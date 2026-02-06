@@ -29,14 +29,14 @@ export function analyticsServerAdapter(
       return getClientId(request);
     },
     setClientId: async () => {
-      const coreContext = getCoreContext().settings;
-      const analyticsSettings = getAnalyticsPlugin().settings;
-      const cookieSettings = analyticsSettings.cookieSettings;
-      const clientIdName = cookieSettings.name.clientId;
-      const legacyClientIdName = `${COOKIE_NAME_PREFIX}${coreContext.contextId}`;
+      const coreConfig = getCoreContext().config;
+      const analyticsOptions = getAnalyticsPlugin().options;
+      const cookieOptions = analyticsOptions.cookies;
+      const clientIdName = cookieOptions.name;
+      const legacyClientIdName = `${COOKIE_NAME_PREFIX}${coreConfig.contextId}`;
       const defaultCookieAttributes = getDefaultCookieAttributes(
-        cookieSettings.expiryDays,
-        cookieSettings.domain
+        cookieOptions.expiryDays,
+        cookieOptions.domain
       );
 
       const legacyClientIdCookie = getCookieServerSide(request.headers.cookie, legacyClientIdName);
@@ -58,13 +58,13 @@ export function analyticsServerAdapter(
 
       if (!clientIdCookie) {
         const cookieValues = await fetchClientIdFromEdgeProxy(
-          coreContext.edgeUrl,
-          coreContext.contextId,
-          analyticsSettings.timeout
+          coreConfig.edgeUrl,
+          coreConfig.contextId,
+          analyticsOptions.timeout
         );
 
         clientIdCookieValue = cookieValues.clientId;
-        getAnalyticsPlugin().settings.proxyValues = cookieValues;
+        analyticsOptions.proxyValues = cookieValues;
       } else clientIdCookieValue = clientIdCookie;
 
       const clientIdCookieString = createCookieString(
@@ -113,9 +113,7 @@ export function analyticsServerAdapter(
  */
 function getClientId(request: IncomingMessage): string | null {
   return (
-    getCookieServerSide(
-      request.headers.cookie,
-      getAnalyticsPlugin().settings.cookieSettings.name.clientId
-    )?.value ?? null
+    getCookieServerSide(request.headers.cookie, getAnalyticsPlugin().options.cookies.name)?.value ??
+    null
   );
 }

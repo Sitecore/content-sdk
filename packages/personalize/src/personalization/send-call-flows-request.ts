@@ -13,21 +13,21 @@ import { debug, PERSONALIZE_NAMESPACE } from '../debug';
 /**
  * A function that sends a CallFlow request to Sitecore EP
  * @param {EPCallFlowsBody} epCallFlowsBody - Properties to be send to Sitecore EP
- * @param {CoreContext['settings']} settings - Settings for the url params
+ * @param {CoreContext['config']} config - Configuration for the url params
  * @param {GetInteractiveExperienceDataOpts} opts - Optional configuration object
  * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A promise that resolves with either the Sitecore EP response object or unknown
  * @internal
  */
 export async function sendCallFlowsRequest(
   epCallFlowsBody: EPCallFlowsBody,
-  settings: CoreContext['settings'],
+  config: CoreContext['config'],
   opts?: GetInteractiveExperienceDataOpts
 ) {
   const startTimestamp = Date.now();
   let debugResponse: DebugResponse = {};
 
   // eslint-disable-next-line max-len
-  const requestUrl = `${settings.edgeUrl}/v1/personalize?siteId=${settings.siteName}`;
+  const requestUrl = `${config.edgeUrl}/v1/personalize?siteId=${config.siteName}`;
 
   const fetchOptions: FetchOptions = {
     body: JSON.stringify(epCallFlowsBody),
@@ -36,7 +36,7 @@ export async function sendCallFlowsRequest(
       'Content-Type': 'application/json',
       'X-Library-Version': PACKAGE_VERSION,
       'x-sc-correlation-id': generateCorrelationId(),
-      'x-sitecore-contextid': settings.contextId,
+      'x-sitecore-contextid': config.contextId,
       /* eslint-enable @typescript-eslint/naming-convention */
     },
     method: 'POST',
@@ -101,7 +101,7 @@ export async function sendCallFlowsRequest(
  * An interface with the basic functionality that the derived classes needs to implement
  */
 export interface PersonalizeClient {
-  settings: CoreContext['settings'];
+  config: CoreContext['config'];
   sendCallFlowsRequest: (
     epCallFlowAttributes: EPCallFlowsBody,
     timeout?: number

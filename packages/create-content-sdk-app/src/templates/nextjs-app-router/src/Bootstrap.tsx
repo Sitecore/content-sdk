@@ -26,14 +26,14 @@ const Bootstrap = ({
     if (config.api.edge?.clientContextId) {
       console.log('✨ Initializing CloudSDK for site:', siteName);
       initContentSdk({
-        settings: {
+        config: {
           contextId: config.api.edge.clientContextId,
           edgeUrl: config.api.edge.edgeUrl,
           siteName: siteName || config.defaultSite,
         },
         plugins: [
           analyticsPlugin({
-            settings: {
+            options: {
               enableCookie: true,
               cookieDomain: window.location.hostname.replace(/^www\./, ''),
             },

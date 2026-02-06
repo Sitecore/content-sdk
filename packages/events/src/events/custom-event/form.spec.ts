@@ -25,8 +25,8 @@ describe('form event', () => {
   };
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
+    options: {
+      cookies: {
         domain: 'cDomain',
         expiryDays: 730,
         name: { clientId: 'cid_name' },
@@ -37,7 +37,7 @@ describe('form event', () => {
   };
 
   const mockCoreContext = {
-    settings: {
+    config: {
       contextId: '123',
       edgeUrl: 'https://edge-platform.sitecorecloud.io',
       siteName: '456',
@@ -110,7 +110,7 @@ describe('form event', () => {
     );
   });
 
-  it('should wait for core settings ready promise', async () => {
+  it('should wait for core context ready promise', async () => {
     let resolveReady: () => void;
     const readyPromise = new Promise<void>((resolve) => {
       resolveReady = resolve;

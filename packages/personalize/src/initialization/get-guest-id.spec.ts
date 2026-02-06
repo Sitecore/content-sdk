@@ -9,6 +9,8 @@ jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
 }));
 jest.mock('@sitecore-content-sdk/core', () => ({
   getCoreContext: jest.fn(),
+  debugModule: jest.fn(() => jest.fn()),
+  debugNamespace: 'content-sdk',
 }));
 
 describe('getGuestId', () => {
@@ -21,7 +23,7 @@ describe('getGuestId', () => {
   };
 
   const mockCoreContext = {
-    settings: {
+    config: {
       contextId: '123',
       edgeUrl: 'https://edge.test.com',
       siteName: '456',
@@ -51,8 +53,8 @@ describe('getGuestId', () => {
     expect(fetchGuestIdSpy).toHaveBeenCalledTimes(1);
     expect(fetchGuestIdSpy).toHaveBeenCalledWith(
       id,
-      mockCoreContext.settings.contextId,
-      mockCoreContext.settings.edgeUrl
+      mockCoreContext.config.contextId,
+      mockCoreContext.config.edgeUrl
     );
     expect(guestID).toBe('guestID');
   });
@@ -67,8 +69,8 @@ describe('getGuestId', () => {
 
     expect(fetchGuestIdSpy).toHaveBeenCalledWith(
       '',
-      mockCoreContext.settings.contextId,
-      mockCoreContext.settings.edgeUrl
+      mockCoreContext.config.contextId,
+      mockCoreContext.config.edgeUrl
     );
   });
 });

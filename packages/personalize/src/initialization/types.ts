@@ -1,29 +1,27 @@
 import { PluginAdapter } from '@sitecore-content-sdk/core';
 import { PERSONALIZE_PLUGIN_NAME } from './const';
 
-export type WebPersonalizationSettings = { async: boolean; defer: boolean; language?: string };
+export type WebPersonalizationOptions = { async: boolean; defer: boolean; language?: string };
 
 export interface PersonalizePluginOptions {
   enablePersonalizeCookie?: boolean;
-  webPersonalization?: boolean | Partial<WebPersonalizationSettings>;
+  webPersonalization?: boolean | Partial<WebPersonalizationOptions>;
 }
 
 export type PersonalizeServerPluginOptions = Omit<PersonalizePluginOptions, 'webPersonalization'>;
 
-export interface PersonalizeSettings {
-  webPersonalization: false | WebPersonalizationSettings;
-  enablePersonalizeCookie: boolean;
-  cookieSettings: {
-    name: {
-      guestId: string;
-    };
+export interface PersonalizeOptions {
+  webPersonalization: false | WebPersonalizationOptions;
+  cookies: {
+    enabled: boolean;
+    name: string;
   };
 }
 
-export type PersonalizeServerSettings = Omit<PersonalizeSettings, 'webPersonalization'>;
+export type PersonalizeServerOptions = Omit<PersonalizeOptions, 'webPersonalization'>;
 
 export interface PersonalizePlugin {
-  settings: PersonalizeSettings | PersonalizeServerSettings;
+  options: PersonalizeOptions | PersonalizeServerOptions;
   init: () => Promise<void>;
   name: typeof PERSONALIZE_PLUGIN_NAME;
   dependencies: string[];
@@ -31,7 +29,7 @@ export interface PersonalizePlugin {
 }
 
 export interface PersonalizeBrowserPlugin {
-  settings: PersonalizeSettings;
+  options: PersonalizeOptions;
   init: () => Promise<void>;
   name: typeof PERSONALIZE_PLUGIN_NAME;
   dependencies: string[];
@@ -39,7 +37,7 @@ export interface PersonalizeBrowserPlugin {
 }
 
 export interface PersonalizeServerPlugin {
-  settings: PersonalizeServerSettings;
+  options: PersonalizeServerOptions;
   init: () => Promise<void>;
   name: typeof PERSONALIZE_PLUGIN_NAME;
   dependencies: string[];

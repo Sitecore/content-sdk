@@ -8,8 +8,8 @@ import {
   PersonalizeBrowserPlugin,
   PersonalizeAdapter,
   PersonalizePluginOptions,
-  PersonalizeSettings,
-  WebPersonalizationSettings,
+  WebPersonalizationOptions,
+  PersonalizeOptions,
 } from './types';
 import { EVENTS_PLUGIN_NAME } from '@sitecore-content-sdk/events/internal';
 import { getCoreContext } from '@sitecore-content-sdk/core';
@@ -21,21 +21,21 @@ import {
   getAnalyticsPlugin,
 } from '@sitecore-content-sdk/analytics-core/internal';
 import { getGuestId } from './get-guest-id';
+import { personalize } from '../personalization/personalize';
 
 /**
  * Initializes the personalize plugin with the provided settings.
  * @internal
  */
 async function init() {
-  const coreSettings = getCoreContext().settings;
+  const coreConfig = getCoreContext().config;
   const personalizePlugin = getPersonalizePlugin();
-  const personalizeSettings = personalizePlugin.settings as PersonalizeSettings;
-
+  const personalizeOptions = personalizePlugin.options as PersonalizeOptions;
   const analyticsPlugin = getAnalyticsPlugin();
 
   if (
-    analyticsPlugin.settings.cookieSettings.enableCookie &&
-    personalizeSettings.enablePersonalizeCookie &&
+    analyticsPlugin.options.cookies.enabled &&
+    personalizeOptions.cookies.enabled &&
     (!personalizePlugin.adapter.getGuestId() || personalizePlugin.adapter.type !== 'browser')
   )
     await personalizePlugin.adapter.setGuestId();
@@ -45,8 +45,14 @@ async function init() {
   window.scContentSDK = {
     ...window.scContentSDK,
     personalize: {
+      personalize,
       version: PACKAGE_VERSION,
-      settings: {},
+      options: personalizeOptions.webPersonalization
+        ? {
+            async: personalizeOptions.webPersonalization.async,
+            defer: personalizeOptions.webPersonalization.defer,
+          }
+        : {},
     },
     analytics_core: {
       ...window.scContentSDK?.analytics_core,
@@ -54,15 +60,15 @@ async function init() {
     },
   };
 
-  if (!personalizeSettings.webPersonalization) return;
+  if (!personalizeOptions.webPersonalization) return;
 
-  window.scContentSDK.personalize.settings = personalizeSettings.webPersonalization;
-  const cdnUrl = await getCdnUrl(coreSettings.contextId, coreSettings.edgeUrl);
+  window.scContentSDK.personalize.options = personalizeOptions.webPersonalization;
+  const cdnUrl = await getCdnUrl(coreConfig.contextId, coreConfig.edgeUrl);
 
   if (!cdnUrl) return;
 
   appendScriptWithAttributes({
-    async: personalizeSettings.webPersonalization.async,
+    async: personalizeOptions.webPersonalization.async,
     src: cdnUrl,
   });
 }
@@ -72,51 +78,49 @@ async function init() {
  */
 interface PersonalizeBrowserPluginParams {
   adapter: PersonalizeAdapter;
-  settings?: PersonalizePluginOptions;
+  options?: PersonalizePluginOptions;
 }
 
 /**
- * Creates a personalize browser plugin with the provided adapter and settings.
- * @param {PersonalizeBrowserPluginParams} params - The personalize plugin parameters including adapter and settings.
+ * Creates a personalize browser plugin with the provided adapter and options.
+ * @param {PersonalizeBrowserPluginParams} params - The personalize plugin parameters including adapter and options.
  * @returns {PersonalizeBrowserPlugin} The configured personalize browser plugin.
  * @public
  */
-export function personalizeBrowserPlugin({
-  adapter,
-  settings,
-}: PersonalizeBrowserPluginParams): PersonalizeBrowserPlugin {
-  const cookieSettings = {
-    name: {
-      guestId: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}_personalize`,
-    },
+export function personalizeBrowserPlugin(
+  params: PersonalizeBrowserPluginParams
+): PersonalizeBrowserPlugin {
+  const { adapter, options } = params;
+  const cookies = {
+    enabled: options?.enablePersonalizeCookie ?? false,
+    name: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}_personalize`,
   };
 
   const dependencies = [ANALYTICS_PLUGIN_NAME];
 
-  let webPersonalization: false | WebPersonalizationSettings;
+  let webPersonalization: false | WebPersonalizationOptions;
 
-  if (settings?.webPersonalization) {
+  if (options?.webPersonalization) {
     dependencies.push(EVENTS_PLUGIN_NAME);
 
     webPersonalization = {
-      async: (settings.webPersonalization as WebPersonalizationSettings).async ?? true,
-      defer: (settings.webPersonalization as WebPersonalizationSettings).defer ?? false,
-      language: (settings.webPersonalization as WebPersonalizationSettings).language ?? undefined,
+      async: (options.webPersonalization as WebPersonalizationOptions).async ?? true,
+      defer: (options.webPersonalization as WebPersonalizationOptions).defer ?? false,
+      language: (options.webPersonalization as WebPersonalizationOptions).language ?? undefined,
     };
   }
   webPersonalization ??= false as const;
 
-  const personalizeSettings = {
+  const resolvedOptions = {
     webPersonalization,
-    enablePersonalizeCookie: settings?.enablePersonalizeCookie ?? false,
-    cookieSettings,
+    cookies,
   };
 
   return {
     name: PERSONALIZE_PLUGIN_NAME,
     init,
     dependencies,
-    settings: personalizeSettings,
+    options: resolvedOptions,
     adapter,
   };
 }
@@ -129,7 +133,8 @@ declare global {
   // eslint-disable-next-line no-unused-vars
   interface ScContentSDK {
     personalize: {
-      settings?: {
+      personalize: typeof personalize;
+      options?: {
         async?: boolean;
         defer?: boolean;
       };

@@ -33,20 +33,20 @@ export function personalizeProxyAdapter(
       return getGuestId(request);
     },
     setGuestId: async () => {
-      const coreSettings = getCoreContext().settings;
-      const cookieSettings = getAnalyticsPlugin().settings.cookieSettings;
+      const coreConfig = getCoreContext().config;
+      const cookieOptions = getAnalyticsPlugin().options.cookies;
       const personalizePlugin = getPersonalizePlugin();
-      const guestIdName = personalizePlugin.settings.cookieSettings.name.guestId;
+      const guestIdCookieName = personalizePlugin.options.cookies.name;
       const cookieAttributes = getDefaultCookieAttributes(
-        cookieSettings.expiryDays,
-        cookieSettings.domain
+        cookieOptions.expiryDays,
+        cookieOptions.domain
       );
-      const legacyGuestIdCookieName = `${COOKIE_NAME_PREFIX}${coreSettings.contextId}_personalize`;
+      const legacyGuestIdCookieName = `${COOKIE_NAME_PREFIX}${coreConfig.contextId}_personalize`;
 
       const legacyGuestIdCookie = request.cookies.get(legacyGuestIdCookieName)?.value;
       if (legacyGuestIdCookie) {
-        request.cookies.set(guestIdName, legacyGuestIdCookie);
-        response.cookies.set(guestIdName, legacyGuestIdCookie, {
+        request.cookies.set(guestIdCookieName, legacyGuestIdCookie);
+        response.cookies.set(guestIdCookieName, legacyGuestIdCookie, {
           ...cookieAttributes,
           sameSite: 'none',
         });
@@ -57,7 +57,7 @@ export function personalizeProxyAdapter(
         return;
       }
 
-      const cookiesValuesFromEdgeServer = getAnalyticsPlugin().settings.proxyValues;
+      const cookiesValuesFromEdgeServer = getAnalyticsPlugin().options.proxyValues;
 
       const guestIdCookie = getGuestId(request);
       const clientIdCookie = getClientId(request);
@@ -69,20 +69,17 @@ export function personalizeProxyAdapter(
       else if (clientIdCookie) {
         const guestIdCookieValueFromEdgeProxy = await fetchGuestIdFromEdgeProxy(
           clientIdCookie,
-          coreSettings.contextId,
-          coreSettings.edgeUrl
+          coreConfig.contextId,
+          coreConfig.edgeUrl
         );
         newGuestIdCookieValue = guestIdCookieValueFromEdgeProxy;
       } else return;
 
-      if (!guestIdCookie) request.cookies.set(guestIdName, newGuestIdCookieValue);
+      if (!guestIdCookie) request.cookies.set(guestIdCookieName, newGuestIdCookieValue);
 
-      const attributes = getDefaultCookieAttributes(
-        cookieSettings.expiryDays,
-        cookieSettings.domain
-      );
+      const attributes = getDefaultCookieAttributes(cookieOptions.expiryDays, cookieOptions.domain);
 
-      response.cookies.set(guestIdName, newGuestIdCookieValue, {
+      response.cookies.set(guestIdCookieName, newGuestIdCookieValue, {
         ...attributes,
         sameSite: 'none',
       });
@@ -97,7 +94,7 @@ export function personalizeProxyAdapter(
  * @internal
  */
 function getGuestId(request: NextRequest): string | null {
-  const guestIdName = getPersonalizePlugin().settings.cookieSettings.name.guestId;
+  const guestIdCookieName = getPersonalizePlugin().options.cookies.name;
 
-  return request.cookies.get(guestIdName)?.value || null;
+  return request.cookies.get(guestIdCookieName)?.value || null;
 }

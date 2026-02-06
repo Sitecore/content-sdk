@@ -1,6 +1,6 @@
 import debug from '../debug';
-import type { CoreContext, InitContentSdkOptions } from './types';
-import { initPlugins, constructCoreContextSettings } from './helpers';
+import type { CoreContext, InitContentSdkParams } from './types';
+import { initPlugins, resolveCoreContextConfig } from './helpers';
 import { Plugin } from './types';
 import { ERROR_MESSAGES } from './consts';
 
@@ -18,21 +18,21 @@ export function getCoreContext(): CoreContext {
 }
 
 /**
- * Initializes the Content SDK with the provided options.
- * @param {InitContentSdkOptions} options - The initialization options including settings and plugins.
+ * Initializes the Content SDK with the provided params.
+ * @param {InitContentSdkParams} params - The initialization params including config and plugins.
  * @returns A promise that resolves when initialization is complete.
  * @public
  */
-export async function initContentSdk(options: InitContentSdkOptions): Promise<void> {
-  debug.init('Initializing Content SDK with options:', options);
-  const { settings, plugins } = options;
+export async function initContentSdk(params: InitContentSdkParams): Promise<void> {
+  debug.init('Initializing Content SDK with params:', params);
+  const { config, plugins } = params;
 
-  const resolvedSettings = constructCoreContextSettings(settings);
+  const resolvedConfig = resolveCoreContextConfig(config);
 
   if (plugins.length === 0) debug.init('No plugins provided to the plugins array');
 
   coreContext = {
-    settings: resolvedSettings,
+    config: resolvedConfig,
     plugins: new Map<string, Plugin>(),
     readyPromise: null,
   };

@@ -31,9 +31,9 @@ jest.mock('../utils/cookies/delete-cookie', () => ({
 }));
 
 describe('analyticsBrowserAdapter', () => {
-  const mockAnalyticsSettings = {
-    cookieSettings: {
-      name: { clientId: 'sc_cid' },
+  const mockAnalyticsOptions = {
+    cookies: {
+      name: 'sc_cid',
       expiryDays: 730,
       domain: '.example.com',
     },
@@ -41,7 +41,7 @@ describe('analyticsBrowserAdapter', () => {
   };
 
   const mockCoreContext = {
-    settings: {
+    config: {
       siteName: 'test-site',
       contextId: 'test-context-id',
       edgeUrl: 'https://edge.test.com',
@@ -59,7 +59,7 @@ describe('analyticsBrowserAdapter', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (pluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue({
-      settings: mockAnalyticsSettings,
+      options: mockAnalyticsOptions,
     });
     (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
     (internalModule.getDefaultCookieAttributes as jest.Mock).mockReturnValue(mockCookieAttributes);
@@ -175,7 +175,7 @@ describe('analyticsBrowserAdapter', () => {
       const adapter = analyticsBrowserAdapter();
       await adapter.setClientId();
 
-      expect(mockAnalyticsSettings.proxyValues).toEqual(proxyValues);
+      expect(mockAnalyticsOptions.proxyValues).toEqual(proxyValues);
     });
 
     it('should use correct cookie attributes from settings', async () => {

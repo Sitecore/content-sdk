@@ -10,22 +10,20 @@ export interface AnalyticsAdapter extends PluginAdapter {
   };
 }
 
-export interface AnalyticsSettings {
-  cookieSettings: {
-    name: {
-      clientId: string;
-    };
+export interface AnalyticsOptions {
+  cookies: {
+    name: string;
     domain?: string;
     expiryDays: number;
     path?: string;
-    enableCookie?: boolean;
+    enabled?: boolean;
   };
   proxyValues?: ProxySettings;
   timeout?: number;
 }
 
 export interface AnalyticsPlugin extends Plugin {
-  settings: AnalyticsSettings;
+  options: AnalyticsOptions;
   adapter: AnalyticsAdapter;
   init: () => Promise<void>;
   name: typeof ANALYTICS_PLUGIN_NAME;

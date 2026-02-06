@@ -18,8 +18,8 @@ describe('event', () => {
   };
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
+    options: {
+      cookies: {
         domain: 'cDomain',
         expiryDays: 730,
         name: { clientId: 'cid_name' },
@@ -30,7 +30,7 @@ describe('event', () => {
   };
 
   const mockCoreContext = {
-    settings: {
+    config: {
       contextId: '123',
       edgeUrl: 'https://edge.test.com',
       siteName: '456',
@@ -69,7 +69,7 @@ describe('event', () => {
       eventData,
       id,
       sendEvent,
-      settings: { ...mockCoreContext.settings, ...mockAnalyticsPlugin.settings },
+      config: { ...mockCoreContext.config, ...mockAnalyticsPlugin.options },
     });
     expect(CustomEvent).toHaveBeenCalledTimes(1);
   });
@@ -89,11 +89,11 @@ describe('event', () => {
       eventData,
       id: '',
       sendEvent,
-      settings: { ...mockCoreContext.settings, ...mockAnalyticsPlugin.settings },
+      config: { ...mockCoreContext.config, ...mockAnalyticsPlugin.options },
     });
   });
 
-  it('should wait for core settings ready promise', async () => {
+  it('should wait for core context ready promise', async () => {
     let resolveReady: () => void;
     const readyPromise = new Promise<void>((resolve) => {
       resolveReady = resolve;

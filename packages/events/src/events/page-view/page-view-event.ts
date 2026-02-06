@@ -10,7 +10,7 @@ import { CoreContext } from '@sitecore-content-sdk/core';
 
 export class PageViewEvent extends BaseEvent {
   static isFirstPageView = true;
-  settings: CoreContext['settings'];
+  config: CoreContext['config'];
   private sendEvent: SendEvent;
   private pageViewData?: PageViewData;
   private extensionData: FlattenedObject = {};
@@ -35,7 +35,7 @@ export class PageViewEvent extends BaseEvent {
 
     this.pageViewData = args.pageViewData;
     this.sendEvent = args.sendEvent;
-    this.settings = args.settings;
+    this.config = args.config;
     this.urlSearchParams = new URLSearchParams(decodeURI(args.searchParams));
 
     if (extensionData) this.extensionData = flattenObject({ object: extensionData });
@@ -58,7 +58,7 @@ export class PageViewEvent extends BaseEvent {
 
     PageViewEvent.isFirstPageView = false;
 
-    return await this.sendEvent({ ...baseAttr, ...eventAttrs }, this.settings);
+    return await this.sendEvent({ ...baseAttr, ...eventAttrs }, this.config);
   }
 
   /**
@@ -164,7 +164,7 @@ export interface PageViewEventArguments {
   sendEvent: SendEvent;
   pageViewData?: PageViewData;
   id: string;
-  settings: CoreContext['settings'];
+  config: CoreContext['config'];
   infer?: Infer;
   extensionData?: NestedObject;
   searchParams: string;

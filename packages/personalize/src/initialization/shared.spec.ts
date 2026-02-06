@@ -5,6 +5,8 @@ import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
   getCoreContext: jest.fn(),
+  debugModule: jest.fn(() => jest.fn()),
+  debugNamespace: 'content-sdk',
 }));
 
 describe('shared', () => {

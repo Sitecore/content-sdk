@@ -25,17 +25,17 @@ export function personalizeBrowserAdapter(): PersonalizeBrowserAdapter {
   return {
     type: 'browser',
     getGuestId: () => {
-      return getCookieValueClientSide(getPersonalizePlugin().settings.cookieSettings.name.guestId);
+      return getCookieValueClientSide(getPersonalizePlugin().options.cookies.name);
     },
     setGuestId: async () => {
-      const coreContext = getCoreContext().settings;
-      const analyticsSettings = getAnalyticsPlugin().settings;
+      const coreConfig = getCoreContext().config;
+      const analyticsOptions = getAnalyticsPlugin().options;
       const personalizePlugin = getPersonalizePlugin();
-      const guestIdCookieName = personalizePlugin.settings.cookieSettings.name.guestId;
-      const legacyGuestIdCookieName = `${COOKIE_NAME_PREFIX}${coreContext.contextId}_personalize`;
+      const guestIdCookieName = personalizePlugin.options.cookies.name;
+      const legacyGuestIdCookieName = `${COOKIE_NAME_PREFIX}${coreConfig.contextId}_personalize`;
       const cookieAttributes = getDefaultCookieAttributes(
-        analyticsSettings.cookieSettings.expiryDays,
-        analyticsSettings.cookieSettings.domain
+        analyticsOptions.cookies.expiryDays,
+        analyticsOptions.cookies.domain
       );
 
       const legacyGuestIdCookie = getCookieValueClientSide(legacyGuestIdCookieName);
@@ -55,12 +55,10 @@ export function personalizeBrowserAdapter(): PersonalizeBrowserAdapter {
         return;
       }
 
-      const cookiesValuesFromEdgeBrowser = getAnalyticsPlugin().settings.proxyValues;
+      const cookiesValuesFromEdgeBrowser = getAnalyticsPlugin().options.proxyValues;
 
       const guestIdCookieValue = getCookieValueClientSide(guestIdCookieName);
-      const clientIdCookieValue = getCookieValueClientSide(
-        analyticsSettings.cookieSettings.name.clientId
-      );
+      const clientIdCookieValue = getCookieValueClientSide(analyticsOptions.cookies.name);
 
       if (guestIdCookieValue) return;
       else if (cookiesValuesFromEdgeBrowser?.guestId)
@@ -72,8 +70,8 @@ export function personalizeBrowserAdapter(): PersonalizeBrowserAdapter {
       else if (clientIdCookieValue) {
         const guestIdCookieValue = await fetchGuestIdFromEdgeProxy(
           clientIdCookieValue,
-          coreContext.contextId,
-          coreContext.edgeUrl
+          coreConfig.contextId,
+          coreConfig.edgeUrl
         );
 
         document.cookie = createCookieString(

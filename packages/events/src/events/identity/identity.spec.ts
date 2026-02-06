@@ -42,8 +42,8 @@ describe('identity', () => {
   };
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
+    options: {
+      cookies: {
         domain: 'cDomain',
         expiryDays: 730,
         name: { clientId: 'cid_name' },
@@ -54,7 +54,7 @@ describe('identity', () => {
   };
 
   const mockCoreContext = {
-    settings: {
+    config: {
       contextId: '123',
       edgeUrl: 'https://edge.test.com',
       siteName: '456',
@@ -81,7 +81,7 @@ describe('identity', () => {
       id,
       identityData: { ...identityData, extensionData },
       sendEvent: sendEventModule.sendEvent,
-      settings: { ...mockCoreContext.settings, ...mockAnalyticsPlugin.settings },
+      config: { ...mockCoreContext.config, ...mockAnalyticsPlugin.options },
     });
     expect(response).toBe('mockedResponse');
   });

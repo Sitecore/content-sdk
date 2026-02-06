@@ -41,7 +41,7 @@ class EventQueue {
         eventData: queueEventPayload.eventData,
         id: queueEventPayload.id,
         sendEvent,
-        settings: queueEventPayload.settings,
+        config: queueEventPayload.config,
       }).send();
 
     this.clearQueue();
@@ -84,6 +84,6 @@ export interface Storage {
   removeItem(key: string): void;
 }
 
-export type QueueEventPayload = Pick<CustomEventArguments, 'eventData' | 'settings' | 'id'>;
+export type QueueEventPayload = Pick<CustomEventArguments, 'eventData' | 'config' | 'id'>;
 
 export const eventQueue = new EventQueue();

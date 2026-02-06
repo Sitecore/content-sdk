@@ -16,7 +16,7 @@ export class CustomEvent extends BaseEvent {
   customEventPayload: CustomEventPayload;
   private sendEvent: SendEvent;
   private extensionData: FlattenedObject = {};
-  private settings: CoreContext['settings'];
+  private config: CoreContext['config'];
 
   /**
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
@@ -28,7 +28,7 @@ export class CustomEvent extends BaseEvent {
     super({ channel, currency, language, page }, args.id);
 
     this.sendEvent = args.sendEvent;
-    this.settings = args.settings;
+    this.config = args.config;
 
     this.customEventPayload = {
       type,
@@ -62,7 +62,7 @@ export class CustomEvent extends BaseEvent {
     const baseAttr = this.mapBaseEventPayload();
     const fetchBody = Object.assign({}, this.customEventPayload, baseAttr);
 
-    return await this.sendEvent(fetchBody, this.settings);
+    return await this.sendEvent(fetchBody, this.config);
   }
 }
 
@@ -73,7 +73,7 @@ export interface CustomEventArguments {
   sendEvent: SendEvent;
   eventData: EventData;
   id: string;
-  settings: CoreContext['settings'];
+  config: CoreContext['config'];
 }
 
 /**

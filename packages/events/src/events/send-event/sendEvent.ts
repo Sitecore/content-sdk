@@ -13,14 +13,14 @@ import { EVENTS_NAMESPACE, debug } from '../../debug';
 /**
  * This factory function sends an event to Edge Proxy
  * @param {EPFetchBody & BasePayload} body - The event data to send
- * @param {Settings} settings - The global settings
+ * @param {CoreContext['config']} config - The global configuration
  */
 export async function sendEvent(
   body: EPFetchBody & BasePayload,
-  settings: CoreContext['settings']
+  config: CoreContext['config']
 ): Promise<EPResponse | null> {
   // eslint-disable-next-line max-len
-  const eventUrl = `${settings.edgeUrl}/v1/events/${API_VERSION}/events?siteId=${settings.siteName}`;
+  const eventUrl = `${config.edgeUrl}/v1/events/${API_VERSION}/events?siteId=${config.siteName}`;
   const startTimestamp = Date.now();
   let debugResponse: DebugResponse = {};
 
@@ -30,7 +30,7 @@ export async function sendEvent(
       'Content-Type': 'application/json',
       'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
       'X-Library-Version': PACKAGE_VERSION,
-      'x-sitecore-contextid': settings.contextId,
+      'x-sitecore-contextid': config.contextId,
     },
     method: 'POST',
   };
@@ -61,7 +61,7 @@ export async function sendEvent(
  */
 export type SendEvent = (
   body: EPFetchBody & BasePayload,
-  settings: CoreContext['settings']
+  config: CoreContext['config']
 ) => Promise<EPResponse | null>;
 
 /**

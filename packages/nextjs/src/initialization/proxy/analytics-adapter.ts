@@ -30,26 +30,26 @@ export function analyticsProxyAdapter(
       return getClientId(request);
     },
     setClientId: async () => {
-      const coreSettings = getCoreContext().settings;
-      const analyticsSettings = getAnalyticsPlugin().settings;
-      const cookieSettings = analyticsSettings.cookieSettings;
-      const clientIdName = cookieSettings.name.clientId;
-      const legacyClientIdName = `${COOKIE_NAME_PREFIX}${coreSettings.contextId}`;
+      const coreConfig = getCoreContext().config;
+      const analyticsOptions = getAnalyticsPlugin().options;
+      const cookieOptions = analyticsOptions.cookies;
+      const clientIdCookieName = cookieOptions.name;
+      const legacyClientIdCookieName = `${COOKIE_NAME_PREFIX}${coreConfig.contextId}`;
       const cookieAttributes = getDefaultCookieAttributes(
-        cookieSettings.expiryDays,
-        cookieSettings.domain
+        cookieOptions.expiryDays,
+        cookieOptions.domain
       );
 
-      const legacyClientIdCookie = request.cookies.get(legacyClientIdName)?.value;
+      const legacyClientIdCookie = request.cookies.get(legacyClientIdCookieName)?.value;
       if (legacyClientIdCookie) {
-        request.cookies.set(clientIdName, legacyClientIdCookie);
-        response.cookies.set(clientIdName, legacyClientIdCookie, {
+        request.cookies.set(clientIdCookieName, legacyClientIdCookie);
+        response.cookies.set(clientIdCookieName, legacyClientIdCookie, {
           ...cookieAttributes,
           sameSite: 'none',
         });
 
-        request.cookies.delete(legacyClientIdName);
-        response.cookies.delete(legacyClientIdName);
+        request.cookies.delete(legacyClientIdCookieName);
+        response.cookies.delete(legacyClientIdCookieName);
 
         return;
       }
@@ -59,22 +59,19 @@ export function analyticsProxyAdapter(
       let newClientIdCookieValue;
       if (!clientIdCookie) {
         const cookieValues = await fetchClientIdFromEdgeProxy(
-          coreSettings.edgeUrl,
-          coreSettings.contextId,
-          analyticsSettings.timeout
+          coreConfig.edgeUrl,
+          coreConfig.contextId,
+          analyticsOptions.timeout
         );
 
         newClientIdCookieValue = cookieValues.clientId;
-        getAnalyticsPlugin().settings.proxyValues = cookieValues;
+        analyticsOptions.proxyValues = cookieValues;
       } else newClientIdCookieValue = clientIdCookie;
 
-      if (!clientIdCookie) request.cookies.set(clientIdName, newClientIdCookieValue);
-      const attributes = getDefaultCookieAttributes(
-        cookieSettings.expiryDays,
-        cookieSettings.domain
-      );
+      if (!clientIdCookie) request.cookies.set(clientIdCookieName, newClientIdCookieValue);
+      const attributes = getDefaultCookieAttributes(cookieOptions.expiryDays, cookieOptions.domain);
 
-      response.cookies.set(clientIdName, newClientIdCookieValue, {
+      response.cookies.set(clientIdCookieName, newClientIdCookieValue, {
         ...attributes,
         sameSite: 'none',
       });
@@ -94,7 +91,7 @@ export function analyticsProxyAdapter(
  * @internal
  */
 export const getClientId = (request: NextRequest): string | null => {
-  const clientIdName = getAnalyticsPlugin().settings.cookieSettings.name.clientId;
+  const clientIdCookieName = getAnalyticsPlugin().options.cookies.name;
 
-  return request.cookies.get(clientIdName)?.value || null;
+  return request.cookies.get(clientIdCookieName)?.value || null;
 };

@@ -9,7 +9,7 @@ jest.mock('../initialization/plugin');
 
 describe('processEventQueue', () => {
   const mockCoreContext = {
-    settings: {
+    config: {
       contextId: '123',
       edgeUrl: 'https://edge.test.com',
     },

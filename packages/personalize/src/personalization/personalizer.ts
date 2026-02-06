@@ -19,14 +19,14 @@ export class Personalizer {
   /**
    * A function to make a request to the Sitecore EP /callFlows API endpoint
    * @param {PersonalizeData} personalizeData - The personalize input from the developer
-   * @param {CoreContext['settings']} settings - The setting that was set during initialization
+   * @param {CoreContext['config']} config - The configuration that was set during initialization
    * @param {string} searchParams - The URL search parameters
    * @param {GetInteractiveExperienceDataOpts} opts - Optional object that contains options for timeout and UA
    * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A promise that resolves with either the Sitecore EP response object or null
    */
   async getInteractiveExperienceData(
     personalizeData: PersonalizeData,
-    settings: CoreContext['settings'],
+    config: CoreContext['config'],
     searchParams: string,
     opts?: GetInteractiveExperienceDataOpts
   ): Promise<unknown | null | FailedCalledFlowsResponse> {
@@ -42,7 +42,7 @@ export class Personalizer {
     const mappedData = this.mapPersonalizeInputToEPData(sanitizedInput);
     if (!mappedData.email && !mappedData.identifiers) mappedData.clientId = this.clientId;
 
-    return await sendCallFlowsRequest(mappedData, settings, opts);
+    return await sendCallFlowsRequest(mappedData, config, opts);
   }
 
   /**

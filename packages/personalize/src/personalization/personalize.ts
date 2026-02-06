@@ -16,7 +16,7 @@ export async function personalize(
   personalizeData: PersonalizeData,
   opts?: PersonalizeOpts
 ): Promise<unknown | null | FailedCalledFlowsResponse> {
-  const { settings, readyPromise } = getCoreContext();
+  const { config, readyPromise } = getCoreContext();
   await readyPromise;
   const { adapter: personalizeAdapter } = getPersonalizePlugin();
 
@@ -29,7 +29,7 @@ export async function personalize(
 
   return new Personalizer(clientId, guestId).getInteractiveExperienceData(
     personalizeData,
-    settings,
+    config,
     searchParams,
     {
       userAgent,

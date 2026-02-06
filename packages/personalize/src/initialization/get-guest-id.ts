@@ -9,9 +9,9 @@ import { getCoreContext } from '@sitecore-content-sdk/core';
  * @internal
  */
 export async function getGuestId(): Promise<string> {
-  const { settings } = getCoreContext();
+  const { config } = getCoreContext();
 
   const clientId = getAnalyticsPlugin().adapter.getClientId() || '';
 
-  return fetchGuestIdFromEdgeProxy(clientId, settings.contextId, settings.edgeUrl);
+  return fetchGuestIdFromEdgeProxy(clientId, config.contextId, config.edgeUrl);
 }

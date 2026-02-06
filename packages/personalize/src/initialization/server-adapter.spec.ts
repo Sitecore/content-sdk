@@ -10,6 +10,8 @@ import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
   getCoreContext: jest.fn(),
+  debugModule: jest.fn(() => jest.fn()),
+  debugNamespace: 'content-sdk',
 }));
 
 jest.mock('./shared', () => ({
@@ -34,26 +36,26 @@ jest.mock('../guest-id/fetch-guest-id-from-edge-proxy', () => ({
 
 describe('personalizeServerAdapter', () => {
   const mockPersonalizePlugin = {
-    settings: {
-      cookieSettings: {
-        name: { guestId: 'sc_cid_personalize' },
+    options: {
+      cookies: {
+        name: 'sc_cid_personalize',
       },
     },
   };
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
+    options: {
+      cookies: {
         expiryDays: 730,
         domain: '.example.com',
-        name: { clientId: 'sc_cid' },
+        name: 'sc_cid',
       },
       proxyValues: undefined as any,
     },
   };
 
   const mockCoreContext = {
-    settings: {
+    config: {
       contextId: 'test-context-id',
       edgeUrl: 'https://edge.test.com',
     },
@@ -96,7 +98,7 @@ describe('personalizeServerAdapter', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockAnalyticsPlugin.settings.proxyValues = undefined;
+    mockAnalyticsPlugin.options.proxyValues = undefined;
     (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(mockPersonalizePlugin);
     (analyticsPluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue(mockAnalyticsPlugin);
     (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
@@ -254,7 +256,7 @@ describe('personalizeServerAdapter', () => {
 
     describe('guest ID from proxy values', () => {
       it('should use guest ID from proxy values when available', async () => {
-        mockAnalyticsPlugin.settings.proxyValues = { guestId: 'proxy-guest-id' };
+        mockAnalyticsPlugin.options.proxyValues = { guestId: 'proxy-guest-id' };
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined) // legacy cookie
           .mockReturnValueOnce(undefined) // guest id cookie

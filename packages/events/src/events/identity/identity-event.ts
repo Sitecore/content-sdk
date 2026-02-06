@@ -17,7 +17,7 @@ export class IdentityEvent extends BaseEvent {
   private sendEvent: SendEvent;
   private extensionData: FlattenedObject = {};
   private numberOfExtensionDataProperties = 0;
-  private settings: CoreContext['settings'];
+  private config: CoreContext['config'];
 
   /**
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
@@ -32,7 +32,7 @@ export class IdentityEvent extends BaseEvent {
 
     this.identityData = args.identityData;
     this.sendEvent = args.sendEvent;
-    this.settings = args.settings;
+    this.config = args.config;
 
     if (extensionData) this.extensionData = flattenObject({ object: extensionData });
 
@@ -51,7 +51,7 @@ export class IdentityEvent extends BaseEvent {
     const eventAttrs = this.mapAttributes();
     const fetchBody = Object.assign({}, eventAttrs, baseAttr);
 
-    return await this.sendEvent(fetchBody, this.settings);
+    return await this.sendEvent(fetchBody, this.config);
   }
 
   /**
@@ -180,6 +180,6 @@ export interface IdentityEventArguments {
   sendEvent: SendEvent;
   identityData: IdentityData;
   id: string;
-  settings: CoreContext['settings'];
+  config: CoreContext['config'];
   infer?: Infer;
 }

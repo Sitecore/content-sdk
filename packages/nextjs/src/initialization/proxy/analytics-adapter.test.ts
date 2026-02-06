@@ -18,9 +18,9 @@ describe('analyticsProxyAdapter', () => {
   let fetchClientIdFromEdgeProxyStub: sinon.SinonStub;
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
-        name: { clientId: 'sc_cid' },
+    options: {
+      cookies: {
+        name: 'sc_cid',
         expiryDays: 730,
         domain: '.example.com',
       },
@@ -30,7 +30,7 @@ describe('analyticsProxyAdapter', () => {
   };
 
   const mockCoreContext = {
-    settings: {
+    config: {
       contextId: 'test-context-id',
       edgeUrl: 'https://edge.test.com',
     },
@@ -86,7 +86,7 @@ describe('analyticsProxyAdapter', () => {
   };
 
   beforeEach(() => {
-    mockAnalyticsPlugin.settings.proxyValues = undefined;
+    mockAnalyticsPlugin.options.proxyValues = undefined;
 
     getAnalyticsPluginStub = sandbox.stub().returns(mockAnalyticsPlugin);
     getCoreContextStub = sandbox.stub().returns(mockCoreContext);
@@ -266,7 +266,7 @@ describe('analyticsProxyAdapter', () => {
           const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
           await adapter.setClientId();
 
-          expect(mockAnalyticsPlugin.settings.proxyValues).to.deep.equal(proxyValues);
+          expect(mockAnalyticsPlugin.options.proxyValues).to.deep.equal(proxyValues);
         });
 
         it('should set new cookie on request when fetching from edge proxy', async () => {

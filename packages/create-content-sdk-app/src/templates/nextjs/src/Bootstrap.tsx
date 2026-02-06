@@ -27,14 +27,14 @@ const Bootstrap = (props: SitecorePageProps): JSX.Element | null => {
     } else {
       if (config.api.edge?.clientContextId) {
         initContentSdk({
-          settings: {
+          config: {
             contextId: config.api.edge.clientContextId,
             edgeUrl: config.api.edge.edgeUrl,
             siteName: page.siteName || config.defaultSite,
           },
           plugins: [
             analyticsPlugin({
-              settings: {
+              options: {
                 enableCookie: true,
                 cookieDomain: window.location.hostname.replace(/^www\./, ''),
               },

@@ -31,7 +31,7 @@ describe('personalize', () => {
       pointOfSale: 'spinair.com',
     };
 
-    const settings = {
+    const config = {
       siteName: '456',
       contextId: '123',
       edgeUrl: '',
@@ -50,7 +50,7 @@ describe('personalize', () => {
     };
 
     const mockCoreContext = {
-      settings,
+      config,
       readyPromise: Promise.resolve(),
     };
 
@@ -82,7 +82,7 @@ describe('personalize', () => {
       expect(Personalizer).toHaveBeenCalledWith(clientId, guestId);
     });
 
-    it('should throw error if settings have not been configured properly', async () => {
+    it('should throw error if config have not been configured properly', async () => {
       (coreModule.getCoreContext as jest.Mock).mockImplementation(() => {
         throw new Error('Test error');
       });
@@ -102,13 +102,13 @@ describe('personalize', () => {
 
       const expectedOpts = { timeout: 100, userAgent: 'test-user-agent' };
       const expectedData = personalizeData;
-      const expectedSettings = settings;
+      const expectedConfig = config;
 
       expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
         expectedData,
-        expectedSettings,
+        expectedConfig,
         '',
         expectedOpts
       );
@@ -126,13 +126,13 @@ describe('personalize', () => {
 
       const expectedOpts = { timeout: undefined, userAgent: 'test-user-agent' };
       const expectedData = personalizeData;
-      const expectedSettings = settings;
+      const expectedConfig = config;
 
       expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
         expectedData,
-        expectedSettings,
+        expectedConfig,
         '',
         expectedOpts
       );
@@ -153,7 +153,7 @@ describe('personalize', () => {
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
         personalizeData,
-        settings,
+        config,
         searchParams,
         { timeout: undefined, userAgent: 'test-user-agent' }
       );
@@ -193,13 +193,13 @@ describe('personalize', () => {
 
       await personalize(personalizeData);
 
-      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', {
+      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, config, '', {
         timeout: undefined,
         userAgent: undefined,
       });
     });
 
-    it('should wait for core settings ready promise', async () => {
+    it('should wait for core context ready promise', async () => {
       let resolveReady: () => void;
       const readyPromise = new Promise<void>((resolve) => {
         resolveReady = resolve;

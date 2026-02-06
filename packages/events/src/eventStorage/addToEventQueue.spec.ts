@@ -24,8 +24,8 @@ describe('addToEventQueue', () => {
   };
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
+    options: {
+      cookies: {
         domain: 'cDomain',
         expiryDays: 730,
         name: { clientId: 'cid_name' },
@@ -37,7 +37,7 @@ describe('addToEventQueue', () => {
   };
 
   const mockCoreContext = {
-    settings: {
+    config: {
       contextId: '123',
       edgeUrl: 'https://edge.test.com',
     },
@@ -67,7 +67,7 @@ describe('addToEventQueue', () => {
     expect(enqueueEventSpy).toHaveBeenCalledWith({
       eventData,
       id: 'test_id',
-      settings: { ...mockCoreContext.settings, ...mockAnalyticsPlugin.settings },
+      config: { ...mockCoreContext.config, ...mockAnalyticsPlugin.options },
     } as any);
   });
 
@@ -84,7 +84,7 @@ describe('addToEventQueue', () => {
     expect(enqueueEventSpy).toHaveBeenCalledWith({
       eventData,
       id: '',
-      settings: { ...mockCoreContext.settings, ...mockAnalyticsPlugin.settings },
+      config: { ...mockCoreContext.config, ...mockAnalyticsPlugin.options },
     } as any);
   });
 

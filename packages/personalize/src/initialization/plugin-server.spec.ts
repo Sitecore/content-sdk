@@ -7,6 +7,8 @@ import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
   getCoreContext: jest.fn(),
+  debugModule: jest.fn(() => jest.fn()),
+  debugNamespace: 'content-sdk',
 }));
 
 jest.mock('./shared', () => ({
@@ -31,12 +33,12 @@ describe('personalizeServerPlugin', () => {
   });
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
-        enableCookie: true,
+    options: {
+      cookies: {
+        enabled: true,
         expiryDays: 730,
         domain: '.example.com',
-        name: { clientId: 'sc_cid' },
+        name: 'sc_cid',
       },
     },
   };
@@ -72,12 +74,10 @@ describe('personalizeServerPlugin', () => {
       const adapter = createMockAdapter();
       const plugin = personalizeServerPlugin({ adapter });
 
-      expect(plugin.settings).toEqual({
-        enablePersonalizeCookie: false,
-        cookieSettings: {
-          name: {
-            guestId: 'sc_cid_personalize',
-          },
+      expect(plugin.options).toEqual({
+        cookies: {
+          enabled: false,
+          name: 'sc_cid_personalize',
         },
       });
     });
@@ -86,20 +86,20 @@ describe('personalizeServerPlugin', () => {
       const adapter = createMockAdapter();
       const plugin = personalizeServerPlugin({
         adapter,
-        settings: { enablePersonalizeCookie: true },
+        options: { enablePersonalizeCookie: true },
       });
 
-      expect(plugin.settings.enablePersonalizeCookie).toBe(true);
+      expect(plugin.options.cookies.enabled).toBe(true);
     });
 
     it('should create a plugin with enablePersonalizeCookie false', () => {
       const adapter = createMockAdapter();
       const plugin = personalizeServerPlugin({
         adapter,
-        settings: { enablePersonalizeCookie: false },
+        options: { enablePersonalizeCookie: false },
       });
 
-      expect(plugin.settings.enablePersonalizeCookie).toBe(false);
+      expect(plugin.options.cookies.enabled).toBe(false);
     });
 
     it('should have an init function', () => {
@@ -117,7 +117,7 @@ describe('personalizeServerPlugin', () => {
 
       const plugin = personalizeServerPlugin({
         adapter,
-        settings: { enablePersonalizeCookie: true },
+        options: { enablePersonalizeCookie: true },
       });
 
       (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
@@ -132,13 +132,13 @@ describe('personalizeServerPlugin', () => {
 
       const plugin = personalizeServerPlugin({
         adapter,
-        settings: { enablePersonalizeCookie: true },
+        options: { enablePersonalizeCookie: true },
       });
 
       (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
       (analyticsPluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue({
-        settings: {
-          cookieSettings: {
+        options: {
+          cookies: {
             enableCookie: false,
           },
         },
@@ -154,7 +154,7 @@ describe('personalizeServerPlugin', () => {
 
       const plugin = personalizeServerPlugin({
         adapter,
-        settings: { enablePersonalizeCookie: false },
+        options: { enablePersonalizeCookie: false },
       });
 
       (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);

@@ -17,7 +17,7 @@ export async function pageView(pageViewData?: PageViewData): Promise<EPResponse 
   await coreContext.readyPromise;
   getEventsPlugin();
 
-  const { settings, adapter } = getAnalyticsPlugin();
+  const { options, adapter } = getAnalyticsPlugin();
   const id = adapter.getClientId() || '';
   const searchParams = adapter.location.getSearchParams();
 
@@ -26,6 +26,6 @@ export async function pageView(pageViewData?: PageViewData): Promise<EPResponse 
     pageViewData,
     searchParams,
     sendEvent,
-    settings: { ...coreContext.settings, ...settings },
+    config: { ...coreContext.config, ...options },
   }).send();
 }

@@ -33,7 +33,7 @@ describe('plugin', () => {
   });
 
   const mockCoreContext = {
-    settings: {
+    config: {
       siteName: 'test-site',
       contextId: 'test-context-id',
       edgeUrl: 'https://edge.test.com',
@@ -73,104 +73,100 @@ describe('plugin', () => {
       expect(typeof plugin.init).toBe('function');
     });
 
-    describe('settings construction', () => {
+    describe('options construction', () => {
       it('should return default cookie settings when no settings provided', () => {
         const adapter = createMockAdapter();
         const plugin = analyticsPlugin({ adapter });
 
-        expect(plugin.settings.cookieSettings).toEqual({
+        expect(plugin.options.cookies).toEqual({
           domain: undefined,
-          enableCookie: false,
+          enabled: false,
           expiryDays: DEFAULT_COOKIE_EXPIRY_DAYS,
-          name: {
-            clientId: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}`,
-          },
+          name: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}`,
           path: '/',
         });
       });
 
-      it('should return default cookie settings when empty settings provided', () => {
+      it('should return default cookie settings when empty options provided', () => {
         const adapter = createMockAdapter();
-        const plugin = analyticsPlugin({ settings: {}, adapter });
+        const plugin = analyticsPlugin({ options: {}, adapter });
 
-        expect(plugin.settings.cookieSettings).toEqual({
+        expect(plugin.options.cookies).toEqual({
           domain: undefined,
-          enableCookie: false,
+          enabled: false,
           expiryDays: DEFAULT_COOKIE_EXPIRY_DAYS,
-          name: {
-            clientId: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}`,
-          },
+          name: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}`,
           path: '/',
         });
       });
 
       it('should set custom cookie domain', () => {
         const adapter = createMockAdapter();
-        const plugin = analyticsPlugin({ settings: { cookieDomain: '.example.com' }, adapter });
+        const plugin = analyticsPlugin({ options: { cookieDomain: '.example.com' }, adapter });
 
-        expect(plugin.settings.cookieSettings.domain).toBe('.example.com');
+        expect(plugin.options.cookies.domain).toBe('.example.com');
       });
 
       it('should set custom cookie expiry days', () => {
         const adapter = createMockAdapter();
-        const plugin = analyticsPlugin({ settings: { cookieExpiryDays: 365 }, adapter });
+        const plugin = analyticsPlugin({ options: { cookieExpiryDays: 365 }, adapter });
 
-        expect(plugin.settings.cookieSettings.expiryDays).toBe(365);
+        expect(plugin.options.cookies.expiryDays).toBe(365);
       });
 
       it('should use default expiry days when cookieExpiryDays is 0', () => {
         const adapter = createMockAdapter();
-        const plugin = analyticsPlugin({ settings: { cookieExpiryDays: 0 }, adapter });
+        const plugin = analyticsPlugin({ options: { cookieExpiryDays: 0 }, adapter });
 
-        expect(plugin.settings.cookieSettings.expiryDays).toBe(DEFAULT_COOKIE_EXPIRY_DAYS);
+        expect(plugin.options.cookies.expiryDays).toBe(DEFAULT_COOKIE_EXPIRY_DAYS);
       });
 
       it('should set custom cookie path', () => {
         const adapter = createMockAdapter();
-        const plugin = analyticsPlugin({ settings: { cookiePath: '/custom' }, adapter });
+        const plugin = analyticsPlugin({ options: { cookiePath: '/custom' }, adapter });
 
-        expect(plugin.settings.cookieSettings.path).toBe('/custom');
+        expect(plugin.options.cookies.path).toBe('/custom');
       });
 
       it('should use default cookie path when empty path provided', () => {
         const adapter = createMockAdapter();
-        const plugin = analyticsPlugin({ settings: { cookiePath: '' }, adapter });
+        const plugin = analyticsPlugin({ options: { cookiePath: '' }, adapter });
 
-        expect(plugin.settings.cookieSettings.path).toBe('/');
+        expect(plugin.options.cookies.path).toBe('/');
       });
 
-      it('should set enableCookie to true', () => {
+      it('should set cookie enabled to true', () => {
         const adapter = createMockAdapter();
-        const plugin = analyticsPlugin({ settings: { enableCookie: true }, adapter });
+        const plugin = analyticsPlugin({ options: { enableCookie: true }, adapter });
 
-        expect(plugin.settings.cookieSettings.enableCookie).toBe(true);
+        expect(plugin.options.cookies.enabled).toBe(true);
       });
 
-      it('should set enableCookie to false', () => {
+      it('should set cookie enabled to false', () => {
         const adapter = createMockAdapter();
-        const plugin = analyticsPlugin({ settings: { enableCookie: false }, adapter });
+        const plugin = analyticsPlugin({ options: { enableCookie: false }, adapter });
 
-        expect(plugin.settings.cookieSettings.enableCookie).toBe(false);
+        expect(plugin.options.cookies.enabled).toBe(false);
       });
 
       it('should set custom timeout', () => {
         const adapter = createMockAdapter();
-        const plugin = analyticsPlugin({ settings: { timeout: 5000 }, adapter });
+        const plugin = analyticsPlugin({ options: { timeout: 5000 }, adapter });
 
-        expect(plugin.settings.timeout).toBe(5000);
+        expect(plugin.options.timeout).toBe(5000);
       });
 
       it('should return undefined timeout when not provided', () => {
         const adapter = createMockAdapter();
-        const plugin = analyticsPlugin({ settings: {}, adapter });
+        const plugin = analyticsPlugin({ options: {}, adapter });
 
-        expect(plugin.settings.timeout).toBeUndefined();
+        expect(plugin.options.timeout).toBeUndefined();
       });
 
       it('should construct all custom settings correctly', () => {
         const adapter = createMockAdapter();
         const plugin = analyticsPlugin({
-          settings: {
+          options: {
             cookieDomain: '.custom.com',
             cookieExpiryDays: 100,
             cookiePath: '/app',
@@ -180,14 +176,12 @@ describe('plugin', () => {
           adapter,
         });
 
-        expect(plugin.settings).toEqual({
-          cookieSettings: {
+        expect(plugin.options).toEqual({
+          cookies: {
             domain: '.custom.com',
-            enableCookie: true,
+            enabled: true,
             expiryDays: 100,
-            name: {
-              clientId: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}`,
-            },
+            name: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}`,
             path: '/app',
           },
           timeout: 3000,
@@ -199,7 +193,7 @@ describe('plugin', () => {
   describe('getAnalyticsPlugin', () => {
     it('should return the analytics plugin from core settings', () => {
       const adapter = createMockAdapter();
-      const plugin = analyticsPlugin({ settings: { enableCookie: true }, adapter });
+      const plugin = analyticsPlugin({ options: { enableCookie: true }, adapter });
       mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       const result = getAnalyticsPlugin();
@@ -219,7 +213,7 @@ describe('plugin', () => {
   describe('init', () => {
     it('should not call setClientId when enableCookie is false', async () => {
       const adapter = createMockAdapter();
-      const plugin = analyticsPlugin({ settings: { enableCookie: false }, adapter });
+      const plugin = analyticsPlugin({ options: { enableCookie: false }, adapter });
       mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
@@ -232,7 +226,7 @@ describe('plugin', () => {
       mockGetClientId.mockReturnValue(null);
       mockSetClientId.mockResolvedValue(undefined);
 
-      const plugin = analyticsPlugin({ settings: { enableCookie: true }, adapter });
+      const plugin = analyticsPlugin({ options: { enableCookie: true }, adapter });
       mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
@@ -245,7 +239,7 @@ describe('plugin', () => {
       mockGetClientId.mockReturnValue('');
       mockSetClientId.mockResolvedValue(undefined);
 
-      const plugin = analyticsPlugin({ settings: { enableCookie: true }, adapter });
+      const plugin = analyticsPlugin({ options: { enableCookie: true }, adapter });
       mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
@@ -258,7 +252,7 @@ describe('plugin', () => {
       mockGetClientId.mockReturnValue('existing-client-id');
       mockSetClientId.mockResolvedValue(undefined);
 
-      const plugin = analyticsPlugin({ settings: { enableCookie: true }, adapter });
+      const plugin = analyticsPlugin({ options: { enableCookie: true }, adapter });
       mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
@@ -271,7 +265,7 @@ describe('plugin', () => {
       mockGetClientId.mockReturnValue('existing-client-id');
       mockSetClientId.mockResolvedValue(undefined);
 
-      const plugin = analyticsPlugin({ settings: { enableCookie: true }, adapter });
+      const plugin = analyticsPlugin({ options: { enableCookie: true }, adapter });
       mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
@@ -284,7 +278,7 @@ describe('plugin', () => {
       mockGetClientId.mockReturnValue('existing-client-id');
       mockSetClientId.mockResolvedValue(undefined);
 
-      const plugin = analyticsPlugin({ settings: { enableCookie: true }, adapter });
+      const plugin = analyticsPlugin({ options: { enableCookie: true }, adapter });
       mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
@@ -292,7 +286,7 @@ describe('plugin', () => {
       expect(window.scContentSDK).toBeDefined();
       expect(window.scContentSDK.analytics_core).toBeDefined();
       expect(window.scContentSDK.analytics_core.getClientId).toBe(getClientIdModule.getClientId);
-      expect(window.scContentSDK.analytics_core.settings).toEqual({
+      expect(window.scContentSDK.analytics_core.options).toEqual({
         siteName: 'test-site',
         contextId: 'test-context-id',
         edgeUrl: 'https://edge.test.com',
@@ -305,7 +299,7 @@ describe('plugin', () => {
       mockGetClientId.mockReturnValue(null);
       mockSetClientId.mockResolvedValue(undefined);
 
-      const plugin = analyticsPlugin({ settings: { enableCookie: true }, adapter });
+      const plugin = analyticsPlugin({ options: { enableCookie: true }, adapter });
       mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();
@@ -322,7 +316,7 @@ describe('plugin', () => {
       mockGetClientId.mockReturnValue('existing-client-id');
       mockSetClientId.mockResolvedValue(undefined);
 
-      const plugin = analyticsPlugin({ settings: { enableCookie: true }, adapter });
+      const plugin = analyticsPlugin({ options: { enableCookie: true }, adapter });
       mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
 
       await plugin.init();

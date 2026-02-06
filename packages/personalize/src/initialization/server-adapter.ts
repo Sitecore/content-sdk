@@ -20,10 +20,8 @@ export interface PersonalizeServerAdapter extends PersonalizeAdapter {
 
 const getGuestId = (request: IncomingMessage): string | null => {
   return (
-    getCookieServerSide(
-      request.headers.cookie,
-      getPersonalizePlugin().settings.cookieSettings.name.guestId
-    )?.value ?? null
+    getCookieServerSide(request.headers.cookie, getPersonalizePlugin().options.cookies.name)
+      ?.value ?? null
   );
 };
 
@@ -43,15 +41,15 @@ export function personalizeServerAdapter(
     getUserAgent: () => request.headers['user-agent'],
     getGuestId: () => getGuestId(request),
     setGuestId: async () => {
-      const coreContext = getCoreContext().settings;
-      const cookieSettings = getAnalyticsPlugin().settings.cookieSettings;
-      const clientIdName = cookieSettings.name.clientId;
+      const coreConfig = getCoreContext().config;
+      const cookieOptions = getAnalyticsPlugin().options.cookies;
+      const clientIdName = cookieOptions.name;
       const personalizePlugin = getPersonalizePlugin();
-      const guestIdName = personalizePlugin.settings.cookieSettings.name.guestId;
-      const legacyGuestIdCookieName = `${COOKIE_NAME_PREFIX}${coreContext.contextId}_personalize`;
+      const guestIdName = personalizePlugin.options.cookies.name;
+      const legacyGuestIdCookieName = `${COOKIE_NAME_PREFIX}${coreConfig.contextId}_personalize`;
       const cookieAttributes = getDefaultCookieAttributes(
-        cookieSettings.expiryDays,
-        cookieSettings.domain
+        cookieOptions.expiryDays,
+        cookieOptions.domain
       );
 
       const legacyGuestIdCookie = getCookieServerSide(
@@ -75,8 +73,7 @@ export function personalizeServerAdapter(
         return;
       }
 
-      const cookiesValuesFromEdgeServer = getAnalyticsPlugin().settings.proxyValues;
-
+      const cookiesValuesFromEdgeServer = getAnalyticsPlugin().options.proxyValues;
       const guestIdCookie = getCookieServerSide(request.headers.cookie, guestIdName);
       const clientIdCookie = getCookieServerSide(request.headers.cookie, clientIdName);
 
@@ -97,8 +94,8 @@ export function personalizeServerAdapter(
       else if (clientIdCookie) {
         const guestIdCookieValueFromEdgeProxy = await fetchGuestIdFromEdgeProxy(
           clientIdCookie.value,
-          coreContext.contextId,
-          coreContext.edgeUrl
+          coreConfig.contextId,
+          coreConfig.edgeUrl
         );
         guestIdCookieString = createCookieString(
           guestIdName,

@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import proxyquire from 'proxyquire';
-import { checkPluginDependencies, initPlugins, constructCoreContextSettings } from './helpers';
+import { checkPluginDependencies, initPlugins, resolveCoreContextConfig } from './helpers';
 import { Plugin } from './types';
 import { ERROR_MESSAGES } from './consts';
 
@@ -201,7 +201,6 @@ describe('helpers', () => {
       plugins.set('base-plugin', basePlugin);
       plugins.set('dependent-plugin', dependentPlugin);
 
-      // Should not throw
       await initPlugins(plugins);
     });
 
@@ -227,7 +226,6 @@ describe('helpers', () => {
     it('should handle empty plugins map', async () => {
       const plugins = new Map<string, Plugin>();
 
-      // Should not throw
       await initPlugins(plugins);
     });
 
@@ -252,7 +250,7 @@ describe('helpers', () => {
 
   describe('constructCoreContextSettings', () => {
     let debugInitStub: sinon.SinonStub;
-    let constructCoreContextSettingsMocked: typeof import('./helpers').constructCoreContextSettings;
+    let resolveCoreContextConfigMocked: typeof import('./helpers').resolveCoreContextConfig;
 
     beforeEach(() => {
       debugInitStub = sandbox.stub();
@@ -263,7 +261,7 @@ describe('helpers', () => {
           },
         },
       });
-      constructCoreContextSettingsMocked = module.constructCoreContextSettings;
+      resolveCoreContextConfigMocked = module.resolveCoreContextConfig;
     });
 
     it('should return settings object for valid configuration and log debug message', () => {
@@ -273,7 +271,7 @@ describe('helpers', () => {
         siteName: 'test-site',
       };
 
-      const result = constructCoreContextSettingsMocked(config);
+      const result = resolveCoreContextConfigMocked(config);
 
       expect(result).to.deep.equal({
         contextId: 'test-context-id',
@@ -295,7 +293,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => constructCoreContextSettings(config)).to.throw(ERROR_MESSAGES.MV_001);
+        expect(() => resolveCoreContextConfig(config)).to.throw(ERROR_MESSAGES.MV_001);
       });
 
       it('should throw when contextId is only whitespace', () => {
@@ -305,7 +303,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => constructCoreContextSettings(config)).to.throw(ERROR_MESSAGES.MV_001);
+        expect(() => resolveCoreContextConfig(config)).to.throw(ERROR_MESSAGES.MV_001);
       });
 
       it('should throw when contextId is undefined', () => {
@@ -315,7 +313,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => constructCoreContextSettings(config)).to.throw(ERROR_MESSAGES.MV_001);
+        expect(() => resolveCoreContextConfig(config)).to.throw(ERROR_MESSAGES.MV_001);
       });
 
       it('should throw when contextId is null', () => {
@@ -325,7 +323,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => constructCoreContextSettings(config)).to.throw(ERROR_MESSAGES.MV_001);
+        expect(() => resolveCoreContextConfig(config)).to.throw(ERROR_MESSAGES.MV_001);
       });
     });
 
@@ -337,7 +335,7 @@ describe('helpers', () => {
           siteName: '',
         };
 
-        expect(() => constructCoreContextSettings(config)).to.throw(ERROR_MESSAGES.MV_002);
+        expect(() => resolveCoreContextConfig(config)).to.throw(ERROR_MESSAGES.MV_002);
       });
 
       it('should throw when siteName is only whitespace', () => {
@@ -347,7 +345,7 @@ describe('helpers', () => {
           siteName: '   ',
         };
 
-        expect(() => constructCoreContextSettings(config)).to.throw(ERROR_MESSAGES.MV_002);
+        expect(() => resolveCoreContextConfig(config)).to.throw(ERROR_MESSAGES.MV_002);
       });
 
       it('should throw when siteName is undefined', () => {
@@ -357,7 +355,7 @@ describe('helpers', () => {
           siteName: undefined as unknown as string,
         };
 
-        expect(() => constructCoreContextSettings(config)).to.throw(ERROR_MESSAGES.MV_002);
+        expect(() => resolveCoreContextConfig(config)).to.throw(ERROR_MESSAGES.MV_002);
       });
 
       it('should throw when siteName is null', () => {
@@ -367,7 +365,7 @@ describe('helpers', () => {
           siteName: null as unknown as string,
         };
 
-        expect(() => constructCoreContextSettings(config)).to.throw(ERROR_MESSAGES.MV_002);
+        expect(() => resolveCoreContextConfig(config)).to.throw(ERROR_MESSAGES.MV_002);
       });
     });
 
@@ -378,7 +376,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        const result = constructCoreContextSettings(config);
+        const result = resolveCoreContextConfig(config);
 
         expect(result.edgeUrl).to.equal('https://edge-platform.sitecorecloud.io');
         expect(result.contextId).to.equal('test-context-id');
@@ -392,7 +390,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => constructCoreContextSettings(config)).to.throw(ERROR_MESSAGES.IV_001);
+        expect(() => resolveCoreContextConfig(config)).to.throw(ERROR_MESSAGES.IV_001);
       });
 
       it('should accept valid http URL', () => {
@@ -402,7 +400,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        const result = constructCoreContextSettings(config);
+        const result = resolveCoreContextConfig(config);
 
         expect(result.edgeUrl).to.equal('http://edge.example.com');
       });
@@ -414,7 +412,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        const result = constructCoreContextSettings(config);
+        const result = resolveCoreContextConfig(config);
 
         expect(result.edgeUrl).to.equal('https://edge.example.com');
       });
@@ -426,7 +424,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        const result = constructCoreContextSettings(config);
+        const result = resolveCoreContextConfig(config);
 
         expect(result.edgeUrl).to.equal('https://edge.example.com/api/v1');
       });
@@ -438,7 +436,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        const result = constructCoreContextSettings(config);
+        const result = resolveCoreContextConfig(config);
 
         expect(result.edgeUrl).to.equal('https://edge.example.com:8080');
       });
@@ -450,7 +448,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => constructCoreContextSettings(config)).to.throw(ERROR_MESSAGES.IV_001);
+        expect(() => resolveCoreContextConfig(config)).to.throw(ERROR_MESSAGES.IV_001);
       });
 
       it('should throw for URL without protocol', () => {
@@ -460,7 +458,7 @@ describe('helpers', () => {
           siteName: 'test-site',
         };
 
-        expect(() => constructCoreContextSettings(config)).to.throw(ERROR_MESSAGES.IV_001);
+        expect(() => resolveCoreContextConfig(config)).to.throw(ERROR_MESSAGES.IV_001);
       });
     });
   });

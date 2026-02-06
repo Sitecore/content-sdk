@@ -16,7 +16,7 @@ export async function identity(identityData: IdentityData): Promise<EPResponse |
   await coreContext.readyPromise;
   getEventsPlugin();
 
-  const { settings, adapter } = getAnalyticsPlugin();
+  const { options, adapter } = getAnalyticsPlugin();
 
   const id = adapter.getClientId() || '';
 
@@ -24,6 +24,6 @@ export async function identity(identityData: IdentityData): Promise<EPResponse |
     id,
     identityData,
     sendEvent,
-    settings: { ...coreContext.settings, ...settings },
+    config: { ...coreContext.config, ...options },
   }).send();
 }

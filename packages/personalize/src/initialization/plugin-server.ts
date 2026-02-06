@@ -7,7 +7,7 @@ import {
   PersonalizeAdapter,
   PersonalizeServerPlugin,
   PersonalizeServerPluginOptions,
-  PersonalizeServerSettings,
+  PersonalizeServerOptions,
 } from './types';
 import { getPersonalizePlugin } from './shared';
 import {
@@ -16,55 +16,49 @@ import {
 } from '@sitecore-content-sdk/analytics-core/internal';
 
 /**
- * Initializes the personalize plugin with the provided settings.
+ * Initializes the personalize plugin with the provided options.
  * @internal
  */
 async function init() {
   const personalizePlugin = getPersonalizePlugin();
-  const personalizeSettings = personalizePlugin.settings as PersonalizeServerSettings;
-
+  const personalizeOptions = personalizePlugin.options as PersonalizeServerOptions;
   const analyticsPlugin = getAnalyticsPlugin();
 
-  if (
-    analyticsPlugin.settings.cookieSettings.enableCookie &&
-    personalizeSettings.enablePersonalizeCookie
-  )
+  if (analyticsPlugin.options.cookies.enabled && personalizeOptions.cookies.enabled)
     await personalizePlugin.adapter.setGuestId();
 }
 
 interface PersonalizeServerPluginParams {
   adapter: PersonalizeAdapter;
-  settings?: PersonalizeServerPluginOptions;
+  options?: PersonalizeServerPluginOptions;
 }
 
 /**
- * Creates an personalize server plugin with the provided settings.
- * @param {PersonalizeServerPluginsOptions | undefined} settings - The personalize plugin settings to validate.
+ * Creates an personalize server plugin with the provided options.
+ * @param {PersonalizeServerPluginParams} params - The parameters for the personalize plugin.
  * @returns {PersonalizeServerPlugin} The personalize plugin instance.
  * @public
  */
-export function personalizeServerPlugin({
-  settings,
-  adapter,
-}: PersonalizeServerPluginParams): PersonalizeServerPlugin {
-  const cookieSettings = {
-    name: {
-      guestId: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}_personalize`,
-    },
+export function personalizeServerPlugin(
+  params: PersonalizeServerPluginParams
+): PersonalizeServerPlugin {
+  const { adapter, options } = params;
+  const cookies = {
+    enabled: options?.enablePersonalizeCookie ?? false,
+    name: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}_personalize`,
   };
 
   const dependencies = [ANALYTICS_PLUGIN_NAME];
 
-  const personalizeSettings = {
-    enablePersonalizeCookie: settings?.enablePersonalizeCookie ?? false,
-    cookieSettings,
+  const resolvedOptions = {
+    cookies,
   };
 
   return {
     name: PERSONALIZE_PLUGIN_NAME,
     init,
     dependencies,
-    settings: personalizeSettings,
+    options: resolvedOptions,
     adapter,
   };
 }

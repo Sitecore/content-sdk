@@ -21,7 +21,7 @@ export async function form(
   await coreContext.readyPromise;
   getEventsPlugin();
 
-  const { settings, adapter } = getAnalyticsPlugin();
+  const { options, adapter } = getAnalyticsPlugin();
 
   const id = adapter.getClientId() || '';
 
@@ -36,7 +36,7 @@ export async function form(
     },
     id,
     sendEvent,
-    settings: { ...coreContext.settings, ...settings },
+    config: { ...coreContext.config, ...options },
   });
 
   formEvent.page = undefined as unknown as string;

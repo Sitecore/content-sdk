@@ -13,8 +13,8 @@ const debugInit = debug.init;
 /**
  * Parameters for creating an analytics plugin.
  */
-interface AnalyticsPluginOptions {
-  settings?: {
+interface AnalyticsPluginParams {
+  options?: {
     cookieDomain?: string;
     cookieExpiryDays?: number;
     cookiePath?: string;
@@ -26,36 +26,34 @@ interface AnalyticsPluginOptions {
 
 /**
  * Creates an analytics plugin with the provided options.
- * @param {AnalyticsPluginOptions} options - The parameters for the analytics plugin.
+ * @param {AnalyticsPluginParams} params - The parameters for the analytics plugin.
  * @returns {AnalyticsPlugin} The analytics plugin instance.
  * @public
  */
-export function analyticsPlugin(options: AnalyticsPluginOptions): AnalyticsPlugin {
-  const { settings, adapter } = options;
+export function analyticsPlugin(params: AnalyticsPluginParams): AnalyticsPlugin {
+  const { options, adapter } = params;
 
-  const analyticsSettings = {
-    cookieSettings: {
-      domain: settings?.cookieDomain,
-      enableCookie: settings?.enableCookie ?? false,
-      expiryDays: settings?.cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
-      name: {
-        clientId: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}`,
-      },
-      path: settings?.cookiePath || '/',
+  const resolvedOptions = {
+    cookies: {
+      domain: options?.cookieDomain,
+      enabled: options?.enableCookie ?? false,
+      expiryDays: options?.cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
+      name: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}`,
+      path: options?.cookiePath || '/',
     },
-    timeout: settings?.timeout,
+    timeout: options?.timeout,
   };
 
   return {
     name: ANALYTICS_PLUGIN_NAME,
     init,
-    settings: analyticsSettings,
+    options: resolvedOptions,
     adapter,
   };
 }
 
 /**
- * Initializes the analytics plugin with the provided settings.
+ * Initializes the analytics plugin with the provided options.
  * @internal
  */
 async function init() {
@@ -63,7 +61,7 @@ async function init() {
   const coreContext = getCoreContext();
   const analyticsPlugin = getAnalyticsPlugin();
 
-  if (!analyticsPlugin.settings.cookieSettings.enableCookie) {
+  if (!analyticsPlugin.options.cookies.enabled) {
     debugInit(
       `Cookies are disabled for ${ANALYTICS_PLUGIN_NAME}. If this was not intentional, set "enableCookie" to "true".`
     );
@@ -82,10 +80,10 @@ async function init() {
       ...window.scContentSDK,
       analytics_core: {
         getClientId,
-        settings: {
-          siteName: coreContext.settings.siteName,
-          contextId: coreContext.settings.contextId,
-          edgeUrl: coreContext.settings.edgeUrl,
+        options: {
+          siteName: coreContext.config.siteName,
+          contextId: coreContext.config.contextId,
+          edgeUrl: coreContext.config.edgeUrl,
         },
         version: LIBRARY_VERSION,
       },
@@ -111,7 +109,7 @@ export function getAnalyticsPlugin(): AnalyticsPlugin {
 declare global {
   interface AnalyticsCore {
     getClientId: typeof getClientId;
-    settings: CoreContext['settings'];
+    options: CoreContext['config'];
     version: string;
   }
   interface ScContentSDK {

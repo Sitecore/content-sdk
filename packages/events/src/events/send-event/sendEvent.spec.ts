@@ -35,7 +35,7 @@ jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
   };
 });
 
-const settingsObj = {
+const config = {
   contextId: '123',
   edgeUrl: 'http://testurl',
   siteName: 'site',
@@ -88,7 +88,7 @@ describe('EventApiClient', () => {
     const expectedBody = JSON.stringify(eventData);
     const expectedUrl = 'http://testurl/v1/events/v1.2/events?siteId=site';
 
-    await sendEvent(eventData, settingsObj).then((data) => {
+    await sendEvent(eventData, config).then((data) => {
       expect(data).toEqual({
         status: 'OK',
       });
@@ -122,7 +122,7 @@ describe('EventApiClient', () => {
     const expectedBody = JSON.stringify(eventData);
     const expectedUrl = 'http://testurl/v1/events/v1.2/events?siteId=site';
 
-    await sendEvent(eventData, settingsObj).then((data) => {
+    await sendEvent(eventData, config).then((data) => {
       expect(data).toEqual({
         status: 'OK',
       });
@@ -150,7 +150,7 @@ describe('EventApiClient', () => {
 
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as any;
 
-    const response = await sendEvent(eventData, settingsObj);
+    const response = await sendEvent(eventData, config);
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(response).toEqual(null);

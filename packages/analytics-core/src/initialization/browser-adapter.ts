@@ -21,41 +21,37 @@ export function analyticsBrowserAdapter(): AnalyticsBrowserAdapter {
   return {
     type: 'browser',
     getClientId: () => {
-      return getCookieValueClientSide(getAnalyticsPlugin().settings.cookieSettings.name.clientId);
+      return getCookieValueClientSide(getAnalyticsPlugin().options.cookies.name);
     },
     setClientId: async () => {
-      const coreContext = getCoreContext().settings;
-      const analyticsSettings = getAnalyticsPlugin().settings;
+      const coreConfig = getCoreContext().config;
+      const analyticsOptions = getAnalyticsPlugin().options;
 
       const cookieAttributes = getDefaultCookieAttributes(
-        analyticsSettings.cookieSettings.expiryDays,
-        analyticsSettings.cookieSettings.domain
+        analyticsOptions.cookies.expiryDays,
+        analyticsOptions.cookies.domain
       );
 
-      const legacyCookie = getCookieValueClientSide(
-        `${COOKIE_NAME_PREFIX}${coreContext.contextId}`
-      );
+      const legacyCookie = getCookieValueClientSide(`${COOKIE_NAME_PREFIX}${coreConfig.contextId}`);
 
       if (legacyCookie) {
         document.cookie = createCookieString(
-          analyticsSettings.cookieSettings.name.clientId,
+          analyticsOptions.cookies.name,
           legacyCookie,
           cookieAttributes
         );
-        deleteCookie(`${COOKIE_NAME_PREFIX}${coreContext.contextId}`);
-
+        deleteCookie(`${COOKIE_NAME_PREFIX}${coreConfig.contextId}`);
         return;
       }
 
       const cookieValues = await fetchClientIdFromEdgeProxy(
-        coreContext.edgeUrl,
-        coreContext.contextId
+        coreConfig.edgeUrl,
+        coreConfig.contextId
       );
 
-      getAnalyticsPlugin().settings.proxyValues = cookieValues;
-
+      analyticsOptions.proxyValues = cookieValues;
       document.cookie = createCookieString(
-        analyticsSettings.cookieSettings.name.clientId,
+        analyticsOptions.cookies.name,
         cookieValues.clientId,
         cookieAttributes
       );

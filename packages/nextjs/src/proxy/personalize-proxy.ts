@@ -276,21 +276,21 @@ export class PersonalizeProxy extends ProxyBase {
     response: NextResponse;
   }): Promise<void> {
     await initContentSdk({
-      settings: {
+      config: {
         contextId: this.config.contextId,
         edgeUrl: this.config.edgeUrl,
         siteName,
       },
       plugins: [
         analyticsPlugin({
-          settings: {
+          options: {
             enableCookie: true,
             cookieDomain: hostname,
           },
           adapter: analyticsProxyAdapter(request, response),
         }),
         personalizeServerPlugin({
-          settings: {
+          options: {
             enablePersonalizeCookie: true,
           },
           adapter: personalizeProxyAdapter(request, response),

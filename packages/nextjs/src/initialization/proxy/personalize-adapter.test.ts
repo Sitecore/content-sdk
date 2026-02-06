@@ -20,9 +20,9 @@ describe('personalizeProxyAdapter', () => {
   let getClientIdStub: sinon.SinonStub;
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
-        name: { clientId: 'sc_cid' },
+    options: {
+      cookies: {
+        name: 'sc_cid',
         expiryDays: 730,
         domain: '.example.com',
       },
@@ -32,15 +32,15 @@ describe('personalizeProxyAdapter', () => {
   };
 
   const mockPersonalizePlugin = {
-    settings: {
-      cookieSettings: {
-        name: { guestId: 'sc_gid' },
+    options: {
+      cookies: {
+        name: 'sc_gid',
       },
     },
   };
 
   const mockCoreContext = {
-    settings: {
+    config: {
       contextId: 'test-context-id',
       edgeUrl: 'https://edge.test.com',
     },
@@ -94,7 +94,7 @@ describe('personalizeProxyAdapter', () => {
   };
 
   beforeEach(() => {
-    mockAnalyticsPlugin.settings.proxyValues = undefined;
+    mockAnalyticsPlugin.options.proxyValues = undefined;
 
     getAnalyticsPluginStub = sandbox.stub().returns(mockAnalyticsPlugin);
     getCoreContextStub = sandbox.stub().returns(mockCoreContext);
@@ -288,7 +288,7 @@ describe('personalizeProxyAdapter', () => {
 
       describe('proxy values from edge server', () => {
         it('should use guest ID from proxy values when available', async () => {
-          mockAnalyticsPlugin.settings.proxyValues = {
+          mockAnalyticsPlugin.options.proxyValues = {
             clientId: 'client-id',
             guestId: 'proxy-guest-id',
           };
@@ -307,7 +307,7 @@ describe('personalizeProxyAdapter', () => {
         });
 
         it('should set cookie on request when using proxy values', async () => {
-          mockAnalyticsPlugin.settings.proxyValues = {
+          mockAnalyticsPlugin.options.proxyValues = {
             clientId: 'client-id',
             guestId: 'proxy-guest-id',
           };
@@ -323,7 +323,7 @@ describe('personalizeProxyAdapter', () => {
         });
 
         it('should fallback to edge proxy fetch when proxy values exist but guestId is undefined', async () => {
-          mockAnalyticsPlugin.settings.proxyValues = {
+          mockAnalyticsPlugin.options.proxyValues = {
             clientId: 'client-id',
             guestId: undefined,
           };

@@ -45,7 +45,7 @@ describe('CustomEvent', () => {
 
   describe('constructor', () => {
     let eventData: EventData;
-    const settings = {
+    const config = {
       contextId: '123',
       edgeUrl: '',
       siteName: '456',
@@ -63,7 +63,7 @@ describe('CustomEvent', () => {
     it('should not call flatten object method when no extension data is passed', () => {
       const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
       Object.defineProperty(window, 'location', { value: { search: '' }, writable: true });
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
     });
@@ -74,12 +74,12 @@ describe('CustomEvent', () => {
         eventData: { ...eventData, extensionData },
         id,
         sendEvent: sendEventModule.sendEvent,
-        settings,
+        config,
       }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(
         expect.not.objectContaining({ ext: {} }),
-        expect.objectContaining(settings)
+        expect.objectContaining(config)
       );
     });
 
@@ -90,7 +90,7 @@ describe('CustomEvent', () => {
         eventData: { ...eventData, extensionData },
         id,
         sendEvent: sendEventModule.sendEvent,
-        settings,
+        config,
       }).send();
 
       const expectedExt = {
@@ -103,7 +103,7 @@ describe('CustomEvent', () => {
 
       expect(sendEventSpy).toHaveBeenCalledWith(
         expect.objectContaining(expectedExt),
-        expect.objectContaining(settings)
+        expect.objectContaining(config)
       );
     });
 
@@ -116,7 +116,7 @@ describe('CustomEvent', () => {
           eventData: { ...eventData, extensionData },
           id,
           sendEvent: sendEventModule.sendEvent,
-          settings,
+          config,
         });
       }).toThrow(ERROR_MESSAGES.IV_006);
     });
@@ -130,14 +130,14 @@ describe('CustomEvent', () => {
           eventData: { ...eventData, extensionData },
           id,
           sendEvent: sendEventModule.sendEvent,
-          settings,
+          config,
         });
       }).not.toThrow(ERROR_MESSAGES.IV_006);
     });
   });
 
   describe('send', () => {
-    const settings = {
+    const config = {
       contextId: '123',
       edgeUrl: '',
       siteName: '456',
@@ -162,11 +162,11 @@ describe('CustomEvent', () => {
         testAttr3: 22,
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(
         expect.objectContaining(expectedExt),
-        expect.objectContaining(settings)
+        expect.objectContaining(config)
       );
     });
 
@@ -179,7 +179,7 @@ describe('CustomEvent', () => {
 
       const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
       expect(languageSpy).toHaveBeenCalledTimes(1);
@@ -209,9 +209,9 @@ describe('CustomEvent', () => {
         type: 'CUSTOM_TYPE',
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
-      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, settings);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, config);
       expect(languageSpy).toHaveBeenCalledTimes(0);
       expect(pageNameSpy).toHaveBeenCalledTimes(0);
     });
@@ -237,9 +237,9 @@ describe('CustomEvent', () => {
         type: 'CUSTOM_TYPE',
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
-      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, settings);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, config);
       expect(languageSpy).toHaveBeenCalledTimes(1);
       expect(pageNameSpy).toHaveBeenCalledTimes(1);
     });
@@ -261,16 +261,16 @@ describe('CustomEvent', () => {
         type: 'CUSTOM_TYPE',
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
-      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, settings);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, config);
       expect(languageSpy).toHaveBeenCalledTimes(1);
       expect(pageNameSpy).toHaveBeenCalledTimes(1);
     });
   });
   describe('search data', () => {
     it('should include sc_search if searchData is provided', async () => {
-      const settings = {
+      const config = {
         contextId: '123',
         edgeUrl: '',
         siteName: '456',
@@ -306,9 +306,9 @@ describe('CustomEvent', () => {
         type: 'CUSTOM_TYPE',
       } as const;
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
-      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, settings);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, config);
     });
   });
 });

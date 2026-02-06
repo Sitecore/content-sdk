@@ -1,10 +1,10 @@
 /**
- * Options for initContentSdk
+ * Parameters for initContentSdk
  * @public
  */
-export interface InitContentSdkOptions {
+export interface InitContentSdkParams {
   /** Initialization settings */
-  settings: {
+  config: {
     contextId: string;
     edgeUrl?: string;
     siteName: string;
@@ -14,14 +14,14 @@ export interface InitContentSdkOptions {
 }
 
 /**
- * Internal settings of the SDK initialization
+ * Internal config of the SDK initialization
  * @internal
  */
 export interface CoreContext {
   /**
-   * The SDK initialization settings
+   * The SDK initialization config
    */
-  settings: { contextId: string; edgeUrl: string; siteName: string };
+  config: { contextId: string; edgeUrl: string; siteName: string };
   /**
    * Map of enabled plugins by name
    */
@@ -42,18 +42,19 @@ export type PluginDependency = string;
 /**
  * Plugin interface for extending SDK functionality.
  * Plugins are the standard way to add capabilities to the SDK.
- * @template Settings - Plugin-specific settings type
+ * @template Options - Plugin-specific options type
+ * @template Adapter - Plugin-specific adapter type
  * @public
  */
-export interface Plugin<Settings = unknown, Adapter = unknown> {
+export interface Plugin<Options = unknown, Adapter = unknown> {
   /**
    * Unique identifier for the plugin (e.g., '@sitecore-content-sdk/events')
    */
   name: string;
   /**
-   * Optional plugin-specific settings
+   * Optional plugin-specific options
    */
-  settings?: Settings;
+  options?: Options;
   /**
    * List of plugins this plugin depends on
    */

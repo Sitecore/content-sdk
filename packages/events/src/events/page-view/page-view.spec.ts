@@ -29,8 +29,8 @@ describe('pageView', () => {
   };
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
+    options: {
+      cookies: {
         domain: 'cDomain',
         expiryDays: 730,
         name: { clientId: 'cid_name' },
@@ -41,7 +41,7 @@ describe('pageView', () => {
   };
 
   const mockCoreContext = {
-    settings: {
+    config: {
       contextId: '123',
       edgeUrl: 'https://edge.test.com',
       siteName: '456',
@@ -79,7 +79,7 @@ describe('pageView', () => {
       pageViewData: { ...pageViewData, extensionData },
       searchParams: '?test=value',
       sendEvent,
-      settings: { ...mockCoreContext.settings, ...mockAnalyticsPlugin.settings },
+      config: { ...mockCoreContext.config, ...mockAnalyticsPlugin.options },
     });
     expect(response).toBe('mockedResponse');
   });

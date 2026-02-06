@@ -27,9 +27,9 @@ jest.mock('../utils', () => ({
 }));
 
 describe('analyticsServerAdapter', () => {
-  const mockAnalyticsSettings = {
-    cookieSettings: {
-      name: { clientId: 'sc_cid' },
+  const mockAnalyticsOptions = {
+    cookies: {
+      name: 'sc_cid',
       expiryDays: 730,
       domain: '.example.com',
     },
@@ -38,7 +38,7 @@ describe('analyticsServerAdapter', () => {
   };
 
   const mockCoreContext = {
-    settings: {
+    config: {
       siteName: 'test-site',
       contextId: 'test-context-id',
       edgeUrl: 'https://edge.test.com',
@@ -77,9 +77,9 @@ describe('analyticsServerAdapter', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockAnalyticsSettings.proxyValues = undefined;
+    mockAnalyticsOptions.proxyValues = undefined;
     (pluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue({
-      settings: mockAnalyticsSettings,
+      options: mockAnalyticsOptions,
     });
     (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
     (internalModule.getDefaultCookieAttributes as jest.Mock).mockReturnValue(mockCookieAttributes);
@@ -313,7 +313,7 @@ describe('analyticsServerAdapter', () => {
         const adapter = analyticsServerAdapter(request, response);
         await adapter.setClientId();
 
-        expect(mockAnalyticsSettings.proxyValues).toEqual(proxyValues);
+        expect(mockAnalyticsOptions.proxyValues).toEqual(proxyValues);
       });
 
       it('should append cookie to request headers when no existing cookies', async () => {

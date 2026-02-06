@@ -14,13 +14,13 @@ export async function addToEventQueue(eventData: EventData): Promise<void> {
   await coreContext.readyPromise;
   getEventsPlugin();
 
-  const { settings, adapter } = getAnalyticsPlugin();
+  const { options, adapter } = getAnalyticsPlugin();
   const id = adapter.getClientId() || '';
 
   const queueEventPayload: QueueEventPayload = {
     eventData,
     id,
-    settings: { ...coreContext.settings, ...settings },
+    config: { ...coreContext.config, ...options },
   };
 
   eventQueue.enqueueEvent(queueEventPayload);
