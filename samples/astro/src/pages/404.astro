@@ -14,25 +14,24 @@ try {
 } catch (error) {
   console.error('Error occurred while fetching 404 error page:', error);
 }
-
-const route = page?.layout.sitecore.route;
-const title = (route?.fields?.Title as { value?: string })?.value ?? 'Page Not Found';
 ---
 
-<Layout>
-  <title>{title}</title>
-  <main>
-    {page && route ? (
-      <div>
-        <h1>{title}</h1>
-        <pre>{JSON.stringify(route.fields, null, 2)}</pre>
-      </div>
-    ) : (
-      <div>
+{page ? (
+  <Layout page={page} />
+) : (
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width" />
+      <link rel="icon" href="/favicon.ico" />
+      <title>Page Not Found</title>
+    </head>
+    <body>
+      <main>
         <h1>Page Not Found</h1>
         <p>The page you are looking for does not exist.</p>
         <a href="/">Go back home</a>
-      </div>
-    )}
-  </main>
-</Layout>
+      </main>
+    </body>
+  </html>
+)}

@@ -1,23 +1,101 @@
+---
+/**
+ * This Layout is the Astro equivalent of the Next.js Layout component.
+ * It renders the HTML shell, Sitecore head links (styles/themes),
+ * and the placeholder-based page structure.
+ */
+import type { Page, Field, HTMLLink } from '@sitecore-content-sdk/atro';
+import Placeholder from '@sitecore-content-sdk/atro/components/Placeholder.astro';
+import { client } from '../lib/sitecore-client';
+import componentMap from '../lib/component-map';
+
+interface Props {
+  page: Page;
+}
+
+const { page } = Astro.props;
+const { layout, mode } = page;
+const route = layout.sitecore.route;
+
+interface RouteFields {
+  [key: string]: unknown;
+  Title?: Field;
+}
+
+const fields = route?.fields as RouteFields | undefined;
+const title = fields?.Title?.value?.toString() || 'Page';
+const mainClass = mode.isEditing ? 'editing-mode' : 'prod-mode';
+
+// Resolve Sitecore style/theme links for the <head>
+const headLinks: HTMLLink[] = client.getHeadLinks(layout, {
+  enableStyles: true,
+  enableThemes: true,
+});
+---
+
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    {headLinks.map(({ rel, href }) => (
+      <link rel={rel} href={href} />
+    ))}
+  </head>
+  <body>
+    <div class={mainClass}>
+      {route ? (
+        <>
+          <header>
+            <div id="header">
+              <Placeholder
+                name="headless-header"
+                rendering={route}
+                page={page}
+                componentMap={componentMap}
+              />
+            </div>
+          </header>
+          <main>
+            <div id="content">
+              <Placeholder
+                name="headless-main"
+                rendering={route}
+                page={page}
+                componentMap={componentMap}
+              />
+            </div>
+          </main>
+          <footer>
+            <div id="footer">
+              <Placeholder
+                name="headless-footer"
+                rendering={route}
+                page={page}
+                componentMap={componentMap}
+              />
+            </div>
+          </footer>
+        </>
+      ) : (
+        <main>
+          <div id="content">
+            <p>No route data available.</p>
+          </div>
+        </main>
+      )}
+    </div>
+  </body>
 </html>
 
 <style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
 </style>

@@ -27,6 +27,7 @@ export {
   ClientError,
   CacheClient,
   CacheOptions,
+  HTMLLink,
   MemoryCacheClient,
   NativeDataFetcher,
   NativeDataFetcherResponse,

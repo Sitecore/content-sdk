@@ -45,18 +45,6 @@ try {
 if (!page) {
   return Astro.rewrite('/404');
 }
-
-const route = page.layout.sitecore.route;
-const title = (route?.fields?.Title as { value?: string })?.value ?? 'Page';
 ---
 
-<Layout>
-  <title>{title}</title>
-  <main>
-    <div>
-      <h1>{title}</h1>
-      <p>Site: {page.siteName} | Locale: {locale}</p>
-      <pre>{JSON.stringify(route?.fields, null, 2)}</pre>
-    </div>
-  </main>
-</Layout>
+<Layout page={page} />

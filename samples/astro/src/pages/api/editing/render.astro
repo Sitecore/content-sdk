@@ -10,6 +10,7 @@ import {
   parseDesignLibraryPreviewData,
 } from '@sitecore-content-sdk/atro';
 import type { EditingQueryParams } from '@sitecore-content-sdk/atro';
+import Layout from '../../../layouts/Layout.astro';
 import { client } from '../../../lib/sitecore-client';
 import scConfig from '../../../sitecore.config';
 
@@ -84,18 +85,6 @@ if (!page) {
     headers: responseHeaders,
   });
 }
-
-const route = page.layout.sitecore.route;
-const title = (route?.fields?.Title as { value?: string })?.value ?? 'Editing Preview';
 ---
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>{title}</title>
-  </head>
-  <body>
-    <!-- TODO: Render using Placeholder component with the page's route data and component map -->
-    <pre>{JSON.stringify(route, null, 2)}</pre>
-  </body>
-</html>
+<Layout page={page} />
