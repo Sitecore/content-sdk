@@ -7,10 +7,11 @@ import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getEventsPlugin } from '../../initialization/plugin';
 
 /**
- * A function that sends a VIEW event to SitecoreCloud API
- * @param {PageViewData} [pageViewData] - The optional attributes in order to be send to SitecoreCloud API
+ * A function that sends a VIEW event to the SitecoreCloud API
+ * @param {PageViewData} [pageViewData] - The optional attributes to be sent to the SitecoreCloud API
  * This object will be flattened and sent in the ext object of the payload
- * @returns The response object that Sitecore EP returns
+ * @returns The response object that Sitecore Edge Proxy returns
+ * @public
  */
 export async function pageView(pageViewData?: PageViewData): Promise<EPResponse | null> {
   const coreContext = getCoreContext();

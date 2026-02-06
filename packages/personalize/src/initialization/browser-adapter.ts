@@ -17,8 +17,8 @@ export interface PersonalizeBrowserAdapter extends PersonalizeAdapter {
 }
 
 /**
- * Enables personalize functionality in the browser environment.
- * @returns An PersonalizeBrowserAdapter instance.
+ * Enables personalization in the browser.
+ * @returns {PersonalizeBrowserAdapter} An PersonalizeBrowserAdapter instance.
  * @public
  */
 export function personalizeBrowserAdapter(): PersonalizeBrowserAdapter {

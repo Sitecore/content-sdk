@@ -10,6 +10,7 @@ import type { BasicTypes } from '../interfaces';
  * const flattenedObject = flattenObject(object);
  * // flattenedObject is { order_amount: 1, order_delivered: false }
  * ```
+ * @internal
  */
 export function flattenObject(data: FlattenObjectDataParameters) {
   const { currentKey, object } = data;

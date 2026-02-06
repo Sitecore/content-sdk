@@ -17,7 +17,7 @@ export class BaseEvent {
   }
 
   /**
-   *  A function that returns the properties for sending events to Sitecore EP
+   *  A function that returns the properties for sending events to the Sitecore Edge Proxy.
    * @returns an object that is required
    */
   protected mapBaseEventPayload(): BasePayload {

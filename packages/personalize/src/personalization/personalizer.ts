@@ -17,12 +17,12 @@ export class Personalizer {
   constructor(private clientId: string, private guestId?: string) {}
 
   /**
-   * A function to make a request to the Sitecore EP /callFlows API endpoint
+   * A function to make a request to the Sitecore Edge Proxy `/callFlows` API endpoint
    * @param {PersonalizeData} personalizeData - The personalize input from the developer
    * @param {CoreContext['config']} config - The configuration that was set during initialization
    * @param {string} searchParams - The URL search parameters
-   * @param {GetInteractiveExperienceDataOpts} opts - Optional object that contains options for timeout and UA
-   * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A promise that resolves with either the Sitecore EP response object or null
+   * @param {GetInteractiveExperienceDataOpts} opts - Optional object that contains options for timeout and User Agent
+   * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A promise that resolves with either the Sitecore Edge Proxy response object or null
    */
   async getInteractiveExperienceData(
     personalizeData: PersonalizeData,
@@ -80,9 +80,9 @@ export class Personalizer {
     return sanitizedData;
   }
   /**
-   * A function that maps the personalize input data with the EP
+   * A function that maps the personalize input data with the Edge Proxy
    * @param {PersonalizeData} input - The personalize input data to map
-   * @returns {EPCallFlowsBody} The EP object
+   * @returns {EPCallFlowsBody} The Edge Proxy object
    */
   private mapPersonalizeInputToEPData(input: PersonalizeData): EPCallFlowsBody {
     const mappedData: EPCallFlowsBody = {

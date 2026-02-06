@@ -2,7 +2,7 @@ import { API_VERSION } from '@sitecore-content-sdk/analytics-core/internal';
 import { ERROR_MESSAGES, PACKAGE_VERSION } from '../consts';
 
 /**
- * Gets the guest ref from EP.
+ * Gets the guest ref from Edge Proxy.
  * @param {string} clientId - The client ID of the client.
  * @param {string} contextId - The Sitecore Edge context ID.
  * @param {string} edgeUrl - The Sitecore Edge base URL.

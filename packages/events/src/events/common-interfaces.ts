@@ -1,7 +1,7 @@
 import type { NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
 
 /**
- * Event data that is sent to Sitecore EP
+ * Event data that is sent to Sitecore Edge Proxy.
  */
 export interface EventAttributesInput {
   language?: string;
@@ -11,6 +11,6 @@ export interface EventAttributesInput {
 }
 
 /**
- * Type of the extension data that the developer can pass to events
+ * Type of the extension data that the developer can pass to events.
  */
 export type ExtensionData = NestedObject;

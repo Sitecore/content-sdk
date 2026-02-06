@@ -14,9 +14,9 @@ interface AnalyticsServerAdapter extends AnalyticsAdapter {
 }
 
 /**
- * Enables analytics functionality in the server environment.
- * @template Request - The HTTP request type extending IncomingMessage.
- * @template Response - The HTTP response type extending OutgoingMessage.
+ * Enables analytics in the server.
+ * @template Request - The HTTP request type extending `IncomingMessage`.
+ * @template Response - The HTTP response type extending `OutgoingMessage`.
  * @param {Request} request - The HTTP request object.
  * @param {Response} response - The HTTP response object.
  * @returns {AnalyticsServerAdapter} The analytics server adapter.
@@ -110,7 +110,7 @@ export function analyticsServerAdapter<
 
 /**
  * Retrieves the client ID from the request cookies.
- * @template Request - The HTTP request type extending IncomingMessage.
+ * @template Request - The HTTP request type extending `IncomingMessage`.
  * @param {Request} request
  * @returns {string | null} The client ID or null if not found.
  * @internal

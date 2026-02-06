@@ -91,7 +91,7 @@ async function init() {
 }
 
 /**
- * Retrieves the analytics plugin instance from the core configuration.
+ * Retrieves the analytics plugin instance from the core context.
  * @returns {AnalyticsPlugin} The analytics plugin instance.
  * @internal
  */

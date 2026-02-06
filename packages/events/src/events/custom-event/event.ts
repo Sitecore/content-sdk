@@ -7,9 +7,10 @@ import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getEventsPlugin } from '../../initialization/plugin';
 
 /**
- * A function that sends an event to SitecoreCloud API with the specified type
- * @param {EventData} eventData - The required/optional attributes in order to be send to SitecoreCloud API
- * @returns The response object that Sitecore EP returns
+ * A function that sends an event to the SitecoreCloud API with the specified type
+ * @param {EventData} eventData - The required/optional attributes to be sent to the SitecoreCloud API
+ * @returns The response object that Sitecore Edge Proxy returns
+ * @public
  */
 export async function event(eventData: EventData): Promise<EPResponse | null> {
   const coreContext = getCoreContext();

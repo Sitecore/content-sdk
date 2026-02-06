@@ -7,6 +7,7 @@ import { ERROR_MESSAGES } from '../consts';
  * @param {RequestInit} fetchOptions Options forwarded to the Fetch API.
  * @returns {Promise<Response | null>} Fetch response or null when the request is aborted or times out.
  * @throws {Error} When the timeout value is not a non-negative integer or when the request aborts.
+ * @internal
  */
 export async function fetchWithTimeout(
   url: string,

@@ -7,9 +7,9 @@ import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getEventsPlugin } from '../../initialization/plugin';
 
 /**
- * A function that sends an IDENTITY event to SitecoreCloud API
- * @param {IdentityData} identityData - The required/optional attributes in order to be send to SitecoreCloud API
- * @returns The response object that Sitecore EP returns
+ * A function that sends an IDENTITY event to the SitecoreCloud API
+ * @param {IdentityData} identityData - The required/optional attributes to be sent to the SitecoreCloud API
+ * @returns The response object that Sitecore Edge Proxy returns
  */
 export async function identity(identityData: IdentityData): Promise<EPResponse | null> {
   const coreContext = getCoreContext();

@@ -3,7 +3,7 @@
  * @public
  */
 export interface InitContentSdkParams {
-  /** Initialization settings */
+  /** Initialization config */
   config: {
     contextId: string;
     edgeUrl?: string;
@@ -48,7 +48,7 @@ export type PluginDependency = string;
  */
 export interface Plugin<Options = unknown, Adapter = unknown> {
   /**
-   * Unique identifier for the plugin (e.g., '@sitecore-content-sdk/events')
+   * Unique identifier for the plugin (e.g., 'EventsPlugin')
    */
   name: string;
   /**

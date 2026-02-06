@@ -5,7 +5,7 @@ import { getCoreContext } from '@sitecore-content-sdk/core';
 /**
  * Returns the guest ID.
  * @returns {Promise<string>} A promise that resolves with the guest ID.
- * @throws Will throw an error if the Sitecore Edge context ID is incorrect.
+ * @throws If the Sitecore Edge context ID is incorrect.
  * @internal
  */
 export async function getGuestId(): Promise<string> {

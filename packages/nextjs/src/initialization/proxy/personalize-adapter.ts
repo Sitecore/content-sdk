@@ -17,9 +17,10 @@ export interface PersonalizeProxyAdapter extends Required<PersonalizeAdapter> {
 }
 
 /**
- * Enables personalize functionality in the proxy environment.
+ * Enables personalization in the proxy environment.
  * @param {NextRequest} request - The HTTP request object.
  * @param {NextResponse} response - The HTTP response object.
+ * @returns {PersonalizeProxyAdapter} The personalize proxy adapter.
  * @public
  */
 export function personalizeProxyAdapter(
@@ -88,7 +89,7 @@ export function personalizeProxyAdapter(
 }
 
 /**
- * Retrieves the guest ID from the request cookies.
+ * Retrieves the guest ID from request cookies.
  * @param {NextRequest} request
  * @returns {string | null} The guest ID or null if not found.
  * @internal

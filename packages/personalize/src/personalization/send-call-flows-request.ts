@@ -11,11 +11,11 @@ import { CoreContext } from '@sitecore-content-sdk/core';
 import { debug, PERSONALIZE_NAMESPACE } from '../debug';
 
 /**
- * A function that sends a CallFlow request to Sitecore EP
- * @param {EPCallFlowsBody} epCallFlowsBody - Properties to be send to Sitecore EP
+ * A function that sends a CallFlow request to Sitecore Edge Proxy
+ * @param {EPCallFlowsBody} epCallFlowsBody - Properties to be sent to Sitecore Edge Proxy
  * @param {CoreContext['config']} config - Configuration for the url params
  * @param {GetInteractiveExperienceDataOpts} opts - Optional configuration object
- * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A promise that resolves with either the Sitecore EP response object or unknown
+ * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A promise that resolves with either the Sitecore Edge Proxy response object or unknown
  * @internal
  */
 export async function sendCallFlowsRequest(
@@ -109,7 +109,7 @@ export interface PersonalizeClient {
 }
 
 /**
- * An interface that describes the failed response model from Sitecore EP
+ * An interface that describes the failed response model from Sitecore Edge Proxy
  */
 export interface FailedCalledFlowsResponse {
   status: string;
@@ -128,7 +128,7 @@ export interface EPIdentifier {
 }
 
 /**
- * An interface that describes the payload sent to Sitecore EP library
+ * An interface that describes the payload sent to Sitecore Edge Proxy library
  */
 export interface EPCallFlowsBody {
   clientId?: string;

@@ -1,6 +1,7 @@
 /**
  * Appends a script element to the document head with the specified attributes.
  * @param {ScriptAttributes} attributes - The attributes to set on the script element.
+ * @internal
  */
 export function appendScriptWithAttributes(attributes: ScriptAttributes) {
   const sdkScriptElement = document.createElement('script');

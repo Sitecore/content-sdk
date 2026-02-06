@@ -3,6 +3,7 @@
  * @param {Data} data The source object.
  * @param {Keys[]} keys Keys to omit from the source object.
  * @returns {Omit<Data, Keys>} Object without the specified keys.
+ * @internal
  */
 export function omit<Data extends object, Keys extends keyof Data>(
   data: Data,

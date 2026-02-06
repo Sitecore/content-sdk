@@ -12,6 +12,9 @@ import { MAX_EXT_ATTRIBUTES } from '../consts';
 import type { SendEvent } from '../send-event/sendEvent';
 import { CoreContext } from '@sitecore-content-sdk/core';
 
+/**
+ * A class that extends from {@link BaseEvent} and has all the required functionality to send an IDENTITY event
+ */
 export class IdentityEvent extends BaseEvent {
   private identityData: IdentityData;
   private sendEvent: SendEvent;
@@ -20,7 +23,7 @@ export class IdentityEvent extends BaseEvent {
   private config: CoreContext['config'];
 
   /**
-   * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
+   * A class that extends from {@link BaseEvent} and has all the required functionality to send an IDENTITY event
    * @param {IdentityEventArguments} args - Unified object containing the required properties
    */
   constructor(args: IdentityEventArguments) {
@@ -43,8 +46,8 @@ export class IdentityEvent extends BaseEvent {
   }
 
   /**
-   * Sends the event to Sitecore EP
-   * @returns - A promise that resolves with either the Sitecore EP response object or null
+   * Sends the event to Sitecore Edge Proxy
+   * @returns - A promise that resolves with either the Sitecore Edge Proxy response object or null
    */
   async send(): Promise<EPResponse | null> {
     const baseAttr = this.mapBaseEventPayload();
@@ -55,7 +58,7 @@ export class IdentityEvent extends BaseEvent {
   }
 
   /**
-   * Function that validates the identifiers object, email and date attributes for CDN users
+   * Function that validates the identifiers object, email, and date attributes for CDN users
    * @param {IdentityData} identityData - The data to be validated
    */
   private validateAttributes(identityData: IdentityData) {
@@ -121,7 +124,7 @@ interface EPIdentifier {
 }
 
 /**
- * Interface with the necessary attributes for the input for sending Identity events
+ * Interface with the necessary attributes for the input for sending identity events
  */
 export interface IdentityData extends EventAttributesInput {
   city?: string;
@@ -174,7 +177,7 @@ export interface IdentityEventPayload {
 }
 
 /**
- * Interface of the unified arguments object for identity event
+ * Interface of the unified arguments object for the identity event
  */
 export interface IdentityEventArguments {
   sendEvent: SendEvent;

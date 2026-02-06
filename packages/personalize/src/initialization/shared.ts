@@ -3,9 +3,9 @@ import { PERSONALIZE_PLUGIN_NAME } from './const';
 import { PersonalizePlugin } from './types';
 
 /**
- * Retrieves the personalize plugin instance from the core configuration.
+ * Retrieves the personalize plugin instance from the core context.
  * @returns {PersonalizePlugin} The personalize plugin instance.
- * @public
+ * @internal
  */
 export function getPersonalizePlugin(): PersonalizePlugin {
   const plugin = getCoreContext().plugins.get(PERSONALIZE_PLUGIN_NAME) as

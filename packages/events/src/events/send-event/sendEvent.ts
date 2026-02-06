@@ -11,9 +11,10 @@ import { CoreContext } from '@sitecore-content-sdk/core';
 import { EVENTS_NAMESPACE, debug } from '../../debug';
 
 /**
- * This factory function sends an event to Edge Proxy
+ * This function sends an event to Sitecore Edge Proxy
  * @param {EPFetchBody & BasePayload} body - The event data to send
  * @param {CoreContext['config']} config - The global configuration
+ * @internal
  */
 export async function sendEvent(
   body: EPFetchBody & BasePayload,

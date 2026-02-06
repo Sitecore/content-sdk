@@ -1,7 +1,8 @@
 /**
  * Validates whether a URL string uses the HTTP or HTTPS protocol.
- * @param {string} url URL candidate to test.
+ * @param {string} url The URL to validate.
  * @returns {boolean} True when the URL is valid and uses HTTP or HTTPS.
+ * @internal
  */
 export function isValidHttpURL(url: string): boolean {
   try {

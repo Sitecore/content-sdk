@@ -6,10 +6,10 @@ import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getPersonalizePlugin } from '../initialization/shared';
 
 /**
- * A function that executes an interactive experiment or web experiment over any web-based or mobile application.
- * @param {PersonalizeData} personalizeData - The required/optional attributes in order to create a flow execution
- * @param {PersonalizeOpts} opts - An object containing additional options
- * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A flow execution response
+ * A function that executes an interactive/web experiment over any web-based/mobile application.
+ * @param {PersonalizeData} personalizeData - The required/optional attributes for a flow execution.
+ * @param {PersonalizeOpts} opts - An object containing additional options.
+ * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A flow execution response.
  * @public
  */
 export async function personalize(
@@ -39,7 +39,7 @@ export async function personalize(
 }
 
 /**
- * Options for the personalize function
+ * Options for the personalize function.
  */
 interface PersonalizeOpts {
   /**

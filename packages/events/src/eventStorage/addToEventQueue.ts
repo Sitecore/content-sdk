@@ -6,8 +6,9 @@ import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getEventsPlugin } from '../initialization/plugin';
 
 /**
- * A function that adds event to the queue
- * @param {EventData} eventData - The required/optional attributes in order to be send to SitecoreCloud API
+ * A function that adds an event to the queue
+ * @param {EventData} eventData - The required/optional attributes in order to be sent to SitecoreCloud API
+ * @public
  */
 export async function addToEventQueue(eventData: EventData): Promise<void> {
   const coreContext = getCoreContext();

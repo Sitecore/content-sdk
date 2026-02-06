@@ -14,7 +14,8 @@ interface AnalyticsBrowserAdapter extends AnalyticsAdapter {
 }
 
 /**
- * Enables analytics functionality in the browser environment.
+ * Enables analytics in the browser.
+ * @returns {AnalyticsBrowserAdapter} The analytics browser adapter.
  * @public
  */
 export function analyticsBrowserAdapter(): AnalyticsBrowserAdapter {

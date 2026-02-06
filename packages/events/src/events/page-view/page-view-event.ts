@@ -8,6 +8,9 @@ import type { SendEvent } from '../send-event/sendEvent';
 import { flattenObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { CoreContext } from '@sitecore-content-sdk/core';
 
+/**
+ * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
+ */
 export class PageViewEvent extends BaseEvent {
   static isFirstPageView = true;
   config: CoreContext['config'];
@@ -49,8 +52,8 @@ export class PageViewEvent extends BaseEvent {
   }
 
   /**
-   * Sends the event to Sitecore EP
-   * @returns - A promise that resolves with either the Sitecore EP response object or null
+   * Sends the event to Sitecore Edge Proxy
+   * @returns - A promise that resolves with either the Sitecore Edge Proxy response object or null
    */
   async send(): Promise<EPResponse | null> {
     const baseAttr = this.mapBaseEventPayload();
@@ -80,7 +83,7 @@ export class PageViewEvent extends BaseEvent {
   }
 
   /**
-   * Returns the referrer if exists on page view event else null if we are on server and no referrer is on event, else
+   * Returns the referrer if exists on page view event else null if on server and no referrer is on event, else
    * returns the href if on client side and the document referrer is different from the window location hostname
    * @returns - the referrer
    */
@@ -171,7 +174,7 @@ export interface PageViewEventArguments {
 }
 
 /**
- * Type with the required/optional attributes in order to send a view event to SitecoreCloud API
+ * Type with the required/optional attributes in order to send a view event to the SitecoreCloud API
  */
 export interface PageViewData extends EventAttributesInput {
   pageVariantId?: string;
@@ -189,7 +192,7 @@ interface UtmParameters {
 }
 
 /**
- * An interface describing the page view event specific payload to be sent * to the API
+ * An interface describing the page view event specific payload to be sent to the API
  */
 export interface PageViewEventPayload extends UtmParameters {
   type: 'VIEW';

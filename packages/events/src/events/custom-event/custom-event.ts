@@ -12,6 +12,9 @@ import { MAX_EXT_ATTRIBUTES } from '../consts';
 import type { SendEvent } from '../send-event/sendEvent';
 import { CoreContext } from '@sitecore-content-sdk/core';
 
+/**
+ * A class that extends from {@link BaseEvent} and has all the required functionality to send a custom event
+ */
 export class CustomEvent extends BaseEvent {
   customEventPayload: CustomEventPayload;
   private sendEvent: SendEvent;
@@ -19,7 +22,7 @@ export class CustomEvent extends BaseEvent {
   private config: CoreContext['config'];
 
   /**
-   * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
+   * A class that extends from {@link BaseEvent} and has all the required functionality to send a custom event
    * @param {CustomEventArguments} args - Unified object containing the required properties
    */
   constructor(args: CustomEventArguments) {
@@ -55,8 +58,8 @@ export class CustomEvent extends BaseEvent {
   }
 
   /**
-   * Sends the event to Sitecore EP
-   * @returns - A promise that resolves with either the Sitecore EP response object or null
+   * Sends the event to Sitecore Edge Proxy
+   * @returns - A promise that resolves with either the Sitecore Edge Proxy response object or null
    */
   async send(): Promise<EPResponse | null> {
     const baseAttr = this.mapBaseEventPayload();
@@ -77,7 +80,7 @@ export interface CustomEventArguments {
 }
 
 /**
- * Interface with the required/optional attributes in order to send a custom event to SitecoreCloud API
+ * Interface with the required/optional attributes to send a custom event to the SitecoreCloud API
  */
 export interface CustomEventPayload extends NestedObject {
   sc_search?: {
@@ -90,7 +93,7 @@ export interface CustomEventPayload extends NestedObject {
 }
 
 /**
- * Interface with the required/optional attributes in order to send a custom event to SitecoreCloud API
+ * Interface with the required/optional attributes to send a custom event to the SitecoreCloud API
  */
 export interface EventData extends EventAttributesInput, NestedObject {
   type: string;

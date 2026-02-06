@@ -12,7 +12,7 @@ import { ANALYTICS_PLUGIN_NAME } from '@sitecore-content-sdk/analytics-core/inte
 import { EventsPlugin } from './types';
 
 /**
- * Initializes the analytics plugin with the provided settings.
+ * Initializes the events plugin with the provided options.
  * @internal
  */
 async function init() {
@@ -33,7 +33,7 @@ async function init() {
 }
 
 /**
- * Creates an events plugin with the provided settings.
+ * Creates an events plugin with the provided options.
  * @returns {EventsPlugin} The events plugin instance.
  * @public
  */
@@ -46,7 +46,7 @@ export function eventsPlugin(): EventsPlugin {
 }
 
 /**
- * Retrieves the events plugin instance from the core configuration.
+ * Retrieves the events plugin instance from the core context.
  * @returns {EventsPlugin} The events plugin instance.
  * @internal
  */

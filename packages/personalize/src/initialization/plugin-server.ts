@@ -28,13 +28,16 @@ async function init() {
     await personalizePlugin.adapter.setGuestId();
 }
 
+/**
+ * Parameters for creating a personalize server plugin.
+ */
 interface PersonalizeServerPluginParams {
   adapter: PersonalizeAdapter;
   options?: PersonalizeServerPluginOptions;
 }
 
 /**
- * Creates an personalize server plugin with the provided options.
+ * Creates a personalize server plugin with the provided options.
  * @param {PersonalizeServerPluginParams} params - The parameters for the personalize plugin.
  * @returns {PersonalizeServerPlugin} The personalize plugin instance.
  * @public

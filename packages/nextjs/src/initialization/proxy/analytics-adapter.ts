@@ -15,9 +15,10 @@ interface AnalyticsProxyAdapter extends AnalyticsAdapter {
 }
 
 /**
- * Enables analytics functionality in the proxy environment.
+ * Enables analytics in the proxy environment.
  * @param {NextRequest} request - The Next.js request object.
  * @param {NextResponse} response - The Next.js response object.
+ * @returns {AnalyticsProxyAdapter} The analytics proxy adapter.
  * @public
  */
 export function analyticsProxyAdapter(

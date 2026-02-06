@@ -19,12 +19,12 @@ export interface PersonalizeServerAdapter extends PersonalizeAdapter {
 }
 
 /**
- * Enables personalize functionality in the server environment.
- * @template Request - The HTTP request type extending IncomingMessage.
- * @template Response - The HTTP response type extending OutgoingMessage.
+ * Enables personalization in the server.
+ * @template Request - The HTTP request type extending `IncomingMessage`.
+ * @template Response - The HTTP response type extending `OutgoingMessage`.
  * @param {Request} request - The HTTP request object.
  * @param {Response} response - The HTTP response object.
- * @returns An PersonalizeServerAdapter instance.
+ * @returns {PersonalizeServerAdapter} An PersonalizeServerAdapter instance.
  * @public
  */
 export function personalizeServerAdapter<
@@ -124,7 +124,7 @@ export function personalizeServerAdapter<
 
 /**
  * Retrieves the guest ID from the request cookies.
- * @template Request - The HTTP request type extending IncomingMessage.
+ * @template Request - The HTTP request type extending `IncomingMessage`.
  * @param {Request} request
  * @returns {string | null} The guest ID or null if not found.
  * @internal

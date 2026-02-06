@@ -9,6 +9,7 @@ import { constructGetClientIdUrl } from './construct-get-client-id-url';
  * @param {string} contextId - The Sitecore context ID parameter for the Edge proxy API.
  * @param {number} [timeout] - The timeout in milliseconds for the call to the proxy.
  * @returns {Promise<ProxySettings>} The client ID and guest ID from the proxy.
+ * @internal
  */
 export async function fetchClientIdFromEdgeProxy(
   edgeUrl: string,

@@ -11,8 +11,8 @@ class EventQueue {
 
   /**
    * Adds the required event data to the queue and stores it in the storage.
-   * @param {QueueEventPayload} queueEventPayload - The required event data for the creation of a CustomEvent.
-   * Performs validation by creating a new CustomEvent.
+   * @param {QueueEventPayload} queueEventPayload - The required event data for the creation of a `CustomEvent`.
+   * Validates by creating a new `CustomEvent`.
    */
   enqueueEvent(queueEventPayload: QueueEventPayload) {
     const sessionStorage = this.getSessionStorage();
@@ -31,7 +31,7 @@ class EventQueue {
     sessionStorage.setItem(this.key, JSON.stringify(eventQueue));
   }
   /**
-   * Iterates the queue, and sends sequently the custom events to Sitecore EP.
+   * Iterates the queue and sends sequentially the custom events to Sitecore Edge Proxy.
    */
   async sendAllEvents() {
     const eventQueue = this.getEventQueue();
@@ -55,7 +55,7 @@ class EventQueue {
     sessionStorage.removeItem(this.key);
   }
 
-  /** Returns the stored array of data with type QueueEventPayload, or empty array if the given key does not exist. */
+  /** Returns the stored array of data with type `QueueEventPayload`, or empty array if the given key does not exist. */
   private getEventQueue(): QueueEventPayload[] {
     const sessionStorage = this.getSessionStorage();
 
@@ -76,7 +76,7 @@ class EventQueue {
 }
 
 /**
- * This Storage interface represents the required storage functionality.
+ * This interface represents the required storage functionality.
  */
 export interface Storage {
   getItem(key: string): string | null;

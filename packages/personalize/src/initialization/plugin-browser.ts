@@ -24,7 +24,7 @@ import { getGuestId } from './get-guest-id';
 import { personalize } from '../personalization/personalize';
 
 /**
- * Initializes the personalize plugin with the provided settings.
+ * Initializes the personalize plugin with the provided options.
  * @internal
  */
 async function init() {
