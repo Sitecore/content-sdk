@@ -12,6 +12,13 @@ export {
 export type { ComponentProps } from './placeholder-utils';
 export { resolveFieldEditingState } from './field-utils';
 export type { FieldEditingState } from './field-utils';
+export {
+  isEditingMode,
+  isDesignLibraryRequest,
+  parseEditingPreviewData,
+  parseDesignLibraryPreviewData,
+} from './editing-utils';
+export type { EditingQueryParams } from './editing-utils';
 
 // Core exports from @sitecore-content-sdk/core
 export {

@@ -6,6 +6,8 @@ export { getPlaceholderRenderings, getComponentProps, getSXAParams, } from './pl
 export type { ComponentProps } from './placeholder-utils';
 export { resolveFieldEditingState } from './field-utils';
 export type { FieldEditingState } from './field-utils';
+export { isEditingMode, isDesignLibraryRequest, parseEditingPreviewData, parseDesignLibraryPreviewData, } from './editing-utils';
+export type { EditingQueryParams } from './editing-utils';
 export { constants, enableDebug, ClientError, CacheClient, CacheOptions, MemoryCacheClient, NativeDataFetcher, NativeDataFetcherResponse, NativeDataFetcherConfig, StaticPath, } from '@sitecore-content-sdk/core';
 export { GraphQLClientError, RetryStrategy, DefaultRetryStrategy, GraphQLRequestClientFactoryConfig, GraphQLRequestClient, SitecoreClient, Page, PageOptions, SitemapXmlOptions, PageMode, ErrorPage, SitecoreClientInit, createGraphQLClientFactory, GraphQLClientOptions, } from '@sitecore-content-sdk/core/client';
 export { SitecoreConfig, SitecoreConfigInput, defineConfig, } from '@sitecore-content-sdk/core/config';
