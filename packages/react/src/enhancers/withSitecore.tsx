@@ -1,5 +1,5 @@
 ﻿'use client';
-import React from 'react';
+import React, { useContext } from 'react';
 import { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
 import {
   SitecoreProviderReactContext,
@@ -57,17 +57,14 @@ export function withSitecore(options?: WithSitecoreOptions) {
     Component: React.ComponentType<ComponentProps>
   ) {
     return function WithSitecoreProvider(props: WithSitecoreHocProps<ComponentProps>) {
+      const scContext = useContext(SitecoreProviderReactContext);
       return (
-        <SitecoreProviderReactContext.Consumer>
-          {(value) => (
-            <Component
-              {...(props as ComponentProps)}
-              page={value.page}
-              api={value.api}
-              updatePage={options && options.updatable && value.setPage}
-            />
-          )}
-        </SitecoreProviderReactContext.Consumer>
+        <Component
+          {...(props as ComponentProps)}
+          page={scContext.page}
+          api={scContext.api}
+          updatePage={options && options.updatable && scContext.setPage}
+        />
       );
     };
   };
