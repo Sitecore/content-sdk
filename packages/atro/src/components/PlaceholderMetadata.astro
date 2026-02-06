@@ -1,0 +1,75 @@
+---
+import type { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import {
+  isDynamicPlaceholder,
+  getDynamicPlaceholderPattern,
+} from '@sitecore-content-sdk/core/layout';
+import { MetadataKind, DEFAULT_PLACEHOLDER_UID } from '@sitecore-content-sdk/core/editing';
+
+interface Props {
+  /** The rendering data for this component. */
+  rendering: ComponentRendering;
+  /** The name of the placeholder (if this is a placeholder chrome). */
+  placeholderName?: string;
+}
+
+const { rendering, placeholderName } = Astro.props;
+
+const chromeType = placeholderName ? 'placeholder' : 'rendering';
+
+/**
+ * Compute the ID for the opening code block.
+ */
+function computeOpenId(): string | undefined {
+  if (chromeType === 'placeholder' && placeholderName) {
+    return getPlaceholderId();
+  }
+  return rendering.uid;
+}
+
+/**
+ * Get the placeholder ID for the metadata, handling dynamic placeholders.
+ */
+function getPlaceholderId(): string {
+  const id = rendering.uid;
+
+  for (const placeholder of Object.keys(rendering.placeholders ?? {})) {
+    if (placeholderName === placeholder) {
+      return id
+        ? `${placeholderName}_${id}`
+        : `${placeholderName}_${DEFAULT_PLACEHOLDER_UID}`;
+    }
+
+    // Check if the placeholder is a dynamic placeholder
+    if (isDynamicPlaceholder(placeholder)) {
+      const pattern = getDynamicPlaceholderPattern(placeholder);
+
+      // Check if the placeholder matches the dynamic placeholder pattern
+      if (pattern.test(placeholderName!)) {
+        return id ? `${placeholder}_${id}` : `${placeholder}_${DEFAULT_PLACEHOLDER_UID}`;
+      }
+    }
+  }
+
+  return id
+    ? `${placeholderName}_${id}`
+    : `${placeholderName}_${DEFAULT_PLACEHOLDER_UID}`;
+}
+
+const openId = computeOpenId();
+---
+
+<code
+  type="text/sitecore"
+  chrometype={chromeType}
+  class="scpm"
+  kind={MetadataKind.Open}
+  id={openId}
+></code>
+<slot />
+<code
+  type="text/sitecore"
+  chrometype={chromeType}
+  class="scpm"
+  kind={MetadataKind.Close}
+></code>

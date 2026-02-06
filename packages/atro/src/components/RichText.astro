@@ -1,0 +1,39 @@
+---
+import type { FieldMetadata } from '@sitecore-content-sdk/core/layout';
+import FieldMetadataComponent from './FieldMetadata.astro';
+import DefaultEmptyFieldEditingComponentText from './DefaultEmptyFieldEditingComponentText.astro';
+import { resolveFieldEditingState } from '../field-utils';
+
+interface Props {
+  /** The rich text field data. */
+  field?: FieldMetadata & { value?: string };
+  /**
+   * The HTML element that will wrap the contents of the field.
+   * @default 'div'
+   */
+  tag?: string;
+  /**
+   * Can be used to explicitly disable inline editing.
+   * @default true
+   */
+  editable?: boolean;
+  [htmlAttributes: string]: unknown;
+}
+
+const { field, tag = 'div', editable = true, ...otherProps } = Astro.props;
+
+const { hasMetadata, isEmpty, showEmptyEditing } = resolveFieldEditingState(field, editable);
+
+const value = field?.value ?? '';
+const Tag = tag || 'div';
+---
+
+{(showEmptyEditing || !isEmpty) && (
+  <FieldMetadataComponent metadata={hasMetadata ? field!.metadata : undefined}>
+    {showEmptyEditing ? (
+      <DefaultEmptyFieldEditingComponentText tag={tag} {...otherProps} />
+    ) : (
+      <Tag {...otherProps} set:html={value} />
+    )}
+  </FieldMetadataComponent>
+)}

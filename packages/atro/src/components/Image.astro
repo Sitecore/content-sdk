@@ -1,0 +1,126 @@
+---
+import type { FieldMetadata } from '@sitecore-content-sdk/core/layout';
+import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
+import { mediaApi } from '@sitecore-content-sdk/core/media';
+import FieldMetadataComponent from './FieldMetadata.astro';
+import DefaultEmptyFieldEditingComponentImage from './DefaultEmptyFieldEditingComponentImage.astro';
+import { resolveFieldEditingState } from '../field-utils';
+
+/**
+ * The image field value shape.
+ */
+interface ImageFieldValue {
+  [attributeName: string]: unknown;
+  src?: string;
+}
+
+/**
+ * The image field shape (value wrapper).
+ */
+interface ImageField {
+  value?: ImageFieldValue;
+}
+
+/**
+ * Image size parameters for srcSet generation.
+ */
+interface ImageSizeParameters {
+  [attr: string]: string | number | undefined;
+  /** Fixed width of the image */
+  w?: number;
+  /** Fixed height of the image */
+  h?: number;
+  /** Max width of the image */
+  mw?: number;
+  /** Max height of the image */
+  mh?: number;
+  /** Ignore aspect ratio */
+  iar?: 1 | 0;
+  /** Allow stretch */
+  as?: 1 | 0;
+  /** Image scale. Defaults to 1.0 */
+  sc?: number;
+}
+
+interface Props {
+  /** Image field data (consistent with other field types). */
+  field?: (ImageField | ImageFieldValue) & FieldMetadata;
+  /**
+   * Can be used to explicitly disable inline editing.
+   * @default true
+   */
+  editable?: boolean;
+  /**
+   * Parameters that will be attached to Sitecore media URLs.
+   */
+  imageParams?: { [paramName: string]: string | number };
+  /**
+   * Array of image size parameters for generating srcSet attribute.
+   */
+  srcSet?: ImageSizeParameters[];
+  /**
+   * Custom regexp that finds media URL prefix that will be replaced by `/-/jssmedia` or `/~/jssmedia`.
+   */
+  mediaUrlPrefix?: RegExp;
+  [attributeName: string]: unknown;
+}
+
+const { field, editable = true, imageParams, srcSet, mediaUrlPrefix, ...otherProps } = Astro.props;
+
+const { hasMetadata, showEmptyEditing } = resolveFieldEditingState(field, editable);
+
+const dynamicMedia = field as ImageField | ImageFieldValue | undefined;
+const fieldIsEmpty = isFieldValueEmpty(dynamicMedia);
+
+// Resolve the image value: handle both raw ImageFieldValue and wrapped ImageField
+const img = !fieldIsEmpty
+  ? (dynamicMedia as ImageFieldValue)?.src
+    ? { ...(field as ImageFieldValue) }
+    : { ...((dynamicMedia as ImageField)?.value as ImageFieldValue) }
+  : null;
+
+// Remove metadata from the img attributes to avoid leaking it to the HTML
+if (img && 'metadata' in img) {
+  delete img.metadata;
+}
+
+/**
+ * Build the final image attributes with resolved media URLs and srcSet.
+ */
+function getImageAttrs(): Record<string, unknown> | null {
+  if (!img) return null;
+
+  const { src, srcSet: _srcSet, ...imgAttrs } = img as ImageFieldValue & { srcSet?: ImageSizeParameters[] };
+
+  if (!src) return null;
+
+  const newAttrs: Record<string, unknown> = {
+    ...imgAttrs,
+    ...otherProps,
+  };
+
+  // Update image URL for content SDK handler and image rendering params
+  const resolvedSrc = mediaApi.updateImageUrl(src, imageParams, mediaUrlPrefix);
+
+  if (srcSet) {
+    newAttrs.srcset = mediaApi.getSrcSet(resolvedSrc, srcSet, imageParams, mediaUrlPrefix);
+  }
+
+  // Always output original src as fallback for older browsers
+  newAttrs.src = resolvedSrc;
+
+  return newAttrs;
+}
+
+const attrs = !fieldIsEmpty ? getImageAttrs() : null;
+---
+
+{(showEmptyEditing || !!attrs) && (
+  <FieldMetadataComponent metadata={hasMetadata ? field!.metadata : undefined}>
+    {showEmptyEditing ? (
+      <DefaultEmptyFieldEditingComponentImage {...otherProps} />
+    ) : (
+      <img {...attrs} />
+    )}
+  </FieldMetadataComponent>
+)}

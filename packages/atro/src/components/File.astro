@@ -1,0 +1,48 @@
+---
+import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
+
+/**
+ * The file field value shape.
+ */
+interface FileFieldValue {
+  [propName: string]: unknown;
+  src?: string;
+  title?: string;
+  displayName?: string;
+}
+
+/**
+ * The file field shape (value wrapper).
+ */
+interface FileField {
+  value: FileFieldValue;
+}
+
+interface Props {
+  /** The file field data. */
+  field: FileFieldValue | FileField;
+  [attributeName: string]: unknown;
+}
+
+const { field, ...otherProps } = Astro.props;
+
+const dynamicField = field as FileField | FileFieldValue;
+const fieldIsEmpty = isFieldValueEmpty(dynamicField);
+
+// Handle link directly on field for forgetful devs
+const file: FileFieldValue | undefined = !fieldIsEmpty
+  ? (dynamicField as FileFieldValue).src
+    ? (field as FileFieldValue)
+    : (dynamicField as FileField).value
+  : undefined;
+
+const hasChildren = Astro.slots.has('default');
+const linkText = !hasChildren && file ? (file.title || file.displayName) : null;
+---
+
+{file && (
+  <a href={file.src} {...otherProps}>
+    {linkText}
+    <slot />
+  </a>
+)}

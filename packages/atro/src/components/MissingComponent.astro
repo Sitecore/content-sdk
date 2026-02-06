@@ -1,0 +1,22 @@
+---
+import type { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+
+interface Props {
+  rendering: ComponentRendering;
+  [key: string]: unknown;
+}
+
+const { rendering } = Astro.props;
+const componentName = rendering?.componentName || 'Unknown';
+---
+
+<div
+  style="background: darkorange; color: white; padding: 1.5em; font-family: sans-serif;"
+>
+  <p style="margin: 0;">
+    <em>
+      {componentName} is missing a component implementation.
+      Ensure it is registered in the component map.
+    </em>
+  </p>
+</div>

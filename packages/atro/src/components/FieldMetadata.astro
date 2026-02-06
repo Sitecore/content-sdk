@@ -1,0 +1,16 @@
+---
+import { MetadataKind } from '@sitecore-content-sdk/core/editing';
+
+interface Props {
+  /** The field metadata object to serialize as JSON. If omitted, children render unwrapped. */
+  metadata?: { [key: string]: unknown };
+}
+
+const { metadata } = Astro.props;
+
+const data = metadata ? JSON.stringify(metadata) : null;
+---
+
+{data && <code type="text/sitecore" chrometype="field" class="scpm" kind={MetadataKind.Open}>{data}</code>}
+<slot />
+{data && <code type="text/sitecore" chrometype="field" class="scpm" kind={MetadataKind.Close}></code>}

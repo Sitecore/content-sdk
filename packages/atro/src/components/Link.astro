@@ -1,0 +1,86 @@
+---
+import type { FieldMetadata } from '@sitecore-content-sdk/core/layout';
+import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
+import FieldMetadataComponent from './FieldMetadata.astro';
+import DefaultEmptyFieldEditingComponentText from './DefaultEmptyFieldEditingComponentText.astro';
+import { resolveFieldEditingState } from '../field-utils';
+
+/**
+ * The link field value shape.
+ */
+interface LinkFieldValue {
+  [attributeName: string]: unknown;
+  href?: string;
+  class?: string;
+  title?: string;
+  target?: string;
+  text?: string;
+  anchor?: string;
+  querystring?: string;
+  linktype?: string;
+}
+
+/**
+ * The link field shape (value wrapper).
+ */
+interface LinkField {
+  value: LinkFieldValue;
+}
+
+interface Props {
+  /** The link field data. */
+  field: (LinkField | LinkFieldValue) & FieldMetadata;
+  /**
+   * Can be used to explicitly disable inline editing.
+   * @default true
+   */
+  editable?: boolean;
+  /**
+   * Displays a link text ('description' in Sitecore) even when children exist.
+   */
+  showLinkTextWithChildrenPresent?: boolean;
+  [htmlAttributes: string]: unknown;
+}
+
+const { field, editable = true, showLinkTextWithChildrenPresent, ...otherProps } = Astro.props;
+
+const { hasMetadata, isEmpty, showEmptyEditing } = resolveFieldEditingState(field, editable);
+
+const hasChildren = Astro.slots.has('default');
+
+// Handle link directly on field for forgetful devs
+const dynamicField = field as LinkField | LinkFieldValue;
+const link: LinkFieldValue | undefined = (dynamicField as LinkFieldValue)?.href
+  ? (field as LinkFieldValue)
+  : (dynamicField as LinkField)?.value;
+
+const anchorFragment = link && link.linktype !== 'anchor' && link.anchor ? `#${link.anchor}` : '';
+const querystring = link?.querystring ? `?${link.querystring}` : '';
+const href = link ? `${link.href}${querystring}${anchorFragment}` : '';
+
+const anchorAttrs: Record<string, unknown> = {
+  href,
+  class: link?.class || undefined,
+  title: link?.title || undefined,
+  target: link?.target || undefined,
+};
+
+if (anchorAttrs.target === '_blank' && !otherProps.rel) {
+  anchorAttrs.rel = 'noopener noreferrer';
+}
+
+const linkText = (showLinkTextWithChildrenPresent || !hasChildren) ? (link?.text || link?.href) : null;
+---
+
+{(showEmptyEditing || (!isEmpty && link)) && (
+  <FieldMetadataComponent metadata={hasMetadata ? field!.metadata : undefined}>
+    {showEmptyEditing ? (
+      <DefaultEmptyFieldEditingComponentText {...otherProps} />
+    ) : (
+      <a {...anchorAttrs} {...otherProps}>
+        {linkText}
+        <slot />
+      </a>
+    )}
+  </FieldMetadataComponent>
+)}

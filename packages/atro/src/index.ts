@@ -2,6 +2,17 @@
  * Public API Surface of @sitecore-content-sdk/atro
  */
 
+// Astro-specific exports
+export type { AstroComponentMap, PlaceholderProps } from './types';
+export {
+  getPlaceholderRenderings,
+  getComponentProps,
+  getSXAParams,
+} from './placeholder-utils';
+export type { ComponentProps } from './placeholder-utils';
+export { resolveFieldEditingState } from './field-utils';
+export type { FieldEditingState } from './field-utils';
+
 // Core exports from @sitecore-content-sdk/core
 export {
   constants,
@@ -13,6 +24,7 @@ export {
   NativeDataFetcher,
   NativeDataFetcherResponse,
   NativeDataFetcherConfig,
+  StaticPath,
 } from '@sitecore-content-sdk/core';
 
 export {
@@ -48,12 +60,18 @@ export {
   LayoutService,
   RouteData,
   Field,
+  FieldMetadata,
+  GenericFieldValue,
+  isFieldValueEmpty,
   Item,
   getChildPlaceholder,
   getFieldValue,
   ComponentRendering,
   ComponentFields,
   ComponentParams,
+  PlaceholdersData,
+  isDynamicPlaceholder,
+  getDynamicPlaceholderPattern,
   EditMode,
 } from '@sitecore-content-sdk/core/layout';
 
@@ -69,7 +87,12 @@ export {
   DesignLibraryMode,
   LayoutKind,
   isDesignLibraryMode,
+  EDITING_ALLOWED_ORIGINS,
+  QUERY_PARAM_EDITING_SECRET,
+  Metadata,
 } from '@sitecore-content-sdk/core/editing';
+
+export { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
 
 export { SiteInfo, SITE_KEY } from '@sitecore-content-sdk/core/site';
 

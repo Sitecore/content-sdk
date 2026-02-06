@@ -1,0 +1,13 @@
+---
+interface Props {
+  /** The HTML tag to use for the wrapper element. */
+  tag?: string;
+  [key: string]: unknown;
+}
+
+const { tag = 'span', ...otherProps } = Astro.props;
+
+const Tag = tag;
+---
+
+<Tag {...otherProps}>[No text in field]</Tag>

@@ -1,0 +1,73 @@
+---
+import type { FieldMetadata } from '@sitecore-content-sdk/core/layout';
+import FieldMetadataComponent from './FieldMetadata.astro';
+import DefaultEmptyFieldEditingComponentText from './DefaultEmptyFieldEditingComponentText.astro';
+import { resolveFieldEditingState } from '../field-utils';
+
+interface Props {
+  /** The text field data. */
+  field?: FieldMetadata & { value?: string | number };
+  /**
+   * The HTML element that will wrap the contents of the field.
+   */
+  tag?: string;
+  /**
+   * If false, HTML-encoding of the field value is disabled and the value is rendered as-is.
+   * @default true
+   */
+  encode?: boolean;
+  /**
+   * Can be used to explicitly disable inline editing.
+   * @default true
+   */
+  editable?: boolean;
+  [htmlAttributes: string]: unknown;
+}
+
+const { field, tag, encode = true, editable = true, ...otherProps } = Astro.props;
+
+const { hasMetadata, isEmpty, showEmptyEditing } = resolveFieldEditingState(field, editable);
+
+/**
+ * Escape HTML special characters for safe rendering.
+ */
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/**
+ * Format the field value for rendering.
+ * When encode=true, HTML-escapes the value and converts newlines to <br> tags.
+ * When encode=false, returns the raw value as-is.
+ */
+function formatValue(): string {
+  const value = field?.value === undefined ? '' : String(field.value);
+
+  if (encode) {
+    return value.split('\n').map((line) => escapeHtml(line)).join('<br>');
+  }
+
+  return value;
+}
+
+const formattedValue = !isEmpty ? formatValue() : '';
+const useTag = !!tag || !encode;
+const Tag = tag || 'span';
+---
+
+{(showEmptyEditing || !isEmpty) && (
+  <FieldMetadataComponent metadata={hasMetadata ? field!.metadata : undefined}>
+    {showEmptyEditing ? (
+      <DefaultEmptyFieldEditingComponentText tag={tag} {...otherProps} />
+    ) : useTag ? (
+      <Tag {...otherProps} set:html={formattedValue} />
+    ) : (
+      <Fragment set:html={formattedValue} />
+    )}
+  </FieldMetadataComponent>
+)}

@@ -1,0 +1,62 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { Page, StaticPath } from '@sitecore-content-sdk/atro';
+import Layout from '../layouts/Layout.astro';
+import { client } from '../lib/sitecore-client';
+
+export const getStaticPaths = (async () => {
+  const sites = ['site1'];
+  const languages = ['en'];
+
+  let staticPaths: StaticPath[] = [];
+
+  try {
+    staticPaths = await client.getPagePaths(sites, languages);
+  } catch (error) {
+    console.error('Error occurred while fetching static paths:', error);
+  }
+
+  return staticPaths.map((staticPath) => ({
+    params: {
+      // Astro catch-all: undefined = root "/", string = everything else
+      path: staticPath.params.path.length > 0
+        ? staticPath.params.path.join('/')
+        : undefined,
+    },
+    props: {
+      locale: staticPath.locale ?? 'en',
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+// Resolve the path from params and fetch the page
+const { path } = Astro.params;
+const { locale } = Astro.props;
+const pagePath = path ? `/${path}` : '/';
+
+let page: Page | null = null;
+
+try {
+  page = await client.getPage(pagePath, { locale });
+} catch (error) {
+  console.error(`Error fetching page data for ${pagePath}:`, error);
+}
+
+if (!page) {
+  return Astro.rewrite('/404');
+}
+
+const route = page.layout.sitecore.route;
+const title = (route?.fields?.Title as { value?: string })?.value ?? 'Page';
+---
+
+<Layout>
+  <title>{title}</title>
+  <main>
+    <div>
+      <h1>{title}</h1>
+      <p>Site: {page.siteName} | Locale: {locale}</p>
+      <pre>{JSON.stringify(route?.fields, null, 2)}</pre>
+    </div>
+  </main>
+</Layout>

@@ -1,0 +1,99 @@
+---
+import type { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
+import type { Page } from '@sitecore-content-sdk/core/client';
+import type { AstroComponentMap } from '../types';
+import { constants } from '@sitecore-content-sdk/core';
+import { getPlaceholderRenderings, getComponentProps } from '../placeholder-utils';
+import PlaceholderMetadata from './PlaceholderMetadata.astro';
+import MissingComponent from './MissingComponent.astro';
+
+interface Props {
+  /** Name of the placeholder to render. */
+  name: string;
+  /** Rendering data (parent component rendering or route data) containing placeholder data. */
+  rendering: ComponentRendering | RouteData;
+  /** Page data containing mode information for editing detection. */
+  page: Page;
+  /** Component map that maps Sitecore component names to Astro component implementations. */
+  componentMap: AstroComponentMap;
+  /** Optional fields to pass to all rendered components. */
+  fields?: Record<string, unknown>;
+  /** Optional params to pass to all rendered components. */
+  params?: Record<string, string>;
+}
+
+const { name, rendering, page, componentMap, fields, params } = Astro.props;
+
+const isEditing = page.mode.isEditing;
+
+const placeholderRenderings = getPlaceholderRenderings(rendering, name, isEditing);
+
+const isEmpty = placeholderRenderings.length === 0;
+
+/**
+ * Resolved component data for each rendering in the placeholder.
+ */
+interface ResolvedComponent {
+  Component: any;
+  componentProps: ReturnType<typeof getComponentProps>;
+  rendering: ComponentRendering;
+  isMissing: boolean;
+}
+
+const resolvedComponents: ResolvedComponent[] = placeholderRenderings
+  .filter((r) => {
+    // Skip hidden renderings
+    if (r.componentName === constants.HIDDEN_RENDERING_NAME) return false;
+    // Skip empty component names
+    if (!r.componentName) return false;
+    return true;
+  })
+  .map((r) => {
+    const Component = componentMap.get(r.componentName);
+    const componentProps = getComponentProps(r, fields, params);
+
+    if (!Component) {
+      console.error(
+        `Placeholder '${name}' contains unknown component '${r.componentName}'. ` +
+          `Ensure that an Astro component exists for it and is registered in the component map.`
+      );
+    }
+
+    return {
+      Component: Component || MissingComponent,
+      componentProps,
+      rendering: r,
+      isMissing: !Component,
+    };
+  });
+
+const parentRendering = rendering as ComponentRendering;
+---
+
+{isEditing ? (
+  <PlaceholderMetadata rendering={parentRendering} placeholderName={name}>
+    {resolvedComponents.map(({ Component, componentProps, rendering: r }) => (
+      <PlaceholderMetadata rendering={r}>
+        <Component
+          {...componentProps}
+          rendering={r}
+          page={page}
+          componentMap={componentMap}
+        />
+      </PlaceholderMetadata>
+    ))}
+  </PlaceholderMetadata>
+) : (
+  resolvedComponents.map(({ Component, componentProps, rendering: r }) => (
+    <Component
+      {...componentProps}
+      rendering={r}
+      page={page}
+      componentMap={componentMap}
+    />
+  ))
+)}
+
+{isEditing && isEmpty && (
+  <div class="sc-jss-empty-placeholder"></div>
+)}

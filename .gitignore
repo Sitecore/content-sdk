@@ -28,3 +28,5 @@ samples/
 .npmrc
 
 packages/*/temp/
+
+!/samples/astro/
