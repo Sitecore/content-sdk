@@ -24,7 +24,6 @@ const Bootstrap = ({
     }
 
     if (config.api.edge?.clientContextId) {
-      console.log('✨ Initializing CloudSDK for site:', siteName);
       initContentSdk({
         config: {
           contextId: config.api.edge.clientContextId,
