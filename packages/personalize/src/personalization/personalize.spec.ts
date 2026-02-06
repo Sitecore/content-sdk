@@ -21,7 +21,7 @@ jest.mock('../initialization/shared', () => ({
 describe('personalize', () => {
   describe('new init', () => {
     const clientId = 'client_id_value';
-    const guestId = 'guest_id_value';
+    const profileId = 'profile-id_value';
     const personalizeData = {
       channel: 'WEB',
       currency: 'EUR',
@@ -45,7 +45,7 @@ describe('personalize', () => {
     };
 
     const mockPersonalizeAdapter = {
-      getGuestId: jest.fn().mockReturnValue(guestId),
+      getProfileId: jest.fn().mockReturnValue(profileId),
       getUserAgent: jest.fn().mockReturnValue('test-user-agent'),
     };
 
@@ -79,7 +79,7 @@ describe('personalize', () => {
       expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(Personalizer).toHaveBeenCalledTimes(1);
-      expect(Personalizer).toHaveBeenCalledWith(clientId, guestId);
+      expect(Personalizer).toHaveBeenCalledWith(clientId, profileId);
     });
 
     it('should throw error if config have not been configured properly', async () => {
@@ -164,12 +164,12 @@ describe('personalize', () => {
 
       await personalize(personalizeData);
 
-      expect(Personalizer).toHaveBeenCalledWith('', guestId);
+      expect(Personalizer).toHaveBeenCalledWith('', profileId);
     });
 
-    it('should use empty string for guestId when getGuestId returns null', async () => {
+    it('should use empty string for profileId when getProfileId returns null', async () => {
       mockAdapter.getClientId.mockReturnValue(clientId);
-      mockPersonalizeAdapter.getGuestId.mockReturnValue(null);
+      mockPersonalizeAdapter.getProfileId.mockReturnValue(null);
 
       await personalize(personalizeData);
 
@@ -178,7 +178,7 @@ describe('personalize', () => {
 
     it('should handle undefined getUserAgent method', async () => {
       const mockPersonalizeAdapterWithoutUserAgent = {
-        getGuestId: jest.fn().mockReturnValue(guestId),
+        getProfileId: jest.fn().mockReturnValue(profileId),
       };
 
       (personalizePluginModule.getPersonalizePlugin as jest.Mock).mockReturnValue({

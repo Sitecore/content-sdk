@@ -139,7 +139,7 @@ describe('analyticsBrowserAdapter', () => {
         >
       ).mockResolvedValue({
         clientId: 'new-client-id',
-        guestId: 'client-key-123',
+        profileId: 'client-key-123',
       });
       (utilsModule.createCookieString as jest.Mock).mockReturnValue(
         'sc_cid=new-client-id; Max-Age=63072000'
@@ -162,7 +162,7 @@ describe('analyticsBrowserAdapter', () => {
     it('should store proxy values in plugin settings after fetching from edge proxy', async () => {
       const proxyValues = {
         clientId: 'new-client-id',
-        guestId: 'client-key-123',
+        profileId: 'client-key-123',
       };
       (utilsModule.getCookieValueClientSide as jest.Mock).mockReturnValue('');
       (
@@ -186,7 +186,7 @@ describe('analyticsBrowserAdapter', () => {
         >
       ).mockResolvedValue({
         clientId: 'client-id',
-        guestId: 'client-key-123',
+        profileId: 'client-key-123',
       });
       (utilsModule.createCookieString as jest.Mock).mockReturnValue('cookie-string');
 

@@ -10,7 +10,7 @@ import {
   getDefaultCookieAttributes,
 } from '@sitecore-content-sdk/analytics-core/internal';
 import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/internal';
-import { fetchGuestIdFromEdgeProxy } from '../guest-id/fetch-guest-id-from-edge-proxy';
+import { fetchProfileIdFromEdgeProxy } from '../profile-id/fetch-profile-id-from-edge-proxy';
 
 export interface PersonalizeBrowserAdapter extends PersonalizeAdapter {
   type: 'browser';
@@ -24,30 +24,30 @@ export interface PersonalizeBrowserAdapter extends PersonalizeAdapter {
 export function personalizeBrowserAdapter(): PersonalizeBrowserAdapter {
   return {
     type: 'browser',
-    getGuestId: () => {
+    getProfileId: () => {
       return getCookieValueClientSide(getPersonalizePlugin().options.cookies.name);
     },
-    setGuestId: async () => {
+    setProfileId: async () => {
       const coreConfig = getCoreContext().config;
       const analyticsOptions = getAnalyticsPlugin().options;
       const personalizePlugin = getPersonalizePlugin();
-      const guestIdCookieName = personalizePlugin.options.cookies.name;
-      const legacyGuestIdCookieName = `${COOKIE_NAME_PREFIX}${coreConfig.contextId}_personalize`;
+      const profileIdCookieName = personalizePlugin.options.cookies.name;
+      const legacyProfileIdCookieName = `${COOKIE_NAME_PREFIX}${coreConfig.contextId}_personalize`;
       const cookieAttributes = getDefaultCookieAttributes(
         analyticsOptions.cookies.expiryDays,
         analyticsOptions.cookies.domain
       );
 
-      const legacyGuestIdCookie = getCookieValueClientSide(legacyGuestIdCookieName);
+      const legacyProfileIdCookie = getCookieValueClientSide(legacyProfileIdCookieName);
 
-      if (legacyGuestIdCookie) {
+      if (legacyProfileIdCookie) {
         document.cookie = createCookieString(
-          guestIdCookieName,
-          legacyGuestIdCookie,
+          profileIdCookieName,
+          legacyProfileIdCookie,
           cookieAttributes
         );
 
-        document.cookie = createCookieString(legacyGuestIdCookieName, '', {
+        document.cookie = createCookieString(legacyProfileIdCookieName, '', {
           ...cookieAttributes,
           maxAge: 0,
         });
@@ -57,26 +57,26 @@ export function personalizeBrowserAdapter(): PersonalizeBrowserAdapter {
 
       const cookiesValuesFromEdgeBrowser = getAnalyticsPlugin().options.proxyValues;
 
-      const guestIdCookieValue = getCookieValueClientSide(guestIdCookieName);
+      const profileIdCookieValue = getCookieValueClientSide(profileIdCookieName);
       const clientIdCookieValue = getCookieValueClientSide(analyticsOptions.cookies.name);
 
-      if (guestIdCookieValue) return;
-      else if (cookiesValuesFromEdgeBrowser?.guestId)
+      if (profileIdCookieValue) return;
+      else if (cookiesValuesFromEdgeBrowser?.profileId)
         document.cookie = createCookieString(
-          guestIdCookieName,
-          cookiesValuesFromEdgeBrowser.guestId,
+          profileIdCookieName,
+          cookiesValuesFromEdgeBrowser.profileId,
           cookieAttributes
         );
       else if (clientIdCookieValue) {
-        const guestIdCookieValue = await fetchGuestIdFromEdgeProxy(
+        const profileIdCookieValue = await fetchProfileIdFromEdgeProxy(
           clientIdCookieValue,
           coreConfig.contextId,
           coreConfig.edgeUrl
         );
 
         document.cookie = createCookieString(
-          guestIdCookieName,
-          guestIdCookieValue,
+          profileIdCookieName,
+          profileIdCookieValue,
           cookieAttributes
         );
       }

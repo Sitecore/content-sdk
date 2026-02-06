@@ -6,7 +6,7 @@ import * as coreModule from '@sitecore-content-sdk/core';
 import * as analyticsPluginModule from '@sitecore-content-sdk/analytics-core/internal';
 import * as analyticsUtilsModule from '@sitecore-content-sdk/analytics-core/utils';
 import * as getCdnUrlModule from '../web-personalization/get-cdn-url';
-import * as getGuestIdModule from './get-guest-id';
+import * as getProfileIdModule from './get-profile-id';
 import { PersonalizeAdapter } from './types';
 import { jest, expect } from '@jest/globals';
 
@@ -40,13 +40,13 @@ jest.mock('../web-personalization/get-cdn-url', () => ({
 }));
 
 describe('personalizeBrowserPlugin', () => {
-  const mockGetGuestId = jest.fn() as jest.Mock<PersonalizeAdapter['getGuestId']>;
-  const mockSetGuestId = jest.fn() as jest.Mock<PersonalizeAdapter['setGuestId']>;
+  const mockGetProfileId = jest.fn() as jest.Mock<PersonalizeAdapter['getProfileId']>;
+  const mockSetProfileId = jest.fn() as jest.Mock<PersonalizeAdapter['setProfileId']>;
 
   const createMockAdapter = (type: 'browser' | 'server' = 'browser'): PersonalizeAdapter => ({
     type,
-    getGuestId: mockGetGuestId,
-    setGuestId: mockSetGuestId,
+    getProfileId: mockGetProfileId,
+    setProfileId: mockSetProfileId,
   });
 
   const mockAnalyticsPlugin = {
@@ -186,11 +186,11 @@ describe('personalizeBrowserPlugin', () => {
   });
 
   describe('init', () => {
-    describe('setGuestId', () => {
-      it('should call setGuestId when both enableCookie and enablePersonalizeCookie are true and guest ID does not exist', async () => {
+    describe('setProfileId', () => {
+      it('should call setProfileId when both enableCookie and enablePersonalizeCookie are true and profile ID does not exist', async () => {
         const adapter = createMockAdapter();
-        mockGetGuestId.mockReturnValue('');
-        mockSetGuestId.mockResolvedValue(undefined);
+        mockGetProfileId.mockReturnValue('');
+        mockSetProfileId.mockResolvedValue(undefined);
 
         const plugin = personalizeBrowserPlugin({
           adapter,
@@ -201,13 +201,13 @@ describe('personalizeBrowserPlugin', () => {
 
         await plugin.init();
 
-        expect(mockSetGuestId).toHaveBeenCalledTimes(1);
+        expect(mockSetProfileId).toHaveBeenCalledTimes(1);
       });
 
-      it('should call setGuestId when adapter type is not browser even if guest ID exists', async () => {
+      it('should call setProfileId when adapter type is not browser even if profile ID exists', async () => {
         const adapter = createMockAdapter('server');
-        mockGetGuestId.mockReturnValue('existing-guest-id');
-        mockSetGuestId.mockResolvedValue(undefined);
+        mockGetProfileId.mockReturnValue('existing-profile-id');
+        mockSetProfileId.mockResolvedValue(undefined);
 
         const plugin = personalizeBrowserPlugin({
           adapter,
@@ -218,12 +218,12 @@ describe('personalizeBrowserPlugin', () => {
 
         await plugin.init();
 
-        expect(mockSetGuestId).toHaveBeenCalledTimes(1);
+        expect(mockSetProfileId).toHaveBeenCalledTimes(1);
       });
 
-      it('should not call setGuestId when guest ID exists and adapter type is browser', async () => {
+      it('should not call setProfileId when profile ID exists and adapter type is browser', async () => {
         const adapter = createMockAdapter('browser');
-        mockGetGuestId.mockReturnValue('existing-guest-id');
+        mockGetProfileId.mockReturnValue('existing-profile-id');
 
         const plugin = personalizeBrowserPlugin({
           adapter,
@@ -234,10 +234,10 @@ describe('personalizeBrowserPlugin', () => {
 
         await plugin.init();
 
-        expect(mockSetGuestId).not.toHaveBeenCalled();
+        expect(mockSetProfileId).not.toHaveBeenCalled();
       });
 
-      it('should not call setGuestId when enableCookie is false', async () => {
+      it('should not call setProfileId when enableCookie is false', async () => {
         const adapter = createMockAdapter();
 
         const plugin = personalizeBrowserPlugin({
@@ -256,10 +256,10 @@ describe('personalizeBrowserPlugin', () => {
 
         await plugin.init();
 
-        expect(mockSetGuestId).not.toHaveBeenCalled();
+        expect(mockSetProfileId).not.toHaveBeenCalled();
       });
 
-      it('should not call setGuestId when enablePersonalizeCookie is false', async () => {
+      it('should not call setProfileId when enablePersonalizeCookie is false', async () => {
         const adapter = createMockAdapter();
 
         const plugin = personalizeBrowserPlugin({
@@ -271,7 +271,7 @@ describe('personalizeBrowserPlugin', () => {
 
         await plugin.init();
 
-        expect(mockSetGuestId).not.toHaveBeenCalled();
+        expect(mockSetProfileId).not.toHaveBeenCalled();
       });
     });
 
@@ -312,7 +312,7 @@ describe('personalizeBrowserPlugin', () => {
         expect(window.scContentSDK.personalize.options).toEqual({});
       });
 
-      it('should add getGuestId to window.scContentSDK.analytics_core', async () => {
+      it('should add getProfileId to window.scContentSDK.analytics_core', async () => {
         const adapter = createMockAdapter();
 
         const plugin = personalizeBrowserPlugin({ adapter });
@@ -322,7 +322,9 @@ describe('personalizeBrowserPlugin', () => {
         await plugin.init();
 
         expect(window.scContentSDK.analytics_core).toBeDefined();
-        expect(window.scContentSDK.analytics_core.getGuestId).toBe(getGuestIdModule.getGuestId);
+        expect(window.scContentSDK.analytics_core.getProfileId).toBe(
+          getProfileIdModule.getProfileId
+        );
       });
 
       it('should preserve existing window.scContentSDK properties', async () => {
@@ -343,7 +345,9 @@ describe('personalizeBrowserPlugin', () => {
 
         expect((window.scContentSDK as any).analytics_core.getClientId).toBeDefined();
         expect((window.scContentSDK as any).analytics_core.version).toBe('1.0.0');
-        expect(window.scContentSDK.analytics_core.getGuestId).toBe(getGuestIdModule.getGuestId);
+        expect(window.scContentSDK.analytics_core.getProfileId).toBe(
+          getProfileIdModule.getProfileId
+        );
       });
     });
 

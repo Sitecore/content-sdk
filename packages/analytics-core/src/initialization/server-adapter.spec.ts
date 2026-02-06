@@ -275,7 +275,7 @@ describe('analyticsServerAdapter', () => {
           >
         ).mockResolvedValue({
           clientId: 'new-client-id',
-          guestId: 'client-key-123',
+          profileId: 'client-key-123',
         });
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
           'sc_cid=new-client-id; Max-Age=63072000'
@@ -297,7 +297,7 @@ describe('analyticsServerAdapter', () => {
       it('should store proxy values in plugin settings after fetching', async () => {
         const proxyValues = {
           clientId: 'new-client-id',
-          guestId: 'client-key-123',
+          profileId: 'client-key-123',
         };
         (utilsModule.getCookieServerSide as jest.Mock).mockReturnValue(undefined);
         (
@@ -324,7 +324,7 @@ describe('analyticsServerAdapter', () => {
           >
         ).mockResolvedValue({
           clientId: 'new-client-id',
-          guestId: 'guest-id-123',
+          profileId: 'profile-id-123',
         });
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
           'sc_cid=new-client-id; Max-Age=63072000'
@@ -347,7 +347,7 @@ describe('analyticsServerAdapter', () => {
           >
         ).mockResolvedValue({
           clientId: 'new-client-id',
-          guestId: 'guest-id-123',
+          profileId: 'profile-id-123',
         });
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
           'sc_cid=new-client-id; Max-Age=63072000'
@@ -374,7 +374,7 @@ describe('analyticsServerAdapter', () => {
           >
         ).mockResolvedValue({
           clientId: 'new-client-id',
-          guestId: 'guest-id-123',
+          profileId: 'profile-id-123',
         });
         (utilsModule.createCookieString as jest.Mock).mockReturnValue('sc_cid=new-client-id');
 
@@ -395,7 +395,7 @@ describe('analyticsServerAdapter', () => {
           >
         ).mockResolvedValue({
           clientId: 'new-client-id',
-          guestId: 'guest-id-123',
+          profileId: 'profile-id-123',
         });
         (utilsModule.createCookieString as jest.Mock).mockReturnValue('sc_cid=new-client-id');
 
@@ -420,7 +420,7 @@ describe('analyticsServerAdapter', () => {
           >
         ).mockResolvedValue({
           clientId: 'new-client-id',
-          guestId: 'guest-id-123',
+          profileId: 'profile-id-123',
         });
         (utilsModule.createCookieString as jest.Mock).mockReturnValue('sc_cid=new-client-id');
 

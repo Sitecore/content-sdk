@@ -23,13 +23,13 @@ jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
 }));
 
 describe('personalizeServerPlugin', () => {
-  const mockGetGuestId = jest.fn() as jest.Mock<PersonalizeAdapter['getGuestId']>;
-  const mockSetGuestId = jest.fn() as jest.Mock<PersonalizeAdapter['setGuestId']>;
+  const mockGetProfileId = jest.fn() as jest.Mock<PersonalizeAdapter['getProfileId']>;
+  const mockSetProfileId = jest.fn() as jest.Mock<PersonalizeAdapter['setProfileId']>;
 
   const createMockAdapter = (): PersonalizeAdapter => ({
     type: 'server',
-    getGuestId: mockGetGuestId,
-    setGuestId: mockSetGuestId,
+    getProfileId: mockGetProfileId,
+    setProfileId: mockSetProfileId,
   });
 
   const mockAnalyticsPlugin = {
@@ -111,9 +111,9 @@ describe('personalizeServerPlugin', () => {
   });
 
   describe('init', () => {
-    it('should call setGuestId when both enableCookie and enablePersonalizeCookie are true', async () => {
+    it('should call setProfileId when both enableCookie and enablePersonalizeCookie are true', async () => {
       const adapter = createMockAdapter();
-      mockSetGuestId.mockResolvedValue(undefined);
+      mockSetProfileId.mockResolvedValue(undefined);
 
       const plugin = personalizeServerPlugin({
         adapter,
@@ -124,10 +124,10 @@ describe('personalizeServerPlugin', () => {
 
       await plugin.init();
 
-      expect(mockSetGuestId).toHaveBeenCalledTimes(1);
+      expect(mockSetProfileId).toHaveBeenCalledTimes(1);
     });
 
-    it('should not call setGuestId when enableCookie is false', async () => {
+    it('should not call setProfileId when enableCookie is false', async () => {
       const adapter = createMockAdapter();
 
       const plugin = personalizeServerPlugin({
@@ -146,10 +146,10 @@ describe('personalizeServerPlugin', () => {
 
       await plugin.init();
 
-      expect(mockSetGuestId).not.toHaveBeenCalled();
+      expect(mockSetProfileId).not.toHaveBeenCalled();
     });
 
-    it('should not call setGuestId when enablePersonalizeCookie is false', async () => {
+    it('should not call setProfileId when enablePersonalizeCookie is false', async () => {
       const adapter = createMockAdapter();
 
       const plugin = personalizeServerPlugin({
@@ -161,7 +161,7 @@ describe('personalizeServerPlugin', () => {
 
       await plugin.init();
 
-      expect(mockSetGuestId).not.toHaveBeenCalled();
+      expect(mockSetProfileId).not.toHaveBeenCalled();
     });
   });
 });

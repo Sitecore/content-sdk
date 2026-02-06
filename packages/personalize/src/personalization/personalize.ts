@@ -23,11 +23,11 @@ export async function personalize(
   const { adapter: analyticsAdapter } = getAnalyticsPlugin();
 
   const clientId = analyticsAdapter.getClientId() || '';
-  const guestId = personalizeAdapter.getGuestId() || '';
+  const profileId = personalizeAdapter.getProfileId() || '';
   const searchParams = analyticsAdapter.location.getSearchParams();
   const userAgent = personalizeAdapter.getUserAgent?.();
 
-  return new Personalizer(clientId, guestId).getInteractiveExperienceData(
+  return new Personalizer(clientId, profileId).getInteractiveExperienceData(
     personalizeData,
     config,
     searchParams,

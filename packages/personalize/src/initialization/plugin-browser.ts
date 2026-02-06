@@ -20,7 +20,7 @@ import {
   ANALYTICS_PLUGIN_NAME,
   getAnalyticsPlugin,
 } from '@sitecore-content-sdk/analytics-core/internal';
-import { getGuestId } from './get-guest-id';
+import { getProfileId } from './get-profile-id';
 import { personalize } from '../personalization/personalize';
 
 /**
@@ -36,9 +36,9 @@ async function init() {
   if (
     analyticsPlugin.options.cookies.enabled &&
     personalizeOptions.cookies.enabled &&
-    (!personalizePlugin.adapter.getGuestId() || personalizePlugin.adapter.type !== 'browser')
+    (!personalizePlugin.adapter.getProfileId() || personalizePlugin.adapter.type !== 'browser')
   )
-    await personalizePlugin.adapter.setGuestId();
+    await personalizePlugin.adapter.setProfileId();
 
   if (typeof window === 'undefined') return;
 
@@ -56,7 +56,7 @@ async function init() {
     },
     analytics_core: {
       ...window.scContentSDK?.analytics_core,
-      getGuestId,
+      getProfileId,
     },
   };
 
@@ -128,7 +128,7 @@ export function personalizeBrowserPlugin(
 declare global {
   // eslint-disable-next-line no-unused-vars
   interface AnalyticsCore {
-    getGuestId: typeof getGuestId;
+    getProfileId: typeof getProfileId;
   }
   // eslint-disable-next-line no-unused-vars
   interface ScContentSDK {

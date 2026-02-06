@@ -25,7 +25,7 @@ async function init() {
   const analyticsPlugin = getAnalyticsPlugin();
 
   if (analyticsPlugin.options.cookies.enabled && personalizeOptions.cookies.enabled)
-    await personalizePlugin.adapter.setGuestId();
+    await personalizePlugin.adapter.setProfileId();
 }
 
 /**

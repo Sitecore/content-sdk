@@ -5,7 +5,7 @@ import {
 import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/internal';
 import { getCoreContext } from '@sitecore-content-sdk/core';
 import {
-  fetchGuestIdFromEdgeProxy,
+  fetchProfileIdFromEdgeProxy,
   getPersonalizePlugin,
 } from '@sitecore-content-sdk/personalize/internal';
 import { PersonalizeAdapter } from '@sitecore-content-sdk/personalize/internal';
@@ -30,57 +30,57 @@ export function personalizeProxyAdapter(
   return {
     type: 'proxy',
     getUserAgent: () => request.headers.get('user-agent') || undefined,
-    getGuestId: () => {
-      return getGuestId(request);
+    getProfileId: () => {
+      return getProfileId(request);
     },
-    setGuestId: async () => {
+    setProfileId: async () => {
       const coreConfig = getCoreContext().config;
       const cookieOptions = getAnalyticsPlugin().options.cookies;
       const personalizePlugin = getPersonalizePlugin();
-      const guestIdCookieName = personalizePlugin.options.cookies.name;
+      const profileIdCookieName = personalizePlugin.options.cookies.name;
       const cookieAttributes = getDefaultCookieAttributes(
         cookieOptions.expiryDays,
         cookieOptions.domain
       );
-      const legacyGuestIdCookieName = `${COOKIE_NAME_PREFIX}${coreConfig.contextId}_personalize`;
+      const legacyProfileIdCookieName = `${COOKIE_NAME_PREFIX}${coreConfig.contextId}_personalize`;
 
-      const legacyGuestIdCookie = request.cookies.get(legacyGuestIdCookieName)?.value;
-      if (legacyGuestIdCookie) {
-        request.cookies.set(guestIdCookieName, legacyGuestIdCookie);
-        response.cookies.set(guestIdCookieName, legacyGuestIdCookie, {
+      const legacyProfileIdCookie = request.cookies.get(legacyProfileIdCookieName)?.value;
+      if (legacyProfileIdCookie) {
+        request.cookies.set(profileIdCookieName, legacyProfileIdCookie);
+        response.cookies.set(profileIdCookieName, legacyProfileIdCookie, {
           ...cookieAttributes,
           sameSite: 'none',
         });
 
-        request.cookies.delete(legacyGuestIdCookieName);
-        response.cookies.delete(legacyGuestIdCookieName);
+        request.cookies.delete(legacyProfileIdCookieName);
+        response.cookies.delete(legacyProfileIdCookieName);
 
         return;
       }
 
       const cookiesValuesFromEdgeServer = getAnalyticsPlugin().options.proxyValues;
 
-      const guestIdCookie = getGuestId(request);
+      const profileIdCookie = getProfileId(request);
       const clientIdCookie = getClientId(request);
 
-      let newGuestIdCookieValue;
-      if (guestIdCookie) newGuestIdCookieValue = guestIdCookie;
-      else if (cookiesValuesFromEdgeServer?.guestId)
-        newGuestIdCookieValue = cookiesValuesFromEdgeServer.guestId;
+      let newProfileIdCookieValue;
+      if (profileIdCookie) newProfileIdCookieValue = profileIdCookie;
+      else if (cookiesValuesFromEdgeServer?.profileId)
+        newProfileIdCookieValue = cookiesValuesFromEdgeServer.profileId;
       else if (clientIdCookie) {
-        const guestIdCookieValueFromEdgeProxy = await fetchGuestIdFromEdgeProxy(
+        const profileIdCookieValueFromEdgeProxy = await fetchProfileIdFromEdgeProxy(
           clientIdCookie,
           coreConfig.contextId,
           coreConfig.edgeUrl
         );
-        newGuestIdCookieValue = guestIdCookieValueFromEdgeProxy;
+        newProfileIdCookieValue = profileIdCookieValueFromEdgeProxy;
       } else return;
 
-      if (!guestIdCookie) request.cookies.set(guestIdCookieName, newGuestIdCookieValue);
+      if (!profileIdCookie) request.cookies.set(profileIdCookieName, newProfileIdCookieValue);
 
       const attributes = getDefaultCookieAttributes(cookieOptions.expiryDays, cookieOptions.domain);
 
-      response.cookies.set(guestIdCookieName, newGuestIdCookieValue, {
+      response.cookies.set(profileIdCookieName, newProfileIdCookieValue, {
         ...attributes,
         sameSite: 'none',
       });
@@ -89,13 +89,13 @@ export function personalizeProxyAdapter(
 }
 
 /**
- * Retrieves the guest ID from request cookies.
+ * Retrieves the profile ID from request cookies.
  * @param {NextRequest} request
- * @returns {string | null} The guest ID or null if not found.
+ * @returns {string | null} The profile ID or null if not found.
  * @internal
  */
-function getGuestId(request: NextRequest): string | null {
-  const guestIdCookieName = getPersonalizePlugin().options.cookies.name;
+function getProfileId(request: NextRequest): string | null {
+  const profileIdCookieName = getPersonalizePlugin().options.cookies.name;
 
-  return request.cookies.get(guestIdCookieName)?.value || null;
+  return request.cookies.get(profileIdCookieName)?.value || null;
 }

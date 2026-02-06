@@ -1,10 +1,10 @@
 /* eslint-disable max-len */
 import { ERROR_MESSAGES, PACKAGE_VERSION } from '../consts';
 import type {
-  GetGuestRefResponse,
-  GetGuestRefResponseError,
-} from './fetch-guest-id-from-edge-proxy';
-import { fetchGuestIdFromEdgeProxy } from './fetch-guest-id-from-edge-proxy';
+  GetProfileIdResponse,
+  GetProfileIdResponseError,
+} from './fetch-profile-id-from-edge-proxy';
+import { fetchProfileIdFromEdgeProxy } from './fetch-profile-id-from-edge-proxy';
 import { jest, expect } from '@jest/globals';
 
 const API_VERSION = 'v1.2';
@@ -16,7 +16,7 @@ jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
   SITECORE_EDGE_URL: 'https://edge-platform.sitecorecloud.io',
 }));
 
-describe('fetchGuestIdFromEdgeProxy', () => {
+describe('fetchProfileIdFromEdgeProxy', () => {
   const cid = 'cid';
   const contextId = 'contextId';
 
@@ -24,26 +24,26 @@ describe('fetchGuestIdFromEdgeProxy', () => {
     jest.clearAllMocks();
   });
 
-  it('should return the guest id', async () => {
+  it('should return the profile id', async () => {
     const expectedResponse = 'ref';
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ customer: { ref: expectedResponse } } as GetGuestRefResponse),
+      json: () => Promise.resolve({ customer: { ref: expectedResponse } } as GetProfileIdResponse),
       ok: true,
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
-    const response = await fetchGuestIdFromEdgeProxy(cid, contextId, SITECORE_EDGE_URL);
+    const response = await fetchProfileIdFromEdgeProxy(cid, contextId, SITECORE_EDGE_URL);
     expect(response).toBe(expectedResponse);
   });
 
   it('should call fetch with the correct url', async () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ customer: { ref: 'ref' } } as GetGuestRefResponse),
+      json: () => Promise.resolve({ customer: { ref: 'ref' } } as GetProfileIdResponse),
       ok: true,
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
     const expectedUrl = `${SITECORE_EDGE_URL}/v1/events/${API_VERSION}/browser/${cid}/show.json?client_key=&api_token=`;
-    await fetchGuestIdFromEdgeProxy(cid, contextId, SITECORE_EDGE_URL);
+    await fetchProfileIdFromEdgeProxy(cid, contextId, SITECORE_EDGE_URL);
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith(expectedUrl, {
@@ -64,13 +64,13 @@ describe('fetchGuestIdFromEdgeProxy', () => {
         Promise.resolve({
           error_msg: expectedMsg,
           moreInfo: expectedMoreInfo,
-        } as GetGuestRefResponseError),
+        } as GetProfileIdResponseError),
       ok: false,
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
     const expectedErrorMessage = `${expectedMsg}, for more info: ${expectedMoreInfo}`;
-    expect(() => fetchGuestIdFromEdgeProxy(cid, contextId, SITECORE_EDGE_URL)).rejects.toThrow(
+    expect(() => fetchProfileIdFromEdgeProxy(cid, contextId, SITECORE_EDGE_URL)).rejects.toThrow(
       expectedErrorMessage
     );
   });
@@ -84,7 +84,7 @@ describe('fetchGuestIdFromEdgeProxy', () => {
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
     expect(async () => {
-      await fetchGuestIdFromEdgeProxy(cid, contextId, SITECORE_EDGE_URL);
+      await fetchProfileIdFromEdgeProxy(cid, contextId, SITECORE_EDGE_URL);
     }).rejects.toThrow(ERROR_MESSAGES.IE_006);
   });
 });

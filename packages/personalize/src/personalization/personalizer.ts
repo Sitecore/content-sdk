@@ -12,9 +12,9 @@ export class Personalizer {
   /**
    * The Personalizer Class runs a flow of interactive experiments.
    * @param {string} clientId - The client id of the user
-   * @param {string} [guestId] - The guestRef of the user
+   * @param {string} [profileId] - The profile id of the user
    */
-  constructor(private clientId: string, private guestId?: string) {}
+  constructor(private clientId: string, private profileId?: string) {}
 
   /**
    * A function to make a request to the Sitecore Edge Proxy `/callFlows` API endpoint
@@ -91,7 +91,7 @@ export class Personalizer {
       currencyCode: input.currency,
       email: input.email,
       friendlyId: input.friendlyId,
-      guestRef: this.guestId,
+      guestRef: this.profileId,
       identifiers: input.identifier,
       language: input.language ?? language(),
       params: input.params,

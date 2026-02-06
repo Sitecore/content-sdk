@@ -1,7 +1,7 @@
 import * as analyticsPluginsModule from '@sitecore-content-sdk/analytics-core/internal';
 import * as coreModule from '@sitecore-content-sdk/core';
-import * as fetchGuestIdFromEdgeProxyModule from '../guest-id/fetch-guest-id-from-edge-proxy';
-import { getGuestId } from './get-guest-id';
+import * as fetchProfileIdFromEdgeProxyModule from '../profile-id/fetch-profile-id-from-edge-proxy';
+import { getProfileId } from './get-profile-id';
 import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
@@ -13,7 +13,7 @@ jest.mock('@sitecore-content-sdk/core', () => ({
   debugNamespace: 'content-sdk',
 }));
 
-describe('getGuestId', () => {
+describe('getProfileId', () => {
   const mockAdapter = {
     getClientId: jest.fn(),
   };
@@ -41,33 +41,33 @@ describe('getGuestId', () => {
     jest.clearAllMocks();
   });
 
-  it('should call fetchGuestIdFromEdgeProxy with the correct parameters and resolve with guestId', async () => {
+  it('should call fetchProfileIdFromEdgeProxy with the correct parameters and resolve with profileId', async () => {
     const id = 'test_id';
-    const fetchGuestIdSpy = jest
-      .spyOn(fetchGuestIdFromEdgeProxyModule, 'fetchGuestIdFromEdgeProxy')
-      .mockResolvedValueOnce('guestID');
+    const fetchProfileIdSpy = jest
+      .spyOn(fetchProfileIdFromEdgeProxyModule, 'fetchProfileIdFromEdgeProxy')
+      .mockResolvedValueOnce('profileID');
     mockAdapter.getClientId.mockReturnValue(id);
 
-    const guestID = await getGuestId();
+    const profileID = await getProfileId();
 
-    expect(fetchGuestIdSpy).toHaveBeenCalledTimes(1);
-    expect(fetchGuestIdSpy).toHaveBeenCalledWith(
+    expect(fetchProfileIdSpy).toHaveBeenCalledTimes(1);
+    expect(fetchProfileIdSpy).toHaveBeenCalledWith(
       id,
       mockCoreContext.config.contextId,
       mockCoreContext.config.edgeUrl
     );
-    expect(guestID).toBe('guestID');
+    expect(profileID).toBe('profileID');
   });
 
   it('should use empty string for clientId when getClientId returns null', async () => {
-    const fetchGuestIdSpy = jest
-      .spyOn(fetchGuestIdFromEdgeProxyModule, 'fetchGuestIdFromEdgeProxy')
-      .mockResolvedValueOnce('guestID');
+    const fetchProfileIdSpy = jest
+      .spyOn(fetchProfileIdFromEdgeProxyModule, 'fetchProfileIdFromEdgeProxy')
+      .mockResolvedValueOnce('profileID');
     mockAdapter.getClientId.mockReturnValue(null);
 
-    await getGuestId();
+    await getProfileId();
 
-    expect(fetchGuestIdSpy).toHaveBeenCalledWith(
+    expect(fetchProfileIdSpy).toHaveBeenCalledWith(
       '',
       mockCoreContext.config.contextId,
       mockCoreContext.config.edgeUrl

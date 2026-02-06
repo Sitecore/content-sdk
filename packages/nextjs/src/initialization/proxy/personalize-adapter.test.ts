@@ -16,7 +16,7 @@ describe('personalizeProxyAdapter', () => {
   let getCoreContextStub: sinon.SinonStub;
   let getPersonalizePluginStub: sinon.SinonStub;
   let getDefaultCookieAttributesStub: sinon.SinonStub;
-  let fetchGuestIdFromEdgeProxyStub: sinon.SinonStub;
+  let fetchProfileIdFromEdgeProxyStub: sinon.SinonStub;
   let getClientIdStub: sinon.SinonStub;
 
   const mockAnalyticsPlugin = {
@@ -100,7 +100,7 @@ describe('personalizeProxyAdapter', () => {
     getCoreContextStub = sandbox.stub().returns(mockCoreContext);
     getPersonalizePluginStub = sandbox.stub().returns(mockPersonalizePlugin);
     getDefaultCookieAttributesStub = sandbox.stub().returns(mockCookieAttributes);
-    fetchGuestIdFromEdgeProxyStub = sandbox.stub();
+    fetchProfileIdFromEdgeProxyStub = sandbox.stub();
     getClientIdStub = sandbox.stub();
 
     personalizeProxyAdapterModule = proxyquire('./personalize-adapter', {
@@ -114,7 +114,7 @@ describe('personalizeProxyAdapter', () => {
       },
       '@sitecore-content-sdk/personalize/internal': {
         getPersonalizePlugin: getPersonalizePluginStub,
-        fetchGuestIdFromEdgeProxy: fetchGuestIdFromEdgeProxyStub,
+        fetchProfileIdFromEdgeProxy: fetchProfileIdFromEdgeProxyStub,
       },
       './analytics-adapter': {
         getClientId: getClientIdStub,
@@ -157,114 +157,114 @@ describe('personalizeProxyAdapter', () => {
       });
     });
 
-    describe('getGuestId', () => {
-      it('should return guest ID from request cookies', () => {
-        const request = createMockRequest({ sc_gid: 'guest-id-123' });
+    describe('getProfileId', () => {
+      it('should return profile ID from request cookies', () => {
+        const request = createMockRequest({ sc_gid: 'profile-id-123' });
         const response = createMockResponse();
 
         const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-        const result = adapter.getGuestId();
-        expect(result).to.equal('guest-id-123');
+        const result = adapter.getProfileId();
+        expect(result).to.equal('profile-id-123');
       });
 
-      it('should return null when guest ID cookie does not exist', () => {
+      it('should return null when profile ID cookie does not exist', () => {
         const request = createMockRequest({});
         const response = createMockResponse();
 
         const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-        const result = adapter.getGuestId();
+        const result = adapter.getProfileId();
         expect(result).to.be.null;
       });
     });
 
-    describe('setGuestId', () => {
+    describe('setProfileId', () => {
       describe('legacy cookie migration', () => {
         it('should migrate legacy cookie and set new cookie in response', async () => {
           const request = createMockRequest({
-            'sc_test-context-id_personalize': 'legacy-guest-id',
+            'sc_test-context-id_personalize': 'legacy-profile-id',
           });
           const response = createMockResponse();
 
           const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-          await adapter.setGuestId();
+          await adapter.setProfileId();
 
           expect(response.cookieStore.sc_gid).to.deep.include({
-            value: 'legacy-guest-id',
+            value: 'legacy-profile-id',
             sameSite: 'none',
           });
         });
 
         it('should set new cookie on request when migrating legacy cookie', async () => {
-          const cookieStore = { 'sc_test-context-id_personalize': 'legacy-guest-id' };
+          const cookieStore = { 'sc_test-context-id_personalize': 'legacy-profile-id' };
           const request = createMockRequest(cookieStore);
           const response = createMockResponse();
 
           const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-          await adapter.setGuestId();
+          await adapter.setProfileId();
 
-          expect(request.cookies.get('sc_gid')?.value).to.equal('legacy-guest-id');
+          expect(request.cookies.get('sc_gid')?.value).to.equal('legacy-profile-id');
         });
 
         it('should delete legacy cookie from request and response', async () => {
           const request = createMockRequest({
-            'sc_test-context-id_personalize': 'legacy-guest-id',
+            'sc_test-context-id_personalize': 'legacy-profile-id',
           });
           const response = createMockResponse();
 
           const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-          await adapter.setGuestId();
+          await adapter.setProfileId();
 
           expect(request.cookies.get('sc_test-context-id_personalize')).to.be.undefined;
         });
 
         it('should not fetch from edge proxy when legacy cookie exists', async () => {
           const request = createMockRequest({
-            'sc_test-context-id_personalize': 'legacy-guest-id',
+            'sc_test-context-id_personalize': 'legacy-profile-id',
           });
           const response = createMockResponse();
 
           const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-          await adapter.setGuestId();
+          await adapter.setProfileId();
 
-          expect(fetchGuestIdFromEdgeProxyStub).to.not.have.been.called;
+          expect(fetchProfileIdFromEdgeProxyStub).to.not.have.been.called;
         });
       });
 
-      describe('existing guest ID', () => {
-        it('should use existing guest ID and set cookie in response', async () => {
-          const request = createMockRequest({ sc_gid: 'existing-guest-id' });
+      describe('existing profile ID', () => {
+        it('should use existing profile ID and set cookie in response', async () => {
+          const request = createMockRequest({ sc_gid: 'existing-profile-id' });
           const response = createMockResponse();
 
           const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-          await adapter.setGuestId();
+          await adapter.setProfileId();
 
-          expect(fetchGuestIdFromEdgeProxyStub).to.not.have.been.called;
+          expect(fetchProfileIdFromEdgeProxyStub).to.not.have.been.called;
           expect(response.cookieStore.sc_gid).to.deep.include({
-            value: 'existing-guest-id',
+            value: 'existing-profile-id',
             sameSite: 'none',
           });
         });
 
-        it('should not set cookie on request when guest ID already exists', async () => {
-          const cookieStore = { sc_gid: 'existing-guest-id' };
+        it('should not set cookie on request when profile ID already exists', async () => {
+          const cookieStore = { sc_gid: 'existing-profile-id' };
           const request = createMockRequest(cookieStore);
           const response = createMockResponse();
 
           const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-          await adapter.setGuestId();
+          await adapter.setProfileId();
 
           // The request cookie should remain unchanged
-          expect(request.cookies.get('sc_gid')?.value).to.equal('existing-guest-id');
+          expect(request.cookies.get('sc_gid')?.value).to.equal('existing-profile-id');
         });
 
-        it('should not modify request cookie when guest ID cookie already exists (branch coverage)', async () => {
-          // This test ensures the branch `if (!guestIdCookie)` at line 85 is covered
-          // when guestIdCookie is truthy - the request.cookies.set should NOT be called
+        it('should not modify request cookie when profile ID cookie already exists (branch coverage)', async () => {
+          // This test ensures the branch `if (!profileIdCookie)` at line 85 is covered
+          // when profileIdCookie is truthy - the request.cookies.set should NOT be called
           let setCalled = false;
           const request = {
             cookies: {
               get: (name: string) => {
-                if (name === 'sc_gid') return { value: 'existing-guest-id' };
+                if (name === 'sc_gid') return { value: 'existing-profile-id' };
                 return undefined;
               },
               set: () => {
@@ -279,29 +279,29 @@ describe('personalizeProxyAdapter', () => {
           const response = createMockResponse();
 
           const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-          await adapter.setGuestId();
+          await adapter.setProfileId();
 
-          // The request.cookies.set should not have been called because guestIdCookie exists
+          // The request.cookies.set should not have been called because profileIdCookie exists
           expect(setCalled).to.be.false;
         });
       });
 
       describe('proxy values from edge server', () => {
-        it('should use guest ID from proxy values when available', async () => {
+        it('should use profile ID from proxy values when available', async () => {
           mockAnalyticsPlugin.options.proxyValues = {
             clientId: 'client-id',
-            guestId: 'proxy-guest-id',
+            profileId: 'proxy-profile-id',
           };
 
           const request = createMockRequest({});
           const response = createMockResponse();
 
           const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-          await adapter.setGuestId();
+          await adapter.setProfileId();
 
-          expect(fetchGuestIdFromEdgeProxyStub).to.not.have.been.called;
+          expect(fetchProfileIdFromEdgeProxyStub).to.not.have.been.called;
           expect(response.cookieStore.sc_gid).to.deep.include({
-            value: 'proxy-guest-id',
+            value: 'proxy-profile-id',
             sameSite: 'none',
           });
         });
@@ -309,7 +309,7 @@ describe('personalizeProxyAdapter', () => {
         it('should set cookie on request when using proxy values', async () => {
           mockAnalyticsPlugin.options.proxyValues = {
             clientId: 'client-id',
-            guestId: 'proxy-guest-id',
+            profileId: 'proxy-profile-id',
           };
 
           const cookieStore: Record<string, string> = {};
@@ -317,83 +317,83 @@ describe('personalizeProxyAdapter', () => {
           const response = createMockResponse();
 
           const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-          await adapter.setGuestId();
+          await adapter.setProfileId();
 
-          expect(request.cookies.get('sc_gid')?.value).to.equal('proxy-guest-id');
+          expect(request.cookies.get('sc_gid')?.value).to.equal('proxy-profile-id');
         });
 
-        it('should fallback to edge proxy fetch when proxy values exist but guestId is undefined', async () => {
+        it('should fallback to edge proxy fetch when proxy values exist but profileId is undefined', async () => {
           mockAnalyticsPlugin.options.proxyValues = {
             clientId: 'client-id',
-            guestId: undefined,
+            profileId: undefined,
           };
           getClientIdStub.returns('client-id-123');
-          fetchGuestIdFromEdgeProxyStub.resolves('fetched-guest-id');
+          fetchProfileIdFromEdgeProxyStub.resolves('fetched-profile-id');
 
           const request = createMockRequest({});
           const response = createMockResponse();
 
           const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-          await adapter.setGuestId();
+          await adapter.setProfileId();
 
-          expect(fetchGuestIdFromEdgeProxyStub).to.have.been.calledWith(
+          expect(fetchProfileIdFromEdgeProxyStub).to.have.been.calledWith(
             'client-id-123',
             'test-context-id',
             'https://edge.test.com'
           );
           expect(response.cookieStore.sc_gid).to.deep.include({
-            value: 'fetched-guest-id',
+            value: 'fetched-profile-id',
             sameSite: 'none',
           });
         });
       });
 
       describe('fetch from edge proxy', () => {
-        it('should fetch guest ID from edge proxy when client ID exists', async () => {
+        it('should fetch profile ID from edge proxy when client ID exists', async () => {
           getClientIdStub.returns('client-id-123');
-          fetchGuestIdFromEdgeProxyStub.resolves('new-guest-id');
+          fetchProfileIdFromEdgeProxyStub.resolves('new-profile-id');
 
           const request = createMockRequest({});
           const response = createMockResponse();
 
           const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-          await adapter.setGuestId();
+          await adapter.setProfileId();
 
-          expect(fetchGuestIdFromEdgeProxyStub).to.have.been.calledWith(
+          expect(fetchProfileIdFromEdgeProxyStub).to.have.been.calledWith(
             'client-id-123',
             'test-context-id',
             'https://edge.test.com'
           );
         });
 
-        it('should set guest ID cookie from edge proxy response', async () => {
+        it('should set profile ID cookie from edge proxy response', async () => {
           getClientIdStub.returns('client-id-123');
-          fetchGuestIdFromEdgeProxyStub.resolves('new-guest-id');
+          fetchProfileIdFromEdgeProxyStub.resolves('new-profile-id');
 
           const request = createMockRequest({});
           const response = createMockResponse();
 
           const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-          await adapter.setGuestId();
+          await adapter.setProfileId();
 
           expect(response.cookieStore.sc_gid).to.deep.include({
-            value: 'new-guest-id',
+            value: 'new-profile-id',
             sameSite: 'none',
           });
         });
 
         it('should set cookie on request when fetching from edge proxy', async () => {
           getClientIdStub.returns('client-id-123');
-          fetchGuestIdFromEdgeProxyStub.resolves('new-guest-id');
+          fetchProfileIdFromEdgeProxyStub.resolves('new-profile-id');
 
           const cookieStore: Record<string, string> = {};
           const request = createMockRequest(cookieStore);
           const response = createMockResponse();
 
           const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-          await adapter.setGuestId();
+          await adapter.setProfileId();
 
-          expect(request.cookies.get('sc_gid')?.value).to.equal('new-guest-id');
+          expect(request.cookies.get('sc_gid')?.value).to.equal('new-profile-id');
         });
       });
 
@@ -405,9 +405,9 @@ describe('personalizeProxyAdapter', () => {
           const response = createMockResponse();
 
           const adapter = personalizeProxyAdapterModule.personalizeProxyAdapter(request, response);
-          await adapter.setGuestId();
+          await adapter.setProfileId();
 
-          expect(fetchGuestIdFromEdgeProxyStub).to.not.have.been.called;
+          expect(fetchProfileIdFromEdgeProxyStub).to.not.have.been.called;
           expect(response.cookieStore.sc_gid).to.be.undefined;
         });
       });

@@ -237,7 +237,7 @@ describe('analyticsProxyAdapter', () => {
         it('should fetch client ID from edge proxy when no cookies exist', async () => {
           fetchClientIdFromEdgeProxyStub.resolves({
             clientId: 'new-client-id',
-            guestId: 'guest-id',
+            profileId: 'profile-id',
           });
 
           const request = createMockRequest({});
@@ -256,7 +256,7 @@ describe('analyticsProxyAdapter', () => {
         it('should store proxy values in plugin settings after fetching', async () => {
           const proxyValues = {
             clientId: 'new-client-id',
-            guestId: 'guest-id',
+            profileId: 'profile-id',
           };
           fetchClientIdFromEdgeProxyStub.resolves(proxyValues);
 

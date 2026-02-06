@@ -45,7 +45,7 @@ export interface PersonalizeServerPlugin {
 }
 
 export interface PersonalizeAdapter extends PluginAdapter {
-  getGuestId: () => string | null;
-  setGuestId: () => Promise<void>;
+  getProfileId: () => string | null;
+  setProfileId: () => Promise<void>;
   getUserAgent?: () => string | undefined;
 }
