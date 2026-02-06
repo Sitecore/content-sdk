@@ -15,14 +15,14 @@ interface EmptyFieldComponentProps {
  * @param {object} props - The props for the component.
  * @public
  */
-export function DefaultEmptyFieldEditingComponentTextOptimized(props: EmptyFieldComponentProps) {
+export const DefaultEmptyFieldEditingComponentTextOptimized = (props: EmptyFieldComponentProps) => {
   const Tag = (props.tag || 'span') as React.ElementType;
   return (
     <Tag {...props} suppressHydrationWarning={true}>
       [No text in field]
     </Tag>
   );
-}
+};
 
 /**
  * The DefaultEmptyFieldEditingComponentImage component (unchanged - already uses JSX).
@@ -31,7 +31,9 @@ export function DefaultEmptyFieldEditingComponentTextOptimized(props: EmptyField
  * @param {object} props - The props for the component.
  * @public
  */
-export function DefaultEmptyFieldEditingComponentImageOptimized(props: EmptyFieldComponentProps) {
+export const DefaultEmptyFieldEditingComponentImageOptimized = (
+  props: EmptyFieldComponentProps
+) => {
   const inlineStyles = {
     minWidth: '48px',
     minHeight: '48px',
@@ -50,4 +52,4 @@ export function DefaultEmptyFieldEditingComponentImageOptimized(props: EmptyFiel
       style={inlineStyles}
     />
   );
-}
+};

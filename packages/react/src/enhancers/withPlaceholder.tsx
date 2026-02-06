@@ -3,11 +3,11 @@ import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/lay
 import { withComponentMap } from './withComponentMap';
 import { withSitecore } from './withSitecore';
 import {
-  PlaceholderComponent,
   PlaceholderProps,
   getPlaceholderRenderings,
+  getRenderedComponents,
 } from '../components/Placeholder';
-import { ErrorComponent } from '../components/ErrorBoundary';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 export interface WithPlaceholderOptions {
   /**
@@ -36,6 +36,7 @@ export interface PlaceholderToPropMapping {
   prop: string;
 }
 
+// TODO: this HOC and Placeholder are kinda doing the same thing. Could the be combined?
 export type WithPlaceholderSpec =
   | (string | PlaceholderToPropMapping)
   | (string | PlaceholderToPropMapping)[];
@@ -55,68 +56,56 @@ export function withPlaceholder(
       | React.ComponentClass<PlaceholderProps>
       | React.FunctionComponent<PlaceholderProps>
   ) => {
-    class WithPlaceholder extends PlaceholderComponent {
-      constructor(props: PlaceholderProps) {
-        super(props);
+    const WithPlaceholder = (props: PlaceholderProps) => {
+      let childProps: PlaceholderProps = { ...props };
+
+      delete childProps.componentMap;
+
+      if (options && options.propsTransformer) {
+        childProps = options.propsTransformer(childProps);
       }
 
-      render() {
-        let childProps: PlaceholderProps = { ...this.props };
+      const renderingData =
+        options && options.resolvePlaceholderDataFromProps
+          ? options.resolvePlaceholderDataFromProps(childProps)
+          : childProps.rendering;
 
-        delete childProps.componentMap;
+      const definitelyArrayPlacholders = !Array.isArray(placeholders)
+        ? [placeholders]
+        : placeholders;
 
-        if (options && options.propsTransformer) {
-          childProps = options.propsTransformer(childProps);
-        }
+      definitelyArrayPlacholders.forEach((placeholder: string | PlaceholderToPropMapping) => {
+        let placeholderData: ComponentRendering[];
 
-        if (this.state.error) {
-          if (childProps.errorComponent) {
-            return <childProps.errorComponent error={this.state.error} />;
-          }
-
-          return (
-            <ErrorComponent message={`A rendering error occurred: ${this.state.error.message}.`} />
+        if (typeof placeholder !== 'string' && placeholder.placeholder && placeholder.prop) {
+          placeholderData = getPlaceholderRenderings(
+            renderingData,
+            placeholder.placeholder,
+            childProps.page.mode.isEditing
           );
-        }
-
-        const renderingData =
-          options && options.resolvePlaceholderDataFromProps
-            ? options.resolvePlaceholderDataFromProps(childProps)
-            : childProps.rendering;
-
-        const definitelyArrayPlacholders = !Array.isArray(placeholders)
-          ? [placeholders]
-          : placeholders;
-
-        definitelyArrayPlacholders.forEach((placeholder: string | PlaceholderToPropMapping) => {
-          let placeholderData: ComponentRendering[];
-
-          if (typeof placeholder !== 'string' && placeholder.placeholder && placeholder.prop) {
-            placeholderData = getPlaceholderRenderings(
-              renderingData,
-              placeholder.placeholder,
-              childProps.page.mode.isEditing
-            );
-            if (placeholderData) {
-              (childProps as PlaceholderProps & Record<string, unknown>)[placeholder.prop] =
-                PlaceholderComponent.getRenderedComponents(this.props, placeholderData);
-            }
-          } else {
-            placeholderData = getPlaceholderRenderings(
-              renderingData,
-              placeholder as string,
-              childProps.page.mode.isEditing
-            );
-            if (placeholderData) {
-              (childProps as PlaceholderProps & Record<string, unknown>)[placeholder as string] =
-                PlaceholderComponent.getRenderedComponents(this.props, placeholderData);
-            }
+          if (placeholderData) {
+            (childProps as PlaceholderProps & Record<string, unknown>)[placeholder.prop] =
+              getRenderedComponents(props, placeholderData);
           }
-        });
+        } else {
+          placeholderData = getPlaceholderRenderings(
+            renderingData,
+            placeholder as string,
+            childProps.page.mode.isEditing
+          );
+          if (placeholderData) {
+            (childProps as PlaceholderProps & Record<string, unknown>)[placeholder as string] =
+              getRenderedComponents(props, placeholderData);
+          }
+        }
+      });
 
-        return <WrappedComponent {...childProps} />;
-      }
-    }
+      return (
+        <ErrorBoundary errorComponent={props.errorComponent}>
+          <WrappedComponent {...childProps} />
+        </ErrorBoundary>
+      );
+    };
 
     return withSitecore()(withComponentMap(WithPlaceholder));
   };

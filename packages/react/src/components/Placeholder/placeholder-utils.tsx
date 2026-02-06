@@ -26,6 +26,8 @@ import {
   PlaceholderProps,
   RenderedProps,
 } from './models';
+import { PlaceholderMetadata } from './PlaceholderMetadata';
+import ErrorBoundary from '../ErrorBoundary';
 
 /**
  * Get the renderings for the specified placeholder from the rendering data.
@@ -281,4 +283,82 @@ export const getComponentForRendering = (
       .componentType as ComponentForRendering['componentType'],
     isEmpty: false,
   };
+};
+
+/**
+ * Renders the components for the placeholder based on the provided rendering data.
+ * @param {PlaceholderProps} props placeholder component props
+ * @param {ComponentRendering[]} placeholderRenderings renderings within placeholder
+ * @returns {React.ReactNode | React.ReactElement[]} rendered components
+ */
+export const getRenderedComponents = (
+  props: PlaceholderProps,
+  placeholderRenderings: ComponentRendering[]
+) => {
+  const { name, missingComponentComponent, hiddenRenderingComponent } = props;
+
+  const transformedComponents = placeholderRenderings
+    .map((componentRendering: ComponentRendering, index: number) => {
+      const key = componentRendering.uid || `component-${index}`;
+
+      const renderedProps = getRenderedComponentProps(props, componentRendering, key);
+
+      const component = getComponentForRendering(
+        componentRendering,
+        name,
+        props.componentMap,
+        hiddenRenderingComponent,
+        missingComponentComponent
+      );
+
+      let rendered = React.createElement<{ [attr: string]: unknown }>(
+        component.component as React.ComponentType,
+        props.modifyComponentProps ? props.modifyComponentProps(renderedProps) : renderedProps
+      );
+
+      if (!component.isEmpty) {
+        const errorBoundaryKey = rendered.type + '-' + index;
+
+        const disableSuspense = props.disableSuspense || false;
+        rendered = (
+          <ErrorBoundary
+            data-testid="error-boundary"
+            key={errorBoundaryKey}
+            errorComponent={props.errorComponent}
+            componentLoadingMessage={props.componentLoadingMessage}
+            isDynamic={component.dynamic}
+            disableSuspense={disableSuspense}
+            rendering={rendered.props.rendering as ComponentRendering}
+          >
+            {rendered}
+          </ErrorBoundary>
+        );
+      }
+
+      // if in edit mode then emit shallow chromes for hydration in Pages
+      if (props.page.mode.isEditing) {
+        return (
+          <PlaceholderMetadata key={key} rendering={componentRendering}>
+            {rendered}
+          </PlaceholderMetadata>
+        );
+      }
+
+      return rendered;
+    })
+    .filter((element) => element); // remove nulls
+
+  if (props.page.mode.isEditing) {
+    return [
+      <PlaceholderMetadata
+        key={(props.rendering as ComponentRendering).uid}
+        placeholderName={name}
+        rendering={props.rendering as ComponentRendering}
+      >
+        {transformedComponents}
+      </PlaceholderMetadata>,
+    ];
+  }
+
+  return transformedComponents;
 };

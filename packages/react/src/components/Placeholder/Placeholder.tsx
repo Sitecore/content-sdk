@@ -1,154 +1,47 @@
 ﻿'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PlaceholderProps } from './models';
 import { withComponentMap } from '../../enhancers/withComponentMap';
 import { PagesEditor } from '@sitecore-content-sdk/content/editing';
 import { withSitecore } from '../../enhancers/withSitecore';
 import {
-  getComponentForRendering,
   getPlaceholderRenderings,
-  getRenderedComponentProps,
+  getRenderedComponents,
   renderEmptyPlaceholder,
 } from './placeholder-utils';
-import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
-import { PlaceholderMetadata } from './PlaceholderMetadata';
-import ErrorBoundary, { ErrorComponent } from '../ErrorBoundary';
+import ErrorBoundary from '../ErrorBoundary';
 
-export class PlaceholderComponent extends React.Component<PlaceholderProps> {
-  isEmpty = false;
-  state: Readonly<{ error?: Error }>;
+const PlaceholderComponent = (props: PlaceholderProps) => {
+  const renderingData = props.rendering;
+  const placeholderRenderings = getPlaceholderRenderings(
+    renderingData,
+    props.name,
+    props.page.mode.isEditing
+  );
+  const isEmpty = !placeholderRenderings.length;
 
-  constructor(props: PlaceholderProps) {
-    super(props);
-    this.state = {};
-  }
-
-  /**
-   * Renders the components for the placeholder based on the provided rendering data.
-   * @param {PlaceholderProps} props placeholder component props
-   * @param {ComponentRendering[]} placeholderRenderings renderings within placeholder
-   * @returns {React.ReactNode | React.ReactElement[]} rendered components
-   */
-  static getRenderedComponents = (
-    props: PlaceholderProps,
-    placeholderRenderings: ComponentRendering[]
-  ) => {
-    const { name, missingComponentComponent, hiddenRenderingComponent } = props;
-
-    const transformedComponents = placeholderRenderings
-      .map((componentRendering: ComponentRendering, index: number) => {
-        const key = componentRendering.uid || `component-${index}`;
-
-        const renderedProps = getRenderedComponentProps(props, componentRendering, key);
-
-        const component = getComponentForRendering(
-          componentRendering,
-          name,
-          props.componentMap,
-          hiddenRenderingComponent,
-          missingComponentComponent
-        );
-
-        let rendered = React.createElement<{ [attr: string]: unknown }>(
-          component.component as React.ComponentType,
-          props.modifyComponentProps ? props.modifyComponentProps(renderedProps) : renderedProps
-        );
-
-        if (!component.isEmpty) {
-          const errorBoundaryKey = rendered.type + '-' + index;
-
-          const disableSuspense = props.disableSuspense || false;
-          rendered = (
-            <ErrorBoundary
-              data-testid="error-boundary"
-              key={errorBoundaryKey}
-              errorComponent={props.errorComponent}
-              componentLoadingMessage={props.componentLoadingMessage}
-              isDynamic={component.dynamic}
-              disableSuspense={disableSuspense}
-              rendering={rendered.props.rendering as ComponentRendering}
-            >
-              {rendered}
-            </ErrorBoundary>
-          );
-        }
-
-        // if in edit mode then emit shallow chromes for hydration in Pages
-        if (props.page.mode.isEditing) {
-          return (
-            <PlaceholderMetadata key={key} rendering={componentRendering}>
-              {rendered}
-            </PlaceholderMetadata>
-          );
-        }
-
-        return rendered;
-      })
-      .filter((element) => element); // remove nulls
-
-    if (props.page.mode.isEditing) {
-      return [
-        <PlaceholderMetadata
-          key={(props.rendering as ComponentRendering).uid}
-          placeholderName={name}
-          rendering={props.rendering as ComponentRendering}
-        >
-          {transformedComponents}
-        </PlaceholderMetadata>,
-      ];
-    }
-
-    return transformedComponents;
-  };
-
-  componentDidMount() {
-    if (this.isEmpty && PagesEditor.isActive()) {
+  // componentDidMount equivalent: Reset chromes when placeholder is empty
+  useEffect(() => {
+    if (isEmpty && PagesEditor.isActive()) {
       PagesEditor.resetChromes();
     }
-  }
+  }, [isEmpty]); // Empty array = runs once on mount
 
-  componentDidCatch(error: Error) {
-    this.setState({ error });
-  }
-
-  render() {
-    const childProps: PlaceholderProps = { ...this.props };
+  const renderChildren = () => {
+    const childProps: PlaceholderProps = { ...props };
 
     delete childProps.componentMap;
 
-    if (this.state.error) {
-      if (childProps.errorComponent) {
-        return <childProps.errorComponent error={this.state.error} />;
-      }
+    const components = getRenderedComponents(props, placeholderRenderings);
 
-      return (
-        <ErrorComponent message={`A rendering error occurred: ${this.state.error.message}.`} />
-      );
-    }
+    if (isEmpty) {
+      const rendered = props.renderEmpty ? props.renderEmpty(components) : components;
 
-    const renderingData = childProps.rendering;
-
-    const placeholderRenderings = getPlaceholderRenderings(
-      renderingData,
-      this.props.name,
-      this.props.page.mode.isEditing
-    );
-
-    this.isEmpty = !placeholderRenderings.length;
-
-    const components = PlaceholderComponent.getRenderedComponents(
-      this.props,
-      placeholderRenderings
-    );
-
-    if (this.isEmpty) {
-      const rendered = this.props.renderEmpty ? this.props.renderEmpty(components) : components;
-
-      return this.props.page.mode.isEditing ? renderEmptyPlaceholder(rendered) : rendered;
-    } else if (this.props.render) {
-      return this.props.render(components, placeholderRenderings, childProps);
-    } else if (this.props.renderEach) {
-      const renderEach = this.props.renderEach;
+      return props.page.mode.isEditing ? renderEmptyPlaceholder(rendered) : rendered;
+    } else if (props.render) {
+      return props.render(components, placeholderRenderings, childProps);
+    } else if (props.renderEach) {
+      const renderEach = props.renderEach;
 
       return components.map((component, index) => {
         if (component && component.props && component.props.type === 'text/sitecore') {
@@ -160,8 +53,11 @@ export class PlaceholderComponent extends React.Component<PlaceholderProps> {
     } else {
       return components;
     }
-  }
-}
+  };
+
+  // Using error boundary for errors that may happen within Placeholder itself
+  return <ErrorBoundary errorComponent={props.errorComponent}>{renderChildren()}</ErrorBoundary>;
+};
 
 const PlaceholderWithComponentMap = withComponentMap(PlaceholderComponent);
 
