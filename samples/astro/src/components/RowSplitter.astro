@@ -1,0 +1,44 @@
+---
+/**
+ * Row Splitter component.
+ * Renders multiple rows, each with its own dynamic placeholder.
+ * Supports up to 8 rows with configurable styles.
+ */
+import type { ComponentRendering, Page, AstroComponentMap } from '@sitecore-content-sdk/atro';
+import Placeholder from '@sitecore-content-sdk/atro/components/Placeholder.astro';
+
+interface Props {
+  fields: Record<string, unknown>;
+  params: Record<string, string>;
+  rendering: ComponentRendering;
+  page: Page;
+  componentMap: AstroComponentMap;
+}
+
+const { params, rendering, page, componentMap } = Astro.props;
+const enabledPlaceholders = params.EnabledPlaceholders?.split(',') ?? [];
+const id = params.RenderingIdentifier;
+---
+
+<div class={`component row-splitter ${params.styles}`} id={id}>
+  {enabledPlaceholders.map((ph) => {
+    const num = Number(ph);
+    const placeholderKey = `row-${num}-{*}`;
+    const rowStyles = (params[`Styles${num}`] ?? '').trimEnd();
+
+    return (
+      <div class={`container-fluid ${rowStyles}`.trimEnd()}>
+        <div>
+          <div class="row">
+            <Placeholder
+              name={placeholderKey}
+              rendering={rendering}
+              page={page}
+              componentMap={componentMap}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  })}
+</div>

@@ -1,0 +1,26 @@
+---
+/**
+ * A simple Content Block component, with a heading and rich text block.
+ * This is the most basic building block of a content site, and the most basic
+ * Content SDK component that's useful.
+ */
+import type { ComponentRendering, Field } from '@sitecore-content-sdk/atro';
+import Text from '@sitecore-content-sdk/atro/components/Text.astro';
+import RichText from '@sitecore-content-sdk/atro/components/RichText.astro';
+
+interface Props {
+  fields: {
+    heading: Field<string>;
+    content: Field<string>;
+  };
+  params: Record<string, string>;
+  rendering: ComponentRendering;
+}
+
+const { fields } = Astro.props;
+---
+
+<div class="contentBlock">
+  <Text tag="h2" class="contentTitle" field={fields.heading} />
+  <RichText class="contentDescription" field={fields.content} />
+</div>

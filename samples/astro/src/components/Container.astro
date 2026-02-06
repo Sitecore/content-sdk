@@ -1,0 +1,68 @@
+---
+/**
+ * Container component.
+ * Renders a dynamic placeholder with optional background image support.
+ */
+import type { ComponentRendering, Page, AstroComponentMap } from '@sitecore-content-sdk/atro';
+import Placeholder from '@sitecore-content-sdk/atro/components/Placeholder.astro';
+
+interface Props {
+  fields: Record<string, unknown>;
+  params: Record<string, string>;
+  rendering: ComponentRendering;
+  page: Page;
+  componentMap: AstroComponentMap;
+}
+
+const { params, rendering, page, componentMap } = Astro.props;
+const {
+  styles,
+  RenderingIdentifier: id,
+  BackgroundImage: backgroundImage,
+  DynamicPlaceholderId,
+} = params;
+
+const phKey = `container-${DynamicPlaceholderId}`;
+
+// Extract the mediaurl from rendering parameters
+const mediaUrlPattern = /mediaurl="([^"]*)"/i;
+
+let backgroundStyle = '';
+
+if (backgroundImage && backgroundImage.match(mediaUrlPattern)) {
+  const mediaUrl = backgroundImage.match(mediaUrlPattern)?.[1] || '';
+  backgroundStyle = `background-image: url('${mediaUrl}')`;
+}
+
+const hasContainerStyle = styles?.split(' ').includes('container');
+---
+
+{hasContainerStyle ? (
+  <div class="container-wrapper">
+    <div class={`component container-default ${styles}`} id={id}>
+      <div class="component-content" style={backgroundStyle}>
+        <div class="row">
+          <Placeholder
+            name={phKey}
+            rendering={rendering}
+            page={page}
+            componentMap={componentMap}
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+) : (
+  <div class={`component container-default ${styles}`} id={id}>
+    <div class="component-content" style={backgroundStyle}>
+      <div class="row">
+        <Placeholder
+          name={phKey}
+          rendering={rendering}
+          page={page}
+          componentMap={componentMap}
+        />
+      </div>
+    </div>
+  </div>
+)}

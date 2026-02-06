@@ -1,0 +1,29 @@
+---
+/**
+ * A simple Rich Text component wrapper.
+ * Renders a Sitecore rich text field with SXA styles support.
+ */
+import type { ComponentRendering, Field } from '@sitecore-content-sdk/atro';
+import RichTextField from '@sitecore-content-sdk/atro/components/RichText.astro';
+
+interface Props {
+  fields: {
+    Text: Field<string>;
+  };
+  params: Record<string, string>;
+  rendering: ComponentRendering;
+}
+
+const { fields, params } = Astro.props;
+const { RenderingIdentifier, styles } = params;
+---
+
+<div class={`component rich-text ${styles}`} id={RenderingIdentifier}>
+  <div class="component-content">
+    {fields ? (
+      <RichTextField field={fields.Text} />
+    ) : (
+      <span class="is-empty-hint">Rich text</span>
+    )}
+  </div>
+</div>

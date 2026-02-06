@@ -1,0 +1,136 @@
+---
+/**
+ * Navigation component.
+ * Renders a hierarchical navigation tree with a mobile hamburger menu toggle.
+ * Uses vanilla JavaScript for client-side interactivity (menu toggle, active states).
+ */
+import type { ComponentRendering, Page } from '@sitecore-content-sdk/atro';
+
+interface NavigationFields {
+  Id: string;
+  DisplayName: string;
+  Title: { value?: string; metadata?: unknown };
+  NavigationTitle: { value?: string; metadata?: unknown };
+  Href: string;
+  Querystring: string;
+  Children: NavigationFields[];
+  Styles: string[];
+}
+
+interface Props {
+  fields: Record<string, NavigationFields>;
+  params: Record<string, string>;
+  rendering: ComponentRendering;
+  page: Page;
+}
+
+const { fields, params, page } = Astro.props;
+const { styles, RenderingIdentifier: id } = params;
+const isEditing = page?.mode?.isEditing;
+
+const navigationItems = Object.values(fields).filter(Boolean) as NavigationFields[];
+const isEmpty = navigationItems.length === 0;
+
+/**
+ * Get the display text for a navigation item.
+ */
+function getTextContent(item: NavigationFields): string {
+  if (item.NavigationTitle?.value) return String(item.NavigationTitle.value);
+  if (item.Title?.value) return String(item.Title.value);
+  return item.DisplayName;
+}
+
+/**
+ * Build the href for a navigation item including querystring.
+ */
+function getHref(item: NavigationFields): string {
+  const qs = item.Querystring ? `?${item.Querystring}` : '';
+  return `${item.Href}${qs}`;
+}
+
+/**
+ * Get the title attribute for a navigation link.
+ */
+function getTitle(item: NavigationFields): string {
+  return (
+    item.NavigationTitle?.value?.toString() ??
+    item.Title?.value?.toString() ??
+    item.DisplayName
+  );
+}
+---
+
+{isEmpty ? (
+  <div class={`component navigation ${styles}`} id={id}>
+    <div class="component-content">[Navigation]</div>
+  </div>
+) : (
+  <div class={`component navigation ${styles}`} id={id}>
+    <label class="menu-mobile-navigate-wrapper">
+      <input
+        type="checkbox"
+        class="menu-mobile-navigate"
+      />
+      <div class="menu-humburger" />
+      <div class="component-content">
+        <nav>
+          <ul class="clearfix">
+            {navigationItems.map((item) => (
+              <li
+                class={[...(item.Styles || []), 'rel-level1'].join(' ')}
+                tabindex="0"
+              >
+                <div class={`navigation-title ${item.Children?.length > 0 ? 'child' : ''}`}>
+                  <a href={isEditing ? undefined : getHref(item)} title={getTitle(item)}>
+                    {getTextContent(item)}
+                  </a>
+                </div>
+                {item.Children?.length > 0 && (
+                  <ul class="clearfix">
+                    {item.Children.map((child) => (
+                      <li
+                        class={[...(child.Styles || []), 'rel-level2'].join(' ')}
+                        tabindex="0"
+                      >
+                        <div class={`navigation-title ${child.Children?.length > 0 ? 'child' : ''}`}>
+                          <a href={isEditing ? undefined : getHref(child)} title={getTitle(child)}>
+                            {getTextContent(child)}
+                          </a>
+                        </div>
+                        {child.Children?.length > 0 && (
+                          <ul class="clearfix">
+                            {child.Children.map((grandchild) => (
+                              <li
+                                class={[...(grandchild.Styles || []), 'rel-level3'].join(' ')}
+                                tabindex="0"
+                              >
+                                <div class="navigation-title">
+                                  <a href={isEditing ? undefined : getHref(grandchild)} title={getTitle(grandchild)}>
+                                    {getTextContent(grandchild)}
+                                  </a>
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </label>
+  </div>
+)}
+
+<script>
+  // Toggle active state on navigation items with children
+  document.querySelectorAll('.navigation-title.child').forEach((el) => {
+    el.addEventListener('click', () => {
+      el.closest('li')?.classList.toggle('active');
+    });
+  });
+</script>

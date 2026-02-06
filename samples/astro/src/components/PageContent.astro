@@ -1,0 +1,30 @@
+---
+/**
+ * Page Content component.
+ * Renders a rich text content field, falling back to route-level Content field if no datasource.
+ */
+import type { ComponentRendering, Field, Page } from '@sitecore-content-sdk/atro';
+import RichTextField from '@sitecore-content-sdk/atro/components/RichText.astro';
+
+interface Props {
+  fields: {
+    Content?: Field<string>;
+  };
+  params: Record<string, string>;
+  rendering: ComponentRendering;
+  page: Page;
+}
+
+const { fields, params, page } = Astro.props;
+const { styles, RenderingIdentifier: id } = params;
+
+const field = fields?.Content ?? (page?.layout?.sitecore?.route?.fields?.Content as Field<string>);
+---
+
+<div class={`component content ${styles}`} id={id}>
+  <div class="component-content">
+    <div class="field-content">
+      {field ? <RichTextField field={field} /> : '[Content]'}
+    </div>
+  </div>
+</div>

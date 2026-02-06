@@ -1,0 +1,68 @@
+---
+/**
+ * Title component.
+ * Renders a title field with an optional link, using integrated GraphQL data.
+ * In editing mode, renders only the text; in normal mode, wraps it in a link.
+ */
+import type { ComponentRendering, Field, Page } from '@sitecore-content-sdk/atro';
+import Text from '@sitecore-content-sdk/atro/components/Text.astro';
+import Link from '@sitecore-content-sdk/atro/components/Link.astro';
+
+interface Item {
+  url: {
+    path: string;
+    siteName: string;
+  };
+  field: {
+    jsonValue: {
+      value: string;
+    };
+  };
+}
+
+interface Props {
+  fields: {
+    data?: {
+      datasource?: Item;
+      contextItem?: Item;
+    };
+  };
+  params: Record<string, string>;
+  rendering: ComponentRendering;
+  page: Page;
+}
+
+const { params, fields, page } = Astro.props;
+const { styles, RenderingIdentifier: id } = params;
+
+const datasource = fields?.data?.datasource || fields?.data?.contextItem;
+
+type TextField = Field<string>;
+
+const datasourceField = datasource?.field?.jsonValue as TextField | undefined;
+const contextField = page?.layout?.sitecore?.route?.fields?.Title as TextField | undefined;
+const titleField = datasourceField || contextField;
+
+const linkField = {
+  value: {
+    href: datasource?.url?.path,
+    title:
+      (titleField?.value ? String(titleField.value) : undefined) ||
+      datasource?.field?.jsonValue?.value,
+  },
+};
+---
+
+<div class={`component title ${(styles || '').trim()}`} id={id}>
+  <div class="component-content">
+    <div class="field-title">
+      {page?.mode?.isEditing ? (
+        <Text field={titleField} />
+      ) : (
+        <Link field={linkField}>
+          <Text field={titleField} />
+        </Link>
+      )}
+    </div>
+  </div>
+</div>

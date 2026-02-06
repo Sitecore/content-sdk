@@ -1,0 +1,85 @@
+---
+/**
+ * Link List component.
+ * Renders a list of links from integrated GraphQL datasource children.
+ */
+import type { ComponentRendering } from '@sitecore-content-sdk/atro';
+import Text from '@sitecore-content-sdk/atro/components/Text.astro';
+import Link from '@sitecore-content-sdk/atro/components/Link.astro';
+
+interface LinkField {
+  value: {
+    href?: string;
+    text?: string;
+    [key: string]: unknown;
+  };
+}
+
+interface TextField {
+  value?: string;
+  metadata?: unknown;
+}
+
+interface Props {
+  fields: {
+    data: {
+      datasource: {
+        children: {
+          results: Array<{
+            field: {
+              link: LinkField;
+            };
+          }>;
+        };
+        field: {
+          title: TextField;
+        };
+      };
+    };
+  };
+  params: Record<string, string>;
+  rendering: ComponentRendering;
+}
+
+const { fields, params } = Astro.props;
+const datasource = fields?.data?.datasource;
+const styles = `component link-list ${params.styles || ''}`.trim();
+const id = params.RenderingIdentifier;
+
+const links = datasource?.children?.results?.filter(
+  (element) => element?.field?.link
+) ?? [];
+---
+
+<div class={styles} id={id}>
+  <div class="component-content">
+    {!datasource ? (
+      <h3>Link List</h3>
+    ) : (
+      <>
+        <Text tag="h3" field={datasource.field?.title} />
+        <ul>
+          {links.map((element, index) => {
+            const total = links.length;
+            const classNames = [
+              `item${index}`,
+              index % 2 === 0 ? 'odd' : 'even',
+              index === 0 ? 'first' : '',
+              index === total - 1 ? 'last' : '',
+            ]
+              .filter(Boolean)
+              .join(' ');
+
+            return (
+              <li class={classNames}>
+                <div class="field-link">
+                  <Link field={element.field.link} />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </>
+    )}
+  </div>
+</div>

@@ -1,0 +1,27 @@
+---
+/**
+ * Partial Design Dynamic Placeholder component.
+ * A passthrough component that renders a dynamic placeholder
+ * based on the `sig` rendering parameter.
+ */
+import type { ComponentRendering, Page, AstroComponentMap } from '@sitecore-content-sdk/atro';
+import Placeholder from '@sitecore-content-sdk/atro/components/Placeholder.astro';
+
+interface Props {
+  fields: Record<string, unknown>;
+  params: Record<string, string>;
+  rendering: ComponentRendering;
+  page: Page;
+  componentMap: AstroComponentMap;
+}
+
+const { rendering, page, componentMap } = Astro.props;
+const placeholderName = rendering?.params?.sig || '';
+---
+
+<Placeholder
+  name={placeholderName}
+  rendering={rendering}
+  page={page}
+  componentMap={componentMap}
+/>

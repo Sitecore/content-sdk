@@ -1,0 +1,76 @@
+---
+/**
+ * Image component with Default and Banner variants.
+ * Default: Renders an image with an optional link wrapper and caption.
+ * Banner: Renders a hero banner image with background-image style.
+ */
+import type { ComponentRendering, Field, Page } from '@sitecore-content-sdk/atro';
+import ImageField from '@sitecore-content-sdk/atro/components/Image.astro';
+import Link from '@sitecore-content-sdk/atro/components/Link.astro';
+import Text from '@sitecore-content-sdk/atro/components/Text.astro';
+
+interface ImageFieldValue {
+  src?: string;
+  alt?: string;
+  width?: string;
+  height?: string;
+  [key: string]: unknown;
+}
+
+interface Props {
+  fields: {
+    Image: { value?: ImageFieldValue; metadata?: unknown };
+    ImageCaption?: Field<string>;
+    TargetUrl?: { value: { href?: string; [key: string]: unknown } };
+  };
+  params: Record<string, string>;
+  rendering: ComponentRendering;
+  page: Page;
+}
+
+const { fields, params, page } = Astro.props;
+const { styles, RenderingIdentifier: id } = params;
+
+const isBannerVariant = params.FieldNames === 'Banner';
+
+// Banner variant
+const backgroundImageUrl = fields?.Image?.value?.src;
+const backgroundStyle = backgroundImageUrl
+  ? `background-image: url('${backgroundImageUrl}')`
+  : '';
+
+// Default variant
+const shouldWrapWithLink =
+  !page?.mode?.isEditing && fields?.TargetUrl?.value?.href;
+---
+
+{!fields ? (
+  <div class={`component image ${styles}`.trim()} id={id}>
+    <div class="component-content">
+      <span class="is-empty-hint">Image</span>
+    </div>
+  </div>
+) : isBannerVariant ? (
+  <div class={`component hero-banner ${styles}`.trim()} id={id}>
+    <div class="component-content sc-sxa-image-hero-banner" style={backgroundStyle}>
+      <ImageField field={fields.Image} />
+    </div>
+  </div>
+) : (
+  <div class={`component image ${styles}`} id={id}>
+    <div class="component-content">
+      {shouldWrapWithLink ? (
+        <Link field={fields.TargetUrl}>
+          <ImageField field={fields.Image} />
+        </Link>
+      ) : (
+        <ImageField field={fields.Image} />
+      )}
+      <Text
+        tag="span"
+        class="image-caption field-imagecaption"
+        field={fields.ImageCaption}
+      />
+    </div>
+  </div>
+)}

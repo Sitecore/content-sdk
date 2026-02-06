@@ -1,0 +1,43 @@
+---
+/**
+ * Column Splitter component.
+ * Renders multiple columns, each with its own dynamic placeholder.
+ * Supports up to 8 columns with configurable widths and styles.
+ */
+import type { ComponentRendering, Page, AstroComponentMap } from '@sitecore-content-sdk/atro';
+import Placeholder from '@sitecore-content-sdk/atro/components/Placeholder.astro';
+
+interface Props {
+  fields: Record<string, unknown>;
+  params: Record<string, string>;
+  rendering: ComponentRendering;
+  page: Page;
+  componentMap: AstroComponentMap;
+}
+
+const { params, rendering, page, componentMap } = Astro.props;
+const { EnabledPlaceholders, RenderingIdentifier: id, styles } = params;
+
+const enabledColumns = EnabledPlaceholders?.split(',') ?? [];
+---
+
+<div class={`row component column-splitter ${styles}`} id={id}>
+  {enabledColumns.map((columnNum) => {
+    const columnWidth = params[`ColumnWidth${columnNum}`] ?? '';
+    const columnStyle = params[`Styles${columnNum}`] ?? '';
+    const columnClassNames = `${columnWidth} ${columnStyle}`.trim();
+
+    return (
+      <div class={columnClassNames}>
+        <div class="row">
+          <Placeholder
+            name={`column-${columnNum}-{*}`}
+            rendering={rendering}
+            page={page}
+            componentMap={componentMap}
+          />
+        </div>
+      </div>
+    );
+  })}
+</div>
