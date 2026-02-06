@@ -15,14 +15,17 @@ interface AnalyticsServerAdapter extends AnalyticsAdapter {
 
 /**
  * Enables analytics functionality in the server environment.
- * @param {IncomingMessage} request - The HTTP request object.
- * @param {OutgoingMessage} response - The HTTP response object.
+ * @template Request - The HTTP request type extending IncomingMessage.
+ * @template Response - The HTTP response type extending OutgoingMessage.
+ * @param {Request} request - The HTTP request object.
+ * @param {Response} response - The HTTP response object.
+ * @returns {AnalyticsServerAdapter} The analytics server adapter.
  * @public
  */
-export function analyticsServerAdapter(
-  request: IncomingMessage,
-  response: OutgoingMessage
-): AnalyticsServerAdapter {
+export function analyticsServerAdapter<
+  Request extends IncomingMessage,
+  Response extends OutgoingMessage
+>(request: Request, response: Response): AnalyticsServerAdapter {
   return {
     type: 'server',
     getClientId: () => {
@@ -107,11 +110,12 @@ export function analyticsServerAdapter(
 
 /**
  * Retrieves the client ID from the request cookies.
- * @param {IncomingMessage} request
+ * @template Request - The HTTP request type extending IncomingMessage.
+ * @param {Request} request
  * @returns {string | null} The client ID or null if not found.
  * @internal
  */
-function getClientId(request: IncomingMessage): string | null {
+function getClientId<Request extends IncomingMessage>(request: Request): string | null {
   return (
     getCookieServerSide(request.headers.cookie, getAnalyticsPlugin().options.cookies.name)?.value ??
     null

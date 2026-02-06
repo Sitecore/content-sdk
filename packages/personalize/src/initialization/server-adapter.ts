@@ -18,24 +18,19 @@ export interface PersonalizeServerAdapter extends PersonalizeAdapter {
   getUserAgent: PersonalizeAdapter['getUserAgent'];
 }
 
-const getGuestId = (request: IncomingMessage): string | null => {
-  return (
-    getCookieServerSide(request.headers.cookie, getPersonalizePlugin().options.cookies.name)
-      ?.value ?? null
-  );
-};
-
 /**
  * Enables personalize functionality in the server environment.
- * @param {IncomingMessage} request - The HTTP request object.
- * @param {OutgoingMessage} response - The HTTP response object.
+ * @template Request - The HTTP request type extending IncomingMessage.
+ * @template Response - The HTTP response type extending OutgoingMessage.
+ * @param {Request} request - The HTTP request object.
+ * @param {Response} response - The HTTP response object.
  * @returns An PersonalizeServerAdapter instance.
  * @public
  */
-export function personalizeServerAdapter(
-  request: IncomingMessage,
-  response: OutgoingMessage
-): PersonalizeServerAdapter {
+export function personalizeServerAdapter<
+  Request extends IncomingMessage,
+  Response extends OutgoingMessage
+>(request: Request, response: Response): PersonalizeServerAdapter {
   return {
     type: 'server',
     getUserAgent: () => request.headers['user-agent'],
@@ -125,4 +120,18 @@ export function personalizeServerAdapter(
       response.setHeader('Set-Cookie', cookieHeader);
     },
   };
+}
+
+/**
+ * Retrieves the guest ID from the request cookies.
+ * @template Request - The HTTP request type extending IncomingMessage.
+ * @param {Request} request
+ * @returns {string | null} The guest ID or null if not found.
+ * @internal
+ */
+function getGuestId<Request extends IncomingMessage>(request: Request): string | null {
+  return (
+    getCookieServerSide(request.headers.cookie, getPersonalizePlugin().options.cookies.name)
+      ?.value ?? null
+  );
 }
