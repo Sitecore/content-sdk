@@ -1,4 +1,4 @@
-import { ProxySettings } from '../interfaces';
+import { ResolvedVisitorIds } from '../interfaces';
 import { Plugin, type PluginAdapter } from '@sitecore-content-sdk/core';
 import { ANALYTICS_PLUGIN_NAME } from './const';
 
@@ -24,7 +24,7 @@ export interface AnalyticsOptions {
     path?: string;
     enabled?: boolean;
   };
-  proxyValues?: ProxySettings;
+  resolvedVisitorIds?: ResolvedVisitorIds;
   timeout?: number;
 }
 

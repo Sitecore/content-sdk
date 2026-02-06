@@ -9,7 +9,7 @@ export interface EPResponse {
   customer_ref: string;
 }
 
-export interface ProxySettings {
+export interface ResolvedVisitorIds {
   clientId: string;
   profileId: string;
 }

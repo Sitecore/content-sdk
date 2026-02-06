@@ -25,7 +25,7 @@ describe('analyticsProxyAdapter', () => {
         domain: '.example.com',
       },
       timeout: 3000,
-      proxyValues: undefined as any,
+      resolvedVisitorIds: undefined as any,
     },
   };
 
@@ -86,7 +86,7 @@ describe('analyticsProxyAdapter', () => {
   };
 
   beforeEach(() => {
-    mockAnalyticsPlugin.options.proxyValues = undefined;
+    mockAnalyticsPlugin.options.resolvedVisitorIds = undefined;
 
     getAnalyticsPluginStub = sandbox.stub().returns(mockAnalyticsPlugin);
     getCoreContextStub = sandbox.stub().returns(mockCoreContext);
@@ -254,11 +254,11 @@ describe('analyticsProxyAdapter', () => {
         });
 
         it('should store proxy values in plugin settings after fetching', async () => {
-          const proxyValues = {
+          const resolvedVisitorIds = {
             clientId: 'new-client-id',
             profileId: 'profile-id',
           };
-          fetchClientIdFromEdgeProxyStub.resolves(proxyValues);
+          fetchClientIdFromEdgeProxyStub.resolves(resolvedVisitorIds);
 
           const request = createMockRequest({});
           const response = createMockResponse();
@@ -266,7 +266,7 @@ describe('analyticsProxyAdapter', () => {
           const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
           await adapter.setClientId();
 
-          expect(mockAnalyticsPlugin.options.proxyValues).to.deep.equal(proxyValues);
+          expect(mockAnalyticsPlugin.options.resolvedVisitorIds).to.deep.equal(resolvedVisitorIds);
         });
 
         it('should set new cookie on request when fetching from edge proxy', async () => {

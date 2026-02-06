@@ -67,7 +67,7 @@ export function analyticsServerAdapter<
         );
 
         clientIdCookieValue = cookieValues.clientId;
-        analyticsOptions.proxyValues = cookieValues;
+        analyticsOptions.resolvedVisitorIds = cookieValues;
       } else clientIdCookieValue = clientIdCookie;
 
       const clientIdCookieString = createCookieString(

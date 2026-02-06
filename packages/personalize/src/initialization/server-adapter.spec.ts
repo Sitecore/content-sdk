@@ -50,7 +50,7 @@ describe('personalizeServerAdapter', () => {
         domain: '.example.com',
         name: 'sc_cid',
       },
-      proxyValues: undefined as any,
+      resolvedVisitorIds: undefined as any,
     },
   };
 
@@ -98,7 +98,7 @@ describe('personalizeServerAdapter', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockAnalyticsPlugin.options.proxyValues = undefined;
+    mockAnalyticsPlugin.options.resolvedVisitorIds = undefined;
     (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(mockPersonalizePlugin);
     (analyticsPluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue(mockAnalyticsPlugin);
     (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
@@ -256,7 +256,7 @@ describe('personalizeServerAdapter', () => {
 
     describe('profile ID from proxy values', () => {
       it('should use profile ID from proxy values when available', async () => {
-        mockAnalyticsPlugin.options.proxyValues = { profileId: 'proxy-profile-id' };
+        mockAnalyticsPlugin.options.resolvedVisitorIds = { profileId: 'proxy-profile-id' };
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined) // legacy cookie
           .mockReturnValueOnce(undefined) // profile id cookie

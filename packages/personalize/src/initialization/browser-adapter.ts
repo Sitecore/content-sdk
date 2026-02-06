@@ -55,7 +55,7 @@ export function personalizeBrowserAdapter(): PersonalizeBrowserAdapter {
         return;
       }
 
-      const cookiesValuesFromEdgeBrowser = getAnalyticsPlugin().options.proxyValues;
+      const cookiesValuesFromEdgeBrowser = getAnalyticsPlugin().options.resolvedVisitorIds;
 
       const profileIdCookieValue = getCookieValueClientSide(profileIdCookieName);
       const clientIdCookieValue = getCookieValueClientSide(analyticsOptions.cookies.name);

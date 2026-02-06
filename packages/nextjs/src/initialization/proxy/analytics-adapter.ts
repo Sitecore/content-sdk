@@ -66,7 +66,7 @@ export function analyticsProxyAdapter(
         );
 
         newClientIdCookieValue = cookieValues.clientId;
-        analyticsOptions.proxyValues = cookieValues;
+        analyticsOptions.resolvedVisitorIds = cookieValues;
       } else newClientIdCookieValue = clientIdCookie;
 
       if (!clientIdCookie) request.cookies.set(clientIdCookieName, newClientIdCookieValue);
