@@ -1,0 +1,59 @@
+{
+  "name": "@sitecore-content-sdk/atro",
+  "version": "1.4.0-canary.12",
+  "type": "module",
+  "main": "dist/esm/index.js",
+  "module": "dist/esm/index.js",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "clean": "del-cli dist types",
+    "lint": "eslint \"./src/**/*.ts\""
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "author": {
+    "name": "Sitecore Corporation",
+    "url": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sitecore/content-sdk"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
+  "bugs": {
+    "url": "https://github.com/sitecore/content-sdk/issues"
+  },
+  "peerDependencies": {
+    "astro": "^5.17.1"
+  },
+  "dependencies": {
+    "@sitecore-content-sdk/core": "1.4.0-canary.12"
+  },
+  "devDependencies": {
+    "astro": "^5.17.1",
+    "del-cli": "^6.0.0",
+    "typescript": "~5.8.3"
+  },
+  "description": "Astro SDK for Sitecore Content SDK",
+  "types": "types/index.d.ts",
+  "files": [
+    "dist",
+    "types",
+    "src/components",
+    "/*.d.ts"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./types/index.d.ts"
+    },
+    "./components/*": "./src/components/*"
+  }
+}
