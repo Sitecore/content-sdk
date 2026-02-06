@@ -10,7 +10,7 @@
     "@sitecore-content-sdk/core": "1.5.0-canary.6",
     "debug": "^4.4.3"
   },
-  "description": "> TODO: description",
+  "description": "Provides shared logic and runtime initialization. Required for the Content SDK 'events' and 'personalize' packages to function.",
   "devDependencies": {
     "@jest/types": "^29.6.3",
     "@stylistic/eslint-plugin": "^5.2.2",
