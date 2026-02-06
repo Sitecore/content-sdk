@@ -99,7 +99,7 @@ export { withPlaceholder } from './enhancers/withPlaceholder';
 export { withDatasourceCheck } from './enhancers/withDatasourceCheck';
 export { withFieldMetadata } from './enhancers/withFieldMetadata';
 export { withEmptyFieldEditingComponent } from './enhancers/withEmptyFieldEditingComponent';
-export { useComponentMap } from './enhancers/useComponentMap';
+export { withComponentMap, useComponentMap } from './enhancers/withComponentMap';
 export { EditingScripts } from './components/EditingScripts';
 export {
   DefaultEmptyFieldEditingComponentText,

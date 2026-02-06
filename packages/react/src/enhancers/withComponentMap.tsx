@@ -1,3 +1,4 @@
+'use client';
 import React, { JSX } from 'react';
 import { ComponentMapReactContext } from '../components/SitecoreProvider';
 import { useContext } from 'react';
@@ -18,9 +19,9 @@ export function withComponentMap<T extends WithComponentMapProps>(
    * @returns {JSX.Element} - the rendered component
    */
   function WithComponentMap(props: T): JSX.Element {
-    const context = useContext(ComponentMapReactContext);
+    const contextComponentMap = useComponentMap();
 
-    return <Component {...props} componentMap={props.componentMap || context} />;
+    return <Component {...props} componentMap={props.componentMap || contextComponentMap} />;
   }
 
   WithComponentMap.displayName = `withComponentMap(${
@@ -28,4 +29,14 @@ export function withComponentMap<T extends WithComponentMapProps>(
   })`;
 
   return WithComponentMap;
+}
+
+/**
+ * Hook to access the component map in client context.
+ * @returns {ComponentMap} The component map from the SitecoreProvider
+ * @public
+ */
+export function useComponentMap(): ComponentMap {
+  const componentMap = useContext(ComponentMapReactContext);
+  return componentMap;
 }
