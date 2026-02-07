@@ -5,10 +5,11 @@ import Layout from '../layouts/Layout.astro';
 import { client } from '../lib/sitecore-client';
 import config from '../sitecore.config';
 import { normalizeSiteRewrite } from '@sitecore-content-sdk/astro';
+import { i18n } from 'astro:config/server';
 
 export const getStaticPaths = (async () => {
-  const sites = ['site1'];
-  const languages = ['en'];
+  const sites = [config.defaultSite];
+  const languages = (i18n?.locales as string[]) || [config.defaultLanguage];
 
   let staticPaths: StaticPath[] = [];
 
@@ -25,16 +26,13 @@ export const getStaticPaths = (async () => {
         staticPath.params.path.length > 0
           ? normalizeSiteRewrite(staticPath.params.path.join('/'))
           : undefined,
-    },
-    props: {
       locale: staticPath.locale ?? 'en',
     },
   }));
 }) satisfies GetStaticPaths;
 
 // Resolve the path from params and fetch the page
-const { path } = Astro.params;
-const { locale } = Astro.props;
+const { path, locale } = Astro.params;
 const pagePath = path ? `/${path}` : '/';
 
 let page: Page | null = null;
