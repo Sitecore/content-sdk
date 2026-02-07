@@ -1,5 +1,5 @@
 ---
-import type { Page } from '@sitecore-content-sdk/atro';
+import type { Page } from '@sitecore-content-sdk/astro';
 import {
   QUERY_PARAM_EDITING_SECRET,
   EDITING_ALLOWED_ORIGINS,
@@ -8,8 +8,8 @@ import {
   isDesignLibraryRequest,
   parseEditingPreviewData,
   parseDesignLibraryPreviewData,
-} from '@sitecore-content-sdk/atro';
-import type { EditingQueryParams } from '@sitecore-content-sdk/atro';
+} from '@sitecore-content-sdk/astro';
+import type { EditingQueryParams } from '@sitecore-content-sdk/astro';
 import Layout from '../../../layouts/Layout.astro';
 import { client } from '../../../lib/sitecore-client';
 import scConfig from '../../../sitecore.config';

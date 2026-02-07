@@ -1,10 +1,10 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import type { Page, StaticPath } from '@sitecore-content-sdk/atro';
+import type { Page, StaticPath } from '@sitecore-content-sdk/astro';
 import Layout from '../layouts/Layout.astro';
 import { client } from '../lib/sitecore-client';
 import config from '../sitecore.config';
-import { normalizeSiteRewrite } from '@sitecore-content-sdk/atro';
+import { normalizeSiteRewrite } from '@sitecore-content-sdk/astro';
 
 export const getStaticPaths = (async () => {
   const sites = ['site1'];

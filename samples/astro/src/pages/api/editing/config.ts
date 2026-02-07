@@ -4,7 +4,7 @@ import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
   getEnforcedCorsHeaders,
-} from '@sitecore-content-sdk/atro';
+} from '@sitecore-content-sdk/astro';
 import scConfig from '../../../sitecore.config';
 
 // This endpoint must be server-rendered (not prerendered at build time)

@@ -1,4 +1,4 @@
-import type { AstroComponentMap } from '@sitecore-content-sdk/atro';
+import type { AstroComponentMap } from '@sitecore-content-sdk/astro';
 
 // Field components
 import ContentBlock from '../components/ContentBlock.astro';

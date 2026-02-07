@@ -4,9 +4,9 @@
  * It renders the HTML shell, Sitecore head links (styles/themes),
  * and the placeholder-based page structure.
  */
-import type { Page, Field, HTMLLink } from '@sitecore-content-sdk/atro';
-import Placeholder from '@sitecore-content-sdk/atro/components/Placeholder.astro';
-import EditingScripts from '@sitecore-content-sdk/atro/components/EditingScripts.astro';
+import type { Page, Field, HTMLLink } from '@sitecore-content-sdk/astro';
+import Placeholder from '@sitecore-content-sdk/astro/components/Placeholder.astro';
+import EditingScripts from '@sitecore-content-sdk/astro/components/EditingScripts.astro';
 import { client } from '../lib/sitecore-client';
 import config from '../sitecore.config';
 import componentMap from '../lib/component-map';

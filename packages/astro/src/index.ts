@@ -1,5 +1,5 @@
 /**
- * Public API Surface of @sitecore-content-sdk/atro
+ * Public API Surface of @sitecore-content-sdk/astro
  */
 
 // Astro-specific exports

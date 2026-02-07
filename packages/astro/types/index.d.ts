@@ -1,5 +1,5 @@
 /**
- * Public API Surface of @sitecore-content-sdk/atro
+ * Public API Surface of @sitecore-content-sdk/astro
  */
 export type { AstroComponentMap, PlaceholderProps } from './types';
 export { getPlaceholderRenderings, getComponentProps, getSXAParams, } from './placeholder-utils';

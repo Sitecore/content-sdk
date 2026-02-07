@@ -1,5 +1,5 @@
 {
-  "name": "@sitecore-content-sdk/atro",
+  "name": "@sitecore-content-sdk/astro",
   "version": "1.4.0-canary.12",
   "type": "module",
   "main": "dist/esm/index.js",

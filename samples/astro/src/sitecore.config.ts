@@ -1,4 +1,4 @@
-import { defineConfig } from '@sitecore-content-sdk/atro';
+import { defineConfig } from '@sitecore-content-sdk/astro';
 
 export default defineConfig({
   api: {
