@@ -30,7 +30,7 @@ function handleRequest(request: Request): Response {
   const corsHeaders = getEnforcedCorsHeaders({
     requestMethod: request.method,
     headers: request.headers,
-    allowedOrigins: EDITING_ALLOWED_ORIGINS,
+    allowedOrigins: [...EDITING_ALLOWED_ORIGINS, 'https://pages-staging.sitecore-staging.cloud'],
   });
 
   if (!corsHeaders) {

@@ -16,6 +16,6 @@ export { DictionaryPhrases, DictionaryService } from '@sitecore-content-sdk/core
 export { mediaApi } from '@sitecore-content-sdk/core/media';
 export { isEditorActive, resetEditorChromes, EditingPreviewData, DesignLibraryRenderPreviewData, DesignLibraryMode, LayoutKind, isDesignLibraryMode, EDITING_ALLOWED_ORIGINS, QUERY_PARAM_EDITING_SECRET, Metadata, } from '@sitecore-content-sdk/core/editing';
 export { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
-export { SiteInfo, SITE_KEY } from '@sitecore-content-sdk/core/site';
+export { SiteInfo, SITE_KEY, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
 export { PersonalizeService, PersonalizeInfo, getPersonalizedRewrite, getPersonalizedRewriteData, normalizePersonalizedRewrite, CdpHelper, DEFAULT_VARIANT, } from '@sitecore-content-sdk/core/personalize';
 //# sourceMappingURL=index.d.ts.map

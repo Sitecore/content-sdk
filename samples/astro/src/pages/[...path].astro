@@ -3,6 +3,8 @@ import type { GetStaticPaths } from 'astro';
 import type { Page, StaticPath } from '@sitecore-content-sdk/atro';
 import Layout from '../layouts/Layout.astro';
 import { client } from '../lib/sitecore-client';
+import config from '../sitecore.config';
+import { normalizeSiteRewrite } from '@sitecore-content-sdk/atro';
 
 export const getStaticPaths = (async () => {
   const sites = ['site1'];
@@ -19,9 +21,10 @@ export const getStaticPaths = (async () => {
   return staticPaths.map((staticPath) => ({
     params: {
       // Astro catch-all: undefined = root "/", string = everything else
-      path: staticPath.params.path.length > 0
-        ? staticPath.params.path.join('/')
-        : undefined,
+      path:
+        staticPath.params.path.length > 0
+          ? normalizeSiteRewrite(staticPath.params.path.join('/'))
+          : undefined,
     },
     props: {
       locale: staticPath.locale ?? 'en',
@@ -37,7 +40,11 @@ const pagePath = path ? `/${path}` : '/';
 let page: Page | null = null;
 
 try {
-  page = await client.getPage(pagePath, { locale });
+  console.log('Fetching page data for', pagePath, { locale, site: config.defaultSite });
+  page = await client.getPage(pagePath, {
+    locale: config.defaultLanguage,
+    site: config.defaultSite,
+  });
 } catch (error) {
   console.error(`Error fetching page data for ${pagePath}:`, error);
 }

@@ -102,7 +102,7 @@ export {
 
 export { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
 
-export { SiteInfo, SITE_KEY } from '@sitecore-content-sdk/core/site';
+export { SiteInfo, SITE_KEY, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
 
 export {
   PersonalizeService,
