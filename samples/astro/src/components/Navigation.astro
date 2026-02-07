@@ -9,8 +9,12 @@ import type { ComponentRendering, Page } from '@sitecore-content-sdk/atro';
 interface NavigationFields {
   Id: string;
   DisplayName: string;
-  Title: { value?: string; metadata?: unknown };
-  NavigationTitle: { value?: string; metadata?: unknown };
+  Title: { value?: string; metadata?: {
+        [key: string]: unknown;
+    }; };
+  NavigationTitle: { value?: string; metadata?: {
+        [key: string]: unknown;
+    }; };
   Href: string;
   Querystring: string;
   Children: NavigationFields[];

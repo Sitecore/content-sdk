@@ -11,9 +11,17 @@ import Link from '@sitecore-content-sdk/atro/components/Link.astro';
 
 interface Props {
   fields: {
-    PromoIcon?: { value?: Record<string, unknown>; metadata?: unknown };
+    PromoIcon?: {
+      value?: Record<string, unknown>;
+      metadata?: {
+        [key: string]: unknown;
+      };
+    };
     PromoText?: Field<string>;
-    PromoLink?: { value: { href?: string; [key: string]: unknown } };
+    PromoLink?: {
+      value: { href?: string; [key: string]: unknown };
+      metadata?: { [key: string]: unknown };
+    };
     PromoText2?: Field<string>;
   };
   params: Record<string, string>;
@@ -28,35 +36,37 @@ const isWithTextVariant = params.FieldNames === 'WithText';
 
 <div class={`component promo ${styles}`} id={id}>
   <div class="component-content">
-    {!fields ? (
-      <span class="is-empty-hint">Promo</span>
-    ) : (
-      <>
-        <div class="field-promoicon">
-          <ImageField field={fields.PromoIcon} />
-        </div>
-        <div class="promo-text">
-          {isWithTextVariant ? (
-            <>
-              <div class="field-promotext">
-                <RichTextField class="promo-text" field={fields.PromoText} />
-              </div>
-              <div class="field-promotext">
-                <RichTextField class="promo-text" field={fields.PromoText2} />
-              </div>
-            </>
-          ) : (
-            <>
-              <div class="field-promotext">
-                <RichTextField field={fields.PromoText} />
-              </div>
-              <div class="field-promolink">
-                <Link field={fields.PromoLink} />
-              </div>
-            </>
-          )}
-        </div>
-      </>
-    )}
+    {
+      !fields ? (
+        <span class="is-empty-hint">Promo</span>
+      ) : (
+        <>
+          <div class="field-promoicon">
+            <ImageField field={fields.PromoIcon} />
+          </div>
+          <div class="promo-text">
+            {isWithTextVariant ? (
+              <>
+                <div class="field-promotext">
+                  <RichTextField class="promo-text" field={fields.PromoText} />
+                </div>
+                <div class="field-promotext">
+                  <RichTextField class="promo-text" field={fields.PromoText2} />
+                </div>
+              </>
+            ) : (
+              <>
+                <div class="field-promotext">
+                  <RichTextField field={fields.PromoText} />
+                </div>
+                <div class="field-promolink">
+                  <Link field={fields.PromoLink} />
+                </div>
+              </>
+            )}
+          </div>
+        </>
+      )
+    }
   </div>
 </div>

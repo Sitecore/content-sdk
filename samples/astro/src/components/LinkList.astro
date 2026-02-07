@@ -17,7 +17,9 @@ interface LinkField {
 
 interface TextField {
   value?: string;
-  metadata?: unknown;
+  metadata?: {
+        [key: string]: unknown;
+    };
 }
 
 interface Props {

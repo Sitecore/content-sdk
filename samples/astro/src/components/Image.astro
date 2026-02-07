@@ -19,7 +19,12 @@ interface ImageFieldValue {
 
 interface Props {
   fields: {
-    Image: { value?: ImageFieldValue; metadata?: unknown };
+    Image: {
+      value?: ImageFieldValue;
+      metadata?: {
+        [key: string]: unknown;
+      };
+    };
     ImageCaption?: Field<string>;
     TargetUrl?: { value: { href?: string; [key: string]: unknown } };
   };
@@ -35,42 +40,37 @@ const isBannerVariant = params.FieldNames === 'Banner';
 
 // Banner variant
 const backgroundImageUrl = fields?.Image?.value?.src;
-const backgroundStyle = backgroundImageUrl
-  ? `background-image: url('${backgroundImageUrl}')`
-  : '';
+const backgroundStyle = backgroundImageUrl ? `background-image: url('${backgroundImageUrl}')` : '';
 
 // Default variant
-const shouldWrapWithLink =
-  !page?.mode?.isEditing && fields?.TargetUrl?.value?.href;
+const shouldWrapWithLink = !page?.mode?.isEditing && fields?.TargetUrl?.value?.href;
 ---
 
-{!fields ? (
-  <div class={`component image ${styles}`.trim()} id={id}>
-    <div class="component-content">
-      <span class="is-empty-hint">Image</span>
+{
+  !fields ? (
+    <div class={`component image ${styles}`.trim()} id={id}>
+      <div class="component-content">
+        <span class="is-empty-hint">Image</span>
+      </div>
     </div>
-  </div>
-) : isBannerVariant ? (
-  <div class={`component hero-banner ${styles}`.trim()} id={id}>
-    <div class="component-content sc-sxa-image-hero-banner" style={backgroundStyle}>
-      <ImageField field={fields.Image} />
-    </div>
-  </div>
-) : (
-  <div class={`component image ${styles}`} id={id}>
-    <div class="component-content">
-      {shouldWrapWithLink ? (
-        <Link field={fields.TargetUrl}>
-          <ImageField field={fields.Image} />
-        </Link>
-      ) : (
+  ) : isBannerVariant ? (
+    <div class={`component hero-banner ${styles}`.trim()} id={id}>
+      <div class="component-content sc-sxa-image-hero-banner" style={backgroundStyle}>
         <ImageField field={fields.Image} />
-      )}
-      <Text
-        tag="span"
-        class="image-caption field-imagecaption"
-        field={fields.ImageCaption}
-      />
+      </div>
     </div>
-  </div>
-)}
+  ) : (
+    <div class={`component image ${styles}`} id={id}>
+      <div class="component-content">
+        {shouldWrapWithLink ? (
+          <Link field={fields.TargetUrl}>
+            <ImageField field={fields.Image} />
+          </Link>
+        ) : (
+          <ImageField field={fields.Image} />
+        )}
+        <Text tag="span" class="image-caption field-imagecaption" field={fields.ImageCaption} />
+      </div>
+    </div>
+  )
+}
