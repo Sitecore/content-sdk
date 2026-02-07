@@ -6,6 +6,8 @@ import {
   getEnforcedCorsHeaders,
 } from '@sitecore-content-sdk/astro';
 import scConfig from '../../../sitecore.config';
+import componentsMap from '../../../../.sitecore/component-map';
+import metadata from '../../../.././.sitecore/metadata.json';
 
 // This endpoint must be server-rendered (not prerendered at build time)
 export const prerender = false;
@@ -16,12 +18,7 @@ export const prerender = false;
  */
 
 // Component list — add your registered component names here
-const components: string[] = [];
-
-// Application metadata
-const metadata = {
-  packages: {},
-};
+const components = [...componentsMap.keys()];
 
 function handleRequest(request: Request): Response {
   const url = new URL(request.url);

@@ -1,22 +1,22 @@
 import type { AstroComponentMap } from '@sitecore-content-sdk/astro';
 
 // Field components
-import ContentBlock from '../components/ContentBlock.astro';
-import RichTextComponent from '../components/RichText.astro';
-import PageContent from '../components/PageContent.astro';
-import Title from '../components/Title.astro';
-import ImageComponent from '../components/Image.astro';
-import Promo from '../components/Promo.astro';
-import LinkList from '../components/LinkList.astro';
+import ContentBlock from '../src/components/ContentBlock.astro';
+import RichTextComponent from '../src/components/RichText.astro';
+import PageContent from '../src/components/PageContent.astro';
+import Title from '../src/components/Title.astro';
+import ImageComponent from '../src/components/Image.astro';
+import Promo from '../src/components/Promo.astro';
+import LinkList from '../src/components/LinkList.astro';
 
 // Layout / placeholder components
-import Container from '../components/Container.astro';
-import ColumnSplitter from '../components/ColumnSplitter.astro';
-import RowSplitter from '../components/RowSplitter.astro';
-import PartialDesignDynamicPlaceholder from '../components/PartialDesignDynamicPlaceholder.astro';
+import Container from '../src/components/Container.astro';
+import ColumnSplitter from '../src/components/ColumnSplitter.astro';
+import RowSplitter from '../src/components/RowSplitter.astro';
+import PartialDesignDynamicPlaceholder from '../src/components/PartialDesignDynamicPlaceholder.astro';
 
 // Interactive components
-import Navigation from '../components/Navigation.astro';
+import Navigation from '../src/components/Navigation.astro';
 
 /**
  * Component map that maps Sitecore component names to Astro component implementations.
