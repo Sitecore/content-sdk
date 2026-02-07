@@ -1,0 +1,7 @@
+.row.column-splitter {
+  @apply mx-0 px-[2.5px] max-w-none;
+
+  > div {
+    @apply px-[5px];
+  }
+}

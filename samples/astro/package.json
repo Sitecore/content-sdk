@@ -11,6 +11,10 @@
   "dependencies": {
     "@astrojs/node": "^9.2.2",
     "@sitecore-content-sdk/atro": "1.4.0-canary.12",
-    "astro": "^5.17.1"
+    "@tailwindcss/postcss": "4",
+    "@tailwindcss/vite": "^4.1.18",
+    "astro": "^5.17.1",
+    "tailwind-bootstrap-grid": "6.0.0",
+    "tailwindcss": "4"
   }
 }

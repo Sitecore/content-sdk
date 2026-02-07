@@ -1,0 +1,24 @@
+footer {
+  @apply max-mobile-large:pt-0;
+
+  .container-dark-background {
+    @apply bg-bg-dark-gray;
+  }
+
+  .contacts {
+    @apply text-[14px];
+
+    a {
+      @apply text-text-white;
+    }
+
+    p,
+    span {
+      @apply text-text-white;
+    }
+  }
+
+  .indent-inner {
+    @apply p-[65px] max-mobile-large:p-[40px_0];
+  }
+}

@@ -1,0 +1,52 @@
+/* component-richtext-content */
+
+.content,
+.rich-text {
+  @apply border-transparent leading-[1.5] text-[12px] overflow-hidden;
+
+  * {
+    @apply max-w-full;
+  }
+}
+
+/* rich text lists */
+
+.rich-text-lists,
+.field-featurelist {
+  ul {
+    @apply box-border m-0 p-0;
+
+    li {
+      @apply text-[13px] relative leading-[21px] list-none m-0 p-[5px_0_5px_25px];
+
+      &:before {
+        @apply inline-block align-middle text-[12px] font-[FontAwesome] absolute top-[3px] left-0 text-text-basic text-center content-['\f046'] w-[20px] my-0 ml-0 mr-[5px] p-0;
+      }
+    }
+  }
+}
+
+.field-featurelist {
+  ul {
+    li {
+      &:before {
+        @apply inline-block align-middle text-[12px] font-[FontAwesome] absolute top-[3px] left-0 text-text-basic text-center content-['\f046'] w-[20px] my-0 ml-0 mr-[5px] p-0;
+      }
+    }
+  }
+}
+
+.media-link {
+  &.file-type-icon-media-link {
+    @apply float-left;
+    .field-filetypeicon {
+      @apply text-center;
+    }
+  }
+}
+
+/* base rich text */
+
+.rich-text {
+  @apply text-[16px] max-mobile-large:p-[0_30px_10px_30px] max-mobile-large:text-[14px];
+}

@@ -8,6 +8,7 @@ import type { Page, Field, HTMLLink } from '@sitecore-content-sdk/atro';
 import Placeholder from '@sitecore-content-sdk/atro/components/Placeholder.astro';
 import { client } from '../lib/sitecore-client';
 import componentMap from '../lib/component-map';
+import '../assets/main.css';
 
 interface Props {
   page: Page;
@@ -90,12 +91,3 @@ const headLinks: HTMLLink[] = client.getHeadLinks(layout, {
     </div>
   </body>
 </html>
-
-<style>
-  html,
-  body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-  }
-</style>

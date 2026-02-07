@@ -1,0 +1,39 @@
+/* component link list */
+.link-list {
+  @apply bg-transparent;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply border-b-1 border-solid border-border-basic-color;
+  }
+  > .component-content {
+    ul {
+      @apply bg-transparent;
+    }
+    li {
+      @apply bg-transparent block text-[13px];
+      a {
+        @apply inline text-text-basic relative pl-[10px] text-[1em] no-underline hover:text-text-basic-active hover:no-underline hover:border-b-1 hover:border-solid hover:border-border-basic-color;
+        &:before {
+          @apply content-["\f054"] absolute left-0 top-[50%] translate-y-[-50%] text-[10px];
+        }
+      }
+    }
+  }
+}
+
+/* list vertical */
+.link-list.list-vertical {
+  h3 {
+    @apply bg-bg-basic-color w-full inline-block p-[3px_5px] border-1 border-solid border-border-gray;
+  }
+  a {
+    @apply border-none;
+  }
+  li {
+    @apply block ml-[20px];
+  }
+}

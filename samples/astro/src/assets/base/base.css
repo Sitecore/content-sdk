@@ -1,0 +1,96 @@
+.button-default,
+.default {
+  @apply default-link-button bg-bg-submenu-active text-text-basic;
+}
+
+.button-success,
+.success {
+  @apply default-link-button bg-btn-green-light text-text-white hover:text-text-white hover:bg-btn-green;
+}
+
+.button-warning,
+.warning {
+  @apply default-link-button bg-btn-red text-text-white hover:text-text-white hover:bg-btn-red-active;
+}
+
+/* base richtext */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply text-text-heading-color;
+}
+h1,
+h2 {
+  @apply m-[10px_0];
+}
+h3,
+h4,
+p {
+  @apply m-[5px_0];
+}
+h5,
+h6 {
+  @apply m-[5px_0_0];
+}
+strong {
+  @apply font-bold;
+}
+ul,
+ol {
+  @apply py-[5px] ml-[10px];
+}
+li {
+  @apply text-font-normal ml-[15px];
+}
+ul {
+  li {
+    @apply list-disc list-inside;
+  }
+}
+ol {
+  li {
+    @apply list-decimal list-inside;
+  }
+}
+a {
+  @apply text-text-red underline text-[1em] hover:text-text-basic-active;
+}
+table {
+  @apply h-auto! border-2 border-solid border-border-gray;
+  &,
+  tr,
+  th,
+  td {
+    @apply border-2 border-solid border-border-gray bg-bg-basic-color border-collapse align-middle;
+  }
+  tr,
+  th,
+  td {
+    @apply p-[5px];
+  }
+  caption {
+    @apply bg-bg-light-gray overflow-hidden text-font-big font-bold text-[1.2em] p-[10px] ml-0;
+  }
+  tr {
+    @apply border-none;
+  }
+  th,
+  td {
+    @apply border-t-2 border-l-2;
+  }
+  th {
+    @apply bg-bg-lighter-gray text-font-normal font-bold p-[7px];
+    &:first-child {
+      @apply border-l-0;
+    }
+  }
+  td {
+    &:first-child {
+      @apply border-l-0;
+    }
+  }
+}

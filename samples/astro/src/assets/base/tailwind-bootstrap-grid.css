@@ -1,0 +1,369 @@
+.col-sm-1 {
+  @apply sm:col-1;
+}
+.col-sm-2 {
+  @apply sm:col-2;
+}
+.col-sm-3 {
+  @apply sm:col-3;
+}
+.col-sm-4 {
+  @apply sm:col-4;
+}
+.col-sm-5 {
+  @apply sm:col-5;
+}
+.col-sm-6 {
+  @apply sm:col-6;
+}
+.col-sm-7 {
+  @apply sm:col-7;
+}
+.col-sm-8 {
+  @apply sm:col-8;
+}
+.col-sm-9 {
+  @apply sm:col-9;
+}
+.col-sm-10 {
+  @apply sm:col-10;
+}
+.col-sm-11 {
+  @apply sm:col-11;
+}
+.col-sm-12 {
+  @apply sm:col-12;
+}
+
+.col-md-1 {
+  @apply md:col-1;
+}
+.col-md-2 {
+  @apply md:col-2;
+}
+.col-md-3 {
+  @apply md:col-3;
+}
+.col-md-4 {
+  @apply md:col-4;
+}
+.col-md-5 {
+  @apply md:col-5;
+}
+.col-md-6 {
+  @apply md:col-6;
+}
+.col-md-7 {
+  @apply md:col-7;
+}
+.col-md-8 {
+  @apply md:col-8;
+}
+.col-md-9 {
+  @apply md:col-9;
+}
+.col-md-10 {
+  @apply md:col-10;
+}
+.col-md-11 {
+  @apply md:col-11;
+}
+.col-md-12 {
+  @apply md:col-12;
+}
+
+.col-lg-1 {
+  @apply lg:col-1;
+}
+.col-lg-2 {
+  @apply lg:col-2;
+}
+.col-lg-3 {
+  @apply lg:col-3;
+}
+.col-lg-4 {
+  @apply lg:col-4;
+}
+.col-lg-5 {
+  @apply lg:col-5;
+}
+.col-lg-6 {
+  @apply lg:col-6;
+}
+.col-lg-7 {
+  @apply lg:col-7;
+}
+.col-lg-8 {
+  @apply lg:col-8;
+}
+.col-lg-9 {
+  @apply lg:col-9;
+}
+.col-lg-10 {
+  @apply lg:col-10;
+}
+.col-lg-11 {
+  @apply lg:col-11;
+}
+.col-lg-12 {
+  @apply lg:col-12;
+}
+
+.col-xl-1 {
+  @apply xl:col-1;
+}
+.col-xl-2 {
+  @apply xl:col-2;
+}
+.col-xl-3 {
+  @apply xl:col-3;
+}
+.col-xl-4 {
+  @apply xl:col-4;
+}
+.col-xl-5 {
+  @apply xl:col-5;
+}
+.col-xl-6 {
+  @apply xl:col-6;
+}
+.col-xl-7 {
+  @apply xl:col-7;
+}
+.col-xl-8 {
+  @apply xl:col-8;
+}
+.col-xl-9 {
+  @apply xl:col-9;
+}
+.col-xl-10 {
+  @apply xl:col-10;
+}
+.col-xl-11 {
+  @apply xl:col-11;
+}
+.col-xl-12 {
+  @apply xl:col-12;
+}
+
+.col-xxl-1 {
+  @apply 2xl:col-1;
+}
+.col-xxl-2 {
+  @apply 2xl:col-2;
+}
+.col-xxl-3 {
+  @apply 2xl:col-3;
+}
+.col-xxl-4 {
+  @apply 2xl:col-4;
+}
+.col-xxl-5 {
+  @apply 2xl:col-5;
+}
+.col-xxl-6 {
+  @apply 2xl:col-6;
+}
+.col-xxl-7 {
+  @apply 2xl:col-7;
+}
+.col-xxl-8 {
+  @apply 2xl:col-8;
+}
+.col-xxl-9 {
+  @apply 2xl:col-9;
+}
+.col-xxl-10 {
+  @apply 2xl:col-10;
+}
+.col-xxl-11 {
+  @apply 2xl:col-11;
+}
+.col-xxl-12 {
+  @apply 2xl:col-12;
+}
+
+.offset-sm-0 {
+  @apply sm:offset-0;
+}
+.offset-sm-1 {
+  @apply sm:offset-1;
+}
+.offset-sm-2 {
+  @apply sm:offset-2;
+}
+.offset-sm-3 {
+  @apply sm:offset-3;
+}
+.offset-sm-4 {
+  @apply sm:offset-4;
+}
+.offset-sm-5 {
+  @apply sm:offset-5;
+}
+.offset-sm-6 {
+  @apply sm:offset-6;
+}
+.offset-sm-7 {
+  @apply sm:offset-7;
+}
+.offset-sm-8 {
+  @apply sm:offset-8;
+}
+.offset-sm-9 {
+  @apply sm:offset-9;
+}
+.offset-sm-10 {
+  @apply sm:offset-10;
+}
+.offset-sm-11 {
+  @apply sm:offset-11;
+}
+
+.offset-md-0 {
+  @apply md:offset-0;
+}
+.offset-md-1 {
+  @apply md:offset-1;
+}
+.offset-md-2 {
+  @apply md:offset-2;
+}
+.offset-md-3 {
+  @apply md:offset-3;
+}
+.offset-md-4 {
+  @apply md:offset-4;
+}
+.offset-md-5 {
+  @apply md:offset-5;
+}
+.offset-md-6 {
+  @apply md:offset-6;
+}
+.offset-md-7 {
+  @apply md:offset-7;
+}
+.offset-md-8 {
+  @apply md:offset-8;
+}
+.offset-md-9 {
+  @apply md:offset-9;
+}
+.offset-md-10 {
+  @apply md:offset-10;
+}
+.offset-md-11 {
+  @apply md:offset-11;
+}
+
+.offset-lg-0 {
+  @apply lg:offset-0;
+}
+.offset-lg-1 {
+  @apply lg:offset-1;
+}
+.offset-lg-2 {
+  @apply lg:offset-2;
+}
+.offset-lg-3 {
+  @apply lg:offset-3;
+}
+.offset-lg-4 {
+  @apply lg:offset-4;
+}
+.offset-lg-5 {
+  @apply lg:offset-5;
+}
+.offset-lg-6 {
+  @apply lg:offset-6;
+}
+.offset-lg-7 {
+  @apply lg:offset-7;
+}
+.offset-lg-8 {
+  @apply lg:offset-8;
+}
+.offset-lg-9 {
+  @apply lg:offset-9;
+}
+.offset-lg-10 {
+  @apply lg:offset-10;
+}
+.offset-lg-11 {
+  @apply lg:offset-11;
+}
+
+.offset-xl-0 {
+  @apply xl:offset-0;
+}
+.offset-xl-1 {
+  @apply xl:offset-1;
+}
+.offset-xl-2 {
+  @apply xl:offset-2;
+}
+.offset-xl-3 {
+  @apply xl:offset-3;
+}
+.offset-xl-4 {
+  @apply xl:offset-4;
+}
+.offset-xl-5 {
+  @apply xl:offset-5;
+}
+.offset-xl-6 {
+  @apply xl:offset-6;
+}
+.offset-xl-7 {
+  @apply xl:offset-7;
+}
+.offset-xl-8 {
+  @apply xl:offset-8;
+}
+.offset-xl-9 {
+  @apply xl:offset-9;
+}
+.offset-xl-10 {
+  @apply xl:offset-10;
+}
+.offset-xl-11 {
+  @apply xl:offset-11;
+}
+
+.offset-xxl-0 {
+  @apply 2xl:offset-0;
+}
+.offset-xxl-1 {
+  @apply 2xl:offset-1;
+}
+.offset-xxl-2 {
+  @apply 2xl:offset-2;
+}
+.offset-xxl-3 {
+  @apply 2xl:offset-3;
+}
+.offset-xxl-4 {
+  @apply 2xl:offset-4;
+}
+.offset-xxl-5 {
+  @apply 2xl:offset-5;
+}
+.offset-xxl-6 {
+  @apply 2xl:offset-6;
+}
+.offset-xxl-7 {
+  @apply 2xl:offset-7;
+}
+.offset-xxl-8 {
+  @apply 2xl:offset-8;
+}
+.offset-xxl-9 {
+  @apply 2xl:offset-9;
+}
+.offset-xxl-10 {
+  @apply 2xl:offset-10;
+}
+.offset-xxl-11 {
+  @apply 2xl:offset-11;
+}

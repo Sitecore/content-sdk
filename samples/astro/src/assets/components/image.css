@@ -1,0 +1,20 @@
+/* component image  */
+.image {
+  img {
+    @apply w-full h-auto;
+  }
+  a {
+    @apply inline-block max-w-full;
+  }
+  span {
+    @apply block italic text-font-small text-text-basic;
+  }
+}
+
+/* components image */
+
+.image-default-size {
+  img {
+    @apply max-w-none w-auto!;
+  }
+}
