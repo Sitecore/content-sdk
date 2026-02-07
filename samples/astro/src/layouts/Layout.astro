@@ -6,7 +6,9 @@
  */
 import type { Page, Field, HTMLLink } from '@sitecore-content-sdk/atro';
 import Placeholder from '@sitecore-content-sdk/atro/components/Placeholder.astro';
+import EditingScripts from '@sitecore-content-sdk/atro/components/EditingScripts.astro';
 import { client } from '../lib/sitecore-client';
+import config from '../sitecore.config';
 import componentMap from '../lib/component-map';
 import '../assets/main.css';
 
@@ -89,5 +91,6 @@ const headLinks: HTMLLink[] = client.getHeadLinks(layout, {
         </main>
       )}
     </div>
+    <EditingScripts page={page} edgeUrl={config.api?.edge?.edgeUrl} />
   </body>
 </html>

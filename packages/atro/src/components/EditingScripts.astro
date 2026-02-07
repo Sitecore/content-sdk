@@ -1,0 +1,67 @@
+---
+/**
+ * Renders client scripts and data for editing/preview mode for Pages.
+ * Renders script required for the Design Library (when mode.isDesignLibrary is true).
+ */
+import type { Page } from '@sitecore-content-sdk/core/client';
+import {
+  getContentSdkPagesClientData,
+  getDesignLibraryScriptLink,
+} from '@sitecore-content-sdk/core/editing';
+
+interface Props {
+  /** Page data containing mode and layout information. */
+  page: Page;
+  /** Optional Edge URL for the Design Library script. */
+  edgeUrl?: string;
+}
+
+const { page, edgeUrl } = Astro.props;
+const { mode, layout } = page;
+const { clientData, clientScripts } = layout.sitecore.context;
+
+// Check if we should render nothing
+const isNormalOrPreview = mode.isNormal || mode.isPreview;
+
+// Build Design Library script URL if in Design Library mode
+let designLibraryScriptUrl: string | undefined;
+if (mode.isDesignLibrary) {
+  // Add cache buster to the script URL (format hh-dd-mm-yyyy, UTC)
+  const now = new Date();
+  const hour = String(now.getUTCHours()).padStart(2, '0');
+  const day = String(now.getUTCDate()).padStart(2, '0');
+  const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+  const year = String(now.getUTCFullYear());
+  const cacheTimestamp = `${hour}-${day}-${month}-${year}`;
+  designLibraryScriptUrl = `${getDesignLibraryScriptLink(edgeUrl)}?cb=${cacheTimestamp}`;
+}
+
+// Build content SDK client data for editing mode
+const contentSdkClientData = { ...clientData, ...getContentSdkPagesClientData() };
+---
+
+{/* Don't render anything if not in editing mode */}
+{!isNormalOrPreview && (
+  <>
+    {/* In case of Design Library - render only the script for Design Library */}
+    {mode.isDesignLibrary && designLibraryScriptUrl && (
+      <script src={designLibraryScriptUrl}></script>
+    )}
+
+    {/* In editing mode, render client scripts and client data */}
+    {!mode.isDesignLibrary && (
+      <>
+        {clientScripts?.map((src) => (
+          <script src={src} />
+        ))}
+        {Object.keys(contentSdkClientData).map((id) => (
+          <script
+            id={id}
+            type="application/json"
+            set:html={JSON.stringify(contentSdkClientData[id])}
+          />
+        ))}
+      </>
+    )}
+  </>
+)}
