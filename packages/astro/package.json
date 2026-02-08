@@ -55,6 +55,10 @@
       "import": "./dist/esm/index.js",
       "types": "./types/index.d.ts"
     },
+    "./middleware": {
+      "import": "./dist/esm/middleware/index.js",
+      "types": "./types/middleware/index.d.ts"
+    },
     "./components/*": "./src/components/*"
   }
 }

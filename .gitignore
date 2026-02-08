@@ -28,5 +28,7 @@ samples/
 .npmrc
 
 packages/*/temp/
-
+!samples/
+samples/*
 !/samples/astro/
+!/samples/astro/**

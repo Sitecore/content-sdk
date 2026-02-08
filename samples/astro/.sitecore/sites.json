@@ -1,0 +1,12 @@
+[
+  {
+    "name": "site1",
+    "hostName": "localhost|site1.localhost|127.0.0.1",
+    "language": "en"
+  },
+  {
+    "name": "site2",
+    "hostName": "site2.localhost",
+    "language": "en"
+  }
+]

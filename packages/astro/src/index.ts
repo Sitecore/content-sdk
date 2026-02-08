@@ -85,7 +85,16 @@ export {
 
 export { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 
-export { SiteInfo, SITE_KEY, normalizeSiteRewrite } from '@sitecore-content-sdk/content/site';
+export {
+  SiteInfo,
+  SiteResolver,
+  SiteRewriteData,
+  SITE_KEY,
+  SITE_PREFIX,
+  getSiteRewrite,
+  getSiteRewriteData,
+  normalizeSiteRewrite,
+} from '@sitecore-content-sdk/content/site';
 
 export {
   PersonalizeService,

@@ -1,6 +1,6 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*", ".sitecore/component-map.ts"],
+  "include": [".astro/types.d.ts", ".sitecore/types.d.ts", "**/*", ".sitecore/component-map.ts"],
   "exclude": ["dist"]
 }
 

@@ -4,7 +4,7 @@ import type { Page, StaticPath } from '@sitecore-content-sdk/astro';
 import Layout from '../layouts/Layout.astro';
 import { client } from '../lib/sitecore-client';
 import config from '../sitecore.config';
-import { normalizeSiteRewrite } from '@sitecore-content-sdk/astro';
+import { normalizeSiteRewrite, getSiteRewriteData } from '@sitecore-content-sdk/astro';
 import { i18n } from 'astro:config/server';
 
 export const getStaticPaths = (async () => {
@@ -36,15 +36,21 @@ export const getStaticPaths = (async () => {
 // Resolve the path from params and fetch the page
 const { path } = Astro.params;
 const { locale } = Astro.props;
-const pagePath = path ? `/${path}` : '/';
+
+// Extract site name from the rewritten path (set by multisite middleware)
+// Falls back to default site if no site prefix is present
+const { siteName } = getSiteRewriteData(path || '', config.defaultSite);
+
+// Normalize the path by removing site prefix for Sitecore API calls
+const pagePath = path ? `/${normalizeSiteRewrite(path)}` : '/';
 
 let page: Page | null = null;
 
 try {
-  console.log('Fetching page data for', pagePath, { locale, site: config.defaultSite });
+  console.log('Fetching page data for', pagePath, { locale, site: siteName });
   page = await client.getPage(pagePath, {
     locale,
-    site: config.defaultSite,
+    site: siteName,
   });
 } catch (error) {
   console.error(`Error fetching page data for ${pagePath}:`, error);
