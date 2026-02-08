@@ -1,9 +1,8 @@
 ---
-import type { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
-import type { Page } from '@sitecore-content-sdk/core/client';
+import type { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
+import type { Page } from '@sitecore-content-sdk/content/client';
 import type { AstroComponentMap } from '../types';
-import { constants } from '@sitecore-content-sdk/core';
-import { getPlaceholderRenderings, getComponentProps } from '../placeholder-utils';
+import { getPlaceholderRenderings, getComponentProps, HIDDEN_RENDERING_NAME } from '../placeholder-utils';
 import PlaceholderMetadata from './PlaceholderMetadata.astro';
 import MissingComponent from './MissingComponent.astro';
 
@@ -43,7 +42,7 @@ interface ResolvedComponent {
 const resolvedComponents: ResolvedComponent[] = placeholderRenderings
   .filter((r) => {
     // Skip hidden renderings
-    if (r.componentName === constants.HIDDEN_RENDERING_NAME) return false;
+    if (r.componentName === HIDDEN_RENDERING_NAME) return false;
     // Skip empty component names
     if (!r.componentName) return false;
     return true;

@@ -4,8 +4,8 @@ import {
   DesignLibraryMode,
   LayoutKind,
   isDesignLibraryMode,
-} from '@sitecore-content-sdk/core/editing';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/editing';
+import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 
 /**
  * Query parameters type for editing mode requests

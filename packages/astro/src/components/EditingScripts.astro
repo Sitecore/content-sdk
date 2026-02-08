@@ -3,11 +3,11 @@
  * Renders client scripts and data for editing/preview mode for Pages.
  * Renders script required for the Design Library (when mode.isDesignLibrary is true).
  */
-import type { Page } from '@sitecore-content-sdk/core/client';
+import type { Page } from '@sitecore-content-sdk/content/client';
 import {
   getContentSdkPagesClientData,
   getDesignLibraryScriptLink,
-} from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/editing';
 
 interface Props {
   /** Page data containing mode and layout information. */

@@ -3,15 +3,13 @@ import {
   RouteData,
   isDynamicPlaceholder,
   getDynamicPlaceholderPattern,
-} from '@sitecore-content-sdk/core/layout';
-import { constants } from '@sitecore-content-sdk/core';
+} from '@sitecore-content-sdk/content/layout';
+export { HIDDEN_RENDERING_NAME } from '@sitecore-content-sdk/content';
 
 /**
  * Hidden rendering name constant
  * @internal
  */
-export const HIDDEN_RENDERING_NAME = constants.HIDDEN_RENDERING_NAME;
-
 /**
  * Get the renderings for the specified placeholder from the rendering data.
  * @param {ComponentRendering | RouteData} rendering rendering data

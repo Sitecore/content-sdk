@@ -1,4 +1,4 @@
-import { EditingPreviewData, DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/core/editing';
+import { EditingPreviewData, DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/content/editing';
 /**
  * Query parameters type for editing mode requests
  * @public

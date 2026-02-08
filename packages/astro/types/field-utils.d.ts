@@ -1,4 +1,4 @@
-import { type FieldMetadata, type GenericFieldValue, type Field } from '@sitecore-content-sdk/core/layout';
+import { type FieldMetadata, type GenericFieldValue, type Field } from '@sitecore-content-sdk/content/layout';
 /**
  * Result of resolving field editing state.
  * @public

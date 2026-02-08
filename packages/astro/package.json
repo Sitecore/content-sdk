@@ -34,7 +34,8 @@
     "astro": "^5.17.1"
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "1.4.0-canary.12"
+    "@sitecore-content-sdk/content": "workspace:*",
+    "@sitecore-content-sdk/core": "workspace:^"
   },
   "devDependencies": {
     "astro": "^5.17.1",

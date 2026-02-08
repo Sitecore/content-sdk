@@ -1,5 +1,5 @@
-import type { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
-import type { Page } from '@sitecore-content-sdk/core/client';
+import type { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
+import type { Page } from '@sitecore-content-sdk/content/client';
 
 /**
  * A map of Sitecore component names to Astro component implementations.

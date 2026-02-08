@@ -1,9 +1,9 @@
-import { ComponentRendering, RouteData } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
+export { HIDDEN_RENDERING_NAME } from '@sitecore-content-sdk/content';
 /**
  * Hidden rendering name constant
  * @internal
  */
-export declare const HIDDEN_RENDERING_NAME = "Hidden Rendering";
 /**
  * Get the renderings for the specified placeholder from the rendering data.
  * @param {ComponentRendering | RouteData} rendering rendering data

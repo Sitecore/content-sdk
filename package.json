@@ -45,7 +45,7 @@
   },
   "workspaces": [
     "packages/*",
-    "samples/*"
+    "samples/astro"
   ],
   "resolutions": {
     "eslint-plugin-react-hooks": "^5.2.0",

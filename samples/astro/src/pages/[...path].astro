@@ -26,13 +26,16 @@ export const getStaticPaths = (async () => {
         staticPath.params.path.length > 0
           ? normalizeSiteRewrite(staticPath.params.path.join('/'))
           : undefined,
-      locale: staticPath.locale ?? 'en',
     },
+    props: {
+      locale: staticPath.locale ?? config.defaultLanguage,
+    }
   }));
 }) satisfies GetStaticPaths;
 
 // Resolve the path from params and fetch the page
-const { path, locale } = Astro.params;
+const { path } = Astro.params;
+const { locale } = Astro.props;
 const pagePath = path ? `/${path}` : '/';
 
 let page: Page | null = null;
@@ -40,7 +43,7 @@ let page: Page | null = null;
 try {
   console.log('Fetching page data for', pagePath, { locale, site: config.defaultSite });
   page = await client.getPage(pagePath, {
-    locale: config.defaultLanguage,
+    locale,
     site: config.defaultSite,
   });
 } catch (error) {

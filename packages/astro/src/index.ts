@@ -4,11 +4,7 @@
 
 // Astro-specific exports
 export type { AstroComponentMap, PlaceholderProps } from './types';
-export {
-  getPlaceholderRenderings,
-  getComponentProps,
-  getSXAParams,
-} from './placeholder-utils';
+export { getPlaceholderRenderings, getComponentProps, getSXAParams } from './placeholder-utils';
 export type { ComponentProps } from './placeholder-utils';
 export { resolveFieldEditingState } from './field-utils';
 export type { FieldEditingState } from './field-utils';
@@ -20,20 +16,8 @@ export {
 } from './editing-utils';
 export type { EditingQueryParams } from './editing-utils';
 
-// Core exports from @sitecore-content-sdk/core
-export {
-  constants,
-  enableDebug,
-  ClientError,
-  CacheClient,
-  CacheOptions,
-  HTMLLink,
-  MemoryCacheClient,
-  NativeDataFetcher,
-  NativeDataFetcherResponse,
-  NativeDataFetcherConfig,
-  StaticPath,
-} from '@sitecore-content-sdk/core';
+// Core exports from @sitecore-content-sdk/content
+export { HTMLLink, StaticPath } from '@sitecore-content-sdk/content';
 
 export {
   GraphQLClientError,
@@ -50,13 +34,13 @@ export {
   SitecoreClientInit,
   createGraphQLClientFactory,
   GraphQLClientOptions,
-} from '@sitecore-content-sdk/core/client';
+} from '@sitecore-content-sdk/content/client';
 
 export {
   SitecoreConfig,
   SitecoreConfigInput,
   defineConfig,
-} from '@sitecore-content-sdk/core/config';
+} from '@sitecore-content-sdk/content/config';
 
 export {
   getContentStylesheetLink,
@@ -81,11 +65,11 @@ export {
   isDynamicPlaceholder,
   getDynamicPlaceholderPattern,
   EditMode,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 
-export { DictionaryPhrases, DictionaryService } from '@sitecore-content-sdk/core/i18n';
+export { DictionaryPhrases, DictionaryService } from '@sitecore-content-sdk/content/i18n';
 
-export { mediaApi } from '@sitecore-content-sdk/core/media';
+export { mediaApi } from '@sitecore-content-sdk/content/media';
 
 export {
   isEditorActive,
@@ -97,12 +81,11 @@ export {
   isDesignLibraryMode,
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
-  Metadata,
-} from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/editing';
 
-export { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
+export { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 
-export { SiteInfo, SITE_KEY, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
+export { SiteInfo, SITE_KEY, normalizeSiteRewrite } from '@sitecore-content-sdk/content/site';
 
 export {
   PersonalizeService,
@@ -112,4 +95,4 @@ export {
   normalizePersonalizedRewrite,
   CdpHelper,
   DEFAULT_VARIANT,
-} from '@sitecore-content-sdk/core/personalize';
+} from '@sitecore-content-sdk/content/personalize';

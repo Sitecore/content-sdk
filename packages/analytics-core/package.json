@@ -7,6 +7,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
+    "@sitecore-content-sdk/core": "workspace:^",
     "debug": "^4.4.3"
   },
   "description": "> TODO: description",

@@ -1,6 +1,6 @@
 {
   "lerna": "3.22.1",
-  "packages": ["packages/*", "samples/*"],
+  "packages": ["packages/*", "samples/astro"],
   "version": "independent",
   "npmClient": "yarn",
   "useWorkspaces": true
