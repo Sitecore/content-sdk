@@ -1080,6 +1080,52 @@ describe('App Placeholder logic', () => {
     });
   });
 
+  it('should use renderEach for each child in the placeholder when page editing is enabled', () => {
+    const page = getPage();
+    const components = new Map<string, React.FC>();
+  
+    page.mode.isEditing = true;
+  
+    components.set('Child', () => 'Child');
+  
+    const route = {
+      name: 'Render Each Test',
+      placeholders: {
+        main: [
+          {
+            componentName: 'Child',
+          },
+          {
+            componentName: 'Child',
+          },
+        ],
+      },
+    };
+    page.layout = {
+      sitecore: {
+        context: {},
+        route,
+      },
+    };
+    const phKey = 'main';
+  
+    const renderedComponent = render(
+      <SitecoreProvider componentMap={componentMap} page={page}>
+        <AppPlaceholder
+          name={phKey}
+          rendering={page.layout.sitecore.route}
+          componentMap={components}
+          page={page}
+          render={(children) => <div className="parentWrapper">{children}</div>}
+          renderEach={(child) => <div className="wrapper">{child}</div>}
+        />
+      </SitecoreProvider>
+    );
+  
+    expect(renderedComponent.container.querySelectorAll('.parentWrapper').length).to.equal(1);
+    expect(renderedComponent.container.querySelectorAll('.wrapper').length).to.equal(2);
+  });
+
   describe('AppPlaceholder PlaceholderMetadata', () => {
     const {
       layoutData,

@@ -91,6 +91,10 @@ export const AppPlaceholder = (props: AppPlaceholderProps) => {
             {rendered}
           </ErrorBoundary>
         );
+
+        if (props.renderEach) {
+          rendered = props.renderEach(rendered, index) as React.ReactElement<{ [attr: string]: unknown }>;
+        }
       }
 
       // if in edit mode then emit shallow chromes for hydration in Pages
@@ -128,16 +132,6 @@ export const AppPlaceholder = (props: AppPlaceholderProps) => {
 
   if (props.render) {
     return props.render(components, placeholderRenderings, props);
-  } else if (props.renderEach) {
-    const renderEach = props.renderEach;
-
-    return finalRendering.map((component, index) => {
-      if (component && component.props && component.props.type === 'text/sitecore') {
-        return component;
-      }
-
-      return renderEach(component, index);
-    });
   } else {
     return finalRendering;
   }

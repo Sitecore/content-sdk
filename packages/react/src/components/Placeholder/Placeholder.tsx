@@ -71,6 +71,10 @@ export class PlaceholderComponent extends React.Component<PlaceholderProps> {
               {rendered}
             </ErrorBoundary>
           );
+
+          if (props.renderEach) {
+            rendered = props.renderEach(rendered, index) as React.ReactElement<{ [attr: string]: unknown }>;
+          }
         }
 
         // if in edit mode then emit shallow chromes for hydration in Pages
@@ -147,16 +151,6 @@ export class PlaceholderComponent extends React.Component<PlaceholderProps> {
       return this.props.page.mode.isEditing ? renderEmptyPlaceholder(rendered) : rendered;
     } else if (this.props.render) {
       return this.props.render(components, placeholderRenderings, childProps);
-    } else if (this.props.renderEach) {
-      const renderEach = this.props.renderEach;
-
-      return components.map((component, index) => {
-        if (component && component.props && component.props.type === 'text/sitecore') {
-          return component;
-        }
-
-        return renderEach(component, index);
-      });
     } else {
       return components;
     }
