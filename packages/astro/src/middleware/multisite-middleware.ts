@@ -157,8 +157,12 @@ export function createMultisiteMiddleware(config: MultisiteMiddlewareConfig): Mi
       return next();
     }
 
-    // Skip for prerendered (static) pages - rewriting doesn't work for pre-built pages
-    // The page will fall back to defaultSite via getSiteRewriteData()
+    console.log('Multisite middleware start', {
+      url: url.pathname,
+      prerendered: context.isPrerendered,
+    });
+
+    // Skip for prerendered (static) pages
     if (context.isPrerendered) {
       return next();
     }

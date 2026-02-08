@@ -7,6 +7,8 @@ import config from '../sitecore.config';
 import { normalizeSiteRewrite, getSiteRewriteData } from '@sitecore-content-sdk/astro';
 import { i18n } from 'astro:config/server';
 
+export const prerender = true;
+
 export const getStaticPaths = (async () => {
   const sites = [config.defaultSite];
   const languages = (i18n?.locales as string[]) || [config.defaultLanguage];
@@ -36,6 +38,8 @@ export const getStaticPaths = (async () => {
 // Resolve the path from params and fetch the page
 const { path } = Astro.params;
 const { locale } = Astro.props;
+
+console.log('Page url', Astro.url);
 
 // Extract site name from the rewritten path (set by multisite middleware)
 // Falls back to default site if no site prefix is present
