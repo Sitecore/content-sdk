@@ -141,19 +141,19 @@ export class Personalizer {
  */
 export interface PersonalizeGeolocation {
   /**
-   * The site visitor's city address.
+   * The site visitor's city.
    *
    * Format: title case recommended.
    */
   city?: string;
   /**
-   * The site visitor's country address.
+   * The site visitor's country.
    *
    * Format: uppercase ISO 3166-1 alpha-2.
    */
   country?: string;
   /**
-   * The site visitor's region address.
+   * The site visitor's region.
    * Depends on the regional structure of the country.
    *
    * Format: for example, for Australia, use state and territory abbreviations. For the United States, use ANSI standard INCITS 38:2009.
