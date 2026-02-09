@@ -19,11 +19,11 @@ export function appendScriptWithAttributes(attributes: ScriptAttributes) {
  */
 export interface ScriptAttributes {
   /**
-   * The async attribute.
+   * A boolean value that controls how the script should be executed.
    */
   async: boolean;
   /**
-   * The src attribute.
+   * Represents the URL of an external script; this can be used as an alternative to embedding a script directly within a document. It reflects the `src` attribute of the `script` element.
    */
   src: string;
 }
