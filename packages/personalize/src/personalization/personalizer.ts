@@ -136,6 +136,7 @@ export class Personalizer {
 
 /**
  * An interface that describes the geolocation attributes.
+ * @public
  */
 export interface PersonalizeGeolocation {
   city?: string;
@@ -145,6 +146,7 @@ export interface PersonalizeGeolocation {
 
 /**
  * An interface that describes the flow execution model attributes input for the library
+ * @public
  */
 export interface PersonalizeData {
   channel: string;
@@ -160,6 +162,7 @@ export interface PersonalizeData {
 
 /**
  * An interface that describes the identifier model attributes for the library
+ * @public
  */
 export interface PersonalizeIdentifierInput {
   id: string;
@@ -168,11 +171,13 @@ export interface PersonalizeIdentifierInput {
 
 /**
  * A type that describes the params field
+ * @public
  */
 export type PersonalizeInputParams = NestedObject;
 
 /**
  * Options for the getInteractiveExperienceData method
+ * @internal
  */
 export interface GetInteractiveExperienceDataOpts {
   /**

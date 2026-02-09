@@ -40,6 +40,7 @@ export async function personalize(
 
 /**
  * Options for the personalize function.
+ * @public
  */
 interface PersonalizeOpts {
   /**

@@ -424,6 +424,7 @@ describe('personalizeBrowserPlugin', () => {
             webPersonalization: {
               async: false,
               defer: true,
+              language: 'en',
             },
           },
         });
@@ -435,7 +436,7 @@ describe('personalizeBrowserPlugin', () => {
         expect(window.scContentSDK.personalize.options).toEqual({
           async: false,
           defer: true,
-          language: undefined,
+          language: 'en',
         });
       });
     });

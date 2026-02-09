@@ -47,12 +47,7 @@ async function init() {
     personalize: {
       personalize,
       version: PACKAGE_VERSION,
-      options: personalizeOptions.webPersonalization
-        ? {
-            async: personalizeOptions.webPersonalization.async,
-            defer: personalizeOptions.webPersonalization.defer,
-          }
-        : {},
+      options: personalizeOptions.webPersonalization ? personalizeOptions.webPersonalization : {},
     },
     analytics_core: {
       ...window.scContentSDK?.analytics_core,
@@ -75,6 +70,7 @@ async function init() {
 
 /**
  * Parameters for creating a personalize browser plugin.
+ * @public
  */
 interface PersonalizeBrowserPluginParams {
   adapter: PersonalizeAdapter;
@@ -134,10 +130,7 @@ declare global {
   interface ScContentSDK {
     personalize: {
       personalize: typeof personalize;
-      options?: {
-        async?: boolean;
-        defer?: boolean;
-      };
+      options?: Partial<WebPersonalizationOptions>;
       version: string;
     };
   }

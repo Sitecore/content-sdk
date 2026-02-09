@@ -99,6 +99,7 @@ export async function sendCallFlowsRequest(
 
 /**
  * An interface with the basic functionality that the derived classes needs to implement
+ * @internal
  */
 export interface PersonalizeClient {
   config: CoreContext['config'];
@@ -110,6 +111,7 @@ export interface PersonalizeClient {
 
 /**
  * An interface that describes the failed response model from Sitecore Edge Proxy
+ * @internal
  */
 export interface FailedCalledFlowsResponse {
   status: string;
@@ -121,6 +123,7 @@ export interface FailedCalledFlowsResponse {
 
 /**
  * An interface that describes the identifier model attributes for the library
+ * @internal
  */
 export interface EPIdentifier {
   id: string;
@@ -129,6 +132,7 @@ export interface EPIdentifier {
 
 /**
  * An interface that describes the payload sent to Sitecore Edge Proxy library
+ * @internal
  */
 export interface EPCallFlowsBody {
   clientId?: string;
@@ -147,11 +151,13 @@ export interface EPCallFlowsBody {
 
 /**
  * A type that describes the params property of the EPCallFlowsBody
+ * @internal
  */
 export type EPCallFlowsParams = NestedObject;
 
 /**
  * Interface for the fetch options we need
+ * @internal
  */
 interface FetchOptions extends RequestInit {
   headers: Record<string, string>;
