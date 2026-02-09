@@ -1,6 +1,10 @@
 import packageJson from '../package.json';
 import { MAX_EXT_ATTRIBUTES } from './events/consts';
 
+/**
+ * The package version.
+ * @internal
+ */
 export const PACKAGE_VERSION = packageJson.version;
 export const PACKAGE_NAME = packageJson.name;
 

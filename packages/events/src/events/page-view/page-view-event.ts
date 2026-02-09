@@ -162,6 +162,7 @@ export class PageViewEvent extends BaseEvent {
 
 /**
  * Interface of the unified arguments object for page view event
+ * @internal
  */
 export interface PageViewEventArguments {
   sendEvent: SendEvent;
@@ -175,17 +176,42 @@ export interface PageViewEventArguments {
 
 /**
  * Type with the required/optional attributes in order to send a view event to the SitecoreCloud API
+ * @public
  */
 export interface PageViewData extends EventAttributesInput {
+  /**
+   * The ID of a personalized page variant.
+   */
   pageVariantId?: string;
+  /**
+   * The URI of the webpage that linked to the webpage where the event was captured.
+   *
+   * Default for browser-side events: inferred from document.referrer. If document.referrer is an empty string, the value will be set to null.
+   *
+   * Default for server-side events: null.
+   */
   referrer?: string;
+  /**
+   * Whether to add every UTM parameter from the URL of the current webpage to the event object.
+   *
+   * Default: `true`.
+   */
   includeUTMParameters?: boolean;
+  /**
+   * Any custom data to collect about an event in addition to the other attributes provided for the event data.
+   */
   extensionData?: ExtensionData;
+  /**
+   * Sitecore Search data about the event.
+   * If set, the event and all its data will be available in Sitecore Search.
+   * Construct according to the Sitecore Search Events API reference and data model.
+   */
   searchData?: NestedObject;
 }
 
 /**
  * Interface with the utm_ parameters
+ * @internal
  */
 interface UtmParameters {
   [key: `utm_${string}`]: string;
@@ -193,6 +219,7 @@ interface UtmParameters {
 
 /**
  * An interface describing the page view event specific payload to be sent to the API
+ * @internal
  */
 export interface PageViewEventPayload extends UtmParameters {
   type: 'VIEW';

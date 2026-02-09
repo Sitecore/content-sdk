@@ -36,6 +36,7 @@ export class BaseEvent {
 
 /**
  *  An interface describing the basic payload to be sent to the API
+ * @internal
  */
 export interface BasePayload {
   client_id: string;

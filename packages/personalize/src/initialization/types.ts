@@ -34,7 +34,7 @@ export interface PersonalizePluginOptions {
    *
    * If enableCookie of analytics plugin is false, enablePersonalizeCookie will not be set.
    *
-   * Default: false.
+   * Default: `false`.
    */
   enablePersonalizeCookie?: boolean;
   /**
@@ -44,7 +44,7 @@ export interface PersonalizePluginOptions {
    *
    * To customize the loading of the script, set the value to an object, and in the object, use the async, defer, and language attributes.
    *
-   * Default: false.
+   * Default: `false`.
    */
   webPersonalization?: boolean | Partial<WebPersonalizationOptions>;
 }

@@ -59,6 +59,7 @@ export async function sendEvent(
 
 /**
  * The type of sendEvent function
+ * @internal
  */
 export type SendEvent = (
   body: EPFetchBody & BasePayload,
@@ -67,5 +68,6 @@ export type SendEvent = (
 
 /**
  * The type describing all possible event payloads
+ * @internal
  */
 type EPFetchBody = PageViewEventPayload | IdentityEventPayload | CustomEventPayload;

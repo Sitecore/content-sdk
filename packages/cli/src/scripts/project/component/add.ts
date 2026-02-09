@@ -33,12 +33,12 @@ type AddArgs = {
   targetPath?: string;
   /**
    * If true, skips the component map generation.
-   * Default: false.
+   * Default: `false`.
    */
   skipComponentMap?: boolean;
   /**
    * If true, overwrites the existing component.
-   * Default: false.
+   * Default: `false`.
    */
   overwrite?: boolean;
   /**
