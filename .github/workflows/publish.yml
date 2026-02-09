@@ -99,7 +99,9 @@ jobs:
 
       - name: Bump canary version
         run: |
-          BRANCH_NAME="${{ github.ref_name }}"
+          MAIN_BRANCH="${{ github.ref_name }}"
+          # Main branch needs to be checked out after changeset action
+          git checkout "$MAIN_BRANCH"
           echo "Bumping canary version(s)"
 
           # If a release was just published, bump to next preminor canary
@@ -113,7 +115,7 @@ jobs:
           yarn install
           if [ -n "$(git status --porcelain)" ]; then
             git commit -a -m "Bump canary version [skip ci]"
-            git push origin HEAD:$BRANCH_NAME
+            git push origin HEAD:$MAIN_BRANCH
           else
             echo "No version changes to commit"
           fi
@@ -134,3 +136,28 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+
+      - name: Post-canary sync to changeset release PR
+        run: |
+          CHANGESET_BRANCH="changeset-release/${{ github.ref_name }}"
+          git fetch origin
+          # If changeset branch exists
+          if git ls-remote --heads origin "$CHANGESET_BRANCH" | grep -q .; then            
+            git checkout "$CHANGESET_BRANCH"
+            
+            # Merge dev/release branch into changeset-release branch to fix any potential PR merge conflicts
+            if git merge origin/${{ github.ref_name }} --no-edit -m "chore: merge canary changes from ${{ github.ref_name }}"; then
+              echo "Synced cleanly without conflicts"
+            else              
+              git checkout --ours packages/*/package.json
+              git add packages/*/package.json
+              yarn install
+              git add yarn.lock
+              
+              git commit --no-edit
+            fi
+            git push origin "$CHANGESET_BRANCH"
+            echo "Release branch updated with post-canary changes (keeping release versions)"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
