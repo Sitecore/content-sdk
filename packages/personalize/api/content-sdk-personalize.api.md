@@ -35,11 +35,8 @@ export const PERSONALIZE_PLUGIN_NAME = "PersonalizePlugin";
 
 // @public
 export interface PersonalizeAdapter extends PluginAdapter {
-    // (undocumented)
     getProfileId: () => string | null;
-    // (undocumented)
     getUserAgent?: () => string | undefined;
-    // (undocumented)
     setProfileId: () => Promise<void>;
 }
 

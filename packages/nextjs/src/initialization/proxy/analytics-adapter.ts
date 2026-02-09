@@ -10,7 +10,14 @@ import {
 import { getCoreContext } from '@sitecore-content-sdk/core';
 import { NextRequest, NextResponse } from 'next/server';
 
-interface AnalyticsProxyAdapter extends AnalyticsAdapter {
+/**
+ * Defines the AnalyticsProxyAdapter.
+ * @public
+ */
+export interface AnalyticsProxyAdapter extends AnalyticsAdapter {
+  /**
+   * The type of the adapter.
+   */
   type: 'proxy';
 }
 

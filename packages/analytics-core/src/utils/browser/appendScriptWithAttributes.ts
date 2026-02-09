@@ -13,7 +13,17 @@ export function appendScriptWithAttributes(attributes: ScriptAttributes) {
   document.head.appendChild(sdkScriptElement);
 }
 
-interface ScriptAttributes {
+/**
+ * The script attributes required to append a script element.
+ * @internal
+ */
+export interface ScriptAttributes {
+  /**
+   * The async attribute.
+   */
   async: boolean;
+  /**
+   * The src attribute.
+   */
   src: string;
 }

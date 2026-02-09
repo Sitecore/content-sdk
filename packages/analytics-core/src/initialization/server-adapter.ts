@@ -9,7 +9,14 @@ import { AnalyticsAdapter } from './types';
 import { getCoreContext } from '@sitecore-content-sdk/core';
 import type { IncomingMessage, OutgoingMessage } from 'http';
 
-interface AnalyticsServerAdapter extends AnalyticsAdapter {
+/**
+ * Defines the AnalyticsServerAdapter.
+ * @public
+ */
+export interface AnalyticsServerAdapter extends AnalyticsAdapter {
+  /**
+   * The type of the adapter.
+   */
   type: 'server';
 }
 

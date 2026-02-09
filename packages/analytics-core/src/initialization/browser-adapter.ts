@@ -9,7 +9,14 @@ import { getAnalyticsPlugin } from './plugin';
 import { AnalyticsAdapter } from './types';
 import { getCoreContext } from '@sitecore-content-sdk/core';
 
-interface AnalyticsBrowserAdapter extends AnalyticsAdapter {
+/**
+ * Defines the AnalyticsBrowserAdapter.
+ * @public
+ */
+export interface AnalyticsBrowserAdapter extends AnalyticsAdapter {
+  /**
+   * The type of the adapter.
+   */
   type: 'browser';
 }
 

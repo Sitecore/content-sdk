@@ -12,15 +12,37 @@ const debugInit = debug.init;
 
 /**
  * Parameters for creating an analytics plugin.
+ * @public
  */
-interface AnalyticsPluginParams {
+export interface AnalyticsPluginParams {
+  /**
+   * Optional configuration options for the analytics plugin.
+   */
   options?: {
+    /**
+     * The domain for which the cookie is valid.
+     */
     cookieDomain?: string;
+    /**
+     * The number of days until the cookie expires.
+     */
     cookieExpiryDays?: number;
+    /**
+     * The path for which the cookie is valid.
+     */
     cookiePath?: string;
+    /**
+     * Whether the cookie should be set.
+     */
     enableCookie?: boolean;
+    /**
+     * The timeout duration for the analytics plugin, in milliseconds.
+     */
     timeout?: number;
   };
+  /**
+   * The adapter to be used for the analytics plugin.
+   */
   adapter: AnalyticsAdapter;
 }
 

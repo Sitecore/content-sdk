@@ -158,7 +158,19 @@ export interface PersonalizeServerPlugin {
  * @public
  */
 export interface PersonalizeAdapter extends PluginAdapter {
+  /**
+   * Gets the profile ID. The method returns a string representing the profile ID if it exists, or null if it does not exist.
+   * @returns {string | null} The profile ID or null if not found.
+   */
   getProfileId: () => string | null;
+  /**
+   * Sets the profile ID. The method may involve asynchronous operations, such as setting cookies or making API calls, and returns a promise that resolves when the profile ID has been set.
+   * @returns {Promise<void>} A promise that resolves when the profile ID has been set.
+   */
   setProfileId: () => Promise<void>;
+  /**
+   * Optionally gets the user agent string. The method returns a string representing the user agent if it is available, or undefined if it is not available. This method can be used to provide additional context for personalization based on the user's device or browser.
+   * @returns {string | undefined} The user agent string or undefined.
+   */
   getUserAgent?: () => string | undefined;
 }

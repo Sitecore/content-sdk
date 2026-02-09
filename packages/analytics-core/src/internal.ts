@@ -23,3 +23,4 @@ export { getAnalyticsPlugin } from './initialization/plugin';
 export { ANALYTICS_PLUGIN_NAME } from './initialization/const';
 export type { AnalyticsPlugin } from './initialization/types';
 export { AnalyticsAdapter, AnalyticsOptions } from './initialization/types';
+export type { ResolvedVisitorIds } from './interfaces';

@@ -12,7 +12,14 @@ import { PersonalizeAdapter } from '@sitecore-content-sdk/personalize/internal';
 import { NextRequest, NextResponse } from 'next/server';
 import { getClientId } from './analytics-adapter';
 
+/**
+ * Defines the PersonalizeProxyAdapter.
+ * @public
+ */
 export interface PersonalizeProxyAdapter extends Required<PersonalizeAdapter> {
+  /**
+   * The type of the adapter.
+   */
   type: 'proxy';
 }
 
