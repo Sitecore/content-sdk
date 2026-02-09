@@ -111,13 +111,28 @@ export interface PersonalizeClient {
 
 /**
  * An interface that describes the failed response model from Sitecore Edge Proxy
- * @internal
+ * @public
  */
 export interface FailedCalledFlowsResponse {
+  /**
+   * The status of the response.
+   */
   status: string;
+  /**
+   * The error code.
+   */
   code: string;
+  /**
+   * A message describing the error.
+   */
   message: string;
+  /**
+   * A more detailed message intended for developers.
+   */
   developerMessage: string;
+  /**
+   * A URL with more information about the error.
+   */
   moreInfoUrl: string;
 }
 

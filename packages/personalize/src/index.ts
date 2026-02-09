@@ -4,6 +4,7 @@ export type {
   PersonalizeIdentifierInput,
   PersonalizeInputParams,
 } from './personalization/personalizer';
+export type { FailedCalledFlowsResponse } from './personalization/send-call-flows-request';
 export { personalize, type PersonalizeOpts } from './personalization/personalize';
 
 export type { PersonalizeServerPluginParams } from './initialization/plugin-server';
@@ -20,6 +21,4 @@ export type {
   WebPersonalizationOptions,
   PersonalizePluginOptions,
   PersonalizeServerPluginOptions,
-  PersonalizeBrowserPlugin,
-  PersonalizeServerPlugin,
 } from './initialization/types';

@@ -57,19 +57,31 @@ export type PersonalizeServerPluginOptions = Omit<PersonalizePluginOptions, 'web
 
 /**
  * Represents the resolved personalize plugin options.
- * @internal
+ * @public
  */
 export interface PersonalizeOptions {
+  /**
+   * The resolved web personalization options.
+   */
   webPersonalization: false | WebPersonalizationOptions;
+  /**
+   * The cookie settings for the personalize plugin, including whether the cookie is enabled and the name of the cookie.
+   */
   cookies: {
+    /**
+     * Whether the sc_cid_personalize cookie is enabled.
+     */
     enabled: boolean;
+    /**
+     * The name of the sc_cid_personalize cookie.
+     */
     name: string;
   };
 }
 
 /**
  * Represents the personalize plugin interface.
- * @internal
+ * @public
  */
 export type PersonalizeServerOptions = Omit<PersonalizeOptions, 'webPersonalization'>;
 
@@ -91,7 +103,7 @@ export interface PersonalizePlugin {
  */
 export interface PersonalizeBrowserPlugin {
   /**
-   * The options for the personalize browser plugin, including web personalization and cookie settings.
+   * The resolved options for the personalize browser plugin, including web personalization and cookie settings.
    */
   options: PersonalizeOptions;
   /**
@@ -118,16 +130,32 @@ export interface PersonalizeBrowserPlugin {
  * @public
  */
 export interface PersonalizeServerPlugin {
+  /**
+   * The resolved options for the personalize server plugin, including cookie settings.
+   */
   options: PersonalizeServerOptions;
+  /**
+   * Initializes the personalize server plugin, which may involve setting up necessary configurations or performing any asynchronous operations required for the plugin to function properly.
+   * @returns A promise that resolves when the initialization is complete.
+   */
   init: () => Promise<void>;
+  /**
+   * The name of the personalize plugin.
+   */
   name: typeof PERSONALIZE_PLUGIN_NAME;
+  /**
+   * An array of plugin names that the personalize server plugin depends on. This ensures that the required plugins are initialized before the personalize plugin is initialized.
+   */
   dependencies: string[];
+  /**
+   * The adapter for the personalize server plugin, which provides methods to get and set the profile id, and optionally get the user agent. The adapter allows the personalize plugin to interact with the underlying platform or environment in a consistent way.
+   */
   adapter: PersonalizeAdapter;
 }
 
 /**
  * Represents the personalize adapter interface that defines the methods to get and set the profile id, and optionally get the user agent.
- * @internal
+ * @public
  */
 export interface PersonalizeAdapter extends PluginAdapter {
   getProfileId: () => string | null;
