@@ -45,27 +45,27 @@ describe('Event Storage', () => {
     jest.clearAllMocks();
   });
 
-  // it('getEventQueue should return empty array when no event is added to the queue', () => {
-  //   const arrMock = jest.spyOn(global.Array, 'isArray');
+  it('getEventQueue should return empty array when no event is added to the queue', () => {
+    const arrMock = jest.spyOn(global.Array, 'isArray');
 
-  //   const getSessionStorageSpy = jest.spyOn(eventQueue.eventQueue as any, 'getSessionStorage');
-  //   getSessionStorageSpy.mockImplementation(() => storageMock);
+    const getSessionStorageSpy = jest.spyOn(eventQueue.eventQueue as any, 'getSessionStorage');
+    getSessionStorageSpy.mockImplementation(() => storageMock);
 
-  //   const queueEventPayload: eventQueue.QueueEventPayload = {
-  //     eventData,
-  //     id,
-  //     config,
-  //   };
+    const queueEventPayload: eventQueue.QueueEventPayload = {
+      eventData,
+      id,
+      config,
+    };
 
-  //   eventQueue.eventQueue.enqueueEvent(queueEventPayload);
+    eventQueue.eventQueue.enqueueEvent(queueEventPayload);
 
-  //   expect(inferLanguageSpy).toHaveBeenCalledTimes(0);
-  //   expect(inferPageSpy).toHaveBeenCalledTimes(0);
-  //   expect(getEventQueueSpy).toHaveBeenCalledTimes(1);
-  //   expect(arrMock).toHaveBeenCalledTimes(1);
-  //   expect(storageMock.getItem).toHaveBeenCalledTimes(1);
-  //   expect(getEventQueueSpy).toHaveReturnedWith(expect.arrayContaining([]));
-  // });
+    expect(inferLanguageSpy).toHaveBeenCalledTimes(0);
+    expect(inferPageSpy).toHaveBeenCalledTimes(0);
+    expect(getEventQueueSpy).toHaveBeenCalledTimes(1);
+    expect(arrMock).toHaveBeenCalledTimes(1);
+    expect(storageMock.getItem).toHaveBeenCalledTimes(1);
+    expect(getEventQueueSpy).toHaveReturnedWith(expect.arrayContaining([]));
+  });
 
   it('getEventQueue should return an empty array when getItem returns null', () => {
     const mockArray: eventQueue.QueueEventPayload[] = [];

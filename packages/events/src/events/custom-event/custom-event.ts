@@ -71,6 +71,7 @@ export class CustomEvent extends BaseEvent {
 
 /**
  * Interface of the unified arguments object for custom event
+ * @internal
  */
 export interface CustomEventArguments {
   sendEvent: SendEvent;
@@ -81,6 +82,7 @@ export interface CustomEventArguments {
 
 /**
  * Interface with the required/optional attributes to send a custom event to the SitecoreCloud API
+ * @internal
  */
 export interface CustomEventPayload extends NestedObject {
   sc_search?: {

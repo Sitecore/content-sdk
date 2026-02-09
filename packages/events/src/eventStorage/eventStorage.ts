@@ -76,14 +76,8 @@ class EventQueue {
 }
 
 /**
- * This interface represents the required storage functionality.
+ * @internal
  */
-export interface Storage {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-  removeItem(key: string): void;
-}
-
 export type QueueEventPayload = Pick<CustomEventArguments, 'eventData' | 'config' | 'id'>;
 
 export const eventQueue = new EventQueue();

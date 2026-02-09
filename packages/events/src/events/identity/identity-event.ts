@@ -115,6 +115,7 @@ export class IdentityEvent extends BaseEvent {
 
 /**
  * The JSON array of objects that contain the identity identifiers
+ * @internal
  */
 interface EPIdentifier {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -255,7 +256,7 @@ export interface IdentityEventPayload {
 
 /**
  * Interface of the unified arguments object for the identity event
- *
+ * @internal
  */
 export interface IdentityEventArguments {
   sendEvent: SendEvent;
