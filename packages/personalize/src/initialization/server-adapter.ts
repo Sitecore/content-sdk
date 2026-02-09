@@ -14,11 +14,17 @@ import { fetchProfileIdFromEdgeProxy } from '../profile-id/fetch-profile-id-from
 import type { IncomingMessage, OutgoingMessage } from 'http';
 
 /**
- * Defines the PersonalizeServerAdapter interface and the personalizeServerAdapter function to enable personalization on the server.
+ * Defines the PersonalizeServerAdapter.
  * @public
  */
 export interface PersonalizeServerAdapter extends PersonalizeAdapter {
+  /**
+   * The type of the adapter.
+   */
   type: 'server';
+  /**
+   * Gets the user agent from the request headers.
+   */
   getUserAgent: PersonalizeAdapter['getUserAgent'];
 }
 

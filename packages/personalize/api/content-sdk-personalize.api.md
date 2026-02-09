@@ -45,7 +45,6 @@ export interface PersonalizeAdapter extends PluginAdapter {
 
 // @public
 export interface PersonalizeBrowserAdapter extends PersonalizeAdapter {
-    // (undocumented)
     type: 'browser';
 }
 
@@ -135,9 +134,7 @@ export interface PersonalizePluginOptions {
 
 // @public
 export interface PersonalizeServerAdapter extends PersonalizeAdapter {
-    // (undocumented)
     getUserAgent: PersonalizeAdapter['getUserAgent'];
-    // (undocumented)
     type: 'server';
 }
 
