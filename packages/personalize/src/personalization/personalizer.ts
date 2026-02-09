@@ -6,6 +6,7 @@ import { sendCallFlowsRequest } from './send-call-flows-request';
 import { CoreContext } from '@sitecore-content-sdk/core';
 
 /**
+ * The Personalizer Class runs a flow of interactive experiments.
  * @internal
  */
 export class Personalizer {
@@ -139,8 +140,24 @@ export class Personalizer {
  * @public
  */
 export interface PersonalizeGeolocation {
+  /**
+   * The site visitor's city address.
+   *
+   * Format: title case recommended.
+   */
   city?: string;
+  /**
+   * The site visitor's country address.
+   *
+   * Format: uppercase ISO 3166-1 alpha-2.
+   */
   country?: string;
+  /**
+   * The site visitor's region address.
+   * Depends on the regional structure of the country.
+   *
+   * Format: for example, for Australia, use state and territory abbreviations. For the United States, use ANSI standard INCITS 38:2009.
+   */
   region?: string;
 }
 
@@ -149,14 +166,67 @@ export interface PersonalizeGeolocation {
  * @public
  */
 export interface PersonalizeData {
+  /**
+   * The touchpoint where the user interacts with your brand.
+   * For example, for webpages, the channel is "WEB". For mobile app screens, the channel is "MOBILE_APP".
+   *
+   * Format: uppercase.
+   */
   channel: string;
+  /**
+   * The alphabetic currency code of the currency the site visitor uses in your app.
+   * For example, if the site visitor selects Australian dollars as the currency, the currency is "AUD".
+   *
+   * Format: uppercase ISO 4217.
+   */
   currency?: string;
+  /**
+   * The site visitor's email address.
+   *
+   * Format: lowercase recommended.
+   */
   email?: string;
+  /**
+   * The unique identifier of the live interactive experience or experiment to run.
+   * To find the friendly ID in Sitecore Personalize, click the live experience or experiment to run, then click Build summary. The friendly ID is in the Details pane.
+   */
   friendlyId: string;
+  /**
+   * The site visitor's geolocation data.
+   */
   geo?: PersonalizeGeolocation;
+  /**
+   * The identifiers used for identifying site visitors.
+   *
+   * If set, the experience or experiment runs only for the identified site visitor.
+   */
   identifier?: PersonalizeIdentifierInput;
+  /**
+   * The language the site visitor interacts with your brand in.
+   * For example, if the site visitor selects the Japanese language in your app, the language is "JA".
+   *
+   * Format: uppercase ISO 639.
+   *
+   * Default for browser-side events: inferred from the HTML lang attribute. If lang is not specified, the default is an empty string.
+   *
+   * Default for server-side events: empty string.
+   */
   language?: string;
+  /**
+   * An object of your choice.
+   *
+   * If the URL of the webpage where this function runs contains UTM parameters, those parameters are automatically captured in params.utm.
+   *
+   * To override the automatically captured UTM parameters, specify values manually in params.utm.
+   */
   params?: PersonalizeInputParams;
+  /**
+   * A list of IDs of personalized page variants.
+   *
+   * Ensures that the correct variants are rendered for personalization.
+   *
+   * If unset or an empty array, this property will not be part of the payload.
+   */
   pageVariantIds?: string[];
 }
 
@@ -165,7 +235,13 @@ export interface PersonalizeData {
  * @public
  */
 export interface PersonalizeIdentifierInput {
+  /**
+   * The unique guest (site visitor) identifier provided by your organization's identity system, such as a Customer Relationship Management (CRM) system.
+   */
   id: string;
+  /**
+   * The name of your organization's identity system, external to SitecoreAI, that provided the unique guest (site visitor) identifier.
+   */
   provider: string;
 }
 

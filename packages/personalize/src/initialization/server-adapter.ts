@@ -13,6 +13,10 @@ import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/interna
 import { fetchProfileIdFromEdgeProxy } from '../profile-id/fetch-profile-id-from-edge-proxy';
 import type { IncomingMessage, OutgoingMessage } from 'http';
 
+/**
+ * Defines the PersonalizeServerAdapter interface and the personalizeServerAdapter function to enable personalization on the server.
+ * @public
+ */
 export interface PersonalizeServerAdapter extends PersonalizeAdapter {
   type: 'server';
   getUserAgent: PersonalizeAdapter['getUserAgent'];

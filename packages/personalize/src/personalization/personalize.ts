@@ -42,7 +42,7 @@ export async function personalize(
  * Options for the personalize function.
  * @public
  */
-interface PersonalizeOpts {
+export interface PersonalizeOpts {
   /**
    * Timeout in milliseconds for the personalize request
    */

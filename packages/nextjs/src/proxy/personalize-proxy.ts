@@ -18,6 +18,7 @@ import { personalizeProxyAdapter } from '../initialization/proxy/personalize-ada
 
 /**
  * Represents the geolocation data used for personalization
+ * @public
  */
 export type PersonalizeGeoData = {
   city?: string;

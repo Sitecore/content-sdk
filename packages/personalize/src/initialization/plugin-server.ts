@@ -30,9 +30,16 @@ async function init() {
 
 /**
  * Parameters for creating a personalize server plugin.
+ * @public
  */
-interface PersonalizeServerPluginParams {
+export interface PersonalizeServerPluginParams {
+  /**
+   * The adapter to be used for the personalize server plugin.
+   */
   adapter: PersonalizeAdapter;
+  /**
+   * Optional configuration options for the personalize server plugin.
+   */
   options?: PersonalizeServerPluginOptions;
 }
 

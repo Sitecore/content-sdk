@@ -37,17 +37,29 @@ export async function fetchProfileIdFromEdgeProxy(
   return (data as GetProfileIdResponse).customer.ref;
 }
 
+/**
+ * Represents the common properties of the response from the Edge Proxy when fetching the profile id.
+ * @internal
+ */
 interface GetProfileIdCommon {
   status: string;
   version: string;
   clientKey: string;
 }
 
+/**
+ * Represents the successful response from the Edge Proxy when fetching the profile id.
+ * @internal
+ */
 export interface GetProfileIdResponse extends GetProfileIdCommon {
   ref: string;
   customer: { ref: string };
 }
 
+/**
+ * Represents the error response from the Edge Proxy when fetching the profile id.
+ * @internal
+ */
 export interface GetProfileIdResponseError extends GetProfileIdCommon {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   error_msg: string;

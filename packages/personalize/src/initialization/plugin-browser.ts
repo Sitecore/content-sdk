@@ -72,8 +72,14 @@ async function init() {
  * Parameters for creating a personalize browser plugin.
  * @public
  */
-interface PersonalizeBrowserPluginParams {
+export interface PersonalizeBrowserPluginParams {
+  /**
+   * The adapter to be used for the personalize browser plugin.
+   */
   adapter: PersonalizeAdapter;
+  /**
+   * Optional configuration options for the personalize browser plugin.
+   */
   options?: PersonalizePluginOptions;
 }
 

@@ -12,6 +12,10 @@ import {
 import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/internal';
 import { fetchProfileIdFromEdgeProxy } from '../profile-id/fetch-profile-id-from-edge-proxy';
 
+/**
+ * Defines the PersonalizeBrowserAdapter interface and the personalizeBrowserAdapter function to enable personalization in the browser.
+ * @public
+ */
 export interface PersonalizeBrowserAdapter extends PersonalizeAdapter {
   type: 'browser';
 }
