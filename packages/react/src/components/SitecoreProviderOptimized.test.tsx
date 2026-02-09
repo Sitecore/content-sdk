@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
-import React, { FC } from 'react';
+import React from 'react';
 import { expect } from 'chai';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { SitecoreProviderOptimized } from './SitecoreProviderOptimized';
@@ -10,7 +10,7 @@ import { render } from '@testing-library/react';
 describe('SitecoreProviderOptimized', () => {
   let nestedContext = {};
 
-  const NestedComponent: FC = () => {
+  const NestedComponent = () => {
     const { page } = useSitecore();
     nestedContext = page;
     return <span>Page mode is {page.mode.name}</span>;

@@ -36,14 +36,14 @@ export interface SitecoreProviderProps {
 
 /**
  * The SitecoreProvider component - Optimized functional component version.
- * 
+ *
  * This is a modernized version of the SitecoreProvider that uses React hooks
  * instead of class component lifecycle methods. It provides the same functionality
  * with better React 19+ optimization support.
- * 
+ *
  * @public
  */
-export function SitecoreProviderOptimized(props: SitecoreProviderProps) {
+export const SitecoreProviderOptimized = (props: SitecoreProviderProps) => {
   const { api: propsApi, page: propsPage, componentMap, loadImportMap, children } = props;
 
   // Apply default edgeUrl if any Edge ID is present but no edgeUrl
@@ -96,6 +96,6 @@ export function SitecoreProviderOptimized(props: SitecoreProviderProps) {
       </ComponentMapReactContext.Provider>
     </ImportMapReactContext.Provider>
   );
-}
+};
 
 SitecoreProviderOptimized.displayName = 'SitecoreProviderOptimized';
