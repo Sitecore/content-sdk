@@ -125,36 +125,113 @@ interface EPIdentifier {
 
 /**
  * Interface with the necessary attributes for the input for sending identity events
+ * @public
  */
 export interface IdentityData extends EventAttributesInput {
+  /**
+   * The site visitor's city address.
+   *
+   * Format: title case recommended.
+   */
   city?: string;
+  /**
+   * The site visitor's country address.
+   *
+   * Format: uppercase ISO 3166-1 alpha-2.
+   */
   country?: string;
+  /**
+   * The site visitor's date of birth.
+   *
+   * Format: ISO 8601.
+   */
   dob?: string;
+  /**
+   * The site visitor's email address.
+   *
+   * Format: lowercase recommended.
+   */
   email?: string;
+  /**
+   * The site visitor's first name.
+   *
+   * Format: title case recommended.
+   */
   firstName?: string;
+  /**
+   * The site visitor's gender.
+   */
   gender?: string;
+  /**
+   * The identifiers used for identifying site visitors.
+   */
   identifiers: Identifier[];
+  /**
+   * The site visitor's last name.
+   *
+   * Format: title case recommended.
+   */
   lastName?: string;
+  /**
+   * The site visitor's mobile number.
+   */
   mobile?: string;
+  /**
+   * The site visitor's phone number.
+   */
   phone?: string;
+  /**
+   * The site visitor's postal code.
+   */
   postalCode?: string;
+  /**
+   * The site visitor's state address.
+   *
+   * Format: title case recommended.
+   */
   state?: string;
+  /**
+   * The site visitor's street address.
+   *
+   * Format: title case recommended.
+   */
   street?: string[];
+  /**
+   * The site visitor's title.
+   *
+   * Format: title case.
+   */
   title?: string;
+  /**
+   * Any custom data to collect about an event in addition to the other attributes provided for the event data.
+   */
   extensionData?: ExtensionData;
 }
 
 /**
  * The JSON array of objects that contain the identity identifiers
+ * @public
  */
 export interface Identifier {
+  /**
+   * The date the unique guest (site visitor) identifier expires. This is determined by your organization's identity system.
+   *
+   * Format: ISO 8601.
+   */
   expiryDate?: string;
+  /**
+   * The unique guest (site visitor) identifier provided by your organization's identity system, such as a Customer Relationship Management (CRM) system.
+   */
   id: string;
+  /**
+   * The name of your organization's identity system, external to SitecoreAI, that provided the unique guest (site visitor) identifier.
+   */
   provider: string;
 }
 
 /**
  *  An interface describing the identity event specific payload to be sent to the API
+ * @internal
  */
 export interface IdentityEventPayload {
   city?: string;
@@ -178,6 +255,7 @@ export interface IdentityEventPayload {
 
 /**
  * Interface of the unified arguments object for the identity event
+ *
  */
 export interface IdentityEventArguments {
   sendEvent: SendEvent;

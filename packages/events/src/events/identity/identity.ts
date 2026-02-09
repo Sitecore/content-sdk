@@ -10,6 +10,7 @@ import { getEventsPlugin } from '../../initialization/plugin';
  * A function that sends an IDENTITY event to the SitecoreCloud API
  * @param {IdentityData} identityData - The required/optional attributes to be sent to the SitecoreCloud API
  * @returns The response object that Sitecore Edge Proxy returns
+ * @public
  */
 export async function identity(identityData: IdentityData): Promise<EPResponse | null> {
   const coreContext = getCoreContext();
