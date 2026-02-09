@@ -5,8 +5,17 @@
 export interface InitContentSdkParams {
   /** Initialization config */
   config: {
+    /**
+     * The context ID.
+     */
     contextId: string;
+    /**
+     * Sitecore edge URL
+     */
     edgeUrl?: string;
+    /**
+     * The site name.
+     */
     siteName: string;
   };
   /** Array of plugins to initialize */

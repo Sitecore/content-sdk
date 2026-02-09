@@ -1,3 +1,7 @@
+/**
+ * The error messages for the core package.
+ * @internal
+ */
 export const ERROR_MESSAGES = {
   IE_002: '[IE-002] You must first initialize the SDK using "initContentSdk()".',
   IV_001: '[IV-001] Incorrect value for "edgeUrl". Set the value to a valid URL.',

@@ -49,10 +49,22 @@ declare namespace constants {
 }
 export { constants }
 
+// @internal
+export interface CoreContext {
+    config: {
+        contextId: string;
+        edgeUrl: string;
+        siteName: string;
+    };
+    plugins: Map<string, Plugin_2>;
+    readyPromise: Promise<void> | null;
+}
+
 // @public
 const debug_2: {
     common: debug_3.Debugger;
     http: debug_3.Debugger;
+    init: debug_3.Debugger;
 };
 export { debug_2 as debug }
 
@@ -141,6 +153,9 @@ export function getCache<T>(key: string): T | undefined;
 // @internal
 export function getCacheAndClean<T>(key: string): T | undefined;
 
+// @internal
+export function getCoreContext(): CoreContext;
+
 // @public
 export const getEnforcedCorsHeaders: ({ requestMethod, headers, presetCorsHeader, allowedOrigins, }: {
     requestMethod: string | undefined;
@@ -194,6 +209,22 @@ export type GraphQLRequestClientFactoryConfig = {
 
 // @internal
 export function hasCache(key: string): boolean;
+
+// @public
+export function initContentSdk(params: InitContentSdkParams): Promise<void>;
+
+// @public
+export interface InitContentSdkParams {
+    config: {
+        contextId: string;
+        edgeUrl?: string;
+        siteName: string;
+    };
+    plugins: Plugin_2[];
+}
+
+// @public
+export function isNamespaceEnabled(namespace: string): boolean;
 
 // @public
 export const isRegexOrUrl: (input: string) => "regex" | "url";
@@ -261,6 +292,25 @@ export interface NativeDataFetcherResponse<T> {
 
 // @public
 export const normalizeUrl: (url: string) => string;
+
+// @public
+interface Plugin_2<Options = unknown, Adapter = unknown> {
+    adapter?: Adapter;
+    dependencies?: PluginDependency[];
+    init?: () => void | Promise<void>;
+    name: string;
+    options?: Options;
+}
+export { Plugin_2 as Plugin }
+
+// @internal
+export interface PluginAdapter {
+    // (undocumented)
+    type: 'browser' | (string & {});
+}
+
+// @public
+export type PluginDependency = string;
 
 // @public
 export function resolveUrl(urlBase: string, params?: ParsedUrlQueryInput): string;
