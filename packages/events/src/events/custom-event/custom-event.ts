@@ -94,9 +94,28 @@ export interface CustomEventPayload extends NestedObject {
 
 /**
  * Interface with the required/optional attributes to send a custom event to the SitecoreCloud API
+ * @public
  */
 export interface EventData extends EventAttributesInput, NestedObject {
+  /**
+   * The type of the event.
+   * To send a custom event using event, or to add a custom event to the event queue using addToEventQueue, set type to a unique value. Do not set type to a reserved event name.
+   *
+   * Recommendation: Include the name of the site in the unique value, for example, "myretailsite:CLICKED_PROMO".
+   */
   type: string;
+  /**
+   * Sitecore Search data about the event.
+   *
+   * Use only in the following, standard events:
+   * `SC_SEARCH_WIDGET_VIEW`, `SC_SEARCH_WIDGET_CLICK`
+   *
+   * If set, the event and all its data will be available in Sitecore Search.
+   * Construct according to the Sitecore Search Events API reference and data model.
+   */
   searchData?: NestedObject;
+  /**
+   * Any custom data to collect about an event in addition to the other attributes provided for the event data.
+   */
   extensionData?: ExtensionData;
 }
