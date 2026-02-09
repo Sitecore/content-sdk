@@ -32,6 +32,7 @@ Our versioning strategy is as follows:
 * Introduce Analytics packages:
   * `[analytics]` `[core]` `[create-content-sdk-app]` `[nextjs]` `[react]` Reorganize Analytics packages ([#340](https://github.com/Sitecore/content-sdk/pull/340))([#341](https://github.com/Sitecore/content-sdk/pull/341))
   * `[sdk]` Rework Analytics initialization ([#357](https://github.com/Sitecore/content-sdk/pull/357))
+  * `[sdk]` Refine other analytics packages ([#363](https://github.com/Sitecore/content-sdk/pull/363))
 
 ### 🛠 Breaking Changes
 
