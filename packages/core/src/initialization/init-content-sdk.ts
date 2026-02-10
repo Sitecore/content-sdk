@@ -46,5 +46,5 @@ export async function initContentSdk(params: InitContentSdkParams): Promise<void
 
   await coreContext.readyPromise;
 
-  debug.init('SDK initialization complete');
+  debug.init('Content SDK initialization complete');
 }

@@ -30,7 +30,7 @@ export interface AnalyticsAdapter extends PluginAdapter {
 }
 
 /**
- * Defines the structure of the resolved analytics plugin options, including cookie settings and proxy values.
+ * Defines options for the Analytics plugin.
  * @public
  */
 export interface AnalyticsOptions {

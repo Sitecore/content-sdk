@@ -14,6 +14,7 @@ import { CoreContext } from '@sitecore-content-sdk/core';
 
 /**
  * A class that extends from {@link BaseEvent} and has all the required functionality to send a custom event
+ * @internal
  */
 export class CustomEvent extends BaseEvent {
   customEventPayload: CustomEventPayload;

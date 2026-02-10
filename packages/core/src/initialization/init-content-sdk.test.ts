@@ -179,7 +179,7 @@ describe('init-content-sdk', () => {
       expect(coreContext.readyPromise).to.exist;
 
       const lastCall = debugInitStub.lastCall;
-      expect(lastCall?.args[0]).to.equal('SDK initialization complete');
+      expect(lastCall?.args[0]).to.equal('Content SDK initialization complete');
     });
 
     it('should overwrite previous initialization when called again', async () => {

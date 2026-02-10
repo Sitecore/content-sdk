@@ -1,6 +1,6 @@
 /**
  * The response object that Sitecore Edge Proxy returns.
- * @internal
+ * @public
  */
 export interface EPResponse {
   ref: string;
