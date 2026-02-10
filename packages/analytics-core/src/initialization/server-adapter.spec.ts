@@ -34,7 +34,7 @@ describe('analyticsServerAdapter', () => {
       domain: '.example.com',
     },
     timeout: 3000,
-    resolvedVisitorIds: undefined as any,
+    visitorIds: undefined as any,
   };
 
   const mockCoreContext = {
@@ -77,7 +77,7 @@ describe('analyticsServerAdapter', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockAnalyticsOptions.resolvedVisitorIds = undefined;
+    mockAnalyticsOptions.visitorIds = undefined;
     (pluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue({
       options: mockAnalyticsOptions,
     });
@@ -295,7 +295,7 @@ describe('analyticsServerAdapter', () => {
       });
 
       it('should store proxy values in plugin settings after fetching', async () => {
-        const resolvedVisitorIds = {
+        const visitorIds = {
           clientId: 'new-client-id',
           profileId: 'client-key-123',
         };
@@ -304,7 +304,7 @@ describe('analyticsServerAdapter', () => {
           internalModule.fetchClientIdFromEdgeProxy as jest.Mock<
             typeof internalModule.fetchClientIdFromEdgeProxy
           >
-        ).mockResolvedValue(resolvedVisitorIds);
+        ).mockResolvedValue(visitorIds);
         (utilsModule.createCookieString as jest.Mock).mockReturnValue('cookie-string');
 
         const request = createMockRequest();
@@ -313,7 +313,7 @@ describe('analyticsServerAdapter', () => {
         const adapter = analyticsServerAdapter(request, response);
         await adapter.setClientId();
 
-        expect(mockAnalyticsOptions.resolvedVisitorIds).toEqual(resolvedVisitorIds);
+        expect(mockAnalyticsOptions.visitorIds).toEqual(visitorIds);
       });
 
       it('should append cookie to request headers when no existing cookies', async () => {

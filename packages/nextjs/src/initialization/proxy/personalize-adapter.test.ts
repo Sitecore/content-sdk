@@ -27,7 +27,7 @@ describe('personalizeProxyAdapter', () => {
         domain: '.example.com',
       },
       timeout: 3000,
-      resolvedVisitorIds: undefined as any,
+      visitorIds: undefined as any,
     },
   };
 
@@ -94,7 +94,7 @@ describe('personalizeProxyAdapter', () => {
   };
 
   beforeEach(() => {
-    mockAnalyticsPlugin.options.resolvedVisitorIds = undefined;
+    mockAnalyticsPlugin.options.visitorIds = undefined;
 
     getAnalyticsPluginStub = sandbox.stub().returns(mockAnalyticsPlugin);
     getCoreContextStub = sandbox.stub().returns(mockCoreContext);
@@ -288,7 +288,7 @@ describe('personalizeProxyAdapter', () => {
 
       describe('proxy values from edge server', () => {
         it('should use profile ID from proxy values when available', async () => {
-          mockAnalyticsPlugin.options.resolvedVisitorIds = {
+          mockAnalyticsPlugin.options.visitorIds = {
             clientId: 'client-id',
             profileId: 'proxy-profile-id',
           };
@@ -307,7 +307,7 @@ describe('personalizeProxyAdapter', () => {
         });
 
         it('should set cookie on request when using proxy values', async () => {
-          mockAnalyticsPlugin.options.resolvedVisitorIds = {
+          mockAnalyticsPlugin.options.visitorIds = {
             clientId: 'client-id',
             profileId: 'proxy-profile-id',
           };
@@ -323,7 +323,7 @@ describe('personalizeProxyAdapter', () => {
         });
 
         it('should fallback to edge proxy fetch when proxy values exist but profileId is undefined', async () => {
-          mockAnalyticsPlugin.options.resolvedVisitorIds = {
+          mockAnalyticsPlugin.options.visitorIds = {
             clientId: 'client-id',
             profileId: undefined,
           };

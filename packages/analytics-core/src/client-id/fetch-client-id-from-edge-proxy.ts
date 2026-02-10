@@ -1,4 +1,4 @@
-import type { EPResponse, ResolvedVisitorIds } from '../interfaces';
+import type { EPResponse, VisitorIds } from '../interfaces';
 import { ERROR_MESSAGES, LIBRARY_VERSION } from '../consts';
 import { ERROR_MESSAGES as UTILS_ERROR_MESSAGES, fetchWithTimeout } from '../utils';
 import { resolveGetClientIdUrl } from './resolve-get-client-id-url';
@@ -8,14 +8,14 @@ import { resolveGetClientIdUrl } from './resolve-get-client-id-url';
  * @param {string} edgeUrl - The base URL for the Edge proxy API.
  * @param {string} contextId - The Sitecore context ID parameter for the Edge proxy API.
  * @param {number} [timeout] - The timeout in milliseconds for the call to the proxy.
- * @returns {Promise<ResolvedVisitorIds>} The client ID and profile ID from the proxy.
+ * @returns {Promise<VisitorIds>} The client ID and profile ID from the proxy.
  * @internal
  */
 export async function fetchClientIdFromEdgeProxy(
   edgeUrl: string,
   contextId: string,
   timeout?: number
-): Promise<ResolvedVisitorIds> {
+): Promise<VisitorIds> {
   const fetchOptions = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     headers: {

@@ -59,7 +59,7 @@ export function analyticsBrowserAdapter(): AnalyticsBrowserAdapter {
         coreConfig.contextId
       );
 
-      analyticsOptions.resolvedVisitorIds = cookieValues;
+      analyticsOptions.visitorIds = cookieValues;
       document.cookie = createCookieString(
         analyticsOptions.cookies.name,
         cookieValues.clientId,

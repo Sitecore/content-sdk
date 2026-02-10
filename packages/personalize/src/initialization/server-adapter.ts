@@ -80,7 +80,7 @@ export function personalizeServerAdapter<
         return;
       }
 
-      const cookiesValuesFromEdgeServer = getAnalyticsPlugin().options.resolvedVisitorIds;
+      const cookiesValuesFromEdgeServer = getAnalyticsPlugin().options.visitorIds;
       const profileIdCookie = getCookieServerSide(request.headers.cookie, profileIdName);
       const clientIdCookie = getCookieServerSide(request.headers.cookie, clientIdName);
 

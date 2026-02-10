@@ -11,10 +11,10 @@ export interface EPResponse {
 }
 
 /**
- * The resolved visitor IDs returned from the Edge Proxy.
+ * The visitor IDs returned from the Edge Proxy.
  * @public
  */
-export interface ResolvedVisitorIds {
+export interface VisitorIds {
   /**
    * The client ID associated with the visitor.
    */

@@ -37,7 +37,7 @@ describe('analyticsBrowserAdapter', () => {
       expiryDays: 730,
       domain: '.example.com',
     },
-    resolvedVisitorIds: undefined as any,
+    visitorIds: undefined as any,
   };
 
   const mockCoreContext = {
@@ -160,7 +160,7 @@ describe('analyticsBrowserAdapter', () => {
     });
 
     it('should store proxy values in plugin settings after fetching from edge proxy', async () => {
-      const resolvedVisitorIds = {
+      const visitorIds = {
         clientId: 'new-client-id',
         profileId: 'client-key-123',
       };
@@ -169,13 +169,13 @@ describe('analyticsBrowserAdapter', () => {
         internalModule.fetchClientIdFromEdgeProxy as jest.Mock<
           typeof internalModule.fetchClientIdFromEdgeProxy
         >
-      ).mockResolvedValue(resolvedVisitorIds);
+      ).mockResolvedValue(visitorIds);
       (utilsModule.createCookieString as jest.Mock).mockReturnValue('cookie-string');
 
       const adapter = analyticsBrowserAdapter();
       await adapter.setClientId();
 
-      expect(mockAnalyticsOptions.resolvedVisitorIds).toEqual(resolvedVisitorIds);
+      expect(mockAnalyticsOptions.visitorIds).toEqual(visitorIds);
     });
 
     it('should use correct cookie attributes from settings', async () => {

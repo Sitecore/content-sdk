@@ -38,8 +38,8 @@ export interface AnalyticsOptions {
         path?: string;
         enabled?: boolean;
     };
-    resolvedVisitorIds?: ResolvedVisitorIds;
     timeout?: number;
+    visitorIds?: VisitorIds;
 }
 
 // @public
@@ -149,7 +149,7 @@ export interface DebugResponse {
 // @internal
 export const DEFAULT_COOKIE_EXPIRY_DAYS = 730;
 
-// @internal
+// @public
 export interface EPResponse {
     // (undocumented)
     client_key: string;
@@ -170,7 +170,7 @@ export const ERROR_MESSAGES: {
 };
 
 // @internal
-export function fetchClientIdFromEdgeProxy(edgeUrl: string, contextId: string, timeout?: number): Promise<ResolvedVisitorIds>;
+export function fetchClientIdFromEdgeProxy(edgeUrl: string, contextId: string, timeout?: number): Promise<VisitorIds>;
 
 // @internal
 export function fetchWithTimeout(url: string, timeout: number, fetchOptions: RequestInit): Promise<Response | null>;
@@ -280,12 +280,6 @@ export function pageName(): string;
 // @internal
 export function processDebugResponse(namespace: string, response: Response): object;
 
-// @public
-export interface ResolvedVisitorIds {
-    clientId: string;
-    profileId: string;
-}
-
 // @internal
 export interface ScriptAttributes {
     async: boolean;
@@ -294,6 +288,12 @@ export interface ScriptAttributes {
 
 // @internal
 export const SITECORE_EDGE_URL = "https://edge-platform.sitecorecloud.io";
+
+// @public
+export interface VisitorIds {
+    clientId: string;
+    profileId: string;
+}
 
 // (No @packageDocumentation comment for this package)
 

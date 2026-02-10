@@ -75,7 +75,7 @@ export function analyticsProxyAdapter(
         );
 
         newClientIdCookieValue = cookieValues.clientId;
-        analyticsOptions.resolvedVisitorIds = cookieValues;
+        analyticsOptions.visitorIds = cookieValues;
       } else newClientIdCookieValue = clientIdCookie;
 
       if (!clientIdCookie) request.cookies.set(clientIdCookieName, newClientIdCookieValue);

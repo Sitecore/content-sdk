@@ -67,7 +67,7 @@ export function personalizeProxyAdapter(
         return;
       }
 
-      const cookiesValuesFromEdgeServer = getAnalyticsPlugin().options.resolvedVisitorIds;
+      const cookiesValuesFromEdgeServer = getAnalyticsPlugin().options.visitorIds;
 
       const profileIdCookie = getProfileId(request);
       const clientIdCookie = getClientId(request);

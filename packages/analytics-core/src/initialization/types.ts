@@ -1,4 +1,4 @@
-import { ResolvedVisitorIds } from '../interfaces';
+import { VisitorIds } from '../interfaces';
 import { Plugin, type PluginAdapter } from '@sitecore-content-sdk/core';
 import { ANALYTICS_PLUGIN_NAME } from './const';
 
@@ -60,9 +60,9 @@ export interface AnalyticsOptions {
     enabled?: boolean;
   };
   /**
-   * The resolved visitor IDs returned from the Edge Proxy.
+   * The visitor IDs returned from the Edge Proxy.
    */
-  resolvedVisitorIds?: ResolvedVisitorIds;
+  visitorIds?: VisitorIds;
   /**
    * The timeout duration for the analytics plugin, in milliseconds.
    */
