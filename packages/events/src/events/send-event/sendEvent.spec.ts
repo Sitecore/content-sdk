@@ -45,7 +45,7 @@ describe('EventApiClient', () => {
   const normalizeHeadersSpy = jest.spyOn(utils, 'normalizeHeaders');
 
   const eventData = {
-    client_id: 'cbb8da7f-ef24-48fe-89f4-f5c5186b607d',
+    browser_id: 'cbb8da7f-ef24-48fe-89f4-f5c5186b607d',
     channel: 'WEB',
     client_key: 'key',
     currency: 'EUR',

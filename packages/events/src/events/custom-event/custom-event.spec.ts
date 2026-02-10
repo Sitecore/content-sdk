@@ -198,7 +198,7 @@ describe('CustomEvent', () => {
       };
 
       const expectedData = {
-        client_id: id,
+        browser_id: id,
         channel: 'WEB',
         client_key: '',
         currency: 'EUR',
@@ -226,7 +226,7 @@ describe('CustomEvent', () => {
       };
 
       const expectedData = {
-        client_id: id,
+        browser_id: id,
         channel: 'WEB',
         client_key: '',
         currency: 'EUR',
@@ -252,7 +252,7 @@ describe('CustomEvent', () => {
       };
 
       const expectedData = {
-        client_id: id,
+        browser_id: id,
         client_key: '',
         language: 'EN',
         page: 'races',
@@ -287,7 +287,7 @@ describe('CustomEvent', () => {
       };
 
       const expectedData = {
-        client_id: id,
+        browser_id: id,
         channel: 'WEB',
         client_key: '',
         currency: 'EUR',

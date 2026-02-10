@@ -68,7 +68,7 @@ describe('form event', () => {
     const expectedBody = JSON.stringify({
       type: 'FORM',
       ext: { componentInstanceId: 'test', formId: '1234', interactionType: 'SUBMITTED' },
-      client_id: 'test_id',
+      browser_id: 'test_id',
       client_key: '',
       pos: '',
       requested_at: '2024-01-01T00:00:00.000Z',
@@ -105,7 +105,7 @@ describe('form event', () => {
     expect(fetch).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
-        body: expect.stringContaining('"client_id":""'),
+        body: expect.stringContaining('"browser_id":""'),
       })
     );
   });

@@ -22,7 +22,7 @@ export class BaseEvent {
    */
   protected mapBaseEventPayload(): BasePayload {
     return {
-      client_id: this.clientId,
+      browser_id: this.clientId,
       channel: this.baseEventData.channel,
       client_key: '',
       currency: this.baseEventData.currency,
@@ -39,7 +39,7 @@ export class BaseEvent {
  * @internal
  */
 export interface BasePayload {
-  client_id: string;
+  browser_id: string;
   channel?: string;
   client_key: string;
   currency?: string;

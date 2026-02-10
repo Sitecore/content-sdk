@@ -145,7 +145,7 @@ describe('Test Personalizer Class', () => {
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledTimes(1);
       expect(analyticsCore.language).toHaveBeenCalledTimes(1);
       expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
-        clientId: 'clientId',
+        browserId: 'clientId',
         channel: 'WEB',
         clientKey: '',
         currencyCode: 'EUR',
@@ -169,7 +169,7 @@ describe('Test Personalizer Class', () => {
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledTimes(1);
       expect(analyticsCore.language).toHaveBeenCalledTimes(1);
       expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
-        clientId: 'clientId',
+        browserId: 'clientId',
         channel: 'WEB',
         clientKey: '',
         currencyCode: 'EUR',
@@ -599,7 +599,7 @@ describe('Test Personalizer Class', () => {
       );
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledWith(personalizeInputMock);
       expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
-        clientId: 'clientId',
+        browserId: 'clientId',
         channel: 'WEB',
         clientKey: '',
         currencyCode: 'EUR',
@@ -614,7 +614,7 @@ describe('Test Personalizer Class', () => {
       });
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith(
         {
-          clientId: 'clientId',
+          browserId: 'clientId',
           channel: 'WEB',
           clientKey: '',
           currencyCode: 'EUR',
@@ -649,7 +649,7 @@ describe('Test Personalizer Class', () => {
 
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledWith(personalizeInputMock);
       expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
-        clientId: 'clientId',
+        browserId: 'clientId',
         channel: 'WEB',
         clientKey: '',
         currencyCode: 'EUR',
@@ -664,7 +664,7 @@ describe('Test Personalizer Class', () => {
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledTimes(1);
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith(
         {
-          clientId: 'clientId',
+          browserId: 'clientId',
           channel: 'WEB',
           clientKey: '',
           currencyCode: 'EUR',
@@ -714,7 +714,7 @@ describe('Test Personalizer Class', () => {
       });
 
       expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
-        clientId: 'clientId',
+        browserId: 'clientId',
         channel: 'WEB',
         clientKey: '',
         currencyCode: 'EUR',
@@ -729,9 +729,8 @@ describe('Test Personalizer Class', () => {
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledTimes(1);
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith(
         {
-          clientId: 'clientId',
+          browserId: 'clientId',
           channel: 'WEB',
-
           clientKey: '',
           currencyCode: 'EUR',
           email: undefined,
@@ -846,7 +845,7 @@ describe('Test Personalizer Class', () => {
         `${analyticsCore.SITECORE_EDGE_URL}/v1/personalize?siteId=${settingsMock.siteName}`,
         {
           // eslint-disable-next-line max-len
-          body: '{"channel":"WEB","clientKey":"","currencyCode":"EUR","friendlyId":"personalizeintegrationtest","guestRef":"profileId","language":"EN","pointOfSale":"","clientId":"clientId"}',
+          body: '{"channel":"WEB","clientKey":"","currencyCode":"EUR","friendlyId":"personalizeintegrationtest","guestRef":"profileId","language":"EN","pointOfSale":"","browserId":"clientId"}',
           /* eslint-disable @typescript-eslint/naming-convention */
           headers: {
             'Content-Type': 'application/json',
@@ -1069,7 +1068,7 @@ describe('Test Personalizer Class', () => {
       );
 
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith(
-        { clientId: 'clientId' },
+        { browserId: 'clientId' },
         settings,
         opts
       );
@@ -1150,7 +1149,7 @@ describe('Test Personalizer Class', () => {
 
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith(
         {
-          clientId: 'clientId',
+          browserId: 'clientId',
           channel: 'WEB',
           clientKey: '',
           currencyCode: 'EUR',
@@ -1198,7 +1197,7 @@ describe('Test Personalizer Class', () => {
 
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith(
         {
-          clientId: 'clientId',
+          browserId: 'clientId',
           channel: 'WEB',
           clientKey: '',
           currencyCode: 'EUR',

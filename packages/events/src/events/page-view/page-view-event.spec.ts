@@ -55,7 +55,7 @@ describe('PageViewEvent', () => {
 
   beforeEach(() => {
     expectedBasicAttributes = {
-      client_id: id,
+      browser_id: id,
       channel: 'WEB',
       client_key: '',
       currency: 'EUR',
@@ -559,7 +559,7 @@ describe('PageViewEvent', () => {
     };
 
     let expectedData: any = {
-      client_id: id,
+      browser_id: id,
       client_key: '',
       language: 'EN',
       page: 'races',
@@ -597,7 +597,7 @@ describe('PageViewEvent', () => {
       };
 
       const expectedData = {
-        client_id: id,
+        browser_id: id,
         client_key: '',
         language: 'EN',
         page: 'races',
@@ -623,7 +623,7 @@ describe('PageViewEvent', () => {
 
   describe('send event with no params', () => {
     const expectedData = {
-      client_id: id,
+      browser_id: id,
       channel: undefined,
       client_key: '',
       currency: undefined,

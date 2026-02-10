@@ -150,7 +150,7 @@ export interface EPIdentifier {
  * @internal
  */
 export interface EPCallFlowsBody {
-  clientId?: string;
+  browserId?: string;
   email?: string;
   friendlyId: string;
   identifiers?: EPIdentifier;
