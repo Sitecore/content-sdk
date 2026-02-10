@@ -186,6 +186,11 @@ export interface ComponentUpdateEventArgs {
 // @public
 export function containsDefaultEdgeHost(str: string): boolean;
 
+// @public
+export interface ContentRewriteOptions {
+    type?: 'prefix' | 'normal';
+}
+
 // @internal
 export const createComponentInstance: (importMap: ImportEntry[], previewEventArgs: ComponentPreviewEventArgs) => unknown;
 
@@ -980,6 +985,9 @@ export const resetEditorChromes: () => void;
 export { RetryStrategy }
 
 // @public
+export function rewriteContentInLayout(layout: LayoutServiceData, source: string | RegExp, target: string, options?: ContentRewriteOptions): LayoutServiceData;
+
+// @public
 export function rewriteEdgeHostInResponse<T>(response: T): T;
 
 // @public
@@ -1092,6 +1100,8 @@ export type SitecoreCliConfigInput = {
 // @public
 export class SitecoreClient implements BaseSitecoreClient {
     constructor(initOptions: SitecoreClientInit);
+    // @internal
+    protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData;
     // (undocumented)
     protected clientFactory: GraphQLRequestClientFactory;
     // (undocumented)
@@ -1195,6 +1205,8 @@ export type SitecoreConfigInput = {
         enabled?: boolean;
         locales?: string[];
     };
+    rewriteContentUrls?: boolean;
+    contentRewrite?: (layout: unknown) => unknown;
     disableCodeGeneration?: boolean;
 };
 
@@ -1344,7 +1356,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:59:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:60:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:108:5 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal

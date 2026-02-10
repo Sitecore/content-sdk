@@ -3,11 +3,14 @@ import { hasCustomEdgeHostname, resolveEdgeUrl } from '@sitecore-content-sdk/cor
 /**
  * The default Edge Platform hostnames that may appear in responses.
  * These will be replaced with the custom hostname when configured.
+ * Includes production and staging so layout content (e.g. media URLs) can be rewritten.
  * @internal
  */
 const DEFAULT_EDGE_HOSTNAMES = [
   'edge-platform.sitecorecloud.io',
   'edge.sitecorecloud.io', // Legacy hostname included for safety replacement
+  'edge-staging.sitecore-staging.cloud',
+  'edge-platform-staging.sitecore-staging.cloud',
 ];
 
 /**

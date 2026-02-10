@@ -484,6 +484,38 @@ describe('SitecoreClient', () => {
       });
     });
 
+    it('should apply content rewrite when rewriteContentUrls is true', async () => {
+      const path = '/test/path';
+      const locale = 'en-US';
+      const siteInfo = { name: 'default-site', hostName: 'example.com', language: 'en' };
+      const rawLayout = {
+        sitecore: {
+          route: { name: 'home', placeholders: {} },
+          context: { site: siteInfo, pageState: LayoutServicePageState.Normal },
+        },
+      };
+      layoutServiceStub.fetchLayoutData.returns(rawLayout);
+      const customRewriter = (layout: LayoutServiceData): LayoutServiceData => ({
+        ...layout,
+        sitecore: {
+          ...layout.sitecore,
+          route: layout.sitecore.route
+            ? { ...layout.sitecore.route, displayName: 'rewritten' }
+            : null,
+        },
+      });
+      const clientWithRewrite = new SitecoreClient({
+        ...defaultInitOptions,
+        rewriteContentUrls: true,
+        contentRewrite: customRewriter as any,
+      } as any);
+      (clientWithRewrite as any).layoutService = layoutServiceStub;
+
+      const result = await clientWithRewrite.getPage(path, { locale });
+
+      expect(result?.layout.sitecore.route?.displayName).to.equal('rewritten');
+    });
+
     it('should pass fetchOptions to layoutService when calling getPage', async () => {
       const path = '/test/path';
       const locale = 'en-US';
@@ -1309,6 +1341,15 @@ describe('SitecoreClient', () => {
   });
 
   describe('getHeadLinks', function () {
+    const SITECORE_EDGE_URL_ENV = 'SITECORE_EDGE_URL';
+
+    beforeEach(() => {
+      process.env[SITECORE_EDGE_URL_ENV] = 'https://edge.example.com';
+    });
+    afterEach(() => {
+      delete process.env[SITECORE_EDGE_URL_ENV];
+    });
+
     const truthyValue = {
       value: '<div class="test bar"><p class="foo ck-content">bar</p></div>',
     };

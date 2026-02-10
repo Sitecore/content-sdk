@@ -2,6 +2,7 @@
 import { expect } from 'chai';
 import {
   resolveEdgeUrl,
+  resolveEdgeUrlForStaticFiles,
   hasCustomEdgeHostname,
   getCustomEdgeUrl,
   SITECORE_EDGE_HOSTNAME_ENV,
@@ -154,6 +155,32 @@ describe('resolveEdgeUrl', () => {
     it('should return resolved URL when custom hostname is configured', () => {
       process.env[SITECORE_EDGE_HOSTNAME_ENV] = 'custom.example.com';
       expect(getCustomEdgeUrl()).to.equal('https://custom.example.com');
+    });
+  });
+
+  describe('resolveEdgeUrlForStaticFiles()', () => {
+    it('should return SITECORE_EDGE_URL when set', () => {
+      process.env[SITECORE_EDGE_URL_ENV] = 'https://edge-for-files.example.com';
+      const result = resolveEdgeUrlForStaticFiles();
+      expect(result).to.equal('https://edge-for-files.example.com');
+    });
+
+    it('should return default when no URL env vars are set', () => {
+      const result = resolveEdgeUrlForStaticFiles();
+      expect(result).to.equal(SITECORE_EDGE_URL_DEFAULT);
+    });
+
+    it('should ignore custom hostname and use URL env when set', () => {
+      process.env[SITECORE_EDGE_HOSTNAME_ENV] = 'custom.example.com';
+      process.env[SITECORE_EDGE_URL_ENV] = 'https://edge-platform.example.com';
+      const result = resolveEdgeUrlForStaticFiles();
+      expect(result).to.equal('https://edge-platform.example.com');
+    });
+
+    it('should ignore custom hostname and return default when URL env not set', () => {
+      process.env[SITECORE_EDGE_HOSTNAME_ENV] = 'custom.example.com';
+      const result = resolveEdgeUrlForStaticFiles();
+      expect(result).to.equal(SITECORE_EDGE_URL_DEFAULT);
     });
   });
 });

@@ -8,6 +8,7 @@ export { ensurePathExists } from './ensurePath';
 export { normalizeUrl } from './normalize-url';
 export {
   resolveEdgeUrl,
+  resolveEdgeUrlForStaticFiles,
   hasCustomEdgeHostname,
   getCustomEdgeUrl,
   SITECORE_EDGE_HOSTNAME_ENV,

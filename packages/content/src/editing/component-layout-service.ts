@@ -1,6 +1,6 @@
 import { NativeDataFetcher, FetchOptions } from '@sitecore-content-sdk/core';
 import { resolveUrl, resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
-import { LayoutServiceData, rewriteEdgeHostInResponse } from '../layout';
+import { LayoutServiceData } from '../layout';
 import debug from '../debug';
 import { DesignLibraryMode, DesignLibraryVariantGeneration } from './models';
 
@@ -111,10 +111,10 @@ export class ComponentLayoutService {
           sc_editMode: `${params.mode === DesignLibraryMode.Metadata}`,
         },
       })
-      .then((response) => rewriteEdgeHostInResponse(response.data))
+      .then((response) => response.data)
       .catch((error) => {
         if (error.response?.status === 404) {
-          return rewriteEdgeHostInResponse(error.response.data);
+          return error.response.data;
         }
         throw error;
       });

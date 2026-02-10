@@ -37,3 +37,8 @@ export { LayoutService, LayoutServiceConfig, GRAPHQL_LAYOUT_QUERY_NAME } from '.
 export { getDesignLibraryStylesheetLinks } from './themes';
 
 export { rewriteEdgeHostInResponse, containsDefaultEdgeHost } from './rewrite-edge-host';
+
+export {
+  rewriteContentInLayout,
+  ContentRewriteOptions,
+} from './content-rewrite';

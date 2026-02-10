@@ -1,7 +1,6 @@
 import { FetchOptions } from '@sitecore-content-sdk/core';
 import { GraphQLServiceConfig, SitecoreServiceBase } from '../sitecore-service-base';
 import { LayoutServiceData, RouteOptions } from './models';
-import { rewriteEdgeHostInResponse } from './rewrite-edge-host';
 import debug from '../debug';
 import { SitecoreConfigInput } from '../config';
 
@@ -57,8 +56,7 @@ export class LayoutService extends SitecoreServiceBase {
         sitecore: { context: { pageEditing: false, language: routeOptions?.locale }, route: null },
       };
 
-    // Rewrite Edge hostnames in response if custom hostname is configured
-    return rewriteEdgeHostInResponse(layoutData);
+    return layoutData;
   }
 
   /**

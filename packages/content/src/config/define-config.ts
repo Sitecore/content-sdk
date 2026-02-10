@@ -2,6 +2,7 @@ import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
 import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models';
 import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
+import { rewriteEdgeHostInResponse } from '../layout';
 
 /**
  * Provides default initial values for SitecoreConfig
@@ -54,6 +55,8 @@ export const getFallbackConfig = (): SitecoreConfig => ({
       timeout: 60,
     },
   },
+  rewriteContentUrls: false,
+  contentRewrite: rewriteEdgeHostInResponse,
   disableCodeGeneration: false,
 });
 

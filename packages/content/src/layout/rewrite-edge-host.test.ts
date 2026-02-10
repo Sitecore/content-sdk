@@ -47,6 +47,24 @@ describe('rewriteEdgeHostInResponse', () => {
       expect(result.url).to.equal('https://custom.example.com/media/image.jpg');
     });
 
+    it('should rewrite edge-staging.sitecore-staging.cloud in string values', () => {
+      process.env[SITECORE_EDGE_HOSTNAME_ENV] = 'custom.example.com';
+      const response = {
+        url: 'https://edge-staging.sitecore-staging.cloud/tenant-id/media/image.jpg',
+      };
+      const result = rewriteEdgeHostInResponse(response);
+      expect(result.url).to.equal('https://custom.example.com/tenant-id/media/image.jpg');
+    });
+
+    it('should rewrite edge-platform-staging.sitecore-staging.cloud in string values', () => {
+      process.env[SITECORE_EDGE_HOSTNAME_ENV] = 'custom.example.com';
+      const response = {
+        url: 'https://edge-platform-staging.sitecore-staging.cloud/tenant-id/media/image.jpg',
+      };
+      const result = rewriteEdgeHostInResponse(response);
+      expect(result.url).to.equal('https://custom.example.com/tenant-id/media/image.jpg');
+    });
+
     it('should rewrite multiple occurrences in a string', () => {
       process.env[SITECORE_EDGE_HOSTNAME_ENV] = 'custom.example.com';
       const response = {
@@ -202,6 +220,12 @@ describe('rewriteEdgeHostInResponse', () => {
 
     it('should return true for edge.sitecorecloud.io', () => {
       expect(containsDefaultEdgeHost('https://edge.sitecorecloud.io/media/image.jpg')).to.be.true;
+    });
+
+    it('should return true for edge-staging.sitecore-staging.cloud', () => {
+      expect(
+        containsDefaultEdgeHost('https://edge-staging.sitecore-staging.cloud/tenant/media/a.jpg')
+      ).to.be.true;
     });
 
     it('should return false for custom hostname', () => {
