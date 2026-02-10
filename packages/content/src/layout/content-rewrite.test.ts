@@ -56,7 +56,7 @@ describe('rewriteContentInLayout', () => {
     };
     const result = rewriteContentInLayout(
       layout,
-      'https://edge.example.com',
+      /https:\/\/edge\.example\.com/gi,
       'https://cdn.example.com',
       { type: 'normal' }
     );
