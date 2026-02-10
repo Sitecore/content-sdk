@@ -1,9 +1,7 @@
-import * as analyticsCore from '@sitecore-content-sdk/analytics-core/internal';
-import * as utils from '@sitecore-content-sdk/analytics-core/utils';
+import * as core from '@sitecore-content-sdk/core';
 import { PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
 import { sendEvent } from './sendEvent';
 import { jest, expect } from '@jest/globals';
-import * as debugModule from '../../debug';
 
 jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
   const originalModule: object = jest.requireActual(
@@ -42,8 +40,6 @@ const settingsObj = {
 };
 
 describe('EventApiClient', () => {
-  const normalizeHeadersSpy = jest.spyOn(utils, 'normalizeHeaders');
-
   const eventData = {
     browser_id: 'cbb8da7f-ef24-48fe-89f4-f5c5186b607d',
     channel: 'WEB',
@@ -55,13 +51,13 @@ describe('EventApiClient', () => {
     requested_at: '2024-01-01T00:00:00.000Z',
     type: 'CUSTOM_TYPE',
   };
-  const mockDebugEvents = jest.spyOn(debugModule.debug, 'events');
+
+  let fetchSpy: any;
 
   beforeEach(() => {
-    const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as analyticsCore.EPResponse),
-    });
-    global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
+    fetchSpy = jest.spyOn(core.NativeDataFetcher.prototype, 'fetch').mockResolvedValue({
+      data: { status: 'OK' },
+    } as core.NativeDataFetcherResponse<unknown>);
 
     jest.clearAllMocks();
   });
@@ -71,7 +67,7 @@ describe('EventApiClient', () => {
   });
 
   it('Sends event with the correct values to Sitecore Cloud and show debug', async () => {
-    jest.spyOn(analyticsCore, 'processDebugResponse').mockReturnValue({
+    jest.spyOn(core, 'processDebugResponse').mockReturnValue({
       headers: {},
       redirected: undefined,
       status: undefined,
@@ -94,8 +90,8 @@ describe('EventApiClient', () => {
       });
     });
 
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith(expectedUrl, {
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
       body: expectedBody,
       // eslint-disable-next-line @typescript-eslint/naming-convention
       headers: {
@@ -106,12 +102,10 @@ describe('EventApiClient', () => {
       },
       method: 'POST',
     });
-
-    expect(mockDebugEvents).toHaveBeenCalled();
   });
 
   it('Sends event with the correct values to Sitecore Cloud and show debug', async () => {
-    jest.spyOn(analyticsCore, 'processDebugResponse').mockReturnValue({});
+    jest.spyOn(core, 'processDebugResponse').mockReturnValue({});
     let currentTime = 1609459200000;
     jest.spyOn(Date, 'now').mockImplementation(() => {
       const returnTime = currentTime;
@@ -128,8 +122,8 @@ describe('EventApiClient', () => {
       });
     });
 
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith(expectedUrl, {
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
       body: expectedBody,
       // eslint-disable-next-line @typescript-eslint/naming-convention
       headers: {
@@ -140,21 +134,16 @@ describe('EventApiClient', () => {
       },
       method: 'POST',
     });
-
-    expect(normalizeHeadersSpy).toHaveBeenCalledTimes(0);
-    expect(mockDebugEvents).toHaveBeenCalled();
   });
 
   it('should return null if an error occurs and show debug', async () => {
-    const mockFetch = Promise.reject('Error');
-
-    global.fetch = jest.fn().mockImplementation(() => mockFetch) as any;
+    fetchSpy = jest.spyOn(core.NativeDataFetcher.prototype, 'fetch').mockRejectedValue({
+      message: 'Error',
+    });
 
     const response = await sendEvent(eventData, settingsObj);
 
-    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(response).toEqual(null);
-
-    expect(mockDebugEvents).toHaveBeenCalled();
   });
 });

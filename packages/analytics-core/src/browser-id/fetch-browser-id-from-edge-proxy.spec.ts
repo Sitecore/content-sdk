@@ -1,9 +1,12 @@
 import * as utils from '../utils';
-import { ERROR_MESSAGES, LIBRARY_VERSION, SITECORE_EDGE_URL } from '../consts';
+import { ERROR_MESSAGES, LIBRARY_VERSION } from '../consts';
 import type { EPResponse } from '../interfaces';
+import { constants, NativeDataFetcher } from '@sitecore-content-sdk/core';
 import * as constructGetBrowserIdUrl from './construct-get-browser-id-url';
 import { fetchBrowserIdFromEdgeProxy } from './fetch-browser-id-from-edge-proxy';
 import { jest, expect } from '@jest/globals';
+
+const { SITECORE_EDGE_URL_DEFAULT: SITECORE_EDGE_URL } = constants;
 
 describe('fetchBrowserIdFromEdgeProxy', () => {
   const constructBrowserIdUrlSpy = jest.spyOn(constructGetBrowserIdUrl, 'constructGetBrowserIdUrl');
@@ -21,28 +24,12 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
   });
 
   it('should resolve with an appropriate response object when calling fetch with timeout', async () => {
-    const mockFetch = Promise.resolve({
-      json: () => Promise.resolve(mockResponse as EPResponse),
-    });
-    global.fetch = jest.fn().mockImplementationOnce(() => mockFetch) as typeof fetch;
-    const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout');
+    const fetchSpy = jest.spyOn(NativeDataFetcher.prototype, 'fetch');
+    fetchSpy.mockResolvedValue({ data: mockResponse as EPResponse, status: 200, statusText: 'OK' });
 
     const res = await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 3000);
-    expect(fetchWithTimeoutSpy).toHaveBeenCalled();
-    expect(fetchWithTimeoutSpy).toHaveBeenCalledWith(
-      // eslint-disable-next-line max-len
-      `${SITECORE_EDGE_URL}/v1/events/v1.2/browser/create.json?client_key=`,
-      3000,
-      {
-        headers: {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          'X-Library-Version': LIBRARY_VERSION,
-          'x-sitecore-contextid': sitecoreEdgeContextId,
-        },
-      }
-    );
-
-    expect(fetch).toHaveBeenCalledWith(
+    expect(fetchSpy).toHaveBeenCalled();
+    expect(fetchSpy).toHaveBeenCalledWith(
       // eslint-disable-next-line max-len
       `${SITECORE_EDGE_URL}/v1/events/v1.2/browser/create.json?client_key=`,
       {
@@ -51,23 +38,19 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
           'X-Library-Version': LIBRARY_VERSION,
           'x-sitecore-contextid': sitecoreEdgeContextId,
         },
-        signal: new AbortController().signal,
       }
     );
     expect(res).toMatchObject({ browserId: mockResponse.ref });
-    expect(fetch).toHaveBeenCalledTimes(1);
     expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(SITECORE_EDGE_URL);
   });
 
   it('should resolve with an appropriate response object', () => {
-    const mockFetch = Promise.resolve({
-      json: () => Promise.resolve(mockResponse as EPResponse),
-    });
-    global.fetch = jest.fn().mockImplementationOnce(() => mockFetch) as typeof fetch;
+    const fetchSpy = jest.spyOn(NativeDataFetcher.prototype, 'fetch');
+    fetchSpy.mockResolvedValue({ data: mockResponse as EPResponse, status: 200, statusText: 'OK' });
     fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId).then((res) => {
       expect(res).toMatchObject({ browserId: mockResponse.ref });
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      expect(fetchSpy).toHaveBeenCalledWith(
         // eslint-disable-next-line max-len
         `${SITECORE_EDGE_URL}/v1/events/v1.2/browser/create.json?client_key=`,
         {
@@ -86,7 +69,8 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     const abortError = new Error('abc');
     abortError.name = 'AbortError';
 
-    global.fetch = jest.fn(() => Promise.reject(abortError));
+    const fetchSpy = jest.spyOn(NativeDataFetcher.prototype, 'fetch');
+    fetchSpy.mockRejectedValueOnce(abortError);
 
     const expectedError = ERROR_MESSAGES.IE_0003;
 
@@ -96,19 +80,21 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
   });
 
   it('should throw IE-0003 error if fetch returns null - fetchWithTimeout', async () => {
-    const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockResolvedValue(null);
+    const nativeDataFetcherSpy = jest
+      .spyOn(NativeDataFetcher.prototype, 'fetch')
+      .mockResolvedValue({ data: null, status: 200, statusText: 'OK' });
 
     const expectedError = ERROR_MESSAGES.IE_0003;
 
     expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
     }).rejects.toThrow(expectedError);
-    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+    expect(nativeDataFetcherSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should throw IE-0003 error if fetch rejects - fetchWithTimeout', async () => {
-    const fetchWithTimeoutSpy = jest
-      .spyOn(utils, 'fetchWithTimeout')
+    const nativeDataFetcherSpy = jest
+      .spyOn(NativeDataFetcher.prototype, 'fetch')
       .mockRejectedValueOnce({ message: 'random error' });
 
     const expectedError = ERROR_MESSAGES.IE_0003;
@@ -116,28 +102,32 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
     }).rejects.toThrow(expectedError);
-    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+    expect(nativeDataFetcherSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should throw [IV-0006] when we pass negative timeout value', async () => {
-    const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockRejectedValueOnce({
-      message: utils.ERROR_MESSAGES.IV_0006,
-    });
+    const nativeDataFetcherSpy = jest
+      .spyOn(NativeDataFetcher.prototype, 'fetch')
+      .mockRejectedValueOnce({
+        message: utils.ERROR_MESSAGES.IV_0006,
+      });
 
     expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, -100);
     }).rejects.toThrow(utils.ERROR_MESSAGES.IV_0006);
-    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+    expect(nativeDataFetcherSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should throw [IE-0002] when we get an AbortError', async () => {
-    const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockRejectedValueOnce({
-      message: utils.ERROR_MESSAGES.IE_0002,
-    });
+    const nativeDataFetcherSpy = jest
+      .spyOn(NativeDataFetcher.prototype, 'fetch')
+      .mockRejectedValueOnce({
+        message: utils.ERROR_MESSAGES.IE_0002,
+      });
 
     await expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
     }).rejects.toThrow(utils.ERROR_MESSAGES.IE_0002);
-    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+    expect(nativeDataFetcherSpy).toHaveBeenCalledTimes(1);
   });
 });

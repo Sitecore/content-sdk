@@ -1,7 +1,9 @@
+import { NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
 import type { EPResponse, ProxySettings } from '../interfaces';
 import { ERROR_MESSAGES, LIBRARY_VERSION } from '../consts';
-import { ERROR_MESSAGES as UTILS_ERROR_MESSAGES, fetchWithTimeout } from '../utils';
 import { constructGetBrowserIdUrl } from './construct-get-browser-id-url';
+
+const UTILS_ERROR_MESSAGES = constants.ERROR_MESSAGES;
 
 /**
  * Gets the browser ID and client key from Sitecore Edge proxy.
@@ -24,29 +26,26 @@ export async function fetchBrowserIdFromEdgeProxy(
   };
 
   const url = constructGetBrowserIdUrl(sitecoreEdgeUrl);
-  let payload;
 
-  if (timeout !== undefined)
-    payload = await fetchWithTimeout(url, timeout, fetchOptions)
-      .then((response) => {
-        return (response && response.json()) || null;
-      })
-      .catch((err) => {
-        if (
-          err.message === UTILS_ERROR_MESSAGES.IV_0006 ||
-          err.message === UTILS_ERROR_MESSAGES.IE_0002
-        )
-          throw new Error(err.message);
+  const fetcher = new NativeDataFetcher({ timeout });
 
-        return null;
-      });
-  else
-    payload = await fetch(url, fetchOptions)
-      .then((res) => res.json())
-      .catch(() => undefined);
+  const payload = await fetcher
+    .fetch<EPResponse>(url, fetchOptions)
+    .then((response) => {
+      return response.data || null;
+    })
+    .catch((err) => {
+      if (
+        err.message === UTILS_ERROR_MESSAGES.IV_0006 ||
+        err.message === UTILS_ERROR_MESSAGES.IE_0002
+      )
+        throw new Error(err.message);
+
+      return null;
+    });
 
   if (!payload?.ref) throw new Error(ERROR_MESSAGES.IE_0003);
 
-  const { ref: browserId, customer_ref: guestId }: EPResponse = payload;
+  const { ref: browserId, customer_ref: guestId } = payload;
   return { browserId, guestId };
 }

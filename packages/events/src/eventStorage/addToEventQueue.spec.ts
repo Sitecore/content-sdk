@@ -7,7 +7,6 @@ import * as eventStorageModule from './eventStorage';
 import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/analytics-core/internal');
-jest.mock('@sitecore-content-sdk/core');
 jest.mock('../initialization/plugin');
 
 const eventData: EventData = {

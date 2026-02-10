@@ -150,7 +150,8 @@ describe('analyticsBrowserEnvironment', () => {
 
       expect(internalModule.fetchBrowserIdFromEdgeProxy).toHaveBeenCalledWith(
         'https://edge.test.com',
-        'test-context-id'
+        'test-context-id',
+        undefined,
       );
       expect(utilsModule.createCookieString).toHaveBeenCalledWith(
         'sc_cid',

@@ -8,7 +8,6 @@ import { event } from './event';
 import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/analytics-core/internal');
-jest.mock('@sitecore-content-sdk/core');
 jest.mock('../../initialization/plugin');
 jest.mock('./custom-event');
 

@@ -11,12 +11,17 @@ import * as getBrowserIdModule from '../browser-id/get-browser-id';
 import { AnalyticsEnvironment } from './types';
 import { expect, jest } from '@jest/globals';
 
-jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreSettings: jest.fn(),
-  debug: {
-    init: jest.fn(),
-  },
-}));
+jest.mock('@sitecore-content-sdk/core', () => {
+  const originalModule = jest.requireActual<typeof coreModule>('@sitecore-content-sdk/core');
+
+  return {
+    ...originalModule,
+    getCoreSettings: jest.fn(),
+    debug: {
+      init: jest.fn(),
+    },
+  };
+});
 
 describe('plugin', () => {
   const mockGetBrowserId = jest.fn<AnalyticsEnvironment['getBrowserId']>();
@@ -334,4 +339,3 @@ describe('plugin', () => {
     });
   });
 });
-

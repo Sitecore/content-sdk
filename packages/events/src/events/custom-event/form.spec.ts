@@ -1,4 +1,5 @@
 import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
+import * as core from '@sitecore-content-sdk/core';
 import * as analyticsPluginsModule from '@sitecore-content-sdk/analytics-core/internal';
 import * as coreModule from '@sitecore-content-sdk/core';
 import { PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
@@ -7,7 +8,6 @@ import { form } from './form';
 import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/analytics-core/internal');
-jest.mock('@sitecore-content-sdk/core');
 jest.mock('../../initialization/plugin');
 jest.mock('../../debug', () => {
   const initialModule: object = jest.requireActual('../../debug');
@@ -58,10 +58,9 @@ describe('form event', () => {
   });
 
   it('should send the form event without EP optional attributes', async () => {
-    const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ ref: 'ref' } as EPResponse),
-    });
-    global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
+    const fetchSpy = jest.spyOn(core.NativeDataFetcher.prototype, 'fetch').mockResolvedValue({
+      data: { ref: 'ref' } as EPResponse,
+    } as core.NativeDataFetcherResponse<unknown>);
 
     mockEnvironment.getBrowserId.mockReturnValue('test_id');
 
@@ -76,8 +75,8 @@ describe('form event', () => {
 
     await form('1234', 'SUBMITTED', 'test');
 
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenLastCalledWith(
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenLastCalledWith(
       'https://edge-platform.sitecorecloud.io/v1/events/v1.2/events?siteId=456',
       {
         body: expectedBody,
@@ -93,16 +92,15 @@ describe('form event', () => {
   });
 
   it('should use empty string for id when getBrowserId returns null', async () => {
-    const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ ref: 'ref' } as EPResponse),
-    });
-    global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
+    const fetchSpy = jest.spyOn(core.NativeDataFetcher.prototype, 'fetch').mockResolvedValue({
+      data: { ref: 'ref' } as EPResponse,
+    } as core.NativeDataFetcherResponse<unknown>);
 
     mockEnvironment.getBrowserId.mockReturnValue(null);
 
     await form('1234', 'VIEWED', 'test');
 
-    expect(fetch).toHaveBeenCalledWith(
+    expect(fetchSpy).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
         body: expect.stringContaining('"browser_id":""'),
@@ -123,26 +121,24 @@ describe('form event', () => {
 
     mockEnvironment.getBrowserId.mockReturnValue('test_id');
 
-    const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ ref: 'ref' } as EPResponse),
-    });
-    global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
+    const fetchSpy = jest.spyOn(core.NativeDataFetcher.prototype, 'fetch').mockResolvedValue({
+      data: { ref: 'ref' } as EPResponse,
+    } as core.NativeDataFetcherResponse<unknown>);
 
     const formPromise = form('1234', 'SUBMITTED', 'test');
 
-    expect(fetch).not.toHaveBeenCalled();
+    expect(fetchSpy).not.toHaveBeenCalled();
 
     resolveReady!();
     await formPromise;
 
-    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should call getEventsPlugin to ensure plugin is initialized', async () => {
-    const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ ref: 'ref' } as EPResponse),
-    });
-    global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
+    jest.spyOn(core.NativeDataFetcher.prototype, 'fetch').mockResolvedValue({
+      data: { ref: 'ref' } as EPResponse,
+    } as core.NativeDataFetcherResponse<unknown>);
 
     mockEnvironment.getBrowserId.mockReturnValue('test_id');
 

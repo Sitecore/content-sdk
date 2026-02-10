@@ -12,8 +12,6 @@ export const DAILY_SECONDS = 86400;
 
 export const API_VERSION = 'v1.2';
 
-export const SITECORE_EDGE_URL = 'https://edge-platform.sitecorecloud.io';
-
 export const CORRELATION_ID_HEADER = 'x-sc-correlation-id';
 
 export const ERROR_MESSAGES = {

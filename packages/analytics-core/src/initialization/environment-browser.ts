@@ -49,7 +49,8 @@ export function analyticsBrowserEnvironment(): AnalyticsBrowserEnvironment {
 
       const cookieValues = await fetchBrowserIdFromEdgeProxy(
         coreSettings.sitecoreEdgeUrl,
-        coreSettings.contextId
+        coreSettings.contextId,
+        analyticsSettings.timeout,
       );
 
       getAnalyticsPlugin().settings.proxyValues = cookieValues;

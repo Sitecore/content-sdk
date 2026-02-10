@@ -7,6 +7,8 @@ export {
   debugNamespace,
   debugModule,
   isNamespaceEnabled,
+  processDebugResponse,
+  DebugResponse,
 } from './debug';
 export {
   GraphQLClient,

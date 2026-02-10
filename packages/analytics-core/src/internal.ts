@@ -2,7 +2,6 @@ export { getDefaultCookieAttributes } from './cookie/get-default-cookie-attribut
 
 export { language, pageName } from './infer/infer';
 export { generateCorrelationId } from './correlation-id/generate-correlation-id';
-export { processDebugResponse } from './debug/debug';
 
 export {
   API_VERSION,
@@ -10,13 +9,12 @@ export {
   DAILY_SECONDS,
   DEFAULT_COOKIE_EXPIRY_DAYS,
   LIBRARY_VERSION,
-  SITECORE_EDGE_URL,
   CORRELATION_ID_HEADER,
   BROWSER_ID_COOKIE_NAME,
 } from './consts';
 
 // Interfaces
-export type { EPResponse, Infer, DebugResponse } from './interfaces';
+export type { EPResponse, Infer } from './interfaces';
 
 export { fetchBrowserIdFromEdgeProxy } from './browser-id/fetch-browser-id-from-edge-proxy';
 export { getAnalyticsPlugin } from './initialization/plugin';

@@ -1,14 +1,15 @@
-import { API_VERSION, processDebugResponse } from '@sitecore-content-sdk/analytics-core/internal';
+import { API_VERSION } from '@sitecore-content-sdk/analytics-core/internal';
+import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import type {
   BasePayload,
   CustomEventPayload,
   IdentityEventPayload,
   PageViewEventPayload,
 } from '..';
-import type { DebugResponse, EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
+import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
 import { PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
 import { CoreSettings } from '@sitecore-content-sdk/core';
-import { EVENTS_NAMESPACE, debug } from '../../debug';
+import { debug } from '../../debug';
 
 /**
  * This factory function sends an event to Edge Proxy
@@ -21,8 +22,6 @@ export async function sendEvent(
 ): Promise<EPResponse | null> {
   // eslint-disable-next-line max-len
   const eventUrl = `${settings.sitecoreEdgeUrl}/v1/events/${API_VERSION}/events?siteId=${settings.siteName}`;
-  const startTimestamp = Date.now();
-  let debugResponse: DebugResponse = {};
 
   const fetchOptions = {
     body: JSON.stringify(body),
@@ -35,23 +34,13 @@ export async function sendEvent(
     method: 'POST',
   };
 
-  debug.events('Events request: %s with options: %O', eventUrl, fetchOptions);
+  const fetcher = new NativeDataFetcher({ debugger: debug.events });
 
-  return await fetch(eventUrl, fetchOptions)
-    .then((response) => {
-      debugResponse = processDebugResponse(EVENTS_NAMESPACE, response);
-
-      return response.json();
+  return await fetcher.fetch<EPResponse>(eventUrl, fetchOptions)
+    .then(async (response) => {
+      return response.data;
     })
-    .then((data) => {
-      debugResponse.body = data;
-
-      debug.events('Events response in %dms : %O', Date.now() - startTimestamp, debugResponse);
-
-      return data;
-    })
-    .catch((error) => {
-      debug.events('Error: events response: %O', error);
+    .catch(() => {
       return null;
     });
 }
