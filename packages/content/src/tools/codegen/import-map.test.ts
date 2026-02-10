@@ -17,6 +17,7 @@ import fs from 'fs';
 import { utilsUnitMocks } from './utils';
 import { importUnitMocks } from './import-map';
 import { componentUnitMocks } from './../templating/components';
+import { SitecoreConfig } from './../../config';
 
 describe('Import Map Generation', () => {
   const sandbox = sinon.createSandbox();
@@ -450,211 +451,197 @@ describe('Import Map Generation', () => {
       unitMocks({ getComponentListStub });
     });
 
-    const initialization = [
-      {
-        title: 'Using deprecated scConfig',
-        run: (config: WriteImportMapArgsInternal) => {
-          const generate = writeImportMap(config);
-          return generate();
-        },
-      },
-      {
-        title: 'Using new config passed as argument',
-        run: ({ scConfig, ...rest }: WriteImportMapArgsInternal) => {
-          const generate = writeImportMap(rest);
-          return generate({ scConfig });
-        },
-      },
-    ];
+    const runCommand = (
+      scConfig: SitecoreConfig,
+      writeImportMapConfig: WriteImportMapArgsInternal
+    ) => {
+      const runWruteImportMap = writeImportMap(writeImportMapConfig);
+      return runWruteImportMap({ scConfig });
+    };
 
-    initialization.forEach(({ title, run }) => {
-      describe(title, () => {
-        it('should skip when code generation is disabled', async () => {
-          const debugStub = sandbox.stub(debug, 'common');
-          const scConfig = { disableCodeGeneration: true } as any;
-          utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
-          const getComponentListStub = sandbox.stub();
-          unitMocks({ getComponentListStub });
-          const fsWriteStub = sandbox.stub(fs, 'writeFileSync');
+    it('should skip when code generation is disabled', async () => {
+      const debugStub = sandbox.stub(debug, 'common');
+      const scConfig = { disableCodeGeneration: true } as any;
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+      const getComponentListStub = sandbox.stub();
+      unitMocks({ getComponentListStub });
+      const fsWriteStub = sandbox.stub(fs, 'writeFileSync');
 
-          await run({ paths: ['foo'], exclude: [], scConfig });
+      await runCommand(scConfig, { paths: ['foo'], exclude: [] });
 
-          expect(
-            debugStub.calledWithMatch(
-              'Skipping import map generation. Code generation functionality is disabled.'
-            )
-          ).to.be.true;
-          expect(getComponentListStub.notCalled).to.be.true;
-          expect(fsWriteStub.called).to.be.false;
-        });
+      expect(
+        debugStub.calledWithMatch(
+          'Skipping import map generation. Code generation functionality is disabled.'
+        )
+      ).to.be.true;
+      expect(getComponentListStub.notCalled).to.be.true;
+      expect(fsWriteStub.called).to.be.false;
+    });
 
-        it('should retrieve and parse paths based on inputs from "paths" and "exclude"', async () => {
-          const scConfig = { disableCodeGeneration: false } as any;
-          utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+    it('should retrieve and parse paths based on inputs from "paths" and "exclude"', async () => {
+      const scConfig = { disableCodeGeneration: false } as any;
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
 
-          const fakeEntries = [{ filePath: 'component1.tsx' }, { filePath: 'component2.tsx' }];
-          const getComponentListStub = sandbox.stub().returns(fakeEntries);
-          unitMocks({ getComponentListStub });
-          getImportMapStub.returns(new Map());
-          const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
+      const fakeEntries = [{ filePath: 'component1.tsx' }, { filePath: 'component2.tsx' }];
+      const getComponentListStub = sandbox.stub().returns(fakeEntries);
+      unitMocks({ getComponentListStub });
+      getImportMapStub.returns(new Map());
+      const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
 
-          // Mock fs.createReadStream for prepImportMaps with proper event emitter
-          const createReadStreamStub = sandbox.stub(fs, 'createReadStream');
-          createReadStreamStub.callsFake(() => {
-            const handlers: any = {};
-            const mockStream = {
-              on: (event: string, handler: any) => {
-                handlers[event] = handler;
-                if (event === 'error') {
-                  // Don't trigger error
-                } else if (event === 'close') {
-                  // Trigger close after data
-                  setImmediate(() => handler());
-                }
-                return mockStream;
-              },
-            };
-            // Trigger data event
-            setImmediate(() => handlers.data && handlers.data(Buffer.from('import { funco')));
-            return mockStream as any;
-          });
-
-          defaultMapTemplateStub.returns('// import map content');
-          await run({ paths: ['foo'], exclude: ['bar'], scConfig });
-
-          expect(getComponentListStub.called).to.be.true;
-          expect(getComponentListStub.calledWith(['foo'], ['bar'])).to.be.true;
-          expect(getImportMapStub.calledWith(['component1.tsx', 'component2.tsx'])).to.be.true;
-          expect(fsWriteStub.calledOnce).to.be.true;
-          expect(defaultMapTemplateStub.calledOnce).to.be.true;
-        });
-
-        it('should write server and client import maps', async () => {
-          // run the full unobstructed flow for this test
-          /* eslint-disable-next-line */
-          importUnitMocks.getImportMap = importUnitMocks.getImportMap;
-          /* eslint-disable-next-line */
-          importUnitMocks.defaultMapTemplate = importUnitMocks.defaultMapTemplate;
-          unitMocks({ getComponentListStub: componentUnitMocks.getComponentList });
-          const scConfig = { disableCodeGeneration: false } as any;
-          utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
-
-          const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
-
-          await run({
-            paths: ['client-components/*', 'single-file-imports/named.ts'],
-            exclude: [],
-            scConfig,
-            separateServerClientMaps: true,
-            clientTemplate: (indexedImportMap: Map<string, ModuleExports>) => {
-              return `'use client';
-${defaultMapTemplate(indexedImportMap)}`;
-            },
-          });
-
-          // Assert fsWriteStub was called twice
-          expect(fsWriteStub.calledTwice).to.be.true;
-
-          // Assert server import map was written to import-map.server.ts
-          const serverCall = fsWriteStub.getCall(0);
-          expect(serverCall.args[0]).to.include('import-map.server.ts');
-          expect(serverCall.args[0]).to.not.include('import-map.client.ts');
-          expect(serverCall.args[1]).to.match(/test-exports/);
-          expect(serverCall.args[1]).to.not.match(/useEffect/);
-
-          // Assert client import map was written to import-map.client.ts
-          const clientCall = fsWriteStub.getCall(1);
-          expect(clientCall.args[0]).to.include('import-map.client.ts');
-          expect(clientCall.args[1]).to.match(/\'use client\'/);
-          expect(clientCall.args[1]).to.match(/useEffect/);
-          expect(clientCall.args[1]).to.match(/fake-react/);
-          expect(clientCall.args[1]).to.not.match(/test-exports/);
-        });
-
-        it('should write output into import-map file', async () => {
-          const scConfig = { disableCodeGeneration: false } as any;
-          utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
-
-          const fakeEntries = [{ filePath: 'component1.tsx' }];
-          getComponentListStub.returns(fakeEntries);
-          getImportMapStub.returns(new Map());
-          const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
-
-          // Mock fs.createReadStream for prepImportMaps with proper event emitter
-          const createReadStreamStub = sandbox.stub(fs, 'createReadStream');
-          createReadStreamStub.callsFake(() => {
-            const handlers: any = {};
-            const mockStream = {
-              on: (event: string, handler: any) => {
-                handlers[event] = handler;
-                if (event === 'error') {
-                  // Don't trigger error
-                } else if (event === 'close') {
-                  // Trigger close after data
-                  setImmediate(() => handler());
-                }
-                return mockStream;
-              },
-            };
-            // Trigger data event
-            setImmediate(() => handlers.data && handlers.data(Buffer.from('import { funco')));
-            return mockStream as any;
-          });
-
-          defaultMapTemplateStub.returns('// import map content');
-
-          await run({ paths: ['foo'], exclude: [], scConfig });
-
-          expect(fsWriteStub.calledOnce).to.be.true;
-          const filePath = fsWriteStub.getCall(0).args[0];
-          expect(filePath).to.include('.sitecore');
-          expect(filePath).to.include('import-map.ts');
-          expect(fsWriteStub.getCall(0).args[1]).to.equal('// import map content');
-          expect(fsWriteStub.getCall(0).args[2]).to.deep.include({ encoding: 'utf8' });
-        });
-
-        it('should throw when file write operation fails', async () => {
-          const scConfig = { disableCodeGeneration: false } as any;
-          utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
-
-          const fakeEntries = [{ filePath: 'component1.tsx' }];
-          getComponentListStub.returns(fakeEntries);
-          getImportMapStub.returns(new Map());
-          const error = new Error('Unit test mocks: write failed');
-
-          // Mock fs.createReadStream for prepImportMaps with proper event emitter
-          const createReadStreamStub = sandbox.stub(fs, 'createReadStream');
-          createReadStreamStub.callsFake(() => {
-            const handlers: any = {};
-            const mockStream = {
-              on: (event: string, handler: any) => {
-                handlers[event] = handler;
-                if (event === 'error') {
-                  // Don't trigger error
-                } else if (event === 'close') {
-                  // Trigger close after data
-                  setImmediate(() => handler());
-                }
-                return mockStream;
-              },
-            };
-            // Trigger data event
-            setImmediate(() => handlers.data && handlers.data(Buffer.from('import { funco')));
-            return mockStream as any;
-          });
-
-          sandbox.stub(require('fs'), 'writeFileSync').throws(error);
-          defaultMapTemplateStub.returns('// import map content');
-
-          let thrownError: Error | undefined;
-          try {
-            await run({ paths: ['foo'], exclude: [], scConfig });
-          } catch (e) {
-            thrownError = e as Error;
-          }
-          expect(thrownError).to.equal(error);
-        });
+      // Mock fs.createReadStream for prepImportMaps with proper event emitter
+      const createReadStreamStub = sandbox.stub(fs, 'createReadStream');
+      createReadStreamStub.callsFake(() => {
+        const handlers: any = {};
+        const mockStream = {
+          on: (event: string, handler: any) => {
+            handlers[event] = handler;
+            if (event === 'error') {
+              // Don't trigger error
+            } else if (event === 'close') {
+              // Trigger close after data
+              setImmediate(() => handler());
+            }
+            return mockStream;
+          },
+        };
+        // Trigger data event
+        setImmediate(() => handlers.data && handlers.data(Buffer.from('import { funco')));
+        return mockStream as any;
       });
+
+      defaultMapTemplateStub.returns('// import map content');
+      await runCommand(scConfig, { paths: ['foo'], exclude: ['bar'] });
+
+      expect(getComponentListStub.called).to.be.true;
+      expect(getComponentListStub.calledWith(['foo'], ['bar'])).to.be.true;
+      expect(getImportMapStub.calledWith(['component1.tsx', 'component2.tsx'])).to.be.true;
+      expect(fsWriteStub.calledOnce).to.be.true;
+      expect(defaultMapTemplateStub.calledOnce).to.be.true;
+    });
+
+    it('should write server and client import maps', async () => {
+      // run the full unobstructed flow for this test
+      /* eslint-disable-next-line */
+      importUnitMocks.getImportMap = importUnitMocks.getImportMap;
+      /* eslint-disable-next-line */
+      importUnitMocks.defaultMapTemplate = importUnitMocks.defaultMapTemplate;
+      unitMocks({ getComponentListStub: componentUnitMocks.getComponentList });
+      const scConfig = { disableCodeGeneration: false } as any;
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+
+      const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
+
+      await runCommand(scConfig, {
+        paths: ['client-components/*', 'single-file-imports/named.ts'],
+        exclude: [],
+        separateServerClientMaps: true,
+        clientTemplate: (indexedImportMap: Map<string, ModuleExports>) => {
+          return `'use client';
+${defaultMapTemplate(indexedImportMap)}`;
+        },
+      });
+
+      // Assert fsWriteStub was called twice
+      expect(fsWriteStub.calledTwice).to.be.true;
+
+      // Assert server import map was written to import-map.server.ts
+      const serverCall = fsWriteStub.getCall(0);
+      expect(serverCall.args[0]).to.include('import-map.server.ts');
+      expect(serverCall.args[0]).to.not.include('import-map.client.ts');
+      expect(serverCall.args[1]).to.match(/test-exports/);
+      expect(serverCall.args[1]).to.not.match(/useEffect/);
+
+      // Assert client import map was written to import-map.client.ts
+      const clientCall = fsWriteStub.getCall(1);
+      expect(clientCall.args[0]).to.include('import-map.client.ts');
+      expect(clientCall.args[1]).to.match(/\'use client\'/);
+      expect(clientCall.args[1]).to.match(/useEffect/);
+      expect(clientCall.args[1]).to.match(/fake-react/);
+      expect(clientCall.args[1]).to.not.match(/test-exports/);
+    });
+
+    it('should write output into import-map file', async () => {
+      const scConfig = { disableCodeGeneration: false } as any;
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+
+      const fakeEntries = [{ filePath: 'component1.tsx' }];
+      getComponentListStub.returns(fakeEntries);
+      getImportMapStub.returns(new Map());
+      const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
+
+      // Mock fs.createReadStream for prepImportMaps with proper event emitter
+      const createReadStreamStub = sandbox.stub(fs, 'createReadStream');
+      createReadStreamStub.callsFake(() => {
+        const handlers: any = {};
+        const mockStream = {
+          on: (event: string, handler: any) => {
+            handlers[event] = handler;
+            if (event === 'error') {
+              // Don't trigger error
+            } else if (event === 'close') {
+              // Trigger close after data
+              setImmediate(() => handler());
+            }
+            return mockStream;
+          },
+        };
+        // Trigger data event
+        setImmediate(() => handlers.data && handlers.data(Buffer.from('import { funco')));
+        return mockStream as any;
+      });
+
+      defaultMapTemplateStub.returns('// import map content');
+
+      await runCommand(scConfig, { paths: ['foo'], exclude: [] });
+
+      expect(fsWriteStub.calledOnce).to.be.true;
+      const filePath = fsWriteStub.getCall(0).args[0];
+      expect(filePath).to.include('.sitecore');
+      expect(filePath).to.include('import-map.ts');
+      expect(fsWriteStub.getCall(0).args[1]).to.equal('// import map content');
+      expect(fsWriteStub.getCall(0).args[2]).to.deep.include({ encoding: 'utf8' });
+    });
+
+    it('should throw when file write operation fails', async () => {
+      const scConfig = { disableCodeGeneration: false } as any;
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+
+      const fakeEntries = [{ filePath: 'component1.tsx' }];
+      getComponentListStub.returns(fakeEntries);
+      getImportMapStub.returns(new Map());
+      const error = new Error('Unit test mocks: write failed');
+
+      // Mock fs.createReadStream for prepImportMaps with proper event emitter
+      const createReadStreamStub = sandbox.stub(fs, 'createReadStream');
+      createReadStreamStub.callsFake(() => {
+        const handlers: any = {};
+        const mockStream = {
+          on: (event: string, handler: any) => {
+            handlers[event] = handler;
+            if (event === 'error') {
+              // Don't trigger error
+            } else if (event === 'close') {
+              // Trigger close after data
+              setImmediate(() => handler());
+            }
+            return mockStream;
+          },
+        };
+        // Trigger data event
+        setImmediate(() => handlers.data && handlers.data(Buffer.from('import { funco')));
+        return mockStream as any;
+      });
+
+      sandbox.stub(require('fs'), 'writeFileSync').throws(error);
+      defaultMapTemplateStub.returns('// import map content');
+
+      let thrownError: Error | undefined;
+      try {
+        await runCommand(scConfig, { paths: ['foo'], exclude: [] });
+      } catch (e) {
+        thrownError = e as Error;
+      }
+      expect(thrownError).to.equal(error);
     });
   });
 });

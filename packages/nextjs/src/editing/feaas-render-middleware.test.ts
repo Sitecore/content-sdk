@@ -132,7 +132,7 @@ describe('FEAASRenderMiddleware', () => {
       'Access-Control-Allow-Methods',
       'GET, POST, OPTIONS, DELETE, PUT, PATCH',
     ]);
-    expect(res.setHeader.getCall(2).args).to.deep.equal([
+    expect(res.setHeader.getCall(4).args).to.deep.equal([
       'Access-Control-Allow-Headers',
       'Content-Type, Authorization',
     ]);

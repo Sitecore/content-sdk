@@ -425,8 +425,13 @@ describe('<DesignLibrary />', () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
 
       render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
         </SitecoreProvider>
       );
 
@@ -451,8 +456,13 @@ describe('<DesignLibrary />', () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
 
       render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
         </SitecoreProvider>
       );
 
@@ -486,8 +496,13 @@ describe('<DesignLibrary />', () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
 
       const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
         </SitecoreProvider>
       );
 
@@ -553,8 +568,13 @@ describe('<DesignLibrary />', () => {
       const Gen = (props: any) => <div className="gen">{props.fields?.content?.value}</div>;
 
       render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
         </SitecoreProvider>
       );
 
@@ -645,8 +665,13 @@ describe('<DesignLibrary />', () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata_Gen);
 
       const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
         </SitecoreProvider>
       );
 

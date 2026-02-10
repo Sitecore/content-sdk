@@ -22,9 +22,8 @@ export interface SitecoreProviderProps {
   page: Page;
   /**
    * The dynamic import for import map to be used in variant generation mode.
-   * Currently it's optional but it will be required in the next major version.
    */
-  loadImportMap?: () => Promise<ImportMapImport>;
+  loadImportMap: () => Promise<ImportMapImport>;
 
   children: React.ReactNode;
 }

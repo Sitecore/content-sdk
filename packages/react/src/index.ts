@@ -49,6 +49,7 @@ export {
   PlaceholderProps as PlaceholderComponentProps,
   AppPlaceholder,
   AppPlaceholderProps,
+  renderEmptyPlaceholder,
 } from './components/Placeholder';
 export {
   Image,

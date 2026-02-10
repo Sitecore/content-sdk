@@ -116,8 +116,6 @@ export {
   BYOCClientWrapper,
   BYOCServerWrapper,
 } from '@sitecore-content-sdk/react';
-// Preserving original FEaaSWrapper export name for backward compatibility
-// TODO: remove in future major release
 export { FEaaSWrapper };
 export { BYOCWrapper };
 
@@ -167,4 +165,5 @@ export {
   ClientEditingChromesUpdate,
   AppPlaceholder,
   AppPlaceholderProps,
+  renderEmptyPlaceholder,
 } from '@sitecore-content-sdk/react';

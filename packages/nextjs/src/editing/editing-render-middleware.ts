@@ -113,7 +113,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     if (req.method === 'OPTIONS') {
       debug.editing('preflight request');
 
-      // CORS headers are set by enforceCors
+      // CORS headers are set by getEnforcedCorsHeaders
       return res.status(204).send(null);
     }
 

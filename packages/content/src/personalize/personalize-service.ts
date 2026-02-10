@@ -19,7 +19,6 @@ export type PersonalizeServiceConfig = CacheOptions & {
   timeout?: number;
   /**
    * Optional Sitecore Personalize scope identifier allowing you to isolate your personalization data between XM Cloud environments
-   * @deprecated Will be removed in a future release.
    */
   scope?: string;
   /**

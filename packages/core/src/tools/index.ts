@@ -19,7 +19,6 @@ export {
 export {
   resolveUrl,
   isTimeoutError,
-  enforceCors,
   getEnforcedCorsHeaders,
   EnhancedOmit,
   getAllowedOriginsFromEnv,

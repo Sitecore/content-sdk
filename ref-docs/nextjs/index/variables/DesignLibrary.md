@@ -4,11 +4,11 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / DesignLibrary
 
-# Variable: DesignLibrary
+# Variable: DesignLibrary()
 
-> `const` **DesignLibrary**: \{(`props`): `Element`; `displayName`: `string`; \}
+> `const` **DesignLibrary**: () => `React.JSX.Element` \| `null`
 
-Defined in: react/types/components/DesignLibrary/DesignLibrary.d.ts:16
+Defined in: react/types/components/DesignLibrary/DesignLibrary.d.ts:15
 
 Design Library component.
 
@@ -17,20 +17,8 @@ when generation is enabled (`page.mode.designLibrary.isVariantGeneration === tru
 wires the **variant generation** handshake so the parent (DL Studio) can send
 generated code to preview and iterate on.
 
-## Type Declaration
-
-## Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `props` | `DesignLibraryProps` |  |
-
 ## Returns
 
-`Element`
+`React.JSX.Element` \| `null`
 
 The preview surface, or `null` when not in Design Library mode.
-
-### displayName
-
-> **displayName**: `string`

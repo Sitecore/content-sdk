@@ -27,15 +27,11 @@ This factory function is used to create and configure GraphQL clients for making
 
 Override fetch method. Uses 'GraphQLRequestClient' default otherwise.
 
-### ~~scope?~~
+### scope?
 
 > `optional` **scope**: `string`
 
 Optional Sitecore Personalize scope identifier allowing you to isolate your personalization data between XM Cloud environments
-
-#### Deprecated
-
-Will be removed in a future release.
 
 ### timeout?
 

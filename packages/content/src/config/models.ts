@@ -238,7 +238,7 @@ export type SitecoreCliConfigInput = {
   /**
    * Sitecore configuration (`sitecore.config` file)
    */
-  config?: SitecoreConfig;
+  config: SitecoreConfig;
   /**
    * Configuration for the `sitecore-tools build` CLI command
    */
@@ -246,7 +246,7 @@ export type SitecoreCliConfigInput = {
     /**
      * Commands to run during the build process
      */
-    commands?: Array<(args?: { scConfig?: SitecoreConfig }) => Promise<void>>;
+    commands?: Array<(args?: { scConfig: SitecoreConfig }) => Promise<void>>;
   };
   /**
    * Configuration for the `sitecore-tools scaffold` CLI command

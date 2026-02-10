@@ -13,6 +13,15 @@ export interface WithLoadImportMapProps {
 }
 
 /**
+ * Hook that retrieves the loadImportMap function from context.
+ * @returns {() => Promise<ImportMapImport> | undefined} The loadImportMap function from context, or undefined if not available.
+ * @public
+ */
+export function useLoadImportMap(): (() => Promise<ImportMapImport>) | undefined {
+  return useContext(ImportMapReactContext);
+}
+
+/**
  * Higher-order component that injects the loadImportMap function from context into component props.
  * If the component already receives loadImportMap via props, the prop value takes precedence.
  * @param {React.ComponentClass<T> | React.FC<T>} Component - The component to enhance.
@@ -22,7 +31,7 @@ export function withLoadImportMap<T extends WithLoadImportMapProps>(
   Component: React.ComponentClass<T> | React.FC<T>
 ) {
   const WithLoadImportMap = (props: T): JSX.Element => {
-    const loadImportMapContext = useContext(ImportMapReactContext);
+    const loadImportMapContext = useLoadImportMap();
     const loadClientImportMap = props.loadImportMap || loadImportMapContext;
     return <Component {...props} loadImportMap={loadClientImportMap} />;
   };
