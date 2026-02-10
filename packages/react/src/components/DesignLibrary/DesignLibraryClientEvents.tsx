@@ -49,16 +49,8 @@ export const DesignLibraryPreviewEvents = ({
       _updateServerComponentAction({ uid: updated.uid!, updatedComponent: updated });
     });
 
-    // eslint-disable-next-line no-unused-vars
-    const unsubPreview = addServerComponentPreviewHandler((_eventArgs) => {
-      console.error(
-        'Component Library variant generation for server components is temporarily disabled.'
-      );
-    });
-
     return () => {
       unsubUpdate && unsubUpdate();
-      unsubPreview && unsubPreview();
     };
   }, [component, designLibraryStatus]);
 
