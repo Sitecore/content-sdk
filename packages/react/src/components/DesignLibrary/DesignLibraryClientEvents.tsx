@@ -43,7 +43,7 @@ export const DesignLibraryPreviewEvents = ({
   useEffect(() => {
     if (!component?.uid) return;
 
-    postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid));
+    postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid, true));
 
     const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
       _updateServerComponentAction({ uid: updated.uid!, updatedComponent: updated });
@@ -83,7 +83,7 @@ export const DesignLibraryVariantGenerationEvents = ({
   useEffect(() => {
     if (!component?.uid) return;
 
-    postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid));
+    postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid, true));
 
     const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
       _updateServerComponentAction({

@@ -45,6 +45,7 @@ export interface DesignLibraryStatusEvent extends DesignLibraryEvent {
   message: {
     status: 'ready' | 'rendered';
     uid: string;
+    isRenderingServerComponent: boolean;
   };
 }
 
@@ -205,18 +206,21 @@ export const updateComponent = (
  * Generates a DesignLibraryStatusEvent with the given status and uid.
  * @param {DesignLibraryStatus} status - The status of rendering.
  * @param {string} uid - The unique identifier for the event.
+ * @param {boolean} [isRenderingServerComponent] - Indicates if the component being rendered is a server component.
  * @returns An object representing the DesignLibraryStatusEvent.
  * @internal
  */
 export function getDesignLibraryStatusEvent(
   status: DesignLibraryStatus,
-  uid: string
+  uid: string,
+  isRenderingServerComponent = false
 ): DesignLibraryStatusEvent {
   return {
     name: DESIGN_LIBRARY_STATUS_EVENT_NAME,
     message: {
       status,
       uid,
+      isRenderingServerComponent,
     },
   };
 }
