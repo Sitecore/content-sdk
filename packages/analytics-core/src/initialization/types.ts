@@ -75,7 +75,7 @@ export interface AnalyticsOptions {
  */
 export interface AnalyticsPlugin extends Plugin {
   /**
-   * The resolved options for the analytics plugin.
+   * The options for the analytics plugin.
    */
   options: AnalyticsOptions;
   /**

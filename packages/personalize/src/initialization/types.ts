@@ -56,12 +56,12 @@ export interface PersonalizePluginOptions {
 export type PersonalizeServerPluginOptions = Omit<PersonalizePluginOptions, 'webPersonalization'>;
 
 /**
- * Represents the resolved personalize plugin options.
+ * Represents the personalize plugin options.
  * @public
  */
 export interface PersonalizeOptions {
   /**
-   * The resolved web personalization options.
+   * The web personalization options.
    */
   webPersonalization: false | WebPersonalizationOptions;
   /**
@@ -103,7 +103,7 @@ export interface PersonalizePlugin {
  */
 export interface PersonalizeBrowserPlugin {
   /**
-   * The resolved options for the personalize browser plugin, including web personalization and cookie settings.
+   * The options for the personalize browser plugin, including web personalization and cookie settings.
    */
   options: PersonalizeOptions;
   /**
@@ -131,7 +131,7 @@ export interface PersonalizeBrowserPlugin {
  */
 export interface PersonalizeServerPlugin {
   /**
-   * The resolved options for the personalize server plugin, including cookie settings.
+   * The options for the personalize server plugin, including cookie settings.
    */
   options: PersonalizeServerOptions;
   /**
