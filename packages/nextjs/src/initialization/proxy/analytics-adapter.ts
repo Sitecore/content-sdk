@@ -22,7 +22,9 @@ export interface AnalyticsProxyAdapter extends AnalyticsAdapter {
 }
 
 /**
- * Enables analytics in the proxy environment.
+ * Creates a proxy-based analytics adapter that reads and writes the visitor ID
+ * using cookies and can resolve a new client ID from the Edge proxy when needed.
+ * The adapter also provides access to the current URL search parameters.
  * @param {NextRequest} request - The Next.js request object.
  * @param {NextResponse} response - The Next.js response object.
  * @returns {AnalyticsProxyAdapter} The analytics proxy adapter.

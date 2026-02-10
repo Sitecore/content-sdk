@@ -24,7 +24,9 @@ export interface PersonalizeProxyAdapter extends Required<PersonalizeAdapter> {
 }
 
 /**
- * Enables personalization in the proxy environment.
+ * Creates a proxy-based personalize adapter that reads and writes the profile ID
+ * using cookies and can resolve a new profile ID from the Edge proxy when needed.
+ * The adapter also provides access user agent from the request headers.
  * @param {NextRequest} request - The HTTP request object.
  * @param {NextResponse} response - The HTTP response object.
  * @returns {PersonalizeProxyAdapter} The personalize proxy adapter.

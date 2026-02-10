@@ -21,7 +21,9 @@ export interface AnalyticsBrowserAdapter extends AnalyticsAdapter {
 }
 
 /**
- * Enables analytics in the browser.
+ * Creates a browser-based analytics adapter that reads and writes the visitor ID
+ * using cookies and can resolve a new client ID from the Edge proxy when needed.
+ * The adapter also provides access to the current URL search parameters.
  * @returns {AnalyticsBrowserAdapter} The analytics browser adapter.
  * @public
  */

@@ -21,7 +21,9 @@ export interface AnalyticsServerAdapter extends AnalyticsAdapter {
 }
 
 /**
- * Enables analytics in the server.
+ * Creates a server-based analytics adapter that reads and writes the visitor ID
+ * using cookies and can resolve a new client ID from the Edge proxy when needed.
+ * The adapter also provides access to the current URL search parameters.
  * @template Request - The HTTP request type extending `IncomingMessage`.
  * @template Response - The HTTP response type extending `OutgoingMessage`.
  * @param {Request} request - The HTTP request object.

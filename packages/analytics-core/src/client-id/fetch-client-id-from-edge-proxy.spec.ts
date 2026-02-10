@@ -1,12 +1,12 @@
 import * as utils from '../utils';
 import { ERROR_MESSAGES, LIBRARY_VERSION, SITECORE_EDGE_URL } from '../consts';
 import type { EPResponse } from '../interfaces';
-import * as constructGetClientIdUrl from './construct-get-client-id-url';
+import * as resolveGetClientIdUrl from './resolve-get-client-id-url';
 import { fetchClientIdFromEdgeProxy } from './fetch-client-id-from-edge-proxy';
 import { jest, expect } from '@jest/globals';
 
 describe('fetchClientIdFromEdgeProxy', () => {
-  const constructClientIdUrlSpy = jest.spyOn(constructGetClientIdUrl, 'constructGetClientIdUrl');
+  const constructClientIdUrlSpy = jest.spyOn(resolveGetClientIdUrl, 'resolveGetClientIdUrl');
   const contextId = '83d8199c-2837-4c29-a8ab-1bf234fea2d1';
   const mockResponse = {
     // eslint-disable-next-line @typescript-eslint/naming-convention

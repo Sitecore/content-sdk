@@ -24,7 +24,8 @@ export interface PersonalizeBrowserAdapter extends PersonalizeAdapter {
 }
 
 /**
- * Enables personalization in the browser.
+ * Creates a browser-based personalize adapter that reads and writes the profile ID
+ * using cookies and can resolve a new profile ID from the Edge proxy when needed.
  * @returns {PersonalizeBrowserAdapter} An PersonalizeBrowserAdapter instance.
  * @public
  */

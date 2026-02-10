@@ -1,7 +1,7 @@
 import type { EPResponse, ResolvedVisitorIds } from '../interfaces';
 import { ERROR_MESSAGES, LIBRARY_VERSION } from '../consts';
 import { ERROR_MESSAGES as UTILS_ERROR_MESSAGES, fetchWithTimeout } from '../utils';
-import { constructGetClientIdUrl } from './construct-get-client-id-url';
+import { resolveGetClientIdUrl } from './resolve-get-client-id-url';
 
 /**
  * Gets the client ID and client key from Sitecore Edge proxy.
@@ -24,7 +24,7 @@ export async function fetchClientIdFromEdgeProxy(
     },
   };
 
-  const url = constructGetClientIdUrl(edgeUrl);
+  const url = resolveGetClientIdUrl(edgeUrl);
   let payload;
 
   if (timeout !== undefined)

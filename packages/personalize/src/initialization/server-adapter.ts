@@ -29,7 +29,9 @@ export interface PersonalizeServerAdapter extends PersonalizeAdapter {
 }
 
 /**
- * Enables personalization in the server.
+ * Creates a server-based personalize adapter that reads and writes the profile ID
+ * using cookies and can resolve a new profile ID from the Edge proxy when needed.
+ * The adapter also provides access user agent from the request headers.
  * @template Request - The HTTP request type extending `IncomingMessage`.
  * @template Response - The HTTP response type extending `OutgoingMessage`.
  * @param {Request} request - The HTTP request object.
