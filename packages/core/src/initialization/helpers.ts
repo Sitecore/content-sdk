@@ -1,7 +1,7 @@
 import { CoreContext, InitContentSdkParams } from './types';
 import debug from '../debug';
 import { Plugin } from './types';
-import { ERROR_MESSAGES } from './consts';
+import { ERROR_MESSAGES } from '../constants';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 
 const debugInit = debug.init;

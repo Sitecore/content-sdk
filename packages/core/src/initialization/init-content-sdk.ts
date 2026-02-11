@@ -2,7 +2,7 @@ import debug from '../debug';
 import type { CoreContext, InitContentSdkParams } from './types';
 import { initPlugins, resolveCoreContextConfig } from './helpers';
 import { Plugin } from './types';
-import { ERROR_MESSAGES } from './consts';
+import { ERROR_MESSAGES } from '../constants';
 
 let coreContext: CoreContext | undefined;
 
