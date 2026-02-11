@@ -129,24 +129,6 @@ export function createCookieString(name: string, value: string, attributes: Cook
 export const DAILY_SECONDS = 86400;
 
 // @internal
-export interface DebugResponse {
-    // (undocumented)
-    body?: unknown;
-    // (undocumented)
-    headers?: {
-        [key: string]: string | string[] | [string, string][] | Record<string, string> | Headers;
-    };
-    // (undocumented)
-    redirected?: boolean;
-    // (undocumented)
-    status?: number;
-    // (undocumented)
-    statusText?: string;
-    // (undocumented)
-    url?: string;
-}
-
-// @internal
 export const DEFAULT_COOKIE_EXPIRY_DAYS = 730;
 
 // @public
@@ -164,16 +146,7 @@ export interface EPResponse {
 }
 
 // @internal
-export const ERROR_MESSAGES: {
-    readonly IV_002: "[IV-002] Incorrect value for \"timeout\". Set the value to an integer greater than or equal to 0.";
-    readonly IE_003: "[IE-003] Timeout exceeded. The server did not respond within the allotted time.";
-};
-
-// @internal
 export function fetchClientIdFromEdgeProxy(edgeUrl: string, contextId: string, timeout?: number): Promise<VisitorIds>;
-
-// @internal
-export function fetchWithTimeout(url: string, timeout: number, fetchOptions: RequestInit): Promise<Response | null>;
 
 // @internal
 export interface FlattenedObject {
@@ -239,29 +212,10 @@ export function isShortISODateString(date: string): boolean;
 export function isValidEmail(email: string): boolean;
 
 // @internal
-export function isValidHttpURL(url: string): boolean;
-
-// @internal
-export function isValidLocation(location: Location_2): LocationValidity;
-
-// @internal
 export function language(): string | undefined;
 
 // @internal
 export const LIBRARY_VERSION: string;
-
-// @internal
-type Location_2 = {
-    latitude: number;
-    longitude: number;
-};
-export { Location_2 as Location }
-
-// @internal
-export type LocationValidity = {
-    latitude: boolean;
-    longitude: boolean;
-};
 
 // @public
 export interface NestedObject {
@@ -269,25 +223,13 @@ export interface NestedObject {
 }
 
 // @internal
-export function normalizeHeaders(incomingHeaders?: HeadersInit): Record<string, string | string[]>;
-
-// @internal
-export function omit<Data extends object, Keys extends keyof Data>(data: Data, keys: Keys[]): Omit<Data, Keys>;
-
-// @internal
 export function pageName(): string;
-
-// @internal
-export function processDebugResponse(namespace: string, response: Response): object;
 
 // @internal
 export interface ScriptAttributes {
     async: boolean;
     src: string;
 }
-
-// @internal
-export const SITECORE_EDGE_URL = "https://edge-platform.sitecorecloud.io";
 
 // @public
 export interface VisitorIds {
