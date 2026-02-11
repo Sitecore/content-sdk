@@ -70,37 +70,6 @@ function normalizeHeaders(incomingHeaders: HeadersInit = {}) {
 }
 
 /**
- * Interface for supporting the debug object.
- * @internal
- */
-export interface DebugResponse {
-  headers?: {
-    [key: string]: string | string[] | [string, string][] | Record<string, string> | Headers;
-  };
-  redirected?: boolean;
-  status?: number;
-  statusText?: string;
-  url?: string;
-  body?: unknown;
-}
-
-/**
- * Extracts debug information from an HTTP response if debugging is enabled.
- * @param {Response} response - The HTTP response object from fetch.
- * @returns {object} An object containing selected response details for debugging purposes.
- * @internal
- */
-export function processDebugResponse(response: Response): DebugResponse {
-  return {
-    headers: normalizeHeaders(response.headers),
-    redirected: response.redirected,
-    status: response.status,
-    statusText: response.statusText,
-    url: response.url,
-  };
-}
-
-/**
  * Default Sitecore Content SDK 'debug' module debuggers. Uses namespace prefix 'content-sdk:'.
  * See {@link https://www.npmjs.com/package/debug} for details.
  */

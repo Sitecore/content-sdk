@@ -14,7 +14,6 @@ jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
   API_VERSION: 'v1.2',
   generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7',
   language: jest.fn(),
-  processDebugResponse: jest.fn(),
 }));
 
 jest.mock('../debug', () => {

@@ -66,46 +66,7 @@ describe('EventApiClient', () => {
     jest.restoreAllMocks();
   });
 
-  it('Sends event with the correct values to Sitecore Cloud and show debug', async () => {
-    jest.spyOn(core, 'processDebugResponse').mockReturnValue({
-      headers: {},
-      redirected: undefined,
-      status: undefined,
-      statusText: undefined,
-      url: undefined,
-    });
-    let currentTime = 1609459200000;
-    jest.spyOn(Date, 'now').mockImplementation(() => {
-      const returnTime = currentTime;
-      currentTime += 1000;
-      return returnTime;
-    });
-
-    const expectedBody = JSON.stringify(eventData);
-    const expectedUrl = 'http://testurl/v1/events/v1.2/events?siteId=site';
-
-    await sendEvent(eventData, config).then((data) => {
-      expect(data).toEqual({
-        status: 'OK',
-      });
-    });
-
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
-    expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
-      body: expectedBody,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
-        'X-Library-Version': PACKAGE_VERSION,
-        'x-sitecore-contextid': '123',
-      },
-      method: 'POST',
-    });
-  });
-
-  it('Sends event with the correct values to Sitecore Cloud and show debug', async () => {
-    jest.spyOn(core, 'processDebugResponse').mockReturnValue({});
+  it('Sends event with the correct values to Sitecore Cloud', async () => {
     let currentTime = 1609459200000;
     jest.spyOn(Date, 'now').mockImplementation(() => {
       const returnTime = currentTime;
