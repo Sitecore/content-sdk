@@ -50,6 +50,57 @@ export function isNamespaceEnabled(namespace: string): boolean {
 }
 
 /**
+ * Converts headers from various formats into a uniform key-value pair object.
+ * @param {HeadersInit} incomingHeaders Incoming headers such as a Headers instance or plain object.
+ * @returns {Record<string, string | string[]>} Normalized headers as key-value pairs.
+ */
+function normalizeHeaders(incomingHeaders: HeadersInit = {}) {
+  const headers: Record<string, string | string[]> = {};
+
+  if (typeof incomingHeaders.forEach === 'function')
+    incomingHeaders.forEach((value, key) => {
+      headers[key] = value;
+    });
+  else
+    Object.entries(incomingHeaders).forEach(([key, value]) => {
+      headers[key] = value;
+    });
+
+  return headers;
+}
+
+/**
+ * Interface for supporting the debug object.
+ * @internal
+ */
+export interface DebugResponse {
+  headers?: {
+    [key: string]: string | string[] | [string, string][] | Record<string, string> | Headers;
+  };
+  redirected?: boolean;
+  status?: number;
+  statusText?: string;
+  url?: string;
+  body?: unknown;
+}
+
+/**
+ * Extracts debug information from an HTTP response if debugging is enabled.
+ * @param {Response} response - The HTTP response object from fetch.
+ * @returns {object} An object containing selected response details for debugging purposes.
+ * @internal
+ */
+export function processDebugResponse(response: Response): DebugResponse {
+  return {
+    headers: normalizeHeaders(response.headers),
+    redirected: response.redirected,
+    status: response.status,
+    statusText: response.statusText,
+    url: response.url,
+  };
+}
+
+/**
  * Default Sitecore Content SDK 'debug' module debuggers. Uses namespace prefix 'content-sdk:'.
  * See {@link https://www.npmjs.com/package/debug} for details.
  */

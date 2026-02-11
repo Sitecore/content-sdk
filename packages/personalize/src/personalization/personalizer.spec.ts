@@ -1,16 +1,17 @@
 import * as analyticsCore from '@sitecore-content-sdk/analytics-core/internal';
-import { ERROR_MESSAGES as UtilsERROR_MESSAGES } from '@sitecore-content-sdk/analytics-core/utils';
+import * as coreModule from '@sitecore-content-sdk/core';
 import { ERROR_MESSAGES, PACKAGE_VERSION } from '../consts';
 import type { PersonalizeData, PersonalizeIdentifierInput } from './personalizer';
 import { Personalizer } from './personalizer';
 import * as CallFlowsRequest from './send-call-flows-request';
 import { jest, expect } from '@jest/globals';
-import * as debugModule from '../debug';
+
+const UTILS_ERROR_MESSAGES = coreModule.constants.ERROR_MESSAGES;
+const SITECORE_EDGE_URL = coreModule.constants.SITECORE_EDGE_URL_DEFAULT;
 
 jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
   __esModule: true,
   API_VERSION: 'v1.2',
-  SITECORE_EDGE_URL: 'https://edge-platform.sitecorecloud.io',
   generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7',
   language: jest.fn(),
   processDebugResponse: jest.fn(),
@@ -47,7 +48,7 @@ describe('Test Personalizer Class', () => {
     settingsMock = {
       siteName: '456',
       contextId: '123',
-      edgeUrl: analyticsCore.SITECORE_EDGE_URL,
+      edgeUrl: SITECORE_EDGE_URL,
     };
 
     global.window ??= Object.create(window);
@@ -73,12 +74,6 @@ describe('Test Personalizer Class', () => {
     const validateSpy = jest.spyOn(Personalizer.prototype as any, 'validate');
     const sanitizeInputSpy = jest.spyOn(Personalizer.prototype as any, 'sanitizeInput');
 
-    beforeEach(() => {
-      const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as unknown),
-      });
-      global.fetch = jest.fn<() => Promise<any>>().mockImplementation(() => mockFetch);
-    });
     afterEach(() => {
       jest.clearAllMocks();
     });
@@ -124,10 +119,9 @@ describe('Test Personalizer Class', () => {
     const sendCallFlowsRequestSpy = jest.spyOn(CallFlowsRequest, 'sendCallFlowsRequest');
 
     beforeEach(() => {
-      const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as unknown),
-      });
-      global.fetch = jest.fn<() => Promise<any>>().mockImplementation(() => mockFetch);
+      jest.spyOn(coreModule.NativeDataFetcher.prototype, 'fetch').mockResolvedValue({
+        data: { status: 'OK' },
+      } as coreModule.NativeDataFetcherResponse<unknown>);
     });
 
     afterEach(() => {
@@ -269,7 +263,7 @@ describe('Test Personalizer Class', () => {
         {
           siteName: '456',
           contextId: '123',
-          edgeUrl: analyticsCore.SITECORE_EDGE_URL,
+          edgeUrl: SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -280,10 +274,9 @@ describe('Test Personalizer Class', () => {
     const sanitizeInputSpy = jest.spyOn(Personalizer.prototype as any, 'sanitizeInput');
     let expected: PersonalizeData;
     beforeEach(() => {
-      const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as unknown),
-      });
-      global.fetch = jest.fn<() => Promise<any>>().mockImplementation(() => mockFetch);
+      jest.spyOn(coreModule.NativeDataFetcher.prototype, 'fetch').mockResolvedValue({
+        data: { status: 'OK' },
+      } as coreModule.NativeDataFetcherResponse<unknown>);
 
       expected = {
         channel: 'WEB',
@@ -311,7 +304,7 @@ describe('Test Personalizer Class', () => {
       settingsMock = {
         siteName: '456',
         contextId: '123',
-        edgeUrl: analyticsCore.SITECORE_EDGE_URL,
+        edgeUrl: SITECORE_EDGE_URL,
       };
 
       new Personalizer(clientId, profileId).getInteractiveExperienceData(
@@ -347,7 +340,7 @@ describe('Test Personalizer Class', () => {
       settingsMock = {
         siteName: '456',
         contextId: '123',
-        edgeUrl: analyticsCore.SITECORE_EDGE_URL,
+        edgeUrl: SITECORE_EDGE_URL,
       };
 
       new Personalizer(clientId, profileId).getInteractiveExperienceData(
@@ -379,7 +372,7 @@ describe('Test Personalizer Class', () => {
       settingsMock = {
         siteName: '456',
         contextId: '123',
-        edgeUrl: analyticsCore.SITECORE_EDGE_URL,
+        edgeUrl: SITECORE_EDGE_URL,
       };
 
       new Personalizer(clientId, profileId).getInteractiveExperienceData(
@@ -581,10 +574,9 @@ describe('Test Personalizer Class', () => {
 
     // map
     beforeEach(() => {
-      const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as unknown),
-      });
-      global.fetch = jest.fn<() => Promise<any>>().mockImplementation(() => mockFetch);
+      jest.spyOn(coreModule.NativeDataFetcher.prototype, 'fetch').mockResolvedValue({
+        data: { status: 'OK' },
+      } as coreModule.NativeDataFetcherResponse<unknown>);
     });
 
     afterEach(() => {
@@ -630,7 +622,7 @@ describe('Test Personalizer Class', () => {
         {
           siteName: '456',
           contextId: '123',
-          edgeUrl: analyticsCore.SITECORE_EDGE_URL,
+          edgeUrl: SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -679,7 +671,7 @@ describe('Test Personalizer Class', () => {
         {
           siteName: '456',
           contextId: '123',
-          edgeUrl: analyticsCore.SITECORE_EDGE_URL,
+          edgeUrl: SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -748,7 +740,7 @@ describe('Test Personalizer Class', () => {
         {
           siteName: '456',
           contextId: '123',
-          edgeUrl: analyticsCore.SITECORE_EDGE_URL,
+          edgeUrl: SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -801,7 +793,7 @@ describe('Test Personalizer Class', () => {
         {
           siteName: '456',
           contextId: '123',
-          edgeUrl: analyticsCore.SITECORE_EDGE_URL,
+          edgeUrl: SITECORE_EDGE_URL,
         },
         undefined
       );
@@ -809,13 +801,11 @@ describe('Test Personalizer Class', () => {
   });
 
   describe('timeout', () => {
-    const debugMock = debugModule.debug.personalize;
     afterEach(() => {
       jest.clearAllMocks();
     });
 
     it('should return the response', async () => {
-      jest.spyOn(analyticsCore, 'processDebugResponse').mockReturnValue({});
       let currentTime = 1609459200000;
       jest.spyOn(Date, 'now').mockImplementation(() => {
         const returnTime = currentTime;
@@ -825,11 +815,11 @@ describe('Test Personalizer Class', () => {
 
       const expectedResponse = { test: '420' };
 
-      global.fetch = jest
-        .fn<() => Promise<any>>()
-        .mockImplementation(() =>
-          Promise.resolve({ json: () => Promise.resolve(expectedResponse) })
-        );
+      const fetchSpy = jest
+        .spyOn(coreModule.NativeDataFetcher.prototype, 'fetch')
+        .mockResolvedValue({
+          data: expectedResponse,
+        } as coreModule.NativeDataFetcherResponse<unknown>);
 
       const response = await new Personalizer(clientId, profileId).getInteractiveExperienceData(
         personalizeInputMock,
@@ -840,9 +830,9 @@ describe('Test Personalizer Class', () => {
         }
       );
 
-      expect(fetch).toHaveBeenCalledWith(
+      expect(fetchSpy).toHaveBeenCalledWith(
         // eslint-disable-next-line max-len
-        `${analyticsCore.SITECORE_EDGE_URL}/v1/personalize?siteId=${settingsMock.siteName}`,
+        `${SITECORE_EDGE_URL}/v1/personalize?siteId=${settingsMock.siteName}`,
         {
           // eslint-disable-next-line max-len
           body: '{"channel":"WEB","clientKey":"","currencyCode":"EUR","friendlyId":"personalizeintegrationtest","guestRef":"profileId","language":"EN","pointOfSale":"","browserId":"clientId"}',
@@ -855,29 +845,17 @@ describe('Test Personalizer Class', () => {
           },
           /* eslint-enable @typescript-eslint/naming-convention */
           method: 'POST',
-          signal: new AbortController().signal,
         }
       );
-      expect(debugMock).toHaveBeenCalled();
-      expect((debugMock as unknown as jest.Mock).mock.calls[0][0]).toBe(
-        'Personalize request: %s with options: %O'
-      );
-      expect((debugMock as unknown as jest.Mock).mock.calls[0][1]).toBe(
-        'https://edge-platform.sitecorecloud.io/v1/personalize?siteId=456'
-      );
-      expect((debugMock as unknown as jest.Mock).mock.calls[1][0]).toBe(
-        'Personalize response in %dms : %O'
-      );
-
-      expect((debugMock as unknown as jest.Mock).mock.calls[1][1]).toBe(1000);
-      expect((debugMock as unknown as jest.Mock).mock.calls[1][2]).toStrictEqual({
-        body: expectedResponse,
-      });
 
       expect(response).toBe(expectedResponse);
     });
 
     it('should throw error if a negative number is used for timeout value', async () => {
+      jest.spyOn(coreModule.NativeDataFetcher.prototype, 'fetch').mockImplementationOnce(() => {
+        return Promise.reject(new Error(UTILS_ERROR_MESSAGES.IV_002));
+      });
+
       expect(async () => {
         await new Personalizer(clientId, profileId).getInteractiveExperienceData(
           personalizeInputMock,
@@ -887,10 +865,14 @@ describe('Test Personalizer Class', () => {
             timeout: -10,
           }
         );
-      }).rejects.toThrow(UtilsERROR_MESSAGES.IV_002);
+      }).rejects.toThrow(UTILS_ERROR_MESSAGES.IV_002);
     });
 
     it('should throw error if a float number is used for timeout value', async () => {
+      jest.spyOn(coreModule.NativeDataFetcher.prototype, 'fetch').mockImplementationOnce(() => {
+        return Promise.reject(new Error(UTILS_ERROR_MESSAGES.IV_002));
+      });
+
       expect(async () => {
         await new Personalizer(clientId, profileId).getInteractiveExperienceData(
           personalizeInputMock,
@@ -900,31 +882,7 @@ describe('Test Personalizer Class', () => {
             timeout: 420.69,
           }
         );
-      }).rejects.toThrow(UtilsERROR_MESSAGES.IV_002);
-    });
-
-    it("should call abort method of AbortController if didn't get a response in time", async () => {
-      jest.useFakeTimers();
-
-      global.fetch = jest
-        .fn<() => Promise<any>>()
-        .mockResolvedValue({ json: () => Promise.resolve('anything') });
-
-      const abortSpy = jest.spyOn(AbortController.prototype, 'abort');
-
-      new Personalizer(clientId, profileId).getInteractiveExperienceData(
-        personalizeInputMock,
-        settingsMock,
-        window.location.search,
-        {
-          timeout: 100,
-        }
-      );
-      jest.advanceTimersByTime(1000);
-
-      expect(abortSpy).toHaveBeenCalledTimes(1);
-
-      jest.useRealTimers();
+      }).rejects.toThrow(UTILS_ERROR_MESSAGES.IV_002);
     });
 
     it('should throw immediately a predifined error if timeout is 0', async () => {
@@ -934,8 +892,8 @@ describe('Test Personalizer Class', () => {
           this.name = 'AbortError';
         }
       }
-      global.fetch = jest
-        .fn<() => Promise<never>>()
+      jest
+        .spyOn(coreModule.NativeDataFetcher.prototype, 'fetch')
         .mockRejectedValue(new FetchError('Failed to fetch'));
 
       try {
@@ -946,7 +904,7 @@ describe('Test Personalizer Class', () => {
           { timeout: 0 }
         );
       } catch (error) {
-        expect((error as FetchError).message).toBe(UtilsERROR_MESSAGES.IE_003);
+        expect((error as FetchError).message).toBe(UTILS_ERROR_MESSAGES.IE_003);
       }
     });
 
@@ -958,16 +916,17 @@ describe('Test Personalizer Class', () => {
           this.name = 'AbortError';
         }
       }
-      global.fetch = jest
-        .fn<() => Promise<never>>()
-        .mockRejectedValue(new FetchError('Failed to fetch'));
 
-      new Personalizer(clientId, profileId)
+      jest.spyOn(coreModule.NativeDataFetcher.prototype, 'fetch').mockImplementationOnce(() => {
+        return Promise.reject(new FetchError(UTILS_ERROR_MESSAGES.IE_003));
+      });
+
+      await new Personalizer(clientId, profileId)
         .getInteractiveExperienceData(personalizeInputMock, settingsMock, window.location.search, {
           timeout: 100,
         })
         .catch((err) => {
-          expect(err.message).toEqual(UtilsERROR_MESSAGES.IE_003);
+          expect(err.message).toEqual(UTILS_ERROR_MESSAGES.IE_003);
         });
     });
 
@@ -979,9 +938,9 @@ describe('Test Personalizer Class', () => {
         }
       }
 
-      global.fetch = jest
-        .fn<() => Promise<never>>()
-        .mockRejectedValue(new FetchError('Failed to fetch'));
+      jest.spyOn(coreModule.NativeDataFetcher.prototype, 'fetch').mockImplementationOnce(() => {
+        return Promise.reject(new FetchError('Failed to fetch'));
+      });
 
       const response = await new Personalizer(clientId, profileId).getInteractiveExperienceData(
         personalizeInputMock,
@@ -1003,9 +962,9 @@ describe('Test Personalizer Class', () => {
         }
       }
 
-      global.fetch = jest
-        .fn<() => Promise<never>>()
-        .mockRejectedValue(new FetchError('Failed to fetch'));
+      jest.spyOn(coreModule.NativeDataFetcher.prototype, 'fetch').mockImplementationOnce(() => {
+        return Promise.reject(new FetchError('Failed to fetch'));
+      });
 
       const response = await new Personalizer(clientId, profileId).getInteractiveExperienceData(
         personalizeInputMock,

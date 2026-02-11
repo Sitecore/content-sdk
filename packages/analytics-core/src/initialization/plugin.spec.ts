@@ -11,12 +11,17 @@ import * as getClientIdModule from '../client-id/get-client-id';
 import { AnalyticsAdapter } from './types';
 import { expect, jest } from '@jest/globals';
 
-jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreContext: jest.fn(),
-  debug: {
-    init: jest.fn(),
-  },
-}));
+jest.mock('@sitecore-content-sdk/core', () => {
+  const originalModule = jest.requireActual<typeof coreModule>('@sitecore-content-sdk/core');
+
+  return {
+    ...originalModule,
+    getCoreContext: jest.fn(),
+    debug: {
+      init: jest.fn(),
+    },
+  };
+});
 
 describe('plugin', () => {
   const mockGetClientId = jest.fn<AnalyticsAdapter['getClientId']>();

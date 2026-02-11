@@ -1,14 +1,9 @@
-import type { DebugResponse } from '@sitecore-content-sdk/analytics-core/internal';
-import {
-  generateCorrelationId,
-  processDebugResponse,
-} from '@sitecore-content-sdk/analytics-core/internal';
+import { generateCorrelationId } from '@sitecore-content-sdk/analytics-core/internal';
 import type { NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
-import { fetchWithTimeout } from '@sitecore-content-sdk/analytics-core/utils';
 import { PACKAGE_VERSION } from '../consts';
 import { GetInteractiveExperienceDataOpts } from './personalizer';
-import { CoreContext } from '@sitecore-content-sdk/core';
-import { debug, PERSONALIZE_NAMESPACE } from '../debug';
+import { CoreContext, NativeDataFetcher } from '@sitecore-content-sdk/core';
+import { debug } from '../debug';
 
 /**
  * A function that sends a CallFlow request to Sitecore Edge Proxy
@@ -23,9 +18,6 @@ export async function sendCallFlowsRequest(
   config: CoreContext['config'],
   opts?: GetInteractiveExperienceDataOpts
 ) {
-  const startTimestamp = Date.now();
-  let debugResponse: DebugResponse = {};
-
   // eslint-disable-next-line max-len
   const requestUrl = `${config.edgeUrl}/v1/personalize?siteId=${config.siteName}`;
 
@@ -44,52 +36,16 @@ export async function sendCallFlowsRequest(
 
   if (opts?.userAgent) fetchOptions.headers['User-Agent'] = opts.userAgent;
 
-  debug.personalize('Personalize request: %s with options: %O' as const, requestUrl, fetchOptions);
+  const fetcher = new NativeDataFetcher({ timeout: opts?.timeout, debugger: debug.personalize });
 
-  if (opts?.timeout === undefined)
-    return fetch(requestUrl, fetchOptions)
-      .then((response) => {
-        debugResponse = processDebugResponse(PERSONALIZE_NAMESPACE, response);
-
-        return response.json();
-      })
-      .then((data) => {
-        debugResponse.body = data;
-
-        debug.personalize(
-          'Personalize response in %dms : %O',
-          Date.now() - startTimestamp,
-          debugResponse
-        );
-
-        return data;
-      })
-      .catch((error) => {
-        debug.personalize('Error personalize response: %O' as const, error);
-        return null;
-      });
-
-  return fetchWithTimeout(requestUrl, opts.timeout, fetchOptions)
+  return fetcher
+    .fetch(requestUrl, fetchOptions)
     .then((response) => {
       if (!response) return null;
 
-      debugResponse = processDebugResponse(PERSONALIZE_NAMESPACE, response);
-
-      return response.json();
-    })
-    .then((data) => {
-      debugResponse.body = data;
-
-      debug.personalize(
-        'Personalize response in %dms : %O',
-        Date.now() - startTimestamp,
-        debugResponse
-      );
-
-      return data;
+      return response.data;
     })
     .catch((error) => {
-      debug.personalize('Error personalize response: %O' as const, error);
       if (error.message.includes('IV-002') || error.message.includes('IE-003'))
         throw new Error(error.message);
 
