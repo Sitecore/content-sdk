@@ -1,4 +1,5 @@
-﻿import React, { JSX } from 'react';
+﻿'use client';
+import React, { JSX } from 'react';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { useSitecore } from './withSitecore';
 
@@ -32,7 +33,7 @@ export function withDatasourceCheck(options?: WithDatasourceCheckOptions) {
   return function withDatasourceCheckHoc<ComponentProps extends WithDatasourceCheckProps>(
     Component: React.ComponentType<ComponentProps>
   ) {
-    return function WithDatasourceCheck(props: ComponentProps) {
+    return (props: ComponentProps) => {
       const { page } = useSitecore();
       const EditingError = options?.editingErrorComponent ?? DefaultEditingError;
 

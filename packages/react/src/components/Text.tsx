@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import React, { ReactElement } from 'react';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
@@ -83,14 +83,16 @@ export const Text: React.FC<TextProps> = withFieldMetadata<TextProps>(
         children = output;
       }
 
+      const Tag = (tag || 'span') as React.ElementType;
+
       if (field.metadata) {
-        return React.createElement(
-          tag || 'span',
-          { ...htmlProps, suppressHydrationWarning: true },
-          children
+        return (
+          <Tag {...htmlProps} suppressHydrationWarning={true}>
+            {children}
+          </Tag>
         );
       } else if (tag || !encode) {
-        return React.createElement(tag || 'span', htmlProps, children);
+        return <Tag {...htmlProps}>{children}</Tag>;
       } else {
         return <React.Fragment>{children}</React.Fragment>;
       }

@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import fastDeepEqual from 'fast-deep-equal/es6/react';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
@@ -67,66 +67,59 @@ export const ImportMapReactContext = React.createContext<
  * The SitecoreProvider component.
  * @public
  */
-export class SitecoreProvider extends React.Component<
-  SitecoreProviderProps,
-  SitecoreProviderState
-> {
-  static displayName = 'SitecoreProvider';
+export const SitecoreProvider = (props: SitecoreProviderProps) => {
+  const { api: propsApi, page: propsPage, componentMap, loadImportMap, children } = props;
 
-  constructor(props: SitecoreProviderProps) {
-    super(props);
-
-    // If any Edge ID is present but no edgeUrl, apply the default
-    let api = props.api;
+  // Apply default edgeUrl if any Edge ID is present but no edgeUrl
+  const api = useMemo(() => {
     if (
-      (props.api?.edge?.contextId || props.api?.edge?.clientContextId) &&
-      !props.api?.edge?.edgeUrl
+      (propsApi?.edge?.contextId || propsApi?.edge?.clientContextId) &&
+      !propsApi?.edge?.edgeUrl
     ) {
-      api = {
-        ...props.api,
+      return {
+        ...propsApi,
         edge: {
-          ...props.api.edge,
+          ...propsApi.edge,
           edgeUrl: constants.SITECORE_EDGE_URL_DEFAULT,
         },
       };
     }
+    return propsApi;
+  }, [propsApi]);
 
-    this.state = {
-      page: props.page,
-      setPage: this.setPage,
-      api,
-    };
-  }
+  const [page, setPageInternal] = useState<Page>(propsPage);
 
-  componentDidUpdate(prevProps: SitecoreProviderProps) {
-    // In case if somebody will manage SitecoreProvider state by passing fresh `page` prop
-    // instead of using `updateContext`
-    if (!fastDeepEqual(prevProps.page, this.props.page)) {
-      this.setPage(this.props.page);
+  // Memoize setPage callback
+  const setPage = useCallback((value: Page) => {
+    setPageInternal(value);
+  }, []);
 
-      return;
+  // Handle page prop changes using useEffect instead of componentDidUpdate
+  useEffect(() => {
+    if (!fastDeepEqual(propsPage, page)) {
+      setPage(propsPage);
     }
-  }
+  }, [propsPage, page, setPage]);
 
-  /**
-   * Update page state.
-   * @param {Page} value New page value
-   */
-  setPage = (value: Page) => {
-    this.setState({
-      page: value,
-    });
-  };
+  // Memoize the context value to prevent unnecessary re-renders
+  const contextValue = useMemo<SitecoreProviderState>(
+    () => ({
+      page,
+      setPage,
+      api,
+    }),
+    [page, setPage, api]
+  );
 
-  render() {
-    return (
-      <ImportMapReactContext.Provider value={this.props.loadImportMap}>
-        <ComponentMapReactContext.Provider value={this.props.componentMap}>
-          <SitecoreProviderReactContext.Provider value={this.state}>
-            {this.props.children}
-          </SitecoreProviderReactContext.Provider>
-        </ComponentMapReactContext.Provider>
-      </ImportMapReactContext.Provider>
-    );
-  }
-}
+  return (
+    <ImportMapReactContext.Provider value={loadImportMap}>
+      <ComponentMapReactContext.Provider value={componentMap}>
+        <SitecoreProviderReactContext.Provider value={contextValue}>
+          {children}
+        </SitecoreProviderReactContext.Provider>
+      </ComponentMapReactContext.Provider>
+    </ImportMapReactContext.Provider>
+  );
+};
+
+SitecoreProvider.displayName = 'SitecoreProvider';

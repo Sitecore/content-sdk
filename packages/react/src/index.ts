@@ -95,7 +95,6 @@ export {
   WithSitecoreHocProps,
 } from './enhancers/withSitecore';
 export { withEditorChromes } from './enhancers/withEditorChromes';
-export { withPlaceholder } from './enhancers/withPlaceholder';
 export { withDatasourceCheck } from './enhancers/withDatasourceCheck';
 export { withFieldMetadata } from './enhancers/withFieldMetadata';
 export { withEmptyFieldEditingComponent } from './enhancers/withEmptyFieldEditingComponent';
@@ -107,15 +106,3 @@ export {
 } from './components/DefaultEmptyFieldEditingComponents';
 export { ClientEditingChromesUpdate } from './components/ClientEditingChromesUpdate';
 export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
-export { SitecoreProviderOptimized } from './components/SitecoreProviderOptimized';
-export { FormOptimized } from './components/FormOptimized';
-export { DesignLibraryOptimized } from './components/DesignLibrary/DesignLibraryOptimized';
-export { TextOptimized } from './components/TextOptimized';
-export { LinkOptimized } from './components/LinkOptimized';
-export { DateFieldOptimized } from './components/DateOptimized';
-export { FileOptimized } from './components/FileOptimized';
-export { RichTextOptimized } from './components/RichTextOptimized';
-export {
-  DefaultEmptyFieldEditingComponentTextOptimized,
-  DefaultEmptyFieldEditingComponentImageOptimized,
-} from './components/DefaultEmptyFieldEditingComponentsOptimized';

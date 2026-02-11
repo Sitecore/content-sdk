@@ -1,4 +1,5 @@
-﻿import React, { useContext, JSX } from 'react';
+﻿'use client';
+import React, { useContext, JSX } from 'react';
 import { ImportMapReactContext } from '../components/SitecoreProvider';
 import { ImportMapImport } from '../components/DesignLibrary/models';
 

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import React, { ForwardedRef, forwardRef } from 'react';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
@@ -55,7 +55,8 @@ export const RichText: React.FC<RichTextProps> = withFieldMetadata<RichTextProps
           ...otherProps,
         };
 
-        return React.createElement(tag || 'div', htmlProps);
+        const Tag = (tag || 'div') as React.ElementType;
+        return <Tag {...htmlProps} />;
       }
     ),
     { defaultEmptyFieldEditingComponent: DefaultEmptyFieldEditingComponentText, isForwardRef: true }

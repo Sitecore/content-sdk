@@ -1,4 +1,4 @@
-﻿import { isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
+import { isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
 import React from 'react';
 
 export interface FileFieldValue {
@@ -48,7 +48,13 @@ export const File: React.FC<FileProps> = ({ field, children, ...otherProps }) =>
   const anchorAttrs = {
     href: file.src,
   };
-  return React.createElement('a', { ...anchorAttrs, ...otherProps }, linkText, children);
+
+  return (
+    <a {...anchorAttrs} {...otherProps}>
+      {linkText}
+      {children}
+    </a>
+  );
 };
 
 File.displayName = 'File';

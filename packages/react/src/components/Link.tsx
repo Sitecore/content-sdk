@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import React, { RefAttributes, forwardRef } from 'react';
 import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
@@ -91,14 +91,12 @@ export const Link: React.FC<LinkProps> = withFieldMetadata<LinkProps, HTMLAnchor
         const linkText =
           showLinkTextWithChildrenPresent || !children ? link.text || link.href : null;
 
-        const element = React.createElement(
-          'a',
-          { ...anchorAttrs, ...otherProps, key: 'link', ref },
-          linkText,
-          children
+        return (
+          <a {...anchorAttrs} {...otherProps} key="link" ref={ref}>
+            {linkText}
+            {children}
+          </a>
         );
-
-        return <React.Fragment>{element}</React.Fragment>;
       }
     ),
     { defaultEmptyFieldEditingComponent: DefaultEmptyFieldEditingComponentText, isForwardRef: true }

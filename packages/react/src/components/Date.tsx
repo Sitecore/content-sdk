@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
@@ -51,7 +51,8 @@ export const DateField: React.FC<DateFieldProps> = withFieldMetadata<DateFieldPr
       }
 
       if (tag) {
-        return React.createElement(tag || 'span', htmlProps, children);
+        const Tag = (tag || 'span') as React.ElementType;
+        return <Tag {...htmlProps}>{children}</Tag>;
       } else {
         return <React.Fragment>{children}</React.Fragment>;
       }

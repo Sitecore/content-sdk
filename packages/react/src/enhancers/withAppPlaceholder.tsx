@@ -4,6 +4,8 @@ import { AppPlaceholder } from '../components/Placeholder/AppPlaceholder';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { ComponentMap } from '../components/sharedTypes';
+import { rsc as isServerRuntime } from '../rsc-utils/rsc';
+import { Placeholder } from '../components/Placeholder';
 
 export type ComponentProps = {
   rendering: ComponentRendering;
@@ -16,6 +18,11 @@ export type WrapperProps = {
   componentMap: ComponentMap;
 };
 
+/**
+ * Provides a slot-like functionality by wrapping a component and rendering placeholders defined in the layout data.
+ * @param {ComponentType<T>} Component - The component to be wrapped around placeholders.
+ * @returns {React.ReactNode} A new component that renders the original component with placeholders.
+ */
 export const withAppPlaceholder = <T extends ComponentProps, W extends T & WrapperProps>(
   Component: ComponentType<T>
 ) => {
@@ -24,13 +31,15 @@ export const withAppPlaceholder = <T extends ComponentProps, W extends T & Wrapp
     const phProps: Record<string, unknown> = {};
 
     for (const placeholder of Object.keys(placeholders)) {
-      phProps[placeholder] = (
+      phProps[placeholder] = isServerRuntime ? (
         <AppPlaceholder
           name={placeholder}
           rendering={props.rendering}
           componentMap={props.componentMap}
           page={props.page}
         />
+      ) : (
+        <Placeholder name={placeholder} rendering={props.rendering} page={props.page} />
       );
     }
 

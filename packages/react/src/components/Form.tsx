@@ -86,7 +86,14 @@ export const Form = ({ params, rendering }: FormProps) => {
 
       executeScriptElements(formRef.current);
     }
-  }, [content]);
+  }, [
+    content,
+    isEditing,
+    params.FormId,
+    rendering.uid,
+    context.api?.edge?.clientContextId,
+    context.api?.edge?.edgeUrl,
+  ]);
 
   if (isEditing && error) {
     return <ErrorComponent message="There was a problem loading this section" />;
