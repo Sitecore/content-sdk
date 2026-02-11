@@ -12,7 +12,7 @@
     "@sitecore-content-sdk/events": "1.5.0-canary.6",
     "debug": "^4.4.3"
   },
-  "description": "> TODO: description",
+  "description": "Provides personalization capabilities to build tailored experiences for site visitors.",
   "devDependencies": {
     "@jest/types": "^29.6.3",
     "@stylistic/eslint-plugin": "^5.2.2",
@@ -55,7 +55,6 @@
   "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
   "license": "Apache-2.0",
   "name": "@sitecore-content-sdk/personalize",
-  "private": true,
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -64,10 +63,12 @@
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "clean": "del-cli dist types",
     "coverage": "jest --config jest.config.ts --coverage",
-    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/personalize --entryPoints src/browser.ts --entryPoints src/server.ts --githubPages false",
+    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/personalize --entryPoints src/internal.ts --entryPoints src/index.ts --githubPages false",
     "lint": "eslint \"./src/**/*.ts\"",
     "prepublishOnly": "npm run build",
-    "test": "jest --config jest.config.ts"
+    "test": "jest --config jest.config.ts",    
+    "api-extractor": "npm run build && api-extractor run --local --verbose",
+    "api-extractor:verify": "api-extractor run"
   },
   "version": "1.5.0-canary.6"
 }

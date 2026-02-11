@@ -2,6 +2,7 @@
  * Checks whether the provided coordinates fall within valid latitude and longitude ranges.
  * @param {Location} location The location to validate.
  * @returns {LocationValidity} Flags indicating whether each coordinate is valid.
+ * @internal
  */
 export function isValidLocation(location: Location): LocationValidity {
   return {
@@ -12,16 +13,18 @@ export function isValidLocation(location: Location): LocationValidity {
 
 /**
  * Represents a geographic location with latitude and longitude.
+ * @internal
  */
-type Location = {
+export type Location = {
   latitude: number;
   longitude: number;
 };
 
-/*
+/**
  * Represents the validity of latitude and longitude coordinates.
+ * @internal
  */
-type LocationValidity = {
+export type LocationValidity = {
   latitude: boolean;
   longitude: boolean;
 };

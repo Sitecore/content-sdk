@@ -13,26 +13,26 @@ jest.mock('../../initialization/plugin');
 jest.mock('./custom-event');
 
 describe('event', () => {
-  const mockEnvironment = {
-    getBrowserId: jest.fn(),
+  const mockAdapter = {
+    getClientId: jest.fn(),
   };
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
+    options: {
+      cookies: {
         domain: 'cDomain',
         expiryDays: 730,
-        name: { browserId: 'bid_name' },
+        name: { clientId: 'cid_name' },
         path: '/',
       },
     },
-    environment: mockEnvironment,
+    adapter: mockAdapter,
   };
 
-  const mockCoreSettings = {
-    settings: {
+  const mockCoreContext = {
+    config: {
       contextId: '123',
-      sitecoreEdgeUrl: 'https://edge.test.com',
+      edgeUrl: 'https://edge.test.com',
       siteName: '456',
     },
     readyPromise: Promise.resolve(),
@@ -41,7 +41,7 @@ describe('event', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue(mockCoreSettings as any);
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue(mockCoreContext as any);
     jest
       .spyOn(analyticsPluginsModule, 'getAnalyticsPlugin')
       .mockReturnValue(mockAnalyticsPlugin as any);
@@ -61,7 +61,7 @@ describe('event', () => {
       type: 'CUSTOM_TYPE',
     };
 
-    mockEnvironment.getBrowserId.mockReturnValue(id);
+    mockAdapter.getClientId.mockReturnValue(id);
 
     await event(eventData);
 
@@ -69,19 +69,19 @@ describe('event', () => {
       eventData,
       id,
       sendEvent,
-      settings: { ...mockCoreSettings.settings, ...mockAnalyticsPlugin.settings },
+      config: { ...mockCoreContext.config, ...mockAnalyticsPlugin.options },
     });
     expect(CustomEvent).toHaveBeenCalledTimes(1);
   });
 
-  it('should use empty string for id when getBrowserId returns null', async () => {
+  it('should use empty string for id when getClientId returns null', async () => {
     const eventData: EventData = {
       channel: 'WEB',
       currency: 'EUR',
       type: 'CUSTOM_TYPE',
     };
 
-    mockEnvironment.getBrowserId.mockReturnValue(null);
+    mockAdapter.getClientId.mockReturnValue(null);
 
     await event(eventData);
 
@@ -89,22 +89,22 @@ describe('event', () => {
       eventData,
       id: '',
       sendEvent,
-      settings: { ...mockCoreSettings.settings, ...mockAnalyticsPlugin.settings },
+      config: { ...mockCoreContext.config, ...mockAnalyticsPlugin.options },
     });
   });
 
-  it('should wait for core settings ready promise', async () => {
+  it('should wait for core context ready promise', async () => {
     let resolveReady: () => void;
     const readyPromise = new Promise<void>((resolve) => {
       resolveReady = resolve;
     });
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue({
-      ...mockCoreSettings,
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue({
+      ...mockCoreContext,
       readyPromise,
     } as any);
 
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+    mockAdapter.getClientId.mockReturnValue('test_id');
 
     const eventPromise = event({ type: 'TEST' });
 
@@ -117,7 +117,7 @@ describe('event', () => {
   });
 
   it('should call getEventsPlugin to ensure plugin is initialized', async () => {
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+    mockAdapter.getClientId.mockReturnValue('test_id');
 
     await event({ type: 'TEST' });
 

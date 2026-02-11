@@ -1,12 +1,21 @@
 /**
- * Options for initSitecore
+ * Parameters for initContentSdk
  * @public
  */
-export interface InitSitecoreOptions {
-  /** Initialization settings */
-  settings: {
+export interface InitContentSdkParams {
+  /** Initialization config */
+  config: {
+    /**
+     * The context ID.
+     */
     contextId: string;
-    sitecoreEdgeUrl?: string;
+    /**
+     * Sitecore edge URL
+     */
+    edgeUrl?: string;
+    /**
+     * The site name.
+     */
     siteName: string;
   };
   /** Array of plugins to initialize */
@@ -14,14 +23,14 @@ export interface InitSitecoreOptions {
 }
 
 /**
- * Internal settings of the SDK initialization
+ * Internal config of the SDK initialization
  * @internal
  */
-export interface CoreSettings {
+export interface CoreContext {
   /**
-   * The SDK initialization settings
+   * The SDK initialization config
    */
-  settings: { contextId: string; sitecoreEdgeUrl: string; siteName: string };
+  config: { contextId: string; edgeUrl: string; siteName: string };
   /**
    * Map of enabled plugins by name
    */
@@ -42,18 +51,19 @@ export type PluginDependency = string;
 /**
  * Plugin interface for extending SDK functionality.
  * Plugins are the standard way to add capabilities to the SDK.
- * @template Settings - Plugin-specific settings type
+ * @template Options - Plugin-specific options type
+ * @template Adapter - Plugin-specific adapter type
  * @public
  */
-export interface Plugin<Settings = unknown, Environment = unknown> {
+export interface Plugin<Options = unknown, Adapter = unknown> {
   /**
-   * Unique identifier for the plugin (e.g., '@sitecore-content-sdk/events')
+   * Unique identifier for the plugin (e.g., 'EventsPlugin')
    */
   name: string;
   /**
-   * Optional plugin-specific settings
+   * Optional plugin-specific options
    */
-  settings?: Settings;
+  options?: Options;
   /**
    * List of plugins this plugin depends on
    */
@@ -64,15 +74,15 @@ export interface Plugin<Settings = unknown, Environment = unknown> {
    */
   init?: () => void | Promise<void>;
   /**
-   * Optional environment requirements for the plugin.
+   * Optional adapter requirements for the plugin.
    */
-  environment?: Environment;
+  adapter?: Adapter;
 }
 
 /**
- * Environment definition for plugins.
+ * Adapter definition for plugins.
  * @internal
  */
-export interface PluginEnvironment {
+export interface PluginAdapter {
   type: 'browser' | (string & {});
 }

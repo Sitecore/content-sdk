@@ -1,4 +1,4 @@
-import { CoreSettings, InitSitecoreOptions } from './types';
+import { CoreContext, InitContentSdkParams } from './types';
 import debug from '../debug';
 import { Plugin } from './types';
 import { ERROR_MESSAGES } from './consts';
@@ -17,7 +17,7 @@ export function checkPluginDependencies(plugin: Plugin, plugins: Map<string, Plu
 
   for (const dependency of plugin.dependencies) {
     if (!plugins.has(dependency))
-      throw new Error(`[IE-0001] - "${plugin.name}" also requires "${dependency}"`);
+      throw new Error(`[IE-001] "${plugin.name}" also requires "${dependency}"`);
   }
 
   debugInit(`All required dependencies for "${plugin.name}" are present`);
@@ -43,29 +43,29 @@ export async function initPlugins(plugins: Map<string, Plugin>): Promise<void> {
 }
 
 /**
- * Validates and constructs the core configuration.
- * @param {InitSitecoreOptions['settings']} config - The core configuration object.
+ * Validates and constructs the core context settings.
+ * @param {InitContentSdkParams['config']} config - The core context settings object.
  * @internal
  */
-export function constructCoreConfigSettings(
-  config: InitSitecoreOptions['settings']
-): CoreSettings['settings'] {
-  const { contextId, siteName, sitecoreEdgeUrl } = config;
-  if (!contextId || contextId.trim().length === 0) throw new Error(ERROR_MESSAGES.MV_0001);
+export function resolveCoreContextConfig(
+  config: InitContentSdkParams['config']
+): CoreContext['config'] {
+  const { contextId, siteName, edgeUrl } = config;
+  if (!contextId || contextId.trim().length === 0) throw new Error(ERROR_MESSAGES.MV_001);
 
-  if (!siteName || siteName.trim().length === 0) throw new Error(ERROR_MESSAGES.MV_0002);
+  if (!siteName || siteName.trim().length === 0) throw new Error(ERROR_MESSAGES.MV_002);
 
-  if (sitecoreEdgeUrl !== undefined)
+  if (edgeUrl !== undefined)
     try {
-      new URL(sitecoreEdgeUrl);
+      new URL(edgeUrl);
     } catch {
-      throw new Error(ERROR_MESSAGES.IV_0001);
+      throw new Error(ERROR_MESSAGES.IV_001);
     }
 
   debugInit('Configuration is valid');
 
   return {
     ...config,
-    sitecoreEdgeUrl: sitecoreEdgeUrl?.trim() ?? SITECORE_EDGE_URL_DEFAULT,
+    edgeUrl: edgeUrl?.trim() ?? SITECORE_EDGE_URL_DEFAULT,
   };
 }

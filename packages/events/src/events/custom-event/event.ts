@@ -3,27 +3,28 @@ import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/interna
 import { sendEvent } from '../send-event/sendEvent';
 import { CustomEvent } from './custom-event';
 import type { EventData } from './custom-event';
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getEventsPlugin } from '../../initialization/plugin';
 
 /**
- * A function that sends an event to SitecoreCloud API with the specified type
- * @param {EventData} eventData - The required/optional attributes in order to be send to SitecoreCloud API
- * @returns The response object that Sitecore EP returns
+ * A function that sends an event to the SitecoreCloud API with the specified type
+ * @param {EventData} eventData - The required/optional attributes to be sent to the SitecoreCloud API
+ * @returns The response object that Sitecore Edge Proxy returns
+ * @public
  */
 export async function event(eventData: EventData): Promise<EPResponse | null> {
-  const coreSettings = getCoreSettings();
-  await coreSettings.readyPromise;
+  const coreContext = getCoreContext();
+  await coreContext.readyPromise;
   getEventsPlugin();
 
-  const { settings, environment } = getAnalyticsPlugin();
+  const { options, adapter } = getAnalyticsPlugin();
 
-  const id = environment.getBrowserId() || '';
+  const id = adapter.getClientId() || '';
 
   return new CustomEvent({
     eventData,
     id,
     sendEvent,
-    settings: { ...coreSettings.settings, ...settings },
+    config: { ...coreContext.config, ...options },
   }).send();
 }

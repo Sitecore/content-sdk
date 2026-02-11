@@ -28,7 +28,7 @@ jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
   };
 });
 
-describe.only('CustomEvent', () => {
+describe('CustomEvent', () => {
   const id = 'test_id';
   const languageSpy = jest.spyOn(core, 'language').mockImplementation(() => 'EN');
   const pageNameSpy = jest.spyOn(core, 'pageName').mockImplementation(() => 'races');
@@ -45,9 +45,9 @@ describe.only('CustomEvent', () => {
 
   describe('constructor', () => {
     let eventData: EventData;
-    const settings = {
+    const config = {
       contextId: '123',
-      sitecoreEdgeUrl: '',
+      edgeUrl: '',
       siteName: '456',
     };
 
@@ -63,7 +63,7 @@ describe.only('CustomEvent', () => {
     it('should not call flatten object method when no extension data is passed', () => {
       const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
       Object.defineProperty(window, 'location', { value: { search: '' }, writable: true });
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
     });
@@ -74,12 +74,12 @@ describe.only('CustomEvent', () => {
         eventData: { ...eventData, extensionData },
         id,
         sendEvent: sendEventModule.sendEvent,
-        settings,
+        config,
       }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(
         expect.not.objectContaining({ ext: {} }),
-        expect.objectContaining(settings)
+        expect.objectContaining(config)
       );
     });
 
@@ -90,7 +90,7 @@ describe.only('CustomEvent', () => {
         eventData: { ...eventData, extensionData },
         id,
         sendEvent: sendEventModule.sendEvent,
-        settings,
+        config,
       }).send();
 
       const expectedExt = {
@@ -103,7 +103,7 @@ describe.only('CustomEvent', () => {
 
       expect(sendEventSpy).toHaveBeenCalledWith(
         expect.objectContaining(expectedExt),
-        expect.objectContaining(settings)
+        expect.objectContaining(config)
       );
     });
 
@@ -116,9 +116,9 @@ describe.only('CustomEvent', () => {
           eventData: { ...eventData, extensionData },
           id,
           sendEvent: sendEventModule.sendEvent,
-          settings,
+          config,
         });
-      }).toThrow(ERROR_MESSAGES.IV_0005);
+      }).toThrow(ERROR_MESSAGES.IV_006);
     });
 
     it('should not throw an error when no more than 50 ext attributes are passed', () => {
@@ -130,16 +130,16 @@ describe.only('CustomEvent', () => {
           eventData: { ...eventData, extensionData },
           id,
           sendEvent: sendEventModule.sendEvent,
-          settings,
+          config,
         });
-      }).not.toThrow(ERROR_MESSAGES.IV_0005);
+      }).not.toThrow(ERROR_MESSAGES.IV_006);
     });
   });
 
   describe('send', () => {
-    const settings = {
+    const config = {
       contextId: '123',
-      sitecoreEdgeUrl: '',
+      edgeUrl: '',
       siteName: '456',
     } as const;
 
@@ -162,11 +162,11 @@ describe.only('CustomEvent', () => {
         testAttr3: 22,
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(
         expect.objectContaining(expectedExt),
-        expect.objectContaining(settings)
+        expect.objectContaining(config)
       );
     });
 
@@ -179,7 +179,7 @@ describe.only('CustomEvent', () => {
 
       const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
       expect(languageSpy).toHaveBeenCalledTimes(1);
@@ -209,9 +209,9 @@ describe.only('CustomEvent', () => {
         type: 'CUSTOM_TYPE',
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
-      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, settings);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, config);
       expect(languageSpy).toHaveBeenCalledTimes(0);
       expect(pageNameSpy).toHaveBeenCalledTimes(0);
     });
@@ -226,23 +226,20 @@ describe.only('CustomEvent', () => {
       };
 
       const expectedData = {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         browser_id: id,
         channel: 'WEB',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_key: '',
         currency: 'EUR',
         language: 'EN',
         page: 'races',
         pos: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         requested_at: '2024-01-01T00:00:00.000Z',
         type: 'CUSTOM_TYPE',
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
-      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, settings);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, config);
       expect(languageSpy).toHaveBeenCalledTimes(1);
       expect(pageNameSpy).toHaveBeenCalledTimes(1);
     });
@@ -255,30 +252,27 @@ describe.only('CustomEvent', () => {
       };
 
       const expectedData = {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         browser_id: id,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_key: '',
         language: 'EN',
         page: 'races',
         pos: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         requested_at: '2024-01-01T00:00:00.000Z',
         type: 'CUSTOM_TYPE',
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
-      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, settings);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, config);
       expect(languageSpy).toHaveBeenCalledTimes(1);
       expect(pageNameSpy).toHaveBeenCalledTimes(1);
     });
   });
   describe('search data', () => {
     it('should include sc_search if searchData is provided', async () => {
-      const settings = {
+      const config = {
         contextId: '123',
-        sitecoreEdgeUrl: '',
+        edgeUrl: '',
         siteName: '456',
       };
       const sendEventSpy = jest.spyOn(sendEventModule, 'sendEvent');
@@ -312,9 +306,9 @@ describe.only('CustomEvent', () => {
         type: 'CUSTOM_TYPE',
       } as const;
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
-      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, settings);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, config);
     });
   });
 });

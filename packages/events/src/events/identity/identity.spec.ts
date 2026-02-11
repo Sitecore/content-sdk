@@ -37,26 +37,26 @@ const identityData = {
 const extensionData = { extKey: 'extValue' };
 
 describe('identity', () => {
-  const mockEnvironment = {
-    getBrowserId: jest.fn(),
+  const mockAdapter = {
+    getClientId: jest.fn(),
   };
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
+    options: {
+      cookies: {
         domain: 'cDomain',
         expiryDays: 730,
-        name: { browserId: 'bid_name' },
+        name: { clientId: 'cid_name' },
         path: '/',
       },
     },
-    environment: mockEnvironment,
+    adapter: mockAdapter,
   };
 
-  const mockCoreSettings = {
-    settings: {
+  const mockCoreContext = {
+    config: {
       contextId: '123',
-      sitecoreEdgeUrl: 'https://edge.test.com',
+      edgeUrl: 'https://edge.test.com',
       siteName: '456',
     },
     readyPromise: Promise.resolve(),
@@ -65,7 +65,7 @@ describe('identity', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue(mockCoreSettings as any);
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue(mockCoreContext as any);
     jest
       .spyOn(analyticsPluginsModule, 'getAnalyticsPlugin')
       .mockReturnValue(mockAnalyticsPlugin as any);
@@ -73,7 +73,7 @@ describe('identity', () => {
   });
 
   it('should send an IdentityEvent to the server', async () => {
-    mockEnvironment.getBrowserId.mockReturnValue(id);
+    mockAdapter.getClientId.mockReturnValue(id);
 
     const response = await identity({ ...identityData, extensionData });
 
@@ -81,13 +81,13 @@ describe('identity', () => {
       id,
       identityData: { ...identityData, extensionData },
       sendEvent: sendEventModule.sendEvent,
-      settings: { ...mockCoreSettings.settings, ...mockAnalyticsPlugin.settings },
+      config: { ...mockCoreContext.config, ...mockAnalyticsPlugin.options },
     });
     expect(response).toBe('mockedResponse');
   });
 
-  it('should use empty string for id when getBrowserId returns null', async () => {
-    mockEnvironment.getBrowserId.mockReturnValue(null);
+  it('should use empty string for id when getClientId returns null', async () => {
+    mockAdapter.getClientId.mockReturnValue(null);
 
     await identity({ ...identityData, extensionData });
 
@@ -104,12 +104,12 @@ describe('identity', () => {
       resolveReady = resolve;
     });
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue({
-      ...mockCoreSettings,
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue({
+      ...mockCoreContext,
       readyPromise,
     } as any);
 
-    mockEnvironment.getBrowserId.mockReturnValue(id);
+    mockAdapter.getClientId.mockReturnValue(id);
 
     const identityPromise = identity({ ...identityData, extensionData });
 
@@ -122,7 +122,7 @@ describe('identity', () => {
   });
 
   it('should call getEventsPlugin to ensure plugin is initialized', async () => {
-    mockEnvironment.getBrowserId.mockReturnValue(id);
+    mockAdapter.getClientId.mockReturnValue(id);
 
     await identity({ ...identityData, extensionData });
 

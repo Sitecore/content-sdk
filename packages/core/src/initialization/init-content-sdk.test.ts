@@ -5,31 +5,31 @@ import proxyquire from 'proxyquire';
 import { Plugin } from './types';
 import { ERROR_MESSAGES } from './consts';
 
-describe('init-sitecore', () => {
+describe('init-content-sdk', () => {
   let sandbox: sinon.SinonSandbox;
   let initPluginsStub: sinon.SinonStub;
-  let constructCoreConfigSettingsStub: sinon.SinonStub;
+  let resolveCoreContextConfigStub: sinon.SinonStub;
   let debugInitStub: sinon.SinonStub;
 
-  let initSitecore: typeof import('./init-sitecore').initSitecore;
-  let getCoreSettings: typeof import('./init-sitecore').getCoreSettings;
+  let initContentSdk: typeof import('./init-content-sdk').initContentSdk;
+  let getCoreContext: typeof import('./init-content-sdk').getCoreContext;
 
   const validConfig = {
     contextId: 'test-context-id',
-    sitecoreEdgeUrl: 'https://edge.example.com',
+    edgeUrl: 'https://edge.example.com',
     siteName: 'test-site',
   };
 
   beforeEach(() => {
     sandbox = sinon.createSandbox();
     initPluginsStub = sandbox.stub().resolves();
-    constructCoreConfigSettingsStub = sandbox.stub().callsFake((config) => config);
+    resolveCoreContextConfigStub = sandbox.stub().callsFake((config) => config);
     debugInitStub = sandbox.stub();
 
-    const module = proxyquire('./init-sitecore', {
+    const module = proxyquire('./init-content-sdk', {
       './helpers': {
         initPlugins: initPluginsStub,
-        constructCoreConfigSettings: constructCoreConfigSettingsStub,
+        resolveCoreContextConfig: resolveCoreContextConfigStub,
       },
       '../debug': {
         default: {
@@ -38,17 +38,17 @@ describe('init-sitecore', () => {
       },
     });
 
-    initSitecore = module.initSitecore;
-    getCoreSettings = module.getCoreSettings;
+    initContentSdk = module.initContentSdk;
+    getCoreContext = module.getCoreContext;
   });
 
   afterEach(() => {
     sandbox.restore();
   });
 
-  describe('getCoreSettings', () => {
+  describe('getCoreContext', () => {
     it('should throw error when SDK is not initialized', () => {
-      expect(() => getCoreSettings()).to.throw(ERROR_MESSAGES.IE_0002);
+      expect(() => getCoreContext()).to.throw(ERROR_MESSAGES.IE_002);
     });
 
     it('should return core settings after initialization', async () => {
@@ -57,32 +57,32 @@ describe('init-sitecore', () => {
         init: sandbox.stub().resolves(),
       };
 
-      await initSitecore({
-        settings: validConfig,
+      await initContentSdk({
+        config: validConfig,
         plugins: [mockPlugin],
       });
 
-      const settings = getCoreSettings();
+      const coreContext = getCoreContext();
 
-      expect(settings).to.exist;
-      expect(settings.settings).to.deep.equal(validConfig);
-      expect(settings.plugins.size).to.equal(1);
-      expect(settings.plugins.has('test-plugin')).to.be.true;
+      expect(coreContext).to.exist;
+      expect(coreContext.config).to.deep.equal(validConfig);
+      expect(coreContext.plugins.size).to.equal(1);
+      expect(coreContext.plugins.has('test-plugin')).to.be.true;
     });
   });
 
-  describe('initSitecore', () => {
+  describe('initContentSdk', () => {
     it('should initialize without error when no plugins are provided and log a warning', async () => {
-      await initSitecore({
-        settings: validConfig,
+      await initContentSdk({
+        config: validConfig,
         plugins: [],
       });
 
-      expect(constructCoreConfigSettingsStub.calledOnceWith(validConfig)).to.be.true;
+      expect(resolveCoreContextConfigStub.calledOnceWith(validConfig)).to.be.true;
       expect(debugInitStub.calledWith('No plugins provided to the plugins array')).to.be.true;
 
-      const settings = getCoreSettings();
-      expect(settings.plugins.size).to.equal(0);
+      const coreContext = getCoreContext();
+      expect(coreContext.plugins.size).to.equal(0);
     });
 
     it('should register all provided plugins', async () => {
@@ -90,18 +90,18 @@ describe('init-sitecore', () => {
       const plugin2: Plugin = { name: 'plugin-2' };
       const plugin3: Plugin = { name: 'plugin-3' };
 
-      await initSitecore({
-        settings: validConfig,
+      await initContentSdk({
+        config: validConfig,
         plugins: [plugin1, plugin2, plugin3],
       });
 
-      const settings = getCoreSettings();
-      expect(settings.plugins.size).to.equal(3);
-      expect(settings.plugins.has('plugin-1')).to.be.true;
-      expect(settings.plugins.has('plugin-2')).to.be.true;
-      expect(settings.plugins.has('plugin-3')).to.be.true;
+      const coreContext = getCoreContext();
+      expect(coreContext.plugins.size).to.equal(3);
+      expect(coreContext.plugins.has('plugin-1')).to.be.true;
+      expect(coreContext.plugins.has('plugin-2')).to.be.true;
+      expect(coreContext.plugins.has('plugin-3')).to.be.true;
 
-      expect(debugInitStub.firstCall.args[0]).to.equal('Initializing Content SDK with options:');
+      expect(debugInitStub.firstCall.args[0]).to.equal('Initializing Content SDK with params:');
       const registeredPluginsCall = debugInitStub
         .getCalls()
         .find((call) => (call.args[0] as string).includes('Registered'));
@@ -113,21 +113,21 @@ describe('init-sitecore', () => {
       expect(pluginsArg.size).to.equal(3);
     });
 
-    it('should store plugins with their settings', async () => {
-      const pluginSettings = { option1: 'value1', option2: true };
+    it('should store plugins with their options', async () => {
+      const pluginOptions = { option1: 'value1', option2: true };
       const mockPlugin: Plugin = {
         name: 'test-plugin',
-        settings: pluginSettings,
+        options: pluginOptions,
       };
 
-      await initSitecore({
-        settings: validConfig,
+      await initContentSdk({
+        config: validConfig,
         plugins: [mockPlugin],
       });
 
-      const settings = getCoreSettings();
-      const storedPlugin = settings.plugins.get('test-plugin');
-      expect(storedPlugin?.settings).to.deep.equal(pluginSettings);
+      const coreContext = getCoreContext();
+      const storedPlugin = coreContext.plugins.get('test-plugin');
+      expect(storedPlugin?.options).to.deep.equal(pluginOptions);
     });
 
     it('should store plugins with their dependencies', async () => {
@@ -140,13 +140,13 @@ describe('init-sitecore', () => {
         name: 'base-plugin',
       };
 
-      await initSitecore({
-        settings: validConfig,
+      await initContentSdk({
+        config: validConfig,
         plugins: [basePlugin, mockPlugin],
       });
 
-      const settings = getCoreSettings();
-      const storedPlugin = settings.plugins.get('dependent-plugin');
+      const coreContext = getCoreContext();
+      const storedPlugin = coreContext.plugins.get('dependent-plugin');
       expect(storedPlugin?.dependencies).to.deep.equal(['base-plugin']);
     });
 
@@ -159,35 +159,35 @@ describe('init-sitecore', () => {
 
       const mockPlugin: Plugin = { name: 'test-plugin' };
 
-      await initSitecore({
-        settings: validConfig,
+      await initContentSdk({
+        config: validConfig,
         plugins: [mockPlugin],
       });
 
       expect(initPluginsResolved).to.be.true;
     });
 
-    it('should store readyPromise in coreSettings', async () => {
+    it('should store readyPromise in coreContext', async () => {
       const mockPlugin: Plugin = { name: 'test-plugin' };
 
-      await initSitecore({
-        settings: validConfig,
+      await initContentSdk({
+        config: validConfig,
         plugins: [mockPlugin],
       });
 
-      const settings = getCoreSettings();
-      expect(settings.readyPromise).to.exist;
+      const coreContext = getCoreContext();
+      expect(coreContext.readyPromise).to.exist;
 
       const lastCall = debugInitStub.lastCall;
-      expect(lastCall?.args[0]).to.equal('SDK initialization complete');
+      expect(lastCall?.args[0]).to.equal('Content SDK initialization complete');
     });
 
     it('should overwrite previous initialization when called again', async () => {
       const plugin1: Plugin = { name: 'plugin-1' };
       const plugin2: Plugin = { name: 'plugin-2' };
 
-      await initSitecore({
-        settings: validConfig,
+      await initContentSdk({
+        config: validConfig,
         plugins: [plugin1],
       });
 
@@ -196,16 +196,16 @@ describe('init-sitecore', () => {
         siteName: 'new-site',
       };
 
-      await initSitecore({
-        settings: newConfig,
+      await initContentSdk({
+        config: newConfig,
         plugins: [plugin2],
       });
 
-      const settings = getCoreSettings();
-      expect(settings.settings.siteName).to.equal('new-site');
-      expect(settings.plugins.size).to.equal(1);
-      expect(settings.plugins.has('plugin-2')).to.be.true;
-      expect(settings.plugins.has('plugin-1')).to.be.false;
+      const coreContext = getCoreContext();
+      expect(coreContext.config.siteName).to.equal('new-site');
+      expect(coreContext.plugins.size).to.equal(1);
+      expect(coreContext.plugins.has('plugin-2')).to.be.true;
+      expect(coreContext.plugins.has('plugin-1')).to.be.false;
     });
   });
 });

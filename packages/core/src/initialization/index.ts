@@ -1,3 +1,8 @@
-export { initSitecore, getCoreSettings } from './init-sitecore';
-export { CoreSettings } from './types';
-export { Plugin, PluginDependency, PluginEnvironment } from './types';
+export { initContentSdk, getCoreContext } from './init-content-sdk';
+export type {
+  Plugin,
+  PluginDependency,
+  PluginAdapter,
+  InitContentSdkParams,
+  CoreContext,
+} from './types';

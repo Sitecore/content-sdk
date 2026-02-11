@@ -1,18 +1,18 @@
 import { PERSONALIZE_PLUGIN_NAME } from './const';
 import { PACKAGE_VERSION } from '../consts';
 import {
-  BROWSER_ID_COOKIE_NAME,
+  CLIENT_ID_COOKIE_NAME,
   COOKIE_NAME_PREFIX,
 } from '@sitecore-content-sdk/analytics-core/internal';
 import {
   PersonalizeBrowserPlugin,
-  PersonalizeEnvironment,
+  PersonalizeAdapter,
   PersonalizePluginOptions,
-  PersonalizeSettings,
-  WebPersonalizationSettings,
+  WebPersonalizationOptions,
+  PersonalizeOptions,
 } from './types';
 import { EVENTS_PLUGIN_NAME } from '@sitecore-content-sdk/events/internal';
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getCdnUrl } from '../web-personalization/get-cdn-url';
 import { appendScriptWithAttributes } from '@sitecore-content-sdk/analytics-core/utils';
 import { getPersonalizePlugin } from './shared';
@@ -20,123 +20,124 @@ import {
   ANALYTICS_PLUGIN_NAME,
   getAnalyticsPlugin,
 } from '@sitecore-content-sdk/analytics-core/internal';
-import { getGuestId } from './get-guest-id';
+import { getProfileId } from './get-profile-id';
+import { personalize } from '../personalization/personalize';
 
 /**
- * Initializes the personalize plugin with the provided settings.
+ * Initializes the personalize plugin with the provided options.
  * @internal
  */
 async function init() {
-  const coreConfig = getCoreSettings();
-  const coreSettings = coreConfig.settings;
+  const coreConfig = getCoreContext().config;
   const personalizePlugin = getPersonalizePlugin();
-  const personalizeSettings = personalizePlugin.settings as PersonalizeSettings;
-
+  const personalizeOptions = personalizePlugin.options as PersonalizeOptions;
   const analyticsPlugin = getAnalyticsPlugin();
 
   if (
-    analyticsPlugin.settings.cookieSettings.enableCookie &&
-    personalizeSettings.enablePersonalizeCookie &&
-    (!personalizePlugin.environment.getGuestId() ||
-      personalizePlugin.environment.type !== 'browser')
+    analyticsPlugin.options.cookies.enabled &&
+    personalizeOptions.cookies.enabled &&
+    (!personalizePlugin.adapter.getProfileId() || personalizePlugin.adapter.type !== 'browser')
   )
-    await personalizePlugin.environment.setGuestId();
+    await personalizePlugin.adapter.setProfileId();
 
   if (typeof window === 'undefined') return;
 
-  window.scCloudSDK = {
-    ...window.scCloudSDK,
+  window.scContentSDK = {
+    ...window.scContentSDK,
     personalize: {
+      personalize,
       version: PACKAGE_VERSION,
-      settings: {},
+      options: personalizeOptions.webPersonalization ? personalizeOptions.webPersonalization : {},
     },
-    'analytics-core': {
-      ...window.scCloudSDK?.['analytics-core'],
-      getGuestId,
+    analytics_core: {
+      ...window.scContentSDK?.analytics_core,
+      getProfileId,
     },
   };
 
-  if (!personalizeSettings.webPersonalization) return;
+  if (!personalizeOptions.webPersonalization) return;
 
-  window.scCloudSDK.personalize.settings = personalizeSettings.webPersonalization;
-  const cdnUrl = await getCdnUrl(coreSettings.contextId, coreSettings.sitecoreEdgeUrl);
+  window.scContentSDK.personalize.options = personalizeOptions.webPersonalization;
+  const cdnUrl = await getCdnUrl(coreConfig.contextId, coreConfig.edgeUrl);
 
   if (!cdnUrl) return;
 
   appendScriptWithAttributes({
-    async: personalizeSettings.webPersonalization.async,
+    async: personalizeOptions.webPersonalization.async,
     src: cdnUrl,
   });
 }
 
 /**
  * Parameters for creating a personalize browser plugin.
+ * @public
  */
-interface PersonalizeBrowserPluginParams {
-  environment: PersonalizeEnvironment;
-  settings?: PersonalizePluginOptions;
+export interface PersonalizeBrowserPluginParams {
+  /**
+   * The adapter to be used for the personalize browser plugin.
+   */
+  adapter: PersonalizeAdapter;
+  /**
+   * Optional configuration options for the personalize browser plugin.
+   */
+  options?: PersonalizePluginOptions;
 }
 
 /**
- * Creates a personalize browser plugin with the provided environment and settings.
- * @param {PersonalizeBrowserPluginParams} params - The personalize plugin parameters including environment and settings.
+ * Creates a personalize browser plugin with the provided adapter and options.
+ * @param {PersonalizeBrowserPluginParams} params - The personalize plugin parameters including adapter and options.
  * @returns {PersonalizeBrowserPlugin} The configured personalize browser plugin.
  * @public
  */
-export function personalizeBrowserPlugin({
-  environment,
-  settings,
-}: PersonalizeBrowserPluginParams): PersonalizeBrowserPlugin {
-  const cookieSettings = {
-    name: {
-      guestId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}_personalize`,
-    },
+export function personalizeBrowserPlugin(
+  params: PersonalizeBrowserPluginParams
+): PersonalizeBrowserPlugin {
+  const { adapter, options } = params;
+  const cookies = {
+    enabled: options?.enablePersonalizeCookie ?? false,
+    name: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}_personalize`,
   };
 
   const dependencies = [ANALYTICS_PLUGIN_NAME];
 
-  let webPersonalization: false | WebPersonalizationSettings;
+  let webPersonalization: false | WebPersonalizationOptions;
 
-  if (settings?.webPersonalization) {
+  if (options?.webPersonalization) {
     dependencies.push(EVENTS_PLUGIN_NAME);
 
     webPersonalization = {
-      async: (settings.webPersonalization as WebPersonalizationSettings).async ?? true,
-      defer: (settings.webPersonalization as WebPersonalizationSettings).defer ?? false,
-      language: (settings.webPersonalization as WebPersonalizationSettings).language ?? undefined,
+      async: (options.webPersonalization as WebPersonalizationOptions).async ?? true,
+      defer: (options.webPersonalization as WebPersonalizationOptions).defer ?? false,
+      language: (options.webPersonalization as WebPersonalizationOptions).language ?? undefined,
     };
   }
   webPersonalization ??= false as const;
 
-  const personalizeSettings = {
+  const resolvedOptions = {
     webPersonalization,
-    enablePersonalizeCookie: settings?.enablePersonalizeCookie ?? false,
-    cookieSettings,
+    cookies,
   };
 
   return {
     name: PERSONALIZE_PLUGIN_NAME,
     init,
     dependencies,
-    settings: personalizeSettings,
-    environment,
+    options: resolvedOptions,
+    adapter,
   };
 }
 
 declare global {
   // eslint-disable-next-line no-unused-vars
   interface AnalyticsCore {
-    getGuestId: typeof getGuestId;
+    getProfileId: typeof getProfileId;
   }
   // eslint-disable-next-line no-unused-vars
-  interface ScCloudSDK {
+  interface ScContentSDK {
     personalize: {
-      settings?: {
-        async?: boolean;
-        defer?: boolean;
-      };
+      personalize: typeof personalize;
+      options?: Partial<WebPersonalizationOptions>;
       version: string;
     };
   }
 }
-

@@ -3,6 +3,7 @@
  * @param {Data} data The source object.
  * @param {Keys[]} keys Keys to retain from the source object.
  * @returns {Pick<Data, Keys>} Object containing only the specified keys.
+ * @internal
  */
 export function pick<Data extends object, Keys extends keyof Data>(
   data: Data,

@@ -2,11 +2,13 @@ import { personalizeServerPlugin } from './plugin-server';
 import { PERSONALIZE_PLUGIN_NAME } from './const';
 import * as sharedModule from './shared';
 import * as analyticsPluginModule from '@sitecore-content-sdk/analytics-core/internal';
-import { PersonalizeEnvironment } from './types';
+import { PersonalizeAdapter } from './types';
 import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreSettings: jest.fn(),
+  getCoreContext: jest.fn(),
+  debugModule: jest.fn(() => jest.fn()),
+  debugNamespace: 'content-sdk',
 }));
 
 jest.mock('./shared', () => ({
@@ -16,28 +18,27 @@ jest.mock('./shared', () => ({
 jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
   ANALYTICS_PLUGIN_NAME: 'AnalyticsPlugin',
   COOKIE_NAME_PREFIX: 'sc_',
-  BROWSER_ID_COOKIE_NAME: 'cid',
-
+  CLIENT_ID_COOKIE_NAME: 'cid',
   getAnalyticsPlugin: jest.fn(),
 }));
 
 describe('personalizeServerPlugin', () => {
-  const mockGetGuestId = jest.fn() as jest.Mock<PersonalizeEnvironment['getGuestId']>;
-  const mockSetGuestId = jest.fn() as jest.Mock<PersonalizeEnvironment['setGuestId']>;
+  const mockGetProfileId = jest.fn() as jest.Mock<PersonalizeAdapter['getProfileId']>;
+  const mockSetProfileId = jest.fn() as jest.Mock<PersonalizeAdapter['setProfileId']>;
 
-  const createMockEnvironment = (): PersonalizeEnvironment => ({
+  const createMockAdapter = (): PersonalizeAdapter => ({
     type: 'server',
-    getGuestId: mockGetGuestId,
-    setGuestId: mockSetGuestId,
+    getProfileId: mockGetProfileId,
+    setProfileId: mockSetProfileId,
   });
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
-        enableCookie: true,
+    options: {
+      cookies: {
+        enabled: true,
         expiryDays: 730,
         domain: '.example.com',
-        name: { browserId: 'sc_cid' },
+        name: 'sc_cid',
       },
     },
   };
@@ -49,97 +50,95 @@ describe('personalizeServerPlugin', () => {
 
   describe('plugin creation', () => {
     it('should create a plugin with the correct name', () => {
-      const environment = createMockEnvironment();
-      const plugin = personalizeServerPlugin({ environment });
+      const adapter = createMockAdapter();
+      const plugin = personalizeServerPlugin({ adapter });
 
       expect(plugin.name).toBe(PERSONALIZE_PLUGIN_NAME);
     });
 
     it('should create a plugin with analytics plugin as dependency', () => {
-      const environment = createMockEnvironment();
-      const plugin = personalizeServerPlugin({ environment });
+      const adapter = createMockAdapter();
+      const plugin = personalizeServerPlugin({ adapter });
 
       expect(plugin.dependencies).toEqual(['AnalyticsPlugin']);
     });
 
-    it('should create a plugin with the correct environment', () => {
-      const environment = createMockEnvironment();
-      const plugin = personalizeServerPlugin({ environment });
+    it('should create a plugin with the correct adapter', () => {
+      const adapter = createMockAdapter();
+      const plugin = personalizeServerPlugin({ adapter });
 
-      expect(plugin.environment).toBe(environment);
+      expect(plugin.adapter).toBe(adapter);
     });
 
     it('should create a plugin with default settings when no settings provided', () => {
-      const environment = createMockEnvironment();
-      const plugin = personalizeServerPlugin({ environment });
+      const adapter = createMockAdapter();
+      const plugin = personalizeServerPlugin({ adapter });
 
-      expect(plugin.settings).toEqual({
-        enablePersonalizeCookie: false,
-        cookieSettings: {
-          name: {
-            guestId: 'sc_cid_personalize',
-          },
+      expect(plugin.options).toEqual({
+        cookies: {
+          enabled: false,
+          name: 'sc_cid_personalize',
         },
       });
     });
 
     it('should create a plugin with enablePersonalizeCookie true', () => {
-      const environment = createMockEnvironment();
+      const adapter = createMockAdapter();
       const plugin = personalizeServerPlugin({
-        environment,
-        settings: { enablePersonalizeCookie: true },
+        adapter,
+        options: { enablePersonalizeCookie: true },
       });
 
-      expect(plugin.settings.enablePersonalizeCookie).toBe(true);
+      expect(plugin.options.cookies.enabled).toBe(true);
     });
 
     it('should create a plugin with enablePersonalizeCookie false', () => {
-      const environment = createMockEnvironment();
+      const adapter = createMockAdapter();
       const plugin = personalizeServerPlugin({
-        environment,
-        settings: { enablePersonalizeCookie: false },
+        adapter,
+        options: { enablePersonalizeCookie: false },
       });
 
-      expect(plugin.settings.enablePersonalizeCookie).toBe(false);
+      expect(plugin.options.cookies.enabled).toBe(false);
     });
 
     it('should have an init function', () => {
-      const environment = createMockEnvironment();
-      const plugin = personalizeServerPlugin({ environment });
+      const adapter = createMockAdapter();
+      const plugin = personalizeServerPlugin({ adapter });
 
       expect(typeof plugin.init).toBe('function');
     });
   });
 
   describe('init', () => {
-    it('should call setGuestId when both enableCookie and enablePersonalizeCookie are true', async () => {
-      const environment = createMockEnvironment();
-      mockSetGuestId.mockResolvedValue(undefined);
+    it('should call setProfileId when both enableCookie and enablePersonalizeCookie are true', async () => {
+      const adapter = createMockAdapter();
+      mockSetProfileId.mockResolvedValue(undefined);
 
       const plugin = personalizeServerPlugin({
-        environment,
-        settings: { enablePersonalizeCookie: true },
+        adapter,
+        options: { enablePersonalizeCookie: true },
       });
 
       (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
 
       await plugin.init();
 
-      expect(mockSetGuestId).toHaveBeenCalledTimes(1);
+      expect(mockSetProfileId).toHaveBeenCalledTimes(1);
     });
 
-    it('should not call setGuestId when enableCookie is false', async () => {
-      const environment = createMockEnvironment();
+    it('should not call setProfileId when enableCookie is false', async () => {
+      const adapter = createMockAdapter();
 
       const plugin = personalizeServerPlugin({
-        environment,
-        settings: { enablePersonalizeCookie: true },
+        adapter,
+        options: { enablePersonalizeCookie: true },
       });
 
       (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
       (analyticsPluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue({
-        settings: {
-          cookieSettings: {
+        options: {
+          cookies: {
             enableCookie: false,
           },
         },
@@ -147,23 +146,22 @@ describe('personalizeServerPlugin', () => {
 
       await plugin.init();
 
-      expect(mockSetGuestId).not.toHaveBeenCalled();
+      expect(mockSetProfileId).not.toHaveBeenCalled();
     });
 
-    it('should not call setGuestId when enablePersonalizeCookie is false', async () => {
-      const environment = createMockEnvironment();
+    it('should not call setProfileId when enablePersonalizeCookie is false', async () => {
+      const adapter = createMockAdapter();
 
       const plugin = personalizeServerPlugin({
-        environment,
-        settings: { enablePersonalizeCookie: false },
+        adapter,
+        options: { enablePersonalizeCookie: false },
       });
 
       (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
 
       await plugin.init();
 
-      expect(mockSetGuestId).not.toHaveBeenCalled();
+      expect(mockSetProfileId).not.toHaveBeenCalled();
     });
   });
 });
-

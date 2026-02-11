@@ -1,91 +1,111 @@
-import { AnalyticsEnvironment, AnalyticsPlugin } from './types';
+import { AnalyticsAdapter, AnalyticsPlugin } from './types';
 import {
-  BROWSER_ID_COOKIE_NAME,
+  CLIENT_ID_COOKIE_NAME,
   COOKIE_NAME_PREFIX,
   DEFAULT_COOKIE_EXPIRY_DAYS,
   LIBRARY_VERSION,
 } from '../consts';
 import { ANALYTICS_PLUGIN_NAME } from './const';
-import { getCoreSettings, debug } from '@sitecore-content-sdk/core';
-import { getBrowserId } from '../browser-id/get-browser-id';
+import { getCoreContext, debug, CoreContext } from '@sitecore-content-sdk/core';
+import { getClientId } from '../client-id/get-client-id';
 const debugInit = debug.init;
 
 /**
  * Parameters for creating an analytics plugin.
+ * @public
  */
-interface AnalyticsPluginOptions {
-  settings?: {
+export interface AnalyticsPluginParams {
+  /**
+   * Optional configuration options for the analytics plugin.
+   */
+  options?: {
+    /**
+     * The domain for which the cookie is valid.
+     */
     cookieDomain?: string;
+    /**
+     * The number of days until the cookie expires.
+     */
     cookieExpiryDays?: number;
+    /**
+     * The path for which the cookie is valid.
+     */
     cookiePath?: string;
+    /**
+     * Whether the cookie should be set.
+     */
     enableCookie?: boolean;
+    /**
+     * The timeout duration for the analytics plugin, in milliseconds.
+     */
     timeout?: number;
   };
-  environment: AnalyticsEnvironment;
+  /**
+   * The adapter to be used for the analytics plugin.
+   */
+  adapter: AnalyticsAdapter;
 }
 
 /**
  * Creates an analytics plugin with the provided options.
- * @param {AnalyticsPluginOptions} options - The parameters for the analytics plugin.
+ * @param {AnalyticsPluginParams} params - The parameters for the analytics plugin.
  * @returns {AnalyticsPlugin} The analytics plugin instance.
  * @public
  */
-export function analyticsPlugin(options: AnalyticsPluginOptions): AnalyticsPlugin {
-  const { settings, environment } = options;
+export function analyticsPlugin(params: AnalyticsPluginParams): AnalyticsPlugin {
+  const { options, adapter } = params;
 
-  const analyticsSettings = {
-    cookieSettings: {
-      domain: settings?.cookieDomain,
-      enableCookie: settings?.enableCookie ?? false,
-      expiryDays: settings?.cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
-      name: {
-        browserId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`,
-      },
-      path: settings?.cookiePath || '/',
+  const resolvedOptions = {
+    cookies: {
+      domain: options?.cookieDomain,
+      enabled: options?.enableCookie ?? false,
+      expiryDays: options?.cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
+      name: `${COOKIE_NAME_PREFIX}${CLIENT_ID_COOKIE_NAME}`,
+      path: options?.cookiePath || '/',
     },
-    timeout: settings?.timeout,
+    timeout: options?.timeout,
   };
 
   return {
     name: ANALYTICS_PLUGIN_NAME,
     init,
-    settings: analyticsSettings,
-    environment,
+    options: resolvedOptions,
+    adapter,
   };
 }
 
 /**
- * Initializes the analytics plugin with the provided settings.
+ * Initializes the analytics plugin with the provided options.
  * @internal
  */
 async function init() {
   debugInit(`Initializing ${ANALYTICS_PLUGIN_NAME}`);
-  const coreConfig = getCoreSettings();
+  const coreContext = getCoreContext();
   const analyticsPlugin = getAnalyticsPlugin();
 
-  if (!analyticsPlugin.settings.cookieSettings.enableCookie) {
+  if (!analyticsPlugin.options.cookies.enabled) {
     debugInit(
       `Cookies are disabled for ${ANALYTICS_PLUGIN_NAME}. If this was not intentional, set "enableCookie" to "true".`
     );
     return;
   }
 
-  const environment = analyticsPlugin.environment;
+  const adapter = analyticsPlugin.adapter;
 
-  if (!environment.getBrowserId() || analyticsPlugin.environment.type !== 'browser') {
-    await environment.setBrowserId();
+  if (!adapter.getClientId() || analyticsPlugin.adapter.type !== 'browser') {
+    await adapter.setClientId();
     debugInit(`Cookie set for ${ANALYTICS_PLUGIN_NAME}`);
   }
 
-  if (analyticsPlugin.environment.type === 'browser')
-    window.scCloudSDK = {
-      ...window.scCloudSDK,
-      'analytics-core': {
-        getBrowserId,
-        settings: {
-          siteName: coreConfig.settings.siteName,
-          sitecoreEdgeContextId: coreConfig.settings.contextId,
-          sitecoreEdgeUrl: coreConfig.settings.sitecoreEdgeUrl,
+  if (analyticsPlugin.adapter.type === 'browser')
+    window.scContentSDK = {
+      ...window.scContentSDK,
+      analytics_core: {
+        getClientId,
+        options: {
+          siteName: coreContext.config.siteName,
+          contextId: coreContext.config.contextId,
+          edgeUrl: coreContext.config.edgeUrl,
         },
         version: LIBRARY_VERSION,
       },
@@ -93,17 +113,16 @@ async function init() {
 }
 
 /**
- * Retrieves the analytics plugin instance from the core configuration.
+ * Retrieves the analytics plugin instance from the core context.
  * @returns {AnalyticsPlugin} The analytics plugin instance.
  * @internal
  */
 export function getAnalyticsPlugin(): AnalyticsPlugin {
-  const coreConfig = getCoreSettings();
-  const plugin = coreConfig.plugins.get(ANALYTICS_PLUGIN_NAME) as AnalyticsPlugin;
+  const plugin = getCoreContext().plugins.get(ANALYTICS_PLUGIN_NAME) as AnalyticsPlugin | undefined;
 
   if (!plugin)
     throw new Error(
-      `[IE-0004] - You must first add "${ANALYTICS_PLUGIN_NAME}" to the "initSitecore()" "plugins" array.`
+      `[IE-004] - You must first add "${ANALYTICS_PLUGIN_NAME}" to the "initContentSdk()" "plugins" array.`
     );
 
   return plugin;
@@ -111,20 +130,15 @@ export function getAnalyticsPlugin(): AnalyticsPlugin {
 
 declare global {
   interface AnalyticsCore {
-    getBrowserId: typeof getBrowserId;
-    settings: {
-      siteName: string;
-      sitecoreEdgeContextId: string;
-      sitecoreEdgeUrl: string;
-    };
+    getClientId: typeof getClientId;
+    options: CoreContext['config'];
     version: string;
   }
-  interface ScCloudSDK {
-    'analytics-core': AnalyticsCore;
+  interface ScContentSDK {
+    analytics_core: AnalyticsCore;
   }
   // eslint-disable-next-line no-unused-vars
   interface Window {
-    scCloudSDK: ScCloudSDK;
+    scContentSDK: ScContentSDK;
   }
 }
-

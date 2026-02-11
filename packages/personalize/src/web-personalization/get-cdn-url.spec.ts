@@ -2,8 +2,8 @@ import { getCdnUrl } from './get-cdn-url';
 import { jest, expect } from '@jest/globals';
 
 describe('getCdnUrl', () => {
-  const sitecoreEdgeContextId = '12345';
-  const sitecoreEdgeUrl = 'https://example.com';
+  const contextId = '12345';
+  const edgeUrl = 'https://example.com';
 
   const mockResponse = 'https://cdn.example.com';
 
@@ -21,11 +21,11 @@ describe('getCdnUrl', () => {
   });
 
   it('should return the correct request URL', async () => {
-    const result = await getCdnUrl(sitecoreEdgeContextId, sitecoreEdgeUrl);
+    const result = await getCdnUrl(contextId, edgeUrl);
 
     expect(fetch).toHaveBeenCalledWith('https://example.com/v1/personalize/cdn-url?client_key=', {
       headers: {
-        'x-sitecore-contextid': sitecoreEdgeContextId,
+        'x-sitecore-contextid': contextId,
       },
     });
     expect(result).toEqual(mockResponse);
@@ -39,11 +39,11 @@ describe('getCdnUrl', () => {
       })
     ) as typeof fetch;
 
-    const result = await getCdnUrl(sitecoreEdgeContextId, sitecoreEdgeUrl);
+    const result = await getCdnUrl(contextId, edgeUrl);
 
     expect(fetch).toHaveBeenCalledWith('https://example.com/v1/personalize/cdn-url?client_key=', {
       headers: {
-        'x-sitecore-contextid': sitecoreEdgeContextId,
+        'x-sitecore-contextid': contextId,
       },
     });
     expect(result).toEqual(null);
@@ -56,7 +56,7 @@ describe('getCdnUrl', () => {
       .fn()
       .mockImplementationOnce(() => Promise.reject(mockError)) as typeof fetch;
 
-    const result = await getCdnUrl(sitecoreEdgeContextId, sitecoreEdgeUrl);
+    const result = await getCdnUrl(contextId, edgeUrl);
     expect(result).toEqual(null);
   });
 });

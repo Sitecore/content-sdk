@@ -7,13 +7,14 @@ import { ERROR_MESSAGES } from '../consts';
  * @param {RequestInit} fetchOptions Options forwarded to the Fetch API.
  * @returns {Promise<Response | null>} Fetch response or null when the request is aborted or times out.
  * @throws {Error} When the timeout value is not a non-negative integer or when the request aborts.
+ * @internal
  */
 export async function fetchWithTimeout(
   url: string,
   timeout: number,
   fetchOptions: RequestInit
 ): Promise<Response | null> {
-  if (!Number.isInteger(timeout) || timeout < 0) throw new Error(ERROR_MESSAGES.IV_0006);
+  if (!Number.isInteger(timeout) || timeout < 0) throw new Error(ERROR_MESSAGES.IV_002);
 
   const abortController = new AbortController();
   const signal = abortController.signal;
@@ -28,7 +29,7 @@ export async function fetchWithTimeout(
       return response;
     })
     .catch((error) => {
-      if (error.name === 'AbortError') throw new Error(ERROR_MESSAGES.IE_0002);
+      if (error.name === 'AbortError') throw new Error(ERROR_MESSAGES.IE_003);
       return null;
     });
 }

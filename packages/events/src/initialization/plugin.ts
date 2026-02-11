@@ -1,4 +1,4 @@
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import { EVENTS_PLUGIN_NAME } from './const';
 import { PACKAGE_VERSION } from '../consts';
 import { event } from '../events/custom-event/event';
@@ -12,13 +12,13 @@ import { ANALYTICS_PLUGIN_NAME } from '@sitecore-content-sdk/analytics-core/inte
 import { EventsPlugin } from './types';
 
 /**
- * Initializes the analytics plugin with the provided settings.
+ * Initializes the events plugin with the provided options.
  * @internal
  */
 async function init() {
   if (typeof window !== 'undefined')
-    window.scCloudSDK = {
-      ...window.scCloudSDK,
+    window.scContentSDK = {
+      ...window.scContentSDK,
       events: {
         addToEventQueue,
         clearEventQueue,
@@ -33,7 +33,7 @@ async function init() {
 }
 
 /**
- * Creates an events plugin with the provided settings.
+ * Creates an events plugin with the provided options.
  * @returns {EventsPlugin} The events plugin instance.
  * @public
  */
@@ -46,24 +46,23 @@ export function eventsPlugin(): EventsPlugin {
 }
 
 /**
- * Retrieves the events plugin instance from the core configuration.
+ * Retrieves the events plugin instance from the core context.
  * @returns {EventsPlugin} The events plugin instance.
  * @internal
  */
 export function getEventsPlugin(): EventsPlugin {
-  const coreConfig = getCoreSettings();
-  const plugin = coreConfig.plugins.get(EVENTS_PLUGIN_NAME) as EventsPlugin;
+  const plugin = getCoreContext().plugins.get(EVENTS_PLUGIN_NAME) as EventsPlugin | undefined;
 
   if (!plugin)
     throw new Error(
-      `[IE-0004] - You must first add "${EVENTS_PLUGIN_NAME}" to the "initSitecore()" "plugins" array.`
+      `[IE-004] You must first add "${EVENTS_PLUGIN_NAME}" to the "initContentSdk()" "plugins" array.`
     );
   return plugin;
 }
 
 declare global {
   // eslint-disable-next-line no-unused-vars
-  interface ScCloudSDK {
+  interface ScContentSDK {
     events: {
       addToEventQueue: typeof addToEventQueue;
       clearEventQueue: typeof clearEventQueue;

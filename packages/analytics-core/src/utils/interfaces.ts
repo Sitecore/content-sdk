@@ -1,5 +1,6 @@
 /**
- * A reusable type that accepts only basic types and arrays of those
+ * A reusable type that accepts only basic types and arrays of those.
+ * @public
  */
 export type BasicTypes =
   | string

@@ -20,26 +20,26 @@ jest.mock('../../debug', () => {
 });
 
 describe('form event', () => {
-  const mockEnvironment = {
-    getBrowserId: jest.fn(),
+  const mockAdapter = {
+    getClientId: jest.fn(),
   };
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
+    options: {
+      cookies: {
         domain: 'cDomain',
         expiryDays: 730,
-        name: { browserId: 'bid_name' },
+        name: { clientId: 'cid_name' },
         path: '/',
       },
     },
-    environment: mockEnvironment,
+    adapter: mockAdapter,
   };
 
-  const mockCoreSettings = {
-    settings: {
+  const mockCoreContext = {
+    config: {
       contextId: '123',
-      sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
+      edgeUrl: 'https://edge-platform.sitecorecloud.io',
       siteName: '456',
     },
     readyPromise: Promise.resolve(),
@@ -50,7 +50,7 @@ describe('form event', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue(mockCoreSettings as any);
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue(mockCoreContext as any);
     jest
       .spyOn(analyticsPluginsModule, 'getAnalyticsPlugin')
       .mockReturnValue(mockAnalyticsPlugin as any);
@@ -63,7 +63,7 @@ describe('form event', () => {
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+    mockAdapter.getClientId.mockReturnValue('test_id');
 
     const expectedBody = JSON.stringify({
       type: 'FORM',
@@ -92,13 +92,13 @@ describe('form event', () => {
     );
   });
 
-  it('should use empty string for id when getBrowserId returns null', async () => {
+  it('should use empty string for id when getClientId returns null', async () => {
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ ref: 'ref' } as EPResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
-    mockEnvironment.getBrowserId.mockReturnValue(null);
+    mockAdapter.getClientId.mockReturnValue(null);
 
     await form('1234', 'VIEWED', 'test');
 
@@ -110,18 +110,18 @@ describe('form event', () => {
     );
   });
 
-  it('should wait for core settings ready promise', async () => {
+  it('should wait for core context ready promise', async () => {
     let resolveReady: () => void;
     const readyPromise = new Promise<void>((resolve) => {
       resolveReady = resolve;
     });
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue({
-      ...mockCoreSettings,
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue({
+      ...mockCoreContext,
       readyPromise,
     } as any);
 
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+    mockAdapter.getClientId.mockReturnValue('test_id');
 
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ ref: 'ref' } as EPResponse),
@@ -144,7 +144,7 @@ describe('form event', () => {
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
+    mockAdapter.getClientId.mockReturnValue('test_id');
 
     await form('1234', 'SUBMITTED', 'test');
 

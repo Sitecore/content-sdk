@@ -1,12 +1,13 @@
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import { eventQueue } from './eventStorage';
 import { getEventsPlugin } from '../initialization/plugin';
 
 /**
  * Deletes the queue from session.
+ * @public
  */
 export async function clearEventQueue(): Promise<void> {
-  await getCoreSettings().readyPromise;
+  await getCoreContext().readyPromise;
   getEventsPlugin();
 
   eventQueue.clearQueue();

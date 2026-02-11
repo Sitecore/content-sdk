@@ -1,5 +1,6 @@
 /**
- * The response object that Sitecore EP returns.
+ * The response object that Sitecore Edge Proxy returns.
+ * @public
  */
 export interface EPResponse {
   ref: string;
@@ -9,13 +10,24 @@ export interface EPResponse {
   customer_ref: string;
 }
 
-export interface ProxySettings {
-  browserId: string;
-  guestId: string;
+/**
+ * The visitor IDs returned from the Edge Proxy.
+ * @public
+ */
+export interface VisitorIds {
+  /**
+   * The client ID associated with the visitor.
+   */
+  clientId: string;
+  /**
+   * The profile ID associated with the visitor.
+   */
+  profileId: string;
 }
 
 /**
  * Interface for supporting response `IncomingMessage` HTTP node type.
+ * @internal
  */
 export interface Infer {
   language: () => string | undefined;
@@ -24,6 +36,7 @@ export interface Infer {
 
 /**
  * Interface for supporting the debug object.
+ * @internal
  */
 export interface DebugResponse {
   headers?: {

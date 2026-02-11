@@ -4,18 +4,20 @@ import * as coreModule from '@sitecore-content-sdk/core';
 import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreSettings: jest.fn(),
+  getCoreContext: jest.fn(),
+  debugModule: jest.fn(() => jest.fn()),
+  debugNamespace: 'content-sdk',
 }));
 
 describe('shared', () => {
-  const mockCoreSettings = {
+  const mockCoreContext = {
     plugins: new Map(),
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (coreModule.getCoreSettings as jest.Mock).mockReturnValue(mockCoreSettings);
-    mockCoreSettings.plugins.clear();
+    (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
+    mockCoreContext.plugins.clear();
   });
 
   describe('getPersonalizePlugin', () => {
@@ -25,9 +27,9 @@ describe('shared', () => {
         init: jest.fn(),
         dependencies: [],
         settings: {},
-        environment: {},
+        adapter: {},
       };
-      mockCoreSettings.plugins.set(PERSONALIZE_PLUGIN_NAME, mockPlugin);
+      mockCoreContext.plugins.set(PERSONALIZE_PLUGIN_NAME, mockPlugin);
 
       const result = getPersonalizePlugin();
 
@@ -35,10 +37,9 @@ describe('shared', () => {
     });
 
     it('should throw an error when personalize plugin is not registered', () => {
-      mockCoreSettings.plugins.clear();
+      mockCoreContext.plugins.clear();
 
       expect(() => getPersonalizePlugin()).toThrow('Personalize plugin is not registered');
     });
   });
 });
-

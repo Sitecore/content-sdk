@@ -14,6 +14,7 @@ const reHasEscapedHtml = new RegExp(reEscapedHtml.source);
  * Converts the HTML entities `&amp;`, `&lt;`, `&gt;`, `&quot;`, and `&#39;` in `string` to their corresponding characters.
  * @param {string} string The string to unescape.
  * @returns {string} The unescaped string.
+ * @internal
  */
 export function unescape(string: string = ''): string {
   return reHasEscapedHtml.test(string)

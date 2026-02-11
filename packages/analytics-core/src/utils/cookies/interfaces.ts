@@ -1,5 +1,6 @@
 /**
  * Cookie properties
+ * @internal
  */
 export interface CookieProperties {
   maxAge: number;
@@ -13,6 +14,7 @@ export interface CookieProperties {
 
 /**
  * Cookie attributes
+ * @internal
  */
 export interface CookieAttributes {
   maxAge?: number;
@@ -26,6 +28,7 @@ export interface CookieAttributes {
 
 /**
  * Interface that represents a cookie (name, value)
+ * @internal
  */
 export interface Cookie {
   name: string;

@@ -10,7 +10,7 @@ jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
   getAnalyticsPlugin: jest.fn(),
 }));
 jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreSettings: jest.fn(),
+  getCoreContext: jest.fn(),
   debugModule: jest.fn(() => jest.fn()),
   debugNamespace: 'sitecore-content-sdk',
 }));
@@ -20,8 +20,8 @@ jest.mock('../initialization/shared', () => ({
 
 describe('personalize', () => {
   describe('new init', () => {
-    const browserId = 'browser_id_value';
-    const guestId = 'guest_id_value';
+    const clientId = 'client_id_value';
+    const profileId = 'profile-id_value';
     const personalizeData = {
       channel: 'WEB',
       currency: 'EUR',
@@ -31,38 +31,38 @@ describe('personalize', () => {
       pointOfSale: 'spinair.com',
     };
 
-    const settings = {
+    const config = {
       siteName: '456',
       contextId: '123',
-      sitecoreEdgeUrl: '',
+      edgeUrl: '',
     };
 
-    const mockEnvironment = {
-      getBrowserId: jest.fn().mockReturnValue(browserId),
+    const mockAdapter = {
+      getClientId: jest.fn().mockReturnValue(clientId),
       location: {
         getSearchParams: jest.fn().mockReturnValue(''),
       },
     };
 
-    const mockPersonalizeEnvironment = {
-      getGuestId: jest.fn().mockReturnValue(guestId),
+    const mockPersonalizeAdapter = {
+      getProfileId: jest.fn().mockReturnValue(profileId),
       getUserAgent: jest.fn().mockReturnValue('test-user-agent'),
     };
 
-    const mockCoreSettings = {
-      settings,
+    const mockCoreContext = {
+      config,
       readyPromise: Promise.resolve(),
     };
 
     beforeEach(() => {
       jest.clearAllMocks();
 
-      (coreModule.getCoreSettings as jest.Mock).mockReturnValue(mockCoreSettings);
+      (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
       (analyticsPluginsModule.getAnalyticsPlugin as jest.Mock).mockReturnValue({
-        environment: mockEnvironment,
+        adapter: mockAdapter,
       });
       (personalizePluginModule.getPersonalizePlugin as jest.Mock).mockReturnValue({
-        environment: mockPersonalizeEnvironment,
+        adapter: mockPersonalizeAdapter,
       });
     });
 
@@ -76,14 +76,14 @@ describe('personalize', () => {
 
       await personalize(personalizeData);
 
-      expect(coreModule.getCoreSettings).toHaveBeenCalledTimes(1);
+      expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(Personalizer).toHaveBeenCalledTimes(1);
-      expect(Personalizer).toHaveBeenCalledWith(browserId, guestId);
+      expect(Personalizer).toHaveBeenCalledWith(clientId, profileId);
     });
 
-    it('should throw error if settings have not been configured properly', async () => {
-      (coreModule.getCoreSettings as jest.Mock).mockImplementation(() => {
+    it('should throw error if config have not been configured properly', async () => {
+      (coreModule.getCoreContext as jest.Mock).mockImplementation(() => {
         throw new Error('Test error');
       });
 
@@ -102,13 +102,13 @@ describe('personalize', () => {
 
       const expectedOpts = { timeout: 100, userAgent: 'test-user-agent' };
       const expectedData = personalizeData;
-      const expectedSettings = settings;
+      const expectedConfig = config;
 
-      expect(coreModule.getCoreSettings).toHaveBeenCalledTimes(1);
+      expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
         expectedData,
-        expectedSettings,
+        expectedConfig,
         '',
         expectedOpts
       );
@@ -126,13 +126,13 @@ describe('personalize', () => {
 
       const expectedOpts = { timeout: undefined, userAgent: 'test-user-agent' };
       const expectedData = personalizeData;
-      const expectedSettings = settings;
+      const expectedConfig = config;
 
-      expect(coreModule.getCoreSettings).toHaveBeenCalledTimes(1);
+      expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
         expectedData,
-        expectedSettings,
+        expectedConfig,
         '',
         expectedOpts
       );
@@ -140,7 +140,7 @@ describe('personalize', () => {
 
     it('should call getInteractiveExperience with search params', async () => {
       const searchParams = '?utm_campaign=campaign&utm_medium=email';
-      mockEnvironment.location.getSearchParams.mockReturnValue(searchParams);
+      mockAdapter.location.getSearchParams.mockReturnValue(searchParams);
 
       const getInteractiveExperienceDataSpy = jest.spyOn(
         Personalizer.prototype,
@@ -149,42 +149,42 @@ describe('personalize', () => {
 
       await personalize(personalizeData);
 
-      expect(coreModule.getCoreSettings).toHaveBeenCalledTimes(1);
+      expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
         personalizeData,
-        settings,
+        config,
         searchParams,
         { timeout: undefined, userAgent: 'test-user-agent' }
       );
     });
 
-    it('should use empty string for browserId when getBrowserId returns null', async () => {
-      mockEnvironment.getBrowserId.mockReturnValue(null);
+    it('should use empty string for clientId when getClientId returns null', async () => {
+      mockAdapter.getClientId.mockReturnValue(null);
 
       await personalize(personalizeData);
 
-      expect(Personalizer).toHaveBeenCalledWith('', guestId);
+      expect(Personalizer).toHaveBeenCalledWith('', profileId);
     });
 
-    it('should use empty string for guestId when getGuestId returns null', async () => {
-      mockEnvironment.getBrowserId.mockReturnValue(browserId);
-      mockPersonalizeEnvironment.getGuestId.mockReturnValue(null);
+    it('should use empty string for profileId when getProfileId returns null', async () => {
+      mockAdapter.getClientId.mockReturnValue(clientId);
+      mockPersonalizeAdapter.getProfileId.mockReturnValue(null);
 
       await personalize(personalizeData);
 
-      expect(Personalizer).toHaveBeenCalledWith(browserId, '');
+      expect(Personalizer).toHaveBeenCalledWith(clientId, '');
     });
 
     it('should handle undefined getUserAgent method', async () => {
-      const mockPersonalizeEnvironmentWithoutUserAgent = {
-        getGuestId: jest.fn().mockReturnValue(guestId),
+      const mockPersonalizeAdapterWithoutUserAgent = {
+        getProfileId: jest.fn().mockReturnValue(profileId),
       };
 
       (personalizePluginModule.getPersonalizePlugin as jest.Mock).mockReturnValue({
-        environment: mockPersonalizeEnvironmentWithoutUserAgent,
+        adapter: mockPersonalizeAdapterWithoutUserAgent,
       });
-      mockEnvironment.location.getSearchParams.mockReturnValue('');
+      mockAdapter.location.getSearchParams.mockReturnValue('');
 
       const getInteractiveExperienceDataSpy = jest.spyOn(
         Personalizer.prototype,
@@ -193,20 +193,20 @@ describe('personalize', () => {
 
       await personalize(personalizeData);
 
-      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', {
+      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, config, '', {
         timeout: undefined,
         userAgent: undefined,
       });
     });
 
-    it('should wait for core settings ready promise', async () => {
+    it('should wait for core context ready promise', async () => {
       let resolveReady: () => void;
       const readyPromise = new Promise<void>((resolve) => {
         resolveReady = resolve;
       });
 
-      (coreModule.getCoreSettings as jest.Mock).mockReturnValue({
-        ...mockCoreSettings,
+      (coreModule.getCoreContext as jest.Mock).mockReturnValue({
+        ...mockCoreContext,
         readyPromise,
       });
 

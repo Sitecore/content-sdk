@@ -1,15 +1,17 @@
-import { personalizeServerEnvironment } from './environment-server';
+import { personalizeServerAdapter } from './server-adapter';
 import * as sharedModule from './shared';
 import * as coreModule from '@sitecore-content-sdk/core';
 import * as analyticsPluginModule from '@sitecore-content-sdk/analytics-core/internal';
 import * as internalModule from '@sitecore-content-sdk/analytics-core/internal';
 import * as utilsModule from '@sitecore-content-sdk/analytics-core/utils';
-import * as fetchGuestIdModule from '../guest-id/fetch-guest-id-from-edge-proxy';
+import * as fetchProfileIdModule from '../profile-id/fetch-profile-id-from-edge-proxy';
 import type { IncomingMessage, OutgoingMessage } from 'http';
 import { jest, expect } from '@jest/globals';
 
 jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreSettings: jest.fn(),
+  getCoreContext: jest.fn(),
+  debugModule: jest.fn(() => jest.fn()),
+  debugNamespace: 'content-sdk',
 }));
 
 jest.mock('./shared', () => ({
@@ -28,34 +30,34 @@ jest.mock('@sitecore-content-sdk/analytics-core/utils', () => ({
   getCookieServerSide: jest.fn(),
 }));
 
-jest.mock('../guest-id/fetch-guest-id-from-edge-proxy', () => ({
-  fetchGuestIdFromEdgeProxy: jest.fn(),
+jest.mock('../profile-id/fetch-profile-id-from-edge-proxy', () => ({
+  fetchProfileIdFromEdgeProxy: jest.fn(),
 }));
 
-describe('personalizeServerEnvironment', () => {
+describe('personalizeServerAdapter', () => {
   const mockPersonalizePlugin = {
-    settings: {
-      cookieSettings: {
-        name: { guestId: 'sc_cid_personalize' },
+    options: {
+      cookies: {
+        name: 'sc_cid_personalize',
       },
     },
   };
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
+    options: {
+      cookies: {
         expiryDays: 730,
         domain: '.example.com',
-        name: { browserId: 'sc_cid' },
+        name: 'sc_cid',
       },
-      proxyValues: undefined as any,
+      visitorIds: undefined as any,
     },
   };
 
-  const mockCoreSettings = {
-    settings: {
+  const mockCoreContext = {
+    config: {
       contextId: 'test-context-id',
-      sitecoreEdgeUrl: 'https://edge.test.com',
+      edgeUrl: 'https://edge.test.com',
     },
   };
 
@@ -96,20 +98,19 @@ describe('personalizeServerEnvironment', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockAnalyticsPlugin.settings.proxyValues = undefined;
+    mockAnalyticsPlugin.options.visitorIds = undefined;
     (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(mockPersonalizePlugin);
     (analyticsPluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue(mockAnalyticsPlugin);
-    (coreModule.getCoreSettings as jest.Mock).mockReturnValue(mockCoreSettings);
+    (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
     (internalModule.getDefaultCookieAttributes as jest.Mock).mockReturnValue(mockCookieAttributes);
   });
 
-  it('should return an environment with type "server"', () => {
+  it('should return an adapter with type "server"', () => {
     const request = createMockRequest();
     const response = createMockResponse();
 
-    const environment = personalizeServerEnvironment(request, response);
-
-    expect(environment.type).toBe('server');
+    const adapter = personalizeServerAdapter(request, response);
+    expect(adapter.type).toBe('server');
   });
 
   describe('getUserAgent', () => {
@@ -117,8 +118,8 @@ describe('personalizeServerEnvironment', () => {
       const request = createMockRequest(undefined, '/test', 'Mozilla/5.0');
       const response = createMockResponse();
 
-      const environment = personalizeServerEnvironment(request, response);
-      const result = environment.getUserAgent?.();
+      const adapter = personalizeServerAdapter(request, response);
+      const result = adapter.getUserAgent?.();
 
       expect(result).toBe('Mozilla/5.0');
     });
@@ -128,28 +129,28 @@ describe('personalizeServerEnvironment', () => {
       delete request.headers['user-agent'];
       const response = createMockResponse();
 
-      const environment = personalizeServerEnvironment(request, response);
-      const result = environment.getUserAgent?.();
+      const adapter = personalizeServerAdapter(request, response);
+      const result = adapter.getUserAgent?.();
 
       expect(result).toBeUndefined();
     });
   });
 
-  describe('getGuestId', () => {
-    it('should return the guest ID from request cookies', () => {
+  describe('getProfileId', () => {
+    it('should return the profile ID from request cookies', () => {
       (utilsModule.getCookieServerSide as jest.Mock).mockReturnValue({
         name: 'sc_cid_personalize',
-        value: 'guest-id-123',
+        value: 'profile-id-123',
       });
-      const request = createMockRequest('sc_cid_personalize=guest-id-123');
+      const request = createMockRequest('sc_cid_personalize=profile-id-123');
       const response = createMockResponse();
 
-      const environment = personalizeServerEnvironment(request, response);
-      const result = environment.getGuestId();
+      const adapter = personalizeServerAdapter(request, response);
+      const result = adapter.getProfileId();
 
-      expect(result).toBe('guest-id-123');
+      expect(result).toBe('profile-id-123');
       expect(utilsModule.getCookieServerSide).toHaveBeenCalledWith(
-        'sc_cid_personalize=guest-id-123',
+        'sc_cid_personalize=profile-id-123',
         'sc_cid_personalize'
       );
     });
@@ -159,33 +160,33 @@ describe('personalizeServerEnvironment', () => {
       const request = createMockRequest();
       const response = createMockResponse();
 
-      const environment = personalizeServerEnvironment(request, response);
-      const result = environment.getGuestId();
+      const adapter = personalizeServerAdapter(request, response);
+      const result = adapter.getProfileId();
 
       expect(result).toBeNull();
     });
   });
 
-  describe('setGuestId', () => {
+  describe('setProfileId', () => {
     describe('legacy cookie migration', () => {
       it('should migrate legacy cookie and set new cookie in response', async () => {
         const legacyCookieName = 'sc_test-context-id_personalize';
         (utilsModule.getCookieServerSide as jest.Mock).mockReturnValue({
           name: legacyCookieName,
-          value: 'legacy-guest-id',
+          value: 'legacy-profile-id',
         });
         (utilsModule.createCookieString as jest.Mock)
-          .mockReturnValueOnce('sc_cid_personalize=legacy-guest-id')
+          .mockReturnValueOnce('sc_cid_personalize=legacy-profile-id')
           .mockReturnValueOnce(`${legacyCookieName}=; Max-Age=0`);
 
-        const request = createMockRequest(`${legacyCookieName}=legacy-guest-id`);
+        const request = createMockRequest(`${legacyCookieName}=legacy-profile-id`);
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setProfileId();
 
         expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', [
-          'sc_cid_personalize=legacy-guest-id',
+          'sc_cid_personalize=legacy-profile-id',
           `${legacyCookieName}=; Max-Age=0`,
         ]);
       });
@@ -194,167 +195,171 @@ describe('personalizeServerEnvironment', () => {
         const legacyCookieName = 'sc_test-context-id_personalize';
         (utilsModule.getCookieServerSide as jest.Mock).mockReturnValue({
           name: legacyCookieName,
-          value: 'legacy-guest-id',
+          value: 'legacy-profile-id',
         });
         (utilsModule.createCookieString as jest.Mock)
           .mockReturnValueOnce('new-cookie')
           .mockReturnValueOnce('delete-cookie');
 
-        const request = createMockRequest(`${legacyCookieName}=legacy-guest-id`);
+        const request = createMockRequest(`${legacyCookieName}=legacy-profile-id`);
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setProfileId();
 
-        expect(request.headers.cookie).toBe('sc_cid_personalize=legacy-guest-id');
+        expect(request.headers.cookie).toBe('sc_cid_personalize=legacy-profile-id');
       });
 
       it('should handle legacy cookie when request.headers.cookie is undefined', async () => {
         const legacyCookieName = 'sc_test-context-id_personalize';
         (utilsModule.getCookieServerSide as jest.Mock).mockReturnValue({
           name: legacyCookieName,
-          value: 'legacy-guest-id',
+          value: 'legacy-profile-id',
         });
         (utilsModule.createCookieString as jest.Mock)
-          .mockReturnValueOnce('sc_cid_personalize=legacy-guest-id')
+          .mockReturnValueOnce('sc_cid_personalize=legacy-profile-id')
           .mockReturnValueOnce(`${legacyCookieName}=; Max-Age=0`);
 
         const request = createMockRequest(undefined);
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setProfileId();
 
         expect(request.headers.cookie).toBeUndefined();
       });
     });
 
-    describe('existing guest ID', () => {
-      it('should use existing guest ID and set cookie in response', async () => {
+    describe('existing profile ID', () => {
+      it('should use existing profile ID and set cookie in response', async () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined) // legacy cookie check
-          .mockReturnValueOnce({ name: 'sc_cid_personalize', value: 'existing-guest-id' }) // guest id check
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id' }); // browser id check
+          .mockReturnValueOnce({ name: 'sc_cid_personalize', value: 'existing-profile-id' }) // profile id check
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id' }); // client id check
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
-          'sc_cid_personalize=existing-guest-id'
+          'sc_cid_personalize=existing-profile-id'
         );
 
-        const request = createMockRequest('sc_cid_personalize=existing-guest-id');
+        const request = createMockRequest('sc_cid_personalize=existing-profile-id');
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setProfileId();
 
-        expect(fetchGuestIdModule.fetchGuestIdFromEdgeProxy).not.toHaveBeenCalled();
+        expect(fetchProfileIdModule.fetchProfileIdFromEdgeProxy).not.toHaveBeenCalled();
         expect(response.setHeader).toHaveBeenCalledWith(
           'Set-Cookie',
-          'sc_cid_personalize=existing-guest-id'
+          'sc_cid_personalize=existing-profile-id'
         );
       });
     });
 
-    describe('guest ID from proxy values', () => {
-      it('should use guest ID from proxy values when available', async () => {
-        mockAnalyticsPlugin.settings.proxyValues = { guestId: 'proxy-guest-id' };
+    describe('profile ID from proxy values', () => {
+      it('should use profile ID from proxy values when available', async () => {
+        mockAnalyticsPlugin.options.visitorIds = { profileId: 'proxy-profile-id' };
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined) // legacy cookie
-          .mockReturnValueOnce(undefined) // guest id cookie
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id' }); // browser id
+          .mockReturnValueOnce(undefined) // profile id cookie
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id' }); // client id
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
-          'sc_cid_personalize=proxy-guest-id'
+          'sc_cid_personalize=proxy-profile-id'
         );
 
-        const request = createMockRequest('sc_cid=browser-id');
+        const request = createMockRequest('sc_cid=client-id');
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setProfileId();
 
-        expect(fetchGuestIdModule.fetchGuestIdFromEdgeProxy).not.toHaveBeenCalled();
+        expect(fetchProfileIdModule.fetchProfileIdFromEdgeProxy).not.toHaveBeenCalled();
         expect(utilsModule.createCookieString).toHaveBeenCalledWith(
           'sc_cid_personalize',
-          'proxy-guest-id',
+          'proxy-profile-id',
           mockCookieAttributes
         );
       });
     });
 
     describe('fetch from edge proxy', () => {
-      it('should fetch guest ID from edge proxy when browser ID exists', async () => {
+      it('should fetch profile ID from edge proxy when client ID exists', async () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined) // legacy cookie
-          .mockReturnValueOnce(undefined) // guest id cookie
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id-123' }); // browser id
+          .mockReturnValueOnce(undefined) // profile id cookie
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id-123' }); // client id
         jest
-          .spyOn(fetchGuestIdModule, 'fetchGuestIdFromEdgeProxy')
-          .mockResolvedValue('new-guest-id');
+          .spyOn(fetchProfileIdModule, 'fetchProfileIdFromEdgeProxy')
+          .mockResolvedValue('new-profile-id');
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
-          'sc_cid_personalize=new-guest-id'
+          'sc_cid_personalize=new-profile-id'
         );
 
-        const request = createMockRequest('sc_cid=browser-id-123');
+        const request = createMockRequest('sc_cid=client-id-123');
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setProfileId();
 
-        expect(fetchGuestIdModule.fetchGuestIdFromEdgeProxy).toHaveBeenCalledWith(
-          'browser-id-123',
+        expect(fetchProfileIdModule.fetchProfileIdFromEdgeProxy).toHaveBeenCalledWith(
+          'client-id-123',
           'test-context-id',
           'https://edge.test.com'
         );
       });
 
-      it('should return early when no browser ID cookie exists', async () => {
+      it('should return early when no client ID cookie exists', async () => {
         (utilsModule.getCookieServerSide as jest.Mock).mockReturnValue(undefined);
 
         const request = createMockRequest();
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setProfileId();
 
-        expect(fetchGuestIdModule.fetchGuestIdFromEdgeProxy).not.toHaveBeenCalled();
+        expect(fetchProfileIdModule.fetchProfileIdFromEdgeProxy).not.toHaveBeenCalled();
         expect(response.setHeader).not.toHaveBeenCalled();
       });
 
       it('should append cookie to request headers when no existing cookies', async () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined) // legacy
-          .mockReturnValueOnce(undefined) // guest id
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id' }); // browser id
-        jest.spyOn(fetchGuestIdModule, 'fetchGuestIdFromEdgeProxy').mockResolvedValue('guest-id');
+          .mockReturnValueOnce(undefined) // profile id
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id' }); // client id
+        jest
+          .spyOn(fetchProfileIdModule, 'fetchProfileIdFromEdgeProxy')
+          .mockResolvedValue('profile-id');
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
-          'sc_cid_personalize=guest-id'
+          'sc_cid_personalize=profile-id'
         );
 
         const request = createMockRequest(undefined);
         request.headers.cookie = undefined;
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setProfileId();
 
-        expect(request.headers.cookie).toBe('sc_cid_personalize=guest-id');
+        expect(request.headers.cookie).toBe('sc_cid_personalize=profile-id');
       });
 
       it('should append cookie to existing request cookies', async () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined) // legacy
-          .mockReturnValueOnce(undefined) // guest id
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id' }); // browser id
-        jest.spyOn(fetchGuestIdModule, 'fetchGuestIdFromEdgeProxy').mockResolvedValue('guest-id');
+          .mockReturnValueOnce(undefined) // profile id
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id' }); // client id
+        jest
+          .spyOn(fetchProfileIdModule, 'fetchProfileIdFromEdgeProxy')
+          .mockResolvedValue('profile-id');
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
-          'sc_cid_personalize=guest-id'
+          'sc_cid_personalize=profile-id'
         );
 
         const request = createMockRequest('other_cookie=value');
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setProfileId();
 
-        expect(request.headers.cookie).toBe('other_cookie=value; sc_cid_personalize=guest-id');
+        expect(request.headers.cookie).toBe('other_cookie=value; sc_cid_personalize=profile-id');
       });
     });
 
@@ -363,21 +368,23 @@ describe('personalizeServerEnvironment', () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined)
           .mockReturnValueOnce(undefined)
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id' });
-        jest.spyOn(fetchGuestIdModule, 'fetchGuestIdFromEdgeProxy').mockResolvedValue('guest-id');
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id' });
+        jest
+          .spyOn(fetchProfileIdModule, 'fetchProfileIdFromEdgeProxy')
+          .mockResolvedValue('profile-id');
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
-          'sc_cid_personalize=guest-id'
+          'sc_cid_personalize=profile-id'
         );
 
         const request = createMockRequest();
         const response = createMockResponse();
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setProfileId();
 
         expect(response.setHeader).toHaveBeenCalledWith(
           'Set-Cookie',
-          'sc_cid_personalize=guest-id'
+          'sc_cid_personalize=profile-id'
         );
       });
 
@@ -385,22 +392,24 @@ describe('personalizeServerEnvironment', () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined)
           .mockReturnValueOnce(undefined)
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id' });
-        jest.spyOn(fetchGuestIdModule, 'fetchGuestIdFromEdgeProxy').mockResolvedValue('guest-id');
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id' });
+        jest
+          .spyOn(fetchProfileIdModule, 'fetchProfileIdFromEdgeProxy')
+          .mockResolvedValue('profile-id');
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
-          'sc_cid_personalize=guest-id'
+          'sc_cid_personalize=profile-id'
         );
 
         const request = createMockRequest();
         const response = createMockResponse();
         response.headers['Set-Cookie'] = 'existing_cookie=value';
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setProfileId();
 
         expect(response.setHeader).toHaveBeenCalledWith(
           'Set-Cookie',
-          'existing_cookie=value; sc_cid_personalize=guest-id'
+          'existing_cookie=value; sc_cid_personalize=profile-id'
         );
       });
 
@@ -408,26 +417,27 @@ describe('personalizeServerEnvironment', () => {
         (utilsModule.getCookieServerSide as jest.Mock)
           .mockReturnValueOnce(undefined)
           .mockReturnValueOnce(undefined)
-          .mockReturnValueOnce({ name: 'sc_cid', value: 'browser-id' });
-        jest.spyOn(fetchGuestIdModule, 'fetchGuestIdFromEdgeProxy').mockResolvedValue('guest-id');
+          .mockReturnValueOnce({ name: 'sc_cid', value: 'client-id' });
+        jest
+          .spyOn(fetchProfileIdModule, 'fetchProfileIdFromEdgeProxy')
+          .mockResolvedValue('profile-id');
         (utilsModule.createCookieString as jest.Mock).mockReturnValue(
-          'sc_cid_personalize=guest-id'
+          'sc_cid_personalize=profile-id'
         );
 
         const request = createMockRequest();
         const response = createMockResponse();
         response.headers['Set-Cookie'] = ['cookie1=value1', 'cookie2=value2'];
 
-        const environment = personalizeServerEnvironment(request, response);
-        await environment.setGuestId();
+        const adapter = personalizeServerAdapter(request, response);
+        await adapter.setProfileId();
 
         expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', [
           'cookie1=value1',
           'cookie2=value2',
-          'sc_cid_personalize=guest-id',
+          'sc_cid_personalize=profile-id',
         ]);
       });
     });
   });
 });
-

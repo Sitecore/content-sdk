@@ -3,30 +3,31 @@ import type { NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { ERROR_MESSAGES, UTM_PREFIX } from '../consts';
 import type { EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';
 import { sendCallFlowsRequest } from './send-call-flows-request';
-import { CoreSettings } from '@sitecore-content-sdk/core';
+import { CoreContext } from '@sitecore-content-sdk/core';
 
 /**
+ * The Personalizer Class runs a flow of interactive experiments.
  * @internal
  */
 export class Personalizer {
   /**
    * The Personalizer Class runs a flow of interactive experiments.
-   * @param {string} browserId - The browser id of the user
-   * @param {string} [guestId] - The guestRef of the user
+   * @param {string} clientId - The client id of the user
+   * @param {string} [profileId] - The profile id of the user
    */
-  constructor(private browserId: string, private guestId?: string) {}
+  constructor(private clientId: string, private profileId?: string) {}
 
   /**
-   * A function to make a request to the Sitecore EP /callFlows API endpoint
+   * A function to make a request to the Sitecore Edge Proxy `/callFlows` API endpoint
    * @param {PersonalizeData} personalizeData - The personalize input from the developer
-   * @param {CoreSettings['settings']} settings - The setting that was set during initialization
+   * @param {CoreContext['config']} config - The configuration that was set during initialization
    * @param {string} searchParams - The URL search parameters
-   * @param {GetInteractiveExperienceDataOpts} opts - Optional object that contains options for timeout and UA
-   * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A promise that resolves with either the Sitecore EP response object or null
+   * @param {GetInteractiveExperienceDataOpts} opts - Optional object that contains options for timeout and User Agent
+   * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A promise that resolves with either the Sitecore Edge Proxy response object or null
    */
   async getInteractiveExperienceData(
     personalizeData: PersonalizeData,
-    settings: CoreSettings['settings'],
+    config: CoreContext['config'],
     searchParams: string,
     opts?: GetInteractiveExperienceDataOpts
   ): Promise<unknown | null | FailedCalledFlowsResponse> {
@@ -40,9 +41,9 @@ export class Personalizer {
     }
 
     const mappedData = this.mapPersonalizeInputToEPData(sanitizedInput);
-    if (!mappedData.email && !mappedData.identifiers) mappedData.browserId = this.browserId;
+    if (!mappedData.email && !mappedData.identifiers) mappedData.browserId = this.clientId;
 
-    return await sendCallFlowsRequest(mappedData, settings, opts);
+    return await sendCallFlowsRequest(mappedData, config, opts);
   }
 
   /**
@@ -80,9 +81,9 @@ export class Personalizer {
     return sanitizedData;
   }
   /**
-   * A function that maps the personalize input data with the EP
+   * A function that maps the personalize input data with the Edge Proxy
    * @param {PersonalizeData} input - The personalize input data to map
-   * @returns {EPCallFlowsBody} The EP object
+   * @returns {EPCallFlowsBody} The Edge Proxy object
    */
   private mapPersonalizeInputToEPData(input: PersonalizeData): EPCallFlowsBody {
     const mappedData: EPCallFlowsBody = {
@@ -91,7 +92,7 @@ export class Personalizer {
       currencyCode: input.currency,
       email: input.email,
       friendlyId: input.friendlyId,
-      guestRef: this.guestId,
+      guestRef: this.profileId,
       identifiers: input.identifier,
       language: input.language ?? language(),
       params: input.params,
@@ -108,7 +109,7 @@ export class Personalizer {
    */
   private validate(params: PersonalizeData) {
     if (!params.friendlyId || params.friendlyId.trim().length === 0)
-      throw new Error(ERROR_MESSAGES.MV_0004);
+      throw new Error(ERROR_MESSAGES.MV_004);
   }
 
   /**
@@ -136,43 +137,123 @@ export class Personalizer {
 
 /**
  * An interface that describes the geolocation attributes.
+ * @public
  */
 export interface PersonalizeGeolocation {
+  /**
+   * The site visitor's city.
+   *
+   * Format: title case recommended.
+   */
   city?: string;
+  /**
+   * The site visitor's country.
+   *
+   * Format: uppercase ISO 3166-1 alpha-2.
+   */
   country?: string;
+  /**
+   * The site visitor's region.
+   * Depends on the regional structure of the country.
+   *
+   * Format: for example, for Australia, use state and territory abbreviations. For the United States, use ANSI standard INCITS 38:2009.
+   */
   region?: string;
 }
 
 /**
  * An interface that describes the flow execution model attributes input for the library
+ * @public
  */
 export interface PersonalizeData {
+  /**
+   * The touchpoint where the user interacts with your brand.
+   * For example, for webpages, the channel is "WEB". For mobile app screens, the channel is "MOBILE_APP".
+   *
+   * Format: uppercase.
+   */
   channel: string;
+  /**
+   * The alphabetic currency code of the currency the site visitor uses in your app.
+   * For example, if the site visitor selects Australian dollars as the currency, the currency is "AUD".
+   *
+   * Format: uppercase ISO 4217.
+   */
   currency?: string;
+  /**
+   * The site visitor's email address.
+   *
+   * Format: lowercase recommended.
+   */
   email?: string;
+  /**
+   * The unique identifier of the live interactive experience or experiment to run.
+   * To find the friendly ID in Sitecore Personalize, click the live experience or experiment to run, then click Build summary. The friendly ID is in the Details pane.
+   */
   friendlyId: string;
+  /**
+   * The site visitor's geolocation data.
+   */
   geo?: PersonalizeGeolocation;
+  /**
+   * The identifiers used for identifying site visitors.
+   *
+   * If set, the experience or experiment runs only for the identified site visitor.
+   */
   identifier?: PersonalizeIdentifierInput;
+  /**
+   * The language the site visitor interacts with your brand in.
+   * For example, if the site visitor selects the Japanese language in your app, the language is "JA".
+   *
+   * Format: uppercase ISO 639.
+   *
+   * Default for browser-side events: inferred from the HTML lang attribute. If lang is not specified, the default is an empty string.
+   *
+   * Default for server-side events: empty string.
+   */
   language?: string;
+  /**
+   * An object of your choice.
+   *
+   * If the URL of the webpage where this function runs contains UTM parameters, those parameters are automatically captured in params.utm.
+   *
+   * To override the automatically captured UTM parameters, specify values manually in params.utm.
+   */
   params?: PersonalizeInputParams;
+  /**
+   * A list of IDs of personalized page variants.
+   *
+   * Ensures that the correct variants are rendered for personalization.
+   *
+   * If unset or an empty array, this property will not be part of the payload.
+   */
   pageVariantIds?: string[];
 }
 
 /**
  * An interface that describes the identifier model attributes for the library
+ * @public
  */
 export interface PersonalizeIdentifierInput {
+  /**
+   * The unique guest (site visitor) identifier provided by your organization's identity system, such as a Customer Relationship Management (CRM) system.
+   */
   id: string;
+  /**
+   * The name of your organization's identity system, external to SitecoreAI, that provided the unique guest (site visitor) identifier.
+   */
   provider: string;
 }
 
 /**
  * A type that describes the params field
+ * @public
  */
 export type PersonalizeInputParams = NestedObject;
 
 /**
  * Options for the getInteractiveExperienceData method
+ * @internal
  */
 export interface GetInteractiveExperienceDataOpts {
   /**

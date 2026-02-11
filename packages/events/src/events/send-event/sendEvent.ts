@@ -7,20 +7,21 @@ import type {
 } from '..';
 import type { DebugResponse, EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
 import { PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
-import { CoreSettings } from '@sitecore-content-sdk/core';
+import { CoreContext } from '@sitecore-content-sdk/core';
 import { EVENTS_NAMESPACE, debug } from '../../debug';
 
 /**
- * This factory function sends an event to Edge Proxy
+ * This function sends an event to Sitecore Edge Proxy
  * @param {EPFetchBody & BasePayload} body - The event data to send
- * @param {Settings} settings - The global settings
+ * @param {CoreContext['config']} config - The global configuration
+ * @internal
  */
 export async function sendEvent(
   body: EPFetchBody & BasePayload,
-  settings: CoreSettings['settings']
+  config: CoreContext['config']
 ): Promise<EPResponse | null> {
   // eslint-disable-next-line max-len
-  const eventUrl = `${settings.sitecoreEdgeUrl}/v1/events/${API_VERSION}/events?siteId=${settings.siteName}`;
+  const eventUrl = `${config.edgeUrl}/v1/events/${API_VERSION}/events?siteId=${config.siteName}`;
   const startTimestamp = Date.now();
   let debugResponse: DebugResponse = {};
 
@@ -30,7 +31,7 @@ export async function sendEvent(
       'Content-Type': 'application/json',
       'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
       'X-Library-Version': PACKAGE_VERSION,
-      'x-sitecore-contextid': settings.contextId,
+      'x-sitecore-contextid': config.contextId,
     },
     method: 'POST',
   };
@@ -58,13 +59,15 @@ export async function sendEvent(
 
 /**
  * The type of sendEvent function
+ * @internal
  */
 export type SendEvent = (
   body: EPFetchBody & BasePayload,
-  settings: CoreSettings['settings']
+  config: CoreContext['config']
 ) => Promise<EPResponse | null>;
 
 /**
  * The type describing all possible event payloads
+ * @internal
  */
 type EPFetchBody = PageViewEventPayload | IdentityEventPayload | CustomEventPayload;

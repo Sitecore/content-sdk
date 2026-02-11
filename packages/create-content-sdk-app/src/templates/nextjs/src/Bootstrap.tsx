@@ -1,8 +1,8 @@
 ﻿import { useEffect, JSX } from 'react';
-import { SitecorePageProps, initSitecore } from '@sitecore-content-sdk/nextjs';
+import { SitecorePageProps, initContentSdk } from '@sitecore-content-sdk/nextjs';
 import config from 'sitecore.config';
 import { eventsPlugin } from '@sitecore-content-sdk/events';
-import { analyticsBrowserEnvironment, analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
+import { analyticsBrowserAdapter, analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
 
 /**
  * The Bootstrap component is the entry point for performing any initialization logic
@@ -26,19 +26,19 @@ const Bootstrap = (props: SitecorePageProps): JSX.Element | null => {
       console.debug('Browser Events SDK is not initialized in edit and preview modes');
     } else {
       if (config.api.edge?.clientContextId) {
-        initSitecore({
-          settings: {
+        initContentSdk({
+          config: {
             contextId: config.api.edge.clientContextId,
-            sitecoreEdgeUrl: config.api.edge.edgeUrl,
+            edgeUrl: config.api.edge.edgeUrl,
             siteName: page.siteName || config.defaultSite,
           },
           plugins: [
             analyticsPlugin({
-              settings: {
+              options: {
                 enableCookie: true,
                 cookieDomain: window.location.hostname.replace(/^www\./, ''),
               },
-              environment: analyticsBrowserEnvironment(),
+              adapter: analyticsBrowserAdapter(),
             }),
             eventsPlugin(),
           ],

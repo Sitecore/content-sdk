@@ -2,34 +2,34 @@ import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/interna
 import type { PersonalizeData } from './personalizer';
 import { Personalizer } from './personalizer';
 import type { FailedCalledFlowsResponse } from './send-call-flows-request';
-import { getCoreSettings } from '@sitecore-content-sdk/core';
+import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getPersonalizePlugin } from '../initialization/shared';
 
 /**
- * A function that executes an interactive experiment or web experiment over any web-based or mobile application.
- * @param {PersonalizeData} personalizeData - The required/optional attributes in order to create a flow execution
- * @param {PersonalizeOpts} opts - An object containing additional options
- * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A flow execution response
+ * A function that executes an interactive/web experiment over any web-based/mobile application.
+ * @param {PersonalizeData} personalizeData - The required/optional attributes for a flow execution.
+ * @param {PersonalizeOpts} opts - An object containing additional options.
+ * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A flow execution response.
  * @public
  */
 export async function personalize(
   personalizeData: PersonalizeData,
   opts?: PersonalizeOpts
 ): Promise<unknown | null | FailedCalledFlowsResponse> {
-  const { settings, readyPromise } = getCoreSettings();
+  const { config, readyPromise } = getCoreContext();
   await readyPromise;
-  const { environment: personalizeEnvironment } = getPersonalizePlugin();
+  const { adapter: personalizeAdapter } = getPersonalizePlugin();
 
-  const { environment: analyticsEnvironment } = getAnalyticsPlugin();
+  const { adapter: analyticsAdapter } = getAnalyticsPlugin();
 
-  const browserId = analyticsEnvironment.getBrowserId() || '';
-  const guestId = personalizeEnvironment.getGuestId() || '';
-  const searchParams = analyticsEnvironment.location.getSearchParams();
-  const userAgent = personalizeEnvironment.getUserAgent?.();
+  const clientId = analyticsAdapter.getClientId() || '';
+  const profileId = personalizeAdapter.getProfileId() || '';
+  const searchParams = analyticsAdapter.location.getSearchParams();
+  const userAgent = personalizeAdapter.getUserAgent?.();
 
-  return new Personalizer(browserId, guestId).getInteractiveExperienceData(
+  return new Personalizer(clientId, profileId).getInteractiveExperienceData(
     personalizeData,
-    settings,
+    config,
     searchParams,
     {
       userAgent,
@@ -39,9 +39,10 @@ export async function personalize(
 }
 
 /**
- * Options for the personalize function
+ * Options for the personalize function.
+ * @public
  */
-interface PersonalizeOpts {
+export interface PersonalizeOpts {
   /**
    * Timeout in milliseconds for the personalize request
    */

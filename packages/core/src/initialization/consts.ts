@@ -1,7 +1,10 @@
+/**
+ * The error messages for the core package.
+ * @internal
+ */
 export const ERROR_MESSAGES = {
-  IE_0002: '[IE-0002] You must first initialize the SDK using "initSitecore"',
-  IV_0001: '[IV-0001] Incorrect value for "sitecoreEdgeUrl". Set the value to a valid URL string.',
-  MV_0001: '[MV-0001] "sitecoreEdgeContextId" is required.',
-  MV_0002: '[MV-0002] "siteName" is required.',
+  IE_002: '[IE-002] You must first initialize the SDK using "initContentSdk()".',
+  IV_001: '[IV-001] Incorrect value for "edgeUrl". Set the value to a valid URL.',
+  MV_001: '[MV-001] "contextId" is required.',
+  MV_002: '[MV-002] "siteName" is required.',
 } as const;
-

@@ -21,29 +21,29 @@ jest.mock('./page-view-event', () => {
 });
 
 describe('pageView', () => {
-  const mockEnvironment = {
-    getBrowserId: jest.fn(),
+  const mockAdapter = {
+    getClientId: jest.fn(),
     location: {
       getSearchParams: jest.fn(),
     },
   };
 
   const mockAnalyticsPlugin = {
-    settings: {
-      cookieSettings: {
+    options: {
+      cookies: {
         domain: 'cDomain',
         expiryDays: 730,
-        name: { browserId: 'bid_name' },
+        name: { clientId: 'cid_name' },
         path: '/',
       },
     },
-    environment: mockEnvironment,
+    adapter: mockAdapter,
   };
 
-  const mockCoreSettings = {
-    settings: {
+  const mockCoreContext = {
+    config: {
       contextId: '123',
-      sitecoreEdgeUrl: 'https://edge.test.com',
+      edgeUrl: 'https://edge.test.com',
       siteName: '456',
     },
     readyPromise: Promise.resolve(),
@@ -52,7 +52,7 @@ describe('pageView', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue(mockCoreSettings as any);
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue(mockCoreContext as any);
     jest
       .spyOn(analyticsPluginsModule, 'getAnalyticsPlugin')
       .mockReturnValue(mockAnalyticsPlugin as any);
@@ -69,8 +69,8 @@ describe('pageView', () => {
       page: 'races',
     };
 
-    mockEnvironment.getBrowserId.mockReturnValue(id);
-    mockEnvironment.location.getSearchParams.mockReturnValue('?test=value');
+    mockAdapter.getClientId.mockReturnValue(id);
+    mockAdapter.location.getSearchParams.mockReturnValue('?test=value');
 
     const response = await pageView({ ...pageViewData, extensionData });
 
@@ -79,12 +79,12 @@ describe('pageView', () => {
       pageViewData: { ...pageViewData, extensionData },
       searchParams: '?test=value',
       sendEvent,
-      settings: { ...mockCoreSettings.settings, ...mockAnalyticsPlugin.settings },
+      config: { ...mockCoreContext.config, ...mockAnalyticsPlugin.options },
     });
     expect(response).toBe('mockedResponse');
   });
 
-  it('should use empty string for id when getBrowserId returns null', async () => {
+  it('should use empty string for id when getClientId returns null', async () => {
     const pageViewData: PageViewData = {
       channel: 'WEB',
       currency: 'EUR',
@@ -92,8 +92,8 @@ describe('pageView', () => {
       page: 'races',
     };
 
-    mockEnvironment.getBrowserId.mockReturnValue(null);
-    mockEnvironment.location.getSearchParams.mockReturnValue('');
+    mockAdapter.getClientId.mockReturnValue(null);
+    mockAdapter.location.getSearchParams.mockReturnValue('');
 
     await pageView(pageViewData);
 
@@ -110,13 +110,13 @@ describe('pageView', () => {
       resolveReady = resolve;
     });
 
-    jest.spyOn(coreModule, 'getCoreSettings').mockReturnValue({
-      ...mockCoreSettings,
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue({
+      ...mockCoreContext,
       readyPromise,
     } as any);
 
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
-    mockEnvironment.location.getSearchParams.mockReturnValue('');
+    mockAdapter.getClientId.mockReturnValue('test_id');
+    mockAdapter.location.getSearchParams.mockReturnValue('');
 
     const pageViewPromise = pageView({ channel: 'WEB' });
 
@@ -129,17 +129,17 @@ describe('pageView', () => {
   });
 
   it('should call getEventsPlugin to ensure plugin is initialized', async () => {
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
-    mockEnvironment.location.getSearchParams.mockReturnValue('');
+    mockAdapter.getClientId.mockReturnValue('test_id');
+    mockAdapter.location.getSearchParams.mockReturnValue('');
 
     await pageView({ channel: 'WEB' });
 
     expect(eventsPluginModule.getEventsPlugin).toHaveBeenCalledTimes(1);
   });
 
-  it('should pass searchParams from environment.location.getSearchParams', async () => {
-    mockEnvironment.getBrowserId.mockReturnValue('test_id');
-    mockEnvironment.location.getSearchParams.mockReturnValue('?utm_source=google&utm_medium=cpc');
+  it('should pass searchParams from adapter.location.getSearchParams', async () => {
+    mockAdapter.getClientId.mockReturnValue('test_id');
+    mockAdapter.location.getSearchParams.mockReturnValue('?utm_source=google&utm_medium=cpc');
 
     await pageView({ channel: 'WEB' });
 

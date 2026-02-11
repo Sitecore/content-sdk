@@ -7,17 +7,18 @@ import {
   DEFAULT_VARIANT,
 } from '@sitecore-content-sdk/content/personalize';
 import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
-import { initSitecore } from '@sitecore-content-sdk/core';
+import { initContentSdk } from '@sitecore-content-sdk/core';
 import { personalize } from '@sitecore-content-sdk/personalize';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
 import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
-import { analyticsProxyEnvironment } from '../initialization/proxy/analytics';
+import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter';
 import { personalizeServerPlugin } from '@sitecore-content-sdk/personalize';
-import { personalizeProxyEnvironment } from '../initialization/proxy/personalize';
+import { personalizeProxyAdapter } from '../initialization/proxy/personalize-adapter';
 
 /**
  * Represents the geolocation data used for personalization
+ * @public
  */
 export type PersonalizeGeoData = {
   city?: string;
@@ -275,25 +276,25 @@ export class PersonalizeProxy extends ProxyBase {
     request: NextRequest;
     response: NextResponse;
   }): Promise<void> {
-    await initSitecore({
-      settings: {
+    await initContentSdk({
+      config: {
         contextId: this.config.contextId,
-        sitecoreEdgeUrl: this.config.edgeUrl,
+        edgeUrl: this.config.edgeUrl,
         siteName,
       },
       plugins: [
         analyticsPlugin({
-          settings: {
+          options: {
             enableCookie: true,
             cookieDomain: hostname,
           },
-          environment: analyticsProxyEnvironment(request, response),
+          adapter: analyticsProxyAdapter(request, response),
         }),
         personalizeServerPlugin({
-          settings: {
+          options: {
             enablePersonalizeCookie: true,
           },
-          environment: personalizeProxyEnvironment(request, response),
+          adapter: personalizeProxyAdapter(request, response),
         }),
       ],
     });
