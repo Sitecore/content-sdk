@@ -114,7 +114,7 @@ describe('withPlaceholder HOC', () => {
         name: phKey,
         rendering: null as unknown as ComponentRendering,
       };
-      const Element = withPlaceholder(phKey)(ErrorComponent);
+      const Element = withPlaceholder({ phKey })(ErrorComponent);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
           <Element {...props} />
@@ -132,7 +132,7 @@ describe('withPlaceholder HOC', () => {
         rendering: null as unknown as ComponentRendering,
         errorComponent: ErrorMessageComponent,
       };
-      const Element = withPlaceholder(phKey)(ErrorComponent);
+      const Element = withPlaceholder({ phKey })(ErrorComponent);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
           <Element {...props} />
@@ -150,7 +150,7 @@ describe('withPlaceholder HOC', () => {
         name: phKey,
         rendering: component,
       };
-      const Element = withPlaceholder(phKey)(Home);
+      const Element = withPlaceholder({ phKey })(Home);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
           <Element {...props} />
@@ -180,7 +180,7 @@ describe('withPlaceholder HOC', () => {
         errorComponent: ErrorMessageComponent,
         componentLoadingMessage: 'Custom loading message...',
       };
-      const Element = withPlaceholder(phKey)(Home);
+      const Element = withPlaceholder({ phKey })(Home);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
           <Element {...props} />
@@ -209,7 +209,7 @@ describe('withPlaceholder HOC', () => {
           name: phKey,
           rendering: component,
         };
-        const Element = withPlaceholder(phKey)(Home);
+        const Element = withPlaceholder({ phKey })(Home);
         const renderedComponent = render(
           <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
             <Element {...props} />
@@ -225,7 +225,7 @@ describe('withPlaceholder HOC', () => {
           dataSet.data.sitecore.route?.placeholders.main as (ComponentRendering | RouteData)[]
         ).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
         const phKeyAndProp = {
-          placeholder: 'page-header',
+          phKey: 'page-header',
           prop: 'subProp',
         };
         const props: EnhancedOmit<PlaceholderProps, 'page'> = {
@@ -249,7 +249,7 @@ describe('withPlaceholder HOC', () => {
           dataSet.data.sitecore.route?.placeholders.main as (ComponentRendering | RouteData)[]
         ).find((c) => (c as ComponentRendering).componentName) as ComponentRendering;
         const phKeyAndProp = {
-          placeholder: 'page-header',
+          phKey: 'page-header',
           prop: 'subProp',
         };
         const phOptions = {
@@ -312,7 +312,7 @@ describe('withPlaceholder HOC', () => {
         name: phKey,
         rendering: component,
       };
-      const Element = withPlaceholder(phKey)(Home);
+      const Element = withPlaceholder({ phKey })(Home);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={componentMap} page={editModePage}>
           <Element {...props} />
@@ -341,7 +341,7 @@ describe('withPlaceholder HOC', () => {
       const component = layoutData.sitecore.route;
       const phKey = 'main';
       const phKeyAndProp = {
-        placeholder: phKey,
+        phKey,
         prop: 'subProp',
       };
       const props: EnhancedOmit<PlaceholderProps, 'page'> = {
@@ -381,7 +381,7 @@ describe('withPlaceholder HOC', () => {
         name: phKey,
         rendering: component,
       };
-      const Element = withPlaceholder(phKey)(Home);
+      const Element = withPlaceholder({ phKey })(Home);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={componentMap} page={editModePage}>
           <Element {...props} />
@@ -405,7 +405,7 @@ describe('withPlaceholder HOC', () => {
         name: phKey,
         rendering: component,
       };
-      const Element = withPlaceholder(phKey)(Home);
+      const Element = withPlaceholder({ phKey })(Home);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={componentMap} page={editModePage}>
           <Element {...props} />
@@ -433,7 +433,7 @@ describe('withPlaceholder HOC', () => {
         name: phKey,
         rendering: component,
       };
-      const Element = withPlaceholder(phKey)(Home);
+      const Element = withPlaceholder({ phKey })(Home);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={componentMap} page={editModePage}>
           <Element {...props} />
@@ -466,7 +466,7 @@ describe('withPlaceholder HOC', () => {
         name: phKey,
         rendering: component,
       };
-      const Element = withPlaceholder(phKey)(Home);
+      const Element = withPlaceholder({ phKey })(Home);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={componentMap} page={editModePage}>
           <Element {...props} />

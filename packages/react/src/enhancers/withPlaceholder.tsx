@@ -29,17 +29,15 @@ export interface PlaceholderToPropMapping {
   /**
    * The name of the placeholder this component will expose
    */
-  placeholder: string;
+  phKey: string;
   /**
    * The name of the prop on your wrapped component that you would like the placeholder data injected on
    */
-  prop: string;
+  prop?: string;
 }
 
 // TODO: this HOC and Placeholder are kinda doing the same thing. Could the be combined?
-export type WithPlaceholderSpec =
-  | (string | PlaceholderToPropMapping)
-  | (string | PlaceholderToPropMapping)[];
+export type WithPlaceholderSpec = PlaceholderToPropMapping | PlaceholderToPropMapping[];
 
 /**
  * HOC to provide client-side placeholder functionality to a component.
@@ -74,29 +72,19 @@ export function withPlaceholder(
         ? [placeholders]
         : placeholders;
 
-      definitelyArrayPlacholders.forEach((placeholder: string | PlaceholderToPropMapping) => {
+      definitelyArrayPlacholders.forEach((placeholder) => {
         let placeholderData: ComponentRendering[];
 
-        if (typeof placeholder !== 'string' && placeholder.placeholder && placeholder.prop) {
-          placeholderData = getPlaceholderRenderings(
-            renderingData,
-            placeholder.placeholder,
-            childProps.page.mode.isEditing
+        placeholderData = getPlaceholderRenderings(
+          renderingData,
+          placeholder.phKey,
+          childProps.page.mode.isEditing
+        );
+        if (placeholderData) {
+          childProps[placeholder.prop || placeholder.phKey] = getRenderedComponents(
+            props,
+            placeholderData
           );
-          if (placeholderData) {
-            (childProps as PlaceholderProps & Record<string, unknown>)[placeholder.prop] =
-              getRenderedComponents(props, placeholderData);
-          }
-        } else {
-          placeholderData = getPlaceholderRenderings(
-            renderingData,
-            placeholder as string,
-            childProps.page.mode.isEditing
-          );
-          if (placeholderData) {
-            (childProps as PlaceholderProps & Record<string, unknown>)[placeholder as string] =
-              getRenderedComponents(props, placeholderData);
-          }
         }
       });
 
