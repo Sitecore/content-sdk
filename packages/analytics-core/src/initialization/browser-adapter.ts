@@ -56,7 +56,8 @@ export function analyticsBrowserAdapter(): AnalyticsBrowserAdapter {
 
       const cookieValues = await fetchClientIdFromEdgeProxy(
         coreConfig.edgeUrl,
-        coreConfig.contextId
+        coreConfig.contextId,
+        analyticsOptions.timeout
       );
 
       analyticsOptions.visitorIds = cookieValues;

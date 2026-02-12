@@ -1,7 +1,9 @@
+import { NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
 import type { EPResponse, VisitorIds } from '../interfaces';
 import { ERROR_MESSAGES, LIBRARY_VERSION } from '../consts';
-import { ERROR_MESSAGES as UTILS_ERROR_MESSAGES, fetchWithTimeout } from '../utils';
 import { resolveGetClientIdUrl } from './resolve-get-client-id-url';
+
+const UTILS_ERROR_MESSAGES = constants.ERROR_MESSAGES;
 
 /**
  * Gets the client ID and client key from Sitecore Edge proxy.
@@ -25,26 +27,22 @@ export async function fetchClientIdFromEdgeProxy(
   };
 
   const url = resolveGetClientIdUrl(edgeUrl);
-  let payload;
+  const fetcher = new NativeDataFetcher({ timeout });
 
-  if (timeout !== undefined)
-    payload = await fetchWithTimeout(url, timeout, fetchOptions)
-      .then((response) => {
-        return (response && response.json()) || null;
-      })
-      .catch((err) => {
-        if (
-          err.message === UTILS_ERROR_MESSAGES.IV_002 ||
-          err.message === UTILS_ERROR_MESSAGES.IE_003
-        )
-          throw new Error(err.message);
+  const payload = await fetcher
+    .fetch<EPResponse>(url, fetchOptions)
+    .then((response) => {
+      return response.data || null;
+    })
+    .catch((err) => {
+      if (
+        err.message === UTILS_ERROR_MESSAGES.IV_002 ||
+        err.message === UTILS_ERROR_MESSAGES.IE_003
+      )
+        throw new Error(err.message);
 
-        return null;
-      });
-  else
-    payload = await fetch(url, fetchOptions)
-      .then((res) => res.json())
-      .catch(() => undefined);
+      return null;
+    });
 
   if (!payload?.ref) throw new Error(ERROR_MESSAGES.IE_005);
 

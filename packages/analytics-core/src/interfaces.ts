@@ -33,18 +33,3 @@ export interface Infer {
   language: () => string | undefined;
   pageName: () => string;
 }
-
-/**
- * Interface for supporting the debug object.
- * @internal
- */
-export interface DebugResponse {
-  headers?: {
-    [key: string]: string | string[] | [string, string][] | Record<string, string> | Headers;
-  };
-  redirected?: boolean;
-  status?: number;
-  statusText?: string;
-  url?: string;
-  body?: unknown;
-}

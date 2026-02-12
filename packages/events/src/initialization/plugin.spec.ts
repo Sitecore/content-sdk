@@ -12,12 +12,17 @@ import * as clearEventQueueModule from '../eventStorage/clearEventQueue';
 import * as processEventQueueModule from '../eventStorage/processEventQueue';
 import { jest, expect } from '@jest/globals';
 
-jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreContext: jest.fn(),
-  debug: {
-    init: jest.fn(),
-  },
-}));
+jest.mock('@sitecore-content-sdk/core', () => {
+  const originalModule = jest.requireActual<typeof coreModule>('@sitecore-content-sdk/core');
+
+  return {
+    ...originalModule,
+    getCoreContext: jest.fn(),
+    debug: {
+      init: jest.fn(),
+    },
+  };
+});
 
 jest.mock('../events/custom-event/event', () => ({
   event: jest.fn(),

@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import proxyquire from 'proxyquire';
 import { Plugin } from './types';
-import { ERROR_MESSAGES } from './consts';
+import { ERROR_MESSAGES } from '../constants';
 
 describe('init-content-sdk', () => {
   let sandbox: sinon.SinonSandbox;

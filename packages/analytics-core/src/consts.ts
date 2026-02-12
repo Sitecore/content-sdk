@@ -37,12 +37,6 @@ export const DAILY_SECONDS = 86400;
 export const API_VERSION = 'v1.2';
 
 /**
- * The URL of the Sitecore Edge platform.
- * @internal
- */
-export const SITECORE_EDGE_URL = 'https://edge-platform.sitecorecloud.io';
-
-/**
  * The header name for the correlation ID used in analytics requests.
  * @internal
  */

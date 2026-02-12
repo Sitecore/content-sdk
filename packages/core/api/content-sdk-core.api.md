@@ -44,7 +44,8 @@ declare namespace constants {
         CLAIMS,
         DEFAULT_SITECORE_AUTH_DOMAIN,
         DEFAULT_SITECORE_AUTH_AUDIENCE,
-        DEFAULT_SITECORE_AUTH_BASE_URL
+        DEFAULT_SITECORE_AUTH_BASE_URL,
+        ERROR_MESSAGES
     }
 }
 export { constants }
@@ -115,6 +116,16 @@ export type EnhancedOmit<T, K extends PropertyKey> = {
 
 // @internal
 export const ensurePathExists: (filePath: string) => void;
+
+// @internal
+const ERROR_MESSAGES: {
+    readonly IV_001: "[IV-001] Incorrect value for \"edgeUrl\". Set the value to a valid URL.";
+    readonly IV_002: "[IV-002] Incorrect value for \"timeout\". Set the value to an integer greater than or equal to 0.";
+    readonly IE_002: "[IE-002] You must first initialize the SDK using \"initContentSdk()\".";
+    readonly IE_003: "[IE-003] Timeout exceeded. The server did not respond within the allotted time.";
+    readonly MV_001: "[MV-001] \"contextId\" is required.";
+    readonly MV_002: "[MV-002] \"siteName\" is required.";
+};
 
 // @public
 export const escapeNonSpecialQuestionMarks: (input: string) => string;

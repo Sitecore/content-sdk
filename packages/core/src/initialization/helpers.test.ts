@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import proxyquire from 'proxyquire';
 import { checkPluginDependencies, initPlugins, resolveCoreContextConfig } from './helpers';
 import { Plugin } from './types';
-import { ERROR_MESSAGES } from './consts';
+import { ERROR_MESSAGES } from '../constants';
 
 describe('helpers', () => {
   let sandbox: sinon.SinonSandbox;
