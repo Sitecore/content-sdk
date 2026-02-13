@@ -1,13 +1,10 @@
-import { AppPlaceholderProps } from './models';
+import { AppPlaceholderProps, ChildComponentProps, ComponentForRendering } from './models';
 import {
-  getAppComponentProps,
-  getComponentForRendering,
+  drawPlaceholderComponents,
   getPlaceholderRenderings,
   renderEmptyPlaceholder,
 } from './placeholder-utils';
 import React from 'react';
-import { PlaceholderMetadata } from './PlaceholderMetadata';
-import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import ErrorBoundary from '../ErrorBoundary';
 import { ClientComponentWrapper } from './ClientComponentWrapper';
 import { rsc } from '#rsc-env';
@@ -21,124 +18,77 @@ import { rsc } from '#rsc-env';
  * @public
  */
 export const AppPlaceholder = (props: AppPlaceholderProps) => {
-  const { rendering: parentRendering, componentMap, page } = props;
+  const renderingData = props.rendering;
   const placeholderRenderings = getPlaceholderRenderings(
-    parentRendering,
+    renderingData,
     props.name,
-    page.mode.isEditing
+    props.page.mode.isEditing
   );
 
-  const components = placeholderRenderings
-    .map((rendering, index) => {
-      const {
-        component: Component,
-        isEmpty,
-        componentType,
-        dynamic,
-      } = getComponentForRendering(
-        rendering,
-        props.name,
-        componentMap,
-        props.hiddenRenderingComponent,
-        props.missingComponentComponent
-      );
-      const isClient = componentType === 'client';
-      const key = rendering.uid || `component-${index}`;
+  const drawAppPlaceholderChildComponent = (
+    componentForRendering: ComponentForRendering,
+    renderedProps: ChildComponentProps,
+    key?: string
+  ) => {
+    // Client wrapper is required only when component crosses boundary from server to client.
+    // It happens when component is marker as client and rendered in RSC context.
+    // Also, it is not required when component is hidden or empty, as it will be rendered whthout boundary crossing.
+    const useClientWrapper =
+      componentForRendering.componentType === 'client' && rsc && !componentForRendering.isEmpty;
+    return useClientWrapper ? (
+      <ClientComponentWrapper
+        rendering={renderedProps.rendering}
+        componentProps={{ ...renderedProps, ...props.passThroughComponentProps }}
+        placeholderName={props.name}
+        key={key}
+      />
+    ) : (
+      <componentForRendering.component
+        key={key}
+        {...renderedProps}
+        {...props.passThroughComponentProps}
+        page={props.page}
+        componentMap={props.componentMap}
+      />
+    );
+  };
 
-      // Use rsc context to determine the current runtime
-      const componentRuntime = rsc ? 'server' : 'client';
+  const applyConditionalTransform = (renderedComponents: React.JSX.Element[]) => {
+    const isEmpty = !placeholderRenderings.length;
 
-      const renderedProps = getAppComponentProps(props, rendering);
+    if (isEmpty) {
+      const rendered = props.renderEmpty
+        ? props.renderEmpty(renderedComponents)
+        : renderedComponents;
 
-      const finalRenderedProps = props.modifyComponentProps
-        ? props.modifyComponentProps(renderedProps)
-        : renderedProps;
+      return props.page.mode.isEditing ? renderEmptyPlaceholder(rendered) : rendered;
+    } else if (props.render) {
+      return props.render(renderedComponents, placeholderRenderings, props);
+    } else if (props.renderEach) {
+      const renderEach = props.renderEach;
 
-      // Client wrapper is required only when component crosses boundary from server to client.
-      // It happens when component is marker as client and rendered in RSC context.
-      // Also, it is not required when component is hidden or empty, as it will be rendered whthout boundary crossing.
-      const useClientWrapper = isClient && rsc && !isEmpty;
-      let rendered = useClientWrapper ? (
-        <ClientComponentWrapper
-          rendering={rendering}
-          componentProps={finalRenderedProps}
-          placeholderName={props.name}
-          key={key}
-        />
-      ) : (
-        <Component
-          key={key}
-          {...finalRenderedProps}
-          rendering={rendering}
-          page={page}
-          componentMap={componentMap}
-        />
-      );
+      return renderedComponents.map((component, index) => {
+        if (component && component.props && component.props.type === 'text/sitecore') {
+          return component;
+        }
 
-      if (!isEmpty) {
-        const errorBoundaryKey = rendered.type + '-' + index;
-        const disableSuspense = props.disableSuspense || false;
-        rendered = (
-          <ErrorBoundary
-            data-testid="error-boundary"
-            key={errorBoundaryKey}
-            errorComponent={props.errorComponent}
-            componentLoadingMessage={props.componentLoadingMessage}
-            isDynamic={dynamic}
-            disableSuspense={disableSuspense}
-            rendering={rendered.props.rendering as ComponentRendering}
-          >
-            {rendered}
-          </ErrorBoundary>
-        );
-      }
+        return renderEach(component, index);
+      });
+    } else {
+      return renderedComponents;
+    }
+  };
 
-      // if in edit mode then emit shallow chromes for hydration in Pages
-      if (page.mode.isEditing) {
-        const key = (rendering.uid as string) || `component-${index}`;
-        return (
-          <PlaceholderMetadata key={key} rendering={rendering} componentRuntime={componentRuntime}>
-            {rendered}
-          </PlaceholderMetadata>
-        );
-      }
-      return rendered;
-    })
-    .filter((element) => element);
+  const componentRuntime = rsc ? 'server' : 'client';
+  const components = drawPlaceholderComponents(
+    props,
+    placeholderRenderings,
+    drawAppPlaceholderChildComponent,
+    componentRuntime
+  );
 
-  const finalRendering = page.mode.isEditing
-    ? [
-        <PlaceholderMetadata
-          key={(parentRendering as ComponentRendering).uid || 'placeholder-metadata-root'}
-          placeholderName={props.name}
-          rendering={parentRendering as ComponentRendering}
-        >
-          {components}
-        </PlaceholderMetadata>,
-      ]
-    : components;
-
-  const placeholderEmpty = !placeholderRenderings.length;
-
-  if (placeholderEmpty) {
-    const rendered = props.renderEmpty ? props.renderEmpty(finalRendering) : finalRendering;
-
-    return page.mode.isEditing ? renderEmptyPlaceholder(rendered) : rendered;
-  }
-
-  if (props.render) {
-    return props.render(components, placeholderRenderings, props);
-  } else if (props.renderEach) {
-    const renderEach = props.renderEach;
-
-    return finalRendering.map((component, index) => {
-      if (component && component.props && component.props.type === 'text/sitecore') {
-        return component;
-      }
-
-      return renderEach(component, index);
-    });
-  } else {
-    return finalRendering;
-  }
+  const finalOutput = applyConditionalTransform(components);
+  // Using error boundary for errors that may happen within Placeholder itself
+  return <ErrorBoundary errorComponent={props.errorComponent}>{finalOutput}</ErrorBoundary>;
 };
+

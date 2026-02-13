@@ -20,15 +20,17 @@ import {
   FEAAS_WRAPPER_RENDERING_NAME,
 } from '../FEaaS';
 import {
-  AppComponentProps,
+  ChildComponentProps,
   BasePlaceholderProps,
   ComponentForRendering,
   PlaceholderProps,
-  RenderedProps,
+  AppPlaceholderProps,
 } from './models';
+import { PlaceholderMetadata } from './PlaceholderMetadata';
+import ErrorBoundary from '../ErrorBoundary';
 
 /**
- * Get the renderings for the specified placeholder from the rendering data.
+ * Get the renderings for the specified placeholder from the rendering layout data.
  * @param {ComponentRendering | RouteData } rendering rendering data
  * @param {string} name placeholder name
  * @param {boolean} isEditing whether components should be rendered in editing mode
@@ -110,43 +112,15 @@ export const renderEmptyPlaceholder = (node: React.ReactNode | React.ReactElemen
 };
 
 /**
- * Get component props to be passed to the rendered component.
- * @param {PlaceholderProps} placeholderProps current placeholder props
- * @param {ComponentRendering} componentRendering rendering to be rendered
- * @param {string} renderingKey unique key to pass over to rendering props
- * @returns {RenderedProps} props to be passed to the rendered component
- */
-export const getRenderedComponentProps = (
-  placeholderProps: PlaceholderProps,
-  componentRendering: ComponentRendering,
-  renderingKey: string
-): RenderedProps => {
-  // eslint-disable-next-line no-unused-vars
-  const { fields, params: placeholderParams, ...passThroughProps } = placeholderProps;
-  delete passThroughProps.missingComponentComponent;
-  delete passThroughProps.hiddenRenderingComponent;
-  delete (passThroughProps as { name?: string }).name;
-
-  const mergedContentProps = getAppComponentProps(placeholderProps, componentRendering);
-
-  return {
-    key: renderingKey,
-    ...passThroughProps,
-    ...mergedContentProps,
-    rendering: componentRendering,
-  };
-};
-
-/**
  * Merge specific placeholder props with component field and params content props.
  * @param {BasePlaceholderProps} placeholderProps placeholder props
  * @param {ComponentRendering} componentRendering component rendering
  * @returns {ComponentProps} merged props
  */
-export function getAppComponentProps<T extends BasePlaceholderProps>(
+export function getChildComponentProps<T extends BasePlaceholderProps>(
   placeholderProps: T,
   componentRendering: ComponentRendering
-): AppComponentProps {
+): ChildComponentProps {
   const fields = { ...(placeholderProps.fields || {}), ...(componentRendering.fields || {}) };
   const params = { ...(placeholderProps.params || {}), ...(componentRendering.params || {}) };
   return {
@@ -282,3 +256,89 @@ export const getComponentForRendering = (
     isEmpty: false,
   };
 };
+
+export const drawPlaceholderComponents = (
+  props: PlaceholderProps | AppPlaceholderProps,
+  placeholderRenderings: ComponentRendering[],
+  drawPlaceholderChildComponent: (
+    componentForRendering: ComponentForRendering,
+    renderedProps: ChildComponentProps,
+    key?: string
+  ) => React.JSX.Element,
+  componentRuntime?: 'server' | 'client' | undefined
+) => {
+  const { name, missingComponentComponent, hiddenRenderingComponent } = props;
+  const isEditing = props.page.mode.isEditing;
+
+  const transformedComponents = placeholderRenderings
+    .map((componentRendering: ComponentRendering, index: number) => {
+      const component = getComponentForRendering(
+        componentRendering,
+        name,
+        props.componentMap,
+        hiddenRenderingComponent,
+        missingComponentComponent
+      );
+      const key = componentRendering.uid || `component-${index}`;
+
+      const renderedProps = props.modifyComponentProps
+        ? props.modifyComponentProps(getChildComponentProps(props, componentRendering))
+        : getChildComponentProps(props, componentRendering);
+
+      let rendered = drawPlaceholderChildComponent(
+        component,
+        {
+          ...renderedProps,
+          ...props.passThroughComponentProps,
+        },
+        key
+      );
+
+      if (!component.isEmpty) {
+        const errorBoundaryKey = rendered.type + '-' + index;
+
+        const disableSuspense = props.disableSuspense || false;
+        rendered = (
+          <ErrorBoundary
+            data-testid="error-boundary"
+            key={errorBoundaryKey}
+            errorComponent={props.errorComponent}
+            componentLoadingMessage={props.componentLoadingMessage}
+            isDynamic={component.dynamic}
+            disableSuspense={disableSuspense}
+            rendering={rendered.props.rendering as ComponentRendering}
+          >
+            {rendered}
+          </ErrorBoundary>
+        );
+      }
+      // if in edit mode then emit shallow chromes for hydration in Pages
+      return isEditing ? (
+        <PlaceholderMetadata
+          key={key}
+          rendering={componentRendering}
+          componentRuntime={componentRuntime}
+        >
+          {rendered}
+        </PlaceholderMetadata>
+      ) : (
+        rendered
+      );
+    })
+    .filter((element) => element); // remove nulls
+
+  if (!props.page.mode.isEditing) {
+    return transformedComponents;
+  }
+
+  return [
+    <PlaceholderMetadata
+      key={(props.rendering as ComponentRendering).uid}
+      placeholderName={name}
+      rendering={props.rendering as ComponentRendering}
+    >
+      {transformedComponents}
+    </PlaceholderMetadata>,
+  ];
+};
+

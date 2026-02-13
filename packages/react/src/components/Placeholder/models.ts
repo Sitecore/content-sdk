@@ -10,22 +10,6 @@ type ErrorComponentProps = {
   [prop: string]: unknown;
 };
 
-/** Provided for the component which represents rendering data */
-export type ComponentProps = {
-  [key: string]: unknown;
-  rendering: ComponentRendering;
-};
-
-export interface AppComponentProps {
-  fields: {
-    [name: string]: Field | Item | Item[];
-  };
-  params: {
-    [name: string]: string;
-  };
-  rendering: ComponentRendering;
-}
-
 export interface BasePlaceholderProps {
   /** Name of the placeholder to render. */
   name: string;
@@ -86,29 +70,37 @@ export interface BasePlaceholderProps {
    * Mutually exclusive with `render`.
    */
   renderEach?: (component: React.ReactNode, index: number) => React.ReactNode;
-}
 
-/**
- * The interface for the Placeholder component props.
- * @public
- */
-export interface PlaceholderProps extends BasePlaceholderProps {
-  [key: string]: unknown;
+  /**
+   * Modify final props of component (before render) provided by rendering data.
+   * Can be used in case when you need to insert additional data into the component.
+   * @param {ChildComponentProps} componentProps component props to be modified
+   * @returns {ChildComponentProps} modified or initial props
+   */
+  modifyComponentProps?: (componentProps: ChildComponentProps) => ChildComponentProps;
+
+  /**
+   * An alternative to `modifyComponentProps` that allows passing additional props to the component without modifying the CSDK Placeholder props from Sitecore.
+   * These props will be merged into the result of modifyComponentProps if you use both
+   * Make sure to not include non-serializable props here in RSC server context https://react.dev/reference/rsc/use-server#serializable-parameters-and-return-values
+   */
+  passThroughComponentProps?: {
+    [key: string]: unknown;
+  };
+
   /**
    * Component Map will be used to map Sitecore component names to app implementation
    * When rendered within a <SitecoreProvider> component, defaults to the context componentMap.
    * When rendered as a server placeholder, this prop must be provided. This prop is not used in AppPlaceholder.
    */
   componentMap?: ComponentMap;
+}
 
-  /**
-   * Modify final props of component (before render) provided by rendering data.
-   * Can be used in case when you need to insert additional data into the component.
-   * @param {ComponentProps} componentProps component props to be modified
-   * @returns {ComponentProps} modified or initial props
-   */
-  modifyComponentProps?: (componentProps: ComponentProps) => ComponentProps;
-
+/**
+ * The interface for the client Placeholder component props.
+ * @public
+ */
+export type PlaceholderProps = BasePlaceholderProps & {
   /**
    * Render props function that enables control over the rendering of the components in the placeholder.
    * Useful for techniques like wrapping each child in a wrapper component.
@@ -118,44 +110,38 @@ export interface PlaceholderProps extends BasePlaceholderProps {
     data: ComponentRendering[],
     props: PlaceholderProps
   ) => React.ReactNode;
-}
+};
 
 /**
  * The interface for the AppPlaceholder component props.
  * @public
  */
-export interface AppPlaceholderProps extends BasePlaceholderProps {
-  /**
-   * Component Map will be used to map Sitecore component names to app implementation
-   * When rendered within a <SitecoreProvider> component, defaults to the context componentMap.
-   * When rendered as a server placeholder, this prop must be provided. This prop is not used in AppPlaceholder.
-   */
-  componentMap: ComponentMap;
-  /**
-   * Modify final props of component (before render) provided by rendering data.
-   * Can be used in case when you need to insert additional data into the component.
-   * @param {AppComponentProps} componentProps component props to be modified
-   * @returns {AppComponentProps} modified or initial props
-   */
-  modifyComponentProps?: (componentProps: AppComponentProps) => AppComponentProps;
+export type AppPlaceholderProps = Omit<BasePlaceholderProps, 'componentMap'> &
+  Required<Pick<BasePlaceholderProps, 'componentMap'>> & {
+    /**
+     * Render props function that enables control over the rendering of the components in the placeholder.
+     * Useful for techniques like wrapping each child in a wrapper component.
+     */
+    render?: (
+      components: React.ReactNode[],
+      data: ComponentRendering[],
+      props: AppPlaceholderProps
+    ) => React.ReactNode;
+  };
 
-  /**
-   * Render props function that enables control over the rendering of the components in the placeholder.
-   * Useful for techniques like wrapping each child in a wrapper component.
-   */
-  render?: (
-    components: React.ReactNode[],
-    data: ComponentRendering[],
-    props: AppPlaceholderProps
-  ) => React.ReactNode;
-}
-
-export type RenderedProps = Omit<PlaceholderProps, 'fields' | 'params' | 'name'> & {
+export type RenderedProps = ChildComponentProps & {
   key: string;
-  fields: { [field: string]: unknown };
-  params: { [param: string]: unknown };
-  rendering: ComponentRendering;
 };
+
+export interface ChildComponentProps {
+  fields: {
+    [name: string]: Field | Item | Item[];
+  };
+  params: {
+    [name: string]: string;
+  };
+  rendering: ComponentRendering;
+}
 
 export interface ComponentForRendering {
   component: React.ComponentType<any>;

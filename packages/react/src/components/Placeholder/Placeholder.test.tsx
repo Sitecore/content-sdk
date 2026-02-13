@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -34,7 +34,7 @@ import * as HiddenRendering from '../HiddenRendering';
 import * as ErrorBoundary from '../ErrorBoundary';
 import { MissingComponent, MissingComponentProps } from '../MissingComponent';
 import { Placeholder } from './Placeholder';
-import { ComponentProps } from './models';
+import { ChildComponentProps } from './models';
 import { SitecoreProvider } from '../SitecoreProvider';
 import { Page, PageMode } from '@sitecore-content-sdk/content/client';
 
@@ -86,7 +86,7 @@ const DownloadCallout: React.FC<{
   extraDiv?: boolean;
 }> = (props) => (
   <div className="download-callout-mock">
-    {props.fields.message ? props.fields.message.value : ''}
+    {props.fields?.message ? props.fields.message.value : ''}
     {props.extraDiv ? <div className="extra">extra!</div> : null}
   </div>
 );
@@ -261,40 +261,35 @@ describe('<Placeholder />', () => {
       ).to.be.true;
     });
 
-    it('should apply modifyComponentProps to the final props', () => {
+    it('should pass passThroughComponentProps to rendered components', () => {
       const page = getPage();
-      page.layout = dataSet.data;
-      const component = dataSet.data.sitecore.route as any;
-      const phKey = 'main';
-      const expectedMessage = (component.placeholders.main as any[]).find((c) => c.componentName)
-        .fields.message;
-
-      const modifyComponentProps = (props: ComponentProps) => {
-        if (props.rendering?.componentName === 'DownloadCallout') {
-          return {
-            ...props,
-            extraDiv: true,
-          };
-        }
-
-        return props;
+      // Create a simple test component directly without nesting
+      const testRendering: RouteData = {
+        placeholders: {
+          'test-placeholder': [
+            {
+              componentName: 'DownloadCallout',
+              uid: 'download-uid',
+              fields: {
+                message: { value: 'Test message' },
+              },
+            },
+          ],
+        },
       };
+      page.layout = { sitecore: { context: {}, route: testRendering } };
 
       const renderedComponent = render(
         <SitecoreProvider componentMap={componentMap} page={page} api={undefined}>
           <Placeholder
-            name={phKey}
-            rendering={component}
-            modifyComponentProps={modifyComponentProps}
+            name="test-placeholder"
+            rendering={testRendering}
+            passThroughComponentProps={{ extraDiv: true }}
           />
         </SitecoreProvider>
       );
 
-      expect(
-        renderedComponent.container
-          .querySelector('.download-callout-mock')
-          ?.innerHTML.indexOf(expectedMessage.value) !== -1
-      ).to.be.true;
+      expect(renderedComponent.container.querySelector('.download-callout-mock')).to.not.be.null;
       expect(renderedComponent.container.querySelectorAll('div.extra').length).to.equal(1);
     });
   });
