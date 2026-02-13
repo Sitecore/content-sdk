@@ -4,7 +4,6 @@ import { AppPlaceholder } from '../components/Placeholder/AppPlaceholder';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { ComponentMap } from '../components/sharedTypes';
-import { rsc as isServerRuntime } from '../rsc-utils/rsc';
 import { Placeholder } from '../components/Placeholder';
 
 export type ComponentProps = {
@@ -31,15 +30,13 @@ export const withAppPlaceholder = <T extends ComponentProps, W extends T & Wrapp
     const phProps: Record<string, unknown> = {};
 
     for (const placeholder of Object.keys(placeholders)) {
-      phProps[placeholder] = isServerRuntime ? (
+      phProps[placeholder] = (
         <AppPlaceholder
           name={placeholder}
           rendering={props.rendering}
           componentMap={props.componentMap}
           page={props.page}
         />
-      ) : (
-        <Placeholder name={placeholder} rendering={props.rendering} />
       );
     }
 
