@@ -204,18 +204,12 @@ export type SitecoreConfigInput = {
     locales?: string[];
   };
   /**
-   * Opt-in: rewrite URLs in layout content (media fields, rich text with img/src, href, etc.)
-   * to use the custom hostname. When true, uses the default rewriter (Edge host -> custom host)
-   * or contentRewrite if provided. Off by default to avoid unintended rewrites.
+   * Rewrite media/content URLs in layout (media fields, rich text img/src, href, etc.).
+   * - When `true`: use default rewriter (Edge hostnames -> custom hostname from env).
+   * - When a function: transform each string value; the SDK traverses the layout for you.
+   * @default false
    */
-  rewriteContentUrls?: boolean;
-  /**
-   * Optional custom content rewriter. When rewriteContentUrls is true and this is set,
-   * it is used instead of the default. Use for custom rules (e.g. only certain fields or URL shapes).
-   * @param layout - Layout service data
-   * @returns Rewritten layout (do not mutate input)
-   */
-  contentRewrite?: (layout: unknown) => unknown;
+  rewriteMediaUrls?: boolean | ((value: string) => string);
   /**
    * Opt-out setting for code generation feature
    * Disables code extraction procedure

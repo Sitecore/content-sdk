@@ -1,17 +1,8 @@
-import { hasCustomEdgeHostname, resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
-
-/**
- * The default Edge Platform hostnames that may appear in responses.
- * These will be replaced with the custom hostname when configured.
- * Includes production and staging so layout content (e.g. media URLs) can be rewritten.
- * @internal
- */
-const DEFAULT_EDGE_HOSTNAMES = [
-  'edge-platform.sitecorecloud.io',
-  'edge.sitecorecloud.io', // Legacy hostname included for safety replacement
-  'edge-staging.sitecore-staging.cloud',
-  'edge-platform-staging.sitecore-staging.cloud',
-];
+import {
+  DEFAULT_EDGE_HOSTNAMES,
+  hasCustomEdgeHostname,
+  resolveEdgeUrl,
+} from '@sitecore-content-sdk/core/tools';
 
 /**
  * Regular expression patterns for matching Edge hostnames in URLs.
@@ -37,6 +28,12 @@ function escapeRegExp(input: string): string {
  * This function performs a deep traversal of the object and replaces any string values
  * containing the default Edge hostnames with the custom hostname.
  * Only performs rewriting when a custom Edge hostname is configured via environment variables.
+ *
+ * Use case: Experience Edge returns Layout Service output (layout, placeholders, component fields).
+ * Field values can contain URLs with the Edge hostname—e.g. Image field `value.src`
+ * (`https://edge-platform.sitecorecloud.io/-/media/...`), Rich Text HTML (`<img src="...">`),
+ * or link `href`. When using a custom hostname (e.g. CDN in front of Edge), these URLs
+ * must be rewritten so layout API and media requests both go through the custom host.
  * @param {T} response - The response object to process (typically LayoutServiceData)
  * @returns {T} The response object with Edge hostnames rewritten (same reference if no custom hostname)
  * @public
@@ -113,6 +110,49 @@ function rewriteEdgeHostInString(str: string, customEdgeUrl: string): string {
   }
 
   return result;
+}
+
+/**
+ * Returns the default media URL transformer: rewrites Edge hostnames when custom hostname is configured.
+ * @returns {(value: string) => string} Transformer function; returns string unchanged when no custom hostname
+ * @internal
+ */
+export function getDefaultMediaUrlTransformer(): (value: string) => string {
+  if (!hasCustomEdgeHostname()) {
+    return (s) => s;
+  }
+  const customEdgeUrl = resolveEdgeUrl();
+  return (s) => rewriteEdgeHostInString(s, customEdgeUrl);
+}
+
+/**
+ * Deeply traverses a value and applies a string transformer to every string.
+ * @param {T} value - Value to process (layout, object, array, string)
+ * @param {(s: string) => string} transform - Function that transforms each string
+ * @returns {T} New value with transformed strings
+ * @internal
+ */
+export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => string): T {
+  if (value === null || value === undefined) {
+    return value;
+  }
+  if (typeof value === 'string') {
+    return transform(value) as T;
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => applyMediaUrlRewrite(item, transform)) as T;
+  }
+  if (typeof value === 'object' && Object.getPrototypeOf(value) === Object.prototype) {
+    const result: Record<string, unknown> = {};
+    for (const key of Object.keys(value as Record<string, unknown>)) {
+      result[key] = applyMediaUrlRewrite(
+        (value as Record<string, unknown>)[key],
+        transform
+      );
+    }
+    return result as T;
+  }
+  return value;
 }
 
 /**

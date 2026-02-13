@@ -186,11 +186,6 @@ export interface ComponentUpdateEventArgs {
 // @public
 export function containsDefaultEdgeHost(str: string): boolean;
 
-// @public
-export interface ContentRewriteOptions {
-    type?: 'prefix' | 'normal';
-}
-
 // @internal
 export const createComponentInstance: (importMap: ImportEntry[], previewEventArgs: ComponentPreviewEventArgs) => unknown;
 
@@ -986,9 +981,6 @@ export const resetEditorChromes: () => void;
 export { RetryStrategy }
 
 // @public
-export function rewriteContentInLayout(layout: LayoutServiceData, source: string | RegExp, target: string, options?: ContentRewriteOptions): LayoutServiceData;
-
-// @public
 export function rewriteEdgeHostInResponse<T>(response: T): T;
 
 // @public
@@ -1206,8 +1198,7 @@ export type SitecoreConfigInput = {
         enabled?: boolean;
         locales?: string[];
     };
-    rewriteContentUrls?: boolean;
-    contentRewrite?: (layout: unknown) => unknown;
+    rewriteMediaUrls?: boolean | ((value: string) => string);
     disableCodeGeneration?: boolean;
 };
 

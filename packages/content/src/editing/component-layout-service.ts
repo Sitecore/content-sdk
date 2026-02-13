@@ -1,5 +1,5 @@
 import { NativeDataFetcher, FetchOptions } from '@sitecore-content-sdk/core';
-import { resolveUrl, resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
+import { normalizeUrl, resolveUrl, resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { LayoutServiceData } from '../layout';
 import debug from '../debug';
 import { DesignLibraryMode, DesignLibraryVariantGeneration } from './models';
@@ -141,9 +141,7 @@ export class ComponentLayoutService {
    * @returns {string} The fetch URL for the component data
    */
   private getFetchUrl(params: ComponentLayoutRequestParams) {
-    return resolveUrl(
-      `${resolveEdgeUrl(this.config.edgeUrl)}/layout/component`,
-      this.getComponentFetchParams(params)
-    );
+    const baseUrl = this.config.edgeUrl ? normalizeUrl(this.config.edgeUrl) : resolveEdgeUrl();
+    return resolveUrl(`${baseUrl}/layout/component`, this.getComponentFetchParams(params));
   }
 }

@@ -2,15 +2,8 @@ import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 import { normalizeUrl } from './normalize-url';
 
 /**
- * Environment variable name for the custom Edge hostname (server-side).
- * When set, this hostname replaces the default Edge Platform hostname.
- * @public
- */
-export const SITECORE_EDGE_HOSTNAME_ENV = 'SITECORE_EDGE_HOSTNAME';
-
-/**
- * Environment variable name for the custom Edge hostname (client-side / browser).
- * Required for Next.js client bundles where server-only env vars are not available.
+ * Environment variable name for the custom Edge hostname.
+ * Available on both server and client (e.g. NEXT_PUBLIC_* in Next.js).
  * @public
  */
 export const SITECORE_EDGE_HOSTNAME_PUBLIC_ENV = 'NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME';
@@ -32,7 +25,7 @@ export const SITECORE_EDGE_URL_PUBLIC_ENV = 'NEXT_PUBLIC_SITECORE_EDGE_URL';
  *
  * Priority order:
  * 1. Explicit `edgeUrl` parameter (if provided and not empty)
- * 2. `SITECORE_EDGE_HOSTNAME` / `NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME` environment variable
+ * 2. `NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME` environment variable
  * 3. `SITECORE_EDGE_URL` / `NEXT_PUBLIC_SITECORE_EDGE_URL` environment variable
  * 4. Default Edge Platform URL (`https://edge-platform.sitecorecloud.io`)
  *
@@ -56,20 +49,15 @@ export function resolveEdgeUrl(edgeUrl?: string): string {
     return normalizeUrl(explicit);
   }
 
-  // Determine if we're in browser context
-  const isBrowser = typeof window !== 'undefined';
-
-  // Check for custom hostname env var (prioritize custom hostname over URL)
-  const hostnameEnvVarRaw = isBrowser
-    ? process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV]
-    : process.env[SITECORE_EDGE_HOSTNAME_ENV] || process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV];
-
+  // Check for custom hostname env var (available on both server and client)
+  const hostnameEnvVarRaw = process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV];
   const hostnameEnvVar = normalizeMaybeEnvValue(hostnameEnvVarRaw);
   if (hostnameEnvVar) {
     return normalizeHostnameToUrl(hostnameEnvVar);
   }
 
   // Check for Edge URL env var
+  const isBrowser = typeof window !== 'undefined';
   const urlEnvVarRaw = isBrowser
     ? process.env[SITECORE_EDGE_URL_PUBLIC_ENV]
     : process.env[SITECORE_EDGE_URL_ENV] || process.env[SITECORE_EDGE_URL_PUBLIC_ENV];
@@ -146,15 +134,7 @@ function normalizeMaybeEnvValue(value: string | undefined): string | undefined {
  * @public
  */
 export function hasCustomEdgeHostname(): boolean {
-  const isBrowser = typeof window !== 'undefined';
-
-  if (isBrowser) {
-    return !!normalizeMaybeEnvValue(process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV]);
-  }
-
-  return !!normalizeMaybeEnvValue(
-    process.env[SITECORE_EDGE_HOSTNAME_ENV] || process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV]
-  );
+  return !!normalizeMaybeEnvValue(process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV]);
 }
 
 /**

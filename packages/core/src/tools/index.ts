@@ -6,12 +6,12 @@ export * from './metadata';
 export { default as isServer } from './is-server';
 export { ensurePathExists } from './ensurePath';
 export { normalizeUrl } from './normalize-url';
+export { DEFAULT_EDGE_HOSTNAMES } from '../constants';
 export {
   resolveEdgeUrl,
   resolveEdgeUrlForStaticFiles,
   hasCustomEdgeHostname,
   getCustomEdgeUrl,
-  SITECORE_EDGE_HOSTNAME_ENV,
   SITECORE_EDGE_HOSTNAME_PUBLIC_ENV,
   SITECORE_EDGE_URL_ENV,
   SITECORE_EDGE_URL_PUBLIC_ENV,

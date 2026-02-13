@@ -4,7 +4,4 @@ import { defineConfig } from '@sitecore-content-sdk/nextjs/config';
  * See the documentation for `defineConfig`:
  * https://doc.sitecore.com/xmc/en/developers/content-sdk/the-sitecore-configuration-file.html
  */
-export default defineConfig({
-  // Enable to use custom hostname for content/media URLs (default: false)
-  // rewriteContentUrls: true,
-});
+export default defineConfig({});

@@ -17,6 +17,8 @@ import {
   RouteOptions,
   LayoutServicePageState,
   rewriteEdgeHostInResponse,
+  getDefaultMediaUrlTransformer,
+  applyMediaUrlRewrite,
 } from '../layout';
 import { HTMLLink, StaticPath } from '../models';
 import { getGroomedVariantIds, PersonalizedRewriteData } from '../personalize/utils';
@@ -360,17 +362,16 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!layout.sitecore.route) {
       return null;
     }
-    layout = this.applyContentRewrite(layout);
-    // Initialize links to be inserted on the page
+    // Apply personalization first to select the variant(s) that will be used,
+    // then rewrite content URLs so we only process the selected variant(s)
     if (pageOptions?.personalize?.variantId) {
-      // Modify layoutData to use specific variant(s) instead of default
-      // This will also set the variantId on the Sitecore context so that it is accessible here
       personalizeLayout(
         layout,
         pageOptions.personalize.variantId,
         pageOptions.personalize.componentVariantIds
       );
     }
+    layout = this.applyContentRewrite(layout);
 
     return {
       layout,
@@ -477,15 +478,16 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!data) {
       throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(previewData)}`);
     }
-    const layout = this.applyContentRewrite(data.layoutData);
+    let layout = data.layoutData;
+    const personalizeData = getGroomedVariantIds(variantIds);
+    personalizeLayout(layout, personalizeData.variantId, personalizeData.componentVariantIds);
+    layout = this.applyContentRewrite(layout);
     const page: Page = {
       locale: language,
       layout,
       siteName: layout.sitecore.context.site?.name || site,
       mode: this.getPageMode(mode),
     };
-    const personalizeData = getGroomedVariantIds(variantIds);
-    personalizeLayout(page.layout, personalizeData.variantId, personalizeData.componentVariantIds);
 
     return page;
   }
@@ -711,20 +713,20 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @returns {PageMode} The page mode
    */
   /**
-   * Applies content URL rewrite when rewriteContentUrls is enabled (opt-in).
-   * Uses contentRewrite from config or the default Edge host rewriter.
+   * Applies media URL rewrite when rewriteMediaUrls is enabled.
+   * When true, uses default Edge host rewriter; when a function, transforms each string.
    * @param {LayoutServiceData} layout - Layout data from layout/editing/component/error service
    * @returns {LayoutServiceData} Rewritten layout (or same reference if rewrite disabled)
    * @internal
    */
   protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData {
-    if (!this.initOptions.rewriteContentUrls) {
+    const opt = this.initOptions.rewriteMediaUrls;
+    if (!opt) {
       return layout;
     }
-    const rewriter = this.initOptions.contentRewrite as (
-      l: LayoutServiceData
-    ) => LayoutServiceData;
-    return rewriter(layout);
+    const transformer =
+      opt === true ? getDefaultMediaUrlTransformer() : opt;
+    return applyMediaUrlRewrite(layout, transformer);
   }
 
   private getPageMode(mode: PageModeName, generation?: DesignLibraryVariantGeneration): PageMode {

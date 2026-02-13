@@ -1,4 +1,4 @@
-import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
+import { normalizeUrl, resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { ComponentRendering, LayoutServiceData, RouteData, getFieldValue } from '.';
 import { HTMLLink } from '../models';
 
@@ -13,7 +13,7 @@ const STYLES_LIBRARY_ID_REGEX = /-library--([^\s]+)/;
  * @param {LayoutServiceData} layoutData Layout service data
  * @param {string} sitecoreEdgeContextId Sitecore Edge Context ID
  * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL. If not provided,
- *   resolves from SITECORE_EDGE_HOSTNAME or SITECORE_EDGE_URL env vars, falling back to default.
+ *   resolves from NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME or SITECORE_EDGE_URL env vars, falling back to default.
  * @returns {HTMLLink[]} library stylesheet links
  * @public
  */
@@ -39,7 +39,7 @@ export const getStylesheetUrl = (
   sitecoreEdgeContextId: string,
   sitecoreEdgeUrl?: string
 ) => {
-  return `${resolveEdgeUrl(sitecoreEdgeUrl)}/v1/files/components/styles/${id}.css?sitecoreContextId=${sitecoreEdgeContextId}`;
+  return `${(sitecoreEdgeUrl ? normalizeUrl(sitecoreEdgeUrl) : resolveEdgeUrl())}/v1/files/components/styles/${id}.css?sitecoreContextId=${sitecoreEdgeContextId}`;
 };
 
 /**

@@ -101,7 +101,7 @@ export class SearchService {
   private fetcher: NativeDataFetcher;
 
   constructor(private config: SearchServiceConfig) {
-    this.config.edgeUrl = resolveEdgeUrl(this.config.edgeUrl);
+    this.config.edgeUrl = this.config.edgeUrl ?? resolveEdgeUrl();
 
     this.fetcher = new NativeDataFetcher({
       debugger: debug,

@@ -16,7 +16,8 @@ Our versioning strategy is as follows:
 
 * `[nextjs]` `[create-content-sdk-app]` Enable Next.js 16 Cache Components and Turbopack File System Caching ([#334](https://github.com/Sitecore/content-sdk/pull/334))
 
-* `[core]` `[content]` `[nextjs]` Support custom Edge hostnames via `SITECORE_EDGE_HOSTNAME` / `NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME` ([#359](https://github.com/Sitecore/content-sdk/pull/359))
+* `[core]` `[content]` `[nextjs]` Support custom Edge hostnames via `NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME` ([#359](https://github.com/Sitecore/content-sdk/pull/359))
+  - Consolidated `rewriteContentUrls` and `contentRewrite` into `rewriteMediaUrls: boolean | ((value: string) => string)`. When `true`, uses default Edge host rewriter; when a function, transforms each string (SDK traverses layout). Migration: `rewriteContentUrls: true` → `rewriteMediaUrls: true`; custom rewriter → `rewriteMediaUrls: (value: string) => string`
 
 * Search integration ([#295](https://github.com/Sitecore/content-sdk/pull/295))
   * `[search]` New `@sitecore-content-sdk/search` package providing search functionality
