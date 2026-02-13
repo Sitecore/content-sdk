@@ -56,16 +56,6 @@ const PlaceholderComponent = (props: PlaceholderProps) => {
       return props.page.mode.isEditing ? renderEmptyPlaceholder(rendered) : rendered;
     } else if (props.render) {
       return props.render(renderedComponents, placeholderRenderings, childProps);
-    } else if (props.renderEach) {
-      const renderEach = props.renderEach;
-
-      return renderedComponents.map((component, index) => {
-        if (component && component.props && component.props.type === 'text/sitecore') {
-          return component;
-        }
-
-        return renderEach(component, index);
-      });
     } else {
       return renderedComponents;
     }

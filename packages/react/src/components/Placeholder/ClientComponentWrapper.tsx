@@ -4,12 +4,12 @@ import { ComponentMapReactContext } from '../SitecoreProvider';
 import { useContext } from 'react';
 import React from 'react';
 import { useSitecore } from '../../enhancers/withSitecore';
-import { AppComponentProps } from './models';
+import { ChildComponentProps } from './models';
 import { getComponentForRendering } from './placeholder-utils';
 
 export interface ClientComponentWrapperProps {
   rendering: ComponentRendering;
-  componentProps: AppComponentProps;
+  componentProps: ChildComponentProps;
   placeholderName: string;
 }
 

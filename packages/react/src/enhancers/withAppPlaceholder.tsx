@@ -39,7 +39,7 @@ export const withAppPlaceholder = <T extends ComponentProps, W extends T & Wrapp
           page={props.page}
         />
       ) : (
-        <Placeholder name={placeholder} rendering={props.rendering} page={props.page} />
+        <Placeholder name={placeholder} rendering={props.rendering} />
       );
     }
 

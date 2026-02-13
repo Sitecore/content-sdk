@@ -151,7 +151,7 @@ describe('<Placeholder />', () => {
         ).to.equal(1);
       });
 
-      it('should render components based on the rendereach function', () => {
+      it('should render components based on the renderEach function', () => {
         const page = getPage();
         page.layout = dataSet.data;
         const component = dataSet.data.sitecore.route as RouteData;
@@ -168,6 +168,51 @@ describe('<Placeholder />', () => {
         );
 
         expect(renderedComponent.container.querySelectorAll('.wrapper').length).to.equal(1);
+      });
+
+      it('should use renderEach for each child in the placeholder when page editing is enabled', () => {
+        const page = getPage();
+        const components = new Map<string, React.FC>();
+
+        page.mode.isEditing = true;
+
+        components.set('Child', () => 'Child');
+
+        const route = {
+          name: 'Render Each Test',
+          placeholders: {
+            main: [
+              {
+                componentName: 'Child',
+              },
+              {
+                componentName: 'Child',
+              },
+            ],
+          },
+        };
+        page.layout = {
+          sitecore: {
+            context: {},
+            route,
+          },
+        };
+        const phKey = 'main';
+
+        const renderedComponent = render(
+          <SitecoreProvider componentMap={componentMap} page={page}>
+            <Placeholder
+              name={phKey}
+              rendering={page.layout.sitecore.route}
+              componentMap={components}
+              render={(children) => <div className="parentWrapper">{children}</div>}
+              renderEach={(child) => <div className="wrapper">{child}</div>}
+            />
+          </SitecoreProvider>
+        );
+
+        expect(renderedComponent.container.querySelectorAll('.parentWrapper').length).to.equal(1);
+        expect(renderedComponent.container.querySelectorAll('.wrapper').length).to.equal(2);
       });
 
       it('should render components based on the render function', () => {
