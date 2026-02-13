@@ -156,7 +156,7 @@ export const DesignLibrary = () => {
       cancelled = true;
       unsubscribe && unsubscribe();
     };
-  }, [isVariantGeneration, uid]);
+  }, [isDesignLibrary, isVariantGeneration, uid, loadImportMap, propsState]);
 
   return (
     <main>
