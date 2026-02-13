@@ -9,7 +9,7 @@ export const SITECORE_EDGE_URL_DEFAULT = 'https://edge-platform.sitecorecloud.io
  * Used when rewriting URLs to a custom hostname. Includes production and staging.
  *
  * These hostnames can appear in any string in the response, including:
- * - Media URLs (Image field value.src, Rich Text <img src>)
+ * - Media URLs (Image field value.src, Rich Text markup)
  * - Link field href values
  * - Other URL fields in component data
  *
