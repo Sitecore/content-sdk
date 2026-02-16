@@ -5,7 +5,6 @@ import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import { DocumentNode } from 'graphql';
 import { DefaultRetryStrategy, NativeDataFetcher } from '@sitecore-content-sdk/core';
-import { SITECORE_EDGE_HOSTNAME_PUBLIC_ENV } from '@sitecore-content-sdk/core/tools';
 import { ErrorPage, SitecoreClient } from './sitecore-client';
 import { LayoutKind, DesignLibraryMode } from '../../src/editing';
 import { LayoutServiceData } from '../../layout';
@@ -510,39 +509,40 @@ describe('SitecoreClient', () => {
     });
 
     it('should apply default Edge host rewrite when rewriteMediaUrls is true and custom hostname is set', async () => {
-      const originalEnv = process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV];
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
-      try {
-        const path = '/test/path';
-        const locale = 'en-US';
-        const siteInfo = { name: 'default-site', hostName: 'example.com', language: 'en' };
-        const rawLayout = {
-          sitecore: {
-            route: {
-              name: 'home',
-              placeholders: {},
-              fields: {
-                image: { value: { src: 'https://edge-platform.sitecorecloud.io/-/media/hero.jpg' } },
-              },
+      const path = '/test/path';
+      const locale = 'en-US';
+      const siteInfo = { name: 'default-site', hostName: 'example.com', language: 'en' };
+      const rawLayout = {
+        sitecore: {
+          route: {
+            name: 'home',
+            placeholders: {},
+            fields: {
+              image: { value: { src: 'https://edge-platform.sitecorecloud.io/-/media/hero.jpg' } },
             },
-            context: { site: siteInfo, pageState: LayoutServicePageState.Normal },
           },
-        };
-        layoutServiceStub.fetchLayoutData.returns(rawLayout);
-        const clientWithRewrite = new SitecoreClient({
-          ...defaultInitOptions,
-          rewriteMediaUrls: true,
-        } as any);
+          context: { site: siteInfo, pageState: LayoutServicePageState.Normal },
+        },
+      };
+      layoutServiceStub.fetchLayoutData.returns(rawLayout);
+      const clientWithRewrite = new SitecoreClient({
+        ...defaultInitOptions,
+        api: {
+          ...defaultInitOptions.api,
+          edge: {
+            ...defaultInitOptions.api.edge,
+            edgeUrl: 'https://custom.example.com',
+          },
+        },
+        rewriteMediaUrls: true,
+      } as any);
         (clientWithRewrite as any).layoutService = layoutServiceStub;
 
-        const result = await clientWithRewrite.getPage(path, { locale });
+      const result = await clientWithRewrite.getPage(path, { locale });
 
-        expect(
-          (result?.layout.sitecore.route?.fields?.image?.value as { src: string }).src
-        ).to.equal('https://custom.example.com/-/media/hero.jpg');
-      } finally {
-        process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = originalEnv;
-      }
+      expect(
+        (result?.layout.sitecore.route?.fields?.image?.value as { src: string }).src
+      ).to.equal('https://custom.example.com/-/media/hero.jpg');
     });
 
     it('should pass fetchOptions to layoutService when calling getPage', async () => {
@@ -1525,8 +1525,16 @@ describe('SitecoreClient', () => {
     });
 
     it('should rewrite Edge hostnames in sitemap path and XML when custom hostname is configured', async () => {
-      const originalEnv = process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV];
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'https://custom.example.com';
+      const clientWithCustomEdge = new SitecoreClient({
+        ...defaultInitOptions,
+        api: {
+          ...defaultInitOptions.api,
+          edge: {
+            ...defaultInitOptions.api.edge,
+            edgeUrl: 'https://custom.example.com',
+          },
+        },
+      } as any);
 
       const edgeSitemapPath = 'https://edge-platform.sitecorecloud.io/sitemap.xml';
       const xmlContent =
@@ -1537,12 +1545,11 @@ describe('SitecoreClient', () => {
         .stub(NativeDataFetcher.prototype, 'fetch')
         .resolves({ data: xmlContent, status: 200, statusText: 'OK' });
 
-      const result = await sitecoreClient.getSiteMap({ ...defaultReqConfig });
+      const result = await clientWithCustomEdge.getSiteMap({ ...defaultReqConfig });
 
+      expect(getGraphqlSitemapXMLServiceStub.calledWith(defaultReqConfig.siteName)).to.be.true;
       expect(dataFetcherStub.calledWith('https://custom.example.com/sitemap.xml')).to.be.true;
       expect(result).to.include('https://custom.example.com/a');
-
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = originalEnv;
     });
 
     it('should fetch specific sitemap when ID is provided', async () => {

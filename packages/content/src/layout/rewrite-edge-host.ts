@@ -5,6 +5,22 @@ import {
 } from '@sitecore-content-sdk/core/tools';
 
 /**
+ * Returns true if the given URL has a custom (non-default) Edge hostname.
+ * @param {string} url - Full URL or hostname
+ * @returns {boolean} True if URL host is not a default Edge hostname
+ * @internal
+ */
+function isCustomEdgeUrl(url: string): boolean {
+  try {
+    const u = url.startsWith('http') ? new URL(url) : new URL(`https://${url}`);
+    const host = u.hostname.toLowerCase();
+    return !DEFAULT_EDGE_HOSTNAMES.some((h) => host === h);
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Regular expression patterns for matching Edge hostnames in URLs.
  * Matches both http:// and https:// protocols.
  * @internal
@@ -27,7 +43,7 @@ function escapeRegExp(input: string): string {
  * Rewrites Edge Platform hostnames in a response object to use the custom hostname.
  * This function performs a deep traversal of the object and replaces any string values
  * containing the default Edge hostnames with the custom hostname.
- * Only performs rewriting when a custom Edge hostname is configured via environment variables.
+ * Uses `edgeUrl` when provided (e.g. from config); otherwise resolves from env vars.
  *
  * Use case: Experience Edge returns Layout Service output (layout, placeholders, component fields).
  * Field values can contain URLs with the Edge hostname—e.g. Image field `value.src`
@@ -35,19 +51,23 @@ function escapeRegExp(input: string): string {
  * or link `href`. When using a custom hostname (e.g. CDN in front of Edge), these URLs
  * must be rewritten so layout API and media requests both go through the custom host.
  * @param {T} response - The response object to process (typically LayoutServiceData)
+ * @param {string} [edgeUrl] - Optional Edge URL from config. When provided, used for rewriting instead of env vars.
  * @returns {T} The response object with Edge hostnames rewritten (same reference if no custom hostname)
  * @public
  * @example
  * const layout = await layoutService.fetchLayoutData(path, options);
  * const rewritten = rewriteEdgeHostInResponse(layout);
  */
-export function rewriteEdgeHostInResponse<T>(response: T): T {
-  // Skip if no custom hostname is configured
-  if (!hasCustomEdgeHostname()) {
+export function rewriteEdgeHostInResponse<T>(response: T, edgeUrl?: string): T {
+  const customEdgeUrl = edgeUrl ? resolveEdgeUrl(edgeUrl) : resolveEdgeUrl();
+  const shouldRewrite =
+    edgeUrl !== undefined && edgeUrl !== ''
+      ? isCustomEdgeUrl(customEdgeUrl)
+      : hasCustomEdgeHostname();
+
+  if (!shouldRewrite) {
     return response;
   }
-
-  const customEdgeUrl = resolveEdgeUrl();
 
   return deepRewriteEdgeHost(response, customEdgeUrl);
 }
@@ -114,14 +134,21 @@ function rewriteEdgeHostInString(str: string, customEdgeUrl: string): string {
 
 /**
  * Returns the default media URL transformer: rewrites Edge hostnames when custom hostname is configured.
+ * Uses `edgeUrl` when provided (e.g. from config); otherwise resolves from env vars.
+ * @param {string} [edgeUrl] - Optional Edge URL from config. When provided, used for rewriting instead of env vars.
  * @returns {(value: string) => string} Transformer function; returns string unchanged when no custom hostname
  * @internal
  */
-export function getDefaultMediaUrlTransformer(): (value: string) => string {
-  if (!hasCustomEdgeHostname()) {
+export function getDefaultMediaUrlTransformer(edgeUrl?: string): (value: string) => string {
+  const customEdgeUrl = edgeUrl ? resolveEdgeUrl(edgeUrl) : resolveEdgeUrl();
+  const shouldRewrite =
+    edgeUrl !== undefined && edgeUrl !== ''
+      ? isCustomEdgeUrl(customEdgeUrl)
+      : hasCustomEdgeHostname();
+
+  if (!shouldRewrite) {
     return (s) => s;
   }
-  const customEdgeUrl = resolveEdgeUrl();
   return (s) => rewriteEdgeHostInString(s, customEdgeUrl);
 }
 

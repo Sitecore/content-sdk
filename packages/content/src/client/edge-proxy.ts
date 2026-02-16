@@ -3,6 +3,7 @@ import { normalizeUrl, resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 /**
  * Resolves the base Edge URL: uses provided value (from config) or falls back to resolveEdgeUrl.
  * Normalizes trailing slash when a value is provided.
+ * @param {string} [sitecoreEdgeUrl] - The base Edge URL from config; when not provided, resolves from env vars.
  * @internal
  */
 const getBaseEdgeUrl = (sitecoreEdgeUrl?: string): string =>

@@ -24,6 +24,14 @@ describe('rewriteEdgeHostInResponse', () => {
       expect(result).to.deep.equal(response);
     });
 
+    it('should rewrite when edgeUrl is provided from config (no env vars)', () => {
+      const response = {
+        url: 'https://edge-platform.sitecorecloud.io/media/image.jpg',
+      };
+      const result = rewriteEdgeHostInResponse(response, 'https://custom.edge.example.com');
+      expect(result.url).to.equal('https://custom.edge.example.com/media/image.jpg');
+    });
+
     it('should rewrite edge-platform.sitecorecloud.io in string values', () => {
       process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
       const response = {

@@ -633,13 +633,19 @@ export class SitecoreClient implements BaseSitecoreClient {
     // regular sitemap
     if (sitemapPath) {
       try {
-        const rewrittenSitemapPath = rewriteEdgeHostInResponse(sitemapPath);
+        const rewrittenSitemapPath = rewriteEdgeHostInResponse(
+          sitemapPath,
+          this.initOptions.api.edge.edgeUrl
+        );
         const fetcher = new NativeDataFetcher();
         const xmlResponse = await fetcher.fetch<string>(rewrittenSitemapPath);
         if (!xmlResponse.data) {
           throw new Error('REDIRECT_404');
         }
-        return rewriteEdgeHostInResponse(xmlResponse.data);
+        return rewriteEdgeHostInResponse(
+          xmlResponse.data,
+          this.initOptions.api.edge.edgeUrl
+        );
         // eslint-disable-next-line no-unused-vars
       } catch (error) {
         throw new Error('REDIRECT_404');
@@ -725,7 +731,9 @@ export class SitecoreClient implements BaseSitecoreClient {
       return layout;
     }
     const transformer =
-      opt === true ? getDefaultMediaUrlTransformer() : opt;
+      opt === true
+        ? getDefaultMediaUrlTransformer(this.initOptions.api.edge.edgeUrl)
+        : opt;
     return applyMediaUrlRewrite(layout, transformer);
   }
 

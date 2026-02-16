@@ -12,7 +12,6 @@ export const SITECORE_EDGE_URL_DEFAULT = 'https://edge-platform.sitecorecloud.io
  * - Media URLs (Image field value.src, Rich Text markup)
  * - Link field href values
  * - Other URL fields in component data
- *
  * @public
  */
 export const DEFAULT_EDGE_HOSTNAMES = [

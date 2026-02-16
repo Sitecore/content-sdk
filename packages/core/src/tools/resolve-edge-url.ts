@@ -1,4 +1,6 @@
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
+import isServer from './is-server';
+import { normalizeEnvValue } from './normalize-env-value';
 import { normalizeUrl } from './normalize-url';
 
 /**
@@ -44,25 +46,24 @@ export const SITECORE_EDGE_URL_PUBLIC_ENV = 'NEXT_PUBLIC_SITECORE_EDGE_URL';
  */
 export function resolveEdgeUrl(edgeUrl?: string): string {
   // Use explicit edgeUrl if provided and not empty
-  const explicit = normalizeMaybeEnvValue(edgeUrl);
+  const explicit = normalizeEnvValue(edgeUrl);
   if (explicit) {
     return normalizeUrl(explicit);
   }
 
   // Check for custom hostname env var (available on both server and client)
   const hostnameEnvVarRaw = process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV];
-  const hostnameEnvVar = normalizeMaybeEnvValue(hostnameEnvVarRaw);
+  const hostnameEnvVar = normalizeEnvValue(hostnameEnvVarRaw);
   if (hostnameEnvVar) {
     return normalizeHostnameToUrl(hostnameEnvVar);
   }
 
   // Check for Edge URL env var
-  const isBrowser = typeof window !== 'undefined';
-  const urlEnvVarRaw = isBrowser
-    ? process.env[SITECORE_EDGE_URL_PUBLIC_ENV]
-    : process.env[SITECORE_EDGE_URL_ENV] || process.env[SITECORE_EDGE_URL_PUBLIC_ENV];
+  const urlEnvVarRaw = isServer()
+    ? process.env[SITECORE_EDGE_URL_ENV] || process.env[SITECORE_EDGE_URL_PUBLIC_ENV]
+    : process.env[SITECORE_EDGE_URL_PUBLIC_ENV];
 
-  const urlEnvVar = normalizeMaybeEnvValue(urlEnvVarRaw);
+  const urlEnvVar = normalizeEnvValue(urlEnvVarRaw);
   if (urlEnvVar) {
     return normalizeUrl(urlEnvVar);
   }
@@ -79,11 +80,10 @@ export function resolveEdgeUrl(edgeUrl?: string): string {
  * @public
  */
 export function resolveEdgeUrlForStaticFiles(): string {
-  const isBrowser = typeof window !== 'undefined';
-  const urlEnvVarRaw = isBrowser
-    ? process.env[SITECORE_EDGE_URL_PUBLIC_ENV]
-    : process.env[SITECORE_EDGE_URL_ENV] || process.env[SITECORE_EDGE_URL_PUBLIC_ENV];
-  const urlEnvVar = normalizeMaybeEnvValue(urlEnvVarRaw);
+  const urlEnvVarRaw = isServer()
+    ? process.env[SITECORE_EDGE_URL_ENV] || process.env[SITECORE_EDGE_URL_PUBLIC_ENV]
+    : process.env[SITECORE_EDGE_URL_PUBLIC_ENV];
+  const urlEnvVar = normalizeEnvValue(urlEnvVarRaw);
   if (urlEnvVar) {
     return normalizeUrl(urlEnvVar);
   }
@@ -109,32 +109,12 @@ function normalizeHostnameToUrl(hostnameOrUrl: string): string {
 }
 
 /**
- * Normalizes values that may come from environment variables.
- * In Node, setting `process.env.FOO = undefined` results in the string 'undefined',
- * which should be treated as if the variable is not set.
- * @param {string | undefined} value - Possibly undefined env-like value
- * @returns {string | undefined} A usable string value, or undefined if not meaningful
- * @internal
- */
-function normalizeMaybeEnvValue(value: string | undefined): string | undefined {
-  if (!value) return undefined;
-
-  const trimmed = value.trim();
-  if (!trimmed) return undefined;
-
-  const lowered = trimmed.toLowerCase();
-  if (lowered === 'undefined' || lowered === 'null') return undefined;
-
-  return trimmed;
-}
-
-/**
  * Checks if a custom Edge hostname is configured via environment variables.
  * @returns {boolean} True if a custom hostname is configured
  * @public
  */
 export function hasCustomEdgeHostname(): boolean {
-  return !!normalizeMaybeEnvValue(process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV]);
+  return !!normalizeEnvValue(process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV]);
 }
 
 /**
