@@ -37,6 +37,7 @@ For more information check out our [Getting Started Guide](https://doc.sitecore.
 
 ### AI Development Support
 
+- [AGENTS.md](AGENTS.md) - AI agent guidance: structure, commands, DOs/DON'Ts, boundaries, and quick reference
 - [Claude Code Agent Guide](CLAUDE.md) - Comprehensive guide for Claude Code Agent to generate consistent and idiomatic Sitecore Content SDK code
 - [GitHub Copilot Instructions](copilot-instructions.md) - Instructions for GitHub Copilot to provide accurate Sitecore Content SDK suggestions
 - [Cursor AI Rules](.cursor/rules/) - Cursor-specific coding rules and patterns for Sitecore Content SDK development
