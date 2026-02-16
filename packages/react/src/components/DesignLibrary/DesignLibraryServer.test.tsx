@@ -529,7 +529,7 @@ describe('<DesignLibraryServer />', () => {
             },
             params: { theme: 'dark' },
           },
-          previewComponent: { core: 'preview component code' },
+          generatedComponentData: { core: 'preview component code' },
         } as any);
         createComponentInstanceStub.returns((props) => (
           <div>
@@ -562,7 +562,7 @@ describe('<DesignLibraryServer />', () => {
         const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
         const page = getPage(layoutData, modeLibraryMetadata_Gen);
         const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
-        const previewComponent = { message: { styles: { content: 'background: green' } } };
+        const generatedComponentData = { styles: { content: 'background: green' } };
         getCacheAndCleanStub.returns({
           uid: 'test-content',
           updatedComponent: {
@@ -573,7 +573,7 @@ describe('<DesignLibraryServer />', () => {
             },
             params: { theme: 'dark' },
           },
-          previewComponent,
+          generatedComponentData,
         } as any);
         createComponentInstanceStub.returns((props) => (
           <div>
@@ -593,7 +593,7 @@ describe('<DesignLibraryServer />', () => {
 
         expect(DesignLibraryVariantGenerationEventsStub).to.have.been.calledOnce;
         const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
-        expect(propsPassed.previewComponentData).to.deep.equal(previewComponent);
+        expect(propsPassed.generatedComponentData).to.deep.equal(generatedComponentData);
       });
 
       it('should call createComponentInstance with import map and preview data', async () => {});
@@ -604,7 +604,7 @@ describe('<DesignLibraryServer />', () => {
         const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
         getCacheAndCleanStub.returns({
           uid: 'test-content',
-          previewComponent: { core: 'preview component code' },
+          generatedComponentData: { core: 'preview component code' },
         } as any);
         createComponentInstanceStub.throws(new Error('create component failed'));
 
@@ -646,7 +646,7 @@ describe('<DesignLibraryServer />', () => {
             },
             params: { theme: 'dark' },
           },
-          previewComponent: { core: 'preview component code' },
+          generatedComponentData: { core: 'preview component code' },
         } as any);
         createComponentInstanceStub.returns((props) => {
           throw new Error('render component failed');

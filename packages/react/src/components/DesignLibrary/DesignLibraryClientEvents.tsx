@@ -70,7 +70,7 @@ export const DesignLibraryVariantGenerationEvents = ({
   component,
   importMap,
   importMapError,
-  previewComponentData,
+  generatedComponentData,
 }: DesignLibraryVariantGenerationEventsProps) => {
   useEffect(() => {
     if (!component?.uid) return;
@@ -81,12 +81,15 @@ export const DesignLibraryVariantGenerationEvents = ({
       _updateServerComponentAction({
         uid: updated.uid!,
         updatedComponent: updated,
-        previewComponent: previewComponentData,
+        generatedComponentData,
       });
     });
 
     const unsubPreview = addServerComponentPreviewHandler((eventArgs) => {
-      _updateServerComponentAction({ uid: component.uid!, previewComponent: eventArgs });
+      _updateServerComponentAction({
+        uid: component.uid!,
+        serverComponentPreviewEventArgs: eventArgs,
+      });
     });
 
     if (importMapError) {
@@ -103,9 +106,9 @@ export const DesignLibraryVariantGenerationEvents = ({
       );
       postToDesignLibrary(propsEvent);
 
-      if (previewComponentData?.message?.styles?.content) {
+      if (generatedComponentData?.styles?.content) {
         // the generated component has custom styles, so add the css in style element and add it to document head
-        addStyleElement(previewComponentData.message.styles.content);
+        addStyleElement(generatedComponentData.styles.content);
       }
     }
 
@@ -113,7 +116,7 @@ export const DesignLibraryVariantGenerationEvents = ({
       unsubUpdate && unsubUpdate();
       unsubPreview && unsubPreview();
     };
-  }, [component, designLibraryStatus, importMap, importMapError, previewComponentData]);
+  }, [component, designLibraryStatus, importMap, importMapError, generatedComponentData]);
 
   return <></>;
 };

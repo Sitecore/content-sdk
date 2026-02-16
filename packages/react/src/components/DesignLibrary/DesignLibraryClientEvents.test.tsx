@@ -340,7 +340,7 @@ describe('<DesignLibraryClientEvents />', () => {
       expect(updateServerComponentActionSpy).to.have.been.calledWith({
         uid: updatedComponent.uid,
         updatedComponent,
-        previewComponent: previewComponentData,
+        generatedComponentData: undefined,
       });
     });
 
@@ -412,27 +412,33 @@ describe('<DesignLibraryClientEvents />', () => {
       );
 
       const updateCallback = addServerComponentPreviewHandlerSpy.getCall(0).args[0];
-      const updatedComponent = {
-        ...testEditedComponent,
-        fields: { title: { value: 'Updated Title' } },
+      const componentPreviewServerEvent = {
+        name: 'component:generation:component-preview',
+        message: {
+          cache: {
+            id: 'test-cache-id',
+            token: 'test-cache-token',
+          },
+        },
       };
 
-      updateCallback(updatedComponent);
+      updateCallback(componentPreviewServerEvent);
+
       expect(updateServerComponentActionSpy).to.have.been.calledWith({
-        uid: updatedComponent.uid,
-        previewComponent: updatedComponent,
+        uid: testEditedComponent.uid,
+        serverComponentPreviewEventArgs: componentPreviewServerEvent,
       });
     });
 
     it('should add style element when previewComponentData style is provided', async () => {
       const testStyle = '.test-class { color: red; }';
-      const previewComponentData = { message: { styles: { content: testStyle } } };
+      const previewComponentData = { styles: { content: testStyle } };
       renderWithSitecore(
         {
           designLibraryStatus: DesignLibraryStatus.READY,
           component: testEditedComponent,
           importMap: importMap,
-          previewComponentData: previewComponentData,
+          generatedComponentData: previewComponentData,
         },
         modeLibraryMetadata_Gen,
         true

@@ -11,5 +11,8 @@ export {
   DesignLibraryPreviewError,
   ImportEntry,
   ImportEntryInfo,
+  GeneratedComponentData,
   ComponentPreviewEventArgs,
+  ServerComponentPreviewEventArgs,
+  fetchGeneratedComponentFromCache,
 } from './preview';

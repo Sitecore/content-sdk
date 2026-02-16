@@ -13,7 +13,6 @@ import {
 } from '@sitecore-content-sdk/content/editing';
 import { ComponentUpdateModel } from '../../server-actions/update-server-component-action';
 import * as codegen from '@sitecore-content-sdk/content/codegen';
-import { ComponentPreviewEventArgs } from '@sitecore-content-sdk/content/codegen';
 import { AppPlaceholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 import {
@@ -62,10 +61,7 @@ export const DesignLibraryServer = async ({
   }
 
   const isVariantGeneration = page.mode.designLibrary?.isVariantGeneration;
-
-  // Temporarily disable server side variant generation due to potential security vulerability
-  // eslint-disable-next-line no-constant-condition
-  if (isVariantGeneration && false) {
+  if (isVariantGeneration) {
     return (
       <DesignLibraryServerVariantGeneration
         page={page}
@@ -102,7 +98,7 @@ export const DesignLibraryServerVariantGeneration = async ({
   let importMapInfo: codegen.ImportEntryInfo[] | undefined;
   let Component: DynamicComponent | undefined;
   let importMapError: string | undefined;
-  let previewComponentData: ComponentPreviewEventArgs | undefined;
+  let generatedComponentData: codegen.GeneratedComponentData | undefined;
 
   // load importmap and importmap payload to pass to FE
   // if not provided, or errors during load set error to pass to FE
@@ -142,13 +138,13 @@ export const DesignLibraryServerVariantGeneration = async ({
       );
     }
 
-    if (updateData?.previewComponent && !importMapError && importMap) {
-      previewComponentData = updateData.previewComponent;
+    if (updateData?.generatedComponentData && !importMapError && importMap) {
+      generatedComponentData = updateData.generatedComponentData;
       try {
         // use provided code and import map to create the component instance
         Component = createComponentInstance(
           importMap,
-          updateData.previewComponent
+          updateData.generatedComponentData
         ) as DynamicComponent;
       } catch (error) {
         // error during component initialization - send error to client
@@ -184,7 +180,7 @@ export const DesignLibraryServerVariantGeneration = async ({
         // pass a new object since we have mutated the original which leads to old reference passed to the client
         component={{ ...componentToUpdate }}
         importMapError={importMapError}
-        previewComponentData={previewComponentData}
+        generatedComponentData={generatedComponentData}
       />
     </>
   );
@@ -237,6 +233,7 @@ export const DesignLibraryServerPreview = async ({
         page={page}
         rendering={rendering}
         componentMap={componentMap}
+        key={Date.now()}
       />
       <DesignLibraryPreviewEvents
         designLibraryStatus={designLibraryStatus}

@@ -1,6 +1,9 @@
+import { NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
 import { ComponentFields, ComponentParams } from '../../layout/models';
 import { validateEvent, DesignLibraryEvent } from '../design-library';
+import debug from '../../debug';
 
+const { SITECORE_EDGE_URL_DEFAULT } = constants;
 /**
  * Event to send import map to design library
  */
@@ -62,50 +65,74 @@ export type ComponentImport = {
 };
 
 /**
+ * Represents the data needed to render AI generated component.
+ */
+export type GeneratedComponentData = {
+  /**
+   * The unique identifier for the component.
+   */
+  uid: string;
+  /**
+   * The code of the component.
+   */
+  code: {
+    type: 'function';
+    content: string;
+  };
+  /**
+   * The styles of the component.
+   */
+  styles: {
+    type: 'style-element';
+    /**
+     * The styles content to be attached to the DOM.
+     */
+    content: string;
+    /**
+     * The CSS module import
+     */
+    styleImport: {
+      /**
+       * The name of the style import.
+       */
+      name: string;
+      /**
+       * The value of the style import
+       */
+      content: unknown;
+    };
+  };
+  /**
+   * The imports of the component.
+   */
+  imports: ComponentImport[];
+};
+
+/**
  * Represents a component preview event data sent from design library
  * @internal
  */
 export interface ComponentPreviewEventArgs extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
+  message: GeneratedComponentData;
+}
+
+/**
+ * Represents a server component preview event data sent from design library in variant generation mode.
+ * @internal
+ */
+export interface ServerComponentPreviewEventArgs extends DesignLibraryEvent {
+  name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
   message: {
     /**
-     * The unique identifier for the component.
+     * The cache information for the component preview, used for server components in Design Library variant generation mode.
      */
-    uid: string;
-    /**
-     * The code of the component.
-     */
-    code: {
-      type: 'function';
-      content: string;
+    cache: {
+      /** The unique identifier for the cache entry. */
+      id: string;
+      /** The jwt token for authentication when fetching the preview component from the cache. */
+      token: string;
     };
-    /**
-     * The styles of the component.
-     */
-    styles: {
-      type: 'style-element';
-      /**
-       * The styles content to be attached to the DOM.
-       */
-      content: string;
-      /**
-       * The CSS module import
-       */
-      styleImport: {
-        /**
-         * The name of the style import.
-         */
-        name: string;
-        /**
-         * The value of the style import
-         */
-        content: unknown;
-      };
-    };
-    /**
-     * The imports of the component.
-     */
-    imports: ComponentImport[];
   };
 }
 
@@ -247,7 +274,7 @@ export const addComponentPreviewHandler = (
 
       console.debug('Component Library: message received', eventArgs);
 
-      const Component = createComponentInstance(importMap, eventArgs);
+      const Component = createComponentInstance(importMap, eventArgs.message);
       addStyleElement(eventArgs.message.styles.content);
 
       callback(null, Component);
@@ -273,7 +300,7 @@ export const addComponentPreviewHandler = (
  * @internal
  */
 export const addServerComponentPreviewHandler = (
-  callback: (eventArgs: ComponentPreviewEventArgs) => void
+  callback: (eventArgs: ServerComponentPreviewEventArgs) => void
 ) => {
   const handler = (e: MessageEvent) => {
     if (!validateEvent(e, DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME)) {
@@ -282,7 +309,7 @@ export const addServerComponentPreviewHandler = (
 
     console.debug('Component Library: message received', e.data);
 
-    callback(e.data as ComponentPreviewEventArgs);
+    callback(e.data as ServerComponentPreviewEventArgs);
   };
 
   window.addEventListener('message', handler);
@@ -320,17 +347,16 @@ export function addStyleElement(stylesContent: string) {
 /**
  * Dynamically creates a React component instance from provided importMap and from code, styles, and dependencies provided in the preview event.
  * @param {ImportEntry[]} importMap - The import map containing module and export references that might be injected as dependencies in the provided code.
- * @param {ComponentPreviewEventArgs} previewEventArgs - The event arguments containing the component code, styles, and import definitions.
+ * @param {GeneratedComponentData} generatedComponentData - The generated component data received from design library.
  * @returns The dynamically created React component instance.
  * @throws If any required modules or exports are missing from the import map, an error is thrown describing the missing dependencies.
  * @internal
  */
 export const createComponentInstance = (
   importMap: ImportEntry[],
-  previewEventArgs: ComponentPreviewEventArgs
+  generatedComponentData: GeneratedComponentData
 ): unknown => {
-  const { message } = previewEventArgs;
-  const dependencies = buildComponentDependencies(message.imports, importMap);
+  const dependencies = buildComponentDependencies(generatedComponentData.imports, importMap);
 
   if (dependencies.missing.modules.length > 0 || dependencies.missing.exports.length > 0) {
     let errorMessage = '';
@@ -353,13 +379,13 @@ export const createComponentInstance = (
   const exports: { Component: unknown } = { Component: null };
   const componentFn = new Function(
     'exports',
-    message.styles.styleImport.name,
+    generatedComponentData.styles.styleImport.name,
     ...importNames,
-    message.code.content
+    generatedComponentData.code.content
   );
 
   // Function will set exports.Component
-  componentFn(exports, message.styles.styleImport.content, ...importInstances);
+  componentFn(exports, generatedComponentData.styles.styleImport.content, ...importInstances);
 
   return exports.Component;
 };
@@ -472,3 +498,44 @@ export const sendErrorEvent = (uid: string, error: unknown, type: DesignLibraryP
     target.postMessage(errorEvent, '*');
   }
 };
+
+/**
+ * Fetches generated component data from the authoring cache endpoint.
+ * This is used by the Design Library Server to fetch the updated component data from the secured cache endpoint and render it in the Design Library Studio preview iframe.
+ * @param {string} id - The unique identifier of the component to fetch from cache.
+ * @param {string} token - The authorization token for authentication.
+ * @param {string} edgeUrl - The URL of the Sitecore Edge endpoint.
+ * @returns A Promise that resolves to the component rendering data, component generation data, or undefined if the fetch fails.
+ */
+export async function fetchGeneratedComponentFromCache(
+  id: string,
+  token: string,
+  edgeUrl: string = SITECORE_EDGE_URL_DEFAULT
+): Promise<GeneratedComponentData | undefined> {
+  const dataFetcher = new NativeDataFetcher({ debugger: debug.editing });
+
+  try {
+    const componentDataResponse = await dataFetcher.fetch<GeneratedComponentData>(
+      `${edgeUrl}/authoring/api/v1/components/cache/${id}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (componentDataResponse.status !== 200) {
+      debug.editing(
+        `Failed to fetch generated component data from cache for id: ${id}. Status: ${componentDataResponse.status}, StatusText: ${componentDataResponse.statusText}`
+      );
+    }
+
+    return componentDataResponse.data;
+  } catch (error) {
+    debug.editing(
+      `Error fetching generated component data from cache for id: ${id}. Error: ${error}`
+    );
+    return undefined;
+  }
+}

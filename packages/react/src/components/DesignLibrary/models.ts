@@ -1,4 +1,8 @@
-import { ImportEntry, ImportEntryInfo } from '@sitecore-content-sdk/content/codegen';
+import {
+  GeneratedComponentData,
+  ImportEntry,
+  ImportEntryInfo,
+} from '@sitecore-content-sdk/content/codegen';
 import {
   ComponentFields,
   ComponentParams,
@@ -7,7 +11,6 @@ import {
 } from '@sitecore-content-sdk/content/layout';
 import { DesignLibraryStatus } from '@sitecore-content-sdk/content/editing';
 import { Page } from '@sitecore-content-sdk/content/client';
-import { ComponentPreviewEventArgs } from '@sitecore-content-sdk/content/codegen';
 import { ComponentMap } from '../sharedTypes';
 
 export type ImportMapImport = {
@@ -66,7 +69,7 @@ export type DesignLibraryVariantGenerationEventsProps = DesignLibraryPreviewEven
    */
   importMapError?: string;
   /**
-   * The preview component data received from design library.
+   * The generated component data received from design library.
    */
-  previewComponentData?: ComponentPreviewEventArgs;
+  generatedComponentData?: GeneratedComponentData;
 };
