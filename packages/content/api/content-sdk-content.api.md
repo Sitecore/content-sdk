@@ -539,7 +539,7 @@ export const getContentSdkPagesClientData: () => Record<string, Record<string, u
 export const getContentStylesheetLink: (layoutData: LayoutServiceData, sitecoreEdgeContextId: string, sitecoreEdgeUrl?: string) => HTMLLink | null;
 
 // @internal
-export function getDefaultMediaUrlTransformer(): (value: string) => string;
+export function getDefaultMediaUrlTransformer(edgeUrl?: string): (value: string) => string;
 
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPreviewErrorEvent" needs to be exported by the entry point api-surface.d.ts
 //
@@ -987,7 +987,7 @@ export const resetEditorChromes: () => void;
 export { RetryStrategy }
 
 // @public
-export function rewriteEdgeHostInResponse<T>(response: T): T;
+export function rewriteEdgeHostInResponse<T>(response: T, edgeUrl?: string): T;
 
 // @public
 export type RobotsQueryResult = {
