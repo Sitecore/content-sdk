@@ -14,6 +14,8 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* Add AGENTS.md for AI coding assistant guidance ([#368](https://github.com/Sitecore/content-sdk/pull/368))
+
 * `[nextjs]` `[create-content-sdk-app]` Enable Next.js 16 Cache Components and Turbopack File System Caching ([#334](https://github.com/Sitecore/content-sdk/pull/334))
   - Enabled `cacheComponents: true` for explicit caching with "use cache" directive
   - Enabled `experimental.turbopackFileSystemCacheForDev: true` for faster dev startup (beta)
