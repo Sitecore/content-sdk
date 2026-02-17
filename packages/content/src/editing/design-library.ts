@@ -227,7 +227,7 @@ export function getDesignLibraryStatusEvent(
  * @internal
  */
 export function getDesignLibraryScriptLink(
-  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_URL_DEFAULT
+  sitecoreEdgeUrl: string = constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT
 ): string {
   return `${normalizeUrl(sitecoreEdgeUrl)}/v1/files/designlibrary/lib/rh-lib-script.js`;
 }

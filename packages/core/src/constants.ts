@@ -1,14 +1,8 @@
 /**
- * Default Sitecore edge URL
+ * Default Experience Edge URL (edge.sitecorecloud.io). Used when no custom hostname is configured.
  * @internal
  */
-export const SITECORE_EDGE_URL_DEFAULT = 'https://edge-platform.sitecorecloud.io';
-
-/**
- * Default Edge Platform URL (alias for naming consistency with SITECORE_EDGE_PLATFORM_HOSTNAME).
- * @internal
- */
-export const SITECORE_EDGE_PLATFORM_URL_DEFAULT = 'https://edge-platform.sitecorecloud.io';
+export const SITECORE_EXPERIENCE_EDGE_URL_DEFAULT = 'https://edge.sitecorecloud.io';
 
 /**
  * Default Edge Platform hostnames that may appear in layout/editing responses.
@@ -20,7 +14,12 @@ export const SITECORE_EDGE_PLATFORM_URL_DEFAULT = 'https://edge-platform.sitecor
  * - Other URL fields in component data
  * @public
  */
-export const SITECORE_EXPERIENCE_EDGE_URL_DEFAULT = 'https://edge.sitecorecloud.io'
+export const DEFAULT_EDGE_HOSTNAMES = [
+  'edge-platform.sitecorecloud.io',
+  'edge.sitecorecloud.io',
+  'edge-staging.sitecore-staging.cloud',
+  'edge-platform-staging.sitecore-staging.cloud',
+] as const;
 
 /**
  * Claims URL

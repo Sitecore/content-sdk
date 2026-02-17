@@ -38,8 +38,7 @@ export { ClientError }
 
 declare namespace constants {
     export {
-        SITECORE_EDGE_URL_DEFAULT,
-        SITECORE_EDGE_PLATFORM_URL_DEFAULT,
+        SITECORE_EXPERIENCE_EDGE_URL_DEFAULT,
         DEFAULT_EDGE_HOSTNAMES,
         CLAIMS,
         DEFAULT_SITECORE_AUTH_DOMAIN,
@@ -290,10 +289,7 @@ export function setCache(key: string, data: unknown): void;
 export const SITECORE_EDGE_PLATFORM_HOSTNAME_ENV = "SITECORE_EDGE_PLATFORM_HOSTNAME";
 
 // @internal
-const SITECORE_EDGE_PLATFORM_URL_DEFAULT = "https://edge-platform.sitecorecloud.io";
-
-// @internal
-const SITECORE_EDGE_URL_DEFAULT = "https://edge-platform.sitecorecloud.io";
+const SITECORE_EXPERIENCE_EDGE_URL_DEFAULT = "https://edge.sitecorecloud.io";
 
 // @public
 export interface TenantArgs {

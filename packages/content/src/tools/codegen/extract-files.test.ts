@@ -11,7 +11,7 @@ import { extractFiles, ExtractFilesConfig } from './extract-files';
 import nock from 'nock';
 import { constants } from '@sitecore-content-sdk/core';
 
-const { SITECORE_EDGE_URL_DEFAULT } = constants;
+const { SITECORE_EXPERIENCE_EDGE_URL_DEFAULT } = constants;
 
 describe('extract-files', () => {
   const RENDERINGHOST_NAME = 'testRenderingHost';
@@ -233,7 +233,7 @@ describe('extract-files', () => {
 
     const consoleLogStub = sandbox.stub(console, 'log');
 
-    nock(SITECORE_EDGE_URL_DEFAULT)
+    nock(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT)
       .post('/mesh/push/api/v1/contentsdk/code/extracted')
       .reply(200)
       .persist();
@@ -265,7 +265,7 @@ describe('extract-files', () => {
 
     const consoleLogStub = sandbox.stub(console, 'log');
 
-    nock(SITECORE_EDGE_URL_DEFAULT)
+    nock(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT)
       .post('/mesh/push/api/v1/contentsdk/code/extracted')
       .reply(200)
       .persist();
@@ -297,7 +297,7 @@ describe('extract-files', () => {
 
     const consoleLogStub = sandbox.stub(console, 'log');
 
-    nock(SITECORE_EDGE_URL_DEFAULT)
+    nock(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT)
       .post('/mesh/push/api/v1/contentsdk/code/extracted')
       .reply(200)
       .persist();

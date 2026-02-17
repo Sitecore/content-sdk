@@ -3,7 +3,7 @@ import { constants } from '@sitecore-content-sdk/core';
 import { getDesignLibraryStylesheetLinks, getStylesheetUrl } from './themes';
 import { ComponentRendering } from '.';
 
-const { SITECORE_EDGE_URL_DEFAULT } = constants;
+const { SITECORE_EXPERIENCE_EDGE_URL_DEFAULT } = constants;
 
 describe('themes', () => {
   const sitecoreEdgeContextId = 'test';
@@ -425,7 +425,7 @@ describe('themes', () => {
   describe('getStylesheetUrl', () => {
     it('should use prod edge url by default', () => {
       expect(getStylesheetUrl('foo', sitecoreEdgeContextId)).to.equal(
-        `${SITECORE_EDGE_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=${sitecoreEdgeContextId}`
+        `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=${sitecoreEdgeContextId}`
       );
     });
 

@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { DocumentNode } from 'graphql';
 import { DefaultRetryStrategy, NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
 
-const { SITECORE_EDGE_URL_DEFAULT } = constants;
+const { SITECORE_EXPERIENCE_EDGE_URL_DEFAULT } = constants;
 import { ErrorPage, SitecoreClient } from './sitecore-client';
 import { LayoutKind, DesignLibraryMode } from '../../src/editing';
 import { LayoutServiceData } from '../../layout';
@@ -1413,11 +1413,11 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EDGE_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
+          href: `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
         {
-          href: `${SITECORE_EDGE_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
+          href: `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1439,11 +1439,11 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EDGE_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=client-context-id`,
+          href: `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=client-context-id`,
           rel: 'stylesheet',
         },
         {
-          href: `${SITECORE_EDGE_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=client-context-id`,
+          href: `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=client-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1456,7 +1456,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EDGE_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
+          href: `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1469,7 +1469,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EDGE_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
+          href: `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
       ]);

@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { constants } from '@sitecore-content-sdk/core';
 import { rewriteEdgeHostInResponse, containsDefaultEdgeHost } from './rewrite-edge-host';
 
-const DEFAULT_EDGE_URL = constants.SITECORE_EDGE_URL_DEFAULT;
+const DEFAULT_EDGE_URL = constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT;
 const CUSTOM_EDGE_URL = 'https://custom.example.com';
 
 describe('rewriteEdgeHostInResponse', () => {

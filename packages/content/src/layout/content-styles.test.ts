@@ -10,7 +10,7 @@ import {
 } from './content-styles';
 import { ComponentRendering, Field, Item, LayoutServiceData } from './models';
 
-const { SITECORE_EDGE_URL_DEFAULT } = constants;
+const { SITECORE_EXPERIENCE_EDGE_URL_DEFAULT } = constants;
 
 describe('content-styles', () => {
   const truthyValue = { value: '<div class="test bar"><p class="foo ck-content">bar</p></div>' };
@@ -92,7 +92,7 @@ describe('content-styles', () => {
       };
 
       expect(getContentStylesheetLink(layoutData, sitecoreEdgeContextId)).to.deep.equal({
-        href: `${SITECORE_EDGE_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=${sitecoreEdgeContextId}`,
+        href: `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=${sitecoreEdgeContextId}`,
         rel: 'stylesheet',
       });
     });
@@ -352,7 +352,7 @@ describe('content-styles', () => {
   describe('getContentStylesheetUrl', () => {
     it('should return the default url', () => {
       expect(getContentStylesheetUrl(sitecoreEdgeContextId)).to.equal(
-        `${SITECORE_EDGE_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=${sitecoreEdgeContextId}`
+        `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=${sitecoreEdgeContextId}`
       );
     });
 

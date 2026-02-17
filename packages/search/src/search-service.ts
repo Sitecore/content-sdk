@@ -19,7 +19,7 @@ export type SortSetting<T extends SearchDocument = SearchDocument> = {
 export interface SearchServiceConfig {
   /**
    * XM Cloud endpoint that the app will communicate and retrieve data from.
-   * @default https://edge-platform.sitecorecloud.io
+   * @default https://edge.sitecorecloud.io
    */
   edgeUrl?: string;
   /**

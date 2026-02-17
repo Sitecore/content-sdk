@@ -7,7 +7,7 @@ import { normalizeUrl } from '@sitecore-content-sdk/core/tools';
  * @internal
  */
 const getBaseEdgeUrl = (
-  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_URL_DEFAULT
+  sitecoreEdgeUrl: string = constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT
 ): string => normalizeUrl(sitecoreEdgeUrl);
 
 /**
@@ -17,7 +17,7 @@ const getBaseEdgeUrl = (
  * @public
  */
 export const getEdgeProxyContentUrl = (
-  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_URL_DEFAULT
+  sitecoreEdgeUrl: string = constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT
 ) => `${getBaseEdgeUrl(sitecoreEdgeUrl)}/v1/content/api/graphql/v1`;
 
 /**
@@ -31,6 +31,6 @@ export const getEdgeProxyContentUrl = (
 export const getEdgeProxyFormsUrl = (
   sitecoreEdgeContextId: string,
   formId: string,
-  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_URL_DEFAULT
+  sitecoreEdgeUrl: string = constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT
 ) =>
   `${getBaseEdgeUrl(sitecoreEdgeUrl)}/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`;
