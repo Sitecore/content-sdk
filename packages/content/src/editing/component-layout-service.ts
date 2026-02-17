@@ -64,7 +64,7 @@ export interface ComponentLayoutServiceConfig {
   contextId: string;
   /**
    * XM Cloud endpoint that the app will communicate and retrieve data from
-   * @default https://edge.sitecorecloud.io
+   * @default https://edge-platform.sitecorecloud.io
    */
   edgeUrl?: string;
 }
@@ -142,7 +142,7 @@ export class ComponentLayoutService {
    */
   private getFetchUrl(params: ComponentLayoutRequestParams) {
     const baseUrl = normalizeUrl(
-      this.config.edgeUrl ?? constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT
+      this.config.edgeUrl ?? constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT
     );
     return resolveUrl(`${baseUrl}/layout/component`, this.getComponentFetchParams(params));
   }

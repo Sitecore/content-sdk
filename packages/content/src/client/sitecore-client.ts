@@ -635,7 +635,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (sitemapPath) {
       try {
         const edgeUrl =
-          this.initOptions.api.edge.edgeUrl ?? constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT;
+          this.initOptions.api.edge.edgeUrl ?? constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT;
         const rewrittenSitemapPath = rewriteEdgeHostInResponse(sitemapPath, edgeUrl);
         const fetcher = new NativeDataFetcher();
         const xmlResponse = await fetcher.fetch<string>(rewrittenSitemapPath);
@@ -728,7 +728,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       return layout;
     }
     const edgeUrl =
-      this.initOptions.api.edge.edgeUrl ?? constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT;
+      this.initOptions.api.edge.edgeUrl ?? constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT;
     const transformer =
       opt === true ? getDefaultMediaUrlTransformer(edgeUrl) : opt;
     return applyMediaUrlRewrite(layout, transformer);

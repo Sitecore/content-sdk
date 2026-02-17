@@ -7,7 +7,7 @@ import {
   getComponentSpec,
 } from './component-generation';
 
-const { SITECORE_EXPERIENCE_EDGE_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 
 describe('component-generation', () => {
   const token = '456';
@@ -21,7 +21,7 @@ describe('component-generation', () => {
       });
 
       expect(url).to.equal(
-        `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/authoring/api/v1/components/generated/123?token=456&targetPath=.%2Fcomponents%2Fpromo-block%2FPromoBlock.variantA.ts`
+        `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/authoring/api/v1/components/generated/123?token=456&targetPath=.%2Fcomponents%2Fpromo-block%2FPromoBlock.variantA.ts`
       );
     });
 
@@ -41,7 +41,7 @@ describe('component-generation', () => {
 
   describe('getComponentSpec', () => {
     const mockComponentSpecApi = ({
-      edgeUrl = SITECORE_EXPERIENCE_EDGE_URL_DEFAULT,
+      edgeUrl = SITECORE_EDGE_PLATFORM_URL_DEFAULT,
       componentId,
       targetPath,
       token,

@@ -1,4 +1,4 @@
-import { SITECORE_EXPERIENCE_EDGE_URL_DEFAULT } from '../constants';
+import { SITECORE_EDGE_PLATFORM_URL_DEFAULT } from '../constants';
 import { normalizeEnvValue } from './normalize-env-value';
 import { normalizeUrl } from './normalize-url';
 
@@ -14,7 +14,7 @@ export const SITECORE_EDGE_PLATFORM_HOSTNAME_ENV = 'SITECORE_EDGE_PLATFORM_HOSTN
  * Priority order:
  * 1. Explicit `edgeUrl` parameter (if provided and not empty)
  * 2. `SITECORE_EDGE_PLATFORM_HOSTNAME` environment variable
- * 3. Default Experience Edge URL (`https://edge.sitecorecloud.io`)
+ * 3. Default Edge Platform URL (`https://edge-platform.sitecorecloud.io`)
  *
  * The hostname env var can be provided as:
  * - Full URL: `https://my-custom-edge.example.com`
@@ -27,7 +27,7 @@ export const SITECORE_EDGE_PLATFORM_HOSTNAME_ENV = 'SITECORE_EDGE_PLATFORM_HOSTN
  * @example
  * resolveEdgeUrl('https://custom.edge.com') // => 'https://custom.edge.com'
  * @example
- * resolveEdgeUrl() // => 'https://edge.sitecorecloud.io'
+ * resolveEdgeUrl() // => 'https://edge-platform.sitecorecloud.io'
  */
 export function resolveEdgeUrl(edgeUrl?: string): string {
   // Use explicit edgeUrl if provided and not empty
@@ -42,18 +42,18 @@ export function resolveEdgeUrl(edgeUrl?: string): string {
     return normalizeHostnameToUrl(hostnameEnvVar);
   }
 
-  return SITECORE_EXPERIENCE_EDGE_URL_DEFAULT;
+  return SITECORE_EDGE_PLATFORM_URL_DEFAULT;
 }
 
 /**
  * Resolves the Edge URL for static files (e.g. stylesheets) by ignoring the custom hostname.
  * Use this when the custom host does not serve static file paths (e.g. /v1/files/...).
- * Returns the default Experience Edge URL.
- * @returns {string} The Experience Edge base URL for static files (no trailing slash)
+ * Returns the default Edge Platform URL.
+ * @returns {string} The Edge Platform base URL for static files (no trailing slash)
  * @public
  */
 export function resolveEdgeUrlForStaticFiles(): string {
-  return SITECORE_EXPERIENCE_EDGE_URL_DEFAULT;
+  return SITECORE_EDGE_PLATFORM_URL_DEFAULT;
 }
 
 /**

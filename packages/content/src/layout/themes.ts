@@ -20,7 +20,7 @@ const STYLES_LIBRARY_ID_REGEX = /-library--([^\s]+)/;
 export function getDesignLibraryStylesheetLinks(
   layoutData: LayoutServiceData,
   sitecoreEdgeContextId: string,
-  sitecoreEdgeUrl: string = constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT
+  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT
 ): HTMLLink[] {
   const ids = new Set<string>();
 
@@ -37,7 +37,7 @@ export function getDesignLibraryStylesheetLinks(
 export const getStylesheetUrl = (
   id: string,
   sitecoreEdgeContextId: string,
-  sitecoreEdgeUrl: string = constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT
+  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT
 ) =>
   `${normalizeUrl(sitecoreEdgeUrl)}/v1/files/components/styles/${id}.css?sitecoreContextId=${sitecoreEdgeContextId}`;
 

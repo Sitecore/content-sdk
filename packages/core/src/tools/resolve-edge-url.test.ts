@@ -7,7 +7,7 @@ import {
   getCustomEdgeUrl,
   SITECORE_EDGE_PLATFORM_HOSTNAME_ENV,
 } from './resolve-edge-url';
-import { SITECORE_EXPERIENCE_EDGE_URL_DEFAULT } from '../constants';
+import { SITECORE_EDGE_PLATFORM_URL_DEFAULT } from '../constants';
 
 describe('resolveEdgeUrl', () => {
   const originalEnv = { ...process.env };
@@ -65,25 +65,25 @@ describe('resolveEdgeUrl', () => {
 
     it('should return default when no env vars are set', () => {
       const result = resolveEdgeUrl();
-      expect(result).to.equal(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT);
+      expect(result).to.equal(SITECORE_EDGE_PLATFORM_URL_DEFAULT);
     });
 
     it('should treat the string "undefined" as an unset hostname env var', () => {
       process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'undefined';
       const result = resolveEdgeUrl();
-      expect(result).to.equal(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT);
+      expect(result).to.equal(SITECORE_EDGE_PLATFORM_URL_DEFAULT);
     });
 
     it('should treat the string "null" as an unset hostname env var', () => {
       process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'null';
       const result = resolveEdgeUrl();
-      expect(result).to.equal(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT);
+      expect(result).to.equal(SITECORE_EDGE_PLATFORM_URL_DEFAULT);
     });
 
     it('should treat whitespace-only hostname env var as unset', () => {
       process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = '   ';
       const result = resolveEdgeUrl();
-      expect(result).to.equal(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT);
+      expect(result).to.equal(SITECORE_EDGE_PLATFORM_URL_DEFAULT);
     });
 
     it('should handle http protocol in hostname', () => {
@@ -118,13 +118,13 @@ describe('resolveEdgeUrl', () => {
   describe('resolveEdgeUrlForStaticFiles()', () => {
     it('should return default Edge URL', () => {
       const result = resolveEdgeUrlForStaticFiles();
-      expect(result).to.equal(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT);
+      expect(result).to.equal(SITECORE_EDGE_PLATFORM_URL_DEFAULT);
     });
 
     it('should return default even when custom hostname is set', () => {
       process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'custom.example.com';
       const result = resolveEdgeUrlForStaticFiles();
-      expect(result).to.equal(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT);
+      expect(result).to.equal(SITECORE_EDGE_PLATFORM_URL_DEFAULT);
     });
   });
 });

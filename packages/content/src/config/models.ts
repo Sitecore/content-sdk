@@ -44,7 +44,7 @@ export type SitecoreConfigInput = {
       clientContextId?: string;
       /**
        * XM Cloud endpoint that the app will communicate and retrieve data from
-       * @default https://edge.sitecorecloud.io
+       * @default https://edge-platform.sitecorecloud.io
        */
       edgeUrl?: string;
     };

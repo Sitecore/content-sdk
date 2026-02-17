@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { DocumentNode } from 'graphql';
 import { DefaultRetryStrategy, NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
 
-const { SITECORE_EXPERIENCE_EDGE_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 import { ErrorPage, SitecoreClient } from './sitecore-client';
 import { LayoutKind, DesignLibraryMode } from '../../src/editing';
 import { LayoutServiceData } from '../../layout';
@@ -520,7 +520,7 @@ describe('SitecoreClient', () => {
             name: 'home',
             placeholders: {},
             fields: {
-              image: { value: { src: 'https://edge-platform.sitecorecloud.io/-/media/hero.jpg' } },
+              image: { value: { src: 'https://edge.sitecorecloud.io/-/media/hero.jpg' } },
             },
           },
           context: { site: siteInfo, pageState: LayoutServicePageState.Normal },
@@ -1413,11 +1413,11 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
+          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
         {
-          href: `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
+          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1439,11 +1439,11 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=client-context-id`,
+          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=client-context-id`,
           rel: 'stylesheet',
         },
         {
-          href: `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=client-context-id`,
+          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=client-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1456,7 +1456,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
+          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1469,7 +1469,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EXPERIENCE_EDGE_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
+          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1529,9 +1529,9 @@ describe('SitecoreClient', () => {
         },
       } as any);
 
-      const edgeSitemapPath = 'https://edge-platform.sitecorecloud.io/sitemap.xml';
+      const edgeSitemapPath = 'https://edge.sitecorecloud.io/sitemap.xml';
       const xmlContent =
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://edge-platform.sitecorecloud.io/a</loc></url></urlset>';
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://edge.sitecorecloud.io/a</loc></url></urlset>';
 
       sitemapXmlServiceStub.getSitemap.resolves(edgeSitemapPath);
       const dataFetcherStub = sandbox

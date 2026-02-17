@@ -8,7 +8,7 @@ import { ComponentLayoutRequestParams, ComponentLayoutService } from './componen
 import { LayoutServiceData } from '../layout/models';
 import { DesignLibraryMode } from './models';
 
-const { SITECORE_EXPERIENCE_EDGE_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 
 use(spies);
 
@@ -38,7 +38,7 @@ describe('ComponentLayoutService', () => {
   });
 
   it('should fetch component data', () => {
-    nock(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT, {
+    nock(SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
       reqheaders: {
         'x-sitecore-contextid': contextId,
         'content-type': 'application/json',
@@ -60,7 +60,7 @@ describe('ComponentLayoutService', () => {
   });
 
   it('should fetch component data in metadata mode', () => {
-    nock(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT, {
+    nock(SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
       reqheaders: {
         'x-sitecore-contextid': contextId,
         'content-type': 'application/json',
@@ -115,7 +115,7 @@ describe('ComponentLayoutService', () => {
       },
     };
 
-    nock(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT, {
+    nock(SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
       reqheaders: {
         'x-sitecore-contextid': contextId,
         'content-type': 'application/json',
@@ -139,7 +139,7 @@ describe('ComponentLayoutService', () => {
   });
 
   it('should fetch component data with custom fetch options', () => {
-    nock(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT, {
+    nock(SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
       reqheaders: {
         my_header: 'my_value',
         sc_editMode: 'false',
@@ -189,7 +189,7 @@ describe('ComponentLayoutService', () => {
   });
 
   it('should catch 404 when request layout data', () => {
-    nock(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT, {
+    nock(SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
       reqheaders: {
         'x-sitecore-contextid': contextId,
         sc_editMode: 'false',
@@ -224,7 +224,7 @@ describe('ComponentLayoutService', () => {
   });
 
   it('should allow non 404 errors through', () => {
-    nock(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT, {
+    nock(SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
       reqheaders: {
         'x-sitecore-contextid': contextId,
         sc_editMode: 'false',

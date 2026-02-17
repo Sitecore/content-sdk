@@ -5,7 +5,7 @@ import { deepMerge, defineConfig, getFallbackConfig } from './define-config';
 import { SitecoreConfigInput } from './models';
 import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
 
-const { SITECORE_EXPERIENCE_EDGE_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 
 describe('define-config', () => {
   const mockConfig: SitecoreConfigInput = {
@@ -127,7 +127,7 @@ describe('define-config', () => {
 
       const cfg = getFallbackConfig();
       expect(cfg.api.edge.contextId).to.equal('');
-      expect(cfg.api.edge.edgeUrl).to.equal(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT);
+      expect(cfg.api.edge.edgeUrl).to.equal(SITECORE_EDGE_PLATFORM_URL_DEFAULT);
       expect(cfg.editingSecret).to.equal('editing-secret-missing');
       expect(cfg.personalize.edgeTimeout).to.equal(400);
       expect(cfg.personalize.cdpTimeout).to.equal(400);

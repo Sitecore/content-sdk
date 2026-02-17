@@ -143,7 +143,7 @@ describe('defineConfig', () => {
       it('should default to Edge Platform URL', () => {
         defineConfigModule.defineConfig(defaultConfig());
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.api?.edge?.edgeUrl).to.equal('https://edge.sitecorecloud.io');
+        expect(resultConfig.api?.edge?.edgeUrl).to.equal('https://edge-platform.sitecorecloud.io');
       });
 
       it('should use the value from the config', () => {

@@ -1,40 +1,33 @@
+import { constants } from '@sitecore-content-sdk/core';
 import { normalizeUrl } from '@sitecore-content-sdk/core/tools';
 
-/**
- * Default Edge hostnames that may appear in layout/editing responses.
- * Used when rewriting URLs to a custom hostname. Includes production and staging.
- * @internal
- */
-const DEFAULT_EDGE_HOSTNAMES = [
-  'edge-platform.sitecorecloud.io',
-  'edge.sitecorecloud.io',
-  'edge-staging.sitecore-staging.cloud',
-  'edge-platform-staging.sitecore-staging.cloud',
-] as const;
+/** Default Edge hostname derived from the default Edge URL (edge.sitecorecloud.io). @internal */
+const DEFAULT_EDGE_HOSTNAME = new URL(constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT).hostname;
 
 /**
  * Returns true if the given URL has a custom (non-default) Edge hostname.
  * @param {string} url - Full URL or hostname
- * @returns {boolean} True if URL host is not a default Edge hostname
+ * @returns {boolean} True if URL host is not the default Edge hostname
  * @internal
  */
 function isCustomEdgeUrl(url: string): boolean {
   try {
     const u = url.startsWith('http') ? new URL(url) : new URL(`https://${url}`);
     const host = u.hostname.toLowerCase();
-    return !DEFAULT_EDGE_HOSTNAMES.some((h) => host === h);
+    return host !== DEFAULT_EDGE_HOSTNAME;
   } catch {
     return false;
   }
 }
 
 /**
- * Regular expression patterns for matching Edge hostnames in URLs.
+ * Regular expression for matching the default Edge hostname in URLs.
  * Matches both http:// and https:// protocols.
  * @internal
  */
-const EDGE_HOST_PATTERNS = DEFAULT_EDGE_HOSTNAMES.map(
-  (hostname) => new RegExp(`https?://${escapeRegExp(hostname)}`, 'gi')
+const EDGE_HOST_PATTERN = new RegExp(
+  `https?://${escapeRegExp(DEFAULT_EDGE_HOSTNAME)}`,
+  'gi'
 );
 
 /**
@@ -55,7 +48,7 @@ function escapeRegExp(input: string): string {
  *
  * Use case: Experience Edge returns Layout Service output (layout, placeholders, component fields).
  * Field values can contain URLs with the Edge hostname—e.g. Image field `value.src`
- * (`https://edge-platform.sitecorecloud.io/-/media/...`), Rich Text HTML (`<img src="...">`),
+ * (`https://edge.sitecorecloud.io/-/media/...`), Rich Text HTML (`<img src="...">`),
  * or link `href`. When using a custom hostname (e.g. CDN in front of Edge), these URLs
  * must be rewritten so layout API and media requests both go through the custom host.
  * @param {T} response - The response object to process (typically LayoutServiceData)
@@ -123,15 +116,8 @@ function deepRewriteEdgeHost<T>(value: T, customEdgeUrl: string): T {
  * @internal
  */
 function rewriteEdgeHostInString(str: string, customEdgeUrl: string): string {
-  let result = str;
-
-  for (const pattern of EDGE_HOST_PATTERNS) {
-    // Reset lastIndex for global regex
-    pattern.lastIndex = 0;
-    result = result.replace(pattern, customEdgeUrl);
-  }
-
-  return result;
+  EDGE_HOST_PATTERN.lastIndex = 0;
+  return str.replace(EDGE_HOST_PATTERN, customEdgeUrl);
 }
 
 /**
@@ -180,11 +166,11 @@ export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => stri
 }
 
 /**
- * Checks if a string contains any default Edge Platform hostnames.
+ * Checks if a string contains the default Edge hostname (from the default Edge URL).
  * @param {string} str - The string to check
- * @returns {boolean} True if the string contains a default Edge hostname
+ * @returns {boolean} True if the string contains the default Edge hostname
  * @public
  */
 export function containsDefaultEdgeHost(str: string): boolean {
-  return DEFAULT_EDGE_HOSTNAMES.some((hostname) => str.includes(hostname));
+  return str.includes(DEFAULT_EDGE_HOSTNAME);
 }

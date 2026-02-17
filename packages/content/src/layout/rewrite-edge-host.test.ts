@@ -18,18 +18,18 @@ describe('rewriteEdgeHostInResponse', () => {
 
     it('should rewrite when edgeUrl is provided from config (custom hostname)', () => {
       const response = {
-        url: 'https://edge-platform.sitecorecloud.io/media/image.jpg',
+        url: 'https://edge.sitecorecloud.io/media/image.jpg',
       };
       const result = rewriteEdgeHostInResponse(response, 'https://custom.edge.example.com');
       expect(result.url).to.equal('https://custom.edge.example.com/media/image.jpg');
     });
 
-    it('should rewrite edge-platform.sitecorecloud.io in string values', () => {
+    it('should not rewrite edge-platform.sitecorecloud.io (only default hostname is rewritten)', () => {
       const response = {
         url: 'https://edge-platform.sitecorecloud.io/media/image.jpg',
       };
       const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
-      expect(result.url).to.equal('https://custom.example.com/media/image.jpg');
+      expect(result.url).to.equal('https://edge-platform.sitecorecloud.io/media/image.jpg');
     });
 
     it('should rewrite edge.sitecorecloud.io in string values', () => {
@@ -40,25 +40,29 @@ describe('rewriteEdgeHostInResponse', () => {
       expect(result.url).to.equal('https://custom.example.com/media/image.jpg');
     });
 
-    it('should rewrite edge-staging.sitecore-staging.cloud in string values', () => {
+    it('should not rewrite edge-staging.sitecore-staging.cloud (only default hostname is rewritten)', () => {
       const response = {
         url: 'https://edge-staging.sitecore-staging.cloud/tenant-id/media/image.jpg',
       };
       const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
-      expect(result.url).to.equal('https://custom.example.com/tenant-id/media/image.jpg');
+      expect(result.url).to.equal(
+        'https://edge-staging.sitecore-staging.cloud/tenant-id/media/image.jpg'
+      );
     });
 
-    it('should rewrite edge-platform-staging.sitecore-staging.cloud in string values', () => {
+    it('should not rewrite edge-platform-staging.sitecore-staging.cloud (only default hostname is rewritten)', () => {
       const response = {
         url: 'https://edge-platform-staging.sitecore-staging.cloud/tenant-id/media/image.jpg',
       };
       const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
-      expect(result.url).to.equal('https://custom.example.com/tenant-id/media/image.jpg');
+      expect(result.url).to.equal(
+        'https://edge-platform-staging.sitecore-staging.cloud/tenant-id/media/image.jpg'
+      );
     });
 
     it('should rewrite multiple occurrences in a string', () => {
       const response = {
-        html: '<img src="https://edge-platform.sitecorecloud.io/a.jpg"><img src="https://edge-platform.sitecorecloud.io/b.jpg">',
+        html: '<img src="https://edge.sitecorecloud.io/a.jpg"><img src="https://edge.sitecorecloud.io/b.jpg">',
       };
       const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.html).to.equal(
@@ -74,7 +78,7 @@ describe('rewriteEdgeHostInResponse', () => {
             fields: {
               image: {
                 value: {
-                  src: 'https://edge-platform.sitecorecloud.io/media/image.jpg',
+                  src: 'https://edge.sitecorecloud.io/media/image.jpg',
                 },
               },
             },
@@ -90,8 +94,8 @@ describe('rewriteEdgeHostInResponse', () => {
     it('should rewrite arrays', () => {
       const response = {
         urls: [
-          'https://edge-platform.sitecorecloud.io/a.jpg',
-          'https://edge-platform.sitecorecloud.io/b.jpg',
+          'https://edge.sitecorecloud.io/a.jpg',
+          'https://edge.sitecorecloud.io/b.jpg',
         ],
       };
       const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
@@ -131,7 +135,7 @@ describe('rewriteEdgeHostInResponse', () => {
 
     it('should handle http protocol in edge URLs', () => {
       const response = {
-        url: 'http://edge-platform.sitecorecloud.io/media/image.jpg',
+        url: 'http://edge.sitecorecloud.io/media/image.jpg',
       };
       const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.url).to.equal('https://custom.example.com/media/image.jpg');
@@ -139,7 +143,7 @@ describe('rewriteEdgeHostInResponse', () => {
 
     it('should handle mixed case (case insensitive)', () => {
       const response = {
-        url: 'https://EDGE-PLATFORM.SITECORECLOUD.IO/media/image.jpg',
+        url: 'https://EDGE.SITECORECLOUD.IO/media/image.jpg',
       };
       const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.url).to.equal('https://custom.example.com/media/image.jpg');
@@ -161,7 +165,7 @@ describe('rewriteEdgeHostInResponse', () => {
                   fields: {
                     image: {
                       value: {
-                        src: 'https://edge-platform.sitecorecloud.io/-/media/image.jpg',
+                        src: 'https://edge.sitecorecloud.io/-/media/image.jpg',
                         alt: 'Test image',
                       },
                     },
@@ -172,7 +176,7 @@ describe('rewriteEdgeHostInResponse', () => {
                   fields: {
                     content: {
                       value:
-                        '<p>Image: <img src="https://edge-platform.sitecorecloud.io/-/media/inline.jpg" /></p>',
+                        '<p>Image: <img src="https://edge.sitecorecloud.io/-/media/inline.jpg" /></p>',
                     },
                   },
                 },
@@ -203,25 +207,27 @@ describe('rewriteEdgeHostInResponse', () => {
 
       expect(result.a).to.equal('https://other-cdn.com/path/edge-platform/image.jpg');
       expect(result.b).to.equal('https://my-edge-store.example.com/media/file.jpg');
-      expect(result.c).to.equal('https://custom.example.com/real-edge/media.jpg');
+      expect(result.c).to.equal(
+        'https://edge-platform.sitecorecloud.io/real-edge/media.jpg'
+      );
     });
   });
 
   describe('containsDefaultEdgeHost()', () => {
-    it('should return true for edge-platform.sitecorecloud.io', () => {
+    it('should return false for edge-platform.sitecorecloud.io (only default hostname matches)', () => {
       expect(
         containsDefaultEdgeHost('https://edge-platform.sitecorecloud.io/media/image.jpg')
-      ).to.be.true;
+      ).to.be.false;
     });
 
-    it('should return true for edge.sitecorecloud.io', () => {
+    it('should return true for edge.sitecorecloud.io (default hostname)', () => {
       expect(containsDefaultEdgeHost('https://edge.sitecorecloud.io/media/image.jpg')).to.be.true;
     });
 
-    it('should return true for edge-staging.sitecore-staging.cloud', () => {
+    it('should return false for edge-staging.sitecore-staging.cloud (only default hostname matches)', () => {
       expect(
         containsDefaultEdgeHost('https://edge-staging.sitecore-staging.cloud/tenant/media/a.jpg')
-      ).to.be.true;
+      ).to.be.false;
     });
 
     it('should return false for custom hostname', () => {

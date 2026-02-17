@@ -21,7 +21,7 @@ type Config = { loadStyles: boolean };
 export const getContentStylesheetLink = (
   layoutData: LayoutServiceData,
   sitecoreEdgeContextId: string,
-  sitecoreEdgeUrl: string = constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT
+  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT
 ): HTMLLink | null => {
   if (!layoutData.sitecore.route) return null;
 
@@ -39,7 +39,7 @@ export const getContentStylesheetLink = (
 
 export const getContentStylesheetUrl = (
   sitecoreEdgeContextId: string,
-  sitecoreEdgeUrl: string = constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT
+  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT
 ): string =>
   `${normalizeUrl(sitecoreEdgeUrl)}/v1/files/pages/styles/content-styles.css?sitecoreContextId=${sitecoreEdgeContextId}`;
 
