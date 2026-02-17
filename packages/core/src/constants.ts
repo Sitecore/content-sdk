@@ -5,23 +5,6 @@
 export const SITECORE_EXPERIENCE_EDGE_URL_DEFAULT = 'https://edge.sitecorecloud.io';
 
 /**
- * Default Edge Platform hostnames that may appear in layout/editing responses.
- * Used when rewriting URLs to a custom hostname. Includes production and staging.
- *
- * These hostnames can appear in any string in the response, including:
- * - Media URLs (Image field value.src, Rich Text markup)
- * - Link field href values
- * - Other URL fields in component data
- * @public
- */
-export const DEFAULT_EDGE_HOSTNAMES = [
-  'edge-platform.sitecorecloud.io',
-  'edge.sitecorecloud.io',
-  'edge-staging.sitecore-staging.cloud',
-  'edge-platform-staging.sitecore-staging.cloud',
-] as const;
-
-/**
  * Claims URL
  * @internal
  */

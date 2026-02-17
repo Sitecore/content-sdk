@@ -1,4 +1,16 @@
-import { DEFAULT_EDGE_HOSTNAMES, normalizeUrl } from '@sitecore-content-sdk/core/tools';
+import { normalizeUrl } from '@sitecore-content-sdk/core/tools';
+
+/**
+ * Default Edge hostnames that may appear in layout/editing responses.
+ * Used when rewriting URLs to a custom hostname. Includes production and staging.
+ * @internal
+ */
+const DEFAULT_EDGE_HOSTNAMES = [
+  'edge-platform.sitecorecloud.io',
+  'edge.sitecorecloud.io',
+  'edge-staging.sitecore-staging.cloud',
+  'edge-platform-staging.sitecore-staging.cloud',
+] as const;
 
 /**
  * Returns true if the given URL has a custom (non-default) Edge hostname.

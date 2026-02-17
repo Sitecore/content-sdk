@@ -6,7 +6,6 @@ export * from './metadata';
 export { default as isServer } from './is-server';
 export { ensurePathExists } from './ensurePath';
 export { normalizeUrl } from './normalize-url';
-export { DEFAULT_EDGE_HOSTNAMES } from '../constants';
 export {
   resolveEdgeUrl,
   resolveEdgeUrlForStaticFiles,

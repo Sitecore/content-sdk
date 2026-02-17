@@ -39,7 +39,6 @@ export { ClientError }
 declare namespace constants {
     export {
         SITECORE_EXPERIENCE_EDGE_URL_DEFAULT,
-        DEFAULT_EDGE_HOSTNAMES,
         CLAIMS,
         DEFAULT_SITECORE_AUTH_DOMAIN,
         DEFAULT_SITECORE_AUTH_AUDIENCE,
@@ -66,9 +65,6 @@ export const debugModule: debug_3.Debug & {
 
 // @public
 export const debugNamespace = "content-sdk";
-
-// @public
-export const DEFAULT_EDGE_HOSTNAMES: readonly ["edge-platform.sitecorecloud.io", "edge.sitecorecloud.io", "edge-staging.sitecore-staging.cloud", "edge-platform-staging.sitecore-staging.cloud"];
 
 // @internal
 const DEFAULT_SITECORE_AUTH_AUDIENCE = "https://api.sitecorecloud.io";
@@ -304,7 +300,7 @@ export interface TenantArgs {
 
 // Warnings were encountered during analysis:
 //
-// src/tools/index.ts:39:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+// src/tools/index.ts:38:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 
