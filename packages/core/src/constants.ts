@@ -20,12 +20,7 @@ export const SITECORE_EDGE_PLATFORM_URL_DEFAULT = 'https://edge-platform.sitecor
  * - Other URL fields in component data
  * @public
  */
-export const DEFAULT_EDGE_HOSTNAMES = [
-  'edge-platform.sitecorecloud.io',
-  'edge.sitecorecloud.io',
-  'edge-staging.sitecore-staging.cloud',
-  'edge-platform-staging.sitecore-staging.cloud',
-] as const;
+export const SITECORE_EXPERIENCE_EDGE_URL_DEFAULT = 'https://edge.sitecorecloud.io'
 
 /**
  * Claims URL
