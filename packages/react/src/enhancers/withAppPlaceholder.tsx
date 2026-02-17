@@ -4,7 +4,6 @@ import { AppPlaceholder } from '../components/Placeholder/AppPlaceholder';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { ComponentMap } from '../components/sharedTypes';
-import { Placeholder } from '../components/Placeholder';
 
 export type ComponentProps = {
   rendering: ComponentRendering;

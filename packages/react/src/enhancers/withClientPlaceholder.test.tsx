@@ -289,7 +289,6 @@ describe('withClientPlaceholder HOC', () => {
 
     it('should render a placeholder with given key', () => {
       const component = layoutData.sitecore.route;
-      const phKey = 'main';
       const props: WrapperProps = {
         rendering: component as ComponentRendering,
         page: editModePage,
@@ -310,7 +309,6 @@ describe('withClientPlaceholder HOC', () => {
 
     it('should render a placeholder with given key and multiple placeholders', () => {
       const component = layoutData.sitecore.route;
-      const phKeys = ['main', 'secondary'];
 
       const MultiPlaceholderMetadataComponent: React.FC<ComponentProps> = ({ placeholders }) => {
         return (
@@ -344,7 +342,6 @@ describe('withClientPlaceholder HOC', () => {
 
     it('should render code blocks even if placeholder is empty', () => {
       const component = layoutDataWithEmptyPlaceholder.sitecore.route;
-      const phKey = 'main';
       const props: WrapperProps = {
         rendering: component as ComponentRendering,
         page: editModePage,
@@ -363,7 +360,6 @@ describe('withClientPlaceholder HOC', () => {
 
     it('should render missing component with code blocks if component is not registered', () => {
       const component = layoutDataWithUnknownComponent.sitecore.route;
-      const phKey = 'main';
       const props: WrapperProps = {
         rendering: component as ComponentRendering,
         page: editModePage,
@@ -382,7 +378,6 @@ describe('withClientPlaceholder HOC', () => {
     });
 
     it('should render dynamic placeholder', () => {
-      const phKey = 'container-1';
       const layoutData = layoutDataForNestedDynamicPlaceholder('container-{*}');
       const component = layoutData.sitecore.route;
       const props: WrapperProps = {
@@ -402,7 +397,6 @@ describe('withClientPlaceholder HOC', () => {
     });
 
     it('should render double digit dynamic placeholder', () => {
-      const phKey = 'container-1-2';
       const layoutData = layoutDataForNestedDynamicPlaceholder('container-1-{*}');
       const component = layoutData.sitecore.route;
       const props: WrapperProps = {

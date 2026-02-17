@@ -45,8 +45,16 @@ export const __mockDependencies = (mocks: any) => {
  * when generation is enabled (`page.mode.designLibrary.isVariantGeneration === true`),
  * wires the **variant generation** handshake so the parent (DL Studio) can send
  * generated code to preview and iterate on.
- * @param {DesignLibraryProps} props
- * @param {() => Promise} [props.loadImportMap] Optional async loader that resolves to the import-map used to resolve the generated component’s imports. Required when `isVariantGeneration` is true.
+ * @param {DesignLibraryProps} props - The props for the DesignLibrary component.
+ * @param {Page} props.page - The page data.
+ * @param {() => Promise<ImportMapImport>} [props.loadImportMap] Optional async loader that resolves to the import-map used to resolve the generated component’s imports. Required when `isVariantGeneration` is true.
+ * @param {DynamicComponent} [props.Component] The component to render.
+ * @param {number} [props.renderKey] The key to use for the render.
+ * @param {boolean} [props.isGeneratedComponentActive] Whether the generated component is active.
+ * @param {boolean} [props.isDesignLibrary] Whether the component is a design library.
+ * @param {boolean} [props.isVariantGeneration] Whether the variant generation is enabled.
+ * @param {ComponentUpdateModel} [props.propsState] The props state.
+ * @param {() => void} [props.setPropsState] The function to set the props state.
  * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
  * @public
  */

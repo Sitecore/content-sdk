@@ -65,6 +65,13 @@ export const ImportMapReactContext = React.createContext<
 
 /**
  * The SitecoreProvider component.
+ * @param {SitecoreProviderProps} props - The props for the SitecoreProvider component.
+ * @param {SitecoreProviderProps['api']} props.api - The API configuration.
+ * @param {SitecoreProviderProps['page']} props.page - The page data.
+ * @param {SitecoreProviderProps['componentMap']} props.componentMap - The component map.
+ * @param {SitecoreProviderProps['loadImportMap']} props.loadImportMap - The function to load the import map.
+ * @param {React.ReactNode} props.children - The children to render.
+ * @returns {React.ReactNode} The SitecoreProvider component.
  * @public
  */
 export const SitecoreProvider = (props: SitecoreProviderProps) => {
