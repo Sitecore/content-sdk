@@ -1,4 +1,5 @@
-import { normalizeUrl, resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
+import { constants } from '@sitecore-content-sdk/core';
+import { normalizeUrl } from '@sitecore-content-sdk/core/tools';
 import { ComponentRendering, Field, Item, LayoutServiceData, RouteData } from './index';
 import { HTMLLink } from '../models';
 
@@ -13,15 +14,14 @@ type Config = { loadStyles: boolean };
  * Get the content styles link to be loaded from the Sitecore Edge Platform
  * @param {LayoutServiceData} layoutData Layout service data
  * @param {string} sitecoreEdgeContextId Sitecore Edge Context ID
- * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL. If not provided,
- *   resolves from NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME or SITECORE_EDGE_URL env vars, falling back to default.
+ * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL (resolved at config level). Defaults to platform URL.
  * @returns {HTMLLink | null} content styles link, null if no styles are used in layout
  * @public
  */
 export const getContentStylesheetLink = (
   layoutData: LayoutServiceData,
   sitecoreEdgeContextId: string,
-  sitecoreEdgeUrl?: string
+  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_URL_DEFAULT
 ): HTMLLink | null => {
   if (!layoutData.sitecore.route) return null;
 
@@ -39,9 +39,9 @@ export const getContentStylesheetLink = (
 
 export const getContentStylesheetUrl = (
   sitecoreEdgeContextId: string,
-  sitecoreEdgeUrl?: string
+  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_URL_DEFAULT
 ): string =>
-  `${(sitecoreEdgeUrl ? normalizeUrl(sitecoreEdgeUrl) : resolveEdgeUrl())}/v1/files/pages/styles/content-styles.css?sitecoreContextId=${sitecoreEdgeContextId}`;
+  `${normalizeUrl(sitecoreEdgeUrl)}/v1/files/pages/styles/content-styles.css?sitecoreContextId=${sitecoreEdgeContextId}`;
 
 export const traversePlaceholder = (components: Array<ComponentRendering>, config: Config) => {
   if (config.loadStyles) return;

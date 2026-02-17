@@ -1,30 +1,22 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
+import { constants } from '@sitecore-content-sdk/core';
 import { rewriteEdgeHostInResponse, containsDefaultEdgeHost } from './rewrite-edge-host';
-import { SITECORE_EDGE_HOSTNAME_PUBLIC_ENV } from '@sitecore-content-sdk/core/tools';
+
+const DEFAULT_EDGE_URL = constants.SITECORE_EDGE_URL_DEFAULT;
+const CUSTOM_EDGE_URL = 'https://custom.example.com';
 
 describe('rewriteEdgeHostInResponse', () => {
-  const originalEnv = { ...process.env };
-
-  beforeEach(() => {
-    delete process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV];
-  });
-
-  afterEach(() => {
-    // Restore original env
-    process.env = { ...originalEnv };
-  });
-
   describe('rewriteEdgeHostInResponse()', () => {
-    it('should return response unchanged when no custom hostname is configured', () => {
+    it('should return response unchanged when default edge URL is passed', () => {
       const response = {
         url: 'https://edge-platform.sitecorecloud.io/media/image.jpg',
       };
-      const result = rewriteEdgeHostInResponse(response);
+      const result = rewriteEdgeHostInResponse(response, DEFAULT_EDGE_URL);
       expect(result).to.deep.equal(response);
     });
 
-    it('should rewrite when edgeUrl is provided from config (no env vars)', () => {
+    it('should rewrite when edgeUrl is provided from config (custom hostname)', () => {
       const response = {
         url: 'https://edge-platform.sitecorecloud.io/media/image.jpg',
       };
@@ -33,54 +25,48 @@ describe('rewriteEdgeHostInResponse', () => {
     });
 
     it('should rewrite edge-platform.sitecorecloud.io in string values', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
       const response = {
         url: 'https://edge-platform.sitecorecloud.io/media/image.jpg',
       };
-      const result = rewriteEdgeHostInResponse(response);
+      const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.url).to.equal('https://custom.example.com/media/image.jpg');
     });
 
     it('should rewrite edge.sitecorecloud.io in string values', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
       const response = {
         url: 'https://edge.sitecorecloud.io/media/image.jpg',
       };
-      const result = rewriteEdgeHostInResponse(response);
+      const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.url).to.equal('https://custom.example.com/media/image.jpg');
     });
 
     it('should rewrite edge-staging.sitecore-staging.cloud in string values', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
       const response = {
         url: 'https://edge-staging.sitecore-staging.cloud/tenant-id/media/image.jpg',
       };
-      const result = rewriteEdgeHostInResponse(response);
+      const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.url).to.equal('https://custom.example.com/tenant-id/media/image.jpg');
     });
 
     it('should rewrite edge-platform-staging.sitecore-staging.cloud in string values', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
       const response = {
         url: 'https://edge-platform-staging.sitecore-staging.cloud/tenant-id/media/image.jpg',
       };
-      const result = rewriteEdgeHostInResponse(response);
+      const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.url).to.equal('https://custom.example.com/tenant-id/media/image.jpg');
     });
 
     it('should rewrite multiple occurrences in a string', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
       const response = {
         html: '<img src="https://edge-platform.sitecorecloud.io/a.jpg"><img src="https://edge-platform.sitecorecloud.io/b.jpg">',
       };
-      const result = rewriteEdgeHostInResponse(response);
+      const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.html).to.equal(
         '<img src="https://custom.example.com/a.jpg"><img src="https://custom.example.com/b.jpg">'
       );
     });
 
     it('should rewrite nested objects', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
       const response = {
         sitecore: {
           context: {},
@@ -95,21 +81,20 @@ describe('rewriteEdgeHostInResponse', () => {
           },
         },
       };
-      const result = rewriteEdgeHostInResponse(response);
+      const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.sitecore.route.fields.image.value.src).to.equal(
         'https://custom.example.com/media/image.jpg'
       );
     });
 
     it('should rewrite arrays', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
       const response = {
         urls: [
           'https://edge-platform.sitecorecloud.io/a.jpg',
           'https://edge-platform.sitecorecloud.io/b.jpg',
         ],
       };
-      const result = rewriteEdgeHostInResponse(response);
+      const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.urls).to.deep.equal([
         'https://custom.example.com/a.jpg',
         'https://custom.example.com/b.jpg',
@@ -117,56 +102,50 @@ describe('rewriteEdgeHostInResponse', () => {
     });
 
     it('should handle null values', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
       const response = {
         value: null,
       };
-      const result = rewriteEdgeHostInResponse(response);
+      const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.value).to.be.null;
     });
 
     it('should handle undefined values', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
       const response = {
         value: undefined,
       };
-      const result = rewriteEdgeHostInResponse(response);
+      const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.value).to.be.undefined;
     });
 
     it('should preserve non-string primitives', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
       const response = {
         number: 42,
         boolean: true,
         string: 'no edge url here',
       };
-      const result = rewriteEdgeHostInResponse(response);
+      const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.number).to.equal(42);
       expect(result.boolean).to.be.true;
       expect(result.string).to.equal('no edge url here');
     });
 
     it('should handle http protocol in edge URLs', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
       const response = {
         url: 'http://edge-platform.sitecorecloud.io/media/image.jpg',
       };
-      const result = rewriteEdgeHostInResponse(response);
+      const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.url).to.equal('https://custom.example.com/media/image.jpg');
     });
 
     it('should handle mixed case (case insensitive)', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
       const response = {
         url: 'https://EDGE-PLATFORM.SITECORECLOUD.IO/media/image.jpg',
       };
-      const result = rewriteEdgeHostInResponse(response);
+      const result = rewriteEdgeHostInResponse(response, CUSTOM_EDGE_URL);
       expect(result.url).to.equal('https://custom.example.com/media/image.jpg');
     });
 
     it('should handle complex layout service data structure', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
       const layoutData = {
         sitecore: {
           context: {
@@ -203,7 +182,7 @@ describe('rewriteEdgeHostInResponse', () => {
         },
       };
 
-      const result = rewriteEdgeHostInResponse(layoutData);
+      const result = rewriteEdgeHostInResponse(layoutData, CUSTOM_EDGE_URL);
 
       expect(result.sitecore.route.placeholders.main[0].fields.image.value.src).to.equal(
         'https://custom.example.com/-/media/image.jpg'
@@ -214,15 +193,13 @@ describe('rewriteEdgeHostInResponse', () => {
     });
 
     it('should not rewrite similar but non-Edge URLs (no false positives)', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
-
       const layout = {
         a: 'https://other-cdn.com/path/edge-platform/image.jpg',
         b: 'https://my-edge-store.example.com/media/file.jpg',
         c: 'https://edge-platform.sitecorecloud.io/real-edge/media.jpg',
       };
 
-      const result = rewriteEdgeHostInResponse(layout) as typeof layout;
+      const result = rewriteEdgeHostInResponse(layout, CUSTOM_EDGE_URL) as typeof layout;
 
       expect(result.a).to.equal('https://other-cdn.com/path/edge-platform/image.jpg');
       expect(result.b).to.equal('https://my-edge-store.example.com/media/file.jpg');

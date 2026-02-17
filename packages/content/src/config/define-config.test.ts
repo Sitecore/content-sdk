@@ -99,7 +99,7 @@ describe('define-config', () => {
   describe('getFallbackConfig', () => {
     it('populates env variables in fallback config', () => {
       process.env.SITECORE_EDGE_CONTEXT_ID = 'env-context';
-      process.env.SITECORE_EDGE_URL = 'env-edge-url';
+      process.env.SITECORE_EDGE_PLATFORM_HOSTNAME = 'https://env-edge-url';
       process.env.SITECORE_EDITING_SECRET = 'env-secret';
       process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT = '111';
       process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT = '222';
@@ -108,7 +108,7 @@ describe('define-config', () => {
 
       const cfg = getFallbackConfig();
       expect(cfg.api.edge.contextId).to.equal('env-context');
-      expect(cfg.api.edge.edgeUrl).to.equal('env-edge-url');
+      expect(cfg.api.edge.edgeUrl).to.equal('https://env-edge-url');
       expect(cfg.editingSecret).to.equal('env-secret');
       expect(cfg.personalize.edgeTimeout).to.equal(111);
       expect(cfg.personalize.cdpTimeout).to.equal(222);
@@ -118,7 +118,7 @@ describe('define-config', () => {
 
     it('falls back to defaults when env variables are absent', () => {
       delete process.env.SITECORE_EDGE_CONTEXT_ID;
-      delete process.env.SITECORE_EDGE_URL;
+      delete process.env.SITECORE_EDGE_PLATFORM_HOSTNAME;
       delete process.env.SITECORE_EDITING_SECRET;
       delete process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT;
       delete process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT;

@@ -1,35 +1,20 @@
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
-import isServer from './is-server';
 import { normalizeEnvValue } from './normalize-env-value';
 import { normalizeUrl } from './normalize-url';
 
 /**
- * Environment variable name for the custom Edge hostname.
- * Available on both server and client (e.g. NEXT_PUBLIC_* in Next.js).
+ * Environment variable name for the custom Edge Platform hostname (framework-agnostic).
  * @public
  */
-export const SITECORE_EDGE_HOSTNAME_PUBLIC_ENV = 'NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME';
+export const SITECORE_EDGE_PLATFORM_HOSTNAME_ENV = 'SITECORE_EDGE_PLATFORM_HOSTNAME';
 
 /**
- * Environment variable name for the Edge URL override.
- * @public
- */
-export const SITECORE_EDGE_URL_ENV = 'SITECORE_EDGE_URL';
-
-/**
- * Environment variable name for the Edge URL override (client-side / browser).
- * @public
- */
-export const SITECORE_EDGE_URL_PUBLIC_ENV = 'NEXT_PUBLIC_SITECORE_EDGE_URL';
-
-/**
- * Resolves the Sitecore Edge URL based on environment variables and configuration.
+ * Resolves the Sitecore Edge URL based on configuration and environment.
  *
  * Priority order:
  * 1. Explicit `edgeUrl` parameter (if provided and not empty)
- * 2. `NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME` environment variable
- * 3. `SITECORE_EDGE_URL` / `NEXT_PUBLIC_SITECORE_EDGE_URL` environment variable
- * 4. Default Edge Platform URL (`https://edge-platform.sitecorecloud.io`)
+ * 2. `SITECORE_EDGE_PLATFORM_HOSTNAME` environment variable
+ * 3. Default Edge Platform URL (`https://edge-platform.sitecorecloud.io`)
  *
  * The hostname env var can be provided as:
  * - Full URL: `https://my-custom-edge.example.com`
@@ -51,42 +36,23 @@ export function resolveEdgeUrl(edgeUrl?: string): string {
     return normalizeUrl(explicit);
   }
 
-  // Check for custom hostname env var (available on both server and client)
-  const hostnameEnvVarRaw = process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV];
-  const hostnameEnvVar = normalizeEnvValue(hostnameEnvVarRaw);
+  // Check for custom hostname env var
+  const hostnameEnvVar = normalizeEnvValue(process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV]);
   if (hostnameEnvVar) {
     return normalizeHostnameToUrl(hostnameEnvVar);
   }
 
-  // Check for Edge URL env var
-  const urlEnvVarRaw = isServer()
-    ? process.env[SITECORE_EDGE_URL_ENV] || process.env[SITECORE_EDGE_URL_PUBLIC_ENV]
-    : process.env[SITECORE_EDGE_URL_PUBLIC_ENV];
-
-  const urlEnvVar = normalizeEnvValue(urlEnvVarRaw);
-  if (urlEnvVar) {
-    return normalizeUrl(urlEnvVar);
-  }
-
-  // Fall back to default
   return SITECORE_EDGE_URL_DEFAULT;
 }
 
 /**
  * Resolves the Edge URL for static files (e.g. stylesheets) by ignoring the custom hostname.
  * Use this when the custom host does not serve static file paths (e.g. /v1/files/...).
- * Priority: SITECORE_EDGE_URL / NEXT_PUBLIC_SITECORE_EDGE_URL env, then default.
+ * Returns the default Edge Platform URL.
  * @returns {string} The Edge Platform base URL for static files (no trailing slash)
  * @public
  */
 export function resolveEdgeUrlForStaticFiles(): string {
-  const urlEnvVarRaw = isServer()
-    ? process.env[SITECORE_EDGE_URL_ENV] || process.env[SITECORE_EDGE_URL_PUBLIC_ENV]
-    : process.env[SITECORE_EDGE_URL_PUBLIC_ENV];
-  const urlEnvVar = normalizeEnvValue(urlEnvVarRaw);
-  if (urlEnvVar) {
-    return normalizeUrl(urlEnvVar);
-  }
   return SITECORE_EDGE_URL_DEFAULT;
 }
 
@@ -114,7 +80,7 @@ function normalizeHostnameToUrl(hostnameOrUrl: string): string {
  * @public
  */
 export function hasCustomEdgeHostname(): boolean {
-  return !!normalizeEnvValue(process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV]);
+  return !!normalizeEnvValue(process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV]);
 }
 
 /**

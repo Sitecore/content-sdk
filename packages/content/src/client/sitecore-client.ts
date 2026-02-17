@@ -1,5 +1,6 @@
 import { DocumentNode } from 'graphql';
 import {
+  constants,
   GraphQLClient,
   GraphQLRequestClientFactory,
   FetchOptions,
@@ -633,19 +634,15 @@ export class SitecoreClient implements BaseSitecoreClient {
     // regular sitemap
     if (sitemapPath) {
       try {
-        const rewrittenSitemapPath = rewriteEdgeHostInResponse(
-          sitemapPath,
-          this.initOptions.api.edge.edgeUrl
-        );
+        const edgeUrl =
+          this.initOptions.api.edge.edgeUrl ?? constants.SITECORE_EDGE_URL_DEFAULT;
+        const rewrittenSitemapPath = rewriteEdgeHostInResponse(sitemapPath, edgeUrl);
         const fetcher = new NativeDataFetcher();
         const xmlResponse = await fetcher.fetch<string>(rewrittenSitemapPath);
         if (!xmlResponse.data) {
           throw new Error('REDIRECT_404');
         }
-        return rewriteEdgeHostInResponse(
-          xmlResponse.data,
-          this.initOptions.api.edge.edgeUrl
-        );
+        return rewriteEdgeHostInResponse(xmlResponse.data, edgeUrl);
         // eslint-disable-next-line no-unused-vars
       } catch (error) {
         throw new Error('REDIRECT_404');
@@ -730,10 +727,10 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!opt) {
       return layout;
     }
+    const edgeUrl =
+      this.initOptions.api.edge.edgeUrl ?? constants.SITECORE_EDGE_URL_DEFAULT;
     const transformer =
-      opt === true
-        ? getDefaultMediaUrlTransformer(this.initOptions.api.edge.edgeUrl)
-        : opt;
+      opt === true ? getDefaultMediaUrlTransformer(edgeUrl) : opt;
     return applyMediaUrlRewrite(layout, transformer);
   }
 

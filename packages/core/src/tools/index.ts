@@ -12,9 +12,7 @@ export {
   resolveEdgeUrlForStaticFiles,
   hasCustomEdgeHostname,
   getCustomEdgeUrl,
-  SITECORE_EDGE_HOSTNAME_PUBLIC_ENV,
-  SITECORE_EDGE_URL_ENV,
-  SITECORE_EDGE_URL_PUBLIC_ENV,
+  SITECORE_EDGE_PLATFORM_HOSTNAME_ENV,
 } from './resolve-edge-url';
 export {
   resolveUrl,

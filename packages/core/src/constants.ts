@@ -5,6 +5,12 @@
 export const SITECORE_EDGE_URL_DEFAULT = 'https://edge-platform.sitecorecloud.io';
 
 /**
+ * Default Edge Platform URL (alias for naming consistency with SITECORE_EDGE_PLATFORM_HOSTNAME).
+ * @internal
+ */
+export const SITECORE_EDGE_PLATFORM_URL_DEFAULT = 'https://edge-platform.sitecorecloud.io';
+
+/**
  * Default Edge Platform hostnames that may appear in layout/editing responses.
  * Used when rewriting URLs to a custom hostname. Includes production and staging.
  *

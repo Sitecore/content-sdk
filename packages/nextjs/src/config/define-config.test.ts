@@ -157,11 +157,11 @@ describe('defineConfig', () => {
     });
     describe('environment variable is set', () => {
       before(() => {
-        process.env.NEXT_PUBLIC_SITECORE_EDGE_URL = 'next-public-sitecore-edgeUrl';
+        process.env.NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME = 'next-public-sitecore-edgeUrl';
       });
 
       after(() => {
-        delete process.env.NEXT_PUBLIC_SITECORE_EDGE_URL;
+        delete process.env.NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME;
       });
 
       it('should use the value from the config if present', () => {

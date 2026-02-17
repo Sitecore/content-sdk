@@ -39,6 +39,7 @@ export { ClientError }
 declare namespace constants {
     export {
         SITECORE_EDGE_URL_DEFAULT,
+        SITECORE_EDGE_PLATFORM_URL_DEFAULT,
         DEFAULT_EDGE_HOSTNAMES,
         CLAIMS,
         DEFAULT_SITECORE_AUTH_DOMAIN,
@@ -286,16 +287,13 @@ export interface RetryStrategy {
 export function setCache(key: string, data: unknown): void;
 
 // @public
-export const SITECORE_EDGE_HOSTNAME_PUBLIC_ENV = "NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME";
+export const SITECORE_EDGE_PLATFORM_HOSTNAME_ENV = "SITECORE_EDGE_PLATFORM_HOSTNAME";
+
+// @internal
+const SITECORE_EDGE_PLATFORM_URL_DEFAULT = "https://edge-platform.sitecorecloud.io";
 
 // @internal
 const SITECORE_EDGE_URL_DEFAULT = "https://edge-platform.sitecorecloud.io";
-
-// @public
-export const SITECORE_EDGE_URL_ENV = "SITECORE_EDGE_URL";
-
-// @public
-export const SITECORE_EDGE_URL_PUBLIC_ENV = "NEXT_PUBLIC_SITECORE_EDGE_URL";
 
 // @public
 export interface TenantArgs {
@@ -310,7 +308,7 @@ export interface TenantArgs {
 
 // Warnings were encountered during analysis:
 //
-// src/tools/index.ts:41:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+// src/tools/index.ts:39:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

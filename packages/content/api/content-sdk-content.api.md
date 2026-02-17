@@ -539,7 +539,7 @@ export const getContentSdkPagesClientData: () => Record<string, Record<string, u
 export const getContentStylesheetLink: (layoutData: LayoutServiceData, sitecoreEdgeContextId: string, sitecoreEdgeUrl?: string) => HTMLLink | null;
 
 // @internal
-export function getDefaultMediaUrlTransformer(edgeUrl?: string): (value: string) => string;
+export function getDefaultMediaUrlTransformer(edgeUrl: string): (value: string) => string;
 
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPreviewErrorEvent" needs to be exported by the entry point api-surface.d.ts
 //
@@ -987,7 +987,7 @@ export const resetEditorChromes: () => void;
 export { RetryStrategy }
 
 // @public
-export function rewriteEdgeHostInResponse<T>(response: T, edgeUrl?: string): T;
+export function rewriteEdgeHostInResponse<T>(response: T, edgeUrl: string): T;
 
 // @public
 export type RobotsQueryResult = {
@@ -1353,7 +1353,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:62:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:63:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:108:5 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal

@@ -1,4 +1,5 @@
-import { normalizeUrl, resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
+import { constants } from '@sitecore-content-sdk/core';
+import { normalizeUrl } from '@sitecore-content-sdk/core/tools';
 import {
   ComponentFields,
   ComponentParams,
@@ -220,13 +221,15 @@ export function getDesignLibraryStatusEvent(
 
 /**
  * Generates the URL for the design library script link.
- * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL. If not provided,
- *   resolves from NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME or SITECORE_EDGE_URL env vars, falling back to default.
+ * Caller should pass the resolved Edge URL from config.
+ * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL (resolved at config level). Defaults to platform URL.
  * @returns The full URL to the design library script.
  * @internal
  */
-export function getDesignLibraryScriptLink(sitecoreEdgeUrl?: string): string {
-  return `${(sitecoreEdgeUrl ? normalizeUrl(sitecoreEdgeUrl) : resolveEdgeUrl())}/v1/files/designlibrary/lib/rh-lib-script.js`;
+export function getDesignLibraryScriptLink(
+  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_URL_DEFAULT
+): string {
+  return `${normalizeUrl(sitecoreEdgeUrl)}/v1/files/designlibrary/lib/rh-lib-script.js`;
 }
 
 /**

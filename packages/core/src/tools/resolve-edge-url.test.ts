@@ -5,9 +5,7 @@ import {
   resolveEdgeUrlForStaticFiles,
   hasCustomEdgeHostname,
   getCustomEdgeUrl,
-  SITECORE_EDGE_HOSTNAME_PUBLIC_ENV,
-  SITECORE_EDGE_URL_ENV,
-  SITECORE_EDGE_URL_PUBLIC_ENV,
+  SITECORE_EDGE_PLATFORM_HOSTNAME_ENV,
 } from './resolve-edge-url';
 import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
 
@@ -15,9 +13,7 @@ describe('resolveEdgeUrl', () => {
   const originalEnv = { ...process.env };
 
   beforeEach(() => {
-    delete process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV];
-    delete process.env[SITECORE_EDGE_URL_ENV];
-    delete process.env[SITECORE_EDGE_URL_PUBLIC_ENV];
+    delete process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV];
   });
 
   afterEach(() => {
@@ -27,7 +23,7 @@ describe('resolveEdgeUrl', () => {
 
   describe('resolveEdgeUrl()', () => {
     it('should return explicit edgeUrl parameter when provided', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'custom.example.com';
       const result = resolveEdgeUrl('https://explicit.example.com');
       expect(result).to.equal('https://explicit.example.com');
     });
@@ -37,53 +33,34 @@ describe('resolveEdgeUrl', () => {
       expect(result).to.equal('https://explicit.example.com');
     });
 
-    it('should use NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME when set (hostname only)', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'my-tenant.edge.example.com';
+    it('should use SITECORE_EDGE_PLATFORM_HOSTNAME when set (hostname only)', () => {
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'my-tenant.edge.example.com';
       const result = resolveEdgeUrl();
       expect(result).to.equal('https://my-tenant.edge.example.com');
     });
 
-    it('should use NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME when set (full URL)', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'https://my-tenant.edge.example.com';
+    it('should use SITECORE_EDGE_PLATFORM_HOSTNAME when set (full URL)', () => {
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'https://my-tenant.edge.example.com';
       const result = resolveEdgeUrl();
       expect(result).to.equal('https://my-tenant.edge.example.com');
     });
 
     it('should normalize trailing slash from hostname env var', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'https://my-tenant.edge.example.com/';
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'https://my-tenant.edge.example.com/';
       const result = resolveEdgeUrl();
       expect(result).to.equal('https://my-tenant.edge.example.com');
     });
 
     it('should trim whitespace from hostname env var', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = '  my-tenant.edge.example.com  ';
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = '  my-tenant.edge.example.com  ';
       const result = resolveEdgeUrl();
       expect(result).to.equal('https://my-tenant.edge.example.com');
     });
 
-    it('should use NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME when set', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'public-tenant.edge.example.com';
+    it('should use SITECORE_EDGE_PLATFORM_HOSTNAME when set', () => {
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'public-tenant.edge.example.com';
       const result = resolveEdgeUrl();
       expect(result).to.equal('https://public-tenant.edge.example.com');
-    });
-
-    it('should use SITECORE_EDGE_URL when no hostname is set', () => {
-      process.env[SITECORE_EDGE_URL_ENV] = 'https://edge-url.example.com';
-      const result = resolveEdgeUrl();
-      expect(result).to.equal('https://edge-url.example.com');
-    });
-
-    it('should use NEXT_PUBLIC_SITECORE_EDGE_URL as fallback', () => {
-      process.env[SITECORE_EDGE_URL_PUBLIC_ENV] = 'https://public-edge-url.example.com';
-      const result = resolveEdgeUrl();
-      expect(result).to.equal('https://public-edge-url.example.com');
-    });
-
-    it('should prefer hostname env var over URL env var', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'hostname.example.com';
-      process.env[SITECORE_EDGE_URL_ENV] = 'https://url.example.com';
-      const result = resolveEdgeUrl();
-      expect(result).to.equal('https://hostname.example.com');
     });
 
     it('should return default when no env vars are set', () => {
@@ -92,25 +69,25 @@ describe('resolveEdgeUrl', () => {
     });
 
     it('should treat the string "undefined" as an unset hostname env var', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'undefined';
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'undefined';
       const result = resolveEdgeUrl();
       expect(result).to.equal(SITECORE_EDGE_URL_DEFAULT);
     });
 
     it('should treat the string "null" as an unset hostname env var', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'null';
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'null';
       const result = resolveEdgeUrl();
       expect(result).to.equal(SITECORE_EDGE_URL_DEFAULT);
     });
 
     it('should treat whitespace-only hostname env var as unset', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = '   ';
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = '   ';
       const result = resolveEdgeUrl();
       expect(result).to.equal(SITECORE_EDGE_URL_DEFAULT);
     });
 
     it('should handle http protocol in hostname', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'http://insecure.example.com';
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'http://insecure.example.com';
       const result = resolveEdgeUrl();
       expect(result).to.equal('http://insecure.example.com');
     });
@@ -121,14 +98,9 @@ describe('resolveEdgeUrl', () => {
       expect(hasCustomEdgeHostname()).to.be.false;
     });
 
-    it('should return true when NEXT_PUBLIC_SITECORE_EDGE_HOSTNAME is set', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
+    it('should return true when SITECORE_EDGE_PLATFORM_HOSTNAME is set', () => {
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'custom.example.com';
       expect(hasCustomEdgeHostname()).to.be.true;
-    });
-
-    it('should return false when only SITECORE_EDGE_URL is set', () => {
-      process.env[SITECORE_EDGE_URL_ENV] = 'https://url.example.com';
-      expect(hasCustomEdgeHostname()).to.be.false;
     });
   });
 
@@ -138,32 +110,19 @@ describe('resolveEdgeUrl', () => {
     });
 
     it('should return resolved URL when custom hostname is configured', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'custom.example.com';
       expect(getCustomEdgeUrl()).to.equal('https://custom.example.com');
     });
   });
 
   describe('resolveEdgeUrlForStaticFiles()', () => {
-    it('should return SITECORE_EDGE_URL when set', () => {
-      process.env[SITECORE_EDGE_URL_ENV] = 'https://edge-for-files.example.com';
-      const result = resolveEdgeUrlForStaticFiles();
-      expect(result).to.equal('https://edge-for-files.example.com');
-    });
-
-    it('should return default when no URL env vars are set', () => {
+    it('should return default Edge URL', () => {
       const result = resolveEdgeUrlForStaticFiles();
       expect(result).to.equal(SITECORE_EDGE_URL_DEFAULT);
     });
 
-    it('should ignore custom hostname and use URL env when set', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
-      process.env[SITECORE_EDGE_URL_ENV] = 'https://edge-platform.example.com';
-      const result = resolveEdgeUrlForStaticFiles();
-      expect(result).to.equal('https://edge-platform.example.com');
-    });
-
-    it('should ignore custom hostname and return default when URL env not set', () => {
-      process.env[SITECORE_EDGE_HOSTNAME_PUBLIC_ENV] = 'custom.example.com';
+    it('should return default even when custom hostname is set', () => {
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'custom.example.com';
       const result = resolveEdgeUrlForStaticFiles();
       expect(result).to.equal(SITECORE_EDGE_URL_DEFAULT);
     });
