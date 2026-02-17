@@ -1,9 +1,8 @@
 'use client';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
-import { ComponentMapReactContext } from '../SitecoreProvider';
+import { ComponentMapReactContext, useSitecore } from '../SitecoreProvider';
 import { useContext } from 'react';
 import React from 'react';
-import { useSitecore } from '../../enhancers/withSitecore';
 import { ChildComponentProps } from './models';
 import { getComponentForRendering } from './placeholder-utils';
 

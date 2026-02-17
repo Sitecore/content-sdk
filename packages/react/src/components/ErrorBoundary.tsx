@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import React, { ReactNode, Suspense } from 'react';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';

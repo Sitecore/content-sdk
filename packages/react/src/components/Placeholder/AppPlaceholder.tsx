@@ -19,11 +19,8 @@ import { rsc } from '#rsc-env';
  */
 export const AppPlaceholder = (props: AppPlaceholderProps) => {
   const renderingData = props.rendering;
-  const placeholderRenderings = getPlaceholderRenderings(
-    renderingData,
-    props.name,
-    props.page.mode.isEditing
-  );
+  const isEditing = props.page.mode.isEditing;
+  const placeholderRenderings = getPlaceholderRenderings(renderingData, props.name, isEditing);
 
   const drawAppPlaceholderChildComponent = (
     componentForRendering: ComponentForRendering,
@@ -74,7 +71,8 @@ export const AppPlaceholder = (props: AppPlaceholderProps) => {
     props,
     placeholderRenderings,
     drawAppPlaceholderChildComponent,
-    componentRuntime
+    componentRuntime,
+    isEditing
   );
 
   const finalOutput = applyConditionalTransform(components);

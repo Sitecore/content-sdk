@@ -20,6 +20,7 @@ export type WrapperProps = {
  * Provides a slot-like functionality by wrapping a component and rendering placeholders defined in the layout data.
  * @param {ComponentType<T>} Component - The component to be wrapped around placeholders.
  * @returns {React.ReactNode} A new component that renders the original component with placeholders.
+ * @public
  */
 export const withAppPlaceholder = <T extends ComponentProps, W extends T & WrapperProps>(
   Component: ComponentType<T>

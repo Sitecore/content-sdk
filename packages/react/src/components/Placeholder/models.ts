@@ -50,7 +50,7 @@ export interface BasePlaceholderProps {
    * Page data.
    * This data is passed by the SitecoreProvider.
    */
-  page: Page;
+  page?: Page;
   /**
    * The message that gets displayed while component is loading
    */
@@ -116,8 +116,8 @@ export type PlaceholderProps = BasePlaceholderProps & {
  * The interface for the AppPlaceholder component props.
  * @public
  */
-export type AppPlaceholderProps = Omit<BasePlaceholderProps, 'componentMap'> &
-  Required<Pick<BasePlaceholderProps, 'componentMap'>> & {
+export type AppPlaceholderProps = Omit<BasePlaceholderProps, 'componentMap' | 'page'> &
+  Required<Pick<BasePlaceholderProps, 'componentMap' | 'page'>> & {
     /**
      * Render props function that enables control over the rendering of the components in the placeholder.
      * Useful for techniques like wrapping each child in a wrapper component.
@@ -165,3 +165,4 @@ export const nonSerializedPlaceholderProps = [
   'missingComponentComponent',
   'hiddenRenderingComponent',
 ] as const satisfies (keyof PlaceholderProps)[];
+

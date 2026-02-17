@@ -1,6 +1,6 @@
 ﻿'use client';
 import React from 'react';
-import { useSitecore } from '../enhancers/withSitecore';
+import { useSitecore } from './SitecoreProvider';
 import {
   getContentSdkPagesClientData,
   getDesignLibraryScriptLink,

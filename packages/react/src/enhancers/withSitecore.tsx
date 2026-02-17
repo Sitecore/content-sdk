@@ -1,22 +1,12 @@
-﻿'use client';
-import React, { useContext } from 'react';
+'use client';
+import React from 'react';
 import { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
 import {
-  SitecoreProviderReactContext,
   SitecoreProviderState,
+  useSitecore,
+  UseSitecoreOptions,
 } from '../components/SitecoreProvider';
 import { Page } from '@sitecore-content-sdk/content/client';
-
-/**
- * The options for the withSitecore HOC.
- * @public
- */
-export interface WithSitecoreOptions {
-  /**
-   * If set to true, the `updateContext` method will be injected into the component props.
-   */
-  updatable?: boolean;
-}
 
 /**
  * The props that HOC will inject.
@@ -36,7 +26,7 @@ export interface WithSitecoreProps {
    * @param {Page} value New page value.
    * @returns {void}
    */
-  updatePage?: ((value: Page) => void) | false;
+  setPage?: ((value: Page) => void) | false;
 }
 
 /**
@@ -52,48 +42,20 @@ export type WithSitecoreHocProps<ComponentProps> = EnhancedOmit<
  * @param {WithSitecoreProviderOptions} [options]
  * @public
  */
-export function withSitecore(options?: WithSitecoreOptions) {
+export function withSitecore(options?: UseSitecoreOptions) {
   return function withSitecoreProviderHoc<ComponentProps extends WithSitecoreProps>(
     Component: React.ComponentType<ComponentProps>
   ) {
     return function WithSitecoreProvider(props: WithSitecoreHocProps<ComponentProps>) {
-      const scContext = useContext(SitecoreProviderReactContext);
+      const scContext = useSitecore(options);
       return (
         <Component
           {...(props as ComponentProps)}
           page={scContext.page}
           api={scContext.api}
-          updatePage={options && options.updatable && scContext.setPage}
+          setPage={scContext.setPage}
         />
       );
     };
-  };
-}
-
-/**
- * This hook grants acсess to the current Sitecore page and api.
- * @param {WithSitecoreOptions} [options] hook options
- * @example
- * const EditMode = () => {
- *    const { page } = useSitecore();
- *    return <span>Edit Mode is {page.mode.isEditing ? 'active' : 'inactive'}</span>
- * }
- * @example
- * const EditMode = () => {
- *    const { page, updatePage } = useSitecore({ updatable: true });
- *    const onClick = () => updatePage({ itemId: '123' });
- *    return <span onClick={onClick}>Item id is {page.itemId}</span>
- * }
- * @returns {object} { api, page, updatePage }
- * @public
- */
-export function useSitecore(options?: WithSitecoreOptions): WithSitecoreProps {
-  const reactContext = React.useContext(SitecoreProviderReactContext);
-  const updatable = options?.updatable;
-
-  return {
-    api: reactContext.api,
-    page: reactContext.page,
-    updatePage: updatable ? reactContext.setPage : undefined,
   };
 }

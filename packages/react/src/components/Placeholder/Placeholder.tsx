@@ -1,23 +1,24 @@
 'use client';
 import React, { useEffect } from 'react';
 import { ChildComponentProps, ComponentForRendering, PlaceholderProps } from './models';
-import { withComponentMap } from '../../enhancers/withComponentMap';
 import { PagesEditor } from '@sitecore-content-sdk/content/editing';
-import { withSitecore } from '../../enhancers/withSitecore';
 import {
   getPlaceholderRenderings,
   drawPlaceholderComponents,
   renderEmptyPlaceholder,
 } from './placeholder-utils';
 import ErrorBoundary from '../ErrorBoundary';
+import { useComponentMap, useSitecore } from '../SitecoreProvider';
 
 const PlaceholderComponent = (props: PlaceholderProps) => {
   const renderingData = props.rendering;
-  const placeholderRenderings = getPlaceholderRenderings(
-    renderingData,
-    props.name,
-    props.page.mode.isEditing
-  );
+  let { page } = useSitecore();
+  let componentMap = useComponentMap();
+  page = props.page ?? page;
+  componentMap = props.componentMap || componentMap || undefined;
+  const modProps = { ...props, page, componentMap };
+  const isEditing = page.mode.isEditing;
+  const placeholderRenderings = getPlaceholderRenderings(renderingData, modProps.name, isEditing);
   const isEmpty = !placeholderRenderings.length;
 
   useEffect(() => {
@@ -37,8 +38,8 @@ const PlaceholderComponent = (props: PlaceholderProps) => {
         key={key}
         {...renderedProps}
         {...props.passThroughComponentProps}
-        page={props.page}
-        componentMap={props.componentMap}
+        page={page}
+        componentMap={componentMap}
       />
     );
   };
@@ -53,7 +54,7 @@ const PlaceholderComponent = (props: PlaceholderProps) => {
         ? props.renderEmpty(renderedComponents)
         : renderedComponents;
 
-      return props.page.mode.isEditing ? renderEmptyPlaceholder(rendered) : rendered;
+      return isEditing ? renderEmptyPlaceholder(rendered) : rendered;
     } else if (props.render) {
       return props.render(renderedComponents, placeholderRenderings, childProps);
     } else {
@@ -62,9 +63,11 @@ const PlaceholderComponent = (props: PlaceholderProps) => {
   };
 
   const components = drawPlaceholderComponents(
-    props,
+    modProps,
     placeholderRenderings,
-    drawPlaceholderChildComponent
+    drawPlaceholderChildComponent,
+    undefined,
+    isEditing
   );
 
   const finalOutput = applyConditionalTransform(components);
@@ -76,5 +79,5 @@ const PlaceholderComponent = (props: PlaceholderProps) => {
  * The Placeholder component.
  * @public
  */
-export const Placeholder = withSitecore()(withComponentMap(PlaceholderComponent));
+export const Placeholder = PlaceholderComponent;
 

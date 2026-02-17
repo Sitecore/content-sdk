@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { form } from '@sitecore-content-sdk/content';
-import { useSitecore } from '../enhancers/withSitecore';
+import { useSitecore } from './SitecoreProvider';
 import { ErrorComponent } from './ErrorBoundary';
 
 let { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;

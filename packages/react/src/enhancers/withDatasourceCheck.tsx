@@ -1,7 +1,7 @@
 ﻿'use client';
 import React, { JSX } from 'react';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
-import { useSitecore } from './withSitecore';
+import { useSitecore } from './../components/SitecoreProvider';
 
 export const DefaultEditingError = (): JSX.Element => (
   <div className="sc-jss-editing-error" role="alert">

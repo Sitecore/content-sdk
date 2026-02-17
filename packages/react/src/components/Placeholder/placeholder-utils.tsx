@@ -265,10 +265,10 @@ export const drawPlaceholderComponents = (
     renderedProps: ChildComponentProps,
     key?: string
   ) => React.JSX.Element,
-  componentRuntime?: 'server' | 'client' | undefined
+  componentRuntime?: 'server' | 'client' | undefined,
+  isEditing?: boolean
 ) => {
   const { name, missingComponentComponent, hiddenRenderingComponent } = props;
-  const isEditing = props.page.mode.isEditing;
 
   const transformedComponents = placeholderRenderings
     .map((componentRendering: ComponentRendering, index: number) => {
@@ -333,7 +333,7 @@ export const drawPlaceholderComponents = (
     })
     .filter((element) => element); // remove nulls
 
-  if (!props.page.mode.isEditing) {
+  if (!isEditing) {
     return transformedComponents;
   }
 

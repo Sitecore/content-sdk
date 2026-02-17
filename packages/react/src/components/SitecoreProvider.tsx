@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import fastDeepEqual from 'fast-deep-equal/es6/react';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
@@ -38,7 +38,7 @@ export interface SitecoreProviderState {
    * @param {Page} value New page  value.
    * @returns {void}
    */
-  setPage: (value: Page) => void;
+  setPage?: (value: Page) => void;
   /**
    * The current page.
    */
@@ -47,6 +47,17 @@ export interface SitecoreProviderState {
    * The API configuration defined in the `SitecoreConfig`.
    */
   api?: SitecoreProviderProps['api'];
+}
+
+/**
+ * The options for the useSitecore hook.
+ * @public
+ */
+export interface UseSitecoreOptions {
+  /**
+   * If set to true, the `updateContext` method will be injected into the component props.
+   */
+  updatable?: boolean;
 }
 
 /**
@@ -130,3 +141,43 @@ export const SitecoreProvider = (props: SitecoreProviderProps) => {
 };
 
 SitecoreProvider.displayName = 'SitecoreProvider';
+
+/**
+ * This hook grants acсess to the current Sitecore page and api.
+ * @param {UseSitecoreOptions} [options] hook options
+ * @example
+ * const EditMode = () => {
+ *    const { page } = useSitecore();
+ *    return <span>Edit Mode is {page.mode.isEditing ? 'active' : 'inactive'}</span>
+ * }
+ * @returns {SitecoreProviderState} The current Sitecore context, including the page and api.
+ * @public
+ */
+export function useSitecore(options?: UseSitecoreOptions): SitecoreProviderState {
+  const scContext = useContext(SitecoreProviderReactContext);
+  const updatable = options?.updatable;
+
+  return {
+    ...scContext,
+    setPage: updatable ? scContext.setPage : undefined,
+  };
+}
+
+/**
+ * Hook that retrieves the loadImportMap function from context.
+ * @returns {() => Promise<ImportMapImport> | undefined} The loadImportMap function from context, or undefined if not available.
+ * @public
+ */
+export function useLoadImportMap(): (() => Promise<ImportMapImport>) | undefined {
+  return useContext(ImportMapReactContext);
+}
+
+/**
+ * Hook to access the component map in client context.
+ * @returns {ComponentMap} The component map from the SitecoreProvider
+ * @public
+ */
+export function useComponentMap(): ComponentMap {
+  const componentMap = useContext(ComponentMapReactContext);
+  return componentMap;
+}
