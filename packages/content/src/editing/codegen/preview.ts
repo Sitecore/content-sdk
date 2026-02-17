@@ -66,6 +66,7 @@ export type ComponentImport = {
 
 /**
  * Represents the data needed to render AI generated component.
+ * @internal
  */
 export type GeneratedComponentData = {
   /**
@@ -506,6 +507,7 @@ export const sendErrorEvent = (uid: string, error: unknown, type: DesignLibraryP
  * @param {string} token - The authorization token for authentication.
  * @param {string} edgeUrl - The URL of the Sitecore Edge endpoint.
  * @returns A Promise that resolves to the component rendering data, component generation data, or undefined if the fetch fails.
+ * @internal
  */
 export async function fetchGeneratedComponentFromCache(
   id: string,
