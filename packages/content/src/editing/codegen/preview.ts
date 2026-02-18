@@ -296,7 +296,7 @@ export const addComponentPreviewHandler = (
 
 /**
  * Adds the browser-side event handler for 'component:generation:component-preview' message used in Design Library for server components
- * The event should contain the component code, styles and imports.
+ * The event should contain the cache id and token which will be used to fetch the component code, styles and imports from secured endpoint
  * @param {Function} callback callback to be called after component is received
  * @internal
  */
@@ -502,10 +502,10 @@ export const sendErrorEvent = (uid: string, error: unknown, type: DesignLibraryP
 
 /**
  * Fetches generated component data from the authoring cache endpoint.
- * This is used by the Design Library Server to fetch the updated component data from the secured cache endpoint and render it in the Design Library Studio preview iframe.
+ * This is used by the Design Studio Server to fetch the updated component data from the secured cache endpoint and render it in the Design Library Studio preview iframe.
  * @param {string} id - The unique identifier of the component to fetch from cache.
  * @param {string} token - The authorization token for authentication.
- * @param {string} edgeUrl - The URL of the Sitecore Edge endpoint.
+ * @param {string} [edgeUrl] - The URL of the Sitecore Edge endpoint.
  * @returns A Promise that resolves to the component rendering data, component generation data, or undefined if the fetch fails.
  * @internal
  */
