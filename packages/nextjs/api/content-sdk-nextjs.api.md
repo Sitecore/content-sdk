@@ -173,15 +173,13 @@ import { StaticPath } from '@sitecore-content-sdk/content';
 import { Text as Text_2 } from '@sitecore-content-sdk/react';
 import { TextField } from '@sitecore-content-sdk/react';
 import { useSitecore } from '@sitecore-content-sdk/react';
+import { withAppPlaceholder } from '@sitecore-content-sdk/react';
+import { withClientPlaceholder } from '@sitecore-content-sdk/react';
 import { withDatasourceCheck } from '@sitecore-content-sdk/react';
 import { withEditorChromes } from '@sitecore-content-sdk/react';
 import { withEmptyFieldEditingComponent } from '@sitecore-content-sdk/react';
 import { withFieldMetadata } from '@sitecore-content-sdk/react';
-import { withPlaceholder } from '@sitecore-content-sdk/react';
 import { withSitecore } from '@sitecore-content-sdk/react';
-import { WithSitecoreHocProps } from '@sitecore-content-sdk/react';
-import { WithSitecoreOptions } from '@sitecore-content-sdk/react';
-import { WithSitecoreProps } from '@sitecore-content-sdk/react';
 import { WriteImportMapArgs } from '@sitecore-content-sdk/content/tools';
 
 export { AppPlaceholder }
@@ -898,6 +896,10 @@ export function useComponentProps<ComponentData>(componentUid: string | undefine
 
 export { useSitecore }
 
+export { withAppPlaceholder }
+
+export { withClientPlaceholder }
+
 export { withDatasourceCheck }
 
 export { withEditorChromes }
@@ -906,15 +908,7 @@ export { withEmptyFieldEditingComponent }
 
 export { withFieldMetadata }
 
-export { withPlaceholder }
-
 export { withSitecore }
-
-export { WithSitecoreHocProps }
-
-export { WithSitecoreOptions }
-
-export { WithSitecoreProps }
 
 // @public
 export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }: {

@@ -86,12 +86,15 @@ export {
   SitecoreProvider,
   SitecoreProviderState,
   SitecoreProviderReactContext,
+  useComponentMap,
+  useSitecore,
+  useLoadImportMap,
 } from './components/SitecoreProvider';
 export { withEditorChromes } from './enhancers/withEditorChromes';
+export { withSitecore } from './enhancers/withSitecore';
 export { withDatasourceCheck } from './enhancers/withDatasourceCheck';
 export { withFieldMetadata } from './enhancers/withFieldMetadata';
 export { withEmptyFieldEditingComponent } from './enhancers/withEmptyFieldEditingComponent';
-export { useComponentMap } from './components/SitecoreProvider';
 export { withAppPlaceholder } from './enhancers/withAppPlaceholder';
 export { withClientPlaceholder } from './enhancers/withClientPlaceholder';
 export { EditingScripts } from './components/EditingScripts';
