@@ -13,6 +13,7 @@ import React, {
   Suspense,
 } from 'react';
 import { ImportEntry } from '@sitecore-content-sdk/content/codegen';
+import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import {
   Link,
   Text,
@@ -22,7 +23,6 @@ import {
   Image,
   File,
   withDatasourceCheck,
-  // CdpHelper,
 } from '../..';
 
 /**
@@ -63,7 +63,7 @@ export const defaultServerImportEntries: ImportEntry[] = [
       { name: 'Image', value: Image },
       { name: 'File', value: File },
       { name: 'withDatasourceCheck', value: withDatasourceCheck },
-      // { name: 'CdpHelper', value: CdpHelper },
+      { name: 'CdpHelper', value: CdpHelper },
     ],
   },
 ];
