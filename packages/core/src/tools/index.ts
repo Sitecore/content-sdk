@@ -9,9 +9,9 @@ export { normalizeUrl } from './normalize-url';
 export {
   resolveEdgeUrl,
   resolveEdgeUrlForStaticFiles,
-  hasCustomEdgeHostname,
-  getCustomEdgeUrl,
+  resolveExperienceEdgeUrl,
   SITECORE_EDGE_PLATFORM_HOSTNAME_ENV,
+  SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV,
 } from './resolve-edge-url';
 export {
   resolveUrl,

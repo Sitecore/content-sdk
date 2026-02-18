@@ -3,15 +3,9 @@ import {
   defineConfig as defineConfigCore,
   SitecoreConfigInput as SitecoreConfigInputCore,
 } from '@sitecore-content-sdk/content/config';
-import {
-  resolveEdgeUrl,
-  SITECORE_EDGE_PLATFORM_HOSTNAME_ENV,
-} from '@sitecore-content-sdk/core/tools';
+import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 
-/**
- * Next.js environment variable for Edge Platform hostname (client-exposed).
- * Used so the hostname is available in the browser; falls back to server-only env in getNextFallbackConfig.
- */
+/** Next.js env var for Edge hostname; exposed to the browser so client code can use it. */
 const NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV = 'NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME';
 
 /**
@@ -31,8 +25,7 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
           config?.api?.edge?.clientContextId || process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
         edgeUrl: resolveEdgeUrl(
           config?.api?.edge?.edgeUrl ??
-            process.env[NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] ??
-            process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV]
+            process.env[NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV]
         ),
       },
       local: {

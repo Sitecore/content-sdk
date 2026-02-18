@@ -41,10 +41,10 @@ function escapeRegExp(input: string): string {
 }
 
 /**
- * Rewrites Edge Platform hostnames in a response object to use the custom hostname.
+ * Rewrites Experience Edge hostnames in a response object to use the custom hostname.
  * This function performs a deep traversal of the object and replaces any string values
- * containing the default Edge hostnames with the custom hostname.
- * Caller must pass the resolved Edge URL from config (no env resolution here).
+ * containing the default Experience Edge hostname with the custom hostname.
+ * Caller should pass the Experience Edge URL (e.g. from resolveExperienceEdgeUrl()).
  *
  * Use case: Experience Edge returns Layout Service output (layout, placeholders, component fields).
  * Field values can contain URLs with the Edge hostname—e.g. Image field `value.src`
@@ -52,12 +52,12 @@ function escapeRegExp(input: string): string {
  * or link `href`. When using a custom hostname (e.g. CDN in front of Edge), these URLs
  * must be rewritten so layout API and media requests both go through the custom host.
  * @param {T} response - The response object to process (typically LayoutServiceData)
- * @param {string} edgeUrl - Edge URL from config (resolved at config level).
- * @returns {T} The response object with Edge hostnames rewritten (same reference if no custom hostname)
+ * @param {string} edgeUrl - Experience Edge URL to rewrite to (e.g. from resolveExperienceEdgeUrl).
+ * @returns {T} The response object with Experience Edge hostnames rewritten (same reference if no custom hostname)
  * @public
  * @example
  * const layout = await layoutService.fetchLayoutData(path, options);
- * const rewritten = rewriteEdgeHostInResponse(layout, config.api.edge.edgeUrl);
+ * const rewritten = rewriteEdgeHostInResponse(layout, resolveExperienceEdgeUrl());
  */
 export function rewriteEdgeHostInResponse<T>(response: T, edgeUrl: string): T {
   const customEdgeUrl = normalizeUrl(edgeUrl);
@@ -109,10 +109,10 @@ function deepRewriteEdgeHost<T>(value: T, customEdgeUrl: string): T {
 }
 
 /**
- * Replaces Edge Platform hostnames in a string with the custom hostname.
+ * Replaces Experience Edge hostnames in a string with the custom hostname.
  * @param {string} str - The string to process
- * @param {string} customEdgeUrl - The custom Edge URL to replace with
- * @returns {string} The string with Edge hostnames replaced
+ * @param {string} customEdgeUrl - The custom Experience Edge URL to replace with
+ * @returns {string} The string with Experience Edge hostnames replaced
  * @internal
  */
 function rewriteEdgeHostInString(str: string, customEdgeUrl: string): string {
@@ -121,9 +121,8 @@ function rewriteEdgeHostInString(str: string, customEdgeUrl: string): string {
 }
 
 /**
- * Returns the default media URL transformer: rewrites Edge hostnames when custom hostname is configured.
- * Caller must pass the resolved Edge URL from config.
- * @param {string} edgeUrl - Edge URL from config (resolved at config level).
+ * Returns the default media URL transformer: rewrites Experience Edge hostnames when custom hostname is configured.
+ * @param {string} edgeUrl - Experience Edge URL to rewrite to (e.g. from resolveExperienceEdgeUrl()).
  * @returns {(value: string) => string} Transformer function; returns string unchanged when no custom hostname
  * @internal
  */

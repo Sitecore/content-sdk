@@ -1,6 +1,5 @@
 import { DocumentNode } from 'graphql';
 import {
-  constants,
   GraphQLClient,
   GraphQLRequestClientFactory,
   FetchOptions,
@@ -8,7 +7,10 @@ import {
   NativeDataFetcher,
   debug,
 } from '@sitecore-content-sdk/core';
-import { resolveEdgeUrlForStaticFiles } from '@sitecore-content-sdk/core/tools';
+import {
+  resolveEdgeUrlForStaticFiles,
+  resolveExperienceEdgeUrl,
+} from '@sitecore-content-sdk/core/tools';
 import { DictionaryPhrases, DictionaryService } from '../i18n';
 import {
   getDesignLibraryStylesheetLinks,
@@ -634,15 +636,14 @@ export class SitecoreClient implements BaseSitecoreClient {
     // regular sitemap
     if (sitemapPath) {
       try {
-        const edgeUrl =
-          this.initOptions.api.edge.edgeUrl ?? constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT;
-        const rewrittenSitemapPath = rewriteEdgeHostInResponse(sitemapPath, edgeUrl);
+        const experienceEdgeUrl = resolveExperienceEdgeUrl();
+        const rewrittenSitemapPath = rewriteEdgeHostInResponse(sitemapPath, experienceEdgeUrl);
         const fetcher = new NativeDataFetcher();
         const xmlResponse = await fetcher.fetch<string>(rewrittenSitemapPath);
         if (!xmlResponse.data) {
           throw new Error('REDIRECT_404');
         }
-        return rewriteEdgeHostInResponse(xmlResponse.data, edgeUrl);
+        return rewriteEdgeHostInResponse(xmlResponse.data, experienceEdgeUrl);
         // eslint-disable-next-line no-unused-vars
       } catch (error) {
         throw new Error('REDIRECT_404');
@@ -727,10 +728,9 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!opt) {
       return layout;
     }
-    const edgeUrl =
-      this.initOptions.api.edge.edgeUrl ?? constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT;
+    const experienceEdgeUrl = resolveExperienceEdgeUrl();
     const transformer =
-      opt === true ? getDefaultMediaUrlTransformer(edgeUrl) : opt;
+      opt === true ? getDefaultMediaUrlTransformer(experienceEdgeUrl) : opt;
     return applyMediaUrlRewrite(layout, transformer);
   }
 

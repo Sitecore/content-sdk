@@ -138,9 +138,6 @@ export function getCache<T>(key: string): T | undefined;
 export function getCacheAndClean<T>(key: string): T | undefined;
 
 // @public
-export function getCustomEdgeUrl(): string | undefined;
-
-// @public
 export const getEnforcedCorsHeaders: ({ requestMethod, headers, presetCorsHeader, allowedOrigins, }: {
     requestMethod: string | undefined;
     headers: IncomingHttpHeaders | Headers;
@@ -193,9 +190,6 @@ export type GraphQLRequestClientFactoryConfig = {
 
 // @internal
 export function hasCache(key: string): boolean;
-
-// @public
-export function hasCustomEdgeHostname(): boolean;
 
 // @public
 export const isRegexOrUrl: (input: string) => "regex" | "url";
@@ -271,6 +265,9 @@ export function resolveEdgeUrl(edgeUrl?: string): string;
 export function resolveEdgeUrlForStaticFiles(): string;
 
 // @public
+export function resolveExperienceEdgeUrl(): string;
+
+// @public
 export function resolveUrl(urlBase: string, params?: ParsedUrlQueryInput): string;
 
 // @public
@@ -287,6 +284,9 @@ export const SITECORE_EDGE_PLATFORM_HOSTNAME_ENV = "SITECORE_EDGE_PLATFORM_HOSTN
 
 // @internal
 const SITECORE_EDGE_PLATFORM_URL_DEFAULT = "https://edge-platform.sitecorecloud.io";
+
+// @public
+export const SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV = "SITECORE_EXPERIENCE_EDGE_HOSTNAME";
 
 // @internal
 const SITECORE_EXPERIENCE_EDGE_URL_DEFAULT = "https://edge.sitecorecloud.io";

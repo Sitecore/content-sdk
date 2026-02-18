@@ -3,17 +3,21 @@ import { expect } from 'chai';
 import {
   resolveEdgeUrl,
   resolveEdgeUrlForStaticFiles,
-  hasCustomEdgeHostname,
-  getCustomEdgeUrl,
+  resolveExperienceEdgeUrl,
   SITECORE_EDGE_PLATFORM_HOSTNAME_ENV,
+  SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV,
 } from './resolve-edge-url';
-import { SITECORE_EDGE_PLATFORM_URL_DEFAULT } from '../constants';
+import {
+  SITECORE_EDGE_PLATFORM_URL_DEFAULT,
+  SITECORE_EXPERIENCE_EDGE_URL_DEFAULT,
+} from '../constants';
 
 describe('resolveEdgeUrl', () => {
   const originalEnv = { ...process.env };
 
   beforeEach(() => {
     delete process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV];
+    delete process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV];
   });
 
   afterEach(() => {
@@ -93,25 +97,28 @@ describe('resolveEdgeUrl', () => {
     });
   });
 
-  describe('hasCustomEdgeHostname()', () => {
-    it('should return false when no hostname env vars are set', () => {
-      expect(hasCustomEdgeHostname()).to.be.false;
+  describe('resolveExperienceEdgeUrl()', () => {
+    it('should return default Experience Edge URL when env is not set', () => {
+      const result = resolveExperienceEdgeUrl();
+      expect(result).to.equal(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT);
     });
 
-    it('should return true when SITECORE_EDGE_PLATFORM_HOSTNAME is set', () => {
-      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'custom.example.com';
-      expect(hasCustomEdgeHostname()).to.be.true;
-    });
-  });
-
-  describe('getCustomEdgeUrl()', () => {
-    it('should return undefined when no custom hostname is configured', () => {
-      expect(getCustomEdgeUrl()).to.be.undefined;
+    it('should return custom URL when SITECORE_EXPERIENCE_EDGE_HOSTNAME is set (hostname)', () => {
+      process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV] = 'media.example.com';
+      const result = resolveExperienceEdgeUrl();
+      expect(result).to.equal('https://media.example.com');
     });
 
-    it('should return resolved URL when custom hostname is configured', () => {
-      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'custom.example.com';
-      expect(getCustomEdgeUrl()).to.equal('https://custom.example.com');
+    it('should return custom URL when SITECORE_EXPERIENCE_EDGE_HOSTNAME is set (full URL)', () => {
+      process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV] = 'https://media.example.com';
+      const result = resolveExperienceEdgeUrl();
+      expect(result).to.equal('https://media.example.com');
+    });
+
+    it('should not be affected by SITECORE_EDGE_PLATFORM_HOSTNAME', () => {
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'platform.example.com';
+      const result = resolveExperienceEdgeUrl();
+      expect(result).to.equal(SITECORE_EXPERIENCE_EDGE_URL_DEFAULT);
     });
   });
 
