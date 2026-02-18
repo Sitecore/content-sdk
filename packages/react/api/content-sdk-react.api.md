@@ -61,12 +61,8 @@ import { SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
 // @public
 export const AppPlaceholder: (props: AppPlaceholderProps) => React_2.JSX.Element;
 
-// Warning: (ae-forgotten-export) The symbol "BasePlaceholderProps" needs to be exported by the entry point api-surface.d.ts
-//
 // @public
-export type AppPlaceholderProps = Omit<BasePlaceholderProps, 'componentMap' | 'page'> & Required<Pick<BasePlaceholderProps, 'componentMap' | 'page'>> & {
-    render?: (components: React.ReactNode[], data: ComponentRendering[], props: AppPlaceholderProps) => React.ReactNode;
-};
+export type AppPlaceholderProps = Omit<PlaceholderProps, 'componentMap' | 'page'> & Required<Pick<PlaceholderProps, 'componentMap' | 'page'>>;
 
 // @public
 export class BYOCComponent extends React_2.Component<BYOCComponentProps> {
@@ -375,9 +371,32 @@ export { PageMode }
 export const Placeholder: (props: PlaceholderProps) => React_2.JSX.Element;
 
 // @public
-type PlaceholderProps = BasePlaceholderProps & {
+interface PlaceholderProps {
+    componentLoadingMessage?: string;
+    componentMap?: ComponentMap;
+    disableSuspense?: boolean;
+    // Warning: (ae-forgotten-export) The symbol "ErrorComponentProps" needs to be exported by the entry point api-surface.d.ts
+    errorComponent?: React.ComponentClass<ErrorComponentProps> | React.FC<ErrorComponentProps>;
+    fields?: {
+        [name: string]: Field | Item | Item[];
+    };
+    hiddenRenderingComponent?: React.ComponentClass<unknown> | React.FC<unknown>;
+    missingComponentComponent?: React.ComponentClass<unknown> | React.FC<unknown>;
+    // Warning: (ae-forgotten-export) The symbol "ChildComponentProps" needs to be exported by the entry point api-surface.d.ts
+    modifyComponentProps?: (componentProps: ChildComponentProps) => ChildComponentProps;
+    name: string;
+    page?: Page;
+    params?: {
+        [name: string]: string;
+    };
+    passThroughComponentProps?: {
+        [key: string]: unknown;
+    };
     render?: (components: React.ReactNode[], data: ComponentRendering[], props: PlaceholderProps) => React.ReactNode;
-};
+    renderEach?: (component: React.ReactNode, index: number) => React.ReactNode;
+    renderEmpty?: (components: React.ReactNode[]) => React.ReactNode;
+    rendering: ComponentRendering | RouteData;
+}
 export { PlaceholderProps as PlaceholderComponentProps }
 export { PlaceholderProps }
 
@@ -434,6 +453,9 @@ export const SitecoreProviderReactContext: React_2.Context<SitecoreProviderState
 // @public
 export interface SitecoreProviderState {
     api?: SitecoreProviderProps['api'];
+    componentMap: ComponentMap;
+    // Warning: (ae-forgotten-export) The symbol "ImportMapImport" needs to be exported by the entry point api-surface.d.ts
+    loadImportMap: () => Promise<ImportMapImport>;
     page: Page;
     setPage?: (value: Page) => void;
 }
@@ -453,9 +475,6 @@ export interface TextField extends FieldMetadata {
     // (undocumented)
     value?: string | number;
 }
-
-// @public
-export function useComponentMap(): ComponentMap;
 
 // @public
 export const useInfiniteSearch: <T extends SearchDocument = SearchDocument>(options: UseInfiniteSearchOptions<T>) => UseInfiniteSearchState<T>;
@@ -506,17 +525,16 @@ export type UseSearchState<T extends SearchDocument = SearchDocument> = Omit<Int
     isPreviousData: boolean;
 };
 
+// Warning: (ae-forgotten-export) The symbol "UseSitecoreOptions" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export function useSitecore(options?: UseSitecoreOptions): SitecoreProviderState;
+
 // Warning: (ae-forgotten-export) The symbol "ComponentProps" needs to be exported by the entry point api-surface.d.ts
 // Warning: (ae-forgotten-export) The symbol "WrapperProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export const withAppPlaceholder: <T extends ComponentProps, W extends T & WrapperProps>(Component: ComponentType<T>) => (props: W) => React_2.JSX.Element;
-
-// Warning: (ae-forgotten-export) The symbol "ComponentProps_2" needs to be exported by the entry point api-surface.d.ts
-// Warning: (ae-forgotten-export) The symbol "WrapperProps_2" needs to be exported by the entry point api-surface.d.ts
-//
-// @public
-export const withClientPlaceholder: <T extends ComponentProps_2, W extends T & WrapperProps_2>(Component: ComponentType<T>) => (props: W) => React_2.JSX.Element;
 
 // Warning: (ae-forgotten-export) The symbol "WithDatasourceCheckOptions" needs to be exported by the entry point api-surface.d.ts
 // Warning: (ae-forgotten-export) The symbol "WithDatasourceCheckProps" needs to be exported by the entry point api-surface.d.ts
@@ -541,10 +559,20 @@ export function withEmptyFieldEditingComponent<FieldComponentProps extends WithE
 // @public
 export function withFieldMetadata<FieldComponentProps extends WithMetadataProps, RefElementType = HTMLElement>(FieldComponent: ComponentType<FieldComponentProps>, isForwardRef?: boolean): React_2.ForwardRefExoticComponent<React_2.PropsWithoutRef<FieldComponentProps> & React_2.RefAttributes<RefElementType>> | ((props: FieldComponentProps) => React_2.JSX.Element);
 
+// Warning: (ae-forgotten-export) The symbol "WrapperProps_2" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export const withPlaceholder: <T extends ComponentProps, W extends T & WrapperProps_2>(Component: ComponentType<T>) => (props: W) => React_2.JSX.Element;
+
+// Warning: (ae-forgotten-export) The symbol "WithSitecoreHocProps" needs to be exported by the entry point api-surface.d.ts
+//
+// @public @deprecated (undocumented)
+export function withSitecore(options?: UseSitecoreOptions): <ComponentProps extends Partial<SitecoreProviderState> & Pick<SitecoreProviderState, "page">>(Component: React_2.ComponentType<ComponentProps>) => (props: WithSitecoreHocProps<ComponentProps>) => React_2.JSX.Element;
+
 // Warnings were encountered during analysis:
 //
 // src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point api-surface.d.ts
-// src/components/SitecoreProvider.tsx:88:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
+// src/components/SitecoreProvider.tsx:96:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

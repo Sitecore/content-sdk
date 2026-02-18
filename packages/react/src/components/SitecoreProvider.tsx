@@ -40,9 +40,17 @@ export interface SitecoreProviderState {
    */
   setPage?: (value: Page) => void;
   /**
-   * The current page.
+   * The page data.
    */
   page: Page;
+  /**
+   * The dynamic import for import map to be used in variant generation mode.
+   */
+  loadImportMap: () => Promise<ImportMapImport>;
+  /**
+   * The component map to use for rendering components.
+   */
+  componentMap: ComponentMap;
   /**
    * The API configuration defined in the `SitecoreConfig`.
    */
@@ -125,18 +133,16 @@ export const SitecoreProvider = (props: SitecoreProviderProps) => {
       page,
       setPage,
       api,
+      componentMap,
+      loadImportMap,
     }),
-    [page, setPage, api]
+    [page, setPage, api, componentMap, loadImportMap]
   );
 
   return (
-    <ImportMapReactContext.Provider value={loadImportMap}>
-      <ComponentMapReactContext.Provider value={componentMap}>
-        <SitecoreProviderReactContext.Provider value={contextValue}>
-          {children}
-        </SitecoreProviderReactContext.Provider>
-      </ComponentMapReactContext.Provider>
-    </ImportMapReactContext.Provider>
+    <SitecoreProviderReactContext.Provider value={contextValue}>
+      {children}
+    </SitecoreProviderReactContext.Provider>
   );
 };
 
@@ -161,23 +167,4 @@ export function useSitecore(options?: UseSitecoreOptions): SitecoreProviderState
     ...scContext,
     setPage: updatable ? scContext.setPage : undefined,
   };
-}
-
-/**
- * Hook that retrieves the loadImportMap function from context.
- * @returns {() => Promise<ImportMapImport> | undefined} The loadImportMap function from context, or undefined if not available.
- * @public
- */
-export function useLoadImportMap(): (() => Promise<ImportMapImport>) | undefined {
-  return useContext(ImportMapReactContext);
-}
-
-/**
- * Hook to access the component map in client context.
- * @returns {ComponentMap} The component map from the SitecoreProvider
- * @public
- */
-export function useComponentMap(): ComponentMap {
-  const componentMap = useContext(ComponentMapReactContext);
-  return componentMap;
 }

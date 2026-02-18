@@ -6,31 +6,15 @@ import {
   useSitecore,
   UseSitecoreOptions,
 } from '../components/SitecoreProvider';
-import { Page } from '@sitecore-content-sdk/content/client';
 
 /**
- * The props that HOC will inject.
+ * The props that HOC will inject into the wrapped component — the full Sitecore context state.
  * @public
  */
-export interface WithSitecoreProps {
-  /**
-   * The current page context.
-   */
-  page: Page;
-  /**
-   * The API configuration defined in the `SitecoreConfig`.
-   */
-  api?: SitecoreProviderState['api'];
-  /**
-   * Method to update the page. This is only available if `updatable` is set to true.
-   * @param {Page} value New page value.
-   * @returns {void}
-   */
-  setPage?: ((value: Page) => void) | false;
-}
+export type WithSitecoreProps = SitecoreProviderState;
 
 /**
- * The type of the props that HOC will receive.
+ * The type of the props that the HOC-wrapped component will receive (injected props omitted).
  * @public
  */
 export type WithSitecoreHocProps<ComponentProps> = EnhancedOmit<
@@ -39,13 +23,15 @@ export type WithSitecoreHocProps<ComponentProps> = EnhancedOmit<
 >;
 
 /**
- * @param {WithSitecoreProviderOptions} [options]
+ * @deprecated `useSitecore` hook is a better practice for consuming Sitecore context in components
+ * @param {UseSitecoreOptions} [options] - Options for whether return page context update method alongside the rest of context
+ * @returns A higher-order component that injects Sitecore context into the wrapped component.
  * @public
  */
 export function withSitecore(options?: UseSitecoreOptions) {
-  return function withSitecoreProviderHoc<ComponentProps extends WithSitecoreProps>(
-    Component: React.ComponentType<ComponentProps>
-  ) {
+  return function withSitecoreProviderHoc<
+    ComponentProps extends Partial<SitecoreProviderState> & Pick<SitecoreProviderState, 'page'>
+  >(Component: React.ComponentType<ComponentProps>) {
     return function WithSitecoreProvider(props: WithSitecoreHocProps<ComponentProps>) {
       const scContext = useSitecore(options);
       return (
@@ -54,6 +40,8 @@ export function withSitecore(options?: UseSitecoreOptions) {
           page={scContext.page}
           api={scContext.api}
           setPage={scContext.setPage}
+          componentMap={scContext.componentMap}
+          loadImportMap={scContext.loadImportMap}
         />
       );
     };

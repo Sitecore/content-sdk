@@ -19,15 +19,7 @@ import {
   FEAAS_COMPONENT_RENDERING_NAME,
   FEAAS_WRAPPER_RENDERING_NAME,
 } from '../FEaaS';
-import {
-  ChildComponentProps,
-  BasePlaceholderProps,
-  ComponentForRendering,
-  PlaceholderProps,
-  AppPlaceholderProps,
-} from './models';
-import { PlaceholderMetadata } from './PlaceholderMetadata';
-import ErrorBoundary from '../ErrorBoundary';
+import { ChildComponentProps, PlaceholderProps, ComponentForRendering } from './models';
 
 /**
  * Get the renderings for the specified placeholder from the rendering layout data.
@@ -113,11 +105,11 @@ export const renderEmptyPlaceholder = (node: React.ReactNode | React.ReactElemen
 
 /**
  * Merge specific placeholder props with component field and params content props.
- * @param {BasePlaceholderProps} placeholderProps placeholder props
+ * @param {PlaceholderProps} placeholderProps placeholder props
  * @param {ComponentRendering} componentRendering component rendering
  * @returns {ComponentProps} merged props
  */
-export function getChildComponentProps<T extends BasePlaceholderProps>(
+export function getChildComponentProps<T extends PlaceholderProps>(
   placeholderProps: T,
   componentRendering: ComponentRendering
 ): ChildComponentProps {
@@ -255,96 +247,5 @@ export const getComponentForRendering = (
       .componentType as ComponentForRendering['componentType'],
     isEmpty: false,
   };
-};
-
-export const drawPlaceholderComponents = (
-  props: PlaceholderProps | AppPlaceholderProps,
-  placeholderRenderings: ComponentRendering[],
-  drawPlaceholderChildComponent: (
-    componentForRendering: ComponentForRendering,
-    renderedProps: ChildComponentProps,
-    key?: string
-  ) => React.JSX.Element,
-  componentRuntime?: 'server' | 'client' | undefined,
-  isEditing?: boolean
-) => {
-  const { name, missingComponentComponent, hiddenRenderingComponent } = props;
-
-  const transformedComponents = placeholderRenderings
-    .map((componentRendering: ComponentRendering, index: number) => {
-      const component = getComponentForRendering(
-        componentRendering,
-        name,
-        props.componentMap,
-        hiddenRenderingComponent,
-        missingComponentComponent
-      );
-      const key = componentRendering.uid || `component-${index}`;
-
-      const renderedProps = props.modifyComponentProps
-        ? props.modifyComponentProps(getChildComponentProps(props, componentRendering))
-        : getChildComponentProps(props, componentRendering);
-
-      let rendered = drawPlaceholderChildComponent(
-        component,
-        {
-          ...renderedProps,
-          ...props.passThroughComponentProps,
-        },
-        key
-      );
-
-      if (props.renderEach) {
-        rendered = props.renderEach(rendered, index) as React.ReactElement<{
-          [attr: string]: unknown;
-        }>;
-      }
-
-      if (!component.isEmpty) {
-        const errorBoundaryKey = rendered.type + '-' + index;
-
-        const disableSuspense = props.disableSuspense || false;
-        rendered = (
-          <ErrorBoundary
-            data-testid="error-boundary"
-            key={errorBoundaryKey}
-            errorComponent={props.errorComponent}
-            componentLoadingMessage={props.componentLoadingMessage}
-            isDynamic={component.dynamic}
-            disableSuspense={disableSuspense}
-            rendering={rendered.props.rendering as ComponentRendering}
-          >
-            {rendered}
-          </ErrorBoundary>
-        );
-      }
-      // if in edit mode then emit shallow chromes for hydration in Pages
-      return isEditing ? (
-        <PlaceholderMetadata
-          key={key}
-          rendering={componentRendering}
-          componentRuntime={componentRuntime}
-        >
-          {rendered}
-        </PlaceholderMetadata>
-      ) : (
-        rendered
-      );
-    })
-    .filter((element) => element); // remove nulls
-
-  if (!isEditing) {
-    return transformedComponents;
-  }
-
-  return [
-    <PlaceholderMetadata
-      key={(props.rendering as ComponentRendering).uid}
-      placeholderName={name}
-      rendering={props.rendering as ComponentRendering}
-    >
-      {transformedComponents}
-    </PlaceholderMetadata>,
-  ];
 };
 

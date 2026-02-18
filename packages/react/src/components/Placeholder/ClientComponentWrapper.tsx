@@ -1,7 +1,6 @@
 'use client';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
-import { ComponentMapReactContext, useSitecore } from '../SitecoreProvider';
-import { useContext } from 'react';
+import { useSitecore } from '../SitecoreProvider';
 import React from 'react';
 import { ChildComponentProps } from './models';
 import { getComponentForRendering } from './placeholder-utils';
@@ -13,8 +12,7 @@ export interface ClientComponentWrapperProps {
 }
 
 export const ClientComponentWrapper = (props: ClientComponentWrapperProps) => {
-  const { page } = useSitecore();
-  const componentMap = useContext(ComponentMapReactContext);
+  const { page, componentMap } = useSitecore();
   const componentPropsWithContext = {
     ...props.componentProps,
     rendering: props.rendering,

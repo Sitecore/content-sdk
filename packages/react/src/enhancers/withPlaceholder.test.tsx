@@ -8,7 +8,7 @@ import { Page } from '@sitecore-content-sdk/content/client';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { convertedDevData as normalModeDevData } from '../test-data/normal-mode-data';
 import * as metadataData from '../test-data/metadata-data';
-import { withClientPlaceholder, ComponentProps, WrapperProps } from './withClientPlaceholder';
+import { withPlaceholder, ComponentProps, WrapperProps } from './withPlaceholder';
 import { SitecoreProvider } from '../components/SitecoreProvider';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
 import { Placeholder } from '../components/Placeholder';
@@ -35,7 +35,7 @@ const Home: React.FC<HomeProps> = ({ placeholders, subProp, ...otherProps }: Hom
   if (subProp && !otherProps.reset) {
     return <div className="home-mock-with-prop">{subProp}</div>;
   } else {
-    // For withClientPlaceholder, placeholders are provided as props, so we access them
+    // For withPlaceholder, placeholders are provided as props, so we access them
     const placeholderContent =
       Object.keys(placeholders).length > 0
         ? placeholders['page-content'] || placeholders.main || placeholders['page-header']
@@ -66,7 +66,7 @@ componentMap.set(
   )
 );
 
-describe('withClientPlaceholder HOC', () => {
+describe('withPlaceholder HOC', () => {
   const api = {
     edge: {
       contextId: 'id',
@@ -110,7 +110,7 @@ describe('withClientPlaceholder HOC', () => {
       page: getPage(),
       componentMap,
     };
-    const Element = withClientPlaceholder(Home);
+    const Element = withPlaceholder(Home);
     const renderedComponent = render(
       <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
         <Element {...props} />
@@ -141,7 +141,7 @@ describe('withClientPlaceholder HOC', () => {
       page: getPage(),
       componentMap,
     };
-    const Element = withClientPlaceholder(Home);
+    const Element = withPlaceholder(Home);
     const renderedComponent = render(
       <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
         <Element {...props} />
@@ -193,7 +193,7 @@ describe('withClientPlaceholder HOC', () => {
       page: getPage(),
       componentMap,
     };
-    const Element = withClientPlaceholder(MultiKeyTestComponent);
+    const Element = withPlaceholder(MultiKeyTestComponent);
     const renderedComponent = render(
       <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
         <Element {...props} />
@@ -243,7 +243,7 @@ describe('withClientPlaceholder HOC', () => {
       componentMap,
     };
 
-    const Element = withClientPlaceholder(TestComponent);
+    const Element = withPlaceholder(TestComponent);
     render(
       <SitecoreProvider api={api} componentMap={componentMap} page={page}>
         <Element {...props} />
@@ -294,7 +294,7 @@ describe('withClientPlaceholder HOC', () => {
         page: editModePage,
         componentMap: metadataComponentMap,
       };
-      const Element = withClientPlaceholder(Home);
+      const Element = withPlaceholder(Home);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={metadataComponentMap} page={editModePage}>
           <Element {...props} />
@@ -326,7 +326,7 @@ describe('withClientPlaceholder HOC', () => {
         page: editModePage,
         componentMap: metadataComponentMap,
       };
-      const Element = withClientPlaceholder(MultiPlaceholderMetadataComponent);
+      const Element = withPlaceholder(MultiPlaceholderMetadataComponent);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={metadataComponentMap} page={editModePage}>
           <Element {...props} />
@@ -347,7 +347,7 @@ describe('withClientPlaceholder HOC', () => {
         page: editModePage,
         componentMap: metadataComponentMap,
       };
-      const Element = withClientPlaceholder(Home);
+      const Element = withPlaceholder(Home);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={metadataComponentMap} page={editModePage}>
           <Element {...props} />
@@ -365,7 +365,7 @@ describe('withClientPlaceholder HOC', () => {
         page: editModePage,
         componentMap: metadataComponentMap,
       };
-      const Element = withClientPlaceholder(Home);
+      const Element = withPlaceholder(Home);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={metadataComponentMap} page={editModePage}>
           <Element {...props} />
@@ -385,7 +385,7 @@ describe('withClientPlaceholder HOC', () => {
         page: editModePage,
         componentMap: metadataComponentMap,
       };
-      const Element = withClientPlaceholder(Home);
+      const Element = withPlaceholder(Home);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={metadataComponentMap} page={editModePage}>
           <Element {...props} />
@@ -404,7 +404,7 @@ describe('withClientPlaceholder HOC', () => {
         page: editModePage,
         componentMap: metadataComponentMap,
       };
-      const Element = withClientPlaceholder(Home);
+      const Element = withPlaceholder(Home);
       const renderedComponent = render(
         <SitecoreProvider api={api} componentMap={metadataComponentMap} page={editModePage}>
           <Element {...props} />

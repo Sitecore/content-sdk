@@ -153,7 +153,7 @@ export {
   useSitecore,
   withEditorChromes,
   withAppPlaceholder,
-  withClientPlaceholder,
+  withPlaceholder,
   withDatasourceCheck,
   ImageSizeParameters,
   withFieldMetadata,

@@ -10,7 +10,11 @@ type ErrorComponentProps = {
   [prop: string]: unknown;
 };
 
-export interface BasePlaceholderProps {
+/**
+ * Base Placeholder props
+ * @public
+ */
+export interface PlaceholderProps {
   /** Name of the placeholder to render. */
   name: string;
   /** Rendering data to be used when rendering the placeholder. */
@@ -70,6 +74,15 @@ export interface BasePlaceholderProps {
    * Mutually exclusive with `render`.
    */
   renderEach?: (component: React.ReactNode, index: number) => React.ReactNode;
+  /**
+   * Render props function that enables control over the rendering of the components in the placeholder.
+   * Useful for techniques like wrapping each child in a wrapper component.
+   */
+  render?: (
+    components: React.ReactNode[],
+    data: ComponentRendering[],
+    props: PlaceholderProps
+  ) => React.ReactNode;
 
   /**
    * Modify final props of component (before render) provided by rendering data.
@@ -97,37 +110,11 @@ export interface BasePlaceholderProps {
 }
 
 /**
- * The interface for the client Placeholder component props.
+ * The interface for the AppPlaceholder server-side component props.
  * @public
  */
-export type PlaceholderProps = BasePlaceholderProps & {
-  /**
-   * Render props function that enables control over the rendering of the components in the placeholder.
-   * Useful for techniques like wrapping each child in a wrapper component.
-   */
-  render?: (
-    components: React.ReactNode[],
-    data: ComponentRendering[],
-    props: PlaceholderProps
-  ) => React.ReactNode;
-};
-
-/**
- * The interface for the AppPlaceholder component props.
- * @public
- */
-export type AppPlaceholderProps = Omit<BasePlaceholderProps, 'componentMap' | 'page'> &
-  Required<Pick<BasePlaceholderProps, 'componentMap' | 'page'>> & {
-    /**
-     * Render props function that enables control over the rendering of the components in the placeholder.
-     * Useful for techniques like wrapping each child in a wrapper component.
-     */
-    render?: (
-      components: React.ReactNode[],
-      data: ComponentRendering[],
-      props: AppPlaceholderProps
-    ) => React.ReactNode;
-  };
+export type AppPlaceholderProps = Omit<PlaceholderProps, 'componentMap' | 'page'> &
+  Required<Pick<PlaceholderProps, 'componentMap' | 'page'>>;
 
 export type RenderedProps = ChildComponentProps & {
   key: string;

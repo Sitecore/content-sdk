@@ -86,9 +86,7 @@ export {
   SitecoreProvider,
   SitecoreProviderState,
   SitecoreProviderReactContext,
-  useComponentMap,
   useSitecore,
-  useLoadImportMap,
 } from './components/SitecoreProvider';
 export { withEditorChromes } from './enhancers/withEditorChromes';
 export { withSitecore } from './enhancers/withSitecore';
@@ -96,7 +94,7 @@ export { withDatasourceCheck } from './enhancers/withDatasourceCheck';
 export { withFieldMetadata } from './enhancers/withFieldMetadata';
 export { withEmptyFieldEditingComponent } from './enhancers/withEmptyFieldEditingComponent';
 export { withAppPlaceholder } from './enhancers/withAppPlaceholder';
-export { withClientPlaceholder } from './enhancers/withClientPlaceholder';
+export { withPlaceholder } from './enhancers/withPlaceholder';
 export { EditingScripts } from './components/EditingScripts';
 export {
   DefaultEmptyFieldEditingComponentText,

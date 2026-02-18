@@ -13,7 +13,7 @@ import {
 } from '@sitecore-content-sdk/content/editing';
 import * as codegen from '@sitecore-content-sdk/content/codegen';
 import * as editing from '@sitecore-content-sdk/content/editing';
-import { useSitecore, useLoadImportMap } from '../../components/SitecoreProvider';
+import { useSitecore } from '../../components/SitecoreProvider';
 import { Placeholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 import { DynamicComponent } from './models';
@@ -48,8 +48,7 @@ export const __mockDependencies = (mocks: any) => {
  * @public
  */
 export const DesignLibrary = () => {
-  const { page } = useSitecore();
-  const loadImportMap = useLoadImportMap();
+  const { page, loadImportMap } = useSitecore();
   const route = page.layout.sitecore.route;
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
   const uid = rendering?.uid;

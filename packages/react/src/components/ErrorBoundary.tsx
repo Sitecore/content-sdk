@@ -2,7 +2,7 @@
 import React, { ReactNode, Suspense } from 'react';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
-import { withSitecore } from '../enhancers/withSitecore';
+import { useSitecore } from './SitecoreProvider';
 
 type ErrorComponentProps = {
   [prop: string]: unknown;
@@ -34,7 +34,7 @@ export const ErrorComponent = (
   );
 };
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
+class ErrorBoundaryClass extends React.Component<ErrorBoundaryProps> {
   defaultErrorMessage = 'There was a problem loading this section.';
   defaultLoadingMessage = 'Loading component...';
   state: { error: Error | null } = { error: null };
@@ -106,4 +106,11 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   }
 }
 
-export default withSitecore()(ErrorBoundary);
+const ErrorBoundary = (props: Omit<ErrorBoundaryProps, 'page'>) => {
+  const { page } = useSitecore();
+  const boundaryProps = { ...props, page };
+  return <ErrorBoundaryClass {...boundaryProps} />;
+};
+
+export default ErrorBoundary;
+

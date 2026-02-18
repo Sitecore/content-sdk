@@ -37,6 +37,7 @@ import { Placeholder } from './Placeholder';
 import { ChildComponentProps } from './models';
 import { SitecoreProvider } from '../SitecoreProvider';
 import { Page, PageMode } from '@sitecore-content-sdk/content/client';
+import * as rscUtils from '#rsc-env';
 
 const componentMap = new Map<string, React.FC>();
 // Mock dynamic component for testing
@@ -947,6 +948,7 @@ describe('PlaceholderMetadata', () => {
     page = getPage();
     page.layout = layoutData;
     page.mode = mode;
+    sandbox.replace(rscUtils, 'rsc', false as any);
   });
 
   const componentMap = new Map<string, React.FC>();
@@ -958,7 +960,7 @@ describe('PlaceholderMetadata', () => {
   ));
   componentMap.set('Logo', () => <div className="Logo-mock" />);
 
-  it('should render <PlaceholderMetadata> with nested placeholder components', () => {
+  it('should render <PlaceholderMetadata> with nested placeholder components (Pages Router)', () => {
     const wrapper = render(
       <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name="main" rendering={layoutData.sitecore.route} />
@@ -969,10 +971,10 @@ describe('PlaceholderMetadata', () => {
     expect(wrapper?.baseElement.innerHTML).to.equal(
       [
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_00000000-0000-0000-0000-000000000000"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123" data-csdk-component-runtime="client"></code>',
         '<div class="header-wrapper">',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="logo_nested123"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123" data-csdk-component-runtime="client"></code>',
         '<div class="Logo-mock"></div>',
         '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
@@ -1004,7 +1006,7 @@ describe('PlaceholderMetadata', () => {
     );
   });
 
-  it('should render missing component with code blocks if component is not registered', () => {
+  it('should render missing component with code blocks if component is not registered (Pages Router)', () => {
     page.layout = layoutDataWithUnknownComponent;
 
     const wrapper = render(
@@ -1016,7 +1018,7 @@ describe('PlaceholderMetadata', () => {
     expect(wrapper?.container.innerHTML).to.equal(
       [
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_00000000-0000-0000-0000-000000000000"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="123"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="123" data-csdk-component-runtime="client"></code>',
         '<div style="background: darkorange; outline: 5px solid orange; padding: 10px; color: white; max-width: 500px;"><h2>Unknown</h2><p>Content SDK component is missing React implementation. See the developer console for more information.</p></div>',
         '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
@@ -1024,7 +1026,7 @@ describe('PlaceholderMetadata', () => {
     );
   });
 
-  it('should render dynamic placeholder', () => {
+  it('should render dynamic placeholder (Pages Router)', () => {
     const phKey = 'container-1';
     const layoutData = layoutDataForNestedDynamicPlaceholder('container-{*}');
     page.layout = layoutData;
@@ -1038,10 +1040,10 @@ describe('PlaceholderMetadata', () => {
     expect(wrapper?.container.innerHTML).to.equal(
       [
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="container-{*}_00000000-0000-0000-0000-000000000000"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123" data-csdk-component-runtime="client"></code>',
         '<div class="header-wrapper">',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="logo_nested123"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123" data-csdk-component-runtime="client"></code>',
         '<div class="Logo-mock"></div><code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
         '</div>',
@@ -1053,7 +1055,7 @@ describe('PlaceholderMetadata', () => {
     expect(wrapper?.container.querySelectorAll('.scpm')?.length).to.equal(8);
   });
 
-  it('should render double digit dynamic placeholder', () => {
+  it('should render double digit dynamic placeholder (Pages Router)', () => {
     const phKey = 'container-1-2';
     const layoutData = layoutDataForNestedDynamicPlaceholder('container-1-{*}');
     page.layout = layoutData;
@@ -1066,10 +1068,10 @@ describe('PlaceholderMetadata', () => {
     expect(wrapper?.container.innerHTML).to.equal(
       [
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="container-1-{*}_00000000-0000-0000-0000-000000000000"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123" data-csdk-component-runtime="client"></code>',
         '<div class="header-wrapper">',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="logo_nested123"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123" data-csdk-component-runtime="client"></code>',
         '<div class="Logo-mock"></div><code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
         '</div>',
