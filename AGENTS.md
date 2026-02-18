@@ -51,6 +51,7 @@ content-sdk/
 - **Templates:** `packages/create-content-sdk-app/src/templates/` — Next.js, Next.js App Router
 - **Environment variables:** `.env.*.example` in templates; never commit `.env`
 - **Initializers:** `packages/create-content-sdk-app/src/initializers/` — drive scaffolding via `Initializer.init(args)`
+- **When working inside a scaffolded app** (e.g. under `samples/`), use that app’s **AGENTS.md** for app-level guidance; this file applies to the monorepo and packages.
 
 ### Which package to edit?
 
@@ -108,11 +109,9 @@ content-sdk/
 
 ## Boundaries
 
-**Never edit:**
-- `dist/**`, `.next/`, `out/`, `build/` — compiled output
-- `node_modules/`
-- `yarn.lock`, `package-lock.json` — unless explicitly required
-- `.env`, `.env.local` — use `.env.example` patterns only
+**Never edit:** `dist/**`, `.next/`, `out/`, `build/` (compiled output), `node_modules/`. Do not modify `yarn.lock` or `package-lock.json` unless explicitly required.
+
+**Environment variables:** You may add new env vars when needed. Do it carefully: document the variable in `.env.example` (or in templates, the appropriate `.env.*.example`), with a placeholder or empty value and a short comment; never put real secrets or production values in example files. If adding to a user’s `.env.local` for local dev, add only the variable name (e.g. `MY_VAR=`) and instruct the user to set the value. **Never commit** `.env` or `.env.local` — they are gitignored; example files are the source of truth for what vars exist.
 
 **Never edit without explicit instruction:**
 - `.github/workflows/` — CI configuration
