@@ -10,7 +10,7 @@ import {
   DesignLibraryPreviewEventsProps,
   DesignLibraryVariantGenerationEventsProps,
 } from './models';
-import { useSitecore } from '../../enhancers/withSitecore';
+import { useSitecore } from '../SitecoreProvider';
 
 let {
   getDesignLibraryComponentPropsEvent,
@@ -79,6 +79,7 @@ export const DesignLibraryVariantGenerationEvents = ({
   generatedComponentData,
 }: DesignLibraryVariantGenerationEventsProps) => {
   const { api } = useSitecore();
+  const edgeUrl = api?.edge?.edgeUrl;
 
   useEffect(() => {
     if (!component?.uid) return;
@@ -99,7 +100,7 @@ export const DesignLibraryVariantGenerationEvents = ({
           uid: component.uid!,
           args: eventArgs,
         },
-        api?.edge?.edgeUrl
+        edgeUrl
       );
     });
 
@@ -131,7 +132,14 @@ export const DesignLibraryVariantGenerationEvents = ({
       unsubUpdate && unsubUpdate();
       unsubPreview && unsubPreview();
     };
-  }, [component, designLibraryStatus, importMap, componentInitError, generatedComponentData]);
+  }, [
+    component,
+    designLibraryStatus,
+    importMap,
+    componentInitError,
+    generatedComponentData,
+    edgeUrl,
+  ]);
 
   return <></>;
 };
