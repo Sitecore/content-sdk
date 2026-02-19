@@ -4,7 +4,7 @@
 
 This is a **Sitecore Content SDK** application built with **Next.js (App Router)** and **TypeScript**. AI agents work as developer assistants within this scaffolded head application. The app integrates with Sitecore XM Cloud for content, uses **file-based routing with `[site]` and `[locale]`**, next-intl for i18n, and Edge middleware for multisite, redirects, and personalization.
 
-**Scope:** This file applies to the **application** only (app router, components, API routes, config). For SDK or monorepo work, see the repository root `AGENTS.md`.
+**Scope:** This file applies to **this application only** (a scaffolded head app). It is **not** the Content SDK monorepo — for SDK package development use that repo's `AGENTS.md`. Here we edit app code and config (app router, components, API routes, i18n); we do not modify SDK packages or CI.
 
 ---
 
@@ -52,6 +52,42 @@ next.config.ts                   # next-intl plugin, rewrites, images
 
 ---
 
+## Key concepts for this app
+
+These are the main head-app–specific concepts. Details are in the sections below.
+
+### Middleware (Edge proxy)
+
+- **Where:** `src/proxy.ts`. Next.js runs middleware from `middleware.ts` at root or in `src/` — if the app only has `proxy.ts`, add `src/middleware.ts` that re-exports it.
+- **What it does:** Runs on each request (respecting the `matcher`). Chain order is **fixed:** LocaleProxy → AppRouterMultisiteProxy → RedirectsProxy → PersonalizeProxy. Locale must run first so i18n and multisite see the correct locale.
+- **Config:** Uses `sitecore.config.ts` (multisite, redirects, personalize), `.sitecore/sites.json`, and `src/i18n/routing.ts` (locales). **Do not change proxy order.** Keep the matcher excluding API, `_next/`, sitemap, robots, and static assets so the proxy stays lightweight.
+
+### SitecoreClient
+
+- **Where:** Single shared instance in `src/lib/sitecore-client.ts` — `new SitecoreClient({ ...scConfig })` with config from `sitecore.config.ts`.
+- **Use for:** `getPage`, `getDictionary`, `getErrorPage`, `getPreview`, `getDesignLibraryData`, `getAppRouterStaticParams`. All Sitecore data fetching in the app goes through this client.
+- **Do not:** Create a second client or instantiate SitecoreClient elsewhere. Pass `site` and `locale` from route params (or `parseRewriteHeader` in not-found), not from global state.
+
+### Catch-all route
+
+- **Where:** `src/app/[site]/[locale]/[[...path]]/page.tsx`. This is the **only** page component that renders Sitecore content; the optional `[[...path]]` segment captures the content path.
+- **Flow:** `params` is a Promise (Next.js 15+) — `await params` to get `{ site, locale, path? }`. Call `client.getPage(path ?? [], { site, locale })`. For preview, use `draftMode()` and `client.getPreview(editingParams)` or `client.getDesignLibraryData(editingParams)` from `searchParams`. Call `setRequestLocale(\`${site}_${locale}\`)` at the top of the page for next-intl.
+- **Do not:** Add another catch-all or page at a different path for Sitecore pages; keep this single entry point.
+
+### How locale works
+
+- **In the URL:** All content routes are `/[site]/[locale]/...path` (e.g. `/default/en`, `/default/en/about`). Middleware (LocaleProxy, then AppRouterMultisiteProxy) rewrites incoming requests into this shape.
+- **In the app:** next-intl uses a single `requestLocale` per request. This app encodes both site and locale as `requestLocale = \`${site}_${locale}\``. In the page, call `setRequestLocale(\`${site}_${locale}\`)` so next-intl and `src/i18n/request.ts` see it. In `request.ts`, parse `requestLocale` (e.g. `split('_')`) to get site and locale, then load the dictionary with `client.getDictionary({ locale, site })`.
+- **Config:** `src/i18n/routing.ts` defines `locales` and `defaultLocale`; align these with Sitecore languages (e.g. from `sitecore.config.ts`). **Do not** change the `{site}_{locale}` convention without updating request.ts and all pages that call `setRequestLocale`.
+
+### More (component maps, editing, env)
+
+- **Component maps:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client). Register every Sitecore component here; keep in sync with `src/components/`.
+- **Editing/preview:** Use `draftMode()` in Server Components; when enabled, use `client.getPreview(searchParams)` or `client.getDesignLibraryData(searchParams)`. Editing API routes live under `src/app/api/editing/`.
+- **Env:** All config via environment variables in `sitecore.config.ts`. Document vars in `.env.example` (or `.env.remote.example` / `.env.container.example`); never commit `.env` or `.env.local`.
+
+---
+
 ## Next.js App Router specifics
 
 ### Routing: `[site]` / `[locale]` / `[[...path]]`
@@ -75,7 +111,7 @@ next.config.ts                   # next-intl plugin, rewrites, images
   - **AppRouterMultisiteProxy** — rewrites to `/[site]/[locale]/[...path]`; uses `scConfig.multisite`.
   - **RedirectsProxy** — redirects; uses `scConfig.redirects`, `scConfig.api.edge`, `scConfig.api.local`.
   - **PersonalizeProxy** — personalization; uses `scConfig.personalize`; often disabled in dev.
-- **Matcher:** Exclude API routes, `_next/`, sitemap, robots, healthz, Sitecore paths, and static assets so middleware does not run on every static request.
+- **Matcher:** Exclude API routes, `_next/`, sitemap, robots, healthz, Sitecore paths, and static assets so middleware does not run on every static request. The matcher is defined in `config` in `proxy.ts` (or in `middleware.ts` if it re-exports the proxy).
 - **Config:** `sitecore.config.ts` → `multisite`, `redirects`, `personalize`; never commit secrets.
 
 ### Data fetching and preview
@@ -116,6 +152,7 @@ next.config.ts                   # next-intl plugin, rewrites, images
 
 ## Best practices
 
+- **Quick checks:** If locale or dictionary is wrong, ensure `setRequestLocale(\`${site}_${locale}\`)` is called at the top of the page and `src/i18n/request.ts` parses `requestLocale` and calls `client.getDictionary`. If not-found doesn't show Sitecore content, use `parseRewriteHeader(headers())` for site/locale. Always `await params` (Next.js 15+).
 - **Security:** Use only environment variables in `sitecore.config.ts`; never hardcode API keys, editing secret, or host URLs. Do not expose secrets in client-side code or in logs. Validate and sanitize user input at boundaries.
 - **Performance:** Keep middleware lightweight; use the proxy `matcher` so it does not run on API routes, `_next`, sitemap, robots, or static assets. Use Server Components and Suspense for dynamic content; add `'use client'` only where interactivity is needed. Use `generateStaticParams` and caching as in the existing page.
 - **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Register new components in `.sitecore/component-map.ts` and `.sitecore/component-map.client.ts` as appropriate. Use the single Sitecore client in `lib/sitecore-client.ts` for all data fetching.
@@ -176,6 +213,8 @@ next.config.ts                   # next-intl plugin, rewrites, images
 - [Sitecore Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html) — Official docs.
 - [Next.js App Router](https://nextjs.org/docs/app) — Routing, Server Components, data fetching.
 - [next-intl](https://next-intl.dev/docs) — i18n routing and request config.
+
+**For head applications / empty starters:** If you use this template for your head application (e.g. empty App Router starter), keep this AGENTS.md as that head application's guide. Do not replace it with the Content SDK monorepo root AGENTS.md — that file describes the SDK source tree, not the head application. Adjust only what is specific to your project (e.g. custom layout or workflow). See the Content SDK README "AI Development Support" section for more on which AGENTS.md to use.
 
 ---
 

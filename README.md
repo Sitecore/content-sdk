@@ -44,6 +44,8 @@ For more information check out our [Getting Started Guide](https://doc.sitecore.
 - [Windsurf AI Rules](.windsurfrules) - Windsurf IDE configuration for Sitecore Content SDK development
 - [LLM Guidance](LLMs.txt) - General guidance for Large Language Models working with the Sitecore Content SDK
 
+**Which AGENTS.md to use:** The root [AGENTS.md](AGENTS.md) applies when working in **this monorepo** (packages, yarn, scaffolding). For head applications (including empty starters) generated from our templates, use the AGENTS.md that ships with the head application — it is copied from the template when you run `create-content-sdk-app` and you can adapt it to your project as needed.
+
 ## Contributions
 
 We are very grateful to the community for contributing bug fixes and improvements. We welcome all efforts to evolve and improve the Sitecore Content SDK; read below to learn how to participate in those efforts.

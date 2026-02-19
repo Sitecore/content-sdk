@@ -4,7 +4,7 @@
 
 This is a **Sitecore Content SDK** application built with **Next.js (Pages Router)** and **TypeScript**. AI agents work as developer assistants within this scaffolded head application. The app integrates with Sitecore XM Cloud for content, supports multisite and i18n, and uses Next.js API routes and Edge middleware for routing and SEO.
 
-**Scope:** This file applies to the **application** only (components, pages, API routes, config). For SDK or monorepo work, see the repository root `AGENTS.md`.
+**Scope:** This file applies to **this application only** (a scaffolded head app). It is **not** the Content SDK monorepo — for SDK package development use that repo's `AGENTS.md`. Here we edit app code and config (pages, components, API routes, config); we do not modify SDK packages or CI.
 
 ---
 
@@ -43,10 +43,47 @@ next.config.js       # i18n (locales, defaultLocale), rewrites, images
 
 ---
 
+## Key concepts for this app
+
+These are the main head-app–specific concepts. Details are in the sections below.
+
+### Middleware (Edge proxy)
+
+- **Where:** `src/proxy.ts`. Next.js runs middleware from `middleware.ts` at root or in `src/` — if the app only has `proxy.ts`, add `src/middleware.ts` that re-exports it.
+- **What it does:** Runs on each request (respecting the `config.matcher`). Chain order is **fixed:** MultisiteProxy → RedirectsProxy → PersonalizeProxy. Multisite resolves site (e.g. hostname or cookie) and rewrites; redirects and personalization run after.
+- **Config:** Uses `sitecore.config.ts` (multisite, redirects, personalize) and `.sitecore/sites.json`. **Do not change proxy order.** Use the `skip` callback and matcher to exclude `/api`, `/_next`, static files, and health checks so the proxy stays lightweight.
+
+### SitecoreClient
+
+- **Where:** Single shared instance in `src/lib/sitecore-client.ts` — `new SitecoreClient({ ...scConfig })` with config from `sitecore.config.ts`.
+- **Use for:** `getPage`, `getDictionary`, `getComponentData`, `getPreview`, `getDesignLibraryData`, `getPagePaths`. All Sitecore data fetching in the app goes through this client (in `[[...path]].tsx` getStaticProps/getServerSideProps and in API routes).
+- **Do not:** Create a second client or instantiate SitecoreClient elsewhere. Path comes from `extractPath(context)`; locale from `context.locale` (Next.js i18n).
+
+### Catch-all route
+
+- **Where:** `src/pages/[[...path]].tsx`. This is the **only** page component that renders Sitecore content; the optional `[[...path]]` segment captures the content path.
+- **Flow:** Use `extractPath(context)` (from `@sitecore-content-sdk/nextjs/utils`) to get the path array; use `context.locale` for locale. In getStaticProps/getServerSideProps: `client.getPage(path, { locale: context.locale })`, then `client.getDictionary({ site: page.siteName, locale: page.locale })` and `client.getComponentData(page.layout, context, components)`. For SSG, paths from `client.getPagePaths(sites, context?.locales)` with `sites` from `.sitecore/sites.json`. For preview, use `context.preview` and `context.previewData` with `client.getPreview(context.previewData)` or `client.getDesignLibraryData(context.previewData)`.
+- **Do not:** Add another page or catch-all for Sitecore content; keep this single entry point.
+
+### How locale works
+
+- **Config:** `next.config.js` → `i18n.locales` and `i18n.defaultLocale`. Match (or subset) Sitecore languages. There is no `[locale]` in the URL path; Next.js i18n handles locale via its built-in behavior (e.g. prefix or cookie).
+- **In the app:** Per-request locale is `context.locale` in `getStaticProps` and `getServerSideProps`. Pass it to `client.getPage(path, { locale: context.locale })`. After fetching the page, use `page.siteName` and `page.locale` (or `context.locale`) for `client.getDictionary` and `client.getComponentData`.
+- **Do not:** Assume locale from headers or a different source; always use `context.locale` and the page’s site/locale for Sitecore calls.
+
+### More (component map, editing, env)
+
+- **Component map:** `.sitecore/component-map.ts` — register every Sitecore component here; keep in sync with `src/components/`. Used by `getComponentData` and by the editing API routes.
+- **Editing/preview:** Use `context.preview` and `context.previewData` in the catch-all page; when in preview, use `client.getPreview(context.previewData)` or `client.getDesignLibraryData(context.previewData)`. Editing API routes: `src/pages/api/editing/config.ts`, `render.ts`, `feaas/render.ts`.
+- **Env:** All config via environment variables in `sitecore.config.ts`. Document vars in `.env.example` (or `.env.remote.example` / `.env.container.example`); never commit `.env` or `.env.local`.
+
+---
+
 ## Next.js Pages Router specifics
 
 ### Routing and data fetching
 
+- **_app.tsx:** Wraps the app and receives the page/layout from the catch-all's getStaticProps/getServerSideProps. Do not fetch Sitecore data in _app; all data flows from `[[...path]].tsx`.
 - **Single page for Sitecore content:** `src/pages/[[...path]].tsx` is the catch-all. Path comes from `extractPath(context)` (from `@sitecore-content-sdk/nextjs/utils`); locale from `context.locale` (Next.js i18n).
 - **SSG:** Uses `getStaticPaths` and `getStaticProps`. Paths from `client.getPagePaths(sites, context?.locales)` with `sites` from `.sitecore/sites.json`. Use `revalidate` for ISR.
 - **SSR:** Uses `getServerSideProps` only; no `getStaticPaths`.
@@ -86,11 +123,13 @@ next.config.js       # i18n (locales, defaultLocale), rewrites, images
 
 - **Component map:** `.sitecore/component-map.ts` — register all Sitecore components. Keep in sync with components under `src/components/`.
 - **Layout:** `Layout.tsx` renders page layout and placeholders; `Providers` wrap component props and page context; `Bootstrap` handles site name and preview mode.
+- **404 / 500 / _error:** When the catch-all returns `notFound: true` (no page), Next.js renders `404.tsx`. When the server returns 500, Next.js renders `500.tsx`. Both can optionally fetch and show Sitecore error content via `client.getErrorPage(ErrorPage.NotFound)` / `ErrorPage.InternalServerError` in their getStaticProps (when `scConfig.generateStaticPaths`); otherwise they show a simple fallback. `_error.tsx` is Next.js's error boundary for uncaught errors (client and server); it does not fetch from Sitecore.
 
 ---
 
 ## Best practices
 
+- **Quick checks:** If path or locale is wrong, ensure you use `extractPath(context)` and `context.locale` (from getStaticProps/getServerSideProps); do not assume path or locale from elsewhere. Keep the proxy chain order (Multisite → Redirects → Personalize).
 - **Security:** Use only environment variables in `sitecore.config.ts`; never hardcode API keys, editing secret, or host URLs. Do not expose secrets in client-side code or in logs. Validate and sanitize user input at boundaries.
 - **Performance:** Keep middleware lightweight; use the proxy `skip` callback and `matcher` so middleware does not run on `/api`, `_next`, static files, or health checks. Use `revalidate` in getStaticProps for ISR where appropriate. Prefer server-side data fetching for Sitecore content.
 - **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Register new components in `.sitecore/component-map.ts`. Keep the single Sitecore client instance in `lib/sitecore-client.ts` and pass it (or use it) in API routes and getStaticProps/getServerSideProps.
@@ -148,6 +187,8 @@ next.config.js       # i18n (locales, defaultLocale), rewrites, images
 - **.cursor/rules/** — Project and Sitecore rules.
 - [Sitecore Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html) — Official docs.
 - [Next.js Pages Router](https://nextjs.org/docs/pages) — Data fetching, API routes, i18n.
+
+**For head applications / empty starters:** If you use this template for your head application (e.g. empty starter), keep this AGENTS.md as that head application's guide. Do not replace it with the Content SDK monorepo root AGENTS.md — that file describes the SDK source tree, not the head application. Adjust only what is specific to your project (e.g. custom layout or workflow). See the Content SDK README "AI Development Support" section for more on which AGENTS.md to use.
 
 ---
 

@@ -4,6 +4,8 @@
 
 This repository is the **Sitecore Content SDK** — a TypeScript monorepo of SDK packages, scaffolding CLI, and samples for building applications with Sitecore XM Cloud. AI agents work as developer assistants to implement features, fix bugs, add tests, and maintain templates.
 
+**Scope:** This file is for the **Content SDK monorepo** only. For head applications created with `create-content-sdk-app`, use the AGENTS.md that was generated inside that head application (from the template). Do not copy this repo's root AGENTS.md into a head application.
+
 **Main tasks:** Generate SDK code, perform safe edits in packages and templates, update tests. Do not modify global config (CI, root tooling) without explicit instruction.
 
 ---
@@ -29,21 +31,23 @@ yarn reset                # Clean, reinstall, rebuild
 
 ## Repository Structure
 
+Packages are listed from **foundation (core)** to **consumer (nextjs, then react)**. Lower layers have no or few SDK dependencies; consumer packages depend on core, content, and react. Next.js is listed above react as the main app framework; react provides the UI components nextjs uses.
+
 ```
 content-sdk/
 ├── packages/
-│   ├── core/                  # @sitecore-content-sdk/core — core SDK
-│   ├── nextjs/                # @sitecore-content-sdk/nextjs — Next.js integration
-│   ├── react/                 # @sitecore-content-sdk/react — React components
-│   ├── content/               # @sitecore-content-sdk/content — content client
-│   ├── cli/                   # @sitecore-content-sdk/cli — CLI tools
-│   ├── search/                # @sitecore-content-sdk/search
-│   ├── personalize/           # @sitecore-content-sdk/personalize
-│   ├── events/                # @sitecore-content-sdk/events
-│   ├── analytics-core/        # @sitecore-content-sdk/analytics-core
-│   └── create-content-sdk-app/ # Scaffolding CLI + templates
-├── samples/                   # Example applications (generated from templates)
-└── scripts/                   # Monorepo scripts (scaffold, lint, hooks)
+│   ├── core/                   # @sitecore-content-sdk/core — Foundation: GraphQL client, cache, retry, fetch utilities. No SDK deps.
+│   ├── analytics-core/         # @sitecore-content-sdk/analytics-core — Analytics foundation. No SDK deps.
+│   ├── content/                # @sitecore-content-sdk/content — Content client: layout, editing, site resolution, media. Depends on core.
+│   ├── search/                 # @sitecore-content-sdk/search — Search service and APIs. Depends on core.
+│   ├── events/                 # @sitecore-content-sdk/events — Event tracking. Depends on analytics-core.
+│   ├── personalize/            # @sitecore-content-sdk/personalize — Personalization. Depends on analytics-core, events.
+│   ├── cli/                    # @sitecore-content-sdk/cli — CLI (sitecore-tools). Depends on content.
+│   ├── create-content-sdk-app/  # Scaffolding CLI + Next.js templates. Output apps use nextjs + cli.
+│   ├── nextjs/                 # @sitecore-content-sdk/nextjs — Next.js integration, middleware, editing. Depends on content, core, react. Final consumer.
+│   └── react/                  # @sitecore-content-sdk/react — React components (Text, Image, Placeholder, etc.). Depends on content, core, search. Consumer.
+├── samples/                    # Example applications (generated from templates)
+└── scripts/                    # Monorepo scripts (scaffold, lint, hooks)
 ```
 
 **Key locations:**
@@ -57,13 +61,16 @@ content-sdk/
 
 | Task | Package |
 |------|---------|
-| GraphQL/cache/retry utilities | `packages/core` |
-| Content fetching, layout, editing | `packages/content` |
-| Next.js integration, middleware | `packages/nextjs` |
-| React components (Text, Image, etc.) | `packages/react` |
-| CLI tooling | `packages/cli` |
+| GraphQL, cache, retry, fetch utilities | `packages/core` |
+| Analytics foundation | `packages/analytics-core` |
+| Content fetching, layout, editing, site, media | `packages/content` |
+| Search service | `packages/search` |
+| Event tracking | `packages/events` |
+| Personalization | `packages/personalize` |
+| CLI (sitecore-tools) | `packages/cli` |
 | Scaffolding, templates, init flow | `packages/create-content-sdk-app` |
-| Search, personalize, events, analytics | Respective packages |
+| Next.js integration, middleware, editing | `packages/nextjs` |
+| React components (Text, Image, Placeholder, etc.) | `packages/react` |
 
 ### Working with samples
 
@@ -129,7 +136,7 @@ content-sdk/
 ### 1. Add a utility in a package
 Example: Add a constant in `packages/core/src/constants.ts`:
 - Export from `packages/core/src/index.ts` if public
-- Add JSDoc: `@internal` or full `@param`/`@returns` for public APIs
+- Add JSDoc: `@internal` for internal APIs; `@public` and full `@param`/`@returns` for public APIs
 - Add tests in `packages/core/src/constants.test.ts` (if needed)
 - Run `yarn api-extractor` if you change public exports
 
