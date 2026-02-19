@@ -22,7 +22,6 @@ import {
   GeneratedComponentData,
 } from './preview';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
-import debug from '../../debug';
 
 describe('design library codegen', () => {
   let debugSpy: sinon.SinonSpy;
