@@ -20,7 +20,7 @@ export type ComponentUpdateModel = {
   /**
    * The updated component rendering data.
    */
-  updatedComponentRendering?: ComponentRendering;
+  rendering?: ComponentRendering;
   /**
    * The data needed for generated component to be rendered on the server. Required if update event is coming for a generated component in variant generation mode.
    */

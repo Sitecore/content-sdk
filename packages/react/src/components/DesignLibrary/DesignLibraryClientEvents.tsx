@@ -52,7 +52,7 @@ export const DesignLibraryPreviewEvents = ({
     postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid, true));
 
     const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
-      _updateComponentAction({ uid: updated.uid!, updatedComponentRendering: updated });
+      _updateComponentAction({ uid: updated.uid!, rendering: updated });
     });
 
     return () => {
@@ -88,7 +88,7 @@ export const DesignLibraryVariantGenerationEvents = ({
     const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
       _updateComponentAction({
         uid: updated.uid!,
-        updatedComponentRendering: updated,
+        rendering: updated,
         generatedComponentData,
       });
     });
@@ -97,7 +97,7 @@ export const DesignLibraryVariantGenerationEvents = ({
       _previewComponentAction(
         {
           uid: component.uid!,
-          previewEventArgs: eventArgs,
+          args: eventArgs,
         },
         api?.edge?.edgeUrl
       );

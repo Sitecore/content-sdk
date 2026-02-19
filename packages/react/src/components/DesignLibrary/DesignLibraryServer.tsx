@@ -135,12 +135,8 @@ export const DesignLibraryServerVariantGeneration = async ({
     const updateData = getCacheAndClean<ComponentUpdateModel>(componentUpdateKey);
 
     // apply the updates to the component rendering
-    if (updateData?.updatedComponentRendering) {
-      updateComponent(
-        componentToUpdate,
-        updateData.updatedComponentRendering.fields,
-        updateData.updatedComponentRendering.params
-      );
+    if (updateData?.rendering) {
+      updateComponent(componentToUpdate, updateData.rendering.fields, updateData.rendering.params);
     }
 
     // generate the component instance if we are dealing with an AI-generated component
@@ -242,12 +238,8 @@ export const DesignLibraryServerPreview = async ({
     const updateData = getCacheAndClean<ComponentUpdateModel>(componentUpdateKey);
 
     // apply the updates to the component rendering
-    if (updateData?.updatedComponentRendering) {
-      updateComponent(
-        componentToUpdate,
-        updateData.updatedComponentRendering.fields,
-        updateData.updatedComponentRendering.params
-      );
+    if (updateData?.rendering) {
+      updateComponent(componentToUpdate, updateData.rendering.fields, updateData.rendering.params);
     }
   }
 

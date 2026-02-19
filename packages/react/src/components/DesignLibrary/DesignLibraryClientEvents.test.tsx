@@ -167,16 +167,16 @@ describe('<DesignLibraryClientEvents />', () => {
       });
 
       const updateCallback = addComponentUpdateHandlerSpy.getCall(0).args[1];
-      const updatedComponentRendering = {
+      const rendering = {
         ...testEditedComponent,
         fields: { title: { value: 'Updated Title' } },
       };
 
-      updateCallback(updatedComponentRendering);
+      updateCallback(rendering);
 
       expect(updateComponentActionSpy).to.have.been.calledWith({
-        uid: updatedComponentRendering.uid,
-        updatedComponentRendering,
+        uid: rendering.uid,
+        rendering,
       });
     });
 
@@ -333,16 +333,16 @@ describe('<DesignLibraryClientEvents />', () => {
       );
 
       const updateCallback = addComponentUpdateHandlerSpy.getCall(0).args[1];
-      const updatedComponentRendering = {
+      const rendering = {
         ...testEditedComponent,
         fields: { title: { value: 'Updated Title' } },
       };
 
-      updateCallback(updatedComponentRendering);
+      updateCallback(rendering);
 
       expect(updateComponentActionSpy).to.have.been.calledWith({
-        uid: updatedComponentRendering.uid,
-        updatedComponentRendering,
+        uid: rendering.uid,
+        rendering,
         generatedComponentData: undefined,
       });
     });

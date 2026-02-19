@@ -208,7 +208,7 @@ describe('<DesignLibraryServer />', () => {
       hasCacheStub.returns(true);
       getCacheAndCleanStub.returns({
         uid: 'test-content',
-        updatedComponentRendering: {
+        rendering: {
           fields: {
             heading: {
               value: 'Updated Heading from Cache',
@@ -236,7 +236,7 @@ describe('<DesignLibraryServer />', () => {
       hasCacheStub.returns(true);
       getCacheAndCleanStub.returns({
         uid: 'test-content',
-        updatedComponentRendering: {
+        rendering: {
           fields: {},
           params: { theme: 'dark-mode' },
         },
@@ -260,7 +260,7 @@ describe('<DesignLibraryServer />', () => {
       hasCacheStub.returns(true);
       getCacheAndCleanStub.returns({
         uid: 'test-content',
-        updatedComponentRendering: {
+        rendering: {
           fields: {},
           params: {},
         },
@@ -473,7 +473,7 @@ describe('<DesignLibraryServer />', () => {
         const importMapLoaderSpy = sandbox.stub();
         getCacheAndCleanStub.returns({
           uid: 'test-content',
-          updatedComponentRendering: {
+          rendering: {
             fields: {
               content: {
                 value: 'This is the updated value',
@@ -520,7 +520,7 @@ describe('<DesignLibraryServer />', () => {
         const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
         getCacheAndCleanStub.returns({
           uid: 'test-content',
-          updatedComponentRendering: {
+          rendering: {
             fields: {
               heading: {
                 value: 'This is the updated heading value',
@@ -564,7 +564,7 @@ describe('<DesignLibraryServer />', () => {
         const generatedComponentData = { styles: { content: 'background: green' } };
         getCacheAndCleanStub.returns({
           uid: 'test-content',
-          updatedComponentRendering: {
+          rendering: {
             fields: {
               heading: {
                 value: 'This is the updated heading value',
@@ -637,7 +637,7 @@ describe('<DesignLibraryServer />', () => {
         const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
         getCacheAndCleanStub.returns({
           uid: 'test-content',
-          updatedComponentRendering: {
+          rendering: {
             fields: {
               heading: {
                 value: 'This is the updated heading value',

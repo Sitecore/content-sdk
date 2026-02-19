@@ -63,7 +63,7 @@ describe('Server Component Actions', () => {
     it('should set cache with updated component rendering', async () => {
       const componentUpdate: ComponentUpdateModel = {
         uid: 'test-uid-123',
-        updatedComponentRendering: {
+        rendering: {
           uid: 'test-uid-123',
           componentName: 'ContentBlock',
           fields: {
@@ -159,7 +159,7 @@ describe('Server Component Actions', () => {
 
       const previewEvent: PreviewEventModel = {
         uid: 'test-uid-789',
-        previewEventArgs,
+        args: previewEventArgs,
       };
 
       await previewComponentAction(previewEvent);
@@ -246,7 +246,7 @@ describe('Server Component Actions', () => {
 
       const previewEvent: PreviewEventModel = {
         uid: 'test-uid-env',
-        previewEventArgs,
+        args: previewEventArgs,
       };
 
       await previewComponentAction(previewEvent, customEdgeUrl);
@@ -290,7 +290,7 @@ describe('Server Component Actions', () => {
 
       const previewEvent: PreviewEventModel = {
         uid: 'test-uid-no-env',
-        previewEventArgs,
+        args: previewEventArgs,
       };
 
       await previewComponentAction(previewEvent);
@@ -320,7 +320,7 @@ describe('Server Component Actions', () => {
 
       const previewEvent: PreviewEventModel = {
         uid: 'test-uid-error',
-        previewEventArgs,
+        args: previewEventArgs,
       };
 
       await previewComponentAction(previewEvent);
@@ -361,7 +361,7 @@ describe('Server Component Actions', () => {
 
       const previewEvent: PreviewEventModel = {
         uid: 'test-uid-string-error',
-        previewEventArgs,
+        args: previewEventArgs,
       };
 
       await previewComponentAction(previewEvent);
