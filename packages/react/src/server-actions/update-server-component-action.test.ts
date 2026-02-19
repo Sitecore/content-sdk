@@ -84,7 +84,7 @@ describe('Server Component Actions', () => {
         componentUpdate
       );
       expect(debugEditingStub).to.have.been.calledWith(
-        'Updating server component cache for Component: test-uid-123'
+        'Updating server component cache for Update Component: test-uid-123'
       );
       expect(fetchGeneratedComponentFromCacheStub).to.not.have.been.called;
     });
@@ -120,7 +120,7 @@ describe('Server Component Actions', () => {
         componentUpdate
       );
       expect(debugEditingStub).to.have.been.calledWith(
-        'Updating server component cache for Component: test-uid-456'
+        'Updating server component cache for Update Component: test-uid-456'
       );
       expect(fetchGeneratedComponentFromCacheStub).to.not.have.been.called;
     });
@@ -182,7 +182,7 @@ describe('Server Component Actions', () => {
       );
 
       expect(debugEditingStub).to.have.been.calledWith(
-        'Updating server component cache for Component: test-uid-789'
+        'Updating server component cache for Preview Component: test-uid-789'
       );
     });
 
@@ -205,7 +205,7 @@ describe('Server Component Actions', () => {
       );
       expect(debugEditingStub).to.have.been.calledTwice;
       expect(debugEditingStub.firstCall).to.have.been.calledWith(
-        'Updating server component cache for Component: test-uid-no-preview'
+        'Updating server component cache for Preview Component: test-uid-no-preview'
       );
       expect(debugEditingStub.secondCall).to.have.been.calledWith(
         'No preview event arguments provided for Component: test-uid-no-preview'
@@ -337,7 +337,7 @@ describe('Server Component Actions', () => {
       );
       expect(debugEditingStub).to.have.been.calledTwice;
       expect(debugEditingStub.firstCall).to.have.been.calledWith(
-        'Updating server component cache for Component: test-uid-error'
+        'Updating server component cache for Preview Component: test-uid-error'
       );
       expect(debugEditingStub.secondCall).to.have.been.calledWith(
         'Error fetching generated component data from cache for Component: test-uid-error',
@@ -377,7 +377,7 @@ describe('Server Component Actions', () => {
       );
       expect(debugEditingStub).to.have.been.calledTwice;
       expect(debugEditingStub.firstCall).to.have.been.calledWith(
-        'Updating server component cache for Component: test-uid-string-error'
+        'Updating server component cache for Preview Component: test-uid-string-error'
       );
     });
   });

@@ -61,7 +61,7 @@ export type PreviewEventModel = {
  * @returns A Promise that resolves when the cache has been updated.
  */
 export async function updateComponentAction(updatedComponent: ComponentUpdateModel): Promise<void> {
-  debug.editing(`Updating server component cache for Component: ${updatedComponent.uid}`);
+  debug.editing(`Updating server component cache for Update Component: ${updatedComponent.uid}`);
   setCache(`${COMPONENT_UPDATE_CACHE_KEY_PREFIX}${updatedComponent.uid}`, updatedComponent);
 }
 
@@ -77,7 +77,7 @@ export async function previewComponentAction(
   previewEvent: PreviewEventModel,
   edgeUrl?: string
 ): Promise<void> {
-  debug.editing(`Updating server component cache for Component: ${previewEvent.uid}`);
+  debug.editing(`Updating server component cache for Preview Component: ${previewEvent.uid}`);
 
   const updatedComponent: ComponentPreviewModel = {
     uid: previewEvent.uid,
