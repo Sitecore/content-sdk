@@ -7,6 +7,10 @@ import {
   NativeDataFetcher,
   debug,
 } from '@sitecore-content-sdk/core';
+import {
+  resolveEdgeUrlForStaticFiles,
+  resolveExperienceEdgeUrl,
+} from '@sitecore-content-sdk/core/tools';
 import { DictionaryPhrases, DictionaryService } from '../i18n';
 import {
   getDesignLibraryStylesheetLinks,
@@ -15,6 +19,9 @@ import {
   LayoutServiceData,
   RouteOptions,
   LayoutServicePageState,
+  rewriteEdgeHostInResponse,
+  getDefaultMediaUrlTransformer,
+  applyMediaUrlRewrite,
 } from '../layout';
 import { HTMLLink, StaticPath } from '../models';
 import { getGroomedVariantIds, PersonalizedRewriteData } from '../personalize/utils';
@@ -347,7 +354,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     const locale = pageOptions?.locale ?? this.initOptions.defaultLanguage;
     const site = pageOptions?.site ?? this.initOptions.defaultSite;
     // Fetch layout data, passing on req/res for SSR
-    const layout = await this.layoutService.fetchLayoutData(
+    let layout = await this.layoutService.fetchLayoutData(
       computedPath,
       {
         locale,
@@ -357,25 +364,24 @@ export class SitecoreClient implements BaseSitecoreClient {
     );
     if (!layout.sitecore.route) {
       return null;
-    } else {
-      // Initialize links to be inserted on the page
-      if (pageOptions?.personalize?.variantId) {
-        // Modify layoutData to use specific variant(s) instead of default
-        // This will also set the variantId on the Sitecore context so that it is accessible here
-        personalizeLayout(
-          layout,
-          pageOptions.personalize.variantId,
-          pageOptions.personalize.componentVariantIds
-        );
-      }
-
-      return {
-        layout,
-        siteName: layout.sitecore.context.site?.name || site,
-        locale,
-        mode: this.getPageMode(LayoutServicePageState.Normal),
-      };
     }
+    // Apply personalization first to select the variant(s) that will be used,
+    // then rewrite content URLs so we only process the selected variant(s)
+    if (pageOptions?.personalize?.variantId) {
+      personalizeLayout(
+        layout,
+        pageOptions.personalize.variantId,
+        pageOptions.personalize.componentVariantIds
+      );
+    }
+    layout = this.applyContentRewrite(layout);
+
+    return {
+      layout,
+      siteName: layout.sitecore.context.site?.name || site,
+      locale,
+      mode: this.getPageMode(LayoutServicePageState.Normal),
+    };
   }
 
   /**
@@ -391,18 +397,20 @@ export class SitecoreClient implements BaseSitecoreClient {
     options: { enableStyles?: boolean; enableThemes?: boolean } = {}
   ): HTMLLink[] {
     const { enableStyles = true, enableThemes = true } = options;
-    const { contextId: serverContextId, clientContextId, edgeUrl } = this.initOptions.api.edge;
+    const { contextId: serverContextId, clientContextId } = this.initOptions.api.edge;
     const headLinks: HTMLLink[] = [];
 
     const contextId = serverContextId || clientContextId;
+    // Use default Edge URL for styles (ignore custom hostname) so stylesheets load from platform
+    const edgeUrlForStyles = resolveEdgeUrlForStaticFiles();
 
     if (enableStyles) {
-      const contentStyles = getContentStylesheetLink(layoutData, contextId, edgeUrl);
+      const contentStyles = getContentStylesheetLink(layoutData, contextId, edgeUrlForStyles);
       if (contentStyles) headLinks.push(contentStyles);
     }
 
     if (enableThemes) {
-      headLinks.push(...getDesignLibraryStylesheetLinks(layoutData, contextId, edgeUrl));
+      headLinks.push(...getDesignLibraryStylesheetLinks(layoutData, contextId, edgeUrlForStyles));
     }
 
     return headLinks;
@@ -473,14 +481,16 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!data) {
       throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(previewData)}`);
     }
+    let layout = data.layoutData;
+    const personalizeData = getGroomedVariantIds(variantIds);
+    personalizeLayout(layout, personalizeData.variantId, personalizeData.componentVariantIds);
+    layout = this.applyContentRewrite(layout);
     const page: Page = {
       locale: language,
-      layout: data.layoutData,
-      siteName: data.layoutData.sitecore.context.site?.name || site,
+      layout,
+      siteName: layout.sitecore.context.site?.name || site,
       mode: this.getPageMode(mode),
     };
-    const personalizeData = getGroomedVariantIds(variantIds);
-    personalizeLayout(page.layout, personalizeData.variantId, personalizeData.componentVariantIds);
 
     return page;
   }
@@ -529,10 +539,11 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!componentData) {
       throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(designLibData)}`);
     }
+    const layout = this.applyContentRewrite(componentData);
     const page: Page = {
       locale: designLibData.language,
-      layout: componentData,
-      siteName: componentData.sitecore.context.site?.name || site,
+      layout,
+      siteName: layout.sitecore.context.site?.name || site,
       mode: this.getPageMode(mode, generation),
     };
     return page;
@@ -561,7 +572,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       fetchOptions
     );
 
-    let layout = null;
+    let layout: LayoutServiceData | null = null;
 
     switch (code) {
       case ErrorPage.NotFound:
@@ -577,6 +588,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!layout) {
       return null;
     }
+
+    layout = this.applyContentRewrite(layout);
 
     return {
       layout,
@@ -623,12 +636,14 @@ export class SitecoreClient implements BaseSitecoreClient {
     // regular sitemap
     if (sitemapPath) {
       try {
+        const experienceEdgeUrl = resolveExperienceEdgeUrl();
+        const rewrittenSitemapPath = rewriteEdgeHostInResponse(sitemapPath, experienceEdgeUrl);
         const fetcher = new NativeDataFetcher();
-        const xmlResponse = await fetcher.fetch<string>(sitemapPath);
+        const xmlResponse = await fetcher.fetch<string>(rewrittenSitemapPath);
         if (!xmlResponse.data) {
           throw new Error('REDIRECT_404');
         }
-        return xmlResponse.data;
+        return rewriteEdgeHostInResponse(xmlResponse.data, experienceEdgeUrl);
         // eslint-disable-next-line no-unused-vars
       } catch (error) {
         throw new Error('REDIRECT_404');
@@ -701,6 +716,24 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @param { DesignLibraryVariantGeneration} generation - The variant generation mode, if applicable
    * @returns {PageMode} The page mode
    */
+  /**
+   * Applies media URL rewrite when rewriteMediaUrls is enabled.
+   * When true, uses default Edge host rewriter; when a function, transforms each string.
+   * @param {LayoutServiceData} layout - Layout data from layout/editing/component/error service
+   * @returns {LayoutServiceData} Rewritten layout (or same reference if rewrite disabled)
+   * @internal
+   */
+  protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData {
+    const opt = this.initOptions.rewriteMediaUrls;
+    if (!opt) {
+      return layout;
+    }
+    const experienceEdgeUrl = resolveExperienceEdgeUrl();
+    const transformer =
+      opt === true ? getDefaultMediaUrlTransformer(experienceEdgeUrl) : opt;
+    return applyMediaUrlRewrite(layout, transformer);
+  }
+
   private getPageMode(mode: PageModeName, generation?: DesignLibraryVariantGeneration): PageMode {
     const pageMode: PageMode = {
       name: mode,

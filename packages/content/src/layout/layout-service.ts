@@ -51,11 +51,12 @@ export class LayoutService extends SitecoreServiceBase {
     }>(query, {}, fetchOptions);
 
     // If `rendered` is empty -> not found
-    return (
+    const layoutData =
       data?.layout?.item?.rendered || {
         sitecore: { context: { pageEditing: false, language: routeOptions?.locale }, route: null },
-      }
-    );
+      };
+
+    return layoutData;
   }
 
   /**
