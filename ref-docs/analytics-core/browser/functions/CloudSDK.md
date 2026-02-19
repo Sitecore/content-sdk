@@ -8,7 +8,7 @@
 
 > **CloudSDK**(`settings`): [`CloudSDKBrowserInitializer`](../classes/CloudSDKBrowserInitializer.md)
 
-Defined in: [src/initializer/browser/initializer.ts:196](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/analytics-core/src/initializer/browser/initializer.ts#L196)
+Defined in: [src/initializer/browser/initializer.ts:196](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/analytics-core/src/initializer/browser/initializer.ts#L196)
 
 Runs the initialization logic. Enables packages and creates cookies for CloudSDK.
 

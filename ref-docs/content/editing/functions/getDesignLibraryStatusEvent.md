@@ -6,9 +6,9 @@
 
 # Function: getDesignLibraryStatusEvent()
 
-> **getDesignLibraryStatusEvent**(`status`, `uid`): [`DesignLibraryStatusEvent`](../interfaces/DesignLibraryStatusEvent.md)
+> **getDesignLibraryStatusEvent**(`status`, `uid`, `isRenderingServerComponent?`): [`DesignLibraryStatusEvent`](../interfaces/DesignLibraryStatusEvent.md)
 
-Defined in: [content/src/editing/design-library.ts:209](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/content/src/editing/design-library.ts#L209)
+Defined in: [content/src/editing/design-library.ts:217](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/content/src/editing/design-library.ts#L217)
 
 **`Internal`**
 
@@ -16,10 +16,11 @@ Generates a DesignLibraryStatusEvent with the given status and uid.
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `status` | [`DesignLibraryStatus`](../enumerations/DesignLibraryStatus.md) | The status of rendering. |
-| `uid` | `string` | The unique identifier for the event. |
+| Parameter | Type | Default value | Description |
+| ------ | ------ | ------ | ------ |
+| `status` | [`DesignLibraryStatus`](../enumerations/DesignLibraryStatus.md) | `undefined` | The status of rendering. |
+| `uid` | `string` | `undefined` | The unique identifier for the event. |
+| `isRenderingServerComponent?` | `boolean` | `false` | Indicates if the component being rendered is a server component. |
 
 ## Returns
 

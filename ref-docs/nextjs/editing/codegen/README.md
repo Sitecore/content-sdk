@@ -13,6 +13,7 @@
 ## Variables
 
 - [defaultImportEntries](variables/defaultImportEntries.md)
+- [defaultServerImportEntries](variables/defaultServerImportEntries.md)
 
 ## Functions
 

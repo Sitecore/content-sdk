@@ -6,7 +6,7 @@
 
 # Class: NativeDataFetcher
 
-Defined in: [packages/core/src/native-fetcher.ts:53](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/core/src/native-fetcher.ts#L53)
+Defined in: [packages/core/src/native-fetcher.ts:53](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/core/src/native-fetcher.ts#L53)
 
 Native data fetcher class
 
@@ -16,7 +16,7 @@ Native data fetcher class
 
 > **new NativeDataFetcher**(`config`): `NativeDataFetcher`
 
-Defined in: [packages/core/src/native-fetcher.ts:56](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/core/src/native-fetcher.ts#L56)
+Defined in: [packages/core/src/native-fetcher.ts:56](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/core/src/native-fetcher.ts#L56)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [packages/core/src/native-fetcher.ts:56](https://github.com/Sitecore
 
 > `protected` **config**: [`NativeDataFetcherConfig`](../type-aliases/NativeDataFetcherConfig.md) = `{}`
 
-Defined in: [packages/core/src/native-fetcher.ts:56](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/core/src/native-fetcher.ts#L56)
+Defined in: [packages/core/src/native-fetcher.ts:56](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/core/src/native-fetcher.ts#L56)
 
 ## Methods
 
@@ -42,7 +42,7 @@ Defined in: [packages/core/src/native-fetcher.ts:56](https://github.com/Sitecore
 
 > **delete**\<`T`\>(`url`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
-Defined in: [packages/core/src/native-fetcher.ts:149](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/core/src/native-fetcher.ts#L149)
+Defined in: [packages/core/src/native-fetcher.ts:149](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/core/src/native-fetcher.ts#L149)
 
 Perform a DELETE request
 
@@ -71,7 +71,7 @@ response
 
 > `protected` **extractDebugHeaders**(`incomingHeaders`): `object`
 
-Defined in: [packages/core/src/native-fetcher.ts:201](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/core/src/native-fetcher.ts#L201)
+Defined in: [packages/core/src/native-fetcher.ts:201](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/core/src/native-fetcher.ts#L201)
 
 Safely extract all headers for debug logging
 
@@ -93,7 +93,7 @@ Object with headers as key/value pairs
 
 > **fetch**\<`T`\>(`url`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
-Defined in: [packages/core/src/native-fetcher.ts:64](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/core/src/native-fetcher.ts#L64)
+Defined in: [packages/core/src/native-fetcher.ts:64](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/core/src/native-fetcher.ts#L64)
 
 Implements a data fetcher.
 
@@ -122,7 +122,7 @@ response
 
 > **get**\<`T`\>(`url`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
-Defined in: [packages/core/src/native-fetcher.ts:124](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/core/src/native-fetcher.ts#L124)
+Defined in: [packages/core/src/native-fetcher.ts:124](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/core/src/native-fetcher.ts#L124)
 
 Perform a GET request
 
@@ -151,7 +151,7 @@ response
 
 > `protected` **getRequestInit**(`init`): `RequestInit`
 
-Defined in: [packages/core/src/native-fetcher.ts:183](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/core/src/native-fetcher.ts#L183)
+Defined in: [packages/core/src/native-fetcher.ts:183](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/core/src/native-fetcher.ts#L183)
 
 Determines settings for the request
 
@@ -173,7 +173,7 @@ The final request settings
 
 > **head**\<`T`\>(`url`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
-Defined in: [packages/core/src/native-fetcher.ts:174](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/core/src/native-fetcher.ts#L174)
+Defined in: [packages/core/src/native-fetcher.ts:174](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/core/src/native-fetcher.ts#L174)
 
 Perform a HEAD request
 
@@ -202,7 +202,7 @@ response
 
 > **post**\<`T`\>(`url`, `body`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
-Defined in: [packages/core/src/native-fetcher.ts:135](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/core/src/native-fetcher.ts#L135)
+Defined in: [packages/core/src/native-fetcher.ts:135](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/core/src/native-fetcher.ts#L135)
 
 Perform a POST request
 
@@ -232,7 +232,7 @@ response
 
 > **put**\<`T`\>(`url`, `body`, `options?`): `Promise`\<[`NativeDataFetcherResponse`](../interfaces/NativeDataFetcherResponse.md)\<`T`\>\>
 
-Defined in: [packages/core/src/native-fetcher.ts:160](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/core/src/native-fetcher.ts#L160)
+Defined in: [packages/core/src/native-fetcher.ts:160](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/core/src/native-fetcher.ts#L160)
 
 Perform a PUT request
 

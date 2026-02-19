@@ -6,7 +6,7 @@
 
 # Interface: EventData
 
-Defined in: [events/src/events/custom-event/custom-event.ts:94](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/events/src/events/custom-event/custom-event.ts#L94)
+Defined in: [events/src/events/custom-event/custom-event.ts:94](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/events/src/events/custom-event/custom-event.ts#L94)
 
 Interface with the required/optional attributes in order to send a custom event to SitecoreCloud API
 
@@ -24,7 +24,7 @@ Interface with the required/optional attributes in order to send a custom event 
 
 > `optional` **channel**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/events/src/events/common-interfaces.ts#L9)
+Defined in: [events/src/events/common-interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/events/src/events/common-interfaces.ts#L9)
 
 #### Inherited from
 
@@ -36,7 +36,7 @@ Defined in: [events/src/events/common-interfaces.ts:9](https://github.com/Siteco
 
 > `optional` **currency**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:10](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/events/src/events/common-interfaces.ts#L10)
+Defined in: [events/src/events/common-interfaces.ts:10](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/events/src/events/common-interfaces.ts#L10)
 
 #### Inherited from
 
@@ -48,7 +48,7 @@ Defined in: [events/src/events/common-interfaces.ts:10](https://github.com/Sitec
 
 > `optional` **extensionData**: `NestedObject`
 
-Defined in: [events/src/events/custom-event/custom-event.ts:97](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/events/src/events/custom-event/custom-event.ts#L97)
+Defined in: [events/src/events/custom-event/custom-event.ts:97](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/events/src/events/custom-event/custom-event.ts#L97)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [events/src/events/custom-event/custom-event.ts:97](https://github.c
 
 > `optional` **language**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/events/src/events/common-interfaces.ts#L7)
+Defined in: [events/src/events/common-interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/events/src/events/common-interfaces.ts#L7)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: [events/src/events/common-interfaces.ts:7](https://github.com/Siteco
 
 > `optional` **page**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/events/src/events/common-interfaces.ts#L8)
+Defined in: [events/src/events/common-interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/events/src/events/common-interfaces.ts#L8)
 
 #### Inherited from
 
@@ -80,7 +80,7 @@ Defined in: [events/src/events/common-interfaces.ts:8](https://github.com/Siteco
 
 > `optional` **searchData**: `NestedObject`
 
-Defined in: [events/src/events/custom-event/custom-event.ts:96](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/events/src/events/custom-event/custom-event.ts#L96)
+Defined in: [events/src/events/custom-event/custom-event.ts:96](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/events/src/events/custom-event/custom-event.ts#L96)
 
 ***
 
@@ -88,4 +88,4 @@ Defined in: [events/src/events/custom-event/custom-event.ts:96](https://github.c
 
 > **type**: `string`
 
-Defined in: [events/src/events/custom-event/custom-event.ts:95](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/events/src/events/custom-event/custom-event.ts#L95)
+Defined in: [events/src/events/custom-event/custom-event.ts:95](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/events/src/events/custom-event/custom-event.ts#L95)
