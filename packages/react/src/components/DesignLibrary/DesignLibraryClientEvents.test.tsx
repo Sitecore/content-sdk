@@ -27,7 +27,8 @@ use(sinonChai);
 describe('<DesignLibraryClientEvents />', () => {
   let postToDesignLibrarySpy: sinon.SinonStub;
   let addComponentUpdateHandlerSpy: sinon.SinonStub;
-  let updateServerComponentActionSpy: sinon.SinonStub;
+  let updateComponentActionSpy: sinon.SinonStub;
+  let previewComponentActionSpy: sinon.SinonStub;
   let addServerComponentPreviewHandlerSpy: sinon.SinonStub;
   let getDesignLibraryImportMapEventSpy: sinon.SinonStub;
   let getDesignLibraryComponentPropsEventSpy: sinon.SinonStub;
@@ -37,7 +38,8 @@ describe('<DesignLibraryClientEvents />', () => {
   beforeEach(() => {
     postToDesignLibrarySpy = sandbox.stub();
     addComponentUpdateHandlerSpy = sandbox.stub();
-    updateServerComponentActionSpy = sandbox.stub();
+    updateComponentActionSpy = sandbox.stub();
+    previewComponentActionSpy = sandbox.stub();
     addServerComponentPreviewHandlerSpy = sandbox.stub();
     getDesignLibraryImportMapEventSpy = sandbox.stub();
     getDesignLibraryComponentPropsEventSpy = sandbox.stub();
@@ -47,7 +49,8 @@ describe('<DesignLibraryClientEvents />', () => {
     __mockDependencies({
       postToDesignLibrary: postToDesignLibrarySpy,
       addComponentUpdateHandler: addComponentUpdateHandlerSpy,
-      updateServerComponentAction: updateServerComponentActionSpy,
+      updateComponentAction: updateComponentActionSpy,
+      previewComponentAction: previewComponentActionSpy,
       addServerComponentPreviewHandler: addServerComponentPreviewHandlerSpy,
       getDesignLibraryImportMapEvent: getDesignLibraryImportMapEventSpy,
       getDesignLibraryComponentPropsEvent: getDesignLibraryComponentPropsEventSpy,
@@ -157,23 +160,23 @@ describe('<DesignLibraryClientEvents />', () => {
       );
     });
 
-    it('should call updateServerComponentAction when component is updated', () => {
+    it('should call updateComponentAction when component is updated', () => {
       renderWithSitecore({
         designLibraryStatus: DesignLibraryStatus.READY,
         component: testEditedComponent,
       });
 
       const updateCallback = addComponentUpdateHandlerSpy.getCall(0).args[1];
-      const updatedComponent = {
+      const updatedComponentRendering = {
         ...testEditedComponent,
         fields: { title: { value: 'Updated Title' } },
       };
 
-      updateCallback(updatedComponent);
+      updateCallback(updatedComponentRendering);
 
-      expect(updateServerComponentActionSpy).to.have.been.calledWith({
-        uid: updatedComponent.uid,
-        updatedComponent,
+      expect(updateComponentActionSpy).to.have.been.calledWith({
+        uid: updatedComponentRendering.uid,
+        updatedComponentRendering,
       });
     });
 
@@ -315,7 +318,7 @@ describe('<DesignLibraryClientEvents />', () => {
       );
     });
 
-    it('should call updateServerComponentAction when component is updated', () => {
+    it('should call updateComponentAction when component is updated', () => {
       const previewComponentData = {
         message: { styles: { content: 'some style' }, code: { content: 'some code' } },
       };
@@ -330,16 +333,16 @@ describe('<DesignLibraryClientEvents />', () => {
       );
 
       const updateCallback = addComponentUpdateHandlerSpy.getCall(0).args[1];
-      const updatedComponent = {
+      const updatedComponentRendering = {
         ...testEditedComponent,
         fields: { title: { value: 'Updated Title' } },
       };
 
-      updateCallback(updatedComponent);
+      updateCallback(updatedComponentRendering);
 
-      expect(updateServerComponentActionSpy).to.have.been.calledWith({
-        uid: updatedComponent.uid,
-        updatedComponent,
+      expect(updateComponentActionSpy).to.have.been.calledWith({
+        uid: updatedComponentRendering.uid,
+        updatedComponentRendering,
         generatedComponentData: undefined,
       });
     });
@@ -400,7 +403,7 @@ describe('<DesignLibraryClientEvents />', () => {
       expect(postToDesignLibrarySpy).to.have.been.calledWith(testPropsEvent);
     });
 
-    it('should call updateServerComponentAction when preview component event is received', async () => {
+    it('should call previewComponentAction when preview component event is received', async () => {
       renderWithSitecore(
         {
           designLibraryStatus: DesignLibraryStatus.READY,
@@ -424,10 +427,43 @@ describe('<DesignLibraryClientEvents />', () => {
 
       updateCallback(componentPreviewServerEvent);
 
-      expect(updateServerComponentActionSpy).to.have.been.calledWith({
+      expect(previewComponentActionSpy).to.have.been.calledWith({
         uid: testEditedComponent.uid,
-        serverComponentPreviewEventArgs: componentPreviewServerEvent,
+        previewEventArgs: componentPreviewServerEvent,
       });
+    });
+
+    it('should call previewComponentAction with edge url if available when preview component event is received edge', async () => {
+      renderWithSitecore(
+        {
+          designLibraryStatus: DesignLibraryStatus.READY,
+          component: testEditedComponent,
+          importMap: importMap,
+        },
+        modeLibraryMetadata_Gen,
+        true
+      );
+
+      const updateCallback = addServerComponentPreviewHandlerSpy.getCall(0).args[0];
+      const componentPreviewServerEvent = {
+        name: 'component:generation:component-preview',
+        message: {
+          cache: {
+            id: 'test-cache-id',
+            token: 'test-cache-token',
+          },
+        },
+      };
+
+      updateCallback(componentPreviewServerEvent);
+
+      expect(previewComponentActionSpy).to.have.been.calledWith(
+        {
+          uid: testEditedComponent.uid,
+          previewEventArgs: componentPreviewServerEvent,
+        },
+        'https://test-edge-url.com'
+      );
     });
 
     it('should add style element when previewComponentData style is provided', async () => {
@@ -468,7 +504,7 @@ describe('<DesignLibraryClientEvents />', () => {
           designLibraryStatus: DesignLibraryStatus.READY,
           component: testEditedComponent,
           importMap: importMap,
-          importMapError: testError,
+          componentInitError: testError,
         },
         modeLibraryMetadata_Gen,
         true

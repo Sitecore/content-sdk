@@ -2,11 +2,15 @@
 import React, { useEffect } from 'react';
 import * as dlHelpers from '@sitecore-content-sdk/content/editing';
 import * as codegen from '@sitecore-content-sdk/content/codegen';
-import { updateServerComponentAction } from '../../server-actions/update-server-component-action';
+import {
+  updateComponentAction,
+  previewComponentAction,
+} from '../../server-actions/update-server-component-action';
 import {
   DesignLibraryPreviewEventsProps,
   DesignLibraryVariantGenerationEventsProps,
 } from './models';
+import { useSitecore } from '../../enhancers/withSitecore';
 
 let {
   getDesignLibraryComponentPropsEvent,
@@ -16,12 +20,14 @@ let {
   sendErrorEvent,
 } = codegen;
 let { getDesignLibraryStatusEvent, addComponentUpdateHandler, postToDesignLibrary } = dlHelpers;
-let _updateServerComponentAction = updateServerComponentAction;
+let _updateComponentAction = updateComponentAction;
+let _previewComponentAction = previewComponentAction;
 
 export const __mockDependencies = (mocks: any) => {
   postToDesignLibrary = mocks.postToDesignLibrary;
   addComponentUpdateHandler = mocks.addComponentUpdateHandler;
-  _updateServerComponentAction = mocks.updateServerComponentAction;
+  _updateComponentAction = mocks.updateComponentAction;
+  _previewComponentAction = mocks.previewComponentAction;
   addServerComponentPreviewHandler = mocks.addServerComponentPreviewHandler;
   getDesignLibraryImportMapEvent = mocks.getDesignLibraryImportMapEvent;
   getDesignLibraryComponentPropsEvent = mocks.getDesignLibraryComponentPropsEvent;
@@ -46,7 +52,7 @@ export const DesignLibraryPreviewEvents = ({
     postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid, true));
 
     const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
-      _updateServerComponentAction({ uid: updated.uid!, updatedComponent: updated });
+      _updateComponentAction({ uid: updated.uid!, updatedComponentRendering: updated });
     });
 
     return () => {
@@ -69,32 +75,41 @@ export const DesignLibraryVariantGenerationEvents = ({
   designLibraryStatus,
   component,
   importMap,
-  importMapError,
+  componentInitError,
   generatedComponentData,
 }: DesignLibraryVariantGenerationEventsProps) => {
+  const { api } = useSitecore();
+
   useEffect(() => {
     if (!component?.uid) return;
 
     postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid, true));
 
     const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
-      _updateServerComponentAction({
+      _updateComponentAction({
         uid: updated.uid!,
-        updatedComponent: updated,
+        updatedComponentRendering: updated,
         generatedComponentData,
       });
     });
 
     const unsubPreview = addServerComponentPreviewHandler((eventArgs) => {
-      _updateServerComponentAction({
-        uid: component.uid!,
-        serverComponentPreviewEventArgs: eventArgs,
-      });
+      _previewComponentAction(
+        {
+          uid: component.uid!,
+          previewEventArgs: eventArgs,
+        },
+        api?.edge?.edgeUrl
+      );
     });
 
-    if (importMapError) {
-      // an import map error occurred on the server side in DesignLibraryServer, post error event to Design Studio
-      sendErrorEvent(component.uid, importMapError, codegen.DesignLibraryPreviewError.RenderInit);
+    if (componentInitError) {
+      // an error occurred during initialization of the component on the server side
+      sendErrorEvent(
+        component.uid,
+        componentInitError,
+        codegen.DesignLibraryPreviewError.RenderInit
+      );
     } else {
       const importMapEvent = getDesignLibraryImportMapEvent(component.uid, importMap!);
       postToDesignLibrary(importMapEvent);
@@ -116,7 +131,7 @@ export const DesignLibraryVariantGenerationEvents = ({
       unsubUpdate && unsubUpdate();
       unsubPreview && unsubPreview();
     };
-  }, [component, designLibraryStatus, importMap, importMapError, generatedComponentData]);
+  }, [component, designLibraryStatus, importMap, componentInitError, generatedComponentData]);
 
   return <></>;
 };

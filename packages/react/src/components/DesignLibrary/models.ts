@@ -65,9 +65,12 @@ export type DesignLibraryVariantGenerationEventsProps = DesignLibraryPreviewEven
    */
   importMap?: ImportEntryInfo[];
   /**
-   * Any error that occurred while loading the import map to be posted as a message to the Design Studio.
+   * Any error that occurred during initialization of the component:
+   * - importMap error
+   * - error fetching the generated component data from secured endpoint
+   * - error during generation of the component on the server side
    */
-  importMapError?: string;
+  componentInitError?: string;
   /**
    * The generated component data received from design library.
    */

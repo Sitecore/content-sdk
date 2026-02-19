@@ -9,9 +9,13 @@ import * as globalCache from '@sitecore-content-sdk/core/tools';
 import {
   DesignLibraryStatus,
   COMPONENT_UPDATE_CACHE_KEY_PREFIX,
+  COMPONENT_PREVIEW_CACHE_KEY_PREFIX,
   updateComponent as updateComponentOriginal,
 } from '@sitecore-content-sdk/content/editing';
-import { ComponentUpdateModel } from '../../server-actions/update-server-component-action';
+import {
+  ComponentUpdateModel,
+  ComponentPreviewModel,
+} from '../../server-actions/update-server-component-action';
 import * as codegen from '@sitecore-content-sdk/content/codegen';
 import { AppPlaceholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
@@ -97,20 +101,20 @@ export const DesignLibraryServerVariantGeneration = async ({
   let importMap: codegen.ImportEntry[] | undefined;
   let importMapInfo: codegen.ImportEntryInfo[] | undefined;
   let Component: DynamicComponent | undefined;
-  let importMapError: string | undefined;
+  let componentInitError: string | undefined;
   let generatedComponentData: codegen.GeneratedComponentData | undefined;
 
   // load importmap and importmap payload to pass to FE
   // if not provided, or errors during load set error to pass to FE
   if (!loadServerImportMap) {
-    importMapError = 'No loadImportMap provided';
+    componentInitError = 'No loadImportMap provided';
   } else {
     try {
       const mod = await loadServerImportMap();
       importMap = mod.default;
       importMapInfo = getImportMapInfo(importMap);
     } catch (e) {
-      importMapError = `Error loading import map: ${e}`;
+      componentInitError = `Error loading import map: ${e}`;
     }
   }
 
@@ -122,23 +126,25 @@ export const DesignLibraryServerVariantGeneration = async ({
 
   const uid = componentToUpdate.uid;
   const componentUpdateKey = `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}${uid}`;
+  const componentPreviewKey = `${COMPONENT_PREVIEW_CACHE_KEY_PREFIX}${uid}`;
 
   // check if we have an update for this component in the global cache
   if (hasCache(componentUpdateKey)) {
-    // we have an update, get it and clean the cache
+    // we have fields/params update, get it and clean the cache
     designLibraryStatus = DesignLibraryStatus.RENDERED;
     const updateData = getCacheAndClean<ComponentUpdateModel>(componentUpdateKey);
 
     // apply the updates to the component rendering
-    if (updateData?.updatedComponent) {
+    if (updateData?.updatedComponentRendering) {
       updateComponent(
         componentToUpdate,
-        updateData.updatedComponent.fields,
-        updateData.updatedComponent.params
+        updateData.updatedComponentRendering.fields,
+        updateData.updatedComponentRendering.params
       );
     }
 
-    if (updateData?.generatedComponentData && !importMapError && importMap) {
+    // generate the component instance if we are dealing with an AI-generated component
+    if (updateData?.generatedComponentData && !componentInitError && importMap) {
       generatedComponentData = updateData.generatedComponentData;
       try {
         // use provided code and import map to create the component instance
@@ -148,7 +154,26 @@ export const DesignLibraryServerVariantGeneration = async ({
         ) as DynamicComponent;
       } catch (error) {
         // error during component initialization - send error to client
-        importMapError = (error as Error | string).toString();
+        componentInitError = (error as Error | string).toString();
+      }
+    }
+  } else if (hasCache(componentPreviewKey) && !componentInitError && importMap) {
+    // we have a preview update, get it and clean the cache
+    designLibraryStatus = DesignLibraryStatus.RENDERED;
+    const previewData = getCacheAndClean<ComponentPreviewModel>(componentPreviewKey);
+    componentInitError = previewData?.fetchComponentError;
+
+    if (previewData?.generatedComponentData) {
+      generatedComponentData = previewData.generatedComponentData;
+      try {
+        // use provided code and import map to create the component instance
+        Component = createComponentInstance(
+          importMap,
+          previewData.generatedComponentData
+        ) as DynamicComponent;
+      } catch (error) {
+        // error during component initialization - send error to client
+        componentInitError = (error as Error | string).toString();
       }
     }
   }
@@ -179,7 +204,7 @@ export const DesignLibraryServerVariantGeneration = async ({
         importMap={importMapInfo}
         // pass a new object since we have mutated the original which leads to old reference passed to the client
         component={{ ...componentToUpdate }}
-        importMapError={importMapError}
+        componentInitError={componentInitError}
         generatedComponentData={generatedComponentData}
       />
     </>
@@ -217,11 +242,11 @@ export const DesignLibraryServerPreview = async ({
     const updateData = getCacheAndClean<ComponentUpdateModel>(componentUpdateKey);
 
     // apply the updates to the component rendering
-    if (updateData?.updatedComponent) {
+    if (updateData?.updatedComponentRendering) {
       updateComponent(
         componentToUpdate,
-        updateData.updatedComponent.fields,
-        updateData.updatedComponent.params
+        updateData.updatedComponentRendering.fields,
+        updateData.updatedComponentRendering.params
       );
     }
   }
