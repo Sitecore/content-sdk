@@ -157,7 +157,7 @@ export const DesignLibraryServerVariantGeneration = async ({
     // we have a preview update, get it and clean the cache
     designLibraryStatus = DesignLibraryStatus.RENDERED;
     const previewData = getCacheAndClean<ComponentPreviewModel>(componentPreviewKey);
-    componentInitError = previewData?.fetchComponentError;
+    componentInitError = previewData?.error;
 
     if (previewData?.generatedComponentData) {
       generatedComponentData = previewData.generatedComponentData;

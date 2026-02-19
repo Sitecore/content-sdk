@@ -39,7 +39,7 @@ export type ComponentPreviewModel = {
   /**
    * Error message in case fetching generated component data from secured cache endpoint fails.
    */
-  fetchComponentError?: string;
+  error?: string;
 };
 
 export type PreviewEventModel = {
@@ -82,7 +82,7 @@ export async function previewComponentAction(
   const updatedComponent: ComponentPreviewModel = {
     uid: previewEvent.uid,
     generatedComponentData: undefined,
-    fetchComponentError: undefined,
+    error: undefined,
   };
 
   if (previewEvent.args) {
@@ -98,11 +98,11 @@ export async function previewComponentAction(
         `Error fetching generated component data from cache for Component: ${previewEvent.uid}`,
         error
       );
-      updatedComponent.fetchComponentError = error instanceof Error ? error.message : String(error);
+      updatedComponent.error = error instanceof Error ? error.message : String(error);
     }
   } else {
     debug.editing(`No preview event arguments provided for Component: ${previewEvent.uid}`);
-    updatedComponent.fetchComponentError = 'No preview event arguments provided';
+    updatedComponent.error = 'No preview event arguments provided';
   }
 
   setCache(`${COMPONENT_PREVIEW_CACHE_KEY_PREFIX}${updatedComponent.uid}`, updatedComponent);

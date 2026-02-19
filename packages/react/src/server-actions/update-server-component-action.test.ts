@@ -177,7 +177,7 @@ describe('Server Component Actions', () => {
         {
           uid: 'test-uid-789',
           generatedComponentData: fetchedGeneratedComponentData,
-          fetchComponentError: undefined,
+          error: undefined,
         }
       );
 
@@ -201,7 +201,7 @@ describe('Server Component Actions', () => {
         {
           uid: 'test-uid-no-preview',
           generatedComponentData: undefined,
-          fetchComponentError: 'No preview event arguments provided',
+          error: 'No preview event arguments provided',
         }
       );
       expect(debugEditingStub).to.have.been.calledTwice;
@@ -303,7 +303,7 @@ describe('Server Component Actions', () => {
       );
     });
 
-    it('should handle fetch errors and set fetchComponentError in cache', async () => {
+    it('should handle fetch errors and set error in cache', async () => {
       const args: ServerComponentPreviewEventArgs = {
         name: 'component:generation:component-preview',
         message: {
@@ -333,7 +333,7 @@ describe('Server Component Actions', () => {
         {
           uid: 'test-uid-error',
           generatedComponentData: undefined,
-          fetchComponentError: fetchError.message,
+          error: fetchError.message,
         }
       );
       expect(debugEditingStub).to.have.been.calledTwice;
@@ -373,7 +373,7 @@ describe('Server Component Actions', () => {
         {
           uid: 'test-uid-string-error',
           generatedComponentData: undefined,
-          fetchComponentError: errorMessage,
+          error: errorMessage,
         }
       );
       expect(debugEditingStub).to.have.been.calledTwice;
