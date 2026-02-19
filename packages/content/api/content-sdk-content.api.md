@@ -39,6 +39,9 @@ export class CdpHelper {
 }
 
 // @internal
+export const COMPONENT_PREVIEW_CACHE_KEY_PREFIX = "component-preview-";
+
+// @internal
 export const COMPONENT_UPDATE_CACHE_KEY_PREFIX = "component-update-";
 
 // @public
@@ -436,7 +439,7 @@ const executeScriptElements: (rootElement: HTMLElement) => void;
 export let extractFiles: typeof _extractFiles;
 
 // @internal
-export function fetchGeneratedComponentFromCache(id: string, token: string, edgeUrl?: string): Promise<GeneratedComponentData | undefined>;
+export function fetchGeneratedComponentFromCache(id: string, token: string, edgeUrl?: string): Promise<GeneratedComponentData>;
 
 export { FetchOptions }
 

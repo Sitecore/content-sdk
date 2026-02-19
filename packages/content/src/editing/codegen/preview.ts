@@ -513,31 +513,24 @@ export async function fetchGeneratedComponentFromCache(
   id: string,
   token: string,
   edgeUrl: string = SITECORE_EDGE_URL_DEFAULT
-): Promise<GeneratedComponentData | undefined> {
+): Promise<GeneratedComponentData> {
   const dataFetcher = new NativeDataFetcher({ debugger: debug.editing });
 
-  try {
-    const componentDataResponse = await dataFetcher.fetch<GeneratedComponentData>(
-      `${edgeUrl}/authoring/api/v1/components/cache/${id}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    if (componentDataResponse.status !== 200) {
-      debug.editing(
-        `Failed to fetch generated component data from cache for id: ${id}. Status: ${componentDataResponse.status}, StatusText: ${componentDataResponse.statusText}`
-      );
+  const componentDataResponse = await dataFetcher.fetch<GeneratedComponentData>(
+    `${edgeUrl}/authoring/api/v1/components/cache/${id}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
+  );
 
-    return componentDataResponse.data;
-  } catch (error) {
-    debug.editing(
-      `Error fetching generated component data from cache for id: ${id}. Error: ${error}`
+  if (componentDataResponse.status !== 200) {
+    throw new Error(
+      `Failed to fetch generated component data from cache for id: ${id}. Response Status: ${componentDataResponse.status}, Response Status Text: ${componentDataResponse.statusText}`
     );
-    return undefined;
   }
+
+  return componentDataResponse.data;
 }

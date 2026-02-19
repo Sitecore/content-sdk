@@ -897,7 +897,6 @@ describe('design library codegen', () => {
   describe('fetchGeneratedComponentFromCache', () => {
     let fetchStub: sinon.SinonStub;
     let nativeDataFetcherStub: sinon.SinonStub;
-    let debugEditingSpy: sinon.SinonSpy;
 
     const testId = 'test-component-id-123';
     const testToken = 'test-jwt-token';
@@ -924,12 +923,10 @@ describe('design library codegen', () => {
     beforeEach(() => {
       fetchStub = sinon.stub();
       nativeDataFetcherStub = sinon.stub(NativeDataFetcher.prototype, 'fetch').callsFake(fetchStub);
-      debugEditingSpy = sinon.stub(debug, 'editing');
     });
 
     afterEach(() => {
       nativeDataFetcherStub.restore();
-      debugEditingSpy.restore();
     });
 
     it('should successfully fetch component data with status 200', async () => {
@@ -951,7 +948,6 @@ describe('design library codegen', () => {
           },
         })
       ).to.be.true;
-      expect(debugEditingSpy.called).to.be.false;
     });
 
     it('should use default edge URL when not provided', async () => {
@@ -969,68 +965,70 @@ describe('design library codegen', () => {
       expect(callArgs).to.equal(`${defaultEdgeUrl}/authoring/api/v1/components/cache/${testId}`);
     });
 
-    it('should log debug message and return data when status is not 200', async () => {
+    it('should throw error when status is not 200', async () => {
       fetchStub.resolves({
         status: 404,
         statusText: 'Not Found',
         data: undefined,
       });
 
-      const result = await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
-
-      expect(result).to.be.undefined;
-      expect(debugEditingSpy.calledOnce).to.be.true;
-      expect(
-        debugEditingSpy.calledWith(
-          `Failed to fetch generated component data from cache for id: ${testId}. Status: 404, StatusText: Not Found`
-        )
-      ).to.be.true;
+      try {
+        await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).to.be.instanceOf(Error);
+        expect((error as Error).message).to.equal(
+          `Failed to fetch generated component data from cache for id: ${testId}. Response Status: 404, Response Status Text: Not Found`
+        );
+      }
     });
 
-    it('should return undefined and log error when fetch throws', async () => {
+    it('should throw error when fetch rejects', async () => {
       const testError = new Error('Network error');
       fetchStub.rejects(testError);
 
-      const result = await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
-
-      expect(result).to.be.undefined;
-      expect(debugEditingSpy.calledOnce).to.be.true;
-      expect(
-        debugEditingSpy.calledWith(
-          `Error fetching generated component data from cache for id: ${testId}. Error: ${testError}`
-        )
-      ).to.be.true;
+      try {
+        await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).to.equal(testError);
+      }
     });
 
-    it('should handle 500 server error', async () => {
+    it('should throw error for 500 server error', async () => {
       fetchStub.resolves({
         status: 500,
         statusText: 'Internal Server Error',
         data: undefined,
       });
 
-      const result = await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
-
-      expect(result).to.be.undefined;
-      expect(debugEditingSpy.calledOnce).to.be.true;
-      expect(
-        debugEditingSpy.calledWith(
-          `Failed to fetch generated component data from cache for id: ${testId}. Status: 500, StatusText: Internal Server Error`
-        )
-      ).to.be.true;
+      try {
+        await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).to.be.instanceOf(Error);
+        expect((error as Error).message).to.equal(
+          `Failed to fetch generated component data from cache for id: ${testId}. Response Status: 500, Response Status Text: Internal Server Error`
+        );
+      }
     });
 
-    it('should handle 401 unauthorized error', async () => {
+    it('should throw error for 401 unauthorized error', async () => {
       fetchStub.resolves({
         status: 401,
         statusText: 'Unauthorized',
         data: undefined,
       });
 
-      const result = await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
-
-      expect(result).to.be.undefined;
-      expect(debugEditingSpy.calledOnce).to.be.true;
+      try {
+        await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).to.be.instanceOf(Error);
+        expect((error as Error).message).to.equal(
+          `Failed to fetch generated component data from cache for id: ${testId}. Response Status: 401, Response Status Text: Unauthorized`
+        );
+      }
     });
 
     it('should construct correct URL with id parameter', async () => {

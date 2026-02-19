@@ -23,6 +23,12 @@ const DESIGN_LIBRARY_STATUS_EVENT_NAME = 'component:status';
 export const COMPONENT_UPDATE_CACHE_KEY_PREFIX = 'component-update-';
 
 /**
+ * Prefix for component preview cache keys
+ * @internal
+ */
+export const COMPONENT_PREVIEW_CACHE_KEY_PREFIX = 'component-preview-';
+
+/**
  * Base interface for all Design Library events.
  */
 export interface DesignLibraryEvent {
