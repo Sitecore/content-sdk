@@ -3,7 +3,7 @@ import { ComponentFields, ComponentParams } from '../../layout/models';
 import { validateEvent, DesignLibraryEvent } from '../design-library';
 import debug from '../../debug';
 
-const { SITECORE_EDGE_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 /**
  * Event to send import map to design library
  */
@@ -512,7 +512,7 @@ export const sendErrorEvent = (uid: string, error: unknown, type: DesignLibraryP
 export async function fetchGeneratedComponentFromCache(
   id: string,
   token: string,
-  edgeUrl: string = SITECORE_EDGE_URL_DEFAULT
+  edgeUrl: string = SITECORE_EDGE_PLATFORM_URL_DEFAULT
 ): Promise<GeneratedComponentData> {
   const dataFetcher = new NativeDataFetcher({ debugger: debug.editing });
 
