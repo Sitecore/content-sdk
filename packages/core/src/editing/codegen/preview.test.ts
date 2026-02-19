@@ -18,7 +18,10 @@ import {
   getImportMapInfo,
   isImportEntryInfoArray,
   sendErrorEvent,
+  fetchGeneratedComponentFromCache,
+  GeneratedComponentData,
 } from './preview';
+import { NativeDataFetcher } from '../../native-fetcher';
 
 describe('design library codegen', () => {
   let debugSpy: sinon.SinonSpy;
@@ -503,7 +506,7 @@ describe('design library codegen', () => {
           data: previewMessage,
         });
 
-        const generatedComponent: any = createComponentInstance(importMap, message.data);
+        const generatedComponent: any = createComponentInstance(importMap, message.data.message);
 
         expect(generatedComponent()).to.deep.equal({
           value: 'Test',
@@ -521,7 +524,7 @@ describe('design library codegen', () => {
           data: corruptedPreviewMessage,
         });
 
-        expect(() => createComponentInstance(importMap, message.data)).to.throw(
+        expect(() => createComponentInstance(importMap, message.data.message)).to.throw(
           /NotExistingComponent is not defined/
         );
       });
@@ -541,7 +544,7 @@ describe('design library codegen', () => {
         expect(() =>
           createComponentInstance(
             [{ module: 'react', exports: [{ name: 'useMemo', value: useMemoFn }] }],
-            message.data
+            message.data.message
           )
         ).to.throw(new RegExp(expectedMessage));
       });
@@ -887,6 +890,185 @@ describe('design library codegen', () => {
 
     it('should return false when exports contains non-string values', () => {
       expect(isImportEntryInfoArray([{ module: 'react', exports: [123, {}] }])).to.be.false;
+    });
+  });
+
+  describe('fetchGeneratedComponentFromCache', () => {
+    let fetchStub: sinon.SinonStub;
+    let nativeDataFetcherStub: sinon.SinonStub;
+
+    const testId = 'test-component-id-123';
+    const testToken = 'test-jwt-token';
+    const testEdgeUrl = 'https://test-edge.sitecorecloud.io';
+    const defaultEdgeUrl = 'https://edge-platform.sitecorecloud.io';
+
+    const mockComponentData: GeneratedComponentData = {
+      uid: 'test-uid',
+      code: {
+        type: 'function',
+        content: 'const Component = () => {}',
+      },
+      styles: {
+        type: 'style-element',
+        content: '.test { color: red; }',
+        styleImport: {
+          name: 'styles',
+          content: {},
+        },
+      },
+      imports: [],
+    };
+
+    beforeEach(() => {
+      fetchStub = sinon.stub();
+      nativeDataFetcherStub = sinon.stub(NativeDataFetcher.prototype, 'fetch').callsFake(fetchStub);
+    });
+
+    afterEach(() => {
+      nativeDataFetcherStub.restore();
+    });
+
+    it('should successfully fetch component data with status 200', async () => {
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        data: mockComponentData,
+      });
+
+      const result = await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
+
+      expect(result).to.deep.equal(mockComponentData);
+      expect(fetchStub.calledOnce).to.be.true;
+      expect(
+        fetchStub.calledWith(`${testEdgeUrl}/authoring/api/v1/components/cache/${testId}`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${testToken}`,
+          },
+        })
+      ).to.be.true;
+    });
+
+    it('should use default edge URL when not provided', async () => {
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        data: mockComponentData,
+      });
+
+      const result = await fetchGeneratedComponentFromCache(testId, testToken);
+
+      expect(result).to.deep.equal(mockComponentData);
+      expect(fetchStub.calledOnce).to.be.true;
+      const callArgs = fetchStub.getCall(0).args[0];
+      expect(callArgs).to.equal(`${defaultEdgeUrl}/authoring/api/v1/components/cache/${testId}`);
+    });
+
+    it('should throw error when status is not 200', async () => {
+      fetchStub.resolves({
+        status: 404,
+        statusText: 'Not Found',
+        data: undefined,
+      });
+
+      try {
+        await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).to.be.instanceOf(Error);
+        expect((error as Error).message).to.equal(
+          `Failed to fetch generated component data from cache for id: ${testId}. Response Status: 404, Response Status Text: Not Found`
+        );
+      }
+    });
+
+    it('should throw error when fetch rejects', async () => {
+      const testError = new Error('Network error');
+      fetchStub.rejects(testError);
+
+      try {
+        await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).to.equal(testError);
+      }
+    });
+
+    it('should throw error for 500 server error', async () => {
+      fetchStub.resolves({
+        status: 500,
+        statusText: 'Internal Server Error',
+        data: undefined,
+      });
+
+      try {
+        await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).to.be.instanceOf(Error);
+        expect((error as Error).message).to.equal(
+          `Failed to fetch generated component data from cache for id: ${testId}. Response Status: 500, Response Status Text: Internal Server Error`
+        );
+      }
+    });
+
+    it('should throw error for 401 unauthorized error', async () => {
+      fetchStub.resolves({
+        status: 401,
+        statusText: 'Unauthorized',
+        data: undefined,
+      });
+
+      try {
+        await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).to.be.instanceOf(Error);
+        expect((error as Error).message).to.equal(
+          `Failed to fetch generated component data from cache for id: ${testId}. Response Status: 401, Response Status Text: Unauthorized`
+        );
+      }
+    });
+
+    it('should construct correct URL with id parameter', async () => {
+      const customId = 'custom-component-id-456';
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        data: mockComponentData,
+      });
+
+      await fetchGeneratedComponentFromCache(customId, testToken, testEdgeUrl);
+
+      const callArgs = fetchStub.getCall(0).args[0];
+      expect(callArgs).to.equal(`${testEdgeUrl}/authoring/api/v1/components/cache/${customId}`);
+    });
+
+    it('should pass correct authorization header with token', async () => {
+      const customToken = 'custom-jwt-token-xyz';
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        data: mockComponentData,
+      });
+
+      await fetchGeneratedComponentFromCache(testId, customToken, testEdgeUrl);
+
+      const callArgs = fetchStub.getCall(0).args[1];
+      expect(callArgs.headers.Authorization).to.equal(`Bearer ${customToken}`);
+    });
+
+    it('should use GET method for fetch request', async () => {
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        data: mockComponentData,
+      });
+
+      await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
+
+      const callArgs = fetchStub.getCall(0).args[1];
+      expect(callArgs.method).to.equal('GET');
     });
   });
 });

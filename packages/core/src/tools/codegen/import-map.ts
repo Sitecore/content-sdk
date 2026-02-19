@@ -95,13 +95,12 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
    */
   separateServerClientMaps?: boolean;
   /**
-   * Function to return custom template for server import map file.
-   * Will be used as default template if separateServerClientMaps is false.
+   * Function to return custom template for import map file.
    * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.ts or import-map.server.ts file
    * @returns {string} contents for resulting import map file
    * @internal
    */
-  serverTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
+  defaultTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
   /**
    * Function to return custom template for client import map file when separateServerClientMaps is true.
    * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.client.ts file
@@ -405,7 +404,7 @@ export const writeImportMap = (args: WriteImportMapArgsInternal) => {
   return async ({ scConfig }: { scConfig?: SitecoreConfig } = {}) => {
     const config = args.scConfig ?? scConfig;
 
-    const defaultTemplate = args.serverTemplate || defaultMapTemplate;
+    const defaultTemplate = args.defaultTemplate || defaultMapTemplate;
     const clientTemplate = args.clientTemplate || defaultMapTemplate;
 
     if (!config) {
@@ -447,7 +446,11 @@ export const writeImportMap = (args: WriteImportMapArgsInternal) => {
 };
 
 // eslint-disable-next-line jsdoc/require-jsdoc
-function _defaultMapTemplate(indexedImportMap: Map<string, ModuleExports>, framework = 'core') {
+function _defaultMapTemplate(
+  indexedImportMap: Map<string, ModuleExports>,
+  framework = 'core',
+  defaultImportEntriesImport: string = 'defaultImportEntries'
+) {
   const importStatements: string[] = [];
   const importMapArray = Array.from(indexedImportMap);
   // get import map entries after
@@ -507,7 +510,7 @@ function _defaultMapTemplate(indexedImportMap: Map<string, ModuleExports>, frame
 // Below are built-in Content SDK imports neccessary for the import map
 import {
   combineImportEntries,
-  defaultImportEntries,
+  ${defaultImportEntriesImport},
   ImportEntry,
 } from '@sitecore-content-sdk/${framework}/codegen';
 // end of built-in imports
@@ -531,6 +534,6 @@ ${finalImportMap
   .join(',\n')}
 ] as ImportEntry[];
 
-export default combineImportEntries(defaultImportEntries, importMap);
+export default combineImportEntries(${defaultImportEntriesImport}, importMap);
 `;
 }

@@ -469,13 +469,26 @@ describe('component library utils', () => {
   });
 
   describe('getDesignLibraryStatusEvent', () => {
-    it('should return a valid status event', () => {
+    it('should return a valid status event and set default false for isRenderingServerComponent', () => {
       const statusEvent = getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'uid-1');
       expect(statusEvent).to.deep.equal({
         name: 'component:status',
         message: {
           status: DesignLibraryStatus.READY,
           uid: 'uid-1',
+          isRenderingServerComponent: false,
+        },
+      });
+    });
+
+    it('should return a valid status event with isRenderingServerComponent set to true', () => {
+      const statusEvent = getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'uid-2', true);
+      expect(statusEvent).to.deep.equal({
+        name: 'component:status',
+        message: {
+          status: DesignLibraryStatus.RENDERED,
+          uid: 'uid-2',
+          isRenderingServerComponent: true,
         },
       });
     });

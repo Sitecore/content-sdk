@@ -21,6 +21,12 @@ const DESIGN_LIBRARY_STATUS_EVENT_NAME = 'component:status';
 export const COMPONENT_UPDATE_CACHE_KEY_PREFIX = 'component-update-';
 
 /**
+ * Prefix for component preview cache keys
+ * @internal
+ */
+export const COMPONENT_PREVIEW_CACHE_KEY_PREFIX = 'component-preview-';
+
+/**
  * Base interface for all Design Library events.
  */
 export interface DesignLibraryEvent {
@@ -43,6 +49,7 @@ export interface DesignLibraryStatusEvent extends DesignLibraryEvent {
   message: {
     status: 'ready' | 'rendered';
     uid: string;
+    isRenderingServerComponent: boolean;
   };
 }
 
@@ -203,18 +210,21 @@ export const updateComponent = (
  * Generates a DesignLibraryStatusEvent with the given status and uid.
  * @param {DesignLibraryStatus} status - The status of rendering.
  * @param {string} uid - The unique identifier for the event.
+ * @param {boolean} [isRenderingServerComponent] - Indicates if the component being rendered is a server component.
  * @returns An object representing the DesignLibraryStatusEvent.
  * @internal
  */
 export function getDesignLibraryStatusEvent(
   status: DesignLibraryStatus,
-  uid: string
+  uid: string,
+  isRenderingServerComponent = false
 ): DesignLibraryStatusEvent {
   return {
     name: DESIGN_LIBRARY_STATUS_EVENT_NAME,
     message: {
       status,
       uid,
+      isRenderingServerComponent,
     },
   };
 }

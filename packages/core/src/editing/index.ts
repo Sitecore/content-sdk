@@ -39,5 +39,6 @@ export {
   isDesignLibraryMode,
   postToDesignLibrary,
   COMPONENT_UPDATE_CACHE_KEY_PREFIX,
+  COMPONENT_PREVIEW_CACHE_KEY_PREFIX,
   updateComponent,
 } from './design-library';
