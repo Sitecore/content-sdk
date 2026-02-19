@@ -14,6 +14,8 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* Add AGENTS.md for AI coding assistant guidance ([#368](https://github.com/Sitecore/content-sdk/pull/368))
+
 * `[nextjs]` `[create-content-sdk-app]` Enable Next.js 16 Cache Components and Turbopack File System Caching ([#334](https://github.com/Sitecore/content-sdk/pull/334))
 
 * `[core]` `[content]` `[nextjs]` Support custom Edge hostnames via `SITECORE_EDGE_PLATFORM_HOSTNAME` (Next.js: `NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME`) ([#359](https://github.com/Sitecore/content-sdk/pull/359))
