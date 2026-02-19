@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import React, { forwardRef } from 'react';
+import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import { withFieldMetadata } from './withFieldMetadata';
@@ -25,6 +25,8 @@ describe('withFieldMetadata', () => {
     editable?: boolean;
   };
 
+  type TestComponentWithRefProps = TestComponentProps & { ref?: React.Ref<HTMLDivElement> };
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const TestComponent = (props: TestComponentProps) => {
     return (
@@ -36,17 +38,15 @@ describe('withFieldMetadata', () => {
     );
   };
 
-  const TestComponentWithRef = forwardRef(
-    (props: TestComponentProps, ref: React.ForwardedRef<HTMLDivElement>) => {
-      return (
-        <div>
-          <h1>{props.field?.value}</h1>
-          <h2 ref={ref}>foo</h2>
-          <p>bar</p>
-        </div>
-      );
-    }
-  );
+  const TestComponentWithRef = ({ ref, ...props }: TestComponentWithRefProps) => {
+    return (
+      <div>
+        <h1>{props.field?.value}</h1>
+        <h2 ref={ref}>foo</h2>
+        <p>bar</p>
+      </div>
+    );
+  };
 
   it('should return component if field is empty', () => {
     const props = {
@@ -119,7 +119,7 @@ describe('withFieldMetadata', () => {
     );
   });
 
-  describe('with forwardRef', () => {
+  describe('with isForwardRef', () => {
     it('should return component if field is empty', () => {
       const props = {
         editable: true,
@@ -127,7 +127,7 @@ describe('withFieldMetadata', () => {
 
       const ref = React.createRef<HTMLDivElement>();
 
-      const WrappedComponent = withFieldMetadata<TestComponentProps>(TestComponentWithRef, true);
+      const WrappedComponent = withFieldMetadata<TestComponentWithRefProps>(TestComponentWithRef, true);
 
       const rendered = render(<WrappedComponent {...props} ref={ref} />, {
         container: document.body,
@@ -148,7 +148,7 @@ describe('withFieldMetadata', () => {
 
       const ref = React.createRef<HTMLDivElement>();
 
-      const WrappedComponent = withFieldMetadata<TestComponentProps>(TestComponentWithRef, true);
+      const WrappedComponent = withFieldMetadata<TestComponentWithRefProps>(TestComponentWithRef, true);
 
       const rendered = render(<WrappedComponent {...props} ref={ref} />, {
         container: document.body,
@@ -172,7 +172,7 @@ describe('withFieldMetadata', () => {
 
       const ref = React.createRef<HTMLDivElement>();
 
-      const WrappedComponent = withFieldMetadata<TestComponentProps>(TestComponentWithRef, true);
+      const WrappedComponent = withFieldMetadata<TestComponentWithRefProps>(TestComponentWithRef, true);
 
       const rendered = render(<WrappedComponent {...props} ref={ref} />, {
         container: document.body,
@@ -196,7 +196,7 @@ describe('withFieldMetadata', () => {
 
       const ref = React.createRef<HTMLDivElement>();
 
-      const WrappedComponent = withFieldMetadata<TestComponentProps>(TestComponentWithRef, true);
+      const WrappedComponent = withFieldMetadata<TestComponentWithRefProps>(TestComponentWithRef, true);
 
       const rendered = render(<WrappedComponent {...props} ref={ref} />, {
         container: document.body,

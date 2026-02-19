@@ -23,42 +23,35 @@ export interface DateFieldProps extends EditableFieldProps<DateFieldProps> {
   render?: (date: Date | null) => React.ReactNode;
 }
 
+const DateFieldComponent: React.FC<DateFieldProps> = ({ field, tag, render, editable: _editable, ...htmlProps }) => {
+  if (isFieldValueEmpty(field)) {
+    return null;
+  }
+
+  let children: React.ReactNode;
+
+  if (render) {
+    children = render(field.value ? new Date(field.value) : null);
+  } else {
+    children = field.value;
+  }
+
+  if (tag) {
+    const Tag = (tag || 'span') as React.ElementType;
+    return <Tag {...htmlProps}>{children}</Tag>;
+  } else {
+    return <React.Fragment>{children}</React.Fragment>;
+  }
+};
+
 /**
  * The DateField component.
  * @public
  */
 export const DateField: React.FC<DateFieldProps> = withFieldMetadata<DateFieldProps>(
-  withEmptyFieldEditingComponent<DateFieldProps>(
-    // eslint-disable-next-line no-unused-vars
-    ({ field, tag, editable = true, render, ...otherProps }) => {
-      if (isFieldValueEmpty(field)) {
-        return null;
-      }
-
-      let children: React.ReactNode;
-
-      const htmlProps: {
-        [htmlAttr: string]: unknown;
-        children?: React.ReactNode;
-      } = {
-        ...otherProps,
-      };
-
-      if (render) {
-        children = render(field.value ? new Date(field.value) : null);
-      } else {
-        children = field.value;
-      }
-
-      if (tag) {
-        const Tag = (tag || 'span') as React.ElementType;
-        return <Tag {...htmlProps}>{children}</Tag>;
-      } else {
-        return <React.Fragment>{children}</React.Fragment>;
-      }
-    },
-    { defaultEmptyFieldEditingComponent: DefaultEmptyFieldEditingComponentText }
-  )
+  withEmptyFieldEditingComponent(DateFieldComponent, {
+    defaultEmptyFieldEditingComponent: DefaultEmptyFieldEditingComponentText,
+  })
 );
 
 DateField.displayName = 'Date';

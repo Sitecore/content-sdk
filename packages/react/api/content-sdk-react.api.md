@@ -433,6 +433,7 @@ export interface RichTextProps extends EditableFieldProps<RichTextProps> {
     // (undocumented)
     [htmlAttributes: string]: unknown;
     field?: RichTextField;
+    ref?: React_2.Ref<HTMLElement>;
     tag?: string;
 }
 
@@ -552,12 +553,16 @@ export const withEditorChromes: (WrappedComponent: React_2.ComponentClass<unknow
 // Warning: (ae-forgotten-export) The symbol "WithEmptyFieldEditingComponentOptions" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export function withEmptyFieldEditingComponent<FieldComponentProps extends WithEmptyFieldEditingComponentProps<FieldComponentProps>, RefElementType = HTMLElement>(FieldComponent: ComponentType<FieldComponentProps>, options: WithEmptyFieldEditingComponentOptions): React_2.ForwardRefExoticComponent<React_2.PropsWithoutRef<FieldComponentProps> & React_2.RefAttributes<RefElementType>> | ((props: FieldComponentProps) => React_2.JSX.Element);
+export function withEmptyFieldEditingComponent<FieldComponentProps extends WithEmptyFieldEditingComponentProps<FieldComponentProps>, RefElementType = HTMLElement>(FieldComponent: ComponentType<FieldComponentProps>, options: WithEmptyFieldEditingComponentOptions): (props: FieldComponentProps & {
+    ref?: React_2.Ref<RefElementType>;
+}) => React_2.JSX.Element;
 
 // Warning: (ae-forgotten-export) The symbol "WithMetadataProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export function withFieldMetadata<FieldComponentProps extends WithMetadataProps, RefElementType = HTMLElement>(FieldComponent: ComponentType<FieldComponentProps>, isForwardRef?: boolean): React_2.ForwardRefExoticComponent<React_2.PropsWithoutRef<FieldComponentProps> & React_2.RefAttributes<RefElementType>> | ((props: FieldComponentProps) => React_2.JSX.Element);
+export function withFieldMetadata<FieldComponentProps extends WithMetadataProps, RefElementType = HTMLElement>(FieldComponent: ComponentType<FieldComponentProps>, isForwardRef?: boolean): (props: FieldComponentProps & {
+    ref?: React_2.Ref<RefElementType>;
+}) => React_2.JSX.Element;
 
 // Warning: (ae-forgotten-export) The symbol "WrapperProps_2" needs to be exported by the entry point api-surface.d.ts
 //

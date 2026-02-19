@@ -12,35 +12,23 @@ import { rsc } from '#rsc-env';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { PlaceholderMetadata } from './PlaceholderMetadata';
 
-/**
- * The implemention of placeholder compatible with React Server Components.
- * Renders components from the layout data for the given placeholder name, with consideration for page edit mode.
- * Pulls components from the provided component map.
- * @param {AppPlaceholderProps} props Placeholder props
- * @returns {React.ReactNode | React.ReactElement[]} rendered component(s)
- * @public
- */
-export const AppPlaceholder = (props: AppPlaceholderProps) => {
+const AppPlaceholderComponent = (props: AppPlaceholderProps) => {
   const renderingData = props.rendering;
   const isEditing = props.page.mode.isEditing;
   const placeholderRenderings = getPlaceholderRenderings(renderingData, props.name, isEditing);
   const isEmpty = !placeholderRenderings.length;
 
   const components = getPlaceholderComponents(props, placeholderRenderings);
-
-  let renderedOutput: React.ReactNode = components;
   if (isEmpty) {
+    let renderedOutput: React.ReactNode = components;
     if (props.renderEmpty) {
       renderedOutput = props.renderEmpty(components);
     }
-    if (isEditing) {
-      renderedOutput = renderEmptyPlaceholder(renderedOutput);
-    }
+    return isEditing ? renderEmptyPlaceholder(renderedOutput) : renderedOutput;
   } else if (props.render) {
-    renderedOutput = props.render(components, placeholderRenderings, props);
+    return props.render(components, placeholderRenderings, props);
   }
-  // Using error boundary for errors that may happen within Placeholder itself
-  return <ErrorBoundary errorComponent={props.errorComponent}>{renderedOutput}</ErrorBoundary>;
+  return components;
 };
 
 const getPlaceholderComponents = (
@@ -157,4 +145,19 @@ const getPlaceholderComponents = (
     </PlaceholderMetadata>,
   ];
 };
+
+/**
+ * The implemention of placeholder compatible with React Server Components.
+ * Renders components from the layout data for the given placeholder name, with consideration for page edit mode.
+ * Pulls components from the provided component map.
+ * @param {AppPlaceholderProps} props Placeholder props
+ * @returns {React.ReactNode | React.ReactElement[]} rendered component(s)
+ * @public
+ */
+export const AppPlaceholder = (props: AppPlaceholderProps) => (
+  // Using error boundary for errors that may happen within Placeholder itself
+  <ErrorBoundary errorComponent={props.errorComponent}>
+    <AppPlaceholderComponent {...props} />
+  </ErrorBoundary>
+);
 

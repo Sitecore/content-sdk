@@ -12,17 +12,17 @@ export interface ClientComponentWrapperProps {
 }
 
 export const ClientComponentWrapper = (props: ClientComponentWrapperProps) => {
-  const { page, componentMap } = useSitecore();
+  const { page, componentMap: clientComponentMap } = useSitecore();
   const componentPropsWithContext = {
     ...props.componentProps,
     rendering: props.rendering,
-    componentMap,
+    componentMap: clientComponentMap,
     page,
   };
   const { component: Component } = getComponentForRendering(
     props.rendering,
     props.placeholderName,
-    componentMap
+    clientComponentMap
   );
   return <Component {...componentPropsWithContext} />;
 };
