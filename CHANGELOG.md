@@ -32,6 +32,8 @@ Our versioning strategy is as follows:
 
 * `[nextjs]` `[Pages Router]` Adjust static path generation when multisite is disabled ([#345](https://github.com/Sitecore/content-sdk/pull/345))
 
+* `[nextjs]` Enable secured component variant generation for App Router Server Components in Design Studio ([#369](https://github.com/Sitecore/content-sdk/pull/369))
+
 ### 🛠 Breaking Changes
 
 * Decouple `@sitecore-content-sdk/content` from `@sitecore-content-sdk/core` ([#351](https://github.com/Sitecore/content-sdk/pull/351)):
