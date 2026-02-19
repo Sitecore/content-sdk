@@ -3,7 +3,6 @@ import React, { useState, useEffect, useCallback, useMemo, useContext } from 're
 import fastDeepEqual from 'fast-deep-equal/es6/react';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
-import { constants } from '@sitecore-content-sdk/core';
 import { ComponentMap } from './sharedTypes';
 import { ImportMapImport } from './DesignLibrary/models';
 
@@ -94,24 +93,7 @@ export const ImportMapReactContext = React.createContext<
  * @public
  */
 export const SitecoreProvider = (props: SitecoreProviderProps) => {
-  const { api: propsApi, page: propsPage, componentMap, loadImportMap, children } = props;
-
-  // Apply default edgeUrl if any Edge ID is present but no edgeUrl
-  const api = useMemo(() => {
-    if (
-      (propsApi?.edge?.contextId || propsApi?.edge?.clientContextId) &&
-      !propsApi?.edge?.edgeUrl
-    ) {
-      return {
-        ...propsApi,
-        edge: {
-          ...propsApi.edge,
-          edgeUrl: constants.SITECORE_EDGE_URL_DEFAULT,
-        },
-      };
-    }
-    return propsApi;
-  }, [propsApi]);
+  const { api, page: propsPage, componentMap, loadImportMap, children } = props;
 
   const [page, setPageInternal] = useState<Page>(propsPage);
 

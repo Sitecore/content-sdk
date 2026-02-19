@@ -112,7 +112,6 @@ const getImageAttrs = (
 };
 
 const ImageComponent: React.FC<ImageProps> = ({
-  editable: _editable,
   imageParams,
   field,
   mediaUrlPrefix,
@@ -123,6 +122,8 @@ const ImageComponent: React.FC<ImageProps> = ({
   if (isFieldValueEmpty(dynamicMedia)) {
     return null;
   }
+
+  delete otherProps.editable; // prevent editable from being passed to the DOM
 
   // some wise-guy/gal is passing in a 'raw' image object value
   const img = (dynamicMedia as ImageFieldValue).src

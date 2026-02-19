@@ -23,10 +23,11 @@ export interface DateFieldProps extends EditableFieldProps<DateFieldProps> {
   render?: (date: Date | null) => React.ReactNode;
 }
 
-const DateFieldComponent: React.FC<DateFieldProps> = ({ field, tag, render, editable: _editable, ...htmlProps }) => {
+const DateFieldComponent: React.FC<DateFieldProps> = ({ field, tag, render, ...htmlProps }) => {
   if (isFieldValueEmpty(field)) {
     return null;
   }
+  delete htmlProps.editable; // prevent editable from being passed to the DOM
 
   let children: React.ReactNode;
 

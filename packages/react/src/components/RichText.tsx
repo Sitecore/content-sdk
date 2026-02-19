@@ -31,10 +31,12 @@ export interface RichTextProps extends EditableFieldProps<RichTextProps> {
   ref?: React.Ref<HTMLElement>;
 }
 
-const RichTextComponent: React.FC<RichTextProps> = ({ field, tag = 'div', editable: _editable, ref, ...otherProps }) => {
+const RichTextComponent: React.FC<RichTextProps> = ({ field, tag = 'div', ref, ...otherProps }) => {
   if (isFieldValueEmpty(field)) {
     return null;
   }
+
+  delete otherProps.editable; // prevent editable from being passed to the DOM
 
   const htmlProps = {
     dangerouslySetInnerHTML: {

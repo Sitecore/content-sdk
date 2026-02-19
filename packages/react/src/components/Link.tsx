@@ -49,13 +49,13 @@ export type LinkProps = EditableFieldProps<LinkProps> &
 
 const LinkComponent: React.FC<LinkProps> = ({
   field,
-  editable: _editable,
   showLinkTextWithChildrenPresent,
   ref,
   ...otherProps
 }) => {
   const children = otherProps.children as React.ReactNode;
   const dynamicField: LinkField | LinkFieldValue = field;
+  delete otherProps.editable; // prevent editable from being passed to the DOM
 
   if (isFieldValueEmpty(dynamicField)) {
     return null;
