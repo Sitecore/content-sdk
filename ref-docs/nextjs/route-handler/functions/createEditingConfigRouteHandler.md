@@ -8,7 +8,7 @@
 
 > **createEditingConfigRouteHandler**(`options`): `object`
 
-Defined in: [nextjs/src/route-handler/editing-config-route-handler.ts:36](https://github.com/Sitecore/content-sdk/blob/48c97c4b8cd547e1668c820cb220274bc3e67af1/packages/nextjs/src/route-handler/editing-config-route-handler.ts#L36)
+Defined in: [nextjs/src/route-handler/editing-config-route-handler.ts:36](https://github.com/Sitecore/content-sdk/blob/b45166fa9eae2a8af06824103f648e810054a2a5/packages/nextjs/src/route-handler/editing-config-route-handler.ts#L36)
 
 Creates a route handler for the editing config API route (e.g. '/api/editing/config')
 Provides configuration information to determine feature compatibility on Pages side.
