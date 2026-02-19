@@ -1,6 +1,6 @@
 import { constants, debug } from '@sitecore-content-sdk/core';
 
-const { SITECORE_EDGE_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 
 /**
  * The parameters for fetching the component spec.
@@ -46,7 +46,7 @@ export interface ComponentSpec {
  */
 export const getComponentSpecUrl = ({
   componentId,
-  edgeUrl = SITECORE_EDGE_URL_DEFAULT,
+  edgeUrl = SITECORE_EDGE_PLATFORM_URL_DEFAULT,
   targetPath,
   token,
 }: GetComponentSpecParams) => {
@@ -67,7 +67,7 @@ export const getComponentSpecUrl = ({
  */
 export const getComponentSpec = async ({
   componentId,
-  edgeUrl = SITECORE_EDGE_URL_DEFAULT,
+  edgeUrl = SITECORE_EDGE_PLATFORM_URL_DEFAULT,
   targetPath,
   token,
 }: GetComponentSpecParams) => {

@@ -17,7 +17,7 @@ import testComponent from '../test-data/component-editing-data';
 import { DesignLibraryMode } from './models';
 import { ComponentRendering } from '../layout';
 
-const { SITECORE_EDGE_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 
 describe('component library utils', () => {
   let debugSpy: sinon.SinonSpy;
@@ -487,7 +487,7 @@ describe('component library utils', () => {
     it('should return the default design library script link when no URL is provided', () => {
       const scriptLink = getDesignLibraryScriptLink();
       expect(scriptLink).to.equal(
-        `${SITECORE_EDGE_URL_DEFAULT}/v1/files/designlibrary/lib/rh-lib-script.js`
+        `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/designlibrary/lib/rh-lib-script.js`
       );
     });
 

@@ -126,7 +126,10 @@ export default defineConfig({
     edge: {
       contextId: process.env.SITECORE_EDGE_CONTEXT_ID || '',
       clientContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
-      edgeUrl: process.env.SITECORE_EDGE_URL || 'https://edge-platform.sitecorecloud.io',
+      edgeUrl:
+        process.env.NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME ||
+        process.env.SITECORE_EDGE_PLATFORM_HOSTNAME ||
+        'https://edge-platform.sitecorecloud.io',
     },
     local: {
       apiKey: process.env.SITECORE_API_KEY || '',

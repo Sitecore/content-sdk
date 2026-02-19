@@ -1,8 +1,7 @@
-import { constants, DefaultRetryStrategy } from '@sitecore-content-sdk/core';
+import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
+import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models';
 import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
-
-const { SITECORE_EDGE_URL_DEFAULT } = constants;
 
 /**
  * Provides default initial values for SitecoreConfig
@@ -13,7 +12,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
     edge: {
       contextId: process.env.SITECORE_EDGE_CONTEXT_ID || '',
       clientContextId: '',
-      edgeUrl: process.env.SITECORE_EDGE_URL || SITECORE_EDGE_URL_DEFAULT,
+      edgeUrl: resolveEdgeUrl(),
     },
     local: {
       apiKey: process.env.SITECORE_API_KEY || process.env.NEXT_PUBLIC_SITECORE_API_KEY || '',
@@ -55,6 +54,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
       timeout: 60,
     },
   },
+  rewriteMediaUrls: false,
   disableCodeGeneration: false,
 });
 
@@ -110,6 +110,10 @@ const resolveConfig = (base: SitecoreConfig, override: SitecoreConfigInput): Sit
   if (Number.isNaN(result.personalize.edgeTimeout) || !result.personalize.edgeTimeout) {
     result.personalize.edgeTimeout = base.personalize.edgeTimeout;
   }
+  // Resolve edge URL at config level so consumers use the resolved value directly
+  result.api.edge.edgeUrl = result.api.edge.edgeUrl
+    ? resolveEdgeUrl(result.api.edge.edgeUrl)
+    : resolveEdgeUrl();
 
   return result;
 };

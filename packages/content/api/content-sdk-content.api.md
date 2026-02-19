@@ -30,6 +30,9 @@ export const addServerComponentPreviewHandler: (callback: (eventArgs: ComponentP
 // @internal
 export function addStyleElement(stylesContent: string): void;
 
+// @internal
+export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => string): T;
+
 // @public
 export class CdpHelper {
     static getComponentFriendlyId(pageId: string, componentId: string, language: string, scope?: string): string;
@@ -182,6 +185,9 @@ export interface ComponentUpdateEventArgs {
     // (undocumented)
     name: string;
 }
+
+// @public
+export function containsDefaultEdgeHost(str: string): boolean;
 
 // @internal
 export const createComponentInstance: (importMap: ImportEntry[], previewEventArgs: ComponentPreviewEventArgs) => unknown;
@@ -416,11 +422,11 @@ export enum ErrorPage {
 export type ErrorPages = {
     notFoundPage: {
         rendered: LayoutServiceData;
-    };
+    } | null;
     notFoundPagePath: string;
     serverErrorPage: {
         rendered: LayoutServiceData;
-    };
+    } | null;
     serverErrorPagePath: string;
 };
 
@@ -531,6 +537,9 @@ export const getContentSdkPagesClientData: () => Record<string, Record<string, u
 
 // @public
 export const getContentStylesheetLink: (layoutData: LayoutServiceData, sitecoreEdgeContextId: string, sitecoreEdgeUrl?: string) => HTMLLink | null;
+
+// @internal
+export function getDefaultMediaUrlTransformer(edgeUrl: string): (value: string) => string;
 
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPreviewErrorEvent" needs to be exported by the entry point api-surface.d.ts
 //
@@ -978,6 +987,9 @@ export const resetEditorChromes: () => void;
 export { RetryStrategy }
 
 // @public
+export function rewriteEdgeHostInResponse<T>(response: T, edgeUrl: string): T;
+
+// @public
 export type RobotsQueryResult = {
     site: {
         siteInfo: {
@@ -1087,6 +1099,8 @@ export type SitecoreCliConfigInput = {
 // @public
 export class SitecoreClient implements BaseSitecoreClient {
     constructor(initOptions: SitecoreClientInit);
+    // @internal
+    protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData;
     // (undocumented)
     protected clientFactory: GraphQLRequestClientFactory;
     // (undocumented)
@@ -1190,6 +1204,7 @@ export type SitecoreConfigInput = {
         enabled?: boolean;
         locales?: string[];
     };
+    rewriteMediaUrls?: boolean | ((value: string) => string);
     disableCodeGeneration?: boolean;
 };
 
@@ -1338,7 +1353,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:58:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:65:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:108:5 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal

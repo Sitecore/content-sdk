@@ -46,10 +46,14 @@
 
 ## Functions
 
+- [applyMediaUrlRewrite](functions/applyMediaUrlRewrite.md)
+- [containsDefaultEdgeHost](functions/containsDefaultEdgeHost.md)
 - [getChildPlaceholder](functions/getChildPlaceholder.md)
 - [getContentStylesheetLink](functions/getContentStylesheetLink.md)
+- [getDefaultMediaUrlTransformer](functions/getDefaultMediaUrlTransformer.md)
 - [getDesignLibraryStylesheetLinks](functions/getDesignLibraryStylesheetLinks.md)
 - [getDynamicPlaceholderPattern](functions/getDynamicPlaceholderPattern.md)
 - [getFieldValue](functions/getFieldValue.md)
 - [isDynamicPlaceholder](functions/isDynamicPlaceholder.md)
 - [isFieldValueEmpty](functions/isFieldValueEmpty.md)
+- [rewriteEdgeHostInResponse](functions/rewriteEdgeHostInResponse.md)

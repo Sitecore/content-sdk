@@ -9,8 +9,6 @@ import {
 } from '../layout/models';
 import { DesignLibraryMode } from './models';
 
-const { SITECORE_EDGE_URL_DEFAULT } = constants;
-
 /**
  * Event to be sent when report status to design library
  */
@@ -223,11 +221,14 @@ export function getDesignLibraryStatusEvent(
 
 /**
  * Generates the URL for the design library script link.
- * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL. Default is https://edge-platform.sitecorecloud.io
+ * Caller should pass the resolved Edge URL from config.
+ * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL (resolved at config level). Defaults to platform URL.
  * @returns The full URL to the design library script.
  * @internal
  */
-export function getDesignLibraryScriptLink(sitecoreEdgeUrl = SITECORE_EDGE_URL_DEFAULT): string {
+export function getDesignLibraryScriptLink(
+  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT
+): string {
   return `${normalizeUrl(sitecoreEdgeUrl)}/v1/files/designlibrary/lib/rh-lib-script.js`;
 }
 
