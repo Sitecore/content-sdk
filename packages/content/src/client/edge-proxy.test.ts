@@ -3,14 +3,14 @@ import { expect } from 'chai';
 import { constants } from '@sitecore-content-sdk/core';
 import { getEdgeProxyContentUrl, getEdgeProxyFormsUrl } from './edge-proxy';
 
-const { SITECORE_EDGE_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 
 describe('edge-proxy', () => {
   describe('getEdgeProxyContentUrl', () => {
     it('should return url', () => {
       const url = getEdgeProxyContentUrl();
 
-      expect(url).to.equal(`${SITECORE_EDGE_URL_DEFAULT}/v1/content/api/graphql/v1`);
+      expect(url).to.equal(`${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/content/api/graphql/v1`);
     });
 
     it('should return url when custom sitecoreEdgeUrl is provided', () => {
@@ -38,7 +38,7 @@ describe('edge-proxy', () => {
       const url = getEdgeProxyFormsUrl(sitecoreEdgeContextId, formId);
 
       expect(url).to.equal(
-        `${SITECORE_EDGE_URL_DEFAULT}/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`
+        `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`
       );
     });
 

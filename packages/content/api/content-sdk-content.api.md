@@ -30,6 +30,9 @@ export const addServerComponentPreviewHandler: (callback: (eventArgs: ServerComp
 // @internal
 export function addStyleElement(stylesContent: string): void;
 
+// @internal
+export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => string): T;
+
 // @public
 export class CdpHelper {
     static getComponentFriendlyId(pageId: string, componentId: string, language: string, scope?: string): string;
@@ -170,6 +173,9 @@ export interface ComponentUpdateEventArgs {
     // (undocumented)
     name: string;
 }
+
+// @public
+export function containsDefaultEdgeHost(str: string): boolean;
 
 // @internal
 export const createComponentInstance: (importMap: ImportEntry[], generatedComponentData: GeneratedComponentData) => unknown;
@@ -405,11 +411,11 @@ export enum ErrorPage {
 export type ErrorPages = {
     notFoundPage: {
         rendered: LayoutServiceData;
-    };
+    } | null;
     notFoundPagePath: string;
     serverErrorPage: {
         rendered: LayoutServiceData;
-    };
+    } | null;
     serverErrorPagePath: string;
 };
 
@@ -541,6 +547,9 @@ export const getContentSdkPagesClientData: () => Record<string, Record<string, u
 
 // @public
 export const getContentStylesheetLink: (layoutData: LayoutServiceData, sitecoreEdgeContextId: string, sitecoreEdgeUrl?: string) => HTMLLink | null;
+
+// @internal
+export function getDefaultMediaUrlTransformer(edgeUrl: string): (value: string) => string;
 
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPreviewErrorEvent" needs to be exported by the entry point api-surface.d.ts
 //
@@ -988,6 +997,9 @@ export const resetEditorChromes: () => void;
 export { RetryStrategy }
 
 // @public
+export function rewriteEdgeHostInResponse<T>(response: T, edgeUrl: string): T;
+
+// @public
 export type RobotsQueryResult = {
     site: {
         siteInfo: {
@@ -1110,6 +1122,8 @@ export type SitecoreCliConfigInput = {
 // @public
 export class SitecoreClient implements BaseSitecoreClient {
     constructor(initOptions: SitecoreClientInit);
+    // @internal
+    protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData;
     // (undocumented)
     protected clientFactory: GraphQLRequestClientFactory;
     // (undocumented)
@@ -1213,6 +1227,7 @@ export type SitecoreConfigInput = {
         enabled?: boolean;
         locales?: string[];
     };
+    rewriteMediaUrls?: boolean | ((value: string) => string);
     disableCodeGeneration?: boolean;
 };
 

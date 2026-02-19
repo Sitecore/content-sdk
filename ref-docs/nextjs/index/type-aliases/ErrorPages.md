@@ -16,13 +16,12 @@ Object model of Error Pages result
 
 ### notFoundPage
 
-> **notFoundPage**: `object`
+> **notFoundPage**: \{ `rendered`: [`LayoutServiceData`](../interfaces/LayoutServiceData.md); \} \| `null`
 
-Defined in: content/types/site/error-pages-service.d.ts:25
+Defined in: content/types/site/error-pages-service.d.ts:29
 
-#### rendered
-
-> **rendered**: [`LayoutServiceData`](../interfaces/LayoutServiceData.md)
+Rendered 404 page layout.
+Can be null if the site has no error handling configured for the requested language.
 
 ***
 
@@ -30,19 +29,18 @@ Defined in: content/types/site/error-pages-service.d.ts:25
 
 > **notFoundPagePath**: `string`
 
-Defined in: content/types/site/error-pages-service.d.ts:28
+Defined in: content/types/site/error-pages-service.d.ts:32
 
 ***
 
 ### serverErrorPage
 
-> **serverErrorPage**: `object`
+> **serverErrorPage**: \{ `rendered`: [`LayoutServiceData`](../interfaces/LayoutServiceData.md); \} \| `null`
 
-Defined in: content/types/site/error-pages-service.d.ts:29
+Defined in: content/types/site/error-pages-service.d.ts:37
 
-#### rendered
-
-> **rendered**: [`LayoutServiceData`](../interfaces/LayoutServiceData.md)
+Rendered 500 page layout.
+Can be null if the site has no error handling configured for the requested language.
 
 ***
 
@@ -50,4 +48,4 @@ Defined in: content/types/site/error-pages-service.d.ts:29
 
 > **serverErrorPagePath**: `string`
 
-Defined in: content/types/site/error-pages-service.d.ts:32
+Defined in: content/types/site/error-pages-service.d.ts:40
