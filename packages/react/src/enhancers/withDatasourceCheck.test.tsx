@@ -2,37 +2,23 @@
 import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
-import { spy } from 'sinon';
-
-import { withDatasourceCheck, WithDatasourceCheckProps } from '../enhancers/withDatasourceCheck';
 import {
-  SitecoreProviderReactContext,
-  SitecoreProviderState,
-} from '../components/SitecoreProvider';
-import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
+  withDatasourceCheck,
+  WithDatasourceCheckProps,
+  Page,
+  PageMode,
+} from '../enhancers/withDatasourceCheck';
 
-const mockContext = (editing: boolean): SitecoreProviderState => {
+// Helper to create the Page object state for tests
+const mockPage = (overrides?: Partial<PageMode>): Page => {
   return {
-    page: {
-      locale: 'en',
-      layout: {
-        sitecore: {
-          context: {},
-          route: null,
-        },
-      },
-      mode: {
-        name: LayoutServicePageState.Normal,
-        isNormal: false,
-        isPreview: false,
-        isEditing: editing,
-        isDesignLibrary: false,
-        designLibrary: {
-          isVariantGeneration: false,
-        },
-      },
+    mode: {
+      isNormal: false,
+      isPreview: false,
+      isEditing: false,
+      isDesignLibrary: false,
+      ...overrides,
     },
-    setPage: spy(),
   };
 };
 
@@ -53,26 +39,22 @@ describe('withDatasourceCheck', () => {
         componentName: 'TestComponent',
         dataSource: '',
       },
-    };
+      page: mockPage({ isNormal: true }),
+    } as WithDatasourceCheckProps;
 
-    const wrapper = render(
-      <SitecoreProviderReactContext.Provider value={mockContext(false)}>
-        <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreProviderReactContext.Provider>
-    );
+    const wrapper = render(<TestComponentWithDatasourceCheck {...props} />);
 
     expect(wrapper.container.innerHTML).to.be.empty;
   });
 
   it('should return null if rendering missing in normal mode', () => {
     const TestComponentWithDatasourceCheck = withDatasourceCheck()(TestComponent);
-    const props = {} as WithDatasourceCheckProps;
+    // @ts-ignore - simulating missing props
+    const props = {
+      page: mockPage({ isNormal: true }),
+    } as WithDatasourceCheckProps;
 
-    const wrapper = render(
-      <SitecoreProviderReactContext.Provider value={mockContext(false)}>
-        <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreProviderReactContext.Provider>
-    );
+    const wrapper = render(<TestComponentWithDatasourceCheck {...props} />);
 
     expect(wrapper.container.innerHTML).to.be.empty;
   });
@@ -84,13 +66,10 @@ describe('withDatasourceCheck', () => {
         componentName: 'TestComponent',
         dataSource: '',
       },
-    };
+      page: mockPage({ isEditing: true }),
+    } as WithDatasourceCheckProps;
 
-    const wrapper = render(
-      <SitecoreProviderReactContext.Provider value={mockContext(true)}>
-        <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreProviderReactContext.Provider>
-    );
+    const wrapper = render(<TestComponentWithDatasourceCheck {...props} />);
 
     expect(wrapper.container.querySelectorAll('div.sc-jss-editing-error')).to.have.length(1);
   });
@@ -100,18 +79,16 @@ describe('withDatasourceCheck', () => {
     const TestComponentWithDatasourceCheck = withDatasourceCheck({
       editingErrorComponent: CustomEditingError,
     })(TestComponent);
+
     const props = {
       rendering: {
         componentName: 'TestComponent',
         dataSource: '',
       },
-    };
+      page: mockPage({ isEditing: true }),
+    } as WithDatasourceCheckProps;
 
-    const wrapper = render(
-      <SitecoreProviderReactContext.Provider value={mockContext(true)}>
-        <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreProviderReactContext.Provider>
-    );
+    const wrapper = render(<TestComponentWithDatasourceCheck {...props} />);
 
     expect(wrapper.container.innerHTML).to.contain('Better than yours');
   });
@@ -123,20 +100,12 @@ describe('withDatasourceCheck', () => {
         componentName: 'TestComponent',
         dataSource: '',
       },
-    };
+      page: mockPage({ isDesignLibrary: true }),
+    } as WithDatasourceCheckProps;
 
-    const context = mockContext(false);
-
-    context.page.mode.isDesignLibrary = true;
-
-    const wrapper = render(
-      <SitecoreProviderReactContext.Provider value={context}>
-        <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreProviderReactContext.Provider>
-    );
+    const wrapper = render(<TestComponentWithDatasourceCheck {...props} />);
 
     expect(wrapper.container.innerHTML).to.contain(props.rendering.componentName);
-    expect(wrapper.container.innerHTML).to.contain(props.rendering.dataSource);
   });
 
   it('should return wrapped component if datasource present in normal mode', () => {
@@ -146,13 +115,10 @@ describe('withDatasourceCheck', () => {
         componentName: 'TestComponent',
         dataSource: '{CACDB205-2386-4271-9F05-AE20AAC2A39E}',
       },
-    };
+      page: mockPage({ isNormal: true }),
+    } as WithDatasourceCheckProps;
 
-    const wrapper = render(
-      <SitecoreProviderReactContext.Provider value={mockContext(false)}>
-        <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreProviderReactContext.Provider>
-    );
+    const wrapper = render(<TestComponentWithDatasourceCheck {...props} />);
 
     expect(wrapper.container.innerHTML).to.contain(props.rendering.componentName);
     expect(wrapper.container.innerHTML).to.contain(props.rendering.dataSource);
@@ -165,32 +131,10 @@ describe('withDatasourceCheck', () => {
         componentName: 'TestComponent',
         dataSource: '{CACDB205-2386-4271-9F05-AE20AAC2A39E}',
       },
-    };
+      page: mockPage({ isEditing: true }),
+    } as WithDatasourceCheckProps;
 
-    const wrapper = render(
-      <SitecoreProviderReactContext.Provider value={mockContext(true)}>
-        <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreProviderReactContext.Provider>
-    );
-
-    expect(wrapper.container.innerHTML).to.contain(props.rendering.componentName);
-    expect(wrapper.container.innerHTML).to.contain(props.rendering.dataSource);
-  });
-
-  it('should return wrapped component if not within SitecoreProvider', () => {
-    const TestComponentWithDatasourceCheck = withDatasourceCheck()(TestComponent);
-    const props = {
-      rendering: {
-        componentName: 'TestComponent',
-        dataSource: '{CACDB205-2386-4271-9F05-AE20AAC2A39E}',
-      },
-    };
-
-    const wrapper = render(
-      <SitecoreProviderReactContext.Provider value={mockContext(false)}>
-        <TestComponentWithDatasourceCheck {...props} />
-      </SitecoreProviderReactContext.Provider>
-    );
+    const wrapper = render(<TestComponentWithDatasourceCheck {...props} />);
 
     expect(wrapper.container.innerHTML).to.contain(props.rendering.componentName);
     expect(wrapper.container.innerHTML).to.contain(props.rendering.dataSource);

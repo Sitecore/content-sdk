@@ -1,15 +1,23 @@
 ﻿import React, { JSX } from 'react';
-import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
-import { useSitecore } from './withSitecore';
+import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 
 export const DefaultEditingError = (): JSX.Element => (
   <div className="sc-jss-editing-error" role="alert">
     Datasource is required. Please choose a content item for this component.
   </div>
 );
-
+export type PageMode = {
+  isNormal: boolean;
+  isPreview: boolean;
+  isEditing: boolean;
+  isDesignLibrary: boolean;
+};
+export type Page = {
+  mode: PageMode;
+};
 export interface WithDatasourceCheckProps {
   rendering: ComponentRendering;
+  page: Page;
 }
 
 export interface WithDatasourceCheckOptions {
@@ -33,15 +41,13 @@ export function withDatasourceCheck(options?: WithDatasourceCheckOptions) {
     Component: React.ComponentType<ComponentProps>
   ) {
     return function WithDatasourceCheck(props: ComponentProps) {
-      const { page } = useSitecore();
       const EditingError = options?.editingErrorComponent ?? DefaultEditingError;
-
+      const page = props?.page;
       // If the component is rendered in DesignLibrary, we don't need to check for datasource
-      const isDesignLibrary = page.mode.isDesignLibrary;
-
+      const isDesignLibrary = page?.mode?.isDesignLibrary;
       return isDesignLibrary || props.rendering?.dataSource ? (
         <Component {...props} />
-      ) : page.mode.isEditing ? (
+      ) : page?.mode?.isEditing ? (
         <EditingError />
       ) : null;
     };
