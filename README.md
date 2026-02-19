@@ -37,11 +37,14 @@ For more information check out our [Getting Started Guide](https://doc.sitecore.
 
 ### AI Development Support
 
+- [AGENTS.md](AGENTS.md) - AI agent guidance: structure, commands, DOs/DON'Ts, boundaries, and quick reference
 - [Claude Code Agent Guide](CLAUDE.md) - Comprehensive guide for Claude Code Agent to generate consistent and idiomatic Sitecore Content SDK code
 - [GitHub Copilot Instructions](copilot-instructions.md) - Instructions for GitHub Copilot to provide accurate Sitecore Content SDK suggestions
 - [Cursor AI Rules](.cursor/rules/) - Cursor-specific coding rules and patterns for Sitecore Content SDK development
 - [Windsurf AI Rules](.windsurfrules) - Windsurf IDE configuration for Sitecore Content SDK development
 - [LLM Guidance](LLMs.txt) - General guidance for Large Language Models working with the Sitecore Content SDK
+
+**Which AGENTS.md to use:** The root [AGENTS.md](AGENTS.md) applies when working in **this monorepo** (packages, yarn, scaffolding). For head applications (including empty starters) generated from our templates, use the AGENTS.md that ships with the head application — it is copied from the template when you run `create-content-sdk-app` and you can adapt it to your project as needed.
 
 ## Contributions
 
