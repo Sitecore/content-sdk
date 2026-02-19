@@ -35,3 +35,10 @@ export { getContentStylesheetLink } from './content-styles';
 export { LayoutService, LayoutServiceConfig, GRAPHQL_LAYOUT_QUERY_NAME } from './layout-service';
 
 export { getDesignLibraryStylesheetLinks } from './themes';
+
+export {
+  rewriteEdgeHostInResponse,
+  containsDefaultEdgeHost,
+  getDefaultMediaUrlTransformer,
+  applyMediaUrlRewrite,
+} from './rewrite-edge-host';

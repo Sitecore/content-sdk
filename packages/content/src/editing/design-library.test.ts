@@ -17,7 +17,7 @@ import testComponent from '../test-data/component-editing-data';
 import { DesignLibraryMode } from './models';
 import { ComponentRendering } from '../layout';
 
-const { SITECORE_EDGE_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 
 describe('component library utils', () => {
   let debugSpy: sinon.SinonSpy;
@@ -471,13 +471,26 @@ describe('component library utils', () => {
   });
 
   describe('getDesignLibraryStatusEvent', () => {
-    it('should return a valid status event', () => {
+    it('should return a valid status event and set default false for isRenderingServerComponent', () => {
       const statusEvent = getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'uid-1');
       expect(statusEvent).to.deep.equal({
         name: 'component:status',
         message: {
           status: DesignLibraryStatus.READY,
           uid: 'uid-1',
+          isRenderingServerComponent: false,
+        },
+      });
+    });
+
+    it('should return a valid status event with isRenderingServerComponent set to true', () => {
+      const statusEvent = getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'uid-2', true);
+      expect(statusEvent).to.deep.equal({
+        name: 'component:status',
+        message: {
+          status: DesignLibraryStatus.RENDERED,
+          uid: 'uid-2',
+          isRenderingServerComponent: true,
         },
       });
     });
@@ -487,7 +500,7 @@ describe('component library utils', () => {
     it('should return the default design library script link when no URL is provided', () => {
       const scriptLink = getDesignLibraryScriptLink();
       expect(scriptLink).to.equal(
-        `${SITECORE_EDGE_URL_DEFAULT}/v1/files/designlibrary/lib/rh-lib-script.js`
+        `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/designlibrary/lib/rh-lib-script.js`
       );
     });
 

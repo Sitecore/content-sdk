@@ -204,6 +204,13 @@ export type SitecoreConfigInput = {
     locales?: string[];
   };
   /**
+   * Rewrite media/content URLs in layout (media fields, rich text img/src, href, etc.).
+   * - When `true`: use default rewriter (Edge hostnames -> custom hostname from env).
+   * - When a function: transform each string value; the SDK traverses the layout for you.
+   * @default false
+   */
+  rewriteMediaUrls?: boolean | ((value: string) => string);
+  /**
    * Opt-out setting for code generation feature
    * Disables code extraction procedure
    */

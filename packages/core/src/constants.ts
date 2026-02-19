@@ -1,8 +1,16 @@
 /**
- * Default Sitecore edge URL
+ * Default Edge Platform URL (edge-platform.sitecorecloud.io). Used for service endpoints
+ * (GraphQL, content API, forms, layout, static files) when no custom hostname is configured.
  * @internal
  */
-export const SITECORE_EDGE_URL_DEFAULT = 'https://edge-platform.sitecorecloud.io';
+export const SITECORE_EDGE_PLATFORM_URL_DEFAULT = 'https://edge-platform.sitecorecloud.io';
+
+/**
+ * Default Experience Edge URL (edge.sitecorecloud.io). Used only when replacing media URLs
+ * in layout/editing responses (rewrite-edge-host). Do not use for service endpoints.
+ * @internal
+ */
+export const SITECORE_EXPERIENCE_EDGE_URL_DEFAULT = 'https://edge.sitecorecloud.io';
 
 /**
  * Claims URL

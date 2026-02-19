@@ -328,6 +328,9 @@ export const defaultImportEntries: ImportEntry[];
 export { DefaultRetryStrategy }
 
 // @public
+export const defaultServerImportEntries: ImportEntry[];
+
+// @public
 export const defineCliConfig: (cliConfig: SitecoreCliConfigInput) => SitecoreCliConfig;
 
 // @public

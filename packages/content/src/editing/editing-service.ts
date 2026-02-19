@@ -100,13 +100,15 @@ export class EditingService {
       }
     );
 
-    return {
-      layoutData: editingData?.item?.rendered || {
-        sitecore: {
-          context: { pageEditing: true, language },
-          route: null,
-        },
+    const layoutData = editingData?.item?.rendered || {
+      sitecore: {
+        context: { pageEditing: true, language },
+        route: null,
       },
+    };
+
+    return {
+      layoutData,
     };
   }
 

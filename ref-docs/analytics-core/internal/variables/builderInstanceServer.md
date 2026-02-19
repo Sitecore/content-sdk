@@ -8,4 +8,4 @@
 
 > **builderInstanceServer**: `null` \| [`CloudSDKServerInitializer`](../../server/classes/CloudSDKServerInitializer.md) = `null`
 
-Defined in: [src/initializer/server/initializer.ts:247](https://github.com/Sitecore/content-sdk/blob/e6153e5e80c2076704cad0876eec3b85ec3a1a9f/packages/analytics-core/src/initializer/server/initializer.ts#L247)
+Defined in: [src/initializer/server/initializer.ts:247](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/analytics-core/src/initializer/server/initializer.ts#L247)
