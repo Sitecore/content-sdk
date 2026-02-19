@@ -8,7 +8,7 @@
 
 > **updateImageUrl**(`url`, `params?`, `mediaUrlPrefix?`): `string`
 
-Defined in: [content/src/media/media-api.ts:53](https://github.com/Sitecore/content-sdk/blob/e6153e5e80c2076704cad0876eec3b85ec3a1a9f/packages/content/src/media/media-api.ts#L53)
+Defined in: [content/src/media/media-api.ts:53](https://github.com/Sitecore/content-sdk/blob/48c97c4b8cd547e1668c820cb220274bc3e67af1/packages/content/src/media/media-api.ts#L53)
 
 Prepares a Sitecore media URL with `params` for use by the Content SDK media handler.
 This is done by replacing `/~/media` or `/-/media` with `/~/jssmedia` or `/-/jssmedia`, respectively.

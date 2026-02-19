@@ -16,7 +16,7 @@ Generates a URL for accessing Sitecore Edge Platform Content using the provided 
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `sitecoreEdgeUrl?` | `string` | The base endpoint URL for the Edge Platform. Default is https://edge-platform.sitecorecloud.io |
+| `sitecoreEdgeUrl?` | `string` | The base endpoint URL for the Edge Platform (resolved at config level). Defaults to platform URL. |
 
 ## Returns
 

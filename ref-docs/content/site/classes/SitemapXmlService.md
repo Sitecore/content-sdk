@@ -6,7 +6,7 @@
 
 # Class: SitemapXmlService
 
-Defined in: [content/src/site/sitemap-xml-service.ts:45](https://github.com/Sitecore/content-sdk/blob/e6153e5e80c2076704cad0876eec3b85ec3a1a9f/packages/content/src/site/sitemap-xml-service.ts#L45)
+Defined in: [content/src/site/sitemap-xml-service.ts:45](https://github.com/Sitecore/content-sdk/blob/48c97c4b8cd547e1668c820cb220274bc3e67af1/packages/content/src/site/sitemap-xml-service.ts#L45)
 
 Service that fetch the sitemaps data using Sitecore's GraphQL API.
 
@@ -16,7 +16,7 @@ Service that fetch the sitemaps data using Sitecore's GraphQL API.
 
 > **new SitemapXmlService**(`options`): `SitemapXmlService`
 
-Defined in: [content/src/site/sitemap-xml-service.ts:52](https://github.com/Sitecore/content-sdk/blob/e6153e5e80c2076704cad0876eec3b85ec3a1a9f/packages/content/src/site/sitemap-xml-service.ts#L52)
+Defined in: [content/src/site/sitemap-xml-service.ts:52](https://github.com/Sitecore/content-sdk/blob/48c97c4b8cd547e1668c820cb220274bc3e67af1/packages/content/src/site/sitemap-xml-service.ts#L52)
 
 Creates an instance of graphQL sitemaps service with the provided options
 
@@ -36,7 +36,7 @@ Creates an instance of graphQL sitemaps service with the provided options
 
 > **options**: [`SitemapXmlServiceConfig`](../type-aliases/SitemapXmlServiceConfig.md)
 
-Defined in: [content/src/site/sitemap-xml-service.ts:52](https://github.com/Sitecore/content-sdk/blob/e6153e5e80c2076704cad0876eec3b85ec3a1a9f/packages/content/src/site/sitemap-xml-service.ts#L52)
+Defined in: [content/src/site/sitemap-xml-service.ts:52](https://github.com/Sitecore/content-sdk/blob/48c97c4b8cd547e1668c820cb220274bc3e67af1/packages/content/src/site/sitemap-xml-service.ts#L52)
 
 instance
 
@@ -48,7 +48,7 @@ instance
 
 > **get** `protected` **query**(): `string`
 
-Defined in: [content/src/site/sitemap-xml-service.ts:56](https://github.com/Sitecore/content-sdk/blob/e6153e5e80c2076704cad0876eec3b85ec3a1a9f/packages/content/src/site/sitemap-xml-service.ts#L56)
+Defined in: [content/src/site/sitemap-xml-service.ts:56](https://github.com/Sitecore/content-sdk/blob/48c97c4b8cd547e1668c820cb220274bc3e67af1/packages/content/src/site/sitemap-xml-service.ts#L56)
 
 ##### Returns
 
@@ -60,7 +60,7 @@ Defined in: [content/src/site/sitemap-xml-service.ts:56](https://github.com/Site
 
 > **fetchSitemaps**(`fetchOptions?`): `Promise`\<`string`[]\>
 
-Defined in: [content/src/site/sitemap-xml-service.ts:66](https://github.com/Sitecore/content-sdk/blob/e6153e5e80c2076704cad0876eec3b85ec3a1a9f/packages/content/src/site/sitemap-xml-service.ts#L66)
+Defined in: [content/src/site/sitemap-xml-service.ts:66](https://github.com/Sitecore/content-sdk/blob/48c97c4b8cd547e1668c820cb220274bc3e67af1/packages/content/src/site/sitemap-xml-service.ts#L66)
 
 Fetch list of sitemaps for the site
 
@@ -86,7 +86,7 @@ if the siteName is empty.
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../client/interfaces/GraphQLClient.md)
 
-Defined in: [content/src/site/sitemap-xml-service.ts:115](https://github.com/Sitecore/content-sdk/blob/e6153e5e80c2076704cad0876eec3b85ec3a1a9f/packages/content/src/site/sitemap-xml-service.ts#L115)
+Defined in: [content/src/site/sitemap-xml-service.ts:115](https://github.com/Sitecore/content-sdk/blob/48c97c4b8cd547e1668c820cb220274bc3e67af1/packages/content/src/site/sitemap-xml-service.ts#L115)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
@@ -104,7 +104,7 @@ implementation
 
 > **getSitemap**(`id`): `Promise`\<`string` \| `undefined`\>
 
-Defined in: [content/src/site/sitemap-xml-service.ts:92](https://github.com/Sitecore/content-sdk/blob/e6153e5e80c2076704cad0876eec3b85ec3a1a9f/packages/content/src/site/sitemap-xml-service.ts#L92)
+Defined in: [content/src/site/sitemap-xml-service.ts:92](https://github.com/Sitecore/content-sdk/blob/48c97c4b8cd547e1668c820cb220274bc3e67af1/packages/content/src/site/sitemap-xml-service.ts#L92)
 
 Get sitemap file path for sitemap id
 
