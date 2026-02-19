@@ -112,13 +112,13 @@ const getImageAttrs = (
 };
 
 const ImageComponent: React.FC<ImageProps> = ({
-  editable: _editable,
   imageParams,
   field,
   mediaUrlPrefix,
   ...otherProps
 }) => {
   const dynamicMedia = field as ImageField | ImageFieldValue;
+  delete otherProps.editable;
 
   if (isFieldValueEmpty(dynamicMedia)) {
     return null;
