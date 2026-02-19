@@ -50,7 +50,7 @@ export type PreviewEventModel = {
   /**
    * The preview component event arguments in variant generation mode.
    */
-  previewEventArgs?: ServerComponentPreviewEventArgs;
+  args: ServerComponentPreviewEventArgs;
 };
 
 /**
@@ -85,12 +85,12 @@ export async function previewComponentAction(
     fetchComponentError: undefined,
   };
 
-  if (previewEvent.previewEventArgs) {
+  if (previewEvent.args) {
     // we've received a component preview event from the Design Library, so we need to fetch the generated component data from secured endpoint
     try {
       updatedComponent.generatedComponentData = await fetchGeneratedComponentFromCache(
-        previewEvent.previewEventArgs.message.cache.id,
-        previewEvent.previewEventArgs.message.cache.token,
+        previewEvent.args.message.cache.id,
+        previewEvent.args.message.cache.token,
         edgeUrl
       );
     } catch (error) {

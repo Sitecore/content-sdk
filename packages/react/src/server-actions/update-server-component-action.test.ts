@@ -127,8 +127,8 @@ describe('Server Component Actions', () => {
   });
 
   describe('previewComponentAction', () => {
-    it('should fetch generated component data when previewEventArgs is provided', async () => {
-      const previewEventArgs: ServerComponentPreviewEventArgs = {
+    it('should fetch generated component data when args is provided', async () => {
+      const args: ServerComponentPreviewEventArgs = {
         name: 'component:generation:component-preview',
         message: {
           cache: {
@@ -159,7 +159,7 @@ describe('Server Component Actions', () => {
 
       const previewEvent: PreviewEventModel = {
         uid: 'test-uid-789',
-        args: previewEventArgs,
+        args,
       };
 
       await previewComponentAction(previewEvent);
@@ -186,9 +186,10 @@ describe('Server Component Actions', () => {
       );
     });
 
-    it('should set cache with undefined generatedComponentData when no previewEventArgs provided', async () => {
+    it('should set cache with undefined generatedComponentData when no args provided', async () => {
       const previewEvent: PreviewEventModel = {
         uid: 'test-uid-no-preview',
+        args: undefined as any, // simulating no preview event arguments provided
       };
 
       await previewComponentAction(previewEvent);
@@ -215,7 +216,7 @@ describe('Server Component Actions', () => {
     it('should use custom edgeUrl when provided', async () => {
       const customEdgeUrl = 'https://custom-edge.example.com';
 
-      const previewEventArgs: ServerComponentPreviewEventArgs = {
+      const args: ServerComponentPreviewEventArgs = {
         name: 'component:generation:component-preview',
         message: {
           cache: {
@@ -246,7 +247,7 @@ describe('Server Component Actions', () => {
 
       const previewEvent: PreviewEventModel = {
         uid: 'test-uid-env',
-        args: previewEventArgs,
+        args,
       };
 
       await previewComponentAction(previewEvent, customEdgeUrl);
@@ -259,7 +260,7 @@ describe('Server Component Actions', () => {
     });
 
     it('should handle undefined edgeUrl when not provided', async () => {
-      const previewEventArgs: ServerComponentPreviewEventArgs = {
+      const args: ServerComponentPreviewEventArgs = {
         name: 'component:generation:component-preview',
         message: {
           cache: {
@@ -290,7 +291,7 @@ describe('Server Component Actions', () => {
 
       const previewEvent: PreviewEventModel = {
         uid: 'test-uid-no-env',
-        args: previewEventArgs,
+        args,
       };
 
       await previewComponentAction(previewEvent);
@@ -303,7 +304,7 @@ describe('Server Component Actions', () => {
     });
 
     it('should handle fetch errors and set fetchComponentError in cache', async () => {
-      const previewEventArgs: ServerComponentPreviewEventArgs = {
+      const args: ServerComponentPreviewEventArgs = {
         name: 'component:generation:component-preview',
         message: {
           cache: {
@@ -320,7 +321,7 @@ describe('Server Component Actions', () => {
 
       const previewEvent: PreviewEventModel = {
         uid: 'test-uid-error',
-        args: previewEventArgs,
+        args,
       };
 
       await previewComponentAction(previewEvent);
@@ -346,7 +347,7 @@ describe('Server Component Actions', () => {
     });
 
     it('should handle non-Error fetch failures', async () => {
-      const previewEventArgs: ServerComponentPreviewEventArgs = {
+      const args: ServerComponentPreviewEventArgs = {
         name: 'component:generation:component-preview',
         message: {
           cache: {
@@ -361,7 +362,7 @@ describe('Server Component Actions', () => {
 
       const previewEvent: PreviewEventModel = {
         uid: 'test-uid-string-error',
-        args: previewEventArgs,
+        args,
       };
 
       await previewComponentAction(previewEvent);

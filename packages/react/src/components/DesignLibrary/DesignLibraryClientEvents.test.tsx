@@ -429,7 +429,7 @@ describe('<DesignLibraryClientEvents />', () => {
 
       expect(previewComponentActionSpy).to.have.been.calledWith({
         uid: testEditedComponent.uid,
-        previewEventArgs: componentPreviewServerEvent,
+        args: componentPreviewServerEvent,
       });
     });
 
@@ -460,7 +460,7 @@ describe('<DesignLibraryClientEvents />', () => {
       expect(previewComponentActionSpy).to.have.been.calledWith(
         {
           uid: testEditedComponent.uid,
-          previewEventArgs: componentPreviewServerEvent,
+          args: componentPreviewServerEvent,
         },
         'https://test-edge-url.com'
       );
