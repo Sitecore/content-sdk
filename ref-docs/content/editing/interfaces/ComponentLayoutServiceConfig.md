@@ -6,7 +6,7 @@
 
 # Interface: ComponentLayoutServiceConfig
 
-Defined in: [content/src/editing/component-layout-service.ts:56](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/content/src/editing/component-layout-service.ts#L56)
+Defined in: [content/src/editing/component-layout-service.ts:56](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/editing/component-layout-service.ts#L56)
 
 Config for ComponentLayoutService.
 Provide contextId (server) and optionally clientContextId (browser).
@@ -17,7 +17,7 @@ Provide contextId (server) and optionally clientContextId (browser).
 
 > `optional` **clientContextId**: `string`
 
-Defined in: [content/src/editing/component-layout-service.ts:60](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/content/src/editing/component-layout-service.ts#L60)
+Defined in: [content/src/editing/component-layout-service.ts:60](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/editing/component-layout-service.ts#L60)
 
 A unified identifier used to connect and retrieve data from XM Cloud instance used on the client
 
@@ -27,7 +27,7 @@ A unified identifier used to connect and retrieve data from XM Cloud instance us
 
 > **contextId**: `string`
 
-Defined in: [content/src/editing/component-layout-service.ts:64](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/content/src/editing/component-layout-service.ts#L64)
+Defined in: [content/src/editing/component-layout-service.ts:64](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/editing/component-layout-service.ts#L64)
 
 A unified identifier used to connect and retrieve data from XM Cloud instance used on the server
 
@@ -37,7 +37,7 @@ A unified identifier used to connect and retrieve data from XM Cloud instance us
 
 > `optional` **edgeUrl**: `string`
 
-Defined in: [content/src/editing/component-layout-service.ts:69](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/content/src/editing/component-layout-service.ts#L69)
+Defined in: [content/src/editing/component-layout-service.ts:69](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/editing/component-layout-service.ts#L69)
 
 XM Cloud endpoint that the app will communicate and retrieve data from
 
