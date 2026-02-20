@@ -1,0 +1,88 @@
+{
+  "name": "@sitecore-content-sdk/angular",
+  "version": "2.0.0-canary.1",
+  "description": "Angular components and utilities for Sitecore Content SDK",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "types/index.d.ts",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
+    "clean": "del-cli dist types",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "test": "jest",
+    "coverage": "jest --coverage",
+    "prepublishOnly": "npm run build",
+    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/angular src/index.ts --githubPages false"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "author": {
+    "name": "Sitecore Corporation",
+    "url": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
+  "bugs": {
+    "url": "https://github.com/sitecore/content-sdk/issues"
+  },
+  "peerDependencies": {
+    "@angular/common": "^19.0.0",
+    "@angular/core": "^19.0.0",
+    "@angular/platform-browser": "^19.0.0",
+    "@angular/platform-server": "^19.0.0",
+    "zone.js": "^0.15.0"
+  },
+  "peerDependenciesMeta": {
+    "@angular/platform-server": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@sitecore-content-sdk/content": "2.0.0-canary.1",
+    "@sitecore-content-sdk/core": "2.0.0-canary.1"
+  },
+  "devDependencies": {
+    "@angular/common": "^19.2.0",
+    "@angular/compiler": "^19.2.0",
+    "@angular/compiler-cli": "^19.2.0",
+    "@angular/core": "^19.2.0",
+    "@angular/platform-browser": "^19.2.0",
+    "@angular/platform-browser-dynamic": "^19.2.0",
+    "@angular/platform-server": "^19.2.0",
+    "@stylistic/eslint-plugin": "^5.2.2",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^24.10.4",
+    "@typescript-eslint/eslint-plugin": "8.39.0",
+    "@typescript-eslint/parser": "8.39.0",
+    "del-cli": "^6.0.0",
+    "eslint": "^9.32.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-jsdoc": "52.0.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^29.7.0",
+    "jest-preset-angular": "^14.4.0",
+    "prettier": "^2.8.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "~5.8.3",
+    "zone.js": "^0.15.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./types/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "types",
+    "/*.d.ts"
+  ]
+}
