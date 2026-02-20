@@ -55,7 +55,7 @@ export const ERROR_MESSAGES = {
     '[IE-005] Unable to set the "sc_cid" cookie because the client ID could not be retrieved from the server. Make sure to set the correct values for "contextId" and "siteName". If the issue persists, try again later or use try-catch blocks to handle this error.',
   IE_006:
     '[IE-006] Unable to set the "sc_cid_personalize" cookie because the visitor ID could not be retrieved from the server. Make sure to set the correct values for "contextId" and "siteName". If the issue persists, try again later or use try-catch blocks to handle this error.',
-  IE_007: (hostName: string) => `[IE-012] Could not resolve site for host "${hostName}"`,
+  IE_007: (hostName: string) => `[IE-007] Could not resolve site for host "${hostName}"`,
 
   /** MV errors are related to missing values */
   MV_001: '[MV-001] "contextId" is required.',
