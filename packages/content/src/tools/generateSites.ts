@@ -2,11 +2,13 @@ import path from 'path';
 import chalk from 'chalk';
 import fs from 'fs';
 import { ensurePathExists } from '@sitecore-content-sdk/core/tools';
+import { constants } from '@sitecore-content-sdk/core';
 import { SiteInfo, SiteInfoService } from '../site';
 import { SitecoreConfig } from '../config';
 import { createGraphQLClientFactory } from '../client';
 import debug from '../debug';
 
+const { ERROR_MESSAGES } = constants;
 const DEFAULT_SITES_DIST_PATH = '.sitecore/sites.json';
 
 /**
@@ -41,7 +43,7 @@ export const generateSites = ({
     const config = deprecatedScConfig ?? scConfig;
 
     if (!config) {
-      throw new Error('Sitecore configuration is required to be provided');
+      throw new Error(ERROR_MESSAGES.MV_008);
     }
 
     let sites: SiteInfo[] = [];
@@ -65,7 +67,9 @@ export const generateSites = ({
 
         sites = await siteInfoService.fetchSiteInfo();
       } catch (error) {
-        console.error(chalk.red('Error fetching site information'));
+        console.error(
+          chalk.red(`Failed to fetch site information. ${ERROR_MESSAGES.CONTACT_SUPPORT}`)
+        );
         throw error;
       }
     }

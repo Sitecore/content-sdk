@@ -8,7 +8,7 @@ import { ComponentLayoutRequestParams, ComponentLayoutService } from './componen
 import { LayoutServiceData } from '../layout/models';
 import { DesignLibraryMode } from './models';
 
-const { SITECORE_EDGE_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_URL_DEFAULT, ERROR_MESSAGES } = constants;
 
 use(spies);
 
@@ -249,7 +249,7 @@ describe('ComponentLayoutService', () => {
     });
 
     expect(() => service.fetchComponentData(defaultTestInput)).to.throw(
-      'ComponentLayoutService misconfigured: contextId is missing.'
+      ERROR_MESSAGES.MV_001
     );
   });
 
@@ -257,7 +257,7 @@ describe('ComponentLayoutService', () => {
     const service = new ComponentLayoutService({} as any);
 
     expect(() => service.fetchComponentData(defaultTestInput)).to.throw(
-      'ComponentLayoutService misconfigured: contextId is missing.'
+      ERROR_MESSAGES.MV_001
     );
   });
 

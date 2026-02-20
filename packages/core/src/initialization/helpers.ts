@@ -17,7 +17,7 @@ export function checkPluginDependencies(plugin: Plugin, plugins: Map<string, Plu
 
   for (const dependency of plugin.dependencies) {
     if (!plugins.has(dependency))
-      throw new Error(`[IE-001] "${plugin.name}" also requires "${dependency}"`);
+      throw new Error(ERROR_MESSAGES.IE_001(plugin.name, dependency));
   }
 
   debugInit(`All required dependencies for "${plugin.name}" are present`);

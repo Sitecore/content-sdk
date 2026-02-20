@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@sitecore-content-sdk/content": "1.5.0-canary.6",
+    "@sitecore-content-sdk/core": "1.5.0-canary.6",
     "chokidar": "^4.0.3",
     "dotenv": "^16.5.0",
     "dotenv-expand": "^12.0.2",

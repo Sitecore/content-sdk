@@ -6,11 +6,12 @@ import {
   isValidEmail,
 } from '@sitecore-content-sdk/analytics-core/utils';
 import { BaseEvent } from '../base-event';
-import { ERROR_MESSAGES } from '../../consts';
 import type { FlattenedObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import type { SendEvent } from '../send-event/sendEvent';
-import { CoreContext } from '@sitecore-content-sdk/core';
+import { CoreContext, constants } from '@sitecore-content-sdk/core';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * A class that extends from {@link BaseEvent} and has all the required functionality to send an IDENTITY event
@@ -42,7 +43,7 @@ export class IdentityEvent extends BaseEvent {
     this.numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
     if (this.numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES)
-      throw new Error(ERROR_MESSAGES.IV_006);
+      throw new Error(ERROR_MESSAGES.IV_006(MAX_EXT_ATTRIBUTES));
   }
 
   /**

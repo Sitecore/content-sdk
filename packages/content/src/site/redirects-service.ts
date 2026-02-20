@@ -5,9 +5,11 @@ import {
   CacheOptions,
   MemoryCacheClient,
   FetchOptions,
+  constants,
 } from '@sitecore-content-sdk/core';
-import { siteNameError } from '../constants';
 import debug from '../debug';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Redirect type for 301 redirects
@@ -112,7 +114,7 @@ export class RedirectsService {
    */
   async fetchRedirects(siteName: string, fetchOptions?: FetchOptions): Promise<RedirectInfo[]> {
     if (!siteName) {
-      throw new Error(siteNameError);
+      throw new Error(ERROR_MESSAGES.MV_002);
     }
 
     const cacheKey = `redirects-${siteName}`;

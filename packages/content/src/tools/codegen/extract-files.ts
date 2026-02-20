@@ -9,9 +9,11 @@ import {
 } from './utils';
 import { SitecoreConfig } from './../../config';
 import { auth } from '@sitecore-content-sdk/core/tools';
-import { debug } from '@sitecore-content-sdk/core';
+import { debug, constants } from '@sitecore-content-sdk/core';
 import path from 'path';
 import fs from 'fs';
+
+const { ERROR_MESSAGES } = constants;
 
 export type ExtractFilesConfig = {
   /**
@@ -55,7 +57,7 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
     const config = args.scConfig ?? scConfig;
 
     if (!config) {
-      throw new Error('Sitecore configuration is required to be provided');
+      throw new Error(ERROR_MESSAGES.MV_008);
     }
 
     if (
@@ -79,7 +81,7 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
       const targetUrl = config.api.edge.edgeUrl;
       const { accessToken } = await auth.clientCredentialsFlow(authParams);
       if (!accessToken) {
-        console.error(chalk.red('Failed to get access token, aborting code extraction'));
+        console.error(chalk.red(`Failed to get access token, aborting code extraction. ${ERROR_MESSAGES.CONTACT_SUPPORT}`));
         return;
       }
 
@@ -145,7 +147,7 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
         )
       );
     } catch (error) {
-      console.warn(chalk.yellow('Error during code extraction:', error, error.stack));
+      console.warn(chalk.yellow(`Error during code extraction:`, error, error.stack, ERROR_MESSAGES.CONTACT_SUPPORT));
     }
   };
 }

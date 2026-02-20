@@ -4,11 +4,14 @@ import path from 'path';
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 import * as tools from '@sitecore-content-sdk/content/tools';
+import { constants } from '@sitecore-content-sdk/core';
 import inquirer from 'inquirer';
 import { handler as generateMapHandler } from './generate-map';
 import loadCliConfig from '../../../utils/load-config';
 
 let { getComponentSpec, getComponentList, getComponentSpecUrl } = tools;
+
+const { ERROR_MESSAGES } = constants;
 
 export const unitMocks = (
   toolsModule: Pick<typeof tools, 'getComponentSpec' | 'getComponentList' | 'getComponentSpecUrl'>
@@ -154,9 +157,7 @@ export async function handler(argv: AddArgs) {
   const cliConfig = loadCliConfig(config);
 
   if (!cliConfig.config) {
-    console.error(
-      'The `sitecore.cli.config` file is missing a `config`. Please add it to use this command.'
-    );
+    console.error(ERROR_MESSAGES.MV_005('config'));
     return;
   }
 
@@ -266,7 +267,7 @@ export async function handler(argv: AddArgs) {
     }
 
     const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error(chalk.red(`Failed to add component: ${errorMessage}`));
+    console.error(chalk.red(`Failed to add a generated component. ${errorMessage}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`));
     return;
   }
 }

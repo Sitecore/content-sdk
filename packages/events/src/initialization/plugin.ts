@@ -1,4 +1,4 @@
-import { getCoreContext } from '@sitecore-content-sdk/core';
+import { getCoreContext, constants } from '@sitecore-content-sdk/core';
 import { EVENTS_PLUGIN_NAME } from './const';
 import { PACKAGE_VERSION } from '../consts';
 import { event } from '../events/custom-event/event';
@@ -10,6 +10,8 @@ import { clearEventQueue } from '../eventStorage/clearEventQueue';
 import { processEventQueue } from '../eventStorage/processEventQueue';
 import { ANALYTICS_PLUGIN_NAME } from '@sitecore-content-sdk/analytics-core/internal';
 import { EventsPlugin } from './types';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Initializes the events plugin with the provided options.
@@ -55,7 +57,7 @@ export function getEventsPlugin(): EventsPlugin {
 
   if (!plugin)
     throw new Error(
-      `[IE-004] You must first add "${EVENTS_PLUGIN_NAME}" to the "initContentSdk()" "plugins" array.`
+      ERROR_MESSAGES.IE_004(EVENTS_PLUGIN_NAME)
     );
   return plugin;
 }

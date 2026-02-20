@@ -1,9 +1,11 @@
 import { language } from '@sitecore-content-sdk/analytics-core/internal';
 import type { NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
-import { ERROR_MESSAGES, UTM_PREFIX } from '../consts';
+import { UTM_PREFIX } from '../consts';
 import type { EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';
 import { sendCallFlowsRequest } from './send-call-flows-request';
-import { CoreContext } from '@sitecore-content-sdk/core';
+import { CoreContext, constants } from '@sitecore-content-sdk/core';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * The Personalizer Class runs a flow of interactive experiments.

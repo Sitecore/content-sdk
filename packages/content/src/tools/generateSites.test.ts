@@ -5,11 +5,14 @@ import sinon from 'sinon';
 import path from 'path';
 import fs from 'fs';
 import chalk from 'chalk';
+import { constants } from '@sitecore-content-sdk/core';
 import { GenerateSitesConfig } from './generateSites';
 import { SiteInfo, SiteInfoService } from '../site';
 import { SitecoreConfigInput, defineConfig } from '../config';
 import proxyquire from 'proxyquire';
 import nock from 'nock';
+
+const { ERROR_MESSAGES } = constants;
 
 const defaultSite: SiteInfo = {
   name: 'defaultSite',
@@ -162,7 +165,7 @@ describe('generateSites', () => {
           expect((error as Error).message).to.include('Fetch error');
         }
 
-        expect(consoleErrorStub.calledWith(chalk.red('Error fetching site information'))).to.be
+        expect(consoleErrorStub.calledWith(chalk.red(`Failed to fetch site information. ${ERROR_MESSAGES.CONTACT_SUPPORT}`))).to.be
           .true;
       });
     });

@@ -2,8 +2,10 @@ import { generateCorrelationId } from '@sitecore-content-sdk/analytics-core/inte
 import type { NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { PACKAGE_VERSION } from '../consts';
 import { GetInteractiveExperienceDataOpts } from './personalizer';
-import { CoreContext, NativeDataFetcher } from '@sitecore-content-sdk/core';
+import { CoreContext, NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
 import { debug } from '../debug';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * A function that sends a CallFlow request to Sitecore Edge Proxy
@@ -46,7 +48,7 @@ export async function sendCallFlowsRequest(
       return response.data;
     })
     .catch((error) => {
-      if (error.message.includes('IV-002') || error.message.includes('IE-003'))
+      if (error.message.includes(ERROR_MESSAGES.IV_002) || error.message.includes(ERROR_MESSAGES.IE_003))
         throw new Error(error.message);
 
       return null;

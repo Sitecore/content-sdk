@@ -2,10 +2,11 @@
 import { expect } from 'chai';
 import sinon, { SinonSpy } from 'sinon';
 import nock from 'nock';
-import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClient, constants } from '@sitecore-content-sdk/core';
 import { ErrorPages, ErrorPagesService } from './error-pages-service';
 import { LayoutServiceData } from '../layout';
-import { siteNameError } from '../constants';
+
+const { ERROR_MESSAGES } = constants;
 
 const errorQueryResultNull = {
   site: {
@@ -63,7 +64,7 @@ describe('ErrorPagesService', () => {
         language,
       });
       await service.fetchErrorPages('').catch((error: Error) => {
-        expect(error.message).to.equal(siteNameError);
+        expect(error.message).to.equal(ERROR_MESSAGES.MV_002);
       });
 
       return expect(nock.isDone()).to.be.false;

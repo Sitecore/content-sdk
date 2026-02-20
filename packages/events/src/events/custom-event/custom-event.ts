@@ -5,12 +5,13 @@ import type {
   NestedObject,
 } from '@sitecore-content-sdk/analytics-core/utils';
 import { flattenObject } from '@sitecore-content-sdk/analytics-core/utils';
-import { ERROR_MESSAGES } from '../../consts';
 import { BaseEvent } from '../base-event';
 import type { EventAttributesInput, ExtensionData } from '../common-interfaces';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import type { SendEvent } from '../send-event/sendEvent';
-import { CoreContext } from '@sitecore-content-sdk/core';
+import { CoreContext, constants } from '@sitecore-content-sdk/core';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * A class that extends from {@link BaseEvent} and has all the required functionality to send a custom event
@@ -44,7 +45,7 @@ export class CustomEvent extends BaseEvent {
     const numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
     if (numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES)
-      throw new Error(ERROR_MESSAGES.IV_006);
+      throw new Error(ERROR_MESSAGES.IV_006(MAX_EXT_ATTRIBUTES));
 
     if (numberOfExtensionDataProperties > 0) this.customEventPayload.ext = this.extensionData;
 

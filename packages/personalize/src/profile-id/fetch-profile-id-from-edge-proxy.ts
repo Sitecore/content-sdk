@@ -1,5 +1,8 @@
 import { API_VERSION } from '@sitecore-content-sdk/analytics-core/internal';
-import { ERROR_MESSAGES, PACKAGE_VERSION } from '../consts';
+import { PACKAGE_VERSION } from '../consts';
+import { constants } from '@sitecore-content-sdk/core';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Gets the profile id from Edge Proxy.

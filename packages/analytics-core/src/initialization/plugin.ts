@@ -6,9 +6,11 @@ import {
   LIBRARY_VERSION,
 } from '../consts';
 import { ANALYTICS_PLUGIN_NAME } from './const';
-import { getCoreContext, debug, CoreContext } from '@sitecore-content-sdk/core';
+import { getCoreContext, debug, CoreContext, constants } from '@sitecore-content-sdk/core';
 import { getClientId } from '../client-id/get-client-id';
 const debugInit = debug.init;
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Parameters for creating an analytics plugin.
@@ -121,9 +123,7 @@ export function getAnalyticsPlugin(): AnalyticsPlugin {
   const plugin = getCoreContext().plugins.get(ANALYTICS_PLUGIN_NAME) as AnalyticsPlugin | undefined;
 
   if (!plugin)
-    throw new Error(
-      `[IE-004] - You must first add "${ANALYTICS_PLUGIN_NAME}" to the "initContentSdk()" "plugins" array.`
-    );
+    throw new Error(ERROR_MESSAGES.IE_004(ANALYTICS_PLUGIN_NAME));
 
   return plugin;
 }
