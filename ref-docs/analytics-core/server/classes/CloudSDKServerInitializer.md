@@ -6,7 +6,7 @@
 
 # Class: CloudSDKServerInitializer
 
-Defined in: [src/initializer/server/initializer.ts:39](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/analytics-core/src/initializer/server/initializer.ts#L39)
+Defined in: [src/initializer/server/initializer.ts:39](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/analytics-core/src/initializer/server/initializer.ts#L39)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [src/initializer/server/initializer.ts:39](https://github.com/Siteco
 
 > **new CloudSDKServerInitializer**(`request`, `response`, `settings`): `CloudSDKServerInitializer`
 
-Defined in: [src/initializer/server/initializer.ts:52](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/analytics-core/src/initializer/server/initializer.ts#L52)
+Defined in: [src/initializer/server/initializer.ts:52](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/analytics-core/src/initializer/server/initializer.ts#L52)
 
 Runs the initialization logic. Enables packages and creates cookies for CloudSDK.
 
@@ -48,7 +48,7 @@ ErrorMessages.IV_0001
 
 > **initialize**(): `Promise`\<`void`\>
 
-Defined in: [src/initializer/server/initializer.ts:63](https://github.com/Sitecore/content-sdk/blob/93fb4095715f238f6ba12b275948e1f3a8215ed2/packages/analytics-core/src/initializer/server/initializer.ts#L63)
+Defined in: [src/initializer/server/initializer.ts:63](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/analytics-core/src/initializer/server/initializer.ts#L63)
 
 Runs the initialization logic. Enables packages and create cookies for CloudSDK.
 
