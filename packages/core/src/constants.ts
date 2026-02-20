@@ -42,20 +42,21 @@ export const ERROR_MESSAGES = {
   IV_006: (maxAttributes: number) =>
     `[IV-006] "extensionData" supports maximum ${maxAttributes} attributes. Reduce the number of attributes.`,
   IV_007: (siteName: string) =>
-    `[IV-007] Site "${siteName}" does not exist or site item tree is missing`,
+    `[IV-007] Site "${siteName}" does not exist or site item tree is missing.`,
 
   /** IE errors are related to incorrect execution */
   IE_001: (pluginName: string, dependency: string) =>
-    `[IE-001] "${pluginName}" also requires "${dependency}"`,
-  IE_002: '[IE-002] You must first initialize the SDK using "initContentSdk()".',
+    `[IE-001] "${pluginName}" also requires "${dependency}". Add the missing dependency.`,
+  IE_002:
+    '[IE-002] SDK not initialized. You must first initialize the SDK using "initContentSdk()".',
   IE_003: '[IE-003] Timeout exceeded. The server did not respond within the allotted time.',
   IE_004: (pluginName: string) =>
-    `[IE-004] You must first add "${pluginName}" to the "initContentSdk()" "plugins" array.`,
+    `[IE-004] Plugin not registered. You must first add "${pluginName}" to the "initContentSdk()" "plugins" array.`,
   IE_005:
     '[IE-005] Unable to set the "sc_cid" cookie because the client ID could not be retrieved from the server. Make sure to set the correct values for "contextId" and "siteName". If the issue persists, try again later or use try-catch blocks to handle this error.',
   IE_006:
     '[IE-006] Unable to set the "sc_cid_personalize" cookie because the visitor ID could not be retrieved from the server. Make sure to set the correct values for "contextId" and "siteName". If the issue persists, try again later or use try-catch blocks to handle this error.',
-  IE_007: (hostName: string) => `[IE-007] Could not resolve site for host "${hostName}"`,
+  IE_007: (hostName: string) => `[IE-007] Could not resolve site for host "${hostName}".`,
 
   /** MV errors are related to missing values */
   MV_001: '[MV-001] "contextId" is required.',
@@ -65,9 +66,8 @@ export const ERROR_MESSAGES = {
   MV_005: (property: string) =>
     `[MV-005] The "sitecore.cli.config" file is missing a "${property}". Please add it to use this command.`,
   MV_006: '[MV-006] "clientContextId" is missing. Client-side functionalities may be limited.',
-  MV_007:
-    '[MV-007] Provide either "api.edge.contextId" or both "api.local.apiHost" and "api.local.apiKey".',
-  MV_008: '[MV-008] sitecore.config reference is required to be provided.',
+  MV_007: '[MV-007] Provide either "contextId" or both "apiHost" and "apiKey".',
+  MV_008: '[MV-008] Verify that sitecore.config is properly imported and correctly referenced.',
   MV_009: '[MV-009] "language" is required.',
 
   /** Generic follow-up when the user should contact support */

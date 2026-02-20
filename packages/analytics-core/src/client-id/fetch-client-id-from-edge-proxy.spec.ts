@@ -1,5 +1,5 @@
 import { constants, NativeDataFetcher } from '@sitecore-content-sdk/core';
-import { LIBRARY_VERSION, ERROR_MESSAGES as UTILS_ERROR_MESSAGES } from '../consts';
+import { LIBRARY_VERSION } from '../consts';
 import type { EPResponse } from '../interfaces';
 import * as resolveGetClientIdUrl from './resolve-get-client-id-url';
 import { fetchClientIdFromEdgeProxy } from './fetch-client-id-from-edge-proxy';
@@ -83,7 +83,7 @@ describe('fetchClientIdFromEdgeProxy', () => {
     const fetchSpy = jest.spyOn(NativeDataFetcher.prototype, 'fetch');
     fetchSpy.mockRejectedValueOnce(abortError);
 
-    const expectedError = UTILS_ERROR_MESSAGES.IE_005;
+    const expectedError = ERROR_MESSAGES.IE_005;
 
     expect(async () => {
       await fetchClientIdFromEdgeProxy(SITECORE_EDGE_URL, contextId);
@@ -95,7 +95,7 @@ describe('fetchClientIdFromEdgeProxy', () => {
       .spyOn(NativeDataFetcher.prototype, 'fetch')
       .mockResolvedValue({ data: null, status: 200, statusText: 'OK' });
 
-    const expectedError = UTILS_ERROR_MESSAGES.IE_005;
+    const expectedError = ERROR_MESSAGES.IE_005;
 
     expect(async () => {
       await fetchClientIdFromEdgeProxy(SITECORE_EDGE_URL, contextId, 100);
@@ -108,7 +108,7 @@ describe('fetchClientIdFromEdgeProxy', () => {
       .spyOn(NativeDataFetcher.prototype, 'fetch')
       .mockRejectedValueOnce({ message: 'random error' });
 
-    const expectedError = UTILS_ERROR_MESSAGES.IE_005;
+    const expectedError = ERROR_MESSAGES.IE_005;
 
     expect(async () => {
       await fetchClientIdFromEdgeProxy(SITECORE_EDGE_URL, contextId, 100);

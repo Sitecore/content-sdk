@@ -1,10 +1,12 @@
 import * as analyticsCore from '@sitecore-content-sdk/analytics-core/internal';
 import * as coreModule from '@sitecore-content-sdk/core';
-import { ERROR_MESSAGES, PACKAGE_VERSION } from '../consts';
+import { PACKAGE_VERSION } from '../consts';
 import type { PersonalizeData, PersonalizeIdentifierInput } from './personalizer';
 import { Personalizer } from './personalizer';
 import * as CallFlowsRequest from './send-call-flows-request';
 import { jest, expect } from '@jest/globals';
+
+const { ERROR_MESSAGES } = coreModule.constants;
 
 const UTILS_ERROR_MESSAGES = coreModule.constants.ERROR_MESSAGES;
 const SITECORE_EDGE_URL = coreModule.constants.SITECORE_EDGE_URL_DEFAULT;

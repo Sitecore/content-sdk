@@ -3,11 +3,16 @@ import { PERSONALIZE_PLUGIN_NAME } from './const';
 import * as coreModule from '@sitecore-content-sdk/core';
 import { jest, expect } from '@jest/globals';
 
-jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreContext: jest.fn(),
-  debugModule: jest.fn(() => jest.fn()),
-  debugNamespace: 'content-sdk',
-}));
+jest.mock('@sitecore-content-sdk/core', () => {
+  const originalModule = jest.requireActual<typeof coreModule>('@sitecore-content-sdk/core');
+
+  return {
+    ...originalModule,
+    getCoreContext: jest.fn(),
+    debugModule: jest.fn(() => jest.fn()),
+    debugNamespace: 'content-sdk',
+  };
+});
 
 describe('shared', () => {
   const mockCoreContext = {
@@ -39,7 +44,9 @@ describe('shared', () => {
     it('should throw an error when personalize plugin is not registered', () => {
       mockCoreContext.plugins.clear();
 
-      expect(() => getPersonalizePlugin()).toThrow('Personalize plugin is not registered');
+      expect(() => getPersonalizePlugin()).toThrow(
+        '[IE-004] Plugin not registered. You must first add "PersonalizePlugin" to the "initContentSdk()" "plugins" array.'
+      );
     });
   });
 });
