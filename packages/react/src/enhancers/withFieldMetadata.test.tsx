@@ -127,7 +127,10 @@ describe('withFieldMetadata', () => {
 
       const ref = React.createRef<HTMLDivElement>();
 
-      const WrappedComponent = withFieldMetadata<TestComponentWithRefProps>(TestComponentWithRef, true);
+      const WrappedComponent = withFieldMetadata<TestComponentWithRefProps>(
+        TestComponentWithRef,
+        true
+      );
 
       const rendered = render(<WrappedComponent {...props} ref={ref} />, {
         container: document.body,
@@ -148,7 +151,10 @@ describe('withFieldMetadata', () => {
 
       const ref = React.createRef<HTMLDivElement>();
 
-      const WrappedComponent = withFieldMetadata<TestComponentWithRefProps>(TestComponentWithRef, true);
+      const WrappedComponent = withFieldMetadata<TestComponentWithRefProps>(
+        TestComponentWithRef,
+        true
+      );
 
       const rendered = render(<WrappedComponent {...props} ref={ref} />, {
         container: document.body,
@@ -172,7 +178,10 @@ describe('withFieldMetadata', () => {
 
       const ref = React.createRef<HTMLDivElement>();
 
-      const WrappedComponent = withFieldMetadata<TestComponentWithRefProps>(TestComponentWithRef, true);
+      const WrappedComponent = withFieldMetadata<TestComponentWithRefProps>(
+        TestComponentWithRef,
+        true
+      );
 
       const rendered = render(<WrappedComponent {...props} ref={ref} />, {
         container: document.body,
@@ -196,7 +205,10 @@ describe('withFieldMetadata', () => {
 
       const ref = React.createRef<HTMLDivElement>();
 
-      const WrappedComponent = withFieldMetadata<TestComponentWithRefProps>(TestComponentWithRef, true);
+      const WrappedComponent = withFieldMetadata<TestComponentWithRefProps>(
+        TestComponentWithRef,
+        true
+      );
 
       const rendered = render(<WrappedComponent {...props} ref={ref} />, {
         container: document.body,

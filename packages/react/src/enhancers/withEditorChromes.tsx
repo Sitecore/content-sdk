@@ -1,3 +1,4 @@
+'use client';
 import React, { ComponentType, useEffect, useRef } from 'react';
 import { resetEditorChromes } from '..';
 
