@@ -3823,7 +3823,7 @@ __metadata:
   dependencies:
     "@sitecore-content-sdk/content": "npm:2.0.0-canary.0"
     "@sitecore-content-sdk/core": "npm:2.0.0-canary.0"
-    "@sitecore-content-sdk/search": "npm:1.0.0-canary.0"
+    "@sitecore-content-sdk/search": "npm:0.2.0-canary.10"
     "@sitecore-feaas/clientside": "npm:^0.6.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@testing-library/dom": "npm:^10.4.0"
@@ -3869,7 +3869,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/search@npm:1.0.0-canary.0, @sitecore-content-sdk/search@workspace:packages/search":
+"@sitecore-content-sdk/search@npm:0.2.0-canary.10, @sitecore-content-sdk/search@workspace:packages/search":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/search@workspace:packages/search"
   dependencies:
