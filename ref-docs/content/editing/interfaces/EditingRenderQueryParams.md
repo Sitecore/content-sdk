@@ -6,7 +6,7 @@
 
 # Interface: EditingRenderQueryParams
 
-Defined in: [content/src/editing/models.ts:9](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/editing/models.ts#L9)
+Defined in: [content/src/editing/models.ts:9](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/content/src/editing/models.ts#L9)
 
 **`Internal`**
 
@@ -24,7 +24,7 @@ Appended when XMCloud Pages preview (editing) mode is used
 
 > **mode**: [`Preview`](../../layout/enumerations/LayoutServicePageState.md#preview) \| [`Edit`](../../layout/enumerations/LayoutServicePageState.md#edit) \| [`DesignLibraryMode`](../enumerations/DesignLibraryMode.md)
 
-Defined in: [content/src/editing/models.ts:16](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/editing/models.ts#L16)
+Defined in: [content/src/editing/models.ts:16](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/content/src/editing/models.ts#L16)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [content/src/editing/models.ts:16](https://github.com/Sitecore/conte
 
 > **route**: `string`
 
-Defined in: [content/src/editing/models.ts:15](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/editing/models.ts#L15)
+Defined in: [content/src/editing/models.ts:15](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/content/src/editing/models.ts#L15)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [content/src/editing/models.ts:15](https://github.com/Sitecore/conte
 
 > **sc\_itemid**: `string`
 
-Defined in: [content/src/editing/models.ts:13](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/editing/models.ts#L13)
+Defined in: [content/src/editing/models.ts:13](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/content/src/editing/models.ts#L13)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [content/src/editing/models.ts:13](https://github.com/Sitecore/conte
 
 > **sc\_lang**: `string`
 
-Defined in: [content/src/editing/models.ts:12](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/editing/models.ts#L12)
+Defined in: [content/src/editing/models.ts:12](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/content/src/editing/models.ts#L12)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [content/src/editing/models.ts:12](https://github.com/Sitecore/conte
 
 > `optional` **sc\_layoutKind**: [`LayoutKind`](../enumerations/LayoutKind.md)
 
-Defined in: [content/src/editing/models.ts:17](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/editing/models.ts#L17)
+Defined in: [content/src/editing/models.ts:17](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/content/src/editing/models.ts#L17)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [content/src/editing/models.ts:17](https://github.com/Sitecore/conte
 
 > **sc\_site**: `string`
 
-Defined in: [content/src/editing/models.ts:14](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/editing/models.ts#L14)
+Defined in: [content/src/editing/models.ts:14](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/content/src/editing/models.ts#L14)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [content/src/editing/models.ts:14](https://github.com/Sitecore/conte
 
 > `optional` **sc\_variant**: `string`
 
-Defined in: [content/src/editing/models.ts:18](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/editing/models.ts#L18)
+Defined in: [content/src/editing/models.ts:18](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/content/src/editing/models.ts#L18)
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: [content/src/editing/models.ts:18](https://github.com/Sitecore/conte
 
 > `optional` **sc\_version**: `string`
 
-Defined in: [content/src/editing/models.ts:19](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/editing/models.ts#L19)
+Defined in: [content/src/editing/models.ts:19](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/content/src/editing/models.ts#L19)
 
 ***
 
@@ -88,4 +88,4 @@ Defined in: [content/src/editing/models.ts:19](https://github.com/Sitecore/conte
 
 > **secret**: `string`
 
-Defined in: [content/src/editing/models.ts:11](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/editing/models.ts#L11)
+Defined in: [content/src/editing/models.ts:11](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/content/src/editing/models.ts#L11)

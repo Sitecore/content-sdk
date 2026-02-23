@@ -8,7 +8,7 @@
 
 > **getCloudSDKRequest**(): `Request`
 
-Defined in: [src/initializer/server/initializer.ts:227](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/analytics-core/src/initializer/server/initializer.ts#L227)
+Defined in: [src/initializer/server/initializer.ts:227](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/analytics-core/src/initializer/server/initializer.ts#L227)
 
 Gets the current CloudSDK request object.
 
