@@ -60,5 +60,6 @@
     "dist",
     "types",
     "/*.d.ts"
-  ]
+  ],
+  "private": true
 }
