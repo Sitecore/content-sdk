@@ -333,6 +333,48 @@ describe('Import Map Generation', () => {
       );
     });
 
+    it('should write default service imports with custom defaultImportEntries import name', () => {
+      // Prepare a fake import map with no entries
+      const importMap = new Map<string, ModuleExports>();
+      const customImportName = 'customDefaultImports';
+      const output = defaultMapTemplate(importMap, 'core', customImportName);
+
+      // Should include custom import name in the import statement
+      expect(output).to.include(
+        `import {
+  combineImportEntries,
+  ${customImportName},
+  ImportEntry,
+} from '@sitecore-content-sdk/core/codegen';`
+      );
+
+      // Should use custom import name in the combineImportEntries call
+      expect(output).to.match(
+        new RegExp(`export default combineImportEntries\\(${customImportName}, importMap\\);`)
+      );
+    });
+
+    it('should write default service imports with fallback defaultImportEntries import name', () => {
+      // Prepare a fake import map with no entries
+      const importMap = new Map<string, ModuleExports>();
+      // Call without providing the third parameter to test default behavior
+      const output = defaultMapTemplate(importMap);
+
+      // Should include default 'defaultImportEntries' in the import statement
+      expect(output).to.include(
+        `import {
+  combineImportEntries,
+  defaultImportEntries,
+  ImportEntry,
+} from '@sitecore-content-sdk/core/codegen';`
+      );
+
+      // Should use default 'defaultImportEntries' in the combineImportEntries call
+      expect(output).to.match(
+        /export default combineImportEntries\(defaultImportEntries, importMap\);/
+      );
+    });
+
     it('final file should export function combining generated and default import maps', () => {
       // Prepare a fake import map with one entry
       const importMap = new Map<string, ModuleExports>();

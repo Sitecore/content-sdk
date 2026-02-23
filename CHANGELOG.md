@@ -10,6 +10,12 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
+### 1.5.0
+
+### 🎉 New Features & Improvements
+
+* `[nextjs]` Enable secured component variant generation for App Router Server Components in Design Studio ([#369](https://github.com/Sitecore/content-sdk/pull/369))([#375](https://github.com/Sitecore/content-sdk/pull/375))
+
 ### 1.4.1
 
 ### 🐛 Bug Fixes

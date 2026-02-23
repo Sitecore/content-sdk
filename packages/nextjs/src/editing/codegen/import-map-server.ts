@@ -1,51 +1,35 @@
-'use client';
-
 import React, {
   Children,
   Fragment,
   createElement,
   cloneElement,
   isValidElement,
-  useActionState,
   useCallback,
-  useContext,
-  useDeferredValue,
-  useEffect,
   useId,
-  useLayoutEffect,
   useMemo,
-  useOptimistic,
-  useReducer,
-  useRef,
-  useState,
-  useSyncExternalStore,
-  useTransition,
   forwardRef,
   lazy,
   memo,
   Suspense,
 } from 'react';
 import { ImportEntry } from '@sitecore-content-sdk/core/codegen';
+import { CdpHelper } from '@sitecore-content-sdk/core/personalize';
 import {
   Link,
   Text,
   RichText,
-  useSitecore,
   NextImage,
   Placeholder,
   Image,
   File,
-  useComponentProps,
   withDatasourceCheck,
-  CdpHelper,
-  withSitecore,
 } from '../..';
 
 /**
  * The default import entries for the import map.
  * @public
  */
-export const defaultImportEntries: ImportEntry[] = [
+export const defaultServerImportEntries: ImportEntry[] = [
   /* -------------------- React -------------------- */
   {
     module: 'react',
@@ -57,20 +41,9 @@ export const defaultImportEntries: ImportEntry[] = [
       { name: 'cloneElement', value: cloneElement },
       { name: 'isValidElement', value: isValidElement },
       // Hooks
-      { name: 'useActionState', value: useActionState },
       { name: 'useCallback', value: useCallback },
-      { name: 'useContext', value: useContext },
-      { name: 'useDeferredValue', value: useDeferredValue },
-      { name: 'useEffect', value: useEffect },
       { name: 'useId', value: useId },
-      { name: 'useLayoutEffect', value: useLayoutEffect },
       { name: 'useMemo', value: useMemo },
-      { name: 'useOptimistic', value: useOptimistic },
-      { name: 'useReducer', value: useReducer },
-      { name: 'useRef', value: useRef },
-      { name: 'useState', value: useState },
-      { name: 'useSyncExternalStore', value: useSyncExternalStore },
-      { name: 'useTransition', value: useTransition },
       // Performance helpers
       { name: 'forwardRef', value: forwardRef },
       { name: 'lazy', value: lazy },
@@ -89,9 +62,6 @@ export const defaultImportEntries: ImportEntry[] = [
       { name: 'NextImage', value: NextImage },
       { name: 'Image', value: Image },
       { name: 'File', value: File },
-      { name: 'useSitecore', value: useSitecore },
-      { name: 'withSitecore', value: withSitecore },
-      { name: 'useComponentProps', value: useComponentProps },
       { name: 'withDatasourceCheck', value: withDatasourceCheck },
       { name: 'CdpHelper', value: CdpHelper },
     ],

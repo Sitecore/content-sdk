@@ -2,11 +2,15 @@
 import React, { useEffect } from 'react';
 import * as dlHelpers from '@sitecore-content-sdk/core/editing';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
-import { updateServerComponentAction } from '../../server-actions/update-server-component-action';
+import {
+  updateComponentAction,
+  previewComponentAction,
+} from '../../server-actions/update-server-component-action';
 import {
   DesignLibraryPreviewEventsProps,
   DesignLibraryVariantGenerationEventsProps,
 } from './models';
+import { useSitecore } from '../../enhancers/withSitecore';
 
 let {
   getDesignLibraryComponentPropsEvent,
@@ -16,12 +20,14 @@ let {
   sendErrorEvent,
 } = codegen;
 let { getDesignLibraryStatusEvent, addComponentUpdateHandler, postToDesignLibrary } = dlHelpers;
-let _updateServerComponentAction = updateServerComponentAction;
+let _updateComponentAction = updateComponentAction;
+let _previewComponentAction = previewComponentAction;
 
 export const __mockDependencies = (mocks: any) => {
   postToDesignLibrary = mocks.postToDesignLibrary;
   addComponentUpdateHandler = mocks.addComponentUpdateHandler;
-  _updateServerComponentAction = mocks.updateServerComponentAction;
+  _updateComponentAction = mocks.updateComponentAction;
+  _previewComponentAction = mocks.previewComponentAction;
   addServerComponentPreviewHandler = mocks.addServerComponentPreviewHandler;
   getDesignLibraryImportMapEvent = mocks.getDesignLibraryImportMapEvent;
   getDesignLibraryComponentPropsEvent = mocks.getDesignLibraryComponentPropsEvent;
@@ -43,22 +49,14 @@ export const DesignLibraryPreviewEvents = ({
   useEffect(() => {
     if (!component?.uid) return;
 
-    postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid));
+    postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid, true));
 
-    const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
-      _updateServerComponentAction({ uid: updated.uid!, updatedComponent: updated });
-    });
-
-    // eslint-disable-next-line no-unused-vars
-    const unsubPreview = addServerComponentPreviewHandler((_eventArgs) => {
-      console.error(
-        'Component Library variant generation for server components is temporarily disabled.'
-      );
+    const unsubUpdate = addComponentUpdateHandler(component, (rendering) => {
+      _updateComponentAction({ uid: rendering.uid!, rendering });
     });
 
     return () => {
       unsubUpdate && unsubUpdate();
-      unsubPreview && unsubPreview();
     };
   }, [component, designLibraryStatus]);
 
@@ -77,29 +75,41 @@ export const DesignLibraryVariantGenerationEvents = ({
   designLibraryStatus,
   component,
   importMap,
-  importMapError,
-  previewComponentData,
+  componentInitError,
+  generatedComponentData,
 }: DesignLibraryVariantGenerationEventsProps) => {
+  const { api } = useSitecore();
+
   useEffect(() => {
     if (!component?.uid) return;
 
-    postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid));
+    postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid, true));
 
-    const unsubUpdate = addComponentUpdateHandler(component, (updated) => {
-      _updateServerComponentAction({
-        uid: updated.uid!,
-        updatedComponent: updated,
-        previewComponent: previewComponentData,
+    const unsubUpdate = addComponentUpdateHandler(component, (rendering) => {
+      _updateComponentAction({
+        uid: rendering.uid!,
+        rendering,
+        generatedComponentData,
       });
     });
 
     const unsubPreview = addServerComponentPreviewHandler((eventArgs) => {
-      _updateServerComponentAction({ uid: component.uid!, previewComponent: eventArgs });
+      _previewComponentAction(
+        {
+          uid: component.uid!,
+          args: eventArgs,
+        },
+        api?.edge?.edgeUrl
+      );
     });
 
-    if (importMapError) {
-      // an import map error occurred on the server side in DesignLibraryServer, post error event to Design Studio
-      sendErrorEvent(component.uid, importMapError, codegen.DesignLibraryPreviewError.RenderInit);
+    if (componentInitError) {
+      // an error occurred during initialization of the component on the server side
+      sendErrorEvent(
+        component.uid,
+        componentInitError,
+        codegen.DesignLibraryPreviewError.RenderInit
+      );
     } else {
       const importMapEvent = getDesignLibraryImportMapEvent(component.uid, importMap!);
       postToDesignLibrary(importMapEvent);
@@ -111,9 +121,9 @@ export const DesignLibraryVariantGenerationEvents = ({
       );
       postToDesignLibrary(propsEvent);
 
-      if (previewComponentData?.message?.styles?.content) {
+      if (generatedComponentData?.styles?.content) {
         // the generated component has custom styles, so add the css in style element and add it to document head
-        addStyleElement(previewComponentData.message.styles.content);
+        addStyleElement(generatedComponentData.styles.content);
       }
     }
 
@@ -121,7 +131,7 @@ export const DesignLibraryVariantGenerationEvents = ({
       unsubUpdate && unsubUpdate();
       unsubPreview && unsubPreview();
     };
-  }, [component, designLibraryStatus, importMap, importMapError, previewComponentData]);
+  }, [component, designLibraryStatus, importMap, componentInitError, generatedComponentData]);
 
   return <></>;
 };

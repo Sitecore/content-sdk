@@ -208,7 +208,7 @@ describe('<DesignLibraryServer />', () => {
       hasCacheStub.returns(true);
       getCacheAndCleanStub.returns({
         uid: 'test-content',
-        updatedComponent: {
+        rendering: {
           fields: {
             heading: {
               value: 'Updated Heading from Cache',
@@ -236,7 +236,7 @@ describe('<DesignLibraryServer />', () => {
       hasCacheStub.returns(true);
       getCacheAndCleanStub.returns({
         uid: 'test-content',
-        updatedComponent: {
+        rendering: {
           fields: {},
           params: { theme: 'dark-mode' },
         },
@@ -260,7 +260,7 @@ describe('<DesignLibraryServer />', () => {
       hasCacheStub.returns(true);
       getCacheAndCleanStub.returns({
         uid: 'test-content',
-        updatedComponent: {
+        rendering: {
           fields: {},
           params: {},
         },
@@ -348,7 +348,7 @@ describe('<DesignLibraryServer />', () => {
         expect(importMapLoaderSpy).to.have.been.called;
       });
 
-      it('should set importMapError when loadImportMap is not provided', async () => {
+      it('should set componentInitError when loadImportMap is not provided', async () => {
         const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
         const page = getPage(layoutData, modeLibraryMetadata_Gen);
         const awaitedDesignLibraryServer = await DesignLibraryServerVariantGeneration({
@@ -359,10 +359,10 @@ describe('<DesignLibraryServer />', () => {
         render(awaitedDesignLibraryServer);
 
         const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
-        expect(propsPassed.importMapError).to.equal('No loadImportMap provided');
+        expect(propsPassed.componentInitError).to.equal('No loadImportMap provided');
       });
 
-      it('should set importMapError when loadImportMap throws', async () => {
+      it('should set componentInitError when loadImportMap throws', async () => {
         const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
         const page = getPage(layoutData, modeLibraryMetadata_Gen);
         const importMapLoaderSpy = sandbox.stub().throws(new Error('Import map load failed'));
@@ -377,7 +377,7 @@ describe('<DesignLibraryServer />', () => {
         render(awaitedDesignLibraryServer);
 
         const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
-        expect(propsPassed.importMapError).to.equal(
+        expect(propsPassed.componentInitError).to.equal(
           'Error loading import map: Error: Import map load failed'
         );
       });
@@ -473,7 +473,7 @@ describe('<DesignLibraryServer />', () => {
         const importMapLoaderSpy = sandbox.stub();
         getCacheAndCleanStub.returns({
           uid: 'test-content',
-          updatedComponent: {
+          rendering: {
             fields: {
               content: {
                 value: 'This is the updated value',
@@ -484,7 +484,6 @@ describe('<DesignLibraryServer />', () => {
             },
             params: { theme: 'dark' },
           },
-          previewComponent: {},
         } as any);
 
         const awaitedDesignLibraryServer = await DesignLibraryServerVariantGeneration({
@@ -521,7 +520,7 @@ describe('<DesignLibraryServer />', () => {
         const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
         getCacheAndCleanStub.returns({
           uid: 'test-content',
-          updatedComponent: {
+          rendering: {
             fields: {
               heading: {
                 value: 'This is the updated heading value',
@@ -529,7 +528,7 @@ describe('<DesignLibraryServer />', () => {
             },
             params: { theme: 'dark' },
           },
-          previewComponent: { core: 'preview component code' },
+          generatedComponentData: { core: 'preview component code' },
         } as any);
         createComponentInstanceStub.returns((props) => (
           <div>
@@ -562,10 +561,10 @@ describe('<DesignLibraryServer />', () => {
         const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
         const page = getPage(layoutData, modeLibraryMetadata_Gen);
         const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
-        const previewComponent = { message: { styles: { content: 'background: green' } } };
+        const generatedComponentData = { styles: { content: 'background: green' } };
         getCacheAndCleanStub.returns({
           uid: 'test-content',
-          updatedComponent: {
+          rendering: {
             fields: {
               heading: {
                 value: 'This is the updated heading value',
@@ -573,7 +572,7 @@ describe('<DesignLibraryServer />', () => {
             },
             params: { theme: 'dark' },
           },
-          previewComponent,
+          generatedComponentData,
         } as any);
         createComponentInstanceStub.returns((props) => (
           <div>
@@ -593,18 +592,18 @@ describe('<DesignLibraryServer />', () => {
 
         expect(DesignLibraryVariantGenerationEventsStub).to.have.been.calledOnce;
         const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
-        expect(propsPassed.previewComponentData).to.deep.equal(previewComponent);
+        expect(propsPassed.generatedComponentData).to.deep.equal(generatedComponentData);
       });
 
       it('should call createComponentInstance with import map and preview data', async () => {});
 
-      it('should set importMapError when createComponentInstance throws', async () => {
+      it('should set componentInitError when createComponentInstance throws', async () => {
         const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
         const page = getPage(layoutData, modeLibraryMetadata_Gen);
         const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
         getCacheAndCleanStub.returns({
           uid: 'test-content',
-          previewComponent: { core: 'preview component code' },
+          generatedComponentData: { core: 'preview component code' },
         } as any);
         createComponentInstanceStub.throws(new Error('create component failed'));
 
@@ -618,7 +617,7 @@ describe('<DesignLibraryServer />', () => {
         const rendered = render(awaitedDesignLibraryServer);
 
         const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
-        expect(propsPassed.importMapError).to.equal('Error: create component failed');
+        expect(propsPassed.componentInitError).to.equal('Error: create component failed');
 
         expect(rendered?.container.innerHTML).to.equal(
           [
@@ -638,7 +637,7 @@ describe('<DesignLibraryServer />', () => {
         const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
         getCacheAndCleanStub.returns({
           uid: 'test-content',
-          updatedComponent: {
+          rendering: {
             fields: {
               heading: {
                 value: 'This is the updated heading value',
@@ -646,7 +645,7 @@ describe('<DesignLibraryServer />', () => {
             },
             params: { theme: 'dark' },
           },
-          previewComponent: { core: 'preview component code' },
+          generatedComponentData: { core: 'preview component code' },
         } as any);
         createComponentInstanceStub.returns((props) => {
           throw new Error('render component failed');

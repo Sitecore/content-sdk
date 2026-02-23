@@ -233,7 +233,16 @@ export function nextjsClientMapTemplate(indexedImportMap: Map<string, ModuleExpo
 }
 
 /**
- * React-specific import map template with 'use client' directive. Used in App Router.
+ * React-specific import map template for server side imports only. Used in App Router.
+ * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.server.ts file
+ * @returns {string} contents for resulting import map file
+ */
+export function nextjsServertMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
+  return defaultImportMapTemplate(indexedImportMap, 'nextjs', 'defaultServerImportEntries');
+}
+
+/**
+ * React-specific import map template. Used in Pages Router.
  * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.client.ts file
  * @returns {string} contents for resulting import map file
  */
