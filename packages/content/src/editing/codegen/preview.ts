@@ -4,6 +4,7 @@ import { validateEvent, DesignLibraryEvent } from '../design-library';
 import debug from '../../debug';
 
 const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
+
 /**
  * Event to send import map to design library
  */
@@ -189,6 +190,21 @@ export enum DesignLibraryPreviewError {
    */
   RenderInit = 'render-init',
 }
+
+/**
+ * The generated component data response from the secured endpoint
+ * @internal
+ */
+type GeneratedComponentDataResponse = {
+  /**
+   * The unique identifier for the cache entry.
+   */
+  id: string;
+  /**
+   * The component data content in string format, which includes the component code, styles and imports.
+   */
+  content: string;
+};
 
 /**
  * Builds the component dependencies from the component imports and the import map.
@@ -516,7 +532,7 @@ export async function fetchGeneratedComponentFromCache(
 ): Promise<GeneratedComponentData> {
   const dataFetcher = new NativeDataFetcher({ debugger: debug.editing });
 
-  const componentDataResponse = await dataFetcher.fetch<GeneratedComponentData>(
+  const componentDataResponse = await dataFetcher.fetch<GeneratedComponentDataResponse>(
     `${edgeUrl}/authoring/api/v1/components/cache/${id}`,
     {
       method: 'GET',
@@ -532,5 +548,9 @@ export async function fetchGeneratedComponentFromCache(
     );
   }
 
-  return componentDataResponse.data;
+  const generatedComponentData = JSON.parse(
+    componentDataResponse.data.content
+  ) as GeneratedComponentData;
+
+  return generatedComponentData;
 }

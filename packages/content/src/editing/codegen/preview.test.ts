@@ -932,7 +932,10 @@ describe('design library codegen', () => {
       fetchStub.resolves({
         status: 200,
         statusText: 'OK',
-        data: mockComponentData,
+        data: {
+          id: testId,
+          content: JSON.stringify(mockComponentData),
+        },
       });
 
       const result = await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
@@ -953,7 +956,10 @@ describe('design library codegen', () => {
       fetchStub.resolves({
         status: 200,
         statusText: 'OK',
-        data: mockComponentData,
+        data: {
+          id: testId,
+          content: JSON.stringify(mockComponentData),
+        },
       });
 
       const result = await fetchGeneratedComponentFromCache(testId, testToken);
@@ -1035,7 +1041,10 @@ describe('design library codegen', () => {
       fetchStub.resolves({
         status: 200,
         statusText: 'OK',
-        data: mockComponentData,
+        data: {
+          id: customId,
+          content: JSON.stringify(mockComponentData),
+        },
       });
 
       await fetchGeneratedComponentFromCache(customId, testToken, testEdgeUrl);
@@ -1049,7 +1058,10 @@ describe('design library codegen', () => {
       fetchStub.resolves({
         status: 200,
         statusText: 'OK',
-        data: mockComponentData,
+        data: {
+          id: testId,
+          content: JSON.stringify(mockComponentData),
+        },
       });
 
       await fetchGeneratedComponentFromCache(testId, customToken, testEdgeUrl);
@@ -1062,7 +1074,10 @@ describe('design library codegen', () => {
       fetchStub.resolves({
         status: 200,
         statusText: 'OK',
-        data: mockComponentData,
+        data: {
+          id: testId,
+          content: JSON.stringify(mockComponentData),
+        },
       });
 
       await fetchGeneratedComponentFromCache(testId, testToken, testEdgeUrl);
