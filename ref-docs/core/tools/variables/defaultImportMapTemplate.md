@@ -6,9 +6,9 @@
 
 # Variable: defaultImportMapTemplate()
 
-> **defaultImportMapTemplate**: (`indexedImportMap`, `framework`) => `string` = `_defaultMapTemplate`
+> **defaultImportMapTemplate**: (`indexedImportMap`, `framework`, `defaultImportEntriesImport`) => `string` = `_defaultMapTemplate`
 
-Defined in: [packages/core/src/tools/codegen/import-map.ts:34](https://github.com/Sitecore/content-sdk/blob/0136d0acb2e8346bcb52e2d0dca5714ba8c61735/packages/core/src/tools/codegen/import-map.ts#L34)
+Defined in: [packages/core/src/tools/codegen/import-map.ts:34](https://github.com/Sitecore/content-sdk/blob/f0337b779d76d5d2127940f24a5b1cfb8174af76/packages/core/src/tools/codegen/import-map.ts#L34)
 
 **`Internal`**
 
@@ -20,6 +20,7 @@ Builds file contents for component map based on the default template
 | ------ | ------ | ------ | ------ |
 | `indexedImportMap` | `Map`\<`string`, [`ModuleExports`](../type-aliases/ModuleExports.md)\> | `undefined` | map to be processed into final component-map.ts file |
 | `framework` | `string` | `'core'` | - |
+| `defaultImportEntriesImport` | `string` | `'defaultImportEntries'` | - |
 
 ## Returns
 

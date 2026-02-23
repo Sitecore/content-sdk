@@ -8,7 +8,7 @@
 
 > **WriteImportMapArgsInternal** = [`WriteImportMapArgs`](WriteImportMapArgs.md) & `object`
 
-Defined in: [packages/core/src/tools/codegen/import-map.ts:90](https://github.com/Sitecore/content-sdk/blob/0136d0acb2e8346bcb52e2d0dca5714ba8c61735/packages/core/src/tools/codegen/import-map.ts#L90)
+Defined in: [packages/core/src/tools/codegen/import-map.ts:90](https://github.com/Sitecore/content-sdk/blob/f0337b779d76d5d2127940f24a5b1cfb8174af76/packages/core/src/tools/codegen/import-map.ts#L90)
 
 **`Internal`**
 
@@ -37,23 +37,13 @@ Function to return custom template for client import map file when separateServe
 
 contents for resulting import map file
 
-### separateServerClientMaps?
+### defaultTemplate()?
 
-> `optional` **separateServerClientMaps**: `boolean`
-
-**`Internal`**
-
-generate separate import map for server/client components
-when true, generates import-map.server.ts and import-map.client.ts
-
-### serverTemplate()?
-
-> `optional` **serverTemplate**: (`indexedImportMap`) => `string`
+> `optional` **defaultTemplate**: (`indexedImportMap`) => `string`
 
 **`Internal`**
 
-Function to return custom template for server import map file.
-Will be used as default template if separateServerClientMaps is false.
+Function to return custom template for import map file.
 
 #### Parameters
 
@@ -66,3 +56,12 @@ Will be used as default template if separateServerClientMaps is false.
 `string`
 
 contents for resulting import map file
+
+### separateServerClientMaps?
+
+> `optional` **separateServerClientMaps**: `boolean`
+
+**`Internal`**
+
+generate separate import map for server/client components
+when true, generates import-map.server.ts and import-map.client.ts
