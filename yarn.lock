@@ -3165,7 +3165,7 @@ __metadata:
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
     "@sitecore-content-sdk/core": 1.5.0-canary.11
-    "@sitecore-content-sdk/search": ^0.1.2
+    "@sitecore-content-sdk/search": 0.1.3-canary.1
     "@sitecore-feaas/clientside": ^0.6.0
     "@stylistic/eslint-plugin": ^5.2.2
     "@testing-library/dom": ^10.4.0
@@ -3211,7 +3211,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/search@^0.1.2, @sitecore-content-sdk/search@workspace:packages/search":
+"@sitecore-content-sdk/search@0.1.3-canary.1, @sitecore-content-sdk/search@workspace:packages/search":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/search@workspace:packages/search"
   dependencies:
