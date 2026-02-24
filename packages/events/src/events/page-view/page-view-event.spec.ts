@@ -1,12 +1,14 @@
 import * as core from '@sitecore-content-sdk/analytics-core/internal';
 import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
 import * as utils from '@sitecore-content-sdk/analytics-core/utils';
-import { ERROR_MESSAGES } from '../../consts';
+import { constants } from '@sitecore-content-sdk/core';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as sendEventModule from '../send-event/sendEvent';
 import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
 import { jest, expect } from '@jest/globals';
+
+const { ERROR_MESSAGES } = constants;
 
 jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
   const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/utils') as object;
@@ -290,7 +292,7 @@ describe('PageViewEvent', () => {
 
       expect(() => {
         callPageViewEvent(pageViewData, id, config, extensionData);
-      }).toThrow(ERROR_MESSAGES.IV_006);
+      }).toThrow(ERROR_MESSAGES.IV_006(MAX_EXT_ATTRIBUTES));
     });
 
     it('should not throw an error when no more than 50 ext attributes are passed', () => {

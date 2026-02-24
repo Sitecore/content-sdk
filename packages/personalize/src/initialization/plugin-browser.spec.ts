@@ -10,11 +10,16 @@ import * as getProfileIdModule from './get-profile-id';
 import { PersonalizeAdapter } from './types';
 import { jest, expect } from '@jest/globals';
 
-jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreContext: jest.fn(),
-  debugModule: jest.fn(() => jest.fn()),
-  debugNamespace: 'content-sdk',
-}));
+jest.mock('@sitecore-content-sdk/core', () => {
+  const originalModule = jest.requireActual<typeof coreModule>('@sitecore-content-sdk/core');
+
+  return {
+    ...originalModule,
+    getCoreContext: jest.fn(),
+    debugModule: jest.fn(() => jest.fn()),
+    debugNamespace: 'content-sdk',
+  };
+});
 
 jest.mock('./shared', () => ({
   getPersonalizePlugin: jest.fn(),

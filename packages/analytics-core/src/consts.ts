@@ -41,12 +41,3 @@ export const API_VERSION = 'v1.2';
  * @internal
  */
 export const CORRELATION_ID_HEADER = 'x-sc-correlation-id';
-
-/**
- * The error messages for analytics packages.
- * @internal
- */
-export const ERROR_MESSAGES = {
-  IE_005:
-    '[IE-005] Unable to set the "sc_cid" cookie because the client ID could not be retrieved from the server. Make sure to set the correct values for "contextId" and "siteName". If the issue persists, try again later or use try-catch blocks to handle this error.',
-} as const;

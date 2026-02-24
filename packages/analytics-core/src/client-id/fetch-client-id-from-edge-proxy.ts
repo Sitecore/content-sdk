@@ -1,9 +1,9 @@
 import { NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
 import type { EPResponse, VisitorIds } from '../interfaces';
-import { ERROR_MESSAGES, LIBRARY_VERSION } from '../consts';
+import { LIBRARY_VERSION } from '../consts';
 import { resolveGetClientIdUrl } from './resolve-get-client-id-url';
 
-const UTILS_ERROR_MESSAGES = constants.ERROR_MESSAGES;
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Gets the client ID and client key from Sitecore Edge proxy.
@@ -36,8 +36,8 @@ export async function fetchClientIdFromEdgeProxy(
     })
     .catch((err) => {
       if (
-        err.message === UTILS_ERROR_MESSAGES.IV_002 ||
-        err.message === UTILS_ERROR_MESSAGES.IE_003
+        err.message === ERROR_MESSAGES.IV_002 ||
+        err.message === ERROR_MESSAGES.IE_003
       )
         throw new Error(err.message);
 

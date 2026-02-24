@@ -101,7 +101,7 @@ describe('plugin', () => {
       mockCoreContext.plugins.clear();
 
       expect(() => getEventsPlugin()).toThrow(
-        `[IE-004] You must first add "${EVENTS_PLUGIN_NAME}" to the "initContentSdk()" "plugins" array.`
+        `[IE-004] Plugin not registered. You must first add "${EVENTS_PLUGIN_NAME}" to the "initContentSdk()" "plugins" array.`
       );
     });
   });

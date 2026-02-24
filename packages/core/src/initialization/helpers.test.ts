@@ -218,7 +218,7 @@ describe('helpers', () => {
         expect.fail('Should have thrown an error');
       } catch (error) {
         expect((error as Error).message).to.equal(
-          '[IE-001] "dependent-plugin" also requires "missing-plugin"'
+          '[IE-001] "dependent-plugin" also requires "missing-plugin". Add the missing dependency.'
         );
       }
     });

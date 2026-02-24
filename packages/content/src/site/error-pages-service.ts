@@ -1,9 +1,10 @@
-import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClientFactory, constants } from '@sitecore-content-sdk/core';
 import { FetchOptions, GraphQLClient } from '../client';
 import debug from '../debug';
 import { LayoutServiceData } from '../layout';
 import { GraphQLServiceConfig } from '../sitecore-service-base';
-import { siteNameError } from '../constants';
+
+const { ERROR_MESSAGES } = constants;
 
 // The default query for request error handling
 const defaultQuery = /* GraphQL */ `
@@ -94,7 +95,7 @@ export class ErrorPagesService {
     const language: string = locale || this.options.language;
 
     if (!siteName) {
-      throw new Error(siteNameError);
+      throw new Error(ERROR_MESSAGES.MV_002);
     }
 
     return (<Promise<ErrorPagesQueryResult>>this.graphQLClient.request(

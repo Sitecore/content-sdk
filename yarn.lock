@@ -3532,6 +3532,7 @@ __metadata:
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
     "@sitecore-content-sdk/content": "npm:1.5.0-canary.6"
+    "@sitecore-content-sdk/core": "npm:1.5.0-canary.6"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
     "@types/inquirer": "npm:^9.0.9"

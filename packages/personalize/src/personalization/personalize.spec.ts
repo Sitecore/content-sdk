@@ -9,11 +9,16 @@ jest.mock('./personalizer');
 jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
   getAnalyticsPlugin: jest.fn(),
 }));
-jest.mock('@sitecore-content-sdk/core', () => ({
-  getCoreContext: jest.fn(),
-  debugModule: jest.fn(() => jest.fn()),
-  debugNamespace: 'sitecore-content-sdk',
-}));
+jest.mock('@sitecore-content-sdk/core', () => {
+  const originalModule = jest.requireActual<typeof coreModule>('@sitecore-content-sdk/core');
+
+  return {
+    ...originalModule,
+    getCoreContext: jest.fn(),
+    debugModule: jest.fn(() => jest.fn()),
+    debugNamespace: 'sitecore-content-sdk',
+  };
+});
 jest.mock('../initialization/shared', () => ({
   getPersonalizePlugin: jest.fn(),
 }));

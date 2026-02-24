@@ -1,11 +1,14 @@
 /* eslint-disable max-len */
-import { ERROR_MESSAGES, PACKAGE_VERSION } from '../consts';
+import { constants } from '@sitecore-content-sdk/core';
+import { PACKAGE_VERSION } from '../consts';
 import type {
   GetProfileIdResponse,
   GetProfileIdResponseError,
 } from './fetch-profile-id-from-edge-proxy';
 import { fetchProfileIdFromEdgeProxy } from './fetch-profile-id-from-edge-proxy';
 import { jest, expect } from '@jest/globals';
+
+const { ERROR_MESSAGES } = constants;
 
 const API_VERSION = 'v1.2';
 const SITECORE_EDGE_URL = 'https://edge-platform.sitecorecloud.io';
