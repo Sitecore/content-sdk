@@ -1,7 +1,5 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { Page } from '@sitecore-content-sdk/content/client';
-import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
-import { SITECORE_CONFIG_TOKEN } from '../tokens';
 
 /**
  * Service that holds and exposes the current Sitecore page context as Angular signals.
@@ -21,20 +19,12 @@ import { SITECORE_CONFIG_TOKEN } from '../tokens';
 @Injectable({ providedIn: 'root' })
 export class SitecoreContextService {
   readonly _page = signal<Page | null>(null);
-  readonly _api = signal<SitecoreConfig['api'] | undefined>(
-    inject(SITECORE_CONFIG_TOKEN, { optional: true }) ?? undefined
-  );
 
   /**
    * Read-only signal for the current Sitecore page.
    * Emits `null` until the first page is set by `SitecoreProviderComponent`.
    */
-  readonly page = this._page.asReadonly();
-
-  /**
-   * Read-only signal for the Sitecore API configuration.
-   */
-  readonly api = this._api.asReadonly();
+  public page = this._page;
 
   /**
    * Derived signal: `true` when the page is currently open in Sitecore Pages editor.
@@ -52,13 +42,5 @@ export class SitecoreContextService {
    */
   setPage(page: Page): void {
     this._page.set(page);
-  }
-
-  /**
-   * Sets the Sitecore API configuration. Overrides any value supplied via `SITECORE_CONFIG_TOKEN`.
-   * @param {SitecoreConfig['api']} api The API configuration.
-   */
-  setApi(api: SitecoreConfig['api']): void {
-    this._api.set(api);
   }
 }

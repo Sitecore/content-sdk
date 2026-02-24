@@ -70,5 +70,11 @@
     "vitest": "^4.0.8",
     "zone.js": "^0.15.0"
   },
-  "packageManager": "npm@10.9.3"
+  "main": "dist/fesm2022/sitecore-content-sdk-angular.d.mjs",
+  "module": "dist/fesm2022/sitecore-content-sdk-angular.mjs",
+  "es2022": "dist/fesm2022/sitecore-content-sdk-angular.mjs",
+  "typings": "dist/types/sitecore-content-sdk-angular.d.ts",
+  "metadata": "dist/sitecore-content-sdk-angular.metadata.json",
+  "esm2022": "dist/fesm2022/sitecore-content-sdk-angular.mjs",
+  "fesm2022": "dist/fesm2022/sitecore-content-sdk-angular.mjs"
 }

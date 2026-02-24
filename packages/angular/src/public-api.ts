@@ -33,7 +33,7 @@ export type {
 } from './lib/field-types';
 
 // ─── Injection tokens ───────────────────────────────────────────────────────
-export { SITECORE_CONFIG_TOKEN, COMPONENT_MAP_TOKEN } from './lib/tokens';
+export { COMPONENT_MAP_TOKEN } from './lib/tokens';
 
 // ─── Providers ──────────────────────────────────────────────────────────────
 export { provideSitecoreAngular } from './lib/providers';
@@ -49,19 +49,51 @@ export {
   hasPlaceholder,
 } from './lib/utils/index';
 
-// ─── Re-exports from upstream SDK packages ──────────────────────────────────
-export type {
+// ─── Re-exports from core/content ─────────────────────────────
+// SitecoreConfig type is safe to re-export (type-only, no runtime impact)
+export type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
+// NOTE: defineConfig is intentionally NOT re-exported here — it imports from
+// @sitecore-content-sdk/core/tools (fs, path, child_process) and is server-only.
+// Import it directly in server-side files from @sitecore-content-sdk/content/config.
+export {
+  getContentStylesheetLink,
+  getDesignLibraryStylesheetLinks,
+  LayoutServiceData,
+  LayoutServicePageState,
+  LayoutServiceContext,
+  LayoutServiceContextData,
+  LayoutService,
+  RouteData,
+  Field,
+  Item,
+  getChildPlaceholder,
+  getFieldValue,
   ComponentRendering,
   ComponentFields,
   ComponentParams,
-  RouteData,
-  LayoutServiceData,
-  LayoutServiceContext,
-  Field,
-  GenericFieldValue,
-  Item,
-  PlaceholdersData,
+  EditMode,
 } from '@sitecore-content-sdk/content/layout';
-
-export type { Page } from '@sitecore-content-sdk/content/client';
-export type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
+export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/content/editing';
+export {
+  GraphQLClientError,
+  RetryStrategy,
+  DefaultRetryStrategy,
+  GraphQLRequestClientFactoryConfig,
+  GraphQLRequestClient,
+  PageMode,
+  ErrorPage,
+  Page,
+} from '@sitecore-content-sdk/content/client';
+export { mediaApi } from '@sitecore-content-sdk/content/media';
+export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
+export {
+  constants,
+  enableDebug,
+  ClientError,
+  CacheClient,
+  CacheOptions,
+  MemoryCacheClient,
+  NativeDataFetcher,
+  NativeDataFetcherResponse,
+  NativeDataFetcherConfig,
+} from '@sitecore-content-sdk/core';

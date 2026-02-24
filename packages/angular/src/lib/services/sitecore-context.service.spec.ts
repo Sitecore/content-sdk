@@ -67,15 +67,5 @@ describe('SitecoreContextService', () => {
     });
   });
 
-  describe('api signal', () => {
-    it('should default to undefined without SITECORE_CONFIG_TOKEN', () => {
-      expect(service.api()).toBeUndefined();
-    });
-
-    it('should update when setApi is called', () => {
-      const api = { siteName: 'my-site' } as unknown as Parameters<typeof service.setApi>[0];
-      service.setApi(api);
-      expect(service.api()).toBe(api);
-    });
-  });
 });
+

@@ -55,15 +55,15 @@ export class ImageComponent {
   readonly imgSrc = computed(() => this.resolvedValue()?.src ?? null);
   readonly imgAlt = computed(() => {
     const v = this.resolvedValue();
-    return v?.alt ?? (this.imageAttrs().alt as string | undefined) ?? null;
+    return v?.alt ?? (this.imageAttrs()['alt'] as string | undefined) ?? null;
   });
   readonly imgWidth = computed(() => {
     const v = this.resolvedValue();
-    return v?.width ?? (this.imageAttrs().width as string | undefined) ?? null;
+    return v?.width ?? (this.imageAttrs()['width'] as string | undefined) ?? null;
   });
   readonly imgHeight = computed(() => {
     const v = this.resolvedValue();
-    return v?.height ?? (this.imageAttrs().height as string | undefined) ?? null;
+    return v?.height ?? (this.imageAttrs()['height'] as string | undefined) ?? null;
   });
   readonly extraAttrs = computed(() => this.imageAttrs());
 }
