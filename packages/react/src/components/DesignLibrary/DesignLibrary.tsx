@@ -13,11 +13,10 @@ import {
 } from '@sitecore-content-sdk/content/editing';
 import * as codegen from '@sitecore-content-sdk/content/codegen';
 import * as editing from '@sitecore-content-sdk/content/editing';
-import { useSitecore } from '../../enhancers/withSitecore';
+import { useSitecore } from '../../components/SitecoreProvider';
 import { Placeholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 import { DynamicComponent } from './models';
-import { useLoadImportMap } from '../../enhancers/withLoadImportMap';
 import { ErrorComponent } from '../ErrorBoundary';
 
 let {
@@ -45,14 +44,11 @@ export const __mockDependencies = (mocks: any) => {
  * when generation is enabled (`page.mode.designLibrary.isVariantGeneration === true`),
  * wires the **variant generation** handshake so the parent (DL Studio) can send
  * generated code to preview and iterate on.
- * @param {DesignLibraryProps} props
- * @param {() => Promise} [props.loadImportMap] Optional async loader that resolves to the import-map used to resolve the generated component’s imports. Required when `isVariantGeneration` is true.
  * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
  * @public
  */
 export const DesignLibrary = () => {
-  const { page } = useSitecore();
-  const loadImportMap = useLoadImportMap();
+  const { page, loadImportMap } = useSitecore();
   const route = page.layout.sitecore.route;
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
   const uid = rendering?.uid;
@@ -156,7 +152,7 @@ export const DesignLibrary = () => {
       cancelled = true;
       unsubscribe && unsubscribe();
     };
-  }, [isVariantGeneration, uid]);
+  }, [isDesignLibrary, isVariantGeneration, uid, loadImportMap, propsState]);
 
   return (
     <main>

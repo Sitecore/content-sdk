@@ -3,15 +3,15 @@ import React, { useContext } from 'react';
 import {
   Placeholder as ReactPlaceholder,
   PlaceholderComponentProps,
-  WithSitecoreProps,
   EnhancedOmit,
+  SitecoreProviderState,
 } from '@sitecore-content-sdk/react';
 import { ComponentPropsReactContext } from './ComponentPropsContext';
 
 /**
  * React Placeholder component wrapped by withSitecore, so these properties shouldn't be passed to the Next.js Placeholder.
  */
-type PlaceholderProps = EnhancedOmit<PlaceholderComponentProps, keyof WithSitecoreProps>;
+type PlaceholderProps = EnhancedOmit<PlaceholderComponentProps, keyof SitecoreProviderState>;
 
 /**
  * The Placeholder component.

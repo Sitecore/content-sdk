@@ -52,6 +52,13 @@ Our versioning strategy is as follows:
   - `renderEmptyPlaceholder` method of `PlaceholderComponent` has been removed; instead import `renderEmptyPlaceholder` from `react`/`next` package
   - `DesignLibrary` component now does not accept any props
   - `SitecoreProvider`'s `loadImportMap` is now required
+* [react] [nextjs] Major revamp of components in the react package ([#371](https://github.com/Sitecore/content-sdk/pull/371)):
+  - `Placeholder` and `AppPlaceholder` components' prop `modifyComponentProps` has been removed. `passThroughComponentProps` prop has been added to fill the role of passing props to child components
+  - `componentMap` and `loadImportMap` have been added to the context shared via `SitecoreProvider`
+  - `useLoadImportMap`, `useComponentMap` HOCs have been removed. The Sitecore context data can be accessed via `useSitecore` hook.
+  - `withSitecore`'s `updatePage` prop has been renamed to `setPage`. This HOC has also been marked deprecated, and will eventually be removed in favor of `useSitecore` hook.
+  - Old `withPlaceholder` HOC implementation has been reworked into slot-like logic with server and client implementations. `withAppPlaceholder` can be used in server RSC context, and `withPlaceholder` in client one.
+  - Other components and HOCs in `react` package were refactored and should not have an effect on end user apps.
     
 
 ### 🐛 Bug Fixes

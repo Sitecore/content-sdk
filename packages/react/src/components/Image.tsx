@@ -1,4 +1,3 @@
-﻿/* eslint-disable no-unused-vars */
 import { mediaApi } from '@sitecore-content-sdk/content/media';
 import React from 'react';
 import { addClassName } from '../utils';
@@ -112,42 +111,50 @@ const getImageAttrs = (
   return newAttrs;
 };
 
+const ImageComponent: React.FC<ImageProps> = ({
+  imageParams,
+  field,
+  mediaUrlPrefix,
+  ...otherProps
+}) => {
+  const dynamicMedia = field as ImageField | ImageFieldValue;
+
+  if (isFieldValueEmpty(dynamicMedia)) {
+    return null;
+  }
+
+  delete otherProps.editable; // prevent editable from being passed to the DOM
+
+  // some wise-guy/gal is passing in a 'raw' image object value
+  const img = (dynamicMedia as ImageFieldValue).src
+    ? field
+    : (dynamicMedia.value as ImageFieldValue);
+  if (!img) {
+    return null;
+  }
+
+  // prevent metadata from being passed to the img tag
+  if (img.metadata) {
+    delete img.metadata;
+  }
+
+  const attrs = getImageAttrs({ ...img, ...otherProps }, imageParams, mediaUrlPrefix);
+  if (attrs) {
+    return <img {...attrs} />;
+  }
+
+  return null; // we can't handle the truth
+};
+
 /**
  * The Image component.
  * @param {ImageProps} props component props
  * @public
  */
 export const Image: React.FC<ImageProps> = withFieldMetadata<ImageProps>(
-  withEmptyFieldEditingComponent<ImageProps>(
-    ({ editable = true, imageParams, field, mediaUrlPrefix, ...otherProps }) => {
-      const dynamicMedia = field as ImageField | ImageFieldValue;
-
-      if (isFieldValueEmpty(dynamicMedia)) {
-        return null;
-      }
-
-      // some wise-guy/gal is passing in a 'raw' image object value
-      const img = (dynamicMedia as ImageFieldValue).src
-        ? field
-        : (dynamicMedia.value as ImageFieldValue);
-      if (!img) {
-        return null;
-      }
-
-      // prevent metadata from being passed to the img tag
-      if (img.metadata) {
-        delete img.metadata;
-      }
-
-      const attrs = getImageAttrs({ ...img, ...otherProps }, imageParams, mediaUrlPrefix);
-      if (attrs) {
-        return <img {...attrs} />;
-      }
-
-      return null; // we can't handle the truth
-    },
-    { defaultEmptyFieldEditingComponent: DefaultEmptyFieldEditingComponentImage }
-  )
+  withEmptyFieldEditingComponent(ImageComponent, {
+    defaultEmptyFieldEditingComponent: DefaultEmptyFieldEditingComponentImage,
+  })
 );
 
 Image.displayName = 'Image';
