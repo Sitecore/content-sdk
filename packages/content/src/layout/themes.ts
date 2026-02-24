@@ -1,5 +1,5 @@
 import { constants } from '@sitecore-content-sdk/core';
-import { normalizeUrl } from '@sitecore-content-sdk/core/tools';
+import { normalizeUrl } from '@sitecore-content-sdk/core';
 import { ComponentRendering, LayoutServiceData, RouteData, getFieldValue } from '.';
 import { HTMLLink } from '../models';
 
@@ -39,7 +39,9 @@ export const getStylesheetUrl = (
   sitecoreEdgeContextId: string,
   sitecoreEdgeUrl: string = constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT
 ) =>
-  `${normalizeUrl(sitecoreEdgeUrl)}/v1/files/components/styles/${id}.css?sitecoreContextId=${sitecoreEdgeContextId}`;
+  `${normalizeUrl(
+    sitecoreEdgeUrl
+  )}/v1/files/components/styles/${id}.css?sitecoreContextId=${sitecoreEdgeContextId}`;
 
 /**
  * Traverse placeholder and components to add library ids

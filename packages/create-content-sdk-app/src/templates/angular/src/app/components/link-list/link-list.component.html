@@ -1,0 +1,16 @@
+<div class="component-content">
+  @if (title) {
+  <h3><sc-text [field]="title"></sc-text></h3>
+  } @else {
+  <span class="is-empty-hint">Link list</span>
+  }
+  <ul>
+    @for (fieldLink of fieldLinks; track $index; let i = $index) {
+    <li [ngClass]="getFieldLinkClass(i)">
+      <div class="field-link">
+        <sc-link [field]="fieldLink"></sc-link>
+      </div>
+    </li>
+    }
+  </ul>
+</div>

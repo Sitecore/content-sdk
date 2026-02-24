@@ -3,27 +3,8 @@ import * as authModule from './auth';
 
 export * from './metadata';
 
-export { default as isServer } from './is-server';
 export { ensurePathExists } from './ensurePath';
-export { normalizeUrl } from './normalize-url';
-export {
-  resolveEdgeUrl,
-  resolveEdgeUrlForStaticFiles,
-  resolveExperienceEdgeUrl,
-  SITECORE_EDGE_PLATFORM_HOSTNAME_ENV,
-  SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV,
-} from './resolve-edge-url';
-export {
-  resolveUrl,
-  isTimeoutError,
-  getEnforcedCorsHeaders,
-  EnhancedOmit,
-  getAllowedOriginsFromEnv,
-  isRegexOrUrl,
-  areURLSearchParamsEqual,
-  escapeNonSpecialQuestionMarks,
-  mergeURLSearchParams,
-} from './utils';
+
 export { hasCache, getCache, getCacheAndClean, setCache } from './globalCache';
 
 /**

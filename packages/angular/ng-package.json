@@ -5,8 +5,8 @@
     "entryFile": "./src/public-api.ts"
   },
   "allowedNonPeerDependencies": [
-    "core",
-    "content",
+    "@sitecore-content-sdk/core",
+    "@sitecore-content-sdk/content",
     "@angular/common",
     "@angular/core",
     "@angular/router"

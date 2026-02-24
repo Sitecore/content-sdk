@@ -1,5 +1,5 @@
 import { constants } from '@sitecore-content-sdk/core';
-import { normalizeUrl } from '@sitecore-content-sdk/core/tools';
+import { normalizeUrl } from '@sitecore-content-sdk/core';
 import {
   ComponentFields,
   ComponentParams,

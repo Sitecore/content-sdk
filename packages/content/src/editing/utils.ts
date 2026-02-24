@@ -1,5 +1,5 @@
 import { Field, GenericFieldValue } from '../layout/models';
-import { isServer } from '@sitecore-content-sdk/core/tools';
+import { isServer } from '@sitecore-content-sdk/core';
 
 /**
  * Default value of uid for root placeholder when uid is not present.

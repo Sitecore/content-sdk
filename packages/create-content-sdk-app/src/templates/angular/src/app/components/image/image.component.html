@@ -1,0 +1,42 @@
+<ng-container [ngTemplateOutlet]="variant"></ng-container>
+
+<ng-template #default>
+  <div class="component image {{ styles }}" [attr.id]="id" *ngIf="rendering.fields; else empty">
+    <div class="component-content">
+      @if (isEditing || !$any(rendering.fields)?.TargetUrl?.value?.href) {
+      <sc-image field="imageField"></sc-image>
+      } @else {
+      <sc-link field="TargetUrl">
+        <sc-image field="imageField"></sc-image>
+      </sc-link>
+      }
+      <span class="image-caption field-imagecaption">
+        <sc-text field="ImageCaption"></sc-text>
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #banner>
+  <div class="component hero-banner {{ styles }} {{ classHeroBannerEmpty }}" [attr.id]="id">
+    <div class="component-content sc-sxa-image-hero-banner" [ngStyle]="backgroundStyle">
+      @if (isEditing) {
+      <sc-image field="Image"></sc-image>
+      }
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #withLink>
+  <sc-link field="TargetUrl">
+    <sc-image field="Image"></sc-image>
+  </sc-link>
+</ng-template>
+
+<ng-template #empty>
+  <div class="component image {{ styles }}">
+    <div class="component-content">
+      <span class="is-empty-hint">Image</span>
+    </div>
+  </div>
+</ng-template>

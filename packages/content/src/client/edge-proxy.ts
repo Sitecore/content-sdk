@@ -1,5 +1,5 @@
 import { constants } from '@sitecore-content-sdk/core';
-import { normalizeUrl } from '@sitecore-content-sdk/core/tools';
+import { normalizeUrl } from '@sitecore-content-sdk/core';
 
 /**
  * Resolves the base Edge URL from config. Caller should pass the resolved Edge URL from config.
@@ -33,4 +33,6 @@ export const getEdgeProxyFormsUrl = (
   formId: string,
   sitecoreEdgeUrl: string = constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT
 ) =>
-  `${getBaseEdgeUrl(sitecoreEdgeUrl)}/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`;
+  `${getBaseEdgeUrl(
+    sitecoreEdgeUrl
+  )}/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`;

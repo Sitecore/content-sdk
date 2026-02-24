@@ -1,0 +1,7 @@
+@for (ph of enabledPlaceholders; track ph) {
+<div [ngClass]="getColumnClass(+ph - 1)">
+  <div class="row">
+    <sc-placeholder [name]="getPlaceholderName(ph)" [rendering]="rendering"></sc-placeholder>
+  </div>
+</div>
+}

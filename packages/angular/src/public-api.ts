@@ -18,6 +18,12 @@ export { DateComponent } from './lib/components/date/date.component';
 export { MissingComponent } from './lib/components/missing-component/missing-component.component';
 export { FieldMetadataComponent } from './lib/components/field-metadata/field-metadata.component';
 
+// ─── Directives ─────────────────────────────────────────────────────────────
+export { ScTextDirective } from './lib/components/text/text.directive';
+export { ScImageDirective } from './lib/components/image/image.directive';
+export { ScLinkDirective } from './lib/components/link/link.directive';
+export { ScPlaceholderDirective } from './lib/components/placeholder/placeholder.directive';
+
 // ─── Types ─────────────────────────────────────────────────────────────────
 export type { ComponentMap, AngularContentSdkComponent } from './lib/types';
 export type {
@@ -50,11 +56,7 @@ export {
 } from './lib/utils/index';
 
 // ─── Re-exports from core/content ─────────────────────────────
-// SitecoreConfig type is safe to re-export (type-only, no runtime impact)
-export type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
-// NOTE: defineConfig is intentionally NOT re-exported here — it imports from
-// @sitecore-content-sdk/core/tools (fs, path, child_process) and is server-only.
-// Import it directly in server-side files from @sitecore-content-sdk/content/config.
+export * from '@sitecore-content-sdk/content/config';
 export {
   getContentStylesheetLink,
   getDesignLibraryStylesheetLinks,

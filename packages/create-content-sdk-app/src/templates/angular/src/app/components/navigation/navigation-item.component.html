@@ -1,0 +1,24 @@
+<li [class]="cssClasses" [ngClass]="{ active: isActive }" tabIndex="0">
+  <div [ngClass]="{ 'navigation-title': true, child: hasChildren }" (click)="isActive = !isActive">
+    <sc-link [field]="linkField" (click)="onClick($event)">
+      @if (navItemFields.NavigationTitle?.value) {
+      <sc-text [field]="navItemFields.NavigationTitle"></sc-text>
+      } @else if (navItemFields.Title?.value) {
+      <sc-text [field]="navItemFields.Title"></sc-text>
+      } @else {
+      {{ navItemFields.DisplayName }}
+      }
+    </sc-link>
+  </div>
+  @if (hasChildren) {
+  <ul class="clearfix">
+    @for (childNavItemFields of navItemFields.Children; track childNavItemFields.Id) {
+    <app-navigation-item
+      [navItemFields]="childNavItemFields"
+      [relativeLevel]="childrenRelativeLevel"
+      (childLinkClickEvent)="onClick($event)"
+    ></app-navigation-item>
+    }
+  </ul>
+  }
+</li>

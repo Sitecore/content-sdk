@@ -3,10 +3,11 @@ import {
   defineConfig as defineConfigCore,
   SitecoreConfigInput as SitecoreConfigInputCore,
 } from '@sitecore-content-sdk/content/config';
-import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
+import { resolveEdgeUrl } from '@sitecore-content-sdk/core';
 
 /** Next.js env var for Edge hostname; exposed to the browser so client code can use it. */
-const NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV = 'NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME';
+const NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV =
+  'NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME';
 
 /**
  * Provides default NextJs initial values from env variables for SitecoreConfig
@@ -24,8 +25,7 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
         clientContextId:
           config?.api?.edge?.clientContextId || process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
         edgeUrl: resolveEdgeUrl(
-          config?.api?.edge?.edgeUrl ??
-            process.env[NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV]
+          config?.api?.edge?.edgeUrl ?? process.env[NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV]
         ),
       },
       local: {
