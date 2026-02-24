@@ -8,7 +8,7 @@
 
 > **resolveExperienceEdgeUrl**(): `string`
 
-Defined in: [packages/core/src/tools/resolve-edge-url.ts:67](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/core/src/tools/resolve-edge-url.ts#L67)
+Defined in: [packages/core/src/tools/resolve-edge-url.ts:67](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/core/src/tools/resolve-edge-url.ts#L67)
 
 Resolves the Experience Edge URL for media URL rewriting.
 Use only when rewriting media URLs in layout/editing (e.g. rewriteEdgeHostInResponse).

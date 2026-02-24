@@ -8,6 +8,6 @@
 
 > `const` **REDIRECT\_TYPE\_301**: `"REDIRECT_301"` = `'REDIRECT_301'`
 
-Defined in: [content/src/site/redirects-service.ts:16](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/site/redirects-service.ts#L16)
+Defined in: [content/src/site/redirects-service.ts:16](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/content/src/site/redirects-service.ts#L16)
 
 Redirect type for 301 redirects
