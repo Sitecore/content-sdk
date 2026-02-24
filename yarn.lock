@@ -3539,7 +3539,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sitecore-content-sdk/analytics-core@npm:2.0.0-canary.2, @sitecore-content-sdk/analytics-core@workspace:packages/analytics-core":
+"@sitecore-content-sdk/analytics-core@npm:2.0.0-canary.3, @sitecore-content-sdk/analytics-core@workspace:packages/analytics-core":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/analytics-core@workspace:packages/analytics-core"
   dependencies:
@@ -3568,7 +3568,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
-    "@sitecore-content-sdk/content": "npm:2.0.0-canary.2"
+    "@sitecore-content-sdk/content": "npm:2.0.0-canary.3"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
     "@types/inquirer": "npm:^9.0.9"
@@ -3607,12 +3607,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/content@npm:2.0.0-canary.2, @sitecore-content-sdk/content@workspace:packages/content":
+"@sitecore-content-sdk/content@npm:2.0.0-canary.3, @sitecore-content-sdk/content@workspace:packages/content":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/content@workspace:packages/content"
   dependencies:
     "@sitecore-cloudsdk/events": "npm:^0.5.1"
-    "@sitecore-content-sdk/core": "npm:2.0.0-canary.2"
+    "@sitecore-content-sdk/core": "npm:2.0.0-canary.3"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
     "@types/chai-spies": "npm:^1.0.6"
@@ -3658,7 +3658,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/core@npm:2.0.0-canary.2, @sitecore-content-sdk/core@workspace:packages/core":
+"@sitecore-content-sdk/core@npm:2.0.0-canary.3, @sitecore-content-sdk/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/core@workspace:packages/core"
   dependencies:
@@ -3696,13 +3696,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/events@npm:2.0.0-canary.2, @sitecore-content-sdk/events@workspace:packages/events":
+"@sitecore-content-sdk/events@npm:2.0.0-canary.3, @sitecore-content-sdk/events@workspace:packages/events":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/events@workspace:packages/events"
   dependencies:
     "@jest/globals": "npm:^30.2.0"
     "@jest/types": "npm:^29.6.3"
-    "@sitecore-content-sdk/analytics-core": "npm:2.0.0-canary.2"
+    "@sitecore-content-sdk/analytics-core": "npm:2.0.0-canary.3"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/debug": "npm:^4.1.12"
     "@types/jest": "npm:^29.5.12"
@@ -3730,9 +3730,9 @@ __metadata:
     "@babel/parser": "npm:^7.27.2"
     "@sitecore-cloudsdk/core": "npm:^0.5.1"
     "@sitecore-cloudsdk/personalize": "npm:^0.5.1"
-    "@sitecore-content-sdk/content": "npm:2.0.0-canary.2"
-    "@sitecore-content-sdk/core": "npm:2.0.0-canary.2"
-    "@sitecore-content-sdk/react": "npm:2.0.0-canary.2"
+    "@sitecore-content-sdk/content": "npm:2.0.0-canary.3"
+    "@sitecore-content-sdk/core": "npm:2.0.0-canary.3"
+    "@sitecore-content-sdk/react": "npm:2.0.0-canary.3"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@testing-library/dom": "npm:^10.4.0"
     "@testing-library/react": "npm:^16.3.0"
@@ -3795,8 +3795,8 @@ __metadata:
   resolution: "@sitecore-content-sdk/personalize@workspace:packages/personalize"
   dependencies:
     "@jest/types": "npm:^29.6.3"
-    "@sitecore-content-sdk/analytics-core": "npm:2.0.0-canary.2"
-    "@sitecore-content-sdk/events": "npm:2.0.0-canary.2"
+    "@sitecore-content-sdk/analytics-core": "npm:2.0.0-canary.3"
+    "@sitecore-content-sdk/events": "npm:2.0.0-canary.3"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/debug": "npm:^4.1.12"
     "@types/jest": "npm:^29.5.12"
@@ -3817,13 +3817,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/react@npm:2.0.0-canary.2, @sitecore-content-sdk/react@workspace:packages/react":
+"@sitecore-content-sdk/react@npm:2.0.0-canary.3, @sitecore-content-sdk/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
-    "@sitecore-content-sdk/content": "npm:2.0.0-canary.2"
-    "@sitecore-content-sdk/core": "npm:2.0.0-canary.2"
-    "@sitecore-content-sdk/search": "npm:0.2.0-canary.12"
+    "@sitecore-content-sdk/content": "npm:2.0.0-canary.3"
+    "@sitecore-content-sdk/core": "npm:2.0.0-canary.3"
+    "@sitecore-content-sdk/search": "npm:0.2.0-canary.13"
     "@sitecore-feaas/clientside": "npm:^0.6.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@testing-library/dom": "npm:^10.4.0"
@@ -3869,11 +3869,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/search@npm:0.2.0-canary.12, @sitecore-content-sdk/search@workspace:packages/search":
+"@sitecore-content-sdk/search@npm:0.2.0-canary.13, @sitecore-content-sdk/search@workspace:packages/search":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/search@workspace:packages/search"
   dependencies:
-    "@sitecore-content-sdk/core": "npm:2.0.0-canary.2"
+    "@sitecore-content-sdk/core": "npm:2.0.0-canary.3"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
     chai: "npm:^6.2.1"
