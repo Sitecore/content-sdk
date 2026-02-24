@@ -6,39 +6,37 @@
 
 # Function: withPlaceholder()
 
-> **withPlaceholder**(`placeholders`, `options?`): (`WrappedComponent`) => (`props`) => `Element`
+> **withPlaceholder**\<`T`, `W`\>(`Component`): (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:49](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/react/src/enhancers/withPlaceholder.tsx#L49)
+Defined in: [packages/react/src/enhancers/withPlaceholder.tsx:22](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/react/src/enhancers/withPlaceholder.tsx#L22)
 
-HOC to provide client-side placeholder functionality to a component.
+Provides a slot-like functionality by wrapping a component in client/SSR context and rendering placeholders defined in the layout data.
+
+## Type Parameters
+
+| Type Parameter |
+| ------ |
+| `T` *extends* `ComponentProps` |
+| `W` *extends* `ComponentProps` & `WrapperProps` |
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `placeholders` | `WithPlaceholderSpec` |  |
-| `options?` | `WithPlaceholderOptions` |  |
+| `Component` | `ComponentType`\<`T`\> | The component to be wrapped around placeholders. |
 
 ## Returns
 
-> (`WrappedComponent`): (`props`) => `Element`
+A new component that renders the original component with placeholders.
+
+> (`props`): `Element`
 
 ### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `WrappedComponent` | `ComponentClass`\<[`PlaceholderProps`](../interfaces/PlaceholderProps.md), `any`\> \| `FunctionComponent`\<[`PlaceholderProps`](../interfaces/PlaceholderProps.md)\> |
+| `props` | `W` |
 
 ### Returns
-
-> (`props`): `Element`
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `props` | [`WithSitecoreHocProps`](../type-aliases/WithSitecoreHocProps.md)\<`ComponentProps`\> |
-
-#### Returns
 
 `Element`

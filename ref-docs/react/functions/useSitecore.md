@@ -6,9 +6,9 @@
 
 # Function: useSitecore()
 
-> **useSitecore**(`options?`): [`WithSitecoreProps`](../interfaces/WithSitecoreProps.md)
+> **useSitecore**(`options?`): [`SitecoreProviderState`](../interfaces/SitecoreProviderState.md)
 
-Defined in: [packages/react/src/enhancers/withSitecore.tsx:93](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/react/src/enhancers/withSitecore.tsx#L93)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:144](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/react/src/components/SitecoreProvider.tsx#L144)
 
 This hook grants acсess to the current Sitecore page and api.
 
@@ -16,27 +16,19 @@ This hook grants acсess to the current Sitecore page and api.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `options?` | [`WithSitecoreOptions`](../interfaces/WithSitecoreOptions.md) | hook options |
+| `options?` | `UseSitecoreOptions` | hook options |
 
 ## Returns
 
-[`WithSitecoreProps`](../interfaces/WithSitecoreProps.md)
+[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md)
 
-{ api, page, updatePage }
+The current Sitecore context, including the page and api.
 
-## Examples
+## Example
 
 ```ts
 const EditMode = () => {
    const { page } = useSitecore();
    return <span>Edit Mode is {page.mode.isEditing ? 'active' : 'inactive'}</span>
-}
-```
-
-```ts
-const EditMode = () => {
-   const { page, updatePage } = useSitecore({ updatable: true });
-   const onClick = () => updatePage({ itemId: '123' });
-   return <span onClick={onClick}>Item id is {page.itemId}</span>
 }
 ```

@@ -6,7 +6,7 @@
 
 # Variable: withEditorChromes()
 
-> `const` **withEditorChromes**: (`WrappedComponent`) => `React.ComponentClass`
+> `const` **withEditorChromes**: (`WrappedComponent`) => \{(`props`): `Element`; `displayName`: `string`; \}
 
 Defined in: react/types/enhancers/withEditorChromes.d.ts:7
 
@@ -20,4 +20,18 @@ HOC to inject editor chromes reset on component update.
 
 ## Returns
 
-`React.ComponentClass`
+> (`props`): `Element`
+
+### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `props` | `Record`\<`string`, `unknown`\> |
+
+### Returns
+
+`Element`
+
+### displayName
+
+> **displayName**: `string`
