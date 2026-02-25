@@ -11,7 +11,7 @@
     "ng": "ng",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "ng test --watch=false",
     "lint": "eslint \"./src/**/*.ts\""
   },
   "prettier": {

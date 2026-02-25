@@ -23,7 +23,7 @@ import { getPlaceholderRenderings } from '../../utils/placeholder-utils';
 @Component({
   selector: 'sc-placeholder',
   standalone: true,
-  imports: [NgComponentOutlet, MissingComponent, FieldMetadataComponent],
+  imports: [NgComponentOutlet, FieldMetadataComponent],
   template: `
     @for (r of renderings(); track r.uid || $index) { @if (isEditing()) {
     <sc-field-metadata [rendering]="r">
