@@ -20,7 +20,7 @@ export {
 } from './native-fetcher';
 export { RetryStrategy, GenericGraphQLClientError, FetchOptions } from './models';
 export { constants };
-// temp: decoupling client-safe logic from tools module which is not client safe
+// decoupling client-safe logic from /tools submodule which is not client-side safe
 export { normalizeUrl } from './tools/normalize-url';
 export { default as isServer } from './tools/is-server';
 export {

@@ -1,6 +1,6 @@
 ﻿'use client';
 import React from 'react';
-import { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
+import { EnhancedOmit } from '@sitecore-content-sdk/core';
 import {
   SitecoreProviderReactContext,
   SitecoreProviderState,
