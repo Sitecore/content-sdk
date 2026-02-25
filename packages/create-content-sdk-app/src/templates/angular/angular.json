@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "angular-sample": {
+    "<%- appName %>": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -17,16 +17,14 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
-            "tsConfig": "tsconfig.app.json",
+            "tsConfig": "tsconfig.json",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css"
-            ],
+            "styles": ["src/styles.css"],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
@@ -59,12 +57,15 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "prebundle": false
+          },
           "configurations": {
             "production": {
-              "buildTarget": "angular-sample:build:production"
+              "buildTarget": "<%- appName %>:build:production"
             },
             "development": {
-              "buildTarget": "angular-sample:build:development"
+              "buildTarget": "<%- appName %>:build:development"
             }
           },
           "defaultConfiguration": "development"

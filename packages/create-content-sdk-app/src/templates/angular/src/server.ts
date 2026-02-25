@@ -6,7 +6,8 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
-
+import * as dotenv from 'dotenv';
+dotenv.config();
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();

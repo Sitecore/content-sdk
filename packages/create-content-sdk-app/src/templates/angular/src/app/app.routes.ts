@@ -14,16 +14,10 @@ export const routes: Routes = [
       {
         path: '404',
         component: NotFoundComponent,
-        resolve: {
-          // page: loaderResolver('404'),
-        },
       },
       {
         path: '**',
         component: PageComponent,
-        resolve: {
-          // page: loaderResolver('page'),
-        },
       },
     ],
   },
