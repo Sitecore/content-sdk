@@ -1,5 +1,5 @@
 {
-  "name": "content-sdk-angular",
+  "name": "angular-sample",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -32,8 +32,8 @@
     "@angular/platform-server": "^21.1.0",
     "@angular/router": "^21.1.0",
     "@angular/ssr": "^21.1.4",
-    // TODO: update version usage to match with new release flow
     "@sitecore-content-sdk/angular": "^2.0.0-canary.1",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"

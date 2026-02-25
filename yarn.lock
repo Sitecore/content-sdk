@@ -7390,6 +7390,7 @@ __metadata:
     "@tailwindcss/postcss": "npm:^4.1.12"
     "@types/express": "npm:^5.0.1"
     "@types/node": "npm:^20.17.19"
+    dotenv: "npm:^16.5.0"
     express: "npm:^5.1.0"
     jsdom: "npm:^27.1.0"
     postcss: "npm:^8.5.3"
