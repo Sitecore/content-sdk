@@ -19,6 +19,7 @@ import { IncomingHttpHeaders } from 'http';
 import { SERVER_PROPS_ID, STATIC_PROPS_ID } from 'next/constants';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/tools';
+import { AllowedQueryParams, GetAllowedQueryParamsResult } from './types';
 
 /**
  * Gets editing secret value from request
@@ -75,6 +76,46 @@ export const mapEditingParams = (query: {
         layoutKind: query.sc_layoutKind,
       };
   return params;
+};
+
+/**
+ * Parses the query parameters based on the provided allowed parameters or a resolver function, to extract additional parameters that should be allowed.
+ * @param {{ [key: string]: string | undefined }} queryParams Object of query parameters from incoming URL.
+ * @param {AllowedQueryParams} allowedParams Allowed parameters to map.
+ * @returns Object containing the list of missing required parameters and the allowed query parameters that were extracted.
+ * @internal
+ */
+export const getAllowedQueryParams = (
+  queryParams: { [key: string]: unknown },
+  allowedParams?: AllowedQueryParams
+): GetAllowedQueryParamsResult => {
+  const allowedQueryParamsList =
+    typeof allowedParams === 'function'
+      ? allowedParams(Object.keys(queryParams))
+      : Array.isArray(allowedParams)
+      ? allowedParams
+      : [];
+
+  if (!allowedQueryParamsList.length) return { missingAllowedParams: [], allowedQueryParams: {} };
+
+  return allowedQueryParamsList.reduce(
+    (acc, param) => {
+      const name = typeof param === 'string' ? param : param.name;
+      const required = typeof param === 'string' ? false : param.required;
+
+      const value = queryParams[name];
+      if (value !== undefined) {
+        acc.allowedQueryParams[name] = value;
+
+        return acc;
+      }
+
+      if (required) acc.missingAllowedParams.push(name);
+
+      return acc;
+    },
+    { missingAllowedParams: [], allowedQueryParams: {} } as GetAllowedQueryParamsResult
+  );
 };
 
 /**

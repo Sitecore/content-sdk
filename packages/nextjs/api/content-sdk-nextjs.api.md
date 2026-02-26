@@ -182,6 +182,18 @@ import { withPlaceholder } from '@sitecore-content-sdk/react';
 import { withSitecore } from '@sitecore-content-sdk/react';
 import { WriteImportMapArgs } from '@sitecore-content-sdk/content/tools';
 
+// @public
+export interface AllowedQueryParam {
+    name: string;
+    required?: boolean;
+}
+
+// @public
+export type AllowedQueryParams = Array<AllowedQueryParam | string> | AllowedQueryParamsResolver;
+
+// @public
+export type AllowedQueryParamsResolver = (queryParams: string[]) => Array<AllowedQueryParam | string>;
+
 export { AppPlaceholder }
 
 export { AppPlaceholderProps }
@@ -384,6 +396,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 export type EditingRenderMiddlewareConfig = {
     resolvePageUrl?: (itemPath: string) => string;
     sitecoreInternalEditingHostUrl?: string;
+    allowedQueryParams?: AllowedQueryParams;
 };
 
 export { EditingScripts }
