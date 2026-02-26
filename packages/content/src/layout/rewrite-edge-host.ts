@@ -1,5 +1,5 @@
 import { constants } from '@sitecore-content-sdk/core';
-import { normalizeUrl } from '@sitecore-content-sdk/core';
+import { normalizeUrl } from '@sitecore-content-sdk/core/tools';
 
 /** Default Edge hostname derived from the default Edge URL (edge.sitecorecloud.io). @internal */
 const DEFAULT_EDGE_HOSTNAME = new URL(constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT).hostname;

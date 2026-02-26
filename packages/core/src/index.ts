@@ -20,24 +20,3 @@ export {
 } from './native-fetcher';
 export { RetryStrategy, GenericGraphQLClientError, FetchOptions } from './models';
 export { constants };
-// decoupling client-safe logic from /tools submodule which is not client-side safe
-export { normalizeUrl } from './tools/normalize-url';
-export { default as isServer } from './tools/is-server';
-export {
-  resolveEdgeUrl,
-  resolveEdgeUrlForStaticFiles,
-  resolveExperienceEdgeUrl,
-  SITECORE_EDGE_PLATFORM_HOSTNAME_ENV,
-  SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV,
-} from './tools/resolve-edge-url';
-export {
-  resolveUrl,
-  isTimeoutError,
-  getEnforcedCorsHeaders,
-  EnhancedOmit,
-  getAllowedOriginsFromEnv,
-  isRegexOrUrl,
-  areURLSearchParamsEqual,
-  escapeNonSpecialQuestionMarks,
-  mergeURLSearchParams,
-} from './tools/utils';

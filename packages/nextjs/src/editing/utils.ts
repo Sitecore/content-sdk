@@ -18,7 +18,7 @@ import {
 import { IncomingHttpHeaders } from 'http';
 import { SERVER_PROPS_ID, STATIC_PROPS_ID } from 'next/constants';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
-import { getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core';
+import { getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/tools';
 
 /**
  * Gets editing secret value from request

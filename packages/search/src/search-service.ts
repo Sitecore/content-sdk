@@ -1,4 +1,5 @@
-import { NativeDataFetcher, resolveEdgeUrl } from '@sitecore-content-sdk/core';
+import { NativeDataFetcher } from '@sitecore-content-sdk/core';
+import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { SearchDocument, PathsToStringProps } from './models';
 import { debug } from './debug';
 

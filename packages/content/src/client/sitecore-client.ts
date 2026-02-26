@@ -7,7 +7,7 @@ import {
   NativeDataFetcher,
   debug,
 } from '@sitecore-content-sdk/core';
-import { resolveEdgeUrlForStaticFiles, resolveExperienceEdgeUrl } from '@sitecore-content-sdk/core';
+import { resolveEdgeUrlForStaticFiles, resolveExperienceEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { DictionaryPhrases, DictionaryService } from '../i18n';
 import {
   getDesignLibraryStylesheetLinks,

@@ -1,4 +1,4 @@
-﻿export {
+export {
   constants,
   enableDebug,
   ClientError,
@@ -8,8 +8,8 @@
   NativeDataFetcher,
   NativeDataFetcherResponse,
   NativeDataFetcherConfig,
-  EnhancedOmit,
 } from '@sitecore-content-sdk/core';
+export { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
 export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 export {
   getContentStylesheetLink,

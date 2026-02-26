@@ -12,7 +12,7 @@ import {
   escapeNonSpecialQuestionMarks,
   isRegexOrUrl,
   mergeURLSearchParams,
-} from '@sitecore-content-sdk/core';
+} from '@sitecore-content-sdk/core/tools';
 import { NextURL } from 'next/dist/server/web/next-url';
 import { NextRequest, NextResponse } from 'next/server';
 import regexParser from 'regex-parser';

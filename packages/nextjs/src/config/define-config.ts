@@ -3,7 +3,7 @@ import {
   defineConfig as defineConfigCore,
   SitecoreConfigInput as SitecoreConfigInputCore,
 } from '@sitecore-content-sdk/content/config';
-import { resolveEdgeUrl } from '@sitecore-content-sdk/core';
+import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 
 /** Next.js env var for Edge hostname; exposed to the browser so client code can use it. */
 const NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV =

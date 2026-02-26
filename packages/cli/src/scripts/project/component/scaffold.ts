@@ -1,4 +1,4 @@
-import { scaffoldComponent } from '@sitecore-content-sdk/content/tools';
+import { scaffoldComponent } from '@sitecore-content-sdk/content/tools/server';
 import loadCliConfig from '../../../utils/load-config';
 import { Argv } from 'yargs';
 import { ComponentTemplateType } from '@sitecore-content-sdk/content/config';

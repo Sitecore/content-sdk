@@ -5,7 +5,7 @@ import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import { DocumentNode } from 'graphql';
 import { DefaultRetryStrategy, NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
-import { SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV } from '@sitecore-content-sdk/core';
+import { SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV } from '@sitecore-content-sdk/core/tools';
 
 const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 import { ErrorPage, SitecoreClient } from './sitecore-client';

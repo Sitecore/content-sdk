@@ -1,5 +1,5 @@
 import { constants } from '@sitecore-content-sdk/core';
-import { normalizeUrl } from '@sitecore-content-sdk/core';
+import { normalizeUrl } from '@sitecore-content-sdk/core/tools';
 
 /**
  * Resolves the base Edge URL from config. Caller should pass the resolved Edge URL from config.
