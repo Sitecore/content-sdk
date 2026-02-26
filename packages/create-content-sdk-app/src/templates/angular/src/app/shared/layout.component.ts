@@ -1,7 +1,7 @@
 import { Component, input, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Title } from '@angular/platform-browser';
-import { PlaceholderComponent, Page, Field } from '@sitecore-content-sdk/angular';
+import { Page, Field } from '@sitecore-content-sdk/angular';
 
 /**
  * Route fields interface for page title
@@ -19,32 +19,26 @@ interface RouteFields {
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, PlaceholderComponent],
+  imports: [CommonModule],
   template: `
-    @if (route()) {
     <div [class]="mainClass()">
       <!-- <sc-editing-scripts></sc-editing-scripts> -->
       <header>
         <div id="header">
-          <sc-placeholder name="headless-header" [rendering]="route()!"></sc-placeholder>
+          Header
         </div>
       </header>
       <main>
         <div id="content">
-          <sc-placeholder name="headless-main" [rendering]="route()!"></sc-placeholder>
+          Main content
         </div>
       </main>
       <footer>
         <div id="footer">
-          <sc-placeholder name="headless-footer" [rendering]="route()!"></sc-placeholder>
+          footer
         </div>
       </footer>
     </div>
-    } @else {
-    <div class="loading">
-      <p>Loading...</p>
-    </div>
-    }
   `,
   styles: `
     :host {

@@ -4,14 +4,14 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideSitecoreAngular } from '@sitecore-content-sdk/angular';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { componentMap } from '.sitecore/component-map';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(withFetch()),
     provideRouter(routes),
-    provideSitecoreAngular({ componentMap }),
+    provideSitecoreAngular({}),
     provideClientHydration(withEventReplay()),
   ],
 };

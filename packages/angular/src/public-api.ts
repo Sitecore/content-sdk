@@ -1,14 +1,3 @@
-/*
- * Public API Surface of @sitecore-content-sdk/angular
- */
-
-// ─── Services ──────────────────────────────────────────────────────────────
-export { SitecoreContextService } from './lib/services/sitecore-context.service';
-export { ComponentMapService } from './lib/services/component-map.service';
-
-// ─── Components ────────────────────────────────────────────────────────────
-export { SitecoreProviderComponent } from './lib/components/sitecore-provider/sitecore-provider.component';
-
 // ─── Types ─────────────────────────────────────────────────────────────────
 export type { ComponentMap, AngularContentSdkComponent } from './lib/types';
 
@@ -18,9 +7,6 @@ export { COMPONENT_MAP_TOKEN } from './lib/tokens';
 // ─── Providers ──────────────────────────────────────────────────────────────
 export { provideSitecoreAngular } from './lib/providers';
 export type { SitecoreAngularConfig } from './lib/providers';
-
-// ─── Utilities ───────────────────────────────────────────────────────────────
-export { getPlaceholderRenderings, hasPlaceholder } from './lib/utils/index';
 
 // ─── Re-exports from core/content ─────────────────────────────
 export * from '@sitecore-content-sdk/content/config';
