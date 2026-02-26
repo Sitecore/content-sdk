@@ -82,7 +82,7 @@ export const mapEditingParams = (query: {
  * Parses the query parameters based on a provided list of allowed parameters or a resolver function, to extract additional parameters that should be allowed.
  * @param {{ [key: string]: string | undefined }} queryParams Object of query parameters from incoming URL.
  * @param {string[] | AllowedQueryParamsResolver} allowedParamsList List of allowed parameters to map.
- * @returns {{ missingAllowedParams: string[]; allowedQueryParams: { [key: string]: unknown } }} Object containing the list of missing required parameters and the allowed query parameters that were extracted.
+ * @returns Object containing the list of missing required parameters and the allowed query parameters that were extracted.
  * @internal
  */
 export const getAllowedQueryParams = (
