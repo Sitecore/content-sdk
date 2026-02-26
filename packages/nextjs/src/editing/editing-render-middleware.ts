@@ -23,7 +23,7 @@ import {
   resolveServerUrl,
   getAllowedQueryParams,
 } from './utils';
-import type { AllowedQueryParam, AllowedQueryParamsResolver } from './types';
+import type { AllowedQueryParams } from './types';
 
 /**
  * Configuration for the Editing Render Middleware.
@@ -43,11 +43,11 @@ export type EditingRenderMiddlewareConfig = {
    */
   sitecoreInternalEditingHostUrl?: string;
   /**
-   * List of allowed query string parameters to include in the preview data.
-   *
-   * This can also be a function that receives the list of query parameters and returns the list of allowed parameters.
+   * Query string parameters to allow and include in the preview data.
+   * - Array: each item is a parameter name (string) or an object `{ name, required? }`.
+   * - Function: receives the request's query parameter names and returns the list of allowed parameters.
    */
-  allowedQueryParams?: AllowedQueryParam[] | AllowedQueryParamsResolver;
+  allowedQueryParams?: AllowedQueryParams;
 };
 
 /**

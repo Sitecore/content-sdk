@@ -25,7 +25,7 @@ import {
 } from '../editing/utils';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 import debug from '../debug';
-import type { AllowedQueryParam, AllowedQueryParamsResolver } from '../editing/types';
+import type { AllowedQueryParams } from '../editing/types';
 
 /**
  * Helper function to handle cookie operations - can be mocked for testing
@@ -53,11 +53,11 @@ type EditingHandlerOptions = {
    */
   sitecoreInternalEditingHostUrl?: string;
   /**
-   * List of allowed query string parameters to include in the search params.
-   *
-   * This can also be a function that receives the list of query parameters and returns the list of allowed parameters.
+   * Query string parameters to allow and include  in the search params.
+   * - Array: each item is a parameter name (string) or an object `{ name, required? }`.
+   * - Function: receives the request's query parameter names and returns the list of allowed parameters.
    */
-  allowedQueryParams?: AllowedQueryParam[] | AllowedQueryParamsResolver;
+  allowedQueryParams?: AllowedQueryParams;
 };
 
 /**

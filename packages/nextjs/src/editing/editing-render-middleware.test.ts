@@ -479,18 +479,24 @@ describe('EditingRenderMiddleware', () => {
       });
     });
 
-    it('should include allowed query params when configured as array', async () => {
+    it('should include allowed query params when configured as array (objects and strings)', async () => {
       const customQuery = {
         ...query,
         customParam1: 'value1',
         customParam2: 'value2',
+        stringParam: 'string-value',
         notAllowed: 'shouldNotBeIncluded',
       };
       const req = mockRequest({ query: customQuery });
       const res = mockResponse();
 
       const middleware = new EditingRenderMiddleware({
-        allowedQueryParams: [{ name: 'customParam1' }, { name: 'customParam2' }],
+        allowedQueryParams: [
+          { name: 'customParam1' },
+          { name: 'customParam2' },
+          'stringParam',
+          'missingStringParam',
+        ],
       });
       const handler = middleware.getHandler();
 
@@ -510,14 +516,15 @@ describe('EditingRenderMiddleware', () => {
         layoutKind: 'shared',
         customParam1: 'value1',
         customParam2: 'value2',
+        stringParam: 'string-value',
       });
     });
 
-    it('should return 400 when required allowed query param is missing', async () => {
+    it('should return 400 when required allowed query param is missing (mixed types)', async () => {
       const customQuery = {
         ...query,
         customParam1: 'value1',
-        // customParam2 is required but missing
+        stringParam: 'value',
       };
       const req = mockRequest({ query: customQuery });
       const res = mockResponse();
@@ -526,6 +533,7 @@ describe('EditingRenderMiddleware', () => {
         allowedQueryParams: [
           { name: 'customParam1', required: true },
           { name: 'customParam2', required: true },
+          'stringParam',
         ],
       });
       const handler = middleware.getHandler();
@@ -574,21 +582,27 @@ describe('EditingRenderMiddleware', () => {
       expect(res.status).to.have.been.calledWith(200);
     });
 
-    it('should use resolver function to determine allowed query params', async () => {
+    it('should use resolver function returning strings and objects', async () => {
       const customQuery = {
         ...query,
         prefixedParam1: 'value1',
         prefixedParam2: 'value2',
+        requiredParam: 'required-value',
         otherParam: 'shouldNotBeIncluded',
       };
       const req = mockRequest({ query: customQuery });
       const res = mockResponse();
 
       const resolver = (queryParamKeys: string[]) => {
-        // Only allow params that start with 'prefixed'
-        return queryParamKeys
+        const result: Array<string | { name: string; required?: boolean }> = [];
+        queryParamKeys
           .filter((key) => key.startsWith('prefixed'))
-          .map((key) => ({ name: key }));
+          .forEach((key) => result.push(key));
+
+        if (queryParamKeys.includes('requiredParam')) {
+          result.push({ name: 'requiredParam', required: true });
+        }
+        return result;
       };
 
       const middleware = new EditingRenderMiddleware({
@@ -612,20 +626,22 @@ describe('EditingRenderMiddleware', () => {
         layoutKind: 'shared',
         prefixedParam1: 'value1',
         prefixedParam2: 'value2',
+        requiredParam: 'required-value',
       });
     });
 
-    it('should return 400 when resolver function marks param as required but it is missing', async () => {
+    it('should return 400 when resolver returns mixed types with missing required param', async () => {
       const customQuery = {
         ...query,
         presentParam: 'value1',
-        // missingRequiredParam is not provided
+        stringParam: 'string-value',
       };
       const req = mockRequest({ query: customQuery });
       const res = mockResponse();
 
       const resolver = () => {
         return [
+          'stringParam',
           { name: 'presentParam', required: true },
           { name: 'missingRequiredParam', required: true },
         ];

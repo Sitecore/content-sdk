@@ -18,4 +18,4 @@ export {
   EDITING_COMPONENT_PLACEHOLDER,
   EDITING_COMPONENT_ID,
 } from '@sitecore-content-sdk/content/layout';
-export type { AllowedQueryParam, AllowedQueryParamsResolver } from './types';
+export type { AllowedQueryParam, AllowedQueryParamsResolver, AllowedQueryParams } from './types';

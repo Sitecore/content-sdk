@@ -697,9 +697,14 @@ describe('createEditingRenderRouteHandlers', () => {
         expect(getAllowedQueryParamsStub).to.have.been.called;
       });
 
-      it('should include allowed query params when configured as array', async () => {
+      it('should include allowed query params when configured as array (objects and strings)', async () => {
         const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
-          allowedQueryParams: [{ name: 'customParam1' }, { name: 'customParam2' }],
+          allowedQueryParams: [
+            { name: 'customParam1' },
+            { name: 'customParam2' },
+            'stringParam',
+            'missingStringParam',
+          ],
         });
 
         req.nextUrl!.searchParams = mockSearchParams({
@@ -711,6 +716,7 @@ describe('createEditingRenderRouteHandlers', () => {
           sc_site: 'website',
           customParam1: 'value1',
           customParam2: 'value2',
+          stringParam: 'string-value',
           notAllowed: 'shouldNotBeIncluded',
         });
 
@@ -719,6 +725,7 @@ describe('createEditingRenderRouteHandlers', () => {
           allowedQueryParams: {
             customParam1: 'value1',
             customParam2: 'value2',
+            stringParam: 'string-value',
           },
         });
 
@@ -731,11 +738,12 @@ describe('createEditingRenderRouteHandlers', () => {
         );
       });
 
-      it('should return 400 when required allowed query param is missing', async () => {
+      it('should return 400 when required allowed query param is missing (mixed types)', async () => {
         const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
           allowedQueryParams: [
             { name: 'customParam1', required: true },
             { name: 'customParam2', required: true },
+            'stringParam',
           ],
         });
 
@@ -747,13 +755,14 @@ describe('createEditingRenderRouteHandlers', () => {
           sc_lang: 'en',
           sc_site: 'website',
           customParam1: 'value1',
-          // customParam2 is required but missing
+          stringParam: 'value',
         });
 
         getAllowedQueryParamsStub.returns({
           missingAllowedParams: ['customParam2'],
           allowedQueryParams: {
             customParam1: 'value1',
+            stringParam: 'value',
           },
         });
 
@@ -782,7 +791,6 @@ describe('createEditingRenderRouteHandlers', () => {
           sc_lang: 'en',
           sc_site: 'website',
           requiredParam: 'required-value',
-          // optionalParam is not provided
         });
 
         getAllowedQueryParamsStub.returns({
@@ -797,11 +805,16 @@ describe('createEditingRenderRouteHandlers', () => {
         expect(res.status).to.equal(200);
       });
 
-      it('should use resolver function to determine allowed query params', async () => {
+      it('should use resolver function returning strings and objects', async () => {
         const resolver = (queryParamKeys: string[]) => {
-          return queryParamKeys
+          const result: Array<string | { name: string; required?: boolean }> = [];
+          queryParamKeys
             .filter((key) => key.startsWith('prefixed'))
-            .map((key) => ({ name: key }));
+            .forEach((key) => result.push(key));
+          if (queryParamKeys.includes('requiredParam')) {
+            result.push({ name: 'requiredParam', required: true });
+          }
+          return result;
         };
 
         const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
@@ -817,6 +830,7 @@ describe('createEditingRenderRouteHandlers', () => {
           sc_site: 'website',
           prefixedParam1: 'value1',
           prefixedParam2: 'value2',
+          requiredParam: 'required-value',
           otherParam: 'shouldNotBeIncluded',
         });
 
@@ -825,6 +839,7 @@ describe('createEditingRenderRouteHandlers', () => {
           allowedQueryParams: {
             prefixedParam1: 'value1',
             prefixedParam2: 'value2',
+            requiredParam: 'required-value',
           },
         });
 
@@ -837,9 +852,10 @@ describe('createEditingRenderRouteHandlers', () => {
         );
       });
 
-      it('should return 400 when resolver function marks param as required but it is missing', async () => {
+      it('should return 400 when resolver returns mixed types with missing required param', async () => {
         const resolver = () => {
           return [
+            'stringParam',
             { name: 'presentParam', required: true },
             { name: 'missingRequiredParam', required: true },
           ];
@@ -857,13 +873,14 @@ describe('createEditingRenderRouteHandlers', () => {
           sc_lang: 'en',
           sc_site: 'website',
           presentParam: 'value1',
-          // missingRequiredParam is not provided
+          stringParam: 'string-value',
         });
 
         getAllowedQueryParamsStub.returns({
           missingAllowedParams: ['missingRequiredParam'],
           allowedQueryParams: {
             presentParam: 'value1',
+            stringParam: 'string-value',
           },
         });
 
@@ -1223,15 +1240,16 @@ describe('createEditingRenderRouteHandlers', () => {
     });
 
     describe('allowedQueryParams for POST', () => {
-      it('should include allowed query params in propagated query params', async () => {
+      it('should include allowed query params in propagated query params (objects and strings)', async () => {
         const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
-          allowedQueryParams: [{ name: 'customParam1' }, { name: 'customParam2' }],
+          allowedQueryParams: [{ name: 'customParam1' }, { name: 'customParam2' }, 'stringParam'],
         });
 
         req.nextUrl!.searchParams = mockSearchParams({
           ...mockQuery,
           customParam1: 'value1',
           customParam2: 'value2',
+          stringParam: 'string-value',
           notAllowed: 'shouldNotBeIncluded',
         });
 
@@ -1240,6 +1258,7 @@ describe('createEditingRenderRouteHandlers', () => {
           allowedQueryParams: {
             customParam1: 'value1',
             customParam2: 'value2',
+            stringParam: 'string-value',
           },
         });
 
@@ -1257,13 +1276,19 @@ describe('createEditingRenderRouteHandlers', () => {
         const targetUrl = fetchStub.firstCall.args[0];
         expect(targetUrl).to.include('customParam1=value1');
         expect(targetUrl).to.include('customParam2=value2');
+        expect(targetUrl).to.include('stringParam=string-value');
       });
 
-      it('should use resolver function for POST handler', async () => {
+      it('should use resolver function returning strings and objects for POST handler', async () => {
         const resolver = (queryParamKeys: string[]) => {
-          return queryParamKeys
+          const result: Array<string | { name: string; required?: boolean }> = [];
+          queryParamKeys
             .filter((key) => key.startsWith('prefixed'))
-            .map((key) => ({ name: key }));
+            .forEach((key) => result.push(key));
+          if (queryParamKeys.includes('requiredParam')) {
+            result.push({ name: 'requiredParam', required: true });
+          }
+          return result;
         };
 
         const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
@@ -1274,6 +1299,7 @@ describe('createEditingRenderRouteHandlers', () => {
           ...mockQuery,
           prefixedParam1: 'value1',
           prefixedParam2: 'value2',
+          requiredParam: 'required-value',
           otherParam: 'shouldNotBeIncluded',
         });
 
@@ -1282,6 +1308,7 @@ describe('createEditingRenderRouteHandlers', () => {
           allowedQueryParams: {
             prefixedParam1: 'value1',
             prefixedParam2: 'value2',
+            requiredParam: 'required-value',
           },
         });
 

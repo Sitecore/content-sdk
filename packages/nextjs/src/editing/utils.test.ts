@@ -478,6 +478,105 @@ describe('editing/utils', () => {
         },
       });
     });
+
+    it('should handle array with string parameters (optional by default)', () => {
+      const queryParams = {
+        param1: 'value1',
+        param2: 'value2',
+        param3: 'value3',
+      };
+      const allowedParams = ['param1', 'param2', 'missingParam'];
+
+      const result = getAllowedQueryParams(queryParams, allowedParams);
+
+      expect(result).to.deep.equal({
+        missingAllowedParams: [],
+        allowedQueryParams: {
+          param1: 'value1',
+          param2: 'value2',
+        },
+      });
+    });
+
+    it('should handle mixed array with strings and objects', () => {
+      const queryParams = {
+        stringParam1: 'value1',
+        stringParam2: 'value2',
+        requiredParam: 'required-value',
+        optionalParam: 'optional-value',
+      };
+      const allowedParams = [
+        'stringParam1',
+        'stringParam2',
+        'missingStringParam',
+        { name: 'requiredParam', required: true },
+        { name: 'optionalParam', required: false },
+        { name: 'missingRequiredParam', required: true },
+      ];
+
+      const result = getAllowedQueryParams(queryParams, allowedParams);
+
+      expect(result).to.deep.equal({
+        missingAllowedParams: ['missingRequiredParam'],
+        allowedQueryParams: {
+          stringParam1: 'value1',
+          stringParam2: 'value2',
+          requiredParam: 'required-value',
+          optionalParam: 'optional-value',
+        },
+      });
+    });
+
+    it('should handle resolver function returning strings', () => {
+      const queryParams = {
+        prefixedParam1: 'value1',
+        prefixedParam2: 'value2',
+        otherParam: 'value3',
+      };
+      const resolver = sandbox.stub().returns(['prefixedParam1', 'prefixedParam2']);
+
+      const result = getAllowedQueryParams(queryParams, resolver);
+
+      expect(resolver).to.have.been.calledOnce;
+      expect(result).to.deep.equal({
+        missingAllowedParams: [],
+        allowedQueryParams: {
+          prefixedParam1: 'value1',
+          prefixedParam2: 'value2',
+        },
+      });
+    });
+
+    it('should handle resolver function returning mixed strings and objects', () => {
+      const queryParams = {
+        stringParam1: 'value1',
+        stringParam2: 'value2',
+        requiredParam: 'required-value',
+        optionalParam: 'optional-value',
+      };
+      const resolver = sandbox
+        .stub()
+        .returns([
+          'stringParam1',
+          'stringParam2',
+          { name: 'requiredParam', required: true },
+          { name: 'optionalParam', required: false },
+          { name: 'missingRequiredParam', required: true },
+        ]);
+
+      const result = getAllowedQueryParams(queryParams, resolver);
+
+      expect(resolver).to.have.been.calledOnce;
+      expect(result).to.deep.equal({
+        missingAllowedParams: ['missingRequiredParam'],
+        allowedQueryParams: {
+          stringParam1: 'value1',
+          stringParam2: 'value2',
+          requiredParam: 'required-value',
+          optionalParam: 'optional-value',
+        },
+      });
+    });
   });
 
   describe('cleanupNextPreviewCookies', () => {

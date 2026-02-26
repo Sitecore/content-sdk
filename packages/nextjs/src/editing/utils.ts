@@ -19,7 +19,7 @@ import { IncomingHttpHeaders } from 'http';
 import { SERVER_PROPS_ID, STATIC_PROPS_ID } from 'next/constants';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/tools';
-import { AllowedQueryParam, AllowedQueryParamsResolver } from './types';
+import { AllowedQueryParams, GetAllowedQueryParamsResult } from './types';
 
 /**
  * Gets editing secret value from request
@@ -81,17 +81,14 @@ export const mapEditingParams = (query: {
 /**
  * Parses the query parameters based on the provided allowed parameters or a resolver function, to extract additional parameters that should be allowed.
  * @param {{ [key: string]: string | undefined }} queryParams Object of query parameters from incoming URL.
- * @param {string[] | AllowedQueryParamsResolver} allowedParams Allowed parameters to map.
+ * @param {AllowedQueryParams} allowedParams Allowed parameters to map.
  * @returns Object containing the list of missing required parameters and the allowed query parameters that were extracted.
  * @internal
  */
 export const getAllowedQueryParams = (
   queryParams: { [key: string]: unknown },
-  allowedParams?: AllowedQueryParam[] | AllowedQueryParamsResolver
-): {
-  missingAllowedParams: string[];
-  allowedQueryParams: { [key: string]: unknown };
-} => {
+  allowedParams?: AllowedQueryParams
+): GetAllowedQueryParamsResult => {
   const allowedQueryParamsList =
     typeof allowedParams === 'function'
       ? allowedParams(Object.keys(queryParams))
@@ -102,9 +99,11 @@ export const getAllowedQueryParams = (
   if (!allowedQueryParamsList.length) return { missingAllowedParams: [], allowedQueryParams: {} };
 
   return allowedQueryParamsList.reduce(
-    (acc, { name, required }) => {
-      const value = queryParams[name];
+    (acc, param) => {
+      const name = typeof param === 'string' ? param : param.name;
+      const required = typeof param === 'string' ? false : param.required;
 
+      const value = queryParams[name];
       if (value !== undefined) {
         acc.allowedQueryParams[name] = value;
 
@@ -115,10 +114,7 @@ export const getAllowedQueryParams = (
 
       return acc;
     },
-    { missingAllowedParams: [], allowedQueryParams: {} } as {
-      missingAllowedParams: string[];
-      allowedQueryParams: { [key: string]: unknown };
-    }
+    { missingAllowedParams: [], allowedQueryParams: {} } as GetAllowedQueryParamsResult
   );
 };
 
