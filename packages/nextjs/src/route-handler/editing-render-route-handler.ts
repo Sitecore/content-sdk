@@ -21,9 +21,11 @@ import {
   getCSPHeader,
   resolveServerUrl,
   PreviewCookies,
+  getAllowedQueryParams,
 } from '../editing/utils';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 import debug from '../debug';
+import type { AllowedQueryParam, AllowedQueryParamsResolver } from '../editing/types';
 
 /**
  * Helper function to handle cookie operations - can be mocked for testing
@@ -50,6 +52,12 @@ type EditingHandlerOptions = {
    * The internal host URL for the Next.js application, used for server-side requests for page rendering during editing.
    */
   sitecoreInternalEditingHostUrl?: string;
+  /**
+   * List of allowed query string parameters to include in the search params.
+   *
+   * This can also be a function that receives the list of query parameters and returns the list of allowed parameters.
+   */
+  allowedQueryParams?: AllowedQueryParam[] | AllowedQueryParamsResolver;
 };
 
 /**
@@ -155,18 +163,25 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
 
     const mode = query.mode;
     const requiredQueryParams = getRequiredEditingParamsList(mode);
-
     const missingQueryParams = requiredQueryParams.filter((param) => !query[param]);
+    const { allowedQueryParams, missingAllowedParams } = getAllowedQueryParams(
+      query,
+      options.allowedQueryParams
+    );
 
     // Validate query parameters
-    if (missingQueryParams.length) {
-      debug.editing('missing required query parameters: %o', missingQueryParams);
+    if (missingQueryParams.length || missingAllowedParams.length) {
+      debug.editing('missing required query parameters: %o', [
+        ...missingQueryParams,
+        ...missingAllowedParams,
+      ]);
 
       return Response.json(
         {
-          html: `<html><body>Missing required query parameters: ${missingQueryParams.join(
-            ', '
-          )}</body></html>`,
+          html: `<html><body>Missing required query parameters: ${[
+            ...missingQueryParams,
+            ...missingAllowedParams,
+          ].join(', ')}</body></html>`,
         },
         { status: 400, headers: responseHeaders }
       );
@@ -218,6 +233,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       const propagatedQsParams = {
         ...getQueryParamsForPropagation(query as { [key: string]: string }),
         ...mapEditingParams(query as { [key: string]: string }),
+        ...(allowedQueryParams as { [key: string]: string }),
       };
       // Get headers to propagate on subsequent requests
       const propagatedHeaders = getHeadersForPropagation(headers);
@@ -302,6 +318,9 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     const propagatedQsParams = {
       ...getQueryParamsForPropagation(query as { [key: string]: string }),
       ...mapEditingParams(query as { [key: string]: string }),
+      ...(getAllowedQueryParams(query, options.allowedQueryParams).allowedQueryParams as {
+        [key: string]: string;
+      }),
     };
 
     const base = resolveServerUrl(req);

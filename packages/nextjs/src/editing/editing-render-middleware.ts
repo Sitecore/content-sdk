@@ -21,7 +21,9 @@ import {
   getEditingRequestHtml,
   getCSPHeader,
   resolveServerUrl,
+  getAllowedQueryParams,
 } from './utils';
+import type { AllowedQueryParam, AllowedQueryParamsResolver } from './types';
 
 /**
  * Configuration for the Editing Render Middleware.
@@ -40,6 +42,12 @@ export type EditingRenderMiddlewareConfig = {
    * The internal host URL for the Next.js application, used for server-side requests for page rendering during editing.
    */
   sitecoreInternalEditingHostUrl?: string;
+  /**
+   * List of allowed query string parameters to include in the preview data.
+   *
+   * This can also be a function that receives the list of query parameters and returns the list of allowed parameters.
+   */
+  allowedQueryParams?: AllowedQueryParam[] | AllowedQueryParamsResolver;
 };
 
 /**
@@ -134,15 +142,23 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     const requiredQueryParams = getRequiredEditingParamsList(mode);
 
     const missingQueryParams = requiredQueryParams.filter((param) => !query[param]);
+    const { allowedQueryParams, missingAllowedParams } = getAllowedQueryParams(
+      query,
+      this.config?.allowedQueryParams
+    );
 
     // Validate query parameters
-    if (missingQueryParams.length) {
-      debug.editing('missing required query parameters: %o', missingQueryParams);
+    if (missingQueryParams.length || missingAllowedParams.length) {
+      debug.editing('missing required query parameters: %o', [
+        ...missingQueryParams,
+        ...missingAllowedParams,
+      ]);
 
       return res.status(400).json({
-        html: `<html><body>Missing required query parameters: ${missingQueryParams.join(
-          ', '
-        )}</body></html>`,
+        html: `<html><body>Missing required query parameters: ${[
+          ...missingQueryParams,
+          ...missingAllowedParams,
+        ].join(', ')}</body></html>`,
       });
     }
 
@@ -151,6 +167,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     res.setPreviewData(
       {
         ...previewDataParams,
+        ...allowedQueryParams,
         variantIds: previewDataParams.variantIds?.split(','),
       },
       {

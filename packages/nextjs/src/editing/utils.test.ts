@@ -17,6 +17,7 @@ import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import {
   getEditingSecretFromRequest,
   mapEditingParams,
+  getAllowedQueryParams,
   cleanupNextPreviewCookies,
   getPreviewCookies,
   getRequiredEditingParamsList,
@@ -229,6 +230,253 @@ describe('editing/utils', () => {
       expect(params).to.have.property('site', undefined);
       expect(params).to.have.property('itemId', undefined);
       expect(params).to.have.property('language', undefined);
+    });
+  });
+
+  describe('getAllowedQueryParams', () => {
+    it('should return empty results when allowedParamsList is undefined', () => {
+      const queryParams = { param1: 'value1', param2: 'value2' };
+
+      const result = getAllowedQueryParams(queryParams);
+
+      expect(result).to.deep.equal({
+        missingAllowedParams: [],
+        allowedQueryParams: {},
+      });
+    });
+
+    it('should return empty results when allowedParamsList is an empty array', () => {
+      const queryParams = { param1: 'value1', param2: 'value2' };
+
+      const result = getAllowedQueryParams(queryParams, []);
+
+      expect(result).to.deep.equal({
+        missingAllowedParams: [],
+        allowedQueryParams: {},
+      });
+    });
+
+    it('should extract allowed parameters when they exist in queryParams', () => {
+      const queryParams = {
+        param1: 'value1',
+        param2: 'value2',
+        param3: 'value3',
+      };
+      const allowedParamsList = [{ name: 'param1' }, { name: 'param3' }];
+
+      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+
+      expect(result).to.deep.equal({
+        missingAllowedParams: [],
+        allowedQueryParams: {
+          param1: 'value1',
+          param3: 'value3',
+        },
+      });
+    });
+
+    it('should handle missing required parameters', () => {
+      const queryParams = { param1: 'value1' };
+      const allowedParamsList = [
+        { name: 'param1', required: true },
+        { name: 'param2', required: true },
+        { name: 'param3', required: true },
+      ];
+
+      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+
+      expect(result).to.deep.equal({
+        missingAllowedParams: ['param2', 'param3'],
+        allowedQueryParams: {
+          param1: 'value1',
+        },
+      });
+    });
+
+    it('should not include missing optional parameters in missingAllowedParams', () => {
+      const queryParams = { param1: 'value1' };
+      const allowedParamsList = [
+        { name: 'param1' },
+        { name: 'param2' },
+        { name: 'param3', required: false },
+      ];
+
+      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+
+      expect(result).to.deep.equal({
+        missingAllowedParams: [],
+        allowedQueryParams: {
+          param1: 'value1',
+        },
+      });
+    });
+
+    it('should handle mixed required and optional parameters', () => {
+      const queryParams = {
+        requiredParam1: 'value1',
+        optionalParam1: 'value2',
+      };
+      const allowedParamsList = [
+        { name: 'requiredParam1', required: true },
+        { name: 'requiredParam2', required: true },
+        { name: 'optionalParam1' },
+        { name: 'optionalParam2' },
+      ];
+
+      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+
+      expect(result).to.deep.equal({
+        missingAllowedParams: ['requiredParam2'],
+        allowedQueryParams: {
+          requiredParam1: 'value1',
+          optionalParam1: 'value2',
+        },
+      });
+    });
+
+    it('should call resolver function with query parameter keys', () => {
+      const queryParams = {
+        param1: 'value1',
+        param2: 'value2',
+        param3: 'value3',
+      };
+      const resolver = sandbox
+        .stub()
+        .returns([{ name: 'param1', required: true }, { name: 'param2' }]);
+
+      const result = getAllowedQueryParams(queryParams, resolver);
+
+      expect(resolver).to.have.been.calledOnce;
+      expect(resolver).to.have.been.calledWith(['param1', 'param2', 'param3']);
+      expect(result).to.deep.equal({
+        missingAllowedParams: [],
+        allowedQueryParams: {
+          param1: 'value1',
+          param2: 'value2',
+        },
+      });
+    });
+
+    it('should handle resolver function returning empty array', () => {
+      const queryParams = { param1: 'value1' };
+      const resolver = sandbox.stub().returns([]);
+
+      const result = getAllowedQueryParams(queryParams, resolver);
+
+      expect(resolver).to.have.been.calledOnce;
+      expect(result).to.deep.equal({
+        missingAllowedParams: [],
+        allowedQueryParams: {},
+      });
+    });
+
+    it('should handle resolver function with missing required parameters', () => {
+      const queryParams = { param1: 'value1' };
+      const resolver = sandbox.stub().returns([
+        { name: 'param1', required: true },
+        { name: 'param2', required: true },
+      ]);
+
+      const result = getAllowedQueryParams(queryParams, resolver);
+
+      expect(result).to.deep.equal({
+        missingAllowedParams: ['param2'],
+        allowedQueryParams: {
+          param1: 'value1',
+        },
+      });
+    });
+
+    it('should handle undefined query parameter values correctly', () => {
+      const queryParams = {
+        param1: 'value1',
+        param2: undefined,
+        param3: 'value3',
+      };
+      const allowedParamsList = [
+        { name: 'param1' },
+        { name: 'param2', required: true },
+        { name: 'param3' },
+      ];
+
+      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+
+      expect(result).to.deep.equal({
+        missingAllowedParams: ['param2'],
+        allowedQueryParams: {
+          param1: 'value1',
+          param3: 'value3',
+        },
+      });
+    });
+
+    it('should handle various data types in query parameter values', () => {
+      const queryParams = {
+        stringParam: 'string-value',
+        numberParam: 123,
+        booleanParam: true,
+        arrayParam: ['val1', 'val2'],
+        objectParam: { nested: 'value' },
+      };
+      const allowedParamsList = [
+        { name: 'stringParam' },
+        { name: 'numberParam' },
+        { name: 'booleanParam' },
+        { name: 'arrayParam' },
+        { name: 'objectParam' },
+      ];
+
+      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+
+      expect(result).to.deep.equal({
+        missingAllowedParams: [],
+        allowedQueryParams: {
+          stringParam: 'string-value',
+          numberParam: 123,
+          booleanParam: true,
+          arrayParam: ['val1', 'val2'],
+          objectParam: { nested: 'value' },
+        },
+      });
+    });
+
+    it('should handle empty queryParams object', () => {
+      const queryParams = {};
+      const allowedParamsList = [{ name: 'param1', required: true }, { name: 'param2' }];
+
+      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+
+      expect(result).to.deep.equal({
+        missingAllowedParams: ['param1'],
+        allowedQueryParams: {},
+      });
+    });
+
+    it('should handle null and false values as valid (not undefined)', () => {
+      const queryParams = {
+        nullParam: null,
+        falseParam: false,
+        zeroParam: 0,
+        emptyStringParam: '',
+      };
+      const allowedParamsList = [
+        { name: 'nullParam' },
+        { name: 'falseParam' },
+        { name: 'zeroParam' },
+        { name: 'emptyStringParam' },
+      ];
+
+      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+
+      expect(result).to.deep.equal({
+        missingAllowedParams: [],
+        allowedQueryParams: {
+          nullParam: null,
+          falseParam: false,
+          zeroParam: 0,
+          emptyStringParam: '',
+        },
+      });
     });
   });
 
