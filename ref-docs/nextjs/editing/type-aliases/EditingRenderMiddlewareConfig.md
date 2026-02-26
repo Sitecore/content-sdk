@@ -8,17 +8,29 @@
 
 > **EditingRenderMiddlewareConfig** = `object`
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:30](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/nextjs/src/editing/editing-render-middleware.ts#L30)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:32](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/nextjs/src/editing/editing-render-middleware.ts#L32)
 
 Configuration for the Editing Render Middleware.
 
 ## Properties
 
+### allowedQueryParams?
+
+> `optional` **allowedQueryParams**: [`AllowedQueryParams`](AllowedQueryParams.md)
+
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:50](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/nextjs/src/editing/editing-render-middleware.ts#L50)
+
+Query string parameters to allow and include in the preview data.
+- Array: each item is a parameter name (string) or an object `{ name, required? }`.
+- Function: receives the request's query parameter names and returns the list of allowed parameters.
+
+***
+
 ### resolvePageUrl()?
 
 > `optional` **resolvePageUrl**: (`itemPath`) => `string`
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:38](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/nextjs/src/editing/editing-render-middleware.ts#L38)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:40](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/nextjs/src/editing/editing-render-middleware.ts#L40)
 
 Function used to determine route/page URL to render.
 This may be necessary for certain custom Next.js routing configurations.
@@ -45,6 +57,6 @@ The URL to render
 
 > `optional` **sitecoreInternalEditingHostUrl**: `string`
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:42](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/nextjs/src/editing/editing-render-middleware.ts#L42)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:44](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/nextjs/src/editing/editing-render-middleware.ts#L44)
 
 The internal host URL for the Next.js application, used for server-side requests for page rendering during editing.
