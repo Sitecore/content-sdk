@@ -210,11 +210,6 @@ export const DEFAULT_PLACEHOLDER_UID = "00000000-0000-0000-0000-000000000000";
 // @internal (undocumented)
 export const DEFAULT_VARIANT = "_default";
 
-// Warning: (ae-forgotten-export) The symbol "_defaultMapTemplate" needs to be exported by the entry point api-surface.d.ts
-//
-// @internal
-export let defaultImportMapTemplate: typeof _defaultMapTemplate;
-
 export { DefaultRetryStrategy }
 
 // @public
@@ -439,11 +434,6 @@ export interface ErrorPagesServiceConfig extends GraphQLServiceConfig {
 // @internal
 const executeScriptElements: (rootElement: HTMLElement) => void;
 
-// Warning: (ae-forgotten-export) The symbol "_extractFiles" needs to be exported by the entry point api-surface.d.ts
-//
-// @public
-export let extractFiles: typeof _extractFiles;
-
 // @internal
 export function fetchGeneratedComponentFromCache(id: string, token: string, edgeUrl?: string): Promise<GeneratedComponentData>;
 
@@ -509,16 +499,6 @@ export type GenerateMapArgs = {
 export type GenerateMapFunction = (args: GenerateMapArgs) => void;
 
 // @public
-export const generateSites: ({ destinationPath }?: GenerateSitesConfig) => ((args: {
-    scConfig: SitecoreConfig;
-}) => Promise<void>);
-
-// @public
-export type GenerateSitesConfig = {
-    destinationPath?: string;
-};
-
-// @public
 export type GenericFieldValue = string | boolean | number | Date | {
     [key: string]: unknown;
 } | Array<{
@@ -527,11 +507,6 @@ export type GenericFieldValue = string | boolean | number | Date | {
 
 // @public
 export function getChildPlaceholder(rendering: ComponentRendering, placeholderName: string): ComponentRendering[];
-
-// Warning: (ae-forgotten-export) The symbol "_getComponentList" needs to be exported by the entry point api-surface.d.ts
-//
-// @public (undocumented)
-export let getComponentList: typeof _getComponentList;
 
 // Warning: (ae-forgotten-export) The symbol "GetComponentSpecParams" needs to be exported by the entry point api-surface.d.ts
 // Warning: (ae-forgotten-export) The symbol "ComponentSpec" needs to be exported by the entry point api-surface.d.ts
@@ -798,13 +773,6 @@ export enum MetadataKind {
     Open = "open"
 }
 
-// @internal
-export type ModuleExports = {
-    namedExports: Map<string, string>;
-    defaultExport: string | null;
-    namespaceExport: string | null;
-};
-
 // @public
 export function normalizePersonalizedRewrite(pathname: string): string;
 
@@ -1061,9 +1029,6 @@ export type RouteOptions = {
 
 // @internal (undocumented)
 export type RouterType = 'app' | 'pages';
-
-// @internal
-export function scaffoldComponent(outputFolderPath: string, componentName: string, templateName: string, templates: ScaffoldTemplate[]): void;
 
 // @public
 export type ScaffoldTemplate = {
@@ -1354,29 +1319,9 @@ const updateImageUrl: (url: string, params?: {
 // @internal (undocumented)
 export const VARIANT_PREFIX = "_variantId_";
 
-// Warning: (ae-incompatible-release-tags) The symbol "writeImportMap" is marked as @public, but its signature references "WriteImportMapArgsInternal" which is marked as @internal
-//
-// @public
-export const writeImportMap: (args: WriteImportMapArgsInternal) => ({ scConfig }: {
-    scConfig: SitecoreConfig;
-}) => Promise<void>;
-
-// @public
-export type WriteImportMapArgs = {
-    paths: string[];
-    exclude?: string[];
-};
-
-// @internal
-export type WriteImportMapArgsInternal = WriteImportMapArgs & {
-    separateServerClientMaps?: boolean;
-    defaultTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
-    clientTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
-};
-
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:65:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:62:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:109:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal

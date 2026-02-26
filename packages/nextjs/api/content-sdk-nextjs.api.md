@@ -48,7 +48,6 @@ import { ErrorPage } from '@sitecore-content-sdk/content/client';
 import { ErrorPages } from '@sitecore-content-sdk/content/site';
 import { ErrorPagesService } from '@sitecore-content-sdk/content/site';
 import { ErrorPagesServiceConfig } from '@sitecore-content-sdk/content/site';
-import { extractFiles } from '@sitecore-content-sdk/content/tools';
 import { FEaaSClientWrapper } from '@sitecore-content-sdk/react';
 import { FEaaSComponent } from '@sitecore-content-sdk/react';
 import { FEaaSComponentParams } from '@sitecore-content-sdk/react';
@@ -62,12 +61,7 @@ import { File as File_2 } from '@sitecore-content-sdk/react';
 import { FileField } from '@sitecore-content-sdk/react';
 import { Form } from '@sitecore-content-sdk/react';
 import { GenerateMapArgs } from '@sitecore-content-sdk/content/tools';
-import { GenerateMapFunction } from '@sitecore-content-sdk/content/tools';
-import { generateMetadata } from '@sitecore-content-sdk/core/tools';
-import { generateSites } from '@sitecore-content-sdk/content/tools';
-import { GenerateSitesConfig } from '@sitecore-content-sdk/content/tools';
 import { getChildPlaceholder } from '@sitecore-content-sdk/content/layout';
-import { getComponentList } from '@sitecore-content-sdk/content/tools';
 import { getContentStylesheetLink } from '@sitecore-content-sdk/content/layout';
 import { getDesignLibraryStylesheetLinks } from '@sitecore-content-sdk/react';
 import { getEdgeProxyContentUrl } from '@sitecore-content-sdk/content/client';
@@ -109,7 +103,7 @@ import { LinkProps as LinkProps_2 } from '@sitecore-content-sdk/react';
 import { LinkProps as LinkProps_3 } from 'next/link';
 import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
-import { Metadata } from '@sitecore-content-sdk/core/tools';
+import { Metadata } from '@sitecore-content-sdk/core/tools-server';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
@@ -156,7 +150,6 @@ import { SitecoreCliConfig } from '@sitecore-content-sdk/content/config';
 import { SitecoreCliConfigInput } from '@sitecore-content-sdk/content/config';
 import { SitecoreClient as SitecoreClient_2 } from '@sitecore-content-sdk/content/client';
 import { SitecoreClientInit } from '@sitecore-content-sdk/content/client';
-import { SitecoreConfig as SitecoreConfig_2 } from '@sitecore-content-sdk/content/config';
 import { SitecoreConfigInput as SitecoreConfigInput_2 } from '@sitecore-content-sdk/content/config';
 import { SitecoreProvider } from '@sitecore-content-sdk/react';
 import { SitecoreProviderReactContext } from '@sitecore-content-sdk/react';
@@ -182,7 +175,6 @@ import { withSitecore } from '@sitecore-content-sdk/react';
 import { WithSitecoreHocProps } from '@sitecore-content-sdk/react';
 import { WithSitecoreOptions } from '@sitecore-content-sdk/react';
 import { WithSitecoreProps } from '@sitecore-content-sdk/react';
-import { WriteImportMapArgs } from '@sitecore-content-sdk/content/tools';
 
 export { AppPlaceholder }
 
@@ -404,8 +396,6 @@ export { ErrorPagesService }
 
 export { ErrorPagesServiceConfig }
 
-export { extractFiles }
-
 // @public
 export const extractPath: (context: GetStaticPropsContext | GetServerSidePropsContext) => string;
 
@@ -450,20 +440,9 @@ export { FileField }
 
 export { Form }
 
-// @public
-export const generateMap: GenerateMapFunction;
-
 export { GenerateMapArgs }
 
-export { generateMetadata }
-
-export { generateSites }
-
-export { GenerateSitesConfig }
-
 export { getChildPlaceholder }
-
-export { getComponentList }
 
 // Warning: (ae-forgotten-export) The symbol "ComponentPropsFetchFunction" needs to be exported by the entry point api-surface.d.ts
 //
@@ -918,11 +897,6 @@ export { WithSitecoreHocProps }
 export { WithSitecoreOptions }
 
 export { WithSitecoreProps }
-
-// @public
-export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }: {
-    scConfig: SitecoreConfig_2;
-}) => Promise<void>;
 
 
 export * from "@sitecore-content-sdk/react/search";

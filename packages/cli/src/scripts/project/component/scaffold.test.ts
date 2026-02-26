@@ -48,7 +48,7 @@ describe('scaffold command', () => {
     loadCliConfigStub = sinon.stub(loadConfigModule, 'default').returns(mockConfig);
     scaffoldComponentStub = sinon.stub();
     const scaffoldModule = proxyquire('./scaffold', {
-      '@sitecore-content-sdk/content/tools/server': { scaffoldComponent: scaffoldComponentStub },
+      '@sitecore-content-sdk/content/tools-server': { scaffoldComponent: scaffoldComponentStub },
     });
     handler = scaffoldModule.handler;
   });

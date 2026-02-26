@@ -7,7 +7,7 @@ import {
   getComponentList,
   defaultImportMapTemplate,
   ModuleExports,
-} from '@sitecore-content-sdk/content/tools/server';
+} from '@sitecore-content-sdk/content/tools-server';
 import ts from 'typescript';
 import fs from 'fs';
 

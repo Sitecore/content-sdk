@@ -169,10 +169,10 @@
       "require": "./dist/cjs/tools/index.js",
       "types": "./types/tools/index.d.ts"
     },
-    "./tools/server": {
-      "import": "./dist/esm/tools/tools-server.js",
-      "require": "./dist/cjs/tools/tools-server.js",
-      "types": "./types/tools/tools-server.d.ts"
+    "./tools-server": {
+      "import": "./dist/esm/tools/index-server.js",
+      "require": "./dist/cjs/tools/index-server.js",
+      "types": "./types/tools/index-server.d.ts"
     },
     "./utils": {
       "import": "./dist/esm/utils/index.js",
