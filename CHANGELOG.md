@@ -34,6 +34,8 @@ Our versioning strategy is as follows:
 
 * `[nextjs]` Enable secured component variant generation for App Router Server Components in Design Studio ([#369](https://github.com/Sitecore/content-sdk/pull/369))([#375](https://github.com/Sitecore/content-sdk/pull/375))
 
+* `[nextjs]` Allow to pass custom query parameters to /api/editing/render handlers ([#381](https://github.com/Sitecore/content-sdk/pull/381))
+
 ### 🛠 Breaking Changes
 
 * Decouple `@sitecore-content-sdk/content` from `@sitecore-content-sdk/core` ([#351](https://github.com/Sitecore/content-sdk/pull/351)):
