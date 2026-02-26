@@ -53,7 +53,7 @@ type EditingHandlerOptions = {
    */
   sitecoreInternalEditingHostUrl?: string;
   /**
-   * Query string parameters to allow and include  in the search params.
+   * Query string parameters to allow and include in the search params.
    * - Array: each item is a parameter name (string) or an object `{ name, required? }`.
    * - Function: receives the request's query parameter names and returns the list of allowed parameters.
    */
