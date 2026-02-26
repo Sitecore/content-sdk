@@ -234,7 +234,7 @@ describe('editing/utils', () => {
   });
 
   describe('getAllowedQueryParams', () => {
-    it('should return empty results when allowedParamsList is undefined', () => {
+    it('should return empty results when allowedParams is undefined', () => {
       const queryParams = { param1: 'value1', param2: 'value2' };
 
       const result = getAllowedQueryParams(queryParams);
@@ -245,7 +245,7 @@ describe('editing/utils', () => {
       });
     });
 
-    it('should return empty results when allowedParamsList is an empty array', () => {
+    it('should return empty results when allowedParams is an empty array', () => {
       const queryParams = { param1: 'value1', param2: 'value2' };
 
       const result = getAllowedQueryParams(queryParams, []);
@@ -262,9 +262,9 @@ describe('editing/utils', () => {
         param2: 'value2',
         param3: 'value3',
       };
-      const allowedParamsList = [{ name: 'param1' }, { name: 'param3' }];
+      const allowedParams = [{ name: 'param1' }, { name: 'param3' }];
 
-      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+      const result = getAllowedQueryParams(queryParams, allowedParams);
 
       expect(result).to.deep.equal({
         missingAllowedParams: [],
@@ -277,13 +277,13 @@ describe('editing/utils', () => {
 
     it('should handle missing required parameters', () => {
       const queryParams = { param1: 'value1' };
-      const allowedParamsList = [
+      const allowedParams = [
         { name: 'param1', required: true },
         { name: 'param2', required: true },
         { name: 'param3', required: true },
       ];
 
-      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+      const result = getAllowedQueryParams(queryParams, allowedParams);
 
       expect(result).to.deep.equal({
         missingAllowedParams: ['param2', 'param3'],
@@ -295,13 +295,13 @@ describe('editing/utils', () => {
 
     it('should not include missing optional parameters in missingAllowedParams', () => {
       const queryParams = { param1: 'value1' };
-      const allowedParamsList = [
+      const allowedParams = [
         { name: 'param1' },
         { name: 'param2' },
         { name: 'param3', required: false },
       ];
 
-      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+      const result = getAllowedQueryParams(queryParams, allowedParams);
 
       expect(result).to.deep.equal({
         missingAllowedParams: [],
@@ -316,14 +316,14 @@ describe('editing/utils', () => {
         requiredParam1: 'value1',
         optionalParam1: 'value2',
       };
-      const allowedParamsList = [
+      const allowedParams = [
         { name: 'requiredParam1', required: true },
         { name: 'requiredParam2', required: true },
         { name: 'optionalParam1' },
         { name: 'optionalParam2' },
       ];
 
-      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+      const result = getAllowedQueryParams(queryParams, allowedParams);
 
       expect(result).to.deep.equal({
         missingAllowedParams: ['requiredParam2'],
@@ -393,13 +393,13 @@ describe('editing/utils', () => {
         param2: undefined,
         param3: 'value3',
       };
-      const allowedParamsList = [
+      const allowedParams = [
         { name: 'param1' },
         { name: 'param2', required: true },
         { name: 'param3' },
       ];
 
-      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+      const result = getAllowedQueryParams(queryParams, allowedParams);
 
       expect(result).to.deep.equal({
         missingAllowedParams: ['param2'],
@@ -418,7 +418,7 @@ describe('editing/utils', () => {
         arrayParam: ['val1', 'val2'],
         objectParam: { nested: 'value' },
       };
-      const allowedParamsList = [
+      const allowedParams = [
         { name: 'stringParam' },
         { name: 'numberParam' },
         { name: 'booleanParam' },
@@ -426,7 +426,7 @@ describe('editing/utils', () => {
         { name: 'objectParam' },
       ];
 
-      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+      const result = getAllowedQueryParams(queryParams, allowedParams);
 
       expect(result).to.deep.equal({
         missingAllowedParams: [],
@@ -442,9 +442,9 @@ describe('editing/utils', () => {
 
     it('should handle empty queryParams object', () => {
       const queryParams = {};
-      const allowedParamsList = [{ name: 'param1', required: true }, { name: 'param2' }];
+      const allowedParams = [{ name: 'param1', required: true }, { name: 'param2' }];
 
-      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+      const result = getAllowedQueryParams(queryParams, allowedParams);
 
       expect(result).to.deep.equal({
         missingAllowedParams: ['param1'],
@@ -459,14 +459,14 @@ describe('editing/utils', () => {
         zeroParam: 0,
         emptyStringParam: '',
       };
-      const allowedParamsList = [
+      const allowedParams = [
         { name: 'nullParam' },
         { name: 'falseParam' },
         { name: 'zeroParam' },
         { name: 'emptyStringParam' },
       ];
 
-      const result = getAllowedQueryParams(queryParams, allowedParamsList);
+      const result = getAllowedQueryParams(queryParams, allowedParams);
 
       expect(result).to.deep.equal({
         missingAllowedParams: [],
