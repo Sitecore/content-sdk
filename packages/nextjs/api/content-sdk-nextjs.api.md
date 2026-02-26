@@ -189,7 +189,10 @@ export interface AllowedQueryParam {
 }
 
 // @public
-export type AllowedQueryParamsResolver = (queryParams: string[]) => AllowedQueryParam[];
+export type AllowedQueryParams = Array<AllowedQueryParam | string> | AllowedQueryParamsResolver;
+
+// @public
+export type AllowedQueryParamsResolver = (queryParams: string[]) => Array<AllowedQueryParam | string>;
 
 export { AppPlaceholder }
 
@@ -393,7 +396,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 export type EditingRenderMiddlewareConfig = {
     resolvePageUrl?: (itemPath: string) => string;
     sitecoreInternalEditingHostUrl?: string;
-    allowedQueryParams?: AllowedQueryParam[] | AllowedQueryParamsResolver;
+    allowedQueryParams?: AllowedQueryParams;
 };
 
 export { EditingScripts }
