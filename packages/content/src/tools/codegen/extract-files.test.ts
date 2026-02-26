@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
 import { debug } from '@sitecore-content-sdk/core';
-import { auth } from '@sitecore-content-sdk/core/tools';
+import { auth } from '@sitecore-content-sdk/core/tools-server';
 import { defineConfig, SitecoreConfig } from './../../config';
 import { extractFiles, ExtractFilesConfig } from './extract-files';
 import nock from 'nock';

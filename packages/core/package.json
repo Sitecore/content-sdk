@@ -88,6 +88,11 @@
       "import": "./dist/esm/tools/index.js",
       "require": "./dist/cjs/tools/index.js",
       "types": "./types/tools/index.d.ts"
+    },
+    "./tools-server": {
+      "import": "./dist/esm/tools/index-server.js",
+      "require": "./dist/cjs/tools/index-server.js",
+      "types": "./types/tools/index-server.d.ts"
     }
   }
 }
