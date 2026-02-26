@@ -1,4 +1,5 @@
-import React, { ComponentType } from 'react';
+'use client';
+import React, { ComponentType, useEffect, useRef } from 'react';
 import { resetEditorChromes } from '..';
 
 /**
@@ -9,18 +10,24 @@ import { resetEditorChromes } from '..';
 export const withEditorChromes = (
   WrappedComponent: React.ComponentClass<unknown> | React.FC<unknown>
 ) => {
-  class Enhancer extends React.Component<unknown> {
-    displayName: string =
-      (WrappedComponent as ComponentType).displayName || WrappedComponent.name || 'Component';
-
-    componentDidUpdate() {
+  const Enhancer = (props: Record<string, unknown>) => {
+    const isFirstRender = useRef(true);
+    useEffect(() => {
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+        return;
+      }
+      // only reset chromes on subsequent re-renders
       resetEditorChromes();
-    }
+    });
 
-    render() {
-      return <WrappedComponent {...this.props} />;
-    }
-  }
+    return <WrappedComponent {...props} />;
+  };
 
-  return Enhancer as React.ComponentClass;
+  Enhancer.displayName =
+    (WrappedComponent as ComponentType).displayName ||
+    (WrappedComponent as ComponentType).name ||
+    'Component';
+
+  return Enhancer;
 };

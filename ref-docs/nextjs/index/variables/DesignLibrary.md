@@ -8,7 +8,7 @@
 
 > `const` **DesignLibrary**: () => `React.JSX.Element` \| `null`
 
-Defined in: react/types/components/DesignLibrary/DesignLibrary.d.ts:15
+Defined in: react/types/components/DesignLibrary/DesignLibrary.d.ts:13
 
 Design Library component.
 

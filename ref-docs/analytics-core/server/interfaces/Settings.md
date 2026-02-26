@@ -6,7 +6,7 @@
 
 # Interface: Settings
 
-Defined in: [src/initializer/server/interfaces.ts:12](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/analytics-core/src/initializer/server/interfaces.ts#L12)
+Defined in: [src/initializer/server/interfaces.ts:12](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/analytics-core/src/initializer/server/interfaces.ts#L12)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/initializer/server/interfaces.ts:12](https://github.com/Sitecor
 
 > **cookieSettings**: `object`
 
-Defined in: [src/initializer/server/interfaces.ts:17](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/analytics-core/src/initializer/server/interfaces.ts#L17)
+Defined in: [src/initializer/server/interfaces.ts:17](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/analytics-core/src/initializer/server/interfaces.ts#L17)
 
 #### domain?
 
@@ -46,7 +46,7 @@ Defined in: [src/initializer/server/interfaces.ts:17](https://github.com/Sitecor
 
 > **sitecoreEdgeContextId**: `string`
 
-Defined in: [src/initializer/server/interfaces.ts:13](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/analytics-core/src/initializer/server/interfaces.ts#L13)
+Defined in: [src/initializer/server/interfaces.ts:13](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/analytics-core/src/initializer/server/interfaces.ts#L13)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/initializer/server/interfaces.ts:13](https://github.com/Sitecor
 
 > **sitecoreEdgeUrl**: `string`
 
-Defined in: [src/initializer/server/interfaces.ts:15](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/analytics-core/src/initializer/server/interfaces.ts#L15)
+Defined in: [src/initializer/server/interfaces.ts:15](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/analytics-core/src/initializer/server/interfaces.ts#L15)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [src/initializer/server/interfaces.ts:15](https://github.com/Sitecor
 
 > **siteName**: `string`
 
-Defined in: [src/initializer/server/interfaces.ts:14](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/analytics-core/src/initializer/server/interfaces.ts#L14)
+Defined in: [src/initializer/server/interfaces.ts:14](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/analytics-core/src/initializer/server/interfaces.ts#L14)
 
 ***
 
@@ -70,4 +70,4 @@ Defined in: [src/initializer/server/interfaces.ts:14](https://github.com/Sitecor
 
 > `optional` **timeout**: `number`
 
-Defined in: [src/initializer/server/interfaces.ts:16](https://github.com/Sitecore/content-sdk/blob/57d48c7b35a450f906daae78abfd4cb68e3a40d5/packages/analytics-core/src/initializer/server/interfaces.ts#L16)
+Defined in: [src/initializer/server/interfaces.ts:16](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/analytics-core/src/initializer/server/interfaces.ts#L16)

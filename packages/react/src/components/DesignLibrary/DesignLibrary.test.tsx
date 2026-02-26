@@ -28,6 +28,7 @@ import {
   getDesignLibraryComponentPreviewErrorEvent,
 } from '@sitecore-content-sdk/content/codegen';
 import { after } from 'node:test';
+import * as rscUtils from '#rsc-env';
 
 before(() => {
   if (typeof window !== 'undefined' && !window.requestAnimationFrame) {
@@ -40,6 +41,9 @@ describe('<DesignLibrary />', () => {
     sandbox.restore();
   });
   const sandbox = sinon.createSandbox();
+  before(() => {
+    sandbox.replace(rscUtils, 'rsc', false as any);
+  });
   const postMessageSpy = sandbox.spy(window, 'postMessage');
   const components = new Map<string, React.FC>();
 
@@ -137,7 +141,7 @@ describe('<DesignLibrary />', () => {
     joinHtml([
       '<main><div id="editing-component">',
       `<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="editing-componentmode-placeholder_${guid}"></code>`,
-      `<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="${id}"></code>`,
+      `<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="${id}" data-csdk-component-runtime="client"></code>`,
       '<div class="test"><div>',
       '<p>This is a live set of examples of how to use Content SDK</p>\n',
       '</div><div class="sc-jss-empty-placeholder">',
@@ -389,7 +393,7 @@ describe('<DesignLibrary />', () => {
   });
 
   describe('mode=library-metadata and isVariantGeneration=false', () => {
-    it('renders real component and sends READY + initial RENDERED', async () => {
+    it('renders real component and sends READY + initial RENDERED (Pages Router)', async () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata);
 
       const rendered = render(
@@ -661,7 +665,7 @@ describe('<DesignLibrary />', () => {
       });
     };
 
-    it('renders real component first, wires generation, then switches to generated component', async () => {
+    it('renders real component first, wires generation, then switches to generated component (Pages Router)', async () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata_Gen);
 
       const rendered = render(

@@ -7,8 +7,8 @@ import { render, waitFor } from '@testing-library/react';
 import {
   SitecoreProviderReactContext,
   SitecoreProviderState,
+  useSitecore,
 } from '../components/SitecoreProvider';
-import { useSitecore } from '../enhancers/withSitecore';
 import { getOffset, useSearchService } from './utils';
 
 describe('search utils', () => {
