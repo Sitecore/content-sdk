@@ -63,7 +63,6 @@ Our versioning strategy is as follows:
   - Other components and HOCs in `react` package were refactored and should not have an effect on end user apps.
 * `[react]` Placeholder suspense causes longer JavaScript Scripting execution time ([#384](https://github.com/Sitecore/content-sdk/pull/384))
     
-
 ### 🐛 Bug Fixes
 
 * `[core]` `[search]` `[analytics]` Pass Sitecore Context ID only in headers ([#336](https://github.com/Sitecore/content-sdk/pull/336))
