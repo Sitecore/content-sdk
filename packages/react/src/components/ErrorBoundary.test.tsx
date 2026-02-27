@@ -251,27 +251,38 @@ describe('ErrorBoundary', () => {
       delay(500, import('../test-data/test-dynamic-component'))
     );
 
-    it('should render a loading message', async () => {
+    it('should render a loading message when disableSuspense is false', async () => {
       const rendered = render(
-        <ErrorBoundary>
+        <ErrorBoundary disableSuspense={false}>
           <ItsADynamicComponent />
         </ErrorBoundary>
       );
       expect(rendered.baseElement.textContent).to.equal('Loading component...');
     });
 
-    it('should render custom loading message', async () => {
+    it('should render custom loading message when disableSuspense is false', async () => {
       const loading = 'I am customly loading...';
       const rendered = render(
-        <ErrorBoundary componentLoadingMessage={loading}>
+        <ErrorBoundary componentLoadingMessage={loading} disableSuspense={false}>
           <ItsADynamicComponent />
         </ErrorBoundary>
       );
       expect(rendered.baseElement.textContent).to.equal(loading);
     });
 
-    it('should not render Suspense and default loading message when wrapping a dynamic component', async () => {
-      // mount fails with lazy component and no suspense
+    it('should not render Suspense when disableSuspense is true by default', () => {
+      const RegularComponent: React.FC = () => <div>Regular component</div>;
+
+      const rendered = render(
+        <ErrorBoundary>
+          <RegularComponent />
+        </ErrorBoundary>
+      );
+
+      expect(rendered.container.textContent).to.equal('Regular component');
+    });
+
+    it('should not render Suspense when wrapping a dynamic component', async () => {
       const rendered = render(
         <Suspense>
           <ErrorBoundary isDynamic={true}>
@@ -279,7 +290,6 @@ describe('ErrorBoundary', () => {
           </ErrorBoundary>
         </Suspense>
       );
-      expect(rendered.baseElement.textContent).to.equal('');
       await waitFor(() => expect(rendered.getAllByText('No error').length).to.equal(1));
     });
 

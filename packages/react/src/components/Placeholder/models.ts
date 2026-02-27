@@ -60,8 +60,11 @@ export interface PlaceholderProps {
    */
   componentLoadingMessage?: string;
   /**
-   * If true, disables Suspense in ErrorBoundary for the placeholder.
-   * @default false
+   * @deprecated The `disableSuspense` prop is deprecated and will be removed in version 3.0.0.
+   * The default value is changed to `true` in version 2.0.0 to avoid breaking changes related to Suspense in ErrorBoundary.
+   *
+   * If `false`, enables Suspense in ErrorBoundary for the components rendered by placeholder.
+   * @default true
    */
   disableSuspense?: boolean;
   /**
@@ -152,4 +155,3 @@ export const nonSerializedPlaceholderProps = [
   'missingComponentComponent',
   'hiddenRenderingComponent',
 ] as const satisfies (keyof PlaceholderProps)[];
-
