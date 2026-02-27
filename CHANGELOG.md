@@ -62,6 +62,7 @@ Our versioning strategy is as follows:
   - Old `withPlaceholder` HOC implementation has been reworked into slot-like logic with server and client implementations. `withAppPlaceholder` can be used in server RSC context, and `withPlaceholder` in client one.
   - Other components and HOCs in `react` package were refactored and should not have an effect on end user apps.
 * `[react]` Placeholder suspense causes longer JavaScript Scripting execution time ([#384](https://github.com/Sitecore/content-sdk/pull/384))
+  - The default value is set to `true` to avoid forcing Suspense usage across all components which could negatively impact performance metrics. Suspense can now be enabled explicitly when needed.
     
 ### 🐛 Bug Fixes
 

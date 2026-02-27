@@ -61,7 +61,7 @@ export interface PlaceholderProps {
   componentLoadingMessage?: string;
   /**
    * @deprecated The `disableSuspense` prop is deprecated and will be removed in version 3.0.0.
-   * The default value is changed to `true` in version 2.0.0 to avoid breaking changes related to Suspense in ErrorBoundary.
+   * The default value is set to `true` to avoid forcing Suspense usage across all components which could negatively impact performance metrics. Suspense can now be enabled explicitly when needed.
    *
    * If `false`, enables Suspense in ErrorBoundary for the components rendered by placeholder.
    * @default true
