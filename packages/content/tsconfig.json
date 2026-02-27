@@ -21,7 +21,7 @@
     "i18n.d.ts",
     "site.d.ts",
     "tools.d.ts",
-    "tools-node.d.ts",
+    "node-tools.d.ts",
     "personalize.d.ts",
     "config-cli.d.ts",
     "codegen.d.ts",

@@ -1,4 +1,4 @@
-// export point for /tools-node submodule, which is not client-side safe and should not be imported in browser bundles
+// export point for /node-tools submodule, which is not client-side safe and should not be imported in browser bundles
 export * from './auth/models';
 import * as authModule from './auth';
 

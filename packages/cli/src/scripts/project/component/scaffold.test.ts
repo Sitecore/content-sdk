@@ -48,7 +48,7 @@ describe('scaffold command', () => {
     loadCliConfigStub = sinon.stub(loadConfigModule, 'default').returns(mockConfig);
     scaffoldComponentStub = sinon.stub();
     const scaffoldModule = proxyquire('./scaffold', {
-      '@sitecore-content-sdk/content/tools-node': { scaffoldComponent: scaffoldComponentStub },
+      '@sitecore-content-sdk/content/node-tools': { scaffoldComponent: scaffoldComponentStub },
     });
     handler = scaffoldModule.handler;
   });
@@ -162,3 +162,4 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`
     ).to.be.true;
   });
 });
+

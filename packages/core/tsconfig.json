@@ -14,7 +14,7 @@
     "types",
     "dist",
     "tools.d.ts",
-    "tools-node.d.ts",
+    "node-tools.d.ts",
     "src/**/*.test.ts",
     "src/tools/metadata/test-data/**/*",
     "api"
