@@ -374,6 +374,7 @@ export const Placeholder: (props: PlaceholderProps) => React_2.JSX.Element;
 interface PlaceholderProps {
     componentLoadingMessage?: string;
     componentMap?: ComponentMap;
+    // @deprecated (undocumented)
     disableSuspense?: boolean;
     // Warning: (ae-forgotten-export) The symbol "ErrorComponentProps" needs to be exported by the entry point api-surface.d.ts
     errorComponent?: React.ComponentClass<ErrorComponentProps> | React.FC<ErrorComponentProps>;
