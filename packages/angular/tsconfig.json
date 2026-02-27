@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "es2022",
+    "moduleResolution": "bundler",
+    "strictPropertyInitialization": false,
+    "typeRoots": ["./node_modules/@types", "./typings"],
+    "skipLibCheck": true
+  }
+}

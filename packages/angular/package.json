@@ -1,0 +1,76 @@
+{
+  "name": "@sitecore-content-sdk/angular",
+  "version": "2.0.0-canary.2",
+  "description": "Angular integration for Sitecore Content SDK",
+  "author": {
+    "name": "Sitecore Corporation",
+    "url": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
+  "bugs": {
+    "url": "https://github.com/sitecore/content-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sitecore/content-sdk"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "npm run clean && ng-packagr -p ng-package.json",
+    "clean": "del-cli dist",
+    "lint": "eslint \"./src/**/*.ts\""
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "peerDependencies": {
+    "@angular/common": "^21.0.0",
+    "@angular/core": "^21.0.0",
+    "@angular/router": "^21.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@angular/core": {
+      "optional": false
+    }
+  },
+  "dependencies": {
+    "@sitecore-content-sdk/content": "2.0.0-canary.2",
+    "@sitecore-content-sdk/core": "2.0.0-canary.2"
+  },
+  "devDependencies": {
+    "@angular/common": "^21.0.0",
+    "@angular/compiler": "^21.0.0",
+    "@angular/compiler-cli": "^21.0.0",
+    "@stylistic/eslint-plugin": "^5.2.2",
+    "@types/node": "^24.10.4",
+    "@typescript-eslint/eslint-plugin": "8.39.0",
+    "@typescript-eslint/parser": "8.39.0",
+    "del-cli": "^6.0.0",
+    "eslint": "^9.32.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-jsdoc": "52.0.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "ng-packagr": "^21.0.0",
+    "prettier": "^2.8.0",
+    "typescript": "~5.9.0"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "main": "dist/sitecore-content-sdk-angular/fesm2022/sitecore-content-sdk-angular.mjs",
+  "module": "dist/sitecore-content-sdk-angular/fesm2022/sitecore-content-sdk-angular.mjs",
+  "types": "dist/sitecore-content-sdk-angular/sitecore-content-sdk-angular.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/sitecore-content-sdk-angular/sitecore-content-sdk-angular.d.ts",
+      "esm2022": "./dist/sitecore-content-sdk-angular/esm2022/sitecore-content-sdk-angular.mjs",
+      "default": "./dist/sitecore-content-sdk-angular/fesm2022/sitecore-content-sdk-angular.mjs"
+    }
+  }
+}
