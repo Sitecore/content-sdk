@@ -5,7 +5,7 @@ import {
   generateMetadata,
   extractFiles,
   writeImportMap,
-} from '@sitecore-content-sdk/nextjs/tools-server';
+} from '@sitecore-content-sdk/nextjs/tools-node';
 
 export default defineCliConfig({
   config: scConfig,

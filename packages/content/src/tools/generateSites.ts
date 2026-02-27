@@ -1,7 +1,7 @@
 import path from 'path';
 import chalk from 'chalk';
 import fs from 'fs';
-import { ensurePathExists } from '@sitecore-content-sdk/core/tools-server';
+import { ensurePathExists } from '@sitecore-content-sdk/core/tools-node';
 import { SiteInfo, SiteInfoService } from '../site';
 import { SitecoreConfig } from '../config';
 import { createGraphQLClientFactory } from '../client';

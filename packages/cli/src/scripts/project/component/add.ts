@@ -4,7 +4,7 @@ import path from 'path';
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 import * as tools from '@sitecore-content-sdk/content/tools';
-import * as serverTools from '@sitecore-content-sdk/content/tools-server';
+import * as serverTools from '@sitecore-content-sdk/content/tools-node';
 import inquirer from 'inquirer';
 import { handler as generateMapHandler } from './generate-map';
 import loadCliConfig from '../../../utils/load-config';

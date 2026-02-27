@@ -8,7 +8,7 @@ import {
   readNamedExports,
 } from './utils';
 import { SitecoreConfig } from './../../config';
-import { auth } from '@sitecore-content-sdk/core/tools-server';
+import { auth } from '@sitecore-content-sdk/core/tools-node';
 import { debug } from '@sitecore-content-sdk/core';
 import path from 'path';
 import fs from 'fs';

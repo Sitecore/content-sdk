@@ -9,7 +9,7 @@ import { generateMap } from './generate-map';
 import fs from 'fs';
 import { ComponentImport } from '@sitecore-content-sdk/content/tools';
 import * as coreTools from '@sitecore-content-sdk/content/tools';
-import * as coreServerTools from '@sitecore-content-sdk/content/tools-server';
+import * as coreServerTools from '@sitecore-content-sdk/content/tools-node';
 import * as templatingUtils from './templating/utils';
 
 describe('generateMap', () => {

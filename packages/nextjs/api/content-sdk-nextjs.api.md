@@ -103,7 +103,7 @@ import { LinkProps as LinkProps_2 } from '@sitecore-content-sdk/react';
 import { LinkProps as LinkProps_3 } from 'next/link';
 import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
-import { Metadata } from '@sitecore-content-sdk/core/tools-server';
+import { Metadata } from '@sitecore-content-sdk/core/tools-node';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherError } from '@sitecore-content-sdk/core';

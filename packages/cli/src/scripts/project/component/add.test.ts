@@ -7,7 +7,7 @@ import path from 'path';
 import childProcess from 'child_process';
 import inquirer from 'inquirer';
 import * as toolsModule from '@sitecore-content-sdk/content/tools';
-import * as serverToolsModule from '@sitecore-content-sdk/content/tools-server';
+import * as serverToolsModule from '@sitecore-content-sdk/content/tools-node';
 import * as addModule from './add';
 import * as loadConfigModule from '../../../utils/load-config';
 import * as generateMapModule from './generate-map';
