@@ -8,3 +8,15 @@ export default React;
 export function useEffect() {
   // noop
 }
+
+export function useContext() {
+  // noop
+}
+
+export const useState = () => {
+  // noop
+};
+
+export const useMemo = () => {
+  // noop
+};

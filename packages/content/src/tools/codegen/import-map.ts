@@ -357,7 +357,8 @@ const prepImportMaps = async (paths: string[], separateMaps?: boolean): Promise<
     // read the start of the file that may be 'use client'
     const firstLine = await new Promise<string>((resolve) => {
       let readBuffer = '';
-      const stream = fs.createReadStream(fullPath, { end: 12 });
+      // Read first 1KB - enough for any reasonable comments/rules before 'use client'
+      const stream = fs.createReadStream(fullPath, { end: 1024 });
       stream
         .on('data', async (chunk) => {
           readBuffer += chunk.toString();
@@ -367,7 +368,8 @@ const prepImportMaps = async (paths: string[], separateMaps?: boolean): Promise<
     });
 
     if (!firstLine) continue;
-    if (firstLine.match(/['"]use client['"]/)) {
+    // check if 'use client' directive is present, ignoring any comments or whitespace before it
+    if (firstLine.match(/^(?:\s|\/\/[^\n]*\n|\/\*[\s\S]*?\*\/)*['"]use client['"]/)) {
       clientPaths.push(fullPath);
     } else {
       serverPaths.push(fullPath);
