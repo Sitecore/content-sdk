@@ -29,7 +29,6 @@
     "client.d.ts",
     "utils.d.ts",
     "tools.d.ts",
-    "node-tools.d.ts",
     "config-cli.d.ts",
     "src/tests/*",
     "src/test-data/*",
