@@ -34,6 +34,8 @@ Our versioning strategy is as follows:
 
 * `[nextjs]` Allow to pass custom query parameters to /api/editing/render handlers ([#381](https://github.com/Sitecore/content-sdk/pull/381))
 
+* `[react]` `[nextjs]` Add `X-Content-Type-Options: nosniff` to the editing render route response for improved security ([#386](https://github.com/Sitecore/content-sdk/pull/386))
+
 ### 🛠 Breaking Changes
 
 * Decouple `@sitecore-content-sdk/content` from `@sitecore-content-sdk/core` ([#351](https://github.com/Sitecore/content-sdk/pull/351)):
