@@ -1,5 +1,7 @@
 # AGENTS.md — AI Guidance for Sitecore Content SDK
 
+> **Claude Code users:** This file does not include detailed coding rules. Read all `.cursor/rules/*.mdc` files at the start of your session for code style, naming conventions, Sitecore patterns, testing, and safety rules.
+
 ## Project Overview
 
 This repository is the **Sitecore Content SDK** — a TypeScript monorepo of SDK packages, scaffolding CLI, and samples for building applications with Sitecore XM Cloud. AI agents work as developer assistants to implement features, fix bugs, add tests, and maintain templates.
@@ -26,6 +28,17 @@ yarn reset                # Clean, reinstall, rebuild
 **Per-package:** `cd packages/<name>` then `yarn build`, `yarn lint`, `yarn test`.
 
 **Package manager:** Yarn 4.12.0. Workspaces: `packages/*`, `samples/*`.
+
+---
+
+## Tech Stack
+
+- **Language**: TypeScript (Node LTS)
+- **Runtime**: Node LTS
+- **Build**: `tsc` -> `dist/`, templates bundled via `scripts/build-templates.ts`
+- **Testing**: Mocha + Sinon + Chai, coverage via `nyc`
+- **Lint/format**: ESLint + Prettier
+- **Package Manager**: Yarn 4.12.0
 
 ---
 
@@ -86,7 +99,7 @@ content-sdk/
 - **Naming:** camelCase (variables), PascalCase (components/types), UPPER_SNAKE (constants), kebab-case (directories)
 - Keep functions small and focused; prefer pure functions
 - JSDoc for public APIs: `@param`, `@returns`
-- For full standards: see `.cursor/rules/` and `CLAUDE.md`
+- For full standards: see `.cursor/rules/`
 
 ---
 
@@ -168,10 +181,10 @@ yarn test-packages
 
 ## Detailed Rules Reference
 
-This file is a quick reference. For comprehensive guidance:
+This file is the **canonical source of truth** for AI agents working in this repo. For comprehensive guidance:
 
-- **`.cursor/rules/`** — project-context, safety, repo-structure, code-style, sitecore, testing, cli
-- **`CLAUDE.md`** — full guide (tech stack, Sitecore patterns, CLI, safety)
+- **`.cursor/rules/`** — project-context, safety, repo-structure, code-style, sitecore, testing, cli, general, javascript
+- **`LLMs.txt`** — llms.txt convention companion (points here, provides project overview for external LLMs)
 - **`CONTRIBUTING.md`** — development workflow, branching, PR process
 
 ---
@@ -184,4 +197,4 @@ This file is a quick reference. For comprehensive guidance:
 
 ---
 
-**Remember:** When in doubt, refer to `.cursor/rules/` and `CLAUDE.md` for detailed patterns and examples.
+**Remember:** When in doubt, refer to `.cursor/rules/` for detailed patterns and examples.
