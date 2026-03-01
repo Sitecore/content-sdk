@@ -255,6 +255,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       });
 
       responseHeaders['Content-Type'] = 'text/html; charset=utf-8';
+      responseHeaders['X-Content-Type-Options'] = 'nosniff';
 
       return new Response(html, { status: 200, headers: responseHeaders });
     } catch (err) {
