@@ -4,15 +4,19 @@ import path from 'path';
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 import * as tools from '@sitecore-content-sdk/content/tools';
+import * as serverTools from '@sitecore-content-sdk/content/node-tools';
 import inquirer from 'inquirer';
 import { handler as generateMapHandler } from './generate-map';
 import loadCliConfig from '../../../utils/load-config';
 
-let { getComponentSpec, getComponentList, getComponentSpecUrl } = tools;
+let { getComponentSpec, getComponentSpecUrl } = tools;
+let { getComponentList } = serverTools;
 
-export const unitMocks = (
-  toolsModule: Pick<typeof tools, 'getComponentSpec' | 'getComponentList' | 'getComponentSpecUrl'>
-) => {
+export const unitMocks = (toolsModule: {
+  getComponentSpec: typeof getComponentSpec;
+  getComponentList: typeof getComponentList;
+  getComponentSpecUrl: typeof getComponentSpecUrl;
+}) => {
   getComponentSpec = toolsModule.getComponentSpec;
   getComponentList = toolsModule.getComponentList;
   getComponentSpecUrl = toolsModule.getComponentSpecUrl;
@@ -270,3 +274,4 @@ export async function handler(argv: AddArgs) {
     return;
   }
 }
+

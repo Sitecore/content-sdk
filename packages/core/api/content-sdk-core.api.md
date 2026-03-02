@@ -304,7 +304,7 @@ export interface TenantArgs {
 
 // Warnings were encountered during analysis:
 //
-// src/tools/index.ts:38:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+// src/tools/index-node.ts:16:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 
