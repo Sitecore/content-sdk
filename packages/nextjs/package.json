@@ -169,11 +169,6 @@
       "require": "./dist/cjs/tools/index.js",
       "types": "./types/tools/index.d.ts"
     },
-    "./node-tools": {
-      "import": "./dist/esm/tools/index-node.js",
-      "require": "./dist/cjs/tools/index-node.js",
-      "types": "./types/tools/index-node.d.ts"
-    },
     "./utils": {
       "import": "./dist/esm/utils/index.js",
       "require": "./dist/cjs/utils/index.js",
