@@ -369,7 +369,9 @@ const prepImportMaps = async (paths: string[], separateMaps?: boolean): Promise<
 
     if (!firstLine) continue;
     // check if 'use client' directive is present, ignoring any comments or whitespace before it
-    if (firstLine.match(/^(?:\s|\/\/[^\n]*\n|\/\*[\s\S]*?\*\/)*['"]use client['"]/)) {
+    if (
+      firstLine.match(/^(?:\s|\/\/[^\n]*\n|\/\*[^*]*\*+(?:[^\/*][^*]*\*+)*\/)*['"]use client['"]/)
+    ) {
       clientPaths.push(fullPath);
     } else {
       serverPaths.push(fullPath);
