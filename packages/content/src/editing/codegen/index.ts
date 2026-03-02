@@ -1,7 +1,7 @@
 export {
   addComponentPreviewHandler,
   addServerComponentPreviewHandler,
-  getDesignLibraryComponentPreviewErrorEvent,
+  getDesignLibraryErrorEvent,
   getDesignLibraryComponentPropsEvent,
   getDesignLibraryImportMapEvent,
   getImportMapInfo,

@@ -106,11 +106,7 @@ export const DesignLibraryVariantGenerationEvents = ({
 
     if (componentInitError) {
       // an error occurred during initialization of the component on the server side
-      sendErrorEvent(
-        component.uid,
-        componentInitError,
-        codegen.DesignLibraryPreviewError.RenderInit
-      );
+      sendErrorEvent(component.uid, componentInitError.message, componentInitError.type);
     } else {
       const importMapEvent = getDesignLibraryImportMapEvent(component.uid, importMap!);
       postToDesignLibrary(importMapEvent);
