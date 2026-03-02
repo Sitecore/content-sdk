@@ -8,7 +8,7 @@
 
 > **generateSites**(`config`): (`args`) => `Promise`\<`void`\>
 
-Defined in: [content/src/tools/generateSites.ts:30](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/content/src/tools/generateSites.ts#L30)
+Defined in: [content/src/tools/generateSites.ts:30](https://github.com/Sitecore/content-sdk/blob/500ff39a667bc697e65ad8db118ac8c76a24bf2b/packages/content/src/tools/generateSites.ts#L30)
 
 Generates site information and writes it to a specified destination path.
 

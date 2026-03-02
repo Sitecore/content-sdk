@@ -26,7 +26,7 @@ The message that gets displayed while component is loading
 
 > `optional` **componentMap**: [`ComponentMap`](../type-aliases/ComponentMap.md)
 
-Defined in: react/types/components/Placeholder/models.d.ts:94
+Defined in: react/types/components/Placeholder/models.d.ts:97
 
 Component Map will be used to map Sitecore component names to app implementation
 When rendered within a <SitecoreProvider> component, defaults to the context componentMap.
@@ -34,18 +34,23 @@ When rendered as a server placeholder, this prop must be provided. This prop is 
 
 ***
 
-### disableSuspense?
+### ~~disableSuspense?~~
 
 > `optional` **disableSuspense**: `boolean`
 
-Defined in: react/types/components/Placeholder/models.d.ts:59
+Defined in: react/types/components/Placeholder/models.d.ts:62
 
-If true, disables Suspense in ErrorBoundary for the placeholder.
+#### Deprecated
+
+The `disableSuspense` prop is deprecated and will be removed in version 3.0.0.
+The default value is set to `true` to avoid forcing Suspense usage across all components which could negatively impact performance metrics. Suspense can now be enabled explicitly when needed.
+
+If `false`, enables Suspense in ErrorBoundary for the components rendered by placeholder.
 
 #### Default
 
 ```ts
-false
+true
 ```
 
 ***
@@ -101,7 +106,7 @@ but do not have a definition in the componentMap (i.e. don't have a React implem
 
 > `optional` **modifyComponentProps**: (`componentProps`) => `ChildComponentProps`
 
-Defined in: react/types/components/Placeholder/models.d.ts:80
+Defined in: react/types/components/Placeholder/models.d.ts:83
 
 Modify final props of component (before render) provided by rendering data.
 Can be used in case when you need to insert additional data into the component.
@@ -160,7 +165,7 @@ Any component or placeholder rendered by a placeholder will have access to this 
 
 > `optional` **passThroughComponentProps**: `object`
 
-Defined in: react/types/components/Placeholder/models.d.ts:86
+Defined in: react/types/components/Placeholder/models.d.ts:89
 
 An alternative to `modifyComponentProps` that allows passing additional props to the component without modifying the CSDK Placeholder props from Sitecore.
 These props will be merged into the result of modifyComponentProps if you use both
@@ -176,7 +181,7 @@ Make sure to not include non-serializable props here in RSC server context https
 
 > `optional` **render**: (`components`, `data`, `props`) => `ReactNode`
 
-Defined in: react/types/components/Placeholder/models.d.ts:73
+Defined in: react/types/components/Placeholder/models.d.ts:76
 
 Render props function that enables control over the rendering of the components in the placeholder.
 Useful for techniques like wrapping each child in a wrapper component.
@@ -199,7 +204,7 @@ Useful for techniques like wrapping each child in a wrapper component.
 
 > `optional` **renderEach**: (`component`, `index`) => `ReactNode`
 
-Defined in: react/types/components/Placeholder/models.d.ts:68
+Defined in: react/types/components/Placeholder/models.d.ts:71
 
 Render props function that is called for each non-system component added to the placeholder.
 Mutually exclusive with `render`.
@@ -221,7 +226,7 @@ Mutually exclusive with `render`.
 
 > `optional` **renderEmpty**: (`components`) => `ReactNode`
 
-Defined in: react/types/components/Placeholder/models.d.ts:63
+Defined in: react/types/components/Placeholder/models.d.ts:66
 
 Render props function that is called when the placeholder contains no content components.
 
