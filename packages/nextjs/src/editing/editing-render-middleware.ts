@@ -222,6 +222,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
         route,
       });
 
+      res.setHeader('X-Content-Type-Options', 'nosniff');
       res.status(200).send(html);
     } catch (err) {
       const error = err as Record<string, unknown>;

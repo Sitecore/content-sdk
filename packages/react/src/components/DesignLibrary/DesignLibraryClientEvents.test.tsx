@@ -140,6 +140,7 @@ describe('<DesignLibraryClientEvents />', () => {
             message: {
               status: DesignLibraryStatus.READY,
               uid: testEditedComponent.uid,
+              isRenderingServerComponent: true,
             },
           })
         );
@@ -293,6 +294,7 @@ describe('<DesignLibraryClientEvents />', () => {
             message: {
               status: DesignLibraryStatus.READY,
               uid: testEditedComponent.uid,
+              isRenderingServerComponent: true,
             },
           })
         );

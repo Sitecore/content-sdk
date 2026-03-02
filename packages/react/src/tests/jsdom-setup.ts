@@ -36,20 +36,3 @@ global.jsdom = jsdom;
 
 global.HTMLElement = jsDomWindow.HTMLElement; // makes chai "happy" https://github.com/chaijs/chai/issues/1029
 copyProps(jsDomWindow, global);
-
-// Suppress React error-boundary test noise (expected errors that React logs to console.error)
-const originalConsoleError = global.console.error;
-global.console.error = (...args: unknown[]) => {
-  const msg = args.length > 0 && typeof args[0] === 'string' ? args[0] : '';
-  const isReactErrorBoundary =
-    msg.includes('The above error occurred in the') ||
-    msg.includes('React will try to recreate this component tree') ||
-    msg.includes('An error occurred in component');
-  const isReactErrorInfo =
-    args.length === 2 &&
-    typeof args[1] === 'object' &&
-    args[1] !== null &&
-    'componentStack' in (args[1] as object);
-  if (isReactErrorBoundary || isReactErrorInfo) return;
-  originalConsoleError.apply(global.console, args);
-};
