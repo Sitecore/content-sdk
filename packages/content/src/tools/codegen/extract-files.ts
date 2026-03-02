@@ -8,7 +8,7 @@ import {
   readNamedExports,
 } from './utils';
 import { SitecoreConfig } from './../../config';
-import { auth } from '@sitecore-content-sdk/core/tools';
+import { auth } from '@sitecore-content-sdk/core/node-tools';
 import { debug } from '@sitecore-content-sdk/core';
 import path from 'path';
 import fs from 'fs';
@@ -143,3 +143,4 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
     }
   };
 }
+
