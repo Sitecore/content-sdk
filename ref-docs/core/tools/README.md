@@ -6,27 +6,19 @@
 
 # tools
 
-## Interfaces
-
-- [Metadata](interfaces/Metadata.md)
-- [TenantArgs](interfaces/TenantArgs.md)
-
 ## Type Aliases
 
 - [EnhancedOmit](type-aliases/EnhancedOmit.md)
 
 ## Variables
 
-- [auth](variables/auth.md)
 - [SITECORE\_EDGE\_PLATFORM\_HOSTNAME\_ENV](variables/SITECORE_EDGE_PLATFORM_HOSTNAME_ENV.md)
 - [SITECORE\_EXPERIENCE\_EDGE\_HOSTNAME\_ENV](variables/SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV.md)
 
 ## Functions
 
 - [areURLSearchParamsEqual](functions/areURLSearchParamsEqual.md)
-- [ensurePathExists](functions/ensurePathExists.md)
 - [escapeNonSpecialQuestionMarks](functions/escapeNonSpecialQuestionMarks.md)
-- [generateMetadata](functions/generateMetadata.md)
 - [getAllowedOriginsFromEnv](functions/getAllowedOriginsFromEnv.md)
 - [getCache](functions/getCache.md)
 - [getCacheAndClean](functions/getCacheAndClean.md)

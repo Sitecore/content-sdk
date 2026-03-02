@@ -1,14 +1,14 @@
-[**@sitecore-content-sdk/content**](../../README.md)
+[**@sitecore-content-sdk/content**](../../../README.md)
 
 ***
 
-[@sitecore-content-sdk/content](../../README.md) / [tools](../README.md) / scaffoldComponent
+[@sitecore-content-sdk/content](../../../README.md) / [tools/index-node](../README.md) / scaffoldComponent
 
 # Function: scaffoldComponent()
 
 > **scaffoldComponent**(`outputFolderPath`, `componentName`, `templateName`, `templates`): `void`
 
-Defined in: [content/src/tools/scaffold.ts:47](https://github.com/Sitecore/content-sdk/blob/500ff39a667bc697e65ad8db118ac8c76a24bf2b/packages/content/src/tools/scaffold.ts#L47)
+Defined in: [content/src/tools/scaffold.ts:47](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/content/src/tools/scaffold.ts#L47)
 
 **`Internal`**
 
@@ -21,7 +21,7 @@ Scaffolds a new component based on the provided template.
 | `outputFolderPath` | `string` | The file path where the component will be created. |
 | `componentName` | `string` | The name of the component to be created. |
 | `templateName` | `string` | The name of the template to use for scaffolding. If not provided, defaults to 'byoc' if `byoc` is true, otherwise 'default'. |
-| `templates` | [`ScaffoldTemplate`](../../config/type-aliases/ScaffoldTemplate.md)[] | An array of template objects, each containing a name, a template function, and a getNextSteps function. |
+| `templates` | [`ScaffoldTemplate`](../../../config/type-aliases/ScaffoldTemplate.md)[] | An array of template objects, each containing a name, a template function, and a getNextSteps function. |
 
 ## Returns
 

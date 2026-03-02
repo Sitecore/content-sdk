@@ -1,14 +1,14 @@
-[**@sitecore-content-sdk/core**](../../README.md)
+[**@sitecore-content-sdk/core**](../../../README.md)
 
 ***
 
-[@sitecore-content-sdk/core](../../README.md) / [tools](../README.md) / generateMetadata
+[@sitecore-content-sdk/core](../../../README.md) / [tools/index-node](../README.md) / generateMetadata
 
 # Function: generateMetadata()
 
 > **generateMetadata**(`config?`): () => `Promise`\<`void`\>
 
-Defined in: [packages/core/src/tools/metadata/generateMetadata.ts:35](https://github.com/Sitecore/content-sdk/blob/500ff39a667bc697e65ad8db118ac8c76a24bf2b/packages/core/src/tools/metadata/generateMetadata.ts#L35)
+Defined in: [packages/core/src/tools/metadata/generateMetadata.ts:35](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/core/src/tools/metadata/generateMetadata.ts#L35)
 
 Generate application metadata
 
