@@ -355,22 +355,12 @@ const prepImportMaps = async (paths: string[], separateMaps?: boolean): Promise<
       ? componentPath
       : path.resolve(appPath, componentPath);
     // read the start of the file that may be 'use client'
-    const firstLine = await new Promise<string>((resolve) => {
-      let readBuffer = '';
-      // Read first 1KB - enough for any reasonable comments/rules before 'use client'
-      const stream = fs.createReadStream(fullPath, { end: 1024 });
-      stream
-        .on('data', async (chunk) => {
-          readBuffer += chunk.toString();
-        })
-        .on('close', () => resolve(readBuffer))
-        .on('error', () => resolve(''));
-    });
+    const fileContent = await fs.promises.readFile(fullPath, 'utf8');
 
-    if (!firstLine) continue;
+    if (!fileContent) continue;
     // check if 'use client' directive is present, ignoring any comments or whitespace before it
     if (
-      firstLine.match(/^(?:\s|\/\/[^\n]*\n|\/\*[^*]*\*+(?:[^\/*][^*]*\*+)*\/)*['"]use client['"]/)
+      fileContent.match(/^(?:\s|\/\/[^\n]*\n|\/\*[^*]*\*+(?:[^\/*][^*]*\*+)*\/)*['"]use client['"]/)
     ) {
       clientPaths.push(fullPath);
     } else {
