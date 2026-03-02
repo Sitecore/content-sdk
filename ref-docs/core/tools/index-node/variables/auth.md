@@ -1,20 +1,18 @@
-[**@sitecore-content-sdk/core**](../../README.md)
+[**@sitecore-content-sdk/core**](../../../README.md)
 
 ***
 
-[@sitecore-content-sdk/core](../../README.md) / [tools](../README.md) / auth
+[@sitecore-content-sdk/core](../../../README.md) / [tools/index-node](../README.md) / auth
 
 # Variable: auth
 
 > `const` **auth**: `object`
 
-Defined in: [packages/core/src/tools/index.ts:37](https://github.com/Sitecore/content-sdk/blob/500ff39a667bc697e65ad8db118ac8c76a24bf2b/packages/core/src/tools/index.ts#L37)
+Defined in: [packages/core/src/tools/index-node.ts:15](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/core/src/tools/index-node.ts#L15)
 
 Preserve "live binding" semantics similar to ES module imports: production
 code always sees the current implementation; tests can swap it safely and
 restore via `sandbox.restore()` with no hidden global state.
-
-Public surface consumed by the rest of the codebase.
 
 ## Type Declaration
 

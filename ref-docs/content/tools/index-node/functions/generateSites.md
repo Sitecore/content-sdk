@@ -1,14 +1,14 @@
-[**@sitecore-content-sdk/content**](../../README.md)
+[**@sitecore-content-sdk/content**](../../../README.md)
 
 ***
 
-[@sitecore-content-sdk/content](../../README.md) / [tools](../README.md) / generateSites
+[@sitecore-content-sdk/content](../../../README.md) / [tools/index-node](../README.md) / generateSites
 
 # Function: generateSites()
 
 > **generateSites**(`config`): (`args`) => `Promise`\<`void`\>
 
-Defined in: [content/src/tools/generateSites.ts:30](https://github.com/Sitecore/content-sdk/blob/500ff39a667bc697e65ad8db118ac8c76a24bf2b/packages/content/src/tools/generateSites.ts#L30)
+Defined in: [content/src/tools/generateSites.ts:30](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/content/src/tools/generateSites.ts#L30)
 
 Generates site information and writes it to a specified destination path.
 
@@ -28,8 +28,8 @@ Generates site information and writes it to a specified destination path.
 
 | Parameter | Type |
 | ------ | ------ |
-| `args` | \{ `scConfig`: [`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md); \} |
-| `args.scConfig` | [`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md) |
+| `args` | \{ `scConfig`: [`SitecoreConfig`](../../../config/type-aliases/SitecoreConfig.md); \} |
+| `args.scConfig` | [`SitecoreConfig`](../../../config/type-aliases/SitecoreConfig.md) |
 
 ### Returns
 

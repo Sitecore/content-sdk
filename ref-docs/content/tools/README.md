@@ -20,23 +20,10 @@
 - [EnhancedComponentMapTemplate](type-aliases/EnhancedComponentMapTemplate.md)
 - [GenerateMapArgs](type-aliases/GenerateMapArgs.md)
 - [GenerateMapFunction](type-aliases/GenerateMapFunction.md)
-- [GenerateSitesConfig](type-aliases/GenerateSitesConfig.md)
-- [ModuleExports](type-aliases/ModuleExports.md)
 - [RouterType](type-aliases/RouterType.md)
-- [WriteImportMapArgs](type-aliases/WriteImportMapArgs.md)
-- [WriteImportMapArgsInternal](type-aliases/WriteImportMapArgsInternal.md)
-
-## Variables
-
-- [defaultImportMapTemplate](variables/defaultImportMapTemplate.md)
-- [extractFiles](variables/extractFiles.md)
-- [getComponentList](variables/getComponentList.md)
 
 ## Functions
 
 - [filterComponentsByType](functions/filterComponentsByType.md)
-- [generateSites](functions/generateSites.md)
 - [getComponentSpec](functions/getComponentSpec.md)
 - [getComponentSpecUrl](functions/getComponentSpecUrl.md)
-- [scaffoldComponent](functions/scaffoldComponent.md)
-- [writeImportMap](functions/writeImportMap.md)

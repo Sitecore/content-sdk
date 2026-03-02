@@ -8,4 +8,4 @@
 
 > `const` **enabledPackagesBrowser**: `Map`\<`string`, [`PackageInitializer`](../classes/PackageInitializer.md)\>
 
-Defined in: [src/initializer/browser/initializer.ts:21](https://github.com/Sitecore/content-sdk/blob/500ff39a667bc697e65ad8db118ac8c76a24bf2b/packages/analytics-core/src/initializer/browser/initializer.ts#L21)
+Defined in: [src/initializer/browser/initializer.ts:21](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/analytics-core/src/initializer/browser/initializer.ts#L21)
