@@ -7,7 +7,7 @@ import {
   getComponentList,
   defaultImportMapTemplate,
   ModuleExports,
-} from '@sitecore-content-sdk/content/tools-server';
+} from '@sitecore-content-sdk/content/node-tools';
 import ts from 'typescript';
 import fs from 'fs';
 
@@ -252,3 +252,4 @@ export function nextjsServertMapTemplate(indexedImportMap: Map<string, ModuleExp
 export function nextjsDefaultMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
   return defaultImportMapTemplate(indexedImportMap, 'nextjs');
 }
+

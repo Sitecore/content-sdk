@@ -48,6 +48,7 @@ import { ErrorPage } from '@sitecore-content-sdk/content/client';
 import { ErrorPages } from '@sitecore-content-sdk/content/site';
 import { ErrorPagesService } from '@sitecore-content-sdk/content/site';
 import { ErrorPagesServiceConfig } from '@sitecore-content-sdk/content/site';
+import { extractFiles } from '@sitecore-content-sdk/content/node-tools';
 import { FEaaSClientWrapper } from '@sitecore-content-sdk/react';
 import { FEaaSComponent } from '@sitecore-content-sdk/react';
 import { FEaaSComponentParams } from '@sitecore-content-sdk/react';
@@ -61,7 +62,12 @@ import { File as File_2 } from '@sitecore-content-sdk/react';
 import { FileField } from '@sitecore-content-sdk/react';
 import { Form } from '@sitecore-content-sdk/react';
 import { GenerateMapArgs } from '@sitecore-content-sdk/content/tools';
+import { GenerateMapFunction } from '@sitecore-content-sdk/content/tools';
+import { generateMetadata } from '@sitecore-content-sdk/core/node-tools';
+import { generateSites } from '@sitecore-content-sdk/content/node-tools';
+import { GenerateSitesConfig } from '@sitecore-content-sdk/content/node-tools';
 import { getChildPlaceholder } from '@sitecore-content-sdk/content/layout';
+import { getComponentList } from '@sitecore-content-sdk/content/node-tools';
 import { getContentStylesheetLink } from '@sitecore-content-sdk/content/layout';
 import { getDesignLibraryStylesheetLinks } from '@sitecore-content-sdk/react';
 import { getEdgeProxyContentUrl } from '@sitecore-content-sdk/content/client';
@@ -103,7 +109,7 @@ import { LinkProps as LinkProps_2 } from '@sitecore-content-sdk/react';
 import { LinkProps as LinkProps_3 } from 'next/link';
 import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
-import { Metadata } from '@sitecore-content-sdk/core/tools-server';
+import { Metadata } from '@sitecore-content-sdk/core/node-tools';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
@@ -172,9 +178,19 @@ import { withEmptyFieldEditingComponent } from '@sitecore-content-sdk/react';
 import { withFieldMetadata } from '@sitecore-content-sdk/react';
 import { withPlaceholder } from '@sitecore-content-sdk/react';
 import { withSitecore } from '@sitecore-content-sdk/react';
-import { WithSitecoreHocProps } from '@sitecore-content-sdk/react';
-import { WithSitecoreOptions } from '@sitecore-content-sdk/react';
-import { WithSitecoreProps } from '@sitecore-content-sdk/react';
+import { WriteImportMapArgs } from '@sitecore-content-sdk/content/node-tools';
+
+// @public
+export interface AllowedQueryParam {
+    name: string;
+    required?: boolean;
+}
+
+// @public
+export type AllowedQueryParams = Array<AllowedQueryParam | string> | AllowedQueryParamsResolver;
+
+// @public
+export type AllowedQueryParamsResolver = (queryParams: string[]) => Array<AllowedQueryParam | string>;
 
 export { AppPlaceholder }
 

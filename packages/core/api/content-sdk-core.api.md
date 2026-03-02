@@ -270,6 +270,21 @@ export const SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV = "SITECORE_EXPERIENCE_EDGE_H
 // @internal
 const SITECORE_EXPERIENCE_EDGE_URL_DEFAULT = "https://edge.sitecorecloud.io";
 
+// @public
+export interface TenantArgs {
+    audience?: string;
+    authority?: string;
+    baseUrl?: string;
+    clientId: string;
+    clientSecret?: string;
+    organizationId?: string;
+    tenantId?: string;
+}
+
+// Warnings were encountered during analysis:
+//
+// src/tools/index-node.ts:16:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+
 // (No @packageDocumentation comment for this package)
 
 ```
