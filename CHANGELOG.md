@@ -61,8 +61,9 @@ Our versioning strategy is as follows:
   - `withSitecore`'s `updatePage` prop has been renamed to `setPage`. This HOC has also been marked deprecated, and will eventually be removed in favor of `useSitecore` hook.
   - Old `withPlaceholder` HOC implementation has been reworked into slot-like logic with server and client implementations. `withAppPlaceholder` can be used in server RSC context, and `withPlaceholder` in client one.
   - Other components and HOCs in `react` package were refactored and should not have an effect on end user apps.
+* `[react]` Placeholder suspense causes longer JavaScript Scripting execution time ([#384](https://github.com/Sitecore/content-sdk/pull/384))
+  - The default value of `disableSuspense` property is set to `true` to avoid forcing Suspense usage across all components which could negatively impact performance metrics. Suspense can now be enabled explicitly when needed.
     
-
 ### 🐛 Bug Fixes
 
 * `[core]` `[search]` `[analytics]` Pass Sitecore Context ID only in headers ([#336](https://github.com/Sitecore/content-sdk/pull/336))
