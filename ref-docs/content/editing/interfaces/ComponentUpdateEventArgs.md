@@ -6,7 +6,7 @@
 
 # Interface: ComponentUpdateEventArgs
 
-Defined in: [content/src/editing/utils.ts:61](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/content/src/editing/utils.ts#L61)
+Defined in: [content/src/editing/utils.ts:61](https://github.com/Sitecore/content-sdk/blob/88593e741a650b6b128479a0f5ae31aa36f73ec5/packages/content/src/editing/utils.ts#L61)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Event args for Design Library `update` event
 
 > `optional` **details**: `object`
 
-Defined in: [content/src/editing/utils.ts:63](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/content/src/editing/utils.ts#L63)
+Defined in: [content/src/editing/utils.ts:63](https://github.com/Sitecore/content-sdk/blob/88593e741a650b6b128479a0f5ae31aa36f73ec5/packages/content/src/editing/utils.ts#L63)
 
 #### fields?
 
@@ -38,4 +38,4 @@ Defined in: [content/src/editing/utils.ts:63](https://github.com/Sitecore/conten
 
 > **name**: `string`
 
-Defined in: [content/src/editing/utils.ts:62](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/content/src/editing/utils.ts#L62)
+Defined in: [content/src/editing/utils.ts:62](https://github.com/Sitecore/content-sdk/blob/88593e741a650b6b128479a0f5ae31aa36f73ec5/packages/content/src/editing/utils.ts#L62)

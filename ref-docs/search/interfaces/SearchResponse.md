@@ -6,7 +6,7 @@
 
 # Interface: SearchResponse\<T\>
 
-Defined in: [search-service.ts:50](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/search/src/search-service.ts#L50)
+Defined in: [search-service.ts:50](https://github.com/Sitecore/content-sdk/blob/88593e741a650b6b128479a0f5ae31aa36f73ec5/packages/search/src/search-service.ts#L50)
 
 Response from the Search Service.
 
@@ -22,7 +22,7 @@ Response from the Search Service.
 
 > **results**: `T`[]
 
-Defined in: [search-service.ts:54](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/search/src/search-service.ts#L54)
+Defined in: [search-service.ts:54](https://github.com/Sitecore/content-sdk/blob/88593e741a650b6b128479a0f5ae31aa36f73ec5/packages/search/src/search-service.ts#L54)
 
 The search results.
 
@@ -32,6 +32,6 @@ The search results.
 
 > **total**: `number`
 
-Defined in: [search-service.ts:58](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/search/src/search-service.ts#L58)
+Defined in: [search-service.ts:58](https://github.com/Sitecore/content-sdk/blob/88593e741a650b6b128479a0f5ae31aa36f73ec5/packages/search/src/search-service.ts#L58)
 
 The total number of search results.
