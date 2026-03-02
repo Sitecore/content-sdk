@@ -13,3 +13,4 @@ At the start of every session, read these files for full project guidance:
    - `cli.mdc` — CLI behavior, init flow, backwards compatibility
    - `project-context.mdc` — Project-wide context and constraints
    - `repo-structure.mdc` — Repository structure and templates policy
+   - `agent-tasks.mdc` — Example workflows (add utility, fix test, change template)
