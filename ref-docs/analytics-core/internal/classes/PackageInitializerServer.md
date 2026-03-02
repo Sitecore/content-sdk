@@ -6,7 +6,7 @@
 
 # Class: PackageInitializerServer
 
-Defined in: [src/initializer/server/package-initializer.ts:9](https://github.com/Sitecore/content-sdk/blob/a62a1f22ed28ce75629a695b9a29f5908e48b767/packages/analytics-core/src/initializer/server/package-initializer.ts#L9)
+Defined in: [src/initializer/server/package-initializer.ts:9](https://github.com/Sitecore/content-sdk/blob/500ff39a667bc697e65ad8db118ac8c76a24bf2b/packages/analytics-core/src/initializer/server/package-initializer.ts#L9)
 
 Package initializer for server environments.
 This class is used by other packages to plugin to the core CloudSDK initializer.
@@ -18,7 +18,7 @@ It manages package dependencies, settings, and side effects execution on the ser
 
 > **new PackageInitializerServer**(`packageContext`): `PackageInitializerServer`
 
-Defined in: [src/initializer/server/package-initializer.ts:17](https://github.com/Sitecore/content-sdk/blob/a62a1f22ed28ce75629a695b9a29f5908e48b767/packages/analytics-core/src/initializer/server/package-initializer.ts#L17)
+Defined in: [src/initializer/server/package-initializer.ts:17](https://github.com/Sitecore/content-sdk/blob/500ff39a667bc697e65ad8db118ac8c76a24bf2b/packages/analytics-core/src/initializer/server/package-initializer.ts#L17)
 
 Creates a new PackageInitializerServer instance.
 
@@ -40,7 +40,7 @@ Creates a new PackageInitializerServer instance.
 
 > **get** **settings**(): `unknown`
 
-Defined in: [src/initializer/server/package-initializer.ts:27](https://github.com/Sitecore/content-sdk/blob/a62a1f22ed28ce75629a695b9a29f5908e48b767/packages/analytics-core/src/initializer/server/package-initializer.ts#L27)
+Defined in: [src/initializer/server/package-initializer.ts:27](https://github.com/Sitecore/content-sdk/blob/500ff39a667bc697e65ad8db118ac8c76a24bf2b/packages/analytics-core/src/initializer/server/package-initializer.ts#L27)
 
 Gets the package-specific settings.
 
@@ -56,7 +56,7 @@ The package settings.
 
 > **exec**(): `Promise`\<`void`\>
 
-Defined in: [src/initializer/server/package-initializer.ts:36](https://github.com/Sitecore/content-sdk/blob/a62a1f22ed28ce75629a695b9a29f5908e48b767/packages/analytics-core/src/initializer/server/package-initializer.ts#L36)
+Defined in: [src/initializer/server/package-initializer.ts:36](https://github.com/Sitecore/content-sdk/blob/500ff39a667bc697e65ad8db118ac8c76a24bf2b/packages/analytics-core/src/initializer/server/package-initializer.ts#L36)
 
 Executes the package initialization.
 Validates dependencies and executes side effects.
