@@ -8,7 +8,7 @@
 
 > **getCookiesValuesFromEdgeBrowser**(): `ProxySettings` \| `undefined`
 
-Defined in: [src/initializer/browser/initializer.ts:183](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/analytics-core/src/initializer/browser/initializer.ts#L183)
+Defined in: [src/initializer/browser/initializer.ts:183](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/analytics-core/src/initializer/browser/initializer.ts#L183)
 
 Gets the cookie values fetched from Edge.
 

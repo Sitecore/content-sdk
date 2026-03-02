@@ -8,7 +8,7 @@
 
 > **RedirectInfo** = `object`
 
-Defined in: [content/src/site/redirects-service.ts:34](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/site/redirects-service.ts#L34)
+Defined in: [content/src/site/redirects-service.ts:34](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/site/redirects-service.ts#L34)
 
 Object model of Redirect Info result
 
@@ -18,7 +18,7 @@ Object model of Redirect Info result
 
 > `optional` **isLanguagePreserved**: `boolean`
 
-Defined in: [content/src/site/redirects-service.ts:39](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/site/redirects-service.ts#L39)
+Defined in: [content/src/site/redirects-service.ts:39](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/site/redirects-service.ts#L39)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [content/src/site/redirects-service.ts:39](https://github.com/Siteco
 
 > **isQueryStringPreserved**: `boolean`
 
-Defined in: [content/src/site/redirects-service.ts:38](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/site/redirects-service.ts#L38)
+Defined in: [content/src/site/redirects-service.ts:38](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/site/redirects-service.ts#L38)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [content/src/site/redirects-service.ts:38](https://github.com/Siteco
 
 > **locale**: `string`
 
-Defined in: [content/src/site/redirects-service.ts:40](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/site/redirects-service.ts#L40)
+Defined in: [content/src/site/redirects-service.ts:40](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/site/redirects-service.ts#L40)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [content/src/site/redirects-service.ts:40](https://github.com/Siteco
 
 > **pattern**: `string`
 
-Defined in: [content/src/site/redirects-service.ts:35](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/site/redirects-service.ts#L35)
+Defined in: [content/src/site/redirects-service.ts:35](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/site/redirects-service.ts#L35)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [content/src/site/redirects-service.ts:35](https://github.com/Siteco
 
 > **redirectType**: `string`
 
-Defined in: [content/src/site/redirects-service.ts:37](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/site/redirects-service.ts#L37)
+Defined in: [content/src/site/redirects-service.ts:37](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/site/redirects-service.ts#L37)
 
 ***
 
@@ -58,4 +58,4 @@ Defined in: [content/src/site/redirects-service.ts:37](https://github.com/Siteco
 
 > **target**: `string`
 
-Defined in: [content/src/site/redirects-service.ts:36](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/site/redirects-service.ts#L36)
+Defined in: [content/src/site/redirects-service.ts:36](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/site/redirects-service.ts#L36)

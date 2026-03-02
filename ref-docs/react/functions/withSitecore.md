@@ -4,19 +4,21 @@
 
 [@sitecore-content-sdk/react](../README.md) / withSitecore
 
-# Function: withSitecore()
+# ~~Function: withSitecore()~~
 
 > **withSitecore**(`options?`): \<`ComponentProps`\>(`Component`) => (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withSitecore.tsx:55](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/react/src/enhancers/withSitecore.tsx#L55)
+Defined in: [packages/react/src/enhancers/withSitecore.tsx:31](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/react/src/enhancers/withSitecore.tsx#L31)
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `options?` | [`WithSitecoreOptions`](../interfaces/WithSitecoreOptions.md) |  |
+| `options?` | `UseSitecoreOptions` | Options for whether return page context update method alongside the rest of context |
 
 ## Returns
+
+A higher-order component that injects Sitecore context into the wrapped component.
 
 > \<`ComponentProps`\>(`Component`): (`props`) => `Element`
 
@@ -24,7 +26,7 @@ Defined in: [packages/react/src/enhancers/withSitecore.tsx:55](https://github.co
 
 | Type Parameter |
 | ------ |
-| `ComponentProps` *extends* [`WithSitecoreProps`](../interfaces/WithSitecoreProps.md) |
+| `ComponentProps` *extends* `Partial`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md)\> & `Pick`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md), `"page"`\> |
 
 ### Parameters
 
@@ -40,8 +42,12 @@ Defined in: [packages/react/src/enhancers/withSitecore.tsx:55](https://github.co
 
 | Parameter | Type |
 | ------ | ------ |
-| `props` | [`WithSitecoreHocProps`](../type-aliases/WithSitecoreHocProps.md)\<`ComponentProps`\> |
+| `props` | `WithSitecoreHocProps`\<`ComponentProps`\> |
 
 #### Returns
 
 `Element`
+
+## Deprecated
+
+`useSitecore` hook is a better practice for consuming Sitecore context in components

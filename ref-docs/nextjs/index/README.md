@@ -34,7 +34,6 @@
 - [PersonalizeService](classes/PersonalizeService.md)
 - [RedirectsService](classes/RedirectsService.md)
 - [RobotsService](classes/RobotsService.md)
-- [SitecoreProvider](classes/SitecoreProvider.md)
 - [SiteInfoService](classes/SiteInfoService.md)
 - [SitemapXmlService](classes/SitemapXmlService.md)
 - [SitePathService](classes/SitePathService.md)
@@ -42,7 +41,6 @@
 
 ## Interfaces
 
-- [AppPlaceholderProps](interfaces/AppPlaceholderProps.md)
 - [CacheClient](interfaces/CacheClient.md)
 - [CacheOptions](interfaces/CacheOptions.md)
 - [ComponentFields](interfaces/ComponentFields.md)
@@ -71,11 +69,10 @@
 - [SitecoreProviderState](interfaces/SitecoreProviderState.md)
 - [SitePathServiceConfig](interfaces/SitePathServiceConfig.md)
 - [TextField](interfaces/TextField.md)
-- [WithSitecoreOptions](interfaces/WithSitecoreOptions.md)
-- [WithSitecoreProps](interfaces/WithSitecoreProps.md)
 
 ## Type Aliases
 
+- [AppPlaceholderProps](type-aliases/AppPlaceholderProps.md)
 - [BYOCComponentParams](type-aliases/BYOCComponentParams.md)
 - [BYOCComponentProps](type-aliases/BYOCComponentProps.md)
 - [ComponentMap](type-aliases/ComponentMap.md)
@@ -105,7 +102,6 @@
 - [SiteInfoServiceConfig](type-aliases/SiteInfoServiceConfig.md)
 - [SitemapXmlServiceConfig](type-aliases/SitemapXmlServiceConfig.md)
 - [StaticPath](type-aliases/StaticPath.md)
-- [WithSitecoreHocProps](type-aliases/WithSitecoreHocProps.md)
 
 ## Variables
 
@@ -135,9 +131,12 @@
 - [REDIRECT\_TYPE\_302](variables/REDIRECT_TYPE_302.md)
 - [REDIRECT\_TYPE\_SERVER\_TRANSFER](variables/REDIRECT_TYPE_SERVER_TRANSFER.md)
 - [renderEmptyPlaceholder](variables/renderEmptyPlaceholder.md)
+- [SitecoreProvider](variables/SitecoreProvider.md)
 - [SitecoreProviderReactContext](variables/SitecoreProviderReactContext.md)
 - [Text](variables/Text.md)
+- [withAppPlaceholder](variables/withAppPlaceholder.md)
 - [withEditorChromes](variables/withEditorChromes.md)
+- [withPlaceholder](variables/withPlaceholder.md)
 
 ## Functions
 
@@ -161,5 +160,4 @@
 - [withDatasourceCheck](functions/withDatasourceCheck.md)
 - [withEmptyFieldEditingComponent](functions/withEmptyFieldEditingComponent.md)
 - [withFieldMetadata](functions/withFieldMetadata.md)
-- [withPlaceholder](functions/withPlaceholder.md)
-- [withSitecore](functions/withSitecore.md)
+- [~~withSitecore~~](functions/withSitecore.md)

@@ -6,7 +6,7 @@
 
 # Variable: AppPlaceholder()
 
-> `const` **AppPlaceholder**: (`props`) => `string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`React.ReactNode`\> \| `Promise`\<`string` \| `number` \| `bigint` \| `boolean` \| `React.ReactPortal` \| `React.ReactElement`\<`unknown`, `string` \| `React.JSXElementConstructor`\<`any`\>\> \| `Iterable`\<`React.ReactNode`\> \| `null` \| `undefined`\> \| `React.JSX.Element` \| (`string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`React.ReactNode`\> \| `Promise`\<`string` \| `number` \| `bigint` \| `boolean` \| `React.ReactPortal` \| `React.ReactElement`\<`unknown`, `string` \| `React.JSXElementConstructor`\<`any`\>\> \| `Iterable`\<`React.ReactNode`\> \| `null` \| `undefined`\> \| `React.JSX.Element` \| `null` \| `undefined`)[] \| `null` \| `undefined`
+> `const` **AppPlaceholder**: (`props`) => `React.JSX.Element`
 
 Defined in: react/types/components/Placeholder/AppPlaceholder.d.ts:11
 
@@ -18,10 +18,10 @@ Pulls components from the provided component map.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `props` | [`AppPlaceholderProps`](../interfaces/AppPlaceholderProps.md) | Placeholder props |
+| `props` | [`AppPlaceholderProps`](../type-aliases/AppPlaceholderProps.md) | Placeholder props |
 
 ## Returns
 
-`string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`React.ReactNode`\> \| `Promise`\<`string` \| `number` \| `bigint` \| `boolean` \| `React.ReactPortal` \| `React.ReactElement`\<`unknown`, `string` \| `React.JSXElementConstructor`\<`any`\>\> \| `Iterable`\<`React.ReactNode`\> \| `null` \| `undefined`\> \| `React.JSX.Element` \| (`string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`React.ReactNode`\> \| `Promise`\<`string` \| `number` \| `bigint` \| `boolean` \| `React.ReactPortal` \| `React.ReactElement`\<`unknown`, `string` \| `React.JSXElementConstructor`\<`any`\>\> \| `Iterable`\<`React.ReactNode`\> \| `null` \| `undefined`\> \| `React.JSX.Element` \| `null` \| `undefined`)[] \| `null` \| `undefined`
+`React.JSX.Element`
 
 rendered component(s)

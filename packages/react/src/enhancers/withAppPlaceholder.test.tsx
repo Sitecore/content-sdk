@@ -188,13 +188,12 @@ describe('withAppPlaceholder HOC', () => {
       );
     };
 
-    const phKeys = ['page-header', 'page-content'];
     const props: WrapperProps = {
       rendering: cleanComponent,
       page: getPage(),
       componentMap,
     };
-    const Element = withAppPlaceholder(MultiKeyTestComponent, phKeys);
+    const Element = withAppPlaceholder(MultiKeyTestComponent);
     const renderedComponent = render(
       <SitecoreProvider api={api} componentMap={componentMap} page={getPage()}>
         <Element {...props} />

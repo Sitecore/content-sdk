@@ -9,10 +9,11 @@ export const DefaultEmptyFieldEditingComponentText: React.FC<{
   [key: string]: unknown;
   tag?: string;
 }> = (props) => {
-  return React.createElement(
-    props.tag || 'span',
-    { ...props, suppressHydrationWarning: true },
-    '[No text in field]'
+  const Tag = (props.tag || 'span') as React.ElementType;
+  return (
+    <Tag {...props} suppressHydrationWarning={true}>
+      [No text in field]
+    </Tag>
   );
 };
 

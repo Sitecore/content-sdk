@@ -8,7 +8,7 @@
 
 > **isDynamicPlaceholder**(`placeholder`): `boolean`
 
-Defined in: [content/src/layout/utils.ts:103](https://github.com/Sitecore/content-sdk/blob/c14dbcaffe52a0b67733dc871014642ffd25da94/packages/content/src/layout/utils.ts#L103)
+Defined in: [content/src/layout/utils.ts:103](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/layout/utils.ts#L103)
 
 **`Internal`**
 

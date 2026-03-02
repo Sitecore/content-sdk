@@ -1,6 +1,6 @@
 import { SearchService } from '@sitecore-content-sdk/search';
 import { useMemo } from 'react';
-import { useSitecore } from '../enhancers/withSitecore';
+import { useSitecore } from '../components/SitecoreProvider';
 
 export const DEFAULT_PAGE_SIZE = 10;
 

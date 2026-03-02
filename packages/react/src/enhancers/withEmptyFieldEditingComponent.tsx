@@ -1,4 +1,4 @@
-﻿import React, { ComponentType, forwardRef } from 'react';
+import React, { ComponentType } from 'react';
 import {
   GenericFieldValue,
   Field,
@@ -15,7 +15,7 @@ export interface WithEmptyFieldEditingComponentOptions {
    */
   defaultEmptyFieldEditingComponent: React.FC;
   /**
-   * 'true' if forward reference is needed
+   * 'true' if the ref prop should be explicitly accepted and forwarded
    */
   isForwardRef?: boolean;
 }
@@ -33,7 +33,7 @@ interface WithEmptyFieldEditingComponentProps<Props> {
 /**
  * Returns the passed field component or default component in case field value is empty and edit mode is 'metadata'
  * @param {ComponentType<FieldComponentProps>} FieldComponent the field component
- * @param {WithEmptyFieldEditingComponentProps} options the options of the HOC;
+ * @param {WithEmptyFieldEditingComponentOptions} options the options of the HOC;
  * @public
  */
 export function withEmptyFieldEditingComponent<
@@ -68,17 +68,15 @@ export function withEmptyFieldEditingComponent<
   };
 
   if (options.isForwardRef) {
-    return forwardRef<RefElementType, FieldComponentProps>((props, ref) => {
+    return (props: FieldComponentProps & { ref?: React.Ref<RefElementType> }) => {
       const emptyFieldEditingComponent = getEmptyFieldEditingComponent(
         props as FieldComponentProps
       );
 
       return (
-        emptyFieldEditingComponent || (
-          <FieldComponent {...(props as FieldComponentProps)} ref={ref} />
-        )
+        emptyFieldEditingComponent || <FieldComponent {...(props as FieldComponentProps)} />
       );
-    });
+    };
   }
 
   return (props: FieldComponentProps) => {
