@@ -13,6 +13,10 @@ All Sitecore data fetching goes through the single client in `src/lib/sitecore-c
 - Task involves getPage, getDictionary, getComponentData, getPreview, getDesignLibraryData, or getPagePaths.
 - User mentions "sitecore client," "Layout Service," "page data," or "dictionary."
 
+## How to perform
+
+- Use the client from `src/lib/sitecore-client.ts` only. In [[...path]].tsx: use `extractPath(context)` and `context.locale`; call getPage(path, { locale: context.locale }), then getDictionary and getComponentData(page.layout, context, components). For SSG use getPagePaths in getStaticPaths. For preview use context.preview and getPreview/getDesignLibraryData(context.previewData).
+
 ## Hard Rules
 
 - Use the single SitecoreClient instance in `src/lib/sitecore-client.ts`. Do not create a second client or instantiate SitecoreClient elsewhere.

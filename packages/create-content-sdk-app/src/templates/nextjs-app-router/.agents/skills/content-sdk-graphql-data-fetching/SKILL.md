@@ -13,6 +13,10 @@ All Sitecore data fetching goes through the single client in `src/lib/sitecore-c
 - Task involves getPage, getDictionary, getErrorPage, getPreview, getDesignLibraryData, or getAppRouterStaticParams.
 - User mentions "sitecore client," "Layout Service," "page data," or "dictionary."
 
+## How to perform
+
+- Use the client from `src/lib/sitecore-client.ts` only. In the catch-all page: `await params`, then `client.getPage(path ?? [], { site, locale })`. For SSG use `generateStaticParams` and `client.getAppRouterStaticParams(siteNames, locales)`. For preview use `draftMode()` and `getPreview`/`getDesignLibraryData` from searchParams.
+
 ## Hard Rules
 
 - Use the single SitecoreClient instance in `src/lib/sitecore-client.ts`. Do not create a second client or instantiate SitecoreClient elsewhere.

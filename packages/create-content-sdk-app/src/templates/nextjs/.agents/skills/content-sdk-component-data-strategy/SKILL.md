@@ -13,6 +13,10 @@ This app **uses getComponentData**. After getPage, use **client.getComponentData
 - Task involves getComponentData, component props, or BYOC.
 - User mentions "component data," "props," "BYOC," or "getComponentData."
 
+## How to perform
+
+- In [[...path]].tsx: getPage(path, { locale: context.locale }), then getDictionary, then getComponentData(page.layout, context, components). Return props to Layout; do not fetch in _app or in child components. Register BYOC in .sitecore/component-map.ts; getComponentData passes resolved props.
+
 ## Hard Rules
 
 - **Flow in catch-all page:** In getStaticProps/getServerSideProps: (1) `client.getPage(path, { locale: context.locale })`, (2) `client.getDictionary({ site: page.siteName, locale: page.locale })`, (3) `client.getComponentData(page.layout, context, components)` to resolve component props. Return `{ props: { page, dictionary, componentProps }, notFound: !page }`. Pass these props to Providers and Layout; do not fetch Sitecore data in _app.

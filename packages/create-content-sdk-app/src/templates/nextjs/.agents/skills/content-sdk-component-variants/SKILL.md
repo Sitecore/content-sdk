@@ -13,6 +13,10 @@ One component definition can have multiple presentations or data-driven variants
 - Task involves rendering the same component type with different layouts or props based on data (e.g. variant field or style).
 - User mentions "component variants," "variations," or "multiple renderings."
 
+## How to perform
+
+- Prefer one component that accepts variant/style via props and branches internally; or multiple map entries if the app uses one key per variant. Use layout/fields/params for variant; register in `.sitecore/component-map.ts`. getComponentData resolves props; align with existing app convention.
+
 ## Hard Rules
 
 - Prefer a single component registration that accepts variant/style data (e.g. params or fields) and branches internally, over multiple map entries for the same logical component unless the app pattern uses separate registrations per variant.

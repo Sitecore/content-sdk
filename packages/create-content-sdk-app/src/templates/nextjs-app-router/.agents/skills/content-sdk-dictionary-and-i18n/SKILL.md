@@ -13,6 +13,10 @@ This app uses **next-intl**. Locale is in the URL as [locale]. Request locale is
 - Task involves getDictionary, next-intl, or locale in URL/request.
 - User mentions "dictionary," "i18n," "locale," "translation," or "next-intl."
 
+## How to perform
+
+- Locales and routing: `src/i18n/routing.ts`. Request config: `src/i18n/request.ts` — parse `requestLocale` (e.g. `${site}_${locale}`), call `client.getDictionary({ locale, site })`, return `{ locale, messages }`. In the page, call `setRequestLocale(\`${site}_${locale}\`)` at the top. Use a single getDictionary per request.
+
 ## Hard Rules
 
 - **Config:** `src/i18n/routing.ts` — `defineRouting({ locales, defaultLocale, localePrefix })`. Align `locales` with Sitecore languages (e.g. from sitecore.config.ts defaultLanguage).

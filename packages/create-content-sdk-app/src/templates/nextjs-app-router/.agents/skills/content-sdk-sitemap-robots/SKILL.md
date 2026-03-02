@@ -13,6 +13,10 @@ Sitemap and robots.txt are served via **route handlers** and rewrites. Use the S
 - Task involves SEO, sitemap.xml, or robots route.
 - User mentions "sitemap," "robots," "SEO," or "rewrites."
 
+## How to perform
+
+- Sitemap: `src/app/api/sitemap/route.ts` with `createSitemapRouteHandler({ client, sites })`; robots: `src/app/api/robots/route.ts` with `createRobotsRouteHandler({ client, sites })`. Use sites from `.sitecore/sites.json`. Add rewrites in `next.config.ts` for `/sitemap*.xml` and `/robots.txt` with `locale: false`. Set `dynamic = 'force-dynamic'` if needed.
+
 ## Hard Rules
 
 - **Sitemap:** `src/app/api/sitemap/route.ts` — use `createSitemapRouteHandler({ client, sites })`. Export `{ GET }`. Use `sites` from `.sitecore/sites.json`. Set `export const dynamic = 'force-dynamic'` if the handler relies on request.

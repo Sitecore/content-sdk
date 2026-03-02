@@ -13,6 +13,10 @@ This app uses **Next.js built-in i18n**. There is no [locale] in the URL path; l
 - Task involves getDictionary, Next.js i18n, or context.locale.
 - User mentions "dictionary," "i18n," "locale," or "translation."
 
+## How to perform
+
+- Locales: `next.config.js` → i18n.locales, defaultLocale. In getStaticProps/getServerSideProps use context.locale; after getPage use client.getDictionary({ site: page.siteName, locale: page.locale }). Use a single getDictionary per request. Do not assume locale from headers.
+
 ## Hard Rules
 
 - **Config:** `next.config.js` → `i18n.locales` and `i18n.defaultLocale`. Match (or subset) Sitecore languages.

@@ -13,6 +13,10 @@ This app does **not** use getComponentData. Page and layout data come from **get
 - Task involves component props, server vs client components, or BYOC.
 - User mentions "component data," "props," "BYOC," "server component," or "client component."
 
+## How to perform
+
+- Fetch at page/layout with getPage (or getPreview/getDesignLibraryData in draft). Pass site and locale from route params. Server Components use the client in server context; Client Components receive serializable props only. Register BYOC in the correct component map and pass props from layout.
+
 ## Hard Rules
 
 - **Data source:** Page and layout from `client.getPage(path ?? [], { site, locale })` in the catch-all page (or getPreview/getDesignLibraryData when draftMode() is enabled). All Sitecore-driven data flows from this single fetch at the route level.

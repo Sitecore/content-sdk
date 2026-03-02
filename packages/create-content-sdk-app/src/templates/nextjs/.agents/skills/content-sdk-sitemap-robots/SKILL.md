@@ -13,6 +13,10 @@ Sitemap and robots.txt are served via **API routes** and rewrites. Use the SDK m
 - Task involves SEO, sitemap.xml, or robots route.
 - User mentions "sitemap," "robots," "SEO," or "rewrites."
 
+## How to perform
+
+- Sitemap: `src/pages/api/sitemap.ts` with `SitemapMiddleware(scClient, sites).getHandler()`; robots: `src/pages/api/robots.ts` with `RobotsMiddleware(scClient, sites).getHandler()`. Use sites from `.sitecore/sites.json`. Add rewrites in next.config.js for /sitemap*.xml and /robots.txt to these API routes.
+
 ## Hard Rules
 
 - **Sitemap:** `src/pages/api/sitemap.ts` — use `new SitemapMiddleware(scClient, sites).getHandler()`. Export the handler. Use `sites` from `.sitecore/sites.json`.

@@ -13,6 +13,10 @@ Scaffold new Sitecore components so they integrate with the layout and editing p
 - Task involves creating a new React component that will be rendered from Sitecore layout/placeholders.
 - User mentions "new component," "add component," or "component file structure."
 
+## How to perform
+
+- Create a new file under `src/components/` (or existing feature folder). Define props (fields, params), export a single default component. Register in `.sitecore/component-map.ts` (content-sdk-component-registration). Run `npm run build` to verify.
+
 ## Hard Rules
 
 - Place components under `src/components/`. Use existing folder conventions.

@@ -13,6 +13,10 @@ Upgrade @sitecore-content-sdk/* packages safely; follow the Content SDK repo cha
 - Task involves version bumps, @sitecore-content-sdk/* dependencies, or breaking changes.
 - User mentions "upgrade," "migration," "new version," or "breaking change."
 
+## How to perform
+
+- Bump all @sitecore-content-sdk/* to consistent versions; read the Content SDK repo CHANGELOG (and MIGRATION/upgrade docs) for breaking changes and migration steps. Update package.json, run `npm install` and `npm run build`; test editing and preview after upgrade.
+
 ## Hard Rules
 
 - Prefer upgrading all @sitecore-content-sdk/* packages together to a consistent set of versions unless the user requests a partial upgrade. Check peer dependencies and compatibility.

@@ -14,6 +14,10 @@ Ensure components behave correctly in XM Cloud editing, preview, and design libr
 - Fixing issues where components render differently or break in editor vs published.
 - User mentions getPreview, getDesignLibraryData, or editing API routes.
 
+## How to perform
+
+- In the page or layout: call `draftMode()`; when enabled, read editing params from searchParams, use `isDesignLibraryPreviewData(editingParams)` to choose getDesignLibraryData vs getPreview; otherwise use getPage. Editing routes: config route uses `createEditingConfigRouteHandler`, render route uses `createEditingRenderRouteHandlers`; set `dynamic = 'force-dynamic'` on both.
+
 ## Hard Rules
 
 - Use `draftMode()` in Server Components (e.g. in the page or [site] layout). When `draft.isEnabled`, get editing params from **searchParams** and use `isDesignLibraryPreviewData(editingParams)` to distinguish: if true, use `client.getDesignLibraryData(editingParams)`; otherwise use `client.getPreview(editingParams)`. When not in draft mode, use `getPage(path ?? [], { site, locale })`.

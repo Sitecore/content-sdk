@@ -13,6 +13,10 @@ Diagnose and fix editing, preview, and design library issues without breaking th
 - Task involves debugging "not working in editor," missing chromes, or wrong data in preview.
 - User mentions "editing broken," "preview not working," "design library," or "editor issues."
 
+## How to perform
+
+- Confirm `draftMode()` and searchParams-based getPreview/getDesignLibraryData; ensure `setRequestLocale` is called at the top of the page. Verify editing API routes are not rewritten (check proxy matcher) and both component maps include the component. Check env (editingSecret, API config) and .env.example documentation.
+
 ## Hard Rules
 
 - **Preview flow:** Use `draftMode()` in Server Components; when enabled, use `client.getPreview(editingParams)` or `client.getDesignLibraryData(editingParams)` from **searchParams**. Ensure site/locale are passed correctly (e.g. from route params or editingParams).

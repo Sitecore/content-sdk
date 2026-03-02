@@ -13,6 +13,10 @@ Central config in sitecore.config.ts; all secrets and environment-specific value
 - Task involves sitecore.config.ts, .env, or defaultSite/defaultLanguage.
 - User mentions "config," "environment variables," "API key," or "default site."
 
+## How to perform
+
+- Edit `sitecore.config.ts` with `defineConfig`; read all secrets and env-specific values from `process.env.*`. Add or change vars in `.env.example` (or `.env.remote.example` / `.env.container.example`) with placeholders; never commit `.env` or `.env.local`.
+
 ## Hard Rules
 
 - Use `sitecore.config.ts` with `defineConfig` from the SDK. Expose api (edge, local), defaultSite, defaultLanguage, editingSecret, multisite, redirects, personalize as needed.

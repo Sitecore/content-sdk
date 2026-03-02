@@ -13,6 +13,10 @@ Single catch-all route and layout hierarchy. Site and locale are **in the path**
 - Task involves catch-all route, placeholders, root layout, or Layout.tsx.
 - User mentions "[site]," "[locale]," "[[...path]]," "placeholder," or "layout hierarchy."
 
+## How to perform
+
+- Single Sitecore page: `src/app/[site]/[locale]/[[...path]]/page.tsx`. Use `await params` for `{ site, locale, path? }`; pass to getPage and call `setRequestLocale(\`${site}_${locale}\`)` at the top. Layout: app/layout.tsx → app/[site]/layout.tsx (Bootstrap, draftMode) → page. Not-found: use parseRewriteHeader and getErrorPage in the route's not-found.tsx.
+
 ## Hard Rules
 
 - **Single Sitecore page:** `src/app/[site]/[locale]/[[...path]]/page.tsx`. This is the **only** page that renders Sitecore content. Do not add another page or catch-all for Sitecore content.

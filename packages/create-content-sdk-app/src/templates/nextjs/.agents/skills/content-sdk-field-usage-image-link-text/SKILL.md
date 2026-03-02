@@ -13,6 +13,10 @@ Use SDK field components to render Sitecore fields with proper validation and fa
 - Task involves displaying content fields, fixing empty/broken images or links, or using RichText/Text/Image/Link components.
 - User mentions "field," "Image," "Link," "Text," "RichText," or "field value."
 
+## How to perform
+
+- Use SDK field components: `<Text field={fields?.title} />`, `<RichText field={fields?.content} />`, `<Image field={fields?.image} />`, `<Link field={fields?.link} />`. Guard with `fields?.` when optional; use tag prop on Text when needed. Do not hardcode media or link URLs from Sitecore.
+
 ## Hard Rules
 
 - Prefer SDK field components over manual field value extraction: `<Text field={fields?.title} />`, `<RichText field={fields?.content} />`, `<Image field={fields?.image} />`, `<Link field={fields?.link} />`. Use tag prop for Text when needed (e.g. tag="h1").

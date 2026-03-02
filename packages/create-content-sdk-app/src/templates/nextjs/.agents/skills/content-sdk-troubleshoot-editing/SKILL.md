@@ -13,6 +13,10 @@ Diagnose and fix editing, preview, and design library issues without breaking th
 - Task involves debugging "not working in editor," missing chromes, or wrong data in preview.
 - User mentions "editing broken," "preview not working," "design library," or "editor issues."
 
+## How to perform
+
+- Confirm context.preview and context.previewData and correct path/locale (extractPath, context.locale). Verify editing API routes (config, render, feaas/render) are not rewritten (check proxy matcher) and component-map.ts includes the component. Check env (editingSecret, API config) and .env.example documentation.
+
 ## Hard Rules
 
 - **Preview flow:** In [[...path]].tsx getStaticProps/getServerSideProps, use `context.preview` and `context.previewData`. When in preview, use `client.getPreview(context.previewData)` or `client.getDesignLibraryData(context.previewData)`. Ensure path and locale come from extractPath(context) and context.locale when not in preview.

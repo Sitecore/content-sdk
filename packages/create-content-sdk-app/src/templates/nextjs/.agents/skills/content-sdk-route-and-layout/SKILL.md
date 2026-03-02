@@ -13,6 +13,10 @@ Single catch-all route; no [site] or [locale] in the URL path. Site is resolved 
 - Task involves catch-all route, placeholders, _app, or Layout.tsx.
 - User mentions "[[...path]]," "placeholder," "layout," or "getStaticProps."
 
+## How to perform
+
+- Single Sitecore page: `src/pages/[[...path]].tsx`. Use `extractPath(context)` for path and `context.locale` for locale. Fetch all data in getStaticProps/getServerSideProps and pass to _app and Layout. Not-found/error: use getErrorPage in getStaticProps or 404.tsx / _error.tsx as appropriate.
+
 ## Hard Rules
 
 - **Single Sitecore page:** `src/pages/[[...path]].tsx`. This is the **only** page that renders Sitecore content. Do not add another page or catch-all for Sitecore content.

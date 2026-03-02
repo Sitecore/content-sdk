@@ -14,6 +14,10 @@ Register components in the Sitecore component map so the layout and editing pipe
 - Task involves `.sitecore/component-map.ts`.
 - User asks how to register a component or fix component resolution.
 
+## How to perform
+
+- Open `.sitecore/component-map.ts` and add an entry mapping the layout component name to the React component import. The map is used by getComponentData and editing API routes; keep keys consistent with layout and existing entries.
+
 ## Hard Rules
 
 - Every component rendered from Sitecore layout must be registered in `.sitecore/component-map.ts`. Keep the map in sync with `src/components/`.

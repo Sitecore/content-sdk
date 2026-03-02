@@ -14,6 +14,10 @@ Ensure components behave correctly in XM Cloud editing, preview, and design libr
 - Fixing issues where components render differently or break in editor vs published.
 - User mentions getPreview, getDesignLibraryData, or editing API routes.
 
+## How to perform
+
+- In [[...path]].tsx getStaticProps/getServerSideProps: check context.preview; when true use isDesignLibraryPreviewData(context.previewData) to choose getDesignLibraryData vs getPreview; otherwise getPage + getDictionary + getComponentData. Editing routes: config uses EditingConfigMiddleware, render uses EditingRenderMiddleware, feaas/render uses FEAASRenderMiddleware; export handler as default.
+
 ## Hard Rules
 
 - In the catch-all page (`src/pages/[[...path]].tsx`), use `context.preview` and `context.previewData`. When in preview, use `isDesignLibraryPreviewData(context.previewData)` to distinguish: if true, use `client.getDesignLibraryData(context.previewData)`; otherwise use `client.getPreview(context.previewData)`. When not in preview, use `getPage(path, { locale: context.locale })` then getDictionary and getComponentData as usual.
