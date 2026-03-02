@@ -6,7 +6,7 @@
 
 # Class: CloudSDKBrowserInitializer
 
-Defined in: [src/initializer/browser/initializer.ts:25](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/analytics-core/src/initializer/browser/initializer.ts#L25)
+Defined in: [src/initializer/browser/initializer.ts:25](https://github.com/Sitecore/content-sdk/blob/a62a1f22ed28ce75629a695b9a29f5908e48b767/packages/analytics-core/src/initializer/browser/initializer.ts#L25)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [src/initializer/browser/initializer.ts:25](https://github.com/Sitec
 
 > **new CloudSDKBrowserInitializer**(`settings`): `CloudSDKBrowserInitializer`
 
-Defined in: [src/initializer/browser/initializer.ts:34](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/analytics-core/src/initializer/browser/initializer.ts#L34)
+Defined in: [src/initializer/browser/initializer.ts:34](https://github.com/Sitecore/content-sdk/blob/a62a1f22ed28ce75629a695b9a29f5908e48b767/packages/analytics-core/src/initializer/browser/initializer.ts#L34)
 
 Runs the initialization logic. Enables packages and creates cookies for CloudSDK.
 
@@ -50,7 +50,7 @@ ErrorMessages.IV_0001
 
 > **initialize**(): `void`
 
-Defined in: [src/initializer/browser/initializer.ts:44](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/analytics-core/src/initializer/browser/initializer.ts#L44)
+Defined in: [src/initializer/browser/initializer.ts:44](https://github.com/Sitecore/content-sdk/blob/a62a1f22ed28ce75629a695b9a29f5908e48b767/packages/analytics-core/src/initializer/browser/initializer.ts#L44)
 
 Runs the initialization logic. Enables packages and create cookies for CloudSDK.
 
