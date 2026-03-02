@@ -38,7 +38,7 @@ For more information check out our [Getting Started Guide](https://doc.sitecore.
 ### AI Development Support
 
 - [AGENTS.md](AGENTS.md) - AI agent guidance: structure, commands, DOs/DON'Ts, boundaries, and quick reference
-- [Skills.md](Skills.md) - Capability groupings for the Content SDK (for AI tools and developers)
+- [Skills.md](Skills.md) - Capability groupings for the Content SDK (for AI tools and developers); [.agents/skills/](.agents/skills/) provides each capability as an Agent Skill (SKILL.md) for tools that support the [Agent Skills](https://agentskills.io) standard
 - [Claude Code Agent Guide](CLAUDE.md) - Comprehensive guide for Claude Code Agent to generate consistent and idiomatic Sitecore Content SDK code
 - [GitHub Copilot Instructions](copilot-instructions.md) - Instructions for GitHub Copilot to provide accurate Sitecore Content SDK suggestions
 - [Cursor AI Rules](.cursor/rules/) - Cursor-specific coding rules and patterns for Sitecore Content SDK development

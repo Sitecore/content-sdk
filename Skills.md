@@ -1,6 +1,8 @@
  # Skills.md — Capability groupings for the Sitecore Content SDK
 
-This file describes the Content SDK ecosystem in terms of **capability-style groupings**: high-level areas that help AI tools and developers map tasks to the right part of the SDK. There is no formal API, schema, or folder structure — just a conceptual map. For concrete steps and patterns, see AGENTS.md (monorepo or app) and the [official Content SDK documentation](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+This file describes the Content SDK ecosystem in terms of **capability-style groupings**: high-level areas that help AI tools and developers map tasks to the right part of the SDK. For concrete steps and patterns, see AGENTS.md (monorepo or app) and the [official Content SDK documentation](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+
+**Agent Skills (universal):** Each grouping is also available as a skill in [.agents/skills/](.agents/skills/) in the standard [Agent Skills](https://agentskills.io) format (`SKILL.md` per capability). Tools that support this standard (e.g. Cursor) can discover and load these skills automatically. The capability map below remains the conceptual reference; the `.agents/skills/` tree adds when-to-use, hard rules, and stop conditions for each area.
 
 ---
 
@@ -81,3 +83,5 @@ A capability grouping is described by a **name** and a **short description** of 
 ## How to use this
 
 When generating code or answering questions about the Content SDK, map the task to one or more of the groupings above. Use [AGENTS.md](AGENTS.md) for project- and app-level instructions (commands, structure, DO/DON'T) and the [official documentation](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html) for detailed APIs and guides.
+
+**If your tool supports Agent Skills:** Load skills from [.agents/skills/](.agents/skills/) (one folder per capability, each with a `SKILL.md`). They provide when-to-use triggers, hard rules, and stop conditions for each capability.
