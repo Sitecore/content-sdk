@@ -15,6 +15,11 @@ import { ParsedUrlQueryInput } from 'querystring';
 export const areURLSearchParamsEqual: (params1: URLSearchParams, params2: URLSearchParams) => boolean;
 
 // @public
+export const auth: {
+    readonly clientCredentialsFlow: typeof authModule.clientCredentialsFlow;
+};
+
+// @public
 export interface CacheClient<T> {
     getCacheValue(key: string): T | null;
     setCacheValue(key: string, value: T): T;
@@ -92,6 +97,9 @@ export type EnhancedOmit<T, K extends PropertyKey> = {
     [P in keyof T as Exclude<P, K>]: T[P];
 };
 
+// @internal
+export const ensurePathExists: (filePath: string) => void;
+
 // @public
 export const escapeNonSpecialQuestionMarks: (input: string) => string;
 
@@ -103,6 +111,11 @@ export type FetchOptions = {
     headers?: Record<string, string>;
     debugger?: Debugger_2;
 };
+
+// Warning: (ae-forgotten-export) The symbol "GenerateMetadataConfig" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export const generateMetadata: (config?: GenerateMetadataConfig) => (() => Promise<void>);
 
 // @public
 export type GenericGraphQLClientError = Partial<Error> & {
@@ -198,6 +211,14 @@ export class MemoryCacheClient<T> implements CacheClient<T> {
 
 // @public
 export const mergeURLSearchParams: (params1: URLSearchParams, params2: URLSearchParams) => string;
+
+// @public
+export interface Metadata {
+    // (undocumented)
+    packages: {
+        [key: string]: string;
+    };
+}
 
 // @public
 export class NativeDataFetcher {

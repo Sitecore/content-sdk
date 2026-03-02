@@ -156,6 +156,7 @@ import { SitecoreCliConfig } from '@sitecore-content-sdk/content/config';
 import { SitecoreCliConfigInput } from '@sitecore-content-sdk/content/config';
 import { SitecoreClient as SitecoreClient_2 } from '@sitecore-content-sdk/content/client';
 import { SitecoreClientInit } from '@sitecore-content-sdk/content/client';
+import { SitecoreConfig as SitecoreConfig_2 } from '@sitecore-content-sdk/content/config';
 import { SitecoreConfigInput as SitecoreConfigInput_2 } from '@sitecore-content-sdk/content/config';
 import { SitecoreProvider } from '@sitecore-content-sdk/react';
 import { SitecoreProviderReactContext } from '@sitecore-content-sdk/react';
@@ -178,19 +179,10 @@ import { withEmptyFieldEditingComponent } from '@sitecore-content-sdk/react';
 import { withFieldMetadata } from '@sitecore-content-sdk/react';
 import { withPlaceholder } from '@sitecore-content-sdk/react';
 import { withSitecore } from '@sitecore-content-sdk/react';
+import { WithSitecoreHocProps } from '@sitecore-content-sdk/react';
+import { WithSitecoreOptions } from '@sitecore-content-sdk/react';
+import { WithSitecoreProps } from '@sitecore-content-sdk/react';
 import { WriteImportMapArgs } from '@sitecore-content-sdk/content/node-tools';
-
-// @public
-export interface AllowedQueryParam {
-    name: string;
-    required?: boolean;
-}
-
-// @public
-export type AllowedQueryParams = Array<AllowedQueryParam | string> | AllowedQueryParamsResolver;
-
-// @public
-export type AllowedQueryParamsResolver = (queryParams: string[]) => Array<AllowedQueryParam | string>;
 
 export { AppPlaceholder }
 
@@ -412,6 +404,8 @@ export { ErrorPagesService }
 
 export { ErrorPagesServiceConfig }
 
+export { extractFiles }
+
 // @public
 export const extractPath: (context: GetStaticPropsContext | GetServerSidePropsContext) => string;
 
@@ -456,9 +450,20 @@ export { FileField }
 
 export { Form }
 
+// @public
+export const generateMap: GenerateMapFunction;
+
 export { GenerateMapArgs }
 
+export { generateMetadata }
+
+export { generateSites }
+
+export { GenerateSitesConfig }
+
 export { getChildPlaceholder }
+
+export { getComponentList }
 
 // Warning: (ae-forgotten-export) The symbol "ComponentPropsFetchFunction" needs to be exported by the entry point api-surface.d.ts
 //
@@ -913,6 +918,11 @@ export { WithSitecoreHocProps }
 export { WithSitecoreOptions }
 
 export { WithSitecoreProps }
+
+// @public
+export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }: {
+    scConfig: SitecoreConfig_2;
+}) => Promise<void>;
 
 
 export * from "@sitecore-content-sdk/react/search";
