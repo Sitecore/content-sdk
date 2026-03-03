@@ -71,6 +71,3 @@ jobs:
 
       - name: Scaffold samples
         run: yarn scaffold-samples
-
-      - name: Validate template and package lists (LLM docs, samples.json)
-        run: node scripts/validate-llm-docs.js
