@@ -35,8 +35,6 @@ Our versioning strategy is as follows:
 
 * `[nextjs]` `[Pages Router]` Adjust static path generation when multisite is disabled ([#345](https://github.com/Sitecore/content-sdk/pull/345))
 
-
-
 * `[nextjs]` Allow to pass custom query parameters to /api/editing/render handlers ([#381](https://github.com/Sitecore/content-sdk/pull/381))
 
 * `[nextjs]` `[Pages Router]` Add explicit `Content-Type: text/html; charset=utf-8` to the editing render route response for proper response handling ([#386](https://github.com/Sitecore/content-sdk/pull/386))
