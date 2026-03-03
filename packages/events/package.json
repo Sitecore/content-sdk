@@ -7,7 +7,7 @@
     "url": "https://github.com/Sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.0.0-canary.8",
+    "@sitecore-content-sdk/analytics-core": "2.0.0-canary.9",
     "debug": "^4.4.3"
   },
   "description": "> TODO: description",
@@ -65,5 +65,5 @@
     "prepublishOnly": "npm run build",
     "test": "jest --config jest.config.ts"
   },
-  "version": "2.0.0-canary.8"
+  "version": "2.0.0-canary.9"
 }
