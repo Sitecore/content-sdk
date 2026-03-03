@@ -6,7 +6,7 @@
 
 # Interface: Settings
 
-Defined in: [src/initializer/browser/interfaces.ts:11](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/analytics-core/src/initializer/browser/interfaces.ts#L11)
+Defined in: [src/initializer/browser/interfaces.ts:11](https://github.com/Sitecore/content-sdk/blob/88593e741a650b6b128479a0f5ae31aa36f73ec5/packages/analytics-core/src/initializer/browser/interfaces.ts#L11)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/initializer/browser/interfaces.ts:11](https://github.com/Siteco
 
 > **cookieSettings**: `object`
 
-Defined in: [src/initializer/browser/interfaces.ts:15](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/analytics-core/src/initializer/browser/interfaces.ts#L15)
+Defined in: [src/initializer/browser/interfaces.ts:15](https://github.com/Sitecore/content-sdk/blob/88593e741a650b6b128479a0f5ae31aa36f73ec5/packages/analytics-core/src/initializer/browser/interfaces.ts#L15)
 
 #### domain?
 
@@ -46,7 +46,7 @@ Defined in: [src/initializer/browser/interfaces.ts:15](https://github.com/Siteco
 
 > **sitecoreEdgeContextId**: `string`
 
-Defined in: [src/initializer/browser/interfaces.ts:12](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/analytics-core/src/initializer/browser/interfaces.ts#L12)
+Defined in: [src/initializer/browser/interfaces.ts:12](https://github.com/Sitecore/content-sdk/blob/88593e741a650b6b128479a0f5ae31aa36f73ec5/packages/analytics-core/src/initializer/browser/interfaces.ts#L12)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/initializer/browser/interfaces.ts:12](https://github.com/Siteco
 
 > **sitecoreEdgeUrl**: `string`
 
-Defined in: [src/initializer/browser/interfaces.ts:14](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/analytics-core/src/initializer/browser/interfaces.ts#L14)
+Defined in: [src/initializer/browser/interfaces.ts:14](https://github.com/Sitecore/content-sdk/blob/88593e741a650b6b128479a0f5ae31aa36f73ec5/packages/analytics-core/src/initializer/browser/interfaces.ts#L14)
 
 ***
 
@@ -62,4 +62,4 @@ Defined in: [src/initializer/browser/interfaces.ts:14](https://github.com/Siteco
 
 > **siteName**: `string`
 
-Defined in: [src/initializer/browser/interfaces.ts:13](https://github.com/Sitecore/content-sdk/blob/cfea6f37e3bdfe18c9aded77b244ce21391adbfd/packages/analytics-core/src/initializer/browser/interfaces.ts#L13)
+Defined in: [src/initializer/browser/interfaces.ts:13](https://github.com/Sitecore/content-sdk/blob/88593e741a650b6b128479a0f5ae31aa36f73ec5/packages/analytics-core/src/initializer/browser/interfaces.ts#L13)
