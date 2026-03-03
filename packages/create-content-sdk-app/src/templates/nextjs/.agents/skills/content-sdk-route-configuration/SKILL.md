@@ -1,9 +1,9 @@
 ---
-name: content-sdk-route-and-layout
+name: content-sdk-route-configuration
 description: Configures routing and layout for Pages Router. Single catch-all at src/pages/[[...path]].tsx; path from extractPath(context), locale from context.locale. Data flows via getStaticProps/getServerSideProps to _app and Layout. Use when changing routing, placeholders, or Layout.
 ---
 
-# Content SDK Route and Layout (Pages Router)
+# Content SDK Route Configuration (Pages Router)
 
 Single catch-all route; no [site] or [locale] in the URL path. Site is resolved by middleware; locale from Next.js i18n (context.locale).
 

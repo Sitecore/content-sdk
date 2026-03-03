@@ -34,7 +34,7 @@ Using SDK field components: `<Text>`, `<RichText>`, `<Image>`, `<Link>`, with pr
 
 Page, dictionary, and component data via the single Sitecore client in `src/lib/sitecore-client.ts`. Use `getPage(path, { locale: context.locale })`, then `getDictionary({ site: page.siteName, locale: page.locale })` and `getComponentData(page.layout, context, components)`. For SSG use `getPagePaths(sites, context?.locales)`.
 
-### content-sdk-route-and-layout
+### content-sdk-route-configuration
 
 Routing: single catch-all at `src/pages/[[...path]].tsx`. Path from `extractPath(context)`; locale from `context.locale`. Layout and page data flow via getStaticProps/getServerSideProps to _app and Layout.tsx. No [site]/[locale] in path; site resolved by middleware.
 
@@ -42,7 +42,7 @@ Routing: single catch-all at `src/pages/[[...path]].tsx`. Path from `extractPath
 
 Site and environment: `sitecore.config.ts`, environment variables, default site and language. Document vars in `.env.example` only; never commit `.env` or `.env.local`.
 
-### content-sdk-multisite-basics
+### content-sdk-multisite-management
 
 Multisite: `.sitecore/sites.json`, proxy in `src/proxy.ts`. Chain order is **fixed:** MultisiteProxy → RedirectsProxy → PersonalizeProxy. Do not change proxy order.
 

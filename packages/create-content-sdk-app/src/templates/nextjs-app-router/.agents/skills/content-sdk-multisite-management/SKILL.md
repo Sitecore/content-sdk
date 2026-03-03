@@ -1,9 +1,9 @@
 ---
-name: content-sdk-multisite-basics
+name: content-sdk-multisite-management
 description: Handles multisite: site resolution, .sitecore/sites.json, and proxy in src/proxy.ts. App Router proxy order is fixed: LocaleProxy → AppRouterMultisiteProxy → RedirectsProxy → PersonalizeProxy. Use when working with multiple sites or hostnames.
 ---
 
-# Content SDK Multisite Basics (App Router)
+# Content SDK Multisite Management (App Router)
 
 Site resolution from request (e.g. hostname or cookie); proxy rewrites to /[site]/[locale]/...path. **Locale must run first** so next-intl and multisite see the correct locale.
 

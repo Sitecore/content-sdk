@@ -1,9 +1,9 @@
 ---
-name: content-sdk-route-and-layout
+name: content-sdk-route-configuration
 description: Configures routing and layout for App Router. Single catch-all at src/app/[site]/[locale]/[[...path]]/page.tsx; call setRequestLocale at top of page. Use when changing routing, placeholders, or Layout.
 ---
 
-# Content SDK Route and Layout (App Router)
+# Content SDK Route Configuration (App Router)
 
 Single catch-all route and layout hierarchy. Site and locale are **in the path**; proxy rewrites incoming requests to /[site]/[locale]/...path.
 

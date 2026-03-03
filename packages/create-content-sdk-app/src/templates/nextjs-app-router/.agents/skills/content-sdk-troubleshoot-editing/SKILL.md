@@ -5,6 +5,8 @@ description: Troubleshoots XM Cloud editing, preview, and design library for App
 
 # Content SDK Troubleshoot Editing (App Router)
 
+This skill focuses on **diagnosing** editing, preview, and design library issues. For implementing editing-safe rendering (draftMode, getPreview/getDesignLibraryData, API routes), use the **content-sdk-editing-safe-rendering** skill; the two are complementary (implementation vs. troubleshooting).
+
 Diagnose and fix editing, preview, and design library issues without breaking the single client or proxy order. This app uses **draftMode()** and **searchParams** for preview data.
 
 ## When to Use

@@ -1,9 +1,9 @@
 ---
-name: content-sdk-multisite-basics
+name: content-sdk-multisite-management
 description: Handles multisite: site resolution, .sitecore/sites.json, and proxy in src/proxy.ts. Pages Router proxy order is fixed: MultisiteProxy → RedirectsProxy → PersonalizeProxy. Use when working with multiple sites or hostnames.
 ---
 
-# Content SDK Multisite Basics (Pages Router)
+# Content SDK Multisite Management (Pages Router)
 
 Site resolution from request (e.g. hostname or cookie); proxy rewrites to internal path. No [locale] in URL; Next.js i18n handles locale separately.
 
