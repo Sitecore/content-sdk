@@ -6,7 +6,7 @@
 
 # Enumeration: DesignLibraryStatus
 
-Defined in: [content/src/editing/design-library.ts:55](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/content/src/editing/design-library.ts#L55)
+Defined in: [content/src/editing/design-library.ts:60](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/editing/design-library.ts#L60)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Enumeration of statuses for the design library.
 
 > **READY**: `"ready"`
 
-Defined in: [content/src/editing/design-library.ts:56](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/content/src/editing/design-library.ts#L56)
+Defined in: [content/src/editing/design-library.ts:61](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/editing/design-library.ts#L61)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [content/src/editing/design-library.ts:56](https://github.com/Siteco
 
 > **RENDERED**: `"rendered"`
 
-Defined in: [content/src/editing/design-library.ts:57](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/content/src/editing/design-library.ts#L57)
+Defined in: [content/src/editing/design-library.ts:62](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/editing/design-library.ts#L62)

@@ -21,7 +21,6 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
   const { route } = layout.sitecore;
   const fields = route?.fields as RouteFields;
   const mainClassPageEditing = mode.isEditing ? 'editing-mode' : 'prod-mode';
-  const importMapDynamic = () => import('.sitecore/import-map');
 
   return (
     <>
@@ -35,7 +34,7 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
       {/* root placeholder for the app, which we add components to using route data */}
       <div className={mainClassPageEditing}>
         {mode.isDesignLibrary ? (
-          <DesignLibrary loadImportMap={importMapDynamic} />
+          <DesignLibrary />
         ) : (
           <>
             <header>

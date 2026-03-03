@@ -8,7 +8,7 @@
 
 > `const` **EDITING\_COMPONENT\_PLACEHOLDER**: `"editing-componentmode-placeholder"` = `'editing-componentmode-placeholder'`
 
-Defined in: [content/src/layout/models.ts:186](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/content/src/layout/models.ts#L186)
+Defined in: [content/src/layout/models.ts:186](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/layout/models.ts#L186)
 
 **`Internal`**
 

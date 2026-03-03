@@ -8,7 +8,7 @@
 
 > **getBrowserId**(): `string`
 
-Defined in: [src/browser-id/get-browser-id.ts:8](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/analytics-core/src/browser-id/get-browser-id.ts#L8)
+Defined in: [src/browser-id/get-browser-id.ts:8](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/analytics-core/src/browser-id/get-browser-id.ts#L8)
 
 Gets the browser ID from the cookie.
 

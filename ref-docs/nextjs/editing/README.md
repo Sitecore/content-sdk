@@ -15,10 +15,13 @@
 
 ## Interfaces
 
+- [AllowedQueryParam](interfaces/AllowedQueryParam.md)
 - [FEAASRenderMiddlewareConfig](interfaces/FEAASRenderMiddlewareConfig.md)
 
 ## Type Aliases
 
+- [AllowedQueryParams](type-aliases/AllowedQueryParams.md)
+- [AllowedQueryParamsResolver](type-aliases/AllowedQueryParamsResolver.md)
 - [EditingConfigMiddlewareConfig](type-aliases/EditingConfigMiddlewareConfig.md)
 - [EditingRenderMiddlewareConfig](type-aliases/EditingRenderMiddlewareConfig.md)
 

@@ -1,12 +1,15 @@
 import {
   ComponentFileWithType,
   ComponentType,
-  getComponentList,
   RouterType,
 } from '@sitecore-content-sdk/content/tools';
+import {
+  getComponentList,
+  defaultImportMapTemplate,
+  ModuleExports,
+} from '@sitecore-content-sdk/content/node-tools';
 import ts from 'typescript';
 import fs from 'fs';
-import { defaultImportMapTemplate, ModuleExports } from '@sitecore-content-sdk/content/tools';
 
 /**
  * Detects the Next.js router type (App Router or Pages Router) based on directory structure.
@@ -233,10 +236,20 @@ export function nextjsClientMapTemplate(indexedImportMap: Map<string, ModuleExpo
 }
 
 /**
- * React-specific import map template with 'use client' directive. Used in App Router.
+ * React-specific import map template for server side imports only. Used in App Router.
+ * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.server.ts file
+ * @returns {string} contents for resulting import map file
+ */
+export function nextjsServertMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
+  return defaultImportMapTemplate(indexedImportMap, 'nextjs', 'defaultServerImportEntries');
+}
+
+/**
+ * React-specific import map template. Used in Pages Router.
  * @param {Map<string, ModuleExports>} indexedImportMap import map to be processed into final import-map.client.ts file
  * @returns {string} contents for resulting import map file
  */
 export function nextjsDefaultMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
   return defaultImportMapTemplate(indexedImportMap, 'nextjs');
 }
+

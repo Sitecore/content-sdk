@@ -26,12 +26,10 @@
 - [LayoutService](classes/LayoutService.md)
 - [MemoryCacheClient](classes/MemoryCacheClient.md)
 - [NativeDataFetcher](classes/NativeDataFetcher.md)
-- [SitecoreProvider](classes/SitecoreProvider.md)
 - [SitePathService](classes/SitePathService.md)
 
 ## Interfaces
 
-- [AppPlaceholderProps](interfaces/AppPlaceholderProps.md)
 - [CacheClient](interfaces/CacheClient.md)
 - [CacheOptions](interfaces/CacheOptions.md)
 - [ComponentFields](interfaces/ComponentFields.md)
@@ -60,11 +58,10 @@
 - [SitecoreProviderState](interfaces/SitecoreProviderState.md)
 - [SitePathServiceConfig](interfaces/SitePathServiceConfig.md)
 - [TextField](interfaces/TextField.md)
-- [WithSitecoreOptions](interfaces/WithSitecoreOptions.md)
-- [WithSitecoreProps](interfaces/WithSitecoreProps.md)
 
 ## Type Aliases
 
+- [AppPlaceholderProps](type-aliases/AppPlaceholderProps.md)
 - [BYOCComponentParams](type-aliases/BYOCComponentParams.md)
 - [BYOCComponentProps](type-aliases/BYOCComponentProps.md)
 - [ComponentMap](type-aliases/ComponentMap.md)
@@ -79,21 +76,18 @@
 - [PageMode](type-aliases/PageMode.md)
 - [ReactContentSdkComponent](type-aliases/ReactContentSdkComponent.md)
 - [ReactModule](type-aliases/ReactModule.md)
-- [WithSitecoreHocProps](type-aliases/WithSitecoreHocProps.md)
 
 ## Variables
 
 - [DateField](variables/DateField.md)
 - [DefaultEmptyFieldEditingComponentImage](variables/DefaultEmptyFieldEditingComponentImage.md)
 - [DefaultEmptyFieldEditingComponentText](variables/DefaultEmptyFieldEditingComponentText.md)
-- [DesignLibrary](variables/DesignLibrary.md)
 - [enableDebug](variables/enableDebug.md)
 - [File](variables/File.md)
 - [getContentStylesheetLink](variables/getContentStylesheetLink.md)
 - [Image](variables/Image.md)
 - [isEditorActive](variables/isEditorActive.md)
 - [Link](variables/Link.md)
-- [Placeholder](variables/Placeholder.md)
 - [resetEditorChromes](variables/resetEditorChromes.md)
 - [RichText](variables/RichText.md)
 - [SitecoreProviderReactContext](variables/SitecoreProviderReactContext.md)
@@ -105,6 +99,7 @@
 - [BYOCServerWrapper](functions/BYOCServerWrapper.md)
 - [BYOCWrapper](functions/BYOCWrapper.md)
 - [ClientEditingChromesUpdate](functions/ClientEditingChromesUpdate.md)
+- [DesignLibrary](functions/DesignLibrary.md)
 - [DesignLibraryApp](functions/DesignLibraryApp.md)
 - [EditingScripts](functions/EditingScripts.md)
 - [FEaaSComponent](functions/FEaaSComponent.md)
@@ -116,13 +111,17 @@
 - [getChildPlaceholder](functions/getChildPlaceholder.md)
 - [getDesignLibraryStylesheetLinks](functions/getDesignLibraryStylesheetLinks.md)
 - [getFieldValue](functions/getFieldValue.md)
+- [Placeholder](functions/Placeholder.md)
+- [renderEmptyPlaceholder](functions/renderEmptyPlaceholder.md)
+- [SitecoreProvider](functions/SitecoreProvider.md)
 - [useSitecore](functions/useSitecore.md)
+- [withAppPlaceholder](functions/withAppPlaceholder.md)
 - [withDatasourceCheck](functions/withDatasourceCheck.md)
 - [withEditorChromes](functions/withEditorChromes.md)
 - [withEmptyFieldEditingComponent](functions/withEmptyFieldEditingComponent.md)
 - [withFieldMetadata](functions/withFieldMetadata.md)
 - [withPlaceholder](functions/withPlaceholder.md)
-- [withSitecore](functions/withSitecore.md)
+- [~~withSitecore~~](functions/withSitecore.md)
 
 ## References
 

@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -34,9 +34,10 @@ import * as HiddenRendering from '../HiddenRendering';
 import * as ErrorBoundary from '../ErrorBoundary';
 import { MissingComponent, MissingComponentProps } from '../MissingComponent';
 import { Placeholder } from './Placeholder';
-import { ComponentProps } from './models';
+import { ChildComponentProps } from './models';
 import { SitecoreProvider } from '../SitecoreProvider';
 import { Page, PageMode } from '@sitecore-content-sdk/content/client';
+import * as rscUtils from '#rsc-env';
 
 const componentMap = new Map<string, React.FC>();
 // Mock dynamic component for testing
@@ -86,7 +87,7 @@ const DownloadCallout: React.FC<{
   extraDiv?: boolean;
 }> = (props) => (
   <div className="download-callout-mock">
-    {props.fields.message ? props.fields.message.value : ''}
+    {props.fields?.message ? props.fields.message.value : ''}
     {props.extraDiv ? <div className="extra">extra!</div> : null}
   </div>
 );
@@ -151,7 +152,7 @@ describe('<Placeholder />', () => {
         ).to.equal(1);
       });
 
-      it('should render components based on the rendereach function', () => {
+      it('should render components based on the renderEach function', () => {
         const page = getPage();
         page.layout = dataSet.data;
         const component = dataSet.data.sitecore.route as RouteData;
@@ -168,6 +169,51 @@ describe('<Placeholder />', () => {
         );
 
         expect(renderedComponent.container.querySelectorAll('.wrapper').length).to.equal(1);
+      });
+
+      it('should use renderEach for each child in the placeholder when page editing is enabled', () => {
+        const page = getPage();
+        const components = new Map<string, React.FC>();
+
+        page.mode.isEditing = true;
+
+        components.set('Child', () => 'Child');
+
+        const route = {
+          name: 'Render Each Test',
+          placeholders: {
+            main: [
+              {
+                componentName: 'Child',
+              },
+              {
+                componentName: 'Child',
+              },
+            ],
+          },
+        };
+        page.layout = {
+          sitecore: {
+            context: {},
+            route,
+          },
+        };
+        const phKey = 'main';
+
+        const renderedComponent = render(
+          <SitecoreProvider componentMap={componentMap} page={page}>
+            <Placeholder
+              name={phKey}
+              rendering={page.layout.sitecore.route}
+              componentMap={components}
+              render={(children) => <div className="parentWrapper">{children}</div>}
+              renderEach={(child) => <div className="wrapper">{child}</div>}
+            />
+          </SitecoreProvider>
+        );
+
+        expect(renderedComponent.container.querySelectorAll('.parentWrapper').length).to.equal(1);
+        expect(renderedComponent.container.querySelectorAll('.wrapper').length).to.equal(2);
       });
 
       it('should render components based on the render function', () => {
@@ -261,40 +307,35 @@ describe('<Placeholder />', () => {
       ).to.be.true;
     });
 
-    it('should apply modifyComponentProps to the final props', () => {
+    it('should pass passThroughComponentProps to rendered components', () => {
       const page = getPage();
-      page.layout = dataSet.data;
-      const component = dataSet.data.sitecore.route as any;
-      const phKey = 'main';
-      const expectedMessage = (component.placeholders.main as any[]).find((c) => c.componentName)
-        .fields.message;
-
-      const modifyComponentProps = (props: ComponentProps) => {
-        if (props.rendering?.componentName === 'DownloadCallout') {
-          return {
-            ...props,
-            extraDiv: true,
-          };
-        }
-
-        return props;
+      // Create a simple test component directly without nesting
+      const testRendering: RouteData = {
+        placeholders: {
+          'test-placeholder': [
+            {
+              componentName: 'DownloadCallout',
+              uid: 'download-uid',
+              fields: {
+                message: { value: 'Test message' },
+              },
+            },
+          ],
+        },
       };
+      page.layout = { sitecore: { context: {}, route: testRendering } };
 
       const renderedComponent = render(
         <SitecoreProvider componentMap={componentMap} page={page} api={undefined}>
           <Placeholder
-            name={phKey}
-            rendering={component}
-            modifyComponentProps={modifyComponentProps}
+            name="test-placeholder"
+            rendering={testRendering}
+            passThroughComponentProps={{ extraDiv: true }}
           />
         </SitecoreProvider>
       );
 
-      expect(
-        renderedComponent.container
-          .querySelector('.download-callout-mock')
-          ?.innerHTML.indexOf(expectedMessage.value) !== -1
-      ).to.be.true;
+      expect(renderedComponent.container.querySelector('.download-callout-mock')).to.not.be.null;
       expect(renderedComponent.container.querySelectorAll('div.extra').length).to.equal(1);
     });
   });
@@ -540,6 +581,32 @@ describe('FEaaS fallback', () => {
   });
 });
 
+it('should not render Suspense by default (disableSuspense defaults to true)', () => {
+  const page = getPage();
+  const component = {
+    name: 'home',
+    displayName: 'Home',
+    placeholders: {
+      main: [
+        {
+          uid: '12345',
+          componentName: 'Jumbotron',
+        },
+      ],
+    },
+  } as RouteData;
+  const phKey = 'main';
+
+  const renderedComponent = render(
+    <SitecoreProvider componentMap={componentMap} page={page} api={undefined}>
+      <Placeholder name={phKey} rendering={component} />
+    </SitecoreProvider>
+  );
+
+  expect(renderedComponent.container.querySelector('.jumbotron-mock')).to.not.be.null;
+  expect(renderedComponent.container.innerHTML).to.not.contain('Loading component...');
+});
+
 it('should render Suspense when disableSuspense is false', async () => {
   const page = getPage();
   page.layout = dynamicComponentLayout;
@@ -553,15 +620,26 @@ it('should render Suspense when disableSuspense is false', async () => {
   );
 
   expect(renderedComponent.container.innerHTML).to.contain('Loading component...');
+
   await waitFor(() => {
     expect(renderedComponent.container.querySelector('.dynamic-component')).to.not.be.null;
   });
 });
 
-it('should not render Suspense when disableSuspense is true', () => {
+it('should not render Suspense when disableSuspense is explicitly set to true', () => {
   const page = getPage();
-  page.layout = dynamicComponentLayout;
-  const component = dynamicComponentLayout.sitecore.route as RouteData;
+  const component = {
+    name: 'home',
+    displayName: 'Home',
+    placeholders: {
+      main: [
+        {
+          uid: '12345',
+          componentName: 'Jumbotron',
+        },
+      ],
+    },
+  } as RouteData;
   const phKey = 'main';
 
   const renderedComponent = render(
@@ -571,8 +649,7 @@ it('should not render Suspense when disableSuspense is true', () => {
   );
 
   expect(renderedComponent.container.innerHTML).to.not.contain('Loading component...');
-
-  expect(renderedComponent.container.querySelector('.dynamic-component')).to.not.be.null;
+  expect(renderedComponent.container.querySelector('.jumbotron-mock')).to.not.be.null;
 });
 
 it('should render null for unknown placeholder', () => {
@@ -907,6 +984,7 @@ describe('PlaceholderMetadata', () => {
     page = getPage();
     page.layout = layoutData;
     page.mode = mode;
+    sandbox.replace(rscUtils, 'rsc', false as any);
   });
 
   const componentMap = new Map<string, React.FC>();
@@ -918,7 +996,7 @@ describe('PlaceholderMetadata', () => {
   ));
   componentMap.set('Logo', () => <div className="Logo-mock" />);
 
-  it('should render <PlaceholderMetadata> with nested placeholder components', () => {
+  it('should render <PlaceholderMetadata> with nested placeholder components (Pages Router)', () => {
     const wrapper = render(
       <SitecoreProvider componentMap={componentMap} page={page}>
         <Placeholder name="main" rendering={layoutData.sitecore.route} />
@@ -929,10 +1007,10 @@ describe('PlaceholderMetadata', () => {
     expect(wrapper?.baseElement.innerHTML).to.equal(
       [
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_00000000-0000-0000-0000-000000000000"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123" data-csdk-component-runtime="client"></code>',
         '<div class="header-wrapper">',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="logo_nested123"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123" data-csdk-component-runtime="client"></code>',
         '<div class="Logo-mock"></div>',
         '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
@@ -964,7 +1042,7 @@ describe('PlaceholderMetadata', () => {
     );
   });
 
-  it('should render missing component with code blocks if component is not registered', () => {
+  it('should render missing component with code blocks if component is not registered (Pages Router)', () => {
     page.layout = layoutDataWithUnknownComponent;
 
     const wrapper = render(
@@ -976,7 +1054,7 @@ describe('PlaceholderMetadata', () => {
     expect(wrapper?.container.innerHTML).to.equal(
       [
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="main_00000000-0000-0000-0000-000000000000"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="123"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="123" data-csdk-component-runtime="client"></code>',
         '<div style="background: darkorange; outline: 5px solid orange; padding: 10px; color: white; max-width: 500px;"><h2>Unknown</h2><p>Content SDK component is missing React implementation. See the developer console for more information.</p></div>',
         '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
@@ -984,7 +1062,7 @@ describe('PlaceholderMetadata', () => {
     );
   });
 
-  it('should render dynamic placeholder', () => {
+  it('should render dynamic placeholder (Pages Router)', () => {
     const phKey = 'container-1';
     const layoutData = layoutDataForNestedDynamicPlaceholder('container-{*}');
     page.layout = layoutData;
@@ -998,10 +1076,10 @@ describe('PlaceholderMetadata', () => {
     expect(wrapper?.container.innerHTML).to.equal(
       [
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="container-{*}_00000000-0000-0000-0000-000000000000"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123" data-csdk-component-runtime="client"></code>',
         '<div class="header-wrapper">',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="logo_nested123"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123" data-csdk-component-runtime="client"></code>',
         '<div class="Logo-mock"></div><code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
         '</div>',
@@ -1013,7 +1091,7 @@ describe('PlaceholderMetadata', () => {
     expect(wrapper?.container.querySelectorAll('.scpm')?.length).to.equal(8);
   });
 
-  it('should render double digit dynamic placeholder', () => {
+  it('should render double digit dynamic placeholder (Pages Router)', () => {
     const phKey = 'container-1-2';
     const layoutData = layoutDataForNestedDynamicPlaceholder('container-1-{*}');
     page.layout = layoutData;
@@ -1026,10 +1104,10 @@ describe('PlaceholderMetadata', () => {
     expect(wrapper?.container.innerHTML).to.equal(
       [
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="container-1-{*}_00000000-0000-0000-0000-000000000000"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="nested123" data-csdk-component-runtime="client"></code>',
         '<div class="header-wrapper">',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="logo_nested123"></code>',
-        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123"></code>',
+        '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="deep123" data-csdk-component-runtime="client"></code>',
         '<div class="Logo-mock"></div><code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
         '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
         '</div>',

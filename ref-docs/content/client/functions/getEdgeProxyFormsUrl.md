@@ -8,7 +8,7 @@
 
 > **getEdgeProxyFormsUrl**(`sitecoreEdgeContextId`, `formId`, `sitecoreEdgeUrl?`): `string`
 
-Defined in: [content/src/client/edge-proxy.ts:23](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/content/src/client/edge-proxy.ts#L23)
+Defined in: [content/src/client/edge-proxy.ts:31](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/client/edge-proxy.ts#L31)
 
 **`Internal`**
 
@@ -20,7 +20,7 @@ Generates a URL for accessing Sitecore Edge Platform Forms using the provided fo
 | ------ | ------ | ------ | ------ |
 | `sitecoreEdgeContextId` | `string` | `undefined` | The unique context id. |
 | `formId` | `string` | `undefined` | The unique form id. |
-| `sitecoreEdgeUrl?` | `string` | `SITECORE_EDGE_URL_DEFAULT` | The base endpoint URL for the Edge Platform. Default is https://edge-platform.sitecorecloud.io |
+| `sitecoreEdgeUrl?` | `string` | `constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT` | The base endpoint URL for the Edge Platform (resolved at config level). Defaults to platform URL. |
 
 ## Returns
 

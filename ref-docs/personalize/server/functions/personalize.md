@@ -8,7 +8,7 @@
 
 > **personalize**\<`T`\>(`request`, `personalizeData`, `opts?`): `Promise`\<`unknown`\>
 
-Defined in: [personalization/personalizeServer.ts:24](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/personalize/src/personalization/personalizeServer.ts#L24)
+Defined in: [personalization/personalizeServer.ts:24](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/personalize/src/personalization/personalizeServer.ts#L24)
 
 A function that executes an interactive experiment or web experiment over any web-based or mobile application.
 

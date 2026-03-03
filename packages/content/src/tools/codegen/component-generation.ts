@@ -1,6 +1,6 @@
 import { constants, debug } from '@sitecore-content-sdk/core';
 
-const { SITECORE_EDGE_URL_DEFAULT, ERROR_MESSAGES } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT, ERROR_MESSAGES } = constants;
 
 /**
  * The parameters for fetching the component spec.
@@ -46,7 +46,7 @@ export interface ComponentSpec {
  */
 export const getComponentSpecUrl = ({
   componentId,
-  edgeUrl = SITECORE_EDGE_URL_DEFAULT,
+  edgeUrl = SITECORE_EDGE_PLATFORM_URL_DEFAULT,
   targetPath,
   token,
 }: GetComponentSpecParams) => {
@@ -67,7 +67,7 @@ export const getComponentSpecUrl = ({
  */
 export const getComponentSpec = async ({
   componentId,
-  edgeUrl = SITECORE_EDGE_URL_DEFAULT,
+  edgeUrl = SITECORE_EDGE_PLATFORM_URL_DEFAULT,
   targetPath,
   token,
 }: GetComponentSpecParams) => {
@@ -89,7 +89,9 @@ export const getComponentSpec = async ({
     }
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch component ${componentId}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
+      throw new Error(
+        `Failed to fetch component ${componentId}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`
+      );
     }
 
     const spec: ComponentSpec = await response.json();
@@ -97,7 +99,9 @@ export const getComponentSpec = async ({
 
     return spec;
   } catch (error) {
-    debug.common(`Failed to fetch component spec: ${String(error)}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
+    debug.common(
+      `Failed to fetch component spec: ${String(error)}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`
+    );
     throw error;
   }
 };

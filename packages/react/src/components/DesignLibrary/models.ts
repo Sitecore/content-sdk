@@ -1,4 +1,8 @@
-import { ImportEntry, ImportEntryInfo } from '@sitecore-content-sdk/content/codegen';
+import {
+  GeneratedComponentData,
+  ImportEntry,
+  ImportEntryInfo,
+} from '@sitecore-content-sdk/content/codegen';
 import {
   ComponentFields,
   ComponentParams,
@@ -7,7 +11,6 @@ import {
 } from '@sitecore-content-sdk/content/layout';
 import { DesignLibraryStatus } from '@sitecore-content-sdk/content/editing';
 import { Page } from '@sitecore-content-sdk/content/client';
-import { ComponentPreviewEventArgs } from '@sitecore-content-sdk/content/codegen';
 import { ComponentMap } from '../sharedTypes';
 
 export type ImportMapImport = {
@@ -19,15 +22,6 @@ export type DynamicComponent = React.ComponentType<{
   fields?: ComponentFields;
   params?: ComponentParams;
 }>;
-
-// @MAJOR-RELEASE-TODO - Make loadImportMap required in next major version
-export type DesignLibraryProps = {
-  /**
-   * The dynamic import for import map to be used in variant generation mode.
-   * Currently it's optional but it will be required in the next major version.
-   */
-  loadImportMap?: () => Promise<ImportMapImport>;
-};
 
 export type DesignLibraryServerProps = {
   /**
@@ -71,11 +65,14 @@ export type DesignLibraryVariantGenerationEventsProps = DesignLibraryPreviewEven
    */
   importMap?: ImportEntryInfo[];
   /**
-   * Any error that occurred while loading the import map to be posted as a message to the Design Studio.
+   * Any error that occurred during initialization of the component:
+   * - importMap error
+   * - error fetching the generated component data from secured endpoint
+   * - error during generation of the component on the server side
    */
-  importMapError?: string;
+  componentInitError?: string;
   /**
-   * The preview component data received from design library.
+   * The generated component data received from design library.
    */
-  previewComponentData?: ComponentPreviewEventArgs;
+  generatedComponentData?: GeneratedComponentData;
 };

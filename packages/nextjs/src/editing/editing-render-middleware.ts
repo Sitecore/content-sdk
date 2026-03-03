@@ -21,7 +21,9 @@ import {
   getEditingRequestHtml,
   getCSPHeader,
   resolveServerUrl,
+  getAllowedQueryParams,
 } from './utils';
+import type { AllowedQueryParams } from './types';
 
 /**
  * Configuration for the Editing Render Middleware.
@@ -40,6 +42,12 @@ export type EditingRenderMiddlewareConfig = {
    * The internal host URL for the Next.js application, used for server-side requests for page rendering during editing.
    */
   sitecoreInternalEditingHostUrl?: string;
+  /**
+   * Query string parameters to allow and include in the preview data.
+   * - Array: each item is a parameter name (string) or an object `{ name, required? }`.
+   * - Function: receives the request's query parameter names and returns the list of allowed parameters.
+   */
+  allowedQueryParams?: AllowedQueryParams;
 };
 
 /**
@@ -113,7 +121,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     if (req.method === 'OPTIONS') {
       debug.editing('preflight request');
 
-      // CORS headers are set by enforceCors
+      // CORS headers are set by getEnforcedCorsHeaders
       return res.status(204).send(null);
     }
 
@@ -134,15 +142,23 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     const requiredQueryParams = getRequiredEditingParamsList(mode);
 
     const missingQueryParams = requiredQueryParams.filter((param) => !query[param]);
+    const { allowedQueryParams, missingAllowedParams } = getAllowedQueryParams(
+      query,
+      this.config?.allowedQueryParams
+    );
 
     // Validate query parameters
-    if (missingQueryParams.length) {
-      debug.editing('missing required query parameters: %o', missingQueryParams);
+    if (missingQueryParams.length || missingAllowedParams.length) {
+      debug.editing('missing required query parameters: %o', [
+        ...missingQueryParams,
+        ...missingAllowedParams,
+      ]);
 
       return res.status(400).json({
-        html: `<html><body>Missing required query parameters: ${missingQueryParams.join(
-          ', '
-        )}</body></html>`,
+        html: `<html><body>Missing required query parameters: ${[
+          ...missingQueryParams,
+          ...missingAllowedParams,
+        ].join(', ')}</body></html>`,
       });
     }
 
@@ -151,6 +167,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     res.setPreviewData(
       {
         ...previewDataParams,
+        ...allowedQueryParams,
         variantIds: previewDataParams.variantIds?.split(','),
       },
       {
@@ -205,6 +222,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
         route,
       });
 
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
       res.status(200).send(html);
     } catch (err) {
       const error = err as Record<string, unknown>;

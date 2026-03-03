@@ -6,9 +6,9 @@
 
 # Function: writeImportMap()
 
-> **writeImportMap**(`args`): (`__namedParameters?`) => `Promise`\<`void`\>
+> **writeImportMap**(`args`): (`__namedParameters`) => `Promise`\<`void`\>
 
-Defined in: [nextjs/src/tools/codegen/import-map.ts:16](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/nextjs/src/tools/codegen/import-map.ts#L16)
+Defined in: [nextjs/src/tools/codegen/import-map.ts:25](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/nextjs/src/tools/codegen/import-map.ts#L25)
 
 Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
 
@@ -20,14 +20,14 @@ Entry point function for generating import-map. Parses provided paths and output
 
 ## Returns
 
-> (`__namedParameters?`): `Promise`\<`void`\>
+> (`__namedParameters`): `Promise`\<`void`\>
 
 ### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `__namedParameters?` | \{ `scConfig?`: `Required`\<\{ `api?`: `Required`\<\{ `edge?`: `Required`\<... \| ...\>; `local?`: `Required`\<... \| ...\>; \} \| `undefined`\>; `defaultLanguage?`: `string`; `defaultSite?`: `string`; `dictionary?`: `Required`\<\{ `caching?`: `Required`\<... \| ...\>; \} \| `undefined`\>; `disableCodeGeneration?`: `boolean`; `editingSecret?`: `string`; `layout?`: `Required`\<\{ `formatLayoutQuery?`: (`siteName`, `itemPath`, `locale?`) => ... \| `null`; \} \| `undefined`\>; `multisite?`: `Required`\<\{ `enabled?`: `boolean`; `useCookieResolution?`: (`req?`, `res?`) => ...; \} \| `undefined`\>; `personalize?`: `Required`\<\{ `cdpTimeout?`: `number`; `channel?`: `string`; `currency?`: `string`; `edgeTimeout?`: `number`; `enabled?`: `boolean`; `scope?`: `string`; \} \| `undefined`\>; `redirects?`: `Required`\<\{ `enabled?`: `boolean`; `locales?`: ...[]; \} \| `undefined`\>; `retries?`: `Required`\<\{ `count?`: `number`; `retryStrategy?`: [`RetryStrategy`](../../client/interfaces/RetryStrategy.md); \} \| `undefined`\>; \}\>; \} |
-| `__namedParameters.scConfig?` | `Required`\<\{ `api?`: `Required`\<\{ `edge?`: `Required`\<... \| ...\>; `local?`: `Required`\<... \| ...\>; \} \| `undefined`\>; `defaultLanguage?`: `string`; `defaultSite?`: `string`; `dictionary?`: `Required`\<\{ `caching?`: `Required`\<... \| ...\>; \} \| `undefined`\>; `disableCodeGeneration?`: `boolean`; `editingSecret?`: `string`; `layout?`: `Required`\<\{ `formatLayoutQuery?`: (`siteName`, `itemPath`, `locale?`) => ... \| `null`; \} \| `undefined`\>; `multisite?`: `Required`\<\{ `enabled?`: `boolean`; `useCookieResolution?`: (`req?`, `res?`) => ...; \} \| `undefined`\>; `personalize?`: `Required`\<\{ `cdpTimeout?`: `number`; `channel?`: `string`; `currency?`: `string`; `edgeTimeout?`: `number`; `enabled?`: `boolean`; `scope?`: `string`; \} \| `undefined`\>; `redirects?`: `Required`\<\{ `enabled?`: `boolean`; `locales?`: ...[]; \} \| `undefined`\>; `retries?`: `Required`\<\{ `count?`: `number`; `retryStrategy?`: [`RetryStrategy`](../../client/interfaces/RetryStrategy.md); \} \| `undefined`\>; \}\> |
+| `__namedParameters` | \{ `scConfig`: `SitecoreConfig`; \} |
+| `__namedParameters.scConfig` | `SitecoreConfig` |
 
 ### Returns
 

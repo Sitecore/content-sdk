@@ -1,7 +1,7 @@
 import path from 'path';
 import chalk from 'chalk';
 import fs from 'fs';
-import { ensurePathExists } from '@sitecore-content-sdk/core/tools';
+import { ensurePathExists } from '@sitecore-content-sdk/core/node-tools';
 import { constants } from '@sitecore-content-sdk/core';
 import { SiteInfo, SiteInfoService } from '../site';
 import { SitecoreConfig } from '../config';
@@ -17,12 +17,6 @@ const DEFAULT_SITES_DIST_PATH = '.sitecore/sites.json';
  */
 export type GenerateSitesConfig = {
   /**
-   * The Sitecore configuration used at build and run time.
-   * @deprecated Pass `config` to the `defineCliConfig` function instead. This argument will be removed in the next major version.
-   */
-  scConfig?: SitecoreConfig;
-
-  /**
    * Optional path where the generated sites will be saved.
    * If not provided, the default '.sitecore/sites.json' will be used.
    */
@@ -33,16 +27,13 @@ export type GenerateSitesConfig = {
  * Generates site information and writes it to a specified destination path.
  * @param {GenerateSitesConfig} config - The configuration for generating site info.
  * @returns {Promise<Function>} - A promise that resolves to an asynchronous function that fetches site information and writes it to a file.
- * @public 
+ * @public
  */
-export const generateSites = ({
-  scConfig: deprecatedScConfig,
-  destinationPath,
-}: GenerateSitesConfig = {}): (() => Promise<void>) => {
-  return async ({ scConfig }: { scConfig?: GenerateSitesConfig['scConfig'] } = {}) => {
-    const config = deprecatedScConfig ?? scConfig;
-
-    if (!config) {
+export const generateSites = ({ destinationPath }: GenerateSitesConfig = {}): ((args: {
+  scConfig: SitecoreConfig;
+}) => Promise<void>) => {
+  return async ({ scConfig }: { scConfig: SitecoreConfig }) => {
+    if (!scConfig) {
       throw new Error(ERROR_MESSAGES.MV_008);
     }
 
@@ -50,18 +41,18 @@ export const generateSites = ({
     const sitesFilePath = path.resolve(destinationPath ?? DEFAULT_SITES_DIST_PATH);
 
     debug.multisite(
-      config.multisite.enabled
+      scConfig.multisite.enabled
         ? 'Multisite Enabled: Generating site information'
         : 'Multisite Disabled'
     );
 
-    if (config.multisite.enabled) {
+    if (scConfig.multisite.enabled) {
       try {
         const siteInfoService = new SiteInfoService({
           clientFactory: createGraphQLClientFactory({
-            api: config.api,
-            retries: config.retries.count,
-            retryStrategy: config.retries.retryStrategy,
+            api: scConfig.api,
+            retries: scConfig.retries.count,
+            retryStrategy: scConfig.retries.retryStrategy,
           }),
         });
 
@@ -76,9 +67,9 @@ export const generateSites = ({
 
     // Add default site to the list
     const defaultSite: SiteInfo = {
-      name: config.defaultSite,
+      name: scConfig.defaultSite,
       hostName: '*',
-      language: config.defaultLanguage,
+      language: scConfig.defaultLanguage,
     };
     sites.unshift(defaultSite);
 

@@ -1,10 +1,13 @@
-﻿/* eslint-disable dot-notation */
+/* eslint-disable dot-notation */
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import chai, { expect } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import { DocumentNode } from 'graphql';
-import { DefaultRetryStrategy, NativeDataFetcher } from '@sitecore-content-sdk/core';
+import { DefaultRetryStrategy, NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
+import { SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV } from '@sitecore-content-sdk/core/tools';
+
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 import { ErrorPage, SitecoreClient } from './sitecore-client';
 import { LayoutKind, DesignLibraryMode } from '../../src/editing';
 import { LayoutServiceData } from '../../layout';
@@ -482,6 +485,62 @@ describe('SitecoreClient', () => {
       expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
         'content-sdk-main': [...componentsWithExperiencesArray],
       });
+    });
+
+    it('should apply content rewrite when rewriteMediaUrls is a function', async () => {
+      const path = '/test/path';
+      const locale = 'en-US';
+      const siteInfo = { name: 'default-site', hostName: 'example.com', language: 'en' };
+      const rawLayout = {
+        sitecore: {
+          route: { name: 'home', placeholders: {} },
+          context: { site: siteInfo, pageState: LayoutServicePageState.Normal },
+        },
+      };
+      layoutServiceStub.fetchLayoutData.returns(rawLayout);
+      const stringTransformer = (value: string) =>
+        value === 'home' ? 'rewritten' : value;
+      const clientWithRewrite = new SitecoreClient({
+        ...defaultInitOptions,
+        rewriteMediaUrls: stringTransformer,
+      } as any);
+      (clientWithRewrite as any).layoutService = layoutServiceStub;
+
+      const result = await clientWithRewrite.getPage(path, { locale });
+
+      expect(result?.layout.sitecore.route?.name).to.equal('rewritten');
+    });
+
+    it('should apply default Edge host rewrite when rewriteMediaUrls is true and custom hostname is set', async () => {
+      const path = '/test/path';
+      const locale = 'en-US';
+      const siteInfo = { name: 'default-site', hostName: 'example.com', language: 'en' };
+      const rawLayout = {
+        sitecore: {
+          route: {
+            name: 'home',
+            placeholders: {},
+            fields: {
+              image: { value: { src: 'https://edge.sitecorecloud.io/-/media/hero.jpg' } },
+            },
+          },
+          context: { site: siteInfo, pageState: LayoutServicePageState.Normal },
+        },
+      };
+      layoutServiceStub.fetchLayoutData.returns(rawLayout);
+      process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV] = 'custom.example.com';
+      const clientWithRewrite = new SitecoreClient({
+        ...defaultInitOptions,
+        rewriteMediaUrls: true,
+      } as any);
+      (clientWithRewrite as any).layoutService = layoutServiceStub;
+
+      const result = await clientWithRewrite.getPage(path, { locale });
+
+      expect(
+        (result?.layout.sitecore.route?.fields?.image?.value as { src: string }).src
+      ).to.equal('https://custom.example.com/-/media/hero.jpg');
+      delete process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV];
     });
 
     it('should pass fetchOptions to layoutService when calling getPage', async () => {
@@ -1316,11 +1375,11 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.equal([
         {
-          href: 'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
+          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
         {
-          href: 'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
+          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1342,11 +1401,11 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.equal([
         {
-          href: 'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=client-context-id',
+          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=client-context-id`,
           rel: 'stylesheet',
         },
         {
-          href: 'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=client-context-id',
+          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=client-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1359,7 +1418,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href: 'https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id',
+          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1372,7 +1431,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href: 'https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id',
+          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1418,6 +1477,29 @@ describe('SitecoreClient', () => {
       expect(getGraphqlSitemapXMLServiceStub.calledWith(defaultReqConfig.siteName)).to.be.true;
       expect(dataFetcherStub.calledWith(absoluteSitemapPath)).to.be.true;
       expect(result).to.equal(xmlContent);
+    });
+
+    it('should rewrite Edge hostnames in sitemap path and XML when custom hostname is configured', async () => {
+      process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV] = 'custom.example.com';
+      const clientWithCustomEdge = new SitecoreClient({
+        ...defaultInitOptions,
+      } as any);
+
+      const edgeSitemapPath = 'https://edge.sitecorecloud.io/sitemap.xml';
+      const xmlContent =
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://edge.sitecorecloud.io/a</loc></url></urlset>';
+
+      sitemapXmlServiceStub.getSitemap.resolves(edgeSitemapPath);
+      const dataFetcherStub = sandbox
+        .stub(NativeDataFetcher.prototype, 'fetch')
+        .resolves({ data: xmlContent, status: 200, statusText: 'OK' });
+
+      const result = await clientWithCustomEdge.getSiteMap({ ...defaultReqConfig });
+
+      expect(getGraphqlSitemapXMLServiceStub.calledWith(defaultReqConfig.siteName)).to.be.true;
+      expect(dataFetcherStub.calledWith('https://custom.example.com/sitemap.xml')).to.be.true;
+      expect(result).to.include('https://custom.example.com/a');
+      delete process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV];
     });
 
     it('should fetch specific sitemap when ID is provided', async () => {

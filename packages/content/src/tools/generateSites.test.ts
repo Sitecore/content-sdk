@@ -47,7 +47,7 @@ describe('generateSites', () => {
     consoleErrorStub = sinon.stub(console, 'error');
 
     const generateSitesModule = proxyquire('./generateSites', {
-      '@sitecore-content-sdk/core/tools': { ensurePathExists: ensurePathExistsStub },
+      '@sitecore-content-sdk/core/node-tools': { ensurePathExists: ensurePathExistsStub },
     });
     generateSites = generateSitesModule.generateSites;
   });
@@ -57,117 +57,90 @@ describe('generateSites', () => {
     nock.cleanAll();
   });
 
-  const initialization = [
-    {
-      title: 'Using deprecated scConfig',
-      run: (config: GenerateSitesConfig) => {
-        const generate = generateSites(config);
-        return generate();
-      },
-    },
-    {
-      title: 'Using new config passed as argument',
-      run: ({ scConfig, ...rest }: GenerateSitesConfig) => {
-        const generate = generateSites(rest);
-        return generate({ scConfig });
-      },
-    },
-  ];
+  const runCommand = (generateSitesConfig: GenerateSitesConfig) => {
+    const scConfig = defineConfig(mockConfig);
+    const generate = generateSites(generateSitesConfig);
+    return generate({ scConfig });
+  };
 
-  initialization.forEach(({ title, run }) => {
-    describe(title, () => {
-      it('should write site info to the default path when destinationPath is not provided', async () => {
-        const scConfig = defineConfig(mockConfig);
-        const config: GenerateSitesConfig = {
-          scConfig,
-        };
+  it('should write site info to the default path when destinationPath is not provided', async () => {
+    const config: GenerateSitesConfig = {};
+    sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').resolves([defaultSite]);
 
-        sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').resolves([defaultSite]);
+    await runCommand(config);
 
-        await run(config);
-
-        const expectedPath = path.resolve('.sitecore/sites.json');
-        expect(ensurePathExistsStub.calledWith(expectedPath)).to.be.true;
-        expect(
-          fsWriteFileSyncStub.calledWith(
-            expectedPath,
-            JSON.stringify([defaultSite, defaultSite], null, 2),
-            {
-              encoding: 'utf8',
-            }
-          )
-        ).to.be.true;
-      });
-
-      it('should write site info to the provided destinationPath', async () => {
-        const destinationPath = 'custom/path/sites.json';
-        const scConfig = defineConfig(mockConfig);
-        const config: GenerateSitesConfig = {
-          scConfig,
-          destinationPath: destinationPath,
-        };
-
-        sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').resolves([defaultSite]);
-
-        await run(config);
-
-        const expectedPath = path.resolve(destinationPath);
-        expect(ensurePathExistsStub.calledWith(expectedPath)).to.be.true;
-        expect(
-          fsWriteFileSyncStub.calledWith(
-            expectedPath,
-            JSON.stringify([defaultSite, defaultSite], null, 2),
-            {
-              encoding: 'utf8',
-            }
-          )
-        ).to.be.true;
-      });
-
-      it('should fetch site information when multisiteEnabled is true', async () => {
-        const fetchedSites: SiteInfo[] = [
-          { name: 'site1', hostName: 'site1.com', language: 'de/DE' },
-          { name: 'site2', hostName: 'site2.com', language: 'da/DK' },
-        ];
-
-        sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').resolves(fetchedSites);
-
-        const scConfig = defineConfig(mockConfig);
-        const config: GenerateSitesConfig = {
-          scConfig,
-        };
-
-        await run(config);
-
-        const expectedPath = path.resolve('.sitecore/sites.json');
-        expect(ensurePathExistsStub.calledWith(expectedPath)).to.be.true;
-
-        expect(
-          fsWriteFileSyncStub.calledWith(expectedPath, JSON.stringify(fetchedSites, null, 2), {
-            encoding: 'utf8',
-          })
-        ).to.be.true;
-      });
-
-      it('should log an error when fetching site information fails', async () => {
-        sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').rejects(new Error('Fetch error'));
-        const scConfig = defineConfig(mockConfig);
-
-        const config: GenerateSitesConfig = {
-          scConfig,
-        };
-
-        try {
-          await run(config);
-          expect.fail('Expected function to throw an error');
-        } catch (error) {
-          expect(error).to.be.instanceOf(Error);
-          expect((error as Error).message).to.include('Fetch error');
+    const expectedPath = path.resolve('.sitecore/sites.json');
+    expect(ensurePathExistsStub.calledWith(expectedPath)).to.be.true;
+    expect(
+      fsWriteFileSyncStub.calledWith(
+        expectedPath,
+        JSON.stringify([defaultSite, defaultSite], null, 2),
+        {
+          encoding: 'utf8',
         }
+      )
+    ).to.be.true;
+  });
 
-        expect(consoleErrorStub.calledWith(chalk.red(`Failed to fetch site information. ${ERROR_MESSAGES.CONTACT_SUPPORT}`))).to.be
-          .true;
-      });
-    });
+  it('should write site info to the provided destinationPath', async () => {
+    const destinationPath = 'custom/path/sites.json';
+    const config: GenerateSitesConfig = {
+      destinationPath: destinationPath,
+    };
+    sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').resolves([defaultSite]);
+
+    await runCommand(config);
+
+    const expectedPath = path.resolve(destinationPath);
+    expect(ensurePathExistsStub.calledWith(expectedPath)).to.be.true;
+    expect(
+      fsWriteFileSyncStub.calledWith(
+        expectedPath,
+        JSON.stringify([defaultSite, defaultSite], null, 2),
+        {
+          encoding: 'utf8',
+        }
+      )
+    ).to.be.true;
+  });
+
+  it('should fetch site information when multisiteEnabled is true', async () => {
+    const fetchedSites: SiteInfo[] = [
+      { name: 'site1', hostName: 'site1.com', language: 'de/DE' },
+      { name: 'site2', hostName: 'site2.com', language: 'da/DK' },
+    ];
+    sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').resolves(fetchedSites);
+
+    const config: GenerateSitesConfig = {};
+
+    await runCommand(config);
+
+    const expectedPath = path.resolve('.sitecore/sites.json');
+    expect(ensurePathExistsStub.calledWith(expectedPath)).to.be.true;
+
+    expect(
+      fsWriteFileSyncStub.calledWith(expectedPath, JSON.stringify(fetchedSites, null, 2), {
+        encoding: 'utf8',
+      })
+    ).to.be.true;
+  });
+
+  it('should log an error when fetching site information fails', async () => {
+    sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').rejects(new Error('Fetch error'));
+    const config: GenerateSitesConfig = {};
+
+    try {
+      await runCommand(config);
+      expect.fail('Expected function to throw an error');
+    } catch (error) {
+      expect(error).to.be.instanceOf(Error);
+      expect((error as Error).message).to.include('Fetch error');
+    }
+
+    expect(
+      consoleErrorStub.calledWith(
+        chalk.red(`Failed to fetch site information. ${ERROR_MESSAGES.CONTACT_SUPPORT}`)
+      )
+    ).to.be.true;
   });
 });

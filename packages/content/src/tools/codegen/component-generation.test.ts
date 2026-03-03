@@ -1,13 +1,9 @@
 import { expect } from 'chai';
 import nock from 'nock';
 import { constants } from '@sitecore-content-sdk/core';
-import {
-  ComponentSpec,
-  getComponentSpecUrl,
-  getComponentSpec,
-} from './component-generation';
+import { ComponentSpec, getComponentSpecUrl, getComponentSpec } from './component-generation';
 
-const { SITECORE_EDGE_URL_DEFAULT, ERROR_MESSAGES } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT, ERROR_MESSAGES } = constants;
 
 describe('component-generation', () => {
   const token = '456';
@@ -21,7 +17,7 @@ describe('component-generation', () => {
       });
 
       expect(url).to.equal(
-        `${SITECORE_EDGE_URL_DEFAULT}/authoring/api/v1/components/generated/123?token=456&targetPath=.%2Fcomponents%2Fpromo-block%2FPromoBlock.variantA.ts`
+        `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/authoring/api/v1/components/generated/123?token=456&targetPath=.%2Fcomponents%2Fpromo-block%2FPromoBlock.variantA.ts`
       );
     });
 
@@ -41,7 +37,7 @@ describe('component-generation', () => {
 
   describe('getComponentSpec', () => {
     const mockComponentSpecApi = ({
-      edgeUrl = SITECORE_EDGE_URL_DEFAULT,
+      edgeUrl = SITECORE_EDGE_PLATFORM_URL_DEFAULT,
       componentId,
       targetPath,
       token,
@@ -143,7 +139,9 @@ describe('component-generation', () => {
         await getComponentSpec({ componentId, token });
         expect.fail('Expected function to throw');
       } catch (error) {
-        expect(error.message).to.equal(`Failed to fetch component ${componentId}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
+        expect(error.message).to.equal(
+          `Failed to fetch component ${componentId}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`
+        );
       }
     });
 

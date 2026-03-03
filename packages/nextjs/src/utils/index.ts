@@ -1,4 +1,4 @@
-﻿export {
+export {
   handleEditorFastRefresh,
   extractPath,
   isServerSidePropsContext,

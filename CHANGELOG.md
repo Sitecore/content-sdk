@@ -14,10 +14,16 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
+* Add AGENTS.md for AI coding assistant guidance ([#368](https://github.com/Sitecore/content-sdk/pull/368))
+
+* Add Skills.md with capability groupings for AI tools and developers ([#382](https://github.com/Sitecore/content-sdk/pull/382))
+  - Add `.agents/skills/` with Agent Skills (SKILL.md) per capability for universal AI tooling ([agentskills.io](https://agentskills.io)); each skill includes when-to-use, hard rules, and stop conditions
+  - `[create-content-sdk-app]` Add Skills.md and `.agents/skills/` to Next.js (Pages Router) and Next.js App Router templates so scaffolded apps include capability groupings and template-specific Agent Skills
+
 * `[nextjs]` `[create-content-sdk-app]` Enable Next.js 16 Cache Components and Turbopack File System Caching ([#334](https://github.com/Sitecore/content-sdk/pull/334))
-  - Enabled `cacheComponents: true` for explicit caching with "use cache" directive
-  - Enabled `experimental.turbopackFileSystemCacheForDev: true` for faster dev startup (beta)
-  - Available in both Pages Router and App Router templates
+
+* `[core]` `[content]` `[nextjs]` Support custom Edge hostnames via `SITECORE_EDGE_PLATFORM_HOSTNAME` (Next.js: `NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME`) ([#359](https://github.com/Sitecore/content-sdk/pull/359))
+  - New `rewriteMediaUrls` option: when `true`, rewrites layout media URLs to the custom Edge hostname; when a function, applies a custom string transformer.
 
 * Search integration ([#295](https://github.com/Sitecore/content-sdk/pull/295))
   * `[search]` New `@sitecore-content-sdk/search` package providing search functionality
@@ -29,6 +35,17 @@ Our versioning strategy is as follows:
 
 * `[nextjs]` `[Pages Router]` Adjust static path generation when multisite is disabled ([#345](https://github.com/Sitecore/content-sdk/pull/345))
 
+<<<<<<< HEAD
+* Introduce Analytics packages:
+  * `[analytics]` `[core]` `[create-content-sdk-app]` `[nextjs]` `[react]` Reorganize Analytics packages ([#340](https://github.com/Sitecore/content-sdk/pull/340))([#341](https://github.com/Sitecore/content-sdk/pull/341))
+  * `[sdk]` Rework Analytics initialization ([#357](https://github.com/Sitecore/content-sdk/pull/357))
+  * `[sdk]` Refine other analytics packages ([#363](https://github.com/Sitecore/content-sdk/pull/363))
+=======
+* `[nextjs]` Allow to pass custom query parameters to /api/editing/render handlers ([#381](https://github.com/Sitecore/content-sdk/pull/381))
+
+* `[nextjs]` `[Pages Router]` Add explicit `Content-Type: text/html; charset=utf-8` to the editing render route response for proper response handling ([#386](https://github.com/Sitecore/content-sdk/pull/386))
+>>>>>>> dev
+
 * Introduce Analytics packages:
   * `[analytics]` `[core]` `[create-content-sdk-app]` `[nextjs]` `[react]` Reorganize Analytics packages ([#340](https://github.com/Sitecore/content-sdk/pull/340))([#341](https://github.com/Sitecore/content-sdk/pull/341))
   * `[sdk]` Rework Analytics initialization ([#357](https://github.com/Sitecore/content-sdk/pull/357))
@@ -36,7 +53,7 @@ Our versioning strategy is as follows:
 
 ### 🛠 Breaking Changes
 
-* Decouple `@sitecore-content-sdk/content` from `@sitecore-content-sdk/core` ([#351](https://github.com/Sitecore/content-sdk/pull/351)):
+* Decouple `@sitecore-content-sdk/content` from `@sitecore-content-sdk/core` ([#351](https://github.com/Sitecore/content-sdk/pull/351)([#383](https://github.com/Sitecore/content-sdk/pull/383))):
   - See a detailed upgrade guide for migration instructions
 * `[nextjs]` `[create-content-sdk-app]` Upgrade to Next.js 16 ([#334](https://github.com/Sitecore/content-sdk/pull/334))([#343](https://github.com/Sitecore/content-sdk/pull/343))([#353](https://github.com/Sitecore/content-sdk/pull/353))
   - Next.js 16 is now required (minimum version `^16.0.0`)
@@ -47,11 +64,33 @@ Our versioning strategy is as follows:
     - Previously, `/da/source -> /target` rule would redirect to `/da/target` path when default locale is not `da`
     - Now, `/da/source -> /target` rule would redirect to `/target` path, using default locale, unless the `Shall language be preserved upon redirect?` checkbox is enabled in Redirect Map.
 * Upgrade to Node.js 24.x ([#332](https://github.com/Sitecore/content-sdk/pull/332))
-
+* Remove deprecated api's ([#360](https://github.com/Sitecore/content-sdk/pull/360]))
+  - `sitecore.cli.config`: 
+    - The `config` property is now required; a reference to `sitecore.config` must be provided.
+    - Build-time functions defined in the build array no longer accept the scConfig argument in their constructor. However, the function implementation must receive scConfig, which is passed internally by the CLI command.
+  - `renderEmptyPlaceholder` method of `PlaceholderComponent` has been removed; instead import `renderEmptyPlaceholder` from `react`/`next` package
+  - `DesignLibrary` component now does not accept any props
+  - `SitecoreProvider`'s `loadImportMap` is now required
+* [react] [nextjs] Major revamp of components in the react package ([#371](https://github.com/Sitecore/content-sdk/pull/371)):
+  - `Placeholder` and `AppPlaceholder` components' prop `modifyComponentProps` has been removed. `passThroughComponentProps` prop has been added to fill the role of passing props to child components
+  - `componentMap` and `loadImportMap` have been added to the context shared via `SitecoreProvider`
+  - `useLoadImportMap`, `useComponentMap` HOCs have been removed. The Sitecore context data can be accessed via `useSitecore` hook.
+  - `withSitecore`'s `updatePage` prop has been renamed to `setPage`. This HOC has also been marked deprecated, and will eventually be removed in favor of `useSitecore` hook.
+  - Old `withPlaceholder` HOC implementation has been reworked into slot-like logic with server and client implementations. `withAppPlaceholder` can be used in server RSC context, and `withPlaceholder` in client one.
+  - Other components and HOCs in `react` package were refactored and should not have an effect on end user apps.
+* `[react]` Placeholder suspense causes longer JavaScript Scripting execution time ([#384](https://github.com/Sitecore/content-sdk/pull/384))
+  - The default value of `disableSuspense` property is set to `true` to avoid forcing Suspense usage across all components which could negatively impact performance metrics. Suspense can now be enabled explicitly when needed.
+    
 ### 🐛 Bug Fixes
 
 * `[core]` `[search]` `[analytics]` Pass Sitecore Context ID only in headers ([#336](https://github.com/Sitecore/content-sdk/pull/336))
 * `[core]` `[DesignLibrary]` Fix faux-extentions being stripped from 3rd party modules' names in import-map ([#358](https://github.com/Sitecore/content-sdk/pull/358))
+
+### 1.5.0
+
+### 🎉 New Features & Improvements
+
+* `[nextjs]` Enable secured component variant generation for App Router Server Components in Design Studio ([#369](https://github.com/Sitecore/content-sdk/pull/369))([#375](https://github.com/Sitecore/content-sdk/pull/375))
 
 ### 1.4.1
 

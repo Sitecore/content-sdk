@@ -8,7 +8,7 @@
 
 > **PersonalizeServiceConfig** = `CacheOptions` & `object`
 
-Defined in: [content/src/personalize/personalize-service.ts:15](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/content/src/personalize/personalize-service.ts#L15)
+Defined in: [content/src/personalize/personalize-service.ts:15](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/personalize/personalize-service.ts#L15)
 
 Configuration for the PersonalizeService.
 
@@ -27,15 +27,11 @@ This factory function is used to create and configure GraphQL clients for making
 
 Override fetch method. Uses 'GraphQLRequestClient' default otherwise.
 
-### ~~scope?~~
+### scope?
 
 > `optional` **scope**: `string`
 
 Optional Sitecore Personalize scope identifier allowing you to isolate your personalization data between XM Cloud environments
-
-#### Deprecated
-
-Will be removed in a future release.
 
 ### timeout?
 

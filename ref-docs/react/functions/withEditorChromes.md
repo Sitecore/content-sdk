@@ -6,9 +6,9 @@
 
 # Function: withEditorChromes()
 
-> **withEditorChromes**(`WrappedComponent`): `ComponentClass`\<\{ \}, `any`\>
+> **withEditorChromes**(`WrappedComponent`): \{(`props`): `Element`; `displayName`: `string`; \}
 
-Defined in: [packages/react/src/enhancers/withEditorChromes.tsx:9](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/react/src/enhancers/withEditorChromes.tsx#L9)
+Defined in: [packages/react/src/enhancers/withEditorChromes.tsx:10](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/react/src/enhancers/withEditorChromes.tsx#L10)
 
 HOC to inject editor chromes reset on component update.
 
@@ -20,4 +20,18 @@ HOC to inject editor chromes reset on component update.
 
 ## Returns
 
-`ComponentClass`\<\{ \}, `any`\>
+> (`props`): `Element`
+
+### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `props` | `Record`\<`string`, `unknown`\> |
+
+### Returns
+
+`Element`
+
+### displayName
+
+> **displayName**: `string`

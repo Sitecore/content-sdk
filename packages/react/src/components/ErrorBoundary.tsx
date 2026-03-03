@@ -1,8 +1,8 @@
-﻿'use client';
+'use client';
 import React, { ReactNode, Suspense } from 'react';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
-import { withSitecore } from '../enhancers/withSitecore';
+import { useSitecore } from './SitecoreProvider';
 
 type ErrorComponentProps = {
   [prop: string]: unknown;
@@ -34,7 +34,7 @@ export const ErrorComponent = (
   );
 };
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
+class ErrorBoundaryClass extends React.Component<ErrorBoundaryProps> {
   defaultErrorMessage = 'There was a problem loading this section.';
   defaultLoadingMessage = 'Loading component...';
   state: { error: Error | null } = { error: null };
@@ -92,9 +92,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
     }
 
     // do not apply suspense when suspense is disabled or when on already dynamic components
-    if (this.props.disableSuspense || this.props.isDynamic) {
-      return this.props.children;
-    }
+    if ((this.props.disableSuspense ?? true) || this.props.isDynamic) return this.props.children;
 
     return (
       <Suspense
@@ -106,4 +104,10 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   }
 }
 
-export default withSitecore()(ErrorBoundary);
+const ErrorBoundary = (props: Omit<ErrorBoundaryProps, 'page'>) => {
+  const { page } = useSitecore();
+  const boundaryProps = { ...props, page };
+  return <ErrorBoundaryClass {...boundaryProps} />;
+};
+
+export default ErrorBoundary;

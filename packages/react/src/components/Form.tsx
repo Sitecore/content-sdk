@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { form } from '@sitecore-content-sdk/content';
 import { constants } from '@sitecore-content-sdk/core';
-import { useSitecore } from '../enhancers/withSitecore';
+import { useSitecore } from './SitecoreProvider';
 import { ErrorComponent } from './ErrorBoundary';
 
 const { ERROR_MESSAGES } = constants;
@@ -63,9 +63,7 @@ export const Form = ({ params, rendering }: FormProps) => {
 
       if (!edgeId) {
         /* eslint-disable no-console */
-        console.warn(
-          `${ERROR_MESSAGES.MV_006}. Form cannot be loaded properly on the client`
-        );
+        console.warn(`${ERROR_MESSAGES.MV_006}. Form cannot be loaded properly on the client`);
         return;
       }
 
@@ -89,7 +87,14 @@ export const Form = ({ params, rendering }: FormProps) => {
 
       executeScriptElements(formRef.current);
     }
-  }, [content]);
+  }, [
+    content,
+    isEditing,
+    params.FormId,
+    rendering.uid,
+    context.api?.edge?.clientContextId,
+    context.api?.edge?.edgeUrl,
+  ]);
 
   if (isEditing && error) {
     return <ErrorComponent message="There was a problem loading this section" />;

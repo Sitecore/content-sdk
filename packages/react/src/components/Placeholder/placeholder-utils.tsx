@@ -19,16 +19,10 @@ import {
   FEAAS_COMPONENT_RENDERING_NAME,
   FEAAS_WRAPPER_RENDERING_NAME,
 } from '../FEaaS';
-import {
-  AppComponentProps,
-  BasePlaceholderProps,
-  ComponentForRendering,
-  PlaceholderProps,
-  RenderedProps,
-} from './models';
+import { ChildComponentProps, PlaceholderProps, ComponentForRendering } from './models';
 
 /**
- * Get the renderings for the specified placeholder from the rendering data.
+ * Get the renderings for the specified placeholder from the rendering layout data.
  * @param {ComponentRendering | RouteData } rendering rendering data
  * @param {string} name placeholder name
  * @param {boolean} isEditing whether components should be rendered in editing mode
@@ -103,49 +97,22 @@ export const getSXAParams = (rendering: ComponentRendering) => {
  * Renders the placeholder when it is empty. The required CSS styles are applied to the placeholder in edit mode.
  * @param {React.ReactNode | React.ReactElement[]} node react node
  * @returns react node
+ * @public
  */
 export const renderEmptyPlaceholder = (node: React.ReactNode | React.ReactElement[]) => {
   return <div className="sc-jss-empty-placeholder">{node}</div>;
 };
 
 /**
- * Get component props to be passed to the rendered component.
- * @param {PlaceholderProps} placeholderProps current placeholder props
- * @param {ComponentRendering} componentRendering rendering to be rendered
- * @param {string} renderingKey unique key to pass over to rendering props
- * @returns {RenderedProps} props to be passed to the rendered component
- */
-export const getRenderedComponentProps = (
-  placeholderProps: PlaceholderProps,
-  componentRendering: ComponentRendering,
-  renderingKey: string
-): RenderedProps => {
-  // eslint-disable-next-line no-unused-vars
-  const { fields, params: placeholderParams, ...passThroughProps } = placeholderProps;
-  delete passThroughProps.missingComponentComponent;
-  delete passThroughProps.hiddenRenderingComponent;
-  delete (passThroughProps as { name?: string }).name;
-
-  const mergedContentProps = getAppComponentProps(placeholderProps, componentRendering);
-
-  return {
-    key: renderingKey,
-    ...passThroughProps,
-    ...mergedContentProps,
-    rendering: componentRendering,
-  };
-};
-
-/**
- * Merge placeholder and component field and params content props.
- * @param {BasePlaceholderProps} placeholderProps placeholder props
+ * Merge specific placeholder props with component field and params content props.
+ * @param {PlaceholderProps} placeholderProps placeholder props
  * @param {ComponentRendering} componentRendering component rendering
  * @returns {ComponentProps} merged props
  */
-export function getAppComponentProps<T extends BasePlaceholderProps>(
+export function getChildComponentProps<T extends PlaceholderProps>(
   placeholderProps: T,
   componentRendering: ComponentRendering
-): AppComponentProps {
+): ChildComponentProps {
   const fields = { ...(placeholderProps.fields || {}), ...(componentRendering.fields || {}) };
   const params = { ...(placeholderProps.params || {}), ...(componentRendering.params || {}) };
   return {
@@ -229,7 +196,7 @@ export const getComponentForRendering = (
         componentType: 'universal',
       };
     } else if (renderingDefinition.componentName === BYOC_WRAPPER_RENDERING_NAME) {
-      // wrapping with error boundary could cause problems in case where parent component uses withPlaceholder HOC and tries to access its children props
+      // wrapping with error boundary could cause problems in case where parent component uses withPlaceholder HOCs and tries to access its children props
       // that's why we need to mark BYOC wrapper dynamic
       return {
         component: BYOCWrapper,
@@ -281,3 +248,4 @@ export const getComponentForRendering = (
     isEmpty: false,
   };
 };
+

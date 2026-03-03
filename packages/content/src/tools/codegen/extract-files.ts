@@ -8,7 +8,7 @@ import {
   readNamedExports,
 } from './utils';
 import { SitecoreConfig } from './../../config';
-import { auth } from '@sitecore-content-sdk/core/tools';
+import { auth } from '@sitecore-content-sdk/core/node-tools';
 import { debug, constants } from '@sitecore-content-sdk/core';
 import path from 'path';
 import fs from 'fs';
@@ -16,10 +16,6 @@ import fs from 'fs';
 const { ERROR_MESSAGES } = constants;
 
 export type ExtractFilesConfig = {
-  /**
-   * @deprecated Pass `config` to the `defineCliConfig` function instead. This argument will be removed in the next major version.
-   */
-  scConfig?: SitecoreConfig;
   componentMapPath?: string;
   clientComponentMapPath?: string;
   customValidateDeployContext?: () => boolean;
@@ -53,10 +49,8 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
   };
   const renderingHost = process.env.SITECORE_RENDERINGHOST_NAME;
 
-  return async ({ scConfig }: { scConfig?: SitecoreConfig } = {}) => {
-    const config = args.scConfig ?? scConfig;
-
-    if (!config) {
+  return async ({ scConfig }: { scConfig: SitecoreConfig }) => {
+    if (!scConfig) {
       throw new Error(ERROR_MESSAGES.MV_008);
     }
 
@@ -67,7 +61,7 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
       debug.common('Skipping code extraction, not in deploy context');
       return;
     }
-    if (config.disableCodeGeneration) {
+    if (scConfig.disableCodeGeneration) {
       debug.common('Skipping code extraction, code generation has been disabled');
       return;
     }
@@ -78,10 +72,14 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
 
     try {
       // Use Edge Platform mesh endpoint - staging is ready, prod QA in progress
-      const targetUrl = config.api.edge.edgeUrl;
+      const targetUrl = scConfig.api.edge.edgeUrl;
       const { accessToken } = await auth.clientCredentialsFlow(authParams);
       if (!accessToken) {
-        console.error(chalk.red(`Failed to get access token, aborting code extraction. ${ERROR_MESSAGES.CONTACT_SUPPORT}`));
+        console.error(
+          chalk.red(
+            `Failed to get access token, aborting code extraction. ${ERROR_MESSAGES.CONTACT_SUPPORT}`
+          )
+        );
         return;
       }
 
@@ -147,7 +145,14 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
         )
       );
     } catch (error) {
-      console.warn(chalk.yellow(`Error during code extraction:`, error, error.stack, ERROR_MESSAGES.CONTACT_SUPPORT));
+      console.warn(
+        chalk.yellow(
+          `Error during code extraction:`,
+          error,
+          error.stack,
+          ERROR_MESSAGES.CONTACT_SUPPORT
+        )
+      );
     }
   };
 }

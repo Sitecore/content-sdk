@@ -1,10 +1,10 @@
-import { NativeDataFetcher, constants, FetchOptions } from '@sitecore-content-sdk/core';
-import { resolveUrl } from '@sitecore-content-sdk/core/tools';
-import { LayoutServiceData } from '../layout/models';
+import { constants, NativeDataFetcher, FetchOptions } from '@sitecore-content-sdk/core';
+import { normalizeUrl, resolveUrl } from '@sitecore-content-sdk/core/tools';
+import { LayoutServiceData } from '../layout';
 import debug from '../debug';
 import { DesignLibraryMode, DesignLibraryVariantGeneration } from './models';
 
-const { SITECORE_EDGE_URL_DEFAULT, ERROR_MESSAGES } = constants;
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Params for requesting component data in Design Library mode
@@ -140,9 +140,9 @@ export class ComponentLayoutService {
    * @returns {string} The fetch URL for the component data
    */
   private getFetchUrl(params: ComponentLayoutRequestParams) {
-    return resolveUrl(
-      `${this.config.edgeUrl || SITECORE_EDGE_URL_DEFAULT}/layout/component`,
-      this.getComponentFetchParams(params)
+    const baseUrl = normalizeUrl(
+      this.config.edgeUrl ?? constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT
     );
+    return resolveUrl(`${baseUrl}/layout/component`, this.getComponentFetchParams(params));
   }
 }

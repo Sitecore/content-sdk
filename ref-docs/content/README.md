@@ -17,3 +17,4 @@
 - [personalize](personalize/README.md)
 - [site](site/README.md)
 - [tools](tools/README.md)
+- [tools/index-node](tools/index-node/README.md)

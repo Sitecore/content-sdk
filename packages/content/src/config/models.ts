@@ -204,6 +204,13 @@ export type SitecoreConfigInput = {
     locales?: string[];
   };
   /**
+   * Rewrite media/content URLs in layout (media fields, rich text img/src, href, etc.).
+   * - When `true`: use default rewriter (Edge hostnames -> custom hostname from env).
+   * - When a function: transform each string value; the SDK traverses the layout for you.
+   * @default false
+   */
+  rewriteMediaUrls?: boolean | ((value: string) => string);
+  /**
    * Opt-out setting for code generation feature
    * Disables code extraction procedure
    */
@@ -225,7 +232,7 @@ export type SitecoreCliConfigInput = {
   /**
    * Sitecore configuration (`sitecore.config` file)
    */
-  config?: SitecoreConfig;
+  config: SitecoreConfig;
   /**
    * Configuration for the `sitecore-tools build` CLI command
    */
@@ -233,7 +240,7 @@ export type SitecoreCliConfigInput = {
     /**
      * Commands to run during the build process
      */
-    commands?: Array<(args?: { scConfig?: SitecoreConfig }) => Promise<void>>;
+    commands?: Array<(args?: { scConfig: SitecoreConfig }) => Promise<void>>;
   };
   /**
    * Configuration for the `sitecore-tools scaffold` CLI command

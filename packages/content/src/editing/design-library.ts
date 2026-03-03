@@ -9,7 +9,7 @@ import {
 } from '../layout/models';
 import { DesignLibraryMode } from './models';
 
-const { SITECORE_EDGE_URL_DEFAULT, ERROR_MESSAGES } = constants;
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Event to be sent when report status to design library
@@ -21,6 +21,12 @@ const DESIGN_LIBRARY_STATUS_EVENT_NAME = 'component:status';
  * @internal
  */
 export const COMPONENT_UPDATE_CACHE_KEY_PREFIX = 'component-update-';
+
+/**
+ * Prefix for component preview cache keys
+ * @internal
+ */
+export const COMPONENT_PREVIEW_CACHE_KEY_PREFIX = 'component-preview-';
 
 /**
  * Base interface for all Design Library events.
@@ -45,6 +51,7 @@ export interface DesignLibraryStatusEvent extends DesignLibraryEvent {
   message: {
     status: 'ready' | 'rendered';
     uid: string;
+    isRenderingServerComponent: boolean;
   };
 }
 
@@ -205,29 +212,35 @@ export const updateComponent = (
  * Generates a DesignLibraryStatusEvent with the given status and uid.
  * @param {DesignLibraryStatus} status - The status of rendering.
  * @param {string} uid - The unique identifier for the event.
+ * @param {boolean} [isRenderingServerComponent] - Indicates if the component being rendered is a server component.
  * @returns An object representing the DesignLibraryStatusEvent.
  * @internal
  */
 export function getDesignLibraryStatusEvent(
   status: DesignLibraryStatus,
-  uid: string
+  uid: string,
+  isRenderingServerComponent = false
 ): DesignLibraryStatusEvent {
   return {
     name: DESIGN_LIBRARY_STATUS_EVENT_NAME,
     message: {
       status,
       uid,
+      isRenderingServerComponent,
     },
   };
 }
 
 /**
  * Generates the URL for the design library script link.
- * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL. Default is https://edge-platform.sitecorecloud.io
+ * Caller should pass the resolved Edge URL from config.
+ * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL (resolved at config level). Defaults to platform URL.
  * @returns The full URL to the design library script.
  * @internal
  */
-export function getDesignLibraryScriptLink(sitecoreEdgeUrl = SITECORE_EDGE_URL_DEFAULT): string {
+export function getDesignLibraryScriptLink(
+  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT
+): string {
   return `${normalizeUrl(sitecoreEdgeUrl)}/v1/files/designlibrary/lib/rh-lib-script.js`;
 }
 
@@ -255,6 +268,10 @@ export const postToDesignLibrary = (evt: DesignLibraryEvent) => {
     console.log('Component Library: sending event', evt.name, evt);
     target.postMessage(evt, '*');
   } catch (err) {
-    console.error(`Component Library: postMessage failed. ${ERROR_MESSAGES.CONTACT_SUPPORT}`, err, evt);
+    console.error(
+      `Component Library: postMessage failed. ${ERROR_MESSAGES.CONTACT_SUPPORT}`,
+      err,
+      evt
+    );
   }
 };

@@ -5,17 +5,21 @@ import chalk from 'chalk';
 import { execSync } from 'child_process';
 import * as tools from '@sitecore-content-sdk/content/tools';
 import { constants } from '@sitecore-content-sdk/core';
+import * as serverTools from '@sitecore-content-sdk/content/node-tools';
 import inquirer from 'inquirer';
 import { handler as generateMapHandler } from './generate-map';
 import loadCliConfig from '../../../utils/load-config';
 
-let { getComponentSpec, getComponentList, getComponentSpecUrl } = tools;
+let { getComponentSpec, getComponentSpecUrl } = tools;
+let { getComponentList } = serverTools;
 
 const { ERROR_MESSAGES } = constants;
 
-export const unitMocks = (
-  toolsModule: Pick<typeof tools, 'getComponentSpec' | 'getComponentList' | 'getComponentSpecUrl'>
-) => {
+export const unitMocks = (toolsModule: {
+  getComponentSpec: typeof getComponentSpec;
+  getComponentList: typeof getComponentList;
+  getComponentSpecUrl: typeof getComponentSpecUrl;
+}) => {
   getComponentSpec = toolsModule.getComponentSpec;
   getComponentList = toolsModule.getComponentList;
   getComponentSpecUrl = toolsModule.getComponentSpecUrl;
@@ -267,7 +271,11 @@ export async function handler(argv: AddArgs) {
     }
 
     const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error(chalk.red(`Failed to add a generated component. ${errorMessage}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`));
+    console.error(
+      chalk.red(
+        `Failed to add a generated component. ${errorMessage}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`
+      )
+    );
     return;
   }
 }

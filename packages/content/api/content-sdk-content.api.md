@@ -25,10 +25,13 @@ export const addComponentPreviewHandler: (importMap: ImportEntry[], callback: (e
 export const addComponentUpdateHandler: (rootComponent: ComponentRendering, successCallback?: (updatedRootComponent: ComponentRendering) => void) => (() => void) | undefined;
 
 // @internal
-export const addServerComponentPreviewHandler: (callback: (eventArgs: ComponentPreviewEventArgs) => void) => () => void;
+export const addServerComponentPreviewHandler: (callback: (eventArgs: ServerComponentPreviewEventArgs) => void) => () => void;
 
 // @internal
 export function addStyleElement(stylesContent: string): void;
+
+// @internal
+export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => string): T;
 
 // @public
 export class CdpHelper {
@@ -37,6 +40,9 @@ export class CdpHelper {
     static getPageVariantId(pageId: string, language: string, variantId: string, scope?: string): string;
     static normalizeScope(scope?: string): string;
 }
+
+// @internal
+export const COMPONENT_PREVIEW_CACHE_KEY_PREFIX = "component-preview-";
 
 // @internal
 export const COMPONENT_UPDATE_CACHE_KEY_PREFIX = "component-update-";
@@ -122,22 +128,7 @@ export interface ComponentParams {
 // @internal
 export interface ComponentPreviewEventArgs extends DesignLibraryEvent {
     // (undocumented)
-    message: {
-        uid: string;
-        code: {
-            type: 'function';
-            content: string;
-        };
-        styles: {
-            type: 'style-element';
-            content: string;
-            styleImport: {
-                name: string;
-                content: unknown;
-            };
-        };
-        imports: ComponentImport_2[];
-    };
+    message: GeneratedComponentData;
     // Warning: (ae-forgotten-export) The symbol "DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME" needs to be exported by the entry point api-surface.d.ts
     //
     // (undocumented)
@@ -183,8 +174,11 @@ export interface ComponentUpdateEventArgs {
     name: string;
 }
 
+// @public
+export function containsDefaultEdgeHost(str: string): boolean;
+
 // @internal
-export const createComponentInstance: (importMap: ImportEntry[], previewEventArgs: ComponentPreviewEventArgs) => unknown;
+export const createComponentInstance: (importMap: ImportEntry[], generatedComponentData: GeneratedComponentData) => unknown;
 
 // @public
 export const createGraphQLClientFactory: (options: GraphQLClientOptions) => GraphQLRequestClientFactory;
@@ -279,6 +273,7 @@ export interface DesignLibraryStatusEvent extends DesignLibraryEvent {
     message: {
         status: 'ready' | 'rendered';
         uid: string;
+        isRenderingServerComponent: boolean;
     };
     // Warning: (ae-forgotten-export) The symbol "DESIGN_LIBRARY_STATUS_EVENT_NAME" needs to be exported by the entry point api-surface.d.ts
     //
@@ -416,11 +411,11 @@ export enum ErrorPage {
 export type ErrorPages = {
     notFoundPage: {
         rendered: LayoutServiceData;
-    };
+    } | null;
     notFoundPagePath: string;
     serverErrorPage: {
         rendered: LayoutServiceData;
-    };
+    } | null;
     serverErrorPagePath: string;
 };
 
@@ -448,6 +443,9 @@ const executeScriptElements: (rootElement: HTMLElement) => void;
 //
 // @public
 export let extractFiles: typeof _extractFiles;
+
+// @internal
+export function fetchGeneratedComponentFromCache(id: string, token: string, edgeUrl?: string): Promise<GeneratedComponentData>;
 
 export { FetchOptions }
 
@@ -477,6 +475,24 @@ declare namespace form {
 }
 export { form }
 
+// @internal
+export type GeneratedComponentData = {
+    uid: string;
+    code: {
+        type: 'function';
+        content: string;
+    };
+    styles: {
+        type: 'style-element';
+        content: string;
+        styleImport: {
+            name: string;
+            content: unknown;
+        };
+    };
+    imports: ComponentImport_2[];
+};
+
 // @public
 export type GenerateMapArgs = {
     paths: string[];
@@ -493,11 +509,12 @@ export type GenerateMapArgs = {
 export type GenerateMapFunction = (args: GenerateMapArgs) => void;
 
 // @public
-export const generateSites: ({ scConfig: deprecatedScConfig, destinationPath, }?: GenerateSitesConfig) => (() => Promise<void>);
+export const generateSites: ({ destinationPath }?: GenerateSitesConfig) => ((args: {
+    scConfig: SitecoreConfig;
+}) => Promise<void>);
 
 // @public
 export type GenerateSitesConfig = {
-    scConfig?: SitecoreConfig;
     destinationPath?: string;
 };
 
@@ -531,6 +548,9 @@ export const getContentSdkPagesClientData: () => Record<string, Record<string, u
 // @public
 export const getContentStylesheetLink: (layoutData: LayoutServiceData, sitecoreEdgeContextId: string, sitecoreEdgeUrl?: string) => HTMLLink | null;
 
+// @internal
+export function getDefaultMediaUrlTransformer(edgeUrl: string): (value: string) => string;
+
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPreviewErrorEvent" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
@@ -550,7 +570,7 @@ export function getDesignLibraryImportMapEvent(uid: string, importMap: ImportEnt
 export function getDesignLibraryScriptLink(sitecoreEdgeUrl?: string): string;
 
 // @internal
-export function getDesignLibraryStatusEvent(status: DesignLibraryStatus, uid: string): DesignLibraryStatusEvent;
+export function getDesignLibraryStatusEvent(status: DesignLibraryStatus, uid: string, isRenderingServerComponent?: boolean): DesignLibraryStatusEvent;
 
 // @public
 export function getDesignLibraryStylesheetLinks(layoutData: LayoutServiceData, sitecoreEdgeContextId: string, sitecoreEdgeUrl?: string): HTMLLink[];
@@ -977,6 +997,9 @@ export const resetEditorChromes: () => void;
 export { RetryStrategy }
 
 // @public
+export function rewriteEdgeHostInResponse<T>(response: T, edgeUrl: string): T;
+
+// @public
 export type RobotsQueryResult = {
     site: {
         siteInfo: {
@@ -1053,6 +1076,19 @@ export type ScaffoldTemplate = {
 // @internal
 export const sendErrorEvent: (uid: string, error: unknown, type: DesignLibraryPreviewError) => void;
 
+// @internal
+export interface ServerComponentPreviewEventArgs extends DesignLibraryEvent {
+    // (undocumented)
+    message: {
+        cache: {
+            id: string;
+            token: string;
+        };
+    };
+    // (undocumented)
+    name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
+}
+
 // @public
 export const SITE_KEY = "sc_site";
 
@@ -1067,10 +1103,10 @@ export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInput>;
 
 // @public
 export type SitecoreCliConfigInput = {
-    config?: SitecoreConfig;
+    config: SitecoreConfig;
     build?: {
         commands?: Array<(args?: {
-            scConfig?: SitecoreConfig;
+            scConfig: SitecoreConfig;
         }) => Promise<void>>;
     };
     scaffold?: {
@@ -1086,6 +1122,8 @@ export type SitecoreCliConfigInput = {
 // @public
 export class SitecoreClient implements BaseSitecoreClient {
     constructor(initOptions: SitecoreClientInit);
+    // @internal
+    protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData;
     // (undocumented)
     protected clientFactory: GraphQLRequestClientFactory;
     // (undocumented)
@@ -1189,6 +1227,7 @@ export type SitecoreConfigInput = {
         enabled?: boolean;
         locales?: string[];
     };
+    rewriteMediaUrls?: boolean | ((value: string) => string);
     disableCodeGeneration?: boolean;
 };
 
@@ -1318,28 +1357,27 @@ export const VARIANT_PREFIX = "_variantId_";
 // Warning: (ae-incompatible-release-tags) The symbol "writeImportMap" is marked as @public, but its signature references "WriteImportMapArgsInternal" which is marked as @internal
 //
 // @public
-export const writeImportMap: (args: WriteImportMapArgsInternal) => ({ scConfig }?: {
-    scConfig?: SitecoreConfig;
+export const writeImportMap: (args: WriteImportMapArgsInternal) => ({ scConfig }: {
+    scConfig: SitecoreConfig;
 }) => Promise<void>;
 
 // @public
 export type WriteImportMapArgs = {
     paths: string[];
-    scConfig?: SitecoreConfig;
     exclude?: string[];
 };
 
 // @internal
 export type WriteImportMapArgsInternal = WriteImportMapArgs & {
     separateServerClientMaps?: boolean;
-    serverTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
+    defaultTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
     clientTemplate?: (indexedImportMap: Map<string, ModuleExports>) => string;
 };
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:58:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
-// src/editing/codegen/preview.ts:108:5 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:65:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/editing/codegen/preview.ts:110:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal

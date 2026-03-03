@@ -9,3 +9,4 @@ export * from '../types';
 
 // Submodule exports
 export * from '../tools';
+export * from '../node-tools';

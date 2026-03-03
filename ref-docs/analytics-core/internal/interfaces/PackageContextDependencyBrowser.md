@@ -6,7 +6,7 @@
 
 # Interface: PackageContextDependencyBrowser
 
-Defined in: [src/initializer/browser/interfaces.ts:26](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/analytics-core/src/initializer/browser/interfaces.ts#L26)
+Defined in: [src/initializer/browser/interfaces.ts:26](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/analytics-core/src/initializer/browser/interfaces.ts#L26)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/initializer/browser/interfaces.ts:26](https://github.com/Siteco
 
 > **method**: `string`
 
-Defined in: [src/initializer/browser/interfaces.ts:28](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/analytics-core/src/initializer/browser/interfaces.ts#L28)
+Defined in: [src/initializer/browser/interfaces.ts:28](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/analytics-core/src/initializer/browser/interfaces.ts#L28)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/initializer/browser/interfaces.ts:28](https://github.com/Siteco
 
 > **name**: `string`
 
-Defined in: [src/initializer/browser/interfaces.ts:27](https://github.com/Sitecore/content-sdk/blob/a268b42996e15dfe7c883c983d1b99c91b97a726/packages/analytics-core/src/initializer/browser/interfaces.ts#L27)
+Defined in: [src/initializer/browser/interfaces.ts:27](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/analytics-core/src/initializer/browser/interfaces.ts#L27)
