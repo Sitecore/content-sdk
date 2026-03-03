@@ -53,6 +53,7 @@ content-sdk/
 **Key locations:**
 - **Sources:** `src/**` in each package
 - **Templates:** `packages/create-content-sdk-app/src/templates/` — Next.js, Next.js App Router
+- **Capability groupings and Agent Skills:** See [Skills.md](Skills.md) (links to each template’s Skills.md and `.agents/skills/`; skills are maintained in templates only).
 - **Environment variables:** `.env.*.example` in templates; never commit `.env`
 - **Initializers:** `packages/create-content-sdk-app/src/initializers/` — drive scaffolding via `Initializer.init(args)`
 - **When working inside a scaffolded app** (e.g. under `samples/`), use that app’s **AGENTS.md** for app-level guidance; this file applies to the monorepo and packages.
