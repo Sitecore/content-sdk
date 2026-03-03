@@ -1,13 +1,3 @@
-// ─── Types ─────────────────────────────────────────────────────────────────
-export type { ComponentMap, AngularContentSdkComponent } from './lib/types';
-
-// ─── Injection tokens ───────────────────────────────────────────────────────
-export { COMPONENT_MAP_TOKEN } from './lib/tokens';
-
-// ─── Providers ──────────────────────────────────────────────────────────────
-export { provideSitecoreAngular } from './lib/providers';
-export type { SitecoreAngularConfig } from './lib/providers';
-
 // ─── Re-exports from core/content ─────────────────────────────
 export * from '@sitecore-content-sdk/content/config';
 export {
