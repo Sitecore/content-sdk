@@ -4,7 +4,7 @@
 
 ## Project Overview
 
-This repository is the **Sitecore Content SDK** — a TypeScript monorepo of SDK packages, scaffolding CLI, and samples for building applications with Sitecore XM Cloud. AI agents work as developer assistants to implement features, fix bugs, add tests, and maintain templates.
+This repository is the **Sitecore Content SDK** — a TypeScript monorepo of SDK packages, scaffolding CLI, and samples for building applications with Sitecore XM Cloud or Sitecore AI. AI agents work as developer assistants to implement features, fix bugs, add tests, and maintain templates.
 
 **Scope:** This file is for the **Content SDK monorepo** only. For head applications created with `create-content-sdk-app`, use the AGENTS.md that was generated inside that head application (from the template). Do not copy this repo's root AGENTS.md into a head application.
 
@@ -62,7 +62,6 @@ content-sdk/
 - Env: `.env.*.example` only; never commit `.env`. 
 - Initializers: `src/initializers/` via `Initializer.init(args)`.
 - Capability groupings and Agent Skills: See [Skills.md](Skills.md) (links to each template’s Skills.md and `.agents/skills/`; skills are maintained in templates only).
-- In scaffolded apps (e.g. under `samples/`), use that app’s **AGENTS.md**.
 
 ### Which package to edit?
 
@@ -142,9 +141,13 @@ Branch: `dev`. Feature: `git switch -c feature/my-content-sdk-feature`. PRs agai
 
 ## Detailed Rules Reference
 
-**Canonical source of truth.** Full guidance: **`.cursor/rules/`** (safety, repo-structure, code-style, sitecore, testing, cli, agent-tasks, etc.), **`LLMs.txt`** (overview for LLMs), **`CONTRIBUTING.md`** (workflow).
+**Canonical source of truth.** Full guidance: **`.cursor/rules/`** (safety, repo-structure, code-style, sitecore, testing, cli, agent-tasks, etc.), **`CONTRIBUTING.md`** (workflow).
 
 ---
+
+## MCP
+
+Sitecore Documentation MCP: https://sitecore.mcp.kapa.ai
 
 ## Links
 

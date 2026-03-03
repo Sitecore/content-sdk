@@ -14,3 +14,4 @@ At the start of every session, read these files for full project guidance:
    - `project-context.mdc` — Project-wide context and constraints
    - `repo-structure.mdc` — Repository structure and templates policy
    - `agent-tasks.mdc` — Example workflows (add utility, fix test, change template)
+3. **`Skills.md`** and **`.agents/skills/`** — For capability-specific guidance (component registration, data fetching, editing, i18n, etc.), when your tool supports the [Agent Skills](https://agentskills.io) standard.

@@ -25,7 +25,7 @@ To create a Sitecore Content SDK project in a terminal, run one of the following
 npx create-content-sdk-app
 ```
 
-For more information check out our [Getting Started Guide](https://doc.sitecore.com/xmc/en/developers/content-sdk/creating-a-jss-app-for-xm-cloud.html). For capability groupings that help AI tools and developers map tasks to the right part of the SDK, see [Skills.md](Skills.md).
+For more information check out our [Getting Started Guide](https://doc.sitecore.com/xmc/en/developers/content-sdk/creating-a-jss-app-for-xm-cloud.html).
 
 ## Documentation and community resources
 
@@ -43,7 +43,7 @@ For more information check out our [Getting Started Guide](https://doc.sitecore.
 - [GitHub Copilot Instructions](copilot-instructions.md) - Instructions for GitHub Copilot to provide accurate Sitecore Content SDK suggestions
 - [Cursor AI Rules](.cursor/rules/) - Cursor-specific coding rules and patterns for Sitecore Content SDK development
 - [Windsurf AI Rules](.windsurfrules) - Windsurf IDE configuration for Sitecore Content SDK development
-- [LLM Guidance](LLMs.txt) - General guidance for Large Language Models working with the Sitecore Content SDK
+- [Skills & capability index](Skills.md) - Capability groupings and Agent Skills (`.agents/skills/`); for overview and commands use [AGENTS.md](AGENTS.md)
 
 **Which AGENTS.md to use:** The root [AGENTS.md](AGENTS.md) applies when working in **this monorepo** (packages, yarn, scaffolding). For head applications (including empty starters) generated from our templates, use the AGENTS.md that ships with the head application — it is copied from the template when you run `create-content-sdk-app` and you can adapt it to your project as needed.
 
