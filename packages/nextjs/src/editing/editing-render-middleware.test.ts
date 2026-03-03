@@ -307,6 +307,7 @@ describe('EditingRenderMiddleware', () => {
       'Content-Security-Policy',
       `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
     );
+    expect(res.setHeader).to.have.been.calledWith('Content-Type', 'text/html; charset=utf-8');
   });
 
   it('should use custom resolvePageUrl', async () => {
@@ -383,6 +384,7 @@ describe('EditingRenderMiddleware', () => {
       'Content-Security-Policy',
       `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
     );
+    expect(res.setHeader).to.have.been.calledWith('Content-Type', 'text/html; charset=utf-8');
   });
 
   it('should response with 400 for missing query params', async () => {
@@ -811,6 +813,7 @@ describe('EditingRenderMiddleware', () => {
     await handler(req, res);
 
     expect(res.status).to.be.calledOnceWith(200);
+    expect(res.setHeader).to.have.been.calledWith('Content-Type', 'text/html; charset=utf-8');
   });
 
   it('should remove nextjs preview cookies before responding to browser', async () => {
@@ -1035,6 +1038,7 @@ describe('EditingRenderMiddleware', () => {
         'Content-Security-Policy',
         `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
       );
+      expect(res.setHeader).to.have.been.calledWith('Content-Type', 'text/html; charset=utf-8');
     });
   });
 

@@ -56,8 +56,13 @@ content-sdk/
 └── scripts/                    # Monorepo scripts (scaffold, lint, hooks)
 ```
 
-**Key locations:** Sources: `src/**` per package. Templates: `packages/create-content-sdk-app/src/templates/`. Env: `.env.*.example` only; never commit `.env`. Initializers: `src/initializers/` via `Initializer.init(args)`.
-In scaffolded apps (e.g. under `samples/`), use that app’s **AGENTS.md**.
+**Key locations:** 
+- Sources: `src/**` per package. 
+- Templates: `packages/create-content-sdk-app/src/templates/`. 
+- Env: `.env.*.example` only; never commit `.env`. 
+- Initializers: `src/initializers/` via `Initializer.init(args)`.
+- Capability groupings and Agent Skills: See [Skills.md](Skills.md) (links to each template’s Skills.md and `.agents/skills/`; skills are maintained in templates only).
+- In scaffolded apps (e.g. under `samples/`), use that app’s **AGENTS.md**.
 
 ### Which package to edit?
 

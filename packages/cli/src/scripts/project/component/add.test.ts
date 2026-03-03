@@ -7,6 +7,7 @@ import path from 'path';
 import childProcess from 'child_process';
 import inquirer from 'inquirer';
 import * as toolsModule from '@sitecore-content-sdk/content/tools';
+import * as serverToolsModule from '@sitecore-content-sdk/content/node-tools';
 import * as addModule from './add';
 import * as loadConfigModule from '../../../utils/load-config';
 import * as generateMapModule from './generate-map';
@@ -91,7 +92,7 @@ describe('add command', () => {
     sandbox = sinon.createSandbox();
     loadCliConfigStub = sandbox.stub(loadConfigModule, 'default');
     consoleErrorStub = sandbox.stub(console, 'error').callThrough();
-    getComponentListStub = sandbox.stub(toolsModule, 'getComponentList');
+    getComponentListStub = sandbox.stub(serverToolsModule, 'getComponentList');
     getComponentSpecStub = sandbox.stub(toolsModule, 'getComponentSpec');
     getComponentSpecUrlStub = sandbox
       .stub(toolsModule, 'getComponentSpecUrl')
@@ -790,3 +791,4 @@ describe('add command', () => {
     });
   });
 });
+

@@ -222,6 +222,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
         route,
       });
 
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
       res.status(200).send(html);
     } catch (err) {
       const error = err as Record<string, unknown>;
