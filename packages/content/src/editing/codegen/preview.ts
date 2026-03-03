@@ -145,6 +145,7 @@ export interface ServerComponentPreviewEventArgs extends DesignLibraryEvent {
 
 /**
  * Represents an event indicating the import map to be sent to design library
+ * @internal
  */
 export interface DesignLibraryImportMapEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_IMPORT_MAP_EVENT_NAME;
@@ -159,6 +160,7 @@ export interface DesignLibraryImportMapEvent extends DesignLibraryEvent {
 
 /**
  * Represents an event indicating the component props to be sent to design library
+ * @internal
  */
 export interface DesignLibraryComponentPropsEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_COMPONENT_PROPS_EVENT_NAME;
@@ -172,6 +174,7 @@ export interface DesignLibraryComponentPropsEvent extends DesignLibraryEvent {
 /**
  * Represents an event indicating the preview error to be sent to design library.
  * Sending this type of event will trigger attempt regenerate the component by design library and resend the preview event.
+ * @internal
  */
 export interface DesignLibraryComponentPreviewErrorEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_ERROR_EVENT_NAME;
@@ -184,6 +187,7 @@ export interface DesignLibraryComponentPreviewErrorEvent extends DesignLibraryEv
 
 /**
  * Represents an event indicating a general error to be sent to design library.
+ * @internal
  */
 export interface DesignLibraryErrorEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_ERROR_EVENT_NAME;
