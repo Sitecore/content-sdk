@@ -35,16 +35,11 @@ Our versioning strategy is as follows:
 
 * `[nextjs]` `[Pages Router]` Adjust static path generation when multisite is disabled ([#345](https://github.com/Sitecore/content-sdk/pull/345))
 
-<<<<<<< HEAD
-* Introduce Analytics packages:
-  * `[analytics]` `[core]` `[create-content-sdk-app]` `[nextjs]` `[react]` Reorganize Analytics packages ([#340](https://github.com/Sitecore/content-sdk/pull/340))([#341](https://github.com/Sitecore/content-sdk/pull/341))
-  * `[sdk]` Rework Analytics initialization ([#357](https://github.com/Sitecore/content-sdk/pull/357))
-  * `[sdk]` Refine other analytics packages ([#363](https://github.com/Sitecore/content-sdk/pull/363))
-=======
+
+
 * `[nextjs]` Allow to pass custom query parameters to /api/editing/render handlers ([#381](https://github.com/Sitecore/content-sdk/pull/381))
 
 * `[nextjs]` `[Pages Router]` Add explicit `Content-Type: text/html; charset=utf-8` to the editing render route response for proper response handling ([#386](https://github.com/Sitecore/content-sdk/pull/386))
->>>>>>> dev
 
 * Introduce Analytics packages:
   * `[analytics]` `[core]` `[create-content-sdk-app]` `[nextjs]` `[react]` Reorganize Analytics packages ([#340](https://github.com/Sitecore/content-sdk/pull/340))([#341](https://github.com/Sitecore/content-sdk/pull/341))
