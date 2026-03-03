@@ -637,6 +637,8 @@ ${defaultMapTemplate(indexedImportMap)}`;
       expect(serverCall.args[1]).to.match(/test-exports/);
       expect(serverCall.args[1]).to.not.match(/useEffect/);
       expect(serverCall.args[1]).to.match(/useMemo/);
+      expect(serverCall.args[1]).to.match(/useConsole/);
+      expect(serverCall.args[1]).to.match(/useComment/);
 
       // Assert client import map was written to import-map.client.ts
       const clientCall = fsWriteStub.getCall(1);
@@ -649,6 +651,8 @@ ${defaultMapTemplate(indexedImportMap)}`;
       expect(clientCall.args[1]).to.match(/useState/);
       expect(clientCall.args[1]).to.not.match(/useMemo/);
       expect(clientCall.args[1]).to.not.match(/test-exports/);
+      expect(clientCall.args[1]).to.not.match(/useConsole/);
+      expect(clientCall.args[1]).to.not.match(/useComment/);
     });
 
     it('should write output into import-map file', async () => {

@@ -20,3 +20,11 @@ export const useState = () => {
 export const useMemo = () => {
   // noop
 };
+
+export const useConsole = () => {
+  // noop
+};
+
+export const useComment = () => {
+  // noop
+};

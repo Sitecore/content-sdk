@@ -4,7 +4,7 @@
 'use client';
 import React, { useState } from '../fake-react';
 
-export const BC = () => {
+export const CC = () => {
   console.log(React, useState);
-  return 'B';
+  return 'C';
 };
