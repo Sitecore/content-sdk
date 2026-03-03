@@ -3,7 +3,7 @@ import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models';
 import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
 
-const { SITECORE_EDGE_URL_DEFAULT, ERROR_MESSAGES } = constants;
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Provides default initial values for SitecoreConfig

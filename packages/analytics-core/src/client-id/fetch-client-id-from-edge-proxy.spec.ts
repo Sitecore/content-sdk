@@ -5,7 +5,7 @@ import * as resolveGetClientIdUrl from './resolve-get-client-id-url';
 import { fetchClientIdFromEdgeProxy } from './fetch-client-id-from-edge-proxy';
 import { jest, expect } from '@jest/globals';
 
-const { SITECORE_EDGE_URL_DEFAULT: SITECORE_EDGE_URL, ERROR_MESSAGES } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT: SITECORE_EDGE_URL, ERROR_MESSAGES } = constants;
 
 describe('fetchClientIdFromEdgeProxy', () => {
   const constructClientIdUrlSpy = jest.spyOn(resolveGetClientIdUrl, 'resolveGetClientIdUrl');

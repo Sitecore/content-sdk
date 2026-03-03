@@ -2,7 +2,7 @@ import { CoreContext, InitContentSdkParams } from './types';
 import debug from '../debug';
 import { Plugin } from './types';
 import { ERROR_MESSAGES } from '../constants';
-import { SITECORE_EDGE_URL_DEFAULT } from '../constants';
+import { SITECORE_EDGE_PLATFORM_URL_DEFAULT } from '../constants';
 
 const debugInit = debug.init;
 
@@ -16,8 +16,7 @@ export function checkPluginDependencies(plugin: Plugin, plugins: Map<string, Plu
   if (!plugin.dependencies) return;
 
   for (const dependency of plugin.dependencies) {
-    if (!plugins.has(dependency))
-      throw new Error(ERROR_MESSAGES.IE_001(plugin.name, dependency));
+    if (!plugins.has(dependency)) throw new Error(ERROR_MESSAGES.IE_001(plugin.name, dependency));
   }
 
   debugInit(`All required dependencies for "${plugin.name}" are present`);
@@ -66,6 +65,6 @@ export function resolveCoreContextConfig(
 
   return {
     ...config,
-    edgeUrl: edgeUrl?.trim() ?? SITECORE_EDGE_URL_DEFAULT,
+    edgeUrl: edgeUrl?.trim() ?? SITECORE_EDGE_PLATFORM_URL_DEFAULT,
   };
 }

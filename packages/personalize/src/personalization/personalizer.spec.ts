@@ -9,7 +9,7 @@ import { jest, expect } from '@jest/globals';
 const { ERROR_MESSAGES } = coreModule.constants;
 
 const UTILS_ERROR_MESSAGES = coreModule.constants.ERROR_MESSAGES;
-const SITECORE_EDGE_URL = coreModule.constants.SITECORE_EDGE_URL_DEFAULT;
+const SITECORE_EDGE_URL = coreModule.constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT;
 
 jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
   __esModule: true,
