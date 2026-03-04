@@ -11,7 +11,7 @@ import {
   ImportEntry,
   ComponentImport,
   buildComponentDependencies,
-  getDesignLibraryComponentPreviewErrorEvent,
+  getDesignLibraryErrorEvent,
   DesignLibraryPreviewError,
   ComponentPreviewEventArgs,
   addStyleElement,
@@ -769,9 +769,9 @@ describe('design library codegen', () => {
     });
   });
 
-  describe('getDesignLibraryComponentPreviewErrorEvent', () => {
+  describe('getDesignLibraryErrorEvent', () => {
     it('should return a valid component preview "render" error event', () => {
-      const errorEvent = getDesignLibraryComponentPreviewErrorEvent(
+      const errorEvent = getDesignLibraryErrorEvent(
         'uid-1',
         'custom-error',
         DesignLibraryPreviewError.Render
@@ -783,7 +783,7 @@ describe('design library codegen', () => {
     });
 
     it('should return a valid component preview "render-init" error event', () => {
-      const errorEvent = getDesignLibraryComponentPreviewErrorEvent(
+      const errorEvent = getDesignLibraryErrorEvent(
         'uid-1',
         'custom-error',
         DesignLibraryPreviewError.RenderInit
@@ -795,6 +795,56 @@ describe('design library codegen', () => {
           uid: 'uid-1',
           error: 'custom-error',
           type: DesignLibraryPreviewError.RenderInit,
+        },
+      });
+    });
+
+    it('should return valid load import map error event', () => {
+      const errorEvent = getDesignLibraryErrorEvent(
+        'uid-1',
+        'error during loading import map',
+        DesignLibraryPreviewError.ImportMapLoad
+      );
+
+      expect(errorEvent).to.deep.equal({
+        name: 'component:generation:error',
+        message: {
+          uid: 'uid-1',
+          error: 'error during loading import map',
+          type: DesignLibraryPreviewError.ImportMapLoad,
+        },
+      });
+    });
+
+    it('should return valid import map missing error event', () => {
+      const errorEvent = getDesignLibraryErrorEvent(
+        'uid-1',
+        'import map is missing',
+        DesignLibraryPreviewError.ImportMapMissing
+      );
+      expect(errorEvent).to.deep.equal({
+        name: 'component:generation:error',
+        message: {
+          uid: 'uid-1',
+          error: 'import map is missing',
+          type: DesignLibraryPreviewError.ImportMapMissing,
+        },
+      });
+    });
+
+    it('should return valid fetch error event', () => {
+      const errorEvent = getDesignLibraryErrorEvent(
+        'uid-1',
+        'error during fetching component data',
+        DesignLibraryPreviewError.GeneratedComponentFetch
+      );
+
+      expect(errorEvent).to.deep.equal({
+        name: 'component:generation:error',
+        message: {
+          uid: 'uid-1',
+          error: 'error during fetching component data',
+          type: DesignLibraryPreviewError.GeneratedComponentFetch,
         },
       });
     });
