@@ -8,7 +8,7 @@
 
 > **AppPlaceholder**(`props`): `undefined` \| `null` \| `string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`ReactNode`, `any`, `any`\> \| `Promise`\<`AwaitedReactNode`\> \| `Element` \| (`undefined` \| `null` \| `string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`ReactNode`, `any`, `any`\> \| `Promise`\<`AwaitedReactNode`\> \| `Element`)[]
 
-Defined in: [packages/react/src/components/Placeholder/AppPlaceholder.tsx:23](https://github.com/Sitecore/content-sdk/blob/f0337b779d76d5d2127940f24a5b1cfb8174af76/packages/react/src/components/Placeholder/AppPlaceholder.tsx#L23)
+Defined in: [packages/react/src/components/Placeholder/AppPlaceholder.tsx:23](https://github.com/Sitecore/content-sdk/blob/5bba152bc847537126fe2fd2483428b9b4251be0/packages/react/src/components/Placeholder/AppPlaceholder.tsx#L23)
 
 The implemention of placeholder compatible with React Server Components.
 Renders components from the layout data for the given placeholder name, with consideration for page edit mode.

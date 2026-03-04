@@ -8,7 +8,7 @@
 
 > **PageMode** = `object`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:49](https://github.com/Sitecore/content-sdk/blob/f0337b779d76d5d2127940f24a5b1cfb8174af76/packages/core/src/client/sitecore-client.ts#L49)
+Defined in: [packages/core/src/client/sitecore-client.ts:49](https://github.com/Sitecore/content-sdk/blob/5bba152bc847537126fe2fd2483428b9b4251be0/packages/core/src/client/sitecore-client.ts#L49)
 
 Represents the mode of the page
 
@@ -18,7 +18,7 @@ Represents the mode of the page
 
 > **designLibrary**: `object`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:57](https://github.com/Sitecore/content-sdk/blob/f0337b779d76d5d2127940f24a5b1cfb8174af76/packages/core/src/client/sitecore-client.ts#L57)
+Defined in: [packages/core/src/client/sitecore-client.ts:57](https://github.com/Sitecore/content-sdk/blob/5bba152bc847537126fe2fd2483428b9b4251be0/packages/core/src/client/sitecore-client.ts#L57)
 
 Design Library related properties. Only available in Design Library mode.
 
@@ -34,7 +34,7 @@ Whether the page is in variant generation mode
 
 > **isDesignLibrary**: `boolean`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:78](https://github.com/Sitecore/content-sdk/blob/f0337b779d76d5d2127940f24a5b1cfb8174af76/packages/core/src/client/sitecore-client.ts#L78)
+Defined in: [packages/core/src/client/sitecore-client.ts:78](https://github.com/Sitecore/content-sdk/blob/5bba152bc847537126fe2fd2483428b9b4251be0/packages/core/src/client/sitecore-client.ts#L78)
 
 Whether the page is in Design Library mode
 
@@ -44,7 +44,7 @@ Whether the page is in Design Library mode
 
 > **isEditing**: `boolean`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:74](https://github.com/Sitecore/content-sdk/blob/f0337b779d76d5d2127940f24a5b1cfb8174af76/packages/core/src/client/sitecore-client.ts#L74)
+Defined in: [packages/core/src/client/sitecore-client.ts:74](https://github.com/Sitecore/content-sdk/blob/5bba152bc847537126fe2fd2483428b9b4251be0/packages/core/src/client/sitecore-client.ts#L74)
 
 Whether the page is in editing mode
 
@@ -54,7 +54,7 @@ Whether the page is in editing mode
 
 > **isNormal**: `boolean`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:66](https://github.com/Sitecore/content-sdk/blob/f0337b779d76d5d2127940f24a5b1cfb8174af76/packages/core/src/client/sitecore-client.ts#L66)
+Defined in: [packages/core/src/client/sitecore-client.ts:66](https://github.com/Sitecore/content-sdk/blob/5bba152bc847537126fe2fd2483428b9b4251be0/packages/core/src/client/sitecore-client.ts#L66)
 
 Whether the page is in normal mode
 
@@ -64,7 +64,7 @@ Whether the page is in normal mode
 
 > **isPreview**: `boolean`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:70](https://github.com/Sitecore/content-sdk/blob/f0337b779d76d5d2127940f24a5b1cfb8174af76/packages/core/src/client/sitecore-client.ts#L70)
+Defined in: [packages/core/src/client/sitecore-client.ts:70](https://github.com/Sitecore/content-sdk/blob/5bba152bc847537126fe2fd2483428b9b4251be0/packages/core/src/client/sitecore-client.ts#L70)
 
 Whether the page is in preview mode
 
@@ -74,6 +74,6 @@ Whether the page is in preview mode
 
 > **name**: `PageModeName`
 
-Defined in: [packages/core/src/client/sitecore-client.ts:53](https://github.com/Sitecore/content-sdk/blob/f0337b779d76d5d2127940f24a5b1cfb8174af76/packages/core/src/client/sitecore-client.ts#L53)
+Defined in: [packages/core/src/client/sitecore-client.ts:53](https://github.com/Sitecore/content-sdk/blob/5bba152bc847537126fe2fd2483428b9b4251be0/packages/core/src/client/sitecore-client.ts#L53)
 
 Page mode name.
