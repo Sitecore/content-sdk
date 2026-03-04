@@ -5,8 +5,6 @@ import debug from '../../debug';
 
 const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 
-const { ERROR_MESSAGES } = constants;
-
 /**
  * Event to send import map to design library
  */

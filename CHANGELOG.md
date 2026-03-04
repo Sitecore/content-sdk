@@ -39,10 +39,10 @@ Our versioning strategy is as follows:
 
 * `[nextjs]` `[Pages Router]` Add explicit `Content-Type: text/html; charset=utf-8` to the editing render route response for proper response handling ([#386](https://github.com/Sitecore/content-sdk/pull/386))
 
-* Introduce Analytics packages:
-  * `[analytics]` `[core]` `[create-content-sdk-app]` `[nextjs]` `[react]` Reorganize Analytics packages ([#340](https://github.com/Sitecore/content-sdk/pull/340))([#341](https://github.com/Sitecore/content-sdk/pull/341))
-  * `[sdk]` Rework Analytics initialization ([#357](https://github.com/Sitecore/content-sdk/pull/357))
-  * `[sdk]` Refine other analytics packages ([#363](https://github.com/Sitecore/content-sdk/pull/363))
+* `[analytics-core]` `[events]` `[personalize]` `[core]` `[create-content-sdk-app]` `[nextjs]` `[react]` Introduce Analytics packages ([#340](https://github.com/Sitecore/content-sdk/pull/340))([#341](https://github.com/Sitecore/content-sdk/pull/341))([#357](https://github.com/Sitecore/content-sdk/pull/357))([#363](https://github.com/Sitecore/content-sdk/pull/363))
+  * Migrated the `core`,`events` and `personalize` packages from `CloudSDK` to `analytics-core`,`events` and `personalize` packages in `ContentSDK` 
+  * Reworked the initialization functionality introducing the new `initContentSdk` function
+  * Changes the folder structure for improved separation of concerns
 
 ### 🛠 Breaking Changes
 
