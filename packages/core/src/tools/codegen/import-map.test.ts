@@ -18,7 +18,7 @@ import { utilsUnitMocks } from './utils';
 import { importUnitMocks } from './import-map';
 import { componentUnitMocks } from './../templating/components';
 
-describe('Import Map Generation', () => {
+describe.only('Import Map Generation', () => {
   const sandbox = sinon.createSandbox();
   let cwdStub: sinon.SinonStub;
   let testExportsModulePath = '';
@@ -638,9 +638,10 @@ ${defaultMapTemplate(indexedImportMap)}`;
         // use components in test-data/import-map/client-components-w-comments
         // they contain client components with comments before 'use client' directive
         // to test that the logic correctly identifies them as client components and includes their imports in client import map
-        await runCommand(scConfig, {
+        await run({
           paths: ['client-components-w-comments/*', 'single-file-imports/named.ts'],
           exclude: [],
+          scConfig,
           separateServerClientMaps: true,
           clientTemplate: (indexedImportMap: Map<string, ModuleExports>) => {
             return `'use client';
