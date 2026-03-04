@@ -1,4 +1,5 @@
 import {
+  DesignLibraryPreviewError,
   GeneratedComponentData,
   ImportEntry,
   ImportEntryInfo,
@@ -77,11 +78,18 @@ export type DesignLibraryVariantGenerationEventsProps = DesignLibraryPreviewEven
    * Any error that occurred during initialization of the component:
    * - importMap error
    * - error fetching the generated component data from secured endpoint
-   * - error during generation of the component on the server side
+   * - error during generation or rendering of the component on the server side
    */
-  componentInitError?: string;
+  componentInitError?: ServerComponentInitError;
   /**
    * The generated component data received from design library.
    */
   generatedComponentData?: GeneratedComponentData;
+};
+
+export type ServerComponentInitError = {
+  /** The type of error, as defined in DesignLibraryPreviewError. */
+  type: DesignLibraryPreviewError;
+  /** The error message. */
+  message: string;
 };
