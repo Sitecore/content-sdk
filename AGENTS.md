@@ -58,10 +58,12 @@ content-sdk/
 
 **Key locations:** 
 - Sources: `src/**` per package. 
-- Templates: `packages/create-content-sdk-app/src/templates/`. 
+- Templates: `packages/create-content-sdk-app/src/templates/`.
+- Initializers: `packages/create-content-sdk-app/src/initializers/` via `Initializer.init(args)`.
 - Env: `.env.*.example` only; never commit `.env`. 
-- Initializers: `src/initializers/` via `Initializer.init(args)`.
+
 - Capability groupings and Agent Skills: See [Skills.md](Skills.md) (links to each template’s Skills.md and `.agents/skills/`; skills are maintained in templates only).
+- **When working inside a scaffolded app** (e.g. under `samples/`), use that app’s **AGENTS.md** for app-level guidance
 
 ### Which package to edit?
 

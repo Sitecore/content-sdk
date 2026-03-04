@@ -11,7 +11,7 @@ globs: []
 - Never edit `dist/**`, `.next/`, `out/`, `build/` (compiled output), `node_modules/`
 - Do not commit secrets. `.env` and `.env.local` are gitignored; use `.env.example` (or `.env.*.example` in templates) to document variables with placeholders only. Never put real API keys or production values in example files
 - Template edits must build/run with `npm install && npm run build` in generated apps
-- Reuse common processes (see `src/common/` in create-content-sdk-app); do not rewrite folder structure or move files arbitrarily
+- Reuse common processes (see `src/common/` in create-content-sdk-app); do not reorganize the template or src/common/ structure without asking
 
 ## Security (Input, API, and Rendering)
 
