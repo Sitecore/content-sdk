@@ -3618,7 +3618,7 @@ __metadata:
     typescript: "npm:~5.8.3"
     url-parse: "npm:^1.5.10"
   peerDependencies:
-    "@sitecore-content-sdk/events": 2.0.0-canary.12
+    "@sitecore-content-sdk/events": ^2.0.0-canary
   languageName: unknown
   linkType: soft
 
@@ -3744,9 +3744,9 @@ __metadata:
     ts-node: "npm:^10.9.2"
     typescript: "npm:~5.8.3"
   peerDependencies:
-    "@sitecore-content-sdk/analytics-core": 2.0.0-canary.12
-    "@sitecore-content-sdk/events": 2.0.0-canary.12
-    "@sitecore-content-sdk/personalize": 2.0.0-canary.12
+    "@sitecore-content-sdk/analytics-core": ^2.0.0-canary
+    "@sitecore-content-sdk/events": ^2.0.0-canary
+    "@sitecore-content-sdk/personalize": ^2.0.0-canary
     next: ^16.1.1
     react: ^19.2.1
     react-dom: ^19.2.1
@@ -3830,8 +3830,8 @@ __metadata:
     ts-node: "npm:^10.9.2"
     typescript: "npm:~5.8.3"
   peerDependencies:
-    "@sitecore-content-sdk/analytics-core": 2.0.0-canary.12
-    "@sitecore-content-sdk/events": 2.0.0-canary.12
+    "@sitecore-content-sdk/analytics-core": ^2.0.0-canary
+    "@sitecore-content-sdk/events": ^2.0.0-canary
     "@sitecore-feaas/clientside": ^0.6.0
     react: ^19.2.1
     react-dom: ^19.2.1
