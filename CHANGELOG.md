@@ -10,6 +10,12 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
+### 1.5.1
+   
+### 🐛 Bug Fixes
+
+* `[content]` `[react]` `[nextjs]` Improve import map generation and refactor Design Library error handling ([#387](https://github.com/Sitecore/content-sdk/pull/387))
+
 ### 1.5.0
 
 ### 🎉 New Features & Improvements

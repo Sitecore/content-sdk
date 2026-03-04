@@ -24,6 +24,7 @@ import {
   DesignLibraryServerProps,
   DesignLibraryServerPreviewProps,
   DesignLibraryServerVariantGenerationProps,
+  ServerComponentInitError,
 } from './models';
 import { ErrorComponent } from '../ErrorBoundary';
 
@@ -101,20 +102,34 @@ export const DesignLibraryServerVariantGeneration = async ({
   let importMap: codegen.ImportEntry[] | undefined;
   let importMapInfo: codegen.ImportEntryInfo[] | undefined;
   let Component: DynamicComponent | undefined;
-  let componentInitError: string | undefined;
+  let componentInitError: ServerComponentInitError | undefined;
   let generatedComponentData: codegen.GeneratedComponentData | undefined;
+
+  const getComponentInitError = (
+    type: codegen.DesignLibraryPreviewError,
+    error: unknown
+  ): ServerComponentInitError => ({
+    type,
+    message: error instanceof Error ? error.message : String(error),
+  });
 
   // load importmap and importmap payload to pass to FE
   // if not provided, or errors during load set error to pass to FE
   if (!loadServerImportMap) {
-    componentInitError = 'No loadImportMap provided';
+    componentInitError = getComponentInitError(
+      codegen.DesignLibraryPreviewError.ImportMapMissing,
+      'No loadImportMap provided'
+    );
   } else {
     try {
       const mod = await loadServerImportMap();
       importMap = mod.default;
       importMapInfo = getImportMapInfo(importMap);
     } catch (e) {
-      componentInitError = `Error loading import map: ${e}`;
+      componentInitError = getComponentInitError(
+        codegen.DesignLibraryPreviewError.ImportMapLoad,
+        `Error loading import map: ${e}`
+      );
     }
   }
 
@@ -150,14 +165,22 @@ export const DesignLibraryServerVariantGeneration = async ({
         ) as DynamicComponent;
       } catch (error) {
         // error during component initialization - send error to client
-        componentInitError = (error as Error | string).toString();
+        componentInitError = getComponentInitError(
+          codegen.DesignLibraryPreviewError.RenderInit,
+          error
+        );
       }
     }
   } else if (hasCache(componentPreviewKey) && !componentInitError && importMap) {
     // we have a preview update, get it and clean the cache
     designLibraryStatus = DesignLibraryStatus.RENDERED;
     const previewData = getCacheAndClean<ComponentPreviewModel>(componentPreviewKey);
-    componentInitError = previewData?.error;
+    if (previewData?.error) {
+      componentInitError = getComponentInitError(
+        codegen.DesignLibraryPreviewError.GeneratedComponentFetch,
+        previewData.error
+      );
+    }
 
     if (previewData?.generatedComponentData) {
       generatedComponentData = previewData.generatedComponentData;
@@ -169,7 +192,10 @@ export const DesignLibraryServerVariantGeneration = async ({
         ) as DynamicComponent;
       } catch (error) {
         // error during component initialization - send error to client
-        componentInitError = (error as Error | string).toString();
+        componentInitError = getComponentInitError(
+          codegen.DesignLibraryPreviewError.RenderInit,
+          error
+        );
       }
     }
   }

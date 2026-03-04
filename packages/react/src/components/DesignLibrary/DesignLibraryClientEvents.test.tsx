@@ -504,7 +504,10 @@ describe('<DesignLibraryClientEvents />', () => {
           designLibraryStatus: DesignLibraryStatus.READY,
           component: testEditedComponent,
           importMap: importMap,
-          componentInitError: testError,
+          componentInitError: {
+            message: testError,
+            type: DesignLibraryPreviewError.ImportMapLoad,
+          },
         },
         modeLibraryMetadata_Gen,
         true
@@ -514,7 +517,7 @@ describe('<DesignLibraryClientEvents />', () => {
       expect(sendErrorEventSpy).to.have.been.calledWith(
         testEditedComponent.uid,
         testError,
-        DesignLibraryPreviewError.RenderInit
+        DesignLibraryPreviewError.ImportMapLoad
       );
     });
 
