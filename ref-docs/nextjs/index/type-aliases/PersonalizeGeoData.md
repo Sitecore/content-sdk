@@ -8,7 +8,7 @@
 
 > **PersonalizeGeoData** = `object`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:23](https://github.com/Sitecore/content-sdk/blob/6636e785a81bcfd5e1d8256028ed9f3db7bd96d8/packages/nextjs/src/proxy/personalize-proxy.ts#L23)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:23](https://github.com/Sitecore/content-sdk/blob/dca81790520720d9e179a738163a316f911b36d8/packages/nextjs/src/proxy/personalize-proxy.ts#L23)
 
 Represents the geolocation data used for personalization
 
@@ -18,7 +18,7 @@ Represents the geolocation data used for personalization
 
 > `optional` **city**: `string`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:24](https://github.com/Sitecore/content-sdk/blob/6636e785a81bcfd5e1d8256028ed9f3db7bd96d8/packages/nextjs/src/proxy/personalize-proxy.ts#L24)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:24](https://github.com/Sitecore/content-sdk/blob/dca81790520720d9e179a738163a316f911b36d8/packages/nextjs/src/proxy/personalize-proxy.ts#L24)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [nextjs/src/proxy/personalize-proxy.ts:24](https://github.com/Siteco
 
 > `optional` **country**: `string`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:25](https://github.com/Sitecore/content-sdk/blob/6636e785a81bcfd5e1d8256028ed9f3db7bd96d8/packages/nextjs/src/proxy/personalize-proxy.ts#L25)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:25](https://github.com/Sitecore/content-sdk/blob/dca81790520720d9e179a738163a316f911b36d8/packages/nextjs/src/proxy/personalize-proxy.ts#L25)
 
 ***
 
@@ -34,4 +34,4 @@ Defined in: [nextjs/src/proxy/personalize-proxy.ts:25](https://github.com/Siteco
 
 > `optional` **region**: `string`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:26](https://github.com/Sitecore/content-sdk/blob/6636e785a81bcfd5e1d8256028ed9f3db7bd96d8/packages/nextjs/src/proxy/personalize-proxy.ts#L26)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:26](https://github.com/Sitecore/content-sdk/blob/dca81790520720d9e179a738163a316f911b36d8/packages/nextjs/src/proxy/personalize-proxy.ts#L26)
