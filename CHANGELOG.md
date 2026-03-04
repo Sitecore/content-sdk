@@ -42,7 +42,6 @@ Our versioning strategy is as follows:
 * `[analytics-core]` `[events]` `[personalize]` `[core]` `[create-content-sdk-app]` `[nextjs]` `[react]` Introduce Analytics packages ([#340](https://github.com/Sitecore/content-sdk/pull/340))([#341](https://github.com/Sitecore/content-sdk/pull/341))([#357](https://github.com/Sitecore/content-sdk/pull/357))([#363](https://github.com/Sitecore/content-sdk/pull/363))
   * Migrated the `core`,`events` and `personalize` packages from `CloudSDK` to `analytics-core`,`events` and `personalize` packages in `ContentSDK` 
   * Reworked the initialization functionality introducing the new `initContentSdk` function
-  * Changes the folder structure for improved separation of concerns
 
 ### 🛠 Breaking Changes
 
