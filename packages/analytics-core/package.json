@@ -7,9 +7,10 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
+    "@sitecore-content-sdk/core": "2.0.0-canary.10",
     "debug": "^4.4.3"
   },
-  "description": "> TODO: description",
+  "description": "Provides shared logic and runtime initialization. Required for the Content SDK 'events' and 'personalize' packages to function.",
   "devDependencies": {
     "@jest/types": "^29.6.3",
     "@stylistic/eslint-plugin": "^5.2.2",
@@ -29,26 +30,24 @@
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.2"
   },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "types/src/index.d.ts",
   "exports": {
-    "./browser": {
-      "import": "./dist/esm/src/browser.js",
-      "require": "./dist/cjs/src/browser.js",
-      "types": "./types/src/browser/index.d.ts"
+    ".": {
+      "import": "./dist/esm/src/index.js",
+      "require": "./dist/cjs/src/index.js",
+      "types": "./types/src/index.d.ts"
     },
     "./internal": {
       "import": "./dist/esm/src/internal.js",
       "require": "./dist/cjs/src/internal.js",
-      "types": "./types/src/internal/index.d.ts"
-    },
-    "./server": {
-      "import": "./dist/esm/src/server.js",
-      "require": "./dist/cjs/src/server.js",
-      "types": "./types/src/server/index.d.ts"
+      "types": "./types/src/internal.d.ts"
     },
     "./utils": {
       "import": "./dist/esm/src/utils.js",
       "require": "./dist/cjs/src/utils.js",
-      "types": "./types/src/utils/index.d.ts"
+      "types": "./types/src/utils.d.ts"
     }
   },
   "files": [
@@ -59,7 +58,6 @@
   "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
   "license": "Apache-2.0",
   "name": "@sitecore-content-sdk/analytics-core",
-  "private": true,
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -68,10 +66,12 @@
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "clean": "del-cli dist types",
     "coverage": "jest --config jest.config.ts --coverage",
-    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/analytics-core --entryPoints src/browser.ts --entryPoints src/server.ts --entryPoints src/internal.ts --githubPages false",
+    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/analytics-core --entryPoints src/index.ts --entryPoints src/internal.ts --entryPoints src/utils.ts --githubPages false",
     "lint": "eslint \"./src/**/*.ts\"",
     "prepublishOnly": "npm run build",
-    "test": "jest --config jest.config.ts"
+    "test": "jest --config jest.config.ts",
+    "api-extractor": "npm run build && api-extractor run --local --verbose",
+    "api-extractor:verify": "api-extractor run"
   },
   "version": "2.0.0-canary.10"
 }

@@ -1,5 +1,5 @@
 import { isValidEmail } from './is-valid-email';
-import { it } from '@jest/globals';
+import { it, expect } from '@jest/globals';
 
 describe('isValidEmail', () => {
   const validEmails = [

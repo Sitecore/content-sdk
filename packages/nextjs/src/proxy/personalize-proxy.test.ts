@@ -23,7 +23,7 @@ describe('PersonalizeProxy', () => {
   });
 
   const { PersonalizeProxy } = proxyquire('./personalize-proxy', {
-    '@sitecore-cloudsdk/personalize/server': { personalize: CDKPersonalizeStub },
+    '@sitecore-content-sdk/personalize': { personalize: CDKPersonalizeStub },
   });
 
   const ua = 'user-agent-string';
@@ -300,9 +300,7 @@ describe('PersonalizeProxy', () => {
       expect(personalize.calledOnce).to.be.true;
 
       expect(getOverrideExperienceParamsStub.calledOnceWith(req)).to.be.true;
-      expect(
-        personalize.calledWith(sandbox.match({ params: { utm: customParams } }), sandbox.match.any)
-      ).to.be.true;
+      expect(personalize.calledWith(sandbox.match({ params: { utm: customParams } }))).to.be.true;
 
       validateEndMessageDebugLog('personalize proxy end in %dms: %o', {
         rewritePath: '/styleguide/_variantId_variant-2',
@@ -942,8 +940,7 @@ describe('PersonalizeProxy', () => {
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en', siteName)).to.be.true;
       expect(
         personalize.calledWith(
-          sandbox.match({ friendlyId: CdpHelper.getPageFriendlyId(pageId, 'en', scope) }),
-          sandbox.match.any
+          sandbox.match({ friendlyId: CdpHelper.getPageFriendlyId(pageId, 'en', scope) })
         )
       ).to.be.true;
       expect(finalRes).to.deep.equal(res);
@@ -969,8 +966,7 @@ describe('PersonalizeProxy', () => {
       const finalRes = await proxy.handle(req, res);
 
       expect(proxy['personalizeService']['config'].timeout).to.equal(edgeTimeout);
-      expect(personalize.calledWith(sandbox.match({ timeout: cdpTimeout }), sandbox.match.any)).to
-        .be.true;
+      expect(personalize.calledWith(sandbox.match({ timeout: cdpTimeout }))).to.be.true;
       expect(finalRes).to.deep.equal(res);
       nextRewriteStub.restore();
     });
@@ -986,8 +982,7 @@ describe('PersonalizeProxy', () => {
           sandbox.match({
             friendlyId: CdpHelper.getComponentFriendlyId(pageId, 'component1', 'en'),
             variantIds: ['component1_default', 'component1_variant1'],
-          }),
-          sandbox.match.any
+          })
         )
         .returns(Promise.resolve({ variantId: 'component1_default' }));
       personalizeStub
@@ -995,8 +990,7 @@ describe('PersonalizeProxy', () => {
           sandbox.match({
             friendlyId: CdpHelper.getComponentFriendlyId(pageId, 'component2', 'en'),
             variantIds: ['component2_default', 'component2_variant1', 'component2_variant2'],
-          }),
-          sandbox.match.any
+          })
         )
         .returns(Promise.resolve({ variantId: 'component2_variant1' }));
       personalizeStub
@@ -1009,8 +1003,7 @@ describe('PersonalizeProxy', () => {
               'component3_variant2',
               'component3_variant3',
             ],
-          }),
-          sandbox.match.any
+          })
         )
         .returns(Promise.resolve({ variantId: 'component3_variant3' }));
       const { proxy, getPersonalizeInfo, initPersonalizeServer } = createProxy({
@@ -1099,9 +1092,9 @@ describe('PersonalizeProxy', () => {
         expect(extractGeoDataCb.calledOnce).to.be.true;
         expect(initPersonalizeServer.calledOnce).to.be.true;
         expect(CDKPersonalizeStub.calledThrice).to.be.true;
-        expect(CDKPersonalizeStub.firstCall.args[1].geo).to.deep.equal(geo);
-        expect(CDKPersonalizeStub.secondCall.args[1].geo).to.deep.equal(geo);
-        expect(CDKPersonalizeStub.thirdCall.args[1].geo).to.deep.equal(geo);
+        expect(CDKPersonalizeStub.firstCall.args[0].geo).to.deep.equal(geo);
+        expect(CDKPersonalizeStub.secondCall.args[0].geo).to.deep.equal(geo);
+        expect(CDKPersonalizeStub.thirdCall.args[0].geo).to.deep.equal(geo);
       });
 
       it('should call personalize with geo data when an async cb is provided', async () => {
@@ -1129,9 +1122,9 @@ describe('PersonalizeProxy', () => {
         expect(extractGeoDataCb.calledOnce).to.be.true;
         expect(initPersonalizeServer.calledOnce).to.be.true;
         expect(CDKPersonalizeStub.calledThrice).to.be.true;
-        expect(CDKPersonalizeStub.firstCall.args[1].geo).to.deep.equal(geo);
-        expect(CDKPersonalizeStub.secondCall.args[1].geo).to.deep.equal(geo);
-        expect(CDKPersonalizeStub.thirdCall.args[1].geo).to.deep.equal(geo);
+        expect(CDKPersonalizeStub.firstCall.args[0].geo).to.deep.equal(geo);
+        expect(CDKPersonalizeStub.secondCall.args[0].geo).to.deep.equal(geo);
+        expect(CDKPersonalizeStub.thirdCall.args[0].geo).to.deep.equal(geo);
       });
 
       it('should call personalize without geo data when not available', async () => {
@@ -1145,9 +1138,9 @@ describe('PersonalizeProxy', () => {
 
         expect(initPersonalizeServer.calledOnce).to.be.true;
         expect(CDKPersonalizeStub.calledThrice).to.be.true;
-        expect(CDKPersonalizeStub.firstCall.args[1]).to.not.have.property('geo');
-        expect(CDKPersonalizeStub.secondCall.args[1]).to.not.have.property('geo');
-        expect(CDKPersonalizeStub.thirdCall.args[1]).to.not.have.property('geo');
+        expect(CDKPersonalizeStub.firstCall.args[0]).to.not.have.property('geo');
+        expect(CDKPersonalizeStub.secondCall.args[0]).to.not.have.property('geo');
+        expect(CDKPersonalizeStub.thirdCall.args[0]).to.not.have.property('geo');
       });
     });
 

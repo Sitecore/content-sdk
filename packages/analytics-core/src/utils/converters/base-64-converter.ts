@@ -2,6 +2,7 @@
  * Converts a string or plain object to a base64 string representation.
  * @param {string | Record<string, unknown>} input The value to convert.
  * @returns {string} The base64-encoded string.
+ * @internal
  */
 export function convertToBase64(input: string | { [key: string]: unknown }): string {
   const data = typeof input === 'string' ? input : JSON.stringify(input);

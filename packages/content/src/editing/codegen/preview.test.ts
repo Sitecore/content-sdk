@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
+import { constants } from '@sitecore-content-sdk/core';
 import {
   getDesignLibraryComponentPropsEvent,
   getDesignLibraryImportMapEvent,
@@ -22,6 +23,8 @@ import {
   GeneratedComponentData,
 } from './preview';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
+
+const { ERROR_MESSAGES } = constants;
 
 describe('design library codegen', () => {
   let debugSpy: sinon.SinonSpy;
@@ -321,7 +324,9 @@ describe('design library codegen', () => {
           .to.be.true;
 
         const errorLogArgs = errorSpy.getCall(0).args;
-        expect(errorLogArgs[0]).to.equal('Component Library: sending error event');
+        expect(errorLogArgs[0]).to.equal(
+          `Component Library: sending error event. ${ERROR_MESSAGES.CONTACT_SUPPORT}`
+        );
 
         const errorEvent = errorLogArgs[1];
 
@@ -357,7 +362,9 @@ describe('design library codegen', () => {
           .to.be.true;
 
         const errorLogArgs = errorSpy.getCall(0).args;
-        expect(errorLogArgs[0]).to.equal('Component Library: sending error event');
+        expect(errorLogArgs[0]).to.equal(
+          `Component Library: sending error event. ${ERROR_MESSAGES.CONTACT_SUPPORT}`
+        );
 
         const errorEvent = errorLogArgs[1];
 

@@ -6,6 +6,9 @@ import { getComponentList } from './../templating';
 import { SitecoreConfig } from './../../config';
 import crypto from 'crypto';
 import { isNodeModuleImportOrAlias, getRelativeImportPath } from './utils';
+import { constants } from '@sitecore-content-sdk/core';
+
+const { ERROR_MESSAGES } = constants;
 
 let _getComponentList = getComponentList;
 const aliasImport = /^([a-zA-Z0-9]+) as .+$/;
@@ -384,7 +387,7 @@ export const writeImportMap = (args: WriteImportMapArgsInternal) => {
     const clientTemplate = args.clientTemplate || defaultMapTemplate;
 
     if (!scConfig) {
-      throw new Error('Sitecore configuration is required to be provided');
+      throw new Error(ERROR_MESSAGES.MV_008);
     }
 
     if (scConfig.disableCodeGeneration) {

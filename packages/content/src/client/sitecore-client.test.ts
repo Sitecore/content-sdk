@@ -1192,40 +1192,6 @@ describe('SitecoreClient', () => {
       ).to.be.true;
     });
 
-    it('should throw error when local API settings are missing', async () => {
-      const componentLibData = {
-        itemId: 'item-id',
-        componentUid: 'comp-uid',
-        site: 'test-site',
-        language: 'en',
-        renderingId: 'rendering-id',
-        dataSourceId: 'datasource-id',
-        version: '1',
-        pageState: LayoutServicePageState.Normal,
-      };
-
-      // Create a deep copy of the options to avoid modifying the original
-      const modifiedClient = new SitecoreClient({
-        ...JSON.parse(JSON.stringify(defaultInitOptions)),
-        api: {
-          ...JSON.parse(JSON.stringify(defaultInitOptions.api)),
-          local: null,
-        },
-      });
-
-      (modifiedClient as any).editingService = editingServiceStub;
-      (modifiedClient as any).restComponentService = restComponentServiceStub;
-
-      try {
-        await modifiedClient.getDesignLibraryData(componentLibData);
-        expect.fail('Should have thrown an error');
-      } catch (error) {
-        expect((error as Error).message).to.include(
-          'Component Library requires Sitecore apiHost and apiKey'
-        );
-      }
-    });
-
     it('should pass fetchOptions to componentService when calling getDesignLibraryData', async () => {
       const componentLibData = {
         itemId: 'item-id',

@@ -10,7 +10,7 @@ npm install @sitecore-content-sdk/events
 
 ## Usage
 
-1. Initialize the package using the `CloudSDK` function, available in the `core` package.
+1. Initialize the package using the `initContentSdk` function, available in the `core` package.
 2. Send events using the following functions:
    - `pageView` - send a VIEW event.
    - `identity` - send an IDENTITY event.
@@ -25,16 +25,25 @@ Capture and send a VIEW event from the browser side:
 'use client';
 
 import { useEffect } from 'react';
-import { CloudSDK } from '@sitecore-content-sdk/analytics-core/browser';
-import { pageView } from '@sitecore-content-sdk/events/browser';
+import { initContentSdk } from '@sitecore-content-sdk/core';
+import { analyticsPlugin, analyticsBrowserAdapter } from '@sitecore-content-sdk/analytics-core';
+import { eventsPlugin, pageView } from '@sitecore-content-sdk/events';
 
 export default function Home() {
   useEffect(() => {
-    CloudSDK({
-      /* Initialization settings. See `core` package code examples. */
-    })
-      .addEvents()
-      .initialize();
+    initContentSdk({
+      config: {
+        contextId: '<YOUR_CONTEXT_ID>',
+        siteName: '<YOUR_SITE_NAME>',
+      },
+      plugins: [
+        analyticsPlugin({
+          options: { enableCookie: true },
+          adapter: analyticsBrowserAdapter(),
+        }),
+        eventsPlugin(),
+      ],
+    });
 
     // Send VIEW event:
     pageView();
@@ -48,20 +57,30 @@ Capture and send a VIEW event from the server side:
 
 ```ts
 import type { NextRequest, NextResponse } from 'next/server';
-import { CloudSDK } from '@sitecore-content-sdk/analytics-core/server';
-import { pageView } from '@sitecore-content-sdk/events/server';
+import { initContentSdk } from '@sitecore-content-sdk/core';
+import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
+import { eventsPlugin, pageView } from '@sitecore-content-sdk/events';
+import { analyticsProxyAdapter } from '@sitecore-content-sdk/nextjs';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const response = NextResponse.next();
 
-  await CloudSDK(request, response, {
-    /* Initialization settings. See `core` package code examples. */
-  })
-    .addEvents()
-    .initialize();
+  await initContentSdk({
+    config: {
+      contextId: '<YOUR_CONTEXT_ID>',
+      siteName: '<YOUR_SITE_NAME>',
+    },
+    plugins: [
+      analyticsPlugin({
+        options: { enableCookie: true },
+        adapter: analyticsProxyAdapter(request, response),
+      }),
+      eventsPlugin(),
+    ],
+  });
 
   // Send VIEW event:
-  await pageView(request);
+  await pageView();
 
   return response;
 }
@@ -69,4 +88,4 @@ export async function middleware(request: NextRequest) {
 
 ## Documentation
 
-[Official Sitecore Cloud SDK documentation](https://doc.sitecore.com/xmc/en/developers/sdk/latest/cloud-sdk/index.html)
+[Official Sitecore Content SDK documentation](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html)

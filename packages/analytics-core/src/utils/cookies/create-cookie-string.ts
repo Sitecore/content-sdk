@@ -6,6 +6,7 @@ import type { CookieProperties } from './interfaces';
  * @param {string} value Cookie value.
  * @param {CookieProperties} attributes Supported cookie attributes.
  * @returns {string} Serialized cookie ready to be assigned to `document.cookie`.
+ * @internal
  */
 export function createCookieString(
   name: string,

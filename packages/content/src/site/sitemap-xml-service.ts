@@ -1,7 +1,8 @@
 import { FetchOptions, GraphQLClient } from '../client';
-import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClientFactory, constants } from '@sitecore-content-sdk/core';
 import debug from '../debug';
-import { siteNameError } from '../constants';
+
+const { ERROR_MESSAGES } = constants;
 
 const PREFIX_NAME_SITEMAP = 'sitemap';
 
@@ -67,7 +68,7 @@ export class SitemapXmlService {
     const siteName: string = this.options.siteName;
 
     if (!siteName) {
-      throw new Error(siteNameError);
+      throw new Error(ERROR_MESSAGES.MV_002);
     }
 
     const sitemapResult: Promise<SitemapQueryResult> = this.graphQLClient.request(

@@ -8,9 +8,10 @@
   },
   "dependencies": {
     "@sitecore-content-sdk/analytics-core": "2.0.0-canary.10",
+    "@sitecore-content-sdk/core": "2.0.0-canary.10",
     "debug": "^4.4.3"
   },
-  "description": "> TODO: description",
+  "description": "Enables real-time, unified tracking to send events to Sitecore.",
   "devDependencies": {
     "@jest/globals": "^30.2.0",
     "@jest/types": "^29.6.3",
@@ -31,16 +32,24 @@
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2"
   },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "types/src/index.d.ts",
   "exports": {
+    ".": {
+      "import": "./dist/esm/src/index.js",
+      "require": "./dist/cjs/src/index.js",
+      "types": "./types/src/index.d.ts"
+    },
     "./browser": {
       "import": "./dist/esm/src/browser.js",
       "require": "./dist/cjs/src/browser.js",
       "types": "./types/src/browser.d.ts"
     },
-    "./server": {
-      "import": "./dist/esm/src/server.js",
-      "require": "./dist/cjs/src/server.js",
-      "types": "./types/src/server.d.ts"
+    "./internal": {
+      "import": "./dist/esm/src/internal.js",
+      "require": "./dist/cjs/src/internal.js",
+      "types": "./types/src/internal.d.ts"
     }
   },
   "files": [
@@ -51,7 +60,6 @@
   "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
   "license": "Apache-2.0",
   "name": "@sitecore-content-sdk/events",
-  "private": true,
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -60,10 +68,12 @@
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "clean": "del-cli dist types",
     "coverage": "jest --config jest.config.ts --coverage",
-    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/events --entryPoints src/browser.ts --entryPoints src/server.ts --githubPages false",
+    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/events --entryPoints src/browser.ts --entryPoints src/internal.ts --entryPoints src/index.ts --githubPages false",
     "lint": "eslint \"./src/**/*.ts\"",
     "prepublishOnly": "npm run build",
-    "test": "jest --config jest.config.ts"
+    "test": "jest --config jest.config.ts",
+    "api-extractor": "npm run build && api-extractor run --local --verbose",
+    "api-extractor:verify": "api-extractor run"
   },
   "version": "2.0.0-canary.10"
 }
