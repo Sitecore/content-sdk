@@ -6,7 +6,7 @@
 
 # Interface: PersonalizeServerPlugin
 
-Defined in: [personalize/src/initialization/types.ts:132](https://github.com/Sitecore/content-sdk/blob/92584ceb04c51ecfe2da9825c63b6e238cd87d18/packages/personalize/src/initialization/types.ts#L132)
+Defined in: [personalize/src/initialization/types.ts:132](https://github.com/Sitecore/content-sdk/blob/3746e90462f2207927cf04da92b0c6dc4ff879fc/packages/personalize/src/initialization/types.ts#L132)
 
 Represents the personalize server plugin interface.
 
@@ -16,7 +16,7 @@ Represents the personalize server plugin interface.
 
 > **adapter**: [`PersonalizeAdapter`](PersonalizeAdapter.md)
 
-Defined in: [personalize/src/initialization/types.ts:153](https://github.com/Sitecore/content-sdk/blob/92584ceb04c51ecfe2da9825c63b6e238cd87d18/packages/personalize/src/initialization/types.ts#L153)
+Defined in: [personalize/src/initialization/types.ts:153](https://github.com/Sitecore/content-sdk/blob/3746e90462f2207927cf04da92b0c6dc4ff879fc/packages/personalize/src/initialization/types.ts#L153)
 
 The adapter for the personalize server plugin, which provides methods to get and set the profile id, and optionally get the user agent. The adapter allows the personalize plugin to interact with the underlying platform or environment in a consistent way.
 
@@ -26,7 +26,7 @@ The adapter for the personalize server plugin, which provides methods to get and
 
 > **dependencies**: `string`[]
 
-Defined in: [personalize/src/initialization/types.ts:149](https://github.com/Sitecore/content-sdk/blob/92584ceb04c51ecfe2da9825c63b6e238cd87d18/packages/personalize/src/initialization/types.ts#L149)
+Defined in: [personalize/src/initialization/types.ts:149](https://github.com/Sitecore/content-sdk/blob/3746e90462f2207927cf04da92b0c6dc4ff879fc/packages/personalize/src/initialization/types.ts#L149)
 
 An array of plugin names that the personalize server plugin depends on. This ensures that the required plugins are initialized before the personalize plugin is initialized.
 
@@ -36,7 +36,7 @@ An array of plugin names that the personalize server plugin depends on. This ens
 
 > **init**: () => `Promise`\<`void`\>
 
-Defined in: [personalize/src/initialization/types.ts:141](https://github.com/Sitecore/content-sdk/blob/92584ceb04c51ecfe2da9825c63b6e238cd87d18/packages/personalize/src/initialization/types.ts#L141)
+Defined in: [personalize/src/initialization/types.ts:141](https://github.com/Sitecore/content-sdk/blob/3746e90462f2207927cf04da92b0c6dc4ff879fc/packages/personalize/src/initialization/types.ts#L141)
 
 Initializes the personalize server plugin, which may involve setting up necessary configurations or performing any asynchronous operations required for the plugin to function properly.
 
@@ -52,7 +52,7 @@ A promise that resolves when the initialization is complete.
 
 > **name**: `"PersonalizePlugin"`
 
-Defined in: [personalize/src/initialization/types.ts:145](https://github.com/Sitecore/content-sdk/blob/92584ceb04c51ecfe2da9825c63b6e238cd87d18/packages/personalize/src/initialization/types.ts#L145)
+Defined in: [personalize/src/initialization/types.ts:145](https://github.com/Sitecore/content-sdk/blob/3746e90462f2207927cf04da92b0c6dc4ff879fc/packages/personalize/src/initialization/types.ts#L145)
 
 The name of the personalize plugin.
 
@@ -62,6 +62,6 @@ The name of the personalize plugin.
 
 > **options**: [`PersonalizeServerOptions`](../type-aliases/PersonalizeServerOptions.md)
 
-Defined in: [personalize/src/initialization/types.ts:136](https://github.com/Sitecore/content-sdk/blob/92584ceb04c51ecfe2da9825c63b6e238cd87d18/packages/personalize/src/initialization/types.ts#L136)
+Defined in: [personalize/src/initialization/types.ts:136](https://github.com/Sitecore/content-sdk/blob/3746e90462f2207927cf04da92b0c6dc4ff879fc/packages/personalize/src/initialization/types.ts#L136)
 
 The options for the personalize server plugin, including cookie settings.
