@@ -3,7 +3,7 @@ import { ComponentFields, ComponentParams } from '../../layout/models';
 import { validateEvent, DesignLibraryEvent } from '../design-library';
 import debug from '../../debug';
 
-const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT, ERROR_MESSAGES } = constants;
 
 /**
  * Event to send import map to design library
@@ -555,7 +555,10 @@ export function isImportEntryInfoArray(data: unknown): data is ImportEntryInfo[]
  */
 export const sendErrorEvent = (uid: string, error: unknown, type: DesignLibraryPreviewError) => {
   const errorEvent = getDesignLibraryErrorEvent(uid, error, type);
-  console.error('Component Library: sending error event', errorEvent);
+  console.error(
+    `Component Library: sending error event. ${ERROR_MESSAGES.CONTACT_SUPPORT}`,
+    errorEvent
+  );
   if (typeof window !== 'undefined') {
     const target = window.parent && window.parent !== window ? window.parent : window;
     target.postMessage(errorEvent, '*');

@@ -324,7 +324,9 @@ describe('design library codegen', () => {
           .to.be.true;
 
         const errorLogArgs = errorSpy.getCall(0).args;
-        expect(errorLogArgs[0]).to.equal(`Component Library: sending error event. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
+        expect(errorLogArgs[0]).to.equal(
+          `Component Library: sending error event. ${ERROR_MESSAGES.CONTACT_SUPPORT}`
+        );
 
         const errorEvent = errorLogArgs[1];
 
@@ -360,7 +362,9 @@ describe('design library codegen', () => {
           .to.be.true;
 
         const errorLogArgs = errorSpy.getCall(0).args;
-        expect(errorLogArgs[0]).to.equal(`Component Library: sending error event. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
+        expect(errorLogArgs[0]).to.equal(
+          `Component Library: sending error event. ${ERROR_MESSAGES.CONTACT_SUPPORT}`
+        );
 
         const errorEvent = errorLogArgs[1];
 
