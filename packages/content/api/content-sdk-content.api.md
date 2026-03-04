@@ -231,6 +231,9 @@ export enum DesignLibraryMode {
 
 // @internal
 export enum DesignLibraryPreviewError {
+    GeneratedComponentFetch = "generated-component-fetch-error",
+    ImportMapLoad = "import-map-load-error",
+    ImportMapMissing = "import-map-missing",
     Render = "render",
     RenderInit = "render-init"
 }
@@ -551,15 +554,16 @@ export const getContentStylesheetLink: (layoutData: LayoutServiceData, sitecoreE
 // @internal
 export function getDefaultMediaUrlTransformer(edgeUrl: string): (value: string) => string;
 
-// Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPreviewErrorEvent" needs to be exported by the entry point api-surface.d.ts
-//
-// @internal
-export function getDesignLibraryComponentPreviewErrorEvent(uid: string, error: unknown, type: DesignLibraryPreviewError): DesignLibraryComponentPreviewErrorEvent;
-
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPropsEvent" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
 export function getDesignLibraryComponentPropsEvent(uid: string, fields?: ComponentFields, parameters?: ComponentParams): DesignLibraryComponentPropsEvent;
+
+// Warning: (ae-forgotten-export) The symbol "DesignLibraryErrorEvent" needs to be exported by the entry point api-surface.d.ts
+// Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPreviewErrorEvent" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export function getDesignLibraryErrorEvent(uid: string, error: unknown, type: DesignLibraryPreviewError): DesignLibraryErrorEvent | DesignLibraryComponentPreviewErrorEvent;
 
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryImportMapEvent" needs to be exported by the entry point api-surface.d.ts
 //
@@ -1377,7 +1381,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 // Warnings were encountered during analysis:
 //
 // src/client/sitecore-client.ts:65:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
-// src/editing/codegen/preview.ts:110:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
+// src/editing/codegen/preview.ts:115:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
