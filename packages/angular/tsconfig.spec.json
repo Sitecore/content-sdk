@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "types": ["vitest/globals"],
+    "typeRoots": ["./node_modules/@types", "./typings", "./node_modules"]
+  },
+  "include": [
+    "./src/**/*.spec.ts",
+    "./src/**/*.d.ts"
+  ]
+}

@@ -36,7 +36,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "2.0.0-canary.3"
+    "@sitecore-content-sdk/core": "2.0.0-canary.6"
   },
   "devDependencies": {
     "@types/chai": "^5.2.3",

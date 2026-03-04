@@ -7,10 +7,7 @@ import {
   NativeDataFetcher,
   debug,
 } from '@sitecore-content-sdk/core';
-import {
-  resolveEdgeUrlForStaticFiles,
-  resolveExperienceEdgeUrl,
-} from '@sitecore-content-sdk/core/tools';
+import { resolveEdgeUrlForStaticFiles, resolveExperienceEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { DictionaryPhrases, DictionaryService } from '../i18n';
 import {
   getDesignLibraryStylesheetLinks,
@@ -729,8 +726,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       return layout;
     }
     const experienceEdgeUrl = resolveExperienceEdgeUrl();
-    const transformer =
-      opt === true ? getDefaultMediaUrlTransformer(experienceEdgeUrl) : opt;
+    const transformer = opt === true ? getDefaultMediaUrlTransformer(experienceEdgeUrl) : opt;
     return applyMediaUrlRewrite(layout, transformer);
   }
 

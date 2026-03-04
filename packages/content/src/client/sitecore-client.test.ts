@@ -498,8 +498,7 @@ describe('SitecoreClient', () => {
         },
       };
       layoutServiceStub.fetchLayoutData.returns(rawLayout);
-      const stringTransformer = (value: string) =>
-        value === 'home' ? 'rewritten' : value;
+      const stringTransformer = (value: string) => (value === 'home' ? 'rewritten' : value);
       const clientWithRewrite = new SitecoreClient({
         ...defaultInitOptions,
         rewriteMediaUrls: stringTransformer,
@@ -537,9 +536,9 @@ describe('SitecoreClient', () => {
 
       const result = await clientWithRewrite.getPage(path, { locale });
 
-      expect(
-        (result?.layout.sitecore.route?.fields?.image?.value as { src: string }).src
-      ).to.equal('https://custom.example.com/-/media/hero.jpg');
+      expect((result?.layout.sitecore.route?.fields?.image?.value as { src: string }).src).to.equal(
+        'https://custom.example.com/-/media/hero.jpg'
+      );
       delete process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV];
     });
 
