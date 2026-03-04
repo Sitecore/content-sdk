@@ -3,7 +3,7 @@ import { ComponentFields, ComponentParams } from '../../layout/models';
 import { validateEvent, DesignLibraryEvent } from '../design-library';
 import debug from '../../debug';
 
-const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT, ERROR_MESSAGES } = constants;
 
 /**
  * Event to send import map to design library
@@ -21,10 +21,15 @@ const DESIGN_LIBRARY_COMPONENT_PROPS_EVENT_NAME = 'component:generation:componen
 const DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME = 'component:generation:component-preview';
 
 /**
- * Event to send component error to design library
+ * Event to send component preview error to design library
  */
 const DESIGN_LIBRARY_COMPONENT_PREVIEW_ERROR_EVENT_NAME =
   'component:generation:component-preview-error';
+
+/**
+ * Event to send general component preview error to design library
+ */
+const DESIGN_LIBRARY_ERROR_EVENT_NAME = 'component:generation:error';
 
 /**
  * Represents an import map entry.
@@ -140,6 +145,7 @@ export interface ServerComponentPreviewEventArgs extends DesignLibraryEvent {
 
 /**
  * Represents an event indicating the import map to be sent to design library
+ * @internal
  */
 export interface DesignLibraryImportMapEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_IMPORT_MAP_EVENT_NAME;
@@ -154,6 +160,7 @@ export interface DesignLibraryImportMapEvent extends DesignLibraryEvent {
 
 /**
  * Represents an event indicating the component props to be sent to design library
+ * @internal
  */
 export interface DesignLibraryComponentPropsEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_COMPONENT_PROPS_EVENT_NAME;
@@ -166,13 +173,31 @@ export interface DesignLibraryComponentPropsEvent extends DesignLibraryEvent {
 
 /**
  * Represents an event indicating the preview error to be sent to design library.
+ * Sending this type of event will trigger attempt regenerate the component by design library and resend the preview event.
+ * @internal
  */
 export interface DesignLibraryComponentPreviewErrorEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_ERROR_EVENT_NAME;
   message: {
     uid: string;
     error: unknown;
-    type: DesignLibraryPreviewError;
+    type: DesignLibraryPreviewError.Render | DesignLibraryPreviewError.RenderInit;
+  };
+}
+
+/**
+ * Represents an event indicating a general error to be sent to design library.
+ * @internal
+ */
+export interface DesignLibraryErrorEvent extends DesignLibraryEvent {
+  name: typeof DESIGN_LIBRARY_ERROR_EVENT_NAME;
+  message: {
+    uid: string;
+    error: unknown;
+    type: Omit<
+      DesignLibraryPreviewError,
+      DesignLibraryPreviewError.Render | DesignLibraryPreviewError.RenderInit
+    >;
   };
 }
 
@@ -189,6 +214,18 @@ export enum DesignLibraryPreviewError {
    * Error occurred during component and event handlers initialization.
    */
   RenderInit = 'render-init',
+  /**
+   * The import map is missing
+   */
+  ImportMapMissing = 'import-map-missing',
+  /**
+   * Error during loading of the import map
+   */
+  ImportMapLoad = 'import-map-load-error',
+  /**
+   * Error during fetching the generated component data from secured endpoint
+   */
+  GeneratedComponentFetch = 'generated-component-fetch-error',
 }
 
 /**
@@ -408,22 +445,31 @@ export const createComponentInstance = (
 };
 
 /**
- * Generates a DesignLibraryComponentPreviewErrorEvent with the given uid and error.
+ * Generates a DesignLibraryErrorEvent depending on the type of error with the given uid and error.
  * @param {string} uid - The unique identifier for the event.
  * @param {unknown} error - The error to be sent.
  * @param {DesignLibraryPreviewError} type - The type of error.
- * @returns An object representing the DesignLibraryComponentPreviewErrorEvent.
+ * @returns An object representing the DesignLibraryErrorEvent.
  * @internal
  */
-export function getDesignLibraryComponentPreviewErrorEvent(
+export function getDesignLibraryErrorEvent(
   uid: string,
   error: unknown,
   type: DesignLibraryPreviewError
-): DesignLibraryComponentPreviewErrorEvent {
-  return {
-    name: DESIGN_LIBRARY_COMPONENT_PREVIEW_ERROR_EVENT_NAME,
-    message: { uid, error, type },
-  };
+): DesignLibraryErrorEvent | DesignLibraryComponentPreviewErrorEvent {
+  switch (type) {
+    case DesignLibraryPreviewError.Render:
+    case DesignLibraryPreviewError.RenderInit:
+      return {
+        name: DESIGN_LIBRARY_COMPONENT_PREVIEW_ERROR_EVENT_NAME,
+        message: { uid, error, type },
+      };
+    default:
+      return {
+        name: DESIGN_LIBRARY_ERROR_EVENT_NAME,
+        message: { uid, error, type },
+      };
+  }
 }
 
 /**
@@ -501,15 +547,18 @@ export function isImportEntryInfoArray(data: unknown): data is ImportEntryInfo[]
 }
 
 /**
- * Sends a component preview error event to the design library
+ * Sends a design library error event to the design library
  * @param {string} uid - The unique identifier of the component that's being edited.
  * @param {unknown} error - The error object or message to be sent.
  * @param {DesignLibraryPreviewError} type - The type of error, as defined in DesignLibraryPreviewError.
  * @internal
  */
 export const sendErrorEvent = (uid: string, error: unknown, type: DesignLibraryPreviewError) => {
-  const errorEvent = getDesignLibraryComponentPreviewErrorEvent(uid, error, type);
-  console.error('Component Library: sending error event', errorEvent);
+  const errorEvent = getDesignLibraryErrorEvent(uid, error, type);
+  console.error(
+    `Component Library: sending error event. ${ERROR_MESSAGES.CONTACT_SUPPORT}`,
+    errorEvent
+  );
   if (typeof window !== 'undefined') {
     const target = window.parent && window.parent !== window ? window.parent : window;
     target.postMessage(errorEvent, '*');

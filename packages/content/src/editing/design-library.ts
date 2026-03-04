@@ -9,6 +9,8 @@ import {
 } from '../layout/models';
 import { DesignLibraryMode } from './models';
 
+const { ERROR_MESSAGES } = constants;
+
 /**
  * Event to be sent when report status to design library
  */
@@ -266,6 +268,10 @@ export const postToDesignLibrary = (evt: DesignLibraryEvent) => {
     console.log('Component Library: sending event', evt.name, evt);
     target.postMessage(evt, '*');
   } catch (err) {
-    console.error('Component Library: postMessage failed', err, evt);
+    console.error(
+      `Component Library: postMessage failed. ${ERROR_MESSAGES.CONTACT_SUPPORT}`,
+      err,
+      evt
+    );
   }
 };

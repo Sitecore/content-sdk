@@ -1,15 +1,17 @@
 ﻿import { expect } from 'chai';
 import nock from 'nock';
+import { constants } from '@sitecore-content-sdk/core';
 import {
   SitePathService,
   SitePathServiceConfig,
   getSiteEmptyError,
-  languageError,
 } from './sitepath-service';
 import sitemapDefaultQueryResult from '../test-data/sitemapDefaultQueryResult.json';
 import sitemapPersonalizeQueryResult from '../test-data/sitemapPersonalizeQueryResult.json';
 import sitemapServiceMultisiteResult from '../test-data/sitemapServiceMultisiteResult';
 import { GraphQLClient, GraphQLRequestClient } from '../client';
+
+const { ERROR_MESSAGES } = constants;
 
 class TestService extends SitePathService {
   public client: GraphQLClient;
@@ -613,7 +615,7 @@ describe('SitePathService', () => {
     it('should throw error if valid language is not provided', async () => {
       const service = new SitePathService({ clientFactory });
       await service.fetchSiteRoutes(sites, []).catch((error: RangeError) => {
-        expect(error.message).to.equal(languageError);
+        expect(error.message).to.equal(ERROR_MESSAGES.MV_009);
       });
     });
 

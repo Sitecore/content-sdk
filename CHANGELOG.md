@@ -32,13 +32,16 @@ Our versioning strategy is as follows:
   * `[react]` Added React hooks for search functionality
     - `useSearch` hook for paginated search queries with automatic state management, request cancellation, request status tracking.
     - `useInfiniteSearch` hook for infinite scroll/search patterns with `loadMore` functionality, request cancellation, request status tracking.
-  * `[analytics]` `[core]` `[create-content-sdk-app]` `[nextjs]` `[react]` Reorganize Analytics packages ([#340](https://github.com/Sitecore/content-sdk/pull/340))([#341](https://github.com/Sitecore/content-sdk/pull/341))
 
 * `[nextjs]` `[Pages Router]` Adjust static path generation when multisite is disabled ([#345](https://github.com/Sitecore/content-sdk/pull/345))
 
 * `[nextjs]` Allow to pass custom query parameters to /api/editing/render handlers ([#381](https://github.com/Sitecore/content-sdk/pull/381))
 
 * `[nextjs]` `[Pages Router]` Add explicit `Content-Type: text/html; charset=utf-8` to the editing render route response for proper response handling ([#386](https://github.com/Sitecore/content-sdk/pull/386))
+
+* `[analytics-core]` `[events]` `[personalize]` `[core]` `[create-content-sdk-app]` `[nextjs]` `[react]` Introduce Analytics packages ([#340](https://github.com/Sitecore/content-sdk/pull/340))([#341](https://github.com/Sitecore/content-sdk/pull/341))([#357](https://github.com/Sitecore/content-sdk/pull/357))([#363](https://github.com/Sitecore/content-sdk/pull/363))
+  * Migrated the `core`,`events` and `personalize` packages from `CloudSDK` to `analytics-core`,`events` and `personalize` packages in `ContentSDK` 
+  * Reworked the initialization functionality introducing the new `initContentSdk` function
 
 ### 🛠 Breaking Changes
 
@@ -74,6 +77,8 @@ Our versioning strategy is as follows:
 
 * `[core]` `[search]` `[analytics]` Pass Sitecore Context ID only in headers ([#336](https://github.com/Sitecore/content-sdk/pull/336))
 * `[core]` `[DesignLibrary]` Fix faux-extentions being stripped from 3rd party modules' names in import-map ([#358](https://github.com/Sitecore/content-sdk/pull/358))
+* `[content]` `[react]` `[nextjs]` Improve import map generation and refactor Design Library error handling ([#387](https://github.com/Sitecore/content-sdk/pull/387))
+
 
 ### 1.5.0
 

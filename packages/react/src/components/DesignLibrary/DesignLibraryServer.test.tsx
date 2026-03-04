@@ -12,6 +12,7 @@ import {
   LayoutServiceData,
   EDITING_COMPONENT_PLACEHOLDER,
 } from '@sitecore-content-sdk/content/layout';
+import { DesignLibraryPreviewError } from '@sitecore-content-sdk/content/codegen';
 import { DesignLibraryStatus, DesignLibraryMode } from '@sitecore-content-sdk/content/editing';
 import { getTestLayoutData } from '../../test-data/component-editing-data';
 import {
@@ -359,7 +360,10 @@ describe('<DesignLibraryServer />', () => {
         render(awaitedDesignLibraryServer);
 
         const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
-        expect(propsPassed.componentInitError).to.equal('No loadImportMap provided');
+        expect(propsPassed.componentInitError).to.deep.equal({
+          message: 'No loadImportMap provided',
+          type: DesignLibraryPreviewError.ImportMapMissing,
+        });
       });
 
       it('should set componentInitError when loadImportMap throws', async () => {
@@ -377,9 +381,10 @@ describe('<DesignLibraryServer />', () => {
         render(awaitedDesignLibraryServer);
 
         const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
-        expect(propsPassed.componentInitError).to.equal(
-          'Error loading import map: Error: Import map load failed'
-        );
+        expect(propsPassed.componentInitError).to.deep.equal({
+          message: 'Error loading import map: Error: Import map load failed',
+          type: DesignLibraryPreviewError.ImportMapLoad,
+        });
       });
 
       it('should render AppPlaceholder when no cache update exists', async () => {
@@ -617,7 +622,10 @@ describe('<DesignLibraryServer />', () => {
         const rendered = render(awaitedDesignLibraryServer);
 
         const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
-        expect(propsPassed.componentInitError).to.equal('Error: create component failed');
+        expect(propsPassed.componentInitError).to.deep.equal({
+          message: 'create component failed',
+          type: DesignLibraryPreviewError.RenderInit,
+        });
 
         expect(rendered?.container.innerHTML).to.equal(
           [

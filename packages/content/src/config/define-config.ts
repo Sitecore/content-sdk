@@ -1,7 +1,9 @@
-import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
+import { constants, DefaultRetryStrategy } from '@sitecore-content-sdk/core';
 import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models';
 import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Provides default initial values for SitecoreConfig
@@ -127,16 +129,12 @@ const validateApiConfiguration = (config: SitecoreConfigInput): void => {
   // Server-side: allow Edge OR Local; clientContextId alone is NOT sufficient
   if (!isBrowser) {
     if (!hasEdgeContextId && !hasLocalCreds) {
-      throw new Error(
-        'Configuration error: provide either Edge contextId (api.edge.contextId) or local credentials (api.local.apiHost + api.local.apiKey).'
-      );
+      throw new Error(ERROR_MESSAGES.MV_007);
     }
     if (hasEdgeContextId && !hasClientContextId) {
       // eslint-disable-next-line no-console
       if (process.env.NODE_ENV === 'development') {
-        console.warn(
-          'Warning: only a server-side edge contextId is provided. Client-side requests will require api.edge.clientContextId or a proxy.'
-        );
+        console.warn(ERROR_MESSAGES.MV_006);
       }
     }
     return; // validation complete on the server
@@ -146,10 +144,7 @@ const validateApiConfiguration = (config: SitecoreConfigInput): void => {
   if (isBrowser && !hasClientContextId) {
     // eslint-disable-next-line no-console
     if (process.env.NODE_ENV === 'development') {
-      console.warn(
-        `Warning: clientContextId is missing. The browser will use contextId instead.
-  Client Side functionalities (like Tracking and Personalization) may be limited.`
-      );
+      console.warn(ERROR_MESSAGES.MV_006);
     }
   }
 };

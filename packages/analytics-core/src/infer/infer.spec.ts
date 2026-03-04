@@ -1,4 +1,5 @@
 import * as infer from './infer';
+import { jest, expect } from '@jest/globals';
 
 describe('Test infer class', () => {
   const { window } = global;

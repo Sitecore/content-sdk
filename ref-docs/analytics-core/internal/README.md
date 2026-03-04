@@ -6,62 +6,36 @@
 
 # internal
 
-## Namespaces
-
-- [debug](namespaces/debug/README.md)
-
-## Classes
-
-- [PackageInitializer](classes/PackageInitializer.md)
-- [PackageInitializerServer](classes/PackageInitializerServer.md)
-
 ## Interfaces
 
-- [BrowserSettings](interfaces/BrowserSettings.md)
-- [DebugResponse](interfaces/DebugResponse.md)
+- [AnalyticsAdapter](interfaces/AnalyticsAdapter.md)
+- [AnalyticsOptions](interfaces/AnalyticsOptions.md)
 - [EPResponse](interfaces/EPResponse.md)
 - [Infer](interfaces/Infer.md)
-- [PackageContextDependencyBrowser](interfaces/PackageContextDependencyBrowser.md)
+- [VisitorIds](interfaces/VisitorIds.md)
 
 ## Variables
 
+- [ANALYTICS\_PLUGIN\_NAME](variables/ANALYTICS_PLUGIN_NAME.md)
 - [API\_VERSION](variables/API_VERSION.md)
-- [BROWSER\_ID\_COOKIE\_NAME](variables/BROWSER_ID_COOKIE_NAME.md)
-- [builderInstanceBrowser](variables/builderInstanceBrowser.md)
-- [builderInstanceServer](variables/builderInstanceServer.md)
+- [CLIENT\_ID\_COOKIE\_NAME](variables/CLIENT_ID_COOKIE_NAME.md)
 - [COOKIE\_NAME\_PREFIX](variables/COOKIE_NAME_PREFIX.md)
 - [CORRELATION\_ID\_HEADER](variables/CORRELATION_ID_HEADER.md)
 - [DAILY\_SECONDS](variables/DAILY_SECONDS.md)
-- [debug](variables/debug.md)
 - [DEFAULT\_COOKIE\_EXPIRY\_DAYS](variables/DEFAULT_COOKIE_EXPIRY_DAYS.md)
-- [enabledPackagesBrowser](variables/enabledPackagesBrowser.md)
-- [enabledPackagesServer](variables/enabledPackagesServer.md)
-- [initCoreState](variables/initCoreState.md)
 - [LIBRARY\_VERSION](variables/LIBRARY_VERSION.md)
-- [SITECORE\_EDGE\_URL](variables/SITECORE_EDGE_URL.md)
 
 ## Functions
 
-- [fetchBrowserIdFromEdgeProxy](functions/fetchBrowserIdFromEdgeProxy.md)
+- [fetchClientIdFromEdgeProxy](functions/fetchClientIdFromEdgeProxy.md)
 - [generateCorrelationId](functions/generateCorrelationId.md)
-- [getCloudSDKRequest](functions/getCloudSDKRequest.md)
-- [getCloudSDKResponse](functions/getCloudSDKResponse.md)
-- [getCloudSDKSettingsBrowser](functions/getCloudSDKSettingsBrowser.md)
-- [getCloudSDKSettingsServer](functions/getCloudSDKSettingsServer.md)
-- [getCookiesValuesFromEdgeBrowser](functions/getCookiesValuesFromEdgeBrowser.md)
-- [getCookiesValuesFromEdgeServer](functions/getCookiesValuesFromEdgeServer.md)
-- [getCookieValueFromMiddlewareRequest](functions/getCookieValueFromMiddlewareRequest.md)
-- [getCookieValueFromRequest](functions/getCookieValueFromRequest.md)
+- [getAnalyticsPlugin](functions/getAnalyticsPlugin.md)
 - [getDefaultCookieAttributes](functions/getDefaultCookieAttributes.md)
-- [getEnabledPackageBrowser](functions/getEnabledPackageBrowser.md)
-- [getEnabledPackageServer](functions/getEnabledPackageServer.md)
-- [getGuestIdServer](functions/getGuestIdServer.md)
 - [language](functions/language.md)
 - [pageName](functions/pageName.md)
-- [processDebugResponse](functions/processDebugResponse.md)
 
 ## References
 
-### Settings
+### AnalyticsPlugin
 
-Re-exports [Settings](../browser/interfaces/Settings.md)
+Re-exports [AnalyticsPlugin](../index/interfaces/AnalyticsPlugin.md)

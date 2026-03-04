@@ -1,48 +1,50 @@
-import {
-  getCloudSDKSettingsBrowser as getCloudSDKSettings,
-  getEnabledPackageBrowser as getEnabledPackage,
-} from '@sitecore-content-sdk/analytics-core/internal';
-import { getCookieValueClientSide } from '@sitecore-content-sdk/analytics-core/utils';
-import { PACKAGE_NAME } from '../consts';
-import { awaitInit } from '../initializer/browser/initializer';
-import type { PersonalizeSettings } from '../initializer/browser/interfaces';
+import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/internal';
 import type { PersonalizeData } from './personalizer';
 import { Personalizer } from './personalizer';
 import type { FailedCalledFlowsResponse } from './send-call-flows-request';
+import { getCoreContext } from '@sitecore-content-sdk/core';
+import { getPersonalizePlugin } from '../initialization/shared';
 
 /**
- * Options for the personalize function
- */
-interface PersonalizeOpts {
-  /**
-   * Timeout in milliseconds for the personalize request
-   */
-  timeout?: number;
-}
-
-/**
- * A function that executes an interactive experiment or web experiment over any web-based or mobile application.
- * @param {PersonalizeData} personalizeData - The required/optional attributes in order to create a flow execution
- * @param {PersonalizeOpts} opts - An object containing additional options
- * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A flow execution response
+ * A function that executes an interactive/web experiment over any web-based/mobile application.
+ * @param {PersonalizeData} personalizeData - The required/optional attributes for a flow execution.
+ * @param {PersonalizeOpts} opts - An object containing additional options.
+ * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A flow execution response.
+ * @public
  */
 export async function personalize(
   personalizeData: PersonalizeData,
   opts?: PersonalizeOpts
 ): Promise<unknown | null | FailedCalledFlowsResponse> {
-  await awaitInit();
+  const { config, readyPromise } = getCoreContext();
+  await readyPromise;
+  const { adapter: personalizeAdapter } = getPersonalizePlugin();
 
-  const cloudSDKSettings = getCloudSDKSettings();
-  const personalizeSettings = getEnabledPackage(PACKAGE_NAME)?.settings as PersonalizeSettings;
-  const browserId = getCookieValueClientSide(cloudSDKSettings.cookieSettings.name.browserId);
-  const guestId = getCookieValueClientSide(personalizeSettings.cookieSettings.name.guestId);
+  const { adapter: analyticsAdapter } = getAnalyticsPlugin();
 
-  return new Personalizer(browserId, guestId).getInteractiveExperienceData(
+  const clientId = analyticsAdapter.getClientId() || '';
+  const profileId = personalizeAdapter.getProfileId() || '';
+  const searchParams = analyticsAdapter.location.getSearchParams();
+  const userAgent = personalizeAdapter.getUserAgent?.();
+
+  return new Personalizer(clientId, profileId).getInteractiveExperienceData(
     personalizeData,
-    cloudSDKSettings,
-    window.location.search,
+    config,
+    searchParams,
     {
+      userAgent,
       timeout: opts?.timeout,
     }
   );
+}
+
+/**
+ * Options for the personalize function.
+ * @public
+ */
+export interface PersonalizeOpts {
+  /**
+   * Timeout in milliseconds for the personalize request
+   */
+  timeout?: number;
 }

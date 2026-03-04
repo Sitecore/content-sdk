@@ -1,6 +1,9 @@
 import { Argv } from 'yargs';
+import { constants } from '@sitecore-content-sdk/core';
 import { watchItems } from '../../../utils/watch-items';
 import loadCliConfig from '../../../utils/load-config';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * @param {Argv} yargs
@@ -59,7 +62,7 @@ export function handler(argv: GenerateMapCliArgs) {
   const cliConfig = loadCliConfig(argv.config);
   if (!cliConfig.componentMap) {
     console.error(
-      'The `sitecore.cli.config` file is missing a `componentMap` configuration. Please add it to use this command.'
+      ERROR_MESSAGES.MV_005('componentMap')
     );
     return;
   }

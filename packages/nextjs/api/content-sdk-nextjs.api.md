@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AnalyticsAdapter } from '@sitecore-content-sdk/analytics-core/internal';
 import { AppPlaceholder } from '@sitecore-content-sdk/react';
 import { AppPlaceholderProps } from '@sitecore-content-sdk/react';
 import { BYOCClientWrapper } from '@sitecore-content-sdk/react';
@@ -94,6 +95,7 @@ import { ImageProps as ImageProps_2 } from 'next/image';
 import { ImageSizeParameters } from '@sitecore-content-sdk/react';
 import { ImportEntry } from '@sitecore-content-sdk/content/codegen';
 import { IncomingHttpHeaders } from 'http';
+import { initContentSdk } from '@sitecore-content-sdk/core';
 import { isEditorActive } from '@sitecore-content-sdk/content/editing';
 import { Item } from '@sitecore-content-sdk/content/layout';
 import { JSX as JSX_2 } from 'react';
@@ -124,6 +126,7 @@ import { normalizeSiteRewrite } from '@sitecore-content-sdk/content/site';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { PageMode } from '@sitecore-content-sdk/content/client';
 import { PageOptions } from '@sitecore-content-sdk/content/client';
+import { PersonalizeAdapter } from '@sitecore-content-sdk/personalize/internal';
 import { PersonalizeInfo } from '@sitecore-content-sdk/content/personalize';
 import { personalizeLayout } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeService } from '@sitecore-content-sdk/content/personalize';
@@ -193,6 +196,14 @@ export type AllowedQueryParams = Array<AllowedQueryParam | string> | AllowedQuer
 
 // @public
 export type AllowedQueryParamsResolver = (queryParams: string[]) => Array<AllowedQueryParam | string>;
+
+// @public
+export interface AnalyticsProxyAdapter extends AnalyticsAdapter {
+    type: 'proxy';
+}
+
+// @public
+export function analyticsProxyAdapter(request: NextRequest, response: NextResponse): AnalyticsProxyAdapter;
 
 export { AppPlaceholder }
 
@@ -547,6 +558,8 @@ export { ImageSizeParameters }
 
 export { ImportEntry }
 
+export { initContentSdk }
+
 // @public
 export const isDesignLibraryPreviewData: (data: unknown) => data is DesignLibraryRenderPreviewData;
 
@@ -655,6 +668,13 @@ export const parseRewriteHeader: (headers: Headers) => {
     locale: string;
 };
 
+// @public
+export type PersonalizeGeoData = {
+    city?: string;
+    country?: string;
+    region?: string;
+};
+
 export { personalizeLayout }
 
 // @public
@@ -687,12 +707,20 @@ export class PersonalizeProxy extends ProxyBase {
         timeout?: number;
         variantIds?: string[];
         geo?: PersonalizeGeoData;
-    }, request: NextRequest): Promise<{
+    }): Promise<{
         variantId: string;
     }>;
     // (undocumented)
     protected personalizeService: PersonalizeService | null;
 }
+
+// @public
+export interface PersonalizeProxyAdapter extends Required<PersonalizeAdapter> {
+    type: 'proxy';
+}
+
+// @public
+export function personalizeProxyAdapter(request: NextRequest, response: NextResponse): PersonalizeProxyAdapter;
 
 // @public
 export type PersonalizeProxyConfig = ProxyBaseConfig & SitecoreConfig['api']['edge'] & SitecoreConfig['personalize'] & {
@@ -936,7 +964,6 @@ export * from "@sitecore-content-sdk/react/search";
 
 // Warnings were encountered during analysis:
 //
-// src/proxy/personalize-proxy.ts:302:7 - (ae-forgotten-export) The symbol "PersonalizeGeoData" needs to be exported by the entry point api-surface.d.ts
 // src/services/component-props-service.ts:61:5 - (ae-forgotten-export) The symbol "NextContext" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)

@@ -8,7 +8,9 @@
 
 > **generateCorrelationId**(): `string`
 
-Defined in: [src/correlation-id/generate-correlation-id.ts:7](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/analytics-core/src/correlation-id/generate-correlation-id.ts#L7)
+Defined in: [analytics-core/src/correlation-id/generate-correlation-id.ts:8](https://github.com/Sitecore/content-sdk/blob/3746e90462f2207927cf04da92b0c6dc4ff879fc/packages/analytics-core/src/correlation-id/generate-correlation-id.ts#L8)
+
+**`Internal`**
 
 Generates a correlation id.
 

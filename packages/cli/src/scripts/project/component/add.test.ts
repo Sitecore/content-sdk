@@ -6,11 +6,14 @@ import fs from 'fs';
 import path from 'path';
 import childProcess from 'child_process';
 import inquirer from 'inquirer';
+import { constants } from '@sitecore-content-sdk/core';
 import * as toolsModule from '@sitecore-content-sdk/content/tools';
 import * as serverToolsModule from '@sitecore-content-sdk/content/node-tools';
 import * as addModule from './add';
 import * as loadConfigModule from '../../../utils/load-config';
 import * as generateMapModule from './generate-map';
+
+const { ERROR_MESSAGES } = constants;
 
 describe('add command', () => {
   let sandbox: sinon.SinonSandbox;
@@ -610,7 +613,7 @@ describe('add command', () => {
 
     expect(consoleErrorStub.calledOnce).to.be.true;
     expect(consoleErrorStub.firstCall.args[0]).to.equal(
-      'The `sitecore.cli.config` file is missing a `config`. Please add it to use this command.'
+      ERROR_MESSAGES.MV_005('config')
     );
   });
 
@@ -638,7 +641,7 @@ describe('add command', () => {
 
     expect(
       consoleErrorStub.calledOnceWith(
-        chalk.red('Failed to add component: Failed to fetch component')
+        chalk.red(`Failed to add a generated component. Failed to fetch component. ${ERROR_MESSAGES.CONTACT_SUPPORT}`)
       )
     ).to.be.true;
 
@@ -675,7 +678,7 @@ describe('add command', () => {
 
     expect(
       consoleErrorStub.calledOnceWith(
-        chalk.red('Failed to add component: Failed to execute shadcn add command')
+        chalk.red(`Failed to add a generated component. Failed to execute shadcn add command. ${ERROR_MESSAGES.CONTACT_SUPPORT}`)
       )
     ).to.be.true;
 
@@ -724,7 +727,7 @@ describe('add command', () => {
 
     expect(
       consoleErrorStub.calledOnceWith(
-        chalk.red('Failed to add component: Failed to execute shadcn add command')
+        chalk.red(`Failed to add a generated component. Failed to execute shadcn add command. ${ERROR_MESSAGES.CONTACT_SUPPORT}`)
       )
     ).to.be.true;
 

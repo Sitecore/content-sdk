@@ -1,4 +1,5 @@
 import { convertToBase64 } from './base-64-converter';
+import { jest, expect } from '@jest/globals';
 
 jest.mock('buffer');
 
