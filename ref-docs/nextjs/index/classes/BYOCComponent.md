@@ -47,7 +47,7 @@ Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:15
 
 > **context**: `unknown`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:946
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:947
 
 If using React Context, re-declare this in your class to be the
 `React.ContextType` of your `static contextType`.
@@ -77,7 +77,7 @@ declare context: React.ContextType<typeof MyContext>
 
 > `readonly` **props**: `Readonly`\<`P`\>
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:970
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:971
 
 #### Inherited from
 
@@ -101,7 +101,7 @@ Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:12
 
 > `static` `optional` **contextType**: `Context`\<`any`\>
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:922
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:923
 
 If set, `this.context` will be set at runtime to the current value of the given Context.
 
@@ -134,7 +134,7 @@ class Foo extends React.Component {
 
 > `static` `optional` **propTypes**: `any`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:928
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:929
 
 Ignored by React.
 
@@ -177,7 +177,7 @@ the entire component tree to unmount.
 
 > `optional` **componentDidMount**(): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1189
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1190
 
 Called immediately after a component is mounted. Setting state here will trigger re-rendering.
 
@@ -195,7 +195,7 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 > `optional` **componentDidUpdate**(`prevProps`, `prevState`, `snapshot?`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1252
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1253
 
 Called immediately after updating occurs. Not called for the initial render.
 
@@ -223,7 +223,7 @@ The snapshot is only present if [getSnapshotBeforeUpdate](#getsnapshotbeforeupda
 
 > `optional` **componentWillMount**(): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1268
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1269
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -255,7 +255,7 @@ this from being invoked.
 
 > `optional` **componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1299
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1300
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -297,7 +297,7 @@ this from being invoked.
 
 > `optional` **componentWillUnmount**(): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1205
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1206
 
 Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
 cancelled network requests, or cleaning up any DOM elements created in `componentDidMount`.
@@ -316,7 +316,7 @@ cancelled network requests, or cleaning up any DOM elements created in `componen
 
 > `optional` **componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1331
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1332
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 
@@ -357,7 +357,7 @@ this from being invoked.
 
 > **forceUpdate**(`callback?`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:967
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:968
 
 #### Parameters
 
@@ -379,7 +379,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:967
 
 > `optional` **getSnapshotBeforeUpdate**(`prevProps`, `prevState`): `any`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1246
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1247
 
 Runs before React applies the result of Component.render render to the document, and
 returns an object to be given to [componentDidUpdate](#componentdidupdate). Useful for saving
@@ -425,7 +425,7 @@ Defined in: react/types/components/FEaaS/BYOCWrapper.d.ts:20
 
 > **setState**\<`K`\>(`state`, `callback?`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:962
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:963
 
 #### Type Parameters
 
@@ -454,7 +454,7 @@ Defined in: nextjs/node\_modules/@types/react/index.d.ts:962
 
 > `optional` **shouldComponentUpdate**(`nextProps`, `nextState`, `nextContext`): `boolean`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1200
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1201
 
 Called to determine whether the change in props and state should trigger a re-render.
 
@@ -487,7 +487,7 @@ and `componentDidUpdate` will not be called.
 
 > `optional` **UNSAFE\_componentWillMount**(): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1283
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1284
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -521,7 +521,7 @@ this from being invoked.
 
 > `optional` **UNSAFE\_componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1317
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1318
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -565,7 +565,7 @@ this from being invoked.
 
 > `optional` **UNSAFE\_componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: nextjs/node\_modules/@types/react/index.d.ts:1347
+Defined in: nextjs/node\_modules/@types/react/index.d.ts:1348
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 

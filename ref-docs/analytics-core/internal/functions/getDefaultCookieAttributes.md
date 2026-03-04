@@ -6,9 +6,11 @@
 
 # Function: getDefaultCookieAttributes()
 
-> **getDefaultCookieAttributes**(`maxAge?`, `cookieDomain?`): `CookieProperties`
+> **getDefaultCookieAttributes**(`maxAge?`, `cookieDomain?`): [`CookieProperties`](../../utils/interfaces/CookieProperties.md)
 
-Defined in: [src/cookie/get-default-cookie-attributes.ts:10](https://github.com/Sitecore/content-sdk/blob/da3af374c12a806fb6f8807e6b8d4e5bb6a4d421/packages/analytics-core/src/cookie/get-default-cookie-attributes.ts#L10)
+Defined in: [analytics-core/src/cookie/get-default-cookie-attributes.ts:11](https://github.com/Sitecore/content-sdk/blob/6636e785a81bcfd5e1d8256028ed9f3db7bd96d8/packages/analytics-core/src/cookie/get-default-cookie-attributes.ts#L11)
+
+**`Internal`**
 
 Gets the default cookie attributes.
 
@@ -21,6 +23,6 @@ Gets the default cookie attributes.
 
 ## Returns
 
-`CookieProperties`
+[`CookieProperties`](../../utils/interfaces/CookieProperties.md)
 
 The default configuration settings for the cookie string.

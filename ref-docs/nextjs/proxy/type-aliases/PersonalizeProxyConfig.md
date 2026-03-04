@@ -8,7 +8,7 @@
 
 > **PersonalizeProxyConfig** = [`ProxyBaseConfig`](ProxyBaseConfig.md) & `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & `SitecoreConfig`\[`"personalize"`\] & `object`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:28](https://github.com/Sitecore/content-sdk/blob/da3af374c12a806fb6f8807e6b8d4e5bb6a4d421/packages/nextjs/src/proxy/personalize-proxy.ts#L28)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:33](https://github.com/Sitecore/content-sdk/blob/6636e785a81bcfd5e1d8256028ed9f3db7bd96d8/packages/nextjs/src/proxy/personalize-proxy.ts#L33)
 
 The interface for the PersonalizeProxy configuration.
 
@@ -16,7 +16,7 @@ The interface for the PersonalizeProxy configuration.
 
 ### extractGeoDataCb()?
 
-> `optional` **extractGeoDataCb**: (`req?`) => `Promise`\<`PersonalizeGeoData`\> \| `PersonalizeGeoData`
+> `optional` **extractGeoDataCb**: (`req?`) => `Promise`\<[`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)\> \| [`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)
 
 #### Parameters
 
@@ -26,7 +26,7 @@ The interface for the PersonalizeProxy configuration.
 
 #### Returns
 
-`Promise`\<`PersonalizeGeoData`\> \| `PersonalizeGeoData`
+`Promise`\<[`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)\> \| [`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)
 
 ### getExtraUtmParams()?
 
