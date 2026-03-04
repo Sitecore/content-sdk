@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@sitecore-content-sdk/analytics-core": "2.0.0-canary.10",
+    "@sitecore-content-sdk/core": "2.0.0-canary.10",
     "@sitecore-content-sdk/events": "2.0.0-canary.10",
     "debug": "^4.4.3"
   },
