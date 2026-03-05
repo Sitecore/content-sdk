@@ -77,8 +77,12 @@ Our versioning strategy is as follows:
 
 * `[core]` `[search]` `[analytics]` Pass Sitecore Context ID only in headers ([#336](https://github.com/Sitecore/content-sdk/pull/336))
 * `[core]` `[DesignLibrary]` Fix faux-extentions being stripped from 3rd party modules' names in import-map ([#358](https://github.com/Sitecore/content-sdk/pull/358))
-* `[content]` `[react]` `[nextjs]` Improve import map generation and refactor Design Library error handling ([#387](https://github.com/Sitecore/content-sdk/pull/387))
 
+### 1.5.1
+   
+### 🐛 Bug Fixes
+
+* `[content]` `[react]` `[nextjs]` Improve import map generation and refactor Design Library error handling ([#387](https://github.com/Sitecore/content-sdk/pull/387))
 
 ### 1.5.0
 
