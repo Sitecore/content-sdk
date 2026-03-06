@@ -102,3 +102,4 @@ export {
 } from './components/DefaultEmptyFieldEditingComponents';
 export { ClientEditingChromesUpdate } from './components/ClientEditingChromesUpdate';
 export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
+export { type CachedPageInfo, getCachedPageParams, setCachedPageParams } from './cache/page-params';

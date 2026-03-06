@@ -172,3 +172,9 @@ export type { PersonalizeProxyAdapter } from './initialization/proxy/personalize
 export { personalizeProxyAdapter } from './initialization/proxy/personalize-adapter';
 export type { AnalyticsProxyAdapter } from './initialization/proxy/analytics-adapter';
 export { analyticsProxyAdapter } from './initialization/proxy/analytics-adapter';
+
+export {
+  type CachedPageInfo,
+  getCachedPageParams,
+  setCachedPageParams,
+} from '@sitecore-content-sdk/react';
