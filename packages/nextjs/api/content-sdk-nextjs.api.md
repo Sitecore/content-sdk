@@ -236,6 +236,12 @@ export { BYOCWrapper }
 
 export { CacheClient }
 
+// @public
+export type CachedPageParams = {
+    locale: string;
+    site: string;
+};
+
 export { CacheOptions }
 
 export { CdpHelper }
@@ -482,6 +488,12 @@ export { generateMetadata }
 export { generateSites }
 
 export { GenerateSitesConfig }
+
+// @public
+export const getCachedPageParams: () => {
+    locale: string;
+    site: string;
+};
 
 export { getChildPlaceholder }
 
@@ -857,6 +869,9 @@ export { RobotsService }
 export { RobotsServiceConfig }
 
 export { RouteData }
+
+// @public
+export function setCachedPageParams(pageParams: CachedPageParams): void;
 
 // @public
 export class SitecoreClient extends SitecoreClient_2 {

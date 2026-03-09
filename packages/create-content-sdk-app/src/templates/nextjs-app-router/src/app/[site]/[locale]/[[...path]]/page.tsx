@@ -19,11 +19,11 @@ type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-// Part of page component that handles dynamic data, like the `draftMode()` call and data fetching.
+// Part of page component that handles data, like the `draftMode()` call and data fetching.
 // This component is wrapped in Suspense to enable Next.js 16 Partial Prerendering (PPR),
-// which allows streaming dynamic content while keeping static parts prerendered.
+// which allows streaming content while keeping static parts prerendered.
 // This pattern also works seamlessly when Cache Components is enabled.
-async function DynamicPageContent({ site, locale, path, searchParams }: { site: string; locale: string; path?: string[]; searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+async function PageContent({ site, locale, path, searchParams }: { site: string; locale: string; path?: string[]; searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const draft = await draftMode();
 
   // Fetch the page data from Sitecore
@@ -63,7 +63,7 @@ export default async function Page({ params, searchParams }: PageProps) {
   // PPR allows streaming dynamic content while keeping static parts prerendered for better performance.
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <DynamicPageContent site={site} locale={locale} path={path} searchParams={searchParams} />
+      <PageContent site={site} locale={locale} path={path} searchParams={searchParams} />
     </Suspense>
   );
 }
