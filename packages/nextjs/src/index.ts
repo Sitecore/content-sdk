@@ -172,3 +172,9 @@ export { personalizeProxyAdapter } from './initialization/proxy/personalize-adap
 export type { AnalyticsProxyAdapter } from './initialization/proxy/analytics-adapter';
 export { analyticsProxyAdapter } from './initialization/proxy/analytics-adapter';
 export { DesignLibraryApp } from './components/DesignLibrary/DesignLibraryApp';
+
+export {
+  type CachedPageParams,
+  getCachedPageParams,
+  setCachedPageParams,
+} from './cache/page-params';

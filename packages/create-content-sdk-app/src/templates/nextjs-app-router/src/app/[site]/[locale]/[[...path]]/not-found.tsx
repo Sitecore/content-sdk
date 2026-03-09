@@ -1,21 +1,18 @@
 import Link from 'next/link';
-import { headers } from 'next/headers';
 import { Suspense } from 'react';
-import { ErrorPage } from '@sitecore-content-sdk/nextjs';
-import { parseRewriteHeader } from '@sitecore-content-sdk/nextjs/utils';
+import { ErrorPage, getCachedPageParams } from '@sitecore-content-sdk/nextjs';
 import client from 'lib/sitecore-client';
 import scConfig from 'sitecore.config';
 import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 import { NextIntlClientProvider } from 'next-intl';
 
-// Part of not-found component that handles dynamic data, like the `headers()` call and error page fetching.
+// Part of not-found component that handles dynamic data like error page fetching.
 // This component is wrapped in Suspense to enable Next.js 16 Partial Prerendering (PPR),
 // which allows streaming dynamic content while keeping static parts prerendered.
 // This pattern also works seamlessly when Cache Components is enabled.
-async function DynamicNotFoundContent() {
-  const headersList = await headers();
-  const { site, locale } = parseRewriteHeader(headersList);
+async function NotFoundContent() {
+  const { site, locale } = getCachedPageParams();
 
   const page = await client.getErrorPage(ErrorPage.NotFound, {
     site: site || scConfig.defaultSite,
@@ -53,7 +50,7 @@ export default function NotFound() {
         </div>
       }
     >
-      <DynamicNotFoundContent />
+      <NotFoundContent />
     </Suspense>
   );
 }
