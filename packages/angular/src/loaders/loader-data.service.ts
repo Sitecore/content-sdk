@@ -3,8 +3,10 @@ import { isPlatformBrowser } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Params } from '@angular/router';
-import { LoaderApiRequest, LoaderApiResponse } from './model';
+import { debug } from '@sitecore-content-sdk/core';
+import { LoaderApiRequest, LoaderApiResponse } from './models';
 import { DEFAULT_DATA_ENDPOINT } from '../server/config';
+import { FETCH_DATA_ENDPOINT } from './loader-registry.token';
 
 /**
  * Cache key generator for loader data
@@ -35,6 +37,8 @@ export class LoaderDataService {
   private readonly pending = new Map<string, Promise<LoaderApiResponse>>();
   private readonly http = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly fetchDataEndpoint =
+    inject(FETCH_DATA_ENDPOINT, { optional: true }) ?? DEFAULT_DATA_ENDPOINT;
 
   /**
    * Get data for the given request, using cache or fetching if needed.
@@ -70,20 +74,8 @@ export class LoaderDataService {
   }
 
   /**
-   * Preload data for the given URL using the specified loader.
-   * Makes a request to the /_data endpoint and caches the result.
-   * Does nothing if already cached or currently loading.
-   * Fire-and-forget - does not return the result.
-   * @param {string} url - The URL to preload
-   * @param {string} loaderId - The loader ID to use
-   */
-  preload(url: string, loaderId: string): void {
-    this.prefetch(url, loaderId);
-  }
-
-  /**
    * Prefetch data with full context (url, params, query).
-   * Makes a request to the /_data endpoint and caches the result.
+   * Makes a request to the configured data endpoint and caches the result.
    * Does nothing if already cached or currently loading.
    * Fire-and-forget - does not return the result.
    *
@@ -100,32 +92,32 @@ export class LoaderDataService {
     params?: Params,
     query?: Record<string, string | string[]>
   ): void {
-    // Only prefetch in browser
     if (!isPlatformBrowser(this.platformId)) {
+      debug.common('Prefetch skipped (server context)');
       return;
     }
 
     const key = cacheKey(loaderId, url);
 
-    // Skip if already cached or loading
     if (this.cache.has(key) || this.pending.has(key)) {
+      debug.common('Prefetch skipped (cached or pending)');
       return;
     }
 
-    // Fire and forget - we don't await this
     this.fetchData({ url, loaderId, params, query }).catch(() => {
       // Silently fail - prefetching is best effort
     });
   }
 
   /**
-   * Fetch data from the /_data endpoint.
+   * Fetch data from the configured data endpoint.
    * Stores result in cache and handles pending request tracking.
    * @param {LoaderDataRequest} request - The loader data request
    * @returns {Promise<LoaderApiResponse>} Promise resolving to the API response
    */
   private async fetchData(request: LoaderDataRequest): Promise<LoaderApiResponse> {
     const key = cacheKey(request.loaderId, request.url);
+    const endpoint = this.fetchDataEndpoint;
 
     const reqBody: LoaderApiRequest = {
       loaderId: request.loaderId,
@@ -134,9 +126,7 @@ export class LoaderDataService {
       query: request.query ?? {},
     };
 
-    const fetchPromise = firstValueFrom(
-      this.http.post<LoaderApiResponse>(DEFAULT_DATA_ENDPOINT, reqBody)
-    )
+    const fetchPromise = firstValueFrom(this.http.post<LoaderApiResponse>(endpoint, reqBody))
       .then((resp) => {
         this.pending.delete(key);
 
@@ -144,11 +134,10 @@ export class LoaderDataService {
           return {
             kind: 'error',
             status: 500,
-            message: 'No response from /_data',
+            message: `No response from ${endpoint}`,
           } as LoaderApiResponse;
         }
 
-        // Cache successful data responses
         if (resp.kind === 'data') {
           this.cache.set(key, resp.data);
         }

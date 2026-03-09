@@ -6,39 +6,11 @@ import {
   Router,
   Params,
   RedirectCommand,
+  ResolveFn,
 } from '@angular/router';
-import { LOADER_REGISTRY } from './loader-registry.token';
+import { LOADER_REGISTRY, type DefaultLoaderId } from './loader-registry.token';
 import { LoaderDataService } from './loader-data.service';
-import { extractRequestContext } from './utils';
-
-export class LoaderRedirect extends Error {
-  constructor(public location: string, public status: 301 | 302 | 307 | 308 = 302) {
-    super(`Redirect to ${location}`);
-  }
-}
-
-export class LoaderNotFound extends Error {
-  constructor(message = 'Not Found') {
-    super(message);
-  }
-}
-
-export class LoaderHttpError extends Error {
-  constructor(public status: number, message = 'Error') {
-    super(message);
-  }
-}
-
-// helpers
-export const redirect = (to: string, status: 301 | 302 | 307 | 308 = 302) => {
-  throw new LoaderRedirect(to, status);
-};
-export const notFound = () => {
-  throw new LoaderNotFound();
-};
-export const serverError = (message = 'Internal Server Error') => {
-  throw new LoaderHttpError(500, message);
-};
+import { extractRequestContext, LOADER_ID, notFound, serverError } from './utils';
 
 /**
  * Create a state key for the loader
@@ -50,32 +22,24 @@ function stateKey(loaderId: string, url: string) {
   return makeStateKey<unknown>(`loader:${loaderId}:${url}`);
 }
 
-interface LoaderIdMap {}
-
-type LoaderId = keyof LoaderIdMap extends never ? never : keyof LoaderIdMap;
-
 /**
- * Symbol used to tag resolver functions with their loader ID.
- * This allows the prefetch service to identify loader resolvers in the route tree.
- * @internal
+ * Extension point for custom loader IDs. Augment this interface so that
+ * loaderResolver() accepts your loader ids when you add them via provideLoaderRegistry().
+ * @example
+ * // In your app (e.g. app.d.ts or a types file):
+ * declare module '@sitecore-content-sdk/angular' {
+ *   interface LoaderIdMap {
+ *     myCustomLoader: void;
+ *   }
+ * }
+ * // Then provideLoaderRegistry({ myCustomLoader: myLoader }) and loaderResolver('myCustomLoader') are typed.
  */
-export const LOADER_ID = Symbol('loaderId');
+export interface LoaderIdMap {}
 
-/**
- * Extract the loader ID from a resolver function if it was created by loaderResolver.
- * @param {Function}fn - The resolver function to check
- * @returns {string | undefined} The loader ID if found, undefined otherwise
- * @internal
- */
-export const getLoaderId = (fn: unknown): string | undefined => {
-  if (fn && typeof fn === 'function' && LOADER_ID in fn) {
-    return (fn as Record<symbol, string>)[LOADER_ID];
-  }
+/** Union of default loader ids and any ids added via LoaderIdMap augmentation. */
+export type LoaderId = DefaultLoaderId | keyof LoaderIdMap;
 
-  return undefined;
-};
-
-export const loaderResolver = (loaderId: LoaderId) => {
+export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
   const resolver = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     // All inject() calls must happen synchronously at the top before any await
     const transferState = inject(TransferState);
@@ -143,10 +107,6 @@ export const loaderResolver = (loaderId: LoaderId) => {
 
       return data;
     } catch (e) {
-      if (e instanceof LoaderRedirect) {
-        const urlTree = router.parseUrl(e.location);
-        return new RedirectCommand(urlTree);
-      }
       throw e;
     }
   };

@@ -89,3 +89,21 @@ export type LoaderApiResponse =
  * @public
  */
 export type LoaderFn<T = unknown> = (ctx: LoaderContext) => Promise<T> | T;
+
+export class LoaderRedirect extends Error {
+  constructor(public location: string, public status: 301 | 302 | 307 | 308 = 302) {
+    super(`Redirect to ${location}`);
+  }
+}
+
+export class NotFoundNavigationError extends Error {
+  constructor(message = 'Not Found') {
+    super(message);
+  }
+}
+
+export class LoaderHttpError extends Error {
+  constructor(public status: number, message = 'Error') {
+    super(message);
+  }
+}

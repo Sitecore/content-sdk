@@ -3,7 +3,7 @@ import { Router, ResolveStart, ActivatedRouteSnapshot, Params } from '@angular/r
 import { Subscription, filter } from 'rxjs';
 import { LoaderPrefetchConfig, LOADER_PREFETCH_CONFIG } from './loader-prefetch.config';
 import { LoaderDataService } from './loader-data.service';
-import { getLoaderId } from './loader-resolver';
+import { getLoaderId } from './utils';
 
 /**
  * Context for a loader prefetch request.
