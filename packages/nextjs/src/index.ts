@@ -174,7 +174,7 @@ export type { AnalyticsProxyAdapter } from './initialization/proxy/analytics-ada
 export { analyticsProxyAdapter } from './initialization/proxy/analytics-adapter';
 
 export {
-  type CachedPageInfo,
+  type CachedPageParams,
   getCachedPageParams,
   setCachedPageParams,
-} from '@sitecore-content-sdk/react';
+} from './cache/page-params';

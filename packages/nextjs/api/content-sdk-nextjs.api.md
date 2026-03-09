@@ -14,7 +14,6 @@ import { BYOCComponentProps } from '@sitecore-content-sdk/react';
 import { BYOCServerWrapper } from '@sitecore-content-sdk/react';
 import { BYOCWrapper as BYOCWrapper_2 } from '@sitecore-content-sdk/react';
 import { CacheClient } from '@sitecore-content-sdk/core';
-import { CachedPageInfo } from '@sitecore-content-sdk/react';
 import { CacheOptions } from '@sitecore-content-sdk/core';
 import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { ClientEditingChromesUpdate } from '@sitecore-content-sdk/react';
@@ -68,7 +67,6 @@ import { GenerateMapFunction } from '@sitecore-content-sdk/content/tools';
 import { generateMetadata } from '@sitecore-content-sdk/core/node-tools';
 import { generateSites } from '@sitecore-content-sdk/content/node-tools';
 import { GenerateSitesConfig } from '@sitecore-content-sdk/content/node-tools';
-import { getCachedPageParams } from '@sitecore-content-sdk/react';
 import { getChildPlaceholder } from '@sitecore-content-sdk/content/layout';
 import { getComponentList } from '@sitecore-content-sdk/content/node-tools';
 import { getContentStylesheetLink } from '@sitecore-content-sdk/content/layout';
@@ -157,7 +155,6 @@ import { RobotsQueryResult } from '@sitecore-content-sdk/content/site';
 import { RobotsService } from '@sitecore-content-sdk/content/site';
 import { RobotsServiceConfig } from '@sitecore-content-sdk/content/site';
 import { RouteData } from '@sitecore-content-sdk/content/layout';
-import { setCachedPageParams } from '@sitecore-content-sdk/react';
 import { SitecoreCliConfig } from '@sitecore-content-sdk/content/config';
 import { SitecoreCliConfigInput } from '@sitecore-content-sdk/content/config';
 import { SitecoreClient as SitecoreClient_2 } from '@sitecore-content-sdk/content/client';
@@ -239,7 +236,11 @@ export { BYOCWrapper }
 
 export { CacheClient }
 
-export { CachedPageInfo }
+// @public
+export type CachedPageParams = {
+    locale: string;
+    site: string;
+};
 
 export { CacheOptions }
 
@@ -488,7 +489,11 @@ export { generateSites }
 
 export { GenerateSitesConfig }
 
-export { getCachedPageParams }
+// @public
+export const getCachedPageParams: () => {
+    locale: string;
+    site: string;
+};
 
 export { getChildPlaceholder }
 
@@ -865,7 +870,8 @@ export { RobotsServiceConfig }
 
 export { RouteData }
 
-export { setCachedPageParams }
+// @public
+export function setCachedPageParams(pageParams: CachedPageParams): void;
 
 // @public
 export class SitecoreClient extends SitecoreClient_2 {

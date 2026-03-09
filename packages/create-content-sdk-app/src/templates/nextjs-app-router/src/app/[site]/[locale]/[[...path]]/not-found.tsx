@@ -11,7 +11,7 @@ import { NextIntlClientProvider } from 'next-intl';
 // This component is wrapped in Suspense to enable Next.js 16 Partial Prerendering (PPR),
 // which allows streaming dynamic content while keeping static parts prerendered.
 // This pattern also works seamlessly when Cache Components is enabled.
-async function DynamicNotFoundContent() {
+async function NotFoundContent() {
   const { site, locale } = getCachedPageParams();
 
   const page = await client.getErrorPage(ErrorPage.NotFound, {
@@ -50,7 +50,7 @@ export default function NotFound() {
         </div>
       }
     >
-      <DynamicNotFoundContent />
+      <NotFoundContent />
     </Suspense>
   );
 }

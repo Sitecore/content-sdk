@@ -5,7 +5,7 @@ import proxyquire from 'proxyquire';
 
 describe('page-params cache', () => {
   let getCachedPageParams: () => { locale: string; site: string };
-  let setCachedPageParams: (pageInfo: { locale: string; site: string }) => void;
+  let setCachedPageParams: (pageParams: { locale: string; site: string }) => void;
 
   beforeEach(() => {
     const module = proxyquire('./page-params', {
@@ -21,11 +21,11 @@ describe('page-params cache', () => {
     setCachedPageParams = module.setCachedPageParams;
   });
 
-  it('should return default empty page info', () => {
+  it('should return default empty page params', () => {
     expect(getCachedPageParams()).to.deep.equal({ locale: '', site: '' });
   });
 
-  it('should return updated page info after setting new values', () => {
+  it('should return updated page params after setting new values', () => {
     setCachedPageParams({ locale: 'en', site: 'website' });
     expect(getCachedPageParams()).to.deep.equal({ locale: 'en', site: 'website' });
 
@@ -33,14 +33,14 @@ describe('page-params cache', () => {
     expect(getCachedPageParams()).to.deep.equal({ locale: 'fr', site: 'website2' });
   });
 
-  it('should render current page info values while rendering a component', () => {
+  it('should render current page params values while rendering a component', () => {
     const PageReader = ({ locale, site }: { locale: string; site: string }) => {
       setCachedPageParams({ locale, site });
-      const pageInfo = getCachedPageParams();
+      const pageParams = getCachedPageParams();
 
       return (
         <div data-testid="page-params">
-          {pageInfo.locale}:{pageInfo.site}
+          {pageParams.locale}:{pageParams.site}
         </div>
       );
     };

@@ -108,12 +108,6 @@ export { BYOCWrapper }
 
 export { CacheClient }
 
-// @public
-export type CachedPageInfo = {
-    locale: string;
-    site: string;
-};
-
 export { CacheOptions }
 
 // @public
@@ -247,12 +241,6 @@ export interface FileField {
 //
 // @public
 export const Form: ({ params, rendering }: FormProps) => React_2.JSX.Element;
-
-// @public
-export const getCachedPageParams: () => {
-    locale: string;
-    site: string;
-};
 
 export { getChildPlaceholder }
 
@@ -454,9 +442,6 @@ export { RouteData }
 
 // @public
 export type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
-
-// @public
-export function setCachedPageParams(pageInfo: CachedPageInfo): void;
 
 // @public
 export const SitecoreProvider: {
