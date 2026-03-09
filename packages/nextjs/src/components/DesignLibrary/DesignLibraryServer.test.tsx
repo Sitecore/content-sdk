@@ -15,14 +15,8 @@ import {
 import { DesignLibraryPreviewError } from '@sitecore-content-sdk/content/codegen';
 import { DesignLibraryStatus, DesignLibraryMode } from '@sitecore-content-sdk/content/editing';
 import { getTestLayoutData } from '../../test-data/component-editing-data';
-import {
-  DesignLibraryServer,
-  DesignLibraryServerPreview,
-  DesignLibraryServerVariantGeneration,
-  __mockDependencies,
-} from './DesignLibraryServer';
 import * as DesignLibraryClient from './DesignLibraryClientEvents';
-import * as rscUtils from '#rsc-env';
+import proxyquire from 'proxyquire';
 
 use(sinonChai);
 
@@ -34,6 +28,15 @@ describe('<DesignLibraryServer />', () => {
   let createComponentInstanceStub: sinon.SinonStub;
   let updateComponentStub: sinon.SinonStub;
   let getImportMapInfoStub: sinon.SinonStub;
+  let ErrorBoundaryStub: sinon.SinonStub;
+  let AppPlaceholderStub: sinon.SinonStub;
+  let DesignLibraryErrorBoundaryStub: sinon.SinonStub;
+  let DesignLibraryServer: any;
+  let DesignLibraryServerPreview: any;
+  let DesignLibraryServerVariantGeneration: any;
+  let __mockDependencies: any;
+
+  const sandbox = sinon.createSandbox();
 
   beforeEach(() => {
     hasCacheStub = sandbox.stub();
@@ -49,6 +52,89 @@ describe('<DesignLibraryServer />', () => {
       }
     });
     getImportMapInfoStub = sandbox.stub().returns([]);
+
+    // Mock ErrorBoundary to be a pass-through wrapper
+    ErrorBoundaryStub = sandbox
+      .stub()
+      .callsFake(({ children }: { children: React.ReactNode }) => <>{children}</>);
+
+    // Mock DesignLibraryErrorBoundary to be a pass-through wrapper
+    DesignLibraryErrorBoundaryStub = sandbox.stub().callsFake((props: any) => {
+      const { children, onError } = props;
+
+      // Simple error boundary that catches errors
+      class TestErrorBoundary extends React.Component<
+        { children: React.ReactNode; onError?: (error: Error) => void },
+        { hasError: boolean }
+      > {
+        constructor(props: any) {
+          super(props);
+          this.state = { hasError: false };
+        }
+
+        static getDerivedStateFromError() {
+          return { hasError: true };
+        }
+
+        componentDidCatch(error: Error) {
+          if (this.props.onError) {
+            this.props.onError(error);
+          }
+        }
+
+        render() {
+          if (this.state.hasError) {
+            return <div>Error during component rendering</div>;
+          }
+          return this.props.children;
+        }
+      }
+
+      return <TestErrorBoundary onError={onError}>{children}</TestErrorBoundary>;
+    });
+
+    // Mock AppPlaceholder to render components with chrome markers
+    AppPlaceholderStub = sandbox.stub().callsFake((props: any) => {
+      const { rendering, componentMap } = props;
+      const placeholder = rendering?.placeholders?.[EDITING_COMPONENT_PLACEHOLDER];
+
+      if (!placeholder || placeholder.length === 0) {
+        return null;
+      }
+
+      return (
+        <>
+          <code
+            type="text/sitecore"
+            chrometype="placeholder"
+            className="scpm"
+            kind="open"
+            id={`${EDITING_COMPONENT_PLACEHOLDER}_00000000-0000-0000-0000-000000000000`}
+          />
+          {placeholder.map((component: any, index: number) => {
+            const Component = componentMap?.get(component.componentName);
+            if (!Component) return null;
+
+            return (
+              <React.Fragment key={index}>
+                <code
+                  type="text/sitecore"
+                  chrometype="rendering"
+                  className="scpm"
+                  kind="open"
+                  id={component.uid}
+                  data-csdk-component-runtime="server"
+                />
+                <Component {...component} />
+                <code type="text/sitecore" chrometype="rendering" className="scpm" kind="close" />
+              </React.Fragment>
+            );
+          })}
+          <code type="text/sitecore" chrometype="placeholder" className="scpm" kind="close" />
+        </>
+      );
+    });
+
     DesignLibraryPreviewEventsStub = sandbox
       .stub(DesignLibraryClient, 'DesignLibraryPreviewEvents')
       .callsFake(DlClientEventsMockPreview);
@@ -56,8 +142,19 @@ describe('<DesignLibraryServer />', () => {
       .stub(DesignLibraryClient, 'DesignLibraryVariantGenerationEvents')
       .callsFake(DlClientEventsMockVariantGeneration);
 
-    // Mock rsc to true since DesignLibraryServer is a server component
-    sandbox.replace(rscUtils, 'rsc', true as any);
+    // Use proxyquire to mock React components that use hooks
+    const module = proxyquire('./DesignLibraryServer', {
+      '@sitecore-content-sdk/react': {
+        ErrorBoundary: ErrorBoundaryStub,
+        AppPlaceholder: AppPlaceholderStub,
+        DesignLibraryErrorBoundary: DesignLibraryErrorBoundaryStub,
+      },
+    });
+
+    DesignLibraryServer = module.DesignLibraryServer;
+    DesignLibraryServerPreview = module.DesignLibraryServerPreview;
+    DesignLibraryServerVariantGeneration = module.DesignLibraryServerVariantGeneration;
+    __mockDependencies = module.__mockDependencies;
 
     __mockDependencies({
       hasCache: hasCacheStub,
@@ -71,8 +168,6 @@ describe('<DesignLibraryServer />', () => {
   afterEach(() => {
     sandbox.restore();
   });
-
-  const sandbox = sinon.createSandbox();
 
   const modeNormal: PageMode = {
     name: DesignLibraryMode.Normal,

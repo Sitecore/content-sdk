@@ -142,7 +142,6 @@ export {
   FileField,
   RichTextField,
   DesignLibrary,
-  DesignLibraryApp,
   DefaultEmptyFieldEditingComponentImage,
   DefaultEmptyFieldEditingComponentText,
   PlaceholderComponentProps,
@@ -172,3 +171,4 @@ export type { PersonalizeProxyAdapter } from './initialization/proxy/personalize
 export { personalizeProxyAdapter } from './initialization/proxy/personalize-adapter';
 export type { AnalyticsProxyAdapter } from './initialization/proxy/analytics-adapter';
 export { analyticsProxyAdapter } from './initialization/proxy/analytics-adapter';
+export { DesignLibraryApp } from './components/DesignLibrary/DesignLibraryApp';

@@ -14,13 +14,8 @@ import {
 } from '@sitecore-content-sdk/content/layout';
 import { DesignLibraryStatus, DesignLibraryMode } from '@sitecore-content-sdk/content/editing';
 import { DesignLibraryPreviewError } from '@sitecore-content-sdk/content/codegen';
-import {
-  DesignLibraryVariantGenerationEvents,
-  DesignLibraryPreviewEvents,
-} from './DesignLibraryClientEvents';
 import { getTestLayoutData } from '../../test-data/component-editing-data';
-import { SitecoreProvider } from '../SitecoreProvider';
-import { __mockDependencies } from './DesignLibraryClientEvents';
+import proxyquire from 'proxyquire';
 
 use(sinonChai);
 
@@ -34,6 +29,12 @@ describe('<DesignLibraryClientEvents />', () => {
   let getDesignLibraryComponentPropsEventSpy: sinon.SinonStub;
   let addStyleElementSpy: sinon.SinonStub;
   let sendErrorEventSpy: sinon.SinonStub;
+  let useSitecoreStub: sinon.SinonStub;
+  let DesignLibraryVariantGenerationEvents: any;
+  let DesignLibraryPreviewEvents: any;
+  let __mockDependencies: any;
+
+  const sandbox = sinon.createSandbox();
 
   beforeEach(() => {
     postToDesignLibrarySpy = sandbox.stub();
@@ -45,6 +46,35 @@ describe('<DesignLibraryClientEvents />', () => {
     getDesignLibraryComponentPropsEventSpy = sandbox.stub();
     addStyleElementSpy = sandbox.stub();
     sendErrorEventSpy = sandbox.stub();
+
+    // Mock useSitecore hook
+    useSitecoreStub = sandbox.stub().returns({
+      page: {
+        locale: 'en',
+        layout: { sitecore: { context: {}, route: null } },
+        mode: { name: DesignLibraryMode.Normal, isDesignLibrary: true },
+      },
+      componentMap: new Map(),
+      api: {
+        edge: {
+          contextId: 'test-context-id',
+          clientContextId: 'test-client-context-id',
+          edgeUrl: 'https://test-edge-url.com',
+        },
+        local: { apiKey: 'test-api-key', apiHost: 'https://test-api-host.com', path: '/test-path' },
+      },
+    });
+
+    // Use proxyquire to load module with mocked dependencies
+    const module = proxyquire('./DesignLibraryClientEvents', {
+      '@sitecore-content-sdk/react': {
+        useSitecore: useSitecoreStub,
+      },
+    });
+
+    DesignLibraryVariantGenerationEvents = module.DesignLibraryVariantGenerationEvents;
+    DesignLibraryPreviewEvents = module.DesignLibraryPreviewEvents;
+    __mockDependencies = module.__mockDependencies;
 
     __mockDependencies({
       postToDesignLibrary: postToDesignLibrarySpy,
@@ -59,11 +89,9 @@ describe('<DesignLibraryClientEvents />', () => {
     });
   });
 
-  after(() => {
+  afterEach(() => {
     sandbox.restore();
   });
-
-  const sandbox = sinon.createSandbox();
 
   const components = new Map<string, React.FC>();
   const api = {
@@ -115,14 +143,21 @@ describe('<DesignLibraryClientEvents />', () => {
     const layoutData: LayoutServiceData = getTestLayoutData();
     const page = getPage(layoutData, pageMode);
 
+    // Update the useSitecore mock to return the correct page/api context
+    useSitecoreStub.returns({
+      page,
+      componentMap: components,
+      api,
+    });
+
     return render(
-      <SitecoreProvider page={page} componentMap={components} api={api}>
+      <>
         {isVariantGeneration ? (
           <DesignLibraryVariantGenerationEvents {...props} />
         ) : (
           <DesignLibraryPreviewEvents {...props} />
         )}
-      </SitecoreProvider>
+      </>
     );
   };
 
