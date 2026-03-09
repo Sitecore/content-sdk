@@ -15,7 +15,7 @@ Single catch-all route and layout hierarchy. Site and locale are **in the path**
 
 ## How to perform
 
-- Single Sitecore page: `src/app/[site]/[locale]/[[...path]]/page.tsx`. Use `await params` for `{ site, locale, path? }`; pass to getPage and call `setRequestLocale(\`${site}_${locale}\`)` at the top. Layout: app/layout.tsx → app/[site]/layout.tsx (Bootstrap, draftMode) → page. Not-found: use parseRewriteHeader and getErrorPage in the route's not-found.tsx.
+- Single Sitecore page: `src/app/[site]/[locale]/[[...path]]/page.tsx`. Use `await params` for `{ site, locale, path? }`; pass to getPage and call `setRequestLocale(\`${site}_${locale}\`)` at the top. Layout: app/layout.tsx → app/[site]/layout.tsx (Bootstrap, draftMode) → page. Not-found: use getCachedPageParams and getErrorPage in the route's not-found.tsx.
 
 ## Hard Rules
 
@@ -24,7 +24,7 @@ Single catch-all route and layout hierarchy. Site and locale are **in the path**
 - **Locale for next-intl:** Call `setRequestLocale(\`${site}_${locale}\`)` at the **top** of the page so next-intl and `src/i18n/request.ts` see the correct locale. Do not omit when adding new page branches.
 - **Layout hierarchy:** `app/layout.tsx` → `app/[site]/layout.tsx` (Bootstrap with `siteName={site}` and `draftMode()`) → page. Do not put site/locale-specific data fetching in the root layout.
 - Placeholders are rendered by the layout (e.g. Placeholder component); do not change placeholder names or structure without aligning with Sitecore layout definition.
-- **Not-found:** `src/app/[site]/[locale]/[[...path]]/not-found.tsx`. For Sitecore-driven 404 use `parseRewriteHeader(headers())` for site/locale, then `client.getErrorPage(ErrorPage.NotFound, { site, locale })`. Wrap in Suspense if using async logic.
+- **Not-found:** `src/app/[site]/[locale]/[[...path]]/not-found.tsx`. For Sitecore-driven 404 use `getCachedPageParams()` from `@sitecore-content-sdk/nextjs` for site/locale, then `client.getErrorPage(ErrorPage.NotFound, { site, locale })`. If you enable Next.js Cache Components, wrap async not-found content in Suspense.
 
 ## Stop Conditions
 

@@ -120,15 +120,15 @@ These are the main head-app–specific concepts. Details are in the sections bel
 - **SSG:** `generateStaticParams` — use `client.getAppRouterStaticParams(sites, routing.locales)` (sites from `.sitecore/sites.json`). Return at least one default param when not generating full paths (e.g. dev or when `generateStaticPaths` is off).
 - **Metadata:** `generateMetadata` in the same segment can call `client.getPage(path ?? [], { site, locale })` and derive `title` (e.g. from route fields). Next.js will cache as appropriate.
 
-### Server vs Client components and PPR
+### Server vs Client components
 
 - **Default:** Components are Server Components. Use `'use client'` only for interactivity (e.g. hooks, event handlers).
-- **PPR (Partial Prerendering):** Dynamic work (e.g. `draftMode()`, data fetching) is wrapped in `<Suspense>` (e.g. `DynamicPageContent`, `DynamicLayoutContent`, `DynamicNotFoundContent`). Keep the same pattern when adding new dynamic branches so PPR and caching behave correctly.
+- **Cache Components / PPR:** This template does **not** enable Next.js Cache Components by default and does not wrap page, layout, or not-found in `<Suspense>`. If you opt in to `cacheComponents: true` in `next.config.ts`, you must add Suspense boundaries (or `"use cache"`) around components that use `draftMode()`, `headers()`, or other uncached request-time data.
 - **draftMode:** Used in layout and page; call `await draftMode()` in Server Components that need to know preview state.
 
 ### Not-found and error page
 
-- **Segment not-found:** `src/app/[site]/[locale]/[[...path]]/not-found.tsx`. For Sitecore-driven 404, read site/locale from the rewrite header: `parseRewriteHeader(headers())` from `@sitecore-content-sdk/nextjs/utils`, then `client.getErrorPage(ErrorPage.NotFound, { site, locale })` and render layout if a page is returned. Wrap in `Suspense` if using async logic.
+- **Segment not-found:** `src/app/[site]/[locale]/[[...path]]/not-found.tsx`. Uses `getCachedPageParams()` from `@sitecore-content-sdk/nextjs` for site/locale, then `client.getErrorPage(ErrorPage.NotFound, { site, locale })` and renders layout if a page is returned.
 - **Root not-found:** `src/app/not-found.tsx` — minimal fallback when no segment handles the route.
 
 ### API route handlers
@@ -154,7 +154,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 - **Quick checks:** If locale or dictionary is wrong, ensure `setRequestLocale(\`${site}_${locale}\`)` is called at the top of the page and `src/i18n/request.ts` parses `requestLocale` and calls `client.getDictionary`. If not-found doesn't show Sitecore content, use `parseRewriteHeader(headers())` for site/locale. Always `await params` (Next.js 15+).
 - **Security:** Use only environment variables in `sitecore.config.ts`; never hardcode API keys, editing secret, or host URLs. Do not expose secrets in client-side code or in logs. Validate and sanitize user input at boundaries.
-- **Performance:** Keep middleware lightweight; use the proxy `matcher` so it does not run on API routes, `_next`, sitemap, robots, or static assets. Use Server Components and Suspense for dynamic content; add `'use client'` only where interactivity is needed. Use `generateStaticParams` and caching as in the existing page.
+- **Performance:** Keep middleware lightweight; use the proxy `matcher` so it does not run on API routes, `_next`, sitemap, robots, or static assets. Use Server Components for data fetching; add `'use client'` only where interactivity is needed. Use `generateStaticParams` and caching as in the existing page. If you enable Cache Components, add Suspense where required.
 - **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Register new components in `.sitecore/component-map.ts` and `.sitecore/component-map.client.ts` as appropriate. Use the single Sitecore client in `lib/sitecore-client.ts` for all data fetching.
 - **Consistency:** Follow the existing patterns in `[site]/[locale]/[[...path]]/page.tsx`, layout hierarchy, `i18n/request.ts` (site_locale), and API route handlers. When adding routes or rewrites, keep the middleware matcher and next-intl config in sync.
 
@@ -168,7 +168,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 | Pass `{ site, locale }` to `client.getPage` and `getDictionary` | Assume site/locale from headers inside page without using params |
 | Run LocaleProxy before AppRouterMultisiteProxy in middleware | Change proxy order (locale must run first for i18n) |
 | Call `setRequestLocale(\`${site}_${locale}\`)` in the page for next-intl | Omit setRequestLocale when adding new page branches |
-| Use Suspense around async Server Components that use draftMode or fetch | Put async data fetching in client components when SSR is intended |
+| Add Suspense (or `"use cache"`) when opting in to Next.js Cache Components | Put async data fetching in client components when SSR is intended |
 | Use `parseRewriteHeader(headers())` in not-found for site/locale | Hardcode site/locale in not-found or error pages |
 | Use createXRouteHandler and `.sitecore/sites.json` for sitemap/robots | Hardcode site list or commit `.env` |
 | Use Sitecore field components and validate fields | Expose API keys or editing secret in client code |
@@ -179,7 +179,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ## Guardrails for agentic AI
 
-- **Preserve behavior:** Do not change the proxy order (LocaleProxy → AppRouterMultisiteProxy → …), the `[site]/[locale]/[[...path]]` route shape, or the way `setRequestLocale` and `i18n/request.ts` use `{site}_{locale}`. Preserve PPR/Suspense boundaries and draftMode handling.
+- **Preserve behavior:** Do not change the proxy order (LocaleProxy → AppRouterMultisiteProxy → …), the `[site]/[locale]/[[...path]]` route shape, or the way `setRequestLocale` and `i18n/request.ts` use `{site}_{locale}`. Preserve draftMode handling in layout and page.
 - **Do not expand scope:** Limit edits to the app (app router, components, API routes, i18n, config). Do not modify SDK packages or monorepo tooling unless explicitly asked. Do not change CI, lockfiles, or root config.
 - **Follow existing patterns:** When adding routes, layouts, or components, mirror the existing structure. Use the same Sitecore client, component maps, and env-based config. Do not introduce a different way to resolve site/locale or a second client without clear need.
 - **Verify and stay safe:** After edits, the app should build with `npm run build`. Do not commit secrets or `.env`; only document variables in `.env.example`. Do not add npm dependencies without explicit approval. When in doubt, prefer the existing implementation and ask for clarification.

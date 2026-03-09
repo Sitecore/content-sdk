@@ -8,36 +8,6 @@
 
 ## Next.js Cache Components
 
-Cache Components is **disabled by default** in this template. To enable it:
+Cache Components is **disabled by default** in this template. The app runs without Suspense boundaries around page, layout, or not-found content.
 
-1. **Enable in `next.config.ts`**:
-   ```typescript
-   const nextConfig: NextConfig = {
-     cacheComponents: true,
-     // ... rest of config
-   };
-   ```
-
-2. **Add uncached data access** in all server components that call client methods:
-   
-   Next.js 16 with Cache Components requires accessing uncached data (`draftMode()`, `cookies()`, `headers()`, or `searchParams`) before any operations that might use `new Date()` or other time-related functions.
-   
-   Example:
-   ```typescript
-   export default async function Page({ params, searchParams }: PageProps) {
-     // Access uncached data first
-     await draftMode();
-     
-     const { site, locale, path } = await params;
-     // ... rest of component
-   }
-   ```
-   
-   Apply this pattern to:
-   - Page components that call `client.getPage()`, `client.getPreview()`, etc.
-   - `generateMetadata` functions
-   - Layout components that call client methods
-   - Not-found handlers
-   - Any server component calling Sitecore client methods
-
-3. **See the sample app** (`samples/nextjs-app-router`) for a working example with Cache Components enabled.
+If you enable **Next.js 16 Cache Components** (`cacheComponents: true` in `next.config.ts`), you must add `<Suspense>` boundaries (or use `"use cache"`) around any component that accesses uncached request-time data (`draftMode()`, `headers()`, `cookies()`, or `searchParams`). See [Next.js Cache Components](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents) and the "Uncached data was accessed outside of `<Suspense>`" docs for details.
