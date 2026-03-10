@@ -21,6 +21,7 @@ export type ErrorBoundaryProps = {
 /**
  * Simple error component applying basic error styling.
  * @param {object} props - Either with `message` (string) or with `children` (ReactNode), but not both.
+ * @internal
  */
 export const ErrorComponent = (
   props:

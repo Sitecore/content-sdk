@@ -119,7 +119,6 @@
 - [DefaultEmptyFieldEditingComponentImage](variables/DefaultEmptyFieldEditingComponentImage.md)
 - [DefaultEmptyFieldEditingComponentText](variables/DefaultEmptyFieldEditingComponentText.md)
 - [DesignLibrary](variables/DesignLibrary.md)
-- [DesignLibraryApp](variables/DesignLibraryApp.md)
 - [EditingScripts](variables/EditingScripts.md)
 - [enableDebug](variables/enableDebug.md)
 - [FEaaSClientWrapper](variables/FEaaSClientWrapper.md)
@@ -146,6 +145,7 @@
 
 - [analyticsProxyAdapter](functions/analyticsProxyAdapter.md)
 - [ComponentPropsContext](functions/ComponentPropsContext.md)
+- [DesignLibraryApp](functions/DesignLibraryApp.md)
 - [fetchFEaaSComponentServerProps](functions/fetchFEaaSComponentServerProps.md)
 - [getCachedPageParams](functions/getCachedPageParams.md)
 - [getChildPlaceholder](functions/getChildPlaceholder.md)

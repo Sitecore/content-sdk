@@ -10,7 +10,7 @@ import {
   DesignLibraryPreviewEventsProps,
   DesignLibraryVariantGenerationEventsProps,
 } from './models';
-import { useSitecore } from '../SitecoreProvider';
+import { useSitecore } from '@sitecore-content-sdk/react';
 
 let {
   getDesignLibraryComponentPropsEvent,

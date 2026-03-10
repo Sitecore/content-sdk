@@ -6,7 +6,7 @@
 
 # Interface: PersonalizeBrowserPlugin
 
-Defined in: [personalize/src/initialization/types.ts:104](https://github.com/Sitecore/content-sdk/blob/a50d13a7a644b3d4245c574d05c845cda27de456/packages/personalize/src/initialization/types.ts#L104)
+Defined in: [personalize/src/initialization/types.ts:104](https://github.com/Sitecore/content-sdk/blob/38a940d27a0b5ebb3a3896ce0be5cd54cae847c6/packages/personalize/src/initialization/types.ts#L104)
 
 Represents the personalize browser plugin interface.
 
@@ -16,7 +16,7 @@ Represents the personalize browser plugin interface.
 
 > **adapter**: [`PersonalizeAdapter`](PersonalizeAdapter.md)
 
-Defined in: [personalize/src/initialization/types.ts:125](https://github.com/Sitecore/content-sdk/blob/a50d13a7a644b3d4245c574d05c845cda27de456/packages/personalize/src/initialization/types.ts#L125)
+Defined in: [personalize/src/initialization/types.ts:125](https://github.com/Sitecore/content-sdk/blob/38a940d27a0b5ebb3a3896ce0be5cd54cae847c6/packages/personalize/src/initialization/types.ts#L125)
 
 The adapter for the personalize browser plugin, which provides methods to get and set the profile id, and optionally get the user agent. The adapter allows the personalize plugin to interact with the underlying platform or environment in a consistent way.
 
@@ -26,7 +26,7 @@ The adapter for the personalize browser plugin, which provides methods to get an
 
 > **dependencies**: `string`[]
 
-Defined in: [personalize/src/initialization/types.ts:121](https://github.com/Sitecore/content-sdk/blob/a50d13a7a644b3d4245c574d05c845cda27de456/packages/personalize/src/initialization/types.ts#L121)
+Defined in: [personalize/src/initialization/types.ts:121](https://github.com/Sitecore/content-sdk/blob/38a940d27a0b5ebb3a3896ce0be5cd54cae847c6/packages/personalize/src/initialization/types.ts#L121)
 
 An array of plugin names that the personalize browser plugin depends on. This ensures that the required plugins are initialized before the personalize plugin is initialized.
 
@@ -36,7 +36,7 @@ An array of plugin names that the personalize browser plugin depends on. This en
 
 > **init**: () => `Promise`\<`void`\>
 
-Defined in: [personalize/src/initialization/types.ts:113](https://github.com/Sitecore/content-sdk/blob/a50d13a7a644b3d4245c574d05c845cda27de456/packages/personalize/src/initialization/types.ts#L113)
+Defined in: [personalize/src/initialization/types.ts:113](https://github.com/Sitecore/content-sdk/blob/38a940d27a0b5ebb3a3896ce0be5cd54cae847c6/packages/personalize/src/initialization/types.ts#L113)
 
 Initializes the personalize browser plugin, which may involve setting up necessary configurations, loading scripts, or performing any asynchronous operations required for the plugin to function properly.
 
@@ -52,7 +52,7 @@ A promise that resolves when the initialization is complete.
 
 > **name**: `"PersonalizePlugin"`
 
-Defined in: [personalize/src/initialization/types.ts:117](https://github.com/Sitecore/content-sdk/blob/a50d13a7a644b3d4245c574d05c845cda27de456/packages/personalize/src/initialization/types.ts#L117)
+Defined in: [personalize/src/initialization/types.ts:117](https://github.com/Sitecore/content-sdk/blob/38a940d27a0b5ebb3a3896ce0be5cd54cae847c6/packages/personalize/src/initialization/types.ts#L117)
 
 The name of the personalize plugin.
 
@@ -62,6 +62,6 @@ The name of the personalize plugin.
 
 > **options**: [`PersonalizeOptions`](PersonalizeOptions.md)
 
-Defined in: [personalize/src/initialization/types.ts:108](https://github.com/Sitecore/content-sdk/blob/a50d13a7a644b3d4245c574d05c845cda27de456/packages/personalize/src/initialization/types.ts#L108)
+Defined in: [personalize/src/initialization/types.ts:108](https://github.com/Sitecore/content-sdk/blob/38a940d27a0b5ebb3a3896ce0be5cd54cae847c6/packages/personalize/src/initialization/types.ts#L108)
 
 The options for the personalize browser plugin, including web personalization and cookie settings.
