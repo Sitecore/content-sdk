@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { Router, RedirectCommand } from '@angular/router';
 import type { NavigationError } from '@angular/router';
 import { debug } from '@sitecore-content-sdk/core';
-import { LoaderRedirect, NotFoundNavigationError } from './models';
+import { NotFoundNavigationError } from './models';
 
 /**
  * Options for navigation error handling.
@@ -21,7 +21,6 @@ export interface NavigationErrorOptions {
  * Handles loader exceptions so that:
  * - {@link LoaderNotFound} → redirect to the not-found route (e.g. /404), keeping the failed URL in the address bar
  * - If the failed navigation was already to the error route (e.g. /500 loader threw), returns void to cancel navigation and avoid a loop
- * - {@link LoaderRedirect} → redirect to the target location (or perform external redirect in browser)
  *
  * @param options - Routes for 404 and 500
  * @returns A handler compatible with `provideRouter(routes, withNavigationErrorHandler(...))`

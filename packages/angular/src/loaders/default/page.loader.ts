@@ -1,6 +1,5 @@
-import type { LoaderFn } from '../models';
-import type { Page } from '@sitecore-content-sdk/content/client';
-import { notFound } from '../utils';
+import { LoaderFn, NotFoundNavigationError } from '../models';
+import { Page } from '@sitecore-content-sdk/content/client';
 import { stubPageResult } from './stub-utils';
 
 /**
@@ -10,7 +9,7 @@ import { stubPageResult } from './stub-utils';
 export const pageLoader: LoaderFn<Page> = async (context) => {
   const page = stubPageResult(context.url);
   if (!page) {
-    notFound();
+    throw new NotFoundNavigationError();
   }
   return page;
 };

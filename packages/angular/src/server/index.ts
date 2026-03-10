@@ -11,4 +11,4 @@ export {
   DataHandlerConfig,
 } from './models';
 
-export { createExpressDataMiddleware } from './express-data-middleware';
+export { createLoaderDataServiceMiddleware } from './loader-data-service-middleware';

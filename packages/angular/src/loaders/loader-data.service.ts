@@ -125,12 +125,14 @@ export class LoaderDataService {
       params: request.params ?? {},
       query: request.query ?? {},
     };
+    console.log('DEBUG: LoaderDataService fetchData', endpoint, reqBody);
 
     const fetchPromise = firstValueFrom(this.http.post<LoaderApiResponse>(endpoint, reqBody))
       .then((resp) => {
         this.pending.delete(key);
 
         if (!resp) {
+          console.log('DEBUG: LoaderDataService fetchData: no response');
           return {
             kind: 'error',
             status: 500,
@@ -139,12 +141,14 @@ export class LoaderDataService {
         }
 
         if (resp.kind === 'data') {
+          console.log('DEBUG: LoaderDataService fetchData: data', resp.data);
           this.cache.set(key, resp.data);
         }
 
         return resp;
       })
       .catch((error) => {
+        console.log('DEBUG: LoaderDataService fetchData: error', error);
         this.pending.delete(key);
 
         const message = error instanceof Error ? error.message : 'Fetch failed';
@@ -153,6 +157,7 @@ export class LoaderDataService {
 
     this.pending.set(key, fetchPromise);
 
+    console.log('DEBUG: LoaderDataService fetchData: fetchPromise', fetchPromise);
     return fetchPromise;
   }
 }

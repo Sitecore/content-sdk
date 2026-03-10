@@ -1,6 +1,6 @@
 import { RedirectCommand } from '@angular/router';
 import type { Router } from '@angular/router';
-import { LoaderHttpError, LoaderRedirect, NotFoundNavigationError, RequestContext } from './models';
+import { RequestContext } from './models';
 
 /**
  * Apply a redirect: internal URLs → RedirectCommand; external URLs → full page navigation.
@@ -144,16 +144,6 @@ export function extractRequestContext(req: Request | ExpressLikeRequest): Reques
   };
 }
 
-// helpers
-export const redirect = (to: string, status: 301 | 302 | 307 | 308 = 302) => {
-  throw new LoaderRedirect(to, status);
-};
-export const notFound = () => {
-  throw new NotFoundNavigationError();
-};
-export const serverError = (message = 'Internal Server Error') => {
-  throw new LoaderHttpError(500, message);
-};
 /**
  * Extract the loader ID from a resolver function if it was created by loaderResolver.
  * @param {Function}fn - The resolver function to check

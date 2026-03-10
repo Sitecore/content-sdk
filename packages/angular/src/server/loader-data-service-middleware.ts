@@ -99,30 +99,29 @@ function sendResponse(res: ExpressResponse, result: LoaderApiResponse): void {
 /**
  * Create an Express middleware for the data endpoint.
  * This middleware handles both GET and POST requests at the configured endpoint path.
- * The endpoint path defaults to '/_data' and is kept in sync with the client-side loader resolver.
- * @param {ExpressDataHandlerOptions} options - Handler options including the loader registry and optional endpoint path
- * @returns {ExpressMiddleware} Express middleware that handles the data endpoint
+ *
+ * The endpoint path must match the client: provide the same value to the Angular app via
+ * {@link FETCH_DATA_ENDPOINT} (e.g. in app.config.ts). There is no Angular DI in Node/Express,
+ * so you pass the endpoint here when calling this function (e.g. from server.ts).
+ *
+ * @param options - Handler options: loaders and optional endpoint (defaults to {@link DEFAULT_DATA_ENDPOINT})
+ * @returns Express middleware that handles the data endpoint
  * @example
  * ```typescript
- * import express from 'express';
- * import { createExpressDataMiddleware } from '@sitecore-content-sdk/angular';
- * import { SERVER_LOADERS } from './lib/loaders';
+ * import { createExpressDataMiddleware, DEFAULT_DATA_ENDPOINT } from '@sitecore-content-sdk/angular';
  *
- * const app = express();
- * app.use(express.json());
- *
- * // Mount the data handler middleware (handles /_data by default)
+ * // Use default endpoint (same as client when FETCH_DATA_ENDPOINT is not provided)
  * app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS }));
  *
- * // Or with custom endpoint
- * app.use(createExpressDataMiddleware({
- *   loaders: SERVER_LOADERS,
- *   endpoint: '/api/data'
- * }));
+ * // Or pass the same endpoint you provide to the Angular app (FETCH_DATA_ENDPOINT)
+ * const dataEndpoint = process.env.DATA_ENDPOINT ?? DEFAULT_DATA_ENDPOINT;
+ * app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS, endpoint: dataEndpoint }));
  * ```
  * @public
  */
-export function createExpressDataMiddleware(options: ExpressDataHandlerOptions): ExpressMiddleware {
+export function createLoaderDataServiceMiddleware(
+  options: ExpressDataHandlerOptions
+): ExpressMiddleware {
   const { loaders, endpoint = DEFAULT_DATA_ENDPOINT } = options;
   return async (
     req: ExpressRequest,
@@ -141,7 +140,7 @@ export function createExpressDataMiddleware(options: ExpressDataHandlerOptions):
         // POST: parse body
         const body = req.body as LoaderApiRequest;
 
-        if (!body.loaderId) {
+        if (!body?.loaderId) {
           res.status(400).json({ kind: 'error', status: 400, message: 'Missing loaderId' });
           return;
         }
@@ -150,7 +149,7 @@ export function createExpressDataMiddleware(options: ExpressDataHandlerOptions):
         sendResponse(res, result);
       } else if (req.method === 'GET') {
         // GET: use query parameters
-        const loaderId = String(req.query.loaderId || '');
+        const loaderId = String(req.query?.loaderId || '');
         const url = String(req.query.url || '');
 
         if (!loaderId) {
@@ -185,3 +184,6 @@ export function createExpressDataMiddleware(options: ExpressDataHandlerOptions):
     }
   };
 }
+
+/** @public */
+export const createExpressDataMiddleware = createLoaderDataServiceMiddleware;

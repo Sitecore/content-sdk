@@ -29,12 +29,8 @@ export interface ExpressResponse {
   json(data: unknown): void;
 }
 
-/**
- * Default path for the data endpoint used by loaders.
- * This path is used by both the client-side loader resolver and server-side handlers.
- * @public
- */
-export const DEFAULT_DATA_ENDPOINT = '/_data';
+/** Re-export so server code can use the same default as client (see server/config.ts). */
+export { DEFAULT_DATA_ENDPOINT } from './config';
 
 /**
  * Configuration for server-side data handlers
