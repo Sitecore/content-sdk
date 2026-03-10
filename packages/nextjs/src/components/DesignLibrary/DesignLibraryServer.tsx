@@ -17,16 +17,18 @@ import {
   ComponentPreviewModel,
 } from '../../server-actions/update-server-component-action';
 import * as codegen from '@sitecore-content-sdk/content/codegen';
-import { AppPlaceholder, PlaceholderMetadata } from '../Placeholder';
-import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
+import { AppPlaceholder, PlaceholderMetadata } from '@sitecore-content-sdk/react';
 import {
+  DesignLibraryErrorBoundary,
   DynamicComponent,
+  ErrorComponent,
+} from '@sitecore-content-sdk/react';
+import {
   DesignLibraryServerProps,
   DesignLibraryServerPreviewProps,
   DesignLibraryServerVariantGenerationProps,
   ServerComponentInitError,
 } from './models';
-import { ErrorComponent } from '../ErrorBoundary';
 
 let { getCacheAndClean, hasCache } = globalCache;
 let { createComponentInstance, getImportMapInfo } = codegen;

@@ -1,4 +1,5 @@
 'use server';
+import { refresh } from 'next/cache';
 import { debug } from '@sitecore-content-sdk/content';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import {
@@ -63,6 +64,7 @@ export type PreviewEventModel = {
 export async function updateComponentAction(updatedComponent: ComponentUpdateModel): Promise<void> {
   debug.editing(`Updating server component cache for Update Component: ${updatedComponent.uid}`);
   setCache(`${COMPONENT_UPDATE_CACHE_KEY_PREFIX}${updatedComponent.uid}`, updatedComponent);
+  refresh();
 }
 
 /**
@@ -106,4 +108,5 @@ export async function previewComponentAction(
   }
 
   setCache(`${COMPONENT_PREVIEW_CACHE_KEY_PREFIX}${updatedComponent.uid}`, updatedComponent);
+  refresh();
 }

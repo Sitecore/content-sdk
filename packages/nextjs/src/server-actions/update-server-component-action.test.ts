@@ -20,6 +20,7 @@ use(sinonChai);
 
 describe('Server Component Actions', () => {
   let sandbox: sinon.SinonSandbox;
+  let refreshStub: sinon.SinonStub;
   let setCacheStub: sinon.SinonStub;
   let debugEditingStub: sinon.SinonStub;
   let fetchGeneratedComponentFromCacheStub: sinon.SinonStub;
@@ -30,6 +31,7 @@ describe('Server Component Actions', () => {
   beforeEach(() => {
     sandbox = sinon.createSandbox();
     setCacheStub = sandbox.stub();
+    refreshStub = sandbox.stub();
     debugEditingStub = sandbox.stub();
     fetchGeneratedComponentFromCacheStub = sandbox.stub();
 
@@ -37,6 +39,9 @@ describe('Server Component Actions', () => {
     process.env = { ...originalEnv, SITECORE_EDGE_URL: 'https://edge.sitecorecloud.io' };
 
     const module = proxyquire('./update-server-component-action', {
+      'next/cache': {
+        refresh: refreshStub,
+      },
       '@sitecore-content-sdk/core/tools': {
         setCache: setCacheStub,
       },
@@ -79,6 +84,7 @@ describe('Server Component Actions', () => {
       await updateComponentAction(componentUpdate);
 
       expect(setCacheStub).to.have.been.calledOnce;
+      expect(refreshStub).to.have.been.calledOnce;
       expect(setCacheStub).to.have.been.calledWith(
         `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}test-uid-123`,
         componentUpdate
@@ -115,6 +121,7 @@ describe('Server Component Actions', () => {
       await updateComponentAction(componentUpdate);
 
       expect(setCacheStub).to.have.been.calledOnce;
+      expect(refreshStub).to.have.been.calledOnce;
       expect(setCacheStub).to.have.been.calledWith(
         `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}test-uid-456`,
         componentUpdate
@@ -184,6 +191,7 @@ describe('Server Component Actions', () => {
       expect(debugEditingStub).to.have.been.calledWith(
         'Updating server component cache for Preview Component: test-uid-789'
       );
+      expect(refreshStub).to.have.been.calledOnce;
     });
 
     it('should set cache with undefined generatedComponentData when no args provided', async () => {
@@ -211,6 +219,7 @@ describe('Server Component Actions', () => {
       expect(debugEditingStub.secondCall).to.have.been.calledWith(
         'No preview event arguments provided for Component: test-uid-no-preview'
       );
+      expect(refreshStub).to.have.been.calledOnce;
     });
 
     it('should use custom edgeUrl when provided', async () => {
@@ -344,6 +353,7 @@ describe('Server Component Actions', () => {
         'Error fetching generated component data from cache for Component: test-uid-error',
         fetchError
       );
+      expect(refreshStub).to.have.been.calledOnce;
     });
 
     it('should handle non-Error fetch failures', async () => {
@@ -380,6 +390,7 @@ describe('Server Component Actions', () => {
       expect(debugEditingStub.firstCall).to.have.been.calledWith(
         'Updating server component cache for Preview Component: test-uid-string-error'
       );
+      expect(refreshStub).to.have.been.calledOnce;
     });
   });
 });
