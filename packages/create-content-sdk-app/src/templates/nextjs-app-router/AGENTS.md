@@ -123,7 +123,6 @@ These are the main head-app–specific concepts. Details are in the sections bel
 ### Server vs Client components
 
 - **Default:** Components are Server Components. Use `'use client'` only for interactivity (e.g. hooks, event handlers).
-- **Cache Components / PPR:** This template does **not** enable Next.js Cache Components by default and does not wrap page, layout, or not-found in `<Suspense>`. If you opt in to `cacheComponents: true` in `next.config.ts`, you must add Suspense boundaries (or `"use cache"`) around components that use `draftMode()`, `headers()`, or other uncached request-time data.
 - **draftMode:** Used in layout and page; call `await draftMode()` in Server Components that need to know preview state.
 
 ### Not-found and error page
@@ -154,7 +153,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 - **Quick checks:** If locale or dictionary is wrong, ensure `setRequestLocale(\`${site}_${locale}\`)` is called at the top of the page and `src/i18n/request.ts` parses `requestLocale` and calls `client.getDictionary`. If not-found doesn't show Sitecore content, use `parseRewriteHeader(headers())` for site/locale. Always `await params` (Next.js 15+).
 - **Security:** Use only environment variables in `sitecore.config.ts`; never hardcode API keys, editing secret, or host URLs. Do not expose secrets in client-side code or in logs. Validate and sanitize user input at boundaries.
-- **Performance:** Keep middleware lightweight; use the proxy `matcher` so it does not run on API routes, `_next`, sitemap, robots, or static assets. Use Server Components for data fetching; add `'use client'` only where interactivity is needed. Use `generateStaticParams` and caching as in the existing page. If you enable Cache Components, add Suspense where required.
+- **Performance:** Keep middleware lightweight; use the proxy `matcher` so it does not run on API routes, `_next`, sitemap, robots, or static assets. Use Server Components for data fetching; add `'use client'` only where interactivity is needed. Use `generateStaticParams` and caching as in the existing page.
 - **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Register new components in `.sitecore/component-map.ts` and `.sitecore/component-map.client.ts` as appropriate. Use the single Sitecore client in `lib/sitecore-client.ts` for all data fetching.
 - **Consistency:** Follow the existing patterns in `[site]/[locale]/[[...path]]/page.tsx`, layout hierarchy, `i18n/request.ts` (site_locale), and API route handlers. When adding routes or rewrites, keep the middleware matcher and next-intl config in sync.
 
@@ -168,7 +167,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 | Pass `{ site, locale }` to `client.getPage` and `getDictionary` | Assume site/locale from headers inside page without using params |
 | Run LocaleProxy before AppRouterMultisiteProxy in middleware | Change proxy order (locale must run first for i18n) |
 | Call `setRequestLocale(\`${site}_${locale}\`)` in the page for next-intl | Omit setRequestLocale when adding new page branches |
-| Add Suspense (or `"use cache"`) when opting in to Next.js Cache Components | Put async data fetching in client components when SSR is intended |
+| Use Server Components for async data fetching | Put async data fetching in client components when SSR is intended |
 | Use `parseRewriteHeader(headers())` in not-found for site/locale | Hardcode site/locale in not-found or error pages |
 | Use createXRouteHandler and `.sitecore/sites.json` for sitemap/robots | Hardcode site list or commit `.env` |
 | Use Sitecore field components and validate fields | Expose API keys or editing secret in client code |
