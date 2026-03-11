@@ -2,7 +2,7 @@
 
 This file describes **this application** in terms of **capability-style groupings**: high-level areas that help AI tools and developers map tasks to the right part of the app. This is an App Router app with `[site]`/`[locale]` segments, next-intl, and separate server/client component maps. For concrete steps and patterns, see [AGENTS.md](AGENTS.md) and the [official Content SDK documentation](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
 
-**Agent Skills:** Each grouping is also available as a skill in [.agents/skills/](.agents/skills/) in the standard [Agent Skills](https://agentskills.io) format (`SKILL.md` per capability). Tools that support this standard can discover and load these skills automatically; the skills are tailored for **App Router** (e.g. setRequestLocale, draftMode(), component-map.ts + component-map.client.ts).
+**Agent Skills:** Each grouping is also available as a skill in [.agents/skills/](.agents/skills/) in the standard [Agent Skills](https://agentskills.io) format (`SKILL.md` per capability). Tools that support this standard load skills from `.agents/skills/`; Cursor's built-in skills use `.cursor/skills/` unless it also supports the Agent Skills standard. The skills here are tailored for **App Router** (e.g. setRequestLocale, draftMode(), component-map.ts + component-map.client.ts).
 
 ---
 

@@ -21,12 +21,18 @@ Repository Overview:
 ```
 content-sdk/
 ├── packages/
+│   ├── core/                      # Foundation: GraphQL client, cache, retry, fetch utilities
+│   ├── analytics-core/            # Analytics foundation
+│   ├── content/                   # Content client: layout, editing, site resolution, media
+│   ├── search/                    # Search service and APIs
+│   ├── events/                    # Event tracking
+│   ├── personalize/               # Personalization
+│   ├── cli/                       # CLI (sitecore-tools)
 │   ├── create-content-sdk-app/    # Scaffolding CLI & templates
-│   ├── core/                      # Core SDK functionality
-│   ├── nextjs/                    # Next.js-specific SDK
-│   ├── react/                     # React-specific SDK
-│   └── cli/                       # Additional CLI tools
-└── samples/                       # Example applications
+│   ├── nextjs/                    # Next.js integration, middleware, editing
+│   └── react/                     # React components (Text, Image, Placeholder, etc.)
+├── samples/                       # Example applications
+└── scripts/                       # Monorepo scripts
 ```
 
 Sources: `src/**`
