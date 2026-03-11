@@ -1,5 +1,8 @@
 import type { Params } from '@angular/router';
 
+export const DEFAULT_NOT_FOUND_ROUTE = '/404';
+export const DEFAULT_ERROR_ROUTE = '/500';
+
 /**
  * Request context containing information from the incoming HTTP request.
  * Used for site resolution and other request-dependent operations in loaders.
@@ -79,7 +82,6 @@ export type LoaderApiRequest = {
 
 export type LoaderApiResponse =
   | { kind: 'data'; data: any }
-  | { kind: 'redirect'; location: string; status: number }
   | { kind: 'error'; status: number; message: string }
   | { kind: 'notFound'; status: number };
 

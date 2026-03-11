@@ -56,11 +56,9 @@ export * from '@sitecore-content-sdk/content/config';
 export * from './loaders/loader-resolver';
 export * from './loaders/loader-registry.token';
 export * from './loaders/loader-data.service';
-export {
-  handleNavigationError,
-  type NavigationErrorOptions,
-} from './loaders/router-error-handling';
-
+export { handleNavigationError } from './loaders/router-error-handling';
+export { provideSitecoreAngular } from './lib/providers';
+export * from './components';
 export * from './server';
 
 export const _coreVersionMarker = CORE_VERSION;

@@ -132,11 +132,12 @@ export class LoaderDataService {
         this.pending.delete(key);
 
         if (!resp) {
-          console.log('DEBUG: LoaderDataService fetchData: no response');
+          const message = `No response from ${endpoint}`;
+          console.log(`DEBUG: LoaderDataService fetchData: ${message}`);
           return {
             kind: 'error',
             status: 500,
-            message: `No response from ${endpoint}`,
+            message,
           } as LoaderApiResponse;
         }
 

@@ -9,10 +9,5 @@ const DEFAULT_MESSAGE = 'Internal Server Error';
  * The Error component should read layout.sitecore.route.fields?.error?.value for custom text.
  */
 export const errorLoader: LoaderFn<Page> = async (context) => {
-  try {
-    return errorPageResult(context.url, DEFAULT_MESSAGE);
-  } catch (error) {
-    console.error('Error loading error page', error);
-    throw error;
-  }
+  return errorPageResult(context.url, DEFAULT_MESSAGE);
 };

@@ -1,5 +1,5 @@
 import { EnvironmentProviders, makeEnvironmentProviders, Type } from '@angular/core';
-import { COMPONENT_MAP_TOKEN } from './tokens';
+import { COMPONENT_MAP_TOKEN, ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from './tokens';
 import { ComponentMap } from './types';
 
 /**
@@ -12,6 +12,8 @@ export interface SitecoreAngularConfig {
    * Required for rendering Sitecore components in placeholders.
    */
   componentMap?: ComponentMap | Map<string, Type<unknown>>;
+  notFoundRoute?: string;
+  errorRoute?: string;
 }
 
 /**
@@ -33,6 +35,12 @@ export function provideSitecoreAngular(config: SitecoreAngularConfig): Environme
 
   if (config.componentMap) {
     providers.push({ provide: COMPONENT_MAP_TOKEN, useValue: config.componentMap });
+  }
+  if (config.notFoundRoute) {
+    providers.push({ provide: NOT_FOUND_ROUTE_TOKEN, useValue: config.notFoundRoute });
+  }
+  if (config.errorRoute) {
+    providers.push({ provide: ERROR_ROUTE_TOKEN, useValue: config.errorRoute });
   }
 
   return makeEnvironmentProviders(providers);

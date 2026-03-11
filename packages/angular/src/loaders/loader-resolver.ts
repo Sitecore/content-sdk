@@ -3,15 +3,21 @@ import { isPlatformBrowser } from '@angular/common';
 import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
-  Router,
   Params,
-  RedirectCommand,
   ResolveFn,
+  Router,
 } from '@angular/router';
 import { LOADER_REGISTRY, type DefaultLoaderId } from './loader-registry.token';
 import { LoaderDataService } from './loader-data.service';
 import { extractRequestContext, LOADER_ID } from './utils';
-import { LoaderHttpError, NotFoundNavigationError } from './models';
+import {
+  DEFAULT_ERROR_ROUTE,
+  DEFAULT_NOT_FOUND_ROUTE,
+  LoaderHttpError,
+  NotFoundNavigationError,
+} from './models';
+import { redirectOnNavigationError } from './router-error-handling';
+import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from '../lib/tokens';
 
 /**
  * Create a state key for the loader
@@ -50,7 +56,6 @@ async function resolveOnBrowser(
   loaderId: string
 ): Promise<unknown> {
   const transferState = inject(TransferState);
-  const router = inject(Router);
   const loaderData = inject(LoaderDataService);
 
   const url = state.url;
@@ -71,13 +76,8 @@ async function resolveOnBrowser(
     query: route.queryParams as Record<string, string | string[]>,
   });
 
-  if (resp.kind === 'redirect') {
-    const urlTree = router.parseUrl(resp.location);
-    return new RedirectCommand(urlTree);
-  }
-
   if (resp.kind === 'error') {
-    throw new LoaderHttpError(500, resp.message);
+    throw new LoaderHttpError(resp.status, resp.message);
   }
   if (resp.kind === 'notFound') {
     throw new NotFoundNavigationError();
@@ -91,12 +91,21 @@ export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
     const platformId = inject(PLATFORM_ID);
     const registry = inject(LOADER_REGISTRY);
     const request = inject(REQUEST, { optional: true });
+    const notFoundRoute =
+      inject(NOT_FOUND_ROUTE_TOKEN, { optional: true }) || DEFAULT_NOT_FOUND_ROUTE;
+    const errorRoute = inject(ERROR_ROUTE_TOKEN, { optional: true }) || DEFAULT_ERROR_ROUTE;
+    const router = inject(Router);
 
     const url = state.url;
     const key = stateKey(loaderId, url);
 
     if (isPlatformBrowser(platformId)) {
-      return resolveOnBrowser(route, state, loaderId);
+      try {
+        return await resolveOnBrowser(route, state, loaderId);
+      } catch (e) {
+        // special handling for browser, as navigation error is only produced on server
+        return redirectOnNavigationError(e as Error, url, notFoundRoute, errorRoute, router);
+      }
     }
 
     const loader = registry[loaderId];

@@ -84,10 +84,7 @@ async function executeLoader(
  * @param {LoaderApiResponse} result - The loader API response
  */
 function sendResponse(res: ExpressResponse, result: LoaderApiResponse): void {
-  if (result.kind === 'redirect') {
-    // Return 200 with redirect info for client-side handling
-    res.json(result);
-  } else if (result.kind === 'notFound') {
+  if (result.kind === 'notFound') {
     res.json(result);
   } else if (result.kind === 'error') {
     res.json(result);

@@ -5,7 +5,6 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { loaderResolver } from './loader-resolver';
 import { LOADER_REGISTRY } from './loader-registry.token';
 import { LoaderDataService } from './loader-data.service';
-import { LoaderHttpError, NotFoundNavigationError } from './models';
 import { getLoaderId } from './utils';
 import type { LoaderFn } from './models';
 import type { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
@@ -113,7 +112,7 @@ describe('loaderResolver', () => {
       expect(result).toBeInstanceOf(RedirectCommand);
     });
 
-    it('should throw LoaderHttpError when getData returns error', async () => {
+    it('should return RedirectCommand to /500 when getData returns error', async () => {
       mockLoaderData.getData.mockResolvedValue({
         kind: 'error',
         status: 500,
@@ -124,33 +123,33 @@ describe('loaderResolver', () => {
       const route = makeRouteSnapshot();
       const state = makeRouterStateSnapshot('/path');
 
-      const promise = TestBed.runInInjectionContext(async () => {
+      const result = await TestBed.runInInjectionContext(async () => {
         return (resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>)(
           route,
           state
         );
       });
 
-      await expect(promise).rejects.toThrow(LoaderHttpError);
-      const err = await promise.catch((e: unknown) => e);
-      expect((err as LoaderHttpError).message).toBe('Server error');
+      expect(result).toBeInstanceOf(RedirectCommand);
+      expect((result as RedirectCommand).url.toString()).toBe('/500');
     });
 
-    it('should throw NotFoundNavigationError when getData returns notFound', async () => {
+    it('should return RedirectCommand to /404 when getData returns notFound', async () => {
       mockLoaderData.getData.mockResolvedValue({ kind: 'notFound', status: 404 });
 
       const resolver = loaderResolver('page');
       const route = makeRouteSnapshot();
       const state = makeRouterStateSnapshot('/path');
 
-      await expect(
-        TestBed.runInInjectionContext(async () => {
-          return (resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>)(
-            route,
-            state
-          );
-        })
-      ).rejects.toThrow(NotFoundNavigationError);
+      const result = await TestBed.runInInjectionContext(async () => {
+        return (resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>)(
+          route,
+          state
+        );
+      });
+
+      expect(result).toBeInstanceOf(RedirectCommand);
+      expect((result as RedirectCommand).url.toString()).toBe('/404');
     });
   });
 
