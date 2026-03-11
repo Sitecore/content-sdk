@@ -12,6 +12,7 @@ import {
   postToDesignLibrary,
   validateEvent,
   updateComponent,
+  findComponent,
 } from './design-library';
 import testComponent from '../test-data/component-editing-data';
 import { DesignLibraryMode } from './models';
@@ -467,6 +468,77 @@ describe('component library utils', () => {
         theme: 'dark',
         size: 'large',
       });
+    });
+  });
+
+  describe('findComponent', () => {
+    const leaf: ComponentRendering = {
+      componentName: 'Leaf',
+      uid: 'leaf-uid',
+    };
+
+    const middle: ComponentRendering = {
+      componentName: 'Middle',
+      uid: 'middle-uid',
+      placeholders: {
+        content: [leaf],
+      },
+    };
+
+    const root: ComponentRendering = {
+      componentName: 'Root',
+      uid: 'root-uid',
+      placeholders: {
+        main: [middle],
+        sidebar: [{ componentName: 'Sidebar', uid: 'sidebar-uid' }],
+      },
+    };
+
+    it('should return the root component when its uid matches', () => {
+      expect(findComponent(root, 'root-uid')).to.equal(root);
+    });
+
+    it('should find a direct child in a placeholder', () => {
+      expect(findComponent(root, 'middle-uid')).to.equal(middle);
+    });
+
+    it('should find a deeply nested component', () => {
+      expect(findComponent(root, 'leaf-uid')).to.equal(leaf);
+    });
+
+    it('should find a component in a non-first placeholder', () => {
+      const sidebar = root.placeholders!.sidebar[0];
+      expect(findComponent(root, 'sidebar-uid')).to.equal(sidebar);
+    });
+
+    it('should return null when no component matches the uid', () => {
+      expect(findComponent(root, 'nonexistent-uid')).to.be.null;
+    });
+
+    it('should return null when root has no placeholders and uid does not match', () => {
+      const standalone: ComponentRendering = { componentName: 'Standalone', uid: 'standalone-uid' };
+      expect(findComponent(standalone, 'other-uid')).to.be.null;
+    });
+
+    it('should be case-insensitive when matching uids', () => {
+      expect(findComponent(root, 'ROOT-UID')).to.equal(root);
+      expect(findComponent(root, 'Leaf-Uid')).to.equal(leaf);
+    });
+
+    it('should return null when root uid is undefined and there are no placeholders', () => {
+      const noUid: ComponentRendering = { componentName: 'NoUid' };
+      expect(findComponent(noUid, 'any-uid')).to.be.null;
+    });
+
+    it('should search across multiple renderings in the same placeholder', () => {
+      const sibling1: ComponentRendering = { componentName: 'Sibling1', uid: 'sibling-1' };
+      const sibling2: ComponentRendering = { componentName: 'Sibling2', uid: 'sibling-2' };
+      const parent: ComponentRendering = {
+        componentName: 'Parent',
+        uid: 'parent-uid',
+        placeholders: { main: [sibling1, sibling2] },
+      };
+      expect(findComponent(parent, 'sibling-2')).to.equal(sibling2);
     });
   });
 

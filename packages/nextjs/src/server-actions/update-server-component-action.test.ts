@@ -169,7 +169,7 @@ describe('Server Component Actions', () => {
         args,
       };
 
-      await previewComponentAction(previewEvent);
+      await previewComponentAction(previewEvent, null);
 
       expect(fetchGeneratedComponentFromCacheStub).to.have.been.calledOnce;
       expect(fetchGeneratedComponentFromCacheStub).to.have.been.calledWith(
@@ -184,6 +184,7 @@ describe('Server Component Actions', () => {
         {
           uid: 'test-uid-789',
           generatedComponentData: fetchedGeneratedComponentData,
+          rendering: null,
           error: undefined,
         }
       );
@@ -200,7 +201,7 @@ describe('Server Component Actions', () => {
         args: undefined as any, // simulating no preview event arguments provided
       };
 
-      await previewComponentAction(previewEvent);
+      await previewComponentAction(previewEvent, null);
 
       expect(fetchGeneratedComponentFromCacheStub).to.not.have.been.called;
       expect(setCacheStub).to.have.been.calledOnce;
@@ -209,6 +210,7 @@ describe('Server Component Actions', () => {
         {
           uid: 'test-uid-no-preview',
           generatedComponentData: undefined,
+          rendering: null,
           error: 'No preview event arguments provided',
         }
       );
@@ -259,13 +261,38 @@ describe('Server Component Actions', () => {
         args,
       };
 
-      await previewComponentAction(previewEvent, customEdgeUrl);
+      await previewComponentAction(previewEvent, null, customEdgeUrl);
 
       expect(fetchGeneratedComponentFromCacheStub).to.have.been.calledWith(
         'cache-id-env',
         'cache-token-env',
         customEdgeUrl
       );
+    });
+
+    it('should pass rendering to the cache when rendering is provided', async () => {
+      const rendering: ComponentRendering = {
+        uid: 'test-uid-rendering',
+        componentName: 'TestComponent',
+      };
+
+      const args: ServerComponentPreviewEventArgs = {
+        name: 'component:generation:component-preview',
+        message: { cache: { id: 'cache-id-r', token: 'cache-token-r' } },
+      };
+
+      fetchGeneratedComponentFromCacheStub.resolves({
+        uid: 'test-uid-rendering',
+        code: { type: 'function', content: '' },
+        styles: { type: 'style-element', content: '', styleImport: { name: 's', content: {} } },
+        imports: [],
+      });
+
+      await previewComponentAction({ uid: 'test-uid-rendering', args }, rendering, undefined);
+
+      expect(setCacheStub).to.have.been.calledOnce;
+      const cached = setCacheStub.getCall(0).args[1];
+      expect(cached.rendering).to.equal(rendering);
     });
 
     it('should handle undefined edgeUrl when not provided', async () => {
@@ -303,7 +330,7 @@ describe('Server Component Actions', () => {
         args,
       };
 
-      await previewComponentAction(previewEvent);
+      await previewComponentAction(previewEvent, null);
 
       expect(fetchGeneratedComponentFromCacheStub).to.have.been.calledWith(
         'cache-id-no-env',
@@ -333,7 +360,7 @@ describe('Server Component Actions', () => {
         args,
       };
 
-      await previewComponentAction(previewEvent);
+      await previewComponentAction(previewEvent, null);
 
       expect(fetchGeneratedComponentFromCacheStub).to.have.been.calledOnce;
       expect(setCacheStub).to.have.been.calledOnce;
@@ -342,6 +369,7 @@ describe('Server Component Actions', () => {
         {
           uid: 'test-uid-error',
           generatedComponentData: undefined,
+          rendering: null,
           error: fetchError.message,
         }
       );
@@ -375,7 +403,7 @@ describe('Server Component Actions', () => {
         args,
       };
 
-      await previewComponentAction(previewEvent);
+      await previewComponentAction(previewEvent, null);
 
       expect(setCacheStub).to.have.been.calledOnce;
       expect(setCacheStub).to.have.been.calledWith(
@@ -383,6 +411,7 @@ describe('Server Component Actions', () => {
         {
           uid: 'test-uid-string-error',
           generatedComponentData: undefined,
+          rendering: null,
           error: errorMessage,
         }
       );
