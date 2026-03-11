@@ -6,7 +6,7 @@
 
 # Interface: Plugin\<Options, Adapter\>
 
-Defined in: [packages/core/src/initialization/types.ts:58](https://github.com/Sitecore/content-sdk/blob/ccc62fee7552ed53e9d756ca57a3559546fc0e90/packages/core/src/initialization/types.ts#L58)
+Defined in: [packages/core/src/initialization/types.ts:58](https://github.com/Sitecore/content-sdk/blob/e4d25a1361f2e4c7054948e8cb31a3639dc89fb9/packages/core/src/initialization/types.ts#L58)
 
 Plugin interface for extending SDK functionality.
 Plugins are the standard way to add capabilities to the SDK.
@@ -24,7 +24,7 @@ Plugins are the standard way to add capabilities to the SDK.
 
 > `optional` **adapter**: `Adapter`
 
-Defined in: [packages/core/src/initialization/types.ts:79](https://github.com/Sitecore/content-sdk/blob/ccc62fee7552ed53e9d756ca57a3559546fc0e90/packages/core/src/initialization/types.ts#L79)
+Defined in: [packages/core/src/initialization/types.ts:79](https://github.com/Sitecore/content-sdk/blob/e4d25a1361f2e4c7054948e8cb31a3639dc89fb9/packages/core/src/initialization/types.ts#L79)
 
 Optional adapter requirements for the plugin.
 
@@ -34,7 +34,7 @@ Optional adapter requirements for the plugin.
 
 > `optional` **dependencies**: `string`[]
 
-Defined in: [packages/core/src/initialization/types.ts:70](https://github.com/Sitecore/content-sdk/blob/ccc62fee7552ed53e9d756ca57a3559546fc0e90/packages/core/src/initialization/types.ts#L70)
+Defined in: [packages/core/src/initialization/types.ts:70](https://github.com/Sitecore/content-sdk/blob/e4d25a1361f2e4c7054948e8cb31a3639dc89fb9/packages/core/src/initialization/types.ts#L70)
 
 List of plugins this plugin depends on
 
@@ -44,7 +44,7 @@ List of plugins this plugin depends on
 
 > `optional` **init**: () => `void` \| `Promise`\<`void`\>
 
-Defined in: [packages/core/src/initialization/types.ts:75](https://github.com/Sitecore/content-sdk/blob/ccc62fee7552ed53e9d756ca57a3559546fc0e90/packages/core/src/initialization/types.ts#L75)
+Defined in: [packages/core/src/initialization/types.ts:75](https://github.com/Sitecore/content-sdk/blob/e4d25a1361f2e4c7054948e8cb31a3639dc89fb9/packages/core/src/initialization/types.ts#L75)
 
 Initialization function run once when init is called for the first time.
 Can be async for plugins that need to perform async setup.
@@ -59,7 +59,7 @@ Can be async for plugins that need to perform async setup.
 
 > **name**: `string`
 
-Defined in: [packages/core/src/initialization/types.ts:62](https://github.com/Sitecore/content-sdk/blob/ccc62fee7552ed53e9d756ca57a3559546fc0e90/packages/core/src/initialization/types.ts#L62)
+Defined in: [packages/core/src/initialization/types.ts:62](https://github.com/Sitecore/content-sdk/blob/e4d25a1361f2e4c7054948e8cb31a3639dc89fb9/packages/core/src/initialization/types.ts#L62)
 
 Unique identifier for the plugin (e.g., 'EventsPlugin')
 
@@ -69,6 +69,6 @@ Unique identifier for the plugin (e.g., 'EventsPlugin')
 
 > `optional` **options**: `Options`
 
-Defined in: [packages/core/src/initialization/types.ts:66](https://github.com/Sitecore/content-sdk/blob/ccc62fee7552ed53e9d756ca57a3559546fc0e90/packages/core/src/initialization/types.ts#L66)
+Defined in: [packages/core/src/initialization/types.ts:66](https://github.com/Sitecore/content-sdk/blob/e4d25a1361f2e4c7054948e8cb31a3639dc89fb9/packages/core/src/initialization/types.ts#L66)
 
 Optional plugin-specific options
