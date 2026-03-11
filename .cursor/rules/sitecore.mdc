@@ -113,23 +113,7 @@ Content Fetching:
 - Implement proper loading states and error handling
 - Consider content preview vs. published content scenarios
 
-Security Best Practices:
-
-- Sanitize user inputs before processing
-- Validate content from Sitecore before rendering
-- Use Content Security Policy (CSP) headers
-- Never expose sensitive configuration in client-side code
-
-```typescript
-// Content validation example
-function validateContentItem(item: unknown): ContentItem {
-  if (!item || typeof item !== 'object') {
-    throw new Error('Invalid content item');
-  }
-  // Additional validation logic
-  return item as ContentItem;
-}
-```
+Security: See `.cursor/rules/safety.mdc` for API keys, env vars, input validation, and client-side exposure rules.
 
 ## Development Patterns
 

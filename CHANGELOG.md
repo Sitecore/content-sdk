@@ -14,13 +14,13 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-* Add AGENTS.md for AI coding assistant guidance ([#368](https://github.com/Sitecore/content-sdk/pull/368))
-
 * Add Skills.md with capability groupings for AI tools and developers ([#382](https://github.com/Sitecore/content-sdk/pull/382))
   - Add `.agents/skills/` with Agent Skills (SKILL.md) per capability for universal AI tooling ([agentskills.io](https://agentskills.io)); each skill includes when-to-use, hard rules, and stop conditions
   - `[create-content-sdk-app]` Add Skills.md and `.agents/skills/` to Next.js (Pages Router) and Next.js App Router templates so scaffolded apps include capability groupings and template-specific Agent Skills
 
-* `[nextjs]` `[create-content-sdk-app]` Upgrade to Next.js 16 ([#334](https://github.com/Sitecore/content-sdk/pull/334))([#401](https://github.com/Sitecore/content-sdk/pull/401))
+* Rework AI coding assistance guides around AGENTS.md ([#368](https://github.com/Sitecore/content-sdk/pull/368))([#390](https://github.com/Sitecore/content-sdk/pull/390))
+
+* `[nextjs]` `[create-content-sdk-app]` Enable Next.js 16 Cache Components and Turbopack File System Caching ([#334](https://github.com/Sitecore/content-sdk/pull/334))
 
 * `[core]` `[content]` `[nextjs]` Support custom Edge hostnames via `SITECORE_EDGE_PLATFORM_HOSTNAME` (Next.js: `NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME`) ([#359](https://github.com/Sitecore/content-sdk/pull/359))
   - New `rewriteMediaUrls` option: when `true`, rewrites layout media URLs to the custom Edge hostname; when a function, applies a custom string transformer.
