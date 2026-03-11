@@ -2,7 +2,7 @@ import React from 'react';
 import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/content/layout';
 import { DesingLibraryAppProps } from './models';
 import { DesignLibraryServer } from './DesignLibraryServer';
-import { DesignLibrary } from './DesignLibrary';
+import { DesignLibrary } from '@sitecore-content-sdk/react';
 
 /**
  * Design Library component intended to be used by the NextJs app router application

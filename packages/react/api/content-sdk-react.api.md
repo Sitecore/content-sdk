@@ -48,6 +48,7 @@ import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { PageMode } from '@sitecore-content-sdk/content/client';
 import { default as React_2 } from 'react';
+import { ReactNode } from 'react';
 import { RefAttributes } from 'react';
 import { resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 import { RetryStrategy } from '@sitecore-content-sdk/content/client';
@@ -162,14 +163,36 @@ export { DefaultRetryStrategy }
 // @public
 export const DesignLibrary: () => React_2.JSX.Element | null;
 
-// Warning: (ae-forgotten-export) The symbol "DesingLibraryAppProps" needs to be exported by the entry point api-surface.d.ts
+// Warning: (ae-forgotten-export) The symbol "DesignLibraryErrorBoundaryProps" needs to be exported by the entry point api-surface.d.ts
 //
-// @public
-export const DesignLibraryApp: ({ page, componentMap, loadServerImportMap, }: DesingLibraryAppProps) => React_2.JSX.Element | null;
+// @internal
+export class DesignLibraryErrorBoundary extends React_2.Component<DesignLibraryErrorBoundaryProps> {
+    // (undocumented)
+    componentDidCatch(error: Error): void;
+    // (undocumented)
+    componentDidUpdate(prevProps: DesignLibraryErrorBoundaryProps): void;
+    // (undocumented)
+    static getDerivedStateFromError(): {
+        hasError: boolean;
+    };
+    // (undocumented)
+    render(): React_2.JSX.Element;
+    // (undocumented)
+    state: {
+        hasError: boolean;
+    };
+}
 
 export { DictionaryPhrases }
 
 export { DictionaryService }
+
+// @internal
+export type DynamicComponent = React.ComponentType<{
+    [key: string]: unknown;
+    fields?: ComponentFields;
+    params?: ComponentParams;
+}>;
 
 // @public
 export const EditingScripts: () => React_2.JSX.Element;
@@ -179,6 +202,15 @@ export { EditMode }
 export { enableDebug }
 
 export { EnhancedOmit }
+
+// @internal
+export const ErrorComponent: (props: {
+    message: React_2.ReactNode;
+    children?: never;
+} | {
+    children: React_2.ReactNode;
+    message?: never;
+}) => React_2.JSX.Element;
 
 export { ErrorPage }
 
@@ -300,6 +332,11 @@ export interface ImageSizeParameters {
     w?: number;
 }
 
+// @internal
+export type ImportMapImport = {
+    default: ImportEntry[];
+};
+
 export { isEditorActive }
 
 export { Item }
@@ -369,6 +406,11 @@ export { PageMode }
 
 // @public
 export const Placeholder: (props: PlaceholderProps) => React_2.JSX.Element;
+
+// Warning: (ae-forgotten-export) The symbol "PlaceholderMetadataProps" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export const PlaceholderMetadata: ({ rendering, placeholderName, children, componentRuntime, }: PlaceholderMetadataProps) => JSX_2.Element;
 
 // @public
 interface PlaceholderProps {
@@ -456,7 +498,7 @@ export const SitecoreProviderReactContext: React_2.Context<SitecoreProviderState
 export interface SitecoreProviderState {
     api?: SitecoreProviderProps['api'];
     componentMap: ComponentMap;
-    // Warning: (ae-forgotten-export) The symbol "ImportMapImport" needs to be exported by the entry point api-surface.d.ts
+    // Warning: (ae-incompatible-release-tags) The symbol "loadImportMap" is marked as @public, but its signature references "ImportMapImport" which is marked as @internal
     loadImportMap: () => Promise<ImportMapImport>;
     page: Page;
     setPage?: (value: Page) => void;

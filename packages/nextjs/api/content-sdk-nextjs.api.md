@@ -32,7 +32,6 @@ import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/re
 import { DefaultEmptyFieldEditingComponentText } from '@sitecore-content-sdk/react';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
 import { DesignLibrary } from '@sitecore-content-sdk/react';
-import { DesignLibraryApp } from '@sitecore-content-sdk/react';
 import { DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/content/editing';
 import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 import { DictionaryService } from '@sitecore-content-sdk/content/i18n';
@@ -94,6 +93,7 @@ import { ImageProps } from '@sitecore-content-sdk/react';
 import { ImageProps as ImageProps_2 } from 'next/image';
 import { ImageSizeParameters } from '@sitecore-content-sdk/react';
 import { ImportEntry } from '@sitecore-content-sdk/content/codegen';
+import { ImportMapImport } from '@sitecore-content-sdk/react';
 import { IncomingHttpHeaders } from 'http';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { isEditorActive } from '@sitecore-content-sdk/content/editing';
@@ -236,6 +236,12 @@ export { BYOCWrapper }
 
 export { CacheClient }
 
+// @public
+export type CachedPageParams = {
+    locale: string;
+    site: string;
+};
+
 export { CacheOptions }
 
 export { CdpHelper }
@@ -366,7 +372,10 @@ export const defineProxy: (...proxies: ProxyHandler_2[]) => {
 
 export { DesignLibrary }
 
-export { DesignLibraryApp }
+// Warning: (ae-forgotten-export) The symbol "DesingLibraryAppProps" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export const DesignLibraryApp: ({ page, componentMap, loadServerImportMap, }: DesingLibraryAppProps) => React_2.JSX.Element | null;
 
 export { DictionaryPhrases }
 
@@ -482,6 +491,12 @@ export { generateMetadata }
 export { generateSites }
 
 export { GenerateSitesConfig }
+
+// @public
+export const getCachedPageParams: () => {
+    locale: string;
+    site: string;
+};
 
 export { getChildPlaceholder }
 
@@ -857,6 +872,9 @@ export { RobotsService }
 export { RobotsServiceConfig }
 
 export { RouteData }
+
+// @public
+export function setCachedPageParams(pageParams: CachedPageParams): void;
 
 // @public
 export class SitecoreClient extends SitecoreClient_2 {

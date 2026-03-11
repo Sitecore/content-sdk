@@ -77,8 +77,14 @@ Our versioning strategy is as follows:
 
 * `[core]` `[search]` `[analytics]` Pass Sitecore Context ID only in headers ([#336](https://github.com/Sitecore/content-sdk/pull/336))
 * `[core]` `[DesignLibrary]` Fix faux-extentions being stripped from 3rd party modules' names in import-map ([#358](https://github.com/Sitecore/content-sdk/pull/358))
-* `[content]` `[react]` `[nextjs]` Improve import map generation and refactor Design Library error handling ([#387](https://github.com/Sitecore/content-sdk/pull/387))
+* `[react]` `[nextjs]` `[template/nextjs-app-router]` Fix not-found page forcing `[[...path]]` route to dynamic rendering; use cached page params to preserve SSG ([#399](https://github.com/Sitecore/content-sdk/pull/399))([#402](https://github.com/Sitecore/content-sdk/pull/402))
+* `[rect]` `[nextjs]` `[DesignStudio]` Component does not re-render during editing ([#400](https://github.com/Sitecore/content-sdk/pull/400))
 
+### 1.5.1
+   
+### 🐛 Bug Fixes
+
+* `[content]` `[react]` `[nextjs]` Improve import map generation and refactor Design Library error handling ([#387](https://github.com/Sitecore/content-sdk/pull/387))
 
 ### 1.5.0
 

@@ -12,25 +12,36 @@ import { LayoutServiceData } from '@sitecore-content-sdk/content/layout';
 import { DesignLibraryMode } from '@sitecore-content-sdk/content/editing';
 import { ComponentMapEntry } from '../models';
 import { getTestLayoutData } from '../../test-data/component-editing-data';
-import { DesignLibraryApp } from './DesignLibraryApp';
-import * as DesignLibraryModule from './DesignLibrary';
-import * as DesignLibraryServerModule from './DesignLibraryServer';
+import proxyquire from 'proxyquire';
 
 use(sinonChai);
 
 describe('<DesignLibraryApp />', () => {
   let DesignLibraryStub: sinon.SinonStub;
   let DesignLibraryServerStub: sinon.SinonStub;
+  let DesignLibraryApp: any;
   const sandbox = sinon.createSandbox();
 
   beforeEach(() => {
     DesignLibraryStub = sandbox
-      .stub(DesignLibraryModule, 'DesignLibrary')
+      .stub()
       .returns(<div data-testid="design-library-client">Client Component Rendered</div>);
 
     DesignLibraryServerStub = sandbox
-      .stub(DesignLibraryServerModule, 'DesignLibraryServer')
+      .stub()
       .resolves(<div data-testid="design-library-server">Server Component Rendered</div>);
+
+    // Use proxyquire to mock dependencies before DesignLibraryApp imports them
+    const module = proxyquire('./DesignLibraryApp', {
+      '@sitecore-content-sdk/react': {
+        DesignLibrary: DesignLibraryStub,
+      },
+      './DesignLibraryServer': {
+        DesignLibraryServer: DesignLibraryServerStub,
+      },
+    });
+
+    DesignLibraryApp = module.DesignLibraryApp;
   });
 
   afterEach(() => {

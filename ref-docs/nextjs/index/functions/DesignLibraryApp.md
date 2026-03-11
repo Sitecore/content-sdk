@@ -1,14 +1,14 @@
-[**@sitecore-content-sdk/react**](../README.md)
+[**@sitecore-content-sdk/nextjs**](../../README.md)
 
 ***
 
-[@sitecore-content-sdk/react](../README.md) / DesignLibraryApp
+[@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / DesignLibraryApp
 
 # Function: DesignLibraryApp()
 
 > **DesignLibraryApp**(`props`): `Element` \| `null`
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryApp.tsx:17](https://github.com/Sitecore/content-sdk/blob/3746e90462f2207927cf04da92b0c6dc4ff879fc/packages/react/src/components/DesignLibrary/DesignLibraryApp.tsx#L17)
+Defined in: [nextjs/src/components/DesignLibrary/DesignLibraryApp.tsx:17](https://github.com/Sitecore/content-sdk/blob/e4d25a1361f2e4c7054948e8cb31a3639dc89fb9/packages/nextjs/src/components/DesignLibrary/DesignLibraryApp.tsx#L17)
 
 Design Library component intended to be used by the NextJs app router application
 This component serves as a router between client and server component rendering modes for the Design Library.
