@@ -79,7 +79,7 @@ Our versioning strategy is as follows:
 * `[core]` `[DesignLibrary]` Fix faux-extentions being stripped from 3rd party modules' names in import-map ([#358](https://github.com/Sitecore/content-sdk/pull/358))
 * `[react]` `[nextjs]` `[template/nextjs-app-router]` Fix not-found page forcing `[[...path]]` route to dynamic rendering; use cached page params to preserve SSG ([#399](https://github.com/Sitecore/content-sdk/pull/399))([#402](https://github.com/Sitecore/content-sdk/pull/402))
 * `[rect]` `[nextjs]` `[DesignStudio]` Component does not re-render during editing ([#400](https://github.com/Sitecore/content-sdk/pull/400))
-* `[nextjs]` `[DesignLibrary]` In variant generation mode prevent additional server re-render by passing the rendering along with variant generation data to previewComponentAction ([#403](https://github.com/Sitecore/content-sdk/pull/403))
+* `[nextjs]` `[DesignLibrary]` In variant generation mode prevent additional re-render for Server Components ([#403](https://github.com/Sitecore/content-sdk/pull/403))
 
 ### 1.5.1
    
