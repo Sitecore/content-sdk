@@ -38,6 +38,10 @@ export type ComponentPreviewModel = {
    */
   generatedComponentData?: GeneratedComponentData;
   /**
+   * The updated component rendering data.
+   */
+  rendering?: ComponentRendering | null;
+  /**
    * Error message in case fetching generated component data from secured cache endpoint fails.
    */
   error?: string;
@@ -72,18 +76,21 @@ export async function updateComponentAction(updatedComponent: ComponentUpdateMod
  * The generated component data is retrieved from a secured cache endpoint via the provided event arguments.
  * This enables rendering dynamic updates of server components inside Design Library
  * @param {PreviewEventModel} previewEvent - The preview event model containing the UID and the preview event arguments with cache information to fetch the generated component data.
+ * @param {ComponentRendering} rendering - The component rendering data to use when rendering server side.
  * @param {string} [edgeUrl] - Optional Edge URL to fetch the generated component data.
  * @returns A Promise that resolves when the cache has been updated.
  */
 export async function previewComponentAction(
   previewEvent: PreviewEventModel,
-  edgeUrl?: string
+  rendering: ComponentRendering | null,
+  edgeUrl: string | undefined
 ): Promise<void> {
   debug.editing(`Updating server component cache for Preview Component: ${previewEvent.uid}`);
 
   const updatedComponent: ComponentPreviewModel = {
     uid: previewEvent.uid,
     generatedComponentData: undefined,
+    rendering,
     error: undefined,
   };
 

@@ -25,7 +25,7 @@ export const addComponentPreviewHandler: (importMap: ImportEntry[], callback: (e
 export const addComponentUpdateHandler: (rootComponent: ComponentRendering, successCallback?: (updatedRootComponent: ComponentRendering) => void) => (() => void) | undefined;
 
 // @internal
-export const addServerComponentPreviewHandler: (callback: (eventArgs: ServerComponentPreviewEventArgs) => void) => () => void;
+export const addServerComponentPreviewHandler: (rootComponent: ComponentRendering, callback: (componentToUpdate: ComponentRendering | null, eventArgs: ServerComponentPreviewEventArgs) => void) => () => void;
 
 // @internal
 export function addStyleElement(stylesContent: string): void;
