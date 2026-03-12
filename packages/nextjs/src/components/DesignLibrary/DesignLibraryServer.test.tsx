@@ -568,7 +568,7 @@ describe('<DesignLibraryServer />', () => {
         hasCacheStub.onSecondCall().returns(false);
       });
 
-      it('should apply field and param updates updates from cache', async () => {
+      it('should apply field and param updates from cache', async () => {
         const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
         const page = getPage(layoutData, modeLibraryMetadata_Gen);
         const importMapLoaderSpy = sandbox.stub();
@@ -809,34 +809,7 @@ describe('<DesignLibraryServer />', () => {
         hasCacheStub.onSecondCall().returns(true);
       });
 
-      it('should apply field and param updates from preview cache', async () => {
-        const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
-        const page = getPage(layoutData, modeLibraryMetadata_Gen);
-        const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
-        getCacheAndCleanStub.returns({
-          uid: 'test-content',
-          rendering: {
-            fields: {
-              heading: { value: 'Updated from preview cache' },
-            },
-            params: { theme: 'preview-theme' },
-          },
-        } as any);
-
-        const awaitedDesignLibraryServer = await DesignLibraryServerVariantGeneration({
-          page,
-          rendering: layoutData.sitecore.route as any,
-          componentMap: components,
-          loadServerImportMap: importMapLoaderSpy,
-        });
-
-        const rendered = render(awaitedDesignLibraryServer);
-
-        expect(rendered?.container.innerHTML).to.include('Updated from preview cache');
-        expect(rendered?.container.innerHTML).to.include('class="preview-theme"');
-      });
-
-      it('should apply field and param updates from cache two', async () => {
+      it('should apply field and param updates from cache', async () => {
         const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
         const page = getPage(layoutData, modeLibraryMetadata_Gen);
         const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
