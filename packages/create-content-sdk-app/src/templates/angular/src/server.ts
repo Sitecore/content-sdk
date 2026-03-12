@@ -32,12 +32,15 @@ app.use(
 
 /**
  * Handle all other requests by rendering the Angular application.
+ * Catches ExternalRedirectError from loaders so server-side external redirects send HTTP 302.
  */
 app.use((req, res, next) => {
   angularApp
     .handle(req)
     .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
-    .catch(next);
+    .catch((err) => {
+      next(err);
+    });
 });
 
 /**

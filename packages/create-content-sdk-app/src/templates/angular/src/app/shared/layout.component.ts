@@ -2,7 +2,8 @@ import { Component, input, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // import { RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { Page, Field, CSDKRouterLinkDirective } from '@sitecore-content-sdk/angular';
+import { Page, Field } from '@sitecore-content-sdk/angular';
+import { RouterLink } from '@angular/router';
 
 /**
  * Route fields interface for page title
@@ -20,14 +21,14 @@ interface RouteFields {
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, CSDKRouterLinkDirective],
+  imports: [CommonModule, RouterLink],
   template: `
     <div [class]="mainClass()">
       <!-- <sc-editing-scripts></sc-editing-scripts> -->
       <header>
         <div id="header">
-          <a csdkRouterLink [routerLink]="'/'">Home</a>
-          <a csdkRouterLink [routerLink]="'/about'">About</a>
+          <a [routerLink]="'/'">Home</a>
+          <a [routerLink]="'/about'">About</a>
         </div>
       </header>
       <main>

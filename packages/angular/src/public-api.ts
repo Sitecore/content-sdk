@@ -57,8 +57,8 @@ export * from './loaders/loader-resolver';
 export * from './loaders/loader-registry.token';
 export * from './loaders/loader-data.service';
 export { handleNavigationError } from './loaders/router-error-handling';
+export { applyRedirect } from './loaders/utils';
 export { provideSitecoreAngular } from './lib/providers';
-export * from './components';
 export * from './server';
 
 export const _coreVersionMarker = CORE_VERSION;

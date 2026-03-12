@@ -5,7 +5,7 @@ export const DEFAULT_ERROR_ROUTE = '/500';
 
 /**
  * Request context containing information from the incoming HTTP request.
- * Used for site resolution and other request-dependent operations in loaders.
+ * Used for request-dependent operations in loaders.
  * @public
  */
 export interface RequestContext {
@@ -80,17 +80,36 @@ export type LoaderApiRequest = {
   query: Record<string, any>;
 };
 
+export type LoaderRedirectResult = {
+  loaderRedirectTarget: string;
+  status?: number;
+};
+
+/** Type guard for redirect results returned by loaders. @internal */
+export function isLoaderRedirectResult(v: unknown): v is LoaderRedirectResult {
+  return (
+    typeof v === 'object' &&
+    v !== null &&
+    'loaderRedirectTarget' in v &&
+    typeof (v as LoaderRedirectResult).loaderRedirectTarget === 'string'
+  );
+}
+
 export type LoaderApiResponse =
   | { kind: 'data'; data: any }
+  | { kind: 'redirect'; redirect: LoaderRedirectResult }
   | { kind: 'error'; status: number; message: string }
   | { kind: 'notFound'; status: number };
 
 /**
  * Loader function type.
- * A loader is an async function that receives context and returns data.
+ * A loader is an async function that receives context, can be applied in route resolvers and can return:
+ * - data - any data that can be serialized and stored in the transfer state
+ * - redirect - a redirect to be applied to the router
+ * - throw error - an error that occurred during the retrieval of the data
  * @public
  */
-export type LoaderFn<T = unknown> = (ctx: LoaderContext) => Promise<T> | T;
+export type LoaderFn<T = unknown> = (ctx: LoaderContext) => Promise<T> | T | LoaderRedirectResult;
 
 export class NotFoundNavigationError extends Error {
   constructor(message = 'Not Found') {
@@ -99,7 +118,7 @@ export class NotFoundNavigationError extends Error {
 }
 
 export class LoaderHttpError extends Error {
-  constructor(public status: number, message = 'Error') {
+  constructor(public status: number, message = 'Content SDK Loader Error') {
     super(message);
   }
 }

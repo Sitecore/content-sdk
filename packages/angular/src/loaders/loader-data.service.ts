@@ -3,16 +3,12 @@ import { isPlatformBrowser } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Params } from '@angular/router';
-import { debug } from '@sitecore-content-sdk/core';
 import { LoaderApiRequest, LoaderApiResponse } from './models';
-import { DEFAULT_DATA_ENDPOINT } from '../server/config';
+import { LOADER_DATA_ENDPOINT } from '../server/constants';
 import { FETCH_DATA_ENDPOINT } from './loader-registry.token';
 
 /**
  * Cache key generator for loader data
- * @param {string} loaderId - The loader ID
- * @param {string} url - The URL
- * @returns {string} The cache key
  */
 function cacheKey(loaderId: string, url: string): string {
   return `loader:${loaderId}:${url}`;
@@ -33,12 +29,12 @@ export interface LoaderDataRequest {
   providedIn: 'root',
 })
 export class LoaderDataService {
-  private readonly cache = new Map<string, unknown>();
+  private readonly cache = new Map<string, LoaderApiResponse>();
   private readonly pending = new Map<string, Promise<LoaderApiResponse>>();
   private readonly http = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly fetchDataEndpoint =
-    inject(FETCH_DATA_ENDPOINT, { optional: true }) ?? DEFAULT_DATA_ENDPOINT;
+    inject(FETCH_DATA_ENDPOINT, { optional: true }) ?? LOADER_DATA_ENDPOINT;
 
   /**
    * Get data for the given request, using cache or fetching if needed.
@@ -56,11 +52,11 @@ export class LoaderDataService {
 
     const key = cacheKey(request.loaderId, request.url);
 
-    // Return cached data if available (consume on use)
-    const cachedData = this.cache.get(key);
-    if (cachedData !== undefined) {
+    // Return cached response if available (consume on use); supports data and redirect
+    const cached = this.cache.get(key);
+    if (cached !== undefined) {
       this.cache.delete(key);
-      return { kind: 'data', data: cachedData };
+      return cached;
     }
 
     // Wait for pending request if one exists
@@ -71,42 +67,6 @@ export class LoaderDataService {
 
     // Make new request
     return this.fetchData(request);
-  }
-
-  /**
-   * Prefetch data with full context (url, params, query).
-   * Makes a request to the configured data endpoint and caches the result.
-   * Does nothing if already cached or currently loading.
-   * Fire-and-forget - does not return the result.
-   *
-   * This method is used by the LoaderPrefetchService to start parallel
-   * fetching of all loaders in the matched route tree.
-   * @param {string} url - The URL to prefetch
-   * @param {string} loaderId - The loader ID to use
-   * @param {Params} [params] - Route parameters
-   * @param {Record<string, string | string[]>} [query] - Query parameters
-   */
-  prefetch(
-    url: string,
-    loaderId: string,
-    params?: Params,
-    query?: Record<string, string | string[]>
-  ): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      debug.common('Prefetch skipped (server context)');
-      return;
-    }
-
-    const key = cacheKey(loaderId, url);
-
-    if (this.cache.has(key) || this.pending.has(key)) {
-      debug.common('Prefetch skipped (cached or pending)');
-      return;
-    }
-
-    this.fetchData({ url, loaderId, params, query }).catch(() => {
-      // Silently fail - prefetching is best effort
-    });
   }
 
   /**
@@ -127,7 +87,11 @@ export class LoaderDataService {
     };
     console.log('DEBUG: LoaderDataService fetchData', endpoint, reqBody);
 
-    const fetchPromise = firstValueFrom(this.http.post<LoaderApiResponse>(endpoint, reqBody))
+    const fetchPromise = firstValueFrom(
+      this.http.post<LoaderApiResponse>(endpoint, reqBody, {
+        cache: 'no-store',
+      })
+    )
       .then((resp) => {
         this.pending.delete(key);
 
@@ -143,7 +107,9 @@ export class LoaderDataService {
 
         if (resp.kind === 'data') {
           console.log('DEBUG: LoaderDataService fetchData: data', resp.data);
-          this.cache.set(key, resp.data);
+          this.cache.set(key, resp);
+        } else if (resp.kind === 'redirect') {
+          this.cache.set(key, resp);
         }
 
         return resp;

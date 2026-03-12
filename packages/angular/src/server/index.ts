@@ -1,5 +1,5 @@
 // Configuration
-export { DEFAULT_DATA_ENDPOINT } from './config';
+export { LOADER_DATA_ENDPOINT } from './constants';
 
 // Express handlers
 export {

@@ -3,11 +3,11 @@ import type { LoaderFn } from './models';
 import { pageLoader } from './default/page.loader';
 import { notFoundLoader } from './default/not-found.loader';
 import { errorLoader } from './default/error.loader';
-import { DEFAULT_DATA_ENDPOINT } from '../server/config';
+import { LOADER_DATA_ENDPOINT } from '../server/constants';
 
 /**
  * Optional endpoint path for loader data fetch (e.g. '/_data' or '/api/data').
- * When null or undefined, {@link DEFAULT_DATA_ENDPOINT} is used.
+ * When null or undefined, {@link LOADER_DATA_ENDPOINT} is used.
  * @public
  */
 export const FETCH_DATA_ENDPOINT = new InjectionToken<string | null | undefined>(
@@ -38,3 +38,10 @@ export const provideLoaderRegistry = (loaders?: Record<string, LoaderFn>): Provi
     },
   ];
 };
+
+/**
+ * Symbol used to tag resolver functions with their loader ID.
+ * This allows the prefetch service to identify loader resolvers in the route tree.
+ * @internal
+ */
+export const LOADER_ID = Symbol('loaderId');

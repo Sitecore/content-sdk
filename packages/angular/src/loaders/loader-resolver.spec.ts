@@ -1,19 +1,20 @@
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID, REQUEST, TransferState, makeStateKey } from '@angular/core';
-import { provideRouter, RedirectCommand } from '@angular/router';
+import { provideRouter, RedirectCommand, Router } from '@angular/router';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { loaderResolver } from './loader-resolver';
-import { LOADER_REGISTRY } from './loader-registry.token';
+import { LOADER_ID, LOADER_REGISTRY } from './loader-registry.token';
 import { LoaderDataService } from './loader-data.service';
-import { getLoaderId } from './utils';
 import type { LoaderFn } from './models';
 import type { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
-function makeRouteSnapshot(overrides: Partial<{
-  params: Record<string, string>;
-  queryParams: Record<string, string | string[]>;
-  pathFromRoot: Array<{ params: Record<string, string> }>;
-}> = {}): ActivatedRouteSnapshot {
+function makeRouteSnapshot(
+  overrides: Partial<{
+    params: Record<string, string>;
+    queryParams: Record<string, string | string[]>;
+    pathFromRoot: Array<{ params: Record<string, string> }>;
+  }> = {}
+): ActivatedRouteSnapshot {
   return {
     params: overrides.params ?? {},
     queryParams: overrides.queryParams ?? {},
@@ -29,6 +30,7 @@ describe('loaderResolver', () => {
   describe('browser', () => {
     let mockLoaderData: { getData: ReturnType<typeof vi.fn> };
     let transferState: TransferState;
+    let parseUrlSpy: ReturnType<typeof vi.spyOn>;
 
     beforeEach(() => {
       mockLoaderData = { getData: vi.fn() };
@@ -42,6 +44,8 @@ describe('loaderResolver', () => {
         ],
       });
       transferState = TestBed.inject(TransferState);
+      const router = TestBed.inject(Router);
+      parseUrlSpy = vi.spyOn(router, 'parseUrl');
     });
 
     it('should return data from transfer state when key exists', async () => {
@@ -52,10 +56,9 @@ describe('loaderResolver', () => {
       const route = makeRouteSnapshot();
       const state = makeRouterStateSnapshot('/path');
       const result = await TestBed.runInInjectionContext(async () => {
-        return (resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>)(
-          route,
-          state
-        );
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
       });
 
       expect(result).toEqual({ fromTransfer: true });
@@ -75,10 +78,9 @@ describe('loaderResolver', () => {
       const state = makeRouterStateSnapshot('/page/123');
 
       const result = await TestBed.runInInjectionContext(async () => {
-        return (resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>)(
-          route,
-          state
-        );
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
       });
 
       expect(mockLoaderData.getData).toHaveBeenCalledTimes(1);
@@ -94,8 +96,7 @@ describe('loaderResolver', () => {
     it('should return RedirectCommand when getData returns redirect', async () => {
       mockLoaderData.getData.mockResolvedValue({
         kind: 'redirect',
-        location: '/other',
-        status: 302,
+        redirect: { loaderRedirectTarget: '/other' },
       });
 
       const resolver = loaderResolver('page');
@@ -103,10 +104,9 @@ describe('loaderResolver', () => {
       const state = makeRouterStateSnapshot('/path');
 
       const result = await TestBed.runInInjectionContext(async () => {
-        return (resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>)(
-          route,
-          state
-        );
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
       });
 
       expect(result).toBeInstanceOf(RedirectCommand);
@@ -124,14 +124,13 @@ describe('loaderResolver', () => {
       const state = makeRouterStateSnapshot('/path');
 
       const result = await TestBed.runInInjectionContext(async () => {
-        return (resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>)(
-          route,
-          state
-        );
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
       });
 
       expect(result).toBeInstanceOf(RedirectCommand);
-      expect((result as RedirectCommand).url.toString()).toBe('/500');
+      expect(parseUrlSpy).toHaveBeenCalledWith('/500');
     });
 
     it('should return RedirectCommand to /404 when getData returns notFound', async () => {
@@ -142,14 +141,13 @@ describe('loaderResolver', () => {
       const state = makeRouterStateSnapshot('/path');
 
       const result = await TestBed.runInInjectionContext(async () => {
-        return (resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>)(
-          route,
-          state
-        );
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
       });
 
       expect(result).toBeInstanceOf(RedirectCommand);
-      expect((result as RedirectCommand).url.toString()).toBe('/404');
+      expect(parseUrlSpy).toHaveBeenCalledWith('/404');
     });
   });
 
@@ -183,10 +181,9 @@ describe('loaderResolver', () => {
       const state = makeRouterStateSnapshot('/about');
 
       const result = await TestBed.runInInjectionContext(async () => {
-        return (resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>)(
-          route,
-          state
-        );
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
       });
 
       expect(mockLoader).toHaveBeenCalledTimes(1);
@@ -205,10 +202,9 @@ describe('loaderResolver', () => {
       const state = makeRouterStateSnapshot('/page');
 
       await TestBed.runInInjectionContext(async () => {
-        return (resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>)(
-          route,
-          state
-        );
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
       });
 
       const key = makeStateKey<unknown>('loader:page:/page');
@@ -223,10 +219,9 @@ describe('loaderResolver', () => {
 
       await expect(
         TestBed.runInInjectionContext(async () => {
-          return (resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>)(
-            route,
-            state
-          );
+          return (
+            resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+          )(route, state);
         })
       ).rejects.toThrow('No loader registered for id "missing"');
     });
@@ -241,14 +236,12 @@ describe('loaderResolver', () => {
 
       await expect(
         TestBed.runInInjectionContext(async () => {
-          return (resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>)(
-            route,
-            state
-          );
+          return (
+            resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+          )(route, state);
         })
       ).rejects.toThrow('Loader failed');
     });
-
   });
 
   describe('server with REQUEST', () => {
@@ -279,10 +272,9 @@ describe('loaderResolver', () => {
       const state = makeRouterStateSnapshot('/path');
 
       await TestBed.runInInjectionContext(async () => {
-        return (resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>)(
-          route,
-          state
-        );
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
       });
 
       expect(loaderWithRequest).toHaveBeenCalledWith(
@@ -300,8 +292,8 @@ describe('loaderResolver', () => {
 
   describe('resolver metadata', () => {
     it('should tag resolver with LOADER_ID for prefetch discovery', () => {
-      const resolver = loaderResolver('page');
-      expect(getLoaderId(resolver)).toBe('page');
+      const resolver = loaderResolver('page') as unknown as { [LOADER_ID]: string };
+      expect(resolver[LOADER_ID]).toBe('page');
     });
   });
 });

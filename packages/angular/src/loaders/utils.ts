@@ -6,6 +6,7 @@ import { RequestContext } from './models';
  * Apply a redirect: internal URLs → RedirectCommand; external URLs → full page navigation.
  * Use in resolvers and in the navigation error handler (fallback) so redirect behavior is consistent.
  * Redirects are not errors; this helper is the single place that defines how to perform them.
+ * Redirects are not errors; this helper is the single place that defines how to perform them.
  *
  * @param router - Angular Router (for internal redirects)
  * @param location - Target URL (path or full URL)
@@ -13,11 +14,8 @@ import { RequestContext } from './models';
  * @returns RedirectCommand for internal, void after window.location.assign for external
  * @public
  */
-export function applyRedirect(
-  router: Router,
-  location: string,
-  options?: { replaceUrl?: boolean }
-): RedirectCommand | void {
+export function applyRedirect(router: Router, location: string): RedirectCommand | void {
+  // TODO: implement server-side redirect with custom status code when implementing SXA redirects proxy
   const isExternal = /^https?:\/\//i.test(location);
   if (isExternal) {
     if (typeof window !== 'undefined') {
@@ -25,9 +23,7 @@ export function applyRedirect(
     }
     return;
   }
-  return new RedirectCommand(router.parseUrl(location), {
-    replaceUrl: options?.replaceUrl ?? true,
-  });
+  return new RedirectCommand(router.parseUrl(location), {});
 }
 
 /**
@@ -143,24 +139,3 @@ export function extractRequestContext(req: Request | ExpressLikeRequest): Reques
     query: req.query,
   };
 }
-
-/**
- * Extract the loader ID from a resolver function if it was created by loaderResolver.
- * @param {Function}fn - The resolver function to check
- * @returns {string | undefined} The loader ID if found, undefined otherwise
- * @internal
- */
-export const getLoaderId = (fn: unknown): string | undefined => {
-  if (fn && typeof fn === 'function' && LOADER_ID in fn) {
-    return (fn as Record<symbol, string>)[LOADER_ID];
-  }
-
-  return undefined;
-};
-
-/**
- * Symbol used to tag resolver functions with their loader ID.
- * This allows the prefetch service to identify loader resolvers in the route tree.
- * @internal
- */
-export const LOADER_ID = Symbol('loaderId');

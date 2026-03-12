@@ -6,15 +6,17 @@ import {
   Params,
   ResolveFn,
   Router,
+  RedirectCommand,
 } from '@angular/router';
-import { LOADER_REGISTRY, type DefaultLoaderId } from './loader-registry.token';
+import { LOADER_REGISTRY, LOADER_ID, type DefaultLoaderId } from './loader-registry.token';
 import { LoaderDataService } from './loader-data.service';
-import { extractRequestContext, LOADER_ID } from './utils';
+import { extractRequestContext, applyRedirect } from './utils';
 import {
   DEFAULT_ERROR_ROUTE,
   DEFAULT_NOT_FOUND_ROUTE,
   LoaderHttpError,
   NotFoundNavigationError,
+  isLoaderRedirectResult,
 } from './models';
 import { redirectOnNavigationError } from './router-error-handling';
 import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from '../lib/tokens';
@@ -48,13 +50,14 @@ export type LoaderId = DefaultLoaderId | keyof LoaderIdMap;
 
 /**
  * Browser-only: load data from transfer state or LoaderDataService.
- * Injects TransferState, Router, LoaderDataService. Called by the resolver when isPlatformBrowser.
+ * Injects TransferState, LoaderDataService. Called by the resolver when isPlatformBrowser.
  */
 async function resolveOnBrowser(
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot,
-  loaderId: string
-): Promise<unknown> {
+  loaderId: string,
+  router: Router
+): Promise<unknown | RedirectCommand> {
   const transferState = inject(TransferState);
   const loaderData = inject(LoaderDataService);
 
@@ -82,6 +85,9 @@ async function resolveOnBrowser(
   if (resp.kind === 'notFound') {
     throw new NotFoundNavigationError();
   }
+  if (resp.kind === 'redirect') {
+    return applyRedirect(router, resp.redirect.loaderRedirectTarget);
+  }
   return resp.data;
 }
 
@@ -101,9 +107,9 @@ export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
 
     if (isPlatformBrowser(platformId)) {
       try {
-        return await resolveOnBrowser(route, state, loaderId);
+        return await resolveOnBrowser(route, state, loaderId, router);
       } catch (e) {
-        // special handling for browser, as navigation error is only produced on server
+        // special handling for browser, as navigation error for handleNavigationError is only generated on server
         return redirectOnNavigationError(e as Error, url, notFoundRoute, errorRoute, router);
       }
     }
@@ -116,20 +122,17 @@ export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
 
     const requestContext = request ? extractRequestContext(request) : undefined;
 
-    try {
-      const data = await loader({
-        url,
-        params: route.params,
-        query: route.queryParams,
-        requestContext,
-      });
-
-      transferState.set(key, data);
-
-      return data;
-    } catch (e) {
-      throw e;
+    const result = await loader({
+      url,
+      params: route.params,
+      query: route.queryParams,
+      requestContext,
+    });
+    if (isLoaderRedirectResult(result)) {
+      return applyRedirect(router, result.loaderRedirectTarget);
     }
+    transferState.set(key, result);
+    return result;
   };
 
   resolver[LOADER_ID] = loaderId;

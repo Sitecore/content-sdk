@@ -1,14 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
-import {
-  provideHttpClientTesting,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { LoaderDataService } from './loader-data.service';
 import { FETCH_DATA_ENDPOINT } from './loader-registry.token';
-import { DEFAULT_DATA_ENDPOINT } from '../server/config';
+import { LOADER_DATA_ENDPOINT } from '../server/constants';
 import * as sdkCore from '@sitecore-content-sdk/core';
 
 describe('LoaderDataService', () => {
@@ -16,10 +13,12 @@ describe('LoaderDataService', () => {
   let httpController: HttpTestingController;
   let debugCommonSpy: ReturnType<typeof vi.spyOn>;
 
-  function setupTestBed(overrides: {
-    platformId?: object | string;
-    fetchDataEndpoint?: string | null;
-  } = {}) {
+  function setupTestBed(
+    overrides: {
+      platformId?: object | string;
+      fetchDataEndpoint?: string | null;
+    } = {}
+  ) {
     const platformId = overrides.platformId ?? 'browser';
     TestBed.configureTestingModule({
       providers: [
@@ -51,7 +50,7 @@ describe('LoaderDataService', () => {
       const request = { url: '/test', loaderId: 'page' };
       const resultPromise = service.getData(request);
 
-      const req = httpController.expectOne(DEFAULT_DATA_ENDPOINT);
+      const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual({
         loaderId: 'page',
@@ -65,27 +64,13 @@ describe('LoaderDataService', () => {
       expect(result).toEqual({ kind: 'data', data: { title: 'Hello' } });
     });
 
-    it('should read from cache when cache entry exists', async () => {
-      setupTestBed();
-      const request = { url: '/cached', loaderId: 'page' };
-      // Pre-populate cache via prefetch, then getData should read from cache without a new request
-      service.prefetch('/cached', 'page');
-      const prefetchReq = httpController.expectOne(DEFAULT_DATA_ENDPOINT);
-      prefetchReq.flush({ kind: 'data', data: { cached: true } });
-      await new Promise((r) => setTimeout(r, 0));
-
-      const result = await service.getData(request);
-      expect(result).toEqual({ kind: 'data', data: { cached: true } });
-      httpController.expectNone(DEFAULT_DATA_ENDPOINT);
-    });
-
     it('should return pending request if request for data is already pending', async () => {
       setupTestBed();
       const request = { url: '/pending', loaderId: 'page' };
       const promise1 = service.getData(request);
       const promise2 = service.getData(request);
 
-      const req = httpController.expectOne(DEFAULT_DATA_ENDPOINT);
+      const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req.flush({ kind: 'data', data: { shared: true } });
 
       const [r1, r2] = await Promise.all([promise1, promise2]);
@@ -101,55 +86,7 @@ describe('LoaderDataService', () => {
         status: 500,
         message: 'LoaderDataService only works in browser',
       });
-      httpController.expectNone(DEFAULT_DATA_ENDPOINT);
-    });
-  });
-
-  describe('prefetch', () => {
-    it('should debug log and return when in server context', () => {
-      setupTestBed({ platformId: 'server' });
-      service.prefetch('/url', 'page');
-      expect(debugCommonSpy).toHaveBeenCalledWith('Prefetch skipped (server context)');
-      httpController.expectNone(DEFAULT_DATA_ENDPOINT);
-    });
-
-    it('should debug log and skip if cache has entry or request already pending', async () => {
-      setupTestBed();
-      service.prefetch('/url', 'page');
-      const req = httpController.expectOne(DEFAULT_DATA_ENDPOINT);
-      req.flush({ kind: 'data', data: {} });
-      await new Promise((r) => setTimeout(r, 0));
-
-      debugCommonSpy.mockClear();
-      service.prefetch('/url', 'page');
-      expect(debugCommonSpy).toHaveBeenCalledWith('Prefetch skipped (cached or pending)');
-      httpController.expectNone(DEFAULT_DATA_ENDPOINT);
-    });
-
-    it('should fetch data for URL', () => {
-      setupTestBed();
-      service.prefetch('/prefetch-url', 'page', { id: '1' }, { q: 'x' });
-
-      const req = httpController.expectOne(DEFAULT_DATA_ENDPOINT);
-      expect(req.request.method).toBe('POST');
-      expect(req.request.body).toEqual({
-        loaderId: 'page',
-        url: '/prefetch-url',
-        params: { id: '1' },
-        query: { q: 'x' },
-      });
-      req.flush({ kind: 'data', data: { prefetched: true } });
-    });
-
-    it('should not throw when fetchData throws', async () => {
-      setupTestBed();
-      service.prefetch('/fail', 'page');
-
-      const req = httpController.expectOne(DEFAULT_DATA_ENDPOINT);
-      req.error(new ProgressEvent('error'));
-
-      await new Promise((r) => setTimeout(r, 50));
-      // Prefetch swallows errors; no unhandled rejection
+      httpController.expectNone(LOADER_DATA_ENDPOINT);
     });
   });
 
@@ -170,7 +107,7 @@ describe('LoaderDataService', () => {
       setupTestBed();
       const resultPromise = service.getData({ url: '/test', loaderId: 'page' });
 
-      const req = httpController.expectOne(DEFAULT_DATA_ENDPOINT);
+      const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req.flush({ kind: 'data', data: {} });
       await resultPromise;
     });
@@ -179,27 +116,16 @@ describe('LoaderDataService', () => {
       setupTestBed({ fetchDataEndpoint: null });
       const resultPromise = service.getData({ url: '/test', loaderId: 'page' });
 
-      const req = httpController.expectOne(DEFAULT_DATA_ENDPOINT);
+      const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req.flush({ kind: 'data', data: {} });
       await resultPromise;
-    });
-
-    it('should set cache value when fetch promise returns data', async () => {
-      setupTestBed();
-      service.prefetch('/cache-me', 'page');
-      const req = httpController.expectOne(DEFAULT_DATA_ENDPOINT);
-      req.flush({ kind: 'data', data: { cached: true } });
-      await new Promise((r) => setTimeout(r, 0));
-
-      const result = await service.getData({ url: '/cache-me', loaderId: 'page' });
-      expect(result).toEqual({ kind: 'data', data: { cached: true } });
     });
 
     it('should return error when fetch promise fails', async () => {
       setupTestBed();
       const resultPromise = service.getData({ url: '/fail', loaderId: 'page' });
 
-      const req = httpController.expectOne(DEFAULT_DATA_ENDPOINT);
+      const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req.error(new ProgressEvent('error'));
 
       const result = await resultPromise;
@@ -212,7 +138,7 @@ describe('LoaderDataService', () => {
       const promise1 = service.getData({ url: '/same', loaderId: 'page' });
       const promise2 = service.getData({ url: '/same', loaderId: 'page' });
 
-      const req = httpController.expectOne(DEFAULT_DATA_ENDPOINT);
+      const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req.flush({ kind: 'data', data: { one: 1 } });
 
       const [a, b] = await Promise.all([promise1, promise2]);
@@ -226,12 +152,14 @@ describe('LoaderDataService', () => {
       setupTestBed();
       const resultPromise = service.getData({ url: '/empty', loaderId: 'page' });
 
-      const req = httpController.expectOne(DEFAULT_DATA_ENDPOINT);
+      const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req.flush(null);
 
       const result = await resultPromise;
       expect(result.kind).toBe('error');
-      expect((result as { message: string }).message).toBe(`No response from ${DEFAULT_DATA_ENDPOINT}`);
+      expect((result as { message: string }).message).toBe(
+        `No response from ${LOADER_DATA_ENDPOINT}`
+      );
     });
 
     it('should return error with custom endpoint in message when custom endpoint and falsy response', async () => {

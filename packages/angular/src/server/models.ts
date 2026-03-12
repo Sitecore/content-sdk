@@ -1,4 +1,14 @@
-import { LoaderFn } from '../loaders/models';
+import { InjectionToken } from '@angular/core';
+import type { RequestContext } from '../loaders/models';
+import type { LoaderFn } from '../loaders/models';
+
+/**
+ * Injection token for the request context extractor (used by tests to provide a mock via TestBed).
+ * @internal
+ */
+export const EXTRACT_REQUEST_CONTEXT_TOKEN = new InjectionToken<
+  (req: ExpressRequest) => RequestContext
+>('EXTRACT_REQUEST_CONTEXT');
 
 /**
  * Minimal Express Request interface for type safety without requiring Express as a dependency
@@ -28,9 +38,6 @@ export interface ExpressResponse {
   status(code: number): ExpressResponse;
   json(data: unknown): void;
 }
-
-/** Re-export so server code can use the same default as client (see server/config.ts). */
-export { DEFAULT_DATA_ENDPOINT } from './config';
 
 /**
  * Configuration for server-side data handlers
@@ -75,4 +82,10 @@ export interface ExpressDataHandlerOptions extends DataHandlerConfig {
    * The loader registry containing all registered loaders
    */
   loaders: LoaderRegistry;
+  /**
+   * Optional request context extractor (e.g. for testing via TestBed).
+   * If not provided, uses the default implementation from loaders/utils.
+   * @internal
+   */
+  extractRequestContext?: (req: ExpressRequest) => RequestContext;
 }

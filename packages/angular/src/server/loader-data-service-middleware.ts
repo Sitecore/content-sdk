@@ -2,13 +2,13 @@ import {
   LoaderApiRequest,
   LoaderApiResponse,
   LoaderContext,
+  isLoaderRedirectResult,
   NotFoundNavigationError,
   RequestContext,
   LoaderHttpError,
 } from '../loaders/models';
 import { extractRequestContext } from '../loaders/utils';
 import {
-  DEFAULT_DATA_ENDPOINT,
   ExpressDataHandlerOptions,
   ExpressMiddleware,
   ExpressNextFunction,
@@ -16,6 +16,7 @@ import {
   ExpressResponse,
   LoaderRegistry,
 } from './models';
+import { LOADER_DATA_ENDPOINT } from './constants';
 
 /**
  * Execute a loader and return the API response
@@ -47,10 +48,19 @@ async function executeLoader(
   };
 
   try {
-    const data = await loader(context);
+    const result = await loader(context);
+    if (isLoaderRedirectResult(result)) {
+      return {
+        kind: 'redirect',
+        redirect: {
+          loaderRedirectTarget: result.loaderRedirectTarget,
+          status: result.status,
+        },
+      };
+    }
     return {
       kind: 'data',
-      data,
+      data: result,
     };
   } catch (error) {
     if (error instanceof NotFoundNavigationError) {
@@ -59,7 +69,6 @@ async function executeLoader(
         status: 404,
       };
     }
-
     if (error instanceof LoaderHttpError) {
       return {
         kind: 'error',
@@ -67,8 +76,6 @@ async function executeLoader(
         message: error.message,
       };
     }
-
-    // Generic error
     const message = error instanceof Error ? error.message : 'Loader failed';
     return {
       kind: 'error',
@@ -80,17 +87,33 @@ async function executeLoader(
 
 /**
  * Send the loader response to Express
- * @param {ExpressResponse} res - The Express response object
- * @param {LoaderApiResponse} result - The loader API response
  */
 function sendResponse(res: ExpressResponse, result: LoaderApiResponse): void {
-  if (result.kind === 'notFound') {
-    res.json(result);
-  } else if (result.kind === 'error') {
-    res.json(result);
-  } else {
-    res.json(result);
+  res.json(result);
+}
+
+/** Parse POST body or GET query into LoaderApiRequest, or return a validation error. */
+function parseLoaderRequest(req: ExpressRequest): LoaderApiRequest | { status: number; message: string } {
+  if (req.method === 'POST') {
+    const body = req.body as LoaderApiRequest;
+    if (!body?.loaderId) return { status: 400, message: 'Missing loaderId' };
+    return body;
   }
+  if (req.method === 'GET') {
+    const loaderId = String(req.query?.loaderId ?? '');
+    if (!loaderId) return { status: 400, message: 'Missing loaderId' };
+    const query: Record<string, string> = {};
+    for (const [key, value] of Object.entries(req.query ?? {})) {
+      if (key !== 'loaderId' && key !== 'url' && typeof value === 'string') query[key] = value;
+    }
+    return {
+      loaderId,
+      url: String(req.query?.url ?? ''),
+      params: {},
+      query,
+    };
+  }
+  return { status: 405, message: 'Method not allowed' };
 }
 
 /**
@@ -101,17 +124,17 @@ function sendResponse(res: ExpressResponse, result: LoaderApiResponse): void {
  * {@link FETCH_DATA_ENDPOINT} (e.g. in app.config.ts). There is no Angular DI in Node/Express,
  * so you pass the endpoint here when calling this function (e.g. from server.ts).
  *
- * @param options - Handler options: loaders and optional endpoint (defaults to {@link DEFAULT_DATA_ENDPOINT})
+ * @param options - Handler options: loaders and optional endpoint (defaults to {@link LOADER_DATA_ENDPOINT})
  * @returns Express middleware that handles the data endpoint
  * @example
  * ```typescript
- * import { createExpressDataMiddleware, DEFAULT_DATA_ENDPOINT } from '@sitecore-content-sdk/angular';
+ * import { createExpressDataMiddleware, LOADER_DATA_ENDPOINT } from '@sitecore-content-sdk/angular';
  *
  * // Use default endpoint (same as client when FETCH_DATA_ENDPOINT is not provided)
  * app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS }));
  *
  * // Or pass the same endpoint you provide to the Angular app (FETCH_DATA_ENDPOINT)
- * const dataEndpoint = process.env.DATA_ENDPOINT ?? DEFAULT_DATA_ENDPOINT;
+ * const dataEndpoint = process.env.DATA_ENDPOINT ?? LOADER_DATA_ENDPOINT;
  * app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS, endpoint: dataEndpoint }));
  * ```
  * @public
@@ -119,61 +142,28 @@ function sendResponse(res: ExpressResponse, result: LoaderApiResponse): void {
 export function createLoaderDataServiceMiddleware(
   options: ExpressDataHandlerOptions
 ): ExpressMiddleware {
-  const { loaders, endpoint = DEFAULT_DATA_ENDPOINT } = options;
+  const {
+    loaders,
+    endpoint = LOADER_DATA_ENDPOINT,
+    extractRequestContext: extractReq = extractRequestContext,
+  } = options;
   return async (
     req: ExpressRequest,
     res: ExpressResponse,
     next: ExpressNextFunction
   ): Promise<void> => {
-    // Check if request matches the endpoint
     if (req.path !== endpoint) {
       next();
       return;
     }
-    // Extract request context for loaders
-    const requestContext = extractRequestContext(req);
+    const requestContext = extractReq(req);
     try {
-      if (req.method === 'POST') {
-        // POST: parse body
-        const body = req.body as LoaderApiRequest;
-
-        if (!body?.loaderId) {
-          res.status(400).json({ kind: 'error', status: 400, message: 'Missing loaderId' });
-          return;
-        }
-
-        const result = await executeLoader(body, loaders, requestContext);
-        sendResponse(res, result);
-      } else if (req.method === 'GET') {
-        // GET: use query parameters
-        const loaderId = String(req.query?.loaderId || '');
-        const url = String(req.query.url || '');
-
-        if (!loaderId) {
-          res.status(400).json({ kind: 'error', status: 400, message: 'Missing loaderId' });
-          return;
-        }
-
-        // Build query object excluding loaderId and url
-        const query: Record<string, string> = {};
-        for (const [key, value] of Object.entries(req.query)) {
-          if (key !== 'loaderId' && key !== 'url' && typeof value === 'string') {
-            query[key] = value;
-          }
-        }
-
-        const loaderRequest: LoaderApiRequest = {
-          loaderId,
-          url,
-          params: {},
-          query,
-        };
-
-        const result = await executeLoader(loaderRequest, loaders, requestContext);
+      const parsed = parseLoaderRequest(req);
+      if ('loaderId' in parsed) {
+        const result = await executeLoader(parsed, loaders, requestContext);
         sendResponse(res, result);
       } else {
-        // Method not allowed
-        res.status(405).json({ kind: 'error', status: 405, message: 'Method not allowed' });
+        res.status(parsed.status).json({ kind: 'error', status: parsed.status, message: parsed.message });
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Internal server error';
