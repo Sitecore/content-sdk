@@ -8,7 +8,7 @@ import {
   Router,
   RedirectCommand,
 } from '@angular/router';
-import { LOADER_REGISTRY, LOADER_ID, type DefaultLoaderId } from './loader-registry.token';
+import { LOADER_REGISTRY, LOADER_ID } from './loader-registry.token';
 import { LoaderDataService } from './loader-data.service';
 import { extractRequestContext, applyRedirect } from './utils';
 import {
@@ -45,8 +45,8 @@ function stateKey(loaderId: string, url: string) {
  */
 export interface LoaderIdMap {}
 
-/** Union of default loader ids and any ids added via LoaderIdMap augmentation. */
-export type LoaderId = DefaultLoaderId | keyof LoaderIdMap;
+/** Loader ID type. Use string keys that match the keys you pass to provideLoaderRegistry. */
+export type LoaderId = keyof LoaderIdMap extends never ? string : keyof LoaderIdMap;
 
 /**
  * Browser-only: load data from transfer state or LoaderDataService.

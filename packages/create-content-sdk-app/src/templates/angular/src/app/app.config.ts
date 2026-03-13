@@ -1,9 +1,14 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, withNavigationErrorHandler } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { provideLoaderRegistry, handleNavigationError } from '@sitecore-content-sdk/angular';
+import {
+  provideLoaderRegistry,
+  handleNavigationError,
+  provideSitecoreAngular,
+  PreLoaderDataService,
+} from '@sitecore-content-sdk/angular';
 import { routes } from './app.routes';
-import { provideSitecoreAngular } from '@sitecore-content-sdk/angular';
+import { LOADERS } from './loaders';
 
 /**
  * Client hydration is disabled so that RouterLink and other directives attach correctly
@@ -19,7 +24,8 @@ export const appConfig: ApplicationConfig = {
       notFoundRoute: '/404',
       errorRoute: '/500',
     }),
-    provideLoaderRegistry(),
+    provideLoaderRegistry(LOADERS),
+    PreLoaderDataService,
     provideRouter(routes, withNavigationErrorHandler(handleNavigationError())),
   ],
 };

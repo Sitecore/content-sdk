@@ -37,6 +37,28 @@ export class LoaderDataService {
     inject(FETCH_DATA_ENDPOINT, { optional: true }) ?? LOADER_DATA_ENDPOINT;
 
   /**
+   * Prefetch loader data for the given request without consuming the cache.
+   * If data is already cached or a request is pending, does nothing.
+   * Otherwise starts a fetch and stores the result in cache for a later getData() call.
+   * Used by PreLoaderDataService to warm the cache for all loaders in a route in parallel.
+   * @param {LoaderDataRequest} request - The loader data request
+   */
+  prefetch(loaderRequest: LoaderDataRequest): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    const key = cacheKey(loaderRequest.loaderId, loaderRequest.url);
+    if (this.cache.has(key) || this.pending.has(key)) {
+      return;
+    }
+    const promise = this.fetchData(loaderRequest);
+    this.pending.set(key, promise);
+    promise.then(() => {
+      // Result is already stored in cache by fetchData; nothing to consume
+    });
+  }
+
+  /**
    * Get data for the given request, using cache or fetching if needed.
    * If a request is already pending for this URL/loader combination,
    * waits for it to complete instead of making a duplicate request.
@@ -65,20 +87,22 @@ export class LoaderDataService {
       return pendingRequest;
     }
 
-    // Make new request
-    return this.fetchData(request);
+    // Make new request; add to pending so concurrent callers reuse the same promise
+    const pendingFetchData = this.fetchData(request);
+    this.pending.set(key, pendingFetchData);
+    return pendingFetchData;
   }
 
   /**
    * Fetch data from the configured data endpoint.
-   * Stores result in cache and handles pending request tracking.
+   * Callers (getData, prefetch) add the returned promise to pending; it is removed
+   * in finally when the promise settles.
    * @param {LoaderDataRequest} request - The loader data request
    * @returns {Promise<LoaderApiResponse>} Promise resolving to the API response
    */
   private async fetchData(request: LoaderDataRequest): Promise<LoaderApiResponse> {
     const key = cacheKey(request.loaderId, request.url);
     const endpoint = this.fetchDataEndpoint;
-
     const reqBody: LoaderApiRequest = {
       loaderId: request.loaderId,
       url: request.url,
@@ -87,44 +111,28 @@ export class LoaderDataService {
     };
     console.log('DEBUG: LoaderDataService fetchData', endpoint, reqBody);
 
-    const fetchPromise = firstValueFrom(
-      this.http.post<LoaderApiResponse>(endpoint, reqBody, {
-        cache: 'no-store',
-      })
-    )
-      .then((resp) => {
-        this.pending.delete(key);
-
-        if (!resp) {
-          const message = `No response from ${endpoint}`;
-          console.log(`DEBUG: LoaderDataService fetchData: ${message}`);
-          return {
-            kind: 'error',
-            status: 500,
-            message,
-          } as LoaderApiResponse;
-        }
-
-        if (resp.kind === 'data') {
-          console.log('DEBUG: LoaderDataService fetchData: data', resp.data);
-          this.cache.set(key, resp);
-        } else if (resp.kind === 'redirect') {
-          this.cache.set(key, resp);
-        }
-
-        return resp;
-      })
-      .catch((error) => {
-        console.log('DEBUG: LoaderDataService fetchData: error', error);
-        this.pending.delete(key);
-
-        const message = error instanceof Error ? error.message : 'Fetch failed';
+    try {
+      const resp = await firstValueFrom(
+        this.http.post<LoaderApiResponse>(endpoint, reqBody, { cache: 'no-store' })
+      );
+      if (!resp) {
+        const message = `No response from ${endpoint}`;
+        console.log(`DEBUG: LoaderDataService fetchData: ${message}`);
         return { kind: 'error', status: 500, message } as LoaderApiResponse;
-      });
-
-    this.pending.set(key, fetchPromise);
-
-    console.log('DEBUG: LoaderDataService fetchData: fetchPromise', fetchPromise);
-    return fetchPromise;
+      }
+      if (resp.kind === 'data') {
+        console.log('DEBUG: LoaderDataService fetchData: data', resp.data);
+        this.cache.set(key, resp);
+      } else if (resp.kind === 'redirect') {
+        this.cache.set(key, resp);
+      }
+      return resp;
+    } catch (error) {
+      console.log('DEBUG: LoaderDataService fetchData: error', error);
+      const message = error instanceof Error ? error.message : 'Fetch failed';
+      return { kind: 'error', status: 500, message } as LoaderApiResponse;
+    } finally {
+      this.pending.delete(key);
+    }
   }
 }

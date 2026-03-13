@@ -1,14 +1,14 @@
-import type { Page } from '@sitecore-content-sdk/content/client';
-import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
+import type { Page } from '@sitecore-content-sdk/angular';
+import { LayoutServicePageState } from '@sitecore-content-sdk/angular';
 
 /**
- * Temp: stub helpers until proper implementation (e.g. Sitecore layout service integration).
- * Used by default loaders to return minimal valid Page shapes.
+ * Stub helpers until proper implementation (e.g. Sitecore layout service integration).
+ * Used by app loaders to return minimal valid Page shapes.
  */
 
 /**
  * Returns a stubbed Page for the page loader: route data, mode data, 'en' locale and basic text fields.
- * Temp: replace with real layout/route data from Sitecore when implemented.
+ * Replace with real layout/route data from Sitecore when implemented.
  */
 export function stubPageResult(url: string): Page {
   return {
@@ -47,7 +47,7 @@ export function stubPageResult(url: string): Page {
 
 /**
  * Returns a stubbed Page for not-found (404) or error (500) loaders with an error message in route.fields.error.
- * Temp: replace with proper error page handling when implemented.
+ * Replace with proper error page handling when implemented.
  */
 export function errorPageResult(url: string, errorMessage: string): Page {
   return {

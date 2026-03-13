@@ -90,6 +90,49 @@ describe('LoaderDataService', () => {
     });
   });
 
+  describe('prefetch', () => {
+    it('should populate cache without consuming so getData can read it without a new request', async () => {
+      setupTestBed();
+      const request = { url: '/prefetched', loaderId: 'page' };
+      service.prefetch(request);
+      const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
+      req.flush({ kind: 'data', data: { prefetched: true } });
+      await new Promise((r) => setTimeout(r, 0));
+
+      const result = await service.getData(request);
+      expect(result).toEqual({ kind: 'data', data: { prefetched: true } });
+      httpController.expectNone(LOADER_DATA_ENDPOINT);
+    });
+
+    it('should no-op on server', () => {
+      setupTestBed({ platformId: 'server' });
+      service.prefetch({ url: '/any', loaderId: 'page' });
+      httpController.expectNone(LOADER_DATA_ENDPOINT);
+    });
+
+    it('should not make a new request when cache is already populated', async () => {
+      setupTestBed();
+      const request = { url: '/cached', loaderId: 'page' };
+      service.prefetch(request);
+      const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
+      req.flush({ kind: 'data', data: { cached: true } });
+      await new Promise((r) => setTimeout(r, 0));
+
+      service.prefetch(request);
+      httpController.expectNone(LOADER_DATA_ENDPOINT);
+    });
+
+    it('should not start a second request when one is already pending', () => {
+      setupTestBed();
+      const request = { url: '/pending', loaderId: 'page' };
+      service.prefetch(request);
+      service.prefetch(request);
+
+      const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
+      req.flush({ kind: 'data', data: { pending: true } });
+    });
+  });
+
   describe('fetchData (via getData)', () => {
     it('should use custom data endpoint when provided in DI', async () => {
       const customEndpoint = '/api/loader-data';

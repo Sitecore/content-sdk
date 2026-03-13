@@ -35,8 +35,9 @@ async function executeLoader(
   const loader = loaders[loaderId];
   if (!loader) {
     return {
-      kind: 'notFound',
-      status: 404,
+      kind: 'error',
+      status: 500,
+      message: `No loader registered for id "${loaderId}"`,
     };
   }
 
@@ -93,7 +94,9 @@ function sendResponse(res: ExpressResponse, result: LoaderApiResponse): void {
 }
 
 /** Parse POST body or GET query into LoaderApiRequest, or return a validation error. */
-function parseLoaderRequest(req: ExpressRequest): LoaderApiRequest | { status: number; message: string } {
+function parseLoaderRequest(
+  req: ExpressRequest
+): LoaderApiRequest | { status: number; message: string } {
   if (req.method === 'POST') {
     const body = req.body as LoaderApiRequest;
     if (!body?.loaderId) return { status: 400, message: 'Missing loaderId' };
@@ -163,7 +166,9 @@ export function createLoaderDataServiceMiddleware(
         const result = await executeLoader(parsed, loaders, requestContext);
         sendResponse(res, result);
       } else {
-        res.status(parsed.status).json({ kind: 'error', status: parsed.status, message: parsed.message });
+        res
+          .status(parsed.status)
+          .json({ kind: 'error', status: parsed.status, message: parsed.message });
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Internal server error';

@@ -236,7 +236,7 @@ describe('createLoaderDataServiceMiddleware', () => {
     });
   });
 
-  it('should return notFound when loader id is not in registry', async () => {
+  it('should return error when loader id is not in registry', async () => {
     const middleware = createMiddleware({
       loaders: { page: vi.fn() as LoaderFn },
       endpoint,
@@ -253,8 +253,9 @@ describe('createLoaderDataServiceMiddleware', () => {
     await middleware(req as any, res as any, next);
 
     expect(res.json).toHaveBeenCalledWith({
-      kind: 'notFound',
-      status: 404,
+      kind: 'error',
+      status: 500,
+      message: 'No loader registered for id "unknownLoader"',
     });
   });
 

@@ -1,8 +1,5 @@
 import { InjectionToken, Provider } from '@angular/core';
 import type { LoaderFn } from './models';
-import { pageLoader } from './default/page.loader';
-import { notFoundLoader } from './default/not-found.loader';
-import { errorLoader } from './default/error.loader';
 import { LOADER_DATA_ENDPOINT } from '../server/constants';
 
 /**
@@ -14,27 +11,19 @@ export const FETCH_DATA_ENDPOINT = new InjectionToken<string | null | undefined>
   'FETCH_DATA_ENDPOINT'
 );
 
-/** Default loaders: single source of truth for registry entries and for the LoaderId type. */
-export const DEFAULT_LOADERS = {
-  page: pageLoader,
-  '404': notFoundLoader,
-  '500': errorLoader,
-} as const;
-
-/** Loader IDs from the default registry. Extended by LoaderIdMap when you add custom loaders. */
-export type DefaultLoaderId = keyof typeof DEFAULT_LOADERS;
-
 export const LOADER_REGISTRY = new InjectionToken<Record<string, LoaderFn>>('LOADER_REGISTRY');
 
 /**
- * Provides the loader registry with default loaders (page, '404', '500').
- * Pass optional overrides to replace or extend defaults. Same token is injectable in package and app.
+ * Provides the loader registry for DI. Pass the loaders your app uses (e.g. page, '404', '500').
+ * The same loader set must be registered on the server in createLoaderDataServiceMiddleware so
+ * client-side navigation can fetch route data via the data endpoint.
+ * @public
  */
-export const provideLoaderRegistry = (loaders?: Record<string, LoaderFn>): Provider[] => {
+export const provideLoaderRegistry = (loaders: Record<string, LoaderFn>): Provider[] => {
   return [
     {
       provide: LOADER_REGISTRY,
-      useValue: { ...DEFAULT_LOADERS, ...(loaders ?? {}) },
+      useValue: { ...loaders },
     },
   ];
 };

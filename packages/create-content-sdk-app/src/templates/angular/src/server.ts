@@ -6,7 +6,8 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
-import { createLoaderDataServiceMiddleware, DEFAULT_LOADERS } from '@sitecore-content-sdk/angular';
+import { createLoaderDataServiceMiddleware } from '@sitecore-content-sdk/angular';
+import { LOADERS } from './app/loaders';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -18,7 +19,7 @@ const angularApp = new AngularNodeAppEngine();
  * so client-side navigation can fetch route data via POST /_data.
  */
 app.use(express.json());
-app.use(createLoaderDataServiceMiddleware({ loaders: { ...DEFAULT_LOADERS } }));
+app.use(createLoaderDataServiceMiddleware({ loaders: LOADERS }));
 /**
  * Serve static files from /browser
  */

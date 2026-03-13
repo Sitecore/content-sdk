@@ -1,5 +1,5 @@
-import { LoaderFn, NotFoundNavigationError } from '../models';
-import { Page } from '@sitecore-content-sdk/content/client';
+import type { LoaderFn, Page } from '@sitecore-content-sdk/angular';
+import { NotFoundNavigationError } from '@sitecore-content-sdk/angular';
 import { stubPageResult } from './stub-utils';
 
 /**
