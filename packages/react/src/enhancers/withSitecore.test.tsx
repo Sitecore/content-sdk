@@ -5,13 +5,13 @@ import { expect, use } from 'chai';
 import { fireEvent, render } from '@testing-library/react';
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
-
-import { useSitecore, withSitecore, WithSitecoreProps } from '../enhancers/withSitecore';
+import { withSitecore, WithSitecoreProps } from '../enhancers/withSitecore';
 import {
   SitecoreProviderReactContext,
   SitecoreProviderState,
+  useSitecore,
 } from '../components/SitecoreProvider';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 
 use(sinonChai);
 
@@ -60,7 +60,7 @@ describe('withSitecore', () => {
   it('withSitecore()', () => {
     const TestComponent: React.FC<any> = (props: WithSitecoreProps & { customProp: string }) => (
       <>
-        <div onClick={props.updatePage}>
+        <div onClick={props.setPage}>
           {props.page.locale}
           {props.customProp}
         </div>
@@ -109,7 +109,7 @@ describe('withSitecore', () => {
 
         return (
           <>
-            <div onClick={reactContext.updatePage}>
+            <div onClick={reactContext.setPage}>
               {page.locale}
               {props.customProp}
             </div>
@@ -142,7 +142,7 @@ describe('withSitecore', () => {
         const context = reactContext.page;
 
         return (
-          <div onClick={reactContext.updatePage}>
+          <div onClick={reactContext.setPage}>
             {context.locale}
             {props.customProp}
           </div>

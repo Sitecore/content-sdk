@@ -6,7 +6,7 @@
 
 # Class: GraphQLRequestClient
 
-Defined in: [packages/core/src/graphql-request-client.ts:99](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/graphql-request-client.ts#L99)
+Defined in: [packages/core/src/graphql-request-client.ts:99](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/core/src/graphql-request-client.ts#L99)
 
 A GraphQL client for Sitecore APIs that uses the 'graphql-request' library.
 https://github.com/prisma-labs/graphql-request
@@ -21,7 +21,7 @@ https://github.com/prisma-labs/graphql-request
 
 > **new GraphQLRequestClient**(`endpoint`, `clientConfig?`): `GraphQLRequestClient`
 
-Defined in: [packages/core/src/graphql-request-client.ts:113](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/graphql-request-client.ts#L113)
+Defined in: [packages/core/src/graphql-request-client.ts:113](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/core/src/graphql-request-client.ts#L113)
 
 Provides ability to execute graphql query using given `endpoint`
 
@@ -42,7 +42,7 @@ Provides ability to execute graphql query using given `endpoint`
 
 > **request**\<`T`\>(`query`, `variables?`, `options?`): `Promise`\<`T`\>
 
-Defined in: [packages/core/src/graphql-request-client.ts:163](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/graphql-request-client.ts#L163)
+Defined in: [packages/core/src/graphql-request-client.ts:163](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/core/src/graphql-request-client.ts#L163)
 
 Execute graphql request
 
@@ -58,7 +58,7 @@ Execute graphql request
 | ------ | ------ | ------ |
 | `query` | `string` \| `DocumentNode` | graphql query |
 | `variables?` | \{\[`key`: `string`\]: `unknown`; \} | - |
-| `options?` | [`FetchOptions`](../../client/type-aliases/FetchOptions.md) | Options for configuring a GraphQL request. |
+| `options?` | [`FetchOptions`](../type-aliases/FetchOptions.md) | Options for configuring a GraphQL request. |
 
 #### Returns
 
@@ -74,7 +74,7 @@ Execute graphql request
 
 > `static` **createClientFactory**(`config`): [`GraphQLRequestClientFactory`](../type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/graphql-request-client.ts:149](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/graphql-request-client.ts#L149)
+Defined in: [packages/core/src/graphql-request-client.ts:149](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/core/src/graphql-request-client.ts#L149)
 
 Factory method for creating a GraphQLRequestClientFactory.
 

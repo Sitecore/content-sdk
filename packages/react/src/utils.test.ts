@@ -1,6 +1,6 @@
 ﻿import { expect } from 'chai';
 import { addClassName, getDataFromFields } from './utils';
-import { ComponentFields } from '@sitecore-content-sdk/core/layout';
+import { ComponentFields } from '@sitecore-content-sdk/content/layout';
 
 describe('content-sdk-react utils', () => {
   describe('addClassName', () => {

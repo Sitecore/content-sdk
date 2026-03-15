@@ -1,18 +1,5 @@
 import { draftMode } from 'next/headers';
-import { Suspense } from 'react';
 import Bootstrap from 'src/Bootstrap';
-
-// Component that handles draft mode check (uncached data access)
-async function SiteLayoutContent({ site, children }: { site: string; children: React.ReactNode }) {
-  const { isEnabled } = await draftMode();
-
-  return (
-    <>
-      <Bootstrap siteName={site} isPreviewMode={isEnabled} />
-      {children}
-    </>
-  );
-}
 
 export default async function SiteLayout({
   children,
@@ -22,11 +9,12 @@ export default async function SiteLayout({
   params: Promise<{ site: string }>;
 }) {
   const { site } = await params;
+  const { isEnabled } = await draftMode();
 
-  // Wrap the dynamic content in Suspense for Next.js 16 PPR compatibility
   return (
-    <Suspense fallback={<>{children}</>}>
-      <SiteLayoutContent site={site}>{children}</SiteLayoutContent>
-    </Suspense>
+    <>
+      <Bootstrap siteName={site} isPreviewMode={isEnabled} />
+      {children}
+    </>
   );
 }

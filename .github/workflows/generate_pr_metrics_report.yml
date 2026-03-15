@@ -19,11 +19,6 @@ jobs:
         with:
           node-version: 24
 
-      - name: Install dependencies
-        run: |
-          yarn cache clean --all
-          yarn install --immutable
-
       - name: Generate Report
         run: node ./scripts/generate-package-metrics-report.js
 

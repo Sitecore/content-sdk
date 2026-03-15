@@ -8,7 +8,7 @@
 
 > `const` **getContentStylesheetLink**: (`layoutData`, `sitecoreEdgeContextId`, `sitecoreEdgeUrl?`) => [`HTMLLink`](../type-aliases/HTMLLink.md) \| `null`
 
-Defined in: core/types/layout/content-styles.d.ts:14
+Defined in: content/types/layout/content-styles.d.ts:14
 
 Get the content styles link to be loaded from the Sitecore Edge Platform
 
@@ -18,7 +18,7 @@ Get the content styles link to be loaded from the Sitecore Edge Platform
 | ------ | ------ | ------ |
 | `layoutData` | [`LayoutServiceData`](../interfaces/LayoutServiceData.md) | Layout service data |
 | `sitecoreEdgeContextId` | `string` | Sitecore Edge Context ID |
-| `sitecoreEdgeUrl?` | `string` | Sitecore Edge Platform URL. Default is https://edge-platform.sitecorecloud.io |
+| `sitecoreEdgeUrl?` | `string` | Sitecore Edge Platform URL (resolved at config level). Defaults to platform URL. |
 
 ## Returns
 

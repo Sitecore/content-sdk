@@ -8,7 +8,7 @@ import { BYOCServerWrapper } from './BYOCServerWrapper';
 import * as feaasUtils from './feaas-utils';
 import * as BYOCWrapperModule from './BYOCWrapper';
 import { BYOCComponentProps, BYOCComponentParams } from './models';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 
 describe('BYOCServerWrapper', () => {
   let sandbox: SinonSandbox;

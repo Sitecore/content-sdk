@@ -1,10 +1,10 @@
-﻿'use client';
-import React, { ForwardedRef, forwardRef } from 'react';
+'use client';
+import React from 'react';
+import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 
 /**
  * The interface for the RichText field.
@@ -27,7 +27,29 @@ export interface RichTextProps extends EditableFieldProps<RichTextProps> {
    * @default <div />
    */
   tag?: string;
+  /** Ref forwarded to the root element. */
+  ref?: React.Ref<HTMLElement>;
 }
+
+const RichTextComponent: React.FC<RichTextProps> = ({ field, tag = 'div', ref, ...otherProps }) => {
+  if (isFieldValueEmpty(field)) {
+    return null;
+  }
+
+  delete otherProps.editable; // prevent editable from being passed to the DOM
+
+  const htmlProps = {
+    dangerouslySetInnerHTML: {
+      __html: field.value,
+    },
+    ref,
+    suppressHydrationWarning: field.metadata ? true : undefined,
+    ...otherProps,
+  };
+
+  const Tag = (tag || 'div') as React.ElementType;
+  return <Tag {...htmlProps} />;
+};
 
 /**
  * The RichText component.
@@ -35,32 +57,9 @@ export interface RichTextProps extends EditableFieldProps<RichTextProps> {
  * @public
  */
 export const RichText: React.FC<RichTextProps> = withFieldMetadata<RichTextProps>(
-  withEmptyFieldEditingComponent<RichTextProps>(
-    forwardRef(
-      (
-        // eslint-disable-next-line no-unused-vars
-        { field, tag = 'div', editable = true, ...otherProps }: RichTextProps,
-        ref: ForwardedRef<HTMLElement>
-      ) => {
-        if (isFieldValueEmpty(field)) {
-          return null;
-        }
-
-        const htmlProps = {
-          dangerouslySetInnerHTML: {
-            __html: field.value,
-          },
-          ref,
-          suppressHydrationWarning: field.metadata ? true : undefined,
-          ...otherProps,
-        };
-
-        return React.createElement(tag || 'div', htmlProps);
-      }
-    ),
-    { defaultEmptyFieldEditingComponent: DefaultEmptyFieldEditingComponentText, isForwardRef: true }
-  ),
-  true
+  withEmptyFieldEditingComponent(RichTextComponent, {
+    defaultEmptyFieldEditingComponent: DefaultEmptyFieldEditingComponentText,
+  })
 );
 
 RichText.displayName = 'RichText';

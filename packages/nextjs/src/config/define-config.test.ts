@@ -17,7 +17,7 @@ describe('defineConfig', () => {
   beforeEach(() => {
     defineConfigCoreStub = sandbox.stub();
     defineConfigModule = proxyquire('./define-config', {
-      '@sitecore-content-sdk/core/config': { defineConfig: defineConfigCoreStub },
+      '@sitecore-content-sdk/content/config': { defineConfig: defineConfigCoreStub },
     });
   });
 
@@ -140,10 +140,10 @@ describe('defineConfig', () => {
 
   describe('config.api.edge.edgeUrl', () => {
     describe('environment variable is not set', () => {
-      it('should default to undefined', () => {
+      it('should default to Edge Platform URL', () => {
         defineConfigModule.defineConfig(defaultConfig());
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.api?.edge?.edgeUrl).to.be.undefined;
+        expect(resultConfig.api?.edge?.edgeUrl).to.equal('https://edge-platform.sitecorecloud.io');
       });
 
       it('should use the value from the config', () => {
@@ -157,11 +157,11 @@ describe('defineConfig', () => {
     });
     describe('environment variable is set', () => {
       before(() => {
-        process.env.NEXT_PUBLIC_SITECORE_EDGE_URL = 'next-public-sitecore-edgeUrl';
+        process.env.NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME = 'next-public-sitecore-edgeUrl';
       });
 
       after(() => {
-        delete process.env.NEXT_PUBLIC_SITECORE_EDGE_URL;
+        delete process.env.NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME;
       });
 
       it('should use the value from the config if present', () => {

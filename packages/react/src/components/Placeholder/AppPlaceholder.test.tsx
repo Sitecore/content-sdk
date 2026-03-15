@@ -7,9 +7,9 @@ import {
   ComponentRendering,
   LayoutServicePageState,
   RouteData,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import { expect } from 'chai';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { createSandbox, SinonSandbox } from 'sinon';
 import {
@@ -34,8 +34,8 @@ import * as HiddenRendering from '../HiddenRendering';
 import * as ErrorBoundary from '../ErrorBoundary';
 import { MissingComponent, MissingComponentProps } from '../MissingComponent';
 import { AppPlaceholder } from './AppPlaceholder';
-import { AppComponentProps, ComponentProps } from './models';
-import { Page, PageMode } from '@sitecore-content-sdk/core/client';
+import { AppComponentProps } from './models';
+import { Page, PageMode } from '@sitecore-content-sdk/content/client';
 import * as rscUtils from '#rsc-env';
 import * as ClientComponentWrapperModule from './ClientComponentWrapper';
 import { SitecoreProvider } from '../..';
@@ -587,7 +587,31 @@ describe('App Placeholder logic', () => {
     });
   });
 
-  it('should render Suspense when disableSuspense is false', () => {
+  it('should not render Suspense by default (disableSuspense defaults to true)', () => {
+    const page = getPage();
+    const component = {
+      name: 'home',
+      displayName: 'Home',
+      placeholders: {
+        main: [
+          {
+            uid: '12345',
+            componentName: 'Jumbotron',
+          },
+        ],
+      },
+    } as RouteData;
+    const phKey = 'main';
+
+    const renderedComponent = render(
+      <AppPlaceholder name={phKey} rendering={component} componentMap={componentMap} page={page} />
+    );
+
+    expect(renderedComponent.container.querySelector('.jumbotron-mock')).to.not.be.null;
+    expect(renderedComponent.container.innerHTML).to.not.contain('Loading component...');
+  });
+
+  it('should render Suspense when disableSuspense is false', async () => {
     const page = getPage();
     page.layout = dynamicComponentLayout;
     const component = dynamicComponentLayout.sitecore.route as RouteData;
@@ -604,12 +628,26 @@ describe('App Placeholder logic', () => {
     );
 
     expect(renderedComponent.container.innerHTML).to.contain('Loading component...');
+
+    await waitFor(() => {
+      expect(renderedComponent.container.querySelector('.dynamic-component')).to.not.be.null;
+    });
   });
 
-  it('should not render Suspense when disableSuspense is true', () => {
+  it('should not render Suspense when disableSuspense is explicitly set to true', () => {
     const page = getPage();
-    page.layout = dynamicComponentLayout;
-    const component = dynamicComponentLayout.sitecore.route as RouteData;
+    const component = {
+      name: 'home',
+      displayName: 'Home',
+      placeholders: {
+        main: [
+          {
+            uid: '12345',
+            componentName: 'Jumbotron',
+          },
+        ],
+      },
+    } as RouteData;
     const phKey = 'main';
 
     const renderedComponent = render(
@@ -623,8 +661,7 @@ describe('App Placeholder logic', () => {
     );
 
     expect(renderedComponent.container.innerHTML).to.not.contain('Loading component...');
-
-    expect(renderedComponent.container.querySelector('.dynamic-component')).to.not.be.null;
+    expect(renderedComponent.container.querySelector('.jumbotron-mock')).to.not.be.null;
   });
 
   it('should render null for unknown placeholder', () => {
@@ -1307,6 +1344,52 @@ describe('App Placeholder logic', () => {
 
       // 4 placeholders in total, 8 code blocks
       expect(wrapper?.container.querySelectorAll('.scpm').length).to.equal(8);
+    });
+
+    it('should use renderEach for each child in the placeholder when page editing is enabled', () => {
+      const page = getPage();
+      const components = new Map<string, React.FC>();
+
+      page.mode.isEditing = true;
+
+      components.set('Child', () => 'Child');
+
+      const route = {
+        name: 'Render Each Test',
+        placeholders: {
+          main: [
+            {
+              componentName: 'Child',
+            },
+            {
+              componentName: 'Child',
+            },
+          ],
+        },
+      };
+      page.layout = {
+        sitecore: {
+          context: {},
+          route,
+        },
+      };
+      const phKey = 'main';
+
+      const renderedComponent = render(
+        <SitecoreProvider componentMap={componentMap} page={page}>
+          <AppPlaceholder
+            name={phKey}
+            rendering={page.layout.sitecore.route}
+            componentMap={components}
+            page={page}
+            render={(children) => <div className="parentWrapper">{children}</div>}
+            renderEach={(child) => <div className="wrapper">{child}</div>}
+          />
+        </SitecoreProvider>
+      );
+
+      expect(renderedComponent.container.querySelectorAll('.parentWrapper').length).to.equal(1);
+      expect(renderedComponent.container.querySelectorAll('.wrapper').length).to.equal(2);
     });
   });
 });

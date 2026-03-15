@@ -1,14 +1,6 @@
 import { Debugger } from 'debug';
 
 /**
- * Html <link> tag data model
- * @public
- */
-export type HTMLLink = {
-  [key: string]: unknown;
-} & Pick<HTMLLinkElement, 'rel' | 'href'>;
-
-/**
  * This type represents errors that can occur in a GraphQL client.
  * In cases where an error status was sent back from the server (`!response.ok`), the `response` will be populated with details. In cases where a response was never received, the `code` can be populated with the error code (e.g. Node's 'ECONNRESET', 'ETIMEDOUT', etc).
  * @public
@@ -43,32 +35,6 @@ export interface RetryStrategy {
    * @returns The delay in milliseconds before the next retry.
    */
   getDelay(error: GenericGraphQLClientError, attempt: number): number;
-}
-
-/**
- * Object model of a sitemap's site page item.
- * @public
- */
-export type StaticPath = {
-  params: {
-    path: string[];
-  };
-  locale?: string;
-};
-
-/**
- * Data needed to paginate results in graphql
- * @public
- */
-export interface PageInfo {
-  /**
-   * string token that can be used to fetch the next page of results
-   */
-  endCursor: string;
-  /**
-   * a value that indicates whether more pages of results are available
-   */
-  hasNext: boolean;
 }
 
 /**

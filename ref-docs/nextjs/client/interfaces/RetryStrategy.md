@@ -6,7 +6,7 @@
 
 # Interface: RetryStrategy
 
-Defined in: core/types/models.d.ts:27
+Defined in: core/types/models.d.ts:20
 
 Defines the strategy for retrying GraphQL requests based on errors and attempts.
 
@@ -16,7 +16,7 @@ Defines the strategy for retrying GraphQL requests based on errors and attempts.
 
 > **getDelay**(`error`, `attempt`): `number`
 
-Defined in: core/types/models.d.ts:42
+Defined in: core/types/models.d.ts:35
 
 Calculates the delay (in milliseconds) before the next retry based on the given error and attempt count.
 
@@ -39,7 +39,7 @@ The delay in milliseconds before the next retry.
 
 > **shouldRetry**(`error`, `attempt`, `retries`): `boolean`
 
-Defined in: core/types/models.d.ts:35
+Defined in: core/types/models.d.ts:28
 
 Determines whether a request should be retried based on the given error and attempt count.
 

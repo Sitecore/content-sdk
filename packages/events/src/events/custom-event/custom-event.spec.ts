@@ -1,14 +1,16 @@
 import * as core from '@sitecore-content-sdk/analytics-core/internal';
-import type { Settings } from '@sitecore-content-sdk/analytics-core/internal';
 import * as utils from '@sitecore-content-sdk/analytics-core/utils';
-import { ErrorMessages } from '../../consts';
+import { constants } from '@sitecore-content-sdk/core';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as sendEventModule from '../send-event/sendEvent';
 import { CustomEvent } from './custom-event';
 import type { EventData } from './custom-event';
+import { jest, expect } from '@jest/globals';
+
+const { ERROR_MESSAGES } = constants;
 
 jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
+  const originalModule: object = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -17,7 +19,9 @@ jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
   };
 });
 jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/internal');
+  const originalModule: object = jest.requireActual(
+    '@sitecore-content-sdk/analytics-core/internal'
+  );
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -36,23 +40,17 @@ describe('CustomEvent', () => {
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ status: 'OK' }),
     });
-    global.fetch = jest.fn().mockImplementation(() => mockFetch);
+    global.fetch = jest.fn().mockImplementation(() => mockFetch) as typeof fetch;
 
     jest.clearAllMocks();
   });
 
   describe('constructor', () => {
     let eventData: EventData;
-    const settings: Settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
+    const config = {
+      contextId: '123',
+      edgeUrl: '',
       siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
     };
 
     beforeEach(() => {
@@ -67,7 +65,7 @@ describe('CustomEvent', () => {
     it('should not call flatten object method when no extension data is passed', () => {
       const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
       Object.defineProperty(window, 'location', { value: { search: '' }, writable: true });
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
     });
@@ -78,12 +76,12 @@ describe('CustomEvent', () => {
         eventData: { ...eventData, extensionData },
         id,
         sendEvent: sendEventModule.sendEvent,
-        settings,
+        config,
       }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(
         expect.not.objectContaining({ ext: {} }),
-        expect.objectContaining(settings)
+        expect.objectContaining(config)
       );
     });
 
@@ -94,7 +92,7 @@ describe('CustomEvent', () => {
         eventData: { ...eventData, extensionData },
         id,
         sendEvent: sendEventModule.sendEvent,
-        settings,
+        config,
       }).send();
 
       const expectedExt = {
@@ -107,7 +105,7 @@ describe('CustomEvent', () => {
 
       expect(sendEventSpy).toHaveBeenCalledWith(
         expect.objectContaining(expectedExt),
-        expect.objectContaining(settings)
+        expect.objectContaining(config)
       );
     });
 
@@ -120,9 +118,9 @@ describe('CustomEvent', () => {
           eventData: { ...eventData, extensionData },
           id,
           sendEvent: sendEventModule.sendEvent,
-          settings,
+          config,
         });
-      }).toThrow(ErrorMessages.IV_0005);
+      }).toThrow(ERROR_MESSAGES.IV_006(MAX_EXT_ATTRIBUTES));
     });
 
     it('should not throw an error when no more than 50 ext attributes are passed', () => {
@@ -134,24 +132,18 @@ describe('CustomEvent', () => {
           eventData: { ...eventData, extensionData },
           id,
           sendEvent: sendEventModule.sendEvent,
-          settings,
+          config,
         });
-      }).not.toThrow(ErrorMessages.IV_0005);
+      }).not.toThrow(ERROR_MESSAGES.IV_006);
     });
   });
 
   describe('send', () => {
-    const settings: core.Settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
+    const config = {
+      contextId: '123',
+      edgeUrl: '',
       siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
-    };
+    } as const;
 
     it('should send the event with top level attributes', async () => {
       const sendEventSpy = jest.spyOn(sendEventModule, 'sendEvent');
@@ -172,11 +164,11 @@ describe('CustomEvent', () => {
         testAttr3: 22,
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(
         expect.objectContaining(expectedExt),
-        expect.objectContaining(settings)
+        expect.objectContaining(config)
       );
     });
 
@@ -189,7 +181,7 @@ describe('CustomEvent', () => {
 
       const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
       expect(languageSpy).toHaveBeenCalledTimes(1);
@@ -219,9 +211,9 @@ describe('CustomEvent', () => {
         type: 'CUSTOM_TYPE',
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
-      expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, config);
       expect(languageSpy).toHaveBeenCalledTimes(0);
       expect(pageNameSpy).toHaveBeenCalledTimes(0);
     });
@@ -236,23 +228,20 @@ describe('CustomEvent', () => {
       };
 
       const expectedData = {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         browser_id: id,
         channel: 'WEB',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_key: '',
         currency: 'EUR',
         language: 'EN',
         page: 'races',
         pos: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         requested_at: '2024-01-01T00:00:00.000Z',
         type: 'CUSTOM_TYPE',
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
-      expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, config);
       expect(languageSpy).toHaveBeenCalledTimes(1);
       expect(pageNameSpy).toHaveBeenCalledTimes(1);
     });
@@ -265,37 +254,28 @@ describe('CustomEvent', () => {
       };
 
       const expectedData = {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         browser_id: id,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_key: '',
         language: 'EN',
         page: 'races',
         pos: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         requested_at: '2024-01-01T00:00:00.000Z',
         type: 'CUSTOM_TYPE',
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
-      expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, config);
       expect(languageSpy).toHaveBeenCalledTimes(1);
       expect(pageNameSpy).toHaveBeenCalledTimes(1);
     });
   });
   describe('search data', () => {
     it('should include sc_search if searchData is provided', async () => {
-      const settings: Settings = {
-        cookieSettings: {
-          domain: 'cDomain',
-          expiryDays: 730,
-          name: { browserId: 'bid_name' },
-          path: '/',
-        },
+      const config = {
+        contextId: '123',
+        edgeUrl: '',
         siteName: '456',
-        sitecoreEdgeContextId: '123',
-        sitecoreEdgeUrl: '',
       };
       const sendEventSpy = jest.spyOn(sendEventModule, 'sendEvent');
 
@@ -326,11 +306,11 @@ describe('CustomEvent', () => {
           },
         },
         type: 'CUSTOM_TYPE',
-      };
+      } as const;
 
-      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, config }).send();
 
-      expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData as any, config);
     });
   });
 });

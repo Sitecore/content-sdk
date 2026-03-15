@@ -5,6 +5,7 @@ import { getCookie } from './get-cookie';
  * @param {string | undefined} cookiesHeader Raw `cookie` header contents.
  * @param {string} cookieName The cookie name to look up.
  * @returns {{ name: string; value: string } | undefined} The resolved cookie information when found.
+ * @internal
  */
 export function getCookieServerSide(
   cookiesHeader: string | undefined,

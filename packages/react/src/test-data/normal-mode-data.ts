@@ -1,4 +1,4 @@
-﻿import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
+﻿import { LayoutServiceData } from '@sitecore-content-sdk/content/layout';
 
 export const convertedDevData: LayoutServiceData = {
   sitecore: {

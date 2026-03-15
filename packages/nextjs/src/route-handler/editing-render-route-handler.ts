@@ -1,13 +1,13 @@
-import { debug, NativeDataFetcher } from '@sitecore-content-sdk/core';
+import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import {
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
   PREVIEW_KEY,
   QUERY_PARAM_EDITING_SECRET,
   INVALID_SECRET_HTML_MESSAGE,
-} from '@sitecore-content-sdk/core/editing';
-import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/editing';
+import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
+import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { NextRequest } from 'next/server';
 import { getEditingSecret } from '../utils/utils';
 import { draftMode, cookies as nextCokies } from 'next/headers';
@@ -21,8 +21,11 @@ import {
   getCSPHeader,
   resolveServerUrl,
   PreviewCookies,
+  getAllowedQueryParams,
 } from '../editing/utils';
-import { SITE_KEY } from '@sitecore-content-sdk/core/site';
+import { SITE_KEY } from '@sitecore-content-sdk/content/site';
+import debug from '../debug';
+import type { AllowedQueryParams } from '../editing/types';
 
 /**
  * Helper function to handle cookie operations - can be mocked for testing
@@ -49,6 +52,12 @@ type EditingHandlerOptions = {
    * The internal host URL for the Next.js application, used for server-side requests for page rendering during editing.
    */
   sitecoreInternalEditingHostUrl?: string;
+  /**
+   * Query string parameters to allow and include in the search params.
+   * - Array: each item is a parameter name (string) or an object `{ name, required? }`.
+   * - Function: receives the request's query parameter names and returns the list of allowed parameters.
+   */
+  allowedQueryParams?: AllowedQueryParams;
 };
 
 /**
@@ -154,18 +163,25 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
 
     const mode = query.mode;
     const requiredQueryParams = getRequiredEditingParamsList(mode);
-
     const missingQueryParams = requiredQueryParams.filter((param) => !query[param]);
+    const { allowedQueryParams, missingAllowedParams } = getAllowedQueryParams(
+      query,
+      options.allowedQueryParams
+    );
 
     // Validate query parameters
-    if (missingQueryParams.length) {
-      debug.editing('missing required query parameters: %o', missingQueryParams);
+    if (missingQueryParams.length || missingAllowedParams.length) {
+      debug.editing('missing required query parameters: %o', [
+        ...missingQueryParams,
+        ...missingAllowedParams,
+      ]);
 
       return Response.json(
         {
-          html: `<html><body>Missing required query parameters: ${missingQueryParams.join(
-            ', '
-          )}</body></html>`,
+          html: `<html><body>Missing required query parameters: ${[
+            ...missingQueryParams,
+            ...missingAllowedParams,
+          ].join(', ')}</body></html>`,
         },
         { status: 400, headers: responseHeaders }
       );
@@ -217,6 +233,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       const propagatedQsParams = {
         ...getQueryParamsForPropagation(query as { [key: string]: string }),
         ...mapEditingParams(query as { [key: string]: string }),
+        ...(allowedQueryParams as { [key: string]: string }),
       };
       // Get headers to propagate on subsequent requests
       const propagatedHeaders = getHeadersForPropagation(headers);
@@ -301,6 +318,9 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     const propagatedQsParams = {
       ...getQueryParamsForPropagation(query as { [key: string]: string }),
       ...mapEditingParams(query as { [key: string]: string }),
+      ...(getAllowedQueryParams(query, options.allowedQueryParams).allowedQueryParams as {
+        [key: string]: string;
+      }),
     };
 
     const base = resolveServerUrl(req);

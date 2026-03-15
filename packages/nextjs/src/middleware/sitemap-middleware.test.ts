@@ -4,7 +4,10 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { SitemapMiddleware } from './sitemap-middleware';
-import { SitecoreClient } from '@sitecore-content-sdk/core/client';
+import { SitecoreClient } from '@sitecore-content-sdk/content/client';
+import { constants } from '@sitecore-content-sdk/core';
+
+const { ERROR_MESSAGES } = constants;
 
 chai.use(sinonChai);
 
@@ -189,7 +192,7 @@ describe('SitemapMiddleware', () => {
       await handler(req as NextApiRequest, res as NextApiResponse);
 
       expect(res.status).to.have.been.calledWith(500);
-      expect(res.send).to.have.been.calledWith('Internal Server Error');
+      expect(res.send).to.have.been.calledWith(`Internal Server Error. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
       expect(res.redirect).not.to.have.been.called;
     });
   });

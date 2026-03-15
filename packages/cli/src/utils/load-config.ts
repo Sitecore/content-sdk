@@ -1,4 +1,4 @@
-import { SitecoreCliConfig } from '@sitecore-content-sdk/core/types/config';
+import { SitecoreCliConfig } from '@sitecore-content-sdk/content/config';
 import path from 'path';
 import fs from 'fs';
 import processEnv from './process-env';

@@ -6,7 +6,7 @@
 
 # Class: PersonalizeService
 
-Defined in: core/types/personalize/personalize-service.d.ts:56
+Defined in: content/types/personalize/personalize-service.d.ts:54
 
 Fetch personalize data using the Sitecore GraphQL endpoint.
 
@@ -16,7 +16,7 @@ Fetch personalize data using the Sitecore GraphQL endpoint.
 
 > **new PersonalizeService**(`config`): `PersonalizeService`
 
-Defined in: core/types/personalize/personalize-service.d.ts:64
+Defined in: content/types/personalize/personalize-service.d.ts:62
 
 Fetch personalize data using the Sitecore GraphQL endpoint.
 
@@ -36,7 +36,7 @@ Fetch personalize data using the Sitecore GraphQL endpoint.
 
 > `protected` **config**: [`PersonalizeServiceConfig`](../../proxy/type-aliases/PersonalizeServiceConfig.md)
 
-Defined in: core/types/personalize/personalize-service.d.ts:57
+Defined in: content/types/personalize/personalize-service.d.ts:55
 
 ## Accessors
 
@@ -46,7 +46,7 @@ Defined in: core/types/personalize/personalize-service.d.ts:57
 
 > **get** `protected` **query**(): `string`
 
-Defined in: core/types/personalize/personalize-service.d.ts:65
+Defined in: content/types/personalize/personalize-service.d.ts:63
 
 ##### Returns
 
@@ -58,7 +58,7 @@ Defined in: core/types/personalize/personalize-service.d.ts:65
 
 > `protected` **getCacheClient**(): [`CacheClient`](../interfaces/CacheClient.md)\<`PersonalizeQueryResult`\>
 
-Defined in: core/types/personalize/personalize-service.d.ts:79
+Defined in: content/types/personalize/personalize-service.d.ts:77
 
 Gets cache client implementation
 Override this method if custom cache needs to be used
@@ -75,7 +75,7 @@ CacheClient instance
 
 > `protected` **getCacheKey**(`itemPath`, `language`, `siteName`): `string`
 
-Defined in: core/types/personalize/personalize-service.d.ts:80
+Defined in: content/types/personalize/personalize-service.d.ts:78
 
 #### Parameters
 
@@ -95,7 +95,7 @@ Defined in: core/types/personalize/personalize-service.d.ts:80
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: core/types/personalize/personalize-service.d.ts:87
+Defined in: content/types/personalize/personalize-service.d.ts:85
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
@@ -113,7 +113,7 @@ implementation
 
 > **getPersonalizeInfo**(`itemPath`, `language`, `siteName`): `Promise`\<`PersonalizeInfo` \| `undefined`\>
 
-Defined in: core/types/personalize/personalize-service.d.ts:73
+Defined in: content/types/personalize/personalize-service.d.ts:71
 
 Get personalize information for a route
 

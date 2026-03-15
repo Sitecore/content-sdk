@@ -8,7 +8,7 @@
 
 > **normalizePersonalizedRewrite**(`pathname`): `string`
 
-Defined in: core/types/personalize/utils.d.ts:38
+Defined in: content/types/personalize/utils.d.ts:38
 
 Normalize a personalized rewrite path (remove personalize data)
 

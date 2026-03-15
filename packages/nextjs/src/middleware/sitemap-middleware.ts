@@ -1,6 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { SitecoreClient, SitemapXmlOptions } from '@sitecore-content-sdk/core/client';
+import { SitecoreClient, SitemapXmlOptions } from '@sitecore-content-sdk/content/client';
+import { constants } from '@sitecore-content-sdk/core';
 import { SiteInfo, SiteResolver } from '../site';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Middleware for handling sitemap requests in a Next.js application.
@@ -36,7 +39,7 @@ export class SitemapMiddleware {
       if (error instanceof Error && error.message === 'REDIRECT_404') {
         res.redirect('/404');
       } else {
-        res.status(500).send('Internal Server Error');
+        res.status(500).send(`Internal Server Error. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
       }
     }
   }

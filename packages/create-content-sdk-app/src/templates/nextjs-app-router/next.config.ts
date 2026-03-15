@@ -2,10 +2,6 @@ import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
-  // Enable Cache Components for explicit caching with "use cache" directive
-  // See: https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents
-  cacheComponents: true,
-
   // Enable Turbopack file system caching for faster dev startup (beta)
   // See: https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack
   experimental: {

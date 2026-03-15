@@ -1,13 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { debug } from '@sitecore-content-sdk/core';
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
   INVALID_SECRET_HTML_MESSAGE,
-} from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/editing';
 import { getEditingSecret } from '../utils/utils';
 import { RenderMiddlewareBase } from './render-middleware';
-import { enforceCors } from '@sitecore-content-sdk/core/utils';
+import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
+import debug from '../debug';
 
 /**
  * Configuration for `FEAASRenderMiddleware`.
@@ -59,7 +59,14 @@ export class FEAASRenderMiddleware extends RenderMiddlewareBase {
       headers,
     });
 
-    if (!enforceCors(req, res, EDITING_ALLOWED_ORIGINS)) {
+    const corsHeaders = getEnforcedCorsHeaders({
+      requestMethod: method,
+      headers: headers,
+      presetCorsHeader: headers['Access-Control-Allow-Origin'] as string,
+      allowedOrigins: EDITING_ALLOWED_ORIGINS,
+    });
+
+    if (!corsHeaders) {
       debug.editing(
         'invalid origin host - set allowed origins in JSS_ALLOWED_ORIGINS environment variable'
       );
@@ -69,6 +76,10 @@ export class FEAASRenderMiddleware extends RenderMiddlewareBase {
           `<html><body>Requests from origin ${req.headers?.origin} are not allowed</body></html>`
         );
     }
+
+    Object.keys(corsHeaders).forEach((key) => {
+      res.setHeader(key, corsHeaders[key]);
+    });
 
     if (!method || !['GET', 'OPTIONS'].includes(method)) {
       debug.editing('invalid method - sent %s expected GET,OPTIONS', method);
@@ -87,7 +98,6 @@ export class FEAASRenderMiddleware extends RenderMiddlewareBase {
     if (method === 'OPTIONS') {
       debug.editing('preflight request');
 
-      // CORS headers are set by enforceCors
       return res.status(204).send(null);
     }
 

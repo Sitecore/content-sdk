@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { NextRequest } from 'next/server';
 import proxyquire from 'proxyquire';
-import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/core/editing';
+import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/content/editing';
 import { ComponentMap } from '@sitecore-content-sdk/react';
 import { NextjsContentSdkComponent } from '../sharedTypes/component-props';
 
@@ -49,7 +49,7 @@ describe('createEditingConfigRouteHandler', () => {
 
     editingConfigRouteHandlerModule = proxyquire('./editing-config-route-handler', {
       '../utils/utils': { getEditingSecret: getEditingSecretStub },
-      '@sitecore-content-sdk/core/utils': { getEnforcedCorsHeaders: getEnforcedCorsHeadersStub },
+      '@sitecore-content-sdk/core/tools': { getEnforcedCorsHeaders: getEnforcedCorsHeadersStub },
     });
 
     OriginalResponse = (globalThis as any).Response;

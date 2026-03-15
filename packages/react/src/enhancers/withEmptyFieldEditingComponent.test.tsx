@@ -1,10 +1,10 @@
-﻿/* eslint-disable no-unused-expressions */
-import React, { forwardRef } from 'react';
+/* eslint-disable no-unused-expressions */
+import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import { withEmptyFieldEditingComponent } from './withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from '../components/DefaultEmptyFieldEditingComponents';
-import { EMPTY_DATE_FIELD_VALUE } from '@sitecore-content-sdk/core/layout';
+import { EMPTY_DATE_FIELD_VALUE } from '@sitecore-content-sdk/content/layout';
 
 describe('withEmptyFieldEditingComponent', () => {
   describe('Metadata', () => {
@@ -30,6 +30,8 @@ describe('withEmptyFieldEditingComponent', () => {
       editable?: boolean;
     };
 
+    type TestComponentWithRefProps = TestComponentProps & { ref?: React.Ref<HTMLDivElement> };
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
     const TestComponent = (props: TestComponentProps) => {
       return (
@@ -41,17 +43,15 @@ describe('withEmptyFieldEditingComponent', () => {
       );
     };
 
-    const TestComponentWithRef = forwardRef(
-      (props: TestComponentProps, ref: React.ForwardedRef<HTMLDivElement>) => {
-        return (
-          <div>
-            <h1>hi</h1>
-            <h2 ref={ref}>foo</h2>
-            <p>bar</p>
-          </div>
-        );
-      }
-    );
+    const TestComponentWithRef = ({ ref }: TestComponentWithRefProps) => {
+      return (
+        <div>
+          <h1>hi</h1>
+          <h2 ref={ref}>foo</h2>
+          <p>bar</p>
+        </div>
+      );
+    };
 
     it('Should render provided default empty value component component if field value is not provided', () => {
       const props = {
@@ -67,7 +67,7 @@ describe('withEmptyFieldEditingComponent', () => {
       });
 
       const rendered = render(<WrappedComponent {...props} />);
-      const expected = render(<DefaultEmptyFieldEditingComponentText tag='h1' />);
+      const expected = render(<DefaultEmptyFieldEditingComponentText tag="h1" />);
 
       expect(rendered.container.innerHTML).to.equal(expected.container.innerHTML);
       expect(rendered.container.innerHTML).to.equal('<h1 tag="h1">[No text in field]</h1>');
@@ -144,7 +144,7 @@ describe('withEmptyFieldEditingComponent', () => {
       expect(rendered.container.innerHTML).to.equal('<div><h1>hi</h1><h2>foo</h2><p>bar</p></div>');
     });
 
-    it('Should render component with forward ref if field value is provided', () => {
+    it('Should render component with isForwardRef if field value is provided', () => {
       const props = {
         field: {
           value: 'field value',
@@ -152,7 +152,7 @@ describe('withEmptyFieldEditingComponent', () => {
         },
       };
 
-      const WrappedComponent = withEmptyFieldEditingComponent<TestComponentProps>(
+      const WrappedComponent = withEmptyFieldEditingComponent<TestComponentWithRefProps>(
         TestComponentWithRef,
         {
           defaultEmptyFieldEditingComponent: DefaultEmptyFieldEditingComponentText,

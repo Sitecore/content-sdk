@@ -34,7 +34,6 @@
 - [PersonalizeService](classes/PersonalizeService.md)
 - [RedirectsService](classes/RedirectsService.md)
 - [RobotsService](classes/RobotsService.md)
-- [SitecoreProvider](classes/SitecoreProvider.md)
 - [SiteInfoService](classes/SiteInfoService.md)
 - [SitemapXmlService](classes/SitemapXmlService.md)
 - [SitePathService](classes/SitePathService.md)
@@ -42,7 +41,7 @@
 
 ## Interfaces
 
-- [AppPlaceholderProps](interfaces/AppPlaceholderProps.md)
+- [AnalyticsProxyAdapter](interfaces/AnalyticsProxyAdapter.md)
 - [CacheClient](interfaces/CacheClient.md)
 - [CacheOptions](interfaces/CacheOptions.md)
 - [ComponentFields](interfaces/ComponentFields.md)
@@ -64,6 +63,7 @@
 - [LinkField](interfaces/LinkField.md)
 - [LinkFieldValue](interfaces/LinkFieldValue.md)
 - [NativeDataFetcherResponse](interfaces/NativeDataFetcherResponse.md)
+- [PersonalizeProxyAdapter](interfaces/PersonalizeProxyAdapter.md)
 - [PlaceholderComponentProps](interfaces/PlaceholderComponentProps.md)
 - [PlaceholderData](interfaces/PlaceholderData.md)
 - [RichTextField](interfaces/RichTextField.md)
@@ -71,13 +71,13 @@
 - [SitecoreProviderState](interfaces/SitecoreProviderState.md)
 - [SitePathServiceConfig](interfaces/SitePathServiceConfig.md)
 - [TextField](interfaces/TextField.md)
-- [WithSitecoreOptions](interfaces/WithSitecoreOptions.md)
-- [WithSitecoreProps](interfaces/WithSitecoreProps.md)
 
 ## Type Aliases
 
+- [AppPlaceholderProps](type-aliases/AppPlaceholderProps.md)
 - [BYOCComponentParams](type-aliases/BYOCComponentParams.md)
 - [BYOCComponentProps](type-aliases/BYOCComponentProps.md)
+- [CachedPageParams](type-aliases/CachedPageParams.md)
 - [ComponentMap](type-aliases/ComponentMap.md)
 - [ComponentPropsCollection](type-aliases/ComponentPropsCollection.md)
 - [ComponentPropsContextProps](type-aliases/ComponentPropsContextProps.md)
@@ -94,6 +94,7 @@
 - [NextjsContentSdkComponent](type-aliases/NextjsContentSdkComponent.md)
 - [Page](type-aliases/Page.md)
 - [PageMode](type-aliases/PageMode.md)
+- [PersonalizeGeoData](type-aliases/PersonalizeGeoData.md)
 - [PlaceholdersData](type-aliases/PlaceholdersData.md)
 - [RedirectInfo](type-aliases/RedirectInfo.md)
 - [RedirectsServiceConfig](type-aliases/RedirectsServiceConfig.md)
@@ -105,7 +106,6 @@
 - [SiteInfoServiceConfig](type-aliases/SiteInfoServiceConfig.md)
 - [SitemapXmlServiceConfig](type-aliases/SitemapXmlServiceConfig.md)
 - [StaticPath](type-aliases/StaticPath.md)
-- [WithSitecoreHocProps](type-aliases/WithSitecoreHocProps.md)
 
 ## Variables
 
@@ -119,7 +119,6 @@
 - [DefaultEmptyFieldEditingComponentImage](variables/DefaultEmptyFieldEditingComponentImage.md)
 - [DefaultEmptyFieldEditingComponentText](variables/DefaultEmptyFieldEditingComponentText.md)
 - [DesignLibrary](variables/DesignLibrary.md)
-- [DesignLibraryApp](variables/DesignLibraryApp.md)
 - [EditingScripts](variables/EditingScripts.md)
 - [enableDebug](variables/enableDebug.md)
 - [FEaaSClientWrapper](variables/FEaaSClientWrapper.md)
@@ -134,14 +133,21 @@
 - [REDIRECT\_TYPE\_301](variables/REDIRECT_TYPE_301.md)
 - [REDIRECT\_TYPE\_302](variables/REDIRECT_TYPE_302.md)
 - [REDIRECT\_TYPE\_SERVER\_TRANSFER](variables/REDIRECT_TYPE_SERVER_TRANSFER.md)
+- [renderEmptyPlaceholder](variables/renderEmptyPlaceholder.md)
+- [SitecoreProvider](variables/SitecoreProvider.md)
 - [SitecoreProviderReactContext](variables/SitecoreProviderReactContext.md)
 - [Text](variables/Text.md)
+- [withAppPlaceholder](variables/withAppPlaceholder.md)
 - [withEditorChromes](variables/withEditorChromes.md)
+- [withPlaceholder](variables/withPlaceholder.md)
 
 ## Functions
 
+- [analyticsProxyAdapter](functions/analyticsProxyAdapter.md)
 - [ComponentPropsContext](functions/ComponentPropsContext.md)
+- [DesignLibraryApp](functions/DesignLibraryApp.md)
 - [fetchFEaaSComponentServerProps](functions/fetchFEaaSComponentServerProps.md)
+- [getCachedPageParams](functions/getCachedPageParams.md)
 - [getChildPlaceholder](functions/getChildPlaceholder.md)
 - [getDesignLibraryStylesheetLinks](functions/getDesignLibraryStylesheetLinks.md)
 - [getFieldValue](functions/getFieldValue.md)
@@ -150,15 +156,17 @@
 - [getPersonalizedRewriteData](functions/getPersonalizedRewriteData.md)
 - [getSiteRewrite](functions/getSiteRewrite.md)
 - [getSiteRewriteData](functions/getSiteRewriteData.md)
+- [initContentSdk](functions/initContentSdk.md)
 - [normalizePersonalizedRewrite](functions/normalizePersonalizedRewrite.md)
 - [normalizeSiteRewrite](functions/normalizeSiteRewrite.md)
 - [personalizeLayout](functions/personalizeLayout.md)
+- [personalizeProxyAdapter](functions/personalizeProxyAdapter.md)
 - [Placeholder](functions/Placeholder.md)
 - [RichText](functions/RichText.md)
+- [setCachedPageParams](functions/setCachedPageParams.md)
 - [useComponentProps](functions/useComponentProps.md)
 - [useSitecore](functions/useSitecore.md)
 - [withDatasourceCheck](functions/withDatasourceCheck.md)
 - [withEmptyFieldEditingComponent](functions/withEmptyFieldEditingComponent.md)
 - [withFieldMetadata](functions/withFieldMetadata.md)
-- [withPlaceholder](functions/withPlaceholder.md)
-- [withSitecore](functions/withSitecore.md)
+- [~~withSitecore~~](functions/withSitecore.md)

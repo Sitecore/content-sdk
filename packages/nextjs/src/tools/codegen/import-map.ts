@@ -1,12 +1,21 @@
 import {
-  writeImportMap as writeImportMapCore,
+  writeImportMap as writeImportMapCoreImpl,
   WriteImportMapArgs,
-} from '@sitecore-content-sdk/core/tools';
+} from '@sitecore-content-sdk/content/node-tools';
 import {
   detectRouterType,
   nextjsClientMapTemplate,
+  nextjsServertMapTemplate,
   nextjsDefaultMapTemplate,
 } from '../templating/utils';
+
+let writeImportMapCore = writeImportMapCoreImpl;
+
+export const __mockDependencies = (mocks: any) => {
+  if (mocks.writeImportMapCore) {
+    writeImportMapCore = mocks.writeImportMapCore;
+  }
+};
 
 /**
  * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
@@ -14,11 +23,12 @@ import {
  * @public
  */
 export const writeImportMap = (args: WriteImportMapArgs) => {
-  const separateServerClientMaps = detectRouterType() === 'app';
+  const isAppRouter = detectRouterType() === 'app';
   return writeImportMapCore({
     ...args,
-    separateServerClientMaps,
-    serverTemplate: nextjsDefaultMapTemplate,
+    separateServerClientMaps: isAppRouter,
+    defaultTemplate: isAppRouter ? nextjsServertMapTemplate : nextjsDefaultMapTemplate,
     clientTemplate: nextjsClientMapTemplate,
   });
 };
+

@@ -8,7 +8,7 @@
 
 > **getPersonalizedRewriteData**(`pathname`): `PersonalizedRewriteData`
 
-Defined in: core/types/personalize/utils.d.ts:24
+Defined in: content/types/personalize/utils.d.ts:24
 
 Get personalize data from the rewrite path
 

@@ -16,7 +16,7 @@ import { Suspense } from 'react';
 import React from 'react';
 import { componentMap } from '.sitecore/component-map';
 import client from 'src/lib/sitecore-client';
-import { pageView } from '@sitecore-content-sdk/events/browser';
+import { pageView } from '@sitecore-content-sdk/events';
 import config from 'sitecore.config';
 
 const importMapServer = [
@@ -48,7 +48,7 @@ const importMapServer = [
     exports: [{ name: 'default', value: client }],
   },
   {
-    module: '@sitecore-content-sdk/events/browser',
+    module: '@sitecore-content-sdk/events',
     exports: [{ name: 'pageView', value: pageView }],
   },
   {

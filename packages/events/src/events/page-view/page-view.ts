@@ -1,28 +1,32 @@
 import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
-import { getCloudSDKSettingsBrowser as getCloudSDKSettings } from '@sitecore-content-sdk/analytics-core/internal';
-import { getCookieValueClientSide } from '@sitecore-content-sdk/analytics-core/utils';
-import { awaitInit } from '../../initializer/browser/initializer';
+import { getAnalyticsPlugin } from '@sitecore-content-sdk/analytics-core/internal';
 import { sendEvent } from '../send-event/sendEvent';
 import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
+import { getCoreContext } from '@sitecore-content-sdk/core';
+import { getEventsPlugin } from '../../initialization/plugin';
 
 /**
- * A function that sends a VIEW event to SitecoreCloud API
- * @param {PageViewData} [pageViewData] - The optional attributes in order to be send to SitecoreCloud API
+ * A function that sends a VIEW event to the SitecoreCloud API
+ * @param {PageViewData} [pageViewData] - The optional attributes to be sent to the SitecoreCloud API
  * This object will be flattened and sent in the ext object of the payload
- * @returns The response object that Sitecore EP returns
+ * @returns The response object that Sitecore Edge Proxy returns
+ * @public
  */
 export async function pageView(pageViewData?: PageViewData): Promise<EPResponse | null> {
-  await awaitInit();
+  const coreContext = getCoreContext();
+  await coreContext.readyPromise;
+  getEventsPlugin();
 
-  const settings = getCloudSDKSettings();
-  const id = getCookieValueClientSide(settings.cookieSettings.name.browserId);
+  const { options, adapter } = getAnalyticsPlugin();
+  const id = adapter.getClientId() || '';
+  const searchParams = adapter.location.getSearchParams();
 
   return new PageViewEvent({
     id,
     pageViewData,
-    searchParams: window.location.search,
+    searchParams,
     sendEvent,
-    settings,
+    config: { ...coreContext.config, ...options },
   }).send();
 }

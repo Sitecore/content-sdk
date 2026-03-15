@@ -1,0 +1,146 @@
+/* eslint-disable no-unused-expressions */
+import { expect } from 'chai';
+import sinon, { SinonSpy } from 'sinon';
+import nock from 'nock';
+import { GraphQLRequestClient, constants } from '@sitecore-content-sdk/core';
+import { ErrorPages, ErrorPagesService } from './error-pages-service';
+import { LayoutServiceData } from '../layout';
+
+const { ERROR_MESSAGES } = constants;
+
+const errorQueryResultNull = {
+  site: {
+    siteInfo: null,
+  },
+};
+
+describe('ErrorPagesService', () => {
+  const endpoint = 'http://site';
+  const apiKey = 'some-api-key';
+  const clientFactory = GraphQLRequestClient.createClientFactory({
+    endpoint,
+    apiKey,
+  });
+  const defaultSite = 'site-name';
+  const language = 'en';
+  const mockErrorPages = {
+    notFoundPagePath: '/notFoundPage',
+    notFoundPage: { rendered: {} as LayoutServiceData },
+    serverErrorPagePath: '/serverErrorPage',
+    serverErrorPage: { rendered: {} as LayoutServiceData },
+  };
+
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  const mockErrorPagesRequest = (errorPages?: ErrorPages | null) => {
+    nock(endpoint)
+      .post('/')
+      .reply(
+        200,
+        errorPages
+          ? {
+              data: {
+                site: {
+                  siteInfo: {
+                    errorHandling: errorPages,
+                  },
+                },
+              },
+            }
+          : {
+              data: errorQueryResultNull,
+            }
+      );
+  };
+
+  describe('Fetch error pages', () => {
+    it('should get error if sitename is empty', async () => {
+      mockErrorPagesRequest();
+
+      const service = new ErrorPagesService({
+        clientFactory,
+        language,
+      });
+      await service.fetchErrorPages('').catch((error: Error) => {
+        expect(error.message).to.equal(ERROR_MESSAGES.MV_002);
+      });
+
+      return expect(nock.isDone()).to.be.false;
+    });
+
+    it('should fetch error pages', async () => {
+      mockErrorPagesRequest(mockErrorPages);
+
+      const service = new ErrorPagesService({
+        clientFactory,
+        language,
+      });
+      const errorPages = await service.fetchErrorPages(defaultSite);
+
+      expect(errorPages).to.deep.equal(mockErrorPages);
+
+      return expect(nock.isDone()).to.be.true;
+    });
+
+    it('should fetch error pages using clientFactory', async () => {
+      mockErrorPagesRequest(mockErrorPages);
+
+      const clientFactory = GraphQLRequestClient.createClientFactory({
+        endpoint,
+        apiKey,
+      });
+
+      const service = new ErrorPagesService({
+        language,
+        clientFactory,
+      });
+
+      const errorPages = await service.fetchErrorPages(defaultSite);
+
+      expect(errorPages).to.deep.equal(mockErrorPages);
+
+      return expect(nock.isDone()).to.be.true;
+    });
+
+    it('should get null if error not exists', async () => {
+      mockErrorPagesRequest();
+
+      const service = new ErrorPagesService({
+        clientFactory,
+        language,
+      });
+      const errorPages = await service.fetchErrorPages(defaultSite);
+
+      // eslint-disable-next-line no-unused-expressions
+      expect(errorPages).to.be.null;
+      return expect(nock.isDone()).to.be.true;
+    });
+  });
+
+  it('should call clientFactory with the correct arguments', () => {
+    const clientFactorySpy: SinonSpy = sinon.spy();
+    const mockServiceConfig = {
+      defaultSite: 'supersite',
+      language,
+      clientFactory: clientFactorySpy,
+      retries: {
+        count: 3,
+        retryStrategy: {
+          getDelay: () => 1000,
+          shouldRetry: () => true,
+        },
+      },
+    };
+
+    new ErrorPagesService(mockServiceConfig);
+
+    expect(clientFactorySpy.calledOnce).to.be.true;
+
+    const calledWithArgs = clientFactorySpy.firstCall.args[0];
+    expect(calledWithArgs.debugger).to.exist;
+    expect(calledWithArgs.retries).to.equal(mockServiceConfig.retries.count);
+    expect(calledWithArgs.retryStrategy).to.deep.equal(mockServiceConfig.retries.retryStrategy);
+  });
+});

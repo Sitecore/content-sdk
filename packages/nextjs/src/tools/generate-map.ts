@@ -8,7 +8,7 @@ import {
   EnhancedComponentMapTemplate,
   ComponentMapTemplate,
   ComponentMapEntry,
-} from '@sitecore-content-sdk/core/tools';
+} from '@sitecore-content-sdk/content/tools';
 import * as path from 'path';
 import * as fs from 'fs';
 import { detectRouterType, getComponentListWithTypes } from './templating/utils';

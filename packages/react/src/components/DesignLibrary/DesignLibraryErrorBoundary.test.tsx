@@ -7,7 +7,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import proxyquire from 'proxyquire';
 import { render, waitFor } from '@testing-library/react';
-import { DesignLibraryPreviewError } from '@sitecore-content-sdk/core/codegen';
+import { DesignLibraryPreviewError } from '@sitecore-content-sdk/content/codegen';
 
 use(sinonChai);
 
@@ -29,7 +29,7 @@ describe('<DesignLibraryErrorBoundary />', () => {
 
     // Use proxyquire to inject mocked sendErrorEvent
     const module = proxyquire('./DesignLibraryErrorBoundary', {
-      '@sitecore-content-sdk/core/codegen': {
+      '@sitecore-content-sdk/content/codegen': {
         sendErrorEvent: sendErrorEventStub,
         DesignLibraryPreviewError: DesignLibraryPreviewError,
       },

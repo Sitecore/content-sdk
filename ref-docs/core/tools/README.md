@@ -6,47 +6,31 @@
 
 # tools
 
-## Enumerations
-
-- [ModuleType](enumerations/ModuleType.md)
-
-## Interfaces
-
-- [ComponentFile](interfaces/ComponentFile.md)
-- [ComponentFileWithType](interfaces/ComponentFileWithType.md)
-- [ComponentImport](interfaces/ComponentImport.md)
-- [PluginDefinition](interfaces/PluginDefinition.md)
-- [TenantArgs](interfaces/TenantArgs.md)
-
 ## Type Aliases
 
-- [ComponentMapEntry](type-aliases/ComponentMapEntry.md)
-- [ComponentMapTemplate](type-aliases/ComponentMapTemplate.md)
-- [ComponentType](type-aliases/ComponentType.md)
-- [EnhancedComponentMapTemplate](type-aliases/EnhancedComponentMapTemplate.md)
-- [GenerateMapArgs](type-aliases/GenerateMapArgs.md)
-- [GenerateMapFunction](type-aliases/GenerateMapFunction.md)
-- [GenerateSitesConfig](type-aliases/GenerateSitesConfig.md)
-- [ModuleExports](type-aliases/ModuleExports.md)
-- [RouterType](type-aliases/RouterType.md)
-- [WriteImportMapArgs](type-aliases/WriteImportMapArgs.md)
-- [WriteImportMapArgsInternal](type-aliases/WriteImportMapArgsInternal.md)
+- [EnhancedOmit](type-aliases/EnhancedOmit.md)
 
 ## Variables
 
-- [auth](variables/auth.md)
-- [defaultImportMapTemplate](variables/defaultImportMapTemplate.md)
-- [extractFiles](variables/extractFiles.md)
-- [getComponentList](variables/getComponentList.md)
+- [SITECORE\_EDGE\_PLATFORM\_HOSTNAME\_ENV](variables/SITECORE_EDGE_PLATFORM_HOSTNAME_ENV.md)
+- [SITECORE\_EXPERIENCE\_EDGE\_HOSTNAME\_ENV](variables/SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV.md)
 
 ## Functions
 
-- [filterComponentsByType](functions/filterComponentsByType.md)
-- [generateMetadata](functions/generateMetadata.md)
-- [generatePlugins](functions/generatePlugins.md)
-- [generateSites](functions/generateSites.md)
-- [getComponentSpec](functions/getComponentSpec.md)
-- [getComponentSpecUrl](functions/getComponentSpecUrl.md)
-- [matchPath](functions/matchPath.md)
-- [scaffoldComponent](functions/scaffoldComponent.md)
-- [writeImportMap](functions/writeImportMap.md)
+- [areURLSearchParamsEqual](functions/areURLSearchParamsEqual.md)
+- [escapeNonSpecialQuestionMarks](functions/escapeNonSpecialQuestionMarks.md)
+- [getAllowedOriginsFromEnv](functions/getAllowedOriginsFromEnv.md)
+- [getCache](functions/getCache.md)
+- [getCacheAndClean](functions/getCacheAndClean.md)
+- [getEnforcedCorsHeaders](functions/getEnforcedCorsHeaders.md)
+- [hasCache](functions/hasCache.md)
+- [isRegexOrUrl](functions/isRegexOrUrl.md)
+- [isServer](functions/isServer.md)
+- [isTimeoutError](functions/isTimeoutError.md)
+- [mergeURLSearchParams](functions/mergeURLSearchParams.md)
+- [normalizeUrl](functions/normalizeUrl.md)
+- [resolveEdgeUrl](functions/resolveEdgeUrl.md)
+- [resolveEdgeUrlForStaticFiles](functions/resolveEdgeUrlForStaticFiles.md)
+- [resolveExperienceEdgeUrl](functions/resolveExperienceEdgeUrl.md)
+- [resolveUrl](functions/resolveUrl.md)
+- [setCache](functions/setCache.md)

@@ -6,15 +6,15 @@ import {
   LayoutServiceData,
   LayoutServicePageState,
   RenderingType,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import { EditingScripts } from './EditingScripts';
 import { SitecoreProvider } from './SitecoreProvider';
 import {
   getContentSdkPagesClientData,
   getDesignLibraryScriptLink,
   DesignLibraryMode,
-} from '@sitecore-content-sdk/core/editing';
-import { PageMode } from '@sitecore-content-sdk/core/client';
+} from '@sitecore-content-sdk/content/editing';
+import { PageMode } from '@sitecore-content-sdk/content/client';
 import sinon from 'sinon';
 
 describe('<EditingScripts />', () => {

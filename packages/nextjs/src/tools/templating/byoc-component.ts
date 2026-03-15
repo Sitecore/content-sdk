@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { ScaffoldTemplate, ComponentTemplateType } from '@sitecore-content-sdk/core/config';
+import { ScaffoldTemplate, ComponentTemplateType } from '@sitecore-content-sdk/content/config';
 import { COMPONENT_FILE_EXTENSION } from './constants';
 
 /**

@@ -3,8 +3,8 @@ import {
   ComponentRendering,
   getDynamicPlaceholderPattern,
   isDynamicPlaceholder,
-} from '@sitecore-content-sdk/core/layout';
-import { MetadataKind, DEFAULT_PLACEHOLDER_UID } from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/layout';
+import { MetadataKind, DEFAULT_PLACEHOLDER_UID } from '@sitecore-content-sdk/content/editing';
 
 /**
  *  Props containing the component data to render.
@@ -38,6 +38,7 @@ export type CodeBlockAttributes = {
  * @param {'server' | 'client'} [props.componentRuntime] Component runtime type. Used to add data-csdk-component-runtime attribute to rendering chromes.
  * @param {JSX.Element} props.children The child components or elements to be wrapped by the metadata code blocks.
  * @returns {JSX.Element} A React fragment containing open and close code blocks surrounding the children elements.
+ * @internal
  */
 export const PlaceholderMetadata = ({
   rendering,

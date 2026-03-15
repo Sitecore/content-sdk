@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React, { FC } from 'react';
 import { expect } from 'chai';
-import { Page } from '@sitecore-content-sdk/core/client';
-import { SitecoreProvider } from './SitecoreProvider';
-import { WithSitecoreProps, withSitecore, useSitecore } from '../enhancers/withSitecore';
+import { Page } from '@sitecore-content-sdk/content/client';
+import { SitecoreProvider, useSitecore } from './SitecoreProvider';
+import { WithSitecoreProps, withSitecore } from '../enhancers/withSitecore';
 import { LayoutServiceData, LayoutServicePageState } from '../index';
 import { render } from '@testing-library/react';
 

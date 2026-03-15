@@ -1,0 +1,165 @@
+import {
+  GraphQLClient,
+  GraphQLRequestClientFactory,
+  CacheClient,
+  CacheOptions,
+  MemoryCacheClient,
+  FetchOptions,
+  constants,
+} from '@sitecore-content-sdk/core';
+import debug from '../debug';
+
+const { ERROR_MESSAGES } = constants;
+
+/**
+ * Redirect type for 301 redirects
+ * @public
+ */
+export const REDIRECT_TYPE_301 = 'REDIRECT_301';
+
+/**
+ * Redirect type for 302 redirects
+ * @public
+ */
+export const REDIRECT_TYPE_302 = 'REDIRECT_302';
+
+/**
+ * Redirect type for server transfer
+ * @public
+ */
+export const REDIRECT_TYPE_SERVER_TRANSFER = 'SERVER_TRANSFER';
+
+/**
+ * Object model of Redirect Info result
+ * @public
+ */
+export type RedirectInfo = {
+  pattern: string;
+  target: string;
+  redirectType: string;
+  isQueryStringPreserved: boolean;
+  isLanguagePreserved?: boolean;
+  locale: string;
+};
+
+// The default query for request redirects of site
+const defaultQuery = /* GraphQL */ `
+  query RedirectsQuery($siteName: String!) {
+    site {
+      siteInfo(site: $siteName) {
+        redirects {
+          pattern
+          target
+          redirectType
+          isQueryStringPreserved
+          isLanguagePreserved
+          locale
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * Configuration for @see RedirectsService instances
+ * @public
+ */
+export type RedirectsServiceConfig = CacheOptions & {
+  /**
+   * Override fetch method. Uses 'GraphQLRequestClient' default otherwise.
+   */
+  fetch?: typeof fetch;
+  /**
+   * A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
+   * This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
+   */
+  clientFactory: GraphQLRequestClientFactory;
+};
+
+/**
+ * The schema of data returned in response to redirects array request
+ * @public
+ */
+export type RedirectsQueryResult = {
+  site: { siteInfo: { redirects: RedirectInfo[] } | null };
+};
+
+/**
+ * The RedirectsService class is used to query the Content SDK redirects using Graphql endpoint
+ * @public
+ */
+export class RedirectsService {
+  private graphQLClient: GraphQLClient;
+  private cache: CacheClient<RedirectsQueryResult>;
+
+  /**
+   * Creates an instance of graphQL redirects service with the provided options
+   * @param {RedirectsServiceConfig} options instance
+   */
+  constructor(private options: RedirectsServiceConfig) {
+    this.graphQLClient = this.getGraphQLClient();
+    this.cache = this.getCacheClient();
+  }
+
+  protected get query(): string {
+    return defaultQuery;
+  }
+
+  /**
+   * Fetch an array of redirects from API
+   * @param {string} siteName site name
+   * @returns Promise<RedirectInfo[]>
+   * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
+   * @throws {Error} if the siteName is empty.
+   */
+  async fetchRedirects(siteName: string, fetchOptions?: FetchOptions): Promise<RedirectInfo[]> {
+    if (!siteName) {
+      throw new Error(ERROR_MESSAGES.MV_002);
+    }
+
+    const cacheKey = `redirects-${siteName}`;
+    let data = this.cache.getCacheValue(cacheKey);
+
+    if (!data) {
+      data = await this.graphQLClient.request<RedirectsQueryResult>(
+        this.query,
+        {
+          siteName,
+        },
+        fetchOptions
+      );
+      this.cache.setCacheValue(cacheKey, data);
+    }
+
+    return data?.site?.siteInfo?.redirects || [];
+  }
+
+  /**
+   * Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
+   * library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
+   * want to use something else.
+   * @returns {GraphQLClient} implementation
+   */
+  protected getGraphQLClient(): GraphQLClient {
+    if (!this.options.clientFactory) {
+      throw new Error('clientFactory needs to be provided when initializing GraphQL client.');
+    }
+
+    return this.options.clientFactory({
+      debugger: debug.redirects,
+      fetch: this.options.fetch,
+    });
+  }
+
+  /**
+   * Gets cache client implementation
+   * Override this method if custom cache needs to be used
+   * @returns CacheClient instance
+   */
+  protected getCacheClient(): CacheClient<RedirectsQueryResult> {
+    return new MemoryCacheClient<RedirectsQueryResult>({
+      cacheEnabled: this.options.cacheEnabled ?? true,
+      cacheTimeout: this.options.cacheTimeout ?? 10,
+    });
+  }
+}

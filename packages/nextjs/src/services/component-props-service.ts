@@ -3,7 +3,7 @@ import {
   LayoutServiceData,
   ComponentRendering,
   PlaceholdersData,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import {
   ComponentPropsCollection,
   ComponentPropsFetchFunction,

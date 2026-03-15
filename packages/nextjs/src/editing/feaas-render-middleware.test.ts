@@ -7,7 +7,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import {
   QUERY_PARAM_EDITING_SECRET,
   INVALID_SECRET_HTML_MESSAGE,
-} from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/editing';
 import {
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
@@ -132,7 +132,7 @@ describe('FEAASRenderMiddleware', () => {
       'Access-Control-Allow-Methods',
       'GET, POST, OPTIONS, DELETE, PUT, PATCH',
     ]);
-    expect(res.setHeader.getCall(2).args).to.deep.equal([
+    expect(res.setHeader.getCall(4).args).to.deep.equal([
       'Access-Control-Allow-Headers',
       'Content-Type, Authorization',
     ]);

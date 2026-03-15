@@ -6,7 +6,7 @@
 
 # Enumeration: LayoutServicePageState
 
-Defined in: core/types/layout/models.d.ts:14
+Defined in: content/types/layout/models.d.ts:14
 
 Layout Service page state enum
 
@@ -16,7 +16,7 @@ Layout Service page state enum
 
 > **Edit**: `"edit"`
 
-Defined in: core/types/layout/models.d.ts:16
+Defined in: content/types/layout/models.d.ts:16
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: core/types/layout/models.d.ts:16
 
 > **Normal**: `"normal"`
 
-Defined in: core/types/layout/models.d.ts:17
+Defined in: content/types/layout/models.d.ts:17
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: core/types/layout/models.d.ts:17
 
 > **Preview**: `"preview"`
 
-Defined in: core/types/layout/models.d.ts:15
+Defined in: content/types/layout/models.d.ts:15

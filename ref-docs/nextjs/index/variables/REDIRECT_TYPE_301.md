@@ -8,6 +8,6 @@
 
 > `const` **REDIRECT\_TYPE\_301**: `"REDIRECT_301"` = `"REDIRECT_301"`
 
-Defined in: core/types/site/redirects-service.d.ts:8
+Defined in: content/types/site/redirects-service.d.ts:6
 
 Redirect type for 301 redirects

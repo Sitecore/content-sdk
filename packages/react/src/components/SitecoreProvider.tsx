@@ -1,9 +1,8 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import fastDeepEqual from 'fast-deep-equal/es6/react';
-import { Page } from '@sitecore-content-sdk/core/client';
-import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
-import { constants } from '@sitecore-content-sdk/core';
+import { Page } from '@sitecore-content-sdk/content/client';
+import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { ComponentMap } from './sharedTypes';
 import { ImportMapImport } from './DesignLibrary/models';
 
@@ -22,9 +21,8 @@ export interface SitecoreProviderProps {
   page: Page;
   /**
    * The dynamic import for import map to be used in variant generation mode.
-   * Currently it's optional but it will be required in the next major version.
    */
-  loadImportMap?: () => Promise<ImportMapImport>;
+  loadImportMap: () => Promise<ImportMapImport>;
 
   children: React.ReactNode;
 }
@@ -39,15 +37,34 @@ export interface SitecoreProviderState {
    * @param {Page} value New page  value.
    * @returns {void}
    */
-  setPage: (value: Page) => void;
+  setPage?: (value: Page) => void;
   /**
-   * The current page.
+   * The page data.
    */
   page: Page;
+  /**
+   * The dynamic import for import map to be used in variant generation mode.
+   */
+  loadImportMap: () => Promise<ImportMapImport>;
+  /**
+   * The component map to use for rendering components.
+   */
+  componentMap: ComponentMap;
   /**
    * The API configuration defined in the `SitecoreConfig`.
    */
   api?: SitecoreProviderProps['api'];
+}
+
+/**
+ * The options for the useSitecore hook.
+ * @public
+ */
+export interface UseSitecoreOptions {
+  /**
+   * If set to true, the `updateContext` method will be injected into the component props.
+   */
+  updatable?: boolean;
 }
 
 /**
@@ -66,68 +83,70 @@ export const ImportMapReactContext = React.createContext<
 
 /**
  * The SitecoreProvider component.
+ * @param {SitecoreProviderProps} props - The props for the SitecoreProvider component.
+ * @param {SitecoreProviderProps['api']} props.api - The API configuration.
+ * @param {SitecoreProviderProps['page']} props.page - The page data.
+ * @param {SitecoreProviderProps['componentMap']} props.componentMap - The component map.
+ * @param {SitecoreProviderProps['loadImportMap']} props.loadImportMap - The function to load the import map.
+ * @param {React.ReactNode} props.children - The children to render.
+ * @returns {React.ReactNode} The SitecoreProvider component.
  * @public
  */
-export class SitecoreProvider extends React.Component<
-  SitecoreProviderProps,
-  SitecoreProviderState
-> {
-  static displayName = 'SitecoreProvider';
+export const SitecoreProvider = (props: SitecoreProviderProps) => {
+  const { api, page: propsPage, componentMap, loadImportMap, children } = props;
 
-  constructor(props: SitecoreProviderProps) {
-    super(props);
+  const [page, setPageInternal] = useState<Page>(propsPage);
 
-    // If any Edge ID is present but no edgeUrl, apply the default
-    let api = props.api;
-    if (
-      (props.api?.edge?.contextId || props.api?.edge?.clientContextId) &&
-      !props.api?.edge?.edgeUrl
-    ) {
-      api = {
-        ...props.api,
-        edge: {
-          ...props.api.edge,
-          edgeUrl: constants.SITECORE_EDGE_URL_DEFAULT,
-        },
-      };
+  // Memoize setPage callback
+  const setPage = useCallback((value: Page) => {
+    setPageInternal(value);
+  }, []);
+
+  // Handle page prop changes using useEffect instead of componentDidUpdate
+  useEffect(() => {
+    if (!fastDeepEqual(propsPage, page)) {
+      setPage(propsPage);
     }
+  }, [propsPage, page, setPage]);
 
-    this.state = {
-      page: props.page,
-      setPage: this.setPage,
+  // Memoize the context value to prevent unnecessary re-renders
+  const contextValue = useMemo<SitecoreProviderState>(
+    () => ({
+      page,
+      setPage,
       api,
-    };
-  }
+      componentMap,
+      loadImportMap,
+    }),
+    [page, setPage, api, componentMap, loadImportMap]
+  );
 
-  componentDidUpdate(prevProps: SitecoreProviderProps) {
-    // In case if somebody will manage SitecoreProvider state by passing fresh `page` prop
-    // instead of using `updateContext`
-    if (!fastDeepEqual(prevProps.page, this.props.page)) {
-      this.setPage(this.props.page);
+  return (
+    <SitecoreProviderReactContext.Provider value={contextValue}>
+      {children}
+    </SitecoreProviderReactContext.Provider>
+  );
+};
 
-      return;
-    }
-  }
+SitecoreProvider.displayName = 'SitecoreProvider';
 
-  /**
-   * Update page state.
-   * @param {Page} value New page value
-   */
-  setPage = (value: Page) => {
-    this.setState({
-      page: value,
-    });
+/**
+ * This hook grants acсess to the current Sitecore page and api.
+ * @param {UseSitecoreOptions} [options] hook options
+ * @example
+ * const EditMode = () => {
+ *    const { page } = useSitecore();
+ *    return <span>Edit Mode is {page.mode.isEditing ? 'active' : 'inactive'}</span>
+ * }
+ * @returns {SitecoreProviderState} The current Sitecore context, including the page and api.
+ * @public
+ */
+export function useSitecore(options?: UseSitecoreOptions): SitecoreProviderState {
+  const scContext = useContext(SitecoreProviderReactContext);
+  const updatable = options?.updatable;
+
+  return {
+    ...scContext,
+    setPage: updatable ? scContext.setPage : undefined,
   };
-
-  render() {
-    return (
-      <ImportMapReactContext.Provider value={this.props.loadImportMap}>
-        <ComponentMapReactContext.Provider value={this.props.componentMap}>
-          <SitecoreProviderReactContext.Provider value={this.state}>
-            {this.props.children}
-          </SitecoreProviderReactContext.Provider>
-        </ComponentMapReactContext.Provider>
-      </ImportMapReactContext.Provider>
-    );
-  }
 }

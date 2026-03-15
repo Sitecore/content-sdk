@@ -5,15 +5,20 @@ import {
   PersonalizeInfo,
   CdpHelper,
   DEFAULT_VARIANT,
-} from '@sitecore-content-sdk/core/personalize';
-import { debug } from '@sitecore-content-sdk/core';
+} from '@sitecore-content-sdk/content/personalize';
 import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
-import { CloudSDK } from '@sitecore-content-sdk/analytics-core/server';
-import { personalize } from '@sitecore-content-sdk/personalize/server';
+import { initContentSdk } from '@sitecore-content-sdk/core';
+import { personalize } from '@sitecore-content-sdk/personalize';
 import { SitecoreConfig } from '../config';
+import debug from '../debug';
+import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
+import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter';
+import { personalizeServerPlugin } from '@sitecore-content-sdk/personalize';
+import { personalizeProxyAdapter } from '../initialization/proxy/personalize-adapter';
 
 /**
  * Represents the geolocation data used for personalization
+ * @public
  */
 export type PersonalizeGeoData = {
   city?: string;
@@ -183,17 +188,14 @@ export class PersonalizeProxy extends ProxyBase {
 
       await Promise.all(
         executions.map((execution) =>
-          this.personalize(
-            {
-              friendlyId: execution.friendlyId,
-              variantIds: execution.variantIds,
-              params,
-              language,
-              timeout: cdpTimeout,
-              ...(geo && { geo }),
-            },
-            req
-          ).then((personalization) => {
+          this.personalize({
+            friendlyId: execution.friendlyId,
+            variantIds: execution.variantIds,
+            params,
+            language,
+            timeout: cdpTimeout,
+            ...(geo && { geo }),
+          }).then((personalization) => {
             const variantId = personalization.variantId;
             if (variantId) {
               if (!execution.variantIds.includes(variantId)) {
@@ -274,39 +276,48 @@ export class PersonalizeProxy extends ProxyBase {
     request: NextRequest;
     response: NextResponse;
   }): Promise<void> {
-    await CloudSDK(request, response, {
-      sitecoreEdgeUrl: this.config.edgeUrl,
-      sitecoreEdgeContextId: this.config.contextId,
-      siteName,
-      cookieDomain: hostname,
-      enableServerCookie: true,
-    })
-      .addPersonalize({ enablePersonalizeCookie: true })
-      .initialize();
+    await initContentSdk({
+      config: {
+        contextId: this.config.contextId,
+        edgeUrl: this.config.edgeUrl,
+        siteName,
+      },
+      plugins: [
+        analyticsPlugin({
+          options: {
+            enableCookie: true,
+            cookieDomain: hostname,
+          },
+          adapter: analyticsProxyAdapter(request, response),
+        }),
+        personalizeServerPlugin({
+          options: {
+            enablePersonalizeCookie: true,
+          },
+          adapter: personalizeProxyAdapter(request, response),
+        }),
+      ],
+    });
   }
 
-  protected async personalize(
-    {
-      params,
-      friendlyId,
-      language,
-      timeout,
-      variantIds,
-      geo,
-    }: {
-      params: ExperienceParams;
-      friendlyId: string;
-      language: string;
-      timeout?: number;
-      variantIds?: string[];
-      geo?: PersonalizeGeoData;
-    },
-    request: NextRequest
-  ) {
+  protected async personalize({
+    params,
+    friendlyId,
+    language,
+    timeout,
+    variantIds,
+    geo,
+  }: {
+    params: ExperienceParams;
+    friendlyId: string;
+    language: string;
+    timeout?: number;
+    variantIds?: string[];
+    geo?: PersonalizeGeoData;
+  }) {
     debug.personalize('executing experience for %s %o', friendlyId, params);
 
     return (await personalize(
-      request,
       {
         channel: this.config.channel || 'WEB',
         currency: this.config.currency ?? 'USD',

@@ -8,5 +8,5 @@
   getEdgeProxyContentUrl,
   createGraphQLClientFactory,
   SitecoreClientInit,
-} from '@sitecore-content-sdk/core/client';
+} from '@sitecore-content-sdk/content/client';
 export { SitecoreNextjsClient as SitecoreClient } from './sitecore-nextjs-client';

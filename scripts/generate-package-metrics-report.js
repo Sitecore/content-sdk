@@ -176,14 +176,24 @@ function run() {
   if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
 
   console.log(`🔀 Checking out base(dev) branch: ${baseBranch}`);
+
   execSync(`git checkout ${baseBranch}`, { stdio: 'ignore' });
+  execSync('yarn cache clean --all', { stdio: 'ignore' });
+  execSync('yarn install --immutable', { stdio: 'ignore' });
+
   buildAll();
+
   const baseSizes = recordPackageSizes();
   const baseCoverage = recordCoverage();
 
   console.log('🔁 Checking out PR branch...');
+
   execSync('git checkout -', { stdio: 'ignore' });
+  execSync('yarn cache clean --all', { stdio: 'ignore' });
+  execSync('yarn install --immutable', { stdio: 'ignore' });
+
   buildAll();
+
   const prSizes = recordPackageSizes();
   const prCoverage = recordCoverage();
 

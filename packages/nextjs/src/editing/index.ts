@@ -1,4 +1,4 @@
-export { EditingService } from '@sitecore-content-sdk/core/editing';
+export { EditingService } from '@sitecore-content-sdk/content/editing';
 export {
   EditingRenderMiddleware,
   EditingRenderMiddlewareConfig,
@@ -17,4 +17,5 @@ export {
   RenderingType,
   EDITING_COMPONENT_PLACEHOLDER,
   EDITING_COMPONENT_ID,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
+export type { AllowedQueryParam, AllowedQueryParamsResolver, AllowedQueryParams } from './types';

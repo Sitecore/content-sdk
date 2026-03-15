@@ -5,19 +5,18 @@ import React, { useEffect, useState } from 'react';
 import {
   EDITING_COMPONENT_ID,
   EDITING_COMPONENT_PLACEHOLDER,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
   addComponentUpdateHandler,
-} from '@sitecore-content-sdk/core/editing';
-import * as codegen from '@sitecore-content-sdk/core/codegen';
-import * as editing from '@sitecore-content-sdk/core/editing';
-import { useSitecore } from '../../enhancers/withSitecore';
+} from '@sitecore-content-sdk/content/editing';
+import * as codegen from '@sitecore-content-sdk/content/codegen';
+import * as editing from '@sitecore-content-sdk/content/editing';
+import { useSitecore } from '../../components/SitecoreProvider';
 import { Placeholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
-import { DesignLibraryProps, DynamicComponent } from './models';
-import { withLoadImportMap } from '../../enhancers/withLoadImportMap';
+import { DynamicComponent } from './models';
 import { ErrorComponent } from '../ErrorBoundary';
 
 let {
@@ -45,13 +44,11 @@ export const __mockDependencies = (mocks: any) => {
  * when generation is enabled (`page.mode.designLibrary.isVariantGeneration === true`),
  * wires the **variant generation** handshake so the parent (DL Studio) can send
  * generated code to preview and iterate on.
- * @param {DesignLibraryProps} props
- * @param {() => Promise} [props.loadImportMap] Optional async loader that resolves to the import-map used to resolve the generated component’s imports. Required when `isVariantGeneration` is true.
  * @returns {JSX.Element} The preview surface, or `null` when not in Design Library mode.
  * @public
  */
-export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibraryProps) => {
-  const { page } = useSitecore();
+export const DesignLibrary = () => {
+  const { page, loadImportMap } = useSitecore();
   const route = page.layout.sitecore.route;
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
   const uid = rendering?.uid;
@@ -112,7 +109,7 @@ export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibrary
         sendErrorEvent(
           uid,
           'No loadImportMap provided',
-          codegen.DesignLibraryPreviewError.RenderInit
+          codegen.DesignLibraryPreviewError.ImportMapMissing
         );
         return;
       }
@@ -125,7 +122,7 @@ export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibrary
         sendErrorEvent(
           uid,
           `Error loading import map: ${e}`,
-          codegen.DesignLibraryPreviewError.RenderInit
+          codegen.DesignLibraryPreviewError.ImportMapLoad
         );
         return;
       }
@@ -155,7 +152,7 @@ export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibrary
       cancelled = true;
       unsubscribe && unsubscribe();
     };
-  }, [isVariantGeneration, uid]);
+  }, [isDesignLibrary, isVariantGeneration, uid, loadImportMap, propsState]);
 
   return (
     <main>
@@ -174,4 +171,4 @@ export const DesignLibrary = withLoadImportMap(({ loadImportMap }: DesignLibrary
       )}
     </main>
   );
-});
+};

@@ -6,7 +6,7 @@
 
 # Interface: Item
 
-Defined in: packages/core/types/layout/models.d.ts:131
+Defined in: packages/content/types/layout/models.d.ts:131
 
 Content data returned from Layout Service
 
@@ -16,7 +16,7 @@ Content data returned from Layout Service
 
 > `optional` **displayName**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:133
+Defined in: packages/content/types/layout/models.d.ts:133
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/core/types/layout/models.d.ts:133
 
 > **fields**: `object`
 
-Defined in: packages/core/types/layout/models.d.ts:136
+Defined in: packages/content/types/layout/models.d.ts:136
 
 #### Index Signature
 
@@ -36,7 +36,7 @@ Defined in: packages/core/types/layout/models.d.ts:136
 
 > `optional` **id**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:134
+Defined in: packages/content/types/layout/models.d.ts:134
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: packages/core/types/layout/models.d.ts:134
 
 > **name**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:132
+Defined in: packages/content/types/layout/models.d.ts:132
 
 ***
 
@@ -52,4 +52,4 @@ Defined in: packages/core/types/layout/models.d.ts:132
 
 > `optional` **url**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:135
+Defined in: packages/content/types/layout/models.d.ts:135

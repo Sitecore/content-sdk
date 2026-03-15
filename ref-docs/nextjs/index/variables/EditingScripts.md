@@ -6,7 +6,7 @@
 
 # Variable: EditingScripts()
 
-> `const` **EditingScripts**: () => `JSX.Element`
+> `const` **EditingScripts**: () => `React.JSX.Element`
 
 Defined in: react/types/components/EditingScripts.d.ts:8
 
@@ -15,6 +15,6 @@ Renders script required for the Design Library (when mode.isDesignLibrary is tru
 
 ## Returns
 
-`JSX.Element`
+`React.JSX.Element`
 
 A JSX element containing the editing scripts or an empty fragment if not in editing/preview mode.

@@ -1,4 +1,3 @@
-import { debug } from '@sitecore-content-sdk/core';
 import {
   RedirectsService,
   RedirectsServiceConfig,
@@ -7,18 +6,19 @@ import {
   REDIRECT_TYPE_SERVER_TRANSFER,
   RedirectInfo,
   SiteInfo,
-} from '@sitecore-content-sdk/core/site';
+} from '@sitecore-content-sdk/content/site';
 import {
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,
   isRegexOrUrl,
   mergeURLSearchParams,
-} from '@sitecore-content-sdk/core/utils';
+} from '@sitecore-content-sdk/core/tools';
 import { NextURL } from 'next/dist/server/web/next-url';
 import { NextRequest, NextResponse } from 'next/server';
 import regexParser from 'regex-parser';
 import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
+import debug from '../debug';
 
 const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
 const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
@@ -205,9 +205,16 @@ export class RedirectsProxy extends ProxyBase {
           url.origin
         );
 
+        const basePath = url.basePath; // setting NextUrl.href overrides basePath, so we need to store it
         url.href = prepareNewURL.href;
         url.pathname = prepareNewURL.pathname;
         url.search = prepareNewURL.search;
+        // NextUrl setter sets '/' by default if basePath is empty
+        // this causes issues when basePath is not configured so we need to set it only if exists
+        if (basePath) {
+          url.basePath = basePath;
+        }
+
         if (!isAppRouterRequest) {
           // for pages router i18n implementation, apply default locale as backup
           url.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
@@ -403,9 +410,15 @@ export class RedirectsProxy extends ProxyBase {
 
     const newUrl = new URL(`${url.pathname.toLowerCase()}?${newQueryString}`, url.origin);
 
+    const basePath = url.basePath; // setting NextUrl.href overrides basePath, so we need to store it
     url.search = newUrl.search;
     url.pathname = newUrl.pathname.toLocaleLowerCase();
     url.href = newUrl.href;
+    // NextUrl setter sets '/' by default if basePath is empty
+    // this causes issues when basePath is not configured so we need to set it only if exists
+    if (basePath) {
+      url.basePath = basePath;
+    }
 
     return url;
   }
@@ -498,8 +511,8 @@ export class RedirectsProxy extends ProxyBase {
       headers: res?.headers,
     });
     if (res?.headers) {
-      redirect.headers.delete('x-proxy-next');
-      redirect.headers.delete('x-proxy-rewrite');
+      redirect.headers.delete('x-middleware-next');
+      redirect.headers.delete('x-middleware-rewrite');
       redirect.headers.delete(REWRITE_HEADER_NAME);
     }
     return redirect;

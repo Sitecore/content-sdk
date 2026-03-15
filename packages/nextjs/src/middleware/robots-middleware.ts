@@ -1,6 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { SitecoreClient } from '@sitecore-content-sdk/core/client';
+import { SitecoreClient } from '@sitecore-content-sdk/content/client';
+import { constants } from '@sitecore-content-sdk/core';
 import { SiteInfo, SiteResolver } from '../site';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Middleware for handling robots.txt requests in a Next.js application.
@@ -33,7 +36,7 @@ export class RobotsMiddleware {
       }
       res.status(200).send(robotsContent);
     } catch {
-      res.status(500).send('Internal Server Error');
+      res.status(500).send(`Internal Server Error. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
     }
   }
 }

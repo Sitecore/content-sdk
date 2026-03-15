@@ -4,11 +4,11 @@
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { Page, PageMode } from '@sitecore-content-sdk/core/client';
+import { Page, PageMode } from '@sitecore-content-sdk/content/client';
 import {
   LayoutServiceData,
   EDITING_COMPONENT_PLACEHOLDER,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { DesignLibrary } from './DesignLibrary';
 import { getTestLayoutData } from '../../test-data/component-editing-data';
@@ -21,13 +21,14 @@ import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
   DesignLibraryMode,
-} from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/editing';
 import { __mockDependencies } from './DesignLibrary';
 import {
   DesignLibraryPreviewError,
-  getDesignLibraryComponentPreviewErrorEvent,
-} from '@sitecore-content-sdk/core/codegen';
+  getDesignLibraryErrorEvent,
+} from '@sitecore-content-sdk/content/codegen';
 import { after } from 'node:test';
+import * as rscUtils from '#rsc-env';
 
 before(() => {
   if (typeof window !== 'undefined' && !window.requestAnimationFrame) {
@@ -40,6 +41,9 @@ describe('<DesignLibrary />', () => {
     sandbox.restore();
   });
   const sandbox = sinon.createSandbox();
+  before(() => {
+    sandbox.replace(rscUtils, 'rsc', false as any);
+  });
   const postMessageSpy = sandbox.spy(window, 'postMessage');
   const components = new Map<string, React.FC>();
 
@@ -137,7 +141,7 @@ describe('<DesignLibrary />', () => {
     joinHtml([
       '<main><div id="editing-component">',
       `<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="editing-componentmode-placeholder_${guid}"></code>`,
-      `<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="${id}"></code>`,
+      `<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="${id}" data-csdk-component-runtime="client"></code>`,
       '<div class="test"><div>',
       '<p>This is a live set of examples of how to use Content SDK</p>\n',
       '</div><div class="sc-jss-empty-placeholder">',
@@ -176,7 +180,7 @@ describe('<DesignLibrary />', () => {
     });
     sendErrorEventSpy = sandbox.stub().callsFake((uid, error, type) => {
       // sendErrorEvent calls window.postMessage internally
-      const errorEvent = getDesignLibraryComponentPreviewErrorEvent(uid, error, type);
+      const errorEvent = getDesignLibraryErrorEvent(uid, error, type);
       window.postMessage(errorEvent, '*');
     });
     __mockDependencies({
@@ -389,7 +393,7 @@ describe('<DesignLibrary />', () => {
   });
 
   describe('mode=library-metadata and isVariantGeneration=false', () => {
-    it('renders real component and sends READY + initial RENDERED', async () => {
+    it('renders real component and sends READY + initial RENDERED (Pages Router)', async () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata);
 
       const rendered = render(
@@ -425,8 +429,13 @@ describe('<DesignLibrary />', () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
 
       render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
         </SitecoreProvider>
       );
 
@@ -451,8 +460,13 @@ describe('<DesignLibrary />', () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
 
       render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
         </SitecoreProvider>
       );
 
@@ -486,8 +500,13 @@ describe('<DesignLibrary />', () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
 
       const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
         </SitecoreProvider>
       );
 
@@ -553,8 +572,13 @@ describe('<DesignLibrary />', () => {
       const Gen = (props: any) => <div className="gen">{props.fields?.content?.value}</div>;
 
       render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
         </SitecoreProvider>
       );
 
@@ -599,10 +623,10 @@ describe('<DesignLibrary />', () => {
             .some((c) =>
               JSON.stringify(c.args[0]).includes(
                 JSON.stringify(
-                  getDesignLibraryComponentPreviewErrorEvent(
+                  getDesignLibraryErrorEvent(
                     'test-content',
                     'No loadImportMap provided',
-                    DesignLibraryPreviewError.RenderInit
+                    DesignLibraryPreviewError.ImportMapMissing
                   )
                 )
               )
@@ -641,12 +665,17 @@ describe('<DesignLibrary />', () => {
       });
     };
 
-    it('renders real component first, wires generation, then switches to generated component', async () => {
+    it('renders real component first, wires generation, then switches to generated component (Pages Router)', async () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata_Gen);
 
       const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary loadImportMap={defaultImportMap} />
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
         </SitecoreProvider>
       );
 

@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
-import { ComponentRendering, LayoutServiceData } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering, LayoutServiceData } from '@sitecore-content-sdk/content/layout';
 import { ReactContentSdkComponent } from '@sitecore-content-sdk/react';
 
 /**

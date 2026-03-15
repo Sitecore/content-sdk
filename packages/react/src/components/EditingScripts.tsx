@@ -1,8 +1,10 @@
 ﻿'use client';
-import React, { JSX } from 'react';
-import { useSitecore } from '../enhancers/withSitecore';
-import { getContentSdkPagesClientData } from '@sitecore-content-sdk/core/editing';
-import { getDesignLibraryScriptLink } from '@sitecore-content-sdk/core/editing';
+import React from 'react';
+import { useSitecore } from './SitecoreProvider';
+import {
+  getContentSdkPagesClientData,
+  getDesignLibraryScriptLink,
+} from '@sitecore-content-sdk/content/editing';
 
 /**
  * Renders client scripts and data for editing/preview mode for Pages.
@@ -10,7 +12,7 @@ import { getDesignLibraryScriptLink } from '@sitecore-content-sdk/core/editing';
  * @returns A JSX element containing the editing scripts or an empty fragment if not in editing/preview mode.
  * @public
  */
-export const EditingScripts = (): JSX.Element => {
+export const EditingScripts = () => {
   const {
     page: { mode, layout },
     api,

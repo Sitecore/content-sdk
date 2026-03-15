@@ -6,7 +6,7 @@
 
 # Interface: LayoutServiceContext
 
-Defined in: packages/core/types/layout/models.d.ts:30
+Defined in: packages/content/types/layout/models.d.ts:30
 
 Shape of context data from the Sitecore Layout Service
 
@@ -20,7 +20,7 @@ Shape of context data from the Sitecore Layout Service
 
 > `optional` **clientData**: `Record`\<`string`, `Record`\<`string`, `unknown`\>\>
 
-Defined in: packages/core/types/layout/models.d.ts:42
+Defined in: packages/content/types/layout/models.d.ts:42
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: packages/core/types/layout/models.d.ts:42
 
 > `optional` **clientScripts**: `string`[]
 
-Defined in: packages/core/types/layout/models.d.ts:41
+Defined in: packages/content/types/layout/models.d.ts:41
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: packages/core/types/layout/models.d.ts:41
 
 > `optional` **itemPath**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:34
+Defined in: packages/content/types/layout/models.d.ts:34
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: packages/core/types/layout/models.d.ts:34
 
 > `optional` **language**: `string`
 
-Defined in: packages/core/types/layout/models.d.ts:33
+Defined in: packages/content/types/layout/models.d.ts:33
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: packages/core/types/layout/models.d.ts:33
 
 > `optional` **pageEditing**: `boolean`
 
-Defined in: packages/core/types/layout/models.d.ts:32
+Defined in: packages/content/types/layout/models.d.ts:32
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: packages/core/types/layout/models.d.ts:32
 
 > `optional` **pageState**: [`LayoutServicePageState`](../enumerations/LayoutServicePageState.md)
 
-Defined in: packages/core/types/layout/models.d.ts:35
+Defined in: packages/content/types/layout/models.d.ts:35
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: packages/core/types/layout/models.d.ts:35
 
 > `optional` **renderingType**: `RenderingType`
 
-Defined in: packages/core/types/layout/models.d.ts:40
+Defined in: packages/content/types/layout/models.d.ts:40
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: packages/core/types/layout/models.d.ts:40
 
 > `optional` **site**: `object`
 
-Defined in: packages/core/types/layout/models.d.ts:37
+Defined in: packages/content/types/layout/models.d.ts:37
 
 #### name?
 
@@ -88,4 +88,4 @@ Defined in: packages/core/types/layout/models.d.ts:37
 
 > `optional` **visitorIdentificationTimestamp**: `number`
 
-Defined in: packages/core/types/layout/models.d.ts:36
+Defined in: packages/content/types/layout/models.d.ts:36

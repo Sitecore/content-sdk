@@ -11,14 +11,16 @@ on:
         required: true
         type: choice
         options:
-          - '@sitecore-content-sdk/cli'
           - '@sitecore-content-sdk/nextjs'
+          - '@sitecore-content-sdk/cli'
+          - '@sitecore-content-sdk/react'
           - '@sitecore-content-sdk/search'
           - 'create-content-sdk'
-          - '@sitecore-content-sdk/react'
           - '@sitecore-content-sdk/core'
+          - '@sitecore-content-sdk/content'
           - '@sitecore-content-sdk/analytics-core'
           - '@sitecore-content-sdk/events'
+          - '@sitecore-content-sdk/personalize'
 
       version:
         description: 'Base version to hotfix'

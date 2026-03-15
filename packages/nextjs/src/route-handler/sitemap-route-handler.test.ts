@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { NextRequest } from 'next/server';
 import proxyquire from 'proxyquire';
-import { SitecoreClient } from '@sitecore-content-sdk/core/client';
+import { SitecoreClient } from '@sitecore-content-sdk/content/client';
 
 chai.use(sinonChai);
 

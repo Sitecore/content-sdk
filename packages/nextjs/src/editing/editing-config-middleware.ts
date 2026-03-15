@@ -2,11 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
-} from '@sitecore-content-sdk/core/editing';
-import { debug } from '@sitecore-content-sdk/core';
-import { Metadata } from '@sitecore-content-sdk/core/editing';
-import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
-import { EditMode } from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/editing';
+import debug from '../debug';
+import { Metadata } from '@sitecore-content-sdk/core/node-tools';
+import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
+import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { getEditingSecret } from '../utils/utils';
 import { ComponentMap } from '@sitecore-content-sdk/react';
 import { NextjsContentSdkComponent } from '../sharedTypes/component-props';
@@ -72,7 +72,6 @@ export class EditingConfigMiddleware {
     if (_req.method === 'OPTIONS') {
       debug.editing('preflight request');
 
-      // CORS headers are set by enforceCors
       return res.status(204).send(null);
     }
 
@@ -85,3 +84,4 @@ export class EditingConfigMiddleware {
     });
   };
 }
+

@@ -7,8 +7,9 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { generateMap } from './generate-map';
 import fs from 'fs';
-import { ComponentImport } from '@sitecore-content-sdk/core/tools';
-import * as coreTools from '@sitecore-content-sdk/core/tools';
+import { ComponentImport } from '@sitecore-content-sdk/content/tools';
+import * as coreTools from '@sitecore-content-sdk/content/tools';
+import * as coreServerTools from '@sitecore-content-sdk/content/node-tools';
 import * as templatingUtils from './templating/utils';
 
 describe('generateMap', () => {
@@ -77,7 +78,7 @@ describe('generateMap', () => {
       detectRouterTypeStub = sandbox.stub().returns('app'); // Default to App Router for tests
       filterComponentsByTypeStub = sandbox.stub().returns(fakeComponentsWithTypes);
 
-      sandbox.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
+      sandbox.replaceGetter(coreServerTools, 'getComponentList', () => getComponentListStub);
       sandbox
         .stub(templatingUtils, 'getComponentListWithTypes')
         .callsFake(getComponentListWithTypesStub);
@@ -98,7 +99,7 @@ describe('generateMap', () => {
       detectRouterTypeStub = sandbox.stub().returns('pages');
       filterComponentsByTypeStub = sandbox.stub().returns(fakeComponentsWithTypes);
 
-      sandbox.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
+      sandbox.replaceGetter(coreServerTools, 'getComponentList', () => getComponentListStub);
       sandbox
         .stub(templatingUtils, 'getComponentListWithTypes')
         .callsFake(getComponentListWithTypesStub);
@@ -834,7 +835,7 @@ describe('generateMap', () => {
         });
         const detectRouterTypeStub = sb.stub().returns('app');
 
-        sb.replaceGetter(coreTools, 'getComponentList', () => getComponentListStub);
+        sb.replaceGetter(coreServerTools, 'getComponentList', () => getComponentListStub);
         sb.stub(templatingUtils, 'getComponentListWithTypes').callsFake(
           getComponentListWithTypesStub
         );
@@ -1100,3 +1101,4 @@ describe('generateMap', () => {
     });
   });
 });
+

@@ -6,8 +6,8 @@ import { expect } from 'chai';
 import { SitecoreProvider } from './SitecoreProvider';
 import { Form, mockFormModule } from './Form';
 import sinon from 'sinon';
-import { PageMode } from '@sitecore-content-sdk/core/client';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+import { PageMode } from '@sitecore-content-sdk/content/client';
+import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 
 describe('Form', () => {
   const ctx = {

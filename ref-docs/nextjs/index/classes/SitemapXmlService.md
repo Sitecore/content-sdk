@@ -6,7 +6,7 @@
 
 # Class: SitemapXmlService
 
-Defined in: core/types/site/sitemap-xml-service.d.ts:33
+Defined in: content/types/site/sitemap-xml-service.d.ts:33
 
 Service that fetch the sitemaps data using Sitecore's GraphQL API.
 
@@ -16,7 +16,7 @@ Service that fetch the sitemaps data using Sitecore's GraphQL API.
 
 > **new SitemapXmlService**(`options`): `SitemapXmlService`
 
-Defined in: core/types/site/sitemap-xml-service.d.ts:40
+Defined in: content/types/site/sitemap-xml-service.d.ts:40
 
 Creates an instance of graphQL sitemaps service with the provided options
 
@@ -36,7 +36,7 @@ Creates an instance of graphQL sitemaps service with the provided options
 
 > **options**: [`SitemapXmlServiceConfig`](../type-aliases/SitemapXmlServiceConfig.md)
 
-Defined in: core/types/site/sitemap-xml-service.d.ts:34
+Defined in: content/types/site/sitemap-xml-service.d.ts:34
 
 ## Accessors
 
@@ -46,7 +46,7 @@ Defined in: core/types/site/sitemap-xml-service.d.ts:34
 
 > **get** `protected` **query**(): `string`
 
-Defined in: core/types/site/sitemap-xml-service.d.ts:41
+Defined in: content/types/site/sitemap-xml-service.d.ts:41
 
 ##### Returns
 
@@ -58,7 +58,7 @@ Defined in: core/types/site/sitemap-xml-service.d.ts:41
 
 > **fetchSitemaps**(`fetchOptions?`): `Promise`\<`string`[]\>
 
-Defined in: core/types/site/sitemap-xml-service.d.ts:48
+Defined in: content/types/site/sitemap-xml-service.d.ts:48
 
 Fetch list of sitemaps for the site
 
@@ -84,7 +84,7 @@ if the siteName is empty.
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: core/types/site/sitemap-xml-service.d.ts:61
+Defined in: content/types/site/sitemap-xml-service.d.ts:61
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
@@ -102,7 +102,7 @@ implementation
 
 > **getSitemap**(`id`): `Promise`\<`string` \| `undefined`\>
 
-Defined in: core/types/site/sitemap-xml-service.d.ts:54
+Defined in: content/types/site/sitemap-xml-service.d.ts:54
 
 Get sitemap file path for sitemap id
 

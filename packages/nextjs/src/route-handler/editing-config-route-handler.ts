@@ -2,14 +2,14 @@ import { NextRequest } from 'next/server';
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
-} from '@sitecore-content-sdk/core/editing';
-import { debug } from '@sitecore-content-sdk/core';
-import { Metadata } from '@sitecore-content-sdk/core/editing';
-import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
-import { EditMode } from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/editing';
+import { Metadata } from '@sitecore-content-sdk/core/node-tools';
+import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
+import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { getEditingSecret } from '../utils/utils';
 import { ComponentMap } from '@sitecore-content-sdk/react';
 import { NextjsContentSdkComponent } from '../sharedTypes/component-props';
+import debug from '../debug';
 
 export type EditingConfigRouteHandlerOptions = {
   /**
@@ -149,3 +149,4 @@ export const createEditingConfigRouteHandler = (options: EditingConfigRouteHandl
 
   return { GET, OPTIONS };
 };
+

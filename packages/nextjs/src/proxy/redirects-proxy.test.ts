@@ -2,20 +2,21 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable dot-notation */
-import { debug, GraphQLRequestClient } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
 import {
   REDIRECT_TYPE_301,
   REDIRECT_TYPE_302,
   REDIRECT_TYPE_SERVER_TRANSFER,
   RedirectsService,
   SiteResolver,
-} from '@sitecore-content-sdk/core/site';
+} from '@sitecore-content-sdk/content/site';
 import chai, { use } from 'chai';
 import chaiString from 'chai-string';
 import { NextRequest, NextResponse } from 'next/server';
 import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { RedirectsProxy, RedirectsProxyConfig } from './redirects-proxy';
+import debug from '../debug';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -658,6 +659,76 @@ describe('RedirectsProxy', () => {
       expect(redirectUrl).to.include('/new-page');
       expect(redirectUrl).to.not.include('param1');
       expect(redirectUrl).to.not.include('param2');
+
+      expect(finalRes).to.deep.equal(redirectRes);
+    });
+
+    it('should preserve basePath if configured ', async () => {
+      const req = createRequest({
+        nextUrl: {
+          pathname: '/old-page',
+          search: '?param1=value1&param2=value2',
+          basePath: '/test',
+        },
+      });
+      const res = createResponse();
+
+      const redirectRes = createResponse({
+        redirected: true,
+        status: 302,
+        url: 'http://localhost:3000/test/new-page',
+      });
+      nextRedirectStub.returns(redirectRes);
+
+      const { proxy } = createProxy({
+        pattern: '/old-page',
+        target: '/new-page',
+        redirectType: REDIRECT_TYPE_301,
+        isQueryStringPreserved: true,
+      });
+
+      const finalRes = await proxy.handle(req, res);
+
+      expect(nextRedirectStub.calledOnce).to.be.true;
+      const redirectUrl = nextRedirectStub.getCall(0).args[0];
+      expect(redirectUrl).to.include('/new-page');
+      expect(redirectUrl).to.include('param1=value1');
+      expect(redirectUrl).to.include('param2=value2');
+
+      expect(finalRes).to.deep.equal(redirectRes);
+    });
+
+    it('should preserve basePath if basePath is empty string', async () => {
+      const req = createRequest({
+        nextUrl: {
+          pathname: '/old-page',
+          search: '?param1=value1&param2=value2',
+          basePath: '',
+        },
+      });
+      const res = createResponse();
+
+      const redirectRes = createResponse({
+        redirected: true,
+        status: 302,
+        url: 'http://localhost:3000/new-page',
+      });
+      nextRedirectStub.returns(redirectRes);
+
+      const { proxy } = createProxy({
+        pattern: '/old-page',
+        target: '/new-page',
+        redirectType: REDIRECT_TYPE_301,
+        isQueryStringPreserved: true,
+      });
+
+      const finalRes = await proxy.handle(req, res);
+
+      expect(nextRedirectStub.calledOnce).to.be.true;
+      const redirectUrl = nextRedirectStub.getCall(0).args[0];
+      expect(redirectUrl).to.include('/new-page');
+      expect(redirectUrl).to.include('param1=value1');
+      expect(redirectUrl).to.include('param2=value2');
 
       expect(finalRes).to.deep.equal(redirectRes);
     });

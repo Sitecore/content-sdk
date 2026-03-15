@@ -1,39 +1,22 @@
-export { generateSites, GenerateSitesConfig } from './generateSites';
-export { generateMetadata } from './generateMetadata';
-export { scaffoldComponent } from './scaffold';
-export { GenerateMapFunction, GenerateMapArgs } from './generate-map';
-export { extractFiles } from './codegen/extract-files';
+export { hasCache, getCache, getCacheAndClean, setCache } from './globalCache';
+// decoupling client-safe logic from /tools submodule which is not client-side safe
+export { normalizeUrl } from './normalize-url';
+export { default as isServer } from './is-server';
 export {
-  writeImportMap,
-  WriteImportMapArgs,
-  WriteImportMapArgsInternal,
-  defaultMapTemplate as defaultImportMapTemplate,
-  ModuleExports,
-} from './codegen/import-map';
-export { getComponentSpec, getComponentSpecUrl } from './codegen/component-generation';
-export * from './templating';
-export * from './auth/models';
-import * as authModule from './auth';
-
-/**
- * Preserve "live binding" semantics similar to ES module imports: production
- * code always sees the current implementation; tests can swap it safely and
- * restore via `sandbox.restore()` with no hidden global state.
- *
- * Public surface consumed by the rest of the codebase.
- * @public
- */
-export const auth: {
-  readonly clientCredentialsFlow: typeof authModule.clientCredentialsFlow;
-} = {} as any;
-
-/*
- * Define an accessor so reads are dynamic
- *   - Production: returns the real `authModule.clientCredentialsFlow`.
- *   - Tests: can be replaced with a stub via `sinon.replaceGetter` or `sandbox.replaceGetter`
- */
-Object.defineProperty(auth, 'clientCredentialsFlow', {
-  get: () => authModule.clientCredentialsFlow,
-  configurable: true,
-  enumerable: true,
-});
+  resolveEdgeUrl,
+  resolveEdgeUrlForStaticFiles,
+  resolveExperienceEdgeUrl,
+  SITECORE_EDGE_PLATFORM_HOSTNAME_ENV,
+  SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV,
+} from './resolve-edge-url';
+export {
+  resolveUrl,
+  isTimeoutError,
+  getEnforcedCorsHeaders,
+  EnhancedOmit,
+  getAllowedOriginsFromEnv,
+  isRegexOrUrl,
+  areURLSearchParamsEqual,
+  escapeNonSpecialQuestionMarks,
+  mergeURLSearchParams,
+} from './utils';

@@ -8,7 +8,7 @@
 
 > **debug**: `object`
 
-Defined in: [packages/core/src/debug.ts:36](https://github.com/Sitecore/content-sdk/blob/eba10ed6deebb652659e1f3e0c6d9ce0e19bb662/packages/core/src/debug.ts#L36)
+Defined in: [packages/core/src/debug.ts:56](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/core/src/debug.ts#L56)
 
 Default Sitecore Content SDK 'debug' module debuggers. Uses namespace prefix 'content-sdk:'.
 See [https://www.npmjs.com/package/debug](https://www.npmjs.com/package/debug) for details.
@@ -19,58 +19,10 @@ See [https://www.npmjs.com/package/debug](https://www.npmjs.com/package/debug) f
 
 > **common**: `Debugger`
 
-### dictionary
-
-> **dictionary**: `Debugger`
-
-### editing
-
-> **editing**: `Debugger`
-
-### errorpages
-
-> **errorpages**: `Debugger`
-
-### form
-
-> **form**: `Debugger`
-
 ### http
 
 > **http**: `Debugger`
 
-### layout
+### init
 
-> **layout**: `Debugger`
-
-### locale
-
-> **locale**: `Debugger`
-
-### multisite
-
-> **multisite**: `Debugger`
-
-### personalize
-
-> **personalize**: `Debugger`
-
-### proxy
-
-> **proxy**: `Debugger`
-
-### redirects
-
-> **redirects**: `Debugger`
-
-### robots
-
-> **robots**: `Debugger`
-
-### search
-
-> **search**: `Debugger`
-
-### sitemap
-
-> **sitemap**: `Debugger`
+> **init**: `Debugger`

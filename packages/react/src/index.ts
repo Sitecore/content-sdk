@@ -1,4 +1,4 @@
-﻿export {
+export {
   constants,
   enableDebug,
   ClientError,
@@ -9,8 +9,8 @@
   NativeDataFetcherResponse,
   NativeDataFetcherConfig,
 } from '@sitecore-content-sdk/core';
-export { EnhancedOmit } from '@sitecore-content-sdk/core/utils';
-export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/core/editing';
+export { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
+export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 export {
   getContentStylesheetLink,
   getDesignLibraryStylesheetLinks,
@@ -28,8 +28,8 @@ export {
   ComponentFields,
   ComponentParams,
   EditMode,
-} from '@sitecore-content-sdk/core/layout';
-export { DictionaryPhrases, DictionaryService } from '@sitecore-content-sdk/core/i18n';
+} from '@sitecore-content-sdk/content/layout';
+export { DictionaryPhrases, DictionaryService } from '@sitecore-content-sdk/content/i18n';
 export {
   GraphQLClientError,
   RetryStrategy,
@@ -39,8 +39,8 @@ export {
   PageMode,
   ErrorPage,
   Page,
-} from '@sitecore-content-sdk/core/client';
-export { mediaApi } from '@sitecore-content-sdk/core/media';
+} from '@sitecore-content-sdk/content/client';
+export { mediaApi } from '@sitecore-content-sdk/content/media';
 export { Form } from './components/Form';
 export { ReactContentSdkComponent, ComponentMap, ReactModule } from './components/sharedTypes';
 export {
@@ -48,7 +48,9 @@ export {
   PlaceholderProps,
   PlaceholderProps as PlaceholderComponentProps,
   AppPlaceholder,
+  PlaceholderMetadata,
   AppPlaceholderProps,
+  renderEmptyPlaceholder,
 } from './components/Placeholder';
 export {
   Image,
@@ -77,7 +79,12 @@ export {
   FEaaSServerWrapper,
   BYOCServerWrapper,
 } from './components/FEaaS';
-export { DesignLibrary, DesignLibraryApp } from './components/DesignLibrary';
+export {
+  DesignLibrary,
+  DesignLibraryErrorBoundary,
+  DynamicComponent,
+  ImportMapImport,
+} from './components/DesignLibrary';
 export {} from './components/FEaaS/BYOCComponent';
 export { Link, LinkField, LinkFieldValue, LinkProps } from './components/Link';
 export { File, FileField } from './components/File';
@@ -85,23 +92,20 @@ export {
   SitecoreProvider,
   SitecoreProviderState,
   SitecoreProviderReactContext,
-} from './components/SitecoreProvider';
-export {
-  withSitecore,
   useSitecore,
-  WithSitecoreOptions,
-  WithSitecoreProps,
-  WithSitecoreHocProps,
-} from './enhancers/withSitecore';
+} from './components/SitecoreProvider';
+export { ErrorComponent } from './components/ErrorBoundary';
 export { withEditorChromes } from './enhancers/withEditorChromes';
-export { withPlaceholder } from './enhancers/withPlaceholder';
+export { withSitecore } from './enhancers/withSitecore';
 export { withDatasourceCheck } from './enhancers/withDatasourceCheck';
 export { withFieldMetadata } from './enhancers/withFieldMetadata';
 export { withEmptyFieldEditingComponent } from './enhancers/withEmptyFieldEditingComponent';
+export { withAppPlaceholder } from './enhancers/withAppPlaceholder';
+export { withPlaceholder } from './enhancers/withPlaceholder';
 export { EditingScripts } from './components/EditingScripts';
 export {
   DefaultEmptyFieldEditingComponentText,
   DefaultEmptyFieldEditingComponentImage,
 } from './components/DefaultEmptyFieldEditingComponents';
 export { ClientEditingChromesUpdate } from './components/ClientEditingChromesUpdate';
-export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/core/site';
+export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/content/site';

@@ -6,7 +6,7 @@
 
 # Class: SiteResolver
 
-Defined in: core/types/site/site-resolver.d.ts:6
+Defined in: content/types/site/site-resolver.d.ts:6
 
 Resolves site based on the provided host or site name
 
@@ -16,7 +16,7 @@ Resolves site based on the provided host or site name
 
 > **new SiteResolver**(`sites`): `SiteResolver`
 
-Defined in: core/types/site/site-resolver.d.ts:11
+Defined in: content/types/site/site-resolver.d.ts:11
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: core/types/site/site-resolver.d.ts:11
 
 > **getByHost**: (`hostName`) => [`SiteInfo`](../type-aliases/SiteInfo.md)
 
-Defined in: core/types/site/site-resolver.d.ts:18
+Defined in: content/types/site/site-resolver.d.ts:18
 
 Resolve site by host name
 
@@ -60,7 +60,7 @@ if a matching site is not found
 
 > **getByName**: (`siteName`) => [`SiteInfo`](../type-aliases/SiteInfo.md) \| `undefined`
 
-Defined in: core/types/site/site-resolver.d.ts:24
+Defined in: content/types/site/site-resolver.d.ts:24
 
 Resolve site by site name
 
@@ -82,7 +82,7 @@ the resolved site or undefined if not found
 
 > `protected` **getHostMap**: () => `Map`\<`string`, [`SiteInfo`](../type-aliases/SiteInfo.md)\>
 
-Defined in: core/types/site/site-resolver.d.ts:25
+Defined in: content/types/site/site-resolver.d.ts:25
 
 #### Returns
 
@@ -94,7 +94,7 @@ Defined in: core/types/site/site-resolver.d.ts:25
 
 > `readonly` **sites**: [`SiteInfo`](../type-aliases/SiteInfo.md)[]
 
-Defined in: core/types/site/site-resolver.d.ts:7
+Defined in: content/types/site/site-resolver.d.ts:7
 
 ## Methods
 
@@ -102,7 +102,7 @@ Defined in: core/types/site/site-resolver.d.ts:7
 
 > `protected` **matchesPattern**(`hostname`, `pattern`): `boolean`
 
-Defined in: core/types/site/site-resolver.d.ts:26
+Defined in: content/types/site/site-resolver.d.ts:26
 
 #### Parameters
 

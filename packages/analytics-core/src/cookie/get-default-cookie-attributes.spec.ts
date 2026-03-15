@@ -1,5 +1,6 @@
 import { DAILY_SECONDS, DEFAULT_COOKIE_EXPIRY_DAYS } from '../consts';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
+import { jest, expect } from '@jest/globals';
 
 describe('getDefaultCookieAttributes', () => {
   afterEach(() => {
@@ -11,7 +12,7 @@ describe('getDefaultCookieAttributes', () => {
       maxAge: 10 * DAILY_SECONDS,
       path: '/',
       sameSite: 'None',
-      secure: true
+      secure: true,
     });
   });
   it('should return an object with the correct values when max age is undefined', () => {
@@ -20,7 +21,7 @@ describe('getDefaultCookieAttributes', () => {
       maxAge: DEFAULT_COOKIE_EXPIRY_DAYS * DAILY_SECONDS,
       path: '/',
       sameSite: 'None',
-      secure: true
+      secure: true,
     });
   });
 
@@ -30,7 +31,7 @@ describe('getDefaultCookieAttributes', () => {
       maxAge: DEFAULT_COOKIE_EXPIRY_DAYS * DAILY_SECONDS,
       path: '/',
       sameSite: 'None',
-      secure: true
+      secure: true,
     });
   });
 
@@ -40,7 +41,7 @@ describe('getDefaultCookieAttributes', () => {
       maxAge: DEFAULT_COOKIE_EXPIRY_DAYS * DAILY_SECONDS,
       path: '/',
       sameSite: 'None',
-      secure: true
+      secure: true,
     });
   });
 
@@ -50,7 +51,7 @@ describe('getDefaultCookieAttributes', () => {
       maxAge: 10 * DAILY_SECONDS,
       path: '/',
       sameSite: 'None',
-      secure: true
+      secure: true,
     });
   });
 
@@ -60,7 +61,7 @@ describe('getDefaultCookieAttributes', () => {
       maxAge: DEFAULT_COOKIE_EXPIRY_DAYS * DAILY_SECONDS,
       path: '/',
       sameSite: 'None',
-      secure: true
+      secure: true,
     });
   });
   it('should return an object with the correct values when max age and domain are undefined', () => {
@@ -69,7 +70,7 @@ describe('getDefaultCookieAttributes', () => {
       maxAge: DEFAULT_COOKIE_EXPIRY_DAYS * DAILY_SECONDS,
       path: '/',
       sameSite: 'None',
-      secure: true
+      secure: true,
     });
   });
 
@@ -79,7 +80,7 @@ describe('getDefaultCookieAttributes', () => {
       maxAge: 10 * DAILY_SECONDS,
       path: '/',
       sameSite: 'None',
-      secure: true
+      secure: true,
     });
   });
 });

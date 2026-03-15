@@ -7,3 +7,4 @@ export {
   SearchServiceFetchOptions,
 } from './search-service';
 export { SearchDocument } from './models';
+export { debug } from './debug';

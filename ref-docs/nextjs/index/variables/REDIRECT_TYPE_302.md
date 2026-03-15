@@ -8,6 +8,6 @@
 
 > `const` **REDIRECT\_TYPE\_302**: `"REDIRECT_302"` = `"REDIRECT_302"`
 
-Defined in: core/types/site/redirects-service.d.ts:13
+Defined in: content/types/site/redirects-service.d.ts:11
 
 Redirect type for 302 redirects

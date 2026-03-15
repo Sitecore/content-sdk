@@ -8,7 +8,7 @@
 
 > **getGroomedVariantIds**(`variantIds`): `PersonalizedRewriteData`
 
-Defined in: core/types/personalize/utils.d.ts:31
+Defined in: content/types/personalize/utils.d.ts:31
 
 Parses a list of variantIds and divides into layout and component variants
 

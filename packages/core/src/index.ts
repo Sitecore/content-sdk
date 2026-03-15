@@ -1,13 +1,17 @@
-// NOTE: all imports are now named as to not make breaking changes
-// and to keep react-native working with cjs modules.
-
 import * as constants from './constants';
-import * as form from './form';
 
-export { default as debug, Debugger, enableDebug } from './debug';
+export {
+  default as debug,
+  Debugger,
+  enableDebug,
+  debugNamespace,
+  debugModule,
+  isNamespaceEnabled,
+} from './debug';
 export {
   GraphQLClient,
   GraphQLRequestClient,
+  GraphQLClientError,
   GraphQLRequestClientConfig,
   GraphQLRequestClientFactory,
   GraphQLRequestClientFactoryConfig,
@@ -21,7 +25,6 @@ export {
   NativeDataFetcherError,
   NativeDataFetcherResponse,
 } from './native-fetcher';
-export { HTMLLink, RetryStrategy, GenericGraphQLClientError, StaticPath } from './models';
+export { RetryStrategy, GenericGraphQLClientError, FetchOptions } from './models';
 export { constants };
-export { form };
-export { defineConfig } from './config';
+export * from './initialization';

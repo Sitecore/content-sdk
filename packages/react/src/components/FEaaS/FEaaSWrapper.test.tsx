@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import { composeComponentEndpoint } from './feaas-utils';
 import { FEaaSComponentParams, FEaaSComponentProps } from './models';
 import { FEaaSComponent } from './FEaaSWrapper';
-import { ComponentFields } from '@sitecore-content-sdk/core/layout';
+import { ComponentFields } from '@sitecore-content-sdk/content/layout';
 
 describe('<FEaaSComponent />', () => {
   const requiredParams: FEaaSComponentParams = {

@@ -8,7 +8,7 @@
 
 > `const` **enableDebug**: (`namespaces`) => `void`
 
-Defined in: packages/core/types/debug.d.ts:12
+Defined in: packages/core/types/debug.d.ts:25
 
 Enable debug logging dynamically
 

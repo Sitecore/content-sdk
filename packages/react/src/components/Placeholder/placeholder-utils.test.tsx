@@ -7,13 +7,13 @@ import { createSandbox } from 'sinon';
 import {
   getPlaceholderRenderings,
   getSXAParams,
-  getRenderedComponentProps,
+  getChildComponentProps,
   getComponentForRendering,
 } from './placeholder-utils';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ComponentType, PlaceholderProps } from './models';
 import { ComponentMap, ReactModule } from '../sharedTypes';
-import { constants } from '@sitecore-content-sdk/core';
+import { HIDDEN_RENDERING_NAME } from '@sitecore-content-sdk/content';
 import { MissingComponent } from '../MissingComponent';
 import { HiddenRendering } from '../HiddenRendering';
 import {
@@ -183,7 +183,7 @@ describe('placeholder-utils', () => {
     });
   });
 
-  describe('getRenderedComponentProps', () => {
+  describe('getChildComponentProps', () => {
     it('should merge placeholder and rendering fields', () => {
       const placeholderProps: PlaceholderProps = {
         name: 'test-placeholder',
@@ -215,13 +215,14 @@ describe('placeholder-utils', () => {
         },
       };
 
-      const result = getRenderedComponentProps(placeholderProps, componentRendering, 'test-key');
+      const result = getChildComponentProps(placeholderProps, componentRendering);
 
       expect(result.fields).to.deep.equal({
         placeholderField: { value: 'placeholder-value' },
         renderingField: { value: 'rendering-value' },
         sharedField: { value: 'rendering-shared-value' }, // rendering should override placeholder
       });
+      expect(result.rendering).to.equal(componentRendering);
     });
 
     it('should merge placeholder and rendering params', () => {
@@ -257,7 +258,7 @@ describe('placeholder-utils', () => {
         },
       };
 
-      const result = getRenderedComponentProps(placeholderProps, componentRendering, 'test-key');
+      const result = getChildComponentProps(placeholderProps, componentRendering);
 
       expect(result.params).to.deep.equal({
         placeholderParam: 'placeholder-param-value',
@@ -267,9 +268,10 @@ describe('placeholder-utils', () => {
         Styles: 'custom-class',
         styles: 'col-lg-6 custom-class', // SXA styles should be added
       });
+      expect(result.rendering).to.equal(componentRendering);
     });
 
-    it('should return composite props object', () => {
+    it('should return minimal child component props object', () => {
       const placeholderProps: PlaceholderProps = {
         name: 'test-placeholder',
         rendering: { componentName: 'Test', uid: 'test-uid' },
@@ -302,24 +304,24 @@ describe('placeholder-utils', () => {
         },
       };
 
-      const result = getRenderedComponentProps(placeholderProps, componentRendering, 'test-key');
+      const result = getChildComponentProps(placeholderProps, componentRendering);
 
-      expect(result.key).to.equal('test-key');
+      // getChildComponentProps returns only fields, params, and rendering
       expect(result.rendering).to.equal(componentRendering);
-      expect(result.customProp).to.equal('custom-value');
-      expect(result.componentMap).to.equal(placeholderProps.componentMap);
-
-      // These props should be removed from the result
-      expect(result.missingComponentComponent).to.be.undefined;
-      expect(result.hiddenRenderingComponent).to.be.undefined;
-      expect(result.name).to.be.undefined;
-
       expect(result.fields).to.deep.equal({
         testField: { value: 'test-value' },
       });
       expect(result.params).to.deep.equal({
         testParam: 'test-param',
       });
+
+      // getChildComponentProps does not include these props
+      expect((result as any).key).to.be.undefined;
+      expect((result as any).customProp).to.be.undefined;
+      expect((result as any).componentMap).to.be.undefined;
+      expect((result as any).missingComponentComponent).to.be.undefined;
+      expect((result as any).hiddenRenderingComponent).to.be.undefined;
+      expect((result as any).name).to.be.undefined;
     });
   });
 
@@ -587,7 +589,7 @@ describe('placeholder-utils', () => {
 
     it('should return hiddenRenderingComponent when component is hidden', () => {
       const rendering: ComponentRendering = {
-        componentName: constants.HIDDEN_RENDERING_NAME,
+        componentName: HIDDEN_RENDERING_NAME,
         uid: 'test-uid',
       };
 
@@ -604,7 +606,7 @@ describe('placeholder-utils', () => {
 
     it('should return default HiddenRendering when component is hidden and no custom hidden component provided', () => {
       const rendering: ComponentRendering = {
-        componentName: constants.HIDDEN_RENDERING_NAME,
+        componentName: HIDDEN_RENDERING_NAME,
         uid: 'test-uid',
       };
 

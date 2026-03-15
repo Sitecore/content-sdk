@@ -6,9 +6,9 @@
 
 # Variable: generateSites()
 
-> `const` **generateSites**: (`{ scConfig: deprecatedScConfig, destinationPath, }?`) => () => `Promise`\<`void`\>
+> `const` **generateSites**: (`{ destinationPath }?`) => (`args`) => `Promise`\<`void`\>
 
-Defined in: core/types/tools/generateSites.d.ts:24
+Defined in: content/types/tools/generateSites.d.ts:19
 
 Generates site information and writes it to a specified destination path.
 
@@ -16,13 +16,20 @@ Generates site information and writes it to a specified destination path.
 
 | Parameter | Type |
 | ------ | ------ |
-| `{ scConfig: deprecatedScConfig, destinationPath, }?` | [`GenerateSitesConfig`](../type-aliases/GenerateSitesConfig.md) |
+| `{ destinationPath }?` | [`GenerateSitesConfig`](../type-aliases/GenerateSitesConfig.md) |
 
 ## Returns
 
 - A promise that resolves to an asynchronous function that fetches site information and writes it to a file.
 
-> (): `Promise`\<`void`\>
+> (`args`): `Promise`\<`void`\>
+
+### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `args` | \{ `scConfig`: `SitecoreConfig`; \} |
+| `args.scConfig` | `SitecoreConfig` |
 
 ### Returns
 

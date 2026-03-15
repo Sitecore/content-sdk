@@ -1,16 +1,149 @@
 import { AppPlaceholderProps } from './models';
 import {
-  getAppComponentProps,
+  getChildComponentProps,
   getComponentForRendering,
   getPlaceholderRenderings,
   renderEmptyPlaceholder,
 } from './placeholder-utils';
 import React from 'react';
-import { PlaceholderMetadata } from './PlaceholderMetadata';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import ErrorBoundary from '../ErrorBoundary';
 import { ClientComponentWrapper } from './ClientComponentWrapper';
 import { rsc } from '#rsc-env';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
+import { PlaceholderMetadata } from './PlaceholderMetadata';
+
+const AppPlaceholderComponent = (props: AppPlaceholderProps) => {
+  const renderingData = props.rendering;
+  const isEditing = props.page.mode.isEditing;
+  const placeholderRenderings = getPlaceholderRenderings(renderingData, props.name, isEditing);
+  const isEmpty = !placeholderRenderings.length;
+
+  const components = getPlaceholderComponents(props, placeholderRenderings);
+  if (isEmpty) {
+    let renderedOutput: React.ReactNode = components;
+    if (props.renderEmpty) {
+      renderedOutput = props.renderEmpty(components);
+    }
+    return isEditing ? renderEmptyPlaceholder(renderedOutput) : renderedOutput;
+  } else if (props.render) {
+    return props.render(components, placeholderRenderings, props);
+  }
+  return components;
+};
+
+const getPlaceholderComponents = (
+  placeholderProps: AppPlaceholderProps,
+  placeholderRenderings: ComponentRendering[]
+) => {
+  const {
+    name,
+    rendering,
+    passThroughComponentProps,
+    missingComponentComponent,
+    hiddenRenderingComponent,
+    errorComponent,
+    componentLoadingMessage,
+    renderEach,
+    modifyComponentProps,
+    componentMap,
+    page,
+  } = placeholderProps;
+  const isEditing = page.mode.isEditing;
+  const componentRuntime = rsc ? 'server' : 'client';
+
+  const transformedComponents = placeholderRenderings
+    .map((componentRendering: ComponentRendering, index: number) => {
+      const {
+        component: ChildComponent,
+        isEmpty: componentEmpty,
+        componentType,
+        dynamic,
+      } = getComponentForRendering(
+        componentRendering,
+        name,
+        componentMap,
+        hiddenRenderingComponent,
+        missingComponentComponent
+      );
+      const key = componentRendering.uid || `component-${index}`;
+
+      const renderedProps = modifyComponentProps
+        ? modifyComponentProps(getChildComponentProps(placeholderProps, componentRendering))
+        : getChildComponentProps(placeholderProps, componentRendering);
+
+      // Client wrapper is required only when component crosses boundary from server to client.
+      // It happens when component is marker as client and rendered in RSC context.
+      // Also, it is not required when component is hidden or empty, as it will be rendered whthout boundary crossing.
+      const useClientWrapper = componentType === 'client' && rsc && !componentEmpty;
+      let rendered = useClientWrapper ? (
+        <ClientComponentWrapper
+          rendering={renderedProps.rendering}
+          componentProps={{ ...renderedProps, ...passThroughComponentProps }}
+          placeholderName={name}
+          key={key}
+        />
+      ) : (
+        <ChildComponent
+          key={key}
+          {...renderedProps}
+          {...passThroughComponentProps}
+          page={page}
+          componentMap={componentMap}
+        />
+      );
+
+      if (renderEach) {
+        rendered = renderEach(rendered, index) as React.ReactElement<{
+          [attr: string]: unknown;
+        }>;
+      }
+
+      if (!componentEmpty) {
+        const errorBoundaryKey = rendered.type + '-' + index;
+
+        rendered = (
+          <ErrorBoundary
+            data-testid="error-boundary"
+            key={errorBoundaryKey}
+            errorComponent={errorComponent}
+            componentLoadingMessage={componentLoadingMessage}
+            isDynamic={dynamic}
+            disableSuspense={placeholderProps.disableSuspense}
+            rendering={rendered.props.rendering as ComponentRendering}
+          >
+            {rendered}
+          </ErrorBoundary>
+        );
+      }
+      // if in edit mode then emit shallow chromes for hydration in Pages
+      return isEditing ? (
+        <PlaceholderMetadata
+          key={key}
+          rendering={componentRendering}
+          componentRuntime={componentRuntime}
+        >
+          {rendered}
+        </PlaceholderMetadata>
+      ) : (
+        rendered
+      );
+    })
+    .filter((element) => element); // remove nulls
+
+  if (!isEditing) {
+    return transformedComponents;
+  }
+
+  return [
+    <PlaceholderMetadata
+      key={(rendering as ComponentRendering).uid}
+      placeholderName={name}
+      rendering={rendering as ComponentRendering}
+    >
+      {transformedComponents}
+    </PlaceholderMetadata>,
+  ];
+};
 
 /**
  * The implemention of placeholder compatible with React Server Components.
@@ -20,125 +153,9 @@ import { rsc } from '#rsc-env';
  * @returns {React.ReactNode | React.ReactElement[]} rendered component(s)
  * @public
  */
-export const AppPlaceholder = (props: AppPlaceholderProps) => {
-  const { rendering: parentRendering, componentMap, page } = props;
-  const placeholderRenderings = getPlaceholderRenderings(
-    parentRendering,
-    props.name,
-    page.mode.isEditing
-  );
-
-  const components = placeholderRenderings
-    .map((rendering, index) => {
-      const {
-        component: Component,
-        isEmpty,
-        componentType,
-        dynamic,
-      } = getComponentForRendering(
-        rendering,
-        props.name,
-        componentMap,
-        props.hiddenRenderingComponent,
-        props.missingComponentComponent
-      );
-      const isClient = componentType === 'client';
-      const key = rendering.uid || `component-${index}`;
-
-      // Use rsc context to determine the current runtime
-      const componentRuntime = rsc ? 'server' : 'client';
-
-      const renderedProps = getAppComponentProps(props, rendering);
-
-      const finalRenderedProps = props.modifyComponentProps
-        ? props.modifyComponentProps(renderedProps)
-        : renderedProps;
-
-      // Client wrapper is required only when component crosses boundary from server to client.
-      // It happens when component is marker as client and rendered in RSC context.
-      // Also, it is not required when component is hidden or empty, as it will be rendered whthout boundary crossing.
-      const useClientWrapper = isClient && rsc && !isEmpty;
-      let rendered = useClientWrapper ? (
-        <ClientComponentWrapper
-          rendering={rendering}
-          componentProps={finalRenderedProps}
-          placeholderName={props.name}
-          key={key}
-        />
-      ) : (
-        <Component
-          key={key}
-          {...finalRenderedProps}
-          rendering={rendering}
-          page={page}
-          componentMap={componentMap}
-        />
-      );
-
-      if (!isEmpty) {
-        const errorBoundaryKey = rendered.type + '-' + index;
-        const disableSuspense = props.disableSuspense || false;
-        rendered = (
-          <ErrorBoundary
-            data-testid="error-boundary"
-            key={errorBoundaryKey}
-            errorComponent={props.errorComponent}
-            componentLoadingMessage={props.componentLoadingMessage}
-            isDynamic={dynamic}
-            disableSuspense={disableSuspense}
-            rendering={rendered.props.rendering as ComponentRendering}
-          >
-            {rendered}
-          </ErrorBoundary>
-        );
-      }
-
-      // if in edit mode then emit shallow chromes for hydration in Pages
-      if (page.mode.isEditing) {
-        const key = (rendering.uid as string) || `component-${index}`;
-        return (
-          <PlaceholderMetadata key={key} rendering={rendering} componentRuntime={componentRuntime}>
-            {rendered}
-          </PlaceholderMetadata>
-        );
-      }
-      return rendered;
-    })
-    .filter((element) => element);
-
-  const finalRendering = page.mode.isEditing
-    ? [
-        <PlaceholderMetadata
-          key={(parentRendering as ComponentRendering).uid || 'placeholder-metadata-root'}
-          placeholderName={props.name}
-          rendering={parentRendering as ComponentRendering}
-        >
-          {components}
-        </PlaceholderMetadata>,
-      ]
-    : components;
-
-  const placeholderEmpty = !placeholderRenderings.length;
-
-  if (placeholderEmpty) {
-    const rendered = props.renderEmpty ? props.renderEmpty(finalRendering) : finalRendering;
-
-    return page.mode.isEditing ? renderEmptyPlaceholder(rendered) : rendered;
-  }
-
-  if (props.render) {
-    return props.render(components, placeholderRenderings, props);
-  } else if (props.renderEach) {
-    const renderEach = props.renderEach;
-
-    return finalRendering.map((component, index) => {
-      if (component && component.props && component.props.type === 'text/sitecore') {
-        return component;
-      }
-
-      return renderEach(component, index);
-    });
-  } else {
-    return finalRendering;
-  }
-};
+export const AppPlaceholder = (props: AppPlaceholderProps) => (
+  // Using error boundary for errors that may happen within Placeholder itself
+  <ErrorBoundary errorComponent={props.errorComponent}>
+    <AppPlaceholderComponent {...props} />
+  </ErrorBoundary>
+);

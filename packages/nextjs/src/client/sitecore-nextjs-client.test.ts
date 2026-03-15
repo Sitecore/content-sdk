@@ -5,11 +5,11 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { SitecoreNextjsClient } from './sitecore-nextjs-client';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
-import * as siteTools from '@sitecore-content-sdk/core/site';
-import { SITE_PREFIX } from '@sitecore-content-sdk/core/site';
+import * as siteTools from '@sitecore-content-sdk/content/site';
+import { SITE_PREFIX } from '@sitecore-content-sdk/content/site';
 import { GetServerSidePropsContext } from 'next';
 import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
-import { VARIANT_PREFIX } from '@sitecore-content-sdk/core/personalize';
+import { VARIANT_PREFIX } from '@sitecore-content-sdk/content/personalize';
 
 chai.use(sinonChai);
 
@@ -320,6 +320,61 @@ describe('SitecoreClient', () => {
       expect(result).to.deep.equal([
         { locale: 'en', site: defaultInitOptions.defaultSite, path: ['home'] },
       ]);
+    });
+  });
+
+  describe('getPagePaths', () => {
+    it('should return static paths with site prefixes - multisite enabled by default', async () => {
+      const paths = [
+        { params: { path: ['_site_site-one', 'home'] }, locale: 'en' },
+        { params: { path: ['_site_site-one', 'about'] }, locale: 'en' },
+        { params: { path: ['_site_site-two', 'home'] }, locale: 'de-DE' },
+      ];
+
+      sitePathServiceStub.fetchSiteRoutes.resolves(paths);
+
+      const result = await sitecoreClient.getPagePaths(['site-one', 'site-two'], ['en', 'de-DE']);
+
+      expect(result).to.deep.equal(paths);
+    });
+
+    it('should return static paths with site prefixes when multisite enabled', async () => {
+      const paths = [
+        { params: { path: ['_site_site-one', 'home'] }, locale: 'en' },
+        { params: { path: ['_site_site-one', 'about'] }, locale: 'en' },
+        { params: { path: ['_site_site-two', 'home'] }, locale: 'de-DE' },
+      ];
+
+      sitePathServiceStub.fetchSiteRoutes.resolves(paths);
+
+      const result = await sitecoreClient.getPagePaths(
+        ['site-one', 'site-two'],
+        ['en', 'de-DE'],
+        undefined,
+        true
+      );
+
+      expect(result).to.deep.equal(paths);
+    });
+
+    it('should return static paths without site prefixes when multisite is disabled', async () => {
+      const paths = [
+        { params: { path: ['_site_site-one', 'home'] }, locale: 'en' },
+        { params: { path: ['_site_site-one', 'about'] }, locale: 'en' },
+        { params: { path: ['_site_site-two', 'home'] }, locale: 'de-DE' },
+      ];
+
+      const expectedPaths = [
+        { params: { path: ['home'] }, locale: 'en' },
+        { params: { path: ['about'] }, locale: 'en' },
+        { params: { path: ['home'] }, locale: 'de-DE' },
+      ];
+
+      sitePathServiceStub.fetchSiteRoutes.resolves(structuredClone(paths));
+
+      const result = await sitecoreClient.getPagePaths(['site-one'], ['en'], undefined, false);
+
+      expect(result).to.deep.equal(expectedPaths);
     });
   });
 });

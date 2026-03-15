@@ -6,71 +6,8 @@
 
 # Variable: debug
 
-> `const` **debug**: `object`
+> `const` **debug**: `Record`\<`string`, `debug.Debugger`\>
 
-Defined in: core/types/debug.d.ts:17
+Defined in: [nextjs/src/debug.ts:9](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/debug.ts#L9)
 
-Default Sitecore Content SDK 'debug' module debuggers. Uses namespace prefix 'content-sdk:'.
-See [https://www.npmjs.com/package/debug](https://www.npmjs.com/package/debug) for details.
-
-## Type Declaration
-
-### common
-
-> **common**: `debug.Debugger`
-
-### dictionary
-
-> **dictionary**: `debug.Debugger`
-
-### editing
-
-> **editing**: `debug.Debugger`
-
-### errorpages
-
-> **errorpages**: `debug.Debugger`
-
-### form
-
-> **form**: `debug.Debugger`
-
-### http
-
-> **http**: `debug.Debugger`
-
-### layout
-
-> **layout**: `debug.Debugger`
-
-### locale
-
-> **locale**: `debug.Debugger`
-
-### multisite
-
-> **multisite**: `debug.Debugger`
-
-### personalize
-
-> **personalize**: `debug.Debugger`
-
-### proxy
-
-> **proxy**: `debug.Debugger`
-
-### redirects
-
-> **redirects**: `debug.Debugger`
-
-### robots
-
-> **robots**: `debug.Debugger`
-
-### search
-
-> **search**: `debug.Debugger`
-
-### sitemap
-
-> **sitemap**: `debug.Debugger`
+Unified debug object containing all debug namespaces from referenced content-sdk packages.

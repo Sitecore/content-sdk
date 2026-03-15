@@ -7,68 +7,63 @@
 import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
 import { ClientError } from '@sitecore-content-sdk/core';
-import { ComponentFields } from '@sitecore-content-sdk/core/layout';
-import { ComponentParams } from '@sitecore-content-sdk/core/layout';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import { ComponentFields } from '@sitecore-content-sdk/content/layout';
+import { ComponentParams } from '@sitecore-content-sdk/content/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ComponentType } from 'react';
 import { constants } from '@sitecore-content-sdk/core';
-import { DefaultRetryStrategy } from '@sitecore-content-sdk/core/client';
-import { DictionaryPhrases } from '@sitecore-content-sdk/core/i18n';
-import { DictionaryService } from '@sitecore-content-sdk/core/i18n';
-import { EditMode } from '@sitecore-content-sdk/core/layout';
+import { debug as debug_2 } from '@sitecore-content-sdk/search';
+import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
+import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
+import { DictionaryService } from '@sitecore-content-sdk/content/i18n';
+import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { enableDebug } from '@sitecore-content-sdk/core';
-import { EnhancedOmit } from '@sitecore-content-sdk/core/utils';
-import { ErrorPage } from '@sitecore-content-sdk/core/client';
+import { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
+import { ErrorPage } from '@sitecore-content-sdk/content/client';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
-import { Field } from '@sitecore-content-sdk/core/layout';
-import { FieldMetadata } from '@sitecore-content-sdk/core/layout';
-import { GenericFieldValue } from '@sitecore-content-sdk/core/layout';
-import { getChildPlaceholder } from '@sitecore-content-sdk/core/layout';
-import { getContentStylesheetLink } from '@sitecore-content-sdk/core/layout';
-import { getDesignLibraryStylesheetLinks } from '@sitecore-content-sdk/core/layout';
-import { getFieldValue } from '@sitecore-content-sdk/core/layout';
-import { GraphQLClientError } from '@sitecore-content-sdk/core/client';
-import { GraphQLRequestClient } from '@sitecore-content-sdk/core/client';
-import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/core/client';
-import { ImportEntry } from '@sitecore-content-sdk/core/codegen';
-import { isEditorActive } from '@sitecore-content-sdk/core/editing';
-import { Item } from '@sitecore-content-sdk/core/layout';
+import { Field } from '@sitecore-content-sdk/content/layout';
+import { FieldMetadata } from '@sitecore-content-sdk/content/layout';
+import { GenericFieldValue } from '@sitecore-content-sdk/content/layout';
+import { getChildPlaceholder } from '@sitecore-content-sdk/content/layout';
+import { getContentStylesheetLink } from '@sitecore-content-sdk/content/layout';
+import { getDesignLibraryStylesheetLinks } from '@sitecore-content-sdk/content/layout';
+import { getFieldValue } from '@sitecore-content-sdk/content/layout';
+import { GraphQLClientError } from '@sitecore-content-sdk/content/client';
+import { GraphQLRequestClient } from '@sitecore-content-sdk/content/client';
+import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/content/client';
+import { ImportEntry } from '@sitecore-content-sdk/content/codegen';
+import { isEditorActive } from '@sitecore-content-sdk/content/editing';
+import { Item } from '@sitecore-content-sdk/content/layout';
 import { JSX as JSX_2 } from 'react';
-import { LayoutService } from '@sitecore-content-sdk/core/layout';
-import { LayoutServiceContext } from '@sitecore-content-sdk/core/layout';
-import { LayoutServiceContextData } from '@sitecore-content-sdk/core/layout';
-import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
-import { mediaApi } from '@sitecore-content-sdk/core/media';
+import { LayoutService } from '@sitecore-content-sdk/content/layout';
+import { LayoutServiceContext } from '@sitecore-content-sdk/content/layout';
+import { LayoutServiceContextData } from '@sitecore-content-sdk/content/layout';
+import { LayoutServiceData } from '@sitecore-content-sdk/content/layout';
+import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
+import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
-import { Page } from '@sitecore-content-sdk/core/client';
-import { PageMode } from '@sitecore-content-sdk/core/client';
+import { Page } from '@sitecore-content-sdk/content/client';
+import { PageMode } from '@sitecore-content-sdk/content/client';
 import { default as React_2 } from 'react';
+import { ReactNode } from 'react';
 import { RefAttributes } from 'react';
-import { resetEditorChromes } from '@sitecore-content-sdk/core/editing';
-import { RetryStrategy } from '@sitecore-content-sdk/core/client';
-import { RouteData } from '@sitecore-content-sdk/core/layout';
+import { resetEditorChromes } from '@sitecore-content-sdk/content/editing';
+import { RetryStrategy } from '@sitecore-content-sdk/content/client';
+import { RouteData } from '@sitecore-content-sdk/content/layout';
 import { SearchDocument } from '@sitecore-content-sdk/search';
 import { SearchParameters } from '@sitecore-content-sdk/search';
-import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
-import { SitePathService } from '@sitecore-content-sdk/core/site';
-import { SitePathServiceConfig } from '@sitecore-content-sdk/core/site';
+import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
+import { SitePathService } from '@sitecore-content-sdk/content/site';
+import { SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
 
 // @public
-export const AppPlaceholder: (props: AppPlaceholderProps) => string | number | bigint | boolean | Iterable<React_2.ReactNode> | Promise<string | number | bigint | boolean | React_2.ReactPortal | React_2.ReactElement<unknown, string | React_2.JSXElementConstructor<any>> | Iterable<React_2.ReactNode> | null | undefined> | React_2.JSX.Element | (string | number | bigint | boolean | Iterable<React_2.ReactNode> | Promise<string | number | bigint | boolean | React_2.ReactPortal | React_2.ReactElement<unknown, string | React_2.JSXElementConstructor<any>> | Iterable<React_2.ReactNode> | null | undefined> | React_2.JSX.Element | null | undefined)[] | null | undefined;
+export const AppPlaceholder: (props: AppPlaceholderProps) => React_2.JSX.Element;
 
-// Warning: (ae-forgotten-export) The symbol "BasePlaceholderProps" needs to be exported by the entry point api-surface.d.ts
-//
 // @public
-export interface AppPlaceholderProps extends BasePlaceholderProps {
-    componentMap: ComponentMap;
-    // Warning: (ae-forgotten-export) The symbol "AppComponentProps" needs to be exported by the entry point api-surface.d.ts
-    modifyComponentProps?: (componentProps: AppComponentProps) => AppComponentProps;
-    render?: (components: React.ReactNode[], data: ComponentRendering[], props: AppPlaceholderProps) => React.ReactNode;
-}
+export type AppPlaceholderProps = Omit<PlaceholderProps, 'componentMap' | 'page'> & Required<Pick<PlaceholderProps, 'componentMap' | 'page'>>;
 
 // @public
 export class BYOCComponent extends React_2.Component<BYOCComponentProps> {
@@ -149,6 +144,8 @@ export interface DateFieldProps extends EditableFieldProps<DateFieldProps> {
     tag?: string;
 }
 
+export { debug_2 as debug }
+
 // @public
 export const DefaultEmptyFieldEditingComponentImage: React_2.FC<{
     [key: string]: unknown;
@@ -164,28 +161,56 @@ export const DefaultEmptyFieldEditingComponentText: React_2.FC<{
 export { DefaultRetryStrategy }
 
 // @public
-export const DesignLibrary: {
-    (props: DesignLibraryProps): React_2.JSX.Element;
-    displayName: string;
-};
+export const DesignLibrary: () => React_2.JSX.Element | null;
 
-// Warning: (ae-forgotten-export) The symbol "DesingLibraryAppProps" needs to be exported by the entry point api-surface.d.ts
+// Warning: (ae-forgotten-export) The symbol "DesignLibraryErrorBoundaryProps" needs to be exported by the entry point api-surface.d.ts
 //
-// @public
-export const DesignLibraryApp: ({ page, componentMap, loadServerImportMap, }: DesingLibraryAppProps) => React_2.JSX.Element | null;
+// @internal
+export class DesignLibraryErrorBoundary extends React_2.Component<DesignLibraryErrorBoundaryProps> {
+    // (undocumented)
+    componentDidCatch(error: Error): void;
+    // (undocumented)
+    componentDidUpdate(prevProps: DesignLibraryErrorBoundaryProps): void;
+    // (undocumented)
+    static getDerivedStateFromError(): {
+        hasError: boolean;
+    };
+    // (undocumented)
+    render(): React_2.JSX.Element;
+    // (undocumented)
+    state: {
+        hasError: boolean;
+    };
+}
 
 export { DictionaryPhrases }
 
 export { DictionaryService }
 
+// @internal
+export type DynamicComponent = React.ComponentType<{
+    [key: string]: unknown;
+    fields?: ComponentFields;
+    params?: ComponentParams;
+}>;
+
 // @public
-export const EditingScripts: () => JSX_2.Element;
+export const EditingScripts: () => React_2.JSX.Element;
 
 export { EditMode }
 
 export { enableDebug }
 
 export { EnhancedOmit }
+
+// @internal
+export const ErrorComponent: (props: {
+    message: React_2.ReactNode;
+    children?: never;
+} | {
+    children: React_2.ReactNode;
+    message?: never;
+}) => React_2.JSX.Element;
 
 export { ErrorPage }
 
@@ -307,6 +332,11 @@ export interface ImageSizeParameters {
     w?: number;
 }
 
+// @internal
+export type ImportMapImport = {
+    default: ImportEntry[];
+};
+
 export { isEditorActive }
 
 export { Item }
@@ -375,16 +405,40 @@ export { Page }
 export { PageMode }
 
 // @public
-export const Placeholder: (props: EnhancedOmit<PlaceholderProps, keyof WithSitecoreProps>) => React_2.JSX.Element;
+export const Placeholder: (props: PlaceholderProps) => React_2.JSX.Element;
+
+// Warning: (ae-forgotten-export) The symbol "PlaceholderMetadataProps" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export const PlaceholderMetadata: ({ rendering, placeholderName, children, componentRuntime, }: PlaceholderMetadataProps) => JSX_2.Element;
 
 // @public
-interface PlaceholderProps extends BasePlaceholderProps {
-    // (undocumented)
-    [key: string]: unknown;
+interface PlaceholderProps {
+    componentLoadingMessage?: string;
     componentMap?: ComponentMap;
-    // Warning: (ae-forgotten-export) The symbol "ComponentProps" needs to be exported by the entry point api-surface.d.ts
-    modifyComponentProps?: (componentProps: ComponentProps) => ComponentProps;
+    // @deprecated (undocumented)
+    disableSuspense?: boolean;
+    // Warning: (ae-forgotten-export) The symbol "ErrorComponentProps" needs to be exported by the entry point api-surface.d.ts
+    errorComponent?: React.ComponentClass<ErrorComponentProps> | React.FC<ErrorComponentProps>;
+    fields?: {
+        [name: string]: Field | Item | Item[];
+    };
+    hiddenRenderingComponent?: React.ComponentClass<unknown> | React.FC<unknown>;
+    missingComponentComponent?: React.ComponentClass<unknown> | React.FC<unknown>;
+    // Warning: (ae-forgotten-export) The symbol "ChildComponentProps" needs to be exported by the entry point api-surface.d.ts
+    modifyComponentProps?: (componentProps: ChildComponentProps) => ChildComponentProps;
+    name: string;
+    page?: Page;
+    params?: {
+        [name: string]: string;
+    };
+    passThroughComponentProps?: {
+        [key: string]: unknown;
+    };
     render?: (components: React.ReactNode[], data: ComponentRendering[], props: PlaceholderProps) => React.ReactNode;
+    renderEach?: (component: React.ReactNode, index: number) => React.ReactNode;
+    renderEmpty?: (components: React.ReactNode[]) => React.ReactNode;
+    rendering: ComponentRendering | RouteData;
 }
 export { PlaceholderProps as PlaceholderComponentProps }
 export { PlaceholderProps }
@@ -400,6 +454,9 @@ export type ReactModule = {
     Default?: ComponentType;
     default?: ComponentType;
 };
+
+// @public
+export const renderEmptyPlaceholder: (node: React_2.ReactNode | React_2.ReactElement[]) => React_2.JSX.Element;
 
 export { resetEditorChromes }
 
@@ -419,6 +476,7 @@ export interface RichTextProps extends EditableFieldProps<RichTextProps> {
     // (undocumented)
     [htmlAttributes: string]: unknown;
     field?: RichTextField;
+    ref?: React_2.Ref<HTMLElement>;
     tag?: string;
 }
 
@@ -427,19 +485,11 @@ export { RouteData }
 // @public
 export type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
 
-// Warning: (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
-//
 // @public
-export class SitecoreProvider extends React_2.Component<SitecoreProviderProps, SitecoreProviderState> {
-    constructor(props: SitecoreProviderProps);
-    // (undocumented)
-    componentDidUpdate(prevProps: SitecoreProviderProps): void;
-    // (undocumented)
-    static displayName: string;
-    // (undocumented)
-    render(): React_2.JSX.Element;
-    setPage: (value: Page) => void;
-}
+export const SitecoreProvider: {
+    (props: SitecoreProviderProps): React_2.JSX.Element;
+    displayName: string;
+};
 
 // @public
 export const SitecoreProviderReactContext: React_2.Context<SitecoreProviderState>;
@@ -447,8 +497,11 @@ export const SitecoreProviderReactContext: React_2.Context<SitecoreProviderState
 // @public
 export interface SitecoreProviderState {
     api?: SitecoreProviderProps['api'];
+    componentMap: ComponentMap;
+    // Warning: (ae-incompatible-release-tags) The symbol "loadImportMap" is marked as @public, but its signature references "ImportMapImport" which is marked as @internal
+    loadImportMap: () => Promise<ImportMapImport>;
     page: Page;
-    setPage: (value: Page) => void;
+    setPage?: (value: Page) => void;
 }
 
 export { SitePathService }
@@ -516,8 +569,16 @@ export type UseSearchState<T extends SearchDocument = SearchDocument> = Omit<Int
     isPreviousData: boolean;
 };
 
+// Warning: (ae-forgotten-export) The symbol "UseSitecoreOptions" needs to be exported by the entry point api-surface.d.ts
+//
 // @public
-export function useSitecore(options?: WithSitecoreOptions): WithSitecoreProps;
+export function useSitecore(options?: UseSitecoreOptions): SitecoreProviderState;
+
+// Warning: (ae-forgotten-export) The symbol "ComponentProps" needs to be exported by the entry point api-surface.d.ts
+// Warning: (ae-forgotten-export) The symbol "WrapperProps" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export const withAppPlaceholder: <T extends ComponentProps, W extends T & WrapperProps>(Component: ComponentType<T>) => (props: W) => React_2.JSX.Element;
 
 // Warning: (ae-forgotten-export) The symbol "WithDatasourceCheckOptions" needs to be exported by the entry point api-surface.d.ts
 // Warning: (ae-forgotten-export) The symbol "WithDatasourceCheckProps" needs to be exported by the entry point api-surface.d.ts
@@ -526,47 +587,40 @@ export function useSitecore(options?: WithSitecoreOptions): WithSitecoreProps;
 export function withDatasourceCheck(options?: WithDatasourceCheckOptions): <ComponentProps extends WithDatasourceCheckProps>(Component: React_2.ComponentType<ComponentProps>) => (props: ComponentProps) => JSX_2.Element | null;
 
 // @public
-export const withEditorChromes: (WrappedComponent: React_2.ComponentClass<unknown> | React_2.FC<unknown>) => React_2.ComponentClass;
+export const withEditorChromes: (WrappedComponent: React_2.ComponentClass<unknown> | React_2.FC<unknown>) => {
+    (props: Record<string, unknown>): React_2.JSX.Element;
+    displayName: string;
+};
 
 // Warning: (ae-forgotten-export) The symbol "WithEmptyFieldEditingComponentProps" needs to be exported by the entry point api-surface.d.ts
 // Warning: (ae-forgotten-export) The symbol "WithEmptyFieldEditingComponentOptions" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export function withEmptyFieldEditingComponent<FieldComponentProps extends WithEmptyFieldEditingComponentProps<FieldComponentProps>, RefElementType = HTMLElement>(FieldComponent: ComponentType<FieldComponentProps>, options: WithEmptyFieldEditingComponentOptions): React_2.ForwardRefExoticComponent<React_2.PropsWithoutRef<FieldComponentProps> & React_2.RefAttributes<RefElementType>> | ((props: FieldComponentProps) => React_2.JSX.Element);
+export function withEmptyFieldEditingComponent<FieldComponentProps extends WithEmptyFieldEditingComponentProps<FieldComponentProps>, RefElementType = HTMLElement>(FieldComponent: ComponentType<FieldComponentProps>, options: WithEmptyFieldEditingComponentOptions): (props: FieldComponentProps & {
+    ref?: React_2.Ref<RefElementType>;
+}) => React_2.JSX.Element;
 
 // Warning: (ae-forgotten-export) The symbol "WithMetadataProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export function withFieldMetadata<FieldComponentProps extends WithMetadataProps, RefElementType = HTMLElement>(FieldComponent: ComponentType<FieldComponentProps>, isForwardRef?: boolean): React_2.ForwardRefExoticComponent<React_2.PropsWithoutRef<FieldComponentProps> & React_2.RefAttributes<RefElementType>> | ((props: FieldComponentProps) => React_2.JSX.Element);
+export function withFieldMetadata<FieldComponentProps extends WithMetadataProps, RefElementType = HTMLElement>(FieldComponent: ComponentType<FieldComponentProps>, isForwardRef?: boolean): (props: FieldComponentProps & {
+    ref?: React_2.Ref<RefElementType>;
+}) => React_2.JSX.Element;
 
-// Warning: (ae-forgotten-export) The symbol "WithPlaceholderSpec" needs to be exported by the entry point api-surface.d.ts
-// Warning: (ae-forgotten-export) The symbol "WithPlaceholderOptions" needs to be exported by the entry point api-surface.d.ts
+// Warning: (ae-forgotten-export) The symbol "WrapperProps_2" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export function withPlaceholder(placeholders: WithPlaceholderSpec, options?: WithPlaceholderOptions): (WrappedComponent: React_2.ComponentClass<PlaceholderProps> | React_2.FunctionComponent<PlaceholderProps>) => (props: EnhancedOmit<PlaceholderProps, keyof WithSitecoreProps>) => React_2.JSX.Element;
+export const withPlaceholder: <T extends ComponentProps, W extends T & WrapperProps_2>(Component: ComponentType<T>) => (props: W) => React_2.JSX.Element;
 
-// @public (undocumented)
-export function withSitecore(options?: WithSitecoreOptions): <ComponentProps extends WithSitecoreProps>(Component: React_2.ComponentType<ComponentProps>) => (props: WithSitecoreHocProps<ComponentProps>) => React_2.JSX.Element;
-
-// @public
-export type WithSitecoreHocProps<ComponentProps> = EnhancedOmit<ComponentProps, keyof WithSitecoreProps>;
-
-// @public
-export interface WithSitecoreOptions {
-    updatable?: boolean;
-}
-
-// @public
-export interface WithSitecoreProps {
-    api?: SitecoreProviderState['api'];
-    page: Page;
-    updatePage?: ((value: Page) => void) | false;
-}
+// Warning: (ae-forgotten-export) The symbol "WithSitecoreHocProps" needs to be exported by the entry point api-surface.d.ts
+//
+// @public @deprecated (undocumented)
+export function withSitecore(options?: UseSitecoreOptions): <ComponentProps extends Partial<SitecoreProviderState> & Pick<SitecoreProviderState, "page">>(Component: React_2.ComponentType<ComponentProps>) => (props: WithSitecoreHocProps<ComponentProps>) => React_2.JSX.Element;
 
 // Warnings were encountered during analysis:
 //
-// src/components/DesignLibrary/DesignLibrary.tsx:53:27 - (ae-forgotten-export) The symbol "DesignLibraryProps" needs to be exported by the entry point api-surface.d.ts
 // src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point api-surface.d.ts
+// src/components/SitecoreProvider.tsx:95:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

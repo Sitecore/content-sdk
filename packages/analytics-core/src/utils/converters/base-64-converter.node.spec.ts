@@ -1,4 +1,5 @@
 import { convertToBase64 } from './base-64-converter';
+import { jest, expect } from '@jest/globals';
 
 describe('convertToBase64', () => {
   it('toString method is called with base64 ', () => {
