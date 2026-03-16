@@ -51,6 +51,10 @@ export type LoaderId = keyof LoaderIdMap extends never ? string : keyof LoaderId
 /**
  * Browser-only: load data from transfer state or LoaderDataService.
  * Injects TransferState, LoaderDataService. Called by the resolver when isPlatformBrowser.
+ * @param {ActivatedRouteSnapshot} route - The current route snapshot
+ * @param {RouterStateSnapshot} state - The router state snapshot
+ * @param {string} loaderId - loader ID to resolve, used for transfer state key and LoaderDataService call
+ * @param {Router} router - The Angular router instance
  */
 async function resolveOnBrowser(
   route: ActivatedRouteSnapshot,

@@ -1,5 +1,6 @@
 import { InjectionToken, Provider } from '@angular/core';
 import type { LoaderFn } from './models';
+/* eslint-disable-next-line no-unused-vars -- referenced in JSDoc {@link} below */
 import { LOADER_DATA_ENDPOINT } from '../server/constants';
 
 /**
@@ -17,6 +18,7 @@ export const LOADER_REGISTRY = new InjectionToken<Record<string, LoaderFn>>('LOA
  * Provides the loader registry for DI. Pass the loaders your app uses (e.g. page, '404', '500').
  * The same loader set must be registered on the server in createLoaderDataServiceMiddleware so
  * client-side navigation can fetch route data via the data endpoint.
+ * @param {Record<string, LoaderFn>} loaders - Map of loader id to loader function
  * @public
  */
 export const provideLoaderRegistry = (loaders: Record<string, LoaderFn>): Provider[] => {

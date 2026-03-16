@@ -85,7 +85,11 @@ export type LoaderRedirectResult = {
   status?: number;
 };
 
-/** Type guard for redirect results returned by loaders. @internal */
+/**
+ * Type guard for redirect results returned by loaders.
+ * @param {unknown} v - Value to check
+ * @internal
+ */
 export function isLoaderRedirectResult(v: unknown): v is LoaderRedirectResult {
   return (
     typeof v === 'object' &&

@@ -31,7 +31,6 @@ interface ResolverWithLoaderId {
  * resolvers on that snapshot and its parents (via LOADER_ID on pathFromRoot), then
  * calls LoaderDataService.prefetch() for each (loaderId, url, params, query). Fetches
  * run in parallel; results are stored in LoaderDataService cache for getData() to consume.
- *
  * @public
  */
 @Injectable({
@@ -62,9 +61,8 @@ export class PreLoaderDataService {
    * Call this at the start of browser resolver execution so all loaders for the route
    * are kicked off in parallel before resolvers run sequentially.
    * No-op on server.
-   *
-   * @param route - Current route route (pathFromRoot gives current and parent routes)
-   * @param state - Current router state (use state.url for the navigation URL)
+   * @param {ActivatedRouteSnapshot} route - Current route (pathFromRoot gives current and parent routes)
+   * @param {RouterStateSnapshot} state - Current router state (use state.url for the navigation URL)
    */
   async prefetchForRoute(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (!isPlatformBrowser(this.platformId)) {
@@ -79,6 +77,8 @@ export class PreLoaderDataService {
   /**
    * Collect LoaderDataRequest for each resolver that has LOADER_ID on the current route
    * and its parent routes (pathFromRoot). Deduplicates by (loaderId, url).
+   * @param {ActivatedRouteSnapshot} route - The current route
+   * @param {RouterStateSnapshot} state - The router state snapshot, used for url and params
    */
   private collectLoaders(
     route: ActivatedRouteSnapshot,

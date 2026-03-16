@@ -6,11 +6,8 @@ import { RequestContext } from './models';
  * Apply a redirect: internal URLs → RedirectCommand; external URLs → full page navigation.
  * Use in resolvers and in the navigation error handler (fallback) so redirect behavior is consistent.
  * Redirects are not errors; this helper is the single place that defines how to perform them.
- * Redirects are not errors; this helper is the single place that defines how to perform them.
- *
- * @param router - Angular Router (for internal redirects)
- * @param location - Target URL (path or full URL)
- * @param options - replaceUrl for internal redirects (default true)
+ * @param {Router} router - Angular Router (for internal redirects)
+ * @param {string} location - Target URL (path or full URL)
  * @returns RedirectCommand for internal, void after window.location.assign for external
  * @public
  */

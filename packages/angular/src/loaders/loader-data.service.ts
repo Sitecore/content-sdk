@@ -8,7 +8,10 @@ import { LOADER_DATA_ENDPOINT } from '../server/constants';
 import { FETCH_DATA_ENDPOINT } from './loader-registry.token';
 
 /**
- * Cache key generator for loader data
+ * Cache key generator for loader data.
+ * @param {string} loaderId - Loader identifier
+ * @param {string} url - Request URL
+ * @returns Cache key string
  */
 function cacheKey(loaderId: string, url: string): string {
   return `loader:${loaderId}:${url}`;
@@ -41,7 +44,7 @@ export class LoaderDataService {
    * If data is already cached or a request is pending, does nothing.
    * Otherwise starts a fetch and stores the result in cache for a later getData() call.
    * Used by PreLoaderDataService to warm the cache for all loaders in a route in parallel.
-   * @param {LoaderDataRequest} request - The loader data request
+   * @param {LoaderDataRequest} loaderRequest - The loader data request
    */
   prefetch(loaderRequest: LoaderDataRequest): void {
     if (!isPlatformBrowser(this.platformId)) {
