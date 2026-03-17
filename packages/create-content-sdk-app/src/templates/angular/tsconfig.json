@@ -33,6 +33,6 @@
     "baseUrl": "./",
     "esModuleInterop": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "sitecore.config.ts"],
   "exclude": ["src/**/*.spec.ts"]
 }

@@ -1,3 +1,8 @@
+// ─── Angular SDK providers and tokens ──────────────────────────
+export { provideSitecoreAngular, type SitecoreAngularConfig } from './lib/providers';
+export { SITECORE_CONFIG_TOKEN, COMPONENT_MAP_TOKEN } from './lib/tokens';
+export type { ComponentMap } from './lib/types';
+
 // ─── Re-exports from core/content ─────────────────────────────
 export * from '@sitecore-content-sdk/content/config';
 export {
