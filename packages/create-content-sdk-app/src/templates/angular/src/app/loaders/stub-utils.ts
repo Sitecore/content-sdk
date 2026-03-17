@@ -11,6 +11,9 @@ import { LayoutServicePageState } from '@sitecore-content-sdk/angular';
  * Replace with real layout/route data from Sitecore when implemented.
  */
 export function stubPageResult(url: string): Page {
+  if (url.endsWith('fake-page')) {
+    return null;
+  }
   return {
     layout: {
       sitecore: {
