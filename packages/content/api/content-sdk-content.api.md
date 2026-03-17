@@ -373,7 +373,7 @@ export interface EditingRenderQueryParams {
 // @public
 export class EditingService {
     constructor(serviceConfig: EditingServiceConfig);
-    fetchEditingData({ itemId, language, version, layoutKind, mode }: EditingOptions, fetchOptions?: FetchOptions): Promise<{
+    fetchEditingData(input: EditingOptions, fetchOptions?: FetchOptions): Promise<{
         layoutData: LayoutServiceData;
     }>;
     protected getGraphQLClient(): GraphQLClient;
@@ -512,7 +512,7 @@ export type GenerateMapArgs = {
 export type GenerateMapFunction = (args: GenerateMapArgs) => void;
 
 // @public
-export const generateSites: ({ destinationPath }?: GenerateSitesConfig) => ((args: {
+export const generateSites: (input?: GenerateSitesConfig) => ((args: {
     scConfig: SitecoreConfig;
 }) => Promise<void>);
 
@@ -540,10 +540,10 @@ export let getComponentList: typeof _getComponentList;
 // Warning: (ae-forgotten-export) The symbol "ComponentSpec" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
-export const getComponentSpec: ({ componentId, edgeUrl, targetPath, token, }: GetComponentSpecParams) => Promise<ComponentSpec>;
+export const getComponentSpec: (input: GetComponentSpecParams) => Promise<ComponentSpec>;
 
 // @internal
-export const getComponentSpecUrl: ({ componentId, edgeUrl, targetPath, token, }: GetComponentSpecParams) => string;
+export const getComponentSpecUrl: (input: GetComponentSpecParams) => string;
 
 // @internal
 export const getContentSdkPagesClientData: () => Record<string, Record<string, unknown>>;
@@ -1361,7 +1361,7 @@ export const VARIANT_PREFIX = "_variantId_";
 // Warning: (ae-incompatible-release-tags) The symbol "writeImportMap" is marked as @public, but its signature references "WriteImportMapArgsInternal" which is marked as @internal
 //
 // @public
-export const writeImportMap: (args: WriteImportMapArgsInternal) => ({ scConfig }: {
+export const writeImportMap: (args: WriteImportMapArgsInternal) => (input: {
     scConfig: SitecoreConfig;
 }) => Promise<void>;
 
