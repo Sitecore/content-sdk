@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+
+const DEFAULT_TITLE = 'Page Not Found';
+const DEFAULT_MESSAGE = 'Sorry, the page you\'re looking for doesn\'t exist or has been moved.';
 
 /**
  * 404 Not Found error page component.
- * Displays a user-friendly message when a page is not found.
+ * Reads page from the '404' loader; displays route.fields.error.value or default text.
  */
 @Component({
   selector: 'app-404',
@@ -13,8 +18,8 @@ import { RouterLink } from '@angular/router';
     <div class="not-found-container">
       <div class="not-found-content">
         <h1>404</h1>
-        <h2>Page Not Found</h2>
-        <p>Sorry, the page you're looking for doesn't exist or has been moved.</p>
+        <h2>{{ title() }}</h2>
+        <p>{{ message() }}</p>
         <a routerLink="/" class="back-link">Return to Home</a>
       </div>
     </div>
@@ -64,6 +69,17 @@ import { RouterLink } from '@angular/router';
     .back-link:hover {
       background-color: #0052a3;
     }
-  `]
+  `],
 })
-export class NotFoundComponent {}
+export class NotFoundComponent {
+  private readonly route = inject(ActivatedRoute);
+  private readonly routeData = toSignal(this.route.data);
+
+  private readonly errorFromPage = computed(() => {
+    const page = this.routeData()?.['page'] as { layout?: { sitecore?: { route?: { fields?: { error?: { value?: string } } } } } } | undefined;
+    return page?.layout?.sitecore?.route?.fields?.error?.value;
+  });
+
+  readonly title = computed(() => DEFAULT_TITLE);
+  readonly message = computed(() => (typeof this.errorFromPage() === 'string' ? this.errorFromPage()! : DEFAULT_MESSAGE));
+}

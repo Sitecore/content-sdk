@@ -2,6 +2,9 @@
   "name": "@sitecore-content-sdk/angular",
   "private": true,
   "version": "2.0.0-canary.6",
+  "installConfig": {
+    "hoistingLimits": "none"
+  },
   "description": "Angular components and utilities for Sitecore Content SDK",
   "sideEffects": false,
   "publishConfig": {

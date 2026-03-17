@@ -1,8 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+
+const DEFAULT_TITLE = 'Internal Server Error';
+const DEFAULT_MESSAGE = 'Something went wrong on our end. Please try again later.';
 
 /**
- * Error page component for displaying 500 server errors.
- * Provides user-friendly messaging and navigation options.
+ * 500 error page component.
+ * Reads page from the '500' loader; displays route.fields.error.value or default text.
  */
 @Component({
   selector: 'app-error',
@@ -10,8 +15,8 @@ import { Component } from '@angular/core';
     <div class="error-container">
       <div class="error-content">
         <h1 class="error-code">{{ errorCode }}</h1>
-        <h2 class="error-title">{{ errorTitle }}</h2>
-        <p class="error-message">{{ errorMessage }}</p>
+        <h2 class="error-title">{{ errorTitle() }}</h2>
+        <p class="error-message">{{ errorMessage() }}</p>
         <div class="error-actions">
           <button class="btn btn-primary" (click)="goHome()">Go Home</button>
           <button class="btn btn-secondary" (click)="retry()">Retry</button>
@@ -93,19 +98,26 @@ import { Component } from '@angular/core';
 })
 export class ErrorComponent {
   readonly errorCode = 500;
-  readonly errorTitle = 'Internal Server Error';
-  readonly errorMessage = 'Something went wrong on our end. Please try again later.';
 
-  /**
-   * Navigate back to the home page.
-   */
+  private readonly route = inject(ActivatedRoute);
+  private readonly routeData = toSignal(this.route.data);
+
+  private readonly errorFromPage = computed(() => {
+    const page = this.routeData()?.['page'] as
+      | { layout?: { sitecore?: { route?: { fields?: { error?: { value?: string } } } } } }
+      | undefined;
+    return page?.layout?.sitecore?.route?.fields?.error?.value;
+  });
+
+  readonly errorTitle = computed(() => DEFAULT_TITLE);
+  readonly errorMessage = computed(() =>
+    typeof this.errorFromPage() === 'string' ? this.errorFromPage()! : DEFAULT_MESSAGE
+  );
+
   goHome(): void {
     window.location.href = '/';
   }
 
-  /**
-   * Retry the last action.
-   */
   retry(): void {
     window.location.reload();
   }
