@@ -6,25 +6,20 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
-import * as dotenv from 'dotenv';
-dotenv.config();
+import { createLoaderDataServiceMiddleware } from '@sitecore-content-sdk/angular';
+import { LOADERS } from './app/loaders';
+
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 /**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
+ * Loader data endpoint (/_data). Must use the same loaders as the client registry
+ * so client-side navigation can fetch route data via POST /_data.
  */
-
+app.use(express.json());
+app.use(createLoaderDataServiceMiddleware({ loaders: LOADERS }));
 /**
  * Serve static files from /browser
  */
@@ -38,12 +33,15 @@ app.use(
 
 /**
  * Handle all other requests by rendering the Angular application.
+ * Catches ExternalRedirectError from loaders so server-side external redirects send HTTP 302.
  */
 app.use((req, res, next) => {
   angularApp
     .handle(req)
     .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
-    .catch(next);
+    .catch((err) => {
+      next(err);
+    });
 });
 
 /**
