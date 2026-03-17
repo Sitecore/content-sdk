@@ -1,7 +1,4 @@
-/**
- * Atom schema utilities for Design Studio (DS).
- * Use these to define atoms in src/components/atoms with type-safe props and events.
- */
+/** Atom schema utilities. */
 export type {
   AtomMetadata,
   AtomChild,
