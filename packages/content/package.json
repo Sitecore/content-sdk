@@ -74,7 +74,7 @@
     "typescript": "~5.8.3"
   },
   "peerDependencies": {
-    "@sitecore-content-sdk/events": "^2.0.0-canary"
+    "@sitecore-content-sdk/events": "^2.0.0"
   },
   "dependencies": {
     "@sitecore-content-sdk/core": "^2.0.0",
