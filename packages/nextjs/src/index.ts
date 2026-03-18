@@ -163,6 +163,11 @@ export {
   AppPlaceholder,
   AppPlaceholderProps,
   renderEmptyPlaceholder,
+  AtomRenderer,
+  AtomChild,
+  AtomMetadata,
+  DefaultChild,
+  AtomType,
 } from '@sitecore-content-sdk/react';
 
 export { initContentSdk } from '@sitecore-content-sdk/core';

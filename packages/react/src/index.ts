@@ -10,7 +10,11 @@ export {
   NativeDataFetcherConfig,
 } from '@sitecore-content-sdk/core';
 export { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
-export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/content/editing';
+export {
+  isEditorActive,
+  resetEditorChromes,
+  AtomType,
+} from '@sitecore-content-sdk/content/editing';
 export {
   getContentStylesheetLink,
   getDesignLibraryStylesheetLinks,
@@ -85,6 +89,8 @@ export {
   DynamicComponent,
   ImportMapImport,
 } from './components/DesignLibrary';
+export { AtomRenderer } from './components/AtomRenderer';
+export { AtomChild, AtomMetadata, DefaultChild } from './atoms/types';
 export {} from './components/FEaaS/BYOCComponent';
 export { Link, LinkField, LinkFieldValue, LinkProps } from './components/Link';
 export { File, FileField } from './components/File';

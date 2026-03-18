@@ -5,6 +5,7 @@ import { Page } from '@sitecore-content-sdk/content/client';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { ComponentMap } from './sharedTypes';
 import { ImportMapImport } from './DesignLibrary/models';
+import { AtomMetadata } from '../atoms/types';
 
 export interface SitecoreProviderProps {
   /**
@@ -23,6 +24,11 @@ export interface SitecoreProviderProps {
    * The dynamic import for import map to be used in variant generation mode.
    */
   loadImportMap: () => Promise<ImportMapImport>;
+
+  /**
+   * The atoms metadata to be used in the Design Library.
+   */
+  atoms?: AtomMetadata[];
 
   children: React.ReactNode;
 }
@@ -46,6 +52,10 @@ export interface SitecoreProviderState {
    * The dynamic import for import map to be used in variant generation mode.
    */
   loadImportMap: () => Promise<ImportMapImport>;
+  /**
+   * The atoms metadata to be used in the Design Library.
+   */
+  atoms?: AtomMetadata[];
   /**
    * The component map to use for rendering components.
    */
@@ -88,12 +98,13 @@ export const ImportMapReactContext = React.createContext<
  * @param {SitecoreProviderProps['page']} props.page - The page data.
  * @param {SitecoreProviderProps['componentMap']} props.componentMap - The component map.
  * @param {SitecoreProviderProps['loadImportMap']} props.loadImportMap - The function to load the import map.
+ * @param {SitecoreProviderProps['atoms']} props.atoms - The atoms metadata.
  * @param {React.ReactNode} props.children - The children to render.
  * @returns {React.ReactNode} The SitecoreProvider component.
  * @public
  */
 export const SitecoreProvider = (props: SitecoreProviderProps) => {
-  const { api, page: propsPage, componentMap, loadImportMap, children } = props;
+  const { api, page: propsPage, componentMap, loadImportMap, atoms, children } = props;
 
   const [page, setPageInternal] = useState<Page>(propsPage);
 
@@ -117,8 +128,9 @@ export const SitecoreProvider = (props: SitecoreProviderProps) => {
       api,
       componentMap,
       loadImportMap,
+      atoms,
     }),
-    [page, setPage, api, componentMap, loadImportMap]
+    [page, setPage, api, componentMap, loadImportMap, atoms]
   );
 
   return (
