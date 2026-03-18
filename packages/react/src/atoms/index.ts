@@ -5,6 +5,7 @@ export type {
   DefaultChild,
   EditableComponentProps,
   CallbackPropKeys,
+  CallbackArgZodTuple,
   PropMeta,
   ArgMeta,
 } from './types';

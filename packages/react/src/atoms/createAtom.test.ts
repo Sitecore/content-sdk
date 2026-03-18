@@ -76,4 +76,77 @@ describe('createAtom', () => {
     });
     expect(meta.props).to.be.instanceOf(z.ZodObject);
   });
+
+  describe('customEvents (typed to callback parameters)', () => {
+    it('accepts customEvents with tuple matching callback params (two args)', () => {
+      const WithSubmit = (props: {
+        onSubmit?: (name: string, count: number) => void;
+      }) => {
+        void props;
+        return null;
+      };
+      const onSubmitSchemas = [z.string(), z.number()];
+      const meta = createAtom(WithSubmit, {
+        name: 'WithSubmit',
+        description: 'With submit',
+        props: {},
+        customEvents: { onSubmit: onSubmitSchemas },
+      });
+      expect(meta.customEvents?.onSubmit).to.equal(onSubmitSchemas);
+    });
+
+    it('accepts customEvents with no-arg callback (empty tuple)', () => {
+      const WithClick = (props: { onClick?: () => void }) => {
+        void props;
+        return null;
+      };
+      const meta = createAtom(WithClick, {
+        name: 'WithClick',
+        description: 'With click',
+        props: {},
+        customEvents: {
+          onClick: [],
+        },
+      });
+      expect(meta.customEvents).to.deep.equal({ onClick: [] });
+    });
+
+    it('accepts customEvents with optional param (union with undefined)', () => {
+      const WithChange = (props: {
+        onChange?: (value: string, extra?: number) => void;
+      }) => {
+        void props;
+        return null;
+      };
+      const meta = createAtom(WithChange, {
+        name: 'WithChange',
+        description: 'With change',
+        props: {},
+        customEvents: {
+          onChange: [z.string(), z.number().optional()],
+        },
+      });
+      expect(meta.customEvents?.onChange).to.have.lengthOf(2);
+    });
+
+    it('passes through multiple customEvents', () => {
+      const Multi = (props: {
+        onA?: (x: string) => void;
+        onB?: (y: number) => void;
+      }) => {
+        void props;
+        return null;
+      };
+      const onASchemas = [z.string()];
+      const onBSchemas = [z.number()];
+      const meta = createAtom(Multi, {
+        name: 'Multi',
+        description: 'Multi',
+        props: {},
+        customEvents: { onA: onASchemas, onB: onBSchemas },
+      });
+      expect(meta.customEvents?.onA).to.equal(onASchemas);
+      expect(meta.customEvents?.onB).to.equal(onBSchemas);
+    });
+  });
 });

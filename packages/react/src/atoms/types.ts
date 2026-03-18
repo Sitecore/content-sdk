@@ -33,6 +33,15 @@ export type CallbackPropKeys<T> = {
   [K in keyof T & string]: NonNullable<T[K]> extends (...args: unknown[]) => unknown ? K : never;
 }[keyof T & string];
 
+/**
+ * Tuple of Zod types matching a function's parameter list. Used to type customEvents so each
+ * callback's schemas match its parameters.
+ * @public
+ */
+export type CallbackArgZodTuple<F> = F extends (...args: infer A) => unknown
+  ? { [I in keyof A]: z.ZodType<A[I]> }
+  : never;
+
 /** Prop metadata (e.g. control hint for DS). @public */
 export type PropMeta = { control?: string };
 

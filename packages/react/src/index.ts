@@ -119,6 +119,7 @@ export {
   type DefaultChild,
   type EditableComponentProps,
   type CallbackPropKeys,
+  type CallbackArgZodTuple,
   type PropMeta,
   type ArgMeta,
   type AtomSchemaInput,

@@ -7,6 +7,7 @@ import type {
   DefaultChild,
   EditableComponentProps,
   CallbackPropKeys,
+  CallbackArgZodTuple,
 } from './types';
 
 /**
@@ -29,9 +30,11 @@ export type AtomSchemaInput<C extends ComponentType<unknown>> = {
   };
   /** DOM event handler prop names (e.g. onClick). Must be callback props. */
   htmlEvents?: CallbackPropKeys<EditableComponentProps<C>>[];
-  /** Custom callback prop names to Zod argument type arrays. Keys must be callback props. */
+  /** Custom callback prop names to tuple of Zod types matching that callback's parameters. */
   customEvents?: {
-    [K in CallbackPropKeys<EditableComponentProps<C>>]?: z.ZodType[];
+    [K in CallbackPropKeys<EditableComponentProps<C>>]?: CallbackArgZodTuple<
+      NonNullable<EditableComponentProps<C>[K]>
+    >;
   };
   /** Allowed child types (atom-child metadata, 'text', or 'atom') */
   allowedChildren?: AtomChild[];
