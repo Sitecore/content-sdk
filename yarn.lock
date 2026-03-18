@@ -3143,7 +3143,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/cli@npm:2.0.0-canary.20, @sitecore-content-sdk/cli@workspace:packages/cli":
+"@sitecore-content-sdk/cli@npm:^2.0.0, @sitecore-content-sdk/cli@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
@@ -3306,7 +3306,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/nextjs@npm:2.0.0-canary.20, @sitecore-content-sdk/nextjs@workspace:packages/nextjs":
+"@sitecore-content-sdk/nextjs@npm:^2.0.0, @sitecore-content-sdk/nextjs@workspace:packages/nextjs":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/nextjs@workspace:packages/nextjs"
   dependencies:
@@ -5908,11 +5908,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "create-content-sdk-app@workspace:packages/create-content-sdk-app"
   dependencies:
-    "@sitecore-content-sdk/analytics-core": "npm:2.0.0-canary.20"
-    "@sitecore-content-sdk/cli": "npm:2.0.0-canary.20"
-    "@sitecore-content-sdk/events": "npm:2.0.0-canary.20"
-    "@sitecore-content-sdk/nextjs": "npm:2.0.0-canary.20"
-    "@sitecore-content-sdk/personalize": "npm:2.0.0-canary.20"
+    "@sitecore-content-sdk/analytics-core": "npm:^2.0.0"
+    "@sitecore-content-sdk/cli": "npm:^2.0.0"
+    "@sitecore-content-sdk/events": "npm:^2.0.0"
+    "@sitecore-content-sdk/nextjs": "npm:^2.0.0"
+    "@sitecore-content-sdk/personalize": "npm:^2.0.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
     "@types/cross-spawn": "npm:^6.0.6"
