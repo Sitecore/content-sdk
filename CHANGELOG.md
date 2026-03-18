@@ -10,7 +10,7 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
-## Unreleased
+## 2.0.0
 
 ### 🎉 New Features & Improvements
 
@@ -64,7 +64,7 @@ Our versioning strategy is as follows:
   - `DesignLibrary` component now does not accept any props
   - `SitecoreProvider`'s `loadImportMap` is now required
 * [react] [nextjs] Major revamp of components in the react package ([#371](https://github.com/Sitecore/content-sdk/pull/371)):
-  - `Placeholder` and `AppPlaceholder` components' prop `modifyComponentProps` has been removed. `passThroughComponentProps` prop has been added to fill the role of passing props to child components
+  - `Placeholder` and `AppPlaceholder`, `passThroughComponentProps` prop has been added to fill make passing props to child components easier
   - `componentMap` and `loadImportMap` have been added to the context shared via `SitecoreProvider`
   - `useLoadImportMap`, `useComponentMap` HOCs have been removed. The Sitecore context data can be accessed via `useSitecore` hook.
   - `withSitecore`'s `updatePage` prop has been renamed to `setPage`. This HOC has also been marked deprecated, and will eventually be removed in favor of `useSitecore` hook.
