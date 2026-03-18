@@ -22,9 +22,6 @@ Our versioning strategy is as follows:
 
 * `[nextjs]` `[create-content-sdk-app]` Enable Next.js 16 Cache Components and Turbopack File System Caching ([#334](https://github.com/Sitecore/content-sdk/pull/334))
 
-* `[core]` `[content]` `[nextjs]` Support custom Edge hostnames via `SITECORE_EDGE_PLATFORM_HOSTNAME` (Next.js: `NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME`) ([#359](https://github.com/Sitecore/content-sdk/pull/359))
-  - New `rewriteMediaUrls` option: when `true`, rewrites layout media URLs to the custom Edge hostname; when a function, applies a custom string transformer.
-
 * Search integration ([#295](https://github.com/Sitecore/content-sdk/pull/295))
   * `[search]` New `@sitecore-content-sdk/search` package providing search functionality
     - `SearchService` class for performing search queries with support for pagination, sorting, request cancellation.
@@ -45,12 +42,18 @@ Our versioning strategy is as follows:
 
 ### 🛠 Breaking Changes
 
+* `[core]` `[content]` `[nextjs]` Support custom Edge hostnames via `SITECORE_EDGE_PLATFORM_HOSTNAME` (Next.js: `NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME`) ([#359](https://github.com/Sitecore/content-sdk/pull/359))
+  - New `rewriteMediaUrls` option: when `true`, rewrites layout media URLs to the custom Edge hostname; when a function, applies a custom string transformer.
+  - The old `SITECORE_EDGE_URL` environment variable is no longer used
+
 * Decouple `@sitecore-content-sdk/content` from `@sitecore-content-sdk/core` ([#351](https://github.com/Sitecore/content-sdk/pull/351)([#383](https://github.com/Sitecore/content-sdk/pull/383))):
   - See a detailed upgrade guide for migration instructions
+
 * `[nextjs]` `[create-content-sdk-app]` Upgrade to Next.js 16 ([#334](https://github.com/Sitecore/content-sdk/pull/334))([#343](https://github.com/Sitecore/content-sdk/pull/343))([#353](https://github.com/Sitecore/content-sdk/pull/353))
   - Next.js 16 is now required (minimum version `^16.0.0`)
   - `middleware.ts` renamed to `proxy.ts` with updated function signature
   - Removed deprecated `images.domains` usage (use `remotePatterns` instead)
+
 * `[nextjs]` Expand SXA redirects logic with support for isLanguagePreserved flag. This provides an option to preserve current locale when target redirect URL does not have a locale prefix ([#305](https://github.com/Sitecore/content-sdk/pull/305))
   - This changes the default redirects behavior out of the box.
     - Previously, `/da/source -> /target` rule would redirect to `/da/target` path when default locale is not `da`
