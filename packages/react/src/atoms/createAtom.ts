@@ -1,6 +1,5 @@
 /** Component-first atom/atom-child definition; schema.type differentiates. */
 import { z } from 'zod';
-import type { ComponentType } from 'react';
 import type {
   AtomMetadata,
   AtomChild,
@@ -15,7 +14,7 @@ import type {
  * children and ref; event keys are restricted to callback props of the component.
  * @public
  */
-export type AtomSchemaInput<C extends ComponentType<unknown>> = {
+export type AtomSchemaInput<C> = {
   /** Unique identifier used as the element type in the DSL */
   name: string;
   /** Human-readable summary for the component palette */
@@ -50,7 +49,7 @@ export type AtomSchemaInput<C extends ComponentType<unknown>> = {
  * @returns AtomMetadata with type taken from schema.type (default 'atom')
  * @public
  */
-export function createAtom<C extends ComponentType<unknown>>(
+export function createAtom<C>(
   component: C,
   schema: AtomSchemaInput<C>
 ): AtomMetadata {

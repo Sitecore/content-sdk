@@ -1,6 +1,6 @@
 /** Atom schema types. @public */
 import type { z } from 'zod';
-import type { ComponentPropsWithoutRef, ComponentType } from 'react';
+import type { ComponentType } from 'react';
 
 /** Metadata for an atom or atom-child; type differentiates. @public */
 export type AtomMetadata = {
@@ -22,11 +22,18 @@ export type AtomChild = AtomMetadata | 'text' | 'atom';
 /** Default child: metadata or { atom, props? }. @public */
 export type DefaultChild = AtomMetadata | { atom: AtomMetadata; props?: Record<string, unknown> };
 
+/**
+ * Extracts props from a component type without requiring ComponentType<unknown>, so function
+ * components with specific props (e.g. (props: { x: string }) => JSX.Element) are accepted.
+ */
+type PropsOfComponent<C> = C extends (props: infer P) => unknown
+  ? P
+  : C extends ComponentType<infer P>
+  ? P
+  : never;
+
 /** Component props excluding children and ref. @public */
-export type EditableComponentProps<C extends ComponentType<unknown>> = Omit<
-  ComponentPropsWithoutRef<C>,
-  'children'
->;
+export type EditableComponentProps<C> = Omit<PropsOfComponent<C>, 'children' | 'ref'>;
 
 /** Keys of T that are callback (function) props. @public */
 export type CallbackPropKeys<T> = {
