@@ -1,5 +1,6 @@
 /** Schema metadata for atom props/events. */
 import { z } from 'zod';
+import type { PropMeta, ArgMeta } from './types';
 
 const META_KEY = 'meta';
 
@@ -11,7 +12,7 @@ const META_KEY = 'meta';
  * @returns The same Zod type with meta attached (or schema unchanged if .meta is not callable)
  * @public
  */
-export function withPropMeta<T extends z.ZodType>(schema: T, meta: import('./types').PropMeta): T {
+export function withPropMeta<T extends z.ZodType>(schema: T, meta: PropMeta): T {
   const s = schema as unknown as { meta?: (m: Record<string, unknown>) => T };
   if (typeof s.meta === 'function') {
     return s.meta({ [META_KEY]: meta });
@@ -27,7 +28,7 @@ export function withPropMeta<T extends z.ZodType>(schema: T, meta: import('./typ
  * @returns The same Zod type with meta attached (or schema unchanged if .meta is not callable)
  * @public
  */
-export function withArgMeta<T extends z.ZodType>(schema: T, meta: import('./types').ArgMeta): T {
+export function withArgMeta<T extends z.ZodType>(schema: T, meta: ArgMeta): T {
   const s = schema as unknown as { meta?: (m: Record<string, unknown>) => T };
   if (typeof s.meta === 'function') {
     return s.meta({ [META_KEY]: meta });
