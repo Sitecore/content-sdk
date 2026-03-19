@@ -1,0 +1,104 @@
+name: Prepare Hotfix Release
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_name:
+        description: 'Full package name'
+        required: true
+        type: choice
+        options:
+          - '@sitecore-content-sdk/nextjs'
+          - '@sitecore-content-sdk/cli'
+          - '@sitecore-content-sdk/react'
+          - '@sitecore-content-sdk/search'
+          - 'create-content-sdk'
+          - '@sitecore-content-sdk/core'
+          - '@sitecore-content-sdk/content'
+          - '@sitecore-content-sdk/analytics-core'
+          - '@sitecore-content-sdk/events'
+          - '@sitecore-content-sdk/personalize'
+
+      version:
+        description: 'Base version to hotfix'
+        required: true
+        type: string
+
+jobs:
+  prep-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate GitHub App Token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - name: Set git configuration
+        run: |
+          git config --global user.email builds@sitecore.com
+          git config --global user.name "content-sdk-bot"
+          git remote set-url origin https://x-access-token:${{ steps.generate-token.outputs.token }}@github.com/${{ github.repository }}
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Setup GH action
+        id: setup-gh-action
+        run: |
+          BASE_RELEASE="${{ inputs.package_name }}@${{ inputs.version }}"
+
+          if ! git rev-parse "refs/tags/$BASE_RELEASE" >/dev/null 2>&1; then
+            echo "Release tag $BASE_RELEASE not found. Please validate your inputs."
+            exit 1
+          fi
+
+          echo "base_release=$BASE_RELEASE" >> $GITHUB_OUTPUT
+
+      - name: Create release branch
+        id: create-branch
+        run: |
+          BRANCH_NAME="release/${{ steps.setup-gh-action.outputs.base_release }}-hotfix"
+
+          if git ls-remote --heads origin "$BRANCH_NAME" | grep -q .; then
+            echo "Hotfix branch $BRANCH_NAME already exists"
+            echo "Please check if this is expected. Delete the branch and run action again if not."
+            exit 1
+          else
+            git checkout -b "$BRANCH_NAME" "${{ steps.setup-gh-action.outputs.base_release }}"
+            git push -u origin "$BRANCH_NAME"
+            echo "Branch $BRANCH_NAME created and pushed"
+          fi
+
+      - name: Summary
+        run: |
+          BRANCH_NAME="${{ steps.create-branch.outputs.branch_name }}"
+          BASE_RELEASE="${{ steps.setup-gh-action.outputs.base_release }}"
+
+          echo "## Release Branch Prepared" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| **Target Package** | \`$BASE_RELEASE\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Release Branch** | \`$BRANCH_NAME\` |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Checkout the branch: \`git checkout $BRANCH_NAME\`" >> $GITHUB_STEP_SUMMARY
+          echo "2. Cherrypick or add patch changes" >> $GITHUB_STEP_SUMMARY
+          echo "3. Add changesets (\`yarn changeset\`)" >> $GITHUB_STEP_SUMMARY
+          echo "4. Prepare PR(s) with hotfix changes" >> $GITHUB_STEP_SUMMARY
+          echo "5. Push changes. This will update pre-patch canaries and automatically create the hotfix release PR" >> $GITHUB_STEP_SUMMARY
+          echo "6. Merge hotfix release PR to trigger the release" >> $GITHUB_STEP_SUMMARY
