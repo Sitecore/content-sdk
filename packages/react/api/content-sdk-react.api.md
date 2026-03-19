@@ -9,6 +9,7 @@ import { CacheOptions } from '@sitecore-content-sdk/core';
 import { ClientError } from '@sitecore-content-sdk/core';
 import { ComponentFields } from '@sitecore-content-sdk/content/layout';
 import { ComponentParams } from '@sitecore-content-sdk/content/layout';
+import type { ComponentPropsWithoutRef } from 'react';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ComponentType } from 'react';
 import { constants } from '@sitecore-content-sdk/core';
@@ -58,12 +59,52 @@ import { SearchParameters } from '@sitecore-content-sdk/search';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { SitePathService } from '@sitecore-content-sdk/content/site';
 import { SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
+import { z } from 'zod';
 
 // @public
 export const AppPlaceholder: (props: AppPlaceholderProps) => React_2.JSX.Element;
 
 // @public
 export type AppPlaceholderProps = Omit<PlaceholderProps, 'componentMap' | 'page'> & Required<Pick<PlaceholderProps, 'componentMap' | 'page'>>;
+
+// @public
+export type ArgMeta = {
+    argName: string;
+};
+
+// @public
+export type AtomChild = AtomMetadata | 'text' | 'atom';
+
+// @public
+export type AtomMetadata = {
+    name: string;
+    version?: number;
+    type: 'atom' | 'atom-child';
+    description: string;
+    props: z.ZodObject<z.ZodRawShape>;
+    component: (props: unknown) => React.ReactNode;
+    htmlEvents?: string[];
+    customEvents?: Record<string, z.ZodType[]>;
+    allowedChildren?: AtomChild[];
+    defaultChildren?: DefaultChild[];
+};
+
+// @public
+export type AtomSchemaInput<C extends ComponentType<unknown>> = {
+    name: string;
+    description: string;
+    type?: 'atom' | 'atom-child';
+    version?: number;
+    props: {
+        [K in keyof EditableComponentProps<C>]?: z.ZodType<EditableComponentProps<C>[K]>;
+    };
+    htmlEvents?: CallbackPropKeys<EditableComponentProps<C>>[];
+    customEvents?: {
+        [K in CallbackPropKeys<EditableComponentProps<C>>]?: z.ZodType[];
+    };
+    allowedChildren?: AtomChild[];
+    defaultChildren?: DefaultChild[];
+};
 
 // @public
 export class BYOCComponent extends React_2.Component<BYOCComponentProps> {
@@ -112,6 +153,11 @@ export { CacheClient }
 export { CacheOptions }
 
 // @public
+export type CallbackPropKeys<T> = {
+    [K in keyof T & string]: NonNullable<T[K]> extends (...args: unknown[]) => unknown ? K : never;
+}[keyof T & string];
+
+// @public
 export const ClientEditingChromesUpdate: () => JSX_2.Element;
 
 export { ClientError }
@@ -126,6 +172,9 @@ export { ComponentParams }
 export { ComponentRendering }
 
 export { constants }
+
+// @public
+export function createAtom<C extends ComponentType<unknown>>(component: C, schema: AtomSchemaInput<C>): AtomMetadata;
 
 // @public
 export const DateField: React_2.FC<DateFieldProps>;
@@ -145,6 +194,12 @@ export interface DateFieldProps extends EditableFieldProps<DateFieldProps> {
 }
 
 export { debug_2 as debug }
+
+// @public
+export type DefaultChild = AtomMetadata | {
+    atom: AtomMetadata;
+    props?: Record<string, unknown>;
+};
 
 // @public
 export const DefaultEmptyFieldEditingComponentImage: React_2.FC<{
@@ -193,6 +248,9 @@ export type DynamicComponent = React.ComponentType<{
     fields?: ComponentFields;
     params?: ComponentParams;
 }>;
+
+// @public
+export type EditableComponentProps<C extends ComponentType<unknown>> = Omit<ComponentPropsWithoutRef<C>, 'children'>;
 
 // @public
 export const EditingScripts: () => React_2.JSX.Element;
@@ -272,13 +330,16 @@ export interface FileField {
 // Warning: (ae-forgotten-export) The symbol "FormProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export const Form: ({ params, rendering }: FormProps) => React_2.JSX.Element;
+export const Form: (input: FormProps) => React_2.JSX.Element;
 
 export { getChildPlaceholder }
 
 export { getContentStylesheetLink }
 
 export { getDesignLibraryStylesheetLinks }
+
+// @public
+export function getFieldMeta(schemaOrJsonSchema: z.ZodType | Record<string, unknown>): Record<string, unknown> | undefined;
 
 export { getFieldValue }
 
@@ -410,7 +471,7 @@ export const Placeholder: (props: PlaceholderProps) => React_2.JSX.Element;
 // Warning: (ae-forgotten-export) The symbol "PlaceholderMetadataProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
-export const PlaceholderMetadata: ({ rendering, placeholderName, children, componentRuntime, }: PlaceholderMetadataProps) => JSX_2.Element;
+export const PlaceholderMetadata: (input: PlaceholderMetadataProps) => JSX_2.Element;
 
 // @public
 interface PlaceholderProps {
@@ -442,6 +503,11 @@ interface PlaceholderProps {
 }
 export { PlaceholderProps as PlaceholderComponentProps }
 export { PlaceholderProps }
+
+// @public
+export type PropMeta = {
+    control?: string;
+};
 
 // @public
 export type ReactContentSdkComponent = (ComponentType | ReactModule) & {
@@ -580,6 +646,9 @@ export function useSitecore(options?: UseSitecoreOptions): SitecoreProviderState
 // @public
 export const withAppPlaceholder: <T extends ComponentProps, W extends T & WrapperProps>(Component: ComponentType<T>) => (props: W) => React_2.JSX.Element;
 
+// @public
+export function withArgMeta<T extends z.ZodType>(schema: T, meta: ArgMeta): T;
+
 // Warning: (ae-forgotten-export) The symbol "WithDatasourceCheckOptions" needs to be exported by the entry point api-surface.d.ts
 // Warning: (ae-forgotten-export) The symbol "WithDatasourceCheckProps" needs to be exported by the entry point api-surface.d.ts
 //
@@ -611,6 +680,9 @@ export function withFieldMetadata<FieldComponentProps extends WithMetadataProps,
 //
 // @public
 export const withPlaceholder: <T extends ComponentProps, W extends T & WrapperProps_2>(Component: ComponentType<T>) => (props: W) => React_2.JSX.Element;
+
+// @public
+export function withPropMeta<T extends z.ZodType>(schema: T, meta: PropMeta): T;
 
 // Warning: (ae-forgotten-export) The symbol "WithSitecoreHocProps" needs to be exported by the entry point api-surface.d.ts
 //

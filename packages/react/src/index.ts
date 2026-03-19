@@ -109,3 +109,18 @@ export {
 } from './components/DefaultEmptyFieldEditingComponents';
 export { ClientEditingChromesUpdate } from './components/ClientEditingChromesUpdate';
 export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
+export {
+  createAtom,
+  withPropMeta,
+  withArgMeta,
+  getFieldMeta,
+  type AtomMetadata,
+  type AtomChild,
+  type DefaultChild,
+  type EditableComponentProps,
+  type CallbackPropKeys,
+  type CallbackArgZodTuple,
+  type PropMeta,
+  type ArgMeta,
+  type AtomSchemaInput,
+} from './atoms';
