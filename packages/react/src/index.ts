@@ -90,7 +90,6 @@ export {
   ImportMapImport,
 } from './components/DesignLibrary';
 export { AtomRenderer } from './components/AtomRenderer';
-export { AtomChild, AtomMetadata, DefaultChild } from './atoms/types';
 export {} from './components/FEaaS/BYOCComponent';
 export { Link, LinkField, LinkFieldValue, LinkProps } from './components/Link';
 export { File, FileField } from './components/File';
