@@ -10,12 +10,6 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
-## Unreleased
-
-### 🐛 Bug Fixes
-
-* `[content]` Preview mode shows unpublishable content ([#410](https://github.com/Sitecore/content-sdk/pull/410))
-
 ## 2.0.0
 
 ### 🎉 New Features & Improvements
