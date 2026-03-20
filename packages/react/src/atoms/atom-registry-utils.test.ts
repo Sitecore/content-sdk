@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 import { z } from 'zod';
 import { unfoldAtomsRegistry, serializeAtoms } from './atom-registry-utils';
-import { AtomChild, AtomMetadata, AtomType } from './types';
+import { AtomChild, AtomMetadata } from './types';
+import { AtomType } from '@sitecore-content-sdk/content/editing';
 
 const createAtom = (name: string, allowedChildren?: AtomChild[]): AtomMetadata => ({
   name,
@@ -100,7 +101,7 @@ describe('unfoldAtomsRegistry', () => {
   });
 });
 
-describe('serializeAtoms', () => {
+describe.only('serializeAtoms', () => {
   it('should serialize atom props to JSON schema', () => {
     const propsSchema = z.object({
       label: z.string(),
@@ -192,5 +193,52 @@ describe('serializeAtoms', () => {
     expect(serializedA.customEvents).to.be.an('object');
     expect(serializedA.htmlEvents).to.deep.equal(['onClick', 'onHover']);
     expect(serializedA.defaultChildren).to.deep.equal(['B']);
+  });
+
+  it('should serialize atom props with provided metadata', () => {
+    const propsSchema = z.object({
+      name: z.string().meta({ description: 'The name of the atom', default: 'Unnamed' }),
+      isActive: z.boolean().meta({ description: 'Whether the atom is active', default: false }),
+    });
+    const atomA = createAtom('A');
+    atomA.props = propsSchema;
+
+    const result = serializeAtoms([atomA]);
+
+    const serializedA = result.find((info) => info.name === 'A');
+    if (!serializedA) throw new Error('serializedA should be defined');
+    expect(serializedA.props).to.be.an('object');
+    expect(serializedA.props?.properties).to.have.property('name');
+    expect(serializedA.props?.properties).to.have.property('isActive');
+    expect(serializedA.props?.properties?.name?.description).to.equal('The name of the atom');
+    expect(serializedA.props?.properties?.name?.default).to.equal('Unnamed');
+    expect(serializedA.props?.properties?.isActive?.description).to.equal(
+      'Whether the atom is active'
+    );
+    expect(serializedA.props?.properties?.isActive?.default).to.equal(false);
+  });
+
+  it('should serialize atom custom events with provided arguiment metadata', () => {
+    const atomA = createAtom('A');
+    atomA.customEvents = {
+      onSubmit: [
+        z.string().meta({ firstArgName: 'First argument' }),
+        z.number().meta({ secondArgName: 'Second argument' }),
+      ],
+    };
+
+    const result = serializeAtoms([atomA]);
+
+    const serializedA = result.find((info) => info.name === 'A');
+    if (!serializedA) throw new Error('serializedA should be defined');
+    expect(serializedA.customEvents).to.be.an('object');
+    expect(serializedA.customEvents?.properties).to.have.property('onSubmit');
+    expect(serializedA.customEvents?.properties?.onSubmit?.items).to.have.length(2);
+    expect(serializedA.customEvents?.properties?.onSubmit?.items?.[0]?.firstArgName).to.equal(
+      'First argument'
+    );
+    expect(serializedA.customEvents?.properties?.onSubmit?.items?.[1]?.secondArgName).to.equal(
+      'Second argument'
+    );
   });
 });
