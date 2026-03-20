@@ -8,7 +8,7 @@
 
 > **SitemapXmlOptions** = `object`
 
-Defined in: [content/src/client/sitecore-client.ts:131](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/client/sitecore-client.ts#L131)
+Defined in: [content/src/client/sitecore-client.ts:131](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/client/sitecore-client.ts#L131)
 
 Request options for the getSiteMap method
 
@@ -18,7 +18,7 @@ Request options for the getSiteMap method
 
 > `optional` **id**: `string`
 
-Defined in: [content/src/client/sitecore-client.ts:137](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/client/sitecore-client.ts#L137)
+Defined in: [content/src/client/sitecore-client.ts:137](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/client/sitecore-client.ts#L137)
 
 Optional sitemap identifier when requesting a specific sitemap
 
@@ -28,7 +28,7 @@ Optional sitemap identifier when requesting a specific sitemap
 
 > **reqHost**: `string`
 
-Defined in: [content/src/client/sitecore-client.ts:133](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/client/sitecore-client.ts#L133)
+Defined in: [content/src/client/sitecore-client.ts:133](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/client/sitecore-client.ts#L133)
 
 The hostname from the request (e.g., 'example.com')
 
@@ -38,7 +38,7 @@ The hostname from the request (e.g., 'example.com')
 
 > **reqProtocol**: `string` \| `string`[]
 
-Defined in: [content/src/client/sitecore-client.ts:135](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/client/sitecore-client.ts#L135)
+Defined in: [content/src/client/sitecore-client.ts:135](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/client/sitecore-client.ts#L135)
 
 The protocol from request headers (e.g., 'https' or 'http')
 
@@ -48,6 +48,6 @@ The protocol from request headers (e.g., 'https' or 'http')
 
 > `optional` **siteName**: `string`
 
-Defined in: [content/src/client/sitecore-client.ts:139](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/client/sitecore-client.ts#L139)
+Defined in: [content/src/client/sitecore-client.ts:139](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/client/sitecore-client.ts#L139)
 
 The site name to resolve the sitemap for

@@ -8,7 +8,7 @@
 
 > **personalizeServerPlugin**(`params`): [`PersonalizeServerPlugin`](../../internal/interfaces/PersonalizeServerPlugin.md)
 
-Defined in: [personalize/src/initialization/plugin-server.ts:52](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/personalize/src/initialization/plugin-server.ts#L52)
+Defined in: [personalize/src/initialization/plugin-server.ts:52](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/personalize/src/initialization/plugin-server.ts#L52)
 
 Creates a personalize server plugin with the provided options.
 

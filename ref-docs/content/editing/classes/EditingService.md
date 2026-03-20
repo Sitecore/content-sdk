@@ -6,7 +6,7 @@
 
 # Class: EditingService
 
-Defined in: [content/src/editing/editing-service.ts:53](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/editing/editing-service.ts#L53)
+Defined in: [content/src/editing/editing-service.ts:57](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/editing/editing-service.ts#L57)
 
 Service for fetching editing data from Sitecore using the Sitecore's GraphQL API.
 Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
@@ -17,7 +17,7 @@ Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
 
 > **new EditingService**(`serviceConfig`): `EditingService`
 
-Defined in: [content/src/editing/editing-service.ts:60](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/editing/editing-service.ts#L60)
+Defined in: [content/src/editing/editing-service.ts:64](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/editing/editing-service.ts#L64)
 
 Fetch layout data using the Sitecore GraphQL endpoint.
 
@@ -37,7 +37,7 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 > **serviceConfig**: [`EditingServiceConfig`](../interfaces/EditingServiceConfig.md)
 
-Defined in: [content/src/editing/editing-service.ts:60](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/editing/editing-service.ts#L60)
+Defined in: [content/src/editing/editing-service.ts:64](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/editing/editing-service.ts#L64)
 
 configuration
 
@@ -47,7 +47,7 @@ configuration
 
 > **fetchEditingData**(`variables`, `fetchOptions?`): `Promise`\<\{ `layoutData`: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md); \}\>
 
-Defined in: [content/src/editing/editing-service.ts:75](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/editing/editing-service.ts#L75)
+Defined in: [content/src/editing/editing-service.ts:79](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/editing/editing-service.ts#L79)
 
 Fetches editing data. Provides the layout data and dictionary phrases
 
@@ -70,7 +70,7 @@ The layout data and dictionary phrases.
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../client/interfaces/GraphQLClient.md)
 
-Defined in: [content/src/editing/editing-service.ts:119](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/editing/editing-service.ts#L119)
+Defined in: [content/src/editing/editing-service.ts:126](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/editing/editing-service.ts#L126)
 
 Gets a GraphQL client that can make requests to the API.
 

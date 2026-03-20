@@ -8,7 +8,7 @@
 
 > **form**(`formId`, `interactionType`, `componentInstanceId`): `Promise`\<`EPResponse` \| `null`\>
 
-Defined in: [events/src/events/custom-event/form.ts:16](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/events/src/events/custom-event/form.ts#L16)
+Defined in: [events/src/events/custom-event/form.ts:16](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/events/src/events/custom-event/form.ts#L16)
 
 A function that sends a form event to the SitecoreCloud API
 
