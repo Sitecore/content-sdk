@@ -22,9 +22,9 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@sitecore-content-sdk/nextjs": "<%- version %>",
-    "@sitecore-content-sdk/analytics-core": "<%- version %>",
-    "@sitecore-content-sdk/events": "<%- version %>",
+    "@sitecore-content-sdk/analytics-core": "<%- versions['@sitecore-content-sdk/analytics-core'] %>",
+    "@sitecore-content-sdk/events": "<%- versions['@sitecore-content-sdk/events'] %>",
+    "@sitecore-content-sdk/nextjs": "<%- versions['@sitecore-content-sdk/nextjs'] %>",
     "@sitecore-feaas/clientside": "^0.6.0",
     "@sitecore/components": "~2.1.0",
     "next": "^16.1.1",
@@ -33,7 +33,7 @@
     "react-dom": "^19.2.1"
   },
   "devDependencies": {
-    "@sitecore-content-sdk/cli": "<%- version %>",
+    "@sitecore-content-sdk/cli": "<%- versions['@sitecore-content-sdk/cli'] %>",
     "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
