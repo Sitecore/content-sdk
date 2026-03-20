@@ -1,4 +1,4 @@
-﻿export { default as debug } from './debug';
+export { default as debug } from './debug';
 
 export {
   constants,
@@ -164,10 +164,20 @@ export {
   AppPlaceholderProps,
   renderEmptyPlaceholder,
   AtomRenderer,
-  AtomChild,
-  AtomMetadata,
-  DefaultChild,
   AtomType,
+  createAtom,
+  withPropMeta,
+  withArgMeta,
+  getFieldMeta,
+  type AtomMetadata,
+  type AtomChild,
+  type DefaultChild,
+  type EditableComponentProps,
+  type CallbackPropKeys,
+  type CallbackArgZodTuple,
+  type PropMeta,
+  type ArgMeta,
+  type AtomSchemaInput,
 } from '@sitecore-content-sdk/react';
 
 export { initContentSdk } from '@sitecore-content-sdk/core';
