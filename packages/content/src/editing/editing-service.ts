@@ -1,4 +1,8 @@
-import { GraphQLClient, GraphQLRequestClientFactory, FetchOptions } from '@sitecore-content-sdk/core';
+import {
+  GraphQLClient,
+  GraphQLRequestClientFactory,
+  FetchOptions,
+} from '@sitecore-content-sdk/core';
 import debug from '../debug';
 import { LayoutServiceData, LayoutServicePageState } from '../layout';
 import { LayoutKind } from './models';
@@ -83,6 +87,7 @@ export class EditingService {
     }
 
     const editModeHeader = mode === 'edit' ? 'true' : 'false';
+    const previewModeHeader = mode === 'preview' ? 'true' : 'false';
 
     const editingData = await this.graphQLClient.request<GraphQLEditingQueryResponse>(
       query,
@@ -94,8 +99,10 @@ export class EditingService {
       {
         ...fetchOptions,
         headers: {
+          ...fetchOptions?.headers,
           sc_layoutKind: layoutKind,
           sc_editMode: editModeHeader,
+          sc_previewMode: previewModeHeader,
         },
       }
     );
