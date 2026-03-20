@@ -84,6 +84,7 @@ export class EditingService {
     }
 
     const editModeHeader = mode === 'edit' ? 'true' : 'false';
+    const previewModeHeader = mode === 'preview' ? 'true' : 'false';
 
     const editingData = await this.graphQLClient.request<GraphQLEditingQueryResponse>(
       query,
@@ -95,8 +96,10 @@ export class EditingService {
       {
         ...fetchOptions,
         headers: {
+          ...fetchOptions?.headers,
           sc_layoutKind: layoutKind,
           sc_editMode: editModeHeader,
+          sc_previewMode: previewModeHeader,
         },
       }
     );

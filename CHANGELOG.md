@@ -15,6 +15,7 @@ Our versioning strategy is as follows:
 ### ✨ Bug fixes
 
 * `[react]` Form component loses interactivity and state between rerenders ([#447](https://github.com/Sitecore/content-sdk/pull/447))
+* `[core]` Preview mode shows unpublishable content ([#410](https://github.com/Sitecore/content-sdk/pull/410))
 
 ### 1.5.2
 
