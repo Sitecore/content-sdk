@@ -8,7 +8,7 @@
 
 > **getCookieValueClientSide**(`cookieName`): `string`
 
-Defined in: [analytics-core/src/utils/cookies/get-cookie-value-client-side.ts:9](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/utils/cookies/get-cookie-value-client-side.ts#L9)
+Defined in: [analytics-core/src/utils/cookies/get-cookie-value-client-side.ts:9](https://github.com/Sitecore/content-sdk/blob/fc12774027a7aa86b870d5da278426b9cdfbfffb/packages/analytics-core/src/utils/cookies/get-cookie-value-client-side.ts#L9)
 
 **`Internal`**
 
