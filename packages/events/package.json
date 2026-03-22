@@ -7,8 +7,8 @@
     "url": "https://github.com/Sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.0.1-canary.0",
-    "@sitecore-content-sdk/core": "2.0.1-canary.0",
+    "@sitecore-content-sdk/analytics-core": "^2.0.0",
+    "@sitecore-content-sdk/core": "^2.0.0",
     "debug": "^4.4.3"
   },
   "description": "Enables real-time, unified tracking to send events to Sitecore.",
@@ -75,5 +75,5 @@
     "api-extractor": "npm run build && api-extractor run --local --verbose",
     "api-extractor:verify": "api-extractor run"
   },
-  "version": "2.0.1-canary.0"
+  "version": "2.0.0"
 }
