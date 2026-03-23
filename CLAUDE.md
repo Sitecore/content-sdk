@@ -1,17 +1,10 @@
 # Claude Code — Sitecore Content SDK
 
-At the start of every session, read these files for full project guidance:
+**Start here:** [`AGENTS.md`](AGENTS.md) — monorepo overview, commands, boundaries, and where to edit.
 
-1. **`AGENTS.md`** — Canonical source of truth: project overview, commands, package structure, boundaries, DO/DON'T rules, example tasks, git workflow
-2. **`.cursor/rules/`** — Detailed coding rules (not auto-loaded by Claude Code):
-   - `code-style.mdc` — Vibe-coding principles, code quality, error handling, imports, lint
-   - `javascript.mdc` — Naming conventions, code layout, security, performance, JSDoc
-   - `sitecore.mdc` — XM Cloud integration, component development, content management
-   - `general.mdc` — DRY, SOLID, architecture patterns, development standards
-   - `testing.mdc` — Mocha/Sinon/Chai, test commands
-   - `safety.mdc` — Safety rules for compiled artifacts and secrets
-   - `cli.mdc` — CLI behavior, init flow, backwards compatibility
-   - `project-context.mdc` — Project-wide context and constraints
-   - `repo-structure.mdc` — Repository structure and templates policy
-   - `agent-tasks.mdc` — Example workflows (add utility, fix test, change template)
-3. **`Skills.md`** and **`.agents/skills/`** — For capability-specific guidance (component registration, data fetching, editing, i18n, etc.), when your tool supports the [Agent Skills](https://agentskills.io) standard.
+**Add detail only when needed:**
+
+- **Coding rules:** [`.cursor/rules/`](.cursor/rules/) — open the relevant `.mdc` file for the task (e.g. `safety.mdc`, `sitecore.mdc`, `testing.mdc`). Do **not** load every rule file by default.
+- **Capabilities:** [`Skills.md`](Skills.md) lists task → skill names. If your tool supports [Agent Skills](https://agentskills.io), read **one** matching skill under `.agents/skills/<name>/SKILL.md` (skills for scaffolded apps live in the Next.js templates under `packages/create-content-sdk-app/src/templates/`).
+
+This repo is the **Content SDK monorepo**. For a **generated head app**, use that app’s `AGENTS.md` (not this file’s folder) as the primary guide.

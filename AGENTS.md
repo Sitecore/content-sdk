@@ -1,6 +1,6 @@
 # AGENTS.md — AI Guidance for Sitecore Content SDK
 
-> **Claude Code users:** This file does not include detailed coding rules. Read all `.cursor/rules/*.mdc` files at the start of your session for code style, naming conventions, Sitecore patterns, testing, and safety rules.
+> **Claude Code users:** Start with this file. Open `.cursor/rules/*.mdc` **when a task touches that area** (e.g. `safety.mdc`, `testing.mdc`) — do not load every rule file by default. See root [`CLAUDE.md`](CLAUDE.md).
 
 ## Project Overview
 
