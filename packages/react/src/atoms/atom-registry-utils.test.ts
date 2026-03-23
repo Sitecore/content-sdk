@@ -101,7 +101,7 @@ describe('unfoldAtomsRegistry', () => {
   });
 });
 
-describe.only('serializeAtoms', () => {
+describe('serializeAtoms', () => {
   it('should serialize atom props to JSON schema', () => {
     const propsSchema = z.object({
       label: z.string(),
