@@ -8,7 +8,7 @@
 
 > **flattenObject**(`data`): [`FlattenedObject`](../interfaces/FlattenedObject.md)
 
-Defined in: [analytics-core/src/utils/converters/flatten-object.ts:15](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/analytics-core/src/utils/converters/flatten-object.ts#L15)
+Defined in: [analytics-core/src/utils/converters/flatten-object.ts:15](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/analytics-core/src/utils/converters/flatten-object.ts#L15)
 
 **`Internal`**
 

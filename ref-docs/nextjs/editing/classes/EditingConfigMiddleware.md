@@ -6,7 +6,7 @@
 
 # Class: EditingConfigMiddleware
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:34](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/editing/editing-config-middleware.ts#L34)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:34](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/nextjs/src/editing/editing-config-middleware.ts#L34)
 
 Middleware / handler used in the editing config API route in xmcloud add on (e.g. '/api/editing/config')
 provides configuration information to determine feature compatibility on Pages side.
@@ -17,7 +17,7 @@ provides configuration information to determine feature compatibility on Pages s
 
 > **new EditingConfigMiddleware**(`config?`): `EditingConfigMiddleware`
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:38](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/editing/editing-config-middleware.ts#L38)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:38](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/nextjs/src/editing/editing-config-middleware.ts#L38)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [nextjs/src/editing/editing-config-middleware.ts:38](https://github.
 
 > `protected` **config**: [`EditingConfigMiddlewareConfig`](../type-aliases/EditingConfigMiddlewareConfig.md)
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:38](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/editing/editing-config-middleware.ts#L38)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:38](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/nextjs/src/editing/editing-config-middleware.ts#L38)
 
 Editing configuration middleware config
 
@@ -45,7 +45,7 @@ Editing configuration middleware config
 
 > **getHandler**(): (`req`, `res`) => `Promise`\<`void`\>
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:44](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/editing/editing-config-middleware.ts#L44)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:44](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/nextjs/src/editing/editing-config-middleware.ts#L44)
 
 Gets the Next.js API route handler
 

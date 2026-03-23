@@ -8,7 +8,7 @@
 
 > **personalizeProxyAdapter**(`request`, `response`): [`PersonalizeProxyAdapter`](../interfaces/PersonalizeProxyAdapter.md)
 
-Defined in: [nextjs/src/initialization/proxy/personalize-adapter.ts:35](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/initialization/proxy/personalize-adapter.ts#L35)
+Defined in: [nextjs/src/initialization/proxy/personalize-adapter.ts:35](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/nextjs/src/initialization/proxy/personalize-adapter.ts#L35)
 
 Creates a proxy-based personalize adapter that reads and writes the profile ID
 using cookies and can resolve a new profile ID from the Edge proxy when needed.

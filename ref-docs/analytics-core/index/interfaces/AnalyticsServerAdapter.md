@@ -6,7 +6,7 @@
 
 # Interface: AnalyticsServerAdapter
 
-Defined in: [analytics-core/src/initialization/server-adapter.ts:16](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/analytics-core/src/initialization/server-adapter.ts#L16)
+Defined in: [analytics-core/src/initialization/server-adapter.ts:16](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/analytics-core/src/initialization/server-adapter.ts#L16)
 
 Defines the AnalyticsServerAdapter.
 
@@ -20,7 +20,7 @@ Defines the AnalyticsServerAdapter.
 
 > **getClientId**: () => `string` \| `null`
 
-Defined in: [analytics-core/src/initialization/types.ts:14](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/analytics-core/src/initialization/types.ts#L14)
+Defined in: [analytics-core/src/initialization/types.ts:14](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/analytics-core/src/initialization/types.ts#L14)
 
 Gets the client ID.
 
@@ -40,7 +40,7 @@ The client ID, or null if it is not set.
 
 > **location**: `object`
 
-Defined in: [analytics-core/src/initialization/types.ts:23](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/analytics-core/src/initialization/types.ts#L23)
+Defined in: [analytics-core/src/initialization/types.ts:23](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/analytics-core/src/initialization/types.ts#L23)
 
 The location object, which provides a method for getting search parameters.
 
@@ -66,7 +66,7 @@ The search parameters from the location.
 
 > **setClientId**: () => `Promise`\<`void`\>
 
-Defined in: [analytics-core/src/initialization/types.ts:19](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/analytics-core/src/initialization/types.ts#L19)
+Defined in: [analytics-core/src/initialization/types.ts:19](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/analytics-core/src/initialization/types.ts#L19)
 
 Sets the client ID.
 
@@ -86,7 +86,7 @@ A promise that resolves when the client ID has been set.
 
 > **type**: `"server"`
 
-Defined in: [analytics-core/src/initialization/server-adapter.ts:20](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/analytics-core/src/initialization/server-adapter.ts#L20)
+Defined in: [analytics-core/src/initialization/server-adapter.ts:20](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/analytics-core/src/initialization/server-adapter.ts#L20)
 
 The type of the adapter.
 

@@ -8,7 +8,7 @@
 
 > **createCookieString**(`name`, `value`, `attributes`): `string`
 
-Defined in: [analytics-core/src/utils/cookies/create-cookie-string.ts:11](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/analytics-core/src/utils/cookies/create-cookie-string.ts#L11)
+Defined in: [analytics-core/src/utils/cookies/create-cookie-string.ts:11](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/analytics-core/src/utils/cookies/create-cookie-string.ts#L11)
 
 **`Internal`**
 

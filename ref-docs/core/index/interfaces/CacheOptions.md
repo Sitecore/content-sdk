@@ -6,7 +6,7 @@
 
 # Interface: CacheOptions
 
-Defined in: [packages/core/src/cache-client.ts:37](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/core/src/cache-client.ts#L37)
+Defined in: [packages/core/src/cache-client.ts:37](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/core/src/cache-client.ts#L37)
 
 Minimum configuration options for classes that implement
 
@@ -20,7 +20,7 @@ CacheClient
 
 > `optional` **cacheEnabled**: `boolean`
 
-Defined in: [packages/core/src/cache-client.ts:42](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/core/src/cache-client.ts#L42)
+Defined in: [packages/core/src/cache-client.ts:42](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/core/src/cache-client.ts#L42)
 
 Enable/disable caching mechanism
 
@@ -36,7 +36,7 @@ true
 
 > `optional` **cacheTimeout**: `number`
 
-Defined in: [packages/core/src/cache-client.ts:47](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/core/src/cache-client.ts#L47)
+Defined in: [packages/core/src/cache-client.ts:47](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/core/src/cache-client.ts#L47)
 
 Cache timeout (sec)
 
