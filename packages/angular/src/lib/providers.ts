@@ -1,4 +1,3 @@
-import { EnvironmentProviders, makeEnvironmentProviders, Type } from '@angular/core';
 import type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { SITECORE_CONFIG_TOKEN } from './tokens';
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
