@@ -10,6 +10,14 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
+## 2.0.1
+
+### ✨ Bug fixes
+
+- Fix wrong versions and samples appearing when running `create-content-sdk-app` command.
+  - `angular` sample no longer appears
+  - `nextjs` samples use correct content-sdk dependencies for analytics when scaffolded
+
 ## 2.0.0
 
 ### 🎉 New Features & Improvements
