@@ -124,3 +124,10 @@ export {
   type ArgMeta,
   type AtomSchemaInput,
 } from './atoms';
+export {
+  createView,
+  getAtomRegistry,
+  type CallbackRegistry as ComponentLayoutCallbackRegistry,
+  type CallbackArgNamesMap as ComponentLayoutCallbackArgNamesMap,
+  type CreateViewOptions,
+} from './component-layout';
