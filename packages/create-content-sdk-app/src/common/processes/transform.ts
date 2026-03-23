@@ -5,7 +5,6 @@ import path, { sep } from 'path';
 import { Data, renderFile } from 'ejs';
 import { writeFileToPath, isDevEnvironment } from '../utils/helpers';
 import { BaseAppArgs } from '../base/args';
-const { version } = require('../../../package.json');
 
 const FILE_FOR_COPY_REGEXP =
   /(index\.html)$|\.(gif|jpg|jpeg|tiff|png|svg|ashx|ico|pdf|jar|eot|woff|ttf|woff2)$/;
@@ -15,15 +14,45 @@ export type JsonObjectType = {
   [key: string]: JsonPropertyType;
 };
 
-export const populateEjsData = (args: BaseAppArgs, destination?: string) => {
-  // pass in helper to args object
+/**
+ * Retrieves Content SDK package versions from devDependencies.
+ *
+ * Reads the package.json from the create-content-sdk-app package root and
+ * extracts all `@sitecore-content-sdk` dependencies with their versions.
+ *
+ * When the create-content-sdk-app package itself has a pre-release suffix
+ * (e.g., `-canary`, `-beta`), any pre-release dependencies will have their
+ * range prefixes (`^` or `~`) stripped to ensure exact version matching.
+ * Stable dependencies retain their original version prefixes.
+ *
+ * @returns A dictionary of Content SDK package names to their versions
+ */
+export const getCsdkVersions = (): { [key: string]: string } => {
+  const packageJson = fs.readJsonSync(path.resolve(__dirname, '../../../package.json'));
+  const packageVersion = packageJson.version as string;
+  const devDependencies = packageJson.devDependencies as { [key: string]: string };
+  const csdkDependencies: { [key: string]: string } = {};
 
-  // Use exact version for Content SDK dependencies in beta and canary versions
-  const contentSdkVersion: string = version.match(/(\-[a-zA-Z]+\.\d+)$/) ? version : `~${version}`;
+  const isPackagePreRelease = packageVersion.includes('-');
+
+  for (const [name, version] of Object.entries(devDependencies)) {
+    if (name.startsWith('@sitecore-content-sdk')) {
+      const isDependencyPreRelease = version.includes('-');
+      const shouldStripPrefix = isPackagePreRelease && isDependencyPreRelease;
+      const resolvedVersion = shouldStripPrefix ? version.replace(/^[\^~]/, '') : version;
+      csdkDependencies[name] = resolvedVersion;
+    }
+  }
+
+  return csdkDependencies;
+};
+
+export const populateEjsData = (args: BaseAppArgs, destination?: string) => {
+  const versions = getCsdkVersions();
 
   const ejsData: Data = {
     ...args,
-    version: contentSdkVersion,
+    versions,
     helper: {
       isDev: isDevEnvironment(destination || args.destination),
     },
