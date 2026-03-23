@@ -1,13 +1,13 @@
 import type { LoaderFn, Page } from '@sitecore-content-sdk/angular';
-import { NotFoundNavigationError } from '@sitecore-content-sdk/angular';
-import { stubPageResult } from './stub-utils';
+import { NotFoundNavigationError, resolvePage } from '@sitecore-content-sdk/angular';
+import { getClient } from '../lib/sitecore-client';
 
 /**
  * Page loader: fetches layout data from Sitecore for the current URL.
- * Used by the route resolver to enable dynamic route rendering.
+ * Uses resolvePage() with the lazily-initialized SitecoreClient.
  */
 export const pageLoader: LoaderFn<Page> = async (context) => {
-  const page = stubPageResult(context.url);
+  const page = await resolvePage(getClient(), context.url);
   if (!page) {
     throw new NotFoundNavigationError();
   }

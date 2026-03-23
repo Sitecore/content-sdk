@@ -1,6 +1,7 @@
 // ─── Angular SDK providers and tokens ──────────────────────────
 export { type SitecoreAngularConfig } from './lib/providers';
-export { SITECORE_CONFIG_TOKEN } from './lib/tokens';
+export { SITECORE_CONFIG_TOKEN, SITECORE_CLIENT_TOKEN } from './lib/tokens';
+export { resolvePage, type ResolvePageOptions } from './lib/resolve-page';
 
 // ─── Re-exports from core/content ─────────────────────────────
 export * from '@sitecore-content-sdk/content/config';

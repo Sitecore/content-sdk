@@ -1,7 +1,12 @@
 import type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
-import { SITECORE_CONFIG_TOKEN } from './tokens';
+import { SitecoreClient } from '@sitecore-content-sdk/content/client';
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from './tokens';
+import {
+  SITECORE_CONFIG_TOKEN,
+  SITECORE_CLIENT_TOKEN,
+  ERROR_ROUTE_TOKEN,
+  NOT_FOUND_ROUTE_TOKEN,
+} from './tokens';
 
 /**
  * Configuration for the Sitecore Angular SDK.
@@ -10,7 +15,8 @@ import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from './tokens';
 export interface SitecoreAngularConfig {
   /**
    * Sitecore configuration (e.g. from sitecore.config.ts).
-   * When provided, the config is injectable app-wide via SITECORE_CONFIG_TOKEN.
+   * When provided, both the config and a SitecoreClient instance are injectable app-wide
+   * via SITECORE_CONFIG_TOKEN and SITECORE_CLIENT_TOKEN.
    */
   sitecoreConfig?: SitecoreConfig;
   notFoundRoute?: string;
@@ -25,7 +31,7 @@ export interface SitecoreAngularConfig {
  * import scConfig from '../sitecore.config';
  * export const appConfig: ApplicationConfig = {
  *   providers: [
- *     provideSitecoreAngular({ sitecoreConfig: scConfig, componentMap }),
+ *     provideSitecoreAngular({ sitecoreConfig: scConfig }),
  *   ],
  * };
  * @param {SitecoreAngularConfig} config SDK configuration
@@ -37,6 +43,11 @@ export function provideSitecoreAngular(config: SitecoreAngularConfig): Environme
 
   if (config.sitecoreConfig !== undefined) {
     providers.push({ provide: SITECORE_CONFIG_TOKEN, useValue: config.sitecoreConfig });
+
+    providers.push({
+      provide: SITECORE_CLIENT_TOKEN,
+      useFactory: () => new SitecoreClient({ ...config.sitecoreConfig! }),
+    });
   }
   if (config.notFoundRoute) {
     providers.push({ provide: NOT_FOUND_ROUTE_TOKEN, useValue: config.notFoundRoute });

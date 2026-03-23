@@ -29,6 +29,13 @@ yarn-error.log
 !.vscode/mcp.json
 .history/*
 
+# Environment (generated from .env / .env.dev / .env.prod — see .env*.example)
+/src/environments/environment.dev.ts
+/src/environments/environment.prod.ts
+.env
+.env.dev
+.env.prod
+
 # Miscellaneous
 /.angular/cache
 .sass-cache/
