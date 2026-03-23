@@ -85,6 +85,7 @@ export {
 } from './components/FEaaS';
 export {
   DesignLibrary,
+  DesignLibraryAtoms,
   DesignLibraryErrorBoundary,
   DynamicComponent,
   ImportMapImport,

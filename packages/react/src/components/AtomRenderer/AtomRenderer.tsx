@@ -1,27 +1,11 @@
 'use client';
 import React, { useEffect } from 'react';
-import { useSitecore } from '../SitecoreProvider';
-import { unfoldAtomsRegistry, serializeAtoms } from '../../atoms/atom-registry-utils';
-import {
-  postToDesignLibrary,
-  getDesignLibraryAtomsRegistryEvent,
-} from '@sitecore-content-sdk/content/editing';
+import { AtomMetadata } from '../../atoms';
 
-export const AtomRenderer = () => {
-  const { atoms } = useSitecore();
-
+export const AtomRenderer = ({ atoms }: { atoms?: AtomMetadata[] }) => {
   useEffect(() => {
-    if (atoms) {
-      const flattenedAtoms = unfoldAtomsRegistry(atoms);
-      console.log('Flattened Atoms:', flattenedAtoms);
-      const serializedAtoms = serializeAtoms(flattenedAtoms);
-      console.log('Serialized Atoms:', serializedAtoms);
-
-      postToDesignLibrary(getDesignLibraryAtomsRegistryEvent(serializedAtoms));
-    }
-
-    console.log('Low Code Renderer mounted');
+    console.log('AtomRenderer, available atoms:', atoms);
   }, [atoms]);
 
-  return <div>Low Code Renderer</div>;
+  return <div>Atoms Renderer</div>;
 };
