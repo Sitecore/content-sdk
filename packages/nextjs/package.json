@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/nextjs",
-  "version": "2.0.2-canary.0",
+  "version": "2.0.1",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -32,8 +32,8 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.0.2-canary.0",
-    "@sitecore-content-sdk/personalize": "2.0.2-canary.0",
+    "@sitecore-content-sdk/analytics-core": "^2.0.1",
+    "@sitecore-content-sdk/personalize": "^2.0.1",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.0",
@@ -91,9 +91,9 @@
   },
   "dependencies": {
     "@babel/parser": "^7.27.2",
-    "@sitecore-content-sdk/content": "2.0.2-canary.0",
-    "@sitecore-content-sdk/core": "2.0.2-canary.0",
-    "@sitecore-content-sdk/react": "2.0.2-canary.0",
+    "@sitecore-content-sdk/content": "^2.0.1",
+    "@sitecore-content-sdk/core": "^2.0.1",
+    "@sitecore-content-sdk/react": "^2.0.1",
     "recast": "^0.23.11",
     "regex-parser": "^2.3.1",
     "sync-disk-cache": "^2.1.0"
