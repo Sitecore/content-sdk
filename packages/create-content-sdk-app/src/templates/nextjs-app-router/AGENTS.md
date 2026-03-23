@@ -1,5 +1,7 @@
 # AGENTS.md — AI Guidance for Sitecore Content SDK Next.js (App Router) App
 
+> **Context:** This file is the main guide for this app. Use [Skills.md](Skills.md) to pick **one** [.agents/skills/](.agents/skills/) skill when needed; [CLAUDE.md](CLAUDE.md) explains layered reading. Cursor applies [.cursor/rules/](.cursor/rules/) by glob — you do not need every rule in chat context at once.
+
 ## Project Overview
 
 This is a **Sitecore Content SDK** application built with **Next.js (App Router)** and **TypeScript**. AI agents work as developer assistants within this scaffolded head application. The app integrates with Sitecore XM Cloud for content, uses **file-based routing with `[site]` and `[locale]`**, next-intl for i18n, and Edge middleware for multisite, redirects, and personalization.
@@ -207,9 +209,9 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ## References
 
-- **Skills.md** — Capability groupings for this app; [.agents/skills/](.agents/skills/) provides each capability as an Agent Skill (when-to-use, hard rules, stop conditions) for tools that support the [Agent Skills](https://agentskills.io) standard.
-- **CLAUDE.md** — Full coding standards and Sitecore patterns for this template.
-- **.cursor/rules/** — App Router and Sitecore rules.
+- **Skills.md** — Capability index; [.agents/skills/](.agents/skills/) — load **one** skill per task ([Agent Skills](https://agentskills.io)).
+- **CLAUDE.md** — How to layer AI context for this template.
+- **.cursor/rules/** — Editor rules (applied by glob / always-apply).
 - [Sitecore Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html) — Official docs.
 - [Next.js App Router](https://nextjs.org/docs/app) — Routing, Server Components, data fetching.
 - [next-intl](https://next-intl.dev/docs) — i18n routing and request config.
@@ -218,4 +220,4 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ---
 
-**Remember:** When in doubt, follow existing patterns in this app and refer to `CLAUDE.md` and `.cursor/rules/` for Sitecore and code standards.
+**Remember:** When in doubt, follow existing patterns in this app; open `.cursor/rules/` or a single skill when you need extra constraints beyond this file.

@@ -1,5 +1,7 @@
 # AGENTS.md — AI Guidance for Sitecore Content SDK Next.js (Pages Router) App
 
+> **Context:** This file is the main guide for this app. Use [Skills.md](Skills.md) to pick **one** [.agents/skills/](.agents/skills/) skill when needed; [CLAUDE.md](CLAUDE.md) explains layered reading. Cursor applies [.cursor/rules/](.cursor/rules/) by glob — you do not need every rule in chat context at once.
+
 ## Project Overview
 
 This is a **Sitecore Content SDK** application built with **Next.js (Pages Router)** and **TypeScript**. AI agents work as developer assistants within this scaffolded head application. The app integrates with Sitecore XM Cloud for content, supports multisite and i18n, and uses Next.js API routes and Edge middleware for routing and SEO.
@@ -183,9 +185,9 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ## References
 
-- **Skills.md** — Capability groupings for this app; [.agents/skills/](.agents/skills/) provides each capability as an Agent Skill (when-to-use, hard rules, stop conditions) for tools that support the [Agent Skills](https://agentskills.io) standard.
-- **CLAUDE.md** — Full coding standards and Sitecore patterns for this template.
-- **.cursor/rules/** — Project and Sitecore rules.
+- **Skills.md** — Capability index; [.agents/skills/](.agents/skills/) — load **one** skill per task ([Agent Skills](https://agentskills.io)).
+- **CLAUDE.md** — How to layer AI context for this template.
+- **.cursor/rules/** — Editor rules (applied by glob / always-apply).
 - [Sitecore Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html) — Official docs.
 - [Next.js Pages Router](https://nextjs.org/docs/pages) — Data fetching, API routes, i18n.
 
@@ -193,4 +195,4 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ---
 
-**Remember:** When in doubt, follow existing patterns in this app and refer to `CLAUDE.md` and `.cursor/rules/` for Sitecore and code standards.
+**Remember:** When in doubt, follow existing patterns in this app; open `.cursor/rules/` or a single skill when you need extra constraints beyond this file.

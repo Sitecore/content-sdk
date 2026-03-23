@@ -1,9 +1,10 @@
 # Claude Code — Sitecore Content SDK Next.js (Pages Router) App
 
-At the start of every session, read these files for full project guidance:
+**Start here:** [`AGENTS.md`](AGENTS.md) — full app guidance (routing, client, proxy, i18n, guardrails).
 
-1. **`AGENTS.md`** — Canonical source of truth for this app: overview, commands, application structure, middleware, SitecoreClient, catch-all route, i18n, DO/DON'T, guardrails, boundaries
-2. **`.cursor/rules/`** — Coding rules for this template: general, javascript, sitecore, project-setup
-3. **`Skills.md`** and **`.agents/skills/`** — Capability-specific guidance (component registration, data fetching, editing, i18n, etc.) for tools that support the [Agent Skills](https://agentskills.io) standard.
+**Add detail only when needed:**
 
-This file applies to **this scaffolded head application only**. For the Content SDK monorepo (packages, CLI, templates source), use that repo's root `AGENTS.md` and `.cursor/rules/`.
+- **Cursor rules:** [`.cursor/rules/`](.cursor/rules/) — Cursor applies globs/`alwaysApply` automatically; otherwise open the rule that matches the file type or task.
+- **Capabilities:** [`Skills.md`](Skills.md) maps tasks to skill folders. If your tool supports [Agent Skills](https://agentskills.io), read **only** [`.agents/skills/<capability>/SKILL.md`](.agents/skills/) for the capability you need — not every skill at session start.
+
+This scaffolded head app only. For the Content SDK monorepo (packages, CLI), use that repo’s root `AGENTS.md`.
