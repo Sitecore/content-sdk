@@ -38,10 +38,6 @@ describe('transform', () => {
       const destinationPath = path.resolve('samples/next');
       const file = 'file.ts';
       const renderFileOutput = 'file output';
-      const mockVersions = {
-        '@sitecore-content-sdk/nextjs': '1.4.2-canary.0',
-        '@sitecore-content-sdk/core': '^1.4.0',
-      };
 
       globSyncStub = sinon.stub(glob, 'sync').returns([file]);
       ejsRenderFileStub = sinon.stub(ejs, 'renderFile').returns(Promise.resolve(renderFileOutput));
@@ -53,16 +49,7 @@ describe('transform', () => {
       };
 
       const transformModule = proxyquire('./transform', {
-        'fs-extra': {
-          readJsonSync: () => ({
-            version: pkgVersion,
-            devDependencies: {
-              '@sitecore-content-sdk/nextjs': '^1.4.2-canary.0',
-              '@sitecore-content-sdk/core': '^1.4.0',
-            },
-          }),
-          mkdirsSync: () => {},
-        },
+        '../../../package.json': { version: pkgVersion },
       });
 
       writeFileToPathStub = sinon.stub(helpers, 'writeFileToPath');
@@ -71,7 +58,7 @@ describe('transform', () => {
 
       expect(ejsRenderFileStub).to.have.been.calledOnceWith(path.join(templatePath, file), {
         ...args,
-        versions: mockVersions,
+        version: pkgVersion,
         helper: {
           isDev: false,
         },
@@ -211,64 +198,8 @@ describe('transform', () => {
     });
   });
 
-  describe('getCsdkVersions', () => {
-    it('should return content sdk package versions', () => {
-      const mockDevDependencies = {
-        '@sitecore-content-sdk/nextjs': '^1.4.2',
-        '@sitecore-content-sdk/core': '~1.4.0',
-        '@types/node': '^22.15.14',
-        typescript: '~5.8.3',
-      };
-
-      const transformModule = proxyquire('./transform', {
-        'fs-extra': {
-          readJsonSync: () => ({
-            version: '1.4.0',
-            devDependencies: mockDevDependencies,
-          }),
-        },
-      });
-
-      const result = transformModule.getCsdkVersions();
-
-      expect(result).to.deep.equal({
-        '@sitecore-content-sdk/nextjs': '^1.4.2',
-        '@sitecore-content-sdk/core': '~1.4.0',
-      });
-    });
-
-    it('should return exact pre-release versions when canary or pre-release', () => {
-      const mockDevDependencies = {
-        '@sitecore-content-sdk/nextjs': '^1.4.2-canary.0',
-        '@sitecore-content-sdk/core': '~1.4.0',
-        '@sitecore-content-sdk/react': '1.4.0',
-        '@sitecore-content-sdk/cli': '~1.4.1-beta.2',
-        '@types/node': '^22.15.14',
-        typescript: '~5.8.3',
-      };
-
-      const transformModule = proxyquire('./transform', {
-        'fs-extra': {
-          readJsonSync: () => ({
-            version: '1.4.0-canary.4',
-            devDependencies: mockDevDependencies,
-          }),
-        },
-      });
-
-      const result = transformModule.getCsdkVersions();
-
-      expect(result).to.deep.equal({
-        '@sitecore-content-sdk/nextjs': '1.4.2-canary.0',
-        '@sitecore-content-sdk/core': '~1.4.0',
-        '@sitecore-content-sdk/react': '1.4.0',
-        '@sitecore-content-sdk/cli': '1.4.1-beta.2',
-      });
-    });
-  });
-
   describe('populateEjsData', () => {
-    it('should return versions dictionary with exact pre-release versions for beta', () => {
+    it('should use exact version for app and dependency versions for beta', () => {
       const destinationPath = path.resolve('samples/next');
       const answers = {
         destination: destinationPath,
@@ -277,29 +208,17 @@ describe('transform', () => {
         force: false,
       };
       const pkgVersionBeta = '22.4.1-beta.33';
-      const mockDevDependencies = {
-        '@sitecore-content-sdk/nextjs': '^1.4.2-beta.1',
-        '@sitecore-content-sdk/core': '~1.4.0',
-      };
 
       const transformModule = proxyquire('./transform', {
-        'fs-extra': {
-          readJsonSync: () => ({
-            version: pkgVersionBeta,
-            devDependencies: mockDevDependencies,
-          }),
-        },
+        '../../../package.json': { version: pkgVersionBeta },
       });
 
       const result = transformModule.populateEjsData(answers);
 
-      expect(result.versions).to.deep.equal({
-        '@sitecore-content-sdk/nextjs': '1.4.2-beta.1',
-        '@sitecore-content-sdk/core': '~1.4.0',
-      });
+      expect(result.version).to.equal(pkgVersionBeta);
     });
 
-    it('should return versions dictionary with exact pre-release versions for canary', () => {
+    it('should use exact version for app and dependency versions for canary', () => {
       const destinationPath = path.resolve('samples/next');
       const answers = {
         destination: destinationPath,
@@ -308,29 +227,17 @@ describe('transform', () => {
         force: false,
       };
       const pkgVersionCanary = '22.4.1-canary.33';
-      const mockDevDependencies = {
-        '@sitecore-content-sdk/nextjs': '^1.4.2-canary.0',
-        '@sitecore-content-sdk/core': '~1.4.0',
-      };
 
       const transformModule = proxyquire('./transform', {
-        'fs-extra': {
-          readJsonSync: () => ({
-            version: pkgVersionCanary,
-            devDependencies: mockDevDependencies,
-          }),
-        },
+        '../../../package.json': { version: pkgVersionCanary },
       });
 
       const result = transformModule.populateEjsData(answers);
 
-      expect(result.versions).to.deep.equal({
-        '@sitecore-content-sdk/nextjs': '1.4.2-canary.0',
-        '@sitecore-content-sdk/core': '~1.4.0',
-      });
+      expect(result.version).to.equal(pkgVersionCanary);
     });
 
-    it('should return versions dictionary preserving prefixes for stable release', () => {
+    it('should use exact version for app and ~ version for dependencies for release', () => {
       const destinationPath = path.resolve('samples/next');
       const answers = {
         destination: destinationPath,
@@ -339,26 +246,14 @@ describe('transform', () => {
         force: false,
       };
       const pkgVersionRelease = '22.4.1';
-      const mockDevDependencies = {
-        '@sitecore-content-sdk/nextjs': '^1.4.2',
-        '@sitecore-content-sdk/core': '~1.4.0',
-      };
 
       const transformModule = proxyquire('./transform', {
-        'fs-extra': {
-          readJsonSync: () => ({
-            version: pkgVersionRelease,
-            devDependencies: mockDevDependencies,
-          }),
-        },
+        '../../../package.json': { version: pkgVersionRelease },
       });
 
       const result = transformModule.populateEjsData(answers);
 
-      expect(result.versions).to.deep.equal({
-        '@sitecore-content-sdk/nextjs': '^1.4.2',
-        '@sitecore-content-sdk/core': '~1.4.0',
-      });
+      expect(result.version).to.equal(`~${pkgVersionRelease}`);
     });
   });
 });
