@@ -28,10 +28,10 @@
     "start": "cross-env-shell NODE_ENV=production npm-run-all --serial build next:start"
   },
   "dependencies": {
-    "@sitecore-content-sdk/analytics-core": "<%- versions['@sitecore-content-sdk/analytics-core'] %>",
-    "@sitecore-content-sdk/personalize": "<%- versions['@sitecore-content-sdk/personalize'] %>",
-    "@sitecore-content-sdk/events": "<%- versions['@sitecore-content-sdk/events'] %>",
-    "@sitecore-content-sdk/nextjs": "<%- versions['@sitecore-content-sdk/nextjs'] %>",
+    "@sitecore-content-sdk/nextjs": "<%- version %>",
+    "@sitecore-content-sdk/analytics-core": "<%- version %>",
+    "@sitecore-content-sdk/personalize": "<%- version %>",
+    "@sitecore-content-sdk/events": "<%- version %>",
     "@sitecore-feaas/clientside": "^0.6.0",
     "@sitecore/components": "~2.1.0",
     "next": "^16.1.1",
@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@sitecore-content-sdk/cli": "<%- versions['@sitecore-content-sdk/cli'] %>",
+    "@sitecore-content-sdk/cli": "<%- version %>",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
