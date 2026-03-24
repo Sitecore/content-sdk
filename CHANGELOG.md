@@ -10,7 +10,15 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
-## Unreleased
+## 2.0.1
+
+### ✨ Bug fixes
+
+- Fix wrong versions and samples appearing when running `create-content-sdk-app` command.
+  - `angular` sample no longer appears
+  - `nextjs` samples use correct content-sdk dependencies for analytics when scaffolded
+
+## 2.0.0
 
 ### 🎉 New Features & Improvements
 
@@ -21,9 +29,6 @@ Our versioning strategy is as follows:
 * Rework AI coding assistance guides around AGENTS.md ([#368](https://github.com/Sitecore/content-sdk/pull/368))([#390](https://github.com/Sitecore/content-sdk/pull/390))
 
 * `[nextjs]` `[create-content-sdk-app]` Enable Next.js 16 Cache Components and Turbopack File System Caching ([#334](https://github.com/Sitecore/content-sdk/pull/334))
-
-* `[core]` `[content]` `[nextjs]` Support custom Edge hostnames via `SITECORE_EDGE_PLATFORM_HOSTNAME` (Next.js: `NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME`) ([#359](https://github.com/Sitecore/content-sdk/pull/359))
-  - New `rewriteMediaUrls` option: when `true`, rewrites layout media URLs to the custom Edge hostname; when a function, applies a custom string transformer.
 
 * Search integration ([#295](https://github.com/Sitecore/content-sdk/pull/295))
   * `[search]` New `@sitecore-content-sdk/search` package providing search functionality
@@ -45,12 +50,18 @@ Our versioning strategy is as follows:
 
 ### 🛠 Breaking Changes
 
+* `[core]` `[content]` `[nextjs]` Support custom Edge hostnames via `SITECORE_EDGE_PLATFORM_HOSTNAME` (Next.js: `NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME`) ([#359](https://github.com/Sitecore/content-sdk/pull/359))
+  - New `rewriteMediaUrls` option: when `true`, rewrites layout media URLs to the custom Edge hostname; when a function, applies a custom string transformer.
+  - The old `SITECORE_EDGE_URL` environment variable is no longer used
+
 * Decouple `@sitecore-content-sdk/content` from `@sitecore-content-sdk/core` ([#351](https://github.com/Sitecore/content-sdk/pull/351)([#383](https://github.com/Sitecore/content-sdk/pull/383))):
   - See a detailed upgrade guide for migration instructions
+
 * `[nextjs]` `[create-content-sdk-app]` Upgrade to Next.js 16 ([#334](https://github.com/Sitecore/content-sdk/pull/334))([#343](https://github.com/Sitecore/content-sdk/pull/343))([#353](https://github.com/Sitecore/content-sdk/pull/353))
   - Next.js 16 is now required (minimum version `^16.0.0`)
   - `middleware.ts` renamed to `proxy.ts` with updated function signature
   - Removed deprecated `images.domains` usage (use `remotePatterns` instead)
+
 * `[nextjs]` Expand SXA redirects logic with support for isLanguagePreserved flag. This provides an option to preserve current locale when target redirect URL does not have a locale prefix ([#305](https://github.com/Sitecore/content-sdk/pull/305))
   - This changes the default redirects behavior out of the box.
     - Previously, `/da/source -> /target` rule would redirect to `/da/target` path when default locale is not `da`
@@ -64,7 +75,7 @@ Our versioning strategy is as follows:
   - `DesignLibrary` component now does not accept any props
   - `SitecoreProvider`'s `loadImportMap` is now required
 * [react] [nextjs] Major revamp of components in the react package ([#371](https://github.com/Sitecore/content-sdk/pull/371)):
-  - `Placeholder` and `AppPlaceholder` components' prop `modifyComponentProps` has been removed. `passThroughComponentProps` prop has been added to fill the role of passing props to child components
+  - `Placeholder` and `AppPlaceholder`, `passThroughComponentProps` prop has been added to fill make passing props to child components easier
   - `componentMap` and `loadImportMap` have been added to the context shared via `SitecoreProvider`
   - `useLoadImportMap`, `useComponentMap` HOCs have been removed. The Sitecore context data can be accessed via `useSitecore` hook.
   - `withSitecore`'s `updatePage` prop has been renamed to `setPage`. This HOC has also been marked deprecated, and will eventually be removed in favor of `useSitecore` hook.
@@ -79,6 +90,7 @@ Our versioning strategy is as follows:
 * `[core]` `[DesignLibrary]` Fix faux-extentions being stripped from 3rd party modules' names in import-map ([#358](https://github.com/Sitecore/content-sdk/pull/358))
 * `[react]` `[nextjs]` `[template/nextjs-app-router]` Fix not-found page forcing `[[...path]]` route to dynamic rendering; use cached page params to preserve SSG ([#399](https://github.com/Sitecore/content-sdk/pull/399))([#402](https://github.com/Sitecore/content-sdk/pull/402))
 * `[rect]` `[nextjs]` `[DesignStudio]` Component does not re-render during editing ([#400](https://github.com/Sitecore/content-sdk/pull/400))
+* `[nextjs]` `[DesignLibrary]` In variant generation mode prevent additional re-render for Server Components ([#403](https://github.com/Sitecore/content-sdk/pull/403))
 
 ### 1.5.1
    

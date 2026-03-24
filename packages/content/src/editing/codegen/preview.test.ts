@@ -23,6 +23,7 @@ import {
   GeneratedComponentData,
 } from './preview';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
+import proxyquire from 'proxyquire';
 
 const { ERROR_MESSAGES } = constants;
 
@@ -141,6 +142,12 @@ describe('design library codegen', () => {
           content: corruptedCode,
         },
       },
+    };
+
+    const serverRootComponent = { componentName: 'root-component', uid: 'root-uid' };
+    const mockComponentToUpdate = {
+      componentName: 'target-component',
+      uid: previewMessage.message.uid,
     };
 
     beforeEach(() => {
@@ -399,15 +406,29 @@ describe('design library codegen', () => {
     });
 
     describe('addServerComponentPreviewHandler', () => {
+      let findComponentStub: sinon.SinonStub;
+      let addServerComponentPreviewHandlerWithMock: typeof addServerComponentPreviewHandler;
+
+      beforeEach(() => {
+        findComponentStub = sinon.stub().returns(mockComponentToUpdate);
+        const previewModule = proxyquire('./preview', {
+          '../design-library': { findComponent: findComponentStub },
+        });
+        addServerComponentPreviewHandlerWithMock = previewModule.addServerComponentPreviewHandler;
+      });
+
       it('should add event listener for message events', () => {
-        const unsubscribe = addServerComponentPreviewHandler(callbackStub);
+        const unsubscribe = addServerComponentPreviewHandlerWithMock(
+          serverRootComponent,
+          callbackStub
+        );
         expect(addEventListenerSpy.calledOnce).to.be.true;
         expect(addEventListenerSpy.calledWith('message')).to.be.true;
         expect(typeof unsubscribe).to.equal('function');
       });
 
       it('should ignore events without origin', () => {
-        addServerComponentPreviewHandler(callbackStub);
+        addServerComponentPreviewHandlerWithMock(serverRootComponent, callbackStub);
         const handler = addEventListenerSpy.getCall(0).args[1];
         const message = new MessageEvent('message', {
           data: previewMessage,
@@ -420,7 +441,7 @@ describe('design library codegen', () => {
       });
 
       it('should ignore events with wrong event name', () => {
-        addServerComponentPreviewHandler(callbackStub);
+        addServerComponentPreviewHandlerWithMock(serverRootComponent, callbackStub);
         const handler = addEventListenerSpy.getCall(0).args[1];
         const message = new MessageEvent('message', {
           origin: 'http://localhost',
@@ -434,7 +455,7 @@ describe('design library codegen', () => {
       });
 
       it('should ignore events without data', () => {
-        addServerComponentPreviewHandler(callbackStub);
+        addServerComponentPreviewHandlerWithMock(serverRootComponent, callbackStub);
         const handler = addEventListenerSpy.getCall(0).args[1];
         const message = new MessageEvent('message', {
           origin: 'http://localhost',
@@ -448,7 +469,7 @@ describe('design library codegen', () => {
       });
 
       it('should handle valid component preview event', () => {
-        addServerComponentPreviewHandler(callbackStub);
+        addServerComponentPreviewHandlerWithMock(serverRootComponent, callbackStub);
         const handler = addEventListenerSpy.getCall(0).args[1];
         const message = new MessageEvent('message', {
           origin: 'http://localhost',
@@ -461,11 +482,16 @@ describe('design library codegen', () => {
           .true;
 
         expect(callbackStub.calledOnce).to.be.true;
-        expect(callbackStub.calledWith(previewMessage)).to.be.true;
+        expect(callbackStub.calledWith(mockComponentToUpdate, previewMessage)).to.be.true;
+        expect(findComponentStub.calledOnceWith(serverRootComponent, previewMessage.message.uid)).to
+          .be.true;
       });
 
       it('should unsubscribe from component preview event', () => {
-        const unsubscribe = addServerComponentPreviewHandler(callbackStub);
+        const unsubscribe = addServerComponentPreviewHandlerWithMock(
+          serverRootComponent,
+          callbackStub
+        );
 
         if (unsubscribe) {
           unsubscribe();

@@ -184,6 +184,15 @@ export const DesignLibraryServerVariantGeneration = async ({
       );
     }
 
+    // apply the updates to the component rendering
+    if (previewData?.rendering) {
+      updateComponent(
+        componentToUpdate,
+        previewData.rendering.fields,
+        previewData.rendering.params
+      );
+    }
+
     if (previewData?.generatedComponentData) {
       generatedComponentData = previewData.generatedComponentData;
       try {

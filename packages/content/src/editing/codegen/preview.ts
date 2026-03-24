@@ -1,6 +1,6 @@
 import { NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
-import { ComponentFields, ComponentParams } from '../../layout/models';
-import { validateEvent, DesignLibraryEvent } from '../design-library';
+import { ComponentFields, ComponentParams, ComponentRendering } from '../../layout/models';
+import { validateEvent, DesignLibraryEvent, findComponent } from '../design-library';
 import debug from '../../debug';
 
 const { SITECORE_EDGE_PLATFORM_URL_DEFAULT, ERROR_MESSAGES } = constants;
@@ -350,11 +350,16 @@ export const addComponentPreviewHandler = (
 /**
  * Adds the browser-side event handler for 'component:generation:component-preview' message used in Design Library for server components
  * The event should contain the cache id and token which will be used to fetch the component code, styles and imports from secured endpoint
+ * @param {ComponentRendering} rootComponent - The root component rendering object.
  * @param {Function} callback callback to be called after component is received
  * @internal
  */
 export const addServerComponentPreviewHandler = (
-  callback: (eventArgs: ServerComponentPreviewEventArgs) => void
+  rootComponent: ComponentRendering,
+  callback: (
+    componentToUpdate: ComponentRendering | null,
+    eventArgs: ServerComponentPreviewEventArgs
+  ) => void
 ) => {
   const handler = (e: MessageEvent) => {
     if (!validateEvent(e, DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME)) {
@@ -363,7 +368,9 @@ export const addServerComponentPreviewHandler = (
 
     console.debug('Component Library: message received', e.data);
 
-    callback(e.data as ServerComponentPreviewEventArgs);
+    const componentToUpdate = findComponent(rootComponent, e.data?.message?.uid);
+
+    callback(componentToUpdate, e.data as ServerComponentPreviewEventArgs);
   };
 
   window.addEventListener('message', handler);

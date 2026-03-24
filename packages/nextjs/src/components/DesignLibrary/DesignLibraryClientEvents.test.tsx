@@ -416,7 +416,10 @@ describe('<DesignLibraryClientEvents />', () => {
       );
 
       expect(addServerComponentPreviewHandlerSpy).to.have.been.calledOnce;
-      expect(addServerComponentPreviewHandlerSpy).to.have.been.calledWith(sinon.match.func);
+      expect(addServerComponentPreviewHandlerSpy).to.have.been.calledWith(
+        testEditedComponent,
+        sinon.match.func
+      );
     });
 
     it('should post import map event and component props event in variant generation mode', async () => {
@@ -449,7 +452,8 @@ describe('<DesignLibraryClientEvents />', () => {
         true
       );
 
-      const updateCallback = addServerComponentPreviewHandlerSpy.getCall(0).args[0];
+      const updateCallback = addServerComponentPreviewHandlerSpy.getCall(0).args[1];
+      const mockRendering = { componentName: 'Test', uid: testEditedComponent.uid };
       const componentPreviewServerEvent = {
         name: 'component:generation:component-preview',
         message: {
@@ -460,43 +464,14 @@ describe('<DesignLibraryClientEvents />', () => {
         },
       };
 
-      updateCallback(componentPreviewServerEvent);
-
-      expect(previewComponentActionSpy).to.have.been.calledWith({
-        uid: testEditedComponent.uid,
-        args: componentPreviewServerEvent,
-      });
-    });
-
-    it('should call previewComponentAction with edge url if available when preview component event is received edge', async () => {
-      renderWithSitecore(
-        {
-          designLibraryStatus: DesignLibraryStatus.READY,
-          component: testEditedComponent,
-          importMap: importMap,
-        },
-        modeLibraryMetadata_Gen,
-        true
-      );
-
-      const updateCallback = addServerComponentPreviewHandlerSpy.getCall(0).args[0];
-      const componentPreviewServerEvent = {
-        name: 'component:generation:component-preview',
-        message: {
-          cache: {
-            id: 'test-cache-id',
-            token: 'test-cache-token',
-          },
-        },
-      };
-
-      updateCallback(componentPreviewServerEvent);
+      updateCallback(mockRendering, componentPreviewServerEvent);
 
       expect(previewComponentActionSpy).to.have.been.calledWith(
         {
           uid: testEditedComponent.uid,
           args: componentPreviewServerEvent,
         },
+        mockRendering,
         'https://test-edge-url.com'
       );
     });

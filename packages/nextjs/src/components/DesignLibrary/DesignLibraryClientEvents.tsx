@@ -94,12 +94,13 @@ export const DesignLibraryVariantGenerationEvents = ({
       });
     });
 
-    const unsubPreview = addServerComponentPreviewHandler((eventArgs) => {
+    const unsubPreview = addServerComponentPreviewHandler(component, (rendering, eventArgs) => {
       _previewComponentAction(
         {
           uid: component.uid!,
           args: eventArgs,
         },
+        rendering,
         edgeUrl
       );
     });
