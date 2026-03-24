@@ -3682,6 +3682,7 @@ __metadata:
     eslint-plugin-import: "npm:2.32.0"
     eslint-plugin-jsdoc: "npm:52.0.3"
     eslint-plugin-prettier: "npm:^4.0.0"
+    isbot: "npm:^5.1.36"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
     jest-environment-node: "npm:^29.7.0"
@@ -3698,6 +3699,7 @@ __metadata:
     "@sitecore-content-sdk/analytics-core": "npm:2.0.2-canary.1"
     "@sitecore-content-sdk/content": "npm:2.0.2-canary.1"
     "@sitecore-content-sdk/core": "npm:2.0.2-canary.1"
+    "@sitecore-content-sdk/events": "npm:2.0.2-canary.1"
     "@sitecore-content-sdk/personalize": "npm:2.0.2-canary.1"
     "@sitecore-content-sdk/react": "npm:2.0.2-canary.1"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
@@ -9453,6 +9455,13 @@ __metadata:
   version: 1.0.0
   resolution: "isarray@npm:1.0.0"
   checksum: 10/f032df8e02dce8ec565cf2eb605ea939bdccea528dbcf565cdf92bfa2da9110461159d86a537388ef1acef8815a330642d7885b29010e8f7eac967c9993b65ab
+  languageName: node
+  linkType: hard
+
+"isbot@npm:^5.1.36":
+  version: 5.1.36
+  resolution: "isbot@npm:5.1.36"
+  checksum: 10/70a1713ba63ec6a569cf01598bd9f5c7120922a91f80b30cb2e6beacc96d1023f2f5bcfa86ac387ded3b4980b04a0e851888346b52ace5b2e0db67c879e0f717
   languageName: node
   linkType: hard
 
