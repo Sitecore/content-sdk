@@ -23,7 +23,7 @@ const shouldSkipPageView = () => {
 
 /**
  * Sends a VIEW event for server-side bot tracking (e.g. Next.js proxy / Edge).
- * Uses a synthetic per-invocation client id and defaults {@link PageViewData.channel} to {@link BOT_CHANNEL}.
+ * Uses a synthetic per-invocation client id and defaults `channel` to `bot`.
  * Returns `null` in browser environments.
  * @returns The response from Sitecore Edge Proxy, or `null` if skipped (browser).
  * @public

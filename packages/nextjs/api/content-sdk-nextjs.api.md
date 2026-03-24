@@ -118,6 +118,7 @@ import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
 import { NextApiRequest } from 'next';
 import { NextApiResponse } from 'next';
+import { NextFetchEvent } from 'next/server';
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { NextURL } from 'next/dist/server/web/next-url';
@@ -215,6 +216,23 @@ export class AppRouterMultisiteProxy extends MultisiteProxy {
     protected shouldSkipWhenDisabled(): boolean;
     protected shouldWarnWhenDisabled(_res: NextResponse): void;
 }
+
+// @public
+export class BotTrackingProxy extends ProxyBase {
+    constructor(config: BotTrackingProxyConfig);
+    // (undocumented)
+    protected config: BotTrackingProxyConfig;
+    // (undocumented)
+    handle: (req: NextRequest, res: NextResponse, event?: NextFetchEvent) => Promise<NextResponse>;
+    // @internal (undocumented)
+    protected shouldSkipForLocalEnvironment(req: NextRequest): boolean;
+}
+
+// @public
+export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Pick<ProxyBaseConfig, 'sites' | 'defaultHostname'> & {
+    waitUntil?: (promise: Promise<void>) => void;
+    enabled?: boolean;
+};
 
 export { BYOCClientWrapper }
 
@@ -742,6 +760,7 @@ export type PersonalizeProxyConfig = ProxyBaseConfig & SitecoreConfig['api']['ed
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
     extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
+    skipForBot?: boolean;
 };
 
 export { PersonalizeService }
@@ -773,7 +792,7 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     };
     // (undocumented)
     protected getClientFactory(graphQLOptions: GraphQLClientOptions): GraphQLRequestClientFactory_2;
-    protected getHostHeader(req: NextRequest): string | undefined;
+    protected getHostHeader(req: NextRequest): string;
     protected getLanguage(req: NextRequest, res?: NextResponse): string;
     protected getLanguageFromHeader(res?: NextResponse): string | undefined;
     protected getSite(req: NextRequest, res?: NextResponse): SiteInfo;
