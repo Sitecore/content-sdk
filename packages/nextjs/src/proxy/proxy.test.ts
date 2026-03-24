@@ -298,7 +298,7 @@ describe('ProxyBase', () => {
   });
 
   describe('getHostHeader', () => {
-    it('should return default hostname when header is not present', () => {
+    it('should return empty string when host headers are not present', () => {
       const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         headerValues: {
@@ -306,7 +306,7 @@ describe('ProxyBase', () => {
         },
       });
 
-      expect(proxy['getHostHeader'](req)).to.equal(undefined);
+      expect(proxy['getHostHeader'](req)).to.equal('');
     });
 
     it('should return host header', () => {
@@ -319,6 +319,61 @@ describe('ProxyBase', () => {
       });
 
       expect(proxy['getHostHeader'](req)).to.equal('bar.net');
+    });
+
+    it('should strip port from IPv4 host header', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq({
+        headerValues: {
+          host: '127.0.0.1:3000',
+        },
+      });
+
+      expect(proxy['getHostHeader'](req)).to.equal('127.0.0.1');
+    });
+
+    it('should parse bracketed IPv6 loopback with port', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq({
+        headerValues: {
+          host: '[::1]:3000',
+        },
+      });
+
+      expect(proxy['getHostHeader'](req)).to.equal('::1');
+    });
+
+    it('should preserve unbracketed IPv6 loopback without treating :1 as port', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq({
+        headerValues: {
+          host: '::1',
+        },
+      });
+
+      expect(proxy['getHostHeader'](req)).to.equal('::1');
+    });
+
+    it('should parse bracketed IPv6 without port', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq({
+        headerValues: {
+          host: '[::1]',
+        },
+      });
+
+      expect(proxy['getHostHeader'](req)).to.equal('::1');
+    });
+
+    it('should parse unbracketed IPv6 with zone id (no port strip)', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq({
+        headerValues: {
+          host: 'fe80::1%eth0',
+        },
+      });
+
+      expect(proxy['getHostHeader'](req)).to.equal('fe80::1%eth0');
     });
 
     it('should return x-forwarded-host header when present', () => {

@@ -5,12 +5,19 @@ import {
   PersonalizeProxy,
   RedirectsProxy,
   LocaleProxy,
+  BotTrackingProxy,
 } from '@sitecore-content-sdk/nextjs/proxy';
 import sites from '.sitecore/sites.json';
 import scConfig from 'sitecore.config';
 import { routing } from './i18n/routing';
 
 export default function proxy(req: NextRequest) {
+  // BotTrackingProxy will detect and track bots before any other proxies run
+  const botTracking = new BotTrackingProxy({
+    ...scConfig.api.edge,
+    sites,
+  });
+
   // LocaleProxy and AppRouterMultisiteProxy must always run for App Router routing
   const locale = new LocaleProxy({
     /**
@@ -82,7 +89,7 @@ export default function proxy(req: NextRequest) {
     // },
   });
 
-  return defineProxy(locale, multisite, redirects, personalize).exec(req);
+  return defineProxy(botTracking, locale, multisite, redirects, personalize).exec(req);
 }
 
 export const config = {

@@ -6,14 +6,15 @@ import {
   CdpHelper,
   DEFAULT_VARIANT,
 } from '@sitecore-content-sdk/content/personalize';
-import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { personalize } from '@sitecore-content-sdk/personalize';
+import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/events';
+import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
+import { personalizeServerPlugin } from '@sitecore-content-sdk/personalize';
+import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter';
+import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
-import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
-import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter';
-import { personalizeServerPlugin } from '@sitecore-content-sdk/personalize';
 import { personalizeProxyAdapter } from '../initialization/proxy/personalize-adapter';
 
 /**
@@ -36,6 +37,11 @@ export type PersonalizeProxyConfig = ProxyBaseConfig &
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
     extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
+    /**
+     * Skip personalize proxy for bot requests marked by the bot tracking proxy.
+     * Default is `true`.
+     */
+    skipForBot?: boolean;
   };
 
 /**
@@ -111,6 +117,7 @@ export class PersonalizeProxy extends ProxyBase {
       return res;
     }
     try {
+      const skipForBot = this.config.skipForBot ?? true;
       const pathname = req.nextUrl.pathname;
       const language = this.getLanguage(req, res);
       const hostname = this.getHostHeader(req) || this.defaultHostname;
@@ -138,6 +145,11 @@ export class PersonalizeProxy extends ProxyBase {
         this.isPreview(req) // No need to personalize for preview (layout data is already prepared for preview)
       ) {
         debug.personalize('skipped (%s)', res.redirected ? 'redirected' : 'preview');
+        return res;
+      }
+
+      if (skipForBot && req.cookies.get(BOT_DETECTION_COOKIE)?.value) {
+        debug.personalize('skipped (bot request)');
         return res;
       }
 

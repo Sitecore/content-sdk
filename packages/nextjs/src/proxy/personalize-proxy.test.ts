@@ -7,6 +7,7 @@ import sinonChai from 'sinon-chai';
 import sinon, { spy } from 'sinon';
 import nextjs, { NextRequest, NextResponse } from 'next/server';
 import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
+import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/events';
 import { SiteResolver } from '@sitecore-content-sdk/content/site';
 import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeProxyConfig } from './personalize-proxy';
@@ -613,9 +614,92 @@ describe('PersonalizeProxy', () => {
       expect(finalRes.headers['x-proxy-cache']).to.equal('no-cache');
       expect(finalRes.headers['Cache-Control']).to.equal('no-store, must-revalidate');
     });
+
+    describe('skipForBot', () => {
+      it('skips when bot detection cookie is present (default)', async () => {
+        const req = createRequest({
+          cookieValues: {
+            [BOT_DETECTION_COOKIE]: '1',
+          },
+        });
+        const res = createResponse();
+        const getCookiesSpy = spy(req.cookies, 'get');
+        const { proxy } = createProxy();
+
+        const finalRes = await proxy.handle(req, res);
+
+        validateDebugLog('personalize proxy start: %o', {
+          hostname: 'foo.net',
+          pathname: '/styleguide',
+          language: 'en',
+          headers: {
+            ...req.headers,
+          },
+        });
+        validateDebugLog('skipped (bot request)');
+        expect(getCookiesSpy.calledWith(BOT_DETECTION_COOKIE)).to.be.true;
+        expect(finalRes).to.deep.equal(res);
+      });
+
+      it('skips when bot detection cookie is present and skipForBot is true', async () => {
+        const req = createRequest({
+          cookieValues: {
+            [BOT_DETECTION_COOKIE]: '1',
+          },
+        });
+        const res = createResponse();
+        const { proxy } = createProxy({
+          config: { ...defaultConfig, skipForBot: true },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        validateDebugLog('skipped (bot request)');
+        expect(finalRes).to.deep.equal(res);
+      });
+    });
   });
 
   describe('request passed', () => {
+    it('does not skip for bot when skipForBot is false and bot cookie is present', async () => {
+      const req = createRequest({
+        cookieValues: {
+          [BOT_DETECTION_COOKIE]: '1',
+        },
+      });
+      const res = createResponse();
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const { proxy, getPersonalizeInfo, siteResolver, initPersonalizeServer, personalize } =
+        createProxy({
+          variantId: 'variant-2',
+          config: { ...defaultConfig, skipForBot: false },
+        });
+      const finalRes = await proxy.handle(req, res);
+
+      validateDebugLog('personalize proxy start: %o', {
+        headers: {
+          ...req.headers,
+        },
+        hostname: 'foo.net',
+        pathname: '/styleguide',
+        language: 'en',
+      });
+      expect(getPersonalizeInfo.calledWith('/styleguide', 'en')).to.be.true;
+      expect(initPersonalizeServer.calledOnce).to.be.true;
+      expect(personalize.calledOnce).to.be.true;
+      validateEndMessageDebugLog('personalize proxy end in %dms: %o', {
+        rewritePath: '/styleguide/_variantId_variant-2',
+        headers: {
+          ...res.headers,
+          'x-proxy-cache': 'no-cache',
+          'x-sc-rewrite': '/styleguide/_variantId_variant-2',
+        },
+      });
+      expect(siteResolver.getByHost).to.be.calledWith(hostname);
+      expect(finalRes).to.deep.equal(res);
+      nextRewriteStub.restore();
+    });
+
     it('fallback defaultLocale is used', async () => {
       const language = 'da-DK';
       const req = createRequest({
