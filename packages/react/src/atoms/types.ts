@@ -1,4 +1,5 @@
 /** Atom schema types. @public */
+import type { AtomType } from '@sitecore-content-sdk/content/editing';
 import type { z } from 'zod';
 import type { ComponentType } from 'react';
 
@@ -6,7 +7,7 @@ import type { ComponentType } from 'react';
 export type AtomMetadata = {
   name: string;
   version?: number;
-  type: 'atom' | 'atom-child';
+  type: AtomType;
   description: string;
   props: z.ZodObject<z.ZodRawShape>;
   component: (props: unknown) => React.ReactNode;

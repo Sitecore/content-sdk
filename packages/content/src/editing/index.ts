@@ -77,3 +77,8 @@ export {
   resolveTemplateString as resolveComponentLayoutTemplateString,
   evaluateShowNode as evaluateComponentLayoutShowNode,
 } from './component-layout';
+export {
+  AtomInfo,
+  AtomType,
+  getDesignLibraryAtomsRegistryEvent,
+} from './atoms-builder/atoms-builder';

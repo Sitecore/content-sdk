@@ -163,6 +163,8 @@ export {
   AppPlaceholder,
   AppPlaceholderProps,
   renderEmptyPlaceholder,
+  AtomRenderer,
+  AtomType,
   createAtom,
   withPropMeta,
   withArgMeta,
