@@ -1,11 +1,13 @@
 import type { LoaderFn } from '@sitecore-content-sdk/angular';
 import type { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
-import { getClient } from '../lib/sitecore-client';
+import { SITECORE_CLIENT_TOKEN } from '@sitecore-content-sdk/angular';
+import { inject } from '@angular/core';
 
 /**
  * Dictionary loader: fetches dictionary phrases from Sitecore for the current site/locale.
- * Uses the lazily-initialized SitecoreClient, mirroring the Next.js pattern.
+ * Uses the injected SitecoreClient, mirroring the Next.js pattern.
  */
 export const dictionaryLoader: LoaderFn<DictionaryPhrases> = async () => {
-  return getClient().getDictionary();
+  const client = inject(SITECORE_CLIENT_TOKEN);
+  return client.getDictionary();
 };

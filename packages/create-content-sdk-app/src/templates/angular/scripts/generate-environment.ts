@@ -1,35 +1,28 @@
 /**
  * Generates src/environments/environment.dev.ts or environment.prod.ts
- * by reading dotenv files into process.env and serializing the values the
- * Sitecore SDK packages expect at runtime.
+ * by reading process.env populated by dotenv
+ * and serializing the values the Sitecore SDK packages expect at runtime.
  *
  * Usage:
  *   tsx scripts/generate-environment.ts --dev   (loads .env then .env.dev)
  *   tsx scripts/generate-environment.ts --prod  (loads .env then .env.prod)
  *
- * Priority: real process.env > mode-specific .env file > base .env file.
  */
-import { writeFileSync, existsSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import dotenv from 'dotenv';
 
 const projectRoot = process.cwd();
-const envDir = resolve(projectRoot, 'src', 'environments');
+const angularEnvDir = resolve(projectRoot, 'src', 'environments');
 
 function loadEnvFiles(mode: 'dev' | 'prod'): void {
-  const modeFile = mode === 'dev' ? '.env.dev' : '.env.prod';
+  const contextEnvFile = mode === 'dev' ? '.env.dev' : '.env.prod';
 
   // Base .env first — does NOT override existing process.env values
-  const basePath = resolve(projectRoot, '.env');
-  if (existsSync(basePath)) {
-    dotenv.config({ path: basePath, override: false });
-  }
-
-  // Mode-specific file — overrides values from .env (but not real process.env)
-  const modePath = resolve(projectRoot, modeFile);
-  if (existsSync(modePath)) {
-    dotenv.config({ path: modePath, override: true });
-  }
+  const baseEnvPath = resolve(projectRoot, '.env');
+  const localEnvPath = resolve(projectRoot, '.env.local');
+  const contextEnvPath = resolve(projectRoot, contextEnvFile);
+  dotenv.config({ path: [baseEnvPath, localEnvPath, contextEnvPath] });
 }
 
 function env(key: string, fallback = ''): string {
@@ -37,11 +30,10 @@ function env(key: string, fallback = ''): string {
 }
 
 /**
- * All env vars that the Sitecore SDK packages read from process.env.
- * See:
- *  - packages/content/src/config/define-config.ts  (getFallbackConfig)
- *  - packages/core/src/tools/resolve-edge-url.ts
- *  - packages/core/src/tools/utils.ts
+ * Env variables that Content SDK reads at runtime. Can be expanded.
+ * @see packages/content/src/config/define-config.ts  (getFallbackConfig)
+ * @see packages/core/src/tools/resolve-edge-url.ts
+ * @see packages/core/src/tools/utils.ts
  */
 function serialize(production: boolean): string {
   return `\
@@ -84,9 +76,9 @@ function main(): void {
 
   const production = mode === 'prod';
   const outFile = production ? 'environment.prod.ts' : 'environment.dev.ts';
-  const outPath = resolve(envDir, outFile);
+  const outPath = resolve(angularEnvDir, outFile);
   writeFileSync(outPath, serialize(production), 'utf8');
-  console.log(`[gen:env] Wrote ${outFile} (mode=${mode})`);
+  console.log(`[content-sdk:prebuild] Wrote ${outFile} (mode=${mode})`);
 }
 
 main();

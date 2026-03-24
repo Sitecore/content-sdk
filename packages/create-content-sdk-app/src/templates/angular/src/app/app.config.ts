@@ -23,11 +23,11 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(withFetch()),
     provideRouter(routes),
-    provideSitecoreAngular({ sitecoreConfig: scConfig }),
     provideClientHydration(withEventReplay()),
     provideSitecoreAngular({
       notFoundRoute: '/404',
       errorRoute: '/500',
+      sitecoreConfig: scConfig,
     }),
     provideLoaderRegistry(LOADERS),
     PreLoaderDataService,
