@@ -74,6 +74,10 @@ export type PageMode = {
      * Whether the page is in variant generation mode
      */
     isVariantGeneration: boolean;
+    /**
+     * Whether the page is in atoms editing mode
+     */
+    isAtomsMode?: boolean;
   };
   /**
    * Whether the page is in normal mode
@@ -482,7 +486,11 @@ export class SitecoreClient implements BaseSitecoreClient {
     );
 
     if (!data) {
-      throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(previewData)}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
+      throw new Error(
+        `Unable to fetch editing data for preview ${JSON.stringify(previewData)}. ${
+          ERROR_MESSAGES.CONTACT_SUPPORT
+        }`
+      );
     }
     let layout = data.layoutData;
     const personalizeData = getGroomedVariantIds(variantIds);
@@ -536,7 +544,11 @@ export class SitecoreClient implements BaseSitecoreClient {
     );
 
     if (!componentData) {
-      throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(designLibData)}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
+      throw new Error(
+        `Unable to fetch editing data for preview ${JSON.stringify(designLibData)}. ${
+          ERROR_MESSAGES.CONTACT_SUPPORT
+        }`
+      );
     }
     const layout = this.applyContentRewrite(componentData);
     const page: Page = {

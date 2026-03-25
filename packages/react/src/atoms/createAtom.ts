@@ -1,4 +1,5 @@
 /** Component-first atom/atom-child definition; schema.type differentiates. */
+import { AtomType } from '@sitecore-content-sdk/content/editing';
 import { z } from 'zod';
 import type {
   AtomMetadata,
@@ -20,7 +21,7 @@ export type AtomSchemaInput<C> = {
   /** Human-readable summary for the component palette */
   description: string;
   /** 'atom' (default) for top-level, 'atom-child' for scoped children */
-  type?: 'atom' | 'atom-child';
+  type?: (typeof AtomType)[keyof typeof AtomType];
   /** Optional version for schema evolution */
   version?: number;
   /** Zod schemas for editable props (keys must be component props excluding children/ref) */
@@ -49,17 +50,13 @@ export type AtomSchemaInput<C> = {
  * @returns AtomMetadata with type taken from schema.type (default 'atom')
  * @public
  */
-export function createAtom<C>(
-  component: C,
-  schema: AtomSchemaInput<C>
-): AtomMetadata {
-  const atomType = schema.type ?? 'atom';
+export function createAtom<C>(component: C, schema: AtomSchemaInput<C>): AtomMetadata {
+  const atomType = schema.type ?? AtomType.ATOM;
   const propsShape = schema.props as Record<string, z.ZodType>;
   const propsSchema = z.object(propsShape);
 
   const customEvents =
-    schema.customEvents &&
-    Object.keys(schema.customEvents).length > 0
+    schema.customEvents && Object.keys(schema.customEvents).length > 0
       ? (Object.fromEntries(
           Object.entries(schema.customEvents).filter(([, v]) => v !== undefined)
         ) as Record<string, z.ZodType[]>)
