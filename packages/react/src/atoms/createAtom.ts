@@ -21,7 +21,7 @@ export type AtomSchemaInput<C> = {
   /** Human-readable summary for the component palette */
   description: string;
   /** 'atom' (default) for top-level, 'atom-child' for scoped children */
-  type?: AtomType;
+  type?: (typeof AtomType)[keyof typeof AtomType];
   /** Optional version for schema evolution */
   version?: number;
   /** Zod schemas for editable props (keys must be component props excluding children/ref) */

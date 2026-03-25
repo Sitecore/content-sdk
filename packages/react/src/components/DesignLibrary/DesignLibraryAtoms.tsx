@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
 import { useSitecore } from '../SitecoreProvider';
-import { unfoldAtomsRegistry, serializeAtoms } from '../../atoms/atom-registry-utils';
+import { serializeAtoms } from '../../atoms/atom-registry-utils';
 import {
   postToDesignLibrary,
   getDesignLibraryAtomsRegistryEvent,
@@ -22,9 +22,7 @@ export const DesignLibraryAtoms = () => {
 
   useEffect(() => {
     if (atoms) {
-      const flattenedAtoms = unfoldAtomsRegistry(atoms);
-      console.log('Flattened Atoms:', flattenedAtoms);
-      const serializedAtoms = serializeAtoms(flattenedAtoms);
+      const serializedAtoms = serializeAtoms(atoms);
       console.log('Serialized Atoms:', serializedAtoms);
 
       postToDesignLibrary(getDesignLibraryAtomsRegistryEvent(serializedAtoms));

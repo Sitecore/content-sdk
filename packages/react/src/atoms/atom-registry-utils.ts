@@ -7,32 +7,6 @@ const isAtomMetadata = (value: unknown): value is AtomMetadata => {
 };
 
 /**
- * Unfolds the atoms registry by recursively including all child atoms.
- * @param {AtomMetadata[]} atoms - the atoms array to unfold; should contain only top-level atoms (i.e., those with type 'atom')
- * @returns {AtomMetadata[]} the unfolded atoms registry that includes all allowed child atoms
- * @internal
- */
-export const unfoldAtomsRegistry = (atoms: AtomMetadata[]): AtomMetadata[] => {
-  const unfoldedRegistry: AtomMetadata[] = [];
-  const visited = new Set<string>();
-
-  const visit = (atom: AtomMetadata): void => {
-    if (visited.has(atom.name)) {
-      return;
-    }
-
-    visited.add(atom.name);
-    unfoldedRegistry.push(atom);
-
-    (atom.allowedChildren ?? []).filter(isAtomMetadata).forEach(visit);
-  };
-
-  atoms.forEach(visit);
-
-  return unfoldedRegistry;
-};
-
-/**
  * Serializes the provided atoms metadata array into a format suitable for broadcasting via postMessage to the host application
  * @param {AtomMetadata[]} atoms - the atoms to be serialized
  * @returns {AtomInfo[]} the serialized atoms
@@ -48,12 +22,12 @@ export const serializeAtoms = (atoms: AtomMetadata[]): AtomInfo[] => {
     visited.add(atom.name);
 
     // process allowed children
-    const children: string[] = [];
+    const allowedChildren: string[] = [];
     for (const child of atom.allowedChildren ?? []) {
       if (isAtomMetadata(child)) {
-        children.push(child.name);
+        allowedChildren.push(child.name);
       } else {
-        children.push(child);
+        allowedChildren.push(child);
       }
     }
 
@@ -78,7 +52,7 @@ export const serializeAtoms = (atoms: AtomMetadata[]): AtomInfo[] => {
       type: atom.type,
       description: atom.description,
       props: z.toJSONSchema(atom.props, { target: 'draft-7' }),
-      children,
+      allowedChildren,
       defaultChildren,
       htmlEvents: atom.htmlEvents,
       customEvents,

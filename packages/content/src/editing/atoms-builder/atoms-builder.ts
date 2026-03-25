@@ -9,10 +9,7 @@ const DESIGN_LIBRARY_ATOM_REGISTRY_EVENT_NAME = 'atom:registry';
  * Represents the type of atom, which can be either a top-level atom or an atom child
  * @internal
  */
-export enum AtomType {
-  ATOM = 'atom',
-  ATOM_CHILD = 'atom-child',
-}
+export const AtomType = { ATOM: 'atom', ATOM_CHILD: 'atom-child' } as const;
 
 export type SerializedDefaultChild = string | { atom: string; props?: Record<string, unknown> };
 
@@ -30,9 +27,9 @@ export type AtomInfo = {
    */
   version?: number;
   /**
-   * The type of the atom, which can be either a top-level atom or an atom child.
+   * The type of the atom, which can be either a top-level 'atom' or an 'atom-child'.
    */
-  type: AtomType;
+  type: (typeof AtomType)[keyof typeof AtomType];
   /**
    * A description of the atom.
    */
@@ -42,9 +39,9 @@ export type AtomInfo = {
    */
   props: Record<string, unknown>;
   /**
-   * The children of the atom, which define the nested structure of the atom.
+   * The allowed children of the atom, which define the nested structure of the atom.
    */
-  children: string[];
+  allowedChildren: string[];
   /**
    * The default children of the atom.
    */

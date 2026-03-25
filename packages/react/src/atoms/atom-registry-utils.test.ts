@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { z } from 'zod';
-import { unfoldAtomsRegistry, serializeAtoms } from './atom-registry-utils';
+import { serializeAtoms } from './atom-registry-utils';
 import { AtomChild, AtomMetadata } from './types';
 import { AtomType } from '@sitecore-content-sdk/content/editing';
 
@@ -11,94 +11,6 @@ const createAtom = (name: string, allowedChildren?: AtomChild[]): AtomMetadata =
   props: z.object({}),
   component: () => null,
   allowedChildren,
-});
-
-describe('unfoldAtomsRegistry', () => {
-  it('should return an empty array for empty input', () => {
-    const result = unfoldAtomsRegistry([]);
-
-    expect(result).to.deep.equal([]);
-  });
-
-  it('should return a single top-level atom when there are no children', () => {
-    const atomA = createAtom('A');
-
-    const result = unfoldAtomsRegistry([atomA]);
-
-    expect(result).to.deep.equal([atomA]);
-  });
-
-  it('should ignore string allowedChildren values', () => {
-    const atomA = createAtom('A', ['text', 'atom']);
-
-    const result = unfoldAtomsRegistry([atomA]);
-
-    expect(result.map((atom) => atom.name)).to.deep.equal(['A']);
-  });
-
-  it('should recursively include one level of nested metadata children', () => {
-    const atomB = createAtom('B');
-    const atomA = createAtom('A', [atomB]);
-
-    const result = unfoldAtomsRegistry([atomA]);
-
-    expect(result.map((atom) => atom.name)).to.deep.equal(['A', 'B']);
-  });
-
-  it('should recursively include multiple levels of nested metadata children', () => {
-    const atomC = createAtom('C');
-    const atomB = createAtom('B', [atomC]);
-    const atomA = createAtom('A', [atomB]);
-
-    const result = unfoldAtomsRegistry([atomA]);
-
-    expect(result.map((atom) => atom.name)).to.deep.equal(['A', 'B', 'C']);
-  });
-
-  it('should deduplicate repeated names encountered across branches', () => {
-    const sharedFromA = createAtom('Shared');
-    const sharedFromB = createAtom('Shared');
-    const atomA = createAtom('A', [sharedFromA]);
-    const atomB = createAtom('B', [sharedFromB]);
-
-    const result = unfoldAtomsRegistry([atomA, atomB]);
-
-    expect(result.map((atom) => atom.name)).to.deep.equal(['A', 'Shared', 'B']);
-    expect(result.filter((atom) => atom.name === 'Shared')).to.have.length(1);
-    expect(result[1]).to.equal(sharedFromA);
-  });
-
-  it('should handle cyclic references without infinite recursion', () => {
-    const atomA = createAtom('A');
-    const atomB = createAtom('B');
-
-    atomA.allowedChildren = [atomB];
-    atomB.allowedChildren = [atomA];
-
-    const result = unfoldAtomsRegistry([atomA]);
-
-    expect(result.map((atom) => atom.name)).to.deep.equal(['A', 'B']);
-  });
-
-  it('should not duplicate a child that is also passed as a root atom', () => {
-    const atomB = createAtom('B');
-    const atomA = createAtom('A', [atomB]);
-
-    const result = unfoldAtomsRegistry([atomA, atomB]);
-
-    expect(result.map((atom) => atom.name)).to.deep.equal(['A', 'B']);
-    expect(result[1]).to.equal(atomB);
-  });
-
-  it('should preserve object references from input atoms', () => {
-    const atomB = createAtom('B');
-    const atomA = createAtom('A', [atomB]);
-
-    const result = unfoldAtomsRegistry([atomA]);
-
-    expect(result[0]).to.equal(atomA);
-    expect(result[1]).to.equal(atomB);
-  });
 });
 
 describe('serializeAtoms', () => {
@@ -127,7 +39,7 @@ describe('serializeAtoms', () => {
     expect(result).to.have.length(2);
     const serializedA = result.find((info) => info.name === 'A');
     if (!serializedA) throw new Error('serializedA should be defined');
-    expect(serializedA.children).to.deep.equal(['B', 'text', 'atom']);
+    expect(serializedA.allowedChildren).to.deep.equal(['B', 'text', 'atom']);
   });
 
   it('should serialize defaultChildren with atom names', () => {
@@ -189,7 +101,7 @@ describe('serializeAtoms', () => {
     const serializedA = result.find((info) => info.name === 'A');
     if (!serializedA) throw new Error('serializedA should be defined');
     expect(serializedA.props).to.be.an('object');
-    expect(serializedA.children).to.include('B');
+    expect(serializedA.allowedChildren).to.include('B');
     expect(serializedA.customEvents).to.be.an('object');
     expect(serializedA.htmlEvents).to.deep.equal(['onClick', 'onHover']);
     expect(serializedA.defaultChildren).to.deep.equal(['B']);
@@ -240,5 +152,84 @@ describe('serializeAtoms', () => {
     expect(serializedA.customEvents?.properties?.onSubmit?.items?.[1]?.secondArgName).to.equal(
       'Second argument'
     );
+  });
+
+  it('should flatten three levels of nested allowedChildren', () => {
+    // A → B → C
+    const atomC = createAtom('C');
+    const atomB = createAtom('B', [atomC]);
+    const atomA = createAtom('A', [atomB]);
+
+    const result = serializeAtoms([atomA]);
+
+    expect(result).to.have.length(3);
+    const names = result.map((r) => r.name);
+    expect(names).to.include.members(['A', 'B', 'C']);
+
+    const serializedA = result.find((r) => r.name === 'A')!;
+    const serializedB = result.find((r) => r.name === 'B')!;
+    const serializedC = result.find((r) => r.name === 'C')!;
+
+    // Each level's allowedChildren should be string names, not objects
+    expect(serializedA.allowedChildren).to.deep.equal(['B']);
+    expect(serializedB.allowedChildren).to.deep.equal(['C']);
+    expect(serializedC.allowedChildren).to.deep.equal([]);
+  });
+
+  it('should not duplicate atoms shared across multiple levels (diamond pattern)', () => {
+    // A allows B and C; B also allows C → C should appear only once
+    const atomC = createAtom('C');
+    const atomB = createAtom('B', [atomC]);
+    const atomA = createAtom('A', [atomB, atomC]);
+
+    const result = serializeAtoms([atomA]);
+
+    expect(result).to.have.length(3);
+    const names = result.map((r) => r.name);
+    expect(names).to.include.members(['A', 'B', 'C']);
+    // Ensure no duplicates
+    expect(new Set(names).size).to.equal(3);
+
+    const serializedA = result.find((r) => r.name === 'A')!;
+    expect(serializedA.allowedChildren).to.deep.equal(['B', 'C']);
+  });
+
+  it('should serialize defaultChildren at multiple levels of nesting', () => {
+    // A has defaultChildren referencing B; B has defaultChildren referencing C
+    const atomC = createAtom('C');
+    const atomB = createAtom('B', [atomC]);
+    atomB.defaultChildren = [atomC, { atom: atomC, props: { key: 'val' } }];
+    const atomA = createAtom('A', [atomB]);
+    atomA.defaultChildren = [atomB];
+
+    const result = serializeAtoms([atomA]);
+
+    expect(result).to.have.length(3);
+
+    const serializedA = result.find((r) => r.name === 'A')!;
+    const serializedB = result.find((r) => r.name === 'B')!;
+
+    // A's defaultChildren → B serialized as name string
+    expect(serializedA.defaultChildren).to.deep.equal(['B']);
+
+    // B's defaultChildren → C serialized as name string and { atom: 'C', props }
+    expect(serializedB.defaultChildren).to.deep.equal(['C', { atom: 'C', props: { key: 'val' } }]);
+  });
+
+  it('should handle mixed string and object allowedChildren at multiple levels', () => {
+    // B allows 'text' and 'atom' (strings) and a concrete atom C
+    const atomC = createAtom('C');
+    const atomB = createAtom('B', ['text', 'atom', atomC]);
+    const atomA = createAtom('A', [atomB, 'text']);
+
+    const result = serializeAtoms([atomA]);
+
+    expect(result).to.have.length(3);
+
+    const serializedA = result.find((r) => r.name === 'A')!;
+    const serializedB = result.find((r) => r.name === 'B')!;
+
+    expect(serializedA.allowedChildren).to.deep.equal(['B', 'text']);
+    expect(serializedB.allowedChildren).to.deep.equal(['text', 'atom', 'C']);
   });
 });
