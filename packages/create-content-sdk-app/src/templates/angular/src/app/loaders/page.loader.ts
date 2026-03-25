@@ -1,14 +1,14 @@
 import type { LoaderFn, Page } from '@sitecore-content-sdk/angular';
-import { NotFoundNavigationError, SitecorePageResolver } from '@sitecore-content-sdk/angular';
-import { inject } from '@angular/core';
+import { NotFoundNavigationError, resolveSitecorePage } from '@sitecore-content-sdk/angular';
+import scConfig from '../../../sitecore.config';
+import { getClient } from '../lib/sitecore-client';
 
 /**
  * Page loader: fetches layout data from Sitecore for the current URL.
- * Uses {@link SitecorePageResolver#resolvePage} (`providedIn: 'root'`), injectable in loaders.
+ * Uses imported config and {@link getClient} so this runs outside Angular injection context.
  */
 export const pageLoader: LoaderFn<Page> = async (context) => {
-  const resolver = inject(SitecorePageResolver);
-  const page = await resolver.resolvePage(context.url);
+  const page = await resolveSitecorePage(context.url, scConfig, getClient());
   if (!page) {
     throw new NotFoundNavigationError();
   }
