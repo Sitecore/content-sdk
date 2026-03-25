@@ -7,7 +7,7 @@ import type { ComponentType } from 'react';
 export type AtomMetadata = {
   name: string;
   version?: number;
-  type: AtomType;
+  type: (typeof AtomType)[keyof typeof AtomType];
   description: string;
   props: z.ZodObject<z.ZodRawShape>;
   component: (props: unknown) => React.ReactNode;
