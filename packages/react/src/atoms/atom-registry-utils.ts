@@ -48,12 +48,12 @@ export const serializeAtoms = (atoms: AtomMetadata[]): AtomInfo[] => {
     visited.add(atom.name);
 
     // process allowed children
-    const children: string[] = [];
+    const allowedChildren: string[] = [];
     for (const child of atom.allowedChildren ?? []) {
       if (isAtomMetadata(child)) {
-        children.push(child.name);
+        allowedChildren.push(child.name);
       } else {
-        children.push(child);
+        allowedChildren.push(child);
       }
     }
 
@@ -78,7 +78,7 @@ export const serializeAtoms = (atoms: AtomMetadata[]): AtomInfo[] => {
       type: atom.type,
       description: atom.description,
       props: z.toJSONSchema(atom.props, { target: 'draft-7' }),
-      children,
+      allowedChildren,
       defaultChildren,
       htmlEvents: atom.htmlEvents,
       customEvents,

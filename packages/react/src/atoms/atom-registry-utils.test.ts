@@ -127,7 +127,7 @@ describe('serializeAtoms', () => {
     expect(result).to.have.length(2);
     const serializedA = result.find((info) => info.name === 'A');
     if (!serializedA) throw new Error('serializedA should be defined');
-    expect(serializedA.children).to.deep.equal(['B', 'text', 'atom']);
+    expect(serializedA.allowedChildren).to.deep.equal(['B', 'text', 'atom']);
   });
 
   it('should serialize defaultChildren with atom names', () => {
@@ -189,7 +189,7 @@ describe('serializeAtoms', () => {
     const serializedA = result.find((info) => info.name === 'A');
     if (!serializedA) throw new Error('serializedA should be defined');
     expect(serializedA.props).to.be.an('object');
-    expect(serializedA.children).to.include('B');
+    expect(serializedA.allowedChildren).to.include('B');
     expect(serializedA.customEvents).to.be.an('object');
     expect(serializedA.htmlEvents).to.deep.equal(['onClick', 'onHover']);
     expect(serializedA.defaultChildren).to.deep.equal(['B']);

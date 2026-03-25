@@ -39,9 +39,9 @@ export type AtomInfo = {
    */
   props: Record<string, unknown>;
   /**
-   * The children of the atom, which define the nested structure of the atom.
+   * The allowed children of the atom, which define the nested structure of the atom.
    */
-  children: string[];
+  allowedChildren: string[];
   /**
    * The default children of the atom.
    */

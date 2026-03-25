@@ -22,7 +22,7 @@ describe('atoms-builder', () => {
           type: AtomType.ATOM,
           description: 'A button atom',
           props: { label: 'string' },
-          children: [],
+          allowedChildren: [],
         },
       ];
 
@@ -38,14 +38,14 @@ describe('atoms-builder', () => {
           type: AtomType.ATOM,
           description: 'A button atom',
           props: { label: 'string' },
-          children: ['ButtonIcon'],
+          allowedChildren: ['ButtonIcon'],
         },
         {
           name: 'ButtonIcon',
           type: AtomType.ATOM_CHILD,
           description: 'An icon child of Button',
           props: { src: 'string' },
-          children: [],
+          allowedChildren: [],
         },
       ];
 
@@ -63,7 +63,7 @@ describe('atoms-builder', () => {
           type: AtomType.ATOM,
           description: 'A card atom with optional fields',
           props: { title: 'string' },
-          children: ['CardBody'],
+          allowedChildren: ['CardBody'],
           defaultChildren: ['CardBody', { atom: 'CardFooter', props: { cta: 'Learn more' } }],
           htmlEvents: ['click', 'focus'],
           customEvents: { onExpand: 'CustomExpandEvent' },
