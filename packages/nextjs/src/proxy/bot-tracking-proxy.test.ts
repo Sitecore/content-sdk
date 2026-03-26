@@ -283,6 +283,7 @@ describe('BotTrackingProxy', () => {
 
     validateDebugLog('bot tracking proxy skipped (prefetch)');
     expect(initContentSdkStub).to.not.have.been.called;
+    expect(botPageViewStub).to.not.have.been.called;
     expect(finalRes).to.equal(res);
   });
 
