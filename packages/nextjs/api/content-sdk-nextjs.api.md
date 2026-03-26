@@ -118,7 +118,6 @@ import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
 import { NextApiRequest } from 'next';
 import { NextApiResponse } from 'next';
-import { NextFetchEvent } from 'next/server';
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { NextURL } from 'next/dist/server/web/next-url';
@@ -223,7 +222,7 @@ export class BotTrackingProxy extends ProxyBase {
     // (undocumented)
     protected config: BotTrackingProxyConfig;
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse, event?: NextFetchEvent) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
     // @internal (undocumented)
     protected shouldSkipForLocalEnvironment(req: NextRequest): boolean;
 }

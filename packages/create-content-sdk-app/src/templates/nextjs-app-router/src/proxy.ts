@@ -1,4 +1,4 @@
-import { type NextRequest } from 'next/server';
+import { NextFetchEvent, type NextRequest } from 'next/server';
 import {
   defineProxy,
   AppRouterMultisiteProxy,
@@ -11,11 +11,12 @@ import sites from '.sitecore/sites.json';
 import scConfig from 'sitecore.config';
 import { routing } from './i18n/routing';
 
-export default function proxy(req: NextRequest) {
+export default function proxy(req: NextRequest, event: NextFetchEvent) {
   // BotTrackingProxy will detect and track bots before any other proxies run
   const botTracking = new BotTrackingProxy({
     ...scConfig.api.edge,
     sites,
+    waitUntil: event.waitUntil,
   });
 
   // LocaleProxy and AppRouterMultisiteProxy must always run for App Router routing

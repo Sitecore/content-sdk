@@ -1,4 +1,4 @@
-import { type NextRequest } from 'next/server';
+import { NextFetchEvent, type NextRequest } from 'next/server';
 import {
   defineProxy,
   MultisiteProxy,
@@ -9,11 +9,12 @@ import {
 import sites from '.sitecore/sites.json';
 import scConfig from 'sitecore.config';
 
-export default function proxy(req: NextRequest) {
+export default function proxy(req: NextRequest, event: NextFetchEvent) {
   // BotTrackingProxy will detect and track bots before any other proxies run
   const botTracking = new BotTrackingProxy({
     ...scConfig.api.edge,
     sites,
+    waitUntil: event.waitUntil,
   });
 
   // Instantiate proxies - they will use Edge config if available, otherwise fall back to local config

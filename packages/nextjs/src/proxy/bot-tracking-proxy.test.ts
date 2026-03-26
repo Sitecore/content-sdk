@@ -318,31 +318,7 @@ describe('BotTrackingProxy', () => {
     expect(finalRes).to.equal(res);
   });
 
-  it('delegates async work to event.waitUntil when provided', async () => {
-    isBotStub.returns(true);
-
-    try {
-      const req = createRequest({
-        headerValues: { 'user-agent': 'Googlebot' },
-      });
-      const res = createResponse();
-      const proxy = createProxy();
-
-      const waitUntil = sinon.spy();
-
-      await proxy.handle(req, res, {
-        waitUntil,
-      } as unknown as import('next/server').NextFetchEvent);
-
-      expect(waitUntil).to.have.been.calledOnce;
-      expect(initContentSdkStub).to.have.been.calledOnce;
-      expect(botPageViewStub).to.have.been.calledOnce;
-    } finally {
-      initContentSdkStub.resolves();
-    }
-  });
-
-  it('uses config.waitUntil when NextFetchEvent is omitted', async () => {
+  it('delegates async work to config.waitUntil when provided', async () => {
     isBotStub.returns(true);
 
     try {

@@ -1,4 +1,4 @@
-import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
@@ -18,6 +18,12 @@ import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter
  */
 export type BotTrackingProxyConfig = SitecoreConfig['api']['edge'] &
   Pick<ProxyBaseConfig, 'sites' | 'defaultHostname'> & {
+    /**
+     * Function to run the bot tracking in the background to not block the request.
+     * If not provided, the bot tracking will run synchronously.
+     * Read more about `waitUntil` in the [Next.js documentation](https://nextjs.org/docs/app/api-reference/file-conventions/proxy#waituntil-and-nextfetchevent)
+     * @param {Promise<void>} promise - Promise to run the bot tracking in the background.
+     */
     waitUntil?: (promise: Promise<void>) => void;
     /**
      * When `false`, bot tracking is disabled for every request.
@@ -36,13 +42,11 @@ export class BotTrackingProxy extends ProxyBase {
     super(config);
   }
 
-  handle = async (
-    req: NextRequest,
-    res: NextResponse,
-    event?: NextFetchEvent
-  ): Promise<NextResponse> => {
+  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     try {
-      if (!(this.config.enabled ?? true)) {
+      const isEnabled = this.config.enabled ?? true;
+
+      if (!isEnabled) {
         debug.common('skipped (bot tracking proxy is disabled)');
         return res;
       }
@@ -67,7 +71,7 @@ export class BotTrackingProxy extends ProxyBase {
         return res;
       }
 
-      const waitUntil = event?.waitUntil || this.config.waitUntil;
+      const waitUntil = this.config.waitUntil;
 
       const site = this.getSite(req, res);
 
