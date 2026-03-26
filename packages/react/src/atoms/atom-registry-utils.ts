@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { AtomMetadata } from './types';
 import { AtomInfo } from '@sitecore-content-sdk/content/editing';
+import { ComponentType } from 'react';
 
 const isAtomMetadata = (value: unknown): value is AtomMetadata => {
   return typeof value !== 'string';
@@ -67,3 +68,31 @@ export const serializeAtoms = (atoms: AtomMetadata[]): AtomInfo[] => {
 
   return atomInfos;
 };
+
+/**
+ * Returns a map of atom type name to React component for use with createView.
+ * @param {AtomMetadata[]} metadata - Array of atom metadata (e.g. from createAtom)
+ * @returns {Record<string, ComponentType<unknown>>} Record of atom name to component
+ * @internal
+ */
+export function getAtomRegistry(metadata: AtomMetadata[]): Record<string, ComponentType<unknown>> {
+  const registry: Record<string, ComponentType<unknown>> = {};
+
+  const addAtom = (atom: AtomMetadata): void => {
+    if (registry[atom.name]) {
+      return;
+    }
+    registry[atom.name] = atom.component as ComponentType<unknown>;
+    for (const child of atom.allowedChildren ?? []) {
+      if (child !== 'atom' && child !== 'text' && typeof child === 'object') {
+        addAtom(child);
+      }
+    }
+  };
+
+  for (const atom of metadata) {
+    addAtom(atom);
+  }
+
+  return registry;
+}

@@ -1,9 +1,9 @@
 'use client';
 import React, { useEffect, useMemo } from 'react';
 import { AtomMetadata } from '../../atoms';
-import { Document } from '@sitecore-content-sdk/content/types/editing/component-layout';
+import { Document } from '@sitecore-content-sdk/content/component-layout';
 import { createView } from '../..';
-import { getAtomRegistry } from '../../component-layout/getAtomRegistry';
+import { getAtomRegistry } from '../../atoms/atom-registry-utils';
 
 export type AtomRendererProps = {
   atoms?: AtomMetadata[];
@@ -16,9 +16,9 @@ export const AtomRenderer = ({ atoms, document }: AtomRendererProps) => {
   const View = useMemo(() => {
     if (!document) return null;
 
-    const atomsRegistry = getAtomRegistry(atoms ?? []);
+    const atomRegistry = getAtomRegistry(atoms || []);
 
-    return createView(document, atomsRegistry, {
+    return createView(document, atomRegistry, {
       alert: (...args: unknown[]) => {
         const [message] = args;
         alert(message);

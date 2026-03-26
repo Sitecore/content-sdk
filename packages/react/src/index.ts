@@ -132,7 +132,6 @@ export {
 } from './atoms';
 export {
   createView,
-  getAtomRegistry,
   type CallbackRegistry as ComponentLayoutCallbackRegistry,
   type CallbackArgNamesMap as ComponentLayoutCallbackArgNamesMap,
   type CreateViewOptions,
