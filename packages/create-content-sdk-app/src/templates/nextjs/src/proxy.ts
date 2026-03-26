@@ -14,7 +14,7 @@ export default function proxy(req: NextRequest, event: NextFetchEvent) {
   const botTracking = new BotTrackingProxy({
     ...scConfig.api.edge,
     sites,
-    waitUntil: event.waitUntil,
+    fetchEvent: event,
   });
 
   // Instantiate proxies - they will use Edge config if available, otherwise fall back to local config

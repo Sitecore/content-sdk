@@ -287,6 +287,47 @@ describe('BotTrackingProxy', () => {
     expect(finalRes).to.equal(res);
   });
 
+  it('should run in local environment when SITECORE_ENABLE_BOT_TRACKING is true', async () => {
+    isBotStub.returns(true);
+    const env = process.env as Record<string, string | undefined>;
+    const originalEnv = env.SITECORE_ENABLE_BOT_TRACKING;
+    env.SITECORE_ENABLE_BOT_TRACKING = 'true';
+    env.NODE_ENV = 'development';
+
+    try {
+      const req = createRequest({
+        headerValues: { 'user-agent': 'Googlebot' },
+      });
+      const res = createResponse();
+      const proxy = createProxy();
+
+      const finalRes = await proxy.handle(req, res);
+
+      const stored = getCookieJar(res)[BOT_COOKIE];
+      expect(stored.value).to.equal('1');
+      expect(stored.secure).to.equal(true);
+      expect(stored).to.include({ sameSite: 'lax', path: '/' });
+
+      expect(initContentSdkStub).to.have.been.calledOnce;
+      expect(initContentSdkStub.firstCall.args[0]).to.deep.include({
+        config: {
+          contextId: defaultConfig.contextId,
+          edgeUrl: defaultConfig.edgeUrl,
+          siteName: 'test-site',
+        },
+      });
+      expect(botPageViewStub).to.have.been.calledOnce;
+      validateEndDebugObject('bot tracking proxy end: %o', {
+        pathname: '/styleguide',
+        cookies: res.cookies,
+      });
+      expect(finalRes).to.equal(res);
+    } finally {
+      env.SITECORE_ENABLE_BOT_TRACKING = originalEnv;
+      env.NODE_ENV = originalEnv;
+    }
+  });
+
   it('sets bot cookie and runs botPageView for a bot request', async () => {
     isBotStub.returns(true);
     const req = createRequest({
@@ -318,7 +359,7 @@ describe('BotTrackingProxy', () => {
     expect(finalRes).to.equal(res);
   });
 
-  it('delegates async work to config.waitUntil when provided', async () => {
+  it('delegates async work to fetchEvent.waitUntil when provided', async () => {
     isBotStub.returns(true);
 
     try {
@@ -326,13 +367,13 @@ describe('BotTrackingProxy', () => {
         headerValues: { 'user-agent': 'Googlebot' },
       });
       const res = createResponse();
-      const waitUntil = sinon.spy();
+      const fetchEvent = { waitUntil: sinon.spy() };
 
-      const proxy = createProxy({ waitUntil });
+      const proxy = createProxy({ fetchEvent });
 
       await proxy.handle(req, res);
 
-      expect(waitUntil).to.have.been.calledOnce;
+      expect(fetchEvent.waitUntil).to.have.been.calledOnce;
       expect(initContentSdkStub).to.have.been.calledOnce;
       expect(botPageViewStub).to.have.been.calledOnce;
     } finally {

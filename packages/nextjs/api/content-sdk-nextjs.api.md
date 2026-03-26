@@ -118,6 +118,7 @@ import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
 import { NextApiRequest } from 'next';
 import { NextApiResponse } from 'next';
+import { NextFetchEvent } from 'next/server';
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { NextURL } from 'next/dist/server/web/next-url';
@@ -229,7 +230,7 @@ export class BotTrackingProxy extends ProxyBase {
 
 // @public
 export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Pick<ProxyBaseConfig, 'sites' | 'defaultHostname'> & {
-    waitUntil?: (promise: Promise<void>) => void;
+    fetchEvent?: NextFetchEvent;
     enabled?: boolean;
 };
 

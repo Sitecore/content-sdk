@@ -16,7 +16,7 @@ export default function proxy(req: NextRequest, event: NextFetchEvent) {
   const botTracking = new BotTrackingProxy({
     ...scConfig.api.edge,
     sites,
-    waitUntil: event.waitUntil,
+    fetchEvent: event,
   });
 
   // LocaleProxy and AppRouterMultisiteProxy must always run for App Router routing

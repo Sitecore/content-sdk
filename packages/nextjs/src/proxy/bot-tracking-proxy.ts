@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
@@ -19,12 +19,12 @@ import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter
 export type BotTrackingProxyConfig = SitecoreConfig['api']['edge'] &
   Pick<ProxyBaseConfig, 'sites' | 'defaultHostname'> & {
     /**
-     * Function to run the bot tracking in the background to not block the request.
+     * Fetch event to run the bot tracking in the background to not block the request.
      * If not provided, the bot tracking will run synchronously.
-     * Read more about `waitUntil` in the [Next.js documentation](https://nextjs.org/docs/app/api-reference/file-conventions/proxy#waituntil-and-nextfetchevent)
-     * @param {Promise<void>} promise - Promise to run the bot tracking in the background.
+     * Read more about `fetchEvent` in the [Next.js documentation](https://nextjs.org/docs/app/api-reference/file-conventions/proxy#waituntil-and-nextfetchevent)
+     * @param {NextFetchEvent} fetchEvent - Fetch event to run the bot tracking in the background.
      */
-    waitUntil?: (promise: Promise<void>) => void;
+    fetchEvent?: NextFetchEvent;
     /**
      * When `false`, bot tracking is disabled for every request.
      * Default `true`. Local runs (`next dev` or loopback host) still skip automatically.
@@ -71,8 +71,6 @@ export class BotTrackingProxy extends ProxyBase {
         return res;
       }
 
-      const waitUntil = this.config.waitUntil;
-
       const site = this.getSite(req, res);
 
       const botTracking = async () => {
@@ -102,8 +100,8 @@ export class BotTrackingProxy extends ProxyBase {
         path: '/',
       });
 
-      if (waitUntil) {
-        waitUntil(botTracking());
+      if (this.config.fetchEvent) {
+        this.config.fetchEvent.waitUntil(botTracking());
       } else {
         await botTracking();
       }
@@ -126,6 +124,11 @@ export class BotTrackingProxy extends ProxyBase {
    * @internal
    */
   protected shouldSkipForLocalEnvironment(req: NextRequest): boolean {
+    // Allow bot tracking in local environment for development purposes
+    if (process.env.SITECORE_ENABLE_BOT_TRACKING === 'true') {
+      return false;
+    }
+
     if (process.env.NODE_ENV === 'development') {
       return true;
     }
