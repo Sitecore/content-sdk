@@ -76,7 +76,7 @@ export {
   isTemplateString as isComponentLayoutTemplateString,
   resolveTemplateString as resolveComponentLayoutTemplateString,
   evaluateShowNode as evaluateComponentLayoutShowNode,
-} from './component-layout';
+} from '../component-layout';
 export {
   AtomInfo,
   AtomType,

@@ -115,8 +115,7 @@ export interface Document {
 
 /* Type guards */
 
-const isObj = (x: unknown): x is Record<string, unknown> =>
-  typeof x === 'object' && x !== null;
+const isObj = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null;
 
 const has = <T extends object>(o: T, k: PropertyKey): boolean =>
   Object.prototype.hasOwnProperty.call(o, k);
