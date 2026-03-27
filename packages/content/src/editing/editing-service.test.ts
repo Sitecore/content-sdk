@@ -119,11 +119,14 @@ describe('EditingService', () => {
 
     spy.on(clientFactorySpy.returnValues[0], 'request');
 
+    const site = 'test-site';
+
     const result = await service.fetchEditingData({
       language,
       version,
       itemId,
       mode: LayoutServicePageState.Preview,
+      site,
     });
 
     expect(clientFactorySpy.calledOnce).to.be.true;
@@ -145,6 +148,7 @@ describe('EditingService', () => {
           sc_layoutKind: 'final',
           sc_editMode: 'false',
           sc_previewMode: 'true',
+          sc_site: site,
         },
       }
     );
