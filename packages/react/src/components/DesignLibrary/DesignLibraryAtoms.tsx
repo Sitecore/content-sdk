@@ -19,18 +19,20 @@ import { cardPreset } from '../AtomRenderer/test-data/component-layouts';
  * @internal
  */
 export const DesignLibraryAtoms = () => {
-  const { atoms } = useSitecore();
+  const { atoms, callbackRegistry } = useSitecore();
 
   useEffect(() => {
+    console.log('Design Library Atoms mounted');
+
     if (atoms) {
       const serializedAtoms = serializeAtoms(atoms);
       console.log('Serialized Atoms:', serializedAtoms);
 
       postToDesignLibrary(getDesignLibraryAtomsRegistryEvent(serializedAtoms));
     }
-
-    console.log('Design Library Atoms mounted');
   }, [atoms]);
 
-  return <AtomRenderer atoms={atoms} document={cardPreset} />;
+  return (
+    <AtomRenderer atoms={atoms} callbackRegistry={callbackRegistry ?? {}} document={cardPreset} />
+  );
 };

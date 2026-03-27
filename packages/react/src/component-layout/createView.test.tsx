@@ -21,8 +21,18 @@ describe('createView', () => {
   };
 
   it('should render a simple document with one element', () => {
-    const BoxWithAttrs = (props: { children?: React.ReactNode; title?: string; 'data-designlib-id'?: string; 'data-designlib-label'?: string }) => (
-      <div data-testid="box" data-title={props.title} data-designlib-id={props['data-designlib-id']} data-designlib-label={props['data-designlib-label']}>
+    const BoxWithAttrs = (props: {
+      children?: React.ReactNode;
+      title?: string;
+      'data-designlib-id'?: string;
+      'data-designlib-label'?: string;
+    }) => (
+      <div
+        data-testid="box"
+        data-title={props.title}
+        data-designlib-id={props['data-designlib-id']}
+        data-designlib-label={props['data-designlib-label']}
+      >
         {props.children}
       </div>
     );
@@ -84,45 +94,5 @@ describe('createView', () => {
     };
     const View = createView(doc, atoms);
     expect(() => render(<View />)).to.throw(/unknown atom "UnknownAtom"/);
-  });
-});
-
-describe('getAtomRegistry', () => {
-  it('should return a map of name to component from metadata', () => {
-    const Button = () => null;
-    const meta: AtomMetadata = {
-      name: 'Button',
-      type: 'atom',
-      description: 'Button',
-      props: {} as AtomMetadata['props'],
-      component: Button,
-    };
-    const registry = getAtomRegistry([meta]);
-    expect(registry.Button).to.equal(Button);
-    expect(Object.keys(registry)).to.deep.equal(['Button']);
-  });
-
-  it('should include allowedChildren in registry', () => {
-    const Card = () => null;
-    const CardBody = () => null;
-    const cardMeta: AtomMetadata = {
-      name: 'Card',
-      type: 'atom',
-      description: 'Card',
-      props: {} as AtomMetadata['props'],
-      component: Card,
-      allowedChildren: [
-        {
-          name: 'CardBody',
-          type: 'atom-child',
-          description: 'Body',
-          props: {} as AtomMetadata['props'],
-          component: CardBody,
-        },
-      ],
-    };
-    const registry = getAtomRegistry([cardMeta]);
-    expect(registry.Card).to.equal(Card);
-    expect(registry.CardBody).to.equal(CardBody);
   });
 });

@@ -8,6 +8,7 @@ import { getAtomRegistry } from '../../atoms/atom-registry-utils';
 export type AtomRendererProps = {
   atoms?: AtomMetadata[];
   document?: Document;
+  callbackRegistry?: Record<string, (...args: unknown[]) => void>;
 };
 
 export const AtomRenderer = ({ atoms, document }: AtomRendererProps) => {

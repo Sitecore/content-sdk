@@ -29,6 +29,10 @@ export interface SitecoreProviderProps {
    * The atoms metadata to be used in the Design Library.
    */
   atoms?: AtomMetadata[];
+  /**
+   * The callback registry to be used as event callbacks for low-code components built with atoms.
+   */
+  callbackRegistry?: Record<string, (...args: unknown[]) => void>;
 
   children: React.ReactNode;
 }
@@ -56,6 +60,10 @@ export interface SitecoreProviderState {
    * The atoms metadata to be used in the Design Library.
    */
   atoms?: AtomMetadata[];
+  /**
+   * The callback registry to be used as event callbacks for low-code components built with atoms.
+   */
+  callbackRegistry?: Record<string, (...args: unknown[]) => void>;
   /**
    * The component map to use for rendering components.
    */
@@ -99,12 +107,21 @@ export const ImportMapReactContext = React.createContext<
  * @param {SitecoreProviderProps['componentMap']} props.componentMap - The component map.
  * @param {SitecoreProviderProps['loadImportMap']} props.loadImportMap - The function to load the import map.
  * @param {SitecoreProviderProps['atoms']} props.atoms - The atoms metadata.
+ * @param {SitecoreProviderProps['callbackRegistry']} props.callbackRegistry - The callback registry for low-code components built with atoms.
  * @param {React.ReactNode} props.children - The children to render.
  * @returns {React.ReactNode} The SitecoreProvider component.
  * @public
  */
 export const SitecoreProvider = (props: SitecoreProviderProps) => {
-  const { api, page: propsPage, componentMap, loadImportMap, atoms, children } = props;
+  const {
+    api,
+    page: propsPage,
+    componentMap,
+    loadImportMap,
+    atoms,
+    callbackRegistry,
+    children,
+  } = props;
 
   const [page, setPageInternal] = useState<Page>(propsPage);
 
@@ -129,8 +146,9 @@ export const SitecoreProvider = (props: SitecoreProviderProps) => {
       componentMap,
       loadImportMap,
       atoms,
+      callbackRegistry,
     }),
-    [page, setPage, api, componentMap, loadImportMap, atoms]
+    [page, setPage, api, componentMap, loadImportMap, atoms, callbackRegistry]
   );
 
   return (

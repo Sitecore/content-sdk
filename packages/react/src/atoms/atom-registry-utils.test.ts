@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { z } from 'zod';
-import { serializeAtoms } from './atom-registry-utils';
+import { getAtomRegistry, serializeAtoms } from './atom-registry-utils';
 import { AtomChild, AtomMetadata } from './types';
 import { AtomType } from '@sitecore-content-sdk/content/editing';
 
@@ -231,5 +231,45 @@ describe('serializeAtoms', () => {
 
     expect(serializedA.allowedChildren).to.deep.equal(['B', 'text']);
     expect(serializedB.allowedChildren).to.deep.equal(['text', 'atom', 'C']);
+  });
+});
+
+describe('getAtomRegistry', () => {
+  it('should return a map of name to component from metadata', () => {
+    const Button = () => null;
+    const meta: AtomMetadata = {
+      name: 'Button',
+      type: 'atom',
+      description: 'Button',
+      props: {} as AtomMetadata['props'],
+      component: Button,
+    };
+    const registry = getAtomRegistry([meta]);
+    expect(registry.Button).to.equal(Button);
+    expect(Object.keys(registry)).to.deep.equal(['Button']);
+  });
+
+  it('should include allowedChildren in registry', () => {
+    const Card = () => null;
+    const CardBody = () => null;
+    const cardMeta: AtomMetadata = {
+      name: 'Card',
+      type: 'atom',
+      description: 'Card',
+      props: {} as AtomMetadata['props'],
+      component: Card,
+      allowedChildren: [
+        {
+          name: 'CardBody',
+          type: 'atom-child',
+          description: 'Body',
+          props: {} as AtomMetadata['props'],
+          component: CardBody,
+        },
+      ],
+    };
+    const registry = getAtomRegistry([cardMeta]);
+    expect(registry.Card).to.equal(Card);
+    expect(registry.CardBody).to.equal(CardBody);
   });
 });
