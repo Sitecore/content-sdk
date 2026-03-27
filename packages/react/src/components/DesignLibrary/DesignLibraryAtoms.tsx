@@ -7,7 +7,7 @@ import {
   getDesignLibraryAtomsRegistryEvent,
 } from '@sitecore-content-sdk/content/editing';
 import { AtomRenderer } from '../AtomRenderer/AtomRenderer';
-import { cardPreset } from '../AtomRenderer/test-data/component-layouts';
+import { cardsWithDataBinding } from '../AtomRenderer/test-data/component-layouts';
 
 /**
  * Design Library Atoms component.
@@ -33,6 +33,10 @@ export const DesignLibraryAtoms = () => {
   }, [atoms]);
 
   return (
-    <AtomRenderer atoms={atoms} callbackRegistry={callbackRegistry ?? {}} document={cardPreset} />
+    <AtomRenderer
+      atoms={atoms}
+      callbackRegistry={callbackRegistry ?? {}}
+      document={cardsWithDataBinding}
+    />
   );
 };
