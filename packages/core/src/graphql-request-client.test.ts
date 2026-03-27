@@ -222,6 +222,26 @@ describe('GraphQLRequestClient', () => {
       expect(client['timeout']).to.equal(300);
       expect(client['headers']).to.deep.equal({ foo: 'foo-value', sc_apikey: 'bar' });
     });
+
+    it('should use factory-level custom fetch for requests', async () => {
+      const customFetch = sinon.stub().resolves(
+        new Response(JSON.stringify({ data: { result: 'from-custom-fetch' } }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        })
+      );
+
+      const clientFactory = GraphQLRequestClient.createClientFactory({
+        endpoint: 'https://foo.com/graphql',
+        fetch: customFetch as unknown as typeof fetch,
+      });
+
+      const client = clientFactory();
+      const result = await client.request<{ result: string }>('query Test { test }');
+
+      expect(result).to.deep.equal({ result: 'from-custom-fetch' });
+      expect(customFetch.calledOnce).to.equal(true);
+    });
   });
 
   describe('Working with retryer', () => {
