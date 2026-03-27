@@ -12,6 +12,8 @@ Our versioning strategy is as follows:
 
 ## unreleased 
 
+### 🐛 Bug Fixes
+
 * Preview mode shows unpublishable content ([#410](https://github.com/Sitecore/content-sdk/pull/410))([416](https://github.com/Sitecore/content-sdk/pull/416))
 
 ## 2.0.1
