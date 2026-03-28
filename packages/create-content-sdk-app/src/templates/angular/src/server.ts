@@ -7,7 +7,7 @@ import {
 import express from 'express';
 import { join } from 'node:path';
 import { createLoaderDataServiceMiddleware } from '@sitecore-content-sdk/angular';
-import { LOADERS } from './app/loaders';
+import { LOADERS } from './content-sdk/loaders';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 

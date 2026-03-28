@@ -10,7 +10,7 @@ let _client: SitecoreClient | null = null;
  */
 export function getClient(): SitecoreClient {
   if (!_client) {
-    _client = new SitecoreClient({ ...scConfig });
+    _client = new SitecoreClient(scConfig);
   }
   return _client;
 }

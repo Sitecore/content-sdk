@@ -14,7 +14,7 @@ import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
  * @returns {SitecoreConfig} default config before merging `sitecore.config` overrides
  * @internal
  */
-export const buildFallbackConfig = (env: Record<string, string | undefined>): SitecoreConfig => {
+export const buildFallbackConfig = (env: { [key: string]: string | undefined }): SitecoreConfig => {
   return {
     api: {
       edge: {
@@ -129,9 +129,7 @@ const resolveConfig = (base: SitecoreConfig, override: SitecoreConfigInput): Sit
     result.personalize.edgeTimeout = base.personalize.edgeTimeout;
   }
   // Resolve edge URL at config level so consumers use the resolved value directly
-  result.api.edge.edgeUrl = result.api.edge.edgeUrl
-    ? resolveEdgeUrl(result.api.edge.edgeUrl)
-    : resolveEdgeUrl();
+  result.api.edge.edgeUrl = resolveEdgeUrl(result.api.edge.edgeUrl);
 
   return result;
 };
@@ -246,7 +244,8 @@ export const defineConfig = (
   config: SitecoreConfigInput = {},
   env?: Record<string, string | undefined>
 ): SitecoreConfig => {
-  const fallback = buildFallbackConfig(env || process.env);
+  const runtimeEnv = env || (process ? process.env : {});
+  const fallback = buildFallbackConfig(runtimeEnv);
   const resolvedConfig = resolveConfig(fallback, config);
 
   const isCLI = process?.env?.[SITECORE_CLI_MODE_ENV_VAR] === 'true';

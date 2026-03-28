@@ -1,7 +1,7 @@
 import type { LoaderFn, Page } from '@sitecore-content-sdk/angular';
 import { NotFoundNavigationError, resolveSitecorePage } from '@sitecore-content-sdk/angular';
 import scConfig from '../../../sitecore.config';
-import { getClient } from '../lib/sitecore-client';
+import { getClient } from '../client/sitecore-client';
 
 /**
  * Page loader: fetches layout data from Sitecore for the current URL.

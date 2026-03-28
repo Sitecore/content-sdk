@@ -7,4 +7,9 @@ export {
   ComponentTemplateType,
   DeepRequired,
 } from './models';
-export { defineConfig, getFallbackConfig, deepMerge } from './define-config';
+export {
+  buildFallbackConfig,
+  defineConfig,
+  getFallbackConfig,
+  deepMerge,
+} from './define-config';
