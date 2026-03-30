@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { AtomInfo, AtomType, getDesignLibraryAtomsRegistryEvent } from './atoms-builder';
+import { AtomInfo, getDesignLibraryAtomsRegistryEvent } from './atoms-builder';
 
 describe('atoms-builder', () => {
   describe('getDesignLibraryAtomsRegistryEvent', () => {
@@ -19,7 +19,7 @@ describe('atoms-builder', () => {
       const atomsRegistry: AtomInfo[] = [
         {
           name: 'Button',
-          type: AtomType.ATOM,
+          type: 'atom',
           description: 'A button atom',
           props: { label: 'string' },
           allowedChildren: [],
@@ -35,14 +35,14 @@ describe('atoms-builder', () => {
       const atomsRegistry: AtomInfo[] = [
         {
           name: 'Button',
-          type: AtomType.ATOM,
+          type: 'atom',
           description: 'A button atom',
           props: { label: 'string' },
           allowedChildren: ['ButtonIcon'],
         },
         {
           name: 'ButtonIcon',
-          type: AtomType.ATOM_CHILD,
+          type: 'atom-child',
           description: 'An icon child of Button',
           props: { src: 'string' },
           allowedChildren: [],
@@ -60,7 +60,7 @@ describe('atoms-builder', () => {
         {
           name: 'Card',
           version: 2,
-          type: AtomType.ATOM,
+          type: 'atom',
           description: 'A card atom with optional fields',
           props: { title: 'string' },
           allowedChildren: ['CardBody'],

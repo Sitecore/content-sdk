@@ -2,11 +2,10 @@ import { expect } from 'chai';
 import { z } from 'zod';
 import { getAtomRegistry, serializeAtoms } from './atom-registry-utils';
 import { AtomChild, AtomMetadata } from './types';
-import { AtomType } from '@sitecore-content-sdk/content/editing';
 
 const createAtom = (name: string, allowedChildren?: AtomChild[]): AtomMetadata => ({
   name,
-  type: AtomType.ATOM,
+  type: 'atom',
   description: `${name} atom`,
   props: z.object({}),
   component: () => null,
