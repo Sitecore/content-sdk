@@ -6,7 +6,7 @@
 
 # Interface: WebPersonalizationOptions
 
-Defined in: [personalize/src/initialization/types.ts:8](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/personalize/src/initialization/types.ts#L8)
+Defined in: [personalize/src/initialization/types.ts:8](https://github.com/Sitecore/content-sdk/blob/f7008cbcc73e6353a120cb1ae2a37404f22abe9f/packages/personalize/src/initialization/types.ts#L8)
 
 Represents the web personalization options.
 
@@ -16,7 +16,7 @@ Represents the web personalization options.
 
 > **async**: `boolean`
 
-Defined in: [personalize/src/initialization/types.ts:12](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/personalize/src/initialization/types.ts#L12)
+Defined in: [personalize/src/initialization/types.ts:12](https://github.com/Sitecore/content-sdk/blob/f7008cbcc73e6353a120cb1ae2a37404f22abe9f/packages/personalize/src/initialization/types.ts#L12)
 
 Whether to load the web personalization script with the async attribute.
 
@@ -26,7 +26,7 @@ Whether to load the web personalization script with the async attribute.
 
 > **defer**: `boolean`
 
-Defined in: [personalize/src/initialization/types.ts:16](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/personalize/src/initialization/types.ts#L16)
+Defined in: [personalize/src/initialization/types.ts:16](https://github.com/Sitecore/content-sdk/blob/f7008cbcc73e6353a120cb1ae2a37404f22abe9f/packages/personalize/src/initialization/types.ts#L16)
 
 Whether to load the web personalization script with the defer attribute.
 
@@ -36,6 +36,6 @@ Whether to load the web personalization script with the defer attribute.
 
 > `optional` **language**: `string`
 
-Defined in: [personalize/src/initialization/types.ts:20](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/personalize/src/initialization/types.ts#L20)
+Defined in: [personalize/src/initialization/types.ts:20](https://github.com/Sitecore/content-sdk/blob/f7008cbcc73e6353a120cb1ae2a37404f22abe9f/packages/personalize/src/initialization/types.ts#L20)
 
 The language to be used for web personalization.

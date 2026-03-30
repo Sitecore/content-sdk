@@ -6,7 +6,7 @@
 
 # Interface: EventAttributesInput
 
-Defined in: [events/src/events/common-interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/events/src/events/common-interfaces.ts#L7)
+Defined in: [events/src/events/common-interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/f7008cbcc73e6353a120cb1ae2a37404f22abe9f/packages/events/src/events/common-interfaces.ts#L7)
 
 Event data that is sent to Sitecore Edge Proxy.
 
@@ -22,7 +22,7 @@ Event data that is sent to Sitecore Edge Proxy.
 
 > `optional` **channel**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:37](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/events/src/events/common-interfaces.ts#L37)
+Defined in: [events/src/events/common-interfaces.ts:37](https://github.com/Sitecore/content-sdk/blob/f7008cbcc73e6353a120cb1ae2a37404f22abe9f/packages/events/src/events/common-interfaces.ts#L37)
 
 The touchpoint where the user interacts with your brand.
 
@@ -38,7 +38,7 @@ If unset, this property will not be part of the payload.
 
 > `optional` **currency**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:47](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/events/src/events/common-interfaces.ts#L47)
+Defined in: [events/src/events/common-interfaces.ts:47](https://github.com/Sitecore/content-sdk/blob/f7008cbcc73e6353a120cb1ae2a37404f22abe9f/packages/events/src/events/common-interfaces.ts#L47)
 
 The alphabetic currency code of the currency the site visitor uses in your app.
 
@@ -54,7 +54,7 @@ If unset, this property will not be part of the payload.
 
 > `optional` **language**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:19](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/events/src/events/common-interfaces.ts#L19)
+Defined in: [events/src/events/common-interfaces.ts:19](https://github.com/Sitecore/content-sdk/blob/f7008cbcc73e6353a120cb1ae2a37404f22abe9f/packages/events/src/events/common-interfaces.ts#L19)
 
 The language the site visitor interacts with your brand in.
 
@@ -72,7 +72,7 @@ Default for server-side events: empty string.
 
 > `optional` **page**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:27](https://github.com/Sitecore/content-sdk/blob/13f1347930830c53c628f3a82680e058ba95d5e0/packages/events/src/events/common-interfaces.ts#L27)
+Defined in: [events/src/events/common-interfaces.ts:27](https://github.com/Sitecore/content-sdk/blob/f7008cbcc73e6353a120cb1ae2a37404f22abe9f/packages/events/src/events/common-interfaces.ts#L27)
 
 The name of the webpage where the interaction with your brand takes place.
 
