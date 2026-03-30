@@ -1,17 +1,11 @@
+'use client';
 /**
  * createView: renders a Component Layout document as a React tree.
  * Uses document types and resolver from @sitecore-content-sdk/content/editing.
  * @packageDocumentation
  */
 
-import React, {
-  type FC,
-  type Key,
-  createElement,
-  Fragment,
-  useReducer,
-  useMemo,
-} from 'react';
+import React, { type FC, type Key, createElement, Fragment, useReducer, useMemo } from 'react';
 import {
   type ComponentLayoutDocument as Document,
   type ComponentLayoutNode as Node,
@@ -236,7 +230,12 @@ export function createView<RuntimeProps extends Record<string, unknown> = Record
         return (resolved ?? null) as React.ReactNode;
       }
 
-      if (node === null || typeof node === 'string' || typeof node === 'number' || typeof node === 'boolean') {
+      if (
+        node === null ||
+        typeof node === 'string' ||
+        typeof node === 'number' ||
+        typeof node === 'boolean'
+      ) {
         return node;
       }
       return null;

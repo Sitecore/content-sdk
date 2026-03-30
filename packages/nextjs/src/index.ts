@@ -179,7 +179,6 @@ export {
   type ArgMeta,
   type AtomSchemaInput,
   createView,
-  getAtomRegistry,
   type ComponentLayoutCallbackRegistry,
   type ComponentLayoutCallbackArgNamesMap,
   type CreateViewOptions,

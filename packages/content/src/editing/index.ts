@@ -81,4 +81,7 @@ export {
   AtomInfo,
   AtomType,
   getDesignLibraryAtomsRegistryEvent,
+  sendAtomsErrorEvent,
+  DesignLibraryAtomsError,
+  addDocumentUpdateHandler,
 } from './atoms-builder/atoms-builder';
