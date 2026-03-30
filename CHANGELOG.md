@@ -14,6 +14,7 @@ Our versioning strategy is as follows:
 
 ### ✨ Bug fixes
 
+- `[core] [content]` Fix GraphQL client factory ignoring custom `fetch` and related options ([#418](https://github.com/Sitecore/content-sdk/pull/418))
 - Fix wrong versions and samples appearing when running `create-content-sdk-app` command.
   - `angular` sample no longer appears
   - `nextjs` samples use correct content-sdk dependencies for analytics when scaffolded
