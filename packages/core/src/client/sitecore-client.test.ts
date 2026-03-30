@@ -841,6 +841,7 @@ describe('SitecoreClient', () => {
           version: previewData.version,
           layoutKind: previewData.layoutKind,
           mode: previewData.mode,
+          site: previewData.site,
         })
       ).to.be.true;
     });
@@ -892,6 +893,7 @@ describe('SitecoreClient', () => {
           version: previewData.version,
           layoutKind: previewData.layoutKind,
           mode: previewData.mode,
+          site: previewData.site,
         })
       ).to.be.true;
     });
@@ -991,6 +993,7 @@ describe('SitecoreClient', () => {
           version: previewData.version,
           layoutKind: previewData.layoutKind,
           mode: previewData.mode,
+          site: previewData.site,
         })
         .resolves(editingData);
 
@@ -1004,6 +1007,7 @@ describe('SitecoreClient', () => {
             version: previewData.version,
             layoutKind: previewData.layoutKind,
             mode: previewData.mode,
+            site: previewData.site,
           },
           fetchOptions
         )

@@ -388,6 +388,7 @@ export type EditingOptions = {
     version?: string;
     layoutKind?: LayoutKind;
     mode: Exclude<LayoutServicePageState, 'Normal'>;
+    site?: string;
 };
 
 // @public
@@ -428,7 +429,7 @@ export interface EditingRenderQueryParams {
 // @public
 export class EditingService {
     constructor(serviceConfig: EditingServiceConfig);
-    fetchEditingData({ itemId, language, version, layoutKind, mode }: EditingOptions, fetchOptions?: FetchOptions): Promise<{
+    fetchEditingData({ itemId, language, version, layoutKind, mode, site }: EditingOptions, fetchOptions?: FetchOptions): Promise<{
         layoutData: LayoutServiceData;
     }>;
     protected getGraphQLClient(): GraphQLClient;

@@ -461,6 +461,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         version,
         layoutKind,
         mode,
+        site,
       },
       fetchOptions
     );
