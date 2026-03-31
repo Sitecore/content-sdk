@@ -21,6 +21,7 @@ import {
   isComponentLayoutTemplateString as isTemplateString,
   resolveComponentLayoutTemplateString as resolveTemplateString,
   evaluateComponentLayoutShowNode as evaluateShowNode,
+  isComponentLayoutPrimitive as isPrimitive,
 } from '@sitecore-content-sdk/content/editing';
 
 /** Registry of named callbacks (e.g. alert, navigate). */
@@ -109,12 +110,7 @@ const renderPrimitiveNode = (node: Node, ctx: ResolveContext): React.ReactNode =
   }
 
   // pass through primitives React can render natively
-  if (
-    node === null ||
-    typeof node === 'string' ||
-    typeof node === 'number' ||
-    typeof node === 'boolean'
-  ) {
+  if (isPrimitive(node)) {
     return node;
   }
 
