@@ -26,8 +26,10 @@ const { BotTrackingProxy } = proxyquire('./bot-tracking-proxy', {
   '@sitecore-content-sdk/events': {
     eventsPlugin: eventsPluginStub,
     botPageView: botPageViewStub,
-    isBot: isBotStub,
+  },
+  '@sitecore-content-sdk/events/internal': {
     BOT_DETECTION_COOKIE: BOT_COOKIE,
+    isBot: isBotStub,
   },
 });
 

@@ -7,7 +7,7 @@ import sinonChai from 'sinon-chai';
 import sinon, { spy } from 'sinon';
 import nextjs, { NextRequest, NextResponse } from 'next/server';
 import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
-import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/events';
+import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/events/internal';
 import { SiteResolver } from '@sitecore-content-sdk/content/site';
 import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeProxyConfig } from './personalize-proxy';
