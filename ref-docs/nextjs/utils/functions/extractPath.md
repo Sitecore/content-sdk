@@ -8,7 +8,7 @@
 
 > **extractPath**(`context`): `string`
 
-Defined in: [nextjs/src/utils/utils.ts:57](https://github.com/Sitecore/content-sdk/blob/f7008cbcc73e6353a120cb1ae2a37404f22abe9f/packages/nextjs/src/utils/utils.ts#L57)
+Defined in: [nextjs/src/utils/utils.ts:57](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/nextjs/src/utils/utils.ts#L57)
 
 Extracts the path from the Next.js context parameters.
 

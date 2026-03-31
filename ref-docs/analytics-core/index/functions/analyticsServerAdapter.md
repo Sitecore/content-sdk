@@ -8,7 +8,7 @@
 
 > **analyticsServerAdapter**\<`Request`, `Response`\>(`request`, `response`): [`AnalyticsServerAdapter`](../interfaces/AnalyticsServerAdapter.md)
 
-Defined in: [analytics-core/src/initialization/server-adapter.ts:34](https://github.com/Sitecore/content-sdk/blob/f7008cbcc73e6353a120cb1ae2a37404f22abe9f/packages/analytics-core/src/initialization/server-adapter.ts#L34)
+Defined in: [analytics-core/src/initialization/server-adapter.ts:34](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/analytics-core/src/initialization/server-adapter.ts#L34)
 
 Creates a server-based analytics adapter that reads and writes the visitor ID
 using cookies and can resolve a new client ID from the Edge proxy when needed.
