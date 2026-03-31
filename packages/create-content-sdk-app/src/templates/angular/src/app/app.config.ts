@@ -9,6 +9,7 @@ import {
 } from '@sitecore-content-sdk/angular';
 import { routes } from './app.routes';
 import scConfig from '../../sitecore.config';
+import { getClient } from '../content-sdk/client/sitecore-client';
 import { LOADERS } from '../content-sdk/loaders';
 
 /**
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
       notFoundRoute: '/404',
       errorRoute: '/500',
       sitecoreConfig: scConfig,
+      sitecoreClient: getClient(),
     }),
     provideLoaderRegistry(LOADERS),
     PreLoaderDataService,

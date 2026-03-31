@@ -244,7 +244,7 @@ export const defineConfig = (
   config: SitecoreConfigInput = {},
   env?: Record<string, string | undefined>
 ): SitecoreConfig => {
-  const runtimeEnv = env || (process ? process.env : {});
+  const runtimeEnv = env || (typeof process !== 'undefined' ? process.env : {});
   const fallback = buildFallbackConfig(runtimeEnv);
   const resolvedConfig = resolveConfig(fallback, config);
 
