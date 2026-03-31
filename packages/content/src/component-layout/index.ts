@@ -45,4 +45,5 @@ export {
   isTemplateString,
   resolveTemplateString,
   evaluateShowNode,
+  resolveIfTemplate,
 } from './resolver';

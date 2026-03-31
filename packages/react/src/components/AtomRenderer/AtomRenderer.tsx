@@ -32,5 +32,5 @@ export const AtomRenderer = ({ atoms, document }: AtomRendererProps) => {
     console.log('AtomRenderer, document:', document);
   }, [atoms, document]);
 
-  return <>{View ? <View {...(document?.data ?? {})} /> : 'No document provided'}</>;
+  return <>{View ? <View {...(document?.props ?? {})} /> : 'No document provided'}</>;
 };

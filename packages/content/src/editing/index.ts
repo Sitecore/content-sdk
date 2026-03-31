@@ -75,6 +75,7 @@ export {
   isTemplateString as isComponentLayoutTemplateString,
   resolveTemplateString as resolveComponentLayoutTemplateString,
   evaluateShowNode as evaluateComponentLayoutShowNode,
+  resolveIfTemplate,
 } from '../component-layout';
 export {
   AtomInfo,

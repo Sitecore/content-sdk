@@ -2,15 +2,10 @@
  * Expression and binding resolution for Component Layout documents.
  * Parses bind expressions (props/item/state/event), resolves {{ }} template strings,
  * and evaluates show conditions.
- * @packageDocumentation
  */
 
 import type { ShowNode } from './document';
-import {
-  isShowComparison,
-  isShowAnd,
-  isShowOr,
-} from './document';
+import { isShowComparison, isShowAnd, isShowOr } from './document';
 
 /* Expression parser */
 
@@ -21,9 +16,7 @@ import {
 export type BindSource = 'props' | 'item' | 'state' | 'event' | (string & Record<never, never>);
 
 /** Segment in a parsed path: dot key or bracket sub-expression. */
-export type BindSegment =
-  | { type: 'dot'; key: string }
-  | { type: 'bracket'; expr: ParsedBind };
+export type BindSegment = { type: 'dot'; key: string } | { type: 'bracket'; expr: ParsedBind };
 
 /** Parsed bind expression: source plus path segments. */
 export interface ParsedBind {
@@ -35,15 +28,14 @@ export interface ParsedBind {
  * Parses an expression string into a structured representation.
  * Accepts optional leading "$" and dot/bracket path segments.
  * Source may be any identifier: built-ins (props, item, state, event) or a scope key (e.g. for.as).
- *
- * @param expr - Expression string (e.g. "props.user.name", "state.count", "item.id", "product.name")
- * @returns Parsed expression
- * @throws Error on invalid syntax or empty source
+ * @param {string} expr - Expression string (e.g. "props.user.name", "state.count", "item.id", "product.name")
+ * @returns {ParsedBind} Parsed expression
+ * @throws {Error} on invalid syntax or empty source
  */
 export function parseBindExpression(expr: string): ParsedBind {
   let pos = 0;
 
-  function parse(): ParsedBind {
+  const parse = (): ParsedBind => {
     if (expr[pos] === '$') {
       pos++;
     }
@@ -57,7 +49,9 @@ export function parseBindExpression(expr: string): ParsedBind {
       throw new Error(`Expected identifier in "${expr}" at pos ${pos}`);
     }
     if (!/^[a-zA-Z_]/.test(source)) {
-      throw new Error(`Invalid source "${source}" in "${expr}". Identifier must start with a letter or underscore.`);
+      throw new Error(
+        `Invalid source "${source}" in "${expr}". Identifier must start with a letter or underscore.`
+      );
     }
 
     const segments: BindSegment[] = [];
@@ -88,7 +82,7 @@ export function parseBindExpression(expr: string): ParsedBind {
     }
 
     return { source, segments };
-  }
+  };
 
   const result = parse();
 
@@ -108,10 +102,13 @@ export function parseBindExpression(expr: string): ParsedBind {
  * - scope: optional map for named loop variables (e.g. scope[for.as] = currentItem).
  */
 export interface ResolveContext {
+  /** Runtime props. */
   props: Record<string, unknown>;
+  /** Current state. */
   state: Record<string, unknown>;
   /** Loop variable. When inside a for-loop, set to current element; also use scope.item when scope is used. */
   item?: unknown;
+  /** Current event. */
   event?: unknown;
   /** Optional scope for named sources (e.g. for.as). Resolved after built-in props/state/event/item. */
   scope?: Record<string, unknown>;
@@ -120,10 +117,9 @@ export interface ResolveContext {
 /**
  * Resolves a parsed bind expression against the given context.
  * Lookup order: props, state, event, then item (ctx.item ?? scope.item), then scope[source].
- *
- * @param parsed - Parsed expression from parseBindExpression
- * @param ctx - Runtime context (props, state, event, item, scope)
- * @returns Resolved value or undefined if any segment is null/undefined
+ * @param {ParsedBind} parsed - Parsed expression from parseBindExpression
+ * @param {ResolveContext} ctx - Runtime context (props, state, event, item, scope)
+ * @returns {unknown} Resolved value or undefined if any segment is null/undefined
  */
 export function resolveBindExpression(parsed: ParsedBind, ctx: ResolveContext): unknown {
   const { source } = parsed;
@@ -167,6 +163,8 @@ const TEMPLATE_GLOBAL = /\{\{((?:(?!\}\}).)*)\}\}/g;
 
 /**
  * Returns true if the string contains {{...}} template expressions.
+ * @param {string} s - String to check
+ * @returns {boolean} True if the string contains {{...}} templates, false otherwise
  */
 export function isTemplateString(s: string): boolean {
   return TEMPLATE_PATTERN.test(s);
@@ -177,10 +175,9 @@ export function isTemplateString(s: string): boolean {
  * - If the entire string is a single {{expr}}, returns the raw resolved value (preserving type).
  * - If mixed with literal text, interpolates and returns a string.
  * - If no {{}} patterns, returns the string as-is.
- *
- * @param template - String that may contain {{...}} placeholders
- * @param ctx - Runtime context for resolving expressions
- * @returns Resolved value (any type for single {{}}, string otherwise)
+ * @param {string} template - String that may contain {{...}} placeholders
+ * @param {ResolveContext} ctx - Runtime context for resolving expressions
+ * @returns {unknown} Resolved value (any type for single {{}}, string otherwise)
  */
 export function resolveTemplateString(template: string, ctx: ResolveContext): unknown {
   const singleMatch = template.match(SINGLE_TEMPLATE_RE);
@@ -196,7 +193,7 @@ export function resolveTemplateString(template: string, ctx: ResolveContext): un
   return template.replace(TEMPLATE_GLOBAL, (_, expr) => {
     const parsed = parseBindExpression(expr.trim());
     const resolved = resolveBindExpression(parsed, ctx);
-    return resolved != null ? String(resolved) : '';
+    return resolved !== null && resolved !== undefined ? String(resolved) : '';
   });
 }
 
@@ -205,10 +202,9 @@ export function resolveTemplateString(template: string, ctx: ResolveContext): un
 /**
  * Evaluates a ShowNode tree against the runtime context.
  * Left/right in comparisons may be template strings and are resolved before comparing.
- *
- * @param node - Show condition node (comparison or and/or tree)
- * @param ctx - Runtime context
- * @returns true if the condition passes (element should be visible)
+ * @param {ShowNode} node - Show condition node (comparison or and/or tree)
+ * @param {ResolveContext} ctx - Runtime context
+ * @returns {boolean} True if the condition passes (element should be visible)
  */
 export function evaluateShowNode(node: ShowNode, ctx: ResolveContext): boolean {
   if (isShowAnd(node)) {
@@ -218,9 +214,7 @@ export function evaluateShowNode(node: ShowNode, ctx: ResolveContext): boolean {
     return node.or.some((child) => evaluateShowNode(child, ctx));
   }
   if (isShowComparison(node)) {
-    const left = isTemplateString(node.left)
-      ? resolveTemplateString(node.left, ctx)
-      : node.left;
+    const left = isTemplateString(node.left) ? resolveTemplateString(node.left, ctx) : node.left;
     const right = isTemplateString(node.right)
       ? resolveTemplateString(node.right, ctx)
       : node.right;
@@ -235,3 +229,19 @@ export function evaluateShowNode(node: ShowNode, ctx: ResolveContext): boolean {
   }
   return true;
 }
+
+/**
+ * Resolves a template string value against the provided context.
+ * Returns the original value when it is not a template string.
+ * @param {unknown} value - Value that may be a template string
+ * @param {ResolveContext} ctx - Resolve context
+ * @returns {unknown} Resolved value or original value
+ * @internal
+ */
+export const resolveIfTemplate = (value: unknown, ctx: ResolveContext): unknown => {
+  if (typeof value === 'string' && isTemplateString(value)) {
+    return resolveTemplateString(value, ctx);
+  }
+
+  return value;
+};

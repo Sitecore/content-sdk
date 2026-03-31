@@ -22,6 +22,7 @@ import {
   resolveComponentLayoutTemplateString as resolveTemplateString,
   evaluateComponentLayoutShowNode as evaluateShowNode,
   isComponentLayoutPrimitive as isPrimitive,
+  resolveIfTemplate,
 } from '@sitecore-content-sdk/content/editing';
 
 /** Registry of named callbacks (e.g. alert, navigate). */
@@ -46,22 +47,6 @@ type ScopeMap = Record<string, unknown>;
 type ResolvedProps = Record<string, unknown> & {
   'data-designlib-id'?: string;
   'data-designlib-label'?: string;
-};
-
-/**
- * Resolves a template string value against the provided context.
- * Returns the original value when it is not a template string.
- * @param {unknown} value - Value that may be a template string
- * @param {ResolveContext} ctx - Resolve context
- * @returns {unknown} Resolved value or original value
- * @internal
- */
-export const resolveIfTemplate = (value: unknown, ctx: ResolveContext): unknown => {
-  if (typeof value === 'string' && isTemplateString(value)) {
-    return resolveTemplateString(value, ctx);
-  }
-
-  return value;
 };
 
 /**

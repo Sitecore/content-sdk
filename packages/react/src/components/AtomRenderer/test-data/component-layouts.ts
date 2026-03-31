@@ -121,7 +121,7 @@ export const productPuicker: Document = {
       },
     ],
   },
-  data: {
+  props: {
     categories: [
       {
         value: 'hats',
@@ -206,7 +206,7 @@ export const cardsWithDataBinding: Document = {
       },
     ],
   },
-  data: {
+  props: {
     Link_list_intro: {
       Title: 'Learn more about SaaS content management',
     },
