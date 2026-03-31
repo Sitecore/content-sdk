@@ -43,16 +43,6 @@ export interface EventBinding {
 /** Property binding: either an expression or an event handler. */
 export type Binding = ExpressionBinding | EventBinding;
 
-/* Layout options (optional, applied to element) */
-
-/** Layout options (e.g. flex basis, grow, align). */
-export interface LayoutOptions {
-  basis?: string;
-  grow?: boolean;
-  shrink?: boolean;
-  align?: 'auto' | 'start' | 'center' | 'end' | 'stretch' | 'baseline';
-}
-
 /* For loop */
 
 /** For-loop: iterate over an array; `as` is the loop variable name in expressions. */
@@ -96,7 +86,6 @@ export interface Element {
   children?: Node[];
   for?: ForLoop;
   show?: ShowNode;
-  layout?: LayoutOptions;
 }
 
 /** Node in the layout tree: either an Element or a primitive. */

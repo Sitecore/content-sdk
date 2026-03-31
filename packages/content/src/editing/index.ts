@@ -49,7 +49,6 @@ export {
   type Primitive as ComponentLayoutPrimitive,
   type ForLoop,
   type ShowNode,
-  type LayoutOptions as ComponentLayoutLayoutOptions,
   type ExpressionBinding as ComponentLayoutExpressionBinding,
   type EventBinding as ComponentLayoutEventBinding,
   type Action as ComponentLayoutAction,

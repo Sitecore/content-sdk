@@ -11,7 +11,6 @@ export {
   type SetStateAction,
   type CallAction,
   type Action,
-  type LayoutOptions,
   type ForLoop,
   type ShowComparison,
   type ShowAnd,
