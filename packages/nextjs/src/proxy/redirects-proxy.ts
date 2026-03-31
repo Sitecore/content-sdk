@@ -304,12 +304,18 @@ export class RedirectsProxy extends ProxyBase {
     const locale = this.getLanguage(req);
     const normalizedPath = incomingURL.replace(/\/*$/gi, '').toLowerCase();
     const redirects = await this.redirectsService.fetchRedirects(siteName);
-    const modifyRedirects = structuredClone(redirects);
+
+    const matchedLocaleRedirect = this.processLocaleRedirect(redirects, locale, normalizedPath);
+    if (matchedLocaleRedirect) {
+      return matchedLocaleRedirect;
+    }
+
+    const nonLocaleRedirects = redirects.filter((redirect: RedirectResult) => !redirect.locale);
     let matchedQueryString: string | undefined;
     const localePath = `/${locale.toLowerCase()}${normalizedPath}`;
 
-    return modifyRedirects.length
-      ? modifyRedirects.find((redirect: RedirectResult) => {
+    return nonLocaleRedirects.length
+      ? nonLocaleRedirects.find((redirect: RedirectResult) => {
           // process static URL (non-regex) rules
           if (isRegexOrUrl(redirect.pattern) === 'url') {
             const urlArray = redirect.pattern.endsWith('/')
@@ -367,6 +373,24 @@ export class RedirectsProxy extends ProxyBase {
               matchedQueryString
             ) && (redirect.locale ? redirect.locale.toLowerCase() === locale.toLowerCase() : true)
           );
+        })
+      : undefined;
+  }
+
+  protected processLocaleRedirect(
+    redirects: RedirectResult[],
+    locale: string,
+    normalizedPath: string
+  ): RedirectResult | undefined {
+    // locale patterns will include a redirect item suffix which we need to remove
+    const localeRedirects = redirects
+      .filter((redirect) => redirect.locale === locale)
+      .map((redirect) => ({ ...redirect, pattern: redirect.pattern.replace(/\/.*$/gi, '') }));
+    // locale rules are easy and nice
+    return localeRedirects.length
+      ? localeRedirects.find((redirect: RedirectResult) => {
+          const patternPath = redirect.pattern.replace(/\/*$/gi, '').toLowerCase();
+          return patternPath === normalizedPath;
         })
       : undefined;
   }

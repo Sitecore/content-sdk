@@ -1026,4 +1026,90 @@ describe('RedirectsProxy', () => {
       expect(proxy['redirectsService']).to.not.be.null;
     });
   });
+
+  describe('processLocaleRedirect', () => {
+    const baseRedirect = (overrides: Record<string, unknown> = {}) => ({
+      pattern: '/from',
+      target: '/to',
+      redirectType: REDIRECT_TYPE_301,
+      isQueryStringPreserved: true,
+      locale: 'en',
+      ...overrides,
+    });
+
+    it('returns undefined when there are no locale-specific rules for the request locale', () => {
+      const { proxy } = createProxy();
+      const result = proxy['processLocaleRedirect'](
+        [baseRedirect({ locale: 'da', pattern: '/about' })],
+        'en',
+        '/about'
+      );
+      expect(result).to.be.undefined;
+    });
+
+    it('returns undefined when locale matches but normalized path does not', () => {
+      const { proxy } = createProxy();
+      const result = proxy['processLocaleRedirect'](
+        [baseRedirect({ locale: 'en', pattern: '/other' })],
+        'en',
+        '/about'
+      );
+      expect(result).to.be.undefined;
+    });
+
+    it('returns the first matching redirect when locale and path match', () => {
+      const { proxy } = createProxy();
+      const first = baseRedirect({
+        locale: 'en',
+        pattern: '/about',
+        target: '/first',
+      });
+      const second = baseRedirect({
+        locale: 'en',
+        pattern: '/about',
+        target: '/second',
+      });
+      const result = proxy['processLocaleRedirect']([first, second], 'en', '/about');
+      expect(result).to.deep.equal(first);
+    });
+
+    it('strips a trailing "redirect" segment from the pattern before matching', () => {
+      const { proxy } = createProxy();
+      const redirect = baseRedirect({
+        locale: 'en',
+        pattern: '/about/redirect',
+        target: '/destination',
+      });
+      const result = proxy['processLocaleRedirect']([redirect], 'en', '/about');
+      expect(result).to.deep.equal({ ...redirect, pattern: '/about/' });
+    });
+
+    it('strips a trailing "redirect/" segment from the pattern before matching', () => {
+      const { proxy } = createProxy();
+      const redirect = baseRedirect({
+        locale: 'en',
+        pattern: '/contact/redirect/',
+        target: '/destination',
+      });
+      const result = proxy['processLocaleRedirect']([redirect], 'en', '/contact');
+      expect(result).to.deep.equal({ ...redirect, pattern: '/contact/' });
+    });
+
+    it('matches normalized paths case-insensitively and ignores trailing slashes on the pattern', () => {
+      const { proxy } = createProxy();
+      const redirect = baseRedirect({
+        locale: 'en',
+        pattern: '/Foo/Bar/',
+        target: '/lowercase',
+      });
+      const result = proxy['processLocaleRedirect']([redirect], 'en', '/foo/bar');
+      expect(result?.target).to.equal('/lowercase');
+    });
+
+    it('returns undefined when the list of locale rules is empty after filtering', () => {
+      const { proxy } = createProxy();
+      const result = proxy['processLocaleRedirect']([], 'en', '/about');
+      expect(result).to.be.undefined;
+    });
+  });
 });
