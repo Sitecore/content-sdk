@@ -2,10 +2,9 @@
 /**
  * createView: renders a Component Layout document as a React tree.
  * Uses document types and resolver from @sitecore-content-sdk/content/editing.
- * @packageDocumentation
  */
 
-import React, { type FC, type Key, createElement, Fragment, useReducer } from 'react';
+import React, { type FC, type Key, useReducer } from 'react';
 import {
   type ComponentLayoutDocument as Document,
   type ComponentLayoutNode as Node,
@@ -27,12 +26,21 @@ import {
 /** Registry of named callbacks (e.g. alert, navigate). */
 export type CallbackRegistry = Record<string, (...args: unknown[]) => void>;
 
+/** Props passed to an Atom Component */
+type AtomProps = React.PropsWithChildren<ResolvedProps>;
+
+/** The Atom Component */
+type AtomComponent = React.ComponentType<AtomProps>;
+
 /** Internal state shape used by generated view components. */
 type ViewState = Record<string, unknown>;
+
 /** Patch shape for reducer updates. */
 type StatePatch = Partial<ViewState>;
+
 /** Scope values available to template resolution (e.g. for-loop alias). */
 type ScopeMap = Record<string, unknown>;
+
 /** Props passed to rendered atoms after bindings/template resolution. */
 type ResolvedProps = Record<string, unknown> & {
   'data-designlib-id'?: string;
@@ -56,6 +64,129 @@ export const resolveIfTemplate = (value: unknown, ctx: ResolveContext): unknown 
 };
 
 /**
+ * Renders nodes in a for-loop, iterating over an array with optional key resolution.
+ * @param {Element} node - The element node with a `for` binding
+ * @param {ResolveContext} forCtx - Resolve context for the loop
+ * @param {(tmpl: Element, key: Key, item: unknown, itemScope: ScopeMap) => React.ReactNode} renderNode - Render function
+ * @returns {React.ReactNode} Array of rendered nodes or null if array resolution fails
+ */
+export const renderFor = (
+  node: Element,
+  forCtx: ResolveContext,
+  renderNode: (tmpl: Element, key: Key, item: unknown, itemScope: ScopeMap) => React.ReactNode
+): React.ReactNode => {
+  const forArr = resolveTemplateString(node.for?.each ?? '', forCtx);
+  if (!Array.isArray(forArr)) {
+    return null;
+  }
+
+  return forArr.map((item: unknown, index: number) => {
+    const tmpl: Element = { ...node, for: undefined };
+    const itemScope: ScopeMap = { [node.for!.as]: item };
+    const itemKey = node.for?.key
+      ? resolveTemplateString(node.for.key, {
+          ...forCtx,
+          item: item,
+          scope: itemScope,
+        })
+      : index;
+
+    return renderNode(tmpl, itemKey as Key, item, itemScope);
+  });
+};
+
+/**
+ * Renders a primitive or template-string node.
+ * Returns null for unrecognised node types.
+ * @param {Node} node - A non-element node (string, number, boolean, null)
+ * @param {ResolveContext} ctx - Resolve context for template string resolution
+ * @returns {React.ReactNode} Resolved node or null
+ */
+const renderPrimitiveNode = (node: Node, ctx: ResolveContext): React.ReactNode => {
+  // resolve template strings
+  if (typeof node === 'string' && isTemplateString(node)) {
+    return (resolveIfTemplate(node, ctx) ?? null) as React.ReactNode;
+  }
+
+  // pass through primitives React can render natively
+  if (
+    node === null ||
+    typeof node === 'string' ||
+    typeof node === 'number' ||
+    typeof node === 'boolean'
+  ) {
+    return node;
+  }
+
+  return null;
+};
+
+/**
+ * Renders an element node (atom) with resolved props, bindings, and children.
+ * @param {Element} node - The element node to render
+ * @param {Key | undefined} key - React key for the element
+ * @param {unknown} itemCtx - Current iteration item context
+ * @param {ScopeMap | undefined} scope - Current scope map
+ * @param {Record<string, React.ComponentType<unknown>>} atoms - Atom component registry
+ * @param {CallbackRegistry} callbacks - Callback registry
+ * @param {React.Dispatch<StatePatch>} setState - State dispatcher
+ * @param {ResolveContext} ctx - Resolve context
+ * @param {(node: Node, key: Key | undefined, itemCtx: unknown, scope: ScopeMap | undefined) => React.ReactNode} renderNode - Recursive render function
+ * @returns {React.ReactNode} Rendered atom element
+ */
+const renderElementNode = (
+  node: Element,
+  key: Key | undefined,
+  itemCtx: unknown,
+  scope: ScopeMap | undefined,
+  atoms: Record<string, React.ComponentType<unknown>>,
+  callbacks: CallbackRegistry,
+  setState: React.Dispatch<StatePatch>,
+  ctx: ResolveContext,
+  renderNode: (
+    node: Node,
+    key: Key | undefined,
+    itemCtx: unknown,
+    scope: ScopeMap | undefined
+  ) => React.ReactNode
+): React.ReactNode => {
+  const { id, type, staticProps = {}, bindings = {}, children = [] } = node;
+
+  const Atom = atoms[type] as AtomComponent | undefined;
+  if (!Atom) {
+    throw new Error(`Component Layout: unknown atom "${type}" with id "${id}".`);
+  }
+
+  const resolvedProps: ResolvedProps = { ...staticProps };
+
+  for (const [propName, binding] of Object.entries(bindings)) {
+    if (isExpressionBinding(binding)) {
+      resolvedProps[propName] = resolveTemplateString(binding.value, ctx);
+    } else if (isEventBinding(binding)) {
+      resolvedProps[propName] = buildEventCallback(binding, callbacks, setState, ctx);
+    }
+  }
+
+  resolvedProps['data-atom-id'] = id;
+  resolvedProps['data-atom-label'] = type;
+
+  const childNodes: React.ReactNode[] = children.map((c, i) => {
+    if (typeof c === 'string') {
+      return (resolveIfTemplate(c, ctx) ?? null) as React.ReactNode;
+    }
+    return renderNode(c, i, itemCtx, scope);
+  });
+
+  return childNodes.length > 0 ? (
+    <Atom key={key} {...resolvedProps}>
+      {childNodes}
+    </Atom>
+  ) : (
+    <Atom key={key} {...resolvedProps} />
+  );
+};
+
+/**
  * Builds a callable function from an event binding.
  * Resolves setState values and call args with template strings; invokes callbacks.
  * @param {EventBinding} binding the event binding to build the callback from
@@ -64,12 +195,12 @@ export const resolveIfTemplate = (value: unknown, ctx: ResolveContext): unknown 
  * @param {ResolveContext} resolveContext the context to use for resolving template strings
  * @returns {(...args: unknown[]) => void} a function that can be used as an event handler
  */
-function buildEventCallback(
+const buildEventCallback = (
   binding: EventBinding,
   callbacks: CallbackRegistry,
   setState: React.Dispatch<StatePatch>,
   resolveContext: ResolveContext
-): (...args: unknown[]) => void {
+): ((...args: unknown[]) => void) => {
   return (...args: unknown[]) => {
     let eventValue: unknown;
     if (binding.arguments.length <= 1) {
@@ -110,7 +241,7 @@ function buildEventCallback(
       setState(patch);
     }
   };
-}
+};
 
 /**
  * Creates a React functional component that renders the given Component Layout document.
@@ -135,97 +266,49 @@ export function createView<RuntimeProps extends Record<string, unknown> = Record
       initialState as ViewState
     );
 
-    const makeCtx = (itemCtx?: unknown, scope?: ScopeMap): ResolveContext => ({
-      props: runtimeProps as Record<string, unknown>,
-      state,
-      item: itemCtx,
-      scope,
-    });
-
     const renderNode = (
       node: Node,
       key: Key | undefined,
       itemCtx: unknown,
       scope: ScopeMap | undefined
     ): React.ReactNode => {
+      const ctx: ResolveContext = {
+        props: runtimeProps as Record<string, unknown>,
+        state,
+        item: itemCtx,
+        scope,
+      };
+
       if (isElement(node)) {
         if (hasFor(node)) {
-          const forCtx: ResolveContext = makeCtx(itemCtx, scope);
-          const arr = resolveTemplateString(node.for.each, forCtx);
-          if (!Array.isArray(arr)) {
-            return null;
-          }
-
-          return arr.map((itm: unknown, idx: number) => {
-            const tmpl: Element = { ...node, for: undefined };
-            const itemScope = { [node.for!.as]: itm } as ScopeMap;
-            const itemKey = node.for!.key
-              ? resolveTemplateString(node.for!.key, {
-                  ...forCtx,
-                  item: itm,
-                  scope: itemScope,
-                })
-              : idx;
-            return renderNode(tmpl, itemKey as Key, itm, itemScope);
-          });
+          return renderFor(node, ctx, renderNode);
         }
 
         if (hasShow(node)) {
-          const showCtx: ResolveContext = makeCtx(itemCtx, scope);
-          if (!evaluateShowNode(node.show, showCtx)) {
+          if (!evaluateShowNode(node.show, ctx)) {
             return null;
           }
         }
 
-        const { id, type, staticProps = {}, bindings = {}, children = [] } = node;
-        const Atom = atoms[type];
-        if (!Atom) {
-          throw new Error(`Component Layout: unknown atom "${type}" with id "${id}".`);
-        }
-
-        const ctx: ResolveContext = makeCtx(itemCtx, scope);
-
-        const resolvedProps: ResolvedProps = { ...staticProps };
-
-        for (const [propName, binding] of Object.entries(bindings)) {
-          if (isExpressionBinding(binding)) {
-            resolvedProps[propName] = resolveTemplateString(binding.value, ctx);
-          } else if (isEventBinding(binding)) {
-            resolvedProps[propName] = buildEventCallback(binding, callbacks, setState, ctx);
-          }
-        }
-
-        resolvedProps['data-designlib-id'] = id;
-        resolvedProps['data-designlib-label'] = type;
-
-        const childNodes: React.ReactNode[] = (children ?? []).map((c, i) => {
-          if (typeof c === 'string') {
-            return (resolveIfTemplate(c, ctx) ?? null) as React.ReactNode;
-          }
-          return renderNode(c, i, itemCtx, scope);
-        });
-
-        return createElement(Atom, { key, ...resolvedProps }, ...childNodes);
+        return renderElementNode(
+          node,
+          key,
+          itemCtx,
+          scope,
+          atoms,
+          callbacks,
+          setState,
+          ctx,
+          renderNode
+        );
       }
 
-      if (typeof node === 'string' && isTemplateString(node)) {
-        return (resolveIfTemplate(node, makeCtx(itemCtx, scope)) ?? null) as React.ReactNode;
-      }
-
-      if (
-        node === null ||
-        typeof node === 'string' ||
-        typeof node === 'number' ||
-        typeof node === 'boolean'
-      ) {
-        return node;
-      }
-      return null;
+      return renderPrimitiveNode(node, ctx);
     };
 
     const rootNode = renderNode(root, 0, undefined, undefined);
 
-    return createElement(Fragment, null, rootNode);
+    return <>{rootNode}</>;
   };
 
   Generated.displayName = doc.name;

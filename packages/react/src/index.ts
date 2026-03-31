@@ -133,6 +133,4 @@ export {
 export {
   createView,
   type CallbackRegistry as ComponentLayoutCallbackRegistry,
-  type CallbackArgNamesMap as ComponentLayoutCallbackArgNamesMap,
-  type CreateViewOptions,
 } from './component-layout';
