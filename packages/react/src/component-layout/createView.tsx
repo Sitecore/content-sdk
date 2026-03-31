@@ -5,7 +5,7 @@
  * @packageDocumentation
  */
 
-import React, { type FC, type Key, createElement, Fragment, useReducer, useMemo } from 'react';
+import React, { type FC, type Key, createElement, Fragment, useReducer } from 'react';
 import {
   type ComponentLayoutDocument as Document,
   type ComponentLayoutNode as Node,
@@ -27,19 +27,47 @@ import {
 /** Registry of named callbacks (e.g. alert, navigate). */
 export type CallbackRegistry = Record<string, (...args: unknown[]) => void>;
 
-/** Map of atom type name to callback name to ordered argument names (for Design Studio). Optional. */
-export type CallbackArgNamesMap = Record<string, Record<string, string[]>>;
+/** Internal state shape used by generated view components. */
+type ViewState = Record<string, unknown>;
+/** Patch shape for reducer updates. */
+type StatePatch = Partial<ViewState>;
+/** Scope values available to template resolution (e.g. for-loop alias). */
+type ScopeMap = Record<string, unknown>;
+/** Props passed to rendered atoms after bindings/template resolution. */
+type ResolvedProps = Record<string, unknown> & {
+  'data-designlib-id'?: string;
+  'data-designlib-label'?: string;
+};
+
+/**
+ * Resolves a template string value against the provided context.
+ * Returns the original value when it is not a template string.
+ * @param {unknown} value - Value that may be a template string
+ * @param {ResolveContext} ctx - Resolve context
+ * @returns {unknown} Resolved value or original value
+ * @internal
+ */
+export const resolveIfTemplate = (value: unknown, ctx: ResolveContext): unknown => {
+  if (typeof value === 'string' && isTemplateString(value)) {
+    return resolveTemplateString(value, ctx);
+  }
+
+  return value;
+};
 
 /**
  * Builds a callable function from an event binding.
  * Resolves setState values and call args with template strings; invokes callbacks.
+ * @param {EventBinding} binding the event binding to build the callback from
+ * @param {CallbackRegistry} callbacks the registry of callback implementations to use for call actions
+ * @param {React.Dispatch<StatePatch>} setState the React state dispatcher to apply setState actions
+ * @param {ResolveContext} resolveContext the context to use for resolving template strings
+ * @returns {(...args: unknown[]) => void} a function that can be used as an event handler
  */
 function buildEventCallback(
   binding: EventBinding,
   callbacks: CallbackRegistry,
-  _runtime: Record<string, unknown>,
-  _getState: () => Record<string, unknown>,
-  setState: React.Dispatch<Partial<Record<string, unknown>>>,
+  setState: React.Dispatch<StatePatch>,
   resolveContext: ResolveContext
 ): (...args: unknown[]) => void {
   return (...args: unknown[]) => {
@@ -59,26 +87,17 @@ function buildEventCallback(
       event: eventValue,
     };
 
-    const patch: Record<string, unknown> = {};
+    const patch: StatePatch = {};
     for (const action of binding.actions) {
       if (isSetStateAction(action)) {
         for (const [key, value] of Object.entries(action.setState)) {
-          if (typeof value === 'string' && isTemplateString(value)) {
-            patch[key] = resolveTemplateString(value, ctx);
-          } else {
-            patch[key] = value;
-          }
+          patch[key] = resolveIfTemplate(value, ctx);
         }
         continue;
       }
 
       if (isCallAction(action)) {
-        const resolvedArgs = (action.args ?? []).map((a) => {
-          if (typeof a === 'string' && isTemplateString(a)) {
-            return resolveTemplateString(a, ctx);
-          }
-          return a;
-        });
+        const resolvedArgs = (action.args ?? []).map((a) => resolveIfTemplate(a, ctx));
         const callable = callbacks[action.call];
         if (typeof callable === 'function') {
           callable(...resolvedArgs);
@@ -93,57 +112,45 @@ function buildEventCallback(
   };
 }
 
-/** Options for createView. */
-export interface CreateViewOptions {
-  /** Display name for the generated component. */
-  displayName?: string;
-  /** Optional callback arg names per atom (for Design Studio). */
-  callbackArgNames?: CallbackArgNamesMap;
-}
-
 /**
  * Creates a React functional component that renders the given Component Layout document.
- *
- * @param doc - Component Layout document (root node, optional state, name)
- * @param atoms - Map of atom type name to React component
- * @param callbacks - Optional registry of named callbacks for event actions
- * @param options - Optional displayName and callbackArgNames
- * @returns FC that accepts runtime props (spread as props in expressions)
+ * @param {Document} doc - Component Layout document
+ * @param {Record<string, React.ComponentType<unknown>>} atoms - Map of atom type name to its React implementation
+ * @param {CallbackRegistry} [callbacks] - Optional registry map of callback names to their implementations for event actions
+ * @returns {FC<RuntimeProps>} FC that accepts runtime props (spread as props in expressions)
  */
 export function createView<RuntimeProps extends Record<string, unknown> = Record<string, unknown>>(
   doc: Document,
   atoms: Record<string, React.ComponentType<unknown>>,
-  callbacks: CallbackRegistry = {},
-  options: CreateViewOptions = {}
+  callbacks: CallbackRegistry = {}
 ): FC<RuntimeProps> {
   const { root, state: initialState = {} } = doc;
-  const displayName = options.displayName ?? doc.name ?? 'ComponentLayoutView';
 
   const Generated: FC<RuntimeProps> = (runtimeProps) => {
     const [state, setState] = useReducer(
-      (s: Record<string, unknown>, patch: Partial<Record<string, unknown>>) => ({
-        ...s,
+      (state: ViewState, patch: StatePatch) => ({
+        ...state,
         ...patch,
       }),
-      initialState as Record<string, unknown>
+      initialState as ViewState
     );
 
-    const getState = useMemo(() => () => state, [state]);
+    const makeCtx = (itemCtx?: unknown, scope?: ScopeMap): ResolveContext => ({
+      props: runtimeProps as Record<string, unknown>,
+      state,
+      item: itemCtx,
+      scope,
+    });
 
     const renderNode = (
       node: Node,
       key: Key | undefined,
       itemCtx: unknown,
-      scope: Record<string, unknown> | undefined
+      scope: ScopeMap | undefined
     ): React.ReactNode => {
       if (isElement(node)) {
         if (hasFor(node)) {
-          const forCtx: ResolveContext = {
-            props: runtimeProps as Record<string, unknown>,
-            state,
-            item: itemCtx,
-            scope,
-          };
+          const forCtx: ResolveContext = makeCtx(itemCtx, scope);
           const arr = resolveTemplateString(node.for.each, forCtx);
           if (!Array.isArray(arr)) {
             return null;
@@ -151,7 +158,7 @@ export function createView<RuntimeProps extends Record<string, unknown> = Record
 
           return arr.map((itm: unknown, idx: number) => {
             const tmpl: Element = { ...node, for: undefined };
-            const itemScope = { [node.for!.as]: itm } as Record<string, unknown>;
+            const itemScope = { [node.for!.as]: itm } as ScopeMap;
             const itemKey = node.for!.key
               ? resolveTemplateString(node.for!.key, {
                   ...forCtx,
@@ -164,12 +171,7 @@ export function createView<RuntimeProps extends Record<string, unknown> = Record
         }
 
         if (hasShow(node)) {
-          const showCtx: ResolveContext = {
-            props: runtimeProps as Record<string, unknown>,
-            state,
-            item: itemCtx,
-            scope,
-          };
+          const showCtx: ResolveContext = makeCtx(itemCtx, scope);
           if (!evaluateShowNode(node.show, showCtx)) {
             return null;
           }
@@ -178,40 +180,27 @@ export function createView<RuntimeProps extends Record<string, unknown> = Record
         const { id, type, staticProps = {}, bindings = {}, children = [] } = node;
         const Atom = atoms[type];
         if (!Atom) {
-          throw new Error(`Component Layout: unknown atom "${type}".`);
+          throw new Error(`Component Layout: unknown atom "${type}" with id "${id}".`);
         }
 
-        const ctx: ResolveContext = {
-          props: runtimeProps as Record<string, unknown>,
-          state,
-          item: itemCtx,
-          scope,
-        };
+        const ctx: ResolveContext = makeCtx(itemCtx, scope);
 
-        const resolvedProps: Record<string, unknown> = { ...staticProps };
+        const resolvedProps: ResolvedProps = { ...staticProps };
 
         for (const [propName, binding] of Object.entries(bindings)) {
           if (isExpressionBinding(binding)) {
             resolvedProps[propName] = resolveTemplateString(binding.value, ctx);
           } else if (isEventBinding(binding)) {
-            resolvedProps[propName] = buildEventCallback(
-              binding,
-              callbacks,
-              runtimeProps as Record<string, unknown>,
-              getState,
-              setState,
-              ctx
-            );
+            resolvedProps[propName] = buildEventCallback(binding, callbacks, setState, ctx);
           }
         }
 
-        (resolvedProps as Record<string, unknown>)['data-designlib-id'] = id;
-        (resolvedProps as Record<string, unknown>)['data-designlib-label'] = type;
+        resolvedProps['data-designlib-id'] = id;
+        resolvedProps['data-designlib-label'] = type;
 
         const childNodes: React.ReactNode[] = (children ?? []).map((c, i) => {
-          if (typeof c === 'string' && isTemplateString(c)) {
-            const resolved = resolveTemplateString(c, ctx);
-            return (resolved ?? null) as React.ReactNode;
+          if (typeof c === 'string') {
+            return (resolveIfTemplate(c, ctx) ?? null) as React.ReactNode;
           }
           return renderNode(c, i, itemCtx, scope);
         });
@@ -220,14 +209,7 @@ export function createView<RuntimeProps extends Record<string, unknown> = Record
       }
 
       if (typeof node === 'string' && isTemplateString(node)) {
-        const ctx: ResolveContext = {
-          props: runtimeProps as Record<string, unknown>,
-          state,
-          item: itemCtx,
-          scope,
-        };
-        const resolved = resolveTemplateString(node, ctx);
-        return (resolved ?? null) as React.ReactNode;
+        return (resolveIfTemplate(node, makeCtx(itemCtx, scope)) ?? null) as React.ReactNode;
       }
 
       if (
@@ -242,9 +224,10 @@ export function createView<RuntimeProps extends Record<string, unknown> = Record
     };
 
     const rootNode = renderNode(root, 0, undefined, undefined);
+
     return createElement(Fragment, null, rootNode);
   };
 
-  Generated.displayName = displayName;
+  Generated.displayName = doc.name;
   return Generated;
 }
