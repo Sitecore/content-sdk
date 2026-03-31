@@ -5,7 +5,7 @@ import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
 import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getEventsPlugin } from '../../initialization/plugin';
-import { BOT_CHANNEL, getBotCookie, isBot, isBrowserEnvironment } from './bot-detection';
+import { getBotCookie, isBot } from './bot-detection';
 
 /**
  * A function that checks if the page view should be skipped.
@@ -20,36 +20,6 @@ const shouldSkipPageView = () => {
 
   return isBot(navigator.userAgent);
 };
-
-/**
- * Sends a VIEW event for server-side bot tracking (e.g. Next.js proxy / Edge).
- * Uses a synthetic per-invocation client id and defaults `channel` to `bot`.
- * Returns `null` in browser environments.
- * @returns The response from Sitecore Edge Proxy, or `null` if skipped (browser).
- * @public
- */
-export async function botPageView(): Promise<EPResponse | null> {
-  if (isBrowserEnvironment()) {
-    return null;
-  }
-
-  const coreContext = getCoreContext();
-  await coreContext.readyPromise;
-  getEventsPlugin();
-
-  const { options, adapter } = getAnalyticsPlugin();
-  const id = globalThis.crypto.randomUUID();
-
-  return new PageViewEvent({
-    id,
-    pageViewData: {
-      channel: BOT_CHANNEL,
-    },
-    searchParams: adapter.location.getSearchParams(),
-    sendEvent,
-    config: { ...coreContext.config, ...options },
-  }).send();
-}
 
 /**
  * A function that sends a VIEW event to the SitecoreCloud API

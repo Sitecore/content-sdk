@@ -229,9 +229,8 @@ export class BotTrackingProxy extends ProxyBase {
 }
 
 // @public
-export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Pick<ProxyBaseConfig, 'sites' | 'defaultHostname'> & {
+export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Omit<ProxyBaseConfig, 'defaultLanguage'> & {
     fetchEvent?: NextFetchEvent;
-    enabled?: boolean;
 };
 
 export { BYOCClientWrapper }

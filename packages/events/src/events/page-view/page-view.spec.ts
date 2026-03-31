@@ -2,8 +2,8 @@ import * as analyticsPluginsModule from '@sitecore-content-sdk/analytics-core/in
 import * as coreModule from '@sitecore-content-sdk/core';
 import * as eventsPluginModule from '../../initialization/plugin';
 import { sendEvent } from '../send-event/sendEvent';
-import { getBotCookie, isBot, isBrowserEnvironment } from './bot-detection';
-import { botPageView, pageView } from './page-view';
+import { getBotCookie, isBot } from './bot-detection';
+import { pageView } from './page-view';
 import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
 import { jest, expect, describe, it, beforeEach } from '@jest/globals';
@@ -17,7 +17,6 @@ jest.mock('./bot-detection', () => {
     ...original,
     getBotCookie: jest.fn(),
     isBot: jest.fn(),
-    isBrowserEnvironment: jest.fn().mockImplementation(original.isBrowserEnvironment),
   };
 });
 jest.mock('./page-view-event', () => {
@@ -189,67 +188,6 @@ describe('page-view', () => {
       expect(isBot).toHaveBeenCalledWith(navigator.userAgent);
       expect(PageViewEvent).not.toHaveBeenCalled();
       expect(eventsPluginModule.getEventsPlugin).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('botPageView', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-      jest.mocked(getBotCookie).mockReturnValue(undefined);
-      jest.mocked(isBot).mockReturnValue(false);
-      jest
-        .mocked(isBrowserEnvironment)
-        .mockImplementation(
-          (jest.requireActual('./bot-detection') as typeof import('./bot-detection')).isBrowserEnvironment
-        );
-      setupPluginMocks();
-    });
-
-    it('returns null in browser without calling analytics', async () => {
-      const getCoreContextSpy = jest.spyOn(coreModule, 'getCoreContext');
-
-      await expect(botPageView()).resolves.toBeNull();
-
-      expect(getCoreContextSpy).not.toHaveBeenCalled();
-      expect(eventsPluginModule.getEventsPlugin).not.toHaveBeenCalled();
-      expect(analyticsPluginsModule.getAnalyticsPlugin).not.toHaveBeenCalled();
-      expect(PageViewEvent).not.toHaveBeenCalled();
-    });
-
-    it('sends PageViewEvent with bot channel and random UUID', async () => {
-      jest.mocked(isBrowserEnvironment).mockReturnValue(false);
-
-      const uuid = '00000000-0000-4000-8000-000000000001';
-      const randomUUIDMock = jest.fn(() => uuid);
-      const randomUUIDDesc = Object.getOwnPropertyDescriptor(globalThis.crypto, 'randomUUID');
-      Object.defineProperty(globalThis.crypto, 'randomUUID', {
-        configurable: true,
-        writable: true,
-        value: randomUUIDMock,
-      });
-
-      try {
-        mockAdapter.location.getSearchParams.mockReturnValue('?a=1');
-
-        const response = await botPageView();
-
-        expect(response).toBe('mockedResponse');
-        expect(randomUUIDMock).toHaveBeenCalled();
-        expect(PageViewEvent).toHaveBeenCalledWith({
-          id: uuid,
-          pageViewData: { channel: 'bot' },
-          searchParams: '?a=1',
-          sendEvent,
-          config: { ...mockCoreContext.config, ...mockAnalyticsPlugin.options },
-        });
-        expect(eventsPluginModule.getEventsPlugin).toHaveBeenCalledTimes(1);
-      } finally {
-        if (randomUUIDDesc) {
-          Object.defineProperty(globalThis.crypto, 'randomUUID', randomUUIDDesc);
-        } else {
-          Reflect.deleteProperty(globalThis.crypto, 'randomUUID');
-        }
-      }
     });
   });
 });

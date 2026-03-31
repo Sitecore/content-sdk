@@ -11,6 +11,14 @@ jest.mock('@sitecore-content-sdk/analytics-core/utils', () => ({
   getCookie: jest.fn(),
 }));
 
+jest.mock('./bot-detection', () => {
+  const original = jest.requireActual('./bot-detection') as typeof import('./bot-detection');
+  return {
+    ...original,
+    isBrowserEnvironment: jest.fn().mockImplementation(original.isBrowserEnvironment),
+  };
+});
+
 describe('BotDetection', () => {
   beforeEach(() => {
     jest.mocked(isbot).mockReset();
@@ -51,6 +59,11 @@ describe('BotDetection', () => {
   });
 
   describe('getBotCookie', () => {
+    it('returns undefined when not in browser environment', () => {
+      jest.mocked(isBrowserEnvironment).mockReturnValue(false);
+      expect(getBotCookie()).toBeUndefined();
+    });
+
     it('returns undefined when getCookie finds no cookie', () => {
       jest.mocked(getCookie).mockReturnValue(undefined);
       Object.defineProperty(document, 'cookie', {

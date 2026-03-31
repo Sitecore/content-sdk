@@ -3,7 +3,7 @@ import { getCookie } from '@sitecore-content-sdk/analytics-core/utils';
 
 /**
  * The cookie name for bot detection.
- * @public
+ * @internal
  */
 export const BOT_DETECTION_COOKIE = 'sc_bot';
 
@@ -26,7 +26,7 @@ export function isBrowserEnvironment(): boolean {
  * A function that checks if visitor is a bot.
  * @param {string} userAgent - The user agent of the visitor
  * @returns {boolean} True if the visitor is a bot, false otherwise
- * @public
+ * @internal
  */
 export const isBot = (userAgent?: string | null): boolean => {
   return isbot(userAgent);
@@ -39,7 +39,7 @@ export const isBot = (userAgent?: string | null): boolean => {
  * @internal
  */
 export function getBotCookie(): string | undefined {
-  if (typeof document === 'undefined') return undefined;
+  if (!isBrowserEnvironment()) return undefined;
 
   return getCookie(document.cookie, BOT_DETECTION_COOKIE)?.value;
 }

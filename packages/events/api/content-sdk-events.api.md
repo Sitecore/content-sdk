@@ -4,14 +4,14 @@
 
 ```ts
 
-import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
+import { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
 import type { NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { Plugin as Plugin_2 } from '@sitecore-content-sdk/core';
 
 // @public
 export function addToEventQueue(eventData: EventData): Promise<void>;
 
-// @public
+// @internal
 export const BOT_DETECTION_COOKIE = "sc_bot";
 
 // @public
@@ -87,7 +87,7 @@ export interface IdentityData extends EventAttributesInput {
     title?: string;
 }
 
-// @public
+// @internal
 export const isBot: (userAgent?: string | null) => boolean;
 
 // @internal

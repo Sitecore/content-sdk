@@ -5,9 +5,8 @@ import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
 import {
   eventsPlugin,
   botPageView,
-  isBot,
-  BOT_DETECTION_COOKIE,
 } from '@sitecore-content-sdk/events';
+import { isBot, BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/events/internal';
 import { ProxyBase, ProxyBaseConfig } from './proxy';
 import debug from '../debug';
 import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter';
@@ -17,7 +16,7 @@ import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter
  * @public
  */
 export type BotTrackingProxyConfig = SitecoreConfig['api']['edge'] &
-  Pick<ProxyBaseConfig, 'sites' | 'defaultHostname'> & {
+  Omit<ProxyBaseConfig, 'defaultLanguage'> & {
     /**
      * Fetch event to run the bot tracking in the background to not block the request.
      * If not provided, the bot tracking will run synchronously.
@@ -25,11 +24,6 @@ export type BotTrackingProxyConfig = SitecoreConfig['api']['edge'] &
      * @param {NextFetchEvent} fetchEvent - Fetch event to run the bot tracking in the background.
      */
     fetchEvent?: NextFetchEvent;
-    /**
-     * When `false`, bot tracking is disabled for every request.
-     * Default `true`. Local runs (`next dev` or loopback host) still skip automatically.
-     */
-    enabled?: boolean;
   };
 
 /**
@@ -44,10 +38,20 @@ export class BotTrackingProxy extends ProxyBase {
 
   handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
     try {
-      const isEnabled = this.config.enabled ?? true;
+      const isDisabled = (this.config.skip && this.config.skip(req, res)) || false;
 
-      if (!isEnabled) {
-        debug.common('skipped (bot tracking proxy is disabled)');
+      debug.common('bot tracking proxy start: %o', {
+        pathname: req.nextUrl.pathname,
+        headers: this.extractDebugHeaders(req.headers),
+      });
+
+      if (isDisabled) {
+        debug.common('bot tracking proxy skipped (disabled)');
+        return res;
+      }
+
+      if (this.isPreview(req)) {
+        debug.common('bot tracking proxy skipped (preview)');
         return res;
       }
 
@@ -55,11 +59,6 @@ export class BotTrackingProxy extends ProxyBase {
         debug.common('bot tracking proxy skipped (local environment)');
         return res;
       }
-
-      debug.common('bot tracking proxy start: %o', {
-        pathname: req.nextUrl.pathname,
-        headers: this.extractDebugHeaders(req.headers),
-      });
 
       if (!isBot(req.headers.get('user-agent'))) {
         debug.common('bot tracking proxy skipped (not a bot)');

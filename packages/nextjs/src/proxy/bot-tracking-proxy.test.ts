@@ -234,20 +234,80 @@ describe('BotTrackingProxy', () => {
     });
   });
 
-  it('skips when enabled is false', async () => {
+  it('skips when skip returns true', async () => {
     isBotStub.returns(true);
     const req = createRequest({
       headerValues: { 'user-agent': 'Googlebot' },
     });
     const res = createResponse();
-    const proxy = createProxy({ enabled: false });
+    const skip = sinon.stub().returns(true);
+    const proxy = createProxy({ skip });
 
     const finalRes = await proxy.handle(req, res);
 
-    validateDebugLog('skipped (bot tracking proxy is disabled)');
+    validateDebugLog('bot tracking proxy skipped (disabled)');
+    expect(skip).to.have.been.calledOnceWith(req, res);
     expect(isBotStub).to.not.have.been.called;
     expect(initContentSdkStub).to.not.have.been.called;
     expect(finalRes).to.equal(res);
+  });
+
+  it('runs when skip returns false', async () => {
+    isBotStub.returns(true);
+    const req = createRequest({
+      headerValues: { 'user-agent': 'Googlebot' },
+    });
+    const res = createResponse();
+    const skip = sinon.stub().returns(false);
+    const proxy = createProxy({ skip });
+
+    const finalRes = await proxy.handle(req, res);
+
+    expect(skip).to.have.been.calledOnceWith(req, res);
+    const stored = getCookieJar(res)[BOT_COOKIE];
+    expect(stored.value).to.equal('1');
+    expect(botPageViewStub).to.have.been.calledOnce;
+    expect(finalRes).to.equal(res);
+  });
+
+  describe('preview', () => {
+    it('skips when __prerender_bypass cookie is present', async () => {
+      isBotStub.returns(true);
+      const req = createRequest({
+        headerValues: { 'user-agent': 'Googlebot' },
+        cookieValues: { __prerender_bypass: '1' },
+      });
+      const res = createResponse();
+      const proxy = createProxy();
+
+      const finalRes = await proxy.handle(req, res);
+
+      validateDebugLog('bot tracking proxy skipped (preview)');
+      expect(isBotStub).to.not.have.been.called;
+      expect(initContentSdkStub).to.not.have.been.called;
+      expect(botPageViewStub).to.not.have.been.called;
+      expect(getCookieJar(res)[BOT_COOKIE]).to.be.undefined;
+      expect(finalRes).to.equal(res);
+    });
+
+    it('skips when __next_preview_data cookie is present', async () => {
+      isBotStub.returns(true);
+      const req = createRequest({
+        headerValues: { 'user-agent': 'Googlebot' },
+        cookieValues: { __next_preview_data: '1' },
+      });
+      const res = createResponse();
+      const proxy = createProxy();
+
+      const finalRes = await proxy.handle(req, res);
+
+      validateDebugLog('bot tracking proxy skipped (preview)');
+      expect(isBotStub).to.not.have.been.called;
+      expect(initContentSdkStub).to.not.have.been.called;
+      expect(botPageViewStub).to.not.have.been.called;
+      expect(getCookieJar(res)[BOT_COOKIE]).to.be.undefined;
+      expect(finalRes).to.equal(res);
+    });
   });
 
   it('skips when request is not a bot', async () => {

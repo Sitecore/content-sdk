@@ -8,7 +8,7 @@ import {
 } from '@sitecore-content-sdk/content/personalize';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { personalize } from '@sitecore-content-sdk/personalize';
-import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/events';
+import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/events/internal';
 import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
 import { personalizeServerPlugin } from '@sitecore-content-sdk/personalize';
 import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter';
