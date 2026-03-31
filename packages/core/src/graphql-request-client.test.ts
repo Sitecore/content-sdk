@@ -233,6 +233,7 @@ describe('GraphQLRequestClient', () => {
 
       const clientFactory = GraphQLRequestClient.createClientFactory({
         endpoint: 'https://foo.com/graphql',
+        headers: { 'x-factory-header': 'factory-value' },
         fetch: customFetch as unknown as typeof fetch,
       });
 
@@ -241,6 +242,15 @@ describe('GraphQLRequestClient', () => {
 
       expect(result).to.deep.equal({ result: 'from-custom-fetch' });
       expect(customFetch.calledOnce).to.equal(true);
+
+      const [requestUrl, requestInit] = customFetch.firstCall.args as [string, RequestInit];
+      const requestHeaders = new Headers(requestInit.headers);
+
+      expect(requestUrl).to.equal('https://foo.com/graphql');
+      expect(requestInit.method).to.equal('POST');
+      expect(requestHeaders.get('x-factory-header')).to.equal('factory-value');
+      expect(requestHeaders.get('content-type')).to.contain('application/json');
+      expect(requestInit.body).to.contain('query Test { test }');
     });
   });
 
