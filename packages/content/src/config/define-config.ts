@@ -15,16 +15,26 @@ import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
  * @internal
  */
 export const buildFallbackConfig = (env: { [key: string]: string | undefined }): SitecoreConfig => {
+  const rawEdgeUrl =
+    env.CSDK_PUBLIC_SITECORE_EDGE_HOSTNAME || env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV];
   return {
     api: {
       edge: {
         contextId: env.SITECORE_EDGE_CONTEXT_ID || '',
-        clientContextId: env.SITECORE_EDGE_CLIENT_CONTEXT_ID || '',
-        edgeUrl: resolveEdgeUrl(env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV]),
+        clientContextId: env.CSDK_PUBLIC_SITECORE_EDGE_CONTEXT_ID || '',
+        edgeUrl: resolveEdgeUrl(rawEdgeUrl),
       },
       local: {
-        apiKey: env.SITECORE_API_KEY || env.NEXT_PUBLIC_SITECORE_API_KEY || '',
-        apiHost: env.SITECORE_API_HOST || env.NEXT_PUBLIC_SITECORE_API_HOST || '',
+        apiKey:
+          env.SITECORE_API_KEY ||
+          env.CSDK_PUBLIC_SITECORE_API_KEY ||
+          env.NEXT_PUBLIC_SITECORE_API_KEY ||
+          '',
+        apiHost:
+          env.SITECORE_API_HOST ||
+          env.CSDK_PUBLIC_SITECORE_API_HOST ||
+          env.NEXT_PUBLIC_SITECORE_API_HOST ||
+          '',
         path: '/sitecore/api/graph/edge',
       },
     },
@@ -47,12 +57,16 @@ export const buildFallbackConfig = (env: { [key: string]: string | undefined }):
       enabled: env.NODE_ENV !== 'development',
       edgeTimeout: parseInt(env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT || '', 10) || 400,
       cdpTimeout: parseInt(env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT || '', 10) || 400,
-      scope: env.SITECORE_PERSONALIZE_SCOPE || env.NEXT_PUBLIC_PERSONALIZE_SCOPE || '',
+      scope:
+        env.SITECORE_PERSONALIZE_SCOPE ||
+        env.CSDK_PUBLIC_PERSONALIZE_SCOPE ||
+        env.NEXT_PUBLIC_PERSONALIZE_SCOPE ||
+        '',
       channel: 'WEB',
       currency: 'USD',
     },
-    defaultSite: env.SITECORE_DEFAULT_SITE || '',
-    defaultLanguage: env.SITECORE_DEFAULT_LANGUAGE || 'en',
+    defaultSite: env.SITECORE_DEFAULT_SITE || env.CSDK_PUBLIC_SITECORE_DEFAULT_SITE || '',
+    defaultLanguage: env.SITECORE_DEFAULT_LANGUAGE || env.CSDK_PUBLIC_DEFAULT_LANGUAGE || 'en',
     layout: {
       formatLayoutQuery: null,
     },
@@ -248,7 +262,7 @@ export const defineConfig = (
   const fallback = buildFallbackConfig(runtimeEnv);
   const resolvedConfig = resolveConfig(fallback, config);
 
-  const isCLI = process?.env?.[SITECORE_CLI_MODE_ENV_VAR] === 'true';
+  const isCLI = runtimeEnv?.[SITECORE_CLI_MODE_ENV_VAR] === 'true';
 
   // At `build time`, we create a proxy for the config object to validate the config by
   // accessing the literal paths instead of validating the whole object at once.

@@ -3,7 +3,7 @@ export { type SitecoreAngularConfig } from './lib/providers';
 export { SITECORE_CONFIG_TOKEN, SITECORE_CLIENT_TOKEN } from './lib/tokens';
 export { resolveSitecorePage } from './lib/sitecore-page-resolver';
 
-export { defineConfig, angularEnvToConfig } from './config/define-config';
+export { defineConfig } from './config/define-config';
 export {
   getContentStylesheetLink,
   getDesignLibraryStylesheetLinks,

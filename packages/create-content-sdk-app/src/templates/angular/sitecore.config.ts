@@ -1,10 +1,9 @@
-import { angularEnvToConfig, defineConfig } from '@sitecore-content-sdk/angular';
+import { defineConfig, type AngularClientEnvironment } from '@sitecore-content-sdk/angular';
 import { environment } from './src/environments/environment';
 
 /**
- * Sitecore configuration. Spread {@link angularEnvToConfig} from `environment.ts`, then add overrides.
+ * Client fields come from `environment*.ts` (CSDK_PUBLIC_*); server fields from `process.env`.
+ * Pass overrides in the first argument when needed.
  * @see https://doc.sitecore.com/xmc/en/developers/content-sdk/the-sitecore-configuration-file.html
  */
-export default defineConfig({
-  ...angularEnvToConfig(environment as { [key: string]: string | undefined }),
-});
+export default defineConfig({}, environment satisfies AngularClientEnvironment);

@@ -1,3 +1,4 @@
+import './load-env';
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
