@@ -8,7 +8,7 @@
 
 > **pageView**(`pageViewData?`): `Promise`\<`EPResponse` \| `null`\>
 
-Defined in: [events/src/events/page-view/page-view.ts:16](https://github.com/Sitecore/content-sdk/blob/0ae7ff2b415bcf81d01745bfcd179fc1062f369e/packages/events/src/events/page-view/page-view.ts#L16)
+Defined in: [events/src/events/page-view/page-view.ts:32](https://github.com/Sitecore/content-sdk/blob/d3ca076cf2eb9ac3638fcded92c92cbd74337854/packages/events/src/events/page-view/page-view.ts#L32)
 
 A function that sends a VIEW event to the SitecoreCloud API
 
@@ -16,7 +16,7 @@ A function that sends a VIEW event to the SitecoreCloud API
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `pageViewData?` | [`PageViewData`](../interfaces/PageViewData.md) | The optional attributes to be sent to the SitecoreCloud API This object will be flattened and sent in the ext object of the payload |
+| `pageViewData?` | [`PageViewData`](../interfaces/PageViewData.md) | The optional attributes to be sent to the SitecoreCloud API This object will be flattened and sent in the ext object of the payload. The page view will be skipped if the visitor on the client-side is a bot. |
 
 ## Returns
 

@@ -8,7 +8,7 @@
 
 > `const` **RichText**: `React.FC`\<[`RichTextProps`](../interfaces/RichTextProps.md)\>
 
-Defined in: [packages/react/src/components/RichText.tsx:59](https://github.com/Sitecore/content-sdk/blob/0ae7ff2b415bcf81d01745bfcd179fc1062f369e/packages/react/src/components/RichText.tsx#L59)
+Defined in: [packages/react/src/components/RichText.tsx:59](https://github.com/Sitecore/content-sdk/blob/d3ca076cf2eb9ac3638fcded92c92cbd74337854/packages/react/src/components/RichText.tsx#L59)
 
 The RichText component.
 
