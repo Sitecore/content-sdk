@@ -15,6 +15,7 @@ Our versioning strategy is as follows:
 ### 🐛 Bug Fixes
 
 * Preview mode shows unpublishable content ([#410](https://github.com/Sitecore/content-sdk/pull/410))([416](https://github.com/Sitecore/content-sdk/pull/416))
+* `[core] [content]` Fix GraphQL client factory ignoring custom `fetch` and related options ([#418](https://github.com/Sitecore/content-sdk/pull/418))
 
 ## 2.0.1
 
