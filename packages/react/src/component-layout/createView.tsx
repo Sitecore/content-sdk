@@ -4,7 +4,7 @@
  * Uses document types and resolver from @sitecore-content-sdk/content/editing.
  */
 
-import React, { type FC, type Key, useReducer } from 'react';
+import React, { type FC, type Key, useReducer, useRef } from 'react';
 import {
   type ComponentLayoutDocument as Document,
   type ComponentLayoutNode as Node,
@@ -18,7 +18,6 @@ import {
   isComponentLayoutEventBinding as isEventBinding,
   isComponentLayoutSetStateAction as isSetStateAction,
   isComponentLayoutCallAction as isCallAction,
-  isComponentLayoutTemplateString as isTemplateString,
   resolveComponentLayoutTemplateString as resolveTemplateString,
   evaluateComponentLayoutShowNode as evaluateShowNode,
   isComponentLayoutPrimitive as isPrimitive,
@@ -45,8 +44,8 @@ type ScopeMap = Record<string, unknown>;
 
 /** Props passed to rendered atoms after bindings/template resolution. */
 type ResolvedProps = Record<string, unknown> & {
-  'data-designlib-id'?: string;
-  'data-designlib-label'?: string;
+  'data-atom-id'?: string;
+  'data-atom-label'?: string;
 };
 
 /**
@@ -59,7 +58,7 @@ type ResolvedProps = Record<string, unknown> & {
 export const renderFor = (
   node: Element,
   forCtx: ResolveContext,
-  renderNode: (tmpl: Element, key: Key, item: unknown, itemScope: ScopeMap) => React.ReactNode
+  renderNode: (tmpl: Node, key: Key, item: unknown, itemScope: ScopeMap) => React.ReactNode
 ): React.ReactNode => {
   const forArr = resolveTemplateString(node.for?.each ?? '', forCtx);
   if (!Array.isArray(forArr)) {
@@ -88,9 +87,9 @@ export const renderFor = (
  * @param {ResolveContext} ctx - Resolve context for template string resolution
  * @returns {React.ReactNode} Resolved node or null
  */
-const renderPrimitiveNode = (node: Node, ctx: ResolveContext): React.ReactNode => {
+export const renderPrimitiveNode = (node: Node, ctx: ResolveContext): React.ReactNode => {
   // resolve template strings
-  if (typeof node === 'string' && isTemplateString(node)) {
+  if (typeof node === 'string') {
     return (resolveIfTemplate(node, ctx) ?? null) as React.ReactNode;
   }
 
@@ -106,23 +105,21 @@ const renderPrimitiveNode = (node: Node, ctx: ResolveContext): React.ReactNode =
  * Renders an element node (atom) with resolved props, bindings, and children.
  * @param {Element} node - The element node to render
  * @param {Key | undefined} key - React key for the element
- * @param {unknown} itemCtx - Current iteration item context
- * @param {ScopeMap | undefined} scope - Current scope map
  * @param {Record<string, React.ComponentType<unknown>>} atoms - Atom component registry
  * @param {CallbackRegistry} callbacks - Callback registry
  * @param {React.Dispatch<StatePatch>} setState - State dispatcher
+ * @param {() => ViewState} getState - Function to get the current state at callback time
  * @param {ResolveContext} ctx - Resolve context
  * @param {(node: Node, key: Key | undefined, itemCtx: unknown, scope: ScopeMap | undefined) => React.ReactNode} renderNode - Recursive render function
  * @returns {React.ReactNode} Rendered atom element
  */
-const renderElementNode = (
+export const renderElementNode = (
   node: Element,
   key: Key | undefined,
-  itemCtx: unknown,
-  scope: ScopeMap | undefined,
   atoms: Record<string, React.ComponentType<unknown>>,
   callbacks: CallbackRegistry,
   setState: React.Dispatch<StatePatch>,
+  getState: () => ViewState,
   ctx: ResolveContext,
   renderNode: (
     node: Node,
@@ -144,7 +141,7 @@ const renderElementNode = (
     if (isExpressionBinding(binding)) {
       resolvedProps[propName] = resolveTemplateString(binding.value, ctx);
     } else if (isEventBinding(binding)) {
-      resolvedProps[propName] = buildEventCallback(binding, callbacks, setState, ctx);
+      resolvedProps[propName] = buildEventCallback(binding, callbacks, getState, setState, ctx);
     }
   }
 
@@ -155,7 +152,7 @@ const renderElementNode = (
     if (typeof c === 'string') {
       return (resolveIfTemplate(c, ctx) ?? null) as React.ReactNode;
     }
-    return renderNode(c, i, itemCtx, scope);
+    return renderNode(c, i, ctx.item, ctx.scope);
   });
 
   return childNodes.length > 0 ? (
@@ -172,13 +169,15 @@ const renderElementNode = (
  * Resolves setState values and call args with template strings; invokes callbacks.
  * @param {EventBinding} binding the event binding to build the callback from
  * @param {CallbackRegistry} callbacks the registry of callback implementations to use for call actions
+ * @param {() => ViewState} getState function to get the latest state at the time of event handling
  * @param {React.Dispatch<StatePatch>} setState the React state dispatcher to apply setState actions
- * @param {ResolveContext} resolveContext the context to use for resolving template strings
+ * @param {ResolveContext} resolveContext - Resolve context
  * @returns {(...args: unknown[]) => void} a function that can be used as an event handler
  */
 const buildEventCallback = (
   binding: EventBinding,
   callbacks: CallbackRegistry,
+  getState: () => ViewState,
   setState: React.Dispatch<StatePatch>,
   resolveContext: ResolveContext
 ): ((...args: unknown[]) => void) => {
@@ -194,12 +193,16 @@ const buildEventCallback = (
       eventValue = obj;
     }
 
+    const patch: StatePatch = {};
+    const { props, item, scope } = resolveContext;
     const ctx: ResolveContext = {
-      ...resolveContext,
+      props,
+      item,
+      scope,
+      state: getState(),
       event: eventValue,
     };
 
-    const patch: StatePatch = {};
     for (const action of binding.actions) {
       if (isSetStateAction(action)) {
         for (const [key, value] of Object.entries(action.setState)) {
@@ -247,6 +250,11 @@ export function createView<RuntimeProps extends Record<string, unknown> = Record
       initialState as ViewState
     );
 
+    const stateRef = useRef(state);
+    stateRef.current = state;
+
+    const getState = () => stateRef.current;
+
     const renderNode = (
       node: Node,
       key: Key | undefined,
@@ -255,7 +263,7 @@ export function createView<RuntimeProps extends Record<string, unknown> = Record
     ): React.ReactNode => {
       const ctx: ResolveContext = {
         props: runtimeProps as Record<string, unknown>,
-        state,
+        state: stateRef.current,
         item: itemCtx,
         scope,
       };
@@ -271,17 +279,7 @@ export function createView<RuntimeProps extends Record<string, unknown> = Record
           }
         }
 
-        return renderElementNode(
-          node,
-          key,
-          itemCtx,
-          scope,
-          atoms,
-          callbacks,
-          setState,
-          ctx,
-          renderNode
-        );
+        return renderElementNode(node, key, atoms, callbacks, setState, getState, ctx, renderNode);
       }
 
       return renderPrimitiveNode(node, ctx);
