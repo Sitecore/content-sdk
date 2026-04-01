@@ -5,5 +5,6 @@ export { form } from './events/custom-event/form';
 export { event } from './events/custom-event/event';
 export { identity } from './events/identity/identity';
 export { pageView } from './events/page-view/page-view';
+export { botPageView } from './events/page-view/bot-page-view';
 export type { EventsPlugin } from './initialization/types';
 export { eventsPlugin } from './initialization/plugin';

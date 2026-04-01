@@ -93,6 +93,7 @@
     "@babel/parser": "^7.27.2",
     "@sitecore-content-sdk/content": "2.0.2-canary.4",
     "@sitecore-content-sdk/core": "2.0.2-canary.4",
+    "@sitecore-content-sdk/events": "2.0.2-canary.4",
     "@sitecore-content-sdk/react": "2.0.2-canary.4",
     "recast": "^0.23.11",
     "regex-parser": "^2.3.1",

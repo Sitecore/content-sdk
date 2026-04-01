@@ -1,14 +1,22 @@
-import { type NextRequest } from 'next/server';
+import { NextFetchEvent, type NextRequest } from 'next/server';
 import {
   defineProxy,
   MultisiteProxy,
   PersonalizeProxy,
   RedirectsProxy,
+  BotTrackingProxy,
 } from '@sitecore-content-sdk/nextjs/proxy';
 import sites from '.sitecore/sites.json';
 import scConfig from 'sitecore.config';
 
-export default function proxy(req: NextRequest) {
+export default function proxy(req: NextRequest, event: NextFetchEvent) {
+  // BotTrackingProxy will detect and track bots before any other proxies run
+  const botTracking = new BotTrackingProxy({
+    ...scConfig.api.edge,
+    sites,
+    fetchEvent: event,
+  });
+
   // Instantiate proxies - they will use Edge config if available, otherwise fall back to local config
   // Each proxy will skip processing if required API configuration is not available
   const multisite = new MultisiteProxy({
@@ -62,7 +70,7 @@ export default function proxy(req: NextRequest) {
     // },
   });
 
-  return defineProxy(multisite, redirects, personalize).exec(req);
+  return defineProxy(botTracking, multisite, redirects, personalize).exec(req);
 }
 
 export const config = {
