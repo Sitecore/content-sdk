@@ -14,7 +14,7 @@ import {
   mergeURLSearchParams,
 } from '@sitecore-content-sdk/core/tools';
 import { NextURL } from 'next/dist/server/web/next-url';
-import { NextRequest, NextResponse } from 'next/server';
+import { after, NextRequest, NextResponse } from 'next/server';
 import regexParser from 'regex-parser';
 import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
@@ -24,6 +24,12 @@ const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
 const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
 
 type RedirectResult = RedirectInfo & { matchedQueryString?: string };
+
+type HandledRedirectInfo = {
+  target: NextURL | string;
+  type: string;
+  isExternal: boolean;
+};
 
 /**
  * The interface for the RedirectsProxy configuration.
@@ -35,6 +41,7 @@ export type RedirectsProxyConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clien
   ProxyBaseConfig &
   SitecoreConfig['redirects'] & {
     redirectsService?: RedirectsService;
+    redirectHandled?: (req: NextRequest, redirect: HandledRedirectInfo) => Promise<void> | void;
   };
 /**
  * Proxy / handler fetches all redirects from Sitecore instance by grapqhl service
@@ -440,6 +447,11 @@ export class RedirectsProxy extends ProxyBase {
     res: NextResponse,
     isExternal = false
   ): NextResponse {
+    if (this.config.redirectHandled) {
+      const redirectHandled = this.config.redirectHandled;
+      after(() => redirectHandled(req, { target, type, isExternal }));
+    }
+
     switch (type) {
       case REDIRECT_TYPE_301:
         return this.createRedirectResponse(target, res, 301, 'Moved Permanently');

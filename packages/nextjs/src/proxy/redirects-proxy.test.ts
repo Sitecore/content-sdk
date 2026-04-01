@@ -12,7 +12,7 @@ import {
 } from '@sitecore-content-sdk/content/site';
 import chai, { use } from 'chai';
 import chaiString from 'chai-string';
-import { NextRequest, NextResponse } from 'next/server';
+import nextjs, { NextRequest, NextResponse } from 'next/server';
 import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { RedirectsProxy, RedirectsProxyConfig } from './redirects-proxy';
@@ -48,6 +48,7 @@ describe('RedirectsProxy', () => {
 
   let nextRedirectStub: sinon.SinonStub;
   let nextRewriteStub: sinon.SinonStub;
+  let afterStub: sinon.SinonStub;
 
   const sandbox = sinon.createSandbox();
 
@@ -314,12 +315,14 @@ describe('RedirectsProxy', () => {
   before(() => {
     nextRedirectStub = sandbox.stub(NextResponse, 'redirect');
     nextRewriteStub = sandbox.stub(NextResponse, 'rewrite');
+    afterStub = sandbox.stub(nextjs, 'after');
   });
 
   beforeEach(() => {
     debugSpy.resetHistory();
     nextRedirectStub.reset();
     nextRewriteStub.reset();
+    afterStub.reset();
     // Reset the stubs to return undefined by default, tests will override
     nextRedirectStub.returns(undefined);
     nextRewriteStub.returns(undefined);
@@ -328,6 +331,7 @@ describe('RedirectsProxy', () => {
   after(() => {
     nextRedirectStub.restore();
     nextRewriteStub.restore();
+    afterStub.restore();
   });
 
   describe('request skipped', () => {
@@ -923,6 +927,35 @@ describe('RedirectsProxy', () => {
       expect(nextRedirectStub.calledOnce).to.be.true;
       expect(finalRes.redirected).to.be.true;
       expect(finalRes.status).to.equal(301);
+    });
+
+    it('should call redirectHandled callback if provided for', async () => {
+      const req = createRequest();
+      const res = createResponse();
+
+      const redirectHandled = sandbox.stub();
+      const { proxy } = createProxy({
+        redirectsProxyConfig: { redirectHandled },
+        target: 'https://example.com/new-page',
+      });
+
+      afterStub.callsFake((callback) => {
+        if (typeof callback === 'function') {
+          callback();
+        }
+      });
+
+      await proxy.handle(req, res);
+
+      const firstArg = redirectHandled.getCall(0).args[0];
+      const secondArg = redirectHandled.getCall(0).args[1];
+      expect(redirectHandled.calledOnce).to.be.true;
+      expect(firstArg).to.deep.equal(req);
+      expect(secondArg).to.deep.equal({
+        target: 'https://example.com/new-page',
+        type: REDIRECT_TYPE_301,
+        isExternal: true,
+      });
     });
   });
 
