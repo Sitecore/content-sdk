@@ -1,36 +1,32 @@
 'use client';
-import React, { useEffect, useMemo } from 'react';
-import { AtomMetadata } from '../../atoms';
+import React, { ComponentType, useEffect, useMemo } from 'react';
 import { Document } from '@sitecore-content-sdk/content/component-layout';
 import { createView } from '../..';
-import { getAtomRegistry } from '../../atoms/atom-registry-utils';
 
 export type AtomRendererProps = {
-  atoms?: AtomMetadata[];
+  atomMap?: Record<string, ComponentType<unknown>>;
   document?: Document;
-  callbackRegistry?: Record<string, (...args: unknown[]) => void>;
+  callbackMap?: Record<string, (...args: unknown[]) => void>;
 };
 
-export const AtomRenderer = ({ atoms, document }: AtomRendererProps) => {
+export const AtomRenderer = ({ atomMap, document, callbackMap }: AtomRendererProps) => {
   console.log('AtomRenderer, document:', document?.name);
 
   const View = useMemo(() => {
     if (!document) return null;
 
-    const atomRegistry = getAtomRegistry(atoms || []);
+    if (!atomMap) {
+      console.warn('AtomRenderer: No atom map provided');
+      return null;
+    }
 
-    return createView(document, atomRegistry, {
-      alert: (...args: unknown[]) => {
-        const [message] = args;
-        alert(message);
-      },
-    });
-  }, [document, atoms]);
+    return createView(document, atomMap, callbackMap);
+  }, [document, atomMap, callbackMap]);
 
   useEffect(() => {
-    console.log('AtomRenderer, available atoms:', atoms);
+    console.log('AtomRenderer, available atoms:', atomMap);
     console.log('AtomRenderer, document:', document);
-  }, [atoms, document]);
+  }, [atomMap, document]);
 
   return <>{View ? <View {...(document?.props ?? {})} /> : 'No document provided'}</>;
 };

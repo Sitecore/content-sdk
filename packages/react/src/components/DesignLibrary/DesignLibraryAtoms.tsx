@@ -1,7 +1,7 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSitecore } from '../SitecoreProvider';
-import { serializeAtoms } from '../../atoms/atom-registry-utils';
+import { serializeAtoms, getAtomRegistry } from '../../atoms/atom-registry-utils';
 import {
   postToDesignLibrary,
   getDesignLibraryAtomsRegistryEvent,
@@ -25,44 +25,42 @@ import { cardsWithDataBinding } from '../AtomRenderer/test-data/component-layout
 export const DesignLibraryAtoms = () => {
   const { atoms, callbackRegistry } = useSitecore();
   const [currentDocument, setCurrentDocument] = useState(cardsWithDataBinding);
-  const [renderKey, setRenderKey] = useState(0);
+  const didReceiveDocumentUpdate = useRef(false);
 
-  const serializedAtoms = serializeAtoms(atoms ?? []);
+  const serializedAtoms = useMemo(() => serializeAtoms(atoms ?? []), [atoms]);
+  const atomMap = useMemo(() => getAtomRegistry(atoms || []), [atoms]);
 
   useEffect(() => {
     postToDesignLibrary(
       getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'low-code-component')
     );
+  }, []);
 
+  useEffect(() => {
     if (!serializedAtoms) {
       sendAtomsErrorEvent('No atoms provided', 'atoms-missing');
       return;
-    } else {
-      postToDesignLibrary(getDesignLibraryAtomsRegistryEvent(serializedAtoms));
-
-      const unsubDocumentUpdate = addDocumentUpdateHandler((updatedDocument) => {
-        setCurrentDocument(updatedDocument);
-        setRenderKey((k) => k + 1);
-      });
-
-      return () => unsubDocumentUpdate();
     }
+
+    postToDesignLibrary(getDesignLibraryAtomsRegistryEvent(serializedAtoms));
+
+    const unsubDocumentUpdate = addDocumentUpdateHandler((updatedDocument) => {
+      didReceiveDocumentUpdate.current = true;
+      setCurrentDocument(updatedDocument);
+    });
+
+    return () => unsubDocumentUpdate();
   }, [serializedAtoms]);
 
   useEffect(() => {
-    // Send a rendered event only as effect of a document update
-    if (renderKey === 0) return;
+    if (!didReceiveDocumentUpdate.current) return;
 
     postToDesignLibrary(
       getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'low-code-component')
     );
-  }, [renderKey]);
+  }, [currentDocument]);
 
   return (
-    <AtomRenderer
-      atoms={atoms}
-      callbackRegistry={callbackRegistry ?? {}}
-      document={currentDocument}
-    />
+    <AtomRenderer atomMap={atomMap} callbackMap={callbackRegistry} document={currentDocument} />
   );
 };
