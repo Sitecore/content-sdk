@@ -82,6 +82,8 @@ export enum DesignLibraryMode {
   Normal = 'library',
   /** Metadata mode */
   Metadata = 'library-metadata',
+  /** Atoms mode */
+  Atoms = 'library-atoms',
 }
 
 /**
