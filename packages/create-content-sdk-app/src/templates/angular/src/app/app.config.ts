@@ -8,7 +8,9 @@ import {
   PreLoaderDataService,
 } from '@sitecore-content-sdk/angular';
 import { routes } from './app.routes';
-import { LOADERS } from './loaders';
+import scConfig from '../../sitecore.config';
+import { getClient } from '../content-sdk/client/sitecore-client';
+import { LOADERS } from '../content-sdk/loaders';
 
 /**
  * Client hydration is disabled so that RouterLink and other directives attach correctly
@@ -20,12 +22,14 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(withFetch()),
+    provideRouter(routes, withNavigationErrorHandler(handleNavigationError())),
     provideSitecoreAngular({
       notFoundRoute: '/404',
       errorRoute: '/500',
+      sitecoreConfig: scConfig,
+      sitecoreClient: getClient(),
     }),
     provideLoaderRegistry(LOADERS),
     PreLoaderDataService,
-    provideRouter(routes, withNavigationErrorHandler(handleNavigationError())),
   ],
 };

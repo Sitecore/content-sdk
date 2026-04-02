@@ -1,14 +1,12 @@
 import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { Page } from '@sitecore-content-sdk/angular';
 import { toSignal } from '@angular/core/rxjs-interop';
-
-const DEFAULT_TITLE = 'Page Not Found';
-const DEFAULT_MESSAGE = 'Sorry, the page you\'re looking for doesn\'t exist or has been moved.';
 
 /**
  * 404 Not Found error page component.
- * Reads page from the '404' loader; displays route.fields.error.value or default text.
+ * Reads page from the '404' loader and displays the raw JSON alongside default UI.
  */
 @Component({
   selector: 'app-404',
@@ -18,9 +16,16 @@ const DEFAULT_MESSAGE = 'Sorry, the page you\'re looking for doesn\'t exist or h
     <div class="not-found-container">
       <div class="not-found-content">
         <h1>404</h1>
-        <h2>{{ title() }}</h2>
-        <p>{{ message() }}</p>
+        <h2>Page Not Found</h2>
+        <p>Sorry, the page you're looking for doesn't exist or has been moved.</p>
         <a routerLink="/" class="back-link">Return to Home</a>
+
+        <h3 style="margin-top: 2rem;">Loader data (raw JSON)</h3>
+        @if (page()) {
+          <pre class="loader-json">{{ toJson(page()) }}</pre>
+        } @else {
+          <p><em>No data returned by 404 loader.</em></p>
+        }
       </div>
     </div>
   `,
@@ -32,30 +37,14 @@ const DEFAULT_MESSAGE = 'Sorry, the page you\'re looking for doesn\'t exist or h
       min-height: 100vh;
       background-color: #f5f5f5;
     }
-
     .not-found-content {
       text-align: center;
       padding: 2rem;
+      max-width: 700px;
     }
-
-    h1 {
-      font-size: 6rem;
-      margin: 0;
-      color: #333;
-    }
-
-    h2 {
-      font-size: 2rem;
-      margin: 1rem 0;
-      color: #666;
-    }
-
-    p {
-      font-size: 1.1rem;
-      color: #999;
-      margin-bottom: 2rem;
-    }
-
+    h1 { font-size: 6rem; margin: 0; color: #333; }
+    h2 { font-size: 2rem; margin: 1rem 0; color: #666; }
+    p { font-size: 1.1rem; color: #999; margin-bottom: 2rem; }
     .back-link {
       display: inline-block;
       padding: 0.75rem 1.5rem;
@@ -65,9 +54,17 @@ const DEFAULT_MESSAGE = 'Sorry, the page you\'re looking for doesn\'t exist or h
       border-radius: 4px;
       transition: background-color 0.3s ease;
     }
-
-    .back-link:hover {
-      background-color: #0052a3;
+    .back-link:hover { background-color: #0052a3; }
+    .loader-json {
+      text-align: left;
+      margin: 0.5rem 0 0;
+      font-size: 0.8rem;
+      max-height: 400px;
+      overflow: auto;
+      background: #fff;
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #ddd;
     }
   `],
 })
@@ -75,11 +72,9 @@ export class NotFoundComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly routeData = toSignal(this.route.data);
 
-  private readonly errorFromPage = computed(() => {
-    const page = this.routeData()?.['page'] as { layout?: { sitecore?: { route?: { fields?: { error?: { value?: string } } } } } } | undefined;
-    return page?.layout?.sitecore?.route?.fields?.error?.value;
-  });
+  page = computed(() => this.routeData()?.['page'] as Page | null);
 
-  readonly title = computed(() => DEFAULT_TITLE);
-  readonly message = computed(() => (typeof this.errorFromPage() === 'string' ? this.errorFromPage()! : DEFAULT_MESSAGE));
+  toJson(value: unknown): string {
+    return JSON.stringify(value, null, 2);
+  }
 }

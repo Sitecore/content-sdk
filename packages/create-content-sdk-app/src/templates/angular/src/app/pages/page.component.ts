@@ -4,35 +4,29 @@ import { Page } from '@sitecore-content-sdk/angular';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { LayoutComponent } from '../shared/layout.component';
 
-/**
- * Page component that sets the Sitecore context and dictionary phrases, then renders the layout.
- * Gets page and dictionary data from route resolvers.
- * Displays current route and fields returned by pageLoader.
- */
 @Component({
   selector: 'app-page',
   standalone: true,
   imports: [LayoutComponent],
   template: `
     @let pageValue = page();
-    <section class="page-loader-info" style="margin: 1rem; padding: 1rem; border: 1px solid #ccc; border-radius: 4px;">
+    @let dictValue = dictionary();
+    <section style="margin: 1rem; padding: 1rem; border: 1px solid #ccc; border-radius: 4px;">
       <h2 style="margin-top: 0;">Current route</h2>
       <p><strong>URL:</strong> {{ router.url }}</p>
 
       @if (pageValue) {
-        <h2>Page loader data</h2>
-        <dl style="display: grid; grid-template-columns: auto 1fr; gap: 0.25rem 1rem;">
-          <dt>Route name</dt>
-          <dd>{{ routeName(pageValue) }}</dd>
-          <dt>Locale</dt>
-          <dd>{{ pageValue.locale }}</dd>
-          <dt>Site name</dt>
-          <dd>{{ pageValue.siteName ?? '—' }}</dd>
-          <dt>Mode</dt>
-          <dd>{{ pageValue.mode?.name ?? '—' }}</dd>
-          <dt>Route fields</dt>
-          <dd><pre style="margin: 0; font-size: 0.875rem;">{{ routeFieldsJson(pageValue) }}</pre></dd>
-        </dl>
+        <h2>Page loader data (raw JSON)</h2>
+        <pre style="margin: 0; font-size: 0.8rem; max-height: 400px; overflow: auto; background: #f5f5f5; padding: 0.5rem; border-radius: 4px;">{{ toJson(pageValue) }}</pre>
+      } @else {
+        <p><em>No page data returned by loader.</em></p>
+      }
+
+      <h2>Dictionary phrases (raw JSON)</h2>
+      @if (dictValue && hasKeys(dictValue)) {
+        <pre style="margin: 0; font-size: 0.8rem; max-height: 400px; overflow: auto; background: #f0f7ff; padding: 0.5rem; border-radius: 4px;">{{ toJson(dictValue) }}</pre>
+      } @else {
+        <p><em>No dictionary phrases returned by loader.</em></p>
       }
     </section>
     @if (pageValue) {
@@ -44,15 +38,15 @@ export class PageComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   readonly router = inject(Router);
   private data = toSignal(this.activatedRoute.data);
-  page = computed(() => this.data()?.page as Page | null);
 
-  routeName(p: Page): string {
-    return p?.layout?.sitecore?.route?.name ?? '—';
+  page = computed(() => this.data()?.page as Page | null);
+  dictionary = computed(() => this.data()?.dictionary as Record<string, string> | null);
+
+  toJson(value: unknown): string {
+    return JSON.stringify(value, null, 2);
   }
 
-  routeFieldsJson(p: Page): string {
-    const fields = p?.layout?.sitecore?.route?.fields;
-    if (fields == null || Object.keys(fields).length === 0) return '{}';
-    return JSON.stringify(fields, null, 2);
+  hasKeys(obj: Record<string, unknown>): boolean {
+    return Object.keys(obj).length > 0;
   }
 }

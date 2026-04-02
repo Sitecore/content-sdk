@@ -1,5 +1,9 @@
-// ─── Re-exports from core/content ─────────────────────────────
-export * from '@sitecore-content-sdk/content/config';
+// ─── Angular SDK providers and tokens ──────────────────────────
+export { type SitecoreAngularConfig } from './lib/providers';
+export { SITECORE_CONFIG_TOKEN, SITECORE_CLIENT_TOKEN } from './lib/tokens';
+export { resolveSitecorePage } from './lib/sitecore-page-resolver';
+
+export { defineConfig } from './config/define-config';
 export {
   getContentStylesheetLink,
   getDesignLibraryStylesheetLinks,
@@ -50,14 +54,18 @@ import { VERSION as CORE_VERSION } from '@angular/core';
 import { Router } from '@angular/router';
 
 export * from '@sitecore-content-sdk/content/client';
-export * from '@sitecore-content-sdk/content/config';
 
 // Angular-specific exports
 export * from './loaders/loader-resolver';
 export * from './loaders/loader-registry.token';
 export * from './loaders/loader-data.service';
 export * from './loaders/pre-loader-data.service';
-export { NotFoundNavigationError, LoaderHttpError, type LoaderFn, type LoaderContext } from './loaders/models';
+export {
+  NotFoundNavigationError,
+  LoaderHttpError,
+  type LoaderFn,
+  type LoaderContext,
+} from './loaders/models';
 export { handleNavigationError } from './loaders/router-error-handling';
 export { applyRedirect } from './loaders/utils';
 export { provideSitecoreAngular } from './lib/providers';

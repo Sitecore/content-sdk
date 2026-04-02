@@ -34,6 +34,9 @@ export function addStyleElement(stylesContent: string): void;
 export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => string): T;
 
 // @public
+export const buildFallbackConfig: (env: Record<string, string | undefined>) => SitecoreConfig;
+
+// @public
 export class CdpHelper {
     static getComponentFriendlyId(pageId: string, componentId: string, language: string, scope?: string): string;
     static getPageFriendlyId(pageId: string, language: string, scope?: string): string;
@@ -199,6 +202,11 @@ const debug_2: {
 };
 export { debug_2 as debug }
 
+// Warning: (ae-forgotten-export) The symbol "DeepPartial" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export function deepMerge<T>(base: T, override?: DeepPartial<T>): T;
+
 // @public
 export type DeepRequired<T> = Required<{
     [K in keyof T]: T[K] extends Required<T[K]> ? T[K] : DeepRequired<T[K]>;
@@ -221,7 +229,7 @@ export { DefaultRetryStrategy }
 export const defineCliConfig: (cliConfig: SitecoreCliConfigInput) => SitecoreCliConfig;
 
 // @public
-export const defineConfig: (config: SitecoreConfigInput) => SitecoreConfig;
+export const defineConfig: (config?: SitecoreConfigInput, env?: Record<string, string | undefined>) => SitecoreConfig;
 
 // @public
 export enum DesignLibraryMode {
@@ -583,6 +591,9 @@ export const getEdgeProxyContentUrl: (sitecoreEdgeUrl?: string) => string;
 
 // @internal
 export const getEdgeProxyFormsUrl: (sitecoreEdgeContextId: string, formId: string, sitecoreEdgeUrl?: string) => string;
+
+// @public
+export const getFallbackConfig: () => SitecoreConfig;
 
 // @public
 export function getFieldValue<T>(renderingOrFields: ComponentRendering | ComponentFields, fieldName: string): T | undefined;
@@ -1376,8 +1387,8 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:62:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
-// src/editing/codegen/preview.ts:109:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:65:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/editing/codegen/preview.ts:110:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal

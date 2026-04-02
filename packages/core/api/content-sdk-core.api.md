@@ -259,7 +259,7 @@ export interface NativeDataFetcherResponse<T> {
 export const normalizeUrl: (url: string) => string;
 
 // @public
-export function resolveEdgeUrl(edgeUrl?: string): string;
+export function resolveEdgeUrl(edgeUrl?: string, env?: Record<string, string | undefined>): string;
 
 // @public
 export function resolveEdgeUrlForStaticFiles(): string;

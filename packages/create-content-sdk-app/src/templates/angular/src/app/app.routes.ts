@@ -21,7 +21,10 @@ export const routes: Routes = [
       {
         path: '**',
         component: PageComponent,
-        resolve: { page: loaderResolver('page') },
+        resolve: {
+          page: loaderResolver('page'),
+          dictionary: loaderResolver('dictionary'),
+        },
       },
     ],
   },
