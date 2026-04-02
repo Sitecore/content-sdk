@@ -9,9 +9,6 @@ import {
   type ComponentLayoutElement as Element,
   type ComponentLayoutResolveContext as ResolveContext,
 } from '@sitecore-content-sdk/content/editing';
-
-import proxyquire from 'proxyquire';
-import * as editingModule from '@sitecore-content-sdk/content/editing';
 import {
   buildEventCallback,
   createView,
@@ -20,7 +17,7 @@ import {
   renderPrimitiveNode,
 } from './createView';
 
-describe.only('component-layout/createView', () => {
+describe('component-layout/createView', () => {
   describe('renderFor()', () => {
     it('renders each item and resolves keys', () => {
       const node: Element = {
