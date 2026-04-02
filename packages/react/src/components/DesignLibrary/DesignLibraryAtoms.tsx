@@ -27,7 +27,6 @@ export const DesignLibraryAtoms = () => {
   const [currentDocument, setCurrentDocument] = useState(cardsWithDataBinding);
   const didReceiveDocumentUpdate = useRef(false);
 
-  const serializedAtoms = useMemo(() => serializeAtoms(atoms ?? []), [atoms]);
   const atomMap = useMemo(() => getAtomRegistry(atoms || []), [atoms]);
 
   useEffect(() => {
@@ -37,6 +36,7 @@ export const DesignLibraryAtoms = () => {
   }, []);
 
   useEffect(() => {
+    const serializedAtoms = serializeAtoms(atoms ?? []);
     if (!serializedAtoms) {
       sendAtomsErrorEvent('No atoms provided', 'atoms-missing');
       return;
@@ -50,7 +50,7 @@ export const DesignLibraryAtoms = () => {
     });
 
     return () => unsubDocumentUpdate();
-  }, [serializedAtoms]);
+  }, [atoms]);
 
   useEffect(() => {
     if (!didReceiveDocumentUpdate.current) return;
