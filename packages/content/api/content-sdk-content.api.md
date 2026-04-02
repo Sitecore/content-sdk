@@ -33,6 +33,31 @@ export function addStyleElement(stylesContent: string): void;
 // @internal
 export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => string): T;
 
+// @internal
+export type AtomInfo = {
+    name: string;
+    version?: number;
+    type: (typeof AtomType)[keyof typeof AtomType];
+    description: string;
+    props: Record<string, unknown>;
+    allowedChildren: string[];
+    defaultChildren?: SerializedDefaultChild[];
+    htmlEvents?: string[];
+    customEvents?: Record<string, unknown>;
+};
+
+// @internal
+export const AtomType: {
+    readonly ATOM: "atom";
+    readonly ATOM_CHILD: "atom-child";
+};
+
+// @internal
+export type CallbackInfo = {
+    description: string;
+    params?: Record<string, unknown>;
+};
+
 // @public
 export class CdpHelper {
     static getComponentFriendlyId(pageId: string, componentId: string, language: string, scope?: string): string;
@@ -554,6 +579,11 @@ export const getContentStylesheetLink: (layoutData: LayoutServiceData, sitecoreE
 // @internal
 export function getDefaultMediaUrlTransformer(edgeUrl: string): (value: string) => string;
 
+// Warning: (ae-forgotten-export) The symbol "DesignLibraryAtomsRegistryEvent" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export function getDesignLibraryAtomsRegistryEvent(atomsRegistry: AtomInfo[], callbackRegistry: Record<string, CallbackInfo>): DesignLibraryAtomsRegistryEvent;
+
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPropsEvent" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
@@ -834,6 +864,7 @@ export type PageMode = {
     name: PageModeName;
     designLibrary: {
         isVariantGeneration: boolean;
+        isAtomsMode?: boolean;
     };
     isNormal: boolean;
     isPreview: boolean;
@@ -1381,6 +1412,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 // Warnings were encountered during analysis:
 //
 // src/client/sitecore-client.ts:68:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/editing/atoms-builder/atoms-builder.ts:63:3 - (ae-forgotten-export) The symbol "SerializedDefaultChild" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:115:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal

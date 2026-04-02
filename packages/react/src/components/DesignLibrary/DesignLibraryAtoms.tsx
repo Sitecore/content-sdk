@@ -15,7 +15,7 @@ import { AtomRenderer } from '../AtomRenderer/AtomRenderer';
  * Design Library Atoms component.
  *
  * Facilitates the communication between the Design Studio and the Rendering Host when in atom rendering mode.
- * - On mount, it unfolds and serializes the atoms registry and sends it to the Design Studio via the `getDesignLibraryAtomsRegistryEvent`.
+ * - On mount, it unfolds and serializes the atoms registry and callback registry and sends it to the Design Studio via the `getDesignLibraryAtomsRegistryEvent`.
  * - Fetches Component model data, and passes it to the `AtomRenderer` which is responsible for rendering the low code component
  * based on component model data and the available atoms.
  * @internal
@@ -43,5 +43,5 @@ export const DesignLibraryAtoms = () => {
     console.log('Design Library Callbacks mounted');
   }, [atoms, callbacks]);
 
-  return <AtomRenderer atoms={atoms} />;
+  return <AtomRenderer atoms={atoms} callbacks={callbacks} />;
 };

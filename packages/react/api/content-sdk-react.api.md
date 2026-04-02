@@ -4,12 +4,12 @@
 
 ```ts
 
+import { AtomType } from '@sitecore-content-sdk/content/editing';
 import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
 import { ClientError } from '@sitecore-content-sdk/core';
 import { ComponentFields } from '@sitecore-content-sdk/content/layout';
 import { ComponentParams } from '@sitecore-content-sdk/content/layout';
-import type { ComponentPropsWithoutRef } from 'react';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ComponentType } from 'react';
 import { constants } from '@sitecore-content-sdk/core';
@@ -79,7 +79,7 @@ export type AtomChild = AtomMetadata | 'text' | 'atom';
 export type AtomMetadata = {
     name: string;
     version?: number;
-    type: 'atom' | 'atom-child';
+    type: (typeof AtomType)[keyof typeof AtomType];
     description: string;
     props: z.ZodObject<z.ZodRawShape>;
     component: (props: unknown) => React.ReactNode;
@@ -89,22 +89,29 @@ export type AtomMetadata = {
     defaultChildren?: DefaultChild[];
 };
 
+// @public (undocumented)
+export const AtomRenderer: (input: {
+    atoms?: AtomMetadata[];
+}) => React_2.JSX.Element;
+
 // @public
-export type AtomSchemaInput<C extends ComponentType<unknown>> = {
+export type AtomSchemaInput<C> = {
     name: string;
     description: string;
-    type?: 'atom' | 'atom-child';
+    type?: (typeof AtomType)[keyof typeof AtomType];
     version?: number;
     props: {
         [K in keyof EditableComponentProps<C>]?: z.ZodType<EditableComponentProps<C>[K]>;
     };
     htmlEvents?: CallbackPropKeys<EditableComponentProps<C>>[];
     customEvents?: {
-        [K in CallbackPropKeys<EditableComponentProps<C>>]?: z.ZodType[];
+        [K in CallbackPropKeys<EditableComponentProps<C>>]?: CallbackArgZodTuple<NonNullable<EditableComponentProps<C>[K]>>;
     };
     allowedChildren?: AtomChild[];
     defaultChildren?: DefaultChild[];
 };
+
+export { AtomType }
 
 // @public
 export class BYOCComponent extends React_2.Component<BYOCComponentProps> {
@@ -153,8 +160,13 @@ export { CacheClient }
 export { CacheOptions }
 
 // @public
+export type CallbackArgZodTuple<F> = F extends (...args: infer A) => unknown ? {
+    [I in keyof A]: z.ZodType<A[I]>;
+} : never;
+
+// @public
 export type CallbackPropKeys<T> = {
-    [K in keyof T & string]: NonNullable<T[K]> extends (...args: unknown[]) => unknown ? K : never;
+    [K in keyof T & string]: NonNullable<T[K]> extends (...args: any[]) => unknown ? K : never;
 }[keyof T & string];
 
 // @public
@@ -174,7 +186,7 @@ export { ComponentRendering }
 export { constants }
 
 // @public
-export function createAtom<C extends ComponentType<unknown>>(component: C, schema: AtomSchemaInput<C>): AtomMetadata;
+export function createAtom<C>(component: C, schema: AtomSchemaInput<C>): AtomMetadata;
 
 // @public
 export const DateField: React_2.FC<DateFieldProps>;
@@ -218,6 +230,9 @@ export { DefaultRetryStrategy }
 // @public
 export const DesignLibrary: () => React_2.JSX.Element | null;
 
+// @internal
+export const DesignLibraryAtoms: () => React_2.JSX.Element;
+
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryErrorBoundaryProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
@@ -249,8 +264,10 @@ export type DynamicComponent = React.ComponentType<{
     params?: ComponentParams;
 }>;
 
+// Warning: (ae-forgotten-export) The symbol "PropsOfComponent" needs to be exported by the entry point api-surface.d.ts
+//
 // @public
-export type EditableComponentProps<C extends ComponentType<unknown>> = Omit<ComponentPropsWithoutRef<C>, 'children'>;
+export type EditableComponentProps<C> = Omit<PropsOfComponent<C>, 'children' | 'ref'>;
 
 // @public
 export const EditingScripts: () => React_2.JSX.Element;
@@ -338,7 +355,7 @@ export { getContentStylesheetLink }
 
 export { getDesignLibraryStylesheetLinks }
 
-// @public
+// @internal
 export function getFieldMeta(schemaOrJsonSchema: z.ZodType | Record<string, unknown>): Record<string, unknown> | undefined;
 
 export { getFieldValue }
@@ -563,6 +580,9 @@ export const SitecoreProviderReactContext: React_2.Context<SitecoreProviderState
 // @public
 export interface SitecoreProviderState {
     api?: SitecoreProviderProps['api'];
+    atoms?: AtomMetadata[];
+    // Warning: (ae-forgotten-export) The symbol "CallbackMetadata" needs to be exported by the entry point api-surface.d.ts
+    callbacks?: CallbackMetadata[];
     componentMap: ComponentMap;
     // Warning: (ae-incompatible-release-tags) The symbol "loadImportMap" is marked as @public, but its signature references "ImportMapImport" which is marked as @internal
     loadImportMap: () => Promise<ImportMapImport>;
@@ -692,7 +712,7 @@ export function withSitecore(options?: UseSitecoreOptions): <ComponentProps exte
 // Warnings were encountered during analysis:
 //
 // src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point api-surface.d.ts
-// src/components/SitecoreProvider.tsx:95:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
+// src/components/SitecoreProvider.tsx:115:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 
