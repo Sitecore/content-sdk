@@ -5,7 +5,7 @@ description: Ensures components render safely in XM Cloud editing and preview. P
 
 # Editing / preview (Pages Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Catch-all flow, editing API routes.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#routing-and-data-fetching), [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#api-routes).
 
 ## When
 

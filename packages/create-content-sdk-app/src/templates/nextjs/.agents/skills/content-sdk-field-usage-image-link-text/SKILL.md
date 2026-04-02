@@ -5,7 +5,9 @@ description: Renders Sitecore fields using SDK field components (Text, RichText,
 
 # Field components (Pages Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Sitecore patterns / best practices.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#component-map-and-layout).
+
+**Read code first:** an existing field-driven component under `src/components/`.
 
 ## When
 

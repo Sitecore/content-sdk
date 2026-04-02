@@ -5,7 +5,7 @@ description: Component variants: different renderings or data-driven variants. A
 
 # Component variants (App Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Component maps; layout-driven props.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#component-maps-and-layout), [AGENTS-key-concepts.md](../../docs/AGENTS-key-concepts.md#more-component-maps-editing-env).
 
 ## When
 

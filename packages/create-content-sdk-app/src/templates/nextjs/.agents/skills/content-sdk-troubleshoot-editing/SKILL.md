@@ -5,7 +5,7 @@ description: Troubleshoots XM Cloud editing, preview, and design library for Pag
 
 # Troubleshoot editing (Pages Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md); implement fixes with **content-sdk-editing-safe-rendering**.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#api-routes); implement fixes with **content-sdk-editing-safe-rendering**.
 
 ## When
 

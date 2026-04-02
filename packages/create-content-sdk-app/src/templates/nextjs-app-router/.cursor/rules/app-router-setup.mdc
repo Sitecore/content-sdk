@@ -10,6 +10,6 @@ Next.js App Router + TypeScript + next-intl. **Commands:** `npm install`, `npm r
 
 **Structure:** `src/app/[site]/[locale]/[[...path]]/`, `src/app/api/`, `src/components/`, `src/lib/sitecore-client.ts`, `src/i18n/`, `src/proxy.ts`, `.sitecore/`, `sitecore.config.ts`, `next.config.ts`.
 
-**Detail:** See [`AGENTS.md`](../../AGENTS.md) for proxy order (`LocaleProxy` first), `setRequestLocale`, `draftMode`, and guardrails.
+**Detail:** Guardrails stay in [`AGENTS.md`](../../AGENTS.md). For proxy order (`LocaleProxy` first), `setRequestLocale`, and `draftMode` depth, see [`.agents/docs/`](../../.agents/docs/) (e.g. [`AGENTS-key-concepts.md`](../../.agents/docs/AGENTS-key-concepts.md), [`AGENTS-router-specifics.md`](../../.agents/docs/AGENTS-router-specifics.md)).
 
 Referenced: `@sitecore.config.ts`, `@package.json`, `@.env.example`

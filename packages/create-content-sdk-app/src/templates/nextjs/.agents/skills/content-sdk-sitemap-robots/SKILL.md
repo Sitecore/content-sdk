@@ -5,7 +5,7 @@ description: Sitemap and robots.txt for Pages Router: src/pages/api/sitemap.ts a
 
 # Sitemap & robots (Pages Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — API routes and rewrites.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#api-routes).
 
 ## When
 

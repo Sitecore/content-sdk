@@ -5,7 +5,7 @@ description: Configures routing and layout for Pages Router. Single catch-all at
 
 # Routing (Pages Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Catch-all route, `_app`, Layout, 404/500.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#routing-and-data-fetching).
 
 ## When
 

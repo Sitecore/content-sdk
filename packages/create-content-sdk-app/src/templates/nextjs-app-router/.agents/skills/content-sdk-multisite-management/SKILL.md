@@ -5,7 +5,7 @@ description: Handles multisite: .sitecore/sites.json and proxy in src/proxy.ts. 
 
 # Multisite / proxy (App Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Middleware chain, `sites.json`.
+**Detail:** [AGENTS-key-concepts.md](../../docs/AGENTS-key-concepts.md#middleware-edge-proxy), [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#multisite-and-edge-middleware-proxy).
 
 ## When
 

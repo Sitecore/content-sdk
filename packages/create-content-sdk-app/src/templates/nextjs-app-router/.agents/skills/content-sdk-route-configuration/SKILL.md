@@ -5,7 +5,7 @@ description: Configures routing and layout for App Router. Single catch-all at s
 
 # Routing (App Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — `[site]`/`[locale]`/`[[...path]]`, layouts, not-found.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md) (routing, layouts, not-found); [AGENTS-key-concepts.md](../../docs/AGENTS-key-concepts.md#catch-all-route).
 
 ## When
 

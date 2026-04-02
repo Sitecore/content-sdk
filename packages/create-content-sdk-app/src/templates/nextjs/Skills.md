@@ -1,73 +1,69 @@
 # Skills.md — Capability groupings for this app (Next.js Pages Router)
 
-This file describes **this application** in terms of **capability-style groupings**: high-level areas that help AI tools and developers map tasks to the right part of the app. This is a Pages Router app with `pages/[[...path]].tsx`, Next.js i18n, and a single component map. For concrete steps and patterns, see [AGENTS.md](AGENTS.md) and the [official Content SDK documentation](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+This file maps tasks to **one** skill folder under [.agents/skills/](.agents/skills/). For essentials use compact [AGENTS.md](AGENTS.md); for depth open a layer under [.agents/docs/](.agents/docs/) (see [README](.agents/docs/README.md)). [CLAUDE.md](CLAUDE.md) explains layered reading. [Official Content SDK documentation](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html) covers APIs.
 
-**Agent Skills:** Each grouping has a folder under [.agents/skills/](.agents/skills/) ([Agent Skills](https://agentskills.io) format). **Load only the skill that matches the task** — see [`CLAUDE.md`](CLAUDE.md). Tailored for **Pages Router** (e.g. `extractPath`, `context.locale`, `getComponentData`, single `component-map.ts`).
-
-Map the task to one or more of the groupings below.
+**Agent Skills:** [.agents/skills/](.agents/skills/) ([Agent Skills](https://agentskills.io)). **Load only the skill that matches the task.**
 
 ## Capability groupings
 
 ### content-sdk-component-scaffold
 
-Creating new Sitecore components: file structure, props interface, and placement under `src/components/`. Use when adding a new component from scratch. Register in `.sitecore/component-map.ts`.
+New component from scratch → [.agents/skills/content-sdk-component-scaffold/SKILL.md](.agents/skills/content-sdk-component-scaffold/SKILL.md)
 
 ### content-sdk-component-registration
 
-Registering components in `.sitecore/component-map.ts` only. Required so layout and editing can resolve and render components. Used by getComponentData and editing API routes. Pages Router has a single map.
+Register in `.sitecore/component-map.ts` → [.agents/skills/content-sdk-component-registration/SKILL.md](.agents/skills/content-sdk-component-registration/SKILL.md)
 
 ### content-sdk-editing-safe-rendering
 
-Safe rendering in XM Cloud editing and preview: `context.preview` and `context.previewData`, editing chromes, and design library. Use when ensuring components work in the Sitecore editor and preview. Use `client.getPreview(context.previewData)` or `client.getDesignLibraryData(context.previewData)` when in preview.
+XM Cloud editing / preview / design library → [.agents/skills/content-sdk-editing-safe-rendering/SKILL.md](.agents/skills/content-sdk-editing-safe-rendering/SKILL.md)
 
 ### content-sdk-field-usage-image-link-text
 
-Using SDK field components: `<Text>`, `<RichText>`, `<Image>`, `<Link>`, with proper validation and fallbacks. Use when rendering Sitecore fields.
+`<Text>`, `<RichText>`, `<Image>`, `<Link>` → [.agents/skills/content-sdk-field-usage-image-link-text/SKILL.md](.agents/skills/content-sdk-field-usage-image-link-text/SKILL.md)
 
 ### content-sdk-graphql-data-fetching
 
-Page, dictionary, and component data via the single Sitecore client in `src/lib/sitecore-client.ts`. Use `getPage(path, { locale: context.locale })`, then `getDictionary({ site: page.siteName, locale: page.locale })` and `getComponentData(page.layout, context, components)`. For SSG use `getPagePaths(sites, context?.locales)`.
+`getPage`, dictionary, SSG paths, preview → [.agents/skills/content-sdk-graphql-data-fetching/SKILL.md](.agents/skills/content-sdk-graphql-data-fetching/SKILL.md)
 
 ### content-sdk-route-configuration
 
-Routing: single catch-all at `src/pages/[[...path]].tsx`. Path from `extractPath(context)`; locale from `context.locale`. Layout and page data flow via getStaticProps/getServerSideProps to _app and Layout.tsx. No [site]/[locale] in path; site resolved by middleware.
+Catch-all `[[...path]].tsx`, `_app`, layout → [.agents/skills/content-sdk-route-configuration/SKILL.md](.agents/skills/content-sdk-route-configuration/SKILL.md)
 
 ### content-sdk-site-setup-and-env
 
-Site and environment: `sitecore.config.ts`, environment variables, default site and language. Document vars in `.env.example` only; never commit `.env` or `.env.local`.
+`sitecore.config.ts`, env vars, `.env.example` → [.agents/skills/content-sdk-site-setup-and-env/SKILL.md](.agents/skills/content-sdk-site-setup-and-env/SKILL.md)
 
 ### content-sdk-multisite-management
 
-Multisite: `.sitecore/sites.json`, proxy in `src/proxy.ts`. Chain order is **fixed:** MultisiteProxy → RedirectsProxy → PersonalizeProxy. Do not change proxy order.
+`sites.json`, proxy / multisite chain → [.agents/skills/content-sdk-multisite-management/SKILL.md](.agents/skills/content-sdk-multisite-management/SKILL.md)
 
 ### content-sdk-dictionary-and-i18n
 
-Dictionary and i18n: Next.js i18n in `next.config.js` (i18n.locales, defaultLocale). Per-request locale is `context.locale` in getStaticProps/getServerSideProps. Fetch dictionary with `client.getDictionary({ site: page.siteName, locale: page.locale })` after getPage.
+Next.js i18n, `context.locale`, dictionary → [.agents/skills/content-sdk-dictionary-and-i18n/SKILL.md](.agents/skills/content-sdk-dictionary-and-i18n/SKILL.md)
 
 ### content-sdk-sitemap-robots
 
-Sitemap and robots: `src/pages/api/sitemap.ts` and `src/pages/api/robots.ts` with `SitemapMiddleware(scClient, sites).getHandler()` and `RobotsMiddleware(scClient, sites).getHandler()`. Rewrites in next.config.js for /sitemap*.xml and /robots.txt.
+Sitemap / robots API routes → [.agents/skills/content-sdk-sitemap-robots/SKILL.md](.agents/skills/content-sdk-sitemap-robots/SKILL.md)
 
 ### content-sdk-component-variants
 
-Component variants: different renderings or data-driven variants of the same component type. Use when one component has multiple presentations. Register in `.sitecore/component-map.ts`; getComponentData resolves props.
+Variants / multiple presentations → [.agents/skills/content-sdk-component-variants/SKILL.md](.agents/skills/content-sdk-component-variants/SKILL.md)
 
 ### content-sdk-troubleshoot-editing
 
-Troubleshooting XM Cloud editing, preview, and design library. Use when editing or preview does not behave as expected. Check context.preview, context.previewData, and editing API routes (config, render, feaas/render).
+Editing or preview misbehaves → [.agents/skills/content-sdk-troubleshoot-editing/SKILL.md](.agents/skills/content-sdk-troubleshoot-editing/SKILL.md)
 
 ### content-sdk-upgrade-assistant
 
-Upgrading @sitecore-content-sdk/* packages: version bumps, breaking changes, migration steps. Use when moving to a newer SDK version. Check the Content SDK repo CHANGELOG and upgrade guides.
+Bump `@sitecore-content-sdk/*` → [.agents/skills/content-sdk-upgrade-assistant/SKILL.md](.agents/skills/content-sdk-upgrade-assistant/SKILL.md)
 
 ### content-sdk-component-data-strategy
 
-Component data: after getPage, use `client.getComponentData(page.layout, context, components)` to resolve component props; pass result to layout renderer. All Sitecore-driven component data goes through this flow. BYOC must be registered in `.sitecore/component-map.ts`.
+`getComponentData`, layout props flow → [.agents/skills/content-sdk-component-data-strategy/SKILL.md](.agents/skills/content-sdk-component-data-strategy/SKILL.md)
 
 ---
 
 ## How to use this
 
-Map the task to one or more groupings above. Use [AGENTS.md](AGENTS.md) for app-level instructions and the [official documentation](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html) for APIs.
-
-**If your tool supports Agent Skills:** Load skills from [.agents/skills/](.agents/skills/) (one folder per capability). They provide when-to-use, hard rules, and stop conditions tailored for this Pages Router app.
+Pick **one** skill above. Use [AGENTS.md](AGENTS.md) for compact rules; use [.agents/docs/](.agents/docs/) when you need full patterns for a topic.

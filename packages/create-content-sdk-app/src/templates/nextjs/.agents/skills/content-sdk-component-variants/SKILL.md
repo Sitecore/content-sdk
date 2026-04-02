@@ -5,7 +5,7 @@ description: Implements component variants: different renderings or data-driven 
 
 # Component variants (Pages Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Component map; `getComponentData`.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#component-map-and-layout), [AGENTS-key-concepts.md](../../docs/AGENTS-key-concepts.md#more-component-map-editing-env).
 
 ## When
 

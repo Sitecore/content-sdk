@@ -5,7 +5,9 @@ description: Registers Sitecore components in .sitecore/component-map.ts (Server
 
 # Component registration (App Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Component maps and editing route handlers.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#component-maps-and-layout), [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#api-route-handlers).
+
+**Read code first:** `.sitecore/component-map.ts`, `.sitecore/component-map.client.ts`.
 
 ## When
 

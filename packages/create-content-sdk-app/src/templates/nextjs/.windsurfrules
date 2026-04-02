@@ -1,6 +1,8 @@
 # Sitecore Content SDK — Next.js (Pages Router)
 
-**Primary:** [AGENTS.md](AGENTS.md) — routing, Sitecore client, proxy, i18n, guardrails.
+**Primary:** [AGENTS.md](AGENTS.md) — compact guide (commands, structure, best practices, guardrails).
+
+**Depth:** [.agents/docs/](.agents/docs/) — one layer file when needed (routing, client, proxy, i18n, etc.). [README](.agents/docs/README.md) indexes layers.
 
 **Optional:** [Skills.md](Skills.md) → one folder under [.agents/skills/](.agents/skills/) for the task. [CLAUDE.md](CLAUDE.md) — layered reading. [.cursor/rules/](.cursor/rules/) — same rules as Cursor.
 

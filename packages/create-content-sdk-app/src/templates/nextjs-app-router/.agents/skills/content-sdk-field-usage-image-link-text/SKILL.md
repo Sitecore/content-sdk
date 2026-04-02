@@ -5,7 +5,7 @@ description: Renders Sitecore fields using SDK field components (Text, RichText,
 
 # Field components (App Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Sitecore patterns / Server vs Client.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#server-vs-client-components).
 
 ## When
 

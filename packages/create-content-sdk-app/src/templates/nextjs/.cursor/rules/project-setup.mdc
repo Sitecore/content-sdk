@@ -10,6 +10,6 @@ Next.js + TypeScript head app for XM Cloud. **Commands:** `npm install`, `npm ru
 
 **Structure:** `src/pages/` (catch-all `[[...path]].tsx`, API routes), `src/components/`, `src/lib/sitecore-client.ts`, `src/proxy.ts`, `.sitecore/`, `sitecore.config.ts`, `next.config.js`.
 
-**Detail:** See [`AGENTS.md`](../../AGENTS.md) for middleware chain, `getPage` / `getComponentData`, i18n, and guardrails.
+**Detail:** Guardrails and quick orientation stay in [`AGENTS.md`](../../AGENTS.md). For middleware, `getPage` / `getComponentData`, and i18n depth, see [`.agents/docs/`](../../.agents/docs/) (e.g. [`AGENTS-key-concepts.md`](../../.agents/docs/AGENTS-key-concepts.md), [`AGENTS-router-specifics.md`](../../.agents/docs/AGENTS-router-specifics.md)).
 
 Referenced: `@sitecore.config.ts`, `@package.json`, `@.env.example`

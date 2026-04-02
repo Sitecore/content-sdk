@@ -5,7 +5,7 @@ description: Guides upgrading @sitecore-content-sdk/* packages: version bumps, b
 
 # Upgrade SDK packages (App Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — commands; doc site migration docs; Content SDK repo CHANGELOG.
+**Detail:** [AGENTS-overview.md](../../docs/AGENTS-overview.md#project-overview); doc site migration docs; Content SDK repo CHANGELOG.
 
 ## When
 
@@ -15,6 +15,7 @@ description: Guides upgrading @sitecore-content-sdk/* packages: version bumps, b
 
 - Keep all `@sitecore-content-sdk/*` on compatible versions; run `npm install` + `npm run build`; re-test editing/preview.
 - Apply breaking-change steps from the upstream CHANGELOG before shipping.
+- Retrieve relevant version upgrade guides from [Product Docs MCP](https://sitecore.mcp.kapa.ai)
 
 ## Stop
 

@@ -5,7 +5,7 @@ description: Dictionary and i18n for Pages Router: Next.js i18n in next.config.j
 
 # Dictionary & i18n (Pages Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — i18n (Pages Router), SitecoreClient.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#i18n-pages-router), [AGENTS-key-concepts.md](../../docs/AGENTS-key-concepts.md#sitecoreclient).
 
 ## When
 

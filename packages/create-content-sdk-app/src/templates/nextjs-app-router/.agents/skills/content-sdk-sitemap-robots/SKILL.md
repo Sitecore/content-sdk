@@ -5,7 +5,7 @@ description: Sitemap and robots for App Router: src/app/api/sitemap/route.ts and
 
 # Sitemap & robots (App Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Route handlers and rewrites.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#api-route-handlers).
 
 ## When
 

@@ -5,7 +5,9 @@ description: Creates new Sitecore components with correct file structure, props 
 
 # Component scaffold (App Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Server vs Client, component maps.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#component-maps-and-layout), [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#server-vs-client-components), [AGENTS-workflows-and-boundaries.md](../../docs/AGENTS-workflows-and-boundaries.md#example-agent-tasks).
+
+**Read code first:** `.sitecore/component-map.ts`, `.sitecore/component-map.client.ts`, `src/lib/component-props/index.ts`, and one existing component under `src/components/`.
 
 ## When
 

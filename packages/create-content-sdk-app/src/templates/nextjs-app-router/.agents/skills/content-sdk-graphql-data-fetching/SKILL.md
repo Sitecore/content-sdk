@@ -5,7 +5,7 @@ description: Page and dictionary fetching via the single Sitecore client in src/
 
 # Data fetching (App Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Catch-all page, `generateStaticParams`, metadata.
+**Detail:** [AGENTS-key-concepts.md](../../docs/AGENTS-key-concepts.md#catch-all-route), [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#data-fetching-and-preview).
 
 ## When
 
@@ -14,7 +14,7 @@ description: Page and dictionary fetching via the single Sitecore client in src/
 ## Rules
 
 - Use only `src/lib/sitecore-client.ts`. `await params` (Next 15+); pass `{ site, locale }` into `getPage` / dictionary calls.
-- At the top of content pages, call `setRequestLocale` with the template `` `${site}_${locale}` `` (see AGENTS.md).
+- At the top of content pages, call `setRequestLocale` with the template `` `${site}_${locale}` `` (see [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#i18n-next-intl)).
 - SSG: `getAppRouterStaticParams(sites, routing.locales)`; preview via `draftMode` + search params.
 
 ## Stop

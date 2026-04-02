@@ -5,7 +5,7 @@ description: Troubleshoots XM Cloud editing, preview, and design library for App
 
 # Troubleshoot editing (App Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md); fixes with **content-sdk-editing-safe-rendering**.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#api-route-handlers); fixes with **content-sdk-editing-safe-rendering**.
 
 ## When
 

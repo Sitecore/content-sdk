@@ -5,7 +5,7 @@ description: Fetches page, dictionary, and component data via the single Sitecor
 
 # Data fetching (Pages Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — SitecoreClient, catch-all route, SSG/SSR/preview.
+**Detail:** [AGENTS-key-concepts.md](../../docs/AGENTS-key-concepts.md#catch-all-route), [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#routing-and-data-fetching).
 
 ## When
 

@@ -5,7 +5,7 @@ description: Configures site and environment: sitecore.config.ts, environment va
 
 # Config & env (Pages Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Sitecore client and config; Boundaries.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#sitecore-client-and-config), [AGENTS-workflows-and-boundaries.md](../../docs/AGENTS-workflows-and-boundaries.md#boundaries).
 
 ## When
 

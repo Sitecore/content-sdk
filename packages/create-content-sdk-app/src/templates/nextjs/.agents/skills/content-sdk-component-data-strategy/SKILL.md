@@ -5,7 +5,9 @@ description: Component data for Pages Router: after getPage use client.getCompon
 
 # Component data (Pages Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Catch-all data flow; **content-sdk-graphql-data-fetching**.
+**Detail:** [AGENTS-key-concepts.md](../../docs/AGENTS-key-concepts.md#catch-all-route); **content-sdk-graphql-data-fetching**.
+
+**Read code first:** `src/pages/[[...path]].tsx`, `.sitecore/component-map.ts`.
 
 ## When
 

@@ -1,73 +1,69 @@
 # Skills.md — Capability groupings for this app (Next.js App Router)
 
-This file describes **this application** in terms of **capability-style groupings**: high-level areas that help AI tools and developers map tasks to the right part of the app. This is an App Router app with `[site]`/`[locale]` segments, next-intl, and separate server/client component maps. For concrete steps and patterns, see [AGENTS.md](AGENTS.md) and the [official Content SDK documentation](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+This file maps tasks to **one** skill folder under [.agents/skills/](.agents/skills/). For essentials use compact [AGENTS.md](AGENTS.md); for depth open a layer under [.agents/docs/](.agents/docs/) (see [README](.agents/docs/README.md)). [CLAUDE.md](CLAUDE.md) explains layered reading. [Official Content SDK documentation](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html) covers APIs.
 
-**Agent Skills:** Each grouping has a folder under [.agents/skills/](.agents/skills/) ([Agent Skills](https://agentskills.io) format). **Load only the skill that matches the task** — see [`CLAUDE.md`](CLAUDE.md). Tailored for **App Router** (e.g. `setRequestLocale`, `draftMode()`, server + client component maps).
-
-Map the task to one or more of the groupings below.
+**Agent Skills:** [.agents/skills/](.agents/skills/) ([Agent Skills](https://agentskills.io)). **Load only the skill that matches the task.**
 
 ## Capability groupings
 
 ### content-sdk-component-scaffold
 
-Creating new Sitecore components: file structure, props interface, and placement under `src/components/`. Use when adding a new component from scratch. In App Router, decide Server vs Client and register in the appropriate map.
+New component from scratch → [.agents/skills/content-sdk-component-scaffold/SKILL.md](.agents/skills/content-sdk-component-scaffold/SKILL.md)
 
 ### content-sdk-component-registration
 
-Registering components in `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client). Required so layout and editing can resolve and render components. App Router has separate server and client maps.
+Server/client component maps → [.agents/skills/content-sdk-component-registration/SKILL.md](.agents/skills/content-sdk-component-registration/SKILL.md)
 
 ### content-sdk-editing-safe-rendering
 
-Safe rendering in XM Cloud editing and preview: `draftMode()`, editing chromes, and design library. Use when ensuring components work in the Sitecore editor and preview. Use `client.getPreview(searchParams)` or `client.getDesignLibraryData(searchParams)` when draft mode is enabled.
+`draftMode()`, XM Cloud editing / preview → [.agents/skills/content-sdk-editing-safe-rendering/SKILL.md](.agents/skills/content-sdk-editing-safe-rendering/SKILL.md)
 
 ### content-sdk-field-usage-image-link-text
 
-Using SDK field components: `<Text>`, `<RichText>`, `<Image>`, `<Link>`, with proper validation and fallbacks. Use when rendering Sitecore fields.
+`<Text>`, `<RichText>`, `<Image>`, `<Link>` → [.agents/skills/content-sdk-field-usage-image-link-text/SKILL.md](.agents/skills/content-sdk-field-usage-image-link-text/SKILL.md)
 
 ### content-sdk-graphql-data-fetching
 
-Page and dictionary fetching via the single Sitecore client in `src/lib/sitecore-client.ts`. Use `getPage(path ?? [], { site, locale })`, `getDictionary`, `getAppRouterStaticParams` for SSG. For preview use `draftMode()` and `getPreview`/`getDesignLibraryData` from searchParams.
+`getPage`, dictionary, static params, preview, metadata → [.agents/skills/content-sdk-graphql-data-fetching/SKILL.md](.agents/skills/content-sdk-graphql-data-fetching/SKILL.md)
 
 ### content-sdk-route-configuration
 
-Routing: single catch-all at `src/app/[site]/[locale]/[[...path]]/page.tsx`. Layout: app/layout.tsx → app/[site]/layout.tsx → page. Call `setRequestLocale(\`${site}_${locale}\`)` at top of page. Use placeholders and Layout.tsx as in AGENTS.md.
+`[site]` / `[locale]` / `[[...path]]`, layouts, not-found → [.agents/skills/content-sdk-route-configuration/SKILL.md](.agents/skills/content-sdk-route-configuration/SKILL.md)
 
 ### content-sdk-site-setup-and-env
 
-Site and environment: `sitecore.config.ts`, environment variables, default site and language. Document vars in `.env.example` only; never commit `.env` or `.env.local`.
+`sitecore.config.ts`, env vars, `.env.example` → [.agents/skills/content-sdk-site-setup-and-env/SKILL.md](.agents/skills/content-sdk-site-setup-and-env/SKILL.md)
 
 ### content-sdk-multisite-management
 
-Multisite: `.sitecore/sites.json`, proxy in `src/proxy.ts`. Chain order is **fixed:** LocaleProxy → AppRouterMultisiteProxy → RedirectsProxy → PersonalizeProxy. Do not change proxy order.
+`sites.json`, proxy chain (Locale first) → [.agents/skills/content-sdk-multisite-management/SKILL.md](.agents/skills/content-sdk-multisite-management/SKILL.md)
 
 ### content-sdk-dictionary-and-i18n
 
-Dictionary and i18n: next-intl with `src/i18n/routing.ts` and `src/i18n/request.ts`. Request locale is `${site}_${locale}`; call `setRequestLocale(\`${site}_${locale}\`)` in the page; in request.ts parse and load dictionary with `client.getDictionary({ locale, site })`.
+next-intl, `requestLocale`, dictionary → [.agents/skills/content-sdk-dictionary-and-i18n/SKILL.md](.agents/skills/content-sdk-dictionary-and-i18n/SKILL.md)
 
 ### content-sdk-sitemap-robots
 
-Sitemap and robots: `src/app/api/sitemap/route.ts` and `src/app/api/robots/route.ts` with `createSitemapRouteHandler` and `createRobotsRouteHandler`. Rewrites in next.config.ts for /sitemap*.xml and /robots.txt.
+Sitemap / robots route handlers → [.agents/skills/content-sdk-sitemap-robots/SKILL.md](.agents/skills/content-sdk-sitemap-robots/SKILL.md)
 
 ### content-sdk-component-variants
 
-Component variants: different renderings or data-driven variants of the same component type. Use when one component has multiple presentations. Register in the appropriate component map (server or client).
+Variants / multiple presentations → [.agents/skills/content-sdk-component-variants/SKILL.md](.agents/skills/content-sdk-component-variants/SKILL.md)
 
 ### content-sdk-troubleshoot-editing
 
-Troubleshooting XM Cloud editing, preview, and design library. Use when editing or preview does not behave as expected. Check draftMode(), getPreview/getDesignLibraryData from searchParams, and component maps.
+Editing or preview misbehaves → [.agents/skills/content-sdk-troubleshoot-editing/SKILL.md](.agents/skills/content-sdk-troubleshoot-editing/SKILL.md)
 
 ### content-sdk-upgrade-assistant
 
-Upgrading @sitecore-content-sdk/* packages: version bumps, breaking changes, migration steps. Use when moving to a newer SDK version. Check the Content SDK repo CHANGELOG and upgrade guides.
+Bump `@sitecore-content-sdk/*` → [.agents/skills/content-sdk-upgrade-assistant/SKILL.md](.agents/skills/content-sdk-upgrade-assistant/SKILL.md)
 
 ### content-sdk-component-data-strategy
 
-Component data: layout data from getPage (or getPreview/getDesignLibraryData in editing). Pass site and locale from route params; Server Components use the client in server context; Client Components receive serializable props from parent. BYOC must be registered in the component map.
+Layout data, server vs client props → [.agents/skills/content-sdk-component-data-strategy/SKILL.md](.agents/skills/content-sdk-component-data-strategy/SKILL.md)
 
 ---
 
 ## How to use this
 
-Map the task to one or more groupings above. Use [AGENTS.md](AGENTS.md) for app-level instructions and the [official documentation](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html) for APIs.
-
-**If your tool supports Agent Skills:** Load skills from [.agents/skills/](.agents/skills/) (one folder per capability). They provide when-to-use, hard rules, and stop conditions tailored for this App Router app.
+Pick **one** skill above. Use [AGENTS.md](AGENTS.md) for compact rules; use [.agents/docs/](.agents/docs/) when you need full patterns for a topic.

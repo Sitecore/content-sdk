@@ -5,7 +5,7 @@ description: Ensures components render safely in XM Cloud editing and preview. A
 
 # Editing / preview (App Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — `draftMode`, editing API routes.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#data-fetching-and-preview), [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#api-route-handlers).
 
 ## When
 

@@ -5,7 +5,9 @@ description: Registers Sitecore components in .sitecore/component-map.ts so layo
 
 # Component registration (Pages Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Component map and layout; editing API routes.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#component-map-and-layout), [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#api-routes).
+
+**Read code first:** `.sitecore/component-map.ts`, `src/lib/component-props/index.ts`.
 
 ## When
 

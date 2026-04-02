@@ -5,7 +5,7 @@ description: Dictionary and i18n: next-intl with src/i18n/routing.ts and src/i18
 
 # Dictionary & i18n (App Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — next-intl, `requestLocale` convention.
+**Detail:** [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#i18n-next-intl), [AGENTS-key-concepts.md](../../docs/AGENTS-key-concepts.md#how-locale-works).
 
 ## When
 

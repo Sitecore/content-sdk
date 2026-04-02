@@ -5,7 +5,7 @@ description: Handles multisite: site resolution, .sitecore/sites.json, and proxy
 
 # Multisite / proxy (Pages Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — Middleware, MultisiteProxy chain, `sites.json`.
+**Detail:** [AGENTS-key-concepts.md](../../docs/AGENTS-key-concepts.md#middleware-edge-proxy), [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#multisite-and-edge-middleware-proxy).
 
 ## When
 

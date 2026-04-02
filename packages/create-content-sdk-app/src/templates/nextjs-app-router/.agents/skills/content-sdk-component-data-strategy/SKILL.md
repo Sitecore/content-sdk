@@ -5,7 +5,9 @@ description: Component data for App Router: layout from getPage (or preview hand
 
 # Component data (App Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md); **content-sdk-graphql-data-fetching**.
+**Detail:** [AGENTS-key-concepts.md](../../docs/AGENTS-key-concepts.md#catch-all-route), [AGENTS-router-specifics.md](../../docs/AGENTS-router-specifics.md#server-vs-client-components); **content-sdk-graphql-data-fetching**.
+
+**Read code first:** `src/app/[site]/[locale]/[[...path]]/page.tsx`, `.sitecore/component-map.ts`, `.sitecore/component-map.client.ts`.
 
 ## When
 
