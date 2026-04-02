@@ -174,7 +174,7 @@ export const renderElementNode = (
  * @param {ResolveContext} resolveContext - Resolve context
  * @returns {(...args: unknown[]) => void} a function that can be used as an event handler
  */
-const buildEventCallback = (
+export const buildEventCallback = (
   binding: EventBinding,
   callbacks: CallbackRegistry,
   getState: () => ViewState,
