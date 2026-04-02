@@ -3,6 +3,17 @@ import type { AtomType } from '@sitecore-content-sdk/content/editing';
 import type { z } from 'zod';
 import type { ComponentType } from 'react';
 
+/**
+ * Metadata for callback
+ * @public
+ */
+export type CallbackMetadata = {
+  name: string;
+  description: string;
+  params?: CallbackParamsInput;
+  callbackFn: (...args: any[]) => void;
+};
+
 /** Metadata for an atom or atom-child; type differentiates. @public */
 export type AtomMetadata = {
   name: string;
@@ -58,3 +69,42 @@ export type PropMeta = { control?: string };
 
 /** Event argument metadata (e.g. argName). @public */
 export type ArgMeta = { argName: string };
+
+/**
+ *  Input shape for a single param entry in createCallback.
+ *  @public
+ */
+export type CallbackParamInput = {
+  /** Zod schema for the parameter type */
+  type: z.ZodType;
+  /** Human-readable description of the parameter */
+  description: string;
+};
+
+/**
+ * Record of param names to their schema and description. Keys become the param names.
+ * @public
+ */
+export type CallbackParamsInput = Record<string, CallbackParamInput>;
+
+/**
+ * Keys from P whose Zod type includes undefined (i.e. optional).
+ * @public
+ */
+type OptionalParamKeys<P extends CallbackParamsInput> = {
+  [K in keyof P]: undefined extends z.infer<P[K]['type']> ? K : never;
+}[keyof P];
+
+/** Keys from P whose Zod type does NOT include undefined (i.e. required). @internal */
+type RequiredParamKeys<P extends CallbackParamsInput> = Exclude<keyof P, OptionalParamKeys<P>>;
+
+/**
+ * Infers the impl function's argument object type from a CallbackParamsInput record.
+ * Required params become required properties, optional Zod types become optional properties.
+ * @public
+ */
+export type InferCallbackArgs<P extends CallbackParamsInput> = {
+  [K in RequiredParamKeys<P>]: z.infer<P[K]['type']>;
+} & {
+  [K in OptionalParamKeys<P>]?: z.infer<P[K]['type']>;
+};

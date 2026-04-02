@@ -5,7 +5,7 @@ import { Page } from '@sitecore-content-sdk/content/client';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { ComponentMap } from './sharedTypes';
 import { ImportMapImport } from './DesignLibrary/models';
-import { AtomMetadata } from '../atoms/types';
+import { AtomMetadata, CallbackMetadata } from '../atoms/types';
 
 export interface SitecoreProviderProps {
   /**
@@ -29,6 +29,11 @@ export interface SitecoreProviderProps {
    * The atoms metadata to be used in the Design Library.
    */
   atoms?: AtomMetadata[];
+
+  /**
+   * The callbacks metadata to be used in the Design Library.
+   */
+  callbacks?: CallbackMetadata[];
 
   children: React.ReactNode;
 }
@@ -56,6 +61,10 @@ export interface SitecoreProviderState {
    * The atoms metadata to be used in the Design Library.
    */
   atoms?: AtomMetadata[];
+  /**
+   * The callbacks metadata to be used in the Design Library.
+   */
+  callbacks?: CallbackMetadata[];
   /**
    * The component map to use for rendering components.
    */

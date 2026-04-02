@@ -2,9 +2,12 @@
 import React, { useEffect } from 'react';
 import { useSitecore } from '../SitecoreProvider';
 import { serializeAtoms } from '../../atoms/atom-registry-utils';
+import { serializeCallbacks } from '../../atoms/callback-registry-utils';
 import {
   postToDesignLibrary,
   getDesignLibraryAtomsRegistryEvent,
+  AtomInfo,
+  CallbackInfo,
 } from '@sitecore-content-sdk/content/editing';
 import { AtomRenderer } from '../AtomRenderer/AtomRenderer';
 
@@ -18,18 +21,27 @@ import { AtomRenderer } from '../AtomRenderer/AtomRenderer';
  * @internal
  */
 export const DesignLibraryAtoms = () => {
-  const { atoms } = useSitecore();
+  const { atoms, callbacks } = useSitecore();
 
   useEffect(() => {
-    if (atoms) {
-      const serializedAtoms = serializeAtoms(atoms);
-      console.log('Serialized Atoms:', serializedAtoms);
+    let serializedAtoms: AtomInfo[] = [];
+    let serializedCallbacks: Record<string, CallbackInfo> = {};
 
-      postToDesignLibrary(getDesignLibraryAtomsRegistryEvent(serializedAtoms));
+    if (atoms) {
+      serializedAtoms = serializeAtoms(atoms);
+      console.log('Serialized Atoms:', serializedAtoms);
     }
 
+    if (callbacks) {
+      serializedCallbacks = serializeCallbacks(callbacks);
+      console.log('Serialized Callbacks:', serializedCallbacks);
+    }
+
+    postToDesignLibrary(getDesignLibraryAtomsRegistryEvent(serializedAtoms, serializedCallbacks));
+
     console.log('Design Library Atoms mounted');
-  }, [atoms]);
+    console.log('Design Library Callbacks mounted');
+  }, [atoms, callbacks]);
 
   return <AtomRenderer atoms={atoms} />;
 };
