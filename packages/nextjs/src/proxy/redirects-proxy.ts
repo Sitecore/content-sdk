@@ -301,18 +301,43 @@ export class RedirectsProxy extends ProxyBase {
     const { pathname: incomingURL, search: incomingQS = '' } = this.normalizeUrl(
       req.nextUrl.clone()
     );
-    const locale = this.getLanguage(req);
+    // locale of current request
+    const requestLocale = this.getLanguage(req);
+    // locale of the url - if present in the url
+    const urlLocale = req.nextUrl.locale;
     const normalizedPath = incomingURL.replace(/\/*$/gi, '').toLowerCase();
     const redirects = await this.redirectsService.fetchRedirects(siteName);
 
-    const matchedLocaleRedirect = this.processLocaleRedirect(redirects, locale, normalizedPath);
+    const matchedLocaleRedirect = this.matchRedirectItemRedirect(
+      redirects,
+      requestLocale,
+      normalizedPath
+    );
     if (matchedLocaleRedirect) {
       return matchedLocaleRedirect;
     }
 
+    return this.matchFromRedirectMapRedirect(redirects, urlLocale, incomingURL, incomingQS);
+  }
+
+  /**
+   * Matches redirect-map rules without a `locale` field against the incoming URL (static or regex patterns).
+   * @param {RedirectResult[]} redirects All redirects from the service (non-locale entries are filtered inside).
+   * @param {string} urlLocale Locale segment from the request URL (`nextUrl.locale`).
+   * @param {string} incomingURL Original pathname used for regex tests.
+   * @param {string} incomingQS Query string including leading `?` if present.
+   * @returns {RedirectResult | undefined} First matching redirect or undefined.
+   */
+  protected matchFromRedirectMapRedirect(
+    redirects: RedirectResult[],
+    urlLocale: string,
+    incomingURL: string,
+    incomingQS: string
+  ): RedirectResult | undefined {
     const nonLocaleRedirects = redirects.filter((redirect: RedirectResult) => !redirect.locale);
     let matchedQueryString: string | undefined;
-    const localePath = `/${locale.toLowerCase()}${normalizedPath}`;
+    const normalizedPath = incomingURL.replace(/\/*$/gi, '').toLowerCase();
+    const localePath = `/${urlLocale.toLowerCase()}${normalizedPath}`;
 
     return nonLocaleRedirects.length
       ? nonLocaleRedirects.find((redirect: RedirectResult) => {
@@ -345,7 +370,7 @@ export class RedirectsProxy extends ProxyBase {
           // Modify the redirect pattern to ignore the language prefix in the path
           // And escapes non-special "?" characters in a string or regex.
           redirect.pattern = escapeNonSpecialQuestionMarks(
-            '^' + redirect.pattern.replace(new RegExp(`^[^]?/${locale}/`, 'gi'), '') // ensure function thinks input is regex
+            '^' + redirect.pattern.replace(new RegExp(`^[^]?/${urlLocale}/`, 'gi'), '') // ensure function thinks input is regex
           );
 
           // Prepare the redirect pattern as a regular expression, making it more flexible for matching URLs
@@ -368,29 +393,35 @@ export class RedirectsProxy extends ProxyBase {
 
           return (
             !!(
-              regexParser(redirect.pattern).test(`/${req.nextUrl.locale}${incomingURL}`) ||
+              regexParser(redirect.pattern).test(`/${urlLocale}${incomingURL}`) ||
               regexParser(redirect.pattern).test(incomingURL) ||
               matchedQueryString
-            ) && (redirect.locale ? redirect.locale.toLowerCase() === locale.toLowerCase() : true)
+            ) &&
+            (redirect.locale ? redirect.locale.toLowerCase() === urlLocale.toLowerCase() : true)
           );
         })
       : undefined;
   }
 
-  protected processLocaleRedirect(
+  /**
+   * Processes redirect rules from redirect items (language-versioned)
+   * @param {RedirectResult[]} redirects redirect entries from Edge
+   * @param {string} locale current request locale
+   * @param {string} currentPath current request path (without locale)
+   * @returns {RedirectResult | undefined} matched redirect item redirect result or undefined
+   */
+  protected matchRedirectItemRedirect(
     redirects: RedirectResult[],
     locale: string,
-    normalizedPath: string
+    currentPath: string
   ): RedirectResult | undefined {
     // locale patterns will include a redirect item suffix which we need to remove
-    const localeRedirects = redirects
-      .filter((redirect) => redirect.locale === locale)
-      .map((redirect) => ({ ...redirect, pattern: redirect.pattern.replace(/\/.*$/gi, '') }));
+    const localeRedirects = redirects.filter((redirect) => redirect.locale === locale);
     // locale rules are easy and nice
     return localeRedirects.length
       ? localeRedirects.find((redirect: RedirectResult) => {
           const patternPath = redirect.pattern.replace(/\/*$/gi, '').toLowerCase();
-          return patternPath === normalizedPath;
+          return patternPath === currentPath;
         })
       : undefined;
   }

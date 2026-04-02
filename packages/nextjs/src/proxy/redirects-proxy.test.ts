@@ -1027,7 +1027,7 @@ describe('RedirectsProxy', () => {
     });
   });
 
-  describe('processLocaleRedirect', () => {
+  describe('matchRedirectItemRedirect', () => {
     const baseRedirect = (overrides: Record<string, unknown> = {}) => ({
       pattern: '/from',
       target: '/to',
@@ -1039,7 +1039,7 @@ describe('RedirectsProxy', () => {
 
     it('returns undefined when there are no locale-specific rules for the request locale', () => {
       const { proxy } = createProxy();
-      const result = proxy['processLocaleRedirect'](
+      const result = proxy['matchRedirectItemRedirect'](
         [baseRedirect({ locale: 'da', pattern: '/about' })],
         'en',
         '/about'
@@ -1049,7 +1049,7 @@ describe('RedirectsProxy', () => {
 
     it('returns undefined when locale matches but normalized path does not', () => {
       const { proxy } = createProxy();
-      const result = proxy['processLocaleRedirect'](
+      const result = proxy['matchRedirectItemRedirect'](
         [baseRedirect({ locale: 'en', pattern: '/other' })],
         'en',
         '/about'
@@ -1069,30 +1069,8 @@ describe('RedirectsProxy', () => {
         pattern: '/about',
         target: '/second',
       });
-      const result = proxy['processLocaleRedirect']([first, second], 'en', '/about');
+      const result = proxy['matchRedirectItemRedirect']([first, second], 'en', '/about');
       expect(result).to.deep.equal(first);
-    });
-
-    it('strips a trailing "redirect" segment from the pattern before matching', () => {
-      const { proxy } = createProxy();
-      const redirect = baseRedirect({
-        locale: 'en',
-        pattern: '/about/redirect',
-        target: '/destination',
-      });
-      const result = proxy['processLocaleRedirect']([redirect], 'en', '/about');
-      expect(result).to.deep.equal({ ...redirect, pattern: '/about/' });
-    });
-
-    it('strips a trailing "redirect/" segment from the pattern before matching', () => {
-      const { proxy } = createProxy();
-      const redirect = baseRedirect({
-        locale: 'en',
-        pattern: '/contact/redirect/',
-        target: '/destination',
-      });
-      const result = proxy['processLocaleRedirect']([redirect], 'en', '/contact');
-      expect(result).to.deep.equal({ ...redirect, pattern: '/contact/' });
     });
 
     it('matches normalized paths case-insensitively and ignores trailing slashes on the pattern', () => {
@@ -1102,13 +1080,13 @@ describe('RedirectsProxy', () => {
         pattern: '/Foo/Bar/',
         target: '/lowercase',
       });
-      const result = proxy['processLocaleRedirect']([redirect], 'en', '/foo/bar');
+      const result = proxy['matchRedirectItemRedirect']([redirect], 'en', '/foo/bar');
       expect(result?.target).to.equal('/lowercase');
     });
 
     it('returns undefined when the list of locale rules is empty after filtering', () => {
       const { proxy } = createProxy();
-      const result = proxy['processLocaleRedirect']([], 'en', '/about');
+      const result = proxy['matchRedirectItemRedirect']([], 'en', '/about');
       expect(result).to.be.undefined;
     });
   });
