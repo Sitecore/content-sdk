@@ -6,7 +6,7 @@
 
 This is a **Sitecore Content SDK** application built with **Next.js (Pages Router)** and **TypeScript**. AI agents work as developer assistants within this scaffolded head application. The app integrates with Sitecore XM Cloud for content, supports multisite and i18n, and uses Next.js API routes and Edge middleware for routing and SEO.
 
-**Scope:** This file applies to **this application only** (a scaffolded head app). It is **not** the Content SDK monorepo — for SDK package development use that repo's `AGENTS.md`. Here we edit app code and config (pages, components, API routes, config); we do not modify SDK packages or CI.
+**Scope:** This file applies to **this application only** (a scaffolded head app). Here we edit app code and config (pages, components, API routes, config); we do not modify SDK packages or CI.
 
 ---
 

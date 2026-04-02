@@ -4,13 +4,7 @@ This file describes **this application** in terms of **capability-style grouping
 
 **Agent Skills:** Each grouping has a folder under [.agents/skills/](.agents/skills/) ([Agent Skills](https://agentskills.io) format). **Load only the skill that matches the task** — see [`CLAUDE.md`](CLAUDE.md). Tailored for **Pages Router** (e.g. `extractPath`, `context.locale`, `getComponentData`, single `component-map.ts`).
 
----
-
-## Why capability grouping
-
-Grouping related capabilities makes it easier to know which area of the app applies to a given task and to point to the right docs and patterns. Map the task to one or more of the groupings below; use AGENTS.md and the official docs for concrete steps.
-
----
+Map the task to one or more of the groupings below.
 
 ## Capability groupings
 

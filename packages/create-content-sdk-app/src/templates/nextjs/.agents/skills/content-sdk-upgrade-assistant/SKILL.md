@@ -5,7 +5,7 @@ description: Guides upgrading @sitecore-content-sdk/* packages: version bumps, b
 
 # Upgrade SDK packages (Pages Router)
 
-**Detail:** [AGENTS.md](../../../AGENTS.md) — commands; Content SDK repo CHANGELOG / migration docs.
+**Detail:** [AGENTS.md](../../../AGENTS.md) — commands; doc site migration docs; Content SDK repo CHANGELOG.
 
 ## When
 
