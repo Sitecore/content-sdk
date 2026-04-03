@@ -15,7 +15,7 @@ const ctx: ResolveContext = {
   event: { value: 'clicked' },
 };
 
-describe('component-layout resolver', () => {
+describe.only('component-layout resolver', () => {
   describe('parseBindExpression', () => {
     it('should parse simple source-only expressions', () => {
       expect(parseBindExpression('props')).to.deep.equal({ source: 'props', segments: [] });
@@ -41,7 +41,8 @@ describe('component-layout resolver', () => {
         source: 'props',
         segments: [
           { type: 'dot', key: 'user' },
-          { type: 'dot', key: 'name' }],
+          { type: 'dot', key: 'name' },
+        ],
       });
       expect(parseBindExpression('item.id')).to.deep.equal({
         source: 'item',
@@ -55,8 +56,9 @@ describe('component-layout resolver', () => {
       expect(parsed.segments).to.have.lengthOf(2);
       expect(parsed.segments[0]).to.deep.equal({ type: 'dot', key: 'user' });
       expect(parsed.segments[1]).to.have.property('type', 'bracket');
-      expect((parsed.segments[1] as { expr: { source: string; segments: unknown[] } }).expr)
-        .to.deep.equal({ source: 'state', segments: [{ type: 'dot', key: 'category' }] });
+      expect(
+        (parsed.segments[1] as { expr: { source: string; segments: unknown[] } }).expr
+      ).to.deep.equal({ source: 'state', segments: [{ type: 'dot', key: 'category' }] });
     });
 
     it('should parse scope-key sources (e.g. for.as)', () => {
@@ -98,7 +100,9 @@ describe('component-layout resolver', () => {
 
     it('should return undefined when path is null/undefined', () => {
       expect(resolveBindExpression(parseBindExpression('props.missing'), ctx)).to.equal(undefined);
-      expect(resolveBindExpression(parseBindExpression('props.user.missing'), ctx)).to.equal(undefined);
+      expect(resolveBindExpression(parseBindExpression('props.user.missing'), ctx)).to.equal(
+        undefined
+      );
     });
 
     it('should resolve bracket segment', () => {
@@ -116,7 +120,9 @@ describe('component-layout resolver', () => {
         state: {},
         scope: { product: { name: 'Widget', id: 'p1' } },
       };
-      expect(resolveBindExpression(parseBindExpression('product.name'), ctxWithScope)).to.equal('Widget');
+      expect(resolveBindExpression(parseBindExpression('product.name'), ctxWithScope)).to.equal(
+        'Widget'
+      );
       expect(resolveBindExpression(parseBindExpression('product.id'), ctxWithScope)).to.equal('p1');
     });
 
@@ -130,12 +136,16 @@ describe('component-layout resolver', () => {
         state: {},
         scope: { item: { label: 'FromScope' } },
       };
-      expect(resolveBindExpression(parseBindExpression('item.label'), ctxItemInScope)).to.equal('FromScope');
+      expect(resolveBindExpression(parseBindExpression('item.label'), ctxItemInScope)).to.equal(
+        'FromScope'
+      );
     });
 
     it('should return undefined for unknown scope key when scope is missing', () => {
       const ctxNoScope: ResolveContext = { props: {}, state: {} };
-      expect(resolveBindExpression(parseBindExpression('product.name'), ctxNoScope)).to.equal(undefined);
+      expect(resolveBindExpression(parseBindExpression('product.name'), ctxNoScope)).to.equal(
+        undefined
+      );
     });
   });
 

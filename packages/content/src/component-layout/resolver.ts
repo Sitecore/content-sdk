@@ -35,62 +35,72 @@ export interface ParsedBind {
 export function parseBindExpression(expr: string): ParsedBind {
   let pos = 0;
 
-  const parse = (): ParsedBind => {
+  const skipOptionalDollar = (): void => {
     if (expr[pos] === '$') {
       pos++;
     }
+  };
 
-    const sourceStart = pos;
+  const parseIdentifier = (): string => {
+    const start = pos;
     while (pos < expr.length && /[a-zA-Z0-9_]/.test(expr[pos])) {
       pos++;
     }
-    const source = expr.slice(sourceStart, pos);
-    if (source.length === 0) {
+    const identifier = expr.slice(start, pos);
+
+    if (identifier.length === 0) {
       throw new Error(`Expected identifier in "${expr}" at pos ${pos}`);
     }
-    if (!/^[a-zA-Z_]/.test(source)) {
+    if (!/^[a-zA-Z_]/.test(identifier)) {
       throw new Error(
-        `Invalid source "${source}" in "${expr}". Identifier must start with a letter or underscore.`
+        `Invalid identifier "${identifier}" in "${expr}". Must start with a letter or underscore.`
       );
     }
 
+    return identifier;
+  };
+
+  const parseSegments = (): BindSegment[] => {
     const segments: BindSegment[] = [];
 
     while (pos < expr.length) {
       if (expr[pos] === '.') {
         pos++;
-        const keyStart = pos;
-        while (pos < expr.length && /[a-zA-Z0-9_]/.test(expr[pos])) {
-          pos++;
-        }
-        const key = expr.slice(keyStart, pos);
-        if (!key) {
-          throw new Error(`Expected identifier after "." in "${expr}" at pos ${pos}`);
-        }
+        const key = parseIdentifier();
         segments.push({ type: 'dot', key });
       } else if (expr[pos] === '[') {
-        pos++;
-        const inner = parse();
-        if (expr[pos] !== ']') {
-          throw new Error(`Expected "]" in "${expr}" at pos ${pos}`);
+        pos++; // skip [
+        const bracketStart = pos;
+
+        // Find the matching ]
+        const closeBracket = expr.indexOf(']', pos);
+        if (closeBracket === -1) {
+          throw new Error(`Expected "]" in "${expr}"`);
         }
-        pos++;
+
+        // Extract the inner expression between [ and ]
+        const innerExpr = expr.slice(bracketStart, closeBracket);
+        const inner = parseBindExpression(innerExpr);
+
+        pos = closeBracket + 1; // move past ]
         segments.push({ type: 'bracket', expr: inner });
       } else {
         break;
       }
     }
 
-    return { source, segments };
+    return segments;
   };
 
-  const result = parse();
+  skipOptionalDollar();
+  const source = parseIdentifier();
+  const segments = parseSegments();
 
   if (pos !== expr.length) {
     throw new Error(`Unexpected character "${expr[pos]}" in "${expr}" at pos ${pos}`);
   }
 
-  return result;
+  return { source, segments };
 }
 
 /* Resolve context and expression resolver */
