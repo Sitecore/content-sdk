@@ -23,7 +23,7 @@ import {
   isComponentLayoutPrimitive as isPrimitive,
   resolveIfTemplate,
 } from '@sitecore-content-sdk/content/editing';
-import { CallbackMetadata } from '../atoms';
+import { CallbackMetadata } from '..';
 
 /** Props passed to an Atom Component */
 type AtomProps = React.PropsWithChildren<ResolvedProps>;
