@@ -130,7 +130,3 @@ export {
   type ArgMeta,
   type AtomSchemaInput,
 } from './atoms';
-export {
-  createView,
-  type CallbackRegistry as ComponentLayoutCallbackRegistry,
-} from './component-layout';

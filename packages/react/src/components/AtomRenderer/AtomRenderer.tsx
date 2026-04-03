@@ -1,7 +1,7 @@
 'use client';
 import React, { ComponentType, useEffect, useMemo } from 'react';
 import { Document } from '@sitecore-content-sdk/content/component-layout';
-import { createView } from '../..';
+import { createView } from '../../component-layout';
 import { CallbackMetadata } from '../../atoms';
 
 export type AtomRendererProps = {

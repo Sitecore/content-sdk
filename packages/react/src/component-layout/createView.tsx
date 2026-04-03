@@ -25,12 +25,6 @@ import {
 } from '@sitecore-content-sdk/content/editing';
 import { CallbackMetadata } from '../atoms';
 
-/**
- * Registry of named callbacks (e.g. alert, navigate).
- * @internal
- */
-export type CallbackRegistry = Record<string, (...args: unknown[]) => void>;
-
 /** Props passed to an Atom Component */
 type AtomProps = React.PropsWithChildren<ResolvedProps>;
 

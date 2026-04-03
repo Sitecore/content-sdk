@@ -24,20 +24,19 @@ export interface SitecoreProviderProps {
    * The dynamic import for import map to be used in variant generation mode.
    */
   loadImportMap: () => Promise<ImportMapImport>;
-
   /**
-   * The atoms metadata to be used in the Design Library.
+   * The atom and callback metadata registries for low-code components built with atoms.
    */
-  atoms?: AtomMetadata[];
-  /**
-   * The callback registry to be used as event callbacks for low-code components built with atoms.
-   */
-  callbackRegistry?: Record<string, (...args: unknown[]) => void>;
-
-  /**
-   * The callbacks metadata to be used in the Design Library.
-   */
-  callbacks?: CallbackMetadata[];
+  atomsRegistry?: {
+    /**
+     * The atom metadata to be used for rendering atom components.
+     */
+    atoms?: AtomMetadata[];
+    /**
+     * The callback metadata to be used for rendering atom components.
+     */
+    callbacks?: CallbackMetadata[];
+  };
 
   children: React.ReactNode;
 }
@@ -62,13 +61,18 @@ export interface SitecoreProviderState {
    */
   loadImportMap: () => Promise<ImportMapImport>;
   /**
-   * The atoms metadata to be used in the Design Library.
+   * The atom and callback metadata registries for low-code components built with atoms.
    */
-  atoms?: AtomMetadata[];
-  /**
-   * The callbacks metadata to be used in the Design Library.
-   */
-  callbacks?: CallbackMetadata[];
+  atomsRegistry?: {
+    /**
+     * The atom metadata to be used for rendering atom components.
+     */
+    atoms?: AtomMetadata[];
+    /**
+     * The callback metadata to be used for rendering atom components.
+     */
+    callbacks?: CallbackMetadata[];
+  };
   /**
    * The component map to use for rendering components.
    */
@@ -111,22 +115,13 @@ export const ImportMapReactContext = React.createContext<
  * @param {SitecoreProviderProps['page']} props.page - The page data.
  * @param {SitecoreProviderProps['componentMap']} props.componentMap - The component map.
  * @param {SitecoreProviderProps['loadImportMap']} props.loadImportMap - The function to load the import map.
- * @param {SitecoreProviderProps['atoms']} props.atoms - The atoms metadata.
- * @param {SitecoreProviderProps['callbackRegistry']} props.callbackRegistry - The callback registry for low-code components built with atoms.
+ * @param {SitecoreProviderProps['atomsRegistry']} props.atomsRegistry - The atom and callback metadata registries for low-code components built with atoms.
  * @param {React.ReactNode} props.children - The children to render.
  * @returns {React.ReactNode} The SitecoreProvider component.
  * @public
  */
 export const SitecoreProvider = (props: SitecoreProviderProps) => {
-  const {
-    api,
-    page: propsPage,
-    componentMap,
-    loadImportMap,
-    atoms,
-    callbackRegistry,
-    children,
-  } = props;
+  const { api, page: propsPage, componentMap, loadImportMap, atomsRegistry, children } = props;
 
   const [page, setPageInternal] = useState<Page>(propsPage);
 
@@ -150,10 +145,9 @@ export const SitecoreProvider = (props: SitecoreProviderProps) => {
       api,
       componentMap,
       loadImportMap,
-      atoms,
-      callbackRegistry,
+      atomsRegistry,
     }),
-    [page, setPage, api, componentMap, loadImportMap, atoms, callbackRegistry]
+    [page, setPage, api, componentMap, loadImportMap, atomsRegistry]
   );
 
   return (

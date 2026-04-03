@@ -42,11 +42,14 @@ export const __mockDependencies = (mocks: any) => {
  * @internal
  */
 export const DesignLibraryAtoms = () => {
-  const { atoms, callbacks } = useSitecore();
+  const { atomsRegistry } = useSitecore();
   const [currentDocument, setCurrentDocument] = useState(cardsWithDataBinding);
   const [renderKey, setRenderKey] = useState(0);
 
-  const atomMap = useMemo(() => getAtomRegistry(atoms || []), [atoms]);
+  const atomMap = useMemo(
+    () => getAtomRegistry(atomsRegistry?.atoms || []),
+    [atomsRegistry?.atoms]
+  );
 
   useEffect(() => {
     postToDesignLibrary(
@@ -55,13 +58,13 @@ export const DesignLibraryAtoms = () => {
   }, []);
 
   useEffect(() => {
-    const serializedAtoms = serializeAtoms(atoms ?? []);
+    const serializedAtoms = serializeAtoms(atomsRegistry?.atoms ?? []);
     if (!serializedAtoms) {
       sendAtomsErrorEvent('No atoms provided', 'atoms-missing');
       return;
     }
 
-    const serializedCallbacks = serializeCallbacks(callbacks ?? []);
+    const serializedCallbacks = serializeCallbacks(atomsRegistry?.callbacks ?? []);
 
     postToDesignLibrary(getDesignLibraryAtomsRegistryEvent(serializedAtoms, serializedCallbacks));
 
@@ -71,7 +74,7 @@ export const DesignLibraryAtoms = () => {
     });
 
     return () => unsubDocumentUpdate();
-  }, [atoms, callbacks]);
+  }, [atomsRegistry]);
 
   useEffect(() => {
     if (renderKey === 0) return;
@@ -83,7 +86,11 @@ export const DesignLibraryAtoms = () => {
 
   return (
     <DesignLibraryErrorBoundary uid={currentDocument.name} renderKey={renderKey}>
-      <AtomRenderer atomMap={atomMap} callbackMap={callbacks} document={currentDocument} />
+      <AtomRenderer
+        atomMap={atomMap}
+        callbackMap={atomsRegistry?.callbacks || []}
+        document={currentDocument}
+      />
     </DesignLibraryErrorBoundary>
   );
 };
