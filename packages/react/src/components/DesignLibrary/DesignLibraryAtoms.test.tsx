@@ -77,9 +77,13 @@ describe('<DesignLibraryAtoms />', () => {
     },
   ];
 
-  const mockCallbackRegistry = {
-    trackSelection: () => {},
-  };
+  const mockCallbacks = [
+    {
+      name: 'trackSelection',
+      description: 'Track selection callback',
+      callbackFn: () => {},
+    },
+  ];
 
   const getPage = () => ({
     locale: 'en',
@@ -125,7 +129,7 @@ describe('<DesignLibraryAtoms />', () => {
     const page = getPage();
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -139,7 +143,7 @@ describe('<DesignLibraryAtoms />', () => {
     const page = getPage();
 
     const { container } = render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -152,14 +156,14 @@ describe('<DesignLibraryAtoms />', () => {
     const page = getPage();
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
 
     expect(serializeAtomsStub).to.have.been.calledWith(mockAtoms);
     expect(postToDesignLibrarySpy).to.have.been.calledWith(
-      getDesignLibraryAtomsRegistryEvent(mockSerializedAtoms)
+      getDesignLibraryAtomsRegistryEvent(mockSerializedAtoms, {})
     );
   });
 
@@ -168,14 +172,14 @@ describe('<DesignLibraryAtoms />', () => {
     serializeAtomsStub.returns(mockSerializedAtoms);
 
     render(
-      <SitecoreProvider atoms={[]} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={[]} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
 
     expect(serializeAtomsStub).to.have.been.calledWith([]);
     expect(postToDesignLibrarySpy).to.have.been.calledWith(
-      getDesignLibraryAtomsRegistryEvent(mockSerializedAtoms)
+      getDesignLibraryAtomsRegistryEvent(mockSerializedAtoms, {})
     );
   });
 
@@ -184,7 +188,7 @@ describe('<DesignLibraryAtoms />', () => {
     serializeAtomsStub.returns(null);
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -200,7 +204,7 @@ describe('<DesignLibraryAtoms />', () => {
     serializeAtomsStub.returns(undefined);
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -212,7 +216,7 @@ describe('<DesignLibraryAtoms />', () => {
     const page = getPage();
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -230,7 +234,7 @@ describe('<DesignLibraryAtoms />', () => {
     });
 
     const { container } = render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -265,7 +269,7 @@ describe('<DesignLibraryAtoms />', () => {
     });
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -304,7 +308,7 @@ describe('<DesignLibraryAtoms />', () => {
     });
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -336,7 +340,7 @@ describe('<DesignLibraryAtoms />', () => {
     const page = getPage();
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -355,7 +359,7 @@ describe('<DesignLibraryAtoms />', () => {
     addDocumentUpdateHandlerSpy.returns(unsubscribeSpy);
 
     const { unmount } = render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -371,7 +375,7 @@ describe('<DesignLibraryAtoms />', () => {
     const page = getPage();
 
     const { container } = render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -385,7 +389,7 @@ describe('<DesignLibraryAtoms />', () => {
     serializeAtomsStub.returns(null);
 
     render(
-      <SitecoreProvider callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -398,7 +402,7 @@ describe('<DesignLibraryAtoms />', () => {
     const page = getPage();
 
     const { container } = render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -420,7 +424,7 @@ describe('<DesignLibraryAtoms />', () => {
     ];
 
     const { rerender } = render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -428,7 +432,7 @@ describe('<DesignLibraryAtoms />', () => {
     expect(getAtomRegistryStub).to.have.been.calledWith(mockAtoms);
 
     rerender(
-      <SitecoreProvider atoms={updatedAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={updatedAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -455,7 +459,7 @@ describe('<DesignLibraryAtoms />', () => {
     ];
 
     const { rerender } = render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -463,7 +467,7 @@ describe('<DesignLibraryAtoms />', () => {
     expect(addDocumentUpdateHandlerSpy).to.have.been.calledOnce;
 
     rerender(
-      <SitecoreProvider atoms={updatedAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={updatedAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -482,7 +486,7 @@ describe('<DesignLibraryAtoms />', () => {
     });
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -520,13 +524,13 @@ describe('<DesignLibraryAtoms />', () => {
 
   it('should pass callbackRegistry to AtomRenderer', () => {
     const page = getPage();
-    const customCallbacks = {
-      onButtonClick: () => {},
-      onSelectChange: () => {},
-    };
+    const customCallbacks = [
+      { name: 'onButtonClick', description: 'Button click callback', callbackFn: () => {} },
+      { name: 'onSelectChange', description: 'Select change callback', callbackFn: () => {} },
+    ];
 
     const { container } = render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={customCallbacks} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={customCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -538,7 +542,7 @@ describe('<DesignLibraryAtoms />', () => {
     const page = getPage();
 
     const { container } = render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={{}} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={[]} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -556,7 +560,7 @@ describe('<DesignLibraryAtoms />', () => {
     });
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );

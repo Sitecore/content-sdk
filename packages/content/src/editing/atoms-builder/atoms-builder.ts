@@ -46,6 +46,21 @@ export type AtomType = 'atom' | 'atom-child';
 export type SerializedDefaultChild = string | { atom: string; props?: Record<string, unknown> };
 
 /**
+ * Represents the serialized callback metadata information to be sent to design library
+ * @internal
+ */
+export type CallbackInfo = {
+  /**
+   * A description of the callback.
+   */
+  description: string;
+  /**
+   * The parameters of the callback.
+   */
+  params?: Record<string, unknown>;
+};
+
+/**
  * Represents the serialized atom metadata information to be sent to design library
  * @internal
  */
@@ -96,22 +111,26 @@ export interface DesignLibraryAtomsRegistryEvent extends DesignLibraryEvent {
   name: typeof DESIGN_LIBRARY_ATOM_REGISTRY_EVENT_NAME;
   message: {
     atomsRegistry: AtomInfo[];
+    callbackRegistry: Record<string, CallbackInfo>;
   };
 }
 
 /**
- * Creates a DesignLibraryAtomsRegistryEvent with the given atoms registry.
+ * Creates a DesignLibraryAtomsRegistryEvent with the given atoms registry and callback registry.
  * @param {AtomInfo[]} atomsRegistry - the atoms registry to be sent in the event
- * @returns {DesignLibraryAtomsRegistryEvent} the created event with the atoms registry
+ * @param {Record<string, CallbackInfo>} callbackRegistry - the callback registry to be sent in the event
+ * @returns {DesignLibraryAtomsRegistryEvent} the created event with the atoms registry and callback registry
  * @internal
  */
 export function getDesignLibraryAtomsRegistryEvent(
-  atomsRegistry: AtomInfo[]
+  atomsRegistry: AtomInfo[],
+  callbackRegistry: Record<string, CallbackInfo>
 ): DesignLibraryAtomsRegistryEvent {
   return {
     name: DESIGN_LIBRARY_ATOM_REGISTRY_EVENT_NAME,
     message: {
       atomsRegistry,
+      callbackRegistry,
     },
   };
 }

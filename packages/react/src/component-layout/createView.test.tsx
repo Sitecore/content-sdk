@@ -324,7 +324,7 @@ describe('component-layout/createView', () => {
           node,
           0,
           atoms,
-          {},
+          [],
           () => undefined,
           () => ({}),
           baseContext,
@@ -335,9 +335,13 @@ describe('component-layout/createView', () => {
 
     it('renders atom with resolved props, binding props and children', () => {
       const setStateSpy = sinon.spy();
-      const callbacks = {
-        onChange: sinon.spy(),
-      };
+      const callbacks = [
+        {
+          name: 'onChange',
+          description: 'onChange callback',
+          callbackFn: sinon.spy(),
+        },
+      ];
 
       const childElement: Element = {
         id: 'child-node',
@@ -425,7 +429,7 @@ describe('component-layout/createView', () => {
         node,
         0,
         atoms,
-        {},
+        [],
         () => undefined,
         () => ({}),
         baseContext,
@@ -465,7 +469,7 @@ describe('component-layout/createView', () => {
         node,
         0,
         atoms,
-        {},
+        [],
         () => undefined,
         () => ({ message: 'initial' }),
         baseContext,
@@ -491,7 +495,7 @@ describe('component-layout/createView', () => {
         node,
         0,
         atoms,
-        {},
+        [],
         () => undefined,
         () => ({}),
         baseContext,
@@ -545,7 +549,7 @@ describe('component-layout/createView', () => {
         node,
         0,
         atoms,
-        {},
+        [],
         () => undefined,
         () => ({}),
         baseContext,
@@ -600,7 +604,7 @@ describe('component-layout/createView', () => {
         node,
         0,
         atoms,
-        {},
+        [],
         () => undefined,
         () => ({}),
         baseContext,
@@ -628,7 +632,7 @@ describe('component-layout/createView', () => {
         node,
         0,
         atoms,
-        {},
+        [],
         () => undefined,
         () => ({}),
         baseContext,
@@ -663,7 +667,7 @@ describe('component-layout/createView', () => {
         node,
         0,
         atoms,
-        {},
+        [],
         () => undefined,
         () => ({ message: 'exists' }),
         baseContext,
@@ -734,7 +738,7 @@ describe('component-layout/createView', () => {
         node,
         0,
         atoms,
-        {},
+        [],
         () => undefined,
         () => ({ message: 'nested-state' }),
         baseContext,
@@ -770,7 +774,7 @@ describe('component-layout/createView', () => {
             },
           ],
         } as any,
-        { onEvent: onEventSpy },
+        [{ name: 'onEvent', description: 'onEvent callback', callbackFn: onEventSpy }],
         () => ({ message: 'state-value' }),
         setStateSpy as any,
         { ...baseContext, props: { title: 'Button Title' } }
@@ -823,7 +827,7 @@ describe('component-layout/createView', () => {
         node,
         0,
         customAtoms,
-        {},
+        [],
         () => undefined,
         () => ({}),
         { ...baseContext, props: { title: 'Test Title' } },
@@ -861,7 +865,7 @@ describe('component-layout/createView', () => {
             },
           ],
         } as any,
-        {},
+        [],
         () => ({ message: 'original' }),
         setStateSpy as any,
         baseContext
@@ -897,7 +901,7 @@ describe('component-layout/createView', () => {
         node,
         'unique-key-123',
         customAtoms,
-        {},
+        [],
         () => undefined,
         () => ({}),
         baseContext,
@@ -935,9 +939,13 @@ describe('component-layout/createView', () => {
             },
           ],
         } as any,
-        {
-          trackSelection: trackSpy,
-        },
+        [
+          {
+            name: 'trackSelection',
+            description: 'trackSelection callback',
+            callbackFn: trackSpy,
+          },
+        ],
         () => ({ current: 'hats' }),
         setStateSpy as any,
         {
@@ -975,7 +983,7 @@ describe('component-layout/createView', () => {
             },
           ],
         } as any,
-        {},
+        [],
         () => ({}),
         setStateSpy as any,
         {
@@ -1005,7 +1013,7 @@ describe('component-layout/createView', () => {
             },
           ],
         } as any,
-        { onlyCall: callbackSpy },
+        [{ name: 'onlyCall', description: 'onlyCall callback', callbackFn: callbackSpy }],
         () => ({}),
         setStateSpy as any,
         {
@@ -1037,7 +1045,7 @@ describe('component-layout/createView', () => {
             },
           ],
         } as any,
-        {},
+        [],
         () => ({}),
         setStateSpy as any,
         {
@@ -1072,7 +1080,7 @@ describe('component-layout/createView', () => {
             },
           ],
         } as any,
-        { onTriggered: callbackSpy },
+        [{ name: 'onTriggered', description: 'onTriggered callback', callbackFn: callbackSpy }],
         () => ({}),
         setStateSpy as any,
         {
@@ -1105,7 +1113,7 @@ describe('component-layout/createView', () => {
             },
           ],
         } as any,
-        { complexCall: callbackSpy },
+        [{ name: 'complexCall', description: 'complexCall callback', callbackFn: callbackSpy }],
         () => ({ count: 42 }),
         () => undefined,
         {
@@ -1143,7 +1151,7 @@ describe('component-layout/createView', () => {
             },
           ],
         } as any,
-        { onUpdated: callbackSpy },
+        [{ name: 'onUpdated', description: 'onUpdated callback', callbackFn: callbackSpy }],
         () => ({ updated: false }),
         setStateSpy as any,
         {
@@ -1186,11 +1194,11 @@ describe('component-layout/createView', () => {
             },
           ],
         } as any,
-        {
-          first: call1Spy,
-          second: call2Spy,
-          third: call3Spy,
-        },
+        [
+          { name: 'first', description: 'first callback', callbackFn: call1Spy },
+          { name: 'second', description: 'second callback', callbackFn: call2Spy },
+          { name: 'third', description: 'third callback', callbackFn: call3Spy },
+        ],
         () => ({}),
         setStateSpy as any,
         {
@@ -1225,7 +1233,7 @@ describe('component-layout/createView', () => {
             },
           ],
         } as any,
-        { noArgs: callbackSpy },
+        [{ name: 'noArgs', description: 'noArgs callback', callbackFn: callbackSpy }],
         () => ({}),
         () => undefined,
         {
@@ -1252,7 +1260,7 @@ describe('component-layout/createView', () => {
           arguments: ['value'],
           actions: [],
         } as any,
-        { anyCallback: callbackSpy },
+        [{ name: 'anyCallback', description: 'anyCallback', callbackFn: callbackSpy }],
         () => ({}),
         setStateSpy as any,
         {
@@ -1289,7 +1297,7 @@ describe('component-layout/createView', () => {
             },
           ],
         } as any,
-        { onSelect: callbackSpy },
+        [{ name: 'onSelect', description: 'onSelect callback', callbackFn: callbackSpy }],
         () => ({}),
         setStateSpy as any,
         {
@@ -1328,7 +1336,7 @@ describe('component-layout/createView', () => {
             },
           ],
         } as any,
-        { onValueSet: callbackSpy },
+        [{ name: 'onValueSet', description: 'onValueSet callback', callbackFn: callbackSpy }],
         () => ({ value: 'old' }),
         setStateSpy as any,
         {
@@ -1362,7 +1370,7 @@ describe('component-layout/createView', () => {
             },
           ],
         } as any,
-        {},
+        [],
         () => ({}),
         setStateSpy as any,
         {
@@ -1440,9 +1448,9 @@ describe('component-layout/createView', () => {
         },
       };
 
-      const Generated = createView(doc, atoms, {
-        onChanged: onChangedSpy,
-      });
+      const Generated = createView(doc, atoms, [
+        { name: 'onChanged', description: 'onChanged callback', callbackFn: onChangedSpy },
+      ]);
 
       expect(Generated.displayName).to.equal('SimpleGeneratedView');
 
@@ -1594,10 +1602,10 @@ describe('component-layout/createView', () => {
         },
       };
 
-      const Generated = createView(doc, atoms, {
-        onFirst: onFirstSpy,
-        onSecond: onSecondSpy,
-      });
+      const Generated = createView(doc, atoms, [
+        { name: 'onFirst', description: 'onFirst callback', callbackFn: onFirstSpy },
+        { name: 'onSecond', description: 'onSecond callback', callbackFn: onSecondSpy },
+      ]);
 
       const rendered = render(<Generated />);
 
@@ -1966,7 +1974,9 @@ describe('component-layout/createView', () => {
         },
       };
 
-      const Generated = createView(doc, atoms, { onUpdate: onUpdateSpy });
+      const Generated = createView(doc, atoms, [
+        { name: 'onUpdate', description: 'onUpdate callback', callbackFn: onUpdateSpy },
+      ]);
       const rendered = render(<Generated />);
 
       fireEvent.click(rendered.getByTestId('emit'));
@@ -2097,9 +2107,13 @@ describe('component-layout/createView', () => {
         },
       };
 
-      const Generated = createView(doc, atoms, {
-        onNestedEvent: onNestedEventSpy,
-      });
+      const Generated = createView(doc, atoms, [
+        {
+          name: 'onNestedEvent',
+          description: 'onNestedEvent callback',
+          callbackFn: onNestedEventSpy,
+        },
+      ]);
 
       const rendered = render(
         <Generated

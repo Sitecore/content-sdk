@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSitecore } from '../SitecoreProvider';
 import { serializeAtoms, getAtomRegistry } from '../../atoms/atom-registry-utils';
+import { serializeCallbacks } from '../../atoms/callback-registry-utils';
 import * as editing from '@sitecore-content-sdk/content/editing';
 import { AtomRenderer } from '../AtomRenderer/AtomRenderer';
 import {
@@ -35,13 +36,13 @@ export const __mockDependencies = (mocks: any) => {
  * Design Library Atoms component.
  *
  * Facilitates the communication between the Design Studio and the Rendering Host when in atom rendering mode.
- * - On mount, it unfolds and serializes the atoms registry and sends it to the Design Studio via the `getDesignLibraryAtomsRegistryEvent`.
+ * - On mount, it unfolds and serializes the atoms registry and callback registry and sends it to the Design Studio via the `getDesignLibraryAtomsRegistryEvent`.
  * - Fetches Component model data, and passes it to the `AtomRenderer` which is responsible for rendering the low code component
  * based on component model data and the available atoms.
  * @internal
  */
 export const DesignLibraryAtoms = () => {
-  const { atoms, callbackRegistry } = useSitecore();
+  const { atoms, callbacks } = useSitecore();
   const [currentDocument, setCurrentDocument] = useState(cardsWithDataBinding);
   const [renderKey, setRenderKey] = useState(0);
 
@@ -60,7 +61,9 @@ export const DesignLibraryAtoms = () => {
       return;
     }
 
-    postToDesignLibrary(getDesignLibraryAtomsRegistryEvent(serializedAtoms));
+    const serializedCallbacks = serializeCallbacks(callbacks ?? []);
+
+    postToDesignLibrary(getDesignLibraryAtomsRegistryEvent(serializedAtoms, serializedCallbacks));
 
     const unsubDocumentUpdate = addDocumentUpdateHandler((updatedDocument) => {
       setCurrentDocument(updatedDocument);
@@ -68,7 +71,7 @@ export const DesignLibraryAtoms = () => {
     });
 
     return () => unsubDocumentUpdate();
-  }, [atoms]);
+  }, [atoms, callbacks]);
 
   useEffect(() => {
     if (renderKey === 0) return;
@@ -80,7 +83,7 @@ export const DesignLibraryAtoms = () => {
 
   return (
     <DesignLibraryErrorBoundary uid={currentDocument.name} renderKey={renderKey}>
-      <AtomRenderer atomMap={atomMap} callbackMap={callbackRegistry} document={currentDocument} />
+      <AtomRenderer atomMap={atomMap} callbackMap={callbacks} document={currentDocument} />
     </DesignLibraryErrorBoundary>
   );
 };

@@ -15,7 +15,7 @@ const ctx: ResolveContext = {
   event: { value: 'clicked' },
 };
 
-describe.only('component-layout resolver', () => {
+describe('component-layout resolver', () => {
   describe('parseBindExpression', () => {
     it('should parse simple source-only expressions', () => {
       expect(parseBindExpression('props')).to.deep.equal({ source: 'props', segments: [] });

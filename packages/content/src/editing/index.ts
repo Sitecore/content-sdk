@@ -79,6 +79,7 @@ export {
 } from '../component-layout';
 export {
   AtomInfo,
+  CallbackInfo,
   AtomType,
   getDesignLibraryAtomsRegistryEvent,
   sendAtomsErrorEvent,

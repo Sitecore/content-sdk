@@ -23,6 +23,7 @@ import {
   isComponentLayoutPrimitive as isPrimitive,
   resolveIfTemplate,
 } from '@sitecore-content-sdk/content/editing';
+import { CallbackMetadata } from '../atoms';
 
 /**
  * Registry of named callbacks (e.g. alert, navigate).
@@ -110,7 +111,7 @@ export const renderPrimitiveNode = (node: Node, ctx: ResolveContext): React.Reac
  * @param {Element} node - The element node to render
  * @param {Key | undefined} key - React key for the element
  * @param {Record<string, React.ComponentType<unknown>>} atoms - Atom component registry
- * @param {CallbackRegistry} callbacks - Callback registry
+ * @param {CallbackMetadata[]} callbacks - Callback metadata array
  * @param {React.Dispatch<StatePatch>} setState - State dispatcher
  * @param {() => ViewState} getState - Function to get the current state at callback time
  * @param {ResolveContext} ctx - Resolve context
@@ -122,7 +123,7 @@ export const renderElementNode = (
   node: Element,
   key: Key | undefined,
   atoms: Record<string, React.ComponentType<unknown>>,
-  callbacks: CallbackRegistry,
+  callbacks: CallbackMetadata[],
   setState: React.Dispatch<StatePatch>,
   getState: () => ViewState,
   ctx: ResolveContext,
@@ -173,7 +174,7 @@ export const renderElementNode = (
  * Builds a callable function from an event binding.
  * Resolves setState values and call args with template strings; invokes callbacks.
  * @param {EventBinding} binding the event binding to build the callback from
- * @param {CallbackRegistry} callbacks the registry of callback implementations to use for call actions
+ * @param {CallbackMetadata[]} callbacks the array of callback metadata to use for call actions
  * @param {() => ViewState} getState function to get the latest state at the time of event handling
  * @param {React.Dispatch<StatePatch>} setState the React state dispatcher to apply setState actions
  * @param {ResolveContext} resolveContext - Resolve context
@@ -182,7 +183,7 @@ export const renderElementNode = (
  */
 export const buildEventCallback = (
   binding: EventBinding,
-  callbacks: CallbackRegistry,
+  callbacks: CallbackMetadata[],
   getState: () => ViewState,
   setState: React.Dispatch<StatePatch>,
   resolveContext: ResolveContext
@@ -219,7 +220,7 @@ export const buildEventCallback = (
 
       if (isCallAction(action)) {
         const resolvedArgs = (action.args ?? []).map((a) => resolveIfTemplate(a, ctx));
-        const callable = callbacks[action.call];
+        const callable = callbacks.find((c) => c.name === action.call)?.callbackFn;
         if (typeof callable === 'function') {
           callable(...resolvedArgs);
         }
@@ -237,14 +238,14 @@ export const buildEventCallback = (
  * Creates a React functional component that renders the given Component Layout document.
  * @param {Document} doc - Component Layout document
  * @param {Record<string, React.ComponentType<unknown>>} atoms - Map of atom type name to its React implementation
- * @param {CallbackRegistry} [callbacks] - Optional registry map of callback names to their implementations for event actions
+ * @param {CallbackMetadata[]} [callbacks] - Optional array of callback metadata for event actions
  * @returns {FC<RuntimeProps>} FC that accepts runtime props (spread as props in expressions)
  * @internal
  */
 export function createView<RuntimeProps extends Record<string, unknown> = Record<string, unknown>>(
   doc: Document,
   atoms: Record<string, React.ComponentType<unknown>>,
-  callbacks: CallbackRegistry = {}
+  callbacks: CallbackMetadata[] = []
 ): FC<RuntimeProps> {
   const { root, state: initialState = {} } = doc;
 

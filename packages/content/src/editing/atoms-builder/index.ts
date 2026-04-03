@@ -7,4 +7,5 @@ export {
   sendAtomsErrorEvent,
   DesignLibraryAtomsError,
   addDocumentUpdateHandler,
+  CallbackInfo,
 } from './atoms-builder';
