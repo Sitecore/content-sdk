@@ -24,8 +24,10 @@ export const addComponentPreviewHandler: (importMap: ImportEntry[], callback: (e
 // @internal
 export const addComponentUpdateHandler: (rootComponent: ComponentRendering, successCallback?: (updatedRootComponent: ComponentRendering) => void) => (() => void) | undefined;
 
+// Warning: (ae-forgotten-export) The symbol "Document_2" needs to be exported by the entry point api-surface.d.ts
+//
 // @internal
-export const addDocumentUpdateHandler: (callback: (updatedRootComponent: ComponentLayoutDocument) => void) => () => void;
+export const addDocumentUpdateHandler: (callback: (updatedRootComponent: Document_2) => void) => () => void;
 
 // @internal
 export const addServerComponentPreviewHandler: (rootComponent: ComponentRendering, callback: (componentToUpdate: ComponentRendering | null, eventArgs: ServerComponentPreviewEventArgs) => void) => () => void;
@@ -51,6 +53,12 @@ export type AtomInfo = {
 
 // @internal
 export type AtomType = 'atom' | 'atom-child';
+
+// @internal
+export type CallbackInfo = {
+    description: string;
+    params?: Record<string, unknown>;
+};
 
 // @public
 export class CdpHelper {
@@ -96,79 +104,6 @@ export interface ComponentImport {
     importName: string;
 }
 
-// Warning: (ae-forgotten-export) The symbol "SetStateAction" needs to be exported by the entry point api-surface.d.ts
-// Warning: (ae-forgotten-export) The symbol "CallAction" needs to be exported by the entry point api-surface.d.ts
-//
-// @internal
-export type ComponentLayoutAction = SetStateAction | CallAction;
-
-// @internal
-export type ComponentLayoutBinding = ComponentLayoutExpressionBinding | ComponentLayoutEventBinding;
-
-// @internal
-export type ComponentLayoutBindSegment = {
-    type: 'dot';
-    key: string;
-} | {
-    type: 'bracket';
-    expr: ComponentLayoutParsedBind;
-};
-
-// @internal
-export type ComponentLayoutBindSource = 'props' | 'item' | 'state' | 'event' | (string & Record<never, never>);
-
-// @internal
-export interface ComponentLayoutDocument {
-    name: string;
-    props?: unknown;
-    root: ComponentLayoutNode;
-    state?: Record<string, unknown>;
-}
-
-// @internal
-export interface ComponentLayoutElement {
-    bindings?: Record<string, ComponentLayoutBinding>;
-    children?: ComponentLayoutNode[];
-    for?: ForLoop;
-    id?: string;
-    show?: ShowNode;
-    staticProps?: Record<string, ComponentLayoutPrimitive>;
-    type: string;
-    version?: number;
-}
-
-// @internal
-export interface ComponentLayoutEventBinding {
-    // (undocumented)
-    actions: ComponentLayoutAction[];
-    // (undocumented)
-    arguments: string[];
-    // (undocumented)
-    bindType: 'event';
-}
-
-// @internal
-export interface ComponentLayoutExpressionBinding {
-    // (undocumented)
-    bindType: 'expression';
-    // (undocumented)
-    value: string;
-}
-
-// @internal
-export type ComponentLayoutNode = ComponentLayoutElement | ComponentLayoutPrimitive;
-
-// @internal
-export interface ComponentLayoutParsedBind {
-    // (undocumented)
-    segments: ComponentLayoutBindSegment[];
-    // (undocumented)
-    source: ComponentLayoutBindSource;
-}
-
-// @internal
-export type ComponentLayoutPrimitive = string | number | boolean | null;
-
 // @public
 export interface ComponentLayoutRequestParams {
     componentUid: string;
@@ -180,15 +115,6 @@ export interface ComponentLayoutRequestParams {
     renderingId?: string;
     siteName: string;
     version?: string;
-}
-
-// @internal
-export interface ComponentLayoutResolveContext {
-    event?: unknown;
-    item?: unknown;
-    props: Record<string, unknown>;
-    scope?: Record<string, unknown>;
-    state: Record<string, unknown>;
 }
 
 // @public
@@ -545,9 +471,6 @@ export interface ErrorPagesServiceConfig extends GraphQLServiceConfig {
 }
 
 // @internal
-export function evaluateComponentLayoutShowNode(node: ShowNode, ctx: ComponentLayoutResolveContext): boolean;
-
-// @internal
 const executeScriptElements: (rootElement: HTMLElement) => void;
 
 // Warning: (ae-forgotten-export) The symbol "_extractFiles" needs to be exported by the entry point api-surface.d.ts
@@ -576,16 +499,6 @@ export interface FieldMetadata {
 
 // @internal
 export function filterComponentsByType(components: ComponentFileWithType[], allowedTypes: ComponentType[]): ComponentFileWithType[];
-
-// @internal
-export interface ForLoop {
-    // (undocumented)
-    as: string;
-    // (undocumented)
-    each: string;
-    // (undocumented)
-    key?: string;
-}
 
 declare namespace form {
     export {
@@ -675,7 +588,7 @@ export function getDefaultMediaUrlTransformer(edgeUrl: string): (value: string) 
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryAtomsRegistryEvent" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
-export function getDesignLibraryAtomsRegistryEvent(atomsRegistry: AtomInfo[]): DesignLibraryAtomsRegistryEvent;
+export function getDesignLibraryAtomsRegistryEvent(atomsRegistry: AtomInfo[], callbackRegistry: Record<string, CallbackInfo>): DesignLibraryAtomsRegistryEvent;
 
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPropsEvent" needs to be exported by the entry point api-surface.d.ts
 //
@@ -775,16 +688,6 @@ export { GraphQLRequestClientFactory }
 export { GraphQLRequestClientFactoryConfig }
 
 // @internal
-export function hasComponentLayoutFor(node: ComponentLayoutElement): node is ComponentLayoutElement & {
-    for: ForLoop;
-};
-
-// @internal
-export function hasComponentLayoutShow(node: ComponentLayoutElement): node is ComponentLayoutElement & {
-    show: ShowNode;
-};
-
-// @internal
 export const HIDDEN_RENDERING_NAME = "Hidden Rendering";
 
 // @public
@@ -813,36 +716,6 @@ export interface ImportEntryInfo {
 
 // @internal
 export const INVALID_SECRET_HTML_MESSAGE = "<html><body>Missing or invalid secret</body></html>";
-
-// @internal
-export function isComponentLayoutCallAction(action: ComponentLayoutAction): action is CallAction;
-
-// @internal
-export function isComponentLayoutElement(node: ComponentLayoutNode): node is ComponentLayoutElement;
-
-// @internal
-export function isComponentLayoutEventBinding(binding: ComponentLayoutBinding): binding is ComponentLayoutEventBinding;
-
-// @internal
-export function isComponentLayoutExpressionBinding(binding: ComponentLayoutBinding): binding is ComponentLayoutExpressionBinding;
-
-// @internal
-export function isComponentLayoutPrimitive(value: unknown): value is ComponentLayoutPrimitive;
-
-// @internal
-export function isComponentLayoutSetStateAction(action: ComponentLayoutAction): action is SetStateAction;
-
-// @internal
-export function isComponentLayoutShowAnd(node: ShowNode): node is ShowAnd;
-
-// @internal
-export function isComponentLayoutShowComparison(node: ShowNode): node is ShowComparison;
-
-// @internal
-export function isComponentLayoutShowOr(node: ShowNode): node is ShowOr;
-
-// @internal
-export function isComponentLayoutTemplateString(s: string): boolean;
 
 // @internal
 export function isDesignLibraryMode(mode: unknown): mode is DesignLibraryMode;
@@ -1020,9 +893,6 @@ export class PagesEditor {
     static resetChromes(): void;
 }
 
-// @internal
-export function parseComponentLayoutBindExpression(expr: string): ComponentLayoutParsedBind;
-
 // @public (undocumented)
 export type PersonalizedRewriteData = {
     variantId: string;
@@ -1165,15 +1035,6 @@ const replaceMediaUrlPrefix: (url: string, mediaUrlPrefix?: RegExp) => string;
 // @public
 export const resetEditorChromes: () => void;
 
-// @internal
-export function resolveComponentLayoutBindExpression(parsed: ComponentLayoutParsedBind, ctx: ComponentLayoutResolveContext): unknown;
-
-// @internal
-export function resolveComponentLayoutTemplateString(template: string, ctx: ComponentLayoutResolveContext): unknown;
-
-// @internal
-export const resolveIfTemplate: (value: unknown, ctx: ComponentLayoutResolveContext) => unknown;
-
 export { RetryStrategy }
 
 // @public
@@ -1270,31 +1131,6 @@ export interface ServerComponentPreviewEventArgs extends DesignLibraryEvent {
     };
     // (undocumented)
     name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
-}
-
-// @internal
-export interface ShowAnd {
-    // (undocumented)
-    and: ShowNode[];
-}
-
-// @internal
-export interface ShowComparison {
-    // (undocumented)
-    left: string;
-    // (undocumented)
-    op: 'eq' | 'ne';
-    // (undocumented)
-    right: string;
-}
-
-// @internal
-export type ShowNode = ShowComparison | ShowAnd | ShowOr;
-
-// @internal
-export interface ShowOr {
-    // (undocumented)
-    or: ShowNode[];
 }
 
 // @public
@@ -1585,7 +1421,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 // Warnings were encountered during analysis:
 //
 // src/client/sitecore-client.ts:68:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
-// src/editing/atoms-builder/atoms-builder.ts:80:3 - (ae-forgotten-export) The symbol "SerializedDefaultChild" needs to be exported by the entry point api-surface.d.ts
+// src/editing/atoms-builder/atoms-builder.ts:95:3 - (ae-forgotten-export) The symbol "SerializedDefaultChild" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:115:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
