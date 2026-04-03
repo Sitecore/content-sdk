@@ -1,10 +1,13 @@
 'use client';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSitecore } from '../SitecoreProvider';
 import { serializeAtoms, getAtomRegistry } from '../../atoms/atom-registry-utils';
 import * as editing from '@sitecore-content-sdk/content/editing';
 import { AtomRenderer } from '../AtomRenderer/AtomRenderer';
-import { cardsWithDataBinding } from '../AtomRenderer/test-data/component-layouts';
+import {
+  cardsWithDataBinding,
+  // accordionWithCards,
+} from '../AtomRenderer/test-data/component-layouts';
 import { DesignLibraryErrorBoundary } from '../..';
 
 let {
