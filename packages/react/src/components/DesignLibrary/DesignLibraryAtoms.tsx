@@ -5,6 +5,7 @@ import { serializeAtoms, getAtomRegistry } from '../../atoms/atom-registry-utils
 import * as editing from '@sitecore-content-sdk/content/editing';
 import { AtomRenderer } from '../AtomRenderer/AtomRenderer';
 import { cardsWithDataBinding } from '../AtomRenderer/test-data/component-layouts';
+import { DesignLibraryErrorBoundary } from '../..';
 
 let {
   postToDesignLibrary,
@@ -39,7 +40,7 @@ export const __mockDependencies = (mocks: any) => {
 export const DesignLibraryAtoms = () => {
   const { atoms, callbackRegistry } = useSitecore();
   const [currentDocument, setCurrentDocument] = useState(cardsWithDataBinding);
-  const didReceiveDocumentUpdate = useRef(false);
+  const [renderKey, setRenderKey] = useState(0);
 
   const atomMap = useMemo(() => getAtomRegistry(atoms || []), [atoms]);
 
@@ -59,22 +60,24 @@ export const DesignLibraryAtoms = () => {
     postToDesignLibrary(getDesignLibraryAtomsRegistryEvent(serializedAtoms));
 
     const unsubDocumentUpdate = addDocumentUpdateHandler((updatedDocument) => {
-      didReceiveDocumentUpdate.current = true;
       setCurrentDocument(updatedDocument);
+      setRenderKey((k) => k + 1);
     });
 
     return () => unsubDocumentUpdate();
   }, [atoms]);
 
   useEffect(() => {
-    if (!didReceiveDocumentUpdate.current) return;
+    if (renderKey === 0) return;
 
     postToDesignLibrary(
       getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'low-code-component')
     );
-  }, [currentDocument]);
+  }, [renderKey]);
 
   return (
-    <AtomRenderer atomMap={atomMap} callbackMap={callbackRegistry} document={currentDocument} />
+    <DesignLibraryErrorBoundary uid={currentDocument.name} renderKey={renderKey}>
+      <AtomRenderer atomMap={atomMap} callbackMap={callbackRegistry} document={currentDocument} />
+    </DesignLibraryErrorBoundary>
   );
 };

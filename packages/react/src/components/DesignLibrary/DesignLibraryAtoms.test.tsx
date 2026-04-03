@@ -135,6 +135,19 @@ describe('<DesignLibraryAtoms />', () => {
     );
   });
 
+  it('should wrap AtomRenderer in DesignLibraryErrorBoundary', () => {
+    const page = getPage();
+
+    const { container } = render(
+      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+        <DesignLibraryAtoms />
+      </SitecoreProvider>
+    );
+
+    expect(container).to.exist;
+    expect(getAtomRegistryStub).to.have.been.calledWith(mockAtoms);
+  });
+
   it('should serialize atoms and send atoms registry event', () => {
     const page = getPage();
 
@@ -239,6 +252,45 @@ describe('<DesignLibraryAtoms />', () => {
 
     await waitFor(() => {
       expect(container).to.exist;
+    });
+  });
+
+  it('should increment renderKey when document update is received', async () => {
+    const page = getPage();
+    let capturedHandler: ((doc: Document) => void) | null = null;
+
+    addDocumentUpdateHandlerSpy.callsFake((handler) => {
+      capturedHandler = handler;
+      return () => {};
+    });
+
+    render(
+      <SitecoreProvider atoms={mockAtoms} callbackRegistry={mockCallbackRegistry} page={page}>
+        <DesignLibraryAtoms />
+      </SitecoreProvider>
+    );
+
+    const initialCallCount = postToDesignLibrarySpy.callCount;
+
+    const updatedDocument: Document = {
+      name: 'UpdatedDocument',
+      root: {
+        id: 'updated-root',
+        type: 'Stack',
+        children: [],
+      },
+      props: {},
+      state: {},
+    };
+
+    capturedHandler!(updatedDocument);
+
+    // renderKey increment should trigger RENDERED event
+    await waitFor(() => {
+      expect(postToDesignLibrarySpy.callCount).to.be.greaterThan(initialCallCount);
+      expect(postToDesignLibrarySpy).to.have.been.calledWith(
+        getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'low-code-component')
+      );
     });
   });
 
