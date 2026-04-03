@@ -31,6 +31,7 @@ export interface ParsedBind {
  * @param {string} expr - Expression string (e.g. "props.user.name", "state.count", "item.id", "product.name")
  * @returns {ParsedBind} Parsed expression
  * @throws {Error} on invalid syntax or empty source
+ * @internal
  */
 export function parseBindExpression(expr: string): ParsedBind {
   let pos = 0;
@@ -110,6 +111,7 @@ export function parseBindExpression(expr: string): ParsedBind {
  * - props, state, event: built-in sources.
  * - item: loop variable (backward compat); also resolvable as scope.item when scope is set.
  * - scope: optional map for named loop variables (e.g. scope[for.as] = currentItem).
+ * @internal
  */
 export interface ResolveContext {
   /** Runtime props. */
@@ -125,39 +127,72 @@ export interface ResolveContext {
 }
 
 /**
+ * Resolves the source identifier to its runtime value.
+ * Lookup order: props, state, event, then item (ctx.item ?? scope.item), then scope[source].
+ * @param {BindSource} source - Source identifier
+ * @param {ResolveContext} ctx - Runtime context
+ * @returns {unknown} Resolved source value or undefined
+ */
+function resolveSource(source: BindSource, ctx: ResolveContext): unknown {
+  switch (source) {
+    case 'props':
+      return ctx.props;
+    case 'state':
+      return ctx.state;
+    case 'event':
+      return ctx.event;
+    case 'item':
+      return ctx.item ?? ctx.scope?.item;
+    default:
+      return ctx.scope?.[source];
+  }
+}
+
+/**
+ * Safely accesses a property on an object-like value.
+ * Returns undefined if current is null/undefined or not an object.
+ * @param {unknown} current - Current value
+ * @param {string | number} key - Property key
+ * @returns {unknown} Property value or undefined
+ */
+function safePropertyAccess(current: unknown, key: string | number): unknown {
+  if (current == null) {
+    return undefined;
+  }
+
+  // Check if current is an object (including arrays)
+  if (typeof current !== 'object') {
+    return undefined;
+  }
+
+  return (current as Record<string, unknown>)[key];
+}
+
+/**
  * Resolves a parsed bind expression against the given context.
  * Lookup order: props, state, event, then item (ctx.item ?? scope.item), then scope[source].
  * @param {ParsedBind} parsed - Parsed expression from parseBindExpression
  * @param {ResolveContext} ctx - Runtime context (props, state, event, item, scope)
  * @returns {unknown} Resolved value or undefined if any segment is null/undefined
+ * @internal
  */
 export function resolveBindExpression(parsed: ParsedBind, ctx: ResolveContext): unknown {
-  const { source } = parsed;
-  let current: unknown;
-  if (source === 'props') {
-    current = ctx.props;
-  } else if (source === 'state') {
-    current = ctx.state;
-  } else if (source === 'event') {
-    current = ctx.event;
-  } else if (source === 'item') {
-    current = ctx.item ?? ctx.scope?.item;
-  } else {
-    current = ctx.scope?.[source];
-  }
+  let current = resolveSource(parsed.source, ctx);
 
-  for (const seg of parsed.segments) {
+  for (const segment of parsed.segments) {
     if (current == null) {
       return undefined;
     }
-    if (seg.type === 'dot') {
-      current = (current as Record<string, unknown>)[seg.key];
+
+    if (segment.type === 'dot') {
+      current = safePropertyAccess(current, segment.key);
     } else {
-      const key = resolveBindExpression(seg.expr, ctx);
+      // Bracket accessor - resolve the expression to get the key
+      const key = resolveBindExpression(segment.expr, ctx);
       if (key == null) {
         return undefined;
       }
-      current = (current as Record<string, unknown>)[key as string];
+      current = safePropertyAccess(current, key as string | number);
     }
   }
 
@@ -175,6 +210,7 @@ const TEMPLATE_GLOBAL = /\{\{((?:(?!\}\}).)*)\}\}/g;
  * Returns true if the string contains {{...}} template expressions.
  * @param {string} s - String to check
  * @returns {boolean} True if the string contains {{...}} templates, false otherwise
+ * @internal
  */
 export function isTemplateString(s: string): boolean {
   return TEMPLATE_PATTERN.test(s);
@@ -188,6 +224,7 @@ export function isTemplateString(s: string): boolean {
  * @param {string} template - String that may contain {{...}} placeholders
  * @param {ResolveContext} ctx - Runtime context for resolving expressions
  * @returns {unknown} Resolved value (any type for single {{}}, string otherwise)
+ * @internal
  */
 export function resolveTemplateString(template: string, ctx: ResolveContext): unknown {
   const singleMatch = template.match(SINGLE_TEMPLATE_RE);
@@ -215,6 +252,7 @@ export function resolveTemplateString(template: string, ctx: ResolveContext): un
  * @param {ShowNode} node - Show condition node (comparison or and/or tree)
  * @param {ResolveContext} ctx - Runtime context
  * @returns {boolean} True if the condition passes (element should be visible)
+ * @internal
  */
 export function evaluateShowNode(node: ShowNode, ctx: ResolveContext): boolean {
   if (isShowAnd(node)) {
