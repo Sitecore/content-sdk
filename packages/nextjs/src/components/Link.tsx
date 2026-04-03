@@ -7,6 +7,7 @@ import {
   LinkField,
   LinkProps as ReactLinkProps,
 } from '@sitecore-content-sdk/react';
+import { useRouter as usePageRouter } from 'next/compat/router';
 
 /**
  * The list of NextLink props to be supported by the Link component.
@@ -44,6 +45,8 @@ const FILE_EXTENSION_MATCHER = /^\/.*\.\w+$/;
  */
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
   (props: LinkProps, ref): JSX.Element | null => {
+    const pageRouter = usePageRouter();
+
     const {
       field,
       editable = true,
@@ -81,7 +84,8 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
             target={value.target}
             className={value.class}
             {...rest}
-            locale={false}
+            // locale prop is supported only in Pages Router
+            locale={pageRouter ? false : undefined}
             ref={ref}
             {...(process.env.TEST
               ? {
