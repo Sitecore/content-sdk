@@ -43,6 +43,7 @@ export {
 } from './design-library';
 export {
   AtomInfo,
+  CallbackInfo,
   AtomType,
   getDesignLibraryAtomsRegistryEvent,
 } from './atoms-builder/atoms-builder';

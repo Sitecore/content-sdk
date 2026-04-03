@@ -4,4 +4,5 @@ export {
   SerializedDefaultChild,
   DesignLibraryAtomsRegistryEvent,
   getDesignLibraryAtomsRegistryEvent,
+  CallbackInfo,
 } from './atoms-builder';
