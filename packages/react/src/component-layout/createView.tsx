@@ -24,7 +24,10 @@ import {
   resolveIfTemplate,
 } from '@sitecore-content-sdk/content/editing';
 
-/** Registry of named callbacks (e.g. alert, navigate). */
+/**
+ * Registry of named callbacks (e.g. alert, navigate).
+ * @internal
+ */
 export type CallbackRegistry = Record<string, (...args: unknown[]) => void>;
 
 /** Props passed to an Atom Component */
@@ -54,6 +57,7 @@ type ResolvedProps = Record<string, unknown> & {
  * @param {ResolveContext} forCtx - Resolve context for the loop
  * @param {(tmpl: Element, key: Key, item: unknown, itemScope: ScopeMap) => React.ReactNode} renderNode - Render function
  * @returns {React.ReactNode} Array of rendered nodes or null if array resolution fails
+ * @internal
  */
 export const renderFor = (
   node: Element,
@@ -112,6 +116,7 @@ export const renderPrimitiveNode = (node: Node, ctx: ResolveContext): React.Reac
  * @param {ResolveContext} ctx - Resolve context
  * @param {(node: Node, key: Key | undefined, itemCtx: unknown, scope: ScopeMap | undefined) => React.ReactNode} renderNode - Recursive render function
  * @returns {React.ReactNode} Rendered atom element
+ * @internal
  */
 export const renderElementNode = (
   node: Element,
@@ -173,6 +178,7 @@ export const renderElementNode = (
  * @param {React.Dispatch<StatePatch>} setState the React state dispatcher to apply setState actions
  * @param {ResolveContext} resolveContext - Resolve context
  * @returns {(...args: unknown[]) => void} a function that can be used as an event handler
+ * @internal
  */
 export const buildEventCallback = (
   binding: EventBinding,
@@ -233,6 +239,7 @@ export const buildEventCallback = (
  * @param {Record<string, React.ComponentType<unknown>>} atoms - Map of atom type name to its React implementation
  * @param {CallbackRegistry} [callbacks] - Optional registry map of callback names to their implementations for event actions
  * @returns {FC<RuntimeProps>} FC that accepts runtime props (spread as props in expressions)
+ * @internal
  */
 export function createView<RuntimeProps extends Record<string, unknown> = Record<string, unknown>>(
   doc: Document,

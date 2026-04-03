@@ -12,13 +12,20 @@ import { isShowComparison, isShowAnd, isShowOr } from './document';
 /**
  * Source name for bind expressions. Built-in: "props", "item", "state", "event".
  * Any other identifier is resolved from context.scope (e.g. for.as loop variable name).
+ * @internal
  */
 export type BindSource = 'props' | 'item' | 'state' | 'event' | (string & Record<never, never>);
 
-/** Segment in a parsed path: dot key or bracket sub-expression. */
+/**
+ * Segment in a parsed path: dot key or bracket sub-expression.
+ * @internal
+ */
 export type BindSegment = { type: 'dot'; key: string } | { type: 'bracket'; expr: ParsedBind };
 
-/** Parsed bind expression: source plus path segments. */
+/**
+ * Parsed bind expression: source plus path segments.
+ * @internal
+ */
 export interface ParsedBind {
   source: BindSource;
   segments: BindSegment[];

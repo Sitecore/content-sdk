@@ -5,44 +5,68 @@
 
 /* Primitive values */
 
-/** Primitive value in the layout tree. */
+/**
+ * Primitive value in the layout tree.
+ * @internal
+ */
 export type Primitive = string | number | boolean | null;
 
 /* Bindings */
 
-/** Expression binding: {{ }} template string resolved at runtime. */
+/**
+ * Expression binding: {{ }} template string resolved at runtime.
+ * @internal
+ */
 export interface ExpressionBinding {
   bindType: 'expression';
   value: string;
 }
 
-/** Action executed when an event fires (setState or call callback). */
+/**
+ * Action executed when an event fires (setState or call callback).
+ * @internal
+ */
 export interface SetStateAction {
   setState: Record<string, Primitive>;
 }
 
-/** Action that invokes a named callback. */
+/**
+ * Action to call a named callback with arguments.
+ * @internal
+ */
 export interface CallAction {
   call: string;
   args?: Primitive[];
 }
 
-/** Action inside an event binding. */
+/**
+ * Action inside an event binding.
+ * @internal
+ */
 export type Action = SetStateAction | CallAction;
 
-/** Event binding: handler that runs a list of actions (setState / call). */
+/**
+ * Event binding: handler that runs a list of actions (setState / call).
+ * @internal
+ */
 export interface EventBinding {
   bindType: 'event';
   arguments: string[];
   actions: Action[];
 }
 
-/** Property binding: either an expression or an event handler. */
+/**
+ * Property binding: either an expression or an event handler.
+ * @internal
+ */
 export type Binding = ExpressionBinding | EventBinding;
 
 /* For loop */
 
-/** For-loop: iterate over an array; `as` is the loop variable name in expressions. */
+/**
+ * For-loop: iterate over an array; `as` is the loop variable name in expressions.
+ * @internal
+ */
 export interface ForLoop {
   each: string;
   as: string;
@@ -51,29 +75,44 @@ export interface ForLoop {
 
 /* Conditional visibility (show) — tree-based */
 
-/** Show condition: comparison (left op right). */
+/**
+ * Show condition: comparison (left op right).
+ * @internal
+ */
 export interface ShowComparison {
   left: string;
   op: 'eq' | 'ne';
   right: string;
 }
 
-/** Show condition: logical and. */
+/**
+ * Show condition: logical and.
+ * @internal
+ */
 export interface ShowAnd {
   and: ShowNode[];
 }
 
-/** Show condition: logical or. */
+/**
+ * Show condition: logical or.
+ * @internal
+ */
 export interface ShowOr {
   or: ShowNode[];
 }
 
-/** Show condition node (comparison or and/or tree). */
+/**
+ * Show condition node (comparison or and/or tree).
+ * @internal
+ */
 export type ShowNode = ShowComparison | ShowAnd | ShowOr;
 
 /* Nodes */
 
-/** Element node: atom type, optional id, props, bindings, children, for, show, layout. */
+/**
+ * Element node: atom type, optional id, props, bindings, children, for, show, layout.
+ * @internal
+ */
 export interface Element {
   /** Atom name matching a key in the Atom Registry */
   type: string;
@@ -93,12 +132,18 @@ export interface Element {
   show?: ShowNode;
 }
 
-/** Node in the layout tree: either an Element or a primitive. */
+/**
+ * Node in the layout tree: either an Element or a primitive.
+ * @internal
+ */
 export type Node = Element | Primitive;
 
 /* Document root */
 
-/** Component Layout document: name, optional initial state, root node, optional runtime props. */
+/**
+ * Component Layout document: name, optional initial state, root node, optional runtime props.
+ * @internal
+ */
 export interface Document {
   /** Human-readable identifier of the document */
   name: string;
@@ -121,6 +166,7 @@ const has = <T extends object>(o: T, k: PropertyKey): boolean =>
  * Type guard: node is an Element.
  * @param {Node} node - The node to check
  * @returns {boolean} True if the node is an Element, false otherwise
+ * @internal
  */
 export function isElement(node: Node): node is Element {
   return isObj(node) && has(node, 'type');
@@ -130,6 +176,7 @@ export function isElement(node: Node): node is Element {
  * Type guard: element has a for-loop.
  * @param {Element} node - The element to check
  * @returns {boolean} True if the element has a for-loop, false otherwise
+ * @internal
  */
 export function hasFor(node: Element): node is Element & { for: ForLoop } {
   return node.for !== null && node.for !== undefined && typeof node.for.each === 'string';
@@ -139,6 +186,7 @@ export function hasFor(node: Element): node is Element & { for: ForLoop } {
  * Type guard: element has a show condition.
  * @param {Element} node - The element to check
  * @returns {boolean} True if the element has a show condition, false otherwise
+ * @internal
  */
 export function hasShow(node: Element): node is Element & { show: ShowNode } {
   return node.show !== null && node.show !== undefined;
@@ -148,6 +196,7 @@ export function hasShow(node: Element): node is Element & { show: ShowNode } {
  * Type guard: binding is an expression binding.
  * @param {Binding} binding - The binding to check
  * @returns {boolean} True if the binding is an expression binding, false otherwise
+ * @internal
  */
 export function isExpressionBinding(binding: Binding): binding is ExpressionBinding {
   return isObj(binding) && (binding as ExpressionBinding).bindType === 'expression';
@@ -157,6 +206,7 @@ export function isExpressionBinding(binding: Binding): binding is ExpressionBind
  * Type guard: binding is an event binding.
  * @param {Binding} binding - The binding to check
  * @returns {boolean} True if the binding is an event binding, false otherwise
+ * @internal
  */
 export function isEventBinding(binding: Binding): binding is EventBinding {
   return isObj(binding) && (binding as EventBinding).bindType === 'event';
@@ -166,6 +216,7 @@ export function isEventBinding(binding: Binding): binding is EventBinding {
  * Type guard: action is setState.
  * @param {Action} action - The action to check
  * @returns {boolean} True if the action is setState, false otherwise
+ * @internal
  */
 export function isSetStateAction(action: Action): action is SetStateAction {
   return isObj(action) && has(action, 'setState');
@@ -175,6 +226,7 @@ export function isSetStateAction(action: Action): action is SetStateAction {
  * Type guard: action is call.
  * @param {Action} action - The action to check
  * @returns {boolean} True if the action is call, false otherwise
+ * @internal
  */
 export function isCallAction(action: Action): action is CallAction {
   return isObj(action) && has(action, 'call');
@@ -184,6 +236,7 @@ export function isCallAction(action: Action): action is CallAction {
  * Type guard: value is a primitive.
  * @param {unknown} value - The value to check
  * @returns {boolean} True if the value is a primitive, false otherwise
+ * @internal
  */
 export function isPrimitive(value: unknown): value is Primitive {
   return (
@@ -198,6 +251,7 @@ export function isPrimitive(value: unknown): value is Primitive {
  * Type guard: show node is a comparison.
  * @param {ShowNode} node - The node to check
  * @returns {boolean} True if the node is a comparison, false otherwise
+ * @internal
  */
 export function isShowComparison(node: ShowNode): node is ShowComparison {
   return isObj(node) && has(node, 'left') && has(node, 'op') && has(node, 'right');
@@ -207,6 +261,7 @@ export function isShowComparison(node: ShowNode): node is ShowComparison {
  * Type guard: show node is and.
  * @param {ShowNode} node - The node to check
  * @returns {boolean} True if the node is an and, false otherwise
+ * @internal
  */
 export function isShowAnd(node: ShowNode): node is ShowAnd {
   return isObj(node) && has(node, 'and') && Array.isArray((node as ShowAnd).and);
@@ -216,6 +271,7 @@ export function isShowAnd(node: ShowNode): node is ShowAnd {
  * Type guard: show node is or.
  * @param {ShowNode} node - The node to check
  * @returns {boolean} True if the node is an or, false otherwise
+ * @internal
  */
 export function isShowOr(node: ShowNode): node is ShowOr {
   return isObj(node) && has(node, 'or') && Array.isArray((node as ShowOr).or);
