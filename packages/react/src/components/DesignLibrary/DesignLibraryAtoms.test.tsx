@@ -18,7 +18,7 @@ import { Document } from '@sitecore-content-sdk/content/atoms';
 import { AtomMetadata } from '../../atoms/types';
 import { z } from 'zod';
 
-describe.only('<DesignLibraryAtoms />', () => {
+describe('<DesignLibraryAtoms />', () => {
   const sandbox = sinon.createSandbox();
 
   let postToDesignLibrarySpy: sinon.SinonStub;
