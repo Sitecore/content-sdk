@@ -6,23 +6,23 @@
 
 import React, { type FC, type Key, useReducer, useRef } from 'react';
 import {
-  type ComponentLayoutDocument as Document,
-  type ComponentLayoutNode as Node,
-  type ComponentLayoutElement as Element,
-  type ComponentLayoutEventBinding as EventBinding,
-  type ComponentLayoutResolveContext as ResolveContext,
-  isComponentLayoutElement as isElement,
-  hasComponentLayoutFor as hasFor,
-  hasComponentLayoutShow as hasShow,
-  isComponentLayoutExpressionBinding as isExpressionBinding,
-  isComponentLayoutEventBinding as isEventBinding,
-  isComponentLayoutSetStateAction as isSetStateAction,
-  isComponentLayoutCallAction as isCallAction,
-  resolveComponentLayoutTemplateString as resolveTemplateString,
-  evaluateComponentLayoutShowNode as evaluateShowNode,
-  isComponentLayoutPrimitive as isPrimitive,
+  type Document,
+  type Node,
+  type Element,
+  type EventBinding,
+  type ResolveContext,
+  isElement,
+  hasFor,
+  hasShow,
+  isExpressionBinding,
+  isEventBinding,
+  isSetStateAction,
+  isCallAction,
+  resolveTemplateString,
+  evaluateShowNode,
+  isPrimitive,
   resolveIfTemplate,
-} from '@sitecore-content-sdk/content/editing';
+} from '@sitecore-content-sdk/content/atoms';
 import { CallbackMetadata } from '..';
 
 /** Props passed to an Atom Component */

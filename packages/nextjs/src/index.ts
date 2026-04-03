@@ -178,10 +178,6 @@ export {
   type PropMeta,
   type ArgMeta,
   type AtomSchemaInput,
-  createView,
-  type ComponentLayoutCallbackRegistry,
-  type ComponentLayoutCallbackArgNamesMap,
-  type CreateViewOptions,
 } from '@sitecore-content-sdk/react';
 
 export { initContentSdk } from '@sitecore-content-sdk/core';

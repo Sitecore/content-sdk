@@ -1,4 +1,4 @@
-import { Document } from '@sitecore-content-sdk/content/types/component-layout';
+import { Document } from '@sitecore-content-sdk/content/types/atoms';
 
 export const productPuicker: Document = {
   name: 'ProductPickerPreset',

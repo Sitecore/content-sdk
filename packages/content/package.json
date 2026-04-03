@@ -118,6 +118,11 @@
       "require": "./dist/cjs/editing/codegen/index.js",
       "types": "./types/editing/codegen/index.d.ts"
     },
+    "./atoms": {
+      "import": "./dist/esm/atoms/index.js",
+      "require": "./dist/cjs/atoms/index.js",
+      "types": "./types/atoms/index.d.ts"
+    },
     "./editing": {
       "import": "./dist/esm/editing/index.js",
       "require": "./dist/cjs/editing/index.js",

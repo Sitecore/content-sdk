@@ -1,6 +1,5 @@
 /**
  * Component Layout document types and type guards for the no-code component layout spec.
- * @packageDocumentation
  */
 
 export {
@@ -19,7 +18,7 @@ export {
   type Element,
   type Node,
   type Document,
-} from './document';
+} from './component-layout/document';
 
 export {
   isElement,
@@ -33,7 +32,7 @@ export {
   isShowComparison,
   isShowAnd,
   isShowOr,
-} from './document';
+} from './component-layout/document';
 
 export {
   type BindSource,
@@ -46,4 +45,4 @@ export {
   resolveTemplateString,
   evaluateShowNode,
   resolveIfTemplate,
-} from './resolver';
+} from './component-layout/resolver';
