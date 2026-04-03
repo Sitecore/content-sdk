@@ -2,16 +2,30 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSitecore } from '../SitecoreProvider';
 import { serializeAtoms, getAtomRegistry } from '../../atoms/atom-registry-utils';
-import {
+import * as editing from '@sitecore-content-sdk/content/editing';
+import { AtomRenderer } from '../AtomRenderer/AtomRenderer';
+import { cardsWithDataBinding } from '../AtomRenderer/test-data/component-layouts';
+
+let {
   postToDesignLibrary,
   getDesignLibraryAtomsRegistryEvent,
   getDesignLibraryStatusEvent,
   DesignLibraryStatus,
   sendAtomsErrorEvent,
   addDocumentUpdateHandler,
-} from '@sitecore-content-sdk/content/editing';
-import { AtomRenderer } from '../AtomRenderer/AtomRenderer';
-import { cardsWithDataBinding } from '../AtomRenderer/test-data/component-layouts';
+} = editing;
+
+export const __mockDependencies = (mocks: any) => {
+  if (mocks.postToDesignLibrary) {
+    postToDesignLibrary = mocks.postToDesignLibrary;
+  }
+  if (mocks.sendAtomsErrorEvent) {
+    sendAtomsErrorEvent = mocks.sendAtomsErrorEvent;
+  }
+  if (mocks.addDocumentUpdateHandler) {
+    addDocumentUpdateHandler = mocks.addDocumentUpdateHandler;
+  }
+};
 
 /**
  * Design Library Atoms component.
