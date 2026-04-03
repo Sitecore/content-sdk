@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { z } from 'zod';
-import { getAtomRegistry, serializeAtoms } from './atom-registry-utils';
+import { getAtomMap, serializeAtoms } from './atom-registry-utils';
 import { AtomChild, AtomMetadata } from './types';
 
 const createAtom = (name: string, allowedChildren?: AtomChild[]): AtomMetadata => ({
@@ -233,7 +233,7 @@ describe('serializeAtoms', () => {
   });
 });
 
-describe('getAtomRegistry', () => {
+describe('getAtomMap', () => {
   it('should return a map of name to component from metadata', () => {
     const Button = () => null;
     const meta: AtomMetadata = {
@@ -243,7 +243,7 @@ describe('getAtomRegistry', () => {
       props: {} as AtomMetadata['props'],
       component: Button,
     };
-    const registry = getAtomRegistry([meta]);
+    const registry = getAtomMap([meta]);
     expect(registry.Button).to.equal(Button);
     expect(Object.keys(registry)).to.deep.equal(['Button']);
   });
@@ -267,7 +267,7 @@ describe('getAtomRegistry', () => {
         },
       ],
     };
-    const registry = getAtomRegistry([cardMeta]);
+    const registry = getAtomMap([cardMeta]);
     expect(registry.Card).to.equal(Card);
     expect(registry.CardBody).to.equal(CardBody);
   });

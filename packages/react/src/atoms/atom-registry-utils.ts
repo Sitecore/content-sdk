@@ -75,7 +75,7 @@ export const serializeAtoms = (atoms: AtomMetadata[]): AtomInfo[] => {
  * @returns {Record<string, ComponentType<unknown>>} Record of atom name to component
  * @internal
  */
-export function getAtomRegistry(metadata: AtomMetadata[]): Record<string, ComponentType<unknown>> {
+export function getAtomMap(metadata: AtomMetadata[]): Record<string, ComponentType<unknown>> {
   const registry: Record<string, ComponentType<unknown>> = {};
 
   const addAtom = (atom: AtomMetadata): void => {

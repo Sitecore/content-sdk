@@ -1,5 +1,5 @@
 /**
- * Component Layout: createView and getAtomRegistry for rendering no-code layout documents.
+ * Component Layout: createView for rendering no-code layout documents.
  */
 
 export { createView } from './createView';

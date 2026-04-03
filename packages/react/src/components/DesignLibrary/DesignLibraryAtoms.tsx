@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSitecore } from '../SitecoreProvider';
-import { serializeAtoms, getAtomRegistry } from '../../atoms/atom-registry-utils';
+import { serializeAtoms, getAtomMap } from '../../atoms/atom-registry-utils';
 import { serializeCallbacks } from '../../atoms/callback-registry-utils';
 import * as editing from '@sitecore-content-sdk/content/editing';
 import { AtomRenderer } from '../AtomRenderer/AtomRenderer';
@@ -46,10 +46,7 @@ export const DesignLibraryAtoms = () => {
   const [currentDocument, setCurrentDocument] = useState(cardsWithDataBinding);
   const [renderKey, setRenderKey] = useState(0);
 
-  const atomMap = useMemo(
-    () => getAtomRegistry(atomsRegistry?.atoms || []),
-    [atomsRegistry?.atoms]
-  );
+  const atomMap = useMemo(() => getAtomMap(atomsRegistry?.atoms || []), [atomsRegistry?.atoms]);
 
   useEffect(() => {
     postToDesignLibrary(

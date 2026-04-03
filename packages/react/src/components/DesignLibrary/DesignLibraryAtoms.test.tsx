@@ -25,7 +25,7 @@ describe('<DesignLibraryAtoms />', () => {
   let sendAtomsErrorEventSpy: sinon.SinonStub;
   let addDocumentUpdateHandlerSpy: sinon.SinonStub;
   let serializeAtomsStub: sinon.SinonStub;
-  let getAtomRegistryStub: sinon.SinonStub;
+  let getAtomMapStub: sinon.SinonStub;
 
   const mockAtoms: AtomMetadata[] = [
     {
@@ -105,7 +105,7 @@ describe('<DesignLibraryAtoms />', () => {
     sendAtomsErrorEventSpy = sandbox.stub();
     addDocumentUpdateHandlerSpy = sandbox.stub().returns(() => {});
     serializeAtomsStub = sandbox.stub(atomRegistryUtils, 'serializeAtoms');
-    getAtomRegistryStub = sandbox.stub(atomRegistryUtils, 'getAtomRegistry');
+    getAtomMapStub = sandbox.stub(atomRegistryUtils, 'getAtomMap');
 
     __mockDependencies({
       postToDesignLibrary: postToDesignLibrarySpy,
@@ -114,7 +114,7 @@ describe('<DesignLibraryAtoms />', () => {
     });
 
     serializeAtomsStub.returns(mockSerializedAtoms);
-    getAtomRegistryStub.returns(mockAtomMap);
+    getAtomMapStub.returns(mockAtomMap);
 
     // Stub console methods to suppress AtomRenderer console output during tests
     sandbox.stub(console, 'log');
@@ -149,7 +149,7 @@ describe('<DesignLibraryAtoms />', () => {
     );
 
     expect(container).to.exist;
-    expect(getAtomRegistryStub).to.have.been.calledWith(mockAtoms);
+    expect(getAtomMapStub).to.have.been.calledWith(mockAtoms);
   });
 
   it('should serialize atoms and send atoms registry event', () => {
@@ -381,7 +381,7 @@ describe('<DesignLibraryAtoms />', () => {
     );
 
     expect(container).to.exist;
-    expect(getAtomRegistryStub).to.have.been.calledWith(mockAtoms);
+    expect(getAtomMapStub).to.have.been.calledWith(mockAtoms);
   });
 
   it('should handle undefined atoms', () => {
@@ -429,7 +429,7 @@ describe('<DesignLibraryAtoms />', () => {
       </SitecoreProvider>
     );
 
-    expect(getAtomRegistryStub).to.have.been.calledWith(mockAtoms);
+    expect(getAtomMapStub).to.have.been.calledWith(mockAtoms);
 
     rerender(
       <SitecoreProvider atoms={updatedAtoms} callbacks={mockCallbacks} page={page}>
@@ -437,7 +437,7 @@ describe('<DesignLibraryAtoms />', () => {
       </SitecoreProvider>
     );
 
-    expect(getAtomRegistryStub).to.have.been.calledWith(updatedAtoms);
+    expect(getAtomMapStub).to.have.been.calledWith(updatedAtoms);
   });
 
   it('should resubscribe to document updates when atoms change', () => {
