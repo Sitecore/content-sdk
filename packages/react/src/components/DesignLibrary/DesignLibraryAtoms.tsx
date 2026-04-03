@@ -5,7 +5,7 @@ import { serializeAtoms, getAtomMap } from '../../atoms/atom-registry-utils';
 import { serializeCallbacks } from '../../atoms/callback-registry-utils';
 import { createView } from '../../atoms/component-layout';
 import * as editing from '@sitecore-content-sdk/content/editing';
-import { cardsWithDataBinding } from '../AtomRenderer/test-data/component-layouts';
+import { cardsWithDataBinding } from '../../test-data/atom-component-layouts';
 import { DesignLibraryErrorBoundary } from '../..';
 
 let {
