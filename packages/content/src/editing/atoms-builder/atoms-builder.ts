@@ -165,7 +165,7 @@ export const addDocumentUpdateHandler = (callback: (updatedRootComponent: Docume
 
     console.debug('Component Library atoms: message received', e.data);
 
-    callback(e.data as Document);
+    callback(e.data.document as Document);
   };
 
   window.addEventListener('message', handler);
