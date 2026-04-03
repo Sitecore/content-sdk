@@ -3,12 +3,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useSitecore } from '../SitecoreProvider';
 import { serializeAtoms, getAtomMap } from '../../atoms/atom-registry-utils';
 import { serializeCallbacks } from '../../atoms/callback-registry-utils';
+import { createView } from '../../atoms/component-layout';
 import * as editing from '@sitecore-content-sdk/content/editing';
-import { AtomRenderer } from '../AtomRenderer/AtomRenderer';
-import {
-  cardsWithDataBinding,
-  // accordionWithCards,
-} from '../AtomRenderer/test-data/component-layouts';
+import { cardsWithDataBinding } from '../AtomRenderer/test-data/component-layouts';
 import { DesignLibraryErrorBoundary } from '../..';
 
 let {
@@ -37,8 +34,8 @@ export const __mockDependencies = (mocks: any) => {
  *
  * Facilitates the communication between the Design Studio and the Rendering Host when in atom rendering mode.
  * - On mount, it unfolds and serializes the atoms registry and callback registry and sends it to the Design Studio via the `getDesignLibraryAtomsRegistryEvent`.
- * - Fetches Component model data, and passes it to the `AtomRenderer` which is responsible for rendering the low code component
- * based on component model data and the available atoms.
+ * - Receives Component model data updates via document update handler and renders the low code component
+ * based on component model data and the available atoms using createView.
  * @internal
  */
 export const DesignLibraryAtoms = () => {
@@ -47,6 +44,13 @@ export const DesignLibraryAtoms = () => {
   const [renderKey, setRenderKey] = useState(0);
 
   const atomMap = useMemo(() => getAtomMap(atomsRegistry?.atoms || []), [atomsRegistry?.atoms]);
+
+  const View = useMemo(() => {
+    if (!currentDocument || !atomMap) return null;
+
+    const ViewElement = createView(currentDocument, atomMap, atomsRegistry?.callbacks);
+    return <ViewElement {...(currentDocument?.props ?? {})} />;
+  }, [currentDocument, atomMap, atomsRegistry?.callbacks]);
 
   useEffect(() => {
     postToDesignLibrary(
@@ -83,11 +87,7 @@ export const DesignLibraryAtoms = () => {
 
   return (
     <DesignLibraryErrorBoundary uid={currentDocument.name} renderKey={renderKey}>
-      <AtomRenderer
-        atomMap={atomMap}
-        callbackMap={atomsRegistry?.callbacks || []}
-        document={currentDocument}
-      />
+      {View ?? 'No document provided'}
     </DesignLibraryErrorBoundary>
   );
 };
