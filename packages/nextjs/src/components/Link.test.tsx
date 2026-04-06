@@ -400,7 +400,7 @@ describe('<Link />', () => {
     expect(rendered.container.innerHTML).to.have.length(0);
   });
 
-  describe.only('Locale', () => {
+  describe('Locale', () => {
     it('should set locale to false when Pages Router is available', () => {
       const field = {
         value: {
