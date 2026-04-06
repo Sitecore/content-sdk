@@ -272,7 +272,7 @@ export interface FileField {
 // Warning: (ae-forgotten-export) The symbol "FormProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export const Form: ({ params, rendering }: FormProps) => React_2.JSX.Element;
+export const Form: (input: FormProps) => React_2.JSX.Element;
 
 export { getChildPlaceholder }
 
@@ -410,7 +410,7 @@ export const Placeholder: (props: PlaceholderProps) => React_2.JSX.Element;
 // Warning: (ae-forgotten-export) The symbol "PlaceholderMetadataProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
-export const PlaceholderMetadata: ({ rendering, placeholderName, children, componentRuntime, }: PlaceholderMetadataProps) => JSX_2.Element;
+export const PlaceholderMetadata: (input: PlaceholderMetadataProps) => JSX_2.Element;
 
 // @public
 interface PlaceholderProps {
