@@ -8,7 +8,7 @@
 
 > **ComponentPropsContext**(`props`): `Element`
 
-Defined in: [nextjs/src/components/ComponentPropsContext.tsx:44](https://github.com/Sitecore/content-sdk/blob/2cc2d29fb8ea55dbe794a0b95c29a8d44bbf2b48/packages/nextjs/src/components/ComponentPropsContext.tsx#L44)
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:44](https://github.com/Sitecore/content-sdk/blob/54863d7f28105efe11b1453adb074b3260bdd6eb/packages/nextjs/src/components/ComponentPropsContext.tsx#L44)
 
 The ComponentPropsContext component. Stores component props in a context.
 
