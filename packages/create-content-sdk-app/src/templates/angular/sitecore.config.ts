@@ -1,4 +1,4 @@
-import { defineConfig, type AngularClientEnvironment } from '@sitecore-content-sdk/angular';
+import { defineConfig } from '@sitecore-content-sdk/angular';
 import { environment } from './src/environments/environment';
 
 /**
@@ -6,4 +6,7 @@ import { environment } from './src/environments/environment';
  * Pass overrides in the first argument when needed.
  * @see https://doc.sitecore.com/xmc/en/developers/content-sdk/the-sitecore-configuration-file.html
  */
-export default defineConfig({}, environment satisfies AngularClientEnvironment);
+export default defineConfig(
+  {},
+  environment satisfies Record<string, string | undefined>
+);

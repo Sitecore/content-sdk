@@ -1,104 +1,70 @@
 import { Component, input, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// import { RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { Page, Field } from '@sitecore-content-sdk/angular';
-import { RouterLink } from '@angular/router';
+import { Page, Field, RouteData, ScPlaceholderComponent } from '@sitecore-content-sdk/angular';
 
-/**
- * Route fields interface for page title
- */
 interface RouteFields {
   [key: string]: unknown;
   Title?: Field<string>;
 }
 
-/**
- * Layout component that provides the main structure for Sitecore pages.
- * Renders header, main content, and footer placeholders.
- * @public
- */
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, ScPlaceholderComponent],
   template: `
-    <div [class]="mainClass()">
-      <!-- <sc-editing-scripts></sc-editing-scripts> -->
-      <header>
+    <div [ngClass]="layoutClasses()">
+      <header class="w-full">
         <div id="header">
-          <a [routerLink]="'/'">Home</a>
-          <a [routerLink]="'/about'">About</a>
+          @if (scRoute()) {
+            <sc-placeholder name="headless-header" [rendering]="scRoute()!"></sc-placeholder>
+          }
         </div>
       </header>
-      <main>
-        <div id="content">Main content</div>
+      <main class="min-w-0 w-full flex-1">
+        <div id="content" class="w-full min-w-0 max-w-none">
+          @if (scRoute()) {
+            <sc-placeholder name="headless-main" [rendering]="scRoute()!"></sc-placeholder>
+          }
+        </div>
       </main>
-      <footer>
-        <div id="footer">footer</div>
+      <footer class="w-full">
+        <div id="footer">
+          @if (scRoute()) {
+            <sc-placeholder name="headless-footer" [rendering]="scRoute()!"></sc-placeholder>
+          }
+        </div>
       </footer>
     </div>
   `,
   styles: `
     :host {
       display: block;
-      min-height: 100vh;
-    }
-
-    .editing-mode {
-      /* Styles for editing mode */
-    }
-
-    .prod-mode {
-      /* Styles for production mode */
-    }
-
-    .loading {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    header {
-      width: 100%;
-    }
-
-    main {
-      flex: 1;
-      width: 100%;
-    }
-
-    footer {
-      width: 100%;
     }
   `,
 })
 export class LayoutComponent {
-  /**
-   * Page data from Sitecore
-   */
   readonly page = input.required<Page>();
 
-  /**
-   * Current route data derived from page
-   */
-  readonly route = computed(() => this.page().layout?.sitecore?.route ?? null);
+  readonly scRoute = computed(() => this.page().layout?.sitecore?.route as RouteData | null);
 
-  /**
-   * Main container CSS class based on editing mode
-   */
-  readonly mainClass = computed(() => (this.page().mode?.isEditing ? 'editing-mode' : 'prod-mode'));
+  readonly layoutClasses = computed(() => {
+    const editing = this.page().mode?.isEditing;
+    return {
+      'editing-mode': !!editing,
+      'prod-mode': !editing,
+      'flex min-h-screen min-w-0 flex-col': true,
+    };
+  });
 
   private readonly titleService = inject(Title);
 
   constructor() {
-    // Effect to update the page title when the page changes
     effect(() => {
-      const route = this.route();
+      const route = this.scRoute();
       if (route) {
         const fields = route.fields as RouteFields | undefined;
-        const title = fields?.Title?.value ?? 'Page';
+        const title = fields?.Title?.value ?? 'Content SDK Page';
         this.titleService.setTitle(title);
       }
     });

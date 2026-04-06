@@ -1,0 +1,62 @@
+@theme {
+  --font-roboto: 'Roboto', 'sans-serif';
+  /* // abstract/vars /_colors: */
+
+  --color-main-color: #27272a;
+
+  /* //Backgrounds colors */
+  --color-bg-basic-color: #ffffff;
+  --color-bg-light-gray: #f7f7f7;
+  --color-bg-lighter-gray: #fafafa;
+  --color-bg-light-gray-active: #dadada;
+  --color-bg-blue: #89c6cc;
+  --color-bg-blue-active: #15909c;
+  --color-bg-black: #000;
+  --color-bg-black-active: #3d3d3d;
+  --color-page-bg-editor: none;
+  --color-bg-dark-gray: #262626;
+  --color-bg-submenu: #edebeb;
+  --color-bg-submenu-active: #f6f6f6;
+  /* //Text colors */
+  --color-text-white: #fff;
+  --color-text-heading-color: #222;
+  --color-text-basic: #747474;
+  --color-text-basic-active: #878787;
+  --color-text-blue: #89c6cc;
+  --color-text-blue-active: #15909c;
+  --color-text-red: #de232f;
+  /* //Border colors */
+  --color-border-gray: #d2d2d2;
+  --color-border-basic-color: #89c6cc;
+
+  /* //Buttons colors */
+  --color-btn-green-light: #a0ce4e;
+  --color-btn-green: #92be43;
+  --color-btn-red-active: #c34e30;
+  --color-btn-red: #bc4526;
+  /* //other */
+  --color-promo-bg-hero: rgba(0, 0, 0, 0.5);
+  --color-menu-hover-color: #1b809e;
+  --color-menu-active-color: #176f89;
+
+  /* // abstract/vars /_fontSizes: */
+  --text-font-small: 11px;
+  --text-font-normal: 13px;
+  --text-font-medium: 16px;
+  --text-font-big: 20px;
+  --text-font-extrabig: 24px;
+  --text-navigation-font-basic: 18px;
+  --text-navigation-font-basic-submenu: 14px;
+
+  /* // breakpoints */
+  --breakpoint-mobile: 380px;
+  --breakpoint-mobile-horizontal: 640px;
+  --breakpoint-mobile-large: 992px;
+  --breakpoint-desktop: 1024px;
+
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-2xl: 1400px;
+}
