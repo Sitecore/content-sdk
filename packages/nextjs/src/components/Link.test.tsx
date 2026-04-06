@@ -400,6 +400,42 @@ describe('<Link />', () => {
     expect(rendered.container.innerHTML).to.have.length(0);
   });
 
+  describe.only('Locale', () => {
+    it('should set locale to false when Pages Router is available', () => {
+      const field = {
+        value: {
+          href: '/lorem',
+          text: 'ipsum',
+        },
+      };
+
+      const rendered = render(
+        <Page>
+          <Link field={field} />
+        </Page>
+      );
+
+      const link = rendered.container.querySelector('a');
+      expect(link?.getAttribute('data-nextjs-link')).to.equal('true');
+      expect(link?.getAttribute('data-nextjs-locale')).to.equal('false');
+    });
+
+    it('should not set locale when Pages Router is not available', () => {
+      const field = {
+        value: {
+          href: '/lorem',
+          text: 'ipsum',
+        },
+      };
+
+      const rendered = render(<Link field={field} />);
+
+      const link = rendered.container.querySelector('a');
+      expect(link?.getAttribute('data-nextjs-link')).to.equal('true');
+      expect(link?.getAttribute('data-nextjs-locale')).to.equal(null);
+    });
+  });
+
   describe('editMode metadata', () => {
     const testMetadata = {
       contextItem: {

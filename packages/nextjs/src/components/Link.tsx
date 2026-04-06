@@ -91,6 +91,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
               ? {
                   'data-nextjs-link': true,
                   'data-nextjs-prefetch': props.prefetch,
+                  'data-nextjs-locale': pageRouter ? false : undefined,
                 }
               : {})}
           >
