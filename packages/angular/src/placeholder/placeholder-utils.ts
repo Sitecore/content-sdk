@@ -1,0 +1,239 @@
+import { Type } from '@angular/core';
+import {
+  ComponentRendering,
+  RouteData,
+  isDynamicPlaceholder,
+  getDynamicPlaceholderPattern,
+} from '@sitecore-content-sdk/content/layout';
+import { HIDDEN_RENDERING_NAME } from '@sitecore-content-sdk/content';
+
+/**
+ * SXA uses a special export name to identify the "default" variant.
+ */
+export const DEFAULT_EXPORT_NAME = 'Default';
+
+/**
+ * An entry in the Angular component map. Maps Sitecore rendering names to Angular component types.
+ * Supports SXA rendering variants via named exports alongside a default.
+ * @public
+ */
+export type AngularModule = {
+  /** Default component for this rendering */
+  default?: Type<unknown>;
+  /** SXA convention: uppercase Default */
+  Default?: Type<unknown>;
+  /** Named variant exports */
+  [exportName: string]: Type<unknown> | string | undefined;
+  /** Component runtime type (reserved for future use) */
+  componentType?: 'client' | 'server' | 'universal';
+};
+
+/**
+ * The Angular component map type: maps Sitecore rendering names to component types or modules.
+ * @public
+ */
+export type ComponentMap = Map<string, Type<unknown> | AngularModule>;
+
+/**
+ * Result of resolving a component for a rendering definition.
+ */
+export interface ComponentForRendering {
+  component: Type<unknown> | null;
+  isEmpty: boolean;
+}
+
+/**
+ * Merged props passed to each child component rendered by a placeholder.
+ */
+export interface ChildComponentProps {
+  fields: { [key: string]: unknown };
+  params: { [key: string]: string };
+  rendering: ComponentRendering;
+}
+
+/**
+ * Get the renderings for the specified placeholder from the rendering layout data.
+ * Includes dynamic placeholder handling aligned with React's implementation.
+ * @param rendering - rendering data
+ * @param name - placeholder name
+ * @param isEditing - whether editing mode is active
+ * @returns array of component renderings
+ */
+export const getPlaceholderRenderings = (
+  rendering: ComponentRendering | RouteData,
+  name: string,
+  isEditing: boolean
+): ComponentRendering[] => {
+  let phName = name.slice();
+  let placeholdersForRead: Record<string, ComponentRendering[]> | undefined;
+
+  if (rendering?.placeholders) {
+    if (isEditing) {
+      Object.keys(rendering.placeholders).forEach((key) => {
+        const patternPlaceholder = isDynamicPlaceholder(key)
+          ? getDynamicPlaceholderPattern(key)
+          : null;
+
+        if (patternPlaceholder && patternPlaceholder.test(phName)) {
+          phName = key;
+        }
+      });
+      placeholdersForRead = rendering.placeholders;
+    } else {
+      placeholdersForRead = { ...rendering.placeholders };
+      Object.entries(rendering.placeholders).forEach(([key, value]) => {
+        const patternPlaceholder = isDynamicPlaceholder(key)
+          ? getDynamicPlaceholderPattern(key)
+          : null;
+
+        if (patternPlaceholder && patternPlaceholder.test(phName)) {
+          placeholdersForRead![phName] = value;
+          delete placeholdersForRead![key];
+        }
+      });
+    }
+  }
+
+  let result: ComponentRendering[] | null = null;
+  if (rendering && placeholdersForRead && Object.keys(placeholdersForRead).length > 0) {
+    result = placeholdersForRead[phName] ?? null;
+  }
+
+  if (!result) {
+    console.warn(
+      `Placeholder '${phName}' was not found in the current rendering data`,
+      JSON.stringify(rendering, null, 2)
+    );
+    return [];
+  }
+
+  return result;
+};
+
+/**
+ * Extra inputs to set on each dynamically rendered component (in addition to `fields`, `params`, `rendering`).
+ * Keys are Angular `input()` names on the host component.
+ * @public
+ */
+export type PassThroughProps = Readonly<Record<string, unknown>>;
+
+/**
+ * Get SXA specific params from Sitecore rendering params.
+ * @param rendering - rendering object
+ * @returns converted SXA params
+ */
+export const getSXAParams = (
+  rendering: ComponentRendering
+): { styles: string } | undefined => {
+  if (!rendering.params) return { styles: '' };
+
+  const { GridParameters, Styles } = rendering.params;
+
+  if (GridParameters || Styles) {
+    return { styles: `${GridParameters || ''} ${Styles || ''}` };
+  }
+
+  return undefined;
+};
+
+/**
+ * Merge placeholder-level fields/params with per-component fields/params.
+ * @param placeholderFields - placeholder-level fields
+ * @param placeholderParams - placeholder-level params
+ * @param componentRendering - the component rendering data
+ * @returns merged child component props
+ */
+export function getChildComponentProps(
+  placeholderFields: { [key: string]: unknown } | undefined,
+  placeholderParams: { [key: string]: string } | undefined,
+  componentRendering: ComponentRendering
+): ChildComponentProps {
+  const fields = { ...(placeholderFields || {}), ...(componentRendering.fields || {}) };
+  const params = { ...(placeholderParams || {}), ...(componentRendering.params || {}) };
+  return {
+    fields,
+    params: {
+      ...params,
+      ...getSXAParams(componentRendering),
+    },
+    rendering: componentRendering,
+  };
+}
+
+/**
+ * Resolve a component type for a rendering definition.
+ * Handles hidden renderings, missing components, variant selection, and map lookup.
+ * FEaaS/BYOC are intentionally not handled; they fall through to missingComponent.
+ * @param renderingDefinition - the rendering to resolve
+ * @param placeholderName - current placeholder name (for logging)
+ * @param componentMap - the app component map
+ * @param hiddenRenderingComponent - optional override for hidden renderings
+ * @param missingComponentComponent - optional override for missing/unknown components
+ * @returns resolved component info
+ */
+export const resolveComponentForRendering = (
+  renderingDefinition: ComponentRendering,
+  placeholderName: string,
+  componentMap?: ComponentMap,
+  hiddenRenderingComponent?: Type<unknown>,
+  missingComponentComponent?: Type<unknown>
+): ComponentForRendering => {
+  if (renderingDefinition.componentName === HIDDEN_RENDERING_NAME) {
+    return {
+      component: hiddenRenderingComponent ?? null,
+      isEmpty: true,
+    };
+  }
+
+  if (!renderingDefinition.componentName) {
+    return {
+      component: null,
+      isEmpty: true,
+    };
+  }
+
+  let entry: Type<unknown> | AngularModule | undefined;
+  if (!componentMap || componentMap.size === 0) {
+    console.warn(
+      `No components were available in component map to service request for component ${renderingDefinition.componentName}`
+    );
+  } else {
+    entry = componentMap.get(renderingDefinition.componentName);
+  }
+
+  if (!entry) {
+    console.error(
+      `Placeholder ${placeholderName} contains unknown component ${renderingDefinition.componentName}. Ensure that an Angular component exists for it, and that it is registered in your component map.`
+    );
+    return {
+      component: missingComponentComponent ?? null,
+      isEmpty: true,
+    };
+  }
+
+  // If entry is a direct component class (function / class constructor), return it
+  if (typeof entry === 'function') {
+    return { component: entry, isEmpty: false };
+  }
+
+  // AngularModule: handle SXA rendering variants
+  const exportName = renderingDefinition.params?.FieldNames;
+  const resolved =
+    exportName && exportName !== DEFAULT_EXPORT_NAME
+      ? (entry[exportName] as Type<unknown> | undefined)
+      : entry.default || entry.Default;
+
+  if (!resolved || typeof resolved !== 'function') {
+    const variantLabel =
+      exportName && exportName !== DEFAULT_EXPORT_NAME ? ` (${exportName})` : '';
+    console.error(
+      `Placeholder ${placeholderName} contains unknown component ${renderingDefinition.componentName}${variantLabel}. Ensure that an Angular component exists for it, and that it is registered in your component map.`
+    );
+    return {
+      component: missingComponentComponent ?? null,
+      isEmpty: true,
+    };
+  }
+
+  return { component: resolved, isEmpty: false };
+};
