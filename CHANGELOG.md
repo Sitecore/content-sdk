@@ -16,7 +16,6 @@ Our versioning strategy is as follows:
 
 `[events]` `[nextjs]` Lightweight Tracking ([#414](https://github.com/Sitecore/content-sdk/pull/414))
   - Introduced `BotTrackingProxy` Next.js proxy to capture bot tracking events.
-`[content]` Add Unified UI origin to allowed origins ([#424](https://github.com/Sitecore/content-sdk/pull/424))
 `[nextjs]` Upgrade to Next.js 16.2 ([#429](https://github.com/Sitecore/content-sdk/pull/429))
 
 ### 🐛 Bug Fixes
@@ -24,6 +23,12 @@ Our versioning strategy is as follows:
 * Preview mode shows unpublishable content ([#410](https://github.com/Sitecore/content-sdk/pull/410))([416](https://github.com/Sitecore/content-sdk/pull/416))
 * `[core] [content]` Fix GraphQL client factory ignoring custom `fetch` and related options ([#418](https://github.com/Sitecore/content-sdk/pull/418))
 * `[nextjs]` AppRouter - NextLink is throwing Locale error in dev mode ([#427](https://github.com/Sitecore/content-sdk/pull/427))
+
+## 2.0.2
+
+### 🎉 New Features & Improvements
+
+* `[content]` Add Unified UI origin to allowed origins ([#424](https://github.com/Sitecore/content-sdk/pull/424))
 
 ## 2.0.1
 
