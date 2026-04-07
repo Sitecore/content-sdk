@@ -17,8 +17,7 @@ Our versioning strategy is as follows:
 `[events]` `[nextjs]` Lightweight Tracking ([#414](https://github.com/Sitecore/content-sdk/pull/414))
   - Introduced `BotTrackingProxy` Next.js proxy to capture bot tracking events.
 `[content]` Add Unified UI origin to allowed origins ([#424](https://github.com/Sitecore/content-sdk/pull/424))
-
-`[nextjs]` `[create-content-sdk-app]` Upgrade to Next.js 16.2 ([#429](https://github.com/Sitecore/content-sdk/pull/429))
+`[nextjs]` Upgrade to Next.js 16.2 ([#429](https://github.com/Sitecore/content-sdk/pull/429))
 
 ### 🐛 Bug Fixes
 
