@@ -14,7 +14,7 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-`[core]` Add Unified UI origin to allowed origins
+* `[core]` Add Unified UI origin to allowed origins ([#430](https://github.com/Sitecore/content-sdk/pull/430))
 
 ### 1.5.1
    
