@@ -327,6 +327,7 @@ export class RedirectsProxy extends ProxyBase {
    * @param {string} incomingURL Original pathname used for regex tests.
    * @param {string} incomingQS Query string including leading `?` if present.
    * @returns {RedirectResult | undefined} First matching redirect or undefined.
+   * @private
    */
   protected matchFromRedirectMapRedirect(
     redirects: RedirectResult[],
@@ -409,6 +410,7 @@ export class RedirectsProxy extends ProxyBase {
    * @param {string} locale current request locale
    * @param {string} currentPath current request path (without locale)
    * @returns {RedirectResult | undefined} matched redirect item redirect result or undefined
+   * @private
    */
   protected matchRedirectItemRedirect(
     redirects: RedirectResult[],
