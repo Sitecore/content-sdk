@@ -6,7 +6,7 @@
 
 # Interface: FlattenedObject
 
-Defined in: [analytics-core/src/utils/converters/flatten-object.ts:51](https://github.com/Sitecore/content-sdk/blob/54863d7f28105efe11b1453adb074b3260bdd6eb/packages/analytics-core/src/utils/converters/flatten-object.ts#L51)
+Defined in: [analytics-core/src/utils/converters/flatten-object.ts:51](https://github.com/Sitecore/content-sdk/blob/d4bc70e3446552ba58512eec0bcdcb9a26af4c54/packages/analytics-core/src/utils/converters/flatten-object.ts#L51)
 
 **`Internal`**
 
@@ -14,4 +14,4 @@ Interface for the return object of the flattenObject function
 
 ## Indexable
 
-\[`key`: `string`\]: [`BasicTypes`](../type-aliases/BasicTypes.md)
+> \[`key`: `string`\]: [`BasicTypes`](../type-aliases/BasicTypes.md)

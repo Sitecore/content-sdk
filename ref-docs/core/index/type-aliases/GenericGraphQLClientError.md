@@ -8,7 +8,7 @@
 
 > **GenericGraphQLClientError** = `Partial`\<`Error`\> & `object`
 
-Defined in: [packages/core/src/models.ts:8](https://github.com/Sitecore/content-sdk/blob/54863d7f28105efe11b1453adb074b3260bdd6eb/packages/core/src/models.ts#L8)
+Defined in: [packages/core/src/models.ts:8](https://github.com/Sitecore/content-sdk/blob/d4bc70e3446552ba58512eec0bcdcb9a26af4c54/packages/core/src/models.ts#L8)
 
 This type represents errors that can occur in a GraphQL client.
 In cases where an error status was sent back from the server (`!response.ok`), the `response` will be populated with details. In cases where a response was never received, the `code` can be populated with the error code (e.g. Node's 'ECONNRESET', 'ETIMEDOUT', etc).
@@ -17,24 +17,24 @@ In cases where an error status was sent back from the server (`!response.ok`), t
 
 ### code?
 
-> `optional` **code**: `string`
+> `optional` **code?**: `string`
 
 ### headers?
 
-> `optional` **headers**: `HeadersInit`
+> `optional` **headers?**: `HeadersInit`
 
 ### response?
 
-> `optional` **response**: `object`
+> `optional` **response?**: `object`
 
 #### response.headers?
 
-> `optional` **headers**: `Headers`
+> `optional` **headers?**: `Headers`
 
 #### response.ok?
 
-> `optional` **ok**: `boolean`
+> `optional` **ok?**: `boolean`
 
 #### response.status?
 
-> `optional` **status**: `number`
+> `optional` **status?**: `number`

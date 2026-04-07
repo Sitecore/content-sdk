@@ -8,7 +8,7 @@
 
 > **isServerSidePropsContext**(`context`): `context is GetServerSidePropsContext`
 
-Defined in: [nextjs/src/utils/utils.ts:70](https://github.com/Sitecore/content-sdk/blob/54863d7f28105efe11b1453adb074b3260bdd6eb/packages/nextjs/src/utils/utils.ts#L70)
+Defined in: [nextjs/src/utils/utils.ts:70](https://github.com/Sitecore/content-sdk/blob/d4bc70e3446552ba58512eec0bcdcb9a26af4c54/packages/nextjs/src/utils/utils.ts#L70)
 
 Determines whether context is GetServerSidePropsContext (SSR) or GetStaticPropsContext (SSG)
 
@@ -16,7 +16,7 @@ Determines whether context is GetServerSidePropsContext (SSR) or GetStaticPropsC
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `context` | `GetServerSidePropsContext` \| `GetStaticPropsContext` |  |
+| `context` | `GetServerSidePropsContext` \| `GetStaticPropsContext` | - |
 
 ## Returns
 

@@ -8,15 +8,15 @@
 
 > **PersonalizeProxyConfig** = [`ProxyBaseConfig`](ProxyBaseConfig.md) & `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & `SitecoreConfig`\[`"personalize"`\] & `object`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:34](https://github.com/Sitecore/content-sdk/blob/54863d7f28105efe11b1453adb074b3260bdd6eb/packages/nextjs/src/proxy/personalize-proxy.ts#L34)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:34](https://github.com/Sitecore/content-sdk/blob/d4bc70e3446552ba58512eec0bcdcb9a26af4c54/packages/nextjs/src/proxy/personalize-proxy.ts#L34)
 
 The interface for the PersonalizeProxy configuration.
 
 ## Type Declaration
 
-### extractGeoDataCb()?
+### extractGeoDataCb?
 
-> `optional` **extractGeoDataCb**: (`req?`) => `Promise`\<[`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)\> \| [`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)
+> `optional` **extractGeoDataCb?**: (`req?`) => `Promise`\<[`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)\> \| [`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)
 
 #### Parameters
 
@@ -28,9 +28,9 @@ The interface for the PersonalizeProxy configuration.
 
 `Promise`\<[`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)\> \| [`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)
 
-### getExtraUtmParams()?
+### getExtraUtmParams?
 
-> `optional` **getExtraUtmParams**: (`req`) => `Partial`\<`ExperienceParams`\[`"utm"`\]\>
+> `optional` **getExtraUtmParams?**: (`req`) => `Partial`\<`ExperienceParams`\[`"utm"`\]\>
 
 #### Parameters
 
@@ -44,11 +44,11 @@ The interface for the PersonalizeProxy configuration.
 
 ### personalizeService?
 
-> `optional` **personalizeService**: [`PersonalizeService`](../../index/classes/PersonalizeService.md)
+> `optional` **personalizeService?**: [`PersonalizeService`](../../index/classes/PersonalizeService.md)
 
 ### skipForBot?
 
-> `optional` **skipForBot**: `boolean`
+> `optional` **skipForBot?**: `boolean`
 
 Skip personalize proxy for bot requests marked by the bot tracking proxy.
 Default is `true`.

@@ -6,7 +6,7 @@
 
 # Interface: EventsPlugin
 
-Defined in: [events/src/initialization/types.ts:8](https://github.com/Sitecore/content-sdk/blob/54863d7f28105efe11b1453adb074b3260bdd6eb/packages/events/src/initialization/types.ts#L8)
+Defined in: [events/src/initialization/types.ts:8](https://github.com/Sitecore/content-sdk/blob/d4bc70e3446552ba58512eec0bcdcb9a26af4c54/packages/events/src/initialization/types.ts#L8)
 
 Defines the structure of the events plugin, including its initialization method, name, and dependencies.
 
@@ -18,7 +18,7 @@ Defines the structure of the events plugin, including its initialization method,
 
 ### adapter?
 
-> `optional` **adapter**: `unknown`
+> `optional` **adapter?**: `unknown`
 
 Defined in: core/types/initialization/types.d.ts:80
 
@@ -34,7 +34,7 @@ Optional adapter requirements for the plugin.
 
 > **dependencies**: `string`[]
 
-Defined in: [events/src/initialization/types.ts:21](https://github.com/Sitecore/content-sdk/blob/54863d7f28105efe11b1453adb074b3260bdd6eb/packages/events/src/initialization/types.ts#L21)
+Defined in: [events/src/initialization/types.ts:21](https://github.com/Sitecore/content-sdk/blob/d4bc70e3446552ba58512eec0bcdcb9a26af4c54/packages/events/src/initialization/types.ts#L21)
 
 An array of plugin names that the events plugin depends on. This ensures that the required plugins are initialized before the events plugin is initialized.
 
@@ -44,11 +44,11 @@ An array of plugin names that the events plugin depends on. This ensures that th
 
 ***
 
-### init()
+### init
 
 > **init**: () => `Promise`\<`void`\>
 
-Defined in: [events/src/initialization/types.ts:13](https://github.com/Sitecore/content-sdk/blob/54863d7f28105efe11b1453adb074b3260bdd6eb/packages/events/src/initialization/types.ts#L13)
+Defined in: [events/src/initialization/types.ts:13](https://github.com/Sitecore/content-sdk/blob/d4bc70e3446552ba58512eec0bcdcb9a26af4c54/packages/events/src/initialization/types.ts#L13)
 
 Initializes the events plugin, which may involve setting up necessary configurations or performing any asynchronous operations required for the plugin to function properly.
 
@@ -68,7 +68,7 @@ A promise that resolves when the initialization is complete.
 
 > **name**: `"EventsPlugin"`
 
-Defined in: [events/src/initialization/types.ts:17](https://github.com/Sitecore/content-sdk/blob/54863d7f28105efe11b1453adb074b3260bdd6eb/packages/events/src/initialization/types.ts#L17)
+Defined in: [events/src/initialization/types.ts:17](https://github.com/Sitecore/content-sdk/blob/d4bc70e3446552ba58512eec0bcdcb9a26af4c54/packages/events/src/initialization/types.ts#L17)
 
 The name of the events plugin.
 
@@ -80,7 +80,7 @@ The name of the events plugin.
 
 ### options?
 
-> `optional` **options**: `unknown`
+> `optional` **options?**: `unknown`
 
 Defined in: core/types/initialization/types.d.ts:67
 

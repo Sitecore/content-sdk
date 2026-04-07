@@ -4,11 +4,11 @@
 
 [@sitecore-content-sdk/content](../../../README.md) / [tools/index-node](../README.md) / getComponentList
 
-# Variable: getComponentList()
+# Variable: getComponentList
 
 > **getComponentList**: (`paths`, `exclude?`, `includeVariants?`) => [`ComponentFile`](../../interfaces/ComponentFile.md)[] = `_getComponentList`
 
-Defined in: [content/src/tools/templating/components.ts:6](https://github.com/Sitecore/content-sdk/blob/54863d7f28105efe11b1453adb074b3260bdd6eb/packages/content/src/tools/templating/components.ts#L6)
+Defined in: [content/src/tools/templating/components.ts:6](https://github.com/Sitecore/content-sdk/blob/d4bc70e3446552ba58512eec0bcdcb9a26af4c54/packages/content/src/tools/templating/components.ts#L6)
 
 Get list of components from
 

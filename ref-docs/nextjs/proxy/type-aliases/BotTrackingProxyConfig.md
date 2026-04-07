@@ -8,7 +8,7 @@
 
 > **BotTrackingProxyConfig** = `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & `Omit`\<[`ProxyBaseConfig`](ProxyBaseConfig.md), `"defaultLanguage"`\> & `object`
 
-Defined in: [nextjs/src/proxy/bot-tracking-proxy.ts:18](https://github.com/Sitecore/content-sdk/blob/54863d7f28105efe11b1453adb074b3260bdd6eb/packages/nextjs/src/proxy/bot-tracking-proxy.ts#L18)
+Defined in: [nextjs/src/proxy/bot-tracking-proxy.ts:18](https://github.com/Sitecore/content-sdk/blob/d4bc70e3446552ba58512eec0bcdcb9a26af4c54/packages/nextjs/src/proxy/bot-tracking-proxy.ts#L18)
 
 Configuration for BotTrackingProxy.
 
@@ -16,7 +16,7 @@ Configuration for BotTrackingProxy.
 
 ### fetchEvent?
 
-> `optional` **fetchEvent**: `NextFetchEvent`
+> `optional` **fetchEvent?**: `NextFetchEvent`
 
 Fetch event to run the bot tracking in the background to not block the request.
 If not provided, the bot tracking will run synchronously.
