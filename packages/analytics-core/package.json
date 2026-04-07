@@ -7,7 +7,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "2.0.2-canary.0",
+    "@sitecore-content-sdk/core": "^2.0.2",
     "debug": "^4.4.3"
   },
   "description": "Provides shared logic and runtime initialization. Required for the Content SDK 'events' and 'personalize' packages to function.",
@@ -73,5 +73,5 @@
     "api-extractor": "npm run build && api-extractor run --local --verbose",
     "api-extractor:verify": "api-extractor run"
   },
-  "version": "2.0.2-canary.0"
+  "version": "2.0.2"
 }
