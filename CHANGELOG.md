@@ -10,6 +10,12 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
+### 1.5.2
+
+### 🎉 New Features & Improvements
+
+`[core]` Add Unified UI origin to allowed origins
+
 ### 1.5.1
    
 ### 🐛 Bug Fixes
