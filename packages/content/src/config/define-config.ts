@@ -21,7 +21,8 @@ export const buildFallbackConfig = (env: { [key: string]: string | undefined }):
     api: {
       edge: {
         contextId: env.SITECORE_EDGE_CONTEXT_ID || '',
-        clientContextId: env.CSDK_PUBLIC_SITECORE_EDGE_CONTEXT_ID || '',
+        clientContextId:
+          env.SITECORE_EDGE_CLIENT_CONTEXT_ID || env.CSDK_PUBLIC_SITECORE_EDGE_CONTEXT_ID || '',
         edgeUrl: resolveEdgeUrl(rawEdgeUrl),
       },
       local: {

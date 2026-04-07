@@ -12,7 +12,7 @@ import { routes } from './app.routes';
 import scConfig from '../../sitecore.config';
 import { getClient } from '../content-sdk/client/sitecore-client';
 import { LOADERS } from '../content-sdk/loaders';
-import { componentMap } from './components/component-map';
+import { componentMap } from '.sitecore/component-map';
 
 /**
  * Client hydration is disabled so that RouterLink and other directives attach correctly

@@ -6,15 +6,12 @@
     "gen:env": "tsx scripts/generate-environment.ts",
     "gen:env:dev": "tsx scripts/generate-environment.ts --dev",
     "gen:env:prod": "tsx scripts/generate-environment.ts --prod",
-    "start": "run-s gen:env:dev start:app",
-    "start:app": "ng serve",
-    "build": "run-s gen:env:prod build:app",
-    "build:app": "ng build",
-    "watch": "run-s gen:env:dev watch:app",
-    "watch:app": "ng build --watch --configuration development",
-    "test": "ng test",
-    "serve:ssr": "run-s build serve:ssr:app",
-    "serve:ssr:app": "node dist/<%- appName %>/server/server.mjs"
+    "dev": "npm-run-all -s gen:env:dev \"ng serve\"",
+    "build": "npm-run-all -s gen:env:prod \"ng build\"",
+    "watch": "npm-run-all -s gen:env:dev \"ng build --watch --configuration development\"",
+    "start": "npm-run-all -s build serve:ssr",
+    "serve:ssr": "node dist/angular-app/server/server.mjs",
+    "test": "ng test"    
   },
   "prettier": {
     "printWidth": 100,
