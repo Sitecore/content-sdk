@@ -5578,11 +5578,11 @@ __metadata:
   linkType: hard
 
 "baseline-browser-mapping@npm:^2.10.12, baseline-browser-mapping@npm:^2.9.19":
-  version: 2.10.15
-  resolution: "baseline-browser-mapping@npm:2.10.15"
+  version: 2.10.16
+  resolution: "baseline-browser-mapping@npm:2.10.16"
   bin:
     baseline-browser-mapping: dist/cli.cjs
-  checksum: 10/bc84f12b068f9558261d323777efff2e260f228f614346ad45c52f974912b3cb2c851032fac39b31939589ad55057ca583983d25644fe5ad406f948f0d6f0c0c
+  checksum: 10/822f803785bb08169730e0cbf832ede7ee30010c5321965d709c8e76e6f0e9cadb3f042b4dd91ae24c43f7dc64b9a600a7034226f97662eea6e0625704988150
   languageName: node
   linkType: hard
 
@@ -6969,9 +6969,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.328":
-  version: 1.5.331
-  resolution: "electron-to-chromium@npm:1.5.331"
-  checksum: 10/4377b78be27a22f6097f8c9c3d7aa114416ab57dc7da15132825699c004bdd7b65d2c7d5af1500d51fe6e36c6a61254dff35414fe154408c9d20e677ee30e33c
+  version: 1.5.332
+  resolution: "electron-to-chromium@npm:1.5.332"
+  checksum: 10/922241e23aa8b440e26bcf72cc0b1624867e0299c887ced914f011fb13dddbcb34755c4aa30e71f71de154da7cb035e37565a5cd94418c13be93c8c6ca9ccc5f
   languageName: node
   linkType: hard
 
@@ -10786,9 +10786,9 @@ __metadata:
   linkType: hard
 
 "lru-cache@npm:^11.0.0, lru-cache@npm:^11.1.0, lru-cache@npm:^11.2.1":
-  version: 11.3.0
-  resolution: "lru-cache@npm:11.3.0"
-  checksum: 10/e94d4d1159299f745e9f9e75927e460aede732daa339141a887695e6d75c8d1a393bd0e79b02769bd9344e76eec0c02685e6c0f5c741cfa559488d86fec645dd
+  version: 11.3.2
+  resolution: "lru-cache@npm:11.3.2"
+  checksum: 10/045b709782593d3f4ecb69340280717fd7c685b0d36f5976466995bd668ebf1af9e6540b9647b140b0ec4de95a48e2c80ae73ea6c4449e2f4d16a617e8760bf2
   languageName: node
   linkType: hard
 
