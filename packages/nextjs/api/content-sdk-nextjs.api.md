@@ -286,7 +286,7 @@ export type ComponentPropsCollection = {
 };
 
 // @public
-export const ComponentPropsContext: ({ children, value, }: ComponentPropsContextProps) => JSX_2.Element;
+export const ComponentPropsContext: (input: ComponentPropsContextProps) => JSX_2.Element;
 
 // @public
 export type ComponentPropsContextProps = {
@@ -392,7 +392,7 @@ export { DesignLibrary }
 // Warning: (ae-forgotten-export) The symbol "DesingLibraryAppProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export const DesignLibraryApp: ({ page, componentMap, loadServerImportMap, }: DesingLibraryAppProps) => React_2.JSX.Element | null;
+export const DesignLibraryApp: (input: DesingLibraryAppProps) => React_2.JSX.Element | null;
 
 export { DictionaryPhrases }
 
@@ -725,14 +725,14 @@ export class PersonalizeProxy extends ProxyBase {
     // (undocumented)
     handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
     // (undocumented)
-    protected initPersonalizeServer({ hostname, siteName, request, response, }: {
+    protected initPersonalizeServer(input: {
         hostname: string;
         siteName: string;
         request: NextRequest;
         response: NextResponse;
     }): Promise<void>;
     // (undocumented)
-    protected personalize({ params, friendlyId, language, timeout, variantIds, geo, }: {
+    protected personalize(input: {
         params: ExperienceParams;
         friendlyId: string;
         language: string;
@@ -991,7 +991,7 @@ export { withPlaceholder }
 export { withSitecore }
 
 // @public
-export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }: {
+export const writeImportMap: (args: WriteImportMapArgs) => (input: {
     scConfig: SitecoreConfig_2;
 }) => Promise<void>;
 
