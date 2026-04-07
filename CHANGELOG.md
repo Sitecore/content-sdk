@@ -16,6 +16,10 @@ Our versioning strategy is as follows:
 
 * Preview mode shows unpublishable content ([#410](https://github.com/Sitecore/content-sdk/pull/410))([416](https://github.com/Sitecore/content-sdk/pull/416))
 
+### 🎉 New Features & Improvements
+
+* `[nextjs]` Support for redirect items redirects in redirect proxy (more redirects!) ([#433](https://github.com/Sitecore/content-sdk/pull/433))
+
 ## 2.0.1
 
 ### ✨ Bug fixes
