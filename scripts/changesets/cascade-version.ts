@@ -9,19 +9,24 @@
  * 4. Applies the modified release plan
  *
  * Cascading rules:
- * - If package A has a version bump (minor/major),
+ * - If package A has a version bump (minor/major; or any bump when --snapshot),
  * the version bump is propagated to all packages that depend on A (directly or transitively).
  *
- * Usage: tsx .changeset/scripts/cascade-version.ts [--dry-run]
+ * With --snapshot: all change types cascade; snapshot semver suffixes are applied via changesets;
+ * changelogs are not updated (CI-only; changesets are not removed from the remote branch).
+ *
+ * Usage: tsx ./scripts/changesets/cascade-version.ts [--dry-run] [--snapshot]
  */
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
 
+import { appendFileSync } from 'fs';
 import assembleReleasePlan from '@changesets/assemble-release-plan';
 import applyReleasePlan from '@changesets/apply-release-plan';
 import readChangesets from '@changesets/read';
-import { getCommitsThatAddFiles } from '@changesets/git';
+import { getCommitsThatAddFiles, getCurrentCommitId } from '@changesets/git';
 import { read as readConfig } from '@changesets/config';
+import { readPreState } from '@changesets/pre';
 import { getPackages, Packages } from '@manypkg/get-packages';
 import { getDependentsGraph } from '@changesets/get-dependents-graph';
 import type { VersionType, NewChangesetWithCommit, NewChangeset } from '@changesets/types';
@@ -35,8 +40,15 @@ type PackageChangeset = NewChangesetWithCommit & {
   releaseType: VersionType;
 };
 
+function writeGithubOutput(key: string, value: string): void {
+  const out = process.env.GITHUB_OUTPUT;
+  if (!out) return;
+  appendFileSync(out, `${key}=${value}\n`);
+}
+
 async function main(): Promise<void> {
   const dryRun = process.argv.includes('--dry-run');
+  const isSnapshot = process.argv.includes('--snapshot');
   const cwd = process.cwd();
 
   console.log('📦 Custom changeset cascade version script: start...');
@@ -48,10 +60,18 @@ async function main(): Promise<void> {
     config.commit = false;
   }
 
+  const preState = await readPreState(cwd);
+  if (isSnapshot && preState?.mode === 'pre') {
+    throw new Error('Snapshot release is not allowed in pre mode. Run `changeset pre exit` first.');
+  }
+
   const originalChangesets = await getChangesetsWithCommits(cwd);
 
   if (originalChangesets.length === 0) {
     console.log('No pending changesets found.');
+    if (isSnapshot && !dryRun) {
+      writeGithubOutput('snapshot_publish', 'false');
+    }
     return;
   }
 
@@ -74,34 +94,39 @@ async function main(): Promise<void> {
     return `${'cascade-changeset-' + random}`;
   };
 
+  const cascadeChangeTypes: VersionType[] = isSnapshot
+    ? ['major', 'minor', 'patch']
+    : ['major', 'minor'];
+
   // Apply additional changesets to dependent packages
   const cascadeChangesets = [] as NewChangeset[];
   dependentsGraph.forEach((dependentPkgs, sourcePkg) => {
     const sourceChangesets = changesetMap.get(sourcePkg);
     if (!sourceChangesets) return;
-    const aggregatedSummaries = {
-      major: [] as string[],
-      minor: [] as string[],
+
+    const aggregatedSummaries: Record<VersionType, string[]> = {
+      major: [],
+      minor: [],
+      patch: [],
+      none: [],
     };
+
     sourceChangesets.forEach((sourceChange) => {
-      if (sourceChange.releaseType === 'major') {
-        aggregatedSummaries.major.push(formatSummary(sourceChange));
-      } else if (sourceChange.releaseType === 'minor') {
-        aggregatedSummaries.minor.push(formatSummary(sourceChange));
+      const rt = sourceChange.releaseType;
+      if (cascadeChangeTypes.includes(rt)) {
+        aggregatedSummaries[rt].push(formatSummary(sourceChange));
       }
     });
+
     dependentPkgs.forEach((depPkg) => {
-      // Propagate changes from source to dependent packages if present
-      Object.keys(aggregatedSummaries).forEach((changeType) => {
-        if (aggregatedSummaries[changeType as keyof typeof aggregatedSummaries].length === 0)
-          return;
-        const cascadeReleaseType = cascadeVersionPatchOnlyPkgs.includes(depPkg)
-          ? 'patch'
-          : (changeType as VersionType);
+      cascadeChangeTypes.forEach((changeType) => {
+        if (aggregatedSummaries[changeType].length === 0) return;
+        const cascadeReleaseType =
+          !isSnapshot && cascadeVersionPatchOnlyPkgs.includes(depPkg) ? 'patch' : changeType;
         const synthethicChange: PackageChangeset = {
           id: generateChangesetId(),
           summary: `${changeType} \`${sourcePkg}\` dependency update:\n${aggregatedSummaries[
-            changeType as keyof typeof aggregatedSummaries
+            changeType
           ].join('\n')}`,
           releases: [{ name: depPkg, type: cascadeReleaseType }],
           releaseType: cascadeReleaseType,
@@ -113,8 +138,20 @@ async function main(): Promise<void> {
 
   const finalChangesets = [...originalChangesets, ...cascadeChangesets];
 
-  // Assemble release plan with all changesets
-  const releasePlan = assembleReleasePlan(finalChangesets, packages, config, undefined);
+  const snapshotParams =
+    isSnapshot && config.snapshot.prereleaseTemplate?.includes('{commit}')
+      ? { tag: 'canary' as const, commit: await getCurrentCommitId({ cwd }) }
+      : isSnapshot
+      ? { tag: 'canary' as const }
+      : undefined;
+
+  const releasePlan = assembleReleasePlan(
+    finalChangesets,
+    packages,
+    config,
+    preState,
+    snapshotParams
+  );
 
   console.log('\n📋 Final release plan:');
   releasePlan.releases
@@ -123,7 +160,17 @@ async function main(): Promise<void> {
       console.log(`  ${r.name}: ${r.oldVersion} → ${r.newVersion} (${r.type})`);
     });
 
-  await applyReleasePlan(releasePlan, packages, config);
+  if (dryRun) {
+    console.log('🔍 DRY RUN MODE - skipping applyReleasePlan (no files changed)');
+    return;
+  }
+
+  const applyConfig = isSnapshot ? { ...config, changelog: false as const } : config;
+  await applyReleasePlan(releasePlan, packages, applyConfig, isSnapshot ? 'canary' : undefined);
+
+  if (isSnapshot) {
+    writeGithubOutput('snapshot_publish', 'true');
+  }
 
   console.log('✅ Version updates applied with cascading bumps.');
 }
@@ -189,10 +236,9 @@ function getPackageChangesetMap(
   return changesetMap;
 }
 
-try {
-  main();
-} catch (error: any) {
-  console.error('❌ Error:', error.message);
-  console.error(error.stack);
+main().catch((error: unknown) => {
+  const err = error as Error;
+  console.error('❌ Error:', err.message);
+  console.error(err.stack);
   process.exit(1);
-}
+});

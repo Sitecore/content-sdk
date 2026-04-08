@@ -4,5 +4,9 @@
   "commit": false,
   "access": "public",
   "baseBranch": "dev",
-  "ignore": []
+  "ignore": [],
+  "snapshot": {
+    "useCalculatedVersion": true,
+    "prereleaseTemplate": "{tag}.{datetime}"
+  }
 }

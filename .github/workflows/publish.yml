@@ -1,7 +1,7 @@
 name: Publish
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
 
 on:
@@ -15,8 +15,10 @@ on:
     paths:
       - '**'
 
+# changesets/action runs csdk:prep-release which consumes .changeset/*.md in that runner.
+# Canary snapshot must run in a separate job with its own checkout so changesets still exist.
 jobs:
-  publish:
+  stable-release-pre:
     runs-on: ubuntu-latest
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
@@ -57,7 +59,6 @@ jobs:
         run: npm run build
 
       - name: Generate API docs
-        # Generate API docs for both full releases and canary releases
         run: |
           yarn generate-docs
           if [ -n "$(git status --porcelain)" ]; then
@@ -70,26 +71,26 @@ jobs:
 
       - name: Creating .npmrc
         run: |
-          cat << EOF > "$HOME/.npmrc"
-            @sitecore-content-sdk:registry=https://$NPM_REGISTRY
-            registry=https://$NPM_REGISTRY
-            //$NPM_REGISTRY/:_authToken=$NPM_TOKEN
-          EOF
+          NPM_REGISTRY="${NPM_REGISTRY%/}"
+          NPM_REGISTRY="${NPM_REGISTRY}/"
+          write_npmrc() {
+            {
+              echo "@sitecore-content-sdk:registry=https://$NPM_REGISTRY"
+              echo "registry=https://$NPM_REGISTRY"
+              echo "//$NPM_REGISTRY:_authToken=$NPM_TOKEN"
+            } > "$1"
+          }
+          write_npmrc "$GITHUB_WORKSPACE/.npmrc"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
 
-      # ========== CHANGESET ACTION ==========
-      # Create/update the release PR with updated versions based on changesets
-      # OR
-      # Publish to npm when release PR is merged
       - name: Prepare and Process Changesets Release
         id: changesets
         uses: changesets/action@v1
         with:
-          # using scripts from monorepo root package.json
           version: yarn csdk:prep-release
-          publish: yarn csdk:publish-release
+          publish: yarn changeset:publish --tag latest
           commit: '[release][ci] Version bump and changelog'
           title: ${{ github.ref_name == 'dev' && '[csdk] latest release' || format('[csdk] patch release - {0}', github.ref_name) }}
         env:
@@ -97,33 +98,76 @@ jobs:
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
 
-      - name: Bump canary version
+  canary-snapshot:
+    runs-on: ubuntu-latest
+    env:
+      YARN_ENABLE_IMMUTABLE_INSTALLS: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
         run: |
-          MAIN_BRANCH="${{ github.ref_name }}"
-          # Main branch needs to be checked out after changeset action
-          git checkout "$MAIN_BRANCH"
-          echo "Bumping canary version(s)"
+          yarn cache clean --all
+          yarn install --immutable
 
-          # If a release was just published, bump to next preminor canary
-          if [[ "$RELEASE_PUBLISHED" == "true" ]]; then
-            echo "Release was just published - bumping to preminor canary"
-            npx lerna version preminor --exact --preid canary --sign-git-tag false --yes --no-git-tag-version
-          else
-            npx lerna version prerelease --exact --preid canary --sign-git-tag false --yes --no-git-tag-version
-          fi
+      - name: Build packages
+        run: npm run build
 
-          yarn install
-          if [ -n "$(git status --porcelain)" ]; then
-            git commit -a -m "Bump canary version [skip ci]"
-            git push origin HEAD:$MAIN_BRANCH
-          else
-            echo "No version changes to commit"
-          fi
+      - name: Creating .npmrc
+        run: |
+          NPM_REGISTRY="${NPM_REGISTRY%/}"
+          NPM_REGISTRY="${NPM_REGISTRY}/"
+          write_npmrc() {
+            {
+              echo "@sitecore-content-sdk:registry=https://$NPM_REGISTRY"
+              echo "registry=https://$NPM_REGISTRY"
+              echo "//$NPM_REGISTRY:_authToken=$NPM_TOKEN"
+            } > "$1"
+          }
+          write_npmrc "$GITHUB_WORKSPACE/.npmrc"
         env:
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-          RELEASE_PUBLISHED: ${{ steps.changesets.outputs.published }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
 
       - name: Pre-release canary publish
+        id: canary_snapshot
+        run: yarn changeset:cascade-snapshot-version
+
+      - name: Compute snapshot npm dist-tag
+        id: snapshot_tag
+        if: steps.canary_snapshot.outputs.snapshot_publish == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sha = context.sha;
+            const short = sha.slice(0, 7);
+            const { data } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: sha,
+            });
+            const prNums = data.map((p) => p.number).filter((n) => n != null);
+            const prLabel = prNums.length ? String(Math.max(...prNums)) : 'no-pr';
+            const tagPr = `canary.pr-${prLabel}`;
+            const tagSha = `canary.commit-${short}`;
+            core.setOutput('tag_pr', tagPr);
+            core.setOutput('tag_sha', tagSha);
+            core.info(`Snapshot npm dist-tags: ${tagPr} + ${tagSha}`);
+
+      - name: Publish canary snapshot packages to npm
+        if: steps.canary_snapshot.outputs.snapshot_publish == 'true'
+        env:
+          COMMIT_NPM_TAG: ${{ steps.snapshot_tag.outputs.tag_sha }}
+          PR_NPM_TAG: ${{ steps.snapshot_tag.outputs.tag_pr }}
         run: |
           BRANCH_NAME="${{ github.ref_name }}"
           if [[ "$BRANCH_NAME" =~ ^release/ ]]; then
@@ -131,33 +175,7 @@ jobs:
           else
             NPM_TAG="canary"
           fi
-          echo "Publishing canary packages to npm..."
-          npx lerna publish from-package --canary --pre-dist-tag "$NPM_TAG" --preid canary --no-verify-access --yes
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
-
-      - name: Post-canary sync to changeset release PR
-        run: |
-          CHANGESET_BRANCH="changeset-release/${{ github.ref_name }}"
-          git fetch origin
-          # If changeset branch exists
-          if git ls-remote --heads origin "$CHANGESET_BRANCH" | grep -q .; then            
-            git checkout "$CHANGESET_BRANCH"
-            
-            # Merge dev/release branch into changeset-release branch to fix any potential PR merge conflicts
-            if git merge origin/${{ github.ref_name }} --no-edit -m "chore: merge canary changes from ${{ github.ref_name }}"; then
-              echo "Synced cleanly without conflicts"
-            else              
-              git checkout --ours packages/*/package.json
-              git add packages/*/package.json
-              yarn install
-              git add yarn.lock
-              
-              git commit --no-edit
-            fi
-            git push origin "$CHANGESET_BRANCH"
-            echo "Release branch updated with post-canary changes (keeping release versions)"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          yarn changeset:publish --tag $NPM_TAG --no-git-tag
+          VERSION=$(node -p "require('./packages/create-content-sdk-app/package.json').version")
+          npm dist-tag add create-content-sdk-app@$VERSION $COMMIT_NPM_TAG
+          npm dist-tag add create-content-sdk-app@$VERSION $PR_NPM_TAG
