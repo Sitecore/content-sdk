@@ -21,6 +21,7 @@
 
 ## Functions
 
+- [botPageView](functions/botPageView.md)
 - [event](functions/event.md)
 - [eventsPlugin](functions/eventsPlugin.md)
 - [form](functions/form.md)

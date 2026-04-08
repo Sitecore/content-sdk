@@ -22,7 +22,7 @@ CacheClient
 
 ### cacheEnabled?
 
-> `optional` **cacheEnabled**: `boolean`
+> `optional` **cacheEnabled?**: `boolean`
 
 Defined in: core/types/cache-client.d.ts:30
 
@@ -38,7 +38,7 @@ true
 
 ### cacheTimeout?
 
-> `optional` **cacheTimeout**: `number`
+> `optional` **cacheTimeout?**: `number`
 
 Defined in: core/types/cache-client.d.ts:35
 

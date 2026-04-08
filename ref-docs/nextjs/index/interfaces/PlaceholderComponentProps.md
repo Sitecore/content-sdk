@@ -14,7 +14,7 @@ Base Placeholder props
 
 ### componentLoadingMessage?
 
-> `optional` **componentLoadingMessage**: `string`
+> `optional` **componentLoadingMessage?**: `string`
 
 Defined in: react/types/components/Placeholder/models.d.ts:54
 
@@ -24,7 +24,7 @@ The message that gets displayed while component is loading
 
 ### componentMap?
 
-> `optional` **componentMap**: [`ComponentMap`](../type-aliases/ComponentMap.md)
+> `optional` **componentMap?**: [`ComponentMap`](../type-aliases/ComponentMap.md)
 
 Defined in: react/types/components/Placeholder/models.d.ts:97
 
@@ -36,7 +36,7 @@ When rendered as a server placeholder, this prop must be provided. This prop is 
 
 ### ~~disableSuspense?~~
 
-> `optional` **disableSuspense**: `boolean`
+> `optional` **disableSuspense?**: `boolean`
 
 Defined in: react/types/components/Placeholder/models.d.ts:62
 
@@ -57,7 +57,7 @@ true
 
 ### errorComponent?
 
-> `optional` **errorComponent**: `ComponentClass`\<`ErrorComponentProps`, `any`\> \| `FC`\<`ErrorComponentProps`\>
+> `optional` **errorComponent?**: `ComponentClass`\<`ErrorComponentProps`, `any`\> \| `FC`\<`ErrorComponentProps`\>
 
 Defined in: react/types/components/Placeholder/models.d.ts:45
 
@@ -68,7 +68,7 @@ the placeholder
 
 ### fields?
 
-> `optional` **fields**: `object`
+> `optional` **fields?**: `object`
 
 Defined in: react/types/components/Placeholder/models.d.ts:22
 
@@ -83,7 +83,7 @@ Any component or placeholder rendered by a placeholder will have access to this 
 
 ### hiddenRenderingComponent?
 
-> `optional` **hiddenRenderingComponent**: `ComponentClass`\<`unknown`, `any`\> \| `FC`\<`unknown`\>
+> `optional` **hiddenRenderingComponent?**: `ComponentClass`\<`unknown`, `any`\> \| `FC`\<`unknown`\>
 
 Defined in: react/types/components/Placeholder/models.d.ts:40
 
@@ -93,7 +93,7 @@ A component that is rendered in place of any components that are hidden
 
 ### missingComponentComponent?
 
-> `optional` **missingComponentComponent**: `ComponentClass`\<`unknown`, `any`\> \| `FC`\<`unknown`\>
+> `optional` **missingComponentComponent?**: `ComponentClass`\<`unknown`, `any`\> \| `FC`\<`unknown`\>
 
 Defined in: react/types/components/Placeholder/models.d.ts:36
 
@@ -102,9 +102,9 @@ but do not have a definition in the componentMap (i.e. don't have a React implem
 
 ***
 
-### modifyComponentProps()?
+### modifyComponentProps?
 
-> `optional` **modifyComponentProps**: (`componentProps`) => `ChildComponentProps`
+> `optional` **modifyComponentProps?**: (`componentProps`) => `ChildComponentProps`
 
 Defined in: react/types/components/Placeholder/models.d.ts:83
 
@@ -137,7 +137,7 @@ Name of the placeholder to render.
 
 ### page?
 
-> `optional` **page**: [`Page`](../type-aliases/Page.md)
+> `optional` **page?**: [`Page`](../type-aliases/Page.md)
 
 Defined in: react/types/components/Placeholder/models.d.ts:50
 
@@ -148,7 +148,7 @@ This data is passed by the SitecoreProvider.
 
 ### params?
 
-> `optional` **params**: `object`
+> `optional` **params?**: `object`
 
 Defined in: react/types/components/Placeholder/models.d.ts:29
 
@@ -163,7 +163,7 @@ Any component or placeholder rendered by a placeholder will have access to this 
 
 ### passThroughComponentProps?
 
-> `optional` **passThroughComponentProps**: `object`
+> `optional` **passThroughComponentProps?**: `object`
 
 Defined in: react/types/components/Placeholder/models.d.ts:89
 
@@ -177,9 +177,9 @@ Make sure to not include non-serializable props here in RSC server context https
 
 ***
 
-### render()?
+### render?
 
-> `optional` **render**: (`components`, `data`, `props`) => `ReactNode`
+> `optional` **render?**: (`components`, `data`, `props`) => `ReactNode`
 
 Defined in: react/types/components/Placeholder/models.d.ts:76
 
@@ -200,9 +200,9 @@ Useful for techniques like wrapping each child in a wrapper component.
 
 ***
 
-### renderEach()?
+### renderEach?
 
-> `optional` **renderEach**: (`component`, `index`) => `ReactNode`
+> `optional` **renderEach?**: (`component`, `index`) => `ReactNode`
 
 Defined in: react/types/components/Placeholder/models.d.ts:71
 
@@ -222,9 +222,9 @@ Mutually exclusive with `render`.
 
 ***
 
-### renderEmpty()?
+### renderEmpty?
 
-> `optional` **renderEmpty**: (`components`) => `ReactNode`
+> `optional` **renderEmpty?**: (`components`) => `ReactNode`
 
 Defined in: react/types/components/Placeholder/models.d.ts:66
 

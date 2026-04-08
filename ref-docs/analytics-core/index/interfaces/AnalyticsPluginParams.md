@@ -6,7 +6,7 @@
 
 # Interface: AnalyticsPluginParams
 
-Defined in: [analytics-core/src/initialization/plugin.ts:19](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/plugin.ts#L19)
+Defined in: [analytics-core/src/initialization/plugin.ts:19](https://github.com/Sitecore/content-sdk/blob/b92d240245a7da53f462f7bcffe6086a3971978d/packages/analytics-core/src/initialization/plugin.ts#L19)
 
 Parameters for creating an analytics plugin.
 
@@ -16,7 +16,7 @@ Parameters for creating an analytics plugin.
 
 > **adapter**: [`AnalyticsAdapter`](../../internal/interfaces/AnalyticsAdapter.md)
 
-Defined in: [analytics-core/src/initialization/plugin.ts:48](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/plugin.ts#L48)
+Defined in: [analytics-core/src/initialization/plugin.ts:48](https://github.com/Sitecore/content-sdk/blob/b92d240245a7da53f462f7bcffe6086a3971978d/packages/analytics-core/src/initialization/plugin.ts#L48)
 
 The adapter to be used for the analytics plugin.
 
@@ -24,38 +24,38 @@ The adapter to be used for the analytics plugin.
 
 ### options?
 
-> `optional` **options**: `object`
+> `optional` **options?**: `object`
 
-Defined in: [analytics-core/src/initialization/plugin.ts:23](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/plugin.ts#L23)
+Defined in: [analytics-core/src/initialization/plugin.ts:23](https://github.com/Sitecore/content-sdk/blob/b92d240245a7da53f462f7bcffe6086a3971978d/packages/analytics-core/src/initialization/plugin.ts#L23)
 
 Optional configuration options for the analytics plugin.
 
 #### cookieDomain?
 
-> `optional` **cookieDomain**: `string`
+> `optional` **cookieDomain?**: `string`
 
 The domain for which the cookie is valid.
 
 #### cookieExpiryDays?
 
-> `optional` **cookieExpiryDays**: `number`
+> `optional` **cookieExpiryDays?**: `number`
 
 The number of days until the cookie expires.
 
 #### cookiePath?
 
-> `optional` **cookiePath**: `string`
+> `optional` **cookiePath?**: `string`
 
 The path for which the cookie is valid.
 
 #### enableCookie?
 
-> `optional` **enableCookie**: `boolean`
+> `optional` **enableCookie?**: `boolean`
 
 Whether the cookie should be set.
 
 #### timeout?
 
-> `optional` **timeout**: `number`
+> `optional` **timeout?**: `number`
 
 The timeout duration for the analytics plugin, in milliseconds.

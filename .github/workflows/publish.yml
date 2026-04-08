@@ -179,3 +179,4 @@ jobs:
           VERSION=$(node -p "require('./packages/create-content-sdk-app/package.json').version")
           npm dist-tag add create-content-sdk-app@$VERSION $COMMIT_NPM_TAG
           npm dist-tag add create-content-sdk-app@$VERSION $PR_NPM_TAG
+

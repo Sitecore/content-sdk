@@ -2204,74 +2204,74 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/env@npm:16.1.6":
-  version: 16.1.6
-  resolution: "@next/env@npm:16.1.6"
-  checksum: 10/52f17ead23b3dc42e613be469b3a179c9c199f43ab42dfcba1f1bc25adba3d7818b4159ab1c797ddfa64a081c21cc1f753a997c14e164d8a88873e0774395d37
+"@next/env@npm:16.2.3":
+  version: 16.2.3
+  resolution: "@next/env@npm:16.2.3"
+  checksum: 10/30ed128d8ffae47e58732ee134b78da36e2d6942da7479ec5e640d205b7822224daf2f07d7a69352dc362908eb260fc9fa7eaba1ce5e6311abeacc6ffb0fe90a
   languageName: node
   linkType: hard
 
-"@next/eslint-plugin-next@npm:15.5.3":
-  version: 15.5.3
-  resolution: "@next/eslint-plugin-next@npm:15.5.3"
+"@next/eslint-plugin-next@npm:16.2.2":
+  version: 16.2.2
+  resolution: "@next/eslint-plugin-next@npm:16.2.2"
   dependencies:
     fast-glob: "npm:3.3.1"
-  checksum: 10/f737cfa8e1b083d4d87dcaa42137eec3b3e0eac92a8d21879b9d4d45a134c4d56bb5076d28ba81aac86207ea6cc9e910136010517527391328e6bbd94b5e1ea6
+  checksum: 10/ab6713f960e5365c79d47795dfcef5566707fa83d7dff6ef31bddbb874d3f0f8be885ad6f9995eed438f8c63446f3846f08065e2fe671a8f11823ee448df1b72
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-arm64@npm:16.1.6":
-  version: 16.1.6
-  resolution: "@next/swc-darwin-arm64@npm:16.1.6"
+"@next/swc-darwin-arm64@npm:16.2.3":
+  version: 16.2.3
+  resolution: "@next/swc-darwin-arm64@npm:16.2.3"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-x64@npm:16.1.6":
-  version: 16.1.6
-  resolution: "@next/swc-darwin-x64@npm:16.1.6"
+"@next/swc-darwin-x64@npm:16.2.3":
+  version: 16.2.3
+  resolution: "@next/swc-darwin-x64@npm:16.2.3"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-gnu@npm:16.1.6":
-  version: 16.1.6
-  resolution: "@next/swc-linux-arm64-gnu@npm:16.1.6"
+"@next/swc-linux-arm64-gnu@npm:16.2.3":
+  version: 16.2.3
+  resolution: "@next/swc-linux-arm64-gnu@npm:16.2.3"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-musl@npm:16.1.6":
-  version: 16.1.6
-  resolution: "@next/swc-linux-arm64-musl@npm:16.1.6"
+"@next/swc-linux-arm64-musl@npm:16.2.3":
+  version: 16.2.3
+  resolution: "@next/swc-linux-arm64-musl@npm:16.2.3"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-gnu@npm:16.1.6":
-  version: 16.1.6
-  resolution: "@next/swc-linux-x64-gnu@npm:16.1.6"
+"@next/swc-linux-x64-gnu@npm:16.2.3":
+  version: 16.2.3
+  resolution: "@next/swc-linux-x64-gnu@npm:16.2.3"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-musl@npm:16.1.6":
-  version: 16.1.6
-  resolution: "@next/swc-linux-x64-musl@npm:16.1.6"
+"@next/swc-linux-x64-musl@npm:16.2.3":
+  version: 16.2.3
+  resolution: "@next/swc-linux-x64-musl@npm:16.2.3"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@next/swc-win32-arm64-msvc@npm:16.1.6":
-  version: 16.1.6
-  resolution: "@next/swc-win32-arm64-msvc@npm:16.1.6"
+"@next/swc-win32-arm64-msvc@npm:16.2.3":
+  version: 16.2.3
+  resolution: "@next/swc-win32-arm64-msvc@npm:16.2.3"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-win32-x64-msvc@npm:16.1.6":
-  version: 16.1.6
-  resolution: "@next/swc-win32-x64-msvc@npm:16.1.6"
+"@next/swc-win32-x64-msvc@npm:16.2.3":
+  version: 16.2.3
+  resolution: "@next/swc-win32-x64-msvc@npm:16.2.3"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -3117,12 +3117,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sitecore-content-sdk/analytics-core@npm:^2.0.0, @sitecore-content-sdk/analytics-core@workspace:packages/analytics-core":
+"@sitecore-content-sdk/analytics-core@npm:2.1.0-canary.2, @sitecore-content-sdk/analytics-core@workspace:packages/analytics-core":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/analytics-core@workspace:packages/analytics-core"
   dependencies:
     "@jest/types": "npm:^29.6.3"
-    "@sitecore-content-sdk/core": "npm:^2.0.0"
+    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/debug": "npm:^4.1.12"
     "@types/jest": "npm:^29.5.12"
@@ -3143,12 +3143,42 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/cli@npm:^2.0.0, @sitecore-content-sdk/cli@workspace:packages/cli":
+"@sitecore-content-sdk/analytics-core@npm:^2.0.0, @sitecore-content-sdk/analytics-core@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@sitecore-content-sdk/analytics-core@npm:2.0.2"
+  dependencies:
+    "@sitecore-content-sdk/core": "npm:^2.0.2"
+    debug: "npm:^4.4.3"
+  checksum: 10/2597439a17aac182fc15feb40039cacbbad47e283abec816f413df82d061b707b7fdf747d47e875aaaac9685924113aee14778a7f206c3f0085e0f0a0b9cdf92
+  languageName: node
+  linkType: hard
+
+"@sitecore-content-sdk/cli@npm:^2.0.0":
+  version: 2.0.2
+  resolution: "@sitecore-content-sdk/cli@npm:2.0.2"
+  dependencies:
+    "@sitecore-content-sdk/content": "npm:^2.0.2"
+    "@sitecore-content-sdk/core": "npm:^2.0.2"
+    chokidar: "npm:^4.0.3"
+    dotenv: "npm:^16.5.0"
+    dotenv-expand: "npm:^12.0.2"
+    inquirer: "npm:^12.9.6"
+    resolve: "npm:^1.22.10"
+    tmp: "npm:^0.2.3"
+    tsx: "npm:^4.19.4"
+    yargs: "npm:^17.7.2"
+  bin:
+    sitecore-tools: dist/cjs/bin/sitecore-tools.js
+  checksum: 10/628cea335269c237bf18eb542f37c43445d1f89934962a77c5b5ef166e126dac147fec434c605dfdc251e8ba1045f6e85bc7ddd9b769805f6c824bb990db7445
+  languageName: node
+  linkType: hard
+
+"@sitecore-content-sdk/cli@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
-    "@sitecore-content-sdk/content": "npm:^2.0.0"
-    "@sitecore-content-sdk/core": "npm:^2.0.0"
+    "@sitecore-content-sdk/content": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
     "@types/inquirer": "npm:^9.0.9"
@@ -3187,12 +3217,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/content@npm:^2.0.0, @sitecore-content-sdk/content@workspace:packages/content":
+"@sitecore-content-sdk/content@npm:2.1.0-canary.2, @sitecore-content-sdk/content@workspace:packages/content":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/content@workspace:packages/content"
   dependencies:
-    "@sitecore-content-sdk/core": "npm:^2.0.0"
-    "@sitecore-content-sdk/events": "npm:^2.0.0"
+    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/events": "npm:2.1.0-canary.2"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
     "@types/chai-spies": "npm:^1.0.6"
@@ -3234,11 +3264,27 @@ __metadata:
     typescript: "npm:~5.8.3"
     url-parse: "npm:^1.5.10"
   peerDependencies:
-    "@sitecore-content-sdk/events": ^2.0.0
+    "@sitecore-content-sdk/events": ^2.0.2-canary.2
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/core@npm:^2.0.0, @sitecore-content-sdk/core@workspace:packages/core":
+"@sitecore-content-sdk/content@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@sitecore-content-sdk/content@npm:2.0.2"
+  dependencies:
+    "@sitecore-content-sdk/core": "npm:^2.0.2"
+    chalk: "npm:^4.1.2"
+    debug: "npm:^4.4.0"
+    glob: "npm:^11.0.2"
+    graphql: "npm:^16.11.0"
+    url-parse: "npm:^1.5.10"
+  peerDependencies:
+    "@sitecore-content-sdk/events": ^2.0.2
+  checksum: 10/a6f9d0134ccabf263696a41724d82511dcc5a08e5d9e9d17f6be5663763a679dcf34be222e8d7ad67b6ea244ddab1e900975e761afddd7450bd6a059184175eb
+  languageName: node
+  linkType: hard
+
+"@sitecore-content-sdk/core@npm:2.1.0-canary.2, @sitecore-content-sdk/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/core@workspace:packages/core"
   dependencies:
@@ -3278,14 +3324,27 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/events@npm:^2.0.0, @sitecore-content-sdk/events@workspace:packages/events":
+"@sitecore-content-sdk/core@npm:^2.0.1, @sitecore-content-sdk/core@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@sitecore-content-sdk/core@npm:2.0.2"
+  dependencies:
+    debug: "npm:^4.4.0"
+    graphql: "npm:^16.11.0"
+    graphql-request: "npm:^6.1.0"
+    memory-cache: "npm:^0.2.0"
+    url-parse: "npm:^1.5.10"
+  checksum: 10/1ca11c128cea59db5cd46860ca36fb5333e3e2ddd5e0b673d97e44237452a08738ff96394277f7e05bf9c441f1685102d5b649f91272fc5ca1e039b339f9cf64
+  languageName: node
+  linkType: hard
+
+"@sitecore-content-sdk/events@npm:2.1.0-canary.2, @sitecore-content-sdk/events@workspace:packages/events":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/events@workspace:packages/events"
   dependencies:
     "@jest/globals": "npm:^30.2.0"
     "@jest/types": "npm:^29.6.3"
-    "@sitecore-content-sdk/analytics-core": "npm:^2.0.0"
-    "@sitecore-content-sdk/core": "npm:^2.0.0"
+    "@sitecore-content-sdk/analytics-core": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/debug": "npm:^4.1.12"
     "@types/jest": "npm:^29.5.12"
@@ -3298,6 +3357,7 @@ __metadata:
     eslint-plugin-import: "npm:2.32.0"
     eslint-plugin-jsdoc: "npm:52.0.3"
     eslint-plugin-prettier: "npm:^4.0.0"
+    isbot: "npm:^5.1.36"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
     jest-environment-node: "npm:^29.7.0"
@@ -3306,16 +3366,54 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/nextjs@npm:^2.0.0, @sitecore-content-sdk/nextjs@workspace:packages/nextjs":
+"@sitecore-content-sdk/events@npm:^2.0.0, @sitecore-content-sdk/events@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@sitecore-content-sdk/events@npm:2.0.2"
+  dependencies:
+    "@sitecore-content-sdk/analytics-core": "npm:^2.0.2"
+    "@sitecore-content-sdk/core": "npm:^2.0.2"
+    debug: "npm:^4.4.3"
+  checksum: 10/429802b765bf5de22d1b231871a89e81dd6e75754cf1a912c4a0cac96d0aad33b376cdc95cef1a99a82b5ea9503135854eda1d3d9cde2ba30804c08c7ccba58c
+  languageName: node
+  linkType: hard
+
+"@sitecore-content-sdk/nextjs@npm:^2.0.0":
+  version: 2.0.2
+  resolution: "@sitecore-content-sdk/nextjs@npm:2.0.2"
+  dependencies:
+    "@babel/parser": "npm:^7.27.2"
+    "@sitecore-content-sdk/content": "npm:^2.0.2"
+    "@sitecore-content-sdk/core": "npm:^2.0.2"
+    "@sitecore-content-sdk/react": "npm:^2.0.2"
+    recast: "npm:^0.23.11"
+    regex-parser: "npm:^2.3.1"
+    sync-disk-cache: "npm:^2.1.0"
+  peerDependencies:
+    "@sitecore-content-sdk/analytics-core": ^2.0.2
+    "@sitecore-content-sdk/events": ^2.0.2
+    "@sitecore-content-sdk/personalize": ^2.0.2
+    next: ^16.1.1
+    react: ^19.2.1
+    react-dom: ^19.2.1
+    typescript: ^5.4.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10/1e19f7c6f4558fd3d855b2873c19d06355c4923231b7156abbe0416cfd57234589626ad1c6502b1bedac1845848afb048556b9e0ef9941d00a7bf932b627cbe2
+  languageName: node
+  linkType: hard
+
+"@sitecore-content-sdk/nextjs@workspace:packages/nextjs":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/nextjs@workspace:packages/nextjs"
   dependencies:
     "@babel/parser": "npm:^7.27.2"
-    "@sitecore-content-sdk/analytics-core": "npm:^2.0.0"
-    "@sitecore-content-sdk/content": "npm:^2.0.0"
-    "@sitecore-content-sdk/core": "npm:^2.0.0"
-    "@sitecore-content-sdk/personalize": "npm:^2.0.0"
-    "@sitecore-content-sdk/react": "npm:^2.0.0"
+    "@sitecore-content-sdk/analytics-core": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/content": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/events": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/personalize": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/react": "npm:2.1.0-canary.2"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@testing-library/dom": "npm:^10.4.0"
     "@testing-library/react": "npm:^16.3.0"
@@ -3345,7 +3443,7 @@ __metadata:
     glob: "npm:^11.0.2"
     jsdom: "npm:^26.1.0"
     mocha: "npm:^11.2.2"
-    next: "npm:^16.1.1"
+    next: "npm:^16.2.0"
     nock: "npm:14.0.0-beta.7"
     nyc: "npm:^17.1.0"
     prettier: "npm:^2.8.0"
@@ -3360,10 +3458,10 @@ __metadata:
     ts-node: "npm:^10.9.2"
     typescript: "npm:~5.8.3"
   peerDependencies:
-    "@sitecore-content-sdk/analytics-core": ^2.0.0
-    "@sitecore-content-sdk/events": ^2.0.0
-    "@sitecore-content-sdk/personalize": ^2.0.0
-    next: ^16.1.1
+    "@sitecore-content-sdk/analytics-core": ^2.0.2-canary.2
+    "@sitecore-content-sdk/events": ^2.0.2-canary.2
+    "@sitecore-content-sdk/personalize": ^2.0.2-canary.2
+    next: ^16.2.0
     react: ^19.2.1
     react-dom: ^19.2.1
     typescript: ^5.4.0
@@ -3373,14 +3471,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/personalize@npm:^2.0.0, @sitecore-content-sdk/personalize@workspace:packages/personalize":
+"@sitecore-content-sdk/personalize@npm:2.1.0-canary.2, @sitecore-content-sdk/personalize@workspace:packages/personalize":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/personalize@workspace:packages/personalize"
   dependencies:
     "@jest/types": "npm:^29.6.3"
-    "@sitecore-content-sdk/analytics-core": "npm:^2.0.0"
-    "@sitecore-content-sdk/core": "npm:^2.0.0"
-    "@sitecore-content-sdk/events": "npm:^2.0.0"
+    "@sitecore-content-sdk/analytics-core": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/events": "npm:2.1.0-canary.2"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/debug": "npm:^4.1.12"
     "@types/jest": "npm:^29.5.12"
@@ -3401,13 +3499,25 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/react@npm:^2.0.0, @sitecore-content-sdk/react@workspace:packages/react":
+"@sitecore-content-sdk/personalize@npm:^2.0.0":
+  version: 2.0.2
+  resolution: "@sitecore-content-sdk/personalize@npm:2.0.2"
+  dependencies:
+    "@sitecore-content-sdk/analytics-core": "npm:^2.0.2"
+    "@sitecore-content-sdk/core": "npm:^2.0.2"
+    "@sitecore-content-sdk/events": "npm:^2.0.2"
+    debug: "npm:^4.4.3"
+  checksum: 10/a61d5410b92cc0f0d94686281581e3fc7641890e5c8fa26f23df63783ba2489a4a89eec466c11dac57405d1eba81866b4f5eac7d1a36dbf4b13dfa998450d02a
+  languageName: node
+  linkType: hard
+
+"@sitecore-content-sdk/react@npm:2.1.0-canary.2, @sitecore-content-sdk/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
-    "@sitecore-content-sdk/content": "npm:^2.0.0"
-    "@sitecore-content-sdk/core": "npm:^2.0.0"
-    "@sitecore-content-sdk/search": "npm:^0.2.0"
+    "@sitecore-content-sdk/content": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/search": "npm:0.2.2-canary.11"
     "@sitecore-feaas/clientside": "npm:^0.6.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@testing-library/dom": "npm:^10.4.0"
@@ -3446,19 +3556,37 @@ __metadata:
     ts-node: "npm:^10.9.2"
     typescript: "npm:~5.8.3"
   peerDependencies:
-    "@sitecore-content-sdk/analytics-core": ^2.0.0
-    "@sitecore-content-sdk/events": ^2.0.0
+    "@sitecore-content-sdk/analytics-core": ^2.0.2-canary.2
+    "@sitecore-content-sdk/events": ^2.0.2-canary.2
     "@sitecore-feaas/clientside": ^0.6.0
     react: ^19.2.1
     react-dom: ^19.2.1
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/search@npm:^0.2.0, @sitecore-content-sdk/search@workspace:packages/search":
+"@sitecore-content-sdk/react@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@sitecore-content-sdk/react@npm:2.0.2"
+  dependencies:
+    "@sitecore-content-sdk/content": "npm:^2.0.2"
+    "@sitecore-content-sdk/core": "npm:^2.0.2"
+    "@sitecore-content-sdk/search": "npm:^0.2.1"
+    fast-deep-equal: "npm:^3.1.3"
+  peerDependencies:
+    "@sitecore-content-sdk/analytics-core": ^2.0.0
+    "@sitecore-content-sdk/events": ^2.0.0
+    "@sitecore-feaas/clientside": ^0.6.0
+    react: ^19.2.1
+    react-dom: ^19.2.1
+  checksum: 10/f8ccf8de75251d737ff3c2d50f39cdf33d7d80b87c0be0ef75acc1a3787dec6dbe287c0f35a3e9ff1ea0ff0ab71c9e1545017797bb245708b33ff8c83e62ae5b
+  languageName: node
+  linkType: hard
+
+"@sitecore-content-sdk/search@npm:0.2.2-canary.11, @sitecore-content-sdk/search@workspace:packages/search":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/search@workspace:packages/search"
   dependencies:
-    "@sitecore-content-sdk/core": "npm:^2.0.0"
+    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
     chai: "npm:^6.2.1"
@@ -3474,6 +3602,15 @@ __metadata:
     typescript: "npm:~5.8.3"
   languageName: unknown
   linkType: soft
+
+"@sitecore-content-sdk/search@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@sitecore-content-sdk/search@npm:0.2.1"
+  dependencies:
+    "@sitecore-content-sdk/core": "npm:^2.0.1"
+  checksum: 10/6de23c2b32516ef4f1ef5b6788f1a2a08150cbf60acadb162de40b9bff1196ca04217caf4c54a6daeecae34df3054f6ac4c8639b6f405885ebff7696124cd508
+  languageName: node
+  linkType: hard
 
 "@sitecore-feaas/clientside@npm:^0.6.0":
   version: 0.6.4
@@ -4102,7 +4239,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0, @typescript-eslint/eslint-plugin@npm:^8.39.0":
+"@typescript-eslint/eslint-plugin@npm:8.58.1":
+  version: 8.58.1
+  resolution: "@typescript-eslint/eslint-plugin@npm:8.58.1"
+  dependencies:
+    "@eslint-community/regexpp": "npm:^4.12.2"
+    "@typescript-eslint/scope-manager": "npm:8.58.1"
+    "@typescript-eslint/type-utils": "npm:8.58.1"
+    "@typescript-eslint/utils": "npm:8.58.1"
+    "@typescript-eslint/visitor-keys": "npm:8.58.1"
+    ignore: "npm:^7.0.5"
+    natural-compare: "npm:^1.4.0"
+    ts-api-utils: "npm:^2.5.0"
+  peerDependencies:
+    "@typescript-eslint/parser": ^8.58.1
+    eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
+    typescript: ">=4.8.4 <6.1.0"
+  checksum: 10/0fcbe6faadb77313aa91c895c977a24fc72a79eed62f46f7b2d5804db52a9af99351b33b9c4d73fdabb0f69772d5d4a9acdef249a0d1526a44d3817fb51419b5
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/eslint-plugin@npm:^8.39.0":
   version: 8.54.0
   resolution: "@typescript-eslint/eslint-plugin@npm:8.54.0"
   dependencies:
@@ -4138,7 +4295,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0, @typescript-eslint/parser@npm:^8.39.0":
+"@typescript-eslint/parser@npm:8.58.1":
+  version: 8.58.1
+  resolution: "@typescript-eslint/parser@npm:8.58.1"
+  dependencies:
+    "@typescript-eslint/scope-manager": "npm:8.58.1"
+    "@typescript-eslint/types": "npm:8.58.1"
+    "@typescript-eslint/typescript-estree": "npm:8.58.1"
+    "@typescript-eslint/visitor-keys": "npm:8.58.1"
+    debug: "npm:^4.4.3"
+  peerDependencies:
+    eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
+    typescript: ">=4.8.4 <6.1.0"
+  checksum: 10/062584d26609e82169459ebf0c59f4925ba6596f4ea1637a320c34a25c34117585c458b9c6c268f5eeaee1988f4c7257d34d4bd05a214a88de12110e71b48493
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/parser@npm:^8.39.0":
   version: 8.54.0
   resolution: "@typescript-eslint/parser@npm:8.54.0"
   dependencies:
@@ -4180,6 +4353,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/project-service@npm:8.58.1":
+  version: 8.58.1
+  resolution: "@typescript-eslint/project-service@npm:8.58.1"
+  dependencies:
+    "@typescript-eslint/tsconfig-utils": "npm:^8.58.1"
+    "@typescript-eslint/types": "npm:^8.58.1"
+    debug: "npm:^4.4.3"
+  peerDependencies:
+    typescript: ">=4.8.4 <6.1.0"
+  checksum: 10/2f3136268fc262e77e8c8c14291e60c54e0228b63ccb022826b6def6d80b83ce9c3a92fef11c888889fb204343c845556868c49495c3aa0a115e9a861dd5fe99
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/scope-manager@npm:8.39.0":
   version: 8.39.0
   resolution: "@typescript-eslint/scope-manager@npm:8.39.0"
@@ -4200,6 +4386,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/scope-manager@npm:8.58.1":
+  version: 8.58.1
+  resolution: "@typescript-eslint/scope-manager@npm:8.58.1"
+  dependencies:
+    "@typescript-eslint/types": "npm:8.58.1"
+    "@typescript-eslint/visitor-keys": "npm:8.58.1"
+  checksum: 10/dc070fd73847807e32cb7dfc37512abd0b1a485b0037d8cfb6c593555a5b673d3ee9d19c61504ea71d067ad610c66f64d70d56f3a5db51895c0a25e45621cd08
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/tsconfig-utils@npm:8.39.0":
   version: 8.39.0
   resolution: "@typescript-eslint/tsconfig-utils@npm:8.39.0"
@@ -4215,6 +4411,15 @@ __metadata:
   peerDependencies:
     typescript: ">=4.8.4 <6.0.0"
   checksum: 10/e9d6b29538716f007919bfcee94f09b7f8e7d2b684ad43d1a3c8d43afb9f0539c7707f84a34f42054e31c8c056b0ccf06575d89e860b4d34632ffefaefafe1fc
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/tsconfig-utils@npm:8.58.1, @typescript-eslint/tsconfig-utils@npm:^8.58.1":
+  version: 8.58.1
+  resolution: "@typescript-eslint/tsconfig-utils@npm:8.58.1"
+  peerDependencies:
+    typescript: ">=4.8.4 <6.1.0"
+  checksum: 10/4a5cf9a5eb834d05f2d37f7d80319575cf4a75aa52807b96edc0db24349ba417b41cb6f5257ffb07b8b9b4c59c7438637e8c75ed7c2b513bcb07e259b49e058e
   languageName: node
   linkType: hard
 
@@ -4250,6 +4455,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/type-utils@npm:8.58.1":
+  version: 8.58.1
+  resolution: "@typescript-eslint/type-utils@npm:8.58.1"
+  dependencies:
+    "@typescript-eslint/types": "npm:8.58.1"
+    "@typescript-eslint/typescript-estree": "npm:8.58.1"
+    "@typescript-eslint/utils": "npm:8.58.1"
+    debug: "npm:^4.4.3"
+    ts-api-utils: "npm:^2.5.0"
+  peerDependencies:
+    eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
+    typescript: ">=4.8.4 <6.1.0"
+  checksum: 10/39d62d6711590e817cf9a36257c19ea18e201ceca42b900350e121ea8986c167fbdd9da385ced29c61e38a1b5c76b6c320d59e21d4dd7f32767520e31aef4654
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/types@npm:8.39.0":
   version: 8.39.0
   resolution: "@typescript-eslint/types@npm:8.39.0"
@@ -4261,6 +4482,13 @@ __metadata:
   version: 8.54.0
   resolution: "@typescript-eslint/types@npm:8.54.0"
   checksum: 10/c25cc0bdf90fb150cf6ce498897f43fe3adf9e872562159118f34bd91a9bfab5f720cb1a41f3cdf253b2e840145d7d372089b7cef5156624ef31e98d34f91b31
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/types@npm:8.58.1, @typescript-eslint/types@npm:^8.58.1":
+  version: 8.58.1
+  resolution: "@typescript-eslint/types@npm:8.58.1"
+  checksum: 10/447e1351af8a47297096f063b327c69b1c986af89e39cb39e142bb35d7bec2ce8f34f31edcf62d1beb2e09a38e2029b12b50b335dae4e7c9ff49bd82f9127523
   languageName: node
   linkType: hard
 
@@ -4303,6 +4531,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/typescript-estree@npm:8.58.1":
+  version: 8.58.1
+  resolution: "@typescript-eslint/typescript-estree@npm:8.58.1"
+  dependencies:
+    "@typescript-eslint/project-service": "npm:8.58.1"
+    "@typescript-eslint/tsconfig-utils": "npm:8.58.1"
+    "@typescript-eslint/types": "npm:8.58.1"
+    "@typescript-eslint/visitor-keys": "npm:8.58.1"
+    debug: "npm:^4.4.3"
+    minimatch: "npm:^10.2.2"
+    semver: "npm:^7.7.3"
+    tinyglobby: "npm:^0.2.15"
+    ts-api-utils: "npm:^2.5.0"
+  peerDependencies:
+    typescript: ">=4.8.4 <6.1.0"
+  checksum: 10/107510b484148a8a9a5874f5451b9a6649609607ee5e67de36cded786157987a5262b145398b1bd1935afab66134532369a4d6abb53c6f5b7744e3ace0b13f07
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/utils@npm:8.39.0":
   version: 8.39.0
   resolution: "@typescript-eslint/utils@npm:8.39.0"
@@ -4333,6 +4580,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/utils@npm:8.58.1":
+  version: 8.58.1
+  resolution: "@typescript-eslint/utils@npm:8.58.1"
+  dependencies:
+    "@eslint-community/eslint-utils": "npm:^4.9.1"
+    "@typescript-eslint/scope-manager": "npm:8.58.1"
+    "@typescript-eslint/types": "npm:8.58.1"
+    "@typescript-eslint/typescript-estree": "npm:8.58.1"
+  peerDependencies:
+    eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
+    typescript: ">=4.8.4 <6.1.0"
+  checksum: 10/c51a5e116d1a09d0eb701c5884d5b9b8c22f79c427cb4c46357e4bcb7dfdfd9beba92e5d518572f42111b7335541a4ccefe3c05595fc3d666c1b62ddd1522e54
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/visitor-keys@npm:8.39.0":
   version: 8.39.0
   resolution: "@typescript-eslint/visitor-keys@npm:8.39.0"
@@ -4350,6 +4612,16 @@ __metadata:
     "@typescript-eslint/types": "npm:8.54.0"
     eslint-visitor-keys: "npm:^4.2.1"
   checksum: 10/cca5380ee30250302ee1459e5a0a38de8c16213026dbbff3d167fa7d71d012f31d60ac4483ad45ebd13f2ac963d1ca52dd5f22759a68d4ee57626e421769187a
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/visitor-keys@npm:8.58.1":
+  version: 8.58.1
+  resolution: "@typescript-eslint/visitor-keys@npm:8.58.1"
+  dependencies:
+    "@typescript-eslint/types": "npm:8.58.1"
+    eslint-visitor-keys: "npm:^5.0.0"
+  checksum: 10/e9f34741da6fc0cb8e9eb67828ea4427ac2004a33ce8d1e1e9ba038471f9ed68405eca871651bb2efa793a467bc5233a4310c5571ad1497cb2a84a600e1733a8
   languageName: node
   linkType: hard
 
@@ -5174,12 +5446,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"baseline-browser-mapping@npm:^2.8.3, baseline-browser-mapping@npm:^2.9.0":
+"baseline-browser-mapping@npm:^2.9.0":
   version: 2.9.19
   resolution: "baseline-browser-mapping@npm:2.9.19"
   bin:
     baseline-browser-mapping: dist/cli.js
   checksum: 10/8d7bbb7fe3d1ad50e04b127c819ba6d059c01ed0d2a7a5fc3327e23a8c42855fa3a8b510550c1fe1e37916147e6a390243566d3ef85bf6130c8ddfe5cc3db530
+  languageName: node
+  linkType: hard
+
+"baseline-browser-mapping@npm:^2.9.19":
+  version: 2.10.16
+  resolution: "baseline-browser-mapping@npm:2.10.16"
+  bin:
+    baseline-browser-mapping: dist/cli.cjs
+  checksum: 10/822f803785bb08169730e0cbf832ede7ee30010c5321965d709c8e76e6f0e9cadb3f042b4dd91ae24c43f7dc64b9a600a7034226f97662eea6e0625704988150
   languageName: node
   linkType: hard
 
@@ -5248,6 +5529,15 @@ __metadata:
   dependencies:
     balanced-match: "npm:^4.0.2"
   checksum: 10/cfd57e20d8ded9578149e47ae4d3fff2b2f78d06b54a32a73057bddff65c8e9b930613f0cbcfefedf12dd117151e19d4da16367d5127c54f3bff02d8a4479bb2
+  languageName: node
+  linkType: hard
+
+"brace-expansion@npm:^5.0.5":
+  version: 5.0.5
+  resolution: "brace-expansion@npm:5.0.5"
+  dependencies:
+    balanced-match: "npm:^4.0.2"
+  checksum: 10/f259b2ddf04489da9512ad637ba6b4ef2d77abd4445d20f7f1714585f153435200a53fa6a2e4a5ee974df14ddad4cd16421f6f803e96e8b452bd48598878d0ee
   languageName: node
   linkType: hard
 
@@ -6889,27 +7179,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-next@npm:15.5.3":
-  version: 15.5.3
-  resolution: "eslint-config-next@npm:15.5.3"
+"eslint-config-next@npm:16.2.2":
+  version: 16.2.2
+  resolution: "eslint-config-next@npm:16.2.2"
   dependencies:
-    "@next/eslint-plugin-next": "npm:15.5.3"
-    "@rushstack/eslint-patch": "npm:^1.10.3"
-    "@typescript-eslint/eslint-plugin": "npm:^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0"
-    "@typescript-eslint/parser": "npm:^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0"
+    "@next/eslint-plugin-next": "npm:16.2.2"
     eslint-import-resolver-node: "npm:^0.3.6"
     eslint-import-resolver-typescript: "npm:^3.5.2"
-    eslint-plugin-import: "npm:^2.31.0"
+    eslint-plugin-import: "npm:^2.32.0"
     eslint-plugin-jsx-a11y: "npm:^6.10.0"
     eslint-plugin-react: "npm:^7.37.0"
-    eslint-plugin-react-hooks: "npm:^5.0.0"
+    eslint-plugin-react-hooks: "npm:^7.0.0"
+    globals: "npm:16.4.0"
+    typescript-eslint: "npm:^8.46.0"
   peerDependencies:
-    eslint: ^7.23.0 || ^8.0.0 || ^9.0.0
+    eslint: ">=9.0.0"
     typescript: ">=3.3.1"
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10/2acbd954f01609f98d313741f30841e60a4f615a2572511696207544754ca6a6d2f030e7451f07ff23819a288ea64c4b6b15a7b21082566b766e4b0898cc8c7b
+  checksum: 10/5aead54023f7f0551be881778f89d5ab2e5da41e1893f32fdcdcb66a61540b44da5f307ae9a2da6d8aea3a8e937cd3a28a725f0a0c629db45dd35383980fd193
   languageName: node
   linkType: hard
 
@@ -6971,7 +7260,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-import@npm:2.32.0, eslint-plugin-import@npm:^2.31.0, eslint-plugin-import@npm:^2.32.0":
+"eslint-plugin-import@npm:2.32.0, eslint-plugin-import@npm:^2.32.0":
   version: 2.32.0
   resolution: "eslint-plugin-import@npm:2.32.0"
   dependencies:
@@ -8011,6 +8300,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"globals@npm:16.4.0":
+  version: 16.4.0
+  resolution: "globals@npm:16.4.0"
+  checksum: 10/1627a9f42fb4c82d7af6a0c8b6cd616e00110908304d5f1ddcdf325998f3aed45a4b29d8a1e47870f328817805263e31e4f1673f00022b9c2b210552767921cf
+  languageName: node
+  linkType: hard
+
 "globals@npm:^14.0.0":
   version: 14.0.0
   resolution: "globals@npm:14.0.0"
@@ -9008,6 +9304,13 @@ __metadata:
   version: 1.0.0
   resolution: "isarray@npm:1.0.0"
   checksum: 10/f032df8e02dce8ec565cf2eb605ea939bdccea528dbcf565cdf92bfa2da9110461159d86a537388ef1acef8815a330642d7885b29010e8f7eac967c9993b65ab
+  languageName: node
+  linkType: hard
+
+"isbot@npm:^5.1.36":
+  version: 5.1.37
+  resolution: "isbot@npm:5.1.37"
+  checksum: 10/99337867b9b84b1e4141a3088ddb8ed6e53ea406d334bacb147ee4b44581bd951ab32ead12840702154e344aed53e48806141b8fe8b8c3c8307739b3e97ac550
   languageName: node
   linkType: hard
 
@@ -10704,6 +11007,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:^10.2.2":
+  version: 10.2.5
+  resolution: "minimatch@npm:10.2.5"
+  dependencies:
+    brace-expansion: "npm:^5.0.5"
+  checksum: 10/19e87a931aff60ee7b9d80f39f817b8bfc54f61f8356ee3549fbf636dbccacacfec8d803eac73293955c4527cd085247dfc064bce4a5e349f8f3b85e2bf5da0f
+  languageName: node
+  linkType: hard
+
 "minimatch@npm:^3.0.4, minimatch@npm:^3.1.1, minimatch@npm:^3.1.2":
   version: 3.1.2
   resolution: "minimatch@npm:3.1.2"
@@ -10964,24 +11276,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:^16.1.1":
-  version: 16.1.6
-  resolution: "next@npm:16.1.6"
+"next@npm:^16.2.0":
+  version: 16.2.3
+  resolution: "next@npm:16.2.3"
   dependencies:
-    "@next/env": "npm:16.1.6"
-    "@next/swc-darwin-arm64": "npm:16.1.6"
-    "@next/swc-darwin-x64": "npm:16.1.6"
-    "@next/swc-linux-arm64-gnu": "npm:16.1.6"
-    "@next/swc-linux-arm64-musl": "npm:16.1.6"
-    "@next/swc-linux-x64-gnu": "npm:16.1.6"
-    "@next/swc-linux-x64-musl": "npm:16.1.6"
-    "@next/swc-win32-arm64-msvc": "npm:16.1.6"
-    "@next/swc-win32-x64-msvc": "npm:16.1.6"
+    "@next/env": "npm:16.2.3"
+    "@next/swc-darwin-arm64": "npm:16.2.3"
+    "@next/swc-darwin-x64": "npm:16.2.3"
+    "@next/swc-linux-arm64-gnu": "npm:16.2.3"
+    "@next/swc-linux-arm64-musl": "npm:16.2.3"
+    "@next/swc-linux-x64-gnu": "npm:16.2.3"
+    "@next/swc-linux-x64-musl": "npm:16.2.3"
+    "@next/swc-win32-arm64-msvc": "npm:16.2.3"
+    "@next/swc-win32-x64-msvc": "npm:16.2.3"
     "@swc/helpers": "npm:0.5.15"
-    baseline-browser-mapping: "npm:^2.8.3"
+    baseline-browser-mapping: "npm:^2.9.19"
     caniuse-lite: "npm:^1.0.30001579"
     postcss: "npm:8.4.31"
-    sharp: "npm:^0.34.4"
+    sharp: "npm:^0.34.5"
     styled-jsx: "npm:5.1.6"
   peerDependencies:
     "@opentelemetry/api": ^1.1.0
@@ -11020,7 +11332,7 @@ __metadata:
       optional: true
   bin:
     next: dist/bin/next
-  checksum: 10/00322378df865d4f00d232f8b1f42f4f0ad114e1d14f660d483b01ccd533459af6202e2f80067bf41a97aa0c99c3ae1d21a0aef2c081b0a9f456b978de4bf757
+  checksum: 10/5164885daacbb36a771380e1b5efba524863e1bdf2b5a6c80413cbf1e3ab4e8ddab5716cd91ff94ca5c5c5deb2a12d1312d6d6ae994e16ebfa985fdda6134bc6
   languageName: node
   linkType: hard
 
@@ -12819,7 +13131,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^8.39.0"
     "@typescript-eslint/parser": "npm:^8.39.0"
     eslint: "npm:^9.32.0"
-    eslint-config-next: "npm:15.5.3"
+    eslint-config-next: "npm:16.2.2"
     eslint-config-prettier: "npm:^10.1.8"
     eslint-plugin-import: "npm:2.32.0"
     eslint-plugin-jsdoc: "npm:52.0.3"
@@ -13061,7 +13373,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sharp@npm:^0.34.4":
+"sharp@npm:^0.34.5":
   version: 0.34.5
   resolution: "sharp@npm:0.34.5"
   dependencies:
@@ -13986,6 +14298,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ts-api-utils@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "ts-api-utils@npm:2.5.0"
+  peerDependencies:
+    typescript: ">=4.8.4"
+  checksum: 10/d5f1936f5618c6ab6942a97b78802217540ced00e7501862ae1f578d9a3aa189fc06050e64cb8951d21f7088e5fd35f53d2bf0d0370a883861c7b05e993ebc44
+  languageName: node
+  linkType: hard
+
 "ts-jest@npm:^29.1.0, ts-jest@npm:^29.4.6":
   version: 29.4.6
   resolution: "ts-jest@npm:29.4.6"
@@ -14271,6 +14592,21 @@ __metadata:
   bin:
     typedoc: bin/typedoc
   checksum: 10/657afd087d88a14cf77ad941de8913041a6a025e87c78833a5ee58a52b8252b685730394ab7920781b0b2faa0507b1c9d87fcf82dd86d1b788420716fc17ded3
+  languageName: node
+  linkType: hard
+
+"typescript-eslint@npm:^8.46.0":
+  version: 8.58.1
+  resolution: "typescript-eslint@npm:8.58.1"
+  dependencies:
+    "@typescript-eslint/eslint-plugin": "npm:8.58.1"
+    "@typescript-eslint/parser": "npm:8.58.1"
+    "@typescript-eslint/typescript-estree": "npm:8.58.1"
+    "@typescript-eslint/utils": "npm:8.58.1"
+  peerDependencies:
+    eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
+    typescript: ">=4.8.4 <6.1.0"
+  checksum: 10/b65fba0a594870fe5c456e6650a9050adf83b72c3d57983e3924778e217399e057c4c185abbe21396f288113d85c475377ee0d7ed6ac24538ef4ea0a7332c0df
   languageName: node
   linkType: hard
 

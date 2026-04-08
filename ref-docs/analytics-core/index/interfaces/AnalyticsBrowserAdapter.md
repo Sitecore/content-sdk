@@ -6,7 +6,7 @@
 
 # Interface: AnalyticsBrowserAdapter
 
-Defined in: [analytics-core/src/initialization/browser-adapter.ts:16](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/browser-adapter.ts#L16)
+Defined in: [analytics-core/src/initialization/browser-adapter.ts:16](https://github.com/Sitecore/content-sdk/blob/b92d240245a7da53f462f7bcffe6086a3971978d/packages/analytics-core/src/initialization/browser-adapter.ts#L16)
 
 Defines the AnalyticsBrowserAdapter.
 
@@ -16,11 +16,11 @@ Defines the AnalyticsBrowserAdapter.
 
 ## Properties
 
-### getClientId()
+### getClientId
 
 > **getClientId**: () => `string` \| `null`
 
-Defined in: [analytics-core/src/initialization/types.ts:14](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L14)
+Defined in: [analytics-core/src/initialization/types.ts:14](https://github.com/Sitecore/content-sdk/blob/b92d240245a7da53f462f7bcffe6086a3971978d/packages/analytics-core/src/initialization/types.ts#L14)
 
 Gets the client ID.
 
@@ -40,11 +40,11 @@ The client ID, or null if it is not set.
 
 > **location**: `object`
 
-Defined in: [analytics-core/src/initialization/types.ts:23](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L23)
+Defined in: [analytics-core/src/initialization/types.ts:23](https://github.com/Sitecore/content-sdk/blob/b92d240245a7da53f462f7bcffe6086a3971978d/packages/analytics-core/src/initialization/types.ts#L23)
 
 The location object, which provides a method for getting search parameters.
 
-#### getSearchParams()
+#### getSearchParams
 
 > **getSearchParams**: () => `string`
 
@@ -62,11 +62,11 @@ The search parameters from the location.
 
 ***
 
-### setClientId()
+### setClientId
 
 > **setClientId**: () => `Promise`\<`void`\>
 
-Defined in: [analytics-core/src/initialization/types.ts:19](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L19)
+Defined in: [analytics-core/src/initialization/types.ts:19](https://github.com/Sitecore/content-sdk/blob/b92d240245a7da53f462f7bcffe6086a3971978d/packages/analytics-core/src/initialization/types.ts#L19)
 
 Sets the client ID.
 
@@ -86,7 +86,7 @@ A promise that resolves when the client ID has been set.
 
 > **type**: `"browser"`
 
-Defined in: [analytics-core/src/initialization/browser-adapter.ts:20](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/browser-adapter.ts#L20)
+Defined in: [analytics-core/src/initialization/browser-adapter.ts:20](https://github.com/Sitecore/content-sdk/blob/b92d240245a7da53f462f7bcffe6086a3971978d/packages/analytics-core/src/initialization/browser-adapter.ts#L20)
 
 The type of the adapter.
 

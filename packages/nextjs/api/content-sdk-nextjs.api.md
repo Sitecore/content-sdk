@@ -118,6 +118,7 @@ import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
 import { NextApiRequest } from 'next';
 import { NextApiResponse } from 'next';
+import { NextFetchEvent } from 'next/server';
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { NextURL } from 'next/dist/server/web/next-url';
@@ -216,6 +217,22 @@ export class AppRouterMultisiteProxy extends MultisiteProxy {
     protected shouldWarnWhenDisabled(_res: NextResponse): void;
 }
 
+// @public
+export class BotTrackingProxy extends ProxyBase {
+    constructor(config: BotTrackingProxyConfig);
+    // (undocumented)
+    protected config: BotTrackingProxyConfig;
+    // (undocumented)
+    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    // @internal (undocumented)
+    protected shouldSkipForLocalEnvironment(req: NextRequest): boolean;
+}
+
+// @public
+export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Omit<ProxyBaseConfig, 'defaultLanguage'> & {
+    fetchEvent?: NextFetchEvent;
+};
+
 export { BYOCClientWrapper }
 
 export { BYOCComponent }
@@ -269,7 +286,7 @@ export type ComponentPropsCollection = {
 };
 
 // @public
-export const ComponentPropsContext: ({ children, value, }: ComponentPropsContextProps) => JSX_2.Element;
+export const ComponentPropsContext: (input: ComponentPropsContextProps) => JSX_2.Element;
 
 // @public
 export type ComponentPropsContextProps = {
@@ -375,7 +392,7 @@ export { DesignLibrary }
 // Warning: (ae-forgotten-export) The symbol "DesingLibraryAppProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export const DesignLibraryApp: ({ page, componentMap, loadServerImportMap, }: DesingLibraryAppProps) => React_2.JSX.Element | null;
+export const DesignLibraryApp: (input: DesingLibraryAppProps) => React_2.JSX.Element | null;
 
 export { DictionaryPhrases }
 
@@ -708,14 +725,14 @@ export class PersonalizeProxy extends ProxyBase {
     // (undocumented)
     handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
     // (undocumented)
-    protected initPersonalizeServer({ hostname, siteName, request, response, }: {
+    protected initPersonalizeServer(input: {
         hostname: string;
         siteName: string;
         request: NextRequest;
         response: NextResponse;
     }): Promise<void>;
     // (undocumented)
-    protected personalize({ params, friendlyId, language, timeout, variantIds, geo, }: {
+    protected personalize(input: {
         params: ExperienceParams;
         friendlyId: string;
         language: string;
@@ -742,6 +759,7 @@ export type PersonalizeProxyConfig = ProxyBaseConfig & SitecoreConfig['api']['ed
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
     extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
+    skipForBot?: boolean;
 };
 
 export { PersonalizeService }
@@ -773,7 +791,7 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     };
     // (undocumented)
     protected getClientFactory(graphQLOptions: GraphQLClientOptions): GraphQLRequestClientFactory_2;
-    protected getHostHeader(req: NextRequest): string | undefined;
+    protected getHostHeader(req: NextRequest): string;
     protected getLanguage(req: NextRequest, res?: NextResponse): string;
     protected getLanguageFromHeader(res?: NextResponse): string | undefined;
     protected getSite(req: NextRequest, res?: NextResponse): SiteInfo;
@@ -973,7 +991,7 @@ export { withPlaceholder }
 export { withSitecore }
 
 // @public
-export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }: {
+export const writeImportMap: (args: WriteImportMapArgs) => (input: {
     scConfig: SitecoreConfig_2;
 }) => Promise<void>;
 
