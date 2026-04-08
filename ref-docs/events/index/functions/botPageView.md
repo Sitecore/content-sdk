@@ -8,7 +8,7 @@
 
 > **botPageView**(): `Promise`\<`EPResponse` \| `null`\>
 
-Defined in: [events/src/events/page-view/bot-page-view.ts:15](https://github.com/Sitecore/content-sdk/blob/4325bc486f2f16710608ad439090944e725984f6/packages/events/src/events/page-view/bot-page-view.ts#L15)
+Defined in: [events/src/events/page-view/bot-page-view.ts:15](https://github.com/Sitecore/content-sdk/blob/b92d240245a7da53f462f7bcffe6086a3971978d/packages/events/src/events/page-view/bot-page-view.ts#L15)
 
 Sends a VIEW event for server-side bot tracking (e.g. Next.js proxy / Edge).
 Uses a synthetic per-invocation client id and defaults `channel` to `bot`.

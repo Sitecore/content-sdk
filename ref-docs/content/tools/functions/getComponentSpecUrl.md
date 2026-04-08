@@ -8,7 +8,7 @@
 
 > **getComponentSpecUrl**(`params`): `string`
 
-Defined in: [content/src/tools/codegen/component-generation.ts:47](https://github.com/Sitecore/content-sdk/blob/4325bc486f2f16710608ad439090944e725984f6/packages/content/src/tools/codegen/component-generation.ts#L47)
+Defined in: [content/src/tools/codegen/component-generation.ts:47](https://github.com/Sitecore/content-sdk/blob/b92d240245a7da53f462f7bcffe6086a3971978d/packages/content/src/tools/codegen/component-generation.ts#L47)
 
 **`Internal`**
 
