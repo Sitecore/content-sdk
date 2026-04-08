@@ -14,19 +14,22 @@ export type Primitive = string | number | boolean | null;
 /* Bindings */
 
 /**
- * Expression binding: {{ }} template string resolved at runtime.
+ * Expression binding: `{{ }}` template string resolved at runtime (props, state, item, scope, etc.).
  * @internal
  */
 export interface ExpressionBinding {
+  /** Discriminator for expression bindings. */
   bindType: 'expression';
+  /** Template text inside `{{ }}` (may reference props, state, item, scope, etc.). */
   value: string;
 }
 
 /**
- * Action executed when an event fires (setState or call callback).
+ * Action executed when an event fires: merges into document/component state (see `state` on {@link Document}).
  * @internal
  */
 export interface SetStateAction {
+  /** State patch: keys are state field names; values are primitives applied via setState in the runtime. */
   setState: Record<string, Primitive>;
 }
 
@@ -42,23 +45,26 @@ export interface CallAction {
 }
 
 /**
- * Action inside an event binding.
+ * Union of actions allowed inside an {@link EventBinding}: update state or invoke a registered callback.
  * @internal
  */
 export type Action = SetStateAction | CallAction;
 
 /**
- * Event binding: handler that runs a list of actions (setState / call).
+ * Event binding: DOM-style handler that runs a list of actions (setState / call).
  * @internal
  */
 export interface EventBinding {
+  /** Discriminator for event bindings. */
   bindType: 'event';
+  /** Names of handler parameters (e.g. DOM event argument names) used when resolving action templates. */
   arguments: string[];
+  /** Actions to run when the event fires, in order. */
   actions: Action[];
 }
 
 /**
- * Property binding: either an expression or an event handler.
+ * Per-prop binding on an {@link Element}: either a one-way expression or a typed event handler.
  * @internal
  */
 export type Binding = ExpressionBinding | EventBinding;
@@ -66,45 +72,53 @@ export type Binding = ExpressionBinding | EventBinding;
 /* For loop */
 
 /**
- * For-loop: iterate over an array; `as` is the loop variable name in expressions.
+ * For-loop: iterate over an array resolved from a binding expression; `as` names the loop variable in child scope.
  * @internal
  */
 export interface ForLoop {
+  /** Expression (typically `state.items` or `props.rows`) that resolves to an array to iterate. */
   each: string;
+  /** Variable name for the current item in nested expressions (e.g. `item.id`). */
   as: string;
+  /** Optional expression for a stable React key per row. */
   key?: string;
 }
 
 /* Conditional visibility (show) — tree-based */
 
 /**
- * Show condition: comparison (left op right).
+ * Show condition: comparison (left op right). Operands are template strings resolved before compare.
  * @internal
  */
 export interface ShowComparison {
+  /** Left-hand expression (template string). */
   left: string;
+  /** Equality or inequality after resolving both sides. */
   op: 'eq' | 'ne';
+  /** Right-hand expression (template string). */
   right: string;
 }
 
 /**
- * Show condition: logical and.
+ * Show condition: logical AND — all child nodes must evaluate to true.
  * @internal
  */
 export interface ShowAnd {
+  /** Nested show conditions (comparisons or nested and/or). */
   and: ShowNode[];
 }
 
 /**
- * Show condition: logical or.
+ * Show condition: logical OR — at least one child node must evaluate to true.
  * @internal
  */
 export interface ShowOr {
+  /** Nested show conditions (comparisons or nested and/or). */
   or: ShowNode[];
 }
 
 /**
- * Show condition node (comparison or and/or tree).
+ * Recursive show AST: leaf comparison or nested AND / OR groups.
  * @internal
  */
 export type ShowNode = ShowComparison | ShowAnd | ShowOr;

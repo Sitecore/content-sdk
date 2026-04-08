@@ -271,5 +271,9 @@ describe('component-layout resolver', () => {
     it('should return plain strings without {{ }} unchanged', () => {
       expect(resolveIfTemplate('no-template-here', ctx)).to.equal('no-template-here');
     });
+
+    it('should delegate mixed literal + {{ }} strings to resolveTemplateString', () => {
+      expect(resolveIfTemplate('Hello {{props.user.name}}!', ctx)).to.equal('Hello Alice!');
+    });
   });
 });

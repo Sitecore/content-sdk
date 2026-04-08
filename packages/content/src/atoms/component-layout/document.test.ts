@@ -32,6 +32,10 @@ describe('component-layout document guards', () => {
       expect(isElement(null)).to.equal(false);
       expect(isElement(42)).to.equal(false);
     });
+
+    it('returns false for plain objects without a type field', () => {
+      expect(isElement({} as unknown as Node)).to.equal(false);
+    });
   });
 
   describe('hasFor', () => {
@@ -47,6 +51,14 @@ describe('component-layout document guards', () => {
       expect(hasFor({ type: 'Row' })).to.equal(false);
       expect(hasFor({ type: 'Row', for: {} as never })).to.equal(false);
     });
+
+    it('returns false when for.each is not a string', () => {
+      const el = {
+        type: 'Row',
+        for: { each: 123, as: 'item' },
+      } as unknown as Element;
+      expect(hasFor(el)).to.equal(false);
+    });
   });
 
   describe('hasShow', () => {
@@ -58,6 +70,7 @@ describe('component-layout document guards', () => {
 
     it('returns false when show is null or undefined', () => {
       expect(hasShow({ type: 'Row' })).to.equal(false);
+      expect(hasShow({ type: 'Row', show: null as never })).to.equal(false);
     });
   });
 
