@@ -575,7 +575,7 @@ export const SitecoreProviderReactContext: React_2.Context<SitecoreProviderState
 // @public
 export interface SitecoreProviderState {
     api?: SitecoreProviderProps['api'];
-    atomsRegistry?: {
+    atomRegistry?: {
         atoms?: AtomMetadata[];
         callbacks?: CallbackMetadata[];
     };

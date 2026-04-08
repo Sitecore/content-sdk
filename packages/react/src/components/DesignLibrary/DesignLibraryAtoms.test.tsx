@@ -3,7 +3,10 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React from 'react';
 import sinon from 'sinon';
-import { expect } from 'chai';
+import { expect, use as chaiUse } from 'chai';
+import sinonChai from 'sinon-chai';
+
+chaiUse(sinonChai);
 import { render, waitFor } from '@testing-library/react';
 import { DesignLibraryAtoms, __mockDependencies } from './DesignLibraryAtoms';
 import { SitecoreProvider } from '../SitecoreProvider';
@@ -14,12 +17,19 @@ import {
   AtomInfo,
 } from '@sitecore-content-sdk/content/editing';
 import * as atomRegistryUtils from '../../atoms/atom-registry-utils';
+import { serializeCallbacks } from '../../atoms/callback-registry-utils';
 import { Document } from '@sitecore-content-sdk/content/atoms';
 import { AtomMetadata } from '../../atoms/types';
 import { z } from 'zod';
+import type { ImportMapImport } from './models';
 
 describe('<DesignLibraryAtoms />', () => {
   const sandbox = sinon.createSandbox();
+
+  /** Minimal stubs so `SitecoreProvider` matches its public contract in tests */
+  const apiStub = {} as any;
+  const emptyComponentMap = new Map();
+  const loadImportMapStub = async (): Promise<ImportMapImport> => ({}) as ImportMapImport;
 
   let postToDesignLibrarySpy: sinon.SinonStub;
   let sendAtomsErrorEventSpy: sinon.SinonStub;
@@ -129,7 +139,13 @@ describe('<DesignLibraryAtoms />', () => {
     const page = getPage();
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -143,7 +159,13 @@ describe('<DesignLibraryAtoms />', () => {
     const page = getPage();
 
     const { container } = render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -156,67 +178,57 @@ describe('<DesignLibraryAtoms />', () => {
     const page = getPage();
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
 
     expect(serializeAtomsStub).to.have.been.called;
     expect(postToDesignLibrarySpy).to.have.been.calledWith(
-      getDesignLibraryAtomsRegistryEvent(mockSerializedAtoms, {})
+      getDesignLibraryAtomsRegistryEvent(mockSerializedAtoms, serializeCallbacks(mockCallbacks))
     );
   });
 
-  it('should handle empty atoms array', () => {
+  it('should send error event when serialized atoms list is empty', () => {
     const page = getPage();
-    serializeAtomsStub.returns(mockSerializedAtoms);
+    serializeAtomsStub.returns([]);
 
     render(
-      <SitecoreProvider atoms={[]} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: [], callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
 
     expect(serializeAtomsStub).to.have.been.calledWith([]);
-    expect(postToDesignLibrarySpy).to.have.been.calledWith(
-      getDesignLibraryAtomsRegistryEvent(mockSerializedAtoms, {})
-    );
-  });
-
-  it('should send error event when atoms serialization returns null', () => {
-    const page = getPage();
-    serializeAtomsStub.returns(null);
-
-    render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
-        <DesignLibraryAtoms />
-      </SitecoreProvider>
-    );
-
     expect(sendAtomsErrorEventSpy).to.have.been.calledWith('No atoms provided', 'atoms-missing');
     expect(postToDesignLibrarySpy).not.to.have.been.calledWith(
       sinon.match((arg) => arg.name === 'atom:registry')
     );
   });
 
-  it('should send error event when atoms serialization returns undefined', () => {
-    const page = getPage();
-    serializeAtomsStub.returns(undefined);
-
-    render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
-        <DesignLibraryAtoms />
-      </SitecoreProvider>
-    );
-
-    expect(sendAtomsErrorEventSpy).to.have.been.calledWith('No atoms provided', 'atoms-missing');
-  });
-
   it('should subscribe to document updates on mount', () => {
     const page = getPage();
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -234,7 +246,13 @@ describe('<DesignLibraryAtoms />', () => {
     });
 
     const { container } = render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -269,7 +287,13 @@ describe('<DesignLibraryAtoms />', () => {
     });
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -308,7 +332,13 @@ describe('<DesignLibraryAtoms />', () => {
     });
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -340,7 +370,13 @@ describe('<DesignLibraryAtoms />', () => {
     const page = getPage();
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -359,7 +395,13 @@ describe('<DesignLibraryAtoms />', () => {
     addDocumentUpdateHandlerSpy.returns(unsubscribeSpy);
 
     const { unmount } = render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -375,7 +417,13 @@ describe('<DesignLibraryAtoms />', () => {
     const page = getPage();
 
     const { container } = render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -384,12 +432,18 @@ describe('<DesignLibraryAtoms />', () => {
     expect(getAtomMapStub).to.have.been.called;
   });
 
-  it('should handle undefined atoms', () => {
+  it('should send error when atom registry has no atoms', () => {
     const page = getPage();
-    serializeAtomsStub.returns(null);
+    serializeAtomsStub.returns([]);
 
     render(
-      <SitecoreProvider callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -398,23 +452,17 @@ describe('<DesignLibraryAtoms />', () => {
     expect(sendAtomsErrorEventSpy).to.have.been.calledWith('No atoms provided', 'atoms-missing');
   });
 
-  it('should initialize with cardsWithDataBinding document', () => {
-    const page = getPage();
-
-    const { container } = render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
-        <DesignLibraryAtoms />
-      </SitecoreProvider>
-    );
-
-    expect(container).to.exist;
-  });
-
   it('should create atomMap from atoms registry', () => {
     const page = getPage();
 
     const { container } = render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -423,14 +471,20 @@ describe('<DesignLibraryAtoms />', () => {
     expect(getAtomMapStub).to.have.been.called;
   });
 
-  it('should subscribe to document updates via atomsRegistry effect', () => {
+  it('should subscribe to document updates via atomRegistry effect', () => {
     const page = getPage();
     const unsubscribeSpy = sandbox.spy();
 
     addDocumentUpdateHandlerSpy.returns(unsubscribeSpy);
 
     const { unmount } = render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -452,7 +506,13 @@ describe('<DesignLibraryAtoms />', () => {
     });
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -496,7 +556,13 @@ describe('<DesignLibraryAtoms />', () => {
     ];
 
     const { container } = render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={customCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: customCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -508,7 +574,13 @@ describe('<DesignLibraryAtoms />', () => {
     const page = getPage();
 
     const { container } = render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={[]} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: [] }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );
@@ -526,7 +598,13 @@ describe('<DesignLibraryAtoms />', () => {
     });
 
     render(
-      <SitecoreProvider atoms={mockAtoms} callbacks={mockCallbacks} page={page}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        loadImportMap={loadImportMapStub}
+        page={page}
+        atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
+      >
         <DesignLibraryAtoms />
       </SitecoreProvider>
     );

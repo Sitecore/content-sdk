@@ -2,7 +2,6 @@ export {
   AtomInfo,
   AtomType,
   SerializedDefaultChild,
-  DesignLibraryAtomsRegistryEvent,
   getDesignLibraryAtomsRegistryEvent,
   sendAtomsErrorEvent,
   DesignLibraryAtomsError,

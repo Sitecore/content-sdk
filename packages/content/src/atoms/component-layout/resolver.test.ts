@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import {
   parseBindExpression,
@@ -5,6 +6,7 @@ import {
   isTemplateString,
   resolveTemplateString,
   evaluateShowNode,
+  resolveIfTemplate,
   type ResolveContext,
 } from './resolver';
 
@@ -252,6 +254,22 @@ describe('component-layout resolver', () => {
           ctx
         )
       ).to.be.false;
+    });
+  });
+
+  describe('resolveIfTemplate', () => {
+    it('should resolve strings that look like template expressions', () => {
+      expect(resolveIfTemplate('{{props.user.name}}', ctx)).to.equal('Alice');
+    });
+
+    it('should return non-string values unchanged', () => {
+      expect(resolveIfTemplate(42, ctx)).to.equal(42);
+      expect(resolveIfTemplate(true, ctx)).to.equal(true);
+      expect(resolveIfTemplate(null, ctx)).to.equal(null);
+    });
+
+    it('should return plain strings without {{ }} unchanged', () => {
+      expect(resolveIfTemplate('no-template-here', ctx)).to.equal('no-template-here');
     });
   });
 });

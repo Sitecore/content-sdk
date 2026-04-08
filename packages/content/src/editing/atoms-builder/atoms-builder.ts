@@ -1,6 +1,6 @@
 import { constants } from '@sitecore-content-sdk/core';
 import { DesignLibraryEvent, validateEvent } from '../design-library';
-import { Document } from '../../atoms';
+import type { Document } from '../../atoms/component-layout/document';
 
 const { ERROR_MESSAGES } = constants;
 

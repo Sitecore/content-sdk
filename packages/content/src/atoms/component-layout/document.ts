@@ -35,7 +35,9 @@ export interface SetStateAction {
  * @internal
  */
 export interface CallAction {
+  /** Registered callback name (must match an entry in the callback registry). */
   call: string;
+  /** Arguments passed to the callback; each value may be a literal or resolved from templates. */
   args?: Primitive[];
 }
 
@@ -122,7 +124,7 @@ export interface Element {
   version?: number;
   /** Map of prop name to static Primitive value. Passed directly to the component unchanged. */
   staticProps?: Record<string, Primitive>;
-  /** Map of prop name to @Binding */
+  /** Map of prop name to {@link Binding}. */
   bindings?: Record<string, Binding>;
   /** Child nodes of the element. */
   children?: Node[];

@@ -1,5 +1,7 @@
 import { expect } from 'chai';
-import { AtomInfo, CallbackInfo, getDesignLibraryAtomsRegistryEvent } from './atoms-builder';
+import sinon from 'sinon';
+import type { Document } from '../../atoms/component-layout/document';
+import { AtomInfo, CallbackInfo, addDocumentUpdateHandler, getDesignLibraryAtomsRegistryEvent } from './atoms-builder';
 
 describe('atoms-builder', () => {
   describe('getDesignLibraryAtomsRegistryEvent', () => {
@@ -144,6 +146,69 @@ describe('atoms-builder', () => {
 
       expect(event.message.atomsRegistry).to.deep.equal(atomsRegistry);
       expect(event.message.callbackRegistry).to.deep.equal(callbackRegistry);
+    });
+  });
+
+  describe('addDocumentUpdateHandler', () => {
+    let addListener: sinon.SinonStub;
+    let removeListener: sinon.SinonStub;
+    let messageHandler: ((e: MessageEvent) => void) | undefined;
+
+    beforeEach(() => {
+      messageHandler = undefined;
+      addListener = sinon.stub().callsFake((event: string, handler: (e: MessageEvent) => void) => {
+        if (event === 'message') {
+          messageHandler = handler;
+        }
+      });
+      removeListener = sinon.stub();
+      (globalThis as unknown as { window: Window & typeof globalThis }).window = {
+        addEventListener: addListener,
+        removeEventListener: removeListener,
+      } as unknown as Window & typeof globalThis;
+    });
+
+    afterEach(() => {
+      delete (globalThis as unknown as { window?: Window }).window;
+    });
+
+    it('should register a message listener and invoke callback with document when event is valid', () => {
+      const callback = sinon.spy();
+      const doc: Document = {
+        name: 'preview',
+        root: { type: 'Stack', id: 'r1', children: [] },
+      };
+
+      const unsub = addDocumentUpdateHandler(callback);
+
+      sinon.assert.calledWith(addListener, 'message', sinon.match.func);
+
+      messageHandler!(
+        new MessageEvent('message', {
+          origin: 'http://localhost',
+          data: { name: 'component:atoms:preview', document: doc },
+        })
+      );
+
+      sinon.assert.calledOnceWithExactly(callback, doc);
+      expect(typeof unsub).to.equal('function');
+
+      unsub();
+      sinon.assert.calledWith(removeListener, 'message', messageHandler);
+    });
+
+    it('should ignore messages that do not match the preview event name', () => {
+      const callback = sinon.spy();
+      addDocumentUpdateHandler(callback);
+
+      messageHandler!(
+        new MessageEvent('message', {
+          origin: 'http://localhost',
+          data: { name: 'other:event', document: {} },
+        })
+      );
+
+      sinon.assert.notCalled(callback);
     });
   });
 });

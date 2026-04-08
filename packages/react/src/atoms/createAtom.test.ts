@@ -85,7 +85,10 @@ describe('createAtom', () => {
 
   describe('component scenarios (props only, no callbacks)', () => {
     it('accepts component with only required props', () => {
-      const OnlyProps = (props: { title: string; count: number }) => null;
+      const OnlyProps = (props: { title: string; count: number }) => {
+        void props;
+        return null;
+      };
       const meta = createAtom(OnlyProps, {
         name: 'OnlyProps',
         description: 'Props only',
@@ -100,7 +103,10 @@ describe('createAtom', () => {
     });
 
     it('accepts component with optional props only', () => {
-      const OptionalOnly = (props: { tag?: string }) => null;
+      const OptionalOnly = (props: { tag?: string }) => {
+        void props;
+        return null;
+      };
       const meta = createAtom(OptionalOnly, {
         name: 'OptionalOnly',
         description: 'Optional',
@@ -113,15 +119,14 @@ describe('createAtom', () => {
 
   describe('customEvents (typed to callback parameters)', () => {
     it('accepts component with explicit props (no ComponentType<unknown> cast)', () => {
-      const Test = ({
-        customEvent,
-        prop1,
-        prop2,
-      }: {
+      const Test = (props: {
         customEvent: (x: string, y: number) => void;
         prop1: string;
         prop2: number;
-      }) => null;
+      }) => {
+        void props;
+        return null;
+      };
       const meta = createAtom(Test, {
         name: 'Test',
         description: 'Test',

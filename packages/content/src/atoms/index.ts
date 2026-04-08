@@ -1,5 +1,7 @@
 /**
- * Component Layout document types and type guards for the no-code component layout spec.
+ * Component Layout document types, guards, and runtime resolution helpers exposed on the
+ * `@sitecore-content-sdk/content/atoms` entry point. Parser-level APIs (`parseBindExpression`,
+ * etc.) remain available from `./component-layout/resolver` within this package.
  */
 
 export {
@@ -35,13 +37,7 @@ export {
 } from './component-layout/document';
 
 export {
-  type BindSource,
-  type BindSegment,
-  type ParsedBind,
   type ResolveContext,
-  parseBindExpression,
-  resolveBindExpression,
-  isTemplateString,
   resolveTemplateString,
   evaluateShowNode,
   resolveIfTemplate,

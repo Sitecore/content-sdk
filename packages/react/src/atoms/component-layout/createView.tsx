@@ -217,6 +217,10 @@ export const buildEventCallback = (
         const callable = callbacks.find((c) => c.name === action.call)?.callbackFn;
         if (typeof callable === 'function') {
           callable(...resolvedArgs);
+        } else {
+          console.warn(
+            `[createView] Callback "${action.call}" is not registered or is not a function.`
+          );
         }
         continue;
       }
@@ -271,8 +275,19 @@ export function createView<RuntimeProps extends Record<string, unknown> = Record
       };
 
       if (isElement(node)) {
+        // When both `for` and `show` are set, evaluate `show` once in the parent context
+        // before iterating so the loop can be skipped entirely (then strip `show` per iteration).
         if (hasFor(node)) {
-          return renderFor(node, ctx, renderNode);
+          const loopNode =
+            hasShow(node) && !evaluateShowNode(node.show, ctx)
+              ? null
+              : hasShow(node)
+                ? ({ ...node, show: undefined } as Element)
+                : node;
+          if (loopNode === null) {
+            return null;
+          }
+          return renderFor(loopNode, ctx, renderNode);
         }
 
         if (hasShow(node)) {

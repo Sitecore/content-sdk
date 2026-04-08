@@ -4,11 +4,7 @@ import React from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { fireEvent, render } from '@testing-library/react';
-import {
-  type ComponentLayoutDocument as Document,
-  type ComponentLayoutElement as Element,
-  type ComponentLayoutResolveContext as ResolveContext,
-} from '@sitecore-content-sdk/content/editing';
+import type { Document, Element, ResolveContext } from '@sitecore-content-sdk/content/atoms';
 import {
   buildEventCallback,
   createView,
@@ -557,7 +553,7 @@ describe('component-layout/createView', () => {
       );
 
       const rendered = render(<>{element}</>);
-      const card = rendered.getByTestId('card');
+      expect(rendered.getByTestId('card')).to.exist;
 
       expect(rendered.getByTestId('child-1')).to.exist;
       expect(rendered.getByTestId('child-2')).to.exist;
@@ -1033,6 +1029,7 @@ describe('component-layout/createView', () => {
 
     it('handles missing callback function gracefully (does not throw)', () => {
       const setStateSpy = sinon.spy();
+      const warnSpy = sinon.stub(console, 'warn');
 
       const callback = buildEventCallback(
         {
@@ -1058,6 +1055,8 @@ describe('component-layout/createView', () => {
 
       // Should not throw even though callback doesn't exist
       expect(() => callback('value')).to.not.throw();
+      expect(warnSpy.calledWithMatch(/nonexistentCallback/)).to.equal(true);
+      warnSpy.restore();
     });
 
     it('handles event with no arguments', () => {
@@ -1474,18 +1473,24 @@ describe('component-layout/createView', () => {
           children: [
             {
               id: 'line',
-              type: 'Text',
+              type: 'Stack',
               for: {
                 each: '{{props.items}}',
                 as: 'item',
                 key: '{{item.id}}',
               },
-              show: {
-                left: '{{item.visible}}',
-                op: 'eq',
-                right: true as any,
-              },
-              children: ['{{item.label}}'],
+              children: [
+                {
+                  id: 'line-text',
+                  type: 'Text',
+                  show: {
+                    left: '{{item.visible}}',
+                    op: 'eq',
+                    right: true as any,
+                  },
+                  children: ['{{item.label}}'],
+                },
+              ],
             },
           ],
         },
@@ -1730,7 +1735,7 @@ describe('component-layout/createView', () => {
       expect(rendered.container.textContent).to.contain('User is admin');
     });
 
-    it('combines for and show on same element for conditional list rendering', () => {
+    it('combines for and per-item show via a nested element for conditional list rendering', () => {
       const doc: Document = {
         name: 'ForShowCombinedView',
         root: {
@@ -1738,19 +1743,25 @@ describe('component-layout/createView', () => {
           type: 'Stack',
           children: [
             {
-              id: 'item',
-              type: 'Text',
+              id: 'row',
+              type: 'Stack',
               for: {
                 each: '{{props.items}}',
                 as: 'item',
                 key: '{{item.id}}',
               },
-              show: {
-                left: '{{item.status}}',
-                op: 'eq',
-                right: 'active',
-              },
-              children: ['{{item.label}}'],
+              children: [
+                {
+                  id: 'item',
+                  type: 'Text',
+                  show: {
+                    left: '{{item.status}}',
+                    op: 'eq',
+                    right: 'active',
+                  },
+                  children: ['{{item.label}}'],
+                },
+              ],
             },
           ],
         },
@@ -1771,6 +1782,58 @@ describe('component-layout/createView', () => {
       expect(rendered.container.textContent).to.contain('Active One');
       expect(rendered.container.textContent).to.contain('Active Two');
       expect(rendered.container.textContent).to.not.contain('Inactive');
+    });
+
+    it('evaluates show on the same node as for once in the parent context to skip the entire loop', () => {
+      const doc: Document = {
+        name: 'LoopLevelShowDoc',
+        root: {
+          id: 'root',
+          type: 'Stack',
+          children: [
+            {
+              id: 'line',
+              type: 'Text',
+              for: {
+                each: '{{props.items}}',
+                as: 'item',
+                key: '{{item.id}}',
+              },
+              show: {
+                left: '{{props.renderItems}}',
+                op: 'eq',
+                right: 'yes',
+              },
+              children: ['{{item.label}}'],
+            },
+          ],
+        },
+      };
+
+      const Generated = createView(doc, atoms);
+
+      const hidden = render(
+        <Generated
+          renderItems="no"
+          items={[
+            { id: '1', label: 'A' },
+            { id: '2', label: 'B' },
+          ]}
+        />
+      );
+      expect(hidden.container.textContent).to.not.contain('A');
+
+      const visible = render(
+        <Generated
+          renderItems="yes"
+          items={[
+            { id: '1', label: 'A' },
+            { id: '2', label: 'B' },
+          ]}
+        />
+      );
+      expect(visible.container.textContent).to.contain('A');
+      expect(visible.container.textContent).to.contain('B');
     });
 
     it('updates state through multiple sequential events', () => {
@@ -2065,38 +2128,44 @@ describe('component-layout/createView', () => {
                 as: 'item',
                 key: '{{item.id}}',
               },
-              show: {
-                left: '{{item.visibility}}',
-                op: 'eq',
-                right: 'visible',
-              },
               children: [
                 {
-                  id: 'item-text',
-                  type: 'Text',
-                  children: ['{{item.label}} - {{state.outerValue}} - '],
-                },
-                {
-                  id: 'nested-emitter',
-                  type: 'Emitter',
-                  bindings: {
-                    onValueChange: {
-                      bindType: 'event',
-                      arguments: ['value'],
-                      actions: [
-                        {
-                          setState: {
-                            outerValue: '{{event}}',
-                          },
-                        },
-                        {
-                          call: 'onNestedEvent',
-                          args: ['{{item.id}}', '{{event}}'],
-                        },
-                      ],
-                    },
+                  id: 'group-row',
+                  type: 'Stack',
+                  show: {
+                    left: '{{item.visibility}}',
+                    op: 'eq',
+                    right: 'visible',
                   },
-                  children: [],
+                  children: [
+                    {
+                      id: 'item-text',
+                      type: 'Text',
+                      children: ['{{item.label}} - {{state.outerValue}} - '],
+                    },
+                    {
+                      id: 'nested-emitter',
+                      type: 'Emitter',
+                      bindings: {
+                        onValueChange: {
+                          bindType: 'event',
+                          arguments: ['value'],
+                          actions: [
+                            {
+                              setState: {
+                                outerValue: '{{event}}',
+                              },
+                            },
+                            {
+                              call: 'onNestedEvent',
+                              args: ['{{item.id}}', '{{event}}'],
+                            },
+                          ],
+                        },
+                      },
+                      children: [],
+                    },
+                  ],
                 },
               ],
             },

@@ -134,8 +134,9 @@ export interface ResolveContext {
 }
 
 /**
- * Resolves the source identifier to its runtime value.
- * Lookup order: props, state, event, then item (ctx.item ?? scope.item), then scope[source].
+ * Resolves the source identifier to its runtime value by matching on the source name.
+ * Built-in names (`props`, `state`, `event`, `item`) use the corresponding context fields;
+ * any other identifier is read from `ctx.scope[source]`.
  * @param {BindSource} source - Source identifier
  * @param {ResolveContext} ctx - Runtime context
  * @returns {unknown} Resolved source value or undefined
@@ -163,7 +164,7 @@ function resolveSource(source: BindSource, ctx: ResolveContext): unknown {
  * @returns {unknown} Property value or undefined
  */
 function safePropertyAccess(current: unknown, key: string | number): unknown {
-  if (current == null) {
+  if (current === null || current === undefined) {
     return undefined;
   }
 
@@ -176,8 +177,8 @@ function safePropertyAccess(current: unknown, key: string | number): unknown {
 }
 
 /**
- * Resolves a parsed bind expression against the given context.
- * Lookup order: props, state, event, then item (ctx.item ?? scope.item), then scope[source].
+ * Resolves a parsed bind expression against the given context: starts from the resolved
+ * source root, then walks dot/bracket segments with safe property access.
  * @param {ParsedBind} parsed - Parsed expression from parseBindExpression
  * @param {ResolveContext} ctx - Runtime context (props, state, event, item, scope)
  * @returns {unknown} Resolved value or undefined if any segment is null/undefined
@@ -187,7 +188,7 @@ export function resolveBindExpression(parsed: ParsedBind, ctx: ResolveContext): 
   let current = resolveSource(parsed.source, ctx);
 
   for (const segment of parsed.segments) {
-    if (current == null) {
+    if (current === null || current === undefined) {
       return undefined;
     }
 
@@ -196,7 +197,7 @@ export function resolveBindExpression(parsed: ParsedBind, ctx: ResolveContext): 
     } else {
       // Bracket accessor - resolve the expression to get the key
       const key = resolveBindExpression(segment.expr, ctx);
-      if (key == null) {
+      if (key === null || key === undefined) {
         return undefined;
       }
       current = safePropertyAccess(current, key as string | number);

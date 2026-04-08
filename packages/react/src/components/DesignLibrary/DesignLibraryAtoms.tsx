@@ -4,8 +4,8 @@ import { useSitecore } from '../SitecoreProvider';
 import { serializeAtoms, getAtomMap } from '../../atoms/atom-registry-utils';
 import { serializeCallbacks } from '../../atoms/callback-registry-utils';
 import { createView } from '../../atoms/component-layout';
+import type { Document } from '@sitecore-content-sdk/content/atoms';
 import * as editing from '@sitecore-content-sdk/content/editing';
-import { cardsWithDataBinding } from '../../test-data/atom-component-layouts';
 import { DesignLibraryErrorBoundary } from '../..';
 
 let {
@@ -39,18 +39,16 @@ export const __mockDependencies = (mocks: any) => {
  * @internal
  */
 export const DesignLibraryAtoms = () => {
-  const { atomsRegistry } = useSitecore();
-  const [currentDocument, setCurrentDocument] = useState(cardsWithDataBinding);
+  const { atomRegistry } = useSitecore();
+  const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const [renderKey, setRenderKey] = useState(0);
 
-  const atomMap = useMemo(() => getAtomMap(atomsRegistry?.atoms || []), [atomsRegistry?.atoms]);
+  const atomMap = useMemo(() => getAtomMap(atomRegistry?.atoms || []), [atomRegistry?.atoms]);
 
-  const View = useMemo(() => {
-    if (!currentDocument || !atomMap) return null;
-
-    const ViewElement = createView(currentDocument, atomMap, atomsRegistry?.callbacks);
-    return <ViewElement {...(currentDocument?.props ?? {})} />;
-  }, [currentDocument, atomMap, atomsRegistry?.callbacks]);
+  const ViewComponent = useMemo(() => {
+    if (!currentDocument) return null;
+    return createView(currentDocument, atomMap, atomRegistry?.callbacks);
+  }, [currentDocument, atomMap, atomRegistry?.callbacks]);
 
   useEffect(() => {
     postToDesignLibrary(
@@ -59,13 +57,13 @@ export const DesignLibraryAtoms = () => {
   }, []);
 
   useEffect(() => {
-    const serializedAtoms = serializeAtoms(atomsRegistry?.atoms ?? []);
-    if (!serializedAtoms) {
+    const serializedAtoms = serializeAtoms(atomRegistry?.atoms ?? []);
+    if (serializedAtoms.length === 0) {
       sendAtomsErrorEvent('No atoms provided', 'atoms-missing');
       return;
     }
 
-    const serializedCallbacks = serializeCallbacks(atomsRegistry?.callbacks ?? []);
+    const serializedCallbacks = serializeCallbacks(atomRegistry?.callbacks ?? []);
 
     postToDesignLibrary(getDesignLibraryAtomsRegistryEvent(serializedAtoms, serializedCallbacks));
 
@@ -75,7 +73,7 @@ export const DesignLibraryAtoms = () => {
     });
 
     return () => unsubDocumentUpdate();
-  }, [atomsRegistry]);
+  }, [atomRegistry]);
 
   useEffect(() => {
     if (renderKey === 0) return;
@@ -86,8 +84,11 @@ export const DesignLibraryAtoms = () => {
   }, [renderKey]);
 
   return (
-    <DesignLibraryErrorBoundary uid={currentDocument.name} renderKey={renderKey}>
-      {View ?? 'No document provided'}
+    <DesignLibraryErrorBoundary
+      uid={currentDocument?.name ?? 'design-library-atoms'}
+      renderKey={renderKey}
+    >
+      {ViewComponent ? <ViewComponent {...(currentDocument?.props ?? {})} /> : null}
     </DesignLibraryErrorBoundary>
   );
 };

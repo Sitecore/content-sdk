@@ -19,13 +19,14 @@ import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/core';
 import { RetryStrategy } from '@sitecore-content-sdk/core';
 
 // @internal
+export type Action = SetStateAction | CallAction;
+
+// @internal
 export const addComponentPreviewHandler: (importMap: ImportEntry[], callback: (error: unknown | null, Component: unknown) => void) => (() => void) | undefined;
 
 // @internal
 export const addComponentUpdateHandler: (rootComponent: ComponentRendering, successCallback?: (updatedRootComponent: ComponentRendering) => void) => (() => void) | undefined;
 
-// Warning: (ae-forgotten-export) The symbol "Document_2" needs to be exported by the entry point api-surface.d.ts
-//
 // @internal
 export const addDocumentUpdateHandler: (callback: (updatedRootComponent: Document_2) => void) => () => void;
 
@@ -53,6 +54,15 @@ export type AtomInfo = {
 
 // @internal
 export type AtomType = 'atom' | 'atom-child';
+
+// @internal
+export type Binding = ExpressionBinding | EventBinding;
+
+// @internal
+export interface CallAction {
+    args?: Primitive[];
+    call: string;
+}
 
 // @internal
 export type CallbackInfo = {
@@ -349,6 +359,15 @@ export interface DictionaryServiceConfig extends CacheOptions, GraphQLServiceCon
 }
 
 // @internal
+interface Document_2 {
+    name: string;
+    props?: unknown;
+    root: Node_2;
+    state?: Record<string, unknown>;
+}
+export { Document_2 as Document }
+
+// @internal
 export const EDITING_ALLOWED_ORIGINS: string[];
 
 // @internal
@@ -424,6 +443,19 @@ export enum EditMode {
 }
 
 // @internal
+interface Element_2 {
+    bindings?: Record<string, Binding>;
+    children?: Node_2[];
+    for?: ForLoop;
+    id?: string;
+    show?: ShowNode;
+    staticProps?: Record<string, Primitive>;
+    type: string;
+    version?: number;
+}
+export { Element_2 as Element }
+
+// @internal
 export const EMPTY_DATE_FIELD_VALUE = "0001-01-01T00:00:00Z";
 
 // @internal (undocumented)
@@ -471,7 +503,28 @@ export interface ErrorPagesServiceConfig extends GraphQLServiceConfig {
 }
 
 // @internal
+export function evaluateShowNode(node: ShowNode, ctx: ResolveContext): boolean;
+
+// @internal
+export interface EventBinding {
+    // (undocumented)
+    actions: Action[];
+    // (undocumented)
+    arguments: string[];
+    // (undocumented)
+    bindType: 'event';
+}
+
+// @internal
 const executeScriptElements: (rootElement: HTMLElement) => void;
+
+// @internal
+export interface ExpressionBinding {
+    // (undocumented)
+    bindType: 'expression';
+    // (undocumented)
+    value: string;
+}
 
 // Warning: (ae-forgotten-export) The symbol "_extractFiles" needs to be exported by the entry point api-surface.d.ts
 //
@@ -499,6 +552,16 @@ export interface FieldMetadata {
 
 // @internal
 export function filterComponentsByType(components: ComponentFileWithType[], allowedTypes: ComponentType[]): ComponentFileWithType[];
+
+// @internal
+export interface ForLoop {
+    // (undocumented)
+    as: string;
+    // (undocumented)
+    each: string;
+    // (undocumented)
+    key?: string;
+}
 
 declare namespace form {
     export {
@@ -688,6 +751,16 @@ export { GraphQLRequestClientFactory }
 export { GraphQLRequestClientFactoryConfig }
 
 // @internal
+export function hasFor(node: Element_2): node is Element_2 & {
+    for: ForLoop;
+};
+
+// @internal
+export function hasShow(node: Element_2): node is Element_2 & {
+    show: ShowNode;
+};
+
+// @internal
 export const HIDDEN_RENDERING_NAME = "Hidden Rendering";
 
 // @public
@@ -718,6 +791,9 @@ export interface ImportEntryInfo {
 export const INVALID_SECRET_HTML_MESSAGE = "<html><body>Missing or invalid secret</body></html>";
 
 // @internal
+export function isCallAction(action: Action): action is CallAction;
+
+// @internal
 export function isDesignLibraryMode(mode: unknown): mode is DesignLibraryMode;
 
 // @internal
@@ -726,8 +802,32 @@ export const isDynamicPlaceholder: (placeholder: string) => boolean;
 // @public
 export const isEditorActive: () => boolean;
 
+// @internal
+export function isElement(node: Node_2): node is Element_2;
+
+// @internal
+export function isEventBinding(binding: Binding): binding is EventBinding;
+
+// @internal
+export function isExpressionBinding(binding: Binding): binding is ExpressionBinding;
+
 // @public
 export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field> | null | undefined): field is null | undefined;
+
+// @internal
+export function isPrimitive(value: unknown): value is Primitive;
+
+// @internal
+export function isSetStateAction(action: Action): action is SetStateAction;
+
+// @internal
+export function isShowAnd(node: ShowNode): node is ShowAnd;
+
+// @internal
+export function isShowComparison(node: ShowNode): node is ShowComparison;
+
+// @internal
+export function isShowOr(node: ShowNode): node is ShowOr;
 
 // @public
 export interface Item {
@@ -845,6 +945,10 @@ export type ModuleExports = {
     namespaceExport: string | null;
 };
 
+// @internal
+type Node_2 = Element_2 | Primitive;
+export { Node_2 as Node }
+
 // @public
 export function normalizePersonalizedRewrite(pathname: string): string;
 
@@ -953,6 +1057,9 @@ export const postToDesignLibrary: (evt: DesignLibraryEvent) => void;
 export const PREVIEW_KEY = "sc_preview";
 
 // @internal
+export type Primitive = string | number | boolean | null;
+
+// @internal
 export const QUERY_PARAM_EDITING_SECRET = "secret";
 
 // @public
@@ -1034,6 +1141,21 @@ const replaceMediaUrlPrefix: (url: string, mediaUrlPrefix?: RegExp) => string;
 
 // @public
 export const resetEditorChromes: () => void;
+
+// @internal
+export interface ResolveContext {
+    event?: unknown;
+    item?: unknown;
+    props: Record<string, unknown>;
+    scope?: Record<string, unknown>;
+    state: Record<string, unknown>;
+}
+
+// @internal
+export const resolveIfTemplate: (value: unknown, ctx: ResolveContext) => unknown;
+
+// @internal
+export function resolveTemplateString(template: string, ctx: ResolveContext): unknown;
 
 export { RetryStrategy }
 
@@ -1131,6 +1253,37 @@ export interface ServerComponentPreviewEventArgs extends DesignLibraryEvent {
     };
     // (undocumented)
     name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
+}
+
+// @internal
+export interface SetStateAction {
+    // (undocumented)
+    setState: Record<string, Primitive>;
+}
+
+// @internal
+export interface ShowAnd {
+    // (undocumented)
+    and: ShowNode[];
+}
+
+// @internal
+export interface ShowComparison {
+    // (undocumented)
+    left: string;
+    // (undocumented)
+    op: 'eq' | 'ne';
+    // (undocumented)
+    right: string;
+}
+
+// @internal
+export type ShowNode = ShowComparison | ShowAnd | ShowOr;
+
+// @internal
+export interface ShowOr {
+    // (undocumented)
+    or: ShowNode[];
 }
 
 // @public

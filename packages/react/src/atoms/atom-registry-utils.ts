@@ -84,7 +84,7 @@ export function getAtomMap(metadata: AtomMetadata[]): Record<string, ComponentTy
     }
     registry[atom.name] = atom.component as ComponentType<unknown>;
     for (const child of atom.allowedChildren ?? []) {
-      if (child !== 'atom' && child !== 'text' && typeof child === 'object') {
+      if (typeof child === 'object' && child !== null) {
         addAtom(child);
       }
     }
