@@ -8,7 +8,7 @@
 
 > **RedirectsQueryResult** = `object`
 
-Defined in: [content/src/site/redirects-service.ts:83](https://github.com/Sitecore/content-sdk/blob/21e586e21b4d02181f2ff54e45a22a203b23a8bf/packages/content/src/site/redirects-service.ts#L83)
+Defined in: [content/src/site/redirects-service.ts:83](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/content/src/site/redirects-service.ts#L83)
 
 The schema of data returned in response to redirects array request
 
@@ -18,7 +18,7 @@ The schema of data returned in response to redirects array request
 
 > **site**: `object`
 
-Defined in: [content/src/site/redirects-service.ts:84](https://github.com/Sitecore/content-sdk/blob/21e586e21b4d02181f2ff54e45a22a203b23a8bf/packages/content/src/site/redirects-service.ts#L84)
+Defined in: [content/src/site/redirects-service.ts:84](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/content/src/site/redirects-service.ts#L84)
 
 #### siteInfo
 

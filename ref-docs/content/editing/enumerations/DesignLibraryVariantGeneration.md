@@ -6,7 +6,7 @@
 
 # Enumeration: DesignLibraryVariantGeneration
 
-Defined in: [content/src/editing/models.ts:91](https://github.com/Sitecore/content-sdk/blob/21e586e21b4d02181f2ff54e45a22a203b23a8bf/packages/content/src/editing/models.ts#L91)
+Defined in: [content/src/editing/models.ts:91](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/content/src/editing/models.ts#L91)
 
 Variant generation mode for Design Library
 
@@ -16,4 +16,4 @@ Variant generation mode for Design Library
 
 > **Variant**: `"variant"`
 
-Defined in: [content/src/editing/models.ts:92](https://github.com/Sitecore/content-sdk/blob/21e586e21b4d02181f2ff54e45a22a203b23a8bf/packages/content/src/editing/models.ts#L92)
+Defined in: [content/src/editing/models.ts:92](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/content/src/editing/models.ts#L92)
