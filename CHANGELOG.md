@@ -14,10 +14,10 @@ Our versioning strategy is as follows:
 
 ### 🎉 New Features & Improvements
 
-`[events]` `[nextjs]` Lightweight Tracking ([#414](https://github.com/Sitecore/content-sdk/pull/414))
+* `[events]` `[nextjs]` Lightweight Tracking ([#414](https://github.com/Sitecore/content-sdk/pull/414))([#435](https://github.com/Sitecore/content-sdk/pull/435))
   - Introduced `BotTrackingProxy` Next.js proxy to capture bot tracking events.
-`[nextjs]` Upgrade to Next.js 16.2 ([#429](https://github.com/Sitecore/content-sdk/pull/429))
-`[create-content-sdk-app]` Use native flat ESLint config for App Router templates ([#431](https://github.com/Sitecore/content-sdk/pull/431))
+* `[nextjs]` Upgrade to Next.js 16.2 ([#429](https://github.com/Sitecore/content-sdk/pull/429))
+* `[create-content-sdk-app]` Use native flat ESLint config for App Router templates ([#431](https://github.com/Sitecore/content-sdk/pull/431))
 
 ### 🐛 Bug Fixes
 
