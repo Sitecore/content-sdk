@@ -17,6 +17,7 @@
 
 ## Type Aliases
 
+- [BotPageViewData](type-aliases/BotPageViewData.md)
 - [ExtensionData](type-aliases/ExtensionData.md)
 
 ## Functions
