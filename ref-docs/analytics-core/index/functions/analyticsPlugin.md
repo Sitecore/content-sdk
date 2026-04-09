@@ -8,7 +8,7 @@
 
 > **analyticsPlugin**(`params`): [`AnalyticsPlugin`](../interfaces/AnalyticsPlugin.md)
 
-Defined in: [analytics-core/src/initialization/plugin.ts:57](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/analytics-core/src/initialization/plugin.ts#L57)
+Defined in: [analytics-core/src/initialization/plugin.ts:57](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/analytics-core/src/initialization/plugin.ts#L57)
 
 Creates an analytics plugin with the provided options.
 

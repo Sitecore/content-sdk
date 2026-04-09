@@ -8,7 +8,7 @@
 
 > **ImportMapImport** = `object`
 
-Defined in: [packages/react/src/components/DesignLibrary/models.ts:19](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/react/src/components/DesignLibrary/models.ts#L19)
+Defined in: [packages/react/src/components/DesignLibrary/models.ts:19](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/DesignLibrary/models.ts#L19)
 
 **`Internal`**
 
@@ -20,4 +20,4 @@ Model representing the import map in the Design Library.
 
 > **default**: `ImportEntry`[]
 
-Defined in: [packages/react/src/components/DesignLibrary/models.ts:20](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/react/src/components/DesignLibrary/models.ts#L20)
+Defined in: [packages/react/src/components/DesignLibrary/models.ts:20](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/DesignLibrary/models.ts#L20)

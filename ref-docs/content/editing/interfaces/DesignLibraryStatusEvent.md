@@ -6,7 +6,7 @@
 
 # Interface: DesignLibraryStatusEvent
 
-Defined in: [content/src/editing/design-library.ts:49](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/content/src/editing/design-library.ts#L49)
+Defined in: [content/src/editing/design-library.ts:49](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/content/src/editing/design-library.ts#L49)
 
 **`Internal`**
 
@@ -22,7 +22,7 @@ Represents an event indicating the status of a component in the library.
 
 > **message**: `object`
 
-Defined in: [content/src/editing/design-library.ts:51](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/content/src/editing/design-library.ts#L51)
+Defined in: [content/src/editing/design-library.ts:51](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/content/src/editing/design-library.ts#L51)
 
 The message payload for the event.
 
@@ -48,7 +48,7 @@ The message payload for the event.
 
 > **name**: `"component:status"`
 
-Defined in: [content/src/editing/design-library.ts:50](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/content/src/editing/design-library.ts#L50)
+Defined in: [content/src/editing/design-library.ts:50](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/content/src/editing/design-library.ts#L50)
 
 The name of the event.
 

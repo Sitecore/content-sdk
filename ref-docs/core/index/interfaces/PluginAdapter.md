@@ -6,7 +6,7 @@
 
 # Interface: PluginAdapter
 
-Defined in: [packages/core/src/initialization/types.ts:86](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/core/src/initialization/types.ts#L86)
+Defined in: [packages/core/src/initialization/types.ts:86](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/core/src/initialization/types.ts#L86)
 
 **`Internal`**
 
@@ -18,4 +18,4 @@ Adapter definition for plugins.
 
 > **type**: `string` & `object` \| `"browser"`
 
-Defined in: [packages/core/src/initialization/types.ts:87](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/core/src/initialization/types.ts#L87)
+Defined in: [packages/core/src/initialization/types.ts:87](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/core/src/initialization/types.ts#L87)

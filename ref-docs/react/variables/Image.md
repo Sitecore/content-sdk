@@ -8,7 +8,7 @@
 
 > `const` **Image**: `React.FC`\<[`ImageProps`](../interfaces/ImageProps.md)\>
 
-Defined in: [packages/react/src/components/Image.tsx:154](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/react/src/components/Image.tsx#L154)
+Defined in: [packages/react/src/components/Image.tsx:154](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/Image.tsx#L154)
 
 The Image component.
 

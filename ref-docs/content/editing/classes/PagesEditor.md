@@ -6,7 +6,7 @@
 
 # Class: PagesEditor
 
-Defined in: [content/src/editing/utils.ts:82](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/content/src/editing/utils.ts#L82)
+Defined in: [content/src/editing/utils.ts:82](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/content/src/editing/utils.ts#L82)
 
 Static utility class for Sitecore Pages Editor
 
@@ -26,7 +26,7 @@ Static utility class for Sitecore Pages Editor
 
 > `static` **isActive**(): `boolean`
 
-Defined in: [content/src/editing/utils.ts:88](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/content/src/editing/utils.ts#L88)
+Defined in: [content/src/editing/utils.ts:88](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/content/src/editing/utils.ts#L88)
 
 Determines whether the current execution context is within a Pages Editor.
 Pages Editor environment can be identified only in the browser
@@ -43,7 +43,7 @@ true if executing within a Pages Editor
 
 > `static` **resetChromes**(): `void`
 
-Defined in: [content/src/editing/utils.ts:97](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/content/src/editing/utils.ts#L97)
+Defined in: [content/src/editing/utils.ts:97](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/content/src/editing/utils.ts#L97)
 
 #### Returns
 

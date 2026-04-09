@@ -8,7 +8,7 @@
 
 > **personalizeServerAdapter**\<`Request`, `Response`\>(`request`, `response`): [`PersonalizeServerAdapter`](../interfaces/PersonalizeServerAdapter.md)
 
-Defined in: [personalize/src/initialization/server-adapter.ts:42](https://github.com/Sitecore/content-sdk/blob/dab46fcff27d61ada73abfddf39ca90f19ebc3b9/packages/personalize/src/initialization/server-adapter.ts#L42)
+Defined in: [personalize/src/initialization/server-adapter.ts:42](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/personalize/src/initialization/server-adapter.ts#L42)
 
 Creates a server-based personalize adapter that reads and writes the profile ID
 using cookies and can resolve a new profile ID from the Edge proxy when needed.
