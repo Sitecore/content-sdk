@@ -2,10 +2,7 @@ import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
-import {
-  eventsPlugin,
-  botPageView,
-} from '@sitecore-content-sdk/events';
+import { eventsPlugin, botPageView } from '@sitecore-content-sdk/events';
 import { isBot, BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/events/internal';
 import { ProxyBase, ProxyBaseConfig } from './proxy';
 import debug from '../debug';
@@ -71,6 +68,7 @@ export class BotTrackingProxy extends ProxyBase {
       }
 
       const site = this.getSite(req, res);
+      const language = this.getLanguage(req, res);
 
       const botTracking = async () => {
         await initContentSdk({
@@ -90,7 +88,10 @@ export class BotTrackingProxy extends ProxyBase {
           ],
         });
 
-        await botPageView();
+        await botPageView({
+          page: req.nextUrl.pathname,
+          language: language,
+        });
       };
 
       res.cookies.set(BOT_DETECTION_COOKIE, '1', {
