@@ -5,7 +5,11 @@ import { sendEvent } from '../send-event/sendEvent';
 import { PageViewEvent } from './page-view-event';
 import { BOT_CHANNEL, isBrowserEnvironment } from './bot-detection';
 
-type BotPageView = {
+/**
+ * The data to be sent for bot tracking.
+ * @public
+ */
+export type BotPageViewData = {
   /**
    * The name of the webpage where the interaction with your brand takes place.
    */
@@ -26,7 +30,7 @@ type BotPageView = {
  * @returns The response from Sitecore Edge Proxy, or `null` if skipped (browser).
  * @public
  */
-export async function botPageView(pageViewData: BotPageView): Promise<EPResponse | null> {
+export async function botPageView(pageViewData: BotPageViewData): Promise<EPResponse | null> {
   if (isBrowserEnvironment()) {
     return null;
   }

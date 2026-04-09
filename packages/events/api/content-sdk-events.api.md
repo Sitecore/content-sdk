@@ -15,7 +15,13 @@ export function addToEventQueue(eventData: EventData): Promise<void>;
 export const BOT_DETECTION_COOKIE = "sc_bot";
 
 // @public
-export function botPageView(): Promise<EPResponse | null>;
+export function botPageView(pageViewData: BotPageViewData): Promise<EPResponse | null>;
+
+// @public
+export type BotPageViewData = {
+    page: string;
+    language: string;
+};
 
 // @public
 export function clearEventQueue(): Promise<void>;
