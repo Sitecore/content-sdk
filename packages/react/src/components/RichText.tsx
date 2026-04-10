@@ -1,18 +1,10 @@
 'use client';
 import React from 'react';
-import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
+import { isFieldValueEmpty, type RichTextField } from '@sitecore-content-sdk/content/layout';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-
-/**
- * The interface for the RichText field.
- * @public
- */
-export interface RichTextField extends FieldMetadata {
-  value?: string;
-}
 
 /**
  * The interface for the RichText component props.
