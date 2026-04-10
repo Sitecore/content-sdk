@@ -22,6 +22,15 @@ export {
   ComponentParams,
   EditMode,
 } from '@sitecore-content-sdk/content/layout';
+export type {
+  ImageField,
+  ImageFieldValue,
+  ImageSizeParameters,
+  LinkField,
+  LinkFieldValue,
+  RichTextField,
+  TextField,
+} from '@sitecore-content-sdk/content/layout';
 export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 export {
   GraphQLClientError,
@@ -94,8 +103,8 @@ export {
 
 // ─── Field directives ──────────────────────────────────────────
 export { ScTextDirective } from './field-directives/sc-text.directive';
-export { ScImageDirective, type ImageField, type ImageFieldValue } from './field-directives/sc-image.directive';
-export { ScLinkDirective, type LinkField, type LinkFieldValue } from './field-directives/sc-link.directive';
+export { ScImageDirective } from './field-directives/sc-image.directive';
+export { ScLinkDirective } from './field-directives/sc-link.directive';
 export { ScRichTextDirective } from './field-directives/sc-rich-text.directive';
 
 // ─── Form ──────────────────────────────────────────────────────

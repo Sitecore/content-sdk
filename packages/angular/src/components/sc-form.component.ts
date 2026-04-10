@@ -28,12 +28,7 @@ const { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
   selector: 'sc-form',
   standalone: true,
   template: `
-    <div
-      #formContainer
-      [class]="styles()"
-      [id]="renderingId()"
-      [innerHTML]="content()"
-    ></div>
+    <div #formContainer [class]="styles()" [id]="renderingId()" [innerHTML]="content()"></div>
   `,
 })
 export class ScFormComponent {
@@ -65,10 +60,9 @@ export class ScFormComponent {
       const formId = p?.['FormId'];
       if (!formId) return;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Sitecore config shape varies by app
-      const cfg = this.config as any;
-      const edgeId = cfg?.api?.edge?.clientContextId ?? cfg?.edge?.clientContextId;
-      const edgeUrl = cfg?.api?.edge?.edgeUrl ?? cfg?.edge?.edgeUrl;
+      const cfg = this.config;
+      const edgeId = cfg?.api?.edge?.clientContextId;
+      const edgeUrl = cfg?.api?.edge?.edgeUrl;
 
       if (!edgeId) {
         console.warn(

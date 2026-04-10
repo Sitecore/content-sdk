@@ -1,6 +1,7 @@
 import { Directive, ElementRef, inject, input, effect, Renderer2 } from '@angular/core';
 import { isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
 import { mediaApi } from '@sitecore-content-sdk/content/media';
+import { getClassFromField } from './utils';
 
 /**
  * Image field value shape.
@@ -8,6 +9,9 @@ import { mediaApi } from '@sitecore-content-sdk/content/media';
 export interface ImageFieldValue {
   [attributeName: string]: unknown;
   src?: string;
+  alt?: string;
+  width?: number;
+  height?: number;
 }
 
 /**
@@ -31,7 +35,6 @@ export interface ImageField {
  */
 @Directive({
   selector: 'img[scImage]',
-  standalone: true,
 })
 export class ScImageDirective {
   /** The Sitecore image field. */
@@ -51,8 +54,7 @@ export class ScImageDirective {
       const field = this.scImage();
       const element = this.el.nativeElement;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- image field shapes vary (wrapped / flat)
-      if (!field || isFieldValueEmpty(field as any)) {
+      if (!field || isFieldValueEmpty(field)) {
         this.renderer.removeAttribute(element, 'src');
         return;
       }
@@ -70,19 +72,23 @@ export class ScImageDirective {
       const prefix = this.mediaUrlPrefix();
       const resolvedSrc = mediaApi.updateImageUrl(img.src, params, prefix);
       this.renderer.setAttribute(element, 'src', resolvedSrc);
+      const classValue = getClassFromField(img);
+      if (classValue) {
+        this.renderer.addClass(element, classValue);
+      }
 
       if (img.alt !== undefined) {
-        this.renderer.setAttribute(element, 'alt', String(img.alt));
+        this.renderer.setAttribute(element, 'alt', img.alt);
       } else {
         this.renderer.removeAttribute(element, 'alt');
       }
       if (img.width !== undefined) {
-        this.renderer.setAttribute(element, 'width', String(Number(img.width)));
+        this.renderer.setAttribute(element, 'width', String(img.width));
       } else {
         this.renderer.removeAttribute(element, 'width');
       }
       if (img.height !== undefined) {
-        this.renderer.setAttribute(element, 'height', String(Number(img.height)));
+        this.renderer.setAttribute(element, 'height', String(img.height));
       } else {
         this.renderer.removeAttribute(element, 'height');
       }

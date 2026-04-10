@@ -1,29 +1,6 @@
 import { Directive, ElementRef, inject, input, effect, Renderer2 } from '@angular/core';
-import { isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
-
-/**
- * Link field value shape.
- */
-export interface LinkFieldValue {
-  [attributeName: string]: unknown;
-  href?: string;
-  className?: string;
-  class?: string;
-  title?: string;
-  target?: string;
-  text?: string;
-  anchor?: string;
-  querystring?: string;
-  linktype?: string;
-}
-
-/**
- * Link field shape (with optional value wrapper).
- */
-export interface LinkField {
-  value: LinkFieldValue;
-  metadata?: { [key: string]: unknown };
-}
+import { isFieldValueEmpty, LinkFieldValue, LinkField } from '@sitecore-content-sdk/content/layout';
+import { getClassFromField } from './utils';
 
 /**
  * Renders a Sitecore link field onto a host `<a>` element.
@@ -38,25 +15,29 @@ export interface LinkField {
  */
 @Directive({
   selector: 'a[scLink]',
-  standalone: true,
 })
 export class ScLinkDirective {
   /** The Sitecore link field. */
-  readonly scLink = input.required<LinkField | LinkFieldValue | undefined>();
+  readonly scLink = input.required<LinkField | LinkFieldValue>();
 
   /** Whether to show link text alongside existing child content. */
-  readonly showLinkTextWithChildrenPresent = input<boolean>(false);
+  readonly preferTextFromField = input<boolean>(false);
 
   private readonly el = inject(ElementRef<HTMLAnchorElement>);
   private readonly renderer = inject(Renderer2);
+  private readonly originalClass: string | undefined;
+  private readonly originalTitle: string | undefined;
+  private readonly originalTarget: string | undefined;
 
   constructor() {
+    this.originalClass = (this.el.nativeElement as HTMLAnchorElement).className;
+    this.originalTitle = (this.el.nativeElement as HTMLAnchorElement).title;
+    this.originalTarget = (this.el.nativeElement as HTMLAnchorElement).target;
     effect(() => {
       const field = this.scLink();
       const element = this.el.nativeElement;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- link field shapes vary (wrapped / flat)
-      if (!field || isFieldValueEmpty(field as any)) {
+      if (!field || isFieldValueEmpty(field)) {
         this.renderer.removeAttribute(element, 'href');
         return;
       }
@@ -65,25 +46,28 @@ export class ScLinkDirective {
         ? (field as LinkFieldValue)
         : (field as LinkField).value;
 
-      if (!link) {
-        this.renderer.removeAttribute(element, 'href');
-        return;
-      }
-
       const anchor = link.linktype !== 'anchor' && link.anchor ? `#${link.anchor}` : '';
       const querystring = link.querystring ? `?${link.querystring}` : '';
 
       this.renderer.setAttribute(element, 'href', `${link.href || ''}${querystring}${anchor}`);
 
-      if (link.class || link.className) {
-        this.renderer.setAttribute(element, 'class', String(link.class || link.className));
+      const classValue = getClassFromField(link);
+      if (classValue) {
+        this.renderer.addClass(element, classValue);
       } else {
         this.renderer.removeAttribute(element, 'class');
+        if (this.originalClass) {
+          this.renderer.addClass(element, this.originalClass);
+        }
       }
+
       if (link.title) {
         this.renderer.setAttribute(element, 'title', link.title);
       } else {
         this.renderer.removeAttribute(element, 'title');
+        if (this.originalTitle) {
+          this.renderer.setAttribute(element, 'title', this.originalTitle);
+        }
       }
       if (link.target) {
         this.renderer.setAttribute(element, 'target', link.target);
@@ -92,14 +76,17 @@ export class ScLinkDirective {
         }
       } else {
         this.renderer.removeAttribute(element, 'target');
+        if (this.originalTarget) {
+          this.renderer.setAttribute(element, 'target', this.originalTarget);
+        }
       }
 
       const hasChildren = element.childNodes.length > 0 && element.textContent?.trim();
-      if (this.showLinkTextWithChildrenPresent() || !hasChildren) {
+      if (!hasChildren) {
         const text = link.text || link.href || '';
-        if (!hasChildren) {
-          this.renderer.setProperty(element, 'textContent', text);
-        }
+        this.renderer.setProperty(element, 'textContent', text);
+      } else if (this.preferTextFromField() && link.text) {
+        this.renderer.setProperty(element, 'textContent', link.text || '');
       }
     });
   }

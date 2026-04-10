@@ -8,7 +8,7 @@ import {
   SecurityContext,
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { isFieldValueEmpty, Field } from '@sitecore-content-sdk/content/layout';
+import { isFieldValueEmpty, TextField } from '@sitecore-content-sdk/content/layout';
 
 /**
  * Renders a Sitecore rich text field value as innerHTML of the host element.
@@ -23,11 +23,10 @@ import { isFieldValueEmpty, Field } from '@sitecore-content-sdk/content/layout';
  */
 @Directive({
   selector: '[scRichText]',
-  standalone: true,
 })
 export class ScRichTextDirective {
   /** The Sitecore rich text field. */
-  readonly scRichText = input.required<Field<string> | undefined>();
+  readonly scRichText = input.required<TextField>();
 
   private readonly el = inject(ElementRef<HTMLElement>);
   private readonly renderer = inject(Renderer2);
@@ -43,7 +42,7 @@ export class ScRichTextDirective {
         return;
       }
 
-      const raw = field.value ?? '';
+      const raw = (field.value as string) ?? '';
       const trusted = this.sanitizer.bypassSecurityTrustHtml(raw);
       const html = this.sanitizer.sanitize(SecurityContext.HTML, trusted) ?? '';
       this.renderer.setProperty(element, 'innerHTML', html);

@@ -1,5 +1,5 @@
 import { Directive, ElementRef, inject, input, effect, Renderer2 } from '@angular/core';
-import { isFieldValueEmpty, Field } from '@sitecore-content-sdk/content/layout';
+import { isFieldValueEmpty, TextField } from '@sitecore-content-sdk/content/layout';
 
 /**
  * Renders a Sitecore text field value into the host element's text content.
@@ -15,11 +15,10 @@ import { isFieldValueEmpty, Field } from '@sitecore-content-sdk/content/layout';
  */
 @Directive({
   selector: '[scText]',
-  standalone: true,
 })
 export class ScTextDirective {
   /** The Sitecore text field. */
-  readonly scText = input.required<Field<string | number> | undefined>();
+  readonly scText = input.required<TextField>();
 
   /** Whether to HTML-encode the value (default: true). When false, uses innerHTML. */
   readonly scTextEncode = input<boolean>(true);
@@ -38,7 +37,7 @@ export class ScTextDirective {
         return;
       }
 
-      const value = field.value === undefined ? '' : String(field.value);
+      const value = String(field.value);
 
       if (encode) {
         this.renderer.setProperty(element, 'textContent', value);
