@@ -1,3 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+/**
+ * Tailwind + kit-nextjs-skate-park theme and component styles.
+ * Custom max-* variants match --breakpoint-* in skate-park variables.css.
+ */
+@import 'tailwindcss';
 
-@import "tailwindcss";
+@custom-variant max-mobile (@media (max-width: 380px));
+@custom-variant max-mobile-horizontal (@media (max-width: 640px));
+@custom-variant max-mobile-large (@media (max-width: 992px));
+@custom-variant max-desktop (@media (max-width: 1024px));
+
+@import './styles/skate-park/main.css';
+@import './styles/angular-app-layout.css';

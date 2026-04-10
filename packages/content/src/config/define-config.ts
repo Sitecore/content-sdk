@@ -21,7 +21,8 @@ export const buildFallbackConfig = (env: { [key: string]: string | undefined }):
     api: {
       edge: {
         contextId: env.SITECORE_EDGE_CONTEXT_ID || '',
-        clientContextId: env.CSDK_PUBLIC_SITECORE_EDGE_CONTEXT_ID || '',
+        clientContextId:
+          env.SITECORE_EDGE_CLIENT_CONTEXT_ID || env.CSDK_PUBLIC_SITECORE_EDGE_CONTEXT_ID || '',
         edgeUrl: resolveEdgeUrl(rawEdgeUrl),
       },
       local: {
@@ -65,7 +66,11 @@ export const buildFallbackConfig = (env: { [key: string]: string | undefined }):
       channel: 'WEB',
       currency: 'USD',
     },
-    defaultSite: env.SITECORE_DEFAULT_SITE || env.CSDK_PUBLIC_SITECORE_DEFAULT_SITE || '',
+    defaultSite:
+      env.SITECORE_DEFAULT_SITE ||
+      env.CSDK_PUBLIC_SITECORE_DEFAULT_SITE ||
+      env.CSDK_PUBLIC_DEFAULT_SITE ||
+      '',
     defaultLanguage: env.SITECORE_DEFAULT_LANGUAGE || env.CSDK_PUBLIC_DEFAULT_LANGUAGE || 'en',
     layout: {
       formatLayoutQuery: null,

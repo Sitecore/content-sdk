@@ -1,13 +1,12 @@
-/// <reference types="node" />
 import type { SitecoreConfig, SitecoreConfigInput } from '@sitecore-content-sdk/content/config';
 import { defineConfig as baseDefineConfig } from '@sitecore-content-sdk/content/config';
 
 function getProcessEnv(): Record<string, string | undefined> {
-  return typeof process !== 'undefined' && process.env
-    ? (process.env as Record<string, string | undefined>)
-    : {};
+  // Use globalThis so we do not need @types/node (lib tsconfig uses "types": []).
+  const env = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process
+    ?.env;
+  return env ? env : {};
 }
-
 /**
  * Merges `clientEnv` (browser-safe `environment*.ts`) with `process.env` for server-only variables.
  * On Node/SSR, load `.env` in the app entry before importing `sitecore.config` (see `load-env.ts` in the sample).

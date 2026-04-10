@@ -1,0 +1,329 @@
+/**
+ * Align samples/angular-app layout with kit-nextjs-skate-park visuals.
+ *
+ * Angular renders sc-placeholder and app-* hosts; Next.js inlines components in JSX.
+ * Without these rules, placeholders/hosts shrink-wrap and hero media stays column-width.
+ */
+
+/* ---- Angular / Content SDK host elements (custom elements default to inline in some cases) ---- */
+app-root {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+}
+
+/* ---- Header: full-width bar; inner row matches skate-park content width ---- */
+/* app.css sets #header { display:flex; flex-wrap:wrap } — nowrap on desktop so logo+nav stay one row */
+#header {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1250px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+/*
+ * Header placeholder = one flex row (matches Next: siblings in a horizontal bar).
+ * Do NOT use min-width:0 + flex-shrink on logo/title — that clips "Skate Park" text.
+ * Do NOT wrap on desktop — nav must stay on the same row as the logo.
+ */
+#header sc-placeholder {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+  gap: 1rem;
+}
+
+#header sc-placeholder::before {
+  content: '';
+  flex: 1 1 0;
+  order: 1;
+  min-width: 0;
+  align-self: stretch;
+}
+
+/* Logo / title / any block before nav: never shrink below content */
+#header sc-placeholder > *:not(app-navigation) {
+  order: 0;
+  flex: 0 0 auto;
+  min-width: max-content;
+  overflow: visible;
+}
+
+#header app-title,
+#header app-rich-text,
+#header app-image,
+#header sc-placeholder > app-title {
+  overflow: visible;
+}
+
+#header app-title .component.title,
+#header app-title .field-title,
+#header app-title .field-title h1,
+#header app-rich-text .rich-text {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+/* Skate-park rich-text.css sets .rich-text { overflow-hidden } — clip header logos */
+#header .component.rich-text .rich-text,
+#header .rich-text {
+  overflow: visible !important;
+}
+
+#header app-navigation,
+#header sc-placeholder > app-navigation {
+  order: 2;
+  flex: 0 0 auto;
+  margin-left: 0 !important;
+  min-width: 0;
+  display: block;
+  overflow: visible;
+}
+
+@media (max-width: 992px) {
+  #header {
+    flex-wrap: wrap;
+  }
+
+  #header sc-placeholder::before {
+    display: none;
+  }
+
+  #header sc-placeholder {
+    flex-direction: column-reverse;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+
+  #header sc-placeholder > *:not(app-navigation) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  #header app-navigation,
+  #header sc-placeholder > app-navigation {
+    margin-left: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #header .navigation.navigation-horizontal {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 993px) {
+  #header .navigation.navigation-horizontal {
+    width: auto !important;
+    margin-top: 0 !important;
+  }
+}
+
+/* ---- Main: stack placeholder output full width (column) ---- */
+main {
+  width: 100%;
+  min-width: 0;
+  overflow-x: visible;
+}
+
+#content {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  overflow-x: visible;
+}
+
+/* Host must not clip full-bleed transforms on inner .component.image */
+#content app-image {
+  display: block;
+  width: 100%;
+  max-width: none;
+  overflow: visible;
+}
+
+#content sc-placeholder {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  align-items: stretch;
+}
+
+/* Block-level hosts so width:100% propagates (matches block-level React roots) */
+#content sc-placeholder > app-page-content,
+#content sc-placeholder > app-title,
+#content sc-placeholder > app-image,
+#content sc-placeholder > app-rich-text,
+#content sc-placeholder > app-content-block,
+#content sc-placeholder > app-promo,
+#content sc-placeholder > app-link-list,
+#content sc-placeholder > app-row-splitter,
+#content sc-placeholder > app-column-splitter,
+#content sc-placeholder > app-container {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Nested placeholders inside PageContent / splitters */
+#content app-page-content sc-placeholder,
+#content app-row-splitter sc-placeholder,
+#content app-column-splitter sc-placeholder {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  align-items: stretch;
+}
+
+#content app-page-content sc-placeholder > *,
+#content app-row-splitter sc-placeholder > *,
+#content app-column-splitter sc-placeholder > * {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* PageContent wrapper: do not clip or max-width inner flow */
+#content .component.page-content {
+  max-width: none;
+}
+
+#content .component.page-content > .component-content {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+/*
+ * Sitecore often adds Bootstrap-style col- and offset- classes via rendering styles.
+ * In a vertical stack (no grid row), that shifts blocks (e.g. "In the news" mid-page).
+ * Reset only for direct stacked renderings under PageContent (not inside column-splitter rows).
+ */
+#content .component.page-content > .component-content > sc-placeholder > app-title > .component,
+#content .component.page-content > .component-content > sc-placeholder > app-rich-text > .component,
+#content .component.page-content > .component-content > sc-placeholder > app-content-block > .component,
+#content .component.page-content > .component-content > sc-placeholder > app-promo > .component,
+#content .component.page-content > .component-content > sc-placeholder > app-link-list > .component,
+#content .component.page-content > .component-content > sc-placeholder > app-image > .component {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  flex: 0 0 auto !important;
+}
+
+/* Same stack at root main when PageContent is not used */
+#content > sc-placeholder > app-title > .component,
+#content > sc-placeholder > app-rich-text > .component,
+#content > sc-placeholder > app-content-block > .component,
+#content > sc-placeholder > app-promo > .component,
+#content > sc-placeholder > app-link-list > .component,
+#content > sc-placeholder > app-image > .component {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  flex: 0 0 auto !important;
+}
+
+/* ---- Prose column (skate-park container width) ---- */
+#content .component.title .component-content,
+#content .component.rich-text .component-content,
+#content .component.content .component-content,
+#content .component.link-list .component-content,
+#content .component.promo .component-content {
+  box-sizing: border-box;
+  max-width: 1250px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Hero title typography: match container.css .main-header (Next example hero) */
+#content .component.title .component-content {
+  margin-top: 55px;
+  margin-bottom: 30px;
+}
+
+#content .component.title .field-title h1 {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  font-size: 50px;
+  font-weight: 500;
+  line-height: 70px;
+  color: var(--color-text-basic, #222);
+}
+
+@media (max-width: 992px) {
+  #content .component.title .component-content {
+    margin-top: 10px;
+    margin-bottom: 0;
+  }
+
+  #content .component.title .field-title h1 {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}
+
+/*
+ * Full-bleed hero: margin calc(50% - 50vw) is 0 when the parent is already full viewport
+ * wide, so the image stays column-width. Center with transform + 100vw instead.
+ */
+#content .component.image {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0;
+  margin-right: 0;
+  width: 100vw;
+  max-width: none;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+}
+
+#content .component.image .component-content {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#content .component.image .sc-image-wrapper,
+#content .component.image img {
+  display: block;
+  width: 100%;
+  max-width: none !important;
+  height: auto;
+}
+
+/* ---- Footer placeholder stacks like main ---- */
+#footer sc-placeholder {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  align-items: stretch;
+}
+
+#footer sc-placeholder > * {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}

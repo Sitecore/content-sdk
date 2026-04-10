@@ -27,7 +27,7 @@ function loadEnvFiles(mode: 'dev' | 'prod'): void {
 }
 
 function serialize(production: boolean): string {
-  const lines: string[] = [`  production: ${production},`];
+  const lines: string[] = [`  production: '${production}',`] 
 
   const keys = Object.keys(process.env).sort();
   for (const key of keys) {

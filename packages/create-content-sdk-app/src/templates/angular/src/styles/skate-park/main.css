@@ -1,0 +1,14 @@
+/**
+ * Ported from examples/kit-nextjs-skate-park/src/assets/main.css
+ * @see https://github.com/Sitecore/xmcloud-starter-js/tree/main/examples/kit-nextjs-skate-park
+ */
+@import './base/index.css';
+@import './components/index.css';
+
+@plugin 'tailwind-bootstrap-grid' {
+  container_max_widths:
+    'sm', '576px', 'md', '768px', 'lg', '992px', 'xl', '1200px', '2xl', '1400px';
+}
+
+@source inline("col-{1..12}");
+@source inline("offset-{1..12}");

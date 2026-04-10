@@ -1,35 +1,37 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Page } from '@sitecore-content-sdk/angular';
+import { Page, SitecoreContextService } from '@sitecore-content-sdk/angular';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { LayoutComponent } from '../shared/layout.component';
 
 /**
- * 500 error page component.
- * Reads page from the '500' loader and displays the raw JSON alongside default UI.
+ * 500 error page. Uses the Sitecore server-error page when the loader returns layout data;
+ * otherwise shows a static fallback (aligned with kit-nextjs global-error behavior).
  */
 @Component({
   selector: 'app-error',
+  standalone: true,
+  imports: [LayoutComponent],
   template: `
-    <div class="error-container">
-      <div class="error-content">
-        <h1 class="error-code">500</h1>
-        <h2 class="error-title">Internal Server Error</h2>
-        <p class="error-message">Something went wrong on our end. Please try again later.</p>
-        <div class="error-actions">
-          <button class="btn btn-primary" (click)="goHome()">Go Home</button>
-          <button class="btn btn-secondary" (click)="retry()">Retry</button>
+    @let pageValue = page();
+    @if (pageValue) {
+      <app-layout [page]="pageValue"></app-layout>
+    } @else {
+      <div class="error-container">
+        <div class="error-content">
+          <h1 class="error-code">500</h1>
+          <h2 class="error-title">Internal Server Error</h2>
+          <p class="error-message">Something went wrong on our end. Please try again later.</p>
+          <div class="error-actions">
+            <button type="button" class="btn btn-primary" (click)="goHome()">Go Home</button>
+            <button type="button" class="btn btn-secondary" (click)="retry()">Retry</button>
+          </div>
         </div>
-
-        <h3 style="margin-top: 2rem;">Loader data (raw JSON)</h3>
-        @if (page()) {
-          <pre class="loader-json">{{ toJson(page()) }}</pre>
-        } @else {
-          <p><em>No data returned by 500 loader.</em></p>
-        }
       </div>
-    </div>
+    }
   `,
-  styles: [`
+  styles: [
+    `
     .error-container {
       display: flex;
       align-items: center;
@@ -45,10 +47,26 @@ import { toSignal } from '@angular/core/rxjs-interop';
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       max-width: 700px;
     }
-    .error-code { font-size: 4rem; font-weight: bold; color: #e74c3c; margin: 0; }
-    .error-title { font-size: 1.5rem; color: #2c3e50; margin: 1rem 0; }
-    .error-message { color: #7f8c8d; margin: 1.5rem 0 2rem; }
-    .error-actions { display: flex; gap: 1rem; justify-content: center; }
+    .error-code {
+      font-size: 4rem;
+      font-weight: bold;
+      color: #e74c3c;
+      margin: 0;
+    }
+    .error-title {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin: 1rem 0;
+    }
+    .error-message {
+      color: #7f8c8d;
+      margin: 1.5rem 0 2rem;
+    }
+    .error-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
     .btn {
       padding: 0.75rem 1.5rem;
       border: none;
@@ -57,31 +75,34 @@ import { toSignal } from '@angular/core/rxjs-interop';
       cursor: pointer;
       transition: background-color 0.3s;
     }
-    .btn-primary { background-color: #3498db; color: white; }
-    .btn-primary:hover { background-color: #2980b9; }
-    .btn-secondary { background-color: #95a5a6; color: white; }
-    .btn-secondary:hover { background-color: #7f8c8d; }
-    .loader-json {
-      text-align: left;
-      margin: 0.5rem 0 0;
-      font-size: 0.8rem;
-      max-height: 400px;
-      overflow: auto;
-      background: #f5f5f5;
-      padding: 0.5rem;
-      border-radius: 4px;
-      border: 1px solid #ddd;
+    .btn-primary {
+      background-color: #3498db;
+      color: white;
     }
-  `],
+    .btn-primary:hover {
+      background-color: #2980b9;
+    }
+    .btn-secondary {
+      background-color: #95a5a6;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background-color: #7f8c8d;
+    }
+  `,
+  ],
 })
 export class ErrorComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly routeData = toSignal(this.route.data);
+  private readonly context = inject(SitecoreContextService);
 
   page = computed(() => this.routeData()?.['page'] as Page | null);
 
-  toJson(value: unknown): string {
-    return JSON.stringify(value, null, 2);
+  constructor() {
+    effect(() => {
+      this.context.setPage(this.page() ?? null);
+    });
   }
 
   goHome(): void {
