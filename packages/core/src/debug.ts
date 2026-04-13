@@ -57,4 +57,5 @@ export default {
   common: debug(`${debugNamespace}:common`),
   http: debug(`${debugNamespace}:http`),
   init: debug(`${debugNamespace}:init`),
+  telemetry: debug(`${debugNamespace}:telemetry`),
 };

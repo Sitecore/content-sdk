@@ -1,4 +1,6 @@
 import loadCliConfig from '../../utils/load-config';
+import { TelemetryService } from '@sitecore-content-sdk/core/node-tools';
+import { SdkBuildEventInit } from '../../telemetry/sdk-build-event';
 
 export const command = ['build', 'b'];
 
@@ -30,13 +32,14 @@ export type BuildArgs = {
  */
 export async function handler(argv: BuildArgs) {
   const cliConfig = loadCliConfig(argv.config);
-
   if (cliConfig.build && Array.isArray(cliConfig.build.commands)) {
     for (const command of cliConfig.build.commands) {
       await command({ scConfig: cliConfig.config });
+      // TODO: get the name of the command, from the command, pass it to event
     }
   }
-
+  const sdkBuildEvent = SdkBuildEventInit();
+  TelemetryService.dispatch(sdkBuildEvent);
   // Exit the process to avoid hanging the process by custom build commands
   process.exit(0);
 }

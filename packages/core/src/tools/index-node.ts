@@ -1,7 +1,7 @@
 // export point for /node-tools submodule, which is not client-side safe and should not be imported in browser bundles
 export * from './auth/models';
 import * as authModule from './auth';
-
+export * from './telemetry';
 export * from './metadata';
 
 export { ensurePathExists } from './ensurePath';
