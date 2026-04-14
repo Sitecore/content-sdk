@@ -20,3 +20,11 @@ export {
   escapeNonSpecialQuestionMarks,
   mergeURLSearchParams,
 } from './utils';
+export {
+  TelemetryService,
+  TelemetryEvent,
+  TelemetryEventInitializer,
+  CSDK_TELEMETRY_FIRST_API_CALL_ENV,
+  SDK_FIRST_API_CALL_EVENT_NAME,
+  SdkFirstApiCallEventInit,
+} from './telemetry';

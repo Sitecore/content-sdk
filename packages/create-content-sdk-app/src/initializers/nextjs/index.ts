@@ -11,9 +11,10 @@ export default class NextjsInitializer implements Initializer {
     const answers = await inquirer.prompt<NextjsAnswer>(prompts, args);
     const templatePath = path.resolve(__dirname, '../../templates/nextjs');
 
-    await transform(templatePath, { ...args, ...answers });
+    const merged = { ...args, ...answers };
+    await transform(templatePath, merged);
 
-    const sdkEvent = SdkInstalledEventInit('nextjs');
+    const sdkEvent = SdkInstalledEventInit('nextjs', merged.destination as string);
     TelemetryService.dispatch(sdkEvent);
 
     const response = {};

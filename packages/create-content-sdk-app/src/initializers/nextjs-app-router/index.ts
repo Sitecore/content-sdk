@@ -11,9 +11,10 @@ export default class NextjsAppRouterInitializer implements Initializer {
     const answers = await inquirer.prompt<NextjsAppRouterAnswer>(prompts, args);
     const templatePath = path.resolve(__dirname, '../../templates/nextjs-app-router');
 
-    await transform(templatePath, { ...args, ...answers });
+    const merged = { ...args, ...answers };
+    await transform(templatePath, merged);
 
-    const sdkEvent = SdkInstalledEventInit('nextjs-app-router');
+    const sdkEvent = SdkInstalledEventInit('nextjs-app-router', merged.destination as string);
     TelemetryService.dispatch(sdkEvent);
 
     const response = {};

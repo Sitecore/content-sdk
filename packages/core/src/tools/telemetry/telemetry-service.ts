@@ -1,12 +1,13 @@
-import fs from 'fs';
-import path from 'path';
 import debugModule from 'debug';
 import debug, { enableDebug } from '../../debug';
 import { TelemetryEventInitializer } from './base-event';
+import {
+  CSDK_TELEMETRY_FIRST_API_CALL_ENV,
+  SDK_FIRST_API_CALL_EVENT_NAME,
+} from './first-api-call-event';
+
 export class TelemetryService {
   static TELEMETRY_POST_URL = 'http://localhost:3100/events';
-  // /sitecore-jss/telemetry-log.txt
-  static LOG_FILE_PATH = path.resolve(__dirname, '../../../telemetry-log.txt');
 
   static disable() {
     process.env.JSS_TELEMETRY = 'false';
@@ -30,20 +31,23 @@ export class TelemetryService {
       return false;
     }
 
-    let data = [];
-
-    if (fs.existsSync(this.LOG_FILE_PATH)) {
-      data = JSON.parse(fs.readFileSync(this.LOG_FILE_PATH, { encoding: 'utf-8' }));
-    }
-
     const event = eventInit();
     event.date = new Date();
 
+    if (event.name === SDK_FIRST_API_CALL_EVENT_NAME) {
+      const latch = process.env[CSDK_TELEMETRY_FIRST_API_CALL_ENV]?.trim();
+      if (latch) {
+        debug.telemetry(
+          'skipped (sdk-first-api-call; %s is set)',
+          CSDK_TELEMETRY_FIRST_API_CALL_ENV
+        );
+        return false;
+      }
+    }
+
     debug.telemetry('sending telemetry event %s', JSON.stringify(event, null, 2));
-
-    const chunk = JSON.stringify([...data, event], null, 2);
-
-    fs.writeFileSync(this.LOG_FILE_PATH, chunk);
+    // eslint-disable-next-line no-console -- local / dev telemetry sink (no fs; safe for any runtime)
+    console.log('[telemetry]', JSON.stringify(event, null, 2));
     try {
       fetch(this.TELEMETRY_POST_URL, {
         method: 'POST',
@@ -52,6 +56,9 @@ export class TelemetryService {
     } catch (error) {
       debug.telemetry('error sending telemetry events %s', error);
       return false;
+    }
+    if (event.name === SDK_FIRST_API_CALL_EVENT_NAME) {
+      process.env[CSDK_TELEMETRY_FIRST_API_CALL_ENV] = '1';
     }
     return true;
   }

@@ -9,8 +9,11 @@ import {
   constants,
 } from '@sitecore-content-sdk/core';
 import {
+  CSDK_TELEMETRY_FIRST_API_CALL_ENV,
   resolveEdgeUrlForStaticFiles,
   resolveExperienceEdgeUrl,
+  SdkFirstApiCallEventInit,
+  TelemetryService,
 } from '@sitecore-content-sdk/core/tools';
 import { DictionaryPhrases, DictionaryService } from '../i18n';
 import {
@@ -327,6 +330,19 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   /**
+   * One-shot telemetry after the first successful layout service response (Node only).
+   */
+  private scheduleFirstLayoutFetchTelemetry(): void {
+    if (typeof process === 'undefined' || !process.versions?.node) {
+      return;
+    }
+    if (process.env[CSDK_TELEMETRY_FIRST_API_CALL_ENV]?.trim()) {
+      return;
+    }
+    TelemetryService.dispatch(SdkFirstApiCallEventInit());
+  }
+
+  /**
    * Execute a raw GraphQL request using the client's configured GraphQL Edge endpoint.
    * This is a thin pass-through to the underlying `GraphQLClient.request` method,
    * @param {string | DocumentNode} query GraphQL query
@@ -365,6 +381,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       },
       fetchOptions
     );
+    this.scheduleFirstLayoutFetchTelemetry();
     if (!layout.sitecore.route) {
       return null;
     }

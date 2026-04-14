@@ -2,6 +2,7 @@
 export * from './auth/models';
 import * as authModule from './auth';
 export * from './telemetry';
+export { getSystemInformationData } from './telemetry/system-info-event';
 export * from './metadata';
 
 export { ensurePathExists } from './ensurePath';
