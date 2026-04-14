@@ -16,7 +16,7 @@ Object model of a sitemap's site page item.
 
 ### locale?
 
-> `optional` **locale**: `string`
+> `optional` **locale?**: `string`
 
 Defined in: content/types/models.d.ts:16
 

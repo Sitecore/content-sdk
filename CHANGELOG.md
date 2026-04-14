@@ -10,11 +10,26 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
-## unreleased 
+## unreleased
+
+### 🎉 New Features & Improvements
+
+* `[events]` `[nextjs]` Lightweight Tracking ([#414](https://github.com/Sitecore/content-sdk/pull/414))([#435](https://github.com/Sitecore/content-sdk/pull/435))
+  - Introduced `BotTrackingProxy` Next.js proxy to capture bot tracking events.
+* `[nextjs]` Upgrade to Next.js 16.2 ([#429](https://github.com/Sitecore/content-sdk/pull/429))
+* `[create-content-sdk-app]` Use native flat ESLint config for App Router templates ([#431](https://github.com/Sitecore/content-sdk/pull/431))
 
 ### 🐛 Bug Fixes
 
 * Preview mode shows unpublishable content ([#410](https://github.com/Sitecore/content-sdk/pull/410))([416](https://github.com/Sitecore/content-sdk/pull/416))
+* `[core] [content]` Fix GraphQL client factory ignoring custom `fetch` and related options ([#418](https://github.com/Sitecore/content-sdk/pull/418))
+* `[nextjs]` AppRouter - NextLink is throwing Locale error in dev mode ([#427](https://github.com/Sitecore/content-sdk/pull/427))
+
+## 2.0.2
+
+### 🎉 New Features & Improvements
+
+* `[content]` Add Unified UI origin to allowed origins ([#424](https://github.com/Sitecore/content-sdk/pull/424))
 
 ### 🎉 New Features & Improvements
 

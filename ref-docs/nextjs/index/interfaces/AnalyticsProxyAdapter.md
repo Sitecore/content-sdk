@@ -6,7 +6,7 @@
 
 # Interface: AnalyticsProxyAdapter
 
-Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:17](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L17)
+Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:17](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L17)
 
 Defines the AnalyticsProxyAdapter.
 
@@ -16,7 +16,7 @@ Defines the AnalyticsProxyAdapter.
 
 ## Properties
 
-### getClientId()
+### getClientId
 
 > **getClientId**: () => `string` \| `null`
 
@@ -44,7 +44,7 @@ Defined in: analytics-core/types/src/initialization/types.d.ts:22
 
 The location object, which provides a method for getting search parameters.
 
-#### getSearchParams()
+#### getSearchParams
 
 > **getSearchParams**: () => `string`
 
@@ -62,7 +62,7 @@ The search parameters from the location.
 
 ***
 
-### setClientId()
+### setClientId
 
 > **setClientId**: () => `Promise`\<`void`\>
 
@@ -86,7 +86,7 @@ A promise that resolves when the client ID has been set.
 
 > **type**: `"proxy"`
 
-Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:21](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L21)
+Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:21](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L21)
 
 The type of the adapter.
 

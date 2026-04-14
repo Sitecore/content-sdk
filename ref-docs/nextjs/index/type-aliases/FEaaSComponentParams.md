@@ -16,7 +16,7 @@ Params from a Sitecore FEaaS rendering
 
 ### ComponentDataOverride?
 
-> `optional` **ComponentDataOverride**: `string`
+> `optional` **ComponentDataOverride?**: `string`
 
 Defined in: react/types/components/FEaaS/models.d.ts:90
 
@@ -24,7 +24,7 @@ Defined in: react/types/components/FEaaS/models.d.ts:90
 
 ### ComponentHostName?
 
-> `optional` **ComponentHostName**: `string`
+> `optional` **ComponentHostName?**: `string`
 
 Defined in: react/types/components/FEaaS/models.d.ts:88
 
@@ -32,7 +32,7 @@ Defined in: react/types/components/FEaaS/models.d.ts:88
 
 ### ComponentHTMLOverride?
 
-> `optional` **ComponentHTMLOverride**: `string`
+> `optional` **ComponentHTMLOverride?**: `string`
 
 Defined in: react/types/components/FEaaS/models.d.ts:91
 
@@ -40,7 +40,7 @@ Defined in: react/types/components/FEaaS/models.d.ts:91
 
 ### ComponentId?
 
-> `optional` **ComponentId**: `string`
+> `optional` **ComponentId?**: `string`
 
 Defined in: react/types/components/FEaaS/models.d.ts:85
 
@@ -48,7 +48,7 @@ Defined in: react/types/components/FEaaS/models.d.ts:85
 
 ### ComponentInstanceId?
 
-> `optional` **ComponentInstanceId**: `string`
+> `optional` **ComponentInstanceId?**: `string`
 
 Defined in: react/types/components/FEaaS/models.d.ts:89
 
@@ -56,7 +56,7 @@ Defined in: react/types/components/FEaaS/models.d.ts:89
 
 ### ComponentRevision?
 
-> `optional` **ComponentRevision**: `RevisionType`
+> `optional` **ComponentRevision?**: `RevisionType`
 
 Defined in: react/types/components/FEaaS/models.d.ts:87
 
@@ -64,7 +64,7 @@ Defined in: react/types/components/FEaaS/models.d.ts:87
 
 ### ComponentVersion?
 
-> `optional` **ComponentVersion**: `string`
+> `optional` **ComponentVersion?**: `string`
 
 Defined in: react/types/components/FEaaS/models.d.ts:86
 
@@ -72,7 +72,7 @@ Defined in: react/types/components/FEaaS/models.d.ts:86
 
 ### LibraryId?
 
-> `optional` **LibraryId**: `string`
+> `optional` **LibraryId?**: `string`
 
 Defined in: react/types/components/FEaaS/models.d.ts:84
 
@@ -80,7 +80,7 @@ Defined in: react/types/components/FEaaS/models.d.ts:84
 
 ### RenderingIdentifier?
 
-> `optional` **RenderingIdentifier**: `string`
+> `optional` **RenderingIdentifier?**: `string`
 
 Defined in: react/types/components/FEaaS/models.d.ts:93
 
@@ -88,6 +88,6 @@ Defined in: react/types/components/FEaaS/models.d.ts:93
 
 ### styles?
 
-> `optional` **styles**: `string`
+> `optional` **styles?**: `string`
 
 Defined in: react/types/components/FEaaS/models.d.ts:92

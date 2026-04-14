@@ -24,7 +24,7 @@ Name of the code file
 
 ### componentType?
 
-> `optional` **componentType**: `ComponentType`
+> `optional` **componentType?**: `ComponentType`
 
 Defined in: content/types/tools/templating/components.d.ts:56
 

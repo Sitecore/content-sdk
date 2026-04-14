@@ -4,11 +4,11 @@
 
 [@sitecore-content-sdk/content](../../README.md) / [tools](../README.md) / GenerateMapFunction
 
-# Type Alias: GenerateMapFunction()
+# Type Alias: GenerateMapFunction
 
 > **GenerateMapFunction** = (`args`) => `void`
 
-Defined in: [content/src/tools/generate-map.ts:6](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/content/src/tools/generate-map.ts#L6)
+Defined in: [content/src/tools/generate-map.ts:6](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/content/src/tools/generate-map.ts#L6)
 
 ## Parameters
 

@@ -29,7 +29,7 @@ The path from which to import the component(s)
 
 #### namedImports?
 
-> `optional` **namedImports**: `string`[]
+> `optional` **namedImports?**: `string`[]
 
 The specific named components to import from the package. Leave empty to have whole package be imported as wildcard and allow SXA variants support for component.
 

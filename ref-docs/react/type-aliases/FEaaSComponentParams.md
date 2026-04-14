@@ -8,7 +8,7 @@
 
 > **FEaaSComponentParams** = `object`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:92](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/react/src/components/FEaaS/models.ts#L92)
+Defined in: [packages/react/src/components/FEaaS/models.ts:92](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/FEaaS/models.ts#L92)
 
 Params from a Sitecore FEaaS rendering
 
@@ -16,78 +16,78 @@ Params from a Sitecore FEaaS rendering
 
 ### ComponentDataOverride?
 
-> `optional` **ComponentDataOverride**: `string`
+> `optional` **ComponentDataOverride?**: `string`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:99](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/react/src/components/FEaaS/models.ts#L99)
+Defined in: [packages/react/src/components/FEaaS/models.ts:99](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/FEaaS/models.ts#L99)
 
 ***
 
 ### ComponentHostName?
 
-> `optional` **ComponentHostName**: `string`
+> `optional` **ComponentHostName?**: `string`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:97](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/react/src/components/FEaaS/models.ts#L97)
+Defined in: [packages/react/src/components/FEaaS/models.ts:97](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/FEaaS/models.ts#L97)
 
 ***
 
 ### ComponentHTMLOverride?
 
-> `optional` **ComponentHTMLOverride**: `string`
+> `optional` **ComponentHTMLOverride?**: `string`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:100](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/react/src/components/FEaaS/models.ts#L100)
+Defined in: [packages/react/src/components/FEaaS/models.ts:100](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/FEaaS/models.ts#L100)
 
 ***
 
 ### ComponentId?
 
-> `optional` **ComponentId**: `string`
+> `optional` **ComponentId?**: `string`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:94](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/react/src/components/FEaaS/models.ts#L94)
+Defined in: [packages/react/src/components/FEaaS/models.ts:94](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/FEaaS/models.ts#L94)
 
 ***
 
 ### ComponentInstanceId?
 
-> `optional` **ComponentInstanceId**: `string`
+> `optional` **ComponentInstanceId?**: `string`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:98](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/react/src/components/FEaaS/models.ts#L98)
+Defined in: [packages/react/src/components/FEaaS/models.ts:98](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/FEaaS/models.ts#L98)
 
 ***
 
 ### ComponentRevision?
 
-> `optional` **ComponentRevision**: `RevisionType`
+> `optional` **ComponentRevision?**: `RevisionType`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:96](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/react/src/components/FEaaS/models.ts#L96)
+Defined in: [packages/react/src/components/FEaaS/models.ts:96](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/FEaaS/models.ts#L96)
 
 ***
 
 ### ComponentVersion?
 
-> `optional` **ComponentVersion**: `string`
+> `optional` **ComponentVersion?**: `string`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:95](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/react/src/components/FEaaS/models.ts#L95)
+Defined in: [packages/react/src/components/FEaaS/models.ts:95](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/FEaaS/models.ts#L95)
 
 ***
 
 ### LibraryId?
 
-> `optional` **LibraryId**: `string`
+> `optional` **LibraryId?**: `string`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:93](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/react/src/components/FEaaS/models.ts#L93)
+Defined in: [packages/react/src/components/FEaaS/models.ts:93](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/FEaaS/models.ts#L93)
 
 ***
 
 ### RenderingIdentifier?
 
-> `optional` **RenderingIdentifier**: `string`
+> `optional` **RenderingIdentifier?**: `string`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:102](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/react/src/components/FEaaS/models.ts#L102)
+Defined in: [packages/react/src/components/FEaaS/models.ts:102](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/FEaaS/models.ts#L102)
 
 ***
 
 ### styles?
 
-> `optional` **styles**: `string`
+> `optional` **styles?**: `string`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:101](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/react/src/components/FEaaS/models.ts#L101)
+Defined in: [packages/react/src/components/FEaaS/models.ts:101](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/FEaaS/models.ts#L101)

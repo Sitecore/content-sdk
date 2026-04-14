@@ -40,6 +40,7 @@ export const EDITING_ALLOWED_ORIGINS = [
   'https://pages.sitecorecloud.io',
   'https://xmapps.sitecorecloud.io',
   'https://designlibrary.sitecorecloud.io',
+  'https://app.sitecorecloud.io',
 ];
 
 type ExtendedWindow = Window &

@@ -8,7 +8,7 @@
 
 > `const` **ERROR\_MESSAGES**: `object`
 
-Defined in: [packages/core/src/constants.ts:42](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/core/src/constants.ts#L42)
+Defined in: [packages/core/src/constants.ts:42](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/core/src/constants.ts#L42)
 
 **`Internal`**
 
@@ -22,7 +22,7 @@ The error messages. Includes errors for all packages.
 
 Generic follow-up when the user should contact support
 
-### IE\_001()
+### IE\_001
 
 > `readonly` **IE\_001**: (`pluginName`, `dependency`) => `string`
 
@@ -47,7 +47,7 @@ IE errors are related to incorrect execution
 
 > `readonly` **IE\_003**: `"[IE-003] Timeout exceeded. The server did not respond within the allotted time."` = `'[IE-003] Timeout exceeded. The server did not respond within the allotted time.'`
 
-### IE\_004()
+### IE\_004
 
 > `readonly` **IE\_004**: (`pluginName`) => `string`
 
@@ -69,7 +69,7 @@ IE errors are related to incorrect execution
 
 > `readonly` **IE\_006**: "\[IE-006\] Unable to set the \"sc\_cid\_personalize\" cookie because the visitor ID could not be retrieved from the server. Make sure to set the correct values for \"contextId\" and \"siteName\". If the issue persists, try again later or use try-catch blocks to handle this error." = `'[IE-006] Unable to set the "sc_cid_personalize" cookie because the visitor ID could not be retrieved from the server. Make sure to set the correct values for "contextId" and "siteName". If the issue persists, try again later or use try-catch blocks to handle this error.'`
 
-### IE\_007()
+### IE\_007
 
 > `readonly` **IE\_007**: (`hostName`) => `string`
 
@@ -105,7 +105,7 @@ IV errors are related to incorrect values, wrongly formatted objects, etc.
 
 > `readonly` **IV\_005**: "\[IV-005\] Incorrect value for \"expiryDate\". Format the value according to ISO 8601." = `'[IV-005] Incorrect value for "expiryDate". Format the value according to ISO 8601.'`
 
-### IV\_006()
+### IV\_006
 
 > `readonly` **IV\_006**: (`maxAttributes`) => `string`
 
@@ -119,7 +119,7 @@ IV errors are related to incorrect values, wrongly formatted objects, etc.
 
 `string`
 
-### IV\_007()
+### IV\_007
 
 > `readonly` **IV\_007**: (`siteName`) => `string`
 
@@ -151,7 +151,7 @@ MV errors are related to missing values
 
 > `readonly` **MV\_004**: "\[MV-004\] \"friendlyId\" is required." = `'[MV-004] "friendlyId" is required.'`
 
-### MV\_005()
+### MV\_005
 
 > `readonly` **MV\_005**: (`property`) => `string`
 

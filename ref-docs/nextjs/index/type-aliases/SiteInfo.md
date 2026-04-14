@@ -14,7 +14,7 @@ Object model of Site Info result
 
 ## Indexable
 
-\[`key`: `string`\]: `unknown`
+> \[`key`: `string`\]: `unknown`
 
 Additional user-defined properties
 

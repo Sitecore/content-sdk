@@ -87,9 +87,7 @@ export type GraphQLRequestClientFactory = (
  */
 export type GraphQLRequestClientFactoryConfig = {
   endpoint: string;
-  apiKey?: string;
-  contextId?: string;
-};
+} & GraphQLRequestClientConfig;
 
 /**
  * A GraphQL client for Sitecore APIs that uses the 'graphql-request' library.
@@ -148,11 +146,10 @@ export class GraphQLRequestClient implements GraphQLClient {
    */
   static createClientFactory({
     endpoint,
-    apiKey,
-    contextId,
+    ...factoryConfig
   }: GraphQLRequestClientFactoryConfig): GraphQLRequestClientFactory {
     return (config: Omit<GraphQLRequestClientConfig, 'apiKey' | 'contextId'> = {}) =>
-      new GraphQLRequestClient(endpoint, { ...config, apiKey, contextId });
+      new GraphQLRequestClient(endpoint, { ...factoryConfig, ...config });
   }
 
   /**

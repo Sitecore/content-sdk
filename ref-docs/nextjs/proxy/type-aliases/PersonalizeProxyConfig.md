@@ -8,15 +8,15 @@
 
 > **PersonalizeProxyConfig** = [`ProxyBaseConfig`](ProxyBaseConfig.md) & `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & `SitecoreConfig`\[`"personalize"`\] & `object`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:33](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/nextjs/src/proxy/personalize-proxy.ts#L33)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:34](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/nextjs/src/proxy/personalize-proxy.ts#L34)
 
 The interface for the PersonalizeProxy configuration.
 
 ## Type Declaration
 
-### extractGeoDataCb()?
+### extractGeoDataCb?
 
-> `optional` **extractGeoDataCb**: (`req?`) => `Promise`\<[`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)\> \| [`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)
+> `optional` **extractGeoDataCb?**: (`req?`) => `Promise`\<[`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)\> \| [`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)
 
 #### Parameters
 
@@ -28,9 +28,9 @@ The interface for the PersonalizeProxy configuration.
 
 `Promise`\<[`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)\> \| [`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)
 
-### getExtraUtmParams()?
+### getExtraUtmParams?
 
-> `optional` **getExtraUtmParams**: (`req`) => `Partial`\<`ExperienceParams`\[`"utm"`\]\>
+> `optional` **getExtraUtmParams?**: (`req`) => `Partial`\<`ExperienceParams`\[`"utm"`\]\>
 
 #### Parameters
 
@@ -44,4 +44,11 @@ The interface for the PersonalizeProxy configuration.
 
 ### personalizeService?
 
-> `optional` **personalizeService**: [`PersonalizeService`](../../index/classes/PersonalizeService.md)
+> `optional` **personalizeService?**: [`PersonalizeService`](../../index/classes/PersonalizeService.md)
+
+### skipForBot?
+
+> `optional` **skipForBot?**: `boolean`
+
+Skip personalize proxy for bot requests marked by the bot tracking proxy.
+Default is `true`.

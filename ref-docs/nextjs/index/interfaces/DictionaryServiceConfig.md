@@ -22,7 +22,7 @@ DictionaryService instances
 
 ### cacheEnabled?
 
-> `optional` **cacheEnabled**: `boolean`
+> `optional` **cacheEnabled?**: `boolean`
 
 Defined in: core/types/cache-client.d.ts:30
 
@@ -42,7 +42,7 @@ true
 
 ### cacheTimeout?
 
-> `optional` **cacheTimeout**: `number`
+> `optional` **cacheTimeout?**: `number`
 
 Defined in: core/types/cache-client.d.ts:35
 
@@ -77,7 +77,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 ### debugger?
 
-> `optional` **debugger**: `Debugger`
+> `optional` **debugger?**: `Debugger`
 
 Defined in: content/types/sitecore-service-base.d.ts:12
 
@@ -91,7 +91,7 @@ Optional debug logger override
 
 ### dictionaryEntryTemplateId?
 
-> `optional` **dictionaryEntryTemplateId**: `string`
+> `optional` **dictionaryEntryTemplateId?**: `string`
 
 Defined in: content/types/i18n/dictionary-service.d.ts:45
 
@@ -107,7 +107,7 @@ Optional. The template ID to use when searching for dictionary entries.
 
 ### pageSize?
 
-> `optional` **pageSize**: `number`
+> `optional` **pageSize?**: `number`
 
 Defined in: content/types/i18n/dictionary-service.d.ts:52
 
@@ -125,7 +125,7 @@ Optional. How many result items to fetch in each GraphQL call. This is needed fo
 
 ### retries?
 
-> `optional` **retries**: `object`
+> `optional` **retries?**: `object`
 
 Defined in: content/types/config/models.d.ts:84
 
@@ -133,7 +133,7 @@ Retry configuration applied to Layout, Dictionary and ErrorPages services
 
 #### count?
 
-> `optional` **count**: `number`
+> `optional` **count?**: `number`
 
 Number of retries for the GraphQL client.
 
@@ -145,7 +145,7 @@ Number of retries for the GraphQL client.
 
 #### retryStrategy?
 
-> `optional` **retryStrategy**: [`RetryStrategy`](../../client/interfaces/RetryStrategy.md)
+> `optional` **retryStrategy?**: [`RetryStrategy`](../../client/interfaces/RetryStrategy.md)
 
 Retry strategy for the client. By default, uses exponential
 back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.

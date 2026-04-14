@@ -8,7 +8,7 @@
 
 > **SitecoreClientInit** = `Omit`\<[`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md), `"multisite"` \| `"redirects"` \| `"personalize"`\> & `object`
 
-Defined in: [content/src/client/models.ts:12](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/content/src/client/models.ts#L12)
+Defined in: [content/src/client/models.ts:12](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/content/src/client/models.ts#L12)
 
 Init options for Sitecore Client that allows you to override services too
 
@@ -16,28 +16,28 @@ Init options for Sitecore Client that allows you to override services too
 
 ### custom?
 
-> `optional` **custom**: `object`
+> `optional` **custom?**: `object`
 
 #### custom.componentService?
 
-> `optional` **componentService**: [`ComponentLayoutService`](../../editing/classes/ComponentLayoutService.md)
+> `optional` **componentService?**: [`ComponentLayoutService`](../../editing/classes/ComponentLayoutService.md)
 
 #### custom.dictionaryService?
 
-> `optional` **dictionaryService**: [`DictionaryService`](../../i18n/classes/DictionaryService.md)
+> `optional` **dictionaryService?**: [`DictionaryService`](../../i18n/classes/DictionaryService.md)
 
 #### custom.editingService?
 
-> `optional` **editingService**: [`EditingService`](../../editing/classes/EditingService.md)
+> `optional` **editingService?**: [`EditingService`](../../editing/classes/EditingService.md)
 
 #### custom.errorPagesService?
 
-> `optional` **errorPagesService**: [`ErrorPagesService`](../../site/classes/ErrorPagesService.md)
+> `optional` **errorPagesService?**: [`ErrorPagesService`](../../site/classes/ErrorPagesService.md)
 
 #### custom.layoutService?
 
-> `optional` **layoutService**: [`LayoutService`](../../layout/classes/LayoutService.md)
+> `optional` **layoutService?**: [`LayoutService`](../../layout/classes/LayoutService.md)
 
 #### custom.sitePathService?
 
-> `optional` **sitePathService**: [`SitePathService`](../../site/classes/SitePathService.md)
+> `optional` **sitePathService?**: [`SitePathService`](../../site/classes/SitePathService.md)

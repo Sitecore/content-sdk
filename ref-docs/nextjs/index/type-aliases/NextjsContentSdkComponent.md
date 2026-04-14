@@ -8,7 +8,7 @@
 
 > **NextjsContentSdkComponent** = `ReactContentSdkComponent` & `object`
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:47](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/nextjs/src/sharedTypes/component-props.ts#L47)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:47](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/nextjs/src/sharedTypes/component-props.ts#L47)
 
 Represents a nextjs component import
 
@@ -16,16 +16,16 @@ Represents a nextjs component import
 
 ### componentType?
 
-> `optional` **componentType**: `"client"` \| `"server"` \| `"universal"`
+> `optional` **componentType?**: `"client"` \| `"server"` \| `"universal"`
 
 Indicates the type of the component in a Next.js app router context.
 - 'client': The component contains client only api's and will be rendered on the client side.
 - 'server': The component contains server only api's and will be rendered on the server side.
 - 'universal': The component is isomorphic and can be rendered on both server and client.
 
-### dynamicModule()?
+### dynamicModule?
 
-> `optional` **dynamicModule**: () => `Promise`\<`ReactContentSdkComponent`\>
+> `optional` **dynamicModule?**: () => `Promise`\<`ReactContentSdkComponent`\>
 
 Optional dynamic import for lazy components - allows component props retrieval
 
@@ -35,7 +35,7 @@ Optional dynamic import for lazy components - allows component props retrieval
 
 ### getComponentServerProps?
 
-> `optional` **getComponentServerProps**: [`GetComponentServerProps`](GetComponentServerProps.md)
+> `optional` **getComponentServerProps?**: [`GetComponentServerProps`](GetComponentServerProps.md)
 
 Defines the shape of a data-fetching function used at the component level.
 

@@ -8,7 +8,7 @@
 
 > **ReactContentSdkComponent** = `ComponentType` \| [`ReactModule`](ReactModule.md) & `object`
 
-Defined in: [packages/react/src/components/sharedTypes/components.ts:17](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/react/src/components/sharedTypes/components.ts#L17)
+Defined in: [packages/react/src/components/sharedTypes/components.ts:17](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/react/src/components/sharedTypes/components.ts#L17)
 
 React component import with account for custom exports
 
@@ -16,4 +16,4 @@ React component import with account for custom exports
 
 ### componentType?
 
-> `optional` **componentType**: `"server"` \| `"client"` \| `"universal"`
+> `optional` **componentType?**: `"server"` \| `"client"` \| `"universal"`

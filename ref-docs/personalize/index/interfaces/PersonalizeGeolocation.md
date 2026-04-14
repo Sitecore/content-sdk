@@ -6,7 +6,7 @@
 
 # Interface: PersonalizeGeolocation
 
-Defined in: [personalize/src/personalization/personalizer.ts:144](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/personalize/src/personalization/personalizer.ts#L144)
+Defined in: [personalize/src/personalization/personalizer.ts:144](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/personalize/src/personalization/personalizer.ts#L144)
 
 An interface that describes the geolocation attributes.
 
@@ -14,9 +14,9 @@ An interface that describes the geolocation attributes.
 
 ### city?
 
-> `optional` **city**: `string`
+> `optional` **city?**: `string`
 
-Defined in: [personalize/src/personalization/personalizer.ts:150](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/personalize/src/personalization/personalizer.ts#L150)
+Defined in: [personalize/src/personalization/personalizer.ts:150](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/personalize/src/personalization/personalizer.ts#L150)
 
 The site visitor's city.
 
@@ -26,9 +26,9 @@ Format: title case recommended.
 
 ### country?
 
-> `optional` **country**: `string`
+> `optional` **country?**: `string`
 
-Defined in: [personalize/src/personalization/personalizer.ts:156](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/personalize/src/personalization/personalizer.ts#L156)
+Defined in: [personalize/src/personalization/personalizer.ts:156](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/personalize/src/personalization/personalizer.ts#L156)
 
 The site visitor's country.
 
@@ -38,9 +38,9 @@ Format: uppercase ISO 3166-1 alpha-2.
 
 ### region?
 
-> `optional` **region**: `string`
+> `optional` **region?**: `string`
 
-Defined in: [personalize/src/personalization/personalizer.ts:163](https://github.com/Sitecore/content-sdk/blob/a8f8449eaf9300a6c6791c4ca1402de3ec959247/packages/personalize/src/personalization/personalizer.ts#L163)
+Defined in: [personalize/src/personalization/personalizer.ts:163](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/personalize/src/personalization/personalizer.ts#L163)
 
 The site visitor's region.
 Depends on the regional structure of the country.

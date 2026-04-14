@@ -9,6 +9,7 @@
 ## Classes
 
 - [AppRouterMultisiteProxy](classes/AppRouterMultisiteProxy.md)
+- [BotTrackingProxy](classes/BotTrackingProxy.md)
 - [LocaleProxy](classes/LocaleProxy.md)
 - [MultisiteProxy](classes/MultisiteProxy.md)
 - [PersonalizeProxy](classes/PersonalizeProxy.md)
@@ -18,6 +19,7 @@
 
 ## Type Aliases
 
+- [BotTrackingProxyConfig](type-aliases/BotTrackingProxyConfig.md)
 - [LocaleProxyConfig](type-aliases/LocaleProxyConfig.md)
 - [MultisiteProxyConfig](type-aliases/MultisiteProxyConfig.md)
 - [PersonalizeProxyConfig](type-aliases/PersonalizeProxyConfig.md)
