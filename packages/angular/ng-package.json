@@ -9,6 +9,7 @@
     "@sitecore-content-sdk/content",
     "@angular/common",
     "@angular/core",
-    "@angular/router"
+    "@angular/router",
+    "unstorage"
   ]
 }

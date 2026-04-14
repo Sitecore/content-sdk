@@ -1,4 +1,5 @@
 import { InjectionToken } from '@angular/core';
+import type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import type { RequestContext } from '../loaders/models';
 import type { LoaderFn } from '../loaders/models';
 
@@ -82,6 +83,11 @@ export interface ExpressDataHandlerOptions extends DataHandlerConfig {
    * The loader registry containing all registered loaders
    */
   loaders: LoaderRegistry;
+  /**
+   * When set, server loader results are cached according to `angular.loaderCache` on this config.
+   * Use the same object as `provideSitecoreAngular({ sitecoreConfig })`.
+   */
+  sitecoreConfig?: SitecoreConfig;
   /**
    * Optional request context extractor (e.g. for testing via TestBed).
    * If not provided, uses the default implementation from loaders/utils.

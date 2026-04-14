@@ -68,6 +68,12 @@ export * from '@sitecore-content-sdk/content/client';
 export * from './loaders/loader-resolver';
 export * from './loaders/loader-registry.token';
 export * from './loaders/loader-data.service';
+export {
+  buildLoaderCacheKeyString,
+  getLoaderResultCache,
+  LoaderResultCache,
+  shouldCacheLoaderResponse,
+} from './loaders/loader-result-cache';
 export * from './loaders/pre-loader-data.service';
 export {
   NotFoundNavigationError,

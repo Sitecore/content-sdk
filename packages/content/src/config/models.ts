@@ -215,6 +215,38 @@ export type SitecoreConfigInput = {
    * Disables code extraction procedure
    */
   disableCodeGeneration?: boolean;
+
+  /**
+   * Angular Content SDK–specific settings (SSR loaders, etc.)
+   */
+  angular?: {
+    /**
+     * Server-side cache for route loader results (resolver + Express data middleware).
+     * Defaults can be set via environment variables (see each property).
+     */
+    loaderCache?: {
+      /**
+       * When false, loader results are never read from or written to cache.
+       * @default true (or from `CSDK_ANGULAR_LOADER_CACHE_ENABLED` / `SITECORE_ANGULAR_LOADER_CACHE_ENABLED`)
+       */
+      enabled?: boolean;
+      /**
+       * Time-to-live for each cache entry, in seconds.
+       * @default 300 (or from `CSDK_ANGULAR_LOADER_CACHE_TTL_SECONDS` / `SITECORE_ANGULAR_LOADER_CACHE_TTL_SECONDS`)
+       */
+      ttlSeconds?: number;
+      /**
+       * [unstorage](https://unstorage.unjs.io/) driver name (e.g. `memory`, `fs`, `vercel-kv`, `netlify-blobs`).
+       * @default 'memory' (or from `CSDK_ANGULAR_LOADER_CACHE_DRIVER` / `SITECORE_ANGULAR_LOADER_CACHE_DRIVER`)
+       */
+      driver?: string;
+      /**
+       * Options passed to the selected unstorage driver (merged with JSON from
+       * `CSDK_ANGULAR_LOADER_CACHE_DRIVER_OPTIONS` / `SITECORE_ANGULAR_LOADER_CACHE_DRIVER_OPTIONS` when set).
+       */
+      driverOptions?: Record<string, unknown>;
+    };
+  };
 };
 
 /**

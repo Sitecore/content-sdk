@@ -55,7 +55,8 @@
   "dependencies": {
     "@sitecore-content-sdk/content": "2.0.0-canary.6",
     "@sitecore-content-sdk/core": "2.0.0-canary.6",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "unstorage": "^1.17.5"
   },
   "devDependencies": {
     "@angular/build": "^21.1.4",

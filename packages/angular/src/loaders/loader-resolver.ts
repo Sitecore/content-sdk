@@ -19,7 +19,8 @@ import {
   isLoaderRedirectResult,
 } from './models';
 import { redirectOnNavigationError } from './router-error-handling';
-import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from '../lib/tokens';
+import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN, SITECORE_CONFIG_TOKEN } from '../lib/tokens';
+import { buildLoaderCacheKeyString, getLoaderResultCache } from './loader-result-cache';
 
 /**
  * Create a state key for the loader
@@ -126,6 +127,23 @@ export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
 
     const requestContext = request ? extractRequestContext(request) : undefined;
 
+    const sitecoreConfig = inject(SITECORE_CONFIG_TOKEN, { optional: true });
+    const loaderCache = sitecoreConfig ? getLoaderResultCache(sitecoreConfig) : null;
+    const cacheKeyMaterial = buildLoaderCacheKeyString(loaderId, url);
+
+    if (loaderCache?.isEnabled()) {
+      const cached = await loaderCache.get(cacheKeyMaterial);
+      if (cached) {
+        if (cached.kind === 'redirect') {
+          return applyRedirect(router, cached.redirect.loaderRedirectTarget);
+        }
+        if (cached.kind === 'data') {
+          transferState.set(key, cached.data);
+          return cached.data;
+        }
+      }
+    }
+
     const result = await loader({
       url,
       params: route.params,
@@ -133,7 +151,20 @@ export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
       requestContext,
     });
     if (isLoaderRedirectResult(result)) {
+      if (loaderCache?.isEnabled()) {
+        await loaderCache.set(cacheKeyMaterial, {
+          kind: 'redirect',
+          redirect: {
+            loaderRedirectTarget: result.loaderRedirectTarget,
+            status: result.status,
+          },
+        });
+      }
       return applyRedirect(router, result.loaderRedirectTarget);
+    }
+    if (loaderCache?.isEnabled()) {
+      const apiResponse = { kind: 'data' as const, data: result };
+      await loaderCache.set(cacheKeyMaterial, apiResponse);
     }
     transferState.set(key, result);
     return result;

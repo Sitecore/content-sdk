@@ -6,6 +6,35 @@ import {
 import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models';
 import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
 
+function parseEnvBoolean(value: string | undefined, defaultValue: boolean): boolean {
+  if (value === undefined || value === '') {
+    return defaultValue;
+  }
+  const v = value.toLowerCase();
+  if (v === 'false' || v === '0' || v === 'no') {
+    return false;
+  }
+  if (v === 'true' || v === '1' || v === 'yes') {
+    return true;
+  }
+  return defaultValue;
+}
+
+function parseEnvJsonRecord(value: string | undefined): Record<string, unknown> {
+  if (!value?.trim()) {
+    return {};
+  }
+  try {
+    const parsed = JSON.parse(value) as unknown;
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      return parsed as Record<string, unknown>;
+    }
+  } catch {
+    // ignore invalid JSON
+  }
+  return {};
+}
+
 /**
  * Default Sitecore config values sourced from an env-like record (e.g. `process.env` or
  * values mapped from an Angular `environment` object). Shared by {@link getFallbackConfig}
@@ -79,6 +108,29 @@ export const buildFallbackConfig = (env: { [key: string]: string | undefined }):
       caching: {
         enabled: true,
         timeout: 60,
+      },
+    },
+    angular: {
+      loaderCache: {
+        enabled: parseEnvBoolean(
+          env.CSDK_ANGULAR_LOADER_CACHE_ENABLED ?? env.SITECORE_ANGULAR_LOADER_CACHE_ENABLED,
+          true
+        ),
+        ttlSeconds:
+          parseInt(
+            env.CSDK_ANGULAR_LOADER_CACHE_TTL_SECONDS ??
+              env.SITECORE_ANGULAR_LOADER_CACHE_TTL_SECONDS ??
+              '',
+            10
+          ) || 300,
+        driver:
+          env.CSDK_ANGULAR_LOADER_CACHE_DRIVER ||
+          env.SITECORE_ANGULAR_LOADER_CACHE_DRIVER ||
+          'memory',
+        driverOptions: parseEnvJsonRecord(
+          env.CSDK_ANGULAR_LOADER_CACHE_DRIVER_OPTIONS ||
+            env.SITECORE_ANGULAR_LOADER_CACHE_DRIVER_OPTIONS
+        ),
       },
     },
     rewriteMediaUrls: false,

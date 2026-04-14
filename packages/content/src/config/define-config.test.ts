@@ -74,6 +74,11 @@ describe('define-config', () => {
     // dictionary caching
     expect(config.dictionary.caching.enabled).to.equal(fallback.dictionary.caching.enabled);
     expect(config.dictionary.caching.timeout).to.equal(fallback.dictionary.caching.timeout);
+
+    // angular loader cache (defaults from fallback / env)
+    expect(config.angular.loaderCache.enabled).to.equal(fallback.angular.loaderCache.enabled);
+    expect(config.angular.loaderCache.ttlSeconds).to.equal(fallback.angular.loaderCache.ttlSeconds);
+    expect(config.angular.loaderCache.driver).to.equal(fallback.angular.loaderCache.driver);
   });
 
   it('applies fallback personalize timeouts when values are falsy', () => {
@@ -171,6 +176,20 @@ describe('define-config', () => {
       expect(cfg.personalize.scope).to.equal('scope-record');
       expect(cfg.redirects.enabled).to.equal(true);
       expect(cfg.personalize.enabled).to.equal(true);
+    });
+
+    it('applies angular loader cache settings from env record', () => {
+      const env = {
+        CSDK_ANGULAR_LOADER_CACHE_ENABLED: 'false',
+        CSDK_ANGULAR_LOADER_CACHE_TTL_SECONDS: '120',
+        CSDK_ANGULAR_LOADER_CACHE_DRIVER: 'fs',
+        CSDK_ANGULAR_LOADER_CACHE_DRIVER_OPTIONS: '{"base":"/tmp/sc-cache"}',
+      };
+      const cfg = buildFallbackConfig(env);
+      expect(cfg.angular.loaderCache.enabled).to.equal(false);
+      expect(cfg.angular.loaderCache.ttlSeconds).to.equal(120);
+      expect(cfg.angular.loaderCache.driver).to.equal('fs');
+      expect(cfg.angular.loaderCache.driverOptions).to.deep.equal({ base: '/tmp/sc-cache' });
     });
   });
 

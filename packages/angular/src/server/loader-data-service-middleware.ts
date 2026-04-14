@@ -17,6 +17,11 @@ import {
   LoaderRegistry,
 } from './models';
 import { LOADER_DATA_ENDPOINT } from './constants';
+import {
+  buildLoaderCacheKeyString,
+  getLoaderResultCache,
+  shouldCacheLoaderResponse,
+} from '../loaders/loader-result-cache';
 
 /**
  * Execute a loader and return the API response
@@ -28,7 +33,8 @@ import { LOADER_DATA_ENDPOINT } from './constants';
 async function executeLoader(
   request: LoaderApiRequest,
   loaders: LoaderRegistry,
-  requestContext?: RequestContext
+  requestContext: RequestContext | undefined,
+  loaderCache: ReturnType<typeof getLoaderResultCache> | null
 ): Promise<LoaderApiResponse> {
   const { loaderId, url, params, query } = request;
 
@@ -41,6 +47,15 @@ async function executeLoader(
     };
   }
 
+  const cacheKeyMaterial = buildLoaderCacheKeyString(loaderId, url);
+
+  if (loaderCache?.isEnabled()) {
+    const cached = await loaderCache.get(cacheKeyMaterial);
+    if (cached) {
+      return cached;
+    }
+  }
+
   const context: LoaderContext = {
     url,
     params,
@@ -51,18 +66,26 @@ async function executeLoader(
   try {
     const result = await loader(context);
     if (isLoaderRedirectResult(result)) {
-      return {
+      const response: LoaderApiResponse = {
         kind: 'redirect',
         redirect: {
           loaderRedirectTarget: result.loaderRedirectTarget,
           status: result.status,
         },
       };
+      if (loaderCache?.isEnabled() && shouldCacheLoaderResponse(response)) {
+        await loaderCache.set(cacheKeyMaterial, response);
+      }
+      return response;
     }
-    return {
+    const response: LoaderApiResponse = {
       kind: 'data',
       data: result,
     };
+    if (loaderCache?.isEnabled() && shouldCacheLoaderResponse(response)) {
+      await loaderCache.set(cacheKeyMaterial, response);
+    }
+    return response;
   } catch (error) {
     if (error instanceof NotFoundNavigationError) {
       return {
@@ -139,6 +162,9 @@ function parseLoaderRequest(
  * // Or pass the same endpoint you provide to the Angular app (FETCH_DATA_ENDPOINT)
  * const dataEndpoint = process.env.DATA_ENDPOINT ?? LOADER_DATA_ENDPOINT;
  * app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS, endpoint: dataEndpoint }));
+ *
+ * // Pass the same Sitecore config as the app so loader caching uses `angular.loaderCache`:
+ * app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS, sitecoreConfig: scConfig }));
  * ```
  * @public
  */
@@ -149,7 +175,9 @@ export function createLoaderDataServiceMiddleware(
     loaders,
     endpoint = LOADER_DATA_ENDPOINT,
     extractRequestContext: extractReq = extractRequestContext,
+    sitecoreConfig,
   } = options;
+  const loaderCache = sitecoreConfig ? getLoaderResultCache(sitecoreConfig) : null;
   return async (
     req: ExpressRequest,
     res: ExpressResponse,
@@ -163,7 +191,7 @@ export function createLoaderDataServiceMiddleware(
     try {
       const parsed = parseLoaderRequest(req);
       if ('loaderId' in parsed) {
-        const result = await executeLoader(parsed, loaders, requestContext);
+        const result = await executeLoader(parsed, loaders, requestContext, loaderCache);
         sendResponse(res, result);
       } else {
         res
