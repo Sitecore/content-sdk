@@ -6,7 +6,7 @@
 
 # Interface: AnalyticsOptions
 
-Defined in: [analytics-core/src/initialization/types.ts:36](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/analytics-core/src/initialization/types.ts#L36)
+Defined in: [analytics-core/src/initialization/types.ts:36](https://github.com/Sitecore/content-sdk/blob/888eef99b46ec3cc8aafe70ca50b3ddbce1580b0/packages/analytics-core/src/initialization/types.ts#L36)
 
 Defines options for the Analytics plugin.
 
@@ -16,7 +16,7 @@ Defines options for the Analytics plugin.
 
 > **cookies**: `object`
 
-Defined in: [analytics-core/src/initialization/types.ts:40](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/analytics-core/src/initialization/types.ts#L40)
+Defined in: [analytics-core/src/initialization/types.ts:40](https://github.com/Sitecore/content-sdk/blob/888eef99b46ec3cc8aafe70ca50b3ddbce1580b0/packages/analytics-core/src/initialization/types.ts#L40)
 
 The cookie settings for the analytics plugin.
 
@@ -56,7 +56,7 @@ The path for which the cookie is valid.
 
 > `optional` **timeout?**: `number`
 
-Defined in: [analytics-core/src/initialization/types.ts:69](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/analytics-core/src/initialization/types.ts#L69)
+Defined in: [analytics-core/src/initialization/types.ts:69](https://github.com/Sitecore/content-sdk/blob/888eef99b46ec3cc8aafe70ca50b3ddbce1580b0/packages/analytics-core/src/initialization/types.ts#L69)
 
 The timeout duration for the analytics plugin, in milliseconds.
 
@@ -66,6 +66,6 @@ The timeout duration for the analytics plugin, in milliseconds.
 
 > `optional` **visitorIds?**: [`VisitorIds`](VisitorIds.md)
 
-Defined in: [analytics-core/src/initialization/types.ts:65](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/analytics-core/src/initialization/types.ts#L65)
+Defined in: [analytics-core/src/initialization/types.ts:65](https://github.com/Sitecore/content-sdk/blob/888eef99b46ec3cc8aafe70ca50b3ddbce1580b0/packages/analytics-core/src/initialization/types.ts#L65)
 
 The visitor IDs returned from the Edge Proxy.

@@ -6,7 +6,7 @@
 
 # Interface: EditingServiceConfig
 
-Defined in: [content/src/editing/editing-service.ts:32](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/content/src/editing/editing-service.ts#L32)
+Defined in: [content/src/editing/editing-service.ts:32](https://github.com/Sitecore/content-sdk/blob/888eef99b46ec3cc8aafe70ca50b3ddbce1580b0/packages/content/src/editing/editing-service.ts#L32)
 
 Configuration for the EditingService
 
@@ -16,7 +16,7 @@ Configuration for the EditingService
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [content/src/editing/editing-service.ts:37](https://github.com/Sitecore/content-sdk/blob/70016491a49cd62f4c9a1f6cd5f5e859c138b42d/packages/content/src/editing/editing-service.ts#L37)
+Defined in: [content/src/editing/editing-service.ts:37](https://github.com/Sitecore/content-sdk/blob/888eef99b46ec3cc8aafe70ca50b3ddbce1580b0/packages/content/src/editing/editing-service.ts#L37)
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
