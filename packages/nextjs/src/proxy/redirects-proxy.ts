@@ -301,13 +301,12 @@ export class RedirectsProxy extends ProxyBase {
     const { pathname: incomingURL, search: incomingQS = '' } = this.normalizeUrl(
       req.nextUrl.clone()
     );
-    // locale of current request
-    const requestLocale = this.getLanguage(req);
-    // locale of the url - if present in the url
-    const urlLocale = req.nextUrl.locale;
+
     const normalizedPath = incomingURL.replace(/\/*$/gi, '').toLowerCase();
     const redirects = await this.redirectsService.fetchRedirects(siteName);
 
+    // locale of current request (from URL, headers or otherwise), used to match versioned redirect rules
+    const requestLocale = this.getLanguage(req);
     const matchedLocaleRedirect = this.matchRedirectItemRedirect(
       redirects,
       requestLocale,
@@ -316,7 +315,8 @@ export class RedirectsProxy extends ProxyBase {
     if (matchedLocaleRedirect) {
       return matchedLocaleRedirect;
     }
-
+    // locale of the url - if present in the url, used for redirect map matching
+    const urlLocale = req.nextUrl.locale;
     return this.matchFromRedirectMapRedirect(redirects, urlLocale, incomingURL, incomingQS);
   }
 
@@ -379,7 +379,7 @@ export class RedirectsProxy extends ProxyBase {
             .replace(/^\/|\/$/g, '') // Removes leading and trailing slashes
             .replace(/^\^\/|\/\$$/g, '') // Removes unnecessary start (^) and end ($) anchors
             .replace(/^\^|\$$/g, '') // Further cleans up anchors
-            .replace(/\$\/gi$/g, '')}[\/]?$/i`; // Ensures the pattern allows an optional trailing slash
+            .replace(/\$\/g$/g, '')}[\/]?$/i`; // Ensures the pattern allows an optional trailing slash
 
           // Redirect pattern matches the full incoming URL with query string present
           matchedQueryString = [
@@ -417,13 +417,11 @@ export class RedirectsProxy extends ProxyBase {
     locale: string,
     currentPath: string
   ): RedirectResult | undefined {
-    // locale patterns will include a redirect item suffix which we need to remove
-    const localeRedirects = redirects.filter((redirect) => redirect.locale === locale);
-    // locale rules are easy and nice
-    return localeRedirects.length
-      ? localeRedirects.find((redirect: RedirectResult) => {
-          const patternPath = redirect.pattern.replace(/\/*$/gi, '').toLowerCase();
-          return patternPath === currentPath;
+    return redirects.length
+      ? redirects.find((redirect: RedirectResult) => {
+          const patternPath = redirect.pattern.replace(/\/*$/g, '').toLowerCase();
+          // locale rules are easy and nice
+          return redirect.locale === locale && patternPath === currentPath;
         })
       : undefined;
   }
