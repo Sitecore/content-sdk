@@ -1121,6 +1121,23 @@ describe('App Placeholder logic', () => {
     ));
     componentMap.set('Logo', () => <div className="Logo-mock" />);
 
+    it('should pass finalRendering with PlaceholderMetadata to render prop in editing mode', () => {
+      const wrapper = render(
+        <AppPlaceholder
+          name="main"
+          rendering={layoutData.sitecore.route}
+          componentMap={componentMap}
+          page={page}
+          render={(components) => <div className="render-wrapper">{components}</div>}
+        />,
+        { container: document.body }
+      );
+
+      // render prop should receive finalRendering which includes PlaceholderMetadata code blocks
+      expect(wrapper?.baseElement.querySelectorAll('.scpm').length).to.equal(8);
+      expect(wrapper?.baseElement.querySelectorAll('.render-wrapper').length).to.equal(1);
+    });
+
     it('should render <PlaceholderMetadata> with nested placeholder components', () => {
       const wrapper = render(
         <AppPlaceholder
