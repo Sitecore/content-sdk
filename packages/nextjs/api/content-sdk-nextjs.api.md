@@ -838,6 +838,8 @@ export class RedirectsProxy extends ProxyBase {
     protected getExistsRedirect(req: NextRequest, siteName: string): Promise<RedirectResult | undefined>;
     // (undocumented)
     handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    protected matchFromRedirectMapRedirect(redirects: RedirectResult[], urlLocale: string, incomingURL: string, incomingQS: string): RedirectResult | undefined;
+    protected matchRedirectItemRedirect(redirects: RedirectResult[], locale: string, currentPath: string): RedirectResult | undefined;
     protected normalizeUrl(url: NextURL): NextURL;
     // (undocumented)
     protected redirectsService: RedirectsService | null;

@@ -1026,4 +1026,68 @@ describe('RedirectsProxy', () => {
       expect(proxy['redirectsService']).to.not.be.null;
     });
   });
+
+  describe('matchRedirectItemRedirect', () => {
+    const baseRedirect = (overrides: Record<string, unknown> = {}) => ({
+      pattern: '/from',
+      target: '/to',
+      redirectType: REDIRECT_TYPE_301,
+      isQueryStringPreserved: true,
+      locale: 'en',
+      ...overrides,
+    });
+
+    it('returns undefined when there are no locale-specific rules for the request locale', () => {
+      const { proxy } = createProxy();
+      const result = proxy['matchRedirectItemRedirect'](
+        [baseRedirect({ locale: 'da', pattern: '/about' })],
+        'en',
+        '/about'
+      );
+      expect(result).to.be.undefined;
+    });
+
+    it('returns undefined when locale matches but normalized path does not', () => {
+      const { proxy } = createProxy();
+      const result = proxy['matchRedirectItemRedirect'](
+        [baseRedirect({ locale: 'en', pattern: '/other' })],
+        'en',
+        '/about'
+      );
+      expect(result).to.be.undefined;
+    });
+
+    it('returns the first matching redirect when locale and path match', () => {
+      const { proxy } = createProxy();
+      const first = baseRedirect({
+        locale: 'en',
+        pattern: '/about',
+        target: '/first',
+      });
+      const second = baseRedirect({
+        locale: 'en',
+        pattern: '/about',
+        target: '/second',
+      });
+      const result = proxy['matchRedirectItemRedirect']([first, second], 'en', '/about');
+      expect(result).to.deep.equal(first);
+    });
+
+    it('matches normalized paths case-insensitively and ignores trailing slashes on the pattern', () => {
+      const { proxy } = createProxy();
+      const redirect = baseRedirect({
+        locale: 'en',
+        pattern: '/Foo/Bar/',
+        target: '/lowercase',
+      });
+      const result = proxy['matchRedirectItemRedirect']([redirect], 'en', '/foo/bar');
+      expect(result?.target).to.equal('/lowercase');
+    });
+
+    it('returns undefined when the list of locale rules is empty after filtering', () => {
+      const { proxy } = createProxy();
+      const result = proxy['matchRedirectItemRedirect']([], 'en', '/about');
+      expect(result).to.be.undefined;
+    });
+  });
 });
