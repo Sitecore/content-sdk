@@ -13,6 +13,7 @@ jest.mock('@sitecore-content-sdk/analytics-core/utils', () => ({
 
 jest.mock('./bot-detection', () => {
   const original = jest.requireActual('./bot-detection') as typeof import('./bot-detection');
+
   return {
     ...original,
     isBrowserEnvironment: jest.fn().mockImplementation(original.isBrowserEnvironment),

@@ -269,6 +269,11 @@ describe('BotTrackingProxy', () => {
     const stored = getCookieJar(res)[BOT_COOKIE];
     expect(stored.value).to.equal('1');
     expect(botPageViewStub).to.have.been.calledOnce;
+    expect(botPageViewStub.firstCall.args[0]).to.deep.include({
+      page: '/styleguide',
+      language: 'en',
+      userAgent: 'Googlebot',
+    });
     expect(finalRes).to.equal(res);
   });
 
@@ -379,6 +384,11 @@ describe('BotTrackingProxy', () => {
         },
       });
       expect(botPageViewStub).to.have.been.calledOnce;
+      expect(botPageViewStub.firstCall.args[0]).to.deep.include({
+        page: '/styleguide',
+        language: 'en',
+        userAgent: 'Googlebot',
+      });
       validateEndDebugObject('bot tracking proxy end: %o', {
         pathname: '/styleguide',
         cookies: res.cookies,
@@ -414,6 +424,11 @@ describe('BotTrackingProxy', () => {
       },
     });
     expect(botPageViewStub).to.have.been.calledOnce;
+    expect(botPageViewStub.firstCall.args[0]).to.deep.include({
+      page: '/styleguide',
+      language: 'en',
+      userAgent: 'Googlebot',
+    });
     validateEndDebugObject('bot tracking proxy end: %o', {
       pathname: '/styleguide',
       cookies: res.cookies,
@@ -438,6 +453,11 @@ describe('BotTrackingProxy', () => {
       expect(fetchEvent.waitUntil).to.have.been.calledOnce;
       expect(initContentSdkStub).to.have.been.calledOnce;
       expect(botPageViewStub).to.have.been.calledOnce;
+      expect(botPageViewStub.firstCall.args[0]).to.deep.include({
+        page: '/styleguide',
+        language: 'en',
+        userAgent: 'Googlebot',
+      });
     } finally {
       initContentSdkStub.resolves();
     }

@@ -91,6 +91,7 @@ export class BotTrackingProxy extends ProxyBase {
         await botPageView({
           page: req.nextUrl.pathname,
           language: language,
+          userAgent: req.headers.get('user-agent') ?? '',
         });
       };
 

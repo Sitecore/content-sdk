@@ -20,13 +20,18 @@ export type BotPageViewData = {
    * Format: uppercase ISO 639.
    */
   language: string;
+  /**
+   * Full `User-Agent` of the request. Sent in event `ext` as `sourceUserAgent` (distinct from any `User-Agent` header on the HTTP request).
+   * When omitted, defaults to an empty string.
+   */
+  userAgent?: string;
 };
 
 /**
  * Sends a VIEW event for server-side bot tracking (e.g. Next.js proxy / Edge).
  * Uses a synthetic per-invocation client id and defaults `channel` to `bot`.
  * Returns `null` in browser environments.
- * @param {BotPageView} [pageViewData] - The optional attributes to be sent to the SitecoreCloud API
+ * @param {BotPageViewData} [pageViewData] - The optional attributes to be sent to the SitecoreCloud API
  * @returns The response from Sitecore Edge Proxy, or `null` if skipped (browser).
  * @public
  */
@@ -41,6 +46,7 @@ export async function botPageView(pageViewData: BotPageViewData): Promise<EPResp
 
   const { options, adapter } = getAnalyticsPlugin();
   const id = globalThis.crypto.randomUUID();
+  const userAgentValue = pageViewData.userAgent ?? '';
 
   return new PageViewEvent({
     id,
@@ -48,6 +54,9 @@ export async function botPageView(pageViewData: BotPageViewData): Promise<EPResp
       channel: BOT_CHANNEL,
       page: pageViewData.page,
       language: pageViewData.language,
+      extensionData: {
+        sourceUserAgent: userAgentValue,
+      },
     },
     searchParams: adapter.location.getSearchParams(),
     sendEvent,
