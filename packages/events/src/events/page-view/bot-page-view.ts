@@ -46,7 +46,6 @@ export async function botPageView(pageViewData: BotPageViewData): Promise<EPResp
 
   const { options, adapter } = getAnalyticsPlugin();
   const id = globalThis.crypto.randomUUID();
-  const userAgentValue = pageViewData.userAgent ?? '';
 
   return new PageViewEvent({
     id,
@@ -55,7 +54,7 @@ export async function botPageView(pageViewData: BotPageViewData): Promise<EPResp
       page: pageViewData.page,
       language: pageViewData.language,
       extensionData: {
-        sourceUserAgent: userAgentValue,
+        sourceUserAgent: pageViewData.userAgent,
       },
     },
     searchParams: adapter.location.getSearchParams(),
