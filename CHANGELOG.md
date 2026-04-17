@@ -18,6 +18,7 @@ Our versioning strategy is as follows:
   - Introduced `BotTrackingProxy` Next.js proxy to capture bot tracking events.
 * `[nextjs]` Upgrade to Next.js 16.2 ([#429](https://github.com/Sitecore/content-sdk/pull/429))
 * `[create-content-sdk-app]` Use native flat ESLint config for App Router templates ([#431](https://github.com/Sitecore/content-sdk/pull/431))
+* `[nextjs]` Support for redirect items redirects in redirect proxy (more redirects!) ([#433](https://github.com/Sitecore/content-sdk/pull/433)) ([#439](https://github.com/Sitecore/content-sdk/pull/439))
 
 ### 🐛 Bug Fixes
 
@@ -30,10 +31,6 @@ Our versioning strategy is as follows:
 ### 🎉 New Features & Improvements
 
 * `[content]` Add Unified UI origin to allowed origins ([#424](https://github.com/Sitecore/content-sdk/pull/424))
-
-### 🎉 New Features & Improvements
-
-* `[nextjs]` Support for redirect items redirects in redirect proxy (more redirects!) ([#433](https://github.com/Sitecore/content-sdk/pull/433))
 
 ## 2.0.1
 
