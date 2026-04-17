@@ -22,9 +22,8 @@ export type BotPageViewData = {
   language: string;
   /**
    * Full `User-Agent` of the request. Sent in event `ext` as `sourceUserAgent` (distinct from any `User-Agent` header on the HTTP request).
-   * When omitted, defaults to an empty string.
    */
-  userAgent?: string;
+  userAgent: string;
 };
 
 /**

@@ -84,7 +84,7 @@ describe('bot-page-view', () => {
   it('returns null in browser without calling analytics', async () => {
     const getCoreContextSpy = jest.spyOn(coreModule, 'getCoreContext');
 
-    await expect(botPageView({ page, language })).resolves.toBeNull();
+    await expect(botPageView({ page, language, userAgent: 'Mozilla/5.0' })).resolves.toBeNull();
 
     expect(getCoreContextSpy).not.toHaveBeenCalled();
     expect(eventsPluginModule.getEventsPlugin).not.toHaveBeenCalled();

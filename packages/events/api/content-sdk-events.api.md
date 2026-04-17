@@ -21,7 +21,7 @@ export function botPageView(pageViewData: BotPageViewData): Promise<EPResponse |
 export type BotPageViewData = {
     page: string;
     language: string;
-    userAgent?: string;
+    userAgent: string;
 };
 
 // @public

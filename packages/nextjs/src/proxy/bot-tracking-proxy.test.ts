@@ -335,6 +335,30 @@ describe('BotTrackingProxy', () => {
     expect(getCookieJar(res)[BOT_COOKIE]).to.be.undefined;
   });
 
+  it('skips when user-agent header is missing or empty', async () => {
+    isBotStub.returns(true);
+
+    for (const headerValues of [{}, { 'user-agent': '' }] as const) {
+      const req = createRequest({ headerValues });
+      const res = createResponse();
+      const proxy = createProxy();
+
+      const finalRes = await proxy.handle(req, res);
+
+      validateDebugLog('bot tracking proxy skipped (no user-agent)');
+      expect(isBotStub).to.not.have.been.called;
+      expect(initContentSdkStub).to.not.have.been.called;
+      expect(botPageViewStub).to.not.have.been.called;
+      expect(finalRes).to.equal(res);
+      expect(getCookieJar(res)[BOT_COOKIE]).to.be.undefined;
+
+      isBotStub.resetHistory();
+      initContentSdkStub.resetHistory();
+      botPageViewStub.resetHistory();
+      debugSpy.resetHistory();
+    }
+  });
+
   it('skips when request is a prefetch', async () => {
     isBotStub.returns(true);
     const req = createRequest({
