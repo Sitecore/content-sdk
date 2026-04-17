@@ -1,5 +1,6 @@
 import type { Type } from '@angular/core';
 import type { AngularModule, ComponentMap } from '@sitecore-content-sdk/angular';
+import { ScFormComponent } from '@sitecore-content-sdk/angular';
 import { TitleComponent } from 'components/title.component';
 import { RichTextComponent } from 'components/rich-text.component';
 import { ImageComponent } from 'components/image.component';
@@ -25,6 +26,7 @@ export const componentMap: ComponentMap = new Map<string, Type<unknown> | Angula
   ['PageContent', PageContentComponent],
   ['LinkList', LinkListComponent],
   ['PartialDesignDynamicPlaceholder', ContainerComponent],
+  ['Form', ScFormComponent],
 ]);
 
 export default componentMap;

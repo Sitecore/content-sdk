@@ -10,7 +10,7 @@
     "build": "npm-run-all -s gen:env:prod \"ng build\"",
     "watch": "npm-run-all -s gen:env:dev \"ng build --watch --configuration development\"",
     "start": "npm-run-all -s build serve:ssr",
-    "serve:ssr": "node dist/angular-app/server/server.mjs",
+    "serve:ssr": "node dist/<%- appName %>/server/server.mjs",
     "test": "ng test"    
   },
   "prettier": {
