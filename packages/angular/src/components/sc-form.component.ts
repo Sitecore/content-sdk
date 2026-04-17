@@ -2,7 +2,6 @@ import {
   Component,
   inject,
   input,
-  signal,
   ElementRef,
   ViewChild,
   afterNextRender,
@@ -28,7 +27,7 @@ const { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
   selector: 'sc-form',
   standalone: true,
   template: `
-    <div #formContainer [class]="styles()" [id]="renderingId()" [innerHTML]="content()"></div>
+    <div #formContainer [class]="styles()" [id]="renderingId()"></div>
   `,
 })
 export class ScFormComponent {
@@ -43,8 +42,6 @@ export class ScFormComponent {
   private readonly context = inject(SitecoreContextService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
-
-  readonly content = signal('');
 
   readonly styles = () => {
     const s = this.params()?.['styles'];
@@ -72,29 +69,24 @@ export class ScFormComponent {
       }
 
       let cancelled = false;
-      let scriptTimeoutId: ReturnType<typeof setTimeout> | undefined;
       this.destroyRef.onDestroy(() => {
         cancelled = true;
-        if (scriptTimeoutId !== undefined) {
-          clearTimeout(scriptTimeoutId);
-        }
       });
 
       loadForm(edgeId, formId, edgeUrl)
         .then((html: string) => {
           if (cancelled) return;
-          this.content.set(html);
-          scriptTimeoutId = setTimeout(() => {
-            scriptTimeoutId = undefined;
-            if (cancelled) return;
-            const el = this.formContainerRef?.nativeElement;
-            if (!el) return;
-            const isEditing = this.context.isEditing();
-            if (!isEditing) {
-              subscribeToFormSubmitEvent(el, this.rendering()?.uid);
-            }
-            executeScriptElements(el);
-          }, 0);
+          const el = this.formContainerRef?.nativeElement;
+          if (!el) return;
+
+          el.innerHTML = html;
+
+          const isEditing = this.context.isEditing();
+          if (!isEditing) {
+            subscribeToFormSubmitEvent(el, this.rendering()?.uid);
+          }
+
+          executeScriptElements(el);
         })
         .catch(() => {
           console.error(

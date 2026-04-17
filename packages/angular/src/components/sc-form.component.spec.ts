@@ -50,7 +50,7 @@ const makePage = (isEditing: boolean): Page =>
     },
   }) as unknown as Page;
 
-/** Flush afterNextRender, loadForm promise, and setTimeout(0) that runs scripts / subscribe. */
+/** Flush afterNextRender and loadForm promise (scripts / subscribe run in the same microtask). */
 async function flushFormLoadPipeline(fixture: ComponentFixture<ScFormComponent>): Promise<void> {
   fixture.detectChanges();
   await fixture.whenStable();
@@ -157,7 +157,7 @@ describe('ScFormComponent', () => {
   });
 
   it('should set loaded HTML into the container via innerHTML (JSS: innerHTML = content)', async () => {
-    // Use markup Angular will retain in [innerHTML] (e.g. <form> is stripped by the sanitizer).
+    // Markup is assigned on the container element ref (not [innerHTML], which sanitizes scripts).
     mocks.loadForm.mockResolvedValue('<p class="sc-form-inner" data-f="1">Inner</p>');
 
     const fixture = createFixture();
