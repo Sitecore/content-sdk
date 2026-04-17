@@ -79,7 +79,7 @@ export type AtomChild = AtomMetadata | 'text' | 'atom';
 export type AtomMetadata = {
     name: string;
     version?: number;
-    type: (typeof AtomType)[keyof typeof AtomType];
+    type: AtomType;
     description: string;
     props: z.ZodObject<z.ZodRawShape>;
     component: (props: unknown) => React.ReactNode;
@@ -89,16 +89,11 @@ export type AtomMetadata = {
     defaultChildren?: DefaultChild[];
 };
 
-// @public (undocumented)
-export const AtomRenderer: (input: {
-    atoms?: AtomMetadata[];
-}) => React_2.JSX.Element;
-
 // @public
 export type AtomSchemaInput<C> = {
     name: string;
     description: string;
-    type?: (typeof AtomType)[keyof typeof AtomType];
+    type?: AtomType;
     version?: number;
     props: {
         [K in keyof EditableComponentProps<C>]?: z.ZodType<EditableComponentProps<C>[K]>;
@@ -580,9 +575,10 @@ export const SitecoreProviderReactContext: React_2.Context<SitecoreProviderState
 // @public
 export interface SitecoreProviderState {
     api?: SitecoreProviderProps['api'];
-    atoms?: AtomMetadata[];
-    // Warning: (ae-forgotten-export) The symbol "CallbackMetadata" needs to be exported by the entry point api-surface.d.ts
-    callbacks?: CallbackMetadata[];
+    atomRegistry?: {
+        atoms?: AtomMetadata[];
+        callbacks?: CallbackMetadata[];
+    };
     componentMap: ComponentMap;
     // Warning: (ae-incompatible-release-tags) The symbol "loadImportMap" is marked as @public, but its signature references "ImportMapImport" which is marked as @internal
     loadImportMap: () => Promise<ImportMapImport>;
@@ -712,7 +708,8 @@ export function withSitecore(options?: UseSitecoreOptions): <ComponentProps exte
 // Warnings were encountered during analysis:
 //
 // src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point api-surface.d.ts
-// src/components/SitecoreProvider.tsx:115:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
+// src/components/SitecoreProvider.tsx:74:5 - (ae-forgotten-export) The symbol "CallbackMetadata" needs to be exported by the entry point api-surface.d.ts
+// src/components/SitecoreProvider.tsx:123:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

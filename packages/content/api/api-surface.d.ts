@@ -18,5 +18,6 @@ export * from '../layout';
 export * from '../media';
 export * from '../personalize';
 export * from '../site';
+export * from '../atoms';
 export * from '../tools';
 export * from '../node-tools';

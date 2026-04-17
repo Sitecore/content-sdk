@@ -46,4 +46,7 @@ export {
   CallbackInfo,
   AtomType,
   getDesignLibraryAtomsRegistryEvent,
+  sendAtomsErrorEvent,
+  DesignLibraryAtomsError,
+  addDocumentUpdateHandler,
 } from './atoms-builder/atoms-builder';

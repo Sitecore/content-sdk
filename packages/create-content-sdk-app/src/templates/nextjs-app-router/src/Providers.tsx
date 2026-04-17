@@ -12,7 +12,7 @@ export default function Providers({ children, page }: { children: React.ReactNod
       componentMap={components}
       page={page}
       loadImportMap={() => import('.sitecore/import-map.client')}
-      atoms={atoms}
+      atomRegistry={{ atoms }}
     >
       {children}
     </SitecoreProvider>

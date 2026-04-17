@@ -21,7 +21,7 @@ export type AtomSchemaInput<C> = {
   /** Human-readable summary for the component palette */
   description: string;
   /** 'atom' (default) for top-level, 'atom-child' for scoped children */
-  type?: (typeof AtomType)[keyof typeof AtomType];
+  type?: AtomType;
   /** Optional version for schema evolution */
   version?: number;
   /** Zod schemas for editable props (keys must be component props excluding children/ref) */
@@ -45,13 +45,13 @@ export type AtomSchemaInput<C> = {
 /**
  * Create an atom or atom-child descriptor. The component is the first argument, the schema the
  * second; schema.type selects 'atom' (default) or 'atom-child'.
- * @param component - The React component that renders this atom
- * @param schema - Name, description, type, props, events, and children rules
+ * @param {C} component - The React component that renders this atom
+ * @param {AtomSchemaInput<C>} schema - Name, description, type, props, events, and children rules
  * @returns AtomMetadata with type taken from schema.type (default 'atom')
  * @public
  */
 export function createAtom<C>(component: C, schema: AtomSchemaInput<C>): AtomMetadata {
-  const atomType = schema.type ?? AtomType.ATOM;
+  const atomType: AtomType = schema.type ?? 'atom';
   const propsShape = schema.props as Record<string, z.ZodType>;
   const propsSchema = z.object(propsShape);
 
