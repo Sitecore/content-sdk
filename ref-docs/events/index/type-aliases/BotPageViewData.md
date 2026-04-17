@@ -8,7 +8,7 @@
 
 > **BotPageViewData** = `object`
 
-Defined in: [events/src/events/page-view/bot-page-view.ts:12](https://github.com/Sitecore/content-sdk/blob/888eef99b46ec3cc8aafe70ca50b3ddbce1580b0/packages/events/src/events/page-view/bot-page-view.ts#L12)
+Defined in: [events/src/events/page-view/bot-page-view.ts:12](https://github.com/Sitecore/content-sdk/blob/fd717ff9011a06b489cdebb45197092600bc6c8a/packages/events/src/events/page-view/bot-page-view.ts#L12)
 
 The data to be sent for bot tracking.
 
@@ -18,7 +18,7 @@ The data to be sent for bot tracking.
 
 > **language**: `string`
 
-Defined in: [events/src/events/page-view/bot-page-view.ts:22](https://github.com/Sitecore/content-sdk/blob/888eef99b46ec3cc8aafe70ca50b3ddbce1580b0/packages/events/src/events/page-view/bot-page-view.ts#L22)
+Defined in: [events/src/events/page-view/bot-page-view.ts:22](https://github.com/Sitecore/content-sdk/blob/fd717ff9011a06b489cdebb45197092600bc6c8a/packages/events/src/events/page-view/bot-page-view.ts#L22)
 
 The language the site visitor interacts with your brand in.
 For example, if the site visitor selects the Japanese language in your app, the language is "JA".
@@ -30,6 +30,16 @@ Format: uppercase ISO 639.
 
 > **page**: `string`
 
-Defined in: [events/src/events/page-view/bot-page-view.ts:16](https://github.com/Sitecore/content-sdk/blob/888eef99b46ec3cc8aafe70ca50b3ddbce1580b0/packages/events/src/events/page-view/bot-page-view.ts#L16)
+Defined in: [events/src/events/page-view/bot-page-view.ts:16](https://github.com/Sitecore/content-sdk/blob/fd717ff9011a06b489cdebb45197092600bc6c8a/packages/events/src/events/page-view/bot-page-view.ts#L16)
 
 The name of the webpage where the interaction with your brand takes place.
+
+***
+
+### userAgent
+
+> **userAgent**: `string`
+
+Defined in: [events/src/events/page-view/bot-page-view.ts:26](https://github.com/Sitecore/content-sdk/blob/fd717ff9011a06b489cdebb45197092600bc6c8a/packages/events/src/events/page-view/bot-page-view.ts#L26)
+
+Full `User-Agent` of the request. Sent in event `ext` as `sourceUserAgent` (distinct from any `User-Agent` header on the HTTP request).
