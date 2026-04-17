@@ -149,7 +149,7 @@ export class RedirectsProxy extends ProxyBase {
       site = this.getSite(req, res);
 
       // Find the redirect from result of RedirectService
-      const existsRedirect = await this.getExistsRedirect(req, site.name);
+      const existsRedirect = await this.getExistsRedirect(req, site.name, language);
 
       if (!existsRedirect) {
         debug.redirects('skipped (redirect does not exist)');
@@ -292,7 +292,8 @@ export class RedirectsProxy extends ProxyBase {
    */
   protected async getExistsRedirect(
     req: NextRequest,
-    siteName: string
+    siteName: string,
+    requestLocale: string
   ): Promise<RedirectResult | undefined> {
     if (!this.redirectsService) {
       return undefined;
@@ -305,8 +306,7 @@ export class RedirectsProxy extends ProxyBase {
     const normalizedPath = incomingURL.replace(/\/*$/gi, '').toLowerCase();
     const redirects = await this.redirectsService.fetchRedirects(siteName);
 
-    // locale of current request (from URL, headers or otherwise), used to match versioned redirect rules
-    const requestLocale = this.getLanguage(req);
+    // using locale of current request (from URL, headers or otherwise), used to match versioned redirect rules
     const matchedLocaleRedirect = this.matchRedirectItemRedirect(
       redirects,
       requestLocale,
@@ -408,7 +408,7 @@ export class RedirectsProxy extends ProxyBase {
    * Processes redirect rules from redirect items (language-versioned)
    * @param {RedirectResult[]} redirects redirect entries from Edge
    * @param {string} locale current request locale
-   * @param {string} currentPath current request path (without locale)
+   * @param {string} currentPath current request path
    * @returns {RedirectResult | undefined} matched redirect item redirect result or undefined
    * @private
    */
@@ -417,11 +417,12 @@ export class RedirectsProxy extends ProxyBase {
     locale: string,
     currentPath: string
   ): RedirectResult | undefined {
+    const nonLocalePath = currentPath.replace(new RegExp(`^\/?${locale}\/`, 'i'), '/');
     return redirects.length
       ? redirects.find((redirect: RedirectResult) => {
           const patternPath = redirect.pattern.replace(/\/*$/g, '').toLowerCase();
           // locale rules are easy and nice
-          return redirect.locale === locale && patternPath === currentPath;
+          return redirect.locale === locale && patternPath === nonLocalePath;
         })
       : undefined;
   }
