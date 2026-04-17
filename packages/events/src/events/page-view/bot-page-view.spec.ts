@@ -84,7 +84,7 @@ describe('bot-page-view', () => {
   it('returns null in browser without calling analytics', async () => {
     const getCoreContextSpy = jest.spyOn(coreModule, 'getCoreContext');
 
-    await expect(botPageView({ page, language })).resolves.toBeNull();
+    await expect(botPageView({ page, language, userAgent: 'Mozilla/5.0' })).resolves.toBeNull();
 
     expect(getCoreContextSpy).not.toHaveBeenCalled();
     expect(eventsPluginModule.getEventsPlugin).not.toHaveBeenCalled();
@@ -107,13 +107,20 @@ describe('bot-page-view', () => {
     try {
       mockAdapter.location.getSearchParams.mockReturnValue('?a=1');
 
-      const response = await botPageView({ page, language });
+      const response = await botPageView({ page, language, userAgent: 'Googlebot/2.1' });
 
       expect(response).toBe('mockedResponse');
       expect(randomUUIDMock).toHaveBeenCalled();
       expect(PageViewEvent).toHaveBeenCalledWith({
         id: uuid,
-        pageViewData: { channel: 'bot', page, language },
+        pageViewData: {
+          channel: 'bot',
+          page,
+          language,
+          extensionData: {
+            sourceUserAgent: 'Googlebot/2.1',
+          },
+        },
         searchParams: '?a=1',
         sendEvent,
         config: { ...mockCoreContext.config, ...mockAnalyticsPlugin.options },
@@ -127,4 +134,5 @@ describe('bot-page-view', () => {
       }
     }
   });
+
 });

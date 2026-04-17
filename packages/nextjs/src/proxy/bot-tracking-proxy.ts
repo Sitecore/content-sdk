@@ -57,7 +57,13 @@ export class BotTrackingProxy extends ProxyBase {
         return res;
       }
 
-      if (!isBot(req.headers.get('user-agent'))) {
+      const userAgent = req.headers.get('user-agent');
+      if (!userAgent) {
+        debug.common('bot tracking proxy skipped (no user-agent)');
+        return res;
+      }
+
+      if (!isBot(userAgent)) {
         debug.common('bot tracking proxy skipped (not a bot)');
         return res;
       }
@@ -91,6 +97,7 @@ export class BotTrackingProxy extends ProxyBase {
         await botPageView({
           page: req.nextUrl.pathname,
           language: language,
+          userAgent,
         });
       };
 
