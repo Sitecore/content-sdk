@@ -33,6 +33,7 @@ export {
   ImageSizeParameters,
   LinkField,
   LinkFieldValue,
+  TextField,
   RichTextField,
 } from '@sitecore-content-sdk/content/layout';
 export { DictionaryPhrases, DictionaryService } from '@sitecore-content-sdk/content/i18n';

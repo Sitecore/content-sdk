@@ -11,7 +11,7 @@
     "watch": "npm-run-all -s gen:env:dev \"ng build --watch --configuration development\"",
     "start": "npm-run-all -s build serve:ssr",
     "serve:ssr": "node dist/<%- appName %>/server/server.mjs",
-    "test": "ng test"    
+    "test": "ng test"
   },
   "prettier": {
     "printWidth": 100,
