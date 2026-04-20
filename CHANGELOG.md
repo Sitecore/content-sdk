@@ -28,7 +28,7 @@ Our versioning strategy is as follows:
 
 ### ✨ Chores
 
-* `[create-content-sdk-app]` Update outdated documentation links in nextjs templates ([#440](https://github.com/Sitecore/content-sdk/pull/440))
+* `[create-content-sdk-app]` Update outdated documentation links ([#440](https://github.com/Sitecore/content-sdk/pull/440))
 
 ## 2.0.2
 
