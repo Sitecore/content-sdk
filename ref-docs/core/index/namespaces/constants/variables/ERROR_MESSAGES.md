@@ -8,7 +8,7 @@
 
 > `const` **ERROR\_MESSAGES**: `object`
 
-Defined in: [packages/core/src/constants.ts:42](https://github.com/Sitecore/content-sdk/blob/fd717ff9011a06b489cdebb45197092600bc6c8a/packages/core/src/constants.ts#L42)
+Defined in: [packages/core/src/constants.ts:42](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/core/src/constants.ts#L42)
 
 **`Internal`**
 

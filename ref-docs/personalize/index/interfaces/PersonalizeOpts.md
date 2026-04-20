@@ -6,7 +6,7 @@
 
 # Interface: PersonalizeOpts
 
-Defined in: [personalize/src/personalization/personalize.ts:45](https://github.com/Sitecore/content-sdk/blob/fd717ff9011a06b489cdebb45197092600bc6c8a/packages/personalize/src/personalization/personalize.ts#L45)
+Defined in: [personalize/src/personalization/personalize.ts:45](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/personalize/src/personalization/personalize.ts#L45)
 
 Options for the personalize function.
 
@@ -16,6 +16,6 @@ Options for the personalize function.
 
 > `optional` **timeout?**: `number`
 
-Defined in: [personalize/src/personalization/personalize.ts:49](https://github.com/Sitecore/content-sdk/blob/fd717ff9011a06b489cdebb45197092600bc6c8a/packages/personalize/src/personalization/personalize.ts#L49)
+Defined in: [personalize/src/personalization/personalize.ts:49](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/personalize/src/personalization/personalize.ts#L49)
 
 Timeout in milliseconds for the personalize request

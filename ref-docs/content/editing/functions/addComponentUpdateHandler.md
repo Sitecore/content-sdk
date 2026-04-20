@@ -8,7 +8,7 @@
 
 > **addComponentUpdateHandler**(`rootComponent`, `successCallback?`): (() => `void`) \| `undefined`
 
-Defined in: [content/src/editing/design-library.ts:87](https://github.com/Sitecore/content-sdk/blob/fd717ff9011a06b489cdebb45197092600bc6c8a/packages/content/src/editing/design-library.ts#L87)
+Defined in: [content/src/editing/design-library.ts:87](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/content/src/editing/design-library.ts#L87)
 
 **`Internal`**
 

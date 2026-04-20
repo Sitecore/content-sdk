@@ -6,7 +6,7 @@
 
 # Enumeration: MetadataKind
 
-Defined in: [content/src/editing/models.ts:57](https://github.com/Sitecore/content-sdk/blob/fd717ff9011a06b489cdebb45197092600bc6c8a/packages/content/src/editing/models.ts#L57)
+Defined in: [content/src/editing/models.ts:57](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/content/src/editing/models.ts#L57)
 
 **`Internal`**
 
@@ -20,7 +20,7 @@ Represents the kind of metadata element.
 
 > **Close**: `"close"`
 
-Defined in: [content/src/editing/models.ts:59](https://github.com/Sitecore/content-sdk/blob/fd717ff9011a06b489cdebb45197092600bc6c8a/packages/content/src/editing/models.ts#L59)
+Defined in: [content/src/editing/models.ts:59](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/content/src/editing/models.ts#L59)
 
 ***
 
@@ -28,4 +28,4 @@ Defined in: [content/src/editing/models.ts:59](https://github.com/Sitecore/conte
 
 > **Open**: `"open"`
 
-Defined in: [content/src/editing/models.ts:58](https://github.com/Sitecore/content-sdk/blob/fd717ff9011a06b489cdebb45197092600bc6c8a/packages/content/src/editing/models.ts#L58)
+Defined in: [content/src/editing/models.ts:58](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/content/src/editing/models.ts#L58)

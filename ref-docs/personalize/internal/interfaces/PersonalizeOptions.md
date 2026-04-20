@@ -6,7 +6,7 @@
 
 # Interface: PersonalizeOptions
 
-Defined in: [personalize/src/initialization/types.ts:62](https://github.com/Sitecore/content-sdk/blob/fd717ff9011a06b489cdebb45197092600bc6c8a/packages/personalize/src/initialization/types.ts#L62)
+Defined in: [personalize/src/initialization/types.ts:62](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/personalize/src/initialization/types.ts#L62)
 
 Represents the personalize plugin options.
 
@@ -16,7 +16,7 @@ Represents the personalize plugin options.
 
 > **cookies**: `object`
 
-Defined in: [personalize/src/initialization/types.ts:70](https://github.com/Sitecore/content-sdk/blob/fd717ff9011a06b489cdebb45197092600bc6c8a/packages/personalize/src/initialization/types.ts#L70)
+Defined in: [personalize/src/initialization/types.ts:70](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/personalize/src/initialization/types.ts#L70)
 
 The cookie settings for the personalize plugin, including whether the cookie is enabled and the name of the cookie.
 
@@ -38,6 +38,6 @@ The name of the sc_cid_personalize cookie.
 
 > **webPersonalization**: `false` \| [`WebPersonalizationOptions`](../../index/interfaces/WebPersonalizationOptions.md)
 
-Defined in: [personalize/src/initialization/types.ts:66](https://github.com/Sitecore/content-sdk/blob/fd717ff9011a06b489cdebb45197092600bc6c8a/packages/personalize/src/initialization/types.ts#L66)
+Defined in: [personalize/src/initialization/types.ts:66](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/personalize/src/initialization/types.ts#L66)
 
 The web personalization options.
