@@ -15,7 +15,7 @@ on:
           - '@sitecore-content-sdk/cli'
           - '@sitecore-content-sdk/react'
           - '@sitecore-content-sdk/search'
-          - 'create-content-sdk'
+          - 'create-content-sdk-app'
           - '@sitecore-content-sdk/core'
           - '@sitecore-content-sdk/content'
           - '@sitecore-content-sdk/analytics-core'
