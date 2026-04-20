@@ -47,7 +47,7 @@ export function resolveEdgeUrl(edgeUrl?: string): string {
     return normalizeUrl(explicit);
   }
 
-  const runtimeEnv = process ? process.env : {};
+  const runtimeEnv = typeof process !== 'undefined' ? process.env : {};
 
   // Check for custom hostname env var
   const hostnameEnvVar = normalizeEnvValue(runtimeEnv[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV]);
