@@ -799,6 +799,8 @@ describe('RedirectsProxy', () => {
           pathname: '/old-page',
         },
       });
+      // match app router behavior about locale in request
+      delete req.locale;
       // Set up App Router response so locale is added to pathname
       const res = createResponse({
         headers: {
@@ -1088,6 +1090,17 @@ describe('RedirectsProxy', () => {
       const { proxy } = createProxy();
       const result = proxy['matchRedirectItemRedirect']([], 'en', '/about');
       expect(result).to.be.undefined;
+    });
+
+    it('should ignore locale prefix when matching redirects (app router)', () => {
+      const { proxy } = createProxy();
+      const redirect = baseRedirect({
+        locale: 'en',
+        pattern: '/Foo/redirect/',
+        target: '/lowercase',
+      });
+      const result = proxy['matchRedirectItemRedirect']([redirect], 'en', '/en/foo/redirect');
+      expect(result?.target).to.equal('/lowercase');
     });
   });
 });
