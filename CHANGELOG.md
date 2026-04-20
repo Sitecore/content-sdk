@@ -26,6 +26,10 @@ Our versioning strategy is as follows:
 * `[core] [content]` Fix GraphQL client factory ignoring custom `fetch` and related options ([#418](https://github.com/Sitecore/content-sdk/pull/418))
 * `[nextjs]` AppRouter - NextLink is throwing Locale error in dev mode ([#427](https://github.com/Sitecore/content-sdk/pull/427))
 
+### ✨ Chores
+
+* `[create-content-sdk-app]` Update outdated documentation links in nextjs templates ([#440](https://github.com/Sitecore/content-sdk/pull/440))
+
 ## 2.0.2
 
 ### 🎉 New Features & Improvements
