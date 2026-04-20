@@ -19,7 +19,9 @@ Create `.env` file:
 PORT=3100
 GAINSIGHT_API_KEY=your-rest-api-key-from-px-admin
 GAINSIGHT_BASE_URL=https://api-eu.aptrinsic.com/v1
+# Product tag key from Gainsight. Use Sitecore AI key by default (Administration -> Products)
 GAINSIGHT_PROPERTY_KEY=AP-YOUR-PRODUCT-KEY
+# IdentifyID value for a user. Will be used to put a name to the event, can be retrieved via REST Gainsight API (GET v1/users)
 GAINSIGHT_IDENTIFY_ID=default-user-id
 
 # Optional
