@@ -7,9 +7,9 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.1.0-canary.7",
-    "@sitecore-content-sdk/core": "2.1.0-canary.7",
-    "@sitecore-content-sdk/events": "2.1.0-canary.7",
+    "@sitecore-content-sdk/analytics-core": "2.1.0-canary.8",
+    "@sitecore-content-sdk/core": "2.1.0-canary.8",
+    "@sitecore-content-sdk/events": "2.1.0-canary.8",
     "debug": "^4.4.3"
   },
   "description": "Provides personalization capabilities to build tailored experiences for site visitors.",
@@ -70,5 +70,5 @@
     "api-extractor": "npm run build && api-extractor run --local --verbose",
     "api-extractor:verify": "api-extractor run"
   },
-  "version": "2.1.0-canary.7"
+  "version": "2.1.0-canary.8"
 }
