@@ -6,6 +6,7 @@ import { SitecoreProvider, useSitecore } from './SitecoreProvider';
 import { WithSitecoreProps, withSitecore } from '../enhancers/withSitecore';
 import { LayoutServiceData, LayoutServicePageState } from '../index';
 import { render } from '@testing-library/react';
+import type { ImportMapImport } from './DesignLibrary/models';
 
 describe('SitecoreProvider', () => {
   let nestedContext = {};
@@ -14,10 +15,18 @@ describe('SitecoreProvider', () => {
     anotherProperty?: string;
   }
 
+  const loadImportMapStub = async (): Promise<ImportMapImport> => ({}) as ImportMapImport;
+
   const NestedComponent: FC<NestedComponentProps> = () => {
     const { page } = useSitecore();
     nestedContext = page;
     return <span>Page mode is {page.mode.name}</span>;
+  };
+
+  const AtomRegistryProbe: FC = () => {
+    const { atomRegistry } = useSitecore();
+    nestedContext = atomRegistry as unknown;
+    return <span>probe</span>;
   };
 
   const NestedComponentWithContext = withSitecore()(NestedComponent);
@@ -58,7 +67,12 @@ describe('SitecoreProvider', () => {
 
   it('renders the component with the context', () => {
     const rendered = render(
-      <SitecoreProvider api={apiStub} componentMap={components} page={mockPage}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={components}
+        page={mockPage}
+        loadImportMap={loadImportMapStub}
+      >
         <NestedComponentWithContext />
       </SitecoreProvider>
     );
@@ -69,7 +83,12 @@ describe('SitecoreProvider', () => {
 
   it('updates state when new page is received via props', () => {
     const rendered = render(
-      <SitecoreProvider api={apiStub} componentMap={components} page={mockPage}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={components}
+        page={mockPage}
+        loadImportMap={loadImportMapStub}
+      >
         <NestedComponentWithContext />
       </SitecoreProvider>
     );
@@ -82,7 +101,12 @@ describe('SitecoreProvider', () => {
     };
 
     rendered.rerender(
-      <SitecoreProvider api={apiStub} componentMap={components} page={newMockPage}>
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={components}
+        page={newMockPage}
+        loadImportMap={loadImportMapStub}
+      >
         <NestedComponentWithContext />
       </SitecoreProvider>
     );
@@ -91,5 +115,27 @@ describe('SitecoreProvider', () => {
       ...mockPage,
       locale: 'gr',
     });
+  });
+
+  it('exposes atomRegistry on context when provided', () => {
+    nestedContext = undefined;
+    const atomRegistry = {
+      atoms: [],
+      callbacks: [],
+    };
+
+    render(
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={components}
+        page={mockPage}
+        loadImportMap={loadImportMapStub}
+        atomRegistry={atomRegistry}
+      >
+        <AtomRegistryProbe />
+      </SitecoreProvider>
+    );
+
+    expect(nestedContext).to.deep.equal(atomRegistry);
   });
 });

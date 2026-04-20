@@ -25,6 +25,7 @@
     "personalize.d.ts",
     "config-cli.d.ts",
     "codegen.d.ts",
+    "atoms.d.ts",
     "src/**/*.test.ts",
     "src/test-data/**/*",
     "src/tools/codegen/test-data/**/*",

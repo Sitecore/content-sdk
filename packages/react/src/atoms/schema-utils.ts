@@ -7,8 +7,8 @@ const META_KEY = 'meta';
 /**
  * Attach editor hint (e.g. control type) to a prop schema. Metadata is stored under a key that
  * survives JSON Schema conversion for Design Studio.
- * @param schema - Zod type for the prop
- * @param meta - Editor metadata (e.g. control)
+ * @param {import('zod').ZodType} schema - Zod type for the prop
+ * @param {PropMeta} meta - Editor metadata (e.g. control)
  * @returns The same Zod type with meta attached (or schema unchanged if .meta is not callable)
  * @public
  */
@@ -23,8 +23,8 @@ export function withPropMeta<T extends z.ZodType>(schema: T, meta: PropMeta): T 
 /**
  * Attach display metadata to a custom event argument (e.g. argName for DS). Stored under a key
  * that survives JSON Schema conversion.
- * @param schema - Zod type for the argument
- * @param meta - Argument metadata
+ * @param {import('zod').ZodType} schema - Zod type for the argument
+ * @param {ArgMeta} meta - Argument metadata
  * @returns The same Zod type with meta attached (or schema unchanged if .meta is not callable)
  * @public
  */
@@ -39,7 +39,7 @@ export function withArgMeta<T extends z.ZodType>(schema: T, meta: ArgMeta): T {
 /**
  * Get field metadata from a Zod type or a plain JSON Schema object. Uses _zod to detect Zod
  * schemas; otherwise reads the meta key from the object. For internal use by the renderer / DS.
- * @param schemaOrJsonSchema - Live Zod type or plain JSON Schema object
+ * @param {import('zod').ZodType | Record<string, unknown>} schemaOrJsonSchema - Live Zod type or plain JSON Schema object
  * @returns The meta object or undefined
  * @internal
  */

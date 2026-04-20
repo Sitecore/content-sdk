@@ -18,7 +18,7 @@ export type CallbackMetadata = {
 export type AtomMetadata = {
   name: string;
   version?: number;
-  type: (typeof AtomType)[keyof typeof AtomType];
+  type: AtomType;
   description: string;
   props: z.ZodObject<z.ZodRawShape>;
   component: (props: unknown) => React.ReactNode;
