@@ -33,4 +33,4 @@ Central config in sitecore.config.ts; all secrets and environment-specific value
 ## References
 
 - [AGENTS.md](../../../AGENTS.md) for boundaries and env rules.
-- [Official Content SDK docs](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+- [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).

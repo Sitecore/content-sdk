@@ -153,4 +153,4 @@ Sitecore Documentation MCP: https://sitecore.mcp.kapa.ai
 
 ## Links
 
-[Sitecore Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html) · [Creating a JSS App](https://doc.sitecore.com/xmc/en/developers/content-sdk/creating-a-jss-app-for-xm-cloud.html) · [XM Cloud](https://doc.sitecore.com/xmc)
+[Sitecore Content SDK](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html) · [Creating a JSS App](https://doc.sitecore.com/sai/en/developers/content-sdk/20/creating-a-content-sdk-app.html) · [XM Cloud](https://doc.sitecore.com/sai)
