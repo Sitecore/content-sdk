@@ -8,6 +8,6 @@
 
 > **BasicTypes** = `string` \| `boolean` \| `number` \| `undefined` \| (`string` \| `boolean` \| `number` \| \{\[`key`: `string`\]: `BasicTypes`; \} \| `BasicTypes`[])[]
 
-Defined in: [analytics-core/src/utils/interfaces.ts:5](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/analytics-core/src/utils/interfaces.ts#L5)
+Defined in: [analytics-core/src/utils/interfaces.ts:5](https://github.com/Sitecore/content-sdk/blob/70eccc43077e1c9d1fe9da2ed5681f1cd3574c75/packages/analytics-core/src/utils/interfaces.ts#L5)
 
 A reusable type that accepts only basic types and arrays of those.
