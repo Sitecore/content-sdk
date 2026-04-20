@@ -41,17 +41,14 @@ function collectSitecoreContentSdkVersions(
 }
 
 export const SdkInstalledEventInit =
-  (
-    template: string,
-    destination: string
-  ): TelemetryEventInitializer<SdkInstalledEventData> =>
+  (template: string, destination: string): TelemetryEventInitializer<SdkInstalledEventData> =>
   () => {
     const systemInformationData = getSystemInformationData();
     const scaffoldPkg = path.join(path.resolve(destination), 'package.json');
     const sitecoreContentSdkPackages = collectSitecoreContentSdkVersions(scaffoldPkg);
 
     return {
-      name: 'sdk-installed',
+      name: 'csdk-poc-sdk-installed',
       data: {
         template,
         createContentSdkPackage: createContentSdkPackage.name,

@@ -15,7 +15,7 @@ export default class NextjsInitializer implements Initializer {
     await transform(templatePath, merged);
 
     const sdkEvent = SdkInstalledEventInit('nextjs', merged.destination as string);
-    TelemetryService.dispatch(sdkEvent);
+    await TelemetryService.dispatch(sdkEvent);
 
     const response = {};
     return response;

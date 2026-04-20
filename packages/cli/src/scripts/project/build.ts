@@ -39,7 +39,7 @@ export async function handler(argv: BuildArgs) {
     }
   }
   const sdkBuildEvent = SdkBuildEventInit();
-  TelemetryService.dispatch(sdkBuildEvent);
+  await TelemetryService.dispatch(sdkBuildEvent);
   // Exit the process to avoid hanging the process by custom build commands
   process.exit(0);
 }

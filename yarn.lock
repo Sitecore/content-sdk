@@ -13793,6 +13793,7 @@ __metadata:
   dependencies:
     "@types/express": "npm:^4.17.23"
     "@types/node": "npm:^22.15.21"
+    dotenv: "npm:^16.5.0"
     express: "npm:^4.21.2"
     typescript: "npm:~5.8.3"
   languageName: unknown

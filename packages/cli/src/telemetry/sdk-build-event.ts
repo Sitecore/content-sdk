@@ -6,7 +6,7 @@ import {
 export const SdkBuildEventInit = (): TelemetryEventInitializer<unknown> => () => {
   const systemInformationData = getSystemInformationData();
   return {
-    name: 'sdk-build',
+    name: 'csdk-poc-sdk-build',
     data: {
       ...systemInformationData,
     },

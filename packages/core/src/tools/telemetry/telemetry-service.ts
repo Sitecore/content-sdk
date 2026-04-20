@@ -7,7 +7,7 @@ import {
 } from './first-api-call-event';
 
 export class TelemetryService {
-  static TELEMETRY_POST_URL = 'http://localhost:3100/events';
+  static TELEMETRY_POST_URL = process.env.TELEMETRY_POST_URL ?? 'http://localhost:3100/events';
 
   static disable() {
     process.env.JSS_TELEMETRY = 'false';
@@ -21,7 +21,7 @@ export class TelemetryService {
     return process.env.JSS_TELEMETRY !== 'false';
   }
 
-  static dispatch(eventInit: TelemetryEventInitializer) {
+  static async dispatch(eventInit: TelemetryEventInitializer) {
     if (process.env.DEBUG && !debugModule.enabled(debug.telemetry.namespace)) {
       enableDebug(process.env.DEBUG);
     }
@@ -49,12 +49,14 @@ export class TelemetryService {
     // eslint-disable-next-line no-console -- local / dev telemetry sink (no fs; safe for any runtime)
     console.log('[telemetry]', JSON.stringify(event, null, 2));
     try {
-      fetch(this.TELEMETRY_POST_URL, {
+      await fetch(this.TELEMETRY_POST_URL, {
+        headers: { 'Content-Type': 'application/json' },
         method: 'POST',
         body: JSON.stringify(event),
       });
     } catch (error) {
       debug.telemetry('error sending telemetry events %s', error);
+      console.error('error sending telemetry events %s', error);
       return false;
     }
     if (event.name === SDK_FIRST_API_CALL_EVENT_NAME) {

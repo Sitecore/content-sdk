@@ -332,14 +332,14 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * One-shot telemetry after the first successful layout service response (Node only).
    */
-  private scheduleFirstLayoutFetchTelemetry(): void {
+  private async scheduleFirstLayoutFetchTelemetry(): Promise<void> {
     if (typeof process === 'undefined' || !process.versions?.node) {
       return;
     }
     if (process.env[CSDK_TELEMETRY_FIRST_API_CALL_ENV]?.trim()) {
       return;
     }
-    TelemetryService.dispatch(SdkFirstApiCallEventInit());
+    await TelemetryService.dispatch(SdkFirstApiCallEventInit());
   }
 
   /**
@@ -381,7 +381,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       },
       fetchOptions
     );
-    this.scheduleFirstLayoutFetchTelemetry();
+    await this.scheduleFirstLayoutFetchTelemetry();
     if (!layout.sitecore.route) {
       return null;
     }
