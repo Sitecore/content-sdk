@@ -210,7 +210,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 - **Skills.md** — Capability groupings for this app; [.agents/skills/](.agents/skills/) provides each capability as an Agent Skill (when-to-use, hard rules, stop conditions) for tools that support the [Agent Skills](https://agentskills.io) standard.
 - **CLAUDE.md** — Full coding standards and Sitecore patterns for this template.
 - **.cursor/rules/** — App Router and Sitecore rules.
-- [Sitecore Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html) — Official docs.
+- [Sitecore Content SDK](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html) — Official docs.
 - [Next.js App Router](https://nextjs.org/docs/app) — Routing, Server Components, data fetching.
 - [next-intl](https://next-intl.dev/docs) — i18n routing and request config.
 

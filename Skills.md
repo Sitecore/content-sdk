@@ -11,4 +11,4 @@ Capability groupings and Agent Skills are **maintained in the scaffolding templa
 
 Each template’s `Skills.md` lists the same capability groupings (component scaffold, registration, data fetching, editing, i18n, etc.) with template-specific details. Each template’s `.agents/skills/` contains one folder per capability with a `SKILL.md` (when-to-use, how to perform, hard rules, stop conditions). Tools that support [Agent Skills](https://agentskills.io) can load skills from the template path when working in a generated app or in the template source.
 
-For monorepo-level instructions (commands, structure, DO/DON’T), see [AGENTS.md](AGENTS.md). For official APIs and guides, see the [Content SDK documentation](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+For monorepo-level instructions (commands, structure, DO/DON’T), see [AGENTS.md](AGENTS.md). For official APIs and guides, see the [Content SDK documentation](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).
