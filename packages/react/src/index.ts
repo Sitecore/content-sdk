@@ -1,4 +1,4 @@
-﻿export {
+export {
   constants,
   enableDebug,
   ClientError,
@@ -48,6 +48,7 @@ export {
   PlaceholderProps,
   PlaceholderProps as PlaceholderComponentProps,
   AppPlaceholder,
+  PlaceholderMetadata,
   AppPlaceholderProps,
   renderEmptyPlaceholder,
 } from './components/Placeholder';
@@ -78,7 +79,12 @@ export {
   FEaaSServerWrapper,
   BYOCServerWrapper,
 } from './components/FEaaS';
-export { DesignLibrary, DesignLibraryApp } from './components/DesignLibrary';
+export {
+  DesignLibrary,
+  DesignLibraryErrorBoundary,
+  DynamicComponent,
+  ImportMapImport,
+} from './components/DesignLibrary';
 export {} from './components/FEaaS/BYOCComponent';
 export { Link, LinkField, LinkFieldValue, LinkProps } from './components/Link';
 export { File, FileField } from './components/File';
@@ -88,6 +94,7 @@ export {
   SitecoreProviderReactContext,
   useSitecore,
 } from './components/SitecoreProvider';
+export { ErrorComponent } from './components/ErrorBoundary';
 export { withEditorChromes } from './enhancers/withEditorChromes';
 export { withSitecore } from './enhancers/withSitecore';
 export { withDatasourceCheck } from './enhancers/withDatasourceCheck';

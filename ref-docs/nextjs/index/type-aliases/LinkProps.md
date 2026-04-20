@@ -8,7 +8,7 @@
 
 > **LinkProps** = `ReactLinkProps` & `object` & `Pick`\<`NextLinkProps`, *typeof* `supportedNextLinkProps`\[`number`\]\>
 
-Defined in: [nextjs/src/components/Link.tsx:28](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/nextjs/src/components/Link.tsx#L28)
+Defined in: [nextjs/src/components/Link.tsx:29](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/nextjs/src/components/Link.tsx#L29)
 
 The interface for the Link component props.
 
@@ -16,7 +16,7 @@ The interface for the Link component props.
 
 ### internalLinkMatcher?
 
-> `optional` **internalLinkMatcher**: `RegExp`
+> `optional` **internalLinkMatcher?**: `RegExp`
 
 If `href` match with `internalLinkMatcher` regexp, then it's internal link and NextLink will be rendered
 

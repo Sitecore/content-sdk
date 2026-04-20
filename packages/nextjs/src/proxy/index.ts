@@ -8,6 +8,7 @@ export {
   PersonalizeService,
   PersonalizeServiceConfig,
 } from '@sitecore-content-sdk/content/personalize';
+export { BotTrackingProxy, BotTrackingProxyConfig } from './bot-tracking-proxy';
 export {
   RedirectsService,
   RedirectsServiceConfig,

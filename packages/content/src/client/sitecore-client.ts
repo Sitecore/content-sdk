@@ -6,6 +6,7 @@ import {
   RetryStrategy,
   NativeDataFetcher,
   debug,
+  constants,
 } from '@sitecore-content-sdk/core';
 import {
   resolveEdgeUrlForStaticFiles,
@@ -38,6 +39,8 @@ import {
   ComponentLayoutService,
   DesignLibraryMode,
 } from '../editing';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Error page codes
@@ -474,12 +477,17 @@ export class SitecoreClient implements BaseSitecoreClient {
         version,
         layoutKind,
         mode,
+        site,
       },
       fetchOptions
     );
 
     if (!data) {
-      throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(previewData)}`);
+      throw new Error(
+        `Unable to fetch editing data for preview ${JSON.stringify(previewData)}. ${
+          ERROR_MESSAGES.CONTACT_SUPPORT
+        }`
+      );
     }
     let layout = data.layoutData;
     const personalizeData = getGroomedVariantIds(variantIds);
@@ -505,10 +513,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     designLibData: DesignLibraryRenderPreviewData,
     fetchOptions?: FetchOptions
   ): Promise<Page> {
-    if (!this.initOptions.api.local) {
-      throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
-    }
-
     const {
       itemId,
       componentUid,
@@ -537,7 +541,11 @@ export class SitecoreClient implements BaseSitecoreClient {
     );
 
     if (!componentData) {
-      throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(designLibData)}`);
+      throw new Error(
+        `Unable to fetch editing data for preview ${JSON.stringify(designLibData)}. ${
+          ERROR_MESSAGES.CONTACT_SUPPORT
+        }`
+      );
     }
     const layout = this.applyContentRewrite(componentData);
     const page: Page = {
@@ -729,8 +737,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       return layout;
     }
     const experienceEdgeUrl = resolveExperienceEdgeUrl();
-    const transformer =
-      opt === true ? getDefaultMediaUrlTransformer(experienceEdgeUrl) : opt;
+    const transformer = opt === true ? getDefaultMediaUrlTransformer(experienceEdgeUrl) : opt;
     return applyMediaUrlRewrite(layout, transformer);
   }
 

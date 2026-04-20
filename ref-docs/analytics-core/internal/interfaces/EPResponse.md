@@ -6,9 +6,9 @@
 
 # Interface: EPResponse
 
-Defined in: [src/interfaces.ts:4](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/analytics-core/src/interfaces.ts#L4)
+Defined in: [analytics-core/src/interfaces.ts:5](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/analytics-core/src/interfaces.ts#L5)
 
-The response object that Sitecore EP returns.
+The response object that Sitecore Edge Proxy returns.
 
 ## Properties
 
@@ -16,7 +16,7 @@ The response object that Sitecore EP returns.
 
 > **client\_key**: `string`
 
-Defined in: [src/interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/analytics-core/src/interfaces.ts#L8)
+Defined in: [analytics-core/src/interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/analytics-core/src/interfaces.ts#L9)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [src/interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/0
 
 > **customer\_ref**: `string`
 
-Defined in: [src/interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/analytics-core/src/interfaces.ts#L9)
+Defined in: [analytics-core/src/interfaces.ts:10](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/analytics-core/src/interfaces.ts#L10)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [src/interfaces.ts:9](https://github.com/Sitecore/content-sdk/blob/0
 
 > **ref**: `string`
 
-Defined in: [src/interfaces.ts:5](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/analytics-core/src/interfaces.ts#L5)
+Defined in: [analytics-core/src/interfaces.ts:6](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/analytics-core/src/interfaces.ts#L6)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [src/interfaces.ts:5](https://github.com/Sitecore/content-sdk/blob/0
 
 > **status**: `string`
 
-Defined in: [src/interfaces.ts:6](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/analytics-core/src/interfaces.ts#L6)
+Defined in: [analytics-core/src/interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/analytics-core/src/interfaces.ts#L7)
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: [src/interfaces.ts:6](https://github.com/Sitecore/content-sdk/blob/0
 
 > **version**: `string`
 
-Defined in: [src/interfaces.ts:7](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/analytics-core/src/interfaces.ts#L7)
+Defined in: [analytics-core/src/interfaces.ts:8](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/analytics-core/src/interfaces.ts#L8)

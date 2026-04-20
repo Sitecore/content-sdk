@@ -1,12 +1,15 @@
 import {
   ComponentFileWithType,
   ComponentType,
-  getComponentList,
   RouterType,
 } from '@sitecore-content-sdk/content/tools';
+import {
+  getComponentList,
+  defaultImportMapTemplate,
+  ModuleExports,
+} from '@sitecore-content-sdk/content/node-tools';
 import ts from 'typescript';
 import fs from 'fs';
-import { defaultImportMapTemplate, ModuleExports } from '@sitecore-content-sdk/content/tools';
 
 /**
  * Detects the Next.js router type (App Router or Pages Router) based on directory structure.
@@ -249,3 +252,4 @@ export function nextjsServertMapTemplate(indexedImportMap: Map<string, ModuleExp
 export function nextjsDefaultMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
   return defaultImportMapTemplate(indexedImportMap, 'nextjs');
 }
+

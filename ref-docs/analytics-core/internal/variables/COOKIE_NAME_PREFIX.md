@@ -8,4 +8,8 @@
 
 > `const` **COOKIE\_NAME\_PREFIX**: `"sc_"` = `'sc_'`
 
-Defined in: [src/consts.ts:5](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/analytics-core/src/consts.ts#L5)
+Defined in: [analytics-core/src/consts.ts:13](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/analytics-core/src/consts.ts#L13)
+
+**`Internal`**
+
+The prefix for cookie names used by the analytics library.

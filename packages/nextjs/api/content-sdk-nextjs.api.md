@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AnalyticsAdapter } from '@sitecore-content-sdk/analytics-core/internal';
 import { AppPlaceholder } from '@sitecore-content-sdk/react';
 import { AppPlaceholderProps } from '@sitecore-content-sdk/react';
 import { BYOCClientWrapper } from '@sitecore-content-sdk/react';
@@ -31,7 +32,6 @@ import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/re
 import { DefaultEmptyFieldEditingComponentText } from '@sitecore-content-sdk/react';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
 import { DesignLibrary } from '@sitecore-content-sdk/react';
-import { DesignLibraryApp } from '@sitecore-content-sdk/react';
 import { DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/content/editing';
 import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 import { DictionaryService } from '@sitecore-content-sdk/content/i18n';
@@ -48,7 +48,7 @@ import { ErrorPage } from '@sitecore-content-sdk/content/client';
 import { ErrorPages } from '@sitecore-content-sdk/content/site';
 import { ErrorPagesService } from '@sitecore-content-sdk/content/site';
 import { ErrorPagesServiceConfig } from '@sitecore-content-sdk/content/site';
-import { extractFiles } from '@sitecore-content-sdk/content/tools';
+import { extractFiles } from '@sitecore-content-sdk/content/node-tools';
 import { FEaaSClientWrapper } from '@sitecore-content-sdk/react';
 import { FEaaSComponent } from '@sitecore-content-sdk/react';
 import { FEaaSComponentParams } from '@sitecore-content-sdk/react';
@@ -63,11 +63,11 @@ import { FileField } from '@sitecore-content-sdk/react';
 import { Form } from '@sitecore-content-sdk/react';
 import { GenerateMapArgs } from '@sitecore-content-sdk/content/tools';
 import { GenerateMapFunction } from '@sitecore-content-sdk/content/tools';
-import { generateMetadata } from '@sitecore-content-sdk/core/tools';
-import { generateSites } from '@sitecore-content-sdk/content/tools';
-import { GenerateSitesConfig } from '@sitecore-content-sdk/content/tools';
+import { generateMetadata } from '@sitecore-content-sdk/core/node-tools';
+import { generateSites } from '@sitecore-content-sdk/content/node-tools';
+import { GenerateSitesConfig } from '@sitecore-content-sdk/content/node-tools';
 import { getChildPlaceholder } from '@sitecore-content-sdk/content/layout';
-import { getComponentList } from '@sitecore-content-sdk/content/tools';
+import { getComponentList } from '@sitecore-content-sdk/content/node-tools';
 import { getContentStylesheetLink } from '@sitecore-content-sdk/content/layout';
 import { getDesignLibraryStylesheetLinks } from '@sitecore-content-sdk/react';
 import { getEdgeProxyContentUrl } from '@sitecore-content-sdk/content/client';
@@ -93,7 +93,9 @@ import { ImageProps } from '@sitecore-content-sdk/react';
 import { ImageProps as ImageProps_2 } from 'next/image';
 import { ImageSizeParameters } from '@sitecore-content-sdk/react';
 import { ImportEntry } from '@sitecore-content-sdk/content/codegen';
+import { ImportMapImport } from '@sitecore-content-sdk/react';
 import { IncomingHttpHeaders } from 'http';
+import { initContentSdk } from '@sitecore-content-sdk/core';
 import { isEditorActive } from '@sitecore-content-sdk/content/editing';
 import { Item } from '@sitecore-content-sdk/content/layout';
 import { JSX as JSX_2 } from 'react';
@@ -109,13 +111,14 @@ import { LinkProps as LinkProps_2 } from '@sitecore-content-sdk/react';
 import { LinkProps as LinkProps_3 } from 'next/link';
 import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
-import { Metadata } from '@sitecore-content-sdk/core/tools';
+import { Metadata } from '@sitecore-content-sdk/core/node-tools';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
 import { NextApiRequest } from 'next';
 import { NextApiResponse } from 'next';
+import { NextFetchEvent } from 'next/server';
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { NextURL } from 'next/dist/server/web/next-url';
@@ -124,6 +127,7 @@ import { normalizeSiteRewrite } from '@sitecore-content-sdk/content/site';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { PageMode } from '@sitecore-content-sdk/content/client';
 import { PageOptions } from '@sitecore-content-sdk/content/client';
+import { PersonalizeAdapter } from '@sitecore-content-sdk/personalize/internal';
 import { PersonalizeInfo } from '@sitecore-content-sdk/content/personalize';
 import { personalizeLayout } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeService } from '@sitecore-content-sdk/content/personalize';
@@ -180,7 +184,7 @@ import { withEmptyFieldEditingComponent } from '@sitecore-content-sdk/react';
 import { withFieldMetadata } from '@sitecore-content-sdk/react';
 import { withPlaceholder } from '@sitecore-content-sdk/react';
 import { withSitecore } from '@sitecore-content-sdk/react';
-import { WriteImportMapArgs } from '@sitecore-content-sdk/content/tools';
+import { WriteImportMapArgs } from '@sitecore-content-sdk/content/node-tools';
 
 // @public
 export interface AllowedQueryParam {
@@ -194,6 +198,14 @@ export type AllowedQueryParams = Array<AllowedQueryParam | string> | AllowedQuer
 // @public
 export type AllowedQueryParamsResolver = (queryParams: string[]) => Array<AllowedQueryParam | string>;
 
+// @public
+export interface AnalyticsProxyAdapter extends AnalyticsAdapter {
+    type: 'proxy';
+}
+
+// @public
+export function analyticsProxyAdapter(request: NextRequest, response: NextResponse): AnalyticsProxyAdapter;
+
 export { AppPlaceholder }
 
 export { AppPlaceholderProps }
@@ -204,6 +216,22 @@ export class AppRouterMultisiteProxy extends MultisiteProxy {
     protected shouldSkipWhenDisabled(): boolean;
     protected shouldWarnWhenDisabled(_res: NextResponse): void;
 }
+
+// @public
+export class BotTrackingProxy extends ProxyBase {
+    constructor(config: BotTrackingProxyConfig);
+    // (undocumented)
+    protected config: BotTrackingProxyConfig;
+    // (undocumented)
+    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    // @internal (undocumented)
+    protected shouldSkipForLocalEnvironment(req: NextRequest): boolean;
+}
+
+// @public
+export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Omit<ProxyBaseConfig, 'defaultLanguage'> & {
+    fetchEvent?: NextFetchEvent;
+};
 
 export { BYOCClientWrapper }
 
@@ -224,6 +252,12 @@ declare namespace BYOCWrapper {
 export { BYOCWrapper }
 
 export { CacheClient }
+
+// @public
+export type CachedPageParams = {
+    locale: string;
+    site: string;
+};
 
 export { CacheOptions }
 
@@ -252,7 +286,7 @@ export type ComponentPropsCollection = {
 };
 
 // @public
-export const ComponentPropsContext: ({ children, value, }: ComponentPropsContextProps) => JSX_2.Element;
+export const ComponentPropsContext: (input: ComponentPropsContextProps) => JSX_2.Element;
 
 // @public
 export type ComponentPropsContextProps = {
@@ -355,7 +389,10 @@ export const defineProxy: (...proxies: ProxyHandler_2[]) => {
 
 export { DesignLibrary }
 
-export { DesignLibraryApp }
+// Warning: (ae-forgotten-export) The symbol "DesingLibraryAppProps" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export const DesignLibraryApp: (input: DesingLibraryAppProps) => React_2.JSX.Element | null;
 
 export { DictionaryPhrases }
 
@@ -472,6 +509,12 @@ export { generateSites }
 
 export { GenerateSitesConfig }
 
+// @public
+export const getCachedPageParams: () => {
+    locale: string;
+    site: string;
+};
+
 export { getChildPlaceholder }
 
 export { getComponentList }
@@ -546,6 +589,8 @@ export { ImageProps }
 export { ImageSizeParameters }
 
 export { ImportEntry }
+
+export { initContentSdk }
 
 // @public
 export const isDesignLibraryPreviewData: (data: unknown) => data is DesignLibraryRenderPreviewData;
@@ -655,6 +700,13 @@ export const parseRewriteHeader: (headers: Headers) => {
     locale: string;
 };
 
+// @public
+export type PersonalizeGeoData = {
+    city?: string;
+    country?: string;
+    region?: string;
+};
+
 export { personalizeLayout }
 
 // @public
@@ -673,21 +725,21 @@ export class PersonalizeProxy extends ProxyBase {
     // (undocumented)
     handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
     // (undocumented)
-    protected initPersonalizeServer({ hostname, siteName, request, response, }: {
+    protected initPersonalizeServer(input: {
         hostname: string;
         siteName: string;
         request: NextRequest;
         response: NextResponse;
     }): Promise<void>;
     // (undocumented)
-    protected personalize({ params, friendlyId, language, timeout, variantIds, geo, }: {
+    protected personalize(input: {
         params: ExperienceParams;
         friendlyId: string;
         language: string;
         timeout?: number;
         variantIds?: string[];
         geo?: PersonalizeGeoData;
-    }, request: NextRequest): Promise<{
+    }): Promise<{
         variantId: string;
     }>;
     // (undocumented)
@@ -695,10 +747,19 @@ export class PersonalizeProxy extends ProxyBase {
 }
 
 // @public
+export interface PersonalizeProxyAdapter extends Required<PersonalizeAdapter> {
+    type: 'proxy';
+}
+
+// @public
+export function personalizeProxyAdapter(request: NextRequest, response: NextResponse): PersonalizeProxyAdapter;
+
+// @public
 export type PersonalizeProxyConfig = ProxyBaseConfig & SitecoreConfig['api']['edge'] & SitecoreConfig['personalize'] & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
     extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
+    skipForBot?: boolean;
 };
 
 export { PersonalizeService }
@@ -730,7 +791,7 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     };
     // (undocumented)
     protected getClientFactory(graphQLOptions: GraphQLClientOptions): GraphQLRequestClientFactory_2;
-    protected getHostHeader(req: NextRequest): string | undefined;
+    protected getHostHeader(req: NextRequest): string;
     protected getLanguage(req: NextRequest, res?: NextResponse): string;
     protected getLanguageFromHeader(res?: NextResponse): string | undefined;
     protected getSite(req: NextRequest, res?: NextResponse): SiteInfo;
@@ -774,9 +835,11 @@ export class RedirectsProxy extends ProxyBase {
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
     protected dispatchRedirect(target: NextURL | string, type: string, req: NextRequest, res: NextResponse, isExternal?: boolean): NextResponse;
     // Warning: (ae-forgotten-export) The symbol "RedirectResult" needs to be exported by the entry point api-surface.d.ts
-    protected getExistsRedirect(req: NextRequest, siteName: string): Promise<RedirectResult | undefined>;
+    protected getExistsRedirect(req: NextRequest, siteName: string, requestLocale: string): Promise<RedirectResult | undefined>;
     // (undocumented)
     handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    protected matchFromRedirectMapRedirect(redirects: RedirectResult[], urlLocale: string, incomingURL: string, incomingQS: string): RedirectResult | undefined;
+    protected matchRedirectItemRedirect(redirects: RedirectResult[], locale: string, currentPath: string): RedirectResult | undefined;
     protected normalizeUrl(url: NextURL): NextURL;
     // (undocumented)
     protected redirectsService: RedirectsService | null;
@@ -829,6 +892,9 @@ export { RobotsService }
 export { RobotsServiceConfig }
 
 export { RouteData }
+
+// @public
+export function setCachedPageParams(pageParams: CachedPageParams): void;
 
 // @public
 export class SitecoreClient extends SitecoreClient_2 {
@@ -927,7 +993,7 @@ export { withPlaceholder }
 export { withSitecore }
 
 // @public
-export const writeImportMap: (args: WriteImportMapArgs) => ({ scConfig }: {
+export const writeImportMap: (args: WriteImportMapArgs) => (input: {
     scConfig: SitecoreConfig_2;
 }) => Promise<void>;
 
@@ -936,7 +1002,6 @@ export * from "@sitecore-content-sdk/react/search";
 
 // Warnings were encountered during analysis:
 //
-// src/proxy/personalize-proxy.ts:302:7 - (ae-forgotten-export) The symbol "PersonalizeGeoData" needs to be exported by the entry point api-surface.d.ts
 // src/services/component-props-service.ts:61:5 - (ae-forgotten-export) The symbol "NextContext" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)

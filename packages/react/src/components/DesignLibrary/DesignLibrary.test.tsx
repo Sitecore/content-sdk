@@ -25,7 +25,7 @@ import {
 import { __mockDependencies } from './DesignLibrary';
 import {
   DesignLibraryPreviewError,
-  getDesignLibraryComponentPreviewErrorEvent,
+  getDesignLibraryErrorEvent,
 } from '@sitecore-content-sdk/content/codegen';
 import { after } from 'node:test';
 import * as rscUtils from '#rsc-env';
@@ -180,7 +180,7 @@ describe('<DesignLibrary />', () => {
     });
     sendErrorEventSpy = sandbox.stub().callsFake((uid, error, type) => {
       // sendErrorEvent calls window.postMessage internally
-      const errorEvent = getDesignLibraryComponentPreviewErrorEvent(uid, error, type);
+      const errorEvent = getDesignLibraryErrorEvent(uid, error, type);
       window.postMessage(errorEvent, '*');
     });
     __mockDependencies({
@@ -623,10 +623,10 @@ describe('<DesignLibrary />', () => {
             .some((c) =>
               JSON.stringify(c.args[0]).includes(
                 JSON.stringify(
-                  getDesignLibraryComponentPreviewErrorEvent(
+                  getDesignLibraryErrorEvent(
                     'test-content',
                     'No loadImportMap provided',
-                    DesignLibraryPreviewError.RenderInit
+                    DesignLibraryPreviewError.ImportMapMissing
                   )
                 )
               )

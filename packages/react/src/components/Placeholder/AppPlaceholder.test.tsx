@@ -9,7 +9,7 @@ import {
   RouteData,
 } from '@sitecore-content-sdk/content/layout';
 import { expect } from 'chai';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { createSandbox, SinonSandbox } from 'sinon';
 import {
@@ -587,7 +587,31 @@ describe('App Placeholder logic', () => {
     });
   });
 
-  it('should render Suspense when disableSuspense is false', () => {
+  it('should not render Suspense by default (disableSuspense defaults to true)', () => {
+    const page = getPage();
+    const component = {
+      name: 'home',
+      displayName: 'Home',
+      placeholders: {
+        main: [
+          {
+            uid: '12345',
+            componentName: 'Jumbotron',
+          },
+        ],
+      },
+    } as RouteData;
+    const phKey = 'main';
+
+    const renderedComponent = render(
+      <AppPlaceholder name={phKey} rendering={component} componentMap={componentMap} page={page} />
+    );
+
+    expect(renderedComponent.container.querySelector('.jumbotron-mock')).to.not.be.null;
+    expect(renderedComponent.container.innerHTML).to.not.contain('Loading component...');
+  });
+
+  it('should render Suspense when disableSuspense is false', async () => {
     const page = getPage();
     page.layout = dynamicComponentLayout;
     const component = dynamicComponentLayout.sitecore.route as RouteData;
@@ -604,12 +628,26 @@ describe('App Placeholder logic', () => {
     );
 
     expect(renderedComponent.container.innerHTML).to.contain('Loading component...');
+
+    await waitFor(() => {
+      expect(renderedComponent.container.querySelector('.dynamic-component')).to.not.be.null;
+    });
   });
 
-  it('should not render Suspense when disableSuspense is true', () => {
+  it('should not render Suspense when disableSuspense is explicitly set to true', () => {
     const page = getPage();
-    page.layout = dynamicComponentLayout;
-    const component = dynamicComponentLayout.sitecore.route as RouteData;
+    const component = {
+      name: 'home',
+      displayName: 'Home',
+      placeholders: {
+        main: [
+          {
+            uid: '12345',
+            componentName: 'Jumbotron',
+          },
+        ],
+      },
+    } as RouteData;
     const phKey = 'main';
 
     const renderedComponent = render(
@@ -623,8 +661,7 @@ describe('App Placeholder logic', () => {
     );
 
     expect(renderedComponent.container.innerHTML).to.not.contain('Loading component...');
-
-    expect(renderedComponent.container.querySelector('.dynamic-component')).to.not.be.null;
+    expect(renderedComponent.container.querySelector('.jumbotron-mock')).to.not.be.null;
   });
 
   it('should render null for unknown placeholder', () => {

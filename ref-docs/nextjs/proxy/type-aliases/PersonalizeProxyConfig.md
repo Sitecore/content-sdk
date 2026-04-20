@@ -8,15 +8,15 @@
 
 > **PersonalizeProxyConfig** = [`ProxyBaseConfig`](ProxyBaseConfig.md) & `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & `SitecoreConfig`\[`"personalize"`\] & `object`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:28](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/nextjs/src/proxy/personalize-proxy.ts#L28)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:34](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/nextjs/src/proxy/personalize-proxy.ts#L34)
 
 The interface for the PersonalizeProxy configuration.
 
 ## Type Declaration
 
-### extractGeoDataCb()?
+### extractGeoDataCb?
 
-> `optional` **extractGeoDataCb**: (`req?`) => `Promise`\<`PersonalizeGeoData`\> \| `PersonalizeGeoData`
+> `optional` **extractGeoDataCb?**: (`req?`) => `Promise`\<[`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)\> \| [`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)
 
 #### Parameters
 
@@ -26,11 +26,11 @@ The interface for the PersonalizeProxy configuration.
 
 #### Returns
 
-`Promise`\<`PersonalizeGeoData`\> \| `PersonalizeGeoData`
+`Promise`\<[`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)\> \| [`PersonalizeGeoData`](../../index/type-aliases/PersonalizeGeoData.md)
 
-### getExtraUtmParams()?
+### getExtraUtmParams?
 
-> `optional` **getExtraUtmParams**: (`req`) => `Partial`\<`ExperienceParams`\[`"utm"`\]\>
+> `optional` **getExtraUtmParams?**: (`req`) => `Partial`\<`ExperienceParams`\[`"utm"`\]\>
 
 #### Parameters
 
@@ -44,4 +44,11 @@ The interface for the PersonalizeProxy configuration.
 
 ### personalizeService?
 
-> `optional` **personalizeService**: [`PersonalizeService`](../../index/classes/PersonalizeService.md)
+> `optional` **personalizeService?**: [`PersonalizeService`](../../index/classes/PersonalizeService.md)
+
+### skipForBot?
+
+> `optional` **skipForBot?**: `boolean`
+
+Skip personalize proxy for bot requests marked by the bot tracking proxy.
+Default is `true`.

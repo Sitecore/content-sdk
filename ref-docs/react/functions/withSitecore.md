@@ -8,7 +8,7 @@
 
 > **withSitecore**(`options?`): \<`ComponentProps`\>(`Component`) => (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withSitecore.tsx:31](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/react/src/enhancers/withSitecore.tsx#L31)
+Defined in: [packages/react/src/enhancers/withSitecore.tsx:31](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/react/src/enhancers/withSitecore.tsx#L31)
 
 ## Parameters
 
@@ -20,33 +20,7 @@ Defined in: [packages/react/src/enhancers/withSitecore.tsx:31](https://github.co
 
 A higher-order component that injects Sitecore context into the wrapped component.
 
-> \<`ComponentProps`\>(`Component`): (`props`) => `Element`
-
-### Type Parameters
-
-| Type Parameter |
-| ------ |
-| `ComponentProps` *extends* `Partial`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md)\> & `Pick`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md), `"page"`\> |
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `Component` | `ComponentType`\<`ComponentProps`\> |
-
-### Returns
-
-> (`props`): `Element`
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `props` | `WithSitecoreHocProps`\<`ComponentProps`\> |
-
-#### Returns
-
-`Element`
+\<`ComponentProps`\>(`Component`) => (`props`) => `Element`
 
 ## Deprecated
 

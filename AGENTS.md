@@ -1,8 +1,10 @@
 # AGENTS.md — AI Guidance for Sitecore Content SDK
 
+> **Claude Code users:** This file does not include detailed coding rules. Read all `.cursor/rules/*.mdc` files at the start of your session for code style, naming conventions, Sitecore patterns, testing, and safety rules.
+
 ## Project Overview
 
-This repository is the **Sitecore Content SDK** — a TypeScript monorepo of SDK packages, scaffolding CLI, and samples for building applications with Sitecore XM Cloud. AI agents work as developer assistants to implement features, fix bugs, add tests, and maintain templates.
+This repository is the **Sitecore Content SDK** — a TypeScript monorepo of SDK packages, scaffolding CLI, and samples for building applications with Sitecore XM Cloud or Sitecore AI. AI agents work as developer assistants to implement features, fix bugs, add tests, and maintain templates.
 
 **Scope:** This file is for the **Content SDK monorepo** only. For head applications created with `create-content-sdk-app`, use the AGENTS.md that was generated inside that head application (from the template). Do not copy this repo's root AGENTS.md into a head application.
 
@@ -29,9 +31,13 @@ yarn reset                # Clean, reinstall, rebuild
 
 ---
 
-## Repository Structure
+## Tech Stack
 
-Packages are listed from **foundation (core)** to **consumer (nextjs, then react)**. Lower layers have no or few SDK dependencies; consumer packages depend on core, content, and react. Next.js is listed above react as the main app framework; react provides the UI components nextjs uses.
+TypeScript (Node LTS), Yarn 4.12.0. Build: `tsc` → `dist/`, templates via `scripts/build-templates.ts`. Testing: Mocha + Sinon + Chai, `nyc`. Lint/format: ESLint + Prettier.
+
+---
+
+## Repository Structure
 
 ```
 content-sdk/
@@ -50,12 +56,14 @@ content-sdk/
 └── scripts/                    # Monorepo scripts (scaffold, lint, hooks)
 ```
 
-**Key locations:**
-- **Sources:** `src/**` in each package
-- **Templates:** `packages/create-content-sdk-app/src/templates/` — Next.js, Next.js App Router
-- **Environment variables:** `.env.*.example` in templates; never commit `.env`
-- **Initializers:** `packages/create-content-sdk-app/src/initializers/` — drive scaffolding via `Initializer.init(args)`
-- **When working inside a scaffolded app** (e.g. under `samples/`), use that app’s **AGENTS.md** for app-level guidance; this file applies to the monorepo and packages.
+**Key locations:** 
+- Sources: `src/**` per package. 
+- Templates: `packages/create-content-sdk-app/src/templates/`.
+- Initializers: `packages/create-content-sdk-app/src/initializers/` via `Initializer.init(args)`.
+- Env: `.env.*.example` only; never commit `.env`. 
+
+- Capability groupings and Agent Skills: See [Skills.md](Skills.md) (links to each template’s Skills.md and `.agents/skills/`; skills are maintained in templates only).
+- **When working inside a scaffolded app** (e.g. under `samples/`), use that app’s **AGENTS.md** for app-level guidance
 
 ### Which package to edit?
 
@@ -74,29 +82,19 @@ content-sdk/
 
 ### Working with samples
 
-- **Generate samples:** `yarn scaffold-samples` (uses `scripts/samples.json`)
-- **Develop templates live:** Copy `packages/create-content-sdk-app/watch.json.example` → `watch.json`, set `destination` under `samples/`, run `yarn watch` from `packages/create-content-sdk-app`
-- **Lint samples:** `yarn lint-samples` (scaffolded apps)
+`yarn scaffold-samples` (generate); for live template dev: copy `watch.json.example` → `watch.json`, set `destination` under `samples/`, run `yarn watch` from `packages/create-content-sdk-app`; `yarn lint-samples` (lint scaffolded apps).
 
 ---
 
 ## Code Style
 
-- Use existing patterns in the package you edit
-- **Naming:** camelCase (variables), PascalCase (components/types), UPPER_SNAKE (constants), kebab-case (directories)
-- Keep functions small and focused; prefer pure functions
-- JSDoc for public APIs: `@param`, `@returns`
-- For full standards: see `.cursor/rules/` and `CLAUDE.md`
+Use existing patterns in the package. **Naming:** camelCase, PascalCase (components/types), UPPER_SNAKE (constants), kebab-case (dirs). Small, focused functions; JSDoc for public APIs (`@param`, `@returns`). Full standards: `.cursor/rules/`
 
 ---
 
 ## Testing
 
-- **Stack:** Mocha + Sinon + Chai; coverage via `nyc`
-- **Run:** `yarn test-packages` (root) or `yarn test` in a package
-- **Coverage:** `yarn coverage-packages`
-- **API surface:** `yarn api-extractor:verify` — run when adding/removing public exports; update `api/` reports if intentional (see `CONTRIBUTING.md`)
-- Update tests when changing behavior; ensure they pass before completing
+Mocha + Sinon + Chai; `nyc` for coverage. **Run:** `yarn test-packages` (root) or `yarn test` in a package. **Coverage:** `yarn coverage-packages`. **API surface:** `yarn api-extractor:verify` when changing public exports (see `CONTRIBUTING.md`). Update tests when changing behavior; ensure they pass before completing.
 
 ---
 
@@ -118,7 +116,7 @@ content-sdk/
 
 **Never edit:** `dist/**`, `.next/`, `out/`, `build/` (compiled output), `node_modules/`. Do not modify `yarn.lock` or `package-lock.json` unless explicitly required.
 
-**Environment variables:** You may add new env vars when needed. Do it carefully: document the variable in `.env.example` (or in templates, the appropriate `.env.*.example`), with a placeholder or empty value and a short comment; never put real secrets or production values in example files. If adding to a user’s `.env.local` for local dev, add only the variable name (e.g. `MY_VAR=`) and instruct the user to set the value. **Never commit** `.env` or `.env.local` — they are gitignored; example files are the source of truth for what vars exist.
+**Environment variables:** You may add new env vars when needed. Do it carefully: document the variable in `.env.example` (or in templates, the appropriate `.env.*.example`), with a placeholder or empty value and a short comment; never put real secrets or production values in example files. If adding to a user’s `.env.local` for local dev, add only the variable name (e.g. `MY_VAR=`) and instruct the user to set the value. **Never commit** `.env` or `.env.local` — they are gitignored. See `.cursor/rules/safety.mdc` for full security and secrets guidance.
 
 **Never edit without explicit instruction:**
 - `.github/workflows/` — CI configuration
@@ -133,55 +131,26 @@ content-sdk/
 
 ## Example Agent Tasks
 
-### 1. Add a utility in a package
-Example: Add a constant in `packages/core/src/constants.ts`:
-- Export from `packages/core/src/index.ts` if public
-- Add JSDoc: `@internal` for internal APIs; `@public` and full `@param`/`@returns` for public APIs
-- Add tests in `packages/core/src/constants.test.ts` (if needed)
-- Run `yarn api-extractor` if you change public exports
-
-### 2. Fix a failing test
-```bash
-yarn test-packages
-# Or: cd packages/content && yarn test
-```
-- Locate the failing `*.test.ts` file
-- Preserve intended behavior; fix assertions or implementation
-- Re-run tests before completing
-
-### 3. Change a scaffolding template
-- Edit under `packages/create-content-sdk-app/src/templates/nextjs/` or `nextjs-app-router/`
-- Use `.env.remote.example` for env vars (never `.env`)
-- Verify: Run `yarn watch` (with `watch.json`) or `yarn scaffold-samples`, then `npm install && npm run build` in the generated sample
+See `.cursor/rules/agent-tasks.mdc` for step-by-step examples (add utility, fix test, change template).
 
 ---
 
 ## Git Workflow
 
-- **Development branch:** `dev` (main development branch)
-- **Create feature branch:** `git switch -c feature/my-content-sdk-feature`
-- **PR target:** Open Pull Requests against `dev` (not `main`)
-- **CI:** Lint, tests, and API surface verification must pass before merge
-- See `CONTRIBUTING.md` for full workflow
+Branch: `dev`. Feature: `git switch -c feature/my-content-sdk-feature`. PRs against `dev` (not `main`). CI must pass (lint, tests, API surface). See `CONTRIBUTING.md`.
 
 ---
 
 ## Detailed Rules Reference
 
-This file is a quick reference. For comprehensive guidance:
-
-- **`.cursor/rules/`** — project-context, safety, repo-structure, code-style, sitecore, testing, cli
-- **`CLAUDE.md`** — full guide (tech stack, Sitecore patterns, CLI, safety)
-- **`CONTRIBUTING.md`** — development workflow, branching, PR process
+**Canonical source of truth.** Full guidance: **`.cursor/rules/`** (safety, repo-structure, code-style, sitecore, testing, cli, agent-tasks, etc.), **`CONTRIBUTING.md`** (workflow).
 
 ---
+
+## MCP
+
+Sitecore Documentation MCP: https://sitecore.mcp.kapa.ai
 
 ## Links
 
-- [Sitecore Content SDK Documentation](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html)
-- [Creating a JSS App for XM Cloud](https://doc.sitecore.com/xmc/en/developers/content-sdk/creating-a-jss-app-for-xm-cloud.html)
-- [XM Cloud Documentation](https://doc.sitecore.com/xmc)
-
----
-
-**Remember:** When in doubt, refer to `.cursor/rules/` and `CLAUDE.md` for detailed patterns and examples.
+[Sitecore Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html) · [Creating a JSS App](https://doc.sitecore.com/xmc/en/developers/content-sdk/creating-a-jss-app-for-xm-cloud.html) · [XM Cloud](https://doc.sitecore.com/xmc)

@@ -67,21 +67,13 @@ API Calls:
 - Throw custom errors with context: `SitecoreFetchError`, `ConfigurationError`
 - Handle edge cases with guard clauses
 
-## Security
-
-Input Validation:
-
-- Sanitize user inputs before processing
-- Validate data at application boundaries
-- Use type guards for runtime type checking
-- Escape content when rendering to prevent XSS
+Security: See `.cursor/rules/safety.mdc` for input validation, XSS prevention, and API security.
 
 ```typescript
 async function fetchPageData(path: string): Promise<Page | null> {
   if (!path) {
     throw new Error('Page path is required');
   }
-
   try {
     const pageData = await client.getPage(path);
     return pageData;

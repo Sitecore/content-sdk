@@ -6,32 +6,14 @@
 
 # Type Alias: GraphQLRequestClientFactoryConfig
 
-> **GraphQLRequestClientFactoryConfig** = `object`
+> **GraphQLRequestClientFactoryConfig** = `object` & [`GraphQLRequestClientConfig`](GraphQLRequestClientConfig.md)
 
-Defined in: [packages/core/src/graphql-request-client.ts:88](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/core/src/graphql-request-client.ts#L88)
+Defined in: [packages/core/src/graphql-request-client.ts:88](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/core/src/graphql-request-client.ts#L88)
 
 Configuration type for
 
-## Properties
-
-### apiKey?
-
-> `optional` **apiKey**: `string`
-
-Defined in: [packages/core/src/graphql-request-client.ts:90](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/core/src/graphql-request-client.ts#L90)
-
-***
-
-### contextId?
-
-> `optional` **contextId**: `string`
-
-Defined in: [packages/core/src/graphql-request-client.ts:91](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/core/src/graphql-request-client.ts#L91)
-
-***
+## Type Declaration
 
 ### endpoint
 
 > **endpoint**: `string`
-
-Defined in: [packages/core/src/graphql-request-client.ts:89](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/core/src/graphql-request-client.ts#L89)

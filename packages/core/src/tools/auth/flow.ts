@@ -5,6 +5,7 @@ import {
   DEFAULT_SITECORE_AUTH_DOMAIN,
   DEFAULT_SITECORE_AUTH_AUDIENCE,
   DEFAULT_SITECORE_AUTH_BASE_URL,
+  ERROR_MESSAGES,
 } from '../../constants';
 
 const GRANT_TYPE = 'client_credentials';
@@ -66,7 +67,7 @@ async function _clientCredentialsFlow({
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.error_description || data.error || 'Error during client credentials flow');
+    throw new Error(data.error_description || data.error || `Error during client credentials flow. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
   }
 
   const decodedPayload = decodeJwtPayload(data.access_token) || {};

@@ -9,6 +9,8 @@ import {
 } from '../layout/models';
 import { DesignLibraryMode } from './models';
 
+const { ERROR_MESSAGES } = constants;
+
 /**
  * Event to be sent when report status to design library
  */
@@ -153,20 +155,7 @@ export const updateComponentHandler = (
     return;
   }
 
-  const findComponent = (root: ComponentRendering): ComponentRendering | null => {
-    if (root.uid?.toLowerCase() === eventArgs.details?.uid.toLowerCase()) return root;
-    if (root.placeholders) {
-      for (const plhName of Object.keys(root.placeholders)) {
-        for (const rendering of root.placeholders![plhName]) {
-          const result = findComponent(rendering as ComponentRendering);
-          if (result) return result;
-        }
-      }
-    }
-    return null;
-  };
-
-  const componentToUpdate = findComponent(rootComponent);
+  const componentToUpdate = findComponent(rootComponent, eventArgs.details.uid);
 
   if (componentToUpdate) {
     console.debug(
@@ -184,6 +173,25 @@ export const updateComponentHandler = (
   }
   // strictly for testing
   return rootComponent;
+};
+
+/**
+ * Recursively searches for a component with the specified UID within the given root component and its placeholders.
+ * @param {ComponentRendering} root - The root component to start the search from.
+ * @param {string} uid - The unique identifier of the component to find.
+ * @returns {ComponentRendering | null} The component with the specified UID if found; otherwise, null.
+ */
+export const findComponent = (root: ComponentRendering, uid: string): ComponentRendering | null => {
+  if (root.uid?.toLowerCase() === uid.toLowerCase()) return root;
+  if (root.placeholders) {
+    for (const plhName of Object.keys(root.placeholders)) {
+      for (const rendering of root.placeholders![plhName]) {
+        const result = findComponent(rendering as ComponentRendering, uid);
+        if (result) return result;
+      }
+    }
+  }
+  return null;
 };
 
 /**
@@ -266,6 +274,10 @@ export const postToDesignLibrary = (evt: DesignLibraryEvent) => {
     console.log('Component Library: sending event', evt.name, evt);
     target.postMessage(evt, '*');
   } catch (err) {
-    console.error('Component Library: postMessage failed', err, evt);
+    console.error(
+      `Component Library: postMessage failed. ${ERROR_MESSAGES.CONTACT_SUPPORT}`,
+      err,
+      evt
+    );
   }
 };

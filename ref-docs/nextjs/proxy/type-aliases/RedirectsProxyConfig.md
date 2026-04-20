@@ -8,7 +8,7 @@
 
 > **RedirectsProxyConfig** = `Omit`\<[`RedirectsServiceConfig`](../../index/type-aliases/RedirectsServiceConfig.md), `"fetch"` \| `"clientFactory"`\> & `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & `Partial`\<`NonNullable`\<`SitecoreConfig`\[`"api"`\]\[`"local"`\]\>\> & [`ProxyBaseConfig`](ProxyBaseConfig.md) & `SitecoreConfig`\[`"redirects"`\] & `object`
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:32](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/nextjs/src/proxy/redirects-proxy.ts#L32)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:32](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/nextjs/src/proxy/redirects-proxy.ts#L32)
 
 The interface for the RedirectsProxy configuration.
 
@@ -16,4 +16,4 @@ The interface for the RedirectsProxy configuration.
 
 ### redirectsService?
 
-> `optional` **redirectsService**: [`RedirectsService`](../../index/classes/RedirectsService.md)
+> `optional` **redirectsService?**: [`RedirectsService`](../../index/classes/RedirectsService.md)

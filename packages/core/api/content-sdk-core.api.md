@@ -43,15 +43,28 @@ declare namespace constants {
         CLAIMS,
         DEFAULT_SITECORE_AUTH_DOMAIN,
         DEFAULT_SITECORE_AUTH_AUDIENCE,
-        DEFAULT_SITECORE_AUTH_BASE_URL
+        DEFAULT_SITECORE_AUTH_BASE_URL,
+        ERROR_MESSAGES
     }
 }
 export { constants }
+
+// @internal
+export interface CoreContext {
+    config: {
+        contextId: string;
+        edgeUrl: string;
+        siteName: string;
+    };
+    plugins: Map<string, Plugin_2>;
+    readyPromise: Promise<void> | null;
+}
 
 // @public
 const debug_2: {
     common: debug_3.Debugger;
     http: debug_3.Debugger;
+    init: debug_3.Debugger;
 };
 export { debug_2 as debug }
 
@@ -100,6 +113,34 @@ export type EnhancedOmit<T, K extends PropertyKey> = {
 // @internal
 export const ensurePathExists: (filePath: string) => void;
 
+// @internal
+const ERROR_MESSAGES: {
+    readonly IV_001: "[IV-001] Incorrect value for \"edgeUrl\". Set the value to a valid URL.";
+    readonly IV_002: "[IV-002] Incorrect value for \"timeout\". Set the value to an integer greater than or equal to 0.";
+    readonly IV_003: "[IV-003] Incorrect value for \"dob\". Format the value according to ISO 8601.";
+    readonly IV_004: "[IV-004] Incorrect value for \"email\". Set the value to a valid email address.";
+    readonly IV_005: "[IV-005] Incorrect value for \"expiryDate\". Format the value according to ISO 8601.";
+    readonly IV_006: (maxAttributes: number) => string;
+    readonly IV_007: (siteName: string) => string;
+    readonly IE_001: (pluginName: string, dependency: string) => string;
+    readonly IE_002: "[IE-002] SDK not initialized. You must first initialize the SDK using \"initContentSdk()\".";
+    readonly IE_003: "[IE-003] Timeout exceeded. The server did not respond within the allotted time.";
+    readonly IE_004: (pluginName: string) => string;
+    readonly IE_005: "[IE-005] Unable to set the \"sc_cid\" cookie because the client ID could not be retrieved from the server. Make sure to set the correct values for \"contextId\" and \"siteName\". If the issue persists, try again later or use try-catch blocks to handle this error.";
+    readonly IE_006: "[IE-006] Unable to set the \"sc_cid_personalize\" cookie because the visitor ID could not be retrieved from the server. Make sure to set the correct values for \"contextId\" and \"siteName\". If the issue persists, try again later or use try-catch blocks to handle this error.";
+    readonly IE_007: (hostName: string) => string;
+    readonly MV_001: "[MV-001] \"contextId\" is required.";
+    readonly MV_002: "[MV-002] \"siteName\" is required.";
+    readonly MV_003: "[MV-003] \"identifiers\" is required.";
+    readonly MV_004: "[MV-004] \"friendlyId\" is required.";
+    readonly MV_005: (property: string) => string;
+    readonly MV_006: "[MV-006] \"clientContextId\" is missing. Client-side functionalities may be limited.";
+    readonly MV_007: "[MV-007] Provide either \"contextId\" or both \"apiHost\" and \"apiKey\".";
+    readonly MV_008: "[MV-008] Verify that sitecore.config is properly imported and correctly referenced.";
+    readonly MV_009: "[MV-009] \"language\" is required.";
+    readonly CONTACT_SUPPORT: "If the issue persists, please contact Sitecore Support.";
+};
+
 // @public
 export const escapeNonSpecialQuestionMarks: (input: string) => string;
 
@@ -137,8 +178,11 @@ export function getCache<T>(key: string): T | undefined;
 // @internal
 export function getCacheAndClean<T>(key: string): T | undefined;
 
+// @internal
+export function getCoreContext(): CoreContext;
+
 // @public
-export const getEnforcedCorsHeaders: ({ requestMethod, headers, presetCorsHeader, allowedOrigins, }: {
+export const getEnforcedCorsHeaders: (input: {
     requestMethod: string | undefined;
     headers: IncomingHttpHeaders | Headers;
     presetCorsHeader?: string | string[];
@@ -160,7 +204,7 @@ export type GraphQLClientError = Partial<ClientError> & GenericGraphQLClientErro
 // @public
 export class GraphQLRequestClient implements GraphQLClient {
     constructor(endpoint: string, clientConfig?: GraphQLRequestClientConfig);
-    static createClientFactory({ endpoint, apiKey, contextId, }: GraphQLRequestClientFactoryConfig): GraphQLRequestClientFactory;
+    static createClientFactory(input: GraphQLRequestClientFactoryConfig): GraphQLRequestClientFactory;
     request<T>(query: string | DocumentNode, variables?: {
         [key: string]: unknown;
     }, options?: FetchOptions): Promise<T>;
@@ -184,12 +228,26 @@ export type GraphQLRequestClientFactory = (config?: Omit<GraphQLRequestClientCon
 // @public
 export type GraphQLRequestClientFactoryConfig = {
     endpoint: string;
-    apiKey?: string;
-    contextId?: string;
-};
+} & GraphQLRequestClientConfig;
 
 // @internal
 export function hasCache(key: string): boolean;
+
+// @public
+export function initContentSdk(params: InitContentSdkParams): Promise<void>;
+
+// @public
+export interface InitContentSdkParams {
+    config: {
+        contextId: string;
+        edgeUrl?: string;
+        siteName: string;
+    };
+    plugins: Plugin_2[];
+}
+
+// @public
+export function isNamespaceEnabled(namespace: string): boolean;
 
 // @public
 export const isRegexOrUrl: (input: string) => "regex" | "url";
@@ -259,6 +317,25 @@ export interface NativeDataFetcherResponse<T> {
 export const normalizeUrl: (url: string) => string;
 
 // @public
+interface Plugin_2<Options = unknown, Adapter = unknown> {
+    adapter?: Adapter;
+    dependencies?: PluginDependency[];
+    init?: () => void | Promise<void>;
+    name: string;
+    options?: Options;
+}
+export { Plugin_2 as Plugin }
+
+// @internal
+export interface PluginAdapter {
+    // (undocumented)
+    type: 'browser' | (string & {});
+}
+
+// @public
+export type PluginDependency = string;
+
+// @public
 export function resolveEdgeUrl(edgeUrl?: string): string;
 
 // @public
@@ -304,7 +381,7 @@ export interface TenantArgs {
 
 // Warnings were encountered during analysis:
 //
-// src/tools/index.ts:38:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+// src/tools/index-node.ts:16:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

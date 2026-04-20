@@ -8,15 +8,15 @@
 
 > **addToEventQueue**(`eventData`): `Promise`\<`void`\>
 
-Defined in: [events/src/eventStorage/addToEventQueue.ts:12](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/events/src/eventStorage/addToEventQueue.ts#L12)
+Defined in: [events/src/eventStorage/addToEventQueue.ts:13](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/events/src/eventStorage/addToEventQueue.ts#L13)
 
-A function that adds event to the queue
+A function that adds an event to the queue
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `eventData` | [`EventData`](../interfaces/EventData.md) | The required/optional attributes in order to be send to SitecoreCloud API |
+| `eventData` | [`EventData`](../../index/interfaces/EventData.md) | The required/optional attributes in order to be sent to SitecoreCloud API |
 
 ## Returns
 

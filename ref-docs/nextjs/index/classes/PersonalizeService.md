@@ -24,7 +24,7 @@ Fetch personalize data using the Sitecore GraphQL endpoint.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `config` | [`PersonalizeServiceConfig`](../../proxy/type-aliases/PersonalizeServiceConfig.md) |  |
+| `config` | [`PersonalizeServiceConfig`](../../proxy/type-aliases/PersonalizeServiceConfig.md) | - |
 
 #### Returns
 

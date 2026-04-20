@@ -6,7 +6,7 @@
 
 # Interface: ComponentLayoutServiceConfig
 
-Defined in: [content/src/editing/component-layout-service.ts:56](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/content/src/editing/component-layout-service.ts#L56)
+Defined in: [content/src/editing/component-layout-service.ts:58](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/content/src/editing/component-layout-service.ts#L58)
 
 Config for ComponentLayoutService.
 Provide contextId (server) and optionally clientContextId (browser).
@@ -15,9 +15,9 @@ Provide contextId (server) and optionally clientContextId (browser).
 
 ### clientContextId?
 
-> `optional` **clientContextId**: `string`
+> `optional` **clientContextId?**: `string`
 
-Defined in: [content/src/editing/component-layout-service.ts:60](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/content/src/editing/component-layout-service.ts#L60)
+Defined in: [content/src/editing/component-layout-service.ts:62](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/content/src/editing/component-layout-service.ts#L62)
 
 A unified identifier used to connect and retrieve data from XM Cloud instance used on the client
 
@@ -27,7 +27,7 @@ A unified identifier used to connect and retrieve data from XM Cloud instance us
 
 > **contextId**: `string`
 
-Defined in: [content/src/editing/component-layout-service.ts:64](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/content/src/editing/component-layout-service.ts#L64)
+Defined in: [content/src/editing/component-layout-service.ts:66](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/content/src/editing/component-layout-service.ts#L66)
 
 A unified identifier used to connect and retrieve data from XM Cloud instance used on the server
 
@@ -35,9 +35,9 @@ A unified identifier used to connect and retrieve data from XM Cloud instance us
 
 ### edgeUrl?
 
-> `optional` **edgeUrl**: `string`
+> `optional` **edgeUrl?**: `string`
 
-Defined in: [content/src/editing/component-layout-service.ts:69](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/content/src/editing/component-layout-service.ts#L69)
+Defined in: [content/src/editing/component-layout-service.ts:71](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/content/src/editing/component-layout-service.ts#L71)
 
 XM Cloud endpoint that the app will communicate and retrieve data from
 

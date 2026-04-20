@@ -11,6 +11,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
     steps:

@@ -8,7 +8,7 @@
 
 > **SitecoreCliConfigInput** = `object`
 
-Defined in: [content/src/config/models.ts:231](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/content/src/config/models.ts#L231)
+Defined in: [content/src/config/models.ts:231](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/content/src/config/models.ts#L231)
 
 Type used as CLI config input in sitecore.cli.config
 
@@ -16,15 +16,15 @@ Type used as CLI config input in sitecore.cli.config
 
 ### build?
 
-> `optional` **build**: `object`
+> `optional` **build?**: `object`
 
-Defined in: [content/src/config/models.ts:239](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/content/src/config/models.ts#L239)
+Defined in: [content/src/config/models.ts:239](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/content/src/config/models.ts#L239)
 
 Configuration for the `sitecore-tools build` CLI command
 
 #### commands?
 
-> `optional` **commands**: (`args?`) => `Promise`\<`void`\>[]
+> `optional` **commands?**: (`args?`) => `Promise`\<`void`\>[]
 
 Commands to run during the build process
 
@@ -43,9 +43,9 @@ Commands to run during the build process
 
 ### componentMap?
 
-> `optional` **componentMap**: [`GenerateMapArgs`](../../tools/type-aliases/GenerateMapArgs.md) & `object`
+> `optional` **componentMap?**: [`GenerateMapArgs`](../../tools/type-aliases/GenerateMapArgs.md) & `object`
 
-Defined in: [content/src/config/models.ts:257](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/content/src/config/models.ts#L257)
+Defined in: [content/src/config/models.ts:257](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/content/src/config/models.ts#L257)
 
 Configuration for the `sitecore-tools component generate-map` CLI command
 
@@ -53,7 +53,7 @@ Configuration for the `sitecore-tools component generate-map` CLI command
 
 ##### generator?
 
-> `optional` **generator**: [`GenerateMapFunction`](../../tools/type-aliases/GenerateMapFunction.md)
+> `optional` **generator?**: [`GenerateMapFunction`](../../tools/type-aliases/GenerateMapFunction.md)
 
 Function implementation for generating a component map
 
@@ -63,7 +63,7 @@ Function implementation for generating a component map
 
 > **config**: [`SitecoreConfig`](SitecoreConfig.md)
 
-Defined in: [content/src/config/models.ts:235](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/content/src/config/models.ts#L235)
+Defined in: [content/src/config/models.ts:235](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/content/src/config/models.ts#L235)
 
 Sitecore configuration (`sitecore.config` file)
 
@@ -71,14 +71,14 @@ Sitecore configuration (`sitecore.config` file)
 
 ### scaffold?
 
-> `optional` **scaffold**: `object`
+> `optional` **scaffold?**: `object`
 
-Defined in: [content/src/config/models.ts:248](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/content/src/config/models.ts#L248)
+Defined in: [content/src/config/models.ts:248](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/content/src/config/models.ts#L248)
 
 Configuration for the `sitecore-tools scaffold` CLI command
 
 #### templates?
 
-> `optional` **templates**: [`ScaffoldTemplate`](ScaffoldTemplate.md)[]
+> `optional` **templates?**: [`ScaffoldTemplate`](ScaffoldTemplate.md)[]
 
 Scaffold templates available for generating components

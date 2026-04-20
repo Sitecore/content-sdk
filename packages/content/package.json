@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/content",
-  "version": "2.0.0-canary.4",
+  "version": "2.1.0-canary.8",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -15,7 +15,7 @@
     "test": "mocha \"./src/**/*.test.ts\"",
     "prepublishOnly": "npm run build",
     "coverage": "nyc npm test",
-    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/content --entryPoints src/index.ts --entryPoints src/config/index.ts --entryPoints src/config-cli/index.ts --entryPoints src/client/index.ts --entryPoints src/i18n/index.ts --entryPoints src/layout/index.ts --entryPoints src/media/index.ts --entryPoints src/personalize/index.ts --entryPoints src/site/index.ts --entryPoints src/editing/index.ts --entryPoints src/tools/index.ts --entryPoints src/codegen/index.ts --githubPages false",
+    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/content --entryPoints src/index.ts --entryPoints src/config/index.ts --entryPoints src/config-cli/index.ts --entryPoints src/client/index.ts --entryPoints src/i18n/index.ts --entryPoints src/layout/index.ts --entryPoints src/media/index.ts --entryPoints src/personalize/index.ts --entryPoints src/site/index.ts --entryPoints src/editing/index.ts --entryPoints src/tools/index.ts --entryPoints src/tools/index-node.ts --entryPoints src/codegen/index.ts --githubPages false",
     "api-extractor": "npm run build && api-extractor run --local --verbose",
     "api-extractor:verify": "api-extractor run"
   },
@@ -36,7 +36,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
-    "@sitecore-cloudsdk/events": "^0.5.1",
+    "@sitecore-content-sdk/events": "2.1.0-canary.8",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@types/chai": "^5.2.2",
     "@types/chai-spies": "^1.0.6",
@@ -74,10 +74,10 @@
     "typescript": "~5.8.3"
   },
   "peerDependencies": {
-    "@sitecore-cloudsdk/events": "^0.5.1"
+    "@sitecore-content-sdk/events": "^2.1.0-canary.3"
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "2.0.0-canary.4",
+    "@sitecore-content-sdk/core": "2.1.0-canary.8",
     "chalk": "^4.1.2",
     "debug": "^4.4.0",
     "glob": "^11.0.2",
@@ -152,6 +152,11 @@
       "import": "./dist/esm/tools/index.js",
       "require": "./dist/cjs/tools/index.js",
       "types": "./types/tools/index.d.ts"
+    },
+    "./node-tools": {
+      "import": "./dist/esm/tools/index-node.js",
+      "require": "./dist/cjs/tools/index-node.js",
+      "types": "./types/tools/index-node.d.ts"
     }
   }
 }

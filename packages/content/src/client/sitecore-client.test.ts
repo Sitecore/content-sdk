@@ -498,8 +498,7 @@ describe('SitecoreClient', () => {
         },
       };
       layoutServiceStub.fetchLayoutData.returns(rawLayout);
-      const stringTransformer = (value: string) =>
-        value === 'home' ? 'rewritten' : value;
+      const stringTransformer = (value: string) => (value === 'home' ? 'rewritten' : value);
       const clientWithRewrite = new SitecoreClient({
         ...defaultInitOptions,
         rewriteMediaUrls: stringTransformer,
@@ -537,9 +536,9 @@ describe('SitecoreClient', () => {
 
       const result = await clientWithRewrite.getPage(path, { locale });
 
-      expect(
-        (result?.layout.sitecore.route?.fields?.image?.value as { src: string }).src
-      ).to.equal('https://custom.example.com/-/media/hero.jpg');
+      expect((result?.layout.sitecore.route?.fields?.image?.value as { src: string }).src).to.equal(
+        'https://custom.example.com/-/media/hero.jpg'
+      );
       delete process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV];
     });
 
@@ -899,6 +898,7 @@ describe('SitecoreClient', () => {
           version: previewData.version,
           layoutKind: previewData.layoutKind,
           mode: previewData.mode,
+          site: previewData.site,
         })
       ).to.be.true;
     });
@@ -950,6 +950,7 @@ describe('SitecoreClient', () => {
           version: previewData.version,
           layoutKind: previewData.layoutKind,
           mode: previewData.mode,
+          site: previewData.site,
         })
       ).to.be.true;
     });
@@ -1049,6 +1050,7 @@ describe('SitecoreClient', () => {
           version: previewData.version,
           layoutKind: previewData.layoutKind,
           mode: previewData.mode,
+          site: previewData.site,
         })
         .resolves(editingData);
 
@@ -1062,6 +1064,7 @@ describe('SitecoreClient', () => {
             version: previewData.version,
             layoutKind: previewData.layoutKind,
             mode: previewData.mode,
+            site: previewData.site,
           },
           fetchOptions
         )
@@ -1190,40 +1193,6 @@ describe('SitecoreClient', () => {
           generation: componentLibData.generation,
         })
       ).to.be.true;
-    });
-
-    it('should throw error when local API settings are missing', async () => {
-      const componentLibData = {
-        itemId: 'item-id',
-        componentUid: 'comp-uid',
-        site: 'test-site',
-        language: 'en',
-        renderingId: 'rendering-id',
-        dataSourceId: 'datasource-id',
-        version: '1',
-        pageState: LayoutServicePageState.Normal,
-      };
-
-      // Create a deep copy of the options to avoid modifying the original
-      const modifiedClient = new SitecoreClient({
-        ...JSON.parse(JSON.stringify(defaultInitOptions)),
-        api: {
-          ...JSON.parse(JSON.stringify(defaultInitOptions.api)),
-          local: null,
-        },
-      });
-
-      (modifiedClient as any).editingService = editingServiceStub;
-      (modifiedClient as any).restComponentService = restComponentServiceStub;
-
-      try {
-        await modifiedClient.getDesignLibraryData(componentLibData);
-        expect.fail('Should have thrown an error');
-      } catch (error) {
-        expect((error as Error).message).to.include(
-          'Component Library requires Sitecore apiHost and apiKey'
-        );
-      }
     });
 
     it('should pass fetchOptions to componentService when calling getDesignLibraryData', async () => {

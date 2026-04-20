@@ -1,4 +1,4 @@
-import { scaffoldComponent } from '@sitecore-content-sdk/content/tools';
+import { scaffoldComponent } from '@sitecore-content-sdk/content/node-tools';
 import loadCliConfig from '../../../utils/load-config';
 import { Argv } from 'yargs';
 import { ComponentTemplateType } from '@sitecore-content-sdk/content/config';
@@ -100,3 +100,4 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`);
 
   scaffoldComponent(outputFolder, componentName, templateName, cliConfig.scaffold.templates);
 }
+

@@ -6,82 +6,82 @@
 
 # Interface: LinkFieldValue
 
-Defined in: [packages/react/src/components/Link.tsx:13](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/react/src/components/Link.tsx#L13)
+Defined in: [packages/react/src/components/Link.tsx:13](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/react/src/components/Link.tsx#L13)
 
 The interface for the Link field value.
 
 ## Indexable
 
-\[`attributeName`: `string`\]: `unknown`
+> \[`attributeName`: `string`\]: `unknown`
 
 ## Properties
 
 ### anchor?
 
-> `optional` **anchor**: `string`
+> `optional` **anchor?**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:21](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/react/src/components/Link.tsx#L21)
+Defined in: [packages/react/src/components/Link.tsx:21](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/react/src/components/Link.tsx#L21)
 
 ***
 
 ### class?
 
-> `optional` **class**: `string`
+> `optional` **class?**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:17](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/react/src/components/Link.tsx#L17)
+Defined in: [packages/react/src/components/Link.tsx:17](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/react/src/components/Link.tsx#L17)
 
 ***
 
 ### className?
 
-> `optional` **className**: `string`
+> `optional` **className?**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:16](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/react/src/components/Link.tsx#L16)
+Defined in: [packages/react/src/components/Link.tsx:16](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/react/src/components/Link.tsx#L16)
 
 ***
 
 ### href?
 
-> `optional` **href**: `string`
+> `optional` **href?**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:15](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/react/src/components/Link.tsx#L15)
+Defined in: [packages/react/src/components/Link.tsx:15](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/react/src/components/Link.tsx#L15)
 
 ***
 
 ### linktype?
 
-> `optional` **linktype**: `string`
+> `optional` **linktype?**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:23](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/react/src/components/Link.tsx#L23)
+Defined in: [packages/react/src/components/Link.tsx:23](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/react/src/components/Link.tsx#L23)
 
 ***
 
 ### querystring?
 
-> `optional` **querystring**: `string`
+> `optional` **querystring?**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:22](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/react/src/components/Link.tsx#L22)
+Defined in: [packages/react/src/components/Link.tsx:22](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/react/src/components/Link.tsx#L22)
 
 ***
 
 ### target?
 
-> `optional` **target**: `string`
+> `optional` **target?**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:19](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/react/src/components/Link.tsx#L19)
+Defined in: [packages/react/src/components/Link.tsx:19](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/react/src/components/Link.tsx#L19)
 
 ***
 
 ### text?
 
-> `optional` **text**: `string`
+> `optional` **text?**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:20](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/react/src/components/Link.tsx#L20)
+Defined in: [packages/react/src/components/Link.tsx:20](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/react/src/components/Link.tsx#L20)
 
 ***
 
 ### title?
 
-> `optional` **title**: `string`
+> `optional` **title?**: `string`
 
-Defined in: [packages/react/src/components/Link.tsx:18](https://github.com/Sitecore/content-sdk/blob/0ba09b9a5fb85cb3112ce168d8e0ff92da4b4633/packages/react/src/components/Link.tsx#L18)
+Defined in: [packages/react/src/components/Link.tsx:18](https://github.com/Sitecore/content-sdk/blob/bd64e59f4408401ffdf3111f077ed6c7eb99c56e/packages/react/src/components/Link.tsx#L18)

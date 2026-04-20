@@ -1,12 +1,14 @@
-import type * as core from '@sitecore-content-sdk/analytics-core/internal';
+import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
 import * as utils from '@sitecore-content-sdk/analytics-core/utils';
-import { ErrorMessages } from '../../consts';
+import { constants } from '@sitecore-content-sdk/core';
 import { BaseEvent } from '../base-event';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as sendEvent from '../send-event/sendEvent';
 import type { IdentityData } from './identity-event';
 import { IdentityEvent } from './identity-event';
 import { jest, expect } from '@jest/globals';
+
+const { ERROR_MESSAGES } = constants;
 
 jest.mock('../base-event');
 jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
@@ -29,14 +31,14 @@ jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
 });
 describe('Test Identity', () => {
   let data: IdentityData;
-  let settingsMock: core.Settings;
+  let configMock: { contextId: string; edgeUrl: string; siteName: string };
   const id = 'test_id';
 
   const isShortISODateStringSpy = jest.spyOn(utils, 'isShortISODateString');
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
+      json: () => Promise.resolve({ status: 'OK' } as EPResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as any;
 
@@ -54,16 +56,10 @@ describe('Test Identity', () => {
       page: 'identity',
     };
 
-    settingsMock = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
+    configMock = {
+      contextId: '123',
+      edgeUrl: '',
       siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
     };
   });
 
@@ -79,9 +75,9 @@ describe('Test Identity', () => {
           id,
           identityData: data,
           sendEvent: sendEvent.sendEvent,
-          settings: settingsMock,
+          config: configMock,
         })
-    ).not.toThrow(ErrorMessages.MV_0003);
+    ).not.toThrow(ERROR_MESSAGES.MV_003);
 
     expect(data.city).toEqual(undefined);
     expect(data.country).toEqual(undefined);
@@ -102,7 +98,7 @@ describe('Test Identity', () => {
       id,
       identityData: data,
       sendEvent: sendEvent.sendEvent,
-      settings: settingsMock,
+      config: configMock,
     });
     expect(data.street).toEqual([]);
   });
@@ -113,7 +109,7 @@ describe('Test Identity', () => {
       id,
       identityData: data,
       sendEvent: sendEvent.sendEvent,
-      settings: settingsMock,
+      config: configMock,
     });
     expect(data.street).toEqual(['']);
   });
@@ -125,7 +121,7 @@ describe('Test Identity', () => {
       id,
       identityData: data,
       sendEvent: sendEvent.sendEvent,
-      settings: settingsMock,
+      config: configMock,
     });
     expect(data.street).toEqual(['gennimata']);
   });
@@ -137,7 +133,7 @@ describe('Test Identity', () => {
       id,
       identityData: data,
       sendEvent: sendEvent.sendEvent,
-      settings: settingsMock,
+      config: configMock,
     });
     expect(data.street).toEqual(['gennimata', 'ntourma']);
   });
@@ -156,9 +152,9 @@ describe('Test Identity', () => {
         id,
         identityData: data,
         sendEvent: sendEvent.sendEvent,
-        settings: settingsMock,
+        config: configMock,
       });
-    }).toThrow(ErrorMessages.MV_0003);
+    }).toThrow(ERROR_MESSAGES.MV_003);
   });
 
   it('Should throw error when an invalid email parameter is passed', () => {
@@ -182,9 +178,9 @@ describe('Test Identity', () => {
         id,
         identityData: data,
         sendEvent: sendEvent.sendEvent,
-        settings: settingsMock,
+        config: configMock,
       });
-    }).toThrow(ErrorMessages.IV_0003);
+    }).toThrow(ERROR_MESSAGES.IV_004);
   });
 
   it('should not throw error when the identifiers has object', () => {
@@ -193,9 +189,9 @@ describe('Test Identity', () => {
         id,
         identityData: data,
         sendEvent: sendEvent.sendEvent,
-        settings: settingsMock,
+        config: configMock,
       });
-    }).not.toThrow(ErrorMessages.MV_0003);
+    }).not.toThrow(ERROR_MESSAGES.MV_003);
   });
 
   it('Should make all values to Title Case', () => {
@@ -258,7 +254,7 @@ describe('Test Identity', () => {
       id,
       identityData: data,
       sendEvent: sendEvent.sendEvent,
-      settings: settingsMock,
+      config: configMock,
     });
 
     expect(data.email).not.toEqual(expectedData.email);
@@ -334,13 +330,13 @@ describe('Test Identity', () => {
       id,
       identityData: data,
       sendEvent: sendEvent.sendEvent,
-      settings: settingsMock,
+      config: configMock,
     });
     identity.send();
 
     expect(sendEventSpy).toHaveBeenCalledWith(
       expect.objectContaining(expectedData),
-      expect.objectContaining(settingsMock as any)
+      expect.objectContaining(configMock as any)
     );
     expect(sendEventSpy).toHaveBeenCalledTimes(1);
   });
@@ -354,7 +350,7 @@ describe('Test Identity', () => {
       id,
       identityData: data,
       sendEvent: sendEvent.sendEvent,
-      settings: settingsMock,
+      config: configMock,
     });
 
     expect(attributeCheckAndValidationSpy).toHaveBeenCalledTimes(1);
@@ -369,9 +365,9 @@ describe('Test Identity', () => {
         id,
         identityData: data,
         sendEvent: sendEvent.sendEvent,
-        settings: settingsMock,
+        config: configMock,
       }).send();
-    }).toThrow(ErrorMessages.IV_0002);
+    }).toThrow(ERROR_MESSAGES.IV_003);
   });
 
   it('Should throw an error if expiry date has invalid date format', () => {
@@ -383,14 +379,14 @@ describe('Test Identity', () => {
         id,
         identityData: data,
         sendEvent: sendEvent.sendEvent,
-        settings: settingsMock,
+        config: configMock,
       }).send();
-    }).toThrow(ErrorMessages.IV_0004);
+    }).toThrow(ERROR_MESSAGES.IV_005);
   });
 
   it('should send a identity event with an ext property containing extension data when passed', () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
+      json: () => Promise.resolve({ status: 'OK' } as EPResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch) as any;
 
@@ -412,29 +408,23 @@ describe('Test Identity', () => {
     };
 
     const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22 };
-    const settings: core.Settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
+    const config: { contextId: string; edgeUrl: string; siteName: string } = {
       siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      contextId: '123',
+      edgeUrl: '',
     };
     new IdentityEvent({
       id,
       identityData: { ...identityData, extensionData },
       sendEvent: sendEvent.sendEvent,
-      settings,
+      config,
     }).send();
 
     const expectedAttributes = { ext: { test_a_b: 'b', test_c: 11, testz: 22 } };
 
     expect(sendEventSpy).toHaveBeenCalledWith(
       expect.objectContaining(expectedAttributes),
-      expect.objectContaining(settings as any)
+      expect.objectContaining(config as any)
     );
   });
 
@@ -453,16 +443,10 @@ describe('Test Identity', () => {
         },
       ],
     };
-    const settings: core.Settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
+    const config: { contextId: string; edgeUrl: string; siteName: string } = {
       siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      contextId: '123',
+      edgeUrl: '',
     };
     const extensionData: { [key: string]: string } = {};
 
@@ -473,9 +457,9 @@ describe('Test Identity', () => {
         id,
         identityData: { ...identityData, extensionData },
         sendEvent: sendEvent.sendEvent,
-        settings,
+        config,
       }).send();
-    }).toThrow(ErrorMessages.IV_0005);
+    }).toThrow(ERROR_MESSAGES.IV_006(MAX_EXT_ATTRIBUTES));
   });
 
   it('should not throw an error when no more than 50 ext attributes are passed', () => {
@@ -493,16 +477,10 @@ describe('Test Identity', () => {
         },
       ],
     };
-    const settings: core.Settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
+    const config: { contextId: string; edgeUrl: string; siteName: string } = {
       siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      contextId: '123',
+      edgeUrl: '',
     };
     const extensionData: { [key: string]: string } = {};
     for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) extensionData[`key${i}`] = `value${i}`;
@@ -512,9 +490,9 @@ describe('Test Identity', () => {
         id,
         identityData: { ...identityData, extensionData },
         sendEvent: sendEvent.sendEvent,
-        settings,
+        config,
       }).send();
-    }).not.toThrow(ErrorMessages.IV_0005);
+    }).not.toThrow(ERROR_MESSAGES.IV_006);
   });
 
   it('should not call flatten object method when no extension data is passed', () => {
@@ -533,23 +511,17 @@ describe('Test Identity', () => {
         },
       ],
     };
-    const settings: core.Settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
+    const config: { contextId: string; edgeUrl: string; siteName: string } = {
       siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      contextId: '123',
+      edgeUrl: '',
     };
 
     new IdentityEvent({
       id,
       identityData,
       sendEvent: sendEvent.sendEvent,
-      settings,
+      config,
     }).send();
 
     expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
@@ -572,16 +544,10 @@ describe('Test Identity', () => {
       ],
     };
 
-    const settings: core.Settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
+    const config: { contextId: string; edgeUrl: string; siteName: string } = {
       siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      contextId: '123',
+      edgeUrl: '',
     };
 
     const extensionData = {};
@@ -590,7 +556,7 @@ describe('Test Identity', () => {
       id,
       identityData: { ...identityData, extensionData },
       sendEvent: sendEvent.sendEvent,
-      settings,
+      config,
     }).send();
 
     expect(BaseEvent).toHaveBeenCalled();
@@ -606,7 +572,7 @@ describe('Test Identity', () => {
 
     expect(sendEventSpy).toHaveBeenCalledWith(
       expect.not.objectContaining({ ext: {} }),
-      expect.objectContaining(settings as any)
+      expect.objectContaining(config as any)
     );
   });
 });

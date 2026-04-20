@@ -18,7 +18,7 @@ Component maps can be generated as a single file or split into server/client var
 
 ### clientComponentMap?
 
-> `optional` **clientComponentMap**: `boolean`
+> `optional` **clientComponentMap?**: `boolean`
 
 Defined in: content/types/tools/generate-map.d.ts:32
 
@@ -30,7 +30,7 @@ When false or undefined, generates single component-map.ts (traditional behavior
 
 ### clientMapTemplate?
 
-> `optional` **clientMapTemplate**: `ComponentMapTemplate` \| `EnhancedComponentMapTemplate`
+> `optional` **clientMapTemplate?**: `ComponentMapTemplate` \| `EnhancedComponentMapTemplate`
 
 Defined in: content/types/tools/generate-map.d.ts:26
 
@@ -40,7 +40,7 @@ Optional custom template function to generate the client component map content (
 
 ### componentImports?
 
-> `optional` **componentImports**: [`ComponentImport`](../interfaces/ComponentImport.md)[]
+> `optional` **componentImports?**: [`ComponentImport`](../interfaces/ComponentImport.md)[]
 
 Defined in: content/types/tools/generate-map.d.ts:18
 
@@ -50,7 +50,7 @@ Optional array of package definitions for component imports to include in the ma
 
 ### destination?
 
-> `optional` **destination**: `string`
+> `optional` **destination?**: `string`
 
 Defined in: content/types/tools/generate-map.d.ts:16
 
@@ -66,7 +66,7 @@ Destination folder path for the generated map.
 
 ### exclude?
 
-> `optional` **exclude**: `string`[]
+> `optional` **exclude?**: `string`[]
 
 Defined in: content/types/tools/generate-map.d.ts:20
 
@@ -76,7 +76,7 @@ Optional array of glob paths to exclude from the map.
 
 ### includeVariants?
 
-> `optional` **includeVariants**: `boolean`
+> `optional` **includeVariants?**: `boolean`
 
 Defined in: content/types/tools/generate-map.d.ts:34
 
@@ -86,7 +86,7 @@ Optional flag to include component's variants path in the component map.
 
 ### mapTemplate?
 
-> `optional` **mapTemplate**: `ComponentMapTemplate` \| `EnhancedComponentMapTemplate`
+> `optional` **mapTemplate?**: `ComponentMapTemplate` \| `EnhancedComponentMapTemplate`
 
 Defined in: content/types/tools/generate-map.d.ts:22
 
