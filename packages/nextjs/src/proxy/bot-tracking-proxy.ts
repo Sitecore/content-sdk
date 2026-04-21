@@ -3,7 +3,7 @@ import { initContentSdk } from '@sitecore-content-sdk/core';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
 import { eventsPlugin, botPageView } from '@sitecore-content-sdk/events';
-import { isBot, BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/events/internal';
+import { isBot, BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/analytics-core/internal';
 import { ProxyBase, ProxyBaseConfig } from './proxy';
 import debug from '../debug';
 import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter';

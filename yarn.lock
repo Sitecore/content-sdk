@@ -3532,6 +3532,7 @@ __metadata:
     eslint-plugin-import: "npm:2.32.0"
     eslint-plugin-jsdoc: "npm:52.0.3"
     eslint-plugin-prettier: "npm:^4.0.0"
+    isbot: "npm:^5.1.39"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
     jest-environment-node: "npm:^29.7.0"
@@ -3695,7 +3696,6 @@ __metadata:
     eslint-plugin-import: "npm:2.32.0"
     eslint-plugin-jsdoc: "npm:52.0.3"
     eslint-plugin-prettier: "npm:^4.0.0"
-    isbot: "npm:^5.1.36"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
     jest-environment-node: "npm:^29.7.0"
@@ -9469,10 +9469,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isbot@npm:^5.1.36":
-  version: 5.1.37
-  resolution: "isbot@npm:5.1.37"
-  checksum: 10/99337867b9b84b1e4141a3088ddb8ed6e53ea406d334bacb147ee4b44581bd951ab32ead12840702154e344aed53e48806141b8fe8b8c3c8307739b3e97ac550
+"isbot@npm:^5.1.39":
+  version: 5.1.39
+  resolution: "isbot@npm:5.1.39"
+  checksum: 10/978ff14899ff8e201713220a9b2440e59fa618cf0db22fa2bae26e9b937f4a09c35bacea0d72e470c0a703ab72f1ce5823306439214d0c9707eb3e3436bbb8bd
   languageName: node
   linkType: hard
 

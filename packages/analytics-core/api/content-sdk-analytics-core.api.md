@@ -15,6 +15,7 @@ export const ANALYTICS_PLUGIN_NAME = "AnalyticsPlugin";
 // @public
 export interface AnalyticsAdapter extends PluginAdapter {
     getClientId: () => string | null;
+    isBot?: () => boolean;
     location: {
         getSearchParams: () => string;
     };
@@ -176,6 +177,12 @@ export function generateV4UUID(): string;
 // @internal
 export function getAnalyticsPlugin(): AnalyticsPlugin;
 
+// @internal
+export function getBotCookieClientSide(): string | undefined;
+
+// @internal
+export function getBotCookieServerSide(cookie?: string): string | undefined;
+
 // @public
 export function getClientId(): string;
 
@@ -204,6 +211,9 @@ export interface Infer {
     // (undocumented)
     pageName: () => string;
 }
+
+// @internal
+export const isBot: (userAgent?: string | null) => boolean;
 
 // @internal
 export function isShortISODateString(date: string): boolean;

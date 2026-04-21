@@ -1,26 +1,11 @@
 import { isbot } from 'isbot';
-import { getCookie } from '@sitecore-content-sdk/analytics-core/utils';
+import { getCookieServerSide, getCookieValueClientSide } from '../utils';
 
 /**
  * The cookie name for bot detection.
  * @internal
  */
 export const BOT_DETECTION_COOKIE = 'sc_bot';
-
-/**
- * The channel name for bot tracking.
- * @internal
- */
-export const BOT_CHANNEL = 'bot';
-
-/**
- * True when a browser `document` global is available (client / jsdom).
- * Used so server-only code paths can be tested without mutating `document`.
- * @internal
- */
-export function isBrowserEnvironment(): boolean {
-  return typeof document !== 'undefined';
-}
 
 /**
  * A function that checks if visitor is a bot.
@@ -38,8 +23,16 @@ export const isBot = (userAgent?: string | null): boolean => {
  * Only available on the client-side.
  * @internal
  */
-export function getBotCookie(): string | undefined {
-  if (!isBrowserEnvironment()) return undefined;
+export function getBotCookieClientSide(): string | undefined {
+  return getCookieValueClientSide(BOT_DETECTION_COOKIE);
+}
 
-  return getCookie(document.cookie, BOT_DETECTION_COOKIE)?.value;
+/**
+ * A function that gets the bot cookie.
+ * @param {string} cookie - The cookie string.
+ * @returns {string | undefined} The value of the bot cookie, or undefined if the cookie is not found.
+ * @internal
+ */
+export function getBotCookieServerSide(cookie?: string): string | undefined {
+  return getCookieServerSide(cookie, BOT_DETECTION_COOKIE)?.value;
 }

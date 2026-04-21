@@ -11,9 +11,6 @@ import { Plugin as Plugin_2 } from '@sitecore-content-sdk/core';
 // @public
 export function addToEventQueue(eventData: EventData): Promise<void>;
 
-// @internal
-export const BOT_DETECTION_COOKIE = "sc_bot";
-
 // @public
 export function botPageView(pageViewData: BotPageViewData): Promise<EPResponse | null>;
 
@@ -93,9 +90,6 @@ export interface IdentityData extends EventAttributesInput {
     street?: string[];
     title?: string;
 }
-
-// @internal
-export const isBot: (userAgent?: string | null) => boolean;
 
 // @internal
 export const PACKAGE_NAME: string;

@@ -9,8 +9,7 @@
   "dependencies": {
     "@sitecore-content-sdk/analytics-core": "2.1.0-canary.9",
     "@sitecore-content-sdk/core": "2.1.0-canary.9",
-    "debug": "^4.4.3",
-    "isbot": "^5.1.36"
+    "debug": "^4.4.3"
   },
   "description": "Enables real-time, unified tracking to send events to Sitecore.",
   "devDependencies": {

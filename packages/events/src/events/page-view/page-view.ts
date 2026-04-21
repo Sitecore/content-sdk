@@ -5,21 +5,6 @@ import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
 import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getEventsPlugin } from '../../initialization/plugin';
-import { getBotCookie, isBot } from './bot-detection';
-
-/**
- * A function that checks if the page view should be skipped.
- * The page view is skipped if the visitor is a bot.
- * @returns {boolean} True if the page view should be skipped, false otherwise
- * @internal
- */
-const shouldSkipPageView = () => {
-  const botCookie = getBotCookie();
-
-  if (botCookie) return true;
-
-  return isBot(navigator.userAgent);
-};
 
 /**
  * A function that sends a VIEW event to the SitecoreCloud API
@@ -30,13 +15,16 @@ const shouldSkipPageView = () => {
  * @public
  */
 export async function pageView(pageViewData?: PageViewData): Promise<EPResponse | null> {
-  if (shouldSkipPageView()) return null;
-
   const coreContext = getCoreContext();
   await coreContext.readyPromise;
   getEventsPlugin();
 
   const { options, adapter } = getAnalyticsPlugin();
+
+  if (adapter.isBot?.()) {
+    return null;
+  }
+
   const id = adapter.getClientId() || '';
   const searchParams = adapter.location.getSearchParams();
 

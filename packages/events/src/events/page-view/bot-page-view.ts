@@ -3,7 +3,12 @@ import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getEventsPlugin } from '../../initialization/plugin';
 import { sendEvent } from '../send-event/sendEvent';
 import { PageViewEvent } from './page-view-event';
-import { BOT_CHANNEL, isBrowserEnvironment } from './bot-detection';
+
+/**
+ * The channel name for bot tracking.
+ * @internal
+ */
+export const BOT_CHANNEL = 'bot';
 
 /**
  * The data to be sent for bot tracking.
@@ -27,18 +32,13 @@ export type BotPageViewData = {
 };
 
 /**
- * Sends a VIEW event for server-side bot tracking (e.g. Next.js proxy / Edge).
+ * Sends a VIEW event for bot tracking.
  * Uses a synthetic per-invocation client id and defaults `channel` to `bot`.
- * Returns `null` in browser environments.
  * @param {BotPageViewData} [pageViewData] - The optional attributes to be sent to the SitecoreCloud API
- * @returns The response from Sitecore Edge Proxy, or `null` if skipped (browser).
+ * @returns The response from Sitecore Edge Proxy.
  * @public
  */
 export async function botPageView(pageViewData: BotPageViewData): Promise<EPResponse | null> {
-  if (isBrowserEnvironment()) {
-    return null;
-  }
-
   const coreContext = getCoreContext();
   await coreContext.readyPromise;
   getEventsPlugin();
