@@ -23,7 +23,7 @@ export async function pageView(pageViewData?: PageViewData): Promise<EPResponse 
   const { options, adapter } = getAnalyticsPlugin();
 
   if (adapter.isBot?.()) {
-    debug.events('pageView skipped - visitor is a bot');
+    debug.events('pageView skipped (visitor is a bot)');
     return null;
   }
 

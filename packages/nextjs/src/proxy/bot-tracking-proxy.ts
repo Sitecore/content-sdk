@@ -107,7 +107,7 @@ export class BotTrackingProxy extends ProxyBase {
         path: '/',
       });
 
-      debug.common('bot tracking proxy - visitor is a bot');
+      debug.common('bot tracking proxy (visitor is a bot)');
 
       if (this.config.fetchEvent) {
         this.config.fetchEvent.waitUntil(botTracking());
