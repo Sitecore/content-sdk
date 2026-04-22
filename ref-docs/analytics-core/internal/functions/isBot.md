@@ -8,11 +8,12 @@
 
 > **isBot**(`userAgent?`): `boolean`
 
-Defined in: [analytics-core/src/bot-detection/bot-detection.ts:16](https://github.com/Sitecore/content-sdk/blob/56930d59c3f5446bcbe511b664a90b81d79766d5/packages/analytics-core/src/bot-detection/bot-detection.ts#L16)
+Defined in: [analytics-core/src/bot-detection/bot-detection.ts:17](https://github.com/Sitecore/content-sdk/blob/4f2a7186eaa603a5f983accbbb7c18c13d5e6ddb/packages/analytics-core/src/bot-detection/bot-detection.ts#L17)
 
 **`Internal`**
 
 A function that checks if visitor is a bot.
+Performs a check based on the user agent.
 
 ## Parameters
 

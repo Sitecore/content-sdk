@@ -31,10 +31,10 @@
 - [fetchClientIdFromEdgeProxy](functions/fetchClientIdFromEdgeProxy.md)
 - [generateCorrelationId](functions/generateCorrelationId.md)
 - [getAnalyticsPlugin](functions/getAnalyticsPlugin.md)
-- [getBotCookieClientSide](functions/getBotCookieClientSide.md)
-- [getBotCookieServerSide](functions/getBotCookieServerSide.md)
 - [getDefaultCookieAttributes](functions/getDefaultCookieAttributes.md)
 - [isBot](functions/isBot.md)
+- [isBotClientSide](functions/isBotClientSide.md)
+- [isBotServerSide](functions/isBotServerSide.md)
 - [language](functions/language.md)
 - [pageName](functions/pageName.md)
 
