@@ -1,6 +1,7 @@
 import * as analyticsPluginsModule from '@sitecore-content-sdk/analytics-core/internal';
 import * as coreModule from '@sitecore-content-sdk/core';
 import * as eventsPluginModule from '../../initialization/plugin';
+import * as debugModule from '../../debug';
 import { sendEvent } from '../send-event/sendEvent';
 import { pageView } from './page-view';
 import type { PageViewData } from './page-view-event';
@@ -19,6 +20,14 @@ jest.mock('./page-view-event', () => {
     }),
   };
 });
+
+jest.mock('../../debug', () => ({
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  __esModule: true,
+  debug: {
+    events: jest.fn(),
+  },
+}));
 
 describe('page-view', () => {
   const mockAdapter = {
@@ -162,6 +171,7 @@ describe('page-view', () => {
       const result = await pageView({ channel: 'WEB' });
 
       expect(result).toBeNull();
+      expect(debugModule.debug.events).toHaveBeenCalledWith('pageView skipped (visitor is a bot)');
       expect(mockAdapter.isBot).toHaveBeenCalled();
       expect(PageViewEvent).not.toHaveBeenCalled();
     });
