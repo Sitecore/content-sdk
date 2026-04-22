@@ -32,6 +32,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
+    "@sitecore-content-sdk/analytics-core": "2.1.0-canary.10",
     "@sitecore-feaas/clientside": "^0.6.0",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@testing-library/dom": "^10.4.0",

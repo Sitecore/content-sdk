@@ -1,11 +1,10 @@
 import {
   COOKIE_NAME_PREFIX,
   fetchClientIdFromEdgeProxy,
-  getBotCookieServerSide,
+  isBotServerSide,
   getDefaultCookieAttributes,
   getAnalyticsPlugin,
   AnalyticsAdapter,
-  isBot,
 } from '@sitecore-content-sdk/analytics-core/internal';
 import { getCoreContext } from '@sitecore-content-sdk/core';
 import { NextRequest, NextResponse } from 'next/server';
@@ -37,8 +36,7 @@ export function analyticsProxyAdapter(
   return {
     type: 'proxy',
     isBot: () => {
-      const botCookie = getBotCookieServerSide(request.cookies.toString());
-      return !!botCookie || isBot(request.headers.get('user-agent'));
+      return isBotServerSide(request.cookies.toString(), request.headers.get('user-agent'));
     },
     getClientId: () => {
       return getClientId(request);

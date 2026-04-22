@@ -3804,6 +3804,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
+    "@sitecore-content-sdk/analytics-core": "npm:2.1.0-canary.10"
     "@sitecore-content-sdk/content": "npm:2.1.0-canary.10"
     "@sitecore-content-sdk/core": "npm:2.1.0-canary.10"
     "@sitecore-content-sdk/search": "npm:0.2.2-canary.19"

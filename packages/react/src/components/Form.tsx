@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
+import * as analyticsCoreInternalModule from '@sitecore-content-sdk/analytics-core/internal';
 import { form } from '@sitecore-content-sdk/content';
 import { constants } from '@sitecore-content-sdk/core';
 import { useSitecore } from './SitecoreProvider';
@@ -9,6 +10,7 @@ import { ErrorComponent } from './ErrorBoundary';
 const { ERROR_MESSAGES } = constants;
 
 let { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
+let { isBotClientSide } = analyticsCoreInternalModule;
 
 /**
  * Mock function to replace the form module functions for `testing` purposes.
@@ -18,6 +20,10 @@ export const mockFormModule = (formModule: any) => {
   executeScriptElements = formModule.executeScriptElements;
   loadForm = formModule.loadForm;
   subscribeToFormSubmitEvent = formModule.subscribeToFormSubmitEvent;
+};
+
+export const mockAnalyticsInternalModule = (analyticsCoreInternalModule: any) => {
+  isBotClientSide = analyticsCoreInternalModule.isBotClientSide;
 };
 
 /**
@@ -81,7 +87,7 @@ export const Form = ({ params, rendering }: FormProps) => {
       if (!formRef.current) return;
 
       // If we are in editing mode, we don't want to send any events
-      if (!isEditing) {
+      if (!isEditing && !isBotClientSide()) {
         subscribeToFormSubmitEvent(formRef.current, rendering.uid);
       }
 
