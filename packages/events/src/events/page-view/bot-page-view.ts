@@ -32,8 +32,27 @@ export type BotPageViewData = {
 };
 
 /**
+ * Derives a deterministic, UUID-shaped client id from the given input by hashing
+ * it with SHA-256. The same input always produces the same id, which allows
+ * analytics to treat repeated requests from the same crawler as a single visitor.
+ * @param {string} input - The value used as the fingerprint source (typically the User-Agent).
+ * @returns {Promise<string>} A UUID-shaped string derived from the SHA-256 hash of the input.
+ * @internal
+ */
+async function deriveBotClientId(input: string): Promise<string> {
+  const data = new TextEncoder().encode(input);
+  const hashBuffer = await globalThis.crypto.subtle.digest('SHA-256', data);
+  const bytes = new Uint8Array(hashBuffer).slice(0, 16);
+
+  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
+/**
  * Sends a VIEW event for bot tracking.
- * Uses a synthetic per-invocation client id and defaults `channel` to `bot`.
+ * Derives a stable client id from `userAgent` so repeated requests from the same
+ * crawler share a single id, and defaults `channel` to `bot`.
  * @param {BotPageViewData} [pageViewData] - The optional attributes to be sent to the SitecoreCloud API
  * @returns The response from Sitecore Edge Proxy.
  * @public
@@ -44,7 +63,7 @@ export async function botPageView(pageViewData: BotPageViewData): Promise<EPResp
   getEventsPlugin();
 
   const { options, adapter } = getAnalyticsPlugin();
-  const id = globalThis.crypto.randomUUID();
+  const id = await deriveBotClientId(pageViewData.userAgent);
 
   return new PageViewEvent({
     id,
