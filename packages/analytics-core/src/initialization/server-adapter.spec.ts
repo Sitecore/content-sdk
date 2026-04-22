@@ -13,8 +13,7 @@ jest.mock('@sitecore-content-sdk/core', () => ({
 }));
 
 jest.mock('../bot-detection/bot-detection', () => ({
-  isBot: jest.fn(),
-  getBotCookieServerSide: jest.fn(),
+  isBotServerSide: jest.fn(),
 }));
 
 jest.mock('./plugin', () => ({
@@ -101,7 +100,7 @@ describe('analyticsServerAdapter', () => {
 
   describe('isBot', () => {
     it('should return true when isBot returns true', () => {
-      (botDetectionModule.isBot as jest.Mock).mockReturnValue(true);
+      (botDetectionModule.isBotServerSide as jest.Mock).mockReturnValue(true);
 
       const adapter = analyticsServerAdapter(createMockRequest(), createMockResponse());
       const result = adapter.isBot?.();
@@ -110,22 +109,12 @@ describe('analyticsServerAdapter', () => {
     });
     
     it('should return false when isBot returns false', () => {
-      (botDetectionModule.isBot as jest.Mock).mockReturnValue(false);
+      (botDetectionModule.isBotServerSide as jest.Mock).mockReturnValue(false);
 
       const adapter = analyticsServerAdapter(createMockRequest(), createMockResponse());
       const result = adapter.isBot?.();
 
       expect(result).toBe(false);
-    });
-    
-    it('should return true when bot cookie is set', () => {
-      (botDetectionModule.getBotCookieServerSide as jest.Mock).mockReturnValue('1');
-      (botDetectionModule.isBot as jest.Mock).mockReturnValue(false);
-
-      const adapter = analyticsServerAdapter(createMockRequest(), createMockResponse());
-      const result = adapter.isBot?.();
-
-      expect(result).toBe(true);
     });
   });
 

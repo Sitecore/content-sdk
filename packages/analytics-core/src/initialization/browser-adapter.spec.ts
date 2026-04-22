@@ -13,8 +13,7 @@ jest.mock('@sitecore-content-sdk/core', () => ({
 }));
 
 jest.mock('../bot-detection/bot-detection', () => ({
-  isBot: jest.fn(),
-  getBotCookieClientSide: jest.fn(),
+  isBotClientSide: jest.fn(),
 }));
 
 jest.mock('./plugin', () => ({
@@ -84,7 +83,7 @@ describe('analyticsBrowserAdapter', () => {
 
   describe('isBot', () => {
     it('should return true when isBot returns true', () => {
-      (botDetectionModule.isBot as jest.Mock).mockReturnValue(true);
+      (botDetectionModule.isBotClientSide as jest.Mock).mockReturnValue(true);
 
       const adapter = analyticsBrowserAdapter();
       const result = adapter.isBot?.();
@@ -93,22 +92,12 @@ describe('analyticsBrowserAdapter', () => {
     });
 
     it('should return false when isBot returns false', () => {
-      (botDetectionModule.isBot as jest.Mock).mockReturnValue(false);
+      (botDetectionModule.isBotClientSide as jest.Mock).mockReturnValue(false);
 
       const adapter = analyticsBrowserAdapter();
       const result = adapter.isBot?.();
 
       expect(result).toBe(false);
-    });
-
-    it('should return true when bot cookie is set', () => {
-      (botDetectionModule.getBotCookieClientSide as jest.Mock).mockReturnValue('1');
-      (botDetectionModule.isBot as jest.Mock).mockReturnValue(false);
-
-      const adapter = analyticsBrowserAdapter();
-      const result = adapter.isBot?.();
-
-      expect(result).toBe(true);
     });
   });
 

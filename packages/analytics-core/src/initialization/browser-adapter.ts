@@ -1,4 +1,4 @@
-import { getBotCookieClientSide, isBot } from '../bot-detection/bot-detection';
+import { isBotClientSide } from '../bot-detection/bot-detection';
 import {
   COOKIE_NAME_PREFIX,
   fetchClientIdFromEdgeProxy,
@@ -32,8 +32,7 @@ export function analyticsBrowserAdapter(): AnalyticsBrowserAdapter {
   return {
     type: 'browser',
     isBot: () => {
-      const botCookie = getBotCookieClientSide();
-      return !!botCookie || isBot(navigator.userAgent);
+      return isBotClientSide();
     },
     getClientId: () => {
       return getCookieValueClientSide(getAnalyticsPlugin().options.cookies.name);

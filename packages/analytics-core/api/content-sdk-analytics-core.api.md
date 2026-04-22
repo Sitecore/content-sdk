@@ -180,12 +180,6 @@ export function generateV4UUID(): string;
 // @internal
 export function getAnalyticsPlugin(): AnalyticsPlugin;
 
-// @internal
-export function getBotCookieClientSide(): string | undefined;
-
-// @internal
-export function getBotCookieServerSide(cookie?: string): string | undefined;
-
 // @public
 export function getClientId(): string;
 
@@ -217,6 +211,12 @@ export interface Infer {
 
 // @internal
 export const isBot: (userAgent?: string | null) => boolean;
+
+// @internal
+export const isBotClientSide: () => boolean;
+
+// @internal
+export const isBotServerSide: (cookie?: string, userAgent?: string | null) => boolean;
 
 // @internal
 export function isShortISODateString(date: string): boolean;

@@ -16,8 +16,7 @@ describe('analyticsProxyAdapter', () => {
   let getCoreContextStub: sinon.SinonStub;
   let getDefaultCookieAttributesStub: sinon.SinonStub;
   let fetchClientIdFromEdgeProxyStub: sinon.SinonStub;
-  let getBotCookieServerSideStub: sinon.SinonStub;
-  let isBotStub: sinon.SinonStub;
+  let isBotServerSideStub: sinon.SinonStub;
 
   const mockAnalyticsPlugin = {
     options: {
@@ -99,8 +98,7 @@ describe('analyticsProxyAdapter', () => {
     getCoreContextStub = sandbox.stub().returns(mockCoreContext);
     getDefaultCookieAttributesStub = sandbox.stub().returns(mockCookieAttributes);
     fetchClientIdFromEdgeProxyStub = sandbox.stub();
-    getBotCookieServerSideStub = sandbox.stub();
-    isBotStub = sandbox.stub();
+    isBotServerSideStub = sandbox.stub();
 
     analyticsProxyAdapterModule = proxyquire('./analytics-adapter', {
       '@sitecore-content-sdk/core': {
@@ -111,8 +109,7 @@ describe('analyticsProxyAdapter', () => {
         getDefaultCookieAttributes: getDefaultCookieAttributesStub,
         fetchClientIdFromEdgeProxy: fetchClientIdFromEdgeProxyStub,
         getAnalyticsPlugin: getAnalyticsPluginStub,
-        getBotCookieServerSide: getBotCookieServerSideStub,
-        isBot: isBotStub,
+        isBotServerSide: isBotServerSideStub,
       },
     });
   });
@@ -170,8 +167,8 @@ describe('analyticsProxyAdapter', () => {
     });
 
     describe('isBot', () => {
-      it('should return true when bot cookie is set', () => {
-        getBotCookieServerSideStub.returns('1');
+      it('should return true when isBotServerSide returns true', () => {
+        isBotServerSideStub.returns(true);
         const request = createMockRequest({});
         const response = createMockResponse();
 
@@ -181,9 +178,8 @@ describe('analyticsProxyAdapter', () => {
         expect(result).to.be.true;
       });
 
-      it('should return false when bot cookie is not set', () => {
-        getBotCookieServerSideStub.returns(null);
-        isBotStub.returns(false);
+      it('should return false when isBotServerSide returns false', () => {
+        isBotServerSideStub.returns(false);
 
         const request = createMockRequest({});
         const response = createMockResponse();
@@ -192,16 +188,6 @@ describe('analyticsProxyAdapter', () => {
         const result = adapter.isBot?.();
 
         expect(result).to.be.false;
-      });
-
-      it('should return true when isBot returns true', () => {
-        isBotStub.returns(true);
-        const request = createMockRequest({});
-        const response = createMockResponse();
-
-        const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
-        const result = adapter.isBot?.();
-        expect(result).to.be.true;
       });
     });
 
