@@ -1,4 +1,5 @@
 export { hasCache, getCache, getCacheAndClean, setCache } from './globalCache';
+export { tryCatch } from './try-catch';
 // decoupling client-safe logic from /tools submodule which is not client-side safe
 export { normalizeUrl } from './normalize-url';
 export { default as isServer } from './is-server';

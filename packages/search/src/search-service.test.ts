@@ -3,6 +3,7 @@ import { constants, NativeDataFetcherError } from '@sitecore-content-sdk/core';
 import { SearchService, SortSetting } from './search-service';
 import { expect } from 'chai';
 import nock from 'nock';
+import proxyquire from 'proxyquire';
 
 describe('SearchService', () => {
   const searchIndexId = '1234567890';
@@ -27,6 +28,7 @@ describe('SearchService', () => {
         query: {
           keyphrase: 'test',
         },
+        sessionId: '',
         sort: {
           fields: [],
         },
@@ -64,6 +66,7 @@ describe('SearchService', () => {
         query: {
           keyphrase: '',
         },
+        sessionId: '',
         sort: {
           fields: [],
         },
@@ -102,6 +105,7 @@ describe('SearchService', () => {
         query: {
           keyphrase: 'test',
         },
+        sessionId: '',
         sort: {
           fields: [],
         },
@@ -142,6 +146,7 @@ describe('SearchService', () => {
         query: {
           keyphrase: 'test',
         },
+        sessionId: '',
         sort: {
           fields: [],
         },
@@ -182,6 +187,7 @@ describe('SearchService', () => {
         query: {
           keyphrase: 'test',
         },
+        sessionId: '',
         sort: {
           fields: [],
         },
@@ -222,6 +228,7 @@ describe('SearchService', () => {
         query: {
           keyphrase: 'test',
         },
+        sessionId: '',
         sort: {
           fields: [sort],
         },
@@ -265,6 +272,7 @@ describe('SearchService', () => {
         query: {
           keyphrase: 'test',
         },
+        sessionId: '',
         sort: {
           fields: sort,
         },
@@ -303,6 +311,7 @@ describe('SearchService', () => {
         query: {
           keyphrase: 'test',
         },
+        sessionId: '',
         sort: {
           fields: [],
         },
@@ -337,6 +346,7 @@ describe('SearchService', () => {
         query: {
           keyphrase: '',
         },
+        sessionId: '',
         sort: {
           fields: [],
         },
@@ -468,4 +478,85 @@ describe('SearchService', () => {
       }
     });
   });
+
+  describe('sessionId', () => {
+    it('should send the sessionId when the analytics plugin is registered', async () => {
+      const clientId = 'test-client-id';
+
+      const { SearchService: SearchServiceWithPlugin } = proxyquire('./search-service', {
+        '@sitecore-content-sdk/core/tools': {
+          ...require('@sitecore-content-sdk/core/tools'),
+          tryCatch: () => [clientId, null],
+        },
+      });
+
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: {
+          'x-sitecore-contextid': contextId,
+        },
+      })
+        .post(`/v1/search`, {
+          config: {
+            id: searchIndexId,
+          },
+          limit: 10,
+          offset: 0,
+          query: {
+            keyphrase: '',
+          },
+          sessionId: clientId,
+          sort: {
+            fields: [],
+          },
+        })
+        .reply(200, {
+          content: [],
+          total: 0,
+        });
+
+      const searchService = new SearchServiceWithPlugin({ contextId });
+      const searchResponse = await searchService.search({ searchIndexId });
+
+      expect(searchResponse.results).to.deep.equal([]);
+    });
+
+    it('should send an empty sessionId when the analytics plugin is not registered', async () => {
+      const { SearchService: SearchServiceNoPlugin } = proxyquire('./search-service', {
+        '@sitecore-content-sdk/core/tools': {
+          ...require('@sitecore-content-sdk/core/tools'),
+          tryCatch: () => ['', new Error('Plugin not registered')],
+        },
+      });
+
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: {
+          'x-sitecore-contextid': contextId,
+        },
+      })
+        .post(`/v1/search`, {
+          config: {
+            id: searchIndexId,
+          },
+          limit: 10,
+          offset: 0,
+          query: {
+            keyphrase: '',
+          },
+          sessionId: '',
+          sort: {
+            fields: [],
+          },
+        })
+        .reply(200, {
+          content: [],
+          total: 0,
+        });
+
+      const searchService = new SearchServiceNoPlugin({ contextId });
+      const searchResponse = await searchService.search({ searchIndexId });
+
+      expect(searchResponse.results).to.deep.equal([]);
+    });
+  });
 });
+
