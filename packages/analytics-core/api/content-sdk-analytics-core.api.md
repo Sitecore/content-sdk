@@ -86,6 +86,9 @@ export type BasicTypes = string | boolean | number | undefined | Array<string | 
 } | Array<BasicTypes>>;
 
 // @internal
+export const BOT_DETECTION_COOKIE = "sc_bot";
+
+// @internal
 export const CLIENT_ID_COOKIE_NAME = "cid";
 
 // @internal
