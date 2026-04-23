@@ -379,7 +379,7 @@ export interface TenantArgs {
     tenantId?: string;
 }
 
-// @public
+// @internal
 export function tryCatch<CallbackResult, Fallback = undefined, Result = CallbackResult extends Promise<infer U> ? Promise<[U, null] | [Fallback, Error]> : [CallbackResult, null] | [Fallback, Error]>(fn: () => CallbackResult, fallback?: Fallback): Result;
 
 // Warnings were encountered during analysis:

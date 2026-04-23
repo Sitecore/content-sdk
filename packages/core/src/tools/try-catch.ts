@@ -5,7 +5,7 @@
  * @param {() => CallbackResult} fn - The function to execute.
  * @param {Fallback} [fallback] - Optional fallback value returned as the result when an error occurs.
  * @returns {Result} A tuple of [result, error].
- * @public
+ * @internal
  */
 export function tryCatch<
   CallbackResult,
