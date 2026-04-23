@@ -9,7 +9,7 @@ import sinon from 'sinon';
 import { PageMode } from '@sitecore-content-sdk/content/client';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 
-describe.only('Form', () => {
+describe('Form', () => {
   const ctx = {
     api: {
       edge: {
