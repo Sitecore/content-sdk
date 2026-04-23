@@ -127,7 +127,7 @@ export const AppPlaceholder = (props: AppPlaceholderProps) => {
   }
 
   if (props.render) {
-    return props.render(components, placeholderRenderings, props);
+    return props.render(finalRendering, placeholderRenderings, props);
   } else if (props.renderEach) {
     const renderEach = props.renderEach;
 
