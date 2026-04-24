@@ -53,6 +53,7 @@ export const Form = ({ params, rendering }: FormProps) => {
 
   const isEditing = context.page.mode.isEditing;
 
+  // fetch form content
   useEffect(() => {
     if (!content) {
       // Forms must use clientContextId since they are rendered client-side
@@ -76,28 +77,31 @@ export const Form = ({ params, rendering }: FormProps) => {
           }
           setError(true);
         });
-    } else {
-      if (!formRef.current) return;
-
-      // If we are in editing mode, we don't want to send any events
-      if (!isEditing) {
-        subscribeToFormSubmitEvent(formRef.current, rendering.uid);
-      }
-
-      executeScriptElements(formRef.current);
     }
-  }, [content]);
+  }, [
+    content,
+    isEditing,
+    params.FormId,
+    context.api?.edge?.clientContextId,
+    context.api?.edge?.edgeUrl,
+  ]);
+
+  // Set innerHTML and execute scripts whenever form content changes
+  useEffect(() => {
+    if (!content || !formRef.current) return;
+
+    formRef.current.innerHTML = content;
+    executeScriptElements(formRef.current);
+
+    // If we are in editing mode, we don't want to send any events
+    if (!isEditing) {
+      subscribeToFormSubmitEvent(formRef.current, rendering.uid);
+    }
+  }, [content, isEditing, rendering.uid]);
 
   if (isEditing && error) {
     return <ErrorComponent message="There was a problem loading this section" />;
   }
 
-  return (
-    <div
-      ref={formRef}
-      dangerouslySetInnerHTML={{ __html: content }}
-      className={params.styles?.trimEnd()}
-      id={id ? id : undefined}
-    ></div>
-  );
+  return <div ref={formRef} className={params.styles?.trimEnd()} id={id ? id : undefined}></div>;
 };
