@@ -27,6 +27,14 @@ import { ComponentMap } from '@sitecore-content-sdk/react';
 import { StaticParams } from './models';
 import { SitecoreConfig } from '../config';
 
+type PreviewDataWithAuth<T> = T & {
+  /**
+   * The authorization header value to use for the request.
+   * Provided only in Pages Router Preview mode.
+   */
+  authorization?: string;
+};
+
 /**
  * Init options for Sitecore Client that allows you to override services too
  * @public
@@ -99,10 +107,12 @@ export class SitecoreNextjsClient extends SitecoreClient {
     designLibData: PreviewData,
     fetchOptions?: FetchOptions
   ): Promise<Page> {
-    return super.getDesignLibraryData(
-      designLibData as DesignLibraryRenderPreviewData,
+    const merged = this.mergePreviewAuthorization<DesignLibraryRenderPreviewData>(
+      designLibData,
       fetchOptions
     );
+
+    return super.getDesignLibraryData(merged.previewData, merged.fetchOptions);
   }
 
   /**
@@ -111,7 +121,38 @@ export class SitecoreNextjsClient extends SitecoreClient {
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
    */
   async getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null> {
-    return super.getPreview(previewData as EditingPreviewData, fetchOptions);
+    const merged = this.mergePreviewAuthorization<EditingPreviewData>(previewData, fetchOptions);
+
+    return super.getPreview(merged.previewData, merged.fetchOptions);
+  }
+
+  /**
+   * Builds FetchOptions for preview calls by extracting
+   * propagation-eligible headers from the incoming request.
+   *
+   * Currently, only the `authorization` header is forwarded to Sitecore.
+   * All other headers present on the input are ignored.
+   *
+   * If `fetchOptions` is provided, its values are preserved.
+   * Headers are merged with the caller-supplied headers.
+   *
+   * **NOTE**: App Router only.
+   * @param {Headers} headers - The headers from the incoming request.
+   * @param {FetchOptions} [fetchOptions] - Additional fetch options.
+   * @returns {FetchOptions} The FetchOptions for the preview call.
+   */
+  getPreviewFetchOptions(headers: Headers, fetchOptions?: FetchOptions): FetchOptions {
+    const authorization = headers.get('authorization');
+    const mergedHeaders: Record<string, string> = { ...(fetchOptions?.headers ?? {}) };
+
+    if (authorization) {
+      mergedHeaders.Authorization = authorization;
+    }
+  
+    return {
+      ...fetchOptions,
+      headers: mergedHeaders,
+    };
   }
 
   /**
@@ -216,5 +257,35 @@ export class SitecoreNextjsClient extends SitecoreClient {
 
   protected getComponentPropsService(): ComponentPropsService {
     return new ComponentPropsService();
+  }
+
+  /**
+   * Merges the authorization header from the preview data into the fetch options.
+   * **NOTE**: Pages Router only.
+   * @param {PreviewData} previewData - The preview data to merge the authorization header from.
+   * @param {FetchOptions} [fetchOptions] - The fetch options to merge the authorization header into.
+   * @returns The preview data and fetch options with the authorization header merged.
+   */
+  private mergePreviewAuthorization<T extends object>(
+    previewData: PreviewData,
+    fetchOptions?: FetchOptions
+  ): { previewData: T; fetchOptions?: FetchOptions } {
+    if (!previewData || typeof previewData !== 'object') {
+      return { previewData: previewData as unknown as T, fetchOptions };
+    }
+
+    const { authorization, ...rest } = previewData as PreviewDataWithAuth<T>;
+
+    if (!authorization) {
+      return { previewData: previewData as T, fetchOptions };
+    }
+
+    const existing = fetchOptions?.headers ?? {};
+    const mergedHeaders = {
+      ...existing,
+      Authorization: authorization,
+    };
+
+    return { previewData: rest as T, fetchOptions: { ...fetchOptions, headers: mergedHeaders } };
   }
 }

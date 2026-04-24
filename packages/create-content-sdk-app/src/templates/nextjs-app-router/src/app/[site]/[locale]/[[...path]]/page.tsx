@@ -1,6 +1,6 @@
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
 import { notFound } from 'next/navigation';
-import { draftMode } from 'next/headers';
+import { draftMode, headers as nextHeaders } from 'next/headers';
 <% if (prerender === 'SSG') { -%>
 import { SiteInfo } from '@sitecore-content-sdk/nextjs';
 import sites from '.sitecore/sites.json';
@@ -30,10 +30,13 @@ export default async function Page({ params, searchParams }: PageProps) {
   let page;
   if (draft.isEnabled) {
     const editingParams = await searchParams;
+    const headers = await nextHeaders();
+    const fetchOptions = client.getPreviewFetchOptions(headers);
+
     if (isDesignLibraryPreviewData(editingParams)) {
-      page = await client.getDesignLibraryData(editingParams);
+      page = await client.getDesignLibraryData(editingParams, fetchOptions);
     } else {
-      page = await client.getPreview(editingParams);
+      page = await client.getPreview(editingParams, fetchOptions);
     }
   } else {
     page = await client.getPage(path ?? [], { site, locale });

@@ -32,6 +32,7 @@ type Query = {
 };
 
 const allowedOrigin = 'https://allowed.com';
+const defaultAuthHeader = 'Bearer test-token';
 
 const mockRequest = ({
   query,
@@ -48,6 +49,7 @@ const mockRequest = ({
     headers: {
       host: 'localhost:3000',
       origin: allowedOrigin,
+      authorization: defaultAuthHeader,
       ...headers,
     },
   } as EditingNextApiRequest;
@@ -225,6 +227,7 @@ describe('EditingRenderMiddleware', () => {
       version: 'latest',
       mode: 'edit',
       layoutKind: 'shared',
+      authorization: defaultAuthHeader,
     });
 
     expect(res.send).to.have.been.calledOnce;
@@ -266,6 +269,7 @@ describe('EditingRenderMiddleware', () => {
       version: undefined,
       mode: 'edit',
       layoutKind: undefined,
+      authorization: defaultAuthHeader,
     });
   });
 
@@ -298,6 +302,7 @@ describe('EditingRenderMiddleware', () => {
       version: undefined,
       mode: 'edit',
       layoutKind: undefined,
+      authorization: defaultAuthHeader,
     });
 
     expect(res.status).to.be.calledOnceWith(200);
@@ -336,6 +341,7 @@ describe('EditingRenderMiddleware', () => {
       version: 'latest',
       mode: 'edit',
       layoutKind: 'shared',
+      authorization: defaultAuthHeader,
     });
 
     expect(res.status).to.be.calledOnceWith(200);
@@ -376,6 +382,7 @@ describe('EditingRenderMiddleware', () => {
       version: 'latest',
       mode: 'edit',
       layoutKind: 'shared',
+      authorization: defaultAuthHeader,
     });
 
     expect(res.status).to.be.calledOnceWith(200);
@@ -478,6 +485,7 @@ describe('EditingRenderMiddleware', () => {
         version: 'latest',
         mode: 'edit',
         layoutKind: 'shared',
+        authorization: defaultAuthHeader,
       });
     });
 
@@ -519,6 +527,7 @@ describe('EditingRenderMiddleware', () => {
         customParam1: 'value1',
         customParam2: 'value2',
         stringParam: 'string-value',
+        authorization: defaultAuthHeader,
       });
     });
 
@@ -580,6 +589,7 @@ describe('EditingRenderMiddleware', () => {
         mode: 'edit',
         layoutKind: 'shared',
         requiredParam: 'required-value',
+        authorization: defaultAuthHeader,
       });
       expect(res.status).to.have.been.calledWith(200);
     });
@@ -629,6 +639,7 @@ describe('EditingRenderMiddleware', () => {
         prefixedParam1: 'value1',
         prefixedParam2: 'value2',
         requiredParam: 'required-value',
+        authorization: defaultAuthHeader,
       });
     });
 
@@ -693,6 +704,7 @@ describe('EditingRenderMiddleware', () => {
         version: 'latest',
         mode: 'edit',
         layoutKind: 'shared',
+        authorization: defaultAuthHeader,
       });
       expect(res.status).to.have.been.calledWith(200);
     });
@@ -736,6 +748,7 @@ describe('EditingRenderMiddleware', () => {
         numberParam: '123',
         booleanParam: 'true',
         arrayParam: ['val1', 'val2'],
+        authorization: defaultAuthHeader,
       });
     });
 
@@ -1018,6 +1031,7 @@ describe('EditingRenderMiddleware', () => {
         version: 'latest',
         mode: 'preview',
         layoutKind: 'final',
+        authorization: defaultAuthHeader,
       });
 
       expect(res.setHeader).to.have.been.calledWith('Access-Control-Allow-Origin', allowedOrigin);
