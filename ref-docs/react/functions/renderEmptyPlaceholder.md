@@ -8,7 +8,7 @@
 
 > **renderEmptyPlaceholder**(`node`): `Element`
 
-Defined in: [packages/react/src/components/Placeholder/placeholder-utils.tsx:102](https://github.com/Sitecore/content-sdk/blob/4f2a7186eaa603a5f983accbbb7c18c13d5e6ddb/packages/react/src/components/Placeholder/placeholder-utils.tsx#L102)
+Defined in: [packages/react/src/components/Placeholder/placeholder-utils.tsx:102](https://github.com/Sitecore/content-sdk/blob/ef402dd75a112669c92b74a47a914a72b029d911/packages/react/src/components/Placeholder/placeholder-utils.tsx#L102)
 
 Renders the placeholder when it is empty. The required CSS styles are applied to the placeholder in edit mode.
 

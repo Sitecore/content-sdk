@@ -8,7 +8,7 @@
 
 > **defineProxy**(...`proxies`): `object`
 
-Defined in: [nextjs/src/proxy/proxy.ts:273](https://github.com/Sitecore/content-sdk/blob/4f2a7186eaa603a5f983accbbb7c18c13d5e6ddb/packages/nextjs/src/proxy/proxy.ts#L273)
+Defined in: [nextjs/src/proxy/proxy.ts:273](https://github.com/Sitecore/content-sdk/blob/ef402dd75a112669c92b74a47a914a72b029d911/packages/nextjs/src/proxy/proxy.ts#L273)
 
 Define a proxy with a list of proxy handlers
 
