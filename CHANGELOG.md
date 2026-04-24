@@ -22,6 +22,9 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
+* `[nextjs]` Preview allows users to access pages without proper permissions ([#448](https://github.com/Sitecore/content-sdk/pull/448))
+  - App Router: Extract `authorization` header from request headers and propagate it to page data fetching requests. Requires users to share headers via `client.getPreviewFetchOptions` method. See more details in 'What's New' section of the release notes.
+  - Pages Router: Set `authorization` header in preview data and propagate it to page data fetching requests.
 * Preview mode shows unpublishable content ([#410](https://github.com/Sitecore/content-sdk/pull/410))([416](https://github.com/Sitecore/content-sdk/pull/416))
 * `[core] [content]` Fix GraphQL client factory ignoring custom `fetch` and related options ([#418](https://github.com/Sitecore/content-sdk/pull/418))
 * `[nextjs]` AppRouter - NextLink is throwing Locale error in dev mode ([#427](https://github.com/Sitecore/content-sdk/pull/427))
