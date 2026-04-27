@@ -230,8 +230,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     try {
       debug.editing('fetching page route for %s', query.route);
       // Editing preview data, mapped from the incoming `sc_*` query parameters
-      // into the typed shape consumed by `client.getPreview` /
-      // `client.getDesignLibraryData`.
+      // into the typed shape consumed by preview methods.
       const editingPreviewData = {
         ...mapEditingParams(query as { [key: string]: string }),
         ...(allowedQueryParams as { [key: string]: string }),
