@@ -911,7 +911,10 @@ export class SitecoreClient extends SitecoreClient_2 {
     getPage(path: string | string[], pageOptions: PageOptions, options?: FetchOptions): Promise<Page | null>;
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
     getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null>;
-    getPreviewFetchOptions(headers: Headers, fetchOptions?: FetchOptions): FetchOptions;
+    getPreviewInputs(headers: Headers, extra?: FetchOptions): {
+        previewData: PreviewData;
+        fetchOptions: FetchOptions;
+    };
     getSiteNameFromPath(path: string | string[]): string;
     // Warning: (ae-forgotten-export) The symbol "SitecoreNextjsClientInit" needs to be exported by the entry point api-surface.d.ts
     //

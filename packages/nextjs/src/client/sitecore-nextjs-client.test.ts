@@ -533,25 +533,112 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe('getPreviewFetchOptions', () => {
-    it('should return fetch options with Authorization', () => {
-      const headers = new Headers({ Authorization: 'Bearer abc' });
-      const fetchOptions = { retries: 2 };
+  describe('getPreviewInputs', () => {
+    const editingParamsHeader = 'x-sitecore-editing-params';
 
-      const result = sitecoreClient.getPreviewFetchOptions(headers, fetchOptions);
+    it('should return empty previewData when EDITING_PARAMS_HEADER is missing', () => {
+      const headers = new Headers();
 
-      expect(result).to.deep.equal({ retries: 2, headers: { Authorization: 'Bearer abc' } });
+      const result = sitecoreClient.getPreviewInputs(headers);
+
+      expect(result.previewData).to.deep.equal({});
+      expect(result.fetchOptions).to.deep.equal({ headers: {} });
     });
 
-    it('should return fetch options with custom headers and Authorization header', () => {
+    it('should return empty previewData when EDITING_PARAMS_HEADER is invalid JSON', () => {
+      const headers = new Headers({ [editingParamsHeader]: 'not-json' });
+
+      const result = sitecoreClient.getPreviewInputs(headers);
+
+      expect(result.previewData).to.deep.equal({});
+    });
+
+    it('should parse EDITING_PARAMS_HEADER into previewData', () => {
+      const previewPayload = {
+        site: 'my-site',
+        itemId: 'item-id',
+        language: 'en',
+        mode: 'edit',
+        variantIds: 'v1',
+      };
+      const headers = new Headers({
+        [editingParamsHeader]: JSON.stringify(previewPayload),
+      });
+
+      const result = sitecoreClient.getPreviewInputs(headers);
+
+      expect(result.previewData).to.deep.equal(previewPayload);
+    });
+
+    it('should merge Authorization header into fetchOptions', () => {
       const headers = new Headers({ Authorization: 'Bearer abc' });
-      const fetchOptions = { retries: 2, headers: { 'X-Custom': 'value' } };
+      const extra = { retries: 2 };
 
-      const result = sitecoreClient.getPreviewFetchOptions(headers, fetchOptions);
+      const result = sitecoreClient.getPreviewInputs(headers, extra);
 
-      expect(result).to.deep.equal({
+      expect(result.fetchOptions).to.deep.equal({
+        retries: 2,
+        headers: { Authorization: 'Bearer abc' },
+      });
+    });
+
+    it('should preserve caller-supplied custom headers and add Authorization', () => {
+      const headers = new Headers({ Authorization: 'Bearer abc' });
+      const extra = { retries: 2, headers: { 'X-Custom': 'value' } };
+
+      const result = sitecoreClient.getPreviewInputs(headers, extra);
+
+      expect(result.fetchOptions).to.deep.equal({
         retries: 2,
         headers: { 'X-Custom': 'value', Authorization: 'Bearer abc' },
+      });
+    });
+
+    it('should not emit Authorization when header is absent', () => {
+      const headers = new Headers();
+      const extra = { headers: { 'X-Custom': 'value' } };
+
+      const result = sitecoreClient.getPreviewInputs(headers, extra);
+
+      expect(result.fetchOptions.headers).to.deep.equal({ 'X-Custom': 'value' });
+    });
+
+    it('should override caller-supplied lowercase authorization with the request value (no duplicate keys)', () => {
+      const headers = new Headers({ Authorization: 'Bearer request' });
+      const extra = { headers: { authorization: 'Bearer caller' } };
+
+      const result = sitecoreClient.getPreviewInputs(headers, extra);
+
+      expect(result.fetchOptions.headers).to.deep.equal({ Authorization: 'Bearer request' });
+    });
+
+    it('should preserve caller-supplied lowercase authorization when the request has no Authorization', () => {
+      const headers = new Headers();
+      const extra = { headers: { authorization: 'Bearer caller' } };
+
+      const result = sitecoreClient.getPreviewInputs(headers, extra);
+
+      expect(result.fetchOptions.headers).to.deep.equal({ authorization: 'Bearer caller' });
+    });
+
+    it('should return both previewData and fetchOptions populated together', () => {
+      const previewPayload = {
+        site: 'my-site',
+        itemId: 'item-id',
+        language: 'en',
+        mode: 'library',
+      };
+
+      const headers = new Headers({
+        [editingParamsHeader]: JSON.stringify(previewPayload),
+        Authorization: 'Bearer xyz',
+      });
+
+      const result = sitecoreClient.getPreviewInputs(headers);
+
+      expect(result.previewData).to.deep.equal(previewPayload);
+      expect(result.fetchOptions).to.deep.equal({
+        headers: { Authorization: 'Bearer xyz' },
       });
     });
   });
