@@ -151,6 +151,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       {
         ...previewDataParams,
         variantIds: previewDataParams.variantIds?.split(','),
+        authorization: headers.authorization,
       },
       {
         maxAge: 3,
