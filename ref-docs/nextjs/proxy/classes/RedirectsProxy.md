@@ -6,7 +6,7 @@
 
 # Class: RedirectsProxy
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:44](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/redirects-proxy.ts#L44)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:44](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/redirects-proxy.ts#L44)
 
 Proxy / handler fetches all redirects from Sitecore instance by grapqhl service
 compares with current url and redirects to target url
@@ -21,7 +21,7 @@ compares with current url and redirects to target url
 
 > **new RedirectsProxy**(`config?`): `RedirectsProxy`
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:51](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/redirects-proxy.ts#L51)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:51](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/redirects-proxy.ts#L51)
 
 #### Parameters
 
@@ -43,7 +43,7 @@ Defined in: [nextjs/src/proxy/redirects-proxy.ts:51](https://github.com/Sitecore
 
 > `protected` **config**: [`RedirectsProxyConfig`](../type-aliases/RedirectsProxyConfig.md)
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:51](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/redirects-proxy.ts#L51)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:51](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/redirects-proxy.ts#L51)
 
 redirects proxy config
 
@@ -57,7 +57,7 @@ redirects proxy config
 
 > `protected` **defaultHostname**: `string`
 
-Defined in: [nextjs/src/proxy/proxy.ts:95](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/proxy.ts#L95)
+Defined in: [nextjs/src/proxy/proxy.ts:95](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/proxy.ts#L95)
 
 #### Inherited from
 
@@ -69,7 +69,7 @@ Defined in: [nextjs/src/proxy/proxy.ts:95](https://github.com/Sitecore/content-s
 
 > `protected` **redirectsService**: [`RedirectsService`](../../index/classes/RedirectsService.md) \| `null`
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:45](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/redirects-proxy.ts#L45)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:45](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/redirects-proxy.ts#L45)
 
 ***
 
@@ -77,7 +77,7 @@ Defined in: [nextjs/src/proxy/redirects-proxy.ts:45](https://github.com/Sitecore
 
 > `protected` **siteResolver**: [`SiteResolver`](../../index/classes/SiteResolver.md)
 
-Defined in: [nextjs/src/proxy/proxy.ts:96](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/proxy.ts#L96)
+Defined in: [nextjs/src/proxy/proxy.ts:96](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/proxy.ts#L96)
 
 #### Inherited from
 
@@ -89,7 +89,7 @@ Defined in: [nextjs/src/proxy/proxy.ts:96](https://github.com/Sitecore/content-s
 
 > `protected` **createRedirectResponse**(`url`, `res`, `status`, `statusText`): `NextResponse`
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:556](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/redirects-proxy.ts#L556)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:556](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/redirects-proxy.ts#L556)
 
 Helper function to create a redirect response and remove the x-proxy-next header.
 
@@ -114,7 +114,7 @@ The redirect response.
 
 > `protected` **disabled**(`req`, `res`): `boolean` \| `undefined`
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:276](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/redirects-proxy.ts#L276)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:276](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/redirects-proxy.ts#L276)
 
 #### Parameters
 
@@ -137,7 +137,7 @@ Defined in: [nextjs/src/proxy/redirects-proxy.ts:276](https://github.com/Sitecor
 
 > `protected` **dispatchRedirect**(`target`, `type`, `req`, `res`, `isExternal?`): `NextResponse`
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:492](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/redirects-proxy.ts#L492)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:492](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/redirects-proxy.ts#L492)
 
 Helper function to dispatch a redirect or rewrite based on the redirect type.
 
@@ -163,7 +163,7 @@ The redirect/rewrite response, or `res` if the type is not recognized.
 
 > `protected` **extractDebugHeaders**(`incomingHeaders`): `object`
 
-Defined in: [nextjs/src/proxy/proxy.ts:166](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/proxy.ts#L166)
+Defined in: [nextjs/src/proxy/proxy.ts:166](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/proxy.ts#L166)
 
 Safely extract all headers for debug logging
 Necessary to avoid proxy issue https://github.com/vercel/next.js/issues/39765
@@ -190,7 +190,7 @@ Object with headers as key/value pairs
 
 > `protected` **getClientFactory**(`graphQLOptions`): [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [nextjs/src/proxy/proxy.ts:236](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/proxy.ts#L236)
+Defined in: [nextjs/src/proxy/proxy.ts:236](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/proxy.ts#L236)
 
 #### Parameters
 
@@ -212,7 +212,7 @@ Defined in: [nextjs/src/proxy/proxy.ts:236](https://github.com/Sitecore/content-
 
 > `protected` **getHostHeader**(`req`): `string`
 
-Defined in: [nextjs/src/proxy/proxy.ts:202](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/proxy.ts#L202)
+Defined in: [nextjs/src/proxy/proxy.ts:202](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/proxy.ts#L202)
 
 Extract 'host' header
 
@@ -236,7 +236,7 @@ Extract 'host' header
 
 > `protected` **getLanguage**(`req`, `res?`): `string`
 
-Defined in: [nextjs/src/proxy/proxy.ts:178](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/proxy.ts#L178)
+Defined in: [nextjs/src/proxy/proxy.ts:178](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/proxy.ts#L178)
 
 Provides used language
 
@@ -263,7 +263,7 @@ language
 
 > `protected` **getLanguageFromHeader**(`res?`): `string` \| `undefined`
 
-Defined in: [nextjs/src/proxy/proxy.ts:194](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/proxy.ts#L194)
+Defined in: [nextjs/src/proxy/proxy.ts:194](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/proxy.ts#L194)
 
 Extract language from locale header of the response
 set by LocaleProxy for app router application
@@ -290,7 +290,7 @@ language or undefined if not found
 
 > `protected` **getSite**(`req`, `res?`): [`SiteInfo`](../../index/type-aliases/SiteInfo.md)
 
-Defined in: [nextjs/src/proxy/proxy.ts:216](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/proxy.ts#L216)
+Defined in: [nextjs/src/proxy/proxy.ts:216](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/proxy.ts#L216)
 
 Get site information. If site name is stored in cookie, use it, otherwise resolve by hostname
 - If site can't be resolved by site name cookie use default site info based on provided parameters
@@ -319,7 +319,7 @@ site information
 
 > **handle**(`req`, `res`): `Promise`\<`NextResponse`\<`unknown`\>\>
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:102](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/redirects-proxy.ts#L102)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:102](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/redirects-proxy.ts#L102)
 
 Handler method to execute proxy logic
 
@@ -344,7 +344,7 @@ Handler method to execute proxy logic
 
 > `protected` **isAppRouter**(`res`): `boolean`
 
-Defined in: [nextjs/src/proxy/proxy.ts:121](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/proxy.ts#L121)
+Defined in: [nextjs/src/proxy/proxy.ts:121](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/proxy.ts#L121)
 
 Determines if the application is using the app router based on the locale header
 
@@ -370,7 +370,7 @@ true if app router is used
 
 > `protected` **isPrefetch**(`req`): `boolean`
 
-Defined in: [nextjs/src/proxy/proxy.ts:130](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/proxy.ts#L130)
+Defined in: [nextjs/src/proxy/proxy.ts:130](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/proxy.ts#L130)
 
 Determines if the request is a Next.js (next/link) prefetch request
 
@@ -396,7 +396,7 @@ is prefetch
 
 > `protected` **isPreview**(`req`): `boolean`
 
-Defined in: [nextjs/src/proxy/proxy.ts:109](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/proxy.ts#L109)
+Defined in: [nextjs/src/proxy/proxy.ts:109](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/proxy.ts#L109)
 
 Determines if mode is preview
 
@@ -422,7 +422,7 @@ is preview
 
 > `protected` **normalizeUrl**(`url`): `NextURL`
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:437](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/redirects-proxy.ts#L437)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:437](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/redirects-proxy.ts#L437)
 
 When a user clicks on a link generated by the Link component from next/link,
 Next.js adds special parameters in the route called path.
@@ -446,7 +446,7 @@ normalize url
 
 > `protected` **rewrite**(`rewritePath`, `req`, `res`, `skipHeader?`): `NextResponse`
 
-Defined in: [nextjs/src/proxy/proxy.ts:247](https://github.com/Sitecore/content-sdk/blob/0140eb8495d867c5549ce1cfd9ff09e0ee4c0166/packages/nextjs/src/proxy/proxy.ts#L247)
+Defined in: [nextjs/src/proxy/proxy.ts:247](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/proxy/proxy.ts#L247)
 
 Create a rewrite response
 
