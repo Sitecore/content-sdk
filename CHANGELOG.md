@@ -23,6 +23,11 @@ Our versioning strategy is as follows:
 
 ### 🐛 Bug Fixes
 
+* `[nextjs]` `[App Router]` searchParams empty on statically generated pages when Draft Mode is enabled (Vercel only) ([#448](https://github.com/Sitecore/content-sdk/pull/448))
+  - `searchParams` are not expected to be accessible in `draftMode` (this is a known Next.js issue). By design, preview data should be passed via request headers. To support this, we introduced the `client.getPreviewInputs` helper method. At the same time, preview data continues to be available via searchParams for backward compatibility. See more details in 'What's New' section of the release notes.
+* `[nextjs]` Preview allows users to access pages without proper permissions ([#448](https://github.com/Sitecore/content-sdk/pull/448))
+  - App Router: Extract `authorization` header from request headers and propagate it to page data fetching requests. Requires users to share headers via `client.getPreviewInputs` method. See more details in 'What's New' section of the release notes.
+  - Pages Router: Set `authorization` header in preview data and propagate it to page data fetching requests. No changes are required for consumers.
 * Preview mode shows unpublishable content ([#410](https://github.com/Sitecore/content-sdk/pull/410))([416](https://github.com/Sitecore/content-sdk/pull/416))
 * `[core] [content]` Fix GraphQL client factory ignoring custom `fetch` and related options ([#418](https://github.com/Sitecore/content-sdk/pull/418))
 * `[nextjs]` AppRouter - NextLink is throwing Locale error in dev mode ([#427](https://github.com/Sitecore/content-sdk/pull/427))
