@@ -8,7 +8,7 @@
 
 > **getDesignLibraryStylesheetLinks**(`layoutData`, `sitecoreEdgeContextId`, `sitecoreEdgeUrl?`): [`HTMLLink`](../../index/type-aliases/HTMLLink.md)[]
 
-Defined in: [content/src/layout/themes.ts:20](https://github.com/Sitecore/content-sdk/blob/4f2a7186eaa603a5f983accbbb7c18c13d5e6ddb/packages/content/src/layout/themes.ts#L20)
+Defined in: [content/src/layout/themes.ts:20](https://github.com/Sitecore/content-sdk/blob/ef402dd75a112669c92b74a47a914a72b029d911/packages/content/src/layout/themes.ts#L20)
 
 Walks through rendering tree and returns list of links of all FEAAS, BYOC or SXA Design Library Stylesheets that are used
 

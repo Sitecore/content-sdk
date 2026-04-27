@@ -6,7 +6,7 @@
 
 # Interface: AnalyticsProxyAdapter
 
-Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:16](https://github.com/Sitecore/content-sdk/blob/4f2a7186eaa603a5f983accbbb7c18c13d5e6ddb/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L16)
+Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:16](https://github.com/Sitecore/content-sdk/blob/ef402dd75a112669c92b74a47a914a72b029d911/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L16)
 
 Defines the AnalyticsProxyAdapter.
 
@@ -106,7 +106,7 @@ A promise that resolves when the client ID has been set.
 
 > **type**: `"proxy"`
 
-Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:20](https://github.com/Sitecore/content-sdk/blob/4f2a7186eaa603a5f983accbbb7c18c13d5e6ddb/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L20)
+Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:20](https://github.com/Sitecore/content-sdk/blob/ef402dd75a112669c92b74a47a914a72b029d911/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L20)
 
 The type of the adapter.
 

@@ -30,6 +30,7 @@ Our versioning strategy is as follows:
 * Preview mode shows unpublishable content ([#410](https://github.com/Sitecore/content-sdk/pull/410))([416](https://github.com/Sitecore/content-sdk/pull/416))
 * `[core] [content]` Fix GraphQL client factory ignoring custom `fetch` and related options ([#418](https://github.com/Sitecore/content-sdk/pull/418))
 * `[nextjs]` AppRouter - NextLink is throwing Locale error in dev mode ([#427](https://github.com/Sitecore/content-sdk/pull/427))
+* `[react]` Form component loses interactivity and state between rerenders ([#447](https://github.com/Sitecore/content-sdk/pull/447))
 
 ### ✨ Chores
 
