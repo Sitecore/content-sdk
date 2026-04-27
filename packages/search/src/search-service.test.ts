@@ -484,9 +484,8 @@ describe('SearchService', () => {
       const clientId = 'test-client-id';
 
       const { SearchService: SearchServiceWithPlugin } = proxyquire('./search-service', {
-        '@sitecore-content-sdk/core/tools': {
-          ...require('@sitecore-content-sdk/core/tools'),
-          tryCatch: () => [clientId, null],
+        '@sitecore-content-sdk/analytics-core': {
+          getClientId: () => clientId,
         },
       });
 
@@ -522,9 +521,10 @@ describe('SearchService', () => {
 
     it('should send an empty sessionId when the analytics plugin is not registered', async () => {
       const { SearchService: SearchServiceNoPlugin } = proxyquire('./search-service', {
-        '@sitecore-content-sdk/core/tools': {
-          ...require('@sitecore-content-sdk/core/tools'),
-          tryCatch: () => ['', new Error('Plugin not registered')],
+        '@sitecore-content-sdk/analytics-core': {
+          getClientId: () => {
+            throw new Error('Plugin not registered');
+          },
         },
       });
 
@@ -559,4 +559,3 @@ describe('SearchService', () => {
     });
   });
 });
-

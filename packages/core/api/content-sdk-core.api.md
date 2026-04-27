@@ -379,9 +379,6 @@ export interface TenantArgs {
     tenantId?: string;
 }
 
-// @internal
-export function tryCatch<CallbackResult, Fallback = undefined, Result = CallbackResult extends Promise<infer U> ? Promise<[U, null] | [Fallback, Error]> : [CallbackResult, null] | [Fallback, Error]>(fn: () => CallbackResult, fallback?: Fallback): Result;
-
 // Warnings were encountered during analysis:
 //
 // src/tools/index-node.ts:16:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
