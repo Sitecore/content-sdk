@@ -232,10 +232,6 @@ describe('Form', () => {
       executeScriptElements: execSpy,
     });
 
-    mockAnalyticsInternalModule({
-      isBotClientSide: isBotClientSideSpy,
-    });
-
     const rendered = render(
       <SitecoreProvider api={ctx.api} page={ctx.page.normal}>
         <Form rendering={rendering} params={rendering.params} />
