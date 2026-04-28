@@ -7,6 +7,11 @@
 import { AnalyticsAdapter } from '@sitecore-content-sdk/analytics-core/internal';
 import { AppPlaceholder } from '@sitecore-content-sdk/react';
 import { AppPlaceholderProps } from '@sitecore-content-sdk/react';
+import { ArgMeta } from '@sitecore-content-sdk/react';
+import { AtomChild } from '@sitecore-content-sdk/react';
+import { AtomMetadata } from '@sitecore-content-sdk/react';
+import { AtomSchemaInput } from '@sitecore-content-sdk/react';
+import { AtomType } from '@sitecore-content-sdk/react';
 import { BYOCClientWrapper } from '@sitecore-content-sdk/react';
 import { BYOCComponent } from '@sitecore-content-sdk/react';
 import { BYOCComponentParams } from '@sitecore-content-sdk/react';
@@ -15,6 +20,8 @@ import { BYOCServerWrapper } from '@sitecore-content-sdk/react';
 import { BYOCWrapper as BYOCWrapper_2 } from '@sitecore-content-sdk/react';
 import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
+import { CallbackArgZodTuple } from '@sitecore-content-sdk/react';
+import { CallbackPropKeys } from '@sitecore-content-sdk/react';
 import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { ClientEditingChromesUpdate } from '@sitecore-content-sdk/react';
 import { ComponentFields } from '@sitecore-content-sdk/content/layout';
@@ -25,9 +32,13 @@ import { ComponentMap } from '@sitecore-content-sdk/react';
 import { ComponentParams } from '@sitecore-content-sdk/content/layout';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { constants } from '@sitecore-content-sdk/core';
+import { createAtom } from '@sitecore-content-sdk/react';
 import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
 import { DateField } from '@sitecore-content-sdk/react';
+import { DateFieldSchema } from '@sitecore-content-sdk/react';
+import { dateFieldSchema } from '@sitecore-content-sdk/react';
 import { DeepRequired } from '@sitecore-content-sdk/content/config';
+import { DefaultChild } from '@sitecore-content-sdk/react';
 import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/react';
 import { DefaultEmptyFieldEditingComponentText } from '@sitecore-content-sdk/react';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
@@ -36,6 +47,7 @@ import { DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/content/ed
 import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 import { DictionaryService } from '@sitecore-content-sdk/content/i18n';
 import { DictionaryServiceConfig } from '@sitecore-content-sdk/content/i18n';
+import { EditableComponentProps } from '@sitecore-content-sdk/react';
 import { EDITING_COMPONENT_ID } from '@sitecore-content-sdk/content/layout';
 import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/content/layout';
 import { EditingRenderQueryParams } from '@sitecore-content-sdk/content/editing';
@@ -60,6 +72,8 @@ import { FetchOptions } from '@sitecore-content-sdk/content/client';
 import { Field } from '@sitecore-content-sdk/content/layout';
 import { File as File_2 } from '@sitecore-content-sdk/react';
 import { FileField } from '@sitecore-content-sdk/react';
+import { FileFieldSchema } from '@sitecore-content-sdk/react';
+import { fileFieldSchema } from '@sitecore-content-sdk/react';
 import { Form } from '@sitecore-content-sdk/react';
 import { GenerateMapArgs } from '@sitecore-content-sdk/content/tools';
 import { GenerateMapFunction } from '@sitecore-content-sdk/content/tools';
@@ -71,6 +85,7 @@ import { getComponentList } from '@sitecore-content-sdk/content/node-tools';
 import { getContentStylesheetLink } from '@sitecore-content-sdk/content/layout';
 import { getDesignLibraryStylesheetLinks } from '@sitecore-content-sdk/react';
 import { getEdgeProxyContentUrl } from '@sitecore-content-sdk/content/client';
+import { getFieldMeta } from '@sitecore-content-sdk/react';
 import { getFieldValue } from '@sitecore-content-sdk/content/layout';
 import { getGroomedVariantIds } from '@sitecore-content-sdk/content/personalize';
 import { getPersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
@@ -88,6 +103,8 @@ import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/content
 import { HTMLLink } from '@sitecore-content-sdk/content';
 import { Image as Image_2 } from '@sitecore-content-sdk/react';
 import { ImageField } from '@sitecore-content-sdk/react';
+import { ImageFieldSchema } from '@sitecore-content-sdk/react';
+import { imageFieldSchema } from '@sitecore-content-sdk/react';
 import { ImageFieldValue } from '@sitecore-content-sdk/react';
 import { ImageProps } from '@sitecore-content-sdk/react';
 import { ImageProps as ImageProps_2 } from 'next/image';
@@ -106,6 +123,8 @@ import { LayoutServiceContextData } from '@sitecore-content-sdk/content/layout';
 import { LayoutServiceData } from '@sitecore-content-sdk/content/layout';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { LinkField } from '@sitecore-content-sdk/react';
+import { LinkFieldSchema } from '@sitecore-content-sdk/react';
+import { linkFieldSchema } from '@sitecore-content-sdk/react';
 import { LinkFieldValue } from '@sitecore-content-sdk/react';
 import { LinkProps as LinkProps_2 } from '@sitecore-content-sdk/react';
 import { LinkProps as LinkProps_3 } from 'next/link';
@@ -135,6 +154,7 @@ import { PlaceholderComponentProps } from '@sitecore-content-sdk/react';
 import { PlaceholderData } from '@sitecore-content-sdk/content/layout';
 import { PlaceholdersData } from '@sitecore-content-sdk/content/layout';
 import { PreviewData } from 'next';
+import { PropMeta } from '@sitecore-content-sdk/react';
 import { default as React_2 } from 'react';
 import { ReactContentSdkComponent } from '@sitecore-content-sdk/react';
 import { ReactNode } from 'react';
@@ -150,6 +170,8 @@ import { resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 import { resolveUrl } from '@sitecore-content-sdk/core/tools';
 import { RetryStrategy } from '@sitecore-content-sdk/content/client';
 import { RichTextField } from '@sitecore-content-sdk/react';
+import { RichTextFieldSchema } from '@sitecore-content-sdk/react';
+import { richTextFieldSchema } from '@sitecore-content-sdk/react';
 import { RichTextProps as RichTextProps_2 } from '@sitecore-content-sdk/react';
 import { RobotsQueryResult } from '@sitecore-content-sdk/content/site';
 import { RobotsService } from '@sitecore-content-sdk/content/site';
@@ -175,13 +197,17 @@ import { SiteResolver } from '@sitecore-content-sdk/content/site';
 import { StaticPath } from '@sitecore-content-sdk/content';
 import { Text as Text_2 } from '@sitecore-content-sdk/react';
 import { TextField } from '@sitecore-content-sdk/react';
+import { TextFieldSchema } from '@sitecore-content-sdk/react';
+import { textFieldSchema } from '@sitecore-content-sdk/react';
 import { useSitecore } from '@sitecore-content-sdk/react';
 import { withAppPlaceholder } from '@sitecore-content-sdk/react';
+import { withArgMeta } from '@sitecore-content-sdk/react';
 import { withDatasourceCheck } from '@sitecore-content-sdk/react';
 import { withEditorChromes } from '@sitecore-content-sdk/react';
 import { withEmptyFieldEditingComponent } from '@sitecore-content-sdk/react';
 import { withFieldMetadata } from '@sitecore-content-sdk/react';
 import { withPlaceholder } from '@sitecore-content-sdk/react';
+import { withPropMeta } from '@sitecore-content-sdk/react';
 import { withSitecore } from '@sitecore-content-sdk/react';
 import { WriteImportMapArgs } from '@sitecore-content-sdk/content/node-tools';
 
@@ -216,6 +242,16 @@ export class AppRouterMultisiteProxy extends MultisiteProxy {
     protected shouldWarnWhenDisabled(_res: NextResponse): void;
 }
 
+export { ArgMeta }
+
+export { AtomChild }
+
+export { AtomMetadata }
+
+export { AtomSchemaInput }
+
+export { AtomType }
+
 export { BYOCClientWrapper }
 
 export { BYOCComponent }
@@ -243,6 +279,10 @@ export type CachedPageParams = {
 };
 
 export { CacheOptions }
+
+export { CallbackArgZodTuple }
+
+export { CallbackPropKeys }
 
 export { CdpHelper }
 
@@ -308,6 +348,8 @@ export { ComponentRendering }
 
 export { constants }
 
+export { createAtom }
+
 // Warning: (ae-forgotten-export) The symbol "EditingConfigRouteHandlerOptions" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
@@ -343,9 +385,15 @@ export function createSitemapRouteHandler(options: RouteHandlerOptions): {
 
 export { DateField }
 
+export { DateFieldSchema }
+
+export { dateFieldSchema }
+
 // @public
 const debug_2: Record<string, debug.Debugger>;
 export { debug_2 as debug }
+
+export { DefaultChild }
 
 export { DefaultEmptyFieldEditingComponentImage }
 
@@ -382,6 +430,8 @@ export { DictionaryPhrases }
 export { DictionaryService }
 
 export { DictionaryServiceConfig }
+
+export { EditableComponentProps }
 
 export { EDITING_COMPONENT_ID }
 
@@ -479,6 +529,10 @@ export { File_2 as File }
 
 export { FileField }
 
+export { FileFieldSchema }
+
+export { fileFieldSchema }
+
 export { Form }
 
 // @public
@@ -518,6 +572,8 @@ export { getContentStylesheetLink }
 export { getDesignLibraryStylesheetLinks }
 
 export { getEdgeProxyContentUrl }
+
+export { getFieldMeta }
 
 export { getFieldValue }
 
@@ -565,6 +621,10 @@ export { Image_2 as Image }
 
 export { ImageField }
 
+export { ImageFieldSchema }
+
+export { imageFieldSchema }
+
 export { ImageFieldValue }
 
 export { ImageProps }
@@ -601,6 +661,10 @@ export { LayoutServicePageState }
 export const Link: React_2.ForwardRefExoticComponent<Omit<LinkProps, "ref"> & React_2.RefAttributes<HTMLAnchorElement>>;
 
 export { LinkField }
+
+export { LinkFieldSchema }
+
+export { linkFieldSchema }
 
 export { LinkFieldValue }
 
@@ -759,6 +823,8 @@ export { PlaceholderData }
 
 export { PlaceholdersData }
 
+export { PropMeta }
+
 // @public
 export abstract class ProxyBase extends ProxyHandler_2 {
     constructor(config: ProxyBaseConfig);
@@ -851,6 +917,10 @@ export const RichText: {
 };
 
 export { RichTextField }
+
+export { RichTextFieldSchema }
+
+export { richTextFieldSchema }
 
 // @public
 export type RichTextProps = RichTextProps_2 & {
@@ -953,12 +1023,18 @@ export { Text_2 as Text }
 
 export { TextField }
 
+export { TextFieldSchema }
+
+export { textFieldSchema }
+
 // @public
 export function useComponentProps<ComponentData>(componentUid: string | undefined): ComponentData | undefined;
 
 export { useSitecore }
 
 export { withAppPlaceholder }
+
+export { withArgMeta }
 
 export { withDatasourceCheck }
 
@@ -969,6 +1045,8 @@ export { withEmptyFieldEditingComponent }
 export { withFieldMetadata }
 
 export { withPlaceholder }
+
+export { withPropMeta }
 
 export { withSitecore }
 
