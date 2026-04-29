@@ -70,7 +70,7 @@ describe('ProxyBase', () => {
     Object.defineProperties(res.headers, {
       set: {
         value: (key, value) => {
-        res.headers[key] = value;
+          res.headers[key] = value;
         },
         enumerable: false,
       },
@@ -620,6 +620,42 @@ describe('defineProxy', () => {
     expect(result).to.deep.equal({
       params: ['m2', 'm1', 'm3'],
     });
+  });
+
+  it('should stop executing proxies when a previous proxy sets location header', async () => {
+    const firstProxySpy = sinon.spy();
+    const skippedProxySpy = sinon.spy();
+
+    const proxy1: ProxyHandler = {
+      handle: (_req, res) => {
+        firstProxySpy();
+        return Promise.resolve(res);
+      },
+    };
+
+    const redirectingProxy: ProxyHandler = {
+      handle: (_req, res) => {
+        res.headers.set('location', '/redirect-target');
+        return Promise.resolve(res);
+      },
+    };
+
+    const proxyAfterRedirect: ProxyHandler = {
+      handle: (_req, res) => {
+        skippedProxySpy();
+        res.headers.set('after-redirect', 'true');
+        return Promise.resolve(res);
+      },
+    };
+
+    const req = {} as NextRequest;
+
+    const result = await defineProxy(proxy1, redirectingProxy, proxyAfterRedirect).exec(req);
+
+    expect(firstProxySpy).to.have.been.calledOnce;
+    expect(skippedProxySpy).to.not.have.been.called;
+    expect(result.headers.get('location')).to.equal('/redirect-target');
+    expect(result.headers.get('after-redirect')).to.equal(null);
   });
 
   it('should execute proxies with empty response', async () => {

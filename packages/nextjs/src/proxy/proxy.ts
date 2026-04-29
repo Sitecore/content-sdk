@@ -247,7 +247,11 @@ export const defineProxy = (...proxies: ProxyHandler[]) => {
       const start = Date.now();
 
       const proxyResponse = await proxies.reduce(
-        (p, proxy) => p.then((res) => proxy.handle(req, res)),
+        (p, proxy) =>
+          p.then((res) => {
+            if (res.headers?.get('location')) return res;
+            return proxy.handle(req, res);
+          }),
         Promise.resolve(response)
       );
 
