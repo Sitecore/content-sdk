@@ -16,8 +16,8 @@ Our versioning strategy is as follows:
 
 * `[nextjs]` `[App Router]` searchParams empty on statically generated pages when Draft Mode is enabled (Vercel only) ([#448](https://github.com/Sitecore/content-sdk/pull/448))
   - `searchParams` are not expected to be accessible in `draftMode` (this is a known Next.js issue). By design, preview data should be passed via request headers. To support this, we introduced the `client.getPreviewInputs` helper method. At the same time, preview data continues to be available via searchParams for backward compatibility. See more details in 'What's New' section of the release notes.
-* `[nextjs]` Preview allows users to access pages without proper permissions ([#448](https://github.com/Sitecore/content-sdk/pull/448))([#455](https://github.com/Sitecore/content-sdk/pull/455))
-  - App Router & Pages Router: Import and use `PreviewProxy` to gate preview requests. See more details in 'What's New' section of the release notes.
+* `[nextjs]` Preview allows users to access pages without proper permissions ([#448](https://github.com/Sitecore/content-sdk/pull/448))([#455](https://github.com/Sitecore/content-sdk/pull/455))([#456](https://github.com/Sitecore/content-sdk/pull/456))
+  - App Router & Pages Router: Import and use `PreviewMiddleware` to gate preview requests. See more details in 'What's New' section of the release notes.
 * `[react]` Form component loses interactivity and state between rerenders ([#447](https://github.com/Sitecore/content-sdk/pull/447))
 * `[core]` Preview mode shows unpublishable content ([#410](https://github.com/Sitecore/content-sdk/pull/410))([416](https://github.com/Sitecore/content-sdk/pull/416))
 

@@ -16,6 +16,7 @@ import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import {
+  EDITING_PARAMS_HEADER,
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from './constants';
@@ -481,6 +482,35 @@ describe('EditingRenderMiddleware', () => {
     );
     expect(fetchRequestHeaders).to.have.property('authorization', 'yes');
     expect(fetchRequestHeaders).to.not.have.property('otherHeader');
+  });
+
+  it('should propagate previewData as JSON in EDITING_PARAMS_HEADER', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    const fetcherGetStub = sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    const fetchRequestHeaders = fetcherGetStub.getCall(0).args[1]?.headers;
+
+    expect(fetchRequestHeaders).to.have.property(EDITING_PARAMS_HEADER);
+
+    const editingParams = JSON.parse(fetchRequestHeaders![EDITING_PARAMS_HEADER]);
+    expect(editingParams).to.deep.equal({
+      site: 'website',
+      itemId: '{11111111-1111-1111-1111-111111111111}',
+      language: 'en',
+      variantIds: ['dev'],
+      version: 'latest',
+      mode: 'edit',
+      layoutKind: 'shared',
+    });
   });
 
   it('should return 200 if internal request successful', async () => {
