@@ -1,13 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ProxyBase } from './proxy';
-import { PREVIEW_KEY, EditingOptions } from '@sitecore-content-sdk/content/editing';
+import { EditingOptions } from '@sitecore-content-sdk/content/editing';
 import { SitecoreClient } from '../client';
 import { EDITING_PARAMS_HEADER } from '../editing/constants';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 
+/**
+ * Configuration for PreviewProxy
+ * @public
+ */
 export type PreviewProxyConfig = { client: SitecoreClient };
 
+/**
+ * Proxy for preview requests. Acts as a gateway for preview requests.
+ * @public
+ */
 export class PreviewProxy extends ProxyBase {
   protected client: SitecoreClient;
 
