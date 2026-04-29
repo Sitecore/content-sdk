@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/search",
-  "version": "0.2.2-canary.24",
+  "version": "0.2.2-canary.25",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -36,8 +36,8 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.1.0-canary.15",
-    "@sitecore-content-sdk/core": "2.1.0-canary.15"
+    "@sitecore-content-sdk/analytics-core": "2.1.0-canary.16",
+    "@sitecore-content-sdk/core": "2.1.0-canary.16"
   },
   "devDependencies": {
     "@types/chai": "^5.2.3",
