@@ -155,7 +155,7 @@ describe('createLoaderDataServiceMiddleware', () => {
     expect(next).not.toHaveBeenCalled();
     expect(res.json).toHaveBeenCalledWith({
       kind: 'redirect',
-      redirect: {
+      data: {
         loaderRedirectTarget: '/other-page',
         status: 302,
       },

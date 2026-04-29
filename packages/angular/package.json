@@ -16,7 +16,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false",
-    "lint": "eslint \"./src/**/*.ts\""
+    "lint": "eslint \"./src/**/*.ts\" \"./node/**/*.ts\""
   },
   "prettier": {
     "printWidth": 100,
@@ -83,6 +83,10 @@
     ".": {
       "types": "./dist/types/sitecore-content-sdk-angular.d.ts",
       "default": "./dist/fesm2022/sitecore-content-sdk-angular.mjs"
+    },
+    "./node": {
+      "types": "./dist/types/sitecore-content-sdk-angular-node.d.ts",
+      "default": "./dist/fesm2022/sitecore-content-sdk-angular-node.mjs"
     }
   }
 }

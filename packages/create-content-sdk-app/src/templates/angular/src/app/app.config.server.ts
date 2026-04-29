@@ -1,12 +1,15 @@
 import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
 import { provideServerRendering, withRoutes } from '@angular/ssr';
+import { LOADER_RESULT_CACHE_TOKEN } from '@sitecore-content-sdk/angular';
 import { appConfig } from './app.config';
 import { serverRoutes } from './app.routes.server';
+import { loaderResultCache } from '../content-sdk/loader-cache';
 
 const serverConfig: ApplicationConfig = {
   providers: [
-    provideServerRendering(withRoutes(serverRoutes))
-  ]
+    provideServerRendering(withRoutes(serverRoutes)),
+    { provide: LOADER_RESULT_CACHE_TOKEN, useValue: loaderResultCache },
+  ],
 };
 
 export const config = mergeApplicationConfig(appConfig, serverConfig);

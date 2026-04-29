@@ -100,7 +100,7 @@ describe('loaderResolver', () => {
     it('should return RedirectCommand when getData returns redirect', async () => {
       mockLoaderData.getData.mockResolvedValue({
         kind: 'redirect',
-        redirect: { loaderRedirectTarget: '/other' },
+        data: { loaderRedirectTarget: '/other' },
       });
 
       const resolver = loaderResolver('page');

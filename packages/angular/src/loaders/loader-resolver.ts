@@ -17,10 +17,15 @@ import {
   LoaderHttpError,
   NotFoundNavigationError,
   isLoaderRedirectResult,
+  LoaderApiResponse,
 } from './models';
 import { redirectOnNavigationError } from './router-error-handling';
-import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN, SITECORE_CONFIG_TOKEN } from '../lib/tokens';
-import { buildLoaderCacheKeyString, getLoaderResultCache } from './loader-result-cache';
+import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN, LOADER_RESULT_CACHE_TOKEN } from '../lib/tokens';
+import {
+  buildLoaderCacheKeyString,
+  normalizeCachedLoaderResponse,
+} from './loader-cache.interface';
+import type { LoaderResultCacheStore } from './loader-cache.interface';
 
 /**
  * Create a state key for the loader
@@ -30,6 +35,40 @@ import { buildLoaderCacheKeyString, getLoaderResultCache } from './loader-result
  */
 function stateKey(loaderId: string, url: string) {
   return makeStateKey<unknown>(`loader:${loaderId}:${url}`);
+}
+
+/**
+ * Attempt to read from loader cache. Returns cached response or null if not cached or cache disabled.
+ * @param {ILoaderResultCache | null} loaderCache - The loader result cache instance
+ * @param {string} cacheKey - The cache key
+ * @returns {Promise<LoaderApiResponse | null>}
+ */
+async function tryReadFromCache(
+  loaderCache: LoaderResultCacheStore | null,
+  cacheKey: string
+): Promise<LoaderApiResponse | null> {
+  if (!loaderCache?.isEnabled()) {
+    return null;
+  }
+  const raw = await loaderCache.get(cacheKey);
+  return raw ? normalizeCachedLoaderResponse(raw) : null;
+}
+
+/**
+ * Persist loader result into cache (fire-and-forget). Does nothing if cache is disabled.
+ * @param {ILoaderResultCache | null} loaderCache - The loader result cache instance
+ * @param {string} cacheKey - The cache key
+ * @param {LoaderApiResponse} response - The response to cache
+ */
+function persistIntoCache(
+  loaderCache: LoaderResultCacheStore | null,
+  cacheKey: string,
+  response: LoaderApiResponse
+): void {
+  if (!loaderCache?.isEnabled()) {
+    return;
+  }
+  void loaderCache.set(cacheKey, response);
 }
 
 /**
@@ -77,12 +116,14 @@ async function resolveOnBrowser(
 
   const allParams = route.pathFromRoot.reduce((acc, r) => ({ ...acc, ...r.params }), {}) as Params;
 
-  const resp = await loaderData.getData({
-    url,
-    loaderId,
-    params: allParams,
-    query: route.queryParams as Record<string, string | string[]>,
-  });
+  const resp = normalizeCachedLoaderResponse(
+    await loaderData.getData({
+      url,
+      loaderId,
+      params: allParams,
+      query: route.queryParams as Record<string, string | string[]>,
+    })
+  );
 
   if (resp.kind === 'error') {
     throw new LoaderHttpError(resp.status, resp.message);
@@ -91,7 +132,7 @@ async function resolveOnBrowser(
     throw new NotFoundNavigationError();
   }
   if (resp.kind === 'redirect') {
-    return applyRedirect(router, resp.redirect.loaderRedirectTarget);
+    return applyRedirect(router, resp.data.loaderRedirectTarget);
   }
   return resp.data;
 }
@@ -117,57 +158,53 @@ export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
         // special handling for browser, as navigation error for handleNavigationError is only generated on server
         return redirectOnNavigationError(e as Error, url, notFoundRoute, errorRoute, router);
       }
-    }
+    } else {
+      const loader = registry[loaderId];
 
-    const loader = registry[loaderId];
-
-    if (!loader) {
-      throw new Error(`No loader registered for id "${loaderId}"`);
-    }
-
-    const requestContext = request ? extractRequestContext(request) : undefined;
-
-    const sitecoreConfig = inject(SITECORE_CONFIG_TOKEN, { optional: true });
-    const loaderCache = sitecoreConfig ? getLoaderResultCache(sitecoreConfig) : null;
-    const cacheKeyMaterial = buildLoaderCacheKeyString(loaderId, url);
-
-    if (loaderCache?.isEnabled()) {
-      const cached = await loaderCache.get(cacheKeyMaterial);
-      if (cached) {
-        if (cached.kind === 'redirect') {
-          return applyRedirect(router, cached.redirect.loaderRedirectTarget);
-        }
-        if (cached.kind === 'data') {
-          transferState.set(key, cached.data);
-          return cached.data;
-        }
+      if (!loader) {
+        throw new Error(`No loader registered for id "${loaderId}"`);
       }
-    }
 
-    const result = await loader({
-      url,
-      params: route.params,
-      query: route.queryParams,
-      requestContext,
-    });
-    if (isLoaderRedirectResult(result)) {
-      if (loaderCache?.isEnabled()) {
-        await loaderCache.set(cacheKeyMaterial, {
-          kind: 'redirect',
-          redirect: {
-            loaderRedirectTarget: result.loaderRedirectTarget,
-            status: result.status,
-          },
+      const requestContext = request ? extractRequestContext(request) : undefined;
+
+      const loaderCache = inject(LOADER_RESULT_CACHE_TOKEN, { optional: true }) ?? null;
+      const cacheKeyMaterial = buildLoaderCacheKeyString(loaderId, url);
+
+      const cachedResponse = await tryReadFromCache(loaderCache, cacheKeyMaterial);
+
+      if (cachedResponse?.kind === 'redirect') {
+        return applyRedirect(router, cachedResponse.data.loaderRedirectTarget);
+      }
+
+      let result: unknown;
+      let cacheHit = false;
+      if (cachedResponse?.kind === 'data') {
+        result = cachedResponse.data;
+        cacheHit = true;
+      } else {
+        result = await loader({
+          url,
+          params: route.params,
+          query: route.queryParams,
+          requestContext,
         });
       }
-      return applyRedirect(router, result.loaderRedirectTarget);
+
+      if (isLoaderRedirectResult(result)) {
+        !cacheHit &&
+          persistIntoCache(loaderCache, cacheKeyMaterial, {
+            kind: 'redirect',
+            data: {
+              loaderRedirectTarget: result.loaderRedirectTarget,
+              status: result.status,
+            },
+          });
+        return applyRedirect(router, result.loaderRedirectTarget);
+      }
+      !cacheHit && persistIntoCache(loaderCache, cacheKeyMaterial, { kind: 'data', data: result });
+      transferState.set(key, result);
+      return result;
     }
-    if (loaderCache?.isEnabled()) {
-      const apiResponse = { kind: 'data' as const, data: result };
-      await loaderCache.set(cacheKeyMaterial, apiResponse);
-    }
-    transferState.set(key, result);
-    return result;
   };
 
   resolver[LOADER_ID] = loaderId;

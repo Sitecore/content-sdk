@@ -30,6 +30,11 @@
             "styles": ["src/styles.css"],
             "server": "src/main.server.ts",
             "outputMode": "server",
+            "externalDependencies": [
+              "unstorage",
+              "@netlify/blobs",
+              "@vercel/kv"
+            ],
             "ssr": {
               "entry": "src/server.ts"
             }

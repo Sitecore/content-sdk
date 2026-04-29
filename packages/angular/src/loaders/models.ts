@@ -101,7 +101,7 @@ export function isLoaderRedirectResult(v: unknown): v is LoaderRedirectResult {
 
 export type LoaderApiResponse =
   | { kind: 'data'; data: any }
-  | { kind: 'redirect'; redirect: LoaderRedirectResult }
+  | { kind: 'redirect'; data: LoaderRedirectResult }
   | { kind: 'error'; status: number; message: string }
   | { kind: 'notFound'; status: number };
 

@@ -19,9 +19,10 @@ import {
 import { LOADER_DATA_ENDPOINT } from './constants';
 import {
   buildLoaderCacheKeyString,
-  getLoaderResultCache,
+  normalizeCachedLoaderResponse,
   shouldCacheLoaderResponse,
-} from '../loaders/loader-result-cache';
+} from '../loaders/loader-cache.interface';
+import type { LoaderResultCacheStore } from '../loaders/loader-cache.interface';
 
 /**
  * Execute a loader and return the API response
@@ -34,7 +35,7 @@ async function executeLoader(
   request: LoaderApiRequest,
   loaders: LoaderRegistry,
   requestContext: RequestContext | undefined,
-  loaderCache: ReturnType<typeof getLoaderResultCache> | null
+  loaderCache: LoaderResultCacheStore | null
 ): Promise<LoaderApiResponse> {
   const { loaderId, url, params, query } = request;
 
@@ -52,7 +53,7 @@ async function executeLoader(
   if (loaderCache?.isEnabled()) {
     const cached = await loaderCache.get(cacheKeyMaterial);
     if (cached) {
-      return cached;
+      return normalizeCachedLoaderResponse(cached);
     }
   }
 
@@ -68,7 +69,7 @@ async function executeLoader(
     if (isLoaderRedirectResult(result)) {
       const response: LoaderApiResponse = {
         kind: 'redirect',
-        redirect: {
+        data: {
           loaderRedirectTarget: result.loaderRedirectTarget,
           status: result.status,
         },
@@ -155,6 +156,7 @@ function parseLoaderRequest(
  * @example
  * ```typescript
  * import { createExpressDataMiddleware, LOADER_DATA_ENDPOINT } from '@sitecore-content-sdk/angular';
+ * import { LoaderResultCache } from '@sitecore-content-sdk/angular/node';
  *
  * // Use default endpoint (same as client when FETCH_DATA_ENDPOINT is not provided)
  * app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS }));
@@ -163,8 +165,9 @@ function parseLoaderRequest(
  * const dataEndpoint = process.env.DATA_ENDPOINT ?? LOADER_DATA_ENDPOINT;
  * app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS, endpoint: dataEndpoint }));
  *
- * // Pass the same Sitecore config as the app so loader caching uses `angular.loaderCache`:
- * app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS, sitecoreConfig: scConfig }));
+ * // With loader caching (recommended: same cache instance as SSR via `LOADER_RESULT_CACHE_TOKEN`):
+ * const loaderCache = LoaderResultCache.forConfig(scConfig);
+ * app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS, loaderCache }));
  * ```
  * @public
  */
@@ -175,9 +178,9 @@ export function createLoaderDataServiceMiddleware(
     loaders,
     endpoint = LOADER_DATA_ENDPOINT,
     extractRequestContext: extractReq = extractRequestContext,
-    sitecoreConfig,
+    loaderCache: explicitLoaderCache,
   } = options;
-  const loaderCache = sitecoreConfig ? getLoaderResultCache(sitecoreConfig) : null;
+  const loaderCache = explicitLoaderCache ?? null;
   return async (
     req: ExpressRequest,
     res: ExpressResponse,
