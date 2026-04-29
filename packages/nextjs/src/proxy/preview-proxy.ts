@@ -5,6 +5,7 @@ import { SitecoreClient } from '../client';
 import { EDITING_PARAMS_HEADER } from '../editing/constants';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
+import debug from '../debug';
 
 /**
  * Configuration for PreviewProxy
@@ -14,6 +15,7 @@ export type PreviewProxyConfig = { client: SitecoreClient };
 
 /**
  * Proxy for preview requests. Acts as a gateway for preview requests.
+ * Currently it only supports internal editing hosts.
  * @public
  */
 export class PreviewProxy extends ProxyBase {
@@ -35,11 +37,14 @@ export class PreviewProxy extends ProxyBase {
     const authHeader = req.headers.get('Authorization') ?? '';
     let editingOptions: EditingOptions | null = previewParams ? JSON.parse(previewParams) : null;
 
+    debug.editing('preview proxy start');
+
     // Process only preview requests (e.g. non editing or design studio)
     if (editingOptions && editingOptions.mode !== 'preview') {
+      debug.editing('preview proxy skipped (mode is not preview)');
       return res;
     }
-    
+
     let pageData: Page | null = null;
 
     // Scenario when the request is coming from /api/editing/render endpoint
@@ -67,11 +72,14 @@ export class PreviewProxy extends ProxyBase {
 
     // Preview content is not found or access is denied
     if (!pageData) {
+      debug.editing('preview content is not found or access is denied');
       return NextResponse.json(
-        { error: 'Preview content is not found or access is denied' },
+        { html: 'Preview content is not found or access is denied' },
         { status: 403 }
       );
     }
+
+    debug.editing('preview proxy end');
 
     return res;
   };

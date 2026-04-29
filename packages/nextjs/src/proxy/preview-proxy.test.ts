@@ -168,7 +168,7 @@ describe('PreviewProxy', () => {
         const result = await proxy.handle(req, res);
 
         expect(jsonStub).to.have.been.calledOnceWithExactly(
-          { error: 'Preview content is not found or access is denied' },
+          { html: 'Preview content is not found or access is denied' },
           { status: 403 }
         );
         expect(result).to.equal(fakeForbidden);
@@ -228,7 +228,7 @@ describe('PreviewProxy', () => {
         const result = await proxy.handle(req, res);
 
         expect(jsonStub).to.have.been.calledOnceWithExactly(
-          { error: 'Preview content is not found or access is denied' },
+          { html: 'Preview content is not found or access is denied' },
           { status: 403 }
         );
         expect(result).to.equal(fakeForbidden);
