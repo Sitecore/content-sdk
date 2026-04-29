@@ -6,7 +6,7 @@
 
 # Class: SitecoreClient
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:49](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/client/sitecore-nextjs-client.ts#L49)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:41](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/client/sitecore-nextjs-client.ts#L41)
 
 The SitecoreNextjsClient class extends the SitecoreClient class to provide additional functionality for Next.js.
 
@@ -20,7 +20,7 @@ The SitecoreNextjsClient class extends the SitecoreClient class to provide addit
 
 > **new SitecoreClient**(`initOptions`): `SitecoreNextjsClient`
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:51](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/client/sitecore-nextjs-client.ts#L51)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:43](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/client/sitecore-nextjs-client.ts#L43)
 
 #### Parameters
 
@@ -54,7 +54,7 @@ Defined in: content/types/client/sitecore-client.d.ts:211
 
 > `protected` **componentPropsService**: [`ComponentPropsService`](../../index/classes/ComponentPropsService.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:50](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/client/sitecore-nextjs-client.ts#L50)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:42](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/client/sitecore-nextjs-client.ts#L42)
 
 ***
 
@@ -122,7 +122,7 @@ Defined in: content/types/client/sitecore-client.d.ts:215
 
 > `protected` **initOptions**: `SitecoreNextjsClientInit`
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:51](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/client/sitecore-nextjs-client.ts#L51)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:43](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/client/sitecore-nextjs-client.ts#L43)
 
 #### Inherited from
 
@@ -187,7 +187,7 @@ Rewritten layout (or same reference if rewrite disabled)
 
 > **getAppRouterStaticParams**(`sites`, `languages?`, `fetchOptions?`): `Promise`\<`StaticParams`[]\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:172](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/client/sitecore-nextjs-client.ts#L172)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:132](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/client/sitecore-nextjs-client.ts#L132)
 
 Generates static params for the Next.js App Router from Sitecore routes.
 
@@ -234,7 +234,7 @@ Defined in: content/types/client/sitecore-client.d.ts:321
 
 > **getComponentData**(`layoutData`, `context`, `components`): `Promise`\<[`ComponentPropsCollection`](../../index/type-aliases/ComponentPropsCollection.md)\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:227](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/client/sitecore-nextjs-client.ts#L227)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:187](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/client/sitecore-nextjs-client.ts#L187)
 
 Parses components from nextjs component map and layoutData, executes getServerProps/getStaticProps methods
 and returns resulting props from components
@@ -259,7 +259,7 @@ component props
 
 > `protected` **getComponentPropsService**(): [`ComponentPropsService`](../../index/classes/ComponentPropsService.md)
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:258](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/client/sitecore-nextjs-client.ts#L258)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:236](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/client/sitecore-nextjs-client.ts#L236)
 
 #### Returns
 
@@ -304,7 +304,7 @@ This is a thin pass-through to the underlying `GraphQLClient.request` method,
 
 > **getDesignLibraryData**(`designLibData`, `fetchOptions?`): `Promise`\<[`Page`](../../index/type-aliases/Page.md)\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:107](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/client/sitecore-nextjs-client.ts#L107)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:99](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/client/sitecore-nextjs-client.ts#L99)
 
 Get design library page details for Design Library mode of your app
 
@@ -467,7 +467,7 @@ An array of `<link>` elements for stylesheets.
 
 > **getPage**(`path`, `pageOptions`, `options?`): `Promise`\<[`Page`](../../index/type-aliases/Page.md) \| `null`\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:78](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/client/sitecore-nextjs-client.ts#L78)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:70](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/client/sitecore-nextjs-client.ts#L70)
 
 Get page details for a route, with layout and other details
 
@@ -495,7 +495,7 @@ page details
 
 > **getPagePaths**(`sites`, `languages?`, `fetchOptions?`): `Promise`\<[`StaticPath`](../../index/type-aliases/StaticPath.md)[]\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:202](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/client/sitecore-nextjs-client.ts#L202)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:162](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/client/sitecore-nextjs-client.ts#L162)
 
 Retrieves the static paths for pages based on the given languages.
 
@@ -523,7 +523,7 @@ A promise that resolves to an array of static paths.
 
 > **getPreview**(`previewData`, `fetchOptions?`): `Promise`\<[`Page`](../../index/type-aliases/Page.md) \| `null`\>
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:124](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/client/sitecore-nextjs-client.ts#L124)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:114](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/client/sitecore-nextjs-client.ts#L114)
 
 Retrieves preview page and layout details
 
@@ -544,46 +544,26 @@ Retrieves preview page and layout details
 
 ***
 
-### getPreviewInputs()
+### getPreviewData()
 
-> **getPreviewInputs**(`headers`, `extra?`): `object`
+> **getPreviewData**(`headers`): `PreviewData`
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:148](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/client/sitecore-nextjs-client.ts#L148)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:224](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/client/sitecore-nextjs-client.ts#L224)
 
 **NOTE**: App Router only.
-
-Builds the inputs for the Preview mode based on incoming request headers.
-
-- Reads editing preview data from the `x-sitecore-editing-params` header.
-- Reads the `authorization` header from the request and merges it as
-  `Authorization` into `fetchOptions.headers`. The request value takes
-  precedence over any `Authorization` (case-insensitive) supplied via
-  `extra.headers`; existing case-variant keys are removed so the result
-  never contains duplicates. An empty `Authorization` is never emitted.
-
-Other headers present on the input are ignored. Non-`headers` fields of
-`extra` are preserved as-is. Extra headers are merged into `fetchOptions.headers`.
+Retrieves preview data from the request headers
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `headers` | `Headers` | The headers from the incoming request. |
-| `extra?` | `FetchOptions` | Optional base fetch options to merge with. |
 
 #### Returns
 
-`object`
+`PreviewData`
 
-The `previewData` and `fetchOptions` to forward
-
-##### fetchOptions
-
-> **fetchOptions**: `FetchOptions`
-
-##### previewData
-
-> **previewData**: `PreviewData`
+The preview data.
 
 ***
 
@@ -672,7 +652,7 @@ Throws 'REDIRECT_404' if requested sitemap is not found
 
 > **getSiteNameFromPath**(`path`): `string`
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:61](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/client/sitecore-nextjs-client.ts#L61)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:53](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/client/sitecore-nextjs-client.ts#L53)
 
 Gets site name based on the provided path
 
@@ -694,7 +674,7 @@ site name, or default site info if not found
 
 > **parsePath**(`path`): `string`
 
-Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:73](https://github.com/Sitecore/content-sdk/blob/855bd4d7f25d36c9c4a22021da6d73fb13ad812f/packages/nextjs/src/client/sitecore-nextjs-client.ts#L73)
+Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:65](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/client/sitecore-nextjs-client.ts#L65)
 
 Normalizes a nextjs path that could have been rewritten
 

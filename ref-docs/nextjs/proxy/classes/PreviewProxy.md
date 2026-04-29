@@ -2,53 +2,60 @@
 
 ***
 
-[@sitecore-content-sdk/nextjs](../../README.md) / [proxy](../README.md) / AppRouterMultisiteProxy
+[@sitecore-content-sdk/nextjs](../../README.md) / [proxy](../README.md) / PreviewProxy
 
-# Class: AppRouterMultisiteProxy
+# Class: PreviewProxy
 
-Defined in: [nextjs/src/proxy/app-router-multisite-proxy.ts:8](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/proxy/app-router-multisite-proxy.ts#L8)
+Defined in: [nextjs/src/proxy/preview-proxy.ts:21](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/proxy/preview-proxy.ts#L21)
 
-Proxy/handler for enabling multisite support in the Next.js App Router.
+Proxy for preview requests. Acts as a gateway for preview requests.
+Currently it only supports internal editing hosts deployed on Sitecore AI.
 
 ## Extends
 
-- [`MultisiteProxy`](MultisiteProxy.md)
+- [`ProxyBase`](ProxyBase.md)
 
 ## Constructors
 
 ### Constructor
 
-> **new AppRouterMultisiteProxy**(`config?`): `AppRouterMultisiteProxy`
+> **new PreviewProxy**(`config`): `PreviewProxy`
 
-Defined in: [nextjs/src/proxy/multisite-proxy.ts:39](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/proxy/multisite-proxy.ts#L39)
+Defined in: [nextjs/src/proxy/preview-proxy.ts:24](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/proxy/preview-proxy.ts#L24)
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `config?` | [`MultisiteProxyConfig`](../type-aliases/MultisiteProxyConfig.md) | Multisite proxy config |
+| Parameter | Type |
+| ------ | ------ |
+| `config` | [`PreviewProxyConfig`](../type-aliases/PreviewProxyConfig.md) |
 
 #### Returns
 
-`AppRouterMultisiteProxy`
+`PreviewProxy`
 
-#### Inherited from
+#### Overrides
 
-[`MultisiteProxy`](MultisiteProxy.md).[`constructor`](MultisiteProxy.md#constructor)
+[`ProxyBase`](ProxyBase.md).[`constructor`](ProxyBase.md#constructor)
 
 ## Properties
 
+### client
+
+> `protected` **client**: [`SitecoreClient`](../../client/classes/SitecoreClient.md)
+
+Defined in: [nextjs/src/proxy/preview-proxy.ts:22](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/proxy/preview-proxy.ts#L22)
+
+***
+
 ### config
 
-> `protected` **config**: [`MultisiteProxyConfig`](../type-aliases/MultisiteProxyConfig.md)
+> `protected` **config**: [`ProxyBaseConfig`](../type-aliases/ProxyBaseConfig.md)
 
-Defined in: [nextjs/src/proxy/multisite-proxy.ts:39](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/proxy/multisite-proxy.ts#L39)
-
-Multisite proxy config
+Defined in: [nextjs/src/proxy/proxy.ts:98](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/proxy/proxy.ts#L98)
 
 #### Inherited from
 
-[`MultisiteProxy`](MultisiteProxy.md).[`config`](MultisiteProxy.md#config)
+[`ProxyBase`](ProxyBase.md).[`config`](ProxyBase.md#config)
 
 ***
 
@@ -60,7 +67,7 @@ Defined in: [nextjs/src/proxy/proxy.ts:95](https://github.com/Sitecore/content-s
 
 #### Inherited from
 
-[`MultisiteProxy`](MultisiteProxy.md).[`defaultHostname`](MultisiteProxy.md#defaulthostname)
+[`ProxyBase`](ProxyBase.md).[`defaultHostname`](ProxyBase.md#defaulthostname)
 
 ***
 
@@ -72,7 +79,7 @@ Defined in: [nextjs/src/proxy/proxy.ts:96](https://github.com/Sitecore/content-s
 
 #### Inherited from
 
-[`MultisiteProxy`](MultisiteProxy.md).[`siteResolver`](MultisiteProxy.md#siteresolver)
+[`ProxyBase`](ProxyBase.md).[`siteResolver`](ProxyBase.md#siteresolver)
 
 ## Methods
 
@@ -80,7 +87,7 @@ Defined in: [nextjs/src/proxy/proxy.ts:96](https://github.com/Sitecore/content-s
 
 > `protected` **disabled**(`req`, `res`): `boolean` \| `undefined`
 
-Defined in: [nextjs/src/proxy/multisite-proxy.ts:136](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/proxy/multisite-proxy.ts#L136)
+Defined in: [nextjs/src/proxy/proxy.ts:149](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/proxy/proxy.ts#L149)
 
 #### Parameters
 
@@ -95,7 +102,7 @@ Defined in: [nextjs/src/proxy/multisite-proxy.ts:136](https://github.com/Sitecor
 
 #### Inherited from
 
-[`MultisiteProxy`](MultisiteProxy.md).[`disabled`](MultisiteProxy.md#disabled)
+[`ProxyBase`](ProxyBase.md).[`disabled`](ProxyBase.md#disabled)
 
 ***
 
@@ -122,7 +129,7 @@ Object with headers as key/value pairs
 
 #### Inherited from
 
-[`MultisiteProxy`](MultisiteProxy.md).[`extractDebugHeaders`](MultisiteProxy.md#extractdebugheaders)
+[`ProxyBase`](ProxyBase.md).[`extractDebugHeaders`](ProxyBase.md#extractdebugheaders)
 
 ***
 
@@ -144,7 +151,7 @@ Defined in: [nextjs/src/proxy/proxy.ts:236](https://github.com/Sitecore/content-
 
 #### Inherited from
 
-[`MultisiteProxy`](MultisiteProxy.md).[`getClientFactory`](MultisiteProxy.md#getclientfactory)
+[`ProxyBase`](ProxyBase.md).[`getClientFactory`](ProxyBase.md#getclientfactory)
 
 ***
 
@@ -168,7 +175,7 @@ Extract 'host' header
 
 #### Inherited from
 
-[`MultisiteProxy`](MultisiteProxy.md).[`getHostHeader`](MultisiteProxy.md#gethostheader)
+[`ProxyBase`](ProxyBase.md).[`getHostHeader`](ProxyBase.md#gethostheader)
 
 ***
 
@@ -195,7 +202,7 @@ language
 
 #### Inherited from
 
-[`MultisiteProxy`](MultisiteProxy.md).[`getLanguage`](MultisiteProxy.md#getlanguage)
+[`ProxyBase`](ProxyBase.md).[`getLanguage`](ProxyBase.md#getlanguage)
 
 ***
 
@@ -222,7 +229,7 @@ language or undefined if not found
 
 #### Inherited from
 
-[`MultisiteProxy`](MultisiteProxy.md).[`getLanguageFromHeader`](MultisiteProxy.md#getlanguagefromheader)
+[`ProxyBase`](ProxyBase.md).[`getLanguageFromHeader`](ProxyBase.md#getlanguagefromheader)
 
 ***
 
@@ -251,34 +258,7 @@ site information
 
 #### Inherited from
 
-[`MultisiteProxy`](MultisiteProxy.md).[`getSite`](MultisiteProxy.md#getsite)
-
-***
-
-### getSiteRewrite()
-
-> `protected` **getSiteRewrite**(`pathname`, `siteName`): `string`
-
-Defined in: [nextjs/src/proxy/app-router-multisite-proxy.ts:39](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/proxy/app-router-multisite-proxy.ts#L39)
-
-Generates a site-specific rewrite path for app router based on the provided pathname and site name.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `pathname` | `string` | The pathname to be rewritten. |
-| `siteName` | `string` | The name of the site. |
-
-#### Returns
-
-`string`
-
-The rewritten path as a string.
-
-#### Overrides
-
-[`MultisiteProxy`](MultisiteProxy.md).[`getSiteRewrite`](MultisiteProxy.md#getsiterewrite)
+[`ProxyBase`](ProxyBase.md).[`getSite`](ProxyBase.md#getsite)
 
 ***
 
@@ -286,7 +266,7 @@ The rewritten path as a string.
 
 > **handle**(`req`, `res`): `Promise`\<`NextResponse`\<`unknown`\>\>
 
-Defined in: [nextjs/src/proxy/multisite-proxy.ts:43](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/proxy/multisite-proxy.ts#L43)
+Defined in: [nextjs/src/proxy/preview-proxy.ts:30](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/proxy/preview-proxy.ts#L30)
 
 Handler method to execute proxy logic
 
@@ -301,9 +281,9 @@ Handler method to execute proxy logic
 
 `Promise`\<`NextResponse`\<`unknown`\>\>
 
-#### Inherited from
+#### Overrides
 
-[`MultisiteProxy`](MultisiteProxy.md).[`handle`](MultisiteProxy.md#handle)
+[`ProxyBase`](ProxyBase.md).[`handle`](ProxyBase.md#handle)
 
 ***
 
@@ -329,7 +309,7 @@ true if app router is used
 
 #### Inherited from
 
-[`MultisiteProxy`](MultisiteProxy.md).[`isAppRouter`](MultisiteProxy.md#isapprouter)
+[`ProxyBase`](ProxyBase.md).[`isAppRouter`](ProxyBase.md#isapprouter)
 
 ***
 
@@ -355,7 +335,7 @@ is prefetch
 
 #### Inherited from
 
-[`MultisiteProxy`](MultisiteProxy.md).[`isPrefetch`](MultisiteProxy.md#isprefetch)
+[`ProxyBase`](ProxyBase.md).[`isPrefetch`](ProxyBase.md#isprefetch)
 
 ***
 
@@ -381,7 +361,7 @@ is preview
 
 #### Inherited from
 
-[`MultisiteProxy`](MultisiteProxy.md).[`isPreview`](MultisiteProxy.md#ispreview)
+[`ProxyBase`](ProxyBase.md).[`isPreview`](ProxyBase.md#ispreview)
 
 ***
 
@@ -408,50 +388,4 @@ Create a rewrite response
 
 #### Inherited from
 
-[`MultisiteProxy`](MultisiteProxy.md).[`rewrite`](MultisiteProxy.md#rewrite)
-
-***
-
-### shouldSkipWhenDisabled()
-
-> `protected` **shouldSkipWhenDisabled**(): `boolean`
-
-Defined in: [nextjs/src/proxy/app-router-multisite-proxy.ts:29](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/proxy/app-router-multisite-proxy.ts#L29)
-
-In App Router, we cannot skip the proxy even if enabled is false,
-because the route structure requires the [site] segment.
-
-#### Returns
-
-`boolean`
-
-always returns false (never skip) for App Router
-
-#### Overrides
-
-[`MultisiteProxy`](MultisiteProxy.md).[`shouldSkipWhenDisabled`](MultisiteProxy.md#shouldskipwhendisabled)
-
-***
-
-### shouldWarnWhenDisabled()
-
-> `protected` **shouldWarnWhenDisabled**(`_res`): `void`
-
-Defined in: [nextjs/src/proxy/app-router-multisite-proxy.ts:15](https://github.com/Sitecore/content-sdk/blob/c06d0ea4e9b654ad3cb1c8d49cd23539a931fcce/packages/nextjs/src/proxy/app-router-multisite-proxy.ts#L15)
-
-Warns when multisite is disabled in App Router.
-The proxy will still run to prevent routing errors.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `_res` | `NextResponse` | response (unused, kept for method signature compatibility) |
-
-#### Returns
-
-`void`
-
-#### Overrides
-
-[`MultisiteProxy`](MultisiteProxy.md).[`shouldWarnWhenDisabled`](MultisiteProxy.md#shouldwarnwhendisabled)
+[`ProxyBase`](ProxyBase.md).[`rewrite`](ProxyBase.md#rewrite)
