@@ -489,6 +489,12 @@ export class SitecoreClient implements BaseSitecoreClient {
         }`
       );
     }
+
+    // If the route is not found it means access is denied or preview content is not found
+    if (!data.layoutData.sitecore.route) {
+      return null;
+    }
+
     let layout = data.layoutData;
     const personalizeData = getGroomedVariantIds(variantIds);
     personalizeLayout(layout, personalizeData.variantId, personalizeData.componentVariantIds);

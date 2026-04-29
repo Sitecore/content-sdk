@@ -5,11 +5,19 @@ import {
   PersonalizeProxy,
   RedirectsProxy,
   BotTrackingProxy,
+  PreviewProxy,
 } from '@sitecore-content-sdk/nextjs/proxy';
 import sites from '.sitecore/sites.json';
 import scConfig from 'sitecore.config';
+import client from 'lib/sitecore-client';
 
 export default function proxy(req: NextRequest, event: NextFetchEvent) {
+  // PreviewProxy authorizes preview requests
+  const preview = new PreviewProxy({
+    client: client,
+    ...scConfig.api.edge,
+  });
+
   // BotTrackingProxy will detect and track bots before any other proxies run
   const botTracking = new BotTrackingProxy({
     ...scConfig.api.edge,
@@ -70,7 +78,7 @@ export default function proxy(req: NextRequest, event: NextFetchEvent) {
     // },
   });
 
-  return defineProxy(botTracking, multisite, redirects, personalize).exec(req);
+  return defineProxy(preview, botTracking, multisite, redirects, personalize).exec(req);
 }
 
 export const config = {
