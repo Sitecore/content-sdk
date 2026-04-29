@@ -18,7 +18,6 @@ import {
   DesignLibraryRenderPreviewData,
   EditingPreviewData,
 } from '@sitecore-content-sdk/core/editing';
-import { EDITING_PARAMS_HEADER } from '../editing/constants';
 import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
 import {
   getPersonalizedRewriteData,
@@ -27,14 +26,7 @@ import {
 import { ComponentMap } from '@sitecore-content-sdk/react';
 import { StaticParams } from './models';
 import { SitecoreConfig } from '../config';
-
-type PreviewDataWithAuth<T> = T & {
-  /**
-   * The authorization header value to use for the request.
-   * Provided only in Pages Router Preview mode.
-   */
-  authorization?: string;
-};
+import { EDITING_PARAMS_HEADER } from '../editing/constants';
 
 /**
  * Init options for Sitecore Client that allows you to override services too
@@ -108,12 +100,10 @@ export class SitecoreNextjsClient extends SitecoreClient {
     designLibData: PreviewData,
     fetchOptions?: FetchOptions
   ): Promise<Page> {
-    const merged = this.mergePreviewAuthorization<DesignLibraryRenderPreviewData>(
-      designLibData,
+    return super.getDesignLibraryData(
+      designLibData as DesignLibraryRenderPreviewData,
       fetchOptions
     );
-
-    return super.getDesignLibraryData(merged.previewData, merged.fetchOptions);
   }
 
   /**
@@ -122,37 +112,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
    */
   async getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null> {
-    const merged = this.mergePreviewAuthorization<EditingPreviewData>(previewData, fetchOptions);
-
-    return super.getPreview(merged.previewData, merged.fetchOptions);
-  }
-
-  /**
-   * **NOTE**: App Router only.
-   *
-   * Builds the inputs for the Preview mode based on incoming request headers.
-   *
-   * - Reads editing preview data from the `x-sitecore-editing-params` header.
-   * - Reads the `authorization` header from the request and merges it as
-   *   `Authorization` into `fetchOptions.headers`. The request value takes
-   *   precedence over any `Authorization` (case-insensitive) supplied via
-   *   `extra.headers`; existing case-variant keys are removed so the result
-   *   never contains duplicates. An empty `Authorization` is never emitted.
-   *
-   * Other headers present on the input are ignored. Non-`headers` fields of
-   * `extra` are preserved as-is. Extra headers are merged into `fetchOptions.headers`.
-   * @param {Headers} headers - The headers from the incoming request.
-   * @param {FetchOptions} [extra] - Optional base fetch options to merge with.
-   * @returns The `previewData` and `fetchOptions` to forward
-   */
-  getPreviewInputs(
-    headers: Headers,
-    extra?: FetchOptions
-  ): { previewData: PreviewData; fetchOptions: FetchOptions } {
-    const previewData = this.parsePreviewDataFromHeader(headers);
-    const fetchOptions = this.mergeAuthorizationHeader(headers, extra);
-
-    return { previewData, fetchOptions };
+    return super.getPreview(previewData as EditingPreviewData, fetchOptions);
   }
 
   /**
@@ -255,54 +215,17 @@ export class SitecoreNextjsClient extends SitecoreClient {
     return componentProps;
   }
 
-  protected getComponentPropsService(): ComponentPropsService {
-    return new ComponentPropsService();
-  }
-
   /**
-   * **NOTE**: Pages Router only.
-   *
-   * Merges the authorization header from the preview data into the fetch options.
-   * The `authorization` field is always stripped from the returned preview data
-   * to avoid leaking it back into request payloads.
-   *
-   * The value stashed in preview data takes precedence over any caller-supplied
-   * `Authorization` header. Existing `Authorization` keys are removed
-   * case-insensitively before the merged value is set, so the result never
-   * contains duplicate keys.
-   * @param {PreviewData} previewData - The preview data to merge the authorization header from.
-   * @param {FetchOptions} [fetchOptions] - The fetch options to merge the authorization header into.
-   * @returns The preview data and fetch options with the authorization header merged.
+   * **NOTE**: App Router only.
+   * Retrieves preview data from the request headers
+   * @param {Headers} headers - The headers from the incoming request.
+   * @returns {PreviewData} The preview data.
    */
-  private mergePreviewAuthorization<T extends object>(
-    previewData: PreviewData,
-    fetchOptions?: FetchOptions
-  ): { previewData: T; fetchOptions?: FetchOptions } {
-    if (!previewData || typeof previewData !== 'object') {
-      return { previewData: previewData as unknown as T, fetchOptions };
-    }
+  getPreviewData(headers: Headers): PreviewData {
+    const packed = headers.get(EDITING_PARAMS_HEADER) ?? '';
 
-    const { authorization, ...rest } = previewData as PreviewDataWithAuth<T>;
-
-    if (!authorization) {
-      return { previewData: rest as T, fetchOptions };
-    }
-
-    const mergedHeaders = this.applyAuthorizationHeader(fetchOptions?.headers, authorization);
-
-    return { previewData: rest as T, fetchOptions: { ...fetchOptions, headers: mergedHeaders } };
-  }
-
-  /**
-   * Reads and JSON-parses the editing preview data propagated via
-   * `EDITING_PARAMS_HEADER`. Returns an empty object when the header is
-   * missing or its value is not valid JSON.
-   * @param {Headers} headers - The incoming request headers.
-   * @returns {PreviewData} The parsed preview data, or an empty object.
-   */
-  private parsePreviewDataFromHeader(headers: Headers): PreviewData {
-    const packed = headers.get(EDITING_PARAMS_HEADER);
     if (!packed) return {} as PreviewData;
+
     try {
       return JSON.parse(packed) as PreviewData;
     } catch {
@@ -310,46 +233,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
     }
   }
 
-  /**
-   * Builds `FetchOptions` by merging the `Authorization` header from the
-   * incoming request headers into `extra`. The request value takes precedence
-   * over any caller-supplied `Authorization` header (case-insensitive). An
-   * empty `Authorization` is never emitted.
-   * @param {Headers} headers - The incoming request headers.
-   * @param {FetchOptions} [extra] - Optional base fetch options to merge with.
-   * @returns {FetchOptions} The merged fetch options.
-   */
-  private mergeAuthorizationHeader(headers: Headers, extra?: FetchOptions): FetchOptions {
-    const authorization = headers.get('authorization');
-    const mergedHeaders = this.applyAuthorizationHeader(extra?.headers, authorization);
-
-    return { ...extra, headers: mergedHeaders };
-  }
-
-  /**
-   * Returns a shallow-cloned headers record with `Authorization` set to
-   * `authorization` (when truthy). Any pre-existing `Authorization` key is
-   * removed case-insensitively to avoid emitting both `authorization` and
-   * `Authorization` in the same record.
-   * @param {Record<string, string> | undefined} headers - Existing headers, if any.
-   * @param {string | null | undefined} authorization - The authorization value to apply, or null/undefined to leave headers unchanged.
-   * @returns {Record<string, string>} The merged headers.
-   */
-  private applyAuthorizationHeader(
-    headers: Record<string, string> | undefined,
-    authorization: string | null | undefined
-  ): Record<string, string> {
-    const merged: Record<string, string> = { ...((headers ?? {}) as Record<string, string>) };
-    if (!authorization) return merged;
-
-    for (const key of Object.keys(merged)) {
-      if (key.toLowerCase() === 'authorization') {
-        delete merged[key];
-      }
-    }
-
-    merged.Authorization = authorization;
-
-    return merged;
+  protected getComponentPropsService(): ComponentPropsService {
+    return new ComponentPropsService();
   }
 }

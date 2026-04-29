@@ -220,14 +220,16 @@ export const getEditingRequestHtml = async (
     .catch((err) => {
       // We need to handle not found error provided by Vercel
       // for `fallback: false` pages
-      if (err.response.status === 404) {
+      // Or preview content is not found or access is denied
+      if (err.response.status === 404 || err.response.status === 403) {
         return err.response;
       }
 
       throw err;
     });
 
-  let html = pageRes.data;
+  // pageRes.data.html can be passed by middleware
+  let html = typeof pageRes.data === 'string' ? pageRes.data : pageRes.data?.html || '';
   if (!html || html.length === 0) {
     throw new Error(`Failed to render html for ${requestUrl.toString()}`);
   }

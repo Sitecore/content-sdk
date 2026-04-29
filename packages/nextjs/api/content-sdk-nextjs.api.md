@@ -751,7 +751,60 @@ export { PlaceholderData }
 
 export { PlaceholdersData }
 
-export { PluginDefinition }
+
+// @public
+export class PreviewProxy extends ProxyBase {
+    constructor(config: PreviewProxyConfig);
+    // (undocumented)
+    protected client: SitecoreClient;
+    // (undocumented)
+    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+}
+
+// @public
+export type PreviewProxyConfig = {
+    client: SitecoreClient;
+};
+
+// @public
+export abstract class ProxyBase extends ProxyHandler_2 {
+    constructor(config: ProxyBaseConfig);
+    // (undocumented)
+    protected config: ProxyBaseConfig;
+    // (undocumented)
+    protected defaultHostname: string;
+    // (undocumented)
+    protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
+    protected extractDebugHeaders(incomingHeaders: Headers): {
+        [key: string]: string;
+    };
+    // (undocumented)
+    protected getClientFactory(graphQLOptions: GraphQLClientOptions): GraphQLRequestClientFactory_2;
+    protected getHostHeader(req: NextRequest): string;
+    protected getLanguage(req: NextRequest, res?: NextResponse): string;
+    protected getLanguageFromHeader(res?: NextResponse): string | undefined;
+    protected getSite(req: NextRequest, res?: NextResponse): SiteInfo;
+    protected isAppRouter(res: NextResponse): boolean;
+    protected isPrefetch(req: NextRequest): boolean;
+    protected isPreview(req: NextRequest): boolean;
+    protected rewrite(rewritePath: string, req: NextRequest, res: NextResponse, skipHeader?: boolean): NextResponse;
+    // (undocumented)
+    protected siteResolver: SiteResolver;
+}
+
+// @public
+export type ProxyBaseConfig = {
+    skip?: (req: NextRequest, res: NextResponse) => boolean;
+    defaultHostname?: string;
+    defaultLanguage?: string;
+    sites: SiteInfo[];
+};
+
+// @public
+abstract class ProxyHandler_2 {
+    abstract handle(req: NextRequest, res: NextResponse): Promise<NextResponse>;
+}
+export { ProxyHandler_2 as ProxyHandler }
 
 export { REDIRECT_TYPE_301 }
 
@@ -840,10 +893,7 @@ export class SitecoreClient extends SitecoreClient_2 {
     getPage(path: string | string[], pageOptions: PageOptions, options?: FetchOptions): Promise<Page | null>;
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
     getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null>;
-    getPreviewInputs(headers: Headers, extra?: FetchOptions): {
-        previewData: PreviewData;
-        fetchOptions: FetchOptions;
-    };
+    getPreviewData(headers: Headers): PreviewData;
     getSiteNameFromPath(path: string | string[]): string;
     // Warning: (ae-forgotten-export) The symbol "SitecoreNextjsClientInit" needs to be exported by the entry point api-surface.d.ts
     //

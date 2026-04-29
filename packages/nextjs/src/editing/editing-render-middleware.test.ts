@@ -227,7 +227,6 @@ describe('EditingRenderMiddleware', () => {
       version: 'latest',
       mode: 'edit',
       layoutKind: 'shared',
-      authorization: defaultAuthHeader,
     });
 
     expect(res.send).to.have.been.calledOnce;
@@ -269,7 +268,6 @@ describe('EditingRenderMiddleware', () => {
       version: undefined,
       mode: 'edit',
       layoutKind: undefined,
-      authorization: defaultAuthHeader,
     });
   });
 
@@ -302,7 +300,6 @@ describe('EditingRenderMiddleware', () => {
       version: undefined,
       mode: 'edit',
       layoutKind: undefined,
-      authorization: defaultAuthHeader,
     });
 
     expect(res.status).to.be.calledOnceWith(200);
@@ -340,7 +337,6 @@ describe('EditingRenderMiddleware', () => {
       version: 'latest',
       mode: 'edit',
       layoutKind: 'shared',
-      authorization: defaultAuthHeader,
     });
 
     expect(res.status).to.be.calledOnceWith(200);
@@ -381,7 +377,6 @@ describe('EditingRenderMiddleware', () => {
       version: 'latest',
       mode: 'edit',
       layoutKind: 'shared',
-      authorization: defaultAuthHeader,
     });
 
     expect(res.status).to.be.calledOnceWith(200);
@@ -709,7 +704,6 @@ describe('EditingRenderMiddleware', () => {
         version: 'latest',
         mode: 'preview',
         layoutKind: 'final',
-        authorization: defaultAuthHeader,
       });
 
       expect(res.setHeader).to.have.been.calledWith('Access-Control-Allow-Origin', allowedOrigin);

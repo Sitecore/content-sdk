@@ -11,6 +11,7 @@ export {
   PersonalizeService,
   PersonalizeServiceConfig,
 } from '@sitecore-content-sdk/core/personalize';
+export { PreviewMiddleware, PreviewMiddlewareConfig } from './preview-middleware';
 export {
   RedirectsService,
   RedirectsServiceConfig,

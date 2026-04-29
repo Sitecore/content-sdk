@@ -328,7 +328,7 @@ describe('SitecoreClient', () => {
     const localSandbox = sinon.createSandbox();
     let basePreviewStub: sinon.SinonStub;
 
-    const basePreviewData = {
+    const previewData = {
       site: 'my-site',
       itemId: 'item-id',
       language: 'en',
@@ -344,58 +344,26 @@ describe('SitecoreClient', () => {
       localSandbox.restore();
     });
 
-    it('should forward previewData and fetchOptions unchanged when previewData has no authorization', async () => {
-      const fetchOptions = { retries: 2 };
+    it('should forward previewData and fetchOptions to base getPreview', async () => {
+      const fetchOptions = { retries: 2, headers: { Authorization: 'Bearer abc' } };
 
-      await sitecoreClient.getPreview(basePreviewData, fetchOptions);
+      await sitecoreClient.getPreview(previewData, fetchOptions);
 
       expect(basePreviewStub).to.have.been.calledOnce;
 
       const [forwardedPreview, forwardedFetchOptions] = basePreviewStub.firstCall.args;
-
-      expect(forwardedPreview).to.deep.equal(basePreviewData);
+      expect(forwardedPreview).to.equal(previewData);
       expect(forwardedFetchOptions).to.equal(fetchOptions);
     });
 
-    it('should promote previewData.authorization to Authorization header and strip it from previewData', async () => {
-      const previewData = { ...basePreviewData, authorization: 'Bearer abc' };
-
+    it('should call base getPreview without fetchOptions when none provided', async () => {
       await sitecoreClient.getPreview(previewData);
 
       expect(basePreviewStub).to.have.been.calledOnce;
 
       const [forwardedPreview, forwardedFetchOptions] = basePreviewStub.firstCall.args;
-
-      expect(forwardedPreview).to.deep.equal(basePreviewData);
-      expect(forwardedPreview).to.not.have.property('authorization');
-      expect(forwardedFetchOptions?.headers).to.deep.equal({ Authorization: 'Bearer abc' });
-    });
-
-    it('should preserve other fetchOptions fields and other headers when merging authorization', async () => {
-      const previewData = { ...basePreviewData, authorization: 'Bearer abc' };
-      const fetchOptions = {
-        retries: 5,
-        headers: { 'X-Custom': 'value' },
-      };
-
-      await sitecoreClient.getPreview(previewData, fetchOptions);
-
-      const [, forwardedFetchOptions] = basePreviewStub.firstCall.args;
-      expect(forwardedFetchOptions).to.deep.include({ retries: 5 });
-      expect(forwardedFetchOptions?.headers).to.deep.equal({
-        'X-Custom': 'value',
-        Authorization: 'Bearer abc',
-      });
-    });
-
-    it('should override caller-supplied Authorization with stashed value', async () => {
-      const previewData = { ...basePreviewData, authorization: 'Bearer stashed' };
-      const fetchOptions = { headers: { Authorization: 'Bearer caller' } };
-
-      await sitecoreClient.getPreview(previewData, fetchOptions);
-
-      const [, forwardedFetchOptions] = basePreviewStub.firstCall.args;
-      expect(forwardedFetchOptions?.headers).to.deep.equal({ Authorization: 'Bearer stashed' });
+      expect(forwardedPreview).to.equal(previewData);
+      expect(forwardedFetchOptions).to.be.undefined;
     });
   });
 
@@ -403,7 +371,7 @@ describe('SitecoreClient', () => {
     const localSandbox = sinon.createSandbox();
     let baseDesignLibraryStub: sinon.SinonStub;
 
-    const baseDesignLibraryData = {
+    const designLibData = {
       site: 'my-site',
       itemId: 'item-id',
       renderingId: 'rendering-id',
@@ -422,59 +390,26 @@ describe('SitecoreClient', () => {
       localSandbox.restore();
     });
 
-    it('should forward designLibData and fetchOptions unchanged when designLibData has no authorization', async () => {
-      const fetchOptions = { retries: 2 };
+    it('should forward designLibData and fetchOptions to base getDesignLibraryData', async () => {
+      const fetchOptions = { retries: 2, headers: { Authorization: 'Bearer abc' } };
 
-      await sitecoreClient.getDesignLibraryData(baseDesignLibraryData, fetchOptions);
+      await sitecoreClient.getDesignLibraryData(designLibData, fetchOptions);
 
       expect(baseDesignLibraryStub).to.have.been.calledOnce;
 
       const [forwardedData, forwardedFetchOptions] = baseDesignLibraryStub.firstCall.args;
-
-      expect(forwardedData).to.deep.equal(baseDesignLibraryData);
+      expect(forwardedData).to.equal(designLibData);
       expect(forwardedFetchOptions).to.equal(fetchOptions);
     });
 
-    it('should promote designLibData.authorization to Authorization header and strip it from designLibData', async () => {
-      const designLibData = { ...baseDesignLibraryData, authorization: 'Bearer abc' };
-
+    it('should call base getDesignLibraryData without fetchOptions when none provided', async () => {
       await sitecoreClient.getDesignLibraryData(designLibData);
 
       expect(baseDesignLibraryStub).to.have.been.calledOnce;
 
       const [forwardedData, forwardedFetchOptions] = baseDesignLibraryStub.firstCall.args;
-
-      expect(forwardedData).to.deep.equal(baseDesignLibraryData);
-      expect(forwardedData).to.not.have.property('authorization');
-      expect(forwardedFetchOptions?.headers).to.deep.equal({ Authorization: 'Bearer abc' });
-    });
-
-    it('should preserve other fetchOptions fields and other headers when merging authorization', async () => {
-      const designLibData = { ...baseDesignLibraryData, authorization: 'Bearer abc' };
-      const fetchOptions = {
-        retries: 5,
-        headers: { 'X-Custom': 'value' },
-      };
-
-      await sitecoreClient.getDesignLibraryData(designLibData, fetchOptions);
-
-      const [, forwardedFetchOptions] = baseDesignLibraryStub.firstCall.args;
-
-      expect(forwardedFetchOptions).to.deep.include({ retries: 5 });
-      expect(forwardedFetchOptions?.headers).to.deep.equal({
-        'X-Custom': 'value',
-        Authorization: 'Bearer abc',
-      });
-    });
-
-    it('should override caller-supplied Authorization with stashed value', async () => {
-      const designLibData = { ...baseDesignLibraryData, authorization: 'Bearer stashed' };
-      const fetchOptions = { headers: { Authorization: 'Bearer caller' } };
-
-      await sitecoreClient.getDesignLibraryData(designLibData, fetchOptions);
-
-      const [, forwardedFetchOptions] = baseDesignLibraryStub.firstCall.args;
-      expect(forwardedFetchOptions?.headers).to.deep.equal({ Authorization: 'Bearer stashed' });
+      expect(forwardedData).to.equal(designLibData);
+      expect(forwardedFetchOptions).to.be.undefined;
     });
   });
 
@@ -533,24 +468,31 @@ describe('SitecoreClient', () => {
     });
   });
 
-  describe('getPreviewInputs', () => {
+  describe('getPreviewData', () => {
     const editingParamsHeader = 'x-sitecore-editing-params';
 
     it('should return empty previewData when EDITING_PARAMS_HEADER is missing', () => {
       const headers = new Headers();
 
-      const result = sitecoreClient.getPreviewInputs(headers);
+      const result = sitecoreClient.getPreviewData(headers);
 
-      expect(result.previewData).to.deep.equal({});
-      expect(result.fetchOptions).to.deep.equal({ headers: {} });
+      expect(result).to.deep.equal({});
+    });
+
+    it('should return empty previewData when EDITING_PARAMS_HEADER is empty', () => {
+      const headers = new Headers({ [editingParamsHeader]: '' });
+
+      const result = sitecoreClient.getPreviewData(headers);
+
+      expect(result).to.deep.equal({});
     });
 
     it('should return empty previewData when EDITING_PARAMS_HEADER is invalid JSON', () => {
       const headers = new Headers({ [editingParamsHeader]: 'not-json' });
 
-      const result = sitecoreClient.getPreviewInputs(headers);
+      const result = sitecoreClient.getPreviewData(headers);
 
-      expect(result.previewData).to.deep.equal({});
+      expect(result).to.deep.equal({});
     });
 
     it('should parse EDITING_PARAMS_HEADER into previewData', () => {
@@ -565,81 +507,27 @@ describe('SitecoreClient', () => {
         [editingParamsHeader]: JSON.stringify(previewPayload),
       });
 
-      const result = sitecoreClient.getPreviewInputs(headers);
+      const result = sitecoreClient.getPreviewData(headers);
 
-      expect(result.previewData).to.deep.equal(previewPayload);
+      expect(result).to.deep.equal(previewPayload);
     });
 
-    it('should merge Authorization header into fetchOptions', () => {
-      const headers = new Headers({ Authorization: 'Bearer abc' });
-      const extra = { retries: 2 };
-
-      const result = sitecoreClient.getPreviewInputs(headers, extra);
-
-      expect(result.fetchOptions).to.deep.equal({
-        retries: 2,
-        headers: { Authorization: 'Bearer abc' },
-      });
-    });
-
-    it('should preserve caller-supplied custom headers and add Authorization', () => {
-      const headers = new Headers({ Authorization: 'Bearer abc' });
-      const extra = { retries: 2, headers: { 'X-Custom': 'value' } };
-
-      const result = sitecoreClient.getPreviewInputs(headers, extra);
-
-      expect(result.fetchOptions).to.deep.equal({
-        retries: 2,
-        headers: { 'X-Custom': 'value', Authorization: 'Bearer abc' },
-      });
-    });
-
-    it('should not emit Authorization when header is absent', () => {
-      const headers = new Headers();
-      const extra = { headers: { 'X-Custom': 'value' } };
-
-      const result = sitecoreClient.getPreviewInputs(headers, extra);
-
-      expect(result.fetchOptions.headers).to.deep.equal({ 'X-Custom': 'value' });
-    });
-
-    it('should override caller-supplied lowercase authorization with the request value (no duplicate keys)', () => {
-      const headers = new Headers({ Authorization: 'Bearer request' });
-      const extra = { headers: { authorization: 'Bearer caller' } };
-
-      const result = sitecoreClient.getPreviewInputs(headers, extra);
-
-      expect(result.fetchOptions.headers).to.deep.equal({ Authorization: 'Bearer request' });
-    });
-
-    it('should preserve caller-supplied lowercase authorization when the request has no Authorization', () => {
-      const headers = new Headers();
-      const extra = { headers: { authorization: 'Bearer caller' } };
-
-      const result = sitecoreClient.getPreviewInputs(headers, extra);
-
-      expect(result.fetchOptions.headers).to.deep.equal({ authorization: 'Bearer caller' });
-    });
-
-    it('should return both previewData and fetchOptions populated together', () => {
+    it('should ignore unrelated headers when parsing previewData', () => {
       const previewPayload = {
         site: 'my-site',
         itemId: 'item-id',
         language: 'en',
         mode: 'library',
       };
-
       const headers = new Headers({
         [editingParamsHeader]: JSON.stringify(previewPayload),
         Authorization: 'Bearer xyz',
+        'X-Custom': 'value',
       });
 
-      const result = sitecoreClient.getPreviewInputs(headers);
+      const result = sitecoreClient.getPreviewData(headers);
 
-      expect(result.previewData).to.deep.equal(previewPayload);
-      expect(result.fetchOptions).to.deep.equal({
-        headers: { Authorization: 'Bearer xyz' },
-      });
+      expect(result).to.deep.equal(previewPayload);
     });
   });
 });
