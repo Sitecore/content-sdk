@@ -19,6 +19,7 @@ Our versioning strategy is as follows:
 * `[content]` `[react]` `[nextjs]` Atomic Design Foundation 
   - Introduced the ability to create a callback registry ([#422](https://github.com/Sitecore/content-sdk/pull/422))
   - Introduce the component layout Document contract and ability to render it; set up Design Studio integration ([#423](https://github.com/Sitecore/content-sdk/pull/423))
+  - Introduce `library-atoms` mode for design library 
 
 
 ### 🐛 Bug Fixes
