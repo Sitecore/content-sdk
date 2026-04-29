@@ -215,6 +215,12 @@ export class SitecoreNextjsClient extends SitecoreClient {
     return componentProps;
   }
 
+  /**
+   * **NOTE**: App Router only.
+   * Retrieves preview data from the request headers
+   * @param {Headers} headers - The headers from the incoming request.
+   * @returns {PreviewData} The preview data.
+   */
   getPreviewData(headers: Headers): PreviewData {
     const packed = headers.get(EDITING_PARAMS_HEADER) ?? '';
 

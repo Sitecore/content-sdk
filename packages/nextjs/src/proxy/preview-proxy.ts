@@ -12,6 +12,7 @@ export class PreviewProxy extends ProxyBase {
   protected client: SitecoreClient;
 
   constructor(config: PreviewProxyConfig) {
+    // PreviewProxy does not need site resolution
     super({ ...config, sites: [] });
     this.client = config.client;
   }
@@ -53,12 +54,6 @@ export class PreviewProxy extends ProxyBase {
         }
       );
     }
-
-    console.log('EditingOptions:', editingOptions);
-    console.log('AuthHeader:', authHeader);
-    console.log('PageData:', pageData);
-    console.log('IsPreview by PREVIEW_KEY Header:', req.cookies.get(PREVIEW_KEY)?.value);
-    console.log('IsSitecore:', process.env.SITECORE);
 
     // Preview content is not found or access is denied
     if (!pageData) {
