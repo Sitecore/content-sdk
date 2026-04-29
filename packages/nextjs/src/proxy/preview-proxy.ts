@@ -15,7 +15,7 @@ export type PreviewProxyConfig = { client: SitecoreClient };
 
 /**
  * Proxy for preview requests. Acts as a gateway for preview requests.
- * Currently it only supports internal editing hosts.
+ * Currently it only supports internal editing hosts deployed on Sitecore AI.
  * @public
  */
 export class PreviewProxy extends ProxyBase {
