@@ -507,11 +507,8 @@ export function evaluateShowNode(node: ShowNode, ctx: ResolveContext): boolean;
 
 // @internal
 export interface EventBinding {
-    // (undocumented)
     actions: Action[];
-    // (undocumented)
     arguments: string[];
-    // (undocumented)
     bindType: 'event';
 }
 
@@ -520,9 +517,7 @@ const executeScriptElements: (rootElement: HTMLElement) => void;
 
 // @internal
 export interface ExpressionBinding {
-    // (undocumented)
     bindType: 'expression';
-    // (undocumented)
     value: string;
 }
 
@@ -555,11 +550,8 @@ export function filterComponentsByType(components: ComponentFileWithType[], allo
 
 // @internal
 export interface ForLoop {
-    // (undocumented)
     as: string;
-    // (undocumented)
     each: string;
-    // (undocumented)
     key?: string;
 }
 
@@ -1257,23 +1249,18 @@ export interface ServerComponentPreviewEventArgs extends DesignLibraryEvent {
 
 // @internal
 export interface SetStateAction {
-    // (undocumented)
     setState: Record<string, Primitive>;
 }
 
 // @internal
 export interface ShowAnd {
-    // (undocumented)
     and: ShowNode[];
 }
 
 // @internal
 export interface ShowComparison {
-    // (undocumented)
     left: string;
-    // (undocumented)
     op: 'eq' | 'ne';
-    // (undocumented)
     right: string;
 }
 
@@ -1282,7 +1269,6 @@ export type ShowNode = ShowComparison | ShowAnd | ShowOr;
 
 // @internal
 export interface ShowOr {
-    // (undocumented)
     or: ShowNode[];
 }
 
