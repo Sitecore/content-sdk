@@ -1,14 +1,11 @@
 import type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import type { SitecoreClient } from '@sitecore-content-sdk/content/client';
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import type { LoaderResultCacheStore } from '../loaders/loader-cache.interface';
-import { NULL_LOADER_CACHE } from '../loaders/loader-cache.interface';
 import {
   SITECORE_CONFIG_TOKEN,
   SITECORE_CLIENT_TOKEN,
   ERROR_ROUTE_TOKEN,
   NOT_FOUND_ROUTE_TOKEN,
-  LOADER_RESULT_CACHE_TOKEN,
 } from './tokens';
 
 /**
@@ -22,17 +19,13 @@ export interface SitecoreAngularConfig {
    */
   sitecoreConfig?: SitecoreConfig;
   /**
-   * Application-owned {@link SitecoreClient} instance (e.g. from a module singleton).
+   * Application-owned client (e.g. `getClient()` from `content-sdk/client/sitecore-client.ts`).
+   * Use {@link AngularSitecoreClientService} when you need scClient caching / browser `/_sc-client` delegation.
    * Required when {@link sitecoreConfig} is set; registered as {@link SITECORE_CLIENT_TOKEN}.
    */
   sitecoreClient?: SitecoreClient;
   notFoundRoute?: string;
   errorRoute?: string;
-  /**
-   * Server-only: loader result cache instance shared with Express `/_data`.
-   * Omit in browser config (defaults to {@link NullLoaderCache}).
-   */
-  loaderResultCache?: LoaderResultCacheStore | null;
 }
 
 /**
@@ -69,9 +62,6 @@ export function provideSitecoreAngular(config: SitecoreAngularConfig): Environme
   if (config.errorRoute) {
     providers.push({ provide: ERROR_ROUTE_TOKEN, useValue: config.errorRoute });
   }
-
-  const loaderResultCache = config.loaderResultCache ?? NULL_LOADER_CACHE;
-  providers.push({ provide: LOADER_RESULT_CACHE_TOKEN, useValue: loaderResultCache });
 
   return makeEnvironmentProviders(providers);
 }

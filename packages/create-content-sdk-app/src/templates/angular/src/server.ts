@@ -8,9 +8,9 @@ import {
 import express from 'express';
 import { join } from 'node:path';
 import { createLoaderDataServiceMiddleware } from '@sitecore-content-sdk/angular';
-import { createLoaderCacheAdminMiddleware } from '@sitecore-content-sdk/angular/node';
+import { createScClientCacheAdminMiddleware } from '@sitecore-content-sdk/angular/node';
 import { LOADERS } from './content-sdk/loaders';
-import { loaderResultCache } from './content-sdk/loader-cache';
+import { scClientCache } from './content-sdk/sc-client-cache';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -22,13 +22,8 @@ const angularApp = new AngularNodeAppEngine();
  * so client-side navigation can fetch route data via POST /_data.
  */
 app.use(express.json());
-app.use(createLoaderCacheAdminMiddleware({ loaderCache: loaderResultCache }));
-app.use(
-  createLoaderDataServiceMiddleware({
-    loaders: LOADERS,
-    loaderCache: loaderResultCache,
-  })
-);
+app.use(createScClientCacheAdminMiddleware({ scClientCache }));
+app.use(createLoaderDataServiceMiddleware({ loaders: LOADERS }));
 /**
  * Serve static files from /browser
  */

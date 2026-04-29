@@ -1,10 +1,6 @@
 // ─── Angular SDK providers and tokens ──────────────────────────
 export { type SitecoreAngularConfig } from './lib/providers';
-export {
-  SITECORE_CONFIG_TOKEN,
-  SITECORE_CLIENT_TOKEN,
-  LOADER_RESULT_CACHE_TOKEN,
-} from './lib/tokens';
+export { SITECORE_CONFIG_TOKEN, SITECORE_CLIENT_TOKEN } from './lib/tokens';
 export { resolveSitecorePage } from './lib/sitecore-page-resolver';
 
 export { defineConfig } from './config/define-config';
@@ -72,14 +68,6 @@ export * from '@sitecore-content-sdk/content/client';
 export * from './loaders/loader-resolver';
 export * from './loaders/loader-registry.token';
 export * from './loaders/loader-data.service';
-export {
-  type LoaderResultCacheStore,
-  NullLoaderCache,
-  NULL_LOADER_CACHE,
-  buildLoaderCacheKeyString,
-  shouldCacheLoaderResponse,
-  normalizeCachedLoaderResponse,
-} from './loaders/loader-cache.interface';
 export * from './loaders/pre-loader-data.service';
 export {
   NotFoundNavigationError,
@@ -87,11 +75,15 @@ export {
   type LoaderFn,
   type LoaderContext,
   type LoaderApiResponse,
+  normalizeLoaderApiResponse,
 } from './loaders/models';
 export { handleNavigationError } from './loaders/router-error-handling';
 export { applyRedirect } from './loaders/utils';
 export { provideSitecoreAngular } from './lib/providers';
 export * from './server';
+
+// ─── scClient Caching ──────────────────────────────────────────
+export * from './client';
 
 // ─── Sitecore Context ──────────────────────────────────────────
 export { SitecoreContextService } from './lib/sitecore-context.service';

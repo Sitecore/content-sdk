@@ -1,36 +1,36 @@
 import type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { createStorage, type Storage } from 'unstorage';
 import memoryDriver from 'unstorage/drivers/memory';
-import type { LoaderApiResponse } from '@sitecore-content-sdk/angular';
-import type { LoaderResultCacheStore } from '@sitecore-content-sdk/angular';
-import { shouldCacheLoaderResponse } from '@sitecore-content-sdk/angular';
+import type { ScClientCacheResponse, ScClientCacheStore } from '@sitecore-content-sdk/angular';
 
 interface CacheEnvelope {
   v: 1;
   exp: number;
-  response: LoaderApiResponse;
+  response: ScClientCacheResponse;
 }
 
 /**
- * One cached loader result row for diagnostics (no response body).
+ * One cached scClient row for diagnostics (no response body).
  * @public
  */
-export interface LoaderCacheEntryDiagnostics {
-  /** Cache key material (`loader:id:url`). */
+export interface ScClientCacheEntryDiagnostics {
+  /** Cache key material. */
   key: string;
   /** Absolute expiry time (ms), or null if unknown/malformed. */
   expiresAt: number | null;
-  /** {@link LoaderApiResponse} `kind` when present. */
+  /** `page` or `dictionary` from {@link ScClientCacheResponse}. */
   responseKind: string | null;
-  /** True when past {@link LoaderCacheEntryDiagnostics.expiresAt}. */
+  /** True when past {@link ScClientCacheEntryDiagnostics.expiresAt}. */
   expired: boolean;
 }
 
 /**
- * Snapshot of loader result cache state for operators (e.g. GET `/admin/cache`).
+ * Snapshot of scClient cache state for operators (e.g. GET `/admin/cache`).
  * @public
  */
-export interface LoaderCacheDiagnostics {
+export interface ScClientCacheDiagnostics {
+  /** Cache category label for operators. */
+  cacheType: 'scClient';
   /** Whether caching is enabled in Sitecore config. */
   enabled: boolean;
   /** Unstorage driver name. */
@@ -39,8 +39,8 @@ export interface LoaderCacheDiagnostics {
   ttlSeconds: number;
   /** Number of keys in storage (may include stale rows until next access). */
   keyCount: number;
-  /** Per-key summary (keys only; no serialized loader payloads). */
-  entries: LoaderCacheEntryDiagnostics[];
+  /** Per-key summary (keys only; no serialized payloads). */
+  entries: ScClientCacheEntryDiagnostics[];
 }
 
 /** @internal */
@@ -60,7 +60,7 @@ async function createDriver(driverName: string, driverOptions: Record<string, un
     default: {
       if (typeof console !== 'undefined' && console.warn) {
         console.warn(
-          `[Sitecore Angular] Unknown loader cache driver "${driverName}", using memory.`
+          `[Sitecore Angular] Unknown scClient cache driver "${driverName}", using memory.`
         );
       }
       return memoryDriver();
@@ -69,19 +69,19 @@ async function createDriver(driverName: string, driverOptions: Record<string, un
 }
 
 /** @internal */
-function loaderCacheDriverFingerprint(config: SitecoreConfig): string {
+function cacheDriverFingerprint(config: SitecoreConfig): string {
   const lc = config.angular.loaderCache;
-  return `${lc.driver}\0${JSON.stringify(lc.driverOptions ?? {})}`;
+  return `scclient\0${lc.driver}\0${JSON.stringify(lc.driverOptions ?? {})}`;
 }
 
 /**
- * Server-side loader result cache backed by unstorage.
- * Import from `@sitecore-content-sdk/angular/node` in Node/Express only — not from the main package entry in browser code.
- * Use {@link getLoaderResultCache} (or {@link LoaderResultCache.forConfig}) to bind the active {@link SitecoreConfig}.
+ * Server-side scClient result cache backed by unstorage.
+ * Import from `@sitecore-content-sdk/angular/node` in Node/Express only.
+ * Uses the same driver config as loader cache (`angular.loaderCache`).
  * @public
  */
-export class LoaderResultCache implements LoaderResultCacheStore {
-  private static instance: LoaderResultCache | null = null;
+export class ScClientCache implements ScClientCacheStore {
+  private static instance: ScClientCache | null = null;
 
   private sitecoreConfig!: SitecoreConfig;
   private storage: Storage | null = null;
@@ -92,25 +92,25 @@ export class LoaderResultCache implements LoaderResultCacheStore {
    * Process-wide cache instance, bound to the given config.
    * @param config - Active Sitecore config (must include `angular.loaderCache`)
    */
-  static forConfig(config: SitecoreConfig): LoaderResultCache {
-    if (!LoaderResultCache.instance) {
-      LoaderResultCache.instance = new LoaderResultCache();
+  static forConfig(config: SitecoreConfig): ScClientCache {
+    if (!ScClientCache.instance) {
+      ScClientCache.instance = new ScClientCache();
     }
-    LoaderResultCache.instance.bindSitecoreConfig(config);
-    return LoaderResultCache.instance;
+    ScClientCache.instance.bindSitecoreConfig(config);
+    return ScClientCache.instance;
   }
 
-  /** Whether loader caching is enabled in Sitecore config. */
+  /** Whether caching is enabled in Sitecore config. */
   isEnabled(): boolean {
     return this.sitecoreConfig.angular.loaderCache.enabled === true;
   }
 
-  async get(keyMaterial: string): Promise<LoaderApiResponse | null> {
+  async get(key: string): Promise<ScClientCacheResponse | null> {
     if (!this.isEnabled()) {
       return null;
     }
     const storage = await this.ensureStorage();
-    const envelope = await storage.getItem<CacheEnvelope>(keyMaterial);
+    const envelope = await storage.getItem<CacheEnvelope>(key);
     if (
       envelope === null ||
       envelope === undefined ||
@@ -119,18 +119,18 @@ export class LoaderResultCache implements LoaderResultCacheStore {
       typeof envelope.exp !== 'number' ||
       !envelope.response
     ) {
-      await storage.removeItem(keyMaterial);
+      await storage.removeItem(key);
       return null;
     }
     if (Date.now() > envelope.exp) {
-      await storage.removeItem(keyMaterial);
+      await storage.removeItem(key);
       return null;
     }
     return envelope.response;
   }
 
-  async set(keyMaterial: string, response: LoaderApiResponse): Promise<void> {
-    if (!this.isEnabled() || !shouldCacheLoaderResponse(response)) {
+  async set(key: string, response: ScClientCacheResponse): Promise<void> {
+    if (!this.isEnabled()) {
       return;
     }
     const ttl = this.sitecoreConfig.angular.loaderCache.ttlSeconds;
@@ -143,30 +143,31 @@ export class LoaderResultCache implements LoaderResultCacheStore {
       exp: Date.now() + ttl * 1000,
       response,
     };
-    await storage.setItem(keyMaterial, envelope);
+    await storage.setItem(key, envelope);
   }
 
   /**
-   * Inspect cache keys and expiry metadata for monitoring (does not return loader payload bodies).
+   * Inspect cache keys and expiry metadata for monitoring (does not return payload bodies).
    * @returns Diagnostic snapshot for JSON APIs or tooling.
    * @public
    */
-  async getDiagnostics(): Promise<LoaderCacheDiagnostics> {
+  async getDiagnostics(): Promise<ScClientCacheDiagnostics> {
     const cfg = this.sitecoreConfig.angular.loaderCache;
-    const base: LoaderCacheDiagnostics = {
+    const base: ScClientCacheDiagnostics = {
+      cacheType: 'scClient',
       enabled: this.isEnabled(),
       driver: cfg.driver,
       ttlSeconds: cfg.ttlSeconds,
       keyCount: 0,
       entries: [],
     };
-    if (!this.storage && !this.initPromise) {
+    if (!this.isEnabled()) {
       return base;
     }
     const storage = await this.ensureStorage();
     const keys = await storage.getKeys();
     const now = Date.now();
-    const entries: LoaderCacheEntryDiagnostics[] = [];
+    const entries: ScClientCacheEntryDiagnostics[] = [];
     for (const key of keys) {
       const raw = await storage.getItem<CacheEnvelope>(key);
       if (
@@ -203,7 +204,7 @@ export class LoaderResultCache implements LoaderResultCacheStore {
   }
 
   private bindSitecoreConfig(config: SitecoreConfig): void {
-    const fp = loaderCacheDriverFingerprint(config);
+    const fp = cacheDriverFingerprint(config);
     if (
       this.boundDriverFingerprint !== undefined &&
       fp !== this.boundDriverFingerprint &&
@@ -233,10 +234,10 @@ export class LoaderResultCache implements LoaderResultCacheStore {
 }
 
 /**
- * Returns the process-wide loader result cache, bound to the given Sitecore config.
- * @param {SitecoreConfig} sitecoreConfig - Active Sitecore config
+ * Returns the process-wide scClient cache, bound to the given Sitecore config.
+ * @param sitecoreConfig - Active Sitecore config
  * @public
  */
-export function getLoaderResultCache(sitecoreConfig: SitecoreConfig): LoaderResultCache {
-  return LoaderResultCache.forConfig(sitecoreConfig);
+export function getScClientCache(sitecoreConfig: SitecoreConfig): ScClientCache {
+  return ScClientCache.forConfig(sitecoreConfig);
 }

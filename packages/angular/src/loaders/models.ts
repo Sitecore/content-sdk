@@ -106,6 +106,27 @@ export type LoaderApiResponse =
   | { kind: 'notFound'; status: number };
 
 /**
+ * Normalize loader HTTP payloads (legacy `{ kind: 'redirect', redirect: … }` → `data`).
+ * @public
+ */
+export function normalizeLoaderApiResponse(resp: LoaderApiResponse): LoaderApiResponse {
+  if (resp.kind !== 'redirect') {
+    return resp;
+  }
+  const r = resp as LoaderApiResponse & {
+    data?: LoaderRedirectResult;
+    redirect?: LoaderRedirectResult;
+  };
+  if (r.data !== undefined) {
+    return { kind: 'redirect', data: r.data };
+  }
+  if (r.redirect !== undefined) {
+    return { kind: 'redirect', data: r.redirect };
+  }
+  return resp;
+}
+
+/**
  * Loader function type.
  * A loader is an async function that receives context, can be applied in route resolvers and can return:
  * - data - any data that can be serialized and stored in the transfer state

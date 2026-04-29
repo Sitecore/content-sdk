@@ -9,10 +9,7 @@ import {
   SITECORE_CONFIG_TOKEN,
   NOT_FOUND_ROUTE_TOKEN,
   ERROR_ROUTE_TOKEN,
-  LOADER_RESULT_CACHE_TOKEN,
 } from './tokens';
-import type { LoaderResultCacheStore } from '../loaders/loader-cache.interface';
-import { NULL_LOADER_CACHE } from '../loaders/loader-cache.interface';
 
 describe('provideSitecoreAngular', () => {
   const mockConfig = { defaultSite: 's', defaultLanguage: 'en' } as SitecoreConfig;
@@ -57,32 +54,5 @@ describe('provideSitecoreAngular', () => {
 
     expect(TestBed.inject(NOT_FOUND_ROUTE_TOKEN)).toBe('/404');
     expect(TestBed.inject(ERROR_ROUTE_TOKEN)).toBe('/500');
-  });
-
-  it('should provide NullLoaderCache as LOADER_RESULT_CACHE_TOKEN by default', () => {
-    TestBed.configureTestingModule({
-      providers: [provideSitecoreAngular({ notFoundRoute: '/404' })],
-    });
-
-    expect(TestBed.inject(LOADER_RESULT_CACHE_TOKEN)).toBe(NULL_LOADER_CACHE);
-  });
-
-  it('should provide custom loaderResultCache when passed', () => {
-    const custom: LoaderResultCacheStore = {
-      isEnabled: () => true,
-      get: async () => null,
-      set: async () => {},
-    };
-    TestBed.configureTestingModule({
-      providers: [
-        provideSitecoreAngular({
-          sitecoreConfig: mockConfig,
-          sitecoreClient: mockClient,
-          loaderResultCache: custom,
-        }),
-      ],
-    });
-
-    expect(TestBed.inject(LOADER_RESULT_CACHE_TOKEN)).toBe(custom);
   });
 });

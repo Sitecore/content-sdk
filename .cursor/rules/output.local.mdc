@@ -1,0 +1,7 @@
+---
+alwaysApply: true
+---
+
+Do not output the detailed description of code/changes made unless asked.
+Only output the list of files affected.
+
