@@ -222,6 +222,36 @@ describe('GraphQLRequestClient', () => {
       expect(client['timeout']).to.equal(300);
       expect(client['headers']).to.deep.equal({ foo: 'foo-value', sc_apikey: 'bar' });
     });
+
+    it('should use factory-level custom fetch for requests', async () => {
+      const customFetch = sinon.stub().resolves(
+        new Response(JSON.stringify({ data: { result: 'from-custom-fetch' } }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        })
+      );
+
+      const clientFactory = GraphQLRequestClient.createClientFactory({
+        endpoint: 'https://foo.com/graphql',
+        headers: { 'x-factory-header': 'factory-value' },
+        fetch: customFetch as unknown as typeof fetch,
+      });
+
+      const client = clientFactory();
+      const result = await client.request<{ result: string }>('query Test { test }');
+
+      expect(result).to.deep.equal({ result: 'from-custom-fetch' });
+      expect(customFetch.calledOnce).to.equal(true);
+
+      const [requestUrl, requestInit] = customFetch.firstCall.args as [string, RequestInit];
+      const requestHeaders = new Headers(requestInit.headers);
+
+      expect(requestUrl).to.equal('https://foo.com/graphql');
+      expect(requestInit.method).to.equal('POST');
+      expect(requestHeaders.get('x-factory-header')).to.equal('factory-value');
+      expect(requestHeaders.get('content-type')).to.contain('application/json');
+      expect(requestInit.body).to.contain('query Test { test }');
+    });
   });
 
   describe('Working with retryer', () => {

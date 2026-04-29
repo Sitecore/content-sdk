@@ -4,11 +4,11 @@
 
 [@sitecore-content-sdk/content](../../../README.md) / [tools/index-node](../README.md) / defaultImportMapTemplate
 
-# Variable: defaultImportMapTemplate()
+# Variable: defaultImportMapTemplate
 
 > **defaultImportMapTemplate**: (`indexedImportMap`, `framework`, `defaultImportEntriesImport`) => `string` = `_defaultMapTemplate`
 
-Defined in: [content/src/tools/codegen/import-map.ts:34](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/tools/codegen/import-map.ts#L34)
+Defined in: [content/src/tools/codegen/import-map.ts:37](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/content/src/tools/codegen/import-map.ts#L37)
 
 **`Internal`**
 

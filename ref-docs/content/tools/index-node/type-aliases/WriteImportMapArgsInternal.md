@@ -8,7 +8,7 @@
 
 > **WriteImportMapArgsInternal** = [`WriteImportMapArgs`](WriteImportMapArgs.md) & `object`
 
-Defined in: [content/src/tools/codegen/import-map.ts:86](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/tools/codegen/import-map.ts#L86)
+Defined in: [content/src/tools/codegen/import-map.ts:89](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/content/src/tools/codegen/import-map.ts#L89)
 
 **`Internal`**
 
@@ -17,9 +17,9 @@ Extends WriteImportMapArgs with additional settings for templates and server/cli
 
 ## Type Declaration
 
-### clientTemplate()?
+### clientTemplate?
 
-> `optional` **clientTemplate**: (`indexedImportMap`) => `string`
+> `optional` **clientTemplate?**: (`indexedImportMap`) => `string`
 
 **`Internal`**
 
@@ -37,9 +37,9 @@ Function to return custom template for client import map file when separateServe
 
 contents for resulting import map file
 
-### defaultTemplate()?
+### defaultTemplate?
 
-> `optional` **defaultTemplate**: (`indexedImportMap`) => `string`
+> `optional` **defaultTemplate?**: (`indexedImportMap`) => `string`
 
 **`Internal`**
 
@@ -59,7 +59,7 @@ contents for resulting import map file
 
 ### separateServerClientMaps?
 
-> `optional` **separateServerClientMaps**: `boolean`
+> `optional` **separateServerClientMaps?**: `boolean`
 
 **`Internal`**
 

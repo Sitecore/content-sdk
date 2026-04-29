@@ -6,32 +6,14 @@
 
 # Type Alias: GraphQLRequestClientFactoryConfig
 
-> **GraphQLRequestClientFactoryConfig** = `object`
+> **GraphQLRequestClientFactoryConfig** = `object` & `GraphQLRequestClientConfig`
 
 Defined in: packages/core/types/graphql-request-client.d.ts:76
 
 Configuration type for
 
-## Properties
-
-### apiKey?
-
-> `optional` **apiKey**: `string`
-
-Defined in: packages/core/types/graphql-request-client.d.ts:78
-
-***
-
-### contextId?
-
-> `optional` **contextId**: `string`
-
-Defined in: packages/core/types/graphql-request-client.d.ts:79
-
-***
+## Type Declaration
 
 ### endpoint
 
 > **endpoint**: `string`
-
-Defined in: packages/core/types/graphql-request-client.d.ts:77

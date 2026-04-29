@@ -8,7 +8,7 @@
 
 > **SiteInfoServiceConfig** = `CacheOptions` & `object`
 
-Defined in: [content/src/site/siteinfo-service.ts:22](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/site/siteinfo-service.ts#L22)
+Defined in: [content/src/site/siteinfo-service.ts:22](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/content/src/site/siteinfo-service.ts#L22)
 
 Configuration for
 
@@ -23,7 +23,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 ### pageSize?
 
-> `optional` **pageSize**: `number`
+> `optional` **pageSize?**: `number`
 
 common variable for all GraphQL queries
 it will be used for every type of query to regulate result batch size

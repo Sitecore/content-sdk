@@ -8,7 +8,7 @@
 
 > **ProxyBaseConfig** = `object`
 
-Defined in: [nextjs/src/proxy/proxy.ts:18](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/nextjs/src/proxy/proxy.ts#L18)
+Defined in: [nextjs/src/proxy/proxy.ts:18](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/nextjs/src/proxy/proxy.ts#L18)
 
 The interface for the Proxy configuration.
 
@@ -16,9 +16,9 @@ The interface for the Proxy configuration.
 
 ### defaultHostname?
 
-> `optional` **defaultHostname**: `string`
+> `optional` **defaultHostname?**: `string`
 
-Defined in: [nextjs/src/proxy/proxy.ts:29](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/nextjs/src/proxy/proxy.ts#L29)
+Defined in: [nextjs/src/proxy/proxy.ts:29](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/nextjs/src/proxy/proxy.ts#L29)
 
 Fallback hostname in case `host` header is not present
 
@@ -32,9 +32,9 @@ localhost
 
 ### defaultLanguage?
 
-> `optional` **defaultLanguage**: `string`
+> `optional` **defaultLanguage?**: `string`
 
-Defined in: [nextjs/src/proxy/proxy.ts:34](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/nextjs/src/proxy/proxy.ts#L34)
+Defined in: [nextjs/src/proxy/proxy.ts:34](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/nextjs/src/proxy/proxy.ts#L34)
 
 Fallback language in locale cannot be extracted from request URL
 
@@ -50,17 +50,17 @@ Fallback language in locale cannot be extracted from request URL
 
 > **sites**: [`SiteInfo`](../../index/type-aliases/SiteInfo.md)[]
 
-Defined in: [nextjs/src/proxy/proxy.ts:38](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/nextjs/src/proxy/proxy.ts#L38)
+Defined in: [nextjs/src/proxy/proxy.ts:38](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/nextjs/src/proxy/proxy.ts#L38)
 
 Site resolution implementation by name/hostname
 
 ***
 
-### skip()?
+### skip?
 
-> `optional` **skip**: (`req`, `res`) => `boolean`
+> `optional` **skip?**: (`req`, `res`) => `boolean`
 
-Defined in: [nextjs/src/proxy/proxy.ts:24](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/nextjs/src/proxy/proxy.ts#L24)
+Defined in: [nextjs/src/proxy/proxy.ts:24](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/nextjs/src/proxy/proxy.ts#L24)
 
 function, determines if proxy execution should be skipped, based on cookie, header, or other considerations
 

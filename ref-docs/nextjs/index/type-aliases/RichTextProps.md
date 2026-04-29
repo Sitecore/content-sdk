@@ -8,7 +8,7 @@
 
 > **RichTextProps** = `ReactRichTextProps` & `object`
 
-Defined in: [nextjs/src/components/RichText.tsx:14](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/nextjs/src/components/RichText.tsx#L14)
+Defined in: [nextjs/src/components/RichText.tsx:14](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/nextjs/src/components/RichText.tsx#L14)
 
 The interface for the RichText component props.
 
@@ -16,7 +16,7 @@ The interface for the RichText component props.
 
 ### internalLinksSelector?
 
-> `optional` **internalLinksSelector**: `string`
+> `optional` **internalLinksSelector?**: `string`
 
 Selector which should be used in order to prefetch it and attach event listeners
 
@@ -28,7 +28,7 @@ Selector which should be used in order to prefetch it and attach event listeners
 
 ### prefetchLinks?
 
-> `optional` **prefetchLinks**: `boolean` \| `"hover"`
+> `optional` **prefetchLinks?**: `boolean` \| `"hover"`
 
 Controls the prefetch of internal links. This can be beneficial if you have RichText fields
 with large numbers of internal links in them.

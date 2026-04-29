@@ -6,9 +6,9 @@
 
 # Function: generateSites()
 
-> **generateSites**(`config`): (`args`) => `Promise`\<`void`\>
+> **generateSites**(`config?`): (`args`) => `Promise`\<`void`\>
 
-Defined in: [content/src/tools/generateSites.ts:30](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/tools/generateSites.ts#L30)
+Defined in: [content/src/tools/generateSites.ts:32](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/content/src/tools/generateSites.ts#L32)
 
 Generates site information and writes it to a specified destination path.
 
@@ -22,15 +22,4 @@ Generates site information and writes it to a specified destination path.
 
 - A promise that resolves to an asynchronous function that fetches site information and writes it to a file.
 
-> (`args`): `Promise`\<`void`\>
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `args` | \{ `scConfig`: [`SitecoreConfig`](../../../config/type-aliases/SitecoreConfig.md); \} |
-| `args.scConfig` | [`SitecoreConfig`](../../../config/type-aliases/SitecoreConfig.md) |
-
-### Returns
-
-`Promise`\<`void`\>
+(`args`) => `Promise`\<`void`\>

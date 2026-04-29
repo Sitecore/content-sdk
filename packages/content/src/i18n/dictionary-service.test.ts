@@ -2,10 +2,12 @@
 import { expect } from 'chai';
 import sinon, { SinonSpy } from 'sinon';
 import nock from 'nock';
-import { GraphQLClient, GraphQLRequestClient } from '@sitecore-content-sdk/core';
+import { GraphQLClient, GraphQLRequestClient, constants } from '@sitecore-content-sdk/core';
 import { DictionaryServiceConfig } from './dictionary-service';
 import { DictionaryService } from '.';
 import dictionarySiteQueryResponse from '../test-data/mockDictionarySiteQueryResponse.json';
+
+const { ERROR_MESSAGES } = constants;
 
 class TestService extends DictionaryService {
   public client: GraphQLClient;
@@ -182,7 +184,7 @@ describe('DictionaryService', () => {
     });
 
     await service.fetchDictionaryData('en', '').catch((error) => {
-      expect(error.message).to.equal('The site name must be a non-empty string');
+      expect(error.message).to.equal(ERROR_MESSAGES.MV_002);
     });
   });
 
@@ -193,7 +195,7 @@ describe('DictionaryService', () => {
     });
 
     await service.fetchDictionaryData('', defaultSite).catch((error) => {
-      expect(error.message).to.equal('The language must be a non-empty string');
+      expect(error.message).to.equal(ERROR_MESSAGES.MV_009);
     });
   });
 

@@ -31,4 +31,4 @@ Scaffold new Sitecore components so they integrate with the layout and editing p
 ## References
 
 - [AGENTS.md](../../../AGENTS.md) for app structure and component map.
-- [Skills.md](../../../Skills.md) for capability map. [Official Content SDK docs](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+- [Skills.md](../../../Skills.md) for capability map. [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).

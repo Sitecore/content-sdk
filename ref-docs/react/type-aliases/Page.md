@@ -46,7 +46,7 @@ Page mode
 
 ### siteName?
 
-> `optional` **siteName**: `string`
+> `optional` **siteName?**: `string`
 
 Defined in: packages/content/types/client/sitecore-client.d.ts:71
 

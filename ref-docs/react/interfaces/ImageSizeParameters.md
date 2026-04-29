@@ -6,21 +6,21 @@
 
 # Interface: ImageSizeParameters
 
-Defined in: [packages/react/src/components/Image.tsx:33](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/react/src/components/Image.tsx#L33)
+Defined in: [packages/react/src/components/Image.tsx:33](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/react/src/components/Image.tsx#L33)
 
 The interface for the Image size parameters.
 
 ## Indexable
 
-\[`attr`: `string`\]: `string` \| `number` \| `undefined`
+> \[`attr`: `string`\]: `string` \| `number` \| `undefined`
 
 ## Properties
 
 ### as?
 
-> `optional` **as**: `0` \| `1`
+> `optional` **as?**: `0` \| `1`
 
-Defined in: [packages/react/src/components/Image.tsx:46](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/react/src/components/Image.tsx#L46)
+Defined in: [packages/react/src/components/Image.tsx:46](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/react/src/components/Image.tsx#L46)
 
 Allow stretch
 
@@ -28,9 +28,9 @@ Allow stretch
 
 ### h?
 
-> `optional` **h**: `number`
+> `optional` **h?**: `number`
 
-Defined in: [packages/react/src/components/Image.tsx:38](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/react/src/components/Image.tsx#L38)
+Defined in: [packages/react/src/components/Image.tsx:38](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/react/src/components/Image.tsx#L38)
 
 Fixed height of the image
 
@@ -38,9 +38,9 @@ Fixed height of the image
 
 ### iar?
 
-> `optional` **iar**: `0` \| `1`
+> `optional` **iar?**: `0` \| `1`
 
-Defined in: [packages/react/src/components/Image.tsx:44](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/react/src/components/Image.tsx#L44)
+Defined in: [packages/react/src/components/Image.tsx:44](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/react/src/components/Image.tsx#L44)
 
 Ignore aspect ratio
 
@@ -48,9 +48,9 @@ Ignore aspect ratio
 
 ### mh?
 
-> `optional` **mh**: `number`
+> `optional` **mh?**: `number`
 
-Defined in: [packages/react/src/components/Image.tsx:42](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/react/src/components/Image.tsx#L42)
+Defined in: [packages/react/src/components/Image.tsx:42](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/react/src/components/Image.tsx#L42)
 
 Max height of the image
 
@@ -58,9 +58,9 @@ Max height of the image
 
 ### mw?
 
-> `optional` **mw**: `number`
+> `optional` **mw?**: `number`
 
-Defined in: [packages/react/src/components/Image.tsx:40](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/react/src/components/Image.tsx#L40)
+Defined in: [packages/react/src/components/Image.tsx:40](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/react/src/components/Image.tsx#L40)
 
 Max width of the image
 
@@ -68,9 +68,9 @@ Max width of the image
 
 ### sc?
 
-> `optional` **sc**: `number`
+> `optional` **sc?**: `number`
 
-Defined in: [packages/react/src/components/Image.tsx:48](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/react/src/components/Image.tsx#L48)
+Defined in: [packages/react/src/components/Image.tsx:48](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/react/src/components/Image.tsx#L48)
 
 Image scale. Defaults to 1.0
 
@@ -78,8 +78,8 @@ Image scale. Defaults to 1.0
 
 ### w?
 
-> `optional` **w**: `number`
+> `optional` **w?**: `number`
 
-Defined in: [packages/react/src/components/Image.tsx:36](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/react/src/components/Image.tsx#L36)
+Defined in: [packages/react/src/components/Image.tsx:36](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/react/src/components/Image.tsx#L36)
 
 Fixed width of the image

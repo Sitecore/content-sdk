@@ -8,7 +8,7 @@
 
 > **getDefaultMediaUrlTransformer**(`edgeUrl`): (`value`) => `string`
 
-Defined in: [content/src/layout/rewrite-edge-host.ts:129](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/layout/rewrite-edge-host.ts#L129)
+Defined in: [content/src/layout/rewrite-edge-host.ts:129](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/content/src/layout/rewrite-edge-host.ts#L129)
 
 **`Internal`**
 
@@ -24,14 +24,4 @@ Returns the default media URL transformer: rewrites Experience Edge hostnames wh
 
 Transformer function; returns string unchanged when no custom hostname
 
-> (`value`): `string`
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `value` | `string` |
-
-### Returns
-
-`string`
+(`value`) => `string`

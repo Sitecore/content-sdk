@@ -1,39 +1,14 @@
-import * as core from '@sitecore-content-sdk/analytics-core/internal';
-import * as utilsModule from '@sitecore-content-sdk/analytics-core/utils';
+import * as analyticsPluginsModule from '@sitecore-content-sdk/analytics-core/internal';
+import * as coreModule from '@sitecore-content-sdk/core';
 import type { EventData } from '../events/custom-event/custom-event';
-import * as initializerModule from '../initializer/browser/initializer';
+import * as eventsPluginModule from '../initialization/plugin';
 import { addToEventQueue } from './addToEventQueue';
-import * as eventQueue from './eventStorage';
+import * as eventStorageModule from './eventStorage';
+import { jest, expect } from '@jest/globals';
 
-jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/internal');
-
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule,
-  };
-});
-jest.mock('@sitecore-content-sdk/analytics-core/browser', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/browser');
-
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule,
-    getCloudSDKSettings: jest.fn(),
-  };
-});
-jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
-
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule,
-    getCookieValueClientSide: jest.fn(),
-  };
-});
+jest.mock('@sitecore-content-sdk/analytics-core/internal');
+jest.mock('@sitecore-content-sdk/core');
+jest.mock('../initialization/plugin');
 
 const eventData: EventData = {
   channel: 'WEB',
@@ -44,40 +19,110 @@ const eventData: EventData = {
 };
 
 describe('addToEventQueue', () => {
-  describe('new init', () => {
-    const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse),
+  const mockAdapter = {
+    getClientId: jest.fn(),
+  };
+
+  const mockAnalyticsPlugin = {
+    options: {
+      cookies: {
+        domain: 'cDomain',
+        expiryDays: 730,
+        name: { clientId: 'cid_name' },
+        path: '/',
+      },
+      siteName: '456',
+    },
+    adapter: mockAdapter,
+  };
+
+  const mockCoreContext = {
+    config: {
+      contextId: '123',
+      edgeUrl: 'https://edge.test.com',
+    },
+    readyPromise: Promise.resolve(),
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue(mockCoreContext as any);
+    jest
+      .spyOn(analyticsPluginsModule, 'getAnalyticsPlugin')
+      .mockReturnValue(mockAnalyticsPlugin as any);
+    jest.spyOn(eventsPluginModule, 'getEventsPlugin').mockReturnValue({} as any);
+  });
+
+  it('should add an event to the queue with the correct payload', async () => {
+    mockAdapter.getClientId.mockReturnValue('test_id');
+
+    const enqueueEventSpy = jest
+      .spyOn(eventStorageModule.eventQueue, 'enqueueEvent')
+      .mockImplementation(() => {});
+
+    await addToEventQueue(eventData);
+
+    expect(enqueueEventSpy).toHaveBeenCalledTimes(1);
+    expect(enqueueEventSpy).toHaveBeenCalledWith({
+      eventData,
+      id: 'test_id',
+      config: { ...mockCoreContext.config, ...mockAnalyticsPlugin.options },
+    } as any);
+  });
+
+  it('should use empty string for id when getClientId returns null', async () => {
+    mockAdapter.getClientId.mockReturnValue(null);
+
+    const enqueueEventSpy = jest
+      .spyOn(eventStorageModule.eventQueue, 'enqueueEvent')
+      .mockImplementation(() => {});
+
+    await addToEventQueue(eventData);
+
+    expect(enqueueEventSpy).toHaveBeenCalledTimes(1);
+    expect(enqueueEventSpy).toHaveBeenCalledWith({
+      eventData,
+      id: '',
+      config: { ...mockCoreContext.config, ...mockAnalyticsPlugin.options },
+    } as any);
+  });
+
+  it('should wait for core settings ready promise', async () => {
+    let resolveReady: () => void;
+    const readyPromise = new Promise<void>((resolve) => {
+      resolveReady = resolve;
     });
-    global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-    it('should add an event to the queue with the correct payload', async () => {
-      jest.spyOn(core, 'getEnabledPackageBrowser').mockReturnValue({ initState: true } as any);
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-      const getCookieValueClientSideSpy = jest
-        .spyOn(utilsModule, 'getCookieValueClientSide')
-        .mockReturnValueOnce('test_id');
-      const getSettingsSpy = jest.spyOn(core, 'getCloudSDKSettingsBrowser').mockReturnValue({
-        cookieSettings: {
-          domain: 'cDomain',
-          expiryDays: 730,
-          name: { browserId: 'bid_name' },
-          path: '/',
-        },
-        siteName: '456',
-        sitecoreEdgeContextId: '123',
-        sitecoreEdgeUrl: '',
-      });
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue({
+      ...mockCoreContext,
+      readyPromise,
+    } as any);
 
-      const enqueueEventSpy = jest.spyOn(eventQueue.eventQueue, 'enqueueEvent');
+    mockAdapter.getClientId.mockReturnValue('test_id');
 
-      await addToEventQueue(eventData);
+    const enqueueEventSpy = jest
+      .spyOn(eventStorageModule.eventQueue, 'enqueueEvent')
+      .mockImplementation(() => {});
 
-      expect(enqueueEventSpy).toHaveBeenCalledTimes(1);
-      expect(getCookieValueClientSideSpy).toHaveBeenCalledTimes(1);
-      expect(getSettingsSpy).toHaveBeenCalledTimes(1);
-    });
+    const addPromise = addToEventQueue(eventData);
+
+    // Should not have been called yet
+    expect(enqueueEventSpy).not.toHaveBeenCalled();
+
+    // Resolve the ready promise
+    resolveReady!();
+    await addPromise;
+
+    expect(enqueueEventSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call getEventsPlugin to ensure plugin is initialized', async () => {
+    mockAdapter.getClientId.mockReturnValue('test_id');
+    jest.spyOn(eventStorageModule.eventQueue, 'enqueueEvent').mockImplementation(() => {});
+
+    await addToEventQueue(eventData);
+
+    expect(eventsPluginModule.getEventsPlugin).toHaveBeenCalledTimes(1);
   });
 });

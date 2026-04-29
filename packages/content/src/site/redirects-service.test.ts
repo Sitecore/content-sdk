@@ -3,11 +3,12 @@
 import { expect, use, spy } from 'chai';
 import spies from 'chai-spies';
 import nock from 'nock';
-import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClient, constants } from '@sitecore-content-sdk/core';
 import { RedirectsService, RedirectsQueryResult } from './redirects-service';
-import { siteNameError } from '../constants';
 
 use(spies);
+
+const { ERROR_MESSAGES } = constants;
 
 const redirectsQueryResultNull = {
   site: {
@@ -70,7 +71,7 @@ describe('RedirectsService', () => {
 
       const service = new RedirectsService(config);
       await service.fetchRedirects('').catch((error: Error) => {
-        expect(error.message).to.equal(siteNameError);
+        expect(error.message).to.equal(ERROR_MESSAGES.MV_002);
       });
 
       return expect(nock.isDone()).to.be.false;

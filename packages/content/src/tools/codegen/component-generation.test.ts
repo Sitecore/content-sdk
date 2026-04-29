@@ -1,13 +1,9 @@
 import { expect } from 'chai';
 import nock from 'nock';
 import { constants } from '@sitecore-content-sdk/core';
-import {
-  ComponentSpec,
-  getComponentSpecUrl,
-  getComponentSpec,
-} from './component-generation';
+import { ComponentSpec, getComponentSpecUrl, getComponentSpec } from './component-generation';
 
-const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT, ERROR_MESSAGES } = constants;
 
 describe('component-generation', () => {
   const token = '456';
@@ -143,7 +139,9 @@ describe('component-generation', () => {
         await getComponentSpec({ componentId, token });
         expect.fail('Expected function to throw');
       } catch (error) {
-        expect(error.message).to.equal('Failed to fetch component 123');
+        expect(error.message).to.equal(
+          `Failed to fetch component ${componentId}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`
+        );
       }
     });
 

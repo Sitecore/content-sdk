@@ -1,9 +1,12 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
+import { constants } from '@sitecore-content-sdk/core';
 import * as generateMapModule from './generate-map';
 import * as loadConfigModule from '../../../utils/load-config';
 import * as watchItemsModule from '../../../utils/watch-items';
+
+const { ERROR_MESSAGES } = constants;
 
 describe('generate-map CLI', () => {
   let sandbox: sinon.SinonSandbox;
@@ -28,8 +31,8 @@ describe('generate-map CLI', () => {
     loadCliConfigStub.returns({});
     generateMapModule.handler({});
     expect(consoleErrorStub.calledOnce).to.be.true;
-    expect(consoleErrorStub.firstCall.args[0]).to.match(
-      /The `sitecore.cli.config` file is missing a `componentMap` configuration. Please add it to use this command./
+    expect(consoleErrorStub.firstCall.args[0]).to.equal(
+      ERROR_MESSAGES.MV_005('componentMap')
     );
   });
 

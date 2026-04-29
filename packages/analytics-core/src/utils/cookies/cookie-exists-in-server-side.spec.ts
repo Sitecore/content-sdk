@@ -1,5 +1,6 @@
 import * as Cookies from './get-cookie-server-side';
 import { cookieExistsInServerSide } from './cookie-exists-in-server-side';
+import { jest, expect } from '@jest/globals';
 
 describe('cookieExistsInServerSide', () => {
   let cookiesHeader = '';

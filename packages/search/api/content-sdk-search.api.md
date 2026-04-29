@@ -54,7 +54,7 @@ export type SortSetting<T extends SearchDocument = SearchDocument> = {
 // Warnings were encountered during analysis:
 //
 // src/models.ts:8:3 - (ae-forgotten-export) The symbol "PrimitiveType" needs to be exported by the entry point index.d.ts
-// src/search-service.ts:11:3 - (ae-forgotten-export) The symbol "PathsToStringProps" needs to be exported by the entry point index.d.ts
+// src/search-service.ts:12:3 - (ae-forgotten-export) The symbol "PathsToStringProps" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

@@ -8,4 +8,8 @@
 
 > `const` **API\_VERSION**: `"v1.2"` = `'v1.2'`
 
-Defined in: [src/consts.ts:13](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/analytics-core/src/consts.ts#L13)
+Defined in: [analytics-core/src/consts.ts:37](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/analytics-core/src/consts.ts#L37)
+
+**`Internal`**
+
+The api version of the Edge Proxy.

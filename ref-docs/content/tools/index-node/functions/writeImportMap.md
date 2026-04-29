@@ -8,7 +8,7 @@
 
 > **writeImportMap**(`args`): (`__namedParameters`) => `Promise`\<`void`\>
 
-Defined in: [content/src/tools/codegen/import-map.ts:387](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/tools/codegen/import-map.ts#L387)
+Defined in: [content/src/tools/codegen/import-map.ts:384](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/content/src/tools/codegen/import-map.ts#L384)
 
 Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
 
@@ -20,15 +20,4 @@ Entry point function for generating import-map. Parses provided paths and output
 
 ## Returns
 
-> (`__namedParameters`): `Promise`\<`void`\>
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `__namedParameters` | \{ `scConfig`: [`SitecoreConfig`](../../../config/type-aliases/SitecoreConfig.md); \} |
-| `__namedParameters.scConfig` | [`SitecoreConfig`](../../../config/type-aliases/SitecoreConfig.md) |
-
-### Returns
-
-`Promise`\<`void`\>
+(`__namedParameters`) => `Promise`\<`void`\>

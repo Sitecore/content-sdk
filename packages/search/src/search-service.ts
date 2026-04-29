@@ -1,5 +1,6 @@
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
+import { getClientId } from '@sitecore-content-sdk/analytics-core';
 import { SearchDocument, PathsToStringProps } from './models';
 import { debug } from './debug';
 
@@ -136,6 +137,14 @@ export class SearchService {
 
     const url = new URL('/v1/search', this.config.edgeUrl);
 
+    let sessionId = '';
+    try {
+      sessionId = getClientId();
+      // eslint-disable-next-line no-unused-vars
+    } catch (error) {
+      // We don't have to treat errors in a special way since we use an empty string as the fallback value
+    }
+
     const sortFields = sort ? (Array.isArray(sort) ? sort : [sort]) : [];
 
     const options = {
@@ -157,6 +166,7 @@ export class SearchService {
         query: {
           keyphrase,
         },
+        sessionId,
         sort: {
           fields: sortFields,
         },

@@ -8,7 +8,7 @@
 
 > **LinkProps** = `EditableFieldProps`\<`LinkProps`\> & `React.AnchorHTMLAttributes`\<`HTMLAnchorElement`\> & `RefAttributes`\<`HTMLAnchorElement`\> & `object`
 
-Defined in: [packages/react/src/components/Link.tsx:38](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/react/src/components/Link.tsx#L38)
+Defined in: [packages/react/src/components/Link.tsx:38](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/react/src/components/Link.tsx#L38)
 
 The interface for the Link component props.
 
@@ -22,6 +22,6 @@ The link field data.
 
 ### showLinkTextWithChildrenPresent?
 
-> `optional` **showLinkTextWithChildrenPresent**: `boolean`
+> `optional` **showLinkTextWithChildrenPresent?**: `boolean`
 
 Displays a link text ('description' in Sitecore) even when children exist

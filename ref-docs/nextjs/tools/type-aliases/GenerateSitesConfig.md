@@ -16,7 +16,7 @@ Configuration object for generating sites.
 
 ### destinationPath?
 
-> `optional` **destinationPath**: `string`
+> `optional` **destinationPath?**: `string`
 
 Defined in: content/types/tools/generateSites.d.ts:11
 

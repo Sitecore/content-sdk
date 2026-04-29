@@ -37,7 +37,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 ### debugger?
 
-> `optional` **debugger**: `Debugger`
+> `optional` **debugger?**: `Debugger`
 
 Defined in: content/types/sitecore-service-base.d.ts:12
 
@@ -61,7 +61,7 @@ The language
 
 ### retries?
 
-> `optional` **retries**: `object`
+> `optional` **retries?**: `object`
 
 Defined in: content/types/config/models.d.ts:84
 
@@ -69,7 +69,7 @@ Retry configuration applied to Layout, Dictionary and ErrorPages services
 
 #### count?
 
-> `optional` **count**: `number`
+> `optional` **count?**: `number`
 
 Number of retries for the GraphQL client.
 
@@ -81,7 +81,7 @@ Number of retries for the GraphQL client.
 
 #### retryStrategy?
 
-> `optional` **retryStrategy**: [`RetryStrategy`](../../client/interfaces/RetryStrategy.md)
+> `optional` **retryStrategy?**: [`RetryStrategy`](../../client/interfaces/RetryStrategy.md)
 
 Retry strategy for the client. By default, uses exponential
 back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.

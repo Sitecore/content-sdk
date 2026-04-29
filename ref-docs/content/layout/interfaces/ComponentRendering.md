@@ -6,7 +6,7 @@
 
 # Interface: ComponentRendering\<T\>
 
-Defined in: [content/src/layout/models.ts:103](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/layout/models.ts#L103)
+Defined in: [content/src/layout/models.ts:103](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/content/src/layout/models.ts#L103)
 
 Definition of a component instance within a placeholder on a route
 
@@ -22,44 +22,44 @@ Definition of a component instance within a placeholder on a route
 
 > **componentName**: `string`
 
-Defined in: [content/src/layout/models.ts:104](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/layout/models.ts#L104)
+Defined in: [content/src/layout/models.ts:104](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/content/src/layout/models.ts#L104)
 
 ***
 
 ### dataSource?
 
-> `optional` **dataSource**: `string`
+> `optional` **dataSource?**: `string`
 
-Defined in: [content/src/layout/models.ts:105](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/layout/models.ts#L105)
+Defined in: [content/src/layout/models.ts:105](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/content/src/layout/models.ts#L105)
 
 ***
 
 ### fields?
 
-> `optional` **fields**: `T`
+> `optional` **fields?**: `T`
 
-Defined in: [content/src/layout/models.ts:108](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/layout/models.ts#L108)
+Defined in: [content/src/layout/models.ts:108](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/content/src/layout/models.ts#L108)
 
 ***
 
 ### params?
 
-> `optional` **params**: [`ComponentParams`](ComponentParams.md)
+> `optional` **params?**: [`ComponentParams`](ComponentParams.md)
 
-Defined in: [content/src/layout/models.ts:109](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/layout/models.ts#L109)
+Defined in: [content/src/layout/models.ts:109](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/content/src/layout/models.ts#L109)
 
 ***
 
 ### placeholders?
 
-> `optional` **placeholders**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\>
+> `optional` **placeholders?**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\>
 
-Defined in: [content/src/layout/models.ts:107](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/layout/models.ts#L107)
+Defined in: [content/src/layout/models.ts:107](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/content/src/layout/models.ts#L107)
 
 ***
 
 ### uid?
 
-> `optional` **uid**: `string`
+> `optional` **uid?**: `string`
 
-Defined in: [content/src/layout/models.ts:106](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/content/src/layout/models.ts#L106)
+Defined in: [content/src/layout/models.ts:106](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/content/src/layout/models.ts#L106)

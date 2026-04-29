@@ -602,6 +602,59 @@ ${defaultMapTemplate(indexedImportMap)}`;
       expect(clientCall.args[1]).to.not.match(/test-exports/);
     });
 
+    it('should correctly determine client import maps when _use client_ directive is not on first line', async () => {
+      // run the full unobstructed flow for this test
+      /* eslint-disable-next-line */
+      importUnitMocks.getImportMap = importUnitMocks.getImportMap;
+      /* eslint-disable-next-line */
+      importUnitMocks.defaultMapTemplate = importUnitMocks.defaultMapTemplate;
+      unitMocks({ getComponentListStub: componentUnitMocks.getComponentList });
+      const scConfig = { disableCodeGeneration: false } as any;
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+
+      const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
+
+      // use components in test-data/import-map/client-components-w-comments
+      // they contain client components with comments before 'use client' directive
+      // to test that the logic correctly identifies them as client components and includes their imports in client import map
+      await runCommand(scConfig, {
+        paths: ['client-components-w-comments/*', 'single-file-imports/named.ts'],
+        exclude: [],
+        separateServerClientMaps: true,
+        clientTemplate: (indexedImportMap: Map<string, ModuleExports>) => {
+          return `'use client';
+${defaultMapTemplate(indexedImportMap)}`;
+        },
+      });
+
+      // Assert fsWriteStub was called twice
+      expect(fsWriteStub.calledTwice).to.be.true;
+
+      // Assert server import map was written to import-map.server.ts
+      const serverCall = fsWriteStub.getCall(0);
+      expect(serverCall.args[0]).to.include('import-map.server.ts');
+      expect(serverCall.args[0]).to.not.include('import-map.client.ts');
+      expect(serverCall.args[1]).to.match(/test-exports/);
+      expect(serverCall.args[1]).to.not.match(/useEffect/);
+      expect(serverCall.args[1]).to.match(/useMemo/);
+      expect(serverCall.args[1]).to.match(/useConsole/);
+      expect(serverCall.args[1]).to.match(/useComment/);
+
+      // Assert client import map was written to import-map.client.ts
+      const clientCall = fsWriteStub.getCall(1);
+
+      expect(clientCall.args[0]).to.include('import-map.client.ts');
+      expect(clientCall.args[1]).to.match(/\'use client\'/);
+      expect(clientCall.args[1]).to.match(/fake-react/);
+      expect(clientCall.args[1]).to.match(/useEffect/);
+      expect(clientCall.args[1]).to.match(/useContext/);
+      expect(clientCall.args[1]).to.match(/useState/);
+      expect(clientCall.args[1]).to.not.match(/useMemo/);
+      expect(clientCall.args[1]).to.not.match(/test-exports/);
+      expect(clientCall.args[1]).to.not.match(/useConsole/);
+      expect(clientCall.args[1]).to.not.match(/useComment/);
+    });
+
     it('should write output into import-map file', async () => {
       const scConfig = { disableCodeGeneration: false } as any;
       utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;

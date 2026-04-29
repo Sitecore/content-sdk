@@ -8,4 +8,8 @@
 
 > `const` **DAILY\_SECONDS**: `86400` = `86400`
 
-Defined in: [src/consts.ts:11](https://github.com/Sitecore/content-sdk/blob/dc098bf2453ff3d6378a7cb98a7f84ad282af7af/packages/analytics-core/src/consts.ts#L11)
+Defined in: [analytics-core/src/consts.ts:31](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/analytics-core/src/consts.ts#L31)
+
+**`Internal`**
+
+The seconds in a day, used for cookie expiration calculations.

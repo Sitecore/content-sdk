@@ -1,7 +1,7 @@
 'use client';
 import { CdpHelper, useSitecore } from '@sitecore-content-sdk/nextjs';
 import { useEffect, JSX } from 'react';
-import { pageView } from '@sitecore-cloudsdk/events/browser';
+import { pageView } from '@sitecore-content-sdk/events';
 import config from 'sitecore.config';
 
 /**

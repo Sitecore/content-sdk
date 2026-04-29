@@ -4,7 +4,7 @@ import { render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { expect } from 'chai';
 import { SitecoreProvider } from './SitecoreProvider';
-import { Form, mockFormModule } from './Form';
+import { Form, mockFormModule, mockAnalyticsInternalModule } from './Form';
 import sinon from 'sinon';
 import { PageMode } from '@sitecore-content-sdk/content/client';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
@@ -80,11 +80,16 @@ describe('Form', () => {
 
     const subscribeSpy = sinon.spy();
     const execSpy = sinon.spy();
+    const isBotClientSideSpy = sinon.stub().returns(false);
 
     mockFormModule({
       loadForm: loadFormSpy,
       subscribeToFormSubmitEvent: subscribeSpy,
       executeScriptElements: execSpy,
+    });
+
+    mockAnalyticsInternalModule({
+      isBotClientSide: isBotClientSideSpy,
     });
 
     const rendered = await render(
@@ -117,10 +122,16 @@ describe('Form', () => {
       return Promise.resolve('<form></form>');
     });
 
+    const isBotClientSideSpy = sinon.stub().returns(false);
+
     mockFormModule({
       loadForm: loadFormSpy,
       subscribeToFormSubmitEvent: sinon.spy(),
       executeScriptElements: sinon.spy(),
+    });
+
+    mockAnalyticsInternalModule({
+      isBotClientSide: isBotClientSideSpy,
     });
 
     const rendered = await render(
@@ -141,16 +152,16 @@ describe('Form', () => {
       .resolves('<form id="test-form"><script>console.log(1);</script></form>');
     const subscribeSpy = sinon.spy();
     const execSpy = sinon.spy();
-
-    const mode: PageMode = {
-      name: LayoutServicePageState.Edit,
-      isEditing: true,
-    };
+    const isBotClientSideSpy = sinon.stub().returns(false);
 
     mockFormModule({
       loadForm: loadFormSpy,
       subscribeToFormSubmitEvent: subscribeSpy,
       executeScriptElements: execSpy,
+    });
+
+    mockAnalyticsInternalModule({
+      isBotClientSide: isBotClientSideSpy,
     });
 
     const rendered = await render(
@@ -168,11 +179,48 @@ describe('Form', () => {
     });
   });
 
+  it('does not subscribe to form submit event if visitor is a bot', async () => {
+    const subscribeSpy = sinon.spy();
+    const execSpy = sinon.spy();
+    const isBotClientSideSpy = sinon.stub().returns(true);
+
+    mockFormModule({
+      loadForm: sinon
+        .stub()
+        .resolves('<form id="test-form"><script>console.log(1);</script></form>'),
+      subscribeToFormSubmitEvent: subscribeSpy,
+      executeScriptElements: execSpy,
+    });
+
+    mockAnalyticsInternalModule({
+      isBotClientSide: isBotClientSideSpy,
+    });
+
+    const rendered = await render(
+      <SitecoreProvider api={ctx.api} page={ctx.page.normal}>
+        <Form rendering={rendering} params={rendering.params} />
+      </SitecoreProvider>
+    );
+
+    await waitFor(() => {
+      expect(subscribeSpy.notCalled).to.be.true;
+      expect(execSpy.calledOnce).to.be.true;
+
+      expect(rendered.container.innerHTML).to.contain('<form id="test-form">');
+    });
+  });
+
   it('renders empty component on load failure (non-edit mode)', async () => {
+    const isBotClientSideSpy = sinon.stub().returns(false);
+
     mockFormModule({
       loadForm: sinon.stub().rejects(),
       subscribeToFormSubmitEvent: sinon.spy(),
       executeScriptElements: sinon.spy(),
+    });
+
+    mockAnalyticsInternalModule({
+      isBotClientSide: isBotClientSideSpy,
     });
 
     const rendered = await render(
@@ -187,10 +235,16 @@ describe('Form', () => {
   });
 
   it('renders edit-mode error placeholder on load failure', async () => {
+    const isBotClientSideSpy = sinon.stub().returns(false);
+
     mockFormModule({
       loadForm: sinon.stub().rejects(),
       subscribeToFormSubmitEvent: sinon.spy(),
       executeScriptElements: sinon.spy(),
+    });
+
+    mockAnalyticsInternalModule({
+      isBotClientSide: isBotClientSideSpy,
     });
 
     const mode: PageMode = {
@@ -215,6 +269,62 @@ describe('Form', () => {
       expect(rendered.baseElement.innerHTML).to.equal(
         '<div class="sc-content-sdk-placeholder-error">There was a problem loading this section</div>'
       );
+    });
+  });
+
+  it('initializes form DOM only once (prevents re-initialization on re-render)', async () => {
+    const loadFormSpy = sinon
+      .stub()
+      .resolves('<form id="test-form"><input type="text" name="field1" /></form>');
+    const subscribeSpy = sinon.spy();
+    const execSpy = sinon.spy();
+    const isBotClientSideSpy = sinon.stub().returns(false);
+
+    mockFormModule({
+      loadForm: loadFormSpy,
+      subscribeToFormSubmitEvent: subscribeSpy,
+      executeScriptElements: execSpy,
+    });
+
+    mockAnalyticsInternalModule({
+      isBotClientSide: isBotClientSideSpy,
+    });
+
+    const rendered = render(
+      <SitecoreProvider api={ctx.api} page={ctx.page.normal}>
+        <Form rendering={rendering} params={rendering.params} />
+      </SitecoreProvider>
+    );
+
+    // Wait for initial render
+    await waitFor(() => {
+      expect(execSpy.calledOnce).to.be.true;
+      expect(subscribeSpy.calledOnce).to.be.true;
+    });
+
+    // Simulate user entering data
+    const input = rendered.container.querySelector('input[name="field1"]') as HTMLInputElement;
+    if (input) {
+      input.value = 'user-entered-value';
+    }
+
+    // Force re-render with same props
+    rendered.rerender(
+      <SitecoreProvider api={ctx.api} page={ctx.page.normal}>
+        <Form rendering={rendering} params={rendering.params} />
+      </SitecoreProvider>
+    );
+
+    await waitFor(() => {
+      // Scripts and subscription should still only be called once
+      expect(execSpy.calledOnce).to.be.true;
+      expect(subscribeSpy.calledOnce).to.be.true;
+
+      // User input should be preserved
+      const inputAfterRerender = rendered.container.querySelector(
+        'input[name="field1"]'
+      ) as HTMLInputElement;
+      expect(inputAfterRerender?.value).to.equal('user-entered-value');
     });
   });
 });

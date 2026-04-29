@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / AppPlaceholder
 
-# Variable: AppPlaceholder()
+# Variable: AppPlaceholder
 
 > `const` **AppPlaceholder**: (`props`) => `React.JSX.Element`
 

@@ -32,4 +32,4 @@ This app uses **Next.js built-in i18n**. There is no [locale] in the URL path; l
 ## References
 
 - [AGENTS.md](../../../AGENTS.md) for Next.js i18n and getDictionary usage.
-- [Official Content SDK docs](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+- [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).

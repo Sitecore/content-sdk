@@ -20,7 +20,7 @@ Shape of route data returned from Sitecore Layout Service
 
 ### databaseName?
 
-> `optional` **databaseName**: `string`
+> `optional` **databaseName?**: `string`
 
 Defined in: packages/content/types/layout/models.d.ts:59
 
@@ -28,7 +28,7 @@ Defined in: packages/content/types/layout/models.d.ts:59
 
 ### deviceId?
 
-> `optional` **deviceId**: `string`
+> `optional` **deviceId?**: `string`
 
 Defined in: packages/content/types/layout/models.d.ts:60
 
@@ -36,7 +36,7 @@ Defined in: packages/content/types/layout/models.d.ts:60
 
 ### displayName?
 
-> `optional` **displayName**: `string`
+> `optional` **displayName?**: `string`
 
 Defined in: packages/content/types/layout/models.d.ts:57
 
@@ -44,7 +44,7 @@ Defined in: packages/content/types/layout/models.d.ts:57
 
 ### fields?
 
-> `optional` **fields**: `Fields`
+> `optional` **fields?**: `Fields`
 
 Defined in: packages/content/types/layout/models.d.ts:58
 
@@ -52,7 +52,7 @@ Defined in: packages/content/types/layout/models.d.ts:58
 
 ### itemId?
 
-> `optional` **itemId**: `string`
+> `optional` **itemId?**: `string`
 
 Defined in: packages/content/types/layout/models.d.ts:67
 
@@ -60,7 +60,7 @@ Defined in: packages/content/types/layout/models.d.ts:67
 
 ### itemLanguage?
 
-> `optional` **itemLanguage**: `string`
+> `optional` **itemLanguage?**: `string`
 
 Defined in: packages/content/types/layout/models.d.ts:61
 
@@ -68,7 +68,7 @@ Defined in: packages/content/types/layout/models.d.ts:61
 
 ### itemVersion?
 
-> `optional` **itemVersion**: `number`
+> `optional` **itemVersion?**: `number`
 
 Defined in: packages/content/types/layout/models.d.ts:62
 
@@ -76,7 +76,7 @@ Defined in: packages/content/types/layout/models.d.ts:62
 
 ### layoutId?
 
-> `optional` **layoutId**: `string`
+> `optional` **layoutId?**: `string`
 
 Defined in: packages/content/types/layout/models.d.ts:63
 
@@ -100,7 +100,7 @@ Defined in: packages/content/types/layout/models.d.ts:66
 
 ### templateId?
 
-> `optional` **templateId**: `string`
+> `optional` **templateId?**: `string`
 
 Defined in: packages/content/types/layout/models.d.ts:64
 
@@ -108,6 +108,6 @@ Defined in: packages/content/types/layout/models.d.ts:64
 
 ### templateName?
 
-> `optional` **templateName**: `string`
+> `optional` **templateName?**: `string`
 
 Defined in: packages/content/types/layout/models.d.ts:65

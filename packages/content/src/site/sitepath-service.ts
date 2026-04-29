@@ -1,12 +1,14 @@
-﻿import { FetchOptions, GraphQLClient, GraphQLRequestClientFactory, PageInfo } from '../client';
+﻿import { constants } from '@sitecore-content-sdk/core';
+import { FetchOptions, GraphQLClient, GraphQLRequestClientFactory, PageInfo } from '../client';
 import { StaticPath } from '../models';
 import { getPersonalizedRewrite } from '../personalize';
 import { getSiteRewrite } from '../site';
 import debug from '../debug';
 
+const { ERROR_MESSAGES } = constants;
+
 /** @private */
 export const languageError = 'The list of languages cannot be empty';
-export const siteError = 'The service needs a site name';
 export const sitesError = 'The list of sites cannot be empty';
 
 /**
@@ -14,7 +16,7 @@ export const sitesError = 'The list of sites cannot be empty';
  * @private
  */
 export function getSiteEmptyError(siteName: string) {
-  return `Site "${siteName}" does not exist or site item tree is missing`;
+  return ERROR_MESSAGES.IV_007(siteName);
 }
 
 /**
@@ -197,7 +199,7 @@ export class SitePathService {
     });
     const paths = new Array<StaticPath>();
     if (!languages.length) {
-      throw new RangeError(languageError);
+      throw new RangeError(ERROR_MESSAGES.MV_009);
     }
     // Get all sites
     if (!sites || !sites.length) {

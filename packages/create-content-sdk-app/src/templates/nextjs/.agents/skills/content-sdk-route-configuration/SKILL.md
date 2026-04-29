@@ -35,4 +35,4 @@ Single catch-all route; no [site] or [locale] in the URL path. Site is resolved 
 ## References
 
 - [AGENTS.md](../../../AGENTS.md) for exact paths, extractPath, and layout flow.
-- [Official Content SDK docs](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+- [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).

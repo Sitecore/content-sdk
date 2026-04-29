@@ -33,4 +33,4 @@ Upgrade @sitecore-content-sdk/* packages safely; follow the Content SDK repo cha
 
 - Content SDK repo [CHANGELOG](https://github.com/Sitecore/content-sdk/blob/dev/CHANGELOG.md) and upgrade docs.
 - [AGENTS.md](../../../AGENTS.md) for build commands.
-- [Official Content SDK docs](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+- [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).
