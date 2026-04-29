@@ -200,6 +200,14 @@ export interface DateFieldProps extends EditableFieldProps<DateFieldProps> {
     tag?: string;
 }
 
+// @public
+export type DateFieldSchema = z.infer<ReturnType<typeof dateFieldSchema>>;
+
+// @public
+export const dateFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
+    value: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>;
+
 export { debug_2 as debug }
 
 // @public
@@ -339,6 +347,18 @@ export interface FileField {
     value: FileFieldValue;
 }
 
+// @public
+export type FileFieldSchema = z.infer<ReturnType<typeof fileFieldSchema>>;
+
+// @public
+export const fileFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
+    value: z.ZodObject<{
+        src: z.ZodOptional<z.ZodString>;
+        title: z.ZodOptional<z.ZodString>;
+        displayName: z.ZodOptional<z.ZodString>;
+    }, z.core.$loose>;
+}, z.core.$strip>;
+
 // Warning: (ae-forgotten-export) The symbol "FormProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
@@ -370,6 +390,20 @@ export interface ImageField {
     // (undocumented)
     value?: ImageFieldValue;
 }
+
+// @public
+export type ImageFieldSchema = z.infer<ReturnType<typeof imageFieldSchema>>;
+
+// @public
+export const imageFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
+    value: z.ZodOptional<z.ZodObject<{
+        src: z.ZodOptional<z.ZodString>;
+        alt: z.ZodOptional<z.ZodString>;
+        width: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>;
+        height: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>;
+        class: z.ZodOptional<z.ZodString>;
+    }, z.core.$loose>>;
+}, z.core.$strip>;
 
 // @public
 export interface ImageFieldValue {
@@ -432,6 +466,24 @@ export interface LinkField {
     // (undocumented)
     value: LinkFieldValue;
 }
+
+// @public
+export type LinkFieldSchema = z.infer<ReturnType<typeof linkFieldSchema>>;
+
+// @public
+export const linkFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
+    value: z.ZodObject<{
+        href: z.ZodOptional<z.ZodString>;
+        className: z.ZodOptional<z.ZodString>;
+        class: z.ZodOptional<z.ZodString>;
+        title: z.ZodOptional<z.ZodString>;
+        target: z.ZodOptional<z.ZodString>;
+        text: z.ZodOptional<z.ZodString>;
+        anchor: z.ZodOptional<z.ZodString>;
+        querystring: z.ZodOptional<z.ZodString>;
+        linktype: z.ZodOptional<z.ZodString>;
+    }, z.core.$loose>;
+}, z.core.$strip>;
 
 // @public
 export interface LinkFieldValue {
@@ -550,6 +602,14 @@ export interface RichTextField extends FieldMetadata {
 }
 
 // @public
+export type RichTextFieldSchema = z.infer<ReturnType<typeof richTextFieldSchema>>;
+
+// @public
+export const richTextFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
+    value: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>;
+
+// @public
 export interface RichTextProps extends EditableFieldProps<RichTextProps> {
     // (undocumented)
     [htmlAttributes: string]: unknown;
@@ -601,6 +661,14 @@ export interface TextField extends FieldMetadata {
     // (undocumented)
     value?: string | number;
 }
+
+// @public
+export type TextFieldSchema = z.infer<ReturnType<typeof textFieldSchema>>;
+
+// @public
+export const textFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
+    value: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>;
+}, z.core.$strip>;
 
 // @public
 export const useInfiniteSearch: <T extends SearchDocument = SearchDocument>(options: UseInfiniteSearchOptions<T>) => UseInfiniteSearchState<T>;

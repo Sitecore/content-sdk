@@ -177,6 +177,18 @@ export {
   type PropMeta,
   type ArgMeta,
   type AtomSchemaInput,
+  textFieldSchema,
+  richTextFieldSchema,
+  dateFieldSchema,
+  linkFieldSchema,
+  imageFieldSchema,
+  fileFieldSchema,
+  type TextFieldSchema,
+  type RichTextFieldSchema,
+  type DateFieldSchema,
+  type LinkFieldSchema,
+  type ImageFieldSchema,
+  type FileFieldSchema,
 } from '@sitecore-content-sdk/react';
 
 export { initContentSdk } from '@sitecore-content-sdk/core';
