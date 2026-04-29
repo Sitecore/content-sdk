@@ -42,6 +42,7 @@ export class PreviewProxy extends ProxyBase {
     
     let pageData: Page | null = null;
 
+    // Scenario when the request is coming from /api/editing/render endpoint
     if (editingOptions) {
       pageData = await this.client.getPreview(editingOptions, {
         headers: {
@@ -49,6 +50,7 @@ export class PreviewProxy extends ProxyBase {
         },
       });
     } else {
+      // Scenario when the page is requested using direct path or navigation is performed
       pageData = await this.client.getPage(
         req.nextUrl.pathname,
         {
