@@ -1070,6 +1070,24 @@ describe('SitecoreClient', () => {
         )
       ).to.be.true;
     });
+
+    it('should return null when route is not found', async () => {
+      const previewData = {
+        site: 'default-site',
+        itemId: 'test-item-id',
+        mode: LayoutServicePageState.Edit,
+        language: 'en',
+        version: '1',
+        variantIds: '',
+        layoutKind: LayoutKind.Final,
+      };
+
+      editingServiceStub.fetchEditingData.resolves({ layoutData: { sitecore: { route: null } } });
+
+      const result = await sitecoreClient.getPreview(previewData);
+
+      expect(result).to.be.null;
+    });
   });
 
   describe('getDesignLibraryData', () => {

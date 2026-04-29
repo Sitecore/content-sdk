@@ -29,12 +29,12 @@ export default async function Page({ params }: PageProps) {
   let page;
   if (draft.isEnabled) {
     const headers = await nextHeaders();
-    const { previewData, fetchOptions } = client.getPreviewInputs(headers);
+    const previewData = client.getPreviewData(headers);
 
     if (isDesignLibraryPreviewData(previewData)) {
-      page = await client.getDesignLibraryData(previewData, fetchOptions);
+      page = await client.getDesignLibraryData(previewData);
     } else {
-      page = await client.getPreview(previewData, fetchOptions);
+      page = await client.getPreview(previewData);
     }
   } else {
     page = await client.getPage(path ?? [], { site, locale });

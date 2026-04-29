@@ -285,7 +285,14 @@ export const defineProxy = (...proxies: ProxyHandler[]) => {
       const start = Date.now();
 
       const proxyResponse = await proxies.reduce(
-        (p, proxy) => p.then((res) => proxy.handle(req, res)),
+        (p, proxy) =>
+          p.then((res) => {
+            // Short-circuit the remaining proxies once a previous one
+            // denied the request (e.g. PreviewProxy returning 403).
+            if (res.status === 403) return res;
+
+            return proxy.handle(req, res);
+          }),
         Promise.resolve(response)
       );
 
