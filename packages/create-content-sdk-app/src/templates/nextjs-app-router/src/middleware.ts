@@ -5,12 +5,20 @@ import {
   PersonalizeMiddleware,
   RedirectsMiddleware,
   LocaleMiddleware,
+  PreviewMiddleware,
 } from '@sitecore-content-sdk/nextjs/middleware';
 import sites from '.sitecore/sites.json';
 import scConfig from 'sitecore.config';
 import { routing } from './i18n/routing';
+import client from './lib/sitecore-client';
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
+  // PreviewMiddleware authorizes preview requests
+  const preview = new PreviewMiddleware({
+    client: client,
+    ...scConfig.api.edge,
+  });
+
   // LocaleMiddleware and AppRouterMultisiteMiddleware must always run for App Router routing
   const locale = new LocaleMiddleware({
     /**
@@ -82,7 +90,7 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
     // },
   });
 
-  return defineMiddleware(locale, multisite, redirects, personalize).exec(req, ev);
+  return defineMiddleware(preview, locale, multisite, redirects, personalize).exec(req, ev);
 }
 
 export const config = {

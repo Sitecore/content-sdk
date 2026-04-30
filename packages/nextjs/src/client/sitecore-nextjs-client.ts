@@ -26,6 +26,7 @@ import {
 import { ComponentMap } from '@sitecore-content-sdk/react';
 import { StaticParams } from './models';
 import { SitecoreConfig } from '../config';
+import { EDITING_PARAMS_HEADER } from '../editing/constants';
 
 /**
  * Init options for Sitecore Client that allows you to override services too
@@ -212,6 +213,24 @@ export class SitecoreNextjsClient extends SitecoreClient {
     }
 
     return componentProps;
+  }
+
+  /**
+   * **NOTE**: App Router only.
+   * Retrieves preview data from the request headers
+   * @param {Headers} headers - The headers from the incoming request.
+   * @returns {PreviewData} The preview data.
+   */
+  getPreviewData(headers: Headers): PreviewData {
+    const packed = headers.get(EDITING_PARAMS_HEADER) ?? '';
+
+    if (!packed) return {} as PreviewData;
+
+    try {
+      return JSON.parse(packed) as PreviewData;
+    } catch {
+      return {} as PreviewData;
+    }
   }
 
   protected getComponentPropsService(): ComponentPropsService {

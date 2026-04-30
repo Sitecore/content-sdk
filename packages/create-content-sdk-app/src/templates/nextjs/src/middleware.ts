@@ -4,13 +4,22 @@ import {
   MultisiteMiddleware,
   PersonalizeMiddleware,
   RedirectsMiddleware,
+  PreviewMiddleware,
 } from '@sitecore-content-sdk/nextjs/middleware';
 import sites from '.sitecore/sites.json';
 import scConfig from 'sitecore.config';
+import client from 'lib/sitecore-client';
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
   // Instantiate middlewares - they will use Edge config if available, otherwise fall back to local config
   // Each middleware will skip processing if required API configuration is not available
+
+  // PreviewMiddleware authorizes preview requests
+  const preview = new PreviewMiddleware({
+    client: client,
+    ...scConfig.api.edge,
+  });
+
   const multisite = new MultisiteMiddleware({
     /**
      * List of sites for site resolver to work with
@@ -62,7 +71,7 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
     // },
   });
 
-  return defineMiddleware(multisite, redirects, personalize).exec(req, ev);
+  return defineMiddleware(preview, multisite, redirects, personalize).exec(req, ev);
 }
 
 export const config = {

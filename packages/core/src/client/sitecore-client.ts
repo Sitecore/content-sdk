@@ -469,6 +469,12 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!data) {
       throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(previewData)}`);
     }
+
+    // If the route is not found it means access is denied or preview content is not found
+    if (!data.layoutData.sitecore.route) {
+      return null;
+    }
+
     const page: Page = {
       locale: language,
       layout: data.layoutData,

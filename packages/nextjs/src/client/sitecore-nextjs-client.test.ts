@@ -5,6 +5,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { SitecoreNextjsClient } from './sitecore-nextjs-client';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
+import { SitecoreClient } from '@sitecore-content-sdk/core/client';
 import * as siteTools from '@sitecore-content-sdk/core/site';
 import { SITE_PREFIX } from '@sitecore-content-sdk/core/site';
 import { GetServerSidePropsContext } from 'next';
@@ -323,6 +324,95 @@ describe('SitecoreClient', () => {
     });
   });
 
+  describe('getPreview', () => {
+    const localSandbox = sinon.createSandbox();
+    let basePreviewStub: sinon.SinonStub;
+
+    const previewData = {
+      site: 'my-site',
+      itemId: 'item-id',
+      language: 'en',
+      mode: 'edit',
+      variantIds: ['v1'],
+    };
+
+    beforeEach(() => {
+      basePreviewStub = localSandbox.stub(SitecoreClient.prototype, 'getPreview').resolves(null);
+    });
+
+    afterEach(() => {
+      localSandbox.restore();
+    });
+
+    it('should forward previewData and fetchOptions to base getPreview', async () => {
+      const fetchOptions = { retries: 2, headers: { Authorization: 'Bearer abc' } };
+
+      await sitecoreClient.getPreview(previewData, fetchOptions);
+
+      expect(basePreviewStub).to.have.been.calledOnce;
+
+      const [forwardedPreview, forwardedFetchOptions] = basePreviewStub.firstCall.args;
+      expect(forwardedPreview).to.equal(previewData);
+      expect(forwardedFetchOptions).to.equal(fetchOptions);
+    });
+
+    it('should call base getPreview without fetchOptions when none provided', async () => {
+      await sitecoreClient.getPreview(previewData);
+
+      expect(basePreviewStub).to.have.been.calledOnce;
+
+      const [forwardedPreview, forwardedFetchOptions] = basePreviewStub.firstCall.args;
+      expect(forwardedPreview).to.equal(previewData);
+      expect(forwardedFetchOptions).to.be.undefined;
+    });
+  });
+
+  describe('getDesignLibraryData', () => {
+    const localSandbox = sinon.createSandbox();
+    let baseDesignLibraryStub: sinon.SinonStub;
+
+    const designLibData = {
+      site: 'my-site',
+      itemId: 'item-id',
+      renderingId: 'rendering-id',
+      componentUid: 'component-uid',
+      language: 'en',
+      mode: 'library',
+    };
+
+    beforeEach(() => {
+      baseDesignLibraryStub = localSandbox
+        .stub(SitecoreClient.prototype, 'getDesignLibraryData')
+        .resolves({} as any);
+    });
+
+    afterEach(() => {
+      localSandbox.restore();
+    });
+
+    it('should forward designLibData and fetchOptions to base getDesignLibraryData', async () => {
+      const fetchOptions = { retries: 2, headers: { Authorization: 'Bearer abc' } };
+
+      await sitecoreClient.getDesignLibraryData(designLibData, fetchOptions);
+
+      expect(baseDesignLibraryStub).to.have.been.calledOnce;
+
+      const [forwardedData, forwardedFetchOptions] = baseDesignLibraryStub.firstCall.args;
+      expect(forwardedData).to.equal(designLibData);
+      expect(forwardedFetchOptions).to.equal(fetchOptions);
+    });
+
+    it('should call base getDesignLibraryData without fetchOptions when none provided', async () => {
+      await sitecoreClient.getDesignLibraryData(designLibData);
+
+      expect(baseDesignLibraryStub).to.have.been.calledOnce;
+
+      const [forwardedData, forwardedFetchOptions] = baseDesignLibraryStub.firstCall.args;
+      expect(forwardedData).to.equal(designLibData);
+      expect(forwardedFetchOptions).to.be.undefined;
+    });
+  });
+
   describe('getPagePaths', () => {
     it('should return static paths with site prefixes - multisite enabled by default', async () => {
       const paths = [
@@ -375,6 +465,69 @@ describe('SitecoreClient', () => {
       const result = await sitecoreClient.getPagePaths(['site-one'], ['en'], undefined, false);
 
       expect(result).to.deep.equal(expectedPaths);
+    });
+  });
+
+  describe('getPreviewData', () => {
+    const editingParamsHeader = 'x-sitecore-editing-params';
+
+    it('should return empty previewData when EDITING_PARAMS_HEADER is missing', () => {
+      const headers = new Headers();
+
+      const result = sitecoreClient.getPreviewData(headers);
+
+      expect(result).to.deep.equal({});
+    });
+
+    it('should return empty previewData when EDITING_PARAMS_HEADER is empty', () => {
+      const headers = new Headers({ [editingParamsHeader]: '' });
+
+      const result = sitecoreClient.getPreviewData(headers);
+
+      expect(result).to.deep.equal({});
+    });
+
+    it('should return empty previewData when EDITING_PARAMS_HEADER is invalid JSON', () => {
+      const headers = new Headers({ [editingParamsHeader]: 'not-json' });
+
+      const result = sitecoreClient.getPreviewData(headers);
+
+      expect(result).to.deep.equal({});
+    });
+
+    it('should parse EDITING_PARAMS_HEADER into previewData', () => {
+      const previewPayload = {
+        site: 'my-site',
+        itemId: 'item-id',
+        language: 'en',
+        mode: 'edit',
+        variantIds: 'v1',
+      };
+      const headers = new Headers({
+        [editingParamsHeader]: JSON.stringify(previewPayload),
+      });
+
+      const result = sitecoreClient.getPreviewData(headers);
+
+      expect(result).to.deep.equal(previewPayload);
+    });
+
+    it('should ignore unrelated headers when parsing previewData', () => {
+      const previewPayload = {
+        site: 'my-site',
+        itemId: 'item-id',
+        language: 'en',
+        mode: 'library',
+      };
+      const headers = new Headers({
+        [editingParamsHeader]: JSON.stringify(previewPayload),
+        Authorization: 'Bearer xyz',
+        'X-Custom': 'value',
+      });
+
+      const result = sitecoreClient.getPreviewData(headers);
+
+      expect(result).to.deep.equal(previewPayload);
     });
   });
 });

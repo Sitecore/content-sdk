@@ -247,7 +247,15 @@ export const defineMiddleware = (...middlewares: Middleware[]) => {
       const start = Date.now();
 
       const middlewareResponse = await middlewares.reduce(
-        (p, middleware) => p.then((res) => middleware.handle(req, res, ev)),
+        (p, middleware) =>
+          p.then((res) => {
+            // Short-circuit the remaining middlewares once a previous one
+            // denied the request (e.g. PreviewMiddleware returning 403).
+            if (res.status === 403) return res;
+
+            return middleware.handle(req, res, ev);
+          }),
+
         Promise.resolve(response)
       );
 
