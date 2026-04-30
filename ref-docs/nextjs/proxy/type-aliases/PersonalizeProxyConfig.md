@@ -8,7 +8,7 @@
 
 > **PersonalizeProxyConfig** = [`ProxyBaseConfig`](ProxyBaseConfig.md) & `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & `SitecoreConfig`\[`"personalize"`\] & `object`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:33](https://github.com/Sitecore/content-sdk/blob/fc12774027a7aa86b870d5da278426b9cdfbfffb/packages/nextjs/src/proxy/personalize-proxy.ts#L33)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:34](https://github.com/Sitecore/content-sdk/blob/b76e6169344e65141a96238321b74ef92202b436/packages/nextjs/src/proxy/personalize-proxy.ts#L34)
 
 The interface for the PersonalizeProxy configuration.
 
@@ -45,3 +45,10 @@ The interface for the PersonalizeProxy configuration.
 ### personalizeService?
 
 > `optional` **personalizeService**: [`PersonalizeService`](../../index/classes/PersonalizeService.md)
+
+### skipForBot?
+
+> `optional` **skipForBot**: `boolean`
+
+Skip personalize proxy for bot requests marked by the bot tracking proxy.
+Default is `true`.

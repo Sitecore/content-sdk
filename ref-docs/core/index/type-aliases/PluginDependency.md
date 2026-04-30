@@ -8,7 +8,7 @@
 
 > **PluginDependency** = `string`
 
-Defined in: [packages/core/src/initialization/types.ts:49](https://github.com/Sitecore/content-sdk/blob/fc12774027a7aa86b870d5da278426b9cdfbfffb/packages/core/src/initialization/types.ts#L49)
+Defined in: [packages/core/src/initialization/types.ts:49](https://github.com/Sitecore/content-sdk/blob/b76e6169344e65141a96238321b74ef92202b436/packages/core/src/initialization/types.ts#L49)
 
 Dependency definition for a plugin.
 Used to declare that a plugin requires another plugin to be present.

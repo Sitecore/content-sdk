@@ -35,4 +35,4 @@ All Sitecore data fetching goes through the single client in `src/lib/sitecore-c
 ## References
 
 - [AGENTS.md](../../../AGENTS.md) for SitecoreClient, getPage, getDictionary, getComponentData, and SSG/SSR.
-- [Official Content SDK docs](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+- [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).

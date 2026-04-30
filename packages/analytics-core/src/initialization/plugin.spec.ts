@@ -27,9 +27,11 @@ describe('plugin', () => {
   const mockGetClientId = jest.fn<AnalyticsAdapter['getClientId']>();
   const mockSetClientId = jest.fn<AnalyticsAdapter['setClientId']>();
   const mockGetSearchParams = jest.fn<AnalyticsAdapter['location']['getSearchParams']>();
+  const mockIsBot = jest.fn<() => boolean>();
 
   const createMockAdapter = (type: 'browser' | 'server' = 'browser'): AnalyticsAdapter => ({
     type,
+    isBot: mockIsBot,
     getClientId: mockGetClientId,
     setClientId: mockSetClientId,
     location: {
@@ -49,6 +51,7 @@ describe('plugin', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
+    mockIsBot.mockReturnValue(false);
     mockCoreContext.plugins.clear();
     // Reset window.scContentSDK
     if (typeof window !== 'undefined') {
@@ -250,6 +253,21 @@ describe('plugin', () => {
       await plugin.init();
 
       expect(mockSetClientId).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not call setClientId when visitor is a bot', async () => {
+      mockIsBot.mockReturnValue(true);
+      mockGetClientId.mockReturnValue('');
+      mockSetClientId.mockResolvedValue(undefined);
+
+      const adapter = createMockAdapter();
+      const plugin = analyticsPlugin({ options: { enableCookie: true }, adapter });
+      mockCoreContext.plugins.set(ANALYTICS_PLUGIN_NAME, plugin);
+
+      await plugin.init();
+
+      expect(mockSetClientId).not.toHaveBeenCalled();
+      expect(mockGetClientId).not.toHaveBeenCalled();
     });
 
     it('should not call setClientId when client ID exists and adapter type is browser', async () => {

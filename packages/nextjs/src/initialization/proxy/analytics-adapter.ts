@@ -1,9 +1,8 @@
 import {
   COOKIE_NAME_PREFIX,
   fetchClientIdFromEdgeProxy,
+  isBotServerSide,
   getDefaultCookieAttributes,
-} from '@sitecore-content-sdk/analytics-core/internal';
-import {
   getAnalyticsPlugin,
   AnalyticsAdapter,
 } from '@sitecore-content-sdk/analytics-core/internal';
@@ -36,6 +35,9 @@ export function analyticsProxyAdapter(
 ): AnalyticsProxyAdapter {
   return {
     type: 'proxy',
+    isBot: () => {
+      return isBotServerSide(request.cookies.toString(), request.headers.get('user-agent'));
+    },
     getClientId: () => {
       return getClientId(request);
     },

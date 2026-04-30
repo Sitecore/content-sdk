@@ -22,3 +22,5 @@ export { ANALYTICS_PLUGIN_NAME } from './initialization/const';
 export type { AnalyticsPlugin } from './initialization/types';
 export { AnalyticsAdapter, AnalyticsOptions } from './initialization/types';
 export type { VisitorIds } from './interfaces';
+
+export { isBot, isBotClientSide, isBotServerSide, BOT_DETECTION_COOKIE } from './bot-detection/bot-detection';

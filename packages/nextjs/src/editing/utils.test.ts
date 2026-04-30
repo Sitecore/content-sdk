@@ -1033,6 +1033,27 @@ describe('editing/utils', () => {
       expect(timestamp).to.be.at.least(beforeTime);
       expect(timestamp).to.be.at.most(afterTime);
     });
+
+    it('should handle 403 response without throwing', async () => {
+      const mock403Response = {
+        data: {
+          html: '<html><body>403 Forbidden</body></html>',
+        },
+      };
+
+      const error = {
+        response: {
+          status: 403,
+          ...mock403Response,
+        },
+      };
+
+      mockDataFetcher.get.rejects(error);
+
+      const result = await getEditingRequestHtml(requestUrl, {}, {}, [], mockDataFetcher as any);
+
+      expect(result).to.equal('<html><body>403 Forbidden</body></html>');
+    });
   });
 
   describe('isDesignLibraryPreviewData', () => {

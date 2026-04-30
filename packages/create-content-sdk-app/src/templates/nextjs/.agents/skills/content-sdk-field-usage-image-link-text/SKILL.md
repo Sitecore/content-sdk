@@ -33,4 +33,4 @@ Use SDK field components to render Sitecore fields with proper validation and fa
 ## References
 
 - [AGENTS.md](../../../AGENTS.md) for component and Sitecore patterns.
-- [Official Content SDK docs](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+- [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).

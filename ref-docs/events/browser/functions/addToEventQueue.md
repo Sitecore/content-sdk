@@ -8,7 +8,7 @@
 
 > **addToEventQueue**(`eventData`): `Promise`\<`void`\>
 
-Defined in: [events/src/eventStorage/addToEventQueue.ts:13](https://github.com/Sitecore/content-sdk/blob/fc12774027a7aa86b870d5da278426b9cdfbfffb/packages/events/src/eventStorage/addToEventQueue.ts#L13)
+Defined in: [events/src/eventStorage/addToEventQueue.ts:13](https://github.com/Sitecore/content-sdk/blob/b76e6169344e65141a96238321b74ef92202b436/packages/events/src/eventStorage/addToEventQueue.ts#L13)
 
 A function that adds an event to the queue
 

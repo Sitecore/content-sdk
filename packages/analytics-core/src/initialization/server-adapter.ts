@@ -1,3 +1,4 @@
+import { isBotServerSide } from '../bot-detection/bot-detection';
 import {
   COOKIE_NAME_PREFIX,
   fetchClientIdFromEdgeProxy,
@@ -37,6 +38,9 @@ export function analyticsServerAdapter<
 >(request: Request, response: Response): AnalyticsServerAdapter {
   return {
     type: 'server',
+    isBot: () => {
+      return isBotServerSide(request.headers.cookie, request.headers['user-agent']);
+    },
     getClientId: () => {
       return getClientId(request);
     },

@@ -498,8 +498,7 @@ describe('SitecoreClient', () => {
         },
       };
       layoutServiceStub.fetchLayoutData.returns(rawLayout);
-      const stringTransformer = (value: string) =>
-        value === 'home' ? 'rewritten' : value;
+      const stringTransformer = (value: string) => (value === 'home' ? 'rewritten' : value);
       const clientWithRewrite = new SitecoreClient({
         ...defaultInitOptions,
         rewriteMediaUrls: stringTransformer,
@@ -537,9 +536,9 @@ describe('SitecoreClient', () => {
 
       const result = await clientWithRewrite.getPage(path, { locale });
 
-      expect(
-        (result?.layout.sitecore.route?.fields?.image?.value as { src: string }).src
-      ).to.equal('https://custom.example.com/-/media/hero.jpg');
+      expect((result?.layout.sitecore.route?.fields?.image?.value as { src: string }).src).to.equal(
+        'https://custom.example.com/-/media/hero.jpg'
+      );
       delete process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV];
     });
 
@@ -899,6 +898,7 @@ describe('SitecoreClient', () => {
           version: previewData.version,
           layoutKind: previewData.layoutKind,
           mode: previewData.mode,
+          site: previewData.site,
         })
       ).to.be.true;
     });
@@ -950,6 +950,7 @@ describe('SitecoreClient', () => {
           version: previewData.version,
           layoutKind: previewData.layoutKind,
           mode: previewData.mode,
+          site: previewData.site,
         })
       ).to.be.true;
     });
@@ -1049,6 +1050,7 @@ describe('SitecoreClient', () => {
           version: previewData.version,
           layoutKind: previewData.layoutKind,
           mode: previewData.mode,
+          site: previewData.site,
         })
         .resolves(editingData);
 
@@ -1062,10 +1064,29 @@ describe('SitecoreClient', () => {
             version: previewData.version,
             layoutKind: previewData.layoutKind,
             mode: previewData.mode,
+            site: previewData.site,
           },
           fetchOptions
         )
       ).to.be.true;
+    });
+
+    it('should return null when route is not found', async () => {
+      const previewData = {
+        site: 'default-site',
+        itemId: 'test-item-id',
+        mode: LayoutServicePageState.Edit,
+        language: 'en',
+        version: '1',
+        variantIds: '',
+        layoutKind: LayoutKind.Final,
+      };
+
+      editingServiceStub.fetchEditingData.resolves({ layoutData: { sitecore: { route: null } } });
+
+      const result = await sitecoreClient.getPreview(previewData);
+
+      expect(result).to.be.null;
     });
   });
 

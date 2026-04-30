@@ -15,6 +15,7 @@ export const ANALYTICS_PLUGIN_NAME = "AnalyticsPlugin";
 // @public
 export interface AnalyticsAdapter extends PluginAdapter {
     getClientId: () => string | null;
+    isBot?: () => boolean;
     location: {
         getSearchParams: () => string;
     };
@@ -83,6 +84,9 @@ export function appendScriptWithAttributes(attributes: ScriptAttributes): void;
 export type BasicTypes = string | boolean | number | undefined | Array<string | boolean | number | {
     [key: string]: BasicTypes;
 } | Array<BasicTypes>>;
+
+// @internal
+export const BOT_DETECTION_COOKIE = "sc_bot";
 
 // @internal
 export const CLIENT_ID_COOKIE_NAME = "cid";
@@ -204,6 +208,15 @@ export interface Infer {
     // (undocumented)
     pageName: () => string;
 }
+
+// @internal
+export const isBot: (userAgent?: string | null) => boolean;
+
+// @internal
+export const isBotClientSide: () => boolean;
+
+// @internal
+export const isBotServerSide: (cookie?: string, userAgent?: string | null) => boolean;
 
 // @internal
 export function isShortISODateString(date: string): boolean;

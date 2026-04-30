@@ -118,6 +118,7 @@ import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
 import { NextApiRequest } from 'next';
 import { NextApiResponse } from 'next';
+import { NextFetchEvent } from 'next/server';
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { NextURL } from 'next/dist/server/web/next-url';
@@ -215,6 +216,22 @@ export class AppRouterMultisiteProxy extends MultisiteProxy {
     protected shouldSkipWhenDisabled(): boolean;
     protected shouldWarnWhenDisabled(_res: NextResponse): void;
 }
+
+// @public
+export class BotTrackingProxy extends ProxyBase {
+    constructor(config: BotTrackingProxyConfig);
+    // (undocumented)
+    protected config: BotTrackingProxyConfig;
+    // (undocumented)
+    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    // @internal (undocumented)
+    protected shouldSkipForLocalEnvironment(req: NextRequest): boolean;
+}
+
+// @public
+export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Omit<ProxyBaseConfig, 'defaultLanguage'> & {
+    fetchEvent?: NextFetchEvent;
+};
 
 export { BYOCClientWrapper }
 
@@ -742,6 +759,7 @@ export type PersonalizeProxyConfig = ProxyBaseConfig & SitecoreConfig['api']['ed
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
     extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
+    skipForBot?: boolean;
 };
 
 export { PersonalizeService }
@@ -760,6 +778,20 @@ export { PlaceholderData }
 export { PlaceholdersData }
 
 // @public
+export class PreviewProxy extends ProxyBase {
+    constructor(config: PreviewProxyConfig);
+    // (undocumented)
+    protected client: SitecoreClient;
+    // (undocumented)
+    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+}
+
+// @public
+export type PreviewProxyConfig = {
+    client: SitecoreClient;
+};
+
+// @public
 export abstract class ProxyBase extends ProxyHandler_2 {
     constructor(config: ProxyBaseConfig);
     // (undocumented)
@@ -773,7 +805,7 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     };
     // (undocumented)
     protected getClientFactory(graphQLOptions: GraphQLClientOptions): GraphQLRequestClientFactory_2;
-    protected getHostHeader(req: NextRequest): string | undefined;
+    protected getHostHeader(req: NextRequest): string;
     protected getLanguage(req: NextRequest, res?: NextResponse): string;
     protected getLanguageFromHeader(res?: NextResponse): string | undefined;
     protected getSite(req: NextRequest, res?: NextResponse): SiteInfo;
@@ -817,9 +849,11 @@ export class RedirectsProxy extends ProxyBase {
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
     protected dispatchRedirect(target: NextURL | string, type: string, req: NextRequest, res: NextResponse, isExternal?: boolean): NextResponse;
     // Warning: (ae-forgotten-export) The symbol "RedirectResult" needs to be exported by the entry point api-surface.d.ts
-    protected getExistsRedirect(req: NextRequest, siteName: string): Promise<RedirectResult | undefined>;
+    protected getExistsRedirect(req: NextRequest, siteName: string, requestLocale: string): Promise<RedirectResult | undefined>;
     // (undocumented)
     handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    protected matchFromRedirectMapRedirect(redirects: RedirectResult[], urlLocale: string, incomingURL: string, incomingQS: string): RedirectResult | undefined;
+    protected matchRedirectItemRedirect(redirects: RedirectResult[], locale: string, currentPath: string): RedirectResult | undefined;
     protected normalizeUrl(url: NextURL): NextURL;
     // (undocumented)
     protected redirectsService: RedirectsService | null;
@@ -891,6 +925,7 @@ export class SitecoreClient extends SitecoreClient_2 {
     getPage(path: string | string[], pageOptions: PageOptions, options?: FetchOptions): Promise<Page | null>;
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
     getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null>;
+    getPreviewData(headers: Headers): PreviewData;
     getSiteNameFromPath(path: string | string[]): string;
     // Warning: (ae-forgotten-export) The symbol "SitecoreNextjsClientInit" needs to be exported by the entry point api-surface.d.ts
     //

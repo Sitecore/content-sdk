@@ -33,4 +33,4 @@ One component definition can have multiple presentations or data-driven variants
 ## References
 
 - [AGENTS.md](../../../AGENTS.md) and content-sdk-component-registration for maps.
-- [Official Content SDK docs](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+- [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).

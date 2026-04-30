@@ -34,4 +34,4 @@ Sitemap and robots.txt are served via **route handlers** and rewrites. Use the S
 ## References
 
 - [AGENTS.md](../../../AGENTS.md) for API routes and rewrites.
-- [Official Content SDK docs](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+- [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).
