@@ -182,7 +182,7 @@ export function getCacheAndClean<T>(key: string): T | undefined;
 export function getCoreContext(): CoreContext;
 
 // @public
-export const getEnforcedCorsHeaders: (input: {
+export const getEnforcedCorsHeaders: ({ requestMethod, headers, presetCorsHeader, allowedOrigins, }: {
     requestMethod: string | undefined;
     headers: IncomingHttpHeaders | Headers;
     presetCorsHeader?: string | string[];
@@ -204,7 +204,7 @@ export type GraphQLClientError = Partial<ClientError> & GenericGraphQLClientErro
 // @public
 export class GraphQLRequestClient implements GraphQLClient {
     constructor(endpoint: string, clientConfig?: GraphQLRequestClientConfig);
-    static createClientFactory(input: GraphQLRequestClientFactoryConfig): GraphQLRequestClientFactory;
+    static createClientFactory({ endpoint, ...factoryConfig }: GraphQLRequestClientFactoryConfig): GraphQLRequestClientFactory;
     request<T>(query: string | DocumentNode, variables?: {
         [key: string]: unknown;
     }, options?: FetchOptions): Promise<T>;
