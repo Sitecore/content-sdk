@@ -10,6 +10,13 @@ Our versioning strategy is as follows:
 - Minor: non-breaking feature additions – no breaking changes (e.g. new features, improvements)
 - Major: new features + breaking changes (e.g. framework upgrades, major architectural changes, major features)
 
+### 1.5.3
+
+### ✨ Bug fixes
+
+* `[react]` Form component loses interactivity and state between rerenders ([#447](https://github.com/Sitecore/content-sdk/pull/447))
+* `[core]` Preview mode shows unpublishable content ([#410](https://github.com/Sitecore/content-sdk/pull/410))([416](https://github.com/Sitecore/content-sdk/pull/416))
+
 ### 1.5.2
 
 ### 🎉 New Features & Improvements
