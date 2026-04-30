@@ -34,4 +34,4 @@ This app **uses getComponentData**. After getPage, use **client.getComponentData
 ## References
 
 - content-sdk-graphql-data-fetching and [AGENTS.md](../../../AGENTS.md) for getPage, getComponentData, and data flow.
-- [Official Content SDK docs](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+- [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).

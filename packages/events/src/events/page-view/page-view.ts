@@ -5,11 +5,13 @@ import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
 import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getEventsPlugin } from '../../initialization/plugin';
+import { debug } from '../../debug';
 
 /**
  * A function that sends a VIEW event to the SitecoreCloud API
  * @param {PageViewData} [pageViewData] - The optional attributes to be sent to the SitecoreCloud API
- * This object will be flattened and sent in the ext object of the payload
+ * This object will be flattened and sent in the ext object of the payload.
+ * The page view will be skipped if the visitor on the client-side is a bot.
  * @returns The response object that Sitecore Edge Proxy returns
  * @public
  */
@@ -19,6 +21,12 @@ export async function pageView(pageViewData?: PageViewData): Promise<EPResponse 
   getEventsPlugin();
 
   const { options, adapter } = getAnalyticsPlugin();
+
+  if (adapter.isBot?.()) {
+    debug.events('pageView skipped (visitor is a bot)');
+    return null;
+  }
+
   const id = adapter.getClientId() || '';
   const searchParams = adapter.location.getSearchParams();
 

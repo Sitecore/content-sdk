@@ -477,13 +477,24 @@ export class SitecoreClient implements BaseSitecoreClient {
         version,
         layoutKind,
         mode,
+        site,
       },
       fetchOptions
     );
 
     if (!data) {
-      throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(previewData)}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
+      throw new Error(
+        `Unable to fetch editing data for preview ${JSON.stringify(previewData)}. ${
+          ERROR_MESSAGES.CONTACT_SUPPORT
+        }`
+      );
     }
+
+    // If the route is not found it means access is denied or preview content is not found
+    if (!data.layoutData.sitecore.route) {
+      return null;
+    }
+
     let layout = data.layoutData;
     const personalizeData = getGroomedVariantIds(variantIds);
     personalizeLayout(layout, personalizeData.variantId, personalizeData.componentVariantIds);
@@ -536,7 +547,11 @@ export class SitecoreClient implements BaseSitecoreClient {
     );
 
     if (!componentData) {
-      throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(designLibData)}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
+      throw new Error(
+        `Unable to fetch editing data for preview ${JSON.stringify(designLibData)}. ${
+          ERROR_MESSAGES.CONTACT_SUPPORT
+        }`
+      );
     }
     const layout = this.applyContentRewrite(componentData);
     const page: Page = {

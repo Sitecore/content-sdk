@@ -33,4 +33,4 @@ Register components in the Sitecore component map so the layout and editing pipe
 ## References
 
 - [AGENTS.md](../../../AGENTS.md) for component map and editing routes.
-- [Official Content SDK docs](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+- [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).
