@@ -14,6 +14,7 @@
 - [MiddlewareBase](classes/MiddlewareBase.md)
 - [MultisiteMiddleware](classes/MultisiteMiddleware.md)
 - [PersonalizeMiddleware](classes/PersonalizeMiddleware.md)
+- [PreviewMiddleware](classes/PreviewMiddleware.md)
 - [RedirectsMiddleware](classes/RedirectsMiddleware.md)
 - [RobotsMiddleware](classes/RobotsMiddleware.md)
 - [SitemapMiddleware](classes/SitemapMiddleware.md)
@@ -25,6 +26,7 @@
 - [MultisiteMiddlewareConfig](type-aliases/MultisiteMiddlewareConfig.md)
 - [PersonalizeMiddlewareConfig](type-aliases/PersonalizeMiddlewareConfig.md)
 - [PersonalizeServiceConfig](type-aliases/PersonalizeServiceConfig.md)
+- [PreviewMiddlewareConfig](type-aliases/PreviewMiddlewareConfig.md)
 - [RedirectsMiddlewareConfig](type-aliases/RedirectsMiddlewareConfig.md)
 
 ## Functions

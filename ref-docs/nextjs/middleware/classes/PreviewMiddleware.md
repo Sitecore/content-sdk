@@ -2,53 +2,60 @@
 
 ***
 
-[@sitecore-content-sdk/nextjs](../../README.md) / [middleware](../README.md) / AppRouterMultisiteMiddleware
+[@sitecore-content-sdk/nextjs](../../README.md) / [middleware](../README.md) / PreviewMiddleware
 
-# Class: AppRouterMultisiteMiddleware
+# Class: PreviewMiddleware
 
-Defined in: [nextjs/src/middleware/app-router-multisite-middleware.ts:8](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/app-router-multisite-middleware.ts#L8)
+Defined in: [nextjs/src/middleware/preview-middleware.ts:21](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/preview-middleware.ts#L21)
 
-Middleware/handler for enabling multisite support in the Next.js App Router.
+Middleware for preview requests. Acts as a gateway for preview requests.
+Currently it only supports internal editing hosts deployed on Sitecore AI.
 
 ## Extends
 
-- [`MultisiteMiddleware`](MultisiteMiddleware.md)
+- [`MiddlewareBase`](MiddlewareBase.md)
 
 ## Constructors
 
 ### Constructor
 
-> **new AppRouterMultisiteMiddleware**(`config?`): `AppRouterMultisiteMiddleware`
+> **new PreviewMiddleware**(`config`): `PreviewMiddleware`
 
-Defined in: [nextjs/src/middleware/multisite-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/multisite-middleware.ts#L39)
+Defined in: [nextjs/src/middleware/preview-middleware.ts:24](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/preview-middleware.ts#L24)
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `config?` | [`MultisiteMiddlewareConfig`](../type-aliases/MultisiteMiddlewareConfig.md) | Multisite middleware config |
+| Parameter | Type |
+| ------ | ------ |
+| `config` | [`PreviewMiddlewareConfig`](../type-aliases/PreviewMiddlewareConfig.md) |
 
 #### Returns
 
-`AppRouterMultisiteMiddleware`
+`PreviewMiddleware`
 
-#### Inherited from
+#### Overrides
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`constructor`](MultisiteMiddleware.md#constructor)
+[`MiddlewareBase`](MiddlewareBase.md).[`constructor`](MiddlewareBase.md#constructor)
 
 ## Properties
 
+### client
+
+> `protected` **client**: [`SitecoreClient`](../../client/classes/SitecoreClient.md)
+
+Defined in: [nextjs/src/middleware/preview-middleware.ts:22](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/preview-middleware.ts#L22)
+
+***
+
 ### config
 
-> `protected` **config**: [`MultisiteMiddlewareConfig`](../type-aliases/MultisiteMiddlewareConfig.md)
+> `protected` **config**: [`MiddlewareBaseConfig`](../type-aliases/MiddlewareBaseConfig.md)
 
-Defined in: [nextjs/src/middleware/multisite-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/multisite-middleware.ts#L39)
-
-Multisite middleware config
+Defined in: [nextjs/src/middleware/middleware.ts:62](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/middleware.ts#L62)
 
 #### Inherited from
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`config`](MultisiteMiddleware.md#config)
+[`MiddlewareBase`](MiddlewareBase.md).[`config`](MiddlewareBase.md#config)
 
 ***
 
@@ -60,7 +67,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:59](https://github.com/Sitecore
 
 #### Inherited from
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`defaultHostname`](MultisiteMiddleware.md#defaulthostname)
+[`MiddlewareBase`](MiddlewareBase.md).[`defaultHostname`](MiddlewareBase.md#defaulthostname)
 
 ***
 
@@ -72,7 +79,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:60](https://github.com/Sitecore
 
 #### Inherited from
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`siteResolver`](MultisiteMiddleware.md#siteresolver)
+[`MiddlewareBase`](MiddlewareBase.md).[`siteResolver`](MiddlewareBase.md#siteresolver)
 
 ## Methods
 
@@ -80,7 +87,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:60](https://github.com/Sitecore
 
 > `protected` **disabled**(`req`, `res`): `undefined` \| `boolean`
 
-Defined in: [nextjs/src/middleware/multisite-middleware.ts:136](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/multisite-middleware.ts#L136)
+Defined in: [nextjs/src/middleware/middleware.ts:113](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/middleware.ts#L113)
 
 #### Parameters
 
@@ -95,7 +102,7 @@ Defined in: [nextjs/src/middleware/multisite-middleware.ts:136](https://github.c
 
 #### Inherited from
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`disabled`](MultisiteMiddleware.md#disabled)
+[`MiddlewareBase`](MiddlewareBase.md).[`disabled`](MiddlewareBase.md#disabled)
 
 ***
 
@@ -122,7 +129,7 @@ Object with headers as key/value pairs
 
 #### Inherited from
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`extractDebugHeaders`](MultisiteMiddleware.md#extractdebugheaders)
+[`MiddlewareBase`](MiddlewareBase.md).[`extractDebugHeaders`](MiddlewareBase.md#extractdebugheaders)
 
 ***
 
@@ -144,7 +151,7 @@ Defined in: [nextjs/src/middleware/middleware.ts:198](https://github.com/Sitecor
 
 #### Inherited from
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`getClientFactory`](MultisiteMiddleware.md#getclientfactory)
+[`MiddlewareBase`](MiddlewareBase.md).[`getClientFactory`](MiddlewareBase.md#getclientfactory)
 
 ***
 
@@ -168,7 +175,7 @@ Extract 'host' header
 
 #### Inherited from
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`getHostHeader`](MultisiteMiddleware.md#gethostheader)
+[`MiddlewareBase`](MiddlewareBase.md).[`getHostHeader`](MiddlewareBase.md#gethostheader)
 
 ***
 
@@ -195,7 +202,7 @@ language
 
 #### Inherited from
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`getLanguage`](MultisiteMiddleware.md#getlanguage)
+[`MiddlewareBase`](MiddlewareBase.md).[`getLanguage`](MiddlewareBase.md#getlanguage)
 
 ***
 
@@ -222,7 +229,7 @@ language or undefined if not found
 
 #### Inherited from
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`getLanguageFromHeader`](MultisiteMiddleware.md#getlanguagefromheader)
+[`MiddlewareBase`](MiddlewareBase.md).[`getLanguageFromHeader`](MiddlewareBase.md#getlanguagefromheader)
 
 ***
 
@@ -251,34 +258,7 @@ site information
 
 #### Inherited from
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`getSite`](MultisiteMiddleware.md#getsite)
-
-***
-
-### getSiteRewrite()
-
-> `protected` **getSiteRewrite**(`pathname`, `siteName`): `string`
-
-Defined in: [nextjs/src/middleware/app-router-multisite-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/app-router-multisite-middleware.ts#L39)
-
-Generates a site-specific rewrite path for app router based on the provided pathname and site name.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `pathname` | `string` | The pathname to be rewritten. |
-| `siteName` | `string` | The name of the site. |
-
-#### Returns
-
-`string`
-
-The rewritten path as a string.
-
-#### Overrides
-
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`getSiteRewrite`](MultisiteMiddleware.md#getsiterewrite)
+[`MiddlewareBase`](MiddlewareBase.md).[`getSite`](MiddlewareBase.md#getsite)
 
 ***
 
@@ -286,7 +266,7 @@ The rewritten path as a string.
 
 > **handle**(`req`, `res`): `Promise`\<`NextResponse`\<`unknown`\>\>
 
-Defined in: [nextjs/src/middleware/multisite-middleware.ts:43](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/multisite-middleware.ts#L43)
+Defined in: [nextjs/src/middleware/preview-middleware.ts:30](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/preview-middleware.ts#L30)
 
 Handler method to execute middleware logic
 
@@ -301,9 +281,9 @@ Handler method to execute middleware logic
 
 `Promise`\<`NextResponse`\<`unknown`\>\>
 
-#### Inherited from
+#### Overrides
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`handle`](MultisiteMiddleware.md#handle)
+[`MiddlewareBase`](MiddlewareBase.md).[`handle`](MiddlewareBase.md#handle)
 
 ***
 
@@ -329,7 +309,7 @@ true if app router is used
 
 #### Inherited from
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`isAppRouter`](MultisiteMiddleware.md#isapprouter)
+[`MiddlewareBase`](MiddlewareBase.md).[`isAppRouter`](MiddlewareBase.md#isapprouter)
 
 ***
 
@@ -355,7 +335,7 @@ is prefetch
 
 #### Inherited from
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`isPrefetch`](MultisiteMiddleware.md#isprefetch)
+[`MiddlewareBase`](MiddlewareBase.md).[`isPrefetch`](MiddlewareBase.md#isprefetch)
 
 ***
 
@@ -381,7 +361,7 @@ is preview
 
 #### Inherited from
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`isPreview`](MultisiteMiddleware.md#ispreview)
+[`MiddlewareBase`](MiddlewareBase.md).[`isPreview`](MiddlewareBase.md#ispreview)
 
 ***
 
@@ -408,50 +388,4 @@ Create a rewrite response
 
 #### Inherited from
 
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`rewrite`](MultisiteMiddleware.md#rewrite)
-
-***
-
-### shouldSkipWhenDisabled()
-
-> `protected` **shouldSkipWhenDisabled**(): `boolean`
-
-Defined in: [nextjs/src/middleware/app-router-multisite-middleware.ts:29](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/app-router-multisite-middleware.ts#L29)
-
-In App Router, we cannot skip the middleware even if enabled is false,
-because the route structure requires the [site] segment.
-
-#### Returns
-
-`boolean`
-
-always returns false (never skip) for App Router
-
-#### Overrides
-
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`shouldSkipWhenDisabled`](MultisiteMiddleware.md#shouldskipwhendisabled)
-
-***
-
-### shouldWarnWhenDisabled()
-
-> `protected` **shouldWarnWhenDisabled**(`_res`): `void`
-
-Defined in: [nextjs/src/middleware/app-router-multisite-middleware.ts:15](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/app-router-multisite-middleware.ts#L15)
-
-Warns when multisite is disabled in App Router.
-The middleware will still run to prevent routing errors.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `_res` | `NextResponse` | response (unused, kept for method signature compatibility) |
-
-#### Returns
-
-`void`
-
-#### Overrides
-
-[`MultisiteMiddleware`](MultisiteMiddleware.md).[`shouldWarnWhenDisabled`](MultisiteMiddleware.md#shouldwarnwhendisabled)
+[`MiddlewareBase`](MiddlewareBase.md).[`rewrite`](MiddlewareBase.md#rewrite)
