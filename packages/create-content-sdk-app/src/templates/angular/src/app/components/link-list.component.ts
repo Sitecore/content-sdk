@@ -1,45 +1,72 @@
-import { Component, input, computed } from '@angular/core';
-import { ComponentRendering, Field } from '@sitecore-content-sdk/angular';
-import { ScTextDirective, ScLinkDirective, LinkField } from '@sitecore-content-sdk/angular';
-import { scComponentRoot, scRenderingId } from '../sitecore/sitecore-component-classes';
+import { Component, computed } from '@angular/core';
+import { isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
+import { Field, ScTextDirective, ScLinkDirective, LinkField } from '@sitecore-content-sdk/angular';
+import { SxaComponent } from './content-sdk/sxa.component';
 
-interface LinkListItem {
-  id: string;
-  fields: {
-    Title?: Field<string>;
-    Link?: LinkField;
+interface LinkListDatasource {
+  children?: {
+    results?: Array<{
+      field?: {
+        link?: LinkField;
+      };
+    }>;
   };
+  field?: {
+    title?: Field<string>;
+  };
+}
+
+interface LinkListFields {
+  data?: { datasource?: LinkListDatasource };
 }
 
 @Component({
   selector: 'app-link-list',
-  standalone: true,
   imports: [ScTextDirective, ScLinkDirective],
   template: `
-    <div [attr.class]="rootClass()" [id]="renderingId()">
+    <aside [attr.class]="('component link-list ' + styles()).trim()" [attr.id]="renderingId()">
       <div class="component-content">
-        <h3 [scText]="titleField()"></h3>
-        <ul>
-          @for (item of linkItems(); track item.id) {
-            <li>
-              @if (item.fields?.Link) {
-                <a [scLink]="item.fields.Link"></a>
-              }
-            </li>
-          }
-        </ul>
+        @if (!datasource()) {
+          <h3>Link List</h3>
+        } @else {
+          <h3 [scText]="titleField()"></h3>
+          <ul>
+            @for (row of linkRows(); track $index) {
+              <li [class]="itemClass($index, linkRows().length)">
+                <div class="field-link">
+                  <a [scLink]="row.link"></a>
+                </div>
+              </li>
+            }
+          </ul>
+        }
       </div>
-    </div>
+    </aside>
   `,
 })
-export class LinkListComponent {
-  readonly fields = input<{ [key: string]: unknown }>({});
-  readonly params = input<{ [key: string]: string }>({});
-  readonly rendering = input<ComponentRendering>();
+export class LinkListComponent extends SxaComponent {
+  readonly data = computed(() => (this.fields() as LinkListFields)?.data);
 
-  readonly titleField = computed(() => this.fields()?.['Title'] as Field<string> | undefined);
-  readonly linkItems = computed(() => (this.fields()?.['items'] as LinkListItem[]) ?? []);
+  readonly datasource = computed(() => this.data()?.datasource);
 
-  readonly rootClass = computed(() => scComponentRoot('link-list', this.params()));
-  readonly renderingId = computed(() => scRenderingId(this.params()));
+  readonly titleField = computed(() => this.datasource()?.field?.title);
+
+  readonly linkRows = computed(() => {
+    const results = this.datasource()?.children?.results;
+    if (!Array.isArray(results)) return [] as Array<{ link: LinkField }>;
+    return results
+      .filter((result) => {
+        const link = result?.field?.link;
+        return !!link && !isFieldValueEmpty(link);
+      })
+      .map((result) => ({ link: result.field!.link! }));
+  });
+
+  /** SXA-style list row classes: `item{n}`, alternating odd/even (0-based), optional first/last. */
+  itemClass(index: number, total: number): string {
+    const classes = [`item${index}`, index % 2 === 0 ? 'odd' : 'even'];
+    if (index === 0) classes.push('first');
+    if (index === total - 1) classes.push('last');
+    return classes.join(' ');
+  }
 }

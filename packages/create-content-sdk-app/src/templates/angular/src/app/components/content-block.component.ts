@@ -1,31 +1,35 @@
-import { Component, input, computed } from '@angular/core';
-import { ComponentRendering, Field } from '@sitecore-content-sdk/angular';
-import { ScTextDirective, ScRichTextDirective } from '@sitecore-content-sdk/angular';
-import { scComponentRoot, scRenderingId } from '../sitecore/sitecore-component-classes';
+import { Component, computed } from '@angular/core';
+import { Field } from '@sitecore-content-sdk/angular';
+import { ScTextDirective, ScRichTextDirective, TextField } from '@sitecore-content-sdk/angular';
+import { SxaComponent } from './content-sdk/sxa.component';
 
+/**
+ * Parity with kit-nextjs-skate-park ContentBlock (minimal section, no Sitecore chrome wrapper).
+ */
 @Component({
   selector: 'app-content-block',
-  standalone: true,
   imports: [ScTextDirective, ScRichTextDirective],
   template: `
-    <div [attr.class]="rootClass()" [id]="renderingId()">
-      <div class="component-content">
-        <div>
-          <h2 [scText]="titleField()"></h2>
-          <div [scRichText]="contentField()"></div>
-        </div>
+    <section class="contentBlock">
+      <h2 class="contentTitle" [scText]="headingField()"></h2>
+      <div class="contentDescription">
+        @if (contentField(); as content) {
+          <div [scRichText]="content"></div>
+        }
       </div>
-    </div>
+    </section>
   `,
 })
-export class ContentBlockComponent {
-  readonly fields = input<{ [key: string]: unknown }>({});
-  readonly params = input<{ [key: string]: string }>({});
-  readonly rendering = input<ComponentRendering>();
+export class ContentBlockComponent extends SxaComponent {
+  readonly headingField = computed((): Field<string> | undefined => {
+    const all = this.fields();
+    if (!all || Object.keys(all).length === 0) return undefined;
+    return (all.heading ?? all.Heading) as Field<string> | undefined;
+  });
 
-  readonly titleField = computed(() => this.fields()?.['Title'] as Field<string> | undefined);
-  readonly contentField = computed(() => this.fields()?.['Content'] as Field<string> | undefined);
-
-  readonly rootClass = computed(() => scComponentRoot('content rich-text', this.params()));
-  readonly renderingId = computed(() => scRenderingId(this.params()));
+  readonly contentField = computed((): TextField | undefined => {
+    const all = this.fields();
+    if (!all || Object.keys(all).length === 0) return undefined;
+    return (all.content ?? all.Content) as TextField | undefined;
+  });
 }

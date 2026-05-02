@@ -48,7 +48,14 @@ const makePage = (isEditing: boolean): Page =>
       isDesignLibrary: false,
       designLibrary: { isVariantGeneration: false },
     },
-  }) as unknown as Page;
+  } as Page);
+
+function formRendering(
+  params: Record<string, string>,
+  extra: Partial<ComponentRendering> = {}
+): ComponentRendering {
+  return { componentName: 'Form', params, ...extra } as ComponentRendering;
+}
 
 /** Flush afterNextRender and loadForm promise (scripts / subscribe run in the same microtask). */
 async function flushFormLoadPipeline(fixture: ComponentFixture<ScFormComponent>): Promise<void> {
@@ -108,7 +115,7 @@ describe('ScFormComponent', () => {
     });
 
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', { FormId: 'form-1' });
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'form-1' }));
     fixture.detectChanges();
     await fixture.whenStable();
     await new Promise<void>((r) => setTimeout(r, 50));
@@ -118,7 +125,7 @@ describe('ScFormComponent', () => {
 
   it('should not call loadForm when FormId is missing (JSS: FormId param)', async () => {
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', {});
+    fixture.componentRef.setInput('rendering', formRendering({}));
     fixture.detectChanges();
     await fixture.whenStable();
     await new Promise<void>((r) => setTimeout(r, 50));
@@ -128,7 +135,7 @@ describe('ScFormComponent', () => {
 
   it('should call loadForm with edge context id, FormId, and edgeUrl from config (JSS: loadForm from Edge)', async () => {
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', { FormId: 'my-form-id' });
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'my-form-id' }));
     await flushFormLoadPipeline(fixture);
 
     expect(mocks.loadForm).toHaveBeenCalledWith(
@@ -146,7 +153,7 @@ describe('ScFormComponent', () => {
     });
 
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', { FormId: 'fid' });
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'fid' }));
     fixture.detectChanges();
     await fixture.whenStable();
     await new Promise<void>((r) => setTimeout(r, 50));
@@ -161,7 +168,7 @@ describe('ScFormComponent', () => {
     mocks.loadForm.mockResolvedValue('<p class="sc-form-inner" data-f="1">Inner</p>');
 
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', { FormId: 'f1' });
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }));
     await flushFormLoadPipeline(fixture);
 
     const host = fixture.nativeElement.querySelector('div') as HTMLDivElement;
@@ -171,10 +178,13 @@ describe('ScFormComponent', () => {
 
   it('should bind styles param as class with trailing whitespace trimmed (JSS: params.styles → className)', async () => {
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', {
-      FormId: 'f1',
-      styles: '  my-form-style  ',
-    });
+    fixture.componentRef.setInput(
+      'rendering',
+      formRendering({
+        FormId: 'f1',
+        styles: '  my-form-style  ',
+      })
+    );
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -184,10 +194,13 @@ describe('ScFormComponent', () => {
 
   it('should bind RenderingIdentifier as element id (JSS: RenderingIdentifier → id)', async () => {
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', {
-      FormId: 'f1',
-      RenderingIdentifier: 'form-rendering-42',
-    });
+    fixture.componentRef.setInput(
+      'rendering',
+      formRendering({
+        FormId: 'f1',
+        RenderingIdentifier: 'form-rendering-42',
+      })
+    );
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -200,7 +213,7 @@ describe('ScFormComponent', () => {
     const ctx = TestBed.inject(SitecoreContextService);
     ctx.setPage(makePage(false));
 
-    fixture.componentRef.setInput('params', { FormId: 'f1' });
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }));
     await flushFormLoadPipeline(fixture);
 
     expect(mocks.executeScriptElements).toHaveBeenCalledTimes(1);
@@ -213,8 +226,10 @@ describe('ScFormComponent', () => {
     const ctx = TestBed.inject(SitecoreContextService);
     ctx.setPage(makePage(false));
 
-    fixture.componentRef.setInput('params', { FormId: 'f1' });
-    fixture.componentRef.setInput('rendering', { uid: 'comp-uid-1' } as ComponentRendering);
+    fixture.componentRef.setInput(
+      'rendering',
+      formRendering({ FormId: 'f1' }, { uid: 'comp-uid-1' })
+    );
     await flushFormLoadPipeline(fixture);
 
     expect(mocks.subscribeToFormSubmitEvent).toHaveBeenCalledTimes(1);
@@ -229,8 +244,7 @@ describe('ScFormComponent', () => {
     const ctx = TestBed.inject(SitecoreContextService);
     ctx.setPage(makePage(true));
 
-    fixture.componentRef.setInput('params', { FormId: 'f1' });
-    fixture.componentRef.setInput('rendering', { uid: 'x' } as ComponentRendering);
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }, { uid: 'x' }));
     await flushFormLoadPipeline(fixture);
 
     expect(mocks.subscribeToFormSubmitEvent).not.toHaveBeenCalled();
@@ -241,7 +255,7 @@ describe('ScFormComponent', () => {
     mocks.loadForm.mockRejectedValue(new Error('network'));
 
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', { FormId: 'bad-form' });
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'bad-form' }));
     fixture.detectChanges();
     await fixture.whenStable();
     await vi.waitFor(() => errorSpy.mock.calls.length > 0, { timeout: 3000, interval: 5 });

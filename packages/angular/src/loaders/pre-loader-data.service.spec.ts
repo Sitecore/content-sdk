@@ -10,7 +10,7 @@ import { LOADER_ID } from './loader-registry.token';
 
 function makeResolverWithLoaderId(loaderId: string): (() => void) & { [LOADER_ID]: string } {
   const fn = () => {};
-  (fn as unknown as Record<symbol, string>)[LOADER_ID] = loaderId;
+  (fn as Record<symbol, string>)[LOADER_ID] = loaderId;
   return fn as (() => void) & { [LOADER_ID]: string };
 }
 
@@ -29,7 +29,7 @@ function makeRouteSnapshot(overrides: {
     pathFromRoot: overrides.pathFromRoot,
     routeConfig: overrides.routeConfig,
     children: overrides.children ?? [],
-  } as unknown as MutableSnapshot;
+  } as MutableSnapshot;
 }
 
 function makeRouterStateSnapshot(url: string): RouterStateSnapshot {

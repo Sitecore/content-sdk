@@ -1,37 +1,49 @@
-import { Component, input, computed } from '@angular/core';
-import { ComponentRendering, ScPlaceholderComponent } from '@sitecore-content-sdk/angular';
-import { scRenderingId } from '../sitecore/sitecore-component-classes';
+import { Component, computed } from '@angular/core';
+import { ScPlaceholderComponent } from '@sitecore-content-sdk/angular';
+import { SxaComponent } from './content-sdk/sxa.component';
+
+type ColumnNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 @Component({
   selector: 'app-column-splitter',
-  standalone: true,
   imports: [ScPlaceholderComponent],
   template: `
-    <div [attr.class]="rowClass()" [id]="renderingId()">
-      @for (phName of placeholderNames(); track phName) {
-        <div>
-          <sc-placeholder [name]="phName" [rendering]="rendering()!"></sc-placeholder>
+    <section
+      [attr.class]="('row component column-splitter ' + styles()).trim()"
+      [attr.id]="renderingId()"
+    >
+      @for (columnNum of enabledColumns(); track columnNum) {
+        <div [attr.class]="columnClassNames(columnNum)">
+          <div class="row">
+            <sc-placeholder [name]="placeholderKey(columnNum)" [rendering]="rendering()!"></sc-placeholder>
+          </div>
         </div>
       }
-    </div>
+    </section>
   `,
 })
-export class ColumnSplitterComponent {
-  readonly fields = input<{ [key: string]: unknown }>({});
-  readonly params = input<{ [key: string]: string }>({});
-  readonly rendering = input<ComponentRendering>();
-
-  readonly placeholderNames = computed(() => {
-    const r = this.rendering();
-    if (!r?.placeholders) return [];
-    return Object.keys(r.placeholders);
+export class ColumnSplitterComponent extends SxaComponent {
+  readonly enabledColumns = computed(() => {
+    const raw = this.params()?.EnabledPlaceholders;
+    return raw?.split(',').map((segment: string) => segment.trim()).filter(Boolean) ?? [];
   });
 
-  readonly rowClass = computed(() => {
-    const s = this.params()?.['styles']?.trim();
-    const base = 'row column-splitter';
-    return s ? `${base} ${s}` : base;
+  /** Extra root-level classes from rendering params (SXA: GridParameters + Styles). */
+  override readonly styles = computed(() => {
+    const renderingParams = this.params();
+    const gridParameters = renderingParams?.GridParameters?.trim() ?? '';
+    const fromStyles = renderingParams?.Styles?.trim() ?? '';
+    return `${gridParameters} ${fromStyles}`.trim();
   });
 
-  readonly renderingId = computed(() => scRenderingId(this.params()));
+  placeholderKey(columnNum: string): string {
+    return `column-${columnNum}-{*}`;
+  }
+
+  columnClassNames(columnNum: string): string {
+    const columnIndex = Number(columnNum) as ColumnNumber;
+    const columnWidth = this.params()?.[`ColumnWidth${columnIndex}`] ?? '';
+    const columnStyle = this.params()?.[`Styles${columnIndex}`] ?? '';
+    return `${columnWidth} ${columnStyle}`.trim();
+  }
 }

@@ -34,7 +34,7 @@ describe('SitecoreContextService', () => {
         isDesignLibrary: false,
         designLibrary: { isVariantGeneration: false },
       },
-    } as unknown as Page;
+    } as Page;
 
     service.setPage(page);
     expect(service.page()).toBe(page);
@@ -53,7 +53,7 @@ describe('SitecoreContextService', () => {
         isDesignLibrary: false,
         designLibrary: { isVariantGeneration: false },
       },
-    } as unknown as Page;
+    } as Page;
 
     service.setPage(page);
     expect(service.isEditing()).toBe(true);
@@ -71,7 +71,7 @@ describe('SitecoreContextService', () => {
         isDesignLibrary: false,
         designLibrary: { isVariantGeneration: false },
       },
-    } as unknown as Page;
+    } as Page;
 
     service.setPage(page);
     expect(service.page()).toBe(page);

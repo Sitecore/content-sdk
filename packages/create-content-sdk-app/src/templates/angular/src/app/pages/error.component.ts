@@ -10,7 +10,6 @@ import { LayoutComponent } from '../shared/layout.component';
  */
 @Component({
   selector: 'app-error',
-  standalone: true,
   imports: [LayoutComponent],
   template: `
     @let pageValue = page();

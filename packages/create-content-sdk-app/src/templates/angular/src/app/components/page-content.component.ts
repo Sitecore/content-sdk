@@ -1,32 +1,72 @@
-import { Component, input, computed } from '@angular/core';
-import { ComponentRendering, ScPlaceholderComponent } from '@sitecore-content-sdk/angular';
-import { scComponentRoot, scRenderingId } from '../sitecore/sitecore-component-classes';
+import { Component, computed, inject } from '@angular/core';
+import { Field, ScRichTextDirective, SitecoreContextService, TextField } from '@sitecore-content-sdk/angular';
+import { StructuredDataComponent } from './structured-data.component';
+import { buildArticleJsonLd } from './content-sdk/json-ld';
+import { SxaComponent } from './content-sdk/sxa.component';
+
+interface PageContentFields {
+  Content?: TextField;
+}
 
 @Component({
   selector: 'app-page-content',
-  standalone: true,
-  imports: [ScPlaceholderComponent],
+  imports: [ScRichTextDirective, StructuredDataComponent],
   template: `
-    <div [attr.class]="rootClass()" [id]="renderingId()">
+    <article
+      [attr.class]="('component content ' + styles()).trim()"
+      [attr.id]="renderingId()"
+      itemscope
+      itemtype="https://schema.org/Article"
+    >
       <div class="component-content">
-        @for (phName of placeholderNames(); track phName) {
-          <sc-placeholder [name]="phName" [rendering]="rendering()!"></sc-placeholder>
-        }
+        <div class="field-content" itemprop="articleBody">
+          @if (contentField(); as content) {
+            <div [scRichText]="content"></div>
+          } @else {
+            [Content]
+          }
+        </div>
       </div>
-    </div>
+      @if (jsonLdPayload()) {
+        <app-structured-data [scriptId]="jsonLdScriptId()" [data]="jsonLdPayload()" />
+      }
+    </article>
   `,
 })
-export class PageContentComponent {
-  readonly fields = input<{ [key: string]: unknown }>({});
-  readonly params = input<{ [key: string]: string }>({});
-  readonly rendering = input<ComponentRendering>();
+export class PageContentComponent extends SxaComponent {
+  private readonly context = inject(SitecoreContextService);
 
-  readonly placeholderNames = computed(() => {
-    const r = this.rendering();
-    if (!r?.placeholders) return [];
-    return Object.keys(r.placeholders);
+  readonly contentField = computed((): TextField | undefined => {
+    const fromFields = (this.fields() as PageContentFields)?.Content;
+    if (fromFields?.value != null && String(fromFields.value).length > 0) {
+      return fromFields;
+    }
+    const route = this.context.page()?.layout?.sitecore?.route;
+    return route?.fields?.Content as TextField | undefined;
   });
 
-  readonly rootClass = computed(() => scComponentRoot('page-content', this.params()));
-  readonly renderingId = computed(() => scRenderingId(this.params()));
+  readonly headline = computed(() => {
+    const route = this.context.page()?.layout?.sitecore?.route;
+    const titleField = route?.fields?.Title as Field<string> | undefined;
+    return titleField?.value != null ? String(titleField.value) : undefined;
+  });
+
+  readonly jsonLdPayload = computed(() => {
+    const headline = this.headline();
+    const articleContent = this.contentField();
+    const articleBodyHtml =
+      articleContent?.value != null && String(articleContent.value).length > 0
+        ? String(articleContent.value)
+        : undefined;
+    if (!headline && !articleBodyHtml) {
+      return null;
+    }
+    return buildArticleJsonLd({
+      headline,
+      articleBodyHtml,
+      inLanguage: this.context.page()?.locale,
+    });
+  });
+
+  readonly jsonLdScriptId = computed(() => `jsonld-article-${this.renderingId() ?? 'page-content'}`);
 }

@@ -1,7 +1,3 @@
-/**
- * Tailwind + kit-nextjs-skate-park theme and component styles.
- * Custom max-* variants match --breakpoint-* in skate-park variables.css.
- */
 @import 'tailwindcss';
 
 @custom-variant max-mobile (@media (max-width: 380px));
@@ -9,5 +5,4 @@
 @custom-variant max-mobile-large (@media (max-width: 992px));
 @custom-variant max-desktop (@media (max-width: 1024px));
 
-@import './styles/skate-park/main.css';
-@import './styles/angular-app-layout.css';
+@import './assets/main.css';

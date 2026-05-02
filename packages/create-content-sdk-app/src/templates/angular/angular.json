@@ -87,6 +87,13 @@
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "eslintConfig": "eslint.config.mjs",
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html", "sitecore.config.ts"]
+          }
         }
       }
     }

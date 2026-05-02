@@ -7,7 +7,6 @@ import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
  */
 @Component({
   selector: 'sc-hidden-rendering',
-  standalone: true,
   template: `<div [style]="styles">The component is hidden</div>`,
 })
 export class ScHiddenRenderingComponent {

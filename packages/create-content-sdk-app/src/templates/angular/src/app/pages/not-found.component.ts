@@ -11,7 +11,6 @@ import { LayoutComponent } from '../shared/layout.component';
  */
 @Component({
   selector: 'app-404',
-  standalone: true,
   imports: [RouterLink, LayoutComponent],
   template: `
     @let pageValue = page();

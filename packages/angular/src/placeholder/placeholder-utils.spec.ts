@@ -12,16 +12,16 @@ import {
   DEFAULT_EXPORT_NAME,
 } from './placeholder-utils';
 
-@Component({ selector: 'test-a', template: 'A', standalone: true })
+@Component({ selector: 'test-a', template: 'A' })
 class TestComponentA {}
 
-@Component({ selector: 'test-b', template: 'B', standalone: true })
+@Component({ selector: 'test-b', template: 'B' })
 class TestComponentB {}
 
-@Component({ selector: 'test-missing', template: 'Missing', standalone: true })
+@Component({ selector: 'test-missing', template: 'Missing' })
 class CustomMissingComponent {}
 
-@Component({ selector: 'test-hidden', template: 'Hidden', standalone: true })
+@Component({ selector: 'test-hidden', template: 'Hidden' })
 class CustomHiddenComponent {}
 
 describe('getPlaceholderRenderings', () => {
@@ -156,6 +156,7 @@ describe('getChildComponentProps', () => {
     const result = getChildComponentProps(undefined, undefined, rendering);
     expect(result.fields).toEqual({ a: { value: 1 } });
     expect(result.rendering).toBe(rendering);
+    expect(result.params).toEqual({ styles: '' });
   });
 });
 

@@ -12,7 +12,6 @@ import { SitecoreContextService } from '../lib/sitecore-context.service';
 
 @Component({
   selector: 'test-title',
-  standalone: true,
   template: `<h1>{{ titleText() }}</h1>`,
 })
 class TitleComponent {
@@ -29,7 +28,6 @@ class TitleComponent {
 
 @Component({
   selector: 'test-content',
-  standalone: true,
   template: `<p>Content</p>`,
 })
 class ContentComponent {
@@ -40,7 +38,6 @@ class ContentComponent {
 
 @Component({
   selector: 'test-passthrough',
-  standalone: true,
   template: `<span>{{ tag() }}</span>`,
 })
 class PassThroughChildComponent {
@@ -62,7 +59,7 @@ const makePage = (isEditing = false): Page =>
       isDesignLibrary: false,
       designLibrary: { isVariantGeneration: false },
     },
-  }) as unknown as Page;
+  } as Page);
 
 describe('ScPlaceholderComponent', () => {
   let warnSpy: ReturnType<typeof vi.spyOn>;
@@ -80,9 +77,7 @@ describe('ScPlaceholderComponent', () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [ScPlaceholderComponent],
-      providers: [
-        { provide: SITECORE_COMPONENT_MAP, useValue: componentMap },
-      ],
+      providers: [{ provide: SITECORE_COMPONENT_MAP, useValue: componentMap }],
     });
 
     const ctx = TestBed.inject(SitecoreContextService);
@@ -94,7 +89,10 @@ describe('ScPlaceholderComponent', () => {
     errorSpy.mockRestore();
   });
 
-  function createFixture(rendering: ComponentRendering | RouteData, name: string): ComponentFixture<ScPlaceholderComponent> {
+  function createFixture(
+    rendering: ComponentRendering | RouteData,
+    name: string
+  ): ComponentFixture<ScPlaceholderComponent> {
     const fixture = TestBed.createComponent(ScPlaceholderComponent);
     fixture.componentRef.setInput('rendering', rendering);
     fixture.componentRef.setInput('name', name);

@@ -25,15 +25,14 @@ const { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
  */
 @Component({
   selector: 'sc-form',
-  standalone: true,
   template: `
     <div #formContainer [class]="styles()" [id]="renderingId()"></div>
   `,
 })
 export class ScFormComponent {
   readonly rendering = input<ComponentRendering>();
-  readonly params = input<{ [key: string]: string }>({});
   readonly fields = input<{ [key: string]: unknown }>({});
+  readonly params = input<{ [key: string]: string }>({});
 
   @ViewChild('formContainer', { static: true })
   private formContainerRef!: ElementRef<HTMLDivElement>;
@@ -44,16 +43,20 @@ export class ScFormComponent {
   private readonly destroyRef = inject(DestroyRef);
 
   readonly styles = () => {
-    const s = this.params()?.['styles'];
+    const p = { ...this.rendering()?.params, ...this.params() };
+    const s = p?.['styles'];
     return s ? s.replace(/\s+$/, '') : '';
   };
-  readonly renderingId = () => this.params()?.['RenderingIdentifier'] || undefined;
+  readonly renderingId = () => {
+    const p = { ...this.rendering()?.params, ...this.params() };
+    return p['RenderingIdentifier'] || undefined;
+  };
 
   constructor() {
     afterNextRender(() => {
       if (!isPlatformBrowser(this.platformId)) return;
 
-      const p = this.params();
+      const p = { ...this.rendering()?.params, ...this.params() };
       const formId = p?.['FormId'];
       if (!formId) return;
 

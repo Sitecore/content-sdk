@@ -15,7 +15,7 @@ describe('resolveSitecorePage', () => {
 
   beforeEach(() => {
     getPage = vi.fn().mockResolvedValue(null);
-    mockClient = { getPage } as unknown as SitecoreClient;
+    mockClient = { getPage } as SitecoreClient;
   });
 
   it('should call getPage with path and empty page options when options omitted', async () => {
@@ -50,7 +50,7 @@ describe('resolveSitecorePage', () => {
   });
 
   it('should return the Page from getPage', async () => {
-    const page = { locale: 'en', layout: {} } as unknown as Page;
+    const page = { locale: 'en', layout: {} } as Page;
     getPage.mockResolvedValueOnce(page);
 
     const result = await resolveSitecorePage('/p', mockConfig, mockClient);

@@ -44,6 +44,7 @@ export interface ComponentForRendering {
 
 /**
  * Merged props passed to each child component rendered by a placeholder.
+ * Matches React `getChildComponentProps`: merged `fields` / `params` props plus raw `rendering`.
  */
 export interface ChildComponentProps {
   fields: { [key: string]: unknown };
@@ -111,7 +112,7 @@ export const getPlaceholderRenderings = (
 };
 
 /**
- * Extra inputs to set on each dynamically rendered component (in addition to `fields`, `params`, `rendering`).
+ * Extra inputs to set on each dynamically rendered component (in addition to `fields`, `params`, and `rendering`).
  * Keys are Angular `input()` names on the host component.
  * @public
  */
@@ -122,15 +123,13 @@ export type PassThroughProps = Readonly<Record<string, unknown>>;
  * @param rendering - rendering object
  * @returns converted SXA params
  */
-export const getSXAParams = (
-  rendering: ComponentRendering
-): { styles: string } | undefined => {
-  if (!rendering.params) return { styles: '' };
+export const getSXAParams = (rendering: ComponentRendering) => {
+  if (!rendering.params) return { Styles: '' };
 
   const { GridParameters, Styles } = rendering.params;
 
   if (GridParameters || Styles) {
-    return { styles: `${GridParameters || ''} ${Styles || ''}` };
+    return { Styles: `${GridParameters || ''} ${Styles || ''}` };
   }
 
   return undefined;
@@ -150,11 +149,12 @@ export function getChildComponentProps(
 ): ChildComponentProps {
   const fields = { ...(placeholderFields || {}), ...(componentRendering.fields || {}) };
   const params = { ...(placeholderParams || {}), ...(componentRendering.params || {}) };
+  const sxa = getSXAParams(componentRendering);
   return {
     fields,
     params: {
       ...params,
-      ...getSXAParams(componentRendering),
+      ...(sxa || {}),
     },
     rendering: componentRendering,
   };
@@ -224,8 +224,7 @@ export const resolveComponentForRendering = (
       : entry.default || entry.Default;
 
   if (!resolved || typeof resolved !== 'function') {
-    const variantLabel =
-      exportName && exportName !== DEFAULT_EXPORT_NAME ? ` (${exportName})` : '';
+    const variantLabel = exportName && exportName !== DEFAULT_EXPORT_NAME ? ` (${exportName})` : '';
     console.error(
       `Placeholder ${placeholderName} contains unknown component ${renderingDefinition.componentName}${variantLabel}. Ensure that an Angular component exists for it, and that it is registered in your component map.`
     );

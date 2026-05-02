@@ -7,7 +7,6 @@ import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
  */
 @Component({
   selector: 'sc-missing-component',
-  standalone: true,
   template: `
     <div style="background: darkorange; outline: 5px solid orange; padding: 10px; color: white; max-width: 500px;">
       <h2>{{ componentName() }}</h2>

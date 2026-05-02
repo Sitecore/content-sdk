@@ -3,7 +3,7 @@ import type { AngularModule, ComponentMap } from '@sitecore-content-sdk/angular'
 import { ScFormComponent } from '@sitecore-content-sdk/angular';
 import { TitleComponent } from 'components/title.component';
 import { RichTextComponent } from 'components/rich-text.component';
-import { ImageComponent } from 'components/image.component';
+import { ImageDefaultComponent, ImageBannerComponent } from 'components/image.component';
 import { ContentBlockComponent } from 'components/content-block.component';
 import { PromoComponent } from 'components/promo.component';
 import { ContainerComponent } from 'components/container.component';
@@ -12,20 +12,31 @@ import { RowSplitterComponent } from 'components/row-splitter.component';
 import { NavigationComponent } from 'components/navigation.component';
 import { PageContentComponent } from 'components/page-content.component';
 import { LinkListComponent } from 'components/link-list.component';
+import { PartialDesignDynamicPlaceholderComponent } from 'components/partial-design-dynamic-placeholder.component';
+
+const imageRendering: AngularModule = {
+  Default: ImageDefaultComponent,
+  Banner: ImageBannerComponent,
+};
+
+const promoRendering: AngularModule = {
+  Default: PromoComponent,
+  WithText: PromoComponent,
+};
 
 export const componentMap: ComponentMap = new Map<string, Type<unknown> | AngularModule>([
   ['Title', TitleComponent],
   ['RichText', RichTextComponent],
-  ['Image', ImageComponent],
+  ['Image', imageRendering],
   ['ContentBlock', ContentBlockComponent],
-  ['Promo', PromoComponent],
+  ['Promo', promoRendering],
   ['Container', ContainerComponent],
   ['ColumnSplitter', ColumnSplitterComponent],
   ['RowSplitter', RowSplitterComponent],
   ['Navigation', NavigationComponent],
   ['PageContent', PageContentComponent],
   ['LinkList', LinkListComponent],
-  ['PartialDesignDynamicPlaceholder', ContainerComponent],
+  ['PartialDesignDynamicPlaceholder', PartialDesignDynamicPlaceholderComponent],
   ['Form', ScFormComponent],
 ]);
 
