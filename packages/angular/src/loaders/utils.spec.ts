@@ -12,7 +12,7 @@ describe('applyRedirect', () => {
   });
 
   it('returns RedirectCommand for internal path', () => {
-    const result = applyRedirect(mockRouter as Router, '/foo');
+    const result = applyRedirect(mockRouter as unknown as Router, '/foo');
     expect(result).toBeInstanceOf(RedirectCommand);
     expect(mockRouter.parseUrl).toHaveBeenCalledWith('/foo');
   });
@@ -20,40 +20,42 @@ describe('applyRedirect', () => {
   it('returns void and calls window.location.assign for external URL', () => {
     const assignSpy = vi.fn();
     const originalWindow = globalThis.window;
-    (globalThis as { window: { location: { assign: ReturnType<typeof vi.fn> } } }).window = {
-      location: { assign: assignSpy },
-    };
+    (globalThis as unknown as { window: { location: { assign: ReturnType<typeof vi.fn> } } }).window =
+      {
+        location: { assign: assignSpy },
+      };
 
-    const result = applyRedirect(mockRouter as Router, 'https://example.com/path');
+    const result = applyRedirect(mockRouter as unknown as Router, 'https://example.com/path');
     expect(result).toBeUndefined();
     expect(assignSpy).toHaveBeenCalledWith('https://example.com/path');
     expect(mockRouter.parseUrl).not.toHaveBeenCalled();
 
-    (globalThis as { window: typeof originalWindow }).window = originalWindow;
+    (globalThis as unknown as { window: typeof originalWindow }).window = originalWindow;
   });
 
   it('treats http URL as external', () => {
     const assignSpy = vi.fn();
     const originalWindow = globalThis.window;
-    (globalThis as { window: { location: { assign: ReturnType<typeof vi.fn> } } }).window = {
-      location: { assign: assignSpy },
-    };
+    (globalThis as unknown as { window: { location: { assign: ReturnType<typeof vi.fn> } } }).window =
+      {
+        location: { assign: assignSpy },
+      };
 
-    const result = applyRedirect(mockRouter as Router, 'http://example.com');
+    const result = applyRedirect(mockRouter as unknown as Router, 'http://example.com');
     expect(result).toBeUndefined();
     expect(assignSpy).toHaveBeenCalledWith('http://example.com');
 
-    (globalThis as { window: typeof originalWindow }).window = originalWindow;
+    (globalThis as unknown as { window: typeof originalWindow }).window = originalWindow;
   });
 
   it('does not throw when window is undefined (SSR) and location is external', () => {
     const originalWindow = globalThis.window;
     try {
-      delete (globalThis as { window?: unknown }).window;
-      const result = applyRedirect(mockRouter as Router, 'https://example.com');
+      delete (globalThis as unknown as { window?: unknown }).window;
+      const result = applyRedirect(mockRouter as unknown as Router, 'https://example.com');
       expect(result).toBeUndefined();
     } finally {
-      (globalThis as { window: typeof originalWindow }).window = originalWindow;
+      (globalThis as unknown as { window: typeof originalWindow }).window = originalWindow;
     }
   });
 });

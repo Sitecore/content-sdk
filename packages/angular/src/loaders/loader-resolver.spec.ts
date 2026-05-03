@@ -399,7 +399,7 @@ describe('loaderResolver', () => {
 
   describe('resolver metadata', () => {
     it('should tag resolver with LOADER_ID for prefetch discovery', () => {
-      const resolver = loaderResolver('page') as { [LOADER_ID]: string };
+      const resolver = loaderResolver('page') as unknown as Record<symbol, string>;
       expect(resolver[LOADER_ID]).toBe('page');
     });
   });

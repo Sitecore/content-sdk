@@ -10,7 +10,7 @@ import { LOADER_ID } from './loader-registry.token';
 
 function makeResolverWithLoaderId(loaderId: string): (() => void) & { [LOADER_ID]: string } {
   const fn = () => {};
-  (fn as Record<symbol, string>)[LOADER_ID] = loaderId;
+  (fn as unknown as Record<symbol, string>)[LOADER_ID] = loaderId;
   return fn as (() => void) & { [LOADER_ID]: string };
 }
 

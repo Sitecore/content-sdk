@@ -13,7 +13,7 @@ import {
 
 describe('provideSitecoreAngular', () => {
   const mockConfig = { defaultSite: 's', defaultLanguage: 'en' } as SitecoreConfig;
-  const mockClient = { getPage: () => Promise.resolve(null) } as SitecoreClient;
+  const mockClient = { getPage: () => Promise.resolve(null) } as unknown as SitecoreClient;
 
   beforeEach(() => {
     TestBed.resetTestingModule();

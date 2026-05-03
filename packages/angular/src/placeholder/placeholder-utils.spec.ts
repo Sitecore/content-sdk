@@ -98,7 +98,7 @@ describe('getPlaceholderRenderings', () => {
 describe('getSXAParams', () => {
   it('should return empty styles when no params', () => {
     const rendering: ComponentRendering = { componentName: 'Test' };
-    expect(getSXAParams(rendering)).toEqual({ styles: '' });
+    expect(getSXAParams(rendering)).toEqual({ Styles: '' });
   });
 
   it('should return styles with GridParameters and Styles', () => {
@@ -106,7 +106,7 @@ describe('getSXAParams', () => {
       componentName: 'Test',
       params: { GridParameters: 'col-9', Styles: 'custom-class' },
     };
-    expect(getSXAParams(rendering)).toEqual({ styles: 'col-9 custom-class' });
+    expect(getSXAParams(rendering)).toEqual({ Styles: 'col-9 custom-class' });
   });
 
   it('should return styles with only GridParameters', () => {
@@ -114,7 +114,7 @@ describe('getSXAParams', () => {
       componentName: 'Test',
       params: { GridParameters: 'col-12' },
     };
-    expect(getSXAParams(rendering)).toEqual({ styles: 'col-12 ' });
+    expect(getSXAParams(rendering)).toEqual({ Styles: 'col-12 ' });
   });
 
   it('should return falsy when neither GridParameters nor Styles exist', () => {
@@ -144,7 +144,7 @@ describe('getChildComponentProps', () => {
     });
     expect(result.params.global).toBe('param');
     expect(result.params.style).toBe('bold');
-    expect(result.params.styles).toBe('col-6 test');
+    expect(result.params.Styles).toBe('col-6 test');
     expect(result.rendering).toBe(rendering);
   });
 
@@ -156,7 +156,7 @@ describe('getChildComponentProps', () => {
     const result = getChildComponentProps(undefined, undefined, rendering);
     expect(result.fields).toEqual({ a: { value: 1 } });
     expect(result.rendering).toBe(rendering);
-    expect(result.params).toEqual({ styles: '' });
+    expect(result.params).toEqual({ Styles: '' });
   });
 });
 

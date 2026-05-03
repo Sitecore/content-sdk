@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect } from 'vitest';
-import { buildHrefFromLinkValue, resolveLinkFromField } from './link-field-binding';
+import { buildHrefFromLinkField, resolveLinkFromField } from './link-field-binding';
 import type { LinkField } from '@sitecore-content-sdk/content/layout';
 
 describe('link-field-binding', () => {
@@ -16,10 +16,10 @@ describe('link-field-binding', () => {
     });
   });
 
-  describe('buildHrefFromLinkValue', () => {
+  describe('buildHrefFromLinkField', () => {
     it('concatenates query and hash fragment', () => {
       expect(
-        buildHrefFromLinkValue({
+        buildHrefFromLinkField({
           href: '/p',
           querystring: 'a=1',
           anchor: 'sec',
