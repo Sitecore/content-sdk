@@ -10,14 +10,14 @@ import { SxaComponent } from './content-sdk/sxa.component';
   selector: 'app-content-block',
   imports: [ScTextDirective, ScRichTextDirective],
   template: `
-    <section class="contentBlock">
+    <div class="contentBlock">
       <h2 class="contentTitle" [scText]="headingField()"></h2>
       <div class="contentDescription">
         @if (contentField(); as content) {
-          <div [scRichText]="content"></div>
+        <div [scRichText]="content"></div>
         }
       </div>
-    </section>
+    </div>
   `,
 })
 export class ContentBlockComponent extends SxaComponent {

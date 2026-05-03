@@ -1,5 +1,5 @@
 @theme {
-  --font-roboto: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  --font-roboto: 'Roboto', sans-serif;
   --font-sans: var(--font-roboto);
   /* // abstract/vars /_colors: */
 

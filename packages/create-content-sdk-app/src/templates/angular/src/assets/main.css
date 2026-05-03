@@ -18,6 +18,15 @@ sc-placeholder.row {
   flex-direction: row;
 }
 
+/* Only main page content: let .row lay out col-* siblings */
+#content .component-content > .row > sc-placeholder {
+  display: contents;
+}
+/* Promos: col-* lives on inner <article> */
+#content app-promo {
+  display: contents;
+}
+
 /* Header placeholder layout — xmcloud basic-spa basic/_header.scss (.prod-mode #header; mobile-large = 992px) */
 @media only screen and (max-width: 992px) {
   .prod-mode #header {

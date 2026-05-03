@@ -13,16 +13,14 @@ interface RichTextFields {
     <div [attr.class]="('component rich-text ' + styles()).trim()" [attr.id]="renderingId()">
       <div class="component-content">
         @if (contentField(); as content) {
-          <div [scRichText]="content"></div>
+        <div [scRichText]="content"></div>
         } @else {
-          <span class="is-empty-hint">Rich text</span>
+        <span class="is-empty-hint">Rich text</span>
         }
       </div>
     </div>
   `,
 })
 export class RichTextComponent extends SxaComponent {
-  readonly contentField = computed(
-    () => (this.fields() as RichTextFields)?.Text,
-  );
+  readonly contentField = computed(() => (this.fields() as RichTextFields)?.Text);
 }

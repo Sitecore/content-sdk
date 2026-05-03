@@ -31,24 +31,24 @@ interface ImageBannerFields {
   imports: [ScImageDirective, ScLinkDirective, ScTextDirective],
   template: `
     @if (showEmpty()) {
-      <div [attr.class]="('component image ' + styles()).trim()">
-        <div class="component-content">
-          <span class="is-empty-hint">Image</span>
-        </div>
+    <div [attr.class]="('component image ' + styles()).trim()">
+      <div class="component-content">
+        <span class="is-empty-hint">Image</span>
       </div>
+    </div>
     } @else {
-      <div [attr.class]="('component image ' + styles()).trim()" [attr.id]="renderingId()">
-        <div class="component-content">
-          @if (wrapWithLink()) {
-            <a [scLink]="targetUrlField()!">
-              <img [scImage]="imageField()" [attr.sizes]="defaultSizes" [attr.alt]="imageAlt()" />
-            </a>
-          } @else {
-            <img [scImage]="imageField()" [attr.sizes]="defaultSizes" [attr.alt]="imageAlt()" />
-          }
-          <span class="image-caption field-imagecaption" [scText]="captionField()"></span>
-        </div>
+    <div [attr.class]="('component image ' + styles()).trim()" [attr.id]="renderingId()">
+      <div class="component-content">
+        @if (wrapWithLink()) {
+        <a [scLink]="targetUrlField()!">
+          <img [scImage]="imageField()" [attr.sizes]="defaultSizes" [attr.alt]="imageAlt()" />
+        </a>
+        } @else {
+        <img [scImage]="imageField()" [attr.sizes]="defaultSizes" [attr.alt]="imageAlt()" />
+        }
+        <span class="image-caption field-imagecaption" [scText]="captionField()"></span>
       </div>
+    </div>
     }
   `,
 })
@@ -57,15 +57,9 @@ export class ImageDefaultComponent extends SxaComponent {
 
   private readonly context = inject(SitecoreContextService);
 
-  readonly imageField = computed(
-    () => (this.fields() as ImageDefaultFields)?.Image,
-  );
-  readonly captionField = computed(
-    () => (this.fields() as ImageDefaultFields)?.ImageCaption,
-  );
-  readonly targetUrlField = computed(
-    () => (this.fields() as ImageDefaultFields)?.TargetUrl,
-  );
+  readonly imageField = computed(() => (this.fields() as ImageDefaultFields)?.Image);
+  readonly captionField = computed(() => (this.fields() as ImageDefaultFields)?.ImageCaption);
+  readonly targetUrlField = computed(() => (this.fields() as ImageDefaultFields)?.TargetUrl);
 
   readonly showEmpty = computed(() => this.fields()?.Image == null);
 

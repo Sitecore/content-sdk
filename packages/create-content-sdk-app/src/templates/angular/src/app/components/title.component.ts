@@ -1,5 +1,11 @@
 import { Component, computed, inject } from '@angular/core';
-import { Field, LinkField, ScLinkDirective, ScTextDirective, SitecoreContextService } from '@sitecore-content-sdk/angular';
+import {
+  Field,
+  LinkField,
+  ScLinkDirective,
+  ScTextDirective,
+  SitecoreContextService,
+} from '@sitecore-content-sdk/angular';
 import { SxaComponent } from './content-sdk/sxa.component';
 
 interface GraphqlItem {
@@ -19,9 +25,9 @@ interface TitleFields {
       <div class="component-content">
         <div class="field-title">
           @if (isEditing()) {
-            <span [scText]="titleField()"></span>
+          <span [scText]="titleField()"></span>
           } @else {
-            <a [scLink]="titleLinkField()"><span [scText]="titleField()"></span></a>
+          <a [scLink]="titleLinkField()"><span [scText]="titleField()"></span></a>
           }
         </div>
       </div>
@@ -31,9 +37,11 @@ interface TitleFields {
 export class TitleComponent extends SxaComponent {
   private readonly context = inject(SitecoreContextService);
 
-  readonly data = computed(() => (this.fields() as TitleFields)?.data);
+  readonly fieldData = computed(() => (this.fields() as TitleFields)?.data);
 
-  readonly datasource = computed(() => this.data()?.datasource || this.data()?.contextItem);
+  readonly datasource = computed(
+    () => this.fieldData()?.datasource || this.fieldData()?.contextItem
+  );
 
   readonly titleField = computed((): Field<string> | undefined => {
     const jsonVal = this.datasource()?.field?.jsonValue as Field<string> | undefined;
@@ -46,15 +54,13 @@ export class TitleComponent extends SxaComponent {
 
   readonly titleLinkField = computed((): LinkField => {
     const graphqlSource = this.datasource();
-    const resolvedTitleField = this.titleField();
+    const title = this.titleField();
     const href = graphqlSource?.url?.path;
     const rawJson = graphqlSource?.field?.jsonValue as { value?: string } | undefined;
     return {
       value: {
         href,
-        title:
-          (resolvedTitleField?.value != null ? String(resolvedTitleField.value) : undefined) ||
-          rawJson?.value,
+        title: (title?.value != null ? String(title.value) : undefined) || rawJson?.value,
       },
     };
   });

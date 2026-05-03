@@ -29,7 +29,7 @@ function promoProductJsonLd(
   fields: Record<string, unknown>,
   link: LinkField | undefined,
   primaryText: TextField | undefined,
-  secondaryText: TextField | undefined,
+  secondaryText: TextField | undefined
 ) {
   const descriptionHtml =
     [primaryText?.value, secondaryText?.value]
@@ -39,8 +39,7 @@ function promoProductJsonLd(
 
   return buildProductJsonLd({
     name:
-      link?.value?.title ||
-      (primaryText?.value != null ? String(primaryText.value) : undefined),
+      link?.value?.title || (primaryText?.value != null ? String(primaryText.value) : undefined),
     descriptionHtml,
     url: link?.value?.href,
     image: promoImageSrc(fields),
@@ -63,30 +62,29 @@ function promoProductJsonLd(
     >
       <div class="component-content">
         @if (showEmpty()) {
-          <span class="is-empty-hint">Promo</span>
+        <span class="is-empty-hint">Promo</span>
         } @else {
-          <div class="field-promoicon" itemprop="image">
-            <img [scImage]="promoIcon()" alt="" />
-          </div>
-          <div class="promo-text" itemprop="description">
-            <div class="field-promotext">
-              @if (promoText(); as primaryRichText) {
-                <div [scRichText]="primaryRichText"></div>
-              }
-            </div>
-            @if (promoText2(); as secondaryRichText) {
-              <div class="field-promotext">
-                <div [scRichText]="secondaryRichText"></div>
-              </div>
+        <div class="field-promoicon" itemprop="image">
+          <img [scImage]="promoIcon()" alt="" />
+        </div>
+        <div class="promo-text" itemprop="description">
+          <div class="field-promotext">
+            @if (promoText(); as primaryRichText) {
+            <div [scRichText]="primaryRichText"></div>
             }
-            <div class="field-promolink">
-              <a [scLink]="promoLink()"></a>
-            </div>
           </div>
-          @if (jsonLd()) {
-            <app-structured-data [scriptId]="jsonLdScriptId()" [data]="jsonLd()" />
+          @if (promoText2(); as secondaryRichText) {
+          <div class="field-promotext">
+            <div [scRichText]="secondaryRichText"></div>
+          </div>
           }
-        }
+          <div class="field-promolink">
+            <a [scLink]="promoLink()"></a>
+          </div>
+        </div>
+        @if (jsonLd()) {
+        <app-structured-data [scriptId]="jsonLdScriptId()" [data]="jsonLd()" />
+        } }
       </div>
     </article>
   `,
@@ -95,10 +93,7 @@ export class PromoComponent extends SxaComponent {
   readonly showEmpty = computed(() => {
     const f = this.fields();
     return (
-      f?.PromoIcon == null &&
-      f?.PromoText == null &&
-      f?.PromoText2 == null &&
-      f?.PromoLink == null
+      f?.PromoIcon == null && f?.PromoText == null && f?.PromoText2 == null && f?.PromoLink == null
     );
   });
 
@@ -121,7 +116,7 @@ export class PromoComponent extends SxaComponent {
       promoFields as Record<string, unknown>,
       this.promoLink(),
       this.promoText(),
-      this.promoText2(),
+      this.promoText2()
     );
   });
 

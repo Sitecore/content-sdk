@@ -21,14 +21,12 @@ interface PageContentFields {
       <div class="component-content">
         <div class="field-content" itemprop="articleBody">
           @if (contentField(); as content) {
-            <div [scRichText]="content"></div>
-          } @else {
-            [Content]
-          }
+          <div [scRichText]="content"></div>
+          } @else { [Content] }
         </div>
       </div>
       @if (jsonLdPayload()) {
-        <app-structured-data [scriptId]="jsonLdScriptId()" [data]="jsonLdPayload()" />
+      <app-structured-data [scriptId]="jsonLdScriptId()" [data]="jsonLdPayload()" />
       }
     </article>
   `,
@@ -37,7 +35,9 @@ export class PageContentComponent extends SxaComponent {
   private readonly context = inject(SitecoreContextService);
 
   readonly contentField = computed((): TextField | undefined => {
-    const fromFields = (this.fields() as PageContentFields)?.Content;
+    const fromFields = (this.fields() as unknown as PageContentFields)?.Content as
+      | TextField
+      | undefined;
     if (fromFields?.value != null && String(fromFields.value).length > 0) {
       return fromFields;
     }
@@ -68,5 +68,7 @@ export class PageContentComponent extends SxaComponent {
     });
   });
 
-  readonly jsonLdScriptId = computed(() => `jsonld-article-${this.renderingId() ?? 'page-content'}`);
+  readonly jsonLdScriptId = computed(
+    () => `jsonld-article-${this.renderingId() ?? 'page-content'}`
+  );
 }

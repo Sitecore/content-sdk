@@ -8,26 +8,31 @@ type RowNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
   selector: 'app-row-splitter',
   imports: [ScPlaceholderComponent],
   template: `
-    <section [attr.class]="('component row-splitter ' + styles()).trim()" [attr.id]="renderingId()">
+    <div [attr.class]="('component row-splitter ' + styles()).trim()" [attr.id]="renderingId()">
       @for (placeholderSegment of enabledPlaceholders(); track placeholderSegment) {
-        <section [attr.class]="rowSectionClass(placeholderSegment)">
-          <div>
-            <div class="row">
-              <sc-placeholder
-                [name]="placeholderKey(placeholderSegment)"
-                [rendering]="rendering()!"
-              ></sc-placeholder>
-            </div>
+      <div [attr.class]="rowSectionClass(placeholderSegment)">
+        <div>
+          <div class="row">
+            <sc-placeholder
+              [name]="placeholderKey(placeholderSegment)"
+              [rendering]="rendering()!"
+            ></sc-placeholder>
           </div>
-        </section>
+        </div>
+      </div>
       }
-    </section>
+    </div>
   `,
 })
 export class RowSplitterComponent extends SxaComponent {
   readonly enabledPlaceholders = computed(() => {
     const raw = this.params()?.EnabledPlaceholders;
-    return raw?.split(',').map((segment: string) => segment.trim()).filter(Boolean) ?? [];
+    return (
+      raw
+        ?.split(',')
+        .map((segment: string) => segment.trim())
+        .filter(Boolean) ?? []
+    );
   });
 
   placeholderKey(placeholderSegment: string): string {

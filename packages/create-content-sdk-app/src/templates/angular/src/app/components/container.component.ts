@@ -10,35 +10,38 @@ const mediaUrlPattern = /mediaurl="([^"]*)"/i;
   imports: [NgTemplateOutlet, NgStyle, ScPlaceholderComponent],
   template: `
     @if (needsWrapper()) {
-      <div class="container-wrapper">
-        <ng-container *ngTemplateOutlet="containerInner"></ng-container>
-      </div>
-    } @else {
+    <div class="container-wrapper">
       <ng-container *ngTemplateOutlet="containerInner"></ng-container>
+    </div>
+    } @else {
+    <ng-container *ngTemplateOutlet="containerInner"></ng-container>
     }
 
     <ng-template #containerInner>
-      <section [attr.class]="('component container-default ' + styles()).trim()" [attr.id]="renderingId()">
+      <div
+        [attr.class]="('component container-default ' + styles()).trim()"
+        [attr.id]="renderingId()"
+      >
         <div class="component-content" [ngStyle]="backgroundStyle()">
           <div class="row">
             @if (placeholderName()) {
-              <sc-placeholder [name]="placeholderName()!" [rendering]="rendering()!"></sc-placeholder>
+            <sc-placeholder [name]="placeholderName()!" [rendering]="rendering()!"></sc-placeholder>
             }
           </div>
         </div>
-      </section>
+      </div>
     </ng-template>
   `,
 })
 export class ContainerComponent extends SxaComponent {
-  readonly needsWrapper = computed(() => {
-    const tokens = this.styles()?.split(/\s+/).filter(Boolean) ?? [];
-    return tokens.includes('container');
-  });
-
   readonly placeholderName = computed(() => {
     const id = this.params()?.DynamicPlaceholderId?.trim();
     return id ? `container-${id}` : '';
+  });
+
+  readonly needsWrapper = computed(() => {
+    const tokens = this.styles()?.split(/\s+/).filter(Boolean) ?? [];
+    return tokens.includes('container');
   });
 
   readonly backgroundStyle = computed((): { [key: string]: string } => {

@@ -1,5 +1,5 @@
 import { Component, computed, input, output, signal } from '@angular/core';
-import { Field, ScLinkDirective, ScTextDirective } from '@sitecore-content-sdk/angular';
+import { Field, ScRouterLinkDirective, ScTextDirective } from '@sitecore-content-sdk/angular';
 
 /** Navigation datasource item (layout JSON field names). */
 export interface NavItemFields {
@@ -15,11 +15,11 @@ export interface NavItemFields {
 
 @Component({
   selector: 'app-navigation-item',
-  imports: [ScLinkDirective, ScTextDirective, NavigationItemComponent],
+  imports: [ScRouterLinkDirective, ScTextDirective, NavigationItemComponent],
   template: `
     <li [class]="itemClass()" [attr.tabindex]="0">
       <div class="navigation-title" [class.child]="hasChildren()" (click)="toggleSubmenu()">
-        <a [scLink]="linkField()" (click)="linkClick.emit($event)">
+        <a [scRouterLink]="linkField()" (click)="linkClick.emit($event)">
           @if (navItemFields().NavigationTitle) {
             <span [scText]="navItemFields().NavigationTitle!"></span>
           } @else if (navItemFields().Title) {
