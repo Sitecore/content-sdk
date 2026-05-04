@@ -175,7 +175,7 @@ async function main(): Promise<void> {
   console.log('✅ Version updates applied with cascading bumps.');
 }
 
-function getTransitiveDependents(packages: Packages): Map<string, string[]> {
+export function getTransitiveDependents(packages: Packages): Map<string, string[]> {
   const baseGraph = getDependentsGraph(packages);
   const transitiveGraph = new Map<string, string[]>();
 
@@ -204,7 +204,7 @@ function getTransitiveDependents(packages: Packages): Map<string, string[]> {
   return transitiveGraph;
 }
 
-async function getChangesetsWithCommits(cwd: string): Promise<NewChangesetWithCommit[]> {
+export async function getChangesetsWithCommits(cwd: string): Promise<NewChangesetWithCommit[]> {
   const changesets = await readChangesets(cwd);
   const ids = changesets.map((chset) => chset.id);
   const paths = ids.map((id) => `.changeset/${id}.md`);
@@ -218,7 +218,7 @@ async function getChangesetsWithCommits(cwd: string): Promise<NewChangesetWithCo
   }));
 }
 
-function getPackageChangesetMap(
+export function getPackageChangesetMap(
   changesetsWithCommits: NewChangesetWithCommit[]
 ): Map<string, PackageChangeset[]> {
   const changesetMap = new Map<string, PackageChangeset[]>();
@@ -242,3 +242,4 @@ main().catch((error: unknown) => {
   console.error(err.stack);
   process.exit(1);
 });
+

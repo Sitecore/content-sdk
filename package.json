@@ -17,7 +17,8 @@
     "changeset:cascade-version": "tsx ./scripts/changesets/cascade-version.ts",
     "changeset:cascade-snapshot-version": "tsx ./scripts/changesets/cascade-version.ts --snapshot",
     "changeset:publish": "changeset publish",
-    "csdk:prep-release": "yarn changeset:cascade-version && yarn install"
+    "csdk:prep-release": "yarn changeset:cascade-version && yarn install",
+    "changeset:test": "vitest run --config ./scripts/changesets/vitest.config.ts"
   },
   "author": {
     "name": "Sitecore Corporation",
@@ -48,7 +49,8 @@
     "tsx": "^4.19.4",
     "typedoc": "^0.28.4",
     "typedoc-plugin-markdown": "^4.6.3",
-    "typescript": "~5.8.3"
+    "typescript": "~5.8.3",
+    "vitest": "^3.2.4"
   },
   "workspaces": [
     "packages/*",
