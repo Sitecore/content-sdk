@@ -20,6 +20,7 @@ Our versioning strategy is as follows:
   - App Router & Pages Router: Import and use `PreviewMiddleware` to gate preview requests. See more details in 'What's New' section of the release notes.
 * `[react]` Form component loses interactivity and state between rerenders ([#447](https://github.com/Sitecore/content-sdk/pull/447))
 * `[core]` Preview mode shows unpublishable content ([#410](https://github.com/Sitecore/content-sdk/pull/410))([416](https://github.com/Sitecore/content-sdk/pull/416))
+* `[nextjs]` `[create-content-sdk-app]` Update Next.JS to latest 15.5.14 ([#462](https://github.com/Sitecore/content-sdk/pull/462))
 
 ### 1.5.2
 
