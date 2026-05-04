@@ -8,7 +8,7 @@
 
 > **PreviewMiddlewareConfig** = `object`
 
-Defined in: [nextjs/src/middleware/preview-middleware.ts:14](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/preview-middleware.ts#L14)
+Defined in: [nextjs/src/middleware/preview-middleware.ts:14](https://github.com/Sitecore/content-sdk/blob/599f6a8824eb73e29b1214dab65afe48894d64b0/packages/nextjs/src/middleware/preview-middleware.ts#L14)
 
 Configuration for PreviewMiddleware
 
@@ -18,4 +18,4 @@ Configuration for PreviewMiddleware
 
 > **client**: [`SitecoreClient`](../../client/classes/SitecoreClient.md)
 
-Defined in: [nextjs/src/middleware/preview-middleware.ts:14](https://github.com/Sitecore/content-sdk/blob/b60e35951a674bd37f0e92d14d408b5c4c833e41/packages/nextjs/src/middleware/preview-middleware.ts#L14)
+Defined in: [nextjs/src/middleware/preview-middleware.ts:14](https://github.com/Sitecore/content-sdk/blob/599f6a8824eb73e29b1214dab65afe48894d64b0/packages/nextjs/src/middleware/preview-middleware.ts#L14)
