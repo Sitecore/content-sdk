@@ -1,4 +1,4 @@
-export type { PageViewData, EventData, IdentityData } from './events';
+export type { PageViewData, BotPageViewData, EventData, IdentityData } from './events';
 export type { Identifier } from './events/identity/identity-event';
 export type { EventAttributesInput, ExtensionData } from './events/common-interfaces';
 export { form } from './events/custom-event/form';

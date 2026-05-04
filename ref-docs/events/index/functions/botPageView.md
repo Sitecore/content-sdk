@@ -6,16 +6,22 @@
 
 # Function: botPageView()
 
-> **botPageView**(): `Promise`\<`EPResponse` \| `null`\>
+> **botPageView**(`pageViewData?`): `Promise`\<`EPResponse` \| `null`\>
 
-Defined in: [events/src/events/page-view/bot-page-view.ts:15](https://github.com/Sitecore/content-sdk/blob/b92d240245a7da53f462f7bcffe6086a3971978d/packages/events/src/events/page-view/bot-page-view.ts#L15)
+Defined in: [events/src/events/page-view/bot-page-view.ts:60](https://github.com/Sitecore/content-sdk/blob/cb6406f86fa34d759a763a19ec61e60afcd2c74d/packages/events/src/events/page-view/bot-page-view.ts#L60)
 
-Sends a VIEW event for server-side bot tracking (e.g. Next.js proxy / Edge).
-Uses a synthetic per-invocation client id and defaults `channel` to `bot`.
-Returns `null` in browser environments.
+Sends a VIEW event for bot tracking.
+Derives a stable client id from `userAgent` so repeated requests from the same
+crawler share a single id, and defaults `channel` to `bot`.
+
+## Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `pageViewData?` | [`BotPageViewData`](../type-aliases/BotPageViewData.md) | The optional attributes to be sent to the SitecoreCloud API |
 
 ## Returns
 
 `Promise`\<`EPResponse` \| `null`\>
 
-The response from Sitecore Edge Proxy, or `null` if skipped (browser).
+The response from Sitecore Edge Proxy.

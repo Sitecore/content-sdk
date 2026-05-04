@@ -24,6 +24,7 @@ import {
   getAllowedQueryParams,
 } from './utils';
 import type { AllowedQueryParams } from './types';
+import { EDITING_PARAMS_HEADER } from './constants';
 
 /**
  * Configuration for the Editing Render Middleware.
@@ -163,17 +164,15 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     }
 
     const previewDataParams = mapEditingParams(query as { [key: string]: string });
+    const previewData = {
+      ...previewDataParams,
+      ...allowedQueryParams,
+      variantIds: previewDataParams.variantIds?.split(','),
+    };
 
-    res.setPreviewData(
-      {
-        ...previewDataParams,
-        ...allowedQueryParams,
-        variantIds: previewDataParams.variantIds?.split(','),
-      },
-      {
-        maxAge: 3,
-      }
-    );
+    res.setPreviewData(previewData, {
+      maxAge: 3,
+    });
 
     // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
     if (mode === LayoutServicePageState.Preview) {
@@ -202,7 +201,10 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       const propagatedQsParams = getQueryParamsForPropagation(query);
 
       // Get headers to propagate on subsequent requests
-      const propagatedHeaders = getHeadersForPropagation(headers);
+      const propagatedHeaders = {
+        ...getHeadersForPropagation(headers),
+        [EDITING_PARAMS_HEADER]: JSON.stringify(previewData),
+      };
       const html = await getEditingRequestHtml(
         requestUrl,
         propagatedQsParams,

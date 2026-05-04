@@ -18,14 +18,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.27.1, @babel/code-frame@npm:^7.28.6":
-  version: 7.28.6
-  resolution: "@babel/code-frame@npm:7.28.6"
+"@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.27.1, @babel/code-frame@npm:^7.28.6, @babel/code-frame@npm:^7.29.0":
+  version: 7.29.0
+  resolution: "@babel/code-frame@npm:7.29.0"
   dependencies:
     "@babel/helper-validator-identifier": "npm:^7.28.5"
     js-tokens: "npm:^4.0.0"
     picocolors: "npm:^1.1.1"
-  checksum: 10/93e7ed9e039e3cb661bdb97c26feebafacc6ec13d745881dae5c7e2708f579475daebe7a3b5d23b183bb940b30744f52f4a5bcb65b4df03b79d82fcb38495784
+  checksum: 10/199e15ff89007dd30675655eec52481cb245c9fdf4f81e4dc1f866603b0217b57aff25f5ffa0a95bbc8e31eb861695330cd7869ad52cc211aa63016320ef72c5
   languageName: node
   linkType: hard
 
@@ -59,7 +59,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/generator@npm:^7.27.5, @babel/generator@npm:^7.28.6, @babel/generator@npm:^7.7.2":
+"@babel/generator@npm:^7.27.5, @babel/generator@npm:^7.29.0, @babel/generator@npm:^7.7.2":
+  version: 7.29.1
+  resolution: "@babel/generator@npm:7.29.1"
+  dependencies:
+    "@babel/parser": "npm:^7.29.0"
+    "@babel/types": "npm:^7.29.0"
+    "@jridgewell/gen-mapping": "npm:^0.3.12"
+    "@jridgewell/trace-mapping": "npm:^0.3.28"
+    jsesc: "npm:^3.0.2"
+  checksum: 10/61fe4ddd6e817aa312a14963ccdbb5c9a8c57e8b97b98d19a8a99ccab2215fda1a5f52bc8dd8d2e3c064497ddeb3ab8ceb55c76fa0f58f8169c34679d2256fe0
+  languageName: node
+  linkType: hard
+
+"@babel/generator@npm:^7.28.6":
   version: 7.28.6
   resolution: "@babel/generator@npm:7.28.6"
   dependencies:
@@ -153,14 +166,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:^7.1.0, @babel/parser@npm:^7.14.7, @babel/parser@npm:^7.20.7, @babel/parser@npm:^7.23.9, @babel/parser@npm:^7.27.2, @babel/parser@npm:^7.28.6":
-  version: 7.28.6
-  resolution: "@babel/parser@npm:7.28.6"
+"@babel/parser@npm:^7.1.0, @babel/parser@npm:^7.14.7, @babel/parser@npm:^7.20.7, @babel/parser@npm:^7.23.9, @babel/parser@npm:^7.27.2, @babel/parser@npm:^7.28.6, @babel/parser@npm:^7.29.0":
+  version: 7.29.2
+  resolution: "@babel/parser@npm:7.29.2"
   dependencies:
-    "@babel/types": "npm:^7.28.6"
+    "@babel/types": "npm:^7.29.0"
   bin:
     parser: ./bin/babel-parser.js
-  checksum: 10/483a6fb5f9876ec9cbbb98816f2c94f39ae4d1158d35f87e1c4bf19a1f56027c96a1a3962ff0c8c46e8322a6d9e1c80d26b7f9668410df13d5b5769d9447b010
+  checksum: 10/45d050bf75aa5194b3255f156173e8553d615ff5a2434674cc4a10cdc7c261931befb8618c996a1c449b87f0ef32a3407879af2ac967d95dc7b4fdbae7037efa
   languageName: node
   linkType: hard
 
@@ -370,17 +383,17 @@ __metadata:
   linkType: hard
 
 "@babel/traverse@npm:^7.28.6":
-  version: 7.28.6
-  resolution: "@babel/traverse@npm:7.28.6"
+  version: 7.29.0
+  resolution: "@babel/traverse@npm:7.29.0"
   dependencies:
-    "@babel/code-frame": "npm:^7.28.6"
-    "@babel/generator": "npm:^7.28.6"
+    "@babel/code-frame": "npm:^7.29.0"
+    "@babel/generator": "npm:^7.29.0"
     "@babel/helper-globals": "npm:^7.28.0"
-    "@babel/parser": "npm:^7.28.6"
+    "@babel/parser": "npm:^7.29.0"
     "@babel/template": "npm:^7.28.6"
-    "@babel/types": "npm:^7.28.6"
+    "@babel/types": "npm:^7.29.0"
     debug: "npm:^4.3.1"
-  checksum: 10/dd71efe9412433169b805d5c346a6473e539ce30f605752a0d40a0733feba37259bd72bb4ad2ab591e2eaff1ee56633de160c1e98efdc8f373cf33a4a8660275
+  checksum: 10/3a0d0438f1ba9fed4fbe1706ea598a865f9af655a16ca9517ab57bda526e224569ca1b980b473fb68feea5e08deafbbf2cf9febb941f92f2d2533310c3fc4abc
   languageName: node
   linkType: hard
 
@@ -391,6 +404,16 @@ __metadata:
     "@babel/helper-string-parser": "npm:^7.27.1"
     "@babel/helper-validator-identifier": "npm:^7.28.5"
   checksum: 10/f9c6e52b451065aae5654686ecfc7de2d27dd0fbbc204ee2bd912a71daa359521a32f378981b1cf333ace6c8f86928814452cb9f388a7da59ad468038deb6b5f
+  languageName: node
+  linkType: hard
+
+"@babel/types@npm:^7.29.0":
+  version: 7.29.0
+  resolution: "@babel/types@npm:7.29.0"
+  dependencies:
+    "@babel/helper-string-parser": "npm:^7.27.1"
+    "@babel/helper-validator-identifier": "npm:^7.28.5"
+  checksum: 10/bfc2b211210f3894dcd7e6a33b2d1c32c93495dc1e36b547376aa33441abe551ab4bc1640d4154ee2acd8e46d3bbc925c7224caae02fcaf0e6a771e97fccc661
   languageName: node
   linkType: hard
 
@@ -3474,12 +3497,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sitecore-content-sdk/analytics-core@npm:2.1.0-canary.2, @sitecore-content-sdk/analytics-core@workspace:packages/analytics-core":
+"@sitecore-content-sdk/analytics-core@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@sitecore-content-sdk/analytics-core@npm:2.1.0"
+  dependencies:
+    "@sitecore-content-sdk/core": "npm:^2.1.0"
+    debug: "npm:^4.4.3"
+    isbot: "npm:^5.1.39"
+  checksum: 10/7470251836399e1205477719f493bf238c6267686dd7131334376356377f55d0c7c67fe231c32e8067fc89df67150be063dc020069a2f2af9709d020cbd402d0
+  languageName: node
+  linkType: hard
+
+"@sitecore-content-sdk/analytics-core@workspace:packages/analytics-core":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/analytics-core@workspace:packages/analytics-core"
   dependencies:
     "@jest/types": "npm:^29.6.3"
-    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/core": "npm:^2.1.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/debug": "npm:^4.1.12"
     "@types/jest": "npm:^29.5.12"
@@ -3492,6 +3526,7 @@ __metadata:
     eslint-plugin-import: "npm:2.32.0"
     eslint-plugin-jsdoc: "npm:52.0.3"
     eslint-plugin-prettier: "npm:^4.0.0"
+    isbot: "npm:^5.1.39"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
     jest-environment-node: "npm:^29.7.0"
@@ -3500,22 +3535,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/analytics-core@npm:^2.0.0, @sitecore-content-sdk/analytics-core@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "@sitecore-content-sdk/analytics-core@npm:2.0.2"
+"@sitecore-content-sdk/cli@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@sitecore-content-sdk/cli@npm:2.1.0"
   dependencies:
-    "@sitecore-content-sdk/core": "npm:^2.0.2"
-    debug: "npm:^4.4.3"
-  checksum: 10/2597439a17aac182fc15feb40039cacbbad47e283abec816f413df82d061b707b7fdf747d47e875aaaac9685924113aee14778a7f206c3f0085e0f0a0b9cdf92
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/cli@npm:^2.0.0":
-  version: 2.0.2
-  resolution: "@sitecore-content-sdk/cli@npm:2.0.2"
-  dependencies:
-    "@sitecore-content-sdk/content": "npm:^2.0.2"
-    "@sitecore-content-sdk/core": "npm:^2.0.2"
+    "@sitecore-content-sdk/content": "npm:^2.1.0"
+    "@sitecore-content-sdk/core": "npm:^2.1.0"
     chokidar: "npm:^4.0.3"
     dotenv: "npm:^16.5.0"
     dotenv-expand: "npm:^12.0.2"
@@ -3526,7 +3551,7 @@ __metadata:
     yargs: "npm:^17.7.2"
   bin:
     sitecore-tools: dist/cjs/bin/sitecore-tools.js
-  checksum: 10/628cea335269c237bf18eb542f37c43445d1f89934962a77c5b5ef166e126dac147fec434c605dfdc251e8ba1045f6e85bc7ddd9b769805f6c824bb990db7445
+  checksum: 10/e5d2d999a3ff6b5027da972f4db75266f23be93368bfc6e878012620b136fbfe64203c3998ac894da3557f754a7a696401a54959d4bc240eef78167c17e08a64
   languageName: node
   linkType: hard
 
@@ -3534,8 +3559,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
-    "@sitecore-content-sdk/content": "npm:2.1.0-canary.2"
-    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/content": "npm:^2.1.0"
+    "@sitecore-content-sdk/core": "npm:^2.1.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
     "@types/inquirer": "npm:^9.0.9"
@@ -3574,12 +3599,28 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/content@npm:2.1.0-canary.2, @sitecore-content-sdk/content@workspace:packages/content":
+"@sitecore-content-sdk/content@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@sitecore-content-sdk/content@npm:2.1.0"
+  dependencies:
+    "@sitecore-content-sdk/core": "npm:^2.1.0"
+    chalk: "npm:^4.1.2"
+    debug: "npm:^4.4.0"
+    glob: "npm:^11.0.2"
+    graphql: "npm:^16.11.0"
+    url-parse: "npm:^1.5.10"
+  peerDependencies:
+    "@sitecore-content-sdk/events": ^2.1.0
+  checksum: 10/b0293a3c614c8c38e53837be1ce3567b641c53b4854e310dec26f8f6c58499203292b3d98cd2f86683c46c215f92d5fed7643aae5e54d8c89e146c5614b692aa
+  languageName: node
+  linkType: hard
+
+"@sitecore-content-sdk/content@workspace:packages/content":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/content@workspace:packages/content"
   dependencies:
-    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
-    "@sitecore-content-sdk/events": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/core": "npm:^2.1.0"
+    "@sitecore-content-sdk/events": "npm:^2.1.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
     "@types/chai-spies": "npm:^1.0.6"
@@ -3621,27 +3662,11 @@ __metadata:
     typescript: "npm:~5.8.3"
     url-parse: "npm:^1.5.10"
   peerDependencies:
-    "@sitecore-content-sdk/events": ^2.0.2-canary.2
+    "@sitecore-content-sdk/events": ^2.1.0
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/content@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "@sitecore-content-sdk/content@npm:2.0.2"
-  dependencies:
-    "@sitecore-content-sdk/core": "npm:^2.0.2"
-    chalk: "npm:^4.1.2"
-    debug: "npm:^4.4.0"
-    glob: "npm:^11.0.2"
-    graphql: "npm:^16.11.0"
-    url-parse: "npm:^1.5.10"
-  peerDependencies:
-    "@sitecore-content-sdk/events": ^2.0.2
-  checksum: 10/a6f9d0134ccabf263696a41724d82511dcc5a08e5d9e9d17f6be5663763a679dcf34be222e8d7ad67b6ea244ddab1e900975e761afddd7450bd6a059184175eb
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/core@npm:2.1.0-canary.2, @sitecore-content-sdk/core@workspace:packages/core":
+"@sitecore-content-sdk/core@npm:^2.1.0, @sitecore-content-sdk/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/core@workspace:packages/core"
   dependencies:
@@ -3681,27 +3706,25 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/core@npm:^2.0.1, @sitecore-content-sdk/core@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "@sitecore-content-sdk/core@npm:2.0.2"
+"@sitecore-content-sdk/events@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@sitecore-content-sdk/events@npm:2.1.0"
   dependencies:
-    debug: "npm:^4.4.0"
-    graphql: "npm:^16.11.0"
-    graphql-request: "npm:^6.1.0"
-    memory-cache: "npm:^0.2.0"
-    url-parse: "npm:^1.5.10"
-  checksum: 10/1ca11c128cea59db5cd46860ca36fb5333e3e2ddd5e0b673d97e44237452a08738ff96394277f7e05bf9c441f1685102d5b649f91272fc5ca1e039b339f9cf64
+    "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
+    "@sitecore-content-sdk/core": "npm:^2.1.0"
+    debug: "npm:^4.4.3"
+  checksum: 10/16bc271c8409d638e4f12145ff5c56b5e5f0225e831b9b640d45aa3b51c0cd88ca3b6e5f8c27f0917d3b3efb0bc981e8772ac46d518d17b1a730efcb67c620ff
   languageName: node
   linkType: hard
 
-"@sitecore-content-sdk/events@npm:2.1.0-canary.2, @sitecore-content-sdk/events@workspace:packages/events":
+"@sitecore-content-sdk/events@workspace:packages/events":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/events@workspace:packages/events"
   dependencies:
     "@jest/globals": "npm:^30.2.0"
     "@jest/types": "npm:^29.6.3"
-    "@sitecore-content-sdk/analytics-core": "npm:2.1.0-canary.2"
-    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
+    "@sitecore-content-sdk/core": "npm:^2.1.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/debug": "npm:^4.1.12"
     "@types/jest": "npm:^29.5.12"
@@ -3714,7 +3737,6 @@ __metadata:
     eslint-plugin-import: "npm:2.32.0"
     eslint-plugin-jsdoc: "npm:52.0.3"
     eslint-plugin-prettier: "npm:^4.0.0"
-    isbot: "npm:^5.1.36"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
     jest-environment-node: "npm:^29.7.0"
@@ -3723,54 +3745,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/events@npm:^2.0.0, @sitecore-content-sdk/events@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "@sitecore-content-sdk/events@npm:2.0.2"
-  dependencies:
-    "@sitecore-content-sdk/analytics-core": "npm:^2.0.2"
-    "@sitecore-content-sdk/core": "npm:^2.0.2"
-    debug: "npm:^4.4.3"
-  checksum: 10/429802b765bf5de22d1b231871a89e81dd6e75754cf1a912c4a0cac96d0aad33b376cdc95cef1a99a82b5ea9503135854eda1d3d9cde2ba30804c08c7ccba58c
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/nextjs@npm:^2.0.0":
-  version: 2.0.2
-  resolution: "@sitecore-content-sdk/nextjs@npm:2.0.2"
-  dependencies:
-    "@babel/parser": "npm:^7.27.2"
-    "@sitecore-content-sdk/content": "npm:^2.0.2"
-    "@sitecore-content-sdk/core": "npm:^2.0.2"
-    "@sitecore-content-sdk/react": "npm:^2.0.2"
-    recast: "npm:^0.23.11"
-    regex-parser: "npm:^2.3.1"
-    sync-disk-cache: "npm:^2.1.0"
-  peerDependencies:
-    "@sitecore-content-sdk/analytics-core": ^2.0.2
-    "@sitecore-content-sdk/events": ^2.0.2
-    "@sitecore-content-sdk/personalize": ^2.0.2
-    next: ^16.1.1
-    react: ^19.2.1
-    react-dom: ^19.2.1
-    typescript: ^5.4.0
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 10/1e19f7c6f4558fd3d855b2873c19d06355c4923231b7156abbe0416cfd57234589626ad1c6502b1bedac1845848afb048556b9e0ef9941d00a7bf932b627cbe2
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/nextjs@workspace:packages/nextjs":
+"@sitecore-content-sdk/nextjs@npm:^2.1.0, @sitecore-content-sdk/nextjs@workspace:packages/nextjs":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/nextjs@workspace:packages/nextjs"
   dependencies:
     "@babel/parser": "npm:^7.27.2"
-    "@sitecore-content-sdk/analytics-core": "npm:2.1.0-canary.2"
-    "@sitecore-content-sdk/content": "npm:2.1.0-canary.2"
-    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
-    "@sitecore-content-sdk/events": "npm:2.1.0-canary.2"
-    "@sitecore-content-sdk/personalize": "npm:2.1.0-canary.2"
-    "@sitecore-content-sdk/react": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
+    "@sitecore-content-sdk/content": "npm:^2.1.0"
+    "@sitecore-content-sdk/core": "npm:^2.1.0"
+    "@sitecore-content-sdk/events": "npm:^2.1.0"
+    "@sitecore-content-sdk/personalize": "npm:^2.1.0"
+    "@sitecore-content-sdk/react": "npm:^2.1.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@testing-library/dom": "npm:^10.4.0"
     "@testing-library/react": "npm:^16.3.0"
@@ -3815,9 +3800,9 @@ __metadata:
     ts-node: "npm:^10.9.2"
     typescript: "npm:~5.8.3"
   peerDependencies:
-    "@sitecore-content-sdk/analytics-core": ^2.0.2-canary.2
-    "@sitecore-content-sdk/events": ^2.0.2-canary.2
-    "@sitecore-content-sdk/personalize": ^2.0.2-canary.2
+    "@sitecore-content-sdk/analytics-core": ^2.1.0
+    "@sitecore-content-sdk/events": ^2.1.0
+    "@sitecore-content-sdk/personalize": ^2.1.0
     next: ^16.2.0
     react: ^19.2.1
     react-dom: ^19.2.1
@@ -3828,14 +3813,26 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/personalize@npm:2.1.0-canary.2, @sitecore-content-sdk/personalize@workspace:packages/personalize":
+"@sitecore-content-sdk/personalize@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@sitecore-content-sdk/personalize@npm:2.1.0"
+  dependencies:
+    "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
+    "@sitecore-content-sdk/core": "npm:^2.1.0"
+    "@sitecore-content-sdk/events": "npm:^2.1.0"
+    debug: "npm:^4.4.3"
+  checksum: 10/975bcc3218629485d80130e1863db78673b4c4cd5c19b1449417a3f86bf2ab6b4ef7cf22aea055f70aec9206d1ab6eb435e6c373eb2c6ddf5417b52acd315af1
+  languageName: node
+  linkType: hard
+
+"@sitecore-content-sdk/personalize@workspace:packages/personalize":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/personalize@workspace:packages/personalize"
   dependencies:
     "@jest/types": "npm:^29.6.3"
-    "@sitecore-content-sdk/analytics-core": "npm:2.1.0-canary.2"
-    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
-    "@sitecore-content-sdk/events": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
+    "@sitecore-content-sdk/core": "npm:^2.1.0"
+    "@sitecore-content-sdk/events": "npm:^2.1.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/debug": "npm:^4.1.12"
     "@types/jest": "npm:^29.5.12"
@@ -3856,25 +3853,32 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/personalize@npm:^2.0.0":
-  version: 2.0.2
-  resolution: "@sitecore-content-sdk/personalize@npm:2.0.2"
+"@sitecore-content-sdk/react@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@sitecore-content-sdk/react@npm:2.1.0"
   dependencies:
-    "@sitecore-content-sdk/analytics-core": "npm:^2.0.2"
-    "@sitecore-content-sdk/core": "npm:^2.0.2"
-    "@sitecore-content-sdk/events": "npm:^2.0.2"
-    debug: "npm:^4.4.3"
-  checksum: 10/a61d5410b92cc0f0d94686281581e3fc7641890e5c8fa26f23df63783ba2489a4a89eec466c11dac57405d1eba81866b4f5eac7d1a36dbf4b13dfa998450d02a
+    "@sitecore-content-sdk/content": "npm:^2.1.0"
+    "@sitecore-content-sdk/core": "npm:^2.1.0"
+    "@sitecore-content-sdk/search": "npm:^0.3.0"
+    fast-deep-equal: "npm:^3.1.3"
+  peerDependencies:
+    "@sitecore-content-sdk/analytics-core": ^2.1.0
+    "@sitecore-content-sdk/events": ^2.1.0
+    "@sitecore-feaas/clientside": ^0.6.0
+    react: ^19.2.1
+    react-dom: ^19.2.1
+  checksum: 10/740bc0d1848f76a3d9fda211007df47d46bf1e99d33c5a1ae5e65dc000c76674aa8cdf9f9f8c65a00e11cf42ffd1da93a262d4b494951bdf524b01d1ddb3a9be
   languageName: node
   linkType: hard
 
-"@sitecore-content-sdk/react@npm:2.1.0-canary.2, @sitecore-content-sdk/react@workspace:packages/react":
+"@sitecore-content-sdk/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
-    "@sitecore-content-sdk/content": "npm:2.1.0-canary.2"
-    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
-    "@sitecore-content-sdk/search": "npm:0.2.2-canary.11"
+    "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
+    "@sitecore-content-sdk/content": "npm:^2.1.0"
+    "@sitecore-content-sdk/core": "npm:^2.1.0"
+    "@sitecore-content-sdk/search": "npm:^0.3.0"
     "@sitecore-feaas/clientside": "npm:^0.6.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@testing-library/dom": "npm:^10.4.0"
@@ -3913,39 +3917,23 @@ __metadata:
     ts-node: "npm:^10.9.2"
     typescript: "npm:~5.8.3"
   peerDependencies:
-    "@sitecore-content-sdk/analytics-core": ^2.0.2-canary.2
-    "@sitecore-content-sdk/events": ^2.0.2-canary.2
+    "@sitecore-content-sdk/analytics-core": ^2.1.0
+    "@sitecore-content-sdk/events": ^2.1.0
     "@sitecore-feaas/clientside": ^0.6.0
     react: ^19.2.1
     react-dom: ^19.2.1
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/react@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "@sitecore-content-sdk/react@npm:2.0.2"
-  dependencies:
-    "@sitecore-content-sdk/content": "npm:^2.0.2"
-    "@sitecore-content-sdk/core": "npm:^2.0.2"
-    "@sitecore-content-sdk/search": "npm:^0.2.1"
-    fast-deep-equal: "npm:^3.1.3"
-  peerDependencies:
-    "@sitecore-content-sdk/analytics-core": ^2.0.0
-    "@sitecore-content-sdk/events": ^2.0.0
-    "@sitecore-feaas/clientside": ^0.6.0
-    react: ^19.2.1
-    react-dom: ^19.2.1
-  checksum: 10/f8ccf8de75251d737ff3c2d50f39cdf33d7d80b87c0be0ef75acc1a3787dec6dbe287c0f35a3e9ff1ea0ff0ab71c9e1545017797bb245708b33ff8c83e62ae5b
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/search@npm:0.2.2-canary.11, @sitecore-content-sdk/search@workspace:packages/search":
+"@sitecore-content-sdk/search@npm:^0.3.0, @sitecore-content-sdk/search@workspace:packages/search":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/search@workspace:packages/search"
   dependencies:
-    "@sitecore-content-sdk/core": "npm:2.1.0-canary.2"
+    "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
+    "@sitecore-content-sdk/core": "npm:^2.1.0"
     "@types/chai": "npm:^5.2.3"
     "@types/mocha": "npm:^10.0.10"
+    "@types/proxyquire": "npm:^1.3.31"
     chai: "npm:^6.2.1"
     del-cli: "npm:^7.0.0"
     eslint: "npm:^9.39.1"
@@ -3955,19 +3943,11 @@ __metadata:
     mocha: "npm:^11.7.5"
     nock: "npm:^14.0.10"
     nyc: "npm:^17.1.0"
+    proxyquire: "npm:^2.1.3"
     tsx: "npm:^4.20.6"
     typescript: "npm:~5.8.3"
   languageName: unknown
   linkType: soft
-
-"@sitecore-content-sdk/search@npm:^0.2.1":
-  version: 0.2.1
-  resolution: "@sitecore-content-sdk/search@npm:0.2.1"
-  dependencies:
-    "@sitecore-content-sdk/core": "npm:^2.0.1"
-  checksum: 10/6de23c2b32516ef4f1ef5b6788f1a2a08150cbf60acadb162de40b9bff1196ca04217caf4c54a6daeecae34df3054f6ac4c8639b6f405885ebff7696124cd508
-  languageName: node
-  linkType: hard
 
 "@sitecore-feaas/clientside@npm:^0.6.0":
   version: 0.6.4
@@ -4762,7 +4742,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/tsconfig-utils@npm:8.54.0, @typescript-eslint/tsconfig-utils@npm:^8.39.0, @typescript-eslint/tsconfig-utils@npm:^8.54.0":
+"@typescript-eslint/tsconfig-utils@npm:8.54.0, @typescript-eslint/tsconfig-utils@npm:^8.54.0":
   version: 8.54.0
   resolution: "@typescript-eslint/tsconfig-utils@npm:8.54.0"
   peerDependencies:
@@ -4777,6 +4757,15 @@ __metadata:
   peerDependencies:
     typescript: ">=4.8.4 <6.1.0"
   checksum: 10/4a5cf9a5eb834d05f2d37f7d80319575cf4a75aa52807b96edc0db24349ba417b41cb6f5257ffb07b8b9b4c59c7438637e8c75ed7c2b513bcb07e259b49e058e
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/tsconfig-utils@npm:^8.39.0":
+  version: 8.58.0
+  resolution: "@typescript-eslint/tsconfig-utils@npm:8.58.0"
+  peerDependencies:
+    typescript: ">=4.8.4 <6.1.0"
+  checksum: 10/4f47212c0e26e6b06e97044ec5e483007d5145ef6b205393a0b43cbc0b385c75c14ba5749d01cf7d1ff100332c2cf1d336f060f7d2191bb67fb892bb4446afaa
   languageName: node
   linkType: hard
 
@@ -4835,7 +4824,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/types@npm:8.54.0, @typescript-eslint/types@npm:^8.34.1, @typescript-eslint/types@npm:^8.39.0, @typescript-eslint/types@npm:^8.46.4, @typescript-eslint/types@npm:^8.53.1, @typescript-eslint/types@npm:^8.54.0":
+"@typescript-eslint/types@npm:8.54.0, @typescript-eslint/types@npm:^8.53.1, @typescript-eslint/types@npm:^8.54.0":
   version: 8.54.0
   resolution: "@typescript-eslint/types@npm:8.54.0"
   checksum: 10/c25cc0bdf90fb150cf6ce498897f43fe3adf9e872562159118f34bd91a9bfab5f720cb1a41f3cdf253b2e840145d7d372089b7cef5156624ef31e98d34f91b31
@@ -4846,6 +4835,13 @@ __metadata:
   version: 8.58.1
   resolution: "@typescript-eslint/types@npm:8.58.1"
   checksum: 10/447e1351af8a47297096f063b327c69b1c986af89e39cb39e142bb35d7bec2ce8f34f31edcf62d1beb2e09a38e2029b12b50b335dae4e7c9ff49bd82f9127523
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/types@npm:^8.34.1, @typescript-eslint/types@npm:^8.39.0, @typescript-eslint/types@npm:^8.46.4":
+  version: 8.58.0
+  resolution: "@typescript-eslint/types@npm:8.58.0"
+  checksum: 10/c68eac0bc25812fdbb2ed4a121e42bfca9f24f3c6be95f6a9c4e7b9af767f1bcfacd6d496e358166143e0a1801dc7d042ce1b5e69946ac2768d9114ff6b8d375
   languageName: node
   linkType: hard
 
@@ -5386,14 +5382,14 @@ __metadata:
   linkType: hard
 
 "ajv@npm:^8.0.0":
-  version: 8.17.1
-  resolution: "ajv@npm:8.17.1"
+  version: 8.18.0
+  resolution: "ajv@npm:8.18.0"
   dependencies:
     fast-deep-equal: "npm:^3.1.3"
     fast-uri: "npm:^3.0.1"
     json-schema-traverse: "npm:^1.0.0"
     require-from-string: "npm:^2.0.2"
-  checksum: 10/ee3c62162c953e91986c838f004132b6a253d700f1e51253b99791e2dbfdb39161bc950ebdc2f156f8568035bb5ed8be7bd78289cd9ecbf3381fe8f5b82e3f33
+  checksum: 10/bfed9de827a2b27c6d4084324eda76a4e32bdde27410b3e9b81d06e6f8f5c78370fc6b93fe1d869f1939ff1d7c4ae8896960995acb8425e3e9288c8884247c48
   languageName: node
   linkType: hard
 
@@ -5955,24 +5951,15 @@ __metadata:
   linkType: hard
 
 "brace-expansion@npm:^2.0.1":
-  version: 2.0.2
-  resolution: "brace-expansion@npm:2.0.2"
+  version: 2.0.3
+  resolution: "brace-expansion@npm:2.0.3"
   dependencies:
     balanced-match: "npm:^1.0.0"
-  checksum: 10/01dff195e3646bc4b0d27b63d9bab84d2ebc06121ff5013ad6e5356daa5a9d6b60fa26cf73c74797f2dc3fbec112af13578d51f75228c1112b26c790a87b0488
+  checksum: 10/e9dd66caaf0784126e1654f1bc19adb28f3ef86f39f2226f833f7700ec727c141f6cd85eaa47bacf3426beda01c9fbc3a2f28174cf59330dc9b58ffaf9e09d96
   languageName: node
   linkType: hard
 
-"brace-expansion@npm:^5.0.2":
-  version: 5.0.4
-  resolution: "brace-expansion@npm:5.0.4"
-  dependencies:
-    balanced-match: "npm:^4.0.2"
-  checksum: 10/cfd57e20d8ded9578149e47ae4d3fff2b2f78d06b54a32a73057bddff65c8e9b930613f0cbcfefedf12dd117151e19d4da16367d5127c54f3bff02d8a4479bb2
-  languageName: node
-  linkType: hard
-
-"brace-expansion@npm:^5.0.5":
+"brace-expansion@npm:^5.0.2, brace-expansion@npm:^5.0.5":
   version: 5.0.5
   resolution: "brace-expansion@npm:5.0.5"
   dependencies:
@@ -6061,7 +6048,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cacache@npm:^20.0.0, cacache@npm:^20.0.1":
+"cacache@npm:^20.0.0":
   version: 20.0.3
   resolution: "cacache@npm:20.0.3"
   dependencies:
@@ -6077,6 +6064,24 @@ __metadata:
     ssri: "npm:^13.0.0"
     unique-filename: "npm:^5.0.0"
   checksum: 10/388a0169970df9d051da30437f93f81b7e91efb570ad0ff2b8fde33279fbe726c1bc8e8e2b9c05053ffb4f563854c73db395e8712e3b62347a1bc4f7fb8899ff
+  languageName: node
+  linkType: hard
+
+"cacache@npm:^20.0.1":
+  version: 20.0.4
+  resolution: "cacache@npm:20.0.4"
+  dependencies:
+    "@npmcli/fs": "npm:^5.0.0"
+    fs-minipass: "npm:^3.0.0"
+    glob: "npm:^13.0.0"
+    lru-cache: "npm:^11.1.0"
+    minipass: "npm:^7.0.3"
+    minipass-collect: "npm:^2.0.1"
+    minipass-flush: "npm:^1.0.5"
+    minipass-pipeline: "npm:^1.2.4"
+    p-map: "npm:^7.0.2"
+    ssri: "npm:^13.0.0"
+  checksum: 10/02c1b4c57dc2473e6f4654220c9405b73ae5fcdb392f82a7cf535468a52b842690cdb3694861d13bbe4dc067d5f8abe9697b4f791ae5b65cd73d62abad1e3e54
   languageName: node
   linkType: hard
 
@@ -6156,7 +6161,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001579, caniuse-lite@npm:^1.0.30001759":
+"caniuse-lite@npm:^1.0.30001579":
+  version: 1.0.30001786
+  resolution: "caniuse-lite@npm:1.0.30001786"
+  checksum: 10/69c4c3baa10091e7d2083e782bc0d931fe6e3b04399c381bf4bc3e469bc05d7cca6d964cd113a008bf7b431e08d567475b0b6ff78d13f521f73e738e141d5a0e
+  languageName: node
+  linkType: hard
+
+"caniuse-lite@npm:^1.0.30001759":
   version: 1.0.30001766
   resolution: "caniuse-lite@npm:1.0.30001766"
   checksum: 10/0edeb69bdb741c98deda609b75e35e5c31e944537e9873ea89a4cf9e9baa3e158675b224951a6f3a212d1f0c328a8494ace323c551ca1fa58ce4915562c4e4d3
@@ -6282,7 +6294,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ci-info@npm:4.3.1, ci-info@npm:^4.2.0":
+"ci-info@npm:4.3.1":
   version: 4.3.1
   resolution: "ci-info@npm:4.3.1"
   checksum: 10/9dc952bef67e665ccde2e7a552d42d5d095529d21829ece060a00925ede2dfa136160c70ef2471ea6ed6c9b133218b47c007f56955c0f1734a2e57f240aa7445
@@ -6296,7 +6308,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ci-info@npm:^4.0.0":
+"ci-info@npm:^4.0.0, ci-info@npm:^4.2.0":
   version: 4.4.0
   resolution: "ci-info@npm:4.4.0"
   checksum: 10/dfded0c630267d89660c8abb988ac8395a382bdfefedcc03e3e2858523312c5207db777c239c34774e3fcff11f015477c19d2ac8a58ea58aa476614a2e64f434
@@ -6665,11 +6677,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "create-content-sdk-app@workspace:packages/create-content-sdk-app"
   dependencies:
-    "@sitecore-content-sdk/analytics-core": "npm:^2.0.0"
-    "@sitecore-content-sdk/cli": "npm:^2.0.0"
-    "@sitecore-content-sdk/events": "npm:^2.0.0"
-    "@sitecore-content-sdk/nextjs": "npm:^2.0.0"
-    "@sitecore-content-sdk/personalize": "npm:^2.0.0"
+    "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
+    "@sitecore-content-sdk/cli": "npm:^2.1.0"
+    "@sitecore-content-sdk/events": "npm:^2.1.0"
+    "@sitecore-content-sdk/nextjs": "npm:^2.1.0"
+    "@sitecore-content-sdk/personalize": "npm:^2.1.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
     "@types/cross-spawn": "npm:^6.0.6"
@@ -8025,9 +8037,9 @@ __metadata:
   linkType: hard
 
 "eslint-visitor-keys@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "eslint-visitor-keys@npm:5.0.0"
-  checksum: 10/05334d637c73d02f644b8dbfd6f555f049a229654b543b4b701944051072808d944368164c8b291cecb60e157a54d05f221eb45945a1bdd06c3e0e298ddb4678
+  version: 5.0.1
+  resolution: "eslint-visitor-keys@npm:5.0.1"
+  checksum: 10/f9cc1a57b75e0ef949545cac33d01e8367e302de4c1483266ed4d8646ee5c306376660196bbb38b004e767b7043d1e661cb4336b49eff634a1bbe75c1db709ec
   languageName: node
   linkType: hard
 
@@ -8978,7 +8990,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"handlebars@npm:^4.7.7, handlebars@npm:^4.7.8":
+"handlebars@npm:^4.7.7":
+  version: 4.7.9
+  resolution: "handlebars@npm:4.7.9"
+  dependencies:
+    minimist: "npm:^1.2.5"
+    neo-async: "npm:^2.6.2"
+    source-map: "npm:^0.6.1"
+    uglify-js: "npm:^3.1.4"
+    wordwrap: "npm:^1.0.0"
+  dependenciesMeta:
+    uglify-js:
+      optional: true
+  bin:
+    handlebars: bin/handlebars
+  checksum: 10/e755433d652e8a15fc02f83d7478e652359e7a4d354c4328818853ed4f8a39d4a09e1d22dad3c7213c5240864a65b3c840970b8b181745575dd957dd258f2b8d
+  languageName: node
+  linkType: hard
+
+"handlebars@npm:^4.7.8":
   version: 4.7.8
   resolution: "handlebars@npm:4.7.8"
   dependencies:
@@ -9893,10 +9923,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isbot@npm:^5.1.36":
-  version: 5.1.37
-  resolution: "isbot@npm:5.1.37"
-  checksum: 10/99337867b9b84b1e4141a3088ddb8ed6e53ea406d334bacb147ee4b44581bd951ab32ead12840702154e344aed53e48806141b8fe8b8c3c8307739b3e97ac550
+"isbot@npm:^5.1.39":
+  version: 5.1.39
+  resolution: "isbot@npm:5.1.39"
+  checksum: 10/978ff14899ff8e201713220a9b2440e59fa618cf0db22fa2bae26e9b937f4a09c35bacea0d72e470c0a703ab72f1ce5823306439214d0c9707eb3e3436bbb8bd
   languageName: node
   linkType: hard
 
@@ -11607,16 +11637,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^10.1.1":
-  version: 10.1.1
-  resolution: "minimatch@npm:10.1.1"
-  dependencies:
-    "@isaacs/brace-expansion": "npm:^5.0.0"
-  checksum: 10/110f38921ea527022e90f7a5f43721838ac740d0a0c26881c03b57c261354fb9a0430e40b2c56dfcea2ef3c773768f27210d1106f1f2be19cde3eea93f26f45e
-  languageName: node
-  linkType: hard
-
-"minimatch@npm:^10.2.2":
+"minimatch@npm:^10.1.1, minimatch@npm:^10.2.2":
   version: 10.2.5
   resolution: "minimatch@npm:10.2.5"
   dependencies:
@@ -11626,11 +11647,11 @@ __metadata:
   linkType: hard
 
 "minimatch@npm:^3.0.4, minimatch@npm:^3.1.1, minimatch@npm:^3.1.2":
-  version: 3.1.2
-  resolution: "minimatch@npm:3.1.2"
+  version: 3.1.5
+  resolution: "minimatch@npm:3.1.5"
   dependencies:
     brace-expansion: "npm:^1.1.7"
-  checksum: 10/e0b25b04cd4ec6732830344e5739b13f8690f8a012d73445a4a19fbc623f5dd481ef7a5827fde25954cd6026fede7574cc54dc4643c99d6c6b653d6203f94634
+  checksum: 10/b11a7ee5773cd34c1a0c8436cdbe910901018fb4b6cb47aa508a18d567f6efd2148507959e35fba798389b161b8604a2d704ccef751ea36bd4582f9852b7d63f
   languageName: node
   linkType: hard
 
@@ -11746,9 +11767,9 @@ __metadata:
   linkType: hard
 
 "minipass@npm:^5.0.0 || ^6.0.2 || ^7.0.0, minipass@npm:^7.0.2, minipass@npm:^7.0.3, minipass@npm:^7.0.4, minipass@npm:^7.1.2":
-  version: 7.1.2
-  resolution: "minipass@npm:7.1.2"
-  checksum: 10/c25f0ee8196d8e6036661104bacd743785b2599a21de5c516b32b3fa2b83113ac89a2358465bc04956baab37ffb956ae43be679b2262bf7be15fce467ccd7950
+  version: 7.1.3
+  resolution: "minipass@npm:7.1.3"
+  checksum: 10/175e4d5e20980c3cd316ae82d2c031c42f6c746467d8b1905b51060a0ba4461441a0c25bb67c025fd9617f9a3873e152c7b543c6b5ac83a1846be8ade80dffd6
   languageName: node
   linkType: hard
 
@@ -11972,6 +11993,18 @@ __metadata:
     json-stringify-safe: "npm:^5.0.1"
     propagate: "npm:^2.0.0"
   checksum: 10/89195d798117a371d0146008f1d32eb3951035cc7ccaf12fe93c7ffce6316172094c7ca0a7746b507397aeb06635904af235bbae8b645f95f24b5e8a812b07ab
+  languageName: node
+  linkType: hard
+
+"node-exports-info@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "node-exports-info@npm:1.6.0"
+  dependencies:
+    array.prototype.flatmap: "npm:^1.3.3"
+    es-errors: "npm:^1.3.0"
+    object.entries: "npm:^1.1.9"
+    semver: "npm:^6.3.1"
+  checksum: 10/0a1667d535f499ac1fe6c6d22f8146bc8b68abc76fa355856219202f6cf5f386027e0ff054e66a22d08be02acbc63fcdc9f98d0fbc97993f5eabc66408fdadad
   languageName: node
   linkType: hard
 
@@ -12961,12 +12994,12 @@ __metadata:
   linkType: hard
 
 "path-scurry@npm:^2.0.0":
-  version: 2.0.1
-  resolution: "path-scurry@npm:2.0.1"
+  version: 2.0.2
+  resolution: "path-scurry@npm:2.0.2"
   dependencies:
     lru-cache: "npm:^11.0.0"
     minipass: "npm:^7.1.2"
-  checksum: 10/1e9c74e9ccf94d7c16056a5cb2dba9fa23eec1bc221ab15c44765486b9b9975b4cd9a4d55da15b96eadf67d5202e9a2f1cec9023fbb35fe7d9ccd0ff1891f88b
+  checksum: 10/2b4257422bcb870a4c2d205b3acdbb213a72f5e2250f61c80f79c9d014d010f82bdf8584441612c8e1fa4eb098678f5704a66fa8377d72646bad4be38e57a2c3
   languageName: node
   linkType: hard
 
@@ -13028,14 +13061,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"picomatch@npm:^4.0.2, picomatch@npm:^4.0.3":
+"picomatch@npm:^4.0.2":
   version: 4.0.3
   resolution: "picomatch@npm:4.0.3"
   checksum: 10/57b99055f40b16798f2802916d9c17e9744e620a0db136554af01d19598b96e45e2f00014c91d1b8b13874b80caa8c295b3d589a3f72373ec4aaf54baa5962d5
   languageName: node
   linkType: hard
 
-"picomatch@npm:^4.0.4":
+"picomatch@npm:^4.0.3, picomatch@npm:^4.0.4":
   version: 4.0.4
   resolution: "picomatch@npm:4.0.4"
   checksum: 10/f6ef80a3590827ce20378ae110ac78209cc4f74d39236370f1780f957b7ee41c12acde0e4651b90f39983506fd2f5e449994716f516db2e9752924aff8de93ce
@@ -13690,15 +13723,18 @@ __metadata:
   linkType: hard
 
 "resolve@npm:^2.0.0-next.5":
-  version: 2.0.0-next.5
-  resolution: "resolve@npm:2.0.0-next.5"
+  version: 2.0.0-next.6
+  resolution: "resolve@npm:2.0.0-next.6"
   dependencies:
-    is-core-module: "npm:^2.13.0"
+    es-errors: "npm:^1.3.0"
+    is-core-module: "npm:^2.16.1"
+    node-exports-info: "npm:^1.6.0"
+    object-keys: "npm:^1.1.1"
     path-parse: "npm:^1.0.7"
     supports-preserve-symlinks-flag: "npm:^1.0.0"
   bin:
     resolve: bin/resolve
-  checksum: 10/2d6fd28699f901744368e6f2032b4268b4c7b9185fd8beb64f68c93ac6b22e52ae13560ceefc96241a665b985edf9ffd393ae26d2946a7d3a07b7007b7d51e79
+  checksum: 10/c95cb98b8d3f9e2a979e6eb8b7e0b0e13f08da62607a45207275f151d640152244568a9a9cd01662a21e3746792177cbf9be1dacb88f7355edf4db49d9ee27e5
   languageName: node
   linkType: hard
 
@@ -13716,15 +13752,18 @@ __metadata:
   linkType: hard
 
 "resolve@patch:resolve@npm%3A^2.0.0-next.5#optional!builtin<compat/resolve>":
-  version: 2.0.0-next.5
-  resolution: "resolve@patch:resolve@npm%3A2.0.0-next.5#optional!builtin<compat/resolve>::version=2.0.0-next.5&hash=c3c19d"
+  version: 2.0.0-next.6
+  resolution: "resolve@patch:resolve@npm%3A2.0.0-next.6#optional!builtin<compat/resolve>::version=2.0.0-next.6&hash=c3c19d"
   dependencies:
-    is-core-module: "npm:^2.13.0"
+    es-errors: "npm:^1.3.0"
+    is-core-module: "npm:^2.16.1"
+    node-exports-info: "npm:^1.6.0"
+    object-keys: "npm:^1.1.1"
     path-parse: "npm:^1.0.7"
     supports-preserve-symlinks-flag: "npm:^1.0.0"
   bin:
     resolve: bin/resolve
-  checksum: 10/05fa778de9d0347c8b889eb7a18f1f06bf0f801b0eb4610b4871a4b2f22e220900cf0ad525e94f990bb8d8921c07754ab2122c0c225ab4cdcea98f36e64fa4c2
+  checksum: 10/1b26738af76c80b341075e6bf4b202ef85f85f4a2cbf2934246c3b5f20c682cf352833fc6e32579c6967419226d3ab63e8d321328da052c87a31eaad91e3571a
   languageName: node
   linkType: hard
 
@@ -14032,16 +14071,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.0.0, semver@npm:^7.1.1, semver@npm:^7.3.4, semver@npm:^7.3.5, semver@npm:^7.3.7, semver@npm:^7.5.3, semver@npm:^7.5.4, semver@npm:^7.6.0, semver@npm:^7.7.1, semver@npm:^7.7.2, semver@npm:^7.7.3":
-  version: 7.7.3
-  resolution: "semver@npm:7.7.3"
-  bin:
-    semver: bin/semver.js
-  checksum: 10/8dbc3168e057a38fc322af909c7f5617483c50caddba135439ff09a754b20bdd6482a5123ff543dad4affa488ecf46ec5fb56d61312ad20bb140199b88dfaea9
-  languageName: node
-  linkType: hard
-
-"semver@npm:^7.6.3":
+"semver@npm:^7.0.0, semver@npm:^7.1.1, semver@npm:^7.3.4, semver@npm:^7.3.5, semver@npm:^7.3.7, semver@npm:^7.5.3, semver@npm:^7.5.4, semver@npm:^7.6.0, semver@npm:^7.6.3, semver@npm:^7.7.1, semver@npm:^7.7.2, semver@npm:^7.7.3":
   version: 7.7.4
   resolution: "semver@npm:7.7.4"
   bin:
@@ -15105,21 +15135,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-api-utils@npm:^2.1.0, ts-api-utils@npm:^2.4.0":
-  version: 2.4.0
-  resolution: "ts-api-utils@npm:2.4.0"
-  peerDependencies:
-    typescript: ">=4.8.4"
-  checksum: 10/d6b2b3b6caad8d2f4ddc0c3785d22bb1a6041773335a1c71d73a5d67d11d993763fe8e4faefc4a4d03bb42b26c6126bbcf2e34826baed1def5369d0ebad358fa
-  languageName: node
-  linkType: hard
-
-"ts-api-utils@npm:^2.5.0":
+"ts-api-utils@npm:^2.1.0, ts-api-utils@npm:^2.5.0":
   version: 2.5.0
   resolution: "ts-api-utils@npm:2.5.0"
   peerDependencies:
     typescript: ">=4.8.4"
   checksum: 10/d5f1936f5618c6ab6942a97b78802217540ced00e7501862ae1f578d9a3aa189fc06050e64cb8951d21f7088e5fd35f53d2bf0d0370a883861c7b05e993ebc44
+  languageName: node
+  linkType: hard
+
+"ts-api-utils@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "ts-api-utils@npm:2.4.0"
+  peerDependencies:
+    typescript: ">=4.8.4"
+  checksum: 10/d6b2b3b6caad8d2f4ddc0c3785d22bb1a6041773335a1c71d73a5d67d11d993763fe8e4faefc4a4d03bb42b26c6126bbcf2e34826baed1def5369d0ebad358fa
   languageName: node
   linkType: hard
 

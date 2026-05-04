@@ -34,4 +34,4 @@ This app does **not** use getComponentData. Page and layout data come from **get
 ## References
 
 - content-sdk-graphql-data-fetching and [AGENTS.md](../../../AGENTS.md) for getPage and data flow.
-- [Official Content SDK docs](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html).
+- [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).

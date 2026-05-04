@@ -16,6 +16,7 @@ describe('analyticsProxyAdapter', () => {
   let getCoreContextStub: sinon.SinonStub;
   let getDefaultCookieAttributesStub: sinon.SinonStub;
   let fetchClientIdFromEdgeProxyStub: sinon.SinonStub;
+  let isBotServerSideStub: sinon.SinonStub;
 
   const mockAnalyticsPlugin = {
     options: {
@@ -49,7 +50,12 @@ describe('analyticsProxyAdapter', () => {
     searchParams = ''
   ): NextRequest => {
     const cookieStore = { ...cookies };
+    const headers: Record<string, string> = {};
+
     return {
+      headers: {
+        get: (name: string) => headers[name] || null,
+      },
       cookies: {
         get: (name: string) => {
           const value = cookieStore[name];
@@ -92,6 +98,7 @@ describe('analyticsProxyAdapter', () => {
     getCoreContextStub = sandbox.stub().returns(mockCoreContext);
     getDefaultCookieAttributesStub = sandbox.stub().returns(mockCookieAttributes);
     fetchClientIdFromEdgeProxyStub = sandbox.stub();
+    isBotServerSideStub = sandbox.stub();
 
     analyticsProxyAdapterModule = proxyquire('./analytics-adapter', {
       '@sitecore-content-sdk/core': {
@@ -102,6 +109,7 @@ describe('analyticsProxyAdapter', () => {
         getDefaultCookieAttributes: getDefaultCookieAttributesStub,
         fetchClientIdFromEdgeProxy: fetchClientIdFromEdgeProxyStub,
         getAnalyticsPlugin: getAnalyticsPluginStub,
+        isBotServerSide: isBotServerSideStub,
       },
     });
   });
@@ -155,6 +163,31 @@ describe('analyticsProxyAdapter', () => {
         const result = adapter.getClientId();
 
         expect(result).to.equal('client-id-456');
+      });
+    });
+
+    describe('isBot', () => {
+      it('should return true when isBotServerSide returns true', () => {
+        isBotServerSideStub.returns(true);
+        const request = createMockRequest({});
+        const response = createMockResponse();
+
+        const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+        const result = adapter.isBot?.();
+
+        expect(result).to.be.true;
+      });
+
+      it('should return false when isBotServerSide returns false', () => {
+        isBotServerSideStub.returns(false);
+
+        const request = createMockRequest({});
+        const response = createMockResponse();
+
+        const adapter = analyticsProxyAdapterModule.analyticsProxyAdapter(request, response);
+        const result = adapter.isBot?.();
+
+        expect(result).to.be.false;
       });
     });
 

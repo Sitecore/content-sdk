@@ -13,6 +13,7 @@ import {
   PREVIEW_KEY,
 } from '@sitecore-content-sdk/content/editing';
 import {
+  EDITING_PARAMS_HEADER,
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from '../editing/constants';
@@ -363,10 +364,19 @@ describe('createEditingRenderRouteHandlers', () => {
         layoutKind: mockQuery.sc_layoutKind,
       });
 
-      // Verify propagated headers
+      // Verify propagated headers (includes editing params header for preview)
       expect(propagatedHeaders).to.deep.equal({
         authorization: 'Bearer token123',
         cookie: 'test=value',
+        [EDITING_PARAMS_HEADER]: JSON.stringify({
+          itemId: mockQuery.sc_itemid,
+          language: mockQuery.sc_lang,
+          site: mockQuery.sc_site,
+          mode: mockQuery.mode,
+          variantIds: mockQuery.sc_variant,
+          version: mockQuery.sc_version,
+          layoutKind: mockQuery.sc_layoutKind,
+        }),
       });
 
       // Verify converted cookies from cookieStore.getAll()
@@ -434,7 +444,8 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
 
       const [, , propagatedHeaders] = getEditingRequestHtmlStub.firstCall.args;
-      expect(propagatedHeaders).to.deep.equal(expectedPropagatedHeaders);
+      expect(propagatedHeaders).to.deep.include(expectedPropagatedHeaders);
+      expect(propagatedHeaders[EDITING_PARAMS_HEADER]).to.be.a('string');
     });
 
     it('should pass cookies correctly for internal request', async () => {
@@ -1142,6 +1153,31 @@ describe('createEditingRenderRouteHandlers', () => {
       const fetchCall = fetchStub.getCall(0);
       const fetchHeaders = fetchCall.args[1].headers as Headers;
       expect(fetchHeaders.get('cookie')).to.include('__prerender_bypass=some-value');
+    });
+
+    it('should propagate editing preview data via EDITING_PARAMS_HEADER on forwarded POST', async () => {
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        data: '<html>Server Action Response</html>',
+      });
+
+      await handlers.POST(req);
+
+      expect(fetchStub.calledOnce).to.be.true;
+      const fetchHeaders = fetchStub.getCall(0).args[1].headers as Headers;
+      const packed = fetchHeaders.get(EDITING_PARAMS_HEADER);
+      expect(packed).to.be.a('string');
+      const parsed = JSON.parse(packed as string);
+      expect(parsed).to.deep.equal({
+        itemId: mockQuery.sc_itemid,
+        language: mockQuery.sc_lang,
+        site: mockQuery.sc_site,
+        mode: mockQuery.mode,
+        variantIds: mockQuery.sc_variant,
+        version: mockQuery.sc_version,
+        layoutKind: mockQuery.sc_layoutKind,
+      });
     });
 
     it('should proxy POST request with mapped querry string parameters and propagated vercel protection parameters', async () => {
