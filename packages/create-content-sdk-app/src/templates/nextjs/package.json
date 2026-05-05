@@ -24,7 +24,7 @@
   "dependencies": {
     "@sitecore-cloudsdk/core": "^0.5.1",
     "@sitecore-cloudsdk/events": "^0.5.1",
-    "@sitecore-content-sdk/nextjs": "<%- version %>",
+    "@sitecore-content-sdk/nextjs": "<%- versions['@sitecore-content-sdk/nextjs'] %>",
     "@sitecore-feaas/clientside": "^0.6.0",
     "@sitecore/components": "~2.1.0",
     "next": "^15.5.14",
@@ -33,7 +33,7 @@
     "react-dom": "^19.2.1"
   },
   "devDependencies": {
-    "@sitecore-content-sdk/cli": "<%- version %>",
+    "@sitecore-content-sdk/cli": "<%- versions['@sitecore-content-sdk/cli'] %>",
     "@types/node": "^22.15.14",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
