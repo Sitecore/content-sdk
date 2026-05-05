@@ -18,7 +18,7 @@ on:
 # changesets/action runs csdk:prep-release which consumes .changeset/*.md in that runner.
 # Canary snapshot must run in a separate job with its own checkout so changesets still exist.
 jobs:
-  stable-release-pre:
+  stable-release-prep:
     runs-on: ubuntu-latest
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
@@ -179,4 +179,3 @@ jobs:
           VERSION=$(node -p "require('./packages/create-content-sdk-app/package.json').version")
           npm dist-tag add create-content-sdk-app@$VERSION $COMMIT_NPM_TAG
           npm dist-tag add create-content-sdk-app@$VERSION $PR_NPM_TAG
-
