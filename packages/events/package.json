@@ -7,8 +7,8 @@
     "url": "https://github.com/Sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.1.0-canary.16",
-    "@sitecore-content-sdk/core": "2.1.0-canary.16",
+    "@sitecore-content-sdk/analytics-core": "^2.1.0",
+    "@sitecore-content-sdk/core": "^2.1.0",
     "debug": "^4.4.3"
   },
   "description": "Enables real-time, unified tracking to send events to Sitecore.",
@@ -30,7 +30,8 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-environment-node": "^29.7.0",
     "ts-jest": "^29.4.6",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "~5.8.3"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -75,5 +76,5 @@
     "api-extractor": "npm run build && api-extractor run --local --verbose",
     "api-extractor:verify": "api-extractor run"
   },
-  "version": "2.1.0-canary.16"
+  "version": "2.1.0"
 }
