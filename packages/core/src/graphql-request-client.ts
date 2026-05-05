@@ -1,5 +1,4 @@
 import { GraphQLClient as Client, ClientError } from 'graphql-request';
-import parse from 'url-parse';
 import { DocumentNode } from 'graphql';
 import debuggers, { Debugger } from './debug';
 import TimeoutPromise from './tools/timeout-promise';
@@ -90,6 +89,26 @@ export type GraphQLRequestClientFactoryConfig = {
 } & GraphQLRequestClientConfig;
 
 /**
+ * Validates the GraphQL endpoint using the WHATWG URL API.
+ * @param {string} endpoint The GraphQL endpoint to validate
+ * @throws {Error} when the endpoint is invalid
+ */
+const validateGraphQLEndpoint = (endpoint: string) => {
+  const errorMessage = `Invalid GraphQL endpoint '${endpoint}'. Verify that appropriate environment variable is set`;
+  let parsedEndpoint: URL;
+
+  try {
+    parsedEndpoint = new URL(endpoint);
+  } catch {
+    throw new Error(errorMessage);
+  }
+
+  if (!parsedEndpoint.hostname) {
+    throw new Error(errorMessage);
+  }
+};
+
+/**
  * A GraphQL client for Sitecore APIs that uses the 'graphql-request' library.
  * https://github.com/prisma-labs/graphql-request
  * @public
@@ -119,11 +138,7 @@ export class GraphQLRequestClient implements GraphQLClient {
       this.headers['x-sitecore-contextid'] = clientConfig.contextId;
     }
 
-    if (!endpoint || !parse(endpoint).hostname) {
-      throw new Error(
-        `Invalid GraphQL endpoint '${endpoint}'. Verify that appropriate environment variable is set`
-      );
-    }
+    validateGraphQLEndpoint(endpoint);
 
     this.timeout = clientConfig.timeout;
     this.retries = clientConfig.retries ?? 3;

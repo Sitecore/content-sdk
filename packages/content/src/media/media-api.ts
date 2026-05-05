@@ -1,7 +1,56 @@
-import URL from 'url-parse';
-
 // finds the Sitecore media URL prefix
 const mediaUrlPrefixRegex = /\/([-~]{1})\/media\//i;
+const internalUrlBase = 'https://content-sdk.invalid';
+const absoluteUrlRegex = /^[a-zA-Z][a-zA-Z\d+.-]*:/;
+
+type ParsedMediaUrlKind = 'absolute' | 'protocol-relative' | 'root-relative' | 'relative-path';
+
+type ParsedMediaUrl = {
+  kind: ParsedMediaUrlKind;
+  url: URL;
+};
+
+/**
+ * Parses a media URL while preserving whether the original input was absolute or relative.
+ * @param {string} input The media URL to parse
+ * @returns {ParsedMediaUrl} The parsed URL and original input kind
+ */
+const parseMediaUrl = (input: string): ParsedMediaUrl => {
+  let kind: ParsedMediaUrlKind;
+
+  if (absoluteUrlRegex.test(input)) {
+    kind = 'absolute';
+  } else if (input.startsWith('//')) {
+    kind = 'protocol-relative';
+  } else if (input.startsWith('/')) {
+    kind = 'root-relative';
+  } else {
+    kind = 'relative-path';
+  }
+
+  return {
+    kind,
+    url: kind === 'absolute' ? new URL(input) : new URL(input, internalUrlBase),
+  };
+};
+
+/**
+ * Formats a parsed media URL back to the same absolute or relative form as the original input.
+ * @param {ParsedMediaUrl} parsed The parsed media URL details
+ * @returns {string} The formatted URL
+ */
+const formatMediaUrl = ({ kind, url }: ParsedMediaUrl): string => {
+  switch (kind) {
+    case 'absolute':
+      return url.toString();
+    case 'protocol-relative':
+      return `//${url.host}${url.pathname}${url.search}${url.hash}`;
+    case 'root-relative':
+      return `${url.pathname}${url.search}${url.hash}`;
+    default:
+      return `${url.pathname.replace(/^\//, '')}${url.search}${url.hash}`;
+  }
+};
 
 /**
  * Get required query string params which should be merged with user params
@@ -27,15 +76,15 @@ export const replaceMediaUrlPrefix = (
   url: string,
   mediaUrlPrefix: RegExp = mediaUrlPrefixRegex
 ): string => {
-  const parsed = URL(url, {}, true);
+  const parsed = parseMediaUrl(url);
 
-  const match = mediaUrlPrefix.exec(parsed.pathname);
+  const match = mediaUrlPrefix.exec(parsed.url.pathname);
   if (match && match.length > 1) {
     // regex will provide us with /-/ or /~/ type
-    parsed.set('pathname', parsed.pathname.replace(mediaUrlPrefix, `/${match[1]}/jssmedia/`));
+    parsed.url.pathname = parsed.url.pathname.replace(mediaUrlPrefix, `/${match[1]}/jssmedia/`);
   }
 
-  return parsed.toString();
+  return formatMediaUrl(parsed);
 };
 
 /**
@@ -59,26 +108,31 @@ export const updateImageUrl = (
     // if params aren't supplied, no need to run it through Content SDK media handler
     return url;
   }
-  // polyfill node `global` in browser to workaround https://github.com/unshiftio/url-parse/issues/150
-  if (typeof window !== 'undefined' && !window.global) {
-    window.global = {} as typeof globalThis;
-  }
+  const parsed = parseMediaUrl(replaceMediaUrlPrefix(url, mediaUrlPrefix));
+  const requiredParams = getRequiredParams({
+    rev: parsed.url.searchParams.get('rev') || undefined,
+    db: parsed.url.searchParams.get('db') || undefined,
+    la: parsed.url.searchParams.get('la') || undefined,
+    vs: parsed.url.searchParams.get('vs') || undefined,
+    ts: parsed.url.searchParams.get('ts') || undefined,
+  });
+  const query = new URLSearchParams();
 
-  const parsed = URL(replaceMediaUrlPrefix(url, mediaUrlPrefix), {}, true);
-
-  const requiredParams = getRequiredParams(parsed.query);
-
-  const query = { ...params };
-
-  Object.entries(requiredParams).forEach(([key, param]) => {
-    if (param) {
-      query[key] = param;
+  Object.entries(params).forEach(([key, param]) => {
+    if (param !== undefined) {
+      query.set(key, `${param}`);
     }
   });
 
-  parsed.set('query', query);
+  Object.entries(requiredParams).forEach(([key, param]) => {
+    if (param) {
+      query.set(key, param);
+    }
+  });
 
-  return parsed.toString();
+  parsed.url.search = query.toString();
+
+  return formatMediaUrl(parsed);
 };
 
 /**

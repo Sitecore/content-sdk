@@ -176,6 +176,19 @@ describe('GraphQLRequestClient', () => {
     }
   });
 
+  it('should throw error when endpoint is not an absolute url', () => {
+    const endpoint = '/graphql';
+
+    try {
+      new GraphQLRequestClient(endpoint, { debugger: debug.common });
+      expect.fail('Expected constructor to throw for a relative endpoint');
+    } catch (error) {
+      expect(error.toString()).to.equal(
+        `Error: Invalid GraphQL endpoint '${endpoint}'. Verify that appropriate environment variable is set`
+      );
+    }
+  });
+
   it('should throw error when request is aborted with default timeout value', async () => {
     nock('http://csdknextweb')
       .post('/graphql')

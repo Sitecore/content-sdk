@@ -3603,7 +3603,6 @@ __metadata:
     "@types/proxyquire": "npm:^1.3.31"
     "@types/sinon": "npm:^17.0.4"
     "@types/sinon-chai": "npm:^4.0.0"
-    "@types/url-parse": "npm:1.4.11"
     "@typescript-eslint/eslint-plugin": "npm:8.39.0"
     "@typescript-eslint/parser": "npm:8.39.0"
     chai: "npm:^4.4.1"
@@ -3630,7 +3629,6 @@ __metadata:
     tslib: "npm:^2.8.1"
     tsx: "npm:^4.19.4"
     typescript: "npm:~5.8.3"
-    url-parse: "npm:^1.5.10"
   peerDependencies:
     "@sitecore-content-sdk/events": ^2.1.0-canary.3
   languageName: unknown
@@ -3649,7 +3647,6 @@ __metadata:
     "@types/node": "npm:^24.10.4"
     "@types/proxyquire": "npm:^1.3.31"
     "@types/sinon": "npm:^17.0.4"
-    "@types/url-parse": "npm:1.4.11"
     "@typescript-eslint/eslint-plugin": "npm:8.39.0"
     "@typescript-eslint/parser": "npm:8.39.0"
     chai: "npm:^4.4.1"
@@ -3672,7 +3669,6 @@ __metadata:
     sinon: "npm:^20.0.0"
     tsx: "npm:^4.19.4"
     typescript: "npm:~5.8.3"
-    url-parse: "npm:^1.5.10"
   languageName: unknown
   linkType: soft
 
@@ -4439,13 +4435,6 @@ __metadata:
   version: 3.0.3
   resolution: "@types/unist@npm:3.0.3"
   checksum: 10/96e6453da9e075aaef1dc22482463898198acdc1eeb99b465e65e34303e2ec1e3b1ed4469a9118275ec284dc98019f63c3f5d49422f0e4ac707e5ab90fb3b71a
-  languageName: node
-  linkType: hard
-
-"@types/url-parse@npm:1.4.11":
-  version: 1.4.11
-  resolution: "@types/url-parse@npm:1.4.11"
-  checksum: 10/3e289d184b03d0b0203bccdff00efc1388db2ad8bba4af094201bf3ea5d001f36674ce1ee1764b8906b786a2de625dbc5d76b63ac68e2a3383a93acfe49e01b8
   languageName: node
   linkType: hard
 
@@ -14954,7 +14943,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"url-parse@npm:^1.5.10, url-parse@npm:^1.5.3":
+"url-parse@npm:^1.5.3":
   version: 1.5.10
   resolution: "url-parse@npm:1.5.10"
   dependencies:
