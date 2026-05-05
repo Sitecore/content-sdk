@@ -1,4 +1,4 @@
 export { DesignLibrary } from './DesignLibrary';
-export { DesignLibraryAtoms } from './DesignLibraryAtoms';
+export { DesignLibraryLowCodeComponent } from './DesignLibraryLowCodeComponent';
 export { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 export { DynamicComponent, ImportMapImport } from './models';

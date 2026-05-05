@@ -18,7 +18,7 @@ use(sinonChai);
 
 describe('<DesignLibraryApp />', () => {
   let DesignLibraryStub: sinon.SinonStub;
-  let DesignLibraryAtomsStub: sinon.SinonStub;
+  let DesignLibraryLowCodeComponentStub: sinon.SinonStub;
   let DesignLibraryServerStub: sinon.SinonStub;
   let DesignLibraryApp: any;
   const sandbox = sinon.createSandbox();
@@ -28,9 +28,9 @@ describe('<DesignLibraryApp />', () => {
       .stub()
       .returns(<div data-testid="design-library-client">Client Component Rendered</div>);
 
-    DesignLibraryAtomsStub = sandbox
+    DesignLibraryLowCodeComponentStub = sandbox
       .stub()
-      .returns(<div data-testid="design-library-atoms">Atoms Component Rendered</div>);
+      .returns(<div data-testid="design-library-low-code">Low Code Component Rendered</div>);
 
     DesignLibraryServerStub = sandbox
       .stub()
@@ -40,7 +40,7 @@ describe('<DesignLibraryApp />', () => {
     const module = proxyquire('./DesignLibraryApp', {
       '@sitecore-content-sdk/react': {
         DesignLibrary: DesignLibraryStub,
-        DesignLibraryAtoms: DesignLibraryAtomsStub,
+        DesignLibraryLowCodeComponent: DesignLibraryLowCodeComponentStub,
       },
       './DesignLibraryServer': {
         DesignLibraryServer: DesignLibraryServerStub,
@@ -57,15 +57,15 @@ describe('<DesignLibraryApp />', () => {
   const modeLibrary: PageMode = {
     name: DesignLibraryMode.Normal,
     isDesignLibrary: true,
-    designLibrary: { isVariantGeneration: false, isAtomsMode: false },
+    designLibrary: { isVariantGeneration: false, isLowCode: false },
     isNormal: false,
     isPreview: false,
     isEditing: true,
   };
 
-  const modeLibraryAtoms: PageMode = {
+  const modeLibraryLowCode: PageMode = {
     ...modeLibrary,
-    designLibrary: { ...modeLibrary.designLibrary, isAtomsMode: true },
+    designLibrary: { ...modeLibrary.designLibrary, isLowCode: true },
   };
 
   const ClientComponent: React.FC<{ [prop: string]: unknown }> = () => <div>Client Component</div>;
@@ -126,13 +126,13 @@ describe('<DesignLibraryApp />', () => {
     render(awaitedDesignLibraryServer);
 
     expect(DesignLibraryStub).to.have.been.calledOnce;
-    expect(DesignLibraryAtomsStub).to.not.have.been.called;
+    expect(DesignLibraryLowCodeComponentStub).to.not.have.been.called;
     expect(DesignLibraryServerStub).to.not.have.been.called;
   });
 
-  it('should render DesignLibraryAtoms when isAtomsMode is true', () => {
+  it('should render DesignLibraryLowCodeComponent when isLowCode is true', () => {
     const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
-    const page = getPage(layoutData, modeLibraryAtoms);
+    const page = getPage(layoutData, modeLibraryLowCode);
     const componentMap = createComponentMap('ContentBlock', 'client');
 
     const awaitedDesignLibraryServer = DesignLibraryApp({
@@ -144,7 +144,7 @@ describe('<DesignLibraryApp />', () => {
 
     render(awaitedDesignLibraryServer);
 
-    expect(DesignLibraryAtomsStub).to.have.been.calledOnce;
+    expect(DesignLibraryLowCodeComponentStub).to.have.been.calledOnce;
     expect(DesignLibraryStub).to.not.have.been.called;
     expect(DesignLibraryServerStub).to.not.have.been.called;
   });

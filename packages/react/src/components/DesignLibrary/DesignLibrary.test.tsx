@@ -21,13 +21,18 @@ import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
   DesignLibraryMode,
+  getDesignLibraryAtomsRegistryEvent,
+  AtomInfo,
 } from '@sitecore-content-sdk/content/editing';
 import { __mockDependencies } from './DesignLibrary';
 import {
   DesignLibraryPreviewError,
   getDesignLibraryErrorEvent,
 } from '@sitecore-content-sdk/content/codegen';
-import { after } from 'node:test';
+import { z } from 'zod';
+import * as atomRegistryUtils from '../../atoms/atom-registry-utils';
+import * as callbackRegistryUtils from '../../atoms/callback-registry-utils';
+import { AtomMetadata, CallbackMetadata } from '../../atoms/types';
 import * as rscUtils from '#rsc-env';
 
 before(() => {
@@ -37,9 +42,6 @@ before(() => {
 });
 
 describe('<DesignLibrary />', () => {
-  after(() => {
-    sandbox.restore();
-  });
   const sandbox = sinon.createSandbox();
   before(() => {
     sandbox.replace(rscUtils, 'rsc', false as any);
@@ -57,10 +59,19 @@ describe('<DesignLibrary />', () => {
   };
 
   // Modes
+  const defaultDesignLibraryPageMode: PageMode = {
+    name: DesignLibraryMode.Normal,
+    isDesignLibrary: true,
+    designLibrary: { isVariantGeneration: false, isLowCode: false },
+    isNormal: false,
+    isPreview: false,
+    isEditing: false,
+  };
+
   const modeLibraryMetadata: PageMode = {
     name: DesignLibraryMode.Metadata,
     isDesignLibrary: true,
-    designLibrary: { isVariantGeneration: false },
+    designLibrary: { isVariantGeneration: false, isLowCode: false },
     isNormal: false,
     isPreview: false,
     isEditing: true,
@@ -69,7 +80,7 @@ describe('<DesignLibrary />', () => {
   const modeLibrary_Gen: PageMode = {
     name: DesignLibraryMode.Normal,
     isDesignLibrary: true,
-    designLibrary: { isVariantGeneration: true },
+    designLibrary: { isVariantGeneration: true, isLowCode: false },
     isNormal: false,
     isPreview: false,
     isEditing: false,
@@ -78,13 +89,16 @@ describe('<DesignLibrary />', () => {
   const modeLibraryMetadata_Gen: PageMode = {
     name: DesignLibraryMode.Metadata,
     isDesignLibrary: true,
-    designLibrary: { isVariantGeneration: true },
+    designLibrary: { isVariantGeneration: true, isLowCode: false },
     isNormal: false,
     isPreview: false,
     isEditing: true,
   };
 
-  const getPage = (layout?: LayoutServiceData, pageMode: PageMode = modeLibrary): Page => ({
+  const getPage = (
+    layout?: LayoutServiceData,
+    pageMode: PageMode = defaultDesignLibraryPageMode
+  ): Page => ({
     locale: 'en',
     layout: layout || { sitecore: { context: {}, route: null } },
     mode: pageMode,
@@ -124,11 +138,63 @@ describe('<DesignLibrary />', () => {
       default: [{ module: 'react', exports: [{ name: 'default', value: React }] }],
     });
 
+  const mockedAtoms: AtomMetadata[] = [
+    {
+      name: 'Button',
+      type: 'atom',
+      description: 'A button component',
+      component: () => React.createElement('button', null, 'Button'),
+      props: z.object({
+        label: z.string(),
+      }),
+    },
+    {
+      name: 'Text',
+      type: 'atom',
+      description: 'A text component',
+      component: () => React.createElement('div', null, 'Text'),
+      props: z.object({
+        content: z.string(),
+      }),
+    },
+  ];
+
+  const mockedCallbacks: CallbackMetadata[] = [
+    {
+      name: 'trackSelection',
+      description: 'Track selection callback',
+      callbackFn: () => {},
+    },
+  ];
+
+  const mockedSerializedAtoms: AtomInfo[] = [
+    {
+      name: 'Button',
+      type: 'atom',
+      description: 'A button component',
+      props: { label: { type: 'string' } },
+      allowedChildren: [],
+    },
+    {
+      name: 'Text',
+      type: 'atom',
+      description: 'A text component',
+      props: { content: { type: 'string' } },
+      allowedChildren: [],
+    },
+  ];
+
+  const mockedSerializedCallbacks: Record<string, { description: string }> = {
+    trackSelection: { description: 'Track selection callback' },
+  };
+
   const unsubscribeSpy = sandbox.spy();
   let addComponentPreviewHandlerSpy: sinon.SinonStub;
   let postToDesignLibrarySpy: sinon.SinonStub;
   let sendErrorEventSpy: sinon.SinonStub;
   let callbackEvent: any = null;
+  let serializeAtomsStub: sinon.SinonStub;
+  let serializeCallbacksStub: sinon.SinonStub;
 
   const RENDER_ID = 'test-content';
   const PLACEHOLDER_GUID = '00000000-0000-0000-0000-000000000000';
@@ -204,6 +270,7 @@ describe('<DesignLibrary />', () => {
       isDesignLibrary: false,
       designLibrary: {
         isVariantGeneration: false,
+        isLowCode: false,
       },
       isNormal: false,
       isPreview: false,
@@ -225,7 +292,7 @@ describe('<DesignLibrary />', () => {
     const modeLibrary: PageMode = {
       name: DesignLibraryMode.Normal,
       isDesignLibrary: true,
-      designLibrary: { isVariantGeneration: false },
+      designLibrary: { isVariantGeneration: false, isLowCode: false },
       isNormal: false,
       isPreview: false,
       isEditing: false,
@@ -423,6 +490,18 @@ describe('<DesignLibrary />', () => {
       });
 
       postMessageSpy.resetHistory();
+
+      serializeAtomsStub = sandbox
+        .stub(atomRegistryUtils, 'serializeAtoms')
+        .callsFake((atoms) => (!atoms?.length ? [] : mockedSerializedAtoms));
+      serializeCallbacksStub = sandbox
+        .stub(callbackRegistryUtils, 'serializeCallbacks')
+        .callsFake((callbacks) => (!callbacks?.length ? {} : mockedSerializedCallbacks));
+    });
+
+    afterEach(() => {
+      serializeAtomsStub.restore();
+      serializeCallbacksStub.restore();
     });
 
     it('fires component:ready on mount', () => {
@@ -634,6 +713,68 @@ describe('<DesignLibrary />', () => {
         ).to.be.true;
       });
     });
+
+    it('posts empty atoms registry event when atomRegistry is not provided on SitecoreProvider', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+      const expectedRegistryEvent = getDesignLibraryAtomsRegistryEvent([], {});
+
+      render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      await waitFor(() => {
+        expect(
+          postMessageSpy
+            .getCalls()
+            .some((c) => JSON.stringify(c.args[0]) === JSON.stringify(expectedRegistryEvent))
+        ).to.be.true;
+      });
+
+      sinon.assert.calledWith(serializeAtomsStub, []);
+      sinon.assert.calledWith(serializeCallbacksStub, []);
+    });
+
+    it('posts atoms registry event with serialized atoms and callbacks when atomRegistry is provided', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+      const expectedRegistryEvent = getDesignLibraryAtomsRegistryEvent(
+        mockedSerializedAtoms,
+        mockedSerializedCallbacks
+      );
+
+      render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+          atomRegistry={{
+            atoms: mockedAtoms,
+            callbacks: mockedCallbacks,
+          }}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      await waitFor(() => {
+        const postedRegistryEvent = postMessageSpy
+          .getCalls()
+          .map((call) => call.args[0])
+          .find((event) => event?.name === 'atom:registry');
+
+        expect(postedRegistryEvent).to.deep.equal(expectedRegistryEvent);
+      });
+
+      sinon.assert.calledWith(serializeAtomsStub, mockedAtoms);
+      sinon.assert.calledWith(serializeCallbacksStub, mockedCallbacks);
+    });
   });
 
   describe('?mode=library-metadata&generation=variant and isVariantGeneration=true', () => {
@@ -647,6 +788,20 @@ describe('<DesignLibrary />', () => {
         postToDesignLibrary: postToDesignLibrarySpy,
         sendErrorEvent: sendErrorEventSpy,
       });
+
+      postMessageSpy.resetHistory();
+
+      serializeAtomsStub = sandbox
+        .stub(atomRegistryUtils, 'serializeAtoms')
+        .callsFake((atoms) => (!atoms?.length ? [] : mockedSerializedAtoms));
+      serializeCallbacksStub = sandbox
+        .stub(callbackRegistryUtils, 'serializeCallbacks')
+        .callsFake((callbacks) => (!callbacks?.length ? {} : mockedSerializedCallbacks));
+    });
+
+    afterEach(() => {
+      serializeAtomsStub.restore();
+      serializeCallbacksStub.restore();
     });
 
     const expectedGeneratedParts = [
@@ -690,6 +845,69 @@ describe('<DesignLibrary />', () => {
       await waitFor(() => expectContains(rendered.baseElement.innerHTML, expectedGeneratedParts));
 
       await waitFor(() => expectStatus(postMessageSpy, DesignLibraryStatus.RENDERED, RENDER_ID));
+    });
+
+    it('posts empty atoms registry event when atomRegistry is not provided on SitecoreProvider', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata_Gen);
+      const expectedRegistryEvent = getDesignLibraryAtomsRegistryEvent([], {});
+
+      render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      await waitFor(() => {
+        const postedRegistryEvent = postMessageSpy
+          .getCalls()
+          .map((call) => call.args[0])
+          .find((event) => event?.name === 'atom:registry');
+
+        expect(postedRegistryEvent).to.deep.equal(expectedRegistryEvent);
+      });
+
+      sinon.assert.calledWith(serializeAtomsStub, []);
+      sinon.assert.calledWith(serializeCallbacksStub, []);
+    });
+
+    it('posts atoms registry event with serialized atoms and callbacks when atomRegistry is provided', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata_Gen);
+      const expectedRegistryEvent = getDesignLibraryAtomsRegistryEvent(
+        mockedSerializedAtoms,
+        mockedSerializedCallbacks
+      );
+
+      render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+          atomRegistry={{
+            atoms: mockedAtoms,
+            callbacks: mockedCallbacks,
+          }}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      await waitFor(() => {
+        const postedRegistryEvent = postMessageSpy
+          .getCalls()
+          .map((call) => call.args[0])
+          .find((event) => event?.name === 'atom:registry');
+
+        expect(postedRegistryEvent).to.deep.equal(expectedRegistryEvent);
+      });
+
+      sinon.assert.calledWith(serializeAtomsStub, mockedAtoms);
+      sinon.assert.calledWith(serializeCallbacksStub, mockedCallbacks);
     });
   });
 

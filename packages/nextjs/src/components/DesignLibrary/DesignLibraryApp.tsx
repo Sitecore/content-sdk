@@ -2,7 +2,7 @@ import React from 'react';
 import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/content/layout';
 import { DesingLibraryAppProps } from './models';
 import { DesignLibraryServer } from './DesignLibraryServer';
-import { DesignLibrary, DesignLibraryAtoms } from '@sitecore-content-sdk/react';
+import { DesignLibrary, DesignLibraryLowCodeComponent } from '@sitecore-content-sdk/react';
 
 /**
  * Design Library component intended to be used by the NextJs app router application
@@ -11,7 +11,7 @@ import { DesignLibrary, DesignLibraryAtoms } from '@sitecore-content-sdk/react';
  * delegates to the appropriate rendering implementation:
  * - Client components are rendered using the `DesignLibrary` component
  * - Server components are rendered using the `DesignLibraryServer` component
- * - Atoms mode components are rendered using the `DesignLibraryAtoms` component
+ * - Low code components are rendered using the `DesignLibraryLowCodeComponent` component
  * @param {DesingLibraryAppProps} props - The properties for the Design Library App.
  * @public
  */
@@ -23,15 +23,15 @@ export const DesignLibraryApp = ({
   const { route } = page.layout.sitecore;
   if (!route) return null;
 
-  const isAtomsMode = page.mode.designLibrary.isAtomsMode;
+  const isLowCode = page.mode.designLibrary.isLowCode;
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
   const component = componentMap.get(rendering?.componentName || '');
   const isClient = component && component.componentType === 'client';
 
   return (
     <>
-      {isAtomsMode ? (
-        <DesignLibraryAtoms />
+      {isLowCode ? (
+        <DesignLibraryLowCodeComponent />
       ) : isClient ? (
         <DesignLibrary />
       ) : (

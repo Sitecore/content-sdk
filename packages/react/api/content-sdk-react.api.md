@@ -233,9 +233,6 @@ export { DefaultRetryStrategy }
 // @public
 export const DesignLibrary: () => React_2.JSX.Element | null;
 
-// @internal
-export const DesignLibraryAtoms: () => React_2.JSX.Element;
-
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryErrorBoundaryProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
@@ -255,6 +252,9 @@ export class DesignLibraryErrorBoundary extends React_2.Component<DesignLibraryE
         hasError: boolean;
     };
 }
+
+// @internal
+export const DesignLibraryLowCodeComponent: () => React_2.JSX.Element;
 
 export { DictionaryPhrases }
 
