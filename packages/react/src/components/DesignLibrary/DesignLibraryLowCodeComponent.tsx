@@ -30,15 +30,15 @@ export const __mockDependencies = (mocks: any) => {
 };
 
 /**
- * Design Library Atoms component.
+ * Design Library Low Code component.
  *
- * Facilitates the communication between the Design Studio and the Rendering Host when in atom rendering mode.
+ * Facilitates the communication between the Design Studio and the Rendering Host when previewing a low code component built with the Atoms.
  * - On mount, it unfolds and serializes the atoms registry and callback registry and sends it to the Design Studio via the `getDesignLibraryAtomsRegistryEvent`.
  * - Receives Component model data updates via document update handler and renders the low code component
  * based on component model data and the available atoms using createView.
  * @internal
  */
-export const DesignLibraryAtoms = () => {
+export const DesignLibraryLowCodeComponent = () => {
   const { atomRegistry } = useSitecore();
   const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const [renderKey, setRenderKey] = useState(0);
@@ -85,7 +85,7 @@ export const DesignLibraryAtoms = () => {
 
   return (
     <DesignLibraryErrorBoundary
-      uid={currentDocument?.name ?? 'design-library-atoms'}
+      uid={currentDocument?.name ?? 'design-library-low-code-component'}
       renderKey={renderKey}
     >
       {ViewComponent ? <ViewComponent {...(currentDocument?.props ?? {})} /> : null}

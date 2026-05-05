@@ -75,9 +75,9 @@ export type PageMode = {
      */
     isVariantGeneration: boolean;
     /**
-     * Whether the page is in atoms editing mode
+     * Whether the page is in low code component editing mode
      */
-    isAtomsMode?: boolean;
+    isLowCode: boolean;
   };
   /**
    * Whether the page is in normal mode
@@ -751,7 +751,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       isPreview: false,
       isEditing: false,
       isDesignLibrary: false,
-      designLibrary: { isVariantGeneration: false, isAtomsMode: false },
+      designLibrary: { isVariantGeneration: false, isLowCode: false },
     };
 
     switch (mode) {
@@ -775,9 +775,9 @@ export class SitecoreClient implements BaseSitecoreClient {
         pageMode.isDesignLibrary = true;
         pageMode.isEditing = true;
         break;
-      case DesignLibraryMode.Atoms:
+      case DesignLibraryMode.LowCode:
         pageMode.isDesignLibrary = true;
-        pageMode.designLibrary.isAtomsMode = true;
+        pageMode.designLibrary.isLowCode = true;
         break;
 
       default:

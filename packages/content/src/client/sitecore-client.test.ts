@@ -365,6 +365,7 @@ describe('SitecoreClient', () => {
           isDesignLibrary: false,
           designLibrary: {
             isVariantGeneration: false,
+            isLowCode: false,
           },
         },
       });
@@ -409,6 +410,7 @@ describe('SitecoreClient', () => {
           isDesignLibrary: false,
           designLibrary: {
             isVariantGeneration: false,
+            isLowCode: false,
           },
         },
       });
@@ -607,6 +609,7 @@ describe('SitecoreClient', () => {
           isDesignLibrary: false,
           designLibrary: {
             isVariantGeneration: false,
+            isLowCode: false,
           },
         },
       });
@@ -652,6 +655,7 @@ describe('SitecoreClient', () => {
             isDesignLibrary: false,
             designLibrary: {
               isVariantGeneration: false,
+              isLowCode: false,
             },
           },
         });
@@ -699,6 +703,7 @@ describe('SitecoreClient', () => {
             isDesignLibrary: false,
             designLibrary: {
               isVariantGeneration: false,
+              isLowCode: false,
             },
           },
         });
@@ -886,6 +891,7 @@ describe('SitecoreClient', () => {
           isDesignLibrary: false,
           designLibrary: {
             isVariantGeneration: false,
+            isLowCode: false,
           },
         },
       });
@@ -937,6 +943,7 @@ describe('SitecoreClient', () => {
           isDesignLibrary: false,
           designLibrary: {
             isVariantGeneration: false,
+            isLowCode: false,
           },
         },
       });
@@ -1111,6 +1118,7 @@ describe('SitecoreClient', () => {
           isEditing: false,
           designLibrary: {
             isVariantGeneration: false,
+            isLowCode: false,
           },
         },
       });
@@ -1172,6 +1180,7 @@ describe('SitecoreClient', () => {
           isEditing: true,
           designLibrary: {
             isVariantGeneration: true,
+            isLowCode: false,
           },
         },
       });
@@ -1261,7 +1270,7 @@ describe('SitecoreClient', () => {
         isDesignLibrary: false,
         designLibrary: {
           isVariantGeneration: false,
-          isAtomsMode: false,
+          isLowCode: false,
         },
       });
 
@@ -1273,7 +1282,7 @@ describe('SitecoreClient', () => {
         isDesignLibrary: false,
         designLibrary: {
           isVariantGeneration: false,
-          isAtomsMode: false,
+          isLowCode: false,
         },
       });
 
@@ -1285,7 +1294,7 @@ describe('SitecoreClient', () => {
         isDesignLibrary: false,
         designLibrary: {
           isVariantGeneration: false,
-          isAtomsMode: false,
+          isLowCode: false,
         },
       });
 
@@ -1297,7 +1306,7 @@ describe('SitecoreClient', () => {
         isDesignLibrary: true,
         designLibrary: {
           isVariantGeneration: false,
-          isAtomsMode: false,
+          isLowCode: false,
         },
       });
 
@@ -1305,7 +1314,7 @@ describe('SitecoreClient', () => {
         name: DesignLibraryMode.Metadata,
         designLibrary: {
           isVariantGeneration: false,
-          isAtomsMode: false,
+          isLowCode: false,
         },
         isNormal: false,
         isPreview: false,
@@ -1317,7 +1326,7 @@ describe('SitecoreClient', () => {
         name: DesignLibraryMode.Normal,
         designLibrary: {
           isVariantGeneration: false,
-          isAtomsMode: false,
+          isLowCode: false,
         },
         isNormal: false,
         isPreview: false,
@@ -1325,15 +1334,15 @@ describe('SitecoreClient', () => {
         isDesignLibrary: true,
       });
 
-      expect(sitecoreClient['getPageMode'](DesignLibraryMode.Atoms)).to.deep.equal({
-        name: DesignLibraryMode.Atoms,
+      expect(sitecoreClient['getPageMode'](DesignLibraryMode.LowCode)).to.deep.equal({
+        name: DesignLibraryMode.LowCode,
         isNormal: false,
         isPreview: false,
         isEditing: false,
         isDesignLibrary: true,
         designLibrary: {
           isVariantGeneration: false,
-          isAtomsMode: true,
+          isLowCode: true,
         },
       });
 
@@ -1345,7 +1354,7 @@ describe('SitecoreClient', () => {
         isDesignLibrary: false,
         designLibrary: {
           isVariantGeneration: false,
-          isAtomsMode: false,
+          isLowCode: false,
         },
       });
     });

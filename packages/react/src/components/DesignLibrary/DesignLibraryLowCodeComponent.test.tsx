@@ -8,7 +8,7 @@ import sinonChai from 'sinon-chai';
 
 chaiUse(sinonChai);
 import { render, waitFor } from '@testing-library/react';
-import { DesignLibraryAtoms, __mockDependencies } from './DesignLibraryAtoms';
+import { DesignLibraryLowCodeComponent, __mockDependencies } from './DesignLibraryLowCodeComponent';
 import { SitecoreProvider } from '../SitecoreProvider';
 import {
   DesignLibraryStatus,
@@ -23,7 +23,7 @@ import { AtomMetadata } from '../../atoms/types';
 import { z } from 'zod';
 import type { ImportMapImport } from './models';
 
-describe('<DesignLibraryAtoms />', () => {
+describe('<DesignLibraryLowCodeComponent />', () => {
   const sandbox = sinon.createSandbox();
 
   /** Minimal stubs so `SitecoreProvider` matches its public contract in tests */
@@ -146,7 +146,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -166,7 +166,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -185,7 +185,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -207,7 +207,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: [], callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -229,7 +229,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -253,7 +253,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -294,7 +294,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -339,7 +339,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -377,7 +377,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -402,7 +402,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -424,7 +424,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -444,7 +444,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -463,7 +463,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -485,7 +485,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -513,7 +513,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -563,7 +563,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: customCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -581,7 +581,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: [] }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -605,7 +605,7 @@ describe('<DesignLibraryAtoms />', () => {
         page={page}
         atomRegistry={{ atoms: mockAtoms, callbacks: mockCallbacks }}
       >
-        <DesignLibraryAtoms />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 

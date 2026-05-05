@@ -265,7 +265,7 @@ export type DesignLibraryAtomsError = 'render' | 'atoms-missing';
 
 // @public
 export enum DesignLibraryMode {
-    Atoms = "library-atoms",
+    LowCode = "library-low-code",
     Metadata = "library-metadata",
     Normal = "library"
 }
@@ -966,7 +966,7 @@ export type PageMode = {
     name: PageModeName;
     designLibrary: {
         isVariantGeneration: boolean;
-        isAtomsMode?: boolean;
+        isLowCode: boolean;
     };
     isNormal: boolean;
     isPreview: boolean;
