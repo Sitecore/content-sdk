@@ -7,6 +7,10 @@ type RevalidateRequestBody = {
   tags?: string[];
 };
 
+/**
+ * Options for {@link createRevalidateRouteHandler}.
+ * @public
+ */
 export type RevalidateRouteHandlerOptions = {
   /**
    * Shared secret expected from request headers.

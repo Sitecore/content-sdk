@@ -52,6 +52,10 @@ function isFullSitecoreContentCacheTag(value: string): boolean {
   return value.startsWith(FULL_TAG_PREFIX);
 }
 
+/**
+ * Options for {@link collectSitecoreTagsFromEdgeRevalidateRequestBody}.
+ * @public
+ */
 export type CollectSitecoreTagsFromEdgeBodyOptions = {
   /**
    * Used when an update omits `entity_culture`, and when mapping bare item ids in `tags`.

@@ -10,6 +10,10 @@ import type { RevalidateRouteHandlerOptions } from './revalidate-route-handler';
 const DEFAULT_SECRET_ENV_VAR = 'SITECORE_REVALIDATE_SECRET';
 const DEFAULT_SECRET_HEADER = 'x-revalidate-secret';
 
+/**
+ * Options for {@link createEdgeWebhookRevalidateRouteHandler}.
+ * @public
+ */
 export type EdgeWebhookRevalidateRouteHandlerOptions = RevalidateRouteHandlerOptions & {
   /**
    * Fallback locale for item tags when `entity_culture` is missing, and for bare item ids in `tags`.

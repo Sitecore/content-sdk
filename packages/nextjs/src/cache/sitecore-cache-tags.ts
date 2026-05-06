@@ -24,6 +24,10 @@ export function normalizeSitecoreItemIdForCacheTag(itemId: string): string {
   return itemId.trim().toLowerCase().replace(/[{}]/g, '');
 }
 
+/**
+ * Parameters for {@link buildSitecoreRouteCacheTag}.
+ * @public
+ */
 export type BuildSitecoreRouteCacheTagParams = {
   site: string;
   locale: string;
@@ -47,6 +51,10 @@ export function buildSitecoreRouteCacheTag(params: BuildSitecoreRouteCacheTagPar
   return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:route:${site}:${locale}:${pathKey}`;
 }
 
+/**
+ * Parameters for {@link buildSitecoreItemCacheTag}.
+ * @public
+ */
 export type BuildSitecoreItemCacheTagParams = {
   itemId: string;
   locale: string;
@@ -71,6 +79,10 @@ export function buildSitecoreItemCacheTag(params: BuildSitecoreItemCacheTagParam
   return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}:${ver}`;
 }
 
+/**
+ * Parameters for {@link buildSitecoreDictionaryCacheTag}.
+ * @public
+ */
 export type BuildSitecoreDictionaryCacheTagParams = {
   site: string;
   locale: string;
@@ -87,6 +99,10 @@ export function buildSitecoreDictionaryCacheTag(params: BuildSitecoreDictionaryC
   return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:${site}:${locale}`;
 }
 
+/**
+ * Parameters for {@link buildSitecorePersonalizedPageVariantCacheTag}.
+ * @public
+ */
 export type BuildSitecorePersonalizedPageVariantCacheTagParams = {
   /**
    * Primary personalization variant id from routing / `PageOptions.personalize`.
@@ -115,6 +131,10 @@ export function buildSitecorePersonalizedPageVariantCacheTag(
   return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:pvv:${variant}${suffix}`;
 }
 
+/**
+ * Minimal route data shape for building item cache tags from layout responses.
+ * @public
+ */
 export type SitecoreRouteDataLike = {
   itemId?: string;
   itemLanguage?: string;

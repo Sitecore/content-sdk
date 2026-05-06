@@ -233,6 +233,47 @@ export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Omit<Prox
     fetchEvent?: NextFetchEvent;
 };
 
+// @public
+export function buildSitecoreDictionaryCacheTag(params: BuildSitecoreDictionaryCacheTagParams): string;
+
+// @public
+export type BuildSitecoreDictionaryCacheTagParams = {
+    site: string;
+    locale: string;
+};
+
+// @public
+export function buildSitecoreItemCacheTag(params: BuildSitecoreItemCacheTagParams): string;
+
+// @public
+export function buildSitecoreItemCacheTagFromRouteData(route: SitecoreRouteDataLike, fallbackLocale: string): string | null;
+
+// @public
+export type BuildSitecoreItemCacheTagParams = {
+    itemId: string;
+    locale: string;
+    version?: number;
+};
+
+// @public
+export function buildSitecorePersonalizedPageVariantCacheTag(params: BuildSitecorePersonalizedPageVariantCacheTagParams): string;
+
+// @public
+export type BuildSitecorePersonalizedPageVariantCacheTagParams = {
+    variantId: string;
+    componentVariantIds?: string[];
+};
+
+// @public
+export function buildSitecoreRouteCacheTag(params: BuildSitecoreRouteCacheTagParams): string;
+
+// @public
+export type BuildSitecoreRouteCacheTagParams = {
+    site: string;
+    locale: string;
+    pathSegments?: string[];
+};
+
 export { BYOCClientWrapper }
 
 export { BYOCComponent }
@@ -264,6 +305,25 @@ export { CacheOptions }
 export { CdpHelper }
 
 export { ClientEditingChromesUpdate }
+
+// @public
+export function collectSitecorePageCacheTags(params: CollectSitecorePageCacheTagsParams): string[];
+
+// @public
+export type CollectSitecorePageCacheTagsParams = {
+    site: string;
+    locale: string;
+    personalizedPathname: string;
+    route: SitecoreRouteDataLike;
+};
+
+// @public
+export type CollectSitecoreTagsFromEdgeBodyOptions = {
+    defaultLocale: string;
+};
+
+// @public
+export function collectSitecoreTagsFromEdgeRevalidateRequestBody(body: SitecoreEdgeRevalidateRequestBody | null | undefined, options: CollectSitecoreTagsFromEdgeBodyOptions): string[];
 
 // @public
 export const combineImportEntries: (defaultImportEntries: ImportEntry[], generatedImportEntries: ImportEntry[]) => ImportEntry[];
@@ -325,6 +385,18 @@ export { ComponentRendering }
 
 export { constants }
 
+// @public
+export function createEdgeWebhookRevalidateRouteHandler(options?: EdgeWebhookRevalidateRouteHandlerOptions): {
+    POST: (req: NextRequest) => Promise<NextResponse<{
+        error: string;
+    }> | NextResponse<{
+        revalidated: boolean;
+        tags: string[];
+        invocation_id: string | null;
+        continues: boolean;
+    }>>;
+};
+
 // Warning: (ae-forgotten-export) The symbol "EditingConfigRouteHandlerOptions" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
@@ -343,6 +415,16 @@ export const createEditingRenderRouteHandlers: (options: EditingHandlerOptions) 
 };
 
 export { createGraphQLClientFactory }
+
+// @public
+export function createRevalidateRouteHandler(options?: RevalidateRouteHandlerOptions): {
+    POST: (req: NextRequest) => Promise<NextResponse<{
+        error: string;
+    }> | NextResponse<{
+        revalidated: boolean;
+        tags: string[];
+    }>>;
+};
 
 // Warning: (ae-forgotten-export) The symbol "RouteHandlerOptions_2" needs to be exported by the entry point api-surface.d.ts
 //
@@ -363,6 +445,9 @@ export { DateField }
 // @public
 const debug_2: Record<string, debug.Debugger>;
 export { debug_2 as debug }
+
+// @public
+export function dedupeSitecoreCacheTags(tags: string[]): string[];
 
 export { DefaultEmptyFieldEditingComponentImage }
 
@@ -399,6 +484,12 @@ export { DictionaryPhrases }
 export { DictionaryService }
 
 export { DictionaryServiceConfig }
+
+// @public
+export type EdgeWebhookRevalidateRouteHandlerOptions = RevalidateRouteHandlerOptions & {
+    defaultLocale?: string;
+    additionalTags?: string[] | ((body: SitecoreEdgeRevalidateRequestBody) => string[]);
+};
 
 export { EDITING_COMPONENT_ID }
 
@@ -456,6 +547,9 @@ export { extractFiles }
 
 // @public
 export const extractPath: (context: GetStaticPropsContext | GetServerSidePropsContext) => string;
+
+// @public
+export function extractSitecoreEdgeContentId(identifier: string): string;
 
 export { FEaaSClientWrapper }
 
@@ -688,6 +782,9 @@ export type NextjsContentSdkComponent = ReactContentSdkComponent & {
 
 export { normalizePersonalizedRewrite }
 
+// @public
+export function normalizeSitecoreItemIdForCacheTag(itemId: string): string;
+
 export { normalizeSiteRewrite }
 
 export { Page }
@@ -879,6 +976,14 @@ export { resolveUrl }
 export { RetryStrategy }
 
 // @public
+export type RevalidateRouteHandlerOptions = {
+    secret?: string;
+    secretEnvVarName?: string;
+    secretHeaderName?: string;
+    cacheProfile?: 'max';
+};
+
+// @public
 export const RichText: {
     (props: RichTextProps): JSX_2.Element;
     displayName: string;
@@ -908,7 +1013,13 @@ export { RobotsServiceConfig }
 export { RouteData }
 
 // @public
+export function sanitizeSitecoreCacheTagSegment(value: string): string;
+
+// @public
 export function setCachedPageParams(pageParams: CachedPageParams): void;
+
+// @public
+export const SITECORE_CONTENT_CACHE_TAG_PREFIX = "sc";
 
 // @public
 export class SitecoreClient extends SitecoreClient_2 {
@@ -946,6 +1057,22 @@ export type SitecoreConfigInput = SitecoreConfigInput_2 & {
 };
 
 // @public
+export type SitecoreEdgeRevalidateRequestBody = {
+    invocation_id?: string;
+    updates?: SitecoreEdgeRevalidateUpdate[];
+    continues?: boolean;
+    tags?: string[];
+};
+
+// @public
+export type SitecoreEdgeRevalidateUpdate = {
+    identifier?: string;
+    entity_definition?: string;
+    operation?: string;
+    entity_culture?: string;
+};
+
+// @public
 export type SitecorePageProps = {
     page: Page | null;
     dictionary?: DictionaryPhrases;
@@ -958,6 +1085,13 @@ export { SitecoreProvider }
 export { SitecoreProviderReactContext }
 
 export { SitecoreProviderState }
+
+// @public
+export type SitecoreRouteDataLike = {
+    itemId?: string;
+    itemLanguage?: string;
+    itemVersion?: number;
+};
 
 export { SiteInfo }
 
