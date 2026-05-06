@@ -104,7 +104,7 @@ describe('ScFormComponent', () => {
     warnSpy.mockRestore();
   });
 
-  it('should not call loadForm on the server (JSS: isPlatformBrowser guard)', async () => {
+  it('should not call loadForm on the server', async () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [ScFormComponent],
@@ -123,7 +123,7 @@ describe('ScFormComponent', () => {
     expect(mocks.loadForm).not.toHaveBeenCalled();
   });
 
-  it('should not call loadForm when FormId is missing (JSS: FormId param)', async () => {
+  it('should not call loadForm when FormId is missing', async () => {
     const fixture = createFixture();
     fixture.componentRef.setInput('rendering', formRendering({}));
     fixture.detectChanges();
@@ -133,7 +133,7 @@ describe('ScFormComponent', () => {
     expect(mocks.loadForm).not.toHaveBeenCalled();
   });
 
-  it('should call loadForm with edge context id, FormId, and edgeUrl from config (JSS: loadForm from Edge)', async () => {
+  it('should call loadForm with edge context id, FormId, and edgeUrl from config', async () => {
     const fixture = createFixture();
     fixture.componentRef.setInput('rendering', formRendering({ FormId: 'my-form-id' }));
     await flushFormLoadPipeline(fixture);
@@ -163,7 +163,7 @@ describe('ScFormComponent', () => {
     expect(String(warnSpy.mock.calls[0][0])).toContain('clientContextId');
   });
 
-  it('should set loaded HTML into the container via innerHTML (JSS: innerHTML = content)', async () => {
+  it('should set loaded HTML into the container via innerHTML', async () => {
     // Markup is assigned on the container element ref (not [innerHTML], which sanitizes scripts).
     mocks.loadForm.mockResolvedValue('<p class="sc-form-inner" data-f="1">Inner</p>');
 
@@ -176,7 +176,7 @@ describe('ScFormComponent', () => {
     expect(host.textContent).toContain('Inner');
   });
 
-  it('should bind styles param as class with trailing whitespace trimmed (JSS: params.styles → className)', async () => {
+  it('should bind styles param as class with trailing whitespace trimmed', async () => {
     const fixture = createFixture();
     fixture.componentRef.setInput(
       'rendering',
@@ -192,7 +192,7 @@ describe('ScFormComponent', () => {
     expect(host.className.trim()).toBe('my-form-style');
   });
 
-  it('should bind RenderingIdentifier as element id (JSS: RenderingIdentifier → id)', async () => {
+  it('should bind RenderingIdentifier as element id', async () => {
     const fixture = createFixture();
     fixture.componentRef.setInput(
       'rendering',
@@ -208,7 +208,7 @@ describe('ScFormComponent', () => {
     expect(host.id).toBe('form-rendering-42');
   });
 
-  it('should call executeScriptElements on the container after load (JSS: executeScriptElements)', async () => {
+  it('should call executeScriptElements on the container after load', async () => {
     const fixture = createFixture();
     const ctx = TestBed.inject(SitecoreContextService);
     ctx.setPage(makePage(false));
@@ -221,7 +221,7 @@ describe('ScFormComponent', () => {
     expect(elArg.tagName).toBe('DIV');
   });
 
-  it('should call subscribeToFormSubmitEvent when not in editing mode (JSS: !isEditing)', async () => {
+  it('should call subscribeToFormSubmitEvent when not in editing mode', async () => {
     const fixture = createFixture();
     const ctx = TestBed.inject(SitecoreContextService);
     ctx.setPage(makePage(false));
@@ -239,7 +239,7 @@ describe('ScFormComponent', () => {
     );
   });
 
-  it('should not call subscribeToFormSubmitEvent in editing mode (JSS: isEditing)', async () => {
+  it('should not call subscribeToFormSubmitEvent in editing mode', async () => {
     const fixture = createFixture();
     const ctx = TestBed.inject(SitecoreContextService);
     ctx.setPage(makePage(true));
@@ -251,7 +251,7 @@ describe('ScFormComponent', () => {
     expect(mocks.executeScriptElements).toHaveBeenCalled();
   });
 
-  it('should log when loadForm rejects (JSS: catch / hasError)', async () => {
+  it('should log when loadForm rejects', async () => {
     mocks.loadForm.mockRejectedValue(new Error('network'));
 
     const fixture = createFixture();

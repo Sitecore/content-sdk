@@ -55,7 +55,7 @@ describe('ScRouterLinkDirective', () => {
     spy.mockRestore();
   });
 
-  it('calls navigateByUrl for href with hash and does not preventDefault (JSS parity)', async () => {
+  it('calls navigateByUrl for href with hash and does not preventDefault', async () => {
     const { fixture, router } = await createFixture();
     const spy = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
 

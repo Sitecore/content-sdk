@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect } from 'vitest';
-import { buildHrefFromLinkField, resolveLinkFromField } from './link-field-binding';
+import { buildHrefFromLinkField, resolveLinkFromField } from './link-field-utils';
 import type { LinkField } from '@sitecore-content-sdk/content/layout';
 
 describe('link-field-binding', () => {
@@ -24,7 +24,7 @@ describe('link-field-binding', () => {
           querystring: 'a=1',
           anchor: 'sec',
           linktype: 'internal',
-        }),
+        })
       ).toBe('/p?a=1#sec');
     });
   });

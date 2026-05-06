@@ -1,10 +1,6 @@
 import { Directive, ElementRef, inject, input, effect, Renderer2 } from '@angular/core';
 import { LinkFieldValue, LinkField } from '@sitecore-content-sdk/content/layout';
-import {
-  applyLinkFieldToAnchor,
-  clearLinkHrefOnAnchor,
-  resolveLinkFromField,
-} from './link-field-binding';
+import { applyLinkFieldToAnchor, resolveLinkFromField } from './link-field-utils';
 
 /**
  * Renders a Sitecore link field onto a host `<a>` element.
@@ -43,7 +39,7 @@ export class ScLinkDirective {
 
       const link = resolveLinkFromField(field);
       if (!link) {
-        clearLinkHrefOnAnchor(this.renderer, element);
+        this.renderer.removeAttribute(element, 'href');
         return;
       }
 

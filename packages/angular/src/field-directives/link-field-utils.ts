@@ -34,6 +34,8 @@ export interface ApplyLinkFieldToAnchorOptions {
   originalClass?: string;
   originalTitle?: string;
   originalTarget?: string;
+  /** Host `rel` captured before the directive applied field data (e.g. template `rel="nofollow"`). */
+  originalRel?: string | null;
 }
 
 /**
@@ -55,40 +57,33 @@ export function applyLinkFieldToAnchor(
     if (options.originalClass) {
       addClassTokens(renderer, element, options.originalClass);
     }
-  }
 
-  if (link.title) {
-    renderer.setAttribute(element, 'title', link.title);
-  } else {
-    renderer.removeAttribute(element, 'title');
-    if (options.originalTitle) {
-      renderer.setAttribute(element, 'title', options.originalTitle);
+    if (link.title) {
+      renderer.setAttribute(element, 'title', link.title);
+    } else {
+      renderer.removeAttribute(element, 'title');
+      if (options.originalTitle) {
+        renderer.setAttribute(element, 'title', options.originalTitle);
+      }
+    }
+    if (link.target) {
+      renderer.setAttribute(element, 'target', link.target);
+      if (link.target === '_blank' && !element.getAttribute('rel')) {
+        renderer.setAttribute(element, 'rel', 'noopener noreferrer');
+      }
+    } else {
+      renderer.removeAttribute(element, 'target');
+      if (options.originalTarget) {
+        renderer.setAttribute(element, 'target', options.originalTarget);
+      }
+    }
+
+    const hasChildren = element.childNodes.length > 0 && element.textContent?.trim();
+    if (!hasChildren) {
+      const text = link.text || link.href || '';
+      renderer.setProperty(element, 'textContent', text);
+    } else if (options.preferTextFromField && link.text) {
+      renderer.setProperty(element, 'textContent', link.text || '');
     }
   }
-  if (link.target) {
-    renderer.setAttribute(element, 'target', link.target);
-    if (link.target === '_blank' && !element.getAttribute('rel')) {
-      renderer.setAttribute(element, 'rel', 'noopener noreferrer');
-    }
-  } else {
-    renderer.removeAttribute(element, 'target');
-    if (options.originalTarget) {
-      renderer.setAttribute(element, 'target', options.originalTarget);
-    }
-  }
-
-  const hasChildren = element.childNodes.length > 0 && element.textContent?.trim();
-  if (!hasChildren) {
-    const text = link.text || link.href || '';
-    renderer.setProperty(element, 'textContent', text);
-  } else if (options.preferTextFromField && link.text) {
-    renderer.setProperty(element, 'textContent', link.text || '');
-  }
-}
-
-/**
- * Clears link-driven attributes when the field is empty (matches ScLink behavior: drop `href` only).
- */
-export function clearLinkHrefOnAnchor(renderer: Renderer2, element: HTMLAnchorElement): void {
-  renderer.removeAttribute(element, 'href');
 }

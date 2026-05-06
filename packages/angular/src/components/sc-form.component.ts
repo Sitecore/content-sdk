@@ -25,13 +25,10 @@ const { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
  */
 @Component({
   selector: 'sc-form',
-  template: `
-    <div #formContainer [class]="styles()" [id]="renderingId()"></div>
-  `,
+  template: ` <div #formContainer [class]="styles()" [id]="renderingId()"></div> `,
 })
 export class ScFormComponent {
   readonly rendering = input<ComponentRendering>();
-  readonly fields = input<{ [key: string]: unknown }>({});
   readonly params = input<{ [key: string]: string }>({});
 
   @ViewChild('formContainer', { static: true })

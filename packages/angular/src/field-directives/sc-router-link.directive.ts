@@ -9,15 +9,10 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { LinkFieldValue, LinkField } from '@sitecore-content-sdk/content/layout';
-import {
-  applyLinkFieldToAnchor,
-  clearLinkHrefOnAnchor,
-  resolveLinkFromField,
-} from './link-field-binding';
+import { applyLinkFieldToAnchor, resolveLinkFromField } from './link-field-utils';
 
 /**
- * Renders a Sitecore link field onto a host `<a>` and calls `Router.navigateByUrl` on click,
- * following the Sitecore JSS Angular `RouterLinkDirective` pattern (sitecore-jss-angular).
+ * Renders a Sitecore link field onto a host `<a>` and calls `Router.navigateByUrl` on click
  *
  * Usage:
  * ```html
@@ -53,7 +48,7 @@ export class ScRouterLinkDirective {
 
       const link = resolveLinkFromField(field);
       if (!link) {
-        clearLinkHrefOnAnchor(this.renderer, element);
+        this.renderer.removeAttribute(element, 'href');
         return;
       }
 
@@ -69,7 +64,7 @@ export class ScRouterLinkDirective {
   @HostListener('click', ['$event'])
   onClick(event: MouseEvent): void {
     const hrefAttr = this.el.nativeElement.getAttribute('href');
-    if (hrefAttr == null || hrefAttr === '') {
+    if (hrefAttr == null || hrefAttr === '' || hrefAttr.match(/^http(s)?:\/\//)) {
       return;
     }
 
@@ -79,7 +74,6 @@ export class ScRouterLinkDirective {
     // }
 
     void this.router.navigateByUrl(hrefAttr);
-    // Match JSS: allow default handling when the URL includes a fragment (hash navigation).
     if (!hrefAttr.includes('#')) {
       event.preventDefault();
     }
