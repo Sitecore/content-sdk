@@ -93,8 +93,9 @@ async function init() {
   }
 
   const adapter = analyticsPlugin.adapter;
+  const isBot = adapter.isBot?.();
 
-  if (!adapter.getClientId() || analyticsPlugin.adapter.type !== 'browser') {
+  if (!isBot && (!adapter.getClientId() || analyticsPlugin.adapter.type !== 'browser')) {
     await adapter.setClientId();
     debugInit(`Cookie set for ${ANALYTICS_PLUGIN_NAME}`);
   }

@@ -23,6 +23,7 @@ import {
   PreviewCookies,
   getAllowedQueryParams,
 } from '../editing/utils';
+import { EDITING_PARAMS_HEADER } from '../editing/constants';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 import debug from '../debug';
 import type { AllowedQueryParams } from '../editing/types';
@@ -228,15 +229,26 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
 
     try {
       debug.editing('fetching page route for %s', query.route);
-      // Get query string parameters to propagate on subsequent requests (e.g. for deployment protection bypass)
-      // Additionally ,in app router preview data is passed through query string instead of preview data cookie
-      const propagatedQsParams = {
-        ...getQueryParamsForPropagation(query as { [key: string]: string }),
+      // Editing preview data, mapped from the incoming `sc_*` query parameters
+      // into the typed shape consumed by preview methods.
+      const editingPreviewData = {
         ...mapEditingParams(query as { [key: string]: string }),
         ...(allowedQueryParams as { [key: string]: string }),
       };
-      // Get headers to propagate on subsequent requests
-      const propagatedHeaders = getHeadersForPropagation(headers);
+      // Query string parameters required by the runtime/platform itself
+      // (e.g. Vercel deployment protection bypass tokens). Editing preview
+      // data is also appended here for backward compatibility with apps that
+      // still read `searchParams` in the page; new code should consume the
+      // `EDITING_PARAMS_HEADER` instead via `client.getPreviewInputs`.
+      // TODO: Remove preview data from qs before next major release.
+      const propagatedQsParams = {
+        ...getQueryParamsForPropagation(query as { [key: string]: string }),
+        ...editingPreviewData,
+      };
+      const propagatedHeaders = {
+        ...getHeadersForPropagation(headers),
+        [EDITING_PARAMS_HEADER]: JSON.stringify(editingPreviewData),
+      };
       const html = await getEditingRequestHtml(
         requestUrl,
         propagatedQsParams,
@@ -315,12 +327,19 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       query[key] = value;
     });
 
-    const propagatedQsParams = {
-      ...getQueryParamsForPropagation(query as { [key: string]: string }),
+    const editingPreviewData = {
       ...mapEditingParams(query as { [key: string]: string }),
       ...(getAllowedQueryParams(query, options.allowedQueryParams).allowedQueryParams as {
         [key: string]: string;
       }),
+    };
+
+    /**
+     * TODO: Remove preview data from qs before next major release.
+     */
+    const propagatedQsParams = {
+      ...getQueryParamsForPropagation(query as { [key: string]: string }),
+      ...editingPreviewData,
     };
 
     const base = resolveServerUrl(req);
@@ -349,6 +368,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
 
     const forwardHeaders = new Headers(req.headers);
     forwardHeaders.set('cookie', forwardCookie);
+    forwardHeaders.set(EDITING_PARAMS_HEADER, JSON.stringify(editingPreviewData));
 
     const forwardedResponse = await dataFetcher.fetch<string>(targetUrl.toString(), {
       method: req.method,

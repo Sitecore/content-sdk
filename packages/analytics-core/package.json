@@ -7,8 +7,9 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "2.1.0-canary.9",
-    "debug": "^4.4.3"
+    "@sitecore-content-sdk/core": "^2.1.0",
+    "debug": "^4.4.3",
+    "isbot": "^5.1.39"
   },
   "description": "Provides shared logic and runtime initialization. Required for the Content SDK 'events' and 'personalize' packages to function.",
   "devDependencies": {
@@ -28,7 +29,8 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-environment-node": "^29.7.0",
     "ts-jest": "^29.1.0",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "~5.8.3"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -73,5 +75,5 @@
     "api-extractor": "npm run build && api-extractor run --local --verbose",
     "api-extractor:verify": "api-extractor run"
   },
-  "version": "2.1.0-canary.9"
+  "version": "2.1.0"
 }

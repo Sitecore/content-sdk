@@ -1,8 +1,8 @@
 import * as analyticsPluginsModule from '@sitecore-content-sdk/analytics-core/internal';
 import * as coreModule from '@sitecore-content-sdk/core';
 import * as eventsPluginModule from '../../initialization/plugin';
+import * as debugModule from '../../debug';
 import { sendEvent } from '../send-event/sendEvent';
-import { getBotCookie, isBot } from './bot-detection';
 import { pageView } from './page-view';
 import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
@@ -11,14 +11,6 @@ import { jest, expect, describe, it, beforeEach } from '@jest/globals';
 jest.mock('@sitecore-content-sdk/analytics-core/internal');
 jest.mock('@sitecore-content-sdk/core');
 jest.mock('../../initialization/plugin');
-jest.mock('./bot-detection', () => {
-  const original = jest.requireActual('./bot-detection') as typeof import('./bot-detection');
-  return {
-    ...original,
-    getBotCookie: jest.fn(),
-    isBot: jest.fn(),
-  };
-});
 jest.mock('./page-view-event', () => {
   return {
     PageViewEvent: jest.fn().mockImplementation(() => {
@@ -29,9 +21,18 @@ jest.mock('./page-view-event', () => {
   };
 });
 
+jest.mock('../../debug', () => ({
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  __esModule: true,
+  debug: {
+    events: jest.fn(),
+  },
+}));
+
 describe('page-view', () => {
   const mockAdapter = {
     getClientId: jest.fn(),
+    isBot: jest.fn(),
     location: {
       getSearchParams: jest.fn(),
     },
@@ -69,8 +70,7 @@ describe('page-view', () => {
   describe('pageView', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-      jest.mocked(getBotCookie).mockReturnValue(undefined);
-      jest.mocked(isBot).mockReturnValue(false);
+      jest.mocked(mockAdapter.isBot).mockReturnValue(false);
       setupPluginMocks();
     });
 
@@ -165,29 +165,15 @@ describe('page-view', () => {
       );
     });
 
-    it('should return null and skip analytics when bot cookie is present', async () => {
-      jest.mocked(getBotCookie).mockReturnValue('1');
+    it('should return null and skip analytics when visitor is a bot', async () => {
+      jest.mocked(mockAdapter.isBot).mockReturnValue(true);
 
       const result = await pageView({ channel: 'WEB' });
 
       expect(result).toBeNull();
-      expect(getBotCookie).toHaveBeenCalled();
-      expect(isBot).not.toHaveBeenCalled();
+      expect(debugModule.debug.events).toHaveBeenCalledWith('pageView skipped (visitor is a bot)');
+      expect(mockAdapter.isBot).toHaveBeenCalled();
       expect(PageViewEvent).not.toHaveBeenCalled();
-      expect(eventsPluginModule.getEventsPlugin).not.toHaveBeenCalled();
-    });
-
-    it('should return null when isBot is true and there is no bot cookie', async () => {
-      jest.mocked(getBotCookie).mockReturnValue(undefined);
-      jest.mocked(isBot).mockReturnValue(true);
-
-      const result = await pageView({ channel: 'WEB' });
-
-      expect(result).toBeNull();
-      expect(getBotCookie).toHaveBeenCalled();
-      expect(isBot).toHaveBeenCalledWith(navigator.userAgent);
-      expect(PageViewEvent).not.toHaveBeenCalled();
-      expect(eventsPluginModule.getEventsPlugin).not.toHaveBeenCalled();
     });
   });
 });

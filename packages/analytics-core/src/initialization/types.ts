@@ -8,6 +8,11 @@ import { ANALYTICS_PLUGIN_NAME } from './const';
  */
 export interface AnalyticsAdapter extends PluginAdapter {
   /**
+   * Checks if the current request is a bot.
+   * @returns {boolean} True if the current request is a bot, false otherwise.
+   */
+  isBot?: () => boolean;
+  /**
    * Gets the client ID.
    * @returns {string | null} The client ID, or null if it is not set.
    */

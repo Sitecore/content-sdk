@@ -7,9 +7,9 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.1.0-canary.9",
-    "@sitecore-content-sdk/core": "2.1.0-canary.9",
-    "@sitecore-content-sdk/events": "2.1.0-canary.9",
+    "@sitecore-content-sdk/analytics-core": "^2.1.0",
+    "@sitecore-content-sdk/core": "^2.1.0",
+    "@sitecore-content-sdk/events": "^2.1.0",
     "debug": "^4.4.3"
   },
   "description": "Provides personalization capabilities to build tailored experiences for site visitors.",
@@ -30,7 +30,8 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-environment-node": "^29.7.0",
     "ts-jest": "^29.1.0",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "~5.8.3"
   },
   "main": "dist/cjs/src/index.js",
   "module": "dist/esm/src/index.js",
@@ -70,5 +71,5 @@
     "api-extractor": "npm run build && api-extractor run --local --verbose",
     "api-extractor:verify": "api-extractor run"
   },
-  "version": "2.1.0-canary.9"
+  "version": "2.1.0"
 }

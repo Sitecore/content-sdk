@@ -18,6 +18,7 @@
 
 - [ANALYTICS\_PLUGIN\_NAME](variables/ANALYTICS_PLUGIN_NAME.md)
 - [API\_VERSION](variables/API_VERSION.md)
+- [BOT\_DETECTION\_COOKIE](variables/BOT_DETECTION_COOKIE.md)
 - [CLIENT\_ID\_COOKIE\_NAME](variables/CLIENT_ID_COOKIE_NAME.md)
 - [COOKIE\_NAME\_PREFIX](variables/COOKIE_NAME_PREFIX.md)
 - [CORRELATION\_ID\_HEADER](variables/CORRELATION_ID_HEADER.md)
@@ -31,6 +32,9 @@
 - [generateCorrelationId](functions/generateCorrelationId.md)
 - [getAnalyticsPlugin](functions/getAnalyticsPlugin.md)
 - [getDefaultCookieAttributes](functions/getDefaultCookieAttributes.md)
+- [isBot](functions/isBot.md)
+- [isBotClientSide](functions/isBotClientSide.md)
+- [isBotServerSide](functions/isBotServerSide.md)
 - [language](functions/language.md)
 - [pageName](functions/pageName.md)
 

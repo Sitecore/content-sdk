@@ -778,6 +778,20 @@ export { PlaceholderData }
 export { PlaceholdersData }
 
 // @public
+export class PreviewProxy extends ProxyBase {
+    constructor(config: PreviewProxyConfig);
+    // (undocumented)
+    protected client: SitecoreClient;
+    // (undocumented)
+    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+}
+
+// @public
+export type PreviewProxyConfig = {
+    client: SitecoreClient;
+};
+
+// @public
 export abstract class ProxyBase extends ProxyHandler_2 {
     constructor(config: ProxyBaseConfig);
     // (undocumented)
@@ -911,6 +925,7 @@ export class SitecoreClient extends SitecoreClient_2 {
     getPage(path: string | string[], pageOptions: PageOptions, options?: FetchOptions): Promise<Page | null>;
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
     getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null>;
+    getPreviewData(headers: Headers): PreviewData;
     getSiteNameFromPath(path: string | string[]): string;
     // Warning: (ae-forgotten-export) The symbol "SitecoreNextjsClientInit" needs to be exported by the entry point api-surface.d.ts
     //
