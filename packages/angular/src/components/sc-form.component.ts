@@ -40,11 +40,18 @@ export class ScFormComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
 
+  /**
+   * Merges `rendering.params` with the `params` input: the component `params()` values override layout for the same key.
+   */
+  private mergedFormParams(): { [key: string]: string } {
+    return { ...(this.rendering()?.params ?? {}), ...this.params() };
+  }
+
   constructor() {
     afterNextRender(() => {
       if (!isPlatformBrowser(this.platformId)) return;
 
-      const p = { ...this.rendering()?.params, ...this.params() };
+      const p = this.mergedFormParams();
       const formId = p.FormId;
       if (!formId) return;
 
@@ -88,12 +95,12 @@ export class ScFormComponent {
   }
 
   readonly styles = () => {
-    const p = { ...this.rendering()?.params, ...this.params() };
+    const p = this.mergedFormParams();
     const s = p.styles;
     return s ? s.replace(/\s+$/, '') : '';
   };
   readonly renderingId = () => {
-    const p = { ...this.rendering()?.params, ...this.params() };
+    const p = this.mergedFormParams();
     return p.RenderingIdentifier || undefined;
   };
 }

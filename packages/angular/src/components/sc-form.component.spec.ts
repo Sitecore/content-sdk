@@ -149,6 +149,46 @@ describe('ScFormComponent', () => {
     );
   });
 
+  it('should use merged params when params input supplies FormId missing on rendering', async () => {
+    const fixture = createFixture();
+    fixture.componentRef.setInput('rendering', formRendering({ RenderingIdentifier: 'r-1' }));
+    fixture.componentRef.setInput('params', { FormId: 'form-from-params-only' });
+    await flushFormLoadPipeline(fixture);
+
+    expect(mocks.loadForm).toHaveBeenCalledWith(
+      'test-edge-context-id',
+      'form-from-params-only',
+      'https://edge.example.com'
+    );
+  });
+
+  it('should prefer FormId from params input over rendering when both are provided', async () => {
+    const fixture = createFixture();
+    fixture.componentRef.setInput(
+      'rendering',
+      formRendering({ FormId: 'rendering-form-id' })
+    );
+    fixture.componentRef.setInput('params', { FormId: 'component-form-id' });
+    await flushFormLoadPipeline(fixture);
+
+    expect(mocks.loadForm).toHaveBeenCalledWith(
+      'test-edge-context-id',
+      'component-form-id',
+      'https://edge.example.com'
+    );
+  });
+
+  it('should apply styles from params when rendering has no styles param', async () => {
+    const fixture = createFixture();
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }));
+    fixture.componentRef.setInput('params', { styles: '  from-params-style  ' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const host = fixture.nativeElement.querySelector('div') as HTMLDivElement;
+    expect(host.className.trim()).toBe('from-params-style');
+  });
+
   it('should not call loadForm when clientContextId is missing (no SITECORE_CONFIG_TOKEN)', async () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
