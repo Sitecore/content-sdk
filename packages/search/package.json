@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/search",
-  "version": "0.2.0-beta.2",
+  "version": "0.2.0-beta.3",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -36,7 +36,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "2.0.0-beta.2"
+    "@sitecore-content-sdk/core": "2.0.0-beta.3"
   },
   "devDependencies": {
     "@types/chai": "^5.2.3",
