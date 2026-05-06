@@ -178,3 +178,33 @@ export {
   getCachedPageParams,
   setCachedPageParams,
 } from './cache/page-params';
+
+export {
+  SITECORE_CONTENT_CACHE_TAG_PREFIX,
+  sanitizeSitecoreCacheTagSegment,
+  normalizeSitecoreItemIdForCacheTag,
+  buildSitecoreRouteCacheTag,
+  buildSitecoreItemCacheTag,
+  buildSitecoreDictionaryCacheTag,
+  buildSitecorePersonalizedPageVariantCacheTag,
+  buildSitecoreItemCacheTagFromRouteData,
+  dedupeSitecoreCacheTags,
+  type BuildSitecoreRouteCacheTagParams,
+  type BuildSitecoreItemCacheTagParams,
+  type BuildSitecoreDictionaryCacheTagParams,
+  type BuildSitecorePersonalizedPageVariantCacheTagParams,
+  type SitecoreRouteDataLike,
+} from './cache/sitecore-cache-tags';
+
+export {
+  collectSitecorePageCacheTags,
+  type CollectSitecorePageCacheTagsParams,
+} from './cache/sitecore-page-cache-tags';
+
+export {
+  extractSitecoreEdgeContentId,
+  collectSitecoreTagsFromEdgeRevalidateRequestBody,
+  type SitecoreEdgeRevalidateUpdate,
+  type SitecoreEdgeRevalidateRequestBody,
+  type CollectSitecoreTagsFromEdgeBodyOptions,
+} from './cache/sitecore-edge-webhook-revalidation';

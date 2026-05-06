@@ -5,5 +5,12 @@
       "prerender": "SSG",
       "silent": false
     }
+  },
+  {
+    "template": "nextjs-app-router-osr",
+    "args": {
+      "prerender": "SSG",
+      "revalidate": true
+    }
   }
 ]

@@ -1,0 +1,56 @@
+{
+  "name": "content-sdk-nextjs-app-router-osr",
+  "description": "Application utilizing Content SDK and Next.js",
+  "version": "0.1.0",
+  "private": true,
+  "author": {
+    "name": "Sitecore Corporation",
+    "url": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sitecore/content-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sitecore/content-sdk/issues"
+  },
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "cross-env NODE_ENV=production run-s sitecore-tools:generate-map sitecore-tools:build next:build",
+    "build:corp-tls": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 NODE_ENV=production run-s sitecore-tools:generate-map sitecore-tools:build next:build",
+    "lint": "eslint ./src/**/*.tsx ./src/**/*.ts",
+    "next:build": "next build",
+    "next:dev": "cross-env NODE_OPTIONS='--inspect' next dev",
+    "next:start": "next start",
+    "sitecore-tools:generate-map": "sitecore-tools project component generate-map",
+    "sitecore-tools:generate-map:watch": "sitecore-tools project component generate-map --watch",
+    "sitecore-tools:build": "sitecore-tools project build",
+    "dev": "cross-env NODE_ENV=development run-s sitecore-tools:generate-map sitecore-tools:build && run-p next:dev sitecore-tools:generate-map:watch",
+    "start": "cross-env NODE_ENV=production run-s build next:start"
+  },
+  "dependencies": {
+    "@sitecore-content-sdk/nextjs": "<%- version %>",
+    "@sitecore-content-sdk/analytics-core": "<%- version %>",
+    "@sitecore-content-sdk/personalize": "<%- version %>",
+    "@sitecore-content-sdk/events": "<%- version %>",
+    "@sitecore-feaas/clientside": "^0.6.0",
+    "@sitecore/components": "~2.1.0",
+    "next": "^16.2.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "next-intl": "^4.3.5"
+  },
+  "devDependencies": {
+    "@sitecore-content-sdk/cli": "<%- version %>",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^24.10.4",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "cross-env": "^10.0.0",
+    "eslint": "^9.33.0",
+    "eslint-config-next": "16.2.2",
+    "npm-run-all2": "^8.0.4",
+    "tailwindcss": "^4",
+    "typescript": "~5.8.3"
+  }
+}
