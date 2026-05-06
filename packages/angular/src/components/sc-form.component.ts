@@ -16,6 +16,7 @@ import { SitecoreContextService } from '../lib/sitecore-context.service';
 
 const { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
 
+/* eslint-disable @typescript-eslint/member-ordering -- ViewChild + signal inputs + constructor ordering conflicts with default groups */
 /**
  * Angular wrapper for Sitecore Forms.
  * Loads form HTML from Edge, executes embedded scripts, and subscribes to form events.
@@ -39,22 +40,12 @@ export class ScFormComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly styles = () => {
-    const p = { ...this.rendering()?.params, ...this.params() };
-    const s = p?.['styles'];
-    return s ? s.replace(/\s+$/, '') : '';
-  };
-  readonly renderingId = () => {
-    const p = { ...this.rendering()?.params, ...this.params() };
-    return p['RenderingIdentifier'] || undefined;
-  };
-
   constructor() {
     afterNextRender(() => {
       if (!isPlatformBrowser(this.platformId)) return;
 
       const p = { ...this.rendering()?.params, ...this.params() };
-      const formId = p?.['FormId'];
+      const formId = p.FormId;
       if (!formId) return;
 
       const cfg = this.config;
@@ -95,4 +86,15 @@ export class ScFormComponent {
         });
     });
   }
+
+  readonly styles = () => {
+    const p = { ...this.rendering()?.params, ...this.params() };
+    const s = p.styles;
+    return s ? s.replace(/\s+$/, '') : '';
+  };
+  readonly renderingId = () => {
+    const p = { ...this.rendering()?.params, ...this.params() };
+    return p.RenderingIdentifier || undefined;
+  };
 }
+/* eslint-enable @typescript-eslint/member-ordering */

@@ -57,7 +57,11 @@ function formRendering(
   return { componentName: 'Form', params, ...extra } as ComponentRendering;
 }
 
-/** Flush afterNextRender and loadForm promise (scripts / subscribe run in the same microtask). */
+/**
+ * Flush afterNextRender and loadForm promise (scripts / subscribe run in the same microtask).
+ * @param {ComponentFixture<ScFormComponent>} fixture - Host fixture under test.
+ * @returns {Promise<void>} Resolves when the form pipeline side effects have run.
+ */
 async function flushFormLoadPipeline(fixture: ComponentFixture<ScFormComponent>): Promise<void> {
   fixture.detectChanges();
   await fixture.whenStable();

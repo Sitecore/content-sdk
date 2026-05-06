@@ -1,70 +1,37 @@
-import {
-  Directive,
-  ElementRef,
-  HostListener,
-  inject,
-  input,
-  effect,
-  Renderer2,
-} from '@angular/core';
+import { Directive, HostListener, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
-import { LinkFieldValue, LinkField } from '@sitecore-content-sdk/content/layout';
-import { applyLinkFieldToAnchor, resolveLinkFromField } from './link-field-utils';
+import type { LinkField, LinkFieldValue } from '@sitecore-content-sdk/content/layout';
+import { ScLinkDirective } from './sc-link.directive';
 
 /**
  * Renders a Sitecore link field onto a host `<a>` and calls `Router.navigateByUrl` on click
+ * for in-app paths only. Clicks are left to the browser when `href` is missing/empty, when
+ * `target="_blank"`, or when `href` uses http(s), mailto, tel, sms, javascript, data, ftp,
+ * or protocol-relative (`//`) URLs.
  *
  * Usage:
  * ```html
  * <a [scRouterLink]="fields.Link">Optional child content</a>
  * ```
- *
  * @public
  */
 @Directive({
   selector: 'a[scRouterLink]',
 })
-export class ScRouterLinkDirective {
-  /** The Sitecore link field. */
-  readonly scRouterLink = input.required<LinkField | LinkFieldValue>();
+export class ScRouterLinkDirective extends ScLinkDirective {
+  /**
+   * Sitecore link field; host attribute `[scRouterLink]` maps to the base {@link ScLinkDirective.scLink} input.
+   */
+  override readonly scLink = input.required<LinkField | LinkFieldValue>({ alias: 'scRouterLink' });
 
-  /** Whether to show link text alongside existing child content. */
-  readonly preferTextFromField = input<boolean>(false);
-
-  private readonly el = inject(ElementRef<HTMLAnchorElement>);
-  private readonly renderer = inject(Renderer2);
   private readonly router = inject(Router);
-  private readonly originalClass: string | undefined;
-  private readonly originalTitle: string | undefined;
-  private readonly originalTarget: string | undefined;
-
-  constructor() {
-    this.originalClass = (this.el.nativeElement as HTMLAnchorElement).className;
-    this.originalTitle = (this.el.nativeElement as HTMLAnchorElement).title;
-    this.originalTarget = (this.el.nativeElement as HTMLAnchorElement).target;
-    effect(() => {
-      const field = this.scRouterLink();
-      const element = this.el.nativeElement;
-
-      const link = resolveLinkFromField(field);
-      if (!link) {
-        this.renderer.removeAttribute(element, 'href');
-        return;
-      }
-
-      applyLinkFieldToAnchor(this.renderer, element, link, {
-        preferTextFromField: this.preferTextFromField(),
-        originalClass: this.originalClass,
-        originalTitle: this.originalTitle,
-        originalTarget: this.originalTarget,
-      });
-    });
-  }
 
   @HostListener('click', ['$event'])
   onClick(event: MouseEvent): void {
-    const hrefAttr = this.el.nativeElement.getAttribute('href');
-    if (hrefAttr == null || hrefAttr === '' || hrefAttr.match(/^http(s)?:\/\//)) {
+    const el = this.el.nativeElement;
+    const hrefAttr = el.getAttribute('href')?.trim() ?? '';
+    const targetAttr = el.getAttribute('target');
+    if (this.shouldDeferNavigation(hrefAttr, targetAttr)) {
       return;
     }
 
@@ -77,5 +44,32 @@ export class ScRouterLinkDirective {
     if (!hrefAttr.includes('#')) {
       event.preventDefault();
     }
+  }
+
+  /**
+   * Returns true when the browser should handle navigation (no in-app Router navigation).
+   * @param {string | null} hrefAttr - Raw `href` attribute from the anchor.
+   * @param {string | null} targetAttr - Raw `target` attribute from the anchor.
+   * @returns {boolean} Whether to skip `Router.navigateByUrl`.
+   */
+  private shouldDeferNavigation(hrefAttr: string | null, targetAttr: string | null): boolean {
+    if (!hrefAttr || hrefAttr === '') {
+      return true;
+    }
+    if (targetAttr === '_blank') {
+      return true;
+    }
+    const lower = hrefAttr.toLowerCase();
+    return (
+      lower.startsWith('http://') ||
+      lower.startsWith('https://') ||
+      lower.startsWith('mailto:') ||
+      lower.startsWith('tel:') ||
+      lower.startsWith('sms:') ||
+      lower.startsWith('javascript:') ||
+      lower.startsWith('data:') ||
+      lower.startsWith('ftp:') ||
+      lower.startsWith('//')
+    );
   }
 }

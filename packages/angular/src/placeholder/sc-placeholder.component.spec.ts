@@ -21,7 +21,7 @@ class TitleComponent {
 
   titleText = () => {
     const f = this.fields();
-    const title = f?.['Title'] as { value: string } | undefined;
+    const title = f?.Title as { value: string } | undefined;
     return title?.value ?? '';
   };
 }

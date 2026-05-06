@@ -10,7 +10,6 @@ import { applyLinkFieldToAnchor, resolveLinkFromField } from './link-field-utils
  * ```html
  * <a [scLink]="fields.Link">Optional child content</a>
  * ```
- *
  * @public
  */
 @Directive({
@@ -23,31 +22,30 @@ export class ScLinkDirective {
   /** Whether to show link text alongside existing child content. */
   readonly preferTextFromField = input<boolean>(false);
 
-  private readonly el = inject(ElementRef<HTMLAnchorElement>);
+  protected readonly el = inject(ElementRef<HTMLAnchorElement>);
   private readonly renderer = inject(Renderer2);
   private readonly originalClass: string | undefined;
   private readonly originalTitle: string | undefined;
   private readonly originalTarget: string | undefined;
+  private readonly originalRel: string | null;
 
   constructor() {
     this.originalClass = (this.el.nativeElement as HTMLAnchorElement).className;
     this.originalTitle = (this.el.nativeElement as HTMLAnchorElement).title;
     this.originalTarget = (this.el.nativeElement as HTMLAnchorElement).target;
+    this.originalRel = (this.el.nativeElement as HTMLAnchorElement).rel;
     effect(() => {
       const field = this.scLink();
       const element = this.el.nativeElement;
 
       const link = resolveLinkFromField(field);
-      if (!link) {
-        this.renderer.removeAttribute(element, 'href');
-        return;
-      }
 
       applyLinkFieldToAnchor(this.renderer, element, link, {
         preferTextFromField: this.preferTextFromField(),
         originalClass: this.originalClass,
         originalTitle: this.originalTitle,
         originalTarget: this.originalTarget,
+        originalRel: this.originalRel,
       });
     });
   }

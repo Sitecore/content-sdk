@@ -30,7 +30,6 @@ export interface ImageField {
  * ```html
  * <img [scImage]="fields.Image" />
  * ```
- *
  * @public
  */
 @Directive({

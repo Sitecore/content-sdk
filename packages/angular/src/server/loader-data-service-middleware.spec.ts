@@ -7,6 +7,10 @@ import { LOADER_DATA_ENDPOINT } from './constants';
 import { EXTRACT_REQUEST_CONTEXT_TOKEN } from './models';
 import type { LoaderRegistry } from './models';
 
+/**
+ * Minimal Express `res` stub for middleware tests.
+ * @returns {object} Mock with `status` and `json` spies.
+ */
 function createMockRes() {
   return {
     status: vi.fn().mockReturnThis(),
@@ -14,6 +18,10 @@ function createMockRes() {
   };
 }
 
+/**
+ * Express `next` stub.
+ * @returns {ReturnType<typeof vi.fn>} Spy function.
+ */
 function createMockNext() {
   return vi.fn();
 }
@@ -30,6 +38,13 @@ describe('createLoaderDataServiceMiddleware', () => {
     });
   });
 
+  /**
+   * Wraps `createLoaderDataServiceMiddleware` with test defaults (registry + extract context).
+   * @param {{ loaders: LoaderRegistry; endpoint?: string }} opts - Options bag for the factory.
+   * @param {LoaderRegistry} opts.loaders - Registered loader functions.
+   * @param {string} [opts.endpoint] - Optional endpoint path override.
+   * @returns {ReturnType<typeof createLoaderDataServiceMiddleware>} Configured middleware.
+   */
   function createMiddleware(opts: {
     loaders: LoaderRegistry;
     endpoint?: string;
