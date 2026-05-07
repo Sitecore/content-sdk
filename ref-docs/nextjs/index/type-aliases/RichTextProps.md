@@ -8,7 +8,7 @@
 
 > **RichTextProps** = `ReactRichTextProps` & `object`
 
-Defined in: [nextjs/src/components/RichText.tsx:14](https://github.com/Sitecore/content-sdk/blob/3f9282b10be88272be44a3998ccbb34d4428d66a/packages/nextjs/src/components/RichText.tsx#L14)
+Defined in: [nextjs/src/components/RichText.tsx:14](https://github.com/Sitecore/content-sdk/blob/3bd72038ef298c1ecec751b7db43db37654b29b7/packages/nextjs/src/components/RichText.tsx#L14)
 
 The interface for the RichText component props.
 

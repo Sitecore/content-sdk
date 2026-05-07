@@ -8,7 +8,7 @@
 
 > **analyticsProxyAdapter**(`request`, `response`): [`AnalyticsProxyAdapter`](../interfaces/AnalyticsProxyAdapter.md)
 
-Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:32](https://github.com/Sitecore/content-sdk/blob/3f9282b10be88272be44a3998ccbb34d4428d66a/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L32)
+Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:32](https://github.com/Sitecore/content-sdk/blob/3bd72038ef298c1ecec751b7db43db37654b29b7/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L32)
 
 Creates a proxy-based analytics adapter that reads and writes the visitor ID
 using cookies and can resolve a new client ID from the Edge proxy when needed.

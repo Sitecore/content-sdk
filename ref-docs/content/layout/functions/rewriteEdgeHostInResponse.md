@@ -8,7 +8,7 @@
 
 > **rewriteEdgeHostInResponse**\<`T`\>(`response`, `edgeUrl`): `T`
 
-Defined in: [content/src/layout/rewrite-edge-host.ts:62](https://github.com/Sitecore/content-sdk/blob/3f9282b10be88272be44a3998ccbb34d4428d66a/packages/content/src/layout/rewrite-edge-host.ts#L62)
+Defined in: [content/src/layout/rewrite-edge-host.ts:62](https://github.com/Sitecore/content-sdk/blob/3bd72038ef298c1ecec751b7db43db37654b29b7/packages/content/src/layout/rewrite-edge-host.ts#L62)
 
 Rewrites Experience Edge hostnames in a response object to use the custom hostname.
 This function performs a deep traversal of the object and replaces any string values
