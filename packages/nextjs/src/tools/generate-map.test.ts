@@ -224,9 +224,11 @@ describe('generateMap', () => {
 
       const [, clientContent] = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
       expect(clientContent).to.include('new Map');
-      expect(clientContent).to.include("import * as Button from './src/components/Button';");
-      expect(clientContent).to.include("import * as Link from './src/components/Link';");
+      expect(clientContent).to.not.include("import * as Button from './src/components/Button';");
+      expect(clientContent).to.not.include("import * as Link from './src/components/Link';");
       expect(clientContent).to.not.include("import * as Card from './src/other-components/Card';");
+      expect(clientContent).to.include("['BYOCWrapper', BYOCClientWrapper],");
+      expect(clientContent).to.include("['FEaaSWrapper', FEaaSClientWrapper],");
     });
 
     it('should not fail if packages is undefined', async () => {
@@ -283,16 +285,12 @@ describe('generateMap', () => {
       const exclude = ['**/*.stories.tsx', '**/*.test.tsx'];
       generateMap({ paths, exclude });
 
-      // App Router generates both main + client maps => two calls to getComponentListWithTypes
-      expect(getComponentListWithTypesStub).to.have.been.calledTwice;
+      // clientComponentMap is undefined → only one collectComponents call (for allComponents)
+      expect(getComponentListWithTypesStub).to.have.been.calledOnce;
       const firstArgs = getComponentListWithTypesStub.getCall(0).args;
-      const secondArgs = getComponentListWithTypesStub.getCall(1).args;
 
       expect(firstArgs[0]).to.deep.equal(paths);
-      expect(secondArgs[0]).to.deep.equal(paths);
-
       expect(firstArgs[1]).to.deep.equals(exclude);
-      expect(secondArgs[1]).to.deep.equals(exclude);
     });
 
     it('should throw error when destination cannot be written to', async () => {
@@ -661,7 +659,7 @@ describe('generateMap', () => {
       expect(debugStub).to.have.been.calledWithExactly(
         'Registering Content SDK component Button.extra'
       );
-      expect(debugStub).to.have.been.callCount(4);
+      expect(debugStub).to.have.been.callCount(2);
     });
   });
 
@@ -883,6 +881,66 @@ describe('generateMap', () => {
       }
     });
 
+    it('should use server wrappers in main map for App Router even when clientComponentMap is false', async () => {
+      sandbox.restore();
+      const sb = sinon.createSandbox();
+      try {
+        const typed = [
+          {
+            componentName: 'MyComp',
+            moduleName: 'MyComp',
+            importPath: './src/components/MyComp',
+            filePath: path.join(process.cwd(), 'src/components/MyComp.tsx'),
+            componentType: 'universal' as const,
+          },
+        ];
+
+        const getComponentListWithTypesStub = sb.stub().returns(typed);
+        const detectRouterTypeStub = sb.stub().returns('app');
+        const filterComponentsByTypeStub = sb
+          .stub()
+          .callsFake((arr: any[], allowed: string[]) =>
+            (arr || []).filter((c) => allowed.includes(c.componentType))
+          );
+
+        sb.stub(templatingUtils, 'getComponentListWithTypes').callsFake(
+          getComponentListWithTypesStub
+        );
+        sb.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
+        sb.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
+
+        const wf = fs.writeFileSync as any;
+        if (wf && typeof wf.restore === 'function') wf.restore();
+        sb.stub(fs, 'writeFileSync');
+
+        generateMap({
+          paths: ['src/components'],
+          clientComponentMap: false,
+          includeVariants: false,
+        });
+
+        expect(fs.writeFileSync).to.have.been.calledTwice;
+
+        const [mainDest, mainContent] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
+        expect(mainDest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.ts'));
+
+        expect(mainContent).to.include("['BYOCWrapper', BYOCServerWrapper],");
+        expect(mainContent).to.include("['FEaaSWrapper', FEaaSServerWrapper],");
+        expect(mainContent).to.include("['Form', { ...Form, componentType: 'client' }],");
+
+        const [clientDest, clientContent] = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
+        expect(clientDest).to.equal(
+          path.join(process.cwd(), '.sitecore', 'component-map.client.ts')
+        );
+
+        expect(clientContent).to.include("['BYOCWrapper', BYOCClientWrapper],");
+        expect(clientContent).to.include("['FEaaSWrapper', FEaaSClientWrapper],");
+        expect(clientContent).to.not.include('MyComp');
+      } finally {
+        sb.restore();
+      }
+    });
+
     it('should auto-detect App Router and generate both maps when clientComponentMap is undefined', async () => {
       const paths = ['src/components'];
 
@@ -949,15 +1007,11 @@ describe('generateMap', () => {
       const [clientDest, clientContent] = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
       expect(clientDest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.client.ts'));
       expect(clientContent).to.include('Client-safe component map for App Router');
-
-      const compactClient = clientContent.replace(/\s+/g, ' ');
-      expect(compactClient).to.match(
-        /\['ClientButton',\s*(\{\s*\.\.\.ClientButton\s*\}|ClientButton)\s*\],/
-      );
-      expect(compactClient).to.match(
-        /\['UniversalCard',\s*(\{\s*\.\.\.UniversalCard\s*\}|UniversalCard)\s*\],/
-      );
-      expect(compactClient).to.not.match(/\['ServerData',\s*ServerData\],/);
+      expect(clientContent).to.include("['BYOCWrapper', BYOCClientWrapper],");
+      expect(clientContent).to.include("['FEaaSWrapper', FEaaSClientWrapper],");
+      expect(clientContent).to.not.include('ClientButton');
+      expect(clientContent).to.not.include('UniversalCard');
+      expect(clientContent).to.not.include('ServerData');
     });
 
     it('should auto-detect Pages Router and generate single map when clientComponentMap is undefined', async () => {
@@ -1101,4 +1155,3 @@ describe('generateMap', () => {
     });
   });
 });
-

@@ -31,6 +31,7 @@ Our versioning strategy is as follows:
 * `[core] [content]` Fix GraphQL client factory ignoring custom `fetch` and related options ([#418](https://github.com/Sitecore/content-sdk/pull/418))
 * `[nextjs]` AppRouter - NextLink is throwing Locale error in dev mode ([#427](https://github.com/Sitecore/content-sdk/pull/427))
 * `[react]` Form component loses interactivity and state between rerenders ([#447](https://github.com/Sitecore/content-sdk/pull/447))
+* `[nextjs]` BYOC and FEAAS are broken when client component map generation is disabled ([#467](https://github.com/Sitecore/content-sdk/pull/467))
 
 ### ✨ Chores
 
