@@ -8,6 +8,6 @@
 
 > `const` **debugNamespace**: `"content-sdk"` = `'content-sdk'`
 
-Defined in: [packages/core/src/debug.ts:15](https://github.com/Sitecore/content-sdk/blob/3f9282b10be88272be44a3998ccbb34d4428d66a/packages/core/src/debug.ts#L15)
+Defined in: [packages/core/src/debug.ts:15](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/core/src/debug.ts#L15)
 
 Debug namespace
