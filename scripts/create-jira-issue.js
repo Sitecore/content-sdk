@@ -54,6 +54,13 @@ const JIRA_ISSUE_TYPE = Object.freeze([
   const jiraIssueType = JIRA_ISSUE_TYPE.find((o) => o.validate(github.event)).type;
   const event = github.event.issue || github.event.pull_request;
 
+  const isSitecoreBot = event.user.login === 'jss-release-github-app[bot]';
+
+  if (isSitecoreBot) {
+    console.log('Skipped Jira issue creation: PR is created by Sitecore bot.');
+    return;
+  }
+
   let userInfoRes;
   try {
     userInfoRes = await fetch(
