@@ -45,40 +45,6 @@ export class RedirectsProxy extends ProxyBase {
   private locales: string[];
 
   /**
-   * Converts a redirect pattern string into a RegExp.
-   * Supports both JS literal form (`/pattern/i`) and plain regex source (`^/path$`).
-   * @param {string} pattern redirect pattern from redirect map
-   * @returns {RegExp} normalized regex instance
-   * @private
-   */
-  private getRedirectPatternRegex(pattern: string): RegExp {
-    const normalizedPattern = escapeNonSpecialQuestionMarks(pattern);
-    const literalMatch = normalizedPattern.match(/^\/(.+)\/([a-z]*)$/i);
-    if (literalMatch) {
-      const [, source, flags] = literalMatch;
-      const safeFlags = flags || 'i';
-      return new RegExp(source, safeFlags);
-    }
-    return new RegExp(normalizedPattern, 'i');
-  }
-
-  /**
-   * Strips locale prefix from path when present.
-   * @param {string} path incoming request path
-   * @param {string} urlLocale locale from Next.js URL
-   * @returns {string} locale-stripped path
-   * @private
-   */
-  private getLocaleStrippedPath(path: string, urlLocale: string): string {
-    if (!urlLocale) {
-      return path;
-    }
-    const localePrefixRegex = new RegExp(`^/${urlLocale}(?=/|$)`, 'i');
-    const strippedPath = path.replace(localePrefixRegex, '') || '/';
-    return strippedPath.startsWith('/') ? strippedPath : `/${strippedPath}`;
-  }
-
-  /**
    * @param {RedirectsProxyConfig} [config] redirects proxy config
    */
   constructor(protected config: RedirectsProxyConfig) {
@@ -320,6 +286,7 @@ export class RedirectsProxy extends ProxyBase {
    * Method returns RedirectInfo when matches
    * @param {NextRequest} req request
    * @param {string} siteName site name
+   * @param {string} requestLocale locale used for locale redirect matching
    * @returns Promise<RedirectInfo | undefined>
    * @private
    */
@@ -600,5 +567,39 @@ export class RedirectsProxy extends ProxyBase {
       redirect.headers.delete(REWRITE_HEADER_NAME);
     }
     return redirect;
+  }
+
+  /**
+   * Converts a redirect pattern string into a RegExp.
+   * Supports both JS literal form (`/pattern/i`) and plain regex source (`^/path$`).
+   * @param {string} pattern redirect pattern from redirect map
+   * @returns {RegExp} normalized regex instance
+   * @private
+   */
+  private getRedirectPatternRegex(pattern: string): RegExp {
+    const normalizedPattern = escapeNonSpecialQuestionMarks(pattern);
+    const literalMatch = normalizedPattern.match(/^\/(.+)\/([a-z]*)$/i);
+    if (literalMatch) {
+      const [, source, flags] = literalMatch;
+      const safeFlags = flags || 'i';
+      return new RegExp(source, safeFlags);
+    }
+    return new RegExp(normalizedPattern, 'i');
+  }
+
+  /**
+   * Strips locale prefix from path when present.
+   * @param {string} path incoming request path
+   * @param {string} urlLocale locale from Next.js URL
+   * @returns {string} locale-stripped path
+   * @private
+   */
+  private getLocaleStrippedPath(path: string, urlLocale: string): string {
+    if (!urlLocale) {
+      return path;
+    }
+    const localePrefixRegex = new RegExp(`^/${urlLocale}(?=/|$)`, 'i');
+    const strippedPath = path.replace(localePrefixRegex, '') || '/';
+    return strippedPath.startsWith('/') ? strippedPath : `/${strippedPath}`;
   }
 }
