@@ -8,7 +8,7 @@
 
 > `const` **SITECORE\_EDGE\_PLATFORM\_HOSTNAME\_ENV**: `"SITECORE_EDGE_PLATFORM_HOSTNAME"` = `'SITECORE_EDGE_PLATFORM_HOSTNAME'`
 
-Defined in: [packages/core/src/tools/resolve-edge-url.ts:13](https://github.com/Sitecore/content-sdk/blob/3bd72038ef298c1ecec751b7db43db37654b29b7/packages/core/src/tools/resolve-edge-url.ts#L13)
+Defined in: [packages/core/src/tools/resolve-edge-url.ts:13](https://github.com/Sitecore/content-sdk/blob/7a289714ede2353183baf3335f1c78701eca9cac/packages/core/src/tools/resolve-edge-url.ts#L13)
 
 Environment variable name for the custom Edge Platform hostname (framework-agnostic).
 Used for service endpoints (GraphQL, APIs, forms). Server-side only.

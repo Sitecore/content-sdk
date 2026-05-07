@@ -8,7 +8,7 @@
 
 > `const` **QUERY\_PARAM\_EDITING\_SECRET**: `"secret"` = `'secret'`
 
-Defined in: [content/src/editing/utils.ts:14](https://github.com/Sitecore/content-sdk/blob/3bd72038ef298c1ecec751b7db43db37654b29b7/packages/content/src/editing/utils.ts#L14)
+Defined in: [content/src/editing/utils.ts:14](https://github.com/Sitecore/content-sdk/blob/7a289714ede2353183baf3335f1c78701eca9cac/packages/content/src/editing/utils.ts#L14)
 
 **`Internal`**
 
