@@ -1,34 +1,60 @@
-import { Component, input, computed } from '@angular/core';
-import { ComponentRendering, ScPlaceholderComponent } from '@sitecore-content-sdk/angular';
-import { scComponentRoot, scRenderingId } from '../sitecore/sitecore-component-classes';
+import { Component, computed } from '@angular/core';
+import { NgTemplateOutlet, NgStyle } from '@angular/common';
+import { ScPlaceholderComponent } from '@sitecore-content-sdk/angular';
+import { SxaComponent } from './content-sdk/sxa.component';
+
+const mediaUrlPattern = /mediaurl="([^"]*)"/i;
 
 @Component({
   selector: 'app-container',
-  standalone: true,
-  imports: [ScPlaceholderComponent],
+  imports: [NgTemplateOutlet, NgStyle, ScPlaceholderComponent],
   template: `
-    <div class="container-wrapper w-full">
-      <div [attr.class]="rootClass()" [id]="renderingId()">
-        <div class="component-content">
-          @for (phName of placeholderNames(); track phName) {
-            <sc-placeholder [name]="phName" [rendering]="rendering()!"></sc-placeholder>
-          }
+    @if (needsWrapper()) {
+    <div class="container-wrapper">
+      <ng-container *ngTemplateOutlet="containerInner"></ng-container>
+    </div>
+    } @else {
+    <ng-container *ngTemplateOutlet="containerInner"></ng-container>
+    }
+
+    <ng-template #containerInner>
+      <div
+        [attr.class]="('component container-default ' + styles()).trim()"
+        [attr.id]="renderingId()"
+      >
+        <div class="component-content" [ngStyle]="backgroundStyle()">
+          <div class="row">
+            @if (placeholderName()) {
+            <sc-placeholder [name]="placeholderName()!" [rendering]="rendering()!"></sc-placeholder>
+            }
+          </div>
         </div>
       </div>
-    </div>
+    </ng-template>
   `,
 })
-export class ContainerComponent {
-  readonly fields = input<{ [key: string]: unknown }>({});
-  readonly params = input<{ [key: string]: string }>({});
-  readonly rendering = input<ComponentRendering>();
-
-  readonly placeholderNames = computed(() => {
-    const r = this.rendering();
-    if (!r?.placeholders) return [];
-    return Object.keys(r.placeholders);
+export class ContainerComponent extends SxaComponent {
+  readonly placeholderName = computed(() => {
+    const id = this.params()?.DynamicPlaceholderId?.trim();
+    return id ? `container-${id}` : '';
   });
 
-  readonly rootClass = computed(() => scComponentRoot('container', this.params()));
-  readonly renderingId = computed(() => scRenderingId(this.params()));
+  readonly needsWrapper = computed(() => {
+    const tokens = this.styles()?.split(/\s+/).filter(Boolean) ?? [];
+    return tokens.includes('container');
+  });
+
+  readonly backgroundStyle = computed((): { [key: string]: string } => {
+    const backgroundImage = this.params()?.BackgroundImage;
+    if (!backgroundImage || !mediaUrlPattern.test(backgroundImage)) {
+      return {};
+    }
+    const mediaUrl = backgroundImage.match(mediaUrlPattern)?.at(1) ?? '';
+    if (!mediaUrl) {
+      return {};
+    }
+    return {
+      backgroundImage: `url('${mediaUrl}')`,
+    };
+  });
 }

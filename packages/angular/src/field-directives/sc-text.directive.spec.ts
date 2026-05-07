@@ -7,7 +7,6 @@ import { ScTextDirective } from './sc-text.directive';
 
 @Component({
   selector: 'test-host',
-  standalone: true,
   imports: [ScTextDirective],
   template: `<span [scText]="field()"></span>`,
 })
@@ -17,7 +16,6 @@ class TestHostComponent {
 
 @Component({
   selector: 'test-host-unencoded',
-  standalone: true,
   imports: [ScTextDirective],
   template: `<span [scText]="field()" [scTextEncode]="false"></span>`,
 })

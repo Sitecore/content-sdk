@@ -1,5 +1,4 @@
 import { Component, input, computed, effect, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { Page, Field, RouteData, ScPlaceholderComponent } from '@sitecore-content-sdk/angular';
 
@@ -10,10 +9,9 @@ interface RouteFields {
 
 @Component({
   selector: 'app-layout',
-  standalone: true,
-  imports: [CommonModule, ScPlaceholderComponent],
+  imports: [ScPlaceholderComponent],
   template: `
-    <div [ngClass]="layoutClasses()">
+    <div [attr.class]="layoutClassAttr()">
       <header class="w-full">
         <div id="header">
           @if (scRoute()) {
@@ -48,13 +46,10 @@ export class LayoutComponent {
 
   readonly scRoute = computed(() => this.page().layout?.sitecore?.route as RouteData | null);
 
-  readonly layoutClasses = computed(() => {
+  readonly layoutClassAttr = computed(() => {
     const editing = this.page().mode?.isEditing;
-    return {
-      'editing-mode': !!editing,
-      'prod-mode': !editing,
-      'flex min-h-screen min-w-0 flex-col': true,
-    };
+    const base = 'flex min-h-screen min-w-0 flex-col';
+    return editing ? `${base} editing-mode` : `${base} prod-mode`;
   });
 
   private readonly titleService = inject(Title);

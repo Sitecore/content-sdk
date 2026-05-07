@@ -6,7 +6,6 @@ import { LayoutComponent } from '../shared/layout.component';
 
 @Component({
   selector: 'app-page',
-  standalone: true,
   imports: [LayoutComponent],
   template: `
     @let pageValue = page();

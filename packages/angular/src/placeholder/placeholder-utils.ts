@@ -18,12 +18,12 @@ export const DEFAULT_EXPORT_NAME = 'Default';
  * @public
  */
 export type AngularModule = {
+  /** Named variant exports (must be first for consistent member ordering). */
+  [exportName: string]: Type<unknown> | string | undefined;
   /** Default component for this rendering */
   default?: Type<unknown>;
   /** SXA convention: uppercase Default */
   Default?: Type<unknown>;
-  /** Named variant exports */
-  [exportName: string]: Type<unknown> | string | undefined;
   /** Component runtime type (reserved for future use) */
   componentType?: 'client' | 'server' | 'universal';
 };
@@ -44,6 +44,7 @@ export interface ComponentForRendering {
 
 /**
  * Merged props passed to each child component rendered by a placeholder.
+ * Matches React `getChildComponentProps`: merged `fields` / `params` props plus raw `rendering`.
  */
 export interface ChildComponentProps {
   fields: { [key: string]: unknown };
@@ -54,10 +55,10 @@ export interface ChildComponentProps {
 /**
  * Get the renderings for the specified placeholder from the rendering layout data.
  * Includes dynamic placeholder handling aligned with React's implementation.
- * @param rendering - rendering data
- * @param name - placeholder name
- * @param isEditing - whether editing mode is active
- * @returns array of component renderings
+ * @param {ComponentRendering | RouteData} rendering - Rendering or route data containing placeholders.
+ * @param {string} name - Placeholder name.
+ * @param {boolean} isEditing - Whether editing mode is active.
+ * @returns {ComponentRendering[]} Child renderings for the placeholder.
  */
 export const getPlaceholderRenderings = (
   rendering: ComponentRendering | RouteData,
@@ -111,7 +112,7 @@ export const getPlaceholderRenderings = (
 };
 
 /**
- * Extra inputs to set on each dynamically rendered component (in addition to `fields`, `params`, `rendering`).
+ * Extra inputs to set on each dynamically rendered component (in addition to `fields`, `params`, and `rendering`).
  * Keys are Angular `input()` names on the host component.
  * @public
  */
@@ -119,18 +120,16 @@ export type PassThroughProps = Readonly<Record<string, unknown>>;
 
 /**
  * Get SXA specific params from Sitecore rendering params.
- * @param rendering - rendering object
- * @returns converted SXA params
+ * @param {ComponentRendering} rendering - Rendering object.
+ * @returns {{ Styles: string } | undefined} Converted SXA params, or `undefined` when none apply.
  */
-export const getSXAParams = (
-  rendering: ComponentRendering
-): { styles: string } | undefined => {
-  if (!rendering.params) return { styles: '' };
+export const getSXAParams = (rendering: ComponentRendering) => {
+  if (!rendering.params) return { Styles: '' };
 
   const { GridParameters, Styles } = rendering.params;
 
   if (GridParameters || Styles) {
-    return { styles: `${GridParameters || ''} ${Styles || ''}` };
+    return { Styles: `${GridParameters || ''} ${Styles || ''}` };
   }
 
   return undefined;
@@ -138,10 +137,10 @@ export const getSXAParams = (
 
 /**
  * Merge placeholder-level fields/params with per-component fields/params.
- * @param placeholderFields - placeholder-level fields
- * @param placeholderParams - placeholder-level params
- * @param componentRendering - the component rendering data
- * @returns merged child component props
+ * @param {{ [key: string]: unknown } | undefined} placeholderFields - Placeholder-level fields.
+ * @param {{ [key: string]: string } | undefined} placeholderParams - Placeholder-level params.
+ * @param {ComponentRendering} componentRendering - The component rendering data.
+ * @returns {ChildComponentProps} Merged child component props.
  */
 export function getChildComponentProps(
   placeholderFields: { [key: string]: unknown } | undefined,
@@ -150,11 +149,12 @@ export function getChildComponentProps(
 ): ChildComponentProps {
   const fields = { ...(placeholderFields || {}), ...(componentRendering.fields || {}) };
   const params = { ...(placeholderParams || {}), ...(componentRendering.params || {}) };
+  const sxa = getSXAParams(componentRendering);
   return {
     fields,
     params: {
       ...params,
-      ...getSXAParams(componentRendering),
+      ...(sxa || {}),
     },
     rendering: componentRendering,
   };
@@ -164,12 +164,12 @@ export function getChildComponentProps(
  * Resolve a component type for a rendering definition.
  * Handles hidden renderings, missing components, variant selection, and map lookup.
  * FEaaS/BYOC are intentionally not handled; they fall through to missingComponent.
- * @param renderingDefinition - the rendering to resolve
- * @param placeholderName - current placeholder name (for logging)
- * @param componentMap - the app component map
- * @param hiddenRenderingComponent - optional override for hidden renderings
- * @param missingComponentComponent - optional override for missing/unknown components
- * @returns resolved component info
+ * @param {ComponentRendering} renderingDefinition - The rendering to resolve.
+ * @param {string} placeholderName - Current placeholder name (for logging).
+ * @param {ComponentMap | undefined} componentMap - The app component map.
+ * @param {Type<unknown> | undefined} hiddenRenderingComponent - Optional override for hidden renderings.
+ * @param {Type<unknown> | undefined} missingComponentComponent - Optional override for missing/unknown components.
+ * @returns {ComponentForRendering} Resolved component info.
  */
 export const resolveComponentForRendering = (
   renderingDefinition: ComponentRendering,
@@ -224,8 +224,7 @@ export const resolveComponentForRendering = (
       : entry.default || entry.Default;
 
   if (!resolved || typeof resolved !== 'function') {
-    const variantLabel =
-      exportName && exportName !== DEFAULT_EXPORT_NAME ? ` (${exportName})` : '';
+    const variantLabel = exportName && exportName !== DEFAULT_EXPORT_NAME ? ` (${exportName})` : '';
     console.error(
       `Placeholder ${placeholderName} contains unknown component ${renderingDefinition.componentName}${variantLabel}. Ensure that an Angular component exists for it, and that it is registered in your component map.`
     );

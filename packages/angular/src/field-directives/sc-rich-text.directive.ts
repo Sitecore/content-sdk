@@ -18,7 +18,6 @@ import { isFieldValueEmpty, TextField } from '@sitecore-content-sdk/content/layo
  * ```html
  * <div [scRichText]="fields.Content"></div>
  * ```
- *
  * @public
  */
 @Directive({

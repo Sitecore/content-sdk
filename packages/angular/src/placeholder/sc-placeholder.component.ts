@@ -33,13 +33,11 @@ import { ScHiddenRenderingComponent } from './sc-hidden-rendering.component';
  * <sc-placeholder name="headless-main" [rendering]="route"></sc-placeholder>
  * ```
  *
- * Optional `[passThroughProps]` sets extra `input()` values on each child (merged after `fields`, `params`, `rendering`).
- *
+ * Optional `[passThroughProps]` sets extra `input()` values on each child (merged after `fields`, `params`, and `rendering`).
  * @public
  */
 @Component({
   selector: 'sc-placeholder',
-  standalone: true,
   imports: [CommonModule],
   template: `<ng-container #container></ng-container>`,
 })
@@ -53,7 +51,7 @@ export class ScPlaceholderComponent {
   /** Optional placeholder-level fields merged into each child. */
   readonly fields = input<{ [key: string]: unknown }>();
 
-  /** Optional placeholder-level params merged into each child. */
+  /** Optional placeholder-level params merged into each child's `params` input. */
   readonly params = input<{ [key: string]: string }>();
 
   /**

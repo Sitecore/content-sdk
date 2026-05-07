@@ -48,9 +48,20 @@ const makePage = (isEditing: boolean): Page =>
       isDesignLibrary: false,
       designLibrary: { isVariantGeneration: false },
     },
-  }) as unknown as Page;
+  } as Page);
 
-/** Flush afterNextRender and loadForm promise (scripts / subscribe run in the same microtask). */
+function formRendering(
+  params: Record<string, string>,
+  extra: Partial<ComponentRendering> = {}
+): ComponentRendering {
+  return { componentName: 'Form', params, ...extra } as ComponentRendering;
+}
+
+/**
+ * Flush afterNextRender and loadForm promise (scripts / subscribe run in the same microtask).
+ * @param {ComponentFixture<ScFormComponent>} fixture - Host fixture under test.
+ * @returns {Promise<void>} Resolves when the form pipeline side effects have run.
+ */
 async function flushFormLoadPipeline(fixture: ComponentFixture<ScFormComponent>): Promise<void> {
   fixture.detectChanges();
   await fixture.whenStable();
@@ -97,7 +108,7 @@ describe('ScFormComponent', () => {
     warnSpy.mockRestore();
   });
 
-  it('should not call loadForm on the server (JSS: isPlatformBrowser guard)', async () => {
+  it('should not call loadForm on the server', async () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [ScFormComponent],
@@ -108,7 +119,7 @@ describe('ScFormComponent', () => {
     });
 
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', { FormId: 'form-1' });
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'form-1' }));
     fixture.detectChanges();
     await fixture.whenStable();
     await new Promise<void>((r) => setTimeout(r, 50));
@@ -116,9 +127,9 @@ describe('ScFormComponent', () => {
     expect(mocks.loadForm).not.toHaveBeenCalled();
   });
 
-  it('should not call loadForm when FormId is missing (JSS: FormId param)', async () => {
+  it('should not call loadForm when FormId is missing', async () => {
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', {});
+    fixture.componentRef.setInput('rendering', formRendering({}));
     fixture.detectChanges();
     await fixture.whenStable();
     await new Promise<void>((r) => setTimeout(r, 50));
@@ -126,9 +137,9 @@ describe('ScFormComponent', () => {
     expect(mocks.loadForm).not.toHaveBeenCalled();
   });
 
-  it('should call loadForm with edge context id, FormId, and edgeUrl from config (JSS: loadForm from Edge)', async () => {
+  it('should call loadForm with edge context id, FormId, and edgeUrl from config', async () => {
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', { FormId: 'my-form-id' });
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'my-form-id' }));
     await flushFormLoadPipeline(fixture);
 
     expect(mocks.loadForm).toHaveBeenCalledWith(
@@ -136,6 +147,46 @@ describe('ScFormComponent', () => {
       'my-form-id',
       'https://edge.example.com'
     );
+  });
+
+  it('should use merged params when params input supplies FormId missing on rendering', async () => {
+    const fixture = createFixture();
+    fixture.componentRef.setInput('rendering', formRendering({ RenderingIdentifier: 'r-1' }));
+    fixture.componentRef.setInput('params', { FormId: 'form-from-params-only' });
+    await flushFormLoadPipeline(fixture);
+
+    expect(mocks.loadForm).toHaveBeenCalledWith(
+      'test-edge-context-id',
+      'form-from-params-only',
+      'https://edge.example.com'
+    );
+  });
+
+  it('should prefer FormId from params input over rendering when both are provided', async () => {
+    const fixture = createFixture();
+    fixture.componentRef.setInput(
+      'rendering',
+      formRendering({ FormId: 'rendering-form-id' })
+    );
+    fixture.componentRef.setInput('params', { FormId: 'component-form-id' });
+    await flushFormLoadPipeline(fixture);
+
+    expect(mocks.loadForm).toHaveBeenCalledWith(
+      'test-edge-context-id',
+      'component-form-id',
+      'https://edge.example.com'
+    );
+  });
+
+  it('should apply styles from params when rendering has no styles param', async () => {
+    const fixture = createFixture();
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }));
+    fixture.componentRef.setInput('params', { styles: '  from-params-style  ' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const host = fixture.nativeElement.querySelector('div') as HTMLDivElement;
+    expect(host.className.trim()).toBe('from-params-style');
   });
 
   it('should not call loadForm when clientContextId is missing (no SITECORE_CONFIG_TOKEN)', async () => {
@@ -146,7 +197,7 @@ describe('ScFormComponent', () => {
     });
 
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', { FormId: 'fid' });
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'fid' }));
     fixture.detectChanges();
     await fixture.whenStable();
     await new Promise<void>((r) => setTimeout(r, 50));
@@ -156,12 +207,12 @@ describe('ScFormComponent', () => {
     expect(String(warnSpy.mock.calls[0][0])).toContain('clientContextId');
   });
 
-  it('should set loaded HTML into the container via innerHTML (JSS: innerHTML = content)', async () => {
+  it('should set loaded HTML into the container via innerHTML', async () => {
     // Markup is assigned on the container element ref (not [innerHTML], which sanitizes scripts).
     mocks.loadForm.mockResolvedValue('<p class="sc-form-inner" data-f="1">Inner</p>');
 
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', { FormId: 'f1' });
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }));
     await flushFormLoadPipeline(fixture);
 
     const host = fixture.nativeElement.querySelector('div') as HTMLDivElement;
@@ -169,12 +220,15 @@ describe('ScFormComponent', () => {
     expect(host.textContent).toContain('Inner');
   });
 
-  it('should bind styles param as class with trailing whitespace trimmed (JSS: params.styles → className)', async () => {
+  it('should bind styles param as class with trailing whitespace trimmed', async () => {
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', {
-      FormId: 'f1',
-      styles: '  my-form-style  ',
-    });
+    fixture.componentRef.setInput(
+      'rendering',
+      formRendering({
+        FormId: 'f1',
+        styles: '  my-form-style  ',
+      })
+    );
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -182,12 +236,15 @@ describe('ScFormComponent', () => {
     expect(host.className.trim()).toBe('my-form-style');
   });
 
-  it('should bind RenderingIdentifier as element id (JSS: RenderingIdentifier → id)', async () => {
+  it('should bind RenderingIdentifier as element id', async () => {
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', {
-      FormId: 'f1',
-      RenderingIdentifier: 'form-rendering-42',
-    });
+    fixture.componentRef.setInput(
+      'rendering',
+      formRendering({
+        FormId: 'f1',
+        RenderingIdentifier: 'form-rendering-42',
+      })
+    );
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -195,12 +252,12 @@ describe('ScFormComponent', () => {
     expect(host.id).toBe('form-rendering-42');
   });
 
-  it('should call executeScriptElements on the container after load (JSS: executeScriptElements)', async () => {
+  it('should call executeScriptElements on the container after load', async () => {
     const fixture = createFixture();
     const ctx = TestBed.inject(SitecoreContextService);
     ctx.setPage(makePage(false));
 
-    fixture.componentRef.setInput('params', { FormId: 'f1' });
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }));
     await flushFormLoadPipeline(fixture);
 
     expect(mocks.executeScriptElements).toHaveBeenCalledTimes(1);
@@ -208,13 +265,15 @@ describe('ScFormComponent', () => {
     expect(elArg.tagName).toBe('DIV');
   });
 
-  it('should call subscribeToFormSubmitEvent when not in editing mode (JSS: !isEditing)', async () => {
+  it('should call subscribeToFormSubmitEvent when not in editing mode', async () => {
     const fixture = createFixture();
     const ctx = TestBed.inject(SitecoreContextService);
     ctx.setPage(makePage(false));
 
-    fixture.componentRef.setInput('params', { FormId: 'f1' });
-    fixture.componentRef.setInput('rendering', { uid: 'comp-uid-1' } as ComponentRendering);
+    fixture.componentRef.setInput(
+      'rendering',
+      formRendering({ FormId: 'f1' }, { uid: 'comp-uid-1' })
+    );
     await flushFormLoadPipeline(fixture);
 
     expect(mocks.subscribeToFormSubmitEvent).toHaveBeenCalledTimes(1);
@@ -224,24 +283,23 @@ describe('ScFormComponent', () => {
     );
   });
 
-  it('should not call subscribeToFormSubmitEvent in editing mode (JSS: isEditing)', async () => {
+  it('should not call subscribeToFormSubmitEvent in editing mode', async () => {
     const fixture = createFixture();
     const ctx = TestBed.inject(SitecoreContextService);
     ctx.setPage(makePage(true));
 
-    fixture.componentRef.setInput('params', { FormId: 'f1' });
-    fixture.componentRef.setInput('rendering', { uid: 'x' } as ComponentRendering);
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }, { uid: 'x' }));
     await flushFormLoadPipeline(fixture);
 
     expect(mocks.subscribeToFormSubmitEvent).not.toHaveBeenCalled();
     expect(mocks.executeScriptElements).toHaveBeenCalled();
   });
 
-  it('should log when loadForm rejects (JSS: catch / hasError)', async () => {
+  it('should log when loadForm rejects', async () => {
     mocks.loadForm.mockRejectedValue(new Error('network'));
 
     const fixture = createFixture();
-    fixture.componentRef.setInput('params', { FormId: 'bad-form' });
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'bad-form' }));
     fixture.detectChanges();
     await fixture.whenStable();
     await vi.waitFor(() => errorSpy.mock.calls.length > 0, { timeout: 3000, interval: 5 });

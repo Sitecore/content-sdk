@@ -7,7 +7,6 @@ import { ScRichTextDirective } from './sc-rich-text.directive';
 
 @Component({
   selector: 'test-richtext',
-  standalone: true,
   imports: [ScRichTextDirective],
   template: `<div [scRichText]="field()"></div>`,
 })

@@ -1,5 +1,6 @@
 @theme {
-  --font-roboto: 'Roboto', 'sans-serif';
+  --font-roboto: 'Roboto', sans-serif;
+  --font-sans: var(--font-roboto);
   /* // abstract/vars /_colors: */
 
   --color-main-color: #27272a;

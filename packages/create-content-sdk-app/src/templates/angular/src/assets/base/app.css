@@ -7,7 +7,7 @@ html {
 }
 
 body {
-  font-family: 'Open Sans', Helvetica, Verdana, Tahoma, sans-serif;
+  font-family: var(--font-roboto);
   position: relative;
   overflow: auto;
   color: var(--color-text-basic);
