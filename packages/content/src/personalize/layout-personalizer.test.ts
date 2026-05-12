@@ -148,6 +148,97 @@ describe('layout-personalizer', () => {
           },
         ]);
       });
+
+      it('should handle nested hidden components in edit mode', () => {
+        const nestedHiddenComponent = {
+          uid: 'nested-hidden-uid',
+          componentName: 'NestedComponent',
+          dataSource: 'nested-datasource',
+          experiences: {
+            mountain_bike_audience: {
+              uid: 'nested-hidden-uid',
+              componentName: null,
+              dataSource: null,
+            },
+          },
+        };
+
+        const rootComponent = {
+          uid: 'root-uid',
+          componentName: 'RootComponent',
+          dataSource: 'root-datasource',
+          placeholders: {
+            main: [nestedHiddenComponent],
+          },
+        };
+
+        const variant = 'mountain_bike_audience';
+        const personalizedPlaceholderResult = personalizePlaceholder(
+          [rootComponent],
+          [variant],
+          true
+        );
+
+        expect(personalizedPlaceholderResult).to.deep.equal([
+          {
+            uid: 'root-uid',
+            componentName: 'RootComponent',
+            dataSource: 'root-datasource',
+            placeholders: {
+              main: [
+                {
+                  uid: 'nested-hidden-uid',
+                  componentName: HIDDEN_RENDERING_NAME,
+                  dataSource: 'nested-datasource',
+                  experiences: {},
+                },
+              ],
+            },
+          },
+        ]);
+      });
+
+      it('should filter out hidden nested components when not in edit mode', () => {
+        const nestedHiddenComponent = {
+          uid: 'nested-hidden-uid',
+          componentName: 'NestedComponent',
+          dataSource: 'nested-datasource',
+          experiences: {
+            mountain_bike_audience: {
+              uid: 'nested-hidden-uid',
+              componentName: null,
+              dataSource: null,
+            },
+          },
+        };
+
+        const rootComponent = {
+          uid: 'root-uid',
+          componentName: 'RootComponent',
+          dataSource: 'root-datasource',
+          placeholders: {
+            main: [nestedHiddenComponent],
+          },
+        };
+
+        const variant = 'mountain_bike_audience';
+        const personalizedPlaceholderResult = personalizePlaceholder(
+          [rootComponent],
+          [variant],
+          false
+        );
+
+        expect(personalizedPlaceholderResult).to.deep.equal([
+          {
+            uid: 'root-uid',
+            componentName: 'RootComponent',
+            dataSource: 'root-datasource',
+            placeholders: {
+              main: [],
+            },
+          },
+        ]);
+      });
     });
 
     describe('with multiple variant Ids', () => {
