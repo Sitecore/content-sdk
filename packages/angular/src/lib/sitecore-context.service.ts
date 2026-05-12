@@ -30,6 +30,7 @@ export class SitecoreContextService {
   /**
    * Update the current page context. Call this when route data resolves.
    * @param {Page | null} page - The resolved Page from a loader, or null to clear.
+   * @returns {void}
    */
   setPage(page: Page | null): void {
     this._page.set(page);

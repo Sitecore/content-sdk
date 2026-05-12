@@ -15,7 +15,6 @@ function sortedClassTokens(el: HTMLElement): string[] {
 
 @Component({
   selector: 'test-link',
-  standalone: true,
   imports: [ScLinkDirective],
   template: `<a [scLink]="field()"></a>`,
 })
@@ -25,7 +24,6 @@ class TestHostComponent {
 
 @Component({
   selector: 'test-link-host-class',
-  standalone: true,
   imports: [ScLinkDirective],
   template: `<a class="host-base" [scLink]="field()"></a>`,
 })
@@ -35,7 +33,6 @@ class TestHostWithHostClassComponent {
 
 @Component({
   selector: 'test-link-host-title',
-  standalone: true,
   imports: [ScLinkDirective],
   template: `<a title="Host title" [scLink]="field()"></a>`,
 })
@@ -45,7 +42,6 @@ class TestHostWithHostTitleComponent {
 
 @Component({
   selector: 'test-link-host-target',
-  standalone: true,
   imports: [ScLinkDirective],
   template: `<a target="_self" [scLink]="field()"></a>`,
 })

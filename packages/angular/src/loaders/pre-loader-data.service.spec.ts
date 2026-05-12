@@ -29,7 +29,7 @@ function makeRouteSnapshot(overrides: {
     pathFromRoot: overrides.pathFromRoot,
     routeConfig: overrides.routeConfig,
     children: overrides.children ?? [],
-  } as unknown as MutableSnapshot;
+  } as MutableSnapshot;
 }
 
 function makeRouterStateSnapshot(url: string): RouterStateSnapshot {

@@ -11,9 +11,9 @@ import type { Page, PageOptions, SitecoreClient } from '@sitecore-content-sdk/co
  * @param {SitecoreConfig} sitecoreConfig - Resolved Sitecore configuration (e.g. default export from `sitecore.config.ts`).
  * @param {SitecoreClient} client - Sitecore client instance (e.g. from a module singleton).
  * @param {{ locale?: string; site?: string }} [options] - Optional `locale` / `site` overrides.
- * @param {string} [options.locale] - Language override
- * @param {string} [options.site] - Site name override
- * @returns Page layout data, or `null` if not found.
+ * @param {string} [options.locale] - Optional locale override.
+ * @param {string} [options.site] - Optional site override.
+ * @returns {Promise<Page | null>} Page layout data, or `null` if not found.
  * @public
  */
 export async function resolveSitecorePage(

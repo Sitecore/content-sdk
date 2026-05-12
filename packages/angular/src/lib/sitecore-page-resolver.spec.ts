@@ -50,7 +50,7 @@ describe('resolveSitecorePage', () => {
   });
 
   it('should return the Page from getPage', async () => {
-    const page = { locale: 'en', layout: {} } as unknown as Page;
+    const page = { locale: 'en', layout: {} } as Page;
     getPage.mockResolvedValueOnce(page);
 
     const result = await resolveSitecorePage('/p', mockConfig, mockClient);

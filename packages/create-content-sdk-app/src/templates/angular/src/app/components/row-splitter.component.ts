@@ -1,37 +1,48 @@
-import { Component, input, computed } from '@angular/core';
-import { ComponentRendering, ScPlaceholderComponent } from '@sitecore-content-sdk/angular';
-import { scRenderingId } from '../sitecore/sitecore-component-classes';
+import { Component, computed } from '@angular/core';
+import { ScPlaceholderComponent } from '@sitecore-content-sdk/angular';
+import { SxaComponent } from './content-sdk/sxa.component';
+
+type RowNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 @Component({
   selector: 'app-row-splitter',
-  standalone: true,
   imports: [ScPlaceholderComponent],
   template: `
-    <div [attr.class]="rowClass()" [id]="renderingId()">
-      @for (phName of placeholderNames(); track phName) {
-        <div class="w-full">
-          <sc-placeholder [name]="phName" [rendering]="rendering()!"></sc-placeholder>
+    <div [attr.class]="('component row-splitter ' + styles()).trim()" [attr.id]="renderingId()">
+      @for (placeholderSegment of enabledPlaceholders(); track placeholderSegment) {
+      <div [attr.class]="rowSectionClass(placeholderSegment)">
+        <div>
+          <div class="row">
+            <sc-placeholder
+              [name]="placeholderKey(placeholderSegment)"
+              [rendering]="rendering()!"
+            ></sc-placeholder>
+          </div>
         </div>
+      </div>
       }
     </div>
   `,
 })
-export class RowSplitterComponent {
-  readonly fields = input<{ [key: string]: unknown }>({});
-  readonly params = input<{ [key: string]: string }>({});
-  readonly rendering = input<ComponentRendering>();
-
-  readonly placeholderNames = computed(() => {
-    const r = this.rendering();
-    if (!r?.placeholders) return [];
-    return Object.keys(r.placeholders);
+export class RowSplitterComponent extends SxaComponent {
+  readonly enabledPlaceholders = computed(() => {
+    const raw = this.params()?.EnabledPlaceholders;
+    return (
+      raw
+        ?.split(',')
+        .map((segment: string) => segment.trim())
+        .filter(Boolean) ?? []
+    );
   });
 
-  readonly rowClass = computed(() => {
-    const s = this.params()?.['styles']?.trim();
-    const base = 'row row-splitter flex w-full flex-col flex-wrap';
-    return s ? `${base} ${s}` : base;
-  });
+  placeholderKey(placeholderSegment: string): string {
+    const rowIndex = Number(placeholderSegment) as RowNumber;
+    return `row-${rowIndex}-{*}`;
+  }
 
-  readonly renderingId = computed(() => scRenderingId(this.params()));
+  rowSectionClass(placeholderSegment: string): string {
+    const rowIndex = Number(placeholderSegment) as RowNumber;
+    const rowStyles = `${this.params()?.[`Styles${rowIndex}`] ?? ''}`.trimEnd();
+    return `container-fluid ${rowStyles}`.trimEnd();
+  }
 }

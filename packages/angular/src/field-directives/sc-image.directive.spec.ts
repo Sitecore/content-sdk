@@ -6,7 +6,6 @@ import { ScImageDirective, type ImageField } from './sc-image.directive';
 
 @Component({
   selector: 'test-img',
-  standalone: true,
   imports: [ScImageDirective],
   template: `<img [scImage]="field()" alt="" />`,
 })

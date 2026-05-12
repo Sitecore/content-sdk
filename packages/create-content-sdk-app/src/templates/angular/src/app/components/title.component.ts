@@ -1,29 +1,69 @@
-import { Component, input, computed } from '@angular/core';
-import { ComponentRendering, Field } from '@sitecore-content-sdk/angular';
-import { ScTextDirective } from '@sitecore-content-sdk/angular';
-import { scComponentRoot, scRenderingId } from '../sitecore/sitecore-component-classes';
+import { Component, computed, inject } from '@angular/core';
+import {
+  Field,
+  LinkField,
+  ScLinkDirective,
+  ScTextDirective,
+  SitecoreContextService,
+} from '@sitecore-content-sdk/angular';
+import { SxaComponent } from './content-sdk/sxa.component';
+
+interface GraphqlItem {
+  url?: { path?: string; siteName?: string };
+  field?: { jsonValue?: unknown };
+}
+
+interface TitleFields {
+  data?: { datasource?: GraphqlItem; contextItem?: GraphqlItem };
+}
 
 @Component({
   selector: 'app-title',
-  standalone: true,
-  imports: [ScTextDirective],
+  imports: [ScTextDirective, ScLinkDirective],
   template: `
-    <div [attr.class]="rootClass()" [id]="renderingId()">
+    <div [attr.class]="('component title ' + styles()).trim()" [attr.id]="renderingId()">
       <div class="component-content">
         <div class="field-title">
-          <h1 [scText]="titleField()"></h1>
+          @if (isEditing()) {
+          <span [scText]="titleField()"></span>
+          } @else {
+          <a [scLink]="titleLinkField()"><span [scText]="titleField()"></span></a>
+          }
         </div>
       </div>
     </div>
   `,
 })
-export class TitleComponent {
-  readonly fields = input<{ [key: string]: unknown }>({});
-  readonly params = input<{ [key: string]: string }>({});
-  readonly rendering = input<ComponentRendering>();
+export class TitleComponent extends SxaComponent {
+  private readonly context = inject(SitecoreContextService);
 
-  readonly titleField = computed(() => this.fields()?.['Title'] as Field<string> | undefined);
+  readonly fieldData = computed(() => (this.fields() as TitleFields)?.data);
 
-  readonly rootClass = computed(() => scComponentRoot('title', this.params()));
-  readonly renderingId = computed(() => scRenderingId(this.params()));
+  readonly datasource = computed(
+    () => this.fieldData()?.datasource || this.fieldData()?.contextItem
+  );
+
+  readonly titleField = computed((): Field<string> | undefined => {
+    const jsonVal = this.datasource()?.field?.jsonValue as Field<string> | undefined;
+    if (jsonVal) {
+      return jsonVal;
+    }
+    const route = this.context.page()?.layout?.sitecore?.route;
+    return route?.fields?.Title as Field<string> | undefined;
+  });
+
+  readonly titleLinkField = computed((): LinkField => {
+    const graphqlSource = this.datasource();
+    const title = this.titleField();
+    const href = graphqlSource?.url?.path;
+    const rawJson = graphqlSource?.field?.jsonValue as { value?: string } | undefined;
+    return {
+      value: {
+        href,
+        title: (title?.value != null ? String(title.value) : undefined) || rawJson?.value,
+      },
+    };
+  });
+
+  readonly isEditing = computed(() => this.context.isEditing());
 }

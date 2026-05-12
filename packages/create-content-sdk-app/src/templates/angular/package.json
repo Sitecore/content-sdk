@@ -13,7 +13,9 @@
     "watch": "npm-run-all -s gen:env:dev sitecore-tools:generate-map \"ng build --watch --configuration development\"",
     "start": "npm-run-all -s build serve:ssr",
     "serve:ssr": "node dist/<%- appName %>/server/server.mjs",
-    "test": "ng test"
+    "test": "ng test",
+    "lint": "ng lint",
+    "lint:fix": "ng lint --fix"
   },
   "prettier": {
     "printWidth": 100,
@@ -50,12 +52,16 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@angular-eslint/builder": "^21.3.1",
     "@angular/build": "^21.1.4",
     "@angular/cli": "^21.1.4",
     "@angular/compiler-cli": "^21.1.0",
+    "@eslint/js": "^10.0.1",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
+    "angular-eslint": "^21.3.1",
+    "eslint": "^10.3.0",
     "jsdom": "^27.1.0",
     "npm-run-all2": "^7.0.2",
     "postcss": "^8.5.3",
@@ -63,6 +69,7 @@
     "@sitecore-content-sdk/cli": "^2.0.0-canary.6",
     "tsx": "^4.19.4",
     "typescript": "~5.9.2",
+    "typescript-eslint": "^8.59.1",
     "vitest": "^4.0.8"
   }
 }

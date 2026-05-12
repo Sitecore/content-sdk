@@ -108,6 +108,7 @@ export {
 export { ScTextDirective } from './field-directives/sc-text.directive';
 export { ScImageDirective } from './field-directives/sc-image.directive';
 export { ScLinkDirective } from './field-directives/sc-link.directive';
+export { ScRouterLinkDirective } from './field-directives/sc-router-link.directive';
 export { ScRichTextDirective } from './field-directives/sc-rich-text.directive';
 
 // ─── Form ──────────────────────────────────────────────────────

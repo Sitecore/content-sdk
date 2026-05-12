@@ -75,6 +75,7 @@
     "@angular/router": "^21.1.0",
     "@types/node": "^24.10.4",
     "del-cli": "^6.0.0",
+    "@vitest/coverage-v8": "^4.1.5",
     "jsdom": "^27.1.0",
     "ng-packagr": "^21.1.0",
     "rxjs": "~7.8.0",

@@ -2,8 +2,8 @@ import type { SitecoreConfig, SitecoreConfigInput } from '@sitecore-content-sdk/
 import { defineConfig as baseDefineConfig } from '@sitecore-content-sdk/content/config';
 
 /**
- * Get the process environment variables in a browser-safe way.
- * @returns {Record<string, string | undefined>} The process environment variables.
+ * Reads `process.env` when running under Node; otherwise returns an empty object.
+ * @returns {Record<string, string | undefined>} Environment map for merging into config.
  */
 function getProcessEnv(): Record<string, string | undefined> {
   // Use globalThis so we do not need @types/node (lib tsconfig uses "types": []).
@@ -14,8 +14,9 @@ function getProcessEnv(): Record<string, string | undefined> {
 /**
  * Merges `clientEnv` (browser-safe `environment*.ts`) with `process.env` for server-only variables.
  * On Node/SSR, load `.env` in the app entry before importing `sitecore.config` (see `load-env.ts` in the sample).
- * @param {SitecoreConfigInput} [config] - Sitecore configuration input
- * @param {Record<string, string | undefined>} [clientEnv] - Browser-safe env map (e.g. from `environment.ts`)
+ * @param {SitecoreConfigInput} [config] - Base Sitecore configuration input.
+ * @param {Record<string, string | undefined>} [clientEnv] - Browser-safe env from `environment*.ts`.
+ * @returns {SitecoreConfig} Fully merged Sitecore configuration.
  * @public
  */
 export function defineConfig(

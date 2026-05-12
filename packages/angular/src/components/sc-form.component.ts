@@ -16,6 +16,7 @@ import { SitecoreContextService } from '../lib/sitecore-context.service';
 
 const { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
 
+/* eslint-disable @typescript-eslint/member-ordering -- ViewChild + signal inputs + constructor ordering conflicts with default groups */
 /**
  * Angular wrapper for Sitecore Forms.
  * Loads form HTML from Edge, executes embedded scripts, and subscribes to form events.
@@ -25,10 +26,7 @@ const { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
  */
 @Component({
   selector: 'sc-form',
-  standalone: true,
-  template: `
-    <div #formContainer [class]="styles()" [id]="renderingId()"></div>
-  `,
+  template: ` <div #formContainer [class]="styles()" [id]="renderingId()"></div> `,
 })
 export class ScFormComponent {
   @ViewChild('formContainer', { static: true })
@@ -36,19 +34,25 @@ export class ScFormComponent {
 
   readonly rendering = input<ComponentRendering>();
   readonly params = input<{ [key: string]: string }>({});
-  readonly fields = input<{ [key: string]: unknown }>({});
 
   private readonly config = inject(SITECORE_CONFIG_TOKEN, { optional: true });
   private readonly context = inject(SitecoreContextService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
 
+  /**
+   * Merges `rendering.params` with the `params` input: the component `params()` values override layout for the same key.
+   */
+  private mergedFormParams(): { [key: string]: string } {
+    return { ...(this.rendering()?.params ?? {}), ...this.params() };
+  }
+
   constructor() {
     afterNextRender(() => {
       if (!isPlatformBrowser(this.platformId)) return;
 
-      const p = this.params();
-      const formId = p?.FormId;
+      const p = this.mergedFormParams();
+      const formId = p.FormId;
       if (!formId) return;
 
       const cfg = this.config;
@@ -91,8 +95,13 @@ export class ScFormComponent {
   }
 
   readonly styles = () => {
-    const s = this.params()?.styles;
+    const p = this.mergedFormParams();
+    const s = p.styles;
     return s ? s.replace(/\s+$/, '') : '';
   };
-  readonly renderingId = () => this.params()?.RenderingIdentifier || undefined;
+  readonly renderingId = () => {
+    const p = this.mergedFormParams();
+    return p.RenderingIdentifier || undefined;
+  };
 }
+/* eslint-enable @typescript-eslint/member-ordering */

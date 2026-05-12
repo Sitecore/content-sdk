@@ -20,11 +20,10 @@ describe('applyRedirect', () => {
   it('returns void and calls window.location.assign for external URL', () => {
     const assignSpy = vi.fn();
     const originalWindow = globalThis.window;
-    (
-      globalThis as unknown as { window: { location: { assign: ReturnType<typeof vi.fn> } } }
-    ).window = {
-      location: { assign: assignSpy },
-    };
+    (globalThis as unknown as { window: { location: { assign: ReturnType<typeof vi.fn> } } }).window =
+      {
+        location: { assign: assignSpy },
+      };
 
     const result = applyRedirect(mockRouter as unknown as Router, 'https://example.com/path');
     expect(result).toBeUndefined();
@@ -37,11 +36,10 @@ describe('applyRedirect', () => {
   it('treats http URL as external', () => {
     const assignSpy = vi.fn();
     const originalWindow = globalThis.window;
-    (
-      globalThis as unknown as { window: { location: { assign: ReturnType<typeof vi.fn> } } }
-    ).window = {
-      location: { assign: assignSpy },
-    };
+    (globalThis as unknown as { window: { location: { assign: ReturnType<typeof vi.fn> } } }).window =
+      {
+        location: { assign: assignSpy },
+      };
 
     const result = applyRedirect(mockRouter as unknown as Router, 'http://example.com');
     expect(result).toBeUndefined();
