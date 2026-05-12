@@ -48,9 +48,12 @@ const makePage = (isEditing: boolean): Page =>
       isDesignLibrary: false,
       designLibrary: { isVariantGeneration: false },
     },
-  }) as unknown as Page;
+  } as unknown as Page);
 
-/** Flush afterNextRender and loadForm promise (scripts / subscribe run in the same microtask). */
+/**
+ * Flush afterNextRender and loadForm promise (scripts / subscribe run in the same microtask).
+ * @param {ComponentFixture} fixture
+ */
 async function flushFormLoadPipeline(fixture: ComponentFixture<ScFormComponent>): Promise<void> {
   fixture.detectChanges();
   await fixture.whenStable();

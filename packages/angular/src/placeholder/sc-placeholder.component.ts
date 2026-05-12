@@ -34,7 +34,6 @@ import { ScHiddenRenderingComponent } from './sc-hidden-rendering.component';
  * ```
  *
  * Optional `[passThroughProps]` sets extra `input()` values on each child (merged after `fields`, `params`, `rendering`).
- *
  * @public
  */
 @Component({

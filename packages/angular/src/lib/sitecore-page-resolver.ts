@@ -7,11 +7,12 @@ import type { Page, PageOptions, SitecoreClient } from '@sitecore-content-sdk/co
  * this stays usable from route loaders without Angular injection context.
  *
  * Future: add helpers for personalization and multisite alongside this call.
- *
- * @param path - Route path (e.g. `'/'` or `'/about'`).
- * @param sitecoreConfig - Resolved Sitecore configuration (e.g. default export from `sitecore.config.ts`).
- * @param client - Sitecore client instance (e.g. from a module singleton).
- * @param options - Optional `locale` / `site` overrides.
+ * @param {string} path - Route path (e.g. `'/'` or `'/about'`).
+ * @param {SitecoreConfig} sitecoreConfig - Resolved Sitecore configuration (e.g. default export from `sitecore.config.ts`).
+ * @param {SitecoreClient} client - Sitecore client instance (e.g. from a module singleton).
+ * @param {{ locale?: string; site?: string }} [options] - Optional `locale` / `site` overrides.
+ * @param {string} [options.locale] - Language override
+ * @param {string} [options.site] - Site name override
  * @returns Page layout data, or `null` if not found.
  * @public
  */

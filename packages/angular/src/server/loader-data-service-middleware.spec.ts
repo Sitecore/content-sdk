@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-jsdoc */
 import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { LoaderFn } from '../loaders/models';
@@ -24,16 +25,16 @@ describe('createLoaderDataServiceMiddleware', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     TestBed.configureTestingModule({
-      providers: [
-        { provide: EXTRACT_REQUEST_CONTEXT_TOKEN, useValue: () => ({}) },
-      ],
+      providers: [{ provide: EXTRACT_REQUEST_CONTEXT_TOKEN, useValue: () => ({}) }],
     });
   });
 
-  function createMiddleware(opts: {
-    loaders: LoaderRegistry;
-    endpoint?: string;
-  }) {
+  /**
+   * @param {{ loaders: import('./models').LoaderRegistry; endpoint?: string }} opts - Middleware factory options
+   * @param {import('./models').LoaderRegistry} opts.loaders - Registered route loaders
+   * @param {string} [opts.endpoint] - Data endpoint path override
+   */
+  function createMiddleware(opts: { loaders: LoaderRegistry; endpoint?: string }) {
     const extractReq = TestBed.inject(EXTRACT_REQUEST_CONTEXT_TOKEN);
     return createLoaderDataServiceMiddleware({
       ...opts,

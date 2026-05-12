@@ -32,9 +32,9 @@ export interface ChildComponentProps {
 /**
  * Get the renderings for the specified placeholder from the rendering layout data.
  * Includes dynamic placeholder handling aligned with React's implementation.
- * @param rendering - rendering data
- * @param name - placeholder name
- * @param isEditing - whether editing mode is active
+ * @param {ComponentRendering | RouteData} rendering - rendering data
+ * @param {string} name - placeholder name
+ * @param {boolean} isEditing - whether editing mode is active
  * @returns array of component renderings
  */
 export const getPlaceholderRenderings = (
@@ -97,7 +97,7 @@ export type PassThroughProps = Readonly<Record<string, unknown>>;
 
 /**
  * Get SXA specific params from Sitecore rendering params.
- * @param rendering - rendering object
+ * @param {ComponentRendering} rendering - rendering object
  * @returns converted SXA params
  */
 export const getSXAParams = (rendering: ComponentRendering): { styles: string } | undefined => {
@@ -114,9 +114,9 @@ export const getSXAParams = (rendering: ComponentRendering): { styles: string } 
 
 /**
  * Merge placeholder-level fields/params with per-component fields/params.
- * @param placeholderFields - placeholder-level fields
- * @param placeholderParams - placeholder-level params
- * @param componentRendering - the component rendering data
+ * @param {{ [key: string]: unknown } | undefined} placeholderFields - placeholder-level fields
+ * @param {{ [key: string]: string } | undefined} placeholderParams - placeholder-level params
+ * @param {ComponentRendering} componentRendering - the component rendering data
  * @returns merged child component props
  */
 export function getChildComponentProps(
@@ -140,11 +140,11 @@ export function getChildComponentProps(
  * Resolve a component type for a rendering definition.
  * Handles hidden renderings, missing components, variant selection, and map lookup.
  * FEaaS/BYOC are intentionally not handled; they fall through to missingComponent.
- * @param renderingDefinition - the rendering to resolve
- * @param placeholderName - current placeholder name (for logging)
- * @param componentMap - the app component map
- * @param hiddenRenderingComponent - optional override for hidden renderings
- * @param missingComponentComponent - optional override for missing/unknown components
+ * @param {ComponentRendering} renderingDefinition - the rendering to resolve
+ * @param {string} placeholderName - current placeholder name (for logging)
+ * @param {ComponentMap | undefined} componentMap - the app component map
+ * @param {Type<unknown> | undefined} hiddenRenderingComponent - optional override for hidden renderings
+ * @param {Type<unknown> | undefined} missingComponentComponent - optional override for missing/unknown components
  * @returns resolved component info
  */
 export const resolveComponentForRendering = (

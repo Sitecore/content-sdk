@@ -10,7 +10,6 @@ import { isFieldValueEmpty, TextField } from '@sitecore-content-sdk/content/layo
  * <h1 [scText]="fields.Title"></h1>
  * <span [scText]="fields.Subtitle" scTextEncode="false"></span>
  * ```
- *
  * @public
  */
 @Directive({

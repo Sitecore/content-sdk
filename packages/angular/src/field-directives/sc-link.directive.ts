@@ -10,7 +10,6 @@ import { getClassFromField } from './utils';
  * ```html
  * <a [scLink]="fields.Link">Optional child content</a>
  * ```
- *
  * @public
  */
 @Directive({

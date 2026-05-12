@@ -12,12 +12,12 @@ export const DEFAULT_EXPORT_NAME = 'Default';
  * @public
  */
 export type AngularCsdkComponent = {
+  /** Named variant exports */
+  [key: string]: Type<unknown> | undefined;
   /** Default component for this rendering */
   default?: Type<unknown>;
   /** SXA convention: uppercase Default */
   Default?: Type<unknown>;
-  /** Named variant exports */
-  [exportName: string]: Type<unknown> | string | undefined;
 };
 
 /**

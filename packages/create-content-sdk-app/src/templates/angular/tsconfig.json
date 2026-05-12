@@ -38,7 +38,6 @@
   "include": [
     "src/**/*.ts",
     "sitecore.config.ts",
-    "sitecore.config.cli.ts",
     "sitecore.cli.config.ts",
     ".sitecore/**/*.ts"
   ],

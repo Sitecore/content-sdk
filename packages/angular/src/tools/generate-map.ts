@@ -16,7 +16,10 @@ export type AngularGenerateMapArgs = Omit<
   'clientComponentMap' | 'clientMapTemplate'
 >;
 
-/** True when the file declares an Angular `@Component`. */
+/**
+ * True when the file declares an Angular `@Component`.
+ * @param {string} filePath - Path to a TypeScript source file
+ */
 function fileHasAngularComponentDecorator(filePath: string): boolean {
   const content = fs.readFileSync(filePath, 'utf8');
   return /\b@Component\s*\(/m.test(content);
@@ -45,8 +48,7 @@ import { ScFormComponent } from '@sitecore-content-sdk/angular';`;
 /**
  * Generates `.sitecore/component-map.ts` for Angular apps from `.ts` sources under configured paths (must declare `@Component`).
  * Flow matches Next.js: {@link collectComponents} → {@link buildAngularMapContent} → write file.
- *
- * @param params - {@link GenerateMapArgs}
+ * @param {GenerateMapArgs} params - {@link GenerateMapArgs}
  * @public
  */
 export const generateMap: GenerateMapFunction = (params: GenerateMapArgs) => {

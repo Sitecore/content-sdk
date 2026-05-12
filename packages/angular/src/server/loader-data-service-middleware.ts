@@ -88,12 +88,17 @@ async function executeLoader(
 
 /**
  * Send the loader response to Express
+ * @param {ExpressResponse} res - Express response
+ * @param {LoaderApiResponse} result - Loader API payload to JSON-encode
  */
 function sendResponse(res: ExpressResponse, result: LoaderApiResponse): void {
   res.json(result);
 }
 
-/** Parse POST body or GET query into LoaderApiRequest, or return a validation error. */
+/**
+ * Parse POST body or GET query into LoaderApiRequest, or return a validation error.
+ * @param {ExpressRequest} req - Incoming Express request
+ */
 function parseLoaderRequest(
   req: ExpressRequest
 ): LoaderApiRequest | { status: number; message: string } {
@@ -126,8 +131,7 @@ function parseLoaderRequest(
  * The endpoint path must match the client: provide the same value to the Angular app via
  * {@link FETCH_DATA_ENDPOINT} (e.g. in app.config.ts). There is no Angular DI in Node/Express,
  * so you pass the endpoint here when calling this function (e.g. from server.ts).
- *
- * @param options - Handler options: loaders and optional endpoint (defaults to {@link LOADER_DATA_ENDPOINT})
+ * @param {ExpressDataHandlerOptions} options - Handler options: loaders and optional endpoint (defaults to {@link LOADER_DATA_ENDPOINT})
  * @returns Express middleware that handles the data endpoint
  * @example
  * ```typescript

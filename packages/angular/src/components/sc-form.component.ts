@@ -31,30 +31,24 @@ const { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
   `,
 })
 export class ScFormComponent {
+  @ViewChild('formContainer', { static: true })
+  private formContainerRef!: ElementRef<HTMLDivElement>;
+
   readonly rendering = input<ComponentRendering>();
   readonly params = input<{ [key: string]: string }>({});
   readonly fields = input<{ [key: string]: unknown }>({});
-
-  @ViewChild('formContainer', { static: true })
-  private formContainerRef!: ElementRef<HTMLDivElement>;
 
   private readonly config = inject(SITECORE_CONFIG_TOKEN, { optional: true });
   private readonly context = inject(SitecoreContextService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly styles = () => {
-    const s = this.params()?.['styles'];
-    return s ? s.replace(/\s+$/, '') : '';
-  };
-  readonly renderingId = () => this.params()?.['RenderingIdentifier'] || undefined;
-
   constructor() {
     afterNextRender(() => {
       if (!isPlatformBrowser(this.platformId)) return;
 
       const p = this.params();
-      const formId = p?.['FormId'];
+      const formId = p?.FormId;
       if (!formId) return;
 
       const cfg = this.config;
@@ -95,4 +89,10 @@ export class ScFormComponent {
         });
     });
   }
+
+  readonly styles = () => {
+    const s = this.params()?.styles;
+    return s ? s.replace(/\s+$/, '') : '';
+  };
+  readonly renderingId = () => this.params()?.RenderingIdentifier || undefined;
 }
