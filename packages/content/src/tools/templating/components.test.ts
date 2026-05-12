@@ -305,11 +305,6 @@ describe('components', () => {
       expect(toPascalCase('MyComponent')).to.equal('MyComponent');
     });
 
-    it('should convert dot-notation to PascalCase', () => {
-      expect(toPascalCase('my.comp')).to.equal('MyComp');
-      expect(toPascalCase('my.long.component.name')).to.equal('MyLongComponentName');
-    });
-
     it('should handle mixed delimiters', () => {
       expect(toPascalCase('my-component_name')).to.equal('MyComponentName');
     });

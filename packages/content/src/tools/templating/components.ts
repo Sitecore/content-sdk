@@ -114,7 +114,7 @@ export interface ComponentImport {
  */
 export const toPascalCase = (name: string): string =>
   name
-    .split(/[-_.]/)
+    .split(/[-_]/)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join('');
 

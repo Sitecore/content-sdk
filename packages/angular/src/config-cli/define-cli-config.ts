@@ -7,11 +7,13 @@ import { generateMap } from '../tools/generate-map';
 
 const noopBuildCommand = async () => {};
 
+type AngularCsdkCliConfig = Omit<SitecoreCliConfigInput, 'config'>;
+
 /**
  * Ensures `build.commands` exists so {@link defineCliConfigCore} validation passes.
- * @param {SitecoreCliConfigInput} cliConfig - CLI configuration being built up
+ * @param {AngularCsdkCliConfig} cliConfig - CLI configuration being built up
  */
-function addDefaultBuildCommands(cliConfig: SitecoreCliConfigInput) {
+function addDefaultBuildCommands(cliConfig: AngularCsdkCliConfig) {
   if (!cliConfig.build) {
     cliConfig.build = {};
   }
@@ -24,7 +26,7 @@ function addDefaultBuildCommands(cliConfig: SitecoreCliConfigInput) {
  * Minimal default scaffold entry so `sitecore-tools project scaffold` remains usable.
  * @param {SitecoreCliConfigInput} cliConfig - CLI configuration being built up
  */
-function addDefaultScaffoldTemplates(cliConfig: SitecoreCliConfigInput) {
+function addDefaultScaffoldTemplates(cliConfig: AngularCsdkCliConfig) {
   if (!cliConfig.scaffold) {
     cliConfig.scaffold = {};
   }
@@ -50,7 +52,7 @@ export class ${componentName}Component {}
  * Registers the Angular component map generator (same CLI entrypoint as Next.js).
  * @param {SitecoreCliConfigInput} cliConfig - CLI configuration being built up
  */
-function addDefaultComponentMapGenerator(cliConfig: SitecoreCliConfigInput) {
+function addDefaultComponentMapGenerator(cliConfig: AngularCsdkCliConfig) {
   cliConfig.componentMap = {
     generator: generateMap,
     paths: ['src/app/components'],
@@ -65,9 +67,9 @@ function addDefaultComponentMapGenerator(cliConfig: SitecoreCliConfigInput) {
  * @returns Resolved {@link SitecoreCliConfig}
  * @public
  */
-export const defineCliConfig = (cliConfig: SitecoreCliConfigInput): SitecoreCliConfig => {
+export const defineCliConfig = (cliConfig: AngularCsdkCliConfig): SitecoreCliConfig => {
   addDefaultBuildCommands(cliConfig);
   addDefaultScaffoldTemplates(cliConfig);
   addDefaultComponentMapGenerator(cliConfig);
-  return defineCliConfigCore(cliConfig);
+  return defineCliConfigCore(cliConfig as SitecoreCliConfigInput);
 };
