@@ -8,7 +8,7 @@
 
 > **containsDefaultEdgeHost**(`str`): `boolean`
 
-Defined in: [content/src/layout/rewrite-edge-host.ts:173](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/content/src/layout/rewrite-edge-host.ts#L173)
+Defined in: [content/src/layout/rewrite-edge-host.ts:173](https://github.com/Sitecore/content-sdk/blob/77825b9deac7ebde4022f21ad02170354dd2da15/packages/content/src/layout/rewrite-edge-host.ts#L173)
 
 Checks if a string contains the default Edge hostname (from the default Edge URL).
 

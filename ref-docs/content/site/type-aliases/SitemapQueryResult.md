@@ -8,7 +8,7 @@
 
 > **SitemapQueryResult** = `object`
 
-Defined in: [content/src/site/sitemap-xml-service.ts:40](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/content/src/site/sitemap-xml-service.ts#L40)
+Defined in: [content/src/site/sitemap-xml-service.ts:40](https://github.com/Sitecore/content-sdk/blob/77825b9deac7ebde4022f21ad02170354dd2da15/packages/content/src/site/sitemap-xml-service.ts#L40)
 
 The schema of data returned in response to sitemaps request
 
@@ -18,7 +18,7 @@ The schema of data returned in response to sitemaps request
 
 > **site**: `object`
 
-Defined in: [content/src/site/sitemap-xml-service.ts:40](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/content/src/site/sitemap-xml-service.ts#L40)
+Defined in: [content/src/site/sitemap-xml-service.ts:40](https://github.com/Sitecore/content-sdk/blob/77825b9deac7ebde4022f21ad02170354dd2da15/packages/content/src/site/sitemap-xml-service.ts#L40)
 
 #### siteInfo
 
