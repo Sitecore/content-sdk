@@ -6,7 +6,7 @@
 
 # Interface: PersonalizeData
 
-Defined in: [personalize/src/personalization/personalizer.ts:170](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/personalize/src/personalization/personalizer.ts#L170)
+Defined in: [personalize/src/personalization/personalizer.ts:170](https://github.com/Sitecore/content-sdk/blob/30b0db8fe768b83f03fd6b9772b0d3e14711c6b2/packages/personalize/src/personalization/personalizer.ts#L170)
 
 An interface that describes the flow execution model attributes input for the library
 
@@ -16,7 +16,7 @@ An interface that describes the flow execution model attributes input for the li
 
 > **channel**: `string`
 
-Defined in: [personalize/src/personalization/personalizer.ts:177](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/personalize/src/personalization/personalizer.ts#L177)
+Defined in: [personalize/src/personalization/personalizer.ts:177](https://github.com/Sitecore/content-sdk/blob/30b0db8fe768b83f03fd6b9772b0d3e14711c6b2/packages/personalize/src/personalization/personalizer.ts#L177)
 
 The touchpoint where the user interacts with your brand.
 For example, for webpages, the channel is "WEB". For mobile app screens, the channel is "MOBILE_APP".
@@ -29,7 +29,7 @@ Format: uppercase.
 
 > `optional` **currency?**: `string`
 
-Defined in: [personalize/src/personalization/personalizer.ts:184](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/personalize/src/personalization/personalizer.ts#L184)
+Defined in: [personalize/src/personalization/personalizer.ts:184](https://github.com/Sitecore/content-sdk/blob/30b0db8fe768b83f03fd6b9772b0d3e14711c6b2/packages/personalize/src/personalization/personalizer.ts#L184)
 
 The alphabetic currency code of the currency the site visitor uses in your app.
 For example, if the site visitor selects Australian dollars as the currency, the currency is "AUD".
@@ -42,7 +42,7 @@ Format: uppercase ISO 4217.
 
 > `optional` **email?**: `string`
 
-Defined in: [personalize/src/personalization/personalizer.ts:190](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/personalize/src/personalization/personalizer.ts#L190)
+Defined in: [personalize/src/personalization/personalizer.ts:190](https://github.com/Sitecore/content-sdk/blob/30b0db8fe768b83f03fd6b9772b0d3e14711c6b2/packages/personalize/src/personalization/personalizer.ts#L190)
 
 The site visitor's email address.
 
@@ -54,7 +54,7 @@ Format: lowercase recommended.
 
 > **friendlyId**: `string`
 
-Defined in: [personalize/src/personalization/personalizer.ts:195](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/personalize/src/personalization/personalizer.ts#L195)
+Defined in: [personalize/src/personalization/personalizer.ts:195](https://github.com/Sitecore/content-sdk/blob/30b0db8fe768b83f03fd6b9772b0d3e14711c6b2/packages/personalize/src/personalization/personalizer.ts#L195)
 
 The unique identifier of the live interactive experience or experiment to run.
 To find the friendly ID in Sitecore Personalize, click the live experience or experiment to run, then click Build summary. The friendly ID is in the Details pane.
@@ -65,7 +65,7 @@ To find the friendly ID in Sitecore Personalize, click the live experience or ex
 
 > `optional` **geo?**: [`PersonalizeGeolocation`](PersonalizeGeolocation.md)
 
-Defined in: [personalize/src/personalization/personalizer.ts:199](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/personalize/src/personalization/personalizer.ts#L199)
+Defined in: [personalize/src/personalization/personalizer.ts:199](https://github.com/Sitecore/content-sdk/blob/30b0db8fe768b83f03fd6b9772b0d3e14711c6b2/packages/personalize/src/personalization/personalizer.ts#L199)
 
 The site visitor's geolocation data.
 
@@ -75,7 +75,7 @@ The site visitor's geolocation data.
 
 > `optional` **identifier?**: [`PersonalizeIdentifierInput`](PersonalizeIdentifierInput.md)
 
-Defined in: [personalize/src/personalization/personalizer.ts:205](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/personalize/src/personalization/personalizer.ts#L205)
+Defined in: [personalize/src/personalization/personalizer.ts:205](https://github.com/Sitecore/content-sdk/blob/30b0db8fe768b83f03fd6b9772b0d3e14711c6b2/packages/personalize/src/personalization/personalizer.ts#L205)
 
 The identifiers used for identifying site visitors.
 
@@ -87,7 +87,7 @@ If set, the experience or experiment runs only for the identified site visitor.
 
 > `optional` **language?**: `string`
 
-Defined in: [personalize/src/personalization/personalizer.ts:216](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/personalize/src/personalization/personalizer.ts#L216)
+Defined in: [personalize/src/personalization/personalizer.ts:216](https://github.com/Sitecore/content-sdk/blob/30b0db8fe768b83f03fd6b9772b0d3e14711c6b2/packages/personalize/src/personalization/personalizer.ts#L216)
 
 The language the site visitor interacts with your brand in.
 For example, if the site visitor selects the Japanese language in your app, the language is "JA".
@@ -104,7 +104,7 @@ Default for server-side events: empty string.
 
 > `optional` **pageVariantIds?**: `string`[]
 
-Defined in: [personalize/src/personalization/personalizer.ts:232](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/personalize/src/personalization/personalizer.ts#L232)
+Defined in: [personalize/src/personalization/personalizer.ts:232](https://github.com/Sitecore/content-sdk/blob/30b0db8fe768b83f03fd6b9772b0d3e14711c6b2/packages/personalize/src/personalization/personalizer.ts#L232)
 
 A list of IDs of personalized page variants.
 
@@ -118,7 +118,7 @@ If unset or an empty array, this property will not be part of the payload.
 
 > `optional` **params?**: `NestedObject`
 
-Defined in: [personalize/src/personalization/personalizer.ts:224](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/personalize/src/personalization/personalizer.ts#L224)
+Defined in: [personalize/src/personalization/personalizer.ts:224](https://github.com/Sitecore/content-sdk/blob/30b0db8fe768b83f03fd6b9772b0d3e14711c6b2/packages/personalize/src/personalization/personalizer.ts#L224)
 
 An object of your choice.
 

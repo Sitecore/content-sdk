@@ -315,11 +315,11 @@ const collectComponents = (opts: {
  * Pages Router:
  * - component-map.ts          : Single component map with Pages Router wrappers
  *
- * App Router (clientComponentMap=true):
+ * App Router (clientComponentMap=true or undefined):
  * - component-map.ts          : Full component map with all components (server, client, universal)
  * - component-map.client.ts   : Client-safe map with client + universal components
  *
- * App Router (clientComponentMap=false or undefined):
+ * App Router (clientComponentMap=false):
  * - component-map.ts          : Full component map with all components (server, client, universal)
  * - component-map.client.ts   : Client-safe map with built-in components only (no user components)
  *
@@ -400,8 +400,10 @@ export const generateMap: GenerateMapFunction = ({
   }
 
   // clientComponentMap=true  -> include user client+universal components
+  // clientComponentMap=undefined  -> include user client+universal components
   // clientComponentMap=false -> built-ins only
-  const clientComponents = clientComponentMap
+  const shouldGenerateClientMap = clientComponentMap ?? true;
+  const clientComponents = shouldGenerateClientMap
     ? collectComponents({ paths, exclude, includeVariants, filter: 'client' })
     : { raw: [] as ComponentFileWithType[], entries: [] as ComponentMapEntry[] };
 
