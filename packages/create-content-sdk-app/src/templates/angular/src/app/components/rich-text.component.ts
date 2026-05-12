@@ -24,3 +24,5 @@ interface RichTextFields {
 export class RichTextComponent extends SxaComponent {
   readonly contentField = computed(() => (this.fields() as RichTextFields)?.Text);
 }
+
+export default RichTextComponent;

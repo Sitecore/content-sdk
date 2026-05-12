@@ -122,3 +122,5 @@ export class PromoComponent extends SxaComponent {
 
   readonly jsonLdScriptId = computed(() => `jsonld-product-${this.renderingId() ?? 'promo'}`);
 }
+
+export { PromoComponent as Default, PromoComponent as WithText };

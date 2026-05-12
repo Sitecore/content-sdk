@@ -256,6 +256,7 @@ const createConfigProxy = (config: SitecoreConfig) => {
 /**
  * Accepts a SitecoreConfigInput object and returns full sitecore configuration
  * @param {SitecoreConfigInput} config override values to be written over default config settings
+ * @param env
  * @returns {SitecoreConfig} full sitecore configuration to use in application
  * @public
  */

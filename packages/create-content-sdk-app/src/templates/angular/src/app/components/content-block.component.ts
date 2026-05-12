@@ -33,3 +33,5 @@ export class ContentBlockComponent extends SxaComponent {
     return (all.content ?? all.Content) as TextField | undefined;
   });
 }
+
+export default ContentBlockComponent;

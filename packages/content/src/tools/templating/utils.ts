@@ -13,11 +13,11 @@ type ComponentSource = ComponentFile | ComponentFileWithType;
 
 /**
  * Transform component description entries for the component map.
- * @param components - The components to transform.
- * @param opts - The options for the transformation.
- * @param opts.includeVariants - Whether to include variants in the component map.
- * @param opts.shouldAnnotateClient - Whether to annotate the client in the component map. Used in frameworks that make server/client distinction.
- * @returns The transformed component description entries.
+ * @param {ComponentSource[]} components - The components to transform.
+ * @param {object} opts - The options for the transformation.
+ * @param {boolean} opts.includeVariants - Whether to include variants in the component map.
+ * @param {boolean} opts.shouldAnnotateClient - Whether to annotate the client in the component map. Used in frameworks that make server/client distinction.
+ * @returns {ComponentMapEntry[]} The transformed component description entries.
  */
 export const prepareComponentsForMap = (
   components: ComponentSource[],

@@ -1,5 +1,10 @@
 import { Component, computed, inject } from '@angular/core';
-import { Field, ScRichTextDirective, SitecoreContextService, TextField } from '@sitecore-content-sdk/angular';
+import {
+  Field,
+  ScRichTextDirective,
+  SitecoreContextService,
+  TextField,
+} from '@sitecore-content-sdk/angular';
 import { StructuredDataComponent } from './structured-data.component';
 import { buildArticleJsonLd } from './content-sdk/json-ld';
 import { SxaComponent } from './content-sdk/sxa.component';
@@ -72,3 +77,5 @@ export class PageContentComponent extends SxaComponent {
     () => `jsonld-article-${this.renderingId() ?? 'page-content'}`
   );
 }
+
+export default PageContentComponent;

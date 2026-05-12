@@ -46,3 +46,5 @@ export class RowSplitterComponent extends SxaComponent {
     return `container-fluid ${rowStyles}`.trimEnd();
   }
 }
+
+export default RowSplitterComponent;

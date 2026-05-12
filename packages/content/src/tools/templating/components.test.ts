@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { getComponentList, filterComponentsByType } from './components';
+import { getComponentList, filterComponentsByType, toPascalCase } from './components';
 import { ComponentFile, ComponentFileWithType } from './components';
 import path from 'path';
 
@@ -282,6 +282,40 @@ describe('components', () => {
       expect(result).to.deep.equal(expected);
 
       globSyncStub.restore();
+    });
+  });
+
+  describe('toPascalCase', () => {
+    it('should convert kebab-case to PascalCase', () => {
+      expect(toPascalCase('my-component')).to.equal('MyComponent');
+      expect(toPascalCase('my-long-component-name')).to.equal('MyLongComponentName');
+    });
+
+    it('should convert snake_case to PascalCase', () => {
+      expect(toPascalCase('my_component')).to.equal('MyComponent');
+      expect(toPascalCase('my_long_component_name')).to.equal('MyLongComponentName');
+    });
+
+    it('should capitalize the first letter of a camelCase string', () => {
+      expect(toPascalCase('myComponent')).to.equal('MyComponent');
+      expect(toPascalCase('myLongComponentName')).to.equal('MyLongComponentName');
+    });
+
+    it('should leave a PascalCase string unchanged', () => {
+      expect(toPascalCase('MyComponent')).to.equal('MyComponent');
+    });
+
+    it('should convert dot-notation to PascalCase', () => {
+      expect(toPascalCase('my.comp')).to.equal('MyComp');
+      expect(toPascalCase('my.long.component.name')).to.equal('MyLongComponentName');
+    });
+
+    it('should handle mixed delimiters', () => {
+      expect(toPascalCase('my-component_name')).to.equal('MyComponentName');
+    });
+
+    it('should capitalize a single lowercase word', () => {
+      expect(toPascalCase('component')).to.equal('Component');
     });
   });
 

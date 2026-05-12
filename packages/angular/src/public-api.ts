@@ -90,8 +90,7 @@ export { ScHiddenRenderingComponent } from './placeholder/sc-hidden-rendering.co
 export { SITECORE_COMPONENT_MAP } from './placeholder/tokens';
 export {
   DEFAULT_EXPORT_NAME,
-  type AngularCsdkComponent,
-  type AngularModule,
+  type AngularContentSdkComponent,
   type ComponentMap,
 } from './components/types';
 export {

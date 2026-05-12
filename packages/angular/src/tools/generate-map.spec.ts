@@ -40,9 +40,7 @@ const mockGetComponentList = vi.mocked(getComponentList);
 const mockPrepareComponentsForMap = vi.mocked(prepareComponentsForMap);
 const mockBuildComponentMapContent = vi.mocked(buildComponentMapContent);
 
-const ANGULAR_BUILTIN_IMPORTS = `import type { Type } from '@angular/core';
-import type { ComponentMap } from '@sitecore-content-sdk/angular';
-import { ScFormComponent } from '@sitecore-content-sdk/angular';`;
+const ANGULAR_BUILTIN_IMPORTS = `import { ScFormComponent } from '@sitecore-content-sdk/angular';`;
 
 const ANGULAR_BUILTIN_MAP_ENTRIES = [`['Form', ScFormComponent]`];
 

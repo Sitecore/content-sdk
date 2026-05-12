@@ -4,6 +4,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { PLATFORM_ID } from '@angular/core';
 import type { Page } from '@sitecore-content-sdk/content/client';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
+import type { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ScFormComponent } from './sc-form.component';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 import { SitecoreContextService } from '../lib/sitecore-context.service';
@@ -34,6 +35,13 @@ const testSitecoreConfig = {
     },
   },
 } as const;
+
+function formRendering(
+  params: Record<string, string>,
+  extra: Partial<ComponentRendering> = {}
+): ComponentRendering {
+  return { componentName: 'Form', params, ...extra } as ComponentRendering;
+}
 
 const makePage = (isEditing: boolean): Page =>
   ({

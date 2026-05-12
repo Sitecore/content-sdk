@@ -58,3 +58,5 @@ export class ContainerComponent extends SxaComponent {
     };
   });
 }
+
+export default ContainerComponent;

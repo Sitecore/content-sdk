@@ -31,9 +31,7 @@ const buildAngularComponentMap: EnhancedComponentMapTemplate = (
   for (const component of components) {
     console.debug(`Registering Content SDK Angular component ${component.componentName}`);
   }
-  const DEFAULT_BUILTIN_IMPORTS = `import type { Type } from '@angular/core';
-import type { ComponentMap } from '@sitecore-content-sdk/angular';
-import { ScFormComponent } from '@sitecore-content-sdk/angular';`;
+  const DEFAULT_BUILTIN_IMPORTS = `import { ScFormComponent } from '@sitecore-content-sdk/angular';`;
 
   const DEFAULT_BUILTIN_MAP_ENTRIES = [`['Form', ScFormComponent]`];
 

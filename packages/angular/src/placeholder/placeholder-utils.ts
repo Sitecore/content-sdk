@@ -6,7 +6,7 @@ import {
   getDynamicPlaceholderPattern,
 } from '@sitecore-content-sdk/content/layout';
 import { HIDDEN_RENDERING_NAME } from '@sitecore-content-sdk/content';
-import { AngularCsdkComponent, ComponentMap, DEFAULT_EXPORT_NAME } from '../components/types';
+import { AngularContentSdkComponent, ComponentMap, DEFAULT_EXPORT_NAME } from '../components/types';
 
 /**
  * An entry in the Angular component map. Maps Sitecore rendering names to Angular component types.
@@ -186,7 +186,7 @@ export const resolveComponentForRendering = (
     };
   }
 
-  let entry: Type<unknown> | AngularCsdkComponent | undefined;
+  let entry: Type<unknown> | AngularContentSdkComponent | undefined;
   const hasComponentMap = !!(componentMap && componentMap.size > 0);
   if (!hasComponentMap) {
     console.warn(
