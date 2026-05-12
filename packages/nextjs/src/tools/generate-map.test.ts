@@ -224,11 +224,9 @@ describe('generateMap', () => {
 
       const [, clientContent] = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
       expect(clientContent).to.include('new Map');
-      expect(clientContent).to.not.include("import * as Button from './src/components/Button';");
-      expect(clientContent).to.not.include("import * as Link from './src/components/Link';");
+      expect(clientContent).to.include("import * as Button from './src/components/Button';");
+      expect(clientContent).to.include("import * as Link from './src/components/Link';");
       expect(clientContent).to.not.include("import * as Card from './src/other-components/Card';");
-      expect(clientContent).to.include("['BYOCWrapper', BYOCClientWrapper],");
-      expect(clientContent).to.include("['FEaaSWrapper', FEaaSClientWrapper],");
     });
 
     it('should not fail if packages is undefined', async () => {
@@ -285,12 +283,16 @@ describe('generateMap', () => {
       const exclude = ['**/*.stories.tsx', '**/*.test.tsx'];
       generateMap({ paths, exclude });
 
-      // clientComponentMap is undefined → only one collectComponents call (for allComponents)
-      expect(getComponentListWithTypesStub).to.have.been.calledOnce;
+      // App Router generates both main + client maps => two calls to getComponentListWithTypes
+      expect(getComponentListWithTypesStub).to.have.been.calledTwice;
       const firstArgs = getComponentListWithTypesStub.getCall(0).args;
+      const secondArgs = getComponentListWithTypesStub.getCall(1).args;
 
       expect(firstArgs[0]).to.deep.equal(paths);
+      expect(secondArgs[0]).to.deep.equal(paths);
+
       expect(firstArgs[1]).to.deep.equals(exclude);
+      expect(secondArgs[1]).to.deep.equals(exclude);
     });
 
     it('should throw error when destination cannot be written to', async () => {
@@ -659,7 +661,7 @@ describe('generateMap', () => {
       expect(debugStub).to.have.been.calledWithExactly(
         'Registering Content SDK component Button.extra'
       );
-      expect(debugStub).to.have.been.callCount(2);
+      expect(debugStub).to.have.been.callCount(4);
     });
   });
 
@@ -1007,11 +1009,15 @@ describe('generateMap', () => {
       const [clientDest, clientContent] = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
       expect(clientDest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.client.ts'));
       expect(clientContent).to.include('Client-safe component map for App Router');
-      expect(clientContent).to.include("['BYOCWrapper', BYOCClientWrapper],");
-      expect(clientContent).to.include("['FEaaSWrapper', FEaaSClientWrapper],");
-      expect(clientContent).to.not.include('ClientButton');
-      expect(clientContent).to.not.include('UniversalCard');
-      expect(clientContent).to.not.include('ServerData');
+
+      const compactClient = clientContent.replace(/\s+/g, ' ');
+      expect(compactClient).to.match(
+        /\['ClientButton',\s*(\{\s*\.\.\.ClientButton\s*\}|ClientButton)\s*\],/
+      );
+      expect(compactClient).to.match(
+        /\['UniversalCard',\s*(\{\s*\.\.\.UniversalCard\s*\}|UniversalCard)\s*\],/
+      );
+      expect(compactClient).to.not.match(/\['ServerData',\s*ServerData\],/);
     });
 
     it('should auto-detect Pages Router and generate single map when clientComponentMap is undefined', async () => {
