@@ -8,7 +8,7 @@
 
 > `const` **COMPONENT\_PREVIEW\_CACHE\_KEY\_PREFIX**: `"component-preview-"` = `'component-preview-'`
 
-Defined in: [content/src/editing/design-library.ts:29](https://github.com/Sitecore/content-sdk/blob/553b16a67e807643f564a3c5208631654e0b2cef/packages/content/src/editing/design-library.ts#L29)
+Defined in: [content/src/editing/design-library.ts:29](https://github.com/Sitecore/content-sdk/blob/30b0db8fe768b83f03fd6b9772b0d3e14711c6b2/packages/content/src/editing/design-library.ts#L29)
 
 **`Internal`**
 
