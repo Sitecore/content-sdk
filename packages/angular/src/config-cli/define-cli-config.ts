@@ -53,9 +53,7 @@ export class ${componentName}Component {}
 function addDefaultComponentMapGenerator(cliConfig: SitecoreCliConfigInput) {
   cliConfig.componentMap = {
     generator: generateMap,
-
     paths: ['src/app/components'],
-
     ...cliConfig.componentMap,
   };
 }

@@ -20,7 +20,7 @@ export const defaultClientMapTemplate: EnhancedComponentMapTemplate = (
   ctx
 ) => {
   const builtInImports = `
-import { BYOCClientWrapper, NextjsContentSdkComponent, FEaaSClientWrapper } from '@sitecore-content-sdk/nextjs';
+import { BYOCClientWrapper, FEaaSClientWrapper } from '@sitecore-content-sdk/nextjs';
 import { Form } from '@sitecore-content-sdk/nextjs';
 `;
 
@@ -38,6 +38,7 @@ import { Form } from '@sitecore-content-sdk/nextjs';
     });
 
   return buildComponentMapContent(entries, componentImports, {
+    framework: 'nextjs',
     headerComment: 'Client-safe component map for App Router',
     isClientMap: true,
     builtInImports,
@@ -128,7 +129,7 @@ export const generateMap: GenerateMapFunction = ({
     } else {
       // default app router server map
       const builtInImports = `
-import { BYOCServerWrapper, NextjsContentSdkComponent, FEaaSServerWrapper } from '@sitecore-content-sdk/nextjs';
+import { BYOCServerWrapper, FEaaSServerWrapper } from '@sitecore-content-sdk/nextjs';
 import { Form } from '@sitecore-content-sdk/nextjs';
 `;
 
@@ -138,6 +139,7 @@ import { Form } from '@sitecore-content-sdk/nextjs';
         `['Form', { ...Form, componentType: 'client' }]`,
       ];
       mainContent = buildComponentMapContent(getComponents.entries, componentImports, {
+        framework: 'nextjs',
         headerComment:
           "Below are built-in components that are available in the app, it's recommended to keep them as is",
         isClientMap: false,
@@ -189,10 +191,22 @@ import { Form } from '@sitecore-content-sdk/nextjs';
       includeVariants,
       filter: 'all',
     }).entries;
+    const builtInPagesRouterImports = `
+import { BYOCWrapper, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';
+import { Form } from '@sitecore-content-sdk/nextjs';
+`;
+    const builtInPagesRouterMapEntries = [
+      `['BYOCWrapper', BYOCWrapper]`,
+      `['FEaaSWrapper', FEaaSWrapper]`,
+      `['Form', { ...Form, componentType: 'client' }]`,
+    ];
     const content = buildComponentMapContent(components, componentImports, {
+      framework: 'nextjs',
       headerComment:
         "Below are built-in components that are available in the app, it's recommended to keep them as is",
       isClientMap: false,
+      builtInImports: builtInPagesRouterImports,
+      builtInMapEntries: builtInPagesRouterMapEntries,
     });
     fs.writeFileSync(path.join(process.cwd(), destination, 'component-map.ts'), content, 'utf8');
 

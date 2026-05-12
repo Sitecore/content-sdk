@@ -20,6 +20,7 @@
     "build": "del-cli dist cli-node && ng build && tsc -p tsconfig.cli.json",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false",
+    "coverage": "ng test --watch=false --coverage",
     "lint": "eslint \"./src/**/*.ts\""
   },
   "prettier": {

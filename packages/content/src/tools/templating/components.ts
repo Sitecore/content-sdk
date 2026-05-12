@@ -42,8 +42,8 @@ export type ComponentMapTemplate = (
 export type EnhancedComponentMapTemplate = (
   components: (ComponentFile | ComponentFileWithType)[],
   componentImports: ComponentImport[] | undefined,
-  ctx?: {
-    entries?: ComponentMapEntry[];
+  ctx: {
+    entries: ComponentMapEntry[];
     includeVariants?: boolean;
     isClientMap?: boolean;
   }

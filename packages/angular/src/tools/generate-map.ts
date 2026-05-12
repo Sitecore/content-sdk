@@ -1,15 +1,13 @@
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import * as path from 'path';
-import type {
-  EnhancedComponentMapTemplate,
-  GenerateMapArgs,
-  GenerateMapFunction,
-} from '@sitecore-content-sdk/content/tools';
-import { getComponentList } from '@sitecore-content-sdk/content/node-tools';
 import {
   buildComponentMapContent,
   prepareComponentsForMap,
-} from '@sitecore-content-sdk/content/src/tools/templating';
+  type EnhancedComponentMapTemplate,
+  type GenerateMapArgs,
+  type GenerateMapFunction,
+} from '@sitecore-content-sdk/content/tools';
+import { getComponentList } from '@sitecore-content-sdk/content/node-tools';
 
 export type AngularGenerateMapArgs = Omit<
   GenerateMapArgs,
@@ -20,10 +18,10 @@ export type AngularGenerateMapArgs = Omit<
  * True when the file declares an Angular `@Component`.
  * @param {string} filePath - Path to a TypeScript source file
  */
-function fileHasAngularComponentDecorator(filePath: string): boolean {
+const fileHasAngularComponentDecorator = (filePath: string): boolean => {
   const content = fs.readFileSync(filePath, 'utf8');
-  return /\b@Component\s*\(/m.test(content);
-}
+  return /@Component\s*\(/m.test(content);
+};
 
 const buildAngularComponentMap: EnhancedComponentMapTemplate = (
   components,
@@ -39,12 +37,14 @@ import { ScFormComponent } from '@sitecore-content-sdk/angular';`;
 
   const DEFAULT_BUILTIN_MAP_ENTRIES = [`['Form', ScFormComponent]`];
 
-  return buildComponentMapContent(ctx.entries, componentImports, {
+  return buildComponentMapContent(ctx.entries!, componentImports, {
     framework: 'angular',
     builtInImports: DEFAULT_BUILTIN_IMPORTS,
     builtInMapEntries: DEFAULT_BUILTIN_MAP_ENTRIES,
-  });
+    // Content SDK public types omit `framework`; implementation reads it (see packages/content/src/tools/templating/utils.ts).
+  } as never);
 };
+
 /**
  * Generates `.sitecore/component-map.ts` for Angular apps from `.ts` sources under configured paths (must declare `@Component`).
  * Flow matches Next.js: {@link collectComponents} → {@link buildAngularMapContent} → write file.

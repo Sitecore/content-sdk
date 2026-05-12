@@ -63,11 +63,9 @@ export const prepareComponentsForMap = (
         imports.push(`import * as ${group.base.moduleName} from '${group.base.importPath}';`);
         spreads.push(`...${group.base.moduleName}`);
       }
-      const annotateClient =
-        opts.shouldAnnotateClient ??
-        (!!group.base && 'componentType' in group.base && group.base.componentType === 'client'
-          ? true
-          : false);
+      const annotateClient = opts.shouldAnnotateClient
+        ? !!group.base && 'componentType' in group.base && group.base.componentType === 'client'
+        : false;
 
       let valueExpr: string;
       if (spreads.length) {
@@ -86,9 +84,9 @@ export const prepareComponentsForMap = (
       // Variants disabled: single entry per group
       if (group.base) {
         imports.push(`import * as ${group.base.moduleName} from '${group.base.importPath}';`);
-        const annotateClient =
-          opts.shouldAnnotateClient ??
-          ('componentType' in group.base && group.base.componentType === 'client' ? true : false);
+        const annotateClient = opts.shouldAnnotateClient
+          ? 'componentType' in group.base && group.base.componentType === 'client'
+          : false;
         entries.push({
           key: group.prefix,
           imports,
@@ -124,13 +122,13 @@ type TemplateOptions = {
   /** Built-in map entries to include in the map */
   builtInMapEntries?: string[];
   /** Framework name to use in the component map */
-  framework?: string;
+  framework: string;
 };
 
 export const buildComponentMapContent = (
   entries: ComponentMapEntry[],
   componentImports: ComponentImport[] | undefined,
-  options: TemplateOptions = {}
+  options: TemplateOptions
 ): string => {
   const {
     headerComment = "Below are built-in components that are available in the app, it's recommended to keep them as is",
@@ -141,10 +139,10 @@ export const buildComponentMapContent = (
   const frameworkComponentTypeName = `${
     framework.charAt(0).toUpperCase() + framework.slice(1)
   }ContentSdkComponent`;
-  const frameworkImportString = `import { ${frameworkComponentTypeName} } from '@sitecore-content-sdk/${framework}';`;
+  const frameworkImportString = `import { ${frameworkComponentTypeName} } from '@sitecore-content-sdk/${framework}';\n`;
   const wildcardImports: string[] = [];
   const namedImports: string[] = [];
-  const builtInImports = [frameworkImportString, ...(options.builtInImports || [])];
+  const builtInImports = frameworkImportString + (options.builtInImports || '');
 
   const builtInMapEntries = options.builtInMapEntries ?? [];
 
@@ -194,7 +192,8 @@ export const buildComponentMapContent = (
   });
 
   return `// ${headerComment}
-${builtInImports}${importsSection}
+${builtInImports}
+${importsSection}
 
 export const componentMap = new Map<string, ${frameworkComponentTypeName}>([
 ${componentMapEntries
