@@ -7,5 +7,6 @@
     "strictPropertyInitialization": false,
     "typeRoots": ["./node_modules/@types", "./typings"],
     "skipLibCheck": true
-  }
+  },
+  "exclude": ["./src/config-cli/**/*", "./src/tools/**/*"]
 }

@@ -6,33 +6,11 @@ import {
   getDynamicPlaceholderPattern,
 } from '@sitecore-content-sdk/content/layout';
 import { HIDDEN_RENDERING_NAME } from '@sitecore-content-sdk/content';
-
-/**
- * SXA uses a special export name to identify the "default" variant.
- */
-export const DEFAULT_EXPORT_NAME = 'Default';
-
-/**
- * An entry in the Angular component map. Maps Sitecore rendering names to Angular component types.
- * Supports SXA rendering variants via named exports alongside a default.
- * @public
- */
-export type AngularModule = {
-  /** Default component for this rendering */
-  default?: Type<unknown>;
-  /** SXA convention: uppercase Default */
-  Default?: Type<unknown>;
-  /** Named variant exports */
-  [exportName: string]: Type<unknown> | string | undefined;
-  /** Component runtime type (reserved for future use) */
-  componentType?: 'client' | 'server' | 'universal';
-};
-
-/**
- * The Angular component map type: maps Sitecore rendering names to component types or modules.
- * @public
- */
-export type ComponentMap = Map<string, Type<unknown> | AngularModule>;
+import {
+  AngularCsdkComponent,
+  ComponentMap,
+  DEFAULT_EXPORT_NAME,
+} from '../components/types';
 
 /**
  * Result of resolving a component for a rendering definition.
@@ -122,9 +100,7 @@ export type PassThroughProps = Readonly<Record<string, unknown>>;
  * @param rendering - rendering object
  * @returns converted SXA params
  */
-export const getSXAParams = (
-  rendering: ComponentRendering
-): { styles: string } | undefined => {
+export const getSXAParams = (rendering: ComponentRendering): { styles: string } | undefined => {
   if (!rendering.params) return { styles: '' };
 
   const { GridParameters, Styles } = rendering.params;
@@ -192,13 +168,14 @@ export const resolveComponentForRendering = (
     };
   }
 
-  let entry: Type<unknown> | AngularModule | undefined;
-  if (!componentMap || componentMap.size === 0) {
+  let entry: Type<unknown> | AngularCsdkComponent | undefined;
+  const hasComponentMap = !!(componentMap && componentMap.size > 0);
+  if (!hasComponentMap) {
     console.warn(
       `No components were available in component map to service request for component ${renderingDefinition.componentName}`
     );
   } else {
-    entry = componentMap.get(renderingDefinition.componentName);
+    entry = componentMap!.get(renderingDefinition.componentName);
   }
 
   if (!entry) {
@@ -216,7 +193,7 @@ export const resolveComponentForRendering = (
     return { component: entry, isEmpty: false };
   }
 
-  // AngularModule: handle SXA rendering variants
+  // AngularCsdkComponent (SXA variants): pick export by FieldNames
   const exportName = renderingDefinition.params?.FieldNames;
   const resolved =
     exportName && exportName !== DEFAULT_EXPORT_NAME
@@ -224,8 +201,7 @@ export const resolveComponentForRendering = (
       : entry.default || entry.Default;
 
   if (!resolved || typeof resolved !== 'function') {
-    const variantLabel =
-      exportName && exportName !== DEFAULT_EXPORT_NAME ? ` (${exportName})` : '';
+    const variantLabel = exportName && exportName !== DEFAULT_EXPORT_NAME ? ` (${exportName})` : '';
     console.error(
       `Placeholder ${placeholderName} contains unknown component ${renderingDefinition.componentName}${variantLabel}. Ensure that an Angular component exists for it, and that it is registered in your component map.`
     );

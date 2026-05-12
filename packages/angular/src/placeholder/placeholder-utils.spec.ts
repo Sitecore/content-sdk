@@ -2,14 +2,12 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Component } from '@angular/core';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
+import { DEFAULT_EXPORT_NAME, type AngularModule, type ComponentMap } from '../components/types';
 import {
   getPlaceholderRenderings,
   getSXAParams,
   getChildComponentProps,
   resolveComponentForRendering,
-  ComponentMap,
-  AngularModule,
-  DEFAULT_EXPORT_NAME,
 } from './placeholder-utils';
 
 @Component({ selector: 'test-a', template: 'A', standalone: true })

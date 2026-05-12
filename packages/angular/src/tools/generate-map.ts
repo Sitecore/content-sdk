@@ -1,0 +1,81 @@
+import * as fs from 'fs';
+import * as path from 'path';
+import type {
+  EnhancedComponentMapTemplate,
+  GenerateMapArgs,
+  GenerateMapFunction,
+} from '@sitecore-content-sdk/content/tools';
+import { getComponentList } from '@sitecore-content-sdk/content/node-tools';
+import {
+  buildComponentMapContent,
+  prepareComponentsForMap,
+} from '@sitecore-content-sdk/content/src/tools/templating';
+
+export type AngularGenerateMapArgs = Omit<
+  GenerateMapArgs,
+  'clientComponentMap' | 'clientMapTemplate'
+>;
+
+/** True when the file declares an Angular `@Component`. */
+function fileHasAngularComponentDecorator(filePath: string): boolean {
+  const content = fs.readFileSync(filePath, 'utf8');
+  return /\b@Component\s*\(/m.test(content);
+}
+
+const buildAngularComponentMap: EnhancedComponentMapTemplate = (
+  components,
+  componentImports,
+  ctx
+) => {
+  for (const component of components) {
+    console.debug(`Registering Content SDK Angular component ${component.componentName}`);
+  }
+  const DEFAULT_BUILTIN_IMPORTS = `import type { Type } from '@angular/core';
+import type { ComponentMap } from '@sitecore-content-sdk/angular';
+import { ScFormComponent } from '@sitecore-content-sdk/angular';`;
+
+  const DEFAULT_BUILTIN_MAP_ENTRIES = [`['Form', ScFormComponent]`];
+
+  return buildComponentMapContent(ctx.entries, componentImports, {
+    framework: 'angular',
+    builtInImports: DEFAULT_BUILTIN_IMPORTS,
+    builtInMapEntries: DEFAULT_BUILTIN_MAP_ENTRIES,
+  });
+};
+/**
+ * Generates `.sitecore/component-map.ts` for Angular apps from `.ts` sources under configured paths (must declare `@Component`).
+ * Flow matches Next.js: {@link collectComponents} → {@link buildAngularMapContent} → write file.
+ *
+ * @param params - {@link GenerateMapArgs}
+ * @public
+ */
+export const generateMap: GenerateMapFunction = (params: GenerateMapArgs) => {
+  const {
+    paths,
+    destination = '.sitecore',
+    exclude,
+    componentImports,
+    includeVariants = true,
+    mapTemplate,
+  } = params;
+
+  const comps = getComponentList(paths, exclude, includeVariants);
+
+  const withComponentDecorator = comps.filter((c) => fileHasAngularComponentDecorator(c.filePath));
+
+  const processedComponents = prepareComponentsForMap(withComponentDecorator, {
+    includeVariants: includeVariants,
+  });
+
+  const mapTemplateFn = mapTemplate ?? buildAngularComponentMap;
+
+  const content = mapTemplateFn(withComponentDecorator, componentImports, {
+    entries: processedComponents,
+    includeVariants,
+    isClientMap: false,
+  });
+
+  const outDir = path.join(process.cwd(), destination);
+  fs.mkdirSync(outDir, { recursive: true });
+  fs.writeFileSync(path.join(outDir, 'component-map.ts'), content, 'utf8');
+};

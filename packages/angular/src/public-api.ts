@@ -89,8 +89,12 @@ export { ScMissingComponentComponent } from './placeholder/sc-missing-component.
 export { ScHiddenRenderingComponent } from './placeholder/sc-hidden-rendering.component';
 export { SITECORE_COMPONENT_MAP } from './placeholder/tokens';
 export {
-  type ComponentMap,
+  DEFAULT_EXPORT_NAME,
+  type AngularCsdkComponent,
   type AngularModule,
+  type ComponentMap,
+} from './components/types';
+export {
   type ChildComponentProps,
   type ComponentForRendering,
   type PassThroughProps,
@@ -98,7 +102,6 @@ export {
   getSXAParams,
   getChildComponentProps,
   resolveComponentForRendering,
-  DEFAULT_EXPORT_NAME,
 } from './placeholder/placeholder-utils';
 
 // ─── Field directives ──────────────────────────────────────────

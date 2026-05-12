@@ -1,210 +1,17 @@
 import {
-  ComponentFile,
   GenerateMapArgs,
   GenerateMapFunction,
-  ComponentImport,
   filterComponentsByType,
   ComponentFileWithType,
   EnhancedComponentMapTemplate,
   ComponentMapTemplate,
   ComponentMapEntry,
+  prepareComponentsForMap,
+  buildComponentMapContent,
 } from '@sitecore-content-sdk/content/tools';
 import * as path from 'path';
 import * as fs from 'fs';
 import { detectRouterType, getComponentListWithTypes } from './templating/utils';
-
-/**
- * A component source can be either a file or a file with type information.
- */
-type ComponentSource = ComponentFile | ComponentFileWithType;
-
-/**
- * Template options for component map generation
- */
-type TemplateOptions = {
-  /** Custom header comment for the generated map */
-  headerComment?: string;
-  /** Whether this is a client-only map (no need for componentType annotations) */
-  isClientMap?: boolean;
-  /** Built-in imports string to include in the map */
-  builtInImports?: string;
-  /** Built-in map entries to include in the map */
-  builtInMapEntries?: string[];
-};
-
-// Common builder for Next.js component map content
-const prepareComponentsForMap = (
-  components: ComponentSource[],
-  opts: { includeVariants: boolean }
-): ComponentMapEntry[] => {
-  const groups = new Map<
-    string,
-    { dir: string; prefix: string; base?: ComponentSource; neighbors: ComponentSource[] }
-  >();
-
-  const getPrefix = (name: string) => {
-    const index = name.indexOf('.');
-    return index === -1 ? name : name.slice(0, index);
-  };
-
-  for (const file of components) {
-    const dir = path.dirname(file.filePath).replace(/\\/g, '/');
-    const prefix = getPrefix(file.componentName);
-    const key = `${dir}::${prefix}`;
-
-    let group = groups.get(key);
-    if (!group) {
-      group = { dir, prefix, neighbors: [] };
-      groups.set(key, group);
-    }
-
-    if (file.componentName === prefix) group.base = file;
-    else group.neighbors.push(file);
-  }
-
-  const entries: ComponentMapEntry[] = [];
-
-  for (const group of groups.values()) {
-    const imports: string[] = [];
-
-    if (opts.includeVariants) {
-      const spreads: string[] = [];
-      for (const neighbor of group.neighbors) {
-        imports.push(`import * as ${neighbor.moduleName} from '${neighbor.importPath}';`);
-        spreads.push(`...${neighbor.moduleName}`);
-      }
-      if (group.base) {
-        imports.push(`import * as ${group.base.moduleName} from '${group.base.importPath}';`);
-        spreads.push(`...${group.base.moduleName}`);
-      }
-      const annotateClient =
-        !!group.base && 'componentType' in group.base && group.base.componentType === 'client';
-
-      let valueExpr: string;
-      if (spreads.length) {
-        valueExpr = spreads.join(', ');
-      } else {
-        valueExpr = group.base ? group.base.moduleName : group.neighbors[0].moduleName;
-      }
-
-      entries.push({
-        key: group.prefix,
-        imports,
-        valueExpr,
-        annotateClient,
-      });
-    } else {
-      // Variants disabled: single entry per group
-      if (group.base) {
-        imports.push(`import * as ${group.base.moduleName} from '${group.base.importPath}';`);
-        const annotateClient =
-          'componentType' in group.base && group.base.componentType === 'client';
-        entries.push({
-          key: group.prefix,
-          imports,
-          valueExpr: group.base.moduleName,
-          annotateClient,
-        });
-      } else if (group.neighbors.length) {
-        const first = group.neighbors[0];
-        imports.push(`import * as ${first.moduleName} from '${first.importPath}';`);
-        entries.push({
-          key: group.prefix,
-          imports,
-          valueExpr: first.moduleName,
-          annotateClient: false,
-        });
-      }
-    }
-  }
-
-  return entries;
-};
-
-const buildNextjsMapContent = (
-  entries: ComponentMapEntry[],
-  componentImports: ComponentImport[] | undefined,
-  options: TemplateOptions = {}
-): string => {
-  const isAppRouter = detectRouterType() === 'app';
-  const {
-    headerComment = "Below are built-in components that are available in the app, it's recommended to keep them as is",
-    isClientMap = false,
-  } = options;
-
-  const wildcardImports: string[] = [];
-  const namedImports: string[] = [];
-  const builtInImports =
-    options.builtInImports ||
-    `
-import { BYOCWrapper, NextjsContentSdkComponent, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';
-import { Form } from '@sitecore-content-sdk/nextjs';
-`;
-
-  const builtInMapEntries = options.builtInMapEntries || [
-    `['BYOCWrapper', BYOCWrapper]`,
-    `['FEaaSWrapper', FEaaSWrapper]`,
-    `['Form', ${isAppRouter ? '{ ...Form, componentType: \'client\' }' : 'Form'}]`,
-  ];
-
-  // Add per-entry imports
-  entries.forEach((e) => wildcardImports.push(...e.imports));
-
-  // Handle package imports
-  componentImports?.forEach((pkg) => {
-    if (pkg.importInfo.namedImports) {
-      namedImports.push(
-        `import { ${pkg.importInfo.namedImports.join(', ')} } from '${pkg.importInfo.importFrom}';`
-      );
-    } else {
-      wildcardImports.push(`import * as ${pkg.importName} from '${pkg.importInfo.importFrom}';`);
-    }
-  });
-
-  const importLines = [
-    headerComment.includes('built-in') ? '// end of built-in components' : null,
-    ...wildcardImports,
-    ...namedImports,
-  ].filter(Boolean) as string[];
-
-  const importsSection = importLines.length ? `\n${importLines.join('\n')}` : '';
-
-  // Build entry lines (package named imports are appended below)
-  const componentMapEntries: string[] = builtInMapEntries;
-  for (const e of entries) {
-    const value =
-      !isClientMap && e.annotateClient
-        ? `{ ${e.valueExpr}, componentType: 'client' }`
-        : e.valueExpr.includes('...')
-        ? `{ ${e.valueExpr} }`
-        : e.valueExpr;
-    componentMapEntries.push(`['${e.key}', ${value}]`);
-  }
-
-  // Add package-based entries
-  componentImports?.forEach((pkg) => {
-    if (pkg.importInfo.namedImports) {
-      pkg.importInfo.namedImports.forEach((name: string) => {
-        componentMapEntries.push(`['${name}', ${name}]`);
-      });
-    } else {
-      componentMapEntries.push(`['${pkg.importName}', ${pkg.importName}]`);
-    }
-  });
-
-  return `// ${headerComment}
-${builtInImports}${importsSection}
-
-export const componentMap = new Map<string, NextjsContentSdkComponent>([
-${componentMapEntries
-  .map((component) => {
-    return `  ${component},\n`;
-  })
-  .join('')}]);
-
-export default componentMap;
-`;
-};
 
 // default client template
 export const defaultClientMapTemplate: EnhancedComponentMapTemplate = (
@@ -227,9 +34,10 @@ import { Form } from '@sitecore-content-sdk/nextjs';
     ctx?.entries ??
     prepareComponentsForMap(components as ComponentFileWithType[], {
       includeVariants: ctx?.includeVariants ?? true,
+      shouldAnnotateClient: true,
     });
 
-  return buildNextjsMapContent(entries, componentImports, {
+  return buildComponentMapContent(entries, componentImports, {
     headerComment: 'Client-safe component map for App Router',
     isClientMap: true,
     builtInImports,
@@ -262,7 +70,10 @@ const collectComponents = (opts: {
 
   return {
     raw: filtered,
-    entries: prepareComponentsForMap(filtered, { includeVariants: opts.includeVariants }),
+    entries: prepareComponentsForMap(filtered, {
+      includeVariants: opts.includeVariants,
+      shouldAnnotateClient: true,
+    }),
   };
 };
 
@@ -326,7 +137,7 @@ import { Form } from '@sitecore-content-sdk/nextjs';
         `['FEaaSWrapper', FEaaSServerWrapper]`,
         `['Form', { ...Form, componentType: 'client' }]`,
       ];
-      mainContent = buildNextjsMapContent(getComponents.entries, componentImports, {
+      mainContent = buildComponentMapContent(getComponents.entries, componentImports, {
         headerComment:
           "Below are built-in components that are available in the app, it's recommended to keep them as is",
         isClientMap: false,
@@ -378,7 +189,7 @@ import { Form } from '@sitecore-content-sdk/nextjs';
       includeVariants,
       filter: 'all',
     }).entries;
-    const content = buildNextjsMapContent(components, componentImports, {
+    const content = buildComponentMapContent(components, componentImports, {
       headerComment:
         "Below are built-in components that are available in the app, it's recommended to keep them as is",
       isClientMap: false,

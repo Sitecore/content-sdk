@@ -15,11 +15,11 @@ import { CommonModule } from '@angular/common';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
 import { SitecoreContextService } from '../lib/sitecore-context.service';
 import { SITECORE_COMPONENT_MAP } from './tokens';
+import type { ComponentMap } from '../components/types';
 import {
   getPlaceholderRenderings,
   getChildComponentProps,
   resolveComponentForRendering,
-  ComponentMap,
   type PassThroughProps,
 } from './placeholder-utils';
 import { ScMissingComponentComponent } from './sc-missing-component.component';
