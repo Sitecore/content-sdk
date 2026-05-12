@@ -167,8 +167,15 @@ describe('layout-personalizer', () => {
           uid: 'root-uid',
           componentName: 'RootComponent',
           dataSource: 'root-datasource',
-          placeholders: {
-            main: [nestedHiddenComponent],
+          experiences: {
+            mountain_bike_audience: {
+              uid: 'root-uid',
+              componentName: 'RootComponent',
+              dataSource: 'root-variant-datasource',
+              placeholders: {
+                main: [nestedHiddenComponent],
+              },
+            },
           },
         };
 
@@ -183,7 +190,7 @@ describe('layout-personalizer', () => {
           {
             uid: 'root-uid',
             componentName: 'RootComponent',
-            dataSource: 'root-datasource',
+            dataSource: 'root-variant-datasource',
             placeholders: {
               main: [
                 {
@@ -215,9 +222,16 @@ describe('layout-personalizer', () => {
         const rootComponent = {
           uid: 'root-uid',
           componentName: 'RootComponent',
-          dataSource: 'root-datasource',
-          placeholders: {
-            main: [nestedHiddenComponent],
+          dataSource: 'root-default-datasource',
+          experiences: {
+            mountain_bike_audience: {
+              uid: 'root-uid',
+              componentName: 'RootComponent',
+              dataSource: 'root-variant-datasource',
+              placeholders: {
+                nested: [nestedHiddenComponent],
+              },
+            },
           },
         };
 
@@ -232,9 +246,9 @@ describe('layout-personalizer', () => {
           {
             uid: 'root-uid',
             componentName: 'RootComponent',
-            dataSource: 'root-datasource',
+            dataSource: 'root-variant-datasource',
             placeholders: {
-              main: [],
+              nested: [],
             },
           },
         ]);
