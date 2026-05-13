@@ -8,18 +8,18 @@
 
 > `const` **generateMap**: `GenerateMapFunction`
 
-Defined in: [nextjs/src/tools/generate-map.ts:337](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/nextjs/src/tools/generate-map.ts#L337)
+Defined in: [nextjs/src/tools/generate-map.ts:337](https://github.com/Sitecore/content-sdk/blob/77825b9deac7ebde4022f21ad02170354dd2da15/packages/nextjs/src/tools/generate-map.ts#L337)
 
 Generate and write componentMap.ts files based on provided params.
 
 Pages Router:
 - component-map.ts          : Single component map with Pages Router wrappers
 
-App Router (clientComponentMap=true):
+App Router (clientComponentMap=true or undefined):
 - component-map.ts          : Full component map with all components (server, client, universal)
 - component-map.client.ts   : Client-safe map with client + universal components
 
-App Router (clientComponentMap=false or undefined):
+App Router (clientComponentMap=false):
 - component-map.ts          : Full component map with all components (server, client, universal)
 - component-map.client.ts   : Client-safe map with built-in components only (no user components)
 
