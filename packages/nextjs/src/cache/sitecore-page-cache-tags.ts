@@ -16,6 +16,19 @@ function normalizePathname(pathname: string): string {
   return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
 }
 
+/** Trim leading and trailing `/` without regex (linear time; avoids ReDoS flags on path-derived input). */
+function trimSlashes(part: string): string {
+  let start = 0;
+  let end = part.length;
+  while (start < end && part[start] === '/') {
+    start++;
+  }
+  while (end > start && part[end - 1] === '/') {
+    end--;
+  }
+  return part.slice(start, end);
+}
+
 /**
  * Normalizes App Router catch-all `path` segments the same way as `SitecoreClient.parsePath` for a
  * string array (leading slash, trim segments, drop empty `/` parts).
@@ -27,7 +40,7 @@ function personalizedPathnameFromPathSegments(path: string[]): string {
   }
   return `/${path
     .filter((part) => part !== '/')
-    .map((part) => part.replace(/^\/+/, '').replace(/\/+$/, ''))
+    .map((part) => trimSlashes(part))
     .join('/')}`;
 }
 
