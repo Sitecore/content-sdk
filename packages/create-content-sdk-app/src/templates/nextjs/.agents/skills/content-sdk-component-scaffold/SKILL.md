@@ -1,6 +1,6 @@
 ---
 name: content-sdk-component-scaffold
-description: Creates new Sitecore components with correct file structure, props interface, and placement under src/components/. Use when adding a new component from scratch or scaffolding a component. Pages Router: register in .sitecore/component-map.ts only.
+description: "Creates new Sitecore components with correct file structure, props interface, and placement under src/components/. Use when adding a new component from scratch, scaffolding a component, or creating a React component for Sitecore layout placeholders. Pages Router uses a single component map at .sitecore/component-map.ts."
 ---
 
 # Content SDK Component Scaffold (Pages Router)
@@ -13,9 +13,34 @@ Scaffold new Sitecore components so they integrate with the layout and editing p
 - Task involves creating a new React component that will be rendered from Sitecore layout/placeholders.
 - User mentions "new component," "add component," or "component file structure."
 
-## How to perform
+## How to Perform
 
-- Create a new file under `src/components/` (or existing feature folder). Define props (fields, params), export a single default component. Register in `.sitecore/component-map.ts` (content-sdk-component-registration). Run `npm run build` to verify.
+1. Create a new file under `src/components/` (or an existing feature folder).
+2. Define a props interface with the component's fields and params, then export a single default component:
+
+```tsx
+import { Text, Field } from '@sitecore-content-sdk/react';
+
+interface HeroBannerProps {
+  fields: {
+    heading: Field<string>;
+    subheading: Field<string>;
+  };
+  params: { [key: string]: string };
+}
+
+export default function HeroBanner({ fields, params }: HeroBannerProps) {
+  return (
+    <div className={`component ${params.styles || ''}`}>
+      <Text field={fields.heading} tag="h1" />
+      <Text field={fields.subheading} tag="p" />
+    </div>
+  );
+}
+```
+
+3. Register the component in `.sitecore/component-map.ts` (see content-sdk-component-registration).
+4. Run `npm run build` and confirm the component resolves in layout preview or editing mode.
 
 ## Hard Rules
 
