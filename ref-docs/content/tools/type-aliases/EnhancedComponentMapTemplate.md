@@ -4,11 +4,11 @@
 
 [@sitecore-content-sdk/content](../../README.md) / [tools](../README.md) / EnhancedComponentMapTemplate
 
-# Type Alias: EnhancedComponentMapTemplate()
+# Type Alias: EnhancedComponentMapTemplate
 
 > **EnhancedComponentMapTemplate** = (`components`, `componentImports`, `ctx`) => `string`
 
-Defined in: [content/src/tools/templating/components.ts:42](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/tools/templating/components.ts#L42)
+Defined in: [content/src/tools/templating/components.ts:42](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/tools/templating/components.ts#L42)
 
 **`Internal`**
 

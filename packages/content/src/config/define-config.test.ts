@@ -10,7 +10,7 @@ import {
 import { SitecoreConfigInput } from './models';
 import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
 
-const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT, ERROR_MESSAGES } = constants;
 
 describe('define-config', () => {
   const mockConfig: SitecoreConfigInput = {
@@ -274,9 +274,7 @@ describe('define-config', () => {
       const cfg: SitecoreConfigInput = {
         api: { edge: { contextId: '', clientContextId: 'client-id' } },
       };
-      expect(() => defineConfig(cfg)).to.throw(
-        'Configuration error: provide either Edge contextId'
-      );
+      expect(() => defineConfig(cfg)).to.throw(ERROR_MESSAGES.MV_007);
     });
 
     it('throws when server-side has neither Edge contextId nor Local credentials', () => {
@@ -290,16 +288,12 @@ describe('define-config', () => {
         },
       };
 
-      expect(() => defineConfig(badConfig)).to.throw(
-        'Configuration error: provide either Edge contextId'
-      );
+      expect(() => defineConfig(badConfig)).to.throw(ERROR_MESSAGES.MV_007);
     });
 
     it('fails when API configuration is empty', () => {
       const cfg = { api: {} } as SitecoreConfigInput;
-      expect(() => defineConfig(cfg)).to.throw(
-        'Configuration error: provide either Edge contextId'
-      );
+      expect(() => defineConfig(cfg)).to.throw(ERROR_MESSAGES.MV_007);
     });
   });
 
@@ -319,9 +313,7 @@ describe('define-config', () => {
 
       const config = defineConfig(cfg);
 
-      expect(() => config.api.edge.contextId).to.throw(
-        'Configuration error: provide either Edge contextId'
-      );
+      expect(() => config.api.edge.contextId).to.throw(ERROR_MESSAGES.MV_007);
     });
 
     it('throws when server-side has neither Edge contextId nor Local credentials', () => {
@@ -337,12 +329,8 @@ describe('define-config', () => {
 
       const config = defineConfig(badConfig);
 
-      expect(() => config.api.edge.contextId).to.throw(
-        'Configuration error: provide either Edge contextId'
-      );
-      expect(() => config.api.local.apiKey).to.throw(
-        'Configuration error: provide either Edge contextId'
-      );
+      expect(() => config.api.edge.contextId).to.throw(ERROR_MESSAGES.MV_007);
+      expect(() => config.api.local.apiKey).to.throw(ERROR_MESSAGES.MV_007);
     });
 
     it('fails when API configuration is empty', () => {
@@ -350,12 +338,8 @@ describe('define-config', () => {
 
       const config = defineConfig(cfg);
 
-      expect(() => config.api.edge.contextId).to.throw(
-        'Configuration error: provide either Edge contextId'
-      );
-      expect(() => config.api.local.apiKey).to.throw(
-        'Configuration error: provide either Edge contextId'
-      );
+      expect(() => config.api.edge.contextId).to.throw(ERROR_MESSAGES.MV_007);
+      expect(() => config.api.local.apiKey).to.throw(ERROR_MESSAGES.MV_007);
     });
   });
 
@@ -385,9 +369,7 @@ describe('define-config', () => {
 
       it('requires Edge or Local; clientContextId alone is insufficient', () => {
         const cfg = { api: { edge: { contextId: '', clientContextId: 'client-id' } } };
-        expect(() => defineConfig(cfg)).to.throw(
-          'Configuration error: provide either Edge contextId'
-        );
+        expect(() => defineConfig(cfg)).to.throw(ERROR_MESSAGES.MV_007);
       });
     });
 
@@ -410,9 +392,7 @@ describe('define-config', () => {
       it('requires Edge or Local; clientContextId alone is insufficient', () => {
         const cfg = { api: { edge: { contextId: '', clientContextId: 'client-id' } } };
         const config = defineConfig(cfg);
-        expect(() => config.api.edge.contextId).to.throw(
-          'Configuration error: provide either Edge contextId'
-        );
+        expect(() => config.api.edge.contextId).to.throw(ERROR_MESSAGES.MV_007);
       });
     });
   });

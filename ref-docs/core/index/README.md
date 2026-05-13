@@ -22,8 +22,12 @@
 
 - [CacheClient](interfaces/CacheClient.md)
 - [CacheOptions](interfaces/CacheOptions.md)
+- [CoreContext](interfaces/CoreContext.md)
 - [GraphQLClient](interfaces/GraphQLClient.md)
+- [InitContentSdkParams](interfaces/InitContentSdkParams.md)
 - [NativeDataFetcherResponse](interfaces/NativeDataFetcherResponse.md)
+- [Plugin](interfaces/Plugin.md)
+- [PluginAdapter](interfaces/PluginAdapter.md)
 - [RetryStrategy](interfaces/RetryStrategy.md)
 
 ## Type Aliases
@@ -37,6 +41,7 @@
 - [GraphQLRequestClientFactoryConfig](type-aliases/GraphQLRequestClientFactoryConfig.md)
 - [NativeDataFetcherConfig](type-aliases/NativeDataFetcherConfig.md)
 - [NativeDataFetcherError](type-aliases/NativeDataFetcherError.md)
+- [PluginDependency](type-aliases/PluginDependency.md)
 
 ## Variables
 
@@ -47,3 +52,6 @@
 ## Functions
 
 - [enableDebug](functions/enableDebug.md)
+- [getCoreContext](functions/getCoreContext.md)
+- [initContentSdk](functions/initContentSdk.md)
+- [isNamespaceEnabled](functions/isNamespaceEnabled.md)

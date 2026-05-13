@@ -6,6 +6,7 @@ import type { CookieProperties } from '../utils';
  * @param {number} [maxAge] - Sets the cookie "Max-Age" attribute in days.
  * @param {string} [cookieDomain] - Optional domain for the cookie.
  * @returns {CookieProperties} The default configuration settings for the cookie string.
+ * @internal
  */
 export function getDefaultCookieAttributes(
   maxAge: number = DEFAULT_COOKIE_EXPIRY_DAYS,

@@ -109,7 +109,7 @@ export const DesignLibrary = () => {
         sendErrorEvent(
           uid,
           'No loadImportMap provided',
-          codegen.DesignLibraryPreviewError.RenderInit
+          codegen.DesignLibraryPreviewError.ImportMapMissing
         );
         return;
       }
@@ -122,7 +122,7 @@ export const DesignLibrary = () => {
         sendErrorEvent(
           uid,
           `Error loading import map: ${e}`,
-          codegen.DesignLibraryPreviewError.RenderInit
+          codegen.DesignLibraryPreviewError.ImportMapLoad
         );
         return;
       }

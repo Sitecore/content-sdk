@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / BYOCClientWrapper
 
-# Variable: BYOCClientWrapper()
+# Variable: BYOCClientWrapper
 
 > `const` **BYOCClientWrapper**: (`props`) => `JSX.Element`
 

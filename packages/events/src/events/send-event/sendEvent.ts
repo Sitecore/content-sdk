@@ -1,34 +1,27 @@
-import {
-  API_VERSION,
-  debug,
-  processDebugResponse,
-} from '@sitecore-content-sdk/analytics-core/internal';
+import { API_VERSION } from '@sitecore-content-sdk/analytics-core/internal';
 import type {
   BasePayload,
   CustomEventPayload,
   IdentityEventPayload,
   PageViewEventPayload,
 } from '..';
-import type {
-  DebugResponse,
-  EPResponse,
-  Settings,
-} from '@sitecore-content-sdk/analytics-core/internal';
-import { EVENTS_NAMESPACE, PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
+import type { EPResponse } from '@sitecore-content-sdk/analytics-core/internal';
+import { PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
+import { CoreContext, NativeDataFetcher } from '@sitecore-content-sdk/core';
+import { debug } from '../../debug';
 
 /**
- * This factory function sends an event to Edge Proxy
+ * This function sends an event to Sitecore Edge Proxy
  * @param {EPFetchBody & BasePayload} body - The event data to send
- * @param {Settings} settings - The global settings
+ * @param {CoreContext['config']} config - The global configuration
+ * @internal
  */
 export async function sendEvent(
   body: EPFetchBody & BasePayload,
-  settings: Settings
+  config: CoreContext['config']
 ): Promise<EPResponse | null> {
   // eslint-disable-next-line max-len
-  const eventUrl = `${settings.sitecoreEdgeUrl}/v1/events/${API_VERSION}/events?siteId=${settings.siteName}`;
-  const startTimestamp = Date.now();
-  let debugResponse: DebugResponse = {};
+  const eventUrl = `${config.edgeUrl}/v1/events/${API_VERSION}/events?siteId=${config.siteName}`;
 
   const fetchOptions = {
     body: JSON.stringify(body),
@@ -36,45 +29,34 @@ export async function sendEvent(
       'Content-Type': 'application/json',
       'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
       'X-Library-Version': PACKAGE_VERSION,
-      'x-sitecore-contextid': settings.sitecoreEdgeContextId,
+      'x-sitecore-contextid': config.contextId,
     },
     method: 'POST',
   };
 
-  debug(EVENTS_NAMESPACE)('Events request: %s with options: %O', eventUrl, fetchOptions);
+  const fetcher = new NativeDataFetcher({ debugger: debug.events });
 
-  return await fetch(eventUrl, fetchOptions)
-    .then((response) => {
-      debugResponse = processDebugResponse(EVENTS_NAMESPACE, response);
-
-      return response.json();
+  return await fetcher
+    .fetch<EPResponse>(eventUrl, fetchOptions)
+    .then(async (response) => {
+      return response.data;
     })
-    .then((data) => {
-      debugResponse.body = data;
-
-      debug(EVENTS_NAMESPACE)(
-        'Events response in %dms : %O',
-        Date.now() - startTimestamp,
-        debugResponse
-      );
-
-      return data;
-    })
-    .catch((error) => {
-      debug(EVENTS_NAMESPACE)('Error: events response: %O', error);
+    .catch(() => {
       return null;
     });
 }
 
 /**
  * The type of sendEvent function
+ * @internal
  */
 export type SendEvent = (
   body: EPFetchBody & BasePayload,
-  settings: Settings
+  config: CoreContext['config']
 ) => Promise<EPResponse | null>;
 
 /**
  * The type describing all possible event payloads
+ * @internal
  */
 type EPFetchBody = PageViewEventPayload | IdentityEventPayload | CustomEventPayload;

@@ -8,21 +8,8 @@ globs: []
 
 ## Universal Standards
 
-DRY Principle:
-
-- Don't Repeat Yourself - extract common functionality
-- Create reusable utilities and helper functions
-- Use composition over inheritance
-- Share types and interfaces across modules
-
-SOLID Principles:
-
-- Single Responsibility: each function/class has one purpose
-- Open/Closed: extend functionality through composition
-- Dependency Inversion: depend on abstractions, not implementations
-
-Code Clarity:
-
+- DRY Principle
+- SOLID Principles
 - Write self-documenting code with clear intent
 - Use meaningful names that express business concepts
 - Prefer explicit over implicit behavior
@@ -62,7 +49,7 @@ Version Control:
 
 Documentation:
 
-- Document public APIs and interfaces
+- Document public APIs and interfaces with tsdoc comments
 - Include usage examples for complex functionality
 - Keep documentation close to code
 - Update documentation with code changes
@@ -94,4 +81,3 @@ Referenced:
 @packages/create-content-sdk-app/src/common/
 @packages/core/src/
 @eslint.config.mjs
-

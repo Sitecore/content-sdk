@@ -5,14 +5,13 @@ import {
   CacheClient,
   CacheOptions,
   MemoryCacheClient,
+  constants,
 } from '@sitecore-content-sdk/core';
 import { PageInfo } from '../client';
-import { siteNameError, languageError } from '../constants';
 import debug from '../debug';
 import { GraphQLServiceConfig } from '../sitecore-service-base';
-/** @private */
-export const queryError =
-  'Valid value for rootItemId not provided and failed to auto-resolve app root item.';
+
+const { ERROR_MESSAGES } = constants;
 
 /** @default */
 const siteQuery = /* GraphQL */ `
@@ -160,11 +159,11 @@ export class DictionaryService implements CacheClient<DictionaryPhrases> {
     let after = '';
 
     if (!site) {
-      throw new RangeError(siteNameError);
+      throw new RangeError(ERROR_MESSAGES.MV_002);
     }
 
     if (!language) {
-      throw new RangeError(languageError);
+      throw new RangeError(ERROR_MESSAGES.MV_009);
     }
 
     while (hasNext) {

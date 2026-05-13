@@ -21,6 +21,7 @@ export type ErrorBoundaryProps = {
 /**
  * Simple error component applying basic error styling.
  * @param {object} props - Either with `message` (string) or with `children` (ReactNode), but not both.
+ * @internal
  */
 export const ErrorComponent = (
   props:
@@ -92,9 +93,7 @@ class ErrorBoundaryClass extends React.Component<ErrorBoundaryProps> {
     }
 
     // do not apply suspense when suspense is disabled or when on already dynamic components
-    if (this.props.disableSuspense || this.props.isDynamic) {
-      return this.props.children;
-    }
+    if ((this.props.disableSuspense ?? true) || this.props.isDynamic) return this.props.children;
 
     return (
       <Suspense
@@ -113,4 +112,3 @@ const ErrorBoundary = (props: Omit<ErrorBoundaryProps, 'page'>) => {
 };
 
 export default ErrorBoundary;
-

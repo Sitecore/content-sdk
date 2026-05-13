@@ -6,7 +6,7 @@
 
 # Interface: SitePathServiceConfig
 
-Defined in: content/types/site/sitepath-service.d.ts:72
+Defined in: content/types/site/sitepath-service.d.ts:71
 
 Configuration options for
 
@@ -24,7 +24,7 @@ SitePathService instances
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: content/types/site/sitepath-service.d.ts:83
+Defined in: content/types/site/sitepath-service.d.ts:82
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -33,9 +33,9 @@ This factory function is used to create and configure GraphQL clients for making
 
 ### excludedPaths?
 
-> `optional` **excludedPaths**: `string`[]
+> `optional` **excludedPaths?**: `string`[]
 
-Defined in: content/types/site/sitepath-service.d.ts:31
+Defined in: content/types/site/sitepath-service.d.ts:30
 
 Optional. Paths starting with these provided prefixes will be excluded from returned results.
 
@@ -47,9 +47,9 @@ Optional. Paths starting with these provided prefixes will be excluded from retu
 
 ### includedPaths?
 
-> `optional` **includedPaths**: `string`[]
+> `optional` **includedPaths?**: `string`[]
 
-Defined in: content/types/site/sitepath-service.d.ts:27
+Defined in: content/types/site/sitepath-service.d.ts:26
 
 Optional. Only paths starting with these provided prefixes will be returned.
 
@@ -61,9 +61,9 @@ Optional. Only paths starting with these provided prefixes will be returned.
 
 ### includePersonalizedRoutes?
 
-> `optional` **includePersonalizedRoutes**: `boolean`
+> `optional` **includePersonalizedRoutes?**: `boolean`
 
-Defined in: content/types/site/sitepath-service.d.ts:78
+Defined in: content/types/site/sitepath-service.d.ts:77
 
 A flag for whether to include personalized routes in service output.
 Only works on XM Cloud for pages using Embedded Personalization (not Component A/B testing).
@@ -73,9 +73,9 @@ Turned off by default.
 
 ### pageSize?
 
-> `optional` **pageSize**: `number`
+> `optional` **pageSize?**: `number`
 
-Defined in: content/types/site/sitepath-service.d.ts:38
+Defined in: content/types/site/sitepath-service.d.ts:37
 
 common variable for all GraphQL queries
 it will be used for every type of query to regulate result batch size

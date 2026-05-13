@@ -1,4 +1,8 @@
-import { GraphQLClient, GraphQLRequestClientFactory, FetchOptions } from '@sitecore-content-sdk/core';
+import {
+  GraphQLClient,
+  GraphQLRequestClientFactory,
+  FetchOptions,
+} from '@sitecore-content-sdk/core';
 import debug from '../debug';
 import { LayoutServiceData, LayoutServicePageState } from '../layout';
 import { LayoutKind } from './models';
@@ -43,6 +47,7 @@ export type EditingOptions = {
   version?: string;
   layoutKind?: LayoutKind;
   mode: Exclude<LayoutServicePageState, 'Normal'>;
+  site?: string;
 };
 
 /**
@@ -69,11 +74,12 @@ export class EditingService {
    * @param {string} variables.mode - The editing mode to fetch layout data for.
    * @param {string} [variables.version] - The version of the item (optional).
    * @param {LayoutKind} [variables.layoutKind] - The final or shared layout variant.
+   * @param {string} [variables.site] - The site context for fetching layout data (optional).
    * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
    * @returns {Promise} The layout data and dictionary phrases.
    */
   async fetchEditingData(
-    { itemId, language, version, layoutKind = LayoutKind.Final, mode }: EditingOptions,
+    { itemId, language, version, layoutKind = LayoutKind.Final, mode, site }: EditingOptions,
     fetchOptions?: FetchOptions
   ) {
     debug.editing('fetching editing data for %s %s %s %s', itemId, language, version, layoutKind);
@@ -83,6 +89,7 @@ export class EditingService {
     }
 
     const editModeHeader = mode === 'edit' ? 'true' : 'false';
+    const previewModeHeader = mode === 'preview' ? 'true' : 'false';
 
     const editingData = await this.graphQLClient.request<GraphQLEditingQueryResponse>(
       query,
@@ -94,8 +101,11 @@ export class EditingService {
       {
         ...fetchOptions,
         headers: {
+          ...fetchOptions?.headers,
           sc_layoutKind: layoutKind,
           sc_editMode: editModeHeader,
+          sc_previewMode: previewModeHeader,
+          ...(site && { sc_site: site }),
         },
       }
     );

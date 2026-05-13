@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / DesignLibrary
 
-# Variable: DesignLibrary()
+# Variable: DesignLibrary
 
 > `const` **DesignLibrary**: () => `React.JSX.Element` \| `null`
 

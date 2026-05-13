@@ -1,8 +1,9 @@
 import { getCdnUrl } from './get-cdn-url';
+import { jest, expect } from '@jest/globals';
 
 describe('getCdnUrl', () => {
-  const sitecoreEdgeContextId = '12345';
-  const sitecoreEdgeUrl = 'https://example.com';
+  const contextId = '12345';
+  const edgeUrl = 'https://example.com';
 
   const mockResponse = 'https://cdn.example.com';
 
@@ -12,7 +13,7 @@ describe('getCdnUrl', () => {
         ok: true,
         text: () => Promise.resolve(mockResponse),
       })
-    );
+    ) as typeof fetch;
   });
 
   afterEach(() => {
@@ -20,11 +21,11 @@ describe('getCdnUrl', () => {
   });
 
   it('should return the correct request URL', async () => {
-    const result = await getCdnUrl(sitecoreEdgeContextId, sitecoreEdgeUrl);
+    const result = await getCdnUrl(contextId, edgeUrl);
 
     expect(fetch).toHaveBeenCalledWith('https://example.com/v1/personalize/cdn-url?client_key=', {
       headers: {
-        'x-sitecore-contextid': sitecoreEdgeContextId,
+        'x-sitecore-contextid': contextId,
       },
     });
     expect(result).toEqual(mockResponse);
@@ -36,13 +37,13 @@ describe('getCdnUrl', () => {
         ok: false,
         text: () => Promise.resolve({ error: 'error' }),
       })
-    );
+    ) as typeof fetch;
 
-    const result = await getCdnUrl(sitecoreEdgeContextId, sitecoreEdgeUrl);
+    const result = await getCdnUrl(contextId, edgeUrl);
 
     expect(fetch).toHaveBeenCalledWith('https://example.com/v1/personalize/cdn-url?client_key=', {
       headers: {
-        'x-sitecore-contextid': sitecoreEdgeContextId,
+        'x-sitecore-contextid': contextId,
       },
     });
     expect(result).toEqual(null);
@@ -51,9 +52,11 @@ describe('getCdnUrl', () => {
   it('should handle fetch error', async () => {
     const mockError = new Error('Network error');
 
-    global.fetch = jest.fn().mockRejectedValueOnce(mockError);
+    global.fetch = jest
+      .fn()
+      .mockImplementationOnce(() => Promise.reject(mockError)) as typeof fetch;
 
-    const result = await getCdnUrl(sitecoreEdgeContextId, sitecoreEdgeUrl);
+    const result = await getCdnUrl(contextId, edgeUrl);
     expect(result).toEqual(null);
   });
 });

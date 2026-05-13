@@ -12,6 +12,18 @@ import ts from 'typescript';
 import fs from 'fs';
 
 /**
+ * Constants for Next.js router types. Used for consistent detection and comparison throughout the codebase.
+ * Values are based on Next.js conventions:
+ * - 'app' for App Router (src/app or app directory)
+ * - 'pages' for Pages Router (src/pages or pages directory)
+ * @internal
+ */
+export const ROUTER_TYPE = {
+  APP: 'app',
+  PAGES: 'pages',
+} as const;
+
+/**
  * Detects the Next.js router type (App Router or Pages Router) based on directory structure.
  * @param {string} projectRoot - The project root directory. Defaults to current working directory.
  * @returns {RouterType} 'app' if App Router is detected, 'pages' otherwise
@@ -19,19 +31,17 @@ import fs from 'fs';
  */
 export function detectRouterType(projectRoot: string = process.cwd()): RouterType {
   const appDirExists =
-    fs.existsSync(`${projectRoot}/src/app`) || fs.existsSync(`${projectRoot}/app`);
+    fs.existsSync(`${projectRoot}/src/${ROUTER_TYPE.APP}`) ||
+    fs.existsSync(`${projectRoot}/${ROUTER_TYPE.APP}`);
   const pagesDirExists =
-    fs.existsSync(`${projectRoot}/src/pages`) || fs.existsSync(`${projectRoot}/pages`);
+    fs.existsSync(`${projectRoot}/src/${ROUTER_TYPE.PAGES}`) ||
+    fs.existsSync(`${projectRoot}/${ROUTER_TYPE.PAGES}`);
 
-  if (appDirExists) {
-    return 'app';
-  }
+  if (appDirExists) return ROUTER_TYPE.APP;
 
-  if (pagesDirExists) {
-    return 'pages';
-  }
+  if (pagesDirExists) return ROUTER_TYPE.PAGES;
 
-  return 'pages';
+  return ROUTER_TYPE.PAGES;
 }
 
 /**
@@ -190,7 +200,7 @@ export function detectComponentType(filePath: string, routerType?: RouterType): 
     // Router-aware defaults:
     // - App Router: defaults to server (RSC by default)
     // - Pages Router: defaults to universal (isomorphic by default)
-    if (detectedRouterType === 'app') {
+    if (detectedRouterType === ROUTER_TYPE.APP) {
       return 'server';
     } else {
       return 'universal';
@@ -252,4 +262,3 @@ export function nextjsServertMapTemplate(indexedImportMap: Map<string, ModuleExp
 export function nextjsDefaultMapTemplate(indexedImportMap: Map<string, ModuleExports>) {
   return defaultImportMapTemplate(indexedImportMap, 'nextjs');
 }
-

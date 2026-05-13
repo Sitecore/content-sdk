@@ -6,7 +6,7 @@
 
 # Interface: ErrorPagesServiceConfig
 
-Defined in: [content/src/site/error-pages-service.ts:32](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/site/error-pages-service.ts#L32)
+Defined in: [content/src/site/error-pages-service.ts:33](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/site/error-pages-service.ts#L33)
 
 Configuration for
 
@@ -24,7 +24,7 @@ ErrorPagesService instances
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [content/src/site/error-pages-service.ts:41](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/site/error-pages-service.ts#L41)
+Defined in: [content/src/site/error-pages-service.ts:42](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/site/error-pages-service.ts#L42)
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -37,9 +37,9 @@ This factory function is used to create and configure GraphQL clients for making
 
 ### debugger?
 
-> `optional` **debugger**: `Debugger`
+> `optional` **debugger?**: `Debugger`
 
-Defined in: [content/src/sitecore-service-base.ts:13](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/sitecore-service-base.ts#L13)
+Defined in: [content/src/sitecore-service-base.ts:13](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/sitecore-service-base.ts#L13)
 
 Optional debug logger override
 
@@ -53,7 +53,7 @@ Optional debug logger override
 
 > **language**: `string`
 
-Defined in: [content/src/site/error-pages-service.ts:36](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/site/error-pages-service.ts#L36)
+Defined in: [content/src/site/error-pages-service.ts:37](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/site/error-pages-service.ts#L37)
 
 The language
 
@@ -61,15 +61,15 @@ The language
 
 ### retries?
 
-> `optional` **retries**: `object`
+> `optional` **retries?**: `object`
 
-Defined in: [content/src/config/models.ts:88](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/config/models.ts#L88)
+Defined in: [content/src/config/models.ts:88](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/config/models.ts#L88)
 
 Retry configuration applied to Layout, Dictionary and ErrorPages services
 
 #### count?
 
-> `optional` **count**: `number`
+> `optional` **count?**: `number`
 
 Number of retries for the GraphQL client.
 
@@ -81,7 +81,7 @@ Number of retries for the GraphQL client.
 
 #### retryStrategy?
 
-> `optional` **retryStrategy**: [`RetryStrategy`](../../client/interfaces/RetryStrategy.md)
+> `optional` **retryStrategy?**: [`RetryStrategy`](../../client/interfaces/RetryStrategy.md)
 
 Retry strategy for the client. By default, uses exponential
 back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.

@@ -8,4 +8,8 @@
 
 > `const` **CORRELATION\_ID\_HEADER**: `"x-sc-correlation-id"` = `'x-sc-correlation-id'`
 
-Defined in: [src/consts.ts:17](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/analytics-core/src/consts.ts#L17)
+Defined in: [analytics-core/src/consts.ts:43](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/analytics-core/src/consts.ts#L43)
+
+**`Internal`**
+
+The header name for the correlation ID used in analytics requests.

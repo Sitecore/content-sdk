@@ -6,7 +6,7 @@
 
 # Interface: TextField
 
-Defined in: [packages/react/src/components/Text.tsx:13](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/react/src/components/Text.tsx#L13)
+Defined in: packages/content/types/layout/field-types.d.ts:65
 
 The interface for the Text field.
 
@@ -18,7 +18,7 @@ The interface for the Text field.
 
 ### metadata?
 
-> `optional` **metadata**: `object`
+> `optional` **metadata?**: `object`
 
 Defined in: packages/content/types/layout/models.d.ts:123
 
@@ -34,6 +34,6 @@ Defined in: packages/content/types/layout/models.d.ts:123
 
 ### value?
 
-> `optional` **value**: `string` \| `number`
+> `optional` **value?**: `string` \| `number`
 
-Defined in: [packages/react/src/components/Text.tsx:14](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/react/src/components/Text.tsx#L14)
+Defined in: packages/content/types/layout/field-types.d.ts:66

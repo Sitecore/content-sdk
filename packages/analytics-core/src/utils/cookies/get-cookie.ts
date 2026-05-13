@@ -3,6 +3,7 @@
  * @param {string | undefined} cookieStr Cookie string containing serialized cookies.
  * @param {string} cookieName The cookie name to locate.
  * @returns {{ name: string; value: string } | undefined} The cookie name/value pair when found.
+ * @internal
  */
 export function getCookie(
   cookieStr: string | undefined,

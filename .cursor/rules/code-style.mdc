@@ -55,12 +55,7 @@ Error Strategy:
 - Use custom error classes for domain-specific errors
 - Handle edge cases explicitly with guard clauses
 
-Security:
-
-- Sanitize user inputs
-- Validate data at boundaries
-- Never log sensitive information
-- Use environment variables for configuration
+Security: See `.cursor/rules/safety.mdc` for input validation, secrets, and API security.
 
 ## Development Workflow
 

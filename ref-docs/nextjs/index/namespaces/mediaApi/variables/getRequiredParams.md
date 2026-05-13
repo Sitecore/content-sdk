@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../../../README.md) / [index](../../../README.md) / [mediaApi](../README.md) / getRequiredParams
 
-# Variable: getRequiredParams()
+# Variable: getRequiredParams
 
 > `const` **getRequiredParams**: (`qs`) => `object`
 

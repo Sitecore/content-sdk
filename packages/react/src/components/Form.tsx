@@ -1,11 +1,16 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
+import * as analyticsCoreInternalModule from '@sitecore-content-sdk/analytics-core/internal';
 import { form } from '@sitecore-content-sdk/content';
+import { constants } from '@sitecore-content-sdk/core';
 import { useSitecore } from './SitecoreProvider';
 import { ErrorComponent } from './ErrorBoundary';
 
+const { ERROR_MESSAGES } = constants;
+
 let { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
+let { isBotClientSide } = analyticsCoreInternalModule;
 
 /**
  * Mock function to replace the form module functions for `testing` purposes.
@@ -15,6 +20,10 @@ export const mockFormModule = (formModule: any) => {
   executeScriptElements = formModule.executeScriptElements;
   loadForm = formModule.loadForm;
   subscribeToFormSubmitEvent = formModule.subscribeToFormSubmitEvent;
+};
+
+export const mockAnalyticsInternalModule = (analyticsCoreInternalModule: any) => {
+  isBotClientSide = analyticsCoreInternalModule.isBotClientSide;
 };
 
 /**
@@ -53,6 +62,7 @@ export const Form = ({ params, rendering }: FormProps) => {
 
   const isEditing = context.page.mode.isEditing;
 
+  // fetch form content
   useEffect(() => {
     if (!content) {
       // Forms must use clientContextId since they are rendered client-side
@@ -60,9 +70,7 @@ export const Form = ({ params, rendering }: FormProps) => {
 
       if (!edgeId) {
         /* eslint-disable no-console */
-        console.warn(
-          'Warning: clientContextId is missing – form cannot be loaded properly on the client'
-        );
+        console.warn(`${ERROR_MESSAGES.MV_006}. Form cannot be loaded properly on the client`);
         return;
       }
 
@@ -71,40 +79,36 @@ export const Form = ({ params, rendering }: FormProps) => {
         .catch(() => {
           if (isEditing) {
             console.error(
-              `Failed to load form with id ${params.FormId}. Check debug logs for content-sdk:form for more details.`
+              `Failed to load form with id ${params.FormId}. Check debug logs for content-sdk:form for more details. ${ERROR_MESSAGES.CONTACT_SUPPORT}`
             );
           }
           setError(true);
         });
-    } else {
-      if (!formRef.current) return;
-
-      // If we are in editing mode, we don't want to send any events
-      if (!isEditing) {
-        subscribeToFormSubmitEvent(formRef.current, rendering.uid);
-      }
-
-      executeScriptElements(formRef.current);
     }
   }, [
     content,
     isEditing,
     params.FormId,
-    rendering.uid,
     context.api?.edge?.clientContextId,
     context.api?.edge?.edgeUrl,
   ]);
+
+  // Set innerHTML and execute scripts whenever form content changes
+  useEffect(() => {
+    if (!content || !formRef.current) return;
+
+    formRef.current.innerHTML = content;
+    executeScriptElements(formRef.current);
+
+    // If we are in editing mode, we don't want to send any events
+    if (!isEditing && !isBotClientSide()) {
+      subscribeToFormSubmitEvent(formRef.current, rendering.uid);
+    }
+  }, [content, isEditing, rendering.uid]);
 
   if (isEditing && error) {
     return <ErrorComponent message="There was a problem loading this section" />;
   }
 
-  return (
-    <div
-      ref={formRef}
-      dangerouslySetInnerHTML={{ __html: content }}
-      className={params.styles?.trimEnd()}
-      id={id ? id : undefined}
-    ></div>
-  );
+  return <div ref={formRef} className={params.styles?.trimEnd()} id={id ? id : undefined}></div>;
 };

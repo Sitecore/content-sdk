@@ -32,7 +32,10 @@ export default defineConfig({
     edge: {
       contextId: process.env.SITECORE_EDGE_CONTEXT_ID || '',
       clientContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
-      edgeUrl: process.env.SITECORE_EDGE_URL || 'https://edge-platform.sitecorecloud.io',
+      edgeUrl:
+        process.env.NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME ||
+        process.env.SITECORE_EDGE_PLATFORM_HOSTNAME ||
+        'https://edge-platform.sitecorecloud.io',
     },
     local: {
       apiKey: process.env.SITECORE_API_KEY || '',
@@ -113,23 +116,7 @@ Content Fetching:
 - Implement proper loading states and error handling
 - Consider content preview vs. published content scenarios
 
-Security Best Practices:
-
-- Sanitize user inputs before processing
-- Validate content from Sitecore before rendering
-- Use Content Security Policy (CSP) headers
-- Never expose sensitive configuration in client-side code
-
-```typescript
-// Content validation example
-function validateContentItem(item: unknown): ContentItem {
-  if (!item || typeof item !== 'object') {
-    throw new Error('Invalid content item');
-  }
-  // Additional validation logic
-  return item as ContentItem;
-}
-```
+Security: See `.cursor/rules/safety.mdc` for API keys, env vars, input validation, and client-side exposure rules.
 
 ## Development Patterns
 

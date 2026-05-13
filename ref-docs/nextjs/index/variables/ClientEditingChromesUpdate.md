@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / ClientEditingChromesUpdate
 
-# Variable: ClientEditingChromesUpdate()
+# Variable: ClientEditingChromesUpdate
 
 > `const` **ClientEditingChromesUpdate**: () => `JSX.Element`
 

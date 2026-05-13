@@ -8,4 +8,8 @@
 
 > `const` **DEFAULT\_COOKIE\_EXPIRY\_DAYS**: `730` = `730`
 
-Defined in: [src/consts.ts:9](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/analytics-core/src/consts.ts#L9)
+Defined in: [analytics-core/src/consts.ts:25](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/analytics-core/src/consts.ts#L25)
+
+**`Internal`**
+
+The default number of days until the client ID cookie expires.

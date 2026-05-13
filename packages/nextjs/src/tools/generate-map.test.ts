@@ -883,6 +883,66 @@ describe('generateMap', () => {
       }
     });
 
+    it('should use server wrappers in main map for App Router even when clientComponentMap is false', async () => {
+      sandbox.restore();
+      const sb = sinon.createSandbox();
+      try {
+        const typed = [
+          {
+            componentName: 'MyComp',
+            moduleName: 'MyComp',
+            importPath: './src/components/MyComp',
+            filePath: path.join(process.cwd(), 'src/components/MyComp.tsx'),
+            componentType: 'universal' as const,
+          },
+        ];
+
+        const getComponentListWithTypesStub = sb.stub().returns(typed);
+        const detectRouterTypeStub = sb.stub().returns('app');
+        const filterComponentsByTypeStub = sb
+          .stub()
+          .callsFake((arr: any[], allowed: string[]) =>
+            (arr || []).filter((c) => allowed.includes(c.componentType))
+          );
+
+        sb.stub(templatingUtils, 'getComponentListWithTypes').callsFake(
+          getComponentListWithTypesStub
+        );
+        sb.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
+        sb.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
+
+        const wf = fs.writeFileSync as any;
+        if (wf && typeof wf.restore === 'function') wf.restore();
+        sb.stub(fs, 'writeFileSync');
+
+        generateMap({
+          paths: ['src/components'],
+          clientComponentMap: false,
+          includeVariants: false,
+        });
+
+        expect(fs.writeFileSync).to.have.been.calledTwice;
+
+        const [mainDest, mainContent] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
+        expect(mainDest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.ts'));
+
+        expect(mainContent).to.include("['BYOCWrapper', BYOCServerWrapper],");
+        expect(mainContent).to.include("['FEaaSWrapper', FEaaSServerWrapper],");
+        expect(mainContent).to.include("['Form', { ...Form, componentType: 'client' }],");
+
+        const [clientDest, clientContent] = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
+        expect(clientDest).to.equal(
+          path.join(process.cwd(), '.sitecore', 'component-map.client.ts')
+        );
+
+        expect(clientContent).to.include("['BYOCWrapper', BYOCClientWrapper],");
+        expect(clientContent).to.include("['FEaaSWrapper', FEaaSClientWrapper],");
+        expect(clientContent).to.not.include('MyComp');
+      } finally {
+        sb.restore();
+      }
+    });
+
     it('should auto-detect App Router and generate both maps when clientComponentMap is undefined', async () => {
       const paths = ['src/components'];
 

@@ -1,33 +1,70 @@
-import type * as core from '@sitecore-content-sdk/analytics-core/internal';
-import * as initializerModule from '../initializer/browser/initializer';
+import * as coreModule from '@sitecore-content-sdk/core';
+import * as eventsPluginModule from '../initialization/plugin';
 import { clearEventQueue } from './clearEventQueue';
-import * as eventQueue from './eventStorage';
+import * as eventStorageModule from './eventStorage';
+import { jest, expect } from '@jest/globals';
 
-jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
-  const originalModule = jest.requireActual('@sitecore-content-sdk/analytics-core/internal');
+jest.mock('@sitecore-content-sdk/core');
+jest.mock('../initialization/plugin');
 
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule,
-  };
-});
 describe('clearEventQueue', () => {
-  const mockFetch = Promise.resolve({
-    json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse),
-  });
-  global.fetch = jest.fn().mockImplementation(() => mockFetch);
+  const mockCoreContext = {
+    settings: {
+      contextId: '123',
+      edgeUrl: 'https://edge.test.com',
+    },
+    readyPromise: Promise.resolve(),
+  };
 
-  afterEach(() => {
+  beforeEach(() => {
     jest.clearAllMocks();
+
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue(mockCoreContext as any);
+    jest.spyOn(eventsPluginModule, 'getEventsPlugin').mockReturnValue({} as any);
   });
 
   it('should clear the queue', async () => {
-    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-    const clearQueueSpy = jest.spyOn(eventQueue.eventQueue, 'clearQueue');
+    const clearQueueSpy = jest
+      .spyOn(eventStorageModule.eventQueue, 'clearQueue')
+      .mockImplementation(() => {});
 
     await clearEventQueue();
 
     expect(clearQueueSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should wait for core context ready promise', async () => {
+    let resolveReady: () => void;
+    const readyPromise = new Promise<void>((resolve) => {
+      resolveReady = resolve;
+    });
+
+    jest.spyOn(coreModule, 'getCoreContext').mockReturnValue({
+      ...mockCoreContext,
+      readyPromise,
+    } as any);
+
+    const clearQueueSpy = jest
+      .spyOn(eventStorageModule.eventQueue, 'clearQueue')
+      .mockImplementation(() => {});
+
+    const clearPromise = clearEventQueue();
+
+    // Should not have been called yet
+    expect(clearQueueSpy).not.toHaveBeenCalled();
+
+    // Resolve the ready promise
+    resolveReady!();
+    await clearPromise;
+
+    expect(clearQueueSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call getEventsPlugin to ensure plugin is initialized', async () => {
+    jest.spyOn(eventStorageModule.eventQueue, 'clearQueue').mockImplementation(() => {});
+
+    await clearEventQueue();
+
+    expect(eventsPluginModule.getEventsPlugin).toHaveBeenCalledTimes(1);
   });
 });

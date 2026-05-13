@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 import nock from 'nock';
-import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClient, constants } from '@sitecore-content-sdk/core';
 import { RobotsService } from './robots-service';
 import { FetchOptions } from '../../client';
-import { siteNameError } from '../constants';
+
+const { ERROR_MESSAGES } = constants;
 
 const robotsQueryResultNull = {
   site: {
@@ -53,7 +54,7 @@ describe('RobotsService', () => {
 
       const service = new RobotsService({ clientFactory, siteName: '' });
       await service.fetchRobots().catch((error: Error) => {
-        expect(error.message).to.equal(siteNameError);
+        expect(error.message).to.equal(ERROR_MESSAGES.MV_002);
       });
 
       return expect(nock.isDone()).to.be.false;

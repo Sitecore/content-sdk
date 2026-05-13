@@ -793,12 +793,134 @@ describe('RedirectsProxy', () => {
       expect(finalRes).to.deep.equal(redirectRes);
     });
 
+    describe('regex redirect-map compatibility scenarios', () => {
+      it('should apply capture group substitution for root path without leaving $1 token', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/',
+            locale: 'en',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse();
+        const redirectRes = createResponse({
+          redirected: true,
+          status: 301,
+          url: 'http://localhost:3000/en/',
+        });
+        nextRedirectStub.returns(redirectRes);
+
+        const { proxy } = createProxy({
+          pattern: '^/(?!en|de-de|ko-kr|zh-tw|zh-cn|ja-jp)(.*)$',
+          target: '/en/$1',
+          redirectType: REDIRECT_TYPE_301,
+        });
+
+        await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const redirectUrl = nextRedirectStub.getCall(0).args[0] as string;
+        expect(redirectUrl).to.not.include('$1');
+        expect(redirectUrl).to.include('http://localhost:3000/');
+      });
+
+      it('should match anchored regex rule for locale-prefixed incoming path', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/en/test/red',
+            locale: 'en',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse();
+        const redirectRes = createResponse({
+          redirected: true,
+          status: 301,
+          url: 'http://localhost:3000/en/about',
+        });
+        nextRedirectStub.returns(redirectRes);
+
+        const { proxy } = createProxy({
+          pattern: '^/test/(.*)$',
+          target: '/en/about',
+          redirectType: REDIRECT_TYPE_301,
+        });
+
+        await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const redirectUrl = nextRedirectStub.getCall(0).args[0] as string;
+        expect(redirectUrl).to.include('/about');
+      });
+
+      it('should match anchored regex rule ending with slash for locale-prefixed incoming path', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/en/test/',
+            locale: 'en',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse();
+        const redirectRes = createResponse({
+          redirected: true,
+          status: 301,
+          url: 'http://localhost:3000/en/about',
+        });
+        nextRedirectStub.returns(redirectRes);
+
+        const { proxy } = createProxy({
+          pattern: '^/test/$',
+          target: '/en/about',
+          redirectType: REDIRECT_TYPE_301,
+        });
+
+        await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const redirectUrl = nextRedirectStub.getCall(0).args[0] as string;
+        expect(redirectUrl).to.include('/about');
+      });
+
+      it('should substitute capture groups for anchored default path regex', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/default/example',
+            locale: 'en',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse();
+        const redirectRes = createResponse({
+          redirected: true,
+          status: 301,
+          url: 'http://localhost:3000/en/example',
+        });
+        nextRedirectStub.returns(redirectRes);
+
+        const { proxy } = createProxy({
+          pattern: '^/default/(.*)$',
+          target: '/en/$1',
+          redirectType: REDIRECT_TYPE_301,
+        });
+
+        await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const redirectUrl = nextRedirectStub.getCall(0).args[0] as string;
+        expect(redirectUrl).to.include('/example');
+        expect(redirectUrl).to.not.include('$1');
+      });
+    });
+
     it('should replace $siteLang token in target', async () => {
       const req = createRequest({
         nextUrl: {
           pathname: '/old-page',
         },
       });
+      // match app router behavior about locale in request
+      delete req.locale;
       // Set up App Router response so locale is added to pathname
       const res = createResponse({
         headers: {
@@ -1024,6 +1146,81 @@ describe('RedirectsProxy', () => {
       // Verify proxy was created and redirectsService is initialized
       expect(proxy).to.not.be.undefined;
       expect(proxy['redirectsService']).to.not.be.null;
+    });
+  });
+
+  describe('matchRedirectItemRedirect', () => {
+    const baseRedirect = (overrides: Record<string, unknown> = {}) => ({
+      pattern: '/from',
+      target: '/to',
+      redirectType: REDIRECT_TYPE_301,
+      isQueryStringPreserved: true,
+      locale: 'en',
+      ...overrides,
+    });
+
+    it('returns undefined when there are no locale-specific rules for the request locale', () => {
+      const { proxy } = createProxy();
+      const result = proxy['matchRedirectItemRedirect'](
+        [baseRedirect({ locale: 'da', pattern: '/about' })],
+        'en',
+        '/about'
+      );
+      expect(result).to.be.undefined;
+    });
+
+    it('returns undefined when locale matches but normalized path does not', () => {
+      const { proxy } = createProxy();
+      const result = proxy['matchRedirectItemRedirect'](
+        [baseRedirect({ locale: 'en', pattern: '/other' })],
+        'en',
+        '/about'
+      );
+      expect(result).to.be.undefined;
+    });
+
+    it('returns the first matching redirect when locale and path match', () => {
+      const { proxy } = createProxy();
+      const first = baseRedirect({
+        locale: 'en',
+        pattern: '/about',
+        target: '/first',
+      });
+      const second = baseRedirect({
+        locale: 'en',
+        pattern: '/about',
+        target: '/second',
+      });
+      const result = proxy['matchRedirectItemRedirect']([first, second], 'en', '/about');
+      expect(result).to.deep.equal(first);
+    });
+
+    it('matches normalized paths case-insensitively and ignores trailing slashes on the pattern', () => {
+      const { proxy } = createProxy();
+      const redirect = baseRedirect({
+        locale: 'en',
+        pattern: '/Foo/Bar/',
+        target: '/lowercase',
+      });
+      const result = proxy['matchRedirectItemRedirect']([redirect], 'en', '/foo/bar');
+      expect(result?.target).to.equal('/lowercase');
+    });
+
+    it('returns undefined when the list of locale rules is empty after filtering', () => {
+      const { proxy } = createProxy();
+      const result = proxy['matchRedirectItemRedirect']([], 'en', '/about');
+      expect(result).to.be.undefined;
+    });
+
+    it('should ignore locale prefix when matching redirects (app router)', () => {
+      const { proxy } = createProxy();
+      const redirect = baseRedirect({
+        locale: 'en',
+        pattern: '/Foo/redirect/',
+        target: '/lowercase',
+      });
+      const result = proxy['matchRedirectItemRedirect']([redirect], 'en', '/en/foo/redirect');
+      expect(result?.target).to.equal('/lowercase');
     });
   });
 });

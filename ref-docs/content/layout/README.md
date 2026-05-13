@@ -23,12 +23,19 @@
 - [ComponentRendering](interfaces/ComponentRendering.md)
 - [Field](interfaces/Field.md)
 - [FieldMetadata](interfaces/FieldMetadata.md)
+- [ImageField](interfaces/ImageField.md)
+- [ImageFieldValue](interfaces/ImageFieldValue.md)
+- [ImageSizeParameters](interfaces/ImageSizeParameters.md)
 - [Item](interfaces/Item.md)
 - [LayoutServiceContext](interfaces/LayoutServiceContext.md)
 - [LayoutServiceContextData](interfaces/LayoutServiceContextData.md)
 - [LayoutServiceData](interfaces/LayoutServiceData.md)
+- [LinkField](interfaces/LinkField.md)
+- [LinkFieldValue](interfaces/LinkFieldValue.md)
 - [PlaceholderData](interfaces/PlaceholderData.md)
+- [RichTextField](interfaces/RichTextField.md)
 - [RouteData](interfaces/RouteData.md)
+- [TextField](interfaces/TextField.md)
 
 ## Type Aliases
 

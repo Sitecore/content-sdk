@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / FEaaSServerWrapper
 
-# Variable: FEaaSServerWrapper()
+# Variable: FEaaSServerWrapper
 
 > `const` **FEaaSServerWrapper**: (`props`) => `Promise`\<`React.JSX.Element`\>
 

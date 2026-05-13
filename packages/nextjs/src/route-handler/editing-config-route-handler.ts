@@ -149,3 +149,4 @@ export const createEditingConfigRouteHandler = (options: EditingConfigRouteHandl
 
   return { GET, OPTIONS };
 };
+

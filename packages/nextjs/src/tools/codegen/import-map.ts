@@ -31,3 +31,4 @@ export const writeImportMap = (args: WriteImportMapArgs) => {
     clientTemplate: nextjsClientMapTemplate,
   });
 };
+

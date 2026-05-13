@@ -8,7 +8,7 @@
 
 > **getHeadersForPropagation**(`headers`): `object`
 
-Defined in: [nextjs/src/editing/utils.ts:168](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/nextjs/src/editing/utils.ts#L168)
+Defined in: [nextjs/src/editing/utils.ts:209](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/nextjs/src/editing/utils.ts#L209)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Get headers that should be passed along to subsequent requests
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `headers` | `IncomingHttpHeaders` \| `Headers` | Incoming HTTP Headers |
+| `headers` | `Headers` \| `IncomingHttpHeaders` | Incoming HTTP Headers |
 
 ## Returns
 

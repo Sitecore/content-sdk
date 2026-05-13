@@ -32,7 +32,7 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `serviceConfig` | `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: (`siteName`, `itemPath`, `locale?`) => `string` \| `null`; \}\> | configuration |
+| `serviceConfig` | `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: ((`siteName`, `itemPath`, `locale?`) => `string`) \| `null`; \}\> | configuration |
 
 #### Returns
 
@@ -58,7 +58,7 @@ Defined in: content/types/sitecore-service-base.d.ts:19
 
 ### serviceConfig
 
-> **serviceConfig**: `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: (`siteName`, `itemPath`, `locale?`) => `string` \| `null`; \}\>
+> **serviceConfig**: `Pick`\<`SitecoreConfigInput`, `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: ((`siteName`, `itemPath`, `locale?`) => `string`) \| `null`; \}\>
 
 Defined in: content/types/layout/layout-service.d.ts:22
 
@@ -73,7 +73,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 ##### debugger?
 
-> `optional` **debugger**: `Debugger`
+> `optional` **debugger?**: `Debugger`
 
 Optional debug logger override
 
