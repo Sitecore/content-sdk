@@ -10,6 +10,7 @@ import type { BasicTypes } from '../interfaces';
  * const flattenedObject = flattenObject(object);
  * // flattenedObject is { order_amount: 1, order_delivered: false }
  * ```
+ * @internal
  */
 export function flattenObject(data: FlattenObjectDataParameters) {
   const { currentKey, object } = data;
@@ -35,8 +36,9 @@ export function flattenObject(data: FlattenObjectDataParameters) {
 
 /**
  * Interface for the data object parameter of the flattenObject function
+ * @internal
  */
-interface FlattenObjectDataParameters {
+export interface FlattenObjectDataParameters {
   object: NestedObject;
   currentKey?: string;
   newObject?: FlattenedObject;
@@ -44,6 +46,7 @@ interface FlattenObjectDataParameters {
 
 /**
  * Interface for the return object of the flattenObject function
+ * @internal
  */
 export interface FlattenedObject {
   [key: string]: BasicTypes;
@@ -51,7 +54,11 @@ export interface FlattenedObject {
 
 /**
  * Interface of the object to flatten
+ * @public
  */
 export interface NestedObject {
+  /**
+   * They keys of the object can be any string, and the values can be either basic types or another nested object.
+   */
   [key: string]: BasicTypes | NestedObject;
 }

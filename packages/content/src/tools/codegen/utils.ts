@@ -3,8 +3,10 @@ import chalk from 'chalk';
 import path from 'path';
 import fs from 'fs';
 import * as ts from 'typescript';
-import { debug } from '@sitecore-content-sdk/core';
+import { debug, constants } from '@sitecore-content-sdk/core';
 import { isBuiltin } from 'module';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Parse the generated component-map file and return all referenced modules
@@ -434,7 +436,7 @@ async function _sendCode({
   } catch (error) {
     console.error(
       chalk.red(
-        `Fetch request to send extracted code from ${file.path} failed: ${JSON.stringify(error)}`
+        `Fetch request to send extracted code from ${file.path} failed: ${JSON.stringify(error)}. ${ERROR_MESSAGES.CONTACT_SUPPORT}`
       )
     );
     return null;

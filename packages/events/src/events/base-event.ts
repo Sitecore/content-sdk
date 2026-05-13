@@ -3,26 +3,26 @@ import type { EventAttributesInput } from './common-interfaces';
 
 export class BaseEvent {
   public page: string;
-  private readonly browserId: string;
+  private readonly clientId: string;
   private readonly language: string | undefined;
   /**
    * The base event class that has all the shared functions between Events
    * @param {BaseEventData} baseEventData - The event data to send
-   * @param {string} id - The browser id
+   * @param {string} id - The client id
    */
   constructor(private baseEventData: BaseEventData, id: string) {
-    this.browserId = id;
+    this.clientId = id;
     this.language = this.baseEventData.language ?? language();
     this.page = this.baseEventData.page ?? pageName();
   }
 
   /**
-   *  A function that returns the properties for sending events to Sitecore EP
+   *  A function that returns the properties for sending events to the Sitecore Edge Proxy.
    * @returns an object that is required
    */
   protected mapBaseEventPayload(): BasePayload {
     return {
-      browser_id: this.browserId,
+      browser_id: this.clientId,
       channel: this.baseEventData.channel,
       client_key: '',
       currency: this.baseEventData.currency,
@@ -36,6 +36,7 @@ export class BaseEvent {
 
 /**
  *  An interface describing the basic payload to be sent to the API
+ * @internal
  */
 export interface BasePayload {
   browser_id: string;

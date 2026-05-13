@@ -4,14 +4,13 @@ import sinon from 'sinon';
 import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
-import { debug } from '@sitecore-content-sdk/core';
+import { debug, constants } from '@sitecore-content-sdk/core';
 import { auth } from '@sitecore-content-sdk/core/node-tools';
 import { defineConfig, SitecoreConfig } from './../../config';
 import { extractFiles, ExtractFilesConfig } from './extract-files';
 import nock from 'nock';
-import { constants } from '@sitecore-content-sdk/core';
 
-const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
+const { SITECORE_EDGE_PLATFORM_URL_DEFAULT, ERROR_MESSAGES } = constants;
 
 describe('extract-files', () => {
   const RENDERINGHOST_NAME = 'testRenderingHost';
@@ -143,7 +142,9 @@ describe('extract-files', () => {
 
     expect(consoleErrorStub.calledOnce).to.be.true;
     expect(consoleErrorStub.firstCall.args[0]).to.equal(
-      chalk.red('Failed to get access token, aborting code extraction')
+      chalk.red(
+        `Failed to get access token, aborting code extraction. ${ERROR_MESSAGES.CONTACT_SUPPORT}`
+      )
     );
   });
 

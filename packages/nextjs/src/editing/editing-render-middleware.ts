@@ -21,7 +21,10 @@ import {
   getEditingRequestHtml,
   getCSPHeader,
   resolveServerUrl,
+  getAllowedQueryParams,
 } from './utils';
+import type { AllowedQueryParams } from './types';
+import { EDITING_PARAMS_HEADER } from './constants';
 
 /**
  * Configuration for the Editing Render Middleware.
@@ -40,6 +43,12 @@ export type EditingRenderMiddlewareConfig = {
    * The internal host URL for the Next.js application, used for server-side requests for page rendering during editing.
    */
   sitecoreInternalEditingHostUrl?: string;
+  /**
+   * Query string parameters to allow and include in the preview data.
+   * - Array: each item is a parameter name (string) or an object `{ name, required? }`.
+   * - Function: receives the request's query parameter names and returns the list of allowed parameters.
+   */
+  allowedQueryParams?: AllowedQueryParams;
 };
 
 /**
@@ -134,29 +143,36 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     const requiredQueryParams = getRequiredEditingParamsList(mode);
 
     const missingQueryParams = requiredQueryParams.filter((param) => !query[param]);
+    const { allowedQueryParams, missingAllowedParams } = getAllowedQueryParams(
+      query,
+      this.config?.allowedQueryParams
+    );
 
     // Validate query parameters
-    if (missingQueryParams.length) {
-      debug.editing('missing required query parameters: %o', missingQueryParams);
+    if (missingQueryParams.length || missingAllowedParams.length) {
+      debug.editing('missing required query parameters: %o', [
+        ...missingQueryParams,
+        ...missingAllowedParams,
+      ]);
 
       return res.status(400).json({
-        html: `<html><body>Missing required query parameters: ${missingQueryParams.join(
-          ', '
-        )}</body></html>`,
+        html: `<html><body>Missing required query parameters: ${[
+          ...missingQueryParams,
+          ...missingAllowedParams,
+        ].join(', ')}</body></html>`,
       });
     }
 
     const previewDataParams = mapEditingParams(query as { [key: string]: string });
+    const previewData = {
+      ...previewDataParams,
+      ...allowedQueryParams,
+      variantIds: previewDataParams.variantIds?.split(','),
+    };
 
-    res.setPreviewData(
-      {
-        ...previewDataParams,
-        variantIds: previewDataParams.variantIds?.split(','),
-      },
-      {
-        maxAge: 3,
-      }
-    );
+    res.setPreviewData(previewData, {
+      maxAge: 3,
+    });
 
     // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
     if (mode === LayoutServicePageState.Preview) {
@@ -185,7 +201,10 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       const propagatedQsParams = getQueryParamsForPropagation(query);
 
       // Get headers to propagate on subsequent requests
-      const propagatedHeaders = getHeadersForPropagation(headers);
+      const propagatedHeaders = {
+        ...getHeadersForPropagation(headers),
+        [EDITING_PARAMS_HEADER]: JSON.stringify(previewData),
+      };
       const html = await getEditingRequestHtml(
         requestUrl,
         propagatedQsParams,
@@ -205,6 +224,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
         route,
       });
 
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
       res.status(200).send(html);
     } catch (err) {
       const error = err as Record<string, unknown>;

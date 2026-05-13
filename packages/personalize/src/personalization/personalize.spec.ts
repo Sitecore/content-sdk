@@ -1,47 +1,32 @@
-import * as coreBrowserModule from '@sitecore-content-sdk/analytics-core/browser';
-import * as coreInternalModule from '@sitecore-content-sdk/analytics-core/internal';
-import * as utilsModule from '@sitecore-content-sdk/analytics-core/utils';
-import * as initializerModule from '../initializer/browser/initializer';
+import * as analyticsPluginsModule from '@sitecore-content-sdk/analytics-core/internal';
+import * as coreModule from '@sitecore-content-sdk/core';
+import * as personalizePluginModule from '../initialization/shared';
 import { personalize } from './personalize';
 import { Personalizer } from './personalizer';
-import { expect } from '@jest/globals';
+import { jest, expect } from '@jest/globals';
 
 jest.mock('./personalizer');
-
-jest.mock('@sitecore-content-sdk/analytics-core/internal', () => {
-  const originalModule: object = jest.requireActual(
-    '@sitecore-content-sdk/analytics-core/internal'
-  );
-
-  return {
-    __esModule: true,
-    ...originalModule,
-    getCloudSDKSettingsBrowser: jest.fn(),
-  };
-});
-
-jest.mock('@sitecore-content-sdk/analytics-core/browser', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/analytics-core/browser');
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
+  getAnalyticsPlugin: jest.fn(),
+}));
+jest.mock('@sitecore-content-sdk/core', () => {
+  const originalModule = jest.requireActual<typeof coreModule>('@sitecore-content-sdk/core');
 
   return {
-    __esModule: true,
     ...originalModule,
-    getBrowserId: jest.fn(),
+    getCoreContext: jest.fn(),
+    debugModule: jest.fn(() => jest.fn()),
+    debugNamespace: 'sitecore-content-sdk',
   };
 });
+jest.mock('../initialization/shared', () => ({
+  getPersonalizePlugin: jest.fn(),
+}));
 
-jest.mock('@sitecore-content-sdk/analytics-core/utils', () => {
-  const originalModule: object = jest.requireActual('@sitecore-content-sdk/analytics-core/utils');
-
-  return {
-    __esModule: true,
-    ...originalModule,
-  };
-});
 describe('personalize', () => {
   describe('new init', () => {
-    const browserId = 'browser_id_value';
-    const guestId = 'guest_id_value';
+    const clientId = 'client_id_value';
+    const profileId = 'profile-id_value';
     const personalizeData = {
       channel: 'WEB',
       currency: 'EUR',
@@ -51,85 +36,66 @@ describe('personalize', () => {
       pointOfSale: 'spinair.com',
     };
 
-    const settings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/',
-      },
+    const config = {
       siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      contextId: '123',
+      edgeUrl: '',
     };
 
-    const personalizeSettings = {
-      initState: true,
-      settings: {
-        cookieSettings: { name: { guestId: '123456' } },
-        enablePersonalizeCookie: false,
+    const mockAdapter = {
+      getClientId: jest.fn().mockReturnValue(clientId),
+      location: {
+        getSearchParams: jest.fn().mockReturnValue(''),
       },
     };
 
-    let windowSpy: jest.Spied<typeof globalThis.Window>;
+    const mockPersonalizeAdapter = {
+      getProfileId: jest.fn().mockReturnValue(profileId),
+      getUserAgent: jest.fn().mockReturnValue('test-user-agent'),
+    };
 
-    const mockFetch = () => Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
-    global.fetch = jest.fn().mockImplementation(mockFetch);
-    jest.spyOn(coreBrowserModule, 'getBrowserId').mockReturnValue(browserId);
-    jest.spyOn(utilsModule, 'getCookieValueClientSide').mockReturnValue(guestId);
+    const mockCoreContext = {
+      config,
+      readyPromise: Promise.resolve(),
+    };
 
     beforeEach(() => {
       jest.clearAllMocks();
-      windowSpy = jest.spyOn(globalThis, 'window', 'get');
-    });
-    it('should return an object with available functionality', async () => {
-      jest
-        .spyOn(coreInternalModule, 'getEnabledPackageBrowser')
-        .mockReturnValue(personalizeSettings as any);
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
 
+      (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
+      (analyticsPluginsModule.getAnalyticsPlugin as jest.Mock).mockReturnValue({
+        adapter: mockAdapter,
+      });
+      (personalizePluginModule.getPersonalizePlugin as jest.Mock).mockReturnValue({
+        adapter: mockPersonalizeAdapter,
+      });
+    });
+
+    it('should return an object with available functionality', async () => {
       const getInteractiveExperienceDataSpy = jest.spyOn(
         Personalizer.prototype,
         'getInteractiveExperienceData'
       );
-      const getSettingsSpy = jest
-        .spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser')
-        .mockReturnValue(settings);
 
       expect(typeof personalize).toBe('function');
-
-      getSettingsSpy.mockReturnValue(settings);
 
       await personalize(personalizeData);
 
-      expect(getSettingsSpy).toHaveBeenCalledTimes(1);
+      expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(Personalizer).toHaveBeenCalledTimes(1);
-      expect(utilsModule.getCookieValueClientSide).toHaveBeenCalledWith(
-        personalizeSettings.settings.cookieSettings.name.guestId
-      );
+      expect(Personalizer).toHaveBeenCalledWith(clientId, profileId);
     });
 
-    it('should throw error if settings have not been configured properly', async () => {
-      jest
-        .spyOn(coreInternalModule, 'getEnabledPackageBrowser')
-        .mockReturnValue({ initState: true } as any);
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-
-      const getSettingsSpy = jest.spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser');
-
-      getSettingsSpy.mockImplementation(() => {
-        throw new Error(`Test error`);
+    it('should throw error if config have not been configured properly', async () => {
+      (coreModule.getCoreContext as jest.Mock).mockImplementation(() => {
+        throw new Error('Test error');
       });
 
-      await expect(async () => await personalize(personalizeData)).rejects.toThrow(`Test error`);
+      await expect(async () => await personalize(personalizeData)).rejects.toThrow('Test error');
     });
 
     it('should call getInteractiveExperience with timeout in opts object', async () => {
-      jest
-        .spyOn(coreInternalModule, 'getEnabledPackageBrowser')
-        .mockReturnValue(personalizeSettings as any);
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
       const getInteractiveExperienceDataSpy = jest.spyOn(
         Personalizer.prototype,
         'getInteractiveExperienceData'
@@ -137,28 +103,23 @@ describe('personalize', () => {
 
       expect(typeof personalize).toBe('function');
 
-      const getSettingsSpy = jest
-        .spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser')
-        .mockReturnValue(settings);
-
       await personalize(personalizeData, { timeout: 100 });
 
-      const expectedOpts = { timeout: 100 };
+      const expectedOpts = { timeout: 100, userAgent: 'test-user-agent' };
       const expectedData = personalizeData;
-      const expectedSettings = settings;
+      const expectedConfig = config;
 
-      expect(getSettingsSpy).toHaveBeenCalledTimes(1);
+      expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
         expectedData,
-        expectedSettings,
-        window.location.search,
+        expectedConfig,
+        '',
         expectedOpts
       );
     });
 
     it('should call getInteractiveExperience without opts object', async () => {
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
       const getInteractiveExperienceDataSpy = jest.spyOn(
         Personalizer.prototype,
         'getInteractiveExperienceData'
@@ -166,56 +127,109 @@ describe('personalize', () => {
 
       expect(typeof personalize).toBe('function');
 
-      const getSettingsSpy = jest
-        .spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser')
-        .mockReturnValue(settings);
-
       await personalize(personalizeData);
 
-      const expectedOpts = { timeout: undefined };
+      const expectedOpts = { timeout: undefined, userAgent: 'test-user-agent' };
       const expectedData = personalizeData;
-      const expectedSettings = settings;
+      const expectedConfig = config;
 
-      expect(getSettingsSpy).toHaveBeenCalledTimes(1);
+      expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
         expectedData,
-        expectedSettings,
-        window.location.search,
+        expectedConfig,
+        '',
         expectedOpts
       );
     });
 
-    it('should call getInteractiveExperience without search params', async () => {
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+    it('should call getInteractiveExperience with search params', async () => {
+      const searchParams = '?utm_campaign=campaign&utm_medium=email';
+      mockAdapter.location.getSearchParams.mockReturnValue(searchParams);
+
       const getInteractiveExperienceDataSpy = jest.spyOn(
         Personalizer.prototype,
         'getInteractiveExperienceData'
       );
 
-      const getSettingsSpy = jest
-        .spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser')
-        .mockReturnValue(settings);
+      await personalize(personalizeData);
 
-      windowSpy.mockImplementation(
-        () =>
-          ({
-            location: {
-              search: '?utm_campaign=campaign&utm_medium=email',
-            },
-          } as any)
+      expect(coreModule.getCoreContext).toHaveBeenCalledTimes(1);
+      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
+      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
+        personalizeData,
+        config,
+        searchParams,
+        { timeout: undefined, userAgent: 'test-user-agent' }
+      );
+    });
+
+    it('should use empty string for clientId when getClientId returns null', async () => {
+      mockAdapter.getClientId.mockReturnValue(null);
+
+      await personalize(personalizeData);
+
+      expect(Personalizer).toHaveBeenCalledWith('', profileId);
+    });
+
+    it('should use empty string for profileId when getProfileId returns null', async () => {
+      mockAdapter.getClientId.mockReturnValue(clientId);
+      mockPersonalizeAdapter.getProfileId.mockReturnValue(null);
+
+      await personalize(personalizeData);
+
+      expect(Personalizer).toHaveBeenCalledWith(clientId, '');
+    });
+
+    it('should handle undefined getUserAgent method', async () => {
+      const mockPersonalizeAdapterWithoutUserAgent = {
+        getProfileId: jest.fn().mockReturnValue(profileId),
+      };
+
+      (personalizePluginModule.getPersonalizePlugin as jest.Mock).mockReturnValue({
+        adapter: mockPersonalizeAdapterWithoutUserAgent,
+      });
+      mockAdapter.location.getSearchParams.mockReturnValue('');
+
+      const getInteractiveExperienceDataSpy = jest.spyOn(
+        Personalizer.prototype,
+        'getInteractiveExperienceData'
       );
 
       await personalize(personalizeData);
 
-      expect(getSettingsSpy).toHaveBeenCalledTimes(1);
-      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
-      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
-        personalizeData,
-        settings,
-        '?utm_campaign=campaign&utm_medium=email',
-        { timeout: undefined }
+      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, config, '', {
+        timeout: undefined,
+        userAgent: undefined,
+      });
+    });
+
+    it('should wait for core context ready promise', async () => {
+      let resolveReady: () => void;
+      const readyPromise = new Promise<void>((resolve) => {
+        resolveReady = resolve;
+      });
+
+      (coreModule.getCoreContext as jest.Mock).mockReturnValue({
+        ...mockCoreContext,
+        readyPromise,
+      });
+
+      const getInteractiveExperienceDataSpy = jest.spyOn(
+        Personalizer.prototype,
+        'getInteractiveExperienceData'
       );
+
+      const personalizePromise = personalize(personalizeData);
+
+      // Should not have been called yet
+      expect(getInteractiveExperienceDataSpy).not.toHaveBeenCalled();
+
+      // Resolve the ready promise
+      resolveReady!();
+      await personalizePromise;
+
+      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
     });
   });
 });

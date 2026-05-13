@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/react](../README.md) / resetEditorChromes
 
-# Variable: resetEditorChromes()
+# Variable: resetEditorChromes
 
 > `const` **resetEditorChromes**: () => `void`
 

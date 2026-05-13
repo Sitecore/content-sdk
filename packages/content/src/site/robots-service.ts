@@ -1,7 +1,8 @@
-import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClientFactory, constants } from '@sitecore-content-sdk/core';
 import { FetchOptions, GraphQLClient } from '../client';
 import debug from '../debug';
-import { siteNameError } from '../constants';
+
+const { ERROR_MESSAGES } = constants;
 
 // The default query for request robots.txt
 const defaultQuery = /* GraphQL */ `
@@ -65,7 +66,7 @@ export class RobotsService {
     const siteName: string = this.options.siteName;
 
     if (!siteName) {
-      throw new Error(siteNameError);
+      throw new Error(ERROR_MESSAGES.MV_002);
     }
 
     const robotsResult: Promise<RobotsQueryResult> = this.graphQLClient.request(

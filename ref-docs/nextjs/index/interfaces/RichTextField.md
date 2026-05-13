@@ -6,9 +6,9 @@
 
 # Interface: RichTextField
 
-Defined in: react/types/components/RichText.d.ts:8
+Defined in: content/types/layout/field-types.d.ts:72
 
-The interface for the RichText field.
+The interface for the Rich Text field.
 
 ## Extends
 
@@ -18,7 +18,7 @@ The interface for the RichText field.
 
 ### metadata?
 
-> `optional` **metadata**: `object`
+> `optional` **metadata?**: `object`
 
 Defined in: content/types/layout/models.d.ts:123
 
@@ -34,6 +34,6 @@ Defined in: content/types/layout/models.d.ts:123
 
 ### value?
 
-> `optional` **value**: `string`
+> `optional` **value?**: `string`
 
-Defined in: react/types/components/RichText.d.ts:9
+Defined in: content/types/layout/field-types.d.ts:73

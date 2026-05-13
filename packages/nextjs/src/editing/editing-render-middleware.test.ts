@@ -16,6 +16,7 @@ import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import {
+  EDITING_PARAMS_HEADER,
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from './constants';
@@ -32,6 +33,7 @@ type Query = {
 };
 
 const allowedOrigin = 'https://allowed.com';
+const defaultAuthHeader = 'Bearer test-token';
 
 const mockRequest = ({
   query,
@@ -48,6 +50,7 @@ const mockRequest = ({
     headers: {
       host: 'localhost:3000',
       origin: allowedOrigin,
+      authorization: defaultAuthHeader,
       ...headers,
     },
   } as EditingNextApiRequest;
@@ -307,6 +310,7 @@ describe('EditingRenderMiddleware', () => {
       'Content-Security-Policy',
       `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
     );
+    expect(res.setHeader).to.have.been.calledWith('Content-Type', 'text/html; charset=utf-8');
   });
 
   it('should use custom resolvePageUrl', async () => {
@@ -383,6 +387,7 @@ describe('EditingRenderMiddleware', () => {
       'Content-Security-Policy',
       `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
     );
+    expect(res.setHeader).to.have.been.calledWith('Content-Type', 'text/html; charset=utf-8');
   });
 
   it('should response with 400 for missing query params', async () => {
@@ -449,6 +454,322 @@ describe('EditingRenderMiddleware', () => {
     expect(fetchRequestUrl.includes('someOtherParam=shouldNotBeIncluded')).to.be.false;
   });
 
+  describe('allowedQueryParams configuration', () => {
+    it('should not include additional query params when allowedQueryParams is not configured', async () => {
+      const customQuery = {
+        ...query,
+        customParam1: 'value1',
+        customParam2: 'value2',
+      };
+      const req = mockRequest({ query: customQuery });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware();
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
+        site: 'website',
+        itemId: '{11111111-1111-1111-1111-111111111111}',
+        language: 'en',
+        variantIds: ['dev'],
+        version: 'latest',
+        mode: 'edit',
+        layoutKind: 'shared',
+      });
+    });
+
+    it('should include allowed query params when configured as array (objects and strings)', async () => {
+      const customQuery = {
+        ...query,
+        customParam1: 'value1',
+        customParam2: 'value2',
+        stringParam: 'string-value',
+        notAllowed: 'shouldNotBeIncluded',
+      };
+      const req = mockRequest({ query: customQuery });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware({
+        allowedQueryParams: [
+          { name: 'customParam1' },
+          { name: 'customParam2' },
+          'stringParam',
+          'missingStringParam',
+        ],
+      });
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
+        site: 'website',
+        itemId: '{11111111-1111-1111-1111-111111111111}',
+        language: 'en',
+        variantIds: ['dev'],
+        version: 'latest',
+        mode: 'edit',
+        layoutKind: 'shared',
+        customParam1: 'value1',
+        customParam2: 'value2',
+        stringParam: 'string-value',
+      });
+    });
+
+    it('should return 400 when required allowed query param is missing (mixed types)', async () => {
+      const customQuery = {
+        ...query,
+        customParam1: 'value1',
+        stringParam: 'value',
+      };
+      const req = mockRequest({ query: customQuery });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware({
+        allowedQueryParams: [
+          { name: 'customParam1', required: true },
+          { name: 'customParam2', required: true },
+          'stringParam',
+        ],
+      });
+      const handler = middleware.getHandler();
+
+      await handler(req, res);
+
+      expect(res.status).to.have.been.calledWith(400);
+      expect(res.json).to.have.been.calledWith({
+        html: '<html><body>Missing required query parameters: customParam2</body></html>',
+      });
+    });
+
+    it('should handle optional allowed query params correctly', async () => {
+      const customQuery = {
+        ...query,
+        requiredParam: 'required-value',
+        // optionalParam is not provided
+      };
+      const req = mockRequest({ query: customQuery });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware({
+        allowedQueryParams: [
+          { name: 'requiredParam', required: true },
+          { name: 'optionalParam', required: false },
+        ],
+      });
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      expect(res.setPreviewData).to.have.been.calledWith({
+        site: 'website',
+        itemId: '{11111111-1111-1111-1111-111111111111}',
+        language: 'en',
+        variantIds: ['dev'],
+        version: 'latest',
+        mode: 'edit',
+        layoutKind: 'shared',
+        requiredParam: 'required-value',
+      });
+      expect(res.status).to.have.been.calledWith(200);
+    });
+
+    it('should use resolver function returning strings and objects', async () => {
+      const customQuery = {
+        ...query,
+        prefixedParam1: 'value1',
+        prefixedParam2: 'value2',
+        requiredParam: 'required-value',
+        otherParam: 'shouldNotBeIncluded',
+      };
+      const req = mockRequest({ query: customQuery });
+      const res = mockResponse();
+
+      const resolver = (queryParamKeys: string[]) => {
+        const result: Array<string | { name: string; required?: boolean }> = [];
+        queryParamKeys
+          .filter((key) => key.startsWith('prefixed'))
+          .forEach((key) => result.push(key));
+
+        if (queryParamKeys.includes('requiredParam')) {
+          result.push({ name: 'requiredParam', required: true });
+        }
+        return result;
+      };
+
+      const middleware = new EditingRenderMiddleware({
+        allowedQueryParams: resolver,
+      });
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      expect(res.setPreviewData).to.have.been.calledWith({
+        site: 'website',
+        itemId: '{11111111-1111-1111-1111-111111111111}',
+        language: 'en',
+        variantIds: ['dev'],
+        version: 'latest',
+        mode: 'edit',
+        layoutKind: 'shared',
+        prefixedParam1: 'value1',
+        prefixedParam2: 'value2',
+        requiredParam: 'required-value',
+      });
+    });
+
+    it('should return 400 when resolver returns mixed types with missing required param', async () => {
+      const customQuery = {
+        ...query,
+        presentParam: 'value1',
+        stringParam: 'string-value',
+      };
+      const req = mockRequest({ query: customQuery });
+      const res = mockResponse();
+
+      const resolver = () => {
+        return [
+          'stringParam',
+          { name: 'presentParam', required: true },
+          { name: 'missingRequiredParam', required: true },
+        ];
+      };
+
+      const middleware = new EditingRenderMiddleware({
+        allowedQueryParams: resolver,
+      });
+      const handler = middleware.getHandler();
+
+      await handler(req, res);
+
+      expect(res.status).to.have.been.calledWith(400);
+      expect(res.json).to.have.been.calledWith({
+        html: '<html><body>Missing required query parameters: missingRequiredParam</body></html>',
+      });
+    });
+
+    it('should handle resolver function returning empty array', async () => {
+      const customQuery = {
+        ...query,
+        customParam: 'value',
+      };
+      const req = mockRequest({ query: customQuery });
+      const res = mockResponse();
+
+      const resolver = () => {
+        return []; // No additional params allowed
+      };
+
+      const middleware = new EditingRenderMiddleware({
+        allowedQueryParams: resolver,
+      });
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      expect(res.setPreviewData).to.have.been.calledWith({
+        site: 'website',
+        itemId: '{11111111-1111-1111-1111-111111111111}',
+        language: 'en',
+        variantIds: ['dev'],
+        version: 'latest',
+        mode: 'edit',
+        layoutKind: 'shared',
+      });
+      expect(res.status).to.have.been.calledWith(200);
+    });
+
+    it('should handle various data types in allowed query params', async () => {
+      const customQuery = {
+        ...query,
+        stringParam: 'string-value',
+        numberParam: '123',
+        booleanParam: 'true',
+        arrayParam: ['val1', 'val2'],
+      };
+      const req = mockRequest({ query: customQuery });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware({
+        allowedQueryParams: [
+          { name: 'stringParam' },
+          { name: 'numberParam' },
+          { name: 'booleanParam' },
+          { name: 'arrayParam' },
+        ],
+      });
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      expect(res.setPreviewData).to.have.been.calledWith({
+        site: 'website',
+        itemId: '{11111111-1111-1111-1111-111111111111}',
+        language: 'en',
+        variantIds: ['dev'],
+        version: 'latest',
+        mode: 'edit',
+        layoutKind: 'shared',
+        stringParam: 'string-value',
+        numberParam: '123',
+        booleanParam: 'true',
+        arrayParam: ['val1', 'val2'],
+      });
+    });
+
+    it('should combine missing required editing params and missing required allowed params in error message', async () => {
+      const customQuery = {
+        sc_site: 'website',
+        secret: secret,
+        // missing: sc_itemid, sc_lang, route, mode
+        // missing: requiredAllowedParam
+      };
+      const req = mockRequest({ query: customQuery });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware({
+        allowedQueryParams: [{ name: 'requiredAllowedParam', required: true }],
+      });
+      const handler = middleware.getHandler();
+
+      await handler(req, res);
+
+      expect(res.status).to.have.been.calledWith(400);
+      const jsonCall = (res.json as any).getCall(0).args[0];
+      expect(jsonCall.html).to.include('Missing required query parameters:');
+      expect(jsonCall.html).to.include('sc_itemid');
+      expect(jsonCall.html).to.include('sc_lang');
+      expect(jsonCall.html).to.include('route');
+      expect(jsonCall.html).to.include('mode');
+      expect(jsonCall.html).to.include('requiredAllowedParam');
+    });
+  });
+
   it('should issue intrnal request propagating allowed headers', async () => {
     const req = mockRequest({
       query,
@@ -481,6 +802,68 @@ describe('EditingRenderMiddleware', () => {
     expect(fetchRequestHeaders).to.not.have.property('otherHeader');
   });
 
+  it('should propagate previewData as JSON in EDITING_PARAMS_HEADER', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    const fetcherGetStub = sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    const fetchRequestHeaders = fetcherGetStub.getCall(0).args[1]?.headers;
+
+    expect(fetchRequestHeaders).to.have.property(EDITING_PARAMS_HEADER);
+
+    const editingParams = JSON.parse(fetchRequestHeaders![EDITING_PARAMS_HEADER]);
+    expect(editingParams).to.deep.equal({
+      site: 'website',
+      itemId: '{11111111-1111-1111-1111-111111111111}',
+      language: 'en',
+      variantIds: ['dev'],
+      version: 'latest',
+      mode: 'edit',
+      layoutKind: 'shared',
+    });
+  });
+
+  it('should include allowed query params in EDITING_PARAMS_HEADER previewData', async () => {
+    const customQuery = {
+      ...query,
+      customParam1: 'value1',
+      stringParam: 'string-value',
+      notAllowed: 'shouldNotBeIncluded',
+    };
+    const req = mockRequest({ query: customQuery });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware({
+      allowedQueryParams: [{ name: 'customParam1' }, 'stringParam'],
+    });
+    const handler = middleware.getHandler();
+
+    const fetcherGetStub = sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    const fetchRequestHeaders = fetcherGetStub.getCall(0).args[1]?.headers;
+
+    expect(fetchRequestHeaders).to.have.property(EDITING_PARAMS_HEADER);
+
+    const editingParams = JSON.parse(fetchRequestHeaders![EDITING_PARAMS_HEADER]);
+    expect(editingParams).to.include({
+      customParam1: 'value1',
+      stringParam: 'string-value',
+    });
+    expect(editingParams).to.not.have.property('notAllowed');
+  });
+
   it('should return 200 if internal request successful', async () => {
     const req = mockRequest({ query });
     const res = mockResponse();
@@ -495,6 +878,7 @@ describe('EditingRenderMiddleware', () => {
     await handler(req, res);
 
     expect(res.status).to.be.calledOnceWith(200);
+    expect(res.setHeader).to.have.been.calledWith('Content-Type', 'text/html; charset=utf-8');
   });
 
   it('should remove nextjs preview cookies before responding to browser', async () => {
@@ -719,6 +1103,7 @@ describe('EditingRenderMiddleware', () => {
         'Content-Security-Policy',
         `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
       );
+      expect(res.setHeader).to.have.been.calledWith('Content-Type', 'text/html; charset=utf-8');
     });
   });
 

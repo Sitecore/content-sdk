@@ -8,7 +8,7 @@
 
 > **createEditingRenderRouteHandlers**(`options`): `object`
 
-Defined in: [nextjs/src/route-handler/editing-render-route-handler.ts:61](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/nextjs/src/route-handler/editing-render-route-handler.ts#L61)
+Defined in: [nextjs/src/route-handler/editing-render-route-handler.ts:70](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/nextjs/src/route-handler/editing-render-route-handler.ts#L70)
 
 Creates a route handler for the editing render API route (e.g. '/api/editing/render')
 
@@ -22,7 +22,7 @@ Creates a route handler for the editing render API route (e.g. '/api/editing/ren
 
 The route handler object with GET and OPTIONS methods.
 
-### GET()
+### GET
 
 > **GET**: (`req`) => `Promise`\<`Response`\>
 
@@ -36,7 +36,7 @@ The route handler object with GET and OPTIONS methods.
 
 `Promise`\<`Response`\>
 
-### OPTIONS()
+### OPTIONS
 
 > **OPTIONS**: (`req`) => `Response`
 
@@ -50,7 +50,7 @@ The route handler object with GET and OPTIONS methods.
 
 `Response`
 
-### POST()
+### POST
 
 > **POST**: (`req`) => `Promise`\<`Response`\>
 

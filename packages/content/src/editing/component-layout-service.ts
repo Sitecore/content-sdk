@@ -4,6 +4,8 @@ import { LayoutServiceData } from '../layout';
 import debug from '../debug';
 import { DesignLibraryMode, DesignLibraryVariantGeneration } from './models';
 
+const { ERROR_MESSAGES } = constants;
+
 /**
  * Params for requesting component data in Design Library mode
  * @public
@@ -85,10 +87,7 @@ export class ComponentLayoutService {
     const sitecoreContextId = this.config.contextId || this.config.clientContextId;
 
     if (!sitecoreContextId) {
-      throw new Error(
-        `ComponentLayoutService misconfigured: contextId is missing.
-         Provide contextId on the server, and clientContextId in the browser if you need to full client-side functionality.`
-      );
+      throw new Error(ERROR_MESSAGES.MV_001);
     }
 
     const fetcher = new NativeDataFetcher({ debugger: debug.layout });

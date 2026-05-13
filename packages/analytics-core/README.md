@@ -1,6 +1,6 @@
-# core
+# analytics-core
 
-This package is for initializing the Cloud SDK and its other packages in your app.
+This package provides the analytics core functionality for the Sitecore Content SDK.
 
 ## Installation
 
@@ -8,71 +8,87 @@ This package is for initializing the Cloud SDK and its other packages in your ap
 npm install @sitecore-content-sdk/analytics-core
 ```
 
-To initialize other Cloud SDK packages, first install them:
+To use other Content SDK packages, first install them:
 
 ```bash
 npm install @sitecore-content-sdk/events
 npm install @sitecore-content-sdk/personalize
-npm install @sitecore-content-sdk/search
 ```
 
 ## Usage
 
-1. Import the modules of all installed Cloud SDK packages that you want to initialize.
-2. Initialize the Cloud SDK and its packages using the `CloudSDK` function, available in the `core` package.
+1. Import the `initContentSdk` function from `@sitecore-content-sdk/core`.
+2. Import the plugins and adapters from the packages you want to use.
+3. Initialize the Content SDK with the plugins array.
 
 ## Code examples
 
-Initialize the Cloud SDK and its packages on the browser side:
+Initialize the Content SDK on the browser side:
 
 ```tsx
 'use client';
 
 import { useEffect } from 'react';
-import { CloudSDK } from '@sitecore-content-sdk/analytics-core/browser';
-import '@sitecore-content-sdk/events/browser';
-import '@sitecore-content-sdk/personalize/browser';
+import { initContentSdk } from '@sitecore-content-sdk/core';
+import { analyticsPlugin, analyticsBrowserAdapter } from '@sitecore-content-sdk/analytics-core';
+import { eventsPlugin } from '@sitecore-content-sdk/events';
+import { personalizeBrowserPlugin, personalizeBrowserAdapter } from '@sitecore-content-sdk/personalize';
 
 export default function Home() {
   useEffect(() => {
-    CloudSDK({
-      sitecoreEdgeContextId: '<YOUR_CONTEXT_ID>',
-      siteName: '<YOUR_SITE_NAME>',
-      enableBrowserCookie: true
-    })
-      .addEvents() // Initialize the `events` package.
-      .addPersonalize({
-        enablePersonalizeCookie: true,
-        webPersonalization: true
-      }) // Initialize the `personalize` package and enable web personalization.
-      .addSearch() // Initialize the `search` package.
-      .initialize();
+    initContentSdk({
+      config: {
+        contextId: '<YOUR_CONTEXT_ID>',
+        siteName: '<YOUR_SITE_NAME>',
+      },
+      plugins: [
+        analyticsPlugin({
+          options: { enableCookie: true },
+          adapter: analyticsBrowserAdapter(),
+        }),
+        eventsPlugin(),
+        personalizeBrowserPlugin({
+          options: { enablePersonalizeCookie: true },
+          adapter: personalizeBrowserAdapter(),
+        }),
+      ],
+    });
   }, []);
 
   return <></>;
 }
 ```
 
-Initialize the Cloud SDK and its packages on the server side:
+Initialize the Content SDK on the server side:
 
 ```ts
 import type { NextRequest, NextResponse } from 'next/server';
-import { CloudSDK } from '@sitecore-content-sdk/analytics-core/server';
-import '@sitecore-content-sdk/events/server';
-import '@sitecore-content-sdk/personalize/server';
+import { initContentSdk } from '@sitecore-content-sdk/core';
+import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
+import { eventsPlugin } from '@sitecore-content-sdk/events';
+import { personalizeServerPlugin } from '@sitecore-content-sdk/personalize';
+import { analyticsProxyAdapter, personalizeProxyAdapter } from '@sitecore-content-sdk/nextjs';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const response = NextResponse.next();
 
-  await CloudSDK(request, response, {
-    sitecoreEdgeContextId: '<YOUR_CONTEXT_ID>',
-    siteName: '<YOUR_SITE_NAME>',
-    enableServerCookie: true
-  })
-    .addEvents() // Initialize the `events` package.
-    .addPersonalize({ enablePersonalizeCookie: true }) // Initialize the `personalize` package.
-    .addSearch() // Initialize the `search` package.
-    .initialize();
+  await initContentSdk({
+    config: {
+      contextId: '<YOUR_CONTEXT_ID>',
+      siteName: '<YOUR_SITE_NAME>',
+    },
+    plugins: [
+      analyticsPlugin({
+        options: { enableCookie: true },
+        adapter: analyticsProxyAdapter(request, response),
+      }),
+      eventsPlugin(),
+      personalizeServerPlugin({
+        options: { enablePersonalizeCookie: true },
+        adapter: personalizeProxyAdapter(request, response),
+      }),
+    ],
+  });
 
   return response;
 }
@@ -80,4 +96,4 @@ export async function middleware(request: NextRequest) {
 
 ## Documentation
 
-[Official Sitecore Cloud SDK documentation](https://doc.sitecore.com/xmc/en/developers/sdk/latest/cloud-sdk/index.html)
+[Official Sitecore Content SDK documentation](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html)

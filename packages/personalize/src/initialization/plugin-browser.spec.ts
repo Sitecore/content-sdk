@@ -1,0 +1,449 @@
+import { personalizeBrowserPlugin } from './plugin-browser';
+import { PERSONALIZE_PLUGIN_NAME } from './const';
+import { PACKAGE_VERSION } from '../consts';
+import * as sharedModule from './shared';
+import * as coreModule from '@sitecore-content-sdk/core';
+import * as analyticsPluginModule from '@sitecore-content-sdk/analytics-core/internal';
+import * as analyticsUtilsModule from '@sitecore-content-sdk/analytics-core/utils';
+import * as getCdnUrlModule from '../web-personalization/get-cdn-url';
+import * as getProfileIdModule from './get-profile-id';
+import { PersonalizeAdapter } from './types';
+import { jest, expect } from '@jest/globals';
+
+jest.mock('@sitecore-content-sdk/core', () => {
+  const originalModule = jest.requireActual<typeof coreModule>('@sitecore-content-sdk/core');
+
+  return {
+    ...originalModule,
+    getCoreContext: jest.fn(),
+    debugModule: jest.fn(() => jest.fn()),
+    debugNamespace: 'content-sdk',
+  };
+});
+
+jest.mock('./shared', () => ({
+  getPersonalizePlugin: jest.fn(),
+}));
+
+jest.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
+  ANALYTICS_PLUGIN_NAME: 'AnalyticsPlugin',
+  COOKIE_NAME_PREFIX: 'sc_',
+  CLIENT_ID_COOKIE_NAME: 'cid',
+  getAnalyticsPlugin: jest.fn(),
+}));
+
+jest.mock('@sitecore-content-sdk/events/internal', () => ({
+  EVENTS_PLUGIN_NAME: 'EventsPlugin',
+}));
+
+jest.mock('@sitecore-content-sdk/analytics-core/utils', () => ({
+  appendScriptWithAttributes: jest.fn(),
+}));
+
+jest.mock('../web-personalization/get-cdn-url', () => ({
+  getCdnUrl: jest.fn(),
+}));
+
+describe('personalizeBrowserPlugin', () => {
+  const mockGetProfileId = jest.fn() as jest.Mock<PersonalizeAdapter['getProfileId']>;
+  const mockSetProfileId = jest.fn() as jest.Mock<PersonalizeAdapter['setProfileId']>;
+
+  const createMockAdapter = (type: 'browser' | 'server' = 'browser'): PersonalizeAdapter => ({
+    type,
+    getProfileId: mockGetProfileId,
+    setProfileId: mockSetProfileId,
+  });
+
+  const mockAnalyticsPlugin = {
+    options: {
+      cookies: {
+        enabled: true,
+        expiryDays: 730,
+        domain: '.example.com',
+        name: { clientId: 'sc_cid' },
+      },
+    },
+  };
+
+  const mockCoreContext = {
+    config: {
+      contextId: 'test-context-id',
+      edgeUrl: 'https://edge.test.com',
+      siteName: 'test-site',
+    },
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (analyticsPluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue(mockAnalyticsPlugin);
+    (coreModule.getCoreContext as jest.Mock).mockReturnValue(mockCoreContext);
+    // Reset window.scContentSDK
+    if (typeof window !== 'undefined') {
+      delete (window as any).scContentSDK;
+    }
+  });
+
+  describe('plugin creation', () => {
+    it('should create a plugin with the correct name', () => {
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({ adapter });
+
+      expect(plugin.name).toBe(PERSONALIZE_PLUGIN_NAME);
+    });
+
+    it('should create a plugin with analytics plugin as dependency', () => {
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({ adapter });
+
+      expect(plugin.dependencies).toEqual(['AnalyticsPlugin']);
+    });
+
+    it('should create a plugin with analytics and events plugins as dependencies when webPersonalization is enabled', () => {
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({
+        adapter,
+        options: { webPersonalization: { async: true } },
+      });
+
+      expect(plugin.dependencies).toEqual(['AnalyticsPlugin', 'EventsPlugin']);
+    });
+
+    it('should create a plugin with the correct adapter', () => {
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({ adapter });
+
+      expect(plugin.adapter).toBe(adapter);
+    });
+
+    it('should create a plugin with default settings when no settings provided', () => {
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({ adapter });
+
+      expect(plugin.options).toEqual({
+        webPersonalization: false,
+        cookies: {
+          enabled: false,
+          name: 'sc_cid_personalize',
+        },
+      });
+    });
+
+    it('should create a plugin with enablePersonalizeCookie true', () => {
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({
+        adapter,
+        options: { enablePersonalizeCookie: true },
+      });
+
+      expect(plugin.options.cookies.enabled).toBe(true);
+    });
+
+    it('should create a plugin with enablePersonalizeCookie false', () => {
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({
+        adapter,
+        options: { enablePersonalizeCookie: false },
+      });
+
+      expect(plugin.options.cookies.enabled).toBe(false);
+    });
+
+    it('should create a plugin with webPersonalization settings with defaults', () => {
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({
+        adapter,
+        options: { webPersonalization: {} },
+      });
+
+      expect(plugin.options.webPersonalization).toEqual({
+        async: true,
+        defer: false,
+        language: undefined,
+      });
+    });
+
+    it('should create a plugin with custom webPersonalization settings', () => {
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({
+        adapter,
+        options: {
+          webPersonalization: {
+            async: false,
+            defer: true,
+            language: 'en',
+          },
+        },
+      });
+
+      expect(plugin.options.webPersonalization).toEqual({
+        async: false,
+        defer: true,
+        language: 'en',
+      });
+    });
+
+    it('should have an init function', () => {
+      const adapter = createMockAdapter();
+      const plugin = personalizeBrowserPlugin({ adapter });
+
+      expect(typeof plugin.init).toBe('function');
+    });
+  });
+
+  describe('init', () => {
+    describe('setProfileId', () => {
+      it('should call setProfileId when both enableCookie and enablePersonalizeCookie are true and profile ID does not exist', async () => {
+        const adapter = createMockAdapter();
+        mockGetProfileId.mockReturnValue('');
+        mockSetProfileId.mockResolvedValue(undefined);
+
+        const plugin = personalizeBrowserPlugin({
+          adapter,
+          options: { enablePersonalizeCookie: true },
+        });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        expect(mockSetProfileId).toHaveBeenCalledTimes(1);
+      });
+
+      it('should call setProfileId when adapter type is not browser even if profile ID exists', async () => {
+        const adapter = createMockAdapter('server');
+        mockGetProfileId.mockReturnValue('existing-profile-id');
+        mockSetProfileId.mockResolvedValue(undefined);
+
+        const plugin = personalizeBrowserPlugin({
+          adapter,
+          options: { enablePersonalizeCookie: true },
+        });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        expect(mockSetProfileId).toHaveBeenCalledTimes(1);
+      });
+
+      it('should not call setProfileId when profile ID exists and adapter type is browser', async () => {
+        const adapter = createMockAdapter('browser');
+        mockGetProfileId.mockReturnValue('existing-profile-id');
+
+        const plugin = personalizeBrowserPlugin({
+          adapter,
+          options: { enablePersonalizeCookie: true },
+        });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        expect(mockSetProfileId).not.toHaveBeenCalled();
+      });
+
+      it('should not call setProfileId when enableCookie is false', async () => {
+        const adapter = createMockAdapter();
+
+        const plugin = personalizeBrowserPlugin({
+          adapter,
+          options: { enablePersonalizeCookie: true },
+        });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+        (analyticsPluginModule.getAnalyticsPlugin as jest.Mock).mockReturnValue({
+          options: {
+            cookies: {
+              enabled: false,
+            },
+          },
+        });
+
+        await plugin.init();
+
+        expect(mockSetProfileId).not.toHaveBeenCalled();
+      });
+
+      it('should not call setProfileId when enablePersonalizeCookie is false', async () => {
+        const adapter = createMockAdapter();
+
+        const plugin = personalizeBrowserPlugin({
+          adapter,
+          options: { enablePersonalizeCookie: false },
+        });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        expect(mockSetProfileId).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('server-side rendering', () => {
+      it('should return early when window is undefined', async () => {
+        const originalWindow = global.window;
+        // @ts-expect-error - simulating SSR environment
+        delete global.window;
+
+        const adapter = createMockAdapter();
+
+        const plugin = personalizeBrowserPlugin({ adapter });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        // Should not throw and should not try to set window.scContentSDK
+        expect(getCdnUrlModule.getCdnUrl).not.toHaveBeenCalled();
+
+        global.window = originalWindow;
+      });
+    });
+
+    describe('window.scContentSDK setup', () => {
+      it('should set up window.scContentSDK with personalize properties', async () => {
+        const adapter = createMockAdapter();
+
+        const plugin = personalizeBrowserPlugin({ adapter });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        expect(window.scContentSDK).toBeDefined();
+        expect(window.scContentSDK.personalize).toBeDefined();
+        expect(window.scContentSDK.personalize.version).toBe(PACKAGE_VERSION);
+        expect(window.scContentSDK.personalize.options).toEqual({});
+      });
+
+      it('should add getProfileId to window.scContentSDK.analytics_core', async () => {
+        const adapter = createMockAdapter();
+
+        const plugin = personalizeBrowserPlugin({ adapter });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        expect(window.scContentSDK.analytics_core).toBeDefined();
+        expect(window.scContentSDK.analytics_core.getProfileId).toBe(
+          getProfileIdModule.getProfileId
+        );
+      });
+
+      it('should preserve existing window.scContentSDK properties', async () => {
+        (window as any).scContentSDK = {
+          analytics_core: {
+            getClientId: jest.fn(),
+            version: '1.0.0',
+          },
+        };
+
+        const adapter = createMockAdapter();
+
+        const plugin = personalizeBrowserPlugin({ adapter });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        expect((window.scContentSDK as any).analytics_core.getClientId).toBeDefined();
+        expect((window.scContentSDK as any).analytics_core.version).toBe('1.0.0');
+        expect(window.scContentSDK.analytics_core.getProfileId).toBe(
+          getProfileIdModule.getProfileId
+        );
+      });
+    });
+
+    describe('webPersonalization', () => {
+      it('should not load CDN script when webPersonalization is false', async () => {
+        const adapter = createMockAdapter();
+
+        const plugin = personalizeBrowserPlugin({
+          adapter,
+          options: { webPersonalization: false },
+        });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        expect(getCdnUrlModule.getCdnUrl).not.toHaveBeenCalled();
+        expect(analyticsUtilsModule.appendScriptWithAttributes).not.toHaveBeenCalled();
+      });
+
+      it('should load CDN script when webPersonalization is enabled and CDN URL is available', async () => {
+        const adapter = createMockAdapter();
+        (
+          getCdnUrlModule.getCdnUrl as jest.Mock<typeof getCdnUrlModule.getCdnUrl>
+        ).mockResolvedValue('https://cdn.test.com/script.js');
+
+        const plugin = personalizeBrowserPlugin({
+          adapter,
+          options: { webPersonalization: { async: true } },
+        });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        expect(getCdnUrlModule.getCdnUrl).toHaveBeenCalledWith(
+          'test-context-id',
+          'https://edge.test.com'
+        );
+        expect(analyticsUtilsModule.appendScriptWithAttributes).toHaveBeenCalledWith({
+          async: true,
+          src: 'https://cdn.test.com/script.js',
+        });
+      });
+
+      it('should not load CDN script when CDN URL is not available', async () => {
+        const adapter = createMockAdapter();
+        (
+          getCdnUrlModule.getCdnUrl as jest.Mock<typeof getCdnUrlModule.getCdnUrl>
+        ).mockResolvedValue(null);
+
+        const plugin = personalizeBrowserPlugin({
+          adapter,
+          options: { webPersonalization: { async: true } },
+        });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        expect(getCdnUrlModule.getCdnUrl).toHaveBeenCalled();
+        expect(analyticsUtilsModule.appendScriptWithAttributes).not.toHaveBeenCalled();
+      });
+
+      it('should set webPersonalization settings on window.scContentSDK.personalize', async () => {
+        const adapter = createMockAdapter();
+        (
+          getCdnUrlModule.getCdnUrl as jest.Mock<typeof getCdnUrlModule.getCdnUrl>
+        ).mockResolvedValue('https://cdn.test.com/script.js');
+
+        const plugin = personalizeBrowserPlugin({
+          adapter,
+          options: {
+            webPersonalization: {
+              async: false,
+              defer: true,
+              language: 'en',
+            },
+          },
+        });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        expect(window.scContentSDK.personalize.options).toEqual({
+          async: false,
+          defer: true,
+          language: 'en',
+        });
+      });
+    });
+  });
+});

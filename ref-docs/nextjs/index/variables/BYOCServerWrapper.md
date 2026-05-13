@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / BYOCServerWrapper
 
-# Variable: BYOCServerWrapper()
+# Variable: BYOCServerWrapper
 
 > `const` **BYOCServerWrapper**: (`props`) => `Promise`\<`React.JSX.Element`\>
 

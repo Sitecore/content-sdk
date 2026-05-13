@@ -7,4 +7,5 @@
 ## Modules
 
 - [browser](browser/README.md)
-- [server](server/README.md)
+- [index](index/README.md)
+- [internal](internal/README.md)

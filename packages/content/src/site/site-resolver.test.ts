@@ -1,6 +1,9 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
+import { constants } from '@sitecore-content-sdk/core';
 import { SiteResolver } from './site-resolver';
+
+const { ERROR_MESSAGES } = constants;
 
 describe('SiteResolver', () => {
   describe('getByHost', () => {
@@ -8,7 +11,7 @@ describe('SiteResolver', () => {
       const resolver = new SiteResolver([]);
       expect(() => {
         resolver.getByHost('foo.com');
-      }).to.throw(Error, 'Could not resolve site for host foo.com');
+      }).to.throw(Error, ERROR_MESSAGES.IE_007('foo.com'));
     });
 
     it('should throw when there is no appropriate site info', () => {
@@ -18,7 +21,7 @@ describe('SiteResolver', () => {
       ]);
       expect(() => {
         resolver.getByHost('foo.com');
-      }).to.throw(Error, 'Could not resolve site for host foo.com');
+      }).to.throw(Error, ERROR_MESSAGES.IE_007('foo.com'));
     });
 
     it('should return site', () => {

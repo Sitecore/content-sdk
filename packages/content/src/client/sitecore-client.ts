@@ -6,6 +6,7 @@ import {
   RetryStrategy,
   NativeDataFetcher,
   debug,
+  constants,
 } from '@sitecore-content-sdk/core';
 import {
   resolveEdgeUrlForStaticFiles,
@@ -38,6 +39,8 @@ import {
   ComponentLayoutService,
   DesignLibraryMode,
 } from '../editing';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Error page codes
@@ -474,13 +477,24 @@ export class SitecoreClient implements BaseSitecoreClient {
         version,
         layoutKind,
         mode,
+        site,
       },
       fetchOptions
     );
 
     if (!data) {
-      throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(previewData)}`);
+      throw new Error(
+        `Unable to fetch editing data for preview ${JSON.stringify(previewData)}. ${
+          ERROR_MESSAGES.CONTACT_SUPPORT
+        }`
+      );
     }
+
+    // If the route is not found it means access is denied or preview content is not found
+    if (!data.layoutData.sitecore.route) {
+      return null;
+    }
+
     let layout = data.layoutData;
     const personalizeData = getGroomedVariantIds(variantIds);
     personalizeLayout(layout, personalizeData.variantId, personalizeData.componentVariantIds);
@@ -505,10 +519,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     designLibData: DesignLibraryRenderPreviewData,
     fetchOptions?: FetchOptions
   ): Promise<Page> {
-    if (!this.initOptions.api.local) {
-      throw new Error('Component Library requires Sitecore apiHost and apiKey to be provided');
-    }
-
     const {
       itemId,
       componentUid,
@@ -537,7 +547,11 @@ export class SitecoreClient implements BaseSitecoreClient {
     );
 
     if (!componentData) {
-      throw new Error(`Unable to fetch editing data for preview ${JSON.stringify(designLibData)}`);
+      throw new Error(
+        `Unable to fetch editing data for preview ${JSON.stringify(designLibData)}. ${
+          ERROR_MESSAGES.CONTACT_SUPPORT
+        }`
+      );
     }
     const layout = this.applyContentRewrite(componentData);
     const page: Page = {
