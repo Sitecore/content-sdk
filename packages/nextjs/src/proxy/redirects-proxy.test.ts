@@ -793,6 +793,126 @@ describe('RedirectsProxy', () => {
       expect(finalRes).to.deep.equal(redirectRes);
     });
 
+    describe('regex redirect-map compatibility scenarios', () => {
+      it('should apply capture group substitution for root path without leaving $1 token', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/',
+            locale: 'en',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse();
+        const redirectRes = createResponse({
+          redirected: true,
+          status: 301,
+          url: 'http://localhost:3000/en/',
+        });
+        nextRedirectStub.returns(redirectRes);
+
+        const { proxy } = createProxy({
+          pattern: '^/(?!en|de-de|ko-kr|zh-tw|zh-cn|ja-jp)(.*)$',
+          target: '/en/$1',
+          redirectType: REDIRECT_TYPE_301,
+        });
+
+        await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const redirectUrl = nextRedirectStub.getCall(0).args[0] as string;
+        expect(redirectUrl).to.not.include('$1');
+        expect(redirectUrl).to.include('http://localhost:3000/');
+      });
+
+      it('should match anchored regex rule for locale-prefixed incoming path', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/en/test/red',
+            locale: 'en',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse();
+        const redirectRes = createResponse({
+          redirected: true,
+          status: 301,
+          url: 'http://localhost:3000/en/about',
+        });
+        nextRedirectStub.returns(redirectRes);
+
+        const { proxy } = createProxy({
+          pattern: '^/test/(.*)$',
+          target: '/en/about',
+          redirectType: REDIRECT_TYPE_301,
+        });
+
+        await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const redirectUrl = nextRedirectStub.getCall(0).args[0] as string;
+        expect(redirectUrl).to.include('/about');
+      });
+
+      it('should match anchored regex rule ending with slash for locale-prefixed incoming path', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/en/test/',
+            locale: 'en',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse();
+        const redirectRes = createResponse({
+          redirected: true,
+          status: 301,
+          url: 'http://localhost:3000/en/about',
+        });
+        nextRedirectStub.returns(redirectRes);
+
+        const { proxy } = createProxy({
+          pattern: '^/test/$',
+          target: '/en/about',
+          redirectType: REDIRECT_TYPE_301,
+        });
+
+        await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const redirectUrl = nextRedirectStub.getCall(0).args[0] as string;
+        expect(redirectUrl).to.include('/about');
+      });
+
+      it('should substitute capture groups for anchored default path regex', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/default/example',
+            locale: 'en',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse();
+        const redirectRes = createResponse({
+          redirected: true,
+          status: 301,
+          url: 'http://localhost:3000/en/example',
+        });
+        nextRedirectStub.returns(redirectRes);
+
+        const { proxy } = createProxy({
+          pattern: '^/default/(.*)$',
+          target: '/en/$1',
+          redirectType: REDIRECT_TYPE_301,
+        });
+
+        await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const redirectUrl = nextRedirectStub.getCall(0).args[0] as string;
+        expect(redirectUrl).to.include('/example');
+        expect(redirectUrl).to.not.include('$1');
+      });
+    });
+
     it('should replace $siteLang token in target', async () => {
       const req = createRequest({
         nextUrl: {

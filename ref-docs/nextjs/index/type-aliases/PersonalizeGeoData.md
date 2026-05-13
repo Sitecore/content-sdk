@@ -8,7 +8,7 @@
 
 > **PersonalizeGeoData** = `object`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:24](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/nextjs/src/proxy/personalize-proxy.ts#L24)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:24](https://github.com/Sitecore/content-sdk/blob/77825b9deac7ebde4022f21ad02170354dd2da15/packages/nextjs/src/proxy/personalize-proxy.ts#L24)
 
 Represents the geolocation data used for personalization
 
@@ -18,7 +18,7 @@ Represents the geolocation data used for personalization
 
 > `optional` **city?**: `string`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:25](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/nextjs/src/proxy/personalize-proxy.ts#L25)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:25](https://github.com/Sitecore/content-sdk/blob/77825b9deac7ebde4022f21ad02170354dd2da15/packages/nextjs/src/proxy/personalize-proxy.ts#L25)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [nextjs/src/proxy/personalize-proxy.ts:25](https://github.com/Siteco
 
 > `optional` **country?**: `string`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:26](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/nextjs/src/proxy/personalize-proxy.ts#L26)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:26](https://github.com/Sitecore/content-sdk/blob/77825b9deac7ebde4022f21ad02170354dd2da15/packages/nextjs/src/proxy/personalize-proxy.ts#L26)
 
 ***
 
@@ -34,4 +34,4 @@ Defined in: [nextjs/src/proxy/personalize-proxy.ts:26](https://github.com/Siteco
 
 > `optional` **region?**: `string`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:27](https://github.com/Sitecore/content-sdk/blob/d9d50e1e9cf196032766ca4287d4c24576cabbd6/packages/nextjs/src/proxy/personalize-proxy.ts#L27)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:27](https://github.com/Sitecore/content-sdk/blob/77825b9deac7ebde4022f21ad02170354dd2da15/packages/nextjs/src/proxy/personalize-proxy.ts#L27)
