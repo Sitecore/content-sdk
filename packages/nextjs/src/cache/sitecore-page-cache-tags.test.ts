@@ -39,13 +39,31 @@ describe('collectSitecorePageCacheTags', () => {
     expect(routeTag).to.equal(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:route:website:en-us:about`);
   });
 
-  it('includes route, dict, and item tags', () => {
+  it('derives pathname from path segments when personalizedPathname is omitted', () => {
+    const tags = collectSitecorePageCacheTags({
+      ...base,
+      path: ['about'],
+    });
+    const routeTag = tags.find((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:route:`));
+    expect(routeTag).to.equal(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:route:website:en-us:about`);
+  });
+
+  it('uses home route when path is empty and personalizedPathname is omitted', () => {
+    const tags = collectSitecorePageCacheTags({
+      ...base,
+      path: [],
+    });
+    const routeTag = tags.find((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:route:`));
+    expect(routeTag).to.equal(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:route:website:en-us:_`);
+  });
+
+  it('includes route, personalization, and item tags', () => {
     const tags = collectSitecorePageCacheTags({
       ...base,
       personalizedPathname: '/about',
     });
     expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:route:`))).to.equal(true);
-    expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:`))).to.equal(true);
+    expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:pvv:`))).to.equal(true);
     expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:`))).to.equal(true);
   });
 });

@@ -33,6 +33,12 @@ describe('createRevalidateRouteHandler', () => {
     }));
 
     module = proxyquireNoCallThru('./revalidate-route-handler', {
+      '../debug': {
+        __esModule: true,
+        default: {
+          revalidate: () => undefined,
+        },
+      },
       'next/cache': { revalidateTag: revalidateTagStub },
       'next/server': { NextRequest: class {}, NextResponse: { json: nextResponseJsonStub } },
     });

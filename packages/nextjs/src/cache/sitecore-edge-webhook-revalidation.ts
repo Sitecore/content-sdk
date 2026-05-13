@@ -27,7 +27,7 @@ export type SitecoreEdgeRevalidateRequestBody = {
   /**
    * Extra tag strings. Values starting with the Sitecore cache prefix (`sc:`) are used as-is.
    * Bare values are treated as Sitecore item ids (with optional `-media` / `-layout` suffix stripped)
-   * and mapped to {@link buildSitecoreItemCacheTag} using `defaultLocale`.
+   * and mapped to {@link buildSitecoreItemCacheTag} using the handler default locale when culture is missing.
    */
   tags?: string[];
 };
@@ -35,7 +35,7 @@ export type SitecoreEdgeRevalidateRequestBody = {
 /**
  * Strips Experience Edge style suffixes from an `identifier` so the value can be used as an item id in cache tags.
  * Handles `{GUID}`, `{GUID}-media`, `{GUID}-layout` style strings.
- * @param identifier - Raw identifier from a webhook update row.
+ * @param {string} identifier - Raw identifier from a webhook update row.
  * @public
  */
 export function extractSitecoreEdgeContentId(identifier: string): string {
@@ -48,6 +48,10 @@ export function extractSitecoreEdgeContentId(identifier: string): string {
 
 const FULL_TAG_PREFIX = `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:`;
 
+/**
+ * @param {string} value - Candidate tag string from a webhook body.
+ * @returns True when `value` is already a full `sc:` content cache tag.
+ */
 function isFullSitecoreContentCacheTag(value: string): boolean {
   return value.startsWith(FULL_TAG_PREFIX);
 }
@@ -67,6 +71,8 @@ export type CollectSitecoreTagsFromEdgeBodyOptions = {
  * Maps a POC-style Edge webhook JSON body to Content SDK cache tag strings used by
  * {@link collectSitecorePageCacheTags} / {@link buildSitecoreItemCacheTag} (`sc:item:...`), so
  * `revalidateTag` matches tags registered during cached reads.
+ * @param {SitecoreEdgeRevalidateRequestBody | null | undefined} body - Webhook JSON body (tags and/or updates).
+ * @param {CollectSitecoreTagsFromEdgeBodyOptions} options - Default locale when culture is missing on an update or bare tag.
  * @public
  */
 export function collectSitecoreTagsFromEdgeRevalidateRequestBody(

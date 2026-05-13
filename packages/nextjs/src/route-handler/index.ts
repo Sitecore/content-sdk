@@ -5,9 +5,16 @@ export { createEditingRenderRouteHandlers } from './editing-render-route-handler
 export {
   createRevalidateRouteHandler,
   type RevalidateRouteHandlerOptions,
+  type RevalidateTagCacheProfile,
 } from './revalidate-route-handler';
 export {
+  createWebhookRevalidateRouteHandler,
+  type WebhookRevalidateRouteHandlerOptions,
   createEdgeWebhookRevalidateRouteHandler,
   type EdgeWebhookRevalidateRouteHandlerOptions,
-} from './edge-webhook-revalidate-route-handler';
+} from './webhook-revalidate-route-handler';
+export {
+  createSitecoreRevalidateRouteHandler,
+  type SitecoreRevalidateRouteHandlerOptions,
+} from './sitecore-revalidate-route-handler';
 

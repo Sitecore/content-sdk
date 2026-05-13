@@ -287,6 +287,7 @@ export class RedirectsProxy extends ProxyBase {
    * Method returns RedirectInfo when matches
    * @param {NextRequest} req request
    * @param {string} siteName site name
+   * @param {string} requestLocale - Resolved locale for redirect lookup.
    * @returns Promise<RedirectInfo | undefined>
    * @private
    */

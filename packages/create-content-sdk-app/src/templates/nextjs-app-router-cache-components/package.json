@@ -1,11 +1,11 @@
 {
-  "name": "content-sdk-nextjs-app-router",
-  "description": "Application utilizing Content SDK and Next.js",
+  "name": "content-sdk-nextjs-app-router-cache-components",
+  "description": "Content SDK Next.js App Router sample with Cache Components and On-demand revalidation",
   "version": "0.1.0",
   "private": true,
   "author": {
     "name": "Sitecore Corporation",
-    "url": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html"
+    "url": "https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html"
   },
   "repository": {
     "type": "git",

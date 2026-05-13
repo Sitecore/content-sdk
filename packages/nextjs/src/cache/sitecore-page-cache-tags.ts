@@ -3,7 +3,6 @@ import {
   normalizePersonalizedRewrite,
 } from '@sitecore-content-sdk/content/personalize';
 import {
-  buildSitecoreDictionaryCacheTag,
   buildSitecoreItemCacheTagFromRouteData,
   buildSitecorePersonalizedPageVariantCacheTag,
   buildSitecoreRouteCacheTag,
@@ -11,13 +10,30 @@ import {
   type SitecoreRouteDataLike,
 } from './sitecore-cache-tags';
 
+/** @param {string} pathname - Raw pathname (may omit leading slash). */
 function normalizePathname(pathname: string): string {
   const trimmed = pathname.trim() || '/';
   return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
 }
 
 /**
+ * Normalizes App Router catch-all `path` segments the same way as `SitecoreClient.parsePath` for a
+ * string array (leading slash, trim segments, drop empty `/` parts).
+ * @param {string[]} path - App Router catch-all segments.
+ */
+function personalizedPathnameFromPathSegments(path: string[]): string {
+  if (path.length === 0) {
+    return '/';
+  }
+  return `/${path
+    .filter((part) => part !== '/')
+    .map((part) => part.replace(/^\/+/, '').replace(/\/+$/, ''))
+    .join('/')}`;
+}
+
+/**
  * Route segments after removing personalization rewrite markers, for stable route-level tags.
+ * @param {string} personalizedPathname - Pathname that may include personalization rewrite segments.
  */
 function routeSegmentsFromPersonalizedPathname(personalizedPathname: string): string[] {
   const pathname = normalizePathname(personalizedPathname);
@@ -39,19 +55,31 @@ export type CollectSitecorePageCacheTagsParams = {
   /**
    * Path string used for personalization rewrite parsing (`_variantId_...`) and for deriving
    * normalized route segments (variants stripped) for the route tag.
+   * Provide this **or** `path`. When both are set, this value wins.
    */
-  personalizedPathname: string;
+  personalizedPathname?: string;
+  /**
+   * App Router catch-all segments (e.g. from `[...path]`). Used when `personalizedPathname` is omitted;
+   * normalized the same way as `SitecoreClient.parsePath` for a string array argument.
+   */
+  path?: string[];
   /** Route node from layout (for item id / language / version). */
   route: SitecoreRouteDataLike;
 };
 
 /**
- * Builds the full tag set for a Sitecore page read: route, dictionary, personalization variant, and route item.
- * @param {CollectSitecorePageCacheTagsParams} params - Site, locale, pathname, and route metadata.
+ * Builds cache tags for a Sitecore page read (`getPage`): route, personalization variant, and route item.
+ * Dictionary data is not part of `getPage`; tag dictionary fetches separately (for example with
+ * `buildSitecoreDictionaryCacheTag` on a dedicated `use cache` helper).
+ * @param {CollectSitecorePageCacheTagsParams} params - Site, locale, path or personalized pathname, and route metadata.
  * @public
  */
 export function collectSitecorePageCacheTags(params: CollectSitecorePageCacheTagsParams): string[] {
-  const pathname = normalizePathname(params.personalizedPathname);
+  const pathnameInput =
+    params.personalizedPathname !== undefined
+      ? params.personalizedPathname
+      : personalizedPathnameFromPathSegments(params.path ?? []);
+  const pathname = normalizePathname(pathnameInput);
   const personalize = getPersonalizedRewriteData(pathname);
   const pathSegments = routeSegmentsFromPersonalizedPathname(pathname);
 
@@ -61,7 +89,6 @@ export function collectSitecorePageCacheTags(params: CollectSitecorePageCacheTag
       locale: params.locale,
       pathSegments,
     }),
-    buildSitecoreDictionaryCacheTag({ site: params.site, locale: params.locale }),
     buildSitecorePersonalizedPageVariantCacheTag({
       variantId: personalize.variantId,
       componentVariantIds: personalize.componentVariantIds,

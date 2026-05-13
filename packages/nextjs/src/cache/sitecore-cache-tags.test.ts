@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import {
   buildSitecoreDictionaryCacheTag,
+  buildSitecoreDictionaryCacheTagsFromSites,
   buildSitecoreItemCacheTag,
   buildSitecoreItemCacheTagFromRouteData,
   buildSitecorePersonalizedPageVariantCacheTag,
@@ -72,6 +73,47 @@ describe('sitecore-cache-tags', () => {
       expect(buildSitecoreDictionaryCacheTag({ site: 'Website', locale: 'da-DK' })).to.equal(
         `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:website:da-dk`
       );
+    });
+  });
+
+  describe('buildSitecoreDictionaryCacheTagsFromSites', () => {
+    it('dedupes duplicate site locale combinations including extraDictionarySite overlap', () => {
+      expect(
+        buildSitecoreDictionaryCacheTagsFromSites({
+          sites: [
+            { name: 'Website', language: 'en' },
+            { name: 'Website', language: 'en' },
+          ],
+          baseLocale: 'en',
+          extraDictionarySite: 'Website',
+        })
+      ).to.deep.equal([`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:website:en`]);
+    });
+
+    it('adds extraDictionarySite tag alongside per-site tags', () => {
+      expect(
+        buildSitecoreDictionaryCacheTagsFromSites({
+          sites: [
+            { name: 'Website', language: 'en-US' },
+            { name: 'Other', language: 'da-DK' },
+          ],
+          baseLocale: 'en',
+          extraDictionarySite: 'Website',
+        })
+      ).to.deep.equal([
+        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:website:en-us`,
+        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:other:da-dk`,
+        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:website:en`,
+      ]);
+    });
+
+    it('uses baseLocale when site language is empty', () => {
+      expect(
+        buildSitecoreDictionaryCacheTagsFromSites({
+          sites: [{ name: 'Solo', language: '' }],
+          baseLocale: 'fr-FR',
+        })
+      ).to.deep.equal([`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:solo:fr-fr`]);
     });
   });
 

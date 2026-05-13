@@ -7,7 +7,7 @@
     }
   },
   {
-    "template": "nextjs-app-router-osr",
+    "template": "nextjs-app-router-cache-components",
     "args": {
       "prerender": "SSG",
       "revalidate": true

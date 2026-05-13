@@ -1,6 +1,14 @@
 import { dedupeSitecoreCacheTags } from '../cache/sitecore-cache-tags';
+import debug from '../debug';
 import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
+
+/**
+ * Second argument to Next.js `revalidateTag` (cache profile: e.g. `"max"` or `{ expire }`).
+ * Aligns with the installed `next/cache` typings.
+ * @public
+ */
+export type RevalidateTagCacheProfile = Parameters<typeof revalidateTag>[1];
 
 type RevalidateRequestBody = {
   tag?: string;
@@ -28,15 +36,16 @@ export type RevalidateRouteHandlerOptions = {
    */
   secretHeaderName?: string;
   /**
-   * Next.js cache profile used by revalidateTag.
-   * Default is max.
+   * Next.js `revalidateTag` cache profile (second argument). Default is `"max"` (recommended).
+   * Other string values may match profiles from `cacheLife` in `next.config`; objects may use `{ expire }` per Next.js docs.
    */
-  cacheProfile?: 'max';
+  cacheProfile?: RevalidateTagCacheProfile;
 };
 
 const DEFAULT_SECRET_ENV_VAR = 'SITECORE_REVALIDATE_SECRET';
 const DEFAULT_SECRET_HEADER = 'x-revalidate-secret';
 
+/** @param {RevalidateRequestBody} body - Parsed JSON body with optional `tag` or `tags`. */
 function normalizeTags(body: RevalidateRequestBody): string[] {
   const fromSingle = body.tag ? [body.tag] : [];
   const fromMany = body.tags ?? [];
@@ -59,42 +68,64 @@ export function createRevalidateRouteHandler(options: RevalidateRouteHandlerOpti
   } = options;
 
   const POST = async (req: NextRequest) => {
-    const configuredSecret = secret ?? process.env[secretEnvVarName];
-    if (!configuredSecret) {
-      return NextResponse.json(
-        { error: `${secretEnvVarName} is not configured.` },
-        { status: 500 }
-      );
-    }
-
-    const providedSecret = req.headers.get(secretHeaderName);
-    if (providedSecret !== configuredSecret) {
-      return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
-    }
-
-    let body: RevalidateRequestBody;
+    const startTimestamp = Date.now();
     try {
-      body = (await req.json()) as RevalidateRequestBody;
-    } catch {
-      return NextResponse.json({ error: 'Request body must be valid JSON.' }, { status: 400 });
-    }
+      const configuredSecret = secret ?? process.env[secretEnvVarName];
+      if (!configuredSecret) {
+        debug.revalidate('revalidate route handler: %s is not configured', secretEnvVarName);
+        return NextResponse.json(
+          { error: `${secretEnvVarName} is not configured.` },
+          { status: 500 }
+        );
+      }
 
-    const tags = normalizeTags(body);
-    if (tags.length === 0) {
-      return NextResponse.json(
-        { error: 'Provide a non-empty `tag` or `tags` in the request body.' },
-        { status: 400 }
-      );
-    }
+      const providedSecret = req.headers.get(secretHeaderName);
+      if (providedSecret !== configuredSecret) {
+        debug.revalidate('revalidate route handler: unauthorized (secret mismatch or missing header)');
+        return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+      }
 
-    for (const tag of tags) {
-      revalidateTag(tag, cacheProfile);
-    }
+      let body: RevalidateRequestBody;
+      try {
+        body = (await req.json()) as RevalidateRequestBody;
+      } catch {
+        debug.revalidate('revalidate route handler: invalid JSON body');
+        return NextResponse.json({ error: 'Request body must be valid JSON.' }, { status: 400 });
+      }
 
-    return NextResponse.json({
-      revalidated: true,
-      tags,
-    });
+      const tags = normalizeTags(body);
+      if (tags.length === 0) {
+        debug.revalidate('revalidate route handler: no tags in body after %dms', Date.now() - startTimestamp);
+        return NextResponse.json(
+          { error: 'Provide a non-empty `tag` or `tags` in the request body.' },
+          { status: 400 }
+        );
+      }
+
+      debug.revalidate('revalidate route handler start: %o', { tagsCount: tags.length });
+
+      for (const tag of tags) {
+        revalidateTag(tag, cacheProfile);
+      }
+
+      debug.revalidate('revalidate route handler end in %dms: %o', Date.now() - startTimestamp, {
+        tagsCount: tags.length,
+      });
+
+      return NextResponse.json({
+        revalidated: true,
+        tags,
+      });
+    } catch (error) {
+      if (error instanceof Error && (error as any).digest === 'NEXT_PRERENDER_INTERRUPTED') {
+        throw error;
+      }
+
+      console.log('Revalidate route handler failed:');
+      console.log(error);
+
+      return NextResponse.json({ error: 'Internal Server Error.' }, { status: 500 });
+    }
   };
 
   return { POST };

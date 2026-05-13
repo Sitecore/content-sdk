@@ -100,6 +100,46 @@ export function buildSitecoreDictionaryCacheTag(params: BuildSitecoreDictionaryC
 }
 
 /**
+ * Parameters for buildSitecoreDictionaryCacheTagsFromSites.
+ * @public
+ */
+export type BuildSitecoreDictionaryCacheTagsFromSitesParams = {
+  /** Sites list (e.g. from generated multisite JSON). */
+  sites: readonly { name: string; language?: string }[];
+  /** Locale used when a site has no language and for the optional extra-site dictionary tag. */
+  baseLocale: string;
+  /** Optional site name; adds one dictionary tag scoped to the shared locale field only. */
+  extraDictionarySite?: string;
+};
+
+/**
+ * Builds deduplicated dictionary cache tags from a sites list and optional extra site.
+ * @param {BuildSitecoreDictionaryCacheTagsFromSitesParams} params - Sites list, base locale, and optional extra site for an additional dictionary tag.
+ * @public
+ */
+export function buildSitecoreDictionaryCacheTagsFromSites(
+  params: BuildSitecoreDictionaryCacheTagsFromSitesParams
+): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  const push = (tag: string) => {
+    if (!seen.has(tag)) {
+      seen.add(tag);
+      out.push(tag);
+    }
+  };
+  for (const site of params.sites) {
+    const locale = site.language?.trim() ? site.language : params.baseLocale;
+    push(buildSitecoreDictionaryCacheTag({ site: site.name, locale }));
+  }
+  const extraSite = params.extraDictionarySite?.trim();
+  if (extraSite) {
+    push(buildSitecoreDictionaryCacheTag({ site: extraSite, locale: params.baseLocale }));
+  }
+  return out;
+}
+
+/**
  * Parameters for {@link buildSitecorePersonalizedPageVariantCacheTag}.
  * @public
  */

@@ -3,6 +3,6 @@
 "create-content-sdk-app": minor
 ---
 
-Add tag-based revalidation support for App Router OSR, including cache tag helpers and revalidation route handlers.
+Add tag-based revalidation support for the Next.js App Router with Cache Components, including cache tag helpers and revalidation route handlers.
 
-Introduce the `nextjs-app-router-osr` scaffolding template with manual and webhook revalidation routes wired out of the box.
+Introduce the `nextjs-app-router-cache-components` scaffolding template with a combined revalidation route wired out of the box.
