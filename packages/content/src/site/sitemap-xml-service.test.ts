@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import nock from 'nock';
-import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClient, constants } from '@sitecore-content-sdk/core';
 import { SitemapXmlService } from './sitemap-xml-service';
-import { siteNameError } from '../constants';
+
+const { ERROR_MESSAGES } = constants;
 
 const sitemapQueryResultNull = {
   site: {
@@ -55,7 +56,7 @@ describe('SitemapXmlService', () => {
 
       const service = new SitemapXmlService({ clientFactory, siteName: '' });
       await service.fetchSitemaps().catch((error: Error) => {
-        expect(error.message).to.equal(siteNameError);
+        expect(error.message).to.equal(ERROR_MESSAGES.MV_002);
       });
 
       return expect(nock.isDone()).to.be.false;

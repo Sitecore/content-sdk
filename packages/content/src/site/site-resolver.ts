@@ -1,4 +1,7 @@
+import { constants } from '@sitecore-content-sdk/core';
 import { SiteInfo } from './models';
+
+const { ERROR_MESSAGES } = constants;
 
 // Delimiters for multi-value hostnames
 const DELIMITERS = /\||,|;/g;
@@ -25,7 +28,7 @@ export class SiteResolver {
         return site;
       }
     }
-    throw new Error(`Could not resolve site for host ${hostName}`);
+    throw new Error(ERROR_MESSAGES.IE_007(hostName));
   };
 
   /**

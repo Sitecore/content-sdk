@@ -13,6 +13,7 @@ import {
   PREVIEW_KEY,
 } from '@sitecore-content-sdk/content/editing';
 import {
+  EDITING_PARAMS_HEADER,
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from '../editing/constants';
@@ -36,6 +37,7 @@ describe('createEditingRenderRouteHandlers', () => {
   let cookiesStub: any;
   let getRequiredQueryParamsStub: sinon.SinonStub;
   let getCSPHeaderStub: sinon.SinonStub;
+  let getAllowedQueryParamsStub: sinon.SinonStub;
   let fetchStub: sinon.SinonStub;
   let handlers: any;
   let req: Partial<NextRequest>;
@@ -103,6 +105,10 @@ describe('createEditingRenderRouteHandlers', () => {
     getCSPHeaderStub = sandbox
       .stub()
       .returns(`frame-ancestors 'self' ${allowedOrigin} ${EDITING_ALLOWED_ORIGINS.join(' ')}`);
+    getAllowedQueryParamsStub = sandbox.stub().returns({
+      missingAllowedParams: [],
+      allowedQueryParams: {},
+    });
 
     // Set the global variable BEFORE proxyquire loads the module
     (global as any).__TEST_COOKIE_STORE__ = cookiesStub;
@@ -129,6 +135,7 @@ describe('createEditingRenderRouteHandlers', () => {
         getRequiredEditingParamsList: getRequiredQueryParamsStub,
         getCSPHeader: getCSPHeaderStub,
         resolveServerUrl: resolveServerUrlStub,
+        getAllowedQueryParams: getAllowedQueryParamsStub,
         mapEditingParams: sandbox.stub().callsFake((query: any) => ({
           itemId: query.sc_itemid,
           language: query.sc_lang,
@@ -138,6 +145,10 @@ describe('createEditingRenderRouteHandlers', () => {
           version: query.sc_version,
           layoutKind: query.sc_layoutKind,
         })),
+        PreviewCookies: {
+          PREVIEW_DATA: '__next_preview_data',
+          PRERENDER_BYPASS: '__prerender_bypass',
+        },
       },
       '@sitecore-content-sdk/core': {
         NativeDataFetcher: NativeDataFetcherStub,
@@ -353,10 +364,19 @@ describe('createEditingRenderRouteHandlers', () => {
         layoutKind: mockQuery.sc_layoutKind,
       });
 
-      // Verify propagated headers
+      // Verify propagated headers (includes editing params header for preview)
       expect(propagatedHeaders).to.deep.equal({
         authorization: 'Bearer token123',
         cookie: 'test=value',
+        [EDITING_PARAMS_HEADER]: JSON.stringify({
+          itemId: mockQuery.sc_itemid,
+          language: mockQuery.sc_lang,
+          site: mockQuery.sc_site,
+          mode: mockQuery.mode,
+          variantIds: mockQuery.sc_variant,
+          version: mockQuery.sc_version,
+          layoutKind: mockQuery.sc_layoutKind,
+        }),
       });
 
       // Verify converted cookies from cookieStore.getAll()
@@ -424,7 +444,8 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
 
       const [, , propagatedHeaders] = getEditingRequestHtmlStub.firstCall.args;
-      expect(propagatedHeaders).to.deep.equal(expectedPropagatedHeaders);
+      expect(propagatedHeaders).to.deep.include(expectedPropagatedHeaders);
+      expect(propagatedHeaders[EDITING_PARAMS_HEADER]).to.be.a('string');
     });
 
     it('should pass cookies correctly for internal request', async () => {
@@ -660,6 +681,321 @@ describe('createEditingRenderRouteHandlers', () => {
         `frame-ancestors 'self' ${allowedOrigin} ${EDITING_ALLOWED_ORIGINS.join(' ')}`
       );
     });
+
+    describe('allowedQueryParams configuration', () => {
+      it('should not include additional query params when allowedQueryParams is not configured', async () => {
+        const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({});
+
+        req.nextUrl!.searchParams = mockSearchParams({
+          [QUERY_PARAM_EDITING_SECRET]: secret,
+          mode: 'edit',
+          route: '/styleguide',
+          sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+          sc_lang: 'en',
+          sc_site: 'website',
+          customParam1: 'value1',
+          customParam2: 'value2',
+        });
+
+        getAllowedQueryParamsStub.returns({
+          missingAllowedParams: [],
+          allowedQueryParams: {},
+        });
+
+        const res = await handlers.GET(req as NextRequest);
+
+        expect(res.status).to.equal(200);
+        expect(getAllowedQueryParamsStub).to.have.been.called;
+      });
+
+      it('should include allowed query params when configured as array (objects and strings)', async () => {
+        const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
+          allowedQueryParams: [
+            { name: 'customParam1' },
+            { name: 'customParam2' },
+            'stringParam',
+            'missingStringParam',
+          ],
+        });
+
+        req.nextUrl!.searchParams = mockSearchParams({
+          [QUERY_PARAM_EDITING_SECRET]: secret,
+          mode: 'edit',
+          route: '/styleguide',
+          sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+          sc_lang: 'en',
+          sc_site: 'website',
+          customParam1: 'value1',
+          customParam2: 'value2',
+          stringParam: 'string-value',
+          notAllowed: 'shouldNotBeIncluded',
+        });
+
+        getAllowedQueryParamsStub.returns({
+          missingAllowedParams: [],
+          allowedQueryParams: {
+            customParam1: 'value1',
+            customParam2: 'value2',
+            stringParam: 'string-value',
+          },
+        });
+
+        const res = await handlers.GET(req as NextRequest);
+
+        expect(res.status).to.equal(200);
+        expect(getAllowedQueryParamsStub).to.have.been.calledWith(
+          sinon.match.any,
+          sinon.match.array
+        );
+      });
+
+      it('should return 400 when required allowed query param is missing (mixed types)', async () => {
+        const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
+          allowedQueryParams: [
+            { name: 'customParam1', required: true },
+            { name: 'customParam2', required: true },
+            'stringParam',
+          ],
+        });
+
+        req.nextUrl!.searchParams = mockSearchParams({
+          [QUERY_PARAM_EDITING_SECRET]: secret,
+          mode: 'edit',
+          route: '/styleguide',
+          sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+          sc_lang: 'en',
+          sc_site: 'website',
+          customParam1: 'value1',
+          stringParam: 'value',
+        });
+
+        getAllowedQueryParamsStub.returns({
+          missingAllowedParams: ['customParam2'],
+          allowedQueryParams: {
+            customParam1: 'value1',
+            stringParam: 'value',
+          },
+        });
+
+        const res = await handlers.GET(req as NextRequest);
+
+        expect(res.status).to.equal(400);
+        const responseBody = JSON.parse(res.body);
+        expect(responseBody.html).to.equal(
+          '<html><body>Missing required query parameters: customParam2</body></html>'
+        );
+      });
+
+      it('should handle optional allowed query params correctly', async () => {
+        const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
+          allowedQueryParams: [
+            { name: 'requiredParam', required: true },
+            { name: 'optionalParam', required: false },
+          ],
+        });
+
+        req.nextUrl!.searchParams = mockSearchParams({
+          [QUERY_PARAM_EDITING_SECRET]: secret,
+          mode: 'edit',
+          route: '/styleguide',
+          sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+          sc_lang: 'en',
+          sc_site: 'website',
+          requiredParam: 'required-value',
+        });
+
+        getAllowedQueryParamsStub.returns({
+          missingAllowedParams: [],
+          allowedQueryParams: {
+            requiredParam: 'required-value',
+          },
+        });
+
+        const res = await handlers.GET(req as NextRequest);
+
+        expect(res.status).to.equal(200);
+      });
+
+      it('should use resolver function returning strings and objects', async () => {
+        const resolver = (queryParamKeys: string[]) => {
+          const result: Array<string | { name: string; required?: boolean }> = [];
+          queryParamKeys
+            .filter((key) => key.startsWith('prefixed'))
+            .forEach((key) => result.push(key));
+          if (queryParamKeys.includes('requiredParam')) {
+            result.push({ name: 'requiredParam', required: true });
+          }
+          return result;
+        };
+
+        const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
+          allowedQueryParams: resolver,
+        });
+
+        req.nextUrl!.searchParams = mockSearchParams({
+          [QUERY_PARAM_EDITING_SECRET]: secret,
+          mode: 'edit',
+          route: '/styleguide',
+          sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+          sc_lang: 'en',
+          sc_site: 'website',
+          prefixedParam1: 'value1',
+          prefixedParam2: 'value2',
+          requiredParam: 'required-value',
+          otherParam: 'shouldNotBeIncluded',
+        });
+
+        getAllowedQueryParamsStub.returns({
+          missingAllowedParams: [],
+          allowedQueryParams: {
+            prefixedParam1: 'value1',
+            prefixedParam2: 'value2',
+            requiredParam: 'required-value',
+          },
+        });
+
+        const res = await handlers.GET(req as NextRequest);
+
+        expect(res.status).to.equal(200);
+        expect(getAllowedQueryParamsStub).to.have.been.calledWith(
+          sinon.match.any,
+          sinon.match.func
+        );
+      });
+
+      it('should return 400 when resolver returns mixed types with missing required param', async () => {
+        const resolver = () => {
+          return [
+            'stringParam',
+            { name: 'presentParam', required: true },
+            { name: 'missingRequiredParam', required: true },
+          ];
+        };
+
+        const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
+          allowedQueryParams: resolver,
+        });
+
+        req.nextUrl!.searchParams = mockSearchParams({
+          [QUERY_PARAM_EDITING_SECRET]: secret,
+          mode: 'edit',
+          route: '/styleguide',
+          sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+          sc_lang: 'en',
+          sc_site: 'website',
+          presentParam: 'value1',
+          stringParam: 'string-value',
+        });
+
+        getAllowedQueryParamsStub.returns({
+          missingAllowedParams: ['missingRequiredParam'],
+          allowedQueryParams: {
+            presentParam: 'value1',
+            stringParam: 'string-value',
+          },
+        });
+
+        const res = await handlers.GET(req as NextRequest);
+
+        expect(res.status).to.equal(400);
+        const responseBody = JSON.parse(res.body);
+        expect(responseBody.html).to.equal(
+          '<html><body>Missing required query parameters: missingRequiredParam</body></html>'
+        );
+      });
+
+      it('should handle resolver function returning empty array', async () => {
+        const resolver = () => {
+          return []; // No additional params allowed
+        };
+
+        const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
+          allowedQueryParams: resolver,
+        });
+
+        req.nextUrl!.searchParams = mockSearchParams({
+          [QUERY_PARAM_EDITING_SECRET]: secret,
+          mode: 'edit',
+          route: '/styleguide',
+          sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+          sc_lang: 'en',
+          sc_site: 'website',
+          customParam: 'value',
+        });
+
+        getAllowedQueryParamsStub.returns({
+          missingAllowedParams: [],
+          allowedQueryParams: {},
+        });
+
+        const res = await handlers.GET(req as NextRequest);
+
+        expect(res.status).to.equal(200);
+      });
+
+      it('should combine missing required editing params and missing required allowed params in error message', async () => {
+        const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
+          allowedQueryParams: [{ name: 'requiredAllowedParam', required: true }],
+        });
+
+        req.nextUrl!.searchParams = mockSearchParams({
+          [QUERY_PARAM_EDITING_SECRET]: secret,
+          sc_site: 'website',
+          // missing: sc_itemid, sc_lang, route, mode
+          // missing: requiredAllowedParam
+        });
+
+        getAllowedQueryParamsStub.returns({
+          missingAllowedParams: ['requiredAllowedParam'],
+          allowedQueryParams: {},
+        });
+
+        const res = await handlers.GET(req as NextRequest);
+
+        expect(res.status).to.equal(400);
+        const responseBody = JSON.parse(res.body);
+        expect(responseBody.html).to.include('Missing required query parameters:');
+        expect(responseBody.html).to.include('sc_itemid');
+        expect(responseBody.html).to.include('sc_lang');
+        expect(responseBody.html).to.include('route');
+        expect(responseBody.html).to.include('mode');
+        expect(responseBody.html).to.include('requiredAllowedParam');
+      });
+
+      it('should pass allowed query params to getEditingRequestHtml in propagatedQsParams', async () => {
+        const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
+          allowedQueryParams: [{ name: 'customParam1' }, { name: 'customParam2' }],
+        });
+
+        req.nextUrl!.searchParams = mockSearchParams({
+          [QUERY_PARAM_EDITING_SECRET]: secret,
+          mode: 'edit',
+          route: '/styleguide',
+          sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+          sc_lang: 'en',
+          sc_site: 'website',
+          customParam1: 'value1',
+          customParam2: 'value2',
+        });
+
+        getAllowedQueryParamsStub.returns({
+          missingAllowedParams: [],
+          allowedQueryParams: {
+            customParam1: 'value1',
+            customParam2: 'value2',
+          },
+        });
+
+        await handlers.GET(req as NextRequest);
+
+        expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
+        const [, propagatedQsParams] = getEditingRequestHtmlStub.firstCall.args;
+        expect(propagatedQsParams).to.include({
+          customParam1: 'value1',
+          customParam2: 'value2',
+        });
+      });
+    });
   });
 
   describe('POST handler', () => {
@@ -819,6 +1155,31 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(fetchHeaders.get('cookie')).to.include('__prerender_bypass=some-value');
     });
 
+    it('should propagate editing preview data via EDITING_PARAMS_HEADER on forwarded POST', async () => {
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        data: '<html>Server Action Response</html>',
+      });
+
+      await handlers.POST(req);
+
+      expect(fetchStub.calledOnce).to.be.true;
+      const fetchHeaders = fetchStub.getCall(0).args[1].headers as Headers;
+      const packed = fetchHeaders.get(EDITING_PARAMS_HEADER);
+      expect(packed).to.be.a('string');
+      const parsed = JSON.parse(packed as string);
+      expect(parsed).to.deep.equal({
+        itemId: mockQuery.sc_itemid,
+        language: mockQuery.sc_lang,
+        site: mockQuery.sc_site,
+        mode: mockQuery.mode,
+        variantIds: mockQuery.sc_variant,
+        version: mockQuery.sc_version,
+        layoutKind: mockQuery.sc_layoutKind,
+      });
+    });
+
     it('should proxy POST request with mapped querry string parameters and propagated vercel protection parameters', async () => {
       const protectionParams = {
         [QUERY_PARAM_VERCEL_PROTECTION_BYPASS]: 'bypass-token-123',
@@ -912,6 +1273,125 @@ describe('createEditingRenderRouteHandlers', () => {
       const setCookie = res.headers.get('Set-Cookie');
       expect(setCookie).to.not.include('__prerender_bypass');
       expect(setCookie).to.not.include('__next_preview_data');
+    });
+
+    describe('allowedQueryParams for POST', () => {
+      it('should include allowed query params in propagated query params (objects and strings)', async () => {
+        const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
+          allowedQueryParams: [{ name: 'customParam1' }, { name: 'customParam2' }, 'stringParam'],
+        });
+
+        req.nextUrl!.searchParams = mockSearchParams({
+          ...mockQuery,
+          customParam1: 'value1',
+          customParam2: 'value2',
+          stringParam: 'string-value',
+          notAllowed: 'shouldNotBeIncluded',
+        });
+
+        getAllowedQueryParamsStub.returns({
+          missingAllowedParams: [],
+          allowedQueryParams: {
+            customParam1: 'value1',
+            customParam2: 'value2',
+            stringParam: 'string-value',
+          },
+        });
+
+        fetchStub.resolves({
+          status: 200,
+          statusText: 'OK',
+          headers: new Headers({ 'content-type': 'text/html' }),
+          data: '<html>Response</html>',
+        });
+
+        await handlers.POST(req);
+
+        expect(getAllowedQueryParamsStub).to.have.been.called;
+        expect(fetchStub).to.have.been.calledOnce;
+        const targetUrl = fetchStub.firstCall.args[0];
+        expect(targetUrl).to.include('customParam1=value1');
+        expect(targetUrl).to.include('customParam2=value2');
+        expect(targetUrl).to.include('stringParam=string-value');
+      });
+
+      it('should use resolver function returning strings and objects for POST handler', async () => {
+        const resolver = (queryParamKeys: string[]) => {
+          const result: Array<string | { name: string; required?: boolean }> = [];
+          queryParamKeys
+            .filter((key) => key.startsWith('prefixed'))
+            .forEach((key) => result.push(key));
+          if (queryParamKeys.includes('requiredParam')) {
+            result.push({ name: 'requiredParam', required: true });
+          }
+          return result;
+        };
+
+        const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
+          allowedQueryParams: resolver,
+        });
+
+        req.nextUrl!.searchParams = mockSearchParams({
+          ...mockQuery,
+          prefixedParam1: 'value1',
+          prefixedParam2: 'value2',
+          requiredParam: 'required-value',
+          otherParam: 'shouldNotBeIncluded',
+        });
+
+        getAllowedQueryParamsStub.returns({
+          missingAllowedParams: [],
+          allowedQueryParams: {
+            prefixedParam1: 'value1',
+            prefixedParam2: 'value2',
+            requiredParam: 'required-value',
+          },
+        });
+
+        fetchStub.resolves({
+          status: 200,
+          statusText: 'OK',
+          headers: new Headers({ 'content-type': 'text/html' }),
+          data: '<html>Response</html>',
+        });
+
+        await handlers.POST(req);
+
+        expect(getAllowedQueryParamsStub).to.have.been.calledWith(
+          sinon.match.any,
+          sinon.match.func
+        );
+      });
+
+      it('should handle empty allowedQueryParams from resolver in POST', async () => {
+        const resolver = () => [];
+
+        const handlers = editingRenderRouteHandlerModule.createEditingRenderRouteHandlers({
+          allowedQueryParams: resolver,
+        });
+
+        req.nextUrl!.searchParams = mockSearchParams({
+          ...mockQuery,
+          customParam: 'value',
+        });
+
+        getAllowedQueryParamsStub.returns({
+          missingAllowedParams: [],
+          allowedQueryParams: {},
+        });
+
+        fetchStub.resolves({
+          status: 200,
+          statusText: 'OK',
+          headers: new Headers({ 'content-type': 'text/html' }),
+          data: '<html>Response</html>',
+        });
+
+        const res = await handlers.POST(req);
+
+        expect(res.status).to.equal(200);
+        expect(getAllowedQueryParamsStub).to.have.been.called;
+      });
     });
   });
 

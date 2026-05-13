@@ -6,10 +6,29 @@ import {
   ComponentMapEntry,
 } from './components';
 
+const DEFAULT_HEADER_COMMENT =
+  "Below are built-in components that are available in the app, it's recommended to keep them as is";
+
 /**
  * A component source can be either a file or a file with type information.
  */
 type ComponentSource = ComponentFile | ComponentFileWithType;
+
+/**
+ * Template options for component map generation
+ */
+type TemplateOptions = {
+  /** Custom header comment for the generated map */
+  headerComment?: string;
+  /** Whether this is a client-only map (no need for componentType annotations). Only used in frameworks that make server/client distinction. */
+  isClientMap?: boolean;
+  /** Built-in imports string to include in the map */
+  builtInImports?: string;
+  /** Built-in map entries to include in the map */
+  builtInMapEntries?: string[];
+  /** Framework name to use in the component map */
+  framework: string;
+};
 
 /**
  * Transform component description entries for the component map.
@@ -109,32 +128,22 @@ export const prepareComponentsForMap = (
   return entries;
 };
 
-/**
- * Template options for component map generation
- */
-type TemplateOptions = {
-  /** Custom header comment for the generated map */
-  headerComment?: string;
-  /** Whether this is a client-only map (no need for componentType annotations). Only used in frameworks that make server/client distinction. */
-  isClientMap?: boolean;
-  /** Built-in imports string to include in the map */
-  builtInImports?: string;
-  /** Built-in map entries to include in the map */
-  builtInMapEntries?: string[];
-  /** Framework name to use in the component map */
-  framework: string;
-};
-
 export const buildComponentMapContent = (
   entries: ComponentMapEntry[],
   componentImports: ComponentImport[] | undefined,
   options: TemplateOptions
 ): string => {
   const {
-    headerComment = "Below are built-in components that are available in the app, it's recommended to keep them as is",
+    headerComment = DEFAULT_HEADER_COMMENT,
     isClientMap = false,
-    framework = 'unknown',
+    framework,
+    builtInImports = '',
+    builtInMapEntries = [],
   } = options;
+
+  if (!framework) {
+    throw new Error('options.framework is required to build the component map');
+  }
 
   const frameworkComponentTypeName = `${
     framework.charAt(0).toUpperCase() + framework.slice(1)
@@ -142,9 +151,6 @@ export const buildComponentMapContent = (
   const frameworkImportString = `import { ${frameworkComponentTypeName} } from '@sitecore-content-sdk/${framework}';\n`;
   const wildcardImports: string[] = [];
   const namedImports: string[] = [];
-  const builtInImports = frameworkImportString + (options.builtInImports || '');
-
-  const builtInMapEntries = options.builtInMapEntries ?? [];
 
   // Add per-entry imports
   entries.forEach((e) => wildcardImports.push(...e.imports));
@@ -161,15 +167,15 @@ export const buildComponentMapContent = (
   });
 
   const importLines = [
-    headerComment.includes('built-in') ? '// end of built-in components' : null,
+    builtInImports.length ? '// end of built-in import section' : null,
     ...wildcardImports,
     ...namedImports,
   ].filter(Boolean) as string[];
 
   const importsSection = importLines.length ? `\n${importLines.join('\n')}` : '';
 
-  // Build entry lines (package named imports are appended below)
-  const componentMapEntries: string[] = builtInMapEntries;
+  // Clone to avoid mutating the caller's array
+  const componentMapEntries: string[] = structuredClone(builtInMapEntries);
   for (const e of entries) {
     const value =
       !isClientMap && e.annotateClient
@@ -192,8 +198,8 @@ export const buildComponentMapContent = (
   });
 
   return `// ${headerComment}
-${builtInImports}
-${importsSection}
+${frameworkImportString}
+${builtInImports}${importsSection}
 
 export const componentMap = new Map<string, ${frameworkComponentTypeName}>([
 ${componentMapEntries

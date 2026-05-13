@@ -1,0 +1,35 @@
+---
+description: Example agent tasks for adding utilities, fixing tests, and changing scaffolding templates
+alwaysApply: false
+globs:
+  - 'packages/**/src/**'
+  - 'packages/create-content-sdk-app/src/templates/**'
+---
+
+# Example Agent Tasks
+
+## 1. Add a utility in a package
+
+Example: Add a constant in `packages/core/src/constants.ts`:
+
+- Export from `packages/core/src/index.ts` if public
+- Add JSDoc: `@internal` for internal APIs; `@public` and full `@param`/`@returns` for public APIs
+- Add tests in `packages/core/src/constants.test.ts` (if needed)
+- Run `yarn api-extractor` if you change public exports
+
+## 2. Fix a failing test
+
+```bash
+yarn test-packages
+# Or: cd packages/content && yarn test
+```
+
+- Locate the failing `*.test.ts` file
+- Preserve intended behavior; fix assertions or implementation
+- Re-run tests before completing
+
+## 3. Change a scaffolding template
+
+- Edit under `packages/create-content-sdk-app/src/templates/nextjs/` or `nextjs-app-router/`
+- Use `.env.remote.example` for env vars (never `.env`)
+- Verify: Run `yarn watch` (with `watch.json`) or `yarn scaffold-samples`, then `npm install && npm run build` in the generated sample

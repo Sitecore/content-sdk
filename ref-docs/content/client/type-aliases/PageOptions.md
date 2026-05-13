@@ -8,7 +8,7 @@
 
 > **PageOptions** = `Partial`\<[`RouteOptions`](../../layout/type-aliases/RouteOptions.md)\> & `object`
 
-Defined in: [content/src/client/sitecore-client.ts:120](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/content/src/client/sitecore-client.ts#L120)
+Defined in: [content/src/client/sitecore-client.ts:123](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/client/sitecore-client.ts#L123)
 
 Page options
 
@@ -16,4 +16,4 @@ Page options
 
 ### personalize?
 
-> `optional` **personalize**: [`PersonalizedRewriteData`](../../personalize/type-aliases/PersonalizedRewriteData.md)
+> `optional` **personalize?**: [`PersonalizedRewriteData`](../../personalize/type-aliases/PersonalizedRewriteData.md)

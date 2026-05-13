@@ -23,18 +23,18 @@ This factory function is used to create and configure GraphQL clients for making
 
 ### fetch?
 
-> `optional` **fetch**: *typeof* `fetch`
+> `optional` **fetch?**: *typeof* `fetch`
 
 Override fetch method. Uses 'GraphQLRequestClient' default otherwise.
 
 ### scope?
 
-> `optional` **scope**: `string`
+> `optional` **scope?**: `string`
 
 Optional Sitecore Personalize scope identifier allowing you to isolate your personalization data between XM Cloud environments
 
 ### timeout?
 
-> `optional` **timeout**: `number`
+> `optional` **timeout?**: `number`
 
 Timeout (ms) for the Personalize request. Default is 400.

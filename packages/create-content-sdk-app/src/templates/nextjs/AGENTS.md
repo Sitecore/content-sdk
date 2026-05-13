@@ -183,9 +183,10 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ## References
 
+- **Skills.md** — Capability groupings for this app; [.agents/skills/](.agents/skills/) provides each capability as an Agent Skill (when-to-use, hard rules, stop conditions) for tools that support the [Agent Skills](https://agentskills.io) standard.
 - **CLAUDE.md** — Full coding standards and Sitecore patterns for this template.
 - **.cursor/rules/** — Project and Sitecore rules.
-- [Sitecore Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html) — Official docs.
+- [Sitecore Content SDK](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html) — Official docs.
 - [Next.js Pages Router](https://nextjs.org/docs/pages) — Data fetching, API routes, i18n.
 
 **For head applications / empty starters:** If you use this template for your head application (e.g. empty starter), keep this AGENTS.md as that head application's guide. Do not replace it with the Content SDK monorepo root AGENTS.md — that file describes the SDK source tree, not the head application. Adjust only what is specific to your project (e.g. custom layout or workflow). See the Content SDK README "AI Development Support" section for more on which AGENTS.md to use.

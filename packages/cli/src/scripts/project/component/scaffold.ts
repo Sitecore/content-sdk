@@ -100,3 +100,4 @@ dashes, or underscores. It can also contain slashes to indicate a subfolder`);
 
   scaffoldComponent(outputFolder, componentName, templateName, cliConfig.scaffold.templates);
 }
+

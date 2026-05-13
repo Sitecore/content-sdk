@@ -259,6 +259,17 @@ describe('prepareComponentsForMap', () => {
 // buildComponentMapContent
 // ---------------------------------------------------------------------------
 describe('buildComponentMapContent', () => {
+  it('should throw when options.framework is omitted', () => {
+    expect(() =>
+      buildComponentMapContent(
+        [],
+        undefined,
+        // @ts-expect-error exercising runtime guard when options bypass TypeScript
+        {}
+      )
+    ).to.throw('options.framework is required to build the component map');
+  });
+
   it('should emit a valid empty component map with the framework type import', () => {
     const content = buildComponentMapContent([], undefined, { framework: 'nextjs' });
 
@@ -269,6 +280,37 @@ describe('buildComponentMapContent', () => {
       'export const componentMap = new Map<string, NextjsContentSdkComponent>'
     );
     expect(content).to.include('export default componentMap');
+    expect(content).to.not.include('// end of built-in import section');
+  });
+
+  it('should not include // end of built-in import section when builtInImports is empty, even with user component imports', () => {
+    const entries = prepareComponentsForMap(
+      [
+        {
+          componentName: 'Card',
+          moduleName: 'Card',
+          importPath: './src/components/Card',
+          filePath: abs('src/components/Card.tsx'),
+          componentType: 'server',
+        } as ComponentFileWithType,
+      ],
+      { includeVariants: false }
+    );
+
+    const content = buildComponentMapContent(entries, undefined, { framework: 'nextjs' });
+
+    expect(content).to.include("import * as Card from './src/components/Card';");
+    expect(content).to.not.include('// end of built-in import section');
+  });
+
+  it('should include // end of built-in import section when builtInImports is non-empty', () => {
+    const builtInImports = `\nimport { BYOCWrapper } from '@sitecore-content-sdk/nextjs';\n`;
+    const content = buildComponentMapContent([], undefined, {
+      framework: 'nextjs',
+      builtInImports,
+    });
+
+    expect(content).to.include('// end of built-in import section');
   });
 
   it('should generate a framework-specific type name (e.g. ReactContentSdkComponent for react)', () => {
@@ -287,6 +329,7 @@ describe('buildComponentMapContent', () => {
       "import { BYOCWrapper, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';"
     );
     expect(content).to.include("import { Form } from '@sitecore-content-sdk/nextjs';");
+    expect(content).to.include('// end of built-in import section');
   });
 
   it('should place built-in entries (BYOCWrapper, FEaaSWrapper) before user component entries in the map', () => {

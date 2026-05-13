@@ -19,6 +19,12 @@
 - [SitecoreConfig](type-aliases/SitecoreConfig.md)
 - [SitecoreConfigInput](type-aliases/SitecoreConfigInput.md)
 
+## Functions
+
+- [buildFallbackConfig](functions/buildFallbackConfig.md)
+- [deepMerge](functions/deepMerge.md)
+- [getFallbackConfig](functions/getFallbackConfig.md)
+
 ## References
 
 ### defineConfig

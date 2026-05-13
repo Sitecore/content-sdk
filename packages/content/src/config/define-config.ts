@@ -1,10 +1,12 @@
-import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
+import { DefaultRetryStrategy, constants } from '@sitecore-content-sdk/core';
 import {
   resolveEdgeUrl,
   SITECORE_EDGE_PLATFORM_HOSTNAME_ENV,
 } from '@sitecore-content-sdk/core/tools';
 import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models';
 import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Default Sitecore config values sourced from an env-like record (e.g. `process.env` or
@@ -162,16 +164,12 @@ const validateApiConfiguration = (config: SitecoreConfigInput): void => {
   // Server-side: allow Edge OR Local; clientContextId alone is NOT sufficient
   if (!isBrowser) {
     if (!hasEdgeContextId && !hasLocalCreds) {
-      throw new Error(
-        'Configuration error: provide either Edge contextId (api.edge.contextId) or local credentials (api.local.apiHost + api.local.apiKey).'
-      );
+      throw new Error(ERROR_MESSAGES.MV_007);
     }
     if (hasEdgeContextId && !hasClientContextId) {
       // eslint-disable-next-line no-console
-      if (process?.env?.NODE_ENV === 'development') {
-        console.warn(
-          'Warning: only a server-side edge contextId is provided. Client-side requests will require api.edge.clientContextId or a proxy.'
-        );
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(ERROR_MESSAGES.MV_006);
       }
     }
     return; // validation complete on the server
@@ -180,11 +178,8 @@ const validateApiConfiguration = (config: SitecoreConfigInput): void => {
   // Browser-side warning (runs only if contextId exists but clientContextId is missing)
   if (isBrowser && !hasClientContextId) {
     // eslint-disable-next-line no-console
-    if (process?.env?.NODE_ENV === 'development') {
-      console.warn(
-        `Warning: clientContextId is missing. The browser will use contextId instead.
-  Client Side functionalities (like Tracking and Personalization) may be limited.`
-      );
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(ERROR_MESSAGES.MV_006);
     }
   }
 };
@@ -256,7 +251,7 @@ const createConfigProxy = (config: SitecoreConfig) => {
 /**
  * Accepts a SitecoreConfigInput object and returns full sitecore configuration
  * @param {SitecoreConfigInput} config override values to be written over default config settings
- * @param env
+ * @param {Record<string, string | undefined>} [env] optional env-like record to source default config values from; defaults to `process.env` when not provided
  * @returns {SitecoreConfig} full sitecore configuration to use in application
  * @public
  */

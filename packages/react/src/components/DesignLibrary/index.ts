@@ -1,2 +1,3 @@
 export { DesignLibrary } from './DesignLibrary';
-export { DesignLibraryApp } from './DesignLibraryApp';
+export { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
+export { DynamicComponent, ImportMapImport } from './models';

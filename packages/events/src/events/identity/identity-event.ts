@@ -1,4 +1,4 @@
-import type { EPResponse, Infer, Settings } from '@sitecore-content-sdk/analytics-core/internal';
+import type { EPResponse, Infer } from '@sitecore-content-sdk/analytics-core/internal';
 import type { EventAttributesInput, ExtensionData } from '../common-interfaces';
 import {
   flattenObject,
@@ -6,20 +6,25 @@ import {
   isValidEmail,
 } from '@sitecore-content-sdk/analytics-core/utils';
 import { BaseEvent } from '../base-event';
-import { ErrorMessages } from '../../consts';
 import type { FlattenedObject } from '@sitecore-content-sdk/analytics-core/utils';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import type { SendEvent } from '../send-event/sendEvent';
+import { CoreContext, constants } from '@sitecore-content-sdk/core';
 
+const { ERROR_MESSAGES } = constants;
+
+/**
+ * A class that extends from {@link BaseEvent} and has all the required functionality to send an IDENTITY event
+ */
 export class IdentityEvent extends BaseEvent {
   private identityData: IdentityData;
   private sendEvent: SendEvent;
   private extensionData: FlattenedObject = {};
   private numberOfExtensionDataProperties = 0;
-  private settings: Settings;
+  private config: CoreContext['config'];
 
   /**
-   * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
+   * A class that extends from {@link BaseEvent} and has all the required functionality to send an IDENTITY event
    * @param {IdentityEventArguments} args - Unified object containing the required properties
    */
   constructor(args: IdentityEventArguments) {
@@ -31,45 +36,45 @@ export class IdentityEvent extends BaseEvent {
 
     this.identityData = args.identityData;
     this.sendEvent = args.sendEvent;
-    this.settings = args.settings;
+    this.config = args.config;
 
     if (extensionData) this.extensionData = flattenObject({ object: extensionData });
 
     this.numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
     if (this.numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES)
-      throw new Error(ErrorMessages.IV_0005);
+      throw new Error(ERROR_MESSAGES.IV_006(MAX_EXT_ATTRIBUTES));
   }
 
   /**
-   * Sends the event to Sitecore EP
-   * @returns - A promise that resolves with either the Sitecore EP response object or null
+   * Sends the event to Sitecore Edge Proxy
+   * @returns - A promise that resolves with either the Sitecore Edge Proxy response object or null
    */
   async send(): Promise<EPResponse | null> {
     const baseAttr = this.mapBaseEventPayload();
     const eventAttrs = this.mapAttributes();
     const fetchBody = Object.assign({}, eventAttrs, baseAttr);
 
-    return await this.sendEvent(fetchBody, this.settings);
+    return await this.sendEvent(fetchBody, this.config);
   }
 
   /**
-   * Function that validates the identifiers object, email and date attributes for CDN users
+   * Function that validates the identifiers object, email, and date attributes for CDN users
    * @param {IdentityData} identityData - The data to be validated
    */
   private validateAttributes(identityData: IdentityData) {
-    if (identityData.identifiers.length === 0) throw new Error(ErrorMessages.MV_0003);
+    if (identityData.identifiers.length === 0) throw new Error(ERROR_MESSAGES.MV_003);
 
     if (identityData.dob !== undefined && !isShortISODateString(identityData.dob))
-      throw new Error(ErrorMessages.IV_0002);
+      throw new Error(ERROR_MESSAGES.IV_003);
 
     identityData.identifiers.forEach((identifier: Identifier) => {
       if (identifier.expiryDate && !isShortISODateString(identifier.expiryDate))
-        throw new Error(ErrorMessages.IV_0004);
+        throw new Error(ERROR_MESSAGES.IV_005);
     });
 
     if (identityData.email && !isValidEmail(identityData.email))
-      throw new Error(ErrorMessages.IV_0003);
+      throw new Error(ERROR_MESSAGES.IV_004);
   }
 
   /**
@@ -111,6 +116,7 @@ export class IdentityEvent extends BaseEvent {
 
 /**
  * The JSON array of objects that contain the identity identifiers
+ * @internal
  */
 interface EPIdentifier {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -120,37 +126,114 @@ interface EPIdentifier {
 }
 
 /**
- * Interface with the necessary attributes for the input for sending Identity events
+ * Interface with the necessary attributes for the input for sending identity events
+ * @public
  */
 export interface IdentityData extends EventAttributesInput {
+  /**
+   * The site visitor's city address.
+   *
+   * Format: title case recommended.
+   */
   city?: string;
+  /**
+   * The site visitor's country address.
+   *
+   * Format: uppercase ISO 3166-1 alpha-2.
+   */
   country?: string;
+  /**
+   * The site visitor's date of birth.
+   *
+   * Format: ISO 8601.
+   */
   dob?: string;
+  /**
+   * The site visitor's email address.
+   *
+   * Format: lowercase recommended.
+   */
   email?: string;
+  /**
+   * The site visitor's first name.
+   *
+   * Format: title case recommended.
+   */
   firstName?: string;
+  /**
+   * The site visitor's gender.
+   */
   gender?: string;
+  /**
+   * The identifiers used for identifying site visitors.
+   */
   identifiers: Identifier[];
+  /**
+   * The site visitor's last name.
+   *
+   * Format: title case recommended.
+   */
   lastName?: string;
+  /**
+   * The site visitor's mobile number.
+   */
   mobile?: string;
+  /**
+   * The site visitor's phone number.
+   */
   phone?: string;
+  /**
+   * The site visitor's postal code.
+   */
   postalCode?: string;
+  /**
+   * The site visitor's state address.
+   *
+   * Format: title case recommended.
+   */
   state?: string;
+  /**
+   * The site visitor's street address.
+   *
+   * Format: title case recommended.
+   */
   street?: string[];
+  /**
+   * The site visitor's title.
+   *
+   * Format: title case.
+   */
   title?: string;
+  /**
+   * Any custom data to collect about an event in addition to the other attributes provided for the event data.
+   */
   extensionData?: ExtensionData;
 }
 
 /**
  * The JSON array of objects that contain the identity identifiers
+ * @public
  */
 export interface Identifier {
+  /**
+   * The date the unique guest (site visitor) identifier expires. This is determined by your organization's identity system.
+   *
+   * Format: ISO 8601.
+   */
   expiryDate?: string;
+  /**
+   * The unique guest (site visitor) identifier provided by your organization's identity system, such as a Customer Relationship Management (CRM) system.
+   */
   id: string;
+  /**
+   * The name of your organization's identity system, external to SitecoreAI, that provided the unique guest (site visitor) identifier.
+   */
   provider: string;
 }
 
 /**
  *  An interface describing the identity event specific payload to be sent to the API
+ * @internal
  */
 export interface IdentityEventPayload {
   city?: string;
@@ -173,12 +256,13 @@ export interface IdentityEventPayload {
 }
 
 /**
- * Interface of the unified arguments object for identity event
+ * Interface of the unified arguments object for the identity event
+ * @internal
  */
 export interface IdentityEventArguments {
   sendEvent: SendEvent;
   identityData: IdentityData;
   id: string;
-  settings: Settings;
+  config: CoreContext['config'];
   infer?: Infer;
 }

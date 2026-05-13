@@ -167,4 +167,26 @@ describe('createGraphQLClientFactory', () => {
     // Factory should be created successfully (falling back to Local)
     expect(factory).to.not.be.undefined;
   });
+
+  it('passes custom fetch through to client factory config', () => {
+    const createClientFactorySpy = sinon.spy(GraphQLRequestClient, 'createClientFactory');
+    const customFetch = sinon.stub();
+
+    createGraphQLClientFactory({
+      api: {
+        edge: {
+          contextId: 'test-context-id',
+          edgeUrl: 'https://test.edge.url',
+        },
+      },
+      fetch: customFetch as unknown as typeof fetch,
+    });
+
+    expect(createClientFactorySpy.calledOnce).to.be.true;
+    expect(createClientFactorySpy.firstCall.args[0]).to.deep.include({
+      endpoint: 'https://test.edge.url/v1/content/api/graphql/v1',
+      contextId: 'test-context-id',
+      fetch: customFetch,
+    });
+  });
 });

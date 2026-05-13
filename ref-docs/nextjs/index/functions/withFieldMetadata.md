@@ -28,14 +28,4 @@ Wraps the field component with metadata markup intended to be used for chromes h
 
 ## Returns
 
-> (`props`): `Element`
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `props` | `FieldComponentProps` & `object` |
-
-### Returns
-
-`Element`
+(`props`) => `Element`

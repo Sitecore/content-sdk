@@ -1,7 +1,7 @@
 {
   "name": "@sitecore-content-sdk/angular",
   "private": true,
-  "version": "2.0.0-canary.6",
+  "version": "0.1.0",
   "installConfig": {
     "hoistingLimits": "none"
   },
@@ -58,8 +58,8 @@
     }
   },
   "dependencies": {
-    "@sitecore-content-sdk/content": "2.0.0-canary.6",
-    "@sitecore-content-sdk/core": "2.0.0-canary.6",
+    "@sitecore-content-sdk/content": "^2.1.0",
+    "@sitecore-content-sdk/core": "^2.1.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

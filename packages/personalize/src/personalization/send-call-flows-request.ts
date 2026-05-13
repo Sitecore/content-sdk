@@ -1,31 +1,27 @@
-import type { DebugResponse, Settings } from '@sitecore-content-sdk/analytics-core/internal';
-import {
-  debug,
-  generateCorrelationId,
-  processDebugResponse,
-} from '@sitecore-content-sdk/analytics-core/internal';
+import { generateCorrelationId } from '@sitecore-content-sdk/analytics-core/internal';
 import type { NestedObject } from '@sitecore-content-sdk/analytics-core/utils';
-import { fetchWithTimeout } from '@sitecore-content-sdk/analytics-core/utils';
-import { PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
+import { PACKAGE_VERSION } from '../consts';
 import { GetInteractiveExperienceDataOpts } from './personalizer';
+import { CoreContext, NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
+import { debug } from '../debug';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
- * A function that sends a CallFlow request to Sitecore EP
- * @param {EPCallFlowsBody} epCallFlowsBody - Properties to be send to Sitecore EP
- * @param {Settings} settings - Settings for the url params
+ * A function that sends a CallFlow request to Sitecore Edge Proxy
+ * @param {EPCallFlowsBody} epCallFlowsBody - Properties to be sent to Sitecore Edge Proxy
+ * @param {CoreContext['config']} config - Configuration for the url params
  * @param {GetInteractiveExperienceDataOpts} opts - Optional configuration object
- * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A promise that resolves with either the Sitecore EP response object or unknown
+ * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A promise that resolves with either the Sitecore Edge Proxy response object or unknown
+ * @internal
  */
 export async function sendCallFlowsRequest(
   epCallFlowsBody: EPCallFlowsBody,
-  settings: Settings,
+  config: CoreContext['config'],
   opts?: GetInteractiveExperienceDataOpts
 ) {
-  const startTimestamp = Date.now();
-  let debugResponse: DebugResponse = {};
-
   // eslint-disable-next-line max-len
-  const requestUrl = `${settings.sitecoreEdgeUrl}/v1/personalize?siteId=${settings.siteName}`;
+  const requestUrl = `${config.edgeUrl}/v1/personalize?siteId=${config.siteName}`;
 
   const fetchOptions: FetchOptions = {
     body: JSON.stringify(epCallFlowsBody),
@@ -34,7 +30,7 @@ export async function sendCallFlowsRequest(
       'Content-Type': 'application/json',
       'X-Library-Version': PACKAGE_VERSION,
       'x-sc-correlation-id': generateCorrelationId(),
-      'x-sitecore-contextid': settings.sitecoreEdgeContextId,
+      'x-sitecore-contextid': config.contextId,
       /* eslint-enable @typescript-eslint/naming-convention */
     },
     method: 'POST',
@@ -42,57 +38,17 @@ export async function sendCallFlowsRequest(
 
   if (opts?.userAgent) fetchOptions.headers['User-Agent'] = opts.userAgent;
 
-  debug(PERSONALIZE_NAMESPACE)(
-    'Personalize request: %s with options: %O' as const,
-    requestUrl,
-    fetchOptions
-  );
+  const fetcher = new NativeDataFetcher({ timeout: opts?.timeout, debugger: debug.personalize });
 
-  if (opts?.timeout === undefined)
-    return fetch(requestUrl, fetchOptions)
-      .then((response) => {
-        debugResponse = processDebugResponse(PERSONALIZE_NAMESPACE, response);
-
-        return response.json();
-      })
-      .then((data) => {
-        debugResponse.body = data;
-
-        debug(PERSONALIZE_NAMESPACE)(
-          'Personalize response in %dms : %O',
-          Date.now() - startTimestamp,
-          debugResponse
-        );
-
-        return data;
-      })
-      .catch((error) => {
-        debug(PERSONALIZE_NAMESPACE)('Error personalize response: %O' as const, error);
-        return null;
-      });
-
-  return fetchWithTimeout(requestUrl, opts.timeout, fetchOptions)
+  return fetcher
+    .fetch(requestUrl, fetchOptions)
     .then((response) => {
       if (!response) return null;
 
-      debugResponse = processDebugResponse(PERSONALIZE_NAMESPACE, response);
-
-      return response.json();
-    })
-    .then((data) => {
-      debugResponse.body = data;
-
-      debug(PERSONALIZE_NAMESPACE)(
-        'Personalize response in %dms : %O',
-        Date.now() - startTimestamp,
-        debugResponse
-      );
-
-      return data;
+      return response.data;
     })
     .catch((error) => {
-      debug(PERSONALIZE_NAMESPACE)('Error personalize response: %O' as const, error);
-      if (error.message.includes('IV-0006') || error.message.includes('IE-0002'))
+      if (error.message.includes(ERROR_MESSAGES.IV_002) || error.message.includes(ERROR_MESSAGES.IE_003))
         throw new Error(error.message);
 
       return null;
@@ -101,9 +57,10 @@ export async function sendCallFlowsRequest(
 
 /**
  * An interface with the basic functionality that the derived classes needs to implement
+ * @internal
  */
 export interface PersonalizeClient {
-  settings: Settings;
+  config: CoreContext['config'];
   sendCallFlowsRequest: (
     epCallFlowAttributes: EPCallFlowsBody,
     timeout?: number
@@ -111,18 +68,35 @@ export interface PersonalizeClient {
 }
 
 /**
- * An interface that describes the failed response model from Sitecore EP
+ * An interface that describes the failed response model from Sitecore Edge Proxy
+ * @public
  */
 export interface FailedCalledFlowsResponse {
+  /**
+   * The status of the response.
+   */
   status: string;
+  /**
+   * The error code.
+   */
   code: string;
+  /**
+   * A message describing the error.
+   */
   message: string;
+  /**
+   * A more detailed message intended for developers.
+   */
   developerMessage: string;
+  /**
+   * A URL with more information about the error.
+   */
   moreInfoUrl: string;
 }
 
 /**
  * An interface that describes the identifier model attributes for the library
+ * @internal
  */
 export interface EPIdentifier {
   id: string;
@@ -130,7 +104,8 @@ export interface EPIdentifier {
 }
 
 /**
- * An interface that describes the payload sent to Sitecore EP library
+ * An interface that describes the payload sent to Sitecore Edge Proxy library
+ * @internal
  */
 export interface EPCallFlowsBody {
   browserId?: string;
@@ -149,11 +124,13 @@ export interface EPCallFlowsBody {
 
 /**
  * A type that describes the params property of the EPCallFlowsBody
+ * @internal
  */
 export type EPCallFlowsParams = NestedObject;
 
 /**
  * Interface for the fetch options we need
+ * @internal
  */
 interface FetchOptions extends RequestInit {
   headers: Record<string, string>;

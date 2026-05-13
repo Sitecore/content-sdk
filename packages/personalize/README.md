@@ -10,7 +10,7 @@ npm install @sitecore-content-sdk/personalize
 
 ## Usage
 
-1. Initialize the package using the `CloudSDK` function, available in the `core` package.
+1. Initialize the package using the `initContentSdk` function, available in the `core` package.
 2. To run web personalization (browser-side only):
    1. Initialize the `events` package.
    2. Enable web personalization during initialization.
@@ -24,8 +24,10 @@ Run personalizations from the browser side:
 'use client';
 
 import { useEffect } from 'react';
-import { CloudSDK } from '@sitecore-content-sdk/analytics-core/browser';
-import { personalize } from '@sitecore-content-sdk/personalize/browser';
+import { initContentSdk } from '@sitecore-content-sdk/core';
+import { analyticsPlugin, analyticsBrowserAdapter } from '@sitecore-content-sdk/analytics-core';
+import { eventsPlugin } from '@sitecore-content-sdk/events';
+import { personalizeBrowserPlugin, personalizeBrowserAdapter, personalize } from '@sitecore-content-sdk/personalize';
 
 export default function Home() {
   const getPersonalizeData = async () => {
@@ -40,12 +42,23 @@ export default function Home() {
   };
 
   useEffect(() => {
-    CloudSDK({
-      /* Initialization settings. See `core` package code examples. */
-    })
-      .addEvents() // Initialize the `events` package to enable web personalization
-      .addPersonalize({ enablePersonalizeCookie: true, webPersonalization: true }) // Enable web personalization
-      .initialize();
+    initContentSdk({
+      config: {
+        contextId: '<YOUR_CONTEXT_ID>',
+        siteName: '<YOUR_SITE_NAME>',
+      },
+      plugins: [
+        analyticsPlugin({
+          options: { enableCookie: true },
+          adapter: analyticsBrowserAdapter(),
+        }),
+        eventsPlugin(),
+        personalizeBrowserPlugin({
+          options: { enablePersonalizeCookie: true, webPersonalization: true },
+          adapter: personalizeBrowserAdapter(),
+        }),
+      ],
+    });
 
     getPersonalizeData();
   }, []);
@@ -58,20 +71,33 @@ Run personalizations from the server side:
 
 ```ts
 import type { NextRequest, NextResponse } from 'next/server';
-import { CloudSDK } from '@sitecore-content-sdk/analytics-core/server';
-import { personalize } from '@sitecore-content-sdk/personalize/server';
+import { initContentSdk } from '@sitecore-content-sdk/core';
+import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
+import { personalizeServerPlugin, personalize } from '@sitecore-content-sdk/personalize';
+import { analyticsProxyAdapter, personalizeProxyAdapter } from '@sitecore-content-sdk/nextjs';
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
-  await CloudSDK(request, response, {
-    /* Initialization settings. See `core` package code examples. */
-  })
-    .addPersonalize({ enablePersonalizeCookie: true })
-    .initialize();
+  await initContentSdk({
+    config: {
+      contextId: '<YOUR_CONTEXT_ID>',
+      siteName: '<YOUR_SITE_NAME>',
+    },
+    plugins: [
+      analyticsPlugin({
+        options: { enableCookie: true },
+        adapter: analyticsProxyAdapter(request, response),
+      }),
+      personalizeServerPlugin({
+        options: { enablePersonalizeCookie: true },
+        adapter: personalizeProxyAdapter(request, response),
+      }),
+    ],
+  });
 
   // Run interactive personalization:
-  const data = await personalize(request, {
+  const data = await personalize({
     channel: 'WEB',
     currency: 'EUR',
     friendlyId: '<YOUR_EXPERIENCE_FRIENDLY_ID>'
@@ -85,4 +111,4 @@ export async function middleware(request: NextRequest) {
 
 ## Documentation
 
-[Official Sitecore Cloud SDK documentation](https://doc.sitecore.com/xmc/en/developers/sdk/latest/cloud-sdk/index.html)
+[Official Sitecore Content SDK documentation](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html)

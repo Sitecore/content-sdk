@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/react](../../../../README.md) / [mediaApi](../README.md) / getSrcSet
 
-# Variable: getSrcSet()
+# Variable: getSrcSet
 
 > `const` **getSrcSet**: (`url`, `srcSet`, `imageParams?`, `mediaUrlPrefix?`) => `string`
 

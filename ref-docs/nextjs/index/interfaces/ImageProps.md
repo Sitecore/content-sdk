@@ -6,7 +6,7 @@
 
 # Interface: ImageProps
 
-Defined in: react/types/components/Image.d.ts:44
+Defined in: react/types/components/Image.d.ts:8
 
 The interface for the Image component props.
 
@@ -16,13 +16,13 @@ The interface for the Image component props.
 
 ## Indexable
 
-\[`attributeName`: `string`\]: `unknown`
+> \[`attributeName`: `string`\]: `unknown`
 
 ## Properties
 
 ### editable?
 
-> `optional` **editable**: `boolean`
+> `optional` **editable?**: `boolean`
 
 Defined in: react/types/components/sharedTypes/props.d.ts:9
 
@@ -42,7 +42,7 @@ true
 
 ### emptyFieldEditingComponent?
 
-> `optional` **emptyFieldEditingComponent**: `ComponentClass`\<`ImageProps`, `any`\> \| `FC`\<`ImageProps`\>
+> `optional` **emptyFieldEditingComponent?**: `ComponentClass`\<`ImageProps`, `any`\> \| `FC`\<`ImageProps`\>
 
 Defined in: react/types/components/sharedTypes/props.d.ts:13
 
@@ -56,9 +56,9 @@ Custom element to render in Pages in edit mode if field value is empty
 
 ### field?
 
-> `optional` **field**: (ImageField \| ImageFieldValue) & FieldMetadata
+> `optional` **field?**: (ImageField \| ImageFieldValue) & FieldMetadata
 
-Defined in: react/types/components/Image.d.ts:47
+Defined in: react/types/components/Image.d.ts:11
 
 Image field data (consistent with other field types)
 
@@ -66,9 +66,9 @@ Image field data (consistent with other field types)
 
 ### imageParams?
 
-> `optional` **imageParams**: `object`
+> `optional` **imageParams?**: `object`
 
-Defined in: react/types/components/Image.d.ts:51
+Defined in: react/types/components/Image.d.ts:15
 
 Parameters that will be attached to Sitecore media URLs
 
@@ -80,9 +80,9 @@ Parameters that will be attached to Sitecore media URLs
 
 ### mediaUrlPrefix?
 
-> `optional` **mediaUrlPrefix**: `RegExp`
+> `optional` **mediaUrlPrefix?**: `RegExp`
 
-Defined in: react/types/components/Image.d.ts:62
+Defined in: react/types/components/Image.d.ts:26
 
 Custom regexp that finds media URL prefix that will be replaced by `/-/jssmedia` or `/~/jssmedia`.
 
@@ -98,6 +98,6 @@ Custom regexp that finds media URL prefix that will be replaced by `/-/jssmedia`
 
 ### srcSet?
 
-> `optional` **srcSet**: [`ImageSizeParameters`](ImageSizeParameters.md)[]
+> `optional` **srcSet?**: [`ImageSizeParameters`](ImageSizeParameters.md)[]
 
-Defined in: react/types/components/Image.d.ts:54
+Defined in: react/types/components/Image.d.ts:18

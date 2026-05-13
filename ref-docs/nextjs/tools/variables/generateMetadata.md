@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [tools](../README.md) / generateMetadata
 
-# Variable: generateMetadata()
+# Variable: generateMetadata
 
 > `const` **generateMetadata**: (`config?`) => () => `Promise`\<`void`\>
 
@@ -22,8 +22,4 @@ Generate application metadata
 
 A promise that resolves when the metadata generation is complete.
 
-> (): `Promise`\<`void`\>
-
-### Returns
-
-`Promise`\<`void`\>
+() => `Promise`\<`void`\>

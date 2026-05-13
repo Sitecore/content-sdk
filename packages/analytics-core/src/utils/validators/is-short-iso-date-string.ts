@@ -2,6 +2,7 @@
  * Checks if the provided string matches the shortened ISO 8601 format (`YYYY-MM-DDThh:mm`).
  * @param {string} date The date string to validate.
  * @returns {boolean} True when the value conforms to the shortened ISO format.
+ * @internal
  */
 export function isShortISODateString(date: string): boolean {
   try {

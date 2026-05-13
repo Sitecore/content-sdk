@@ -101,7 +101,6 @@ const getPlaceholderComponents = (
       if (!componentEmpty) {
         const errorBoundaryKey = rendered.type + '-' + index;
 
-        const disableSuspense = placeholderProps.disableSuspense || false;
         rendered = (
           <ErrorBoundary
             data-testid="error-boundary"
@@ -109,7 +108,7 @@ const getPlaceholderComponents = (
             errorComponent={errorComponent}
             componentLoadingMessage={componentLoadingMessage}
             isDynamic={dynamic}
-            disableSuspense={disableSuspense}
+            disableSuspense={placeholderProps.disableSuspense}
             rendering={rendered.props.rendering as ComponentRendering}
           >
             {rendered}
@@ -160,4 +159,3 @@ export const AppPlaceholder = (props: AppPlaceholderProps) => (
     <AppPlaceholderComponent {...props} />
   </ErrorBoundary>
 );
-

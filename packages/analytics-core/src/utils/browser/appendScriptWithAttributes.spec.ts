@@ -1,4 +1,5 @@
 import { appendScriptWithAttributes } from './appendScriptWithAttributes';
+import { expect } from '@jest/globals';
 
 describe('appendScriptWithAttributes', () => {
   const { window } = global;

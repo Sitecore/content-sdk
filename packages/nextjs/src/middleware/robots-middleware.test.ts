@@ -5,6 +5,9 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { RobotsMiddleware } from './robots-middleware';
 import { SitecoreClient } from '@sitecore-content-sdk/content/client';
 import { SiteInfo } from '@sitecore-content-sdk/content/site';
+import { constants } from '@sitecore-content-sdk/core';
+
+const { ERROR_MESSAGES } = constants;
 
 chai.use(sinonChai);
 
@@ -97,7 +100,7 @@ describe('RobotsMiddleware', () => {
     await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
 
     expect(res.status).to.have.been.calledWith(500);
-    expect(res.send).to.have.been.calledWith('Internal Server Error');
+    expect(res.send).to.have.been.calledWith(`Internal Server Error. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
   });
 
   it('should use "localhost" as fallback when host header is missing', async () => {

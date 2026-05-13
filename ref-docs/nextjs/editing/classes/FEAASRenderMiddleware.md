@@ -6,7 +6,7 @@
 
 # Class: FEAASRenderMiddleware
 
-Defined in: [nextjs/src/editing/feaas-render-middleware.ts:30](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/nextjs/src/editing/feaas-render-middleware.ts#L30)
+Defined in: [nextjs/src/editing/feaas-render-middleware.ts:30](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/nextjs/src/editing/feaas-render-middleware.ts#L30)
 
 Middleware / handler for use in the feaas render Next.js API route (e.g. '/api/editing/feaas/render')
 which is required for Sitecore editing support.
@@ -21,7 +21,7 @@ which is required for Sitecore editing support.
 
 > **new FEAASRenderMiddleware**(`config?`): `FEAASRenderMiddleware`
 
-Defined in: [nextjs/src/editing/feaas-render-middleware.ts:37](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/nextjs/src/editing/feaas-render-middleware.ts#L37)
+Defined in: [nextjs/src/editing/feaas-render-middleware.ts:37](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/nextjs/src/editing/feaas-render-middleware.ts#L37)
 
 #### Parameters
 
@@ -41,9 +41,9 @@ Defined in: [nextjs/src/editing/feaas-render-middleware.ts:37](https://github.co
 
 ### config?
 
-> `protected` `optional` **config**: [`FEAASRenderMiddlewareConfig`](../interfaces/FEAASRenderMiddlewareConfig.md)
+> `protected` `optional` **config?**: [`FEAASRenderMiddlewareConfig`](../interfaces/FEAASRenderMiddlewareConfig.md)
 
-Defined in: [nextjs/src/editing/feaas-render-middleware.ts:37](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/nextjs/src/editing/feaas-render-middleware.ts#L37)
+Defined in: [nextjs/src/editing/feaas-render-middleware.ts:37](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/nextjs/src/editing/feaas-render-middleware.ts#L37)
 
 FEAAS render middleware config
 
@@ -53,7 +53,7 @@ FEAAS render middleware config
 
 > **getHandler**(): (`req`, `res`) => `Promise`\<`void`\>
 
-Defined in: [nextjs/src/editing/feaas-render-middleware.ts:47](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/nextjs/src/editing/feaas-render-middleware.ts#L47)
+Defined in: [nextjs/src/editing/feaas-render-middleware.ts:47](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/nextjs/src/editing/feaas-render-middleware.ts#L47)
 
 Gets the Next.js API route handler
 
@@ -61,18 +61,7 @@ Gets the Next.js API route handler
 
 route handler
 
-> (`req`, `res`): `Promise`\<`void`\>
-
-##### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `req` | `NextApiRequest` |
-| `res` | `NextApiResponse` |
-
-##### Returns
-
-`Promise`\<`void`\>
+(`req`, `res`) => `Promise`\<`void`\>
 
 ***
 
@@ -80,7 +69,7 @@ route handler
 
 > `protected` **getHeadersForPropagation**(`headers`): `object`
 
-Defined in: [nextjs/src/editing/render-middleware.ts:40](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/nextjs/src/editing/render-middleware.ts#L40)
+Defined in: [nextjs/src/editing/render-middleware.ts:40](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/nextjs/src/editing/render-middleware.ts#L40)
 
 Get headers that should be passed along to subsequent requests
 
@@ -88,7 +77,7 @@ Get headers that should be passed along to subsequent requests
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `headers` | `IncomingHttpHeaders` \| `Headers` | Incoming HTTP Headers |
+| `headers` | `Headers` \| `IncomingHttpHeaders` | Incoming HTTP Headers |
 
 #### Returns
 
@@ -106,7 +95,7 @@ Object of approved headers
 
 > `protected` **getQueryParamsForPropagation**(`query`): `object`
 
-Defined in: [nextjs/src/editing/render-middleware.ts:18](https://github.com/Sitecore/content-sdk/blob/4124a8307b50372705f15f5d57a92b7358748ad1/packages/nextjs/src/editing/render-middleware.ts#L18)
+Defined in: [nextjs/src/editing/render-middleware.ts:18](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/nextjs/src/editing/render-middleware.ts#L18)
 
 Gets query parameters that should be passed along to subsequent requests (e.g. for deployment protection bypass)
 

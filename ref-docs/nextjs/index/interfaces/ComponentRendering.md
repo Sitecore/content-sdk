@@ -28,7 +28,7 @@ Defined in: content/types/layout/models.d.ts:95
 
 ### dataSource?
 
-> `optional` **dataSource**: `string`
+> `optional` **dataSource?**: `string`
 
 Defined in: content/types/layout/models.d.ts:96
 
@@ -36,7 +36,7 @@ Defined in: content/types/layout/models.d.ts:96
 
 ### fields?
 
-> `optional` **fields**: `T`
+> `optional` **fields?**: `T`
 
 Defined in: content/types/layout/models.d.ts:99
 
@@ -44,7 +44,7 @@ Defined in: content/types/layout/models.d.ts:99
 
 ### params?
 
-> `optional` **params**: [`ComponentParams`](ComponentParams.md)
+> `optional` **params?**: [`ComponentParams`](ComponentParams.md)
 
 Defined in: content/types/layout/models.d.ts:100
 
@@ -52,7 +52,7 @@ Defined in: content/types/layout/models.d.ts:100
 
 ### placeholders?
 
-> `optional` **placeholders**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\>
+> `optional` **placeholders?**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\>
 
 Defined in: content/types/layout/models.d.ts:98
 
@@ -60,6 +60,6 @@ Defined in: content/types/layout/models.d.ts:98
 
 ### uid?
 
-> `optional` **uid**: `string`
+> `optional` **uid?**: `string`
 
 Defined in: content/types/layout/models.d.ts:97

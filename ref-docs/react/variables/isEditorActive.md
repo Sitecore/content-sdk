@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/react](../README.md) / isEditorActive
 
-# Variable: isEditorActive()
+# Variable: isEditorActive
 
 > `const` **isEditorActive**: () => `boolean`
 
