@@ -64,8 +64,8 @@ describe('generateMap', () => {
     cwdSpy = vi.spyOn(process, 'cwd').mockReturnValue('/project/root');
     readState.readFileImpl = () => '@Component({})\nexport class Default {}';
     fsMock.readFileSync.mockClear();
-    fsMock.mkdirSync.mockClear();
-    fsMock.writeFileSync.mockClear();
+    fsMock.mkdirSync.mockReset();
+    fsMock.writeFileSync.mockReset();
     mockPrepareComponentsForMap.mockReset();
     mockPrepareComponentsForMap.mockReturnValue(preparedEntries);
     mockBuildComponentMapContent.mockReset();
@@ -205,5 +205,67 @@ describe('generateMap', () => {
       'CUSTOM_MAP_BODY',
       'utf8'
     );
+  });
+
+  it('should log to console.error and rethrow when mkdirSync fails', () => {
+    const comp = makeComponent({
+      filePath: '/project/root/src/a.component.ts',
+      componentName: 'A',
+      moduleName: 'A',
+      importPath: 'src/a.component',
+    });
+    mockGetComponentList.mockReturnValue([comp]);
+
+    const diskError = new Error('mkdir EACCES');
+    fsMock.mkdirSync.mockImplementation(() => {
+      throw diskError;
+    });
+
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    try {
+      expect(() => generateMap({ paths: ['src'] })).toThrow(diskError);
+
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+      const [message, err] = consoleErrorSpy.mock.calls[0] as [string, unknown];
+      expect(message).toContain('Component Map generation failed');
+      expect(message).toContain('component-map.ts');
+      expect(err).toBe(diskError);
+    } finally {
+      consoleErrorSpy.mockRestore();
+    }
+
+    expect(fsMock.writeFileSync).not.toHaveBeenCalled();
+  });
+
+  it('should log to console.error and rethrow when writeFileSync fails', () => {
+    const comp = makeComponent({
+      filePath: '/project/root/src/a.component.ts',
+      componentName: 'A',
+      moduleName: 'A',
+      importPath: 'src/a.component',
+    });
+    mockGetComponentList.mockReturnValue([comp]);
+
+    const writeError = new Error('ENOSPC');
+    fsMock.writeFileSync.mockImplementation(() => {
+      throw writeError;
+    });
+
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    try {
+      expect(() => generateMap({ paths: ['src'] })).toThrow(writeError);
+
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+      const [message, err] = consoleErrorSpy.mock.calls[0] as [string, unknown];
+      expect(message).toContain('Component Map generation failed');
+      expect(message).toContain('component-map.ts');
+      expect(err).toBe(writeError);
+    } finally {
+      consoleErrorSpy.mockRestore();
+    }
+
+    expect(fsMock.mkdirSync).toHaveBeenCalled();
   });
 });

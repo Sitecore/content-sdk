@@ -159,6 +159,8 @@ describe('getChildComponentProps', () => {
 });
 
 describe('resolveComponentForRendering', () => {
+  const emptyComponentMap: ComponentMap = new Map();
+
   let errorSpy: ReturnType<typeof vi.spyOn>;
   let warnSpy: ReturnType<typeof vi.spyOn>;
 
@@ -174,7 +176,7 @@ describe('resolveComponentForRendering', () => {
 
   it('should return null component for hidden rendering', () => {
     const rendering: ComponentRendering = { componentName: 'Hidden Rendering' };
-    const result = resolveComponentForRendering(rendering, 'main');
+    const result = resolveComponentForRendering(rendering, 'main', emptyComponentMap);
     expect(result.component).toBeNull();
     expect(result.isEmpty).toBe(true);
   });
@@ -184,7 +186,7 @@ describe('resolveComponentForRendering', () => {
     const result = resolveComponentForRendering(
       rendering,
       'main',
-      undefined,
+      emptyComponentMap,
       CustomHiddenComponent
     );
     expect(result.component).toBe(CustomHiddenComponent);
@@ -193,14 +195,14 @@ describe('resolveComponentForRendering', () => {
 
   it('should return null for empty component name', () => {
     const rendering: ComponentRendering = { componentName: '' };
-    const result = resolveComponentForRendering(rendering, 'main');
+    const result = resolveComponentForRendering(rendering, 'main', emptyComponentMap);
     expect(result.component).toBeNull();
     expect(result.isEmpty).toBe(true);
   });
 
-  it('should warn when no component map provided', () => {
+  it('should warn when component map is empty', () => {
     const rendering: ComponentRendering = { componentName: 'Widget' };
-    resolveComponentForRendering(rendering, 'main');
+    resolveComponentForRendering(rendering, 'main', emptyComponentMap);
     expect(warnSpy).toHaveBeenCalled();
   });
 

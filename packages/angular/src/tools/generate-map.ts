@@ -45,7 +45,6 @@ const buildAngularComponentMap: EnhancedComponentMapTemplate = (
 
 /**
  * Generates `.sitecore/component-map.ts` for Angular apps from `.ts` sources under configured paths (must declare `@Component`).
- * Flow matches Next.js: {@link collectComponents} → {@link buildAngularMapContent} → write file.
  * @param {GenerateMapArgs} params - {@link GenerateMapArgs}
  * @public
  */
@@ -76,6 +75,14 @@ export const generateMap: GenerateMapFunction = (params: GenerateMapArgs) => {
   });
 
   const outDir = path.join(process.cwd(), destination);
-  fs.mkdirSync(outDir, { recursive: true });
-  fs.writeFileSync(path.join(outDir, 'component-map.ts'), content, 'utf8');
+  try {
+    fs.mkdirSync(outDir, { recursive: true });
+    fs.writeFileSync(path.join(outDir, 'component-map.ts'), content, 'utf8');
+  } catch (error) {
+    console.error(
+      `Component Map generation failed. Error writing to file ${outDir}/component-map.ts`,
+      error
+    );
+    throw error;
+  }
 };

@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
 import { SitecoreContextService } from '../lib/sitecore-context.service';
 import { SITECORE_COMPONENT_MAP } from './tokens';
-import type { ComponentMap } from '../components/types';
+import type { AngularContentSdkComponent, ComponentMap } from '../components/types';
 import {
   getPlaceholderRenderings,
   getChildComponentProps,
@@ -86,7 +86,10 @@ export class ScPlaceholderComponent {
 
       const rendering = this.rendering();
       const name = this.name();
-      const componentMap = this.componentMap() ?? this.contextComponentMap ?? undefined;
+      const componentMap =
+        this.componentMap() ??
+        this.contextComponentMap ??
+        new Map<string, AngularContentSdkComponent>();
       const isEditing = this.isEditing();
 
       const renderings = getPlaceholderRenderings(rendering, name, isEditing);

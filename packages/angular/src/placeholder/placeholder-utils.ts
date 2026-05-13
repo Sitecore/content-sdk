@@ -48,10 +48,6 @@ export interface ChildComponentProps {
  * @param {ComponentRendering | RouteData} rendering - rendering data
  * @param {string} name - placeholder name
  * @param {boolean} isEditing - whether editing mode is active
- * @returns array of component renderings
- * @param {ComponentRendering | RouteData} rendering - Rendering or route data containing placeholders.
- * @param {string} name - Placeholder name.
- * @param {boolean} isEditing - Whether editing mode is active.
  * @returns {ComponentRendering[]} Child renderings for the placeholder.
  */
 export const getPlaceholderRenderings = (
@@ -168,7 +164,7 @@ export function getChildComponentProps(
 export const resolveComponentForRendering = (
   renderingDefinition: ComponentRendering,
   placeholderName: string,
-  componentMap?: ComponentMap,
+  componentMap: ComponentMap,
   hiddenRenderingComponent?: Type<unknown>,
   missingComponentComponent?: Type<unknown>
 ): ComponentForRendering => {
@@ -193,7 +189,7 @@ export const resolveComponentForRendering = (
       `No components were available in component map to service request for component ${renderingDefinition.componentName}`
     );
   } else {
-    entry = componentMap!.get(renderingDefinition.componentName);
+    entry = componentMap.get(renderingDefinition.componentName);
   }
 
   if (!entry) {
