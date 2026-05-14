@@ -87,8 +87,9 @@ export {
   StudioComponentWrapper,
   StudioComponentWrapper as StudioComponentClientWrapper,
   StudioComponentServerWrapper,
-  StudioComponentParams,
-  StudioComponentServerWrapperProps,
+  type StudioComponentParams,
+  type StudioComponentServerWrapperProps,
+  type StudioComponentWrapperProps,
 } from './atoms/Wrapper';
 export {
   DesignLibrary,

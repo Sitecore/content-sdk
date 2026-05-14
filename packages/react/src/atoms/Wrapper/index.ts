@@ -1,4 +1,8 @@
 export { StudioComponentWrapper } from './StudioComponentWrapper';
 export { StudioComponentServerWrapper } from './StudioComponentServerWrapper';
-export { StudioComponentParams, StudioComponentServerWrapperProps } from './models';
+export {
+  StudioComponentParams,
+  StudioComponentServerWrapperProps,
+  StudioComponentWrapperProps,
+} from './models';
 
