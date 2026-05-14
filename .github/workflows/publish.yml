@@ -144,8 +144,7 @@ jobs:
 
       - name: Re-Install dependencies
         run: |
-          yarn cache clean --all
-          yarn install --immutable
+          yarn install
 
       - name: Compute snapshot npm dist-tag
         id: snapshot_tag
