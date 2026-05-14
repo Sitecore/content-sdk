@@ -88,9 +88,8 @@ function hasManualTagInput(body: Record<string, unknown>): boolean {
  * - **Webhook-style bodies** — non-empty `updates`, `continues: true`, non-empty `invocation_id`, or any
  *   `tag` / `tags` entry that does not start with `sc:` (bare item ids are mapped like
  *   {@link createWebhookRevalidateRouteHandler}).
- *
- * Uses the same secret env/header defaults as {@link createRevalidateRouteHandler}.
- * @param {SitecoreRevalidateRouteHandlerOptions} [options] - Secret, cache profile, locale, sites, and dictionary options.
+ * Uses `SITECORE_REVALIDATE_SECRET` and the `x-revalidate-secret` header. On the **webhook** branch, resolved tags include **`sc:dict:…`** when **`sites`** / **`defaultSite`** are configured (see {@link createWebhookRevalidateRouteHandler}); the **manual** branch only revalidates the `sc:` tags the client sends.
+ * @param {SitecoreRevalidateRouteHandlerOptions} [options] - Optional inline `secret`, `cacheProfile`, locale, sites, and dictionary options.
  * @public
  */
 export function createSitecoreRevalidateRouteHandler(
@@ -101,8 +100,6 @@ export function createSitecoreRevalidateRouteHandler(
     sites,
     defaultSite,
     secret,
-    secretEnvVarName = DEFAULT_SECRET_ENV_VAR,
-    secretHeaderName = DEFAULT_SECRET_HEADER,
     cacheProfile = 'max',
   } = options;
 
@@ -118,16 +115,16 @@ export function createSitecoreRevalidateRouteHandler(
   const POST = async (req: NextRequest) => {
     const startTimestamp = Date.now();
     try {
-      const configuredSecret = secret ?? process.env[secretEnvVarName];
+      const configuredSecret = secret ?? process.env[DEFAULT_SECRET_ENV_VAR];
       if (!configuredSecret) {
-        debug.revalidate('sitecore revalidate: %s is not configured', secretEnvVarName);
+        debug.revalidate('sitecore revalidate: %s is not configured', DEFAULT_SECRET_ENV_VAR);
         return NextResponse.json(
-          { error: `${secretEnvVarName} is not configured.` },
+          { error: `${DEFAULT_SECRET_ENV_VAR} is not configured.` },
           { status: 500 }
         );
       }
 
-      const providedSecret = req.headers.get(secretHeaderName);
+      const providedSecret = req.headers.get(DEFAULT_SECRET_HEADER);
       if (providedSecret !== configuredSecret) {
         debug.revalidate('sitecore revalidate: unauthorized (secret mismatch or missing header)');
         return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });

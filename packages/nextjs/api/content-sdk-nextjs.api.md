@@ -1003,8 +1003,6 @@ export { RetryStrategy }
 // @public
 export type RevalidateRouteHandlerOptions = {
     secret?: string;
-    secretEnvVarName?: string;
-    secretHeaderName?: string;
     cacheProfile?: RevalidateTagCacheProfile;
 };
 

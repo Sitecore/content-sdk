@@ -21,20 +21,10 @@ type RevalidateRequestBody = {
  */
 export type RevalidateRouteHandlerOptions = {
   /**
-   * Shared secret expected from request headers.
-   * If omitted, handler uses process.env[secretEnvVarName].
+   * Shared secret. If omitted, the handler reads `process.env.SITECORE_REVALIDATE_SECRET`.
+   * Callers must send the same value in the **`x-revalidate-secret`** request header (fixed contract; not Sitecore “authorization item” config).
    */
   secret?: string;
-  /**
-   * Environment variable name for resolving the shared secret.
-   * Default is SITECORE_REVALIDATE_SECRET.
-   */
-  secretEnvVarName?: string;
-  /**
-   * Request header name used for passing the secret.
-   * Default is x-revalidate-secret.
-   */
-  secretHeaderName?: string;
   /**
    * Next.js `revalidateTag` cache profile (second argument). Default is `"max"` (recommended).
    * Other string values may match profiles from `cacheLife` in `next.config`; objects may use `{ expire }` per Next.js docs.
@@ -60,26 +50,21 @@ function normalizeTags(body: RevalidateRequestBody): string[] {
  * @public
  */
 export function createRevalidateRouteHandler(options: RevalidateRouteHandlerOptions = {}) {
-  const {
-    secret,
-    secretEnvVarName = DEFAULT_SECRET_ENV_VAR,
-    secretHeaderName = DEFAULT_SECRET_HEADER,
-    cacheProfile = 'max',
-  } = options;
+  const { secret, cacheProfile = 'max' } = options;
 
   const POST = async (req: NextRequest) => {
     const startTimestamp = Date.now();
     try {
-      const configuredSecret = secret ?? process.env[secretEnvVarName];
+      const configuredSecret = secret ?? process.env[DEFAULT_SECRET_ENV_VAR];
       if (!configuredSecret) {
-        debug.revalidate('revalidate route handler: %s is not configured', secretEnvVarName);
+        debug.revalidate('revalidate route handler: %s is not configured', DEFAULT_SECRET_ENV_VAR);
         return NextResponse.json(
-          { error: `${secretEnvVarName} is not configured.` },
+          { error: `${DEFAULT_SECRET_ENV_VAR} is not configured.` },
           { status: 500 }
         );
       }
 
-      const providedSecret = req.headers.get(secretHeaderName);
+      const providedSecret = req.headers.get(DEFAULT_SECRET_HEADER);
       if (providedSecret !== configuredSecret) {
         debug.revalidate('revalidate route handler: unauthorized (secret mismatch or missing header)');
         return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });

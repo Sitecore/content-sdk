@@ -84,6 +84,7 @@ export type CollectSitecorePageCacheTagsParams = {
  * Builds cache tags for a Sitecore page read (`getPage`): route, personalization variant, and route item.
  * Dictionary data is not part of `getPage`; tag dictionary fetches separately (for example with
  * `buildSitecoreDictionaryCacheTag` on a dedicated `use cache` helper).
+ * Registers **`sc:route:…`**, **`sc:pvv:…`**, and **`sc:item:…`** (when layout has `itemId`). Edge-style webhooks usually emit item ids, which map to **`sc:item:…`** via {@link collectSitecoreTagsFromEdgeRevalidateRequestBody}; route and variant tags are only invalidated from webhooks if passed as full `sc:` strings in `tags`, or via manual revalidate.
  * @param {CollectSitecorePageCacheTagsParams} params - Site, locale, path or personalized pathname, and route metadata.
  * @public
  */

@@ -29,9 +29,8 @@ export type WebhookRevalidateRouteHandlerOptions = RevalidateRouteHandlerOptions
  * Creates a POST route handler for Experience Edge / Content Operations style webhook bodies (POC-aligned).
  * Maps `updates[].identifier` (+ optional `entity_culture`) to Content SDK **item** cache tags (`sc:item:...`)
  * so invalidation matches tags from {@link collectSitecorePageCacheTags}.
- *
- * Uses the same secret env/header defaults as {@link createRevalidateRouteHandler}.
- * @param {WebhookRevalidateRouteHandlerOptions} [options] - Secret, cache profile, locale, sites, and dictionary options.
+ * Uses `SITECORE_REVALIDATE_SECRET` and the `x-revalidate-secret` header (see {@link createRevalidateRouteHandler}). When **`sites`** or **`defaultSite`** is set, each POST also revalidates **`sc:dict:…`** tags for those sites (same tags dictionary `use cache` helpers register).
+ * @param {WebhookRevalidateRouteHandlerOptions} [options] - Optional inline `secret`, `cacheProfile`, locale, sites, and dictionary options.
  * @public
  */
 export function createWebhookRevalidateRouteHandler(
@@ -42,8 +41,6 @@ export function createWebhookRevalidateRouteHandler(
     sites,
     defaultSite,
     secret,
-    secretEnvVarName = DEFAULT_SECRET_ENV_VAR,
-    secretHeaderName = DEFAULT_SECRET_HEADER,
     cacheProfile = 'max',
   } = options;
 
@@ -59,16 +56,16 @@ export function createWebhookRevalidateRouteHandler(
   const POST = async (req: NextRequest) => {
     const startTimestamp = Date.now();
     try {
-      const configuredSecret = secret ?? process.env[secretEnvVarName];
+      const configuredSecret = secret ?? process.env[DEFAULT_SECRET_ENV_VAR];
       if (!configuredSecret) {
-        debug.revalidate('webhook revalidate: %s is not configured', secretEnvVarName);
+        debug.revalidate('webhook revalidate: %s is not configured', DEFAULT_SECRET_ENV_VAR);
         return NextResponse.json(
-          { error: `${secretEnvVarName} is not configured.` },
+          { error: `${DEFAULT_SECRET_ENV_VAR} is not configured.` },
           { status: 500 }
         );
       }
 
-      const providedSecret = req.headers.get(secretHeaderName);
+      const providedSecret = req.headers.get(DEFAULT_SECRET_HEADER);
       if (providedSecret !== configuredSecret) {
         debug.revalidate('webhook revalidate: unauthorized (secret mismatch or missing header)');
         return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });

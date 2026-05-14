@@ -71,6 +71,7 @@ export type CollectSitecoreTagsFromEdgeBodyOptions = {
  * Maps a POC-style Edge webhook JSON body to Content SDK cache tag strings used by
  * {@link collectSitecorePageCacheTags} / {@link buildSitecoreItemCacheTag} (`sc:item:...`), so
  * `revalidateTag` matches tags registered during cached reads.
+ * **`updates`** rows resolve to **`sc:item:…`** (locale from `entity_culture` or `defaultLocale`). **`tags`**: full `sc:` strings pass through; bare ids become **`sc:item:…`** with `defaultLocale`. Route/variant tags are not inferred.
  * @param {SitecoreEdgeRevalidateRequestBody | null | undefined} body - Webhook JSON body (tags and/or updates).
  * @param {CollectSitecoreTagsFromEdgeBodyOptions} options - Default locale when culture is missing on an update or bare tag.
  * @public

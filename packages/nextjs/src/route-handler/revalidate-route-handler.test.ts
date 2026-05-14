@@ -47,7 +47,6 @@ describe('createRevalidateRouteHandler', () => {
   afterEach(() => {
     sandbox.restore();
     delete process.env.SITECORE_REVALIDATE_SECRET;
-    delete process.env.REVALIDATE_SECRET_TEST;
   });
 
   it('should return 500 when secret is not configured', async () => {
@@ -138,26 +137,6 @@ describe('createRevalidateRouteHandler', () => {
     expect(res.body).to.deep.equal({
       revalidated: true,
       tags: ['sc:dict:site:en', 'sc:route:site:en:_'],
-    });
-  });
-
-  it('should use custom secret options', async () => {
-    process.env.REVALIDATE_SECRET_TEST = 'expected';
-    const handler = module.createRevalidateRouteHandler({
-      secretEnvVarName: 'REVALIDATE_SECRET_TEST',
-      secretHeaderName: 'x-custom-secret',
-    });
-    const res = await handler.POST(
-      createReq({
-        headers: { 'x-custom-secret': 'expected' },
-        body: { tag: 'sc:route:site:en:_' },
-      })
-    );
-
-    expect(res.status).to.equal(200);
-    expect(res.body).to.deep.equal({
-      revalidated: true,
-      tags: ['sc:route:site:en:_'],
     });
   });
 });
