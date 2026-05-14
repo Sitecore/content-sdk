@@ -22,7 +22,7 @@ Our versioning strategy is as follows:
   - Introduce Zod Schemas for Content SDK Fields ([#450](https://github.com/Sitecore/content-sdk/pull/450))
   - Introduce `low-code` mode for design library ([#452](https://github.com/Sitecore/content-sdk/pull/452))
   - Support Atom-based code generation ([#465](https://github.com/Sitecore/content-sdk/pull/465))
-
+  - Create an SXA component in RH to fetch NCC layout from external host and pass it to render ([#478](https://github.com/Sitecore/content-sdk/pull/478))
 
 
 ### 🐛 Bug Fixes
