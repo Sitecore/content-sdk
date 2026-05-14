@@ -8,7 +8,7 @@
 
 > **getDefaultMediaUrlTransformer**(`edgeUrl`): (`value`) => `string`
 
-Defined in: [content/src/layout/rewrite-edge-host.ts:129](https://github.com/Sitecore/content-sdk/blob/77825b9deac7ebde4022f21ad02170354dd2da15/packages/content/src/layout/rewrite-edge-host.ts#L129)
+Defined in: [content/src/layout/rewrite-edge-host.ts:129](https://github.com/Sitecore/content-sdk/blob/7d388d6eae7bc0cfc53199a13850391ceccd0504/packages/content/src/layout/rewrite-edge-host.ts#L129)
 
 **`Internal`**
 
