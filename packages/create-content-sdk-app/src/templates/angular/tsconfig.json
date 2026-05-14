@@ -35,6 +35,11 @@
     "baseUrl": "./",
     "esModuleInterop": true
   },
-  "include": ["src/**/*.ts", "sitecore.config.ts"],
+  "include": [
+    "src/**/*.ts",
+    "sitecore.config.ts",
+    "sitecore.cli.config.ts",
+    ".sitecore/**/*.ts"
+  ],
   "exclude": ["src/**/*.spec.ts"]
 }

@@ -70,3 +70,5 @@ export class LinkListComponent extends SxaComponent {
     return classes.join(' ');
   }
 }
+
+export default LinkListComponent;

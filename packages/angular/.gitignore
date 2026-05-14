@@ -2,6 +2,8 @@
 
 # Compiled output
 /dist
+/dist-node
+/cli-node
 /tmp
 /out-tsc
 /bazel-out

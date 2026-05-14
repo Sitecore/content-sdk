@@ -55,3 +55,5 @@ export class ColumnSplitterComponent extends SxaComponent {
     return `${columnWidth} ${columnStyle}`.trim();
   }
 }
+
+export default ColumnSplitterComponent;

@@ -11,9 +11,13 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
+  "files": [
+    "dist",
+    "cli-node"
+  ],
   "scripts": {
     "ng": "ng",
-    "build": "ng build",
+    "build": "del-cli dist cli-node && ng build && tsc -p tsconfig.cli.json",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false",
     "coverage": "ng test --watch=false --coverage",
@@ -69,7 +73,9 @@
     "@angular/platform-browser": "^21.1.0",
     "@angular/platform-server": "^21.1.0",
     "@angular/router": "^21.1.0",
+    "@types/node": "^24.10.4",
     "@vitest/coverage-v8": "^4.1.5",
+    "del-cli": "^6.0.0",
     "jsdom": "^27.1.0",
     "ng-packagr": "^21.1.0",
     "rxjs": "~7.8.0",
@@ -84,6 +90,14 @@
     ".": {
       "types": "./dist/types/sitecore-content-sdk-angular.d.ts",
       "default": "./dist/fesm2022/sitecore-content-sdk-angular.mjs"
+    },
+    "./config-cli": {
+      "types": "./cli-node/config-cli/index.d.ts",
+      "default": "./cli-node/config-cli/index.js"
+    },
+    "./tools": {
+      "types": "./cli-node/tools/index.d.ts",
+      "default": "./cli-node/tools/index.js"
     }
   }
 }

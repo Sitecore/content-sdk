@@ -67,3 +67,5 @@ export class TitleComponent extends SxaComponent {
 
   readonly isEditing = computed(() => this.context.isEditing());
 }
+
+export default TitleComponent;

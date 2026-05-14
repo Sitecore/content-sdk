@@ -21,24 +21,24 @@ export interface NavItemFields {
       <div class="navigation-title" [class.child]="hasChildren()" (click)="toggleSubmenu()">
         <a [scRouterLink]="linkField()" (click)="linkClick.emit($event)">
           @if (navItemFields().NavigationTitle) {
-            <span [scText]="navItemFields().NavigationTitle!"></span>
+          <span [scText]="navItemFields().NavigationTitle!"></span>
           } @else if (navItemFields().Title) {
-            <span [scText]="navItemFields().Title!"></span>
+          <span [scText]="navItemFields().Title!"></span>
           } @else {
-            {{ displayFallback() }}
+          {{ displayFallback() }}
           }
         </a>
       </div>
       @if (hasChildren()) {
-        <ul class="clearfix">
-          @for (child of children(); track trackChild(child, index); let index = $index) {
-            <app-navigation-item
-              [navItemFields]="child"
-              [relativeLevel]="relativeLevel() + 1"
-              (linkClick)="linkClick.emit($event)"
-            />
-          }
-        </ul>
+      <ul class="clearfix">
+        @for (child of children(); track trackChild(child, index); let index = $index) {
+        <app-navigation-item
+          [navItemFields]="child"
+          [relativeLevel]="relativeLevel() + 1"
+          (linkClick)="linkClick.emit($event)"
+        />
+        }
+      </ul>
       }
     </li>
   `,
@@ -62,8 +62,8 @@ export class NavigationItemComponent {
       navItem.NavigationTitle?.value != null && String(navItem.NavigationTitle.value) !== ''
         ? String(navItem.NavigationTitle.value)
         : navItem.Title?.value != null && String(navItem.Title.value) !== ''
-          ? String(navItem.Title.value)
-          : (navItem.DisplayName ?? '');
+        ? String(navItem.Title.value)
+        : navItem.DisplayName ?? '';
     return {
       value: {
         href,
@@ -93,3 +93,5 @@ export class NavigationItemComponent {
     return itemId ? `${index}-${itemId}` : String(index);
   }
 }
+
+export default NavigationItemComponent;

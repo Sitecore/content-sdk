@@ -2,9 +2,9 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { PLATFORM_ID } from '@angular/core';
-import type { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import type { Page } from '@sitecore-content-sdk/content/client';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
+import type { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ScFormComponent } from './sc-form.component';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 import { SitecoreContextService } from '../lib/sitecore-context.service';
@@ -36,6 +36,13 @@ const testSitecoreConfig = {
   },
 } as const;
 
+function formRendering(
+  params: Record<string, string>,
+  extra: Partial<ComponentRendering> = {}
+): ComponentRendering {
+  return { componentName: 'Form', params, ...extra } as ComponentRendering;
+}
+
 const makePage = (isEditing: boolean): Page =>
   ({
     locale: 'en',
@@ -48,19 +55,11 @@ const makePage = (isEditing: boolean): Page =>
       isDesignLibrary: false,
       designLibrary: { isVariantGeneration: false },
     },
-  } as Page);
-
-function formRendering(
-  params: Record<string, string>,
-  extra: Partial<ComponentRendering> = {}
-): ComponentRendering {
-  return { componentName: 'Form', params, ...extra } as ComponentRendering;
-}
+  } as unknown as Page);
 
 /**
  * Flush afterNextRender and loadForm promise (scripts / subscribe run in the same microtask).
- * @param {ComponentFixture<ScFormComponent>} fixture - Host fixture under test.
- * @returns {Promise<void>} Resolves when the form pipeline side effects have run.
+ * @param {ComponentFixture} fixture
  */
 async function flushFormLoadPipeline(fixture: ComponentFixture<ScFormComponent>): Promise<void> {
   fixture.detectChanges();
@@ -164,10 +163,7 @@ describe('ScFormComponent', () => {
 
   it('should prefer FormId from params input over rendering when both are provided', async () => {
     const fixture = createFixture();
-    fixture.componentRef.setInput(
-      'rendering',
-      formRendering({ FormId: 'rendering-form-id' })
-    );
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'rendering-form-id' }));
     fixture.componentRef.setInput('params', { FormId: 'component-form-id' });
     await flushFormLoadPipeline(fixture);
 

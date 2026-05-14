@@ -1,11 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  Renderer2,
-  effect,
-  inject,
-  input,
-} from '@angular/core';
+import { Component, ElementRef, Renderer2, effect, inject, input } from '@angular/core';
 
 /**
  * Emits a JSON-LD script tag (kit-nextjs-skate-park StructuredData parity).
@@ -46,3 +39,5 @@ export class StructuredDataComponent {
     });
   }
 }
+
+export default StructuredDataComponent;

@@ -10,10 +10,7 @@ import { ComponentRendering, ScPlaceholderComponent } from '@sitecore-content-sd
   imports: [ScPlaceholderComponent],
   template: `
     @if (placeholderSignature()) {
-      <sc-placeholder
-        [name]="placeholderSignature()!"
-        [rendering]="rendering()!"
-      ></sc-placeholder>
+    <sc-placeholder [name]="placeholderSignature()!" [rendering]="rendering()!"></sc-placeholder>
     }
   `,
 })
@@ -32,3 +29,5 @@ export class PartialDesignDynamicPlaceholderComponent {
     return merged.sig?.trim() ?? '';
   });
 }
+
+export default PartialDesignDynamicPlaceholderComponent;

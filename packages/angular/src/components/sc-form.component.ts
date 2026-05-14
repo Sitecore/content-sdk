@@ -29,11 +29,11 @@ const { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
   template: ` <div #formContainer [class]="styles()" [id]="renderingId()"></div> `,
 })
 export class ScFormComponent {
-  readonly rendering = input<ComponentRendering>();
-  readonly params = input<{ [key: string]: string }>({});
-
   @ViewChild('formContainer', { static: true })
   private formContainerRef!: ElementRef<HTMLDivElement>;
+
+  readonly rendering = input<ComponentRendering>();
+  readonly params = input<{ [key: string]: string }>({});
 
   private readonly config = inject(SITECORE_CONFIG_TOKEN, { optional: true });
   private readonly context = inject(SitecoreContextService);

@@ -7,7 +7,7 @@ import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import type { Page } from '@sitecore-content-sdk/content/client';
 import { ScPlaceholderComponent } from './sc-placeholder.component';
 import { SITECORE_COMPONENT_MAP } from './tokens';
-import { ComponentMap } from './placeholder-utils';
+import type { ComponentMap } from '../components/types';
 import { SitecoreContextService } from '../lib/sitecore-context.service';
 
 @Component({

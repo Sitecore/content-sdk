@@ -52,7 +52,7 @@ interface ImageBannerFields {
     }
   `,
 })
-export class ImageDefaultComponent extends SxaComponent {
+class ImageDefaultComponent extends SxaComponent {
   readonly defaultSizes = DEFAULT_SIZES;
 
   private readonly context = inject(SitecoreContextService);
@@ -95,7 +95,7 @@ export class ImageDefaultComponent extends SxaComponent {
     </div>
   `,
 })
-export class ImageBannerComponent extends SxaComponent {
+class ImageBannerComponent extends SxaComponent {
   readonly bannerSizes = BANNER_SIZES;
 
   readonly bannerImageField = computed(() => {
@@ -115,3 +115,5 @@ export class ImageBannerComponent extends SxaComponent {
     return typeof alt === 'string' ? alt : 'Hero banner';
   });
 }
+
+export { ImageDefaultComponent as Default, ImageBannerComponent as Banner };

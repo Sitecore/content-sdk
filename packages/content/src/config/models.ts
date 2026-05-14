@@ -263,7 +263,7 @@ export type SitecoreCliConfigInput = {
 };
 
 /**
- * Final Sitecore CLI config type required by the CLI
+ * Final Sitecore CLI config type required by the CLI.
  * @public
  */
 export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInput>;

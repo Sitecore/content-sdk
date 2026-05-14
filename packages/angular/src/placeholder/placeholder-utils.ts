@@ -6,11 +6,7 @@ import {
   getDynamicPlaceholderPattern,
 } from '@sitecore-content-sdk/content/layout';
 import { HIDDEN_RENDERING_NAME } from '@sitecore-content-sdk/content';
-
-/**
- * SXA uses a special export name to identify the "default" variant.
- */
-export const DEFAULT_EXPORT_NAME = 'Default';
+import { AngularContentSdkComponent, ComponentMap, DEFAULT_EXPORT_NAME } from '../components/types';
 
 /**
  * An entry in the Angular component map. Maps Sitecore rendering names to Angular component types.
@@ -27,12 +23,6 @@ export type AngularModule = {
   /** Component runtime type (reserved for future use) */
   componentType?: 'client' | 'server' | 'universal';
 };
-
-/**
- * The Angular component map type: maps Sitecore rendering names to component types or modules.
- * @public
- */
-export type ComponentMap = Map<string, Type<unknown> | AngularModule>;
 
 /**
  * Result of resolving a component for a rendering definition.
@@ -55,9 +45,9 @@ export interface ChildComponentProps {
 /**
  * Get the renderings for the specified placeholder from the rendering layout data.
  * Includes dynamic placeholder handling aligned with React's implementation.
- * @param {ComponentRendering | RouteData} rendering - Rendering or route data containing placeholders.
- * @param {string} name - Placeholder name.
- * @param {boolean} isEditing - Whether editing mode is active.
+ * @param {ComponentRendering | RouteData} rendering - rendering data
+ * @param {string} name - placeholder name
+ * @param {boolean} isEditing - whether editing mode is active
  * @returns {ComponentRendering[]} Child renderings for the placeholder.
  */
 export const getPlaceholderRenderings = (
@@ -174,7 +164,7 @@ export function getChildComponentProps(
 export const resolveComponentForRendering = (
   renderingDefinition: ComponentRendering,
   placeholderName: string,
-  componentMap?: ComponentMap,
+  componentMap: ComponentMap,
   hiddenRenderingComponent?: Type<unknown>,
   missingComponentComponent?: Type<unknown>
 ): ComponentForRendering => {
@@ -192,8 +182,9 @@ export const resolveComponentForRendering = (
     };
   }
 
-  let entry: Type<unknown> | AngularModule | undefined;
-  if (!componentMap || componentMap.size === 0) {
+  let entry: Type<unknown> | AngularContentSdkComponent | undefined;
+  const hasComponentMap = !!(componentMap && componentMap.size > 0);
+  if (!hasComponentMap) {
     console.warn(
       `No components were available in component map to service request for component ${renderingDefinition.componentName}`
     );
@@ -216,7 +207,7 @@ export const resolveComponentForRendering = (
     return { component: entry, isEmpty: false };
   }
 
-  // AngularModule: handle SXA rendering variants
+  // AngularCsdkComponent (SXA variants): pick export by FieldNames
   const exportName = renderingDefinition.params?.FieldNames;
   const resolved =
     exportName && exportName !== DEFAULT_EXPORT_NAME
