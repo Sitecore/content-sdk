@@ -84,6 +84,13 @@ export {
   BYOCServerWrapper,
 } from './components/FEaaS';
 export {
+  StudioComponentWrapper,
+  StudioComponentWrapper as StudioComponentClientWrapper,
+  StudioComponentServerWrapper,
+  StudioComponentParams,
+  StudioComponentServerWrapperProps,
+} from './atoms/Wrapper';
+export {
   DesignLibrary,
   DesignLibraryLowCodeComponent,
   DesignLibraryErrorBoundary,
