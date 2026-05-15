@@ -1,10 +1,17 @@
 import { GraphQLClient as Client, ClientError } from 'graphql-request';
-import parse from 'url-parse';
 import { DocumentNode } from 'graphql';
 import debuggers, { Debugger } from './debug';
 import TimeoutPromise from './tools/timeout-promise';
 import { GenericGraphQLClientError, RetryStrategy, FetchOptions } from './models';
 import { DefaultRetryStrategy } from './retries';
+
+function hasGraphQLEndpointHostname(endpoint: string): boolean {
+  try {
+    return Boolean(new URL(endpoint).hostname);
+  } catch {
+    return false;
+  }
+}
 
 /**
  * An interface for GraphQL clients for Sitecore APIs
@@ -119,7 +126,7 @@ export class GraphQLRequestClient implements GraphQLClient {
       this.headers['x-sitecore-contextid'] = clientConfig.contextId;
     }
 
-    if (!endpoint || !parse(endpoint).hostname) {
+    if (!endpoint || !hasGraphQLEndpointHostname(endpoint)) {
       throw new Error(
         `Invalid GraphQL endpoint '${endpoint}'. Verify that appropriate environment variable is set`
       );
