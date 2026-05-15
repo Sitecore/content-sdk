@@ -9,6 +9,9 @@ import { loaderResolver } from './loader-resolver';
 import { LOADER_ID, LOADER_REGISTRY } from './loader-registry.token';
 import { LoaderDataService } from './loader-data.service';
 import { LOADER_DATA_ENDPOINT } from '../server/constants';
+import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
+import type { SitecoreAngularConfig } from '../config/models';
+import { loaderDataCacheKey } from './loader-cache-key';
 import type { LoaderFn } from './models';
 import type { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
@@ -31,6 +34,8 @@ function makeRouterStateSnapshot(url: string): RouterStateSnapshot {
 }
 
 describe('loaderResolver', () => {
+  const mockAngularScConfig = { defaultLanguage: 'en', locales: ['en', 'fr'] } as SitecoreAngularConfig;
+
   describe('browser', () => {
     let mockLoaderData: { getData: ReturnType<typeof vi.fn> };
     let transferState: TransferState;
@@ -45,6 +50,7 @@ describe('loaderResolver', () => {
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: LOADER_REGISTRY, useValue: { page: (async () => ({})) as LoaderFn } },
           { provide: LoaderDataService, useValue: mockLoaderData },
+          { provide: SITECORE_CONFIG_TOKEN, useValue: mockAngularScConfig },
         ],
       });
       transferState = TestBed.inject(TransferState);
@@ -54,7 +60,7 @@ describe('loaderResolver', () => {
 
     it('should return data from transfer state when key exists', async () => {
       const resolver = loaderResolver('page');
-      const key = makeStateKey<unknown>('loader:page:/path');
+      const key = makeStateKey<unknown>(loaderDataCacheKey('page', 'en', '/path'));
       transferState.set(key, { fromTransfer: true });
 
       const route = makeRouteSnapshot();
@@ -169,6 +175,7 @@ describe('loaderResolver', () => {
           LoaderDataService,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: LOADER_REGISTRY, useValue: { page: (async () => ({})) as LoaderFn } },
+          { provide: SITECORE_CONFIG_TOKEN, useValue: mockAngularScConfig },
         ],
       });
       httpController = TestBed.inject(HttpTestingController);
@@ -274,6 +281,7 @@ describe('loaderResolver', () => {
           { provide: PLATFORM_ID, useValue: 'server' },
           { provide: LOADER_REGISTRY, useValue: { page: mockLoader } },
           { provide: LoaderDataService, useValue: { getData: vi.fn() } },
+          { provide: SITECORE_CONFIG_TOKEN, useValue: mockAngularScConfig },
         ],
       });
       transferState = TestBed.inject(TransferState);
@@ -314,7 +322,7 @@ describe('loaderResolver', () => {
         )(route, state);
       });
 
-      const key = makeStateKey<unknown>('loader:page:/page');
+      const key = makeStateKey<unknown>(loaderDataCacheKey('page', 'en', '/page'));
       expect(transferState.hasKey(key)).toBe(true);
       expect(transferState.get(key, null)).toEqual({ server: true, title: 'SSR' });
     });
@@ -369,6 +377,7 @@ describe('loaderResolver', () => {
           { provide: LOADER_REGISTRY, useValue: { page: loaderWithRequest } },
           { provide: LoaderDataService, useValue: { getData: vi.fn() } },
           { provide: REQUEST, useValue: mockRequest },
+          { provide: SITECORE_CONFIG_TOKEN, useValue: mockAngularScConfig },
         ],
       });
     });

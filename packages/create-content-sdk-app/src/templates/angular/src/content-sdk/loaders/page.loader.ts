@@ -1,5 +1,5 @@
 import type { LoaderFn, Page } from '@sitecore-content-sdk/angular';
-import { NotFoundNavigationError, resolveSitecorePage } from '@sitecore-content-sdk/angular';
+import { NotFoundNavigationError, resolveLocale, resolveSitecorePage } from '@sitecore-content-sdk/angular';
 import scConfig from '../../../sitecore.config';
 import { getClient } from '../client/sitecore-client';
 
@@ -8,7 +8,8 @@ import { getClient } from '../client/sitecore-client';
  * Uses imported config and {@link getClient} so this runs outside Angular injection context.
  */
 export const pageLoader: LoaderFn<Page> = async (context) => {
-  const page = await resolveSitecorePage(context.url, scConfig, getClient());
+  const locale = resolveLocale(context.params, scConfig.defaultLanguage ?? 'en');
+  const page = await resolveSitecorePage(context.url, scConfig, getClient(), { locale });
   if (!page) {
     throw new NotFoundNavigationError();
   }

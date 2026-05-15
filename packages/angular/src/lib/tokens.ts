@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
+import type { SitecoreAngularConfig } from '../config/models';
 import type { SitecoreClient } from '@sitecore-content-sdk/content/client';
 
 /**
@@ -7,7 +7,7 @@ import type { SitecoreClient } from '@sitecore-content-sdk/content/client';
  * Provided by `provideSitecoreAngular({ sitecoreConfig, sitecoreClient })`. Inject this to read config app-wide.
  * @public
  */
-export const SITECORE_CONFIG_TOKEN = new InjectionToken<SitecoreConfig>('SITECORE_CONFIG_TOKEN');
+export const SITECORE_CONFIG_TOKEN = new InjectionToken<SitecoreAngularConfig>('SITECORE_CONFIG_TOKEN');
 
 /**
  * Injection token for the SitecoreClient instance.

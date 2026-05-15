@@ -12,13 +12,17 @@ import type {
 } from '@sitecore-content-sdk/content/tools';
 
 const readState = vi.hoisted(() => ({
-  readFileImpl: (_filePath: string): string => '@Component({})\nexport class Default {}',
+  readFileImpl: (filePath: string): string => {
+    void filePath;
+    return '@Component({})\nexport class Default {}';
+  },
 }));
 
 const fsMock = vi.hoisted(() => ({
-  readFileSync: vi.fn((filePath: unknown, _encoding?: unknown) =>
-    readState.readFileImpl(String(filePath))
-  ),
+  readFileSync: vi.fn((filePath: unknown, encoding?: unknown) => {
+    void encoding;
+    return readState.readFileImpl(String(filePath));
+  }),
   mkdirSync: vi.fn(),
   writeFileSync: vi.fn(),
 }));

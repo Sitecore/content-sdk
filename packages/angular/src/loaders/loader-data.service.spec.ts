@@ -8,6 +8,8 @@ import { LoaderDataService } from './loader-data.service';
 import { FETCH_DATA_ENDPOINT } from './loader-registry.token';
 import { LOADER_DATA_ENDPOINT } from '../server/constants';
 import * as sdkCore from '@sitecore-content-sdk/core';
+import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
+import type { SitecoreAngularConfig } from '../config/models';
 
 describe('LoaderDataService', () => {
   let service: LoaderDataService;
@@ -18,6 +20,7 @@ describe('LoaderDataService', () => {
     overrides: {
       platformId?: object | string;
       fetchDataEndpoint?: string | null;
+      sitecoreConfig?: SitecoreAngularConfig | null;
     } = {}
   ) {
     const platformId = overrides.platformId ?? 'browser';
@@ -29,6 +32,9 @@ describe('LoaderDataService', () => {
         { provide: PLATFORM_ID, useValue: platformId },
         ...(overrides.fetchDataEndpoint !== undefined
           ? [{ provide: FETCH_DATA_ENDPOINT, useValue: overrides.fetchDataEndpoint }]
+          : []),
+        ...(overrides.sitecoreConfig !== undefined && overrides.sitecoreConfig !== null
+          ? [{ provide: SITECORE_CONFIG_TOKEN, useValue: overrides.sitecoreConfig }]
           : []),
       ],
     });
@@ -63,6 +69,34 @@ describe('LoaderDataService', () => {
 
       const result = await resultPromise;
       expect(result).toEqual({ kind: 'data', data: { title: 'Hello' } });
+    });
+
+    it('should issue a new request when locale params differ for the same canonical url', async () => {
+      setupTestBed({
+        sitecoreConfig: { locales: ['en', 'fr'], defaultLanguage: 'en' } as SitecoreAngularConfig,
+      });
+      const first = await (async () => {
+        const promise = service.getData({ url: '/shared', loaderId: 'page', params: {} });
+        const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
+        expect(req.request.body.params).toEqual({});
+        req.flush({ kind: 'data', data: { n: 1 } });
+        return promise;
+      })();
+
+      const second = await (async () => {
+        const promise = service.getData({
+          url: '/shared',
+          loaderId: 'page',
+          params: { locale: 'fr' },
+        });
+        const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
+        expect(req.request.body.params).toEqual({ locale: 'fr' });
+        req.flush({ kind: 'data', data: { n: 2 } });
+        return promise;
+      })();
+
+      expect(first).toEqual({ kind: 'data', data: { n: 1 } });
+      expect(second).toEqual({ kind: 'data', data: { n: 2 } });
     });
 
     it('should return pending request if request for data is already pending', async () => {

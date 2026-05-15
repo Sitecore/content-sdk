@@ -19,16 +19,32 @@ import {
   isLoaderRedirectResult,
 } from './models';
 import { redirectOnNavigationError } from './router-error-handling';
-import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from '../lib/tokens';
+import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN, SITECORE_CONFIG_TOKEN } from '../lib/tokens';
+import { resolveLocale, stripLocalePrefix } from '../i18n/locale-url';
+import { loaderDataCacheKey } from './loader-cache-key';
 
 /**
- * Create a state key for the loader
+ * Create a state key for the loader (locale + canonical URL).
  * @param {string} loaderId - The loader ID
- * @param {string} url - The URL
+ * @param {string} locale - Resolved locale
+ * @param {string} canonicalUrl - Locale-stripped URL
  * @returns {StateKey} The state key
  */
-function stateKey(loaderId: string, url: string) {
-  return makeStateKey<unknown>(`loader:${loaderId}:${url}`);
+function stateKey(loaderId: string, locale: string, canonicalUrl: string) {
+  return makeStateKey<unknown>(loaderDataCacheKey(loaderId, locale, canonicalUrl));
+}
+
+/**
+ * Merges params from the route tree (root → leaf).
+ * @param {ActivatedRouteSnapshot} route - Leaf route snapshot
+ * @returns {Params} Merged params
+ */
+function mergedRouteParams(route: ActivatedRouteSnapshot): Params {
+  const fromPath = (route.pathFromRoot ?? []).reduce(
+    (acc, r) => ({ ...acc, ...(r?.params ?? {}) }),
+    {} as Params
+  );
+  return { ...fromPath, ...(route.params ?? {}) };
 }
 
 /**
@@ -64,9 +80,15 @@ async function resolveOnBrowser(
 ): Promise<unknown | RedirectCommand> {
   const transferState = inject(TransferState);
   const loaderData = inject(LoaderDataService);
+  const scConfig = inject(SITECORE_CONFIG_TOKEN, { optional: true });
+  const defaultLanguage = scConfig?.defaultLanguage ?? 'en';
+  const locales = scConfig?.locales?.length ? scConfig.locales : [defaultLanguage];
 
   const url = state.url;
-  const key = stateKey(loaderId, url);
+  const params = mergedRouteParams(route);
+  const locale = resolveLocale(params, defaultLanguage);
+  const canonicalUrl = stripLocalePrefix(url, locales);
+  const key = stateKey(loaderId, locale, canonicalUrl);
 
   if (transferState.hasKey(key)) {
     const data = transferState.get(key, null);
@@ -74,12 +96,10 @@ async function resolveOnBrowser(
     return data;
   }
 
-  const allParams = route.pathFromRoot.reduce((acc, r) => ({ ...acc, ...r.params }), {}) as Params;
-
   const resp = await loaderData.getData({
-    url,
+    url: canonicalUrl,
     loaderId,
-    params: allParams,
+    params,
     query: route.queryParams as Record<string, string | string[]>,
   });
 
@@ -105,16 +125,22 @@ export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
       inject(NOT_FOUND_ROUTE_TOKEN, { optional: true }) || DEFAULT_NOT_FOUND_ROUTE;
     const errorRoute = inject(ERROR_ROUTE_TOKEN, { optional: true }) || DEFAULT_ERROR_ROUTE;
     const router = inject(Router);
+    const scConfig = inject(SITECORE_CONFIG_TOKEN, { optional: true });
+    const locales = scConfig?.locales ?? [scConfig?.defaultLanguage ?? 'en'];
+    const defaultLanguage = scConfig?.defaultLanguage ?? 'en';
 
     const url = state.url;
-    const key = stateKey(loaderId, url);
+    const params = mergedRouteParams(route);
+    const locale = resolveLocale(params, defaultLanguage);
+    const canonicalUrl = stripLocalePrefix(url, locales);
+    const key = stateKey(loaderId, locale, canonicalUrl);
 
     if (isPlatformBrowser(platformId)) {
       try {
         return await resolveOnBrowser(route, state, loaderId, router);
       } catch (e) {
         // special handling for browser, as navigation error for handleNavigationError is only generated on server
-        return redirectOnNavigationError(e as Error, url, notFoundRoute, errorRoute, router);
+        return redirectOnNavigationError(e as Error, url, notFoundRoute, errorRoute, router, scConfig);
       }
     }
 
@@ -127,8 +153,8 @@ export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
     const requestContext = request ? extractRequestContext(request) : undefined;
 
     const result = await loader({
-      url,
-      params: route.params,
+      url: canonicalUrl,
+      params,
       query: route.queryParams,
       requestContext,
     });

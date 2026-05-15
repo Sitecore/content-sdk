@@ -1,7 +1,12 @@
 import { Component, computed, effect, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouterLink } from '@angular/router';
-import { Page, SitecoreContextService } from '@sitecore-content-sdk/angular';
+import {
+  LocalePathPipe,
+  Page,
+  ScPageContextComponent,
+  SitecoreContextService,
+} from '@sitecore-content-sdk/angular';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { LayoutComponent } from '../shared/layout.component';
 
@@ -11,18 +16,21 @@ import { LayoutComponent } from '../shared/layout.component';
  */
 @Component({
   selector: 'app-404',
-  imports: [RouterLink, LayoutComponent],
+  imports: [RouterLink, LayoutComponent, ScPageContextComponent, LocalePathPipe],
   template: `
     @let pageValue = page();
+    @let dict = dictionary();
     @if (pageValue) {
-      <app-layout [page]="pageValue"></app-layout>
+      <sc-page-context [data]="{ page: pageValue, dictionary: dict ?? undefined }">
+        <app-layout [page]="pageValue"></app-layout>
+      </sc-page-context>
     } @else {
       <div class="not-found-container">
         <div class="not-found-content">
           <h1>404</h1>
           <h2>Page Not Found</h2>
           <p>Sorry, the page you're looking for doesn't exist or has been moved.</p>
-          <a routerLink="/" class="back-link">Return to Home</a>
+          <a [routerLink]="'/' | localePath" class="back-link">Return to Home</a>
         </div>
       </div>
     }
@@ -77,10 +85,13 @@ export class NotFoundComponent {
   private readonly context = inject(SitecoreContextService);
 
   page = computed(() => this.routeData()?.['page'] as Page | null);
+  dictionary = computed(() => this.routeData()?.['dictionary'] as Record<string, string> | null);
 
   constructor() {
     effect(() => {
-      this.context.setPage(this.page() ?? null);
+      if (!this.page()) {
+        this.context.setPage(null);
+      }
     });
   }
 }

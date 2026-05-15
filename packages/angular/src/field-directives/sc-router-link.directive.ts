@@ -1,13 +1,18 @@
-import { Directive, HostListener, inject, input } from '@angular/core';
+import { Directive, HostListener, inject, input, effect, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import type { LinkField, LinkFieldValue } from '@sitecore-content-sdk/content/layout';
 import { ScLinkDirective } from './sc-link.directive';
+import { SitecoreContextService } from '../lib/sitecore-context.service';
+import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
+import { prependLocale } from '../i18n/locale-url';
 
 /**
  * Renders a Sitecore link field onto a host `<a>` and calls `Router.navigateByUrl` on click
  * for in-app paths only. Clicks are left to the browser when `href` is missing/empty, when
  * `target="_blank"`, or when `href` uses http(s), mailto, tel, sms, javascript, data, ftp,
  * or protocol-relative (`//`) URLs.
+ *
+ * For internal root-relative paths, the active locale prefix is applied (except in editing mode).
  *
  * Usage:
  * ```html
@@ -25,6 +30,33 @@ export class ScRouterLinkDirective extends ScLinkDirective {
   override readonly scLink = input.required<LinkField | LinkFieldValue>({ alias: 'scRouterLink' });
 
   private readonly router = inject(Router);
+  private readonly sitecoreContext = inject(SitecoreContextService);
+  private readonly scConfig = inject(SITECORE_CONFIG_TOKEN, { optional: true });
+  private readonly routerLinkRenderer = inject(Renderer2);
+
+  constructor() {
+    super();
+    effect(() => {
+      this.scLink();
+      const el = this.el.nativeElement;
+      const hrefRaw = el.getAttribute('href')?.trim() ?? '';
+      if (!hrefRaw || this.sitecoreContext.isEditing()) {
+        return;
+      }
+      if (this.shouldDeferNavigation(hrefRaw, el.getAttribute('target'))) {
+        return;
+      }
+      if (hrefRaw.startsWith('#')) {
+        return;
+      }
+      const defaultLang = this.scConfig?.defaultLanguage ?? 'en';
+      const locale = this.sitecoreContext.locale() ?? defaultLang;
+      const localized = prependLocale(hrefRaw, locale, defaultLang);
+      if (localized !== hrefRaw) {
+        this.routerLinkRenderer.setAttribute(el, 'href', localized);
+      }
+    });
+  }
 
   @HostListener('click', ['$event'])
   onClick(event: MouseEvent): void {
@@ -34,11 +66,6 @@ export class ScRouterLinkDirective extends ScLinkDirective {
     if (this.shouldDeferNavigation(hrefAttr, targetAttr)) {
       return;
     }
-
-    // Early return in editing mode
-    // if (this.sitecoreContext.isEditing()) {
-    //   return;
-    // }
 
     void this.router.navigateByUrl(hrefAttr);
     if (!hrefAttr.includes('#')) {

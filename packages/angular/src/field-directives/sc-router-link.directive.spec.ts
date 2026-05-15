@@ -5,6 +5,10 @@ import { Component, input } from '@angular/core';
 import { provideRouter, Router } from '@angular/router';
 import { ScRouterLinkDirective } from './sc-router-link.directive';
 import type { LinkField } from '@sitecore-content-sdk/content/layout';
+import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
+import type { SitecoreAngularConfig } from '../config/models';
+import { SitecoreContextService } from '../lib/sitecore-context.service';
+import type { Page } from '@sitecore-content-sdk/content/client';
 
 @Component({ standalone: true, template: '', selector: 'blank-cmp' })
 class BlankCmp {}
@@ -21,21 +25,51 @@ class TestScRouterLinkHost {
 }
 
 describe('ScRouterLinkDirective', () => {
-  async function createFixture(): Promise<{
+  async function createFixture(options?: {
+    locale?: string;
+    isEditing?: boolean;
+  }): Promise<{
     fixture: ComponentFixture<TestScRouterLinkHost>;
     router: Router;
   }> {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [TestScRouterLinkHost, BlankCmp],
-      providers: [provideRouter([{ path: '**', component: BlankCmp }])],
+      providers: [
+        provideRouter([{ path: '**', component: BlankCmp }]),
+        {
+          provide: SITECORE_CONFIG_TOKEN,
+          useValue: {
+            defaultLanguage: 'en',
+            locales: ['en', 'fr'],
+          } as SitecoreAngularConfig,
+        },
+      ],
     });
     const fixture = TestBed.createComponent(TestScRouterLinkHost);
     const router = TestBed.inject(Router);
+    const context = TestBed.inject(SitecoreContextService);
+    context.setPage({
+      locale: options?.locale ?? 'en',
+      mode: { isEditing: options?.isEditing ?? false },
+    } as Page);
     await router.navigateByUrl('/');
     fixture.detectChanges();
     return { fixture, router };
   }
+
+  it('prefixes internal href with active locale when not default language', async () => {
+    const { fixture } = await createFixture({ locale: 'fr' });
+    const a = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
+    expect(a.getAttribute('href')).toContain('/fr/about');
+  });
+
+  it('does not prefix href in editing mode', async () => {
+    const { fixture } = await createFixture({ locale: 'fr', isEditing: true });
+    const a = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
+    expect(a.getAttribute('href')).toContain('/about');
+    expect(a.getAttribute('href')).not.toContain('/fr/');
+  });
 
   it('calls Router.navigateByUrl with href on click and preventDefault when no hash', async () => {
     const { fixture, router } = await createFixture();

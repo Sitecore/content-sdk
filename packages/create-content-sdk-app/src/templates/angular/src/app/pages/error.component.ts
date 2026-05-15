@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Page, SitecoreContextService } from '@sitecore-content-sdk/angular';
+import { Page, ScPageContextComponent, SitecoreContextService } from '@sitecore-content-sdk/angular';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { LayoutComponent } from '../shared/layout.component';
 
@@ -10,11 +10,14 @@ import { LayoutComponent } from '../shared/layout.component';
  */
 @Component({
   selector: 'app-error',
-  imports: [LayoutComponent],
+  imports: [LayoutComponent, ScPageContextComponent],
   template: `
     @let pageValue = page();
+    @let dict = dictionary();
     @if (pageValue) {
-      <app-layout [page]="pageValue"></app-layout>
+      <sc-page-context [data]="{ page: pageValue, dictionary: dict ?? undefined }">
+        <app-layout [page]="pageValue"></app-layout>
+      </sc-page-context>
     } @else {
       <div class="error-container">
         <div class="error-content">
@@ -97,10 +100,13 @@ export class ErrorComponent {
   private readonly context = inject(SitecoreContextService);
 
   page = computed(() => this.routeData()?.['page'] as Page | null);
+  dictionary = computed(() => this.routeData()?.['dictionary'] as Record<string, string> | null);
 
   constructor() {
     effect(() => {
-      this.context.setPage(this.page() ?? null);
+      if (!this.page()) {
+        this.context.setPage(null);
+      }
     });
   }
 

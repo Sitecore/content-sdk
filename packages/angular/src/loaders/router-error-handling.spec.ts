@@ -4,7 +4,8 @@ import { provideRouter, RedirectCommand, Router } from '@angular/router';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { handleNavigationError } from './router-error-handling';
 import { NotFoundNavigationError, LoaderHttpError } from './models';
-import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from '../lib/tokens';
+import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN, SITECORE_CONFIG_TOKEN } from '../lib/tokens';
+import type { SitecoreAngularConfig } from '../config/models';
 import * as sdkCore from '@sitecore-content-sdk/core';
 
 /** Minimal shape of Angular's NavigationError used by the handler */
@@ -45,6 +46,54 @@ describe('handleNavigationError', () => {
 
     expect(result).toBeInstanceOf(RedirectCommand);
     expect(parseUrlSpy).toHaveBeenCalledWith('/404');
+  });
+
+  it('should prepend locale to not-found redirect when config has multiple locales', () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([]),
+        {
+          provide: SITECORE_CONFIG_TOKEN,
+          useValue: {
+            locales: ['en', 'fr'],
+            defaultLanguage: 'en',
+          } as SitecoreAngularConfig,
+        },
+      ],
+    });
+    router = TestBed.inject(Router);
+    parseUrlSpy = vi.spyOn(router, 'parseUrl');
+
+    const e: MockNavigationError = { error: new NotFoundNavigationError(), url: '/fr/missing' };
+    const result = runHandler(e);
+
+    expect(result).toBeInstanceOf(RedirectCommand);
+    expect(parseUrlSpy).toHaveBeenCalledWith('/fr/404');
+  });
+
+  it('should not redirect when already on localized not-found route', () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([]),
+        {
+          provide: SITECORE_CONFIG_TOKEN,
+          useValue: {
+            locales: ['en', 'fr'],
+            defaultLanguage: 'en',
+          } as SitecoreAngularConfig,
+        },
+      ],
+    });
+    router = TestBed.inject(Router);
+    parseUrlSpy = vi.spyOn(router, 'parseUrl');
+
+    const e: MockNavigationError = { error: new NotFoundNavigationError(), url: '/fr/404' };
+    const result = runHandler(e);
+
+    expect(result).toBeUndefined();
+    expect(parseUrlSpy).not.toHaveBeenCalled();
   });
 
   it('should redirect to internalServerErrorRoute when processing other exceptions', () => {
