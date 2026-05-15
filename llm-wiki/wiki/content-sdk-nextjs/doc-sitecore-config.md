@@ -7,14 +7,12 @@ Synthesized from official [The Sitecore configuration file](https://doc.sitecore
 ## Where it lives
 
 - Generated apps: root **`sitecore.config.ts`**.
-- Templates: `packages/create-content-sdk-app/src/templates/nextjs/sitecore.config.ts`, `nextjs-app-router/sitecore.config.ts`, Angular template equivalents.
+- Templates: `packages/create-content-sdk-app/src/templates/nextjs/sitecore.config.ts`, `nextjs-app-router/sitecore.config.ts`.
 
 ## Next.js resolution pipeline
 
-1. **`defineConfig`** from **`@sitecore-content-sdk/nextjs/config`** (`packages/nextjs/src/config/define-config.ts`) runs **`getNextFallbackConfig`**: merges **`NEXT_PUBLIC_*`**, **`VERCEL_ENV === 'preview'`** for multisite cookie resolution, **`GENERATE_STATIC_PATHS`**, **`SITECORE_INTERNAL_EDITING_HOST_URL`**, etc.
-2. Passes result to **`defineConfig`** from **`@sitecore-content-sdk/content/config`** (`packages/content/src/config/define-config.ts`).
-3. Content **`defineConfig(config, env?)`**: **`buildFallbackConfig(env)`** → **`resolveConfig`** (**`deepMerge`**, skips `undefined` and **`''`** overrides) → **`resolveEdgeUrl`** on merged `api.edge.edgeUrl`. (Details: [../common/doc-sitecore-config-input.md](../common/doc-sitecore-config-input.md).)
-4. **CLI mode** (`SITECORE_CLI_MODE=true`): lazy validation **Proxy** on sensitive paths; else immediate **`validateApiConfiguration`** (server needs Edge **`contextId`** or local **`apiHost`+`apiKey`**).
+1. **`defineConfig`** from **`@sitecore-content-sdk/nextjs/config`** (`packages/nextjs/src/config/define-config.ts`) runs **`getNextFallbackConfig`**: merges **`NEXT_PUBLIC_*`**, **`VERCEL_ENV === 'preview'`** for multisite cookie resolution, **`GENERATE_STATIC_PATHS`**, **`SITECORE_INTERNAL_EDITING_HOST_URL`** (see `packages/nextjs/src/config/define-config.ts` for the complete list).
+2. Passes merged env to content **`defineConfig`** — the shared `buildFallbackConfig` → `deepMerge` → `resolveEdgeUrl` → CLI validation pipeline applies. See [common merge pipeline](../common/doc-sitecore-config-input.md).
 
 ## Next-only `SitecoreConfigInput` fields
 
@@ -42,8 +40,8 @@ When using the **`[site]`** segment pattern, keep **`multisite.enabled`** consis
 
 - [doc-example-environment-variable-files.md](doc-example-environment-variable-files.md) — `.env.*.example` vs `defineConfig` / env.
 - [doc-editor-integration-metadata.md](doc-editor-integration-metadata.md) — `editingSecret`, render host.
-- [doc-terminology-platform-names.md](doc-terminology-platform-names.md)
-- [../content-sdk-angular/doc-environment-and-define-config-angular.md](../content-sdk-angular/doc-environment-and-define-config-angular.md) — Angular **`CSDK_PUBLIC_*`** → `environment*.ts`
+- [doc-terminology-platform-names.md](../common/doc-terminology-platform-names.md)
+- [../content-sdk-angular/index.md](../content-sdk-angular/index.md) — other heads in this monorepo (start here for Angular)
 
 ## Raw
 

@@ -60,13 +60,43 @@ Framework-agnostic client: layout pages, dictionary, preview/editing, error page
 | `getSiteMap` | Sitemap XML string |
 | `getRobots` | robots.txt |
 
-## Angular usage (pointer)
+## `Page` type contract
 
-`@sitecore-content-sdk/angular` re-exports **`SitecoreClient`** from **`@sitecore-content-sdk/content/client`**. The template uses a lazy singleton **`getClient()`** that does **`new SitecoreClient(scConfig)`** so credentials are not required at Angular build-time route extraction. Loaders call **`resolveSitecorePage(path, scConfig, getClient())`**, which delegates to **`client.getPage`**.
+`SitecoreClient.getPage` returns **`Page | null`** (`packages/content/src/client/sitecore-client.ts`).
 
-## Next.js usage (pointer)
+| Field | Type | Notes |
+|-------|------|-------|
+| `layout` | `LayoutServiceData` | Contains `layout.sitecore.route: RouteData \| null` — route fields and placeholder tree |
+| `siteName` | `string?` | Resolved site name |
+| `locale` | `string` | Active locale/language for this page |
+| `mode` | `PageMode` | See flags below |
 
-**`SitecoreNextjsClient`** extends the base with **`parsePath`**, App Router preview headers, **`getComponentData`**, etc. See [../content-sdk-nextjs/doc-sitecore-client-apis.md](../content-sdk-nextjs/doc-sitecore-client-apis.md).
+**`PageMode` flags:**
+
+| Flag | Meaning |
+|------|---------|
+| `mode.isEditing` | Page is open in the Sitecore Pages editor |
+| `mode.isPreview` | Preview mode |
+| `mode.isNormal` | Normal rendering (not editing, not preview) |
+| `mode.isDesignLibrary` | Design Library rendering |
+
+## Editing utilities (`content/editing`)
+
+`@sitecore-content-sdk/content/editing` exports two framework-agnostic helpers used by both Angular and Next.js:
+
+| Export | Purpose |
+|--------|---------|
+| `isEditorActive()` | Returns `true` when the page is loaded inside the Sitecore Pages editor (checks window/DOM signals) |
+| `resetEditorChromes()` | Re-initializes the editor chrome decorators after client-side navigation or dynamic content changes |
+
+Both heads re-export these from their own packages. In Angular they appear in `SitecoreContextService`'s editing integration; in Next.js the React `Placeholder` calls `PagesEditor.resetChromes()` (same concept, reached through `@sitecore-content-sdk/react` re-export).
+
+**Source:** `packages/content/src/editing/utils.ts`
+
+## Head-specific usage
+
+- **Angular:** `getClient()` singleton, `resolveSitecorePage` — see [doc-sitecore-config-typescript-angular.md](../content-sdk-angular/doc-sitecore-config-typescript-angular.md).
+- **Next.js:** `SitecoreNextjsClient` extensions — see [doc-sitecore-client-apis.md](../content-sdk-nextjs/doc-sitecore-client-apis.md).
 
 ## Related
 

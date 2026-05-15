@@ -4,7 +4,7 @@
 
 ## Platform naming (read this first)
 
-**Sitecore AI**, **SitecoreAI**, **SAI**, **XM Cloud**, **Sitecore XM Cloud**, and **XMC** (in URLs and comments) refer to the **same** platform context for Content SDK work in this repo. See [doc-terminology-platform-names.md](doc-terminology-platform-names.md).
+**Sitecore AI**, **SitecoreAI**, **SAI**, **XM Cloud**, **Sitecore XM Cloud**, and **XMC** (in URLs and comments) refer to the **same** platform context for Content SDK work in this repo. See [doc-terminology-platform-names.md](../common/doc-terminology-platform-names.md).
 
 ## Purpose
 
@@ -14,7 +14,7 @@ This repository ships **TypeScript packages**, a **scaffolding CLI** (`create-co
 
 | Topic | Wiki |
 |--------|------|
-| Naming | [doc-terminology-platform-names.md](doc-terminology-platform-names.md) |
+| Naming | [doc-terminology-platform-names.md](../common/doc-terminology-platform-names.md) |
 | Config types (all heads) | [../common/doc-sitecore-config-input.md](../common/doc-sitecore-config-input.md) |
 | Env fallbacks / `buildFallbackConfig` (all heads) | [../common/doc-config-environment-variables.md](../common/doc-config-environment-variables.md) |
 | `SitecoreClient` + GraphQL factory (all heads) | [../common/doc-sitecore-client-and-graphql.md](../common/doc-sitecore-client-and-graphql.md) |

@@ -1,6 +1,6 @@
 # GraphQL client factory and Edge URLs (Next hub)
 
-Canonical **code-truth** for **`createGraphQLClientFactory`**, Edge vs local URLs, and **`SitecoreClient`** construction lives in the **common** wiki (same behavior for Angular and any **`@sitecore-content-sdk/content`** consumer):
+Canonical **code-truth** for **`createGraphQLClientFactory`**, Edge vs local URLs, and **`SitecoreClient`** construction lives in the **common** wiki:
 
 - **[../common/doc-sitecore-client-and-graphql.md](../common/doc-sitecore-client-and-graphql.md)**
 
