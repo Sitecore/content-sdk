@@ -1,23 +1,40 @@
 # Environment variables and `buildFallbackConfig`
 
-How **`@sitecore-content-sdk/content`** fills **`SitecoreConfig`** from **`process.env`** (and from head-supplied env objects). Same variable *names* support **Next** (often **`NEXT_PUBLIC_*`** or server-only), **Angular** (browser-safe **`CSDK_PUBLIC_*`** literals + server **`process.env`**), and any other consumer of **`defineConfig`**.
+How **`@sitecore-content-sdk/content`** fills **`SitecoreConfig`** from an env-like record (e.g. **`process.env`**, or **`clientEnv`** merged in by a head’s **`defineConfig`**). **`buildFallbackConfig`** in **`packages/content/src/config/define-config.ts`** uses **string literal** keys only; TypeScript **constant** names such as **`SITECORE_EDGE_PLATFORM_HOSTNAME_ENV`** are **not** environment variable names—they exist so the code can index **`env['SITECORE_EDGE_PLATFORM_HOSTNAME']`** without repeating the string.
 
 **Code:** `packages/content/src/config/define-config.ts` — **`buildFallbackConfig`**.
 
-## `buildFallbackConfig` env keys
+## Key prefixes (by head)
 
-| Area | Variables (chained with `\|\|`) |
-|------|----------------------------------|
-| Edge hostname | `CSDK_PUBLIC_SITECORE_EDGE_HOSTNAME`, `SITECORE_EDGE_PLATFORM_HOSTNAME_ENV` |
-| Edge context | `SITECORE_EDGE_CONTEXT_ID` |
-| Client context | `SITECORE_EDGE_CLIENT_CONTEXT_ID`, `CSDK_PUBLIC_SITECORE_EDGE_CONTEXT_ID` |
-| Local key | `SITECORE_API_KEY`, `CSDK_PUBLIC_SITECORE_API_KEY`, `NEXT_PUBLIC_SITECORE_API_KEY` |
-| Local host | `SITECORE_API_HOST`, `CSDK_PUBLIC_SITECORE_API_HOST`, `NEXT_PUBLIC_SITECORE_API_HOST` |
-| Editing secret | `SITECORE_EDITING_SECRET` (fallback placeholder if unset) |
-| Default site | `SITECORE_DEFAULT_SITE`, `CSDK_PUBLIC_SITECORE_DEFAULT_SITE`, `CSDK_PUBLIC_DEFAULT_SITE` |
-| Default language | `SITECORE_DEFAULT_LANGUAGE`, `CSDK_PUBLIC_DEFAULT_LANGUAGE` → default **`en`** |
-| Personalize | `PERSONALIZE_MIDDLEWARE_*_TIMEOUT`, scope envs, … |
-| Local GraphQL path | Hardcoded **`/sitecore/api/graph/edge`** unless overridden in config |
+| Prefix | Typical use |
+|--------|----------------|
+| **`SITECORE_*`** | Server-side / shared secrets and IDs (Next **`.env`**, Angular server **`process.env`**, CI). |
+| **`NEXT_PUBLIC_*`** | **Next.js** convention for values that must exist in the browser bundle; **`buildFallbackConfig`** reads several of these directly (alongside **`SITECORE_*`** / **`CSDK_PUBLIC_*`**). |
+| **`CSDK_PUBLIC_*`** | **Angular** convention only: the scaffold’s **`generate-environment.ts`** copies only these keys into **`environment.*.ts`**, which become **`clientEnv`** for **`@sitecore-content-sdk/angular`** **`defineConfig`**. Next templates do **not** rely on this prefix for public config. |
+
+Any head may pass a merged map into **`defineConfig`**, so multiple prefixes can appear in the same object at runtime (e.g. Angular SSR merges **`clientEnv`** with **`process.env`**).
+
+## `buildFallbackConfig` env keys (exact names)
+
+Values below follow **`env.A \|\| env.B \|\| …`** in **`buildFallbackConfig`** unless noted.
+
+| Area | Environment variable keys (in evaluation order) |
+|------|---------------------------------------------------|
+| Edge hostname (input to **`resolveEdgeUrl`**) | `CSDK_PUBLIC_SITECORE_EDGE_HOSTNAME`, then `SITECORE_EDGE_PLATFORM_HOSTNAME` |
+| Edge context ID | `SITECORE_EDGE_CONTEXT_ID` |
+| Edge **client** context ID | `SITECORE_EDGE_CLIENT_CONTEXT_ID`, then `CSDK_PUBLIC_SITECORE_EDGE_CONTEXT_ID` |
+| Local GraphQL **API key** | `SITECORE_API_KEY`, then `CSDK_PUBLIC_SITECORE_API_KEY`, then `NEXT_PUBLIC_SITECORE_API_KEY` |
+| Local GraphQL **host** | `SITECORE_API_HOST`, then `CSDK_PUBLIC_SITECORE_API_HOST`, then `NEXT_PUBLIC_SITECORE_API_HOST` |
+| Editing secret | `SITECORE_EDITING_SECRET` (if unset, code uses placeholder string **`editing-secret-missing`**) |
+| Default site | `SITECORE_DEFAULT_SITE`, then `CSDK_PUBLIC_SITECORE_DEFAULT_SITE`, then `CSDK_PUBLIC_DEFAULT_SITE` |
+| Default language | `SITECORE_DEFAULT_LANGUAGE`, then `CSDK_PUBLIC_DEFAULT_LANGUAGE`; if still empty, defaults to **`en`** |
+| Personalize — Edge timeout (ms) | `PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT` (parsed integer; default **400** if missing/invalid) |
+| Personalize — CDP timeout (ms) | `PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT` (parsed integer; default **400** if missing/invalid) |
+| Personalize — scope | `SITECORE_PERSONALIZE_SCOPE`, then `CSDK_PUBLIC_PERSONALIZE_SCOPE`, then `NEXT_PUBLIC_PERSONALIZE_SCOPE` |
+| Redirects / personalize **enabled** flags | Derived from **`NODE_ENV`** (`!== 'development'` → enabled), not separate `SITECORE_*` keys |
+| Local GraphQL **path** | Not from env: hardcoded **`/sitecore/api/graph/edge`** in this fallback object (overridable via **`sitecore.config.ts`**) |
+
+**Source for `SITECORE_EDGE_PLATFORM_HOSTNAME`:** the content package imports **`SITECORE_EDGE_PLATFORM_HOSTNAME_ENV`** from **`@sitecore-content-sdk/core/tools`**; that export’s value is the string **`'SITECORE_EDGE_PLATFORM_HOSTNAME'`** (`packages/core/src/tools/resolve-edge-url.ts`).
 
 ## By head (how env reaches `defineConfig`)
 

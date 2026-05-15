@@ -49,7 +49,7 @@ Holds **`config: SitecoreConfig`**, optional **`build.commands`**, **`scaffold.t
 
 | Head | Wrapper | Notes |
 |------|---------|-------|
-| **Next.js** | `@sitecore-content-sdk/nextjs/config` **`defineConfig`** | **`getNextFallbackConfig`** adds **`NEXT_PUBLIC_*`**, preview multisite cookie behavior, **`GENERATE_STATIC_PATHS`**, **`SITECORE_INTERNAL_EDITING_HOST_URL`**, etc. |
+| **Next.js** | `@sitecore-content-sdk/nextjs/config` **`defineConfig`** | **`getNextFallbackConfig`** adds **`NEXT_PUBLIC_*`**, preview multisite cookie behavior, **`GENERATE_STATIC_PATHS`**, **`SITECORE_INTERNAL_EDITING_HOST_URL`** (full list: [doc-sitecore-config.md](../content-sdk-nextjs/doc-sitecore-config.md)). |
 | **Angular** | `@sitecore-content-sdk/angular` **`defineConfig`** | Merges **`clientEnv`** (generated **`environment*.ts`**) with **`getProcessEnv()`** on the server, then calls content **`defineConfig`**. |
 
 ## Related

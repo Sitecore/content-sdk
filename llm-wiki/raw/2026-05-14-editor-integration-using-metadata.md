@@ -14,7 +14,7 @@ fetch_note: "HTML retrieved via curl; body distilled to markdown (diagram omitte
 
 **Note:** Official diagram: teal = Content SDK for Next.js APIs; other colors = sample app pieces.
 
-**Local Pages testing:** Connect [local host to Pages](https://doc.sitecore.com/xmc/en/developers/xm-cloud/connect-your-local-host-to-pages.html) (doc link uses XMC path; same platform family as SAI — see wiki `content-sdk-nextjs/doc-terminology-platform-names.md`).
+**Local Pages testing:** Connect [local host to Pages](https://doc.sitecore.com/xmc/en/developers/xm-cloud/connect-your-local-host-to-pages.html) (doc link uses XMC path; same platform family as SAI — see wiki `wiki/common/doc-terminology-platform-names.md`).
 
 **Important — iframes:** `X-Frame-Options: SAMEORIGIN` or CSP `frame-ancestors 'self'` can **block** the Pages iframe. Allow the Pages domain to frame the editing host (adjust headers / exceptions).
 

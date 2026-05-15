@@ -4,6 +4,8 @@ This hub splits the ingested **JSS-Angular Live Design** architecture PDF into f
 
 **Sources:** [raw extract](../../raw/2026-05-14-jss-angular-live-design-architecture.md) · PDF in repo: [`llm-wiki/raw/design/JSS-Angular-Live-Design-Doc-140526-211917.pdf`](../../raw/design/JSS-Angular-Live-Design-Doc-140526-211917.pdf)
 
+The Angular head fetches Sitecore layout data through a **loader system**: route `resolve` functions backed by a named loader registry, server execution with Angular's `TransferState`, and an Express RPC endpoint (`/_data`) for client navigations. Each subsection page below covers a section of this design.
+
 ## Pages (by PDF section)
 
 | Topic | Page |
@@ -26,4 +28,4 @@ This hub splits the ingested **JSS-Angular Live Design** architecture PDF into f
 
 - [index.md](index.md) — Angular wiki hub
 - [Common wiki — config, env, SitecoreClient + GraphQL](../common/index.md) — **`@sitecore-content-sdk/content`** canonical pages
-- [Next.js `sitecore.config` (Next-only fields)](../content-sdk-nextjs/doc-sitecore-config.md) — **`getNextFallbackConfig`**, App Router multisite notes
+- [Next.js wiki](../content-sdk-nextjs/index.md)
