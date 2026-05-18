@@ -8,7 +8,7 @@
 
 > **LocaleProxyConfig** = [`ProxyBaseConfig`](ProxyBaseConfig.md) & `object`
 
-Defined in: [nextjs/src/proxy/locale-proxy.ts:12](https://github.com/Sitecore/content-sdk/blob/7d388d6eae7bc0cfc53199a13850391ceccd0504/packages/nextjs/src/proxy/locale-proxy.ts#L12)
+Defined in: [nextjs/src/proxy/locale-proxy.ts:12](https://github.com/Sitecore/content-sdk/blob/c50ffd7c4f7e7995d1145f8a5659acb6ed683eab/packages/nextjs/src/proxy/locale-proxy.ts#L12)
 
 The interface for the Locale proxy configuration.
 

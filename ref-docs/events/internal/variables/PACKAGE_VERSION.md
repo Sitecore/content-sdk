@@ -8,7 +8,7 @@
 
 > `const` **PACKAGE\_VERSION**: `string` = `packageJson.version`
 
-Defined in: [events/src/consts.ts:7](https://github.com/Sitecore/content-sdk/blob/7d388d6eae7bc0cfc53199a13850391ceccd0504/packages/events/src/consts.ts#L7)
+Defined in: [events/src/consts.ts:7](https://github.com/Sitecore/content-sdk/blob/c50ffd7c4f7e7995d1145f8a5659acb6ed683eab/packages/events/src/consts.ts#L7)
 
 **`Internal`**
 

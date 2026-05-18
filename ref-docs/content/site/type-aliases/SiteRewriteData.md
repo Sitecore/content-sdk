@@ -8,7 +8,7 @@
 
 > **SiteRewriteData** = `object`
 
-Defined in: [content/src/site/utils.ts:17](https://github.com/Sitecore/content-sdk/blob/7d388d6eae7bc0cfc53199a13850391ceccd0504/packages/content/src/site/utils.ts#L17)
+Defined in: [content/src/site/utils.ts:17](https://github.com/Sitecore/content-sdk/blob/c50ffd7c4f7e7995d1145f8a5659acb6ed683eab/packages/content/src/site/utils.ts#L17)
 
 Object model of site rewrite data
 
@@ -18,4 +18,4 @@ Object model of site rewrite data
 
 > **siteName**: `string`
 
-Defined in: [content/src/site/utils.ts:18](https://github.com/Sitecore/content-sdk/blob/7d388d6eae7bc0cfc53199a13850391ceccd0504/packages/content/src/site/utils.ts#L18)
+Defined in: [content/src/site/utils.ts:18](https://github.com/Sitecore/content-sdk/blob/c50ffd7c4f7e7995d1145f8a5659acb6ed683eab/packages/content/src/site/utils.ts#L18)

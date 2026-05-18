@@ -8,7 +8,7 @@
 
 > **ComponentPropsContextProps** = `object`
 
-Defined in: [nextjs/src/components/ComponentPropsContext.tsx:34](https://github.com/Sitecore/content-sdk/blob/7d388d6eae7bc0cfc53199a13850391ceccd0504/packages/nextjs/src/components/ComponentPropsContext.tsx#L34)
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:34](https://github.com/Sitecore/content-sdk/blob/c50ffd7c4f7e7995d1145f8a5659acb6ed683eab/packages/nextjs/src/components/ComponentPropsContext.tsx#L34)
 
 The interface for the ComponentPropsContext component props.
 
@@ -18,7 +18,7 @@ The interface for the ComponentPropsContext component props.
 
 > **children**: `ReactNode`
 
-Defined in: [nextjs/src/components/ComponentPropsContext.tsx:35](https://github.com/Sitecore/content-sdk/blob/7d388d6eae7bc0cfc53199a13850391ceccd0504/packages/nextjs/src/components/ComponentPropsContext.tsx#L35)
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:35](https://github.com/Sitecore/content-sdk/blob/c50ffd7c4f7e7995d1145f8a5659acb6ed683eab/packages/nextjs/src/components/ComponentPropsContext.tsx#L35)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [nextjs/src/components/ComponentPropsContext.tsx:35](https://github.
 
 > **value**: [`ComponentPropsCollection`](ComponentPropsCollection.md)
 
-Defined in: [nextjs/src/components/ComponentPropsContext.tsx:36](https://github.com/Sitecore/content-sdk/blob/7d388d6eae7bc0cfc53199a13850391ceccd0504/packages/nextjs/src/components/ComponentPropsContext.tsx#L36)
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:36](https://github.com/Sitecore/content-sdk/blob/c50ffd7c4f7e7995d1145f8a5659acb6ed683eab/packages/nextjs/src/components/ComponentPropsContext.tsx#L36)

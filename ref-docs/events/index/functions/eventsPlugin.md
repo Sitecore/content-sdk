@@ -8,7 +8,7 @@
 
 > **eventsPlugin**(): [`EventsPlugin`](../interfaces/EventsPlugin.md)
 
-Defined in: [events/src/initialization/plugin.ts:42](https://github.com/Sitecore/content-sdk/blob/7d388d6eae7bc0cfc53199a13850391ceccd0504/packages/events/src/initialization/plugin.ts#L42)
+Defined in: [events/src/initialization/plugin.ts:42](https://github.com/Sitecore/content-sdk/blob/c50ffd7c4f7e7995d1145f8a5659acb6ed683eab/packages/events/src/initialization/plugin.ts#L42)
 
 Creates an events plugin with the provided options.
 
