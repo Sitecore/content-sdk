@@ -8,7 +8,7 @@
 
 > **isBotClientSide**(): `boolean`
 
-Defined in: [analytics-core/src/bot-detection/bot-detection.ts:28](https://github.com/Sitecore/content-sdk/blob/c50ffd7c4f7e7995d1145f8a5659acb6ed683eab/packages/analytics-core/src/bot-detection/bot-detection.ts#L28)
+Defined in: [analytics-core/src/bot-detection/bot-detection.ts:28](https://github.com/Sitecore/content-sdk/blob/421d9105c87752d5bb0d388661240bd0d97920b1/packages/analytics-core/src/bot-detection/bot-detection.ts#L28)
 
 **`Internal`**
 

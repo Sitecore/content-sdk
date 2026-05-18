@@ -8,7 +8,7 @@
 
 > **filterComponentsByType**(`components`, `allowedTypes`): [`ComponentFileWithType`](../interfaces/ComponentFileWithType.md)[]
 
-Defined in: [content/src/tools/templating/components.ts:160](https://github.com/Sitecore/content-sdk/blob/c50ffd7c4f7e7995d1145f8a5659acb6ed683eab/packages/content/src/tools/templating/components.ts#L160)
+Defined in: [content/src/tools/templating/components.ts:160](https://github.com/Sitecore/content-sdk/blob/421d9105c87752d5bb0d388661240bd0d97920b1/packages/content/src/tools/templating/components.ts#L160)
 
 **`Internal`**
 
