@@ -121,6 +121,15 @@ describe('updateImageUrl', () => {
     });
   });
 
+  it('should omit empty string params', () => {
+    const original = 'http://sitecore/-/media/lorem/ipsum.jpg';
+    const updated = updateImageUrl(original, { w: '100', h: '', mw: 0 });
+    const url = new URL(updated);
+    expect(url.searchParams.get('w')).to.equal('100');
+    expect(url.searchParams.get('mw')).to.equal('0');
+    expect(url.searchParams.has('h')).to.be.false;
+  });
+
   it('should merge querystring and params', () => {
     const src =
       '/media/lorem/ipsum.jpg?x=valueX&y=value111&rev=109010&db=333&la=444&vs=555&ts=666&unknownParam=54321';

@@ -101,12 +101,12 @@ export const updateImageUrl = (
 
   const merged: Record<string, string> = {};
   for (const [key, val] of Object.entries(params)) {
-    if (val !== undefined && val !== null) {
+    if (val != null && val !== '') {
       merged[key] = String(val);
     }
   }
   Object.entries(requiredParams).forEach(([key, param]) => {
-    if (param) {
+    if (param != null && param !== '') {
       merged[key] = param;
     }
   });
