@@ -20,7 +20,7 @@ import {
   getRequiredEditingParamsList,
   getCSPHeader,
   resolveServerUrl,
-  PreviewCookies,
+  PREVIEW_COOKIES,
   getAllowedQueryParams,
 } from '../editing/utils';
 import { EDITING_PARAMS_HEADER } from '../editing/constants';
@@ -199,8 +199,8 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
 
     const cookieStore = await getNextCookies();
     cookieStore.set(
-      PreviewCookies.PRERENDER_BYPASS,
-      cookieStore.get(PreviewCookies.PRERENDER_BYPASS)?.value || '',
+      PREVIEW_COOKIES.PRERENDER_BYPASS,
+      cookieStore.get(PREVIEW_COOKIES.PRERENDER_BYPASS)?.value || '',
       {
         httpOnly: true,
         path: '/',
@@ -359,8 +359,8 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     // add prerender bypass cookie to forwarded request in order to enable draft mode
     const cookieStore = await getNextCookies();
     const reqCookie = req.headers.get('cookie') || '';
-    const prerenderBypassCookie = `${PreviewCookies.PRERENDER_BYPASS}=${
-      cookieStore.get(PreviewCookies.PRERENDER_BYPASS)?.value || ''
+    const prerenderBypassCookie = `${PREVIEW_COOKIES.PRERENDER_BYPASS}=${
+      cookieStore.get(PREVIEW_COOKIES.PRERENDER_BYPASS)?.value || ''
     }`;
     const forwardCookie = reqCookie
       ? `${reqCookie}; ${prerenderBypassCookie}`
