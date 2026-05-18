@@ -145,7 +145,7 @@ describe('createEditingRenderRouteHandlers', () => {
           version: query.sc_version,
           layoutKind: query.sc_layoutKind,
         })),
-        PreviewCookies: {
+        PREVIEW_COOKIES: {
           PREVIEW_DATA: '__next_preview_data',
           PRERENDER_BYPASS: '__prerender_bypass',
         },

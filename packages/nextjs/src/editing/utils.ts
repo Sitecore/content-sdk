@@ -119,12 +119,14 @@ export const getAllowedQueryParams = (
 };
 
 /**
- * Next.js preview cookies enum
+ * Preview cookies constants referenced within the sdk
+ * @public
  */
-export const enum PreviewCookies {
-  PREVIEW_DATA = '__next_preview_data',
-  PRERENDER_BYPASS = '__prerender_bypass',
-}
+export const PREVIEW_COOKIES = {
+  PREVIEW_DATA: '__next_preview_data',
+  PRERENDER_BYPASS: '__prerender_bypass',
+  PREVIEW_TOKEN: 'sc_preview_token',
+};
 
 /**
  * Filters out Next.js preview cookies from a cookie string or array
@@ -141,8 +143,8 @@ export const cleanupNextPreviewCookies = (cookies: string | string[] | null) => 
   // Filter out Next.js preview cookies
   const filteredCookies = cookies.filter(
     (cookie: string) =>
-      !new RegExp(`^${PreviewCookies.PREVIEW_DATA}=`).test(cookie) &&
-      !new RegExp(`^${PreviewCookies.PRERENDER_BYPASS}=`).test(cookie)
+      !new RegExp(`^${PREVIEW_COOKIES.PREVIEW_DATA}=`).test(cookie) &&
+      !new RegExp(`^${PREVIEW_COOKIES.PRERENDER_BYPASS}=`).test(cookie)
   );
   return filteredCookies;
 };
