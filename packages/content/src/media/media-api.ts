@@ -4,13 +4,21 @@ const mediaUrlPrefixRegex = /\/([-~]{1})\/media\//i;
 /** Base URL used only to parse path-only / relative media URLs with WHATWG URL */
 const RELATIVE_URL_BASE = 'http://__sitecore_content_sdk_media__/';
 
+/**
+ * Whether the URL input uses an absolute or special (protocol-relative) scheme.
+ * @param {string} input Media URL string
+ * @returns True when the input has a scheme or starts with `//`
+ * @internal
+ */
 function hasAbsoluteOrSpecialScheme(input: string): boolean {
   return /^[a-z][a-z0-9+.-]*:/i.test(input) || input.startsWith('//');
 }
 
 /**
  * Parse a media URL that may be absolute or path-only (relative).
- * @returns parsed URL and whether the input was path-only (so serialization omits the dummy base).
+ * @param {string} input Media URL string
+ * @returns Parsed URL and whether the input was path-only (so serialization omits the dummy base)
+ * @internal
  */
 function parseMediaUrl(input: string): { url: URL; relative: boolean } {
   if (hasAbsoluteOrSpecialScheme(input)) {
@@ -24,6 +32,13 @@ function parseMediaUrl(input: string): { url: URL; relative: boolean } {
   return { url: new URL(input, RELATIVE_URL_BASE), relative: true };
 }
 
+/**
+ * Serialize a parsed media URL, omitting the dummy base for path-only inputs.
+ * @param {URL} parsed Parsed media URL
+ * @param {boolean} relative Whether the original input was path-only
+ * @returns Serialized URL string
+ * @internal
+ */
 function serializeMediaUrl(parsed: URL, relative: boolean): string {
   if (relative) {
     return `${parsed.pathname}${parsed.search}${parsed.hash}`;
@@ -31,6 +46,12 @@ function serializeMediaUrl(parsed: URL, relative: boolean): string {
   return parsed.toString();
 }
 
+/**
+ * Convert URL search params to a plain query record.
+ * @param {URLSearchParams} sp URL search params
+ * @returns Query string key/value map
+ * @internal
+ */
 function searchParamsToQueryRecord(sp: URLSearchParams): { [key: string]: string | undefined } {
   const q: { [key: string]: string | undefined } = {};
   sp.forEach((value, key) => {
@@ -101,12 +122,12 @@ export const updateImageUrl = (
 
   const merged: Record<string, string> = {};
   for (const [key, val] of Object.entries(params)) {
-    if (val != null && val !== '') {
+    if (val !== undefined && val !== null && val !== '') {
       merged[key] = String(val);
     }
   }
   Object.entries(requiredParams).forEach(([key, param]) => {
-    if (param != null && param !== '') {
+    if (param !== undefined && param !== null && param !== '') {
       merged[key] = param;
     }
   });
