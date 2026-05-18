@@ -45,7 +45,7 @@ export class PreviewProxy extends ProxyBase {
 
     debug.editing('preview proxy start');
 
-    // Process only preview requests (e.g. non editing or design studio)
+    // Process only preview/editing requests
     if (editingOptions && !['preview', 'edit'].includes(editingOptions.mode)) {
       debug.editing('preview proxy skipped (mode is not preview or edit)');
       return res;
