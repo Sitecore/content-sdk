@@ -4,6 +4,7 @@ export {
   EditingRenderMiddlewareConfig,
 } from './editing-render-middleware';
 export {
+  PREVIEW_COOKIES,
   isDesignLibraryPreviewData,
   getQueryParamsForPropagation,
   getHeadersForPropagation,

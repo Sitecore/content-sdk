@@ -778,6 +778,13 @@ export { PlaceholderData }
 export { PlaceholdersData }
 
 // @public
+export const PREVIEW_COOKIES: {
+    PREVIEW_DATA: string;
+    PRERENDER_BYPASS: string;
+    PREVIEW_TOKEN: string;
+};
+
+// @public
 export class PreviewProxy extends ProxyBase {
     constructor(config: PreviewProxyConfig);
     // (undocumented)
