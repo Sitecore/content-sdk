@@ -161,7 +161,7 @@ describe('StudioComponentServerWrapper', () => {
 
       expect(result).to.be.null;
       expect(consoleErrorStub).to.have.been.calledWithMatch(
-        'StudioComponentService: failed to fetch component layout'
+        'StudioComponentServerWrapper: failed to fetch component layout'
       );
     });
 
@@ -174,7 +174,34 @@ describe('StudioComponentServerWrapper', () => {
 
       expect(result).to.be.null;
       expect(consoleErrorStub).to.have.been.calledWithMatch(
-        'StudioComponentService: failed to parse component layout response'
+        'StudioComponentServerWrapper: failed to parse component layout response'
+      );
+    });
+  });
+
+  describe('fetchDocument — path validation', () => {
+    it('returns null and warns when path is empty', async () => {
+      const result = await StudioComponentServerWrapper({
+        componentRef: 'org/components/hero/nonexistent',
+        fieldNames: 'nonexistent',
+      });
+
+      expect(result).to.be.null;
+      expect(consoleWarnStub).to.have.been.calledWithMatch(
+        'StudioComponentServerWrapper: missing component reference path'
+      );
+    });
+
+    it('returns null and errors when URL resolution fails', async () => {
+      resolveEdgeUrlStub.throws(new Error('invalid hostname'));
+
+      const result = await StudioComponentServerWrapper({
+        componentRef: 'components/hero/default',
+      });
+
+      expect(result).to.be.null;
+      expect(consoleErrorStub).to.have.been.calledWithMatch(
+        'StudioComponentServerWrapper: failed to resolve component from'
       );
     });
   });

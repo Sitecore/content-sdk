@@ -71,7 +71,7 @@ const MMS_COMPONENT_PATH_PREFIX = 'mms';
  */
 async function fetchDocument(path: string): Promise<Document | null> {
   if (!path) {
-    console.warn('StudioComponentService: missing component reference path');
+    console.warn('StudioComponentServerWrapper: missing component reference path');
     return null;
   }
 
@@ -85,7 +85,7 @@ async function fetchDocument(path: string): Promise<Document | null> {
 
     url = new URL(pathWithMmsPrefix, hostURL).toString();
   } catch (err) {
-    console.error(`StudioComponentService: failed to resolve component from "${path}"`, err);
+    console.error(`StudioComponentServerWrapper: failed to resolve component from "${path}"`, err);
     return null;
   }
 
@@ -94,7 +94,10 @@ async function fetchDocument(path: string): Promise<Document | null> {
     const fetcher = new NativeDataFetcher({ debugger: debug.layout });
     response = await fetcher.get(url);
   } catch (error) {
-    console.error(`StudioComponentService: failed to fetch component layout from ${url}`, error);
+    console.error(
+      `StudioComponentServerWrapper: failed to fetch component layout from ${url}`,
+      error
+    );
     return null;
   }
 
@@ -104,7 +107,7 @@ async function fetchDocument(path: string): Promise<Document | null> {
     return document;
   } catch (err) {
     console.error(
-      `StudioComponentService: failed to parse component layout response from ${url}`,
+      `StudioComponentServerWrapper: failed to parse component layout response from ${url}`,
       err
     );
     return null;
