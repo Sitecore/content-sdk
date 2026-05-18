@@ -4,6 +4,7 @@ import { StudioComponentServerWrapperProps } from './models';
 import { NativeDataFetcher, NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
 import { debug } from '@sitecore-content-sdk/content';
 import { Document } from '@sitecore-content-sdk/content/atoms';
+import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 
 /**
  * Server component for Studio (NCC) components. Fetches the component layout
@@ -80,7 +81,7 @@ async function fetchDocument(path: string): Promise<Document | null> {
       ? `/${MMS_COMPONENT_PATH_PREFIX}${path}`
       : `/${MMS_COMPONENT_PATH_PREFIX}/${path}`;
 
-    const hostURL = resolveHostURL();
+    const hostURL = resolveEdgeUrl();
 
     url = new URL(pathWithMmsPrefix, hostURL).toString();
   } catch (err) {
@@ -107,28 +108,6 @@ async function fetchDocument(path: string): Promise<Document | null> {
       err
     );
     return null;
-  }
-}
-
-/**
- * Resolve the host URL for StudioComponentService.
- * @returns resolved URL
- */
-function resolveHostURL(): URL {
-  const hostConfig = process.env.SITECORE_EDGE_PLATFORM_HOSTNAME;
-  if (!hostConfig)
-    throw new Error(
-      'StudioComponentService: a host must be configured to resolve a relative component reference. ' +
-        'Set the SITECORE_EDGE_PLATFORM_HOSTNAME environment variable.'
-    );
-
-  try {
-    return new URL(hostConfig);
-  } catch {
-    throw new Error(
-      `StudioComponentService: invalid host URL "${hostConfig}". ` +
-        'Set the SITECORE_EDGE_PLATFORM_HOSTNAME environment variable.'
-    );
   }
 }
 

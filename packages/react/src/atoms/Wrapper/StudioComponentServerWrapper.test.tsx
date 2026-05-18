@@ -16,6 +16,7 @@ describe('StudioComponentServerWrapper', () => {
   let StudioComponentWrapperStub: SinonStub;
   let consoleWarnStub: SinonStub;
   let consoleErrorStub: SinonStub;
+  let resolveEdgeUrlStub: SinonStub;
 
   const sampleDocument: Document = {
     name: 'hero',
@@ -31,6 +32,7 @@ describe('StudioComponentServerWrapper', () => {
       .returns(React.createElement('div', { 'data-test': 'wrapper' }));
     consoleWarnStub = sandbox.stub(console, 'warn');
     consoleErrorStub = sandbox.stub(console, 'error');
+    resolveEdgeUrlStub = sandbox.stub().returns('https://edge.example.com');
 
     module = proxyquire('./StudioComponentServerWrapper', {
       '@sitecore-content-sdk/core': {
@@ -40,6 +42,9 @@ describe('StudioComponentServerWrapper', () => {
             this.get = fetcherGetStub;
           }
         },
+      },
+      '@sitecore-content-sdk/core/tools': {
+        resolveEdgeUrl: resolveEdgeUrlStub,
       },
       '@sitecore-content-sdk/content': {
         debug: { layout: undefined },
@@ -143,32 +148,6 @@ describe('StudioComponentServerWrapper', () => {
 
       const calledUrl: string = fetcherGetStub.firstCall.args[0];
       expect(calledUrl).to.include('/mms/components/hero/default');
-    });
-
-    it('returns null and errors when SITECORE_EDGE_PLATFORM_HOSTNAME is not set', async () => {
-      delete process.env.SITECORE_EDGE_PLATFORM_HOSTNAME;
-
-      const result = await StudioComponentServerWrapper({
-        componentRef: 'components/hero/default',
-      });
-
-      expect(result).to.be.null;
-      expect(consoleErrorStub).to.have.been.calledWithMatch(
-        'StudioComponentService: failed to resolve component'
-      );
-    });
-
-    it('returns null and errors when SITECORE_EDGE_PLATFORM_HOSTNAME is not a valid URL', async () => {
-      process.env.SITECORE_EDGE_PLATFORM_HOSTNAME = 'not-a-url';
-
-      const result = await StudioComponentServerWrapper({
-        componentRef: 'components/hero/default',
-      });
-
-      expect(result).to.be.null;
-      expect(consoleErrorStub).to.have.been.calledWithMatch(
-        'StudioComponentService: failed to resolve component'
-      );
     });
   });
 
