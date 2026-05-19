@@ -8,6 +8,6 @@
 
 > **MultisiteProxyConfig** = [`ProxyBaseConfig`](ProxyBaseConfig.md) & `SitecoreConfig`\[`"multisite"`\]
 
-Defined in: [nextjs/src/proxy/multisite-proxy.ts:29](https://github.com/Sitecore/content-sdk/blob/ced58bb49648d0be99eb0979ab77edb76e1a6a33/packages/nextjs/src/proxy/multisite-proxy.ts#L29)
+Defined in: [nextjs/src/proxy/multisite-proxy.ts:29](https://github.com/Sitecore/content-sdk/blob/2204da329c1296334b71f674795af93d93d50ee9/packages/nextjs/src/proxy/multisite-proxy.ts#L29)
 
 The interface for the MultisiteProxy configuration.

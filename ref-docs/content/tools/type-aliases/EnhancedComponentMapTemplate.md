@@ -8,7 +8,7 @@
 
 > **EnhancedComponentMapTemplate** = (`components`, `componentImports`, `ctx`) => `string`
 
-Defined in: [content/src/tools/templating/components.ts:42](https://github.com/Sitecore/content-sdk/blob/ced58bb49648d0be99eb0979ab77edb76e1a6a33/packages/content/src/tools/templating/components.ts#L42)
+Defined in: [content/src/tools/templating/components.ts:42](https://github.com/Sitecore/content-sdk/blob/2204da329c1296334b71f674795af93d93d50ee9/packages/content/src/tools/templating/components.ts#L42)
 
 **`Internal`**
 
