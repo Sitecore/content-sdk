@@ -66,17 +66,21 @@ export class PreviewProxy extends ProxyBase {
           return null;
         });
     } else {
+      const site = req.cookies.get(SITE_KEY)?.value as string;
+
       // Scenario when the page is requested using direct path or navigation is performed
       pageData = await this.client
         .getPage(
           req.nextUrl.pathname,
           {
-            site: req.cookies.get(SITE_KEY)?.value,
+            site,
             locale: this.getLanguage(req),
           },
           {
             headers: {
               Authorization: authHeader,
+              sc_previewMode: 'true',
+              sc_site: site
             },
           }
         )
