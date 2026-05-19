@@ -66,7 +66,7 @@ export class PreviewProxy extends ProxyBase {
           return null;
         });
     } else {
-      const site = req.cookies.get(SITE_KEY)?.value as string;
+      const site = req.cookies.get(SITE_KEY)?.value || req.nextUrl.searchParams.get(SITE_KEY) || '';
 
       // Scenario when the page is requested using direct path or navigation is performed
       pageData = await this.client
@@ -80,7 +80,7 @@ export class PreviewProxy extends ProxyBase {
             headers: {
               Authorization: authHeader,
               sc_previewMode: 'true',
-              sc_site: site
+              sc_site: site,
             },
           }
         )
