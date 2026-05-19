@@ -25,6 +25,11 @@ const createRequest = (props: Record<string, any> = {}) => {
       clone() {
         return Object.assign({}, req.nextUrl);
       },
+      searchParams: {
+        get(key: string) {
+          return props.searchParams?.[key];
+        },
+      },
       ...(props.nextUrl || {}),
     },
     headers: {
@@ -270,6 +275,32 @@ describe('PreviewProxy', () => {
           '/about',
           { site: 'my-site', locale: 'de-DE' },
           { headers: { Authorization: 'Bearer xyz', sc_previewMode: 'true', sc_site: 'my-site' } }
+        );
+        expect(clientStub.getPreview).to.not.have.been.called;
+        expect(result).to.equal(res);
+      });
+
+      it('should call getPage with pathname, site query string, locale and Authorization header', async () => {
+        const req = createRequest({
+          nextUrl: { pathname: '/about', locale: 'de-DE' },
+          headerValues: { Authorization: 'Bearer xyz' },
+          searchParams: { [SITE_KEY]: 'my-site' },
+        });
+        const res = createResponse();
+        clientStub.getPage.resolves({} as any);
+
+        const result = await proxy.handle(req, res);
+
+        expect(clientStub.getPage).to.have.been.calledOnceWithExactly(
+          '/about',
+          { site: 'my-site', locale: 'de-DE' },
+          {
+            headers: {
+              Authorization: 'Bearer xyz',
+              sc_previewMode: 'true',
+              sc_site: 'my-site',
+            },
+          }
         );
         expect(clientStub.getPreview).to.not.have.been.called;
         expect(result).to.equal(res);
