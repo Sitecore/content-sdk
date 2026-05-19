@@ -269,7 +269,7 @@ describe('PreviewProxy', () => {
         expect(clientStub.getPage).to.have.been.calledOnceWithExactly(
           '/about',
           { site: 'my-site', locale: 'de-DE' },
-          { headers: { Authorization: 'Bearer xyz' } }
+          { headers: { Authorization: 'Bearer xyz', sc_previewMode: 'true', sc_site: 'my-site' } }
         );
         expect(clientStub.getPreview).to.not.have.been.called;
         expect(result).to.equal(res);
