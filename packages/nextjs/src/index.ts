@@ -110,6 +110,7 @@ export { Placeholder } from './components/Placeholder';
 export { NextImage } from './components/NextImage';
 import * as FEaaSWrapper from './components/FEaaSWrapper';
 import * as BYOCWrapper from './components/BYOCWrapper';
+import * as StudioNccWrapper from './components/StudioNccWrapper';
 export {
   FEaaSClientWrapper,
   FEaaSServerWrapper,
@@ -118,6 +119,8 @@ export {
 } from '@sitecore-content-sdk/react';
 export { FEaaSWrapper };
 export { BYOCWrapper };
+export { StudioNccWrapper };
+export type { StudioNccWrapperProps, StudioNccWrapperParams } from './components/StudioNccWrapper';
 
 export {
   ComponentMap,
