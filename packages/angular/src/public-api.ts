@@ -1,7 +1,9 @@
 // ─── Angular SDK providers and tokens ──────────────────────────
-export type { SitecoreAngularConfig, SitecoreAngularConfigInput } from './config/models';
-export { defineConfig, parseLocalesEnv, normalizeLocales } from './config/define-config';
-export { type SitecoreAngularProviderConfig } from './lib/providers';
+export { type SitecoreAngularConfig } from './lib/providers';
+export { SITECORE_CONFIG_TOKEN, SITECORE_CLIENT_TOKEN } from './lib/tokens';
+export { resolveSitecorePage } from './lib/sitecore-page-resolver';
+
+export { defineConfig } from './config/define-config';
 export {
   getContentStylesheetLink,
   getDesignLibraryStylesheetLinks,
@@ -76,18 +78,10 @@ export {
 export { handleNavigationError } from './loaders/router-error-handling';
 export { applyRedirect } from './loaders/utils';
 export { provideSitecoreAngular } from './lib/providers';
-export {
-  SITECORE_CONFIG_TOKEN,
-  SITECORE_CLIENT_TOKEN,
-  ERROR_ROUTE_TOKEN,
-  NOT_FOUND_ROUTE_TOKEN,
-} from './lib/tokens';
 export * from './server';
 
 // ─── Sitecore Context ──────────────────────────────────────────
 export { SitecoreContextService } from './lib/sitecore-context.service';
-export { ScPageContextComponent } from './lib/sc-page-context.component';
-export { resolveSitecorePage } from './lib/sitecore-page-resolver';
 
 // ─── Placeholder ───────────────────────────────────────────────
 export { ScPlaceholderComponent } from './placeholder/sc-placeholder.component';
@@ -115,21 +109,6 @@ export { ScImageDirective } from './field-directives/sc-image.directive';
 export { ScLinkDirective } from './field-directives/sc-link.directive';
 export { ScRouterLinkDirective } from './field-directives/sc-router-link.directive';
 export { ScRichTextDirective } from './field-directives/sc-rich-text.directive';
-
-export {
-  createLocaleMatcher,
-  createLocaleErrorMatcher,
-} from './i18n/locale-matcher';
-export {
-  stripLocalePrefix,
-  resolveLocale,
-  prependLocale,
-  stripConfiguredRouteLocalePrefix,
-  extractLocaleFromUrl,
-} from './i18n/locale-url';
-export { LocalePathPipe } from './i18n/locale-path.pipe';
-export { SitecoreTranslateLoader } from './i18n/sitecore-translate-loader';
-export { loaderDataCacheKey } from './loaders/loader-cache-key';
 
 // ─── Form ──────────────────────────────────────────────────────
 export { ScFormComponent } from './components/sc-form.component';

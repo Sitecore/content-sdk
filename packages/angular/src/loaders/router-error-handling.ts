@@ -2,19 +2,12 @@ import { inject } from '@angular/core';
 import { RedirectCommand, Router } from '@angular/router';
 import type { NavigationError } from '@angular/router';
 import { DEFAULT_ERROR_ROUTE, DEFAULT_NOT_FOUND_ROUTE, NotFoundNavigationError } from './models';
-import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN, SITECORE_CONFIG_TOKEN } from '../lib/tokens';
-import {
-  extractLocaleFromUrl,
-  prependLocale,
-  stripConfiguredRouteLocalePrefix,
-  stripLeadingLocaleFromPathKey,
-} from '../i18n/locale-url';
-import type { SitecoreAngularConfig } from '../config/models';
+import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from '../lib/tokens';
 
 /**
  * Normalizes a URL path (strip leading slash and query) for comparison.
  * @param {string} url - URL or path string
- * @returns Normalized path segment without leading slash
+ * @returns Normalized path segment
  */
 function normalizePath(url: string): string {
   return url.replace(/^\//, '').split('?')[0];
@@ -38,7 +31,6 @@ function normalizePath(url: string): string {
  * @param {string} notFoundRoute - Path for the not-found page (e.g. '/404')
  * @param {string} errorRoute - Path for the error page (e.g. '/500')
  * @param {Router} router - Angular Router instance
- * @param {SitecoreAngularConfig | null | undefined} [scConfig] - Sitecore Angular config (optional; avoids `inject()` after async boundaries)
  * @returns RedirectCommand to redirect, or void to cancel and avoid a loop
  * @public
  */
@@ -47,37 +39,32 @@ export function redirectOnNavigationError(
   failedUrl: string,
   notFoundRoute: string,
   errorRoute: string,
-  router: Router,
-  scConfig?: SitecoreAngularConfig | null
+  router: Router
 ): RedirectCommand | void {
-  const defaultLanguage = scConfig?.defaultLanguage ?? 'en';
-  const locales = scConfig?.locales?.length ? scConfig.locales : [defaultLanguage];
-
-  const canonNotFound = stripConfiguredRouteLocalePrefix(notFoundRoute, locales);
-  const canonError = stripConfiguredRouteLocalePrefix(errorRoute, locales);
-  const locale = extractLocaleFromUrl(failedUrl, locales, defaultLanguage);
-
-  const localizedNotFound = prependLocale(canonNotFound, locale, defaultLanguage);
-  const localizedError = prependLocale(canonError, locale, defaultLanguage);
-
-  const failedPath = normalizePath(failedUrl);
-  const notFoundKey = normalizePath(canonNotFound);
-  const errorKey = normalizePath(canonError);
-  const failedStem = stripLeadingLocaleFromPathKey(failedPath, locales);
+  console.log('Navigation error occurred on url: ' + failedUrl, err.message);
 
   const kind: 'error' | 'notFound' = err instanceof NotFoundNavigationError ? 'notFound' : 'error';
 
+  const failedPath = normalizePath(failedUrl);
+  const notFoundPath = normalizePath(notFoundRoute);
+  const errorPath = normalizePath(errorRoute);
+
   if (kind === 'notFound') {
-    if (failedStem === notFoundKey) {
+    if (failedPath === notFoundPath) {
+      console.log('RouteErrorHandler: Not found route was not found. Avoiding redirect loop.');
       return;
     }
-    return new RedirectCommand(router.parseUrl(localizedNotFound));
+    const urlTree = router.parseUrl(notFoundRoute);
+    return new RedirectCommand(urlTree);
   }
 
-  if (failedStem === errorKey) {
+  // kind === 'error'
+  if (failedPath === errorPath) {
+    console.log('RouteErrorHandler: Error route threw its own error. Avoiding redirect loop.');
     return;
   }
-  return new RedirectCommand(router.parseUrl(localizedError));
+  const urlTree = router.parseUrl(errorRoute);
+  return new RedirectCommand(urlTree);
 }
 
 /**
@@ -94,7 +81,6 @@ export function handleNavigationError(): (error: NavigationError) => RedirectCom
       inject(NOT_FOUND_ROUTE_TOKEN, { optional: true }) || DEFAULT_NOT_FOUND_ROUTE;
     const errorRoute = inject(ERROR_ROUTE_TOKEN, { optional: true }) || DEFAULT_ERROR_ROUTE;
     const router = inject(Router);
-    const scConfig = inject(SITECORE_CONFIG_TOKEN, { optional: true });
-    return redirectOnNavigationError(err, failedUrl, notFoundRoute, errorRoute, router, scConfig);
+    return redirectOnNavigationError(err, failedUrl, notFoundRoute, errorRoute, router);
   };
 }

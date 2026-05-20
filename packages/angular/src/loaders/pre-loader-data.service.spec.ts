@@ -83,8 +83,8 @@ describe('PreLoaderDataService', () => {
       expect(loaderDataPrefetchSpy).toHaveBeenCalledWith({
         loaderId: 'layout',
         url: '/page/123',
-        params: { id: '123' },
-        query: { q: 'search' },
+        params: {},
+        query: {},
       });
       expect(loaderDataPrefetchSpy).toHaveBeenCalledWith({
         loaderId: 'page',

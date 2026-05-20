@@ -1,6 +1,6 @@
+import type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import type { SitecoreClient } from '@sitecore-content-sdk/content/client';
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import type { SitecoreAngularConfig } from '../config/models';
 import {
   SITECORE_CONFIG_TOKEN,
   SITECORE_CLIENT_TOKEN,
@@ -12,12 +12,12 @@ import {
  * Configuration for the Sitecore Angular SDK.
  * @public
  */
-export interface SitecoreAngularProviderConfig {
+export interface SitecoreAngularConfig {
   /**
    * Sitecore configuration (e.g. from sitecore.config.ts).
    * When provided, {@link sitecoreClient} must also be set; both are registered for DI.
    */
-  sitecoreConfig?: SitecoreAngularConfig;
+  sitecoreConfig?: SitecoreConfig;
   /**
    * Application-owned {@link SitecoreClient} instance (e.g. from a module singleton).
    * Required when {@link sitecoreConfig} is set; registered as {@link SITECORE_CLIENT_TOKEN}.
@@ -39,13 +39,11 @@ export interface SitecoreAngularProviderConfig {
  *     provideSitecoreAngular({ sitecoreConfig: scConfig, sitecoreClient: getClient() }),
  *   ],
  * };
- * @param {SitecoreAngularProviderConfig} config SDK configuration
+ * @param {SitecoreAngularConfig} config SDK configuration
  * @returns {EnvironmentProviders} Angular environment providers
  * @public
  */
-export function provideSitecoreAngular(
-  config: SitecoreAngularProviderConfig
-): EnvironmentProviders {
+export function provideSitecoreAngular(config: SitecoreAngularConfig): EnvironmentProviders {
   const providers = [];
 
   if (config.sitecoreConfig !== undefined || config.sitecoreClient !== undefined) {

@@ -6,16 +6,22 @@ import { Params } from '@angular/router';
 import { LoaderApiRequest, LoaderApiResponse } from './models';
 import { LOADER_DATA_ENDPOINT } from '../server/constants';
 import { FETCH_DATA_ENDPOINT } from './loader-registry.token';
-import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
-import { resolveLocale, stripLocalePrefix } from '../i18n/locale-url';
-import { loaderDataCacheKey } from './loader-cache-key';
+
+/**
+ * Cache key generator for loader data.
+ * @param {string} loaderId - Loader identifier
+ * @param {string} url - Request URL
+ * @returns Cache key string
+ */
+function cacheKey(loaderId: string, url: string): string {
+  return `loader:${loaderId}:${url}`;
+}
 
 /**
  * Request parameters for fetching loader data
  * @public
  */
 export interface LoaderDataRequest {
-  /** Canonical URL (locale prefix stripped) passed to loaders and `/_data`. */
   url: string;
   loaderId: string;
   params?: Params;
@@ -32,7 +38,6 @@ export class LoaderDataService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly fetchDataEndpoint =
     inject(FETCH_DATA_ENDPOINT, { optional: true }) ?? LOADER_DATA_ENDPOINT;
-  private readonly scConfig = inject(SITECORE_CONFIG_TOKEN, { optional: true });
 
   /**
    * Prefetch loader data for the given request without consuming the cache.
@@ -45,7 +50,7 @@ export class LoaderDataService {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    const key = this.cacheKey(loaderRequest);
+    const key = cacheKey(loaderRequest.loaderId, loaderRequest.url);
     if (this.cache.has(key) || this.pending.has(key)) {
       return;
     }
@@ -70,7 +75,7 @@ export class LoaderDataService {
       return { kind: 'error', status: 500, message: 'LoaderDataService only works in browser' };
     }
 
-    const key = this.cacheKey(request);
+    const key = cacheKey(request.loaderId, request.url);
 
     // Return cached response if available (consume on use); supports data and redirect
     const cached = this.cache.get(key);
@@ -91,14 +96,6 @@ export class LoaderDataService {
     return pendingFetchData;
   }
 
-  private cacheKey(request: LoaderDataRequest): string {
-    const defaultLanguage = this.scConfig?.defaultLanguage ?? 'en';
-    const locales = this.scConfig?.locales?.length ? this.scConfig.locales : [defaultLanguage];
-    const locale = resolveLocale(request.params ?? {}, defaultLanguage);
-    const canonicalUrl = stripLocalePrefix(request.url, locales);
-    return loaderDataCacheKey(request.loaderId, locale, canonicalUrl);
-  }
-
   /**
    * Fetch data from the configured data endpoint.
    * Callers (getData, prefetch) add the returned promise to pending; it is removed
@@ -107,7 +104,7 @@ export class LoaderDataService {
    * @returns {Promise<LoaderApiResponse>} Promise resolving to the API response
    */
   private async fetchData(request: LoaderDataRequest): Promise<LoaderApiResponse> {
-    const key = this.cacheKey(request);
+    const key = cacheKey(request.loaderId, request.url);
     const endpoint = this.fetchDataEndpoint;
     const reqBody: LoaderApiRequest = {
       loaderId: request.loaderId,
@@ -115,6 +112,7 @@ export class LoaderDataService {
       params: request.params ?? {},
       query: request.query ?? {},
     };
+    console.log('DEBUG: LoaderDataService fetchData', endpoint, reqBody);
 
     try {
       const resp = await firstValueFrom(
@@ -122,15 +120,18 @@ export class LoaderDataService {
       );
       if (!resp) {
         const message = `No response from ${endpoint}`;
+        console.log(`DEBUG: LoaderDataService fetchData: ${message}`);
         return { kind: 'error', status: 500, message } as LoaderApiResponse;
       }
       if (resp.kind === 'data') {
+        console.log('DEBUG: LoaderDataService fetchData: data', resp.data);
         this.cache.set(key, resp);
       } else if (resp.kind === 'redirect') {
         this.cache.set(key, resp);
       }
       return resp;
     } catch (error) {
+      console.log('DEBUG: LoaderDataService fetchData: error', error);
       const message = error instanceof Error ? error.message : 'Fetch failed';
       return { kind: 'error', status: 500, message } as LoaderApiResponse;
     } finally {

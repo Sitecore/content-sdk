@@ -18,9 +18,6 @@ export class SitecoreContextService {
   /** Whether the current page is in editing mode. */
   readonly isEditing: Signal<boolean>;
 
-  /** Active locale from the current page (`page.locale`), or `null` when no page is set. */
-  readonly locale: Signal<string | null>;
-
   private readonly _page: WritableSignal<Page | null>;
 
   constructor() {
@@ -28,7 +25,6 @@ export class SitecoreContextService {
     this._page = pageSignal;
     this.page = pageSignal.asReadonly();
     this.isEditing = computed(() => pageSignal()?.mode?.isEditing ?? false);
-    this.locale = computed(() => pageSignal()?.locale ?? null);
   }
 
   /**

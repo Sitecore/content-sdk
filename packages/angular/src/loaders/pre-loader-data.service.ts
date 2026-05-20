@@ -12,8 +12,6 @@ import {
 import { LoaderDataService } from './loader-data.service';
 import { LoaderDataRequest } from './loader-data.service';
 import { LOADER_ID } from './loader-registry.token';
-import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
-import { stripLocalePrefix } from '../i18n/locale-url';
 
 /**
  * Resolver function shape used in route config (minimal for LOADER_ID detection).
@@ -43,7 +41,6 @@ export class PreLoaderDataService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly scConfig = inject(SITECORE_CONFIG_TOKEN, { optional: true });
 
   constructor() {
     this.router.events
@@ -80,30 +77,19 @@ export class PreLoaderDataService {
   /**
    * Collect LoaderDataRequest for each resolver that has LOADER_ID on the current route
    * and its parent routes (pathFromRoot). Deduplicates by (loaderId, url).
-   * @param {ActivatedRouteSnapshot} leaf - Leaf route snapshot (`pathFromRoot` gives current and parent routes)
-   * @param {RouterStateSnapshot} state - Current router state (use `state.url` for the navigation URL)
+   * @param {ActivatedRouteSnapshot} route - The current route
+   * @param {RouterStateSnapshot} state - The router state snapshot, used for url and params
    */
   private collectLoaders(
-    leaf: ActivatedRouteSnapshot,
+    route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): LoaderDataRequest[] {
     const loaderDataRequests: LoaderDataRequest[] = [];
-    const breadcrump = leaf.pathFromRoot ?? [];
-    const defaultLanguage = this.scConfig?.defaultLanguage ?? 'en';
-    const locales = this.scConfig?.locales?.length ? this.scConfig.locales : [defaultLanguage];
-    const url = state.url;
-    const mergedParams: Params = {
-      ...(leaf.pathFromRoot ?? []).reduce(
-        (acc, r) => ({ ...acc, ...(r?.params ?? {}) }),
-        {} as Params
-      ),
-      ...(leaf.params ?? {}),
-    };
-    const canonicalUrl = stripLocalePrefix(url, locales);
+    const breadcrump = route.pathFromRoot ?? [];
 
-    for (const ancestor of breadcrump) {
-      if (!ancestor) continue;
-      const resolveDefinition = ancestor.routeConfig?.resolve;
+    for (const route of breadcrump) {
+      if (!route) continue;
+      const resolveDefinition = route.routeConfig?.resolve;
       if (resolveDefinition) {
         for (const resolver of Object.values(resolveDefinition)) {
           if (
@@ -112,11 +98,16 @@ export class PreLoaderDataService {
             typeof (resolver as ResolverWithLoaderId)[LOADER_ID] === 'string'
           ) {
             const loaderId = (resolver as ResolverWithLoaderId)[LOADER_ID];
+            const url = state.url;
+            const params: Params = (route.pathFromRoot ?? []).reduce(
+              (acc, r) => ({ ...acc, ...(r?.params ?? {}) }),
+              {}
+            );
             loaderDataRequests.push({
               loaderId,
-              url: canonicalUrl,
-              params: mergedParams,
-              query: (leaf.queryParams ?? {}) as Record<string, string | string[]>,
+              url,
+              params,
+              query: (route.queryParams ?? {}) as Record<string, string | string[]>,
             });
           }
         }

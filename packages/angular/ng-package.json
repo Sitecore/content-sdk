@@ -9,7 +9,6 @@
     "@sitecore-content-sdk/content",
     "@angular/common",
     "@angular/core",
-    "@angular/router",
-    "@ngx-translate/core"
+    "@angular/router"
   ]
 }

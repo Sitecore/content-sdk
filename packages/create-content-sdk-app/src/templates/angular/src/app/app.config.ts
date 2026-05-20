@@ -1,22 +1,12 @@
-import {
-  APP_INITIALIZER,
-  ApplicationConfig,
-  provideBrowserGlobalErrorListeners,
-} from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, withNavigationErrorHandler } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import {
-  provideTranslateLoader,
-  provideTranslateService,
-  TranslateService,
-} from '@ngx-translate/core';
-import {
-  handleNavigationError,
-  PreLoaderDataService,
   provideLoaderRegistry,
+  handleNavigationError,
   provideSitecoreAngular,
+  PreLoaderDataService,
   SITECORE_COMPONENT_MAP,
-  SitecoreTranslateLoader,
 } from '@sitecore-content-sdk/angular';
 import { routes } from './app.routes';
 import scConfig from '../../sitecore.config';
@@ -44,17 +34,5 @@ export const appConfig: ApplicationConfig = {
     provideLoaderRegistry(LOADERS),
     PreLoaderDataService,
     { provide: SITECORE_COMPONENT_MAP, useValue: componentMap },
-    ...provideTranslateService({
-      fallbackLang: scConfig.defaultLanguage ?? 'en',
-      loader: provideTranslateLoader(SitecoreTranslateLoader),
-    }),
-    {
-      provide: APP_INITIALIZER,
-      multi: true,
-      useFactory: (translate: TranslateService) => () => {
-        translate.addLangs(scConfig.locales);
-      },
-      deps: [TranslateService],
-    },
   ],
 };
