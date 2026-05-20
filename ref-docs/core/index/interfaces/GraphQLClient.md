@@ -6,7 +6,7 @@
 
 # Interface: GraphQLClient
 
-Defined in: [packages/core/src/graphql-request-client.ts:12](https://github.com/Sitecore/content-sdk/blob/2204da329c1296334b71f674795af93d93d50ee9/packages/core/src/graphql-request-client.ts#L12)
+Defined in: [packages/core/src/graphql-request-client.ts:12](https://github.com/Sitecore/content-sdk/blob/9d576f78e5d0026edc36b285187360ab244a5a41/packages/core/src/graphql-request-client.ts#L12)
 
 An interface for GraphQL clients for Sitecore APIs
 
@@ -16,7 +16,7 @@ An interface for GraphQL clients for Sitecore APIs
 
 > **request**\<`T`\>(`query`, `variables?`, `options?`): `Promise`\<`T`\>
 
-Defined in: [packages/core/src/graphql-request-client.ts:18](https://github.com/Sitecore/content-sdk/blob/2204da329c1296334b71f674795af93d93d50ee9/packages/core/src/graphql-request-client.ts#L18)
+Defined in: [packages/core/src/graphql-request-client.ts:18](https://github.com/Sitecore/content-sdk/blob/9d576f78e5d0026edc36b285187360ab244a5a41/packages/core/src/graphql-request-client.ts#L18)
 
 Execute graphql request
 

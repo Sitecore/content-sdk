@@ -8,7 +8,7 @@
 
 > **isTimeoutError**(`error`): `boolean`
 
-Defined in: [packages/core/src/tools/utils.ts:66](https://github.com/Sitecore/content-sdk/blob/2204da329c1296334b71f674795af93d93d50ee9/packages/core/src/tools/utils.ts#L66)
+Defined in: [packages/core/src/tools/utils.ts:66](https://github.com/Sitecore/content-sdk/blob/9d576f78e5d0026edc36b285187360ab244a5a41/packages/core/src/tools/utils.ts#L66)
 
 Indicates whether the error is a timeout error
 
