@@ -8,7 +8,7 @@
 
 > **GetComponentServerProps** = `ComponentPropsFetchFunction`
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:41](https://github.com/Sitecore/content-sdk/blob/c3e1d0a82b1cf70c131a171395bad245d2f46f59/packages/nextjs/src/sharedTypes/component-props.ts#L41)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:41](https://github.com/Sitecore/content-sdk/blob/3b25a6307ef74f6ab7da606ec8b04e5fcb108ad3/packages/nextjs/src/sharedTypes/component-props.ts#L41)
 
 Defines the shape of a data-fetching function used at the component level.
 

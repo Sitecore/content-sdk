@@ -6,7 +6,7 @@
 
 # Interface: AllowedQueryParam
 
-Defined in: [nextjs/src/editing/types.ts:5](https://github.com/Sitecore/content-sdk/blob/c3e1d0a82b1cf70c131a171395bad245d2f46f59/packages/nextjs/src/editing/types.ts#L5)
+Defined in: [nextjs/src/editing/types.ts:5](https://github.com/Sitecore/content-sdk/blob/3b25a6307ef74f6ab7da606ec8b04e5fcb108ad3/packages/nextjs/src/editing/types.ts#L5)
 
 Represents an allowed query parameter.
 
@@ -16,7 +16,7 @@ Represents an allowed query parameter.
 
 > **name**: `string`
 
-Defined in: [nextjs/src/editing/types.ts:9](https://github.com/Sitecore/content-sdk/blob/c3e1d0a82b1cf70c131a171395bad245d2f46f59/packages/nextjs/src/editing/types.ts#L9)
+Defined in: [nextjs/src/editing/types.ts:9](https://github.com/Sitecore/content-sdk/blob/3b25a6307ef74f6ab7da606ec8b04e5fcb108ad3/packages/nextjs/src/editing/types.ts#L9)
 
 The name of the query parameter to allow.
 
@@ -26,6 +26,6 @@ The name of the query parameter to allow.
 
 > `optional` **required**: `boolean`
 
-Defined in: [nextjs/src/editing/types.ts:13](https://github.com/Sitecore/content-sdk/blob/c3e1d0a82b1cf70c131a171395bad245d2f46f59/packages/nextjs/src/editing/types.ts#L13)
+Defined in: [nextjs/src/editing/types.ts:13](https://github.com/Sitecore/content-sdk/blob/3b25a6307ef74f6ab7da606ec8b04e5fcb108ad3/packages/nextjs/src/editing/types.ts#L13)
 
 Whether the query parameter is required.

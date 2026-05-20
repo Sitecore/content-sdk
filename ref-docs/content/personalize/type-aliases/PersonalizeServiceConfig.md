@@ -8,7 +8,7 @@
 
 > **PersonalizeServiceConfig** = `CacheOptions` & `object`
 
-Defined in: [content/src/personalize/personalize-service.ts:15](https://github.com/Sitecore/content-sdk/blob/c3e1d0a82b1cf70c131a171395bad245d2f46f59/packages/content/src/personalize/personalize-service.ts#L15)
+Defined in: [content/src/personalize/personalize-service.ts:15](https://github.com/Sitecore/content-sdk/blob/3b25a6307ef74f6ab7da606ec8b04e5fcb108ad3/packages/content/src/personalize/personalize-service.ts#L15)
 
 Configuration for the PersonalizeService.
 

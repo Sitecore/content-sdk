@@ -8,7 +8,7 @@
 
 > **getHeadersForPropagation**(`headers`): `object`
 
-Defined in: [nextjs/src/editing/utils.ts:209](https://github.com/Sitecore/content-sdk/blob/c3e1d0a82b1cf70c131a171395bad245d2f46f59/packages/nextjs/src/editing/utils.ts#L209)
+Defined in: [nextjs/src/editing/utils.ts:211](https://github.com/Sitecore/content-sdk/blob/3b25a6307ef74f6ab7da606ec8b04e5fcb108ad3/packages/nextjs/src/editing/utils.ts#L211)
 
 **`Internal`**
 

@@ -8,7 +8,7 @@
 
 > **botPageView**(`pageViewData?`): `Promise`\<`EPResponse` \| `null`\>
 
-Defined in: [events/src/events/page-view/bot-page-view.ts:60](https://github.com/Sitecore/content-sdk/blob/c3e1d0a82b1cf70c131a171395bad245d2f46f59/packages/events/src/events/page-view/bot-page-view.ts#L60)
+Defined in: [events/src/events/page-view/bot-page-view.ts:60](https://github.com/Sitecore/content-sdk/blob/3b25a6307ef74f6ab7da606ec8b04e5fcb108ad3/packages/events/src/events/page-view/bot-page-view.ts#L60)
 
 Sends a VIEW event for bot tracking.
 Derives a stable client id from `userAgent` so repeated requests from the same

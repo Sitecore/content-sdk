@@ -8,7 +8,7 @@
 
 > **personalizeLayout**(`layout`, `variantId`, `componentVariantIds?`): [`PlaceholdersData`](../../layout/type-aliases/PlaceholdersData.md)\<`string`\> \| `undefined`
 
-Defined in: [content/src/personalize/layout-personalizer.ts:21](https://github.com/Sitecore/content-sdk/blob/c3e1d0a82b1cf70c131a171395bad245d2f46f59/packages/content/src/personalize/layout-personalizer.ts#L21)
+Defined in: [content/src/personalize/layout-personalizer.ts:21](https://github.com/Sitecore/content-sdk/blob/3b25a6307ef74f6ab7da606ec8b04e5fcb108ad3/packages/content/src/personalize/layout-personalizer.ts#L21)
 
 Apply personalization to layout data. This will recursively go through all placeholders/components, check experiences nodes and replace default with object from specific experience.
 
