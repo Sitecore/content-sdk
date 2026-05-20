@@ -1507,7 +1507,9 @@ describe('SitecoreClient', () => {
 
       expect(sitemapXmlServiceStub.fetchSitemaps.called).to.be.true;
       expect(result).to.include('<?xml version="1.0" encoding="UTF-8"?>');
-      expect(result).to.include('<sitemapindex xmlns="http://sitemaps.org/schemas/sitemap/0.9">');
+      expect(result).to.include(
+        '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+      );
 
       absoluteSitemapPaths.forEach((path) => {
         const fileName = path.split('/').pop();

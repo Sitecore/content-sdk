@@ -645,7 +645,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     }
 
     return `<?xml version="1.0" encoding="UTF-8"?>
-      <sitemapindex xmlns="http://sitemaps.org/schemas/sitemap/0.9">
+      <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       ${sitemaps
         .map((item: string) => {
           const parseUrl = item.split('/');
