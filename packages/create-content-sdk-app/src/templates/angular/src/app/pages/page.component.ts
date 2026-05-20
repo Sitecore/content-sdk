@@ -8,11 +8,10 @@ import { LayoutComponent } from '../shared/layout.component';
   selector: 'app-page',
   imports: [LayoutComponent],
   template: `
-    @let pageValue = page();
-    @if (pageValue) {
-      <app-layout [page]="pageValue"></app-layout>
+    @let pageValue = page(); @if (pageValue) {
+    <app-layout [page]="pageValue"></app-layout>
     } @else {
-      <p class="p-8 text-center text-sm text-zinc-500"><em>Loading page data...</em></p>
+    <p class="p-8 text-center text-sm text-zinc-500"><em>Loading page data...</em></p>
     }
   `,
 })
@@ -27,6 +26,7 @@ export class PageComponent {
   constructor() {
     effect(() => {
       this.context.setPage(this.page() ?? null);
+      this.context.setDictionary(this.dictionary() ?? null);
     });
   }
 }

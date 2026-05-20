@@ -83,6 +83,8 @@ export * from './server';
 // ─── Sitecore Context ──────────────────────────────────────────
 export { SitecoreContextService } from './lib/sitecore-context.service';
 
+export { SitecoreTranslateLoader } from './i18n/sitecore-translate-loader';
+
 // ─── Placeholder ───────────────────────────────────────────────
 export { ScPlaceholderComponent } from './placeholder/sc-placeholder.component';
 export { ScMissingComponentComponent } from './placeholder/sc-missing-component.component';
