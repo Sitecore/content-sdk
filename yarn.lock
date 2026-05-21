@@ -3611,7 +3611,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/content@npm:^2.1.0, @sitecore-content-sdk/content@npm:^2.1.1, @sitecore-content-sdk/content@workspace:packages/content":
+"@sitecore-content-sdk/content@npm:^2.1.0, @sitecore-content-sdk/content@workspace:packages/content":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/content@workspace:packages/content"
   dependencies:
@@ -3737,7 +3737,7 @@ __metadata:
   dependencies:
     "@babel/parser": "npm:^7.27.2"
     "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
-    "@sitecore-content-sdk/content": "npm:^2.1.1"
+    "@sitecore-content-sdk/content": "npm:^2.1.0"
     "@sitecore-content-sdk/core": "npm:^2.1.0"
     "@sitecore-content-sdk/events": "npm:^2.1.0"
     "@sitecore-content-sdk/personalize": "npm:^2.1.0"
