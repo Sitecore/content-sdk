@@ -69,7 +69,9 @@ export function provideSitecoreAngular(config: SitecoreAngularConfig): Environme
     providers.push({ provide: ERROR_ROUTE_TOKEN, useValue: config.errorRoute });
   }
 
-  const locales = config.sitecoreConfig?.angular?.locales ?? [];
+  const locales = config.sitecoreConfig?.angular?.locales ?? [
+    config.sitecoreConfig?.defaultLanguage ?? 'en',
+  ];
   if (locales.length > 0) {
     providers.push({ provide: UrlSerializer, useClass: LocaleUrlSerializer });
     providers.push(provideLocaleBootstrap());

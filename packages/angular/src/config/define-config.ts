@@ -87,17 +87,17 @@ export function defineConfig(
   clientEnv: Record<string, string | undefined> = {}
 ): AngularSitecoreConfig {
   const { angular, ...baseInput } = config;
-  const base = baseDefineConfig(baseInput as SitecoreConfigInput, {
+  const scConfig = baseDefineConfig(baseInput as SitecoreConfigInput, {
     ...clientEnv,
     ...getProcessEnv(),
   });
 
-  const locales = resolveLocales(angular?.locales ?? [], base.defaultLanguage);
+  const locales = resolveLocales(angular?.locales ?? [], scConfig.defaultLanguage);
 
-  base.redirects.locales = locales;
+  scConfig.redirects.locales = locales;
 
   return {
-    ...base,
+    ...scConfig,
     angular: { locales },
   } as AngularSitecoreConfig;
 }

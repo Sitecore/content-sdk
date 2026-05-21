@@ -20,10 +20,7 @@ export interface LocaleExtractionResult {
  * @returns {LocaleExtractionResult} Detected locale and the rest of the path.
  * @public
  */
-export function extractLocaleFromPath(
-  pathname: string,
-  locales: string[]
-): LocaleExtractionResult {
+export function extractLocaleFromPath(pathname: string, locales: string[]): LocaleExtractionResult {
   if (!pathname) {
     return { locale: null, rest: '/' };
   }
