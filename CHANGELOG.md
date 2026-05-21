@@ -23,7 +23,7 @@ Our versioning strategy is as follows:
   - Introduce `low-code` mode for design library ([#452](https://github.com/Sitecore/content-sdk/pull/452))
   - Support Atom-based code generation ([#465](https://github.com/Sitecore/content-sdk/pull/465))
   - Create an SXA component in RH to fetch NCC layout from external host and pass it to render ([#478](https://github.com/Sitecore/content-sdk/pull/478))
-  - Integrate Studio/NCC preview and rendering by introducing `StudioNccWrapper` component for page layouts ([#485](https://github.com/Sitecore/content-sdk/pull/485))
+  - Integrate Studio/NCC Design Library low-code preview through `StudioComponentWrapper` and apply `document.props` as runtime props in `createView` ([#485](https://github.com/Sitecore/content-sdk/pull/485))
 
 
 ### 🐛 Bug Fixes
