@@ -8,7 +8,7 @@
 
 > **getComponentList**: (`paths`, `exclude?`, `includeVariants?`) => [`ComponentFile`](../../interfaces/ComponentFile.md)[] = `_getComponentList`
 
-Defined in: [content/src/tools/templating/components.ts:6](https://github.com/Sitecore/content-sdk/blob/210f354a75bc745a00ce1e1fd340e7f684e24c81/packages/content/src/tools/templating/components.ts#L6)
+Defined in: [content/src/tools/templating/components.ts:6](https://github.com/Sitecore/content-sdk/blob/c53aa3f15ff268c6b38d3382b1b91da05fed99e4/packages/content/src/tools/templating/components.ts#L6)
 
 Get list of components from
 
