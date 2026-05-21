@@ -88,6 +88,8 @@ jobs:
       - name: Prepare and Process Changesets Release
         id: changesets
         uses: changesets/action@v1
+        env:
+          npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
         with:
           version: yarn csdk:prep-release
           publish: yarn changeset:publish --tag latest
