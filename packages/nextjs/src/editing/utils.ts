@@ -264,7 +264,11 @@ export const getEditingRequestHtml = async (
       // We need to handle not found error provided by Vercel
       // for `fallback: false` pages
       // Or preview content is not found or access is denied
-      if (err.response.status === 404 || err.response.status === 403) {
+      if (
+        err.response.status === 404 ||
+        err.response.status === 403 ||
+        err.response.status === 500
+      ) {
         return err.response;
       }
 
