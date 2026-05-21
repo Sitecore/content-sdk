@@ -10,14 +10,11 @@ The Angular template and package assume **standalone** components (no NgModule f
 
 ## Component map
 
-The component map format and CLI generation contract are shared with Next.js — see [../common/doc-component-map.md](../common/doc-component-map.md) for the full specification.
-
-Angular-specific details:
-- **`packages/angular/src/tools/generate-map.ts`** implements the Angular generator; it calls the shared `buildComponentMapContent()` and hardcodes the `ScFormComponent` built-in entry.
-- The generated map is consumed via **`SITECORE_COMPONENT_MAP`** injection token in **`app.config.ts`** (`useValue: componentMap` from **`.sitecore/component-map`**).
+- Generation is driven from **`sitecore.cli.config.ts`** (same family as Next).
+- **`packages/angular/src/tools/generate-map.ts`** implements Angular map generation; output is consumed via **`SITECORE_COMPONENT_MAP`** injection token in **`app.config.ts`** (`useValue: componentMap` from **`.sitecore/component-map`**).
 
 ## Placeholders
 
-**`sc-placeholder`** and **`placeholder-utils.ts`** resolve rendering names to standalone components using the component map (PascalCase keys, default + variant files at generation time). Editing mode affects which renderings are exposed (`getPlaceholderRenderings` takes **`isEditing`** from **`SitecoreContextService`** — see [doc-editing-and-page-context-angular.md](doc-editing-and-page-context-angular.md)).
+**`sc-placeholder`** and **`placeholder-utils.ts`** resolve rendering names to standalone components using the same map shape as Next (PascalCase, default + variant files at generation time). Editing mode affects which renderings are exposed (`getPlaceholderRenderings` takes **`isEditing`** from **`SitecoreContextService`** — see [doc-editing-and-page-context-angular.md](doc-editing-and-page-context-angular.md)).
 
 **Related:** [doc-field-directives.md](doc-field-directives.md)

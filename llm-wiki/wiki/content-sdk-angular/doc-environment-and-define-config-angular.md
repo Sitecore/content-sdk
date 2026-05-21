@@ -4,7 +4,7 @@ How the Angular head avoids raw **`process.env`** in the browser and still feeds
 
 **Sources:** [raw extract](../../raw/2026-05-14-jss-angular-live-design-architecture.md) · [architecture index](doc-architecture-loaders-and-ssr.md)
 
-**Shared with all heads:** [../common/doc-config-environment-variables.md](../common/doc-config-environment-variables.md) (**`buildFallbackConfig`** env keys; public prefix **`CSDK_PUBLIC_*`** vs **`NEXT_PUBLIC_*`**) · [../common/doc-sitecore-config-input.md](../common/doc-sitecore-config-input.md) (merge pipeline, **`SitecoreConfigInput`** tables).
+**Shared with all heads:** [../common/doc-config-environment-variables.md](../common/doc-config-environment-variables.md) ( **`buildFallbackConfig`** env keys, Next vs Angular wiring) · [../common/doc-sitecore-config-input.md](../common/doc-sitecore-config-input.md) (merge pipeline, **`SitecoreConfigInput`** tables).
 
 ## Angular `defineConfig` wrapper
 
@@ -18,6 +18,6 @@ Only **`CSDK_PUBLIC_*`** keys are embedded in those files; server secrets use **
 
 ## GraphQL and `SitecoreClient`
 
-Merged **`SitecoreConfig`** drives **`createGraphQLClientFactory`** and **`SitecoreClient`** the same way as for any head using **`@sitecore-content-sdk/content`**; see [../common/doc-sitecore-client-and-graphql.md](../common/doc-sitecore-client-and-graphql.md) — **Angular usage** for **`getClient()`** + **`new SitecoreClient(scConfig)`**.
+Merged **`SitecoreConfig`** drives the same **`createGraphQLClientFactory`** and **`SitecoreClient`** as Next. See [../common/doc-sitecore-client-and-graphql.md](../common/doc-sitecore-client-and-graphql.md) — especially **Angular usage** for **`getClient()`** + **`new SitecoreClient(scConfig)`**.
 
-**Related:** [doc-sitecore-config-typescript-angular.md](doc-sitecore-config-typescript-angular.md) · Next-only **`getNextFallbackConfig`** pipeline: [doc-sitecore-config.md](../content-sdk-nextjs/doc-sitecore-config.md)
+**Related:** [doc-sitecore-config-typescript-angular.md](doc-sitecore-config-typescript-angular.md) · [Next.js sitecore config (Next-only fields)](../content-sdk-nextjs/doc-sitecore-config.md)

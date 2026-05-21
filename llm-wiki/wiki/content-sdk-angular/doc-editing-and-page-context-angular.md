@@ -1,7 +1,5 @@
 # Editing and page context (Angular)
 
-**Status: editing integration is not yet implemented** for the Angular head. This page documents what is currently available.
-
 The PDF marked **Editing** as TBA. In code, editing is surfaced primarily through **`SitecoreContextService`** and layout **`Page.mode`**, not through a separate Next-style middleware document for Angular.
 
 **Sources:** [raw extract](../../raw/2026-05-14-jss-angular-live-design-architecture.md) · [architecture index](doc-architecture-loaders-and-ssr.md)
@@ -47,6 +45,6 @@ export class SitecoreContextService {
 
 - **`sc-placeholder`** uses **`isEditing`** when choosing placeholder renderings.
 - **`sc-form`** skips certain client behavior when **`isEditing`** is true.
-- **`@sitecore-content-sdk/angular`** re-exports **`isEditorActive`** and **`resetEditorChromes`** from **`@sitecore-content-sdk/content/editing`** (implementation: **`packages/content/src/editing/utils.ts`**).
+- **`@sitecore-content-sdk/angular`** re-exports **`isEditorActive`** and **`resetEditorChromes`** from **`@sitecore-content-sdk/content/editing`** for chrome detection utilities used with Experience Editor–style flows.
 
 **Related:** [doc-components-and-placeholder-map.md](doc-components-and-placeholder-map.md)

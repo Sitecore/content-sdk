@@ -6,14 +6,6 @@ Prefix suggestion for parseability: `## [YYYY-MM-DD] ingest | <short title>` / `
 
 ---
 
-## [2026-05-14] wiki | Boundary and LLM-usability audit
-
-Added **`wiki/wiki-boundary-and-token-audit.md`** (routing rules, conformance checklist, delta table, diagram). Stubbed **`content-sdk-nextjs/doc-terminology-platform-names.md`** → **common** canonical. Applied link and wording fixes (Angular multisite → common config, editing chrome → `content/editing`, removed **etc.**, Angular index “Shared packages”, **AGENTS.md** / **README** terminology paths).
-
-## [2026-05-14] wiki | Editor integration — CORS (`getEnforcedCorsHeaders`, `JSS_ALLOWED_ORIGINS`)
-
-Expanded **`content-sdk-nextjs/doc-editor-integration-metadata.md`** from **`packages/core`** / **`packages/content`** / **`packages/nextjs`** editing handlers (Pages + App Router POST bypass).
-
 ## [2026-05-14] wiki | Common wiki — config, env, SitecoreClient + GraphQL
 
 Extracted framework-agnostic material from **Next.js** wiki into **`common/doc-sitecore-config-input.md`**, **`common/doc-config-environment-variables.md`**, **`common/doc-sitecore-client-and-graphql.md`**. Trimmed **`content-sdk-nextjs/doc-sitecore-config.md`**, **`doc-graphql-client-and-edge-urls.md`**, **`doc-sitecore-client-apis.md`** to Next-specific deltas; pointed **`doc-architecture-edge-graphql`**, **`doc-route-handling-data-fetching`**, **`overview-content-sdk`**, root **`index.md`** at **common**. Expanded **Angular** env + `sitecore.config` pages and **`doc-example-environment-variable-files`** (Angular **`CSDK_PUBLIC_*`**).

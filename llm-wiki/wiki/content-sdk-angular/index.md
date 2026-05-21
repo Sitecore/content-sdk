@@ -20,7 +20,6 @@
 | [doc-editing-and-page-context-angular.md](doc-editing-and-page-context-angular.md) | `SitecoreContextService`, `isEditing`, content `editing` re-exports |
 | [doc-multisite-angular-roadmap.md](doc-multisite-angular-roadmap.md) | Multisite: PDF TBA vs `resolveSitecorePage` options + JSDoc “future” |
 | [doc-personalization-angular-roadmap.md](doc-personalization-angular-roadmap.md) | Personalization: PDF TBA vs client/config reality |
-| [doc-i18n-angular.md](doc-i18n-angular.md) | **Stub:** locale on `Page`, `dictionaryLoader`; URL-segment i18n not implemented |
 
 ## Sources
 
@@ -36,16 +35,15 @@
 - `packages/angular/src/config/define-config.ts` — Angular `defineConfig` wrapper
 - `packages/angular/src/server/loader-data-service-middleware.ts` — loader RPC middleware
 
-## Shared packages (common wiki)
+## Shared with Next.js (common wiki)
 
-These topics live under **`@sitecore-content-sdk/content`** (and related packages); the **common** wiki is canonical:
+These topics are identical for Angular and Next at the **`@sitecore-content-sdk/content`** layer:
 
 - [../common/doc-sitecore-config-input.md](../common/doc-sitecore-config-input.md) — **`SitecoreConfigInput`**, merge pipeline
-- [../common/doc-config-environment-variables.md](../common/doc-config-environment-variables.md) — **`buildFallbackConfig`** env keys (**`CSDK_PUBLIC_*`** vs **`NEXT_PUBLIC_*`** on this page and in that doc’s prefix table)
+- [../common/doc-config-environment-variables.md](../common/doc-config-environment-variables.md) — **`buildFallbackConfig`** env keys; Angular **`CSDK_PUBLIC_*`** vs Next **`NEXT_PUBLIC_*`**
 - [../common/doc-sitecore-client-and-graphql.md](../common/doc-sitecore-client-and-graphql.md) — **`createGraphQLClientFactory`**, **`SitecoreClient`**, **`getPage`**
-- [../common/doc-component-map.md](../common/doc-component-map.md) — component map format, `GenerateMapArgs`, CLI generation
-- [../common/doc-terminology-platform-names.md](../common/doc-terminology-platform-names.md) — platform name conventions
 
 ## See also
 
+- [Next.js wiki index](../content-sdk-nextjs/index.md) — parallel head patterns
 - [Common wiki index](../common/index.md) — shared packages

@@ -15,7 +15,7 @@ Catalog of **Next.js head** pages (`@sitecore-content-sdk/nextjs`, Pages/App Rou
 | Page | Summary |
 |------|---------|
 | [overview-content-sdk.md](overview-content-sdk.md) | Monorepo purpose, package map, doc topic map, head-app vs SDK scope |
-| [doc-terminology-platform-names.md](../common/doc-terminology-platform-names.md) | **SAI / Sitecore AI / XMC / XM Cloud** — interchangeable names in docs and comments |
+| [doc-terminology-platform-names.md](doc-terminology-platform-names.md) | **SAI / Sitecore AI / XMC / XM Cloud** — interchangeable names in docs and comments |
 
 ## Official docs (SAI 2.x) — synthesized
 
@@ -24,13 +24,13 @@ Catalog of **Next.js head** pages (`@sitecore-content-sdk/nextjs`, Pages/App Rou
 | [doc-sitecore-config.md](doc-sitecore-config.md) | `sitecore.config.ts` + Next **`defineConfig`** / **`getNextFallbackConfig`**; links to **common** for full **`SitecoreConfigInput`**, env keys, GraphQL + `SitecoreClient` |
 | [doc-architecture-edge-graphql.md](doc-architecture-edge-graphql.md) | Experience Edge, GraphQL; runtime vs `package.json` doc note; points to **common** for implementation |
 | [doc-graphql-client-and-edge-urls.md](doc-graphql-client-and-edge-urls.md) | Next hub → **common** canonical factory doc; Next dev proxy pointer |
-| [doc-page-composition-placeholders.md](doc-page-composition-placeholders.md) | Authoring vs GraphQL JSON; **`Placeholder`** vs **`AppPlaceholder`** (Pages vs App Router, RSC); component map |
+| [doc-page-composition-placeholders.md](doc-page-composition-placeholders.md) | Authoring vs GraphQL JSON; Layout + component map |
 | [doc-route-handling-data-fetching.md](doc-route-handling-data-fetching.md) | Catch-all, `getPage` / preview / `getComponentData`; LayoutService path under `packages/content` |
 | [doc-i18n-multilingual.md](doc-i18n-multilingual.md) | i18n: App Router `next-intl` (raw) + **Pages Router** code (`next.config` i18n, `extractPath`, `getDictionary`, `next-localization`) |
-| [doc-example-environment-variable-files.md](doc-example-environment-variable-files.md) | `.env` examples: **Pages + App Router** template paths; **`yarn scaffold-samples`** → **`samples/`** for runnable local dev |
+| [doc-example-environment-variable-files.md](doc-example-environment-variable-files.md) | `.env.container` / `.env.remote` examples, template paths, Angular **`CSDK_PUBLIC_*`** cross-link, link to `sitecore.config` |
 | [doc-sitecore-client-apis.md](doc-sitecore-client-apis.md) | **Next** `SitecoreNextjsClient` extensions; **common** for base `SitecoreClient` + GraphQL |
 | [doc-plugins-and-adapters.md](doc-plugins-and-adapters.md) | Plugins, adapters, analytics / personalize stack |
-| [doc-editor-integration-metadata.md](doc-editor-integration-metadata.md) | Page builder, editing API routes, preview, FEaaS, **CORS** (`getEnforcedCorsHeaders`, `JSS_ALLOWED_ORIGINS`), CSP |
+| [doc-editor-integration-metadata.md](doc-editor-integration-metadata.md) | Page builder, editing API routes, preview, FEaaS, CSP |
 
 ## Concepts & flows
 

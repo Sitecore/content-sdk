@@ -179,7 +179,7 @@ If documentation and code disagree: **document the code’s behavior** in the wi
 | Path | Who edits | Contents |
 |------|-----------|----------|
 | `llm-wiki/raw/` | **Human** adds files; agent **does not** modify | Curated markdown/text copies of docs, MCP exports, articles |
-| `llm-wiki/wiki/` | **Agent** creates/updates (per user direction) | Overviews, package notes, flows; **Next.js** pages under `wiki/content-sdk-nextjs/`; shared stubs under `wiki/common/`; Angular under `wiki/content-sdk-angular/`; **in-progress plans** under `wiki/plans/` |
+| `llm-wiki/wiki/` | **Agent** creates/updates (per user direction) | Overviews, package notes, flows; **Next.js** pages under `wiki/content-sdk-nextjs/`; shared stubs under `wiki/common/`; Angular under `wiki/content-sdk-angular/` |
 | `llm-wiki/wiki/index.md` | **Agent** maintains | Root hub linking stack-specific indexes |
 | `llm-wiki/wiki/content-sdk-nextjs/index.md` | **Agent** maintains | Next.js wiki catalog |
 | `llm-wiki/wiki/log.md` | **Agent** appends | Chronological ingest / query / lint entries |
@@ -211,7 +211,7 @@ Prefer **one source per ingest** when the user wants tight review; batch only wh
 ### Conventions
 
 - Prefer **relative links** between wiki pages; cite code as `` `packages/<pkg>/src/...` ``.
-- **Platform naming:** In wiki and comments, **Sitecore AI / SitecoreAI / SAI / XM Cloud / Sitecore XM Cloud / XMC** refer to the **same** platform context unless code explicitly distinguishes behavior. See `llm-wiki/wiki/common/doc-terminology-platform-names.md`.
+- **Platform naming:** In wiki and comments, **Sitecore AI / SitecoreAI / SAI / XM Cloud / XMC** refer to the **same** platform context unless code explicitly distinguishes behavior. See `llm-wiki/wiki/content-sdk-nextjs/doc-terminology-platform-names.md`.
 - Do **not** store secrets in raw or wiki; follow `.cursor/rules/safety.mdc`.
 - Do **not** edit `dist/**`, `node_modules/`, or generated-only paths as part of wiki maintenance.
 

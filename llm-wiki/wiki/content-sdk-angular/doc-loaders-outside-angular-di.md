@@ -13,6 +13,6 @@ A **`LoaderFn`** runs in:
 
 So anything used **inside** the loader body must be available **without** calling **`inject()`** from within that body. The supported pattern is **static imports**: default **`sitecore.config`**, **`getClient()`** factory module, and helpers such as **`resolveSitecorePage`** from **`@sitecore-content-sdk/angular`**.
 
-The **resolver factory** itself uses **`inject()`** for **`LOADER_REGISTRY`**, **`TransferState`**, **`Router`**, **`platformId`**, and optional **`REQUEST`**; that is fine because it only runs inside Angular.
+The **resolver factory** itself uses **`inject()`** for **`TransferState`**, **`Router`**, **`LOADER_REGISTRY`**, etc.; that is fine because it only runs inside Angular.
 
 **Related:** [doc-loaders-route-registry-and-page-loader.md](doc-loaders-route-registry-and-page-loader.md)

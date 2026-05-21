@@ -11,11 +11,11 @@ From official [Architecture overview](https://doc.sitecore.com/sai/en/developers
 
 ## Runtime (this repo)
 
-GraphQL URLs for **`SitecoreClient`** come from **`sitecore.config.ts`** via **`defineConfig`** and **env** — not from `package.json`. See [../common/doc-sitecore-client-and-graphql.md](../common/doc-sitecore-client-and-graphql.md) and [doc-sitecore-config.md](doc-sitecore-config.md).
+GraphQL URLs for **`SitecoreClient`** come from **`sitecore.config.ts`** via **`defineConfig`** and **env** — not primarily from `package.json`. See [../common/doc-sitecore-client-and-graphql.md](../common/doc-sitecore-client-and-graphql.md) and [doc-sitecore-config.md](doc-sitecore-config.md).
 
 ## Templates
 
-`package.json` may still list `graphQLEndpointPath` but it has no role. Treat **`sitecore.config` + env** as authoritative.
+**Pages Router** `package.json` may still list `graphQLEndpointPath` for tooling alignment. **App Router** template may omit that block — treat **`sitecore.config` + env** as authoritative.
 
 ## Implementation
 
@@ -24,7 +24,7 @@ GraphQL URLs for **`SitecoreClient`** come from **`sitecore.config.ts`** via **`
 
 ## Mental model
 
-Authors compose pages in SitecoreAI. The head consumes **JSON** (GraphQL responses) from Edge or local GraphQL via **`SitecoreClient`**. Fetch wiring is **Next.js-specific** — Pages Router `getPage` / App Router `draftMode` / middleware. **`@sitecore-content-sdk/react`** renders typed layout data but does not replace **`SitecoreClient`**.
+Authors compose pages in SitecoreAI. The head consumes **JSON** (GraphQL responses) from Edge or local GraphQL via **`SitecoreClient`**. Fetch wiring is **framework-specific** (Next `getPage` / App Router / middleware; Angular loaders + **`resolveSitecorePage`**); **`@sitecore-content-sdk/react`** renders typed layout data but does not replace **`SitecoreClient`**.
 
 ## Raw
 
