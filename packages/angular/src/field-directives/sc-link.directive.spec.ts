@@ -5,6 +5,9 @@ import { Component, input } from '@angular/core';
 import { ScLinkDirective } from './sc-link.directive';
 import type { LinkField } from '@sitecore-content-sdk/content/layout';
 import { getClassFromField } from './utils';
+import { SitecoreContextService } from '../lib/sitecore-context.service';
+import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
+import type { AngularSitecoreConfig } from '../config/define-config';
 
 function sortedClassTokens(el: HTMLElement): string[] {
   return (el.className || '')
@@ -200,5 +203,95 @@ describe('ScLinkDirective', () => {
 
     a = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
     expect(a.target).toBe('_self');
+  });
+});
+
+describe('ScLinkDirective locale-aware href', () => {
+  function createFixtureWithLocales(
+    locales: string[],
+    urlLocale: string | null
+  ): ComponentFixture<TestHostComponent> {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [TestHostComponent],
+      providers: [
+        {
+          provide: SITECORE_CONFIG_TOKEN,
+          useValue: {
+            defaultLanguage: 'en',
+            angular: { locales },
+          } as AngularSitecoreConfig,
+        },
+      ],
+    });
+    const context = TestBed.inject(SitecoreContextService);
+    context.setLocale(urlLocale);
+    return TestBed.createComponent(TestHostComponent);
+  }
+
+  function hrefFor(field: LinkField, locales: string[], urlLocale: string | null): string | null {
+    const fixture = createFixtureWithLocales(locales, urlLocale);
+    fixture.componentRef.setInput('field', field);
+    fixture.detectChanges();
+    const a = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
+    return a.getAttribute('href');
+  }
+
+  it('should prefix an internal href with the current locale (en)', () => {
+    expect(hrefFor({ value: { href: '/about' } }, ['en', 'de'], 'en')).toBe('/en/about');
+  });
+
+  it('should not prefix an internal href when current locale is null', () => {
+    expect(hrefFor({ value: { href: '/about' } }, ['en', 'de'], null)).toBe('/about');
+  });
+
+  it('should not double-prefix when the field href already contains the current locale', () => {
+    expect(hrefFor({ value: { href: '/en/about' } }, ['en', 'de'], 'en')).toBe('/en/about');
+  });
+
+  it('should preserve an authored cross-locale href even when current locale differs', () => {
+    expect(hrefFor({ value: { href: '/de/about' } }, ['en', 'de'], 'en')).toBe('/de/about');
+  });
+
+  it('should prefix an internal href with a non-default locale (de)', () => {
+    expect(hrefFor({ value: { href: '/about' } }, ['en', 'de'], 'de')).toBe('/de/about');
+  });
+
+  it('should leave an external https href untouched even when it contains a locale-like segment', () => {
+    expect(
+      hrefFor({ value: { href: 'https://example.com/en/foo' } }, ['en', 'de'], 'en')
+    ).toBe('https://example.com/en/foo');
+  });
+
+  it('should leave a mailto href untouched', () => {
+    expect(hrefFor({ value: { href: 'mailto:user@example.com' } }, ['en', 'de'], 'en')).toBe(
+      'mailto:user@example.com'
+    );
+  });
+
+  it('should leave a tel href untouched', () => {
+    expect(hrefFor({ value: { href: 'tel:+15551234567' } }, ['en', 'de'], 'en')).toBe(
+      'tel:+15551234567'
+    );
+  });
+
+  it('should leave a protocol-relative href untouched', () => {
+    expect(hrefFor({ value: { href: '//cdn.example.com/asset.js' } }, ['en', 'de'], 'en')).toBe(
+      '//cdn.example.com/asset.js'
+    );
+  });
+
+  it('should be idempotent across change-detection cycles', () => {
+    const fixture = createFixtureWithLocales(['en', 'de'], 'en');
+    fixture.componentRef.setInput('field', { value: { href: '/about' } });
+    fixture.detectChanges();
+    let a = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
+    expect(a.getAttribute('href')).toBe('/en/about');
+
+    fixture.detectChanges();
+    fixture.detectChanges();
+
+    a = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
+    expect(a.getAttribute('href')).toBe('/en/about');
   });
 });

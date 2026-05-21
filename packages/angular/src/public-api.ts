@@ -3,7 +3,11 @@ export { type SitecoreAngularConfig } from './lib/providers';
 export { SITECORE_CONFIG_TOKEN, SITECORE_CLIENT_TOKEN } from './lib/tokens';
 export { resolveSitecorePage } from './lib/sitecore-page-resolver';
 
-export { defineConfig } from './config/define-config';
+export {
+  defineConfig,
+  type AngularSitecoreConfigInput,
+  type AngularSitecoreConfig,
+} from './config/define-config';
 export {
   getContentStylesheetLink,
   getDesignLibraryStylesheetLinks,
@@ -84,6 +88,16 @@ export * from './server';
 export { SitecoreContextService } from './lib/sitecore-context.service';
 
 export { SitecoreTranslateLoader } from './i18n/sitecore-translate-loader';
+
+// ─── Localized routing ────────────────────────────────────────
+export {
+  extractLocaleFromPath,
+  prependLocale,
+  createLocaleMatcher,
+  type LocaleExtractionResult,
+} from './i18n/locale-utils';
+export { LocaleUrlSerializer } from './i18n/locale-url-serializer';
+export { provideLocaleBootstrap } from './i18n/locale-bootstrap';
 
 // ─── Placeholder ───────────────────────────────────────────────
 export { ScPlaceholderComponent } from './placeholder/sc-placeholder.component';

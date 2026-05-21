@@ -7,7 +7,7 @@ import { SitecoreContextService } from '../lib/sitecore-context.service';
 export class SitecoreTranslateLoader implements TranslateLoader {
   private readonly context = inject(SitecoreContextService);
 
-  getTranslation(_lang: string): Observable<Record<string, string>> {
+  getTranslation(): Observable<Record<string, string>> {
     const dictionary = this.context.dictionary();
     return of(dictionary ?? {});
   }

@@ -1,13 +1,17 @@
 import { InjectionToken } from '@angular/core';
-import type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import type { SitecoreClient } from '@sitecore-content-sdk/content/client';
+import type { AngularSitecoreConfig } from '../config/define-config';
 
 /**
  * Injection token for the Sitecore configuration.
  * Provided by `provideSitecoreAngular({ sitecoreConfig, sitecoreClient })`. Inject this to read config app-wide.
+ * `AngularSitecoreConfig` extends `SitecoreConfig`, so consumers that previously typed the
+ * value as `SitecoreConfig` remain structurally compatible.
  * @public
  */
-export const SITECORE_CONFIG_TOKEN = new InjectionToken<SitecoreConfig>('SITECORE_CONFIG_TOKEN');
+export const SITECORE_CONFIG_TOKEN = new InjectionToken<AngularSitecoreConfig>(
+  'SITECORE_CONFIG_TOKEN'
+);
 
 /**
  * Injection token for the SitecoreClient instance.

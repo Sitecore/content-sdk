@@ -4,7 +4,8 @@ import { provideRouter, RedirectCommand, Router } from '@angular/router';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { handleNavigationError } from './router-error-handling';
 import { NotFoundNavigationError, LoaderHttpError } from './models';
-import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from '../lib/tokens';
+import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN, SITECORE_CONFIG_TOKEN } from '../lib/tokens';
+import type { AngularSitecoreConfig } from '../config/define-config';
 import * as sdkCore from '@sitecore-content-sdk/core';
 
 /** Minimal shape of Angular's NavigationError used by the handler */
@@ -45,6 +46,46 @@ describe('handleNavigationError', () => {
 
     expect(result).toBeInstanceOf(RedirectCommand);
     expect(parseUrlSpy).toHaveBeenCalledWith('/404');
+  });
+
+  it('should redirect to locale-prefixed not found route when the failed URL has a locale', () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([]),
+        {
+          provide: SITECORE_CONFIG_TOKEN,
+          useValue: { angular: { locales: ['en', 'da'] } } as AngularSitecoreConfig,
+        },
+      ],
+    });
+    router = TestBed.inject(Router);
+    parseUrlSpy = vi.spyOn(router, 'parseUrl');
+    const e: MockNavigationError = { error: new NotFoundNavigationError(), url: '/da/about' };
+    const result = runHandler(e);
+
+    expect(result).toBeInstanceOf(RedirectCommand);
+    expect(parseUrlSpy).toHaveBeenCalledWith('/da/404');
+  });
+
+  it('should redirect to locale-prefixed error route when the failed URL has a locale', () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([]),
+        {
+          provide: SITECORE_CONFIG_TOKEN,
+          useValue: { angular: { locales: ['en', 'da'] } } as AngularSitecoreConfig,
+        },
+      ],
+    });
+    router = TestBed.inject(Router);
+    parseUrlSpy = vi.spyOn(router, 'parseUrl');
+    const e: MockNavigationError = { error: new LoaderHttpError(500, 'Server error'), url: '/da/page' };
+    const result = runHandler(e);
+
+    expect(result).toBeInstanceOf(RedirectCommand);
+    expect(parseUrlSpy).toHaveBeenCalledWith('/da/500');
   });
 
   it('should redirect to internalServerErrorRoute when processing other exceptions', () => {

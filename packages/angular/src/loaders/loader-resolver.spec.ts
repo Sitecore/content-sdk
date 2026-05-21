@@ -11,6 +11,8 @@ import { LoaderDataService } from './loader-data.service';
 import { LOADER_DATA_ENDPOINT } from '../server/constants';
 import type { LoaderFn } from './models';
 import type { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
+import type { AngularSitecoreConfig } from '../config/define-config';
 
 function makeRouteSnapshot(
   overrides: Partial<{
@@ -401,6 +403,65 @@ describe('loaderResolver', () => {
     it('should tag resolver with LOADER_ID for prefetch discovery', () => {
       const resolver = loaderResolver('page') as unknown as Record<symbol, string>;
       expect(resolver[LOADER_ID]).toBe('page');
+    });
+  });
+
+  describe('locale plumbing into loader params', () => {
+    let mockLoader: ReturnType<typeof vi.fn> & LoaderFn;
+
+    beforeEach(() => {
+      TestBed.resetTestingModule();
+      mockLoader = vi.fn().mockResolvedValue({ ok: true }) as ReturnType<typeof vi.fn> & LoaderFn;
+      TestBed.configureTestingModule({
+        providers: [
+          provideRouter([]),
+          TransferState,
+          { provide: PLATFORM_ID, useValue: 'server' },
+          { provide: LOADER_REGISTRY, useValue: { page: mockLoader } },
+          { provide: LoaderDataService, useValue: { getData: vi.fn() } },
+          {
+            provide: SITECORE_CONFIG_TOKEN,
+            useValue: {
+              defaultLanguage: 'en',
+              angular: { locales: ['en', 'de'] },
+            } as AngularSitecoreConfig,
+          },
+        ],
+      });
+    });
+
+    it('should pass the matched locale from route params to the loader', async () => {
+      const resolver = loaderResolver('page');
+      const route = makeRouteSnapshot({
+        pathFromRoot: [{ params: { locale: 'de' } }, { params: {} }],
+      });
+      const state = makeRouterStateSnapshot('/de/about');
+
+      await TestBed.runInInjectionContext(async () => {
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
+      });
+
+      expect(mockLoader).toHaveBeenCalledWith(
+        expect.objectContaining({ params: expect.objectContaining({ locale: 'de' }) })
+      );
+    });
+
+    it('should default params.locale to defaultLanguage when no locale segment was matched', async () => {
+      const resolver = loaderResolver('page');
+      const route = makeRouteSnapshot({ pathFromRoot: [{ params: {} }] });
+      const state = makeRouterStateSnapshot('/about');
+
+      await TestBed.runInInjectionContext(async () => {
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
+      });
+
+      expect(mockLoader).toHaveBeenCalledWith(
+        expect.objectContaining({ params: expect.objectContaining({ locale: 'en' }) })
+      );
     });
   });
 });

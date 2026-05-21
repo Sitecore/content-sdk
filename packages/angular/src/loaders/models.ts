@@ -38,7 +38,12 @@ export type LoaderContext = {
    */
   url: string;
   /**
-   * Route parameters from all matched segments
+   * Route parameters from all matched segments.
+   *
+   * When locales are configured and the route tree uses `createLocaleMatcher`, the matched
+   * locale is exposed as `params.locale`. The resolver also defaults `params.locale` to
+   * `defaultLanguage` from `sitecore.config` when no locale segment was matched — loaders
+   * can rely on a concrete `params.locale` regardless of URL shape.
    */
   params: Params;
   /**

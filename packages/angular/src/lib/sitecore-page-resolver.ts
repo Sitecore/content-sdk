@@ -1,5 +1,5 @@
-import type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import type { Page, PageOptions, SitecoreClient } from '@sitecore-content-sdk/content/client';
+import { AngularSitecoreConfig } from '../config/define-config';
 
 /**
  * Resolves layout/page data for a route path using a {@link SitecoreClient} and Sitecore config.
@@ -18,7 +18,7 @@ import type { Page, PageOptions, SitecoreClient } from '@sitecore-content-sdk/co
  */
 export async function resolveSitecorePage(
   path: string,
-  sitecoreConfig: SitecoreConfig,
+  sitecoreConfig: AngularSitecoreConfig,
   client: SitecoreClient,
   options?: { locale?: string; site?: string }
 ): Promise<Page | null> {
