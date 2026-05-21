@@ -5,9 +5,11 @@ import { Component, input } from '@angular/core';
 import { ScLinkDirective } from './sc-link.directive';
 import type { LinkField } from '@sitecore-content-sdk/content/layout';
 import { getClassFromField } from './utils';
-import { SitecoreContextService } from '../lib/sitecore-context.service';
-import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 import type { AngularSitecoreConfig } from '../config/define-config';
+import {
+  provideMockSitecoreContext,
+  setMockContextUrlLocale,
+} from '../testing/mock-sitecore-context';
 
 function sortedClassTokens(el: HTMLElement): string[] {
   return (el.className || '')
@@ -214,18 +216,14 @@ describe('ScLinkDirective locale-aware href', () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [TestHostComponent],
-      providers: [
-        {
-          provide: SITECORE_CONFIG_TOKEN,
-          useValue: {
-            defaultLanguage: 'en',
-            angular: { locales },
-          } as AngularSitecoreConfig,
-        },
-      ],
+      providers: provideMockSitecoreContext({
+        config: {
+          defaultLanguage: 'en',
+          angular: { locales },
+        } as AngularSitecoreConfig,
+      }),
     });
-    const context = TestBed.inject(SitecoreContextService);
-    context.setLocale(urlLocale);
+    setMockContextUrlLocale(urlLocale);
     return TestBed.createComponent(TestHostComponent);
   }
 

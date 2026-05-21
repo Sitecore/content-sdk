@@ -6,8 +6,8 @@ import {
   handleNavigationError,
   provideSitecoreAngular,
   PreLoaderDataService,
-  SitecoreTranslateLoader,
   SITECORE_COMPONENT_MAP,
+  SitecoreTranslateLoader,
 } from '@sitecore-content-sdk/angular';
 import { routes } from './app.routes';
 import scConfig from '../../sitecore.config';

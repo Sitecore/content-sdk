@@ -1,13 +1,13 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, PLATFORM_ID, REQUEST, inject } from '@angular/core';
 import { DefaultUrlSerializer, type UrlTree } from '@angular/router';
-import { SitecoreContextService } from '../lib/sitecore-context.service';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
-import { splitLocaleFromPath } from './locale-utils';
+import { resolveCurrentPath, splitLocaleFromPath } from './locale-utils';
 import { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
+import { isPlatformBrowser } from '@angular/common';
 
 /**
  * Locale-aware {@link UrlSerializer} replacement. Extends {@link DefaultUrlSerializer} and
- * prepends the current URL locale (from {@link SitecoreContextService}) to every serialized
+ * prepends the current URL locale (from the request pathname) to every serialized
  * URL. Angular's built-in `[routerLink]` computes hrefs via `router.serializeUrl()`, which
  * delegates to the DI-injected `UrlSerializer.serialize()` — so replacing the binding makes
  * every routerLink href locale-aware with no directive changes.
@@ -26,16 +26,22 @@ import { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
  */
 @Injectable()
 export class LocaleUrlSerializer extends DefaultUrlSerializer {
-  private readonly context = inject(SitecoreContextService);
   private readonly locales =
     inject(SITECORE_CONFIG_TOKEN, { optional: true })?.angular?.locales ?? [];
+  private readonly req = inject(REQUEST, { optional: true });
+  private readonly platformId = inject(PLATFORM_ID);
 
   override serialize(tree: UrlTree): string {
     const base = super.serialize(tree);
     if (this.locales.length > 0 && splitLocaleFromPath(base, this.locales).locale) {
       return base;
     }
-    const currentLocale = this.context.urlLocale();
+    const isBrowser = isPlatformBrowser(this.platformId);
+    const currentLocale = splitLocaleFromPath(
+      resolveCurrentPath(this.req, isBrowser),
+      this.locales
+    ).locale;
+
     if (!currentLocale) {
       return base;
     }

@@ -5,6 +5,6 @@ import { getClient } from '../client/sitecore-client';
 /**
  * Dictionary loader: fetches dictionary phrases from Sitecore for the current site/locale.
  */
-export const dictionaryLoader: LoaderFn<DictionaryPhrases> = async () => {
-  return await getClient().getDictionary();
+export const dictionaryLoader: LoaderFn<DictionaryPhrases> = async (context) => {
+  return await getClient().getDictionary({ locale: context.params['locale'] as string });
 };

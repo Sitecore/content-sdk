@@ -8,7 +8,10 @@ import type { Page } from '@sitecore-content-sdk/content/client';
 import { ScPlaceholderComponent } from './sc-placeholder.component';
 import { SITECORE_COMPONENT_MAP } from './tokens';
 import type { ComponentMap } from '../components/types';
-import { SitecoreContextService } from '../lib/sitecore-context.service';
+import {
+  provideMockSitecoreContext,
+  setMockContextPage,
+} from '../testing/mock-sitecore-context';
 
 @Component({
   selector: 'test-title',
@@ -77,11 +80,13 @@ describe('ScPlaceholderComponent', () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [ScPlaceholderComponent],
-      providers: [{ provide: SITECORE_COMPONENT_MAP, useValue: componentMap }],
+      providers: [
+        ...provideMockSitecoreContext(),
+        { provide: SITECORE_COMPONENT_MAP, useValue: componentMap },
+      ],
     });
 
-    const ctx = TestBed.inject(SitecoreContextService);
-    ctx.setPage(makePage());
+    setMockContextPage(makePage());
   });
 
   afterEach(() => {
@@ -165,10 +170,12 @@ describe('ScPlaceholderComponent', () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [ScPlaceholderComponent],
-      providers: [{ provide: SITECORE_COMPONENT_MAP, useValue: map }],
+      providers: [
+        ...provideMockSitecoreContext(),
+        { provide: SITECORE_COMPONENT_MAP, useValue: map },
+      ],
     });
-    const ctx = TestBed.inject(SitecoreContextService);
-    ctx.setPage(makePage());
+    setMockContextPage(makePage());
 
     const fixture = TestBed.createComponent(ScPlaceholderComponent);
     fixture.componentRef.setInput('rendering', {

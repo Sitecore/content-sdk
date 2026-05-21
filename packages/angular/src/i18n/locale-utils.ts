@@ -57,3 +57,24 @@ export function scLocaleMatcher(locales: string[]): UrlMatcher {
     return { consumed: [] };
   };
 }
+
+/**
+ * Resolves the initial URL pathname from the current execution environment.
+ * Returns `'/'` when neither REQUEST nor `window.location` is available.
+ * @param {Request | null} req - SSR REQUEST token value, when present.
+ * @param {boolean} isBrowser - Whether the current platform is the browser.
+ * @returns {string} URL pathname suitable for locale extraction.
+ */
+export function resolveCurrentPath(req: Request | null, isBrowser: boolean): string {
+  if (req) {
+    try {
+      return new URL(req.url).pathname;
+    } catch {
+      // fall through to browser/default
+    }
+  }
+  if (isBrowser && typeof window !== 'undefined' && window.location) {
+    return window.location.pathname;
+  }
+  return '/';
+}

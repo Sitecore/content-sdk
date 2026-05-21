@@ -1,5 +1,5 @@
 // ─── Angular SDK providers and tokens ──────────────────────────
-export { type SitecoreAngularConfig } from './lib/providers';
+export { type AngularCSDKAppInit } from './lib/providers';
 export { SITECORE_CONFIG_TOKEN, SITECORE_CLIENT_TOKEN } from './lib/tokens';
 export { resolveSitecorePage } from './lib/sitecore-page-resolver';
 
@@ -45,6 +45,7 @@ export {
   PageMode,
   ErrorPage,
   Page,
+  SitecoreClient,
 } from '@sitecore-content-sdk/content/client';
 export { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
 export { mediaApi } from '@sitecore-content-sdk/content/media';
@@ -95,7 +96,6 @@ export {
   type LocaleExtractionResult,
 } from './i18n/locale-utils';
 export { LocaleUrlSerializer } from './i18n/locale-url-serializer';
-export { provideLocaleBootstrap } from './i18n/locale-bootstrap';
 
 // ─── Placeholder ───────────────────────────────────────────────
 export { ScPlaceholderComponent } from './placeholder/sc-placeholder.component';

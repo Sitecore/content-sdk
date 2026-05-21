@@ -1,6 +1,6 @@
-import { Component, computed, inject, effect } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Page, SitecoreContextService } from '@sitecore-content-sdk/angular';
+import { Page } from '@sitecore-content-sdk/angular';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { LayoutComponent } from '../shared/layout.component';
 
@@ -17,16 +17,8 @@ import { LayoutComponent } from '../shared/layout.component';
 })
 export class PageComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly context = inject(SitecoreContextService);
   private data = toSignal(this.activatedRoute.data);
 
   page = computed(() => this.data()?.page as Page | null);
   dictionary = computed(() => this.data()?.dictionary as Record<string, string> | null);
-
-  constructor() {
-    effect(() => {
-      this.context.setPage(this.page() ?? null);
-      this.context.setDictionary(this.dictionary() ?? null);
-    });
-  }
 }

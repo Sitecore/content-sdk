@@ -9,7 +9,7 @@ import {
 } from './tokens';
 import type { AngularSitecoreConfig } from '../config/define-config';
 import { LocaleUrlSerializer } from '../i18n/locale-url-serializer';
-import { provideLocaleBootstrap } from '../i18n/locale-bootstrap';
+import { SitecoreContextService } from './sitecore-context.service';
 
 /**
  * Configuration for the Sitecore Angular SDK.
@@ -34,9 +34,9 @@ export interface AngularCSDKAppInit {
  * Provides Sitecore Angular SDK services to the application.
  * Call this in your `app.config.ts` `providers` array.
  *
- * When `sitecoreConfig.angular.locales` contains more than just `defaultLanguage`, this
- * call also registers a locale-aware {@link UrlSerializer} and an `APP_INITIALIZER` that
- * keeps `SitecoreContextService.urlLocale()` in sync with router navigation.
+ * When `sitecoreConfig.angular.locales` is configured, this call also registers a
+ * locale-aware {@link UrlSerializer}. {@link SitecoreContextService} is always registered
+ * and derives page, dictionary, and locale state reactively from the Router.
  * @example
  * // app.config.ts
  * import scConfig from '../sitecore.config';
@@ -69,12 +69,13 @@ export function provideSitecoreAngular(init: AngularCSDKAppInit): EnvironmentPro
     providers.push({ provide: ERROR_ROUTE_TOKEN, useValue: init.errorRoute });
   }
 
+  providers.push(SitecoreContextService);
+
   const locales = init.sitecoreConfig?.angular?.locales ?? [
     init.sitecoreConfig?.defaultLanguage ?? 'en',
   ];
   if (locales.length > 0) {
     providers.push({ provide: UrlSerializer, useClass: LocaleUrlSerializer });
-    providers.push(provideLocaleBootstrap());
   }
 
   return makeEnvironmentProviders(providers as Parameters<typeof makeEnvironmentProviders>[0]);
