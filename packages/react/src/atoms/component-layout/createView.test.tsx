@@ -1464,6 +1464,52 @@ describe('component-layout/createView', () => {
       expect(onChangedSpy.firstCall.args[0]).to.equal('updated');
     });
 
+    it('merges plain-object document.props into resolve context for bindings', () => {
+      const doc: Document = {
+        name: 'PropsDoc',
+        props: { label: 'from-document' },
+        root: {
+          id: 'root',
+          type: 'Stack',
+          children: [
+            {
+              id: 'text',
+              type: 'Text',
+              children: ['{{props.label}}'],
+            },
+          ],
+        },
+      };
+
+      const Generated = createView(doc, atoms);
+      const rendered = render(<Generated />);
+
+      expect(rendered.getByTestId('text').textContent).to.equal('from-document');
+    });
+
+    it('ignores non-object document.props when resolving bindings', () => {
+      const doc: Document = {
+        name: 'BadPropsDoc',
+        props: 'not-an-object' as unknown as Document['props'],
+        root: {
+          id: 'root',
+          type: 'Stack',
+          children: [
+            {
+              id: 'text',
+              type: 'Text',
+              children: ['{{props.label}}'],
+            },
+          ],
+        },
+      };
+
+      const Generated = createView(doc, atoms);
+      const rendered = render(<Generated label="runtime" />);
+
+      expect(rendered.getByTestId('text').textContent).to.equal('runtime');
+    });
+
     it('supports for/show expressions with runtime props', () => {
       const doc: Document = {
         name: 'LoopAndShowDoc',

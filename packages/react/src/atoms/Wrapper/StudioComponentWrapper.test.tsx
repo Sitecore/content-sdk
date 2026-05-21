@@ -23,12 +23,12 @@ class ErrorBoundary extends React.Component<
 > {
   state = { hasError: false };
 
-  componentDidCatch(err: Error) {
-    this.props.onError?.(err);
-  }
-
   static getDerivedStateFromError() {
     return { hasError: true };
+  }
+
+  componentDidCatch(err: Error) {
+    this.props.onError?.(err);
   }
 
   render() {

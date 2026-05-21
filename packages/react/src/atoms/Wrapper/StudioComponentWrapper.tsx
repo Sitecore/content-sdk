@@ -9,7 +9,10 @@ import { StudioComponentWrapperProps } from './models';
  * Client component that renders a pre-fetched Studio (NCC) component layout.
  *
  * Expects `document` to be provided (fetched server-side by
- * `StudioComponentServerWrapper` or from DesignLibraryLowCodeComponent). Renders `null` when no layout is available.
+ * `StudioComponentServerWrapper`, from Design Library document updates, or any other
+ * preview path that supplies a layout `Document`). Runtime props from plain-object
+ * `document.props` are applied as runtime props when the layout view is created. Renders `null` when no layout
+ * is available.
  * @param {StudioComponentWrapperProps} props component props
  * @internal
  */
@@ -27,4 +30,3 @@ export const StudioComponentWrapper = (props: StudioComponentWrapperProps): JSX.
 
   return <ViewComponent />;
 };
-

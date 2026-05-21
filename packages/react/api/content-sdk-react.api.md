@@ -17,6 +17,7 @@ import { debug as debug_2 } from '@sitecore-content-sdk/search';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
 import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 import { DictionaryService } from '@sitecore-content-sdk/content/i18n';
+import type { Document as Document_2 } from '@sitecore-content-sdk/content/atoms';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { enableDebug } from '@sitecore-content-sdk/core';
 import { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
@@ -649,6 +650,30 @@ export interface SitecoreProviderState {
 export { SitePathService }
 
 export { SitePathServiceConfig }
+
+// @internal
+export type StudioComponentParams = {
+    componentRef?: string;
+};
+
+// @internal
+export const StudioComponentServerWrapper: (props: StudioComponentServerWrapperProps) => Promise<React_2.JSX.Element | null>;
+
+// @internal
+export type StudioComponentServerWrapperProps = {
+    componentRef: string;
+    fieldNames?: string;
+};
+
+// @internal
+const StudioComponentWrapper: (props: StudioComponentWrapperProps) => JSX_2.Element | null;
+export { StudioComponentWrapper as StudioComponentClientWrapper }
+export { StudioComponentWrapper }
+
+// @internal
+export type StudioComponentWrapperProps = {
+    document?: Document_2 | null;
+};
 
 // Warning: (ae-forgotten-export) The symbol "TextProps" needs to be exported by the entry point api-surface.d.ts
 //

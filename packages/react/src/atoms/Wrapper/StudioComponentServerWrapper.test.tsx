@@ -180,16 +180,16 @@ describe('StudioComponentServerWrapper', () => {
   });
 
   describe('fetchDocument — path validation', () => {
-    it('returns null and warns when path is empty', async () => {
+    it('renders when fieldNames matches the variant segment in componentRef', async () => {
       const result = await StudioComponentServerWrapper({
         componentRef: 'org/components/hero/nonexistent',
         fieldNames: 'nonexistent',
       });
 
-      expect(result).to.be.null;
-      expect(consoleWarnStub).to.have.been.calledWithMatch(
-        'StudioComponentServerWrapper: missing component reference path'
-      );
+      expect(result).to.not.be.null;
+      expect(fetcherGetStub).to.have.been.calledOnce;
+      expect(result.type).to.equal(StudioComponentWrapperStub);
+      expect(result.props.document).to.deep.equal(sampleDocument);
     });
 
     it('returns null and errors when URL resolution fails', async () => {
