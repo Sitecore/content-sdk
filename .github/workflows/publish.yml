@@ -88,8 +88,6 @@ jobs:
       - name: Prepare and Process Changesets Release
         id: changesets
         uses: changesets/action@v1
-        env:
-          npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
         with:
           version: yarn csdk:prep-release
           publish: yarn changeset:publish --tag latest
@@ -99,6 +97,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
 
   canary-snapshot:
     runs-on: ubuntu-latest
