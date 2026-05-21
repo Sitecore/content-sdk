@@ -15,7 +15,7 @@ import { provideLocaleBootstrap } from '../i18n/locale-bootstrap';
  * Configuration for the Sitecore Angular SDK.
  * @public
  */
-export interface SitecoreAngularConfig {
+export interface AngularCSDKAppInit {
   /**
    * Sitecore configuration (e.g. from sitecore.config.ts).
    * When provided, {@link sitecoreClient} must also be set; both are registered for DI.
@@ -50,27 +50,27 @@ export interface SitecoreAngularConfig {
  * @returns {EnvironmentProviders} Angular environment providers
  * @public
  */
-export function provideSitecoreAngular(config: SitecoreAngularConfig): EnvironmentProviders {
+export function provideSitecoreAngular(init: AngularCSDKAppInit): EnvironmentProviders {
   const providers: Array<unknown> = [];
 
-  if (config.sitecoreConfig !== undefined || config.sitecoreClient !== undefined) {
-    if (config.sitecoreConfig === undefined || config.sitecoreClient === undefined) {
+  if (init.sitecoreConfig !== undefined || init.sitecoreClient !== undefined) {
+    if (init.sitecoreConfig === undefined || init.sitecoreClient === undefined) {
       throw new Error(
         'provideSitecoreAngular: `sitecoreConfig` and `sitecoreClient` must both be provided together.'
       );
     }
-    providers.push({ provide: SITECORE_CONFIG_TOKEN, useValue: config.sitecoreConfig });
-    providers.push({ provide: SITECORE_CLIENT_TOKEN, useValue: config.sitecoreClient });
+    providers.push({ provide: SITECORE_CONFIG_TOKEN, useValue: init.sitecoreConfig });
+    providers.push({ provide: SITECORE_CLIENT_TOKEN, useValue: init.sitecoreClient });
   }
-  if (config.notFoundRoute) {
-    providers.push({ provide: NOT_FOUND_ROUTE_TOKEN, useValue: config.notFoundRoute });
+  if (init.notFoundRoute) {
+    providers.push({ provide: NOT_FOUND_ROUTE_TOKEN, useValue: init.notFoundRoute });
   }
-  if (config.errorRoute) {
-    providers.push({ provide: ERROR_ROUTE_TOKEN, useValue: config.errorRoute });
+  if (init.errorRoute) {
+    providers.push({ provide: ERROR_ROUTE_TOKEN, useValue: init.errorRoute });
   }
 
-  const locales = config.sitecoreConfig?.angular?.locales ?? [
-    config.sitecoreConfig?.defaultLanguage ?? 'en',
+  const locales = init.sitecoreConfig?.angular?.locales ?? [
+    init.sitecoreConfig?.defaultLanguage ?? 'en',
   ];
   if (locales.length > 0) {
     providers.push({ provide: UrlSerializer, useClass: LocaleUrlSerializer });

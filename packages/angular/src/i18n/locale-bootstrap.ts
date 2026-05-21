@@ -9,7 +9,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { SitecoreContextService } from '../lib/sitecore-context.service';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
-import { extractLocaleFromPath } from './locale-utils';
+import { splitLocaleFromPath } from './locale-utils';
 
 /**
  * Resolves the initial URL pathname from the current execution environment.
@@ -59,12 +59,13 @@ export function provideLocaleBootstrap(): EnvironmentProviders {
     const router = inject(Router);
 
     const initialPath = resolveInitialPath(req, isBrowser);
-    context.setLocale(extractLocaleFromPath(initialPath, locales).locale);
+    context.setLocale(splitLocaleFromPath(initialPath, locales).locale);
 
+    // maintain locale on client navigation too
     router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const path = event.urlAfterRedirects.split('?')[0];
-        context.setLocale(extractLocaleFromPath(path, locales).locale);
+        context.setLocale(splitLocaleFromPath(path, locales).locale);
       }
     });
   });

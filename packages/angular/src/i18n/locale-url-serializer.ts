@@ -2,7 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { DefaultUrlSerializer, type UrlTree } from '@angular/router';
 import { SitecoreContextService } from '../lib/sitecore-context.service';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
-import { extractLocaleFromPath, prependLocale } from './locale-utils';
+import { splitLocaleFromPath } from './locale-utils';
+import { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
 
 /**
  * Locale-aware {@link UrlSerializer} replacement. Extends {@link DefaultUrlSerializer} and
@@ -19,7 +20,7 @@ import { extractLocaleFromPath, prependLocale } from './locale-utils';
  * - Otherwise the locale segment is prepended to the serialized URL.
  *
  * Parsing is inherited from the default — this serializer does **not** strip locale on
- * parse. The locale matcher (`createLocaleMatcher`) consumes the locale segment from the
+ * parse. The locale matcher (`scLocaleMatcher`) consumes the locale segment from the
  * route tree instead.
  * @public
  */
@@ -31,9 +32,13 @@ export class LocaleUrlSerializer extends DefaultUrlSerializer {
 
   override serialize(tree: UrlTree): string {
     const base = super.serialize(tree);
-    if (this.locales.length > 0 && extractLocaleFromPath(base, this.locales).locale) {
+    if (this.locales.length > 0 && splitLocaleFromPath(base, this.locales).locale) {
       return base;
     }
-    return prependLocale(base, this.context.urlLocale());
+    const currentLocale = this.context.urlLocale();
+    if (!currentLocale) {
+      return base;
+    }
+    return getLocaleRewrite(base, currentLocale);
   }
 }

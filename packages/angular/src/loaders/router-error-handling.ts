@@ -3,7 +3,7 @@ import { RedirectCommand, Router } from '@angular/router';
 import type { NavigationError } from '@angular/router';
 import { DEFAULT_ERROR_ROUTE, DEFAULT_NOT_FOUND_ROUTE, NotFoundNavigationError } from './models';
 import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN, SITECORE_CONFIG_TOKEN } from '../lib/tokens';
-import { extractLocaleFromPath } from '../i18n/locale-utils';
+import { splitLocaleFromPath } from '../i18n/locale-utils';
 
 /**
  * Normalizes a URL path (strip leading slash and query) for comparison.
@@ -83,7 +83,7 @@ export function handleNavigationError(): (error: NavigationError) => RedirectCom
     const errorRoute = inject(ERROR_ROUTE_TOKEN, { optional: true }) || DEFAULT_ERROR_ROUTE;
     const locales = inject(SITECORE_CONFIG_TOKEN, { optional: true })?.angular?.locales ?? [];
     const router = inject(Router);
-    const { locale } = extractLocaleFromPath(failedUrl, locales);
+    const { locale } = splitLocaleFromPath(failedUrl, locales);
     const targetNotFound = locale ? `/${locale}${notFoundRoute}` : notFoundRoute;
     const targetError = locale ? `/${locale}${errorRoute}` : errorRoute;
     return redirectOnNavigationError(err, failedUrl, targetNotFound, targetError, router);

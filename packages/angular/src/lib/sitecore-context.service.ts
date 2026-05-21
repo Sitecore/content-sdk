@@ -1,4 +1,11 @@
-import { Injectable, signal, computed, inject, type Signal, type WritableSignal } from '@angular/core';
+import {
+  Injectable,
+  signal,
+  computed,
+  inject,
+  type Signal,
+  type WritableSignal,
+} from '@angular/core';
 import type { Page } from '@sitecore-content-sdk/content/client';
 import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 import { SITECORE_CONFIG_TOKEN } from './tokens';
@@ -30,14 +37,14 @@ export class SitecoreContextService {
    */
   readonly urlLocale: Signal<string | null>;
 
-  /**
-   * Effective locale for data fetching: `urlLocale ?? defaultLanguage`. Always concrete.
-   */
-  readonly effectiveLocale: Signal<string>;
-
   private readonly _page: WritableSignal<Page | null>;
   private readonly _dictionary: WritableSignal<DictionaryPhrases | null>;
+  // locale extracted from the current route URL (if present)
   private readonly _urlLocale: WritableSignal<string | null>;
+  /**
+   * Effective locale for data fetching: `page.locale ?? urlLocale ?? defaultLanguage`. Always concrete.
+   */
+  readonly effectiveLocale: Signal<string>;
 
   constructor() {
     const pageSignal = signal<Page | null>(null);
@@ -51,9 +58,12 @@ export class SitecoreContextService {
     const defaultLanguage =
       inject(SITECORE_CONFIG_TOKEN, { optional: true })?.defaultLanguage ?? '';
     const urlLocaleSignal = signal<string | null>(null);
+
     this._urlLocale = urlLocaleSignal;
     this.urlLocale = urlLocaleSignal.asReadonly();
-    this.effectiveLocale = computed(() => urlLocaleSignal() ?? defaultLanguage);
+    this.effectiveLocale = computed(
+      () => this.page()?.locale ?? urlLocaleSignal() ?? defaultLanguage
+    );
   }
 
   /**
@@ -67,15 +77,5 @@ export class SitecoreContextService {
 
   setDictionary(dictionary: DictionaryPhrases | null): void {
     this._dictionary.set(dictionary);
-  }
-
-  /**
-   * Update the current URL locale. Called by the locale bootstrap on initial load and on
-   * subsequent `NavigationEnd` events.
-   * @param {string | null} locale - Configured locale found in the URL, or `null` when absent.
-   * @returns {void}
-   */
-  setLocale(locale: string | null): void {
-    this._urlLocale.set(locale);
   }
 }

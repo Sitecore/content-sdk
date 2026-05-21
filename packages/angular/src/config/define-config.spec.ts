@@ -10,12 +10,10 @@ describe('defineConfig', () => {
 
   it('should merge clientEnv with process.env into content defineConfig', () => {
     vi.stubEnv('SITECORE_EDITING_SECRET', 'secret-from-process');
-    const spy = vi
-      .spyOn(contentConfig, 'defineConfig')
-      .mockReturnValue({
-        defaultLanguage: 'en',
-        redirects: { enabled: true, locales: [] },
-      } as unknown as contentConfig.SitecoreConfig);
+    const spy = vi.spyOn(contentConfig, 'defineConfig').mockReturnValue({
+      defaultLanguage: 'en',
+      redirects: { enabled: true, locales: [] },
+    } as unknown as contentConfig.SitecoreConfig);
 
     defineConfig({ defaultSite: 'explicit' }, { CSDK_PUBLIC_FOO: 'from-client' });
 
@@ -31,12 +29,10 @@ describe('defineConfig', () => {
 
   it('should let process.env override duplicate keys from clientEnv', () => {
     vi.stubEnv('SITECORE_EDGE_CONTEXT_ID', 'from-process');
-    const spy = vi
-      .spyOn(contentConfig, 'defineConfig')
-      .mockReturnValue({
-        defaultLanguage: 'en',
-        redirects: { enabled: true, locales: [] },
-      } as unknown as contentConfig.SitecoreConfig);
+    const spy = vi.spyOn(contentConfig, 'defineConfig').mockReturnValue({
+      defaultLanguage: 'en',
+      redirects: { enabled: true, locales: [] },
+    } as unknown as contentConfig.SitecoreConfig);
 
     defineConfig({}, { SITECORE_EDGE_CONTEXT_ID: 'from-client' });
 
@@ -85,7 +81,7 @@ describe('defineConfig', () => {
 
     const result = defineConfig({ angular: { locales: ['en', 'de'] } });
 
-    expect((result.redirects as { locales: string[] }).locales).toEqual(['en', 'de']);
+    expect((result.redirects as unknown as { locales: string[] }).locales).toEqual(['en', 'de']);
   });
 
   it('should override redirect locale settings with angular settings', () => {
@@ -96,7 +92,7 @@ describe('defineConfig', () => {
 
     const result = defineConfig({ angular: { locales: ['en', 'de'] } });
 
-    expect((result.redirects as { locales: string[] }).locales).toEqual(['en', 'de']);
+    expect((result.redirects as unknown as { locales: string[] }).locales).toEqual(['en', 'de']);
   });
 
   it('should honor a custom defaultLanguage when prepending to angular.locales', () => {

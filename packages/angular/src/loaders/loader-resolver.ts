@@ -57,10 +57,7 @@ export type LoaderId = keyof LoaderIdMap extends never ? string : keyof LoaderId
  * @returns {Params} Merged params with a guaranteed `locale` when `defaultLanguage` is set.
  */
 function buildLoaderParams(route: ActivatedRouteSnapshot, defaultLanguage?: string): Params {
-  const merged = route.pathFromRoot.reduce(
-    (acc, r) => ({ ...acc, ...r.params }),
-    {} as Params
-  );
+  const merged = route.pathFromRoot.reduce((acc, r) => ({ ...acc, ...r.params }), {} as Params);
   if (!merged.locale && defaultLanguage) {
     merged.locale = defaultLanguage;
   }

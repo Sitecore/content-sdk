@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect } from 'vitest';
 import { UrlSegment } from '@angular/router';
-import { extractLocaleFromPath, prependLocale, createLocaleMatcher } from './locale-utils';
+import { splitLocaleFromPath, scLocaleMatcher } from './locale-utils';
 
 const LOCALES = ['en', 'de'];
 
@@ -9,72 +9,83 @@ function seg(path: string): UrlSegment {
   return new UrlSegment(path, {});
 }
 
-describe('extractLocaleFromPath', () => {
-  it('should detect a configured locale at the start of the path', () => {
-    expect(extractLocaleFromPath('/en/about', LOCALES)).toEqual({
+describe('splitLocaleFromPath', () => {
+  it('should return locale and the nonLocalePath when first path segment matches locales', () => {
+    expect(splitLocaleFromPath('/en/about', LOCALES)).toEqual({
       locale: 'en',
-      rest: '/about',
+      nonLocalePath: '/about',
     });
   });
 
-  it('should detect a configured locale when the locale is the only segment', () => {
-    expect(extractLocaleFromPath('/en', LOCALES)).toEqual({ locale: 'en', rest: '/' });
+  it('should return locale and the nonLocalePath without a query string when first path segment matches locales and input pathname has query string', () => {
+    expect(splitLocaleFromPath('/en/about?x=1', LOCALES)).toEqual({
+      locale: 'en',
+      nonLocalePath: '/about',
+    });
   });
 
-  it('should return null locale when the first segment is not configured', () => {
-    expect(extractLocaleFromPath('/about', LOCALES)).toEqual({
+  it('should return locale and the nonLocalePath without a fragment when first path segment matches locales and input pathname has fragment', () => {
+    expect(splitLocaleFromPath('/en/about#section', LOCALES)).toEqual({
+      locale: 'en',
+      nonLocalePath: '/about',
+    });
+  });
+
+  it('should return the nonLocalePath only when first path segment does not match locales', () => {
+    expect(splitLocaleFromPath('/about', LOCALES)).toEqual({
       locale: null,
-      rest: '/about',
+      nonLocalePath: '/about',
     });
-  });
-
-  it('should return null locale at the root', () => {
-    expect(extractLocaleFromPath('/', LOCALES)).toEqual({ locale: null, rest: '/' });
-  });
-
-  it('should not treat an unconfigured locale-shaped segment as a locale', () => {
-    expect(extractLocaleFromPath('/fr/about', LOCALES)).toEqual({
+    expect(splitLocaleFromPath('/fr/about', LOCALES)).toEqual({
       locale: null,
-      rest: '/fr/about',
+      nonLocalePath: '/fr/about',
     });
   });
 
-  it('should preserve query and fragment in the rest of the path', () => {
-    expect(extractLocaleFromPath('/en/about?x=1#hash', LOCALES)).toEqual({
-      locale: 'en',
-      rest: '/about?x=1#hash',
+  it('should return the nonLocalePath only without query string when first path segment does not match locales and input pathname has query string', () => {
+    expect(splitLocaleFromPath('/about?x=1', LOCALES)).toEqual({
+      locale: null,
+      nonLocalePath: '/about',
+    });
+    expect(splitLocaleFromPath('/fr/about?x=1', LOCALES)).toEqual({
+      locale: null,
+      nonLocalePath: '/fr/about',
     });
   });
 
-  it('should accept a pathname without leading slash', () => {
-    expect(extractLocaleFromPath('en/about', LOCALES)).toEqual({
-      locale: 'en',
-      rest: '/about',
+  it('should return the nonLocalePath only without fragment when first path segment does not match locales and input pathname has fragment', () => {
+    expect(splitLocaleFromPath('/about#section', LOCALES)).toEqual({
+      locale: null,
+      nonLocalePath: '/about',
+    });
+    expect(splitLocaleFromPath('/fr/about#section', LOCALES)).toEqual({
+      locale: null,
+      nonLocalePath: '/fr/about',
+    });
+  });
+
+  it('should return "/" only for home page pathname without locale', () => {
+    expect(splitLocaleFromPath('/', LOCALES)).toEqual({
+      locale: null,
+      nonLocalePath: '/',
+    });
+  });
+
+  it('should return "/" only for home page pathname without locale, when query string or fragment is present', () => {
+    expect(splitLocaleFromPath('/?x=1', LOCALES)).toEqual({
+      locale: null,
+      nonLocalePath: '/',
+    });
+    expect(splitLocaleFromPath('/#section', LOCALES)).toEqual({
+      locale: null,
+      nonLocalePath: '/',
     });
   });
 });
 
-describe('prependLocale', () => {
-  it('should prepend the locale segment when a locale is provided', () => {
-    expect(prependLocale('/about', 'en')).toBe('/en/about');
-  });
-
-  it('should leave the path unchanged when locale is null', () => {
-    expect(prependLocale('/about', null)).toBe('/about');
-  });
-
-  it('should leave the path unchanged when locale is empty', () => {
-    expect(prependLocale('/about', '')).toBe('/about');
-  });
-
-  it('should produce /<locale> when the path is the root', () => {
-    expect(prependLocale('/', 'en')).toBe('/en');
-  });
-});
-
-describe('createLocaleMatcher', () => {
+describe('scLocaleMatcher', () => {
   it('should consume a configured locale segment and expose it as posParam locale', () => {
-    const matcher = createLocaleMatcher(LOCALES);
+    const matcher = scLocaleMatcher(LOCALES);
     const segments = [seg('en'), seg('about')];
 
     const result = matcher(segments, {} as never, {} as never);
@@ -85,7 +96,7 @@ describe('createLocaleMatcher', () => {
   });
 
   it('should not consume any segments when the first segment is not a configured locale', () => {
-    const matcher = createLocaleMatcher(LOCALES);
+    const matcher = scLocaleMatcher(LOCALES);
     const segments = [seg('about')];
 
     const result = matcher(segments, {} as never, {} as never);
@@ -95,7 +106,7 @@ describe('createLocaleMatcher', () => {
   });
 
   it('should match the root path with zero consumed segments', () => {
-    const matcher = createLocaleMatcher(LOCALES);
+    const matcher = scLocaleMatcher(LOCALES);
 
     const result = matcher([], {} as never, {} as never);
 
@@ -103,7 +114,7 @@ describe('createLocaleMatcher', () => {
   });
 
   it('should consume a locale-only path', () => {
-    const matcher = createLocaleMatcher(LOCALES);
+    const matcher = scLocaleMatcher(LOCALES);
     const segments = [seg('en')];
 
     const result = matcher(segments, {} as never, {} as never);
@@ -113,7 +124,7 @@ describe('createLocaleMatcher', () => {
   });
 
   it('should not consume when the first segment matches an unconfigured locale', () => {
-    const matcher = createLocaleMatcher(LOCALES);
+    const matcher = scLocaleMatcher(LOCALES);
     const segments = [seg('fr'), seg('about')];
 
     const result = matcher(segments, {} as never, {} as never);

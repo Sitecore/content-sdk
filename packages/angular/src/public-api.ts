@@ -46,6 +46,7 @@ export {
   ErrorPage,
   Page,
 } from '@sitecore-content-sdk/content/client';
+export { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
 export { mediaApi } from '@sitecore-content-sdk/content/media';
 export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
 export {
@@ -65,8 +66,6 @@ export {
 
 import { VERSION as CORE_VERSION } from '@angular/core';
 import { Router } from '@angular/router';
-
-export * from '@sitecore-content-sdk/content/client';
 
 // Angular-specific exports
 export * from './loaders/loader-resolver';
@@ -91,9 +90,8 @@ export { SitecoreTranslateLoader } from './i18n/sitecore-translate-loader';
 
 // ─── Localized routing ────────────────────────────────────────
 export {
-  extractLocaleFromPath,
-  prependLocale,
-  createLocaleMatcher,
+  splitLocaleFromPath,
+  scLocaleMatcher,
   type LocaleExtractionResult,
 } from './i18n/locale-utils';
 export { LocaleUrlSerializer } from './i18n/locale-url-serializer';

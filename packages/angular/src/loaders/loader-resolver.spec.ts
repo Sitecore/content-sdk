@@ -286,6 +286,7 @@ describe('loaderResolver', () => {
       const route = makeRouteSnapshot({
         params: { slug: 'about' },
         queryParams: { lang: 'en' },
+        pathFromRoot: [{ params: {} }, { params: { slug: 'about' } }],
       });
       const state = makeRouterStateSnapshot('/about');
 

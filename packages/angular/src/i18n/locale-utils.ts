@@ -1,5 +1,4 @@
 import type { UrlMatcher, UrlMatchResult, UrlSegment } from '@angular/router';
-import { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
 
 /**
  * Result of locale extraction from a URL path.
@@ -9,8 +8,14 @@ export interface LocaleExtractionResult {
   /** Configured locale found at the start of the path, or `null` when absent. */
   locale: string | null;
   /** Remainder of the path after the locale segment (always starts with `/`). */
-  rest: string;
+  nonLocalePath: string;
 }
+
+/**
+ * Parses a normalized pathname into its first segment, remainder path, and query/fragment suffix.
+ * Groups: (1) first segment, (2) rest of path including leading slash, (3) ?query and/or #fragment.
+ */
+const PATH_PARTS_REGEX = /^\/([^/?#]*)(\/[^?#]*)?([?#].*)?$/;
 
 /**
  * Extracts a configured locale from the first segment of a URL pathname.
@@ -20,42 +25,23 @@ export interface LocaleExtractionResult {
  * @returns {LocaleExtractionResult} Detected locale and the rest of the path.
  * @public
  */
-export function extractLocaleFromPath(pathname: string, locales: string[]): LocaleExtractionResult {
+export function splitLocaleFromPath(pathname: string, locales: string[]): LocaleExtractionResult {
   if (!pathname) {
-    return { locale: null, rest: '/' };
+    return { locale: null, nonLocalePath: '/' };
   }
-  const normalized = pathname.startsWith('/') ? pathname : '/' + pathname;
-  const queryIndex = normalized.search(/[?#]/);
-  const pathOnly = queryIndex === -1 ? normalized : normalized.slice(0, queryIndex);
-  const suffix = queryIndex === -1 ? '' : normalized.slice(queryIndex);
-  const firstSlash = pathOnly.indexOf('/', 1);
-  const firstSegment = firstSlash === -1 ? pathOnly.slice(1) : pathOnly.slice(1, firstSlash);
+  const normalized = pathname.startsWith('/') ? pathname : `/${pathname}`;
+  const [, firstSegment = '', restPath = '', _queryFragmentSuffix = ''] =
+    normalized.match(PATH_PARTS_REGEX) ?? [];
 
   if (firstSegment && locales.includes(firstSegment)) {
-    const rest = firstSlash === -1 ? '/' : pathOnly.slice(firstSlash);
-    return { locale: firstSegment, rest: (rest || '/') + suffix };
+    return { locale: firstSegment, nonLocalePath: restPath || '/' };
   }
-  return { locale: null, rest: pathname };
-}
-
-/**
- * Prepends a locale segment to a URL pathname. No-op when `locale` is `null` or empty.
- * Delegates to {@link getLocaleRewrite} from `@sitecore-content-sdk/content/i18n`.
- * @param {string} pathname - URL pathname.
- * @param {string | null} locale - Locale to prepend, or `null` to skip.
- * @returns {string} Locale-prefixed pathname, or the original when `locale` is `null` or empty.
- * @public
- */
-export function prependLocale(pathname: string, locale: string | null): string {
-  if (!locale) {
-    return pathname;
-  }
-  return getLocaleRewrite(pathname, locale);
+  return { locale: null, nonLocalePath: `/${firstSegment}${restPath}` };
 }
 
 /**
  * Creates an Angular {@link UrlMatcher} that consumes a configured-locale segment from
- * the start of a route. When the first URL segment matches one of `locales`, it is consumed
+ * the start of a route. When the first URL segment matches one of scConfig's `locales`, it is consumed
  * and exposed as the `locale` route param. Otherwise zero segments are consumed and the
  * route still matches (so error routes and the catchall handle both prefixed and unprefixed
  * URLs from the same route tree).
@@ -63,7 +49,7 @@ export function prependLocale(pathname: string, locale: string | null): string {
  * @returns {UrlMatcher} Angular URL matcher for locale-prefixed route trees.
  * @public
  */
-export function createLocaleMatcher(locales: string[]): UrlMatcher {
+export function scLocaleMatcher(locales: string[]): UrlMatcher {
   return (segments: UrlSegment[]): UrlMatchResult => {
     if (segments.length > 0 && locales.includes(segments[0].path)) {
       return { consumed: [segments[0]], posParams: { locale: segments[0] } };

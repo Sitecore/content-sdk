@@ -3,7 +3,8 @@ import { LinkFieldValue, LinkField } from '@sitecore-content-sdk/content/layout'
 import { applyLinkFieldToAnchor, resolveLinkFromField } from './link-field-utils';
 import { SitecoreContextService } from '../lib/sitecore-context.service';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
-import { extractLocaleFromPath, prependLocale } from '../i18n/locale-utils';
+import { splitLocaleFromPath } from '../i18n/locale-utils';
+import { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
 
 const EXTERNAL_HREF_PREFIXES = [
   'http://',
@@ -105,7 +106,7 @@ export class ScLinkDirective {
       return link;
     }
     if (this.locales.length > 0) {
-      const { locale } = extractLocaleFromPath(href, this.locales);
+      const { locale } = splitLocaleFromPath(href, this.locales);
       if (locale) {
         return link;
       }
@@ -114,6 +115,6 @@ export class ScLinkDirective {
     if (!currentLocale) {
       return link;
     }
-    return { ...link, href: prependLocale(href, currentLocale) };
+    return { ...link, href: getLocaleRewrite(href, currentLocale) };
   }
 }

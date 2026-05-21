@@ -7,16 +7,36 @@ import { SitecoreContextService } from '../lib/sitecore-context.service';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 import type { AngularSitecoreConfig } from '../config/define-config';
 import { provideLocaleBootstrap } from './locale-bootstrap';
-import { createLocaleMatcher } from './locale-utils';
+import { scLocaleMatcher } from './locale-utils';
 
 @Component({ standalone: true, template: '', selector: 'blank-cmp' })
 class BlankCmp {}
 
-function makeConfig(locales: string[]): AngularSitecoreConfig {
+function makeConfig(
+  locales: string[],
+  defaultLanguage: string = 'en'
+): AngularSitecoreConfig {
   return {
-    defaultLanguage: 'en',
+    defaultLanguage,
     angular: { locales },
   } as AngularSitecoreConfig;
+}
+
+function configureServerBootstrap(
+  requestUrl: string,
+  config: AngularSitecoreConfig
+): SitecoreContextService {
+  TestBed.resetTestingModule();
+  TestBed.configureTestingModule({
+    providers: [
+      provideRouter([]),
+      { provide: SITECORE_CONFIG_TOKEN, useValue: config },
+      { provide: PLATFORM_ID, useValue: 'server' },
+      { provide: REQUEST, useValue: new Request(requestUrl) },
+      provideLocaleBootstrap(),
+    ],
+  });
+  return TestBed.inject(SitecoreContextService);
 }
 
 describe('provideLocaleBootstrap', () => {
@@ -43,23 +63,21 @@ describe('provideLocaleBootstrap', () => {
       expect(context.urlLocale()).toBe('de');
     });
 
-    it('should leave urlLocale null when REQUEST URL has no configured locale prefix', async () => {
-      TestBed.resetTestingModule();
-      TestBed.configureTestingModule({
-        providers: [
-          provideRouter([]),
-          { provide: SITECORE_CONFIG_TOKEN, useValue: makeConfig(['en', 'de']) },
-          { provide: PLATFORM_ID, useValue: 'server' },
-          {
-            provide: REQUEST,
-            useValue: new Request('https://example.com/about'),
-          },
-          provideLocaleBootstrap(),
-        ],
-      });
-      const context = TestBed.inject(SitecoreContextService);
+    it('should fall back to defaultLanguage when REQUEST URL has no configured locale prefix', async () => {
+      const context = configureServerBootstrap(
+        'https://example.com/about',
+        makeConfig(['en', 'de'], 'da')
+      );
       await TestBed.runInInjectionContext(async () => {});
-      expect(context.urlLocale()).toBeNull();
+      expect(context.urlLocale()).toBe('da');
+    });
+
+    it('should fall back to en when REQUEST URL has no locale prefix and defaultLanguage is unset', async () => {
+      const context = configureServerBootstrap('https://example.com/about', {
+        angular: { locales: ['en', 'de'] },
+      } as AngularSitecoreConfig);
+      await TestBed.runInInjectionContext(async () => {});
+      expect(context.urlLocale()).toBe('en');
     });
   });
 
@@ -75,7 +93,7 @@ describe('provideLocaleBootstrap', () => {
         providers: [
           provideRouter([
             {
-              matcher: createLocaleMatcher(['en', 'de']),
+              matcher: scLocaleMatcher(['en', 'de']),
               children: [{ path: '**', component: BlankCmp }],
             },
           ]),
