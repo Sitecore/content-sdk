@@ -4,7 +4,7 @@ import { withPropMeta } from './schema-utils';
 
 /**
  * Zod schema for a Sitecore Single-Line Text or Multi-Line Text field.
- * Mirrors {@link [Text Component](https://github.com/Sitecore/content-sdk/blob/dev/packages/react/src/components/Text.tsx)}.
+ * Mirrors the Sitecore Text component (`Text.tsx` in `@sitecore-content-sdk/react`).
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the schema.
  * @returns A ZodObject with `value?: string | number` and the DS control hint attached.
  * @public
@@ -20,7 +20,7 @@ export const textFieldSchema = (extra?: z.ZodRawShape) =>
 
 /**
  * Zod schema for a Sitecore Rich Text field.
- * Mirrors {@link [Rich Text Component](https://github.com/Sitecore/content-sdk/blob/dev/packages/react/src/components/RichText.tsx)}.
+ * Mirrors the Sitecore Rich Text component (`RichText.tsx` in `@sitecore-content-sdk/react`).
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the schema.
  * @returns A ZodObject with `value?: string` and the DS control hint attached.
  * @public
@@ -36,7 +36,7 @@ export const richTextFieldSchema = (extra?: z.ZodRawShape) =>
 
 /**
  * Zod schema for a Sitecore Date field.
- * Mirrors the field shape used in {@link [Date Component](https://github.com/Sitecore/content-sdk/blob/dev/packages/react/src/components/Date.tsx)}.
+ * Mirrors the field shape used in the Date component (`Date.tsx` in `@sitecore-content-sdk/react`).
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the schema.
  * @returns A ZodObject with `value?: string` and the DS control hint attached.
  * @public
@@ -52,7 +52,7 @@ export const dateFieldSchema = (extra?: z.ZodRawShape) =>
 
 /**
  * Zod schema for a Sitecore Link field.
- * Mirrors {@link [Link Component](https://github.com/Sitecore/content-sdk/blob/dev/packages/react/src/components/Link.tsx)}.
+ * Mirrors the Sitecore Link component (`Link.tsx` in `@sitecore-content-sdk/react`).
  * The inner value object uses `z.looseObject` to allow arbitrary Sitecore-added attributes,
  * matching the `[attributeName: string]: unknown` index signature on `LinkFieldValue`.
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the outer schema.
@@ -80,7 +80,7 @@ export const linkFieldSchema = (extra?: z.ZodRawShape) =>
 
 /**
  * Zod schema for a Sitecore Image field.
- * Mirrors {@link [Image Component](https://github.com/Sitecore/content-sdk/blob/dev/packages/react/src/components/Image.tsx)}.
+ * Mirrors the Sitecore Image component (`Image.tsx` in `@sitecore-content-sdk/react`).
  * The inner value object uses `z.looseObject` to allow arbitrary HTML attributes,
  * matching the `[attributeName: string]: unknown` index signature on `ImageFieldValue`.
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the outer schema.
@@ -106,7 +106,7 @@ export const imageFieldSchema = (extra?: z.ZodRawShape) =>
 
 /**
  * Zod schema for a Sitecore File field.
- * Mirrors {@link [File Component](https://github.com/Sitecore/content-sdk/blob/dev/packages/react/src/components/File.tsx)}.
+ * Mirrors the Sitecore File component (`File.tsx` in `@sitecore-content-sdk/react`).
  * The inner value object uses `z.looseObject` to allow arbitrary extra properties,
  * matching the `[propName: string]: unknown` index signature on `FileFieldValue`.
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the outer schema.

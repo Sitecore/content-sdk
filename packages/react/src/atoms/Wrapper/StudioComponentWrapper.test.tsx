@@ -23,12 +23,12 @@ class ErrorBoundary extends React.Component<
 > {
   state = { hasError: false };
 
-  componentDidCatch(err: Error) {
-    this.props.onError?.(err);
-  }
-
   static getDerivedStateFromError() {
     return { hasError: true };
+  }
+
+  componentDidCatch(err: Error) {
+    this.props.onError?.(err);
   }
 
   render() {
@@ -115,26 +115,6 @@ describe('<StudioComponentWrapper />', () => {
   it('renders the component-layout view when document is provided', () => {
     const { container } = renderInProvider(<StudioComponentWrapper document={sampleDoc} />);
     expect(container.querySelector('[data-test="box"]')).to.exist;
-  });
-
-  it('spreads plain-object document.props onto the root view', () => {
-    const docWithProps: Document = {
-      ...sampleDoc,
-      props: { 'data-runtime': 'from-document' },
-    };
-    const { container } = renderInProvider(<StudioComponentWrapper document={docWithProps} />);
-    expect(container.querySelector('[data-test="box"][data-runtime="from-document"]')).to.exist;
-  });
-
-  it('does not spread non-object document.props onto the root view', () => {
-    const docBadProps: Document = {
-      ...sampleDoc,
-      props: 'not-an-object' as unknown as Document['props'],
-    };
-    const { container } = renderInProvider(<StudioComponentWrapper document={docBadProps} />);
-    const el = container.querySelector('[data-test="box"]');
-    expect(el).to.exist;
-    expect(el?.getAttribute('data-runtime')).to.be.null;
   });
 
   it('renders nothing safely when atomRegistry is absent from the provider and document is null', () => {

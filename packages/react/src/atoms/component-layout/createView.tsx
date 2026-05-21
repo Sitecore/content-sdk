@@ -246,6 +246,13 @@ export function createView<RuntimeProps extends Record<string, unknown> = Record
   callbacks: CallbackMetadata[] = []
 ): FC<RuntimeProps> {
   const { root, state: initialState = {} } = doc;
+  const documentProps =
+    doc.props !== null &&
+    doc.props !== undefined &&
+    typeof doc.props === 'object' &&
+    !Array.isArray(doc.props)
+      ? (doc.props as Record<string, unknown>)
+      : {};
 
   const Generated: FC<RuntimeProps> = (runtimeProps) => {
     const [state, setState] = useReducer(
@@ -268,7 +275,7 @@ export function createView<RuntimeProps extends Record<string, unknown> = Record
       scope: ScopeMap | undefined
     ): React.ReactNode => {
       const ctx: ResolveContext = {
-        props: runtimeProps as Record<string, unknown>,
+        props: { ...documentProps, ...(runtimeProps as Record<string, unknown>) },
         state: stateRef.current,
         item: itemCtx,
         scope,

@@ -1,18 +1,13 @@
 // Below are built-in components that are available in the app, it's recommended to keep them as is
-import {
-  BYOCWrapper,
-  NextjsContentSdkComponent,
-  FEaaSWrapper,
-  StudioNccWrapper,
-} from '@sitecore-content-sdk/nextjs';
+import { BYOCWrapper, NextjsContentSdkComponent, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';
 import { Form } from '@sitecore-content-sdk/nextjs';
+import StudioNccWrapper from 'components/content-sdk/StudioNccWrapper';
 // end of built-in components
 
 // Components must be registered within the map to match the string key with component name in Sitecore
 export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['BYOCWrapper', BYOCWrapper],
   ['FEaaSWrapper', FEaaSWrapper],
-  // NCC / Studio layout: set rendering params ComponentRef (→ componentRef) and optional FieldNames
   ['StudioNccWrapper', StudioNccWrapper],
   ['Form', { ...Form, componentType: 'client' }],
 ]);

@@ -17,7 +17,6 @@ Register components in the Sitecore component maps so the layout and editing pip
 ## How to perform
 
 - Open `.sitecore/component-map.ts` (Server) or `.sitecore/component-map.client.ts` (Client). Add an entry mapping the layout component name to the React component import. Keep keys consistent with layout and existing map entries.
-- For NCC / Studio layouts on pages, use built-in `StudioNccWrapper` from `@sitecore-content-sdk/nextjs` in the server map (see template `component-map.ts`). Sitecore rendering params: `ComponentRef` → `componentRef`, optional `FieldNames`.
 
 ## Hard Rules
 
