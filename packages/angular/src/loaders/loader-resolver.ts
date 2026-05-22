@@ -1,4 +1,4 @@
-import { inject, TransferState, PLATFORM_ID, REQUEST, makeStateKey } from '@angular/core';
+import { inject, TransferState, PLATFORM_ID, REQUEST, REQUEST_CONTEXT, makeStateKey } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import {
   ActivatedRouteSnapshot,
@@ -16,10 +16,11 @@ import {
   DEFAULT_NOT_FOUND_ROUTE,
   LoaderHttpError,
   NotFoundNavigationError,
-  isLoaderRedirectResult,
 } from './models';
 import { redirectOnNavigationError } from './router-error-handling';
 import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from '../lib/tokens';
+import { resolveLoaderData } from '../server/cache/resolve-loader-data';
+import type { LoaderCache } from '../server/cache/models';
 
 /**
  * Create a state key for the loader
@@ -123,20 +124,37 @@ export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
     if (!loader) {
       throw new Error(`No loader registered for id "${loaderId}"`);
     }
-
     const requestContext = request ? extractRequestContext(request) : undefined;
+    const ssrContext = inject(REQUEST_CONTEXT, { optional: true }) as
+      | { cache?: LoaderCache }
+      | undefined;
+    const cache = ssrContext?.cache;
 
-    const result = await loader({
-      url,
-      params: route.params,
-      query: route.queryParams,
-      requestContext,
-    });
-    if (isLoaderRedirectResult(result)) {
-      return applyRedirect(router, result.loaderRedirectTarget);
+    const result = await resolveLoaderData(
+      {
+        loaderId,
+        url,
+        params: route.params,
+        query: route.queryParams as Record<string, string | string[]>,
+      },
+      registry,
+      cache,
+      requestContext
+    );
+
+    if (result.kind === 'redirect') {
+      return applyRedirect(router, result.redirect.loaderRedirectTarget);
     }
-    transferState.set(key, result);
-    return result;
+
+    if (result.kind === 'error') {
+      const cause = (result as { cause?: unknown }).cause;
+      if (cause instanceof NotFoundNavigationError) throw cause;
+      if (cause instanceof LoaderHttpError) throw cause;
+      throw new LoaderHttpError(result.status, result.message);
+    }
+
+    transferState.set(key, result.data);
+    return result.data;
   };
 
   resolver[LOADER_ID] = loaderId;

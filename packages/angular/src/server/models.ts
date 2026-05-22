@@ -1,6 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import type { RequestContext } from '../loaders/models';
 import type { LoaderFn } from '../loaders/models';
+import type { LoaderCache } from './cache/models';
 
 /**
  * Injection token for the request context extractor (used by tests to provide a mock via TestBed).
@@ -82,6 +83,11 @@ export interface ExpressDataHandlerOptions extends DataHandlerConfig {
    * The loader registry containing all registered loaders
    */
   loaders: LoaderRegistry;
+  /**
+   * Optional loader cache. When supplied, /_data responses go through
+   * cache-aside; omit to run loaders directly on every request.
+   */
+  cache?: LoaderCache;
   /**
    * Optional request context extractor (e.g. for testing via TestBed).
    * If not provided, uses the default implementation from loaders/utils.

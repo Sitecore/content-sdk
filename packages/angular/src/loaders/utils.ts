@@ -130,9 +130,20 @@ export function extractRequestContext(req: Request | ExpressLikeRequest): Reques
   }
 
   // Express-like request object
+  const hostHeader = req.headers?.['host'];
+  const hostname = pickHostnameFromHostHeader(
+    Array.isArray(hostHeader) ? hostHeader[0] : hostHeader
+  );
   return {
+    hostname,
     headers: req.headers,
     cookies: req.cookies,
     query: req.query,
   };
+}
+
+function pickHostnameFromHostHeader(host: string | undefined): string | undefined {
+  if (!host) return undefined;
+  const colon = host.indexOf(':');
+  return colon === -1 ? host : host.slice(0, colon);
 }

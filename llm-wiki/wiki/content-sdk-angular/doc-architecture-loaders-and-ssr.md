@@ -23,6 +23,7 @@ The Angular head fetches Sitecore layout data through a **loader system**: route
 | Editing / page context | [doc-editing-and-page-context-angular.md](doc-editing-and-page-context-angular.md) |
 | Multisite | [doc-multisite-angular-roadmap.md](doc-multisite-angular-roadmap.md) |
 | Personalization | [doc-personalization-angular-roadmap.md](doc-personalization-angular-roadmap.md) |
+| ISR / server-side caching (investigation) | [doc-isr-investigation-and-caching.md](doc-isr-investigation-and-caching.md) |
 
 ## See also
 

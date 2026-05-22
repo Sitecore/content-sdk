@@ -1,8 +1,6 @@
 import {
   LoaderApiRequest,
   LoaderApiResponse,
-  LoaderContext,
-  isLoaderRedirectResult,
   NotFoundNavigationError,
   RequestContext,
   LoaderHttpError,
@@ -17,6 +15,8 @@ import {
   LoaderRegistry,
 } from './models';
 import { LOADER_DATA_ENDPOINT } from './constants';
+import { resolveLoaderData } from './cache/resolve-loader-data';
+import type { LoaderCache } from './cache/models';
 
 /**
  * Execute a loader and return the API response
@@ -28,62 +28,35 @@ import { LOADER_DATA_ENDPOINT } from './constants';
 async function executeLoader(
   request: LoaderApiRequest,
   loaders: LoaderRegistry,
-  requestContext?: RequestContext
+  requestContext: RequestContext | undefined,
+  cache: LoaderCache | undefined
 ): Promise<LoaderApiResponse> {
-  const { loaderId, url, params, query } = request;
+  const result = await resolveLoaderData(request, loaders, cache, requestContext);
 
-  const loader = loaders[loaderId];
-  if (!loader) {
+  if (result.kind === 'redirect') {
     return {
-      kind: 'error',
-      status: 500,
-      message: `No loader registered for id "${loaderId}"`,
+      kind: 'redirect',
+      redirect: {
+        loaderRedirectTarget: result.redirect.loaderRedirectTarget,
+        status: result.redirect.status,
+      },
     };
   }
 
-  const context: LoaderContext = {
-    url,
-    params,
-    query,
-    requestContext,
-  };
-
-  try {
-    const result = await loader(context);
-    if (isLoaderRedirectResult(result)) {
-      return {
-        kind: 'redirect',
-        redirect: {
-          loaderRedirectTarget: result.loaderRedirectTarget,
-          status: result.status,
-        },
-      };
+  if (result.kind === 'error') {
+    // Map known loader errors back to wire envelopes; resolveLoaderData
+    // attaches the original Error via `cause` so we can pattern-match.
+    const cause = (result as { cause?: unknown }).cause;
+    if (cause instanceof NotFoundNavigationError) {
+      return { kind: 'notFound', status: 404 };
     }
-    return {
-      kind: 'data',
-      data: result,
-    };
-  } catch (error) {
-    if (error instanceof NotFoundNavigationError) {
-      return {
-        kind: 'notFound',
-        status: 404,
-      };
+    if (cause instanceof LoaderHttpError) {
+      return { kind: 'error', status: cause.status, message: cause.message };
     }
-    if (error instanceof LoaderHttpError) {
-      return {
-        kind: 'error',
-        status: error.status,
-        message: error.message,
-      };
-    }
-    const message = error instanceof Error ? error.message : 'Loader failed';
-    return {
-      kind: 'error',
-      status: 500,
-      message,
-    };
+    return { kind: 'error', status: result.status, message: result.message };
   }
+
+  return { kind: 'data', data: result.data };
 }
 
 /**
@@ -151,6 +124,7 @@ export function createLoaderDataServiceMiddleware(
 ): ExpressMiddleware {
   const {
     loaders,
+    cache,
     endpoint = LOADER_DATA_ENDPOINT,
     extractRequestContext: extractReq = extractRequestContext,
   } = options;
@@ -167,7 +141,7 @@ export function createLoaderDataServiceMiddleware(
     try {
       const parsed = parseLoaderRequest(req);
       if ('loaderId' in parsed) {
-        const result = await executeLoader(parsed, loaders, requestContext);
+        const result = await executeLoader(parsed, loaders, requestContext, cache);
         sendResponse(res, result);
       } else {
         res

@@ -21,6 +21,8 @@
 | [doc-multisite-angular-roadmap.md](doc-multisite-angular-roadmap.md) | Multisite: PDF TBA vs `resolveSitecorePage` options + JSDoc “future” |
 | [doc-personalization-angular-roadmap.md](doc-personalization-angular-roadmap.md) | Personalization: PDF TBA vs client/config reality |
 | [doc-i18n-angular.md](doc-i18n-angular.md) | **Stub:** locale on `Page`, `dictionaryLoader`; URL-segment i18n not implemented |
+| [doc-isr-investigation-and-caching.md](doc-isr-investigation-and-caching.md) | **ISR investigation** — unstorage, POC approaches 2–4, mainline vs POC; decision TBD |
+| [doc-loader-cache-plan.md](doc-loader-cache-plan.md) | **Loader cache plan** — Option 3 implementation: server-only module, persistence, on/off, prerender, invalidation |
 
 ## Sources
 
@@ -28,6 +30,8 @@
 |--------|----------|
 | JSS-Angular Live Design PDF (ingest 2026-05-14) | **`llm-wiki/raw/design/JSS-Angular-Live-Design-Doc-140526-211917.pdf`** |
 | Text extract (same document) | `llm-wiki/raw/2026-05-14-jss-angular-live-design-architecture.md` |
+| JSS-Angular ISR PDF (ingest 2026-05-22) | **`llm-wiki/raw/design/JSS-Angular-ISR-220526-175323.pdf`** |
+| Text extract (ISR document) | `llm-wiki/raw/2026-05-22-jss-angular-isr-investigation.md` |
 
 ## Code anchors
 
