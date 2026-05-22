@@ -675,27 +675,13 @@ describe('editing/utils', () => {
     it('should return component required params for design library mode', () => {
       const params = getRequiredEditingParamsList(DesignLibraryMode.Normal);
 
-      expect(params).to.deep.equal([
-        'sc_site',
-        'sc_itemid',
-        'sc_renderingId',
-        'sc_uid',
-        'sc_lang',
-        'mode',
-      ]);
+      expect(params).to.deep.equal(['sc_site', 'sc_itemid', 'sc_uid', 'sc_lang', 'mode']);
     });
 
     it('should return component required params for library metadata mode', () => {
       const params = getRequiredEditingParamsList(DesignLibraryMode.Metadata);
 
-      expect(params).to.deep.equal([
-        'sc_site',
-        'sc_itemid',
-        'sc_renderingId',
-        'sc_uid',
-        'sc_lang',
-        'mode',
-      ]);
+      expect(params).to.deep.equal(['sc_site', 'sc_itemid', 'sc_uid', 'sc_lang', 'mode']);
     });
 
     it('should return editing required params for edit mode', () => {
