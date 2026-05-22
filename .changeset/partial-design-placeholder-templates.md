@@ -2,4 +2,4 @@
 'create-content-sdk-app': patch
 ---
 
-[create-content-sdk] Add PartialDesignDynamicPlaceholder to App Router and Pages Router templates for SitecoreAI partial designs
+[create-content-sdk-app] Add PartialDesignDynamicPlaceholder to App Router and Pages Router templates for Sitecore AI partial designs
