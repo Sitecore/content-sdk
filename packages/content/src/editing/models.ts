@@ -29,10 +29,10 @@ export interface RenderComponentQueryParams {
   secret: string;
   sc_lang: string;
   sc_itemid: string;
-  sc_renderingId: string;
   sc_uid: string;
   sc_site: string;
   mode: DesignLibraryMode;
+  sc_renderingId?: string;
   sc_variant?: string;
   sc_version?: string;
 }
@@ -99,10 +99,10 @@ export enum DesignLibraryVariantGeneration {
 export interface DesignLibraryRenderPreviewData {
   site: string;
   itemId: string;
-  renderingId: string;
   componentUid: string;
   language: string;
   mode: DesignLibraryMode;
+  renderingId?: string;
   variant?: string;
   version?: string;
   dataSourceId?: string;
