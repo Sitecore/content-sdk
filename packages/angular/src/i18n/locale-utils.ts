@@ -9,6 +9,8 @@ export interface LocaleExtractionResult {
   locale: string | null;
   /** Remainder of the path after the locale segment (always starts with `/`). */
   nonLocalePath: string;
+  /** Query or fragment string found at the end of the path, or `null` when absent. */
+  queryFragment?: string;
 }
 
 /**
@@ -30,13 +32,13 @@ export function splitLocaleFromPath(pathname: string, locales: string[]): Locale
     return { locale: null, nonLocalePath: '/' };
   }
   const normalized = pathname.startsWith('/') ? pathname : `/${pathname}`;
-  const [, firstSegment = '', restPath = '', _queryFragmentSuffix = ''] =
+  const [, firstSegment = '', restPath = '', queryFragment = undefined] =
     normalized.match(PATH_PARTS_REGEX) ?? [];
 
   if (firstSegment && locales.includes(firstSegment)) {
-    return { locale: firstSegment, nonLocalePath: restPath || '/' };
+    return { locale: firstSegment, nonLocalePath: restPath || '/', queryFragment };
   }
-  return { locale: null, nonLocalePath: `/${firstSegment}${restPath}` };
+  return { locale: null, nonLocalePath: `/${firstSegment}${restPath}`, queryFragment };
 }
 
 /**

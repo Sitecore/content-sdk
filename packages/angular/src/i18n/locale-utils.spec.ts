@@ -10,76 +10,109 @@ function seg(path: string): UrlSegment {
 }
 
 describe('splitLocaleFromPath', () => {
-  it('should return locale and the nonLocalePath when first path segment matches locales', () => {
+  it('should return locale and nonLocalePath when first path segment matches locales', () => {
     expect(splitLocaleFromPath('/en/about', LOCALES)).toEqual({
       locale: 'en',
       nonLocalePath: '/about',
+      queryFragment: undefined,
     });
   });
 
-  it('should return locale and the nonLocalePath without a query string when first path segment matches locales and input pathname has query string', () => {
+  it('should strip query string from nonLocalePath and return it in queryFragment when locale matches', () => {
     expect(splitLocaleFromPath('/en/about?x=1', LOCALES)).toEqual({
       locale: 'en',
       nonLocalePath: '/about',
+      queryFragment: '?x=1',
     });
   });
 
-  it('should return locale and the nonLocalePath without a fragment when first path segment matches locales and input pathname has fragment', () => {
+  it('should strip fragment from nonLocalePath and return it in queryFragment when locale matches', () => {
     expect(splitLocaleFromPath('/en/about#section', LOCALES)).toEqual({
       locale: 'en',
       nonLocalePath: '/about',
+      queryFragment: '#section',
     });
   });
 
-  it('should return the nonLocalePath only when first path segment does not match locales', () => {
+  it('should return nonLocalePath only when first path segment does not match locales', () => {
     expect(splitLocaleFromPath('/about', LOCALES)).toEqual({
       locale: null,
       nonLocalePath: '/about',
+      queryFragment: undefined,
     });
     expect(splitLocaleFromPath('/fr/about', LOCALES)).toEqual({
       locale: null,
       nonLocalePath: '/fr/about',
+      queryFragment: undefined,
     });
   });
 
-  it('should return the nonLocalePath only without query string when first path segment does not match locales and input pathname has query string', () => {
+  it('should strip query string from nonLocalePath and return it in queryFragment when locale does not match', () => {
     expect(splitLocaleFromPath('/about?x=1', LOCALES)).toEqual({
       locale: null,
       nonLocalePath: '/about',
+      queryFragment: '?x=1',
     });
     expect(splitLocaleFromPath('/fr/about?x=1', LOCALES)).toEqual({
       locale: null,
       nonLocalePath: '/fr/about',
+      queryFragment: '?x=1',
     });
   });
 
-  it('should return the nonLocalePath only without fragment when first path segment does not match locales and input pathname has fragment', () => {
+  it('should strip fragment from nonLocalePath and return it in queryFragment when locale does not match', () => {
     expect(splitLocaleFromPath('/about#section', LOCALES)).toEqual({
       locale: null,
       nonLocalePath: '/about',
+      queryFragment: '#section',
     });
     expect(splitLocaleFromPath('/fr/about#section', LOCALES)).toEqual({
       locale: null,
       nonLocalePath: '/fr/about',
+      queryFragment: '#section',
     });
   });
 
-  it('should return "/" only for home page pathname without locale', () => {
+  it('should return "/" for home page pathname without locale', () => {
     expect(splitLocaleFromPath('/', LOCALES)).toEqual({
       locale: null,
       nonLocalePath: '/',
+      queryFragment: undefined,
     });
   });
 
-  it('should return "/" only for home page pathname without locale, when query string or fragment is present', () => {
+  it('should strip query string or fragment from home pathname and return them in queryFragment', () => {
     expect(splitLocaleFromPath('/?x=1', LOCALES)).toEqual({
       locale: null,
       nonLocalePath: '/',
+      queryFragment: '?x=1',
     });
     expect(splitLocaleFromPath('/#section', LOCALES)).toEqual({
       locale: null,
       nonLocalePath: '/',
+      queryFragment: '#section',
     });
+  });
+
+  it('should return combined query string and fragment in queryFragment', () => {
+    expect(splitLocaleFromPath('/en/about?x=1#section', LOCALES)).toEqual({
+      locale: 'en',
+      nonLocalePath: '/about',
+      queryFragment: '?x=1#section',
+    });
+    expect(splitLocaleFromPath('/about?x=1#section', LOCALES)).toEqual({
+      locale: null,
+      nonLocalePath: '/about',
+      queryFragment: '?x=1#section',
+    });
+  });
+
+  it('should omit queryFragment for empty pathname', () => {
+    expect(splitLocaleFromPath('', LOCALES)).toEqual({
+      locale: null,
+      nonLocalePath: '/',
+    });
+    expect(splitLocaleFromPath('', LOCALES).queryFragment).toBeUndefined();
   });
 });
 

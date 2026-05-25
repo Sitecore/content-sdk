@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter, withNavigationErrorHandler } from '@angular/router';
+import { provideRouter, UrlSerializer, withNavigationErrorHandler } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import {
   provideLoaderRegistry,
@@ -8,6 +8,7 @@ import {
   PreLoaderDataService,
   SITECORE_COMPONENT_MAP,
   SitecoreTranslateLoader,
+  LocaleUrlSerializer,
 } from '@sitecore-content-sdk/angular';
 import { routes } from './app.routes';
 import scConfig from '../../sitecore.config';
@@ -37,5 +38,7 @@ export const appConfig: ApplicationConfig = {
     PreLoaderDataService,
     { provide: SITECORE_COMPONENT_MAP, useValue: componentMap },
     { provide: TranslateLoader, useClass: SitecoreTranslateLoader },
+    // provides locale aware serializer for csdk and angular router links
+    { provide: UrlSerializer, useClass: LocaleUrlSerializer },
   ],
 };

@@ -8,7 +8,6 @@ import {
   NOT_FOUND_ROUTE_TOKEN,
 } from './tokens';
 import type { AngularSitecoreConfig } from '../config/define-config';
-import { LocaleUrlSerializer } from '../i18n/locale-url-serializer';
 import { SitecoreContextService } from './sitecore-context.service';
 
 /**
@@ -67,15 +66,6 @@ export function provideSitecoreAngular(init: AngularCSDKAppInit): EnvironmentPro
   }
   if (init.errorRoute) {
     providers.push({ provide: ERROR_ROUTE_TOKEN, useValue: init.errorRoute });
-  }
-
-  providers.push(SitecoreContextService);
-
-  const locales = init.sitecoreConfig?.angular?.locales ?? [
-    init.sitecoreConfig?.defaultLanguage ?? 'en',
-  ];
-  if (locales.length > 0) {
-    providers.push({ provide: UrlSerializer, useClass: LocaleUrlSerializer });
   }
 
   return makeEnvironmentProviders(providers as Parameters<typeof makeEnvironmentProviders>[0]);
