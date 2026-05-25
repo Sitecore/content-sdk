@@ -253,7 +253,7 @@ export interface DesignLibraryRenderPreviewData {
     // (undocumented)
     mode: DesignLibraryMode;
     // (undocumented)
-    renderingId: string;
+    renderingId?: string;
     // (undocumented)
     site: string;
     // (undocumented)
@@ -974,7 +974,7 @@ export interface RenderComponentQueryParams {
     // (undocumented)
     sc_lang: string;
     // (undocumented)
-    sc_renderingId: string;
+    sc_renderingId?: string;
     // (undocumented)
     sc_site: string;
     // (undocumented)

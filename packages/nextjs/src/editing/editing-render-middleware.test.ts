@@ -1052,6 +1052,25 @@ describe('EditingRenderMiddleware', () => {
       );
     });
 
+    it('should handle draft component request without sc_renderingId', async () => {
+      // eslint-disable-next-line no-unused-vars
+      const { sc_renderingId: _renderingId, ...draftQuery } = query;
+      const req = mockRequest({ query: draftQuery });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware();
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      expect(res.status).to.be.calledOnceWith(200);
+      expect(res.send).to.have.been.calledOnceWith('<div>some html</div>');
+    });
+
     it('should response with 400 for missing query params', async () => {
       const req = mockRequest({
         query: { sc_site: 'website', secret },

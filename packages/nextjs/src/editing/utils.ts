@@ -166,16 +166,9 @@ export const getPreviewCookies = (site: string) => {
  * @returns {string[]} list of required parameters for validation
  */
 export const getRequiredEditingParamsList = (mode: EditingRenderQueryParams['mode']) => {
-  const editingRequiredParams = ['sc_site', 'sc_itemid', 'sc_lang', 'route', 'mode'];
-
-  const componentRequiredParams = [
-    'sc_site',
-    'sc_itemid',
-    'sc_renderingId',
-    'sc_uid',
-    'sc_lang',
-    'mode',
-  ];
+  const baseRequiredParams = ['sc_site', 'sc_itemid', 'sc_lang'];
+  const editingRequiredParams = [...baseRequiredParams, 'route', 'mode'];
+  const componentRequiredParams = [...baseRequiredParams, 'sc_uid', 'mode'];
   return isDesignLibraryMode(mode) ? componentRequiredParams : editingRequiredParams;
 };
 
