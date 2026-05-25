@@ -14,7 +14,7 @@ export class SitecoreTranslateLoader implements TranslateLoader {
   private readonly context = inject(SitecoreContextService);
 
   /**
-   * Returns the translation based on the current router locale dictionary from {@link SitecoreContextService}.
+   * Returns the translation based on the dictionary in the context from {@link SitecoreContextService}.
    * @returns {Observable<Record<string, string>>} Observable of translation dictionary.
    */
   getTranslation(): Observable<Record<string, string>> {

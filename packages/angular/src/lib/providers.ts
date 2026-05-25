@@ -45,7 +45,7 @@ export interface AngularCSDKAppInit {
  *     provideSitecoreAngular({ sitecoreConfig: scConfig, sitecoreClient: getClient() }),
  *   ],
  * };
- * @param {SitecoreAngularConfig} config SDK configuration
+ * @param {AngularCSDKAppInit} config SDK configuration
  * @returns {EnvironmentProviders} Angular environment providers
  * @public
  */

@@ -8,7 +8,7 @@ import { AngularSitecoreConfig } from '../config/define-config';
  *
  * Future: add helpers for personalization and multisite alongside this call.
  * @param {string} path - Route path (e.g. `'/'` or `'/about'`).
- * @param {SitecoreConfig} sitecoreConfig - Resolved Sitecore configuration (e.g. default export from `sitecore.config.ts`).
+ * @param {AngularSitecoreConfig} sitecoreConfig - Resolved Sitecore configuration (e.g. default export from `sitecore.config.ts`).
  * @param {SitecoreClient} client - Sitecore client instance (e.g. from a module singleton).
  * @param {{ locale?: string; site?: string }} [options] - Optional `locale` / `site` overrides.
  * @param {string} [options.locale] - Optional locale override.

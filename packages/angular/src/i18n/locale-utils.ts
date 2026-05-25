@@ -21,7 +21,7 @@ const PATH_PARTS_REGEX = /^\/([^/?#]*)(\/[^?#]*)?([?#].*)?$/;
 
 /**
  * Extracts a configured locale from the first segment of a URL pathname.
- * Returns `{ locale: null, rest: pathname }` when the first segment is not a configured locale.
+ * Returns `{ locale: null, nonLocalePath: pathname, queryFragment: query or fragment string }` when the first segment is not a configured locale.
  * @param {string} pathname - URL pathname, with or without leading `/`.
  * @param {string[]} locales - Configured locales.
  * @returns {LocaleExtractionResult} Detected locale and the rest of the path.
