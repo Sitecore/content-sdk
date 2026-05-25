@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ErrorPage, Page } from '@sitecore-content-sdk/nextjs';

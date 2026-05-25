@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "template": "nextjs",
     "args": {
@@ -9,8 +9,7 @@
   {
     "template": "nextjs-app-router-cache-components",
     "args": {
-      "prerender": "SSG",
-      "revalidate": true
+      "prerender": "SSG"
     }
   }
 ]

@@ -1,15 +1,9 @@
-﻿import type { NextConfig } from 'next';
+import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
-
-const allowedDevOrigins = (process.env.NEXT_ALLOWED_DEV_ORIGINS ?? '')
-  .split(',')
-  .map((origin) => origin.trim())
-  .filter(Boolean);
 
 const nextConfig: NextConfig = {
   // Enable Cache Components (`use cache`, `cacheTag`) in Next.js App Router.
   cacheComponents: true,
-  ...(allowedDevOrigins.length > 0 ? { allowedDevOrigins } : {}),
 
   // Enable Turbopack file system caching for faster dev startup (beta)
   // See: https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack
