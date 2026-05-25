@@ -8,7 +8,7 @@
 
 > **appendScriptWithAttributes**(`attributes`): `void`
 
-Defined in: [analytics-core/src/utils/browser/appendScriptWithAttributes.ts:6](https://github.com/Sitecore/content-sdk/blob/85b14a924e1541b929221c290dd9186542d52050/packages/analytics-core/src/utils/browser/appendScriptWithAttributes.ts#L6)
+Defined in: [analytics-core/src/utils/browser/appendScriptWithAttributes.ts:6](https://github.com/Sitecore/content-sdk/blob/a1d379868299122f98c2bf8e4536466d377703b7/packages/analytics-core/src/utils/browser/appendScriptWithAttributes.ts#L6)
 
 **`Internal`**
 
