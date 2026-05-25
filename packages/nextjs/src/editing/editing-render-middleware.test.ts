@@ -770,7 +770,7 @@ describe('EditingRenderMiddleware', () => {
     });
   });
 
-  it('should issue intrnal request propagating allowed headers', async () => {
+  it('should issue internal request propagating allowed headers', async () => {
     const req = mockRequest({
       query,
       headers: {
@@ -895,6 +895,29 @@ describe('EditingRenderMiddleware', () => {
     await handler(req, res);
 
     expect(res.setHeader).to.have.been.calledWith('Set-Cookie', []);
+    expect(res.status).to.be.calledOnceWith(200);
+  });
+
+  it('should set authorization token cookie to the response', async () => {
+    const req = mockRequest({ query, headers: { authorization: 'token-value' } });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    const setCookieCalls = (res.setHeader as sinon.SinonStub)
+      .getCalls()
+      .filter((call) => call.args[0] === 'Set-Cookie');
+    const lastSetCookie = setCookieCalls[1]?.args[1];
+    expect(lastSetCookie).to.deep.include(
+      'sc_preview_token=token-value; Path=/; HttpOnly; SameSite=None; Secure'
+    );
     expect(res.status).to.be.calledOnceWith(200);
   });
 

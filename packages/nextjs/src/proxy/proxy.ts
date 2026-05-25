@@ -5,7 +5,7 @@ import {
   createGraphQLClientFactory,
   GraphQLClientOptions,
 } from '@sitecore-content-sdk/content/client';
-import { PreviewCookies } from '../editing/utils';
+import { PREVIEW_COOKIES } from '../editing/utils';
 import debug from '../debug';
 
 export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
@@ -108,8 +108,8 @@ export abstract class ProxyBase extends ProxyHandler {
    */
   protected isPreview(req: NextRequest) {
     return !!(
-      req.cookies.get(PreviewCookies.PRERENDER_BYPASS)?.value ||
-      req.cookies.get(PreviewCookies.PREVIEW_DATA)?.value
+      req.cookies.get(PREVIEW_COOKIES.PRERENDER_BYPASS)?.value ||
+      req.cookies.get(PREVIEW_COOKIES.PREVIEW_DATA)?.value
     );
   }
 

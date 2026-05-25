@@ -8,7 +8,7 @@
 
 > **BotPageViewData** = `object`
 
-Defined in: [events/src/events/page-view/bot-page-view.ts:17](https://github.com/Sitecore/content-sdk/blob/77825b9deac7ebde4022f21ad02170354dd2da15/packages/events/src/events/page-view/bot-page-view.ts#L17)
+Defined in: [events/src/events/page-view/bot-page-view.ts:17](https://github.com/Sitecore/content-sdk/blob/85b14a924e1541b929221c290dd9186542d52050/packages/events/src/events/page-view/bot-page-view.ts#L17)
 
 The data to be sent for bot tracking.
 
@@ -18,7 +18,7 @@ The data to be sent for bot tracking.
 
 > **language**: `string`
 
-Defined in: [events/src/events/page-view/bot-page-view.ts:27](https://github.com/Sitecore/content-sdk/blob/77825b9deac7ebde4022f21ad02170354dd2da15/packages/events/src/events/page-view/bot-page-view.ts#L27)
+Defined in: [events/src/events/page-view/bot-page-view.ts:27](https://github.com/Sitecore/content-sdk/blob/85b14a924e1541b929221c290dd9186542d52050/packages/events/src/events/page-view/bot-page-view.ts#L27)
 
 The language the site visitor interacts with your brand in.
 For example, if the site visitor selects the Japanese language in your app, the language is "JA".
@@ -30,7 +30,7 @@ Format: uppercase ISO 639.
 
 > **page**: `string`
 
-Defined in: [events/src/events/page-view/bot-page-view.ts:21](https://github.com/Sitecore/content-sdk/blob/77825b9deac7ebde4022f21ad02170354dd2da15/packages/events/src/events/page-view/bot-page-view.ts#L21)
+Defined in: [events/src/events/page-view/bot-page-view.ts:21](https://github.com/Sitecore/content-sdk/blob/85b14a924e1541b929221c290dd9186542d52050/packages/events/src/events/page-view/bot-page-view.ts#L21)
 
 The name of the webpage where the interaction with your brand takes place.
 
@@ -40,6 +40,6 @@ The name of the webpage where the interaction with your brand takes place.
 
 > **userAgent**: `string`
 
-Defined in: [events/src/events/page-view/bot-page-view.ts:31](https://github.com/Sitecore/content-sdk/blob/77825b9deac7ebde4022f21ad02170354dd2da15/packages/events/src/events/page-view/bot-page-view.ts#L31)
+Defined in: [events/src/events/page-view/bot-page-view.ts:31](https://github.com/Sitecore/content-sdk/blob/85b14a924e1541b929221c290dd9186542d52050/packages/events/src/events/page-view/bot-page-view.ts#L31)
 
 Full `User-Agent` of the request. Sent in event `ext` as `sourceUserAgent` (distinct from any `User-Agent` header on the HTTP request).
