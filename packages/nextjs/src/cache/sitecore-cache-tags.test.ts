@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import type { RouteData } from '@sitecore-content-sdk/content/layout';
 import {
   buildSitecoreDictionaryCacheTag,
   buildSitecoreDictionaryCacheTagsFromSites,
@@ -135,14 +136,25 @@ describe('sitecore-cache-tags', () => {
   });
 
   describe('buildSitecoreItemCacheTagFromRouteData', () => {
-    it('returns null without itemId', () => {
-      expect(buildSitecoreItemCacheTagFromRouteData({}, 'en-US')).to.equal(null);
+    it('returns null when route is undefined', () => {
+      expect(buildSitecoreItemCacheTagFromRouteData(undefined, 'en-US')).to.equal(null);
+    });
+
+    it('returns null when itemId is missing', () => {
+      expect(
+        buildSitecoreItemCacheTagFromRouteData({ placeholders: {} } as RouteData, 'en-US')
+      ).to.equal(null);
     });
 
     it('uses itemLanguage from route when set', () => {
       expect(
         buildSitecoreItemCacheTagFromRouteData(
-          { itemId: '{A1111111-1111-1111-1111-111111111111}', itemLanguage: 'fr-FR', itemVersion: 2 },
+          {
+            itemId: '{A1111111-1111-1111-1111-111111111111}',
+            itemLanguage: 'fr-FR',
+            itemVersion: 2,
+            placeholders: {},
+          } as RouteData,
           'en-US'
         )
       ).to.equal(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:a1111111-1111-1111-1111-111111111111:fr-fr:v2`);
@@ -150,7 +162,10 @@ describe('sitecore-cache-tags', () => {
 
     it('falls back to fallbackLocale', () => {
       expect(
-        buildSitecoreItemCacheTagFromRouteData({ itemId: 'a1111111111111111111111111111111' }, 'en-US')
+        buildSitecoreItemCacheTagFromRouteData(
+          { itemId: 'a1111111111111111111111111111111', placeholders: {} } as RouteData,
+          'en-US'
+        )
       ).to.equal(
         `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:a1111111111111111111111111111111:en-us:latest`
       );

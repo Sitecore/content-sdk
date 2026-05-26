@@ -55,7 +55,7 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     expect(revalidateTagStub.called).to.equal(false);
   });
 
-  it('should use manual path for all sc: tags and omit webhook metadata in response', async () => {
+  it('should pass sc:-prefixed tags through verbatim and echo invocation metadata', async () => {
     process.env.SITECORE_REVALIDATE_SECRET = 'expected';
     const handler = module.createSitecoreRevalidateRouteHandler();
     const res = await handler.POST(
@@ -70,6 +70,8 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     expect(res.body).to.deep.equal({
       revalidated: true,
       tags: ['sc:route:site:en:_', 'sc:dict:site:en'],
+      invocation_id: null,
+      continues: false,
     });
   });
 
@@ -119,7 +121,7 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     });
   });
 
-  it('should include dictionary tags from sites on webhook path', async () => {
+  it('should include dictionary tags from sites on every call when configured', async () => {
     process.env.SITECORE_REVALIDATE_SECRET = 'expected';
     const handler = module.createSitecoreRevalidateRouteHandler({
       defaultLocale: 'en',
@@ -145,5 +147,24 @@ describe('createSitecoreRevalidateRouteHandler', () => {
       'sc:item:71b0ba0716214254aee4429b1a970c8b:en:latest'
     );
     expect(revalidateTagStub.secondCall.args[0]).to.equal('sc:dict:new-testing-site-mn:en');
+  });
+
+  it('should also append dictionary tags when only sc: tags are sent', async () => {
+    process.env.SITECORE_REVALIDATE_SECRET = 'expected';
+    const handler = module.createSitecoreRevalidateRouteHandler({
+      defaultLocale: 'en',
+      sites: [{ name: 'site-a', hostName: 'a.local', language: 'en' }],
+    });
+    const res = await handler.POST(
+      createReq({
+        headers: { 'x-revalidate-secret': 'expected' },
+        body: { tags: ['sc:route:site-a:en:_'] },
+      })
+    );
+
+    expect(res.status).to.equal(200);
+    expect(revalidateTagStub.callCount).to.equal(2);
+    expect(revalidateTagStub.firstCall.args[0]).to.equal('sc:route:site-a:en:_');
+    expect(revalidateTagStub.secondCall.args[0]).to.equal('sc:dict:site-a:en');
   });
 });

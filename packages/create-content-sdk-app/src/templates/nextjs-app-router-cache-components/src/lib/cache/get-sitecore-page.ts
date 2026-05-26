@@ -21,7 +21,7 @@ export async function getSitecorePage(params: GetSitecorePageParams): Promise<Pa
     site,
     locale,
     path,
-    route: page?.layout?.sitecore?.route ?? {},
+    route: page?.layout?.sitecore?.route,
   });
 
   for (const tag of tags) {

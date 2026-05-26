@@ -1,7 +1,9 @@
+import type { RouteData } from '@sitecore-content-sdk/content/layout';
+
 /**
  * Stable cache tag strings for Sitecore content (Next.js `cacheTag`, `unstable_cache` tags, `revalidateTag`).
  * Tags are deterministic for the same logical inputs so app code and invalidation webhooks stay aligned.
- * @public
+ * @internal
  */
 export const SITECORE_CONTENT_CACHE_TAG_PREFIX = 'sc';
 
@@ -9,7 +11,7 @@ export const SITECORE_CONTENT_CACHE_TAG_PREFIX = 'sc';
  * Sanitizes a single segment for use inside Sitecore cache tags.
  * Colons are reserved as delimiters; slashes and whitespace are normalized for stable keys.
  * @param {string} value - Raw segment (site name, locale, path segment, etc.).
- * @public
+ * @internal
  */
 export function sanitizeSitecoreCacheTagSegment(value: string): string {
   return value.trim().toLowerCase().replace(/[/:\s]+/g, '_');
@@ -18,7 +20,7 @@ export function sanitizeSitecoreCacheTagSegment(value: string): string {
 /**
  * Normalizes a Sitecore item GUID for use in cache tags (lowercase, no braces).
  * @param {string} itemId - Sitecore item id or GUID string.
- * @public
+ * @internal
  */
 export function normalizeSitecoreItemIdForCacheTag(itemId: string): string {
   return itemId.trim().toLowerCase().replace(/[{}]/g, '');
@@ -26,7 +28,7 @@ export function normalizeSitecoreItemIdForCacheTag(itemId: string): string {
 
 /**
  * Parameters for {@link buildSitecoreRouteCacheTag}.
- * @public
+ * @internal
  */
 export type BuildSitecoreRouteCacheTagParams = {
   site: string;
@@ -41,7 +43,7 @@ export type BuildSitecoreRouteCacheTagParams = {
 /**
  * Tag for a resolved route (site + language + logical path). Use for URL-level invalidation.
  * @param {BuildSitecoreRouteCacheTagParams} params - Site, locale, and optional path segments.
- * @public
+ * @internal
  */
 export function buildSitecoreRouteCacheTag(params: BuildSitecoreRouteCacheTagParams): string {
   const site = sanitizeSitecoreCacheTagSegment(params.site);
@@ -53,7 +55,7 @@ export function buildSitecoreRouteCacheTag(params: BuildSitecoreRouteCacheTagPar
 
 /**
  * Parameters for {@link buildSitecoreItemCacheTag}.
- * @public
+ * @internal
  */
 export type BuildSitecoreItemCacheTagParams = {
   itemId: string;
@@ -67,7 +69,7 @@ export type BuildSitecoreItemCacheTagParams = {
 /**
  * Tag for a layout/route item (and anything else keyed the same way). Use for item-level invalidation.
  * @param {BuildSitecoreItemCacheTagParams} params - Item id, locale, and optional published version.
- * @public
+ * @internal
  */
 export function buildSitecoreItemCacheTag(params: BuildSitecoreItemCacheTagParams): string {
   const id = normalizeSitecoreItemIdForCacheTag(params.itemId);
@@ -101,7 +103,7 @@ export function buildSitecoreDictionaryCacheTag(params: BuildSitecoreDictionaryC
 
 /**
  * Parameters for buildSitecoreDictionaryCacheTagsFromSites.
- * @public
+ * @internal
  */
 export type BuildSitecoreDictionaryCacheTagsFromSitesParams = {
   /** Sites list (e.g. from generated multisite JSON). */
@@ -115,7 +117,7 @@ export type BuildSitecoreDictionaryCacheTagsFromSitesParams = {
 /**
  * Builds deduplicated dictionary cache tags from a sites list and optional extra site.
  * @param {BuildSitecoreDictionaryCacheTagsFromSitesParams} params - Sites list, base locale, and optional extra site for an additional dictionary tag.
- * @public
+ * @internal
  */
 export function buildSitecoreDictionaryCacheTagsFromSites(
   params: BuildSitecoreDictionaryCacheTagsFromSitesParams
@@ -141,7 +143,7 @@ export function buildSitecoreDictionaryCacheTagsFromSites(
 
 /**
  * Parameters for {@link buildSitecorePersonalizedPageVariantCacheTag}.
- * @public
+ * @internal
  */
 export type BuildSitecorePersonalizedPageVariantCacheTagParams = {
   /**
@@ -157,7 +159,7 @@ export type BuildSitecorePersonalizedPageVariantCacheTagParams = {
 /**
  * Tag for a personalized page variant so caches do not bleed across variants.
  * @param {BuildSitecorePersonalizedPageVariantCacheTagParams} params - Variant id and optional component variant ids.
- * @public
+ * @internal
  */
 export function buildSitecorePersonalizedPageVariantCacheTag(
   params: BuildSitecorePersonalizedPageVariantCacheTagParams
@@ -172,28 +174,20 @@ export function buildSitecorePersonalizedPageVariantCacheTag(
 }
 
 /**
- * Minimal route data shape for building item cache tags from layout responses.
- * @public
- */
-export type SitecoreRouteDataLike = {
-  itemId?: string;
-  itemLanguage?: string;
-  itemVersion?: number;
-};
-
-/**
- * Builds an item cache tag from layout route data when `itemId` is present.
+ * Builds an item cache tag from Sitecore layout route data when `itemId` is present.
  * Prefers `itemLanguage` from Sitecore when set; otherwise uses `fallbackLocale`.
- * @param {SitecoreRouteDataLike} route - Route data from layout (item id, language, version).
+ * Accepts the same `RouteData` shape returned by the layout service (e.g. `page.layout.sitecore.route`,
+ * which is `RouteData | null`) or `undefined` when the page did not resolve.
+ * @param {RouteData | null | undefined} route - Route node from layout (item id, language, version).
  * @param {string} fallbackLocale - Locale used when `route.itemLanguage` is not set.
- * @returns `null` when `route.itemId` is missing.
- * @public
+ * @returns `null` when `route` is missing or `route.itemId` is not set.
+ * @internal
  */
 export function buildSitecoreItemCacheTagFromRouteData(
-  route: SitecoreRouteDataLike,
+  route: RouteData | null | undefined,
   fallbackLocale: string
 ): string | null {
-  if (!route.itemId) {
+  if (!route?.itemId) {
     return null;
   }
   const locale = route.itemLanguage
@@ -210,7 +204,7 @@ export function buildSitecoreItemCacheTagFromRouteData(
 /**
  * Deduplicates tag strings while preserving first-seen order.
  * @param {string[]} tags - Tag strings possibly containing duplicates.
- * @public
+ * @internal
  */
 export function dedupeSitecoreCacheTags(tags: string[]): string[] {
   const seen = new Set<string>();

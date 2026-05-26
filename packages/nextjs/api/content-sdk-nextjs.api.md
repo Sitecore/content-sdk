@@ -243,51 +243,6 @@ export type BuildSitecoreDictionaryCacheTagParams = {
     locale: string;
 };
 
-// @public
-export function buildSitecoreDictionaryCacheTagsFromSites(params: BuildSitecoreDictionaryCacheTagsFromSitesParams): string[];
-
-// @public
-export type BuildSitecoreDictionaryCacheTagsFromSitesParams = {
-    sites: readonly {
-        name: string;
-        language?: string;
-    }[];
-    baseLocale: string;
-    extraDictionarySite?: string;
-};
-
-// @public
-export function buildSitecoreItemCacheTag(params: BuildSitecoreItemCacheTagParams): string;
-
-// @public
-export function buildSitecoreItemCacheTagFromRouteData(route: SitecoreRouteDataLike, fallbackLocale: string): string | null;
-
-// @public
-export type BuildSitecoreItemCacheTagParams = {
-    itemId: string;
-    locale: string;
-    version?: number;
-};
-
-// @public
-export function buildSitecorePersonalizedPageVariantCacheTag(params: BuildSitecorePersonalizedPageVariantCacheTagParams): string;
-
-// @public
-export type BuildSitecorePersonalizedPageVariantCacheTagParams = {
-    variantId: string;
-    componentVariantIds?: string[];
-};
-
-// @public
-export function buildSitecoreRouteCacheTag(params: BuildSitecoreRouteCacheTagParams): string;
-
-// @public
-export type BuildSitecoreRouteCacheTagParams = {
-    site: string;
-    locale: string;
-    pathSegments?: string[];
-};
-
 export { BYOCClientWrapper }
 
 export { BYOCComponent }
@@ -329,16 +284,8 @@ export type CollectSitecorePageCacheTagsParams = {
     locale: string;
     personalizedPathname?: string;
     path?: string[];
-    route: SitecoreRouteDataLike;
+    route?: RouteData | null;
 };
-
-// @public
-export type CollectSitecoreTagsFromEdgeBodyOptions = {
-    defaultLocale: string;
-};
-
-// @public
-export function collectSitecoreTagsFromEdgeRevalidateRequestBody(body: SitecoreEdgeRevalidateRequestBody | null | undefined, options: CollectSitecoreTagsFromEdgeBodyOptions): string[];
 
 // @public
 export const combineImportEntries: (defaultImportEntries: ImportEntry[], generatedImportEntries: ImportEntry[]) => ImportEntry[];
@@ -433,6 +380,8 @@ export function createSitecoreRevalidateRouteHandler(options?: SitecoreRevalidat
     }> | NextResponse<{
         revalidated: boolean;
         tags: string[];
+        invocation_id: string | null;
+        continues: boolean;
     }>>;
 };
 
@@ -448,9 +397,6 @@ export { DateField }
 // @public
 const debug_2: Record<string, debug.Debugger>;
 export { debug_2 as debug }
-
-// @public
-export function dedupeSitecoreCacheTags(tags: string[]): string[];
 
 export { DefaultEmptyFieldEditingComponentImage }
 
@@ -544,9 +490,6 @@ export { extractFiles }
 
 // @public
 export const extractPath: (context: GetStaticPropsContext | GetServerSidePropsContext) => string;
-
-// @public
-export function extractSitecoreEdgeContentId(identifier: string): string;
 
 export { FEaaSClientWrapper }
 
@@ -779,9 +722,6 @@ export type NextjsContentSdkComponent = ReactContentSdkComponent & {
 
 export { normalizePersonalizedRewrite }
 
-// @public
-export function normalizeSitecoreItemIdForCacheTag(itemId: string): string;
-
 export { normalizeSiteRewrite }
 
 export { Page }
@@ -1012,13 +952,7 @@ export { RobotsServiceConfig }
 export { RouteData }
 
 // @public
-export function sanitizeSitecoreCacheTagSegment(value: string): string;
-
-// @public
 export function setCachedPageParams(pageParams: CachedPageParams): void;
-
-// @public
-export const SITECORE_CONTENT_CACHE_TAG_PREFIX = "sc";
 
 // @public
 export class SitecoreClient extends SitecoreClient_2 {
@@ -1056,22 +990,6 @@ export type SitecoreConfigInput = SitecoreConfigInput_2 & {
 };
 
 // @public
-export type SitecoreEdgeRevalidateRequestBody = {
-    invocation_id?: string;
-    updates?: SitecoreEdgeRevalidateUpdate[];
-    continues?: boolean;
-    tags?: string[];
-};
-
-// @public
-export type SitecoreEdgeRevalidateUpdate = {
-    identifier?: string;
-    entity_definition?: string;
-    operation?: string;
-    entity_culture?: string;
-};
-
-// @public
 export type SitecorePageProps = {
     page: Page | null;
     dictionary?: DictionaryPhrases;
@@ -1091,14 +1009,7 @@ export type SitecoreRevalidateRouteHandlerOptions = {
     cacheProfile?: RevalidateTagCacheProfile;
     defaultLocale?: string;
     sites?: SiteInfo[];
-    defaultSite?: string;
-};
-
-// @public
-export type SitecoreRouteDataLike = {
-    itemId?: string;
-    itemLanguage?: string;
-    itemVersion?: number;
+    extraDictionarySite?: string;
 };
 
 export { SiteInfo }

@@ -238,11 +238,11 @@ import scConfig from 'sitecore.config';
 export const { POST } = createSitecoreRevalidateRouteHandler({
   defaultLocale: scConfig.defaultLanguage,
   sites,
-  defaultSite: scConfig.defaultSite,
+  extraDictionarySite: scConfig.defaultSite,
 });
 ```
 
-Authorized by `SITECORE_REVALIDATE_SECRET` (sent in the `x-revalidate-secret` header). Accepts both manual `sc:`-prefixed tags and Sitecore webhook payloads.
+Authorized by `SITECORE_REVALIDATE_SECRET` (sent in the `x-revalidate-secret` header). Single Sitecore-webhook endpoint: accepts `updates[]` (publish events) and `tags[]` (pass-through `sc:` strings or bare item IDs).
 
 ### Internationalization
 

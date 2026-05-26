@@ -82,8 +82,8 @@ Content Rendering:
 
 Cache Components and revalidation:
 
-- Helpers in `src/lib/cache/` declare `'use cache';` and attach Sitecore tags (`sc:route`, `sc:item`, `sc:pvv`, `sc:dict`) via `cacheTag`
-- `POST /api/revalidate` accepts both manual `sc:`-prefixed tags and Sitecore webhook payloads
+- Helpers in `src/lib/cache/` declare `'use cache';` and attach Sitecore tags (`sc:route`, `sc:item`, `sc:dict`) via `cacheTag`
+- `POST /api/revalidate` is a single Sitecore-webhook endpoint that accepts `updates[]` (publish events) and `tags[]` (pass-through `sc:` strings or bare item IDs)
 - The route is authorized via `SITECORE_REVALIDATE_SECRET` (sent in the `x-revalidate-secret` header)
 - Keep the SDK in-process dictionary cache disabled in `sitecore.config.ts` (`dictionary: { caching: { enabled: false } }`) so dictionary updates flow through Cache Components only
 

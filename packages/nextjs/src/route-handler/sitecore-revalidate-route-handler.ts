@@ -35,86 +35,37 @@ export type SitecoreRevalidateRouteHandlerOptions = {
   cacheProfile?: RevalidateTagCacheProfile;
   /** Locale for item tags when culture is missing, and for dictionary tags when a site has no language. */
   defaultLocale?: string;
-  /** Sites list; merges dictionary cache tags for each site on webhook calls. */
+  /** Sites list; merges one `sc:dict:<site>:<locale>` cache tag per site on every revalidation call. */
   sites?: SiteInfo[];
-  /** Optional site name for an extra dictionary tag scoped to the handler locale option. */
-  defaultSite?: string;
+  /**
+   * Optional **dictionary-only** site name. When set, the handler appends one extra
+   * `sc:dict:<extraDictionarySite>:<defaultLocale>` tag on top of the per-site tags above.
+   * Use this as a defensive guarantee that the canonical site's dictionary tag is always
+   * invalidated even if the `sites` list is empty or carries a different language string.
+   * Note: this option does **not** influence routing or any other tag family.
+   */
+  extraDictionarySite?: string;
 };
 
-/** @param {Record<string, unknown>} body - Parsed JSON object with optional `tag` or `tags` for manual revalidation. */
-function normalizeManualTags(body: Record<string, unknown>): string[] {
-  const fromSingle =
-    typeof body.tag === 'string' && body.tag.trim() ? [body.tag.trim()] : [];
-  const fromMany = Array.isArray(body.tags)
-    ? body.tags
-        .filter((t): t is string => typeof t === 'string')
-        .map((t) => t.trim())
-        .filter(Boolean)
-    : [];
-  const normalized = [...fromSingle, ...fromMany];
-  return dedupeSitecoreCacheTags(normalized);
-}
-
-/** @param {Record<string, unknown>} body - Parsed JSON object that may include `invocation_id`. */
-function hasNonEmptyInvocationId(body: Record<string, unknown>): boolean {
-  const v = body.invocation_id;
-  return typeof v === 'string' && v.trim().length > 0;
-}
-
 /**
- * When true, the body is handled like an Experience Edge / Content Operations webhook:
- * `updates` identifiers and bare values in `tags` are mapped to `sc:item:...` tags.
- * @param {Record<string, unknown>} body - Parsed JSON revalidate request body.
- */
-function mustUseWebhookTagResolution(body: Record<string, unknown>): boolean {
-  if (body.continues === true) {
-    return true;
-  }
-  if (hasNonEmptyInvocationId(body)) {
-    return true;
-  }
-  if (Array.isArray(body.updates) && body.updates.length > 0) {
-    return true;
-  }
-
-  const singleTag = typeof body.tag === 'string' ? body.tag.trim() : '';
-  if (singleTag && !singleTag.startsWith('sc:')) {
-    return true;
-  }
-
-  if (Array.isArray(body.tags)) {
-    for (const t of body.tags) {
-      if (typeof t === 'string' && t.trim() && !t.trim().startsWith('sc:')) {
-        return true;
-      }
-    }
-  }
-  return false;
-}
-
-/** @param {Record<string, unknown>} body - Parsed JSON object with optional manual `tag` / `tags` input. */
-function hasManualTagInput(body: Record<string, unknown>): boolean {
-  if (typeof body.tag === 'string' && body.tag.trim()) {
-    return true;
-  }
-  if (Array.isArray(body.tags) && body.tags.some((t) => typeof t === 'string' && t.trim())) {
-    return true;
-  }
-  return false;
-}
-
-/**
- * Creates a single `POST` handler for `/api/revalidate` that supports both manual and Sitecore-webhook
- * revalidation. The body is dispatched at runtime:
+ * Creates a single `POST` handler for `/api/revalidate` that consumes Sitecore Experience Edge / Content
+ * Operations webhook bodies (and equivalent ad-hoc calls that reuse the same body shape).
  *
- * - **Explicit tags** — JSON `{ tag }` or `{ tags }` where every value starts with `sc:` (manual revalidation).
- * - **Webhook-style bodies** — non-empty `updates`, `continues: true`, non-empty `invocation_id`, or any
- *   `tag` / `tags` entry that does not start with `sc:`. Bare item ids are mapped to `sc:item:...` tags so
- *   invalidation matches the tags produced by `collectSitecorePageCacheTags`.
+ * The body is expected to be a JSON object that resolves to at least one Sitecore cache tag:
  *
- * Uses `SITECORE_REVALIDATE_SECRET` and the `x-revalidate-secret` header. On the **webhook** branch, resolved
- * tags include **`sc:dict:…`** when **`sites`** / **`defaultSite`** are configured; the **manual** branch only
- * revalidates the `sc:` tags the client sends.
+ * - **`updates[]`** — Sitecore publish-event rows. Each row's `identifier` (with `-media` / `-layout`
+ *   suffix stripped) maps to an `sc:item:<id>:<locale>:latest` tag, using `entity_culture` for locale
+ *   (falling back to the handler's `defaultLocale`).
+ * - **`tags[]`** — pass-through and convenience array:
+ *   - Strings already starting with `sc:` are used verbatim (e.g. `sc:route:...`, `sc:item:...`, `sc:dict:...`).
+ *   - Bare values are treated as Sitecore item ids and mapped to `sc:item:<id>:<defaultLocale>:latest`.
+ *
+ * When **`sites`** / **`extraDictionarySite`** are configured, the handler also appends one
+ * `sc:dict:<site>:<locale>` tag per site (and one extra `sc:dict:<extraDictionarySite>:<defaultLocale>`
+ * tag if set) so dictionary updates flow through the same call.
+ *
+ * Auth: `SITECORE_REVALIDATE_SECRET` env var (or the `secret` option), sent by callers in the
+ * **`x-revalidate-secret`** request header.
  * @param {SitecoreRevalidateRouteHandlerOptions} [options] - Optional inline `secret`, `cacheProfile`, locale, sites, and dictionary options.
  * @public
  */
@@ -124,17 +75,17 @@ export function createSitecoreRevalidateRouteHandler(
   const {
     defaultLocale = 'en',
     sites,
-    defaultSite,
+    extraDictionarySite,
     secret,
     cacheProfile = 'max',
   } = options;
 
   const dictionaryTags =
-    sites !== undefined || defaultSite?.trim()
+    sites !== undefined || extraDictionarySite?.trim()
       ? buildSitecoreDictionaryCacheTagsFromSites({
           sites: sites ?? [],
           baseLocale: defaultLocale,
-          extraDictionarySite: defaultSite,
+          extraDictionarySite,
         })
       : [];
 
@@ -169,87 +120,51 @@ export function createSitecoreRevalidateRouteHandler(
         return NextResponse.json({ error: 'Request body must be a JSON object.' }, { status: 400 });
       }
 
-      const obj = body as Record<string, unknown>;
+      const webhookBody = body as SitecoreEdgeRevalidateRequestBody;
 
-      if (mustUseWebhookTagResolution(obj)) {
-        const webhookBody = obj as SitecoreEdgeRevalidateRequestBody;
-        debug.revalidate('sitecore revalidate webhook path start: %o', {
-          invocation_id: webhookBody.invocation_id ?? null,
-          continues: webhookBody.continues ?? false,
-          updatesCount: webhookBody.updates?.length ?? 0,
-          tagsCount: Array.isArray(webhookBody.tags) ? webhookBody.tags.length : 0,
-          dictionaryTagsCount: dictionaryTags.length,
-          defaultLocale,
-        });
-
-        const tags = dedupeSitecoreCacheTags([
-          ...collectSitecoreTagsFromEdgeRevalidateRequestBody(webhookBody, { defaultLocale }),
-          ...dictionaryTags,
-        ]);
-        if (tags.length === 0) {
-          debug.revalidate(
-            'sitecore revalidate webhook path: no tags resolved in %dms',
-            Date.now() - startTimestamp
-          );
-          return NextResponse.json(
-            {
-              error:
-                'Provide non-empty `updates` (with identifiers) and/or `tags` that resolve to at least one cache tag.',
-            },
-            { status: 400 }
-          );
-        }
-
-        for (const tag of tags) {
-          revalidateTag(tag, cacheProfile);
-        }
-
-        debug.revalidate('sitecore revalidate webhook path end in %dms: %o', Date.now() - startTimestamp, {
-          tagsCount: tags.length,
-          invocation_id: webhookBody.invocation_id ?? null,
-          continues: webhookBody.continues ?? false,
-        });
-
-        return NextResponse.json({
-          revalidated: true,
-          tags,
-          invocation_id: webhookBody.invocation_id ?? null,
-          continues: webhookBody.continues ?? false,
-        });
-      }
-
-      if (!hasManualTagInput(obj)) {
-        debug.revalidate('sitecore revalidate: missing tag or tags in manual path');
-        return NextResponse.json(
-          { error: 'Provide a non-empty `tag` or `tags` in the request body.' },
-          { status: 400 }
-        );
-      }
-
-      const tags = normalizeManualTags(obj);
-      if (tags.length === 0) {
-        debug.revalidate('sitecore revalidate manual path: no valid tags after normalization');
-        return NextResponse.json(
-          { error: 'Provide a non-empty `tag` or `tags` in the request body.' },
-          { status: 400 }
-        );
-      }
-
-      debug.revalidate('sitecore revalidate manual path start: %o', {
-        tagsCount: tags.length,
+      debug.revalidate('sitecore revalidate start: %o', {
+        invocation_id: webhookBody.invocation_id ?? null,
+        continues: webhookBody.continues ?? false,
+        updatesCount: webhookBody.updates?.length ?? 0,
+        tagsCount: Array.isArray(webhookBody.tags) ? webhookBody.tags.length : 0,
+        dictionaryTagsCount: dictionaryTags.length,
+        defaultLocale,
       });
+
+      const tags = dedupeSitecoreCacheTags([
+        ...collectSitecoreTagsFromEdgeRevalidateRequestBody(webhookBody, { defaultLocale }),
+        ...dictionaryTags,
+      ]);
+
+      if (tags.length === 0) {
+        debug.revalidate(
+          'sitecore revalidate: no tags resolved in %dms',
+          Date.now() - startTimestamp
+        );
+        return NextResponse.json(
+          {
+            error:
+              'Provide non-empty `updates` (with identifiers) and/or `tags` that resolve to at least one cache tag.',
+          },
+          { status: 400 }
+        );
+      }
 
       for (const tag of tags) {
         revalidateTag(tag, cacheProfile);
       }
 
-      debug.revalidate('sitecore revalidate manual path end in %dms: %o', Date.now() - startTimestamp, {
+      debug.revalidate('sitecore revalidate end in %dms: %o', Date.now() - startTimestamp, {
         tagsCount: tags.length,
+        invocation_id: webhookBody.invocation_id ?? null,
+        continues: webhookBody.continues ?? false,
       });
 
       return NextResponse.json({
         revalidated: true,
         tags,
+        invocation_id: webhookBody.invocation_id ?? null,
+        continues: webhookBody.continues ?? false,
       });
     } catch (error) {
       if (error instanceof Error && (error as any).digest === 'NEXT_PRERENDER_INTERRUPTED') {

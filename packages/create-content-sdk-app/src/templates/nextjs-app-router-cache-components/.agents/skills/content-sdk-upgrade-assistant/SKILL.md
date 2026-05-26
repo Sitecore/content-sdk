@@ -20,7 +20,7 @@ Upgrade @sitecore-content-sdk/* packages safely; follow the Content SDK repo cha
 ## Hard Rules
 
 - Prefer upgrading all @sitecore-content-sdk/* packages together to a consistent set of versions unless the user requests a partial upgrade. Check peer dependencies and compatibility.
-- Update dependencies in package.json; run `npm install` and `npm run build`. Test editing, preview, and an on-demand revalidate call (e.g. send a manual `sc:`-tag to `POST /api/revalidate` and verify the corresponding page refreshes) after upgrade.
+- Update dependencies in package.json; run `npm install` and `npm run build`. Test editing, preview, and an on-demand revalidate call (e.g. send `{ "tags": ["sc:route:..."] }` to `POST /api/revalidate` with the `x-revalidate-secret` header and verify the corresponding page refreshes) after upgrade.
 - Read the **Content SDK repository** CHANGELOG (and any MIGRATION.md or upgrade guide) for breaking changes and required code/config updates. Apply migration steps before or with the version bump.
 - Watch for changes in the cache helpers, revalidate route handlers, or tag formats — those affect `src/lib/cache/*` and `src/app/api/revalidate/route.ts`.
 - Do not edit .next/, node_modules/, or lockfiles unless required for the upgrade. Do not change CI or root tooling unless the task explicitly includes it.

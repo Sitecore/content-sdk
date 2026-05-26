@@ -72,7 +72,7 @@ Component data: layout data from `getSitecorePage` (or `client.getPreview` / `ge
 
 ### content-sdk-cache-components-and-osr
 
-Next.js Cache Components and tag-based on-demand revalidation: the `src/lib/cache/` helpers (`getSitecorePage`, `getSitecoreDictionary`, `getSitecoreErrorPage`), the Sitecore tag families (`sc:route`, `sc:item`, `sc:pvv`, `sc:dict`), and the `POST /api/revalidate` route (manual tags + Sitecore webhook payloads, authorized via `SITECORE_REVALIDATE_SECRET`). Use when adding cached reads, wiring webhooks, debugging stale content, or extending the tag strategy.
+Next.js Cache Components and tag-based on-demand revalidation: the `src/lib/cache/` helpers (`getSitecorePage`, `getSitecoreDictionary`, `getSitecoreErrorPage`), the Sitecore tag families (`sc:route`, `sc:item`, `sc:dict`), and the single Sitecore-webhook `POST /api/revalidate` route (Experience Edge / Content Operations `updates[]` plus optional ad-hoc `tags[]` pass-through, authorized via `SITECORE_REVALIDATE_SECRET`). Use when adding cached reads, wiring webhooks, debugging stale content, or extending the tag strategy.
 
 ---
 

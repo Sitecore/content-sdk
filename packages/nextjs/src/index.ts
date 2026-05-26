@@ -179,34 +179,16 @@ export {
   setCachedPageParams,
 } from './cache/page-params';
 
+// Sitecore cache-tag public surface. Kept intentionally small: the cache helpers in the template
+// (`getSitecorePage`, `getSitecoreErrorPage`, `getSitecoreDictionary`) and the `createSitecoreRevalidateRouteHandler`
+// already cover the end-to-end Sitecore tag flow. Lower-level tag builders and webhook-body parsers remain
+// internal so callers don't hand-build Sitecore cache tag strings or duplicate the route handler's logic.
 export {
-  SITECORE_CONTENT_CACHE_TAG_PREFIX,
-  sanitizeSitecoreCacheTagSegment,
-  normalizeSitecoreItemIdForCacheTag,
-  buildSitecoreRouteCacheTag,
-  buildSitecoreItemCacheTag,
   buildSitecoreDictionaryCacheTag,
-  buildSitecoreDictionaryCacheTagsFromSites,
-  buildSitecorePersonalizedPageVariantCacheTag,
-  buildSitecoreItemCacheTagFromRouteData,
-  dedupeSitecoreCacheTags,
-  type BuildSitecoreRouteCacheTagParams,
-  type BuildSitecoreItemCacheTagParams,
   type BuildSitecoreDictionaryCacheTagParams,
-  type BuildSitecoreDictionaryCacheTagsFromSitesParams,
-  type BuildSitecorePersonalizedPageVariantCacheTagParams,
-  type SitecoreRouteDataLike,
 } from './cache/sitecore-cache-tags';
 
 export {
   collectSitecorePageCacheTags,
   type CollectSitecorePageCacheTagsParams,
 } from './cache/sitecore-page-cache-tags';
-
-export {
-  extractSitecoreEdgeContentId,
-  collectSitecoreTagsFromEdgeRevalidateRequestBody,
-  type SitecoreEdgeRevalidateUpdate,
-  type SitecoreEdgeRevalidateRequestBody,
-  type CollectSitecoreTagsFromEdgeBodyOptions,
-} from './cache/sitecore-edge-webhook-revalidation';

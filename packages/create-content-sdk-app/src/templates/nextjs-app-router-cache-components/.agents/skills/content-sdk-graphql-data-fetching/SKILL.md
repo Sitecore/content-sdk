@@ -5,7 +5,7 @@ description: Fetches page and dictionary data via the cache helpers in src/lib/c
 
 # Content SDK GraphQL Data Fetching (App Router + Cache Components)
 
-This template ships **tag-aware cache helpers** under `src/lib/cache/`. All non-preview Sitecore reads go through these helpers so cached payloads carry Sitecore tags (`sc:route`, `sc:item`, `sc:pvv`, `sc:dict`) and can be invalidated by `revalidateTag`. Preview and design library reads use the SDK client directly (they must remain dynamic).
+This template ships **tag-aware cache helpers** under `src/lib/cache/`. All non-preview Sitecore reads go through these helpers so cached payloads carry Sitecore tags (`sc:route`, `sc:item`, `sc:dict`) and can be invalidated by `revalidateTag`. Preview and design library reads use the SDK client directly (they must remain dynamic).
 
 ## When to Use
 
@@ -50,7 +50,7 @@ export async function getSomething(params: { site: string; locale: string }) {
 }
 ```
 
-Then make sure the corresponding tag is invalidated either by manual `POST /api/revalidate` calls or by a Sitecore webhook mapping in the revalidate handler.
+Then make sure the corresponding tag is invalidated by a Sitecore webhook posted to `POST /api/revalidate` (or by an ad-hoc `POST /api/revalidate` call with `{ "tags": ["sc:..."] }`).
 
 ## Stop Conditions
 

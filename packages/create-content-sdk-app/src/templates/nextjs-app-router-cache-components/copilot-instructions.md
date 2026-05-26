@@ -59,8 +59,8 @@ const client = new SitecoreClient({
 
 ### Cache helpers (this template)
 - Use `getSitecorePage`, `getSitecoreDictionary`, `getSitecoreErrorPage` from `src/lib/cache/` for all non-preview Sitecore reads
-- Each helper declares `'use cache';` and attaches Sitecore tags (`sc:route`, `sc:item`, `sc:pvv`, `sc:dict`) via `cacheTag`
-- Tags are invalidated by `POST /api/revalidate` (manual tags or Sitecore webhook payloads, authorized by `SITECORE_REVALIDATE_SECRET`)
+- Each helper declares `'use cache';` and attaches Sitecore tags (`sc:route`, `sc:item`, `sc:dict`) via `cacheTag`
+- Tags are invalidated by `POST /api/revalidate` (Sitecore webhook payloads with `updates[]`, or ad-hoc `{ "tags": ["sc:..."] }` calls; authorized by `SITECORE_REVALIDATE_SECRET`)
 
 ```typescript
 // Cached page read (in src/app/[site]/[locale]/[[...path]]/page.tsx)
@@ -239,11 +239,11 @@ import scConfig from 'sitecore.config';
 export const { POST } = createSitecoreRevalidateRouteHandler({
   defaultLocale: scConfig.defaultLanguage,
   sites,
-  defaultSite: scConfig.defaultSite,
+  extraDictionarySite: scConfig.defaultSite,
 });
 ```
 
-The route is authorized by `SITECORE_REVALIDATE_SECRET` (sent in the `x-revalidate-secret` header). It accepts both manual `sc:`-prefixed tags and Sitecore webhook payloads.
+The route is authorized by `SITECORE_REVALIDATE_SECRET` (sent in the `x-revalidate-secret` header). It is a single Sitecore-webhook endpoint that accepts `updates[]` (publish events) and `tags[]` (pass-through `sc:` strings or bare item IDs).
 
 ### Internationalization
 

@@ -41,7 +41,7 @@ export async function getSitecoreErrorPage(params: GetSitecoreErrorPageParams): 
     site,
     locale,
     personalizedPathname,
-    route: page?.layout?.sitecore?.route ?? {},
+    route: page?.layout?.sitecore?.route,
   });
 
   for (const tag of tags) {

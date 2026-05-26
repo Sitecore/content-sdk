@@ -48,7 +48,7 @@ src/
   lib/
     sitecore-client.ts            # Single SitecoreClient instance
     cache/                        # Tag-aware data helpers (this template)
-      get-sitecore-page.ts        # `use cache` + sc:route/sc:item/sc:pvv tags
+      get-sitecore-page.ts        # `use cache` + sc:route/sc:item tags
       get-sitecore-dictionary.ts  # `use cache` + sc:dict tag
       get-sitecore-error-page.ts  # `use cache` + tags for 404 / 500 content
   i18n/                          # next-intl
@@ -71,12 +71,13 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 - **`next.config.ts`** sets `cacheComponents: true`. This enables Next.js `use cache` and `cacheTag` so cached payloads can be invalidated by tag.
 - **Cache helpers in `src/lib/cache/`** wrap the SDK client and attach Sitecore tags to each cached payload:
-  - `getSitecorePage({ site, locale, path })` → page data with `sc:route:...`, `sc:item:...`, and `sc:pvv:...` tags.
+  - `getSitecorePage({ site, locale, path })` → page data with `sc:route:...` and `sc:item:...` tags. Personalization variants are isolated naturally by the URL path / Cache Components key.
   - `getSitecoreDictionary({ site, locale })` → dictionary phrases with a `sc:dict:...` tag.
   - `getSitecoreErrorPage({ site, locale, code })` → 404 / 500 Sitecore content with the same tag strategy as `getSitecorePage`.
-- **`POST /api/revalidate`** accepts either:
-  - Explicit `sc:`-prefixed tags (`{ "tag": "sc:..." }` or `{ "tags": ["sc:..."] }`) — manual / operational invalidation.
-  - Sitecore webhook-style JSON (`updates`, `invocation_id`, `continues`) — the handler maps event data to tags.
+- **`POST /api/revalidate`** is a single Sitecore-webhook endpoint. It accepts the Sitecore Experience Edge / Content Operations payload shape:
+  - `updates[]` — Sitecore publish-event rows; the handler maps each row's `identifier` (with `-media` / `-layout` stripped) to `sc:item:<id>:<locale>:latest`.
+  - `tags[]` — pass-through array. `sc:`-prefixed strings are revalidated verbatim (handy for ad-hoc, operational calls); bare item IDs are mapped to `sc:item:<id>:<defaultLocale>:latest`.
+  - Dictionary tags from `sites` (and the optional `extraDictionarySite` handler option) are merged on every call so dictionary changes are covered.
 - **Auth:** the endpoint requires the shared secret `SITECORE_REVALIDATE_SECRET` (sent in the `x-revalidate-secret` request header). Configure the same value in your hosting environment and in your Sitecore webhook.
 - **Dictionary cache:** `sitecore.config.ts` disables the SDK's in-process dictionary cache (`dictionary: { caching: { enabled: false } }`). The Cache Components helper is the only dictionary cache layer, so `revalidateTag` works end to end.
 
@@ -152,10 +153,10 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ### On-demand revalidation (`POST /api/revalidate`)
 
-- **Where:** `src/app/api/revalidate/route.ts`. Uses `createSitecoreRevalidateRouteHandler` from `@sitecore-content-sdk/nextjs/route-handler` (unified handler — accepts both manual tags and Sitecore webhook payloads).
+- **Where:** `src/app/api/revalidate/route.ts`. Uses `createSitecoreRevalidateRouteHandler` from `@sitecore-content-sdk/nextjs/route-handler` — a single Sitecore-webhook endpoint.
 - **Auth:** Reads the secret from `process.env.SITECORE_REVALIDATE_SECRET`. Callers send the same value in the `x-revalidate-secret` request header. Required on every request.
-- **Manual invalidation:** Send `{ "tag": "sc:route:default:en:/about" }` or `{ "tags": ["sc:route:...", "sc:item:..."] }` with `sc:`-prefixed tags. Useful for debugging and operational cache clears.
-- **Webhook invalidation:** Send a Sitecore Experience Edge / Content Operations payload (with `updates`, `invocation_id`, `continues`, or bare item IDs in `tags`). The handler maps each entry to `sc:item:<id>` tags, plus dictionary tags from `sites` / `defaultSite` so dictionary changes are also covered.
+- **Webhook payload (`updates[]`):** Send the Sitecore Experience Edge / Content Operations body (`updates`, `invocation_id`, `continues`). The handler maps each `identifier` (with `-media` / `-layout` stripped) to `sc:item:<id>:<locale>:latest` and revalidates it.
+- **Ad-hoc invalidation (`tags[]`):** Reuse the same endpoint with `{ "tags": ["sc:route:...", "sc:item:..."] }` (`sc:`-prefixed strings are revalidated verbatim) or `{ "tags": ["<itemId>"] }` (bare item IDs are mapped to `sc:item:<id>:<defaultLocale>:latest`). Dictionary tags from `sites` (and the optional `extraDictionarySite` handler option) are appended on **every** call.
 - **Do not:** Bypass auth, expose the secret in client code, or call `revalidateTag` directly from components.
 
 ### Server vs Client components
@@ -177,7 +178,7 @@ This template ships **two** not-found components and a segment layout that ties 
 - **Sitemap:** `src/app/api/sitemap/route.ts` — `createSitemapRouteHandler({ client, sites })`. Export `{ GET }`; use `sites` from `.sitecore/sites.json`. With `cacheComponents: true`, the explicit `dynamic = 'force-dynamic'` is not needed (Next.js handles it automatically).
 - **Robots:** `src/app/api/robots/route.ts` — `createRobotsRouteHandler({ client, sites })`. Same pattern.
 - **Editing:** `src/app/api/editing/config/route.ts` and `editing/render/route.ts` — use `createEditingConfigRouteHandler` and `createEditingRenderRouteHandlers` with `components`, `clientComponents` (`.sitecore/component-map.client.ts`), `metadata`, and `client`.
-- **Revalidate:** `src/app/api/revalidate/route.ts` — `createSitecoreRevalidateRouteHandler({ defaultLocale, sites, defaultSite })`. Export `{ POST }`.
+- **Revalidate:** `src/app/api/revalidate/route.ts` — `createSitecoreRevalidateRouteHandler({ defaultLocale, sites, extraDictionarySite })`. Pass `scConfig.defaultSite` as `extraDictionarySite` so the canonical site's dictionary tag is always covered. Export `{ POST }`.
 - **Rewrites:** `next.config.ts` → rewrites for `/sitemap*.xml`, `/robots.txt` with `locale: false` so they are not localized.
 
 ### Sitecore client and config
@@ -194,7 +195,7 @@ This template ships **two** not-found components and a segment layout that ties 
 
 ## Best practices
 
-- **Quick checks:** If locale or dictionary is wrong, ensure `setRequestLocale(\`${site}_${locale}\`)` is called at the top of the page and `src/i18n/request.ts` parses `requestLocale` and calls `getSitecoreDictionary`. If a content change does not appear, verify the webhook posted to `POST /api/revalidate` with the right secret and check the tag families (`sc:route`, `sc:item`, `sc:pvv`, `sc:dict`) returned by the cache helpers.
+- **Quick checks:** If locale or dictionary is wrong, ensure `setRequestLocale(\`${site}_${locale}\`)` is called at the top of the page and `src/i18n/request.ts` parses `requestLocale` and calls `getSitecoreDictionary`. If a content change does not appear, verify the webhook posted to `POST /api/revalidate` with the right secret and check the tag families (`sc:route`, `sc:item`, `sc:dict`) returned by the cache helpers.
 - **Security:** Use only environment variables in `sitecore.config.ts`; never hardcode API keys, editing secret, or `SITECORE_REVALIDATE_SECRET`. Do not expose secrets in client-side code or logs. Validate and sanitize user input at boundaries.
 - **Performance:** Keep middleware lightweight; use the proxy `matcher` so it does not run on `/api/*`, `_next`, sitemap, robots, or static assets. Use Server Components for data fetching and the cache helpers under `'use cache'` so cached payloads carry the right tags. Use `generateStaticParams` and caching as in the existing page.
 - **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Register new components in `.sitecore/component-map.ts` and `.sitecore/component-map.client.ts` as appropriate. Use the cache helpers in `src/lib/cache/` for all non-preview Sitecore reads so tags stay consistent across the app.

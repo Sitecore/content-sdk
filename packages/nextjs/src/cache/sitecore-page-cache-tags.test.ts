@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import type { RouteData } from '@sitecore-content-sdk/content/layout';
 import { collectSitecorePageCacheTags } from './sitecore-page-cache-tags';
 import { SITECORE_CONTENT_CACHE_TAG_PREFIX } from './sitecore-cache-tags';
 
@@ -10,25 +11,9 @@ describe('collectSitecorePageCacheTags', () => {
       itemId: '{11111111-1111-1111-1111-111111111111}',
       itemLanguage: 'en-US',
       itemVersion: 1,
-    },
+      placeholders: {},
+    } as RouteData,
   };
-
-  it('includes personalization variant tag from pathname', () => {
-    const tags = collectSitecorePageCacheTags({
-      ...base,
-      personalizedPathname: '/about/_variantId_hero-a',
-    });
-    expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:pvv:`))).to.equal(true);
-    expect(tags.some((t) => t.includes('hero-a'))).to.equal(true);
-  });
-
-  it('includes default variant tag when no rewrite segments', () => {
-    const tags = collectSitecorePageCacheTags({
-      ...base,
-      personalizedPathname: '/about',
-    });
-    expect(tags.some((t) => t === `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:pvv:_default`)).to.equal(true);
-  });
 
   it('uses normalized route segments (strips variant markers from route tag)', () => {
     const tags = collectSitecorePageCacheTags({
@@ -57,13 +42,21 @@ describe('collectSitecorePageCacheTags', () => {
     expect(routeTag).to.equal(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:route:website:en-us:_`);
   });
 
-  it('includes route, personalization, and item tags', () => {
+  it('includes route and item tags only (no personalization variant tag)', () => {
     const tags = collectSitecorePageCacheTags({
       ...base,
       personalizedPathname: '/about',
     });
     expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:route:`))).to.equal(true);
-    expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:pvv:`))).to.equal(true);
     expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:`))).to.equal(true);
+    expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:pvv:`))).to.equal(false);
+  });
+
+  it('does not add a personalization variant tag even when pathname carries variant markers', () => {
+    const tags = collectSitecorePageCacheTags({
+      ...base,
+      personalizedPathname: '/about/_variantId_hero-a',
+    });
+    expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:pvv:`))).to.equal(false);
   });
 });

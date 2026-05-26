@@ -134,11 +134,12 @@ export default async function LocalizedPage() {
 
 ## On-demand revalidation
 
-- Endpoint: `POST /api/revalidate` (in `src/app/api/revalidate/route.ts`)
+- Endpoint: `POST /api/revalidate` (in `src/app/api/revalidate/route.ts`) — single Sitecore-webhook endpoint
 - Auth: shared secret `SITECORE_REVALIDATE_SECRET`, sent in the `x-revalidate-secret` header
-- Payloads accepted:
-  - Manual tags: `{ "tag": "sc:route:default:en:/about" }` or `{ "tags": ["sc:route:...", "sc:item:..."] }`
-  - Sitecore webhook (Experience Edge / Content Operations) JSON with `updates`, `invocation_id`, `continues` — the handler maps event entries to `sc:item:<id>` tags and adds dictionary tags from `sites` / `defaultSite`
+- Body shape (Sitecore Experience Edge / Content Operations):
+  - `updates[]`: publish-event rows; each `identifier` (with `-media` / `-layout` stripped) maps to `sc:item:<id>:<locale>:latest`
+  - `tags[]`: pass-through array. `sc:`-prefixed strings are revalidated verbatim (use this for ad-hoc / operational calls); bare item IDs are mapped to `sc:item:<id>:<defaultLocale>:latest`
+  - Dictionary tags from `sites` (and the optional `extraDictionarySite` handler option, typically `scConfig.defaultSite`) are appended on every call
 - Do not bypass auth or call `revalidateTag` directly from components
 
 ## Configuration
@@ -191,7 +192,7 @@ Server-Side Rendering and Cache Components:
 Caching Strategies:
 
 - Cache Sitecore reads via the helpers in `src/lib/cache/`
-- Use deterministic Sitecore tags (`sc:route`, `sc:item`, `sc:pvv`, `sc:dict`) so webhook-driven invalidation is precise
+- Use deterministic Sitecore tags (`sc:route`, `sc:item`, `sc:dict`) so webhook-driven invalidation is precise
 - Handle content updates by routing webhooks to `POST /api/revalidate`
 - Consider CDN caching for static content
 

@@ -7,7 +7,7 @@ import {
 /**
  * One content change entry as commonly seen in Experience Edge / Content Operations style payloads (POC shape).
  * Field names follow community OSR examples; production payloads may include additional fields.
- * @public
+ * @internal
  */
 export type SitecoreEdgeRevalidateUpdate = {
   identifier?: string;
@@ -18,7 +18,7 @@ export type SitecoreEdgeRevalidateUpdate = {
 
 /**
  * Request body shape for webhook-driven revalidation (POC-aligned).
- * @public
+ * @internal
  */
 export type SitecoreEdgeRevalidateRequestBody = {
   invocation_id?: string;
@@ -36,7 +36,7 @@ export type SitecoreEdgeRevalidateRequestBody = {
  * Strips Experience Edge style suffixes from an `identifier` so the value can be used as an item id in cache tags.
  * Handles `{GUID}`, `{GUID}-media`, `{GUID}-layout` style strings.
  * @param {string} identifier - Raw identifier from a webhook update row.
- * @public
+ * @internal
  */
 export function extractSitecoreEdgeContentId(identifier: string): string {
   if (!identifier || typeof identifier !== 'string') {
@@ -58,7 +58,7 @@ function isFullSitecoreContentCacheTag(value: string): boolean {
 
 /**
  * Options for {@link collectSitecoreTagsFromEdgeRevalidateRequestBody}.
- * @public
+ * @internal
  */
 export type CollectSitecoreTagsFromEdgeBodyOptions = {
   /**
@@ -74,7 +74,7 @@ export type CollectSitecoreTagsFromEdgeBodyOptions = {
  * **`updates`** rows resolve to **`sc:item:…`** (locale from `entity_culture` or `defaultLocale`). **`tags`**: full `sc:` strings pass through; bare ids become **`sc:item:…`** with `defaultLocale`. Route/variant tags are not inferred.
  * @param {SitecoreEdgeRevalidateRequestBody | null | undefined} body - Webhook JSON body (tags and/or updates).
  * @param {CollectSitecoreTagsFromEdgeBodyOptions} options - Default locale when culture is missing on an update or bare tag.
- * @public
+ * @internal
  */
 export function collectSitecoreTagsFromEdgeRevalidateRequestBody(
   body: SitecoreEdgeRevalidateRequestBody | null | undefined,

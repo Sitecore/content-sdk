@@ -1,13 +1,9 @@
-import {
-  getPersonalizedRewriteData,
-  normalizePersonalizedRewrite,
-} from '@sitecore-content-sdk/content/personalize';
+import { normalizePersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
+import type { RouteData } from '@sitecore-content-sdk/content/layout';
 import {
   buildSitecoreItemCacheTagFromRouteData,
-  buildSitecorePersonalizedPageVariantCacheTag,
   buildSitecoreRouteCacheTag,
   dedupeSitecoreCacheTags,
-  type SitecoreRouteDataLike,
 } from './sitecore-cache-tags';
 
 /** @param {string} pathname - Raw pathname (may omit leading slash). */
@@ -66,9 +62,8 @@ export type CollectSitecorePageCacheTagsParams = {
   site: string;
   locale: string;
   /**
-   * Path string used for personalization rewrite parsing (`_variantId_...`) and for deriving
-   * normalized route segments (variants stripped) for the route tag.
-   * Provide this **or** `path`. When both are set, this value wins.
+   * Path string used for deriving normalized route segments (personalization rewrite segments stripped)
+   * for the route tag. Provide this **or** `path`. When both are set, this value wins.
    */
   personalizedPathname?: string;
   /**
@@ -76,15 +71,26 @@ export type CollectSitecorePageCacheTagsParams = {
    * normalized the same way as `SitecoreClient.parsePath` for a string array argument.
    */
   path?: string[];
-  /** Route node from layout (for item id / language / version). */
-  route: SitecoreRouteDataLike;
+  /**
+   * Route node from a Sitecore layout response (e.g. `page.layout.sitecore.route`, which is
+   * `RouteData | null`). Optional because the page may not resolve; only `itemId`, `itemLanguage`,
+   * and `itemVersion` are read when present.
+   */
+  route?: RouteData | null;
 };
 
 /**
- * Builds cache tags for a Sitecore page read (`getPage`): route, personalization variant, and route item.
+ * Builds cache tags for a Sitecore page read (`getPage`): the route tag and the route's item tag.
  * Dictionary data is not part of `getPage`; tag dictionary fetches separately (for example with
  * `buildSitecoreDictionaryCacheTag` on a dedicated `use cache` helper).
- * Registers **`sc:route:…`**, **`sc:pvv:…`**, and **`sc:item:…`** (when layout has `itemId`). Edge-style webhooks usually emit item ids, which map to **`sc:item:…`** via {@link collectSitecoreTagsFromEdgeRevalidateRequestBody}; route and variant tags are only invalidated from webhooks if passed as full `sc:` strings in `tags`, or via manual revalidate.
+ *
+ * Registers **`sc:route:…`** and **`sc:item:…`** (when layout has `itemId`). Edge-style webhooks emit
+ * item ids, which the Sitecore revalidate route handler maps to **`sc:item:…`**; route tags are only
+ * invalidated when callers send the full `sc:route:…` strings in the `tags[]` array of the same revalidate request.
+ *
+ * Personalization variants are isolated naturally by URL path (each variant rewrite yields a distinct
+ * Cache Components key) so no `sc:pvv:…` tag is added here. If a personalize-specific webhook is wired
+ * up later, build that tag in the dedicated helper and add it on top of these.
  * @param {CollectSitecorePageCacheTagsParams} params - Site, locale, path or personalized pathname, and route metadata.
  * @public
  */
@@ -94,7 +100,6 @@ export function collectSitecorePageCacheTags(params: CollectSitecorePageCacheTag
       ? params.personalizedPathname
       : personalizedPathnameFromPathSegments(params.path ?? []);
   const pathname = normalizePathname(pathnameInput);
-  const personalize = getPersonalizedRewriteData(pathname);
   const pathSegments = routeSegmentsFromPersonalizedPathname(pathname);
 
   return dedupeSitecoreCacheTags([
@@ -102,10 +107,6 @@ export function collectSitecorePageCacheTags(params: CollectSitecorePageCacheTag
       site: params.site,
       locale: params.locale,
       pathSegments,
-    }),
-    buildSitecorePersonalizedPageVariantCacheTag({
-      variantId: personalize.variantId,
-      componentVariantIds: personalize.componentVariantIds,
     }),
     buildSitecoreItemCacheTagFromRouteData(params.route, params.locale) ?? '',
   ]).filter(Boolean);
