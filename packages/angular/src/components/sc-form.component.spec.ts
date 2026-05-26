@@ -7,7 +7,10 @@ import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import type { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ScFormComponent } from './sc-form.component';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
-import { SitecoreContextService } from '../lib/sitecore-context.service';
+import {
+  provideMockSitecoreContext,
+  setMockContextPage,
+} from '../testing/mock-sitecore-context';
 
 const mocks = vi.hoisted(() => ({
   loadForm: vi.fn(),
@@ -96,6 +99,7 @@ describe('ScFormComponent', () => {
     TestBed.configureTestingModule({
       imports: [ScFormComponent],
       providers: [
+        ...provideMockSitecoreContext(),
         { provide: PLATFORM_ID, useValue: 'browser' },
         { provide: SITECORE_CONFIG_TOKEN, useValue: testSitecoreConfig },
       ],
@@ -112,6 +116,7 @@ describe('ScFormComponent', () => {
     TestBed.configureTestingModule({
       imports: [ScFormComponent],
       providers: [
+        ...provideMockSitecoreContext(),
         { provide: PLATFORM_ID, useValue: 'server' },
         { provide: SITECORE_CONFIG_TOKEN, useValue: testSitecoreConfig },
       ],
@@ -189,7 +194,10 @@ describe('ScFormComponent', () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [ScFormComponent],
-      providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
+      providers: [
+        ...provideMockSitecoreContext(),
+        { provide: PLATFORM_ID, useValue: 'browser' },
+      ],
     });
 
     const fixture = createFixture();
@@ -250,8 +258,7 @@ describe('ScFormComponent', () => {
 
   it('should call executeScriptElements on the container after load', async () => {
     const fixture = createFixture();
-    const ctx = TestBed.inject(SitecoreContextService);
-    ctx.setPage(makePage(false));
+    setMockContextPage(makePage(false));
 
     fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }));
     await flushFormLoadPipeline(fixture);
@@ -263,8 +270,7 @@ describe('ScFormComponent', () => {
 
   it('should call subscribeToFormSubmitEvent when not in editing mode', async () => {
     const fixture = createFixture();
-    const ctx = TestBed.inject(SitecoreContextService);
-    ctx.setPage(makePage(false));
+    setMockContextPage(makePage(false));
 
     fixture.componentRef.setInput(
       'rendering',
@@ -281,8 +287,7 @@ describe('ScFormComponent', () => {
 
   it('should not call subscribeToFormSubmitEvent in editing mode', async () => {
     const fixture = createFixture();
-    const ctx = TestBed.inject(SitecoreContextService);
-    ctx.setPage(makePage(true));
+    setMockContextPage(makePage(true));
 
     fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }, { uid: 'x' }));
     await flushFormLoadPipeline(fixture);

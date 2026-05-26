@@ -3391,6 +3391,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ngx-translate/core@npm:^17.0.0":
+  version: 17.0.0
+  resolution: "@ngx-translate/core@npm:17.0.0"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/common": ">=16"
+    "@angular/core": ">=16"
+  checksum: 10/a05b86347675b2e841e9bf598ada046f6563159330dfda821df7231025d1f276be54a4a3748170245e23e98288e509428ed1dd77a80fbb3cb191ee93f22c432a
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -4888,6 +4900,7 @@ __metadata:
     "@angular/platform-browser": "npm:^21.1.0"
     "@angular/platform-server": "npm:^21.1.0"
     "@angular/router": "npm:^21.1.0"
+    "@ngx-translate/core": "npm:^17.0.0"
     "@sitecore-content-sdk/content": "npm:^2.1.0"
     "@sitecore-content-sdk/core": "npm:^2.1.0"
     "@types/node": "npm:^24.10.4"
@@ -4906,9 +4919,12 @@ __metadata:
     "@angular/platform-browser": ^21.0.0
     "@angular/platform-server": ^21.0.0
     "@angular/ssr": ^21.0.0
+    "@ngx-translate/core": ^17.0.0
     zone.js: ^0.15.0
   peerDependenciesMeta:
     "@angular/platform-server":
+      optional: true
+    "@ngx-translate/core":
       optional: true
   languageName: unknown
   linkType: soft

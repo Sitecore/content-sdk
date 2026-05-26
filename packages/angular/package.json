@@ -50,14 +50,19 @@
     "@angular/platform-browser": "^21.0.0",
     "@angular/platform-server": "^21.0.0",
     "@angular/ssr": "^21.0.0",
+    "@ngx-translate/core": "^17.0.0",
     "zone.js": "^0.15.0"
   },
   "peerDependenciesMeta": {
     "@angular/platform-server": {
       "optional": true
+    },
+    "@ngx-translate/core": {
+      "optional": true
     }
   },
   "dependencies": {
+    "@ngx-translate/core": "^17.0.0",
     "@sitecore-content-sdk/content": "^2.1.0",
     "@sitecore-content-sdk/core": "^2.1.0",
     "tslib": "^2.3.0"

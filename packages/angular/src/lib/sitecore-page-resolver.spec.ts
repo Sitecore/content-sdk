@@ -1,8 +1,8 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import type { Page, SitecoreClient } from '@sitecore-content-sdk/content/client';
 import { resolveSitecorePage } from './sitecore-page-resolver';
+import { AngularSitecoreConfig } from '../config/define-config';
 
 describe('resolveSitecorePage', () => {
   let getPage: ReturnType<typeof vi.fn>;
@@ -11,7 +11,7 @@ describe('resolveSitecorePage', () => {
   const mockConfig = {
     defaultSite: 'test-site',
     defaultLanguage: 'en',
-  } as SitecoreConfig;
+  } as AngularSitecoreConfig;
 
   beforeEach(() => {
     getPage = vi.fn().mockResolvedValue(null);

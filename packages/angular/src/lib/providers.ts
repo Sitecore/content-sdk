@@ -1,23 +1,23 @@
-import type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import type { SitecoreClient } from '@sitecore-content-sdk/content/client';
-import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
+import { EnvironmentProviders, makeEnvironmentProviders, Provider } from '@angular/core';
 import {
   SITECORE_CONFIG_TOKEN,
   SITECORE_CLIENT_TOKEN,
   ERROR_ROUTE_TOKEN,
   NOT_FOUND_ROUTE_TOKEN,
 } from './tokens';
+import type { AngularSitecoreConfig } from '../config/define-config';
 
 /**
  * Configuration for the Sitecore Angular SDK.
  * @public
  */
-export interface SitecoreAngularConfig {
+export interface AngularCSDKAppInit {
   /**
    * Sitecore configuration (e.g. from sitecore.config.ts).
    * When provided, {@link sitecoreClient} must also be set; both are registered for DI.
    */
-  sitecoreConfig?: SitecoreConfig;
+  sitecoreConfig?: AngularSitecoreConfig;
   /**
    * Application-owned {@link SitecoreClient} instance (e.g. from a module singleton).
    * Required when {@link sitecoreConfig} is set; registered as {@link SITECORE_CLIENT_TOKEN}.
@@ -30,6 +30,12 @@ export interface SitecoreAngularConfig {
 /**
  * Provides Sitecore Angular SDK services to the application.
  * Call this in your `app.config.ts` `providers` array.
+ * @param {AngularCSDKAppInit} init SDK configuration
+ * @param {AngularCSDKAppInit} init.sitecoreConfig - Sitecore configuration
+ * @param {AngularCSDKAppInit} init.sitecoreClient - Sitecore client
+ * @param {AngularCSDKAppInit} init.notFoundRoute - Not found route
+ * @param {AngularCSDKAppInit} init.errorRoute - Error route
+ * @returns {EnvironmentProviders} Angular environment providers
  * @example
  * // app.config.ts
  * import scConfig from '../sitecore.config';
@@ -39,28 +45,26 @@ export interface SitecoreAngularConfig {
  *     provideSitecoreAngular({ sitecoreConfig: scConfig, sitecoreClient: getClient() }),
  *   ],
  * };
- * @param {SitecoreAngularConfig} config SDK configuration
- * @returns {EnvironmentProviders} Angular environment providers
  * @public
  */
-export function provideSitecoreAngular(config: SitecoreAngularConfig): EnvironmentProviders {
-  const providers = [];
+export function provideSitecoreAngular(init: AngularCSDKAppInit): EnvironmentProviders {
+  const providers: Array<Provider | EnvironmentProviders> = [];
 
-  if (config.sitecoreConfig !== undefined || config.sitecoreClient !== undefined) {
-    if (config.sitecoreConfig === undefined || config.sitecoreClient === undefined) {
+  if (init.sitecoreConfig !== undefined || init.sitecoreClient !== undefined) {
+    if (init.sitecoreConfig === undefined || init.sitecoreClient === undefined) {
       throw new Error(
         'provideSitecoreAngular: `sitecoreConfig` and `sitecoreClient` must both be provided together.'
       );
     }
-    providers.push({ provide: SITECORE_CONFIG_TOKEN, useValue: config.sitecoreConfig });
-    providers.push({ provide: SITECORE_CLIENT_TOKEN, useValue: config.sitecoreClient });
+    providers.push({ provide: SITECORE_CONFIG_TOKEN, useValue: init.sitecoreConfig });
+    providers.push({ provide: SITECORE_CLIENT_TOKEN, useValue: init.sitecoreClient });
   }
-  if (config.notFoundRoute) {
-    providers.push({ provide: NOT_FOUND_ROUTE_TOKEN, useValue: config.notFoundRoute });
+  if (init.notFoundRoute) {
+    providers.push({ provide: NOT_FOUND_ROUTE_TOKEN, useValue: init.notFoundRoute });
   }
-  if (config.errorRoute) {
-    providers.push({ provide: ERROR_ROUTE_TOKEN, useValue: config.errorRoute });
+  if (init.errorRoute) {
+    providers.push({ provide: ERROR_ROUTE_TOKEN, useValue: init.errorRoute });
   }
 
-  return makeEnvironmentProviders(providers);
+  return makeEnvironmentProviders(providers as Parameters<typeof makeEnvironmentProviders>[0]);
 }

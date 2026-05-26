@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter, withNavigationErrorHandler } from '@angular/router';
+import { provideRouter, UrlSerializer, withNavigationErrorHandler } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import {
   provideLoaderRegistry,
@@ -7,12 +7,15 @@ import {
   provideSitecoreAngular,
   PreLoaderDataService,
   SITECORE_COMPONENT_MAP,
+  SitecoreTranslateLoader,
+  LocaleUrlSerializer,
 } from '@sitecore-content-sdk/angular';
 import { routes } from './app.routes';
 import scConfig from '../../sitecore.config';
 import { getClient } from '../content-sdk/client/sitecore-client';
 import { LOADERS } from '../content-sdk/loaders';
 import { componentMap } from '.sitecore/component-map';
+import { TranslateLoader } from '@ngx-translate/core';
 
 /**
  * Client hydration is disabled so that RouterLink and other directives attach correctly
@@ -34,5 +37,8 @@ export const appConfig: ApplicationConfig = {
     provideLoaderRegistry(LOADERS),
     PreLoaderDataService,
     { provide: SITECORE_COMPONENT_MAP, useValue: componentMap },
+    { provide: TranslateLoader, useClass: SitecoreTranslateLoader },
+    // provides locale aware serializer for csdk and angular router links
+    { provide: UrlSerializer, useClass: LocaleUrlSerializer },
   ],
 };

@@ -1,7 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach } from 'vitest';
-import type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import type { SitecoreClient } from '@sitecore-content-sdk/content/client';
 import { provideSitecoreAngular } from './providers';
 import {
@@ -10,9 +9,10 @@ import {
   NOT_FOUND_ROUTE_TOKEN,
   ERROR_ROUTE_TOKEN,
 } from './tokens';
+import type { AngularSitecoreConfig } from '../config/define-config';
 
 describe('provideSitecoreAngular', () => {
-  const mockConfig = { defaultSite: 's', defaultLanguage: 'en' } as SitecoreConfig;
+  const mockConfig = { defaultSite: 's', defaultLanguage: 'en' } as AngularSitecoreConfig;
   const mockClient = { getPage: () => Promise.resolve(null) } as unknown as SitecoreClient;
 
   beforeEach(() => {
@@ -21,7 +21,9 @@ describe('provideSitecoreAngular', () => {
 
   it('should provide the passed sitecoreClient as SITECORE_CLIENT_TOKEN', () => {
     TestBed.configureTestingModule({
-      providers: [provideSitecoreAngular({ sitecoreConfig: mockConfig, sitecoreClient: mockClient })],
+      providers: [
+        provideSitecoreAngular({ sitecoreConfig: mockConfig, sitecoreClient: mockClient }),
+      ],
     });
 
     expect(TestBed.inject(SITECORE_CLIENT_TOKEN)).toBe(mockClient);
@@ -29,7 +31,9 @@ describe('provideSitecoreAngular', () => {
 
   it('should provide the passed sitecoreConfig as SITECORE_CONFIG_TOKEN', () => {
     TestBed.configureTestingModule({
-      providers: [provideSitecoreAngular({ sitecoreConfig: mockConfig, sitecoreClient: mockClient })],
+      providers: [
+        provideSitecoreAngular({ sitecoreConfig: mockConfig, sitecoreClient: mockClient }),
+      ],
     });
 
     expect(TestBed.inject(SITECORE_CONFIG_TOKEN)).toBe(mockConfig);

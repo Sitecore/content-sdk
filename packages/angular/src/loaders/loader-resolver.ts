@@ -19,7 +19,7 @@ import {
   isLoaderRedirectResult,
 } from './models';
 import { redirectOnNavigationError } from './router-error-handling';
-import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from '../lib/tokens';
+import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN, SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 
 /**
  * Create a state key for the loader
@@ -49,18 +49,36 @@ export interface LoaderIdMap {}
 export type LoaderId = keyof LoaderIdMap extends never ? string : keyof LoaderIdMap;
 
 /**
+ * Merges params from all ancestor route segments and defaults `locale` from the resolved
+ * Sitecore config when missing. Loaders always see a concrete `params.locale` whether or
+ * not the locale matcher captured one from the URL.
+ * @param {ActivatedRouteSnapshot} route - The current route snapshot.
+ * @param {string} [defaultLanguage] - Default language to fall back to.
+ * @returns {Params} Merged params with a guaranteed `locale` when `defaultLanguage` is set.
+ */
+function buildLoaderParams(route: ActivatedRouteSnapshot, defaultLanguage?: string): Params {
+  const merged = route.pathFromRoot.reduce((acc, r) => ({ ...acc, ...r.params }), {} as Params);
+  if (!merged.locale && defaultLanguage) {
+    merged.locale = defaultLanguage;
+  }
+  return merged;
+}
+
+/**
  * Browser-only: load data from transfer state or LoaderDataService.
  * Injects TransferState, LoaderDataService. Called by the resolver when isPlatformBrowser.
  * @param {ActivatedRouteSnapshot} route - The current route snapshot
  * @param {RouterStateSnapshot} state - The router state snapshot
  * @param {string} loaderId - loader ID to resolve, used for transfer state key and LoaderDataService call
  * @param {Router} router - The Angular router instance
+ * @param {string} [defaultLanguage] - Default language for locale fallback in params
  */
 async function resolveOnBrowser(
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot,
   loaderId: string,
-  router: Router
+  router: Router,
+  defaultLanguage?: string
 ): Promise<unknown | RedirectCommand> {
   const transferState = inject(TransferState);
   const loaderData = inject(LoaderDataService);
@@ -74,7 +92,7 @@ async function resolveOnBrowser(
     return data;
   }
 
-  const allParams = route.pathFromRoot.reduce((acc, r) => ({ ...acc, ...r.params }), {}) as Params;
+  const allParams = buildLoaderParams(route, defaultLanguage);
 
   const resp = await loaderData.getData({
     url,
@@ -105,13 +123,14 @@ export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
       inject(NOT_FOUND_ROUTE_TOKEN, { optional: true }) || DEFAULT_NOT_FOUND_ROUTE;
     const errorRoute = inject(ERROR_ROUTE_TOKEN, { optional: true }) || DEFAULT_ERROR_ROUTE;
     const router = inject(Router);
+    const defaultLanguage = inject(SITECORE_CONFIG_TOKEN, { optional: true })?.defaultLanguage;
 
     const url = state.url;
     const key = stateKey(loaderId, url);
 
     if (isPlatformBrowser(platformId)) {
       try {
-        return await resolveOnBrowser(route, state, loaderId, router);
+        return await resolveOnBrowser(route, state, loaderId, router, defaultLanguage);
       } catch (e) {
         // special handling for browser, as navigation error for handleNavigationError is only generated on server
         return redirectOnNavigationError(e as Error, url, notFoundRoute, errorRoute, router);
@@ -128,7 +147,7 @@ export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
 
     const result = await loader({
       url,
-      params: route.params,
+      params: buildLoaderParams(route, defaultLanguage),
       query: route.queryParams,
       requestContext,
     });
