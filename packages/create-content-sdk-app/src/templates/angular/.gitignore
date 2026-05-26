@@ -37,6 +37,9 @@ yarn-error.log
 .env.prod
 .env.local
 
+# Loader cache (unstorage fs driver)
+.cache/
+
 # Miscellaneous
 /.angular/cache
 .sass-cache/

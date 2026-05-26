@@ -1,3 +1,4 @@
+import type { DriverFlags } from 'unstorage';
 import type { LoaderContext } from '../../loaders/models';
 
 /**
@@ -14,12 +15,12 @@ export interface LoaderCacheEntry {
 
 /**
  * Per-loader config overrides. Most-specific wins over defaults from
- * LoaderCacheConfig.defaultTtl / enabled.
+ * LoaderCacheConfig.revalidate / enabled.
  * @public
  */
 export interface LoaderCacheLoaderConfig {
   enabled?: boolean;
-  ttl?: number | 'infinite';
+  ttl?: number;
   /** Reserved for Phase 4 (variant-aware keying). Accepted but ignored in v1. */
   personalize?: boolean;
 }
@@ -32,28 +33,24 @@ export interface LoaderCacheConfig {
   /** unique app id used to scope keys when multiple apps share a store */
   namespace?: string;
   /** default TTL in seconds; pass 'infinite' to never expire */
-  defaultTtl?: number | 'infinite';
+  revalidate?: number;
   /** master switch — set to false to make every call fall through to the raw loader */
   enabled?: boolean;
   /** per-loader overrides keyed by loaderId */
   loaders?: Record<string, LoaderCacheLoaderConfig>;
-  /**
-   * Site name used by `invalidate({ route })` when no `site` is supplied.
-   * Should match `scConfig.defaultSite`. Defaults to `'default'`.
-   */
-  defaultSiteName?: string;
+  /** Unstorage `Driver` shorthand. The cache wraps it with `createStorage({ driver })` internally. Use this for single-driver setups (`fs`, `redis`, `memory`, etc). */
+  driver?: DriverFlags;
 }
 
 /**
- * Filter accepted by cache.invalidate(). `route` is required; other dimensions
- * narrow when supplied. See the loader-cache plan doc, §6.
+ * Filter accepted by cache.invalidate(). `route` is required
+ * other fields are optional and will be used to narrow the invalidation.
  * @public
  */
-export interface InvalidateFilter {
+export interface InvalidateInput {
   route: string;
   site?: string | '*';
   language?: string;
-  /** accepted but ignored in v1 (every entry keys as variant:default) */
   variantId?: string;
   loaderId?: string;
 }
@@ -83,7 +80,7 @@ export interface LoaderCache {
   get(key: string): Promise<LoaderCacheEntry | null>;
   set(key: string, value: unknown, ttlSeconds: number | 'infinite', tags: string[]): Promise<void>;
   /** Per-path invalidation. Returns number of entries deleted. */
-  invalidate(filter: InvalidateFilter): Promise<number>;
+  invalidate(filter: InvalidateInput): Promise<number>;
   /** Direct delete by exact key. */
   delete(key: string): Promise<boolean>;
   /** Nuke every entry. */
@@ -93,7 +90,11 @@ export interface LoaderCache {
   resolveTtl(loaderId: string): number | 'infinite';
   isEnabled(loaderId: string): boolean;
   /** Reads back the resolved config (useful for admin UI). */
-  getConfig(): Readonly<Required<Omit<LoaderCacheConfig, 'loaders'>> & { loaders: Record<string, LoaderCacheLoaderConfig> }>;
+  getConfig(): Readonly<
+    Required<Omit<LoaderCacheConfig, 'loaders' | 'storage' | 'driver'>> & {
+      loaders: Record<string, LoaderCacheLoaderConfig>;
+    }
+  >;
 }
 
 /**
@@ -103,7 +104,7 @@ export interface LoaderCache {
 export interface CacheKeyDimensions {
   site: string;
   language: string;
-  variantId: string; // always 'default' in v1
+  variantId: string;
   loaderId: string;
   route: string;
   paramsHash: string;
@@ -116,7 +117,10 @@ export interface CacheKeyDimensions {
  */
 export function dimensionsFromContext(loaderId: string, ctx: LoaderContext): CacheKeyDimensions {
   const params = (ctx.params ?? {}) as Record<string, unknown>;
-  const headers = (ctx.requestContext?.headers ?? {}) as Record<string, string | string[] | undefined>;
+  const headers = (ctx.requestContext?.headers ?? {}) as Record<
+    string,
+    string | string[] | undefined
+  >;
 
   const site =
     (typeof params['site'] === 'string' && (params['site'] as string)) ||
@@ -172,7 +176,9 @@ function canonicalStringify(value: unknown): string {
   return (
     '{' +
     keys
-      .map((k) => JSON.stringify(k) + ':' + canonicalStringify((value as Record<string, unknown>)[k]))
+      .map(
+        (k) => JSON.stringify(k) + ':' + canonicalStringify((value as Record<string, unknown>)[k])
+      )
       .join(',') +
     '}'
   );

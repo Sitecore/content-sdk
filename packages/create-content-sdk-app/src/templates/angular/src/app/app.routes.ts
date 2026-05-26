@@ -3,11 +3,16 @@ import { loaderResolver } from '@sitecore-content-sdk/angular';
 import { PageComponent } from './pages/page.component';
 import { NotFoundComponent } from './pages/not-found.component';
 import { ErrorComponent } from './pages/error.component';
+import { CacheDemoComponent } from './admin/cache-demo.component';
 
 export const routes: Routes = [
   {
     path: '',
     children: [
+      {
+        path: 'admin/cache',
+        component: CacheDemoComponent,
+      },
       {
         path: '500',
         component: ErrorComponent,

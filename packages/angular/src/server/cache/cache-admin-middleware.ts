@@ -1,10 +1,5 @@
-import {
-  ExpressMiddleware,
-  ExpressNextFunction,
-  ExpressRequest,
-  ExpressResponse,
-} from '../models';
-import { InvalidateFilter, LoaderCache } from './models';
+import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from '../models';
+import { InvalidateInput, LoaderCache } from './models';
 
 /**
  * Options for the admin middleware.
@@ -27,7 +22,7 @@ const DEFAULT_ENDPOINT = '/api/_cache';
 /**
  * Lightweight admin surface for the loader cache:
  *   GET    <endpoint>/entries        → list entries (metadata only, no values)
- *   POST   <endpoint>/invalidate     → invalidate by InvalidateFilter (JSON body)
+ *   POST   <endpoint>/invalidate     → invalidate by InvalidateInput (JSON body)
  *   POST   <endpoint>/flush          → flush every entry
  *   GET    <endpoint>/config         → resolved config (for the demo UI)
  *
@@ -63,17 +58,17 @@ export function createCacheAdminMiddleware(
       }
 
       if (action === 'config' && req.method === 'GET') {
-        res.status(200).json(cache.getConfig());
+        res.status(200).json({ ...cache.getConfig() });
         return;
       }
 
       if (action === 'invalidate' && req.method === 'POST') {
-        const body = (req.body ?? {}) as Partial<InvalidateFilter>;
+        const body = (req.body ?? {}) as Partial<InvalidateInput>;
         if (!body.route || typeof body.route !== 'string') {
           res.status(400).json({ error: 'route is required' });
           return;
         }
-        const deleted = await cache.invalidate(body as InvalidateFilter);
+        const deleted = await cache.invalidate(body as InvalidateInput);
         res.status(200).json({ deleted });
         return;
       }

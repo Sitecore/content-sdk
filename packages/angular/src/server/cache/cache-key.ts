@@ -1,5 +1,5 @@
 import type { LoaderContext } from '../../loaders/models';
-import { CacheKeyDimensions, dimensionsFromContext, InvalidateFilter } from './models';
+import { CacheKeyDimensions, dimensionsFromContext, InvalidateInput } from './models';
 
 const KEY_PREFIX = 'loader';
 
@@ -49,11 +49,7 @@ export function buildTags(d: CacheKeyDimensions, namespace?: string): string[] {
  * Omitted dimensions widen to "all" (no tag constraint on that axis);
  * `site` defaults to `defaultSiteName` unless explicitly '*'.
  */
-export function filterToRequiredTags(
-  filter: InvalidateFilter,
-  defaultSiteName: string,
-  namespace?: string
-): string[] {
+export function filterToRequiredTags(filter: InvalidateInput, namespace?: string): string[] {
   const ns = namespace ? `${escapeSegment(namespace)}:` : '';
   const required: string[] = [];
 

@@ -1,5 +1,6 @@
+import { createStorage } from 'unstorage';
 import {
-  InvalidateFilter,
+  InvalidateInput,
   LoaderCache,
   LoaderCacheConfig,
   LoaderCacheEntry,
@@ -7,27 +8,42 @@ import {
   LoaderCacheLoaderConfig,
 } from './models';
 import { filterToRequiredTags } from './cache-key';
+import { UnstorageLoaderCache } from './unstorage-loader-cache';
 
 const DEFAULT_TTL_SECONDS = 300;
 
-interface ResolvedConfig {
+/**
+ * Resolved (fully defaulted) config used by every {@link LoaderCache}
+ * implementation. Exported as `@internal` so sibling impls can share the same
+ * shape and helper.
+ * @internal
+ */
+export interface ResolvedConfig {
   namespace: string;
-  defaultTtl: number | 'infinite';
+  revalidate: number;
   enabled: boolean;
   loaders: Record<string, LoaderCacheLoaderConfig>;
   defaultSiteName: string;
 }
 
 /**
- * Public factory for the v1 in-memory loader cache. Returns a {@link LoaderCache}
- * backed by an internal {@link InMemoryLoaderCache} class.
+ * Public factory for the loader cache. Dispatches to the right backend:
  *
- * The class is intentionally not exported: callers should depend on the
- * {@link LoaderCache} interface, so we can swap the implementation (unstorage,
- * Redis, etc.) without touching public types. See plan §4.3.
+ *   - `config.storage`  → {@link UnstorageLoaderCache} using that Storage
+ *   - `config.driver`   → {@link UnstorageLoaderCache} wrapping the driver
+ *                         in `createStorage({ driver })`
+ *   - otherwise         → {@link InMemoryLoaderCache} (plain Map)
+ *
+ * Callers depend on the {@link LoaderCache} interface; concrete classes are
+ * not exported, so we can swap implementations without touching public types.
+ * See plan §4.3.
  * @public
  */
 export function createLoaderCache(config: LoaderCacheConfig = {}): LoaderCache {
+  const resolved = resolveConfig(config);
+  if (config.driver) {
+    return new UnstorageLoaderCache(createStorage(), resolved);
+  }
   return new InMemoryLoaderCache(config);
 }
 
@@ -57,23 +73,17 @@ class InMemoryLoaderCache implements LoaderCache {
     return entry;
   }
 
-  async set(
-    key: string,
-    value: unknown,
-    ttlSeconds: number | 'infinite',
-    tags: string[]
-  ): Promise<void> {
-    const ttl = ttlSeconds === 'infinite' ? null : ttlSeconds;
-    const expiresAt = ttl === null ? null : this.now() + ttl * 1000;
+  async set(key: string, value: unknown, ttlSeconds: number, tags: string[]): Promise<void> {
+    const expiresAt = ttlSeconds > 0 ? null : Date.now() + ttlSeconds * 1000;
     this.store.set(key, {
       value,
       tags: [...tags],
-      storedAt: this.now(),
+      storedAt: Date.now(),
       expiresAt,
     });
   }
 
-  async invalidate(filter: InvalidateFilter): Promise<number> {
+  async invalidate(filter: InvalidateInput): Promise<number> {
     const required = filterToRequiredTags(
       filter,
       this.resolved.defaultSiteName,
@@ -115,10 +125,10 @@ class InMemoryLoaderCache implements LoaderCache {
     return out;
   }
 
-  resolveTtl(loaderId: string): number | 'infinite' {
+  resolveTtl(loaderId: string): number {
     const perLoader = this.resolved.loaders[loaderId];
     if (perLoader && perLoader.ttl !== undefined) return perLoader.ttl;
-    return this.resolved.defaultTtl;
+    return this.resolved.revalidate;
   }
 
   isEnabled(loaderId: string): boolean {
@@ -132,25 +142,28 @@ class InMemoryLoaderCache implements LoaderCache {
     return this.resolved;
   }
 
-  private now(): number {
-    return Date.now();
-  }
-
   private isExpired(entry: LoaderCacheEntry): boolean {
-    return entry.expiresAt !== null && entry.expiresAt <= this.now();
+    return entry.expiresAt !== null && entry.expiresAt <= Date.now();
   }
 }
 
-function resolveConfig(config: LoaderCacheConfig): ResolvedConfig {
+/**
+ * Build a {@link ResolvedConfig} from a {@link LoaderCacheConfig}. Shared by
+ * every backend so config semantics stay identical regardless of driver.
+ * @internal
+ */
+export function resolveConfig(config: LoaderCacheConfig): ResolvedConfig {
   return {
     namespace: config.namespace ?? '',
-    defaultTtl: config.defaultTtl ?? DEFAULT_TTL_SECONDS,
+    revalidate: config.revalidate ?? DEFAULT_TTL_SECONDS,
     enabled: config.enabled ?? true,
     loaders: config.loaders ?? {},
-    defaultSiteName: config.defaultSiteName ?? 'default',
   };
 }
 
+/**
+ * @deprecated only used for demo purposes. remove before release.
+ */
 function approxByteSize(value: unknown): number {
   try {
     return JSON.stringify(value).length;
