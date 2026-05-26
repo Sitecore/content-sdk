@@ -1,6 +1,5 @@
 import type { SitecoreClient } from '@sitecore-content-sdk/content/client';
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import { UrlSerializer } from '@angular/router';
 import {
   SITECORE_CONFIG_TOKEN,
   SITECORE_CLIENT_TOKEN,
@@ -8,7 +7,6 @@ import {
   NOT_FOUND_ROUTE_TOKEN,
 } from './tokens';
 import type { AngularSitecoreConfig } from '../config/define-config';
-import { SitecoreContextService } from './sitecore-context.service';
 
 /**
  * Configuration for the Sitecore Angular SDK.
@@ -32,10 +30,12 @@ export interface AngularCSDKAppInit {
 /**
  * Provides Sitecore Angular SDK services to the application.
  * Call this in your `app.config.ts` `providers` array.
- *
- * When `sitecoreConfig.angular.locales` is configured, this call also registers a
- * locale-aware {@link UrlSerializer}. {@link SitecoreContextService} is always registered
- * and derives page, dictionary, and locale state reactively from the Router.
+ * @param {AngularCSDKAppInit} init SDK configuration
+ * @param {AngularCSDKAppInit} init.sitecoreConfig - Sitecore configuration
+ * @param {AngularCSDKAppInit} init.sitecoreClient - Sitecore client
+ * @param {AngularCSDKAppInit} init.notFoundRoute - Not found route
+ * @param {AngularCSDKAppInit} init.errorRoute - Error route
+ * @returns {EnvironmentProviders} Angular environment providers
  * @example
  * // app.config.ts
  * import scConfig from '../sitecore.config';
@@ -45,8 +45,6 @@ export interface AngularCSDKAppInit {
  *     provideSitecoreAngular({ sitecoreConfig: scConfig, sitecoreClient: getClient() }),
  *   ],
  * };
- * @param {AngularCSDKAppInit} config SDK configuration
- * @returns {EnvironmentProviders} Angular environment providers
  * @public
  */
 export function provideSitecoreAngular(init: AngularCSDKAppInit): EnvironmentProviders {

@@ -9,7 +9,7 @@ import { ErrorComponent } from './pages/error.component';
  * Error routes (`404` / `500`) live at the top level — both unprefixed and with a
  * `:locale` parameter segment — so that `@angular/ssr` can match its `ServerRoute`
  * entries by `path` and emit the correct HTTP status. The catchall page sits behind
- * `scLocaleMatcher `, which still consumes a configured locale (if present) and
+ * `scLocaleMatcher`, which still consumes a configured locale (if present) and
  * exposes it as a `locale` route param to loaders.
  */
 const errorRoutes: Route[] = [

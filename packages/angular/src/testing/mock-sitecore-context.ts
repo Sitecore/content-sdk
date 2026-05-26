@@ -1,5 +1,14 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import { Component, EnvironmentProviders, Injectable, Provider, inject, signal, computed } from '@angular/core';
+/* eslint-disable @typescript-eslint/member-ordering */
+import {
+  Component,
+  EnvironmentProviders,
+  Injectable,
+  Provider,
+  inject,
+  signal,
+  computed,
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import type { Page } from '@sitecore-content-sdk/content/client';
@@ -24,11 +33,7 @@ class MockSitecoreContextService {
   readonly urlLocale = this._urlLocale.asReadonly();
   readonly isEditing = computed(() => this._page()?.mode?.isEditing ?? false);
   readonly effectiveLocale = computed(
-    () =>
-      this._page()?.locale ??
-      this._urlLocale() ??
-      this.config?.defaultLanguage ??
-      'en'
+    () => this._page()?.locale ?? this._urlLocale() ?? this.config?.defaultLanguage ?? 'en'
   );
 
   setPage(page: Page | null): void {
@@ -83,9 +88,6 @@ export function setMockContextUrlLocale(locale: string | null): void {
 }
 
 /** Align mock urlLocale with a pathname using configured locales from `config`. */
-export function setMockContextUrlLocaleFromPathname(
-  pathname: string,
-  locales: string[]
-): void {
+export function setMockContextUrlLocaleFromPathname(pathname: string, locales: string[]): void {
   setMockContextUrlLocale(splitLocaleFromPath(pathname, locales).locale);
 }

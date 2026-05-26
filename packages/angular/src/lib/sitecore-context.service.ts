@@ -12,7 +12,11 @@ interface SitecoreRouteData {
   page?: Page | null;
   dictionary?: DictionaryPhrases | null;
 }
-/** Walk the activated route tree and merge `data` from every snapshot node. */
+/**
+ * Walk the activated route tree and merge `data` from every snapshot node.
+ * @param {Router} router - Angular Router instance
+ * @returns {SitecoreRouteData} Merged route data
+ */
 function getMergedRouteData(router: Router): SitecoreRouteData {
   const merged: SitecoreRouteData = {};
   const stack: ActivatedRouteSnapshot[] = [router.routerState.snapshot.root];
@@ -35,6 +39,30 @@ function getMergedRouteData(router: Router): SitecoreRouteData {
  */
 @Injectable({ providedIn: 'root' })
 export class SitecoreContextService {
+  /** Current Sitecore page data (layout + mode). */
+  readonly page: Signal<Page | null> = computed(() => this.routeData()?.page ?? null);
+  /** Current Sitecore dictionary data. */
+  readonly dictionary: Signal<DictionaryPhrases | null> = computed(
+    () => this.routeData()?.dictionary ?? null
+  );
+  /** Whether the current page is in editing mode. */
+  readonly isEditing: Signal<boolean> = computed(() => this.page()?.mode?.isEditing ?? false);
+  /**
+   * Locale extracted from the current URL; `null` when no configured-locale prefix
+   * or when locales are not configured.
+   */
+  readonly urlLocale: Signal<string | null> = computed(() => {
+    if (this.locales.length === 0) {
+      return null;
+    }
+    return splitLocaleFromPath(this.pathname(), this.locales).locale;
+  });
+  /**
+   * Effective locale for data fetching: `page.locale ?? urlLocale ?? defaultLanguage`.
+   */
+  readonly effectiveLocale: Signal<string> = computed(
+    () => this.page()?.locale ?? this.urlLocale() ?? this.defaultLanguage
+  );
   private readonly router = inject(Router);
   private readonly config = inject(SITECORE_CONFIG_TOKEN, { optional: true });
   private readonly platformId = inject(PLATFORM_ID);
@@ -62,29 +90,5 @@ export class SitecoreContextService {
       startWith(resolveCurrentPath(this.req ?? null, this.isBrowser))
     ),
     { initialValue: resolveCurrentPath(this.req ?? null, this.isBrowser) }
-  );
-  /** Current Sitecore page data (layout + mode). */
-  readonly page: Signal<Page | null> = computed(() => this.routeData()?.page ?? null);
-  /** Current Sitecore dictionary data. */
-  readonly dictionary: Signal<DictionaryPhrases | null> = computed(
-    () => this.routeData()?.dictionary ?? null
-  );
-  /** Whether the current page is in editing mode. */
-  readonly isEditing: Signal<boolean> = computed(() => this.page()?.mode?.isEditing ?? false);
-  /**
-   * Locale extracted from the current URL; `null` when no configured-locale prefix
-   * or when locales are not configured.
-   */
-  readonly urlLocale: Signal<string | null> = computed(() => {
-    if (this.locales.length === 0) {
-      return null;
-    }
-    return splitLocaleFromPath(this.pathname(), this.locales).locale;
-  });
-  /**
-   * Effective locale for data fetching: `page.locale ?? urlLocale ?? defaultLanguage`.
-   */
-  readonly effectiveLocale: Signal<string> = computed(
-    () => this.page()?.locale ?? this.urlLocale() ?? this.defaultLanguage
   );
 }
