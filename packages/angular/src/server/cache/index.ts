@@ -13,5 +13,5 @@ export {
   createCacheAdminMiddleware,
   type CacheAdminMiddlewareOptions,
 } from './cache-admin-middleware';
-export { buildCacheKey, buildTags, filterToRequiredTags, serializeKey } from './cache-key';
+export { buildCacheKey, buildDefaultTags, filterToRequiredTags, serializeKey } from './cache-key';
 export { dimensionsFromContext } from './models';

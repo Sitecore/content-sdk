@@ -23,12 +23,13 @@ import {
   DEFAULT_NOT_FOUND_ROUTE,
   LoaderHttpError,
   NotFoundNavigationError,
+  LoaderCache,
+  LoaderCacheConfig,
 } from './models';
 import { redirectOnNavigationError } from './router-error-handling';
 import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from '../lib/tokens';
 import { resolveLoaderData } from '../server/cache/resolve-loader-data';
-import type { LoaderCache } from '../server/cache/models';
-
+import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 /**
  * Create a state key for the loader
  * @param {string} loaderId - The loader ID
@@ -121,11 +122,14 @@ async function resolveOnBrowser(
   return resp.data;
 }
 
-export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
+export const loaderResolver = (
+  loaderId: LoaderId,
+  cacheOptions?: LoaderCacheConfig
+): ResolveFn<unknown> => {
   const resolver = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const transferState = inject(TransferState);
     const platformId = inject(PLATFORM_ID);
-    const registry = inject(LOADER_REGISTRY);
+    const loaderRegistry = inject(LOADER_REGISTRY);
     const request = inject(REQUEST, { optional: true });
     const notFoundRoute =
       inject(NOT_FOUND_ROUTE_TOKEN, { optional: true }) || DEFAULT_NOT_FOUND_ROUTE;
@@ -145,7 +149,7 @@ export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
       }
     }
 
-    const loader = registry[loaderId];
+    const loader = loaderRegistry[loaderId];
 
     if (!loader) {
       throw new Error(`No loader registered for id "${loaderId}"`);
@@ -163,9 +167,10 @@ export const loaderResolver = (loaderId: LoaderId): ResolveFn<unknown> => {
         params: route.params,
         query: route.queryParams as Record<string, string | string[]>,
       },
-      registry,
+      loaderRegistry,
       cache,
-      requestContext
+      requestContext,
+      cacheOptions
     );
 
     if (result.kind === 'redirect') {

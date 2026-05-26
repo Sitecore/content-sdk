@@ -2,12 +2,13 @@ import {
   LoaderApiRequest,
   LoaderContext,
   LoaderRedirectResult,
-  RequestContext,
   isLoaderRedirectResult,
+  LoaderCache,
+  LoaderCacheConfig,
 } from '../../loaders/models';
+import { extractRequestContext } from '../../loaders/utils';
 import { LoaderRegistry } from '../models';
-import { buildCacheKey, buildTags } from './cache-key';
-import { LoaderCache } from './models';
+import { buildCacheKey, buildDefaultTags } from './cache-key';
 
 /**
  * Result returned to call sites. Mirrors the raw loader return shape so the
@@ -33,9 +34,10 @@ export async function resolveLoaderData(
   request: LoaderApiRequest,
   registry: LoaderRegistry,
   cache: LoaderCache | undefined,
-  requestContext?: RequestContext
+  cacheOptions?: LoaderCacheConfig
 ): Promise<ResolveLoaderDataResult> {
   const { loaderId, url, params, query } = request;
+  const requestContext = extractRequestContext(request);
   const loader = registry[loaderId];
   if (!loader) {
     return { kind: 'error', status: 500, message: `No loader registered for id "${loaderId}"` };
@@ -43,7 +45,7 @@ export async function resolveLoaderData(
 
   const ctx: LoaderContext = { url, params, query, requestContext };
 
-  const cacheable = cache && cache.isEnabled(loaderId);
+  const cacheable = cacheOptions?.enabled && cache && cache.isEnabled(loaderId);
 
   if (cacheable) {
     const { key } = buildCacheKey(loaderId, ctx);
@@ -69,8 +71,8 @@ export async function resolveLoaderData(
 
   if (cacheable) {
     const { key, dimensions } = buildCacheKey(loaderId, ctx);
-    const tags = buildTags(dimensions);
-    await cache.set(key, value, cache.resolveTtl(loaderId), tags);
+    const tags = buildDefaultTags(dimensions);
+    await cache.set(key, value, cacheOptions?.revalidate ?? cache.resolveTtl(loaderId), tags);
   }
 
   return { kind: 'data', data: value };

@@ -1,7 +1,9 @@
 import type { LoaderContext } from '../../loaders/models';
-import { CacheKeyDimensions, dimensionsFromContext, InvalidateInput } from './models';
+import { CacheKeyDimensions } from './models';
+import { dimensionsFromContext } from './utils';
+import { InvalidateInput } from '../../loaders/models';
 
-const KEY_PREFIX = 'loader';
+const CACHE_KEY_PREFIX = 'scLoader';
 
 /**
  * Compose the canonical cache key.
@@ -9,38 +11,35 @@ const KEY_PREFIX = 'loader';
  */
 export function buildCacheKey(
   loaderId: string,
-  ctx: LoaderContext,
-  namespace?: string
+  ctx: LoaderContext
 ): { key: string; dimensions: CacheKeyDimensions } {
-  const dims = dimensionsFromContext(loaderId, ctx);
-  const key = serializeKey(dims, namespace);
-  return { key, dimensions: dims };
+  const dimensions = dimensionsFromContext(loaderId, ctx);
+  const key = serializeKey(dimensions);
+  return { key, dimensions };
 }
 
-export function serializeKey(d: CacheKeyDimensions, namespace?: string): string {
-  const ns = namespace ? `:${escapeSegment(namespace)}` : '';
+export function serializeKey(dimensions: CacheKeyDimensions): string {
   return [
-    KEY_PREFIX + ns,
-    escapeSegment(d.site),
-    escapeSegment(d.language),
-    escapeSegment(d.variantId),
-    escapeSegment(d.loaderId),
-    escapeSegment(d.route),
-    d.paramsHash,
+    CACHE_KEY_PREFIX,
+    encodeURIComponent(dimensions.site),
+    encodeURIComponent(dimensions.locale),
+    encodeURIComponent(dimensions.variantId),
+    encodeURIComponent(dimensions.loaderId),
+    encodeURIComponent(dimensions.route),
+    ...(dimensions.customTags ?? []),
   ].join(':');
 }
 
 /**
  * Tag list mirrored alongside each entry — used by invalidate() to find matching keys.
  */
-export function buildTags(d: CacheKeyDimensions, namespace?: string): string[] {
-  const ns = namespace ? `${escapeSegment(namespace)}:` : '';
+export function buildDefaultTags(dimensions: CacheKeyDimensions): string[] {
   return [
-    `${ns}site:${escapeSegment(d.site)}`,
-    `${ns}language:${escapeSegment(d.language)}`,
-    `${ns}variant:${escapeSegment(d.variantId)}`,
-    `${ns}loader:${escapeSegment(d.loaderId)}`,
-    `${ns}route:${escapeSegment(d.route)}`,
+    `site:${encodeURIComponent(dimensions.site)}`,
+    `language:${encodeURIComponent(dimensions.locale)}`,
+    `variant:${encodeURIComponent(dimensions.variantId)}`,
+    `loader:${encodeURIComponent(dimensions.loaderId)}`,
+    `route:${encodeURIComponent(dimensions.route)}`,
   ];
 }
 
@@ -49,25 +48,18 @@ export function buildTags(d: CacheKeyDimensions, namespace?: string): string[] {
  * Omitted dimensions widen to "all" (no tag constraint on that axis);
  * `site` defaults to `defaultSiteName` unless explicitly '*'.
  */
-export function filterToRequiredTags(filter: InvalidateInput, namespace?: string): string[] {
-  const ns = namespace ? `${escapeSegment(namespace)}:` : '';
-  const required: string[] = [];
+export function resolveTagsToInvalidate(
+  filter: InvalidateInput,
+  defaultSiteName: string
+): string[] {
+  const tags: string[] = [];
 
   const site = filter.site === '*' ? null : filter.site ?? defaultSiteName;
-  if (site) required.push(`${ns}site:${escapeSegment(site)}`);
-  if (filter.language) required.push(`${ns}language:${escapeSegment(filter.language)}`);
-  if (filter.variantId) required.push(`${ns}variant:${escapeSegment(filter.variantId)}`);
-  if (filter.loaderId) required.push(`${ns}loader:${escapeSegment(filter.loaderId)}`);
+  if (site) tags.push(`site:${encodeURIComponent(site)}`);
+  if (filter.language) tags.push(`language:${encodeURIComponent(filter.language)}`);
+  if (filter.variantId) tags.push(`variant:${encodeURIComponent(filter.variantId)}`);
+  if (filter.loaderId) tags.push(`loader:${encodeURIComponent(filter.loaderId)}`);
 
-  required.push(`${ns}route:${escapeSegment(filter.route)}`);
-  return required;
-}
-
-/**
- * Segments are delimited by ':' in the key; any ':' in a segment value would
- * collide. URL-encode the colon (and a few other unsafe chars) to keep parsing
- * trivial.
- */
-function escapeSegment(s: string): string {
-  return s.replace(/[:%]/g, (c) => encodeURIComponent(c));
+  tags.push(`route:${encodeURIComponent(filter.route)}`);
+  return tags;
 }

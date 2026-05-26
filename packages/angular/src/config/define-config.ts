@@ -32,6 +32,19 @@ export interface AngularSitecoreConfigInput extends Omit<SitecoreConfigInput, 'r
      * `defaultLanguage` is prepended automatically when absent.
      */
     locales?: string[];
+    /**
+     * Configuration for the ISR-like cache.
+     */
+    isrCache: {
+      /**
+       * Whether the cache is enabled.
+       */
+      enabled: boolean;
+      /**
+       * The global revalidate time in seconds.
+       */
+      revalidate: number;
+    };
   };
 }
 

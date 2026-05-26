@@ -131,3 +131,86 @@ export class LoaderHttpError extends Error {
     super(message);
   }
 }
+
+/**
+ * Base config for loader cache. Can be applied per loader.
+ * @public
+ */
+export interface LoaderCacheConfig {
+  /** default TTL in seconds; pass 'infinite' to never expire */
+  revalidate?: number;
+  /** master switch — set to false to make every call fall through to the raw loader */
+  enabled?: boolean;
+}
+
+/**
+ * Metadata returned by cache.entries() — sufficient for an admin UI without
+ * shipping the cached values themselves (which can be large).
+ * @public
+ */
+export interface LoaderCacheEntryInfo {
+  key: string;
+  tags: string[];
+  storedAt: number;
+  expiresAt: number | null;
+}
+
+/**
+ * Persisted cache entry shape. Stored under the composite cache key built by
+ * buildCacheKey(); see cache-key.ts.
+ * @public
+ */
+export interface LoaderCacheEntry {
+  value: unknown;
+  tags: string[];
+  storedAt: number;
+  expiresAt: number | null; // null = never expire
+}
+
+/**
+ * Filter accepted by cache.invalidate(). `route` is required
+ * other fields are optional and will be used to narrow the invalidation.
+ * @public
+ */
+export interface InvalidateInput {
+  route: string;
+  site?: string | '*';
+  language?: string;
+  variantId?: string;
+  loaderId?: string;
+}
+
+/**
+ * Global config for the loader cache.
+ * @public
+ */
+export interface GlobalLoaderCacheConfig extends LoaderCacheConfig {
+  /**
+   * unstorage driver for the cache. Default in-memory cache is used when empty.
+   */
+  driver?: 'memory' | 'redis' | 'fs';
+}
+
+/**
+ * Server-only cache instance. Constructed once in server.ts via
+ * createLoaderCache() and passed by reference to the middleware factories
+ * (`createLoaderDataServiceMiddleware`, `createCacheAdminMiddleware`) and to
+ * Angular SSR through `angularApp.handle(req, { cache })`.
+ * @public
+ */
+export interface LoaderCache {
+  get(key: string): Promise<LoaderCacheEntry | null>;
+  set(key: string, value: unknown, ttlSeconds: number | 'infinite', tags: string[]): Promise<void>;
+  /** Per-path invalidation. Returns number of entries deleted. */
+  invalidate(filter: InvalidateInput): Promise<number>;
+  /** Direct delete by exact key. */
+  delete(key: string): Promise<boolean>;
+  /** Nuke every entry. */
+  flush(): Promise<void>;
+  /** Returns lightweight metadata for every live entry — used by admin tooling. */
+  entries(): Promise<LoaderCacheEntryInfo[]>;
+  resolveTtl(loaderId: string): number | 'infinite';
+  isEnabled(loaderId: string): boolean;
+  /** Reads back the resolved config (useful for admin UI). */
+  getConfig(): Readonly<LoaderCacheConfig>;
+}

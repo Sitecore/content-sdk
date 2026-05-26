@@ -2,8 +2,8 @@ import {
   LoaderApiRequest,
   LoaderApiResponse,
   NotFoundNavigationError,
-  RequestContext,
   LoaderHttpError,
+  LoaderCache,
 } from '../loaders/models';
 import { extractRequestContext } from '../loaders/utils';
 import {
@@ -16,7 +16,6 @@ import {
 } from './models';
 import { LOADER_DATA_ENDPOINT } from './constants';
 import { resolveLoaderData } from './cache/resolve-loader-data';
-import type { LoaderCache } from './cache/models';
 
 /**
  * Execute a loader and return the API response
@@ -28,10 +27,9 @@ import type { LoaderCache } from './cache/models';
 async function executeLoader(
   request: LoaderApiRequest,
   loaders: LoaderRegistry,
-  requestContext: RequestContext | undefined,
   cache: LoaderCache | undefined
 ): Promise<LoaderApiResponse> {
-  const result = await resolveLoaderData(request, loaders, cache, requestContext);
+  const result = await resolveLoaderData(request, loaders, cache);
 
   if (result.kind === 'redirect') {
     return {
@@ -92,6 +90,7 @@ function parseLoaderRequest(
       url: String(req.query?.url ?? ''),
       params: {},
       query,
+      angularRequestContext: extractRequestContext(req),
     };
   }
   return { status: 405, message: 'Method not allowed' };
@@ -122,12 +121,7 @@ function parseLoaderRequest(
 export function createLoaderDataServiceMiddleware(
   options: ExpressDataHandlerOptions
 ): ExpressMiddleware {
-  const {
-    loaders,
-    cache,
-    endpoint = LOADER_DATA_ENDPOINT,
-    extractRequestContext: extractReq = extractRequestContext,
-  } = options;
+  const { loaders, cache, endpoint = LOADER_DATA_ENDPOINT } = options;
   return async (
     req: ExpressRequest,
     res: ExpressResponse,
@@ -137,11 +131,10 @@ export function createLoaderDataServiceMiddleware(
       next();
       return;
     }
-    const requestContext = extractReq(req);
     try {
       const parsed = parseLoaderRequest(req);
       if ('loaderId' in parsed) {
-        const result = await executeLoader(parsed, loaders, requestContext, cache);
+        const result = await executeLoader(parsed, loaders, cache);
         sendResponse(res, result);
       } else {
         res

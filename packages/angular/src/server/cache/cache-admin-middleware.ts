@@ -1,5 +1,10 @@
+/* eslint-disable */
+/**
+ * This middleware is only used for testing and should be removed before release.
+ * TODO: Remove this middleware before release.
+ */
 import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from '../models';
-import { InvalidateInput, LoaderCache } from './models';
+import { InvalidateInput, LoaderCache } from '../../loaders/models';
 
 /**
  * Options for the admin middleware.

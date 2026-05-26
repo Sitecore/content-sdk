@@ -1,6 +1,6 @@
-import type { Storage } from 'unstorage';
+import { Storage, createStorage, Driver } from 'unstorage';
 import { InvalidateInput, LoaderCache, LoaderCacheEntry, LoaderCacheEntryInfo } from './models';
-import { filterToRequiredTags } from './cache-key';
+import { resolveTagsToInvalidate } from './cache-key';
 import type { ResolvedConfig } from './loader-cache';
 
 /**
@@ -18,14 +18,13 @@ import type { ResolvedConfig } from './loader-cache';
  * @internal
  */
 export class UnstorageLoaderCache implements LoaderCache {
-  readonly backend = 'unstorage' as const;
   private readonly storage: Storage;
   private readonly resolved: ResolvedConfig;
   /** Prefix passed to `storage.getKeys()` / `storage.clear()` for scoped scans. */
   private readonly keyPrefix: string;
 
-  constructor(storage: Storage, resolved: ResolvedConfig) {
-    this.storage = storage;
+  constructor(driver: Driver, resolved: ResolvedConfig) {
+    this.storage = createStorage({ driver: driver });
     this.resolved = resolved;
     // Mirrors the serializeKey() prefix in cache-key.ts so getKeys() returns
     // only this cache's entries — never anything else the user stores in the
@@ -55,17 +54,13 @@ export class UnstorageLoaderCache implements LoaderCache {
   }
 
   async invalidate(filter: InvalidateInput): Promise<number> {
-    const required = filterToRequiredTags(
-      filter,
-      this.resolved.defaultSiteName,
-      this.resolved.namespace
-    );
+    const tags = resolveTagsToInvalidate(filter, this.resolved.defaultSiteName);
     const keys = await this.storage.getKeys(this.keyPrefix);
     let deleted = 0;
     for (const key of keys) {
       const entry = await this.storage.getItem<LoaderCacheEntry>(key);
       if (!entry) continue;
-      if (required.every((tag) => entry.tags.includes(tag))) {
+      if (tags.every((tag) => entry.tags.includes(tag))) {
         await this.storage.removeItem(key);
         deleted++;
       }
@@ -99,7 +94,6 @@ export class UnstorageLoaderCache implements LoaderCache {
         tags: [...entry.tags],
         storedAt: entry.storedAt,
         expiresAt: entry.expiresAt,
-        approxBytes: approxByteSize(entry.value),
       });
     }
     return out;
@@ -124,13 +118,5 @@ export class UnstorageLoaderCache implements LoaderCache {
 
   private isExpired(entry: LoaderCacheEntry): boolean {
     return entry.expiresAt !== null && entry.expiresAt <= Date.now();
-  }
-}
-
-function approxByteSize(value: unknown): number {
-  try {
-    return JSON.stringify(value).length;
-  } catch {
-    return 0;
   }
 }
