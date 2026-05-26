@@ -1,5 +1,5 @@
-import type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import type { Page, PageOptions, SitecoreClient } from '@sitecore-content-sdk/content/client';
+import { AngularSitecoreConfig } from '../config/define-config';
 
 /**
  * Resolves layout/page data for a route path using a {@link SitecoreClient} and Sitecore config.
@@ -8,7 +8,7 @@ import type { Page, PageOptions, SitecoreClient } from '@sitecore-content-sdk/co
  *
  * Future: add helpers for personalization and multisite alongside this call.
  * @param {string} path - Route path (e.g. `'/'` or `'/about'`).
- * @param {SitecoreConfig} sitecoreConfig - Resolved Sitecore configuration (e.g. default export from `sitecore.config.ts`).
+ * @param {AngularSitecoreConfig} sitecoreConfig - Resolved Sitecore configuration (e.g. default export from `sitecore.config.ts`).
  * @param {SitecoreClient} client - Sitecore client instance (e.g. from a module singleton).
  * @param {{ locale?: string; site?: string }} [options] - Optional `locale` / `site` overrides.
  * @param {string} [options.locale] - Optional locale override.
@@ -18,7 +18,7 @@ import type { Page, PageOptions, SitecoreClient } from '@sitecore-content-sdk/co
  */
 export async function resolveSitecorePage(
   path: string,
-  sitecoreConfig: SitecoreConfig,
+  sitecoreConfig: AngularSitecoreConfig,
   client: SitecoreClient,
   options?: { locale?: string; site?: string }
 ): Promise<Page | null> {

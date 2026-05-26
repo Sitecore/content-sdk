@@ -1,9 +1,13 @@
 // ─── Angular SDK providers and tokens ──────────────────────────
-export { type SitecoreAngularConfig } from './lib/providers';
+export { type AngularCSDKAppInit } from './lib/providers';
 export { SITECORE_CONFIG_TOKEN, SITECORE_CLIENT_TOKEN } from './lib/tokens';
 export { resolveSitecorePage } from './lib/sitecore-page-resolver';
 
-export { defineConfig } from './config/define-config';
+export {
+  defineConfig,
+  type AngularSitecoreConfigInput,
+  type AngularSitecoreConfig,
+} from './config/define-config';
 export {
   getContentStylesheetLink,
   getDesignLibraryStylesheetLinks,
@@ -41,7 +45,9 @@ export {
   PageMode,
   ErrorPage,
   Page,
+  SitecoreClient,
 } from '@sitecore-content-sdk/content/client';
+export { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
 export { mediaApi } from '@sitecore-content-sdk/content/media';
 export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
 export {
@@ -62,8 +68,6 @@ export {
 import { VERSION as CORE_VERSION } from '@angular/core';
 import { Router } from '@angular/router';
 
-export * from '@sitecore-content-sdk/content/client';
-
 // Angular-specific exports
 export * from './loaders/loader-resolver';
 export * from './loaders/loader-registry.token';
@@ -82,6 +86,16 @@ export * from './server';
 
 // ─── Sitecore Context ──────────────────────────────────────────
 export { SitecoreContextService } from './lib/sitecore-context.service';
+
+export { SitecoreTranslateLoader } from './i18n/sitecore-translate-loader';
+
+// ─── Localized routing ────────────────────────────────────────
+export {
+  splitLocaleFromPath,
+  scLocaleMatcher,
+  type LocaleExtractionResult,
+} from './i18n/locale-utils';
+export { LocaleUrlSerializer } from './i18n/locale-url-serializer';
 
 // ─── Placeholder ───────────────────────────────────────────────
 export { ScPlaceholderComponent } from './placeholder/sc-placeholder.component';
