@@ -1,5 +1,5 @@
 import type { SitecoreClient } from '@sitecore-content-sdk/content/client';
-import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
+import { EnvironmentProviders, makeEnvironmentProviders, Provider } from '@angular/core';
 import {
   SITECORE_CONFIG_TOKEN,
   SITECORE_CLIENT_TOKEN,
@@ -48,7 +48,7 @@ export interface AngularCSDKAppInit {
  * @public
  */
 export function provideSitecoreAngular(init: AngularCSDKAppInit): EnvironmentProviders {
-  const providers: Array<unknown> = [];
+  const providers: Array<Provider | EnvironmentProviders> = [];
 
   if (init.sitecoreConfig !== undefined || init.sitecoreClient !== undefined) {
     if (init.sitecoreConfig === undefined || init.sitecoreClient === undefined) {
