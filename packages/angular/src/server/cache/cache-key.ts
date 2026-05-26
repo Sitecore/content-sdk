@@ -3,7 +3,7 @@ import { CacheKeyDimensions } from './models';
 import { dimensionsFromContext } from './utils';
 import { InvalidateInput } from '../../loaders/models';
 
-const CACHE_KEY_PREFIX = 'scLoader';
+export const CACHE_KEY_PREFIX = 'scLoader';
 
 /**
  * Compose the canonical cache key.
@@ -26,7 +26,6 @@ export function serializeKey(dimensions: CacheKeyDimensions): string {
     encodeURIComponent(dimensions.variantId),
     encodeURIComponent(dimensions.loaderId),
     encodeURIComponent(dimensions.route),
-    ...(dimensions.customTags ?? []),
   ].join(':');
 }
 
@@ -36,7 +35,7 @@ export function serializeKey(dimensions: CacheKeyDimensions): string {
 export function buildDefaultTags(dimensions: CacheKeyDimensions): string[] {
   return [
     `site:${encodeURIComponent(dimensions.site)}`,
-    `language:${encodeURIComponent(dimensions.locale)}`,
+    `locale:${encodeURIComponent(dimensions.locale)}`,
     `variant:${encodeURIComponent(dimensions.variantId)}`,
     `loader:${encodeURIComponent(dimensions.loaderId)}`,
     `route:${encodeURIComponent(dimensions.route)}`,
@@ -44,9 +43,14 @@ export function buildDefaultTags(dimensions: CacheKeyDimensions): string[] {
 }
 
 /**
- * Resolve an InvalidateFilter into the set of tags that an entry must carry to match.
+ * Resolve an InvalidateInput into the set of tags that an entry must carry to match.
  * Omitted dimensions widen to "all" (no tag constraint on that axis);
  * `site` defaults to `defaultSiteName` unless explicitly '*'.
+ *
+ * At least one of `filter.route` or `filter.tags` should be set; otherwise the
+ * returned list contains only the site constraint (which would match every
+ * entry on the default site). Callers (admin middleware, CLI) enforce that
+ * precondition.
  */
 export function resolveTagsToInvalidate(
   filter: InvalidateInput,
@@ -56,10 +60,11 @@ export function resolveTagsToInvalidate(
 
   const site = filter.site === '*' ? null : filter.site ?? defaultSiteName;
   if (site) tags.push(`site:${encodeURIComponent(site)}`);
-  if (filter.language) tags.push(`language:${encodeURIComponent(filter.language)}`);
+  if (filter.language) tags.push(`locale:${encodeURIComponent(filter.language)}`);
   if (filter.variantId) tags.push(`variant:${encodeURIComponent(filter.variantId)}`);
   if (filter.loaderId) tags.push(`loader:${encodeURIComponent(filter.loaderId)}`);
-
-  tags.push(`route:${encodeURIComponent(filter.route)}`);
+  if (filter.route) tags.push(`route:${encodeURIComponent(filter.route)}`);
+  // Custom tags are matched verbatim (no prefix transformation).
+  if (filter.tags?.length) tags.push(...filter.tags);
   return tags;
 }

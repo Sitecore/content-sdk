@@ -6,7 +6,8 @@ import { NotFoundNavigationError, LoaderHttpError } from '../loaders/models';
 import { createLoaderDataServiceMiddleware } from './loader-data-service-middleware';
 import { LOADER_DATA_ENDPOINT } from './constants';
 import { EXTRACT_REQUEST_CONTEXT_TOKEN } from './models';
-import type { LoaderRegistry } from './models';
+import type { LoaderRegistry } from '../loaders/loader-registry.token';
+import { createLoaderCache } from './cache/loader-cache';
 
 /**
  * Minimal Express `res` stub for middleware tests.
@@ -38,11 +39,15 @@ describe('createLoaderDataServiceMiddleware', () => {
   });
 
   /**
-   * @param {{ loaders: import('./models').LoaderRegistry; endpoint?: string }} opts - Middleware factory options
+   * @param {{ loaders: import('./models').LoaderRegistry; endpoint?: string; cache?: import('../loaders/models').LoaderCache }} opts - Middleware factory options
    * @param {import('./models').LoaderRegistry} opts.loaders - Registered route loaders
    * @param {string} [opts.endpoint] - Data endpoint path override
    */
-  function createMiddleware(opts: { loaders: LoaderRegistry; endpoint?: string }) {
+  function createMiddleware(opts: {
+    loaders: LoaderRegistry;
+    endpoint?: string;
+    cache?: import('../loaders/models').LoaderCache;
+  }) {
     const extractReq = TestBed.inject(EXTRACT_REQUEST_CONTEXT_TOKEN);
     return createLoaderDataServiceMiddleware({
       ...opts,
@@ -286,6 +291,38 @@ describe('createLoaderDataServiceMiddleware', () => {
 
     expect(next).toHaveBeenCalledWith();
     expect(res.json).not.toHaveBeenCalled();
+  });
+
+  it('should serve cached loader data on repeat requests without re-running the loader', async () => {
+    const mockLoader = vi.fn().mockResolvedValue({ title: 'Cached page' }) as LoaderFn;
+    const cache = createLoaderCache({ revalidate: 300 });
+    const middleware = createMiddleware({
+      loaders: { page: mockLoader },
+      endpoint,
+      cache,
+    });
+    const req = {
+      method: 'POST',
+      path: endpoint,
+      body: { loaderId: 'page', url: '/cached-page', params: { site: 'demo' }, query: {} },
+      query: {},
+      headers: {},
+    };
+    const res1 = createMockRes();
+    const res2 = createMockRes();
+
+    await middleware(req as any, res1 as any, createMockNext());
+    await middleware(req as any, res2 as any, createMockNext());
+
+    expect(mockLoader).toHaveBeenCalledTimes(1);
+    expect(res1.json).toHaveBeenCalledWith({
+      kind: 'data',
+      data: { title: 'Cached page' },
+    });
+    expect(res2.json).toHaveBeenCalledWith({
+      kind: 'data',
+      data: { title: 'Cached page' },
+    });
   });
 
   it('should return 400 when POST body missing loaderId', async () => {

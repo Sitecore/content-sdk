@@ -33,17 +33,14 @@ export interface AngularSitecoreConfigInput extends Omit<SitecoreConfigInput, 'r
      */
     locales?: string[];
     /**
-     * Configuration for the ISR-like cache.
+     * Configuration for the ISR-like cache. Both fields default when omitted
+     * (`enabled: true`, `revalidate: 300`).
      */
-    isrCache: {
-      /**
-       * Whether the cache is enabled.
-       */
-      enabled: boolean;
-      /**
-       * The global revalidate time in seconds.
-       */
-      revalidate: number;
+    isrCache?: {
+      /** Whether the cache is enabled. */
+      enabled?: boolean;
+      /** The global revalidate time in seconds. */
+      revalidate?: number;
     };
   };
 }
@@ -60,8 +57,19 @@ export interface AngularSitecoreConfig extends Omit<SitecoreConfig, 'redirects'>
   angular: {
     /** Resolved locales for the Angular app. Always contains at least `defaultLanguage`. */
     locales: string[];
+    /**
+     * Resolved configuration for the ISR-like cache. Defaults are applied by
+     * `defineConfig`: `enabled: true`, `revalidate: 300`.
+     */
+    isrCache: {
+      enabled: boolean;
+      revalidate: number;
+    };
   };
 }
+
+/** Defaults applied to `angular.isrCache` when input omits fields. */
+const DEFAULT_ISR_CACHE = { enabled: true, revalidate: 300 } as const;
 
 /**
  * Ensures `defaultLanguage` is present in the locales list (prepended when missing) and
@@ -109,8 +117,13 @@ export function defineConfig(
 
   scConfig.redirects.locales = locales;
 
+  const isrCache = {
+    enabled: angular?.isrCache?.enabled ?? DEFAULT_ISR_CACHE.enabled,
+    revalidate: angular?.isrCache?.revalidate ?? DEFAULT_ISR_CACHE.revalidate,
+  };
+
   return {
     ...scConfig,
-    angular: { locales },
+    angular: { locales, isrCache },
   } as AngularSitecoreConfig;
 }

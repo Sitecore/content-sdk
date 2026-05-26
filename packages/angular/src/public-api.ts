@@ -74,10 +74,16 @@ export * from './loaders/loader-registry.token';
 export * from './loaders/loader-data.service';
 export * from './loaders/pre-loader-data.service';
 export {
+  SERVER_LOADER_DATA_PROVIDER,
+  type ServerLoaderDataProviderPort,
+} from './loaders/server-loader-data-provider.token';
+export { type LoaderRegistry } from './loaders/loader-registry.token';
+export {
   NotFoundNavigationError,
   LoaderHttpError,
   type LoaderFn,
   type LoaderContext,
+  type LoaderDataResult,
 } from './loaders/models';
 export { handleNavigationError } from './loaders/router-error-handling';
 export { applyRedirect } from './loaders/utils';

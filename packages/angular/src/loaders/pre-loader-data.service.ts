@@ -24,13 +24,13 @@ interface ResolverWithLoaderId {
 /**
  * PreLoaderDataService kicks off loader data fetches for all loaders in the current route
  * and its parent routes in parallel, so that when Angular runs resolvers sequentially,
- * resolvers get cache hits or join already-pending requests instead of waiting.
+ * resolvers get staged prefetched responses or join already-pending requests instead of waiting.
  *
  * Subscribes to the router's ActivationStart event and prefetches for the
  * ActivatedRouteSnapshot when it is the leaf route (browser only). Discovers all loader
  * resolvers on that snapshot and its parents (via LOADER_ID on pathFromRoot), then
  * calls LoaderDataService.prefetch() for each (loaderId, url, params, query). Fetches
- * run in parallel; results are stored in LoaderDataService cache for getData() to consume.
+ * run in parallel; results are stored in LoaderDataService prefetchedResponses for getData() to consume.
  * @public
  */
 @Injectable({

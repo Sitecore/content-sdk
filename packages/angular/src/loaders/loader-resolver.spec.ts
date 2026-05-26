@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { TestBed } from '@angular/core/testing';
-import { PLATFORM_ID, REQUEST, TransferState, makeStateKey } from '@angular/core';
+import { PLATFORM_ID, REQUEST, TransferState, makeStateKey, REQUEST_CONTEXT } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { provideRouter, RedirectCommand, Router } from '@angular/router';
@@ -8,7 +8,9 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { loaderResolver } from './loader-resolver';
 import { LOADER_ID, LOADER_REGISTRY } from './loader-registry.token';
 import { LoaderDataService } from './loader-data.service';
+import { provideServerLoaderDataProvider } from '../server/provide-server-loader-data-provider';
 import { LOADER_DATA_ENDPOINT } from '../server/constants';
+import { createLoaderCache } from '../server/cache/loader-cache';
 import type { LoaderFn } from './models';
 import type { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
@@ -276,6 +278,7 @@ describe('loaderResolver', () => {
           { provide: PLATFORM_ID, useValue: 'server' },
           { provide: LOADER_REGISTRY, useValue: { page: mockLoader } },
           { provide: LoaderDataService, useValue: { getData: vi.fn() } },
+          provideServerLoaderDataProvider(),
         ],
       });
       transferState = TestBed.inject(TransferState);
@@ -322,7 +325,7 @@ describe('loaderResolver', () => {
       expect(transferState.get(key, null)).toEqual({ server: true, title: 'SSR' });
     });
 
-    it('should throw when loader id is not in registry', async () => {
+    it('should throw LoaderHttpError when loader id is not in registry', async () => {
       const resolver = loaderResolver('missing' as 'page');
       const route = makeRouteSnapshot();
       const state = makeRouterStateSnapshot('/path');
@@ -333,7 +336,9 @@ describe('loaderResolver', () => {
             resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
           )(route, state);
         })
-      ).rejects.toThrow('No loader registered for id "missing"');
+      ).rejects.toMatchObject({
+        message: 'No loader registered for id "missing"',
+      });
     });
 
     it('should rethrow when loader throws', async () => {
@@ -351,6 +356,44 @@ describe('loaderResolver', () => {
           )(route, state);
         })
       ).rejects.toThrow('Loader failed');
+    });
+
+    it('should reuse cached loader output on SSR when REQUEST_CONTEXT provides a cache', async () => {
+      TestBed.resetTestingModule();
+      const cachedLoader = vi.fn().mockResolvedValue({ cached: true }) as ReturnType<
+        typeof vi.fn
+      > &
+        LoaderFn;
+      const cache = createLoaderCache({ revalidate: 300 });
+      TestBed.configureTestingModule({
+        providers: [
+          provideRouter([]),
+          TransferState,
+          { provide: PLATFORM_ID, useValue: 'server' },
+          { provide: LOADER_REGISTRY, useValue: { page: cachedLoader } },
+          { provide: LoaderDataService, useValue: { getData: vi.fn() } },
+          { provide: REQUEST_CONTEXT, useValue: { cache } },
+          provideServerLoaderDataProvider(),
+        ],
+      });
+
+      const resolver = loaderResolver('page');
+      const route = makeRouteSnapshot({ pathFromRoot: [{ params: { site: 'demo' } }] });
+      const state = makeRouterStateSnapshot('/cached-ssr');
+
+      await TestBed.runInInjectionContext(async () => {
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
+      });
+      const second = await TestBed.runInInjectionContext(async () => {
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
+      });
+
+      expect(cachedLoader).toHaveBeenCalledTimes(1);
+      expect(second).toEqual({ cached: true });
     });
   });
 
@@ -372,6 +415,7 @@ describe('loaderResolver', () => {
           { provide: LOADER_REGISTRY, useValue: { page: loaderWithRequest } },
           { provide: LoaderDataService, useValue: { getData: vi.fn() } },
           { provide: REQUEST, useValue: mockRequest },
+          provideServerLoaderDataProvider(),
         ],
       });
     });
@@ -420,6 +464,7 @@ describe('loaderResolver', () => {
           { provide: PLATFORM_ID, useValue: 'server' },
           { provide: LOADER_REGISTRY, useValue: { page: mockLoader } },
           { provide: LoaderDataService, useValue: { getData: vi.fn() } },
+          provideServerLoaderDataProvider(),
           {
             provide: SITECORE_CONFIG_TOKEN,
             useValue: {

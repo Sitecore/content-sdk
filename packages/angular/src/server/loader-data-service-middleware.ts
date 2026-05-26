@@ -3,7 +3,7 @@ import {
   LoaderApiResponse,
   NotFoundNavigationError,
   LoaderHttpError,
-  LoaderCache,
+  LoaderDataResult,
 } from '../loaders/models';
 import { extractRequestContext } from '../loaders/utils';
 import {
@@ -12,25 +12,16 @@ import {
   ExpressNextFunction,
   ExpressRequest,
   ExpressResponse,
-  LoaderRegistry,
 } from './models';
 import { LOADER_DATA_ENDPOINT } from './constants';
-import { resolveLoaderData } from './cache/resolve-loader-data';
+import { ServerLoaderDataProvider } from './loader-data.provider';
 
 /**
- * Execute a loader and return the API response
- * @param {LoaderApiRequest} request - The loader data request
- * @param {LoaderRegistry} loaders - The loader registry
- * @param {RequestContext} [requestContext] - The request context
- * @returns {Promise<LoaderApiResponse>} Promise resolving to the API response
+ * Map loader resolution result to wire-level API response.
+ * @param {LoaderDataResult} result - Loader result from the shared registry
+ * @returns {LoaderApiResponse} Wire envelope for the client
  */
-async function executeLoader(
-  request: LoaderApiRequest,
-  loaders: LoaderRegistry,
-  cache: LoaderCache | undefined
-): Promise<LoaderApiResponse> {
-  const result = await resolveLoaderData(request, loaders, cache);
-
+function toApiResponse(result: LoaderDataResult): LoaderApiResponse {
   if (result.kind === 'redirect') {
     return {
       kind: 'redirect',
@@ -42,9 +33,7 @@ async function executeLoader(
   }
 
   if (result.kind === 'error') {
-    // Map known loader errors back to wire envelopes; resolveLoaderData
-    // attaches the original Error via `cause` so we can pattern-match.
-    const cause = (result as { cause?: unknown }).cause;
+    const cause = result.cause;
     if (cause instanceof NotFoundNavigationError) {
       return { kind: 'notFound', status: 404 };
     }
@@ -90,7 +79,6 @@ function parseLoaderRequest(
       url: String(req.query?.url ?? ''),
       params: {},
       query,
-      angularRequestContext: extractRequestContext(req),
     };
   }
   return { status: 405, message: 'Method not allowed' };
@@ -109,12 +97,12 @@ function parseLoaderRequest(
  * ```typescript
  * import { createExpressDataMiddleware, LOADER_DATA_ENDPOINT } from '@sitecore-content-sdk/angular';
  *
- * // Use default endpoint (same as client when FETCH_DATA_ENDPOINT is not provided)
- * app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS }));
+ * // Pass the same LOADERS object used with provideLoaderRegistry(LOADERS)
+ * app.use(createExpressDataMiddleware({ loaders: LOADERS }));
  *
  * // Or pass the same endpoint you provide to the Angular app (FETCH_DATA_ENDPOINT)
  * const dataEndpoint = process.env.DATA_ENDPOINT ?? LOADER_DATA_ENDPOINT;
- * app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS, endpoint: dataEndpoint }));
+ * app.use(createExpressDataMiddleware({ loaders: LOADERS, endpoint: dataEndpoint }));
  * ```
  * @public
  */
@@ -122,6 +110,8 @@ export function createLoaderDataServiceMiddleware(
   options: ExpressDataHandlerOptions
 ): ExpressMiddleware {
   const { loaders, cache, endpoint = LOADER_DATA_ENDPOINT } = options;
+  const serverLoaderData = new ServerLoaderDataProvider(loaders, cache);
+
   return async (
     req: ExpressRequest,
     res: ExpressResponse,
@@ -134,7 +124,12 @@ export function createLoaderDataServiceMiddleware(
     try {
       const parsed = parseLoaderRequest(req);
       if ('loaderId' in parsed) {
-        const result = await executeLoader(parsed, loaders, cache);
+        // Per refactor plan A2: extract once at the boundary; ride on the payload.
+        // POST body's `angularRequestContext` is ignored — server-derived data
+        // (hostname, headers) must come from the actual request, not from a
+        // payload the browser could spoof.
+        parsed.angularRequestContext = extractRequestContext(req);
+        const result = toApiResponse(await serverLoaderData.resolve(parsed));
         sendResponse(res, result);
       } else {
         res

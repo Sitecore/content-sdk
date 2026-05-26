@@ -10,7 +10,7 @@
     "@angular/common",
     "@angular/core",
     "@angular/router",
-    "unstorage"
+    "unstorage",
     "@ngx-translate/core"
   ]
 }

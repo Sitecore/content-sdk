@@ -46,7 +46,7 @@ describe('LoaderDataService', () => {
   });
 
   describe('getData', () => {
-    it('should make new data request when no pending requests and data not in cache', async () => {
+    it('should make new data request when no pending requests and no staged prefetched response', async () => {
       setupTestBed();
       const request = { url: '/test', loaderId: 'page' };
       const resultPromise = service.getData(request);
@@ -92,7 +92,7 @@ describe('LoaderDataService', () => {
   });
 
   describe('prefetch', () => {
-    it('should populate cache without consuming so getData can read it without a new request', async () => {
+    it('should stage prefetched response without consuming so getData can read it without a new request', async () => {
       setupTestBed();
       const request = { url: '/prefetched', loaderId: 'page' };
       service.prefetch(request);
@@ -111,12 +111,12 @@ describe('LoaderDataService', () => {
       httpController.expectNone(LOADER_DATA_ENDPOINT);
     });
 
-    it('should not make a new request when cache is already populated', async () => {
+    it('should not make a new request when prefetched response is already staged', async () => {
       setupTestBed();
-      const request = { url: '/cached', loaderId: 'page' };
+      const request = { url: '/staged', loaderId: 'page' };
       service.prefetch(request);
       const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
-      req.flush({ kind: 'data', data: { cached: true } });
+      req.flush({ kind: 'data', data: { staged: true } });
       await new Promise((r) => setTimeout(r, 0));
 
       service.prefetch(request);

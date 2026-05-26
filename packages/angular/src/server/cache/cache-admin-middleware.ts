@@ -69,8 +69,10 @@ export function createCacheAdminMiddleware(
 
       if (action === 'invalidate' && req.method === 'POST') {
         const body = (req.body ?? {}) as Partial<InvalidateInput>;
-        if (!body.route || typeof body.route !== 'string') {
-          res.status(400).json({ error: 'route is required' });
+        const hasRoute = typeof body.route === 'string' && body.route.length > 0;
+        const hasTags = Array.isArray(body.tags) && body.tags.length > 0;
+        if (!hasRoute && !hasTags) {
+          res.status(400).json({ error: 'at least one of `route` or `tags` is required' });
           return;
         }
         const deleted = await cache.invalidate(body as InvalidateInput);

@@ -12,16 +12,25 @@ export const FETCH_DATA_ENDPOINT = new InjectionToken<string | null | undefined>
   'FETCH_DATA_ENDPOINT'
 );
 
-export const LOADER_REGISTRY = new InjectionToken<Record<string, LoaderFn>>('LOADER_REGISTRY');
-
 /**
- * Provides the loader registry for DI. Pass the loaders your app uses (e.g. page, '404', '500').
- * The same loader set must be registered on the server in createLoaderDataServiceMiddleware so
- * client-side navigation can fetch route data via the data endpoint.
- * @param {Record<string, LoaderFn>} loaders - Map of loader id to loader function
+ * Cross-boundary loader registry — maps loader IDs to loader functions.
+ * The same registry is used for SSR, CSR (`/_data`), and route resolvers.
+ * There is no separate server vs client loader set.
  * @public
  */
-export const provideLoaderRegistry = (loaders: Record<string, LoaderFn>): Provider[] => {
+export type LoaderRegistry = Record<string, LoaderFn>;
+
+export const LOADER_REGISTRY = new InjectionToken<LoaderRegistry>('LOADER_REGISTRY');
+
+/**
+ * Registers the app's loader registry for DI. Pass the loaders your app uses
+ * (e.g. page, '404', '500'). Use the **same object** with
+ * {@link createLoaderDataServiceMiddleware} in `server.ts` so SSR and CSR
+ * navigations resolve the same loader functions.
+ * @param {LoaderRegistry} loaders - Map of loader id to loader function
+ * @public
+ */
+export const provideLoaderRegistry = (loaders: LoaderRegistry): Provider[] => {
   return [
     {
       provide: LOADER_REGISTRY,

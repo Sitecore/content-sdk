@@ -1,17 +1,14 @@
-export type {
-  LoaderCache,
-  LoaderCacheConfig,
-  LoaderCacheLoaderConfig,
-  LoaderCacheEntry,
-  LoaderCacheEntryInfo,
-  InvalidateFilter,
-  CacheKeyDimensions,
-} from './models';
+export type { CacheKeyDimensions, ResolvedConfig } from './models';
 export { createLoaderCache } from './loader-cache';
-export { resolveLoaderData, type ResolveLoaderDataResult } from './resolve-loader-data';
 export {
   createCacheAdminMiddleware,
   type CacheAdminMiddlewareOptions,
 } from './cache-admin-middleware';
-export { buildCacheKey, buildDefaultTags, filterToRequiredTags, serializeKey } from './cache-key';
-export { dimensionsFromContext } from './models';
+export {
+  buildCacheKey,
+  buildDefaultTags,
+  resolveTagsToInvalidate,
+  serializeKey,
+  CACHE_KEY_PREFIX,
+} from './cache-key';
+export { dimensionsFromContext } from './utils';

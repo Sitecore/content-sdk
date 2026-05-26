@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import type { RequestContext } from '../loaders/models';
-import type { LoaderFn } from '../loaders/models';
-import type { LoaderCache } from './cache/models';
+import type { LoaderRegistry } from '../loaders/loader-registry.token';
+import type { LoaderCache } from '../loaders/models';
 
 /**
  * Injection token for the request context extractor (used by tests to provide a mock via TestBed).
@@ -69,10 +69,10 @@ export type ExpressMiddleware = (
 ) => void | Promise<void>;
 
 /**
- * Loader registry type - maps loader IDs to loader functions
  * @public
+ * @deprecated Import {@link LoaderRegistry} from `@sitecore-content-sdk/angular` loader registry exports instead.
  */
-export type LoaderRegistry = Record<string, LoaderFn>;
+export type { LoaderRegistry } from '../loaders/loader-registry.token';
 
 /**
  * Options for the Express data handler
@@ -80,7 +80,7 @@ export type LoaderRegistry = Record<string, LoaderFn>;
  */
 export interface ExpressDataHandlerOptions extends DataHandlerConfig {
   /**
-   * The loader registry containing all registered loaders
+   * The shared loader registry (same object as {@link provideLoaderRegistry}).
    */
   loaders: LoaderRegistry;
   /**

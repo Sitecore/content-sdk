@@ -15,6 +15,7 @@ import {
   createLoaderDataServiceMiddleware,
 } from '@sitecore-content-sdk/angular';
 import { LOADERS } from './content-sdk/loaders';
+import config from '../sitecore.config';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -39,8 +40,8 @@ const driver =
       : undefined;
 
 const loaderCache = createLoaderCache({
-  revalidate: 300,
-  defaultSiteName: 'localhost',
+  revalidate: config.angular.isrCache.revalidate,
+  defaultSiteName: config.defaultSiteName,
   ...(driver ? { driver } : {}),
 });
 

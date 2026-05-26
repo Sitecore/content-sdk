@@ -1,8 +1,12 @@
 import { resolveTagsToInvalidate } from './cache-key';
-import { GlobalLoaderCacheConfig, LoaderCache, LoaderCacheEntry } from '../../loaders/models';
-import { resolveConfig } from './utils';
+import {
+  GlobalLoaderCacheConfig,
+  InvalidateInput,
+  LoaderCache,
+  LoaderCacheEntry,
+  LoaderCacheEntryInfo,
+} from '../../loaders/models';
 import { ResolvedConfig } from './models';
-import { InvalidateInput, LoaderCacheEntryInfo } from '../../loaders/models';
 
 /**
  * Default LoaderCache implementation: single in-process Map, O(N) tag-scan
@@ -13,11 +17,11 @@ import { InvalidateInput, LoaderCacheEntryInfo } from '../../loaders/models';
  * @internal
  */
 export class InMemoryLoaderCache implements LoaderCache {
-  private readonly resolved: ResolvedConfig;
+  private readonly config: ResolvedConfig;
   private readonly store = new Map<string, LoaderCacheEntry>();
 
-  constructor(config: GlobalLoaderCacheConfig) {
-    this.resolved = resolveConfig(config);
+  constructor(config: ResolvedConfig) {
+    this.config = config;
   }
 
   async get(key: string): Promise<LoaderCacheEntry | null> {
@@ -31,7 +35,7 @@ export class InMemoryLoaderCache implements LoaderCache {
   }
 
   async set(key: string, value: unknown, ttlSeconds: number, tags: string[]): Promise<void> {
-    const expiresAt = ttlSeconds > 0 ? null : Date.now() + ttlSeconds * 1000;
+    const expiresAt = ttlSeconds > 0 ? Date.now() + ttlSeconds * 1000 : null;
     this.store.set(key, {
       value,
       tags: [...tags],
@@ -41,7 +45,7 @@ export class InMemoryLoaderCache implements LoaderCache {
   }
 
   async invalidate(filter: InvalidateInput): Promise<number> {
-    const required = resolveTagsToInvalidate(filter);
+    const required = resolveTagsToInvalidate(filter, this.config.defaultSiteName);
     let deleted = 0;
     for (const [key, entry] of this.store) {
       if (required.every((tag) => entry.tags.includes(tag))) {
@@ -77,21 +81,16 @@ export class InMemoryLoaderCache implements LoaderCache {
     return out;
   }
 
-  resolveTtl(loaderId: string): number {
-    const perLoader = this.resolved.loaders[loaderId];
-    if (perLoader && perLoader.ttl !== undefined) return perLoader.ttl;
-    return this.resolved.revalidate;
+  resolveTtl(): number {
+    return this.config.revalidate;
   }
 
-  isEnabled(loaderId: string): boolean {
-    if (!this.resolved.enabled) return false;
-    const perLoader = this.resolved.loaders[loaderId];
-    if (perLoader && perLoader.enabled === false) return false;
-    return true;
+  enabled(): boolean {
+    return this.config.enabled;
   }
 
-  getConfig(): ResolvedConfig {
-    return this.resolved;
+  getConfig(): Readonly<GlobalLoaderCacheConfig> {
+    return this.config;
   }
 
   private isExpired(entry: LoaderCacheEntry): boolean {

@@ -1,11 +1,4 @@
-import {
-  inject,
-  TransferState,
-  PLATFORM_ID,
-  REQUEST,
-  REQUEST_CONTEXT,
-  makeStateKey,
-} from '@angular/core';
+import { inject, TransferState, PLATFORM_ID, REQUEST, makeStateKey } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import {
   ActivatedRouteSnapshot,
@@ -15,7 +8,7 @@ import {
   Router,
   RedirectCommand,
 } from '@angular/router';
-import { LOADER_REGISTRY, LOADER_ID } from './loader-registry.token';
+import { LOADER_ID } from './loader-registry.token';
 import { LoaderDataService } from './loader-data.service';
 import { extractRequestContext, applyRedirect } from './utils';
 import {
@@ -23,12 +16,11 @@ import {
   DEFAULT_NOT_FOUND_ROUTE,
   LoaderHttpError,
   NotFoundNavigationError,
-  LoaderCache,
   LoaderCacheConfig,
 } from './models';
 import { redirectOnNavigationError } from './router-error-handling';
 import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from '../lib/tokens';
-import { resolveLoaderData } from '../server/cache/resolve-loader-data';
+import { SERVER_LOADER_DATA_PROVIDER } from './server-loader-data-provider.token';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 /**
  * Create a state key for the loader
@@ -87,10 +79,11 @@ async function resolveOnBrowser(
   state: RouterStateSnapshot,
   loaderId: string,
   router: Router,
-  defaultLanguage?: string
+  defaultLanguage?: string,
+  cacheOptions?: LoaderCacheConfig
 ): Promise<unknown | RedirectCommand> {
   const transferState = inject(TransferState);
-  const loaderData = inject(LoaderDataService);
+  const browserLoaderData = inject(LoaderDataService);
 
   const url = state.url;
   const key = stateKey(loaderId, url);
@@ -103,11 +96,12 @@ async function resolveOnBrowser(
 
   const allParams = buildLoaderParams(route, defaultLanguage);
 
-  const resp = await loaderData.getData({
+  const resp = await browserLoaderData.getData({
     url,
     loaderId,
     params: allParams,
     query: route.queryParams as Record<string, string | string[]>,
+    cacheOptions,
   });
 
   if (resp.kind === 'error') {
@@ -129,7 +123,6 @@ export const loaderResolver = (
   const resolver = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const transferState = inject(TransferState);
     const platformId = inject(PLATFORM_ID);
-    const loaderRegistry = inject(LOADER_REGISTRY);
     const request = inject(REQUEST, { optional: true });
     const notFoundRoute =
       inject(NOT_FOUND_ROUTE_TOKEN, { optional: true }) || DEFAULT_NOT_FOUND_ROUTE;
@@ -142,43 +135,44 @@ export const loaderResolver = (
 
     if (isPlatformBrowser(platformId)) {
       try {
-        return await resolveOnBrowser(route, state, loaderId, router, defaultLanguage);
+        return await resolveOnBrowser(
+          route,
+          state,
+          loaderId,
+          router,
+          defaultLanguage,
+          cacheOptions
+        );
       } catch (e) {
         // special handling for browser, as navigation error for handleNavigationError is only generated on server
         return redirectOnNavigationError(e as Error, url, notFoundRoute, errorRoute, router);
       }
     }
 
-    const loader = loaderRegistry[loaderId];
-
-    if (!loader) {
-      throw new Error(`No loader registered for id "${loaderId}"`);
+    const serverLoaderData = inject(SERVER_LOADER_DATA_PROVIDER, { optional: true });
+    if (!serverLoaderData) {
+      throw new Error(
+        'SSR loader resolution requires provideServerLoaderDataProvider() in server application providers'
+      );
     }
-    const requestContext = request ? extractRequestContext(request) : undefined;
-    const ssrContext = inject(REQUEST_CONTEXT, { optional: true }) as
-      | { cache?: LoaderCache }
-      | undefined;
-    const cache = ssrContext?.cache;
 
-    const result = await resolveLoaderData(
-      {
-        loaderId,
-        url,
-        params: route.params,
-        query: route.queryParams as Record<string, string | string[]>,
-      },
-      loaderRegistry,
-      cache,
-      requestContext,
-      cacheOptions
-    );
+    const angularRequestContext = request ? extractRequestContext(request) : undefined;
+
+    const result = await serverLoaderData.resolve({
+      loaderId,
+      url,
+      params: buildLoaderParams(route, defaultLanguage),
+      query: route.queryParams as Record<string, string | string[]>,
+      angularRequestContext,
+      cacheOptions,
+    });
 
     if (result.kind === 'redirect') {
       return applyRedirect(router, result.redirect.loaderRedirectTarget);
     }
 
     if (result.kind === 'error') {
-      const cause = (result as { cause?: unknown }).cause;
+      const cause = result.cause;
       if (cause instanceof NotFoundNavigationError) throw cause;
       if (cause instanceof LoaderHttpError) throw cause;
       throw new LoaderHttpError(result.status, result.message);

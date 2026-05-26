@@ -1,7 +1,13 @@
 import { Storage, createStorage, Driver } from 'unstorage';
-import { InvalidateInput, LoaderCache, LoaderCacheEntry, LoaderCacheEntryInfo } from './models';
-import { resolveTagsToInvalidate } from './cache-key';
-import type { ResolvedConfig } from './loader-cache';
+import {
+  GlobalLoaderCacheConfig,
+  InvalidateInput,
+  LoaderCache,
+  LoaderCacheEntry,
+  LoaderCacheEntryInfo,
+} from '../../loaders/models';
+import { CACHE_KEY_PREFIX, resolveTagsToInvalidate } from './cache-key';
+import { ResolvedConfig } from './models';
 
 /**
  * Unstorage-backed {@link LoaderCache}. Pluggable across `unstorage` drivers —
@@ -14,22 +20,24 @@ import type { ResolvedConfig } from './loader-cache';
  *
  * Invalidation walks every key under the cache prefix and reads each entry's
  * tags — O(N) over the cache size. Acceptable up to thousands of entries; a
- * driver-native tag index (Redis `SADD`, etc.) is a Phase 2b optimization.
+ * driver-native tag index (Redis `SADD`, etc.) is a Phase 3 optimization.
  * @internal
  */
 export class UnstorageLoaderCache implements LoaderCache {
   private readonly storage: Storage;
-  private readonly resolved: ResolvedConfig;
+  private readonly config: ResolvedConfig;
   /** Prefix passed to `storage.getKeys()` / `storage.clear()` for scoped scans. */
   private readonly keyPrefix: string;
 
-  constructor(driver: Driver, resolved: ResolvedConfig) {
-    this.storage = createStorage({ driver: driver });
-    this.resolved = resolved;
+  constructor(driver: Driver, config: ResolvedConfig) {
+    this.storage = createStorage({ driver });
+    this.config = config;
     // Mirrors the serializeKey() prefix in cache-key.ts so getKeys() returns
     // only this cache's entries — never anything else the user stores in the
-    // same Storage instance.
-    this.keyPrefix = resolved.namespace ? `loader:${resolved.namespace}:` : 'loader:';
+    // same Storage instance. Namespace is appended when configured.
+    this.keyPrefix = config.namespace
+      ? `${CACHE_KEY_PREFIX}:${config.namespace}`
+      : CACHE_KEY_PREFIX;
   }
 
   async get(key: string): Promise<LoaderCacheEntry | null> {
@@ -54,7 +62,7 @@ export class UnstorageLoaderCache implements LoaderCache {
   }
 
   async invalidate(filter: InvalidateInput): Promise<number> {
-    const tags = resolveTagsToInvalidate(filter, this.resolved.defaultSiteName);
+    const tags = resolveTagsToInvalidate(filter, this.config.defaultSiteName);
     const keys = await this.storage.getKeys(this.keyPrefix);
     let deleted = 0;
     for (const key of keys) {
@@ -99,21 +107,16 @@ export class UnstorageLoaderCache implements LoaderCache {
     return out;
   }
 
-  resolveTtl(loaderId: string): number {
-    const perLoader = this.resolved.loaders[loaderId];
-    if (perLoader && perLoader.ttl !== undefined) return perLoader.ttl;
-    return this.resolved.revalidate;
+  resolveTtl(): number {
+    return this.config.revalidate;
   }
 
-  isEnabled(loaderId: string): boolean {
-    if (!this.resolved.enabled) return false;
-    const perLoader = this.resolved.loaders[loaderId];
-    if (perLoader && perLoader.enabled === false) return false;
-    return true;
+  enabled(): boolean {
+    return this.config.enabled;
   }
 
-  getConfig(): ResolvedConfig {
-    return this.resolved;
+  getConfig(): Readonly<GlobalLoaderCacheConfig> {
+    return this.config;
   }
 
   private isExpired(entry: LoaderCacheEntry): boolean {

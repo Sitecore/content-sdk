@@ -1,5 +1,5 @@
-import { LoaderCacheConfig, ResolvedConfig, CacheKeyDimensions, DEFAULT_CACHE_TTL } from './models';
-import { LoaderContext } from '../../loaders/models';
+import { ResolvedConfig, CacheKeyDimensions, DEFAULT_CACHE_TTL } from './models';
+import { GlobalLoaderCacheConfig, LoaderContext } from '../../loaders/models';
 
 /**
  * @deprecated only used for demo purposes. remove before release.
@@ -38,13 +38,16 @@ function stripQuery(url: string): string {
 }
 
 /**
- * Build a {@link ResolvedConfig} from a {@link LoaderCacheConfig}. Shared by
- * every backend so config semantics stay identical regardless of driver.
+ * Build a {@link ResolvedConfig} from a {@link GlobalLoaderCacheConfig}.
+ * Shared by every backend so config semantics stay identical regardless of driver.
  * @internal
  */
-export function resolveConfig(config: LoaderCacheConfig): ResolvedConfig {
+export function resolveConfig(config: GlobalLoaderCacheConfig): ResolvedConfig {
   return {
     revalidate: config.revalidate ?? DEFAULT_CACHE_TTL,
     enabled: config.enabled ?? true,
+    namespace: config.namespace ?? '',
+    defaultSiteName: config.defaultSiteName ?? 'default',
+    loaders: config.loaders ?? {},
   };
 }
