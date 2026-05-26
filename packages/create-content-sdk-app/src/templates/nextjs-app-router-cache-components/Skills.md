@@ -36,7 +36,7 @@ Page and dictionary fetching via the cache helpers in `src/lib/cache/`. Use `get
 
 ### content-sdk-route-configuration
 
-Routing: single catch-all at `src/app/[site]/[locale]/[[...path]]/page.tsx`. Layout: app/layout.tsx → app/[site]/layout.tsx → page. Call `setRequestLocale(\`${site}_${locale}\`)` at top of page. Root not-found uses `getSitecoreErrorPage`; root `global-error.tsx` uses `client.getErrorPage` directly (it's a Client Component).
+Routing: single catch-all at `src/app/[site]/[locale]/[[...path]]/page.tsx`. Layout chain: `app/layout.tsx` → `app/[site]/layout.tsx` (Bootstrap, draftMode) → `app/[site]/[locale]/[[...path]]/layout.tsx` (calls `setCachedPageParams({ site, locale })`) → page. Call `setRequestLocale(\`${site}_${locale}\`)` at the top of the page. **Two not-founds**: the segment `[[...path]]/not-found.tsx` reads `getCachedPageParams()` (set by the segment layout) and calls `getSitecoreErrorPage` — staying SSG-safe because it never calls `headers()`. The root `src/app/not-found.tsx` falls back to `scConfig.defaultSite` / `scConfig.defaultLanguage` for unrouted requests. `global-error.tsx` uses `client.getErrorPage` directly (it's a Client Component, not cached).
 
 ### content-sdk-site-setup-and-env
 

@@ -31,13 +31,15 @@ npm run type-check   # Run TypeScript compiler
 src/
   app/                           # Next.js App Router
     layout.tsx                    # Root layout
-    not-found.tsx                 # Root 404 (uses getSitecoreErrorPage)
-    global-error.tsx              # Root 500 (uses client.getErrorPage)
+    not-found.tsx                 # Root 404 (uses getSitecoreErrorPage with scConfig defaults)
+    global-error.tsx              # Root 500 (uses client.getErrorPage; Client Component)
     [site]/                       # Site segment (multisite)
       layout.tsx                  # Site layout (Bootstrap, draftMode)
       [locale]/                   # Locale segment (i18n)
         [[...path]]/
+          layout.tsx              # Segment layout: setCachedPageParams({ site, locale }) (SSG-safe)
           page.tsx                # Sitecore page (uses getSitecorePage)
+          not-found.tsx           # Segment 404: getCachedPageParams() + getSitecoreErrorPage
     api/                          # Route handlers
       sitemap/route.ts, robots/route.ts
       editing/config/route.ts, editing/render/route.ts
@@ -89,7 +91,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 - **Where:** Single shared instance in `src/lib/sitecore-client.ts` — `new SitecoreClient({ ...scConfig })` with config from `sitecore.config.ts`.
 - **Use directly for:** preview and editing (`getPreview`, `getDesignLibraryData`, internal editing routes), 500 page (`client.getErrorPage(ErrorPage.InternalServerError)` in `global-error.tsx`), and `getAppRouterStaticParams`.
 - **Use the cache helpers for everything else:** non-preview page reads go through `getSitecorePage`; dictionary reads through `getSitecoreDictionary`; 404 content through `getSitecoreErrorPage`. The cache helpers wrap the same client under `'use cache'` and attach the right tags.
-- **Do not:** Create a second client or instantiate SitecoreClient elsewhere. Pass `site` and `locale` from route params (or `parseRewriteHeader` in not-found), not from global state.
+- **Do not:** Create a second client or instantiate SitecoreClient elsewhere. Pass `site` and `locale` from route params (or `getCachedPageParams()` in the segment `not-found.tsx`, or `scConfig.defaultSite` / `scConfig.defaultLanguage` in the root `not-found.tsx`), not from global state.
 
 ### Catch-all route
 
@@ -118,7 +120,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 - **URL shape:** `/[site]/[locale]/...path` (e.g. `/default/en`, `/default/en/about`). Site and locale are **in the path**; the Edge proxy rewrites incoming requests to this shape.
 - **Page component:** `src/app/[site]/[locale]/[[...path]]/page.tsx`. Receives `params: Promise<{ site, locale, path? }>`. Use `await params`; in draft mode go through `client.getPreview` / `client.getDesignLibraryData`; otherwise call `getSitecorePage({ site, locale, path: path ?? [] })`.
-- **Layout hierarchy:** `app/layout.tsx` → `app/[site]/layout.tsx` (per-site; runs Bootstrap with `siteName={site}` and `draftMode()`) → page. Do not put site/locale-specific data fetching in the root layout; use the `[site]` or page layout.
+- **Layout hierarchy:** `app/layout.tsx` → `app/[site]/layout.tsx` (per-site; runs Bootstrap with `siteName={site}` and `draftMode()`) → `app/[site]/[locale]/[[...path]]/layout.tsx` (calls `setCachedPageParams({ site, locale })` so segment `not-found.tsx` can resolve site/locale without `headers()`) → page. Do not put site/locale-specific data fetching in the root layout; use the `[site]` or segment layout.
 
 ### i18n (next-intl)
 
@@ -163,8 +165,12 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ### Not-found and error pages
 
-- **Root not-found:** `src/app/not-found.tsx`. Uses `getSitecoreErrorPage({ site, locale, code: ErrorPage.NotFound })` so 404 content benefits from the same cache tagging as the page and can be invalidated by webhook.
-- **Root global error:** `src/app/global-error.tsx` is a Client Component (`'use client'`) and fetches `client.getErrorPage(ErrorPage.InternalServerError, ...)` from the client side; it is not cached.
+This template ships **two** not-found components and a segment layout that ties them together while staying compatible with SSG and Cache Components:
+
+- **Root not-found:** `src/app/not-found.tsx`. Used as the fallback when no segment handles the route (e.g. unknown site/locale). Falls back to `scConfig.defaultSite` / `scConfig.defaultLanguage` and calls `getSitecoreErrorPage({ site, locale, code: ErrorPage.NotFound })`, so 404 content gets the same Sitecore cache tags as a normal page.
+- **Segment not-found:** `src/app/[site]/[locale]/[[...path]]/not-found.tsx`. Triggered when the catch-all page calls `notFound()` (e.g. the requested path resolves to no Sitecore page). Reads site/locale via `getCachedPageParams()` (set by the segment layout below) and calls `getSitecoreErrorPage(...)`. Wrapped in `NextIntlClientProvider` to keep i18n working in 404 markup.
+- **Segment layout:** `src/app/[site]/[locale]/[[...path]]/layout.tsx`. Calls `setCachedPageParams({ site, locale })` on every request for this segment. This uses the SDK's React `cache()` based `set/getCachedPageParams` helpers (from `@sitecore-content-sdk/nextjs`) so the segment `not-found.tsx` can read `{ site, locale }` **without** calling `headers()` — which would opt the route out of SSG. **Do not** call `headers()` in the segment not-found; keep using `getCachedPageParams()`.
+- **Root global error:** `src/app/global-error.tsx` is a Client Component (`'use client'`) that fetches `client.getErrorPage(ErrorPage.InternalServerError, ...)` on the client; it is not cached (the cache helpers are server-side).
 
 ### API route handlers
 
@@ -209,7 +215,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 | Send the secret in the `x-revalidate-secret` header when calling `/api/revalidate` | Bypass auth or call `revalidateTag` directly from components |
 | Keep `sitecore.config.ts` dictionary cache disabled | Re-enable the SDK in-process dictionary cache (bypasses `revalidateTag`) |
 | Use Server Components for async data fetching | Put async data fetching in client components when SSR is intended |
-| Use `parseRewriteHeader(headers())` in not-found / error fallbacks | Hardcode site/locale in not-found or error pages |
+| Set site/locale via `setCachedPageParams` in `[site]/[locale]/[[...path]]/layout.tsx` and read with `getCachedPageParams()` in the segment `not-found.tsx` | Call `headers()` in not-found (opts out of SSG) or hardcode site/locale |
 | Use createXRouteHandler and `.sitecore/sites.json` for sitemap/robots | Hardcode site list or commit `.env` |
 | Use Sitecore field components and validate fields | Expose API keys or editing secret in client code |
 | Document required env vars in `.env.example` only | Commit `.env` or `.env.local` |
@@ -219,7 +225,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ## Guardrails for agentic AI
 
-- **Preserve behavior:** Do not change the proxy order (PreviewProxy → BotTrackingProxy → LocaleProxy → AppRouterMultisiteProxy → …), the `[site]/[locale]/[[...path]]` route shape, the `{site}_{locale}` next-intl convention, or the cache-helper boundary (cache helpers wrap non-preview Sitecore reads; preview/editing use `client.*` directly). Preserve `draftMode` handling in layout and page.
+- **Preserve behavior:** Do not change the proxy order (PreviewProxy → BotTrackingProxy → LocaleProxy → AppRouterMultisiteProxy → …), the `[site]/[locale]/[[...path]]` route shape, the `{site}_{locale}` next-intl convention, the cache-helper boundary (cache helpers wrap non-preview Sitecore reads; preview/editing use `client.*` directly), or the `setCachedPageParams` → `getCachedPageParams` flow between the segment layout and segment `not-found.tsx` (this is what keeps the 404 SSG-safe). Preserve `draftMode` handling in layout and page.
 - **Do not expand scope:** Limit edits to the app (app router, components, API routes, cache helpers, i18n, config). Do not modify SDK packages or monorepo tooling unless explicitly asked. Do not change CI, lockfiles, or root config.
 - **Follow existing patterns:** When adding routes, layouts, or components, mirror the existing structure. Use the same Sitecore client, cache helpers, component maps, and env-based config. Do not introduce a different way to resolve site/locale, a second client, or a parallel cache layer.
 - **Verify and stay safe:** After edits, the app should build with `npm run build`. Do not commit secrets or `.env`; only document variables in `.env.example`. Do not add npm dependencies without explicit approval. When in doubt, prefer the existing implementation and ask for clarification.
