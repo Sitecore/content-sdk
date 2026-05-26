@@ -6,17 +6,40 @@ import { buildSitecoreDictionaryCacheTagsFromSites, dedupeSitecoreCacheTags } fr
 import debug from '../debug';
 import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
-import type { WebhookRevalidateRouteHandlerOptions } from './webhook-revalidate-route-handler';
+import type { SiteInfo } from '@sitecore-content-sdk/content/site';
 
 const DEFAULT_SECRET_ENV_VAR = 'SITECORE_REVALIDATE_SECRET';
 const DEFAULT_SECRET_HEADER = 'x-revalidate-secret';
 
 /**
- * Options for {@link createSitecoreRevalidateRouteHandler}.
- * Same as {@link WebhookRevalidateRouteHandlerOptions} (webhook mapping + optional sites / defaultSite for dictionary tags).
+ * Second argument to Next.js `revalidateTag` (cache profile: e.g. `"max"` or `{ expire }`).
+ * Aligns with the installed `next/cache` typings.
  * @public
  */
-export type SitecoreRevalidateRouteHandlerOptions = WebhookRevalidateRouteHandlerOptions;
+export type RevalidateTagCacheProfile = Parameters<typeof revalidateTag>[1];
+
+/**
+ * Options for {@link createSitecoreRevalidateRouteHandler}.
+ * @public
+ */
+export type SitecoreRevalidateRouteHandlerOptions = {
+  /**
+   * Shared secret. If omitted, the handler reads `process.env.SITECORE_REVALIDATE_SECRET`.
+   * Callers must send the same value in the **`x-revalidate-secret`** request header (fixed contract; not Sitecore "authorization item" config).
+   */
+  secret?: string;
+  /**
+   * Next.js `revalidateTag` cache profile (second argument). Default is `"max"` (recommended).
+   * Other string values may match profiles from `cacheLife` in `next.config`; objects may use `{ expire }` per Next.js docs.
+   */
+  cacheProfile?: RevalidateTagCacheProfile;
+  /** Locale for item tags when culture is missing, and for dictionary tags when a site has no language. */
+  defaultLocale?: string;
+  /** Sites list; merges dictionary cache tags for each site on webhook calls. */
+  sites?: SiteInfo[];
+  /** Optional site name for an extra dictionary tag scoped to the handler locale option. */
+  defaultSite?: string;
+};
 
 /** @param {Record<string, unknown>} body - Parsed JSON object with optional `tag` or `tags` for manual revalidation. */
 function normalizeManualTags(body: Record<string, unknown>): string[] {
@@ -81,14 +104,17 @@ function hasManualTagInput(body: Record<string, unknown>): boolean {
 }
 
 /**
- * Creates a single `POST` handler for `/api/revalidate` that supports:
+ * Creates a single `POST` handler for `/api/revalidate` that supports both manual and Sitecore-webhook
+ * revalidation. The body is dispatched at runtime:
  *
- * - **Explicit tags** — JSON `{ tag }` or `{ tags }` where every value starts with `sc:` (manual revalidation;
- *   same behavior as {@link createRevalidateRouteHandler}).
+ * - **Explicit tags** — JSON `{ tag }` or `{ tags }` where every value starts with `sc:` (manual revalidation).
  * - **Webhook-style bodies** — non-empty `updates`, `continues: true`, non-empty `invocation_id`, or any
- *   `tag` / `tags` entry that does not start with `sc:` (bare item ids are mapped like
- *   {@link createWebhookRevalidateRouteHandler}).
- * Uses `SITECORE_REVALIDATE_SECRET` and the `x-revalidate-secret` header. On the **webhook** branch, resolved tags include **`sc:dict:…`** when **`sites`** / **`defaultSite`** are configured (see {@link createWebhookRevalidateRouteHandler}); the **manual** branch only revalidates the `sc:` tags the client sends.
+ *   `tag` / `tags` entry that does not start with `sc:`. Bare item ids are mapped to `sc:item:...` tags so
+ *   invalidation matches the tags produced by `collectSitecorePageCacheTags`.
+ *
+ * Uses `SITECORE_REVALIDATE_SECRET` and the `x-revalidate-secret` header. On the **webhook** branch, resolved
+ * tags include **`sc:dict:…`** when **`sites`** / **`defaultSite`** are configured; the **manual** branch only
+ * revalidates the `sc:` tags the client sends.
  * @param {SitecoreRevalidateRouteHandlerOptions} [options] - Optional inline `secret`, `cacheProfile`, locale, sites, and dictionary options.
  * @public
  */

@@ -75,12 +75,24 @@ export const generateStaticParams = async () => {
   ];
 };
 <% } -%>
-// Metadata fields for the page.
-export const generateMetadata = async ({ params }: PageProps) => {
+// Metadata fields for the page. Mirrors the Page draft-mode branching so the <title> matches the body.
+export const generateMetadata = async ({ params, searchParams }: PageProps) => {
   const { path, site, locale } = await params;
 
-  // The same call as for rendering the page. Should be cached by default react behavior
-  const page = await getSitecorePage({ site, locale, path: path ?? [] });
+  const draft = await draftMode();
+
+  let page;
+  if (draft.isEnabled) {
+    const editingParams = await searchParams;
+    if (isDesignLibraryPreviewData(editingParams)) {
+      page = await client.getDesignLibraryData(editingParams);
+    } else {
+      page = await client.getPreview(editingParams);
+    }
+  } else {
+    page = await getSitecorePage({ site, locale, path: path ?? [] });
+  }
+
   return {
     title: (page?.layout.sitecore.route?.fields as RouteFields)?.Title?.value?.toString() || 'Page',
   };

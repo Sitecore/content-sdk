@@ -400,9 +400,6 @@ export { ComponentRendering }
 
 export { constants }
 
-// @public @deprecated (undocumented)
-export const createEdgeWebhookRevalidateRouteHandler: typeof createWebhookRevalidateRouteHandler;
-
 // Warning: (ae-forgotten-export) The symbol "EditingConfigRouteHandlerOptions" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
@@ -421,16 +418,6 @@ export const createEditingRenderRouteHandlers: (options: EditingHandlerOptions) 
 };
 
 export { createGraphQLClientFactory }
-
-// @public
-export function createRevalidateRouteHandler(options?: RevalidateRouteHandlerOptions): {
-    POST: (req: NextRequest) => Promise<NextResponse<{
-        error: string;
-    }> | NextResponse<{
-        revalidated: boolean;
-        tags: string[];
-    }>>;
-};
 
 // Warning: (ae-forgotten-export) The symbol "RouteHandlerOptions_2" needs to be exported by the entry point api-surface.d.ts
 //
@@ -454,18 +441,6 @@ export function createSitecoreRevalidateRouteHandler(options?: SitecoreRevalidat
 // @public
 export function createSitemapRouteHandler(options: RouteHandlerOptions): {
     GET: (req: NextRequest) => Promise<Response>;
-};
-
-// @public
-export function createWebhookRevalidateRouteHandler(options?: WebhookRevalidateRouteHandlerOptions): {
-    POST: (req: NextRequest) => Promise<NextResponse<{
-        error: string;
-    }> | NextResponse<{
-        revalidated: boolean;
-        tags: string[];
-        invocation_id: string | null;
-        continues: boolean;
-    }>>;
 };
 
 export { DateField }
@@ -512,9 +487,6 @@ export { DictionaryPhrases }
 export { DictionaryService }
 
 export { DictionaryServiceConfig }
-
-// @public @deprecated (undocumented)
-export type EdgeWebhookRevalidateRouteHandlerOptions = WebhookRevalidateRouteHandlerOptions;
 
 export { EDITING_COMPONENT_ID }
 
@@ -1008,12 +980,6 @@ export { resolveUrl }
 export { RetryStrategy }
 
 // @public
-export type RevalidateRouteHandlerOptions = {
-    secret?: string;
-    cacheProfile?: RevalidateTagCacheProfile;
-};
-
-// @public
 export type RevalidateTagCacheProfile = Parameters<typeof revalidateTag>[1];
 
 // @public
@@ -1120,7 +1086,13 @@ export { SitecoreProviderReactContext }
 export { SitecoreProviderState }
 
 // @public
-export type SitecoreRevalidateRouteHandlerOptions = WebhookRevalidateRouteHandlerOptions;
+export type SitecoreRevalidateRouteHandlerOptions = {
+    secret?: string;
+    cacheProfile?: RevalidateTagCacheProfile;
+    defaultLocale?: string;
+    sites?: SiteInfo[];
+    defaultSite?: string;
+};
 
 // @public
 export type SitecoreRouteDataLike = {
@@ -1162,13 +1134,6 @@ export { TextField }
 export function useComponentProps<ComponentData>(componentUid: string | undefined): ComponentData | undefined;
 
 export { useSitecore }
-
-// @public
-export type WebhookRevalidateRouteHandlerOptions = RevalidateRouteHandlerOptions & {
-    defaultLocale?: string;
-    sites?: SiteInfo[];
-    defaultSite?: string;
-};
 
 export { withAppPlaceholder }
 
