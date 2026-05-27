@@ -16,7 +16,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { RedirectsProxy, RedirectsProxyConfig } from './redirects-proxy';
+import type { SuccessfulRedirectsProxyExecution } from './redirects-proxy';
 import debug from '../debug';
+import { isSuccessfulProxyExecution } from './utils';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -328,6 +330,11 @@ describe('RedirectsProxy', () => {
   after(() => {
     nextRedirectStub.restore();
     nextRewriteStub.restore();
+  });
+
+  it('should expose proxy name', () => {
+    const { proxy } = createProxy();
+    expect(proxy.name).to.equal('RedirectsProxy');
   });
 
   describe('request skipped', () => {
@@ -1082,6 +1089,58 @@ describe('RedirectsProxy', () => {
       expect(errorSpy.getCall(1).calledWith(error)).to.be.true;
 
       expect(finalRes).to.deep.equal(res);
+    });
+
+    it('should record failed execution in context when fetchRedirects throws', async () => {
+      const error = new Error('Custom error');
+      const context = new Map();
+      const fetchRedirectsWithError = sandbox.stub().throws(error);
+
+      const { proxy } = createProxy({
+        fetchRedirectsStub: fetchRedirectsWithError,
+      });
+
+      await proxy.handle(req, res, context);
+
+      expect(context.get('RedirectsProxy')).to.deep.equal({
+        executedSuccessfully: false,
+        error,
+      });
+    });
+    it('should record successful redirect execution in context', async () => {
+      const req = createRequest({
+        nextUrl: {
+          pathname: '/old-page',
+        },
+      });
+      const res = createResponse();
+      const context = new Map();
+
+      const redirectRes = createResponse({
+        redirected: true,
+        status: 301,
+        url: 'http://localhost:3000/new-page',
+      });
+      nextRedirectStub.returns(redirectRes);
+
+      const { proxy } = createProxy({
+        pattern: '/old-page',
+        target: '/new-page',
+        redirectType: REDIRECT_TYPE_301,
+      });
+
+      await proxy.handle(req, res, context);
+
+      const info = context.get('RedirectsProxy');
+      expect(isSuccessfulProxyExecution<SuccessfulRedirectsProxyExecution>(info)).to.equal(true);
+      expect(info).to.deep.include({
+        executedSuccessfully: true,
+        error: null,
+        redirectStatus: 301,
+        isExternal: false,
+      });
+      expect(info?.requestUrl).to.equal('http://localhost:3000/new-page');
+      expect(info?.redirectUrl).to.equal('http://localhost:3000/new-page');
     });
   });
 

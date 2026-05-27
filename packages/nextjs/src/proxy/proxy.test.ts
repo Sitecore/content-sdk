@@ -70,7 +70,7 @@ describe('ProxyBase', () => {
     Object.defineProperties(res.headers, {
       set: {
         value: (key, value) => {
-        res.headers[key] = value;
+          res.headers[key] = value;
         },
         enumerable: false,
       },
@@ -753,5 +753,49 @@ describe('defineProxy', () => {
     expect(gateProxy.handle).to.have.been.calledOnce;
     expect(downstreamProxy.handle).to.not.have.been.called;
     expect(result).to.equal(forbidden);
+  });
+
+  it('should pass context to proxies when generateContext is true', async () => {
+    const contextProxy: ProxyHandler = {
+      handle: (_req, res, context) => {
+        context?.set('ContextProxy', {
+          executedSuccessfully: true,
+          error: null,
+          marker: 'seen',
+        });
+        return Promise.resolve(res);
+      },
+    };
+
+    const req = {} as NextRequest;
+    const res = { status: 200 } as unknown as NextResponse;
+
+    const result = await defineProxy(contextProxy).exec(req, res, true);
+
+    expect(result.context.get('ContextProxy')).to.deep.equal({
+      executedSuccessfully: true,
+      error: null,
+      marker: 'seen',
+    });
+    expect(result.response).to.equal(res);
+  });
+
+  it('should not provide context when generateContext is false', async () => {
+    let receivedContext: unknown;
+
+    const contextProxy: ProxyHandler = {
+      handle: (_req, res, context) => {
+        receivedContext = context;
+        return Promise.resolve(res);
+      },
+    };
+
+    const req = {} as NextRequest;
+    const res = { status: 200 } as unknown as NextResponse;
+
+    const result = await defineProxy(contextProxy).exec(req, res, false);
+
+    expect(receivedContext).to.be.undefined;
+    expect(result).to.equal(res);
   });
 });

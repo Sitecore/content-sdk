@@ -12,10 +12,21 @@ import { personalize } from '@sitecore-content-sdk/personalize';
 import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
 import { personalizeServerPlugin } from '@sitecore-content-sdk/personalize';
 import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter';
-import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
+import { ProxiesContext, ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
 import { personalizeProxyAdapter } from '../initialization/proxy/personalize-adapter';
+import { FailedProxyExecution, SuccessfulProxyExecution } from './types';
+
+/**
+ * Information about executed proxy to be stored in the context
+ * Used for describing successful execution with details about the personalization that was applied
+ * @public
+ */
+export interface SuccessfulPersonalizeProxyExecution extends SuccessfulProxyExecution {
+  identifiedVariantIds: string[];
+  rewritePath: string;
+}
 
 /**
  * Represents the geolocation data used for personalization
@@ -72,6 +83,7 @@ type PersonalizeExecution = {
  */
 export class PersonalizeProxy extends ProxyBase {
   protected personalizeService: PersonalizeService | null;
+  private _name = 'PersonalizeProxy';
 
   /**
    * @param {PersonalizeProxyConfig} [config] Personalize proxy config
@@ -111,7 +123,18 @@ export class PersonalizeProxy extends ProxyBase {
       });
   }
 
-  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  /**
+   * Name of the proxy, used for debugging and context information.
+   */
+  get name() {
+    return this._name;
+  }
+
+  handle = async (
+    req: NextRequest,
+    res: NextResponse,
+    context?: ProxiesContext
+  ): Promise<NextResponse> => {
     if (!this.config.enabled) {
       debug.personalize('skipped (personalize proxy is disabled globally)');
       return res;
@@ -241,10 +264,27 @@ export class PersonalizeProxy extends ProxyBase {
         headers: this.extractDebugHeaders(response.headers),
       });
 
+      const successfulExecution: SuccessfulPersonalizeProxyExecution = {
+        executedSuccessfully: true,
+        error: null,
+        identifiedVariantIds: structuredClone(identifiedVariantIds),
+        rewritePath,
+      };
+
+      context?.set(this._name, successfulExecution);
+
       return response;
     } catch (error) {
       console.log('Personalize proxy failed:');
       console.log(error);
+
+      const failedExecution: FailedProxyExecution = {
+        executedSuccessfully: false,
+        error,
+      };
+
+      context?.set(this._name, failedExecution);
+
       return res;
     }
   };

@@ -2,8 +2,19 @@
 
 import { NextResponse, NextRequest } from 'next/server';
 import { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
-import { ProxyBase, ProxyBaseConfig, LOCALE_HEADER_NAME } from './proxy';
+import { ProxyBase, ProxyBaseConfig, LOCALE_HEADER_NAME, ProxiesContext } from './proxy';
 import debug from '../debug';
+import { FailedProxyExecution, SuccessfulProxyExecution } from './types';
+
+/**
+ * Information about executed proxy to be stored in the context
+ * Used for describing successful execution with details about the locale that was applied
+ * @public
+ */
+export interface SuccessfulLocaleProxyExecution extends SuccessfulProxyExecution {
+  rewrote: boolean;
+  locale: string;
+}
 
 /**
  * The interface for the Locale proxy configuration.
@@ -23,6 +34,7 @@ export type LocaleProxyConfig = ProxyBaseConfig & {
  * @public
  */
 export class LocaleProxy extends ProxyBase {
+  private _name = 'LocaleProxy';
   /**
    * @param {LocaleProxyConfig} config Locale proxy config
    */
@@ -30,7 +42,18 @@ export class LocaleProxy extends ProxyBase {
     super(config);
   }
 
-  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  /**
+   * Name of the proxy, used for debugging and context information.
+   */
+  get name() {
+    return this._name;
+  }
+
+  handle = async (
+    req: NextRequest,
+    res: NextResponse,
+    context?: ProxiesContext
+  ): Promise<NextResponse> => {
     try {
       const { pathname } = req.nextUrl;
 
@@ -59,6 +82,15 @@ export class LocaleProxy extends ProxyBase {
           rewritePath,
         });
 
+        const successfulExecution: SuccessfulLocaleProxyExecution = {
+          executedSuccessfully: true,
+          error: null,
+          rewrote: true,
+          locale,
+        };
+
+        context?.set(this._name, successfulExecution);
+
         return response;
       }
 
@@ -69,10 +101,27 @@ export class LocaleProxy extends ProxyBase {
         locale,
       });
 
+      const successfulExecution: SuccessfulLocaleProxyExecution = {
+        executedSuccessfully: true,
+        error: null,
+        rewrote: false,
+        locale,
+      };
+
+      context?.set(this._name, successfulExecution);
+
       return res;
     } catch (error) {
       console.log('Locale proxy failed:');
       console.log(error);
+
+      const failedExecution: FailedProxyExecution = {
+        executedSuccessfully: false,
+        error,
+      };
+
+      context?.set(this._name, failedExecution);
+
       return res;
     }
   };

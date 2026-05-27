@@ -6,7 +6,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 import { EDITING_PARAMS_HEADER } from '../editing/constants';
 import { PreviewProxy } from './preview-proxy';
+import type { SuccessfulPreviewProxyExecution } from './preview-proxy';
 import { PREVIEW_COOKIES } from '../editing/utils';
+import { isSuccessfulProxyExecution } from './utils';
 
 chai.use(sinonChai);
 const expect = chai.expect;
@@ -108,6 +110,10 @@ describe('PreviewProxy', () => {
     } else {
       process.env.SITECORE = originalSitecoreEnv;
     }
+  });
+
+  it('should expose proxy name', () => {
+    expect(proxy.name).to.equal('PreviewProxy');
   });
 
   describe('when SITECORE env is not set (external host)', () => {
@@ -365,6 +371,51 @@ describe('PreviewProxy', () => {
           html: 'Preview content is not found or access is denied',
         });
         expect(clientStub.getPage).to.have.been.calledOnce;
+      });
+    });
+
+    describe('execution context', () => {
+      it('should record successful execution with pageDataReceived when getPage resolves data', async () => {
+        const req = createRequest({
+          nextUrl: { pathname: '/about', locale: 'en' },
+          cookieValues: { [SITE_KEY]: 'my-site' },
+        });
+        const res = createResponse();
+        const context = new Map();
+        clientStub.getPage.resolves({} as any);
+
+        await proxy.handle(req, res, context);
+
+        const info = context.get('PreviewProxy');
+        expect(isSuccessfulProxyExecution<SuccessfulPreviewProxyExecution>(info)).to.equal(true);
+        expect(info).to.deep.equal({
+          executedSuccessfully: true,
+          error: null,
+          pageDataReceived: true,
+        });
+      });
+
+      it('should record successful execution with pageDataReceived false when getPage resolves null', async () => {
+        const req = createRequest({
+          nextUrl: { pathname: '/about', locale: 'en' },
+          cookieValues: { [SITE_KEY]: 'my-site' },
+        });
+        const res = createResponse();
+        const context = new Map();
+        clientStub.getPage.resolves(null);
+
+        const fakeForbidden = { status: 403 } as unknown as NextResponse;
+        sandbox.stub(NextResponse, 'json').returns(fakeForbidden);
+
+        await proxy.handle(req, res, context);
+
+        const info = context.get('PreviewProxy');
+        expect(isSuccessfulProxyExecution<SuccessfulPreviewProxyExecution>(info)).to.equal(true);
+        expect(info).to.deep.equal({
+          executedSuccessfully: true,
+          error: null,
+          pageDataReceived: false,
+        });
       });
     });
   });

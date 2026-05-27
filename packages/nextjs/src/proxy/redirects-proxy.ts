@@ -15,14 +15,27 @@ import {
 } from '@sitecore-content-sdk/core/tools';
 import { NextURL } from 'next/dist/server/web/next-url';
 import { NextRequest, NextResponse } from 'next/server';
-import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
+import { ProxiesContext, ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
+import { FailedProxyExecution, SuccessfulProxyExecution } from './types';
 
 const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
 const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
 
 type RedirectResult = RedirectInfo & { matchedQueryString?: string; matchedPath?: string };
+
+/**
+ * Information about executed proxy to be stored in the context
+ * Used for describing successful execution with details about the redirects that were applied
+ * @public
+ */
+export interface SuccessfulRedirectsProxyExecution extends SuccessfulProxyExecution {
+  requestUrl: string;
+  redirectUrl: string;
+  redirectStatus: number;
+  isExternal: boolean;
+}
 
 /**
  * The interface for the RedirectsProxy configuration.
@@ -43,6 +56,7 @@ export type RedirectsProxyConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clien
 export class RedirectsProxy extends ProxyBase {
   protected redirectsService: RedirectsService | null;
   private locales: string[];
+  private _name = 'RedirectsProxy';
 
   /**
    * @param {RedirectsProxyConfig} [config] redirects proxy config
@@ -98,7 +112,18 @@ export class RedirectsProxy extends ProxyBase {
     });
   }
 
-  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  /**
+   * Name of the proxy, used for debugging and context information.
+   */
+  get name() {
+    return this._name;
+  }
+
+  handle = async (
+    req: NextRequest,
+    res: NextResponse,
+    context?: ProxiesContext
+  ): Promise<NextResponse> => {
     if (!this.config.enabled) {
       debug.redirects('skipped (redirects proxy is disabled globally)');
       return res;
@@ -243,7 +268,9 @@ export class RedirectsProxy extends ProxyBase {
       // Apply regex replacements to the target URL if the pattern is a regex
       const sourcePath = existsRedirect.matchedPath || reqUrl.pathname;
       const pathForCaptureMatch = sourcePath.replace(/\/*$/gi, '') || '/';
-      const matched = pathForCaptureMatch.match(this.getRedirectPatternRegex(existsRedirect.pattern));
+      const matched = pathForCaptureMatch.match(
+        this.getRedirectPatternRegex(existsRedirect.pattern)
+      );
       if (matched) {
         existsRedirect.target = existsRedirect.target.replace(
           /\$(\d+)/g,
@@ -253,7 +280,9 @@ export class RedirectsProxy extends ProxyBase {
         );
       }
 
-      const redirectedResponse = REGEXP_ABSOLUTE_URL.test(existsRedirect.target)
+      const isAbsoluteUrl = REGEXP_ABSOLUTE_URL.test(existsRedirect.target);
+
+      const redirectedResponse = isAbsoluteUrl
         ? processAbsoluteUrlTarget(reqUrl, existsRedirect)
         : processRelativeUrlTarget(reqUrl, existsRedirect);
 
@@ -264,10 +293,29 @@ export class RedirectsProxy extends ProxyBase {
         headers: this.extractDebugHeaders(redirectedResponse.headers),
       });
 
+      const successfulExecution: SuccessfulRedirectsProxyExecution = {
+        executedSuccessfully: true,
+        error: null,
+        requestUrl: reqUrl.href,
+        redirectUrl: redirectedResponse.url,
+        redirectStatus: redirectedResponse.status,
+        isExternal: isAbsoluteUrl,
+      };
+
+      context?.set(this._name, successfulExecution);
+
       return redirectedResponse;
     } catch (error) {
       console.log('Redirect proxy failed:');
       console.log(error);
+
+      const failedExecution: FailedProxyExecution = {
+        executedSuccessfully: false,
+        error,
+      };
+
+      context?.set(this._name, failedExecution);
+
       return res;
     }
   };

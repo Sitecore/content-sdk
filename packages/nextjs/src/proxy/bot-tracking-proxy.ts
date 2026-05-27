@@ -4,9 +4,19 @@ import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
 import { eventsPlugin, botPageView } from '@sitecore-content-sdk/events';
 import { isBot, BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/analytics-core/internal';
-import { ProxyBase, ProxyBaseConfig } from './proxy';
+import { ProxiesContext, ProxyBase, ProxyBaseConfig } from './proxy';
 import debug from '../debug';
 import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter';
+import { FailedProxyExecution, SuccessfulProxyExecution } from './types';
+
+/**
+ * Information about executed proxy to be stored in the context
+ * Used for describing successful execution with details about the bot tracking that was applied
+ * @public
+ */
+export interface SuccessfulBotTrackingProxyExecution extends SuccessfulProxyExecution {
+  botDetected: boolean;
+}
 
 /**
  * Configuration for BotTrackingProxy.
@@ -29,11 +39,24 @@ export type BotTrackingProxyConfig = SitecoreConfig['api']['edge'] &
  * @public
  */
 export class BotTrackingProxy extends ProxyBase {
+  private _name = 'BotTrackingProxy';
+
   constructor(protected config: BotTrackingProxyConfig) {
     super(config);
   }
 
-  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  /**
+   * Name of the proxy, used for debugging and context information.
+   */
+  get name() {
+    return this._name;
+  }
+
+  handle = async (
+    req: NextRequest,
+    res: NextResponse,
+    context?: ProxiesContext
+  ): Promise<NextResponse> => {
     try {
       const isDisabled = (this.config.skip && this.config.skip(req, res)) || false;
 
@@ -120,9 +143,25 @@ export class BotTrackingProxy extends ProxyBase {
         cookies: res.cookies,
       });
 
+      const successfulExecution: SuccessfulBotTrackingProxyExecution = {
+        executedSuccessfully: true,
+        error: null,
+        botDetected: true,
+      };
+
+      context?.set(this._name, successfulExecution);
+
       return res;
     } catch (error) {
       debug.common('bot tracking proxy error: %o', error);
+
+      const failedExecution: FailedProxyExecution = {
+        executedSuccessfully: false,
+        error,
+      };
+
+      context?.set(this._name, failedExecution);
+
       return res;
     }
   };

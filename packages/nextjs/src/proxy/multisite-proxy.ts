@@ -2,10 +2,23 @@
 
 import { NextResponse, NextRequest } from 'next/server';
 import { getSiteRewrite, SITE_KEY } from '@sitecore-content-sdk/content/site';
-import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
+import { ProxiesContext, ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
+
+/**
+ * Information about executed proxy to be stored in the context
+ * Used for describing successful execution with details about the multisite that was applied
+ * @public
+ */
+export interface SuccessfulMultisiteProxyExecution extends SuccessfulProxyExecution {
+  rewritePath: string;
+  siteName: string;
+  isSitecorePreview: string | undefined;
+}
+
 import debug from '../debug';
+import { FailedProxyExecution, SuccessfulProxyExecution } from './types';
 
 export type CookieAttributes = {
   /**
@@ -33,6 +46,8 @@ export type MultisiteProxyConfig = ProxyBaseConfig & SitecoreConfig['multisite']
  * @public
  */
 export class MultisiteProxy extends ProxyBase {
+  private _name = 'MultisiteProxy';
+
   /**
    * @param {MultisiteProxyConfig} [config] Multisite proxy config
    */
@@ -40,7 +55,18 @@ export class MultisiteProxy extends ProxyBase {
     super(config);
   }
 
-  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  /**
+   * Name of the proxy, used for debugging and context information.
+   */
+  get name() {
+    return this._name;
+  }
+
+  handle = async (
+    req: NextRequest,
+    res: NextResponse,
+    context?: ProxiesContext
+  ): Promise<NextResponse> => {
     try {
       // Path can be rewritten by previously executed proxy
       const pathname = res?.headers.get(REWRITE_HEADER_NAME) || req.nextUrl.pathname;
@@ -125,10 +151,27 @@ export class MultisiteProxy extends ProxyBase {
         cookies: response.cookies,
       });
 
+      const successfulExecution: SuccessfulMultisiteProxyExecution = {
+        executedSuccessfully: true,
+        error: null,
+        rewritePath,
+        siteName,
+        isSitecorePreview,
+      };
+
+      context?.set(this._name, successfulExecution);
+
       return response;
     } catch (error) {
       console.log('Multisite proxy failed:');
       console.log(error);
+
+      const failedExecution: FailedProxyExecution = {
+        executedSuccessfully: false,
+        error,
+      };
+
+      context?.set(this._name, failedExecution);
       return res;
     }
   };
