@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 import { EDITING_PARAMS_HEADER } from '../editing/constants';
 import { PreviewProxy } from './preview-proxy';
+import { PREVIEW_COOKIES } from '../editing/utils';
 
 chai.use(sinonChai);
 const expect = chai.expect;
@@ -23,6 +24,11 @@ const createRequest = (props: Record<string, any> = {}) => {
       defaultLocale: undefined,
       clone() {
         return Object.assign({}, req.nextUrl);
+      },
+      searchParams: {
+        get(key: string) {
+          return props.searchParams?.[key];
+        },
       },
       ...(props.nextUrl || {}),
     },
@@ -51,6 +57,7 @@ const createRequest = (props: Record<string, any> = {}) => {
 
 const createResponse = (props: Record<string, any> = {}) => {
   const headerStore: Record<string, string> = { ...(props.headerValues || {}) };
+  const cookieStore: Record<string, string> = { ...(props.cookieValues || {}) };
 
   const res = {
     headers: {
@@ -61,6 +68,22 @@ const createResponse = (props: Record<string, any> = {}) => {
         headerStore[key] = value;
       },
     },
+    cookies: {
+      // eslint-disable-next-line no-unused-vars
+      set(key: string, value: string, _attributes?: Record<string, unknown>) {
+        cookieStore[key] = value;
+      },
+      get(key: string) {
+        return { value: cookieStore[key] };
+      },
+    },
+    json: sinon.stub().callsFake((body, options) => {
+      return {
+        headers: options?.headers,
+        status: options?.status,
+        body,
+      };
+    }),
   } as unknown as NextResponse;
 
   return res;
@@ -174,8 +197,8 @@ describe('PreviewProxy', () => {
         expect(result).to.equal(fakeForbidden);
       });
 
-      it('should skip and return response unchanged when editing mode is not preview', async () => {
-        const editEditingOptions = { ...editingOptions, mode: 'edit' };
+      it('should skip and return response unchanged when mode is not preview or edit', async () => {
+        const editEditingOptions = { ...editingOptions, mode: 'normal' };
         const req = createRequest({
           headerValues: {
             [EDITING_PARAMS_HEADER]: JSON.stringify(editEditingOptions),
@@ -189,6 +212,50 @@ describe('PreviewProxy', () => {
         expect(result).to.equal(res);
         expect(clientStub.getPreview).to.not.have.been.called;
         expect(clientStub.getPage).to.not.have.been.called;
+      });
+
+      it('should set authorization token cookie to the response', async () => {
+        const req = createRequest({
+          headerValues: {
+            [EDITING_PARAMS_HEADER]: JSON.stringify(editingOptions),
+            Authorization: 'Bearer abc',
+          },
+        });
+        const res = createResponse();
+        clientStub.getPreview.resolves({} as any);
+
+        const result = await proxy.handle(req, res);
+
+        expect(result.cookies.get(PREVIEW_COOKIES.PREVIEW_TOKEN)?.value).to.equal('Bearer abc');
+        expect(result).to.equal(res);
+      });
+
+      it('should handle 403 response from getPreview', async () => {
+        const req = createRequest({
+          headerValues: {
+            [EDITING_PARAMS_HEADER]: JSON.stringify(editingOptions),
+            Authorization: 'Bearer abc',
+          },
+        });
+        const res = createResponse();
+
+        clientStub.getPreview.rejects({ response: { status: 403 } });
+
+        sandbox.stub(NextResponse, 'json').callsFake((body, options) => {
+          return {
+            headers: options?.headers,
+            status: options?.status,
+            body,
+          } as unknown as NextResponse;
+        });
+
+        const result = await proxy.handle(req, res);
+
+        expect(result.status).to.equal(403);
+        expect(result.body).to.deep.equal({
+          html: 'Preview content is not found or access is denied',
+        });
+        expect(clientStub.getPreview).to.have.been.calledOnce;
       });
     });
 
@@ -207,7 +274,33 @@ describe('PreviewProxy', () => {
         expect(clientStub.getPage).to.have.been.calledOnceWithExactly(
           '/about',
           { site: 'my-site', locale: 'de-DE' },
-          { headers: { Authorization: 'Bearer xyz' } }
+          { headers: { Authorization: 'Bearer xyz', sc_previewMode: 'true', sc_site: 'my-site' } }
+        );
+        expect(clientStub.getPreview).to.not.have.been.called;
+        expect(result).to.equal(res);
+      });
+
+      it('should call getPage with pathname, site query string, locale and Authorization header', async () => {
+        const req = createRequest({
+          nextUrl: { pathname: '/about', locale: 'de-DE' },
+          headerValues: { Authorization: 'Bearer xyz' },
+          searchParams: { [SITE_KEY]: 'my-site' },
+        });
+        const res = createResponse();
+        clientStub.getPage.resolves({} as any);
+
+        const result = await proxy.handle(req, res);
+
+        expect(clientStub.getPage).to.have.been.calledOnceWithExactly(
+          '/about',
+          { site: 'my-site', locale: 'de-DE' },
+          {
+            headers: {
+              Authorization: 'Bearer xyz',
+              sc_previewMode: 'true',
+              sc_site: 'my-site',
+            },
+          }
         );
         expect(clientStub.getPreview).to.not.have.been.called;
         expect(result).to.equal(res);
@@ -232,6 +325,46 @@ describe('PreviewProxy', () => {
           { status: 403 }
         );
         expect(result).to.equal(fakeForbidden);
+      });
+
+      it('should set authorization token cookie to the response', async () => {
+        const req = createRequest({
+          nextUrl: { pathname: '/about', locale: 'en' },
+          cookieValues: { [SITE_KEY]: 'my-site', [PREVIEW_COOKIES.PREVIEW_TOKEN]: 'Bearer abc' },
+        });
+
+        const res = createResponse();
+        clientStub.getPage.resolves({} as any);
+
+        const result = await proxy.handle(req, res);
+
+        expect(result.cookies.get(PREVIEW_COOKIES.PREVIEW_TOKEN)?.value).to.equal('Bearer abc');
+        expect(result).to.equal(res);
+      });
+
+      it('should handle 403 response from getPage', async () => {
+        const req = createRequest({
+          nextUrl: { pathname: '/about', locale: 'en' },
+          cookieValues: { [SITE_KEY]: 'my-site', [PREVIEW_COOKIES.PREVIEW_TOKEN]: 'Bearer abc' },
+        });
+        const res = createResponse();
+        clientStub.getPage.rejects({ response: { status: 403 } });
+
+        sandbox.stub(NextResponse, 'json').callsFake((body, options) => {
+          return {
+            headers: options?.headers,
+            status: options?.status,
+            body,
+          } as unknown as NextResponse;
+        });
+
+        const result = await proxy.handle(req, res);
+
+        expect(result.status).to.equal(403);
+        expect(result.body).to.deep.equal({
+          html: 'Preview content is not found or access is denied',
+        });
+        expect(clientStub.getPage).to.have.been.calledOnce;
       });
     });
   });

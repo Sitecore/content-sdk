@@ -8,7 +8,7 @@
 
 > **EnhancedComponentMapTemplate** = (`components`, `componentImports`, `ctx`) => `string`
 
-Defined in: [content/src/tools/templating/components.ts:42](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/tools/templating/components.ts#L42)
+Defined in: [content/src/tools/templating/components.ts:42](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/content/src/tools/templating/components.ts#L42)
 
 **`Internal`**
 
@@ -18,10 +18,10 @@ Defined in: [content/src/tools/templating/components.ts:42](https://github.com/S
 | ------ | ------ |
 | `components` | ([`ComponentFile`](../interfaces/ComponentFile.md) \| [`ComponentFileWithType`](../interfaces/ComponentFileWithType.md))[] |
 | `componentImports` | [`ComponentImport`](../interfaces/ComponentImport.md)[] \| `undefined` |
-| `ctx` | \{ `entries`: [`ComponentMapEntry`](ComponentMapEntry.md)[]; `includeVariants`: `boolean`; `isClientMap`: `boolean`; \} |
+| `ctx` | \{ `entries`: [`ComponentMapEntry`](ComponentMapEntry.md)[]; `includeVariants?`: `boolean`; `isClientMap?`: `boolean`; \} |
 | `ctx.entries` | [`ComponentMapEntry`](ComponentMapEntry.md)[] |
-| `ctx.includeVariants` | `boolean` |
-| `ctx.isClientMap` | `boolean` |
+| `ctx.includeVariants?` | `boolean` |
+| `ctx.isClientMap?` | `boolean` |
 
 ## Returns
 

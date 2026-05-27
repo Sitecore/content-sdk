@@ -119,12 +119,14 @@ export const getAllowedQueryParams = (
 };
 
 /**
- * Next.js preview cookies enum
+ * Preview cookies constants referenced within the sdk
+ * @public
  */
-export const enum PreviewCookies {
-  PREVIEW_DATA = '__next_preview_data',
-  PRERENDER_BYPASS = '__prerender_bypass',
-}
+export const PREVIEW_COOKIES = {
+  PREVIEW_DATA: '__next_preview_data',
+  PRERENDER_BYPASS: '__prerender_bypass',
+  PREVIEW_TOKEN: 'sc_preview_token',
+};
 
 /**
  * Filters out Next.js preview cookies from a cookie string or array
@@ -141,8 +143,8 @@ export const cleanupNextPreviewCookies = (cookies: string | string[] | null) => 
   // Filter out Next.js preview cookies
   const filteredCookies = cookies.filter(
     (cookie: string) =>
-      !new RegExp(`^${PreviewCookies.PREVIEW_DATA}=`).test(cookie) &&
-      !new RegExp(`^${PreviewCookies.PRERENDER_BYPASS}=`).test(cookie)
+      !new RegExp(`^${PREVIEW_COOKIES.PREVIEW_DATA}=`).test(cookie) &&
+      !new RegExp(`^${PREVIEW_COOKIES.PRERENDER_BYPASS}=`).test(cookie)
   );
   return filteredCookies;
 };
@@ -164,16 +166,9 @@ export const getPreviewCookies = (site: string) => {
  * @returns {string[]} list of required parameters for validation
  */
 export const getRequiredEditingParamsList = (mode: EditingRenderQueryParams['mode']) => {
-  const editingRequiredParams = ['sc_site', 'sc_itemid', 'sc_lang', 'route', 'mode'];
-
-  const componentRequiredParams = [
-    'sc_site',
-    'sc_itemid',
-    'sc_renderingId',
-    'sc_uid',
-    'sc_lang',
-    'mode',
-  ];
+  const baseRequiredParams = ['sc_site', 'sc_itemid', 'sc_lang'];
+  const editingRequiredParams = [...baseRequiredParams, 'route', 'mode'];
+  const componentRequiredParams = [...baseRequiredParams, 'sc_uid', 'mode'];
   return isDesignLibraryMode(mode) ? componentRequiredParams : editingRequiredParams;
 };
 
@@ -262,7 +257,11 @@ export const getEditingRequestHtml = async (
       // We need to handle not found error provided by Vercel
       // for `fallback: false` pages
       // Or preview content is not found or access is denied
-      if (err.response.status === 404 || err.response.status === 403) {
+      if (
+        err.response.status === 404 ||
+        err.response.status === 403 ||
+        err.response.status === 500
+      ) {
         return err.response;
       }
 

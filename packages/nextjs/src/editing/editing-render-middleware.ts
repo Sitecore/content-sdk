@@ -22,6 +22,7 @@ import {
   getCSPHeader,
   resolveServerUrl,
   getAllowedQueryParams,
+  PREVIEW_COOKIES,
 } from './utils';
 import type { AllowedQueryParams } from './types';
 import { EDITING_PARAMS_HEADER } from './constants';
@@ -201,7 +202,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       const propagatedQsParams = getQueryParamsForPropagation(query);
 
       // Get headers to propagate on subsequent requests
-      const propagatedHeaders = {
+      const propagatedHeaders: Record<string, string> = {
         ...getHeadersForPropagation(headers),
         [EDITING_PARAMS_HEADER]: JSON.stringify(previewData),
       };
@@ -218,6 +219,12 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
         const filteredCookies = cleanupNextPreviewCookies(cookies);
         filteredCookies && res.setHeader('Set-Cookie', filteredCookies);
       }
+
+      // Add authorization token cookie to the response to support navigation.
+      res.setHeader('Set-Cookie', [
+        ...(res.getHeader('Set-Cookie') as string[]),
+        `${PREVIEW_COOKIES.PREVIEW_TOKEN}=${propagatedHeaders.authorization}; Path=/; HttpOnly; SameSite=None; Secure`,
+      ]);
 
       debug.editing('editing render middleware end in %dms: %o', Date.now() - startTimestamp, {
         status: 200,
