@@ -491,6 +491,55 @@ describe('themes', () => {
           { href: getStylesheetUrl('bar', sitecoreEdgeContextId), rel: 'stylesheet' },
         ]);
       });
+
+      it('should not throw when traversing nested placeholders with object params', () => {
+        const layoutData = {
+          sitecore: {
+            context: {},
+            route: {
+              name: 'home',
+              placeholders: {
+                main: [
+                  {
+                    componentName: 'header',
+                    params: { Styles: detailedStylesObject },
+                    placeholders: {
+                      content: [
+                        {
+                          componentName: 'body',
+                          params: { CSSStyles: detailedStylesObject, LibraryId: detailedStylesObject },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        };
+
+        const run = () => getDesignLibraryStylesheetLinks(layoutData, sitecoreEdgeContextId);
+
+        expect(run).to.not.throw();
+        expect(run()).to.deep.equal([]);
+      });
+
+      it('should still resolve library id from string CSSStyles when Styles param is an object', () => {
+        expect(
+          getDesignLibraryStylesheetLinks(
+            setBasicLayoutData(({
+              componentName: 'styled',
+              params: {
+                CSSStyles: '-library--foo',
+                Styles: detailedStylesObject,
+              },
+            } as unknown) as ComponentRendering),
+            sitecoreEdgeContextId
+          )
+        ).to.deep.equal([
+          { href: getStylesheetUrl('foo', sitecoreEdgeContextId), rel: 'stylesheet' },
+        ]);
+      });
     });
   });
 
