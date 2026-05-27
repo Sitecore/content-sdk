@@ -11,9 +11,10 @@ export {
   DataHandlerConfig,
 } from './models';
 
-export { createLoaderDataServiceMiddleware } from './loader-data-service-middleware';
 export { ServerLoaderDataProvider } from './loader-data.provider';
 export { provideServerLoaderDataProvider } from './provide-server-loader-data-provider';
+
+export * from './middleware';
 
 // Loader cache (server-only). Browser code must not reach createLoaderCache —
 // see plan §1 (Browser safety). The exports here are types + server factories;

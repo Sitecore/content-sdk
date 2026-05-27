@@ -1,107 +1,107 @@
 import { Storage, createStorage, Driver } from 'unstorage';
 import {
-  GlobalLoaderCacheConfig,
   InvalidateInput,
   LoaderCache,
+  LoaderCacheConfig,
   LoaderCacheEntry,
   LoaderCacheEntryInfo,
+  LoaderCacheReadResult,
 } from '../../loaders/models';
-import { CACHE_KEY_PREFIX, resolveTagsToInvalidate } from './cache-key';
-import { ResolvedConfig } from './models';
+import { evaluateCacheRead, applyLoaderCacheConfigDefaults } from './utils';
+import { CACHE_KEY_PREFIX } from './cache-key';
+import { GlobalLoaderCacheConfig } from './models';
 
 /**
- * Unstorage-backed {@link LoaderCache}. Pluggable across `unstorage` drivers —
- * `memory` for dev, `fs` / `fsLite` for single-process persistence, `redis` /
- * `vercelKv` / `cloudflareKv` for multi-worker deployments.
+ * Unstorage-backed {@link LoaderCache}.
  *
- * Entries are stored under the same composite key built by
- * {@link buildCacheKey} so prerendered, runtime, and admin-CLI writes collide
- * by design (the cross-process consistency promised in plan §4.3).
- *
- * Invalidation walks every key under the cache prefix and reads each entry's
- * tags — O(N) over the cache size. Acceptable up to thousands of entries; a
- * driver-native tag index (Redis `SADD`, etc.) is a Phase 3 optimization.
+ * Two key spaces in one driver:
+ *   - `{cacheKey}` → loader entry (value + metadata; tags copied on the entry)
+ *   - `tag:{tag}` → `string[]` of cache keys pointing at that entry
  * @internal
  */
+/** Prefix for tag-index keys in unstorage (entries use `sc:loader:…` keys directly). */
+const TAG_INDEX_PREFIX = 'tag:';
+
 export class UnstorageLoaderCache implements LoaderCache {
   private readonly storage: Storage;
-  private readonly config: ResolvedConfig;
-  /** Prefix passed to `storage.getKeys()` / `storage.clear()` for scoped scans. */
-  private readonly keyPrefix: string;
+  private readonly config: Required<LoaderCacheConfig>;
 
-  constructor(driver: Driver, config: ResolvedConfig) {
+  constructor(driver: Driver, config: LoaderCacheConfig = {}) {
     this.storage = createStorage({ driver });
-    this.config = config;
-    // Mirrors the serializeKey() prefix in cache-key.ts so getKeys() returns
-    // only this cache's entries — never anything else the user stores in the
-    // same Storage instance. Namespace is appended when configured.
-    this.keyPrefix = config.namespace
-      ? `${CACHE_KEY_PREFIX}:${config.namespace}`
-      : CACHE_KEY_PREFIX;
+    this.config = applyLoaderCacheConfigDefaults(config);
   }
 
-  async get(key: string): Promise<LoaderCacheEntry | null> {
-    const entry = await this.storage.getItem<LoaderCacheEntry>(key);
-    if (!entry) return null;
-    if (this.isExpired(entry)) {
-      await this.storage.removeItem(key);
-      return null;
+  async get(cacheKey: string): Promise<LoaderCacheReadResult> {
+    const entry = await this.storage.getItem<LoaderCacheEntry>(this.cacheStorageKey(cacheKey));
+    return evaluateCacheRead(cacheKey, entry ?? null);
+  }
+
+  async set(cacheKey: string, value: unknown, ttlSeconds: number, tags: string[]): Promise<void> {
+    const existing = await this.storage.getItem<LoaderCacheEntry>(this.cacheStorageKey(cacheKey));
+    if (existing) {
+      await this.unlinkTags(cacheKey, existing.tags);
     }
-    return entry;
-  }
 
-  async set(key: string, value: unknown, ttlSeconds: number, tags: string[]): Promise<void> {
     const expiresAt = ttlSeconds > 0 ? Date.now() + ttlSeconds * 1000 : null;
     const entry: LoaderCacheEntry = {
       value,
       tags: [...tags],
       storedAt: Date.now(),
       expiresAt,
+      stale: false,
     };
-    await this.storage.setItem(key, entry);
+    await this.storage.setItem(this.cacheStorageKey(cacheKey), entry);
+    await this.linkTags(cacheKey, tags);
   }
 
   async invalidate(filter: InvalidateInput): Promise<number> {
-    const tags = resolveTagsToInvalidate(filter, this.config.defaultSiteName);
-    const keys = await this.storage.getKeys(this.keyPrefix);
-    let deleted = 0;
-    for (const key of keys) {
-      const entry = await this.storage.getItem<LoaderCacheEntry>(key);
-      if (!entry) continue;
-      if (tags.every((tag) => entry.tags.includes(tag))) {
-        await this.storage.removeItem(key);
-        deleted++;
-      }
+    const tags = filter.tags ?? [];
+    if (tags.length === 0) {
+      return 0;
     }
-    return deleted;
+    const keys = await this.resolveCacheKeysFromTags(tags);
+    let marked = 0;
+    for (const cacheKey of keys) {
+      const entry = await this.storage.getItem<LoaderCacheEntry>(this.cacheStorageKey(cacheKey));
+      if (!entry) {
+        continue;
+      }
+      if (!entry.stale) {
+        await this.storage.setItem(this.cacheStorageKey(cacheKey), { ...entry, stale: true });
+      }
+      marked++;
+    }
+    return marked;
   }
 
-  async delete(key: string): Promise<boolean> {
-    const had = await this.storage.hasItem(key);
-    if (!had) return false;
-    await this.storage.removeItem(key);
+  async delete(cacheKey: string): Promise<boolean> {
+    const entry = await this.storage.getItem<LoaderCacheEntry>(this.cacheStorageKey(cacheKey));
+    if (!entry) {
+      return false;
+    }
+    await this.unlinkTags(cacheKey, entry.tags);
+    await this.storage.removeItem(this.cacheStorageKey(cacheKey));
     return true;
   }
 
   async flush(): Promise<void> {
-    await this.storage.clear(this.keyPrefix);
+    await this.storage.clear();
   }
 
   async entries(): Promise<LoaderCacheEntryInfo[]> {
-    const keys = await this.storage.getKeys(this.keyPrefix);
+    const keys = await this.storage.getKeys(CACHE_KEY_PREFIX);
     const out: LoaderCacheEntryInfo[] = [];
-    for (const key of keys) {
-      const entry = await this.storage.getItem<LoaderCacheEntry>(key);
-      if (!entry) continue;
-      if (this.isExpired(entry)) {
-        await this.storage.removeItem(key);
+    for (const cacheKey of keys) {
+      const entry = await this.storage.getItem<LoaderCacheEntry>(cacheKey);
+      if (!entry) {
         continue;
       }
       out.push({
-        key,
+        key: cacheKey,
         tags: [...entry.tags],
         storedAt: entry.storedAt,
         expiresAt: entry.expiresAt,
+        stale: entry.stale,
       });
     }
     return out;
@@ -119,7 +119,47 @@ export class UnstorageLoaderCache implements LoaderCache {
     return this.config;
   }
 
-  private isExpired(entry: LoaderCacheEntry): boolean {
-    return entry.expiresAt !== null && entry.expiresAt <= Date.now();
+  /** Cache entry: OSR-aligned `sc:loader:…` key → loader payload. */
+  private cacheStorageKey(cacheKey: string): string {
+    return cacheKey;
+  }
+
+  /** Tag index: `tag:{tag}` → cache keys. */
+  private tagStorageKey(tag: string): string {
+    return `${TAG_INDEX_PREFIX}${tag}`;
+  }
+
+  private async linkTags(cacheKey: string, tags: string[]): Promise<void> {
+    for (const tag of tags) {
+      const storageKey = this.tagStorageKey(tag);
+      const current = (await this.storage.getItem<string[]>(storageKey)) ?? [];
+      if (!current.includes(cacheKey)) {
+        await this.storage.setItem(storageKey, [...current, cacheKey]);
+      }
+    }
+  }
+
+  private async unlinkTags(cacheKey: string, tags: string[]): Promise<void> {
+    for (const tag of tags) {
+      const storageKey = this.tagStorageKey(tag);
+      const current = (await this.storage.getItem<string[]>(storageKey)) ?? [];
+      const next = current.filter((k) => k !== cacheKey);
+      if (next.length === 0) {
+        await this.storage.removeItem(storageKey);
+      } else {
+        await this.storage.setItem(storageKey, next);
+      }
+    }
+  }
+
+  private async resolveCacheKeysFromTags(tags: string[]): Promise<Set<string>> {
+    const out = new Set<string>();
+    for (const tag of tags) {
+      const keys = (await this.storage.getItem<string[]>(this.tagStorageKey(tag))) ?? [];
+      for (const key of keys) {
+        out.add(key);
+      }
+    }
+    return out;
   }
 }

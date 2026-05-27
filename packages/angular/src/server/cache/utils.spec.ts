@@ -1,72 +1,65 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect } from 'vitest';
-import { approxByteSize, dimensionsFromContext, resolveConfig } from './utils';
+import { approxByteSize, dimensionsFromContext, resolveConfig, applyLoaderCacheConfigDefaults, urlToPathKey } from './utils';
 import { DEFAULT_CACHE_TTL } from './models';
 
-describe('dimensionsFromContext', () => {
-  describe('when building cache dimensions from a loader context', () => {
-    it('reads site and locale from route params and strips query strings from the url', () => {
-      const dimensions = dimensionsFromContext('page', {
-        url: '/articles/1?ref=email',
-        params: { site: 'blog', locale: 'de' },
-        query: {},
-      });
+describe('urlToPathKey', () => {
+  it('sanitizes path segments and uses _ for home', () => {
+    expect(urlToPathKey('/')).toBe('_');
+    expect(urlToPathKey('/About Us')).toBe('about_us');
+    expect(urlToPathKey('/products/shoes')).toBe('products/shoes');
+  });
 
-      expect(dimensions).toEqual({
-        site: 'blog',
-        locale: 'de',
-        variantId: 'default',
-        loaderId: 'page',
-        route: '/articles/1',
-      });
+  it('strips locale prefix when provided', () => {
+    expect(urlToPathKey('/en/about', 'en')).toBe('about');
+  });
+});
+
+describe('dimensionsFromContext', () => {
+  it('reads site and locale from route params and derives pathKey', () => {
+    const dimensions = dimensionsFromContext('page', {
+      url: '/articles/1?ref=email',
+      params: { site: 'blog', locale: 'de' },
+      query: {},
+    });
+
+    expect(dimensions).toEqual({
+      site: 'blog',
+      locale: 'de',
+      variantId: 'default',
+      loaderId: 'page',
+      pathKey: 'articles/1',
     });
   });
 
-  describe('when params are missing', () => {
-    it('falls back to default site, locale, and root route', () => {
-      const dimensions = dimensionsFromContext('page', {
-        url: '',
-        params: {},
-        query: {},
-      });
-
-      expect(dimensions.site).toBe('default');
-      expect(dimensions.locale).toBe('en');
-      expect(dimensions.route).toBe('/');
+  it('falls back to default site, locale, and home pathKey', () => {
+    const dimensions = dimensionsFromContext('page', {
+      url: '',
+      params: {},
+      query: {},
     });
+
+    expect(dimensions.site).toBe('default');
+    expect(dimensions.locale).toBe('en');
+    expect(dimensions.pathKey).toBe('_');
   });
 });
 
 describe('resolveConfig', () => {
-  describe('when the app passes a partial cache config', () => {
-    it('applies defaults for ttl, enabled flag, namespace, and default site name', () => {
-      expect(resolveConfig({})).toEqual({
-        revalidate: DEFAULT_CACHE_TTL,
-        enabled: true,
-        namespace: '',
-        defaultSiteName: 'default',
-        loaders: {},
-      });
-    });
+  it('strips driver from global cache config', () => {
+    expect(resolveConfig({ driver: {} as never, revalidate: 60 })).toEqual({ revalidate: 60 });
   });
+});
 
-  describe('when the app overrides cache settings', () => {
-    it('keeps the supplied values intact', () => {
-      expect(
-        resolveConfig({
-          revalidate: 60,
-          enabled: false,
-          namespace: 'preview',
-          defaultSiteName: 'shop',
-          loaders: { page: { revalidate: 120 } },
-        })
-      ).toEqual({
-        revalidate: 60,
-        enabled: false,
-        namespace: 'preview',
-        defaultSiteName: 'shop',
-        loaders: { page: { revalidate: 120 } },
-      });
+describe('applyLoaderCacheConfigDefaults', () => {
+  it('applies defaults for every config field', () => {
+    expect(applyLoaderCacheConfigDefaults({})).toEqual({
+      revalidate: DEFAULT_CACHE_TTL,
+      enabled: true,
+      defaultSiteName: 'default',
+      tags: [],
+      sites: [],
+      defaultLocale: 'en',
     });
   });
 });

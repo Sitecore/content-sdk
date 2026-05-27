@@ -1,13 +1,13 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { LoaderFn } from '../loaders/models';
-import { NotFoundNavigationError, LoaderHttpError } from '../loaders/models';
+import type { LoaderFn } from '../../loaders/models';
+import { NotFoundNavigationError, LoaderHttpError } from '../../loaders/models';
 import { createLoaderDataServiceMiddleware } from './loader-data-service-middleware';
-import { LOADER_DATA_ENDPOINT } from './constants';
-import { EXTRACT_REQUEST_CONTEXT_TOKEN } from './models';
-import type { LoaderRegistry } from '../loaders/loader-registry.token';
-import { createLoaderCache } from './cache/loader-cache';
+import { LOADER_DATA_ENDPOINT } from '../constants';
+import { EXTRACT_REQUEST_CONTEXT_TOKEN } from '../models';
+import type { LoaderRegistry } from '../../loaders/loader-registry.token';
+import { createLoaderCache } from '../cache/loader-cache';
 
 /**
  * Minimal Express `res` stub for middleware tests.
@@ -39,14 +39,12 @@ describe('createLoaderDataServiceMiddleware', () => {
   });
 
   /**
-   * @param {{ loaders: import('./models').LoaderRegistry; endpoint?: string; cache?: import('../loaders/models').LoaderCache }} opts - Middleware factory options
-   * @param {import('./models').LoaderRegistry} opts.loaders - Registered route loaders
-   * @param {string} [opts.endpoint] - Data endpoint path override
+   * @param {{ loaders: import('../models').LoaderRegistry; endpoint?: string; cache?: import('../../loaders/models').LoaderCache }} opts - Middleware factory options
    */
   function createMiddleware(opts: {
     loaders: LoaderRegistry;
     endpoint?: string;
-    cache?: import('../loaders/models').LoaderCache;
+    cache?: import('../../loaders/models').LoaderCache;
   }) {
     const extractReq = TestBed.inject(EXTRACT_REQUEST_CONTEXT_TOKEN);
     return createLoaderDataServiceMiddleware({

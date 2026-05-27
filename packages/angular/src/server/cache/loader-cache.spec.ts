@@ -1,13 +1,14 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import memoryDriver from 'unstorage/drivers/memory';
 import fsDriver from 'unstorage/drivers/fs';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import type { LoaderCache, InvalidateInput } from '../../loaders/models';
+import type { LoaderCache } from '../../loaders/models';
 import { createLoaderCache } from './loader-cache';
-import { buildCacheKey, buildDefaultTags } from './cache-key';
+import { buildCacheKey } from './cache-key';
+import { buildLoaderCacheTags } from './cache-tags';
 import type { LoaderContext } from '../../loaders/models';
 
 const sampleContext: LoaderContext = {
@@ -20,9 +21,9 @@ function sampleKey(loaderId = 'page') {
   return buildCacheKey(loaderId, sampleContext).key;
 }
 
-function sampleTags(loaderId = 'page') {
-  const { dimensions } = buildCacheKey(loaderId, sampleContext);
-  return buildDefaultTags(dimensions);
+function sampleTags(loaderId = 'page', value?: unknown) {
+  const { key, dimensions } = buildCacheKey(loaderId, sampleContext);
+  return buildLoaderCacheTags(loaderId, dimensions, key, value);
 }
 
 async function runSharedLoaderCacheContract(
@@ -43,42 +44,43 @@ async function runSharedLoaderCacheContract(
     });
 
     describe('when storing and reading loader output', () => {
-      it('returns null on a cache miss and the stored value on a hit', async () => {
+      it('returns miss on empty key and hit after set', async () => {
         const key = sampleKey();
-        expect(await cache.get(key)).toBeNull();
+        expect(await cache.get(key)).toEqual({ kind: 'miss', cacheKey: key });
 
         await cache.set(key, { title: 'Products' }, 300, sampleTags());
         const hit = await cache.get(key);
 
-        expect(hit?.value).toEqual({ title: 'Products' });
-        expect(hit?.tags).toEqual(sampleTags());
+        expect(hit).toEqual({ kind: 'hit', value: { title: 'Products' }, cacheKey: key });
       });
     });
 
     describe('when an entry TTL expires', () => {
-      it('treats the entry as missing and removes it from storage', async () => {
+      it('returns stale (does not delete) so SWR can serve last-known-good', async () => {
         vi.useFakeTimers();
         const key = sampleKey('expiring');
         await cache.set(key, { stale: true }, 30, sampleTags('expiring'));
 
         vi.advanceTimersByTime(31_000);
-        expect(await cache.get(key)).toBeNull();
+        const read = await cache.get(key);
+        expect(read).toEqual({ kind: 'stale', value: { stale: true }, cacheKey: key });
       });
     });
 
     describe('when ttl is zero or negative', () => {
-      it('keeps the entry until it is explicitly invalidated', async () => {
+      it('keeps the entry until explicitly invalidated', async () => {
         vi.useFakeTimers();
         const key = sampleKey('persistent');
         await cache.set(key, { permanent: true }, 0, sampleTags('persistent'));
 
         vi.advanceTimersByTime(3600_000);
-        expect(await cache.get(key)).not.toBeNull();
+        const read = await cache.get(key);
+        expect(read.kind).toBe('hit');
       });
     });
 
-    describe('when invalidating by route tag', () => {
-      it('deletes only entries whose tags match every required tag', async () => {
+    describe('when invalidating by tag', () => {
+      it('marks matching entries stale without deleting them', async () => {
         const keyA = sampleKey('page');
         const keyB = buildCacheKey('footer', {
           ...sampleContext,
@@ -86,21 +88,35 @@ async function runSharedLoaderCacheContract(
         }).key;
 
         await cache.set(keyA, { page: true }, 300, sampleTags('page'));
-        await cache.set(
-          keyB,
-          { footer: true },
-          300,
-          buildDefaultTags(buildCacheKey('footer', { ...sampleContext, url: '/other' }).dimensions)
+        const tagsB = buildLoaderCacheTags(
+          'footer',
+          buildCacheKey('footer', { ...sampleContext, url: '/other' }).dimensions,
+          keyB
         );
+        await cache.set(keyB, { footer: true }, 300, tagsB);
 
-        const deleted = await cache.invalidate({
-          route: '/products',
-          site: 'shop',
-        } satisfies InvalidateInput);
+        const marked = await cache.invalidate({ tags: ['sc:site:shop'] });
 
-        expect(deleted).toBe(1);
-        expect(await cache.get(keyA)).toBeNull();
-        expect(await cache.get(keyB)).not.toBeNull();
+        expect(marked).toBe(2);
+        expect(await cache.get(keyA)).toEqual({
+          kind: 'stale',
+          value: { page: true },
+          cacheKey: keyA,
+        });
+        expect(await cache.get(keyB)).toEqual({
+          kind: 'stale',
+          value: { footer: true },
+          cacheKey: keyB,
+        });
+      });
+
+      it('marks a single entry stale by self-key tag', async () => {
+        const key = sampleKey('page');
+        await cache.set(key, { page: true }, 300, sampleTags('page'));
+
+        const marked = await cache.invalidate({ tags: [key] });
+        expect(marked).toBe(1);
+        expect((await cache.get(key)).kind).toBe('stale');
       });
     });
 
@@ -110,7 +126,7 @@ async function runSharedLoaderCacheContract(
         await cache.set(key, { temp: true }, 300, sampleTags('delete-me'));
 
         expect(await cache.delete(key)).toBe(true);
-        expect(await cache.get(key)).toBeNull();
+        expect(await cache.get(key)).toEqual({ kind: 'miss', cacheKey: key });
         expect(await cache.delete(key)).toBe(false);
       });
     });
@@ -122,24 +138,20 @@ async function runSharedLoaderCacheContract(
         const key = sampleKey('flush-me');
         await cache.set(key, { temp: true }, 300, sampleTags('flush-me'));
         await cache.flush();
-        expect(await cache.get(key)).toBeNull();
+        expect(await cache.get(key)).toEqual({ kind: 'miss', cacheKey: key });
       });
     });
 
     describe('when listing entries for admin tooling', () => {
-      it('returns metadata without values and skips expired entries', async () => {
-        vi.useFakeTimers();
+      it('returns metadata without values and includes stale flag', async () => {
         const liveKey = sampleKey('live');
-        const expiredKey = sampleKey('expired-list');
-
         await cache.set(liveKey, { live: true }, 300, sampleTags('live'));
-        await cache.set(expiredKey, { expired: true }, 10, sampleTags('expired-list'));
-        vi.advanceTimersByTime(11_000);
+        await cache.invalidate({ tags: [liveKey] });
 
         const entries = await cache.entries();
-        expect(entries.some((entry) => entry.key === liveKey)).toBe(true);
-        expect(entries.some((entry) => entry.key === expiredKey)).toBe(false);
-        expect(entries.find((entry) => entry.key === liveKey)?.tags).toEqual(sampleTags('live'));
+        const live = entries.find((entry) => entry.key === liveKey);
+        expect(live?.tags).toEqual(sampleTags('live'));
+        expect(live?.stale).toBe(true);
       });
     });
 
@@ -188,7 +200,7 @@ describe('UnstorageLoaderCache (fs driver)', () => {
     });
     const hit = await reader.get(key);
 
-    expect(hit?.value).toEqual({ persisted: true });
+    expect(hit).toEqual({ kind: 'hit', value: { persisted: true }, cacheKey: key });
   });
 });
 
@@ -197,20 +209,19 @@ describe('createLoaderCache factory', () => {
     const cache = createLoaderCache();
     const key = sampleKey('factory-default');
     await cache.set(key, { ok: true }, 300, sampleTags('factory-default'));
-    expect(await cache.get(key)).not.toBeNull();
+    expect((await cache.get(key)).kind).toBe('hit');
   });
 
-  it('still stores and retrieves entries when a namespace is configured', async () => {
+  it('uses the unstorage backend when a driver is supplied', async () => {
     const cache = createLoaderCache({
       driver: memoryDriver(),
-      namespace: 'preview-app',
       revalidate: 300,
     });
-    const key = sampleKey('namespaced');
-    await cache.set(key, { namespaced: true }, 300, sampleTags('namespaced'));
+    const key = sampleKey('unstorage');
+    await cache.set(key, { persisted: true }, 300, sampleTags('unstorage'));
 
     expect(await cache.get(key)).toEqual(
-      expect.objectContaining({ value: { namespaced: true } })
+      expect.objectContaining({ kind: 'hit', value: { persisted: true } })
     );
   });
 });

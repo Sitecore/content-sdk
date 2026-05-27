@@ -6,19 +6,18 @@ import {
   LoaderDataResult,
 } from '../loaders/models';
 import { LoaderRegistry } from '../loaders/loader-registry.token';
-import { buildCacheKey, buildDefaultTags } from './cache/cache-key';
+import { buildCacheKey } from './cache/cache-key';
+import { buildLoaderCacheTags } from './cache/cache-tags';
 
 /**
- * Server-side loader data provider. Runs loaders from the shared cross-boundary
- * {@link LoaderRegistry} with optional global {@link LoaderCache} backing.
- * Used by Express middleware and SSR (via {@link SERVER_LOADER_DATA_PROVIDER}).
+ * Server-side loader data provider with stale-while-revalidate cache reads (Phase 3).
  * @public
  */
 export class ServerLoaderDataProvider {
-  constructor(
-    private readonly registry: LoaderRegistry,
-    private readonly cache?: LoaderCache
-  ) {}
+  /** Process-wide coalescing for stale-while-revalidate background refreshes. */
+  private static readonly pendingCacheOps = new Set<string>();
+
+  constructor(private readonly registry: LoaderRegistry, private readonly cache?: LoaderCache) {}
 
   /**
    * Resolve loader data: check cache, run loader on miss, store result.
@@ -34,15 +33,66 @@ export class ServerLoaderDataProvider {
 
     const ctx: LoaderContext = { url, params, query, requestContext: angularRequestContext };
 
-    const cacheable = this.cache && (cacheOptions?.enabled || this.cache.enabled());
+    const cacheable = this.cache && (cacheOptions?.enabled ?? this.cache.enabled());
 
     if (cacheable) {
       const { key } = buildCacheKey(loaderId, ctx);
-      const hit = await this.cache!.get(key);
-      if (hit) {
-        return { kind: 'data', data: hit.value };
+      const read = await this.cache!.get(key);
+
+      if (read.kind === 'hit') {
+        return { kind: 'data', data: read.value };
+      }
+
+      if (read.kind === 'stale') {
+        this.scheduleBackgroundRefresh(request, ctx, key, cacheOptions);
+        return { kind: 'data', data: read.value };
       }
     }
+
+    return this.runLoader({ request, ctx, cacheable: !!cacheable });
+  }
+
+  private scheduleBackgroundRefresh(
+    request: LoaderApiRequest,
+    ctx: LoaderContext,
+    cacheKey: string,
+    cacheOptions: LoaderApiRequest['cacheOptions']
+  ): void {
+    if (ServerLoaderDataProvider.pendingCacheOps.has(cacheKey)) {
+      return;
+    }
+    ServerLoaderDataProvider.pendingCacheOps.add(cacheKey);
+    void this.runLoader({
+      request,
+      ctx,
+      cacheable: true,
+      cacheOptions,
+      knownCacheKey: cacheKey,
+    }).then(
+      () => {
+        ServerLoaderDataProvider.pendingCacheOps.delete(cacheKey);
+      },
+      () => {
+        ServerLoaderDataProvider.pendingCacheOps.delete(cacheKey);
+      }
+    );
+  }
+
+  private async runLoader({
+    request,
+    ctx,
+    cacheable,
+    cacheOptions,
+    knownCacheKey,
+  }: {
+    request: LoaderApiRequest;
+    ctx: LoaderContext;
+    cacheable: boolean;
+    cacheOptions?: LoaderApiRequest['cacheOptions'];
+    knownCacheKey?: string;
+  }): Promise<LoaderDataResult> {
+    const { loaderId } = request;
+    const loader = this.registry[loaderId]!;
 
     let value: unknown;
     try {
@@ -61,11 +111,25 @@ export class ServerLoaderDataProvider {
       return { kind: 'redirect', redirect: value };
     }
 
-    if (cacheable) {
+    if (cacheable && this.cache) {
       const { key, dimensions } = buildCacheKey(loaderId, ctx);
-      const tags = [...buildDefaultTags(dimensions), ...(cacheOptions?.tags ?? [])];
-      const ttl = cacheOptions?.revalidate ?? this.cache!.resolveTtl();
-      await this.cache!.set(key, value, ttl, tags);
+      const cacheKey = knownCacheKey ?? key;
+      const tags = buildLoaderCacheTags(
+        loaderId,
+        dimensions,
+        cacheKey,
+        value,
+        cacheOptions?.tags ?? []
+      );
+      const ttl = cacheOptions?.revalidate ?? this.cache.resolveTtl();
+      try {
+        await this.cache.set(cacheKey, value, ttl, tags);
+      } catch (err) {
+        console.warn(
+          '[sitecore-loader-cache] background refresh failed to write cache entry:',
+          err instanceof Error ? err.message : err
+        );
+      }
     }
 
     return { kind: 'data', data: value };

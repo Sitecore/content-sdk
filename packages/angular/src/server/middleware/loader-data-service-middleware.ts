@@ -4,17 +4,17 @@ import {
   NotFoundNavigationError,
   LoaderHttpError,
   LoaderDataResult,
-} from '../loaders/models';
-import { extractRequestContext } from '../loaders/utils';
+} from '../../loaders/models';
+import { extractRequestContext } from '../../loaders/utils';
 import {
   ExpressDataHandlerOptions,
   ExpressMiddleware,
   ExpressNextFunction,
   ExpressRequest,
   ExpressResponse,
-} from './models';
-import { LOADER_DATA_ENDPOINT } from './constants';
-import { ServerLoaderDataProvider } from './loader-data.provider';
+} from '../models';
+import { LOADER_DATA_ENDPOINT } from '../constants';
+import { ServerLoaderDataProvider } from '../loader-data.provider';
 
 /**
  * Map loader resolution result to wire-level API response.

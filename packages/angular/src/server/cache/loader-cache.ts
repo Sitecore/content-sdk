@@ -1,4 +1,5 @@
-import { LoaderCache, GlobalLoaderCacheConfig } from '../../loaders/models';
+import { LoaderCache } from '../../loaders/models';
+import { GlobalLoaderCacheConfig } from './models';
 import { InMemoryLoaderCache } from './default-in-memory-cache';
 import { UnstorageLoaderCache } from './unstorage-loader-cache';
 import { resolveConfig } from './utils';

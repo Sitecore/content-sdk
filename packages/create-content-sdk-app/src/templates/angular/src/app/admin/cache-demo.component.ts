@@ -9,6 +9,7 @@ interface AdminEntry {
   tags: string[];
   storedAt: number;
   expiresAt: number | null;
+  stale: boolean;
   approxBytes: number;
 }
 
@@ -29,11 +30,7 @@ interface ConfigResponse {
 const ADMIN_BASE = '/api/_cache';
 
 /**
- * Demo page that lists every loader-cache entry held by the running server and
- * lets you invalidate them per-path or flush the whole cache.
- *
- * Hits the admin endpoints exposed by createCacheAdminMiddleware() in
- * server.ts. Plan: llm-wiki/wiki/plans/doc-loader-cache-plan.md
+ * Demo page that lists loader-cache entries and supports tag-based invalidation (Phase 3 OSR).
  */
 @Component({
   selector: 'app-cache-demo',
@@ -54,8 +51,8 @@ const ADMIN_BASE = '/api/_cache';
           </p>
         }
         <p class="hint">
-          Lists entries written by SSR + /_data middleware. Navigate to any page in another tab,
-          then click <em>Refresh</em> to see them appear. Invalidate to evict.
+          Entries use <code>sc:loader:…</code> keys and Sitecore OSR tags. Invalidate marks entries
+          <em>stale</em> (SWR); the next request serves last-known-good while refreshing.
         </p>
       </header>
 
@@ -71,31 +68,25 @@ const ADMIN_BASE = '/api/_cache';
 
       <form class="invalidate" (submit)="invalidate($event)">
         <fieldset>
-          <legend>Invalidate by path</legend>
+          <legend>Invalidate by tag</legend>
           <label>
-            Route
-            <input type="text" name="route" [(ngModel)]="invalidateRoute" placeholder="/about" required />
+            Tags (comma-separated)
+            <input
+              type="text"
+              name="tags"
+              [(ngModel)]="invalidateTags"
+              placeholder="sc:item:…, sc:site:demo"
+              required
+            />
           </label>
-          <label>
-            Site (optional)
-            <input type="text" name="site" [(ngModel)]="invalidateSite" placeholder="default" />
-          </label>
-          <label>
-            Language (optional)
-            <input type="text" name="language" [(ngModel)]="invalidateLanguage" placeholder="en" />
-          </label>
-          <label>
-            Loader (optional)
-            <input type="text" name="loaderId" [(ngModel)]="invalidateLoaderId" placeholder="page" />
-          </label>
-          <button type="submit" [disabled]="loading() || !invalidateRoute.trim()">Invalidate</button>
+          <button type="submit" [disabled]="loading() || !invalidateTags.trim()">Mark stale</button>
         </fieldset>
       </form>
 
       @if (!loading() && entries().length > 0) {
         <div class="meta">
           Total entries: <strong>{{ entries().length }}</strong>
-          &middot; total size: <strong>{{ totalBytes() | number }} bytes</strong>
+          &middot; stale: <strong>{{ staleCount() }}</strong>
         </div>
       }
 
@@ -106,7 +97,7 @@ const ADMIN_BASE = '/api/_cache';
       } @else {
         <ul class="entries">
           @for (entry of entries(); track entry.key) {
-            <li>
+            <li [class.stale]="entry.stale">
               <div class="key">{{ entry.key }}</div>
               <div class="tags">
                 @for (t of entry.tags; track t) {
@@ -120,11 +111,13 @@ const ADMIN_BASE = '/api/_cache';
                 } @else {
                   <span>expires: never</span>
                 }
-                <span>size: {{ entry.approxBytes | number }} B</span>
+                @if (entry.stale) {
+                  <span class="stale-badge">stale</span>
+                }
               </div>
               <div class="actions">
-                <button type="button" (click)="deleteByTagMatch(entry)" [disabled]="loading()">
-                  Invalidate this route
+                <button type="button" (click)="invalidateEntry(entry)" [disabled]="loading()">
+                  Mark this entry stale
                 </button>
               </div>
             </li>
@@ -142,15 +135,17 @@ const ADMIN_BASE = '/api/_cache';
       .toolbar .status { color: #2a7; font-size: .9rem; }
       .invalidate fieldset { display: flex; flex-wrap: wrap; gap: .75rem; align-items: end; }
       .invalidate label { display: flex; flex-direction: column; font-size: .85rem; color: #444; }
-      .invalidate input { padding: .25rem .5rem; min-width: 8rem; }
+      .invalidate input { padding: .25rem .5rem; min-width: 16rem; }
       .meta { color: #666; margin: .75rem 0; font-size: .9rem; }
       .loading, .empty { color: #888; padding: 1rem 0; }
       .entries { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .75rem; }
       .entries li { border: 1px solid #ddd; padding: .75rem; border-radius: 6px; background: #fafafa; }
+      .entries li.stale { border-color: #c90; background: #fffbeb; }
       .key { font-family: ui-monospace, Consolas, monospace; font-size: .85rem; word-break: break-all; }
       .tags { margin: .35rem 0; display: flex; flex-wrap: wrap; gap: .25rem; }
       .tag { font-size: .7rem; background: #eef; padding: .1rem .4rem; border-radius: 3px; font-family: ui-monospace, Consolas, monospace; }
-      .meta-row { display: flex; gap: 1rem; font-size: .8rem; color: #555; margin-top: .25rem; }
+      .meta-row { display: flex; gap: 1rem; font-size: .8rem; color: #555; margin-top: .25rem; align-items: center; }
+      .stale-badge { color: #a60; font-weight: 600; }
       .actions { margin-top: .5rem; }
       button { padding: .35rem .75rem; cursor: pointer; }
       button:disabled { opacity: .5; cursor: not-allowed; }
@@ -164,14 +159,9 @@ export class CacheDemoComponent {
   readonly config = signal<ConfigResponse | null>(null);
   readonly loading = signal(false);
   readonly lastMessage = signal<string>('');
-  readonly totalBytes = computed(() =>
-    this.entries().reduce((sum, e) => sum + e.approxBytes, 0)
-  );
+  readonly staleCount = computed(() => this.entries().filter((e) => e.stale).length);
 
-  invalidateRoute = '';
-  invalidateSite = '';
-  invalidateLanguage = '';
-  invalidateLoaderId = '';
+  invalidateTags = '';
 
   constructor() {
     this.refresh();
@@ -184,7 +174,12 @@ export class CacheDemoComponent {
         firstValueFrom(this.http.get<EntriesResponse>(`${ADMIN_BASE}/entries`)),
         firstValueFrom(this.http.get<ConfigResponse>(`${ADMIN_BASE}/config`)),
       ]);
-      this.entries.set(entries.entries);
+      this.entries.set(
+        entries.entries.map((e) => ({
+          ...e,
+          approxBytes: e.key.length * 2,
+        }))
+      );
       this.config.set(config);
       this.lastMessage.set('');
     } catch (err) {
@@ -208,20 +203,18 @@ export class CacheDemoComponent {
 
   async invalidate(event: Event): Promise<void> {
     event.preventDefault();
-    const route = this.invalidateRoute.trim();
-    if (!route) return;
-
-    const body: Record<string, string> = { route };
-    if (this.invalidateSite.trim()) body['site'] = this.invalidateSite.trim();
-    if (this.invalidateLanguage.trim()) body['language'] = this.invalidateLanguage.trim();
-    if (this.invalidateLoaderId.trim()) body['loaderId'] = this.invalidateLoaderId.trim();
+    const tags = this.invalidateTags
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean);
+    if (tags.length === 0) return;
 
     this.loading.set(true);
     try {
       const resp = await firstValueFrom(
-        this.http.post<{ deleted: number }>(`${ADMIN_BASE}/invalidate`, body)
+        this.http.post<{ marked: number }>(`${ADMIN_BASE}/invalidate`, { tags })
       );
-      this.lastMessage.set(`Invalidated ${resp.deleted} entr${resp.deleted === 1 ? 'y' : 'ies'}.`);
+      this.lastMessage.set(`Marked ${resp.marked} entr${resp.marked === 1 ? 'y' : 'ies'} stale.`);
       await this.refresh();
     } catch (err) {
       this.lastMessage.set(`Invalidate failed: ${(err as Error).message}`);
@@ -230,38 +223,16 @@ export class CacheDemoComponent {
     }
   }
 
-  /**
-   * Convenience: invalidate using the route + loader tags read off the row.
-   */
-  async deleteByTagMatch(entry: AdminEntry): Promise<void> {
-    const route = readTag(entry.tags, 'route:');
-    const site = readTag(entry.tags, 'site:');
-    const language = readTag(entry.tags, 'language:');
-    const loaderId = readTag(entry.tags, 'loader:');
-    if (!route) {
-      this.lastMessage.set('Entry has no route tag.');
-      return;
-    }
-
-    const body: Record<string, string> = { route };
-    if (site) body['site'] = site;
-    if (language) body['language'] = language;
-    if (loaderId) body['loaderId'] = loaderId;
-
+  async invalidateEntry(entry: AdminEntry): Promise<void> {
     this.loading.set(true);
     try {
       const resp = await firstValueFrom(
-        this.http.post<{ deleted: number }>(`${ADMIN_BASE}/invalidate`, body)
+        this.http.post<{ marked: number }>(`${ADMIN_BASE}/invalidate`, { tags: [entry.key] })
       );
-      this.lastMessage.set(`Invalidated ${resp.deleted} entr${resp.deleted === 1 ? 'y' : 'ies'}.`);
+      this.lastMessage.set(`Marked ${resp.marked} entr${resp.marked === 1 ? 'y' : 'ies'} stale.`);
       await this.refresh();
     } finally {
       this.loading.set(false);
     }
   }
-}
-
-function readTag(tags: string[], prefix: string): string | undefined {
-  const t = tags.find((x) => x.startsWith(prefix));
-  return t ? decodeURIComponent(t.slice(prefix.length)) : undefined;
 }

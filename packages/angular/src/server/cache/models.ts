@@ -1,3 +1,6 @@
+import { Driver } from 'unstorage';
+import { LoaderCacheConfig } from '../../loaders/models';
+
 export const DEFAULT_CACHE_TTL = 300;
 
 /**
@@ -9,28 +12,23 @@ export interface CacheKeyDimensions {
   locale: string;
   variantId: string;
   loaderId: string;
-  route: string;
+  pathKey: string;
 }
 
 /**
- * Resolved (fully defaulted) config used by every {@link LoaderCache}
- * implementation. Exported as `@internal` so sibling impls can share the same
- * shape and helper.
+ * Global config for the loader cache. Consumed by `createLoaderCache()` in
+ * the app's `server.ts`.
  *
- * Mirrors {@link GlobalLoaderCacheConfig} minus the construction-time `driver`
- * field — drivers are turned into a Storage instance in the factory before the
- * config reaches a backend.
- * @internal
+ * Drivers are imported and instantiated in the app (e.g.
+ * `fsDriver({ base: './.cache/loaders' })`) — the package does not own driver
+ * selection. When `driver` is omitted, the cache falls back to its built-in
+ * in-memory implementation.
+ * @public
  */
-export interface ResolvedConfig {
-  /** Default TTL in seconds; `0` or negative means "never expire". */
-  revalidate: number;
-  /** Master switch — when false, every call falls through to the raw loader. */
-  enabled: boolean;
-  /** Optional namespace prefix on cache keys (multi-app storage sharing). */
-  namespace: string;
-  /** Site name used by `invalidate({ route })` when no `site` is supplied. */
-  defaultSiteName: string;
-  /** Per-loader overrides keyed by loaderId. */
-  loaders: Record<string, import('../../loaders/models').LoaderCacheConfig>;
+export interface GlobalLoaderCacheConfig extends LoaderCacheConfig {
+  /**
+   * Unstorage `Driver` instance. Pass an imported driver — the cache wraps it
+   * with `createStorage({ driver })` internally. Omit for the in-memory default.
+   */
+  driver?: Driver;
 }

@@ -13,6 +13,7 @@ import {
   createCacheAdminMiddleware,
   createLoaderCache,
   createLoaderDataServiceMiddleware,
+  createSitecoreRevalidateMiddleware,
 } from '@sitecore-content-sdk/angular';
 import { LOADERS } from './content-sdk/loaders';
 import config from '../sitecore.config';
@@ -41,11 +42,27 @@ const driver =
 
 const loaderCache = createLoaderCache({
   revalidate: config.angular.isrCache.revalidate,
-  defaultSiteName: config.defaultSiteName,
+  enabled: config.angular.isrCache.enabled,
+  defaultSiteName: config.defaultSite,
   ...(driver ? { driver } : {}),
 });
 
 app.use(express.json());
+
+/** Production webhook: POST /api/revalidate (Sitecore Edge OSR). */
+app.use(
+  createSitecoreRevalidateMiddleware({
+    cache: loaderCache,
+    defaultLocale: config.defaultLanguage,
+    sites: [
+      {
+        name: config.defaultSite,
+        hostName: '*',
+        language: config.defaultLanguage,
+      },
+    ],
+  })
+);
 
 /** Admin endpoints for cache inspection and invalidation (see `/api/_cache`). */
 app.use(createCacheAdminMiddleware({ cache: loaderCache, endpoint: '/api/_cache' }));

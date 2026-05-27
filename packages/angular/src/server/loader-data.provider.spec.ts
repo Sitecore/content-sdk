@@ -47,7 +47,7 @@ describe('ServerLoaderDataProvider', () => {
 
   it('should return cached data without invoking loader', async () => {
     const cache: LoaderCache = {
-      get: vi.fn().mockResolvedValue({ value: { cached: true } }),
+      get: vi.fn().mockResolvedValue({ kind: 'hit', value: { cached: true }, cacheKey: 'k' }),
       set: vi.fn(),
       invalidate: vi.fn(),
       delete: vi.fn(),
@@ -109,7 +109,7 @@ describe('ServerLoaderDataProvider', () => {
 
   it('should store loader result in cache when cacheable', async () => {
     const cache: LoaderCache = {
-      get: vi.fn().mockResolvedValue(null),
+      get: vi.fn().mockResolvedValue({ kind: 'miss', cacheKey: 'k' }),
       set: vi.fn(),
       invalidate: vi.fn(),
       delete: vi.fn(),
@@ -186,7 +186,7 @@ describe('ServerLoaderDataProvider', () => {
       status: 302,
     });
     const cache: LoaderCache = {
-      get: vi.fn().mockResolvedValue(null),
+      get: vi.fn().mockResolvedValue({ kind: 'miss', cacheKey: 'k' }),
       set: vi.fn(),
       invalidate: vi.fn(),
       delete: vi.fn(),

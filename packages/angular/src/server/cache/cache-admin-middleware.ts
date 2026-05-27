@@ -27,13 +27,9 @@ const DEFAULT_ENDPOINT = '/api/_cache';
 /**
  * Lightweight admin surface for the loader cache:
  *   GET    <endpoint>/entries        → list entries (metadata only, no values)
- *   POST   <endpoint>/invalidate     → invalidate by InvalidateInput (JSON body)
+ *   POST   <endpoint>/invalidate     → mark stale by tags (JSON body)
  *   POST   <endpoint>/flush          → flush every entry
  *   GET    <endpoint>/config         → resolved config (for the demo UI)
- *
- * The cache reference is captured in closure at construction time; this
- * middleware does not read `req.loaderCache` or any other property off the
- * request.
  * @public
  */
 export function createCacheAdminMiddleware(
@@ -69,14 +65,13 @@ export function createCacheAdminMiddleware(
 
       if (action === 'invalidate' && req.method === 'POST') {
         const body = (req.body ?? {}) as Partial<InvalidateInput>;
-        const hasRoute = typeof body.route === 'string' && body.route.length > 0;
         const hasTags = Array.isArray(body.tags) && body.tags.length > 0;
-        if (!hasRoute && !hasTags) {
-          res.status(400).json({ error: 'at least one of `route` or `tags` is required' });
+        if (!hasTags) {
+          res.status(400).json({ error: 'non-empty `tags` array is required' });
           return;
         }
-        const deleted = await cache.invalidate(body as InvalidateInput);
-        res.status(200).json({ deleted });
+        const marked = await cache.invalidate(body as InvalidateInput);
+        res.status(200).json({ marked });
         return;
       }
 
