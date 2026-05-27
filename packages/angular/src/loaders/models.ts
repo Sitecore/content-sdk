@@ -174,7 +174,12 @@ export interface LoaderCacheConfig {
    * OSR tags (self-key, `sc:site`, `sc:locale`, and `sc:item` for page loaders).
    */
   tags?: string[];
+  /**
+   * Site names used by revalidation middleware to fan out dictionary loader tags
+   * (`sc:loader:dictionary:<site>:<locale>`) on every webhook call.
+   */
   sites?: string[];
+  /** Fallback locale for tag helpers when a site entry has no `language`. Defaults to `'en'`. */
   defaultLocale?: string;
 }
 
@@ -193,11 +198,18 @@ export interface LoaderCacheEntryInfo {
 
 /**
  * Three-outcome read result for stale-while-revalidate (Phase 3).
+ *
+ * - `hit` — entry is fresh; serve cached value without running the loader.
+ * - `stale` — entry expired or was invalidated; serve cached value and refresh in the background.
+ * - `miss` — no entry; run the loader synchronously.
  * @public
  */
 export type LoaderCacheReadResult =
+  /** Fresh cache entry within TTL and not marked stale. */
   | { kind: 'hit'; value: unknown; cacheKey: string }
+  /** Expired or invalidated entry; value is served while a background refresh runs. */
   | { kind: 'stale'; value: unknown; cacheKey: string }
+  /** No entry stored for the requested cache key. */
   | { kind: 'miss'; cacheKey: string };
 
 /**
@@ -215,38 +227,56 @@ export interface LoaderCacheEntry {
 }
 
 /**
- * Tag-based invalidation input
- * Marks matching entries stale; does not delete them.
+ * Tag-based invalidation input.
+ * Marks matching entries stale via the tag index; does not delete them (SWR semantics).
  * @public
  */
 export interface InvalidateInput {
+  /** Non-empty list of OSR tags (for example `sc:item:…`, `sc:site:…`, or a cache key self-tag). */
   tags?: string[];
 }
 
 /**
- * Server-only cache instance. Constructed once in server.ts via
- * createLoaderCache() and passed by reference to the middleware factories
- * (`createLoaderDataServiceMiddleware`, `createCacheAdminMiddleware`) and to
- * Angular SSR through `angularApp.handle(req, { cache })`.
+ * Server-only cache instance. Constructed once in `server.ts` via
+ * {@link createLoaderCache} and passed by reference to middleware factories
+ * ({@link createLoaderDataServiceMiddleware}, {@link createCacheAdminMiddleware},
+ * {@link createSitecoreRevalidateMiddleware}) and to Angular SSR through
+ * `angularApp.handle(req, { cache })`.
+ *
+ * Implementations maintain a sidecar tag index so {@link LoaderCache.invalidate}
+ * can mark entries stale without scanning every key.
  * @public
  */
 export interface LoaderCache {
+  /**
+   * Reads a cache entry and classifies it as hit, stale, or miss.
+   * @param key - OSR-aligned cache key (for example `sc:loader:page:demo:en:default:about`).
+   */
   get(key: string): Promise<LoaderCacheReadResult>;
   /**
-   * Stores an entry. `ttlSeconds > 0` makes the entry expire after that many
-   * seconds; `0` or negative means "never expire". Always writes `stale: false`.
+   * Stores an entry and links it to the supplied tag set.
+   * @param key - Cache key to write.
+   * @param value - Loader payload to persist.
+   * @param ttlSeconds - TTL in seconds; `0` or negative means never expire.
+   * @param tags - Tag index pointers written alongside the entry (self-key, site, locale, item, etc.).
    */
   set(key: string, value: unknown, ttlSeconds: number, tags: string[]): Promise<void>;
-  /** Marks entries stale by tag. Returns number of entries marked. */
+  /**
+   * Marks every entry linked to any of the supplied tags as stale.
+   * @param filter - Tag list to resolve through the tag index.
+   * @returns Number of entries marked stale (includes entries already stale).
+   */
   invalidate(filter: InvalidateInput): Promise<number>;
-  /** Direct delete by exact key. */
+  /** Removes a single entry and unlinks it from the tag index. */
   delete(key: string): Promise<boolean>;
-  /** Nuke every entry. */
+  /** Removes every entry and clears the tag index. */
   flush(): Promise<void>;
-  /** Returns lightweight metadata for every live entry — used by admin tooling. */
+  /** Returns lightweight metadata for admin tooling (values are omitted). */
   entries(): Promise<LoaderCacheEntryInfo[]>;
+  /** Global default TTL in seconds from {@link LoaderCacheConfig.revalidate}. */
   resolveTtl(): number;
+  /** Whether caching is enabled globally. Per-route overrides may still opt in. */
   enabled(): boolean;
-  /** Reads back the resolved config (useful for admin UI). */
+  /** Resolved configuration (useful for admin UI and diagnostics). */
   getConfig(): Readonly<LoaderCacheConfig>;
 }

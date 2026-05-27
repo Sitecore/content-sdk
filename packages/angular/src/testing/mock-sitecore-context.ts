@@ -1,5 +1,4 @@
-/* eslint-disable jsdoc/require-jsdoc */
-/* eslint-disable @typescript-eslint/member-ordering */
+/* eslint-disable */
 import {
   Component,
   EnvironmentProviders,

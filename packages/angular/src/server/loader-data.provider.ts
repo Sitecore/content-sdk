@@ -11,18 +11,32 @@ import { buildLoaderCacheTags } from './cache/cache-tags';
 
 /**
  * Server-side loader data provider with stale-while-revalidate cache reads (Phase 3).
+ *
+ * Resolution order when a {@link LoaderCache} is attached:
+ * 1. **hit** — return cached value immediately.
+ * 2. **stale** — return cached value immediately and schedule a background refresh
+ *    (coalesced per cache key via `pendingCacheOps`).
+ * 3. **miss** — run the loader, persist the result with OSR tags, return data.
+ *
+ * Redirect responses are never cached. Per-route {@link LoaderCacheConfig} overrides
+ * from `loaderResolver(id, cacheOptions)` control TTL, tags, and opt-in caching when
+ * the global cache is disabled.
  * @public
  */
 export class ServerLoaderDataProvider {
   /** Process-wide coalescing for stale-while-revalidate background refreshes. */
   private static readonly pendingCacheOps = new Set<string>();
 
+  /**
+   * @param registry - Same loader map as `provideLoaderRegistry` / `/_data` middleware.
+   * @param cache - Optional cache instance from {@link createLoaderCache}.
+   */
   constructor(private readonly registry: LoaderRegistry, private readonly cache?: LoaderCache) {}
 
   /**
-   * Resolve loader data: check cache, run loader on miss, store result.
-   * @param {LoaderApiRequest} request - Loader request payload
-   * @returns {Promise<LoaderDataResult>} Resolved loader result
+   * Resolve loader data with optional cache read-through and SWR refresh.
+   * @param request - Loader id, URL, params, optional request context and cache overrides.
+   * @returns Data, redirect, or error result for the middleware / SSR resolver.
    */
   async resolve(request: LoaderApiRequest): Promise<LoaderDataResult> {
     const { loaderId, url, params, query, angularRequestContext, cacheOptions } = request;
@@ -52,6 +66,7 @@ export class ServerLoaderDataProvider {
     return this.runLoader({ request, ctx, cacheable: !!cacheable });
   }
 
+  /** Fire-and-forget SWR refresh; skipped when a refresh is already in flight for the key. */
   private scheduleBackgroundRefresh(
     request: LoaderApiRequest,
     ctx: LoaderContext,

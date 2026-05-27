@@ -1,17 +1,23 @@
 import { Driver } from 'unstorage';
 import { LoaderCacheConfig } from '../../loaders/models';
 
+/** Default global revalidate TTL (seconds) when {@link LoaderCacheConfig.revalidate} is omitted. @public */
 export const DEFAULT_CACHE_TTL = 300;
 
 /**
- * Identity dimensions of a cache key. Derived from LoaderContext by buildCacheKey().
+ * Identity dimensions of a cache key. Derived from {@link LoaderContext} by {@link buildCacheKey}.
  * @public
  */
 export interface CacheKeyDimensions {
+  /** Site name from route params (defaults to `'default'`). */
   site: string;
+  /** Locale from route params (defaults to `'en'`). */
   locale: string;
+  /** Personalization variant segment (currently always `'default'` until Phase 4). */
   variantId: string;
+  /** Loader id (`page`, `dictionary`, etc.). */
   loaderId: string;
+  /** Sanitized path segment from the loader URL; home route uses `'_'`. */
   pathKey: string;
 }
 

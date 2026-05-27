@@ -130,7 +130,7 @@ export function extractRequestContext(req: Request | ExpressLikeRequest): Reques
   }
 
   // Express-like request object
-  const hostHeader = req.headers?.['host'];
+  const hostHeader = req.headers?.host;
   const hostname = pickHostnameFromHostHeader(
     Array.isArray(hostHeader) ? hostHeader[0] : hostHeader
   );

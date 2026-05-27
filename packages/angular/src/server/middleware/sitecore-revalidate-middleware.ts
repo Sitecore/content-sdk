@@ -36,14 +36,15 @@ export function resolveConfiguredRevalidateSecret(
  * @public
  */
 export interface SitecoreRevalidateMiddlewareOptions {
+  /** Shared cache instance from {@link createLoaderCache}. */
   cache: LoaderCache;
   /** Default: `process.env.SITECORE_REVALIDATE_SECRET` */
   secret?: string;
-  /** Locale fallback when an update has no entity_culture; default `'en'`. */
+  /** Locale fallback when an update has no `entity_culture`; default `'en'`. */
   defaultLocale?: string;
   /**
-   * Optional sites list; when set, every call also marks stale one
-   * `sc:loader:dictionary:<site>:<locale>` entry per site.
+   * When set, every webhook also marks stale one
+   * `sc:loader:dictionary:<site>:<locale>` entry per site (dictionary fan-out).
    */
   sites?: SiteInfo[];
   /** Endpoint path; default `/api/revalidate`. */
@@ -52,7 +53,14 @@ export interface SitecoreRevalidateMiddlewareOptions {
 
 /**
  * Express middleware aligned with Next.js `createSitecoreRevalidateRouteHandler`.
- * Marks matching loader cache entries stale via tag index (SWR semantics).
+ *
+ * Handles `POST /api/revalidate` (configurable via `endpoint`):
+ * - Authenticates with `SITECORE_REVALIDATE_SECRET` / `x-revalidate-secret` when configured.
+ * - Parses Experience Edge webhook bodies via {@link collectSitecoreTagsFromEdgeRevalidateRequestBody}.
+ * - Optionally appends dictionary loader tags for each configured site.
+ * - Calls {@link LoaderCache.invalidate} (marks entries stale; does not delete).
+ *
+ * Response shape: `{ revalidated, tagsCount, marked, invocation_id, continues, durationMs }`.
  * @public
  */
 export function createSitecoreRevalidateMiddleware(

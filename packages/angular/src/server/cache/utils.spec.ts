@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect } from 'vitest';
-import { approxByteSize, dimensionsFromContext, resolveConfig, applyLoaderCacheConfigDefaults, urlToPathKey } from './utils';
+import { approxByteSize, dimensionsFromContext, resolveConfig, applyLoaderCacheConfigDefaults, urlToPathKey, evaluateCacheRead, sanitizeSitecoreCacheSegment, normalizeSitecoreItemIdForCacheKey, dedupeCacheStrings } from './utils';
 import { DEFAULT_CACHE_TTL } from './models';
 
 describe('urlToPathKey', () => {
@@ -73,5 +73,59 @@ describe('approxByteSize', () => {
     const circular: { self?: unknown } = {};
     circular.self = circular;
     expect(approxByteSize(circular)).toBe(0);
+  });
+});
+
+describe('evaluateCacheRead', () => {
+  it('returns miss when entry is absent', () => {
+    expect(evaluateCacheRead('sc:key', null)).toEqual({ kind: 'miss', cacheKey: 'sc:key' });
+  });
+
+  it('returns hit for fresh non-stale entries', () => {
+    const now = 1_000_000;
+    expect(
+      evaluateCacheRead(
+        'sc:key',
+        { value: { ok: true }, tags: [], storedAt: now, expiresAt: now + 60_000, stale: false },
+        now
+      )
+    ).toEqual({ kind: 'hit', value: { ok: true }, cacheKey: 'sc:key' });
+  });
+
+  it('returns stale when entry is flagged stale or past expiry', () => {
+    const now = 1_000_000;
+    expect(
+      evaluateCacheRead(
+        'sc:key',
+        { value: { old: true }, tags: [], storedAt: now - 120_000, expiresAt: now - 1, stale: false },
+        now
+      )
+    ).toEqual({ kind: 'stale', value: { old: true }, cacheKey: 'sc:key' });
+
+    expect(
+      evaluateCacheRead(
+        'sc:key',
+        { value: { flagged: true }, tags: [], storedAt: now, expiresAt: null, stale: true },
+        now
+      )
+    ).toEqual({ kind: 'stale', value: { flagged: true }, cacheKey: 'sc:key' });
+  });
+});
+
+describe('sanitizeSitecoreCacheSegment', () => {
+  it('lowercases and replaces separators with underscores', () => {
+    expect(sanitizeSitecoreCacheSegment(' Demo/Site ')).toBe('demo_site');
+  });
+});
+
+describe('normalizeSitecoreItemIdForCacheKey', () => {
+  it('strips braces and lowercases item ids', () => {
+    expect(normalizeSitecoreItemIdForCacheKey(' {ABC-123} ')).toBe('abc-123');
+  });
+});
+
+describe('dedupeCacheStrings', () => {
+  it('preserves first-seen order while removing duplicates', () => {
+    expect(dedupeCacheStrings(['a', 'b', 'a', 'c', 'b'])).toEqual(['a', 'b', 'c']);
   });
 });

@@ -73,6 +73,8 @@ function buildLoaderParams(route: ActivatedRouteSnapshot, defaultLanguage?: stri
  * @param {string} loaderId - loader ID to resolve, used for transfer state key and LoaderDataService call
  * @param {Router} router - The Angular router instance
  * @param {string} [defaultLanguage] - Default language for locale fallback in params
+ * @param {LoaderCacheConfig} [cacheOptions] - Cache options for the loader
+ * @returns {Promise<unknown | RedirectCommand>} The resolved data or redirect command
  */
 async function resolveOnBrowser(
   route: ActivatedRouteSnapshot,

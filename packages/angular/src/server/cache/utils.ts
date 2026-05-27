@@ -7,7 +7,10 @@ import {
 import { GlobalLoaderCacheConfig, CacheKeyDimensions, DEFAULT_CACHE_TTL } from './models';
 
 /**
- * @deprecated only used for demo purposes. remove before release.
+ * Approximate serialized byte size of a cache value (demo/admin helper).
+ * @param {unknown} value - Value to measure.
+ * @returns {number} JSON string length, or `0` when serialization fails.
+ * @deprecated Only used for demo purposes. Remove before release.
  */
 export function approxByteSize(value: unknown): number {
   try {
@@ -17,14 +20,30 @@ export function approxByteSize(value: unknown): number {
   }
 }
 
+/**
+ * Removes the query string from a URL path.
+ * @param {string} url - URL or path that may include `?query`.
+ * @returns {string} Pathname without query string.
+ * @internal
+ */
 function stripQuery(url: string): string {
   const i = url.indexOf('?');
   return i === -1 ? url : url.slice(0, i);
 }
 
 /**
- * Converts a loader URL to the pathKey segment used in OSR-aligned cache keys.
- * Strips an optional leading locale segment when it matches `params.locale`.
+ * Converts a loader URL to the `pathKey` segment used in OSR-aligned cache keys.
+ * Strips query strings, trims slashes, sanitizes segments, and removes a leading
+ * locale prefix when it matches `params.locale`. Home resolves to `'_'`.
+ * @param {string} url - Loader URL (may include query string).
+ * @param {string} [locale] - Optional locale used to strip a leading `/locale` prefix.
+ * @returns {string} Sanitized path key (`'_'` for home).
+ * @example
+ * ```ts
+ * urlToPathKey('/'); // '_'
+ * urlToPathKey('/About Us'); // 'about_us'
+ * urlToPathKey('/en/about', 'en'); // 'about'
+ * ```
  * @internal
  */
 export function urlToPathKey(url: string, locale?: string): string {
@@ -40,13 +59,17 @@ export function urlToPathKey(url: string, locale?: string): string {
 }
 
 /**
- * Builder hook for tests and the admin endpoint.
+ * Derives {@link CacheKeyDimensions} from a loader context.
+ * Used by {@link buildCacheKey} and admin tooling.
+ * @param {string} loaderId - Loader id being resolved.
+ * @param {LoaderContext} ctx - Loader context (URL + route params).
+ * @returns {CacheKeyDimensions} Parsed cache key dimensions.
  * @internal
  */
 export function dimensionsFromContext(loaderId: string, ctx: LoaderContext): CacheKeyDimensions {
   const params = (ctx.params ?? {}) as Record<string, unknown>;
-  const site = (params?.['site'] as string) || 'default';
-  const locale = (params?.['locale'] as string) || 'en';
+  const site = (params?.site as string) || 'default';
+  const locale = (params?.locale as string) || 'en';
   const pathKey = urlToPathKey(ctx.url || '/', locale);
 
   return {
@@ -59,16 +82,21 @@ export function dimensionsFromContext(loaderId: string, ctx: LoaderContext): Cac
 }
 
 /**
- * Strips `driver` from {@link GlobalLoaderCacheConfig}.
+ * Strips `driver` from {@link GlobalLoaderCacheConfig} before passing config to backends.
+ * @param {GlobalLoaderCacheConfig} config - Global cache config from {@link createLoaderCache}.
+ * @returns {LoaderCacheConfig} Backend-safe config without the unstorage driver instance.
  * @internal
  */
 export function resolveConfig(config: GlobalLoaderCacheConfig): LoaderCacheConfig {
-  const { driver: _, ...rest } = config;
+  const { driver, ...rest } = config;
+  void driver;
   return rest;
 }
 
 /**
  * Applies defaults for every {@link LoaderCacheConfig} field.
+ * @param {LoaderCacheConfig} [config] - Partial config from `createLoaderCache()` or a backend constructor.
+ * @returns {Required<LoaderCacheConfig>} Fully populated config used by cache backends.
  * @internal
  */
 export function applyLoaderCacheConfigDefaults(
@@ -85,7 +113,11 @@ export function applyLoaderCacheConfigDefaults(
 }
 
 /**
- * Maps a stored entry to the three-outcome read result used by the resolver (Phase 3 SWR).
+ * Maps a stored entry to the three-outcome read result used by {@link ServerLoaderDataProvider} (Phase 3 SWR).
+ * @param {string} cacheKey - Key being read.
+ * @param {LoaderCacheEntry | null | undefined} entry - Stored entry, if any.
+ * @param {number} [now] - Current timestamp for TTL comparison (defaults to `Date.now()`).
+ * @returns {LoaderCacheReadResult} Hit, stale, or miss classification.
  * @internal
  */
 export function evaluateCacheRead(
@@ -103,7 +135,9 @@ export function evaluateCacheRead(
 }
 
 /**
- * Sanitizes a segment for Sitecore cache keys and tags.
+ * Sanitizes a segment for Sitecore cache keys and tags (lowercase, separators → `_`).
+ * @param {string} value - Raw segment from site, locale, path, or loader id.
+ * @returns {string} Sanitized segment safe for keys and tags.
  * @internal
  */
 export function sanitizeSitecoreCacheSegment(value: string): string {
@@ -115,6 +149,8 @@ export function sanitizeSitecoreCacheSegment(value: string): string {
 
 /**
  * Normalizes a Sitecore item GUID for cache keys/tags (lowercase, no braces).
+ * @param {string} itemId - Raw Sitecore item id or GUID.
+ * @returns {string} Normalized id segment.
  * @internal
  */
 export function normalizeSitecoreItemIdForCacheKey(itemId: string): string {
@@ -123,6 +159,8 @@ export function normalizeSitecoreItemIdForCacheKey(itemId: string): string {
 
 /**
  * Deduplicates strings while preserving first-seen order.
+ * @param {string[]} values - Tag or key candidates.
+ * @returns {string[]} Deduplicated list.
  * @internal
  */
 export function dedupeCacheStrings(values: string[]): string[] {

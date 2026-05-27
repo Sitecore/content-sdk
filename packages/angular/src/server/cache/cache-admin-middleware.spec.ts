@@ -142,4 +142,87 @@ describe('createCacheAdminMiddleware', () => {
     expect(res.json).toHaveBeenCalledWith({ marked: 1 });
     expect((await cache.get(cacheKey)).kind).toBe('stale');
   });
+
+  it('returns resolved cache config', async () => {
+    const middleware = createCacheAdminMiddleware({ cache, endpoint });
+    const res = createMockRes();
+
+    await middleware(
+      {
+        method: 'GET',
+        path: `${endpoint}/config`,
+        url: `${endpoint}/config`,
+        body: {},
+        query: {},
+      } as ExpressRequest,
+      res,
+      createMockNext()
+    );
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ revalidate: 300 }));
+  });
+
+  it('flushes all cache entries', async () => {
+    const middleware = createCacheAdminMiddleware({ cache, endpoint });
+    const res = createMockRes();
+
+    await middleware(
+      {
+        method: 'POST',
+        path: `${endpoint}/flush`,
+        url: `${endpoint}/flush`,
+        body: {},
+        query: {},
+      } as ExpressRequest,
+      res,
+      createMockNext()
+    );
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({ ok: true });
+    expect((await cache.get(cacheKey)).kind).toBe('miss');
+  });
+
+  it('returns 404 for unknown admin actions', async () => {
+    const middleware = createCacheAdminMiddleware({ cache, endpoint });
+    const res = createMockRes();
+
+    await middleware(
+      {
+        method: 'GET',
+        path: `${endpoint}/unknown`,
+        url: `${endpoint}/unknown`,
+        body: {},
+        query: {},
+      } as ExpressRequest,
+      res,
+      createMockNext()
+    );
+
+    expect(res.status).toHaveBeenCalledWith(404);
+  });
+
+  it('returns 500 when cache operations fail', async () => {
+    const failingCache = createLoaderCache({ revalidate: 300 });
+    vi.spyOn(failingCache, 'entries').mockRejectedValue(new Error('storage down'));
+
+    const middleware = createCacheAdminMiddleware({ cache: failingCache, endpoint });
+    const res = createMockRes();
+
+    await middleware(
+      {
+        method: 'GET',
+        path: `${endpoint}/entries`,
+        url: `${endpoint}/entries`,
+        body: {},
+        query: {},
+      } as ExpressRequest,
+      res,
+      createMockNext()
+    );
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: 'storage down' });
+  });
 });

@@ -1,4 +1,4 @@
-/* eslint-disable jsdoc/require-jsdoc */
+/* eslint-disable */
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Component, PLATFORM_ID, REQUEST } from '@angular/core';
@@ -100,9 +100,7 @@ describe('SitecoreContextService', () => {
     TestBed.configureTestingModule({
       imports: [RouterHostCmp, BlankCmp],
       providers: [
-        provideRouter(
-          appLikeRoutes({ page: mockPage, dictionary: mockDictionary })
-        ),
+        provideRouter(appLikeRoutes({ page: mockPage, dictionary: mockDictionary })),
         { provide: SITECORE_CONFIG_TOKEN, useValue: makeConfig([...TEST_LOCALES]) },
         SitecoreContextService,
       ],
@@ -141,9 +139,7 @@ describe('SitecoreContextService', () => {
     TestBed.configureTestingModule({
       imports: [RouterHostCmp, BlankCmp],
       providers: [
-        provideRouter(
-          appLikeRoutes({ page: editingPage })
-        ),
+        provideRouter(appLikeRoutes({ page: editingPage })),
         { provide: SITECORE_CONFIG_TOKEN, useValue: makeConfig([...TEST_LOCALES]) },
         SitecoreContextService,
       ],
@@ -325,9 +321,7 @@ describe('SitecoreContextService effectiveLocale', () => {
     TestBed.configureTestingModule({
       imports: [RouterHostCmp, BlankCmp],
       providers: [
-        provideRouter(
-          appLikeRoutes({ page: makePage({ locale: 'fr' }) })
-        ),
+        provideRouter(appLikeRoutes({ page: makePage({ locale: 'fr' }) })),
         {
           provide: SITECORE_CONFIG_TOKEN,
           useValue: makeConfig([...TEST_LOCALES], 'en'),

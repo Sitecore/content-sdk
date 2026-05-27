@@ -7,22 +7,32 @@ import {
 } from './utils';
 import type { CacheKeyDimensions } from './models';
 
-/** Sitecore `sc:` namespace prefix for cache tags. */
+/**
+ * Sitecore OSR namespace prefix shared with Next.js (`sc:`).
+ * All loader cache keys and invalidation tags use this prefix.
+ * @public
+ */
 export const SITECORE_CONTENT_CACHE_TAG_PREFIX = 'sc';
 
 /**
  * Parameters for {@link buildSitecoreItemCacheTag}.
- * @internal
+ * @public
  */
 export type BuildSitecoreItemCacheTagParams = {
+  /** Sitecore item GUID or content id. */
   itemId: string;
+  /** Locale/culture for the item tag. */
   locale: string;
+  /** Optional published version; omitted values produce a `latest` suffix. */
   version?: number;
 };
 
 /**
- * Tag for a layout/route item. Authority: `packages/nextjs/src/cache/sitecore-cache-tags.ts`.
- * @internal
+ * Builds an item-scoped revalidation tag: `sc:item:<id>:<locale>:<version>`.
+ * Authority: `packages/nextjs/src/cache/sitecore-cache-tags.ts`.
+ * @param {BuildSitecoreItemCacheTagParams} params - Item id, locale, and optional version.
+ * @returns {string} Sitecore item cache tag.
+ * @public
  */
 export function buildSitecoreItemCacheTag(params: BuildSitecoreItemCacheTagParams): string {
   const id = normalizeSitecoreItemIdForCacheKey(params.itemId);
@@ -35,20 +45,60 @@ export function buildSitecoreItemCacheTag(params: BuildSitecoreItemCacheTagParam
 }
 
 /**
- * Tag for dictionary data scoped to site + locale.
- * Authority: `packages/nextjs/src/cache/sitecore-cache-tags.ts`.
- * @internal
+ * Parameters for {@link buildSitecoreDictionaryCacheTag} and related dictionary tag helpers.
+ * @public
  */
-export function buildSitecoreDictionaryCacheTag(params: { site: string; locale: string }): string {
+export type SitecoreDictionaryCacheTagParams = {
+  /** Site name segment. */
+  site: string;
+  /** Locale segment. */
+  locale: string;
+};
+
+/**
+ * Site entry used when fanning out dictionary loader tags from webhook middleware.
+ * @public
+ */
+export type LoaderDictionaryCacheSiteInfo = {
+  /** Site name. */
+  name: string;
+  /** Optional site language; falls back to `baseLocale` when blank. */
+  language?: string;
+};
+
+/**
+ * Parameters for {@link buildLoaderDictionaryCacheTagsFromSites}.
+ * @public
+ */
+export type BuildLoaderDictionaryCacheTagsFromSitesParams = {
+  /** Sites to emit dictionary loader tags for. */
+  sites: readonly LoaderDictionaryCacheSiteInfo[];
+  /** Locale used when a site entry has no `language`. */
+  baseLocale: string;
+};
+
+/**
+ * Builds a Next.js-compatible dictionary tag: `sc:dict:<site>:<locale>`.
+ * Used for dictionary loader entries and cross-stack webhook fan-out.
+ * Authority: `packages/nextjs/src/cache/sitecore-cache-tags.ts`.
+ * @param {SitecoreDictionaryCacheTagParams} params - Site and locale segments.
+ * @returns {string} Dictionary cache tag.
+ * @public
+ */
+export function buildSitecoreDictionaryCacheTag(params: SitecoreDictionaryCacheTagParams): string {
   const site = sanitizeSitecoreCacheSegment(params.site);
   const locale = sanitizeSitecoreCacheSegment(params.locale);
   return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:${site}:${locale}`;
 }
 
 /**
- * Builds an item cache tag from layout route data when `itemId` is present.
+ * Builds an item tag from layout route data when `itemId` is present.
+ * Returns `null` when the route has no item id (non-content routes).
  * Authority: `packages/nextjs/src/cache/sitecore-cache-tags.ts`.
- * @internal
+ * @param {RouteData | null | undefined} route - Layout route metadata.
+ * @param {string} fallbackLocale - Locale used when `route.itemLanguage` is absent.
+ * @returns {string | null} Item cache tag, or `null` when no item id is available.
+ * @public
  */
 export function buildSitecoreItemCacheTagFromRouteData(
   route: RouteData | null | undefined,
@@ -69,13 +119,16 @@ export function buildSitecoreItemCacheTagFromRouteData(
 }
 
 /**
- * Builds loader-cache dictionary tags for webhook fan-out (`sc:loader:dictionary:…`).
- * @internal
+ * Builds loader-cache dictionary self-tags for webhook fan-out across sites.
+ * Produces `sc:loader:dictionary:<site>:<locale>` tags, deduped in first-seen order.
+ * When a site has no `language`, `baseLocale` is used.
+ * @param {BuildLoaderDictionaryCacheTagsFromSitesParams} params - Sites and fallback locale.
+ * @returns {string[]} Deduplicated loader dictionary cache tags.
+ * @public
  */
-export function buildLoaderDictionaryCacheTagsFromSites(params: {
-  sites: readonly { name: string; language?: string }[];
-  baseLocale: string;
-}): string[] {
+export function buildLoaderDictionaryCacheTagsFromSites(
+  params: BuildLoaderDictionaryCacheTagsFromSitesParams
+): string[] {
   const seen = new Set<string>();
   const out: string[] = [];
   for (const site of params.sites) {
@@ -90,35 +143,49 @@ export function buildLoaderDictionaryCacheTagsFromSites(params: {
 }
 
 /**
- * Cache key / self-tag for the dictionary loader.
- * @internal
+ * Loader-cache self-tag for the dictionary loader: `sc:loader:dictionary:<site>:<locale>`.
+ * @param {SitecoreDictionaryCacheTagParams} params - Site and locale segments.
+ * @returns {string} Loader dictionary self-tag (same shape as the cache key).
+ * @public
  */
-export function buildLoaderDictionaryCacheTag(params: { site: string; locale: string }): string {
+export function buildLoaderDictionaryCacheTag(params: SitecoreDictionaryCacheTagParams): string {
   const site = sanitizeSitecoreCacheSegment(params.site);
   const locale = sanitizeSitecoreCacheSegment(params.locale);
   return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:loader:dictionary:${site}:${locale}`;
 }
 
 /**
- * Site-wide fan-out tag.
- * @internal
+ * Site-wide fan-out tag: `sc:site:<site>`.
+ * Invalidating this tag marks every cached entry for the site stale.
+ * @param {string} site - Site name segment.
+ * @returns {string} Site fan-out cache tag.
+ * @public
  */
 export function buildSitecoreSiteCacheTag(site: string): string {
   return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:site:${sanitizeSitecoreCacheSegment(site)}`;
 }
 
 /**
- * Locale-wide fan-out tag.
- * @internal
+ * Locale-wide fan-out tag: `sc:locale:<locale>`.
+ * @param {string} locale - Locale segment.
+ * @returns {string} Locale fan-out cache tag.
+ * @public
  */
 export function buildSitecoreLocaleCacheTag(locale: string): string {
   return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:locale:${sanitizeSitecoreCacheSegment(locale)}`;
 }
 
 /**
- * Builds the tag set written alongside a loader cache entry (Phase 3 OSR alignment).
- * Includes self-key, site, locale, item (page loader), and Next.js-compatible dict tag.
- * @internal
+ * Builds the full tag set written alongside a loader cache entry (Phase 3 OSR alignment).
+ * Always includes self-tag, `sc:site:<site>`, and `sc:locale:<locale>`. Conditionally adds
+ * `sc:item:…` for page loaders and `sc:dict:…` for dictionary loaders. Custom tags are deduped.
+ * @param {string} loaderId - Loader that produced the value.
+ * @param {CacheKeyDimensions} dimensions - Key dimensions from {@link buildCacheKey}.
+ * @param {string} cacheKey - Stored cache key (also used as a self-tag).
+ * @param {unknown} [loaderValue] - Loader payload (page layout is inspected for item tags).
+ * @param {string[]} [customTags] - Optional per-route tags from `loaderResolver(id, { tags })`.
+ * @returns {string[]} Tag set to persist with the cache entry.
+ * @public
  */
 export function buildLoaderCacheTags(
   loaderId: string,
@@ -150,6 +217,13 @@ export function buildLoaderCacheTags(
   return dedupeCacheStrings(tags);
 }
 
+/**
+ * Extracts a page item tag from a loader payload when layout route data is present.
+ * @param {unknown} value - Loader result (expected to be a page shape).
+ * @param {string} fallbackLocale - Locale used when route language is absent.
+ * @returns {string | null} Item cache tag, or `null` when no item id is available.
+ * @internal
+ */
 function buildPageItemTag(value: unknown, fallbackLocale: string): string | null {
   if (!value || typeof value !== 'object') {
     return null;

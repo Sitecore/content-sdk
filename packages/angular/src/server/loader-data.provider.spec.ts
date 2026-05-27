@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ServerLoaderDataProvider } from './loader-data.provider';
 import type { LoaderCache, LoaderFn } from '../loaders/models';
 import { createLoaderCache } from './cache/loader-cache';
+import { buildCacheKey } from './cache/cache-key';
 
 describe('ServerLoaderDataProvider', () => {
   const pageLoader: LoaderFn = vi.fn().mockResolvedValue({ title: 'Page' });
@@ -207,5 +208,95 @@ describe('ServerLoaderDataProvider', () => {
 
     expect(result.kind).toBe('redirect');
     expect(cache.set).not.toHaveBeenCalled();
+  });
+
+  it('should serve stale data immediately and refresh in the background', async () => {
+    let version = 1;
+    const loader = vi.fn(async () => ({ title: `v${version++}` }));
+    const cache = createLoaderCache({ revalidate: 300 });
+    const provider = new ServerLoaderDataProvider({ page: loader }, cache);
+    const request = {
+      loaderId: 'page',
+      url: '/about',
+      params: { site: 'demo', locale: 'en' },
+      query: {},
+    };
+
+    await provider.resolve(request);
+    const { key } = buildCacheKey('page', {
+      url: request.url,
+      params: request.params,
+      query: request.query,
+    });
+    await cache.invalidate({ tags: [key] });
+
+    const staleResult = await provider.resolve(request);
+    expect(staleResult).toEqual({ kind: 'data', data: { title: 'v1' } });
+
+    await vi.waitFor(() => expect(loader).toHaveBeenCalledTimes(2));
+
+    const freshResult = await provider.resolve(request);
+    expect(freshResult).toEqual({ kind: 'data', data: { title: 'v2' } });
+  });
+
+  it('should coalesce concurrent stale-while-revalidate refreshes', async () => {
+    let version = 1;
+    const loader = vi.fn(async () => ({ title: `v${version++}` }));
+    const cache = createLoaderCache({ revalidate: 300 });
+    const provider = new ServerLoaderDataProvider({ page: loader }, cache);
+    const request = {
+      loaderId: 'page',
+      url: '/coalesce',
+      params: { site: 'demo', locale: 'en' },
+      query: {},
+    };
+
+    await provider.resolve(request);
+    const { key } = buildCacheKey('page', {
+      url: request.url,
+      params: request.params,
+      query: request.query,
+    });
+    await cache.invalidate({ tags: [key] });
+
+    await Promise.all([provider.resolve(request), provider.resolve(request)]);
+
+    await vi.waitFor(() => expect(loader.mock.calls.length).toBeGreaterThanOrEqual(2));
+    expect(loader.mock.calls.length).toBe(2);
+  });
+
+  it('should warn when background cache write fails but still return stale data', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const loader = vi.fn().mockResolvedValue({ title: 'v2' });
+    const cache: LoaderCache = {
+      get: vi.fn().mockResolvedValue({ kind: 'stale', value: { title: 'v1' }, cacheKey: 'k' }),
+      set: vi.fn().mockRejectedValue(new Error('write failed')),
+      invalidate: vi.fn(),
+      delete: vi.fn(),
+      flush: vi.fn(),
+      entries: vi.fn(),
+      resolveTtl: vi.fn().mockReturnValue(300),
+      enabled: vi.fn().mockReturnValue(true),
+      getConfig: vi.fn(),
+    };
+
+    const provider = new ServerLoaderDataProvider({ page: loader }, cache);
+    const result = await provider.resolve({
+      loaderId: 'page',
+      url: '/warn',
+      params: { site: 'demo', locale: 'en' },
+      query: {},
+    });
+
+    expect(result).toEqual({ kind: 'data', data: { title: 'v1' } });
+
+    await vi.waitFor(() =>
+      expect(warnSpy).toHaveBeenCalledWith(
+        '[sitecore-loader-cache] background refresh failed to write cache entry:',
+        'write failed'
+      )
+    );
+
+    warnSpy.mockRestore();
   });
 });

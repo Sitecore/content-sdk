@@ -11,31 +11,36 @@ import { evaluateCacheRead, applyLoaderCacheConfigDefaults } from './utils';
 import { CACHE_KEY_PREFIX } from './cache-key';
 import { GlobalLoaderCacheConfig } from './models';
 
-/**
- * Unstorage-backed {@link LoaderCache}.
- *
- * Two key spaces in one driver:
- *   - `{cacheKey}` → loader entry (value + metadata; tags copied on the entry)
- *   - `tag:{tag}` → `string[]` of cache keys pointing at that entry
- * @internal
- */
 /** Prefix for tag-index keys in unstorage (entries use `sc:loader:…` keys directly). */
 const TAG_INDEX_PREFIX = 'tag:';
 
+/**
+ * Unstorage-backed {@link LoaderCache} for persistent or shared storage.
+ * Two key spaces share one driver: `{cacheKey}` entries and `tag:{tag}` index arrays.
+ * Semantics match {@link InMemoryLoaderCache}: `invalidate` marks stale; `get` uses
+ * {@link evaluateCacheRead} for hit/stale/miss.
+ * @internal
+ */
 export class UnstorageLoaderCache implements LoaderCache {
   private readonly storage: Storage;
   private readonly config: Required<LoaderCacheConfig>;
 
+  /**
+   * @param {Driver} driver - Unstorage driver instance from the app (`server.ts`).
+   * @param {LoaderCacheConfig} [config] - Resolved cache configuration.
+   */
   constructor(driver: Driver, config: LoaderCacheConfig = {}) {
     this.storage = createStorage({ driver });
     this.config = applyLoaderCacheConfigDefaults(config);
   }
 
+  /** @inheritdoc */
   async get(cacheKey: string): Promise<LoaderCacheReadResult> {
     const entry = await this.storage.getItem<LoaderCacheEntry>(this.cacheStorageKey(cacheKey));
     return evaluateCacheRead(cacheKey, entry ?? null);
   }
 
+  /** @inheritdoc */
   async set(cacheKey: string, value: unknown, ttlSeconds: number, tags: string[]): Promise<void> {
     const existing = await this.storage.getItem<LoaderCacheEntry>(this.cacheStorageKey(cacheKey));
     if (existing) {
@@ -54,6 +59,7 @@ export class UnstorageLoaderCache implements LoaderCache {
     await this.linkTags(cacheKey, tags);
   }
 
+  /** @inheritdoc */
   async invalidate(filter: InvalidateInput): Promise<number> {
     const tags = filter.tags ?? [];
     if (tags.length === 0) {
@@ -74,6 +80,7 @@ export class UnstorageLoaderCache implements LoaderCache {
     return marked;
   }
 
+  /** @inheritdoc */
   async delete(cacheKey: string): Promise<boolean> {
     const entry = await this.storage.getItem<LoaderCacheEntry>(this.cacheStorageKey(cacheKey));
     if (!entry) {
@@ -84,10 +91,12 @@ export class UnstorageLoaderCache implements LoaderCache {
     return true;
   }
 
+  /** @inheritdoc */
   async flush(): Promise<void> {
     await this.storage.clear();
   }
 
+  /** @inheritdoc */
   async entries(): Promise<LoaderCacheEntryInfo[]> {
     const keys = await this.storage.getKeys(CACHE_KEY_PREFIX);
     const out: LoaderCacheEntryInfo[] = [];
@@ -107,28 +116,44 @@ export class UnstorageLoaderCache implements LoaderCache {
     return out;
   }
 
+  /** @inheritdoc */
   resolveTtl(): number {
     return this.config.revalidate;
   }
 
+  /** @inheritdoc */
   enabled(): boolean {
     return this.config.enabled;
   }
 
+  /** @inheritdoc */
   getConfig(): Readonly<GlobalLoaderCacheConfig> {
     return this.config;
   }
 
-  /** Cache entry: OSR-aligned `sc:loader:…` key → loader payload. */
+  /**
+   * Cache entry storage key (OSR-aligned `sc:loader:…`).
+   * @param {string} cacheKey - Public loader cache key.
+   * @returns {string} Unstorage key for the entry payload.
+   */
   private cacheStorageKey(cacheKey: string): string {
     return cacheKey;
   }
 
-  /** Tag index: `tag:{tag}` → cache keys. */
+  /**
+   * Tag index storage key (`tag:{tag}`).
+   * @param {string} tag - OSR cache tag.
+   * @returns {string} Unstorage key for the tag index bucket.
+   */
   private tagStorageKey(tag: string): string {
     return `${TAG_INDEX_PREFIX}${tag}`;
   }
 
+  /**
+   * Links a cache key into each tag bucket.
+   * @param {string} cacheKey - Cache entry key.
+   * @param {string[]} tags - Tags to link.
+   */
   private async linkTags(cacheKey: string, tags: string[]): Promise<void> {
     for (const tag of tags) {
       const storageKey = this.tagStorageKey(tag);
@@ -139,6 +164,11 @@ export class UnstorageLoaderCache implements LoaderCache {
     }
   }
 
+  /**
+   * Unlinks a cache key from each tag bucket.
+   * @param {string} cacheKey - Cache entry key.
+   * @param {string[]} tags - Tags to unlink.
+   */
   private async unlinkTags(cacheKey: string, tags: string[]): Promise<void> {
     for (const tag of tags) {
       const storageKey = this.tagStorageKey(tag);
@@ -152,6 +182,7 @@ export class UnstorageLoaderCache implements LoaderCache {
     }
   }
 
+  /** @param {string[]} tags - Tags to resolve. @returns {Promise<Set<string>>} Matching cache keys. */
   private async resolveCacheKeysFromTags(tags: string[]): Promise<Set<string>> {
     const out = new Set<string>();
     for (const tag of tags) {

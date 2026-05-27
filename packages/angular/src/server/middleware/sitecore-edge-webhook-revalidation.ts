@@ -54,7 +54,14 @@ export type CollectSitecoreTagsFromEdgeBodyOptions = {
 
 /**
  * Maps an Experience Edge webhook JSON body to Sitecore cache tag strings.
+ *
+ * Accepts fully qualified `sc:…` tags in `body.tags`, raw content identifiers
+ * (with optional `-media`/`-layout` suffixes), and `updates[]` rows with
+ * `identifier` + `entity_culture`.
  * Authority: `packages/nextjs/src/cache/sitecore-edge-webhook-revalidation.ts`.
+ * @param body - Parsed webhook JSON body.
+ * @param options - Locale fallback when an update omits `entity_culture`.
+ * @returns Deduplicated Sitecore cache tags ready for {@link LoaderCache.invalidate}.
  * @public
  */
 export function collectSitecoreTagsFromEdgeRevalidateRequestBody(

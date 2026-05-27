@@ -6,18 +6,22 @@ import { resolveConfig } from './utils';
 
 /**
  * Public factory for the loader cache. Dispatches to the right backend:
+ * - `config.driver` provided → {@link UnstorageLoaderCache} wrapping the driver in `createStorage({ driver })`
+ * - otherwise → {@link InMemoryLoaderCache} (plain Map)
  *
- *   - `config.driver` provided → {@link UnstorageLoaderCache} wrapping the
- *                                 driver in `createStorage({ driver })`
- *   - otherwise                → {@link InMemoryLoaderCache} (plain Map)
- *
- * Drivers are imported and constructed in the app's `server.ts` and passed
- * here as an instance. The cache module does not know about driver-specific
- * options (filesystem base path, Redis URL, etc.) — the app owns that.
- *
- * Callers depend on the {@link LoaderCache} interface; concrete classes are
- * not exported, so we can swap implementations without touching public types.
- * See plan §4.3.
+ * Drivers are imported and constructed in the app's `server.ts` and passed here as an instance.
+ * Callers depend on the {@link LoaderCache} interface; concrete classes are not exported.
+ * @param {GlobalLoaderCacheConfig} [config] - Global cache config and optional unstorage driver.
+ * @returns {LoaderCache} Cache implementation with Phase 3 SWR + tag semantics.
+ * @example
+ * ```ts
+ * const cache = createLoaderCache({
+ *   revalidate: config.angular.isrCache.revalidate,
+ *   enabled: config.angular.isrCache.enabled,
+ *   defaultSiteName: config.defaultSite,
+ *   driver: fsDriver({ base: './.cache/loaders' }),
+ * });
+ * ```
  * @public
  */
 export function createLoaderCache(config: GlobalLoaderCacheConfig = {}): LoaderCache {
