@@ -5,6 +5,7 @@
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+llm-wiki/
 
 *.pfx
 *.publishsettings

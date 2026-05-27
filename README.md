@@ -37,8 +37,7 @@ For more information check out our [Getting Started Guide](https://doc.sitecore.
 
 ### AI Development Support
 
-- [AGENTS.md](AGENTS.md) - AI agent guidance: structure, commands, DOs/DON'Ts, boundaries, quick reference, and **LLM Wiki** maintainer rules for `llm-wiki/`
-- [LLM Wiki](llm-wiki/README.md) - persistent markdown knowledge base (raw sources + agent-maintained wiki); schema and workflows in the **LLM Wiki** section of [AGENTS.md](AGENTS.md)
+- [AGENTS.md](AGENTS.md) - AI agent guidance: structure, commands, DOs/DON'Ts, boundaries, and quick reference
 - [Skills.md](Skills.md) - Capability groupings for the Content SDK (for AI tools and developers); [.agents/skills/](.agents/skills/) provides each capability as an Agent Skill (SKILL.md) for tools that support the [Agent Skills](https://agentskills.io) standard
 - [Claude Code Agent Guide](CLAUDE.md) - Comprehensive guide for Claude Code Agent to generate consistent and idiomatic Sitecore Content SDK code
 - [GitHub Copilot Instructions](copilot-instructions.md) - Instructions for GitHub Copilot to provide accurate Sitecore Content SDK suggestions
