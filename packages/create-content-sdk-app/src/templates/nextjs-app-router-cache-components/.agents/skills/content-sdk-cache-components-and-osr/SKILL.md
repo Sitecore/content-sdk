@@ -12,7 +12,7 @@ This template is the cache-aware variant of the App Router template. It enables 
   - `getSitecoreDictionary({ site, locale })` → `sc:dict:{site}:{locale}`
   - `getSitecoreErrorPage({ site, locale, code })` → same tag strategy as `getSitecorePage`
 - A **single Sitecore-webhook endpoint** at `POST /api/revalidate` (in `src/app/api/revalidate/route.ts`) built with `createSitecoreRevalidateRouteHandler`. It consumes the Experience Edge / Content Operations payload shape — `updates[]` are translated into `sc:item:<id>:<locale>:latest` tags, and `tags[]` is a pass-through array that accepts `sc:`-prefixed strings verbatim (handy for ad-hoc / operational calls) or bare item IDs (mapped to `sc:item:<id>:<defaultLocale>:latest`). Dictionary tags from `sites` (and the optional `extraDictionarySite` handler option, typically `scConfig.defaultSite`) are appended on every call.
-- A shared secret env var **`SITECORE_REVALIDATE_SECRET`** sent in the **`x-revalidate-secret`** request header to authorize the route.
+- Optional auth via **`SITECORE_REVALIDATE_SECRET`**: when set, send the same value in **`x-revalidate-secret`**; when empty, no header is required.
 - A `sitecore.config.ts` with the **SDK in-process dictionary cache disabled** (`dictionary: { caching: { enabled: false } }`) so dictionary updates flow through Cache Components only.
 
 ## When to Use
@@ -25,7 +25,7 @@ This template is the cache-aware variant of the App Router template. It enables 
 ## How to perform
 
 - **Add a cached read:** Add a file under `src/lib/cache/` that declares `'use cache';`, calls the SDK client, computes Sitecore tags (use SDK helpers like `collectSitecorePageCacheTags`, `buildSitecoreDictionaryCacheTag` where appropriate), and calls `cacheTag(tag)` for each.
-- **Invalidate via webhook (primary flow):** Configure your Sitecore Experience Edge / Content Operations webhook to `POST` its standard payload to `/api/revalidate` with the `x-revalidate-secret` header set to `SITECORE_REVALIDATE_SECRET`. The handler converts each `updates[]` entry's `identifier` (with `-media` / `-layout` stripped) into `sc:item:<id>:<locale>:latest` and adds dictionary tags from `sites` (and the optional `extraDictionarySite` handler option).
+- **Invalidate via webhook (primary flow):** Configure your Sitecore Experience Edge / Content Operations webhook to `POST` its standard payload to `/api/revalidate`. When `SITECORE_REVALIDATE_SECRET` is set, add the `x-revalidate-secret` header with the same value. The handler converts each `updates[]` entry's `identifier` (with `-media` / `-layout` stripped) into `sc:item:<id>:<locale>:latest` and adds dictionary tags from `sites` (and the optional `extraDictionarySite` handler option).
 - **Ad-hoc invalidation (same endpoint):** `POST` `{ "tags": ["sc:route:default:en:/about", "sc:item:..."] }` (`sc:`-prefixed strings revalidate verbatim) or `{ "tags": ["<itemId>"] }` (bare IDs map to `sc:item:<id>:<defaultLocale>:latest`) with the same header. Dictionary tags are still appended on every call.
 
 ## Hard Rules
@@ -39,8 +39,8 @@ This template is the cache-aware variant of the App Router template. It enables 
   Use the SDK helpers (`collectSitecorePageCacheTags`, `buildSitecoreDictionaryCacheTag`) to compute these consistently; do not hand-format tags from scratch. Personalization variants are isolated naturally by URL path (Cache Components key), so no `sc:pvv:` tag is added — and lower-level tag builders (item, route, variant, edge-webhook parsers) are intentionally not part of the public SDK surface; if you ever need behavior not covered by the helpers above, raise it on the SDK rather than re-implementing it.
 - **Revalidation route auth:**
   - Endpoint: `POST /api/revalidate` (in `src/app/api/revalidate/route.ts`).
-  - Secret: `SITECORE_REVALIDATE_SECRET` (env var). Sent by callers in the `x-revalidate-secret` header.
-  - **Never** call the route without the secret. **Never** expose the secret in client code or in logs.
+  - Secret: `SITECORE_REVALIDATE_SECRET` (env var). When non-empty, callers must send it in `x-revalidate-secret`; when empty, auth is skipped.
+  - **Never** expose the secret in client code or in logs. Use a non-empty secret when the endpoint should be protected.
   - Do **not** call `revalidateTag` directly from components; route all invalidation through `/api/revalidate` (or call the route handler in tests).
 - **Adding tags to a new helper:** Mirror the existing helpers. Compute tags with SDK helpers when applicable, fall back to deterministic strings (`sc:something:{site}:{locale}`) otherwise, and ensure those tags are also producible from whatever event triggers invalidation (webhook `updates[]` or ad-hoc `tags[]`).
 - **Sitemap / robots / editing routes** with `cacheComponents: true` do not need an explicit `export const dynamic = 'force-dynamic'` — Next.js infers it.

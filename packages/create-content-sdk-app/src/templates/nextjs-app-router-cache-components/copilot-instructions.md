@@ -60,7 +60,7 @@ const client = new SitecoreClient({
 ### Cache helpers (this template)
 - Use `getSitecorePage`, `getSitecoreDictionary`, `getSitecoreErrorPage` from `src/lib/cache/` for all non-preview Sitecore reads
 - Each helper declares `'use cache';` and attaches Sitecore tags (`sc:route`, `sc:item`, `sc:dict`) via `cacheTag`
-- Tags are invalidated by `POST /api/revalidate` (Sitecore webhook payloads with `updates[]`, or ad-hoc `{ "tags": ["sc:..."] }` calls; authorized by `SITECORE_REVALIDATE_SECRET`)
+- Tags are invalidated by `POST /api/revalidate` (Sitecore webhook payloads with `updates[]`, or ad-hoc `{ "tags": ["sc:..."] }` calls; optional auth via `SITECORE_REVALIDATE_SECRET` / `x-revalidate-secret`)
 
 ```typescript
 // Cached page read (in src/app/[site]/[locale]/[[...path]]/page.tsx)
@@ -243,7 +243,7 @@ export const { POST } = createSitecoreRevalidateRouteHandler({
 });
 ```
 
-The route is authorized by `SITECORE_REVALIDATE_SECRET` (sent in the `x-revalidate-secret` header). It is a single Sitecore-webhook endpoint that accepts `updates[]` (publish events) and `tags[]` (pass-through `sc:` strings or bare item IDs).
+When `SITECORE_REVALIDATE_SECRET` is set, callers must send it in `x-revalidate-secret`; when empty, no header is required. Single Sitecore-webhook endpoint: `updates[]` (publish events) and `tags[]` (pass-through `sc:` strings or bare item IDs).
 
 ### Internationalization
 

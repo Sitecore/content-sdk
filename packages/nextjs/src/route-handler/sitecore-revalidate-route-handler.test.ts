@@ -41,6 +41,58 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     delete process.env.SITECORE_REVALIDATE_SECRET;
   });
 
+  it('should revalidate without auth when secret is not configured', async () => {
+    const handler = module.createSitecoreRevalidateRouteHandler({ defaultLocale: 'en' });
+    const res = await handler.POST(
+      createReq({
+        body: { tags: ['sc:route:site:en:_'] },
+      })
+    );
+
+    expect(res.status).to.equal(200);
+    expect(revalidateTagStub.calledOnce).to.equal(true);
+  });
+
+  it('should treat whitespace-only env secret as unset and skip auth', async () => {
+    process.env.SITECORE_REVALIDATE_SECRET = '   ';
+    const handler = module.createSitecoreRevalidateRouteHandler({ defaultLocale: 'en' });
+    const res = await handler.POST(
+      createReq({
+        body: { tags: ['sc:route:site:en:_'] },
+      })
+    );
+
+    expect(res.status).to.equal(200);
+    expect(revalidateTagStub.calledOnce).to.equal(true);
+  });
+
+  it('should return 401 when secret is configured but header is missing', async () => {
+    process.env.SITECORE_REVALIDATE_SECRET = 'expected';
+    const handler = module.createSitecoreRevalidateRouteHandler();
+    const res = await handler.POST(
+      createReq({
+        body: { tags: ['sc:route:site:en:_'] },
+      })
+    );
+
+    expect(res.status).to.equal(401);
+    expect(revalidateTagStub.called).to.equal(false);
+  });
+
+  it('should return 401 when secret is configured but header does not match', async () => {
+    process.env.SITECORE_REVALIDATE_SECRET = 'expected';
+    const handler = module.createSitecoreRevalidateRouteHandler();
+    const res = await handler.POST(
+      createReq({
+        headers: { 'x-revalidate-secret': 'wrong' },
+        body: { tags: ['sc:route:site:en:_'] },
+      })
+    );
+
+    expect(res.status).to.equal(401);
+    expect(revalidateTagStub.called).to.equal(false);
+  });
+
   it('should return 400 when body is not a JSON object', async () => {
     process.env.SITECORE_REVALIDATE_SECRET = 's';
     const handler = module.createSitecoreRevalidateRouteHandler();

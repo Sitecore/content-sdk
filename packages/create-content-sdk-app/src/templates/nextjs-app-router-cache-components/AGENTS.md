@@ -78,7 +78,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
   - `updates[]` — Sitecore publish-event rows; the handler maps each row's `identifier` (with `-media` / `-layout` stripped) to `sc:item:<id>:<locale>:latest`.
   - `tags[]` — pass-through array. `sc:`-prefixed strings are revalidated verbatim (handy for ad-hoc, operational calls); bare item IDs are mapped to `sc:item:<id>:<defaultLocale>:latest`.
   - Dictionary tags from `sites` (and the optional `extraDictionarySite` handler option) are merged on every call so dictionary changes are covered.
-- **Auth:** the endpoint requires the shared secret `SITECORE_REVALIDATE_SECRET` (sent in the `x-revalidate-secret` request header). Configure the same value in your hosting environment and in your Sitecore webhook.
+- **Auth (optional):** leave `SITECORE_REVALIDATE_SECRET` empty to skip auth (no `x-revalidate-secret` header). When set, callers must send the same value in `x-revalidate-secret` (configure that header on your Sitecore webhook).
 - **Dictionary cache:** `sitecore.config.ts` disables the SDK's in-process dictionary cache (`dictionary: { caching: { enabled: false } }`). The Cache Components helper is the only dictionary cache layer, so `revalidateTag` works end to end.
 
 ### Middleware (Edge proxy)
@@ -111,7 +111,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 - **Component maps:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client). Register every Sitecore component here; keep in sync with `src/components/`.
 - **Editing/preview:** Use `draftMode()` in Server Components; when enabled, use `client.getPreview(searchParams)` or `client.getDesignLibraryData(searchParams)` **directly** (do not route preview through the cache helpers). Editing API routes live under `src/app/api/editing/`.
-- **Env:** All config via environment variables in `sitecore.config.ts`. Document vars in `.env.example` (or `.env.remote.example` / `.env.container.example`); never commit `.env` or `.env.local`. `SITECORE_REVALIDATE_SECRET` is required for `POST /api/revalidate`.
+- **Env:** All config via environment variables in `sitecore.config.ts`. Document vars in `.env.example` (or `.env.remote.example` / `.env.container.example`); never commit `.env` or `.env.local`. `SITECORE_REVALIDATE_SECRET` is optional (see `.env.*.example` comments).
 
 ---
 
@@ -154,7 +154,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 ### On-demand revalidation (`POST /api/revalidate`)
 
 - **Where:** `src/app/api/revalidate/route.ts`. Uses `createSitecoreRevalidateRouteHandler` from `@sitecore-content-sdk/nextjs/route-handler` — a single Sitecore-webhook endpoint.
-- **Auth:** Reads the secret from `process.env.SITECORE_REVALIDATE_SECRET`. Callers send the same value in the `x-revalidate-secret` request header. Required on every request.
+- **Auth:** When `SITECORE_REVALIDATE_SECRET` is non-empty, callers must send the same value in `x-revalidate-secret`. When empty, revalidation works without that header.
 - **Webhook payload (`updates[]`):** Send the Sitecore Experience Edge / Content Operations body (`updates`, `invocation_id`, `continues`). The handler maps each `identifier` (with `-media` / `-layout` stripped) to `sc:item:<id>:<locale>:latest` and revalidates it.
 - **Ad-hoc invalidation (`tags[]`):** Reuse the same endpoint with `{ "tags": ["sc:route:...", "sc:item:..."] }` (`sc:`-prefixed strings are revalidated verbatim) or `{ "tags": ["<itemId>"] }` (bare item IDs are mapped to `sc:item:<id>:<defaultLocale>:latest`). Dictionary tags from `sites` (and the optional `extraDictionarySite` handler option) are appended on **every** call.
 - **Do not:** Bypass auth, expose the secret in client code, or call `revalidateTag` directly from components.
@@ -213,7 +213,7 @@ This template ships **two** not-found components and a segment layout that ties 
 | Run PreviewProxy → BotTrackingProxy → LocaleProxy → … in middleware | Change proxy order (locale must run before multisite for App Router) |
 | Call `setRequestLocale(\`${site}_${locale}\`)` in the page for next-intl | Omit setRequestLocale when adding new page branches |
 | Document `SITECORE_REVALIDATE_SECRET` in `.env.*.example` only | Hardcode the revalidate secret or expose it client-side |
-| Send the secret in the `x-revalidate-secret` header when calling `/api/revalidate` | Bypass auth or call `revalidateTag` directly from components |
+| Set `SITECORE_REVALIDATE_SECRET` and send `x-revalidate-secret` when you want the endpoint protected | Hardcode the revalidate secret or expose it client-side |
 | Keep `sitecore.config.ts` dictionary cache disabled | Re-enable the SDK in-process dictionary cache (bypasses `revalidateTag`) |
 | Use Server Components for async data fetching | Put async data fetching in client components when SSR is intended |
 | Set site/locale via `setCachedPageParams` in `[site]/[locale]/[[...path]]/layout.tsx` and read with `getCachedPageParams()` in the segment `not-found.tsx` | Call `headers()` in not-found (opts out of SSG) or hardcode site/locale |
@@ -246,7 +246,7 @@ This template ships **two** not-found components and a segment layout that ties 
 
 **Never edit:** `.next/`, `node_modules/`.
 
-**Environment variables:** You may add new env vars when needed. Do it carefully: add the variable to `.env.example` (or `.env.remote.example` / `.env.container.example` in this template) with a placeholder or comment; never put real secrets in example files. If editing `.env.local` for local dev, add only the variable name and tell the user to set the value. **Never commit** `.env` or `.env.local` — they are gitignored. `SITECORE_REVALIDATE_SECRET` is required for `POST /api/revalidate`.
+**Environment variables:** You may add new env vars when needed. Do it carefully: add the variable to `.env.example` (or `.env.remote.example` / `.env.container.example` in this template) with a placeholder or comment; never put real secrets in example files. If editing `.env.local` for local dev, add only the variable name and tell the user to set the value. **Never commit** `.env` or `.env.local` — they are gitignored. `SITECORE_REVALIDATE_SECRET` is optional — see comments in `.env.*.example`.
 
 **Edit with care:** `next.config.ts` (`cacheComponents: true`, rewrites, next-intl plugin), `sitecore.config.ts` (env only; keep dictionary cache disabled), `proxy.ts` (matcher and proxy order), `src/i18n/routing.ts` and `request.ts`, `src/lib/cache/*` (tag computation). When adding routes or rewrites, keep middleware `matcher` and rewrite rules consistent.
 

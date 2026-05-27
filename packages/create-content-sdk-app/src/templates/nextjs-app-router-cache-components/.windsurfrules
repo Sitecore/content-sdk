@@ -242,7 +242,7 @@ export const { POST } = createSitecoreRevalidateRouteHandler({
 });
 ```
 
-Authorized by `SITECORE_REVALIDATE_SECRET` (sent in the `x-revalidate-secret` header). Single Sitecore-webhook endpoint: accepts `updates[]` (publish events) and `tags[]` (pass-through `sc:` strings or bare item IDs).
+Optional auth: set `SITECORE_REVALIDATE_SECRET` and send `x-revalidate-secret` when populated; leave empty to skip auth. Single Sitecore-webhook endpoint: `updates[]` and `tags[]`.
 
 ### Internationalization
 

@@ -5,7 +5,7 @@ description: Configures site and environment: sitecore.config.ts, environment va
 
 # Content SDK Site Setup and Environment (App Router + Cache Components)
 
-Central config in sitecore.config.ts; all secrets and environment-specific values via env vars. This template also requires `SITECORE_REVALIDATE_SECRET` for `POST /api/revalidate` and keeps the SDK in-process dictionary cache disabled so `revalidateTag` works for dictionary updates.
+Central config in sitecore.config.ts; all secrets and environment-specific values via env vars. `SITECORE_REVALIDATE_SECRET` is optional for `POST /api/revalidate` (see `.env.*.example`). Keep the SDK in-process dictionary cache disabled so `revalidateTag` works for dictionary updates.
 
 ## When to Use
 
@@ -21,7 +21,7 @@ Central config in sitecore.config.ts; all secrets and environment-specific value
 
 - Use `sitecore.config.ts` with `defineConfig` from the SDK. Expose api (edge, local), defaultSite, defaultLanguage, editingSecret, multisite, redirects, personalize as needed.
 - All sensitive or environment-specific values must come from environment variables (e.g. `process.env.SITECORE_API_KEY`, `process.env.SITECORE_REVALIDATE_SECRET`). Never hardcode API keys, secrets, or production URLs in source.
-- **Required env vars (document in `.env.*.example`):** `SITECORE_EDGE_CONTEXT_ID`, `NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID`, `SITECORE_API_KEY` / `SITECORE_API_HOST` (local), `NEXT_PUBLIC_DEFAULT_SITE_NAME`, `NEXT_PUBLIC_DEFAULT_LANGUAGE`, `SITECORE_EDITING_SECRET`, `SITECORE_REVALIDATE_SECRET`.
+- **Document in `.env.*.example`:** `SITECORE_EDGE_CONTEXT_ID`, `NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID`, `SITECORE_API_KEY` / `SITECORE_API_HOST` (local), `NEXT_PUBLIC_DEFAULT_SITE_NAME`, `NEXT_PUBLIC_DEFAULT_LANGUAGE`, `SITECORE_EDITING_SECRET`, `SITECORE_REVALIDATE_SECRET` (optional; empty = no `x-revalidate-secret` header).
 - **Dictionary cache must stay disabled** in `sitecore.config.ts`: `dictionary: { caching: { enabled: false } }`. The cache helper in `src/lib/cache/get-sitecore-dictionary.ts` is the only dictionary cache layer; if you re-enable the SDK cache, `revalidateTag` will not invalidate dictionary data.
 - Document every new or changed env var in `.env.example` (or `.env.remote.example` / `.env.container.example`). Use placeholder or empty value and a short comment; never put real secrets in example files.
 - Never commit `.env` or `.env.local`; they are gitignored. Example files are the source of truth for which vars exist.

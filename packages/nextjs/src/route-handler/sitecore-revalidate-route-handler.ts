@@ -11,6 +11,16 @@ import type { SiteInfo } from '@sitecore-content-sdk/content/site';
 const DEFAULT_SECRET_ENV_VAR = 'SITECORE_REVALIDATE_SECRET';
 const DEFAULT_SECRET_HEADER = 'x-revalidate-secret';
 
+/** Returns a non-empty trimmed secret, or `undefined` when unset or whitespace-only. */
+function resolveConfiguredRevalidateSecret(
+  secretOption: string | undefined,
+  envValue: string | undefined
+): string | undefined {
+  const raw = secretOption !== undefined ? secretOption : envValue;
+  const trimmed = raw?.trim();
+  return trimmed || undefined;
+}
+
 /**
  * Second argument to Next.js `revalidateTag` (cache profile: e.g. `"max"` or `{ expire }`).
  * Aligns with the installed `next/cache` typings.
@@ -24,8 +34,9 @@ export type RevalidateTagCacheProfile = Parameters<typeof revalidateTag>[1];
  */
 export type SitecoreRevalidateRouteHandlerOptions = {
   /**
-   * Shared secret. If omitted, the handler reads `process.env.SITECORE_REVALIDATE_SECRET`.
-   * Callers must send the same value in the **`x-revalidate-secret`** request header (fixed contract; not Sitecore "authorization item" config).
+   * Shared secret for `POST /api/revalidate`. If omitted, the handler reads `process.env.SITECORE_REVALIDATE_SECRET`.
+   * When a non-empty value is configured (here or via env), callers must send the same value in the
+   * **`x-revalidate-secret`** header. When empty/omitted, revalidation proceeds without that header.
    */
   secret?: string;
   /**
@@ -64,8 +75,8 @@ export type SitecoreRevalidateRouteHandlerOptions = {
  * `sc:dict:<site>:<locale>` tag per site (and one extra `sc:dict:<extraDictionarySite>:<defaultLocale>`
  * tag if set) so dictionary updates flow through the same call.
  *
- * Auth: `SITECORE_REVALIDATE_SECRET` env var (or the `secret` option), sent by callers in the
- * **`x-revalidate-secret`** request header.
+ * Auth (optional): when `SITECORE_REVALIDATE_SECRET` (or the `secret` option) is non-empty, callers must
+ * send the same value in the **`x-revalidate-secret`** header. When unset or blank, no header is required.
  * @param {SitecoreRevalidateRouteHandlerOptions} [options] - Optional inline `secret`, `cacheProfile`, locale, sites, and dictionary options.
  * @public
  */
@@ -92,19 +103,19 @@ export function createSitecoreRevalidateRouteHandler(
   const POST = async (req: NextRequest) => {
     const startTimestamp = Date.now();
     try {
-      const configuredSecret = secret ?? process.env[DEFAULT_SECRET_ENV_VAR];
-      if (!configuredSecret) {
-        debug.revalidate('sitecore revalidate: %s is not configured', DEFAULT_SECRET_ENV_VAR);
-        return NextResponse.json(
-          { error: `${DEFAULT_SECRET_ENV_VAR} is not configured.` },
-          { status: 500 }
-        );
-      }
+      const configuredSecret = resolveConfiguredRevalidateSecret(
+        secret,
+        process.env[DEFAULT_SECRET_ENV_VAR]
+      );
 
-      const providedSecret = req.headers.get(DEFAULT_SECRET_HEADER);
-      if (providedSecret !== configuredSecret) {
-        debug.revalidate('sitecore revalidate: unauthorized (secret mismatch or missing header)');
-        return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+      if (configuredSecret) {
+        const providedSecret = req.headers.get(DEFAULT_SECRET_HEADER);
+        if (providedSecret !== configuredSecret) {
+          debug.revalidate('sitecore revalidate: unauthorized (secret mismatch or missing header)');
+          return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+        }
+      } else {
+        debug.revalidate('sitecore revalidate: no secret configured, skipping auth');
       }
 
       let body: unknown;

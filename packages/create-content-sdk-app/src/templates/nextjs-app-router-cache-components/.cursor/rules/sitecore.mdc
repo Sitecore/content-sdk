@@ -135,7 +135,7 @@ export default async function LocalizedPage() {
 ## On-demand revalidation
 
 - Endpoint: `POST /api/revalidate` (in `src/app/api/revalidate/route.ts`) — single Sitecore-webhook endpoint
-- Auth: shared secret `SITECORE_REVALIDATE_SECRET`, sent in the `x-revalidate-secret` header
+- Auth (optional): when `SITECORE_REVALIDATE_SECRET` is set, callers must send the same value in `x-revalidate-secret`; when empty, no header is required
 - Body shape (Sitecore Experience Edge / Content Operations):
   - `updates[]`: publish-event rows; each `identifier` (with `-media` / `-layout` stripped) maps to `sc:item:<id>:<locale>:latest`
   - `tags[]`: pass-through array. `sc:`-prefixed strings are revalidated verbatim (use this for ad-hoc / operational calls); bare item IDs are mapped to `sc:item:<id>:<defaultLocale>:latest`
