@@ -675,27 +675,13 @@ describe('editing/utils', () => {
     it('should return component required params for design library mode', () => {
       const params = getRequiredEditingParamsList(DesignLibraryMode.Normal);
 
-      expect(params).to.deep.equal([
-        'sc_site',
-        'sc_itemid',
-        'sc_renderingId',
-        'sc_uid',
-        'sc_lang',
-        'mode',
-      ]);
+      expect(params).to.deep.equal(['sc_site', 'sc_itemid', 'sc_lang', 'sc_uid', 'mode']);
     });
 
     it('should return component required params for library metadata mode', () => {
       const params = getRequiredEditingParamsList(DesignLibraryMode.Metadata);
 
-      expect(params).to.deep.equal([
-        'sc_site',
-        'sc_itemid',
-        'sc_renderingId',
-        'sc_uid',
-        'sc_lang',
-        'mode',
-      ]);
+      expect(params).to.deep.equal(['sc_site', 'sc_itemid', 'sc_lang', 'sc_uid', 'mode']);
     });
 
     it('should return editing required params for edit mode', () => {
@@ -966,7 +952,7 @@ describe('editing/utils', () => {
     it('should throw error for non-404 fetch failures', async () => {
       const error = {
         response: {
-          status: 500,
+          status: 503,
         },
       };
 
@@ -1053,6 +1039,27 @@ describe('editing/utils', () => {
       const result = await getEditingRequestHtml(requestUrl, {}, {}, [], mockDataFetcher as any);
 
       expect(result).to.equal('<html><body>403 Forbidden</body></html>');
+    });
+
+    it('should handle 500 response without throwing', async () => {
+      const mock500Response = {
+        data: {
+          html: '<html><body>500 Internal Server Error</body></html>',
+        },
+      };
+
+      const error = {
+        response: {
+          status: 500,
+          ...mock500Response,
+        },
+      };
+
+      mockDataFetcher.get.rejects(error);
+
+      const result = await getEditingRequestHtml(requestUrl, {}, {}, [], mockDataFetcher as any);
+
+      expect(result).to.equal('<html><body>500 Internal Server Error</body></html>');
     });
   });
 

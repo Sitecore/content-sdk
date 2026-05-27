@@ -6,7 +6,7 @@
 
 # Interface: RenderComponentQueryParams
 
-Defined in: [content/src/editing/models.ts:27](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/editing/models.ts#L27)
+Defined in: [content/src/editing/models.ts:27](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/content/src/editing/models.ts#L27)
 
 **`Internal`**
 
@@ -23,7 +23,7 @@ Used when a single component is rendered in Pages.
 
 > **mode**: [`DesignLibraryMode`](../enumerations/DesignLibraryMode.md)
 
-Defined in: [content/src/editing/models.ts:35](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/editing/models.ts#L35)
+Defined in: [content/src/editing/models.ts:34](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/content/src/editing/models.ts#L34)
 
 ***
 
@@ -31,7 +31,7 @@ Defined in: [content/src/editing/models.ts:35](https://github.com/Sitecore/conte
 
 > **sc\_itemid**: `string`
 
-Defined in: [content/src/editing/models.ts:31](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/editing/models.ts#L31)
+Defined in: [content/src/editing/models.ts:31](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/content/src/editing/models.ts#L31)
 
 ***
 
@@ -39,15 +39,15 @@ Defined in: [content/src/editing/models.ts:31](https://github.com/Sitecore/conte
 
 > **sc\_lang**: `string`
 
-Defined in: [content/src/editing/models.ts:30](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/editing/models.ts#L30)
+Defined in: [content/src/editing/models.ts:30](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/content/src/editing/models.ts#L30)
 
 ***
 
-### sc\_renderingId
+### sc\_renderingId?
 
-> **sc\_renderingId**: `string`
+> `optional` **sc\_renderingId?**: `string`
 
-Defined in: [content/src/editing/models.ts:32](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/editing/models.ts#L32)
+Defined in: [content/src/editing/models.ts:35](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/content/src/editing/models.ts#L35)
 
 ***
 
@@ -55,7 +55,7 @@ Defined in: [content/src/editing/models.ts:32](https://github.com/Sitecore/conte
 
 > **sc\_site**: `string`
 
-Defined in: [content/src/editing/models.ts:34](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/editing/models.ts#L34)
+Defined in: [content/src/editing/models.ts:33](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/content/src/editing/models.ts#L33)
 
 ***
 
@@ -63,7 +63,7 @@ Defined in: [content/src/editing/models.ts:34](https://github.com/Sitecore/conte
 
 > **sc\_uid**: `string`
 
-Defined in: [content/src/editing/models.ts:33](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/editing/models.ts#L33)
+Defined in: [content/src/editing/models.ts:32](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/content/src/editing/models.ts#L32)
 
 ***
 
@@ -71,7 +71,7 @@ Defined in: [content/src/editing/models.ts:33](https://github.com/Sitecore/conte
 
 > `optional` **sc\_variant?**: `string`
 
-Defined in: [content/src/editing/models.ts:36](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/editing/models.ts#L36)
+Defined in: [content/src/editing/models.ts:36](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/content/src/editing/models.ts#L36)
 
 ***
 
@@ -79,7 +79,7 @@ Defined in: [content/src/editing/models.ts:36](https://github.com/Sitecore/conte
 
 > `optional` **sc\_version?**: `string`
 
-Defined in: [content/src/editing/models.ts:37](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/editing/models.ts#L37)
+Defined in: [content/src/editing/models.ts:37](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/content/src/editing/models.ts#L37)
 
 ***
 
@@ -87,4 +87,4 @@ Defined in: [content/src/editing/models.ts:37](https://github.com/Sitecore/conte
 
 > **secret**: `string`
 
-Defined in: [content/src/editing/models.ts:29](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/content/src/editing/models.ts#L29)
+Defined in: [content/src/editing/models.ts:29](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/content/src/editing/models.ts#L29)

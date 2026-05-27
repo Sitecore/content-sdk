@@ -8,7 +8,7 @@
 
 > **getDefaultCookieAttributes**(`maxAge?`, `cookieDomain?`): [`CookieProperties`](../../utils/interfaces/CookieProperties.md)
 
-Defined in: [analytics-core/src/cookie/get-default-cookie-attributes.ts:11](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/analytics-core/src/cookie/get-default-cookie-attributes.ts#L11)
+Defined in: [analytics-core/src/cookie/get-default-cookie-attributes.ts:11](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/analytics-core/src/cookie/get-default-cookie-attributes.ts#L11)
 
 **`Internal`**
 

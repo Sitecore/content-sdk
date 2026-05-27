@@ -24,6 +24,8 @@
 
 ## Functions
 
+- [buildComponentMapContent](functions/buildComponentMapContent.md)
 - [filterComponentsByType](functions/filterComponentsByType.md)
 - [getComponentSpec](functions/getComponentSpec.md)
 - [getComponentSpecUrl](functions/getComponentSpecUrl.md)
+- [prepareComponentsForMap](functions/prepareComponentsForMap.md)

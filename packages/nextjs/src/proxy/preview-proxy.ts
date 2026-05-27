@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ProxyBase } from './proxy';
 import { EditingOptions } from '@sitecore-content-sdk/content/editing';
-import { SitecoreClient } from '../client';
-import { EDITING_PARAMS_HEADER } from '../editing/constants';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
+import { SitecoreClient } from '../client';
+import { EDITING_PARAMS_HEADER } from '../editing/constants';
+import { PREVIEW_COOKIES } from '../editing/utils';
 import debug from '../debug';
+import { ProxyBase } from './proxy';
 
 /**
  * Configuration for PreviewProxy
@@ -34,14 +35,19 @@ export class PreviewProxy extends ProxyBase {
     }
 
     const previewParams = req.headers.get(EDITING_PARAMS_HEADER);
-    const authHeader = req.headers.get('Authorization') ?? '';
+    // 1. Authorization header comes from the editing render endpoint
+    // 2. Token comes from cookies when navigating to the preview page
+    const authHeader =
+      req.headers.get('Authorization') ||
+      req.cookies.get(PREVIEW_COOKIES.PREVIEW_TOKEN)?.value ||
+      '';
     let editingOptions: EditingOptions | null = previewParams ? JSON.parse(previewParams) : null;
 
     debug.editing('preview proxy start');
 
-    // Process only preview requests (e.g. non editing or design studio)
-    if (editingOptions && editingOptions.mode !== 'preview') {
-      debug.editing('preview proxy skipped (mode is not preview)');
+    // Process only preview/editing requests
+    if (editingOptions && !['preview', 'edit'].includes(editingOptions.mode)) {
+      debug.editing('preview proxy skipped (mode is not preview or edit)');
       return res;
     }
 
@@ -49,25 +55,39 @@ export class PreviewProxy extends ProxyBase {
 
     // Scenario when the request is coming from /api/editing/render endpoint
     if (editingOptions) {
-      pageData = await this.client.getPreview(editingOptions, {
-        headers: {
-          Authorization: authHeader,
-        },
-      });
-    } else {
-      // Scenario when the page is requested using direct path or navigation is performed
-      pageData = await this.client.getPage(
-        req.nextUrl.pathname,
-        {
-          site: req.cookies.get(SITE_KEY)?.value,
-          locale: this.getLanguage(req),
-        },
-        {
+      pageData = await this.client
+        .getPreview(editingOptions, {
           headers: {
             Authorization: authHeader,
           },
-        }
-      );
+        })
+        .catch((error) => {
+          debug.editing('preview proxy failed to get preview: %o', error);
+          return null;
+        });
+    } else {
+      const site = req.cookies.get(SITE_KEY)?.value || req.nextUrl.searchParams.get(SITE_KEY) || '';
+
+      // Scenario when the page is requested using direct path or navigation is performed
+      pageData = await this.client
+        .getPage(
+          req.nextUrl.pathname,
+          {
+            site,
+            locale: this.getLanguage(req),
+          },
+          {
+            headers: {
+              Authorization: authHeader,
+              sc_previewMode: 'true',
+              sc_site: site,
+            },
+          }
+        )
+        .catch((error) => {
+          debug.editing('preview proxy failed to get page: %o', error);
+          return null;
+        });
     }
 
     // Preview content is not found or access is denied
@@ -78,6 +98,13 @@ export class PreviewProxy extends ProxyBase {
         { status: 403 }
       );
     }
+
+    res.cookies.set(PREVIEW_COOKIES.PREVIEW_TOKEN, authHeader, {
+      secure: true,
+      httpOnly: true,
+      sameSite: 'none',
+      path: '/',
+    });
 
     debug.editing('preview proxy end');
 

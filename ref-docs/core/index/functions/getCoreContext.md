@@ -8,7 +8,7 @@
 
 > **getCoreContext**(): [`CoreContext`](../interfaces/CoreContext.md)
 
-Defined in: [packages/core/src/initialization/init-content-sdk.ts:14](https://github.com/Sitecore/content-sdk/blob/18d75b895422fa8b46551735bb393e13cb8df0d2/packages/core/src/initialization/init-content-sdk.ts#L14)
+Defined in: [packages/core/src/initialization/init-content-sdk.ts:14](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/core/src/initialization/init-content-sdk.ts#L14)
 
 **`Internal`**
 

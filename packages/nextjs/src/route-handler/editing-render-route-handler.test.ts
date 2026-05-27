@@ -145,7 +145,7 @@ describe('createEditingRenderRouteHandlers', () => {
           version: query.sc_version,
           layoutKind: query.sc_layoutKind,
         })),
-        PreviewCookies: {
+        PREVIEW_COOKIES: {
           PREVIEW_DATA: '__next_preview_data',
           PRERENDER_BYPASS: '__prerender_bypass',
         },
@@ -1461,6 +1461,23 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.body).to.include('metadata-view');
       expect(res.body).to.include('application/json');
       expect(res.body).to.include('componentId');
+    });
+
+    it('should handle draft component request without sc_renderingId', async () => {
+      getRequiredQueryParamsStub.returns(['sc_site', 'sc_itemid', 'sc_uid', 'sc_lang', 'mode']);
+
+      // eslint-disable-next-line no-unused-vars
+      const { sc_renderingId: _renderingId, ...draftLibraryQueryRest } = designLibraryQuery;
+
+      req.nextUrl!.searchParams = mockSearchParams({
+        ...draftLibraryQueryRest,
+        route: '/components',
+      });
+
+      const res = await handlers.GET(req as NextRequest);
+
+      expect(res.status).to.equal(200);
+      expect(res.body).to.equal('<div>some html</div>');
     });
   });
 

@@ -97,6 +97,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
 
   canary-snapshot:
     runs-on: ubuntu-latest
@@ -138,9 +139,13 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
 
-      - name: Pre-release canary publish
+      - name: Pre-release canary version bump and snapshot cascade
         id: canary_snapshot
         run: yarn changeset:cascade-snapshot-version
+
+      - name: Re-Install dependencies
+        run: |
+          yarn install
 
       - name: Compute snapshot npm dist-tag
         id: snapshot_tag
@@ -168,6 +173,7 @@ jobs:
         env:
           COMMIT_NPM_TAG: ${{ steps.snapshot_tag.outputs.tag_sha }}
           PR_NPM_TAG: ${{ steps.snapshot_tag.outputs.tag_pr }}
+          npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
         run: |
           BRANCH_NAME="${{ github.ref_name }}"
           if [[ "$BRANCH_NAME" =~ ^release/ ]]; then
@@ -175,6 +181,7 @@ jobs:
           else
             NPM_TAG="canary"
           fi
+          yarn build
           yarn changeset:publish --tag $NPM_TAG --no-git-tag
           VERSION=$(node -p "require('./packages/create-content-sdk-app/package.json').version")
           npm dist-tag add create-content-sdk-app@$VERSION $COMMIT_NPM_TAG
