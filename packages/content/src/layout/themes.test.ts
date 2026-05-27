@@ -420,6 +420,78 @@ describe('themes', () => {
         }))
       );
     });
+
+    // Layout Service may return Styles/CSSStyles/LibraryId params as objects
+    // rather than strings. Traversal must not crash on non-string values.
+    describe('non-string params (DetailedRenderingParams)', () => {
+      const detailedStylesObject = {
+        'Allowed Renderings': [],
+        IsVerifiedStyle: { value: false },
+        Value: { value: 'White-Background' },
+        Icon: { value: '' },
+      };
+
+      it('should not throw when params.Styles is an object', () => {
+        const run = () =>
+          getDesignLibraryStylesheetLinks(
+            setBasicLayoutData(({
+              componentName: 'styled',
+              params: { Styles: detailedStylesObject },
+            } as unknown) as ComponentRendering),
+            sitecoreEdgeContextId
+          );
+
+        expect(run).to.not.throw();
+        expect(run()).to.deep.equal([]);
+      });
+
+      it('should not throw when params.CSSStyles is an object', () => {
+        const run = () =>
+          getDesignLibraryStylesheetLinks(
+            setBasicLayoutData(({
+              componentName: 'styled',
+              params: { CSSStyles: detailedStylesObject },
+            } as unknown) as ComponentRendering),
+            sitecoreEdgeContextId
+          );
+
+        expect(run).to.not.throw();
+        expect(run()).to.deep.equal([]);
+      });
+
+      it('should not throw when params.LibraryId is an object', () => {
+        const run = () =>
+          getDesignLibraryStylesheetLinks(
+            setBasicLayoutData(({
+              componentName: 'styled',
+              params: { LibraryId: { Value: { value: 'bar' } } },
+            } as unknown) as ComponentRendering),
+            sitecoreEdgeContextId
+          );
+
+        expect(run).to.not.throw();
+        expect(run()).to.deep.equal([]);
+      });
+
+      it('should fall back to fields when params are objects', () => {
+        expect(
+          getDesignLibraryStylesheetLinks(
+            setBasicLayoutData(({
+              componentName: 'styled',
+              params: { Styles: detailedStylesObject },
+              fields: {
+                LibraryId: {
+                  value: 'bar',
+                },
+              },
+            } as unknown) as ComponentRendering),
+            sitecoreEdgeContextId
+          )
+        ).to.deep.equal([
+          { href: getStylesheetUrl('bar', sitecoreEdgeContextId), rel: 'stylesheet' },
+        ]);
+      });
+    });
   });
 
   describe('getStylesheetUrl', () => {

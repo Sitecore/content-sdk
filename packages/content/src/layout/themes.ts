@@ -53,6 +53,14 @@ const traversePlaceholder = (components: ComponentRendering[], ids: Set<string>)
 };
 
 /**
+ * Returns the value if it is a string, otherwise undefined.
+ * @param {unknown} value value to check
+ * @returns {string | undefined} the string value, or undefined
+ */
+const asString = (value: unknown): string | undefined =>
+  typeof value === 'string' ? value : undefined;
+
+/**
  * Traverse component and children to add library ids
  * @param {RouteData | ComponentRendering | HtmlElementRendering} component component data
  * @param {Set<string>} ids library ids
@@ -60,19 +68,25 @@ const traversePlaceholder = (components: ComponentRendering[], ids: Set<string>)
 const traverseComponent = (component: RouteData | ComponentRendering, ids: Set<string>) => {
   let libraryId: string | undefined = undefined;
   if ('params' in component && component.params) {
+    const cssStylesParam = asString(component.params.CSSStyles);
+    const stylesParam = asString(component.params.Styles);
+    const libraryIdParam = asString(component.params.LibraryId);
     // LibraryID in css class name takes precedence over LibraryId attribute
     libraryId =
-      component.params.CSSStyles?.match(STYLES_LIBRARY_ID_REGEX)?.[1] ||
-      component.params.Styles?.match(STYLES_LIBRARY_ID_REGEX)?.[1] ||
-      component.params.LibraryId ||
+      cssStylesParam?.match(STYLES_LIBRARY_ID_REGEX)?.[1] ||
+      stylesParam?.match(STYLES_LIBRARY_ID_REGEX)?.[1] ||
+      libraryIdParam ||
       undefined;
   }
   // if params are empty we try to fall back to data source
   if (!libraryId && 'fields' in component && component.fields) {
+    const cssStylesField = asString(getFieldValue(component.fields, 'CSSStyles', ''));
+    const stylesField = asString(getFieldValue(component.fields, 'Styles', ''));
+    const libraryIdField = asString(getFieldValue(component.fields, 'LibraryId', ''));
     libraryId =
-      getFieldValue(component.fields, 'CSSStyles', '').match(STYLES_LIBRARY_ID_REGEX)?.[1] ||
-      getFieldValue(component.fields, 'Styles', '').match(STYLES_LIBRARY_ID_REGEX)?.[1] ||
-      getFieldValue(component.fields, 'LibraryId', '') ||
+      cssStylesField?.match(STYLES_LIBRARY_ID_REGEX)?.[1] ||
+      stylesField?.match(STYLES_LIBRARY_ID_REGEX)?.[1] ||
+      libraryIdField ||
       undefined;
   }
 
