@@ -11,7 +11,7 @@ This template is the cache-aware variant of the App Router template. It enables 
   - `getSitecorePage({ site, locale, path })` → `sc:route:...`, `sc:item:...` (variants are isolated naturally by the URL path / Cache Components key, no `sc:pvv:` tag is added)
   - `getSitecoreDictionary({ site, locale })` → `sc:dict:{site}:{locale}`
   - `getSitecoreErrorPage({ site, locale, code })` → same tag strategy as `getSitecorePage`
-- A **single Sitecore-webhook endpoint** at `POST /api/revalidate` (in `src/app/api/revalidate/route.ts`) built with `createSitecoreRevalidateRouteHandler`. It consumes the Experience Edge / Content Operations payload shape — `updates[]` are translated into `sc:item:<id>:<locale>:latest` tags, and `tags[]` is a pass-through array that accepts `sc:`-prefixed strings verbatim (handy for ad-hoc / operational calls) or bare item IDs (mapped to `sc:item:<id>:<defaultLocale>:latest`). Dictionary tags from `sites` (and the optional `extraDictionarySite` handler option, typically `scConfig.defaultSite`) are appended on every call.
+- A **single Sitecore-webhook endpoint** at `POST /api/revalidate` (in `src/app/api/revalidate/route.ts`) built with `createSitecoreRevalidateRouteHandler`. It consumes the Experience Edge / Content Operations payload shape — `updates[]` are translated into `sc:item:<id>:<locale>:latest` tags, and `tags[]` is a pass-through array that accepts `sc:`-prefixed strings verbatim (handy for ad-hoc / operational calls) or bare item IDs (mapped to `sc:item:<id>:<defaultLocale>:latest`). Dictionary tags from `sites` (`.sitecore/sites.json`, including the default site from `generateSites`) are appended on every call.
 - Optional auth via **`SITECORE_REVALIDATE_SECRET`**: when set, send the same value in **`x-revalidate-secret`**; when empty, no header is required.
 - A `sitecore.config.ts` with the **SDK in-process dictionary cache disabled** (`dictionary: { caching: { enabled: false } }`) so dictionary updates flow through Cache Components only.
 
@@ -25,7 +25,7 @@ This template is the cache-aware variant of the App Router template. It enables 
 ## How to perform
 
 - **Add a cached read:** Add a file under `src/lib/cache/` that declares `'use cache';`, calls the SDK client, computes Sitecore tags (use SDK helpers like `collectSitecorePageCacheTags`, `buildSitecoreDictionaryCacheTag` where appropriate), and calls `cacheTag(tag)` for each.
-- **Invalidate via webhook (primary flow):** Configure your Sitecore Experience Edge / Content Operations webhook to `POST` its standard payload to `/api/revalidate`. When `SITECORE_REVALIDATE_SECRET` is set, add the `x-revalidate-secret` header with the same value. The handler converts each `updates[]` entry's `identifier` (with `-media` / `-layout` stripped) into `sc:item:<id>:<locale>:latest` and adds dictionary tags from `sites` (and the optional `extraDictionarySite` handler option).
+- **Invalidate via webhook (primary flow):** Configure your Sitecore Experience Edge / Content Operations webhook to `POST` its standard payload to `/api/revalidate`. When `SITECORE_REVALIDATE_SECRET` is set, add the `x-revalidate-secret` header with the same value. The handler converts each `updates[]` entry's `identifier` (with `-media` / `-layout` stripped) into `sc:item:<id>:<locale>:latest` and adds dictionary tags from `sites`.
 - **Ad-hoc invalidation (same endpoint):** `POST` `{ "tags": ["sc:route:default:en:/about", "sc:item:..."] }` (`sc:`-prefixed strings revalidate verbatim) or `{ "tags": ["<itemId>"] }` (bare IDs map to `sc:item:<id>:<defaultLocale>:latest`) with the same header. Dictionary tags are still appended on every call.
 
 ## Hard Rules
@@ -48,7 +48,7 @@ This template is the cache-aware variant of the App Router template. It enables 
 ## Debugging stale content
 
 - **Page didn't refresh after publish:** Confirm the webhook reached `/api/revalidate` (server logs), the `x-revalidate-secret` header matched `SITECORE_REVALIDATE_SECRET`, and the publish-event item id maps to an `sc:item:<id>` tag that the page's cached entry carries.
-- **Dictionary didn't refresh after publish:** Confirm `dictionary: { caching: { enabled: false } }` is still set in `sitecore.config.ts`, and that the dictionary tag (`sc:dict:{site}:{locale}`) is in the helper's `cacheTag` calls. The route handler adds dictionary tags from `sites` (and the optional `extraDictionarySite` handler option) automatically.
+- **Dictionary didn't refresh after publish:** Confirm `dictionary: { caching: { enabled: false } }` is still set in `sitecore.config.ts`, and that the dictionary tag (`sc:dict:{site}:{locale}`) is in the helper's `cacheTag` calls. The route handler adds dictionary tags from `sites` automatically.
 - **Preview content is stale:** Preview must be dynamic; check that the preview branch in `page.tsx` calls `client.getPreview` / `client.getDesignLibraryData` directly, not the `getSitecorePage` cache helper.
 
 ## Stop Conditions

@@ -5,7 +5,6 @@ import {
   buildSitecoreDictionaryCacheTagsFromSites,
   buildSitecoreItemCacheTag,
   buildSitecoreItemCacheTagFromRouteData,
-  buildSitecorePersonalizedPageVariantCacheTag,
   buildSitecoreRouteCacheTag,
   dedupeSitecoreCacheTags,
   normalizeSitecoreItemIdForCacheTag,
@@ -78,7 +77,7 @@ describe('sitecore-cache-tags', () => {
   });
 
   describe('buildSitecoreDictionaryCacheTagsFromSites', () => {
-    it('dedupes duplicate site locale combinations including extraDictionarySite overlap', () => {
+    it('dedupes duplicate site locale combinations', () => {
       expect(
         buildSitecoreDictionaryCacheTagsFromSites({
           sites: [
@@ -86,26 +85,8 @@ describe('sitecore-cache-tags', () => {
             { name: 'Website', language: 'en' },
           ],
           baseLocale: 'en',
-          extraDictionarySite: 'Website',
         })
       ).to.deep.equal([`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:website:en`]);
-    });
-
-    it('adds extraDictionarySite tag alongside per-site tags', () => {
-      expect(
-        buildSitecoreDictionaryCacheTagsFromSites({
-          sites: [
-            { name: 'Website', language: 'en-US' },
-            { name: 'Other', language: 'da-DK' },
-          ],
-          baseLocale: 'en',
-          extraDictionarySite: 'Website',
-        })
-      ).to.deep.equal([
-        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:website:en-us`,
-        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:other:da-dk`,
-        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:website:en`,
-      ]);
     });
 
     it('uses baseLocale when site language is empty', () => {
@@ -115,23 +96,6 @@ describe('sitecore-cache-tags', () => {
           baseLocale: 'fr-FR',
         })
       ).to.deep.equal([`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:solo:fr-fr`]);
-    });
-  });
-
-  describe('buildSitecorePersonalizedPageVariantCacheTag', () => {
-    it('uses variant id only when no component ids', () => {
-      expect(buildSitecorePersonalizedPageVariantCacheTag({ variantId: 'Variant-A' })).to.equal(
-        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:pvv:variant-a`
-      );
-    });
-
-    it('sorts component variant ids for stability', () => {
-      expect(
-        buildSitecorePersonalizedPageVariantCacheTag({
-          variantId: 'v1',
-          componentVariantIds: ['z', 'a'],
-        })
-      ).to.equal(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:pvv:v1:a+z`);
     });
   });
 

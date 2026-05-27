@@ -379,7 +379,7 @@ export function createSitecoreRevalidateRouteHandler(options?: SitecoreRevalidat
         error: string;
     }> | NextResponse<{
         revalidated: boolean;
-        tags: string[];
+        tagsCount: number;
         invocation_id: string | null;
         continues: boolean;
     }>>;
@@ -1009,7 +1009,6 @@ export type SitecoreRevalidateRouteHandlerOptions = {
     cacheProfile?: RevalidateTagCacheProfile;
     defaultLocale?: string;
     sites?: SiteInfo[];
-    extraDictionarySite?: string;
 };
 
 export { SiteInfo }

@@ -77,7 +77,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 - **`POST /api/revalidate`** is a single Sitecore-webhook endpoint. It accepts the Sitecore Experience Edge / Content Operations payload shape:
   - `updates[]` — Sitecore publish-event rows; the handler maps each row's `identifier` (with `-media` / `-layout` stripped) to `sc:item:<id>:<locale>:latest`.
   - `tags[]` — pass-through array. `sc:`-prefixed strings are revalidated verbatim (handy for ad-hoc, operational calls); bare item IDs are mapped to `sc:item:<id>:<defaultLocale>:latest`.
-  - Dictionary tags from `sites` (and the optional `extraDictionarySite` handler option) are merged on every call so dictionary changes are covered.
+  - Dictionary tags from `sites` (`.sitecore/sites.json`, including the default site from `generateSites`) are merged on every call so dictionary changes are covered.
 - **Auth (optional):** leave `SITECORE_REVALIDATE_SECRET` empty to skip auth (no `x-revalidate-secret` header). When set, callers must send the same value in `x-revalidate-secret` (configure that header on your Sitecore webhook).
 - **Dictionary cache:** `sitecore.config.ts` disables the SDK's in-process dictionary cache (`dictionary: { caching: { enabled: false } }`). The Cache Components helper is the only dictionary cache layer, so `revalidateTag` works end to end.
 
@@ -156,7 +156,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 - **Where:** `src/app/api/revalidate/route.ts`. Uses `createSitecoreRevalidateRouteHandler` from `@sitecore-content-sdk/nextjs/route-handler` — a single Sitecore-webhook endpoint.
 - **Auth:** When `SITECORE_REVALIDATE_SECRET` is non-empty, callers must send the same value in `x-revalidate-secret`. When empty, revalidation works without that header.
 - **Webhook payload (`updates[]`):** Send the Sitecore Experience Edge / Content Operations body (`updates`, `invocation_id`, `continues`). The handler maps each `identifier` (with `-media` / `-layout` stripped) to `sc:item:<id>:<locale>:latest` and revalidates it.
-- **Ad-hoc invalidation (`tags[]`):** Reuse the same endpoint with `{ "tags": ["sc:route:...", "sc:item:..."] }` (`sc:`-prefixed strings are revalidated verbatim) or `{ "tags": ["<itemId>"] }` (bare item IDs are mapped to `sc:item:<id>:<defaultLocale>:latest`). Dictionary tags from `sites` (and the optional `extraDictionarySite` handler option) are appended on **every** call.
+- **Ad-hoc invalidation (`tags[]`):** Reuse the same endpoint with `{ "tags": ["sc:route:...", "sc:item:..."] }` (`sc:`-prefixed strings are revalidated verbatim) or `{ "tags": ["<itemId>"] }` (bare item IDs are mapped to `sc:item:<id>:<defaultLocale>:latest`). Dictionary tags from `sites` are appended on **every** call.
 - **Do not:** Bypass auth, expose the secret in client code, or call `revalidateTag` directly from components.
 
 ### Server vs Client components
@@ -178,7 +178,7 @@ This template ships **two** not-found components and a segment layout that ties 
 - **Sitemap:** `src/app/api/sitemap/route.ts` — `createSitemapRouteHandler({ client, sites })`. Export `{ GET }`; use `sites` from `.sitecore/sites.json`. With `cacheComponents: true`, the explicit `dynamic = 'force-dynamic'` is not needed (Next.js handles it automatically).
 - **Robots:** `src/app/api/robots/route.ts` — `createRobotsRouteHandler({ client, sites })`. Same pattern.
 - **Editing:** `src/app/api/editing/config/route.ts` and `editing/render/route.ts` — use `createEditingConfigRouteHandler` and `createEditingRenderRouteHandlers` with `components`, `clientComponents` (`.sitecore/component-map.client.ts`), `metadata`, and `client`.
-- **Revalidate:** `src/app/api/revalidate/route.ts` — `createSitecoreRevalidateRouteHandler({ defaultLocale, sites, extraDictionarySite })`. Pass `scConfig.defaultSite` as `extraDictionarySite` so the canonical site's dictionary tag is always covered. Export `{ POST }`.
+- **Revalidate:** `src/app/api/revalidate/route.ts` — `createSitecoreRevalidateRouteHandler({ defaultLocale, sites })` with `sites` from `.sitecore/sites.json`. Export `{ POST }`.
 - **Rewrites:** `next.config.ts` → rewrites for `/sitemap*.xml`, `/robots.txt` with `locale: false` so they are not localized.
 
 ### Sitecore client and config

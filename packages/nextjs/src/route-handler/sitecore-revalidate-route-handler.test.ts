@@ -121,7 +121,7 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     expect(revalidateTagStub.callCount).to.equal(2);
     expect(res.body).to.deep.equal({
       revalidated: true,
-      tags: ['sc:route:site:en:_', 'sc:dict:site:en'],
+      tagsCount: 2,
       invocation_id: null,
       continues: false,
     });
@@ -142,7 +142,7 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     expect(revalidateTagStub.firstCall.args[0]).to.equal(
       'sc:item:71b0ba0716214254aee4429b1a970c8b:en:latest'
     );
-    expect(res.body).to.deep.include({ revalidated: true, continues: false });
+    expect(res.body).to.deep.include({ revalidated: true, tagsCount: 1, continues: false });
   });
 
   it('should handle webhook updates and echo invocation metadata', async () => {

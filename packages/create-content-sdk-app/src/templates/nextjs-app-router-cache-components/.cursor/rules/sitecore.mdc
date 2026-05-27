@@ -139,7 +139,7 @@ export default async function LocalizedPage() {
 - Body shape (Sitecore Experience Edge / Content Operations):
   - `updates[]`: publish-event rows; each `identifier` (with `-media` / `-layout` stripped) maps to `sc:item:<id>:<locale>:latest`
   - `tags[]`: pass-through array. `sc:`-prefixed strings are revalidated verbatim (use this for ad-hoc / operational calls); bare item IDs are mapped to `sc:item:<id>:<defaultLocale>:latest`
-  - Dictionary tags from `sites` (and the optional `extraDictionarySite` handler option, typically `scConfig.defaultSite`) are appended on every call
+  - Dictionary tags from `sites` (`.sitecore/sites.json`, including the default site from `generateSites`) are appended on every call
 - Do not bypass auth or call `revalidateTag` directly from components
 
 ## Configuration

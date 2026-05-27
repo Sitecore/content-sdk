@@ -5,7 +5,7 @@ import {
 } from './sitecore-cache-tags';
 
 /**
- * One content change entry as commonly seen in Experience Edge / Content Operations style payloads (POC shape).
+ * One content change entry as commonly seen in Experience Edge / Content Operations style payloads.
  * Field names follow community OSR examples; production payloads may include additional fields.
  * @internal
  */
@@ -17,7 +17,7 @@ export type SitecoreEdgeRevalidateUpdate = {
 };
 
 /**
- * Request body shape for webhook-driven revalidation (POC-aligned).
+ * Request body shape for webhook-driven revalidation.
  * @internal
  */
 export type SitecoreEdgeRevalidateRequestBody = {
@@ -68,7 +68,7 @@ export type CollectSitecoreTagsFromEdgeBodyOptions = {
 };
 
 /**
- * Maps a POC-style Edge webhook JSON body to Content SDK cache tag strings used by
+ * Maps an Experience Edge webhook JSON body to Content SDK cache tag strings used by
  * {@link collectSitecorePageCacheTags} / {@link buildSitecoreItemCacheTag} (`sc:item:...`), so
  * `revalidateTag` matches tags registered during cached reads.
  * **`updates`** rows resolve to **`sc:item:…`** (locale from `entity_culture` or `defaultLocale`). **`tags`**: full `sc:` strings pass through; bare ids become **`sc:item:…`** with `defaultLocale`. Route/variant tags are not inferred.

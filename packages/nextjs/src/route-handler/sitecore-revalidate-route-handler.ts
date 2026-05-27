@@ -11,7 +11,11 @@ import type { SiteInfo } from '@sitecore-content-sdk/content/site';
 const DEFAULT_SECRET_ENV_VAR = 'SITECORE_REVALIDATE_SECRET';
 const DEFAULT_SECRET_HEADER = 'x-revalidate-secret';
 
-/** Returns a non-empty trimmed secret, or `undefined` when unset or whitespace-only. */
+/**
+ * Returns a non-empty trimmed secret, or `undefined` when unset or whitespace-only.
+ * @param {string | undefined} secretOption - Explicit secret from handler options.
+ * @param {string | undefined} envValue - Secret from `process.env` (e.g. `SITECORE_REVALIDATE_SECRET`).
+ */
 function resolveConfiguredRevalidateSecret(
   secretOption: string | undefined,
   envValue: string | undefined
@@ -44,18 +48,16 @@ export type SitecoreRevalidateRouteHandlerOptions = {
    * Other string values may match profiles from `cacheLife` in `next.config`; objects may use `{ expire }` per Next.js docs.
    */
   cacheProfile?: RevalidateTagCacheProfile;
-  /** Locale for item tags when culture is missing, and for dictionary tags when a site has no language. */
-  defaultLocale?: string;
-  /** Sites list; merges one `sc:dict:<site>:<locale>` cache tag per site on every revalidation call. */
-  sites?: SiteInfo[];
   /**
-   * Optional **dictionary-only** site name. When set, the handler appends one extra
-   * `sc:dict:<extraDictionarySite>:<defaultLocale>` tag on top of the per-site tags above.
-   * Use this as a defensive guarantee that the canonical site's dictionary tag is always
-   * invalidated even if the `sites` list is empty or carries a different language string.
-   * Note: this option does **not** influence routing or any other tag family.
+   * Locale for item tags when culture is missing, and for dictionary tags when a site has no language.
+   * Defaults to `'en'` when omitted.
    */
-  extraDictionarySite?: string;
+  defaultLocale?: string;
+  /**
+   * Sites list (e.g. from `.sitecore/sites.json`). Adds one `sc:dict:<site>:<locale>` tag per
+   * site on every revalidation call. `generateSites` always includes the configured default site.
+   */
+  sites?: SiteInfo[];
 };
 
 /**
@@ -71,9 +73,8 @@ export type SitecoreRevalidateRouteHandlerOptions = {
  *   - Strings already starting with `sc:` are used verbatim (e.g. `sc:route:...`, `sc:item:...`, `sc:dict:...`).
  *   - Bare values are treated as Sitecore item ids and mapped to `sc:item:<id>:<defaultLocale>:latest`.
  *
- * When **`sites`** / **`extraDictionarySite`** are configured, the handler also appends one
- * `sc:dict:<site>:<locale>` tag per site (and one extra `sc:dict:<extraDictionarySite>:<defaultLocale>`
- * tag if set) so dictionary updates flow through the same call.
+ * When **`sites`** is configured, the handler also appends one `sc:dict:<site>:<locale>` tag per
+ * site so dictionary updates flow through the same call.
  *
  * Auth (optional): when `SITECORE_REVALIDATE_SECRET` (or the `secret` option) is non-empty, callers must
  * send the same value in the **`x-revalidate-secret`** header. When unset or blank, no header is required.
@@ -83,20 +84,13 @@ export type SitecoreRevalidateRouteHandlerOptions = {
 export function createSitecoreRevalidateRouteHandler(
   options: SitecoreRevalidateRouteHandlerOptions = {}
 ) {
-  const {
-    defaultLocale = 'en',
-    sites,
-    extraDictionarySite,
-    secret,
-    cacheProfile = 'max',
-  } = options;
+  const { defaultLocale = 'en', sites, secret, cacheProfile = 'max' } = options;
 
   const dictionaryTags =
-    sites !== undefined || extraDictionarySite?.trim()
+    sites !== undefined
       ? buildSitecoreDictionaryCacheTagsFromSites({
-          sites: sites ?? [],
+          sites,
           baseLocale: defaultLocale,
-          extraDictionarySite,
         })
       : [];
 
@@ -173,7 +167,7 @@ export function createSitecoreRevalidateRouteHandler(
 
       return NextResponse.json({
         revalidated: true,
-        tags,
+        tagsCount: tags.length,
         invocation_id: webhookBody.invocation_id ?? null,
         continues: webhookBody.continues ?? false,
       });

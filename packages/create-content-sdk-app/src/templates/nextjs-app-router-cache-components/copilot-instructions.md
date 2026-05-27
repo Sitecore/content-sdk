@@ -239,7 +239,6 @@ import scConfig from 'sitecore.config';
 export const { POST } = createSitecoreRevalidateRouteHandler({
   defaultLocale: scConfig.defaultLanguage,
   sites,
-  extraDictionarySite: scConfig.defaultSite,
 });
 ```
 

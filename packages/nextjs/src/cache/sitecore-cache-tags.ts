@@ -61,7 +61,7 @@ export type BuildSitecoreItemCacheTagParams = {
   itemId: string;
   locale: string;
   /**
-   * Published version number, or omit / `undefined` for "latest" (no version in the key).
+   * Published version number, or omit / `undefined` for "latest".
    */
   version?: number;
 };
@@ -108,15 +108,13 @@ export function buildSitecoreDictionaryCacheTag(params: BuildSitecoreDictionaryC
 export type BuildSitecoreDictionaryCacheTagsFromSitesParams = {
   /** Sites list (e.g. from generated multisite JSON). */
   sites: readonly { name: string; language?: string }[];
-  /** Locale used when a site has no language and for the optional extra-site dictionary tag. */
+  /** Locale used when a site has no `language` value. */
   baseLocale: string;
-  /** Optional site name; adds one dictionary tag scoped to the shared locale field only. */
-  extraDictionarySite?: string;
 };
 
 /**
- * Builds deduplicated dictionary cache tags from a sites list and optional extra site.
- * @param {BuildSitecoreDictionaryCacheTagsFromSitesParams} params - Sites list, base locale, and optional extra site for an additional dictionary tag.
+ * Builds deduplicated dictionary cache tags from a sites list.
+ * @param {BuildSitecoreDictionaryCacheTagsFromSitesParams} params - Sites list and fallback locale.
  * @internal
  */
 export function buildSitecoreDictionaryCacheTagsFromSites(
@@ -134,43 +132,7 @@ export function buildSitecoreDictionaryCacheTagsFromSites(
     const locale = site.language?.trim() ? site.language : params.baseLocale;
     push(buildSitecoreDictionaryCacheTag({ site: site.name, locale }));
   }
-  const extraSite = params.extraDictionarySite?.trim();
-  if (extraSite) {
-    push(buildSitecoreDictionaryCacheTag({ site: extraSite, locale: params.baseLocale }));
-  }
   return out;
-}
-
-/**
- * Parameters for {@link buildSitecorePersonalizedPageVariantCacheTag}.
- * @internal
- */
-export type BuildSitecorePersonalizedPageVariantCacheTagParams = {
-  /**
-   * Primary personalization variant id from routing / `PageOptions.personalize`.
-   */
-  variantId: string;
-  /**
-   * Optional component-level variant ids (order is normalized for stability).
-   */
-  componentVariantIds?: string[];
-};
-
-/**
- * Tag for a personalized page variant so caches do not bleed across variants.
- * @param {BuildSitecorePersonalizedPageVariantCacheTagParams} params - Variant id and optional component variant ids.
- * @internal
- */
-export function buildSitecorePersonalizedPageVariantCacheTag(
-  params: BuildSitecorePersonalizedPageVariantCacheTagParams
-): string {
-  const variant = sanitizeSitecoreCacheTagSegment(params.variantId);
-  const extras = (params.componentVariantIds ?? [])
-    .map((s) => sanitizeSitecoreCacheTagSegment(s))
-    .filter(Boolean)
-    .sort();
-  const suffix = extras.length > 0 ? `:${extras.join('+')}` : '';
-  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:pvv:${variant}${suffix}`;
 }
 
 /**

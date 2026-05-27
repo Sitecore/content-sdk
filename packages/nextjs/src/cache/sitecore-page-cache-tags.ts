@@ -12,7 +12,10 @@ function normalizePathname(pathname: string): string {
   return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
 }
 
-/** Trim leading and trailing `/` without regex (linear time; avoids ReDoS flags on path-derived input). */
+/**
+ * Trims leading and trailing `/` from a single path segment without regex (linear time; avoids ReDoS flags on path-derived input).
+ * @param {string} part - One App Router catch-all path segment.
+ */
 function trimSlashes(part: string): string {
   let start = 0;
   let end = part.length;
