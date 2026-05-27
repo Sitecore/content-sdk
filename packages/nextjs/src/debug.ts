@@ -1,4 +1,8 @@
-import { debug as coreDebug } from '@sitecore-content-sdk/core';
+import {
+  debug as coreDebug,
+  debugModule,
+  debugNamespace,
+} from '@sitecore-content-sdk/core';
 import { debug as contentDebug } from '@sitecore-content-sdk/content';
 import { debug as searchDebug } from '@sitecore-content-sdk/react/search';
 
@@ -10,6 +14,7 @@ const debug: Record<string, debug.Debugger> = {
   ...coreDebug,
   ...contentDebug,
   search: searchDebug,
+  revalidate: debugModule(`${debugNamespace}:revalidate`),
 };
 
 export default debug;

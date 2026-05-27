@@ -1,0 +1,316 @@
+# GitHub Copilot Instructions for Sitecore Content SDK Next.js App Router + Cache Components Project
+
+## Project Purpose and Tech Stack
+
+This is a **Sitecore Content SDK** application built with **Next.js App Router** and **TypeScript**, with **Next.js Cache Components** (`cacheComponents: true`) and **tag-based on-demand revalidation** wired in. The project follows Sitecore best practices for XM Cloud development and leverages the latest Next.js App Router features for improved performance and developer experience.
+
+### Key Technologies
+- **Next.js App Router** - React framework with Server Components and modern routing
+- **Next.js Cache Components** - `use cache`, `cacheTag`, `revalidateTag` for tag-based caching
+- **Sitecore Content SDK** - Official SDK for Sitecore XM Cloud integration
+- **TypeScript** - Type-safe JavaScript development
+- **Sitecore XM Cloud** - Headless CMS platform
+- **React Server Components** - Server-side rendering for better performance
+- **next-intl** - Internationalization support
+
+## Coding Standards
+
+### TypeScript Standards
+- Use **strict mode** in tsconfig.json
+- Prefer type assertions over `any`: `value as ContentItem`
+- Use discriminated unions for complex state management
+- Enable strict null checks and strict function types
+
+### Naming Conventions
+- **Variables/Functions**: camelCase (`getUserData()`, `isLoading`, `currentUser`)
+- **Components**: PascalCase (`SitecoreComponent`, `PageLayout`, `ContentBlock`)
+- **Constants**: UPPER_SNAKE_CASE (`API_ENDPOINT`, `DEFAULT_TIMEOUT`)
+- **Directories**: kebab-case (`src/components`, `src/api-clients`)
+- **Types/Interfaces**: PascalCase (`ContentItem`, `LayoutProps`, `SitecoreConfig`)
+
+### Modular Layout (App Router + Cache Components)
+```
+src/
+  app/                 # App Router pages and layouts
+  components/          # UI components (React)
+  lib/
+    sitecore-client.ts # Single SitecoreClient instance
+    cache/             # Tag-aware data helpers (`use cache` + cacheTag)
+  i18n/                # Internationalization setup
+  types/               # TypeScript type definitions
+  hooks/               # Custom React hooks
+```
+
+## Library Usage
+
+### @sitecore-content-sdk
+- Use `SitecoreClient` for content fetching (directly for preview/editing/static-params, indirectly via cache helpers for cached reads)
+- Implement proper error handling with try/catch blocks
+- Handle content preview vs. published content scenarios — preview must remain **dynamic** (do not wrap preview in `'use cache'`)
+
+```typescript
+import { SitecoreClient } from '@sitecore-content-sdk/nextjs/client';
+import scConfig from 'sitecore.config';
+
+const client = new SitecoreClient({
+  ...scConfig,
+});
+```
+
+### Cache helpers (this template)
+- Use `getSitecorePage`, `getSitecoreDictionary`, `getSitecoreErrorPage` from `src/lib/cache/` for all non-preview Sitecore reads
+- Each helper declares `'use cache';` and attaches Sitecore tags (`sc:route`, `sc:item`, `sc:dict`) via `cacheTag`
+- Tags are invalidated by `POST /api/revalidate` (Sitecore webhook payloads with `updates[]`, or ad-hoc `{ "tags": ["sc:..."] }` calls; optional auth via `SITECORE_REVALIDATE_SECRET` / `x-revalidate-secret`)
+
+```typescript
+// Cached page read (in src/app/[site]/[locale]/[[...path]]/page.tsx)
+import { getSitecorePage } from 'src/lib/cache/get-sitecore-page';
+
+const page = await getSitecorePage({ site, locale, path: path ?? [] });
+```
+
+### React App Router Patterns
+- Use **Server Components** for data fetching and static content (default)
+- Use **Client Components** for interactivity (use 'use client' directive)
+- Implement proper error boundaries with error.tsx / global-error.tsx
+- Use loading.tsx for loading states
+- Leverage layout.tsx for shared page structure
+
+### Sitecore Field Components
+- Always use Sitecore field components: `<Text>`, `<RichText>`, `<Image>`
+- Validate field existence before rendering
+- Handle empty/null fields gracefully
+- Prefer Sitecore field components over manual rendering
+
+```typescript
+// Good: Using Sitecore field components
+<Text field={fields?.title} tag="h1" />
+<RichText field={fields?.content} />
+<Image field={fields?.backgroundImage} />
+
+// Avoid: Manual field value extraction unless necessary
+```
+
+## Example Patterns and Prompts
+
+### Server Component Development (cached)
+```typescript
+// Server Component example — cached page read
+import { getSitecorePage } from 'src/lib/cache/get-sitecore-page';
+
+export default async function SitecorePage({ params }: { params: Promise<{ site: string; locale: string; path?: string[] }> }) {
+  const { site, locale, path } = await params;
+  try {
+    const page = await getSitecorePage({ site, locale, path: path ?? [] });
+    if (!page) return <div>Content not found</div>;
+    return <SitecoreLayout layoutData={page.layout} />;
+  } catch (error) {
+    return <div>Content not found</div>;
+  }
+}
+```
+
+### Preview / draft mode (NOT cached)
+```typescript
+import { draftMode } from 'next/headers';
+import client from 'src/lib/sitecore-client';
+
+const draft = await draftMode();
+if (draft.isEnabled) {
+  // Preview must stay dynamic — use the client directly
+  const page = await client.getPreview(editingParams);
+}
+```
+
+### Client Component Integration
+
+Interactive Sitecore Components:
+
+- Use 'use client' directive when needed
+- Keep client components focused on interactivity
+- Pass server-fetched data as props
+- Handle hydration mismatches carefully
+
+```typescript
+'use client';
+
+interface InteractiveSitecoreComponentProps {
+  fields: {
+    title: Field;
+    content: Field;
+  };
+}
+
+export default function InteractiveSitecoreComponent({
+  fields,
+}: InteractiveSitecoreComponentProps) {
+  // Client-side interactivity here
+  return (
+    <div>
+      <Text field={fields?.title} tag="h2" />
+      <RichText field={fields?.content} />
+    </div>
+  );
+}
+```
+
+### Component Development
+```typescript
+// Component props interface
+interface HeroProps {
+  fields: {
+    title: Field;
+    subtitle: Field;
+    backgroundImage: Field;
+  };
+}
+
+export default function Hero({ fields }: HeroProps) {
+  return (
+    <div>
+      <Text field={fields?.title} tag="h1" />
+      <Text field={fields?.subtitle} tag="p" />
+      <Image field={fields?.backgroundImage} />
+    </div>
+  );
+}
+```
+
+### Adding a new cache helper
+
+```typescript
+// src/lib/cache/get-something.ts
+import { cacheTag } from 'next/cache';
+import client from 'src/lib/sitecore-client';
+
+export async function getSomething(params: { site: string; locale: string }) {
+  'use cache';
+  // Compute Sitecore tags via SDK helpers (e.g. buildSitecoreDictionaryCacheTag)
+  cacheTag('sc:something:' + params.site + ':' + params.locale);
+  return client.getSomething(params);
+}
+```
+
+### Error Handling
+
+API Calls:
+
+- Always wrap in try/catch blocks
+- Throw custom errors with context: `SitecoreFetchError`, `ConfigurationError`
+- Handle edge cases with guard clauses
+
+### Configuration
+```typescript
+// sitecore.config.ts
+import { defineConfig } from '@sitecore-content-sdk/nextjs/config';
+
+export default defineConfig({
+  api: {
+    edge: {
+      contextId: process.env.SITECORE_EDGE_CONTEXT_ID || '',
+      clientContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
+      edgeUrl:
+        process.env.NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME ||
+        process.env.SITECORE_EDGE_PLATFORM_HOSTNAME ||
+        'https://edge-platform.sitecorecloud.io',
+    },
+    local: {
+      apiKey: process.env.SITECORE_API_KEY || '',
+      apiHost: process.env.SITECORE_API_HOST || '',
+    },
+  },
+  defaultSite: process.env.NEXT_PUBLIC_DEFAULT_SITE_NAME || 'default',
+  defaultLanguage: process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',
+  editingSecret: process.env.SITECORE_EDITING_SECRET,
+  // Keep the SDK in-process dictionary cache disabled so revalidateTag
+  // invalidates dictionary data through the Cache Components layer only.
+  dictionary: { caching: { enabled: false } },
+});
+```
+
+### On-demand revalidation route
+
+```typescript
+// src/app/api/revalidate/route.ts
+import { createSitecoreRevalidateRouteHandler } from '@sitecore-content-sdk/nextjs/route-handler';
+import sites from '.sitecore/sites.json';
+import scConfig from 'sitecore.config';
+
+export const { POST } = createSitecoreRevalidateRouteHandler({
+  defaultLocale: scConfig.defaultLanguage,
+  sites,
+});
+```
+
+When `SITECORE_REVALIDATE_SECRET` is set, callers must send it in `x-revalidate-secret`; when empty, no header is required. Single Sitecore-webhook endpoint: `updates[]` (publish events) and `tags[]` (pass-through `sc:` strings or bare item IDs).
+
+### Internationalization
+
+Multi-language Support:
+
+- Configure next-intl for language routing
+- Handle Sitecore language contexts
+- Implement language switching
+- Use proper locale-based data fetching via `getSitecoreDictionary` (cached, tag-aware)
+
+```typescript
+// Language-aware data fetching
+import { getTranslations } from 'next-intl/server';
+
+export default async function LocalizedPage() {
+  const t = await getTranslations('common');
+  // Fetch Sitecore content for current locale via the cache helpers
+}
+```
+
+## Development Workflow
+
+1. **Install dependencies**: `npm install`
+2. **Configure environment**: Copy `.env.example` to `.env.local` (include `SITECORE_REVALIDATE_SECRET`)
+3. **Start development**: `npm run dev`
+4. **Build for production**: `npm run build`
+
+## App Router Best Practices
+
+### Server vs Client Components
+- Use Server Components for Sitecore content rendering (default)
+- Use Client Components for user interactions
+- Minimize client-side JavaScript
+- Leverage server-side data fetching
+
+### Routing and Layouts
+- Use layout.tsx for shared page structure
+- Implement loading.tsx for loading states
+- Create error.tsx / global-error.tsx for error boundaries
+- Use page.tsx for route content
+- Use [...path] for Sitecore catch-all routes
+
+### Performance Optimization
+- Leverage Server Components and Cache Components for better performance
+- Use streaming for improved loading experience
+- Implement proper caching with `'use cache'` + `cacheTag`
+- Optimize images with Next.js Image component
+
+## Best Practices
+
+### Performance
+- Optimize images using Next.js Image component
+- Implement proper loading states
+- Cache expensive operations via the `src/lib/cache/` helpers (do not bypass)
+- Consider server-side rendering implications
+- Lazy-load non-critical modules
+- Use Server Components for better performance
+
+### Security
+- Sanitize user inputs before processing
+- Validate data at application boundaries
+- Use HTTPS for all Sitecore connections
+- Never expose sensitive configuration in client-side code (including `SITECORE_REVALIDATE_SECRET`)
+- Escape content when rendering to prevent XSS
+
+### Code Quality
+- Follow DRY principle - extract common functionality
+- Use SOLID principles for maintainable code
+- Write self-documenting code with clear intent
+- Implement proper error boundaries
+- Test behavior, not implementation details
