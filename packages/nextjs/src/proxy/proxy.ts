@@ -305,7 +305,7 @@ export const defineProxy = (...proxies: ProxyHandler[]) => {
      * Execute all proxies
      * @param {NextRequest} req request
      * @param {NextResponse} [res] response
-     * @param {boolean} [generateContext] whether to generate context for storing additional information during proxy execution, e.g. for sharing between different proxies or for returning information about executed proxies.
+     * @param {boolean} [generateContext] whether to generate context for storing additional information during proxy execution, e.g. for sharing between different proxies or for returning information about executed proxies. This will change the return type of the function to include the context, so it should be used when the caller needs access to the context or information about executed proxies, e.g. for logging or debugging purposes.
      */
     exec: async <
       GenerateContext extends boolean,
