@@ -5,7 +5,20 @@ import { getSiteRewrite, SITE_KEY } from '@sitecore-content-sdk/content/site';
 import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
+
+/**
+ * Information about executed proxy to be stored in the context
+ * Used for describing successful execution with details about the multisite that was applied
+ * @public
+ */
+export interface SuccessfulMultisiteProxyExecution extends SuccessfulProxyExecution {
+  rewritePath: string;
+  siteName: string;
+  isSitecorePreview: string | undefined;
+}
+
 import debug from '../debug';
+import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from './types';
 
 export type CookieAttributes = {
   /**
@@ -40,7 +53,18 @@ export class MultisiteProxy extends ProxyBase {
     super(config);
   }
 
-  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  /**
+   * Name of the proxy, used as a key in the context to store information about executed proxies
+   */
+  get name() {
+    return 'MultisiteProxy';
+  }
+
+  handle = async (
+    req: NextRequest,
+    res: NextResponse,
+    proxiesContext?: ProxiesContext
+  ): Promise<NextResponse> => {
     try {
       // Path can be rewritten by previously executed proxy
       const pathname = res?.headers.get(REWRITE_HEADER_NAME) || req.nextUrl.pathname;
@@ -125,10 +149,27 @@ export class MultisiteProxy extends ProxyBase {
         cookies: response.cookies,
       });
 
+      const successfulExecution: SuccessfulMultisiteProxyExecution = {
+        executedSuccessfully: true,
+        error: null,
+        rewritePath,
+        siteName,
+        isSitecorePreview,
+      };
+
+      proxiesContext?.set(this.name, successfulExecution);
+
       return response;
     } catch (error) {
       console.log('Multisite proxy failed:');
       console.log(error);
+
+      const failedExecution: FailedProxyExecution = {
+        executedSuccessfully: false,
+        error,
+      };
+
+      proxiesContext?.set(this.name, failedExecution);
       return res;
     }
   };

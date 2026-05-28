@@ -6,6 +6,8 @@ import nextjs, { NextRequest, NextResponse } from 'next/server';
 import debug from '../debug';
 import { LocaleProxy } from './locale-proxy';
 import { REWRITE_HEADER_NAME, LOCALE_HEADER_NAME } from './proxy';
+import type { SuccessfulLocaleProxyExecution } from './locale-proxy';
+import { isSuccessfulProxyExecution } from './utils';
 
 chai.use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -106,6 +108,11 @@ describe('LocaleProxy', () => {
 
   beforeEach(() => {
     debugSpy.resetHistory();
+  });
+
+  it('should expose proxy name', () => {
+    const { proxy } = createProxy();
+    expect(proxy.name).to.equal('LocaleProxy');
   });
 
   describe('disabled / skip', () => {
@@ -256,6 +263,117 @@ describe('LocaleProxy', () => {
 
       expect(finalRes.headers.get(LOCALE_HEADER_NAME)).to.equal('de-DE');
       expect(finalRes.headers.get(REWRITE_HEADER_NAME)).to.equal('/de-DE/about');
+    });
+  });
+
+  describe('execution context', () => {
+    let nextRewriteStub = sinon.stub();
+
+    afterEach(() => {
+      nextRewriteStub.restore();
+    });
+
+    it('should record successful execution with rewrite in context', async () => {
+      const { proxy } = createProxy({
+        config: { ...defaultConfig, locales: ['en', 'de-DE'] },
+      });
+
+      const req = createRequest({
+        nextUrl: {
+          pathname: '/about',
+        },
+      });
+      const res = createResponse();
+      const context = new Map();
+
+      nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+
+      await proxy.handle(req, res, context);
+
+      const info = context.get('LocaleProxy');
+      expect(isSuccessfulProxyExecution<SuccessfulLocaleProxyExecution>(info)).to.equal(true);
+      expect(info).to.deep.equal({
+        executedSuccessfully: true,
+        error: null,
+        rewrote: true,
+        locale: 'en',
+      });
+    });
+
+    it('should record successful execution without rewrite in context', async () => {
+      const { proxy } = createProxy({
+        config: { ...defaultConfig, locales: ['en', 'de-DE'] },
+      });
+
+      const req = createRequest({
+        nextUrl: {
+          pathname: '/de-DE/about',
+        },
+      });
+      const res = createResponse();
+      const context = new Map();
+
+      await proxy.handle(req, res, context);
+
+      const info = context.get('LocaleProxy');
+      expect(isSuccessfulProxyExecution<SuccessfulLocaleProxyExecution>(info)).to.equal(true);
+      expect(info).to.deep.equal({
+        executedSuccessfully: true,
+        error: null,
+        rewrote: false,
+        locale: 'de-DE',
+      });
+    });
+
+    it('should record failed execution in context when context is provided', async () => {
+      const { proxy } = createProxy({
+        config: { ...defaultConfig, locales: ['en'] },
+      });
+      const error = new Error('rewrite failed');
+      const context = new Map();
+      const errorSpy = spy(console, 'log');
+
+      sinon.stub(proxy as LocaleProxy & { rewrite: () => never }, 'rewrite').throws(error);
+
+      const req = createRequest({
+        nextUrl: {
+          pathname: '/about',
+        },
+      });
+      const res = createResponse();
+
+      const finalRes = await proxy.handle(req, res, context);
+
+      expect(context.get('LocaleProxy')).to.deep.equal({
+        executedSuccessfully: false,
+        error,
+      });
+      expect(finalRes).to.equal(res);
+
+      errorSpy.restore();
+    });
+
+    it('should return response when execution fails and context is not provided', async () => {
+      const { proxy } = createProxy({
+        config: { ...defaultConfig, locales: ['en'] },
+      });
+      const error = new Error('rewrite failed without context');
+      const errorSpy = spy(console, 'log');
+
+      sinon.stub(proxy as LocaleProxy & { rewrite: () => never }, 'rewrite').throws(error);
+
+      const req = createRequest({
+        nextUrl: {
+          pathname: '/about',
+        },
+      });
+      const res = createResponse();
+
+      const finalRes = await proxy.handle(req, res);
+
+      expect(finalRes).to.equal(res);
+
+      errorSpy.restore();
     });
   });
 });
