@@ -8,7 +8,7 @@
 
 > **WriteImportMapArgs** = `object`
 
-Defined in: [content/src/tools/codegen/import-map.ts:79](https://github.com/Sitecore/content-sdk/blob/a1d379868299122f98c2bf8e4536466d377703b7/packages/content/src/tools/codegen/import-map.ts#L79)
+Defined in: [content/src/tools/codegen/import-map.ts:79](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/content/src/tools/codegen/import-map.ts#L79)
 
 Args for import map generation
 Specifies paths to include and exclude when generating imports
@@ -19,7 +19,7 @@ Specifies paths to include and exclude when generating imports
 
 > `optional` **exclude?**: `string`[]
 
-Defined in: [content/src/tools/codegen/import-map.ts:81](https://github.com/Sitecore/content-sdk/blob/a1d379868299122f98c2bf8e4536466d377703b7/packages/content/src/tools/codegen/import-map.ts#L81)
+Defined in: [content/src/tools/codegen/import-map.ts:81](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/content/src/tools/codegen/import-map.ts#L81)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [content/src/tools/codegen/import-map.ts:81](https://github.com/Site
 
 > **paths**: `string`[]
 
-Defined in: [content/src/tools/codegen/import-map.ts:80](https://github.com/Sitecore/content-sdk/blob/a1d379868299122f98c2bf8e4536466d377703b7/packages/content/src/tools/codegen/import-map.ts#L80)
+Defined in: [content/src/tools/codegen/import-map.ts:80](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/content/src/tools/codegen/import-map.ts#L80)

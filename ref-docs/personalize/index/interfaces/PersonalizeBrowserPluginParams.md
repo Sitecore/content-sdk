@@ -6,7 +6,7 @@
 
 # Interface: PersonalizeBrowserPluginParams
 
-Defined in: [personalize/src/initialization/plugin-browser.ts:75](https://github.com/Sitecore/content-sdk/blob/a1d379868299122f98c2bf8e4536466d377703b7/packages/personalize/src/initialization/plugin-browser.ts#L75)
+Defined in: [personalize/src/initialization/plugin-browser.ts:75](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/personalize/src/initialization/plugin-browser.ts#L75)
 
 Parameters for creating a personalize browser plugin.
 
@@ -16,7 +16,7 @@ Parameters for creating a personalize browser plugin.
 
 > **adapter**: [`PersonalizeAdapter`](../../internal/interfaces/PersonalizeAdapter.md)
 
-Defined in: [personalize/src/initialization/plugin-browser.ts:79](https://github.com/Sitecore/content-sdk/blob/a1d379868299122f98c2bf8e4536466d377703b7/packages/personalize/src/initialization/plugin-browser.ts#L79)
+Defined in: [personalize/src/initialization/plugin-browser.ts:79](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/personalize/src/initialization/plugin-browser.ts#L79)
 
 The adapter to be used for the personalize browser plugin.
 
@@ -26,6 +26,6 @@ The adapter to be used for the personalize browser plugin.
 
 > `optional` **options?**: [`PersonalizePluginOptions`](PersonalizePluginOptions.md)
 
-Defined in: [personalize/src/initialization/plugin-browser.ts:83](https://github.com/Sitecore/content-sdk/blob/a1d379868299122f98c2bf8e4536466d377703b7/packages/personalize/src/initialization/plugin-browser.ts#L83)
+Defined in: [personalize/src/initialization/plugin-browser.ts:83](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/personalize/src/initialization/plugin-browser.ts#L83)
 
 Optional configuration options for the personalize browser plugin.

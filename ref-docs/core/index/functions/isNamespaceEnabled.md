@@ -8,7 +8,7 @@
 
 > **isNamespaceEnabled**(`namespace`): `boolean`
 
-Defined in: [packages/core/src/debug.ts:48](https://github.com/Sitecore/content-sdk/blob/a1d379868299122f98c2bf8e4536466d377703b7/packages/core/src/debug.ts#L48)
+Defined in: [packages/core/src/debug.ts:48](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/core/src/debug.ts#L48)
 
 Check if a debug namespace is enabled
 

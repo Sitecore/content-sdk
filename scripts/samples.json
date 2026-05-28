@@ -1,9 +1,15 @@
-﻿[
+[
   {
     "template": "nextjs",
     "args": {
       "prerender": "SSG",
       "silent": false
+    }
+  },
+  {
+    "template": "nextjs-app-router-cache-components",
+    "args": {
+      "prerender": "SSG"
     }
   }
 ]

@@ -8,6 +8,6 @@
 
 > **LayoutServiceConfig** = `GraphQLServiceConfig` & `Partial`\<[`SitecoreConfigInput`](../../config/type-aliases/SitecoreConfigInput.md)\[`"layout"`\]\>
 
-Defined in: [content/src/layout/layout-service.ts:17](https://github.com/Sitecore/content-sdk/blob/a1d379868299122f98c2bf8e4536466d377703b7/packages/content/src/layout/layout-service.ts#L17)
+Defined in: [content/src/layout/layout-service.ts:17](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/content/src/layout/layout-service.ts#L17)
 
 Layout service configuration

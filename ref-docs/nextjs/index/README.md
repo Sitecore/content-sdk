@@ -75,9 +75,11 @@
 ## Type Aliases
 
 - [AppPlaceholderProps](type-aliases/AppPlaceholderProps.md)
+- [BuildSitecoreDictionaryCacheTagParams](type-aliases/BuildSitecoreDictionaryCacheTagParams.md)
 - [BYOCComponentParams](type-aliases/BYOCComponentParams.md)
 - [BYOCComponentProps](type-aliases/BYOCComponentProps.md)
 - [CachedPageParams](type-aliases/CachedPageParams.md)
+- [CollectSitecorePageCacheTagsParams](type-aliases/CollectSitecorePageCacheTagsParams.md)
 - [ComponentMap](type-aliases/ComponentMap.md)
 - [ComponentPropsCollection](type-aliases/ComponentPropsCollection.md)
 - [ComponentPropsContextProps](type-aliases/ComponentPropsContextProps.md)
@@ -144,6 +146,8 @@
 ## Functions
 
 - [analyticsProxyAdapter](functions/analyticsProxyAdapter.md)
+- [buildSitecoreDictionaryCacheTag](functions/buildSitecoreDictionaryCacheTag.md)
+- [collectSitecorePageCacheTags](functions/collectSitecorePageCacheTags.md)
 - [ComponentPropsContext](functions/ComponentPropsContext.md)
 - [DesignLibraryApp](functions/DesignLibraryApp.md)
 - [fetchFEaaSComponentServerProps](functions/fetchFEaaSComponentServerProps.md)
