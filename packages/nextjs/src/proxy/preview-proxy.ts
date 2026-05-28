@@ -6,8 +6,8 @@ import { SitecoreClient } from '../client';
 import { EDITING_PARAMS_HEADER } from '../editing/constants';
 import { PREVIEW_COOKIES } from '../editing/utils';
 import debug from '../debug';
-import { ProxiesContext, ProxyBase } from './proxy';
-import { SuccessfulProxyExecution } from './types';
+import { ProxyBase } from './proxy';
+import { ProxiesContext, SuccessfulProxyExecution } from './types';
 
 /**
  * Configuration for PreviewProxy
@@ -48,7 +48,7 @@ export class PreviewProxy extends ProxyBase {
   handle = async (
     req: NextRequest,
     res: NextResponse,
-    context?: ProxiesContext
+    proxiesContext?: ProxiesContext
   ): Promise<NextResponse> => {
     // Run only in internal editing host
     if (!process.env.SITECORE) {
@@ -121,7 +121,7 @@ export class PreviewProxy extends ProxyBase {
         pageDataReceived: false,
       };
 
-      context?.set(this.name, successfulExecution);
+      proxiesContext?.set(this.name, successfulExecution);
 
       return NextResponse.json(
         { html: 'Preview content is not found or access is denied' },
@@ -144,7 +144,7 @@ export class PreviewProxy extends ProxyBase {
       pageDataReceived: true,
     };
 
-    context?.set(this.name, successfulExecution);
+    proxiesContext?.set(this.name, successfulExecution);
 
     return res;
   };

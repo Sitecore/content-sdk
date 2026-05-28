@@ -2,7 +2,7 @@
 
 import { NextResponse, NextRequest } from 'next/server';
 import { getSiteRewrite, SITE_KEY } from '@sitecore-content-sdk/content/site';
-import { ProxiesContext, ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
+import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
 
@@ -18,7 +18,7 @@ export interface SuccessfulMultisiteProxyExecution extends SuccessfulProxyExecut
 }
 
 import debug from '../debug';
-import { FailedProxyExecution, SuccessfulProxyExecution } from './types';
+import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from './types';
 
 export type CookieAttributes = {
   /**
@@ -63,7 +63,7 @@ export class MultisiteProxy extends ProxyBase {
   handle = async (
     req: NextRequest,
     res: NextResponse,
-    context?: ProxiesContext
+    proxiesContext?: ProxiesContext
   ): Promise<NextResponse> => {
     try {
       // Path can be rewritten by previously executed proxy
@@ -157,7 +157,7 @@ export class MultisiteProxy extends ProxyBase {
         isSitecorePreview,
       };
 
-      context?.set(this.name, successfulExecution);
+      proxiesContext?.set(this.name, successfulExecution);
 
       return response;
     } catch (error) {
@@ -169,7 +169,7 @@ export class MultisiteProxy extends ProxyBase {
         error,
       };
 
-      context?.set(this.name, failedExecution);
+      proxiesContext?.set(this.name, failedExecution);
       return res;
     }
   };

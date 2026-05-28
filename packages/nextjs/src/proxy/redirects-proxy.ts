@@ -15,10 +15,10 @@ import {
 } from '@sitecore-content-sdk/core/tools';
 import { NextURL } from 'next/dist/server/web/next-url';
 import { NextRequest, NextResponse } from 'next/server';
-import { ProxiesContext, ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
+import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
-import { FailedProxyExecution, SuccessfulProxyExecution } from './types';
+import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from './types';
 
 const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
 const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
@@ -121,7 +121,7 @@ export class RedirectsProxy extends ProxyBase {
   handle = async (
     req: NextRequest,
     res: NextResponse,
-    context?: ProxiesContext
+    proxiesContext?: ProxiesContext
   ): Promise<NextResponse> => {
     if (!this.config.enabled) {
       debug.redirects('skipped (redirects proxy is disabled globally)');
@@ -301,7 +301,7 @@ export class RedirectsProxy extends ProxyBase {
         isExternal: isAbsoluteUrl,
       };
 
-      context?.set(this.name, successfulExecution);
+      proxiesContext?.set(this.name, successfulExecution);
 
       return redirectedResponse;
     } catch (error) {
@@ -313,7 +313,7 @@ export class RedirectsProxy extends ProxyBase {
         error,
       };
 
-      context?.set(this.name, failedExecution);
+      proxiesContext?.set(this.name, failedExecution);
 
       return res;
     }

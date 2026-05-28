@@ -2,9 +2,9 @@
 
 import { NextResponse, NextRequest } from 'next/server';
 import { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
-import { ProxyBase, ProxyBaseConfig, LOCALE_HEADER_NAME, ProxiesContext } from './proxy';
+import { ProxyBase, ProxyBaseConfig, LOCALE_HEADER_NAME } from './proxy';
 import debug from '../debug';
-import { FailedProxyExecution, SuccessfulProxyExecution } from './types';
+import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from './types';
 
 /**
  * Information about executed proxy to be stored in the context
@@ -51,7 +51,7 @@ export class LocaleProxy extends ProxyBase {
   handle = async (
     req: NextRequest,
     res: NextResponse,
-    context?: ProxiesContext
+    proxiesContext?: ProxiesContext
   ): Promise<NextResponse> => {
     try {
       const { pathname } = req.nextUrl;
@@ -88,7 +88,7 @@ export class LocaleProxy extends ProxyBase {
           locale,
         };
 
-        context?.set(this.name, successfulExecution);
+        proxiesContext?.set(this.name, successfulExecution);
 
         return response;
       }
@@ -107,7 +107,7 @@ export class LocaleProxy extends ProxyBase {
         locale,
       };
 
-      context?.set(this.name, successfulExecution);
+      proxiesContext?.set(this.name, successfulExecution);
 
       return res;
     } catch (error) {
@@ -119,7 +119,7 @@ export class LocaleProxy extends ProxyBase {
         error,
       };
 
-      context?.set(this.name, failedExecution);
+      proxiesContext?.set(this.name, failedExecution);
 
       return res;
     }

@@ -7,7 +7,7 @@ import {
 } from '@sitecore-content-sdk/content/client';
 import { PREVIEW_COOKIES } from '../editing/utils';
 import debug from '../debug';
-import { FailedProxyExecution, SuccessfulProxyExecution } from './types';
+import { ProxiesContext } from './types';
 
 export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
 export const LOCALE_HEADER_NAME = 'x-sc-locale';
@@ -40,17 +40,6 @@ export type ProxyBaseConfig = {
 };
 
 /**
- * Information about executed proxy to be stored in the context
- */
-export type ProxiesContextMapValue = FailedProxyExecution | SuccessfulProxyExecution;
-
-/**
- * The context object that can be used by proxies to share information between each other or to return information about executed proxies. It is a Map with proxy name as key and an object with any information as value.
- * @public
- */
-export type ProxiesContext = Map<string, ProxiesContextMapValue>;
-
-/**
  * Proxy handler class to be extended by all proxy implementations
  * @public
  */
@@ -64,12 +53,12 @@ export abstract class ProxyHandler {
    * Handler method to execute proxy logic
    * @param {NextRequest} req request
    * @param {NextResponse} res response
-   * @param {ProxiesContext} context additional context that can be used by the proxy, e.g. for storing values to share between different proxies
+   * @param {ProxiesContext} proxiesContext context to share information between proxies
    */
   abstract handle(
     req: NextRequest,
     res: NextResponse,
-    context?: ProxiesContext
+    proxiesContext?: ProxiesContext
   ): Promise<NextResponse>;
 }
 
@@ -305,23 +294,10 @@ export const defineProxy = (...proxies: ProxyHandler[]) => {
      * Execute all proxies
      * @param {NextRequest} req request
      * @param {NextResponse} [res] response
-     * @param {boolean} [generateContext] whether to generate context for storing additional information during proxy execution, e.g. for sharing between different proxies or for returning information about executed proxies. This will change the return type of the function to include the context, so it should be used when the caller needs access to the context or information about executed proxies, e.g. for logging or debugging purposes.
+     * @param {ProxiesContext} [proxiesContext] context to share information between proxies
      */
-    exec: async <
-      GenerateContext extends boolean,
-      ExecReturnType = GenerateContext extends true
-        ? {
-            context: ProxiesContext;
-            response: NextResponse<unknown>;
-          }
-        : NextResponse<unknown>
-    >(
-      req: NextRequest,
-      res?: NextResponse,
-      generateContext?: GenerateContext
-    ): Promise<ExecReturnType> => {
+    exec: async (req: NextRequest, res?: NextResponse, proxiesContext?: ProxiesContext) => {
       const response = res || NextResponse.next();
-      const context = generateContext ? new Map<string, ProxiesContextMapValue>() : undefined;
 
       debug.common('proxy start');
 
@@ -334,16 +310,14 @@ export const defineProxy = (...proxies: ProxyHandler[]) => {
             // denied the request (e.g. PreviewProxy returning 403).
             if (res.status === 403) return res;
 
-            return proxy.handle(req, res, context);
+            return proxy.handle(req, res, proxiesContext);
           }),
         Promise.resolve(response)
       );
 
       debug.common('proxy end in %dms', Date.now() - start);
 
-      if (generateContext) return { context, response: proxyResponse } as ExecReturnType;
-
-      return proxyResponse as ExecReturnType;
+      return proxyResponse;
     },
   };
 };

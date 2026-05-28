@@ -5,9 +5,10 @@ import chai, { use } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import chaiString from 'chai-string';
-import { defineProxy, ProxyHandler, ProxyBase, REWRITE_HEADER_NAME } from './proxy';
+import { defineProxy, ProxyHandler, ProxyBase, REWRITE_HEADER_NAME, ProxiesContext } from './proxy';
 import { NextRequest, NextResponse } from 'next/server';
 import { SiteResolver } from '../site';
+import { SuccessfulProxyExecution } from './types';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -756,13 +757,17 @@ describe('defineProxy', () => {
   });
 
   it('should pass context to proxies when generateContext is true', async () => {
+    const proxiesContext: ProxiesContext = new Map();
+    const successfulExecution: { marker: string } & SuccessfulProxyExecution = {
+      executedSuccessfully: true,
+      error: null,
+      marker: 'seen',
+    };
+
     const contextProxy: ProxyHandler = {
-      handle: (_req, res, context) => {
-        context?.set('ContextProxy', {
-          executedSuccessfully: true,
-          error: null,
-          marker: 'seen',
-        });
+      name: 'ContextProxy',
+      handle: (_req, res, proxiesContext) => {
+        proxiesContext?.set('ContextProxy', successfulExecution);
         return Promise.resolve(res);
       },
     };
@@ -770,20 +775,20 @@ describe('defineProxy', () => {
     const req = {} as NextRequest;
     const res = { status: 200 } as unknown as NextResponse;
 
-    const result = await defineProxy(contextProxy).exec(req, res, true);
+    await defineProxy(contextProxy).exec(req, res, proxiesContext);
 
-    expect(result.context.get('ContextProxy')).to.deep.equal({
+    expect(proxiesContext.get('ContextProxy')).to.deep.equal({
       executedSuccessfully: true,
       error: null,
       marker: 'seen',
     });
-    expect(result.response).to.equal(res);
   });
 
-  it('should not provide context when generateContext is false', async () => {
+  it('should not provide context when proxiesContext is not provided', async () => {
     let receivedContext: unknown;
 
     const contextProxy: ProxyHandler = {
+      name: 'ContextProxy',
       handle: (_req, res, context) => {
         receivedContext = context;
         return Promise.resolve(res);
@@ -793,7 +798,7 @@ describe('defineProxy', () => {
     const req = {} as NextRequest;
     const res = { status: 200 } as unknown as NextResponse;
 
-    const result = await defineProxy(contextProxy).exec(req, res, false);
+    const result = await defineProxy(contextProxy).exec(req, res, undefined);
 
     expect(receivedContext).to.be.undefined;
     expect(result).to.equal(res);

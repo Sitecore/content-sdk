@@ -21,7 +21,12 @@ export {
 export { default as debug } from '../debug';
 
 export { isSuccessfulProxyExecution } from './utils';
-export type { FailedProxyExecution, SuccessfulProxyExecution } from './types';
+export type {
+  FailedProxyExecution,
+  SuccessfulProxyExecution,
+  ProxiesContext,
+  ProxiesContextMapValue,
+} from './types';
 export type { SuccessfulRedirectsProxyExecution } from './redirects-proxy';
 export type { SuccessfulPreviewProxyExecution } from './preview-proxy';
 export type { SuccessfulPersonalizeProxyExecution } from './personalize-proxy';

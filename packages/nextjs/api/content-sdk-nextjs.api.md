@@ -223,10 +223,8 @@ export class BotTrackingProxy extends ProxyBase {
     constructor(config: BotTrackingProxyConfig);
     // (undocumented)
     protected config: BotTrackingProxyConfig;
-    // Warning: (ae-forgotten-export) The symbol "ProxiesContext" needs to be exported by the entry point api-surface.d.ts
-    //
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse, context?: ProxiesContext) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
     get name(): string;
     // @internal (undocumented)
     protected shouldSkipForLocalEnvironment(req: NextRequest): boolean;
@@ -421,10 +419,7 @@ export const defineConfig: (config?: SitecoreConfigInput) => SitecoreConfig;
 
 // @public
 export const defineProxy: (...proxies: ProxyHandler_2[]) => {
-    exec: <GenerateContext extends boolean, ExecReturnType = GenerateContext extends true ? {
-        context: ProxiesContext;
-        response: NextResponse<unknown>;
-    } : NextResponse<unknown>>(req: NextRequest, res?: NextResponse, generateContext?: GenerateContext) => Promise<ExecReturnType>;
+    exec: (req: NextRequest, res?: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse<unknown>>;
 };
 
 export { DesignLibrary }
@@ -648,8 +643,6 @@ export { isEditorActive }
 // @public
 export const isServerSidePropsContext: (context: GetServerSidePropsContext | GetStaticPropsContext) => context is GetServerSidePropsContext;
 
-// Warning: (ae-forgotten-export) The symbol "ProxiesContextMapValue" needs to be exported by the entry point api-surface.d.ts
-//
 // @public
 export function isSuccessfulProxyExecution<SuccessfulProxyType = unknown, T extends ProxiesContextMapValue | undefined = ProxiesContextMapValue | undefined>(info: T): info is T & SuccessfulProxyType;
 
@@ -690,7 +683,7 @@ export class LocaleProxy extends ProxyBase {
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
     protected getLocaleFromPath(path: string): string | undefined;
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse, context?: ProxiesContext) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
     get name(): string;
 }
 
@@ -712,7 +705,7 @@ export class MultisiteProxy extends ProxyBase {
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
     protected getSiteRewrite(pathname: string, siteName: string): string;
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse, context?: ProxiesContext) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
     get name(): string;
     protected shouldSkipWhenDisabled(): boolean;
     protected shouldWarnWhenDisabled(_res: NextResponse): void;
@@ -778,7 +771,7 @@ export class PersonalizeProxy extends ProxyBase {
     // Warning: (ae-forgotten-export) The symbol "PersonalizeExecution" needs to be exported by the entry point api-surface.d.ts
     protected getPersonalizeExecutions(personalizeInfo: PersonalizeInfo, language: string): PersonalizeExecution[];
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse, context?: ProxiesContext) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
     // (undocumented)
     protected initPersonalizeServer(input: {
         hostname: string;
@@ -846,7 +839,7 @@ export class PreviewProxy extends ProxyBase {
     // (undocumented)
     protected client: SitecoreClient;
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse, context?: ProxiesContext) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
     get name(): string;
 }
 
@@ -854,6 +847,12 @@ export class PreviewProxy extends ProxyBase {
 export type PreviewProxyConfig = {
     client: SitecoreClient;
 };
+
+// @public
+export type ProxiesContext = Map<string, ProxiesContextMapValue>;
+
+// @public
+export type ProxiesContextMapValue = FailedProxyExecution | SuccessfulProxyExecution;
 
 // @public
 export abstract class ProxyBase extends ProxyHandler_2 {
@@ -892,7 +891,7 @@ export type ProxyBaseConfig = {
 
 // @public
 abstract class ProxyHandler_2 {
-    abstract handle(req: NextRequest, res: NextResponse, context?: ProxiesContext): Promise<NextResponse>;
+    abstract handle(req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext): Promise<NextResponse>;
     abstract get name(): string;
 }
 export { ProxyHandler_2 as ProxyHandler }
@@ -917,7 +916,7 @@ export class RedirectsProxy extends ProxyBase {
     // Warning: (ae-forgotten-export) The symbol "RedirectResult" needs to be exported by the entry point api-surface.d.ts
     protected getExistsRedirect(req: NextRequest, siteName: string, requestLocale: string): Promise<RedirectResult | undefined>;
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse, context?: ProxiesContext) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
     protected matchFromRedirectMapRedirect(redirects: RedirectResult[], urlLocale: string, incomingURL: string, incomingQS: string): RedirectResult | undefined;
     protected matchRedirectItemRedirect(redirects: RedirectResult[], locale: string, currentPath: string): RedirectResult | undefined;
     get name(): string;

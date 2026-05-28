@@ -4,10 +4,10 @@ import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
 import { eventsPlugin, botPageView } from '@sitecore-content-sdk/events';
 import { isBot, BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/analytics-core/internal';
-import { ProxiesContext, ProxyBase, ProxyBaseConfig } from './proxy';
+import { ProxyBase, ProxyBaseConfig } from './proxy';
 import debug from '../debug';
 import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter';
-import { FailedProxyExecution, SuccessfulProxyExecution } from './types';
+import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from './types';
 
 /**
  * Information about executed proxy to be stored in the context
@@ -53,7 +53,7 @@ export class BotTrackingProxy extends ProxyBase {
   handle = async (
     req: NextRequest,
     res: NextResponse,
-    context?: ProxiesContext
+    proxiesContext?: ProxiesContext
   ): Promise<NextResponse> => {
     try {
       const isDisabled = (this.config.skip && this.config.skip(req, res)) || false;
@@ -147,7 +147,7 @@ export class BotTrackingProxy extends ProxyBase {
         botDetected: true,
       };
 
-      context?.set(this.name, successfulExecution);
+      proxiesContext?.set(this.name, successfulExecution);
 
       return res;
     } catch (error) {
@@ -158,7 +158,7 @@ export class BotTrackingProxy extends ProxyBase {
         error,
       };
 
-      context?.set(this.name, failedExecution);
+      proxiesContext?.set(this.name, failedExecution);
 
       return res;
     }

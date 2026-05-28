@@ -1,4 +1,4 @@
-import { ProxiesContextMapValue } from './proxy';
+import { ProxiesContextMapValue } from './types';
 
 /**
  * Type guard to check if the proxy execution was successful
@@ -14,4 +14,3 @@ export function isSuccessfulProxyExecution<
 >(info: T): info is T & SuccessfulProxyType {
   return info?.executedSuccessfully === true;
 }
-

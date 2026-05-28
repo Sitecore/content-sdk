@@ -12,11 +12,11 @@ import { personalize } from '@sitecore-content-sdk/personalize';
 import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
 import { personalizeServerPlugin } from '@sitecore-content-sdk/personalize';
 import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter';
-import { ProxiesContext, ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
+import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
 import { personalizeProxyAdapter } from '../initialization/proxy/personalize-adapter';
-import { FailedProxyExecution, SuccessfulProxyExecution } from './types';
+import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from './types';
 
 /**
  * Information about executed proxy to be stored in the context
@@ -132,7 +132,7 @@ export class PersonalizeProxy extends ProxyBase {
   handle = async (
     req: NextRequest,
     res: NextResponse,
-    context?: ProxiesContext
+    proxiesContext?: ProxiesContext
   ): Promise<NextResponse> => {
     if (!this.config.enabled) {
       debug.personalize('skipped (personalize proxy is disabled globally)');
@@ -270,7 +270,7 @@ export class PersonalizeProxy extends ProxyBase {
         rewritePath,
       };
 
-      context?.set(this.name, successfulExecution);
+      proxiesContext?.set(this.name, successfulExecution);
 
       return response;
     } catch (error) {
@@ -282,7 +282,7 @@ export class PersonalizeProxy extends ProxyBase {
         error,
       };
 
-      context?.set(this.name, failedExecution);
+      proxiesContext?.set(this.name, failedExecution);
 
       return res;
     }
