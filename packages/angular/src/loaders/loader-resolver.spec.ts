@@ -7,8 +7,8 @@ import { provideRouter, RedirectCommand, Router } from '@angular/router';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { loaderResolver } from './loader-resolver';
 import { LOADER_ID, LOADER_REGISTRY } from './loader-registry.token';
-import { LoaderDataService } from './loader-data.service';
-import { provideServerLoaderDataProvider } from '../server/provide-server-loader-data-provider';
+import { ClientLoaderDataService } from './client-loader-data.service';
+import { provideServerLoaderRunner } from '../server/provide-server-loader-runner';
 import { LOADER_DATA_ENDPOINT } from '../server/constants';
 import { createLoaderCache } from '../server/cache/loader-cache';
 import type { LoaderFn } from './models';
@@ -48,7 +48,7 @@ describe('loaderResolver', () => {
           TransferState,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: LOADER_REGISTRY, useValue: { page: (async () => ({})) as LoaderFn } },
-          { provide: LoaderDataService, useValue: mockLoaderData },
+          { provide: ClientLoaderDataService, useValue: mockLoaderData },
         ],
       });
       transferState = TestBed.inject(TransferState);
@@ -74,7 +74,7 @@ describe('loaderResolver', () => {
       expect(mockLoaderData.getData).not.toHaveBeenCalled();
     });
 
-    it('should call LoaderDataService.getData with correct request and return data', async () => {
+    it('should call ClientLoaderDataService.getData with correct request and return data', async () => {
       mockLoaderData.getData.mockResolvedValue({ kind: 'data', data: { title: 'Home' } });
 
       const resolver = loaderResolver('page');
@@ -159,7 +159,7 @@ describe('loaderResolver', () => {
     });
   });
 
-  describe('browser with real LoaderDataService (pending handling)', () => {
+  describe('browser with real ClientLoaderDataService (pending handling)', () => {
     let httpController: HttpTestingController;
 
     beforeEach(() => {
@@ -170,7 +170,7 @@ describe('loaderResolver', () => {
           provideHttpClient(),
           provideHttpClientTesting(),
           TransferState,
-          LoaderDataService,
+          ClientLoaderDataService,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: LOADER_REGISTRY, useValue: { page: (async () => ({})) as LoaderFn } },
         ],
@@ -233,7 +233,7 @@ describe('loaderResolver', () => {
     });
 
     it('should remove pending promise when fetch settles so a later call triggers a new request', async () => {
-      const loaderData = TestBed.inject(LoaderDataService);
+      const loaderData = TestBed.inject(ClientLoaderDataService);
       const resolver = loaderResolver('page');
       const route = makeRouteSnapshot({ pathFromRoot: [{ params: {} }] });
       const state = makeRouterStateSnapshot('/after-settle');
@@ -277,8 +277,8 @@ describe('loaderResolver', () => {
           TransferState,
           { provide: PLATFORM_ID, useValue: 'server' },
           { provide: LOADER_REGISTRY, useValue: { page: mockLoader } },
-          { provide: LoaderDataService, useValue: { getData: vi.fn() } },
-          provideServerLoaderDataProvider(),
+          { provide: ClientLoaderDataService, useValue: { getData: vi.fn() } },
+          provideServerLoaderRunner(),
         ],
       });
       transferState = TestBed.inject(TransferState);
@@ -360,9 +360,7 @@ describe('loaderResolver', () => {
 
     it('should reuse cached loader output on SSR when REQUEST_CONTEXT provides a cache', async () => {
       TestBed.resetTestingModule();
-      const cachedLoader = vi.fn().mockResolvedValue({ cached: true }) as ReturnType<
-        typeof vi.fn
-      > &
+      const cachedLoader = vi.fn().mockResolvedValue({ cached: true }) as ReturnType<typeof vi.fn> &
         LoaderFn;
       const cache = createLoaderCache({ revalidate: 300 });
       TestBed.configureTestingModule({
@@ -371,9 +369,9 @@ describe('loaderResolver', () => {
           TransferState,
           { provide: PLATFORM_ID, useValue: 'server' },
           { provide: LOADER_REGISTRY, useValue: { page: cachedLoader } },
-          { provide: LoaderDataService, useValue: { getData: vi.fn() } },
+          { provide: ClientLoaderDataService, useValue: { getData: vi.fn() } },
           { provide: REQUEST_CONTEXT, useValue: { cache } },
-          provideServerLoaderDataProvider(),
+          provideServerLoaderRunner(),
         ],
       });
 
@@ -413,9 +411,9 @@ describe('loaderResolver', () => {
           TransferState,
           { provide: PLATFORM_ID, useValue: 'server' },
           { provide: LOADER_REGISTRY, useValue: { page: loaderWithRequest } },
-          { provide: LoaderDataService, useValue: { getData: vi.fn() } },
+          { provide: ClientLoaderDataService, useValue: { getData: vi.fn() } },
           { provide: REQUEST, useValue: mockRequest },
-          provideServerLoaderDataProvider(),
+          provideServerLoaderRunner(),
         ],
       });
     });
@@ -463,8 +461,8 @@ describe('loaderResolver', () => {
           TransferState,
           { provide: PLATFORM_ID, useValue: 'server' },
           { provide: LOADER_REGISTRY, useValue: { page: mockLoader } },
-          { provide: LoaderDataService, useValue: { getData: vi.fn() } },
-          provideServerLoaderDataProvider(),
+          { provide: ClientLoaderDataService, useValue: { getData: vi.fn() } },
+          provideServerLoaderRunner(),
           {
             provide: SITECORE_CONFIG_TOKEN,
             useValue: {

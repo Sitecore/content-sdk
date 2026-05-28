@@ -11,8 +11,8 @@ export {
   DataHandlerConfig,
 } from './models';
 
-export { ServerLoaderDataProvider } from './loader-data.provider';
-export { provideServerLoaderDataProvider } from './provide-server-loader-data-provider';
+export { ServerLoaderRunner } from './server-loader-runner';
+export { provideServerLoaderRunner } from './provide-server-loader-runner';
 
 export * from './middleware';
 

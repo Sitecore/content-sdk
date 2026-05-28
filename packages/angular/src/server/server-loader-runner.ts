@@ -10,7 +10,8 @@ import { buildCacheKey } from './cache/cache-key';
 import { buildLoaderCacheTags } from './cache/cache-tags';
 
 /**
- * Server-side loader data provider with stale-while-revalidate cache reads (Phase 3).
+ * Server-side cache aware loader data resolver.
+ * {@link LoaderResolver} is exposed to both server and browser. This layer ensures browser safety and acts as connecting layer to cache.
  *
  * Resolution order when a {@link LoaderCache} is attached:
  * 1. **hit** — return cached value immediately.
@@ -23,20 +24,20 @@ import { buildLoaderCacheTags } from './cache/cache-tags';
  * the global cache is disabled.
  * @public
  */
-export class ServerLoaderDataProvider {
+export class ServerLoaderRunner {
   /** Process-wide coalescing for stale-while-revalidate background refreshes. */
   private static readonly pendingCacheOps = new Set<string>();
 
   /**
-   * @param registry - Same loader map as `provideLoaderRegistry` / `/_data` middleware.
-   * @param cache - Optional cache instance from {@link createLoaderCache}.
+   * @param {LoaderRegistry} registry - Same loader map as `provideLoaderRegistry` / `/_data` middleware.
+   * @param {LoaderCache | undefined} cache - Optional cache instance from {@link createLoaderCache}.
    */
   constructor(private readonly registry: LoaderRegistry, private readonly cache?: LoaderCache) {}
 
   /**
    * Resolve loader data with optional cache read-through and SWR refresh.
-   * @param request - Loader id, URL, params, optional request context and cache overrides.
-   * @returns Data, redirect, or error result for the middleware / SSR resolver.
+   * @param {LoaderApiRequest} request - Loader id, URL, params, optional request context and cache overrides.
+   * @returns {Promise<LoaderDataResult>} Data, redirect, or error result for the middleware / SSR resolver.
    */
   async resolve(request: LoaderApiRequest): Promise<LoaderDataResult> {
     const { loaderId, url, params, query, angularRequestContext, cacheOptions } = request;
@@ -63,20 +64,26 @@ export class ServerLoaderDataProvider {
       }
     }
 
-    return this.runLoader({ request, ctx, cacheable: !!cacheable });
+    return this.runLoader({ request, ctx, cacheable: !!cacheable, cacheOptions });
   }
 
-  /** Fire-and-forget SWR refresh; skipped when a refresh is already in flight for the key. */
+  /**
+   * Fire-and-forget SWR refresh; skipped when a refresh is already in flight for the key.
+   * @param {LoaderApiRequest} request - The loader request
+   * @param {LoaderContext} ctx - The loader context
+   * @param {string} cacheKey - The cache key
+   * @param {LoaderApiRequest['cacheOptions']} cacheOptions - The cache options
+   */
   private scheduleBackgroundRefresh(
     request: LoaderApiRequest,
     ctx: LoaderContext,
     cacheKey: string,
     cacheOptions: LoaderApiRequest['cacheOptions']
   ): void {
-    if (ServerLoaderDataProvider.pendingCacheOps.has(cacheKey)) {
+    if (ServerLoaderRunner.pendingCacheOps.has(cacheKey)) {
       return;
     }
-    ServerLoaderDataProvider.pendingCacheOps.add(cacheKey);
+    ServerLoaderRunner.pendingCacheOps.add(cacheKey);
     void this.runLoader({
       request,
       ctx,
@@ -85,10 +92,10 @@ export class ServerLoaderDataProvider {
       knownCacheKey: cacheKey,
     }).then(
       () => {
-        ServerLoaderDataProvider.pendingCacheOps.delete(cacheKey);
+        ServerLoaderRunner.pendingCacheOps.delete(cacheKey);
       },
       () => {
-        ServerLoaderDataProvider.pendingCacheOps.delete(cacheKey);
+        ServerLoaderRunner.pendingCacheOps.delete(cacheKey);
       }
     );
   }

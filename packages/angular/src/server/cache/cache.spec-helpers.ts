@@ -95,6 +95,15 @@ export function runSharedLoaderCacheContract(
       expect((await cache.get(key)).kind).toBe('stale');
     });
 
+    it('counts already stale entries during invalidate without rewriting them', async () => {
+      const key = sampleKey('stale-twice');
+      await cache.set(key, { value: 1 }, 300, sampleTags('stale-twice'));
+
+      expect(await cache.invalidate({ tags: [key] })).toBe(1);
+      expect(await cache.invalidate({ tags: [key] })).toBe(1);
+      expect((await cache.get(key)).kind).toBe('stale');
+    });
+
     it('deletes a key and unlinks it from the tag index', async () => {
       const key = sampleKey('delete-me');
       await cache.set(key, { temp: true }, 300, sampleTags('delete-me'));

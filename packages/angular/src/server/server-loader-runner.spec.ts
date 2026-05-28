@@ -1,11 +1,11 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ServerLoaderDataProvider } from './loader-data.provider';
+import { ServerLoaderRunner } from './server-loader-runner';
 import type { LoaderCache, LoaderFn } from '../loaders/models';
 import { createLoaderCache } from './cache/loader-cache';
 import { buildCacheKey } from './cache/cache-key';
 
-describe('ServerLoaderDataProvider', () => {
+describe('ServerLoaderRunner', () => {
   const pageLoader: LoaderFn = vi.fn().mockResolvedValue({ title: 'Page' });
 
   beforeEach(() => {
@@ -14,7 +14,7 @@ describe('ServerLoaderDataProvider', () => {
   });
 
   it('should return error when loader id is not in registry', async () => {
-    const provider = new ServerLoaderDataProvider({});
+    const provider = new ServerLoaderRunner({});
     const result = await provider.resolve({
       loaderId: 'missing',
       url: '/path',
@@ -29,7 +29,7 @@ describe('ServerLoaderDataProvider', () => {
   });
 
   it('should invoke loader and return data on cache miss', async () => {
-    const provider = new ServerLoaderDataProvider({ page: pageLoader });
+    const provider = new ServerLoaderRunner({ page: pageLoader });
     const result = await provider.resolve({
       loaderId: 'page',
       url: '/about',
@@ -59,7 +59,7 @@ describe('ServerLoaderDataProvider', () => {
       getConfig: vi.fn(),
     };
 
-    const provider = new ServerLoaderDataProvider({ page: pageLoader }, cache);
+    const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
     const result = await provider.resolve({
       loaderId: 'page',
       url: '/cached',
@@ -76,7 +76,7 @@ describe('ServerLoaderDataProvider', () => {
       loaderRedirectTarget: '/other',
       status: 302,
     });
-    const provider = new ServerLoaderDataProvider({ page: pageLoader });
+    const provider = new ServerLoaderRunner({ page: pageLoader });
     const result = await provider.resolve({
       loaderId: 'page',
       url: '/redirect',
@@ -93,7 +93,7 @@ describe('ServerLoaderDataProvider', () => {
   it('should return error with cause when loader throws', async () => {
     const err = new Error('Loader failed');
     vi.mocked(pageLoader).mockRejectedValueOnce(err);
-    const provider = new ServerLoaderDataProvider({ page: pageLoader });
+    const provider = new ServerLoaderRunner({ page: pageLoader });
     const result = await provider.resolve({
       loaderId: 'page',
       url: '/fail',
@@ -121,7 +121,7 @@ describe('ServerLoaderDataProvider', () => {
       getConfig: vi.fn(),
     };
 
-    const provider = new ServerLoaderDataProvider({ page: pageLoader }, cache);
+    const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
     await provider.resolve({
       loaderId: 'page',
       url: '/store',
@@ -145,7 +145,7 @@ describe('ServerLoaderDataProvider', () => {
       getConfig: vi.fn(),
     };
 
-    const provider = new ServerLoaderDataProvider({ page: pageLoader }, cache);
+    const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
     await provider.resolve({
       loaderId: 'page',
       url: '/live',
@@ -166,7 +166,7 @@ describe('ServerLoaderDataProvider', () => {
 
   it('should use the cache for a route that opts in even when global caching is disabled', async () => {
     const cache = createLoaderCache({ enabled: false, revalidate: 300 });
-    const provider = new ServerLoaderDataProvider({ page: pageLoader }, cache);
+    const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
     const request = {
       loaderId: 'page',
       url: '/featured',
@@ -179,6 +179,52 @@ describe('ServerLoaderDataProvider', () => {
     await provider.resolve(request);
 
     expect(pageLoader).toHaveBeenCalledTimes(1);
+  });
+
+  it('should pass cacheOptions.revalidate as TTL to cache.set', async () => {
+    const cache = createLoaderCache({ revalidate: 300 });
+    const setSpy = vi.spyOn(cache, 'set');
+    const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
+    const request = {
+      loaderId: 'page',
+      url: '/ttl-override',
+      params: { site: 'demo', locale: 'en' },
+      query: {},
+      cacheOptions: { enabled: true, revalidate: 60 },
+    };
+
+    await provider.resolve(request);
+
+    expect(setSpy).toHaveBeenCalledTimes(1);
+    expect(setSpy).toHaveBeenCalledWith(
+      expect.any(String),
+      { title: 'Page' },
+      60,
+      expect.any(Array)
+    );
+    setSpy.mockRestore();
+  });
+
+  it('should merge cacheOptions.tags into tags passed to cache.set', async () => {
+    const cache = createLoaderCache({ revalidate: 300 });
+    const setSpy = vi.spyOn(cache, 'set');
+    const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
+    const request = {
+      loaderId: 'page',
+      url: '/tagged',
+      params: { site: 'demo', locale: 'en' },
+      query: {},
+      cacheOptions: { enabled: true, tags: ['featured', 'campaign-x'] },
+    };
+
+    await provider.resolve(request);
+
+    expect(setSpy).toHaveBeenCalledTimes(1);
+    const tags = setSpy.mock.calls[0][3] as string[];
+    expect(tags).toContain('featured');
+    expect(tags).toContain('campaign-x');
+    expect(tags).toContain('sc:site:demo');
+    setSpy.mockRestore();
   });
 
   it('should not cache redirect responses', async () => {
@@ -198,7 +244,7 @@ describe('ServerLoaderDataProvider', () => {
       getConfig: vi.fn(),
     };
 
-    const provider = new ServerLoaderDataProvider({ page: pageLoader }, cache);
+    const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
     const result = await provider.resolve({
       loaderId: 'page',
       url: '/protected',
@@ -214,7 +260,7 @@ describe('ServerLoaderDataProvider', () => {
     let version = 1;
     const loader = vi.fn(async () => ({ title: `v${version++}` }));
     const cache = createLoaderCache({ revalidate: 300 });
-    const provider = new ServerLoaderDataProvider({ page: loader }, cache);
+    const provider = new ServerLoaderRunner({ page: loader }, cache);
     const request = {
       loaderId: 'page',
       url: '/about',
@@ -243,7 +289,7 @@ describe('ServerLoaderDataProvider', () => {
     let version = 1;
     const loader = vi.fn(async () => ({ title: `v${version++}` }));
     const cache = createLoaderCache({ revalidate: 300 });
-    const provider = new ServerLoaderDataProvider({ page: loader }, cache);
+    const provider = new ServerLoaderRunner({ page: loader }, cache);
     const request = {
       loaderId: 'page',
       url: '/coalesce',
@@ -280,7 +326,7 @@ describe('ServerLoaderDataProvider', () => {
       getConfig: vi.fn(),
     };
 
-    const provider = new ServerLoaderDataProvider({ page: loader }, cache);
+    const provider = new ServerLoaderRunner({ page: loader }, cache);
     const result = await provider.resolve({
       loaderId: 'page',
       url: '/warn',

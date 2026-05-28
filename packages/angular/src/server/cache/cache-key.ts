@@ -4,7 +4,7 @@ import { dimensionsFromContext } from './utils';
 import { sanitizeSitecoreCacheSegment } from './utils';
 import { SITECORE_CONTENT_CACHE_TAG_PREFIX } from './cache-tags';
 
-/** Prefix for OSR-aligned loader cache keys (`sc:loader:…`). @public */
+/** Prefix for OSR-aligned loader cache keys (`sc:loader:…`). @internal */
 export const CACHE_KEY_PREFIX = `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:loader`;
 
 /**
@@ -17,7 +17,7 @@ export const CACHE_KEY_PREFIX = `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:loader`;
  * buildCacheKey('page', { url: '/about', params: { site: 'demo', locale: 'en' }, query: {} });
  * // → { key: 'sc:loader:page:demo:en:default:about', dimensions: { … } }
  * ```
- * @public
+ * @internal
  */
 export function buildCacheKey(
   loaderId: string,
@@ -34,7 +34,7 @@ export function buildCacheKey(
  * {@link buildGenericLoaderCacheKey} based on `dimensions.loaderId`.
  * @param {CacheKeyDimensions} dimensions - Parsed cache key dimensions.
  * @returns {string} OSR-aligned cache key.
- * @public
+ * @internal
  */
 export function serializeLoaderCacheKey(dimensions: CacheKeyDimensions): string {
   if (dimensions.loaderId === 'page') {
@@ -50,7 +50,7 @@ export function serializeLoaderCacheKey(dimensions: CacheKeyDimensions): string 
  * Page loader key: `sc:loader:page:<site>:<locale>:<variantId>:<pathKey>`.
  * @param {CacheKeyDimensions} dimensions - Parsed cache key dimensions.
  * @returns {string} Page loader cache key.
- * @public
+ * @internal
  */
 export function buildPageCacheKey(dimensions: CacheKeyDimensions): string {
   const site = sanitizeSitecoreCacheSegment(dimensions.site);
@@ -63,7 +63,7 @@ export function buildPageCacheKey(dimensions: CacheKeyDimensions): string {
  * Dictionary loader key: `sc:loader:dictionary:<site>:<locale>` (one entry per site/locale).
  * @param {CacheKeyDimensions} dimensions - Parsed cache key dimensions.
  * @returns {string} Dictionary loader cache key.
- * @public
+ * @internal
  */
 export function buildDictionaryCacheKey(dimensions: CacheKeyDimensions): string {
   const site = sanitizeSitecoreCacheSegment(dimensions.site);
@@ -76,7 +76,7 @@ export function buildDictionaryCacheKey(dimensions: CacheKeyDimensions): string 
  * Used for loaders other than `page` and `dictionary` (for example `404`, `500`).
  * @param {CacheKeyDimensions} dimensions - Parsed cache key dimensions.
  * @returns {string} Generic loader cache key.
- * @public
+ * @internal
  */
 export function buildGenericLoaderCacheKey(dimensions: CacheKeyDimensions): string {
   const loaderId = sanitizeSitecoreCacheSegment(dimensions.loaderId);

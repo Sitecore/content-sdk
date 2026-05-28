@@ -35,7 +35,7 @@ export interface LoaderDataRequest {
 }
 
 /**
- * Browser-only loader data client. POSTs to the `/_data` endpoint and holds
+ * Loader data client for browser loader data resolution. POSTs to the `/_data` endpoint and holds
  * short-lived prefetched responses for parallel navigation prefetching.
  * Not aware of the server-side {@link LoaderCache}.
  * @public
@@ -43,7 +43,7 @@ export interface LoaderDataRequest {
 @Injectable({
   providedIn: 'root',
 })
-export class LoaderDataService {
+export class ClientLoaderDataService {
   private readonly prefetchedResponses = new Map<string, LoaderApiResponse>();
   private readonly pending = new Map<string, Promise<LoaderApiResponse>>();
   private readonly http = inject(HttpClient);
@@ -83,7 +83,11 @@ export class LoaderDataService {
    */
   async getData(request: LoaderDataRequest): Promise<LoaderApiResponse> {
     if (!isPlatformBrowser(this.platformId)) {
-      return { kind: 'error', status: 500, message: 'LoaderDataService only works in browser' };
+      return {
+        kind: 'error',
+        status: 500,
+        message: 'ClientLoaderDataService only works in browser',
+      };
     }
 
     const key = requestKey(request.loaderId, request.url);
@@ -94,11 +98,13 @@ export class LoaderDataService {
       return staged;
     }
 
+    // Wait for pending loader data request if one exists
     const pendingRequest = this.pending.get(key);
     if (pendingRequest) {
       return pendingRequest;
     }
 
+    // Make new request; add to pending so concurrent callers reuse the same promise
     const pendingFetchData = this.fetchData(request);
     this.pending.set(key, pendingFetchData);
     return pendingFetchData;
@@ -121,6 +127,7 @@ export class LoaderDataService {
       query: request.query ?? {},
       cacheOptions: request.cacheOptions,
     };
+    console.log('DEBUG: ClientLoaderDataService fetchData', endpoint, reqBody);
 
     try {
       const resp = await firstValueFrom(
@@ -128,13 +135,18 @@ export class LoaderDataService {
       );
       if (!resp) {
         const message = `No response from ${endpoint}`;
+        console.log(`DEBUG: ClientLoaderDataService fetchData: ${message}`);
         return { kind: 'error', status: 500, message } as LoaderApiResponse;
       }
-      if (resp.kind === 'data' || resp.kind === 'redirect') {
+      if (resp.kind === 'data') {
+        console.log('DEBUG: ClientLoaderDataService fetchData: data', resp.data);
+        this.prefetchedResponses.set(key, resp);
+      } else if (resp.kind === 'redirect') {
         this.prefetchedResponses.set(key, resp);
       }
       return resp;
     } catch (error) {
+      console.log('DEBUG: ClientLoaderDataService fetchData: error', error);
       const message = error instanceof Error ? error.message : 'Fetch failed';
       return { kind: 'error', status: 500, message } as LoaderApiResponse;
     } finally {

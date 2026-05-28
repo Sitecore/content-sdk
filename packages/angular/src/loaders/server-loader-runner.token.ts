@@ -7,7 +7,7 @@ import { LoaderApiRequest, LoaderDataResult } from './models';
  * {@link provideServerLoaderDataProvider}.
  * @public
  */
-export interface ServerLoaderDataProviderPort {
+export interface ServerLoaderRunnerPort {
   /**
    * Resolve loader data on the server (cache-aware) using the shared {@link LOADER_REGISTRY}.
    * @param {LoaderApiRequest} request - Loader request payload
@@ -21,6 +21,6 @@ export interface ServerLoaderDataProviderPort {
  * Must be provided via `provideServerLoaderDataProvider()` in server application config.
  * @public
  */
-export const SERVER_LOADER_DATA_PROVIDER = new InjectionToken<ServerLoaderDataProviderPort>(
-  'SERVER_LOADER_DATA_PROVIDER'
+export const SERVER_LOADER_RUNNER = new InjectionToken<ServerLoaderRunnerPort>(
+  'SERVER_LOADER_RUNNER'
 );

@@ -155,25 +155,16 @@ export class LoaderHttpError extends Error {
 }
 
 /**
- * Base config for loader cache. Can be applied per loader.
+ * Base browser-safe config type for loader cache.
  *
  * `revalidate` is in seconds. A positive value caches the entry for that many
  * seconds; `0` or a negative value means "never expire" (rely on explicit
  * invalidation). There is no `'infinite'` sentinel.
  * @public
  */
-export interface LoaderCacheConfig {
-  /** TTL in seconds. Positive → expires after N seconds; `0` or negative → never expires. */
-  revalidate?: number;
-  /** Master switch — when false, every call falls through to the raw loader. */
-  enabled?: boolean;
+export interface LoaderCacheConfig extends PerRouteLoaderCacheConfig {
   /** Default site name for tag helpers and admin tooling. Defaults to `'default'`. */
   defaultSiteName?: string;
-  /**
-   * Custom tags applied to every entry this loader writes. Merged with built-in
-   * OSR tags (self-key, `sc:site`, `sc:locale`, and `sc:item` for page loaders).
-   */
-  tags?: string[];
   /**
    * Site names used by revalidation middleware to fan out dictionary loader tags
    * (`sc:loader:dictionary:<site>:<locale>`) on every webhook call.
@@ -181,6 +172,22 @@ export interface LoaderCacheConfig {
   sites?: string[];
   /** Fallback locale for tag helpers when a site entry has no `language`. Defaults to `'en'`. */
   defaultLocale?: string;
+}
+
+/**
+ * Per-route cache configuration.
+ * @public
+ */
+export interface PerRouteLoaderCacheConfig {
+  /** TTL in seconds. Positive → expires after N seconds; `0` or negative → never expires. */
+  revalidate?: number;
+  /** Master switch — when false, every call falls through to the raw loader. */
+  enabled?: boolean;
+  /**
+   * Custom tags applied to every entry this loader writes. Merged with built-in
+   * OSR tags (self-key, `sc:site`, `sc:locale`, and `sc:item` for page loaders).
+   */
+  tags?: string[];
 }
 
 /**

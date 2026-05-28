@@ -9,18 +9,18 @@ import {
   RedirectCommand,
 } from '@angular/router';
 import { LOADER_ID } from './loader-registry.token';
-import { LoaderDataService } from './loader-data.service';
+import { ClientLoaderDataService } from './client-loader-data.service';
 import { extractRequestContext, applyRedirect } from './utils';
 import {
   DEFAULT_ERROR_ROUTE,
   DEFAULT_NOT_FOUND_ROUTE,
   LoaderHttpError,
   NotFoundNavigationError,
-  LoaderCacheConfig,
+  PerRouteLoaderCacheConfig,
 } from './models';
 import { redirectOnNavigationError } from './router-error-handling';
 import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from '../lib/tokens';
-import { SERVER_LOADER_DATA_PROVIDER } from './server-loader-data-provider.token';
+import { SERVER_LOADER_RUNNER } from './server-loader-runner.token';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 /**
  * Create a state key for the loader
@@ -66,26 +66,33 @@ function buildLoaderParams(route: ActivatedRouteSnapshot, defaultLanguage?: stri
 }
 
 /**
- * Browser-only: load data from transfer state or LoaderDataService.
- * Injects TransferState, LoaderDataService. Called by the resolver when isPlatformBrowser.
+ * Browser-only: load data from transfer state or ClientLoaderDataService.
+ * Injects TransferState, ClientLoaderDataService. Called by the resolver when isPlatformBrowser.
  * @param {ActivatedRouteSnapshot} route - The current route snapshot
  * @param {RouterStateSnapshot} state - The router state snapshot
- * @param {string} loaderId - loader ID to resolve, used for transfer state key and LoaderDataService call
+ * @param {string} loaderId - loader ID to resolve, used for transfer state key and ClientLoaderDataService call
  * @param {Router} router - The Angular router instance
  * @param {string} [defaultLanguage] - Default language for locale fallback in params
  * @param {LoaderCacheConfig} [cacheOptions] - Cache options for the loader
  * @returns {Promise<unknown | RedirectCommand>} The resolved data or redirect command
  */
-async function resolveOnBrowser(
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot,
-  loaderId: string,
-  router: Router,
-  defaultLanguage?: string,
-  cacheOptions?: LoaderCacheConfig
-): Promise<unknown | RedirectCommand> {
+async function resolveOnBrowser({
+  route,
+  state,
+  loaderId,
+  router,
+  defaultLanguage,
+  cacheOptions,
+}: {
+  route: ActivatedRouteSnapshot;
+  state: RouterStateSnapshot;
+  loaderId: string;
+  router: Router;
+  defaultLanguage?: string;
+  cacheOptions?: PerRouteLoaderCacheConfig;
+}): Promise<unknown | RedirectCommand> {
   const transferState = inject(TransferState);
-  const browserLoaderData = inject(LoaderDataService);
+  const browserLoaderData = inject(ClientLoaderDataService);
 
   const url = state.url;
   const key = stateKey(loaderId, url);
@@ -118,9 +125,15 @@ async function resolveOnBrowser(
   return resp.data;
 }
 
+/**
+ * Create a loader resolver function that resolver loader data with optional cache options on server or browser.
+ * @param loaderId - The loader ID
+ * @param cacheOptions - The cache options
+ * @returns loader resolver function
+ */
 export const loaderResolver = (
   loaderId: LoaderId,
-  cacheOptions?: LoaderCacheConfig
+  cacheOptions?: PerRouteLoaderCacheConfig
 ): ResolveFn<unknown> => {
   const resolver = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const transferState = inject(TransferState);
@@ -137,30 +150,30 @@ export const loaderResolver = (
 
     if (isPlatformBrowser(platformId)) {
       try {
-        return await resolveOnBrowser(
+        return await resolveOnBrowser({
           route,
           state,
           loaderId,
           router,
           defaultLanguage,
-          cacheOptions
-        );
+          cacheOptions,
+        });
       } catch (e) {
         // special handling for browser, as navigation error for handleNavigationError is only generated on server
         return redirectOnNavigationError(e as Error, url, notFoundRoute, errorRoute, router);
       }
     }
 
-    const serverLoaderData = inject(SERVER_LOADER_DATA_PROVIDER, { optional: true });
-    if (!serverLoaderData) {
+    const serverLoaderRunner = inject(SERVER_LOADER_RUNNER, { optional: true });
+    if (!serverLoaderRunner) {
       throw new Error(
-        'SSR loader resolution requires provideServerLoaderDataProvider() in server application providers'
+        'SSR loader resolution requires provideServerLoaderRunner() in server application providers'
       );
     }
 
     const angularRequestContext = request ? extractRequestContext(request) : undefined;
 
-    const result = await serverLoaderData.resolve({
+    const result = await serverLoaderRunner.resolve({
       loaderId,
       url,
       params: buildLoaderParams(route, defaultLanguage),

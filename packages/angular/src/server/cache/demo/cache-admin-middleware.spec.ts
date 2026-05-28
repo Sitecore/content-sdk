@@ -1,10 +1,10 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createCacheAdminMiddleware } from './cache-admin-middleware';
-import { createLoaderCache } from './loader-cache';
-import { buildCacheKey } from './cache-key';
-import { buildLoaderCacheTags } from './cache-tags';
-import type { ExpressRequest, ExpressResponse } from '../models';
+import { createLoaderCache } from '../loader-cache';
+import { buildCacheKey } from '../cache-key';
+import { buildLoaderCacheTags } from '../cache-tags';
+import type { ExpressRequest, ExpressResponse } from '../../models';
 
 function createMockRes() {
   return {

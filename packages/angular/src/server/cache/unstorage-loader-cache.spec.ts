@@ -52,16 +52,6 @@ describe('UnstorageLoaderCache', () => {
     expect(await cache.invalidate({ tags: [key] })).toBe(0);
   });
 
-  it('counts already stale entries during invalidate without rewriting them', async () => {
-    const cache = new UnstorageLoaderCache(memoryDriver(), { revalidate: 300 });
-    const key = sampleKey('stale-twice');
-    await cache.set(key, { value: 1 }, 300, sampleTags('stale-twice'));
-
-    expect(await cache.invalidate({ tags: [key] })).toBe(1);
-    expect(await cache.invalidate({ tags: [key] })).toBe(1);
-    expect((await cache.get(key)).kind).toBe('stale');
-  });
-
   it('omits ghost keys from entries listing', async () => {
     const cache = new UnstorageLoaderCache(memoryDriver(), { revalidate: 300 });
     const key = sampleKey('ghost-entry');

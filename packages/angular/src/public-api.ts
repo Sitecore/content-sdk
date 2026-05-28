@@ -71,12 +71,12 @@ import { Router } from '@angular/router';
 // Angular-specific exports
 export * from './loaders/loader-resolver';
 export * from './loaders/loader-registry.token';
-export * from './loaders/loader-data.service';
+export * from './loaders/client-loader-data.service';
 export * from './loaders/pre-loader-data.service';
 export {
-  SERVER_LOADER_DATA_PROVIDER,
-  type ServerLoaderDataProviderPort,
-} from './loaders/server-loader-data-provider.token';
+  SERVER_LOADER_RUNNER,
+  type ServerLoaderRunnerPort,
+} from './loaders/server-loader-runner.token';
 export { type LoaderRegistry } from './loaders/loader-registry.token';
 export {
   NotFoundNavigationError,
@@ -84,6 +84,8 @@ export {
   type LoaderFn,
   type LoaderContext,
   type LoaderDataResult,
+  type PerRouteLoaderCacheConfig,
+  type LoaderCacheConfig,
 } from './loaders/models';
 export { handleNavigationError } from './loaders/router-error-handling';
 export { applyRedirect } from './loaders/utils';

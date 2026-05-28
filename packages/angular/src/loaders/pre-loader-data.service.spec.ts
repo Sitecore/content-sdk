@@ -4,8 +4,8 @@ import { PLATFORM_ID } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { PreLoaderDataService } from './pre-loader-data.service';
-import { LoaderDataService } from './loader-data.service';
+import { ClientPreLoaderDataService } from './pre-loader-data.service';
+import { ClientLoaderDataService } from './client-loader-data.service';
 import { LOADER_ID } from './loader-registry.token';
 
 function makeResolverWithLoaderId(loaderId: string): (() => void) & { [LOADER_ID]: string } {
@@ -36,18 +36,18 @@ function makeRouterStateSnapshot(url: string): RouterStateSnapshot {
   return { url } as RouterStateSnapshot;
 }
 
-describe('PreLoaderDataService', () => {
+describe('ClientPreLoaderDataService', () => {
   let loaderDataPrefetchSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     loaderDataPrefetchSpy = vi.fn();
     TestBed.configureTestingModule({
       providers: [
-        PreLoaderDataService,
+        ClientPreLoaderDataService,
         provideRouter([]),
         { provide: PLATFORM_ID, useValue: 'browser' },
         {
-          provide: LoaderDataService,
+          provide: ClientLoaderDataService,
           useValue: { prefetch: loaderDataPrefetchSpy },
         },
       ],
@@ -75,7 +75,7 @@ describe('PreLoaderDataService', () => {
       (child as MutableSnapshot).pathFromRoot = [root, child];
 
       const state = makeRouterStateSnapshot('/page/123');
-      const service = TestBed.inject(PreLoaderDataService);
+      const service = TestBed.inject(ClientPreLoaderDataService);
 
       await service.prefetchForRoute(child as ActivatedRouteSnapshot, state);
 
@@ -111,7 +111,7 @@ describe('PreLoaderDataService', () => {
       (child as MutableSnapshot).pathFromRoot = [root, child];
 
       const state = makeRouterStateSnapshot('/page');
-      const service = TestBed.inject(PreLoaderDataService);
+      const service = TestBed.inject(ClientPreLoaderDataService);
 
       await service.prefetchForRoute(child as ActivatedRouteSnapshot, state);
 
@@ -128,10 +128,10 @@ describe('PreLoaderDataService', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
-          PreLoaderDataService,
+          ClientPreLoaderDataService,
           provideRouter([]),
           { provide: PLATFORM_ID, useValue: 'server' },
-          { provide: LoaderDataService, useValue: { prefetch: loaderDataPrefetchSpy } },
+          { provide: ClientLoaderDataService, useValue: { prefetch: loaderDataPrefetchSpy } },
         ],
       });
       const root = makeRouteSnapshot({
@@ -141,7 +141,7 @@ describe('PreLoaderDataService', () => {
       });
       (root as MutableSnapshot).pathFromRoot = [root];
       const state = makeRouterStateSnapshot('/');
-      const service = TestBed.inject(PreLoaderDataService);
+      const service = TestBed.inject(ClientPreLoaderDataService);
 
       await service.prefetchForRoute(root as ActivatedRouteSnapshot, state);
 

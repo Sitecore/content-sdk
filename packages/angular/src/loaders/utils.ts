@@ -129,7 +129,6 @@ export function extractRequestContext(req: Request | ExpressLikeRequest): Reques
     };
   }
 
-  // Express-like request object
   const hostHeader = req.headers?.host;
   const hostname = pickHostnameFromHostHeader(
     Array.isArray(hostHeader) ? hostHeader[0] : hostHeader
@@ -142,6 +141,11 @@ export function extractRequestContext(req: Request | ExpressLikeRequest): Reques
   };
 }
 
+/**
+ * Pick the hostname from the host header
+ * @param {string | undefined} host - The host header
+ * @returns {string | undefined} The hostname
+ */
 function pickHostnameFromHostHeader(host: string | undefined): string | undefined {
   if (!host) return undefined;
   const colon = host.indexOf(':');

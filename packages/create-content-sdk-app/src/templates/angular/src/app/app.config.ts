@@ -5,7 +5,7 @@ import {
   provideLoaderRegistry,
   handleNavigationError,
   provideSitecoreAngular,
-  PreLoaderDataService,
+  ClientPreLoaderDataService,
   SITECORE_COMPONENT_MAP,
   SitecoreTranslateLoader,
   LocaleUrlSerializer,
@@ -35,7 +35,7 @@ export const appConfig: ApplicationConfig = {
       sitecoreClient: getClient(),
     }),
     provideLoaderRegistry(LOADERS),
-    PreLoaderDataService,
+    ClientPreLoaderDataService,
     { provide: SITECORE_COMPONENT_MAP, useValue: componentMap },
     { provide: TranslateLoader, useClass: SitecoreTranslateLoader },
     // provides locale aware serializer for csdk and angular router links

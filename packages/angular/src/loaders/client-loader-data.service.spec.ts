@@ -4,13 +4,13 @@ import { PLATFORM_ID } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { LoaderDataService } from './loader-data.service';
+import { ClientLoaderDataService } from './client-loader-data.service';
 import { FETCH_DATA_ENDPOINT } from './loader-registry.token';
 import { LOADER_DATA_ENDPOINT } from '../server/constants';
 import * as sdkCore from '@sitecore-content-sdk/core';
 
-describe('LoaderDataService', () => {
-  let service: LoaderDataService;
+describe('ClientLoaderDataService', () => {
+  let service: ClientLoaderDataService;
   let httpController: HttpTestingController;
   let debugCommonSpy: ReturnType<typeof vi.spyOn>;
 
@@ -23,7 +23,7 @@ describe('LoaderDataService', () => {
     const platformId = overrides.platformId ?? 'browser';
     TestBed.configureTestingModule({
       providers: [
-        LoaderDataService,
+        ClientLoaderDataService,
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: PLATFORM_ID, useValue: platformId },
@@ -32,7 +32,7 @@ describe('LoaderDataService', () => {
           : []),
       ],
     });
-    service = TestBed.inject(LoaderDataService);
+    service = TestBed.inject(ClientLoaderDataService);
     httpController = TestBed.inject(HttpTestingController);
   }
 
@@ -85,7 +85,7 @@ describe('LoaderDataService', () => {
       expect(result).toEqual({
         kind: 'error',
         status: 500,
-        message: 'LoaderDataService only works in browser',
+        message: 'ClientLoaderDataService only works in browser',
       });
       httpController.expectNone(LOADER_DATA_ENDPOINT);
     });

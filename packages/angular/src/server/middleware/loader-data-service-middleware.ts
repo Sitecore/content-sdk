@@ -14,7 +14,7 @@ import {
   ExpressResponse,
 } from '../models';
 import { LOADER_DATA_ENDPOINT } from '../constants';
-import { ServerLoaderDataProvider } from '../loader-data.provider';
+import { ServerLoaderRunner } from '../server-loader-runner';
 
 /**
  * Map loader resolution result to wire-level API response.
@@ -110,7 +110,7 @@ export function createLoaderDataServiceMiddleware(
   options: ExpressDataHandlerOptions
 ): ExpressMiddleware {
   const { loaders, cache, endpoint = LOADER_DATA_ENDPOINT } = options;
-  const serverLoaderData = new ServerLoaderDataProvider(loaders, cache);
+  const serverLoaderData = new ServerLoaderRunner(loaders, cache);
 
   return async (
     req: ExpressRequest,

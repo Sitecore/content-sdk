@@ -3,7 +3,6 @@ import { dedupeCacheStrings } from '../cache/utils';
 
 /**
  * One content change entry as commonly seen in Experience Edge / Content Operations payloads.
- * Authority: `packages/nextjs/src/cache/sitecore-edge-webhook-revalidation.ts`.
  * @public
  */
 export type SitecoreEdgeRevalidateUpdate = {
@@ -26,7 +25,6 @@ export type SitecoreEdgeRevalidateRequestBody = {
 
 /**
  * Strips Experience Edge style suffixes from an `identifier`.
- * Authority: `packages/nextjs/src/cache/sitecore-edge-webhook-revalidation.ts`.
  * @param {string} identifier - Raw identifier from a webhook update row.
  * @public
  */
@@ -39,10 +37,6 @@ export function extractSitecoreEdgeContentId(identifier: string): string {
 }
 
 const FULL_TAG_PREFIX = `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:`;
-
-function isFullSitecoreContentCacheTag(value: string): boolean {
-  return value.startsWith(FULL_TAG_PREFIX);
-}
 
 /**
  * Options for {@link collectSitecoreTagsFromEdgeRevalidateRequestBody}.
@@ -58,10 +52,9 @@ export type CollectSitecoreTagsFromEdgeBodyOptions = {
  * Accepts fully qualified `sc:…` tags in `body.tags`, raw content identifiers
  * (with optional `-media`/`-layout` suffixes), and `updates[]` rows with
  * `identifier` + `entity_culture`.
- * Authority: `packages/nextjs/src/cache/sitecore-edge-webhook-revalidation.ts`.
- * @param body - Parsed webhook JSON body.
- * @param options - Locale fallback when an update omits `entity_culture`.
- * @returns Deduplicated Sitecore cache tags ready for {@link LoaderCache.invalidate}.
+ * @param {SitecoreEdgeRevalidateRequestBody | null | undefined} body - Parsed webhook JSON body.
+ * @param {CollectSitecoreTagsFromEdgeBodyOptions} options - Locale fallback when an update omits `entity_culture`.
+ * @returns {string[]} Deduplicated Sitecore cache tags ready for {@link LoaderCache.invalidate}.
  * @public
  */
 export function collectSitecoreTagsFromEdgeRevalidateRequestBody(
@@ -79,7 +72,7 @@ export function collectSitecoreTagsFromEdgeRevalidateRequestBody(
     if (!s) {
       continue;
     }
-    if (isFullSitecoreContentCacheTag(s)) {
+    if (s.startsWith(FULL_TAG_PREFIX)) {
       out.push(s);
     } else {
       const id = extractSitecoreEdgeContentId(s);

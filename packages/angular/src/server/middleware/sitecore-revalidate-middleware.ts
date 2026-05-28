@@ -12,6 +12,11 @@ const DEFAULT_SECRET_ENV_VAR = 'SITECORE_REVALIDATE_SECRET';
 const DEFAULT_SECRET_HEADER = 'x-revalidate-secret';
 const DEFAULT_ENDPOINT = '/api/revalidate';
 
+/**
+ * Read a process environment variable
+ * @param {string} name - The name of the environment variable
+ * @returns {string | undefined} The value of the environment variable
+ */
 function readProcessEnv(name: string): string | undefined {
   const proc = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process;
   return proc?.env?.[name];
@@ -19,7 +24,9 @@ function readProcessEnv(name: string): string | undefined {
 
 /**
  * Returns a non-empty trimmed secret, or `undefined` when unset or whitespace-only.
- * Authority: `packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts`.
+ * @param {string | undefined} secretOption - Explicit secret from handler options.
+ * @param {string | undefined} envValue - Secret from `process.env` (e.g. `SITECORE_REVALIDATE_SECRET`).
+ * @returns {string | undefined} The resolved secret
  * @internal
  */
 export function resolveConfiguredRevalidateSecret(
@@ -61,6 +68,8 @@ export interface SitecoreRevalidateMiddlewareOptions {
  * - Calls {@link LoaderCache.invalidate} (marks entries stale; does not delete).
  *
  * Response shape: `{ revalidated, tagsCount, marked, invocation_id, continues, durationMs }`.
+ * @param {SitecoreRevalidateMiddlewareOptions} options - The options for the middleware
+ * @returns {ExpressMiddleware} The middleware function
  * @public
  */
 export function createSitecoreRevalidateMiddleware(

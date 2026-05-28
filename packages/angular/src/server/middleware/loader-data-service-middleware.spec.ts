@@ -294,6 +294,7 @@ describe('createLoaderDataServiceMiddleware', () => {
   it('should serve cached loader data on repeat requests without re-running the loader', async () => {
     const mockLoader = vi.fn().mockResolvedValue({ title: 'Cached page' }) as LoaderFn;
     const cache = createLoaderCache({ revalidate: 300 });
+    const setSpy = vi.spyOn(cache, 'set');
     const middleware = createMiddleware({
       loaders: { page: mockLoader },
       endpoint,
@@ -302,7 +303,7 @@ describe('createLoaderDataServiceMiddleware', () => {
     const req = {
       method: 'POST',
       path: endpoint,
-      body: { loaderId: 'page', url: '/cached-page', params: { site: 'demo' }, query: {} },
+      body: { loaderId: 'page', url: '/cached-page', params: { site: 'demo', locale: 'en' }, query: {} },
       query: {},
       headers: {},
     };
@@ -313,6 +314,17 @@ describe('createLoaderDataServiceMiddleware', () => {
     await middleware(req as any, res2 as any, createMockNext());
 
     expect(mockLoader).toHaveBeenCalledTimes(1);
+    expect(setSpy).toHaveBeenCalledTimes(1);
+    expect(setSpy).toHaveBeenCalledWith(
+      'sc:loader:page:demo:en:default:cached-page',
+      { title: 'Cached page' },
+      300,
+      expect.arrayContaining([
+        'sc:loader:page:demo:en:default:cached-page',
+        'sc:site:demo',
+        'sc:locale:en',
+      ])
+    );
     expect(res1.json).toHaveBeenCalledWith({
       kind: 'data',
       data: { title: 'Cached page' },
@@ -321,6 +333,7 @@ describe('createLoaderDataServiceMiddleware', () => {
       kind: 'data',
       data: { title: 'Cached page' },
     });
+    setSpy.mockRestore();
   });
 
   it('should return 400 when POST body missing loaderId', async () => {
