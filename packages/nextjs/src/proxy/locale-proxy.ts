@@ -34,7 +34,6 @@ export type LocaleProxyConfig = ProxyBaseConfig & {
  * @public
  */
 export class LocaleProxy extends ProxyBase {
-  private _name = 'LocaleProxy';
   /**
    * @param {LocaleProxyConfig} config Locale proxy config
    */
@@ -43,10 +42,10 @@ export class LocaleProxy extends ProxyBase {
   }
 
   /**
-   * Name of the proxy, used for debugging and context information.
+   * Name of the proxy, used as a key in the context to store information about executed proxies
    */
   get name() {
-    return this._name;
+    return 'LocaleProxy';
   }
 
   handle = async (
@@ -89,7 +88,7 @@ export class LocaleProxy extends ProxyBase {
           locale,
         };
 
-        context?.set(this._name, successfulExecution);
+        context?.set(this.name, successfulExecution);
 
         return response;
       }
@@ -108,7 +107,7 @@ export class LocaleProxy extends ProxyBase {
         locale,
       };
 
-      context?.set(this._name, successfulExecution);
+      context?.set(this.name, successfulExecution);
 
       return res;
     } catch (error) {
@@ -120,7 +119,7 @@ export class LocaleProxy extends ProxyBase {
         error,
       };
 
-      context?.set(this._name, failedExecution);
+      context?.set(this.name, failedExecution);
 
       return res;
     }

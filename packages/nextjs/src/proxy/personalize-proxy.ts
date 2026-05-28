@@ -83,7 +83,6 @@ type PersonalizeExecution = {
  */
 export class PersonalizeProxy extends ProxyBase {
   protected personalizeService: PersonalizeService | null;
-  private _name = 'PersonalizeProxy';
 
   /**
    * @param {PersonalizeProxyConfig} [config] Personalize proxy config
@@ -124,10 +123,10 @@ export class PersonalizeProxy extends ProxyBase {
   }
 
   /**
-   * Name of the proxy, used for debugging and context information.
+   * Name of the proxy, used as a key in the context to store information about executed proxies
    */
   get name() {
-    return this._name;
+    return 'PersonalizeProxy';
   }
 
   handle = async (
@@ -271,7 +270,7 @@ export class PersonalizeProxy extends ProxyBase {
         rewritePath,
       };
 
-      context?.set(this._name, successfulExecution);
+      context?.set(this.name, successfulExecution);
 
       return response;
     } catch (error) {
@@ -283,7 +282,7 @@ export class PersonalizeProxy extends ProxyBase {
         error,
       };
 
-      context?.set(this._name, failedExecution);
+      context?.set(this.name, failedExecution);
 
       return res;
     }

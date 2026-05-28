@@ -46,8 +46,6 @@ export type MultisiteProxyConfig = ProxyBaseConfig & SitecoreConfig['multisite']
  * @public
  */
 export class MultisiteProxy extends ProxyBase {
-  private _name = 'MultisiteProxy';
-
   /**
    * @param {MultisiteProxyConfig} [config] Multisite proxy config
    */
@@ -56,10 +54,10 @@ export class MultisiteProxy extends ProxyBase {
   }
 
   /**
-   * Name of the proxy, used for debugging and context information.
+   * Name of the proxy, used as a key in the context to store information about executed proxies
    */
   get name() {
-    return this._name;
+    return 'MultisiteProxy';
   }
 
   handle = async (
@@ -159,7 +157,7 @@ export class MultisiteProxy extends ProxyBase {
         isSitecorePreview,
       };
 
-      context?.set(this._name, successfulExecution);
+      context?.set(this.name, successfulExecution);
 
       return response;
     } catch (error) {
@@ -171,7 +169,7 @@ export class MultisiteProxy extends ProxyBase {
         error,
       };
 
-      context?.set(this._name, failedExecution);
+      context?.set(this.name, failedExecution);
       return res;
     }
   };

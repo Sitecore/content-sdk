@@ -31,7 +31,6 @@ export interface SuccessfulPreviewProxyExecution extends SuccessfulProxyExecutio
  */
 export class PreviewProxy extends ProxyBase {
   protected client: SitecoreClient;
-  private _name = 'PreviewProxy';
 
   constructor(config: PreviewProxyConfig) {
     // PreviewProxy does not need site resolution
@@ -40,10 +39,10 @@ export class PreviewProxy extends ProxyBase {
   }
 
   /**
-   * Name of the proxy, used for debugging and context information.
+   * Name of the proxy, used as a key in the context to store information about executed proxies
    */
   get name() {
-    return this._name;
+    return 'PreviewProxy';
   }
 
   handle = async (
@@ -122,7 +121,7 @@ export class PreviewProxy extends ProxyBase {
         pageDataReceived: false,
       };
 
-      context?.set(this._name, successfulExecution);
+      context?.set(this.name, successfulExecution);
 
       return NextResponse.json(
         { html: 'Preview content is not found or access is denied' },
@@ -145,7 +144,7 @@ export class PreviewProxy extends ProxyBase {
       pageDataReceived: true,
     };
 
-    context?.set(this._name, successfulExecution);
+    context?.set(this.name, successfulExecution);
 
     return res;
   };

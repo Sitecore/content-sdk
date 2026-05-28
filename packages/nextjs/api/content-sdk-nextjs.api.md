@@ -876,6 +876,7 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     protected isAppRouter(res: NextResponse): boolean;
     protected isPrefetch(req: NextRequest): boolean;
     protected isPreview(req: NextRequest): boolean;
+    get name(): string;
     protected rewrite(rewritePath: string, req: NextRequest, res: NextResponse, skipHeader?: boolean): NextResponse;
     // (undocumented)
     protected siteResolver: SiteResolver;
@@ -892,6 +893,7 @@ export type ProxyBaseConfig = {
 // @public
 abstract class ProxyHandler_2 {
     abstract handle(req: NextRequest, res: NextResponse, context?: ProxiesContext): Promise<NextResponse>;
+    abstract get name(): string;
 }
 export { ProxyHandler_2 as ProxyHandler }
 

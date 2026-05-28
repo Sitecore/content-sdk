@@ -39,17 +39,15 @@ export type BotTrackingProxyConfig = SitecoreConfig['api']['edge'] &
  * @public
  */
 export class BotTrackingProxy extends ProxyBase {
-  private _name = 'BotTrackingProxy';
-
   constructor(protected config: BotTrackingProxyConfig) {
     super(config);
   }
 
   /**
-   * Name of the proxy, used for debugging and context information.
+   * Name of the proxy, used as a key in the context to store information about executed proxies
    */
   get name() {
-    return this._name;
+    return 'BotTrackingProxy';
   }
 
   handle = async (
@@ -149,7 +147,7 @@ export class BotTrackingProxy extends ProxyBase {
         botDetected: true,
       };
 
-      context?.set(this._name, successfulExecution);
+      context?.set(this.name, successfulExecution);
 
       return res;
     } catch (error) {
@@ -160,7 +158,7 @@ export class BotTrackingProxy extends ProxyBase {
         error,
       };
 
-      context?.set(this._name, failedExecution);
+      context?.set(this.name, failedExecution);
 
       return res;
     }

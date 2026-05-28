@@ -55,7 +55,10 @@ export type ProxiesContext = Map<string, ProxiesContextMapValue>;
  * @public
  */
 export abstract class ProxyHandler {
-  // TODO: Add the name property to the base class and make it abstract, so all proxies are forced to have a name. This will be used for better logging and for storing executed proxy information in the context. To avoid breaking change, we will not make it abstract for now.
+  /**
+   * Name of the proxy, used as a key in the context to store information about executed proxies
+   */
+  abstract get name(): string;
 
   /**
    * Handler method to execute proxy logic
@@ -118,6 +121,13 @@ export abstract class ProxyBase extends ProxyHandler {
     super();
     this.siteResolver = new SiteResolver(config.sites);
     this.defaultHostname = config.defaultHostname || 'localhost';
+  }
+
+  /**
+   * Name of the proxy, used as a key in the context to store information about executed proxies
+   */
+  get name() {
+    return 'ProxyBase';
   }
 
   /**

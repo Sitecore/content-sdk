@@ -56,7 +56,6 @@ export type RedirectsProxyConfig = Omit<RedirectsServiceConfig, 'fetch' | 'clien
 export class RedirectsProxy extends ProxyBase {
   protected redirectsService: RedirectsService | null;
   private locales: string[];
-  private _name = 'RedirectsProxy';
 
   /**
    * @param {RedirectsProxyConfig} [config] redirects proxy config
@@ -113,10 +112,10 @@ export class RedirectsProxy extends ProxyBase {
   }
 
   /**
-   * Name of the proxy, used for debugging and context information.
+   * Name of the proxy, used as a key in the context to store information about executed proxies
    */
   get name() {
-    return this._name;
+    return 'RedirectsProxy';
   }
 
   handle = async (
@@ -302,7 +301,7 @@ export class RedirectsProxy extends ProxyBase {
         isExternal: isAbsoluteUrl,
       };
 
-      context?.set(this._name, successfulExecution);
+      context?.set(this.name, successfulExecution);
 
       return redirectedResponse;
     } catch (error) {
@@ -314,7 +313,7 @@ export class RedirectsProxy extends ProxyBase {
         error,
       };
 
-      context?.set(this._name, failedExecution);
+      context?.set(this.name, failedExecution);
 
       return res;
     }
