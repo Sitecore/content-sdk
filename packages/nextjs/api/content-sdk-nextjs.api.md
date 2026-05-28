@@ -150,6 +150,7 @@ import { RenderingType } from '@sitecore-content-sdk/content/layout';
 import { resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 import { resolveUrl } from '@sitecore-content-sdk/core/tools';
 import { RetryStrategy } from '@sitecore-content-sdk/content/client';
+import { revalidateTag } from 'next/cache';
 import { RichTextField } from '@sitecore-content-sdk/react';
 import { RichTextProps as RichTextProps_2 } from '@sitecore-content-sdk/react';
 import { RobotsQueryResult } from '@sitecore-content-sdk/content/site';
@@ -236,6 +237,15 @@ export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Omit<Prox
     fetchEvent?: NextFetchEvent;
 };
 
+// @public
+export function buildSitecoreDictionaryCacheTag(params: BuildSitecoreDictionaryCacheTagParams): string;
+
+// @public
+export type BuildSitecoreDictionaryCacheTagParams = {
+    site: string;
+    locale: string;
+};
+
 export { BYOCClientWrapper }
 
 export { BYOCComponent }
@@ -267,6 +277,18 @@ export { CacheOptions }
 export { CdpHelper }
 
 export { ClientEditingChromesUpdate }
+
+// @public
+export function collectSitecorePageCacheTags(params: CollectSitecorePageCacheTagsParams): string[];
+
+// @public
+export type CollectSitecorePageCacheTagsParams = {
+    site: string;
+    locale: string;
+    personalizedPathname?: string;
+    path?: string[];
+    route?: RouteData | null;
+};
 
 // @public
 export const combineImportEntries: (defaultImportEntries: ImportEntry[], generatedImportEntries: ImportEntry[]) => ImportEntry[];
@@ -352,6 +374,18 @@ export { createGraphQLClientFactory }
 // @public
 export const createRobotsRouteHandler: (options: RouteHandlerOptions_2) => {
     GET: (req: NextRequest) => Promise<Response>;
+};
+
+// @public
+export function createSitecoreRevalidateRouteHandler(options?: SitecoreRevalidateRouteHandlerOptions): {
+    POST: (req: NextRequest) => Promise<NextResponse<{
+        error: string;
+    }> | NextResponse<{
+        revalidated: boolean;
+        tagsCount: number;
+        invocation_id: string | null;
+        continues: boolean;
+    }>>;
 };
 
 // Warning: (ae-forgotten-export) The symbol "RouteHandlerOptions" needs to be exported by the entry point api-surface.d.ts
@@ -910,6 +944,9 @@ export { resolveUrl }
 export { RetryStrategy }
 
 // @public
+export type RevalidateTagCacheProfile = Parameters<typeof revalidateTag>[1];
+
+// @public
 export const RichText: {
     (props: RichTextProps): JSX_2.Element;
     displayName: string;
@@ -989,6 +1026,14 @@ export { SitecoreProvider }
 export { SitecoreProviderReactContext }
 
 export { SitecoreProviderState }
+
+// @public
+export type SitecoreRevalidateRouteHandlerOptions = {
+    secret?: string;
+    cacheProfile?: RevalidateTagCacheProfile;
+    defaultLocale?: string;
+    sites?: SiteInfo[];
+};
 
 export { SiteInfo }
 
