@@ -7,6 +7,16 @@ import { isBot, BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/analytics-cor
 import { ProxyBase, ProxyBaseConfig } from './proxy';
 import debug from '../debug';
 import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter';
+import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from './types';
+
+/**
+ * Information about executed proxy to be stored in the context
+ * Used for describing successful execution with details about the bot tracking that was applied
+ * @public
+ */
+export interface SuccessfulBotTrackingProxyExecution extends SuccessfulProxyExecution {
+  botDetected: boolean;
+}
 
 /**
  * Configuration for BotTrackingProxy.
@@ -33,7 +43,18 @@ export class BotTrackingProxy extends ProxyBase {
     super(config);
   }
 
-  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  /**
+   * Name of the proxy, used as a key in the context to store information about executed proxies
+   */
+  get name() {
+    return 'BotTrackingProxy';
+  }
+
+  handle = async (
+    req: NextRequest,
+    res: NextResponse,
+    proxiesContext?: ProxiesContext
+  ): Promise<NextResponse> => {
     try {
       const isDisabled = (this.config.skip && this.config.skip(req, res)) || false;
 
@@ -120,9 +141,25 @@ export class BotTrackingProxy extends ProxyBase {
         cookies: res.cookies,
       });
 
+      const successfulExecution: SuccessfulBotTrackingProxyExecution = {
+        executedSuccessfully: true,
+        error: null,
+        botDetected: true,
+      };
+
+      proxiesContext?.set(this.name, successfulExecution);
+
       return res;
     } catch (error) {
       debug.common('bot tracking proxy error: %o', error);
+
+      const failedExecution: FailedProxyExecution = {
+        executedSuccessfully: false,
+        error,
+      };
+
+      proxiesContext?.set(this.name, failedExecution);
+
       return res;
     }
   };

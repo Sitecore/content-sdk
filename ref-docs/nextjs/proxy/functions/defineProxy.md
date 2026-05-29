@@ -8,7 +8,7 @@
 
 > **defineProxy**(...`proxies`): `object`
 
-Defined in: [nextjs/src/proxy/proxy.ts:273](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/nextjs/src/proxy/proxy.ts#L273)
+Defined in: [nextjs/src/proxy/proxy.ts:291](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/nextjs/src/proxy/proxy.ts#L291)
 
 Define a proxy with a list of proxy handlers
 
@@ -22,7 +22,7 @@ Define a proxy with a list of proxy handlers
 
 ### exec
 
-> **exec**: (`req`, `res?`) => `Promise`\<`NextResponse`\<`unknown`\>\>
+> **exec**: (`req`, `res?`, `proxiesContext?`) => `Promise`\<`NextResponse`\<`unknown`\>\>
 
 Execute all proxies
 
@@ -32,6 +32,7 @@ Execute all proxies
 | ------ | ------ | ------ |
 | `req` | `NextRequest` | request |
 | `res?` | `NextResponse`\<`unknown`\> | response |
+| `proxiesContext?` | [`ProxiesContext`](../type-aliases/ProxiesContext.md) | context to share information between proxies |
 
 #### Returns
 

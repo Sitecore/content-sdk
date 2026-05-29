@@ -16,6 +16,17 @@ import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
 import { personalizeProxyAdapter } from '../initialization/proxy/personalize-adapter';
+import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from './types';
+
+/**
+ * Information about executed proxy to be stored in the context
+ * Used for describing successful execution with details about the personalization that was applied
+ * @public
+ */
+export interface SuccessfulPersonalizeProxyExecution extends SuccessfulProxyExecution {
+  identifiedVariantIds: string[];
+  rewritePath: string;
+}
 
 /**
  * Represents the geolocation data used for personalization
@@ -111,7 +122,18 @@ export class PersonalizeProxy extends ProxyBase {
       });
   }
 
-  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  /**
+   * Name of the proxy, used as a key in the context to store information about executed proxies
+   */
+  get name() {
+    return 'PersonalizeProxy';
+  }
+
+  handle = async (
+    req: NextRequest,
+    res: NextResponse,
+    proxiesContext?: ProxiesContext
+  ): Promise<NextResponse> => {
     if (!this.config.enabled) {
       debug.personalize('skipped (personalize proxy is disabled globally)');
       return res;
@@ -241,10 +263,27 @@ export class PersonalizeProxy extends ProxyBase {
         headers: this.extractDebugHeaders(response.headers),
       });
 
+      const successfulExecution: SuccessfulPersonalizeProxyExecution = {
+        executedSuccessfully: true,
+        error: null,
+        identifiedVariantIds: structuredClone(identifiedVariantIds),
+        rewritePath,
+      };
+
+      proxiesContext?.set(this.name, successfulExecution);
+
       return response;
     } catch (error) {
       console.log('Personalize proxy failed:');
       console.log(error);
+
+      const failedExecution: FailedProxyExecution = {
+        executedSuccessfully: false,
+        error,
+      };
+
+      proxiesContext?.set(this.name, failedExecution);
+
       return res;
     }
   };

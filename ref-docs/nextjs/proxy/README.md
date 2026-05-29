@@ -18,6 +18,17 @@
 - [ProxyHandler](classes/ProxyHandler.md)
 - [RedirectsProxy](classes/RedirectsProxy.md)
 
+## Interfaces
+
+- [FailedProxyExecution](interfaces/FailedProxyExecution.md)
+- [SuccessfulBotTrackingProxyExecution](interfaces/SuccessfulBotTrackingProxyExecution.md)
+- [SuccessfulLocaleProxyExecution](interfaces/SuccessfulLocaleProxyExecution.md)
+- [SuccessfulMultisiteProxyExecution](interfaces/SuccessfulMultisiteProxyExecution.md)
+- [SuccessfulPersonalizeProxyExecution](interfaces/SuccessfulPersonalizeProxyExecution.md)
+- [SuccessfulPreviewProxyExecution](interfaces/SuccessfulPreviewProxyExecution.md)
+- [SuccessfulProxyExecution](interfaces/SuccessfulProxyExecution.md)
+- [SuccessfulRedirectsProxyExecution](interfaces/SuccessfulRedirectsProxyExecution.md)
+
 ## Type Aliases
 
 - [BotTrackingProxyConfig](type-aliases/BotTrackingProxyConfig.md)
@@ -26,12 +37,15 @@
 - [PersonalizeProxyConfig](type-aliases/PersonalizeProxyConfig.md)
 - [PersonalizeServiceConfig](type-aliases/PersonalizeServiceConfig.md)
 - [PreviewProxyConfig](type-aliases/PreviewProxyConfig.md)
+- [ProxiesContext](type-aliases/ProxiesContext.md)
+- [ProxiesContextMapValue](type-aliases/ProxiesContextMapValue.md)
 - [ProxyBaseConfig](type-aliases/ProxyBaseConfig.md)
 - [RedirectsProxyConfig](type-aliases/RedirectsProxyConfig.md)
 
 ## Functions
 
 - [defineProxy](functions/defineProxy.md)
+- [isSuccessfulProxyExecution](functions/isSuccessfulProxyExecution.md)
 
 ## References
 

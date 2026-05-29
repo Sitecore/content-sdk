@@ -6,7 +6,7 @@
 
 # Class: DesignLibraryErrorBoundary
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx:24](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx#L24)
+Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx:24](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx#L24)
 
 **`Internal`**
 
@@ -112,7 +112,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:979
 
 > **state**: `object`
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx:25](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx#L25)
+Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx:25](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx#L25)
 
 #### hasError
 
@@ -179,7 +179,7 @@ Only kept in types for backwards compatibility. Will be removed in a future majo
 
 > **componentDidCatch**(`error`): `void`
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx:39](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx#L39)
+Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx:39](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx#L39)
 
 Catches exceptions generated in descendant components. Unhandled exceptions will cause
 the entire component tree to unmount.
@@ -222,7 +222,7 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 > **componentDidUpdate**(`prevProps`): `void`
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx:33](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx#L33)
+Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx:33](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx#L33)
 
 Called immediately after updating occurs. Not called for the initial render.
 
@@ -434,7 +434,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx:43](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx#L43)
+Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx:43](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx#L43)
 
 #### Returns
 
@@ -633,7 +633,7 @@ this from being invoked.
 
 > `static` **getDerivedStateFromError**(): `object`
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx:29](https://github.com/Sitecore/content-sdk/blob/856cb89263cff3f1e39e74ebd0ae054e4bd68391/packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx#L29)
+Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx:29](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/react/src/components/DesignLibrary/DesignLibraryErrorBoundary.tsx#L29)
 
 #### Returns
 

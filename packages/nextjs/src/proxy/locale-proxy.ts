@@ -4,6 +4,17 @@ import { NextResponse, NextRequest } from 'next/server';
 import { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
 import { ProxyBase, ProxyBaseConfig, LOCALE_HEADER_NAME } from './proxy';
 import debug from '../debug';
+import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from './types';
+
+/**
+ * Information about executed proxy to be stored in the context
+ * Used for describing successful execution with details about the locale that was applied
+ * @public
+ */
+export interface SuccessfulLocaleProxyExecution extends SuccessfulProxyExecution {
+  rewrote: boolean;
+  locale: string;
+}
 
 /**
  * The interface for the Locale proxy configuration.
@@ -30,7 +41,18 @@ export class LocaleProxy extends ProxyBase {
     super(config);
   }
 
-  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  /**
+   * Name of the proxy, used as a key in the context to store information about executed proxies
+   */
+  get name() {
+    return 'LocaleProxy';
+  }
+
+  handle = async (
+    req: NextRequest,
+    res: NextResponse,
+    proxiesContext?: ProxiesContext
+  ): Promise<NextResponse> => {
     try {
       const { pathname } = req.nextUrl;
 
@@ -59,6 +81,15 @@ export class LocaleProxy extends ProxyBase {
           rewritePath,
         });
 
+        const successfulExecution: SuccessfulLocaleProxyExecution = {
+          executedSuccessfully: true,
+          error: null,
+          rewrote: true,
+          locale,
+        };
+
+        proxiesContext?.set(this.name, successfulExecution);
+
         return response;
       }
 
@@ -69,10 +100,27 @@ export class LocaleProxy extends ProxyBase {
         locale,
       });
 
+      const successfulExecution: SuccessfulLocaleProxyExecution = {
+        executedSuccessfully: true,
+        error: null,
+        rewrote: false,
+        locale,
+      };
+
+      proxiesContext?.set(this.name, successfulExecution);
+
       return res;
     } catch (error) {
       console.log('Locale proxy failed:');
       console.log(error);
+
+      const failedExecution: FailedProxyExecution = {
+        executedSuccessfully: false,
+        error,
+      };
+
+      proxiesContext?.set(this.name, failedExecution);
+
       return res;
     }
   };

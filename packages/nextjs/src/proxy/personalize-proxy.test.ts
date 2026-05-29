@@ -11,8 +11,10 @@ import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/analytics-core/inter
 import { SiteResolver } from '@sitecore-content-sdk/content/site';
 import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeProxyConfig } from './personalize-proxy';
+import type { SuccessfulPersonalizeProxyExecution } from './personalize-proxy';
 import proxyquire from 'proxyquire';
 import debug from '../debug';
+import { isSuccessfulProxyExecution } from './utils';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -260,6 +262,11 @@ describe('PersonalizeProxy', () => {
   afterEach(() => {
     sandbox.restore();
     userAgentStub.returns({ ua } as any);
+  });
+
+  it('should expose proxy name', () => {
+    const { proxy } = createProxy();
+    expect(proxy.name).to.equal('PersonalizeProxy');
   });
 
   describe('Extensibility', () => {
@@ -1333,6 +1340,47 @@ describe('PersonalizeProxy', () => {
       expect(errorSpy.getCall(1).calledWith(error)).to.be.true;
 
       expect(finalRes).to.deep.equal(res);
+    });
+
+    it('should record failed execution in context when getPersonalizeInfo throws', async () => {
+      const error = new Error('Edge fails');
+      const context = new Map();
+      const getPersonalizeInfoWithError = sandbox.stub().throws(error);
+
+      const { proxy } = createProxy({
+        getPersonalizeInfoStub: getPersonalizeInfoWithError,
+      });
+
+      await proxy.handle(req, res, context);
+
+      expect(context.get('PersonalizeProxy')).to.deep.equal({
+        executedSuccessfully: false,
+        error,
+      });
+    });
+
+    it('should record successful execution in context when variants are identified', async () => {
+      const req = createRequest();
+      const res = createResponse();
+      const context = new Map();
+      const nextRewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
+
+      const { proxy } = createProxy({
+        variantId: 'variant-2',
+      });
+
+      await proxy.handle(req, res, context);
+
+      const info = context.get('PersonalizeProxy');
+      expect(isSuccessfulProxyExecution<SuccessfulPersonalizeProxyExecution>(info)).to.equal(true);
+      expect(info).to.deep.equal({
+        executedSuccessfully: true,
+        error: null,
+        identifiedVariantIds: ['variant-2'],
+        rewritePath: '/styleguide/_variantId_variant-2',
+      });
+
+      nextRewriteStub.restore();
     });
   });
 
