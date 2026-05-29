@@ -11,7 +11,10 @@ export const parseArgs = (): ParsedArgs => {
   // to pass to the generator prompts and skip them.
   // useful for CI and testing purposes
   const options = {
-    boolean: ['force', 'noInstall', 'yes', 'silent'],
+    boolean: ['force', 'noInstall', 'yes', 'silent', 'help'],
+    alias: {
+      h: 'help',
+    },
     string: ['destination', 'template'],
     default: {},
   };
@@ -24,6 +27,24 @@ export const parseArgs = (): ParsedArgs => {
     args[key] === '' && delete args[key];
   });
   return args;
+};
+
+export const printHelp = () => {
+  console.log(`Usage:
+  create-content-sdk-app [template] [options]
+
+Templates:
+  nextjs
+  nextjs-app-router
+
+Options:
+  --template <name>       Template to scaffold
+  --destination <path>    Destination folder
+  --yes                   Use defaults and skip prompts where possible
+  --force                 Continue if destination is not empty
+  --noInstall             Skip package install and lint fix
+  --silent                Suppress normal output
+  --help, -h              Show help`);
 };
 
 export const getDestination = async (args: ParsedArgs, template: string) => {
@@ -60,6 +81,11 @@ export const promptDestination = async (prompt: string, defaultDestination: stri
 };
 
 export const main = async (args: ParsedArgs) => {
+  if (args.help) {
+    printHelp();
+    return;
+  }
+
   let template: string = '';
 
   // check if template was provided
