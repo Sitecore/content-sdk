@@ -8,12 +8,11 @@ import { existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const here = dirname(fileURLToPath(import.meta.url));
+const current = dirname(fileURLToPath(import.meta.url));
 
 const candidateRoots = [
   process.cwd(),
-  resolve(here, '..'),
-  resolve(here, '..', '..', '..'),
+  resolve(current, '..'),
 ];
 
 const seen = new Set<string>();
@@ -23,12 +22,11 @@ for (const root of candidateRoots) {
   seen.add(dir);
   const envPath = resolve(dir, '.env');
   const localPath = resolve(dir, '.env.local');
-  if (!existsSync(envPath) && !existsSync(localPath)) continue;
-  if (existsSync(envPath)) {
-    dotenv.config({ path: envPath });
-  }
   if (existsSync(localPath)) {
     dotenv.config({ path: localPath });
+    break;
+  } else if (existsSync(envPath)) {
+    dotenv.config({ path: envPath });
+    break;
   }
-  break;
 }

@@ -94,69 +94,69 @@
   ],
   "exports": {
     ".": {
+      "types": "./types/index.d.ts",
       "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
-      "types": "./types/index.d.ts"
+      "require": "./dist/cjs/index.js"      
     },
     "./client": {
+      "types": "./types/client/index.d.ts",
       "import": "./dist/esm/client/index.js",
-      "require": "./dist/cjs/client/index.js",
-      "types": "./types/client/index.d.ts"
+      "require": "./dist/cjs/client/index.js"      
     },
     "./config": {
+      "types": "./types/config/index.d.ts",
       "import": "./dist/esm/config/index.js",
-      "require": "./dist/cjs/config/index.js",
-      "types": "./types/config/index.d.ts"
+      "require": "./dist/cjs/config/index.js"      
     },
     "./config-cli": {
+      "types": "./types/config-cli/index.d.ts",
       "import": "./dist/esm/config-cli/index.js",
-      "require": "./dist/cjs/config-cli/index.js",
-      "types": "./types/config-cli/index.d.ts"
+      "require": "./dist/cjs/config-cli/index.js"      
     },
     "./codegen": {
+      "types": "./types/editing/codegen/index.d.ts",
       "import": "./dist/esm/editing/codegen/index.js",
-      "require": "./dist/cjs/editing/codegen/index.js",
-      "types": "./types/editing/codegen/index.d.ts"
+      "require": "./dist/cjs/editing/codegen/index.js"      
     },
     "./editing": {
+      "types": "./types/editing/index.d.ts",
       "import": "./dist/esm/editing/index.js",
-      "require": "./dist/cjs/editing/index.js",
-      "types": "./types/editing/index.d.ts"
+      "require": "./dist/cjs/editing/index.js"      
     },
     "./i18n": {
+      "types": "./types/i18n/index.d.ts",
       "import": "./dist/esm/i18n/index.js",
-      "require": "./dist/cjs/i18n/index.js",
-      "types": "./types/i18n/index.d.ts"
+      "require": "./dist/cjs/i18n/index.js"      
     },
     "./layout": {
+      "types": "./types/layout/index.d.ts",
       "import": "./dist/esm/layout/index.js",
-      "require": "./dist/cjs/layout/index.js",
-      "types": "./types/layout/index.d.ts"
+      "require": "./dist/cjs/layout/index.js"      
     },
     "./media": {
+      "types": "./types/media/index.d.ts",
       "import": "./dist/esm/media/index.js",
-      "require": "./dist/cjs/media/index.js",
-      "types": "./types/media/index.d.ts"
+      "require": "./dist/cjs/media/index.js"
     },
     "./personalize": {
+      "types": "./types/personalize/index.d.ts",
       "import": "./dist/esm/personalize/index.js",
-      "require": "./dist/cjs/personalize/index.js",
-      "types": "./types/personalize/index.d.ts"
+      "require": "./dist/cjs/personalize/index.js"
     },
     "./site": {
+      "types": "./types/site/index.d.ts",
       "import": "./dist/esm/site/index.js",
-      "require": "./dist/cjs/site/index.js",
-      "types": "./types/site/index.d.ts"
+      "require": "./dist/cjs/site/index.js"      
     },
     "./tools": {
+      "types": "./types/tools/index.d.ts",
       "import": "./dist/esm/tools/index.js",
-      "require": "./dist/cjs/tools/index.js",
-      "types": "./types/tools/index.d.ts"
+      "require": "./dist/cjs/tools/index.js"      
     },
     "./node-tools": {
+      "types": "./types/tools/index-node.d.ts",
       "import": "./dist/esm/tools/index-node.js",
-      "require": "./dist/cjs/tools/index-node.js",
-      "types": "./types/tools/index-node.d.ts"
+      "require": "./dist/cjs/tools/index-node.js"      
     }
   }
 }
