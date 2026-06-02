@@ -29,9 +29,19 @@ export class UnstorageLoaderCache implements LoaderCache {
    * @param {Driver} driver - Unstorage driver instance from the app (`server.ts`).
    * @param {LoaderCacheConfig} [config] - Resolved cache configuration.
    */
-  constructor(driver: Driver, config: LoaderCacheConfig = {}) {
+  constructor(driver: Driver, config: GlobalLoaderCacheConfig = {}) {
     this.storage = createStorage({ driver });
     this._config = applyLoaderCacheConfigDefaults(config);
+  }
+
+  /** @inheritdoc */
+  get ttl(): number {
+    return this._config.revalidate;
+  }
+
+  /** @inheritdoc */
+  get config(): Readonly<LoaderCacheConfig> {
+    return this._config;
   }
 
   /** @inheritdoc */
@@ -117,18 +127,8 @@ export class UnstorageLoaderCache implements LoaderCache {
   }
 
   /** @inheritdoc */
-  get ttl(): number {
-    return this._config.revalidate;
-  }
-
-  /** @inheritdoc */
   enabled(): boolean {
     return this._config.enabled;
-  }
-
-  /** @inheritdoc */
-  get config(): Readonly<GlobalLoaderCacheConfig> {
-    return this._config;
   }
 
   /**

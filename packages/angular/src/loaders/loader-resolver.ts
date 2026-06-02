@@ -127,9 +127,9 @@ async function resolveOnBrowser({
 
 /**
  * Create a loader resolver function that resolver loader data with optional cache options on server or browser.
- * @param loaderId - The loader ID
- * @param cacheOptions - The cache options
- * @returns loader resolver function
+ * @param {LoaderId} loaderId - The loader ID
+ * @param {PerRouteLoaderCacheConfig} [cacheOptions] - The cache options
+ * @returns {ResolveFn<unknown>} loader resolver function
  */
 export const loaderResolver = (
   loaderId: LoaderId,

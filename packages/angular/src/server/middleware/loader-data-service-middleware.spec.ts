@@ -38,9 +38,7 @@ describe('createLoaderDataServiceMiddleware', () => {
     });
   });
 
-  /**
-   * @param {{ loaders: import('../models').LoaderRegistry; endpoint?: string; cache?: import('../../loaders/models').LoaderCache }} opts - Middleware factory options
-   */
+  /** eslint-disable-next-line jsdoc/require-jsdoc */
   function createMiddleware(opts: {
     loaders: LoaderRegistry;
     endpoint?: string;
@@ -303,7 +301,12 @@ describe('createLoaderDataServiceMiddleware', () => {
     const req = {
       method: 'POST',
       path: endpoint,
-      body: { loaderId: 'page', url: '/cached-page', params: { site: 'demo', locale: 'en' }, query: {} },
+      body: {
+        loaderId: 'page',
+        url: '/cached-page',
+        params: { site: 'demo', locale: 'en' },
+        query: {},
+      },
       query: {},
       headers: {},
     };

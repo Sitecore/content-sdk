@@ -255,6 +255,10 @@ export interface InvalidateInput {
  * @public
  */
 export interface LoaderCache {
+  /** Global default TTL in seconds from {@link LoaderCacheConfig.revalidate}. */
+  get ttl(): number;
+  /** Resolved configuration (useful for admin UI and diagnostics). */
+  get config(): Readonly<LoaderCacheConfig>;
   /**
    * Reads a cache entry and classifies it as hit, stale, or miss.
    * @param key - OSR-aligned cache key (for example `sc:loader:page:demo:en:default:about`).
@@ -280,10 +284,6 @@ export interface LoaderCache {
   flush(): Promise<void>;
   /** Returns lightweight metadata for admin tooling (values are omitted). */
   entries(): Promise<LoaderCacheEntryInfo[]>;
-  /** Global default TTL in seconds from {@link LoaderCacheConfig.revalidate}. */
-  get ttl(): number;
   /** Whether caching is enabled globally. Per-route overrides may still opt in. */
   enabled(): boolean;
-  /** Resolved configuration (useful for admin UI and diagnostics). */
-  get config(): Readonly<LoaderCacheConfig>;
 }

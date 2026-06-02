@@ -89,8 +89,9 @@ export function dimensionsFromContext(loaderId: string, ctx: LoaderContext): Cac
  * @internal
  */
 export function resolveConfig(config: GlobalLoaderCacheConfig): LoaderCacheConfig {
-  const { driver: _driver, ...rest } = config;
-  return rest;
+  const clonedConfig = { ...config };
+  delete clonedConfig.driver;
+  return clonedConfig;
 }
 
 /**
