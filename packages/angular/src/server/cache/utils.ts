@@ -8,9 +8,10 @@ import { GlobalLoaderCacheConfig, CacheKeyDimensions, DEFAULT_CACHE_TTL } from '
 
 /**
  * Approximate serialized byte size of a cache value (demo/admin helper).
+ * Only used for demo purposes. Remove before release.
+ * TODO: Remove before release.
  * @param {unknown} value - Value to measure.
  * @returns {number} JSON string length, or `0` when serialization fails.
- * @deprecated Only used for demo purposes. Remove before release.
  */
 export function approxByteSize(value: unknown): number {
   try {
@@ -88,8 +89,7 @@ export function dimensionsFromContext(loaderId: string, ctx: LoaderContext): Cac
  * @internal
  */
 export function resolveConfig(config: GlobalLoaderCacheConfig): LoaderCacheConfig {
-  const { driver, ...rest } = config;
-  void driver;
+  const { driver: _driver, ...rest } = config;
   return rest;
 }
 
@@ -164,13 +164,6 @@ export function normalizeSitecoreItemIdForCacheKey(itemId: string): string {
  * @internal
  */
 export function dedupeCacheStrings(values: string[]): string[] {
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const value of values) {
-    if (!seen.has(value)) {
-      seen.add(value);
-      out.push(value);
-    }
-  }
-  return out;
+  const dedupedSet = new Set<string>(values);
+  return Array.from(dedupedSet);
 }

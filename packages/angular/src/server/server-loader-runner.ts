@@ -52,7 +52,7 @@ export class ServerLoaderRunner {
 
     if (cacheable) {
       const { key } = buildCacheKey(loaderId, ctx);
-      const read = await this.cache!.get(key);
+      const read = await this.cache.get(key);
 
       if (read.kind === 'hit') {
         return { kind: 'data', data: read.value };
@@ -143,7 +143,7 @@ export class ServerLoaderRunner {
         value,
         cacheOptions?.tags ?? []
       );
-      const ttl = cacheOptions?.revalidate ?? this.cache.resolveTtl();
+      const ttl = cacheOptions?.revalidate ?? this.cache.ttl;
       try {
         await this.cache.set(cacheKey, value, ttl, tags);
       } catch (err) {

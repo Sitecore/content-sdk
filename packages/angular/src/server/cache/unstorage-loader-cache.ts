@@ -23,7 +23,7 @@ const TAG_INDEX_PREFIX = 'tag:';
  */
 export class UnstorageLoaderCache implements LoaderCache {
   private readonly storage: Storage;
-  private readonly config: Required<LoaderCacheConfig>;
+  private readonly _config: Required<LoaderCacheConfig>;
 
   /**
    * @param {Driver} driver - Unstorage driver instance from the app (`server.ts`).
@@ -31,7 +31,7 @@ export class UnstorageLoaderCache implements LoaderCache {
    */
   constructor(driver: Driver, config: LoaderCacheConfig = {}) {
     this.storage = createStorage({ driver });
-    this.config = applyLoaderCacheConfigDefaults(config);
+    this._config = applyLoaderCacheConfigDefaults(config);
   }
 
   /** @inheritdoc */
@@ -117,18 +117,18 @@ export class UnstorageLoaderCache implements LoaderCache {
   }
 
   /** @inheritdoc */
-  resolveTtl(): number {
-    return this.config.revalidate;
+  get ttl(): number {
+    return this._config.revalidate;
   }
 
   /** @inheritdoc */
   enabled(): boolean {
-    return this.config.enabled;
+    return this._config.enabled;
   }
 
   /** @inheritdoc */
-  getConfig(): Readonly<GlobalLoaderCacheConfig> {
-    return this.config;
+  get config(): Readonly<GlobalLoaderCacheConfig> {
+    return this._config;
   }
 
   /**

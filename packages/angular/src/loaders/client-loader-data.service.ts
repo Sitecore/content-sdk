@@ -127,7 +127,6 @@ export class ClientLoaderDataService {
       query: request.query ?? {},
       cacheOptions: request.cacheOptions,
     };
-    console.log('DEBUG: ClientLoaderDataService fetchData', endpoint, reqBody);
 
     try {
       const resp = await firstValueFrom(
@@ -135,18 +134,15 @@ export class ClientLoaderDataService {
       );
       if (!resp) {
         const message = `No response from ${endpoint}`;
-        console.log(`DEBUG: ClientLoaderDataService fetchData: ${message}`);
         return { kind: 'error', status: 500, message } as LoaderApiResponse;
       }
       if (resp.kind === 'data') {
-        console.log('DEBUG: ClientLoaderDataService fetchData: data', resp.data);
         this.prefetchedResponses.set(key, resp);
       } else if (resp.kind === 'redirect') {
         this.prefetchedResponses.set(key, resp);
       }
       return resp;
     } catch (error) {
-      console.log('DEBUG: ClientLoaderDataService fetchData: error', error);
       const message = error instanceof Error ? error.message : 'Fetch failed';
       return { kind: 'error', status: 500, message } as LoaderApiResponse;
     } finally {

@@ -281,9 +281,9 @@ export interface LoaderCache {
   /** Returns lightweight metadata for admin tooling (values are omitted). */
   entries(): Promise<LoaderCacheEntryInfo[]>;
   /** Global default TTL in seconds from {@link LoaderCacheConfig.revalidate}. */
-  resolveTtl(): number;
+  get ttl(): number;
   /** Whether caching is enabled globally. Per-route overrides may still opt in. */
   enabled(): boolean;
   /** Resolved configuration (useful for admin UI and diagnostics). */
-  getConfig(): Readonly<LoaderCacheConfig>;
+  get config(): Readonly<LoaderCacheConfig>;
 }

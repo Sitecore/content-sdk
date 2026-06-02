@@ -36,7 +36,7 @@ export interface AngularSitecoreConfigInput extends Omit<SitecoreConfigInput, 'r
      * Configuration for the ISR-like cache. Both fields default when omitted
      * (`enabled: true`, `revalidate: 300`).
      */
-    isrCache?: {
+    loadersCache?: {
       /** Whether the cache is enabled. */
       enabled?: boolean;
       /** The global revalidate time in seconds. */
@@ -61,14 +61,14 @@ export interface AngularSitecoreConfig extends Omit<SitecoreConfig, 'redirects'>
      * Resolved configuration for the ISR-like cache. Defaults are applied by
      * `defineConfig`: `enabled: true`, `revalidate: 300`.
      */
-    isrCache: {
+    loadersCache: {
       enabled: boolean;
       revalidate: number;
     };
   };
 }
 
-/** Defaults applied to `angular.isrCache` when input omits fields. */
+/** Defaults applied to `angular.loadersCache` when input omits fields. */
 const DEFAULT_ISR_CACHE = { enabled: true, revalidate: 300 } as const;
 
 /**
@@ -117,13 +117,13 @@ export function defineConfig(
 
   scConfig.redirects.locales = locales;
 
-  const isrCache = {
-    enabled: angular?.isrCache?.enabled ?? DEFAULT_ISR_CACHE.enabled,
-    revalidate: angular?.isrCache?.revalidate ?? DEFAULT_ISR_CACHE.revalidate,
+  const loadersCache = {
+    enabled: angular?.loadersCache?.enabled ?? DEFAULT_ISR_CACHE.enabled,
+    revalidate: angular?.loadersCache?.revalidate ?? DEFAULT_ISR_CACHE.revalidate,
   };
 
   return {
     ...scConfig,
-    angular: { locales, isrCache },
+    angular: { locales, loadersCache },
   } as AngularSitecoreConfig;
 }

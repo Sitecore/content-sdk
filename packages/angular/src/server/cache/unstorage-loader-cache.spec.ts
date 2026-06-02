@@ -33,9 +33,9 @@ describe('UnstorageLoaderCache', () => {
 
   it('applies config defaults from the constructor', () => {
     const cache = new UnstorageLoaderCache(memoryDriver(), { revalidate: 120, enabled: false });
-    expect(cache.resolveTtl()).toBe(120);
+    expect(cache.ttl).toBe(120);
     expect(cache.enabled()).toBe(false);
-    expect(cache.getConfig()).toMatchObject({ revalidate: 120, enabled: false });
+    expect(cache.config).toMatchObject({ revalidate: 120, enabled: false });
   });
 
   it('returns false when deleting a missing key', async () => {

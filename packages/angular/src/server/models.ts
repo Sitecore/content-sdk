@@ -70,7 +70,6 @@ export type ExpressMiddleware = (
 
 /**
  * @public
- * @deprecated Import {@link LoaderRegistry} from `@sitecore-content-sdk/angular` loader registry exports instead.
  */
 export type { LoaderRegistry } from '../loaders/loader-registry.token';
 

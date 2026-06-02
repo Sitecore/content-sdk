@@ -149,8 +149,8 @@ export function runSharedLoaderCacheContract(
 
     it('exposes resolved config and ttl', () => {
       expect(cache.enabled()).toBe(true);
-      expect(cache.resolveTtl()).toBe(300);
-      expect(cache.getConfig()).toMatchObject({ revalidate: 300, defaultSiteName: 'default' });
+      expect(cache.ttl).toBe(300);
+      expect(cache.config).toMatchObject({ revalidate: 300, defaultSiteName: 'default' });
     });
   });
 }

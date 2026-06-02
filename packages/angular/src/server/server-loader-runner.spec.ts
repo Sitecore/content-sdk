@@ -8,7 +8,7 @@ import { buildCacheKey } from './cache/cache-key';
 describe('ServerLoaderRunner', () => {
   const pageLoader: LoaderFn = vi.fn().mockResolvedValue({ title: 'Page' });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.mocked(pageLoader).mockClear();
     vi.mocked(pageLoader).mockResolvedValue({ title: 'Page' });
   });
@@ -54,9 +54,9 @@ describe('ServerLoaderRunner', () => {
       delete: vi.fn(),
       flush: vi.fn(),
       entries: vi.fn(),
-      resolveTtl: vi.fn().mockReturnValue(300),
+      ttl: 300,
       enabled: vi.fn().mockReturnValue(true),
-      getConfig: vi.fn(),
+      config: {},
     };
 
     const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
@@ -116,9 +116,9 @@ describe('ServerLoaderRunner', () => {
       delete: vi.fn(),
       flush: vi.fn(),
       entries: vi.fn(),
-      resolveTtl: vi.fn().mockReturnValue(300),
+      ttl: 300,
       enabled: vi.fn().mockReturnValue(true),
-      getConfig: vi.fn(),
+      config: {},
     };
 
     const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
@@ -140,9 +140,9 @@ describe('ServerLoaderRunner', () => {
       delete: vi.fn(),
       flush: vi.fn(),
       entries: vi.fn(),
-      resolveTtl: vi.fn().mockReturnValue(300),
+      ttl: 300,
       enabled: vi.fn().mockReturnValue(false),
-      getConfig: vi.fn(),
+      config: {},
     };
 
     const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
@@ -239,9 +239,9 @@ describe('ServerLoaderRunner', () => {
       delete: vi.fn(),
       flush: vi.fn(),
       entries: vi.fn(),
-      resolveTtl: vi.fn().mockReturnValue(300),
+      ttl: 300,
       enabled: vi.fn().mockReturnValue(true),
-      getConfig: vi.fn(),
+      config: {},
     };
 
     const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
@@ -279,7 +279,12 @@ describe('ServerLoaderRunner', () => {
     const staleResult = await provider.resolve(request);
     expect(staleResult).toEqual({ kind: 'data', data: { title: 'v1' } });
 
-    await vi.waitFor(() => expect(loader).toHaveBeenCalledTimes(2));
+    await vi.waitFor(async () => {
+      expect(await cache.get(key)).toEqual(
+        expect.objectContaining({ kind: 'hit', value: { title: 'v2' } })
+      );
+    });
+    expect(loader).toHaveBeenCalledTimes(2);
 
     const freshResult = await provider.resolve(request);
     expect(freshResult).toEqual({ kind: 'data', data: { title: 'v2' } });
@@ -321,9 +326,9 @@ describe('ServerLoaderRunner', () => {
       delete: vi.fn(),
       flush: vi.fn(),
       entries: vi.fn(),
-      resolveTtl: vi.fn().mockReturnValue(300),
+      ttl: 300,
       enabled: vi.fn().mockReturnValue(true),
-      getConfig: vi.fn(),
+      config: {},
     };
 
     const provider = new ServerLoaderRunner({ page: loader }, cache);

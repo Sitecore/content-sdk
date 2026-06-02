@@ -3,7 +3,12 @@
  * This middleware is only used for testing and should be removed before release.
  * TODO: Remove this middleware before release.
  */
-import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from '../../models';
+import {
+  ExpressMiddleware,
+  ExpressNextFunction,
+  ExpressRequest,
+  ExpressResponse,
+} from '../../models';
 import { InvalidateInput, LoaderCache } from '../../../loaders/models';
 
 /**
@@ -59,7 +64,7 @@ export function createCacheAdminMiddleware(
       }
 
       if (action === 'config' && req.method === 'GET') {
-        res.status(200).json({ ...cache.getConfig() });
+        res.status(200).json({ ...cache.config });
         return;
       }
 

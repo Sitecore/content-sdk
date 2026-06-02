@@ -64,18 +64,17 @@ export function collectSitecoreTagsFromEdgeRevalidateRequestBody(
   const { defaultLocale } = options;
   const out: string[] = [];
 
-  for (const raw of body?.tags ?? []) {
-    if (typeof raw !== 'string') {
+  for (const tag of body?.tags ?? []) {
+    if (typeof tag !== 'string') {
       continue;
     }
-    const s = raw.trim();
-    if (!s) {
+    if (!tag) {
       continue;
     }
-    if (s.startsWith(FULL_TAG_PREFIX)) {
-      out.push(s);
+    if (tag.startsWith(FULL_TAG_PREFIX)) {
+      out.push(tag);
     } else {
-      const id = extractSitecoreEdgeContentId(s);
+      const id = extractSitecoreEdgeContentId(tag);
       if (id) {
         out.push(buildSitecoreItemCacheTag({ itemId: id, locale: defaultLocale }));
       }

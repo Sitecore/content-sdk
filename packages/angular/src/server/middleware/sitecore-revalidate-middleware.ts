@@ -7,20 +7,10 @@ import {
   collectSitecoreTagsFromEdgeRevalidateRequestBody,
   type SitecoreEdgeRevalidateRequestBody,
 } from './sitecore-edge-webhook-revalidation';
-
+import { readProcessEnv } from '../utils';
 const DEFAULT_SECRET_ENV_VAR = 'SITECORE_REVALIDATE_SECRET';
 const DEFAULT_SECRET_HEADER = 'x-revalidate-secret';
 const DEFAULT_ENDPOINT = '/api/revalidate';
-
-/**
- * Read a process environment variable
- * @param {string} name - The name of the environment variable
- * @returns {string | undefined} The value of the environment variable
- */
-function readProcessEnv(name: string): string | undefined {
-  const proc = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process;
-  return proc?.env?.[name];
-}
 
 /**
  * Returns a non-empty trimmed secret, or `undefined` when unset or whitespace-only.
@@ -96,14 +86,12 @@ export function createSitecoreRevalidateMiddleware(
         readProcessEnv(DEFAULT_SECRET_ENV_VAR)
       );
 
-      if (configuredSecret) {
-        const headers = req.headers as Record<string, string | string[] | undefined>;
-        const providedSecret = headers[DEFAULT_SECRET_HEADER];
-        const headerValue = Array.isArray(providedSecret) ? providedSecret[0] : providedSecret;
-        if (headerValue !== configuredSecret) {
-          res.status(401).json({ error: 'Unauthorized.' });
-          return;
-        }
+      const headers = req.headers as Record<string, string | string[] | undefined>;
+      const providedSecret = headers[DEFAULT_SECRET_HEADER];
+      const headerValue = Array.isArray(providedSecret) ? providedSecret[0] : providedSecret;
+      if (headerValue !== configuredSecret) {
+        res.status(401).json({ error: 'Unauthorized.' });
+        return;
       }
 
       const body = req.body;

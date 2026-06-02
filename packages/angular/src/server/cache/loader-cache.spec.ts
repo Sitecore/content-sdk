@@ -2,14 +2,19 @@
 import { describe, it, expect } from 'vitest';
 import memoryDriver from 'unstorage/drivers/memory';
 import { createLoaderCache } from './loader-cache';
-import { InMemoryLoaderCache } from './default-in-memory-cache';
 import { UnstorageLoaderCache } from './unstorage-loader-cache';
 import { sampleKey, sampleTags } from './cache.spec-helpers';
 
+function getStorage(cache: UnstorageLoaderCache): Storage {
+  return (cache as unknown as { storage: Storage }).storage;
+}
+
 describe('createLoaderCache factory', () => {
-  it('returns an InMemoryLoaderCache when no driver is supplied', () => {
+  it('returns a UnstorageLoaderCache with memory driver when no driver is supplied', async () => {
     const cache = createLoaderCache();
-    expect(cache).toBeInstanceOf(InMemoryLoaderCache);
+    expect(cache).toBeInstanceOf(UnstorageLoaderCache);
+    const mount = await getStorage(cache as UnstorageLoaderCache).getMount();
+    expect(mount?.driver.name).toBe('memory');
   });
 
   it('returns an UnstorageLoaderCache when a driver is supplied', () => {

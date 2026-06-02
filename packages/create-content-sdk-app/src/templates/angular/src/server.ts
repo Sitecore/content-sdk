@@ -41,8 +41,8 @@ const driver =
       : undefined;
 
 const loaderCache = createLoaderCache({
-  revalidate: config.angular.isrCache.revalidate,
-  enabled: config.angular.isrCache.enabled,
+  revalidate: config.angular.loadersCache.revalidate,
+  enabled: config.angular.loadersCache.enabled,
   defaultSiteName: config.defaultSite,
   ...(driver ? { driver } : {}),
 });

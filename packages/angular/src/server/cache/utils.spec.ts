@@ -1,6 +1,16 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect } from 'vitest';
-import { approxByteSize, dimensionsFromContext, resolveConfig, applyLoaderCacheConfigDefaults, urlToPathKey, evaluateCacheRead, sanitizeSitecoreCacheSegment, normalizeSitecoreItemIdForCacheKey, dedupeCacheStrings } from './utils';
+import {
+  approxByteSize,
+  dimensionsFromContext,
+  resolveConfig,
+  applyLoaderCacheConfigDefaults,
+  urlToPathKey,
+  evaluateCacheRead,
+  sanitizeSitecoreCacheSegment,
+  normalizeSitecoreItemIdForCacheKey,
+  dedupeCacheStrings,
+} from './utils';
 import { DEFAULT_CACHE_TTL } from './models';
 
 describe('urlToPathKey', () => {
@@ -97,7 +107,13 @@ describe('evaluateCacheRead', () => {
     expect(
       evaluateCacheRead(
         'sc:key',
-        { value: { old: true }, tags: [], storedAt: now - 120_000, expiresAt: now - 1, stale: false },
+        {
+          value: { old: true },
+          tags: [],
+          storedAt: now - 120_000,
+          expiresAt: now - 1,
+          stale: false,
+        },
         now
       )
     ).toEqual({ kind: 'stale', value: { old: true }, cacheKey: 'sc:key' });
