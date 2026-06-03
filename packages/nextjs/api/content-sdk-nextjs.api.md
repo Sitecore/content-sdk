@@ -185,12 +185,6 @@ import { withEmptyFieldEditingComponent } from '@sitecore-content-sdk/react';
 import { withFieldMetadata } from '@sitecore-content-sdk/react';
 import { withPlaceholder } from '@sitecore-content-sdk/react';
 import { withSitecore } from '@sitecore-content-sdk/react';
-<<<<<<< HEAD
-import { WithSitecoreHocProps } from '@sitecore-content-sdk/react';
-import { WithSitecoreOptions } from '@sitecore-content-sdk/react';
-import { WithSitecoreProps } from '@sitecore-content-sdk/react';
-import { WriteImportMapArgs } from '@sitecore-content-sdk/content/node-tools';
-=======
 import { WriteImportMapArgs } from '@sitecore-content-sdk/content/node-tools';
 
 // @public
@@ -212,7 +206,6 @@ export interface AnalyticsProxyAdapter extends AnalyticsAdapter {
 
 // @public
 export function analyticsProxyAdapter(request: NextRequest, response: NextResponse): AnalyticsProxyAdapter;
->>>>>>> 41e4865577aede1566f5cbc1645ac82ba6153994
 
 export { AppPlaceholder }
 

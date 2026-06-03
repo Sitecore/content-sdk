@@ -317,9 +317,6 @@ export interface NativeDataFetcherResponse<T> {
 export const normalizeUrl: (url: string) => string;
 
 // @public
-<<<<<<< HEAD
-export function resolveEdgeUrl(edgeUrl?: string, env?: Record<string, string | undefined>): string;
-=======
 interface Plugin_2<Options = unknown, Adapter = unknown> {
     adapter?: Adapter;
     dependencies?: PluginDependency[];
@@ -340,7 +337,6 @@ export type PluginDependency = string;
 
 // @public
 export function resolveEdgeUrl(edgeUrl?: string): string;
->>>>>>> 41e4865577aede1566f5cbc1645ac82ba6153994
 
 // @public
 export function resolveEdgeUrlForStaticFiles(): string;
