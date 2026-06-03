@@ -6,6 +6,7 @@ import {
   RouteData,
   isDynamicPlaceholder,
   getDynamicPlaceholderPattern,
+  getRenderingParamString,
 } from '@sitecore-content-sdk/content/layout';
 import { HIDDEN_RENDERING_NAME } from '@sitecore-content-sdk/content';
 import { HiddenRendering } from '../HiddenRendering';
@@ -81,16 +82,18 @@ export const getPlaceholderRenderings = (
  * @param {ComponentRendering} rendering rendering object
  * @returns {object} converted SXA params
  */
-export const getSXAParams = (rendering: ComponentRendering) => {
+export const getSXAParams = (rendering: ComponentRendering): { styles: string } | undefined => {
   if (!rendering.params) return { styles: '' };
 
-  const { GridParameters, Styles } = rendering.params;
+  const gridParameters = getRenderingParamString(rendering.params.GridParameters) ?? '';
+  const styles = getRenderingParamString(rendering.params.Styles) ?? '';
+  const combinedStyles = [gridParameters, styles].filter(Boolean).join(' ');
 
-  return (
-    (GridParameters || Styles) && {
-      styles: `${GridParameters || ''} ${Styles || ''}`,
-    }
-  );
+  if (!combinedStyles) {
+    return undefined;
+  }
+
+  return { styles: combinedStyles };
 };
 
 /**

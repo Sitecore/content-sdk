@@ -2,4 +2,4 @@
 '@sitecore-content-sdk/content': patch
 ---
 
-[content] Fix `TypeError: e.match is not a function` during build when LayoutService DetailedRenderingParams returns `Styles`, `CSSStyles` or `LibraryId` as objects instead of strings
+[content] Fix build crash and normalize DetailedRenderingParams object/JSON values for `Styles`, `CSSStyles`, `LibraryId`, and `GridParameters` rendering params

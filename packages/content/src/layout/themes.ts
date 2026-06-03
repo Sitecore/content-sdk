@@ -1,6 +1,12 @@
 import { constants } from '@sitecore-content-sdk/core';
 import { normalizeUrl } from '@sitecore-content-sdk/core/tools';
-import { ComponentRendering, LayoutServiceData, RouteData, getFieldValue } from '.';
+import {
+  ComponentRendering,
+  LayoutServiceData,
+  RouteData,
+  getFieldValue,
+  getRenderingParamString,
+} from '.';
 import { HTMLLink } from '../models';
 
 /**
@@ -53,14 +59,6 @@ const traversePlaceholder = (components: ComponentRendering[], ids: Set<string>)
 };
 
 /**
- * Returns the value if it is a string, otherwise undefined.
- * @param {unknown} value value to check
- * @returns {string | undefined} the string value, or undefined
- */
-const asString = (value: unknown): string | undefined =>
-  typeof value === 'string' ? value : undefined;
-
-/**
  * Traverse component and children to add library ids
  * @param {RouteData | ComponentRendering | HtmlElementRendering} component component data
  * @param {Set<string>} ids library ids
@@ -68,9 +66,9 @@ const asString = (value: unknown): string | undefined =>
 const traverseComponent = (component: RouteData | ComponentRendering, ids: Set<string>) => {
   let libraryId: string | undefined = undefined;
   if ('params' in component && component.params) {
-    const cssStylesParam = asString(component.params.CSSStyles);
-    const stylesParam = asString(component.params.Styles);
-    const libraryIdParam = asString(component.params.LibraryId);
+    const cssStylesParam = getRenderingParamString(component.params.CSSStyles);
+    const stylesParam = getRenderingParamString(component.params.Styles);
+    const libraryIdParam = getRenderingParamString(component.params.LibraryId);
     // LibraryID in css class name takes precedence over LibraryId attribute
     libraryId =
       cssStylesParam?.match(STYLES_LIBRARY_ID_REGEX)?.[1] ||
@@ -80,9 +78,13 @@ const traverseComponent = (component: RouteData | ComponentRendering, ids: Set<s
   }
   // if params are empty we try to fall back to data source
   if (!libraryId && 'fields' in component && component.fields) {
-    const cssStylesField = asString(getFieldValue(component.fields, 'CSSStyles', ''));
-    const stylesField = asString(getFieldValue(component.fields, 'Styles', ''));
-    const libraryIdField = asString(getFieldValue(component.fields, 'LibraryId', ''));
+    const cssStylesField = getRenderingParamString(
+      getFieldValue(component.fields, 'CSSStyles', '')
+    );
+    const stylesField = getRenderingParamString(getFieldValue(component.fields, 'Styles', ''));
+    const libraryIdField = getRenderingParamString(
+      getFieldValue(component.fields, 'LibraryId', '')
+    );
     libraryId =
       cssStylesField?.match(STYLES_LIBRARY_ID_REGEX)?.[1] ||
       stylesField?.match(STYLES_LIBRARY_ID_REGEX)?.[1] ||

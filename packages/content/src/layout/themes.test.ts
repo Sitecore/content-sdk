@@ -470,7 +470,43 @@ describe('themes', () => {
           );
 
         expect(run).to.not.throw();
-        expect(run()).to.deep.equal([]);
+        expect(run()).to.deep.equal([
+          { href: getStylesheetUrl('bar', sitecoreEdgeContextId), rel: 'stylesheet' },
+        ]);
+      });
+
+      it('should resolve library id from object Styles Value.value', () => {
+        expect(
+          getDesignLibraryStylesheetLinks(
+            setBasicLayoutData(({
+              componentName: 'styled',
+              params: {
+                Styles: {
+                  Value: { value: '-library--foo White-Background' },
+                },
+              },
+            } as unknown) as ComponentRendering),
+            sitecoreEdgeContextId
+          )
+        ).to.deep.equal([
+          { href: getStylesheetUrl('foo', sitecoreEdgeContextId), rel: 'stylesheet' },
+        ]);
+      });
+
+      it('should resolve library id from JSON string Styles param', () => {
+        expect(
+          getDesignLibraryStylesheetLinks(
+            setBasicLayoutData(({
+              componentName: 'styled',
+              params: {
+                Styles: '{"Value":{"value":"-library--foo"}}',
+              },
+            } as unknown) as ComponentRendering),
+            sitecoreEdgeContextId
+          )
+        ).to.deep.equal([
+          { href: getStylesheetUrl('foo', sitecoreEdgeContextId), rel: 'stylesheet' },
+        ]);
       });
 
       it('should fall back to fields when params are objects', () => {
@@ -507,7 +543,10 @@ describe('themes', () => {
                       content: [
                         {
                           componentName: 'body',
-                          params: { CSSStyles: detailedStylesObject, LibraryId: detailedStylesObject },
+                          params: {
+                            CSSStyles: detailedStylesObject,
+                            LibraryId: { IsVerifiedStyle: { value: false } },
+                          },
                         },
                       ],
                     },
