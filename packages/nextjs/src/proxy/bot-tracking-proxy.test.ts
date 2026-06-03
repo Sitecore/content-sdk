@@ -186,6 +186,10 @@ describe('BotTrackingProxy', () => {
       ...config,
     } as import('./bot-tracking-proxy').BotTrackingProxyConfig);
 
+  it('should expose proxy name', () => {
+    expect(createProxy().name).to.equal('BotTrackingProxy');
+  });
+
   it('skips in local environment when NODE_ENV is development', async () => {
     isBotStub.returns(true);
 
@@ -504,5 +508,47 @@ describe('BotTrackingProxy', () => {
     const errLog = debugSpy.args.find((log) => log[0] === 'bot tracking proxy error: %o');
 
     expect(errLog![1]).to.equal(err);
+  });
+
+  describe('execution context', () => {
+    it('should record successful execution when bot is detected', async () => {
+      isBotStub.returns(true);
+      initContentSdkStub.resolves();
+
+      const req = createRequest({
+        headerValues: { 'user-agent': 'Googlebot' },
+      });
+      const res = createResponse();
+      const context = new Map();
+      const proxy = createProxy();
+
+      await proxy.handle(req, res, context);
+
+      expect(context.get('BotTrackingProxy')).to.deep.equal({
+        executedSuccessfully: true,
+        error: null,
+        botDetected: true,
+      });
+    });
+
+    it('should record failed execution when botPageView rejects', async () => {
+      isBotStub.returns(true);
+      const err = new Error('edge failure');
+      botPageViewStub.rejects(err);
+
+      const req = createRequest({
+        headerValues: { 'user-agent': 'Googlebot' },
+      });
+      const res = createResponse();
+      const context = new Map();
+      const proxy = createProxy();
+
+      await proxy.handle(req, res, context);
+
+      expect(context.get('BotTrackingProxy')).to.deep.equal({
+        executedSuccessfully: false,
+        error: err,
+      });
+    });
   });
 });

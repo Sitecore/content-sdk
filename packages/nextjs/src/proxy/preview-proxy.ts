@@ -7,12 +7,22 @@ import { EDITING_PARAMS_HEADER } from '../editing/constants';
 import { PREVIEW_COOKIES } from '../editing/utils';
 import debug from '../debug';
 import { ProxyBase } from './proxy';
+import { ProxiesContext, SuccessfulProxyExecution } from './types';
 
 /**
  * Configuration for PreviewProxy
  * @public
  */
 export type PreviewProxyConfig = { client: SitecoreClient };
+
+/**
+ * Information about executed proxy to be stored in the context
+ * Used for describing successful execution with details about the preview that was applied
+ * @public
+ */
+export interface SuccessfulPreviewProxyExecution extends SuccessfulProxyExecution {
+  pageDataReceived: boolean;
+}
 
 /**
  * Proxy for preview requests. Acts as a gateway for preview requests.
@@ -28,7 +38,18 @@ export class PreviewProxy extends ProxyBase {
     this.client = config.client;
   }
 
-  handle = async (req: NextRequest, res: NextResponse): Promise<NextResponse> => {
+  /**
+   * Name of the proxy, used as a key in the context to store information about executed proxies
+   */
+  get name() {
+    return 'PreviewProxy';
+  }
+
+  handle = async (
+    req: NextRequest,
+    res: NextResponse,
+    proxiesContext?: ProxiesContext
+  ): Promise<NextResponse> => {
     // Run only in internal editing host
     if (!process.env.SITECORE) {
       return res;
@@ -93,6 +114,15 @@ export class PreviewProxy extends ProxyBase {
     // Preview content is not found or access is denied
     if (!pageData) {
       debug.editing('preview content is not found or access is denied');
+
+      const successfulExecution: SuccessfulPreviewProxyExecution = {
+        executedSuccessfully: true,
+        error: null,
+        pageDataReceived: false,
+      };
+
+      proxiesContext?.set(this.name, successfulExecution);
+
       return NextResponse.json(
         { html: 'Preview content is not found or access is denied' },
         { status: 403 }
@@ -107,6 +137,14 @@ export class PreviewProxy extends ProxyBase {
     });
 
     debug.editing('preview proxy end');
+
+    const successfulExecution: SuccessfulPreviewProxyExecution = {
+      executedSuccessfully: true,
+      error: null,
+      pageDataReceived: true,
+    };
+
+    proxiesContext?.set(this.name, successfulExecution);
 
     return res;
   };

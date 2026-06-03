@@ -39,17 +39,17 @@
     ".": {
       "types": "./types/src/index.d.ts",
       "import": "./dist/esm/src/index.js",
-      "require": "./dist/cjs/src/index.js"      
+      "require": "./dist/cjs/src/index.js"
     },
     "./internal": {
       "types": "./types/src/internal.d.ts",
       "import": "./dist/esm/src/internal.js",
-      "require": "./dist/cjs/src/internal.js"      
+      "require": "./dist/cjs/src/internal.js"
     },
     "./utils": {
       "types": "./types/src/utils.d.ts",
       "import": "./dist/esm/src/utils.js",
-      "require": "./dist/cjs/src/utils.js"      
+      "require": "./dist/cjs/src/utils.js"
     }
   },
   "files": [

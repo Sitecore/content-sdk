@@ -231,7 +231,8 @@ export class BotTrackingProxy extends ProxyBase {
     // (undocumented)
     protected config: BotTrackingProxyConfig;
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
+    get name(): string;
     // @internal (undocumented)
     protected shouldSkipForLocalEnvironment(req: NextRequest): boolean;
 }
@@ -425,7 +426,7 @@ export const defineConfig: (config?: SitecoreConfigInput) => SitecoreConfig;
 
 // @public
 export const defineProxy: (...proxies: ProxyHandler_2[]) => {
-    exec: (req: NextRequest, res?: NextResponse) => Promise<NextResponse<unknown>>;
+    exec: (req: NextRequest, res?: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse<unknown>>;
 };
 
 export { DesignLibrary }
@@ -497,6 +498,14 @@ export { extractFiles }
 
 // @public
 export const extractPath: (context: GetStaticPropsContext | GetServerSidePropsContext) => string;
+
+// @public
+export interface FailedProxyExecution {
+    // (undocumented)
+    error: unknown;
+    // (undocumented)
+    executedSuccessfully: false;
+}
 
 export { FEaaSClientWrapper }
 
@@ -641,6 +650,9 @@ export { isEditorActive }
 // @public
 export const isServerSidePropsContext: (context: GetServerSidePropsContext | GetStaticPropsContext) => context is GetServerSidePropsContext;
 
+// @public
+export function isSuccessfulProxyExecution<SuccessfulProxyType = unknown, T extends ProxiesContextMapValue | undefined = ProxiesContextMapValue | undefined>(info: T): info is T & SuccessfulProxyType;
+
 export { Item }
 
 export { LayoutService }
@@ -678,7 +690,8 @@ export class LocaleProxy extends ProxyBase {
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
     protected getLocaleFromPath(path: string): string | undefined;
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
+    get name(): string;
 }
 
 // @public
@@ -699,7 +712,8 @@ export class MultisiteProxy extends ProxyBase {
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
     protected getSiteRewrite(pathname: string, siteName: string): string;
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
+    get name(): string;
     protected shouldSkipWhenDisabled(): boolean;
     protected shouldWarnWhenDisabled(_res: NextResponse): void;
 }
@@ -764,7 +778,7 @@ export class PersonalizeProxy extends ProxyBase {
     // Warning: (ae-forgotten-export) The symbol "PersonalizeExecution" needs to be exported by the entry point api-surface.d.ts
     protected getPersonalizeExecutions(personalizeInfo: PersonalizeInfo, language: string): PersonalizeExecution[];
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
     // (undocumented)
     protected initPersonalizeServer(input: {
         hostname: string;
@@ -772,6 +786,7 @@ export class PersonalizeProxy extends ProxyBase {
         request: NextRequest;
         response: NextResponse;
     }): Promise<void>;
+    get name(): string;
     // (undocumented)
     protected personalize(input: {
         params: ExperienceParams;
@@ -831,13 +846,20 @@ export class PreviewProxy extends ProxyBase {
     // (undocumented)
     protected client: SitecoreClient;
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
+    get name(): string;
 }
 
 // @public
 export type PreviewProxyConfig = {
     client: SitecoreClient;
 };
+
+// @public
+export type ProxiesContext = Map<string, ProxiesContextMapValue>;
+
+// @public
+export type ProxiesContextMapValue = FailedProxyExecution | SuccessfulProxyExecution;
 
 // @public
 export abstract class ProxyBase extends ProxyHandler_2 {
@@ -860,6 +882,7 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     protected isAppRouter(res: NextResponse): boolean;
     protected isPrefetch(req: NextRequest): boolean;
     protected isPreview(req: NextRequest): boolean;
+    get name(): string;
     protected rewrite(rewritePath: string, req: NextRequest, res: NextResponse, skipHeader?: boolean): NextResponse;
     // (undocumented)
     protected siteResolver: SiteResolver;
@@ -875,7 +898,8 @@ export type ProxyBaseConfig = {
 
 // @public
 abstract class ProxyHandler_2 {
-    abstract handle(req: NextRequest, res: NextResponse): Promise<NextResponse>;
+    abstract handle(req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext): Promise<NextResponse>;
+    abstract get name(): string;
 }
 export { ProxyHandler_2 as ProxyHandler }
 
@@ -899,9 +923,10 @@ export class RedirectsProxy extends ProxyBase {
     // Warning: (ae-forgotten-export) The symbol "RedirectResult" needs to be exported by the entry point api-surface.d.ts
     protected getExistsRedirect(req: NextRequest, siteName: string, requestLocale: string): Promise<RedirectResult | undefined>;
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
     protected matchFromRedirectMapRedirect(redirects: RedirectResult[], urlLocale: string, incomingURL: string, incomingQS: string): RedirectResult | undefined;
     protected matchRedirectItemRedirect(redirects: RedirectResult[], locale: string, currentPath: string): RedirectResult | undefined;
+    get name(): string;
     protected normalizeUrl(url: NextURL): NextURL;
     // (undocumented)
     protected redirectsService: RedirectsService | null;
@@ -1042,6 +1067,64 @@ export { SitePathServiceConfig }
 export { SiteResolver }
 
 export { StaticPath }
+
+// @public
+export interface SuccessfulBotTrackingProxyExecution extends SuccessfulProxyExecution {
+    // (undocumented)
+    botDetected: boolean;
+}
+
+// @public
+export interface SuccessfulLocaleProxyExecution extends SuccessfulProxyExecution {
+    // (undocumented)
+    locale: string;
+    // (undocumented)
+    rewrote: boolean;
+}
+
+// @public
+export interface SuccessfulMultisiteProxyExecution extends SuccessfulProxyExecution {
+    // (undocumented)
+    isSitecorePreview: string | undefined;
+    // (undocumented)
+    rewritePath: string;
+    // (undocumented)
+    siteName: string;
+}
+
+// @public
+export interface SuccessfulPersonalizeProxyExecution extends SuccessfulProxyExecution {
+    // (undocumented)
+    identifiedVariantIds: string[];
+    // (undocumented)
+    rewritePath: string;
+}
+
+// @public
+export interface SuccessfulPreviewProxyExecution extends SuccessfulProxyExecution {
+    // (undocumented)
+    pageDataReceived: boolean;
+}
+
+// @public
+export interface SuccessfulProxyExecution {
+    // (undocumented)
+    error: null;
+    // (undocumented)
+    executedSuccessfully: true;
+}
+
+// @public
+export interface SuccessfulRedirectsProxyExecution extends SuccessfulProxyExecution {
+    // (undocumented)
+    isExternal: boolean;
+    // (undocumented)
+    redirectStatus: number;
+    // (undocumented)
+    redirectUrl: string;
+    // (undocumented)
+    requestUrl: string;
+}
 
 export { Text_2 as Text }
 

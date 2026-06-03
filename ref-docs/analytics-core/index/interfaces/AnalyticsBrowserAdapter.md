@@ -6,7 +6,7 @@
 
 # Interface: AnalyticsBrowserAdapter
 
-Defined in: [analytics-core/src/initialization/browser-adapter.ts:17](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/analytics-core/src/initialization/browser-adapter.ts#L17)
+Defined in: [analytics-core/src/initialization/browser-adapter.ts:17](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/analytics-core/src/initialization/browser-adapter.ts#L17)
 
 Defines the AnalyticsBrowserAdapter.
 
@@ -20,7 +20,7 @@ Defines the AnalyticsBrowserAdapter.
 
 > **getClientId**: () => `string` \| `null`
 
-Defined in: [analytics-core/src/initialization/types.ts:19](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/analytics-core/src/initialization/types.ts#L19)
+Defined in: [analytics-core/src/initialization/types.ts:19](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/analytics-core/src/initialization/types.ts#L19)
 
 Gets the client ID.
 
@@ -40,7 +40,7 @@ The client ID, or null if it is not set.
 
 > `optional` **isBot?**: () => `boolean`
 
-Defined in: [analytics-core/src/initialization/types.ts:14](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/analytics-core/src/initialization/types.ts#L14)
+Defined in: [analytics-core/src/initialization/types.ts:14](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/analytics-core/src/initialization/types.ts#L14)
 
 Checks if the current request is a bot.
 
@@ -60,7 +60,7 @@ True if the current request is a bot, false otherwise.
 
 > **location**: `object`
 
-Defined in: [analytics-core/src/initialization/types.ts:28](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/analytics-core/src/initialization/types.ts#L28)
+Defined in: [analytics-core/src/initialization/types.ts:28](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/analytics-core/src/initialization/types.ts#L28)
 
 The location object, which provides a method for getting search parameters.
 
@@ -86,7 +86,7 @@ The search parameters from the location.
 
 > **setClientId**: () => `Promise`\<`void`\>
 
-Defined in: [analytics-core/src/initialization/types.ts:24](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/analytics-core/src/initialization/types.ts#L24)
+Defined in: [analytics-core/src/initialization/types.ts:24](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/analytics-core/src/initialization/types.ts#L24)
 
 Sets the client ID.
 
@@ -106,7 +106,7 @@ A promise that resolves when the client ID has been set.
 
 > **type**: `"browser"`
 
-Defined in: [analytics-core/src/initialization/browser-adapter.ts:21](https://github.com/Sitecore/content-sdk/blob/932dec9d0ea130c3f620b32f2a21cb0a49bd0481/packages/analytics-core/src/initialization/browser-adapter.ts#L21)
+Defined in: [analytics-core/src/initialization/browser-adapter.ts:21](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/analytics-core/src/initialization/browser-adapter.ts#L21)
 
 The type of the adapter.
 

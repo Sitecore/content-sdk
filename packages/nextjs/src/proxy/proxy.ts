@@ -7,6 +7,7 @@ import {
 } from '@sitecore-content-sdk/content/client';
 import { PREVIEW_COOKIES } from '../editing/utils';
 import debug from '../debug';
+import { ProxiesContext } from './types';
 
 export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
 export const LOCALE_HEADER_NAME = 'x-sc-locale';
@@ -44,11 +45,21 @@ export type ProxyBaseConfig = {
  */
 export abstract class ProxyHandler {
   /**
+   * Name of the proxy, used as a key in the context to store information about executed proxies
+   */
+  abstract get name(): string;
+
+  /**
    * Handler method to execute proxy logic
    * @param {NextRequest} req request
    * @param {NextResponse} res response
+   * @param {ProxiesContext} proxiesContext context to share information between proxies
    */
-  abstract handle(req: NextRequest, res: NextResponse): Promise<NextResponse>;
+  abstract handle(
+    req: NextRequest,
+    res: NextResponse,
+    proxiesContext?: ProxiesContext
+  ): Promise<NextResponse>;
 }
 
 /**
@@ -99,6 +110,13 @@ export abstract class ProxyBase extends ProxyHandler {
     super();
     this.siteResolver = new SiteResolver(config.sites);
     this.defaultHostname = config.defaultHostname || 'localhost';
+  }
+
+  /**
+   * Name of the proxy, used as a key in the context to store information about executed proxies
+   */
+  get name() {
+    return 'ProxyBase';
   }
 
   /**
@@ -276,8 +294,9 @@ export const defineProxy = (...proxies: ProxyHandler[]) => {
      * Execute all proxies
      * @param {NextRequest} req request
      * @param {NextResponse} [res] response
+     * @param {ProxiesContext} [proxiesContext] context to share information between proxies
      */
-    exec: async (req: NextRequest, res?: NextResponse) => {
+    exec: async (req: NextRequest, res?: NextResponse, proxiesContext?: ProxiesContext) => {
       const response = res || NextResponse.next();
 
       debug.common('proxy start');
@@ -291,7 +310,7 @@ export const defineProxy = (...proxies: ProxyHandler[]) => {
             // denied the request (e.g. PreviewProxy returning 403).
             if (res.status === 403) return res;
 
-            return proxy.handle(req, res);
+            return proxy.handle(req, res, proxiesContext);
           }),
         Promise.resolve(response)
       );

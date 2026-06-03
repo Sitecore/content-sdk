@@ -40,17 +40,17 @@
     ".": {
       "types": "./types/src/index.d.ts",
       "import": "./dist/esm/src/index.js",
-      "require": "./dist/cjs/src/index.js"      
+      "require": "./dist/cjs/src/index.js"
     },
     "./browser": {
       "types": "./types/src/browser.d.ts",
       "import": "./dist/esm/src/browser.js",
-      "require": "./dist/cjs/src/browser.js"      
+      "require": "./dist/cjs/src/browser.js"
     },
     "./internal": {
       "types": "./types/src/internal.d.ts",
       "import": "./dist/esm/src/internal.js",
-      "require": "./dist/cjs/src/internal.js"      
+      "require": "./dist/cjs/src/internal.js"
     }
   },
   "files": [
