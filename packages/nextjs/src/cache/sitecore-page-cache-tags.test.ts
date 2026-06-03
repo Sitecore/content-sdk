@@ -47,9 +47,15 @@ describe('collectSitecorePageCacheTags', () => {
       ...base,
       personalizedPathname: '/about',
     });
-    expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:route:`))).to.equal(true);
-    expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:`))).to.equal(true);
-    expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:pvv:`))).to.equal(false);
+    expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:route:`))).to.equal(
+      true
+    );
+    expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:`))).to.equal(
+      true
+    );
+    expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:pvv:`))).to.equal(
+      false
+    );
   });
 
   it('does not add a personalization variant tag even when pathname carries variant markers', () => {
@@ -57,6 +63,8 @@ describe('collectSitecorePageCacheTags', () => {
       ...base,
       personalizedPathname: '/about/_variantId_hero-a',
     });
-    expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:pvv:`))).to.equal(false);
+    expect(tags.some((t) => t.startsWith(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:pvv:`))).to.equal(
+      false
+    );
   });
 });

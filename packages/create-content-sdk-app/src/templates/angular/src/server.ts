@@ -7,8 +7,16 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
-import { createLoaderDataServiceMiddleware } from '@sitecore-content-sdk/angular';
+import fsDriver from 'unstorage/drivers/fs';
+import memoryDriver from 'unstorage/drivers/memory';
+import {
+  createCacheAdminMiddleware,
+  createLoaderCache,
+  createLoaderDataServiceMiddleware,
+  createSitecoreRevalidateMiddleware,
+} from '@sitecore-content-sdk/angular';
 import { LOADERS } from './content-sdk/loaders';
+import config from '../sitecore.config';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -16,11 +24,55 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 /**
+ * Loader cache driver selection (server only).
+ *
+ *   LOADER_CACHE_DRIVER unset            → in-memory Map (default)
+ *   LOADER_CACHE_DRIVER=unstorage-memory → unstorage with memory driver
+ *   LOADER_CACHE_DRIVER=unstorage-fs     → unstorage with fs driver (persists)
+ *
+ * The fs driver writes to `./.cache/loaders/<key>.json`, surviving process restarts.
+ */
+const driverChoice = process.env.LOADER_CACHE_DRIVER;
+const driver =
+  driverChoice === 'unstorage-fs'
+    ? fsDriver({ base: './.cache/loaders' })
+    : driverChoice === 'unstorage-memory'
+      ? memoryDriver()
+      : undefined;
+
+const loaderCache = createLoaderCache({
+  revalidate: config.angular.loadersCache.revalidate,
+  enabled: config.angular.loadersCache.enabled,
+  defaultSiteName: config.defaultSite,
+  ...(driver ? { driver } : {}),
+});
+
+app.use(express.json());
+
+/** Production webhook: POST /api/revalidate (Sitecore Edge OSR). */
+app.use(
+  createSitecoreRevalidateMiddleware({
+    cache: loaderCache,
+    defaultLocale: config.defaultLanguage,
+    sites: [
+      {
+        name: config.defaultSite,
+        hostName: '*',
+        language: config.defaultLanguage,
+      },
+    ],
+  })
+);
+
+/** Admin endpoints for cache inspection and invalidation (see `/api/_cache`). */
+app.use(createCacheAdminMiddleware({ cache: loaderCache, endpoint: '/api/_cache' }));
+
+/**
  * Loader data endpoint (/_data). Must use the same loaders as the client registry
  * so client-side navigation can fetch route data via POST /_data.
  */
-app.use(express.json());
-app.use(createLoaderDataServiceMiddleware({ loaders: LOADERS }));
+app.use(createLoaderDataServiceMiddleware({ loaders: LOADERS, cache: loaderCache }));
+
 /**
  * Serve static files from /browser
  */
@@ -34,11 +86,12 @@ app.use(
 
 /**
  * Handle all other requests by rendering the Angular application.
- * Catches ExternalRedirectError from loaders so server-side external redirects send HTTP 302.
+ * The cache reference rides on REQUEST_CONTEXT so the SSR loader resolver
+ * picks it up via inject(REQUEST_CONTEXT).
  */
 app.use((req, res, next) => {
   angularApp
-    .handle(req)
+    .handle(req, { cache: loaderCache })
     .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
     .catch((err) => {
       next(err);

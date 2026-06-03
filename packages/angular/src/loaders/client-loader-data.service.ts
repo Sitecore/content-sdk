@@ -3,17 +3,17 @@ import { isPlatformBrowser } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Params } from '@angular/router';
-import { LoaderApiRequest, LoaderApiResponse } from './models';
+import { LoaderApiRequest, LoaderApiResponse, LoaderCacheConfig } from './models';
 import { LOADER_DATA_ENDPOINT } from '../server/constants';
 import { FETCH_DATA_ENDPOINT } from './loader-registry.token';
 
 /**
- * Cache key generator for loader data.
+ * Staging key for prefetched loader responses (browser-only, consume-once).
  * @param {string} loaderId - Loader identifier
  * @param {string} url - Request URL
- * @returns Cache key string
+ * @returns Staging key string
  */
-function cacheKey(loaderId: string, url: string): string {
+function requestKey(loaderId: string, url: string): string {
   return `loader:${loaderId}:${url}`;
 }
 
@@ -26,13 +26,25 @@ export interface LoaderDataRequest {
   loaderId: string;
   params?: Params;
   query?: Record<string, string | string[]>;
+  /**
+   * Per-route cache overrides from `loaderResolver(id, cacheOptions)`. Sent
+   * to the server in the POST body so server-side cache policy matches the
+   * route's intent on CSR navigations. Phase 5 of the refactor plan.
+   */
+  cacheOptions?: LoaderCacheConfig;
 }
 
+/**
+ * Loader data client for browser loader data resolution. POSTs to the `/_data` endpoint and holds
+ * short-lived prefetched responses for parallel navigation prefetching.
+ * Not aware of the server-side {@link LoaderCache}.
+ * @public
+ */
 @Injectable({
   providedIn: 'root',
 })
-export class LoaderDataService {
-  private readonly cache = new Map<string, LoaderApiResponse>();
+export class ClientLoaderDataService {
+  private readonly prefetchedResponses = new Map<string, LoaderApiResponse>();
   private readonly pending = new Map<string, Promise<LoaderApiResponse>>();
   private readonly http = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
@@ -40,51 +52,53 @@ export class LoaderDataService {
     inject(FETCH_DATA_ENDPOINT, { optional: true }) ?? LOADER_DATA_ENDPOINT;
 
   /**
-   * Prefetch loader data for the given request without consuming the cache.
-   * If data is already cached or a request is pending, does nothing.
-   * Otherwise starts a fetch and stores the result in cache for a later getData() call.
-   * Used by PreLoaderDataService to warm the cache for all loaders in a route in parallel.
+   * Prefetch loader data for the given request without consuming staged responses.
+   * If a response is already staged or a request is pending, does nothing.
+   * Otherwise starts a fetch and stores the result for a later getData() call.
+   * Used by PreLoaderDataService to warm responses for all loaders in a route in parallel.
    * @param {LoaderDataRequest} loaderRequest - The loader data request
    */
   prefetch(loaderRequest: LoaderDataRequest): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    const key = cacheKey(loaderRequest.loaderId, loaderRequest.url);
-    if (this.cache.has(key) || this.pending.has(key)) {
+    const key = requestKey(loaderRequest.loaderId, loaderRequest.url);
+    if (this.prefetchedResponses.has(key) || this.pending.has(key)) {
       return;
     }
     const promise = this.fetchData(loaderRequest);
     this.pending.set(key, promise);
     promise.then(() => {
-      // Result is already stored in cache by fetchData; nothing to consume
+      // Result is already stored in prefetchedResponses by fetchData
     });
   }
 
   /**
-   * Get data for the given request, using cache or fetching if needed.
+   * Get data for the given request, using staged prefetched responses or fetching if needed.
    * If a request is already pending for this URL/loader combination,
    * waits for it to complete instead of making a duplicate request.
-   * Consumes (removes) cached data after retrieval.
+   * Consumes (removes) staged responses after retrieval.
    * @param {LoaderDataRequest} request - The loader data request
    * @returns {Promise<LoaderApiResponse>} Promise resolving to the API response
    */
   async getData(request: LoaderDataRequest): Promise<LoaderApiResponse> {
-    // Only fetch in browser
     if (!isPlatformBrowser(this.platformId)) {
-      return { kind: 'error', status: 500, message: 'LoaderDataService only works in browser' };
+      return {
+        kind: 'error',
+        status: 500,
+        message: 'ClientLoaderDataService only works in browser',
+      };
     }
 
-    const key = cacheKey(request.loaderId, request.url);
+    const key = requestKey(request.loaderId, request.url);
 
-    // Return cached response if available (consume on use); supports data and redirect
-    const cached = this.cache.get(key);
-    if (cached !== undefined) {
-      this.cache.delete(key);
-      return cached;
+    const staged = this.prefetchedResponses.get(key);
+    if (staged !== undefined) {
+      this.prefetchedResponses.delete(key);
+      return staged;
     }
 
-    // Wait for pending request if one exists
+    // Wait for pending loader data request if one exists
     const pendingRequest = this.pending.get(key);
     if (pendingRequest) {
       return pendingRequest;
@@ -104,15 +118,15 @@ export class LoaderDataService {
    * @returns {Promise<LoaderApiResponse>} Promise resolving to the API response
    */
   private async fetchData(request: LoaderDataRequest): Promise<LoaderApiResponse> {
-    const key = cacheKey(request.loaderId, request.url);
+    const key = requestKey(request.loaderId, request.url);
     const endpoint = this.fetchDataEndpoint;
     const reqBody: LoaderApiRequest = {
       loaderId: request.loaderId,
       url: request.url,
       params: request.params ?? {},
       query: request.query ?? {},
+      cacheOptions: request.cacheOptions,
     };
-    console.log('DEBUG: LoaderDataService fetchData', endpoint, reqBody);
 
     try {
       const resp = await firstValueFrom(
@@ -120,18 +134,15 @@ export class LoaderDataService {
       );
       if (!resp) {
         const message = `No response from ${endpoint}`;
-        console.log(`DEBUG: LoaderDataService fetchData: ${message}`);
         return { kind: 'error', status: 500, message } as LoaderApiResponse;
       }
       if (resp.kind === 'data') {
-        console.log('DEBUG: LoaderDataService fetchData: data', resp.data);
-        this.cache.set(key, resp);
+        this.prefetchedResponses.set(key, resp);
       } else if (resp.kind === 'redirect') {
-        this.cache.set(key, resp);
+        this.prefetchedResponses.set(key, resp);
       }
       return resp;
     } catch (error) {
-      console.log('DEBUG: LoaderDataService fetchData: error', error);
       const message = error instanceof Error ? error.message : 'Fetch failed';
       return { kind: 'error', status: 500, message } as LoaderApiResponse;
     } finally {

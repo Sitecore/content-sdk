@@ -65,7 +65,8 @@
     "@ngx-translate/core": "^17.0.0",
     "@sitecore-content-sdk/content": "^2.1.0",
     "@sitecore-content-sdk/core": "^2.1.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "unstorage": "^1.17.5"
   },
   "devDependencies": {
     "@angular/build": "^21.1.4",

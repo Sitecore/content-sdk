@@ -14,7 +14,10 @@ export const SITECORE_CONTENT_CACHE_TAG_PREFIX = 'sc';
  * @internal
  */
 export function sanitizeSitecoreCacheTagSegment(value: string): string {
-  return value.trim().toLowerCase().replace(/[/:\s]+/g, '_');
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[/:\s]+/g, '_');
 }
 
 /**
@@ -95,7 +98,9 @@ export type BuildSitecoreDictionaryCacheTagParams = {
  * @param {BuildSitecoreDictionaryCacheTagParams} params - Site and locale for the dictionary fetch.
  * @public
  */
-export function buildSitecoreDictionaryCacheTag(params: BuildSitecoreDictionaryCacheTagParams): string {
+export function buildSitecoreDictionaryCacheTag(
+  params: BuildSitecoreDictionaryCacheTagParams
+): string {
   const site = sanitizeSitecoreCacheTagSegment(params.site);
   const locale = sanitizeSitecoreCacheTagSegment(params.locale);
   return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:${site}:${locale}`;

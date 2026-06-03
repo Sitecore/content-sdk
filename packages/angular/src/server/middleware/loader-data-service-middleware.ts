@@ -1,89 +1,49 @@
 import {
   LoaderApiRequest,
   LoaderApiResponse,
-  LoaderContext,
-  isLoaderRedirectResult,
   NotFoundNavigationError,
-  RequestContext,
   LoaderHttpError,
-} from '../loaders/models';
-import { extractRequestContext } from '../loaders/utils';
+  LoaderDataResult,
+} from '../../loaders/models';
+import { extractRequestContext } from '../../loaders/utils';
 import {
   ExpressDataHandlerOptions,
   ExpressMiddleware,
   ExpressNextFunction,
   ExpressRequest,
   ExpressResponse,
-  LoaderRegistry,
-} from './models';
-import { LOADER_DATA_ENDPOINT } from './constants';
+} from '../models';
+import { LOADER_DATA_ENDPOINT } from '../constants';
+import { ServerLoaderRunner } from '../server-loader-runner';
 
 /**
- * Execute a loader and return the API response
- * @param {LoaderApiRequest} request - The loader data request
- * @param {LoaderRegistry} loaders - The loader registry
- * @param {RequestContext} [requestContext] - The request context
- * @returns {Promise<LoaderApiResponse>} Promise resolving to the API response
+ * Map loader resolution result to wire-level API response.
+ * @param {LoaderDataResult} result - Loader result from the shared registry
+ * @returns {LoaderApiResponse} Wire envelope for the client
  */
-async function executeLoader(
-  request: LoaderApiRequest,
-  loaders: LoaderRegistry,
-  requestContext?: RequestContext
-): Promise<LoaderApiResponse> {
-  const { loaderId, url, params, query } = request;
-
-  const loader = loaders[loaderId];
-  if (!loader) {
+function toApiResponse(result: LoaderDataResult): LoaderApiResponse {
+  if (result.kind === 'redirect') {
     return {
-      kind: 'error',
-      status: 500,
-      message: `No loader registered for id "${loaderId}"`,
+      kind: 'redirect',
+      redirect: {
+        loaderRedirectTarget: result.redirect.loaderRedirectTarget,
+        status: result.redirect.status,
+      },
     };
   }
 
-  const context: LoaderContext = {
-    url,
-    params,
-    query,
-    requestContext,
-  };
-
-  try {
-    const result = await loader(context);
-    if (isLoaderRedirectResult(result)) {
-      return {
-        kind: 'redirect',
-        redirect: {
-          loaderRedirectTarget: result.loaderRedirectTarget,
-          status: result.status,
-        },
-      };
+  if (result.kind === 'error') {
+    const cause = result.cause;
+    if (cause instanceof NotFoundNavigationError) {
+      return { kind: 'notFound', status: 404 };
     }
-    return {
-      kind: 'data',
-      data: result,
-    };
-  } catch (error) {
-    if (error instanceof NotFoundNavigationError) {
-      return {
-        kind: 'notFound',
-        status: 404,
-      };
+    if (cause instanceof LoaderHttpError) {
+      return { kind: 'error', status: cause.status, message: cause.message };
     }
-    if (error instanceof LoaderHttpError) {
-      return {
-        kind: 'error',
-        status: error.status,
-        message: error.message,
-      };
-    }
-    const message = error instanceof Error ? error.message : 'Loader failed';
-    return {
-      kind: 'error',
-      status: 500,
-      message,
-    };
+    return { kind: 'error', status: result.status, message: result.message };
   }
+
+  return { kind: 'data', data: result.data };
 }
 
 /**
@@ -137,23 +97,21 @@ function parseLoaderRequest(
  * ```typescript
  * import { createExpressDataMiddleware, LOADER_DATA_ENDPOINT } from '@sitecore-content-sdk/angular';
  *
- * // Use default endpoint (same as client when FETCH_DATA_ENDPOINT is not provided)
- * app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS }));
+ * // Pass the same LOADERS object used with provideLoaderRegistry(LOADERS)
+ * app.use(createExpressDataMiddleware({ loaders: LOADERS }));
  *
  * // Or pass the same endpoint you provide to the Angular app (FETCH_DATA_ENDPOINT)
  * const dataEndpoint = process.env.DATA_ENDPOINT ?? LOADER_DATA_ENDPOINT;
- * app.use(createExpressDataMiddleware({ loaders: SERVER_LOADERS, endpoint: dataEndpoint }));
+ * app.use(createExpressDataMiddleware({ loaders: LOADERS, endpoint: dataEndpoint }));
  * ```
  * @public
  */
 export function createLoaderDataServiceMiddleware(
   options: ExpressDataHandlerOptions
 ): ExpressMiddleware {
-  const {
-    loaders,
-    endpoint = LOADER_DATA_ENDPOINT,
-    extractRequestContext: extractReq = extractRequestContext,
-  } = options;
+  const { loaders, cache, endpoint = LOADER_DATA_ENDPOINT } = options;
+  const serverLoaderData = new ServerLoaderRunner(loaders, cache);
+
   return async (
     req: ExpressRequest,
     res: ExpressResponse,
@@ -163,11 +121,15 @@ export function createLoaderDataServiceMiddleware(
       next();
       return;
     }
-    const requestContext = extractReq(req);
     try {
       const parsed = parseLoaderRequest(req);
       if ('loaderId' in parsed) {
-        const result = await executeLoader(parsed, loaders, requestContext);
+        // Per refactor plan A2: extract once at the boundary; ride on the payload.
+        // POST body's `angularRequestContext` is ignored — server-derived data
+        // (hostname, headers) must come from the actual request, not from a
+        // payload the browser could spoof.
+        parsed.angularRequestContext = extractRequestContext(req);
+        const result = toApiResponse(await serverLoaderData.resolve(parsed));
         sendResponse(res, result);
       } else {
         res

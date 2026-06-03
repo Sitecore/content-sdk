@@ -55,7 +55,6 @@ export default tseslint.config(
       'no-underscore-dangle': 'off',
       // Sitecore field directives populate host element content at runtime
       '@angular-eslint/template/elements-content': 'off',
-      // Navigation matches kit-nextjs-skate-park (click on title row / delegated nav close)
       '@angular-eslint/template/click-events-have-key-events': 'off',
       '@angular-eslint/template/interactive-supports-focus': 'off',
     },

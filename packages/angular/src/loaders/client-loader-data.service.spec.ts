@@ -4,13 +4,13 @@ import { PLATFORM_ID } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { LoaderDataService } from './loader-data.service';
+import { ClientLoaderDataService } from './client-loader-data.service';
 import { FETCH_DATA_ENDPOINT } from './loader-registry.token';
 import { LOADER_DATA_ENDPOINT } from '../server/constants';
 import * as sdkCore from '@sitecore-content-sdk/core';
 
-describe('LoaderDataService', () => {
-  let service: LoaderDataService;
+describe('ClientLoaderDataService', () => {
+  let service: ClientLoaderDataService;
   let httpController: HttpTestingController;
   let debugCommonSpy: ReturnType<typeof vi.spyOn>;
 
@@ -23,7 +23,7 @@ describe('LoaderDataService', () => {
     const platformId = overrides.platformId ?? 'browser';
     TestBed.configureTestingModule({
       providers: [
-        LoaderDataService,
+        ClientLoaderDataService,
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: PLATFORM_ID, useValue: platformId },
@@ -32,7 +32,7 @@ describe('LoaderDataService', () => {
           : []),
       ],
     });
-    service = TestBed.inject(LoaderDataService);
+    service = TestBed.inject(ClientLoaderDataService);
     httpController = TestBed.inject(HttpTestingController);
   }
 
@@ -46,7 +46,7 @@ describe('LoaderDataService', () => {
   });
 
   describe('getData', () => {
-    it('should make new data request when no pending requests and data not in cache', async () => {
+    it('should make new data request when no pending requests and no staged prefetched response', async () => {
       setupTestBed();
       const request = { url: '/test', loaderId: 'page' };
       const resultPromise = service.getData(request);
@@ -85,14 +85,14 @@ describe('LoaderDataService', () => {
       expect(result).toEqual({
         kind: 'error',
         status: 500,
-        message: 'LoaderDataService only works in browser',
+        message: 'ClientLoaderDataService only works in browser',
       });
       httpController.expectNone(LOADER_DATA_ENDPOINT);
     });
   });
 
   describe('prefetch', () => {
-    it('should populate cache without consuming so getData can read it without a new request', async () => {
+    it('should stage prefetched response without consuming so getData can read it without a new request', async () => {
       setupTestBed();
       const request = { url: '/prefetched', loaderId: 'page' };
       service.prefetch(request);
@@ -111,12 +111,12 @@ describe('LoaderDataService', () => {
       httpController.expectNone(LOADER_DATA_ENDPOINT);
     });
 
-    it('should not make a new request when cache is already populated', async () => {
+    it('should not make a new request when prefetched response is already staged', async () => {
       setupTestBed();
-      const request = { url: '/cached', loaderId: 'page' };
+      const request = { url: '/staged', loaderId: 'page' };
       service.prefetch(request);
       const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
-      req.flush({ kind: 'data', data: { cached: true } });
+      req.flush({ kind: 'data', data: { staged: true } });
       await new Promise((r) => setTimeout(r, 0));
 
       service.prefetch(request);
