@@ -110,10 +110,10 @@ jobs:
           ref: ${{ github.ref }}
           fetch-depth: 0
 
-      - name: Use Node.js 24
+      - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 22
 
       - name: Install dependencies
         run: |
@@ -155,4 +155,3 @@ jobs:
             NPM_TAG="canary"
           fi
           yarn changeset:publish --tag $NPM_TAG --no-git-tag
-
