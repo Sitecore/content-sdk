@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import type { ComponentMap } from '../components/types';
+import type { ComponentMap } from './types';
 
 /**
  * Injection token for the Sitecore component map.

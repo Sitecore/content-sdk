@@ -105,16 +105,13 @@ export {
 } from './i18n/locale-utils';
 export { LocaleUrlSerializer } from './i18n/locale-url-serializer';
 
-// ─── Placeholder ───────────────────────────────────────────────
-export { ScPlaceholderComponent } from './placeholder/sc-placeholder.component';
-export { ScMissingComponentComponent } from './placeholder/sc-missing-component.component';
-export { ScHiddenRenderingComponent } from './placeholder/sc-hidden-rendering.component';
-export { SITECORE_COMPONENT_MAP } from './placeholder/tokens';
+// ─── Placeholders, components and field directives ───────────────────────────────────────────────
 export {
   DEFAULT_EXPORT_NAME,
   type AngularContentSdkComponent,
   type ComponentMap,
 } from './components/types';
+export { SITECORE_COMPONENT_MAP } from './components/tokens';
 export {
   type ChildComponentProps,
   type ComponentForRendering,
@@ -123,16 +120,18 @@ export {
   getSXAParams,
   getChildComponentProps,
   resolveComponentForRendering,
-} from './placeholder/placeholder-utils';
-
-// ─── Field directives ──────────────────────────────────────────
-export { ScTextDirective } from './field-directives/sc-text.directive';
-export { ScImageDirective } from './field-directives/sc-image.directive';
-export { ScLinkDirective } from './field-directives/sc-link.directive';
-export { ScRouterLinkDirective } from './field-directives/sc-router-link.directive';
-export { ScRichTextDirective } from './field-directives/sc-rich-text.directive';
-
-// ─── Form ──────────────────────────────────────────────────────
+} from './components/placeholder/placeholder-utils';
+export { ScPlaceholderComponent } from './components/placeholder/sc-placeholder.component';
+export {
+  ScTextDirective,
+  ScImageDirective,
+  ScLinkDirective,
+  ScRouterLinkDirective,
+  ScRichTextDirective,
+  ScHiddenRenderingComponent,
+  ScMissingComponentComponent,
+} from './components';
+export {} from './components';
 export { ScFormComponent } from './components/sc-form.component';
 
 export const _coreVersionMarker = CORE_VERSION;

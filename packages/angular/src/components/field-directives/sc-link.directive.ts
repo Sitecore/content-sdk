@@ -1,9 +1,9 @@
 import { Directive, ElementRef, inject, input, effect, Renderer2 } from '@angular/core';
 import { LinkFieldValue, LinkField } from '@sitecore-content-sdk/content/layout';
 import { applyLinkFieldToAnchor, resolveLinkFromField } from './link-field-utils';
-import { SitecoreContextService } from '../lib/sitecore-context.service';
-import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
-import { splitLocaleFromPath } from '../i18n/locale-utils';
+import { SitecoreContextService } from '../../lib/sitecore-context.service';
+import { SITECORE_CONFIG_TOKEN } from '../../lib/tokens';
+import { splitLocaleFromPath } from '../../i18n/locale-utils';
 import { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
 
 const EXTERNAL_HREF_PREFIXES = [

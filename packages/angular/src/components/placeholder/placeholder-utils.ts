@@ -6,23 +6,7 @@ import {
   getDynamicPlaceholderPattern,
 } from '@sitecore-content-sdk/content/layout';
 import { HIDDEN_RENDERING_NAME } from '@sitecore-content-sdk/content';
-import { AngularContentSdkComponent, ComponentMap, DEFAULT_EXPORT_NAME } from '../components/types';
-
-/**
- * An entry in the Angular component map. Maps Sitecore rendering names to Angular component types.
- * Supports SXA rendering variants via named exports alongside a default.
- * @public
- */
-export type AngularModule = {
-  /** Named variant exports (must be first for consistent member ordering). */
-  [exportName: string]: Type<unknown> | string | undefined;
-  /** Default component for this rendering */
-  default?: Type<unknown>;
-  /** SXA convention: uppercase Default */
-  Default?: Type<unknown>;
-  /** Component runtime type (reserved for future use) */
-  componentType?: 'client' | 'server' | 'universal';
-};
+import { AngularContentSdkComponent, ComponentMap, DEFAULT_EXPORT_NAME } from '../types';
 
 /**
  * Result of resolving a component for a rendering definition.

@@ -13,17 +13,17 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
-import { SitecoreContextService } from '../lib/sitecore-context.service';
-import { SITECORE_COMPONENT_MAP } from './tokens';
-import type { AngularContentSdkComponent, ComponentMap } from '../components/types';
+import { SitecoreContextService } from '../../lib/sitecore-context.service';
+import { SITECORE_COMPONENT_MAP } from '../tokens';
+import type { AngularContentSdkComponent, ComponentMap } from '../types';
 import {
   getPlaceholderRenderings,
   getChildComponentProps,
   resolveComponentForRendering,
   type PassThroughProps,
 } from './placeholder-utils';
-import { ScMissingComponentComponent } from './sc-missing-component.component';
-import { ScHiddenRenderingComponent } from './sc-hidden-rendering.component';
+import { ScMissingComponentComponent } from '../sc-missing-component.component';
+import { ScHiddenRenderingComponent } from '../sc-hidden-rendering.component';
 
 /**
  * Angular placeholder component. Renders components from layout data for a given placeholder name.

@@ -7,10 +7,7 @@ import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import type { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ScFormComponent } from './sc-form.component';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
-import {
-  provideMockSitecoreContext,
-  setMockContextPage,
-} from '../testing/mock-sitecore-context';
+import { provideMockSitecoreContext, setMockContextPage } from '../testing/mock-sitecore-context';
 
 const mocks = vi.hoisted(() => ({
   loadForm: vi.fn(),
@@ -18,10 +15,8 @@ const mocks = vi.hoisted(() => ({
   subscribeToFormSubmitEvent: vi.fn(),
 }));
 
-vi.mock('@sitecore-content-sdk/content', async (importOriginal) => {
-  const original = await importOriginal<typeof import('@sitecore-content-sdk/content')>();
+vi.mock('@sitecore-content-sdk/content', () => {
   return {
-    ...original,
     form: {
       loadForm: (...args: unknown[]) => mocks.loadForm(...args),
       executeScriptElements: mocks.executeScriptElements,
@@ -30,57 +25,57 @@ vi.mock('@sitecore-content-sdk/content', async (importOriginal) => {
   };
 });
 
-const testSitecoreConfig = {
-  api: {
-    edge: {
-      clientContextId: 'test-edge-context-id',
-      edgeUrl: 'https://edge.example.com',
-    },
-  },
-} as const;
-
-function formRendering(
-  params: Record<string, string>,
-  extra: Partial<ComponentRendering> = {}
-): ComponentRendering {
-  return { componentName: 'Form', params, ...extra } as ComponentRendering;
-}
-
-const makePage = (isEditing: boolean): Page =>
-  ({
-    locale: 'en',
-    layout: { sitecore: { context: {}, route: null } },
-    mode: {
-      name: isEditing ? LayoutServicePageState.Edit : LayoutServicePageState.Normal,
-      isNormal: !isEditing,
-      isPreview: false,
-      isEditing,
-      isDesignLibrary: false,
-      designLibrary: { isVariantGeneration: false },
-    },
-  } as unknown as Page);
-
-/**
- * Flush afterNextRender and loadForm promise (scripts / subscribe run in the same microtask).
- * @param {ComponentFixture} fixture
- */
-async function flushFormLoadPipeline(fixture: ComponentFixture<ScFormComponent>): Promise<void> {
-  fixture.detectChanges();
-  await fixture.whenStable();
-  await vi.waitFor(() => mocks.loadForm.mock.calls.length > 0, { timeout: 3000, interval: 5 });
-  await fixture.whenStable();
-  fixture.detectChanges();
-  await fixture.whenStable();
-  for (let i = 0; i < 50; i++) {
-    if (mocks.executeScriptElements.mock.calls.length > 0) break;
-    await new Promise<void>((r) => setTimeout(r, 0));
-  }
-  expect(mocks.executeScriptElements.mock.calls.length).toBeGreaterThan(0);
-  fixture.detectChanges();
-  await fixture.whenStable();
-}
-
 describe('ScFormComponent', () => {
+  const testSitecoreConfig = {
+    api: {
+      edge: {
+        clientContextId: 'test-edge-context-id',
+        edgeUrl: 'https://edge.example.com',
+      },
+    },
+  } as const;
+
+  function formRendering(
+    params: Record<string, string>,
+    extra: Partial<ComponentRendering> = {}
+  ): ComponentRendering {
+    return { componentName: 'Form', params, ...extra } as ComponentRendering;
+  }
+
+  const makePage = (isEditing: boolean): Page =>
+    ({
+      locale: 'en',
+      layout: { sitecore: { context: {}, route: null } },
+      mode: {
+        name: isEditing ? LayoutServicePageState.Edit : LayoutServicePageState.Normal,
+        isNormal: !isEditing,
+        isPreview: false,
+        isEditing,
+        isDesignLibrary: false,
+        designLibrary: { isVariantGeneration: false },
+      },
+    } as unknown as Page);
+
+  /**
+   * Flush afterNextRender and loadForm promise (scripts / subscribe run in the same microtask).
+   * @param {ComponentFixture} fixture
+   */
+  async function flushFormLoadPipeline(fixture: ComponentFixture<ScFormComponent>): Promise<void> {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await vi.waitFor(() => mocks.loadForm.mock.calls.length > 0, { timeout: 3000, interval: 5 });
+    await fixture.whenStable();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    for (let i = 0; i < 50; i++) {
+      if (mocks.executeScriptElements.mock.calls.length > 0) break;
+      await new Promise<void>((r) => setTimeout(r, 0));
+    }
+    expect(mocks.executeScriptElements.mock.calls.length).toBeGreaterThan(0);
+    fixture.detectChanges();
+    await fixture.whenStable();
+  }
+
   let errorSpy: ReturnType<typeof vi.spyOn>;
   let warnSpy: ReturnType<typeof vi.spyOn>;
 
@@ -194,10 +189,7 @@ describe('ScFormComponent', () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [ScFormComponent],
-      providers: [
-        ...provideMockSitecoreContext(),
-        { provide: PLATFORM_ID, useValue: 'browser' },
-      ],
+      providers: [...provideMockSitecoreContext(), { provide: PLATFORM_ID, useValue: 'browser' }],
     });
 
     const fixture = createFixture();

@@ -5,17 +5,14 @@ import { Component, input } from '@angular/core';
 import { ScLinkDirective } from './sc-link.directive';
 import type { LinkField } from '@sitecore-content-sdk/content/layout';
 import { getClassFromField } from './utils';
-import type { AngularSitecoreConfig } from '../config/define-config';
+import type { AngularSitecoreConfig } from '../../config/define-config';
 import {
   provideMockSitecoreContext,
   setMockContextUrlLocale,
-} from '../testing/mock-sitecore-context';
+} from '../../testing/mock-sitecore-context';
 
 function sortedClassTokens(el: HTMLElement): string[] {
-  return (el.className || '')
-    .split(/\s+/)
-    .filter(Boolean)
-    .sort();
+  return (el.className || '').split(/\s+/).filter(Boolean).sort();
 }
 
 @Component({
@@ -256,9 +253,9 @@ describe('ScLinkDirective locale-aware href', () => {
   });
 
   it('should leave an external https href untouched even when it contains a locale-like segment', () => {
-    expect(
-      hrefFor({ value: { href: 'https://example.com/en/foo' } }, ['en', 'de'], 'en')
-    ).toBe('https://example.com/en/foo');
+    expect(hrefFor({ value: { href: 'https://example.com/en/foo' } }, ['en', 'de'], 'en')).toBe(
+      'https://example.com/en/foo'
+    );
   });
 
   it('should leave a mailto href untouched', () => {

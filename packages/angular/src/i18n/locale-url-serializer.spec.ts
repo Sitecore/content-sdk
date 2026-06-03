@@ -1,11 +1,18 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { Component, EnvironmentProviders, input, PLATFORM_ID, Provider, REQUEST } from '@angular/core';
+import {
+  Component,
+  EnvironmentProviders,
+  input,
+  PLATFORM_ID,
+  Provider,
+  REQUEST,
+} from '@angular/core';
 import { Router, RouterLink, UrlSerializer, UrlTree } from '@angular/router';
 import type { LinkField } from '@sitecore-content-sdk/content/layout';
 import { LocaleUrlSerializer } from './locale-url-serializer';
-import { ScRouterLinkDirective } from '../field-directives/sc-router-link.directive';
+import { ScRouterLinkDirective } from '../components';
 import type { AngularSitecoreConfig } from '../config/define-config';
 import {
   provideMockSitecoreContext,

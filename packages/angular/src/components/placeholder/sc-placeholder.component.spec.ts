@@ -6,12 +6,12 @@ import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/lay
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import type { Page } from '@sitecore-content-sdk/content/client';
 import { ScPlaceholderComponent } from './sc-placeholder.component';
-import { SITECORE_COMPONENT_MAP } from './tokens';
-import type { ComponentMap } from '../components/types';
+import { SITECORE_COMPONENT_MAP } from '../tokens';
+import type { ComponentMap } from '../types';
 import {
   provideMockSitecoreContext,
   setMockContextPage,
-} from '../testing/mock-sitecore-context';
+} from '../../testing/mock-sitecore-context';
 
 @Component({
   selector: 'test-title',
