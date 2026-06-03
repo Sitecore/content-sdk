@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "WebFetch(domain:raw.githubusercontent.com)",
-      "Bash(yarn build *)",
-      "Bash(yarn test *)"
-    ]
-  }
-}
