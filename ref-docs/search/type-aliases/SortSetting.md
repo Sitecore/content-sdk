@@ -8,7 +8,7 @@
 
 > **SortSetting**\<`T`\> = `object`
 
-Defined in: [search-service.ts:8](https://github.com/Sitecore/content-sdk/blob/426d8e368258285b2e1b49c5da86ca8ed1446282/packages/search/src/search-service.ts#L8)
+Defined in: [search-service.ts:8](https://github.com/Sitecore/content-sdk/blob/0a90d511033a5704b1a70503050d4346be3fdcdd/packages/search/src/search-service.ts#L8)
 
 Options for sorting the search results.
 
@@ -24,7 +24,7 @@ Options for sorting the search results.
 
 > **name**: `PathsToStringProps`\<`T`\>
 
-Defined in: [search-service.ts:9](https://github.com/Sitecore/content-sdk/blob/426d8e368258285b2e1b49c5da86ca8ed1446282/packages/search/src/search-service.ts#L9)
+Defined in: [search-service.ts:9](https://github.com/Sitecore/content-sdk/blob/0a90d511033a5704b1a70503050d4346be3fdcdd/packages/search/src/search-service.ts#L9)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [search-service.ts:9](https://github.com/Sitecore/content-sdk/blob/4
 
 > **order**: `"asc"` \| `"desc"`
 
-Defined in: [search-service.ts:10](https://github.com/Sitecore/content-sdk/blob/426d8e368258285b2e1b49c5da86ca8ed1446282/packages/search/src/search-service.ts#L10)
+Defined in: [search-service.ts:10](https://github.com/Sitecore/content-sdk/blob/0a90d511033a5704b1a70503050d4346be3fdcdd/packages/search/src/search-service.ts#L10)

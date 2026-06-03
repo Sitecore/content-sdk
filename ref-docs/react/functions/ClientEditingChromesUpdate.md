@@ -8,7 +8,7 @@
 
 > **ClientEditingChromesUpdate**(): `Element`
 
-Defined in: [packages/react/src/components/ClientEditingChromesUpdate.tsx:9](https://github.com/Sitecore/content-sdk/blob/426d8e368258285b2e1b49c5da86ca8ed1446282/packages/react/src/components/ClientEditingChromesUpdate.tsx#L9)
+Defined in: [packages/react/src/components/ClientEditingChromesUpdate.tsx:9](https://github.com/Sitecore/content-sdk/blob/0a90d511033a5704b1a70503050d4346be3fdcdd/packages/react/src/components/ClientEditingChromesUpdate.tsx#L9)
 
 Updates editing chromes in app router / RSC context.
 This ensures all the relevant Pages editing markup is applied once all client components are loaded.
