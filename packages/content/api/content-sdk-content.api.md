@@ -611,6 +611,9 @@ export function getPersonalizedRewrite(pathname: string, variantIds: string[]): 
 export function getPersonalizedRewriteData(pathname: string): PersonalizedRewriteData;
 
 // @public
+export function getRenderingParamString(value: unknown): string | undefined;
+
+// @public
 const getRequiredParams: (qs: {
     [key: string]: string | undefined;
 }) => {
