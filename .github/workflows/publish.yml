@@ -147,6 +147,7 @@ jobs:
         if: steps.canary_snapshot.outputs.snapshot_publish == 'true'
         env:
           PR_NPM_TAG: ${{ steps.snapshot_tag.outputs.tag_pr }}
+          npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
         run: |
           BRANCH_NAME="${{ github.ref_name }}"
           if [[ "$BRANCH_NAME" =~ ^release/ ]]; then
