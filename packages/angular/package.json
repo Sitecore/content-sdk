@@ -21,7 +21,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false",
     "coverage": "ng test --watch=false --coverage",
-    "lint": "eslint \"./src/**/*.ts\""
+    "lint": "eslint \"./src/**/*.ts\"",
+    "generate-docs": "npx typedoc --options typedoc.json --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --tsconfig tsconfig.typedoc.json --out ../../ref-docs/angular --entryPoints src/config/index.ts --entryPoints src/config-cli/index.ts --entryPoints src/lib/index.ts --entryPoints src/loaders/index.ts --entryPoints src/i18n/index.ts --entryPoints src/components/index.ts --entryPoints src/components/field-directives/index.ts --entryPoints src/components/placeholder/index.ts --entryPoints src/server/express/index.ts --entryPoints src/server/cache/index.ts --entryPoints src/server/middleware/index.ts --githubPages false"
   },
   "prettier": {
     "printWidth": 100,

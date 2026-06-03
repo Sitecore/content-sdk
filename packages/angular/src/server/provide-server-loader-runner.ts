@@ -10,9 +10,9 @@ import { LoaderCache, LoaderApiRequest } from '../loaders/models';
 import { ServerLoaderRunner } from './server-loader-runner';
 
 /**
- * Wires SSR {@link SERVER_LOADER_DATA_PROVIDER} to {@link ServerLoaderRunner}
+ * Wires SSR {@link SERVER_LOADER_RUNNER} to ServerLoaderRunner
  * using the shared {@link LOADER_REGISTRY}. Include in server application providers
- * alongside {@link provideLoaderRegistry}.
+ * alongside provideLoaderRegistry.
  * @returns Environment providers for SSR loader data resolution
  * @public
  */

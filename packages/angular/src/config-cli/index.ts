@@ -1,1 +1,1 @@
-export { defineCliConfig } from './define-cli-config';
+export { defineCliConfig, type AngularCsdkCliConfig } from './define-cli-config';

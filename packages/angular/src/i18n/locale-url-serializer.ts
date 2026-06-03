@@ -1,5 +1,6 @@
 import { Injectable, PLATFORM_ID, REQUEST, inject } from '@angular/core';
 import { DefaultUrlSerializer, type UrlTree } from '@angular/router';
+import type { UrlSerializer } from '@angular/router';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 import { resolveCurrentPath, splitLocaleFromPath } from './locale-utils';
 import { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';
@@ -16,7 +17,7 @@ import { isPlatformBrowser } from '@angular/common';
  * - When `currentLocale` is `null` (URL has no configured locale prefix), serialization is
  *   unchanged.
  * - When the serialized URL already starts with a configured locale segment, serialization
- *   is unchanged (mirrors {@link ScLinkDirective} idempotency under repeated cycles).
+ *   is unchanged (mirrors ScLinkDirective idempotency under repeated cycles).
  * - Otherwise the locale segment is prepended to the serialized URL.
  *
  * Parsing is inherited from the default — this serializer does **not** strip locale on

@@ -114,7 +114,7 @@ export function applyLoaderCacheConfigDefaults(
 }
 
 /**
- * Maps a stored entry to the three-outcome read result used by {@link ServerLoaderDataProvider} (Phase 3 SWR).
+ * Maps a stored entry to the three-outcome read result used by {@link ServerLoaderRunner} (Phase 3 SWR).
  * @param {string} cacheKey - Key being read.
  * @param {LoaderCacheEntry | null | undefined} entry - Stored entry, if any.
  * @param {number} [now] - Current timestamp for TTL comparison (defaults to `Date.now()`).

@@ -79,7 +79,7 @@ export type { LoaderRegistry } from '../loaders/loader-registry.token';
  */
 export interface ExpressDataHandlerOptions extends DataHandlerConfig {
   /**
-   * The shared loader registry (same object as {@link provideLoaderRegistry}).
+   * The shared loader registry (same object as provideLoaderRegistry).
    */
   loaders: LoaderRegistry;
   /**

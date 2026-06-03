@@ -245,12 +245,12 @@ export interface InvalidateInput {
 
 /**
  * Server-only cache instance. Constructed once in `server.ts` via
- * {@link createLoaderCache} and passed by reference to middleware factories
- * ({@link createLoaderDataServiceMiddleware}, {@link createCacheAdminMiddleware},
- * {@link createSitecoreRevalidateMiddleware}) and to Angular SSR through
+ * `createLoaderCache` (see `server/cache`) and passed by reference to middleware factories
+ * (`createLoaderDataServiceMiddleware`, `createCacheAdminMiddleware`,
+ * `createSitecoreRevalidateMiddleware`; see `server/middleware`) and to Angular SSR through
  * `angularApp.handle(req, { cache })`.
  *
- * Implementations maintain a sidecar tag index so {@link LoaderCache.invalidate}
+ * Implementations maintain a sidecar tag index so `LoaderCache.invalidate`
  * can mark entries stale without scanning every key.
  * @public
  */

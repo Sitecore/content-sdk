@@ -3,8 +3,8 @@ import { LoaderApiRequest, LoaderDataResult } from './models';
 
 /**
  * SSR injection port for cache-aware loader resolution.
- * Implemented by {@link ServerLoaderDataProvider} and wired via
- * {@link provideServerLoaderDataProvider}.
+ * Implemented by `ServerLoaderRunner` and wired via
+ * `provideServerLoaderRunner` (see the `server/express` module).
  * @public
  */
 export interface ServerLoaderRunnerPort {
@@ -18,7 +18,7 @@ export interface ServerLoaderRunnerPort {
 
 /**
  * Injection token for SSR loader data resolution.
- * Must be provided via `provideServerLoaderDataProvider()` in server application config.
+ * Must be provided via `provideServerLoaderRunner` in server application config.
  * @public
  */
 export const SERVER_LOADER_RUNNER = new InjectionToken<ServerLoaderRunnerPort>(

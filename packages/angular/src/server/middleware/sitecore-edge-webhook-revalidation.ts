@@ -54,7 +54,7 @@ export type CollectSitecoreTagsFromEdgeBodyOptions = {
  * `identifier` + `entity_culture`.
  * @param {SitecoreEdgeRevalidateRequestBody | null | undefined} body - Parsed webhook JSON body.
  * @param {CollectSitecoreTagsFromEdgeBodyOptions} options - Locale fallback when an update omits `entity_culture`.
- * @returns {string[]} Deduplicated Sitecore cache tags ready for {@link LoaderCache.invalidate}.
+ * @returns {string[]} Deduplicated Sitecore cache tags ready for `LoaderCache.invalidate`.
  * @public
  */
 export function collectSitecoreTagsFromEdgeRevalidateRequestBody(

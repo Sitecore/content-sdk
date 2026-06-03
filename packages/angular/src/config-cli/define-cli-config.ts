@@ -7,7 +7,7 @@ import { generateMap } from '../tools/generate-map';
 
 const noopBuildCommand = async () => {};
 
-type AngularCsdkCliConfig = Omit<SitecoreCliConfigInput, 'config'>;
+export type AngularCsdkCliConfig = Omit<SitecoreCliConfigInput, 'config'>;
 
 /**
  * Ensures `build.commands` exists so {@link defineCliConfigCore} validation passes.

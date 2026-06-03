@@ -11,7 +11,7 @@ import { buildLoaderCacheTags } from './cache/cache-tags';
 
 /**
  * Server-side cache aware loader data resolver.
- * {@link LoaderResolver} is exposed to both server and browser. This layer ensures browser safety and acts as connecting layer to cache.
+ * LoaderResolver is exposed to both server and browser. This layer ensures browser safety and acts as connecting layer to cache.
  *
  * Resolution order when a {@link LoaderCache} is attached:
  * 1. **hit** — return cached value immediately.
@@ -19,7 +19,7 @@ import { buildLoaderCacheTags } from './cache/cache-tags';
  *    (coalesced per cache key via `pendingCacheOps`).
  * 3. **miss** — run the loader, persist the result with OSR tags, return data.
  *
- * Redirect responses are never cached. Per-route {@link LoaderCacheConfig} overrides
+ * Redirect responses are never cached. Per-route LoaderCacheConfig overrides
  * from `loaderResolver(id, cacheOptions)` control TTL, tags, and opt-in caching when
  * the global cache is disabled.
  * @public
@@ -30,7 +30,7 @@ export class ServerLoaderRunner {
 
   /**
    * @param {LoaderRegistry} registry - Same loader map as `provideLoaderRegistry` / `/_data` middleware.
-   * @param {LoaderCache | undefined} cache - Optional cache instance from {@link createLoaderCache}.
+   * @param {LoaderCache | undefined} cache - Optional cache instance from createLoaderCache.
    */
   constructor(private readonly registry: LoaderRegistry, private readonly cache?: LoaderCache) {}
 

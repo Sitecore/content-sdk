@@ -89,7 +89,7 @@ function parseLoaderRequest(
  * This middleware handles both GET and POST requests at the configured endpoint path.
  *
  * The endpoint path must match the client: provide the same value to the Angular app via
- * {@link FETCH_DATA_ENDPOINT} (e.g. in app.config.ts). There is no Angular DI in Node/Express,
+ * FETCH_DATA_ENDPOINT (e.g. in app.config.ts). There is no Angular DI in Node/Express,
  * so you pass the endpoint here when calling this function (e.g. from server.ts).
  * @param {ExpressDataHandlerOptions} options - Handler options: loaders and optional endpoint (defaults to {@link LOADER_DATA_ENDPOINT})
  * @returns Express middleware that handles the data endpoint

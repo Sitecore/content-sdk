@@ -33,7 +33,7 @@ export function resolveConfiguredRevalidateSecret(
  * @public
  */
 export interface SitecoreRevalidateMiddlewareOptions {
-  /** Shared cache instance from {@link createLoaderCache}. */
+  /** Shared cache instance from createLoaderCache call */
   cache: LoaderCache;
   /** Default: `process.env.SITECORE_REVALIDATE_SECRET` */
   secret?: string;
@@ -55,7 +55,7 @@ export interface SitecoreRevalidateMiddlewareOptions {
  * - Authenticates with `SITECORE_REVALIDATE_SECRET` / `x-revalidate-secret` when configured.
  * - Parses Experience Edge webhook bodies via {@link collectSitecoreTagsFromEdgeRevalidateRequestBody}.
  * - Optionally appends dictionary loader tags for each configured site.
- * - Calls {@link LoaderCache.invalidate} (marks entries stale; does not delete).
+ * - Calls `LoaderCache.invalidate` (marks entries stale; does not delete).
  *
  * Response shape: `{ revalidated, tagsCount, marked, invocation_id, continues, durationMs }`.
  * @param {SitecoreRevalidateMiddlewareOptions} options - The options for the middleware

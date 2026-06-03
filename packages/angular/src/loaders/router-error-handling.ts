@@ -69,7 +69,7 @@ export function redirectOnNavigationError(
 }
 
 /**
- * Returns a navigation error handler for use with {@link withNavigationErrorHandler}.
+ * Returns a navigation error handler for use with withNavigationErrorHandler.
  * Delegates to {@link redirectOnNavigationError}.
  * @returns A handler compatible with `provideRouter(routes, withNavigationErrorHandler(...))`
  * @public
