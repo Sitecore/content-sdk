@@ -8,7 +8,7 @@
 
 > `const` **HIDDEN\_RENDERING\_NAME**: `"Hidden Rendering"` = `'Hidden Rendering'`
 
-Defined in: [packages/core/src/constants.ts:29](https://github.com/Sitecore/content-sdk/blob/3fb7faea35bc22c17643d4e6e02afd7c37bacdd3/packages/core/src/constants.ts#L29)
+Defined in: [packages/core/src/constants.ts:29](https://github.com/Sitecore/content-sdk/blob/426d8e368258285b2e1b49c5da86ca8ed1446282/packages/core/src/constants.ts#L29)
 
 **`Internal`**
 

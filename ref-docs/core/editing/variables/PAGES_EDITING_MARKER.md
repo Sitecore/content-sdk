@@ -8,7 +8,7 @@
 
 > `const` **PAGES\_EDITING\_MARKER**: `"jss-hrz-editing"` = `'jss-hrz-editing'`
 
-Defined in: [packages/core/src/editing/utils.ts:33](https://github.com/Sitecore/content-sdk/blob/3fb7faea35bc22c17643d4e6e02afd7c37bacdd3/packages/core/src/editing/utils.ts#L33)
+Defined in: [packages/core/src/editing/utils.ts:33](https://github.com/Sitecore/content-sdk/blob/426d8e368258285b2e1b49c5da86ca8ed1446282/packages/core/src/editing/utils.ts#L33)
 
 **`Internal`**
 

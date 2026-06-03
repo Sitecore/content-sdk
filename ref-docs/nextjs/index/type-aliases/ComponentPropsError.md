@@ -8,7 +8,7 @@
 
 > **ComponentPropsError** = `object`
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:9](https://github.com/Sitecore/content-sdk/blob/3fb7faea35bc22c17643d4e6e02afd7c37bacdd3/packages/nextjs/src/sharedTypes/component-props.ts#L9)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:9](https://github.com/Sitecore/content-sdk/blob/426d8e368258285b2e1b49c5da86ca8ed1446282/packages/nextjs/src/sharedTypes/component-props.ts#L9)
 
 The interface for the component props error.
 
@@ -18,7 +18,7 @@ The interface for the component props error.
 
 > **componentName**: `string`
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:9](https://github.com/Sitecore/content-sdk/blob/3fb7faea35bc22c17643d4e6e02afd7c37bacdd3/packages/nextjs/src/sharedTypes/component-props.ts#L9)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:9](https://github.com/Sitecore/content-sdk/blob/426d8e368258285b2e1b49c5da86ca8ed1446282/packages/nextjs/src/sharedTypes/component-props.ts#L9)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [nextjs/src/sharedTypes/component-props.ts:9](https://github.com/Sit
 
 > **error**: `string`
 
-Defined in: [nextjs/src/sharedTypes/component-props.ts:9](https://github.com/Sitecore/content-sdk/blob/3fb7faea35bc22c17643d4e6e02afd7c37bacdd3/packages/nextjs/src/sharedTypes/component-props.ts#L9)
+Defined in: [nextjs/src/sharedTypes/component-props.ts:9](https://github.com/Sitecore/content-sdk/blob/426d8e368258285b2e1b49c5da86ca8ed1446282/packages/nextjs/src/sharedTypes/component-props.ts#L9)

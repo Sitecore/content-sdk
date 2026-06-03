@@ -8,7 +8,7 @@
 
 > **createEditingRenderRouteHandlers**(`options`): `object`
 
-Defined in: [nextjs/src/route-handler/editing-render-route-handler.ts:61](https://github.com/Sitecore/content-sdk/blob/3fb7faea35bc22c17643d4e6e02afd7c37bacdd3/packages/nextjs/src/route-handler/editing-render-route-handler.ts#L61)
+Defined in: [nextjs/src/route-handler/editing-render-route-handler.ts:61](https://github.com/Sitecore/content-sdk/blob/426d8e368258285b2e1b49c5da86ca8ed1446282/packages/nextjs/src/route-handler/editing-render-route-handler.ts#L61)
 
 Creates a route handler for the editing render API route (e.g. '/api/editing/render')
 
