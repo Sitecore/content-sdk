@@ -33,8 +33,15 @@ export function addStyleElement(stylesContent: string): void;
 // @internal
 export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => string): T;
 
-// @public
-export const buildFallbackConfig: (env: Record<string, string | undefined>) => SitecoreConfig;
+// Warning: (ae-forgotten-export) The symbol "TemplateOptions" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export const buildComponentMapContent: (entries: ComponentMapEntry[], componentImports: ComponentImport[] | undefined, options: TemplateOptions) => string;
+
+// @internal
+export const buildFallbackConfig: (env: {
+    [key: string]: string | undefined;
+}) => SitecoreConfig;
 
 // @public
 export class CdpHelper {
@@ -204,7 +211,7 @@ export { debug_2 as debug }
 
 // Warning: (ae-forgotten-export) The symbol "DeepPartial" needs to be exported by the entry point api-surface.d.ts
 //
-// @public
+// @internal
 export function deepMerge<T>(base: T, override?: DeepPartial<T>): T;
 
 // @public
@@ -407,8 +414,8 @@ export const EMPTY_DATE_FIELD_VALUE = "0001-01-01T00:00:00Z";
 // @internal (undocumented)
 export type EnhancedComponentMapTemplate = (components: (ComponentFile | ComponentFileWithType)[], componentImports: ComponentImport[] | undefined, ctx: {
     entries: ComponentMapEntry[];
-    includeVariants: boolean;
-    isClientMap: boolean;
+    includeVariants?: boolean;
+    isClientMap?: boolean;
 }) => string;
 
 // @public
@@ -597,7 +604,7 @@ export const getEdgeProxyContentUrl: (sitecoreEdgeUrl?: string) => string;
 // @internal
 export const getEdgeProxyFormsUrl: (sitecoreEdgeContextId: string, formId: string, sitecoreEdgeUrl?: string) => string;
 
-// @public
+// @internal
 export const getFallbackConfig: () => SitecoreConfig;
 
 // @public
@@ -670,6 +677,33 @@ export const HIDDEN_RENDERING_NAME = "Hidden Rendering";
 export type HTMLLink = {
     [key: string]: unknown;
 } & Pick<HTMLLinkElement, 'rel' | 'href'>;
+
+// @public
+export interface ImageField {
+    // (undocumented)
+    value?: ImageFieldValue;
+}
+
+// @public
+export interface ImageFieldValue {
+    // (undocumented)
+    [attributeName: string]: unknown;
+    // (undocumented)
+    src?: string;
+}
+
+// @public
+export interface ImageSizeParameters {
+    // (undocumented)
+    [attr: string]: string | number | undefined;
+    as?: 1 | 0;
+    h?: number;
+    iar?: 1 | 0;
+    mh?: number;
+    mw?: number;
+    sc?: number;
+    w?: number;
+}
 
 // @public
 export interface ImportEntry {
@@ -791,6 +825,36 @@ export enum LayoutServicePageState {
     Normal = "normal",
     // (undocumented)
     Preview = "preview"
+}
+
+// @public
+export interface LinkField {
+    // (undocumented)
+    value: LinkFieldValue;
+}
+
+// @public
+export interface LinkFieldValue {
+    // (undocumented)
+    [attributeName: string]: unknown;
+    // (undocumented)
+    anchor?: string;
+    // (undocumented)
+    class?: string;
+    // (undocumented)
+    className?: string;
+    // (undocumented)
+    href?: string;
+    // (undocumented)
+    linktype?: string;
+    // (undocumented)
+    querystring?: string;
+    // (undocumented)
+    target?: string;
+    // (undocumented)
+    text?: string;
+    // (undocumented)
+    title?: string;
 }
 
 // @internal
@@ -924,6 +988,14 @@ export type PlaceholdersData<TYPEDNAME extends string = string> = {
 // @internal
 export const postToDesignLibrary: (evt: DesignLibraryEvent) => void;
 
+// Warning: (ae-forgotten-export) The symbol "ComponentSource" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export const prepareComponentsForMap: (components: ComponentSource[], opts: {
+    includeVariants: boolean;
+    shouldAnnotateClient?: boolean;
+}) => ComponentMapEntry[];
+
 // @internal
 export const PREVIEW_KEY = "sc_preview";
 
@@ -1014,6 +1086,12 @@ export { RetryStrategy }
 
 // @public
 export function rewriteEdgeHostInResponse<T>(response: T, edgeUrl: string): T;
+
+// @public
+export interface RichTextField extends FieldMetadata {
+    // (undocumented)
+    value?: string;
+}
 
 // @public
 export type RobotsQueryResult = {
@@ -1358,6 +1436,12 @@ export type StaticPath = {
 
 // @internal
 const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: string) => void;
+
+// @public
+export interface TextField extends FieldMetadata {
+    // (undocumented)
+    value?: string | number;
+}
 
 // @internal
 export const updateComponent: (component: ComponentRendering<ComponentFields>, fields: ComponentFields | undefined, params: ComponentParams | undefined) => void;

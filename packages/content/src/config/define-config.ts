@@ -92,6 +92,7 @@ export const buildFallbackConfig = (env: { [key: string]: string | undefined }):
  * Provides default initial values for SitecoreConfig from `process.env`
  * TODO: remove in favor of buildFallbackConfig
  * @returns default config
+ * @internal
  */
 export const getFallbackConfig = (): SitecoreConfig => {
   return buildFallbackConfig(process.env);
@@ -101,6 +102,7 @@ export const getFallbackConfig = (): SitecoreConfig => {
  * Deep merge utility that skips undefined or empty string values in the override.
  * @param {T} base base value
  * @param {DeepPartial<T>} [override] override value
+ * @internal
  */
 export function deepMerge<T>(base: T, override?: DeepPartial<T>): T {
   if (!override) return base;

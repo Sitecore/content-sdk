@@ -37,6 +37,7 @@ type TemplateOptions = {
  * @param {boolean} opts.includeVariants - Whether to include variants in the component map.
  * @param {boolean} opts.shouldAnnotateClient - Whether to annotate the client in the component map. Used in frameworks that make server/client distinction.
  * @returns {ComponentMapEntry[]} The transformed component description entries.
+ * @internal
  */
 export const prepareComponentsForMap = (
   components: ComponentSource[],
@@ -128,6 +129,14 @@ export const prepareComponentsForMap = (
   return entries;
 };
 
+/**
+ * Cross framework function to build the component map content.
+ * @param {ComponentMapEntry[]} entries - The entries to build the component map content for.
+ * @param {ComponentImport[] | undefined} componentImports - The component imports to build the component map content for.
+ * @param {TemplateOptions} options - The options for the buildComponentMapContent function.
+ * @returns {string} The component map content.
+ * @internal
+ */
 export const buildComponentMapContent = (
   entries: ComponentMapEntry[],
   componentImports: ComponentImport[] | undefined,
