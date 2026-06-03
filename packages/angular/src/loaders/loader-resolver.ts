@@ -68,12 +68,13 @@ function buildLoaderParams(route: ActivatedRouteSnapshot, defaultLanguage?: stri
 /**
  * Browser-only: load data from transfer state or ClientLoaderDataService.
  * Injects TransferState, ClientLoaderDataService. Called by the resolver when isPlatformBrowser.
- * @param {ActivatedRouteSnapshot} route - The current route snapshot
- * @param {RouterStateSnapshot} state - The router state snapshot
- * @param {string} loaderId - loader ID to resolve, used for transfer state key and ClientLoaderDataService call
- * @param {Router} router - The Angular router instance
- * @param {string} [defaultLanguage] - Default language for locale fallback in params
- * @param {LoaderCacheConfig} [cacheOptions] - Cache options for the loader
+ * @param {object} options - The options for the resolveOnBrowser function
+ * @param {ActivatedRouteSnapshot} options.route - The current route snapshot
+ * @param {RouterStateSnapshot} options.state - The router state snapshot
+ * @param {string} options.loaderId - loader ID to resolve, used for transfer state key and ClientLoaderDataService call
+ * @param {Router} options.router - The Angular router instance
+ * @param {string} [options.defaultLanguage] - Default language for locale fallback in params
+ * @param {LoaderCacheConfig} [options.cacheOptions] - Cache options for the loader
  * @returns {Promise<unknown | RedirectCommand>} The resolved data or redirect command
  */
 async function resolveOnBrowser({

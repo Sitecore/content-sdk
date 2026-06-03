@@ -65,7 +65,7 @@ describe('loaderResolver', () => {
       const state = makeRouterStateSnapshot('/path');
       const result = await TestBed.runInInjectionContext(async () => {
         return (
-          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+          resolver as (_r: ActivatedRouteSnapshot, _s: RouterStateSnapshot) => Promise<unknown>
         )(route, state);
       });
 

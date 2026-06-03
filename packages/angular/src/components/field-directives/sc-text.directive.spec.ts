@@ -24,7 +24,7 @@ class TestHostUnencodedComponent {
 }
 
 describe('ScTextDirective', () => {
-  function createFixture<T>(component: new (...args: any[]) => T): ComponentFixture<T> {
+  function createFixture<T>(component: new (..._args: any[]) => T): ComponentFixture<T> {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({ imports: [component] });
     return TestBed.createComponent(component);

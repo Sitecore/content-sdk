@@ -1,6 +1,5 @@
 import { Injectable, PLATFORM_ID, REQUEST, inject } from '@angular/core';
 import { DefaultUrlSerializer, type UrlTree } from '@angular/router';
-import type { UrlSerializer } from '@angular/router';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 import { resolveCurrentPath, splitLocaleFromPath } from './locale-utils';
 import { getLocaleRewrite } from '@sitecore-content-sdk/content/i18n';

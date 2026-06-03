@@ -38,7 +38,8 @@ describe('createLoaderDataServiceMiddleware', () => {
     });
   });
 
-  /** eslint-disable-next-line jsdoc/require-jsdoc */
+  /** eslint-disable jsdoc/require-jsdoc */
+  /** eslint-disable jsdoc/require-param */
   function createMiddleware(opts: {
     loaders: LoaderRegistry;
     endpoint?: string;
