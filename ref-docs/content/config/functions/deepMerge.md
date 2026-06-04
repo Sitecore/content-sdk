@@ -8,7 +8,9 @@
 
 > **deepMerge**\<`T`\>(`base`, `override?`): `T`
 
-Defined in: [content/src/config/define-config.ts:105](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/content/src/config/define-config.ts#L105)
+Defined in: [content/src/config/define-config.ts:107](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/content/src/config/define-config.ts#L107)
+
+**`Internal`**
 
 Deep merge utility that skips undefined or empty string values in the override.
 

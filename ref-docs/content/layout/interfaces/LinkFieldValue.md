@@ -6,7 +6,7 @@
 
 # Interface: LinkFieldValue
 
-Defined in: [content/src/layout/field-types.ts:7](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/content/src/layout/field-types.ts#L7)
+Defined in: [content/src/layout/field-types.ts:7](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/content/src/layout/field-types.ts#L7)
 
 The interface for the Link field value.
 
@@ -20,7 +20,7 @@ The interface for the Link field value.
 
 > `optional` **anchor?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:15](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/content/src/layout/field-types.ts#L15)
+Defined in: [content/src/layout/field-types.ts:15](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/content/src/layout/field-types.ts#L15)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [content/src/layout/field-types.ts:15](https://github.com/Sitecore/c
 
 > `optional` **class?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:11](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/content/src/layout/field-types.ts#L11)
+Defined in: [content/src/layout/field-types.ts:11](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/content/src/layout/field-types.ts#L11)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [content/src/layout/field-types.ts:11](https://github.com/Sitecore/c
 
 > `optional` **className?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:10](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/content/src/layout/field-types.ts#L10)
+Defined in: [content/src/layout/field-types.ts:10](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/content/src/layout/field-types.ts#L10)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [content/src/layout/field-types.ts:10](https://github.com/Sitecore/c
 
 > `optional` **href?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:9](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/content/src/layout/field-types.ts#L9)
+Defined in: [content/src/layout/field-types.ts:9](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/content/src/layout/field-types.ts#L9)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [content/src/layout/field-types.ts:9](https://github.com/Sitecore/co
 
 > `optional` **linktype?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:17](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/content/src/layout/field-types.ts#L17)
+Defined in: [content/src/layout/field-types.ts:17](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/content/src/layout/field-types.ts#L17)
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: [content/src/layout/field-types.ts:17](https://github.com/Sitecore/c
 
 > `optional` **querystring?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:16](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/content/src/layout/field-types.ts#L16)
+Defined in: [content/src/layout/field-types.ts:16](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/content/src/layout/field-types.ts#L16)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [content/src/layout/field-types.ts:16](https://github.com/Sitecore/c
 
 > `optional` **target?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:13](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/content/src/layout/field-types.ts#L13)
+Defined in: [content/src/layout/field-types.ts:13](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/content/src/layout/field-types.ts#L13)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [content/src/layout/field-types.ts:13](https://github.com/Sitecore/c
 
 > `optional` **text?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:14](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/content/src/layout/field-types.ts#L14)
+Defined in: [content/src/layout/field-types.ts:14](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/content/src/layout/field-types.ts#L14)
 
 ***
 
@@ -84,4 +84,4 @@ Defined in: [content/src/layout/field-types.ts:14](https://github.com/Sitecore/c
 
 > `optional` **title?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:12](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/content/src/layout/field-types.ts#L12)
+Defined in: [content/src/layout/field-types.ts:12](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/content/src/layout/field-types.ts#L12)

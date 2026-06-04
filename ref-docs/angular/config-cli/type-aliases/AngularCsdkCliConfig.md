@@ -8,4 +8,4 @@
 
 > **AngularCsdkCliConfig** = `Omit`\<[`SitecoreCliConfigInput`](../content/config/type-aliases/SitecoreCliConfigInput.md), `"config"`\>
 
-Defined in: [packages/angular/src/config-cli/define-cli-config.ts:10](https://github.com/Sitecore/content-sdk/blob/396935c78ae029a02fc0b86aaa7283fab025ee20/packages/angular/src/config-cli/define-cli-config.ts#L10)
+Defined in: [packages/angular/src/config-cli/define-cli-config.ts:10](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/config-cli/define-cli-config.ts#L10)

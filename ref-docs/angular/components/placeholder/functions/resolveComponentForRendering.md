@@ -8,7 +8,7 @@
 
 > **resolveComponentForRendering**(`renderingDefinition`, `placeholderName`, `componentMap`, `hiddenRenderingComponent?`, `missingComponentComponent?`): [`ComponentForRendering`](../interfaces/ComponentForRendering.md)
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:148](https://github.com/Sitecore/content-sdk/blob/396935c78ae029a02fc0b86aaa7283fab025ee20/packages/angular/src/components/placeholder/placeholder-utils.ts#L148)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:148](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/components/placeholder/placeholder-utils.ts#L148)
 
 Resolve a component type for a rendering definition.
 Handles hidden renderings, missing components, variant selection, and map lookup.

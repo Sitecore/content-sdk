@@ -8,16 +8,22 @@
 
 > **buildComponentMapContent**(`entries`, `componentImports`, `options`): `string`
 
-Defined in: [content/src/tools/templating/utils.ts:131](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/content/src/tools/templating/utils.ts#L131)
+Defined in: [content/src/tools/templating/utils.ts:140](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/content/src/tools/templating/utils.ts#L140)
+
+**`Internal`**
+
+Cross framework function to build the component map content.
 
 ## Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `entries` | [`ComponentMapEntry`](../type-aliases/ComponentMapEntry.md)[] |
-| `componentImports` | [`ComponentImport`](../interfaces/ComponentImport.md)[] \| `undefined` |
-| `options` | `TemplateOptions` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `entries` | [`ComponentMapEntry`](../type-aliases/ComponentMapEntry.md)[] | The entries to build the component map content for. |
+| `componentImports` | [`ComponentImport`](../interfaces/ComponentImport.md)[] \| `undefined` | The component imports to build the component map content for. |
+| `options` | `TemplateOptions` | The options for the buildComponentMapContent function. |
 
 ## Returns
 
 `string`
+
+The component map content.

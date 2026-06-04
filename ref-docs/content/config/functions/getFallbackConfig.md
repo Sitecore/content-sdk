@@ -8,7 +8,9 @@
 
 > **getFallbackConfig**(): [`SitecoreConfig`](../type-aliases/SitecoreConfig.md)
 
-Defined in: [content/src/config/define-config.ts:96](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/content/src/config/define-config.ts#L96)
+Defined in: [content/src/config/define-config.ts:97](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/content/src/config/define-config.ts#L97)
+
+**`Internal`**
 
 Provides default initial values for SitecoreConfig from `process.env`
 TODO: remove in favor of buildFallbackConfig

@@ -6,7 +6,7 @@
 
 # Class: ScRichTextDirective
 
-Defined in: [packages/angular/src/components/field-directives/sc-rich-text.directive.ts:26](https://github.com/Sitecore/content-sdk/blob/396935c78ae029a02fc0b86aaa7283fab025ee20/packages/angular/src/components/field-directives/sc-rich-text.directive.ts#L26)
+Defined in: [packages/angular/src/components/field-directives/sc-rich-text.directive.ts:26](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/components/field-directives/sc-rich-text.directive.ts#L26)
 
 Renders a Sitecore rich text field value as innerHTML of the host element.
 Content is marked trusted for Angular sanitization (typical for CMS-authored HTML).
@@ -22,7 +22,7 @@ Usage:
 
 > **new ScRichTextDirective**(): `ScRichTextDirective`
 
-Defined in: [packages/angular/src/components/field-directives/sc-rich-text.directive.ts:34](https://github.com/Sitecore/content-sdk/blob/396935c78ae029a02fc0b86aaa7283fab025ee20/packages/angular/src/components/field-directives/sc-rich-text.directive.ts#L34)
+Defined in: [packages/angular/src/components/field-directives/sc-rich-text.directive.ts:34](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/components/field-directives/sc-rich-text.directive.ts#L34)
 
 #### Returns
 
@@ -34,6 +34,6 @@ Defined in: [packages/angular/src/components/field-directives/sc-rich-text.direc
 
 > `readonly` **scRichText**: `InputSignal`\<`TextField`\>
 
-Defined in: [packages/angular/src/components/field-directives/sc-rich-text.directive.ts:28](https://github.com/Sitecore/content-sdk/blob/396935c78ae029a02fc0b86aaa7283fab025ee20/packages/angular/src/components/field-directives/sc-rich-text.directive.ts#L28)
+Defined in: [packages/angular/src/components/field-directives/sc-rich-text.directive.ts:28](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/components/field-directives/sc-rich-text.directive.ts#L28)
 
 The Sitecore rich text field.
