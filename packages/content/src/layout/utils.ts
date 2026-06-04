@@ -28,7 +28,7 @@ const extractDetailedRenderingParamValue = (value: Record<string, unknown>): str
  * instead of plain strings (e.g. Styles, CSSStyles, GridParameters).
  * @param {unknown} value rendering param value
  * @returns {string | undefined} normalized string value, or undefined when not extractable
- * @public
+ * @internal
  */
 export function getRenderingParamString(value: unknown): string | undefined {
   if (value === null || value === undefined) {

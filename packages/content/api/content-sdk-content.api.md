@@ -610,7 +610,7 @@ export function getPersonalizedRewrite(pathname: string, variantIds: string[]): 
 // @public
 export function getPersonalizedRewriteData(pathname: string): PersonalizedRewriteData;
 
-// @public
+// @internal
 export function getRenderingParamString(value: unknown): string | undefined;
 
 // @public
