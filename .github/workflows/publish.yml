@@ -175,10 +175,10 @@ jobs:
           PR_NPM_TAG: ${{ steps.snapshot_tag.outputs.tag_pr }}
           npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
         run: |
-          BRANCH_NAME="${{ github.ref_name }}
-          if [[ "$BRANCH_NAME" =~ "^release/beta" ]]; then
+          BRANCH_NAME="${{ github.ref_name }}"
+          if [[ "$BRANCH_NAME" =~ ^release/beta ]]; then
             NPM_TAG="beta"
-          else if [[ "$BRANCH_NAME" =~ ^release/ ]]; then
+          elif [[ "$BRANCH_NAME" =~ ^release/ ]]; then
             NPM_TAG="hotfix-canary"
           else
             NPM_TAG="canary"
