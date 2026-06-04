@@ -1,6 +1,11 @@
 /** Schema metadata for atom props/events. */
 import { z } from 'zod';
-import type { PropMeta, ArgMeta } from './types';
+
+/** Prop metadata (e.g. control hint for Design Studio). @public */
+export type PropMeta = { control?: string };
+
+/** Event argument metadata (e.g. argName). @public */
+export type ArgMeta = { argName: string };
 
 const META_KEY = 'meta';
 

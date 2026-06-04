@@ -15,7 +15,7 @@ describe('SitecoreProvider', () => {
     anotherProperty?: string;
   }
 
-  const loadImportMapStub = async (): Promise<ImportMapImport> => ({}) as ImportMapImport;
+  const loadImportMapStub = async (): Promise<ImportMapImport> => ({} as ImportMapImport);
 
   const NestedComponent: FC<NestedComponentProps> = () => {
     const { page } = useSitecore();
@@ -24,8 +24,8 @@ describe('SitecoreProvider', () => {
   };
 
   const AtomRegistryProbe: FC = () => {
-    const { atomRegistry } = useSitecore();
-    nestedContext = atomRegistry as unknown;
+    const { atomsConfig } = useSitecore();
+    nestedContext = atomsConfig as unknown;
     return <span>probe</span>;
   };
 
@@ -117,11 +117,11 @@ describe('SitecoreProvider', () => {
     });
   });
 
-  it('exposes atomRegistry on context when provided', () => {
+  it('exposes atomsConfig on context when provided', () => {
     nestedContext = undefined;
-    const atomRegistry = {
-      atoms: [],
-      callbacks: [],
+    const atomsConfig = {
+      catalog: {} as any,
+      registry: {} as any,
     };
 
     render(
@@ -130,12 +130,12 @@ describe('SitecoreProvider', () => {
         componentMap={components}
         page={mockPage}
         loadImportMap={loadImportMapStub}
-        atomRegistry={atomRegistry}
+        atoms={atomsConfig}
       >
         <AtomRegistryProbe />
       </SitecoreProvider>
     );
 
-    expect(nestedContext).to.deep.equal(atomRegistry);
+    expect(nestedContext).to.deep.equal(atomsConfig);
   });
 });

@@ -1,214 +1,79 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import type { Document } from '../../atoms/component-layout/document';
-import { AtomInfo, CallbackInfo, addDocumentUpdateHandler, getDesignLibraryAtomsRegistryEvent } from './atoms-builder';
+import {
+  AtomsCatalogPayload,
+  getDesignLibraryAtomsCatalogEvent,
+  getDesignLibraryAtomsErrorEvent,
+  addDocumentUpdateHandler,
+} from './atoms-builder';
 
 describe('atoms-builder', () => {
-  describe('getDesignLibraryAtomsRegistryEvent', () => {
-    it('should return an event with name "atom:registry"', () => {
-      const event = getDesignLibraryAtomsRegistryEvent([], {});
+  describe('getDesignLibraryAtomsCatalogEvent', () => {
+    it('returns an event with name "atoms:catalog"', () => {
+      const payload: AtomsCatalogPayload = { components: [], actions: [] };
+      const event = getDesignLibraryAtomsCatalogEvent(payload);
 
-      expect(event.name).to.equal('atom:registry');
+      expect(event.name).to.equal('atoms:catalog');
     });
 
-    it('should return an event with an empty atoms registry when given an empty array', () => {
-      const event = getDesignLibraryAtomsRegistryEvent([], {});
-
-      expect(event.message.atomsRegistry).to.deep.equal([]);
-    });
-
-    it('should return an event containing the provided atoms registry', () => {
-      const atomsRegistry: AtomInfo[] = [
-        {
-          name: 'Button',
-          type: 'atom',
-          description: 'A button atom',
-          props: { label: 'string' },
-          allowedChildren: [],
-        },
-      ];
-
-      const event = getDesignLibraryAtomsRegistryEvent(atomsRegistry, {});
-
-      expect(event.message.atomsRegistry).to.deep.equal(atomsRegistry);
-    });
-
-    it('should return an event containing multiple atoms', () => {
-      const atomsRegistry: AtomInfo[] = [
-        {
-          name: 'Button',
-          type: 'atom',
-          description: 'A button atom',
-          props: { label: 'string' },
-          allowedChildren: ['ButtonIcon'],
-        },
-        {
-          name: 'ButtonIcon',
-          type: 'atom-child',
-          description: 'An icon child of Button',
-          props: { src: 'string' },
-          allowedChildren: [],
-        },
-      ];
-
-      const event = getDesignLibraryAtomsRegistryEvent(atomsRegistry, {});
-
-      expect(event.message.atomsRegistry).to.have.length(2);
-      expect(event.message.atomsRegistry).to.deep.equal(atomsRegistry);
-    });
-
-    it('should include optional fields when provided', () => {
-      const atomsRegistry: AtomInfo[] = [
-        {
-          name: 'Card',
-          version: 2,
-          type: 'atom',
-          description: 'A card atom with optional fields',
-          props: { title: 'string' },
-          allowedChildren: ['CardBody'],
-          defaultChildren: ['CardBody', { atom: 'CardFooter', props: { cta: 'Learn more' } }],
-          htmlEvents: ['click', 'focus'],
-          customEvents: { onExpand: 'CustomExpandEvent' },
-        },
-      ];
-
-      const event = getDesignLibraryAtomsRegistryEvent(atomsRegistry, {});
-
-      const [atom] = event.message.atomsRegistry;
-      expect(atom.version).to.equal(2);
-      expect(atom.defaultChildren).to.deep.equal([
-        'CardBody',
-        { atom: 'CardFooter', props: { cta: 'Learn more' } },
-      ]);
-      expect(atom.htmlEvents).to.deep.equal(['click', 'focus']);
-      expect(atom.customEvents).to.deep.equal({ onExpand: 'CustomExpandEvent' });
-    });
-
-    it('should return an event with an empty callback registry when given an empty object', () => {
-      const event = getDesignLibraryAtomsRegistryEvent([], {});
-
-      expect(event.message.callbackRegistry).to.deep.equal({});
-    });
-
-    it('should return an event containing the provided callback registry', () => {
-      const callbackRegistry: Record<string, CallbackInfo> = {
-        handleClick: {
-          description: 'Handles click events',
-          params: { event: 'MouseEvent' },
-        },
+    it('returns an event containing the provided catalog payload', () => {
+      const payload: AtomsCatalogPayload = {
+        components: [
+          { name: 'Button', propsSchema: { type: 'object' }, description: 'A button', slots: ['default'] },
+        ],
+        actions: [
+          { name: 'submit', paramsSchema: { type: 'object' }, description: 'Submit form' },
+        ],
       };
 
-      const event = getDesignLibraryAtomsRegistryEvent([], callbackRegistry);
+      const event = getDesignLibraryAtomsCatalogEvent(payload);
 
-      expect(event.message.callbackRegistry).to.deep.equal(callbackRegistry);
+      expect(event.message.components).to.have.length(1);
+      expect(event.message.components[0].name).to.equal('Button');
+      expect(event.message.actions).to.have.length(1);
+      expect(event.message.actions[0].name).to.equal('submit');
     });
+  });
 
-    it('should return an event containing multiple callbacks', () => {
-      const callbackRegistry: Record<string, CallbackInfo> = {
-        handleClick: {
-          description: 'Handles click events',
-          params: { event: 'MouseEvent' },
-        },
-        handleSubmit: {
-          description: 'Handles form submission',
-        },
-        handleChange: {
-          description: 'Handles input changes',
-          params: { value: 'string', name: 'string' },
-        },
-      };
+  describe('getDesignLibraryAtomsErrorEvent', () => {
+    it('returns an event with name "atoms:error"', () => {
+      const event = getDesignLibraryAtomsErrorEvent('some error', 'render');
 
-      const event = getDesignLibraryAtomsRegistryEvent([], callbackRegistry);
-
-      expect(Object.keys(event.message.callbackRegistry)).to.have.length(3);
-      expect(event.message.callbackRegistry).to.deep.equal(callbackRegistry);
-    });
-
-    it('should return an event with both atoms registry and callback registry', () => {
-      const atomsRegistry: AtomInfo[] = [
-        {
-          name: 'Button',
-          type: 'atom',
-          description: 'A button atom',
-          props: { label: 'string' },
-          allowedChildren: [],
-        },
-      ];
-
-      const callbackRegistry: Record<string, CallbackInfo> = {
-        onClick: {
-          description: 'Button click handler',
-          params: { event: 'MouseEvent' },
-        },
-      };
-
-      const event = getDesignLibraryAtomsRegistryEvent(atomsRegistry, callbackRegistry);
-
-      expect(event.message.atomsRegistry).to.deep.equal(atomsRegistry);
-      expect(event.message.callbackRegistry).to.deep.equal(callbackRegistry);
+      expect(event.name).to.equal('atoms:error');
+      expect(event.message.error).to.equal('some error');
+      expect(event.message.type).to.equal('render');
     });
   });
 
   describe('addDocumentUpdateHandler', () => {
-    let addListener: sinon.SinonStub;
-    let removeListener: sinon.SinonStub;
-    let messageHandler: ((e: MessageEvent) => void) | undefined;
+    let addEventListener: sinon.SinonStub;
+    let removeEventListener: sinon.SinonStub;
 
     beforeEach(() => {
-      messageHandler = undefined;
-      addListener = sinon.stub().callsFake((event: string, handler: (e: MessageEvent) => void) => {
-        if (event === 'message') {
-          messageHandler = handler;
-        }
-      });
-      removeListener = sinon.stub();
-      (globalThis as unknown as { window: Window & typeof globalThis }).window = {
-        addEventListener: addListener,
-        removeEventListener: removeListener,
-      } as unknown as Window & typeof globalThis;
+      addEventListener = sinon.stub(window, 'addEventListener');
+      removeEventListener = sinon.stub(window, 'removeEventListener');
     });
 
     afterEach(() => {
-      delete (globalThis as unknown as { window?: Window }).window;
+      addEventListener.restore();
+      removeEventListener.restore();
     });
 
-    it('should register a message listener and invoke callback with document when event is valid', () => {
-      const callback = sinon.spy();
-      const doc: Document = {
-        name: 'preview',
-        root: { type: 'Stack', id: 'r1', children: [] },
-      };
-
-      const unsub = addDocumentUpdateHandler(callback);
-
-      sinon.assert.calledWith(addListener, 'message', sinon.match.func);
-
-      messageHandler!(
-        new MessageEvent('message', {
-          origin: 'http://localhost',
-          data: { name: 'component:atoms:preview', document: doc },
-        })
-      );
-
-      sinon.assert.calledOnceWithExactly(callback, doc);
-      expect(typeof unsub).to.equal('function');
-
-      unsub();
-      sinon.assert.calledWith(removeListener, 'message', messageHandler);
-    });
-
-    it('should ignore messages that do not match the preview event name', () => {
-      const callback = sinon.spy();
+    it('registers a message event listener', () => {
+      const callback = sinon.stub();
       addDocumentUpdateHandler(callback);
 
-      messageHandler!(
-        new MessageEvent('message', {
-          origin: 'http://localhost',
-          data: { name: 'other:event', document: {} },
-        })
-      );
+      expect(addEventListener).to.have.been.calledWith('message', sinon.match.func);
+    });
 
-      sinon.assert.notCalled(callback);
+    it('returns an unsubscribe function that removes the listener', () => {
+      const callback = sinon.stub();
+      const unsubscribe = addDocumentUpdateHandler(callback);
+
+      unsubscribe();
+
+      expect(removeEventListener).to.have.been.calledWith('message', sinon.match.func);
     });
   });
 });

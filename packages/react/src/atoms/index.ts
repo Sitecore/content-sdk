@@ -1,21 +1,28 @@
-/** Atom schema utilities. */
+/** Atoms module — json-render based runtime. */
 export type {
-  AtomMetadata,
-  AtomChild,
-  DefaultChild,
-  EditableComponentProps,
-  CallbackPropKeys,
-  CallbackArgZodTuple,
-  PropMeta,
-  ArgMeta,
-  CallbackMetadata,
-  CallbackParamInput,
-  CallbackParamsInput,
-  InferCallbackArgs,
+  AtomComponentDefinition,
+  AtomActionDefinition,
+  AtomsCatalogInput,
+  SitecoreComponentMeta,
+  AtomsComponentsMap,
+  AtomActionHandler,
+  AtomsActionsMap,
+  AtomsRegistryOptions,
+  AtomsConfig,
+  AtomsSpec,
+  AtomRenderProps,
 } from './types';
-export { withPropMeta, withArgMeta, getFieldMeta } from './schema-utils';
-export { createAtom, type AtomSchemaInput } from './createAtom';
-export { createCallback, type CallbackSchemaInput } from './createCallback';
+export { defineAtomsCatalog } from './define-atoms-catalog';
+export { defineAtomsRegistry } from './define-atoms-registry';
+export { serializeCatalog } from './atoms-serializer';
+export type { AtomCatalogEntry, ActionCatalogEntry, SerializedCatalog } from './atoms-serializer';
+export {
+  withPropMeta,
+  withArgMeta,
+  getFieldMeta,
+  type PropMeta,
+  type ArgMeta,
+} from './schema-utils';
 export {
   textFieldSchema,
   richTextFieldSchema,

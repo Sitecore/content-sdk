@@ -1,10 +1,10 @@
 export {
-  AtomInfo,
-  AtomType,
-  SerializedDefaultChild,
-  getDesignLibraryAtomsRegistryEvent,
+  AtomCatalogEntry,
+  ActionCatalogEntry,
+  AtomsCatalogPayload,
+  getDesignLibraryAtomsCatalogEvent,
+  getDesignLibraryAtomsErrorEvent,
   sendAtomsErrorEvent,
   DesignLibraryAtomsError,
   addDocumentUpdateHandler,
-  CallbackInfo,
 } from './atoms-builder';

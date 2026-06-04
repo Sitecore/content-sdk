@@ -10,9 +10,10 @@ const { ERROR_MESSAGES } = constants;
 const DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME = 'component:atoms:preview';
 
 /**
- * Event to send import map to design library
+ * Event name for the atoms catalog registration (replaces legacy `atom:registry`).
+ * @internal
  */
-const DESIGN_LIBRARY_ATOM_REGISTRY_EVENT_NAME = 'atom:registry';
+const DESIGN_LIBRARY_ATOMS_CATALOG_EVENT_NAME = 'atoms:catalog';
 
 /**
  * Event to send to design library when rendering atoms error occurs
@@ -38,100 +39,65 @@ export interface DesignLibraryAtomsErrorEvent extends DesignLibraryEvent {
 }
 
 /**
- * Represents the type of atom, which can be either a top-level atom or an atom child
+ * Serialized component entry in the catalog payload sent to Design Studio.
  * @internal
  */
-export type AtomType = 'atom' | 'atom-child';
-
-export type SerializedDefaultChild = string | { atom: string; props?: Record<string, unknown> };
-
-/**
- * Represents the serialized callback metadata information to be sent to design library
- * @internal
- */
-export type CallbackInfo = {
-  /**
-   * A description of the callback.
-   */
-  description: string;
-  /**
-   * The parameters of the callback.
-   */
-  params?: Record<string, unknown>;
-};
-
-/**
- * Represents the serialized atom metadata information to be sent to design library
- * @internal
- */
-export type AtomInfo = {
-  /**
-   * The name of the atom, which should be unique across the registry and is used to identify the atom in the atom registry.
-   */
+export interface AtomCatalogEntry {
+  /** Component name (key in the catalog). */
   name: string;
-  /**
-   * The optional version of the atom.
-   */
-  version?: number;
-  /**
-   * The type of the atom.
-   */
-  type: AtomType;
-  /**
-   * A description of the atom.
-   */
+  /** JSON Schema representation of the component props. */
+  propsSchema: object;
+  /** Human-readable description. */
   description: string;
-  /**
-   * The properties of the atom.
-   */
-  props: Record<string, unknown>;
-  /**
-   * The allowed children of the atom, which define the nested structure of the atom.
-   */
-  allowedChildren: string[];
-  /**
-   * The default children of the atom.
-   */
-  defaultChildren?: SerializedDefaultChild[];
-  /**
-   * The HTML events of the atom, which define the standard DOM events the atom can handle.
-   */
-  htmlEvents?: string[];
-  /**
-   * The custom events of the atom, which define the non-standard events the atom can handle.
-   */
-  customEvents?: Record<string, unknown>;
-};
-
-/**
- * Represents an event indicating the atom registry to be sent to design library
- * @internal
- */
-export interface DesignLibraryAtomsRegistryEvent extends DesignLibraryEvent {
-  name: typeof DESIGN_LIBRARY_ATOM_REGISTRY_EVENT_NAME;
-  message: {
-    atomsRegistry: AtomInfo[];
-    callbackRegistry: Record<string, CallbackInfo>;
-  };
+  /** Named slots (children). */
+  slots: string[];
 }
 
 /**
- * Creates a DesignLibraryAtomsRegistryEvent with the given atoms registry and callback registry.
- * @param {AtomInfo[]} atomsRegistry - the atoms registry to be sent in the event
- * @param {Record<string, CallbackInfo>} callbackRegistry - the callback registry to be sent in the event
- * @returns {DesignLibraryAtomsRegistryEvent} the created event with the atoms registry and callback registry
+ * Serialized action entry in the catalog payload sent to Design Studio.
  * @internal
  */
-export function getDesignLibraryAtomsRegistryEvent(
-  atomsRegistry: AtomInfo[],
-  callbackRegistry: Record<string, CallbackInfo>
-): DesignLibraryAtomsRegistryEvent {
+export interface ActionCatalogEntry {
+  /** Action name (key in the catalog). */
+  name: string;
+  /** JSON Schema representation of the action params. */
+  paramsSchema: object;
+  /** Human-readable description. */
+  description: string;
+}
+
+/**
+ * Payload of the atoms:catalog event sent to Design Studio.
+ * @internal
+ */
+export interface AtomsCatalogPayload {
+  /** Serialized component entries. */
+  components: AtomCatalogEntry[];
+  /** Serialized action entries. */
+  actions: ActionCatalogEntry[];
+}
+
+/**
+ * Represents the atoms:catalog event sent to Design Studio.
+ * @internal
+ */
+export interface DesignLibraryAtomsCatalogEvent extends DesignLibraryEvent {
+  name: typeof DESIGN_LIBRARY_ATOMS_CATALOG_EVENT_NAME;
+  message: Record<string, unknown>;
+}
+
+/**
+ * Creates a DesignLibraryAtomsCatalogEvent with the given catalog payload.
+ * @param {AtomsCatalogPayload} payload - serialized catalog data
+ * @returns {DesignLibraryAtomsCatalogEvent} the event ready to be posted to Design Studio
+ * @internal
+ */
+export function getDesignLibraryAtomsCatalogEvent(
+  payload: AtomsCatalogPayload
+): DesignLibraryAtomsCatalogEvent {
   return {
-    name: DESIGN_LIBRARY_ATOM_REGISTRY_EVENT_NAME,
-    message: {
-      atomsRegistry,
-      callbackRegistry,
-    },
+    name: DESIGN_LIBRARY_ATOMS_CATALOG_EVENT_NAME,
+    message: payload as unknown as Record<string, unknown>,
   };
 }
 

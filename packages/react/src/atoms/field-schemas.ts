@@ -1,4 +1,4 @@
-/** Zod schemas for Sitecore field types, for use in createAtom prop definitions. */
+/** Zod schemas for Sitecore field types, for use in defineAtomsCatalog prop definitions. */
 import { z } from 'zod';
 import { withPropMeta } from './schema-utils';
 
@@ -174,4 +174,3 @@ export type ImageFieldSchema = z.infer<ReturnType<typeof imageFieldSchema>>;
  * @public
  */
 export type FileFieldSchema = z.infer<ReturnType<typeof fileFieldSchema>>;
-

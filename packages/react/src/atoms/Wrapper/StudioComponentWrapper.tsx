@@ -1,7 +1,6 @@
 'use client';
 import React, { JSX, useMemo } from 'react';
 import { createView } from '../component-layout';
-import { getAtomMap } from '../atom-registry-utils';
 import { useSitecore } from '../../components/SitecoreProvider';
 import { StudioComponentWrapperProps } from './models';
 
@@ -17,14 +16,13 @@ import { StudioComponentWrapperProps } from './models';
  * @internal
  */
 export const StudioComponentWrapper = (props: StudioComponentWrapperProps): JSX.Element | null => {
-  const { atomRegistry } = useSitecore();
-  const atomMap = useMemo(() => getAtomMap(atomRegistry?.atoms ?? []), [atomRegistry?.atoms]);
+  const { atomsConfig } = useSitecore();
 
   const ViewComponent = useMemo(() => {
-    if (!props.document) return null;
+    if (!props.document || !atomsConfig) return null;
 
-    return createView(props.document, atomMap, atomRegistry?.callbacks);
-  }, [props.document, atomMap, atomRegistry?.callbacks]);
+    return createView(props.document, atomsConfig.registry);
+  }, [props.document, atomsConfig]);
 
   if (!ViewComponent) return null;
 

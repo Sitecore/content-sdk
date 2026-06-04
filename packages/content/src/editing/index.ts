@@ -42,10 +42,10 @@ export {
   updateComponent,
 } from './design-library';
 export {
-  AtomInfo,
-  CallbackInfo,
-  AtomType,
-  getDesignLibraryAtomsRegistryEvent,
+  AtomCatalogEntry,
+  ActionCatalogEntry,
+  AtomsCatalogPayload,
+  getDesignLibraryAtomsCatalogEvent,
   sendAtomsErrorEvent,
   DesignLibraryAtomsError,
   addDocumentUpdateHandler,
