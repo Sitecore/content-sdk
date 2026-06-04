@@ -33,18 +33,11 @@ describe('core layout utils', () => {
       expect(getRenderingParamString({ value: 'bar' })).to.equal('bar');
     });
 
-    it('should extract Value.value from JSON string params', () => {
-      expect(
-        getRenderingParamString('{"Value":{"value":"White-Background"},"IsVerifiedStyle":{"value":false}}')
-      ).to.equal('White-Background');
-    });
-
     it('should return undefined for unextractable values', () => {
       expect(getRenderingParamString(undefined)).to.be.undefined;
       expect(getRenderingParamString(null)).to.be.undefined;
       expect(getRenderingParamString({})).to.be.undefined;
       expect(getRenderingParamString({ Value: { value: 42 } })).to.be.undefined;
-      expect(getRenderingParamString('{"foo":"bar"}')).to.be.undefined;
     });
   });
 

@@ -217,21 +217,6 @@ describe('placeholder-utils', () => {
       });
     });
 
-    it('should extract styles from JSON string DetailedRenderingParams', () => {
-      const rendering: ComponentRendering = {
-        componentName: 'TestComponent',
-        uid: 'test-uid',
-        params: {
-          Styles: '{"Value":{"value":"White-Background"}}',
-        },
-      };
-
-      const result = getSXAParams(rendering);
-
-      expect(result).to.deep.equal({
-        styles: 'White-Background',
-      });
-    });
   });
 
   describe('getChildComponentProps', () => {

@@ -24,8 +24,8 @@ const extractDetailedRenderingParamValue = (value: Record<string, unknown>): str
 
 /**
  * Normalizes a rendering param value to a string.
- * Layout Service may return DetailedRenderingParams as objects or JSON strings
- * instead of plain strings (e.g. Styles, CSSStyles, GridParameters).
+ * Layout Service may return DetailedRenderingParams as objects instead of plain
+ * strings (e.g. Styles, CSSStyles, GridParameters).
  * @param {unknown} value rendering param value
  * @returns {string | undefined} normalized string value, or undefined when not extractable
  * @internal
@@ -36,22 +36,6 @@ export function getRenderingParamString(value: unknown): string | undefined {
   }
 
   if (typeof value === 'string') {
-    if (value.startsWith('{')) {
-      try {
-        const parsed: unknown = JSON.parse(value);
-        if (parsed && typeof parsed === 'object') {
-          const extracted = extractDetailedRenderingParamValue(parsed as Record<string, unknown>);
-          if (extracted !== undefined) {
-            return extracted;
-          }
-
-          return undefined;
-        }
-      } catch {
-        // Not JSON — treat as a plain string param value.
-      }
-    }
-
     return value;
   }
 
