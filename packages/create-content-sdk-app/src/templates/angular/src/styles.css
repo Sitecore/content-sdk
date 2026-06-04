@@ -1,0 +1,8 @@
+@import 'tailwindcss';
+
+@custom-variant max-mobile (@media (max-width: 380px));
+@custom-variant max-mobile-horizontal (@media (max-width: 640px));
+@custom-variant max-mobile-large (@media (max-width: 992px));
+@custom-variant max-desktop (@media (max-width: 1024px));
+
+@import './assets/main.css';

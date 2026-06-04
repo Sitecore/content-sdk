@@ -38,7 +38,11 @@ describe('sitecore-cache-tags', () => {
 
     it('joins path segments', () => {
       expect(
-        buildSitecoreRouteCacheTag({ site: 'Website', locale: 'en-US', pathSegments: ['About', 'Team'] })
+        buildSitecoreRouteCacheTag({
+          site: 'Website',
+          locale: 'en-US',
+          pathSegments: ['About', 'Team'],
+        })
       ).to.equal(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:route:website:en-us:about/team`);
     });
   });
@@ -121,7 +125,9 @@ describe('sitecore-cache-tags', () => {
           } as RouteData,
           'en-US'
         )
-      ).to.equal(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:a1111111-1111-1111-1111-111111111111:fr-fr:v2`);
+      ).to.equal(
+        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:a1111111-1111-1111-1111-111111111111:fr-fr:v2`
+      );
     });
 
     it('falls back to fallbackLocale', () => {

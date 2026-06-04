@@ -33,4 +33,6 @@ export const getEdgeProxyFormsUrl = (
   formId: string,
   sitecoreEdgeUrl: string = constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT
 ) =>
-  `${getBaseEdgeUrl(sitecoreEdgeUrl)}/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`;
+  `${getBaseEdgeUrl(
+    sitecoreEdgeUrl
+  )}/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`;

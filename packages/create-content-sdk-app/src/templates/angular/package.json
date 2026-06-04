@@ -1,0 +1,77 @@
+{
+  "name": "<%- appName %>",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "gen:env": "tsx scripts/generate-environment.ts",
+    "gen:env:dev": "tsx scripts/generate-environment.ts --dev",
+    "gen:env:prod": "tsx scripts/generate-environment.ts --prod",
+    "sitecore-tools:generate-map": "sitecore-tools project component generate-map",
+    "sitecore-tools:generate-map:watch": "sitecore-tools project component generate-map --watch",
+    "dev": "npm-run-all -s gen:env:dev sitecore-tools:generate-map -p \"ng serve\" sitecore-tools:generate-map:watch",
+    "build": "npm-run-all -s gen:env:prod sitecore-tools:generate-map \"ng build\"",
+    "watch": "npm-run-all -s gen:env:dev sitecore-tools:generate-map \"ng build --watch --configuration development\"",
+    "start": "npm-run-all -s build serve:ssr",
+    "serve:ssr": "node dist/<%- appName %>/server/server.mjs",
+    "test": "ng test",
+    "lint": "ng lint",
+    "lint:fix": "ng lint --fix"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  <%_ if (helper.isDev) { -%>
+  "installConfig": {
+    "hoistingLimits": "none"
+  },
+  <% } -%>
+  "dependencies": {
+    "@angular/common": "^21.1.0",
+    "@angular/compiler": "^21.1.0",
+    "@angular/core": "^21.1.0",
+    "@angular/forms": "^21.1.0",
+    "@angular/platform-browser": "^21.1.0",
+    "@angular/platform-server": "^21.1.0",
+    "@angular/router": "^21.1.0",
+    "@angular/ssr": "^21.1.4",
+    "@sitecore-content-sdk/angular": "<%- versions['@sitecore-content-sdk/angular'] %>",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "rxjs": "~7.8.0",
+    "unstorage": "^1.17.5",
+    "@ngx-translate/core": "^17.0.0",
+    "tailwind-bootstrap-grid": "^6.0.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular-eslint/builder": "^21.3.1",
+    "@angular/build": "^21.1.4",
+    "@angular/cli": "^21.1.4",
+    "@angular/compiler-cli": "^21.1.0",
+    "@eslint/js": "^10.0.1",
+    "@tailwindcss/postcss": "^4.1.12",
+    "@types/express": "^5.0.1",
+    "@types/node": "^20.17.19",
+    "angular-eslint": "^21.3.1",
+    "eslint": "^10.3.0",
+    "jsdom": "^27.1.0",
+    "npm-run-all2": "^7.0.2",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.12",
+    "@sitecore-content-sdk/cli": "^2.0.0-canary.6",
+    "tsx": "^4.19.4",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.59.1",
+    "vitest": "^4.0.8"
+  }
+}

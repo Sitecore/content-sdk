@@ -1,0 +1,47 @@
+.cover-background {
+  > .component-content {
+    @apply bg-no-repeat bg-cover;
+  }
+}
+.fix-background {
+  > .component-content {
+    @apply bg-no-repeat bg-cover bg-top-left bg-fixed;
+  }
+}
+.parallax-background {
+  > .component-content {
+    @apply bg-no-repeat bg-cover bg-position-[50%_0] bg-fixed max-mobile-large:bg-scroll;
+  }
+}
+
+/* background color  */
+.container-gray-background {
+  @apply bg-bg-light-gray;
+}
+.container-clean-background {
+  @apply bg-bg-basic-color;
+}
+.container-dark-background {
+  @apply bg-bg-black-active;
+}
+.container-color-background {
+  @apply bg-bg-blue;
+}
+
+/* indent */
+.indent {
+  margin: 0 40px;
+  &.col-xxl-12,
+  &.col-xl-12,
+  &.col-lg-12,
+  &.col-md-12,
+  &.col-12 {
+    width: calc(100% - 80px);
+  }
+}
+.indent-top {
+  margin-top: 20px;
+}
+.indent-bottom {
+  margin-bottom: 2px;
+}

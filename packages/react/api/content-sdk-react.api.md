@@ -31,6 +31,9 @@ import { getFieldValue } from '@sitecore-content-sdk/content/layout';
 import { GraphQLClientError } from '@sitecore-content-sdk/content/client';
 import { GraphQLRequestClient } from '@sitecore-content-sdk/content/client';
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/content/client';
+import { ImageField } from '@sitecore-content-sdk/content/layout';
+import { ImageFieldValue } from '@sitecore-content-sdk/content/layout';
+import { ImageSizeParameters } from '@sitecore-content-sdk/content/layout';
 import { ImportEntry } from '@sitecore-content-sdk/content/codegen';
 import { isEditorActive } from '@sitecore-content-sdk/content/editing';
 import { Item } from '@sitecore-content-sdk/content/layout';
@@ -40,6 +43,8 @@ import { LayoutServiceContext } from '@sitecore-content-sdk/content/layout';
 import { LayoutServiceContextData } from '@sitecore-content-sdk/content/layout';
 import { LayoutServiceData } from '@sitecore-content-sdk/content/layout';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
+import { LinkField } from '@sitecore-content-sdk/content/layout';
+import { LinkFieldValue } from '@sitecore-content-sdk/content/layout';
 import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
@@ -52,12 +57,14 @@ import { ReactNode } from 'react';
 import { RefAttributes } from 'react';
 import { resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 import { RetryStrategy } from '@sitecore-content-sdk/content/client';
+import { RichTextField } from '@sitecore-content-sdk/content/layout';
 import { RouteData } from '@sitecore-content-sdk/content/layout';
 import { SearchDocument } from '@sitecore-content-sdk/search';
 import { SearchParameters } from '@sitecore-content-sdk/search';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { SitePathService } from '@sitecore-content-sdk/content/site';
 import { SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
+import { TextField } from '@sitecore-content-sdk/content/layout';
 
 // @public
 export const AppPlaceholder: (props: AppPlaceholderProps) => React_2.JSX.Element;
@@ -292,19 +299,9 @@ export { GraphQLRequestClientFactoryConfig }
 const Image_2: React_2.FC<ImageProps>;
 export { Image_2 as Image }
 
-// @public
-export interface ImageField {
-    // (undocumented)
-    value?: ImageFieldValue;
-}
+export { ImageField }
 
-// @public
-export interface ImageFieldValue {
-    // (undocumented)
-    [attributeName: string]: unknown;
-    // (undocumented)
-    src?: string;
-}
+export { ImageFieldValue }
 
 // @public
 export interface ImageProps extends EditableFieldProps<ImageProps> {
@@ -319,18 +316,7 @@ export interface ImageProps extends EditableFieldProps<ImageProps> {
     srcSet?: ImageSizeParameters[];
 }
 
-// @public
-export interface ImageSizeParameters {
-    // (undocumented)
-    [attr: string]: string | number | undefined;
-    as?: 1 | 0;
-    h?: number;
-    iar?: 1 | 0;
-    mh?: number;
-    mw?: number;
-    sc?: number;
-    w?: number;
-}
+export { ImageSizeParameters }
 
 // @internal
 export type ImportMapImport = {
@@ -354,35 +340,9 @@ export { LayoutServicePageState }
 // @public
 export const Link: React_2.FC<LinkProps>;
 
-// @public
-export interface LinkField {
-    // (undocumented)
-    value: LinkFieldValue;
-}
+export { LinkField }
 
-// @public
-export interface LinkFieldValue {
-    // (undocumented)
-    [attributeName: string]: unknown;
-    // (undocumented)
-    anchor?: string;
-    // (undocumented)
-    class?: string;
-    // (undocumented)
-    className?: string;
-    // (undocumented)
-    href?: string;
-    // (undocumented)
-    linktype?: string;
-    // (undocumented)
-    querystring?: string;
-    // (undocumented)
-    target?: string;
-    // (undocumented)
-    text?: string;
-    // (undocumented)
-    title?: string;
-}
+export { LinkFieldValue }
 
 // @public
 export type LinkProps = EditableFieldProps<LinkProps> & React_2.AnchorHTMLAttributes<HTMLAnchorElement> & RefAttributes<HTMLAnchorElement> & {
@@ -465,11 +425,7 @@ export { RetryStrategy }
 // @public
 export const RichText: React_2.FC<RichTextProps>;
 
-// @public
-export interface RichTextField extends FieldMetadata {
-    // (undocumented)
-    value?: string;
-}
+export { RichTextField }
 
 // @public
 export interface RichTextProps extends EditableFieldProps<RichTextProps> {
@@ -514,11 +470,7 @@ export { SitePathServiceConfig }
 const Text_2: React_2.FC<TextProps>;
 export { Text_2 as Text }
 
-// @public
-export interface TextField extends FieldMetadata {
-    // (undocumented)
-    value?: string | number;
-}
+export { TextField }
 
 // @public
 export const useInfiniteSearch: <T extends SearchDocument = SearchDocument>(options: UseInfiniteSearchOptions<T>) => UseInfiniteSearchState<T>;

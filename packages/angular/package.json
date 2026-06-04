@@ -1,0 +1,114 @@
+{
+  "name": "@sitecore-content-sdk/angular",
+  "private": true,
+  "version": "0.1.0",
+  "installConfig": {
+    "hoistingLimits": "none"
+  },
+  "description": "Angular components and utilities for Sitecore Content SDK",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist",
+    "cli-node"
+  ],
+  "scripts": {
+    "ng": "ng",
+    "build": "del-cli dist cli-node && ng build && tsc -p tsconfig.cli.json",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test --watch=false",
+    "coverage": "ng test --watch=false --coverage",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "generate-docs": "npx typedoc --options typedoc.json --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --tsconfig tsconfig.typedoc.json --out ../../ref-docs/angular --entryPoints src/config/index.ts --entryPoints src/config-cli/index.ts --entryPoints src/lib/index.ts --entryPoints src/loaders/index.ts --entryPoints src/i18n/index.ts --entryPoints src/components/index.ts --entryPoints src/components/field-directives/index.ts --entryPoints src/components/placeholder/index.ts --entryPoints src/server/express/index.ts --entryPoints src/server/cache/index.ts --entryPoints src/server/middleware/index.ts --githubPages false"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "author": {
+    "name": "Sitecore Corporation",
+    "url": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
+  "bugs": {
+    "url": "https://github.com/sitecore/content-sdk/issues"
+  },
+  "peerDependencies": {
+    "@angular/common": "^21.0.0",
+    "@angular/core": "^21.0.0",
+    "@angular/platform-browser": "^21.0.0",
+    "@angular/platform-server": "^21.0.0",
+    "@angular/ssr": "^21.0.0",
+    "@ngx-translate/core": "^17.0.0",
+    "zone.js": "^0.15.0"
+  },
+  "peerDependenciesMeta": {
+    "@angular/platform-server": {
+      "optional": true
+    },
+    "@ngx-translate/core": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@ngx-translate/core": "^17.0.0",
+    "@sitecore-content-sdk/content": "^2.1.0",
+    "@sitecore-content-sdk/core": "^2.1.0",
+    "tslib": "^2.3.0",
+    "unstorage": "^1.17.5"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.1.4",
+    "@angular/cli": "^21.1.4",
+    "@angular/common": "^21.1.0",
+    "@angular/compiler": "^21.1.0",
+    "@angular/compiler-cli": "^21.1.0",
+    "@angular/core": "^21.1.0",
+    "@angular/forms": "^21.1.0",
+    "@angular/platform-browser": "^21.1.0",
+    "@angular/platform-server": "^21.1.0",
+    "@angular/router": "^21.1.0",
+    "@eslint/js": "^9.32.0",
+    "@types/node": "^24.10.4",
+    "@vitest/coverage-v8": "^4.1.5",
+    "angular-eslint": "^21.3.1",
+    "del-cli": "^6.0.0",
+    "eslint": "^9.32.0",
+    "jsdom": "^27.1.0",
+    "ng-packagr": "^21.1.0",
+    "rxjs": "~7.8.0",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.39.0",
+    "vitest": "^4.0.8",
+    "zone.js": "^0.15.0"
+  },
+  "exports": {
+    "./package.json": {
+      "default": "./dist/package.json"
+    },
+    ".": {
+      "types": "./dist/types/sitecore-content-sdk-angular.d.ts",
+      "default": "./dist/fesm2022/sitecore-content-sdk-angular.mjs"
+    },
+    "./config-cli": {
+      "types": "./cli-node/config-cli/index.d.ts",
+      "default": "./cli-node/config-cli/index.js"
+    },
+    "./tools": {
+      "types": "./cli-node/tools/index.d.ts",
+      "default": "./cli-node/tools/index.js"
+    }
+  }
+}

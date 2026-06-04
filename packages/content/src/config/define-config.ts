@@ -1,69 +1,108 @@
-import { constants, DefaultRetryStrategy } from '@sitecore-content-sdk/core';
-import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
+import { DefaultRetryStrategy, constants } from '@sitecore-content-sdk/core';
+import {
+  resolveEdgeUrl,
+  SITECORE_EDGE_PLATFORM_HOSTNAME_ENV,
+} from '@sitecore-content-sdk/core/tools';
 import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models';
 import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
 
 const { ERROR_MESSAGES } = constants;
 
 /**
- * Provides default initial values for SitecoreConfig
- * @returns default config
+ * Default Sitecore config values sourced from an env-like record (e.g. `process.env` or
+ * values mapped from an Angular `environment` object). Shared by {@link getFallbackConfig}
+ * and framework-specific define-config wrappers.
+ * @param {Record<string, string | undefined>} env - String key/value map using the same names as Node / Sitecore CLI env vars
+ * @returns {SitecoreConfig} default config before merging `sitecore.config` overrides
+ * @internal
  */
-export const getFallbackConfig = (): SitecoreConfig => ({
-  api: {
-    edge: {
-      contextId: process.env.SITECORE_EDGE_CONTEXT_ID || '',
-      clientContextId: '',
-      edgeUrl: resolveEdgeUrl(),
+export const buildFallbackConfig = (env: { [key: string]: string | undefined }): SitecoreConfig => {
+  const rawEdgeUrl =
+    env.CSDK_PUBLIC_SITECORE_EDGE_HOSTNAME || env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV];
+  return {
+    api: {
+      edge: {
+        contextId: env.SITECORE_EDGE_CONTEXT_ID || '',
+        clientContextId:
+          env.SITECORE_EDGE_CLIENT_CONTEXT_ID || env.CSDK_PUBLIC_SITECORE_EDGE_CONTEXT_ID || '',
+        edgeUrl: resolveEdgeUrl(rawEdgeUrl),
+      },
+      local: {
+        apiKey:
+          env.SITECORE_API_KEY ||
+          env.CSDK_PUBLIC_SITECORE_API_KEY ||
+          env.NEXT_PUBLIC_SITECORE_API_KEY ||
+          '',
+        apiHost:
+          env.SITECORE_API_HOST ||
+          env.CSDK_PUBLIC_SITECORE_API_HOST ||
+          env.NEXT_PUBLIC_SITECORE_API_HOST ||
+          '',
+        path: '/sitecore/api/graph/edge',
+      },
     },
-    local: {
-      apiKey: process.env.SITECORE_API_KEY || process.env.NEXT_PUBLIC_SITECORE_API_KEY || '',
-      apiHost: process.env.SITECORE_API_HOST || process.env.NEXT_PUBLIC_SITECORE_API_HOST || '',
-      path: '/sitecore/api/graph/edge',
+    editingSecret: env.SITECORE_EDITING_SECRET || 'editing-secret-missing',
+    retries: {
+      count: 3,
+      retryStrategy: new DefaultRetryStrategy({
+        statusCodes: [429, 502, 503, 504, 520, 521, 522, 523, 524],
+      }),
     },
-  },
-  editingSecret: process.env.SITECORE_EDITING_SECRET || 'editing-secret-missing',
-  retries: {
-    count: 3,
-    retryStrategy: new DefaultRetryStrategy({
-      statusCodes: [429, 502, 503, 504, 520, 521, 522, 523, 524],
-    }),
-  },
-  redirects: {
-    enabled: process.env.NODE_ENV !== 'development',
-    locales: ['en'],
-  },
-  multisite: {
-    enabled: true,
-    useCookieResolution: () => false,
-  },
-  personalize: {
-    enabled: process.env.NODE_ENV !== 'development',
-    edgeTimeout: parseInt(process.env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT!, 10) || 400,
-    cdpTimeout: parseInt(process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT!, 10) || 400,
-    scope: '',
-    channel: 'WEB',
-    currency: 'USD',
-  },
-  defaultSite: '',
-  defaultLanguage: 'en',
-  layout: {
-    formatLayoutQuery: null,
-  },
-  dictionary: {
-    caching: {
+    redirects: {
+      enabled: env.NODE_ENV !== 'development',
+      locales: ['en'],
+    },
+    multisite: {
       enabled: true,
-      timeout: 60,
+      useCookieResolution: () => false,
     },
-  },
-  rewriteMediaUrls: false,
-  disableCodeGeneration: false,
-});
+    personalize: {
+      enabled: env.NODE_ENV !== 'development',
+      edgeTimeout: parseInt(env.PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT || '', 10) || 400,
+      cdpTimeout: parseInt(env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT || '', 10) || 400,
+      scope:
+        env.SITECORE_PERSONALIZE_SCOPE ||
+        env.CSDK_PUBLIC_PERSONALIZE_SCOPE ||
+        env.NEXT_PUBLIC_PERSONALIZE_SCOPE ||
+        '',
+      channel: 'WEB',
+      currency: 'USD',
+    },
+    defaultSite:
+      env.SITECORE_DEFAULT_SITE ||
+      env.CSDK_PUBLIC_SITECORE_DEFAULT_SITE ||
+      env.CSDK_PUBLIC_DEFAULT_SITE ||
+      '',
+    defaultLanguage: env.SITECORE_DEFAULT_LANGUAGE || env.CSDK_PUBLIC_DEFAULT_LANGUAGE || 'en',
+    layout: {
+      formatLayoutQuery: null,
+    },
+    dictionary: {
+      caching: {
+        enabled: true,
+        timeout: 60,
+      },
+    },
+    rewriteMediaUrls: false,
+    disableCodeGeneration: false,
+  };
+};
+
+/**
+ * Provides default initial values for SitecoreConfig from `process.env`
+ * TODO: remove in favor of buildFallbackConfig
+ * @returns default config
+ * @internal
+ */
+export const getFallbackConfig = (): SitecoreConfig => {
+  return buildFallbackConfig(process.env);
+};
 
 /**
  * Deep merge utility that skips undefined or empty string values in the override.
  * @param {T} base base value
  * @param {DeepPartial<T>} [override] override value
+ * @internal
  */
 export function deepMerge<T>(base: T, override?: DeepPartial<T>): T {
   if (!override) return base;
@@ -113,9 +152,7 @@ const resolveConfig = (base: SitecoreConfig, override: SitecoreConfigInput): Sit
     result.personalize.edgeTimeout = base.personalize.edgeTimeout;
   }
   // Resolve edge URL at config level so consumers use the resolved value directly
-  result.api.edge.edgeUrl = result.api.edge.edgeUrl
-    ? resolveEdgeUrl(result.api.edge.edgeUrl)
-    : resolveEdgeUrl();
+  result.api.edge.edgeUrl = resolveEdgeUrl(result.api.edge.edgeUrl);
 
   return result;
 };
@@ -216,13 +253,19 @@ const createConfigProxy = (config: SitecoreConfig) => {
 /**
  * Accepts a SitecoreConfigInput object and returns full sitecore configuration
  * @param {SitecoreConfigInput} config override values to be written over default config settings
+ * @param {Record<string, string | undefined>} [env] optional env-like record to source default config values from; defaults to `process.env` when not provided
  * @returns {SitecoreConfig} full sitecore configuration to use in application
  * @public
  */
-export const defineConfig = (config: SitecoreConfigInput): SitecoreConfig => {
-  const resolvedConfig = resolveConfig(getFallbackConfig(), config);
+export const defineConfig = (
+  config: SitecoreConfigInput = {},
+  env?: Record<string, string | undefined>
+): SitecoreConfig => {
+  const runtimeEnv = env || (typeof process !== 'undefined' ? process.env : {});
+  const fallback = buildFallbackConfig(runtimeEnv);
+  const resolvedConfig = resolveConfig(fallback, config);
 
-  const isCLI = process.env[SITECORE_CLI_MODE_ENV_VAR] === 'true';
+  const isCLI = runtimeEnv?.[SITECORE_CLI_MODE_ENV_VAR] === 'true';
 
   // At `build time`, we create a proxy for the config object to validate the config by
   // accessing the literal paths instead of validating the whole object at once.

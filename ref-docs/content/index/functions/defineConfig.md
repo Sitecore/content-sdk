@@ -6,9 +6,9 @@
 
 # Function: defineConfig()
 
-> **defineConfig**(`config`): [`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md)
+> **defineConfig**(`config?`, `env?`): [`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md)
 
-Defined in: [content/src/config/define-config.ts:222](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/content/src/config/define-config.ts#L222)
+Defined in: [content/src/config/define-config.ts:258](https://github.com/Sitecore/content-sdk/blob/875d6d993172f5a390ee9cc4907a6dde260ec447/packages/content/src/config/define-config.ts#L258)
 
 Accepts a SitecoreConfigInput object and returns full sitecore configuration
 
@@ -17,6 +17,7 @@ Accepts a SitecoreConfigInput object and returns full sitecore configuration
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `config` | [`SitecoreConfigInput`](../../config/type-aliases/SitecoreConfigInput.md) | override values to be written over default config settings |
+| `env?` | `Record`\<`string`, `string` \| `undefined`\> | optional env-like record to source default config values from; defaults to `process.env` when not provided |
 
 ## Returns
 

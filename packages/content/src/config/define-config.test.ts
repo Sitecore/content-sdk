@@ -1,7 +1,12 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import { constants, DefaultRetryStrategy } from '@sitecore-content-sdk/core';
-import { deepMerge, defineConfig, getFallbackConfig } from './define-config';
+import {
+  buildFallbackConfig,
+  deepMerge,
+  defineConfig,
+  getFallbackConfig,
+} from './define-config';
 import { SitecoreConfigInput } from './models';
 import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
 
@@ -133,6 +138,67 @@ describe('define-config', () => {
       expect(cfg.personalize.cdpTimeout).to.equal(400);
       expect(cfg.api.local.apiKey).to.equal('');
       expect(cfg.api.local.apiHost).to.equal('');
+    });
+  });
+
+  describe('buildFallbackConfig', () => {
+    it('mirrors process.env-based fallback when given the same keys', () => {
+      const env = {
+        SITECORE_EDGE_CONTEXT_ID: 'ctx-from-record',
+        SITECORE_EDGE_CLIENT_CONTEXT_ID: 'client-from-record',
+        SITECORE_EDGE_PLATFORM_HOSTNAME: 'https://edge-from-record',
+        SITECORE_EDITING_SECRET: 'secret-record',
+        PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT: '333',
+        PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT: '444',
+        SITECORE_API_KEY: 'key-record',
+        SITECORE_API_HOST: 'https://host-record',
+        SITECORE_DEFAULT_SITE: 'site-record',
+        SITECORE_DEFAULT_LANGUAGE: 'da',
+        SITECORE_PERSONALIZE_SCOPE: 'scope-record',
+        NODE_ENV: 'production',
+      };
+      const cfg = buildFallbackConfig(env);
+      expect(cfg.api.edge.contextId).to.equal('ctx-from-record');
+      expect(cfg.api.edge.clientContextId).to.equal('client-from-record');
+      expect(cfg.api.edge.edgeUrl).to.equal('https://edge-from-record');
+      expect(cfg.editingSecret).to.equal('secret-record');
+      expect(cfg.personalize.edgeTimeout).to.equal(333);
+      expect(cfg.personalize.cdpTimeout).to.equal(444);
+      expect(cfg.api.local.apiKey).to.equal('key-record');
+      expect(cfg.api.local.apiHost).to.equal('https://host-record');
+      expect(cfg.defaultSite).to.equal('site-record');
+      expect(cfg.defaultLanguage).to.equal('da');
+      expect(cfg.personalize.scope).to.equal('scope-record');
+      expect(cfg.redirects.enabled).to.equal(true);
+      expect(cfg.personalize.enabled).to.equal(true);
+    });
+  });
+
+  describe('defineConfig with env record', () => {
+    it('merges overrides the same way as defineConfig with process.env', () => {
+      const cfg = defineConfig(mockConfig, {
+        NODE_ENV: 'development',
+        SITECORE_EDGE_CONTEXT_ID: 'base-ctx',
+        SITECORE_API_KEY: 'base-key',
+        SITECORE_API_HOST: 'https://base-host',
+      });
+      expect(cfg.api.edge.contextId).to.equal(mockConfig.api?.edge?.contextId);
+      expect(cfg.defaultSite).to.equal(mockConfig.defaultSite);
+    });
+
+    it('does not use process.env for Edge hostname when env is an explicit record (e.g. empty)', () => {
+      const original = process.env.SITECORE_EDGE_PLATFORM_HOSTNAME;
+      process.env.SITECORE_EDGE_PLATFORM_HOSTNAME = 'https://should-not-be-used';
+      try {
+        const cfg = defineConfig(mockConfig, {});
+        expect(cfg.api.edge.edgeUrl).to.equal(buildFallbackConfig({}, true).api.edge.edgeUrl);
+      } finally {
+        if (original === undefined) {
+          delete process.env.SITECORE_EDGE_PLATFORM_HOSTNAME;
+        } else {
+          process.env.SITECORE_EDGE_PLATFORM_HOSTNAME = original;
+        }
+      }
     });
   });
 

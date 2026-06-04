@@ -6,7 +6,7 @@
 
 # Interface: ImageFieldValue
 
-Defined in: react/types/components/Image.d.ts:8
+Defined in: content/types/layout/field-types.d.ts:29
 
 The interface for the Image field value.
 
@@ -20,4 +20,4 @@ The interface for the Image field value.
 
 > `optional` **src?**: `string`
 
-Defined in: react/types/components/Image.d.ts:10
+Defined in: content/types/layout/field-types.d.ts:31
