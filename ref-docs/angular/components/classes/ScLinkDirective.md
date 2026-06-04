@@ -6,7 +6,7 @@
 
 # Class: ScLinkDirective
 
-Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:55](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/components/field-directives/sc-link.directive.ts#L55)
+Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:55](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-link.directive.ts#L55)
 
 Renders a Sitecore link field onto a host `<a>` element.
 Sets `href`, `title`, `target`, `class`, and text content from the field data.
@@ -32,7 +32,7 @@ Usage:
 
 > **new ScLinkDirective**(): `ScLinkDirective`
 
-Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:72](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/components/field-directives/sc-link.directive.ts#L72)
+Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:72](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-link.directive.ts#L72)
 
 #### Returns
 
@@ -44,7 +44,7 @@ Defined in: [packages/angular/src/components/field-directives/sc-link.directive.
 
 > `protected` `readonly` **el**: `ElementRef`\<`any`\>
 
-Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:62](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/components/field-directives/sc-link.directive.ts#L62)
+Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:62](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-link.directive.ts#L62)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [packages/angular/src/components/field-directives/sc-link.directive.
 
 > `readonly` **preferTextFromField**: `InputSignal`\<`boolean`\>
 
-Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:60](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/components/field-directives/sc-link.directive.ts#L60)
+Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:60](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-link.directive.ts#L60)
 
 Whether to show link text alongside existing child content.
 
@@ -62,6 +62,6 @@ Whether to show link text alongside existing child content.
 
 > `readonly` **scLink**: `InputSignal`\<`LinkField` \| `LinkFieldValue`\>
 
-Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:57](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/components/field-directives/sc-link.directive.ts#L57)
+Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:57](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-link.directive.ts#L57)
 
 The Sitecore link field.

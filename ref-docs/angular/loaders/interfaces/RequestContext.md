@@ -6,7 +6,7 @@
 
 # Interface: RequestContext
 
-Defined in: [packages/angular/src/loaders/models.ts:10](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/loaders/models.ts#L10)
+Defined in: [packages/angular/src/loaders/models.ts:10](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/loaders/models.ts#L10)
 
 Request context containing information from the incoming HTTP request.
 Used for request-dependent operations in loaders.
@@ -17,7 +17,7 @@ Used for request-dependent operations in loaders.
 
 > `optional` **cookies?**: `Record`\<`string`, `string`\>
 
-Defined in: [packages/angular/src/loaders/models.ts:18](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/loaders/models.ts#L18)
+Defined in: [packages/angular/src/loaders/models.ts:18](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/loaders/models.ts#L18)
 
 Cookies from the request
 
@@ -27,7 +27,7 @@ Cookies from the request
 
 > `optional` **headers?**: `Record`\<`string`, `string` \| `string`[] \| `undefined`\>
 
-Defined in: [packages/angular/src/loaders/models.ts:26](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/loaders/models.ts#L26)
+Defined in: [packages/angular/src/loaders/models.ts:26](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/loaders/models.ts#L26)
 
 Headers from the request
 
@@ -37,7 +37,7 @@ Headers from the request
 
 > `optional` **hostname?**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:14](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/loaders/models.ts#L14)
+Defined in: [packages/angular/src/loaders/models.ts:14](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/loaders/models.ts#L14)
 
 The hostname from the request (without port)
 
@@ -47,6 +47,6 @@ The hostname from the request (without port)
 
 > `optional` **query?**: `Record`\<`string`, `string` \| `string`[] \| `undefined`\>
 
-Defined in: [packages/angular/src/loaders/models.ts:22](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/loaders/models.ts#L22)
+Defined in: [packages/angular/src/loaders/models.ts:22](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/loaders/models.ts#L22)
 
 Query parameters from the request

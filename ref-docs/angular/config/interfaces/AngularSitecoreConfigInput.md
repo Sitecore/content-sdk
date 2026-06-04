@@ -6,7 +6,7 @@
 
 # Interface: AngularSitecoreConfigInput
 
-Defined in: [packages/angular/src/config/define-config.ts:22](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/config/define-config.ts#L22)
+Defined in: [packages/angular/src/config/define-config.ts:22](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/config/define-config.ts#L22)
 
 Sitecore configuration input for Angular apps. Extends the base
 [SitecoreConfigInput](../content/config/type-aliases/SitecoreConfigInput.md) with an `angular` section. `redirects.locales` is intentionally
@@ -23,7 +23,7 @@ source of truth for the locale list.
 
 > `optional` **angular?**: `object`
 
-Defined in: [packages/angular/src/config/define-config.ts:29](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/config/define-config.ts#L29)
+Defined in: [packages/angular/src/config/define-config.ts:29](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/config/define-config.ts#L29)
 
 Angular-specific configuration.
 
@@ -385,7 +385,7 @@ Optional Sitecore Personalize scope ID (to isolate data between environments)
 
 > `optional` **redirects?**: `Omit`\<\{ `enabled?`: `boolean`; `locales?`: `string`[]; \}, `"locales"`\>
 
-Defined in: [packages/angular/src/config/define-config.ts:27](https://github.com/Sitecore/content-sdk/blob/0ffd4a7c097b40701ae1608ec7fee7decab49a91/packages/angular/src/config/define-config.ts#L27)
+Defined in: [packages/angular/src/config/define-config.ts:27](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/config/define-config.ts#L27)
 
 Settings for redirects functionality. `locales` is derived automatically from
 `angular.locales`; only `enabled` is configurable at this layer.
