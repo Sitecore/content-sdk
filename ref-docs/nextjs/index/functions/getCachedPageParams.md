@@ -8,7 +8,7 @@
 
 > **getCachedPageParams**(): `object`
 
-Defined in: [nextjs/src/cache/page-params.ts:33](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/nextjs/src/cache/page-params.ts#L33)
+Defined in: [nextjs/src/cache/page-params.ts:33](https://github.com/Sitecore/content-sdk/blob/562866b0bbceb24a31bcd9726c6f74285b50c01d/packages/nextjs/src/cache/page-params.ts#L33)
 
 Gets the cached page params, including locale and site.
 

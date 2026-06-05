@@ -8,7 +8,7 @@
 
 > `const` **GRAPHQL\_LAYOUT\_QUERY\_NAME**: `"ContentSdkLayoutQuery"` = `'ContentSdkLayoutQuery'`
 
-Defined in: [content/src/layout/layout-service.ts:11](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/content/src/layout/layout-service.ts#L11)
+Defined in: [content/src/layout/layout-service.ts:11](https://github.com/Sitecore/content-sdk/blob/562866b0bbceb24a31bcd9726c6f74285b50c01d/packages/content/src/layout/layout-service.ts#L11)
 
 **`Internal`**
 

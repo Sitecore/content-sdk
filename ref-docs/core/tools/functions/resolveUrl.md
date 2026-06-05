@@ -8,7 +8,7 @@
 
 > **resolveUrl**(`urlBase`, `params?`): `string`
 
-Defined in: [packages/core/src/tools/utils.ts:36](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/core/src/tools/utils.ts#L36)
+Defined in: [packages/core/src/tools/utils.ts:36](https://github.com/Sitecore/content-sdk/blob/562866b0bbceb24a31bcd9726c6f74285b50c01d/packages/core/src/tools/utils.ts#L36)
 
 Resolves a base URL that may contain query string parameters and an additional set of query
 string parameters into a unified string representation.

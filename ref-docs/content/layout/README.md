@@ -54,6 +54,7 @@
 - [getDesignLibraryStylesheetLinks](functions/getDesignLibraryStylesheetLinks.md)
 - [getDynamicPlaceholderPattern](functions/getDynamicPlaceholderPattern.md)
 - [getFieldValue](functions/getFieldValue.md)
+- [getRenderingParamString](functions/getRenderingParamString.md)
 - [isDynamicPlaceholder](functions/isDynamicPlaceholder.md)
 - [isFieldValueEmpty](functions/isFieldValueEmpty.md)
 - [rewriteEdgeHostInResponse](functions/rewriteEdgeHostInResponse.md)
