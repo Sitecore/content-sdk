@@ -29,22 +29,25 @@ export const parseArgs = (): ParsedArgs => {
   return args;
 };
 
-export const printHelp = () => {
-  console.log(`Usage:
-  create-content-sdk-app [template] [options]
+export const printHelp = (templates: string[]) => {
+  const templatesList = templates.map((template) => `  ${chalk.cyan(template)}`).join('\n');
 
-Templates:
-  nextjs
-  nextjs-app-router
+  console.log(`${chalk.bold('Usage:')} create-content-sdk-app ${chalk.cyan('[template]')} ${chalk.yellow('[options]')}
 
-Options:
-  --template <name>       Template to scaffold
-  --destination <path>    Destination folder
-  --yes                   Use defaults and skip prompts where possible
-  --force                 Continue if destination is not empty
-  --noInstall             Skip package install and lint fix
-  --silent                Suppress normal output
-  --help, -h              Show help`);
+${chalk.bold('Arguments:')}
+  ${chalk.cyan('template')}                Template to scaffold
+
+${chalk.bold('Templates:')}
+${templatesList}
+
+${chalk.bold('Options:')}
+  ${chalk.yellow('--template')} ${chalk.dim('<name>')}        Template to scaffold
+  ${chalk.yellow('--destination')} ${chalk.dim('<path>')}    Destination folder
+  ${chalk.yellow('--yes')}                   Use defaults and skip prompts where possible
+  ${chalk.yellow('--force')}                 Continue if destination is not empty
+  ${chalk.yellow('--noInstall')}             Skip package install and lint fix
+  ${chalk.yellow('--silent')}                Suppress normal output
+  ${chalk.yellow('-h, --help')}             Show help`);
 };
 
 export const getDestination = async (args: ParsedArgs, template: string) => {
@@ -82,7 +85,7 @@ export const promptDestination = async (prompt: string, defaultDestination: stri
 
 export const main = async (args: ParsedArgs) => {
   if (args.help) {
-    printHelp();
+    printHelp(getAllTemplates());
     return;
   }
 
