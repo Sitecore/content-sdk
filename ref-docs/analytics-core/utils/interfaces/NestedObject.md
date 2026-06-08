@@ -6,7 +6,7 @@
 
 # Interface: NestedObject
 
-Defined in: [analytics-core/src/utils/converters/flatten-object.ts:59](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/analytics-core/src/utils/converters/flatten-object.ts#L59)
+Defined in: [analytics-core/src/utils/converters/flatten-object.ts:59](https://github.com/Sitecore/content-sdk/blob/386c7f8bd3745fb4187e490efe4dd14be4a48189/packages/analytics-core/src/utils/converters/flatten-object.ts#L59)
 
 Interface of the object to flatten
 

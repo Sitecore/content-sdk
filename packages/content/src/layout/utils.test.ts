@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { ComponentRendering } from '../../layout';
 import {
   getFieldValue,
+  getRenderingParamString,
   getChildPlaceholder,
   isFieldValueEmpty,
   isDynamicPlaceholder,
@@ -11,6 +12,35 @@ import {
 } from './utils';
 
 describe('core layout utils', () => {
+  describe('getRenderingParamString', () => {
+    it('should return plain string params unchanged', () => {
+      expect(getRenderingParamString('col-lg-6')).to.equal('col-lg-6');
+      expect(getRenderingParamString('-library--foo')).to.equal('-library--foo');
+    });
+
+    it('should extract Value.value from DetailedRenderingParams objects', () => {
+      expect(
+        getRenderingParamString({
+          'Allowed Renderings': [],
+          IsVerifiedStyle: { value: false },
+          Value: { value: 'White-Background' },
+          Icon: { value: '' },
+        })
+      ).to.equal('White-Background');
+    });
+
+    it('should extract value from simple object wrappers', () => {
+      expect(getRenderingParamString({ value: 'bar' })).to.equal('bar');
+    });
+
+    it('should return undefined for unextractable values', () => {
+      expect(getRenderingParamString(undefined)).to.be.undefined;
+      expect(getRenderingParamString(null)).to.be.undefined;
+      expect(getRenderingParamString({})).to.be.undefined;
+      expect(getRenderingParamString({ Value: { value: 42 } })).to.be.undefined;
+    });
+  });
+
   describe('getFieldValue', () => {
     const fields = {
       crop: {

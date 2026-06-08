@@ -6,7 +6,7 @@
 
 # Interface: SuccessfulBotTrackingProxyExecution
 
-Defined in: [nextjs/src/proxy/bot-tracking-proxy.ts:17](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/nextjs/src/proxy/bot-tracking-proxy.ts#L17)
+Defined in: [nextjs/src/proxy/bot-tracking-proxy.ts:17](https://github.com/Sitecore/content-sdk/blob/386c7f8bd3745fb4187e490efe4dd14be4a48189/packages/nextjs/src/proxy/bot-tracking-proxy.ts#L17)
 
 Information about executed proxy to be stored in the context
 Used for describing successful execution with details about the bot tracking that was applied
@@ -21,7 +21,7 @@ Used for describing successful execution with details about the bot tracking tha
 
 > **botDetected**: `boolean`
 
-Defined in: [nextjs/src/proxy/bot-tracking-proxy.ts:18](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/nextjs/src/proxy/bot-tracking-proxy.ts#L18)
+Defined in: [nextjs/src/proxy/bot-tracking-proxy.ts:18](https://github.com/Sitecore/content-sdk/blob/386c7f8bd3745fb4187e490efe4dd14be4a48189/packages/nextjs/src/proxy/bot-tracking-proxy.ts#L18)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [nextjs/src/proxy/bot-tracking-proxy.ts:18](https://github.com/Sitec
 
 > **error**: `null`
 
-Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/nextjs/src/proxy/types.ts#L18)
+Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-sdk/blob/386c7f8bd3745fb4187e490efe4dd14be4a48189/packages/nextjs/src/proxy/types.ts#L18)
 
 #### Inherited from
 
@@ -41,7 +41,7 @@ Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-s
 
 > **executedSuccessfully**: `true`
 
-Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/nextjs/src/proxy/types.ts#L17)
+Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-sdk/blob/386c7f8bd3745fb4187e490efe4dd14be4a48189/packages/nextjs/src/proxy/types.ts#L17)
 
 #### Inherited from
 
