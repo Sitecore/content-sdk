@@ -491,6 +491,8 @@ describe('Import Map Generation', () => {
       importUnitMocks.getImportMap = getImportMapStub;
       importUnitMocks.defaultMapTemplate = defaultMapTemplateStub;
       unitMocks({ getComponentListStub });
+      sandbox.stub(fs, 'existsSync').returns(true);
+      sandbox.stub(fs, 'mkdirSync');
     });
 
     const runCommand = (
@@ -695,6 +697,27 @@ ${defaultMapTemplate(indexedImportMap)}`;
       expect(filePath).to.include('import-map.ts');
       expect(fsWriteStub.getCall(0).args[1]).to.equal('// import map content');
       expect(fsWriteStub.getCall(0).args[2]).to.deep.include({ encoding: 'utf8' });
+    });
+
+    it('should create the .sitecore directory when it does not exist', async () => {
+      const scConfig = { disableCodeGeneration: false } as any;
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+
+      const fakeEntries = [{ filePath: 'component1.tsx' }];
+      getComponentListStub.returns(fakeEntries);
+      getImportMapStub.returns(new Map());
+      defaultMapTemplateStub.returns('// import map content');
+      const fsWriteStub = sandbox.stub(require('fs'), 'writeFileSync');
+      const outputDir = path.join(process.cwd(), '.sitecore');
+
+      (fs.existsSync as sinon.SinonStub).returns(false);
+
+      await runCommand(scConfig, { paths: ['foo'], exclude: [] });
+
+      expect((fs.existsSync as sinon.SinonStub).calledWith(outputDir)).to.be.true;
+      expect((fs.mkdirSync as sinon.SinonStub).calledOnceWithExactly(outputDir, { recursive: true }))
+        .to.be.true;
+      expect(fsWriteStub.calledOnce).to.be.true;
     });
 
     it('should throw when file write operation fails', async () => {
