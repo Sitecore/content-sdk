@@ -5,12 +5,16 @@ import { eventsPlugin } from '@sitecore-content-sdk/events';
 import { analyticsBrowserAdapter, analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
 import config from 'sitecore.config';
 
+function isPreviewModeCookiePresent(): boolean {
+  return document.cookie.split(';').some((part) => part.trim().startsWith('__prerender_bypass='));
+}
+
 const Bootstrap = ({
   siteName,
-  isPreviewMode,
+  isPreviewMode = false,
 }: {
   siteName: string;
-  isPreviewMode: boolean;
+  isPreviewMode?: boolean;
 }): JSX.Element | null => {
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
@@ -18,7 +22,7 @@ const Bootstrap = ({
       return;
     }
 
-    if (isPreviewMode) {
+    if (isPreviewMode || isPreviewModeCookiePresent()) {
       console.debug('Browser Events SDK is not initialized in edit and preview modes');
       return;
     }

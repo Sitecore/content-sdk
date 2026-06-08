@@ -1,22 +1,23 @@
 import Link from 'next/link';
 import { ErrorPage, getCachedPageParams } from '@sitecore-content-sdk/nextjs';
 import { getSitecoreErrorPage } from 'lib/cache/get-sitecore-error-page';
-import { resolveSitecoreRouteContext } from 'lib/cache/resolve-sitecore-route-context';
+import scConfig from 'sitecore.config';
 import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 import { NextIntlClientProvider } from 'next-intl';
+import { setRequestLocale } from 'next-intl/server';
 
 export default async function NotFound() {
-  const cached = getCachedPageParams();
-  const context = resolveSitecoreRouteContext(cached);
+  const { site, locale } = getCachedPageParams();
 
-  const page = context
-    ? await getSitecoreErrorPage({
-        site: context.site,
-        locale: context.locale,
-        code: ErrorPage.NotFound,
-      })
-    : null;
+  const page = await getSitecoreErrorPage({
+    site: site || scConfig.defaultSite,
+    locale: locale || scConfig.defaultLanguage,
+    code: ErrorPage.NotFound,
+  });
+
+  // After the cached error-page fetch so next-intl's cached dictionary read does not hit DYNAMIC_SERVER_USAGE.
+  setRequestLocale(`${site || scConfig.defaultSite}_${locale || scConfig.defaultLanguage}`);
 
   if (page) {
     return (

@@ -23,6 +23,15 @@ type PageProps = {
 export default async function Page({ params, searchParams }: PageProps) {
   const { site, locale, path } = await params;
 
+  // Cached fetch first so missing routes can notFound() without dynamic APIs in the ancestor tree.
+  const cachedPage = await getSitecorePage({ site, locale, path: path ?? [] });
+
+  if (!cachedPage) {
+    // Ensure site/locale are available to segment not-found.tsx during SSG and runtime.
+    setCachedPageParams({ site, locale });
+    notFound();
+  }
+
   // Set site and locale to be available in src/i18n/request.ts for fetching the dictionary
   setRequestLocale(`${site}_${locale}`);
 
@@ -38,12 +47,11 @@ export default async function Page({ params, searchParams }: PageProps) {
       page = await client.getPreview(editingParams);
     }
   } else {
-    page = await getSitecorePage({ site, locale, path: path ?? [] });
+    page = cachedPage;
   }
 
   // If the page is not found, return a 404
   if (!page) {
-    // Ensure site/locale are available to segment not-found.tsx during SSG and runtime.
     setCachedPageParams({ site, locale });
     notFound();
   }
