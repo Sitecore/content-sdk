@@ -176,40 +176,56 @@ describe('resolveComponentForRendering', () => {
 
   it('should return null component for hidden rendering', () => {
     const rendering: ComponentRendering = { componentName: 'Hidden Rendering' };
-    const result = resolveComponentForRendering(rendering, 'main', emptyComponentMap);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: emptyComponentMap,
+    });
     expect(result.component).toBeNull();
     expect(result.isEmpty).toBe(true);
   });
 
   it('should use custom hidden rendering component when provided', () => {
     const rendering: ComponentRendering = { componentName: 'Hidden Rendering' };
-    const result = resolveComponentForRendering(
-      rendering,
-      'main',
-      emptyComponentMap,
-      CustomHiddenComponent
-    );
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: emptyComponentMap,
+      hiddenRenderingComponent: CustomHiddenComponent,
+    });
     expect(result.component).toBe(CustomHiddenComponent);
     expect(result.isEmpty).toBe(true);
   });
 
   it('should return null for empty component name', () => {
     const rendering: ComponentRendering = { componentName: '' };
-    const result = resolveComponentForRendering(rendering, 'main', emptyComponentMap);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: emptyComponentMap,
+    });
     expect(result.component).toBeNull();
     expect(result.isEmpty).toBe(true);
   });
 
   it('should warn when component map is empty', () => {
     const rendering: ComponentRendering = { componentName: 'Widget' };
-    resolveComponentForRendering(rendering, 'main', emptyComponentMap);
+    resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: emptyComponentMap,
+    });
     expect(warnSpy).toHaveBeenCalled();
   });
 
   it('should error when component not found in map', () => {
     const map: ComponentMap = new Map([['Other', TestComponentA]]);
     const rendering: ComponentRendering = { componentName: 'Unknown' };
-    const result = resolveComponentForRendering(rendering, 'main', map);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+    });
     expect(result.component).toBeNull();
     expect(result.isEmpty).toBe(true);
     expect(errorSpy).toHaveBeenCalled();
@@ -218,13 +234,12 @@ describe('resolveComponentForRendering', () => {
   it('should use custom missing component when provided', () => {
     const map: ComponentMap = new Map();
     const rendering: ComponentRendering = { componentName: 'Unknown' };
-    const result = resolveComponentForRendering(
-      rendering,
-      'main',
-      map,
-      undefined,
-      CustomMissingComponent
-    );
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+      missingComponentComponent: CustomMissingComponent,
+    });
     expect(result.component).toBe(CustomMissingComponent);
     expect(result.isEmpty).toBe(true);
   });
@@ -232,7 +247,11 @@ describe('resolveComponentForRendering', () => {
   it('should resolve direct component type from map', () => {
     const map: ComponentMap = new Map([['Widget', TestComponentA]]);
     const rendering: ComponentRendering = { componentName: 'Widget' };
-    const result = resolveComponentForRendering(rendering, 'main', map);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+    });
     expect(result.component).toBe(TestComponentA);
     expect(result.isEmpty).toBe(false);
   });
@@ -241,7 +260,11 @@ describe('resolveComponentForRendering', () => {
     const mod: AngularModule = { default: TestComponentA };
     const map: ComponentMap = new Map([['Widget', mod]]);
     const rendering: ComponentRendering = { componentName: 'Widget' };
-    const result = resolveComponentForRendering(rendering, 'main', map);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+    });
     expect(result.component).toBe(TestComponentA);
     expect(result.isEmpty).toBe(false);
   });
@@ -250,7 +273,11 @@ describe('resolveComponentForRendering', () => {
     const mod: AngularModule = { Default: TestComponentB };
     const map: ComponentMap = new Map([['Widget', mod]]);
     const rendering: ComponentRendering = { componentName: 'Widget' };
-    const result = resolveComponentForRendering(rendering, 'main', map);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+    });
     expect(result.component).toBe(TestComponentB);
     expect(result.isEmpty).toBe(false);
   });
@@ -265,7 +292,11 @@ describe('resolveComponentForRendering', () => {
       componentName: 'Widget',
       params: { FieldNames: 'CustomVariant' },
     };
-    const result = resolveComponentForRendering(rendering, 'main', map);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+    });
     expect(result.component).toBe(TestComponentB);
     expect(result.isEmpty).toBe(false);
   });
@@ -277,7 +308,11 @@ describe('resolveComponentForRendering', () => {
       componentName: 'Widget',
       params: { FieldNames: DEFAULT_EXPORT_NAME },
     };
-    const result = resolveComponentForRendering(rendering, 'main', map);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+    });
     expect(result.component).toBe(TestComponentA);
     expect(result.isEmpty).toBe(false);
   });
@@ -289,7 +324,11 @@ describe('resolveComponentForRendering', () => {
       componentName: 'Widget',
       params: { FieldNames: 'NonExistent' },
     };
-    const result = resolveComponentForRendering(rendering, 'main', map);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+    });
     expect(result.component).toBeNull();
     expect(result.isEmpty).toBe(true);
     expect(errorSpy).toHaveBeenCalled();

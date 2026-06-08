@@ -11,10 +11,10 @@ import { SxaComponent } from './content-sdk/sxa.component';
   imports: [ScTextDirective, ScRichTextDirective],
   template: `
     <div class="contentBlock">
-      <h2 class="contentTitle" [scText]="headingField()"></h2>
+      <h2 class="contentTitle" *scText="headingField()"></h2>
       <div class="contentDescription">
         @if (contentField(); as content) {
-        <div [scRichText]="content"></div>
+        <div *scRichText="content"></div>
         }
       </div>
     </div>

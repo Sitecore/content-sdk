@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "ng": "ng",
-    "build": "del-cli dist cli-node && ng build && tsc -p tsconfig.cli.json",
+    "build": "del-cli dist cli-node && ng build && tsc -p tsconfig.server.json",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false",
     "coverage": "ng test --watch=false --coverage",
@@ -103,12 +103,12 @@
       "default": "./dist/fesm2022/sitecore-content-sdk-angular.mjs"
     },
     "./config-cli": {
-      "types": "./cli-node/config-cli/index.d.ts",
-      "default": "./cli-node/config-cli/index.js"
+      "types": "./dist-node/server/config-cli/index.d.ts",
+      "default": "./dist-node/server/config-cli/index.js"
     },
     "./tools": {
-      "types": "./cli-node/tools/index.d.ts",
-      "default": "./cli-node/tools/index.js"
+      "types": "./dist-node/server/tools/index.d.ts",
+      "default": "./dist-node/server/tools/index.js"
     }
   }
 }

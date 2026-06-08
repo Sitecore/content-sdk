@@ -6,22 +6,21 @@ type ColumnNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 @Component({
   selector: 'app-column-splitter',
   imports: [ScPlaceholderComponent],
+  host: {
+    '[attr.class]': "('row component column-splitter ' + styles().trim())",
+    '[attr.id]': 'renderingId()',
+  },
   template: `
-    <div
-      [attr.class]="('row component column-splitter ' + styles()).trim()"
-      [attr.id]="renderingId()"
-    >
-      @for (columnNum of enabledColumns(); track columnNum) {
-      <div [attr.class]="columnClassNames(columnNum)">
-        <div class="row">
-          <sc-placeholder
-            [name]="placeholderKey(columnNum)"
-            [rendering]="rendering()!"
-          ></sc-placeholder>
-        </div>
+    @for (columnNum of enabledColumns(); track columnNum) {
+    <div [attr.class]="columnClassNames(columnNum)">
+      <div class="row">
+        <sc-placeholder
+          [name]="placeholderKey(columnNum)"
+          [rendering]="rendering()!"
+        ></sc-placeholder>
       </div>
-      }
     </div>
+    }
   `,
 })
 export class ColumnSplitterComponent extends SxaComponent {

@@ -16,17 +16,16 @@ interface PageContentFields {
 @Component({
   selector: 'app-page-content',
   imports: [ScRichTextDirective, StructuredDataComponent],
+  host: {
+    '[attr.class]': "('component content ' + styles().trim())",
+    '[attr.id]': 'renderingId()',
+  },
   template: `
-    <article
-      [attr.class]="('component content ' + styles()).trim()"
-      [attr.id]="renderingId()"
-      itemscope
-      itemtype="https://schema.org/Article"
-    >
+    <article itemscope itemtype="https://schema.org/Article">
       <div class="component-content">
         <div class="field-content" itemprop="articleBody">
           @if (contentField(); as content) {
-          <div [scRichText]="content"></div>
+          <div *scRichText="content"></div>
           } @else { [Content] }
         </div>
       </div>

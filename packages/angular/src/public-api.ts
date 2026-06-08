@@ -35,7 +35,12 @@ export type {
   RichTextField,
   TextField,
 } from '@sitecore-content-sdk/content/layout';
-export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/content/editing';
+export {
+  isEditorActive,
+  resetEditorChromes,
+  EditingPreviewData,
+  PAGES_EDITING_MARKER,
+} from '@sitecore-content-sdk/content/editing';
 export {
   GraphQLClientError,
   RetryStrategy,
@@ -94,6 +99,7 @@ export * from './server';
 
 // ─── Sitecore Context ──────────────────────────────────────────
 export { SitecoreContextService } from './lib/sitecore-context.service';
+export { ScEditingScriptsComponent } from './lib/sc-editing-scripts.component';
 
 export { SitecoreTranslateLoader } from './i18n/sitecore-translate-loader';
 
@@ -123,6 +129,14 @@ export {
 } from './components/placeholder/placeholder-utils';
 export { ScPlaceholderComponent } from './components/placeholder/sc-placeholder.component';
 export {
+  PLACEHOLDER_GUARD_RESOLVER,
+  PLACEHOLDER_DATA_RESOLVER,
+  type PlaceholderGuardResolver,
+  type PlaceholderDataResolver,
+  type PlaceholderResolverContext,
+} from './components/placeholder/placeholder-tokens';
+export {
+  BaseFieldDirective,
   ScTextDirective,
   ScImageDirective,
   ScLinkDirective,
@@ -130,8 +144,11 @@ export {
   ScRichTextDirective,
   ScHiddenRenderingComponent,
   ScMissingComponentComponent,
+  FieldMetadataMarkerComponent,
+  DefaultEmptyFieldEditingComponent,
+  DefaultEmptyImageFieldEditingComponent,
+  type FieldLike,
 } from './components';
-export {} from './components';
 export { ScFormComponent } from './components/sc-form.component';
 
 export const _coreVersionMarker = CORE_VERSION;

@@ -3,7 +3,7 @@
     "target": "ES2020",
     "module": "CommonJS",
     "moduleResolution": "Node",
-    "outDir": "./cli-node",
+    "outDir": "./dist-node",
     "rootDir": "./src",
     "declaration": true,
     "declarationMap": true,
@@ -12,5 +12,5 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["src/config-cli/**/*.ts", "src/tools/**/*.ts"]
+  "include": ["src/server/config-cli/**/*.ts", "src/server/tools/**/*.ts"]
 }

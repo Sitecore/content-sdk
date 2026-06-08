@@ -38,6 +38,16 @@ export interface ExpressRequest {
 export interface ExpressResponse {
   status(code: number): ExpressResponse;
   json(data: unknown): void;
+  /**
+   * Send a raw response body (string, Buffer, null, etc.). Used for HTML
+   * responses (editing render endpoint) and 204 no-content replies.
+   */
+  send?(body: unknown): void;
+  /**
+   * Set a response header. Used by editing middleware to apply CORS / CSP
+   * headers without depending on Express types directly.
+   */
+  setHeader?(name: string, value: string | string[]): void;
 }
 
 /**

@@ -1,6 +1,13 @@
-import { Component, input, computed, effect, inject } from '@angular/core';
+import { Component, PLATFORM_ID, Renderer2, input, computed, effect, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Page, Field, RouteData, ScPlaceholderComponent } from '@sitecore-content-sdk/angular';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import {
+  Page,
+  Field,
+  RouteData,
+  ScPlaceholderComponent,
+  SITECORE_CLIENT_TOKEN,
+} from '@sitecore-content-sdk/angular';
 
 interface RouteFields {
   [key: string]: unknown;
@@ -53,6 +60,10 @@ export class LayoutComponent {
   });
 
   private readonly titleService = inject(Title);
+  private readonly sitecoreClient = inject(SITECORE_CLIENT_TOKEN, { optional: true });
+  private readonly document = inject(DOCUMENT);
+  private readonly renderer = inject(Renderer2);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   constructor() {
     effect(() => {
@@ -61,6 +72,22 @@ export class LayoutComponent {
         const fields = route.fields as RouteFields | undefined;
         const title = fields?.Title?.value ?? 'Content SDK Page';
         this.titleService.setTitle(title);
+      }
+    });
+
+    effect(() => {
+      if (this.isBrowser || !this.sitecoreClient) return;
+      const layout = this.page().layout;
+      if (!layout) return;
+      const links = this.sitecoreClient.getHeadLinks(layout, {
+        enableStyles: true,
+        enableThemes: false,
+      });
+      for (const link of links) {
+        const el: HTMLLinkElement = this.renderer.createElement('link');
+        this.renderer.setAttribute(el, 'rel', link.rel);
+        this.renderer.setAttribute(el, 'href', link.href);
+        this.renderer.appendChild((this.document as Document).head, el);
       }
     });
   }

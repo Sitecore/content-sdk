@@ -7,21 +7,23 @@ type RowNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 @Component({
   selector: 'app-row-splitter',
   imports: [ScPlaceholderComponent],
+  host: {
+    '[attr.class]': "('component row-splitter ' + styles().trim())",
+    '[attr.id]': 'renderingId()',
+  },
   template: `
-    <div [attr.class]="('component row-splitter ' + styles()).trim()" [attr.id]="renderingId()">
-      @for (placeholderSegment of enabledPlaceholders(); track placeholderSegment) {
-      <div [attr.class]="rowSectionClass(placeholderSegment)">
-        <div>
-          <div class="row">
-            <sc-placeholder
-              [name]="placeholderKey(placeholderSegment)"
-              [rendering]="rendering()!"
-            ></sc-placeholder>
-          </div>
+    @for (placeholderSegment of enabledPlaceholders(); track placeholderSegment) {
+    <div [attr.class]="rowSectionClass(placeholderSegment)">
+      <div>
+        <div class="row">
+          <sc-placeholder
+            [name]="placeholderKey(placeholderSegment)"
+            [rendering]="rendering()!"
+          ></sc-placeholder>
         </div>
       </div>
-      }
     </div>
+    }
   `,
 })
 export class RowSplitterComponent extends SxaComponent {

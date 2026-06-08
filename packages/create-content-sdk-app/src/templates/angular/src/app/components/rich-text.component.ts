@@ -9,15 +9,13 @@ interface RichTextFields {
 @Component({
   selector: 'app-rich-text',
   imports: [ScRichTextDirective],
+  host: {
+    '[attr.class]': "('component rich-text ' + styles().trim())",
+    '[attr.id]': 'renderingId()',
+  },
   template: `
-    <div [attr.class]="('component rich-text ' + styles()).trim()" [attr.id]="renderingId()">
-      <div class="component-content">
-        @if (contentField(); as content) {
-        <div [scRichText]="content"></div>
-        } @else {
-        <span class="is-empty-hint">Rich text</span>
-        }
-      </div>
+    <div class="component-content">
+      <div *scRichText="contentField()"></div>
     </div>
   `,
 })

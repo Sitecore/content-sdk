@@ -6,6 +6,7 @@ import {
   getDynamicPlaceholderPattern,
 } from '@sitecore-content-sdk/content/layout';
 import { HIDDEN_RENDERING_NAME } from '@sitecore-content-sdk/content';
+import { DEFAULT_PLACEHOLDER_UID } from '@sitecore-content-sdk/content/editing';
 import { AngularContentSdkComponent, ComponentMap, DEFAULT_EXPORT_NAME } from '../types';
 
 /**
@@ -18,7 +19,6 @@ export interface ComponentForRendering {
 
 /**
  * Merged props passed to each child component rendered by a placeholder.
- * Matches React `getChildComponentProps`: merged `fields` / `params` props plus raw `rendering`.
  */
 export interface ChildComponentProps {
   fields: { [key: string]: unknown };
@@ -28,7 +28,7 @@ export interface ChildComponentProps {
 
 /**
  * Get the renderings for the specified placeholder from the rendering layout data.
- * Includes dynamic placeholder handling aligned with React's implementation.
+ * Includes dynamic placeholder handling
  * @param {ComponentRendering | RouteData} rendering - rendering data
  * @param {string} name - placeholder name
  * @param {boolean} isEditing - whether editing mode is active
@@ -138,20 +138,27 @@ export function getChildComponentProps(
  * Resolve a component type for a rendering definition.
  * Handles hidden renderings, missing components, variant selection, and map lookup.
  * FEaaS/BYOC are intentionally not handled; they fall through to missingComponent.
- * @param {ComponentRendering} renderingDefinition - The rendering to resolve.
- * @param {string} placeholderName - Current placeholder name (for logging).
- * @param {ComponentMap | undefined} componentMap - The app component map.
- * @param {Type<unknown> | undefined} hiddenRenderingComponent - Optional override for hidden renderings.
- * @param {Type<unknown> | undefined} missingComponentComponent - Optional override for missing/unknown components.
+ * @param {object} args - The arguments object.
+ * @param {ComponentRendering} args.renderingDefinition - The rendering to resolve.
+ * @param {string} args.placeholderName - Current placeholder name (for logging).
+ * @param {ComponentMap} args.componentMap - The app component map.
+ * @param {object} args.hiddenRenderingComponent - Optional override for hidden renderings.
+ * @param {object} args.missingComponentComponent - Optional override for missing/unknown components.
  * @returns {ComponentForRendering} Resolved component info.
  */
-export const resolveComponentForRendering = (
-  renderingDefinition: ComponentRendering,
-  placeholderName: string,
-  componentMap: ComponentMap,
-  hiddenRenderingComponent?: Type<unknown>,
-  missingComponentComponent?: Type<unknown>
-): ComponentForRendering => {
+export const resolveComponentForRendering = ({
+  renderingDefinition,
+  placeholderName,
+  componentMap,
+  hiddenRenderingComponent,
+  missingComponentComponent,
+}: {
+  renderingDefinition: ComponentRendering;
+  placeholderName: string;
+  componentMap: ComponentMap;
+  hiddenRenderingComponent?: Type<unknown>;
+  missingComponentComponent?: Type<unknown>;
+}): ComponentForRendering => {
   if (renderingDefinition.componentName === HIDDEN_RENDERING_NAME) {
     return {
       component: hiddenRenderingComponent ?? null,
@@ -211,3 +218,39 @@ export const resolveComponentForRendering = (
 
   return { component: resolved, isEmpty: false };
 };
+
+/**
+ * Compute the placeholder chrome `id` attribute
+ * lookup: matches a static placeholder name when present in the parent rendering, else
+ * resolves a dynamic-placeholder pattern, else falls back to
+ * `<placeholderName>_<DEFAULT_PLACEHOLDER_UID>`.
+ * @param {ComponentRendering} rendering - The parent rendering object.
+ * @param {string} placeholderName - Current placeholder name.
+ * @param {string} [renderingUid] - Optional rendering uid to append (parent rendering uid for
+ * the outer placeholder marker, omitted for the root route).
+ * @returns {string} Computed placeholder chrome id.
+ * @internal
+ */
+export function computePlaceholderChromeId(
+  rendering: ComponentRendering,
+  placeholderName: string,
+  renderingUid?: string
+): string {
+  const placeholders = rendering.placeholders ?? {};
+  for (const placeholder of Object.keys(placeholders)) {
+    if (placeholderName === placeholder) {
+      return renderingUid
+        ? `${placeholderName}_${renderingUid}`
+        : `${placeholderName}_${DEFAULT_PLACEHOLDER_UID}`;
+    }
+    if (isDynamicPlaceholder(placeholder)) {
+      const pattern = getDynamicPlaceholderPattern(placeholder);
+      if (pattern.test(placeholderName)) {
+        return renderingUid
+          ? `${placeholder}_${renderingUid}`
+          : `${placeholder}_${DEFAULT_PLACEHOLDER_UID}`;
+      }
+    }
+  }
+  return '';
+}

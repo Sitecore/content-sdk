@@ -88,7 +88,6 @@
   }
 }
 .link.link-button {
-  .is-empty-hint,
   .field-link span,
   a {
     @apply default-link-button;

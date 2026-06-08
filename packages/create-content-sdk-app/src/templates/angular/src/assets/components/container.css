@@ -37,6 +37,10 @@
 
   .sxa-bordered {
     @apply p-[5px]!;
+
+    sc-placeholder.sc-jss-empty-placeholder {
+      @apply border border-dashed border-border-gray rounded-[5px] min-h-[30px];
+    }
   }
 }
 

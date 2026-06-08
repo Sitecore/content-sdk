@@ -53,50 +53,39 @@ function promoProductJsonLd(
 @Component({
   selector: 'app-promo',
   imports: [ScRichTextDirective, ScImageDirective, ScLinkDirective, StructuredDataComponent],
+  host: {
+    '[attr.class]': "('component promo ' + styles().trim())",
+    '[attr.id]': 'renderingId()',
+  },
   template: `
-    <article
-      [attr.class]="('component promo ' + styles()).trim()"
-      [attr.id]="renderingId()"
-      itemscope
-      itemtype="https://schema.org/Product"
-    >
+    <article itemscope itemtype="https://schema.org/Product">
       <div class="component-content">
-        @if (showEmpty()) {
-        <span class="is-empty-hint">Promo</span>
-        } @else {
         <div class="field-promoicon" itemprop="image">
-          <img [scImage]="promoIcon()" alt="" />
+          <img *scImage="promoIcon()" alt="" />
         </div>
         <div class="promo-text" itemprop="description">
           <div class="field-promotext">
             @if (promoText(); as primaryRichText) {
-            <div [scRichText]="primaryRichText"></div>
+            <div *scRichText="primaryRichText"></div>
             }
           </div>
           @if (promoText2(); as secondaryRichText) {
           <div class="field-promotext">
-            <div [scRichText]="secondaryRichText"></div>
+            <div *scRichText="secondaryRichText"></div>
           </div>
           }
           <div class="field-promolink">
-            <a [scLink]="promoLink()"></a>
+            <a *scLink="promoLink()"></a>
           </div>
         </div>
         @if (jsonLd()) {
         <app-structured-data [scriptId]="jsonLdScriptId()" [data]="jsonLd()" />
-        } }
+        }
       </div>
     </article>
   `,
 })
 export class PromoComponent extends SxaComponent {
-  readonly showEmpty = computed(() => {
-    const f = this.fields();
-    return (
-      f?.PromoIcon == null && f?.PromoText == null && f?.PromoText2 == null && f?.PromoLink == null
-    );
-  });
-
   readonly promoIcon = computed(() => (this.fields() as PromoFields)?.PromoIcon);
   readonly promoText = computed(() => (this.fields() as PromoFields)?.PromoText);
   readonly promoText2 = computed(() => (this.fields() as PromoFields)?.PromoText2);

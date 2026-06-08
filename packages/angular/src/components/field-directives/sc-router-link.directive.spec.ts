@@ -12,7 +12,7 @@ class BlankCmp {}
 @Component({
   selector: 'test-sc-router-link',
   imports: [ScRouterLinkDirective],
-  template: `<a [scRouterLink]="field()">Label</a>`,
+  template: `<a *scRouterLink="field()">Label</a>`,
 })
 class TestScRouterLinkHost {
   readonly field = input<LinkField>({
@@ -188,4 +188,28 @@ describe('ScRouterLinkDirective', () => {
       spy.mockRestore();
     }
   );
+
+  it('routes to the latest href after multiple field updates', async () => {
+    const { fixture, router } = await createFixture();
+    const spy = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+
+    fixture.componentRef.setInput('field', {
+      value: { href: '/first', text: 'First' },
+    });
+    fixture.detectChanges();
+
+    fixture.componentRef.setInput('field', {
+      value: { href: '/second', text: 'Second' },
+    });
+    fixture.detectChanges();
+
+    const a = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
+    const ev = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 });
+    a.dispatchEvent(ev);
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith('/second');
+
+    spy.mockRestore();
+  });
 });

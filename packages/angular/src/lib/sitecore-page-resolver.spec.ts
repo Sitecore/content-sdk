@@ -1,11 +1,14 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { Page, SitecoreClient } from '@sitecore-content-sdk/content/client';
+import type { EditingPreviewData } from '@sitecore-content-sdk/content/editing';
+import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { resolveSitecorePage } from './sitecore-page-resolver';
 import { AngularSitecoreConfig } from '../config/define-config';
 
 describe('resolveSitecorePage', () => {
   let getPage: ReturnType<typeof vi.fn>;
+  let getPreview: ReturnType<typeof vi.fn>;
   let mockClient: SitecoreClient;
 
   const mockConfig = {
@@ -15,7 +18,8 @@ describe('resolveSitecorePage', () => {
 
   beforeEach(() => {
     getPage = vi.fn().mockResolvedValue(null);
-    mockClient = { getPage } as unknown as SitecoreClient;
+    getPreview = vi.fn().mockResolvedValue(null);
+    mockClient = { getPage, getPreview } as unknown as SitecoreClient;
   });
 
   it('should call getPage with path and empty page options when options omitted', async () => {
@@ -55,6 +59,24 @@ describe('resolveSitecorePage', () => {
 
     const result = await resolveSitecorePage('/p', mockConfig, mockClient);
 
+    expect(result).toBe(page);
+  });
+
+  it('should call client.getPreview when previewData is provided and skip getPage', async () => {
+    const previewData: EditingPreviewData = {
+      site: 'demo',
+      itemId: 'i',
+      language: 'en',
+      mode: LayoutServicePageState.Edit,
+      variantIds: ['_default'],
+    };
+    const page = { locale: 'en', layout: {} } as Page;
+    getPreview.mockResolvedValueOnce(page);
+
+    const result = await resolveSitecorePage('/p', mockConfig, mockClient, { previewData });
+
+    expect(getPreview).toHaveBeenCalledWith(previewData);
+    expect(getPage).not.toHaveBeenCalled();
     expect(result).toBe(page);
   });
 });

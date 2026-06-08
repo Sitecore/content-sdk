@@ -9,36 +9,38 @@ function isNavItem(candidate: unknown): candidate is NavItemFields {
 @Component({
   selector: 'app-navigation',
   imports: [NavigationItemComponent],
+  host: {
+    '[attr.class]': "('component navigation ' + styles().trim())",
+    '[attr.id]': 'renderingId()',
+  },
   template: `
-    <div [attr.class]="('component navigation ' + styles()).trim()" [attr.id]="renderingId()">
-      @if (navItems().length === 0) {
-      <div class="component-content">[Navigation]</div>
-      } @else {
-      <label class="menu-mobile-navigate-wrapper">
-        <input
-          type="checkbox"
-          class="menu-mobile-navigate"
-          [checked]="menuOpen()"
-          (change)="onMenuChange($event)"
-          [attr.aria-label]="menuAriaLabel()"
-        />
-        <div class="menu-humburger" aria-hidden="true"></div>
-        <div class="component-content">
-          <nav>
-            <ul class="clearfix">
-              @for (item of navItems(); track trackRoot(item, index); let index = $index) {
-              <app-navigation-item
-                [navItemFields]="item"
-                [relativeLevel]="1"
-                (linkClick)="closeMenu()"
-              />
-              }
-            </ul>
-          </nav>
-        </div>
-      </label>
-      }
-    </div>
+    @if (navItems().length === 0) {
+    <div class="component-content">[Navigation]</div>
+    } @else {
+    <label class="menu-mobile-navigate-wrapper">
+      <input
+        type="checkbox"
+        class="menu-mobile-navigate"
+        [checked]="menuOpen()"
+        (change)="onMenuChange($event)"
+        [attr.aria-label]="menuAriaLabel()"
+      />
+      <div class="menu-humburger" aria-hidden="true"></div>
+      <div class="component-content">
+        <nav>
+          <ul class="clearfix">
+            @for (item of navItems(); track trackRoot(item, index); let index = $index) {
+            <app-navigation-item
+              [navItemFields]="item"
+              [relativeLevel]="1"
+              (linkClick)="closeMenu()"
+            />
+            }
+          </ul>
+        </nav>
+      </div>
+    </label>
+    }
   `,
 })
 export class NavigationComponent extends SxaComponent {

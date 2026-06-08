@@ -1,6 +1,5 @@
 /**
- * ESLint flat config for @sitecore-jss/sitecore-jss-angular.
- * Extends the shared JSS flat config (repo-wide TypeScript + base rules) and adds
+ *  Extends the shared Content SDK flat config (repo-wide TypeScript + base rules) and adds
  * only Angular-specific config: angular-eslint recommended, processor for inline templates,
  * and library overrides (e.g. component-selector off for sc-*, test-*).
  * @see https://github.com/angular-eslint/angular-eslint/blob/main/docs/CONFIGURING_FLAT_CONFIG.md
@@ -20,7 +19,7 @@ export default tseslint.config(
     processor: angular.processInlineTemplates,
     languageOptions: {
       parserOptions: {
-        project: ['./tsconfig.json', './tsconfig.cli.json', './tsconfig.spec.json'],
+        project: ['./tsconfig.json', './tsconfig.server.json', './tsconfig.spec.json'],
         createDefaultProgram: true,
       },
     },

@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh api *)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Work\\\\QA\\\\xmcloud-starter-js\\\\examples\\\\basic-spa\" -Force)",
+      "Bash(Select-Object Name)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Work\\\\xmc-jss-dev-2\\\\packages\\\\angular\\\\src\" -Recurse -Directory)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(grep -E '\\\\.\\(ts|js|json\\)$')",
+      "Bash(xargs grep -l \"EditMode\\\\|Metadata\\\\|editable\")",
+      "Bash(xargs grep -l \"editable\")",
+      "Bash(xargs grep -l \"rendering\\\\|render\")",
+      "Bash(npx vitest *)"
+    ]
+  }
+}
