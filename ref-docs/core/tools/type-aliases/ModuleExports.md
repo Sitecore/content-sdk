@@ -8,7 +8,7 @@
 
 > **ModuleExports** = `object`
 
-Defined in: [packages/core/src/tools/codegen/import-map.ts:129](https://github.com/Sitecore/content-sdk/blob/0a90d511033a5704b1a70503050d4346be3fdcdd/packages/core/src/tools/codegen/import-map.ts#L129)
+Defined in: [packages/core/src/tools/codegen/import-map.ts:129](https://github.com/Sitecore/content-sdk/blob/ced9004d90ba6b8b63f83181298ad2b2cc675297/packages/core/src/tools/codegen/import-map.ts#L129)
 
 **`Internal`**
 
@@ -20,7 +20,7 @@ Import module definition, specifying all the imports for a given import path
 
 > **defaultExport**: `string` \| `null`
 
-Defined in: [packages/core/src/tools/codegen/import-map.ts:133](https://github.com/Sitecore/content-sdk/blob/0a90d511033a5704b1a70503050d4346be3fdcdd/packages/core/src/tools/codegen/import-map.ts#L133)
+Defined in: [packages/core/src/tools/codegen/import-map.ts:133](https://github.com/Sitecore/content-sdk/blob/ced9004d90ba6b8b63f83181298ad2b2cc675297/packages/core/src/tools/codegen/import-map.ts#L133)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [packages/core/src/tools/codegen/import-map.ts:133](https://github.c
 
 > **namedExports**: `Map`\<`string`, `string`\>
 
-Defined in: [packages/core/src/tools/codegen/import-map.ts:131](https://github.com/Sitecore/content-sdk/blob/0a90d511033a5704b1a70503050d4346be3fdcdd/packages/core/src/tools/codegen/import-map.ts#L131)
+Defined in: [packages/core/src/tools/codegen/import-map.ts:131](https://github.com/Sitecore/content-sdk/blob/ced9004d90ba6b8b63f83181298ad2b2cc675297/packages/core/src/tools/codegen/import-map.ts#L131)
 
 ***
 
@@ -36,4 +36,4 @@ Defined in: [packages/core/src/tools/codegen/import-map.ts:131](https://github.c
 
 > **namespaceExport**: `string` \| `null`
 
-Defined in: [packages/core/src/tools/codegen/import-map.ts:135](https://github.com/Sitecore/content-sdk/blob/0a90d511033a5704b1a70503050d4346be3fdcdd/packages/core/src/tools/codegen/import-map.ts#L135)
+Defined in: [packages/core/src/tools/codegen/import-map.ts:135](https://github.com/Sitecore/content-sdk/blob/ced9004d90ba6b8b63f83181298ad2b2cc675297/packages/core/src/tools/codegen/import-map.ts#L135)
