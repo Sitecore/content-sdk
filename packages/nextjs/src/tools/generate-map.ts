@@ -35,6 +35,15 @@ type TemplateOptions = {
 const DEFAULT_HEADER_COMMENT =
   "Below are built-in components that are available in the app, it's recommended to keep them as is";
 
+// Ensures the .sitecore directory exists, creating it if necessary.
+const ensureDestinationPath = (destination: string) => {
+  const outputPath = path.join(process.cwd(), destination);
+  if (!fs.existsSync(outputPath)) {
+    console.log('[Codegen] Creating import map directory: .sitecore');
+    fs.mkdirSync(outputPath, { recursive: true });
+  }
+};
+
 const APP_ROUTER_BUILTIN_IMPORTS = `
 import { BYOCServerWrapper, NextjsContentSdkComponent, FEaaSServerWrapper } from '@sitecore-content-sdk/nextjs';
 import { Form } from '@sitecore-content-sdk/nextjs';
@@ -346,6 +355,7 @@ export const generateMap: GenerateMapFunction = ({
 }: GenerateMapArgs) => {
   const routerType = detectRouterType();
   const allComponents = collectComponents({ paths, exclude, includeVariants, filter: 'all' });
+  ensureDestinationPath(destination);
 
   if (routerType === ROUTER_TYPE.PAGES) {
     const content = mapTemplate
