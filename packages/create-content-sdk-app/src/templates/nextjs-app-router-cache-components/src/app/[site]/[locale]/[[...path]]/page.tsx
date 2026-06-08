@@ -1,4 +1,3 @@
-import { setCachedPageParams } from '@sitecore-content-sdk/nextjs';
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
 import { notFound } from 'next/navigation';
 import { draftMode } from 'next/headers';
@@ -27,8 +26,6 @@ export default async function Page({ params, searchParams }: PageProps) {
   const cachedPage = await getSitecorePage({ site, locale, path: path ?? [] });
 
   if (!cachedPage) {
-    // Ensure site/locale are available to segment not-found.tsx during SSG and runtime.
-    setCachedPageParams({ site, locale });
     notFound();
   }
 
@@ -52,7 +49,6 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   // If the page is not found, return a 404
   if (!page) {
-    setCachedPageParams({ site, locale });
     notFound();
   }
 
