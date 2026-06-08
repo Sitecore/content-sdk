@@ -6,7 +6,7 @@
 
 # Interface: SearchParameters\<T\>
 
-Defined in: [search-service.ts:66](https://github.com/Sitecore/content-sdk/blob/386c7f8bd3745fb4187e490efe4dd14be4a48189/packages/search/src/search-service.ts#L66)
+Defined in: [search-service.ts:66](https://github.com/Sitecore/content-sdk/blob/585d583b22461a5fc38589fdf351e01bd3e65204/packages/search/src/search-service.ts#L66)
 
 A set of request parameters for the Search Service.
 
@@ -22,7 +22,7 @@ A set of request parameters for the Search Service.
 
 > `optional` **keyphrase?**: `string`
 
-Defined in: [search-service.ts:74](https://github.com/Sitecore/content-sdk/blob/386c7f8bd3745fb4187e490efe4dd14be4a48189/packages/search/src/search-service.ts#L74)
+Defined in: [search-service.ts:74](https://github.com/Sitecore/content-sdk/blob/585d583b22461a5fc38589fdf351e01bd3e65204/packages/search/src/search-service.ts#L74)
 
 Text value to search for. If not provided, the search will return all results.
 
@@ -32,7 +32,7 @@ Text value to search for. If not provided, the search will return all results.
 
 > `optional` **limit?**: `number`
 
-Defined in: [search-service.ts:83](https://github.com/Sitecore/content-sdk/blob/386c7f8bd3745fb4187e490efe4dd14be4a48189/packages/search/src/search-service.ts#L83)
+Defined in: [search-service.ts:83](https://github.com/Sitecore/content-sdk/blob/585d583b22461a5fc38589fdf351e01bd3e65204/packages/search/src/search-service.ts#L83)
 
 Specifies the maximum number of items to return. Maximum value 500.
 
@@ -48,7 +48,7 @@ Specifies the maximum number of items to return. Maximum value 500.
 
 > `optional` **offset?**: `number`
 
-Defined in: [search-service.ts:88](https://github.com/Sitecore/content-sdk/blob/386c7f8bd3745fb4187e490efe4dd14be4a48189/packages/search/src/search-service.ts#L88)
+Defined in: [search-service.ts:88](https://github.com/Sitecore/content-sdk/blob/585d583b22461a5fc38589fdf351e01bd3e65204/packages/search/src/search-service.ts#L88)
 
 Specifies how many items to skip before starting to collect the result set.
 
@@ -64,7 +64,7 @@ Specifies how many items to skip before starting to collect the result set.
 
 > **searchIndexId**: `string`
 
-Defined in: [search-service.ts:70](https://github.com/Sitecore/content-sdk/blob/386c7f8bd3745fb4187e490efe4dd14be4a48189/packages/search/src/search-service.ts#L70)
+Defined in: [search-service.ts:70](https://github.com/Sitecore/content-sdk/blob/585d583b22461a5fc38589fdf351e01bd3e65204/packages/search/src/search-service.ts#L70)
 
 The ID of the search index to use.
 
@@ -74,6 +74,6 @@ The ID of the search index to use.
 
 > `optional` **sort?**: [`SortSetting`](../type-aliases/SortSetting.md)\<`T`\> \| [`SortSetting`](../type-aliases/SortSetting.md)\<`T`\>[]
 
-Defined in: [search-service.ts:78](https://github.com/Sitecore/content-sdk/blob/386c7f8bd3745fb4187e490efe4dd14be4a48189/packages/search/src/search-service.ts#L78)
+Defined in: [search-service.ts:78](https://github.com/Sitecore/content-sdk/blob/585d583b22461a5fc38589fdf351e01bd3e65204/packages/search/src/search-service.ts#L78)
 
 Specifies the sorting of the search results.
