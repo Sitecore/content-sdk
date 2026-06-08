@@ -6,4 +6,3 @@ export {
   NOT_FOUND_ROUTE_TOKEN,
 } from './tokens';
 export { SitecoreContextService } from './sitecore-context.service';
-export { resolveSitecorePage } from './sitecore-page-resolver';

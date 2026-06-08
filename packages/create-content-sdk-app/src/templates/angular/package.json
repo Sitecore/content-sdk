@@ -8,6 +8,7 @@
     "gen:env:prod": "tsx scripts/generate-environment.ts --prod",
     "sitecore-tools:generate-map": "sitecore-tools project component generate-map",
     "sitecore-tools:generate-map:watch": "sitecore-tools project component generate-map --watch",
+    "sitecore-tools:build": "sitecore-tools project build",
     "dev": "npm-run-all -s gen:env:dev sitecore-tools:generate-map -p \"ng serve\" sitecore-tools:generate-map:watch",
     "build": "npm-run-all -s gen:env:prod sitecore-tools:generate-map sitecore-tools:build \"ng build\"",
     "watch": "npm-run-all -s gen:env:dev sitecore-tools:generate-map \"ng build --watch --configuration development\"",
