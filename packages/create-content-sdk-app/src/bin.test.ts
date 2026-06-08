@@ -106,10 +106,13 @@ describe('bin', () => {
     it('should print all provided templates', () => {
       printHelp(['foo', 'bar']);
 
+      const helpText = consoleLogStub.firstCall.args[0];
+
       expect(consoleLogStub).to.have.been.calledOnce;
-      expect(consoleLogStub.firstCall.args[0]).to.include('Usage:');
-      expect(consoleLogStub.firstCall.args[0]).to.include('foo');
-      expect(consoleLogStub.firstCall.args[0]).to.include('bar');
+      expect(helpText).to.include('Usage:');
+      expect(helpText).to.include('foo');
+      expect(helpText).to.include('bar');
+      expect(helpText).to.not.include('--template');
     });
   });
 
