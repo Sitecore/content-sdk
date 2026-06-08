@@ -8,7 +8,7 @@
 
 > `const` **DEFAULT\_SITECORE\_AUTH\_DOMAIN**: `"https://auth.sitecorecloud.io"` = `'https://auth.sitecorecloud.io'`
 
-Defined in: [packages/core/src/constants.ts:26](https://github.com/Sitecore/content-sdk/blob/97ebacafeda3114eace6f291c3fbb622e2944a72/packages/core/src/constants.ts#L26)
+Defined in: [packages/core/src/constants.ts:26](https://github.com/Sitecore/content-sdk/blob/562866b0bbceb24a31bcd9726c6f74285b50c01d/packages/core/src/constants.ts#L26)
 
 **`Internal`**
 

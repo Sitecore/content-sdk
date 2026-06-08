@@ -1,6 +1,51 @@
 /* eslint-disable no-redeclare */
 import { ComponentRendering, ComponentFields, Field, GenericFieldValue } from './models';
 
+const extractDetailedRenderingParamValue = (value: Record<string, unknown>): string | undefined => {
+  const detailedValue = value.Value;
+  if (
+    detailedValue &&
+    typeof detailedValue === 'object' &&
+    detailedValue !== null &&
+    'value' in detailedValue
+  ) {
+    const nestedValue = (detailedValue as { value: unknown }).value;
+    if (typeof nestedValue === 'string') {
+      return nestedValue;
+    }
+  }
+
+  if (typeof value.value === 'string') {
+    return value.value;
+  }
+
+  return undefined;
+};
+
+/**
+ * Normalizes a rendering param value to a string.
+ * Layout Service may return DetailedRenderingParams as objects instead of plain
+ * strings (e.g. Styles, CSSStyles, GridParameters).
+ * @param {unknown} value rendering param value
+ * @returns {string | undefined} normalized string value, or undefined when not extractable
+ * @internal
+ */
+export function getRenderingParamString(value: unknown): string | undefined {
+  if (value === null || value === undefined) {
+    return undefined;
+  }
+
+  if (typeof value === 'string') {
+    return value;
+  }
+
+  if (typeof value === 'object') {
+    return extractDetailedRenderingParamValue(value as Record<string, unknown>);
+  }
+
+  return undefined;
+}
+
 /**
  * Safely extracts a field value from a rendering or fields object.
  * Null will be returned if the field is not defined.

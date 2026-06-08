@@ -150,7 +150,7 @@ describe('placeholder-utils', () => {
       const result = getSXAParams(rendering);
 
       expect(result).to.deep.equal({
-        styles: 'col-lg-8 ',
+        styles: 'col-lg-8',
       });
     });
 
@@ -167,7 +167,7 @@ describe('placeholder-utils', () => {
       const result = getSXAParams(rendering);
 
       expect(result).to.deep.equal({
-        styles: ' custom-styles',
+        styles: 'custom-styles',
       });
     });
 
@@ -181,6 +181,42 @@ describe('placeholder-utils', () => {
 
       expect(result).to.deep.equal({ styles: '' });
     });
+
+    it('should extract styles from DetailedRenderingParams object', () => {
+      const rendering = ({
+        componentName: 'TestComponent',
+        uid: 'test-uid',
+        params: {
+          Styles: {
+            Value: { value: 'White-Background' },
+          },
+        },
+      } as unknown) as ComponentRendering;
+
+      const result = getSXAParams(rendering);
+
+      expect(result).to.deep.equal({
+        styles: 'White-Background',
+      });
+    });
+
+    it('should combine object GridParameters and Styles params', () => {
+      const rendering = ({
+        componentName: 'TestComponent',
+        uid: 'test-uid',
+        params: {
+          GridParameters: { Value: { value: 'col-lg-6' } },
+          Styles: { Value: { value: 'White-Background' } },
+        },
+      } as unknown) as ComponentRendering;
+
+      const result = getSXAParams(rendering);
+
+      expect(result).to.deep.equal({
+        styles: 'col-lg-6 White-Background',
+      });
+    });
+
   });
 
   describe('getChildComponentProps', () => {

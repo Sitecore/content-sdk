@@ -23,6 +23,7 @@ export {
 
 export {
   getFieldValue,
+  getRenderingParamString,
   getChildPlaceholder,
   isFieldValueEmpty,
   isDynamicPlaceholder,
