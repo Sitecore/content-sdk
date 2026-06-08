@@ -6,7 +6,7 @@
 
 # Interface: PersonalizeServerPluginParams
 
-Defined in: [personalize/src/initialization/plugin-server.ts:35](https://github.com/Sitecore/content-sdk/blob/386c7f8bd3745fb4187e490efe4dd14be4a48189/packages/personalize/src/initialization/plugin-server.ts#L35)
+Defined in: [personalize/src/initialization/plugin-server.ts:35](https://github.com/Sitecore/content-sdk/blob/585d583b22461a5fc38589fdf351e01bd3e65204/packages/personalize/src/initialization/plugin-server.ts#L35)
 
 Parameters for creating a personalize server plugin.
 
@@ -16,7 +16,7 @@ Parameters for creating a personalize server plugin.
 
 > **adapter**: [`PersonalizeAdapter`](../../internal/interfaces/PersonalizeAdapter.md)
 
-Defined in: [personalize/src/initialization/plugin-server.ts:39](https://github.com/Sitecore/content-sdk/blob/386c7f8bd3745fb4187e490efe4dd14be4a48189/packages/personalize/src/initialization/plugin-server.ts#L39)
+Defined in: [personalize/src/initialization/plugin-server.ts:39](https://github.com/Sitecore/content-sdk/blob/585d583b22461a5fc38589fdf351e01bd3e65204/packages/personalize/src/initialization/plugin-server.ts#L39)
 
 The adapter to be used for the personalize server plugin.
 
@@ -26,6 +26,6 @@ The adapter to be used for the personalize server plugin.
 
 > `optional` **options?**: [`PersonalizeServerPluginOptions`](../type-aliases/PersonalizeServerPluginOptions.md)
 
-Defined in: [personalize/src/initialization/plugin-server.ts:43](https://github.com/Sitecore/content-sdk/blob/386c7f8bd3745fb4187e490efe4dd14be4a48189/packages/personalize/src/initialization/plugin-server.ts#L43)
+Defined in: [personalize/src/initialization/plugin-server.ts:43](https://github.com/Sitecore/content-sdk/blob/585d583b22461a5fc38589fdf351e01bd3e65204/packages/personalize/src/initialization/plugin-server.ts#L43)
 
 Optional configuration options for the personalize server plugin.
