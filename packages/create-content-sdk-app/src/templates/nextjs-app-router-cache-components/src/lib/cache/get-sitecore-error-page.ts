@@ -1,7 +1,6 @@
 import { collectSitecorePageCacheTags, ErrorPage, type Page } from '@sitecore-content-sdk/nextjs';
 import { cacheTag } from 'next/cache';
 import client from 'src/lib/sitecore-client';
-import scConfig from 'sitecore.config';
 
 /**
  * Stable synthetic pathnames for cache tags so error-page reads do not share the home route (`_`) tag
@@ -27,13 +26,11 @@ type GetSitecoreErrorPageParams = {
   code: ErrorPage;
 };
 
-type CachedSitecoreErrorPageParams = {
-  site: string;
-  locale: string;
-  code: ErrorPage;
-};
-
-async function getCachedSitecoreErrorPage(params: CachedSitecoreErrorPageParams): Promise<Page | null> {
+/**
+ * Loads Sitecore error pages with Next.js Cache Components and the same tag strategy as
+ * {@link getSitecorePage}, so webhook / `revalidateTag` flows can invalidate updated error experiences.
+ */
+export async function getSitecoreErrorPage(params: GetSitecoreErrorPageParams): Promise<Page | null> {
   'use cache';
 
   const { site, locale, code } = params;
@@ -52,30 +49,4 @@ async function getCachedSitecoreErrorPage(params: CachedSitecoreErrorPageParams)
   }
 
   return page;
-}
-
-/**
- * Loads Sitecore error pages with Next.js Cache Components and the same tag strategy as
- * {@link getSitecorePage}, so webhook / `revalidateTag` flows can invalidate updated error experiences.
- * Returns `null` when site is missing or the error page fetch fails.
- */
-export async function getSitecoreErrorPage(params: GetSitecoreErrorPageParams): Promise<Page | null> {
-  const site = params.site?.trim();
-  const locale = params.locale?.trim() || scConfig.defaultLanguage;
-
-  if (!site) {
-    return null;
-  }
-
-  const resolved = { site, locale, code: params.code };
-
-  try {
-    return await getCachedSitecoreErrorPage(resolved);
-  } catch {
-    try {
-      return await client.getErrorPage(params.code, { site, locale });
-    } catch {
-      return null;
-    }
-  }
 }

@@ -9,15 +9,18 @@ import { setRequestLocale } from 'next-intl/server';
 
 export default async function NotFound() {
   const { site, locale } = getCachedPageParams();
+  const resolvedSite = site || scConfig.defaultSite;
+  const resolvedLocale = locale || scConfig.defaultLanguage;
 
   const page = await getSitecoreErrorPage({
-    site: site || scConfig.defaultSite,
-    locale: locale || scConfig.defaultLanguage,
+    site: resolvedSite,
+    locale: resolvedLocale,
     code: ErrorPage.NotFound,
   });
 
-  // After the cached error-page fetch so next-intl's cached dictionary read does not hit DYNAMIC_SERVER_USAGE.
-  setRequestLocale(`${site || scConfig.defaultSite}_${locale || scConfig.defaultLanguage}`);
+  // Set site and locale for next-intl dictionary resolution in src/i18n/request.ts.
+  // Called after the cached error-page fetch so the locale is resolved from route params, not a Dynamic API.
+  setRequestLocale(`${resolvedSite}_${resolvedLocale}`);
 
   if (page) {
     return (
