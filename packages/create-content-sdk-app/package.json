@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@sitecore-content-sdk/analytics-core": "^2.1.0",
-    "@sitecore-content-sdk/angular": "^0.1.0",
+    "@sitecore-content-sdk/angular": "~0.0.1",
     "@sitecore-content-sdk/cli": "^2.1.0",
     "@sitecore-content-sdk/events": "^2.1.0",
     "@sitecore-content-sdk/nextjs": "^2.1.0",
