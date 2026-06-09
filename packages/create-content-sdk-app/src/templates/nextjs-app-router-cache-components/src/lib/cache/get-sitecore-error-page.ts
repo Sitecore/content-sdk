@@ -2,24 +2,6 @@ import { collectSitecorePageCacheTags, ErrorPage, type Page } from '@sitecore-co
 import { cacheTag } from 'next/cache';
 import client from 'src/lib/sitecore-client';
 
-/**
- * Stable synthetic pathnames for cache tags so error-page reads do not share the home route (`_`) tag
- * with normal layout data for `/`.
- */
-const NOT_FOUND_TAG_PATH = '/__sitecore-content-sdk/error/not-found';
-const SERVER_ERROR_TAG_PATH = '/__sitecore-content-sdk/error/server-error';
-
-function personalizedPathnameForErrorCode(code: ErrorPage): string {
-  switch (code) {
-    case ErrorPage.NotFound:
-      return NOT_FOUND_TAG_PATH;
-    case ErrorPage.InternalServerError:
-      return SERVER_ERROR_TAG_PATH;
-    default:
-      return NOT_FOUND_TAG_PATH;
-  }
-}
-
 type GetSitecoreErrorPageParams = {
   site: string;
   locale: string;
@@ -35,13 +17,28 @@ export async function getSitecoreErrorPage(params: GetSitecoreErrorPageParams): 
 
   const { site, locale, code } = params;
   const page = await client.getErrorPage(code, { site, locale });
-  const personalizedPathname = personalizedPathnameForErrorCode(code);
+
+  const sitecore = page?.layout?.sitecore;
+  let path: string[] | undefined;
+  const itemPath = sitecore?.context?.itemPath;
+  if (typeof itemPath === 'string' && itemPath.trim()) {
+    const normalized = itemPath.trim();
+    path =
+      normalized === '/'
+        ? []
+        : (normalized.startsWith('/') ? normalized.slice(1) : normalized).split('/').filter(Boolean);
+  } else {
+    const routeName = sitecore?.route?.name?.trim();
+    if (routeName) {
+      path = [routeName];
+    }
+  }
 
   const tags = collectSitecorePageCacheTags({
     site,
     locale,
-    personalizedPathname,
-    route: page?.layout?.sitecore?.route,
+    ...(path !== undefined ? { path } : {}),
+    route: sitecore?.route,
   });
 
   for (const tag of tags) {
