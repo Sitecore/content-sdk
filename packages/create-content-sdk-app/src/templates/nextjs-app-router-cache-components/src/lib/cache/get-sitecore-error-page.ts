@@ -20,20 +20,11 @@ export async function getSitecoreErrorPage(params: GetSitecoreErrorPageParams): 
 
   const sitecore = page?.layout?.sitecore;
   const itemPath = sitecore?.context?.itemPath;
-  let path: string[] | undefined;
-  if (typeof itemPath === 'string' && itemPath) {
-    path =
-      itemPath === '/'
-        ? []
-        : (itemPath.startsWith('/') ? itemPath.slice(1) : itemPath).split('/').filter(Boolean);
-  } else if (sitecore?.route?.name) {
-    path = [sitecore.route.name];
-  }
 
   const tags = collectSitecorePageCacheTags({
     site,
     locale,
-    ...(path !== undefined ? { path } : {}),
+    path: typeof itemPath === 'string' && itemPath ? itemPath : undefined,
     route: sitecore?.route,
   });
 

@@ -20,7 +20,7 @@ export async function getSitecorePage(params: GetSitecorePageParams): Promise<Pa
   const tags = collectSitecorePageCacheTags({
     site,
     locale,
-    path,
+    path: client.parsePath(path),
     route: page?.layout?.sitecore?.route,
   });
 
