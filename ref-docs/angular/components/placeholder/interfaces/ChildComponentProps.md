@@ -6,7 +6,7 @@
 
 # Interface: ChildComponentProps
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:23](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/placeholder/placeholder-utils.ts#L23)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:23](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/placeholder/placeholder-utils.ts#L23)
 
 Merged props passed to each child component rendered by a placeholder.
 Matches React `getChildComponentProps`: merged `fields` / `params` props plus raw `rendering`.
@@ -17,7 +17,7 @@ Matches React `getChildComponentProps`: merged `fields` / `params` props plus ra
 
 > **fields**: `object`
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:24](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/placeholder/placeholder-utils.ts#L24)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:24](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/placeholder/placeholder-utils.ts#L24)
 
 #### Index Signature
 
@@ -29,7 +29,7 @@ Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:24
 
 > **params**: `object`
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:25](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/placeholder/placeholder-utils.ts#L25)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:25](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/placeholder/placeholder-utils.ts#L25)
 
 #### Index Signature
 
@@ -41,4 +41,4 @@ Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:25
 
 > **rendering**: `ComponentRendering`
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:26](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/placeholder/placeholder-utils.ts#L26)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:26](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/placeholder/placeholder-utils.ts#L26)

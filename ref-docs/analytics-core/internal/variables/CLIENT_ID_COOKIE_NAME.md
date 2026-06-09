@@ -8,7 +8,7 @@
 
 > `const` **CLIENT\_ID\_COOKIE\_NAME**: `"cid"` = `'cid'`
 
-Defined in: [analytics-core/src/consts.ts:19](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/analytics-core/src/consts.ts#L19)
+Defined in: [analytics-core/src/consts.ts:19](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/analytics-core/src/consts.ts#L19)
 
 **`Internal`**
 

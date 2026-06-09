@@ -6,7 +6,7 @@
 
 # Interface: RichTextProps
 
-Defined in: [packages/react/src/components/RichText.tsx:13](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/react/src/components/RichText.tsx#L13)
+Defined in: [packages/react/src/components/RichText.tsx:13](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/react/src/components/RichText.tsx#L13)
 
 The interface for the RichText component props.
 
@@ -24,7 +24,7 @@ The interface for the RichText component props.
 
 > `optional` **editable?**: `boolean`
 
-Defined in: [packages/react/src/components/sharedTypes/props.ts:9](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/react/src/components/sharedTypes/props.ts#L9)
+Defined in: [packages/react/src/components/sharedTypes/props.ts:9](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/react/src/components/sharedTypes/props.ts#L9)
 
 Can be used to explicitly disable inline editing.
 
@@ -44,7 +44,7 @@ true
 
 > `optional` **emptyFieldEditingComponent?**: `ComponentClass`\<`RichTextProps`, `any`\> \| `FC`\<`RichTextProps`\>
 
-Defined in: [packages/react/src/components/sharedTypes/props.ts:13](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/react/src/components/sharedTypes/props.ts#L13)
+Defined in: [packages/react/src/components/sharedTypes/props.ts:13](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/react/src/components/sharedTypes/props.ts#L13)
 
 Custom element to render in Pages in edit mode if field value is empty
 
@@ -58,7 +58,7 @@ Custom element to render in Pages in edit mode if field value is empty
 
 > `optional` **field?**: [`RichTextField`](RichTextField.md)
 
-Defined in: [packages/react/src/components/RichText.tsx:16](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/react/src/components/RichText.tsx#L16)
+Defined in: [packages/react/src/components/RichText.tsx:16](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/react/src/components/RichText.tsx#L16)
 
 The rich text field data.
 
@@ -68,7 +68,7 @@ The rich text field data.
 
 > `optional` **ref?**: `Ref`\<`HTMLElement`\>
 
-Defined in: [packages/react/src/components/RichText.tsx:23](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/react/src/components/RichText.tsx#L23)
+Defined in: [packages/react/src/components/RichText.tsx:23](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/react/src/components/RichText.tsx#L23)
 
 Ref forwarded to the root element.
 
@@ -78,7 +78,7 @@ Ref forwarded to the root element.
 
 > `optional` **tag?**: `string`
 
-Defined in: [packages/react/src/components/RichText.tsx:21](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/react/src/components/RichText.tsx#L21)
+Defined in: [packages/react/src/components/RichText.tsx:21](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/react/src/components/RichText.tsx#L21)
 
 The HTML element that will wrap the contents of the field.
 

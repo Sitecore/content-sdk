@@ -8,7 +8,7 @@
 
 > **applyRedirect**(`router`, `location`): `void` \| `RedirectCommand`
 
-Defined in: [packages/angular/src/loaders/utils.ts:14](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/loaders/utils.ts#L14)
+Defined in: [packages/angular/src/loaders/utils.ts:14](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/loaders/utils.ts#L14)
 
 Apply a redirect: internal URLs → RedirectCommand; external URLs → full page navigation.
 Use in resolvers and in the navigation error handler (fallback) so redirect behavior is consistent.
