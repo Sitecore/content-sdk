@@ -3,18 +3,14 @@
 /* eslint-disable no-unused-vars */
 
 import path from 'path';
-import * as chai from 'chai';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import sinonChai from 'sinon-chai';
 import { generateMap } from './generate-map';
 import fs from 'fs';
 import { ComponentImport } from '@sitecore-content-sdk/content/tools';
 import * as coreTools from '@sitecore-content-sdk/content/tools';
 import * as coreServerTools from '@sitecore-content-sdk/content/node-tools';
 import * as templatingUtils from './templating/utils';
-
-chai.use(sinonChai);
 
 describe('generateMap', () => {
   const sandbox = sinon.createSandbox();
@@ -88,8 +84,6 @@ describe('generateMap', () => {
         .callsFake(getComponentListWithTypesStub);
       sandbox.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
       sandbox.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
-      sandbox.stub(fs, 'existsSync').returns(true);
-      sandbox.stub(fs, 'mkdirSync');
       sandbox.stub(fs, 'writeFileSync');
     });
 
@@ -111,8 +105,6 @@ describe('generateMap', () => {
         .callsFake(getComponentListWithTypesStub);
       sandbox.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
       sandbox.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
-      sandbox.stub(fs, 'existsSync').returns(true);
-      sandbox.stub(fs, 'mkdirSync');
       sandbox.stub(fs, 'writeFileSync');
 
       generateMap({ paths, includeVariants: false });
@@ -284,22 +276,6 @@ describe('generateMap', () => {
         sinon.match.string,
         encodingArg
       );
-    });
-
-    it('should create the destination directory when it does not exist', async () => {
-      const paths = ['src/components'];
-      const destination = '.sitecore';
-      const destinationPath = path.join(process.cwd(), destination);
-
-      (fs.existsSync as sinon.SinonStub).returns(false);
-
-      generateMap({ paths, destination, includeVariants: false });
-
-      expect((fs.existsSync as sinon.SinonStub).calledWith(destinationPath)).to.be.true;
-      expect((fs.mkdirSync as sinon.SinonStub).calledOnceWithExactly(destinationPath, {
-        recursive: true,
-      })).to.be.true;
-      expect(fs.writeFileSync).to.have.been.calledTwice;
     });
 
     it('should pass exclude param into getComponentListWithTypes call', async () => {
@@ -731,8 +707,6 @@ describe('generateMap', () => {
         .callsFake(getComponentListWithTypesStub);
       sandbox.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
       sandbox.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
-      sandbox.stub(fs, 'existsSync').returns(true);
-      sandbox.stub(fs, 'mkdirSync');
       sandbox.stub(fs, 'writeFileSync');
     });
 
@@ -871,8 +845,6 @@ describe('generateMap', () => {
         // Defensively un-stub if already wrapped, then stub once
         const wf = fs.writeFileSync as any;
         if (wf && typeof wf.restore === 'function') wf.restore();
-        sb.stub(fs, 'existsSync').returns(true);
-        sb.stub(fs, 'mkdirSync');
         sb.stub(fs, 'writeFileSync');
 
         const paths = ['src/components'];
@@ -941,8 +913,6 @@ describe('generateMap', () => {
 
         const wf = fs.writeFileSync as any;
         if (wf && typeof wf.restore === 'function') wf.restore();
-        sb.stub(fs, 'existsSync').returns(true);
-        sb.stub(fs, 'mkdirSync');
         sb.stub(fs, 'writeFileSync');
 
         generateMap({
@@ -1076,8 +1046,6 @@ describe('generateMap', () => {
         // Defensively un-stub fs.writeFileSync if some other test wrapped it
         const wf = fs.writeFileSync as any;
         if (wf && typeof wf.restore === 'function') wf.restore();
-        newSandbox.stub(fs, 'existsSync').returns(true);
-        newSandbox.stub(fs, 'mkdirSync');
         newSandbox.stub(fs, 'writeFileSync');
 
         const paths = ['src/components'];

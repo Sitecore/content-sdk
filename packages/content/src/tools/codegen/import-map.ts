@@ -376,15 +376,6 @@ const prepImportMaps = async (paths: string[], separateMaps?: boolean): Promise<
   ];
 };
 
-// Ensures the .sitecore directory exists, creating it if necessary.
-const ensureImportMapPath = (filePath: string) => {
-  const outputPath = path.dirname(filePath);
-  if (!fs.existsSync(outputPath)) {
-    console.log('[Codegen] Creating import map directory: .sitecore');
-    fs.mkdirSync(outputPath, { recursive: true });
-  }
-};
-
 /**
  * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
  * @param {WriteImportMapArgsInternal} args include/exclude paths settings to be processed for import-map, and the Sitecore configuration.
@@ -419,7 +410,6 @@ export const writeImportMap = (args: WriteImportMapArgsInternal) => {
         ? clientTemplate(importMap.map)
         : defaultTemplate(importMap.map);
       try {
-        ensureImportMapPath(importMap.path);
         fs.writeFileSync(importMap.path, importMapContent, {
           encoding: 'utf8',
         });
