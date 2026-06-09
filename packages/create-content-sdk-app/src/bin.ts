@@ -41,7 +41,6 @@ ${chalk.bold('Templates:')}
 ${templatesList}
 
 ${chalk.bold('Options:')}
-  ${chalk.yellow('--template')} ${chalk.dim('<name>')}        Template to scaffold
   ${chalk.yellow('--destination')} ${chalk.dim('<path>')}    Destination folder
   ${chalk.yellow('--yes')}                   Use defaults and skip prompts where possible
   ${chalk.yellow('--force')}                 Continue if destination is not empty
