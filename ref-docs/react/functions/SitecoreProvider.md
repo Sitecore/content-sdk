@@ -8,7 +8,7 @@
 
 > **SitecoreProvider**(`props`): `Element`
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:95](https://github.com/Sitecore/content-sdk/blob/585d583b22461a5fc38589fdf351e01bd3e65204/packages/react/src/components/SitecoreProvider.tsx#L95)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:95](https://github.com/Sitecore/content-sdk/blob/363158477ed913ddfbe904264deebf83015ebcdb/packages/react/src/components/SitecoreProvider.tsx#L95)
 
 The SitecoreProvider component.
 
