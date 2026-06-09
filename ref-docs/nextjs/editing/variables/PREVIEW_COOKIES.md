@@ -8,7 +8,7 @@
 
 > `const` **PREVIEW\_COOKIES**: `object`
 
-Defined in: [nextjs/src/editing/utils.ts:125](https://github.com/Sitecore/content-sdk/blob/585d583b22461a5fc38589fdf351e01bd3e65204/packages/nextjs/src/editing/utils.ts#L125)
+Defined in: [nextjs/src/editing/utils.ts:125](https://github.com/Sitecore/content-sdk/blob/363158477ed913ddfbe904264deebf83015ebcdb/packages/nextjs/src/editing/utils.ts#L125)
 
 Preview cookies constants referenced within the sdk
 

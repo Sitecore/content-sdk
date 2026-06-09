@@ -8,7 +8,7 @@
 
 > `const` **DAILY\_SECONDS**: `86400` = `86400`
 
-Defined in: [analytics-core/src/consts.ts:31](https://github.com/Sitecore/content-sdk/blob/585d583b22461a5fc38589fdf351e01bd3e65204/packages/analytics-core/src/consts.ts#L31)
+Defined in: [analytics-core/src/consts.ts:31](https://github.com/Sitecore/content-sdk/blob/363158477ed913ddfbe904264deebf83015ebcdb/packages/analytics-core/src/consts.ts#L31)
 
 **`Internal`**
 
