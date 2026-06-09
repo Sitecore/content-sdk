@@ -19,25 +19,18 @@ export async function getSitecoreErrorPage(params: GetSitecoreErrorPageParams): 
   const page = await client.getErrorPage(code, { site, locale });
 
   const sitecore = page?.layout?.sitecore;
-  let path: string[] | undefined;
   const itemPath = sitecore?.context?.itemPath;
-  if (typeof itemPath === 'string' && itemPath.trim()) {
-    const normalized = itemPath.trim();
-    path =
-      normalized === '/'
-        ? []
-        : (normalized.startsWith('/') ? normalized.slice(1) : normalized).split('/').filter(Boolean);
-  } else {
-    const routeName = sitecore?.route?.name?.trim();
-    if (routeName) {
-      path = [routeName];
-    }
-  }
+  const personalizedPathname =
+    typeof itemPath === 'string' && itemPath
+      ? itemPath
+      : sitecore?.route?.name
+        ? `/${sitecore.route.name}`
+        : undefined;
 
   const tags = collectSitecorePageCacheTags({
     site,
     locale,
-    ...(path !== undefined ? { path } : {}),
+    ...(personalizedPathname !== undefined ? { personalizedPathname } : {}),
     route: sitecore?.route,
   });
 
