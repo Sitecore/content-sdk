@@ -14,4 +14,6 @@ The DefaultEmptyFieldEditingComponentImage component.
 
 ## Param
 
+**props**
+
 The props for the component.

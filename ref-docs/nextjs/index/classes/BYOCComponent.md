@@ -13,6 +13,8 @@ missing components, and customization of error messages or alternative rendering
 
 ## Param
 
+**props**
+
 component props
 
 ## Extends
