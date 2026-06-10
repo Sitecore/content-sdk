@@ -8,7 +8,10 @@ import {
   getSXAParams,
   getChildComponentProps,
   resolveComponentForRendering,
+  computePlaceholderChromeId,
+  isPlaceholderDeclaredInLayout,
 } from './placeholder-utils';
+import { DEFAULT_PLACEHOLDER_UID } from '@sitecore-content-sdk/content/editing';
 
 @Component({ selector: 'test-a', template: 'A' })
 class TestComponentA {}
@@ -90,6 +93,83 @@ describe('getPlaceholderRenderings', () => {
     };
     const result = getPlaceholderRenderings(route, 'main', false);
     expect(result).toEqual([child]);
+  });
+});
+
+describe('isPlaceholderDeclaredInLayout', () => {
+  it('should return false when the placeholder key is absent from layout', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Root',
+      placeholders: { main: [] },
+    };
+    expect(isPlaceholderDeclaredInLayout(rendering, 'footer', true)).toBe(false);
+    expect(isPlaceholderDeclaredInLayout(rendering, 'footer', false)).toBe(false);
+  });
+
+  it('should return true for a declared empty placeholder', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Root',
+      placeholders: { main: [] },
+    };
+    expect(isPlaceholderDeclaredInLayout(rendering, 'main', true)).toBe(true);
+  });
+
+  it('should resolve dynamic placeholder keys in editing mode', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Root',
+      placeholders: { 'container-{*}': [] },
+    };
+    expect(isPlaceholderDeclaredInLayout(rendering, 'container-1', true)).toBe(true);
+  });
+});
+
+describe('computePlaceholderChromeId', () => {
+  it('should use DEFAULT_PLACEHOLDER_UID for a root static placeholder', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Route',
+      placeholders: { main: [] },
+    };
+    expect(computePlaceholderChromeId(rendering, 'main')).toBe(
+      `main_${DEFAULT_PLACEHOLDER_UID}`
+    );
+  });
+
+  it('should append parent rendering uid for nested static placeholders', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Parent',
+      uid: 'parent-uid',
+      placeholders: { inner: [] },
+    };
+    expect(computePlaceholderChromeId(rendering, 'inner', 'parent-uid')).toBe('inner_parent-uid');
+  });
+
+  it('should use dynamic placeholder pattern key with DEFAULT_PLACEHOLDER_UID', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Route',
+      placeholders: { 'container-{*}': [] },
+    };
+    expect(computePlaceholderChromeId(rendering, 'container-1')).toBe(
+      `container-{*}_${DEFAULT_PLACEHOLDER_UID}`
+    );
+  });
+
+  it('should use dynamic placeholder pattern key with parent uid', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Row',
+      uid: 'row-uid',
+      placeholders: { 'container-{*}': [] },
+    };
+    expect(computePlaceholderChromeId(rendering, 'container-1', 'row-uid')).toBe(
+      'container-{*}_row-uid'
+    );
+  });
+
+  it('should return empty string when placeholder is not declared on parent rendering', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Root',
+      placeholders: { main: [] },
+    };
+    expect(computePlaceholderChromeId(rendering, 'footer', 'root-uid')).toBe('');
   });
 });
 

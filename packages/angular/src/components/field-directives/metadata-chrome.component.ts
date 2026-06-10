@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { MetadataKind } from '@sitecore-content-sdk/content/editing';
 
 /**
@@ -6,22 +6,21 @@ import { MetadataKind } from '@sitecore-content-sdk/content/editing';
  */
 @Component({
   selector: 'code[scFieldMetadataMarker]',
-  template: '{{ metadataString }}',
+  template: '{{ metadataString() }}',
   host: {
     '[attr.type]': '"text/sitecore"',
     '[attr.chrometype]': '"field"',
     '[class]': '"scpm"',
+    '[attr.kind]': 'kind()',
   },
 })
 export class FieldMetadataMarkerComponent {
-  @Input()
-  metadata?: Record<string, unknown>;
+  readonly metadata = input<Record<string, unknown>>();
 
-  @HostBinding('attr.kind')
-  @Input()
-  kind: MetadataKind = MetadataKind.Open;
+  readonly kind = input<MetadataKind>(MetadataKind.Open);
 
-  get metadataString(): string {
-    return this.metadata ? JSON.stringify(this.metadata) : '';
-  }
+  readonly metadataString = computed(() => {
+    const metadata = this.metadata();
+    return metadata ? JSON.stringify(metadata) : '';
+  });
 }

@@ -13,9 +13,6 @@ import { getClient } from '../client/sitecore-client';
  */
 export const pageLoader: LoaderFn<Page> = async (context) => {
   const previewData = getEditingPreviewData(context.requestContext);
-  if (previewData) {
-    return getClient().getPreview(previewData);
-  }
   const locale = (context.params['locale'] as string | undefined) || scConfig.defaultLanguage;
   const { nonLocalePath } = splitLocaleFromPath(context.url, scConfig.angular.locales);
   const site = scConfig.defaultSite;

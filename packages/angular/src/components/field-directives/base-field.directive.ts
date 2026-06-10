@@ -67,6 +67,7 @@ export abstract class BaseFieldDirective<TField> {
   constructor() {
     effect(() => {
       this.field();
+      this.emptyFieldEditingTemplate();
       this.updateView();
     });
   }

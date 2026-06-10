@@ -86,6 +86,52 @@ export const getPlaceholderRenderings = (
 };
 
 /**
+ * Returns true when the placeholder name resolves to a key declared on the parent
+ * rendering's `placeholders` map (including dynamic-placeholder pattern keys in editing mode).
+ * an undeclared name is not the same as a declared-but-empty placeholder.
+ * @param {ComponentRendering | RouteData} rendering - Parent rendering / route node.
+ * @param {string} name - Placeholder name from the template.
+ * @param {boolean} isEditing - Whether editing mode is active.
+ * @returns {boolean} Whether the layout declares this placeholder.
+ * @internal
+ */
+export function isPlaceholderDeclaredInLayout(
+  rendering: ComponentRendering | RouteData,
+  name: string,
+  isEditing: boolean
+): boolean {
+  if (!rendering?.placeholders || Object.keys(rendering.placeholders).length === 0) {
+    return false;
+  }
+
+  let phName = name.slice();
+
+  if (isEditing) {
+    Object.keys(rendering.placeholders).forEach((key) => {
+      const patternPlaceholder = isDynamicPlaceholder(key)
+        ? getDynamicPlaceholderPattern(key)
+        : null;
+
+      if (patternPlaceholder && patternPlaceholder.test(phName)) {
+        phName = key;
+      }
+    });
+    return Object.prototype.hasOwnProperty.call(rendering.placeholders, phName);
+  }
+
+  if (Object.prototype.hasOwnProperty.call(rendering.placeholders, phName)) {
+    return true;
+  }
+
+  return Object.keys(rendering.placeholders).some((key) => {
+    if (!isDynamicPlaceholder(key)) {
+      return false;
+    }
+    return getDynamicPlaceholderPattern(key).test(phName);
+  });
+};
+
+/**
  * Extra inputs to set on each dynamically rendered component (in addition to `fields`, `params`, and `rendering`).
  * Keys are Angular `input()` names on the host component.
  * @public

@@ -344,6 +344,21 @@ describe('ScPlaceholderComponent editing chrome', () => {
     expect(fixture.nativeElement.classList.contains('sc-jss-empty-placeholder')).toBe(true);
   });
 
+  it('should not emit placeholder chrome when the name is undeclared on the parent rendering', () => {
+    const rendering: RouteData = {
+      name: 'route',
+      placeholders: { main: [] },
+    };
+
+    const fixture = TestBed.createComponent(ScPlaceholderComponent);
+    fixture.componentRef.setInput('rendering', rendering);
+    fixture.componentRef.setInput('name', 'footer');
+    fixture.detectChanges();
+
+    expect(chromeMarkers(fixture.nativeElement as HTMLElement).length).toBe(0);
+    expect(fixture.nativeElement.classList.contains('sc-jss-empty-placeholder')).toBe(false);
+  });
+
   it('should not apply sc-jss-empty-placeholder when the placeholder has renderings', () => {
     const rendering: RouteData = {
       name: 'route',

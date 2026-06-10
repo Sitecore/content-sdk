@@ -164,7 +164,7 @@ describe('createEditingRenderMiddleware', () => {
       expect.stringContaining('frame-ancestors')
     );
     const editingReq = req as ExpressEditingRequest;
-    expect(editingReq.url).toBe('/about');
+    expect(editingReq.url).toBe('/en/about');
     expect(editingReq.method).toBe('GET');
     expect(editingReq.scEditing).toEqual({
       site: 'demo',
@@ -202,6 +202,41 @@ describe('createEditingRenderMiddleware', () => {
     expect(next).toHaveBeenCalled();
   });
 
+  it('applies resolvePageUrl override with language', async () => {
+    const middleware = createEditingRenderMiddleware({
+      editingSecret: 's',
+      resolvePageUrl: (itemPath, previewData) => `/${previewData.language}${itemPath}`,
+    });
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/render',
+      url: '/api/editing/render',
+      body: undefined,
+      query: baseQuery(),
+      headers: baseHeaders(),
+    };
+    const res = createMockRes();
+    await middleware(req, res, next);
+    expect(req.url).toBe('/en/about');
+    expect(next).toHaveBeenCalled();
+  });
+
+  it('should rewrite URL to route with language', async () => {
+    const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/render',
+      url: '/api/editing/render',
+      body: undefined,
+      query: baseQuery(),
+      headers: baseHeaders(),
+    };
+    const res = createMockRes();
+    await middleware(req, res, next);
+    expect(req.url).toBe('/en/about');
+    expect(next).toHaveBeenCalled();
+  });
+
   it('encodes the rewritten route', async () => {
     const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
     const req: ExpressRequest = {
@@ -214,7 +249,7 @@ describe('createEditingRenderMiddleware', () => {
     };
     const res = createMockRes();
     await middleware(req, res, next);
-    expect(req.url).toBe('/styleguide/section%202');
+    expect(req.url).toBe('/en/styleguide/section%202');
   });
 
   it('falls back to SITECORE_EDITING_SECRET env when option omitted', async () => {

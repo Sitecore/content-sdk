@@ -266,7 +266,9 @@ export function createEditingRenderMiddleware(
       }
 
       const decodedRoute = flatQuery.route ?? '';
-      const targetRoute = options?.resolvePageUrl?.(decodedRoute, previewData) ?? decodedRoute;
+      const targetRoute =
+        options?.resolvePageUrl?.(decodedRoute, previewData) ??
+        `/${previewData.language}${decodedRoute.startsWith('/') ? '' : '/'}${decodedRoute}`;
       const encodedRoute = encodeURI(targetRoute);
 
       debug.editing('rewriting request to page route %s', targetRoute);

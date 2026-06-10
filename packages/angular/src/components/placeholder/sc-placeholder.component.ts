@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
-import { MetadataKind } from '@sitecore-content-sdk/content/editing';
+import { MetadataKind, resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 import { SitecoreContextService } from '../../lib/sitecore-context.service';
 import { SITECORE_COMPONENT_MAP } from '../tokens';
 import type { AngularContentSdkComponent, ComponentMap } from '../types';
@@ -24,6 +24,7 @@ import {
   getChildComponentProps,
   resolveComponentForRendering,
   computePlaceholderChromeId,
+  isPlaceholderDeclaredInLayout,
   type PassThroughProps,
 } from './placeholder-utils';
 import { ScMissingComponentComponent } from '../sc-missing-component.component';
@@ -52,7 +53,7 @@ import {
  *
  * ```
  * <code class="scpm" chrometype="placeholder" kind="open" id="…" />   ← once, outer
- *   <code class="scpm" chrometype="rendering" kind="open" id="<uid>" data-csdk-component-runtime="server" />
+ *   <code class="scpm" chrometype="rendering" kind="open" id="<uid>"/>
  *   <child-component />
  *   <code class="scpm" chrometype="rendering" kind="close" />
  *   …
@@ -175,12 +176,15 @@ export class ScPlaceholderComponent {
     container.clear();
 
     const rawRenderings = getPlaceholderRenderings(rendering, name, isEditing);
-    this.emptyInEditing.set(rawRenderings.length === 0 && isEditing);
+    const placeholderDeclared = isPlaceholderDeclaredInLayout(rendering, name, isEditing);
+    this.emptyInEditing.set(rawRenderings.length === 0 && isEditing && placeholderDeclared);
 
     // Empty placeholder: in Metadata edit mode, still wrap with an outer placeholder
-    // pair so Pages can discover and target the empty region. Otherwise emit nothing.
+    // pair so Pages can discover and target the empty region. Skip when the name is not
+    // declared on the parent rendering (matches JSS PlaceholderComponent early return).
     if (rawRenderings.length === 0) {
-      if (isEditing && editingChromeBlock) {
+      if (isEditing && editingChromeBlock && placeholderDeclared) {
+        resetEditorChromes();
         this.emitOuterChrome(container, editingChromeBlock, MetadataKind.Open, rendering, name);
         this.emitOuterChrome(container, editingChromeBlock, MetadataKind.Close, rendering, name);
       }
