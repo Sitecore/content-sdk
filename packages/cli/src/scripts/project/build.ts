@@ -1,4 +1,5 @@
 import loadCliConfig from '../../utils/load-config';
+import { ensureSitecoreDirectory } from '../../utils/ensure-sitecore-directory';
 
 export const command = ['build', 'b'];
 
@@ -29,6 +30,7 @@ export type BuildArgs = {
  * @param {BuildArgs} argv - The arguments passed to the command.
  */
 export async function handler(argv: BuildArgs) {
+  ensureSitecoreDirectory();
   const cliConfig = loadCliConfig(argv.config);
 
   if (cliConfig.build && Array.isArray(cliConfig.build.commands)) {

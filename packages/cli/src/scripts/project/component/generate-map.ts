@@ -2,6 +2,7 @@ import { Argv } from 'yargs';
 import { constants } from '@sitecore-content-sdk/core';
 import { watchItems } from '../../../utils/watch-items';
 import loadCliConfig from '../../../utils/load-config';
+import { ensureSitecoreDirectory } from '../../../utils/ensure-sitecore-directory';
 
 const { ERROR_MESSAGES } = constants;
 
@@ -69,6 +70,9 @@ export function handler(argv: GenerateMapCliArgs) {
   const componentMapGenerator = cliConfig.componentMap.generator;
   const { paths, destination, componentImports, exclude, clientComponentMap, includeVariants } =
     cliConfig.componentMap;
+
+  ensureSitecoreDirectory(destination);
+
   if (argv.watch) {
     console.log(
       `Watching for component changes to component builder sources in:\n ${paths.join('\n')}`
