@@ -1,4 +1,5 @@
 import { draftMode } from 'next/headers';
+import { Suspense } from 'react';
 import Bootstrap from 'src/Bootstrap';
 
 export default async function SiteLayout({
@@ -9,11 +10,12 @@ export default async function SiteLayout({
   params: Promise<{ site: string }>;
 }) {
   const { site } = await params;
-  const { isEnabled } = await draftMode();
 
   return (
     <>
-      <Bootstrap siteName={site} isPreviewMode={isEnabled} />
+      <Suspense fallback={null}>
+        <Bootstrap siteName={site} isPreviewMode={(await draftMode()).isEnabled} />
+      </Suspense>
       {children}
     </>
   );

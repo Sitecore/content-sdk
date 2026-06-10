@@ -2,24 +2,6 @@ import { collectSitecorePageCacheTags, ErrorPage, type Page } from '@sitecore-co
 import { cacheTag } from 'next/cache';
 import client from 'src/lib/sitecore-client';
 
-/**
- * Stable synthetic pathnames for cache tags so error-page reads do not share the home route (`_`) tag
- * with normal layout data for `/`.
- */
-const NOT_FOUND_TAG_PATH = '/__sitecore-content-sdk/error/not-found';
-const SERVER_ERROR_TAG_PATH = '/__sitecore-content-sdk/error/server-error';
-
-function personalizedPathnameForErrorCode(code: ErrorPage): string {
-  switch (code) {
-    case ErrorPage.NotFound:
-      return NOT_FOUND_TAG_PATH;
-    case ErrorPage.InternalServerError:
-      return SERVER_ERROR_TAG_PATH;
-    default:
-      return NOT_FOUND_TAG_PATH;
-  }
-}
-
 type GetSitecoreErrorPageParams = {
   site: string;
   locale: string;
@@ -27,7 +9,7 @@ type GetSitecoreErrorPageParams = {
 };
 
 /**
- * Loads SXA-style Sitecore error pages with Next.js Cache Components and the same tag strategy as
+ * Loads Sitecore error pages with Next.js Cache Components and the same tag strategy as
  * {@link getSitecorePage}, so webhook / `revalidateTag` flows can invalidate updated error experiences.
  */
 export async function getSitecoreErrorPage(params: GetSitecoreErrorPageParams): Promise<Page | null> {
@@ -35,13 +17,15 @@ export async function getSitecoreErrorPage(params: GetSitecoreErrorPageParams): 
 
   const { site, locale, code } = params;
   const page = await client.getErrorPage(code, { site, locale });
-  const personalizedPathname = personalizedPathnameForErrorCode(code);
+
+  const sitecore = page?.layout?.sitecore;
+  const itemPath = sitecore?.context?.itemPath;
 
   const tags = collectSitecorePageCacheTags({
     site,
     locale,
-    personalizedPathname,
-    route: page?.layout?.sitecore?.route,
+    path: typeof itemPath === 'string' && itemPath ? itemPath : undefined,
+    route: sitecore?.route,
   });
 
   for (const tag of tags) {
