@@ -6,6 +6,7 @@ import {
 import debug from '../debug';
 import { LayoutServiceData, LayoutServicePageState } from '../layout';
 import { LayoutKind } from './models';
+import { DEFAULT_VARIANT } from '../personalize';
 
 /**
  * GraphQL query for fetching editing data.
@@ -48,6 +49,7 @@ export type EditingOptions = {
   layoutKind?: LayoutKind;
   mode: Exclude<LayoutServicePageState, 'Normal'>;
   site?: string;
+  variantId: string;
 };
 
 /**
@@ -72,6 +74,7 @@ export class EditingService {
    * @param {string} variables.itemId - The item id (path) to fetch layout data for.
    * @param {string} variables.language - The language to fetch layout data for.
    * @param {string} variables.mode - The editing mode to fetch layout data for.
+   * @param {string} variables.variantId - The variant id to fetch layout data for.
    * @param {string} [variables.version] - The version of the item (optional).
    * @param {LayoutKind} [variables.layoutKind] - The final or shared layout variant.
    * @param {string} [variables.site] - The site context for fetching layout data (optional).
@@ -79,7 +82,15 @@ export class EditingService {
    * @returns {Promise} The layout data and dictionary phrases.
    */
   async fetchEditingData(
-    { itemId, language, version, layoutKind = LayoutKind.Final, mode, site }: EditingOptions,
+    {
+      itemId,
+      language,
+      version,
+      layoutKind = LayoutKind.Final,
+      mode,
+      site,
+      variantId,
+    }: EditingOptions,
     fetchOptions?: FetchOptions
   ) {
     debug.editing('fetching editing data for %s %s %s %s', itemId, language, version, layoutKind);
@@ -105,6 +116,7 @@ export class EditingService {
           sc_layoutKind: layoutKind,
           sc_editMode: editModeHeader,
           sc_previewMode: previewModeHeader,
+          sc_variant: variantId === DEFAULT_VARIANT ? 'default' : variantId,
           ...(site && { sc_site: site }),
         },
       }

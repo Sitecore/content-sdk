@@ -172,7 +172,7 @@ describe('editing/utils', () => {
         sc_site: 'test-site',
         sc_itemid: 'item-123',
         sc_lang: 'en',
-        sc_variant: 'variant1,variant2',
+        sc_variant: 'variant-1',
         sc_version: '1',
         sc_layoutKind: 'mvc',
       };
@@ -183,7 +183,7 @@ describe('editing/utils', () => {
         site: 'test-site',
         itemId: 'item-123',
         language: 'en',
-        variantIds: 'variant1,variant2',
+        variantId: 'variant-1',
         version: '1',
         mode: 'edit',
         layoutKind: 'mvc',
@@ -200,7 +200,7 @@ describe('editing/utils', () => {
 
       const params = mapEditingParams(query);
 
-      expect(params.variantIds).to.equal(DEFAULT_VARIANT);
+      expect(params.variantId).to.equal(DEFAULT_VARIANT);
     });
 
     it('should handle empty variant string', () => {
@@ -214,7 +214,7 @@ describe('editing/utils', () => {
 
       const params = mapEditingParams(query);
 
-      expect(params.variantIds).to.equal(DEFAULT_VARIANT);
+      expect(params.variantId).to.equal(DEFAULT_VARIANT);
     });
 
     it('should handle undefined values gracefully', () => {

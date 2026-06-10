@@ -141,7 +141,7 @@ describe('createEditingRenderRouteHandlers', () => {
           language: query.sc_lang,
           site: query.sc_site,
           mode: query.mode,
-          variantIds: query.sc_variant,
+          variantId: query.sc_variant,
           version: query.sc_version,
           layoutKind: query.sc_layoutKind,
         })),
@@ -359,7 +359,7 @@ describe('createEditingRenderRouteHandlers', () => {
         language: mockQuery.sc_lang,
         site: mockQuery.sc_site,
         mode: mockQuery.mode,
-        variantIds: mockQuery.sc_variant,
+        variantId: mockQuery.sc_variant,
         version: mockQuery.sc_version,
         layoutKind: mockQuery.sc_layoutKind,
       });
@@ -373,7 +373,7 @@ describe('createEditingRenderRouteHandlers', () => {
           language: mockQuery.sc_lang,
           site: mockQuery.sc_site,
           mode: mockQuery.mode,
-          variantIds: mockQuery.sc_variant,
+          variantId: mockQuery.sc_variant,
           version: mockQuery.sc_version,
           layoutKind: mockQuery.sc_layoutKind,
         }),
@@ -1174,7 +1174,7 @@ describe('createEditingRenderRouteHandlers', () => {
         language: mockQuery.sc_lang,
         site: mockQuery.sc_site,
         mode: mockQuery.mode,
-        variantIds: mockQuery.sc_variant,
+        variantId: mockQuery.sc_variant,
         version: mockQuery.sc_version,
         layoutKind: mockQuery.sc_layoutKind,
       });
@@ -1208,7 +1208,7 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(targetUrl.searchParams.get('language')).to.equal(mockQuery.sc_language);
       expect(targetUrl.searchParams.get('site')).to.equal(mockQuery.sc_site);
       expect(targetUrl.searchParams.get('mode')).to.equal(mockQuery.mode);
-      expect(targetUrl.searchParams.get('variantIds')).to.equal(mockQuery.sc_variant);
+      expect(targetUrl.searchParams.get('variantId')).to.equal(mockQuery.sc_variant);
       expect(targetUrl.searchParams.get('version')).to.equal(mockQuery.sc_version);
       expect(targetUrl.searchParams.get('layoutKind')).to.equal(mockQuery.sc_layoutKind);
       expect(targetUrl.searchParams.get(QUERY_PARAM_VERCEL_PROTECTION_BYPASS)).to.equal(
