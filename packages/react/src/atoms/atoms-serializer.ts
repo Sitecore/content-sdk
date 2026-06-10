@@ -1,16 +1,11 @@
-/**
- * Atoms runtime serialization — converts a Catalog to the payload shape
- * sent to Design Studio via the Design Library event.
- * @internal
- */
 import type { Catalog } from '@json-render/core';
 import type { AtomsCatalogInput } from './types';
 
 /**
  * Serialized atom info for a single component, sent to Design Studio.
- * @public
+ * @internal
  */
-export interface AtomCatalogEntry {
+export interface AtomCatalogComponentEntry {
   /** Component name (key in the catalog). */
   name: string;
   /** JSON Schema representation of the component props. */
@@ -31,37 +26,36 @@ export interface AtomCatalogEntry {
 
 /**
  * Serialized action info, sent to Design Studio.
- * @public
+ * @internal
  */
-export interface ActionCatalogEntry {
+export interface AtomCatalogActionEntry {
   /** Action name (key in the catalog). */
   name: string;
   /** JSON Schema representation of the action params. */
-  paramsSchema: object;
+  paramsSchema?: object;
   /** Human-readable description. */
-  description: string;
+  description: string | undefined;
 }
 
 /**
  * Full catalog payload sent to Design Studio.
- * @public
+ * @internal
  */
 export interface SerializedCatalog {
   /** Catalog root version from `defineAtomsCatalog`. Absent when not declared. */
   version?: string;
   /** Serialized component entries. */
-  components: AtomCatalogEntry[];
+  components: AtomCatalogComponentEntry[];
   /** Serialized action entries. */
-  actions: ActionCatalogEntry[];
+  actions: AtomCatalogActionEntry[];
 }
 
 /**
  * Serialize a json-render Catalog into the payload shape expected by Design Studio.
  * Extracts component names, JSON Schemas, descriptions, and slots.
- *
- * @param catalog - The json-render Catalog to serialize
+ * @param { Catalog<any, AtomsCatalogInput> } catalog - The json-render Catalog to serialize
  * @returns Serialized catalog for the Design Library event
- * @public
+ * @internal
  */
 export function serializeCatalog(catalog: Catalog<any, AtomsCatalogInput>): SerializedCatalog {
   const { version, components, actions } = catalog.data;
@@ -70,27 +64,39 @@ export function serializeCatalog(catalog: Catalog<any, AtomsCatalogInput>): Seri
 
   const serializedComponents = componentNames.map((name) => {
     const component = components[name];
-    return {
+    const serializedComponent: AtomCatalogComponentEntry = {
       name: name as string,
       propsSchema: component.props.toJSONSchema() as object,
       description: component.description,
       slots: component.slots ?? ['default'],
-      version: component.version,
       allowedChildren: component.allowedChildren,
       allowedParents: component.allowedParents,
       example: component.example,
     };
+
+    if (component.version) serializedComponent.version = component.version;
+
+    return serializedComponent;
   });
 
   const serializedActions = actionNames.map((name) => {
     const action = actions![name];
-    return {
+    const serializedAction: AtomCatalogActionEntry = {
       name: name as string,
-      paramsSchema: action.params.toJSONSchema() as object,
       description: action.description,
     };
+
+    if (action.params) serializedAction.paramsSchema = action.params.toJSONSchema();
+
+    return serializedAction;
   });
 
-  return { version, components: serializedComponents, actions: serializedActions };
-}
+  const serializedCatalog: SerializedCatalog = {
+    components: serializedComponents,
+    actions: serializedActions,
+  };
 
+  if (version) serializedCatalog.version = version;
+
+  return serializedCatalog;
+}
