@@ -8,7 +8,7 @@ import { replaceMediaUrlPrefix, getSrcSet, updateImageUrl, getRequiredParams } f
 const expect = chai.use(chaiString).expect;
 
 describe('getRequiredParams', () => {
-  it('should return required query string params', () => {
+  it('should return required query string params including preview context params', () => {
     const parsedQs = {
       rev: '11',
       db: '22',
@@ -16,6 +16,9 @@ describe('getRequiredParams', () => {
       la: '33',
       vs: '44',
       ts: '55',
+      ttc: '63916515230',
+      tt: 'ABC123',
+      hash: 'DEF456',
       yyy: 'vvv',
     };
 
@@ -27,6 +30,9 @@ describe('getRequiredParams', () => {
       la: '33',
       vs: '44',
       ts: '55',
+      ttc: '63916515230',
+      tt: 'ABC123',
+      hash: 'DEF456',
     });
   });
 });
@@ -56,7 +62,7 @@ describe('updateImageUrl', () => {
     expect(url.searchParams.get('mw')).to.equal('6');
     expect(url.searchParams.get('h')).to.be.null;
     expect(url.searchParams.get('w')).to.be.null;
-    expect(url.searchParams.get('hash')).to.be.null;
+    expect(url.searchParams.get('hash')).to.equal('CC5043DC03C6C27F40EDB08CF84AB8670C05D63D');
   });
 
   it('should preserve required query parameters', () => {
@@ -85,6 +91,50 @@ describe('updateImageUrl', () => {
     const updated = updateImageUrl(original, { foo: 'bar' });
     const url = new URL(updated);
     expect(url.pathname).to.startsWith('/~/jssmedia/');
+  });
+
+  describe('preview context URL handling', () => {
+    it('should preserve preview context params (ttc, tt, hash) alongside imageParams', () => {
+      const original =
+        'http://sitecore/-/media/lorem.jpg?h=386&iar=0&w=580&ttc=63916515230&tt=920D06D9A5A7854EA56FEC0C7ACF7A7A&hash=D04C2CC8A2097B956B39657256631ED7';
+      const updated = updateImageUrl(original, { mw: '100', mh: '50' });
+      const url = new URL(updated);
+      // Preview context params should be preserved
+      expect(url.searchParams.get('ttc')).to.equal('63916515230');
+      expect(url.searchParams.get('tt')).to.equal('920D06D9A5A7854EA56FEC0C7ACF7A7A');
+      expect(url.searchParams.get('hash')).to.equal('D04C2CC8A2097B956B39657256631ED7');
+      // New imageParams should be added
+      expect(url.searchParams.get('mw')).to.equal('100');
+      expect(url.searchParams.get('mh')).to.equal('50');
+      // Non-required params should be stripped
+      expect(url.searchParams.get('h')).to.be.null;
+      expect(url.searchParams.get('iar')).to.be.null;
+      expect(url.searchParams.get('w')).to.be.null;
+      // URL prefix should be replaced
+      expect(url.pathname).to.startsWith('/-/jssmedia/');
+    });
+
+    it('should preserve tt and hash params when present', () => {
+      const original = 'http://sitecore/-/media/lorem.jpg?w=100&tt=ABC123&hash=DEF456';
+      const updated = updateImageUrl(original, { mw: '200' });
+      const url = new URL(updated);
+      // Preview params preserved
+      expect(url.searchParams.get('tt')).to.equal('ABC123');
+      expect(url.searchParams.get('hash')).to.equal('DEF456');
+      // imageParams added
+      expect(url.searchParams.get('mw')).to.equal('200');
+      // Non-required params stripped
+      expect(url.searchParams.get('w')).to.be.null;
+    });
+
+    it('should work with path-only preview URLs', () => {
+      const original = '/-/media/test.jpg?ttc=123&tt=ABC&hash=XYZ';
+      const updated = updateImageUrl(original, { w: '500' });
+      expect(updated).to.include('ttc=123');
+      expect(updated).to.include('tt=ABC');
+      expect(updated).to.include('hash=XYZ');
+      expect(updated).to.include('w=500');
+    });
   });
 
   describe('should replace url using custom mediaUrlPrefix', () => {
