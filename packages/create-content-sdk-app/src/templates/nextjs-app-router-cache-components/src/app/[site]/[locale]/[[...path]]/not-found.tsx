@@ -5,15 +5,22 @@ import scConfig from 'sitecore.config';
 import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 import { NextIntlClientProvider } from 'next-intl';
+import { setRequestLocale } from 'next-intl/server';
 
 export default async function NotFound() {
   const { site, locale } = getCachedPageParams();
+  const resolvedSite = site || scConfig.defaultSite;
+  const resolvedLocale = locale || scConfig.defaultLanguage;
 
   const page = await getSitecoreErrorPage({
-    site: site || scConfig.defaultSite,
-    locale: locale || scConfig.defaultLanguage,
+    site: resolvedSite,
+    locale: resolvedLocale,
     code: ErrorPage.NotFound,
   });
+
+  // Set site and locale for next-intl dictionary resolution in src/i18n/request.ts.
+  // Called after the cached error-page fetch so the locale is resolved from route params, not a Dynamic API.
+  setRequestLocale(`${resolvedSite}_${resolvedLocale}`);
 
   if (page) {
     return (

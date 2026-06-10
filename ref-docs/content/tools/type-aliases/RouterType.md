@@ -8,6 +8,6 @@
 
 > **RouterType** = `"app"` \| `"pages"`
 
-Defined in: [content/src/tools/templating/components.ts:29](https://github.com/Sitecore/content-sdk/blob/363158477ed913ddfbe904264deebf83015ebcdb/packages/content/src/tools/templating/components.ts#L29)
+Defined in: [content/src/tools/templating/components.ts:29](https://github.com/Sitecore/content-sdk/blob/7d29ee8df75a9fcce488bbf9baac1d82ba219e99/packages/content/src/tools/templating/components.ts#L29)
 
 **`Internal`**

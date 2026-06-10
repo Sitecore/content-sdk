@@ -8,7 +8,7 @@
 
 > **BotTrackingProxyConfig** = `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & `Omit`\<[`ProxyBaseConfig`](ProxyBaseConfig.md), `"defaultLanguage"`\> & `object`
 
-Defined in: [nextjs/src/proxy/bot-tracking-proxy.ts:25](https://github.com/Sitecore/content-sdk/blob/363158477ed913ddfbe904264deebf83015ebcdb/packages/nextjs/src/proxy/bot-tracking-proxy.ts#L25)
+Defined in: [nextjs/src/proxy/bot-tracking-proxy.ts:25](https://github.com/Sitecore/content-sdk/blob/7d29ee8df75a9fcce488bbf9baac1d82ba219e99/packages/nextjs/src/proxy/bot-tracking-proxy.ts#L25)
 
 Configuration for BotTrackingProxy.
 
