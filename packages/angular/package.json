@@ -1,7 +1,6 @@
 {
   "name": "@sitecore-content-sdk/angular",
-  "private": true,
-  "version": "0.1.0",
+  "version": "0.0.1",
   "installConfig": {
     "hoistingLimits": "none"
   },

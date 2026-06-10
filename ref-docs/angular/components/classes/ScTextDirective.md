@@ -6,7 +6,7 @@
 
 # Class: ScTextDirective
 
-Defined in: [packages/angular/src/components/field-directives/sc-text.directive.ts:18](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-text.directive.ts#L18)
+Defined in: [packages/angular/src/components/field-directives/sc-text.directive.ts:18](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/field-directives/sc-text.directive.ts#L18)
 
 Renders a Sitecore text field value into the host element's text content.
 For simple string/number fields in published mode.
@@ -23,7 +23,7 @@ Usage:
 
 > **new ScTextDirective**(): `ScTextDirective`
 
-Defined in: [packages/angular/src/components/field-directives/sc-text.directive.ts:28](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-text.directive.ts#L28)
+Defined in: [packages/angular/src/components/field-directives/sc-text.directive.ts:28](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/field-directives/sc-text.directive.ts#L28)
 
 #### Returns
 
@@ -35,7 +35,7 @@ Defined in: [packages/angular/src/components/field-directives/sc-text.directive.
 
 > `readonly` **scText**: `InputSignal`\<`TextField`\>
 
-Defined in: [packages/angular/src/components/field-directives/sc-text.directive.ts:20](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-text.directive.ts#L20)
+Defined in: [packages/angular/src/components/field-directives/sc-text.directive.ts:20](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/field-directives/sc-text.directive.ts#L20)
 
 The Sitecore text field.
 
@@ -45,6 +45,6 @@ The Sitecore text field.
 
 > `readonly` **scTextEncode**: `InputSignal`\<`boolean`\>
 
-Defined in: [packages/angular/src/components/field-directives/sc-text.directive.ts:23](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-text.directive.ts#L23)
+Defined in: [packages/angular/src/components/field-directives/sc-text.directive.ts:23](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/field-directives/sc-text.directive.ts#L23)
 
 Whether to HTML-encode the value (default: true). When false, uses innerHTML.

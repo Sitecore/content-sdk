@@ -8,7 +8,7 @@
 
 > **resolveSitecorePage**(`path`, `sitecoreConfig`, `client`, `options?`): `Promise`\<`Page` \| `null`\>
 
-Defined in: [packages/angular/src/lib/sitecore-page-resolver.ts:19](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/lib/sitecore-page-resolver.ts#L19)
+Defined in: [packages/angular/src/lib/sitecore-page-resolver.ts:19](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/lib/sitecore-page-resolver.ts#L19)
 
 Resolves layout/page data for a route path using a [SitecoreClient](../content/client/classes/SitecoreClient.md) and Sitecore config.
 Import your `sitecore.config` default and shared client (e.g. `getClient()`) from the app;

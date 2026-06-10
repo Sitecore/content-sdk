@@ -6,7 +6,7 @@
 
 # Class: ClientLoaderDataService
 
-Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:46](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/loaders/client-loader-data.service.ts#L46)
+Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:46](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/loaders/client-loader-data.service.ts#L46)
 
 Loader data client for browser loader data resolution. POSTs to the `/_data` endpoint and holds
 short-lived prefetched responses for parallel navigation prefetching.
@@ -28,7 +28,7 @@ Not aware of the server-side [LoaderCache](../interfaces/LoaderCache.md).
 
 > **getData**(`request`): `Promise`\<[`LoaderApiResponse`](../type-aliases/LoaderApiResponse.md)\>
 
-Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:84](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/loaders/client-loader-data.service.ts#L84)
+Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:84](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/loaders/client-loader-data.service.ts#L84)
 
 Get data for the given request, using staged prefetched responses or fetching if needed.
 If a request is already pending for this URL/loader combination,
@@ -53,7 +53,7 @@ Promise resolving to the API response
 
 > **prefetch**(`loaderRequest`): `void`
 
-Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:61](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/loaders/client-loader-data.service.ts#L61)
+Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:61](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/loaders/client-loader-data.service.ts#L61)
 
 Prefetch loader data for the given request without consuming staged responses.
 If a response is already staged or a request is pending, does nothing.

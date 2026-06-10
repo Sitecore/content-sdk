@@ -6,7 +6,7 @@
 
 # Class: ServerLoaderRunner
 
-Defined in: [packages/angular/src/server/server-loader-runner.ts:27](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/server/server-loader-runner.ts#L27)
+Defined in: [packages/angular/src/server/server-loader-runner.ts:27](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/server-loader-runner.ts#L27)
 
 Server-side cache aware loader data resolver.
 LoaderResolver is exposed to both server and browser. This layer ensures browser safety and acts as connecting layer to cache.
@@ -27,7 +27,7 @@ the global cache is disabled.
 
 > **new ServerLoaderRunner**(`registry`, `cache?`): `ServerLoaderRunner`
 
-Defined in: [packages/angular/src/server/server-loader-runner.ts:35](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/server/server-loader-runner.ts#L35)
+Defined in: [packages/angular/src/server/server-loader-runner.ts:35](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/server-loader-runner.ts#L35)
 
 #### Parameters
 
@@ -46,7 +46,7 @@ Defined in: [packages/angular/src/server/server-loader-runner.ts:35](https://git
 
 > **resolve**(`request`): `Promise`\<[`LoaderDataResult`](../../../loaders/type-aliases/LoaderDataResult.md)\>
 
-Defined in: [packages/angular/src/server/server-loader-runner.ts:42](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/server/server-loader-runner.ts#L42)
+Defined in: [packages/angular/src/server/server-loader-runner.ts:42](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/server-loader-runner.ts#L42)
 
 Resolve loader data with optional cache read-through and SWR refresh.
 

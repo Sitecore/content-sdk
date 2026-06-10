@@ -8,7 +8,7 @@
 
 > **AngularContentSdkComponent** = `Type`\<`unknown`\> \| [`AngularModule`](AngularModule.md)
 
-Defined in: [packages/angular/src/components/types.ts:23](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/types.ts#L23)
+Defined in: [packages/angular/src/components/types.ts:23](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/types.ts#L23)
 
 An entry in the Angular component map. Maps Sitecore rendering names to Angular component types.
 Supports SXA rendering variants via named exports alongside a default.

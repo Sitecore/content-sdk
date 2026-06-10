@@ -6,7 +6,7 @@
 
 # Class: ScRouterLinkDirective
 
-Defined in: [packages/angular/src/components/field-directives/sc-router-link.directive.ts:21](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-router-link.directive.ts#L21)
+Defined in: [packages/angular/src/components/field-directives/sc-router-link.directive.ts:21](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/field-directives/sc-router-link.directive.ts#L21)
 
 Renders a Sitecore link field onto a host `<a>` and calls `Router.navigateByUrl` on click
 for in-app paths only. Clicks are left to the browser when `href` is missing/empty, when
@@ -28,7 +28,7 @@ Usage:
 
 > **new ScRouterLinkDirective**(): `ScRouterLinkDirective`
 
-Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:72](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-link.directive.ts#L72)
+Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:72](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/field-directives/sc-link.directive.ts#L72)
 
 #### Returns
 
@@ -44,7 +44,7 @@ Defined in: [packages/angular/src/components/field-directives/sc-link.directive.
 
 > `protected` `readonly` **el**: `ElementRef`\<`any`\>
 
-Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:62](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-link.directive.ts#L62)
+Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:62](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/field-directives/sc-link.directive.ts#L62)
 
 #### Inherited from
 
@@ -56,7 +56,7 @@ Defined in: [packages/angular/src/components/field-directives/sc-link.directive.
 
 > `readonly` **preferTextFromField**: `InputSignal`\<`boolean`\>
 
-Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:60](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-link.directive.ts#L60)
+Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:60](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/field-directives/sc-link.directive.ts#L60)
 
 Whether to show link text alongside existing child content.
 
@@ -70,7 +70,7 @@ Whether to show link text alongside existing child content.
 
 > `readonly` **scLink**: `InputSignal`\<`LinkField` \| `LinkFieldValue`\>
 
-Defined in: [packages/angular/src/components/field-directives/sc-router-link.directive.ts:25](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-router-link.directive.ts#L25)
+Defined in: [packages/angular/src/components/field-directives/sc-router-link.directive.ts:25](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/field-directives/sc-router-link.directive.ts#L25)
 
 Sitecore link field; host attribute `[scRouterLink]` maps to the base [ScLinkDirective.scLink](ScLinkDirective.md#sclink) input.
 
@@ -84,7 +84,7 @@ Sitecore link field; host attribute `[scRouterLink]` maps to the base [ScLinkDir
 
 > **onClick**(`event`): `void`
 
-Defined in: [packages/angular/src/components/field-directives/sc-router-link.directive.ts:30](https://github.com/Sitecore/content-sdk/blob/923ffcee7dd418f8c72a1a802e878859b5159692/packages/angular/src/components/field-directives/sc-router-link.directive.ts#L30)
+Defined in: [packages/angular/src/components/field-directives/sc-router-link.directive.ts:30](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/field-directives/sc-router-link.directive.ts#L30)
 
 #### Parameters
 
