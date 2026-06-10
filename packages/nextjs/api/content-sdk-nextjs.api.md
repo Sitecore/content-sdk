@@ -283,8 +283,7 @@ export function collectSitecorePageCacheTags(params: CollectSitecorePageCacheTag
 export type CollectSitecorePageCacheTagsParams = {
     site: string;
     locale: string;
-    personalizedPathname?: string;
-    path?: string[];
+    path?: string;
     route?: RouteData | null;
 };
 
