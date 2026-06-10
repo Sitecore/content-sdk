@@ -13,43 +13,12 @@ function normalizePathname(pathname: string): string {
 }
 
 /**
- * Trims leading and trailing `/` from a single path segment without regex (linear time; avoids ReDoS flags on path-derived input).
- * @param {string} part - One App Router catch-all path segment.
- */
-function trimSlashes(part: string): string {
-  let start = 0;
-  let end = part.length;
-  while (start < end && part[start] === '/') {
-    start++;
-  }
-  while (end > start && part[end - 1] === '/') {
-    end--;
-  }
-  return part.slice(start, end);
-}
-
-/**
- * Normalizes App Router catch-all `path` segments the same way as `SitecoreClient.parsePath` for a
- * string array (leading slash, trim segments, drop empty `/` parts).
- * @param {string[]} path - App Router catch-all segments.
- */
-function personalizedPathnameFromPathSegments(path: string[]): string {
-  if (path.length === 0) {
-    return '/';
-  }
-  return `/${path
-    .filter((part) => part !== '/')
-    .map((part) => trimSlashes(part))
-    .join('/')}`;
-}
-
-/**
  * Route segments after removing personalization rewrite markers, for stable route-level tags.
- * @param {string} personalizedPathname - Pathname that may include personalization rewrite segments.
+ * @param {string} pathname - Pathname that may include personalization rewrite segments.
  */
-function routeSegmentsFromPersonalizedPathname(personalizedPathname: string): string[] {
-  const pathname = normalizePathname(personalizedPathname);
-  const n = normalizePersonalizedRewrite(pathname);
+function routeSegmentsFromPathname(pathname: string): string[] {
+  const normalized = normalizePathname(pathname);
+  const n = normalizePersonalizedRewrite(normalized);
   if (!n || n === '/') {
     return [];
   }
@@ -65,15 +34,9 @@ export type CollectSitecorePageCacheTagsParams = {
   site: string;
   locale: string;
   /**
-   * Path string used for deriving normalized route segments (personalization rewrite segments stripped)
-   * for the route tag. Provide this **or** `path`. When both are set, this value wins.
+   * Sitecore route path (e.g. `/about`, `/Not-Found`, or `/` for home). Omit for home.
    */
-  personalizedPathname?: string;
-  /**
-   * App Router catch-all segments (e.g. from `[...path]`). Used when `personalizedPathname` is omitted;
-   * normalized the same way as `SitecoreClient.parsePath` for a string array argument.
-   */
-  path?: string[];
+  path?: string;
   /**
    * Route node from a Sitecore layout response (e.g. `page.layout.sitecore.route`, which is
    * `RouteData | null`). Optional because the page may not resolve; only `itemId`, `itemLanguage`,
@@ -94,16 +57,11 @@ export type CollectSitecorePageCacheTagsParams = {
  * Personalization variants are isolated naturally by URL path (each variant rewrite yields a distinct
  * Cache Components key) so no `sc:pvv:…` tag is added here. If a personalize-specific webhook is wired
  * up later, build that tag in the dedicated helper and add it on top of these.
- * @param {CollectSitecorePageCacheTagsParams} params - Site, locale, path or personalized pathname, and route metadata.
+ * @param {CollectSitecorePageCacheTagsParams} params - Site, locale, path, and route metadata.
  * @public
  */
 export function collectSitecorePageCacheTags(params: CollectSitecorePageCacheTagsParams): string[] {
-  const pathnameInput =
-    params.personalizedPathname !== undefined
-      ? params.personalizedPathname
-      : personalizedPathnameFromPathSegments(params.path ?? []);
-  const pathname = normalizePathname(pathnameInput);
-  const pathSegments = routeSegmentsFromPersonalizedPathname(pathname);
+  const pathSegments = routeSegmentsFromPathname(params.path ?? '/');
 
   return dedupeSitecoreCacheTags([
     buildSitecoreRouteCacheTag({
