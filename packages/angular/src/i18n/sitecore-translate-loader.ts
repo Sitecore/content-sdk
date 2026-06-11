@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { TranslateLoader } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { SitecoreContextService } from '../lib/sitecore-context.service';
+import debug from '../debug';
 
 /**
  * `ngx-translate` loader using Sitecore dictionary from {@link SitecoreContextService}.
@@ -19,6 +20,7 @@ export class SitecoreTranslateLoader implements TranslateLoader {
    */
   getTranslation(): Observable<Record<string, string>> {
     const dictionary = this.context.dictionary();
+    debug.dictionary('ngx translate uses dictionary', dictionary);
     return of(dictionary ?? {});
   }
 }
