@@ -124,7 +124,6 @@ export function createLoaderDataServiceMiddleware(
     try {
       const parsed = parseLoaderRequest(req);
       if ('loaderId' in parsed) {
-        // Per refactor plan A2: extract once at the boundary; ride on the payload.
         // POST body's `angularRequestContext` is ignored — server-derived data
         // (hostname, headers) must come from the actual request, not from a
         // payload the browser could spoof.

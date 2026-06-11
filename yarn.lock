@@ -5209,8 +5209,10 @@ __metadata:
     "@angular/router": "npm:^21.1.0"
     "@eslint/js": "npm:^9.32.0"
     "@ngx-translate/core": "npm:^17.0.0"
+    "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
     "@sitecore-content-sdk/content": "npm:^2.1.0"
     "@sitecore-content-sdk/core": "npm:^2.1.0"
+    "@sitecore-content-sdk/personalize": "npm:^2.1.0"
     "@types/node": "npm:^24.10.4"
     "@vitest/coverage-v8": "npm:^4.1.5"
     angular-eslint: "npm:^21.3.1"
@@ -5232,6 +5234,8 @@ __metadata:
     "@angular/platform-server": ^21.0.0
     "@angular/ssr": ^21.0.0
     "@ngx-translate/core": ^17.0.0
+    "@sitecore-content-sdk/analytics-core": ^2.1.0
+    "@sitecore-content-sdk/personalize": ^2.1.0
     zone.js: ^0.15.0
   peerDependenciesMeta:
     "@angular/platform-server":

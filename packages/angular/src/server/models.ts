@@ -11,6 +11,23 @@ export const EXTRACT_REQUEST_CONTEXT_TOKEN = new InjectionToken<
   (req: ExpressRequest) => RequestContext
 >('EXTRACT_REQUEST_CONTEXT');
 
+export interface CookieOptions {
+  /** Expiry relative to now, in milliseconds */
+  maxAge?: number;
+  /** Sign the cookie (needs cookie-parser with a secret) */
+  signed?: boolean;
+  /** GMT expiry date; omit for session cookie */
+  expires?: Date;
+  httpOnly?: boolean;
+  path?: string; // default "/"
+  domain?: string;
+  secure?: boolean;
+  encode?: (val: string) => string;
+  sameSite?: boolean | 'lax' | 'strict' | 'none';
+  priority?: 'low' | 'medium' | 'high';
+  partitioned?: boolean;
+}
+
 /**
  * Minimal Express Request interface for type safety without requiring Express as a dependency
  * @public
@@ -29,6 +46,15 @@ export interface ExpressRequest {
    * Headers from the request
    */
   headers?: Record<string, string | string[] | undefined>;
+  setHeader?: (name: string, value: string | string[] | undefined) => void;
+}
+
+export interface CsdkExpressRequest extends ExpressRequest {
+  sc?: {
+    siteName: string;
+    variantId?: string;
+    componentVariantIds?: string[];
+  };
 }
 
 /**
@@ -48,6 +74,10 @@ export interface ExpressResponse {
    * headers without depending on Express types directly.
    */
   setHeader?(name: string, value: string | string[]): void;
+  /**
+   * Set a response cookie. Used by multisite middleware to set the site cookie.
+   */
+  cookie?(name: string, value: string, options?: CookieOptions): void;
 }
 
 /**
