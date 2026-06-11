@@ -68,9 +68,7 @@ export const mapEditingParams = (query: {
         site: query.sc_site,
         itemId: query.sc_itemid,
         language: query.sc_lang,
-        // for sc_variantId we may employ multiple variants (page-layout + component level)
-        // they will be separated by commas (,)
-        variantIds: query.sc_variant || DEFAULT_VARIANT,
+        variantId: query.sc_variant || DEFAULT_VARIANT,
         version: query.sc_version,
         mode: query.mode,
         layoutKind: query.sc_layoutKind,

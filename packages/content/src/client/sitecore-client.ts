@@ -25,7 +25,7 @@ import {
   applyMediaUrlRewrite,
 } from '../layout';
 import { HTMLLink, StaticPath } from '../models';
-import { getGroomedVariantIds, PersonalizedRewriteData } from '../personalize/utils';
+import { PersonalizedRewriteData } from '../personalize/utils';
 import { personalizeLayout } from '../personalize/layout-personalizer';
 import { ErrorPages, ErrorPagesService, SitePathService, SitemapXmlService } from '../site';
 import { SitecoreClientInit } from './models';
@@ -464,11 +464,8 @@ export class SitecoreClient implements BaseSitecoreClient {
       return null;
     }
     // If we're in Pages preview (editing) mode, prefetch the editing data
-    const { site, itemId, language, version, layoutKind, mode } = previewData as EditingPreviewData;
-
-    const variantIds = Array.isArray(previewData.variantIds)
-      ? previewData.variantIds
-      : previewData.variantIds.split(',');
+    const { site, itemId, language, version, layoutKind, mode, variantId } =
+      previewData as EditingPreviewData;
 
     const data = await this.editingService.fetchEditingData(
       {
@@ -478,6 +475,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         layoutKind,
         mode,
         site,
+        variantId,
       },
       fetchOptions
     );
@@ -496,8 +494,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     }
 
     let layout = data.layoutData;
-    const personalizeData = getGroomedVariantIds(variantIds);
-    personalizeLayout(layout, personalizeData.variantId, personalizeData.componentVariantIds);
     layout = this.applyContentRewrite(layout);
     const page: Page = {
       locale: language,

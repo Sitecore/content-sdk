@@ -168,7 +168,6 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     const previewData = {
       ...previewDataParams,
       ...allowedQueryParams,
-      variantIds: previewDataParams.variantIds?.split(','),
     };
 
     res.setPreviewData(previewData, {

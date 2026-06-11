@@ -334,6 +334,7 @@ export type EditingOptions = {
     layoutKind?: LayoutKind;
     mode: Exclude<LayoutServicePageState, 'Normal'>;
     site?: string;
+    variantId: string;
 };
 
 // @public
@@ -342,7 +343,7 @@ export type EditingPreviewData = {
     itemId: string;
     language: string;
     mode: Exclude<LayoutServicePageState, 'Normal'>;
-    variantIds: string[] | string;
+    variantId: string;
     version?: string;
     layoutKind?: LayoutKind;
 };

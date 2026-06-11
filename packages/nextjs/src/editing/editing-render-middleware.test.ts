@@ -224,7 +224,7 @@ describe('EditingRenderMiddleware', () => {
       site: 'website',
       itemId: '{11111111-1111-1111-1111-111111111111}',
       language: 'en',
-      variantIds: ['dev'],
+      variantId: 'dev',
       version: 'latest',
       mode: 'edit',
       layoutKind: 'shared',
@@ -236,40 +236,6 @@ describe('EditingRenderMiddleware', () => {
       'Content-Security-Policy',
       `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
     );
-  });
-
-  it('should pass multiple variant ids into setPreviewData when sc_variantId parameter has many values', async () => {
-    const query = {
-      mode: 'edit',
-      route: '/styleguide',
-      sc_itemid: '{11111111-1111-1111-1111-111111111111}',
-      sc_lang: 'en',
-      sc_site: 'website',
-      secret: secret,
-      sc_variant: 'id-1,id-2,id-3',
-    } as EditingRenderQueryParams;
-
-    const req = mockRequest({ query });
-    const res = mockResponse();
-
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
-
-    sinon
-      .stub(middleware['dataFetcher'], 'get')
-      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
-
-    await handler(req, res);
-
-    expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
-      site: 'website',
-      itemId: '{11111111-1111-1111-1111-111111111111}',
-      language: 'en',
-      variantIds: ['id-1', 'id-2', 'id-3'],
-      version: undefined,
-      mode: 'edit',
-      layoutKind: undefined,
-    });
   });
 
   it('should handle request with missing optional parameters', async () => {
@@ -297,7 +263,7 @@ describe('EditingRenderMiddleware', () => {
       site: 'website',
       itemId: '{11111111-1111-1111-1111-111111111111}',
       language: 'en',
-      variantIds: ['_default'],
+      variantId: '_default',
       version: undefined,
       mode: 'edit',
       layoutKind: undefined,
@@ -335,7 +301,7 @@ describe('EditingRenderMiddleware', () => {
       site: 'website',
       itemId: '{11111111-1111-1111-1111-111111111111}',
       language: 'en',
-      variantIds: ['dev'],
+      variantId: 'dev',
       version: 'latest',
       mode: 'edit',
       layoutKind: 'shared',
@@ -375,7 +341,7 @@ describe('EditingRenderMiddleware', () => {
       site: 'website',
       itemId: '{11111111-1111-1111-1111-111111111111}',
       language: 'en',
-      variantIds: ['dev'],
+      variantId: 'dev',
       version: 'latest',
       mode: 'edit',
       layoutKind: 'shared',
@@ -477,7 +443,7 @@ describe('EditingRenderMiddleware', () => {
         site: 'website',
         itemId: '{11111111-1111-1111-1111-111111111111}',
         language: 'en',
-        variantIds: ['dev'],
+        variantId: 'dev',
         version: 'latest',
         mode: 'edit',
         layoutKind: 'shared',
@@ -515,7 +481,7 @@ describe('EditingRenderMiddleware', () => {
         site: 'website',
         itemId: '{11111111-1111-1111-1111-111111111111}',
         language: 'en',
-        variantIds: ['dev'],
+        variantId: 'dev',
         version: 'latest',
         mode: 'edit',
         layoutKind: 'shared',
@@ -578,7 +544,7 @@ describe('EditingRenderMiddleware', () => {
         site: 'website',
         itemId: '{11111111-1111-1111-1111-111111111111}',
         language: 'en',
-        variantIds: ['dev'],
+        variantId: 'dev',
         version: 'latest',
         mode: 'edit',
         layoutKind: 'shared',
@@ -625,7 +591,7 @@ describe('EditingRenderMiddleware', () => {
         site: 'website',
         itemId: '{11111111-1111-1111-1111-111111111111}',
         language: 'en',
-        variantIds: ['dev'],
+        variantId: 'dev',
         version: 'latest',
         mode: 'edit',
         layoutKind: 'shared',
@@ -692,7 +658,7 @@ describe('EditingRenderMiddleware', () => {
         site: 'website',
         itemId: '{11111111-1111-1111-1111-111111111111}',
         language: 'en',
-        variantIds: ['dev'],
+        variantId: 'dev',
         version: 'latest',
         mode: 'edit',
         layoutKind: 'shared',
@@ -731,7 +697,7 @@ describe('EditingRenderMiddleware', () => {
         site: 'website',
         itemId: '{11111111-1111-1111-1111-111111111111}',
         language: 'en',
-        variantIds: ['dev'],
+        variantId: 'dev',
         version: 'latest',
         mode: 'edit',
         layoutKind: 'shared',
@@ -824,7 +790,7 @@ describe('EditingRenderMiddleware', () => {
       site: 'website',
       itemId: '{11111111-1111-1111-1111-111111111111}',
       language: 'en',
-      variantIds: ['dev'],
+      variantId: 'dev',
       version: 'latest',
       mode: 'edit',
       layoutKind: 'shared',
@@ -1121,7 +1087,7 @@ describe('EditingRenderMiddleware', () => {
         site: 'website',
         itemId: '{11111111-1111-1111-1111-111111111111}',
         language: 'en',
-        variantIds: ['dev'],
+        variantId: 'dev',
         version: 'latest',
         mode: 'preview',
         layoutKind: 'final',
