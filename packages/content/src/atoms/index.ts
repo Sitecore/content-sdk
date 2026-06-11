@@ -6,3 +6,9 @@
  */
 
 export { type Document } from './component-layout/document';
+export type {
+  SerializedCatalog,
+  SitecoreComponentMeta,
+  AtomCatalogComponentEntry,
+  AtomCatalogActionEntry,
+} from './types';

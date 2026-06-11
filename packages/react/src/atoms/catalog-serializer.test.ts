@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 import { z } from 'zod';
 import { defineAtomsCatalog } from './define-atoms-catalog';
-import { serializeCatalog } from './atoms-serializer';
+import { serializeCatalog } from './catalog-serializer';
 
 describe('serializeCatalog()', () => {
   it('returns components and actions arrays', () => {

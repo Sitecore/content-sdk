@@ -1,6 +1,7 @@
 import { constants } from '@sitecore-content-sdk/core';
 import { DesignLibraryEvent, validateEvent } from '../design-library';
 import type { Document } from '../../atoms/component-layout/document';
+import { SerializedCatalog } from '../../atoms/types';
 
 const { ERROR_MESSAGES } = constants;
 
@@ -93,7 +94,7 @@ export interface DesignLibraryAtomsCatalogEvent extends DesignLibraryEvent {
  * @internal
  */
 export function getDesignLibraryAtomsCatalogEvent(
-  payload: AtomsCatalogPayload
+  payload: SerializedCatalog
 ): DesignLibraryAtomsCatalogEvent {
   return {
     name: DESIGN_LIBRARY_ATOMS_CATALOG_EVENT_NAME,
