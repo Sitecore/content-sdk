@@ -6,7 +6,7 @@
 
 # Interface: ExpressDataHandlerOptions
 
-Defined in: [packages/angular/src/server/models.ts:80](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/models.ts#L80)
+Defined in: [packages/angular/src/server/models.ts:90](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L90)
 
 Options for the Express data handler
 
@@ -20,7 +20,7 @@ Options for the Express data handler
 
 > `optional` **cache?**: [`LoaderCache`](../../../loaders/interfaces/LoaderCache.md)
 
-Defined in: [packages/angular/src/server/models.ts:89](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/models.ts#L89)
+Defined in: [packages/angular/src/server/models.ts:99](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L99)
 
 Optional loader cache. When supplied, /_data responses go through
 cache-aside; omit to run loaders directly on every request.
@@ -31,7 +31,7 @@ cache-aside; omit to run loaders directly on every request.
 
 > `optional` **endpoint?**: `string`
 
-Defined in: [packages/angular/src/server/models.ts:52](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/models.ts#L52)
+Defined in: [packages/angular/src/server/models.ts:62](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L62)
 
 The endpoint path for the data handler.
 
@@ -51,7 +51,7 @@ The endpoint path for the data handler.
 
 > `optional` **extractRequestContext?**: (`req`) => [`RequestContext`](../../../loaders/interfaces/RequestContext.md)
 
-Defined in: [packages/angular/src/server/models.ts:95](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/models.ts#L95)
+Defined in: [packages/angular/src/server/models.ts:105](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L105)
 
 **`Internal`**
 
@@ -74,6 +74,6 @@ If not provided, uses the default implementation from loaders/utils.
 
 > **loaders**: [`LoaderRegistry`](../../../loaders/type-aliases/LoaderRegistry.md)
 
-Defined in: [packages/angular/src/server/models.ts:84](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/models.ts#L84)
+Defined in: [packages/angular/src/server/models.ts:94](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L94)
 
 The shared loader registry (same object as provideLoaderRegistry).

@@ -24,4 +24,3 @@
 ## Functions
 
 - [provideSitecoreAngular](functions/provideSitecoreAngular.md)
-- [resolveSitecorePage](functions/resolveSitecorePage.md)

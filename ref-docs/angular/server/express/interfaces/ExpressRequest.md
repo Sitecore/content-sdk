@@ -6,9 +6,13 @@
 
 # Interface: ExpressRequest
 
-Defined in: [packages/angular/src/server/models.ts:18](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/models.ts#L18)
+Defined in: [packages/angular/src/server/models.ts:18](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L18)
 
 Minimal Express Request interface for type safety without requiring Express as a dependency
+
+## Extended by
+
+- [`ExpressEditingRequest`](../../middleware/interfaces/ExpressEditingRequest.md)
 
 ## Properties
 
@@ -16,7 +20,7 @@ Minimal Express Request interface for type safety without requiring Express as a
 
 > **body**: `unknown`
 
-Defined in: [packages/angular/src/server/models.ts:22](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/models.ts#L22)
+Defined in: [packages/angular/src/server/models.ts:22](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L22)
 
 ***
 
@@ -24,7 +28,7 @@ Defined in: [packages/angular/src/server/models.ts:22](https://github.com/Siteco
 
 > `optional` **cookies?**: `Record`\<`string`, `string`\>
 
-Defined in: [packages/angular/src/server/models.ts:27](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/models.ts#L27)
+Defined in: [packages/angular/src/server/models.ts:27](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L27)
 
 Cookies from the request (requires cookie-parser middleware)
 
@@ -34,7 +38,7 @@ Cookies from the request (requires cookie-parser middleware)
 
 > `optional` **headers?**: `Record`\<`string`, `string` \| `string`[] \| `undefined`\>
 
-Defined in: [packages/angular/src/server/models.ts:31](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/models.ts#L31)
+Defined in: [packages/angular/src/server/models.ts:31](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L31)
 
 Headers from the request
 
@@ -44,7 +48,7 @@ Headers from the request
 
 > **method**: `string`
 
-Defined in: [packages/angular/src/server/models.ts:19](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/models.ts#L19)
+Defined in: [packages/angular/src/server/models.ts:19](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L19)
 
 ***
 
@@ -52,7 +56,7 @@ Defined in: [packages/angular/src/server/models.ts:19](https://github.com/Siteco
 
 > **path**: `string`
 
-Defined in: [packages/angular/src/server/models.ts:20](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/models.ts#L20)
+Defined in: [packages/angular/src/server/models.ts:20](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L20)
 
 ***
 
@@ -60,7 +64,7 @@ Defined in: [packages/angular/src/server/models.ts:20](https://github.com/Siteco
 
 > **query**: `Record`\<`string`, `string` \| `string`[] \| `undefined`\>
 
-Defined in: [packages/angular/src/server/models.ts:23](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/models.ts#L23)
+Defined in: [packages/angular/src/server/models.ts:23](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L23)
 
 ***
 
@@ -68,4 +72,4 @@ Defined in: [packages/angular/src/server/models.ts:23](https://github.com/Siteco
 
 > **url**: `string`
 
-Defined in: [packages/angular/src/server/models.ts:21](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/server/models.ts#L21)
+Defined in: [packages/angular/src/server/models.ts:21](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L21)

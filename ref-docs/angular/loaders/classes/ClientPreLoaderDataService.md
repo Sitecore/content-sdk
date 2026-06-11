@@ -6,7 +6,7 @@
 
 # Class: ClientPreLoaderDataService
 
-Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:39](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/loaders/pre-loader-data.service.ts#L39)
+Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:39](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/loaders/pre-loader-data.service.ts#L39)
 
 ClientPreLoaderDataService kicks off loader data fetches for all loaders in the current route
 and its parent routes in parallel, so that when Angular runs resolvers sequentially,
@@ -24,7 +24,7 @@ run in parallel; results are stored in ClientLoaderDataService prefetchedRespons
 
 > **new ClientPreLoaderDataService**(): `ClientPreLoaderDataService`
 
-Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:45](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/loaders/pre-loader-data.service.ts#L45)
+Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:45](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/loaders/pre-loader-data.service.ts#L45)
 
 #### Returns
 
@@ -36,7 +36,7 @@ Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:45](https:/
 
 > **prefetchForRoute**(`route`, `state`): `Promise`\<`void`\>
 
-Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:67](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/loaders/pre-loader-data.service.ts#L67)
+Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:67](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/loaders/pre-loader-data.service.ts#L67)
 
 Prefetch loader data for all loaders in the route tree.
 Call this at the start of browser resolver execution so all loaders for the route

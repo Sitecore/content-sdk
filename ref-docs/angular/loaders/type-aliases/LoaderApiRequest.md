@@ -8,7 +8,7 @@
 
 > **LoaderApiRequest** = `object`
 
-Defined in: [packages/angular/src/loaders/models.ts:80](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/loaders/models.ts#L80)
+Defined in: [packages/angular/src/loaders/models.ts:80](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/loaders/models.ts#L80)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/angular/src/loaders/models.ts:80](https://github.com/Sitec
 
 > `optional` **angularRequestContext?**: [`RequestContext`](../interfaces/RequestContext.md)
 
-Defined in: [packages/angular/src/loaders/models.ts:91](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/loaders/models.ts#L91)
+Defined in: [packages/angular/src/loaders/models.ts:91](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/loaders/models.ts#L91)
 
 Server-derived request context (hostname, headers, cookies, query).
 Populated once at the request boundary (`/_data` middleware closure or the
@@ -29,7 +29,7 @@ Phase 2 of the refactor plan.
 
 > `optional` **cacheOptions?**: [`LoaderCacheConfig`](../interfaces/LoaderCacheConfig.md)
 
-Defined in: [packages/angular/src/loaders/models.ts:97](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/loaders/models.ts#L97)
+Defined in: [packages/angular/src/loaders/models.ts:97](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/loaders/models.ts#L97)
 
 Per-route cache overrides supplied at the `loaderResolver(id, cacheOptions)`
 call site. The browser includes them in the `/_data` POST body so the same
@@ -41,7 +41,7 @@ per-route policy applies on CSR navigations. Phase 5 of the refactor plan.
 
 > **loaderId**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:81](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/loaders/models.ts#L81)
+Defined in: [packages/angular/src/loaders/models.ts:81](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/loaders/models.ts#L81)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: [packages/angular/src/loaders/models.ts:81](https://github.com/Sitec
 
 > **params**: `Params`
 
-Defined in: [packages/angular/src/loaders/models.ts:83](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/loaders/models.ts#L83)
+Defined in: [packages/angular/src/loaders/models.ts:83](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/loaders/models.ts#L83)
 
 ***
 
@@ -57,7 +57,7 @@ Defined in: [packages/angular/src/loaders/models.ts:83](https://github.com/Sitec
 
 > **query**: `Record`\<`string`, `any`\>
 
-Defined in: [packages/angular/src/loaders/models.ts:84](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/loaders/models.ts#L84)
+Defined in: [packages/angular/src/loaders/models.ts:84](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/loaders/models.ts#L84)
 
 ***
 
@@ -65,4 +65,4 @@ Defined in: [packages/angular/src/loaders/models.ts:84](https://github.com/Sitec
 
 > **url**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:82](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/loaders/models.ts#L82)
+Defined in: [packages/angular/src/loaders/models.ts:82](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/loaders/models.ts#L82)

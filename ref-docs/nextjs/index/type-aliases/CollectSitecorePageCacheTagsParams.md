@@ -8,7 +8,7 @@
 
 > **CollectSitecorePageCacheTagsParams** = `object`
 
-Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:64](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L64)
+Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:64](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L64)
 
 Inputs for assembling cache tags for a typical Sitecore page render (`getPage`).
 
@@ -18,7 +18,7 @@ Inputs for assembling cache tags for a typical Sitecore page render (`getPage`).
 
 > **locale**: `string`
 
-Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:66](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L66)
+Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:66](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L66)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:66](https://github.com
 
 > `optional` **path?**: `string`[]
 
-Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:76](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L76)
+Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:76](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L76)
 
 App Router catch-all segments (e.g. from `[...path]`). Used when `personalizedPathname` is omitted;
 normalized the same way as `SitecoreClient.parsePath` for a string array argument.
@@ -37,7 +37,7 @@ normalized the same way as `SitecoreClient.parsePath` for a string array argumen
 
 > `optional` **personalizedPathname?**: `string`
 
-Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:71](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L71)
+Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:71](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L71)
 
 Path string used for deriving normalized route segments (personalization rewrite segments stripped)
 for the route tag. Provide this **or** `path`. When both are set, this value wins.
@@ -48,7 +48,7 @@ for the route tag. Provide this **or** `path`. When both are set, this value win
 
 > `optional` **route?**: [`RouteData`](../interfaces/RouteData.md) \| `null`
 
-Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:82](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L82)
+Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:82](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L82)
 
 Route node from a Sitecore layout response (e.g. `page.layout.sitecore.route`, which is
 `RouteData | null`). Optional because the page may not resolve; only `itemId`, `itemLanguage`,
@@ -60,4 +60,4 @@ and `itemVersion` are read when present.
 
 > **site**: `string`
 
-Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:65](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L65)
+Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:65](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L65)

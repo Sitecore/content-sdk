@@ -6,9 +6,7 @@
 
 # Class: ScHiddenRenderingComponent
 
-Defined in: [packages/angular/src/components/sc-hidden-rendering.component.ts:12](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/sc-hidden-rendering.component.ts#L12)
-
-Default component rendered for hidden Sitecore renderings.
+Defined in: [packages/angular/src/components/sc-hidden-rendering.component.ts:6](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/components/sc-hidden-rendering.component.ts#L6)
 
 ## Constructors
 
@@ -20,54 +18,16 @@ Default component rendered for hidden Sitecore renderings.
 
 `ScHiddenRenderingComponent`
 
-## Properties
+## Accessors
 
-### fields
+### style
 
-> `readonly` **fields**: `InputSignal`\<\{\[`key`: `string`\]: `unknown`; \} \| `undefined`\>
+#### Get Signature
 
-Defined in: [packages/angular/src/components/sc-hidden-rendering.component.ts:14](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/sc-hidden-rendering.component.ts#L14)
+> **get** **style**(): `string`
 
-***
+Defined in: [packages/angular/src/components/sc-hidden-rendering.component.ts:7](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/components/sc-hidden-rendering.component.ts#L7)
 
-### params
+##### Returns
 
-> `readonly` **params**: `InputSignal`\<\{\[`key`: `string`\]: `string`; \} \| `undefined`\>
-
-Defined in: [packages/angular/src/components/sc-hidden-rendering.component.ts:15](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/sc-hidden-rendering.component.ts#L15)
-
-***
-
-### rendering
-
-> `readonly` **rendering**: `InputSignal`\<`ComponentRendering`\<`ComponentFields`\> \| `undefined`\>
-
-Defined in: [packages/angular/src/components/sc-hidden-rendering.component.ts:13](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/sc-hidden-rendering.component.ts#L13)
-
-***
-
-### styles
-
-> `readonly` **styles**: `object`
-
-Defined in: [packages/angular/src/components/sc-hidden-rendering.component.ts:17](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/angular/src/components/sc-hidden-rendering.component.ts#L17)
-
-#### background
-
-> **background**: `string` = `'repeating-linear-gradient(135deg, #fff, #fff 10px, #f0f0f0 10px, #f0f0f0 20px)'`
-
-#### border
-
-> **border**: `string` = `'1px dashed #ccc'`
-
-#### minHeight
-
-> **minHeight**: `string` = `'30px'`
-
-#### opacity
-
-> **opacity**: `number` = `0.7`
-
-#### padding
-
-> **padding**: `string` = `'10px'`
+`string`

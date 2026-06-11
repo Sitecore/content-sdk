@@ -8,7 +8,7 @@
 
 > **ErrorPages** = `object`
 
-Defined in: [content/src/site/error-pages-service.ts:49](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/content/src/site/error-pages-service.ts#L49)
+Defined in: [content/src/site/error-pages-service.ts:49](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/content/src/site/error-pages-service.ts#L49)
 
 Object model of Error Pages result
 
@@ -18,7 +18,7 @@ Object model of Error Pages result
 
 > **notFoundPage**: \{ `rendered`: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md); \} \| `null`
 
-Defined in: [content/src/site/error-pages-service.ts:54](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/content/src/site/error-pages-service.ts#L54)
+Defined in: [content/src/site/error-pages-service.ts:54](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/content/src/site/error-pages-service.ts#L54)
 
 Rendered 404 page layout.
 Can be null if the site has no error handling configured for the requested language.
@@ -29,7 +29,7 @@ Can be null if the site has no error handling configured for the requested langu
 
 > **notFoundPagePath**: `string`
 
-Defined in: [content/src/site/error-pages-service.ts:55](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/content/src/site/error-pages-service.ts#L55)
+Defined in: [content/src/site/error-pages-service.ts:55](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/content/src/site/error-pages-service.ts#L55)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [content/src/site/error-pages-service.ts:55](https://github.com/Site
 
 > **serverErrorPage**: \{ `rendered`: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md); \} \| `null`
 
-Defined in: [content/src/site/error-pages-service.ts:60](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/content/src/site/error-pages-service.ts#L60)
+Defined in: [content/src/site/error-pages-service.ts:60](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/content/src/site/error-pages-service.ts#L60)
 
 Rendered 500 page layout.
 Can be null if the site has no error handling configured for the requested language.
@@ -48,4 +48,4 @@ Can be null if the site has no error handling configured for the requested langu
 
 > **serverErrorPagePath**: `string`
 
-Defined in: [content/src/site/error-pages-service.ts:61](https://github.com/Sitecore/content-sdk/blob/c0ef1a2348b52d74656a2f0f9adac3e6eb0e62e4/packages/content/src/site/error-pages-service.ts#L61)
+Defined in: [content/src/site/error-pages-service.ts:61](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/content/src/site/error-pages-service.ts#L61)
