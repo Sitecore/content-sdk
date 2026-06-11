@@ -8,7 +8,7 @@
 
 > **getRequiredParams**(`qs`): `object`
 
-Defined in: [content/src/media/media-api.ts:69](https://github.com/Sitecore/content-sdk/blob/0325d614f670aabc44a25c7deff996ace6a1fe8c/packages/content/src/media/media-api.ts#L69)
+Defined in: [content/src/media/media-api.ts:69](https://github.com/Sitecore/content-sdk/blob/3dc5fa6a9ffea34ed539648d3e2e8ac2ce4bf5a4/packages/content/src/media/media-api.ts#L69)
 
 Get required query string params which should be merged with user params
 
@@ -28,6 +28,10 @@ requiredParams
 
 > **db**: `string` \| `undefined`
 
+### hash
+
+> **hash**: `string` \| `undefined`
+
 ### la
 
 > **la**: `string` \| `undefined`
@@ -39,6 +43,14 @@ requiredParams
 ### ts
 
 > **ts**: `string` \| `undefined`
+
+### tt
+
+> **tt**: `string` \| `undefined`
+
+### ttc
+
+> **ttc**: `string` \| `undefined`
 
 ### vs
 
