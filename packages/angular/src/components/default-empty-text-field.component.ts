@@ -5,6 +5,6 @@ import { Component } from '@angular/core';
  */
 @Component({
   selector: '[sc-default-empty-text-field-editing-placeholder]',
-  template: '[No text in field]',
+  template: '<span>[No text in field]</span>',
 })
 export class DefaultEmptyFieldEditingComponent {}

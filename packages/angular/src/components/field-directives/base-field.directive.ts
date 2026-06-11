@@ -1,11 +1,9 @@
 import {
   EmbeddedViewRef,
-  EnvironmentInjector,
   Renderer2,
   TemplateRef,
   Type,
   ViewContainerRef,
-  createComponent,
   effect,
   inject,
   type Signal,
@@ -52,7 +50,6 @@ export abstract class BaseFieldDirective<TField> {
   protected readonly templateRef = inject(TemplateRef<unknown>);
   protected readonly renderer = inject(Renderer2);
   protected readonly context = inject(SitecoreContextService, { optional: true });
-  private readonly envInjector = inject(EnvironmentInjector);
 
   /** Embedded view created by the latest successful render; cleared on each tick. */
   protected viewRef?: EmbeddedViewRef<unknown>;
@@ -113,12 +110,7 @@ export abstract class BaseFieldDirective<TField> {
     if (tpl) {
       this.viewContainer.createEmbeddedView(tpl);
     } else {
-      const hostEl = this.renderer.createElement('span') as HTMLElement;
-      const ref = createComponent(this.defaultEmptyComponent, {
-        hostElement: hostEl,
-        environmentInjector: this.envInjector,
-      });
-      this.viewContainer.insert(ref.hostView);
+      this.viewContainer.createComponent(this.defaultEmptyComponent);
     }
     this.renderEditingChrome(MetadataKind.Close);
   }

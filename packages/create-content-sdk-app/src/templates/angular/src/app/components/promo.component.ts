@@ -58,31 +58,29 @@ function promoProductJsonLd(
     '[attr.id]': 'renderingId()',
   },
   template: `
-    <article itemscope itemtype="https://schema.org/Product">
-      <div class="component-content">
-        <div class="field-promoicon" itemprop="image">
-          <img *scImage="promoIcon()" alt="" />
-        </div>
-        <div class="promo-text" itemprop="description">
-          <div class="field-promotext">
-            @if (promoText(); as primaryRichText) {
-            <div *scRichText="primaryRichText"></div>
-            }
-          </div>
-          @if (promoText2(); as secondaryRichText) {
-          <div class="field-promotext">
-            <div *scRichText="secondaryRichText"></div>
-          </div>
-          }
-          <div class="field-promolink">
-            <a *scLink="promoLink()"></a>
-          </div>
-        </div>
-        @if (jsonLd()) {
-        <app-structured-data [scriptId]="jsonLdScriptId()" [data]="jsonLd()" />
-        }
+    <div class="component-content" itemscope itemtype="https://schema.org/Product">
+      <div class="field-promoicon" itemprop="image">
+        <img *scImage="promoIcon()" alt="" />
       </div>
-    </article>
+      <div class="promo-text" itemprop="description">
+        <div class="field-promotext">
+          @if (promoText(); as primaryRichText) {
+          <div *scRichText="primaryRichText"></div>
+          }
+        </div>
+        @if (promoText2(); as secondaryRichText) {
+        <div class="field-promotext">
+          <div *scRichText="secondaryRichText"></div>
+        </div>
+        }
+        <div class="field-promolink">
+          <a *scLink="promoLink()"></a>
+        </div>
+      </div>
+      @if (jsonLd()) {
+      <app-structured-data [scriptId]="jsonLdScriptId()" [data]="jsonLd()" />
+      }
+    </div>
   `,
 })
 export class PromoComponent extends SxaComponent {
