@@ -8,6 +8,7 @@ import { getClassFromField } from './utils';
 import type { AngularSitecoreConfig } from '../../config/define-config';
 import {
   provideMockSitecoreContext,
+  setMockContextPage,
   setMockContextUrlLocale,
 } from '../../testing/mock-sitecore-context';
 
@@ -18,7 +19,7 @@ function sortedClassTokens(el: HTMLElement): string[] {
 @Component({
   selector: 'test-link',
   imports: [ScLinkDirective],
-  template: `<a [scLink]="field()"></a>`,
+  template: `<a *scLink="field()"></a>`,
 })
 class TestHostComponent {
   readonly field = input<LinkField | undefined>(undefined);
@@ -27,7 +28,7 @@ class TestHostComponent {
 @Component({
   selector: 'test-link-host-class',
   imports: [ScLinkDirective],
-  template: `<a class="host-base" [scLink]="field()"></a>`,
+  template: `<a class="host-base" *scLink="field()"></a>`,
 })
 class TestHostWithHostClassComponent {
   readonly field = input<LinkField | undefined>(undefined);
@@ -36,7 +37,7 @@ class TestHostWithHostClassComponent {
 @Component({
   selector: 'test-link-host-title',
   imports: [ScLinkDirective],
-  template: `<a title="Host title" [scLink]="field()"></a>`,
+  template: `<a title="Host title" *scLink="field()"></a>`,
 })
 class TestHostWithHostTitleComponent {
   readonly field = input<LinkField | undefined>(undefined);
@@ -45,7 +46,7 @@ class TestHostWithHostTitleComponent {
 @Component({
   selector: 'test-link-host-target',
   imports: [ScLinkDirective],
-  template: `<a target="_self" [scLink]="field()"></a>`,
+  template: `<a target="_self" *scLink="field()"></a>`,
 })
 class TestHostWithHostTargetComponent {
   readonly field = input<LinkField | undefined>(undefined);
@@ -101,9 +102,6 @@ describe('ScLinkDirective', () => {
   });
 
   it('should use combined class and className from field when both present', () => {
-    // `getClassFromField` merges the way the React `addClassName` helper does; the directive passes
-    // this string to `Renderer2.addClass`, which accepts one token at a time (split in directive if
-    // both are present and you need both on the element).
     expect(
       getClassFromField({
         href: '/a',
@@ -202,6 +200,43 @@ describe('ScLinkDirective', () => {
 
     a = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
     expect(a.target).toBe('_self');
+  });
+});
+
+describe('ScLinkDirective editing mode', () => {
+  function createEditingFixture(): ComponentFixture<TestHostComponent> {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [TestHostComponent],
+      providers: provideMockSitecoreContext(),
+    });
+    setMockContextPage({ mode: { isEditing: true } } as any);
+    return TestBed.createComponent(TestHostComponent);
+  }
+
+  it('should wrap rendered anchor in chrome markers when metadata is present', () => {
+    const fixture = createEditingFixture();
+    fixture.componentRef.setInput('field', {
+      value: { href: '/about', text: 'About' },
+      metadata: { contextItem: { id: 'x' }, fieldId: 'link' },
+    });
+    fixture.detectChanges();
+
+    const markers = fixture.nativeElement.querySelectorAll('code.scpm');
+    expect(markers.length).toBe(2);
+    expect(fixture.nativeElement.querySelector('a')?.getAttribute('href')).toContain('/about');
+  });
+
+  it('should render the default empty placeholder when field is empty + metadata present', () => {
+    const fixture = createEditingFixture();
+    fixture.componentRef.setInput('field', {
+      metadata: { contextItem: { id: 'x' }, fieldId: 'link' },
+    } as unknown as LinkField);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('code.scpm').length).toBe(2);
+    expect(fixture.nativeElement.textContent).toContain('[No text in field]');
+    expect(fixture.nativeElement.querySelector('a')).toBeNull();
   });
 });
 

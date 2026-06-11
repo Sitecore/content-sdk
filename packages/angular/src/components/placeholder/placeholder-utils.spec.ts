@@ -8,7 +8,10 @@ import {
   getSXAParams,
   getChildComponentProps,
   resolveComponentForRendering,
+  computePlaceholderChromeId,
+  isPlaceholderDeclaredInLayout,
 } from './placeholder-utils';
+import { DEFAULT_PLACEHOLDER_UID } from '@sitecore-content-sdk/content/editing';
 
 @Component({ selector: 'test-a', template: 'A' })
 class TestComponentA {}
@@ -90,6 +93,83 @@ describe('getPlaceholderRenderings', () => {
     };
     const result = getPlaceholderRenderings(route, 'main', false);
     expect(result).toEqual([child]);
+  });
+});
+
+describe('isPlaceholderDeclaredInLayout', () => {
+  it('should return false when the placeholder key is absent from layout', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Root',
+      placeholders: { main: [] },
+    };
+    expect(isPlaceholderDeclaredInLayout(rendering, 'footer', true)).toBe(false);
+    expect(isPlaceholderDeclaredInLayout(rendering, 'footer', false)).toBe(false);
+  });
+
+  it('should return true for a declared empty placeholder', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Root',
+      placeholders: { main: [] },
+    };
+    expect(isPlaceholderDeclaredInLayout(rendering, 'main', true)).toBe(true);
+  });
+
+  it('should resolve dynamic placeholder keys in editing mode', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Root',
+      placeholders: { 'container-{*}': [] },
+    };
+    expect(isPlaceholderDeclaredInLayout(rendering, 'container-1', true)).toBe(true);
+  });
+});
+
+describe('computePlaceholderChromeId', () => {
+  it('should use DEFAULT_PLACEHOLDER_UID for a root static placeholder', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Route',
+      placeholders: { main: [] },
+    };
+    expect(computePlaceholderChromeId(rendering, 'main')).toBe(
+      `main_${DEFAULT_PLACEHOLDER_UID}`
+    );
+  });
+
+  it('should append parent rendering uid for nested static placeholders', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Parent',
+      uid: 'parent-uid',
+      placeholders: { inner: [] },
+    };
+    expect(computePlaceholderChromeId(rendering, 'inner', 'parent-uid')).toBe('inner_parent-uid');
+  });
+
+  it('should use dynamic placeholder pattern key with DEFAULT_PLACEHOLDER_UID', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Route',
+      placeholders: { 'container-{*}': [] },
+    };
+    expect(computePlaceholderChromeId(rendering, 'container-1')).toBe(
+      `container-{*}_${DEFAULT_PLACEHOLDER_UID}`
+    );
+  });
+
+  it('should use dynamic placeholder pattern key with parent uid', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Row',
+      uid: 'row-uid',
+      placeholders: { 'container-{*}': [] },
+    };
+    expect(computePlaceholderChromeId(rendering, 'container-1', 'row-uid')).toBe(
+      'container-{*}_row-uid'
+    );
+  });
+
+  it('should return empty string when placeholder is not declared on parent rendering', () => {
+    const rendering: ComponentRendering = {
+      componentName: 'Root',
+      placeholders: { main: [] },
+    };
+    expect(computePlaceholderChromeId(rendering, 'footer', 'root-uid')).toBe('');
   });
 });
 
@@ -176,40 +256,56 @@ describe('resolveComponentForRendering', () => {
 
   it('should return null component for hidden rendering', () => {
     const rendering: ComponentRendering = { componentName: 'Hidden Rendering' };
-    const result = resolveComponentForRendering(rendering, 'main', emptyComponentMap);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: emptyComponentMap,
+    });
     expect(result.component).toBeNull();
     expect(result.isEmpty).toBe(true);
   });
 
   it('should use custom hidden rendering component when provided', () => {
     const rendering: ComponentRendering = { componentName: 'Hidden Rendering' };
-    const result = resolveComponentForRendering(
-      rendering,
-      'main',
-      emptyComponentMap,
-      CustomHiddenComponent
-    );
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: emptyComponentMap,
+      hiddenRenderingComponent: CustomHiddenComponent,
+    });
     expect(result.component).toBe(CustomHiddenComponent);
     expect(result.isEmpty).toBe(true);
   });
 
   it('should return null for empty component name', () => {
     const rendering: ComponentRendering = { componentName: '' };
-    const result = resolveComponentForRendering(rendering, 'main', emptyComponentMap);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: emptyComponentMap,
+    });
     expect(result.component).toBeNull();
     expect(result.isEmpty).toBe(true);
   });
 
   it('should warn when component map is empty', () => {
     const rendering: ComponentRendering = { componentName: 'Widget' };
-    resolveComponentForRendering(rendering, 'main', emptyComponentMap);
+    resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: emptyComponentMap,
+    });
     expect(warnSpy).toHaveBeenCalled();
   });
 
   it('should error when component not found in map', () => {
     const map: ComponentMap = new Map([['Other', TestComponentA]]);
     const rendering: ComponentRendering = { componentName: 'Unknown' };
-    const result = resolveComponentForRendering(rendering, 'main', map);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+    });
     expect(result.component).toBeNull();
     expect(result.isEmpty).toBe(true);
     expect(errorSpy).toHaveBeenCalled();
@@ -218,13 +314,12 @@ describe('resolveComponentForRendering', () => {
   it('should use custom missing component when provided', () => {
     const map: ComponentMap = new Map();
     const rendering: ComponentRendering = { componentName: 'Unknown' };
-    const result = resolveComponentForRendering(
-      rendering,
-      'main',
-      map,
-      undefined,
-      CustomMissingComponent
-    );
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+      missingComponentComponent: CustomMissingComponent,
+    });
     expect(result.component).toBe(CustomMissingComponent);
     expect(result.isEmpty).toBe(true);
   });
@@ -232,7 +327,11 @@ describe('resolveComponentForRendering', () => {
   it('should resolve direct component type from map', () => {
     const map: ComponentMap = new Map([['Widget', TestComponentA]]);
     const rendering: ComponentRendering = { componentName: 'Widget' };
-    const result = resolveComponentForRendering(rendering, 'main', map);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+    });
     expect(result.component).toBe(TestComponentA);
     expect(result.isEmpty).toBe(false);
   });
@@ -241,7 +340,11 @@ describe('resolveComponentForRendering', () => {
     const mod: AngularModule = { default: TestComponentA };
     const map: ComponentMap = new Map([['Widget', mod]]);
     const rendering: ComponentRendering = { componentName: 'Widget' };
-    const result = resolveComponentForRendering(rendering, 'main', map);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+    });
     expect(result.component).toBe(TestComponentA);
     expect(result.isEmpty).toBe(false);
   });
@@ -250,7 +353,11 @@ describe('resolveComponentForRendering', () => {
     const mod: AngularModule = { Default: TestComponentB };
     const map: ComponentMap = new Map([['Widget', mod]]);
     const rendering: ComponentRendering = { componentName: 'Widget' };
-    const result = resolveComponentForRendering(rendering, 'main', map);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+    });
     expect(result.component).toBe(TestComponentB);
     expect(result.isEmpty).toBe(false);
   });
@@ -265,7 +372,11 @@ describe('resolveComponentForRendering', () => {
       componentName: 'Widget',
       params: { FieldNames: 'CustomVariant' },
     };
-    const result = resolveComponentForRendering(rendering, 'main', map);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+    });
     expect(result.component).toBe(TestComponentB);
     expect(result.isEmpty).toBe(false);
   });
@@ -277,7 +388,11 @@ describe('resolveComponentForRendering', () => {
       componentName: 'Widget',
       params: { FieldNames: DEFAULT_EXPORT_NAME },
     };
-    const result = resolveComponentForRendering(rendering, 'main', map);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+    });
     expect(result.component).toBe(TestComponentA);
     expect(result.isEmpty).toBe(false);
   });
@@ -289,7 +404,11 @@ describe('resolveComponentForRendering', () => {
       componentName: 'Widget',
       params: { FieldNames: 'NonExistent' },
     };
-    const result = resolveComponentForRendering(rendering, 'main', map);
+    const result = resolveComponentForRendering({
+      renderingDefinition: rendering,
+      placeholderName: 'main',
+      componentMap: map,
+    });
     expect(result.component).toBeNull();
     expect(result.isEmpty).toBe(true);
     expect(errorSpy).toHaveBeenCalled();

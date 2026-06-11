@@ -1,44 +1,70 @@
-import { Directive, HostListener, inject, input } from '@angular/core';
+import { Directive, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import type { LinkField, LinkFieldValue } from '@sitecore-content-sdk/content/layout';
 import { ScLinkDirective } from './sc-link.directive';
+import { EXTERNAL_HREF_PREFIXES } from './utils';
 
 /**
- * Renders a Sitecore link field onto a host `<a>` and calls `Router.navigateByUrl` on click
- * for in-app paths only. Clicks are left to the browser when `href` is missing/empty, when
- * `target="_blank"`, or when `href` uses http(s), mailto, tel, sms, javascript, data, ftp,
- * or protocol-relative (`//`) URLs.
+ * Structural directive that renders a Sitecore link field onto a consumer-supplied `<a>` and
+ * routes in-app navigation through `Router.navigateByUrl`. Clicks are left to the browser
+ * when `href` is missing/empty, when `target="_blank"`, or when the href uses an external
+ * scheme (http(s), mailto, tel, sms, javascript, data, ftp, protocol-relative `//`).
+ *
+ * Editing chrome + empty-field placeholder behavior is inherited from {@link ScLinkDirective}.
  *
  * Usage:
  * ```html
- * <a [scRouterLink]="fields.Link">Optional child content</a>
+ * <a *scRouterLink="fields.Link">Optional child content</a>
  * ```
  * @public
  */
 @Directive({
-  selector: 'a[scRouterLink]',
+  selector: '[scRouterLink]',
 })
 export class ScRouterLinkDirective extends ScLinkDirective {
-  /**
-   * Sitecore link field; host attribute `[scRouterLink]` maps to the base {@link ScLinkDirective.scLink} input.
-   */
-  override readonly scLink = input.required<LinkField | LinkFieldValue>({ alias: 'scRouterLink' });
+  /** Sitecore link field; aliases the base {@link ScLinkDirective.field} input to `scRouterLink`. */
+  override readonly field = input.required<LinkField | LinkFieldValue | undefined>({
+    alias: 'scRouterLink',
+  });
 
   private readonly router = inject(Router);
+  private readonly unlisteners: (() => void)[] = [];
 
-  @HostListener('click', ['$event'])
-  onClick(event: MouseEvent): void {
-    const el = this.el.nativeElement;
-    const hrefAttr = el.getAttribute('href')?.trim() ?? '';
-    const targetAttr = el.getAttribute('target');
+  protected override applyValue(): void {
+    this.disposeListeners();
+    super.applyValue();
+    if (!this.viewRef) return;
+    for (const node of this.viewRef.rootNodes) {
+      if (!(node instanceof HTMLAnchorElement)) continue;
+      const unlisten = this.renderer.listen(node, 'click', (event: MouseEvent) =>
+        this.onClick(event, node)
+      );
+      this.unlisteners.push(unlisten);
+    }
+  }
+
+  private disposeListeners(): void {
+    for (const u of this.unlisteners) u();
+    this.unlisteners.length = 0;
+  }
+
+  /**
+   * Click handler attached to the freshly rendered anchor. Defers to the browser for external
+   * URLs and `target="_blank"`; routes everything else via Angular Router. Calls
+   * `event.preventDefault()` only when the in-app navigation has no hash fragment.
+   * @param {MouseEvent} event - Native click event.
+   * @param {HTMLAnchorElement} anchor - Anchor element receiving the click.
+   */
+  private onClick(event: MouseEvent, anchor: HTMLAnchorElement): void {
+    const hrefAttr = anchor.getAttribute('href')?.trim() ?? '';
+    const targetAttr = anchor.getAttribute('target');
     if (this.shouldDeferNavigation(hrefAttr, targetAttr)) {
       return;
     }
 
-    // Early return in editing mode
-    // if (this.sitecoreContext.isEditing()) {
-    //   return;
-    // }
+    if (this.sitecoreContext.isEditing()) {
+      return;
+    }
 
     void this.router.navigateByUrl(hrefAttr);
     if (!hrefAttr.includes('#')) {
@@ -60,16 +86,6 @@ export class ScRouterLinkDirective extends ScLinkDirective {
       return true;
     }
     const lower = hrefAttr.toLowerCase();
-    return (
-      lower.startsWith('http://') ||
-      lower.startsWith('https://') ||
-      lower.startsWith('mailto:') ||
-      lower.startsWith('tel:') ||
-      lower.startsWith('sms:') ||
-      lower.startsWith('javascript:') ||
-      lower.startsWith('data:') ||
-      lower.startsWith('ftp:') ||
-      lower.startsWith('//')
-    );
+    return EXTERNAL_HREF_PREFIXES.some((prefix) => lower.startsWith(prefix));
   }
 }

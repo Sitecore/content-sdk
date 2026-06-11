@@ -20,16 +20,18 @@ interface TitleFields {
 @Component({
   selector: 'app-title',
   imports: [ScTextDirective, ScLinkDirective],
+  host: {
+    '[attr.class]': "('component title ' + styles().trim())",
+    '[attr.id]': 'renderingId()',
+  },
   template: `
-    <div [attr.class]="('component title ' + styles()).trim()" [attr.id]="renderingId()">
-      <div class="component-content">
-        <div class="field-title">
-          @if (isEditing()) {
-          <span [scText]="titleField()"></span>
-          } @else {
-          <a [scLink]="titleLinkField()"><span [scText]="titleField()"></span></a>
-          }
-        </div>
+    <div class="component-content">
+      <div class="field-title">
+        @if (isEditing()) {
+        <span *scText="titleField()"></span>
+        } @else {
+        <a *scLink="titleLinkField()"><span *scText="titleField()"></span></a>
+        }
       </div>
     </div>
   `,

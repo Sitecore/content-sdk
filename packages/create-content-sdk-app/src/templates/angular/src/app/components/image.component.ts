@@ -29,27 +29,21 @@ interface ImageBannerFields {
 @Component({
   selector: 'app-image-default',
   imports: [ScImageDirective, ScLinkDirective, ScTextDirective],
+  host: {
+    '[attr.class]': "('component image ' + styles().trim())",
+    '[attr.id]': 'renderingId()',
+  },
   template: `
-    @if (showEmpty()) {
-    <div [attr.class]="('component image ' + styles()).trim()">
-      <div class="component-content">
-        <span class="is-empty-hint">Image</span>
-      </div>
+    <div class="component-content">
+      @if (wrapWithLink()) {
+      <a *scLink="targetUrlField()!">
+        <img *scImage="imageField()" [attr.sizes]="defaultSizes" [attr.alt]="imageAlt()" />
+      </a>
+      } @else {
+      <img *scImage="imageField()" [attr.sizes]="defaultSizes" [attr.alt]="imageAlt()" />
+      }
+      <span class="image-caption field-imagecaption" *scText="captionField()"></span>
     </div>
-    } @else {
-    <div [attr.class]="('component image ' + styles()).trim()" [attr.id]="renderingId()">
-      <div class="component-content">
-        @if (wrapWithLink()) {
-        <a [scLink]="targetUrlField()!">
-          <img [scImage]="imageField()" [attr.sizes]="defaultSizes" [attr.alt]="imageAlt()" />
-        </a>
-        } @else {
-        <img [scImage]="imageField()" [attr.sizes]="defaultSizes" [attr.alt]="imageAlt()" />
-        }
-        <span class="image-caption field-imagecaption" [scText]="captionField()"></span>
-      </div>
-    </div>
-    }
   `,
 })
 class ImageDefaultComponent extends SxaComponent {
@@ -60,8 +54,6 @@ class ImageDefaultComponent extends SxaComponent {
   readonly imageField = computed(() => (this.fields() as ImageDefaultFields)?.Image);
   readonly captionField = computed(() => (this.fields() as ImageDefaultFields)?.ImageCaption);
   readonly targetUrlField = computed(() => (this.fields() as ImageDefaultFields)?.TargetUrl);
-
-  readonly showEmpty = computed(() => this.fields()?.Image == null);
 
   readonly wrapWithLink = computed(() => {
     if (this.context.isEditing()) return false;
@@ -78,20 +70,22 @@ class ImageDefaultComponent extends SxaComponent {
 @Component({
   selector: 'app-image-banner',
   imports: [ScImageDirective],
+  host: {
+    '[attr.class]': "('component hero-banner ' + styles().trim())",
+    '[attr.id]': 'renderingId()',
+  },
   template: `
-    <div [attr.class]="('component hero-banner ' + styles()).trim()" [attr.id]="renderingId()">
-      <div class="component-content sc-sxa-image-hero-banner">
-        <img
-          [scImage]="bannerImageField()"
-          [attr.sizes]="bannerSizes"
-          loading="eager"
-          fetchpriority="high"
-          [attr.alt]="bannerAlt()"
-          [style.object-fit]="'cover'"
-          [style.width]="'100%'"
-          [style.height]="'100%'"
-        />
-      </div>
+    <div class="component-content sc-sxa-image-hero-banner">
+      <img
+        *scImage="bannerImageField()"
+        [attr.sizes]="bannerSizes"
+        loading="eager"
+        fetchpriority="high"
+        [attr.alt]="bannerAlt()"
+        [style.object-fit]="'cover'"
+        [style.width]="'100%'"
+        [style.height]="'100%'"
+      />
     </div>
   `,
 })

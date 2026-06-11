@@ -15,3 +15,19 @@ export const getClassFromField = (fieldAttrs: { [key: string]: unknown }): strin
   }
   return fieldAttrs.class as string | undefined;
 };
+
+/**
+ * List of prefixes that are handled by the browser and should not be processed by the router links
+ * @public
+ */
+export const EXTERNAL_HREF_PREFIXES = [
+  'http://',
+  'https://',
+  'mailto:',
+  'tel:',
+  'sms:',
+  'javascript:',
+  'data:',
+  'ftp:',
+  '//',
+];

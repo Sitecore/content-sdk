@@ -19,11 +19,11 @@ export interface NavItemFields {
   template: `
     <li [class]="itemClass()" [attr.tabindex]="0">
       <div class="navigation-title" [class.child]="hasChildren()" (click)="toggleSubmenu()">
-        <a [scRouterLink]="linkField()" (click)="linkClick.emit($event)">
+        <a *scRouterLink="linkField()" (click)="linkClick.emit($event)">
           @if (navItemFields().NavigationTitle) {
-          <span [scText]="navItemFields().NavigationTitle!"></span>
+          <span *scText="navItemFields().NavigationTitle!"></span>
           } @else if (navItemFields().Title) {
-          <span [scText]="navItemFields().Title!"></span>
+          <span *scText="navItemFields().Title!"></span>
           } @else {
           {{ displayFallback() }}
           }

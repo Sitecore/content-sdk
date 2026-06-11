@@ -8,6 +8,10 @@ const mediaUrlPattern = /mediaurl="([^"]*)"/i;
 @Component({
   selector: 'app-container',
   imports: [NgTemplateOutlet, NgStyle, ScPlaceholderComponent],
+  host: {
+    '[attr.class]': "('component container-default ' + styles().trim())",
+    '[attr.id]': 'renderingId()',
+  },
   template: `
     @if (needsWrapper()) {
     <div class="container-wrapper">
@@ -18,16 +22,11 @@ const mediaUrlPattern = /mediaurl="([^"]*)"/i;
     }
 
     <ng-template #containerInner>
-      <div
-        [attr.class]="('component container-default ' + styles()).trim()"
-        [attr.id]="renderingId()"
-      >
-        <div class="component-content" [ngStyle]="backgroundStyle()">
-          <div class="row">
-            @if (placeholderName()) {
-            <sc-placeholder [name]="placeholderName()!" [rendering]="rendering()!"></sc-placeholder>
-            }
-          </div>
+      <div class="component-content" [ngStyle]="backgroundStyle()">
+        <div class="row">
+          @if (placeholderName()) {
+          <sc-placeholder [name]="placeholderName()!" [rendering]="rendering()!"></sc-placeholder>
+          }
         </div>
       </div>
     </ng-template>

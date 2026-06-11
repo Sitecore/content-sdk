@@ -11,6 +11,7 @@ import {
 import { LOADER_ID } from './loader-registry.token';
 import { ClientLoaderDataService } from './client-loader-data.service';
 import { extractRequestContext, applyRedirect } from './utils';
+import { EDITING_PARAMS_HEADER } from '../editing/constants';
 import {
   DEFAULT_ERROR_ROUTE,
   DEFAULT_NOT_FOUND_ROUTE,
@@ -174,13 +175,24 @@ export const loaderResolver = (
 
     const angularRequestContext = request ? extractRequestContext(request) : undefined;
 
+    // When the request flows through createEditingRenderMiddleware, the
+    // editing payload is propagated via x-sitecore-editing-params. Cached
+    // responses must not be served to the editor (it expects fresh layout
+    // every render), so disable cache for this resolution.
+    const isEditingRequest = Boolean(
+      angularRequestContext?.headers?.[EDITING_PARAMS_HEADER]
+    );
+    const effectiveCacheOptions = isEditingRequest
+      ? { ...(cacheOptions ?? {}), enabled: false }
+      : cacheOptions;
+
     const result = await serverLoaderRunner.resolve({
       loaderId,
       url,
       params: buildLoaderParams(route, defaultLanguage),
       query: route.queryParams as Record<string, string | string[]>,
       angularRequestContext,
-      cacheOptions,
+      cacheOptions: effectiveCacheOptions,
     });
 
     if (result.kind === 'redirect') {

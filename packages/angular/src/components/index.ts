@@ -10,9 +10,16 @@ export { ScMissingComponentComponent } from './sc-missing-component.component';
 export { ScHiddenRenderingComponent } from './sc-hidden-rendering.component';
 export { SITECORE_COMPONENT_MAP } from './tokens';
 export {
+  BaseFieldDirective,
   ScTextDirective,
   ScImageDirective,
   ScLinkDirective,
   ScRouterLinkDirective,
   ScRichTextDirective,
+  FieldMetadataMarkerComponent,
+  DefaultEmptyFieldEditingComponent,
+  DefaultEmptyImageFieldEditingComponent,
+  type FieldLike,
+  type ImageField,
+  type ImageFieldValue,
 } from './field-directives';

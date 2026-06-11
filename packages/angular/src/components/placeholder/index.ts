@@ -8,3 +8,10 @@ export {
   getChildComponentProps,
   resolveComponentForRendering,
 } from './placeholder-utils';
+export {
+  PLACEHOLDER_GUARD_RESOLVER,
+  PLACEHOLDER_DATA_RESOLVER,
+  type PlaceholderGuardResolver,
+  type PlaceholderDataResolver,
+  type PlaceholderResolverContext,
+} from './placeholder-tokens';

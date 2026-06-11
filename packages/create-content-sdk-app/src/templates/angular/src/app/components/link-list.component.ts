@@ -23,24 +23,26 @@ interface LinkListFields {
 @Component({
   selector: 'app-link-list',
   imports: [ScTextDirective, ScLinkDirective],
+  host: {
+    '[attr.class]': "('component link-list ' + styles().trim())",
+    '[attr.id]': 'renderingId()',
+  },
   template: `
-    <div [attr.class]="('component link-list ' + styles()).trim()" [attr.id]="renderingId()">
-      <div class="component-content">
-        @if (!datasource()) {
-        <h3>Link List</h3>
-        } @else {
-        <h3 [scText]="titleField()"></h3>
-        <ul>
-          @for (row of linkRows(); track $index) {
-          <li [class]="itemClass($index, linkRows().length)">
-            <div class="field-link">
-              <a [scLink]="row.link"></a>
-            </div>
-          </li>
-          }
-        </ul>
+    <div class="component-content">
+      @if (!datasource()) {
+      <h3>Link List</h3>
+      } @else {
+      <h3 *scText="titleField()"></h3>
+      <ul>
+        @for (row of linkRows(); track $index) {
+        <li [class]="itemClass($index, linkRows().length)">
+          <div class="field-link">
+            <a *scLink="row.link"></a>
+          </div>
+        </li>
         }
-      </div>
+      </ul>
+      }
     </div>
   `,
 })

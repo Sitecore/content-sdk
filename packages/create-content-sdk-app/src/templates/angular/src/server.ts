@@ -11,11 +11,14 @@ import fsDriver from 'unstorage/drivers/fs';
 import memoryDriver from 'unstorage/drivers/memory';
 import {
   createCacheAdminMiddleware,
+  createEditingConfigMiddleware,
+  createEditingRenderMiddleware,
   createLoaderCache,
   createLoaderDataServiceMiddleware,
   createSitecoreRevalidateMiddleware,
 } from '@sitecore-content-sdk/angular';
 import { LOADERS } from './content-sdk/loaders';
+import { componentMap } from '.sitecore/component-map';
 import config from '../sitecore.config';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
@@ -66,6 +69,25 @@ app.use(
 
 /** Admin endpoints for cache inspection and invalidation (see `/api/_cache`). */
 app.use(createCacheAdminMiddleware({ cache: loaderCache, endpoint: '/api/_cache' }));
+
+/**
+ * Editing config endpoint (`/api/editing/config`). Replies with the registered
+ * component map keys and `editMode: 'metadata'` so Sitecore Pages can negotiate
+ * editor capabilities before the first render request.
+ */
+app.use(
+  createEditingConfigMiddleware({
+    components: componentMap,
+    metadataImport: () => import('.sitecore/metadata.json'),
+  })
+);
+
+/**
+ * Editing render endpoint (`/api/editing/render`). Rewrites `req.url` to the
+ * editor's requested route, stashes the preview payload on the request, then
+ * lets the Angular SSR engine render the page in-process.
+ */
+app.use(createEditingRenderMiddleware());
 
 /**
  * Loader data endpoint (/_data). Must use the same loaders as the client registry

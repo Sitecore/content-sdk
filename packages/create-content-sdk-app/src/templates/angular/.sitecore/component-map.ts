@@ -1,8 +1,8 @@
 // Below are built-in components that are available in the app, it's recommended to keep them as is
 import { AngularContentSdkComponent } from '@sitecore-content-sdk/angular';
-import { ScFormComponent } from '@sitecore-content-sdk/angular';
 
-// end of built-in components
+import { ScFormComponent } from '@sitecore-content-sdk/angular';
+// end of built-in import section
 import * as Titlecomponent from 'src/app/components/title.component';
 import * as StructuredDatacomponent from 'src/app/components/structured-data.component';
 import * as RowSplittercomponent from 'src/app/components/row-splitter.component';

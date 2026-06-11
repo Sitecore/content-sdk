@@ -1,24 +1,10 @@
-import { Component, input } from '@angular/core';
-import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
-
-/**
- * Default component rendered for hidden Sitecore renderings.
- * @public
- */
+import { Component, HostBinding } from '@angular/core';
 @Component({
   selector: 'sc-hidden-rendering',
-  template: `<div [style]="styles">The component is hidden</div>`,
+  template: 'The component is hidden',
 })
 export class ScHiddenRenderingComponent {
-  readonly rendering = input<ComponentRendering>();
-  readonly fields = input<{ [key: string]: unknown }>();
-  readonly params = input<{ [key: string]: string }>();
-
-  readonly styles = {
-    background: 'repeating-linear-gradient(135deg, #fff, #fff 10px, #f0f0f0 10px, #f0f0f0 20px)',
-    minHeight: '30px',
-    border: '1px dashed #ccc',
-    padding: '10px',
-    opacity: 0.7,
-  };
+  @HostBinding('style') get style() {
+    return 'background-image: linear-gradient(45deg, #ffffff 25%, #dcdcdc 25%, #dcdcdc 50%, #ffffff 50%, #ffffff 75%, #dcdcdc 75%, #dcdcdc 100%); background-size: 3px 3px; display: flex; justify-content: center; align-items: center; padding: 30px; color: #aaa;';
+  }
 }

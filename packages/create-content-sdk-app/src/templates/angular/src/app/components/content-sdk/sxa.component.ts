@@ -2,7 +2,7 @@ import { Directive, computed, input } from '@angular/core';
 import { ComponentRendering } from '@sitecore-content-sdk/angular';
 import { computedRenderingId } from './utils';
 
-/** SXA base: `fields` / `params` merge `rendering` with placeholder-bound inputs (same idea as React placeholder utils). */
+/** SXA base: `fields` / `params` merge `rendering` with placeholder-bound inputs */
 @Directive()
 export abstract class SxaComponent {
   readonly fields = input<Record<string, unknown>>();

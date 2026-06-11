@@ -31,7 +31,7 @@ class TestRouterLinkHost {
 @Component({
   selector: 'test-sc-router-link',
   imports: [ScRouterLinkDirective],
-  template: `<a [scRouterLink]="field()">ScRouterLink</a>`,
+  template: `<a *scRouterLink="field()">ScRouterLink</a>`,
 })
 class TestScRouterLinkHost {
   readonly field = input<LinkField>({ value: { href: '/about', text: 'About' } });
