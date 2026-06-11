@@ -6,7 +6,7 @@
 
 # Class: EditingService
 
-Defined in: content/types/editing/editing-service.d.ts:44
+Defined in: content/types/editing/editing-service.d.ts:45
 
 Service for fetching editing data from Sitecore using the Sitecore's GraphQL API.
 Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
@@ -17,7 +17,7 @@ Expected to be used in XMCloud Pages preview (editing) Metadata Edit Mode.
 
 > **new EditingService**(`serviceConfig`): `EditingService`
 
-Defined in: content/types/editing/editing-service.d.ts:51
+Defined in: content/types/editing/editing-service.d.ts:52
 
 Fetch layout data using the Sitecore GraphQL endpoint.
 
@@ -37,7 +37,7 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 > **serviceConfig**: `EditingServiceConfig`
 
-Defined in: content/types/editing/editing-service.d.ts:45
+Defined in: content/types/editing/editing-service.d.ts:46
 
 ## Methods
 
@@ -45,7 +45,7 @@ Defined in: content/types/editing/editing-service.d.ts:45
 
 > **fetchEditingData**(`variables`, `fetchOptions?`): `Promise`\<\{ `layoutData`: [`LayoutServiceData`](../../index/interfaces/LayoutServiceData.md); \}\>
 
-Defined in: content/types/editing/editing-service.d.ts:64
+Defined in: content/types/editing/editing-service.d.ts:66
 
 Fetches editing data. Provides the layout data and dictionary phrases
 
@@ -68,7 +68,7 @@ The layout data and dictionary phrases.
 
 > `protected` **getGraphQLClient**(): `GraphQLClient`
 
-Defined in: content/types/editing/editing-service.d.ts:71
+Defined in: content/types/editing/editing-service.d.ts:73
 
 Gets a GraphQL client that can make requests to the API.
 
