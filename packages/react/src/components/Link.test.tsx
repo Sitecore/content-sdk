@@ -98,6 +98,112 @@ describe('<Link />', () => {
     const link = c.container.querySelector('a');
     expect(ref.current?.id).to.equal(link?.getAttribute('id'));
   });
+
+  describe('renderChildrenWhenEmpty', () => {
+    it('should render empty anchor with children when field value is empty and renderChildrenWhenEmpty is true', () => {
+      const field = { value: { href: undefined } };
+      const rendered = render(
+        <Link field={field} renderChildrenWhenEmpty>
+          <span>child</span>
+        </Link>
+      );
+      const anchor = rendered.container.querySelector('a');
+      expect(anchor).to.not.equal(null);
+      expect(anchor?.outerHTML).to.contain('<span>child</span>');
+      expect(anchor?.getAttribute('href')).to.equal(null);
+    });
+
+    it('should render empty anchor with children when field has no value and renderChildrenWhenEmpty is true', () => {
+      const field = {};
+      const rendered = render(
+        <Link field={field} renderChildrenWhenEmpty>
+          <span>child</span>
+        </Link>
+      );
+      const anchor = rendered.container.querySelector('a');
+      expect(anchor).to.not.equal(null);
+      expect(anchor?.outerHTML).to.contain('<span>child</span>');
+    });
+
+    it('should render empty anchor with additional props when field is empty and renderChildrenWhenEmpty is true', () => {
+      const field = { value: { href: undefined } };
+      const rendered = render(
+        <Link field={field} renderChildrenWhenEmpty id="empty-link" className="card">
+          <span>child</span>
+        </Link>
+      );
+      const anchor = rendered.container.querySelector('a');
+      expect(anchor?.getAttribute('id')).to.equal('empty-link');
+      expect(anchor?.getAttribute('class')).to.equal('card');
+    });
+
+    it('should still render nothing when field is empty and renderChildrenWhenEmpty is false', () => {
+      const field = { value: { href: undefined } };
+      const rendered = render(<Link field={field} renderChildrenWhenEmpty={false} />);
+      expect(rendered.container.innerHTML).to.equal('');
+    });
+
+    it('should still render nothing when field is empty and renderChildrenWhenEmpty is not provided', () => {
+      const field = { value: { href: undefined } };
+      const rendered = render(<Link field={field} />);
+      expect(rendered.container.innerHTML).to.equal('');
+    });
+
+    it('should render normal link when field has value, regardless of renderChildrenWhenEmpty', () => {
+      const field = { value: { href: '/lorem', text: 'ipsum' } };
+      const rendered = render(
+        <Link field={field} renderChildrenWhenEmpty>
+          <span>child</span>
+        </Link>
+      );
+      const anchor = rendered.container.querySelector('a');
+      expect(anchor?.getAttribute('href')).to.equal('/lorem');
+      expect(anchor?.outerHTML).to.contain('<span>child</span>');
+    });
+
+    describe('edit mode', () => {
+      const testMetadata = {
+        contextItem: {
+          id: '{09A07660-6834-476C-B93B-584248D3003B}',
+          language: 'en',
+          revision: 'a0b36ce0a7db49418edf90eb9621e145',
+          version: 1,
+        },
+        fieldId: '{414061F4-FBB1-4591-BC37-BFFA67F745EB}',
+        fieldType: 'single-line',
+        rawValue: 'Test1',
+      };
+
+      it('should render empty anchor with children inside metadata wrappers when field is empty and renderChildrenWhenEmpty is true', () => {
+        const field = { value: { href: undefined }, metadata: testMetadata };
+        const rendered = render(
+          <Link field={field} renderChildrenWhenEmpty>
+            <span>child</span>
+          </Link>
+        );
+        const anchor = rendered.container.querySelector('a');
+        expect(anchor).to.not.equal(null);
+        expect(anchor?.outerHTML).to.contain('<span>child</span>');
+        expect(anchor?.getAttribute('href')).to.equal(null);
+
+        const codes = rendered.container.querySelectorAll('code.scpm');
+        expect(codes.length).to.equal(2);
+      });
+
+      it('should still show placeholder when field is empty and renderChildrenWhenEmpty is not set', () => {
+        const field = { value: { href: undefined }, metadata: testMetadata };
+        const rendered = render(
+          <Link field={field}>
+            <span>child</span>
+          </Link>
+        );
+        const placeholder = rendered.container.querySelector('span');
+        expect(placeholder?.textContent).to.equal('[No text in field]');
+        expect(rendered.container.querySelector('a')).to.equal(null);
+      });
+    });
+  });
+
   describe('edit mode', () => {
     const testMetadata = {
       contextItem: {
