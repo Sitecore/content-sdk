@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useSitecore } from '../SitecoreProvider';
-import { serializeCatalog } from '../../atoms/atoms-serializer';
+import { serializeCatalog } from '../../atoms';
 import { StudioComponentWrapper } from '../../atoms/Wrapper/StudioComponentWrapper';
 import type { Document } from '@sitecore-content-sdk/content/atoms';
 import * as editing from '@sitecore-content-sdk/content/editing';

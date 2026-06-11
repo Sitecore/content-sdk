@@ -37,7 +37,16 @@ describe('<DesignLibraryLowCodeComponent />', () => {
   const mockCatalog = {
     componentNames: ['Button'],
     actionNames: [],
-    data: { components: { Button: { description: 'A button', slots: ['default'] } } },
+    data: {
+      components: {
+        Button: {
+          props: { toJSONSchema: () => ({}) },
+          description: 'A button',
+          slots: ['default'],
+        },
+      },
+      actions: {},
+    },
     jsonSchema: () => ({}),
   } as any;
 
@@ -123,4 +132,3 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     });
   });
 });
-

@@ -130,7 +130,7 @@ describe('SitecoreProvider', () => {
         componentMap={components}
         page={mockPage}
         loadImportMap={loadImportMapStub}
-        atoms={atomsConfig}
+        atomsConfig={atomsConfig}
       >
         <AtomRegistryProbe />
       </SitecoreProvider>

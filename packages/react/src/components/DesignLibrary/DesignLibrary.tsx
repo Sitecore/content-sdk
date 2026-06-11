@@ -19,7 +19,7 @@ import { Placeholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 import { DynamicComponent } from './models';
 import { ErrorComponent } from '../ErrorBoundary';
-import { serializeCatalog } from '../../atoms/atoms-serializer';
+import { serializeCatalog } from '../../atoms';
 
 let {
   getDesignLibraryImportMapEvent,

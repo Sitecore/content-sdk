@@ -6,7 +6,6 @@ import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { ComponentMap } from './sharedTypes';
 import { ImportMapImport } from './DesignLibrary/models';
 import type { AtomsConfig } from '../atoms/types';
-import { serializeCatalog } from '../atoms';
 
 export interface SitecoreProviderProps {
   /**
@@ -29,7 +28,7 @@ export interface SitecoreProviderProps {
    * Atoms configuration: catalog and registry for rendering low-code components.
    * Pass the catalog from defineAtomsCatalog and the registry result from defineAtomsRegistry.
    */
-  atoms?: AtomsConfig;
+  atomsConfig?: AtomsConfig;
 
   children: React.ReactNode;
 }
@@ -99,22 +98,15 @@ export const ImportMapReactContext = React.createContext<
  * @param {SitecoreProviderProps['page']} props.page - The page data.
  * @param {SitecoreProviderProps['componentMap']} props.componentMap - The component map.
  * @param {SitecoreProviderProps['loadImportMap']} props.loadImportMap - The function to load the import map.
- * @param {SitecoreProviderProps['atoms']} props.atoms - Atoms config (catalog + registry) for rendering low-code components.
+ * @param {SitecoreProviderProps['atomsConfig']} props.atomsConfig - Atoms config (catalog + registry) for rendering low-code components.
  * @param {React.ReactNode} props.children - The children to render.
  * @returns {React.ReactNode} The SitecoreProvider component.
  * @public
  */
 export const SitecoreProvider = (props: SitecoreProviderProps) => {
-  const { api, page: propsPage, componentMap, loadImportMap, atoms, children } = props;
+  const { api, page: propsPage, componentMap, loadImportMap, atomsConfig, children } = props;
 
   const [page, setPageInternal] = useState<Page>(propsPage);
-
-  // Build AtomsConfig internally from developer-provided config
-  const atomsConfig = useMemo<AtomsConfig | undefined>(
-    () => (atoms ? { catalog: atoms.catalog, registry: atoms.registry } : undefined),
-    [atoms]
-  );
-  console.log(serializeCatalog(atomsConfig?.catalog!));
 
   // Memoize setPage callback
   const setPage = useCallback((value: Page) => {
