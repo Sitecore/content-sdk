@@ -67,9 +67,9 @@ function searchParamsToQueryRecord(sp: URLSearchParams): { [key: string]: string
  * @public
  */
 export const getRequiredParams = (qs: { [key: string]: string | undefined }) => {
-  const { rev, db, la, vs, ts } = qs;
+  const { rev, db, la, vs, ts, ttc, tt, hash } = qs;
 
-  return { rev, db, la, vs, ts };
+  return { rev, db, la, vs, ts, ttc, tt, hash };
 };
 
 /**

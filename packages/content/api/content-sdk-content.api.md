@@ -623,6 +623,9 @@ const getRequiredParams: (qs: {
     la: string | undefined;
     vs: string | undefined;
     ts: string | undefined;
+    ttc: string | undefined;
+    tt: string | undefined;
+    hash: string | undefined;
 };
 
 // @public
