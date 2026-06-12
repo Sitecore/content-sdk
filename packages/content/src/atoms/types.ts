@@ -1,3 +1,5 @@
+import { Spec } from '@json-render/core';
+
 /**
  * Serialized atom info for a single component, sent to Design Studio.
  * @internal
@@ -58,5 +60,10 @@ export interface SitecoreComponentMeta {
   allowedChildren?: string[];
   /** Component names that this component is allowed to be placed inside. */
   allowedParents?: string[];
+}
+
+export interface Document extends Spec {
+  /** Human-readable identifier of the document. */
+  name: string;
 }
 

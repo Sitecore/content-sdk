@@ -1,14 +1,13 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import type { Document } from '../../atoms/component-layout/document';
+import { AtomsCatalogPayload } from './types';
 import {
-  AtomsCatalogPayload,
+  addDocumentUpdateHandler,
   getDesignLibraryAtomsCatalogEvent,
   getDesignLibraryAtomsErrorEvent,
-  addDocumentUpdateHandler,
-} from './atoms-builder';
+} from './events';
 
-describe('atoms-builder', () => {
+describe('design-library-bridge events', () => {
   describe('getDesignLibraryAtomsCatalogEvent', () => {
     it('returns an event with name "atoms:catalog"', () => {
       const payload: AtomsCatalogPayload = { components: [], actions: [] };
@@ -20,11 +19,14 @@ describe('atoms-builder', () => {
     it('returns an event containing the provided catalog payload', () => {
       const payload: AtomsCatalogPayload = {
         components: [
-          { name: 'Button', propsSchema: { type: 'object' }, description: 'A button', slots: ['default'] },
+          {
+            name: 'Button',
+            propsSchema: { type: 'object' },
+            description: 'A button',
+            slots: ['default'],
+          },
         ],
-        actions: [
-          { name: 'submit', paramsSchema: { type: 'object' }, description: 'Submit form' },
-        ],
+        actions: [{ name: 'submit', paramsSchema: { type: 'object' }, description: 'Submit form' }],
       };
 
       const event = getDesignLibraryAtomsCatalogEvent(payload);
@@ -51,13 +53,13 @@ describe('atoms-builder', () => {
     let removeEventListener: sinon.SinonStub;
 
     beforeEach(() => {
-      addEventListener = sinon.stub(window, 'addEventListener');
-      removeEventListener = sinon.stub(window, 'removeEventListener');
+      addEventListener = sinon.stub();
+      removeEventListener = sinon.stub();
+      (global as any).window = { addEventListener, removeEventListener };
     });
 
     afterEach(() => {
-      addEventListener.restore();
-      removeEventListener.restore();
+      (global as any).window = undefined;
     });
 
     it('registers a message event listener', () => {

@@ -1,91 +1,18 @@
 import { constants } from '@sitecore-content-sdk/core';
-import { DesignLibraryEvent, validateEvent } from '../design-library';
-import type { Document } from '../../atoms/component-layout/document';
-import { SerializedCatalog } from '../../atoms/types';
+import { validateEvent } from '../../editing/design-library';
+import { Document, SerializedCatalog } from '../types';
+import {
+  DESIGN_LIBRARY_ATOMS_CATALOG_EVENT_NAME,
+  DESIGN_LIBRARY_ATOMS_ERROR_EVENT_NAME,
+  DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME,
+} from './constants';
+import {
+  DesignLibraryAtomsCatalogEvent,
+  DesignLibraryAtomsError,
+  DesignLibraryAtomsErrorEvent,
+} from './types';
 
 const { ERROR_MESSAGES } = constants;
-
-/**
- * Event name for component preview updates from design library
- */
-const DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME = 'component:atoms:preview';
-
-/**
- * Event name for the atoms catalog registration (replaces legacy `atom:registry`).
- * @internal
- */
-const DESIGN_LIBRARY_ATOMS_CATALOG_EVENT_NAME = 'atoms:catalog';
-
-/**
- * Event to send to design library when rendering atoms error occurs
- */
-const DESIGN_LIBRARY_ATOMS_ERROR_EVENT_NAME = 'atoms:error';
-
-/**
- * Enumeration of error types for the design library atoms.
- * @internal
- */
-export type DesignLibraryAtomsError = 'render' | 'atoms-missing';
-
-/**
- * Represents a atom rendering error event to be sent to design library
- * @internal
- */
-export interface DesignLibraryAtomsErrorEvent extends DesignLibraryEvent {
-  name: typeof DESIGN_LIBRARY_ATOMS_ERROR_EVENT_NAME;
-  message: {
-    error: unknown;
-    type: DesignLibraryAtomsError;
-  };
-}
-
-/**
- * Serialized component entry in the catalog payload sent to Design Studio.
- * @internal
- */
-export interface AtomCatalogEntry {
-  /** Component name (key in the catalog). */
-  name: string;
-  /** JSON Schema representation of the component props. */
-  propsSchema: object;
-  /** Human-readable description. */
-  description: string;
-  /** Named slots (children). */
-  slots: string[];
-}
-
-/**
- * Serialized action entry in the catalog payload sent to Design Studio.
- * @internal
- */
-export interface ActionCatalogEntry {
-  /** Action name (key in the catalog). */
-  name: string;
-  /** JSON Schema representation of the action params. */
-  paramsSchema: object;
-  /** Human-readable description. */
-  description: string;
-}
-
-/**
- * Payload of the atoms:catalog event sent to Design Studio.
- * @internal
- */
-export interface AtomsCatalogPayload {
-  /** Serialized component entries. */
-  components: AtomCatalogEntry[];
-  /** Serialized action entries. */
-  actions: ActionCatalogEntry[];
-}
-
-/**
- * Represents the atoms:catalog event sent to Design Studio.
- * @internal
- */
-export interface DesignLibraryAtomsCatalogEvent extends DesignLibraryEvent {
-  name: typeof DESIGN_LIBRARY_ATOMS_CATALOG_EVENT_NAME;
-  message: Record<string, unknown>;
-}
 
 /**
  * Creates a DesignLibraryAtomsCatalogEvent with the given catalog payload.
@@ -162,3 +89,4 @@ export const addDocumentUpdateHandler = (callback: (updatedRootComponent: Docume
 
   return unsubscribe;
 };
+
