@@ -3,12 +3,6 @@
   "description": "Application utilizing Content SDK and Next.js",
   "version": "0.1.0",
   "private": true,
-  "config": {
-    "appName": "content-sdk-nextjs",
-    "graphQLEndpointPath": "/sitecore/api/graph/edge",
-    "language": "en",
-    "template": "nextjs"
-  },
   "author": {
     "name": "Sitecore Corporation",
     "url": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html"
