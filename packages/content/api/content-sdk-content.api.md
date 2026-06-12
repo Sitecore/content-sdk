@@ -334,6 +334,7 @@ export type EditingOptions = {
     layoutKind?: LayoutKind;
     mode: Exclude<LayoutServicePageState, 'Normal'>;
     site?: string;
+    variantId: string;
 };
 
 // @public
@@ -342,7 +343,7 @@ export type EditingPreviewData = {
     itemId: string;
     language: string;
     mode: Exclude<LayoutServicePageState, 'Normal'>;
-    variantIds: string[] | string;
+    variantId: string;
     version?: string;
     layoutKind?: LayoutKind;
 };
@@ -622,6 +623,9 @@ const getRequiredParams: (qs: {
     la: string | undefined;
     vs: string | undefined;
     ts: string | undefined;
+    ttc: string | undefined;
+    tt: string | undefined;
+    hash: string | undefined;
 };
 
 // @public
