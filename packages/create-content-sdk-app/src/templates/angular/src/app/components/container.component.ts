@@ -23,11 +23,13 @@ const mediaUrlPattern = /mediaurl="([^"]*)"/i;
 
     <ng-template #containerInner>
       <div class="component-content" [ngStyle]="backgroundStyle()">
-        <div class="row">
-          @if (placeholderName()) {
-          <sc-placeholder [name]="placeholderName()!" [rendering]="rendering()!"></sc-placeholder>
-          }
-        </div>
+        @if (placeholderName()) {
+        <sc-placeholder
+          class="row"
+          [name]="placeholderName()!"
+          [rendering]="rendering()!"
+        ></sc-placeholder>
+        }
       </div>
     </ng-template>
   `,

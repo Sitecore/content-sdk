@@ -15,7 +15,7 @@ import scConfig from '../../sitecore.config';
 import { getClient } from '../content-sdk/client/sitecore-client';
 import { LOADERS } from '../content-sdk/loaders';
 import { componentMap } from '.sitecore/component-map';
-import { TranslateLoader } from '@ngx-translate/core';
+import { provideTranslateLoader, provideTranslateService } from '@ngx-translate/core';
 
 /**
  * Client hydration is disabled so that RouterLink and other directives attach correctly
@@ -37,7 +37,9 @@ export const appConfig: ApplicationConfig = {
     provideLoaderRegistry(LOADERS),
     ClientPreLoaderDataService,
     { provide: SITECORE_COMPONENT_MAP, useValue: componentMap },
-    { provide: TranslateLoader, useClass: SitecoreTranslateLoader },
+    provideTranslateService({
+      loader: provideTranslateLoader(SitecoreTranslateLoader),
+    }),
     // provides locale aware serializer for csdk and angular router links
     { provide: UrlSerializer, useClass: LocaleUrlSerializer },
   ],
