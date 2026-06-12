@@ -11,11 +11,11 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class App {
   protected readonly title = signal('angular-sample');
-  private context = signal(inject(SitecoreContextService));
+  private context = inject(SitecoreContextService);
 
   constructor(translate: TranslateService) {
     effect(() => {
-      const lang = this.context().page()?.locale;
+      const lang = this.context.page()?.locale;
       if (lang) {
         translate.use(lang);
       }
