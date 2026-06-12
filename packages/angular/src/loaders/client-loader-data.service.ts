@@ -2,8 +2,7 @@ import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Params } from '@angular/router';
-import { LoaderApiRequest, LoaderApiResponse, LoaderCacheConfig } from './models';
+import { LoaderPayload, LoaderApiResponse } from './models';
 import { LOADER_DATA_ENDPOINT } from '../server/constants';
 import { FETCH_DATA_ENDPOINT } from './loader-registry.token';
 
@@ -15,23 +14,6 @@ import { FETCH_DATA_ENDPOINT } from './loader-registry.token';
  */
 function requestKey(loaderId: string, url: string): string {
   return `loader:${loaderId}:${url}`;
-}
-
-/**
- * Request parameters for fetching loader data
- * @public
- */
-export interface LoaderDataRequest {
-  url: string;
-  loaderId: string;
-  params?: Params;
-  query?: Record<string, string | string[]>;
-  /**
-   * Per-route cache overrides from `loaderResolver(id, cacheOptions)`. Sent
-   * to the server in the POST body so server-side cache policy matches the
-   * route's intent on CSR navigations. Phase 5 of the refactor plan.
-   */
-  cacheOptions?: LoaderCacheConfig;
 }
 
 /**
@@ -56,9 +38,9 @@ export class ClientLoaderDataService {
    * If a response is already staged or a request is pending, does nothing.
    * Otherwise starts a fetch and stores the result for a later getData() call.
    * Used by PreLoaderDataService to warm responses for all loaders in a route in parallel.
-   * @param {LoaderDataRequest} loaderRequest - The loader data request
+   * @param {LoaderPayload} loaderRequest - The loader data request
    */
-  prefetch(loaderRequest: LoaderDataRequest): void {
+  prefetch(loaderRequest: LoaderPayload): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
@@ -78,10 +60,10 @@ export class ClientLoaderDataService {
    * If a request is already pending for this URL/loader combination,
    * waits for it to complete instead of making a duplicate request.
    * Consumes (removes) staged responses after retrieval.
-   * @param {LoaderDataRequest} request - The loader data request
+   * @param {LoaderPayload} request - The loader data request
    * @returns {Promise<LoaderApiResponse>} Promise resolving to the API response
    */
-  async getData(request: LoaderDataRequest): Promise<LoaderApiResponse> {
+  async getData(request: LoaderPayload): Promise<LoaderApiResponse> {
     if (!isPlatformBrowser(this.platformId)) {
       return {
         kind: 'error',
@@ -114,16 +96,16 @@ export class ClientLoaderDataService {
    * Fetch data from the configured data endpoint.
    * Callers (getData, prefetch) add the returned promise to pending; it is removed
    * in finally when the promise settles.
-   * @param {LoaderDataRequest} request - The loader data request
+   * @param {LoaderPayload} request - The loader data request
    * @returns {Promise<LoaderApiResponse>} Promise resolving to the API response
    */
-  private async fetchData(request: LoaderDataRequest): Promise<LoaderApiResponse> {
+  private async fetchData(request: LoaderPayload): Promise<LoaderApiResponse> {
     const key = requestKey(request.loaderId, request.url);
     const endpoint = this.fetchDataEndpoint;
-    const reqBody: LoaderApiRequest = {
+    const reqBody: LoaderPayload = {
       loaderId: request.loaderId,
       url: request.url,
-      params: request.params ?? {},
+      routeParams: request.routeParams ?? {},
       query: request.query ?? {},
       cacheOptions: request.cacheOptions,
     };

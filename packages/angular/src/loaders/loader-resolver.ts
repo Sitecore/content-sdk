@@ -10,7 +10,7 @@ import {
 } from '@angular/router';
 import { LOADER_ID } from './loader-registry.token';
 import { ClientLoaderDataService } from './client-loader-data.service';
-import { extractRequestContext, applyRedirect } from './utils';
+import { extractRequestData, applyRedirect } from './utils';
 import { EDITING_PARAMS_HEADER } from '../editing/constants';
 import {
   DEFAULT_ERROR_ROUTE,
@@ -23,6 +23,7 @@ import { redirectOnNavigationError } from './router-error-handling';
 import { ERROR_ROUTE_TOKEN, NOT_FOUND_ROUTE_TOKEN } from '../lib/tokens';
 import { SERVER_LOADER_RUNNER } from './server-loader-runner.token';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
+
 /**
  * Create a state key for the loader
  * @param {string} loaderId - The loader ID
@@ -58,7 +59,7 @@ export type LoaderId = keyof LoaderIdMap extends never ? string : keyof LoaderId
  * @param {string} [defaultLanguage] - Default language to fall back to.
  * @returns {Params} Merged params with a guaranteed `locale` when `defaultLanguage` is set.
  */
-function buildLoaderParams(route: ActivatedRouteSnapshot, defaultLanguage?: string): Params {
+function buildLoaderParams(route: ActivatedRouteSnapshot, defaultLanguage: string): Params {
   const merged = route.pathFromRoot.reduce((acc, r) => ({ ...acc, ...r.params }), {} as Params);
   if (!merged.locale && defaultLanguage) {
     merged.locale = defaultLanguage;
@@ -90,7 +91,7 @@ async function resolveOnBrowser({
   state: RouterStateSnapshot;
   loaderId: string;
   router: Router;
-  defaultLanguage?: string;
+  defaultLanguage: string;
   cacheOptions?: PerRouteLoaderCacheConfig;
 }): Promise<unknown | RedirectCommand> {
   const transferState = inject(TransferState);
@@ -110,7 +111,7 @@ async function resolveOnBrowser({
   const resp = await browserLoaderData.getData({
     url,
     loaderId,
-    params: allParams,
+    routeParams: allParams,
     query: route.queryParams as Record<string, string | string[]>,
     cacheOptions,
   });
@@ -145,7 +146,8 @@ export const loaderResolver = (
       inject(NOT_FOUND_ROUTE_TOKEN, { optional: true }) || DEFAULT_NOT_FOUND_ROUTE;
     const errorRoute = inject(ERROR_ROUTE_TOKEN, { optional: true }) || DEFAULT_ERROR_ROUTE;
     const router = inject(Router);
-    const defaultLanguage = inject(SITECORE_CONFIG_TOKEN, { optional: true })?.defaultLanguage;
+    const config = inject(SITECORE_CONFIG_TOKEN);
+    const defaultLanguage = config.defaultLanguage;
 
     const url = state.url;
     const key = stateKey(loaderId, url);
@@ -173,15 +175,13 @@ export const loaderResolver = (
       );
     }
 
-    const angularRequestContext = request ? extractRequestContext(request) : undefined;
+    const csdkRequestData = request ? extractRequestData(request) : {};
 
     // When the request flows through createEditingRenderMiddleware, the
     // editing payload is propagated via x-sitecore-editing-params. Cached
     // responses must not be served to the editor (it expects fresh layout
     // every render), so disable cache for this resolution.
-    const isEditingRequest = Boolean(
-      angularRequestContext?.headers?.[EDITING_PARAMS_HEADER]
-    );
+    const isEditingRequest = !!csdkRequestData.headers?.[EDITING_PARAMS_HEADER];
     const effectiveCacheOptions = isEditingRequest
       ? { ...(cacheOptions ?? {}), enabled: false }
       : cacheOptions;
@@ -189,10 +189,10 @@ export const loaderResolver = (
     const result = await serverLoaderRunner.resolve({
       loaderId,
       url,
-      params: buildLoaderParams(route, defaultLanguage),
+      routeParams: buildLoaderParams(route, defaultLanguage),
       query: route.queryParams as Record<string, string | string[]>,
-      angularRequestContext,
       cacheOptions: effectiveCacheOptions,
+      csdkRequestData,
     });
 
     if (result.kind === 'redirect') {

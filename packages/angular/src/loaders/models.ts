@@ -1,13 +1,25 @@
 import type { Params } from '@angular/router';
+import { EditingPreviewData } from '@sitecore-content-sdk/content/editing';
 export const DEFAULT_NOT_FOUND_ROUTE = '/404';
 export const DEFAULT_ERROR_ROUTE = '/500';
 
 /**
- * Request context containing information from the incoming HTTP request.
+ * Content SDK request params like site name, variant ids
+ * @public
+ */
+export interface CsdkRequestParams {
+  /** Site name. Either resovled from route or set to default site name from sitecore.config */
+  siteName: string;
+  /** Variant id. Either resovled from route or set to default variant id name */
+  variantId: string;
+  componentVariantIds?: string[];
+}
+/**
+ * Request data from the incoming HTTP request.
  * Used for request-dependent operations in loaders.
  * @public
  */
-export interface RequestContext {
+export interface CsdkRequestData {
   /**
    * The hostname from the request (without port)
    */
@@ -24,6 +36,12 @@ export interface RequestContext {
    * Headers from the request
    */
   headers?: Record<string, string | string[] | undefined>;
+  /**
+   * Preview/editing data for Content SDK
+   */
+  scPreviewData?: EditingPreviewData;
+  /** Content SDK request params */
+  scParams?: CsdkRequestParams;
 }
 
 /**
@@ -44,7 +62,7 @@ export type LoaderContext = {
    * `defaultLanguage` from `sitecore.config` when no locale segment was matched — loaders
    * can rely on a concrete `params.locale` regardless of URL shape.
    */
-  params: Params;
+  routeParams: Params;
   /**
    * Query string parameters
    */
@@ -53,48 +71,33 @@ export type LoaderContext = {
    * Server-only: the incoming request
    */
   req?: Request;
+  /** Content SDK request params like site name, variant ids */
+  scParams: CsdkRequestParams;
   /**
-   * Server-only: the response object
+   * Server-only: request data extracted from the incoming HTTP request
+   * (hostname, headers, cookies, editing preview data). Absent during prerender.
    */
-  res?: Response;
-  /**
-   * Server-only: context from the incoming HTTP request.
-   * Contains hostname, cookies, query params, and headers.
-   * Use with createSiteResolver() to determine the current site.
-   * @example
-   * ```typescript
-   * const resolveSite = createSiteResolver({ sites, defaultSite: config.defaultSite });
-   *
-   * export const pageLoader: LoaderFn = async (ctx) => {
-   *   if (ctx.requestContext) {
-   *     const { site } = resolveSite(ctx.requestContext);
-   *     return client.getPage(ctx.url, { site: site.name });
-   *   }
-   *   return client.getPage(ctx.url);
-   * };
-   * ```
-   */
-  requestContext?: RequestContext;
+  csdkRequestData?: CsdkRequestData;
 };
 
-export type LoaderApiRequest = {
+export type LoaderPayload = {
   loaderId: string;
   url: string;
-  params: Params;
+  routeParams: Params;
   query: Record<string, any>;
-  /**
-   * Server-derived request context (hostname, headers, cookies, query).
-   * Populated once at the request boundary (`/_data` middleware closure or the
-   * SSR resolver). Downstream code reads this directly; nobody re-extracts.
-   * Phase 2 of the refactor plan.
-   */
-  angularRequestContext?: RequestContext;
   /**
    * Per-route cache overrides supplied at the `loaderResolver(id, cacheOptions)`
    * call site. The browser includes them in the `/_data` POST body so the same
-   * per-route policy applies on CSR navigations. Phase 5 of the refactor plan.
+   * per-route policy applies on CSR navigations.
    */
   cacheOptions?: LoaderCacheConfig;
+};
+
+export type LoaderRunnerInit = LoaderPayload & {
+  /**
+   * Supplemental Content SDK request data
+   */
+  csdkRequestData: CsdkRequestData | null;
 };
 
 export type LoaderRedirectResult = {
@@ -204,7 +207,7 @@ export interface LoaderCacheEntryInfo {
 }
 
 /**
- * Three-outcome read result for stale-while-revalidate (Phase 3).
+ * Three-outcome read result for stale-while-revalidate
  *
  * - `hit` — entry is fresh; serve cached value without running the loader.
  * - `stale` — entry expired or was invalidated; serve cached value and refresh in the background.

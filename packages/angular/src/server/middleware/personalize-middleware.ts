@@ -1,4 +1,3 @@
-import type { IncomingMessage, ServerResponse } from 'http';
 import {
   CdpHelper,
   DEFAULT_VARIANT,
@@ -25,6 +24,7 @@ import {
   ExpressResponse,
 } from '../models';
 import { splitLocaleFromPath } from '../../i18n/locale-utils';
+import { SC_PARAMS_HEADER } from '../../loaders/constants';
 import debug from '../../debug';
 
 /**
@@ -142,7 +142,7 @@ const getPersonalizeExecutions = (
 /**
  * Middleware to support Sitecore Personalize.
  * Identifies page/component variants for the request via Sitecore CDP and populates
- * `req.sc.variantId` and `req.sc.componentVariantIds` for downstream layout personalization.
+ * `req.scParams.variantId` and `req.scParams.componentVariantIds` for downstream layout personalization.
  * @param {PersonalizeMiddlewareOptions} options personalize middleware options
  * @returns {ExpressMiddleware} Express middleware
  * @public
@@ -203,7 +203,7 @@ export function createPersonalizeMiddleware(
       const startTimestamp = Date.now();
       const { locale, nonLocalePath } = splitLocaleFromPath(req.path, options.locales ?? []);
       const language = locale || options.defaultLanguage || 'en';
-      const siteName = req.sc?.siteName || req.cookies?.[SITE_KEY] || options.defaultSite;
+      const siteName = req.scParams?.siteName || req.cookies?.[SITE_KEY] || options.defaultSite;
       const hostHeader = req.headers?.['x-forwarded-host'] ?? req.headers?.host;
       const hostname =
         (Array.isArray(hostHeader) ? hostHeader[0] : hostHeader)?.split(':')[0] || 'localhost';
@@ -248,8 +248,8 @@ export function createPersonalizeMiddleware(
 
       // Express req/res are http.IncomingMessage/ServerResponse at runtime; the minimal
       // Express interfaces don't declare that, so cast for the cookie-based server adapters
-      const httpReq = (req as unknown) as IncomingMessage;
-      const httpRes = (res as unknown) as ServerResponse;
+      const httpReq = req;
+      const httpRes = res;
       await initContentSdk({
         config: {
           contextId: options.contextId as string,
@@ -309,7 +309,11 @@ export function createPersonalizeMiddleware(
       }
 
       const { variantId, componentVariantIds } = getGroomedVariantIds(identifiedVariantIds);
-      req.sc = { siteName, ...req.sc, variantId, componentVariantIds };
+      req.scParams = { siteName, ...req.scParams, variantId, componentVariantIds };
+      // Also ride the params on a header so they survive Angular's conversion of the
+      // Express request to a web Request on the SSR path (same mechanism as editing params).
+      req.headers = req.headers ?? {};
+      req.headers[SC_PARAMS_HEADER] = JSON.stringify(req.scParams);
 
       debug.personalize('personalize middleware end in %dms: %o', Date.now() - startTimestamp, {
         variantId,

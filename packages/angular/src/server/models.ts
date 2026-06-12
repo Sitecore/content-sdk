@@ -1,14 +1,12 @@
 import { InjectionToken } from '@angular/core';
-import type { RequestContext } from '../loaders/models';
-import type { LoaderRegistry } from '../loaders/loader-registry.token';
-import type { LoaderCache } from '../loaders/models';
+import type { CsdkRequestParams, CsdkRequestData } from '../loaders/models';
 
 /**
  * Injection token for the request context extractor (used by tests to provide a mock via TestBed).
  * @internal
  */
 export const EXTRACT_REQUEST_CONTEXT_TOKEN = new InjectionToken<
-  (req: ExpressRequest) => RequestContext
+  (req: ExpressRequest) => CsdkRequestData
 >('EXTRACT_REQUEST_CONTEXT');
 
 export interface CookieOptions {
@@ -50,11 +48,7 @@ export interface ExpressRequest {
 }
 
 export interface CsdkExpressRequest extends ExpressRequest {
-  sc?: {
-    siteName: string;
-    variantId?: string;
-    componentVariantIds?: string[];
-  };
+  scParams?: CsdkRequestParams;
 }
 
 /**
@@ -81,18 +75,6 @@ export interface ExpressResponse {
 }
 
 /**
- * Configuration for server-side data handlers
- * @public
- */
-export interface DataHandlerConfig {
-  /**
-   * The endpoint path for the data handler.
-   * @default '/_data'
-   */
-  endpoint?: string;
-}
-
-/**
  * Express next function type
  * @public
  */
@@ -112,25 +94,3 @@ export type ExpressMiddleware = (
  * @public
  */
 export type { LoaderRegistry } from '../loaders/loader-registry.token';
-
-/**
- * Options for the Express data handler
- * @public
- */
-export interface ExpressDataHandlerOptions extends DataHandlerConfig {
-  /**
-   * The shared loader registry (same object as provideLoaderRegistry).
-   */
-  loaders: LoaderRegistry;
-  /**
-   * Optional loader cache. When supplied, /_data responses go through
-   * cache-aside; omit to run loaders directly on every request.
-   */
-  cache?: LoaderCache;
-  /**
-   * Optional request context extractor (e.g. for testing via TestBed).
-   * If not provided, uses the default implementation from loaders/utils.
-   * @internal
-   */
-  extractRequestContext?: (req: ExpressRequest) => RequestContext;
-}

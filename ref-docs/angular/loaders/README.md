@@ -28,7 +28,7 @@
 
 ## Type Aliases
 
-- [LoaderApiRequest](type-aliases/LoaderApiRequest.md)
+- [LoaderPayload](type-aliases/LoaderPayload.md)
 - [LoaderApiResponse](type-aliases/LoaderApiResponse.md)
 - [LoaderCacheReadResult](type-aliases/LoaderCacheReadResult.md)
 - [LoaderContext](type-aliases/LoaderContext.md)

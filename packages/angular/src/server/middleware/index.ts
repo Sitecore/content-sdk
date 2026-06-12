@@ -29,3 +29,5 @@ export {
   type AllowedQueryParams,
   type AllowedQueryParamsResolver,
 } from './editing-render-middleware';
+export { createMultisiteMiddleware } from './multisite-middleware';
+export { createPersonalizeMiddleware } from './personalize-middleware';

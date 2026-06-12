@@ -9,16 +9,18 @@ export const DEFAULT_CACHE_TTL = 300;
  * @internal
  */
 export interface CacheKeyDimensions {
-  /** Site name from route params (defaults to `'default'`). */
+  /** Site name from route params (defaults to sitecoreConfig.defaultSite). */
   site: string;
   /** Locale from route params (defaults to `'en'`). */
   locale: string;
-  /** Personalization variant segment (currently always `'default'` until Phase 4). */
+  /** Personalization variant segment (defaults to `'default'`). */
   variantId: string;
   /** Loader id (`page`, `dictionary`, etc.). */
   loaderId: string;
   /** Sanitized path segment from the loader URL; home route uses `'_'`. */
   pathKey: string;
+  /** Component variant ids from request context */
+  componentVariantIds?: string[];
 }
 
 /**

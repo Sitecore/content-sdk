@@ -1,13 +1,15 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import type { LoaderCache, LoaderContext } from '../../loaders/models';
 import { buildCacheKey } from './cache-key';
 import { buildLoaderCacheTags } from './cache-tags';
 
 export const sampleContext: LoaderContext = {
   url: '/products',
-  params: { site: 'shop', locale: 'en' },
+  routeParams: { locale: 'en' },
   query: {},
+  scParams: { siteName: 'shop', variantId: DEFAULT_VARIANT },
 };
 
 export function sampleKey(loaderId = 'page'): string {

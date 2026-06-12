@@ -49,7 +49,7 @@ describe('createLoaderDataServiceMiddleware', () => {
     return createLoaderDataServiceMiddleware({
       ...opts,
       endpoint: opts.endpoint ?? endpoint,
-      extractRequestContext: extractReq,
+      extractRequestData: extractReq,
     });
   }
 

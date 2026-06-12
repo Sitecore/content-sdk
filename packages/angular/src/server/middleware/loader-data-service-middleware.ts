@@ -1,20 +1,45 @@
 import {
-  LoaderApiRequest,
+  LoaderPayload,
+  LoaderRunnerInit,
   LoaderApiResponse,
   NotFoundNavigationError,
   LoaderHttpError,
   LoaderDataResult,
+  LoaderCache,
 } from '../../loaders/models';
-import { extractRequestContext } from '../../loaders/utils';
 import {
-  ExpressDataHandlerOptions,
   ExpressMiddleware,
   ExpressNextFunction,
   ExpressRequest,
   ExpressResponse,
+  CsdkExpressRequest,
+  LoaderRegistry,
 } from '../models';
 import { LOADER_DATA_ENDPOINT } from '../constants';
 import { ServerLoaderRunner } from '../server-loader-runner';
+import { extractRequestData } from '../../loaders/utils';
+import { AngularSitecoreConfig } from '../../config/define-config';
+
+/**
+ * Options for the Express data handler
+ * @public
+ */
+export interface LoaderDataServiceOptions {
+  /**
+   * The shared loader registry (same object as provideLoaderRegistry).
+   */
+  loaders: LoaderRegistry;
+  /**
+   * Optional loader cache. When supplied, /_data responses go through
+   * cache-aside; omit to run loaders directly on every request.
+   */
+  cache: LoaderCache;
+  /**
+   * The endpoint path for the data handler.
+   * @default '/_data'
+   */
+  endpoint?: string;
+}
 
 /**
  * Map loader resolution result to wire-level API response.
@@ -56,16 +81,18 @@ function sendResponse(res: ExpressResponse, result: LoaderApiResponse): void {
 }
 
 /**
- * Parse POST body or GET query into LoaderApiRequest, or return a validation error.
+ * Parse POST body or GET query into LoaderPayload, or return a validation error.
  * @param {ExpressRequest} req - Incoming Express request
  */
 function parseLoaderRequest(
-  req: ExpressRequest
-): LoaderApiRequest | { status: number; message: string } {
+  req: CsdkExpressRequest
+): LoaderRunnerInit | { status: number; message: string } {
   if (req.method === 'POST') {
-    const body = req.body as LoaderApiRequest;
+    const body = req.body as LoaderPayload;
     if (!body?.loaderId) return { status: 400, message: 'Missing loaderId' };
-    return body;
+    // csdkRequestData is server-derived only — anything request-data-shaped in the
+    // POST body is ignored so clients can't spoof site/variant resolution.
+    return { ...body, csdkRequestData: extractRequestData(req) };
   }
   if (req.method === 'GET') {
     const loaderId = String(req.query?.loaderId ?? '');
@@ -74,11 +101,13 @@ function parseLoaderRequest(
     for (const [key, value] of Object.entries(req.query ?? {})) {
       if (key !== 'loaderId' && key !== 'url' && typeof value === 'string') query[key] = value;
     }
+    const csdkRequestData = extractRequestData(req) ?? null;
     return {
       loaderId,
       url: String(req.query?.url ?? ''),
-      params: {},
+      routeParams: {},
       query,
+      csdkRequestData,
     };
   }
   return { status: 405, message: 'Method not allowed' };
@@ -107,10 +136,11 @@ function parseLoaderRequest(
  * @public
  */
 export function createLoaderDataServiceMiddleware(
-  options: ExpressDataHandlerOptions
+  config: AngularSitecoreConfig,
+  options: LoaderDataServiceOptions
 ): ExpressMiddleware {
   const { loaders, cache, endpoint = LOADER_DATA_ENDPOINT } = options;
-  const serverLoaderData = new ServerLoaderRunner(loaders, cache);
+  const serverLoaderRunner = new ServerLoaderRunner(loaders, config, cache);
 
   return async (
     req: ExpressRequest,
@@ -124,11 +154,7 @@ export function createLoaderDataServiceMiddleware(
     try {
       const parsed = parseLoaderRequest(req);
       if ('loaderId' in parsed) {
-        // POST body's `angularRequestContext` is ignored — server-derived data
-        // (hostname, headers) must come from the actual request, not from a
-        // payload the browser could spoof.
-        parsed.angularRequestContext = extractRequestContext(req);
-        const result = toApiResponse(await serverLoaderData.resolve(parsed));
+        const result = toApiResponse(await serverLoaderRunner.resolve(parsed));
         sendResponse(res, result);
       } else {
         res

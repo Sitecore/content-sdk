@@ -54,7 +54,7 @@ Resolve loader data with optional cache read-through and SWR refresh.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `request` | [`LoaderApiRequest`](../../../loaders/type-aliases/LoaderApiRequest.md) | Loader id, URL, params, optional request context and cache overrides. |
+| `request` | [`LoaderPayload`](../../../loaders/type-aliases/LoaderPayload.md) | Loader id, URL, params, optional request context and cache overrides. |
 
 #### Returns
 

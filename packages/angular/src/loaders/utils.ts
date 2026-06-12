@@ -1,6 +1,10 @@
 import { RedirectCommand } from '@angular/router';
 import type { Router } from '@angular/router';
-import { RequestContext } from './models';
+import { CsdkRequestData, CsdkRequestParams } from './models';
+import { EDITING_PARAMS_HEADER } from '../server/middleware/editing-render-middleware';
+import { EditingPreviewData } from '@sitecore-content-sdk/content/editing';
+import { SC_PARAMS_HEADER } from './constants';
+import debug from '../debug';
 
 /**
  * Apply a redirect: internal URLs → RedirectCommand; external URLs → full page navigation.
@@ -24,12 +28,17 @@ export function applyRedirect(router: Router, location: string): RedirectCommand
 }
 
 /**
- * Express-like request object interface
+ * Express-like request object interface with Content SDK request params
  */
 interface ExpressLikeRequest {
   headers?: Record<string, string | string[] | undefined>;
   cookies?: Record<string, string>;
   query?: Record<string, string | string[] | undefined>;
+  scParams?: CsdkRequestParams;
+}
+
+interface FetchLikeRequest extends Request {
+  scParams?: CsdkRequestParams;
 }
 
 /**
@@ -96,48 +105,68 @@ function parseCookieHeader(cookieHeader: string | null): Record<string, string> 
  * @returns {RequestContext} The request context
  * @example
  * ```typescript
- * import { extractRequestContext } from '@sitecore-content-sdk/angular/server';
+ * import { extractRequestData } from '@sitecore-content-sdk/angular/server';
  *
  * // From Express request
- * const requestContext = extractRequestContext(expressReq);
+ * const requestContext = extractRequestData(expressReq);
  *
  * // From Fetch API Request (Angular's REQUEST token)
- * const requestContext = extractRequestContext(request);
+ * const requestContext = extractRequestData(request);
  * ```
  * @public
  */
-export function extractRequestContext(req: Request | ExpressLikeRequest): RequestContext {
-  // Check if it's a Fetch API Request object
+export function extractRequestData(req: FetchLikeRequest | ExpressLikeRequest): CsdkRequestData {
+  let hostname: string | undefined;
+  let headers: Record<string, string | string[] | undefined> = {};
+  let cookies: Record<string, string> = {};
+  let query: Record<string, string | string[] | undefined> = {};
+  let scPreviewData: EditingPreviewData | undefined;
+  let scParams = 'scParams' in req ? req.scParams : undefined;
+  // Check if it's a Fetch API Request object - we're in browser loaders flow in this case
   if (req instanceof Request) {
-    const headers = headersToObject(req.headers);
-    const cookies = parseCookieHeader(req.headers.get('cookie'));
-    const query = parseQueryFromUrl(req.url);
-
-    // Extract hostname from URL
-    let hostname: string | undefined;
+    headers = headersToObject(req.headers);
+    cookies = parseCookieHeader(req.headers.get('cookie'));
+    query = parseQueryFromUrl(req.url);
     try {
       hostname = new URL(req.url).hostname;
     } catch {
-      // URL parsing failed, hostname will be resolved from headers
+      // empty catch - resolve hostname from host header later
     }
+  } else {
+    headers = req.headers ?? {};
+    cookies = req.cookies ?? {};
+    query = req.query ?? {};
+  }
+  hostname =
+    hostname ??
+    pickHostnameFromHostHeader(Array.isArray(headers?.host) ? headers?.host[0] : headers?.host);
 
-    return {
-      hostname,
-      headers,
-      cookies,
-      query,
-    };
+  const scPreviewDataHeader = headers?.[EDITING_PARAMS_HEADER] as string;
+  if (scPreviewDataHeader) {
+    try {
+      scPreviewData = JSON.parse(scPreviewDataHeader) as EditingPreviewData;
+    } catch {
+      debug.editing('Failed to parse editing preview data from header');
+    }
   }
 
-  const hostHeader = req.headers?.host;
-  const hostname = pickHostnameFromHostHeader(
-    Array.isArray(hostHeader) ? hostHeader[0] : hostHeader
-  );
+  // Express request properties don't survive Angular's conversion to a web Request,
+  // so middleware-resolved params also ride the SC_PARAMS_HEADER (set alongside req.scParams).
+  const scParamsHeader = headers?.[SC_PARAMS_HEADER] as string;
+  if (!scParams && scParamsHeader) {
+    try {
+      scParams = JSON.parse(scParamsHeader) as CsdkRequestParams;
+    } catch {
+      debug.common('Failed to parse Content SDK request params from header');
+    }
+  }
   return {
     hostname,
-    headers: req.headers,
-    cookies: req.cookies,
-    query: req.query,
+    headers,
+    cookies,
+    query,
+    scPreviewData,
+    scParams,
   };
 }
 

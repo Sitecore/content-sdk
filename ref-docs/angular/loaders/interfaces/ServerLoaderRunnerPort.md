@@ -26,7 +26,7 @@ Resolve loader data on the server (cache-aware) using the shared [LOADER\_REGIST
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `request` | [`LoaderApiRequest`](../type-aliases/LoaderApiRequest.md) | Loader request payload |
+| `request` | [`LoaderPayload`](../type-aliases/LoaderPayload.md) | Loader request payload |
 
 #### Returns
 

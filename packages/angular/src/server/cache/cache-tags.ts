@@ -173,7 +173,7 @@ export function buildSitecoreLocaleCacheTag(locale: string): string {
 }
 
 /**
- * Builds the full tag set written alongside a loader cache entry (Phase 3 OSR alignment).
+ * Builds the full tag set written alongside a loader cache entry.
  * Always includes self-tag, `sc:site:<site>`, and `sc:locale:<locale>`. Conditionally adds
  * `sc:item:…` for page loaders and `sc:dict:…` for dictionary loaders. Custom tags are deduped.
  * @param {string} loaderId - Loader that produced the value.

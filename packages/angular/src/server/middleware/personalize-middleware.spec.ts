@@ -31,9 +31,9 @@ vi.mock('@sitecore-content-sdk/analytics-core', () => ({
 }));
 
 const getPersonalizeInfo = vi.fn();
-const personalizeService = ({
+const personalizeService = {
   getPersonalizeInfo,
-} as unknown) as PersonalizeService;
+} as unknown as PersonalizeService;
 
 function createOptions(
   overrides: Partial<PersonalizeMiddlewareOptions> = {}
@@ -57,13 +57,13 @@ function createReq(overrides: Partial<CsdkExpressRequest> = {}): CsdkExpressRequ
     query: {},
     cookies: {},
     headers: { host: 'example.com' },
-    sc: { siteName: 'website' },
+    scParams: { siteName: 'website', variantId: DEFAULT_VARIANT },
     ...overrides,
   };
 }
 
 function createRes() {
-  return ({ setHeader: vi.fn() } as unknown) as ExpressResponse & {
+  return { setHeader: vi.fn() } as unknown as ExpressResponse & {
     setHeader: ReturnType<typeof vi.fn>;
   };
 }
@@ -75,7 +75,7 @@ describe('createPersonalizeMiddleware', () => {
     vi.clearAllMocks();
   });
 
-  it('should populate req.sc with identified page-level variant', async () => {
+  it('should populate req.scParams with identified page-level variant', async () => {
     getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
     vi.mocked(personalize).mockResolvedValue({ variantId: 'variant-a' });
     const req = createReq();
@@ -94,11 +94,15 @@ describe('createPersonalizeMiddleware', () => {
       }),
       { timeout: undefined }
     );
-    expect(req.sc).toEqual({ siteName: 'website', variantId: 'variant-a', componentVariantIds: [] });
+    expect(req.scParams).toEqual({
+      siteName: 'website',
+      variantId: 'variant-a',
+      componentVariantIds: [],
+    });
     expect(next).toHaveBeenCalledTimes(1);
   });
 
-  it('should populate req.sc.componentVariantIds with identified component-level variants', async () => {
+  it('should populate req.scParams.componentVariantIds with identified component-level variants', async () => {
     getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['comp1_var1'] });
     vi.mocked(personalize).mockResolvedValue({ variantId: 'comp1_var1' });
     const req = createReq();
@@ -112,7 +116,7 @@ describe('createPersonalizeMiddleware', () => {
       }),
       { timeout: undefined }
     );
-    expect(req.sc).toEqual({
+    expect(req.scParams).toEqual({
       siteName: 'website',
       variantId: DEFAULT_VARIANT,
       componentVariantIds: ['comp1_var1'],
@@ -142,14 +146,18 @@ describe('createPersonalizeMiddleware', () => {
     expect(getPersonalizeInfo).toHaveBeenCalledWith('/about', 'fr', 'website');
   });
 
-  it('should resolve site from cookie and fall back to defaultSite when req.sc is not set', async () => {
+  it('should resolve site from cookie and fall back to defaultSite when req.scParams is not set', async () => {
     getPersonalizeInfo.mockResolvedValue(undefined);
     const middleware = createPersonalizeMiddleware(createOptions());
 
-    await middleware(createReq({ sc: undefined, cookies: { [SITE_KEY]: 'other-site' } }), createRes(), next);
+    await middleware(
+      createReq({ scParams: undefined, cookies: { [SITE_KEY]: 'other-site' } }),
+      createRes(),
+      next
+    );
     expect(getPersonalizeInfo).toHaveBeenCalledWith('/about', 'en', 'other-site');
 
-    await middleware(createReq({ sc: undefined }), createRes(), next);
+    await middleware(createReq({ scParams: undefined }), createRes(), next);
     expect(getPersonalizeInfo).toHaveBeenCalledWith('/about', 'en', 'website');
   });
 
@@ -159,7 +167,7 @@ describe('createPersonalizeMiddleware', () => {
     await createPersonalizeMiddleware(createOptions({ enabled: false }))(req, createRes(), next);
 
     expect(getPersonalizeInfo).not.toHaveBeenCalled();
-    expect(req.sc?.variantId).toBeUndefined();
+    expect(req.scParams?.variantId).toBe(DEFAULT_VARIANT);
     expect(next).toHaveBeenCalledTimes(1);
   });
 
@@ -235,7 +243,7 @@ describe('createPersonalizeMiddleware', () => {
     await middleware(req, createRes(), next);
 
     expect(personalize).not.toHaveBeenCalled();
-    expect(req.sc?.variantId).toBeUndefined();
+    expect(req.scParams?.variantId).toBe(DEFAULT_VARIANT);
     expect(next).toHaveBeenCalledTimes(2);
   });
 
@@ -248,7 +256,7 @@ describe('createPersonalizeMiddleware', () => {
 
     expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store, must-revalidate');
     expect(personalize).not.toHaveBeenCalled();
-    expect(req.sc?.variantId).toBeUndefined();
+    expect(req.scParams?.variantId).toBe(DEFAULT_VARIANT);
   });
 
   it('should ignore variants not configured for the route', async () => {
@@ -258,7 +266,7 @@ describe('createPersonalizeMiddleware', () => {
 
     await createPersonalizeMiddleware(createOptions())(req, createRes(), next);
 
-    expect(req.sc?.variantId).toBeUndefined();
+    expect(req.scParams?.variantId).toBe(DEFAULT_VARIANT);
     expect(next).toHaveBeenCalledTimes(1);
   });
 
@@ -298,7 +306,7 @@ describe('createPersonalizeMiddleware', () => {
 
     await createPersonalizeMiddleware(createOptions())(req, createRes(), next);
 
-    expect(req.sc?.variantId).toBeUndefined();
+    expect(req.scParams?.variantId).toBe(DEFAULT_VARIANT);
     expect(next).toHaveBeenCalledTimes(1);
     log.mockRestore();
   });

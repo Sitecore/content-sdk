@@ -68,15 +68,18 @@ export function urlToPathKey(url: string, locale?: string): string {
  * @internal
  */
 export function dimensionsFromContext(loaderId: string, ctx: LoaderContext): CacheKeyDimensions {
-  const params = (ctx.params ?? {}) as Record<string, unknown>;
-  const site = (params?.site as string) || 'default';
+  const params = (ctx.routeParams ?? {}) as Record<string, unknown>;
+  const site = ctx.scParams.siteName;
+  const variantId = ctx.scParams.variantId;
+  const componentVariantIds = ctx.scParams.componentVariantIds;
   const locale = (params?.locale as string) || 'en';
   const pathKey = urlToPathKey(ctx.url || '/', locale);
 
   return {
     site,
     locale,
-    variantId: 'default',
+    variantId,
+    componentVariantIds,
     loaderId,
     pathKey,
   };
@@ -114,7 +117,7 @@ export function applyLoaderCacheConfigDefaults(
 }
 
 /**
- * Maps a stored entry to the three-outcome read result used by {@link ServerLoaderRunner} (Phase 3 SWR).
+ * Maps a stored entry to the three-outcome read result used by {@link ServerLoaderRunner}.
  * @param {string} cacheKey - Key being read.
  * @param {LoaderCacheEntry | null | undefined} entry - Stored entry, if any.
  * @param {number} [now] - Current timestamp for TTL comparison (defaults to `Date.now()`).

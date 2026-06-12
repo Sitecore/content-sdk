@@ -12,6 +12,8 @@ import {
   CookieOptions,
 } from '../models';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
+import { SC_PARAMS_HEADER } from '../../loaders/constants';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import debug from '../../debug';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
 
@@ -23,15 +25,23 @@ type MultsiteMiddlewareOptions = SitecoreConfig['multisite'] & {
 
 const hostnameMatcher = /(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}/;
 
+/**
+ *
+ * @param req
+ */
 export function getHostname(req: CsdkExpressRequest): string {
   return getHostnameFromHostHeader(
     (req.headers?.['x-forwarded-host'] as string | undefined) ||
-      (req.headers?.['host'] as string | undefined) ||
+      (req.headers?.host as string | undefined) ||
       hostnameMatcher.exec(req.url ?? '')?.[0] ||
       '*'
   );
 }
 
+/**
+ *
+ * @param options
+ */
 export function createMultisiteMiddleware(options: MultsiteMiddlewareOptions): ExpressMiddleware {
   const siteResolver = new SiteResolver(options.sites ?? []);
   return (req: CsdkExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
@@ -63,7 +73,7 @@ export function createMultisiteMiddleware(options: MultsiteMiddlewareOptions): E
       } else {
         resolvedSite =
           (req.query?.[SITE_KEY] as string | undefined) ||
-          (req.query?.['site'] as string | undefined) ||
+          (req.query?.site as string | undefined) ||
           (options.useCookieResolution &&
             options.useCookieResolution(req as RequestInit) &&
             (req.cookies?.[SITE_KEY] as string | undefined)) ||
@@ -73,7 +83,13 @@ export function createMultisiteMiddleware(options: MultsiteMiddlewareOptions): E
       if (!resolvedSite) {
         resolvedSite = options.defaultSite ?? '';
       }
-      req.sc ? (req.sc.siteName = resolvedSite) : (req.sc = { siteName: resolvedSite });
+      req.scParams
+        ? (req.scParams.siteName = resolvedSite)
+        : (req.scParams = { siteName: resolvedSite, variantId: DEFAULT_VARIANT });
+      // Also ride the params on a header so they survive Angular's conversion of the
+      // Express request to a web Request on the SSR path (same mechanism as editing params).
+      req.headers = req.headers ?? {};
+      req.headers[SC_PARAMS_HEADER] = JSON.stringify(req.scParams);
       debug.multisite('multisite middleware end in %dms: %o', Date.now() - startTimestamp, {
         resolvedSite,
       });
