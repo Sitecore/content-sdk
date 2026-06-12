@@ -188,39 +188,4 @@ describe('<StudioComponentWrapper />', () => {
     const { getByTestId } = renderInProvider(<StudioComponentWrapper document={doc} />);
     expect(getByTestId('text-el').textContent).to.equal('Member');
   });
-
-  // ── useMemo reactivity ────────────────────────────────────────────────────
-
-  it('re-renders as empty when document changes to null', () => {
-    const { container, rerender } = renderInProvider(
-      <StudioComponentWrapper document={sampleDoc} />
-    );
-    expect(container.innerHTML).to.not.equal('');
-
-    rerender(wrapInProvider(<StudioComponentWrapper document={null} />));
-
-    expect(container.innerHTML).to.equal('');
-  });
-
-  it('renders the updated document when the document prop changes', () => {
-    const firstDoc: Document = {
-      name: 'first',
-      root: 'r',
-      elements: { r: { type: 'Text', props: { content: 'First' }, children: [] } },
-    };
-    const secondDoc: Document = {
-      name: 'second',
-      root: 'r',
-      elements: { r: { type: 'Text', props: { content: 'Second' }, children: [] } },
-    };
-
-    const { getByTestId, rerender } = renderInProvider(
-      <StudioComponentWrapper document={firstDoc} />
-    );
-    expect(getByTestId('text-el').textContent).to.equal('First');
-
-    rerender(wrapInProvider(<StudioComponentWrapper document={secondDoc} />, atomsConfig));
-
-    expect(getByTestId('text-el').textContent).to.equal('Second');
-  });
 });

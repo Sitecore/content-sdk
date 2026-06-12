@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import { z } from 'zod';
-import { getFieldMeta } from './schema-utils';
 import {
   textFieldSchema,
   richTextFieldSchema,
@@ -14,6 +13,24 @@ import {
 } from './field-schemas';
 
 describe('field-schemas', () => {
+  const getFieldMeta = (
+    schemaOrJsonSchema: z.ZodType | Record<string, unknown>
+  ): Record<string, unknown> | undefined => {
+    if (typeof schemaOrJsonSchema !== 'object' || schemaOrJsonSchema === null) {
+      return undefined;
+    }
+    if ('_zod' in schemaOrJsonSchema) {
+      const obj = schemaOrJsonSchema as Record<string, unknown> & {
+        meta?: () => Record<string, unknown>;
+      };
+      const m = typeof obj.meta === 'function' ? obj.meta() : undefined;
+      return m?.meta as Record<string, unknown> | undefined;
+    }
+    return (schemaOrJsonSchema as Record<string, unknown>).meta as
+      | Record<string, unknown>
+      | undefined;
+  };
+
   const factories = [
     { name: 'textFieldSchema', factory: textFieldSchema, control: 'Single-Line Text' },
     { name: 'richTextFieldSchema', factory: richTextFieldSchema, control: 'Rich Text' },

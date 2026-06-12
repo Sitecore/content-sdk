@@ -40,28 +40,3 @@ export function withArgMeta<T extends z.ZodType>(schema: T, meta: ArgMeta): T {
   }
   return schema;
 }
-
-/**
- * Get field metadata from a Zod type or a plain JSON Schema object. Uses _zod to detect Zod
- * schemas; otherwise reads the meta key from the object. For internal use by the renderer / DS.
- * @param {import('zod').ZodType | Record<string, unknown>} schemaOrJsonSchema - Live Zod type or plain JSON Schema object
- * @returns The meta object or undefined
- * @internal
- */
-export function getFieldMeta(
-  schemaOrJsonSchema: z.ZodType | Record<string, unknown>
-): Record<string, unknown> | undefined {
-  if (typeof schemaOrJsonSchema !== 'object' || schemaOrJsonSchema === null) {
-    return undefined;
-  }
-  if ('_zod' in schemaOrJsonSchema) {
-    const obj = schemaOrJsonSchema as Record<string, unknown> & {
-      meta?: () => Record<string, unknown>;
-    };
-    const m = typeof obj.meta === 'function' ? obj.meta() : undefined;
-    return m?.[META_KEY] as Record<string, unknown> | undefined;
-  }
-  return (schemaOrJsonSchema as Record<string, unknown>)[META_KEY] as
-    | Record<string, unknown>
-    | undefined;
-}

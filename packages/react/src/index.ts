@@ -116,7 +116,6 @@ export {
   serializeCatalog,
   withPropMeta,
   withArgMeta,
-  getFieldMeta,
   type PropMeta,
   type ArgMeta,
   type AtomComponentDefinition,
