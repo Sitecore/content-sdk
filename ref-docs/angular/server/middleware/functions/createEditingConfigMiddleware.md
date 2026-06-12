@@ -8,7 +8,7 @@
 
 > **createEditingConfigMiddleware**(`options`): [`ExpressMiddleware`](../../express/type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:108](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/middleware/editing-config-middleware.ts#L108)
+Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:108](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/editing-config-middleware.ts#L108)
 
 Express middleware that serves the editing config endpoint
 (default path: `/api/editing/config`). Mirrors the Next.js
