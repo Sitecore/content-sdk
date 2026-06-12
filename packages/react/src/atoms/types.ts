@@ -2,10 +2,12 @@ import type { Catalog, InferCatalogInput } from '@json-render/core';
 import type { ComponentRenderer, DefineRegistryResult, ReactSchema } from '@json-render/react';
 import { SitecoreComponentMeta } from '@sitecore-content-sdk/content/atoms';
 
-// Private: json-render base catalog types derived from the React schema
 type BaseCatalog = InferCatalogInput<ReactSchema['definition']['catalog']>;
 type BaseComponent = BaseCatalog['components'][string];
 type BaseAction = BaseCatalog['actions'][string];
+
+/** Utility type that prevents extra keys beyond those defined in `Base`. */
+export type Exact<T, Base> = T & Record<Exclude<keyof T, keyof Base>, never>;
 
 /**
  * Component definition in the atoms catalog input.

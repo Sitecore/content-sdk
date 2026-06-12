@@ -1,4 +1,3 @@
-// export { type Document } from './component-layout/document';
 export type {
   SerializedCatalog,
   SitecoreComponentMeta,

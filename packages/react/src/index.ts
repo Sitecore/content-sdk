@@ -139,4 +139,5 @@ export {
   type LinkFieldSchema,
   type ImageFieldSchema,
   type FileFieldSchema,
+  useBoundProp,
 } from './atoms';
