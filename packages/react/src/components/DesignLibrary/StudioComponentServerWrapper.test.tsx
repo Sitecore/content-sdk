@@ -20,7 +20,10 @@ describe('StudioComponentServerWrapper', () => {
 
   const sampleDocument: Document = {
     name: 'hero',
-    root: { id: 'r', type: 'Box' },
+    root: 'test',
+    elements: {
+      test: { type: 'Text', props: { content: 'Hello' }, children: [] },
+    },
   };
 
   beforeEach(() => {
@@ -220,4 +223,3 @@ describe('StudioComponentServerWrapper', () => {
     });
   });
 });
-

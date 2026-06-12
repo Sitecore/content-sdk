@@ -1,12 +1,10 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import React from 'react';
 import { expect } from 'chai';
-import { render } from '@testing-library/react';
 import type { Document } from '@sitecore-content-sdk/content/atoms';
-import { createView } from './createView';
 import type { DefineRegistryResult } from '@json-render/react';
+import { createNCC } from '.';
 
-describe('component-layout/createView', () => {
+describe('create-ncc', () => {
   const mockDoc: Document = {
     name: 'TestComponent',
     root: 'root-el',
@@ -26,15 +24,13 @@ describe('component-layout/createView', () => {
     executeAction: async () => {},
   };
 
-  describe('createView()', () => {
-    it('returns an FC with the document name as displayName', () => {
-      const View = createView(mockDoc, mockRegistry);
-      expect(View.displayName).to.equal('TestComponent');
-    });
+  it('returns an FC with the document name as displayName', () => {
+    const View = createNCC(mockDoc, mockRegistry);
+    expect(View.displayName).to.equal('TestComponent');
+  });
 
-    it('returns a functional component', () => {
-      const View = createView(mockDoc, mockRegistry);
-      expect(typeof View).to.equal('function');
-    });
+  it('returns a functional component', () => {
+    const View = createNCC(mockDoc, mockRegistry);
+    expect(typeof View).to.equal('function');
   });
 });

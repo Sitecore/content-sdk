@@ -1,10 +1,21 @@
 import React from 'react';
 import { StudioComponentWrapper } from './StudioComponentWrapper';
-import { StudioComponentServerWrapperProps } from './models';
 import { NativeDataFetcher, NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
 import { debug } from '@sitecore-content-sdk/content';
 import { Document } from '@sitecore-content-sdk/content/atoms';
 import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
+
+/**
+ * Props accepted by the RSC `StudioComponentServerWrapper`.
+ * @internal
+ */
+export type StudioComponentServerWrapperProps = {
+  /**
+   * Pipe separated relative paths to the Studio component layout JSON in MMS with the last segment as the variant name. The path matching `FieldNames` will be used, or `default` if no match.
+   */
+  componentRef: string;
+  fieldNames?: string;
+};
 
 /**
  * Server component for Studio (NCC) components. Fetches the component layout
@@ -113,4 +124,3 @@ async function fetchDocument(path: string): Promise<Document | null> {
     return null;
   }
 }
-

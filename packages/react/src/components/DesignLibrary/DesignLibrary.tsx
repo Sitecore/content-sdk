@@ -10,7 +10,6 @@ import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
   addComponentUpdateHandler,
-  getDesignLibraryAtomsCatalogEvent,
 } from '@sitecore-content-sdk/content/editing';
 import * as codegen from '@sitecore-content-sdk/content/codegen';
 import * as editing from '@sitecore-content-sdk/content/editing';
@@ -20,6 +19,7 @@ import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 import { DynamicComponent } from './models';
 import { ErrorComponent } from '../ErrorBoundary';
 import { serializeCatalog } from '../../atoms';
+import { getDesignLibraryAtomsCatalogEvent } from '@sitecore-content-sdk/content/atoms';
 
 let {
   getDesignLibraryImportMapEvent,

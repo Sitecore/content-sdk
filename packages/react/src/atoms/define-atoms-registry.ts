@@ -1,25 +1,15 @@
 'use client';
-/**
- * defineAtomsRegistry — thin pass-through to json-render's defineRegistry.
- *
- * Preserves full type inference from the catalog so component render functions
- * receive typed `props` (e.g. `({ props, children, emit }) => ...`).
- *
- * @public
- */
 import { defineRegistry } from '@json-render/react';
 
 /**
  * Define an atoms registry that maps catalog definitions to React implementations.
  *
- * Each component receives `{ props, children, emit, on, bindings, loading }` —
- * the standard json-render ComponentContext with fully typed props.
- *
+ * Each component receives `{ props, children, emit, on, bindings, loading }`
  * @param catalog - The catalog created by defineAtomsCatalog
  * @param options - Component and action implementations
  * @returns Registry result with component registry and action handlers
- *
  * @example
+ *
  * ```tsx
  * import { defineAtomsRegistry } from '@sitecore-content-sdk/react/atoms';
  *
@@ -39,8 +29,6 @@ import { defineRegistry } from '@json-render/react';
  *   },
  * });
  * ```
- *
  * @public
  */
 export const defineAtomsRegistry: typeof defineRegistry = defineRegistry;
-

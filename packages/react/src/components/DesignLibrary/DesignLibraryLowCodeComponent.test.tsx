@@ -90,7 +90,7 @@ describe('<DesignLibraryLowCodeComponent />', () => {
         componentMap={emptyComponentMap}
         page={getPage() as any}
         loadImportMap={loadImportMapStub}
-        atoms={runtime}
+        atomsConfig={runtime}
       >
         <DesignLibraryLowCodeComponent />
       </SitecoreProvider>

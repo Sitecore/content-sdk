@@ -55,7 +55,7 @@ describe('<DesignLibrary />', () => {
         route: {
           uid: 'test-uid',
           placeholders: {
-            'editing-componentmode': [
+            'editing-componentmode-placeholder': [
               {
                 uid: 'component-1',
                 componentName: 'TestComponent',
@@ -127,4 +127,3 @@ describe('<DesignLibrary />', () => {
     });
   });
 });
-

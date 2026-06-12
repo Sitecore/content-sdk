@@ -1,12 +1,3 @@
-/**
- * defineAtomsCatalog — thin pass-through to json-render's defineCatalog
- * using the standard @json-render/react schema.
- *
- * The return type preserves the full catalog generic so that `defineAtomsRegistry`
- * can infer typed props for each component render function.
- *
- * @public
- */
 import { defineCatalog } from '@json-render/core';
 import { schema } from '@json-render/react';
 import type { AtomsCatalogInput } from './types';
@@ -17,10 +8,8 @@ import type { AtomsCatalogInput } from './types';
  * Pass component/action definitions exactly as json-render expects them.
  * The returned catalog carries full type information so `defineAtomsRegistry`
  * can infer props per component.
- *
- * @param input - Catalog input with `components` and optionally `actions`
+ * @param {T} input - Catalog input with `components` and optionally `actions`
  * @returns A typed json-render Catalog
- *
  * @example
  * ```ts
  * import { z } from 'zod';
@@ -47,10 +36,8 @@ import type { AtomsCatalogInput } from './types';
  *   },
  * });
  * ```
- *
  * @public
  */
 export function defineAtomsCatalog<T extends AtomsCatalogInput>(input: T) {
   return defineCatalog(schema, input);
 }
-

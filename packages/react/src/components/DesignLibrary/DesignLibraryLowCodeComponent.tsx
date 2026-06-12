@@ -2,19 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { useSitecore } from '../SitecoreProvider';
 import { serializeCatalog } from '../../atoms';
-import { StudioComponentWrapper } from '../../atoms/Wrapper/StudioComponentWrapper';
+import { StudioComponentWrapper } from './StudioComponentWrapper';
 import type { Document } from '@sitecore-content-sdk/content/atoms';
 import * as editing from '@sitecore-content-sdk/content/editing';
+import * as atoms from '@sitecore-content-sdk/content/atoms';
 import { DesignLibraryErrorBoundary } from '../..';
 
-let {
-  postToDesignLibrary,
-  getDesignLibraryAtomsCatalogEvent,
-  getDesignLibraryStatusEvent,
-  DesignLibraryStatus,
-  sendAtomsErrorEvent,
-  addDocumentUpdateHandler,
-} = editing;
+let { postToDesignLibrary, getDesignLibraryStatusEvent, DesignLibraryStatus } = editing;
+let { addDocumentUpdateHandler, getDesignLibraryAtomsCatalogEvent, sendAtomsErrorEvent } = atoms;
 
 export const __mockDependencies = (mocks: any) => {
   if (mocks.postToDesignLibrary) {
