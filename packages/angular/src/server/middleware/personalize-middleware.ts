@@ -262,6 +262,7 @@ export function createPersonalizeMiddleware(
               enableCookie: true,
               cookieDomain: hostname,
             },
+            // personalize middleware will only run on server for Angular and we explicitly use server adapters
             adapter: analyticsServerAdapter(httpReq, httpRes),
           }),
           personalizeServerPlugin({

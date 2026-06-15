@@ -100,6 +100,12 @@ export {
 } from './loaders/context-helpers';
 export { SC_PARAMS_HEADER } from './loaders/constants';
 export { provideSitecoreAngular } from './lib/providers';
+export {
+  SITECORE_ANALYTICS,
+  normalizeCookieDomain,
+  type SitecoreAnalyticsWrapper,
+} from './lib/analytics/sitecore-analytics';
+export { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 export * from './server';
 
 // ─── Sitecore Context ──────────────────────────────────────────

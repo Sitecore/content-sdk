@@ -60,13 +60,7 @@ app.use(
   createSitecoreRevalidateMiddleware({
     cache: loaderCache,
     defaultLocale: config.defaultLanguage,
-    sites: [
-      {
-        name: config.defaultSite,
-        hostName: '*',
-        language: config.defaultLanguage,
-      },
-    ],
+    sites,
   })
 );
 
