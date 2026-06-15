@@ -20,7 +20,7 @@ lerna-debug.log
 coverage/
 /badges
 packages/*/*.tgz
-# samples/
+samples/
 
 .idea
 .next
