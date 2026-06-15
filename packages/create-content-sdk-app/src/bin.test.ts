@@ -7,7 +7,7 @@ import { sep } from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { ParsedArgs } from 'minimist';
-import { parseArgs, main, promptDestination, getDestination } from './bin';
+import { parseArgs, main, printHelp, promptDestination, getDestination } from './bin';
 import * as helpers from './common/utils/helpers';
 import * as initialize from './initialize';
 
@@ -75,6 +75,44 @@ describe('bin', () => {
 
       expect(args.template).to.equal('nextjs');
       expect(args.destination).to.be.undefined;
+    });
+
+    it('should parse help flags', () => {
+      process.argv = ['node', 'index.ts', '-h'];
+
+      const shortArgs = parseArgs();
+
+      expect(shortArgs.help).to.equal(true);
+
+      process.argv = ['node', 'index.ts', '--help'];
+
+      const longArgs = parseArgs();
+
+      expect(longArgs.help).to.equal(true);
+    });
+  });
+
+  describe('printHelp', () => {
+    let consoleLogStub: SinonStub;
+
+    beforeEach(() => {
+      consoleLogStub = sinon.stub(console, 'log');
+    });
+
+    afterEach(() => {
+      consoleLogStub?.restore();
+    });
+
+    it('should print all provided templates', () => {
+      printHelp(['foo', 'bar']);
+
+      const helpText = consoleLogStub.firstCall.args[0];
+
+      expect(consoleLogStub).to.have.been.calledOnce;
+      expect(helpText).to.include('Usage:');
+      expect(helpText).to.include('foo');
+      expect(helpText).to.include('bar');
+      expect(helpText).to.not.include('--template');
     });
   });
 
@@ -475,6 +513,29 @@ describe('bin', () => {
 
       expect(consoleLogStub).to.have.been.calledWith(chalk.red('An error occurred:', error));
       expect(processExitStub).to.have.been.calledWith(1);
+    });
+
+    it('should print help and skip initialization when help is requested', async () => {
+      const templates = ['foo', 'bar'];
+      getAllTemplatesStub.returns(templates);
+
+      const args = mockArgs({
+        help: true,
+      });
+
+      await main(args);
+
+      expect(getAllTemplatesStub).to.have.been.calledOnce;
+      expect(consoleLogStub).to.have.been.calledOnce;
+      expect(consoleLogStub.firstCall.args[0]).to.include('Usage:');
+      templates.forEach((template) => {
+        expect(consoleLogStub.firstCall.args[0]).to.include(template);
+      });
+      expect(inquirerPromptStub).to.not.have.been.called;
+      expect(fsExistsSyncStub).to.not.have.been.called;
+      expect(fsReaddirSyncStub).to.not.have.been.called;
+      expect(initializeStub).to.not.have.been.called;
+      expect(processExitStub).to.not.have.been.called;
     });
   });
 });

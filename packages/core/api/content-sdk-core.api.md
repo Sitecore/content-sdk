@@ -228,9 +228,7 @@ export type GraphQLRequestClientFactory = (config?: Omit<GraphQLRequestClientCon
 // @public
 export type GraphQLRequestClientFactoryConfig = {
     endpoint: string;
-    apiKey?: string;
-    contextId?: string;
-};
+} & GraphQLRequestClientConfig;
 
 // @internal
 export function hasCache(key: string): boolean;

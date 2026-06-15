@@ -16,6 +16,7 @@ import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import {
+  EDITING_PARAMS_HEADER,
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from './constants';
@@ -32,6 +33,7 @@ type Query = {
 };
 
 const allowedOrigin = 'https://allowed.com';
+const defaultAuthHeader = 'Bearer test-token';
 
 const mockRequest = ({
   query,
@@ -48,6 +50,7 @@ const mockRequest = ({
     headers: {
       host: 'localhost:3000',
       origin: allowedOrigin,
+      authorization: defaultAuthHeader,
       ...headers,
     },
   } as EditingNextApiRequest;
@@ -221,7 +224,7 @@ describe('EditingRenderMiddleware', () => {
       site: 'website',
       itemId: '{11111111-1111-1111-1111-111111111111}',
       language: 'en',
-      variantIds: ['dev'],
+      variantId: 'dev',
       version: 'latest',
       mode: 'edit',
       layoutKind: 'shared',
@@ -233,40 +236,6 @@ describe('EditingRenderMiddleware', () => {
       'Content-Security-Policy',
       `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
     );
-  });
-
-  it('should pass multiple variant ids into setPreviewData when sc_variantId parameter has many values', async () => {
-    const query = {
-      mode: 'edit',
-      route: '/styleguide',
-      sc_itemid: '{11111111-1111-1111-1111-111111111111}',
-      sc_lang: 'en',
-      sc_site: 'website',
-      secret: secret,
-      sc_variant: 'id-1,id-2,id-3',
-    } as EditingRenderQueryParams;
-
-    const req = mockRequest({ query });
-    const res = mockResponse();
-
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
-
-    sinon
-      .stub(middleware['dataFetcher'], 'get')
-      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
-
-    await handler(req, res);
-
-    expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
-      site: 'website',
-      itemId: '{11111111-1111-1111-1111-111111111111}',
-      language: 'en',
-      variantIds: ['id-1', 'id-2', 'id-3'],
-      version: undefined,
-      mode: 'edit',
-      layoutKind: undefined,
-    });
   });
 
   it('should handle request with missing optional parameters', async () => {
@@ -294,7 +263,7 @@ describe('EditingRenderMiddleware', () => {
       site: 'website',
       itemId: '{11111111-1111-1111-1111-111111111111}',
       language: 'en',
-      variantIds: ['_default'],
+      variantId: '_default',
       version: undefined,
       mode: 'edit',
       layoutKind: undefined,
@@ -332,7 +301,7 @@ describe('EditingRenderMiddleware', () => {
       site: 'website',
       itemId: '{11111111-1111-1111-1111-111111111111}',
       language: 'en',
-      variantIds: ['dev'],
+      variantId: 'dev',
       version: 'latest',
       mode: 'edit',
       layoutKind: 'shared',
@@ -372,7 +341,7 @@ describe('EditingRenderMiddleware', () => {
       site: 'website',
       itemId: '{11111111-1111-1111-1111-111111111111}',
       language: 'en',
-      variantIds: ['dev'],
+      variantId: 'dev',
       version: 'latest',
       mode: 'edit',
       layoutKind: 'shared',
@@ -474,7 +443,7 @@ describe('EditingRenderMiddleware', () => {
         site: 'website',
         itemId: '{11111111-1111-1111-1111-111111111111}',
         language: 'en',
-        variantIds: ['dev'],
+        variantId: 'dev',
         version: 'latest',
         mode: 'edit',
         layoutKind: 'shared',
@@ -512,7 +481,7 @@ describe('EditingRenderMiddleware', () => {
         site: 'website',
         itemId: '{11111111-1111-1111-1111-111111111111}',
         language: 'en',
-        variantIds: ['dev'],
+        variantId: 'dev',
         version: 'latest',
         mode: 'edit',
         layoutKind: 'shared',
@@ -575,7 +544,7 @@ describe('EditingRenderMiddleware', () => {
         site: 'website',
         itemId: '{11111111-1111-1111-1111-111111111111}',
         language: 'en',
-        variantIds: ['dev'],
+        variantId: 'dev',
         version: 'latest',
         mode: 'edit',
         layoutKind: 'shared',
@@ -622,7 +591,7 @@ describe('EditingRenderMiddleware', () => {
         site: 'website',
         itemId: '{11111111-1111-1111-1111-111111111111}',
         language: 'en',
-        variantIds: ['dev'],
+        variantId: 'dev',
         version: 'latest',
         mode: 'edit',
         layoutKind: 'shared',
@@ -689,7 +658,7 @@ describe('EditingRenderMiddleware', () => {
         site: 'website',
         itemId: '{11111111-1111-1111-1111-111111111111}',
         language: 'en',
-        variantIds: ['dev'],
+        variantId: 'dev',
         version: 'latest',
         mode: 'edit',
         layoutKind: 'shared',
@@ -728,7 +697,7 @@ describe('EditingRenderMiddleware', () => {
         site: 'website',
         itemId: '{11111111-1111-1111-1111-111111111111}',
         language: 'en',
-        variantIds: ['dev'],
+        variantId: 'dev',
         version: 'latest',
         mode: 'edit',
         layoutKind: 'shared',
@@ -767,7 +736,7 @@ describe('EditingRenderMiddleware', () => {
     });
   });
 
-  it('should issue intrnal request propagating allowed headers', async () => {
+  it('should issue internal request propagating allowed headers', async () => {
     const req = mockRequest({
       query,
       headers: {
@@ -797,6 +766,68 @@ describe('EditingRenderMiddleware', () => {
     );
     expect(fetchRequestHeaders).to.have.property('authorization', 'yes');
     expect(fetchRequestHeaders).to.not.have.property('otherHeader');
+  });
+
+  it('should propagate previewData as JSON in EDITING_PARAMS_HEADER', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    const fetcherGetStub = sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    const fetchRequestHeaders = fetcherGetStub.getCall(0).args[1]?.headers;
+
+    expect(fetchRequestHeaders).to.have.property(EDITING_PARAMS_HEADER);
+
+    const editingParams = JSON.parse(fetchRequestHeaders![EDITING_PARAMS_HEADER]);
+    expect(editingParams).to.deep.equal({
+      site: 'website',
+      itemId: '{11111111-1111-1111-1111-111111111111}',
+      language: 'en',
+      variantId: 'dev',
+      version: 'latest',
+      mode: 'edit',
+      layoutKind: 'shared',
+    });
+  });
+
+  it('should include allowed query params in EDITING_PARAMS_HEADER previewData', async () => {
+    const customQuery = {
+      ...query,
+      customParam1: 'value1',
+      stringParam: 'string-value',
+      notAllowed: 'shouldNotBeIncluded',
+    };
+    const req = mockRequest({ query: customQuery });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware({
+      allowedQueryParams: [{ name: 'customParam1' }, 'stringParam'],
+    });
+    const handler = middleware.getHandler();
+
+    const fetcherGetStub = sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    const fetchRequestHeaders = fetcherGetStub.getCall(0).args[1]?.headers;
+
+    expect(fetchRequestHeaders).to.have.property(EDITING_PARAMS_HEADER);
+
+    const editingParams = JSON.parse(fetchRequestHeaders![EDITING_PARAMS_HEADER]);
+    expect(editingParams).to.include({
+      customParam1: 'value1',
+      stringParam: 'string-value',
+    });
+    expect(editingParams).to.not.have.property('notAllowed');
   });
 
   it('should return 200 if internal request successful', async () => {
@@ -830,6 +861,29 @@ describe('EditingRenderMiddleware', () => {
     await handler(req, res);
 
     expect(res.setHeader).to.have.been.calledWith('Set-Cookie', []);
+    expect(res.status).to.be.calledOnceWith(200);
+  });
+
+  it('should set authorization token cookie to the response', async () => {
+    const req = mockRequest({ query, headers: { authorization: 'token-value' } });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    const setCookieCalls = (res.setHeader as sinon.SinonStub)
+      .getCalls()
+      .filter((call) => call.args[0] === 'Set-Cookie');
+    const lastSetCookie = setCookieCalls[1]?.args[1];
+    expect(lastSetCookie).to.deep.include(
+      'sc_preview_token=token-value; Path=/; HttpOnly; SameSite=None; Secure'
+    );
     expect(res.status).to.be.calledOnceWith(200);
   });
 
@@ -964,6 +1018,25 @@ describe('EditingRenderMiddleware', () => {
       );
     });
 
+    it('should handle draft component request without sc_renderingId', async () => {
+      // eslint-disable-next-line no-unused-vars
+      const { sc_renderingId: _renderingId, ...draftQuery } = query;
+      const req = mockRequest({ query: draftQuery });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware();
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      expect(res.status).to.be.calledOnceWith(200);
+      expect(res.send).to.have.been.calledOnceWith('<div>some html</div>');
+    });
+
     it('should response with 400 for missing query params', async () => {
       const req = mockRequest({
         query: { sc_site: 'website', secret },
@@ -1014,7 +1087,7 @@ describe('EditingRenderMiddleware', () => {
         site: 'website',
         itemId: '{11111111-1111-1111-1111-111111111111}',
         language: 'en',
-        variantIds: ['dev'],
+        variantId: 'dev',
         version: 'latest',
         mode: 'preview',
         layoutKind: 'final',

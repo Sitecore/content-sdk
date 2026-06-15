@@ -6,7 +6,7 @@
 
 # Interface: FlattenObjectDataParameters
 
-Defined in: [analytics-core/src/utils/converters/flatten-object.ts:41](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/utils/converters/flatten-object.ts#L41)
+Defined in: [analytics-core/src/utils/converters/flatten-object.ts:41](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/utils/converters/flatten-object.ts#L41)
 
 **`Internal`**
 
@@ -16,17 +16,17 @@ Interface for the data object parameter of the flattenObject function
 
 ### currentKey?
 
-> `optional` **currentKey**: `string`
+> `optional` **currentKey?**: `string`
 
-Defined in: [analytics-core/src/utils/converters/flatten-object.ts:43](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/utils/converters/flatten-object.ts#L43)
+Defined in: [analytics-core/src/utils/converters/flatten-object.ts:43](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/utils/converters/flatten-object.ts#L43)
 
 ***
 
 ### newObject?
 
-> `optional` **newObject**: [`FlattenedObject`](FlattenedObject.md)
+> `optional` **newObject?**: [`FlattenedObject`](FlattenedObject.md)
 
-Defined in: [analytics-core/src/utils/converters/flatten-object.ts:44](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/utils/converters/flatten-object.ts#L44)
+Defined in: [analytics-core/src/utils/converters/flatten-object.ts:44](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/utils/converters/flatten-object.ts#L44)
 
 ***
 
@@ -34,4 +34,4 @@ Defined in: [analytics-core/src/utils/converters/flatten-object.ts:44](https://g
 
 > **object**: [`NestedObject`](NestedObject.md)
 
-Defined in: [analytics-core/src/utils/converters/flatten-object.ts:42](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/utils/converters/flatten-object.ts#L42)
+Defined in: [analytics-core/src/utils/converters/flatten-object.ts:42](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/utils/converters/flatten-object.ts#L42)

@@ -6,12 +6,14 @@
 
 # Class: BYOCComponent
 
-Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:30](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L30)
+Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:30](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L30)
 
 BYOCComponent facilitate the rendering of external components. It manages potential errors,
 missing components, and customization of error messages or alternative rendering components.
 
 ## Param
+
+**props**
 
 component props
 
@@ -25,7 +27,7 @@ component props
 
 > **new BYOCComponent**(`props`): `BYOCComponent`
 
-Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:33](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L33)
+Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:33](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L33)
 
 #### Parameters
 
@@ -47,7 +49,7 @@ Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:33](https://git
 
 > **context**: `unknown`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:947
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:955
 
 If using React Context, re-declare this in your class to be the
 `React.ContextType` of your `static contextType`.
@@ -77,7 +79,7 @@ declare context: React.ContextType<typeof MyContext>
 
 > `readonly` **props**: `Readonly`\<`P`\>
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:971
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:979
 
 #### Inherited from
 
@@ -89,7 +91,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:971
 
 > **state**: `Readonly`\<\{ `error?`: `Error`; \}\>
 
-Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:31](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L31)
+Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:31](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L31)
 
 #### Overrides
 
@@ -99,9 +101,9 @@ Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:31](https://git
 
 ### contextType?
 
-> `static` `optional` **contextType**: `Context`\<`any`\>
+> `static` `optional` **contextType?**: `Context`\<`any`\>
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:923
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:931
 
 If set, `this.context` will be set at runtime to the current value of the given Context.
 
@@ -132,9 +134,9 @@ class Foo extends React.Component {
 
 ### ~~propTypes?~~
 
-> `static` `optional` **propTypes**: `any`
+> `static` `optional` **propTypes?**: `any`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:929
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:937
 
 Ignored by React.
 
@@ -152,7 +154,7 @@ Only kept in types for backwards compatibility. Will be removed in a future majo
 
 > **componentDidCatch**(`error`): `void`
 
-Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:43](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L43)
+Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:43](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L43)
 
 Catches exceptions generated in descendant components. Unhandled exceptions will cause
 the entire component tree to unmount.
@@ -177,7 +179,7 @@ the entire component tree to unmount.
 
 > `optional` **componentDidMount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1190
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1198
 
 Called immediately after a component is mounted. Setting state here will trigger re-rendering.
 
@@ -195,7 +197,7 @@ Called immediately after a component is mounted. Setting state here will trigger
 
 > `optional` **componentDidUpdate**(`prevProps`, `prevState`, `snapshot?`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1253
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1261
 
 Called immediately after updating occurs. Not called for the initial render.
 
@@ -223,7 +225,7 @@ The snapshot is only present if [getSnapshotBeforeUpdate](#getsnapshotbeforeupda
 
 > `optional` **componentWillMount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1269
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1277
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -255,7 +257,7 @@ this from being invoked.
 
 > `optional` **componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1300
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1308
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -297,7 +299,7 @@ this from being invoked.
 
 > `optional` **componentWillUnmount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1206
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1214
 
 Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
 cancelled network requests, or cleaning up any DOM elements created in `componentDidMount`.
@@ -316,7 +318,7 @@ cancelled network requests, or cleaning up any DOM elements created in `componen
 
 > `optional` **componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1332
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1340
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 
@@ -357,7 +359,7 @@ this from being invoked.
 
 > **forceUpdate**(`callback?`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:968
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:976
 
 #### Parameters
 
@@ -379,7 +381,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:968
 
 > `optional` **getSnapshotBeforeUpdate**(`prevProps`, `prevState`): `any`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1247
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1255
 
 Runs before React applies the result of Component.render render to the document, and
 returns an object to be given to [componentDidUpdate](#componentdidupdate). Useful for saving
@@ -409,7 +411,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:47](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L47)
+Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:47](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L47)
 
 #### Returns
 
@@ -425,7 +427,7 @@ Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:47](https://git
 
 > **setState**\<`K`\>(`state`, `callback?`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:963
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:971
 
 #### Type Parameters
 
@@ -437,7 +439,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:963
 
 | Parameter | Type |
 | ------ | ------ |
-| `state` | \{ \} \| (`prevState`, `props`) => \{ \} \| `Pick`\<\{ \}, `K`\> \| `null` \| `Pick`\<\{ \}, `K`\> \| `null` |
+| `state` | \{ \} \| ((`prevState`, `props`) => \{ \} \| `Pick`\<\{ \}, `K`\> \| `null`) \| `Pick`\<\{ \}, `K`\> \| `null` |
 | `callback?` | () => `void` |
 
 #### Returns
@@ -454,7 +456,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:963
 
 > `optional` **shouldComponentUpdate**(`nextProps`, `nextState`, `nextContext`): `boolean`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1201
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1209
 
 Called to determine whether the change in props and state should trigger a re-render.
 
@@ -487,7 +489,7 @@ and `componentDidUpdate` will not be called.
 
 > `optional` **UNSAFE\_componentWillMount**(): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1284
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1292
 
 Called immediately before mounting occurs, and before Component.render.
 Avoid introducing any side-effects or subscriptions in this method.
@@ -521,7 +523,7 @@ this from being invoked.
 
 > `optional` **UNSAFE\_componentWillReceiveProps**(`nextProps`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1318
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1326
 
 Called when the component may be receiving new props.
 React may call this even if props have not changed, so be sure to compare new and existing
@@ -565,7 +567,7 @@ this from being invoked.
 
 > `optional` **UNSAFE\_componentWillUpdate**(`nextProps`, `nextState`, `nextContext`): `void`
 
-Defined in: packages/react/node\_modules/@types/react/index.d.ts:1348
+Defined in: packages/react/node\_modules/@types/react/index.d.ts:1356
 
 Called immediately before rendering when new props or state is received. Not called for the initial render.
 
@@ -608,7 +610,7 @@ this from being invoked.
 
 > `static` **getDerivedStateFromError**(`error`): `object`
 
-Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:38](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L38)
+Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:38](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L38)
 
 #### Parameters
 

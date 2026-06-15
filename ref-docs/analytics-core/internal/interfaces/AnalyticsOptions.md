@@ -6,7 +6,7 @@
 
 # Interface: AnalyticsOptions
 
-Defined in: [analytics-core/src/initialization/types.ts:36](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L36)
+Defined in: [analytics-core/src/initialization/types.ts:41](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/initialization/types.ts#L41)
 
 Defines options for the Analytics plugin.
 
@@ -16,19 +16,19 @@ Defines options for the Analytics plugin.
 
 > **cookies**: `object`
 
-Defined in: [analytics-core/src/initialization/types.ts:40](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L40)
+Defined in: [analytics-core/src/initialization/types.ts:45](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/initialization/types.ts#L45)
 
 The cookie settings for the analytics plugin.
 
 #### domain?
 
-> `optional` **domain**: `string`
+> `optional` **domain?**: `string`
 
 The domain for which the cookie is valid.
 
 #### enabled?
 
-> `optional` **enabled**: `boolean`
+> `optional` **enabled?**: `boolean`
 
 Whether the cookie should be set.
 
@@ -46,7 +46,7 @@ The name of the cookie used to store the client ID.
 
 #### path?
 
-> `optional` **path**: `string`
+> `optional` **path?**: `string`
 
 The path for which the cookie is valid.
 
@@ -54,9 +54,9 @@ The path for which the cookie is valid.
 
 ### timeout?
 
-> `optional` **timeout**: `number`
+> `optional` **timeout?**: `number`
 
-Defined in: [analytics-core/src/initialization/types.ts:69](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L69)
+Defined in: [analytics-core/src/initialization/types.ts:74](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/initialization/types.ts#L74)
 
 The timeout duration for the analytics plugin, in milliseconds.
 
@@ -64,8 +64,8 @@ The timeout duration for the analytics plugin, in milliseconds.
 
 ### visitorIds?
 
-> `optional` **visitorIds**: [`VisitorIds`](VisitorIds.md)
+> `optional` **visitorIds?**: [`VisitorIds`](VisitorIds.md)
 
-Defined in: [analytics-core/src/initialization/types.ts:65](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L65)
+Defined in: [analytics-core/src/initialization/types.ts:70](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/initialization/types.ts#L70)
 
 The visitor IDs returned from the Edge Proxy.

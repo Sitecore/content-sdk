@@ -28,6 +28,7 @@ describe('withEmptyFieldEditingComponent', () => {
         href?: string;
       };
       editable?: boolean;
+      renderChildrenWhenEmpty?: boolean;
     };
 
     type TestComponentWithRefProps = TestComponentProps & { ref?: React.Ref<HTMLDivElement> };
@@ -119,6 +120,45 @@ describe('withEmptyFieldEditingComponent', () => {
           metadata: testMetadata,
         },
         editable: false,
+      };
+
+      const WrappedComponent = withEmptyFieldEditingComponent<TestComponentProps>(TestComponent, {
+        defaultEmptyFieldEditingComponent: DefaultEmptyFieldEditingComponentText,
+      });
+
+      const rendered = render(<WrappedComponent {...props} />);
+      expect(rendered.container.innerHTML).to.equal('<div><h1>hi</h1><h2>foo</h2><p>bar</p></div>');
+    });
+
+    it('Should render component if renderChildrenWhenEmpty is true and value is empty', () => {
+      const props = {
+        field: {
+          value: '',
+          metadata: testMetadata,
+        },
+        renderChildrenWhenEmpty: true,
+      };
+
+      const WrappedComponent = withEmptyFieldEditingComponent<TestComponentProps>(TestComponent, {
+        defaultEmptyFieldEditingComponent: DefaultEmptyFieldEditingComponentText,
+      });
+
+      const rendered = render(<WrappedComponent {...props} />);
+      expect(rendered.container.innerHTML).to.equal('<div><h1>hi</h1><h2>foo</h2><p>bar</p></div>');
+    });
+
+    it('Should render component if renderChildrenWhenEmpty is true and custom empty value component is provided', () => {
+      const EmptyFieldEditingComponent: React.FC = () => (
+        <span className="empty-field-value-placeholder">Custom Empty field value</span>
+      );
+
+      const props = {
+        field: {
+          value: '',
+          metadata: testMetadata,
+        },
+        emptyFieldEditingComponent: EmptyFieldEditingComponent,
+        renderChildrenWhenEmpty: true,
       };
 
       const WrappedComponent = withEmptyFieldEditingComponent<TestComponentProps>(TestComponent, {

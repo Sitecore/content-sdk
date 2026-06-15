@@ -5,8 +5,9 @@ import {
   createGraphQLClientFactory,
   GraphQLClientOptions,
 } from '@sitecore-content-sdk/content/client';
-import { PreviewCookies } from '../editing/utils';
+import { PREVIEW_COOKIES } from '../editing/utils';
 import debug from '../debug';
+import { ProxiesContext } from './types';
 
 export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
 export const LOCALE_HEADER_NAME = 'x-sc-locale';
@@ -44,11 +45,57 @@ export type ProxyBaseConfig = {
  */
 export abstract class ProxyHandler {
   /**
+   * Name of the proxy, used as a key in the context to store information about executed proxies
+   */
+  abstract get name(): string;
+
+  /**
    * Handler method to execute proxy logic
    * @param {NextRequest} req request
    * @param {NextResponse} res response
+   * @param {ProxiesContext} proxiesContext context to share information between proxies
    */
-  abstract handle(req: NextRequest, res: NextResponse): Promise<NextResponse>;
+  abstract handle(
+    req: NextRequest,
+    res: NextResponse,
+    proxiesContext?: ProxiesContext
+  ): Promise<NextResponse>;
+}
+
+/**
+ * Hostname from a `Host` or `x-forwarded-host` value, without port.
+ * - `[::1]:3000` → `::1`
+ * - `127.0.0.1:3000` → `127.0.0.1`
+ * - `example.com:443` → `example.com`
+ * - `::1` → `::1` (does not treat `:1` as a port)
+ * @param {string} host - Raw header value
+ */
+function getHostnameFromHostHeader(host: string): string {
+  const trimmed = host.trim();
+
+  // Bracketed IPv6: "[...]:port" or "[...]"
+  if (trimmed.startsWith('[')) {
+    const end = trimmed.indexOf(']');
+    if (end !== -1) {
+      return trimmed.slice(1, end).toLowerCase();
+    }
+  }
+
+  // Unbracketed IPv6 (e.g. ::1, 2001:db8::1) — never strip on last ":digits"
+  if (trimmed.includes('::')) {
+    return trimmed.toLowerCase();
+  }
+
+  // IPv4 or DNS name with ":port" (port = decimal digits only)
+  const lastColon = trimmed.lastIndexOf(':');
+  if (lastColon > 0) {
+    const after = trimmed.slice(lastColon + 1);
+    if (/^\d+$/.test(after)) {
+      return trimmed.slice(0, lastColon).toLowerCase();
+    }
+  }
+
+  return trimmed.toLowerCase();
 }
 
 /**
@@ -66,14 +113,21 @@ export abstract class ProxyBase extends ProxyHandler {
   }
 
   /**
+   * Name of the proxy, used as a key in the context to store information about executed proxies
+   */
+  get name() {
+    return 'ProxyBase';
+  }
+
+  /**
    * Determines if mode is preview
    * @param {NextRequest} req request
    * @returns {boolean} is preview
    */
   protected isPreview(req: NextRequest) {
     return !!(
-      req.cookies.get(PreviewCookies.PRERENDER_BYPASS)?.value ||
-      req.cookies.get(PreviewCookies.PREVIEW_DATA)?.value
+      req.cookies.get(PREVIEW_COOKIES.PRERENDER_BYPASS)?.value ||
+      req.cookies.get(PREVIEW_COOKIES.PREVIEW_DATA)?.value
     );
   }
 
@@ -164,7 +218,9 @@ export abstract class ProxyBase extends ProxyHandler {
    * @param {NextRequest} req request
    */
   protected getHostHeader(req: NextRequest) {
-    return req.headers.get('x-forwarded-host') || req.headers.get('host')?.split(':')[0];
+    return getHostnameFromHostHeader(
+      req.headers.get('x-forwarded-host') || req.headers.get('host') || ''
+    );
   }
 
   /**
@@ -238,8 +294,9 @@ export const defineProxy = (...proxies: ProxyHandler[]) => {
      * Execute all proxies
      * @param {NextRequest} req request
      * @param {NextResponse} [res] response
+     * @param {ProxiesContext} [proxiesContext] context to share information between proxies
      */
-    exec: async (req: NextRequest, res?: NextResponse) => {
+    exec: async (req: NextRequest, res?: NextResponse, proxiesContext?: ProxiesContext) => {
       const response = res || NextResponse.next();
 
       debug.common('proxy start');
@@ -247,7 +304,14 @@ export const defineProxy = (...proxies: ProxyHandler[]) => {
       const start = Date.now();
 
       const proxyResponse = await proxies.reduce(
-        (p, proxy) => p.then((res) => proxy.handle(req, res)),
+        (p, proxy) =>
+          p.then((res) => {
+            // Short-circuit the remaining proxies once a previous one
+            // denied the request (e.g. PreviewProxy returning 403).
+            if (res.status === 403) return res;
+
+            return proxy.handle(req, res, proxiesContext);
+          }),
         Promise.resolve(response)
       );
 

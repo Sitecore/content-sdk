@@ -6,7 +6,7 @@
 
 # Interface: EventData
 
-Defined in: [events/src/events/custom-event/custom-event.ts:103](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/events/src/events/custom-event/custom-event.ts#L103)
+Defined in: [events/src/events/custom-event/custom-event.ts:103](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/events/src/events/custom-event/custom-event.ts#L103)
 
 Interface with the required/optional attributes to send a custom event to the SitecoreCloud API
 
@@ -16,7 +16,7 @@ Interface with the required/optional attributes to send a custom event to the Si
 
 ## Indexable
 
-\[`key`: `string`\]: `NestedObject` \| `BasicTypes`
+> \[`key`: `string`\]: `NestedObject` \| `BasicTypes`
 
 They keys of the object can be any string, and the values can be either basic types or another nested object.
 
@@ -24,9 +24,9 @@ They keys of the object can be any string, and the values can be either basic ty
 
 ### channel?
 
-> `optional` **channel**: `string`
+> `optional` **channel?**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:37](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/events/src/events/common-interfaces.ts#L37)
+Defined in: [events/src/events/common-interfaces.ts:37](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/events/src/events/common-interfaces.ts#L37)
 
 The touchpoint where the user interacts with your brand.
 
@@ -44,9 +44,9 @@ If unset, this property will not be part of the payload.
 
 ### currency?
 
-> `optional` **currency**: `string`
+> `optional` **currency?**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:47](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/events/src/events/common-interfaces.ts#L47)
+Defined in: [events/src/events/common-interfaces.ts:47](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/events/src/events/common-interfaces.ts#L47)
 
 The alphabetic currency code of the currency the site visitor uses in your app.
 
@@ -64,9 +64,9 @@ If unset, this property will not be part of the payload.
 
 ### extensionData?
 
-> `optional` **extensionData**: `NestedObject`
+> `optional` **extensionData?**: `NestedObject`
 
-Defined in: [events/src/events/custom-event/custom-event.ts:124](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/events/src/events/custom-event/custom-event.ts#L124)
+Defined in: [events/src/events/custom-event/custom-event.ts:124](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/events/src/events/custom-event/custom-event.ts#L124)
 
 Any custom data to collect about an event in addition to the other attributes provided for the event data.
 
@@ -74,9 +74,9 @@ Any custom data to collect about an event in addition to the other attributes pr
 
 ### language?
 
-> `optional` **language**: `string`
+> `optional` **language?**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:19](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/events/src/events/common-interfaces.ts#L19)
+Defined in: [events/src/events/common-interfaces.ts:19](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/events/src/events/common-interfaces.ts#L19)
 
 The language the site visitor interacts with your brand in.
 
@@ -96,9 +96,9 @@ Default for server-side events: empty string.
 
 ### page?
 
-> `optional` **page**: `string`
+> `optional` **page?**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:27](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/events/src/events/common-interfaces.ts#L27)
+Defined in: [events/src/events/common-interfaces.ts:27](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/events/src/events/common-interfaces.ts#L27)
 
 The name of the webpage where the interaction with your brand takes place.
 
@@ -114,9 +114,9 @@ Default for server-side events: empty string.
 
 ### searchData?
 
-> `optional` **searchData**: `NestedObject`
+> `optional` **searchData?**: `NestedObject`
 
-Defined in: [events/src/events/custom-event/custom-event.ts:120](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/events/src/events/custom-event/custom-event.ts#L120)
+Defined in: [events/src/events/custom-event/custom-event.ts:120](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/events/src/events/custom-event/custom-event.ts#L120)
 
 Sitecore Search data about the event.
 
@@ -132,7 +132,7 @@ Construct according to the Sitecore Search Events API reference and data model.
 
 > **type**: `string`
 
-Defined in: [events/src/events/custom-event/custom-event.ts:110](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/events/src/events/custom-event/custom-event.ts#L110)
+Defined in: [events/src/events/custom-event/custom-event.ts:110](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/events/src/events/custom-event/custom-event.ts#L110)
 
 The type of the event.
 To send a custom event using event, or to add a custom event to the event queue using addToEventQueue, set type to a unique value. Do not set type to a reserved event name.

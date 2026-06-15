@@ -13,6 +13,7 @@ import {
   PREVIEW_KEY,
 } from '@sitecore-content-sdk/content/editing';
 import {
+  EDITING_PARAMS_HEADER,
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from '../editing/constants';
@@ -140,11 +141,11 @@ describe('createEditingRenderRouteHandlers', () => {
           language: query.sc_lang,
           site: query.sc_site,
           mode: query.mode,
-          variantIds: query.sc_variant,
+          variantId: query.sc_variant,
           version: query.sc_version,
           layoutKind: query.sc_layoutKind,
         })),
-        PreviewCookies: {
+        PREVIEW_COOKIES: {
           PREVIEW_DATA: '__next_preview_data',
           PRERENDER_BYPASS: '__prerender_bypass',
         },
@@ -358,15 +359,24 @@ describe('createEditingRenderRouteHandlers', () => {
         language: mockQuery.sc_lang,
         site: mockQuery.sc_site,
         mode: mockQuery.mode,
-        variantIds: mockQuery.sc_variant,
+        variantId: mockQuery.sc_variant,
         version: mockQuery.sc_version,
         layoutKind: mockQuery.sc_layoutKind,
       });
 
-      // Verify propagated headers
+      // Verify propagated headers (includes editing params header for preview)
       expect(propagatedHeaders).to.deep.equal({
         authorization: 'Bearer token123',
         cookie: 'test=value',
+        [EDITING_PARAMS_HEADER]: JSON.stringify({
+          itemId: mockQuery.sc_itemid,
+          language: mockQuery.sc_lang,
+          site: mockQuery.sc_site,
+          mode: mockQuery.mode,
+          variantId: mockQuery.sc_variant,
+          version: mockQuery.sc_version,
+          layoutKind: mockQuery.sc_layoutKind,
+        }),
       });
 
       // Verify converted cookies from cookieStore.getAll()
@@ -434,7 +444,8 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
 
       const [, , propagatedHeaders] = getEditingRequestHtmlStub.firstCall.args;
-      expect(propagatedHeaders).to.deep.equal(expectedPropagatedHeaders);
+      expect(propagatedHeaders).to.deep.include(expectedPropagatedHeaders);
+      expect(propagatedHeaders[EDITING_PARAMS_HEADER]).to.be.a('string');
     });
 
     it('should pass cookies correctly for internal request', async () => {
@@ -1144,6 +1155,31 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(fetchHeaders.get('cookie')).to.include('__prerender_bypass=some-value');
     });
 
+    it('should propagate editing preview data via EDITING_PARAMS_HEADER on forwarded POST', async () => {
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        data: '<html>Server Action Response</html>',
+      });
+
+      await handlers.POST(req);
+
+      expect(fetchStub.calledOnce).to.be.true;
+      const fetchHeaders = fetchStub.getCall(0).args[1].headers as Headers;
+      const packed = fetchHeaders.get(EDITING_PARAMS_HEADER);
+      expect(packed).to.be.a('string');
+      const parsed = JSON.parse(packed as string);
+      expect(parsed).to.deep.equal({
+        itemId: mockQuery.sc_itemid,
+        language: mockQuery.sc_lang,
+        site: mockQuery.sc_site,
+        mode: mockQuery.mode,
+        variantId: mockQuery.sc_variant,
+        version: mockQuery.sc_version,
+        layoutKind: mockQuery.sc_layoutKind,
+      });
+    });
+
     it('should proxy POST request with mapped querry string parameters and propagated vercel protection parameters', async () => {
       const protectionParams = {
         [QUERY_PARAM_VERCEL_PROTECTION_BYPASS]: 'bypass-token-123',
@@ -1172,7 +1208,7 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(targetUrl.searchParams.get('language')).to.equal(mockQuery.sc_language);
       expect(targetUrl.searchParams.get('site')).to.equal(mockQuery.sc_site);
       expect(targetUrl.searchParams.get('mode')).to.equal(mockQuery.mode);
-      expect(targetUrl.searchParams.get('variantIds')).to.equal(mockQuery.sc_variant);
+      expect(targetUrl.searchParams.get('variantId')).to.equal(mockQuery.sc_variant);
       expect(targetUrl.searchParams.get('version')).to.equal(mockQuery.sc_version);
       expect(targetUrl.searchParams.get('layoutKind')).to.equal(mockQuery.sc_layoutKind);
       expect(targetUrl.searchParams.get(QUERY_PARAM_VERCEL_PROTECTION_BYPASS)).to.equal(
@@ -1425,6 +1461,23 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.body).to.include('metadata-view');
       expect(res.body).to.include('application/json');
       expect(res.body).to.include('componentId');
+    });
+
+    it('should handle draft component request without sc_renderingId', async () => {
+      getRequiredQueryParamsStub.returns(['sc_site', 'sc_itemid', 'sc_uid', 'sc_lang', 'mode']);
+
+      // eslint-disable-next-line no-unused-vars
+      const { sc_renderingId: _renderingId, ...draftLibraryQueryRest } = designLibraryQuery;
+
+      req.nextUrl!.searchParams = mockSearchParams({
+        ...draftLibraryQueryRest,
+        route: '/components',
+      });
+
+      const res = await handlers.GET(req as NextRequest);
+
+      expect(res.status).to.equal(200);
+      expect(res.body).to.equal('<div>some html</div>');
     });
   });
 

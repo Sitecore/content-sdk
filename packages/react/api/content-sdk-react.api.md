@@ -514,6 +514,7 @@ export interface LinkFieldValue {
 export type LinkProps = EditableFieldProps<LinkProps> & React_2.AnchorHTMLAttributes<HTMLAnchorElement> & RefAttributes<HTMLAnchorElement> & {
     field: (LinkField | LinkFieldValue) & FieldMetadata;
     showLinkTextWithChildrenPresent?: boolean;
+    renderChildrenWhenEmpty?: boolean;
 };
 
 export { mediaApi }

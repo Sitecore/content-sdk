@@ -25,12 +25,12 @@ To create a Sitecore Content SDK project in a terminal, run one of the following
 npx create-content-sdk-app
 ```
 
-For more information check out our [Getting Started Guide](https://doc.sitecore.com/xmc/en/developers/content-sdk/creating-a-jss-app-for-xm-cloud.html).
+For more information check out our [Getting Started Guide](https://doc.sitecore.com/sai/en/developers/content-sdk/20/sitecore-content-sdk-for-sitecoreai.html).
 
 ## Documentation and community resources
 
 - Official documentation:
-- [XM Cloud](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html)
+- [Content SDK](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html)
 - [StackExchange](https://sitecore.stackexchange.com/)
 - [Community Slack](https://sitecorechat.slack.com/messages/content-sdk)
 - [Sitecore Community Forum](https://community.sitecore.net/developers/f/40)

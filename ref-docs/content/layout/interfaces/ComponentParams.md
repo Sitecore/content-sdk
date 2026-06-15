@@ -6,10 +6,10 @@
 
 # Interface: ComponentParams
 
-Defined in: [content/src/layout/models.ts:95](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/layout/models.ts#L95)
+Defined in: [content/src/layout/models.ts:95](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/layout/models.ts#L95)
 
 Component params
 
 ## Indexable
 
-\[`name`: `string`\]: `string`
+> \[`name`: `string`\]: `string`

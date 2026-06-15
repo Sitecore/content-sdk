@@ -6,7 +6,7 @@
 
 # Interface: RouteData\<Fields\>
 
-Defined in: [content/src/layout/models.ts:60](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/layout/models.ts#L60)
+Defined in: [content/src/layout/models.ts:60](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/layout/models.ts#L60)
 
 Shape of route data returned from Sitecore Layout Service
 
@@ -20,65 +20,65 @@ Shape of route data returned from Sitecore Layout Service
 
 ### databaseName?
 
-> `optional` **databaseName**: `string`
+> `optional` **databaseName?**: `string`
 
-Defined in: [content/src/layout/models.ts:64](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/layout/models.ts#L64)
+Defined in: [content/src/layout/models.ts:64](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/layout/models.ts#L64)
 
 ***
 
 ### deviceId?
 
-> `optional` **deviceId**: `string`
+> `optional` **deviceId?**: `string`
 
-Defined in: [content/src/layout/models.ts:65](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/layout/models.ts#L65)
+Defined in: [content/src/layout/models.ts:65](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/layout/models.ts#L65)
 
 ***
 
 ### displayName?
 
-> `optional` **displayName**: `string`
+> `optional` **displayName?**: `string`
 
-Defined in: [content/src/layout/models.ts:62](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/layout/models.ts#L62)
+Defined in: [content/src/layout/models.ts:62](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/layout/models.ts#L62)
 
 ***
 
 ### fields?
 
-> `optional` **fields**: `Fields`
+> `optional` **fields?**: `Fields`
 
-Defined in: [content/src/layout/models.ts:63](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/layout/models.ts#L63)
+Defined in: [content/src/layout/models.ts:63](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/layout/models.ts#L63)
 
 ***
 
 ### itemId?
 
-> `optional` **itemId**: `string`
+> `optional` **itemId?**: `string`
 
-Defined in: [content/src/layout/models.ts:72](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/layout/models.ts#L72)
+Defined in: [content/src/layout/models.ts:72](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/layout/models.ts#L72)
 
 ***
 
 ### itemLanguage?
 
-> `optional` **itemLanguage**: `string`
+> `optional` **itemLanguage?**: `string`
 
-Defined in: [content/src/layout/models.ts:66](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/layout/models.ts#L66)
+Defined in: [content/src/layout/models.ts:66](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/layout/models.ts#L66)
 
 ***
 
 ### itemVersion?
 
-> `optional` **itemVersion**: `number`
+> `optional` **itemVersion?**: `number`
 
-Defined in: [content/src/layout/models.ts:67](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/layout/models.ts#L67)
+Defined in: [content/src/layout/models.ts:67](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/layout/models.ts#L67)
 
 ***
 
 ### layoutId?
 
-> `optional` **layoutId**: `string`
+> `optional` **layoutId?**: `string`
 
-Defined in: [content/src/layout/models.ts:68](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/layout/models.ts#L68)
+Defined in: [content/src/layout/models.ts:68](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/layout/models.ts#L68)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: [content/src/layout/models.ts:68](https://github.com/Sitecore/conten
 
 > **name**: `string`
 
-Defined in: [content/src/layout/models.ts:61](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/layout/models.ts#L61)
+Defined in: [content/src/layout/models.ts:61](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/layout/models.ts#L61)
 
 ***
 
@@ -94,20 +94,20 @@ Defined in: [content/src/layout/models.ts:61](https://github.com/Sitecore/conten
 
 > **placeholders**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)
 
-Defined in: [content/src/layout/models.ts:71](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/layout/models.ts#L71)
+Defined in: [content/src/layout/models.ts:71](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/layout/models.ts#L71)
 
 ***
 
 ### templateId?
 
-> `optional` **templateId**: `string`
+> `optional` **templateId?**: `string`
 
-Defined in: [content/src/layout/models.ts:69](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/layout/models.ts#L69)
+Defined in: [content/src/layout/models.ts:69](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/layout/models.ts#L69)
 
 ***
 
 ### templateName?
 
-> `optional` **templateName**: `string`
+> `optional` **templateName?**: `string`
 
-Defined in: [content/src/layout/models.ts:70](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/layout/models.ts#L70)
+Defined in: [content/src/layout/models.ts:70](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/layout/models.ts#L70)

@@ -14,6 +14,7 @@ import { LayoutServiceData } from '../../layout';
 import { LayoutServicePageState } from '../layout';
 import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
 import { DesignLibraryVariantGeneration } from '../editing/models';
+import { DEFAULT_VARIANT } from '../personalize';
 
 chai.use(sinonChai);
 
@@ -863,7 +864,7 @@ describe('SitecoreClient', () => {
         mode: LayoutServicePageState.Edit,
         language: 'en',
         version: '1',
-        variantIds: 'variant1,comp_variant2',
+        variantId: 'variant1',
         layoutKind: LayoutKind.Final,
       };
 
@@ -904,6 +905,8 @@ describe('SitecoreClient', () => {
           version: previewData.version,
           layoutKind: previewData.layoutKind,
           mode: previewData.mode,
+          site: previewData.site,
+          variantId: previewData.variantId,
         })
       ).to.be.true;
     });
@@ -915,7 +918,7 @@ describe('SitecoreClient', () => {
         mode: LayoutServicePageState.Preview,
         language: 'en',
         version: '1',
-        variantIds: 'variant1,comp_variant2',
+        variantId: 'variant1',
         layoutKind: LayoutKind.Final,
       };
 
@@ -956,21 +959,21 @@ describe('SitecoreClient', () => {
           version: previewData.version,
           layoutKind: previewData.layoutKind,
           mode: previewData.mode,
+          site: previewData.site,
+          variantId: previewData.variantId,
         })
       ).to.be.true;
     });
 
-    it('should apply personalization', async () => {
-      const variant = 'test';
+    it('should forward the variant id to the editing service and not resolve personalization client-side', async () => {
       const testLayoutData = structuredClone(layoutData);
-      const componentVariantIds = ['mountain_bike_audience', 'another_variant', 'third_variant'];
       const previewData = {
         site: 'default-site',
         itemId: 'test-item-id',
-        pageState: LayoutServicePageState.Edit,
+        mode: LayoutServicePageState.Edit,
         language: 'en',
         version: '1',
-        variantIds: [variant, ...componentVariantIds].join(','),
+        variantId: 'mountain_bike_audience',
         layoutKind: LayoutKind.Final,
       };
 
@@ -982,9 +985,20 @@ describe('SitecoreClient', () => {
 
       const result = await sitecoreClient.getPreview(previewData);
 
-      expect(result?.layout.sitecore.route?.placeholders).to.deep.equal({
-        'content-sdk-main': [...componentsWithExperiencesArray],
-      });
+      expect(
+        editingServiceStub.fetchEditingData.calledWith({
+          itemId: previewData.itemId,
+          language: previewData.language,
+          version: previewData.version,
+          layoutKind: previewData.layoutKind,
+          mode: previewData.mode,
+          site: previewData.site,
+          variantId: previewData.variantId,
+        })
+      ).to.be.true;
+
+      // personalization is resolved server-side in edit/preview mode, so the layout is returned as-is
+      expect(result?.layout).to.deep.equal(testLayoutData);
     });
 
     it('should log error when preview data is missing', async () => {
@@ -1004,7 +1018,7 @@ describe('SitecoreClient', () => {
         mode: LayoutServicePageState.Edit,
         language: 'en',
         version: '1',
-        variantIds: '',
+        variantId: DEFAULT_VARIANT,
         layoutKind: LayoutKind.Final,
       };
 
@@ -1025,7 +1039,7 @@ describe('SitecoreClient', () => {
         mode: LayoutServicePageState.Edit,
         language: 'en',
         version: '1',
-        variantIds: '',
+        variantId: DEFAULT_VARIANT,
         layoutKind: LayoutKind.Final,
       };
 
@@ -1055,6 +1069,8 @@ describe('SitecoreClient', () => {
           version: previewData.version,
           layoutKind: previewData.layoutKind,
           mode: previewData.mode,
+          site: previewData.site,
+          variantId: previewData.variantId,
         })
         .resolves(editingData);
 
@@ -1068,10 +1084,30 @@ describe('SitecoreClient', () => {
             version: previewData.version,
             layoutKind: previewData.layoutKind,
             mode: previewData.mode,
+            site: previewData.site,
+            variantId: previewData.variantId,
           },
           fetchOptions
         )
       ).to.be.true;
+    });
+
+    it('should return null when route is not found', async () => {
+      const previewData = {
+        site: 'default-site',
+        itemId: 'test-item-id',
+        mode: LayoutServicePageState.Edit,
+        language: 'en',
+        version: '1',
+        variantId: DEFAULT_VARIANT,
+        layoutKind: LayoutKind.Final,
+      };
+
+      editingServiceStub.fetchEditingData.resolves({ layoutData: { sitecore: { route: null } } });
+
+      const result = await sitecoreClient.getPreview(previewData);
+
+      expect(result).to.be.null;
     });
   });
 
@@ -1559,7 +1595,9 @@ describe('SitecoreClient', () => {
 
       expect(sitemapXmlServiceStub.fetchSitemaps.called).to.be.true;
       expect(result).to.include('<?xml version="1.0" encoding="UTF-8"?>');
-      expect(result).to.include('<sitemapindex xmlns="http://sitemaps.org/schemas/sitemap/0.9">');
+      expect(result).to.include(
+        '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+      );
 
       absoluteSitemapPaths.forEach((path) => {
         const fileName = path.split('/').pop();

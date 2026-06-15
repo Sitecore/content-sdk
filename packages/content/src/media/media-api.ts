@@ -1,7 +1,64 @@
-import URL from 'url-parse';
-
 // finds the Sitecore media URL prefix
 const mediaUrlPrefixRegex = /\/([-~]{1})\/media\//i;
+
+/** Base URL used only to parse path-only / relative media URLs with WHATWG URL */
+const RELATIVE_URL_BASE = 'http://__sitecore_content_sdk_media__/';
+
+/**
+ * Whether the URL input uses an absolute or special (protocol-relative) scheme.
+ * @param {string} input Media URL string
+ * @returns True when the input has a scheme or starts with `//`
+ * @internal
+ */
+function hasAbsoluteOrSpecialScheme(input: string): boolean {
+  return /^[a-z][a-z0-9+.-]*:/i.test(input) || input.startsWith('//');
+}
+
+/**
+ * Parse a media URL that may be absolute or path-only (relative).
+ * @param {string} input Media URL string
+ * @returns Parsed URL and whether the input was path-only (so serialization omits the dummy base)
+ * @internal
+ */
+function parseMediaUrl(input: string): { url: URL; relative: boolean } {
+  if (hasAbsoluteOrSpecialScheme(input)) {
+    try {
+      const url = input.startsWith('//') ? new URL(input, 'http://_') : new URL(input);
+      return { url, relative: false };
+    } catch {
+      // fall through to relative parse attempt
+    }
+  }
+  return { url: new URL(input, RELATIVE_URL_BASE), relative: true };
+}
+
+/**
+ * Serialize a parsed media URL, omitting the dummy base for path-only inputs.
+ * @param {URL} parsed Parsed media URL
+ * @param {boolean} relative Whether the original input was path-only
+ * @returns Serialized URL string
+ * @internal
+ */
+function serializeMediaUrl(parsed: URL, relative: boolean): string {
+  if (relative) {
+    return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+  }
+  return parsed.toString();
+}
+
+/**
+ * Convert URL search params to a plain query record.
+ * @param {URLSearchParams} sp URL search params
+ * @returns Query string key/value map
+ * @internal
+ */
+function searchParamsToQueryRecord(sp: URLSearchParams): { [key: string]: string | undefined } {
+  const q: { [key: string]: string | undefined } = {};
+  sp.forEach((value, key) => {
+    q[key] = value;
+  });
+  return q;
+}
 
 /**
  * Get required query string params which should be merged with user params
@@ -10,9 +67,9 @@ const mediaUrlPrefixRegex = /\/([-~]{1})\/media\//i;
  * @public
  */
 export const getRequiredParams = (qs: { [key: string]: string | undefined }) => {
-  const { rev, db, la, vs, ts } = qs;
+  const { rev, db, la, vs, ts, ttc, tt, hash } = qs;
 
-  return { rev, db, la, vs, ts };
+  return { rev, db, la, vs, ts, ttc, tt, hash };
 };
 
 /**
@@ -27,15 +84,14 @@ export const replaceMediaUrlPrefix = (
   url: string,
   mediaUrlPrefix: RegExp = mediaUrlPrefixRegex
 ): string => {
-  const parsed = URL(url, {}, true);
+  const { url: parsed, relative } = parseMediaUrl(url);
 
   const match = mediaUrlPrefix.exec(parsed.pathname);
   if (match && match.length > 1) {
-    // regex will provide us with /-/ or /~/ type
-    parsed.set('pathname', parsed.pathname.replace(mediaUrlPrefix, `/${match[1]}/jssmedia/`));
+    parsed.pathname = parsed.pathname.replace(mediaUrlPrefix, `/${match[1]}/jssmedia/`);
   }
 
-  return parsed.toString();
+  return serializeMediaUrl(parsed, relative);
 };
 
 /**
@@ -59,26 +115,29 @@ export const updateImageUrl = (
     // if params aren't supplied, no need to run it through Content SDK media handler
     return url;
   }
-  // polyfill node `global` in browser to workaround https://github.com/unshiftio/url-parse/issues/150
-  if (typeof window !== 'undefined' && !window.global) {
-    window.global = {} as typeof globalThis;
+
+  const { url: parsed, relative } = parseMediaUrl(replaceMediaUrlPrefix(url, mediaUrlPrefix));
+
+  const requiredParams = getRequiredParams(searchParamsToQueryRecord(parsed.searchParams));
+
+  const merged: Record<string, string> = {};
+  for (const [key, val] of Object.entries(params)) {
+    if (val !== undefined && val !== null && val !== '') {
+      merged[key] = String(val);
+    }
   }
-
-  const parsed = URL(replaceMediaUrlPrefix(url, mediaUrlPrefix), {}, true);
-
-  const requiredParams = getRequiredParams(parsed.query);
-
-  const query = { ...params };
-
   Object.entries(requiredParams).forEach(([key, param]) => {
-    if (param) {
-      query[key] = param;
+    if (param !== undefined && param !== null && param !== '') {
+      merged[key] = param;
     }
   });
 
-  parsed.set('query', query);
+  parsed.search = '';
+  for (const [k, v] of Object.entries(merged)) {
+    parsed.searchParams.set(k, v);
+  }
 
-  return parsed.toString();
+  return serializeMediaUrl(parsed, relative);
 };
 
 /**

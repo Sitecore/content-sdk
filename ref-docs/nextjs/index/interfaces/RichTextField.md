@@ -18,7 +18,7 @@ The interface for the RichText field.
 
 ### metadata?
 
-> `optional` **metadata**: `object`
+> `optional` **metadata?**: `object`
 
 Defined in: content/types/layout/models.d.ts:123
 
@@ -34,6 +34,6 @@ Defined in: content/types/layout/models.d.ts:123
 
 ### value?
 
-> `optional` **value**: `string`
+> `optional` **value?**: `string`
 
 Defined in: react/types/components/RichText.d.ts:9

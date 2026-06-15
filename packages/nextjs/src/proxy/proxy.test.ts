@@ -5,9 +5,10 @@ import chai, { use } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import chaiString from 'chai-string';
-import { defineProxy, ProxyHandler, ProxyBase, REWRITE_HEADER_NAME } from './proxy';
+import { defineProxy, ProxyHandler, ProxyBase, REWRITE_HEADER_NAME, ProxiesContext } from './proxy';
 import { NextRequest, NextResponse } from 'next/server';
 import { SiteResolver } from '../site';
+import { SuccessfulProxyExecution } from './types';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -70,7 +71,7 @@ describe('ProxyBase', () => {
     Object.defineProperties(res.headers, {
       set: {
         value: (key, value) => {
-        res.headers[key] = value;
+          res.headers[key] = value;
         },
         enumerable: false,
       },
@@ -298,7 +299,7 @@ describe('ProxyBase', () => {
   });
 
   describe('getHostHeader', () => {
-    it('should return default hostname when header is not present', () => {
+    it('should return empty string when host headers are not present', () => {
       const proxy = new SampleProxy({ sites: [] });
       const req = createReq({
         headerValues: {
@@ -306,7 +307,7 @@ describe('ProxyBase', () => {
         },
       });
 
-      expect(proxy['getHostHeader'](req)).to.equal(undefined);
+      expect(proxy['getHostHeader'](req)).to.equal('');
     });
 
     it('should return host header', () => {
@@ -319,6 +320,61 @@ describe('ProxyBase', () => {
       });
 
       expect(proxy['getHostHeader'](req)).to.equal('bar.net');
+    });
+
+    it('should strip port from IPv4 host header', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq({
+        headerValues: {
+          host: '127.0.0.1:3000',
+        },
+      });
+
+      expect(proxy['getHostHeader'](req)).to.equal('127.0.0.1');
+    });
+
+    it('should parse bracketed IPv6 loopback with port', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq({
+        headerValues: {
+          host: '[::1]:3000',
+        },
+      });
+
+      expect(proxy['getHostHeader'](req)).to.equal('::1');
+    });
+
+    it('should preserve unbracketed IPv6 loopback without treating :1 as port', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq({
+        headerValues: {
+          host: '::1',
+        },
+      });
+
+      expect(proxy['getHostHeader'](req)).to.equal('::1');
+    });
+
+    it('should parse bracketed IPv6 without port', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq({
+        headerValues: {
+          host: '[::1]',
+        },
+      });
+
+      expect(proxy['getHostHeader'](req)).to.equal('::1');
+    });
+
+    it('should parse unbracketed IPv6 with zone id (no port strip)', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq({
+        headerValues: {
+          host: 'fe80::1%eth0',
+        },
+      });
+
+      expect(proxy['getHostHeader'](req)).to.equal('fe80::1%eth0');
     });
 
     it('should return x-forwarded-host header when present', () => {
@@ -678,5 +734,73 @@ describe('defineProxy', () => {
 
     expect(result.headers.get('m1')).to.equal('true');
     expect(result.headers.get('m2')).to.equal('true');
+  });
+
+  it('should short-circuit the chain once a proxy returns a 403 response', async () => {
+    const forbidden = { status: 403 } as unknown as NextResponse;
+
+    const gateProxy: ProxyHandler = {
+      handle: sinon.stub().resolves(forbidden),
+    };
+    const downstreamProxy: ProxyHandler = {
+      handle: sinon.stub().resolves({ status: 200 } as unknown as NextResponse),
+    };
+
+    const req = {} as NextRequest;
+    const res = { status: 200 } as unknown as NextResponse;
+
+    const result = await defineProxy(gateProxy, downstreamProxy).exec(req, res);
+
+    expect(gateProxy.handle).to.have.been.calledOnce;
+    expect(downstreamProxy.handle).to.not.have.been.called;
+    expect(result).to.equal(forbidden);
+  });
+
+  it('should pass context to proxies when generateContext is true', async () => {
+    const proxiesContext: ProxiesContext = new Map();
+    const successfulExecution: { marker: string } & SuccessfulProxyExecution = {
+      executedSuccessfully: true,
+      error: null,
+      marker: 'seen',
+    };
+
+    const contextProxy: ProxyHandler = {
+      name: 'ContextProxy',
+      handle: (_req, res, proxiesContext) => {
+        proxiesContext?.set('ContextProxy', successfulExecution);
+        return Promise.resolve(res);
+      },
+    };
+
+    const req = {} as NextRequest;
+    const res = { status: 200 } as unknown as NextResponse;
+
+    await defineProxy(contextProxy).exec(req, res, proxiesContext);
+
+    expect(proxiesContext.get('ContextProxy')).to.deep.equal({
+      executedSuccessfully: true,
+      error: null,
+      marker: 'seen',
+    });
+  });
+
+  it('should not provide context when proxiesContext is not provided', async () => {
+    let receivedContext: unknown;
+
+    const contextProxy: ProxyHandler = {
+      name: 'ContextProxy',
+      handle: (_req, res, context) => {
+        receivedContext = context;
+        return Promise.resolve(res);
+      },
+    };
+
+    const req = {} as NextRequest;
+    const res = { status: 200 } as unknown as NextResponse;
+
+    const result = await defineProxy(contextProxy).exec(req, res, undefined);
+
+    expect(receivedContext).to.be.undefined;
+    expect(result).to.equal(res);
   });
 });

@@ -6,7 +6,7 @@
 
 # Interface: AnalyticsProxyAdapter
 
-Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:17](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L17)
+Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:16](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L16)
 
 Defines the AnalyticsProxyAdapter.
 
@@ -16,11 +16,11 @@ Defines the AnalyticsProxyAdapter.
 
 ## Properties
 
-### getClientId()
+### getClientId
 
 > **getClientId**: () => `string` \| `null`
 
-Defined in: analytics-core/types/src/initialization/types.d.ts:13
+Defined in: analytics-core/types/src/initialization/types.d.ts:18
 
 Gets the client ID.
 
@@ -36,15 +36,35 @@ The client ID, or null if it is not set.
 
 ***
 
+### isBot?
+
+> `optional` **isBot?**: () => `boolean`
+
+Defined in: analytics-core/types/src/initialization/types.d.ts:13
+
+Checks if the current request is a bot.
+
+#### Returns
+
+`boolean`
+
+True if the current request is a bot, false otherwise.
+
+#### Inherited from
+
+`AnalyticsAdapter.isBot`
+
+***
+
 ### location
 
 > **location**: `object`
 
-Defined in: analytics-core/types/src/initialization/types.d.ts:22
+Defined in: analytics-core/types/src/initialization/types.d.ts:27
 
 The location object, which provides a method for getting search parameters.
 
-#### getSearchParams()
+#### getSearchParams
 
 > **getSearchParams**: () => `string`
 
@@ -62,11 +82,11 @@ The search parameters from the location.
 
 ***
 
-### setClientId()
+### setClientId
 
 > **setClientId**: () => `Promise`\<`void`\>
 
-Defined in: analytics-core/types/src/initialization/types.d.ts:18
+Defined in: analytics-core/types/src/initialization/types.d.ts:23
 
 Sets the client ID.
 
@@ -86,7 +106,7 @@ A promise that resolves when the client ID has been set.
 
 > **type**: `"proxy"`
 
-Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:21](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L21)
+Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:20](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L20)
 
 The type of the adapter.
 

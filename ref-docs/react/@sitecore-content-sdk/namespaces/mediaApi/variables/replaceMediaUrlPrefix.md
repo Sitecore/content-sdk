@@ -4,11 +4,11 @@
 
 [@sitecore-content-sdk/react](../../../../README.md) / [mediaApi](../README.md) / replaceMediaUrlPrefix
 
-# Variable: replaceMediaUrlPrefix()
+# Variable: replaceMediaUrlPrefix
 
 > `const` **replaceMediaUrlPrefix**: (`url`, `mediaUrlPrefix?`) => `string`
 
-Defined in: packages/content/types/media/media-api.d.ts:24
+Defined in: packages/content/types/media/media-api.d.ts:27
 
 Replace `/~/media` or `/-/media` with `/~/jssmedia` or `/-/jssmedia`, respectively.
 Can use `mediaUrlPrefix` in order to use a custom prefix.

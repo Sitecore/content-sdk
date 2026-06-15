@@ -6,7 +6,7 @@
 
 # Interface: AnalyticsPlugin
 
-Defined in: [analytics-core/src/initialization/types.ts:76](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L76)
+Defined in: [analytics-core/src/initialization/types.ts:81](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/initialization/types.ts#L81)
 
 Defines the structure of the analytics plugin, including its initialization method, name, options, and adapter.
 
@@ -20,7 +20,7 @@ Defines the structure of the analytics plugin, including its initialization meth
 
 > **adapter**: [`AnalyticsAdapter`](../../internal/interfaces/AnalyticsAdapter.md)
 
-Defined in: [analytics-core/src/initialization/types.ts:84](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L84)
+Defined in: [analytics-core/src/initialization/types.ts:89](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/initialization/types.ts#L89)
 
 The adapter for the analytics plugin, which provides methods to get and set the client ID, and access location search parameters. The adapter allows the analytics plugin to interact with the underlying platform or environment in a consistent way.
 
@@ -32,7 +32,7 @@ The adapter for the analytics plugin, which provides methods to get and set the 
 
 ### dependencies?
 
-> `optional` **dependencies**: `string`[]
+> `optional` **dependencies?**: `string`[]
 
 Defined in: core/types/initialization/types.d.ts:71
 
@@ -44,11 +44,11 @@ List of plugins this plugin depends on
 
 ***
 
-### init()
+### init
 
 > **init**: () => `Promise`\<`void`\>
 
-Defined in: [analytics-core/src/initialization/types.ts:89](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L89)
+Defined in: [analytics-core/src/initialization/types.ts:94](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/initialization/types.ts#L94)
 
 Initializes the analytics plugin, which may involve setting up necessary configurations, loading scripts, or performing any asynchronous operations required for the plugin to function properly.
 
@@ -68,7 +68,7 @@ A promise that resolves when the initialization is complete.
 
 > **name**: `"AnalyticsPlugin"`
 
-Defined in: [analytics-core/src/initialization/types.ts:93](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L93)
+Defined in: [analytics-core/src/initialization/types.ts:98](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/initialization/types.ts#L98)
 
 The name of the analytics plugin.
 
@@ -82,7 +82,7 @@ The name of the analytics plugin.
 
 > **options**: [`AnalyticsOptions`](../../internal/interfaces/AnalyticsOptions.md)
 
-Defined in: [analytics-core/src/initialization/types.ts:80](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L80)
+Defined in: [analytics-core/src/initialization/types.ts:85](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/initialization/types.ts#L85)
 
 The options for the analytics plugin.
 

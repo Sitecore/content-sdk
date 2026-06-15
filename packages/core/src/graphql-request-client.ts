@@ -1,5 +1,4 @@
 import { GraphQLClient as Client, ClientError } from 'graphql-request';
-import parse from 'url-parse';
 import { DocumentNode } from 'graphql';
 import debuggers, { Debugger } from './debug';
 import TimeoutPromise from './tools/timeout-promise';
@@ -87,9 +86,7 @@ export type GraphQLRequestClientFactory = (
  */
 export type GraphQLRequestClientFactoryConfig = {
   endpoint: string;
-  apiKey?: string;
-  contextId?: string;
-};
+} & GraphQLRequestClientConfig;
 
 /**
  * A GraphQL client for Sitecore APIs that uses the 'graphql-request' library.
@@ -121,7 +118,13 @@ export class GraphQLRequestClient implements GraphQLClient {
       this.headers['x-sitecore-contextid'] = clientConfig.contextId;
     }
 
-    if (!endpoint || !parse(endpoint).hostname) {
+    let hasHostname = false;
+    try {
+      hasHostname = Boolean(new URL(endpoint).hostname);
+    } catch {
+      // invalid URL
+    }
+    if (!endpoint || !hasHostname) {
       throw new Error(
         `Invalid GraphQL endpoint '${endpoint}'. Verify that appropriate environment variable is set`
       );
@@ -148,11 +151,10 @@ export class GraphQLRequestClient implements GraphQLClient {
    */
   static createClientFactory({
     endpoint,
-    apiKey,
-    contextId,
+    ...factoryConfig
   }: GraphQLRequestClientFactoryConfig): GraphQLRequestClientFactory {
     return (config: Omit<GraphQLRequestClientConfig, 'apiKey' | 'contextId'> = {}) =>
-      new GraphQLRequestClient(endpoint, { ...config, apiKey, contextId });
+      new GraphQLRequestClient(endpoint, { ...factoryConfig, ...config });
   }
 
   /**

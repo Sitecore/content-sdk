@@ -9,6 +9,8 @@ import nextjs, { NextRequest, NextResponse } from 'next/server';
 import { MultisiteProxy } from './multisite-proxy';
 import { SiteResolver } from '@sitecore-content-sdk/content/site';
 import debug from '../debug';
+import { isSuccessfulProxyExecution } from './utils';
+import type { SuccessfulMultisiteProxyExecution } from './multisite-proxy';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -41,7 +43,7 @@ describe('MultisiteProxy', () => {
       defaultLocale: props.nextUrl?.defaultLocale || 'en',
       searchParams: props.nextUrl?.searchParams || {},
     };
-    
+
     const req: any = {
       ...props,
       nextUrl: null as any,
@@ -117,7 +119,7 @@ describe('MultisiteProxy', () => {
     Object.defineProperties(res.headers, {
       set: {
         value: (key, value) => {
-        res.headers[key] = value;
+          res.headers[key] = value;
         },
         enumerable: false,
       },
@@ -126,7 +128,7 @@ describe('MultisiteProxy', () => {
       },
       forEach: {
         value: (cb) => {
-        Object.keys(res.headers).forEach((key) => cb(res.headers[key], key, res.headers));
+          Object.keys(res.headers).forEach((key) => cb(res.headers[key], key, res.headers));
         },
         enumerable: false,
       },
@@ -169,6 +171,11 @@ describe('MultisiteProxy', () => {
 
   afterEach(() => {
     debugSpy.resetHistory();
+  });
+
+  it('should expose proxy name', () => {
+    const { proxy } = createProxy();
+    expect(proxy.name).to.equal('MultisiteProxy');
   });
 
   describe('request skipped', () => {
@@ -892,6 +899,65 @@ describe('MultisiteProxy', () => {
       expect(errorSpy.getCall(1).calledWith(error)).to.be.true;
 
       expect(finalRes).to.deep.equal(res);
+    });
+
+    it('should record failed execution in context', async () => {
+      const error = new Error('Custom error');
+      const context = new Map();
+
+      class SampleSiteResolver extends SiteResolver {
+        constructor(sites: any) {
+          super(sites);
+        }
+
+        getByHost = () => {
+          throw error;
+        };
+      }
+
+      const { proxy } = createProxy({
+        siteResolver: new SampleSiteResolver([]),
+      });
+
+      await proxy.handle(req, res, context);
+
+      expect(context.get('MultisiteProxy')).to.deep.equal({
+        executedSuccessfully: false,
+        error,
+      });
+    });
+  });
+
+  describe('execution context', () => {
+    let nextRewriteStub = sinon.stub();
+    afterEach(() => {
+      nextRewriteStub.restore();
+    });
+
+    it('should record successful execution in context', async () => {
+      const req = createRequest({
+        cookieValues: { sc_site: 'foobar', sc_preview: 'true' },
+      });
+      const res = createResponse();
+      const context = new Map();
+
+      nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+
+      const { proxy } = createProxy({
+        config: { ...defaultConfig, useCookieResolution: () => true },
+      });
+
+      await proxy.handle(req, res, context);
+
+      const info = context.get('MultisiteProxy');
+      expect(isSuccessfulProxyExecution<SuccessfulMultisiteProxyExecution>(info)).to.equal(true);
+      expect(info).to.deep.equal({
+        executedSuccessfully: true,
+        error: null,
+        rewritePath: '/_site_foobar/styleguide',
+        siteName: 'foobar',
+        isSitecorePreview: 'true',
+      });
     });
   });
 });

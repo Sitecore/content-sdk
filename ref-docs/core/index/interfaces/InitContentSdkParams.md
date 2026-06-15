@@ -6,7 +6,7 @@
 
 # Interface: InitContentSdkParams
 
-Defined in: [packages/core/src/initialization/types.ts:5](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/core/src/initialization/types.ts#L5)
+Defined in: [packages/core/src/initialization/types.ts:5](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/core/src/initialization/types.ts#L5)
 
 Parameters for initContentSdk
 
@@ -16,7 +16,7 @@ Parameters for initContentSdk
 
 > **config**: `object`
 
-Defined in: [packages/core/src/initialization/types.ts:7](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/core/src/initialization/types.ts#L7)
+Defined in: [packages/core/src/initialization/types.ts:7](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/core/src/initialization/types.ts#L7)
 
 Initialization config
 
@@ -28,7 +28,7 @@ The context ID.
 
 #### edgeUrl?
 
-> `optional` **edgeUrl**: `string`
+> `optional` **edgeUrl?**: `string`
 
 Sitecore edge URL
 
@@ -44,6 +44,6 @@ The site name.
 
 > **plugins**: [`Plugin`](Plugin.md)\<`unknown`, `unknown`\>[]
 
-Defined in: [packages/core/src/initialization/types.ts:22](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/core/src/initialization/types.ts#L22)
+Defined in: [packages/core/src/initialization/types.ts:22](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/core/src/initialization/types.ts#L22)
 
 Array of plugins to initialize

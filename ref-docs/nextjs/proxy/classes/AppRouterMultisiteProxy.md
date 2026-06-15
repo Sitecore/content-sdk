@@ -6,7 +6,7 @@
 
 # Class: AppRouterMultisiteProxy
 
-Defined in: [nextjs/src/proxy/app-router-multisite-proxy.ts:8](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/app-router-multisite-proxy.ts#L8)
+Defined in: [nextjs/src/proxy/app-router-multisite-proxy.ts:8](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/app-router-multisite-proxy.ts#L8)
 
 Proxy/handler for enabling multisite support in the Next.js App Router.
 
@@ -20,7 +20,7 @@ Proxy/handler for enabling multisite support in the Next.js App Router.
 
 > **new AppRouterMultisiteProxy**(`config?`): `AppRouterMultisiteProxy`
 
-Defined in: [nextjs/src/proxy/multisite-proxy.ts:39](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/multisite-proxy.ts#L39)
+Defined in: [nextjs/src/proxy/multisite-proxy.ts:52](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/multisite-proxy.ts#L52)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [nextjs/src/proxy/multisite-proxy.ts:39](https://github.com/Sitecore
 
 > `protected` **config**: [`MultisiteProxyConfig`](../type-aliases/MultisiteProxyConfig.md)
 
-Defined in: [nextjs/src/proxy/multisite-proxy.ts:39](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/multisite-proxy.ts#L39)
+Defined in: [nextjs/src/proxy/multisite-proxy.ts:52](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/multisite-proxy.ts#L52)
 
 Multisite proxy config
 
@@ -56,7 +56,7 @@ Multisite proxy config
 
 > `protected` **defaultHostname**: `string`
 
-Defined in: [nextjs/src/proxy/proxy.ts:59](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L59)
+Defined in: [nextjs/src/proxy/proxy.ts:106](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L106)
 
 #### Inherited from
 
@@ -68,11 +68,31 @@ Defined in: [nextjs/src/proxy/proxy.ts:59](https://github.com/Sitecore/content-s
 
 > `protected` **siteResolver**: [`SiteResolver`](../../index/classes/SiteResolver.md)
 
-Defined in: [nextjs/src/proxy/proxy.ts:60](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L60)
+Defined in: [nextjs/src/proxy/proxy.ts:107](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L107)
 
 #### Inherited from
 
 [`MultisiteProxy`](MultisiteProxy.md).[`siteResolver`](MultisiteProxy.md#siteresolver)
+
+## Accessors
+
+### name
+
+#### Get Signature
+
+> **get** **name**(): `string`
+
+Defined in: [nextjs/src/proxy/multisite-proxy.ts:59](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/multisite-proxy.ts#L59)
+
+Name of the proxy, used as a key in the context to store information about executed proxies
+
+##### Returns
+
+`string`
+
+#### Inherited from
+
+[`MultisiteProxy`](MultisiteProxy.md).[`name`](MultisiteProxy.md#name)
 
 ## Methods
 
@@ -80,7 +100,7 @@ Defined in: [nextjs/src/proxy/proxy.ts:60](https://github.com/Sitecore/content-s
 
 > `protected` **disabled**(`req`, `res`): `boolean` \| `undefined`
 
-Defined in: [nextjs/src/proxy/multisite-proxy.ts:136](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/multisite-proxy.ts#L136)
+Defined in: [nextjs/src/proxy/multisite-proxy.ts:177](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/multisite-proxy.ts#L177)
 
 #### Parameters
 
@@ -103,7 +123,7 @@ Defined in: [nextjs/src/proxy/multisite-proxy.ts:136](https://github.com/Sitecor
 
 > `protected` **extractDebugHeaders**(`incomingHeaders`): `object`
 
-Defined in: [nextjs/src/proxy/proxy.ts:130](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L130)
+Defined in: [nextjs/src/proxy/proxy.ts:184](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L184)
 
 Safely extract all headers for debug logging
 Necessary to avoid proxy issue https://github.com/vercel/next.js/issues/39765
@@ -130,7 +150,7 @@ Object with headers as key/value pairs
 
 > `protected` **getClientFactory**(`graphQLOptions`): [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [nextjs/src/proxy/proxy.ts:198](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L198)
+Defined in: [nextjs/src/proxy/proxy.ts:254](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L254)
 
 #### Parameters
 
@@ -150,9 +170,9 @@ Defined in: [nextjs/src/proxy/proxy.ts:198](https://github.com/Sitecore/content-
 
 ### getHostHeader()
 
-> `protected` **getHostHeader**(`req`): `string` \| `undefined`
+> `protected` **getHostHeader**(`req`): `string`
 
-Defined in: [nextjs/src/proxy/proxy.ts:166](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L166)
+Defined in: [nextjs/src/proxy/proxy.ts:220](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L220)
 
 Extract 'host' header
 
@@ -164,7 +184,7 @@ Extract 'host' header
 
 #### Returns
 
-`string` \| `undefined`
+`string`
 
 #### Inherited from
 
@@ -176,7 +196,7 @@ Extract 'host' header
 
 > `protected` **getLanguage**(`req`, `res?`): `string`
 
-Defined in: [nextjs/src/proxy/proxy.ts:142](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L142)
+Defined in: [nextjs/src/proxy/proxy.ts:196](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L196)
 
 Provides used language
 
@@ -203,7 +223,7 @@ language
 
 > `protected` **getLanguageFromHeader**(`res?`): `string` \| `undefined`
 
-Defined in: [nextjs/src/proxy/proxy.ts:158](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L158)
+Defined in: [nextjs/src/proxy/proxy.ts:212](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L212)
 
 Extract language from locale header of the response
 set by LocaleProxy for app router application
@@ -230,7 +250,7 @@ language or undefined if not found
 
 > `protected` **getSite**(`req`, `res?`): [`SiteInfo`](../../index/type-aliases/SiteInfo.md)
 
-Defined in: [nextjs/src/proxy/proxy.ts:178](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L178)
+Defined in: [nextjs/src/proxy/proxy.ts:234](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L234)
 
 Get site information. If site name is stored in cookie, use it, otherwise resolve by hostname
 - If site can't be resolved by site name cookie use default site info based on provided parameters
@@ -259,7 +279,7 @@ site information
 
 > `protected` **getSiteRewrite**(`pathname`, `siteName`): `string`
 
-Defined in: [nextjs/src/proxy/app-router-multisite-proxy.ts:39](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/app-router-multisite-proxy.ts#L39)
+Defined in: [nextjs/src/proxy/app-router-multisite-proxy.ts:39](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/app-router-multisite-proxy.ts#L39)
 
 Generates a site-specific rewrite path for app router based on the provided pathname and site name.
 
@@ -284,9 +304,9 @@ The rewritten path as a string.
 
 ### handle()
 
-> **handle**(`req`, `res`): `Promise`\<`NextResponse`\<`unknown`\>\>
+> **handle**(`req`, `res`, `proxiesContext?`): `Promise`\<`NextResponse`\<`unknown`\>\>
 
-Defined in: [nextjs/src/proxy/multisite-proxy.ts:43](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/multisite-proxy.ts#L43)
+Defined in: [nextjs/src/proxy/multisite-proxy.ts:63](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/multisite-proxy.ts#L63)
 
 Handler method to execute proxy logic
 
@@ -296,6 +316,7 @@ Handler method to execute proxy logic
 | ------ | ------ | ------ |
 | `req` | `NextRequest` | request |
 | `res` | `NextResponse` | response |
+| `proxiesContext?` | [`ProxiesContext`](../type-aliases/ProxiesContext.md) | context to share information between proxies |
 
 #### Returns
 
@@ -311,7 +332,7 @@ Handler method to execute proxy logic
 
 > `protected` **isAppRouter**(`res`): `boolean`
 
-Defined in: [nextjs/src/proxy/proxy.ts:85](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L85)
+Defined in: [nextjs/src/proxy/proxy.ts:139](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L139)
 
 Determines if the application is using the app router based on the locale header
 
@@ -337,7 +358,7 @@ true if app router is used
 
 > `protected` **isPrefetch**(`req`): `boolean`
 
-Defined in: [nextjs/src/proxy/proxy.ts:94](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L94)
+Defined in: [nextjs/src/proxy/proxy.ts:148](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L148)
 
 Determines if the request is a Next.js (next/link) prefetch request
 
@@ -363,7 +384,7 @@ is prefetch
 
 > `protected` **isPreview**(`req`): `boolean`
 
-Defined in: [nextjs/src/proxy/proxy.ts:73](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L73)
+Defined in: [nextjs/src/proxy/proxy.ts:127](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L127)
 
 Determines if mode is preview
 
@@ -389,7 +410,7 @@ is preview
 
 > `protected` **rewrite**(`rewritePath`, `req`, `res`, `skipHeader?`): `NextResponse`
 
-Defined in: [nextjs/src/proxy/proxy.ts:209](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L209)
+Defined in: [nextjs/src/proxy/proxy.ts:265](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L265)
 
 Create a rewrite response
 
@@ -416,7 +437,7 @@ Create a rewrite response
 
 > `protected` **shouldSkipWhenDisabled**(): `boolean`
 
-Defined in: [nextjs/src/proxy/app-router-multisite-proxy.ts:29](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/app-router-multisite-proxy.ts#L29)
+Defined in: [nextjs/src/proxy/app-router-multisite-proxy.ts:29](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/app-router-multisite-proxy.ts#L29)
 
 In App Router, we cannot skip the proxy even if enabled is false,
 because the route structure requires the [site] segment.
@@ -437,7 +458,7 @@ always returns false (never skip) for App Router
 
 > `protected` **shouldWarnWhenDisabled**(`_res`): `void`
 
-Defined in: [nextjs/src/proxy/app-router-multisite-proxy.ts:15](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/app-router-multisite-proxy.ts#L15)
+Defined in: [nextjs/src/proxy/app-router-multisite-proxy.ts:15](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/app-router-multisite-proxy.ts#L15)
 
 Warns when multisite is disabled in App Router.
 The proxy will still run to prevent routing errors.

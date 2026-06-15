@@ -137,6 +137,7 @@ import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
 import { NextApiRequest } from 'next';
 import { NextApiResponse } from 'next';
+import { NextFetchEvent } from 'next/server';
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { NextURL } from 'next/dist/server/web/next-url';
@@ -169,6 +170,7 @@ import { RenderingType } from '@sitecore-content-sdk/content/layout';
 import { resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 import { resolveUrl } from '@sitecore-content-sdk/core/tools';
 import { RetryStrategy } from '@sitecore-content-sdk/content/client';
+import { revalidateTag } from 'next/cache';
 import { RichTextField } from '@sitecore-content-sdk/react';
 import { RichTextFieldSchema } from '@sitecore-content-sdk/react';
 import { richTextFieldSchema } from '@sitecore-content-sdk/react';
@@ -242,15 +244,31 @@ export class AppRouterMultisiteProxy extends MultisiteProxy {
     protected shouldWarnWhenDisabled(_res: NextResponse): void;
 }
 
-export { ArgMeta }
+// @public
+export class BotTrackingProxy extends ProxyBase {
+    constructor(config: BotTrackingProxyConfig);
+    // (undocumented)
+    protected config: BotTrackingProxyConfig;
+    // (undocumented)
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
+    get name(): string;
+    // @internal (undocumented)
+    protected shouldSkipForLocalEnvironment(req: NextRequest): boolean;
+}
 
-export { AtomChild }
+// @public
+export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Omit<ProxyBaseConfig, 'defaultLanguage'> & {
+    fetchEvent?: NextFetchEvent;
+};
 
-export { AtomMetadata }
+// @public
+export function buildSitecoreDictionaryCacheTag(params: BuildSitecoreDictionaryCacheTagParams): string;
 
-export { AtomSchemaInput }
-
-export { AtomType }
+// @public
+export type BuildSitecoreDictionaryCacheTagParams = {
+    site: string;
+    locale: string;
+};
 
 export { BYOCClientWrapper }
 
@@ -287,6 +305,17 @@ export { CallbackPropKeys }
 export { CdpHelper }
 
 export { ClientEditingChromesUpdate }
+
+// @public
+export function collectSitecorePageCacheTags(params: CollectSitecorePageCacheTagsParams): string[];
+
+// @public
+export type CollectSitecorePageCacheTagsParams = {
+    site: string;
+    locale: string;
+    path?: string;
+    route?: RouteData | null;
+};
 
 // @public
 export const combineImportEntries: (defaultImportEntries: ImportEntry[], generatedImportEntries: ImportEntry[]) => ImportEntry[];
@@ -376,6 +405,18 @@ export const createRobotsRouteHandler: (options: RouteHandlerOptions_2) => {
     GET: (req: NextRequest) => Promise<Response>;
 };
 
+// @public
+export function createSitecoreRevalidateRouteHandler(options?: SitecoreRevalidateRouteHandlerOptions): {
+    POST: (req: NextRequest) => Promise<NextResponse<{
+        error: string;
+    }> | NextResponse<{
+        revalidated: boolean;
+        tagsCount: number;
+        invocation_id: string | null;
+        continues: boolean;
+    }>>;
+};
+
 // Warning: (ae-forgotten-export) The symbol "RouteHandlerOptions" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
@@ -415,7 +456,7 @@ export const defineConfig: (config?: SitecoreConfigInput) => SitecoreConfig;
 
 // @public
 export const defineProxy: (...proxies: ProxyHandler_2[]) => {
-    exec: (req: NextRequest, res?: NextResponse) => Promise<NextResponse<unknown>>;
+    exec: (req: NextRequest, res?: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse<unknown>>;
 };
 
 export { DesignLibrary }
@@ -489,6 +530,14 @@ export { extractFiles }
 
 // @public
 export const extractPath: (context: GetStaticPropsContext | GetServerSidePropsContext) => string;
+
+// @public
+export interface FailedProxyExecution {
+    // (undocumented)
+    error: unknown;
+    // (undocumented)
+    executedSuccessfully: false;
+}
 
 export { FEaaSClientWrapper }
 
@@ -643,6 +692,9 @@ export { isEditorActive }
 // @public
 export const isServerSidePropsContext: (context: GetServerSidePropsContext | GetStaticPropsContext) => context is GetServerSidePropsContext;
 
+// @public
+export function isSuccessfulProxyExecution<SuccessfulProxyType = unknown, T extends ProxiesContextMapValue | undefined = ProxiesContextMapValue | undefined>(info: T): info is T & SuccessfulProxyType;
+
 export { Item }
 
 export { LayoutService }
@@ -684,7 +736,8 @@ export class LocaleProxy extends ProxyBase {
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
     protected getLocaleFromPath(path: string): string | undefined;
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
+    get name(): string;
 }
 
 // @public
@@ -705,7 +758,8 @@ export class MultisiteProxy extends ProxyBase {
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
     protected getSiteRewrite(pathname: string, siteName: string): string;
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
+    get name(): string;
     protected shouldSkipWhenDisabled(): boolean;
     protected shouldWarnWhenDisabled(_res: NextResponse): void;
 }
@@ -770,7 +824,7 @@ export class PersonalizeProxy extends ProxyBase {
     // Warning: (ae-forgotten-export) The symbol "PersonalizeExecution" needs to be exported by the entry point api-surface.d.ts
     protected getPersonalizeExecutions(personalizeInfo: PersonalizeInfo, language: string): PersonalizeExecution[];
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
     // (undocumented)
     protected initPersonalizeServer(input: {
         hostname: string;
@@ -778,6 +832,7 @@ export class PersonalizeProxy extends ProxyBase {
         request: NextRequest;
         response: NextResponse;
     }): Promise<void>;
+    get name(): string;
     // (undocumented)
     protected personalize(input: {
         params: ExperienceParams;
@@ -806,6 +861,7 @@ export type PersonalizeProxyConfig = ProxyBaseConfig & SitecoreConfig['api']['ed
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
     extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
+    skipForBot?: boolean;
 };
 
 export { PersonalizeService }
@@ -823,7 +879,33 @@ export { PlaceholderData }
 
 export { PlaceholdersData }
 
-export { PropMeta }
+// @public
+export const PREVIEW_COOKIES: {
+    PREVIEW_DATA: string;
+    PRERENDER_BYPASS: string;
+    PREVIEW_TOKEN: string;
+};
+
+// @public
+export class PreviewProxy extends ProxyBase {
+    constructor(config: PreviewProxyConfig);
+    // (undocumented)
+    protected client: SitecoreClient;
+    // (undocumented)
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
+    get name(): string;
+}
+
+// @public
+export type PreviewProxyConfig = {
+    client: SitecoreClient;
+};
+
+// @public
+export type ProxiesContext = Map<string, ProxiesContextMapValue>;
+
+// @public
+export type ProxiesContextMapValue = FailedProxyExecution | SuccessfulProxyExecution;
 
 // @public
 export abstract class ProxyBase extends ProxyHandler_2 {
@@ -839,13 +921,14 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     };
     // (undocumented)
     protected getClientFactory(graphQLOptions: GraphQLClientOptions): GraphQLRequestClientFactory_2;
-    protected getHostHeader(req: NextRequest): string | undefined;
+    protected getHostHeader(req: NextRequest): string;
     protected getLanguage(req: NextRequest, res?: NextResponse): string;
     protected getLanguageFromHeader(res?: NextResponse): string | undefined;
     protected getSite(req: NextRequest, res?: NextResponse): SiteInfo;
     protected isAppRouter(res: NextResponse): boolean;
     protected isPrefetch(req: NextRequest): boolean;
     protected isPreview(req: NextRequest): boolean;
+    get name(): string;
     protected rewrite(rewritePath: string, req: NextRequest, res: NextResponse, skipHeader?: boolean): NextResponse;
     // (undocumented)
     protected siteResolver: SiteResolver;
@@ -861,7 +944,8 @@ export type ProxyBaseConfig = {
 
 // @public
 abstract class ProxyHandler_2 {
-    abstract handle(req: NextRequest, res: NextResponse): Promise<NextResponse>;
+    abstract handle(req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext): Promise<NextResponse>;
+    abstract get name(): string;
 }
 export { ProxyHandler_2 as ProxyHandler }
 
@@ -883,9 +967,12 @@ export class RedirectsProxy extends ProxyBase {
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
     protected dispatchRedirect(target: NextURL | string, type: string, req: NextRequest, res: NextResponse, isExternal?: boolean): NextResponse;
     // Warning: (ae-forgotten-export) The symbol "RedirectResult" needs to be exported by the entry point api-surface.d.ts
-    protected getExistsRedirect(req: NextRequest, siteName: string): Promise<RedirectResult | undefined>;
+    protected getExistsRedirect(req: NextRequest, siteName: string, requestLocale: string): Promise<RedirectResult | undefined>;
     // (undocumented)
-    handle: (req: NextRequest, res: NextResponse) => Promise<NextResponse>;
+    handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
+    protected matchFromRedirectMapRedirect(redirects: RedirectResult[], urlLocale: string, incomingURL: string, incomingQS: string): RedirectResult | undefined;
+    protected matchRedirectItemRedirect(redirects: RedirectResult[], locale: string, currentPath: string): RedirectResult | undefined;
+    get name(): string;
     protected normalizeUrl(url: NextURL): NextURL;
     // (undocumented)
     protected redirectsService: RedirectsService | null;
@@ -909,6 +996,9 @@ export { resetEditorChromes }
 export { resolveUrl }
 
 export { RetryStrategy }
+
+// @public
+export type RevalidateTagCacheProfile = Parameters<typeof revalidateTag>[1];
 
 // @public
 export const RichText: {
@@ -961,6 +1051,7 @@ export class SitecoreClient extends SitecoreClient_2 {
     getPage(path: string | string[], pageOptions: PageOptions, options?: FetchOptions): Promise<Page | null>;
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
     getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null>;
+    getPreviewData(headers: Headers): PreviewData;
     getSiteNameFromPath(path: string | string[]): string;
     // Warning: (ae-forgotten-export) The symbol "SitecoreNextjsClientInit" needs to be exported by the entry point api-surface.d.ts
     //
@@ -994,6 +1085,14 @@ export { SitecoreProviderReactContext }
 
 export { SitecoreProviderState }
 
+// @public
+export type SitecoreRevalidateRouteHandlerOptions = {
+    secret?: string;
+    cacheProfile?: RevalidateTagCacheProfile;
+    defaultLocale?: string;
+    sites?: SiteInfo[];
+};
+
 export { SiteInfo }
 
 export { SiteInfoService }
@@ -1018,6 +1117,64 @@ export { SitePathServiceConfig }
 export { SiteResolver }
 
 export { StaticPath }
+
+// @public
+export interface SuccessfulBotTrackingProxyExecution extends SuccessfulProxyExecution {
+    // (undocumented)
+    botDetected: boolean;
+}
+
+// @public
+export interface SuccessfulLocaleProxyExecution extends SuccessfulProxyExecution {
+    // (undocumented)
+    locale: string;
+    // (undocumented)
+    rewrote: boolean;
+}
+
+// @public
+export interface SuccessfulMultisiteProxyExecution extends SuccessfulProxyExecution {
+    // (undocumented)
+    isSitecorePreview: string | undefined;
+    // (undocumented)
+    rewritePath: string;
+    // (undocumented)
+    siteName: string;
+}
+
+// @public
+export interface SuccessfulPersonalizeProxyExecution extends SuccessfulProxyExecution {
+    // (undocumented)
+    identifiedVariantIds: string[];
+    // (undocumented)
+    rewritePath: string;
+}
+
+// @public
+export interface SuccessfulPreviewProxyExecution extends SuccessfulProxyExecution {
+    // (undocumented)
+    pageDataReceived: boolean;
+}
+
+// @public
+export interface SuccessfulProxyExecution {
+    // (undocumented)
+    error: null;
+    // (undocumented)
+    executedSuccessfully: true;
+}
+
+// @public
+export interface SuccessfulRedirectsProxyExecution extends SuccessfulProxyExecution {
+    // (undocumented)
+    isExternal: boolean;
+    // (undocumented)
+    redirectStatus: number;
+    // (undocumented)
+    redirectUrl: string;
+    // (undocumented)
+    requestUrl: string;
+}
 
 export { Text_2 as Text }
 

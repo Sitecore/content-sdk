@@ -22,7 +22,4 @@
 .vercel
 
 # sitecore temp files
-.sitecore/*
-# except for component-map
-!.sitecore/component-map.ts
-!.sitecore/import-map.ts
+.sitecore/

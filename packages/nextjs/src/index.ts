@@ -180,3 +180,17 @@ export {
   getCachedPageParams,
   setCachedPageParams,
 } from './cache/page-params';
+
+// Sitecore cache-tag public surface. Kept intentionally small: the cache helpers in the template
+// (`getSitecorePage`, `getSitecoreErrorPage`, `getSitecoreDictionary`) and the `createSitecoreRevalidateRouteHandler`
+// already cover the end-to-end Sitecore tag flow. Lower-level tag builders and webhook-body parsers remain
+// internal so callers don't hand-build Sitecore cache tag strings or duplicate the route handler's logic.
+export {
+  buildSitecoreDictionaryCacheTag,
+  type BuildSitecoreDictionaryCacheTagParams,
+} from './cache/sitecore-cache-tags';
+
+export {
+  collectSitecorePageCacheTags,
+  type CollectSitecorePageCacheTagsParams,
+} from './cache/sitecore-page-cache-tags';

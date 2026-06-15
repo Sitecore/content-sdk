@@ -8,7 +8,7 @@
 
 > **withEmptyFieldEditingComponent**\<`FieldComponentProps`, `RefElementType`\>(`FieldComponent`, `options`): (`props`) => `Element`
 
-Defined in: react/types/enhancers/withEmptyFieldEditingComponent.d.ts:27
+Defined in: react/types/enhancers/withEmptyFieldEditingComponent.d.ts:28
 
 Returns the passed field component or default component in case field value is empty and edit mode is 'metadata'
 
@@ -28,14 +28,4 @@ Returns the passed field component or default component in case field value is e
 
 ## Returns
 
-> (`props`): `Element`
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `props` | `FieldComponentProps` & `object` |
-
-### Returns
-
-`Element`
+(`props`) => `Element`

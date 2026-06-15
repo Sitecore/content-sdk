@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / withPlaceholder
 
-# Variable: withPlaceholder()
+# Variable: withPlaceholder
 
 > `const` **withPlaceholder**: \<`T`, `W`\>(`Component`) => (`props`) => `React.JSX.Element`
 
@@ -29,14 +29,4 @@ Provides a slot-like functionality by wrapping a component in client/SSR context
 
 A new component that renders the original component with placeholders.
 
-> (`props`): `React.JSX.Element`
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `props` | `W` |
-
-### Returns
-
-`React.JSX.Element`
+(`props`) => `React.JSX.Element`

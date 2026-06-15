@@ -11,7 +11,10 @@ export const parseArgs = (): ParsedArgs => {
   // to pass to the generator prompts and skip them.
   // useful for CI and testing purposes
   const options = {
-    boolean: ['force', 'noInstall', 'yes', 'silent'],
+    boolean: ['force', 'noInstall', 'yes', 'silent', 'help'],
+    alias: {
+      h: 'help',
+    },
     string: ['destination', 'template'],
     default: {},
   };
@@ -24,6 +27,26 @@ export const parseArgs = (): ParsedArgs => {
     args[key] === '' && delete args[key];
   });
   return args;
+};
+
+export const printHelp = (templates: string[]) => {
+  const templatesList = templates.map((template) => `  ${chalk.cyan(template)}`).join('\n');
+
+  console.log(`${chalk.bold('Usage:')} create-content-sdk-app ${chalk.cyan('[template]')} ${chalk.yellow('[options]')}
+
+${chalk.bold('Arguments:')}
+  ${chalk.cyan('template')}                Template to scaffold
+
+${chalk.bold('Templates:')}
+${templatesList}
+
+${chalk.bold('Options:')}
+  ${chalk.yellow('--destination')} ${chalk.dim('<path>')}    Destination folder
+  ${chalk.yellow('--yes')}                   Use defaults and skip prompts where possible
+  ${chalk.yellow('--force')}                 Continue if destination is not empty
+  ${chalk.yellow('--noInstall')}             Skip package install and lint fix
+  ${chalk.yellow('--silent')}                Suppress normal output
+  ${chalk.yellow('-h, --help')}             Show help`);
 };
 
 export const getDestination = async (args: ParsedArgs, template: string) => {
@@ -60,6 +83,11 @@ export const promptDestination = async (prompt: string, defaultDestination: stri
 };
 
 export const main = async (args: ParsedArgs) => {
+  if (args.help) {
+    printHelp(getAllTemplates());
+    return;
+  }
+
   let template: string = '';
 
   // check if template was provided

@@ -8,6 +8,8 @@ export {
   PersonalizeService,
   PersonalizeServiceConfig,
 } from '@sitecore-content-sdk/content/personalize';
+export { BotTrackingProxy, BotTrackingProxyConfig } from './bot-tracking-proxy';
+export { PreviewProxy, PreviewProxyConfig } from './preview-proxy';
 export {
   RedirectsService,
   RedirectsServiceConfig,
@@ -17,3 +19,17 @@ export {
   RedirectInfo,
 } from '@sitecore-content-sdk/content/site';
 export { default as debug } from '../debug';
+
+export { isSuccessfulProxyExecution } from './utils';
+export type {
+  FailedProxyExecution,
+  SuccessfulProxyExecution,
+  ProxiesContext,
+  ProxiesContextMapValue,
+} from './types';
+export type { SuccessfulRedirectsProxyExecution } from './redirects-proxy';
+export type { SuccessfulPreviewProxyExecution } from './preview-proxy';
+export type { SuccessfulPersonalizeProxyExecution } from './personalize-proxy';
+export type { SuccessfulMultisiteProxyExecution } from './multisite-proxy';
+export type { SuccessfulLocaleProxyExecution } from './locale-proxy';
+export type { SuccessfulBotTrackingProxyExecution } from './bot-tracking-proxy';

@@ -10,6 +10,7 @@ import { mockEditingServiceResponse } from '../test-data/mockEditingServiceRespo
 import { LayoutKind } from './models';
 import debug from '../debug';
 import { LayoutServicePageState } from '../layout';
+import { DEFAULT_VARIANT } from '../personalize';
 
 use(spies);
 
@@ -74,6 +75,7 @@ describe('EditingService', () => {
       version,
       itemId,
       mode: LayoutServicePageState.Edit,
+      variantId: 'variant-1',
     });
 
     expect(clientFactorySpy.calledOnce).to.be.true;
@@ -94,6 +96,8 @@ describe('EditingService', () => {
         headers: {
           sc_layoutKind: 'final',
           sc_editMode: 'true',
+          sc_previewMode: 'false',
+          sc_variant: 'variant-1',
         },
       }
     );
@@ -118,11 +122,15 @@ describe('EditingService', () => {
 
     spy.on(clientFactorySpy.returnValues[0], 'request');
 
+    const site = 'test-site';
+
     const result = await service.fetchEditingData({
       language,
       version,
       itemId,
       mode: LayoutServicePageState.Preview,
+      site,
+      variantId: 'variant-1',
     });
 
     expect(clientFactorySpy.calledOnce).to.be.true;
@@ -143,6 +151,9 @@ describe('EditingService', () => {
         headers: {
           sc_layoutKind: 'final',
           sc_editMode: 'false',
+          sc_previewMode: 'true',
+          sc_variant: 'variant-1',
+          sc_site: site,
         },
       }
     );
@@ -176,6 +187,7 @@ describe('EditingService', () => {
       version,
       itemId,
       mode: LayoutServicePageState.Edit,
+      variantId: 'variant-1',
     });
 
     expect(clientFactorySpy.calledOnce).to.be.true;
@@ -196,6 +208,8 @@ describe('EditingService', () => {
         headers: {
           sc_layoutKind: 'final',
           sc_editMode: 'true',
+          sc_previewMode: 'false',
+          sc_variant: 'variant-1',
         },
       }
     );
@@ -229,6 +243,7 @@ describe('EditingService', () => {
       language,
       itemId,
       mode: LayoutServicePageState.Edit,
+      variantId: 'variant-1',
     });
 
     expect(clientFactorySpy.calledOnce).to.be.true;
@@ -249,6 +264,8 @@ describe('EditingService', () => {
         headers: {
           sc_layoutKind: 'final',
           sc_editMode: 'true',
+          sc_previewMode: 'false',
+          sc_variant: 'variant-1',
         },
       }
     );
@@ -279,6 +296,7 @@ describe('EditingService', () => {
       itemId,
       layoutKind: LayoutKind.Shared,
       mode: LayoutServicePageState.Edit,
+      variantId: 'variant-1',
     });
 
     expect(clientFactorySpy.calledOnce).to.be.true;
@@ -294,6 +312,8 @@ describe('EditingService', () => {
         headers: {
           sc_layoutKind: 'shared',
           sc_editMode: 'true',
+          sc_previewMode: 'false',
+          sc_variant: 'variant-1',
         },
       }
     );
@@ -314,6 +334,7 @@ describe('EditingService', () => {
         version,
         itemId,
         mode: LayoutServicePageState.Edit,
+        variantId: DEFAULT_VARIANT,
       });
     } catch (error) {
       expect(error.message).to.equal(
@@ -337,6 +358,7 @@ describe('EditingService', () => {
         version,
         itemId,
         mode: LayoutServicePageState.Edit,
+        variantId: DEFAULT_VARIANT,
       });
     } catch (error) {
       expect(error.response.error).to.equal('Internal server error');
@@ -354,6 +376,7 @@ describe('EditingService', () => {
         version,
         itemId,
         mode: LayoutServicePageState.Edit,
+        variantId: DEFAULT_VARIANT,
       });
     } catch (error) {
       expect(error.message).to.equal('The language must be a non-empty string');
@@ -379,6 +402,7 @@ describe('EditingService', () => {
       version: '1',
       layoutKind: LayoutKind.Final,
       mode: LayoutServicePageState.Edit,
+      variantId: 'variant-1',
     };
 
     const requestMock = sinon.stub().resolves({
@@ -401,12 +425,53 @@ describe('EditingService', () => {
     await service.fetchEditingData(editingOptions, fetchOptions);
 
     expect(requestMock.calledOnce).to.be.true;
-    expect(requestMock.firstCall.args[2]).to.deep.equal({
-      ...fetchOptions,
-      headers: {
-        sc_editMode: 'true',
-        sc_layoutKind: LayoutKind.Final,
+
+    const requestOptions = requestMock.firstCall.args[2];
+
+    expect(requestOptions.retries).to.equal(fetchOptions.retries);
+    expect(requestOptions.fetch).to.equal(fetchOptions.fetch);
+    expect(requestOptions.retryStrategy).to.equal(fetchOptions.retryStrategy);
+    expect(requestOptions.headers).to.deep.equal({
+      Authorization: 'Bearer test-token',
+      'Content-Type': 'application/json',
+      sc_editMode: 'true',
+      sc_layoutKind: LayoutKind.Final,
+      sc_previewMode: 'false',
+      sc_variant: 'variant-1',
+    });
+  });
+
+  it('should map the default variant to "default" for the sc_variant header', async () => {
+    const requestMock = sinon.stub().resolves({
+      item: {
+        rendered: {
+          sitecore: {
+            context: { pageEditing: true, language: 'en' },
+            route: null,
+          },
+        },
       },
     });
+
+    sinon.stub(GraphQLRequestClient.prototype, 'request').callsFake(requestMock);
+
+    const service = new EditingService({
+      clientFactory,
+    });
+
+    await service.fetchEditingData({
+      itemId: 'item-123',
+      language: 'en',
+      version: '1',
+      layoutKind: LayoutKind.Final,
+      mode: LayoutServicePageState.Edit,
+      variantId: DEFAULT_VARIANT,
+    });
+
+    expect(requestMock.calledOnce).to.be.true;
+
+    const requestOptions = requestMock.firstCall.args[2];
+
+    expect(requestOptions.headers.sc_variant).to.equal('default');
   });
 });

@@ -14,4 +14,6 @@ The DefaultEmptyFieldEditingComponentText component.
 
 ## Param
 
+**props**
+
 The props for the component.

@@ -4,11 +4,11 @@
 
 [@sitecore-content-sdk/react](../../../../README.md) / [mediaApi](../README.md) / getSrcSet
 
-# Variable: getSrcSet()
+# Variable: getSrcSet
 
 > `const` **getSrcSet**: (`url`, `srcSet`, `imageParams?`, `mediaUrlPrefix?`) => `string`
 
-Defined in: packages/content/types/media/media-api.d.ts:55
+Defined in: packages/content/types/media/media-api.d.ts:58
 
 Receives an array of `srcSet` parameters that are iterated and used as parameters to generate
 a corresponding set of updated Sitecore media URLs via

@@ -6,7 +6,7 @@
 
 # Interface: ComponentImport
 
-Defined in: [content/src/tools/templating/components.ts:98](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/tools/templating/components.ts#L98)
+Defined in: [content/src/tools/templating/components.ts:98](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/tools/templating/components.ts#L98)
 
 Definition for custom components to be included in component map.
 Use this to define components imported from modules/dependencies/packages
@@ -17,7 +17,7 @@ Use this to define components imported from modules/dependencies/packages
 
 > **importInfo**: `object`
 
-Defined in: [content/src/tools/templating/components.ts:102](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/tools/templating/components.ts#L102)
+Defined in: [content/src/tools/templating/components.ts:102](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/tools/templating/components.ts#L102)
 
 Information about how to import the package
 
@@ -29,7 +29,7 @@ The path from which to import the component(s)
 
 #### namedImports?
 
-> `optional` **namedImports**: `string`[]
+> `optional` **namedImports?**: `string`[]
 
 The specific named components to import from the package. Leave empty to have whole package be imported as wildcard and allow SXA variants support for component.
 
@@ -39,6 +39,6 @@ The specific named components to import from the package. Leave empty to have wh
 
 > **importName**: `string`
 
-Defined in: [content/src/tools/templating/components.ts:100](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/tools/templating/components.ts#L100)
+Defined in: [content/src/tools/templating/components.ts:100](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/tools/templating/components.ts#L100)
 
 The name of the import (e.g., 'MyComponent')

@@ -6,7 +6,7 @@
 
 # Interface: AnalyticsAdapter
 
-Defined in: [analytics-core/src/initialization/types.ts:9](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L9)
+Defined in: [analytics-core/src/initialization/types.ts:9](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/initialization/types.ts#L9)
 
 Defines the structure of the analytics adapter, including methods for getting and setting the client ID, and retrieving search parameters from the location.
 
@@ -21,11 +21,11 @@ Defines the structure of the analytics adapter, including methods for getting an
 
 ## Properties
 
-### getClientId()
+### getClientId
 
 > **getClientId**: () => `string` \| `null`
 
-Defined in: [analytics-core/src/initialization/types.ts:14](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L14)
+Defined in: [analytics-core/src/initialization/types.ts:19](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/initialization/types.ts#L19)
 
 Gets the client ID.
 
@@ -37,15 +37,31 @@ The client ID, or null if it is not set.
 
 ***
 
+### isBot?
+
+> `optional` **isBot?**: () => `boolean`
+
+Defined in: [analytics-core/src/initialization/types.ts:14](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/initialization/types.ts#L14)
+
+Checks if the current request is a bot.
+
+#### Returns
+
+`boolean`
+
+True if the current request is a bot, false otherwise.
+
+***
+
 ### location
 
 > **location**: `object`
 
-Defined in: [analytics-core/src/initialization/types.ts:23](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L23)
+Defined in: [analytics-core/src/initialization/types.ts:28](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/initialization/types.ts#L28)
 
 The location object, which provides a method for getting search parameters.
 
-#### getSearchParams()
+#### getSearchParams
 
 > **getSearchParams**: () => `string`
 
@@ -59,11 +75,11 @@ The search parameters from the location.
 
 ***
 
-### setClientId()
+### setClientId
 
 > **setClientId**: () => `Promise`\<`void`\>
 
-Defined in: [analytics-core/src/initialization/types.ts:19](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/analytics-core/src/initialization/types.ts#L19)
+Defined in: [analytics-core/src/initialization/types.ts:24](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/initialization/types.ts#L24)
 
 Sets the client ID.
 

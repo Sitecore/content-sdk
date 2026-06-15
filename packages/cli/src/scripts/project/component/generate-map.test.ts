@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
+import fs from 'fs';
+import path from 'path';
 import sinon from 'sinon';
 import { constants } from '@sitecore-content-sdk/core';
 import * as generateMapModule from './generate-map';
@@ -21,6 +23,8 @@ describe('generate-map CLI', () => {
     consoleLogStub = sandbox.stub(console, 'log');
     loadCliConfigStub = sandbox.stub(loadConfigModule, 'default');
     watchItemsStub = sandbox.stub(watchItemsModule, 'watchItems');
+    sandbox.stub(fs, 'existsSync').returns(true);
+    sandbox.stub(fs, 'mkdirSync');
   });
 
   afterEach(() => {
@@ -90,6 +94,29 @@ describe('generate-map CLI', () => {
     expect(generatorStub.calledOnce).to.be.true;
     expect(generatorStub.firstCall.args[0]).to.deep.equal(args);
     expect(consoleLogStub.calledWithMatch(/Generating component map/)).to.be.true;
+  });
+
+  it('should create the output directory before generating the component map', () => {
+    const generatorStub = sinon.stub();
+    const fakeConfig = {
+      componentMap: {
+        generator: generatorStub,
+        paths: ['src'],
+        destination: 'custom/path',
+        componentImports: [],
+        exclude: [],
+      },
+    };
+    loadCliConfigStub.returns(fakeConfig);
+    (fs.existsSync as sinon.SinonStub).returns(false);
+
+    generateMapModule.handler({});
+
+    const outputPath = path.resolve(process.cwd(), 'custom/path');
+    expect((fs.mkdirSync as sinon.SinonStub).calledOnceWithExactly(outputPath, {
+      recursive: true,
+    })).to.be.true;
+    expect(generatorStub.calledAfter(fs.mkdirSync as sinon.SinonStub)).to.be.true;
   });
 
   it('should pass clientComponentMap: false to generator when explicitly set to false', () => {

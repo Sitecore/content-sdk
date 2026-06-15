@@ -294,7 +294,7 @@ export interface DesignLibraryRenderPreviewData {
     // (undocumented)
     mode: DesignLibraryMode;
     // (undocumented)
-    renderingId: string;
+    renderingId?: string;
     // (undocumented)
     site: string;
     // (undocumented)
@@ -383,6 +383,8 @@ export type EditingOptions = {
     version?: string;
     layoutKind?: LayoutKind;
     mode: Exclude<LayoutServicePageState, 'Normal'>;
+    site?: string;
+    variantId: string;
 };
 
 // @public
@@ -391,7 +393,7 @@ export type EditingPreviewData = {
     itemId: string;
     language: string;
     mode: Exclude<LayoutServicePageState, 'Normal'>;
-    variantIds: string[] | string;
+    variantId: string;
     version?: string;
     layoutKind?: LayoutKind;
 };
@@ -700,6 +702,9 @@ export function getPersonalizedRewrite(pathname: string, variantIds: string[]): 
 // @public
 export function getPersonalizedRewriteData(pathname: string): PersonalizedRewriteData;
 
+// @internal
+export function getRenderingParamString(value: unknown): string | undefined;
+
 // @public
 const getRequiredParams: (qs: {
     [key: string]: string | undefined;
@@ -709,6 +714,9 @@ const getRequiredParams: (qs: {
     la: string | undefined;
     vs: string | undefined;
     ts: string | undefined;
+    ttc: string | undefined;
+    tt: string | undefined;
+    hash: string | undefined;
 };
 
 // @public
@@ -1109,7 +1117,7 @@ export interface RenderComponentQueryParams {
     // (undocumented)
     sc_lang: string;
     // (undocumented)
-    sc_renderingId: string;
+    sc_renderingId?: string;
     // (undocumented)
     sc_site: string;
     // (undocumented)

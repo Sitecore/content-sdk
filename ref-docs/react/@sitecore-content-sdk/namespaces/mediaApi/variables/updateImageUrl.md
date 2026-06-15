@@ -4,11 +4,11 @@
 
 [@sitecore-content-sdk/react](../../../../README.md) / [mediaApi](../README.md) / updateImageUrl
 
-# Variable: updateImageUrl()
+# Variable: updateImageUrl
 
 > `const` **updateImageUrl**: (`url`, `params?`, `mediaUrlPrefix?`) => `string`
 
-Defined in: packages/content/types/media/media-api.d.ts:37
+Defined in: packages/content/types/media/media-api.d.ts:40
 
 Prepares a Sitecore media URL with `params` for use by the Content SDK media handler.
 This is done by replacing `/~/media` or `/-/media` with `/~/jssmedia` or `/-/jssmedia`, respectively.

@@ -69,5 +69,8 @@ jobs:
         run: cat coverlet/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
         shell: bash
 
+      - name: Run tests for release scripts
+        run: yarn changeset:test
+
       - name: Scaffold samples
         run: yarn scaffold-samples

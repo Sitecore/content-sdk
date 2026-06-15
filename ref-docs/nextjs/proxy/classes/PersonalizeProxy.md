@@ -6,7 +6,7 @@
 
 # Class: PersonalizeProxy
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:67](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/personalize-proxy.ts#L67)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:84](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/personalize-proxy.ts#L84)
 
 Proxy / handler to support Sitecore Personalize
 
@@ -20,7 +20,7 @@ Proxy / handler to support Sitecore Personalize
 
 > **new PersonalizeProxy**(`config?`): `PersonalizeProxy`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:73](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/personalize-proxy.ts#L73)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:90](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/personalize-proxy.ts#L90)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [nextjs/src/proxy/personalize-proxy.ts:73](https://github.com/Siteco
 
 > `protected` **config**: [`PersonalizeProxyConfig`](../type-aliases/PersonalizeProxyConfig.md)
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:73](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/personalize-proxy.ts#L73)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:90](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/personalize-proxy.ts#L90)
 
 Personalize proxy config
 
@@ -56,7 +56,7 @@ Personalize proxy config
 
 > `protected` **defaultHostname**: `string`
 
-Defined in: [nextjs/src/proxy/proxy.ts:59](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L59)
+Defined in: [nextjs/src/proxy/proxy.ts:106](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L106)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: [nextjs/src/proxy/proxy.ts:59](https://github.com/Sitecore/content-s
 
 > `protected` **personalizeService**: [`PersonalizeService`](../../index/classes/PersonalizeService.md) \| `null`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:68](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/personalize-proxy.ts#L68)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:85](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/personalize-proxy.ts#L85)
 
 ***
 
@@ -76,11 +76,31 @@ Defined in: [nextjs/src/proxy/personalize-proxy.ts:68](https://github.com/Siteco
 
 > `protected` **siteResolver**: [`SiteResolver`](../../index/classes/SiteResolver.md)
 
-Defined in: [nextjs/src/proxy/proxy.ts:60](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L60)
+Defined in: [nextjs/src/proxy/proxy.ts:107](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L107)
 
 #### Inherited from
 
 [`ProxyBase`](ProxyBase.md).[`siteResolver`](ProxyBase.md#siteresolver)
+
+## Accessors
+
+### name
+
+#### Get Signature
+
+> **get** **name**(): `string`
+
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:128](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/personalize-proxy.ts#L128)
+
+Name of the proxy, used as a key in the context to store information about executed proxies
+
+##### Returns
+
+`string`
+
+#### Overrides
+
+[`ProxyBase`](ProxyBase.md).[`name`](ProxyBase.md#name)
 
 ## Methods
 
@@ -88,7 +108,7 @@ Defined in: [nextjs/src/proxy/proxy.ts:60](https://github.com/Sitecore/content-s
 
 > `protected` **disabled**(`req`, `res`): `boolean` \| `undefined`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:240](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/personalize-proxy.ts#L240)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:291](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/personalize-proxy.ts#L291)
 
 #### Parameters
 
@@ -111,7 +131,7 @@ Defined in: [nextjs/src/proxy/personalize-proxy.ts:240](https://github.com/Sitec
 
 > `protected` **extractDebugHeaders**(`incomingHeaders`): `object`
 
-Defined in: [nextjs/src/proxy/proxy.ts:130](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L130)
+Defined in: [nextjs/src/proxy/proxy.ts:184](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L184)
 
 Safely extract all headers for debug logging
 Necessary to avoid proxy issue https://github.com/vercel/next.js/issues/39765
@@ -138,7 +158,7 @@ Object with headers as key/value pairs
 
 > `protected` **getClientFactory**(`graphQLOptions`): [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [nextjs/src/proxy/proxy.ts:198](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L198)
+Defined in: [nextjs/src/proxy/proxy.ts:254](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L254)
 
 #### Parameters
 
@@ -160,7 +180,7 @@ Defined in: [nextjs/src/proxy/proxy.ts:198](https://github.com/Sitecore/content-
 
 > `protected` **getExperienceParams**(`req`): `ExperienceParams`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:250](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/personalize-proxy.ts#L250)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:301](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/personalize-proxy.ts#L301)
 
 #### Parameters
 
@@ -176,9 +196,9 @@ Defined in: [nextjs/src/proxy/personalize-proxy.ts:250](https://github.com/Sitec
 
 ### getHostHeader()
 
-> `protected` **getHostHeader**(`req`): `string` \| `undefined`
+> `protected` **getHostHeader**(`req`): `string`
 
-Defined in: [nextjs/src/proxy/proxy.ts:166](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L166)
+Defined in: [nextjs/src/proxy/proxy.ts:220](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L220)
 
 Extract 'host' header
 
@@ -190,7 +210,7 @@ Extract 'host' header
 
 #### Returns
 
-`string` \| `undefined`
+`string`
 
 #### Inherited from
 
@@ -202,7 +222,7 @@ Extract 'host' header
 
 > `protected` **getLanguage**(`req`, `res?`): `string`
 
-Defined in: [nextjs/src/proxy/proxy.ts:142](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L142)
+Defined in: [nextjs/src/proxy/proxy.ts:196](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L196)
 
 Provides used language
 
@@ -229,7 +249,7 @@ language
 
 > `protected` **getLanguageFromHeader**(`res?`): `string` \| `undefined`
 
-Defined in: [nextjs/src/proxy/proxy.ts:158](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L158)
+Defined in: [nextjs/src/proxy/proxy.ts:212](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L212)
 
 Extract language from locale header of the response
 set by LocaleProxy for app router application
@@ -256,7 +276,7 @@ language or undefined if not found
 
 > `protected` **getPersonalizeExecutions**(`personalizeInfo`, `language`): `PersonalizeExecution`[]
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:342](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/personalize-proxy.ts#L342)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:393](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/personalize-proxy.ts#L393)
 
 Aggregates personalize executions based on the provided route personalize information and language
 
@@ -279,7 +299,7 @@ An array of personalize executions
 
 > `protected` **getSite**(`req`, `res?`): [`SiteInfo`](../../index/type-aliases/SiteInfo.md)
 
-Defined in: [nextjs/src/proxy/proxy.ts:178](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L178)
+Defined in: [nextjs/src/proxy/proxy.ts:234](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L234)
 
 Get site information. If site name is stored in cookie, use it, otherwise resolve by hostname
 - If site can't be resolved by site name cookie use default site info based on provided parameters
@@ -306,9 +326,9 @@ site information
 
 ### handle()
 
-> **handle**(`req`, `res`): `Promise`\<`NextResponse`\<`unknown`\>\>
+> **handle**(`req`, `res`, `proxiesContext?`): `Promise`\<`NextResponse`\<`unknown`\>\>
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:108](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/personalize-proxy.ts#L108)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:132](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/personalize-proxy.ts#L132)
 
 Handler method to execute proxy logic
 
@@ -318,6 +338,7 @@ Handler method to execute proxy logic
 | ------ | ------ | ------ |
 | `req` | `NextRequest` | request |
 | `res` | `NextResponse` | response |
+| `proxiesContext?` | [`ProxiesContext`](../type-aliases/ProxiesContext.md) | context to share information between proxies |
 
 #### Returns
 
@@ -333,7 +354,7 @@ Handler method to execute proxy logic
 
 > `protected` **initPersonalizeServer**(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:268](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/personalize-proxy.ts#L268)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:319](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/personalize-proxy.ts#L319)
 
 #### Parameters
 
@@ -355,7 +376,7 @@ Defined in: [nextjs/src/proxy/personalize-proxy.ts:268](https://github.com/Sitec
 
 > `protected` **isAppRouter**(`res`): `boolean`
 
-Defined in: [nextjs/src/proxy/proxy.ts:85](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L85)
+Defined in: [nextjs/src/proxy/proxy.ts:139](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L139)
 
 Determines if the application is using the app router based on the locale header
 
@@ -381,7 +402,7 @@ true if app router is used
 
 > `protected` **isPrefetch**(`req`): `boolean`
 
-Defined in: [nextjs/src/proxy/proxy.ts:94](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L94)
+Defined in: [nextjs/src/proxy/proxy.ts:148](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L148)
 
 Determines if the request is a Next.js (next/link) prefetch request
 
@@ -407,7 +428,7 @@ is prefetch
 
 > `protected` **isPreview**(`req`): `boolean`
 
-Defined in: [nextjs/src/proxy/proxy.ts:73](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L73)
+Defined in: [nextjs/src/proxy/proxy.ts:127](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L127)
 
 Determines if mode is preview
 
@@ -433,7 +454,7 @@ is preview
 
 > `protected` **personalize**(`__namedParameters`): `Promise`\<\{ `variantId`: `string`; \}\>
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:303](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/personalize-proxy.ts#L303)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:354](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/personalize-proxy.ts#L354)
 
 #### Parameters
 
@@ -457,7 +478,7 @@ Defined in: [nextjs/src/proxy/personalize-proxy.ts:303](https://github.com/Sitec
 
 > `protected` **rewrite**(`rewritePath`, `req`, `res`, `skipHeader?`): `NextResponse`
 
-Defined in: [nextjs/src/proxy/proxy.ts:209](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/nextjs/src/proxy/proxy.ts#L209)
+Defined in: [nextjs/src/proxy/proxy.ts:265](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/proxy/proxy.ts#L265)
 
 Create a rewrite response
 

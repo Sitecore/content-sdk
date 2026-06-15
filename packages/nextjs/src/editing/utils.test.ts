@@ -172,7 +172,7 @@ describe('editing/utils', () => {
         sc_site: 'test-site',
         sc_itemid: 'item-123',
         sc_lang: 'en',
-        sc_variant: 'variant1,variant2',
+        sc_variant: 'variant-1',
         sc_version: '1',
         sc_layoutKind: 'mvc',
       };
@@ -183,7 +183,7 @@ describe('editing/utils', () => {
         site: 'test-site',
         itemId: 'item-123',
         language: 'en',
-        variantIds: 'variant1,variant2',
+        variantId: 'variant-1',
         version: '1',
         mode: 'edit',
         layoutKind: 'mvc',
@@ -200,7 +200,7 @@ describe('editing/utils', () => {
 
       const params = mapEditingParams(query);
 
-      expect(params.variantIds).to.equal(DEFAULT_VARIANT);
+      expect(params.variantId).to.equal(DEFAULT_VARIANT);
     });
 
     it('should handle empty variant string', () => {
@@ -214,7 +214,7 @@ describe('editing/utils', () => {
 
       const params = mapEditingParams(query);
 
-      expect(params.variantIds).to.equal(DEFAULT_VARIANT);
+      expect(params.variantId).to.equal(DEFAULT_VARIANT);
     });
 
     it('should handle undefined values gracefully', () => {
@@ -675,27 +675,13 @@ describe('editing/utils', () => {
     it('should return component required params for design library mode', () => {
       const params = getRequiredEditingParamsList(DesignLibraryMode.Normal);
 
-      expect(params).to.deep.equal([
-        'sc_site',
-        'sc_itemid',
-        'sc_renderingId',
-        'sc_uid',
-        'sc_lang',
-        'mode',
-      ]);
+      expect(params).to.deep.equal(['sc_site', 'sc_itemid', 'sc_lang', 'sc_uid', 'mode']);
     });
 
     it('should return component required params for library metadata mode', () => {
       const params = getRequiredEditingParamsList(DesignLibraryMode.Metadata);
 
-      expect(params).to.deep.equal([
-        'sc_site',
-        'sc_itemid',
-        'sc_renderingId',
-        'sc_uid',
-        'sc_lang',
-        'mode',
-      ]);
+      expect(params).to.deep.equal(['sc_site', 'sc_itemid', 'sc_lang', 'sc_uid', 'mode']);
     });
 
     it('should return editing required params for edit mode', () => {
@@ -966,7 +952,7 @@ describe('editing/utils', () => {
     it('should throw error for non-404 fetch failures', async () => {
       const error = {
         response: {
-          status: 500,
+          status: 503,
         },
       };
 
@@ -1032,6 +1018,48 @@ describe('editing/utils', () => {
       const timestamp = parseInt(url.searchParams.get('timestamp') || '0', 10);
       expect(timestamp).to.be.at.least(beforeTime);
       expect(timestamp).to.be.at.most(afterTime);
+    });
+
+    it('should handle 403 response without throwing', async () => {
+      const mock403Response = {
+        data: {
+          html: '<html><body>403 Forbidden</body></html>',
+        },
+      };
+
+      const error = {
+        response: {
+          status: 403,
+          ...mock403Response,
+        },
+      };
+
+      mockDataFetcher.get.rejects(error);
+
+      const result = await getEditingRequestHtml(requestUrl, {}, {}, [], mockDataFetcher as any);
+
+      expect(result).to.equal('<html><body>403 Forbidden</body></html>');
+    });
+
+    it('should handle 500 response without throwing', async () => {
+      const mock500Response = {
+        data: {
+          html: '<html><body>500 Internal Server Error</body></html>',
+        },
+      };
+
+      const error = {
+        response: {
+          status: 500,
+          ...mock500Response,
+        },
+      };
+
+      mockDataFetcher.get.rejects(error);
+
+      const result = await getEditingRequestHtml(requestUrl, {}, {}, [], mockDataFetcher as any);
+
+      expect(result).to.equal('<html><body>500 Internal Server Error</body></html>');
     });
   });
 

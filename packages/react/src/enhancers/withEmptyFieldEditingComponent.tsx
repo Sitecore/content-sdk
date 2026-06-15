@@ -28,6 +28,7 @@ interface WithEmptyFieldEditingComponentProps<Props> {
   field?: (Partial<Field> | GenericFieldValue) & FieldMetadata;
   editable?: boolean;
   emptyFieldEditingComponent?: React.ComponentClass<Props> | React.FC<Props>;
+  renderChildrenWhenEmpty?: boolean;
 }
 
 /**
@@ -45,7 +46,12 @@ export function withEmptyFieldEditingComponent<
 ) {
   const getEmptyFieldEditingComponent = (props: FieldComponentProps) => {
     const { editable = true } = props;
-    if (props.field?.metadata && editable && isFieldValueEmpty(props.field)) {
+    if (
+      props.field?.metadata &&
+      editable &&
+      isFieldValueEmpty(props.field) &&
+      !props.renderChildrenWhenEmpty
+    ) {
       const Component =
         props.emptyFieldEditingComponent || options.defaultEmptyFieldEditingComponent;
 

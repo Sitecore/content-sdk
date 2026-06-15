@@ -17,10 +17,12 @@
 
 ## Type Aliases
 
+- [BotPageViewData](type-aliases/BotPageViewData.md)
 - [ExtensionData](type-aliases/ExtensionData.md)
 
 ## Functions
 
+- [botPageView](functions/botPageView.md)
 - [event](functions/event.md)
 - [eventsPlugin](functions/eventsPlugin.md)
 - [form](functions/form.md)

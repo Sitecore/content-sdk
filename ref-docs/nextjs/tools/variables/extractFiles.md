@@ -14,4 +14,6 @@ Extracts components from the app folder and sends them to XMCloud.
 
 ## Param
 
+**args**
+
 Config for components extraction

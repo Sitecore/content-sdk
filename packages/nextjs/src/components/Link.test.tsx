@@ -400,6 +400,192 @@ describe('<Link />', () => {
     expect(rendered.container.innerHTML).to.have.length(0);
   });
 
+  describe('renderChildrenWhenEmpty', () => {
+    it('should render empty anchor with children when field value href is empty and renderChildrenWhenEmpty is true', () => {
+      const field = { value: { href: undefined } };
+
+      const rendered = render(
+        <Page>
+          <Link field={field} renderChildrenWhenEmpty>
+            <span>child content</span>
+          </Link>
+        </Page>
+      );
+
+      const anchor = rendered.container.querySelector('a');
+      expect(anchor).to.not.equal(null);
+      expect(anchor?.outerHTML).to.contain('<span>child content</span>');
+      expect(anchor?.getAttribute('href')).to.equal(null);
+      expect(anchor?.getAttribute('data-react-link')).to.equal('true');
+    });
+
+    it('should render empty anchor with children when field is null and renderChildrenWhenEmpty is true', () => {
+      const field = null as unknown as LinkField;
+
+      const rendered = render(
+        <Page>
+          <Link field={field} renderChildrenWhenEmpty>
+            <span>child content</span>
+          </Link>
+        </Page>
+      );
+
+      const anchor = rendered.container.querySelector('a');
+      expect(anchor).to.not.equal(null);
+      expect(anchor?.outerHTML).to.contain('<span>child content</span>');
+    });
+
+    it('should render empty anchor with additional props when field is empty and renderChildrenWhenEmpty is true', () => {
+      const field = { value: { href: undefined } };
+
+      const rendered = render(
+        <Page>
+          <Link field={field} renderChildrenWhenEmpty id="empty-link" className="card">
+            <span>child content</span>
+          </Link>
+        </Page>
+      );
+
+      const anchor = rendered.container.querySelector('a');
+      expect(anchor?.getAttribute('id')).to.equal('empty-link');
+      expect(anchor?.getAttribute('class')).to.equal('card');
+    });
+
+    it('should not pass Next.js-specific props onto the anchor when renderChildrenWhenEmpty is true and field is null', () => {
+      const field = null as unknown as LinkField;
+
+      const rendered = render(
+        <Page>
+          <Link field={field} renderChildrenWhenEmpty prefetch={false}>
+            <span>child</span>
+          </Link>
+        </Page>
+      );
+
+      const anchor = rendered.container.querySelector('a');
+      expect(anchor).to.not.equal(null);
+      expect(anchor?.hasAttribute('prefetch')).to.equal(false);
+    });
+
+    it('should render nothing when field is empty and renderChildrenWhenEmpty is true without children', () => {
+      const field = null as unknown as LinkField;
+
+      const rendered = render(<Link field={field} renderChildrenWhenEmpty />);
+
+      expect(rendered.container.innerHTML).to.have.length(0);
+    });
+
+    it('should still render nothing when field is empty and renderChildrenWhenEmpty is false', () => {
+      const field = null as unknown as LinkField;
+
+      const rendered = render(<Link field={field} renderChildrenWhenEmpty={false} />);
+
+      expect(rendered.container.innerHTML).to.have.length(0);
+    });
+
+    it('should render normal link when field has value, regardless of renderChildrenWhenEmpty', () => {
+      const field = { value: { href: '/lorem', text: 'ipsum' } };
+
+      const rendered = render(
+        <Page>
+          <Link field={field} renderChildrenWhenEmpty>
+            <span>child</span>
+          </Link>
+        </Page>
+      );
+
+      const anchor = rendered.container.querySelector('a');
+      expect(anchor?.getAttribute('href')).to.contain('/lorem');
+      expect(anchor?.outerHTML).to.contain('<span>child</span>');
+    });
+
+    describe('edit mode', () => {
+      const testMetadata = {
+        contextItem: {
+          id: '{09A07660-6834-476C-B93B-584248D3003B}',
+          language: 'en',
+          revision: 'a0b36ce0a7db49418edf90eb9621e145',
+          version: 1,
+        },
+        fieldId: '{414061F4-FBB1-4591-BC37-BFFA67F745EB}',
+        fieldType: 'single-line',
+        rawValue: 'Test1',
+      };
+
+      it('should render empty anchor with children inside metadata wrappers when field is empty and renderChildrenWhenEmpty is true', () => {
+        const field = { value: { href: undefined }, metadata: testMetadata };
+
+        const rendered = render(
+          <Page>
+            <Link field={field} renderChildrenWhenEmpty>
+              <span>child content</span>
+            </Link>
+          </Page>
+        );
+
+        const anchor = rendered.container.querySelector('a');
+        expect(anchor).to.not.equal(null);
+        expect(anchor?.outerHTML).to.contain('<span>child content</span>');
+        expect(anchor?.getAttribute('href')).to.equal(null);
+
+        const codes = rendered.container.querySelectorAll('code.scpm');
+        expect(codes.length).to.equal(2);
+      });
+
+      it('should still show placeholder when field is empty and renderChildrenWhenEmpty is not set', () => {
+        const field = { value: { href: undefined }, metadata: testMetadata };
+
+        const rendered = render(
+          <Page>
+            <Link field={field}>
+              <span>child content</span>
+            </Link>
+          </Page>
+        );
+
+        const placeholder = rendered.container.querySelector('span');
+        expect(placeholder?.textContent).to.equal('[No text in field]');
+        expect(rendered.container.querySelector('a')).to.equal(null);
+      });
+    });
+  });
+
+  describe('Locale', () => {
+    it('should set locale to false when Pages Router is available', () => {
+      const field = {
+        value: {
+          href: '/lorem',
+          text: 'ipsum',
+        },
+      };
+
+      const rendered = render(
+        <Page>
+          <Link field={field} />
+        </Page>
+      );
+
+      const link = rendered.container.querySelector('a');
+      expect(link?.getAttribute('data-nextjs-link')).to.equal('true');
+      expect(link?.getAttribute('data-nextjs-locale')).to.equal('false');
+    });
+
+    it('should not set locale when Pages Router is not available', () => {
+      const field = {
+        value: {
+          href: '/lorem',
+          text: 'ipsum',
+        },
+      };
+
+      const rendered = render(<Link field={field} />);
+
+      const link = rendered.container.querySelector('a');
+      expect(link?.getAttribute('data-nextjs-link')).to.equal('true');
+      expect(link?.getAttribute('data-nextjs-locale')).to.equal(null);
+    });
+  });
+
   describe('editMode metadata', () => {
     const testMetadata = {
       contextItem: {

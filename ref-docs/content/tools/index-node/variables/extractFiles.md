@@ -4,11 +4,11 @@
 
 [@sitecore-content-sdk/content](../../../README.md) / [tools/index-node](../README.md) / extractFiles
 
-# Variable: extractFiles()
+# Variable: extractFiles
 
 > **extractFiles**: (`args`) => (`__namedParameters`) => `Promise`\<`void`\> = `_extractFiles`
 
-Defined in: [content/src/tools/codegen/extract-files.ts:29](https://github.com/Sitecore/content-sdk/blob/3375ae0859762b6129a6c8498ac6a605b43f0bd6/packages/content/src/tools/codegen/extract-files.ts#L29)
+Defined in: [content/src/tools/codegen/extract-files.ts:29](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/content/src/tools/codegen/extract-files.ts#L29)
 
 Extracts components from the app folder and sends them to XMCloud.
 
@@ -20,15 +20,4 @@ Extracts components from the app folder and sends them to XMCloud.
 
 ## Returns
 
-> (`__namedParameters`): `Promise`\<`void`\>
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `__namedParameters` | \{ `scConfig`: [`SitecoreConfig`](../../../config/type-aliases/SitecoreConfig.md); \} |
-| `__namedParameters.scConfig` | [`SitecoreConfig`](../../../config/type-aliases/SitecoreConfig.md) |
-
-### Returns
-
-`Promise`\<`void`\>
+(`__namedParameters`) => `Promise`\<`void`\>
