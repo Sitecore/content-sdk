@@ -2296,7 +2296,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@json-render/core@npm:0.19.0, @json-render/core@npm:^0.19.0":
+"@json-render/core@npm:0.19.0":
   version: 0.19.0
   resolution: "@json-render/core@npm:0.19.0"
   dependencies:
@@ -2307,7 +2307,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@json-render/react@npm:^0.19.0":
+"@json-render/react@npm:0.19.0":
   version: 0.19.0
   resolution: "@json-render/react@npm:0.19.0"
   dependencies:
@@ -3639,7 +3639,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/content@workspace:packages/content"
   dependencies:
-    "@json-render/core": "npm:^0.19.0"
+    "@json-render/core": "npm:0.19.0"
     "@sitecore-content-sdk/core": "npm:2.1.0-beta.1"
     "@sitecore-content-sdk/events": "npm:2.1.0-beta.1"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
@@ -3931,8 +3931,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
-    "@json-render/core": "npm:^0.19.0"
-    "@json-render/react": "npm:^0.19.0"
+    "@json-render/core": "npm:0.19.0"
+    "@json-render/react": "npm:0.19.0"
     "@sitecore-content-sdk/analytics-core": "npm:2.1.0-beta.1"
     "@sitecore-content-sdk/content": "npm:2.1.0-beta.1"
     "@sitecore-content-sdk/core": "npm:2.1.0-beta.1"
