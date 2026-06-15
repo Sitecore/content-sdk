@@ -8,7 +8,7 @@
 
 > **LinkProps** = `EditableFieldProps`\<`LinkProps`\> & `React.AnchorHTMLAttributes`\<`HTMLAnchorElement`\> & `RefAttributes`\<`HTMLAnchorElement`\> & `object`
 
-Defined in: [packages/react/src/components/Link.tsx:38](https://github.com/Sitecore/content-sdk/blob/f81ac302196d17f88b825b61a78d1f683cc0cb7b/packages/react/src/components/Link.tsx#L38)
+Defined in: [packages/react/src/components/Link.tsx:38](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/react/src/components/Link.tsx#L38)
 
 The interface for the Link component props.
 
@@ -19,6 +19,19 @@ The interface for the Link component props.
 > **field**: [`LinkField`](../interfaces/LinkField.md) \| [`LinkFieldValue`](../interfaces/LinkFieldValue.md) & `FieldMetadata`
 
 The link field data.
+
+### renderChildrenWhenEmpty?
+
+> `optional` **renderChildrenWhenEmpty?**: `boolean`
+
+Renders children even when the link field value is empty.
+When true, an empty anchor element containing the children is rendered instead of null.
+
+#### Default
+
+```ts
+false
+```
 
 ### showLinkTextWithChildrenPresent?
 
