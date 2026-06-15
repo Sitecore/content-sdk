@@ -671,7 +671,6 @@ export { LinkFieldValue }
 // @public
 export type LinkProps = LinkProps_2 & {
     internalLinkMatcher?: RegExp;
-    renderChildrenWhenEmpty?: boolean;
 } & Pick<LinkProps_3, (typeof supportedNextLinkProps)[number]>;
 
 // @public
