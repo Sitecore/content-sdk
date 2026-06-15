@@ -2,6 +2,7 @@ import { Argv } from 'yargs';
 
 import * as build from './build';
 import * as component from './component';
+import * as atoms from './atoms';
 
 /**
  * @param {Argv} yargs
@@ -12,7 +13,7 @@ export function builder(yargs: Argv) {
     describe: 'Performs project level operations',
     builder: (_yargs: Argv) => {
       _yargs = _yargs
-        .command([build, component] as any)
+        .command([build, component, atoms] as any)
         .strict()
         .demandCommand(1, 'You need to specify a command to run');
 

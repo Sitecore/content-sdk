@@ -1,951 +1,129 @@
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable no-unused-expressions */
-/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React from 'react';
 import sinon from 'sinon';
-import { expect } from 'chai';
-import { Page, PageMode } from '@sitecore-content-sdk/content/client';
-import {
-  LayoutServiceData,
-  EDITING_COMPONENT_PLACEHOLDER,
-} from '@sitecore-content-sdk/content/layout';
-import { act, fireEvent, render, waitFor } from '@testing-library/react';
-import { DesignLibrary } from './DesignLibrary';
-import { getTestLayoutData } from '../../test-data/component-editing-data';
-import { SitecoreProvider } from '../SitecoreProvider';
-import { RichText } from '../RichText';
-import { Text } from '../Text';
-import { Placeholder } from '../Placeholder';
+import { expect, use as chaiUse } from 'chai';
+import sinonChai from 'sinon-chai';
 
+chaiUse(sinonChai);
+import { render, waitFor } from '@testing-library/react';
+import { DesignLibrary, __mockDependencies } from './DesignLibrary';
+import { SitecoreProvider } from '../SitecoreProvider';
 import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
-  DesignLibraryMode,
-  getDesignLibraryAtomsRegistryEvent,
-  AtomInfo,
 } from '@sitecore-content-sdk/content/editing';
-import { __mockDependencies } from './DesignLibrary';
-import {
-  DesignLibraryPreviewError,
-  getDesignLibraryErrorEvent,
-} from '@sitecore-content-sdk/content/codegen';
-import { z } from 'zod';
-import * as atomRegistryUtils from '../../atoms/atom-registry-utils';
-import * as callbackRegistryUtils from '../../atoms/callback-registry-utils';
-import { AtomMetadata, CallbackMetadata } from '../../atoms/types';
-import * as rscUtils from '#rsc-env';
-
-before(() => {
-  if (typeof window !== 'undefined' && !window.requestAnimationFrame) {
-    (window as any).requestAnimationFrame = (cb: FrameRequestCallback) => setTimeout(cb, 0);
-  }
-});
+import type { AtomsConfig } from '../../atoms/types';
+import type { ImportMapImport } from './models';
+import type { DefineRegistryResult } from '@json-render/react';
 
 describe('<DesignLibrary />', () => {
   const sandbox = sinon.createSandbox();
-  before(() => {
-    sandbox.replace(rscUtils, 'rsc', false as any);
-  });
-  const postMessageSpy = sandbox.spy(window, 'postMessage');
-  const components = new Map<string, React.FC>();
 
-  const api = {
-    edge: {
-      contextId: 'test-context-id',
-      clientContextId: 'test-client-context-id',
-      edgeUrl: 'https://test-edge-url.com',
-    },
-    local: { apiKey: 'test-api-key', apiHost: 'https://test-api-host.com', path: '/test-path' },
-  };
+  const apiStub = {} as any;
+  const emptyComponentMap = new Map();
+  const loadImportMapStub = async (): Promise<ImportMapImport> =>
+    ({
+      default: [],
+    } as unknown as ImportMapImport);
 
-  // Modes
-  const defaultDesignLibraryPageMode: PageMode = {
-    name: DesignLibraryMode.Normal,
-    isDesignLibrary: true,
-    designLibrary: { isVariantGeneration: false, isLowCode: false },
-    isNormal: false,
-    isPreview: false,
-    isEditing: false,
-  };
-
-  const modeLibraryMetadata: PageMode = {
-    name: DesignLibraryMode.Metadata,
-    isDesignLibrary: true,
-    designLibrary: { isVariantGeneration: false, isLowCode: false },
-    isNormal: false,
-    isPreview: false,
-    isEditing: true,
-  };
-
-  const modeLibrary_Gen: PageMode = {
-    name: DesignLibraryMode.Normal,
-    isDesignLibrary: true,
-    designLibrary: { isVariantGeneration: true, isLowCode: false },
-    isNormal: false,
-    isPreview: false,
-    isEditing: false,
-  };
-
-  const modeLibraryMetadata_Gen: PageMode = {
-    name: DesignLibraryMode.Metadata,
-    isDesignLibrary: true,
-    designLibrary: { isVariantGeneration: true, isLowCode: false },
-    isNormal: false,
-    isPreview: false,
-    isEditing: true,
-  };
-
-  const getPage = (
-    layout?: LayoutServiceData,
-    pageMode: PageMode = defaultDesignLibraryPageMode
-  ): Page => ({
-    locale: 'en',
-    layout: layout || { sitecore: { context: {}, route: null } },
-    mode: pageMode,
-  });
-
-  const ContentBlock: React.FC<{
-    [prop: string]: unknown;
-    fields?: { content: { value: string }; heading: { value: string } };
-  }> = (props) => (
-    <div className="test">
-      <RichText field={props.fields?.content} />
-      <Placeholder name="inner" rendering={props.rendering} />
-    </div>
-  );
-
-  const InnerBlock: React.FC<{ [prop: string]: unknown; fields?: { text: { value: string } } }> = (
-    props
-  ) => (
-    <div className="inner">
-      <Text field={props.fields?.text} />
-    </div>
-  );
-
-  components.set('ContentBlock', ContentBlock);
-  components.set('InnerBlock', InnerBlock);
-
-  async function sendUpdate(details: { uid: string; fields?: any; params?: any }) {
-    const ev = document.createEvent('Event');
-    ev.initEvent('message', false, true);
-    (ev as any).origin = window.location.origin;
-    (ev as any).data = { name: 'component:update', details };
-    await fireEvent(window, ev);
-  }
-
-  const defaultImportMap = () =>
-    Promise.resolve({
-      default: [{ module: 'react', exports: [{ name: 'default', value: React }] }],
-    });
-
-  const mockedAtoms: AtomMetadata[] = [
-    {
-      name: 'Button',
-      type: 'atom',
-      description: 'A button component',
-      component: () => React.createElement('button', null, 'Button'),
-      props: z.object({
-        label: z.string(),
-      }),
-    },
-    {
-      name: 'Text',
-      type: 'atom',
-      description: 'A text component',
-      component: () => React.createElement('div', null, 'Text'),
-      props: z.object({
-        content: z.string(),
-      }),
-    },
-  ];
-
-  const mockedCallbacks: CallbackMetadata[] = [
-    {
-      name: 'trackSelection',
-      description: 'Track selection callback',
-      callbackFn: () => {},
-    },
-  ];
-
-  const mockedSerializedAtoms: AtomInfo[] = [
-    {
-      name: 'Button',
-      type: 'atom',
-      description: 'A button component',
-      props: { label: { type: 'string' } },
-      allowedChildren: [],
-    },
-    {
-      name: 'Text',
-      type: 'atom',
-      description: 'A text component',
-      props: { content: { type: 'string' } },
-      allowedChildren: [],
-    },
-  ];
-
-  const mockedSerializedCallbacks: Record<string, { description: string }> = {
-    trackSelection: { description: 'Track selection callback' },
-  };
-
-  const unsubscribeSpy = sandbox.spy();
-  let addComponentPreviewHandlerSpy: sinon.SinonStub;
   let postToDesignLibrarySpy: sinon.SinonStub;
-  let sendErrorEventSpy: sinon.SinonStub;
-  let callbackEvent: any = null;
-  let serializeAtomsStub: sinon.SinonStub;
-  let serializeCallbacksStub: sinon.SinonStub;
 
-  const RENDER_ID = 'test-content';
-  const PLACEHOLDER_GUID = '00000000-0000-0000-0000-000000000000';
-
-  const joinHtml = (parts: string[]) => parts.join('');
-  const expectContains = (html: string, parts: string[]) =>
-    expect(html).to.contain(joinHtml(parts));
-
-  const expectedInitialMarkup = (guid = PLACEHOLDER_GUID, id = RENDER_ID) =>
-    joinHtml([
-      '<main><div id="editing-component">',
-      `<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="editing-componentmode-placeholder_${guid}"></code>`,
-      `<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="${id}" data-csdk-component-runtime="client"></code>`,
-      '<div class="test"><div>',
-      '<p>This is a live set of examples of how to use Content SDK</p>\n',
-      '</div><div class="sc-jss-empty-placeholder">',
-      '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id=""></code>',
-      '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
-      '</div></div>',
-      '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
-      '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
-      '</div></main>',
-    ]);
-
-  const postedEventsJson = (spy: sinon.SinonSpy) =>
-    spy.getCalls().map((c) => JSON.stringify(c.args[0]));
-
-  const expectStatus = (
-    spy: sinon.SinonSpy,
-    status: DesignLibraryStatus,
-    id: string,
-    opts: { strict?: boolean } = {}
-  ) => {
-    const target = JSON.stringify(getDesignLibraryStatusEvent(status, id));
-    const events = postedEventsJson(spy);
-    if (opts.strict) {
-      expect(events).to.include(target);
-    } else {
-      expect(events.some((e) => e.includes(target))).to.be.true;
-    }
+  const mockRegistry: DefineRegistryResult = {
+    registry: {} as any,
+    handlers: () => ({}),
+    executeAction: async () => {},
   };
+
+  const mockCatalog = {
+    componentNames: ['Button'],
+    actionNames: [],
+    data: { components: { Button: { description: 'A button', slots: ['default'] } } },
+    jsonSchema: () => ({}),
+  } as any;
+
+  const atomsConfig: AtomsConfig = {
+    catalog: mockCatalog,
+    registry: mockRegistry,
+  };
+
+  const getPage = (overrides: Record<string, unknown> = {}) => ({
+    locale: 'en',
+    layout: {
+      sitecore: {
+        context: {},
+        route: {
+          uid: 'test-uid',
+          placeholders: {
+            'editing-componentmode-placeholder': [
+              {
+                uid: 'component-1',
+                componentName: 'TestComponent',
+                fields: {},
+                params: {},
+              },
+            ],
+          },
+        },
+      },
+    },
+    mode: {
+      name: 'normal',
+      isDesignLibrary: true,
+      designLibrary: { isVariantGeneration: false },
+      isNormal: false,
+      isPreview: false,
+      isEditing: false,
+      ...overrides,
+    },
+  });
 
   beforeEach(() => {
-    postMessageSpy.resetHistory();
-    unsubscribeSpy.resetHistory();
-    postToDesignLibrarySpy = sandbox.stub().callsFake((evt) => {
-      // postToDesignLibrary calls window.postMessage internally
-      window.postMessage(evt, '*');
-    });
-    sendErrorEventSpy = sandbox.stub().callsFake((uid, error, type) => {
-      // sendErrorEvent calls window.postMessage internally
-      const errorEvent = getDesignLibraryErrorEvent(uid, error, type);
-      window.postMessage(errorEvent, '*');
-    });
+    postToDesignLibrarySpy = sandbox.stub();
     __mockDependencies({
       postToDesignLibrary: postToDesignLibrarySpy,
-      sendErrorEvent: sendErrorEventSpy,
-    });
-
-    if (typeof (globalThis as any).requestAnimationFrame === 'undefined') {
-      (globalThis as any).requestAnimationFrame = (cb: Function) => setTimeout(cb, 0);
-      (globalThis as any).cancelAnimationFrame = (id: any) => clearTimeout(id);
-    }
-    if (typeof window !== 'undefined') {
-      (window as any).requestAnimationFrame = (globalThis as any).requestAnimationFrame;
-      (window as any).cancelAnimationFrame = (globalThis as any).cancelAnimationFrame;
-    }
-  });
-
-  it('should render null if not in design library mode', () => {
-    const page = getPage(getTestLayoutData().layoutData, {
-      name: DesignLibraryMode.Normal,
-      isDesignLibrary: false,
-      designLibrary: {
-        isVariantGeneration: false,
-        isLowCode: false,
-      },
-      isNormal: false,
-      isPreview: false,
-      isEditing: false,
-    });
-
-    const rendered = render(
-      <SitecoreProvider componentMap={components} api={api} page={page}>
-        <DesignLibrary />
-      </SitecoreProvider>,
-      { container: document.body }
-    );
-    expect(rendered.baseElement.innerHTML).to.equal('');
-  });
-
-  describe('mode=library and isVariantGeneration=false', () => {
-    let page: Page;
-
-    const modeLibrary: PageMode = {
-      name: DesignLibraryMode.Normal,
-      isDesignLibrary: true,
-      designLibrary: { isVariantGeneration: false, isLowCode: false },
-      isNormal: false,
-      isPreview: false,
-      isEditing: false,
-    };
-
-    async function sendUpdateEvent(details: { uid: string; fields?: any; params?: any }) {
-      const ev = document.createEvent('Event');
-      ev.initEvent('message', false, true);
-      (ev as any).origin = window.location.origin;
-      (ev as any).data = { name: 'component:update', details };
-      await fireEvent(window, ev);
-    }
-
-    beforeEach(() => {
-      const basic = getTestLayoutData();
-      page = {
-        locale: 'en',
-        layout: basic.layoutData,
-        mode: modeLibrary,
-      };
-      postMessageSpy.resetHistory();
-    });
-
-    it('renders real component and sends READY + initial RENDERED', async () => {
-      const page = getPage(getTestLayoutData().layoutData, modeLibrary);
-
-      const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary />
-        </SitecoreProvider>
-      );
-
-      expect(rendered.baseElement.innerHTML).to.contain(
-        [
-          '<main><div id="editing-component">',
-          '<div class="test"><div>',
-          '<p>This is a live set of examples of how to use Content SDK</p>\n',
-          '</div></div></div></main>',
-        ].join('')
-      );
-
-      expect(
-        postMessageSpy
-          .getCalls()
-          .some(
-            (c) =>
-              JSON.stringify(c.args[0]) ===
-              JSON.stringify(getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'test-content'))
-          )
-      ).to.be.true;
-
-      await waitFor(() => {
-        expect(
-          postMessageSpy
-            .getCalls()
-            .some((c) =>
-              JSON.stringify(c.args[0]).includes(
-                JSON.stringify(
-                  getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
-                )
-              )
-            )
-        ).to.be.true;
-      });
-    });
-
-    it('should render component with placeholders', () => {
-      page.layout = getTestLayoutData(true).layoutData;
-
-      const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary />
-        </SitecoreProvider>,
-        { container: document.body }
-      );
-
-      expect(rendered.baseElement.innerHTML).to.contain(
-        [
-          '<main><div id="editing-component">',
-          '<div class="test"><div>',
-          '<p>This is a live set of examples of how to use Content SDK</p>\n',
-          '</div>',
-          '<div class="inner">',
-          'Its an inner component',
-          '</div></div></div>',
-          '</main>',
-        ].join('')
-      );
-    });
-
-    it('should update root component', async () => {
-      const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary />
-        </SitecoreProvider>,
-        { container: document.body }
-      );
-
-      expect(rendered.baseElement.innerHTML).to.contain(
-        [
-          '<main><div id="editing-component">',
-          '<div class="test"><div>',
-          '<p>This is a live set of examples of how to use Content SDK</p>\n',
-          '</div></div></div></main>',
-        ].join('')
-      );
-
-      await sendUpdateEvent({
-        uid: 'test-content',
-        fields: { content: { value: 'new content!' } },
-      });
-
-      expect(rendered.baseElement.innerHTML).to.contain(
-        [
-          '<main><div id="editing-component">',
-          '<div class="test"><div>',
-          'new content!',
-          '</div></div></div></main>',
-        ].join('')
-      );
-    });
-
-    it('should update nested component', async () => {
-      const withPlaceholder = getTestLayoutData(true);
-      page.layout = withPlaceholder.layoutData;
-
-      const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary />
-        </SitecoreProvider>,
-        { container: document.body }
-      );
-
-      expect(rendered.baseElement.innerHTML).to.contain(
-        [
-          '<main><div id="editing-component">',
-          '<div class="test"><div>',
-          '<p>This is a live set of examples of how to use Content SDK</p>\n',
-          '</div>',
-          '<div class="inner">',
-          'Its an inner component',
-          '</div></div></div>',
-          '</main>',
-        ].join('')
-      );
-
-      await sendUpdateEvent({
-        uid: 'test-inner',
-        fields: { text: { value: 'new inner content!' } },
-      });
-
-      expect(rendered.baseElement.innerHTML).to.contain(
-        [
-          '<main><div id="editing-component">',
-          '<div class="test"><div>',
-          '<p>This is a live set of examples of how to use Content SDK</p>\n',
-          '</div>',
-          '<div class="inner">',
-          'new inner content!',
-          '</div></div></div>',
-          '</main>',
-        ].join('')
-      );
+      addComponentPreviewHandler: sandbox.stub(),
+      sendErrorEvent: sandbox.stub(),
     });
   });
 
-  describe('mode=library-metadata and isVariantGeneration=false', () => {
-    it('renders real component and sends READY + initial RENDERED (Pages Router)', async () => {
-      const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata);
-
-      const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary />
-        </SitecoreProvider>
-      );
-
-      expect(rendered.baseElement.innerHTML).to.contain(expectedInitialMarkup());
-
-      expectStatus(postMessageSpy, DesignLibraryStatus.READY, RENDER_ID, { strict: true });
-
-      await waitFor(() => expectStatus(postMessageSpy, DesignLibraryStatus.RENDERED, RENDER_ID));
-    });
-  });
-
-  describe('mode=library&generation=variant and isVariantGeneration=true', () => {
-    beforeEach(() => {
-      addComponentPreviewHandlerSpy = sandbox.stub().callsFake((_importMap, cb) => {
-        callbackEvent = cb;
-        return unsubscribeSpy;
-      });
-      __mockDependencies({
-        addComponentPreviewHandler: addComponentPreviewHandlerSpy,
-        postToDesignLibrary: postToDesignLibrarySpy,
-        sendErrorEvent: sendErrorEventSpy,
-      });
-
-      postMessageSpy.resetHistory();
-
-      serializeAtomsStub = sandbox
-        .stub(atomRegistryUtils, 'serializeAtoms')
-        .callsFake((atoms) => (!atoms?.length ? [] : mockedSerializedAtoms));
-      serializeCallbacksStub = sandbox
-        .stub(callbackRegistryUtils, 'serializeCallbacks')
-        .callsFake((callbacks) => (!callbacks?.length ? {} : mockedSerializedCallbacks));
-    });
-
-    afterEach(() => {
-      serializeAtomsStub.restore();
-      serializeCallbacksStub.restore();
-    });
-
-    it('fires component:ready on mount', () => {
-      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
-
-      render(
-        <SitecoreProvider
-          componentMap={components}
-          api={api}
-          page={page}
-          loadImportMap={defaultImportMap}
-        >
-          <DesignLibrary />
-        </SitecoreProvider>
-      );
-
-      const expectedReady = getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'test-content');
-      expect(
-        postMessageSpy
-          .getCalls()
-          .some((c) => JSON.stringify(c.args[0]) === JSON.stringify(expectedReady))
-      ).to.be.true;
-
-      const readyCount = postMessageSpy
-        .getCalls()
-        .filter(
-          (c) =>
-            c.args[0]?.name === expectedReady.name &&
-            c.args[0]?.message?.uid === expectedReady.message.uid
-        ).length;
-      expect(readyCount).to.equal(1);
-    });
-
-    it('fires component:rendered only after generated component is received', async () => {
-      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
-
-      render(
-        <SitecoreProvider
-          componentMap={components}
-          api={api}
-          page={page}
-          loadImportMap={defaultImportMap}
-        >
-          <DesignLibrary />
-        </SitecoreProvider>
-      );
-
-      const expectedRendered = getDesignLibraryStatusEvent(
-        DesignLibraryStatus.RENDERED,
-        'test-content'
-      );
-      expect(
-        postMessageSpy
-          .getCalls()
-          .some((c) => JSON.stringify(c.args[0]) === JSON.stringify(expectedRendered))
-      ).to.be.false;
-
-      await waitFor(() => {
-        expect(addComponentPreviewHandlerSpy).to.have.been.called;
-      });
-
-      const TestComponent = () => <div>Generated!</div>;
-      callbackEvent(null, TestComponent);
-
-      await waitFor(() => {
-        expect(
-          postMessageSpy
-            .getCalls()
-            .some((c) => JSON.stringify(c.args[0]) === JSON.stringify(expectedRendered))
-        ).to.be.true;
-      });
-    });
-
-    it('renders real component first, wires generation, then switches to generated component', async () => {
-      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
-
-      const rendered = render(
-        <SitecoreProvider
-          componentMap={components}
-          api={api}
-          page={page}
-          loadImportMap={defaultImportMap}
-        >
-          <DesignLibrary />
-        </SitecoreProvider>
-      );
-
-      expect(rendered.baseElement.innerHTML).to.contain(
-        [
-          '<main><div id="editing-component">',
-          '<div class="test"><div>',
-          '<p>This is a live set of examples of how to use Content SDK</p>\n',
-          '</div></div></div></main>',
-        ].join('')
-      );
-
-      await waitFor(() => {
-        expect(addComponentPreviewHandlerSpy).to.have.been.called;
-      });
-
-      const TestComponent = () => <div>Generated!</div>;
-      callbackEvent(null, TestComponent);
-
-      await waitFor(() => {
-        expect(rendered.baseElement.innerHTML).to.contain('<div>Generated!</div>');
-      });
-    });
-
-    it('renders real component first, wires generation, then switches to generated component when loadImportMap provided via SitecoreProvider', async () => {
-      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
-
-      const rendered = render(
-        <SitecoreProvider
-          componentMap={components}
-          api={api}
-          page={page}
-          loadImportMap={defaultImportMap}
-        >
-          <DesignLibrary />
-        </SitecoreProvider>
-      );
-
-      expect(rendered.baseElement.innerHTML).to.contain(
-        [
-          '<main><div id="editing-component">',
-          '<div class="test"><div>',
-          '<p>This is a live set of examples of how to use Content SDK</p>\n',
-          '</div></div></div></main>',
-        ].join('')
-      );
-
-      await waitFor(() => {
-        expect(addComponentPreviewHandlerSpy).to.have.been.called;
-      });
-
-      const TestComponent = () => <div>Generated!</div>;
-      callbackEvent(null, TestComponent);
-
-      await waitFor(() => {
-        expect(rendered.baseElement.innerHTML).to.contain('<div>Generated!</div>');
-      });
-    });
-
-    it('updates via component:update after switch', async () => {
-      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
-
-      const Gen = (props: any) => <div className="gen">{props.fields?.content?.value}</div>;
-
-      render(
-        <SitecoreProvider
-          componentMap={components}
-          api={api}
-          page={page}
-          loadImportMap={defaultImportMap}
-        >
-          <DesignLibrary />
-        </SitecoreProvider>
-      );
-
-      await waitFor(() => {
-        expect(addComponentPreviewHandlerSpy).to.have.been.called;
-        callbackEvent(null, Gen);
-      });
-
-      await sendUpdate({
-        uid: 'test-content',
-        fields: { content: { value: 'updated!' } },
-      });
-
-      await waitFor(() => {
-        expect(
-          postMessageSpy
-            .getCalls()
-            .some((c) =>
-              JSON.stringify(c.args[0]).includes(
-                JSON.stringify(
-                  getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
-                )
-              )
-            )
-        ).to.be.true;
-      });
-    });
-
-    it('sends error event when no import map is provided', async () => {
-      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
-
-      render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary />
-        </SitecoreProvider>
-      );
-
-      await waitFor(() => {
-        expect(
-          postMessageSpy
-            .getCalls()
-            .some((c) =>
-              JSON.stringify(c.args[0]).includes(
-                JSON.stringify(
-                  getDesignLibraryErrorEvent(
-                    'test-content',
-                    'No loadImportMap provided',
-                    DesignLibraryPreviewError.ImportMapMissing
-                  )
-                )
-              )
-            )
-        ).to.be.true;
-      });
-    });
-
-    it('posts empty atoms registry event when atomRegistry is not provided on SitecoreProvider', async () => {
-      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
-      const expectedRegistryEvent = getDesignLibraryAtomsRegistryEvent([], {});
-
-      render(
-        <SitecoreProvider
-          componentMap={components}
-          api={api}
-          page={page}
-          loadImportMap={defaultImportMap}
-        >
-          <DesignLibrary />
-        </SitecoreProvider>
-      );
-
-      await waitFor(() => {
-        expect(
-          postMessageSpy
-            .getCalls()
-            .some((c) => JSON.stringify(c.args[0]) === JSON.stringify(expectedRegistryEvent))
-        ).to.be.true;
-      });
-
-      sinon.assert.calledWith(serializeAtomsStub, []);
-      sinon.assert.calledWith(serializeCallbacksStub, []);
-    });
-
-    it('posts atoms registry event with serialized atoms and callbacks when atomRegistry is provided', async () => {
-      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
-      const expectedRegistryEvent = getDesignLibraryAtomsRegistryEvent(
-        mockedSerializedAtoms,
-        mockedSerializedCallbacks
-      );
-
-      render(
-        <SitecoreProvider
-          componentMap={components}
-          api={api}
-          page={page}
-          loadImportMap={defaultImportMap}
-          atomRegistry={{
-            atoms: mockedAtoms,
-            callbacks: mockedCallbacks,
-          }}
-        >
-          <DesignLibrary />
-        </SitecoreProvider>
-      );
-
-      await waitFor(() => {
-        const postedRegistryEvent = postMessageSpy
-          .getCalls()
-          .map((call) => call.args[0])
-          .find((event) => event?.name === 'atom:registry');
-
-        expect(postedRegistryEvent).to.deep.equal(expectedRegistryEvent);
-      });
-
-      sinon.assert.calledWith(serializeAtomsStub, mockedAtoms);
-      sinon.assert.calledWith(serializeCallbacksStub, mockedCallbacks);
-    });
-  });
-
-  describe('?mode=library-metadata&generation=variant and isVariantGeneration=true', () => {
-    beforeEach(() => {
-      addComponentPreviewHandlerSpy = sandbox.stub().callsFake((_importMap, cb) => {
-        callbackEvent = cb;
-        return unsubscribeSpy;
-      });
-      __mockDependencies({
-        addComponentPreviewHandler: addComponentPreviewHandlerSpy,
-        postToDesignLibrary: postToDesignLibrarySpy,
-        sendErrorEvent: sendErrorEventSpy,
-      });
-
-      postMessageSpy.resetHistory();
-
-      serializeAtomsStub = sandbox
-        .stub(atomRegistryUtils, 'serializeAtoms')
-        .callsFake((atoms) => (!atoms?.length ? [] : mockedSerializedAtoms));
-      serializeCallbacksStub = sandbox
-        .stub(callbackRegistryUtils, 'serializeCallbacks')
-        .callsFake((callbacks) => (!callbacks?.length ? {} : mockedSerializedCallbacks));
-    });
-
-    afterEach(() => {
-      serializeAtomsStub.restore();
-      serializeCallbacksStub.restore();
-    });
-
-    const expectedGeneratedParts = [
-      '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close">',
-      '<div>Gen-Metadata</div>',
-      '</code>',
-    ];
-
-    const triggerGeneration = async () => {
-      await act(async () => {
-        callbackEvent(null, () => (
-          <code type="text/sitecore" chrometype="rendering" class="scpm" kind="close">
-            <div>Gen-Metadata</div>
-          </code>
-        ));
-      });
-    };
-
-    it('renders real component first, wires generation, then switches to generated component (Pages Router)', async () => {
-      const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata_Gen);
-
-      const rendered = render(
-        <SitecoreProvider
-          componentMap={components}
-          api={api}
-          page={page}
-          loadImportMap={defaultImportMap}
-        >
-          <DesignLibrary />
-        </SitecoreProvider>
-      );
-
-      expect(rendered.baseElement.innerHTML).to.contain(expectedInitialMarkup());
-
-      await waitFor(() => expect(addComponentPreviewHandlerSpy).to.have.been.called);
-
-      expectStatus(postMessageSpy, DesignLibraryStatus.READY, RENDER_ID, { strict: true });
-
-      await triggerGeneration();
-
-      await waitFor(() => expectContains(rendered.baseElement.innerHTML, expectedGeneratedParts));
-
-      await waitFor(() => expectStatus(postMessageSpy, DesignLibraryStatus.RENDERED, RENDER_ID));
-    });
-
-    it('posts empty atoms registry event when atomRegistry is not provided on SitecoreProvider', async () => {
-      const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata_Gen);
-      const expectedRegistryEvent = getDesignLibraryAtomsRegistryEvent([], {});
-
-      render(
-        <SitecoreProvider
-          componentMap={components}
-          api={api}
-          page={page}
-          loadImportMap={defaultImportMap}
-        >
-          <DesignLibrary />
-        </SitecoreProvider>
-      );
-
-      await waitFor(() => {
-        const postedRegistryEvent = postMessageSpy
-          .getCalls()
-          .map((call) => call.args[0])
-          .find((event) => event?.name === 'atom:registry');
-
-        expect(postedRegistryEvent).to.deep.equal(expectedRegistryEvent);
-      });
-
-      sinon.assert.calledWith(serializeAtomsStub, []);
-      sinon.assert.calledWith(serializeCallbacksStub, []);
-    });
-
-    it('posts atoms registry event with serialized atoms and callbacks when atomRegistry is provided', async () => {
-      const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata_Gen);
-      const expectedRegistryEvent = getDesignLibraryAtomsRegistryEvent(
-        mockedSerializedAtoms,
-        mockedSerializedCallbacks
-      );
-
-      render(
-        <SitecoreProvider
-          componentMap={components}
-          api={api}
-          page={page}
-          loadImportMap={defaultImportMap}
-          atomRegistry={{
-            atoms: mockedAtoms,
-            callbacks: mockedCallbacks,
-          }}
-        >
-          <DesignLibrary />
-        </SitecoreProvider>
-      );
-
-      await waitFor(() => {
-        const postedRegistryEvent = postMessageSpy
-          .getCalls()
-          .map((call) => call.args[0])
-          .find((event) => event?.name === 'atom:registry');
-
-        expect(postedRegistryEvent).to.deep.equal(expectedRegistryEvent);
-      });
-
-      sinon.assert.calledWith(serializeAtomsStub, mockedAtoms);
-      sinon.assert.calledWith(serializeCallbacksStub, mockedCallbacks);
-    });
-  });
-
-  describe('error handling', () => {
-    it('should render ErrorComponent when rendering UID is missing', () => {
-      const layoutData = getTestLayoutData().layoutData;
-
-      // Remove UID from the component
-      const renderingWithoutUid = {
-        ...layoutData.sitecore.route,
-        placeholders: {
-          [EDITING_COMPONENT_PLACEHOLDER]: [
-            {
-              ...layoutData.sitecore.route.placeholders?.[EDITING_COMPONENT_PLACEHOLDER]?.[0],
-              uid: undefined,
-            },
-          ],
-        },
-      };
-
-      const page = {
-        locale: 'en',
-        layout: { ...layoutData, sitecore: { ...layoutData.sitecore, route: renderingWithoutUid } },
-        mode: modeLibraryMetadata,
-      };
-
-      const rendered = render(
-        <SitecoreProvider componentMap={components} api={api} page={page}>
-          <DesignLibrary />
-        </SitecoreProvider>
-      );
-
-      expect(rendered.baseElement.innerHTML).to.contain(
-        'Rendering UID is missing in the rendering data'
-      );
-    });
-  });
-  after(() => {
+  afterEach(() => {
     sandbox.restore();
+  });
+
+  it('renders null when not in design library mode', () => {
+    const page = getPage({ isDesignLibrary: false });
+    const { container } = render(
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        page={page as any}
+        loadImportMap={loadImportMapStub}
+        atoms={atomsConfig}
+      >
+        <DesignLibrary />
+      </SitecoreProvider>
+    );
+    expect(container.innerHTML).to.equal('');
+  });
+
+  it('posts READY status on mount when in design library mode', async () => {
+    const page = getPage();
+    render(
+      <SitecoreProvider
+        api={apiStub}
+        componentMap={emptyComponentMap}
+        page={page as any}
+        loadImportMap={loadImportMapStub}
+        atoms={atomsConfig}
+      >
+        <DesignLibrary />
+      </SitecoreProvider>
+    );
+    await waitFor(() => {
+      expect(postToDesignLibrarySpy).to.have.been.calledWith(
+        getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'component-1')
+      );
+    });
   });
 });

@@ -6,6 +6,8 @@ import {
 } from '@sitecore-content-sdk/nextjs';
 import components from '.sitecore/component-map';
 import scConfig from 'sitecore.config';
+import { catalog, registry } from 'src/atoms';
+import { useRouter } from 'next/navigation';
 
 const Providers = ({
   children,
@@ -16,6 +18,8 @@ const Providers = ({
   componentProps?: ComponentPropsCollection;
   page: Page;
 }) => {
+  const router = useRouter();
+
   return (
     <ComponentPropsContext value={componentProps || {}}>
       <SitecoreProvider
@@ -23,6 +27,7 @@ const Providers = ({
         api={scConfig.api}
         page={page}
         loadImportMap={() => import('.sitecore/import-map')}
+        atomsConfig={{ catalog, registry, navigate: router.push }}
       >
         {children}
       </SitecoreProvider>

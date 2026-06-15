@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "rootDir": "./src",
     "target": "ES2017",
     "module": "CommonJS",
     "jsx": "react",
@@ -27,6 +28,7 @@
     "site.d.ts",
     "search.d.ts",
     "client.d.ts",
+    "atoms.d.ts",
     "utils.d.ts",
     "tools.d.ts",
     "config-cli.d.ts",

@@ -1,6 +1,11 @@
 /** Schema metadata for atom props/events. */
 import { z } from 'zod';
-import type { PropMeta, ArgMeta } from './types';
+
+/**
+ * Prop metadata (e.g. control hint for Design Studio).
+ *  @public
+ */
+export type PropMeta = { control?: string };
 
 const META_KEY = 'meta';
 
@@ -18,45 +23,4 @@ export function withPropMeta<T extends z.ZodType>(schema: T, meta: PropMeta): T 
     return s.meta({ [META_KEY]: meta });
   }
   return schema;
-}
-
-/**
- * Attach display metadata to a custom event argument (e.g. argName for DS). Stored under a key
- * that survives JSON Schema conversion.
- * @param {import('zod').ZodType} schema - Zod type for the argument
- * @param {ArgMeta} meta - Argument metadata
- * @returns The same Zod type with meta attached (or schema unchanged if .meta is not callable)
- * @public
- */
-export function withArgMeta<T extends z.ZodType>(schema: T, meta: ArgMeta): T {
-  const s = schema as unknown as { meta?: (m: Record<string, unknown>) => T };
-  if (typeof s.meta === 'function') {
-    return s.meta({ [META_KEY]: meta });
-  }
-  return schema;
-}
-
-/**
- * Get field metadata from a Zod type or a plain JSON Schema object. Uses _zod to detect Zod
- * schemas; otherwise reads the meta key from the object. For internal use by the renderer / DS.
- * @param {import('zod').ZodType | Record<string, unknown>} schemaOrJsonSchema - Live Zod type or plain JSON Schema object
- * @returns The meta object or undefined
- * @internal
- */
-export function getFieldMeta(
-  schemaOrJsonSchema: z.ZodType | Record<string, unknown>
-): Record<string, unknown> | undefined {
-  if (typeof schemaOrJsonSchema !== 'object' || schemaOrJsonSchema === null) {
-    return undefined;
-  }
-  if ('_zod' in schemaOrJsonSchema) {
-    const obj = schemaOrJsonSchema as Record<string, unknown> & {
-      meta?: () => Record<string, unknown>;
-    };
-    const m = typeof obj.meta === 'function' ? obj.meta() : undefined;
-    return m?.[META_KEY] as Record<string, unknown> | undefined;
-  }
-  return (schemaOrJsonSchema as Record<string, unknown>)[META_KEY] as
-    | Record<string, unknown>
-    | undefined;
 }

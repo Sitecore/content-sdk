@@ -10,11 +10,7 @@ export {
   NativeDataFetcherConfig,
 } from '@sitecore-content-sdk/core';
 export { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
-export {
-  isEditorActive,
-  resetEditorChromes,
-  AtomType,
-} from '@sitecore-content-sdk/content/editing';
+export { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 export {
   getContentStylesheetLink,
   getDesignLibraryStylesheetLinks,
@@ -84,14 +80,6 @@ export {
   BYOCServerWrapper,
 } from './components/FEaaS';
 export {
-  StudioComponentWrapper,
-  StudioComponentWrapper as StudioComponentClientWrapper,
-  StudioComponentServerWrapper,
-  type StudioComponentParams,
-  type StudioComponentServerWrapperProps,
-  type StudioComponentWrapperProps,
-} from './atoms/Wrapper';
-export {
   DesignLibrary,
   DesignLibraryLowCodeComponent,
   DesignLibraryErrorBoundary,
@@ -123,19 +111,18 @@ export {
 export { ClientEditingChromesUpdate } from './components/ClientEditingChromesUpdate';
 export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
 export {
-  createAtom,
+  useBoundProp,
+  defineAtomsCatalog,
+  defineAtomsRegistry,
   withPropMeta,
-  withArgMeta,
-  getFieldMeta,
-  type AtomMetadata,
-  type AtomChild,
-  type DefaultChild,
-  type EditableComponentProps,
-  type CallbackPropKeys,
-  type CallbackArgZodTuple,
   type PropMeta,
-  type ArgMeta,
-  type AtomSchemaInput,
+  type AtomComponentDefinition,
+  type AtomActionDefinition,
+  type AtomsCatalogInput,
+  type AtomsComponentsMap,
+  type AtomActionHandler,
+  type AtomsActionsMap,
+  type AtomsConfig,
   textFieldSchema,
   richTextFieldSchema,
   dateFieldSchema,

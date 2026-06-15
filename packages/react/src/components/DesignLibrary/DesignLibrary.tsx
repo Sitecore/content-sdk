@@ -10,7 +10,6 @@ import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
   addComponentUpdateHandler,
-  getDesignLibraryAtomsRegistryEvent,
 } from '@sitecore-content-sdk/content/editing';
 import * as codegen from '@sitecore-content-sdk/content/codegen';
 import * as editing from '@sitecore-content-sdk/content/editing';
@@ -19,8 +18,8 @@ import { Placeholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 import { DynamicComponent } from './models';
 import { ErrorComponent } from '../ErrorBoundary';
-import { serializeAtoms } from '../../atoms/atom-registry-utils';
-import { serializeCallbacks } from '../../atoms/callback-registry-utils';
+import { serializeCatalog } from '../../atoms';
+import { getDesignLibraryAtomsCatalogEvent } from '@sitecore-content-sdk/content/atoms';
 
 let {
   getDesignLibraryImportMapEvent,
@@ -51,7 +50,7 @@ export const __mockDependencies = (mocks: any) => {
  * @public
  */
 export const DesignLibrary = () => {
-  const { page, loadImportMap, atomRegistry } = useSitecore();
+  const { page, loadImportMap, atomsConfig } = useSitecore();
   const route = page.layout.sitecore.route;
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
   const uid = rendering?.uid;
@@ -142,11 +141,10 @@ export const DesignLibrary = () => {
       const importMapEvent = getDesignLibraryImportMapEvent(uid, importMap);
       postToDesignLibrary(importMapEvent);
 
-      const serializedAtoms = serializeAtoms(atomRegistry?.atoms ?? []);
-      const serializedCallbacks = serializeCallbacks(atomRegistry?.callbacks ?? []);
-
-      const atomRegistryEvent = getDesignLibraryAtomsRegistryEvent(serializedAtoms, serializedCallbacks);
-      postToDesignLibrary(atomRegistryEvent);
+      if (atomsConfig?.catalog) {
+        const catalogPayload = serializeCatalog(atomsConfig.catalog);
+        postToDesignLibrary(getDesignLibraryAtomsCatalogEvent(catalogPayload));
+      }
 
       const propsEvent = getDesignLibraryComponentPropsEvent(
         uid,
@@ -161,7 +159,7 @@ export const DesignLibrary = () => {
       cancelled = true;
       unsubscribe && unsubscribe();
     };
-  }, [isDesignLibrary, isVariantGeneration, uid, loadImportMap, propsState, atomRegistry]);
+  }, [isDesignLibrary, isVariantGeneration, uid, loadImportMap, propsState, atomsConfig]);
 
   return (
     <main>

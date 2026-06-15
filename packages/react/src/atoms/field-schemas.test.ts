@@ -1,7 +1,5 @@
 import { expect } from 'chai';
 import { z } from 'zod';
-import { getFieldMeta } from './schema-utils';
-import { createAtom } from './createAtom';
 import {
   textFieldSchema,
   richTextFieldSchema,
@@ -9,15 +7,30 @@ import {
   linkFieldSchema,
   imageFieldSchema,
   fileFieldSchema,
-  type TextFieldSchema,
-  type RichTextFieldSchema,
-  type DateFieldSchema,
   type LinkFieldSchema,
   type ImageFieldSchema,
   type FileFieldSchema,
 } from './field-schemas';
 
 describe('field-schemas', () => {
+  const getFieldMeta = (
+    schemaOrJsonSchema: z.ZodType | Record<string, unknown>
+  ): Record<string, unknown> | undefined => {
+    if (typeof schemaOrJsonSchema !== 'object' || schemaOrJsonSchema === null) {
+      return undefined;
+    }
+    if ('_zod' in schemaOrJsonSchema) {
+      const obj = schemaOrJsonSchema as Record<string, unknown> & {
+        meta?: () => Record<string, unknown>;
+      };
+      const m = typeof obj.meta === 'function' ? obj.meta() : undefined;
+      return m?.meta as Record<string, unknown> | undefined;
+    }
+    return (schemaOrJsonSchema as Record<string, unknown>).meta as
+      | Record<string, unknown>
+      | undefined;
+  };
+
   const factories = [
     { name: 'textFieldSchema', factory: textFieldSchema, control: 'Single-Line Text' },
     { name: 'richTextFieldSchema', factory: richTextFieldSchema, control: 'Rich Text' },
@@ -143,89 +156,47 @@ describe('field-schemas', () => {
     });
   });
 
-  describe('createAtom integration', () => {
-    const CardComponent = (props: {
-      title?: TextFieldSchema;
-      body?: RichTextFieldSchema;
-      cta?: LinkFieldSchema;
-      image?: ImageFieldSchema;
-      doc?: FileFieldSchema;
-      publishedAt?: DateFieldSchema;
-    }) => {
-      void props;
-      return null;
-    };
-
-    it('accepts textFieldSchema as a prop schema in createAtom', () => {
-      const meta = createAtom(CardComponent, {
-        name: 'Card',
-        description: 'A card atom',
-        props: { title: textFieldSchema() },
-      });
-      expect(meta.props).to.be.instanceOf(z.ZodObject);
-      const parsed = meta.props.safeParse({ title: { value: 'Hello' } });
+  describe('defineAtomsCatalog integration', () => {
+    it('accepts textFieldSchema as a prop in a component definition', () => {
+      const props = z.object({ title: textFieldSchema() });
+      const parsed = props.safeParse({ title: { value: 'Hello' } });
       expect(parsed.success).to.equal(true);
     });
 
-    it('accepts richTextFieldSchema as a prop schema in createAtom', () => {
-      const meta = createAtom(CardComponent, {
-        name: 'Card',
-        description: 'A card atom',
-        props: { body: richTextFieldSchema() },
-      });
-      const parsed = meta.props.safeParse({ body: { value: '<p>content</p>' } });
+    it('accepts richTextFieldSchema as a prop', () => {
+      const props = z.object({ body: richTextFieldSchema() });
+      const parsed = props.safeParse({ body: { value: '<p>content</p>' } });
       expect(parsed.success).to.equal(true);
     });
 
-    it('accepts linkFieldSchema as a prop schema in createAtom', () => {
-      const meta = createAtom(CardComponent, {
-        name: 'Card',
-        description: 'A card atom',
-        props: { cta: linkFieldSchema() },
-      });
-      const parsed = meta.props.safeParse({ cta: { value: { href: '/about', text: 'About' } } });
+    it('accepts linkFieldSchema as a prop', () => {
+      const props = z.object({ cta: linkFieldSchema() });
+      const parsed = props.safeParse({ cta: { value: { href: '/about', text: 'About' } } });
       expect(parsed.success).to.equal(true);
     });
 
-    it('accepts imageFieldSchema as a prop schema in createAtom', () => {
-      const meta = createAtom(CardComponent, {
-        name: 'Card',
-        description: 'A card atom',
-        props: { image: imageFieldSchema() },
-      });
-      const parsed = meta.props.safeParse({ image: { value: { src: '/img.png', alt: 'Alt' } } });
+    it('accepts imageFieldSchema as a prop', () => {
+      const props = z.object({ image: imageFieldSchema() });
+      const parsed = props.safeParse({ image: { value: { src: '/img.png', alt: 'Alt' } } });
       expect(parsed.success).to.equal(true);
     });
 
-    it('accepts fileFieldSchema as a prop schema in createAtom', () => {
-      const meta = createAtom(CardComponent, {
-        name: 'Card',
-        description: 'A card atom',
-        props: { doc: fileFieldSchema() },
-      });
-      const parsed = meta.props.safeParse({ doc: { value: { src: '/file.pdf', title: 'Doc' } } });
+    it('accepts fileFieldSchema as a prop', () => {
+      const props = z.object({ doc: fileFieldSchema() });
+      const parsed = props.safeParse({ doc: { value: { src: '/file.pdf', title: 'Doc' } } });
       expect(parsed.success).to.equal(true);
     });
 
-    it('accepts dateFieldSchema as a prop schema in createAtom', () => {
-      const meta = createAtom(CardComponent, {
-        name: 'Card',
-        description: 'A card atom',
-        props: { publishedAt: dateFieldSchema() },
-      });
-      const parsed = meta.props.safeParse({ publishedAt: { value: '20240101T000000Z' } });
+    it('accepts dateFieldSchema as a prop', () => {
+      const props = z.object({ publishedAt: dateFieldSchema() });
+      const parsed = props.safeParse({ publishedAt: { value: '20240101T000000Z' } });
       expect(parsed.success).to.equal(true);
     });
 
-    it('preserves control hint on field schemas inside createAtom props', () => {
-      const meta = createAtom(CardComponent, {
-        name: 'Card',
-        description: 'A card atom',
-        props: { cta: linkFieldSchema() },
-      });
-      const ctaShape = meta.props.shape.cta as z.ZodType;
+    it('preserves control hint on field schemas', () => {
+      const props = z.object({ cta: linkFieldSchema() });
+      const ctaShape = props.shape.cta as z.ZodType;
       expect(getFieldMeta(ctaShape)).to.deep.equal({ control: 'Link' });
     });
   });
 });
-

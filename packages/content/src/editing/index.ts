@@ -41,12 +41,3 @@ export {
   COMPONENT_PREVIEW_CACHE_KEY_PREFIX,
   updateComponent,
 } from './design-library';
-export {
-  AtomInfo,
-  CallbackInfo,
-  AtomType,
-  getDesignLibraryAtomsRegistryEvent,
-  sendAtomsErrorEvent,
-  DesignLibraryAtomsError,
-  addDocumentUpdateHandler,
-} from './atoms-builder/atoms-builder';

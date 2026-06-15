@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "rootDir": "./src",
     "target": "es2017",
     "skipLibCheck": true,
     "useUnknownInCatchVariables": false,

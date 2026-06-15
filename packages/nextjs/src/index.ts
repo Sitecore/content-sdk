@@ -119,6 +119,8 @@ export {
 export { FEaaSWrapper };
 export { BYOCWrapper };
 
+export * from './atoms';
+
 export {
   ComponentMap,
   Image,
@@ -163,32 +165,6 @@ export {
   AppPlaceholder,
   AppPlaceholderProps,
   renderEmptyPlaceholder,
-  AtomType,
-  createAtom,
-  withPropMeta,
-  withArgMeta,
-  getFieldMeta,
-  type AtomMetadata,
-  type AtomChild,
-  type DefaultChild,
-  type EditableComponentProps,
-  type CallbackPropKeys,
-  type CallbackArgZodTuple,
-  type PropMeta,
-  type ArgMeta,
-  type AtomSchemaInput,
-  textFieldSchema,
-  richTextFieldSchema,
-  dateFieldSchema,
-  linkFieldSchema,
-  imageFieldSchema,
-  fileFieldSchema,
-  type TextFieldSchema,
-  type RichTextFieldSchema,
-  type DateFieldSchema,
-  type LinkFieldSchema,
-  type ImageFieldSchema,
-  type FileFieldSchema,
 } from '@sitecore-content-sdk/react';
 
 export { initContentSdk } from '@sitecore-content-sdk/core';
