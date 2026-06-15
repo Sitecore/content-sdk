@@ -7,7 +7,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "2.0.0-beta.3",
+    "@sitecore-content-sdk/core": "2.1.0-beta.1",
     "debug": "^4.4.3",
     "isbot": "^5.1.39"
   },
@@ -75,5 +75,5 @@
     "api-extractor": "npm run build && api-extractor run --local --verbose",
     "api-extractor:verify": "api-extractor run"
   },
-  "version": "2.0.0-beta.3"
+  "version": "2.1.0-beta.1"
 }
