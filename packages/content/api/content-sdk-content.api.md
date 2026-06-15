@@ -17,9 +17,14 @@ import { GraphQLRequestClientConfig } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/core';
 import { RetryStrategy } from '@sitecore-content-sdk/core';
+import { Spec } from '@json-render/core';
 
 // @internal
-export type Action = SetStateAction | CallAction;
+export interface ActionCatalogEntry {
+    description: string;
+    name: string;
+    paramsSchema: object;
+}
 
 // @internal
 export const addComponentPreviewHandler: (importMap: ImportEntry[], callback: (error: unknown | null, Component: unknown) => void) => (() => void) | undefined;
@@ -40,35 +45,37 @@ export function addStyleElement(stylesContent: string): void;
 export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => string): T;
 
 // @internal
-export type AtomInfo = {
+export interface AtomCatalogActionEntry {
+    description: string | undefined;
     name: string;
-    version?: number;
-    type: AtomType;
-    description: string;
-    props: Record<string, unknown>;
-    allowedChildren: string[];
-    defaultChildren?: SerializedDefaultChild[];
-    htmlEvents?: string[];
-    customEvents?: Record<string, unknown>;
-};
-
-// @internal
-export type AtomType = 'atom' | 'atom-child';
-
-// @internal
-export type Binding = ExpressionBinding | EventBinding;
-
-// @internal
-export interface CallAction {
-    args?: Primitive[];
-    call: string;
+    paramsSchema?: object;
 }
 
 // @internal
-export type CallbackInfo = {
+export interface AtomCatalogComponentEntry {
+    allowedChildren?: string[];
+    allowedParents?: string[];
+    description?: string;
+    example?: unknown;
+    name: string;
+    propsSchema: object;
+    slots: string[];
+    version?: string;
+}
+
+// @internal
+export interface AtomCatalogEntry {
     description: string;
-    params?: Record<string, unknown>;
-};
+    name: string;
+    propsSchema: object;
+    slots: string[];
+}
+
+// @internal
+export interface AtomsCatalogPayload {
+    actions: ActionCatalogEntry[];
+    components: AtomCatalogEntry[];
+}
 
 // @public
 export class CdpHelper {
@@ -359,11 +366,8 @@ export interface DictionaryServiceConfig extends CacheOptions, GraphQLServiceCon
 }
 
 // @internal
-interface Document_2 {
+interface Document_2 extends Spec {
     name: string;
-    props?: unknown;
-    root: Node_2;
-    state?: Record<string, unknown>;
 }
 export { Document_2 as Document }
 
@@ -445,19 +449,6 @@ export enum EditMode {
 }
 
 // @internal
-interface Element_2 {
-    bindings?: Record<string, Binding>;
-    children?: Node_2[];
-    for?: ForLoop;
-    id?: string;
-    show?: ShowNode;
-    staticProps?: Record<string, Primitive>;
-    type: string;
-    version?: number;
-}
-export { Element_2 as Element }
-
-// @internal
 export const EMPTY_DATE_FIELD_VALUE = "0001-01-01T00:00:00Z";
 
 // @internal (undocumented)
@@ -505,23 +496,7 @@ export interface ErrorPagesServiceConfig extends GraphQLServiceConfig {
 }
 
 // @internal
-export function evaluateShowNode(node: ShowNode, ctx: ResolveContext): boolean;
-
-// @internal
-export interface EventBinding {
-    actions: Action[];
-    arguments: string[];
-    bindType: 'event';
-}
-
-// @internal
 const executeScriptElements: (rootElement: HTMLElement) => void;
-
-// @internal
-export interface ExpressionBinding {
-    bindType: 'expression';
-    value: string;
-}
 
 // Warning: (ae-forgotten-export) The symbol "_extractFiles" needs to be exported by the entry point api-surface.d.ts
 //
@@ -549,13 +524,6 @@ export interface FieldMetadata {
 
 // @internal
 export function filterComponentsByType(components: ComponentFileWithType[], allowedTypes: ComponentType[]): ComponentFileWithType[];
-
-// @internal
-export interface ForLoop {
-    as: string;
-    each: string;
-    key?: string;
-}
 
 declare namespace form {
     export {
@@ -642,10 +610,10 @@ export const getContentStylesheetLink: (layoutData: LayoutServiceData, sitecoreE
 // @internal
 export function getDefaultMediaUrlTransformer(edgeUrl: string): (value: string) => string;
 
-// Warning: (ae-forgotten-export) The symbol "DesignLibraryAtomsRegistryEvent" needs to be exported by the entry point api-surface.d.ts
+// Warning: (ae-forgotten-export) The symbol "DesignLibraryAtomsCatalogEvent" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
-export function getDesignLibraryAtomsRegistryEvent(atomsRegistry: AtomInfo[], callbackRegistry: Record<string, CallbackInfo>): DesignLibraryAtomsRegistryEvent;
+export function getDesignLibraryAtomsCatalogEvent(payload: SerializedCatalog): DesignLibraryAtomsCatalogEvent;
 
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPropsEvent" needs to be exported by the entry point api-surface.d.ts
 //
@@ -751,16 +719,6 @@ export { GraphQLRequestClientFactory }
 export { GraphQLRequestClientFactoryConfig }
 
 // @internal
-export function hasFor(node: Element_2): node is Element_2 & {
-    for: ForLoop;
-};
-
-// @internal
-export function hasShow(node: Element_2): node is Element_2 & {
-    show: ShowNode;
-};
-
-// @internal
 export const HIDDEN_RENDERING_NAME = "Hidden Rendering";
 
 // @public
@@ -791,9 +749,6 @@ export interface ImportEntryInfo {
 export const INVALID_SECRET_HTML_MESSAGE = "<html><body>Missing or invalid secret</body></html>";
 
 // @internal
-export function isCallAction(action: Action): action is CallAction;
-
-// @internal
 export function isDesignLibraryMode(mode: unknown): mode is DesignLibraryMode;
 
 // @internal
@@ -802,32 +757,8 @@ export const isDynamicPlaceholder: (placeholder: string) => boolean;
 // @public
 export const isEditorActive: () => boolean;
 
-// @internal
-export function isElement(node: Node_2): node is Element_2;
-
-// @internal
-export function isEventBinding(binding: Binding): binding is EventBinding;
-
-// @internal
-export function isExpressionBinding(binding: Binding): binding is ExpressionBinding;
-
 // @public
 export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field> | null | undefined): field is null | undefined;
-
-// @internal
-export function isPrimitive(value: unknown): value is Primitive;
-
-// @internal
-export function isSetStateAction(action: Action): action is SetStateAction;
-
-// @internal
-export function isShowAnd(node: ShowNode): node is ShowAnd;
-
-// @internal
-export function isShowComparison(node: ShowNode): node is ShowComparison;
-
-// @internal
-export function isShowOr(node: ShowNode): node is ShowOr;
 
 // @public
 export interface Item {
@@ -945,10 +876,6 @@ export type ModuleExports = {
     namespaceExport: string | null;
 };
 
-// @internal
-type Node_2 = Element_2 | Primitive;
-export { Node_2 as Node }
-
 // @public
 export function normalizePersonalizedRewrite(pathname: string): string;
 
@@ -1057,9 +984,6 @@ export const postToDesignLibrary: (evt: DesignLibraryEvent) => void;
 export const PREVIEW_KEY = "sc_preview";
 
 // @internal
-export type Primitive = string | number | boolean | null;
-
-// @internal
 export const QUERY_PARAM_EDITING_SECRET = "secret";
 
 // @public
@@ -1141,21 +1065,6 @@ const replaceMediaUrlPrefix: (url: string, mediaUrlPrefix?: RegExp) => string;
 
 // @public
 export const resetEditorChromes: () => void;
-
-// @internal
-export interface ResolveContext {
-    event?: unknown;
-    item?: unknown;
-    props: Record<string, unknown>;
-    scope?: Record<string, unknown>;
-    state: Record<string, unknown>;
-}
-
-// @internal
-export const resolveIfTemplate: (value: unknown, ctx: ResolveContext) => unknown;
-
-// @internal
-export function resolveTemplateString(template: string, ctx: ResolveContext): unknown;
 
 export { RetryStrategy }
 
@@ -1243,6 +1152,13 @@ export const sendAtomsErrorEvent: (error: unknown, type: DesignLibraryAtomsError
 export const sendErrorEvent: (uid: string, error: unknown, type: DesignLibraryPreviewError) => void;
 
 // @internal
+export interface SerializedCatalog {
+    actions: AtomCatalogActionEntry[];
+    components: AtomCatalogComponentEntry[];
+    version?: string;
+}
+
+// @internal
 export interface ServerComponentPreviewEventArgs extends DesignLibraryEvent {
     // (undocumented)
     message: {
@@ -1253,31 +1169,6 @@ export interface ServerComponentPreviewEventArgs extends DesignLibraryEvent {
     };
     // (undocumented)
     name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
-}
-
-// @internal
-export interface SetStateAction {
-    setState: Record<string, Primitive>;
-}
-
-// @internal
-export interface ShowAnd {
-    and: ShowNode[];
-}
-
-// @internal
-export interface ShowComparison {
-    left: string;
-    op: 'eq' | 'ne';
-    right: string;
-}
-
-// @internal
-export type ShowNode = ShowComparison | ShowAnd | ShowOr;
-
-// @internal
-export interface ShowOr {
-    or: ShowNode[];
 }
 
 // @public
@@ -1305,6 +1196,11 @@ export type SitecoreCliConfigInput = {
     };
     componentMap?: GenerateMapArgs & {
         generator?: GenerateMapFunction;
+    };
+    atoms?: {
+        validation?: {
+            breakOnError?: boolean;
+        };
     };
 };
 
@@ -1368,6 +1264,13 @@ export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' 
         sitePathService?: SitePathService;
     };
 };
+
+// @public
+export interface SitecoreComponentMeta {
+    allowedChildren?: string[];
+    allowedParents?: string[];
+    version?: string;
+}
 
 // @public
 export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
@@ -1568,7 +1471,6 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 // Warnings were encountered during analysis:
 //
 // src/client/sitecore-client.ts:68:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
-// src/editing/atoms-builder/atoms-builder.ts:95:3 - (ae-forgotten-export) The symbol "SerializedDefaultChild" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:115:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal

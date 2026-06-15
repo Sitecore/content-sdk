@@ -62,8 +62,11 @@ export interface SitecoreComponentMeta {
   allowedParents?: string[];
 }
 
+/**
+ * A document is a JSON object that conforms to the JSON Schema specification.
+ * @internal
+ */
 export interface Document extends Spec {
   /** Human-readable identifier of the document. */
   name: string;
 }
-

@@ -94,19 +94,20 @@ export function loadCatalog(): CatalogLoadResult {
  * Load the current atom definitions from the project's atoms module.
  * Uses tsx to import TypeScript at runtime.
  * Returns a map of atom name to { version, schemaHash }.
+ * @param {CatalogLoadResult} [catalog] - Optional pre-loaded catalog. If omitted, the catalog is loaded from disk.
  * @internal
  */
-export async function loadCurrentAtoms(): Promise<AtomsInfoMap> {
+export async function loadCurrentAtoms(catalog?: CatalogLoadResult): Promise<AtomsInfoMap> {
   const modulePath = resolveAtomsModulePath();
   if (!modulePath)
     throw new Error(
       `Atoms module not found at ${ATOMS_MODULE_PATH}.{ts,tsx}. Ensure your atoms are defined in src/atoms/index.{ts,tsx} and export a catalog.`
     );
 
-  const catalog = loadCatalog();
+  const resolvedCatalog = catalog ?? loadCatalog();
   const result: AtomsInfoMap = {};
-  const componentNames = catalog.componentNames ?? [];
-  const components = catalog.data?.components ?? {};
+  const componentNames = resolvedCatalog.componentNames ?? [];
+  const components = resolvedCatalog.data?.components ?? {};
 
   for (const name of componentNames) {
     // Use the component's full data (props schema, slots, etc.) for schema hash except the version, which is pulled out separately.

@@ -4,20 +4,22 @@
 
 ```ts
 
-import { AtomType } from '@sitecore-content-sdk/content/editing';
 import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
+import { Catalog } from '@json-render/core';
 import { ClientError } from '@sitecore-content-sdk/core';
 import { ComponentFields } from '@sitecore-content-sdk/content/layout';
 import { ComponentParams } from '@sitecore-content-sdk/content/layout';
+import type { ComponentRenderer } from '@json-render/react';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ComponentType } from 'react';
 import { constants } from '@sitecore-content-sdk/core';
 import { debug as debug_2 } from '@sitecore-content-sdk/search';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
+import { defineRegistry } from '@json-render/react';
+import type { DefineRegistryResult } from '@json-render/react';
 import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 import { DictionaryService } from '@sitecore-content-sdk/content/i18n';
-import type { Document as Document_2 } from '@sitecore-content-sdk/content/atoms';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { enableDebug } from '@sitecore-content-sdk/core';
 import { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
@@ -34,6 +36,7 @@ import { GraphQLClientError } from '@sitecore-content-sdk/content/client';
 import { GraphQLRequestClient } from '@sitecore-content-sdk/content/client';
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/content/client';
 import { ImportEntry } from '@sitecore-content-sdk/content/codegen';
+import type { InferCatalogInput } from '@json-render/core';
 import { isEditorActive } from '@sitecore-content-sdk/content/editing';
 import { Item } from '@sitecore-content-sdk/content/layout';
 import { JSX as JSX_2 } from 'react';
@@ -51,15 +54,19 @@ import { Page } from '@sitecore-content-sdk/content/client';
 import { PageMode } from '@sitecore-content-sdk/content/client';
 import { default as React_2 } from 'react';
 import { ReactNode } from 'react';
+import type { ReactSchema } from '@json-render/react';
 import { RefAttributes } from 'react';
 import { resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 import { RetryStrategy } from '@sitecore-content-sdk/content/client';
 import { RouteData } from '@sitecore-content-sdk/content/layout';
+import { SchemaType } from '@json-render/core';
 import { SearchDocument } from '@sitecore-content-sdk/search';
 import { SearchParameters } from '@sitecore-content-sdk/search';
+import { SitecoreComponentMeta } from '@sitecore-content-sdk/content/atoms';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { SitePathService } from '@sitecore-content-sdk/content/site';
 import { SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
+import { useBoundProp as useBoundProp_2 } from '@json-render/react';
 import { z } from 'zod';
 
 // @public
@@ -68,46 +75,42 @@ export const AppPlaceholder: (props: AppPlaceholderProps) => React_2.JSX.Element
 // @public
 export type AppPlaceholderProps = Omit<PlaceholderProps, 'componentMap' | 'page'> & Required<Pick<PlaceholderProps, 'componentMap' | 'page'>>;
 
+// Warning: (ae-forgotten-export) The symbol "BaseAction" needs to be exported by the entry point api-surface.d.ts
+//
 // @public
-export type ArgMeta = {
-    argName: string;
+export type AtomActionDefinition = BaseAction;
+
+// @public
+export type AtomActionHandler = (params: Record<string, unknown>) => Promise<void> | void;
+
+// Warning: (ae-forgotten-export) The symbol "BaseComponent" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export type AtomComponentDefinition = BaseComponent & SitecoreComponentMeta;
+
+// @public
+export type AtomsActionsMap = Record<string, AtomActionHandler>;
+
+// Warning: (ae-forgotten-export) The symbol "BaseCatalog" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export type AtomsCatalogInput = BaseCatalog & {
+    version?: string;
+    components: Record<string, AtomComponentDefinition>;
+    actions: Record<string, AtomActionDefinition>;
 };
 
+// Warning: (ae-forgotten-export) The symbol "AtomsComponentRenderer" needs to be exported by the entry point api-surface.d.ts
+//
 // @public
-export type AtomChild = AtomMetadata | 'text' | 'atom';
+export type AtomsComponentsMap = Record<string, AtomsComponentRenderer>;
 
 // @public
-export type AtomMetadata = {
-    name: string;
-    version?: number;
-    type: AtomType;
-    description: string;
-    props: z.ZodObject<z.ZodRawShape>;
-    component: (props: unknown) => React.ReactNode;
-    htmlEvents?: string[];
-    customEvents?: Record<string, z.ZodType[]>;
-    allowedChildren?: AtomChild[];
-    defaultChildren?: DefaultChild[];
-};
-
-// @public
-export type AtomSchemaInput<C> = {
-    name: string;
-    description: string;
-    type?: AtomType;
-    version?: number;
-    props: {
-        [K in keyof EditableComponentProps<C>]?: z.ZodType<EditableComponentProps<C>[K]>;
-    };
-    htmlEvents?: CallbackPropKeys<EditableComponentProps<C>>[];
-    customEvents?: {
-        [K in CallbackPropKeys<EditableComponentProps<C>>]?: CallbackArgZodTuple<NonNullable<EditableComponentProps<C>[K]>>;
-    };
-    allowedChildren?: AtomChild[];
-    defaultChildren?: DefaultChild[];
-};
-
-export { AtomType }
+export interface AtomsConfig {
+    catalog: Catalog<any, AtomsCatalogInput>;
+    navigate?: (path: string) => void;
+    registry: DefineRegistryResult;
+}
 
 // @public
 export class BYOCComponent extends React_2.Component<BYOCComponentProps> {
@@ -156,16 +159,6 @@ export { CacheClient }
 export { CacheOptions }
 
 // @public
-export type CallbackArgZodTuple<F> = F extends (...args: infer A) => unknown ? {
-    [I in keyof A]: z.ZodType<A[I]>;
-} : never;
-
-// @public
-export type CallbackPropKeys<T> = {
-    [K in keyof T & string]: NonNullable<T[K]> extends (...args: any[]) => unknown ? K : never;
-}[keyof T & string];
-
-// @public
 export const ClientEditingChromesUpdate: () => JSX_2.Element;
 
 export { ClientError }
@@ -180,9 +173,6 @@ export { ComponentParams }
 export { ComponentRendering }
 
 export { constants }
-
-// @public
-export function createAtom<C>(component: C, schema: AtomSchemaInput<C>): AtomMetadata;
 
 // @public
 export const DateField: React_2.FC<DateFieldProps>;
@@ -212,12 +202,6 @@ export const dateFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
 export { debug_2 as debug }
 
 // @public
-export type DefaultChild = AtomMetadata | {
-    atom: AtomMetadata;
-    props?: Record<string, unknown>;
-};
-
-// @public
 export const DefaultEmptyFieldEditingComponentImage: React_2.FC<{
     [key: string]: unknown;
     className?: string;
@@ -230,6 +214,36 @@ export const DefaultEmptyFieldEditingComponentText: React_2.FC<{
 }>;
 
 export { DefaultRetryStrategy }
+
+// Warning: (ae-forgotten-export) The symbol "Exact" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export function defineAtomsCatalog<T extends AtomsCatalogInput>(input: Exact<T, AtomsCatalogInput>): Catalog<    {
+spec: SchemaType<"object", {
+root: SchemaType<"string", unknown>;
+elements: SchemaType<"record", SchemaType<"object", {
+type: SchemaType<"ref", string>;
+props: SchemaType<"propsOf", string>;
+children: SchemaType<"array", SchemaType<"string", unknown>>;
+visible: SchemaType<"any", unknown>;
+}>>;
+}>;
+catalog: SchemaType<"object", {
+components: SchemaType<"map", {
+props: SchemaType<"zod", unknown>;
+slots: SchemaType<"array", SchemaType<"string", unknown>>;
+description: SchemaType<"string", unknown>;
+example: SchemaType<"any", unknown>;
+}>;
+actions: SchemaType<"map", {
+params: SchemaType<"zod", unknown>;
+description: SchemaType<"string", unknown>;
+}>;
+}>;
+}, Exact<T, AtomsCatalogInput>>;
+
+// @public
+export const defineAtomsRegistry: typeof defineRegistry;
 
 // @public
 export const DesignLibrary: () => React_2.JSX.Element | null;
@@ -267,11 +281,6 @@ export type DynamicComponent = React.ComponentType<{
     fields?: ComponentFields;
     params?: ComponentParams;
 }>;
-
-// Warning: (ae-forgotten-export) The symbol "PropsOfComponent" needs to be exported by the entry point api-surface.d.ts
-//
-// @public
-export type EditableComponentProps<C> = Omit<PropsOfComponent<C>, 'children' | 'ref'>;
 
 // @public
 export const EditingScripts: () => React_2.JSX.Element;
@@ -370,9 +379,6 @@ export { getChildPlaceholder }
 export { getContentStylesheetLink }
 
 export { getDesignLibraryStylesheetLinks }
-
-// @internal
-export function getFieldMeta(schemaOrJsonSchema: z.ZodType | Record<string, unknown>): Record<string, unknown> | undefined;
 
 export { getFieldValue }
 
@@ -637,10 +643,7 @@ export const SitecoreProviderReactContext: React_2.Context<SitecoreProviderState
 // @public
 export interface SitecoreProviderState {
     api?: SitecoreProviderProps['api'];
-    atomRegistry?: {
-        atoms?: AtomMetadata[];
-        callbacks?: CallbackMetadata[];
-    };
+    atomsConfig?: AtomsConfig;
     componentMap: ComponentMap;
     // Warning: (ae-incompatible-release-tags) The symbol "loadImportMap" is marked as @public, but its signature references "ImportMapImport" which is marked as @internal
     loadImportMap: () => Promise<ImportMapImport>;
@@ -651,30 +654,6 @@ export interface SitecoreProviderState {
 export { SitePathService }
 
 export { SitePathServiceConfig }
-
-// @internal
-export type StudioComponentParams = {
-    componentRef?: string;
-};
-
-// @internal
-export const StudioComponentServerWrapper: (props: StudioComponentServerWrapperProps) => Promise<React_2.JSX.Element | null>;
-
-// @internal
-export type StudioComponentServerWrapperProps = {
-    componentRef: string;
-    fieldNames?: string;
-};
-
-// @internal
-const StudioComponentWrapper: (props: StudioComponentWrapperProps) => JSX_2.Element | null;
-export { StudioComponentWrapper as StudioComponentClientWrapper }
-export { StudioComponentWrapper }
-
-// @internal
-export type StudioComponentWrapperProps = {
-    document?: Document_2 | null;
-};
 
 // Warning: (ae-forgotten-export) The symbol "TextProps" needs to be exported by the entry point api-surface.d.ts
 //
@@ -695,6 +674,9 @@ export type TextFieldSchema = z.infer<ReturnType<typeof textFieldSchema>>;
 export const textFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
     value: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>;
 }, z.core.$strip>;
+
+// @public
+export const useBoundProp: typeof useBoundProp_2;
 
 // @public
 export const useInfiniteSearch: <T extends SearchDocument = SearchDocument>(options: UseInfiniteSearchOptions<T>) => UseInfiniteSearchState<T>;
@@ -756,9 +738,6 @@ export function useSitecore(options?: UseSitecoreOptions): SitecoreProviderState
 // @public
 export const withAppPlaceholder: <T extends ComponentProps, W extends T & WrapperProps>(Component: ComponentType<T>) => (props: W) => React_2.JSX.Element;
 
-// @public
-export function withArgMeta<T extends z.ZodType>(schema: T, meta: ArgMeta): T;
-
 // Warning: (ae-forgotten-export) The symbol "WithDatasourceCheckOptions" needs to be exported by the entry point api-surface.d.ts
 // Warning: (ae-forgotten-export) The symbol "WithDatasourceCheckProps" needs to be exported by the entry point api-surface.d.ts
 //
@@ -802,8 +781,7 @@ export function withSitecore(options?: UseSitecoreOptions): <ComponentProps exte
 // Warnings were encountered during analysis:
 //
 // src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point api-surface.d.ts
-// src/components/SitecoreProvider.tsx:74:5 - (ae-forgotten-export) The symbol "CallbackMetadata" needs to be exported by the entry point api-surface.d.ts
-// src/components/SitecoreProvider.tsx:123:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
+// src/components/SitecoreProvider.tsx:106:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

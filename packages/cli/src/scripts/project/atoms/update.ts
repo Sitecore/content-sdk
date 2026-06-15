@@ -20,11 +20,11 @@ export type UpdateArgs = {
 
 /**
  * Handler for `sitecore-tools project atoms update`.
- * Regenerates `.sitecore/atom-versions.lock.json` from current atom definitions.
+ * Regenerates `.sitecore/atoms.lock.json` from current atom definitions.
  */
 export async function handler() {
-  const currentAtoms = await loadCurrentAtoms();
   const catalog = loadCatalog();
+  const currentAtoms = await loadCurrentAtoms(catalog);
   const catalogData = catalog.data as Record<string, unknown>;
   const catalogVersion = typeof catalogData?.version === 'string' ? catalogData.version : undefined;
 

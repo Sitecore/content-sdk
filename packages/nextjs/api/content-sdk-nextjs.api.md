@@ -7,11 +7,13 @@
 import { AnalyticsAdapter } from '@sitecore-content-sdk/analytics-core/internal';
 import { AppPlaceholder } from '@sitecore-content-sdk/react';
 import { AppPlaceholderProps } from '@sitecore-content-sdk/react';
-import { ArgMeta } from '@sitecore-content-sdk/react';
-import { AtomChild } from '@sitecore-content-sdk/react';
-import { AtomMetadata } from '@sitecore-content-sdk/react';
-import { AtomSchemaInput } from '@sitecore-content-sdk/react';
-import { AtomType } from '@sitecore-content-sdk/react';
+import { AtomActionDefinition } from '@sitecore-content-sdk/react';
+import { AtomActionHandler } from '@sitecore-content-sdk/react';
+import { AtomComponentDefinition } from '@sitecore-content-sdk/react';
+import { AtomsActionsMap } from '@sitecore-content-sdk/react';
+import { AtomsCatalogInput } from '@sitecore-content-sdk/react';
+import { AtomsComponentsMap } from '@sitecore-content-sdk/react';
+import { AtomsConfig } from '@sitecore-content-sdk/react';
 import { BYOCClientWrapper } from '@sitecore-content-sdk/react';
 import { BYOCComponent } from '@sitecore-content-sdk/react';
 import { BYOCComponentParams } from '@sitecore-content-sdk/react';
@@ -20,8 +22,6 @@ import { BYOCServerWrapper } from '@sitecore-content-sdk/react';
 import { BYOCWrapper as BYOCWrapper_2 } from '@sitecore-content-sdk/react';
 import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
-import { CallbackArgZodTuple } from '@sitecore-content-sdk/react';
-import { CallbackPropKeys } from '@sitecore-content-sdk/react';
 import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { ClientEditingChromesUpdate } from '@sitecore-content-sdk/react';
 import { ComponentFields } from '@sitecore-content-sdk/content/layout';
@@ -32,22 +32,21 @@ import { ComponentMap } from '@sitecore-content-sdk/react';
 import { ComponentParams } from '@sitecore-content-sdk/content/layout';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { constants } from '@sitecore-content-sdk/core';
-import { createAtom } from '@sitecore-content-sdk/react';
 import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
 import { DateField } from '@sitecore-content-sdk/react';
 import { DateFieldSchema } from '@sitecore-content-sdk/react';
 import { dateFieldSchema } from '@sitecore-content-sdk/react';
 import { DeepRequired } from '@sitecore-content-sdk/content/config';
-import { DefaultChild } from '@sitecore-content-sdk/react';
 import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/react';
 import { DefaultEmptyFieldEditingComponentText } from '@sitecore-content-sdk/react';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
+import { defineAtomsCatalog as defineAtomsCatalog_2 } from '@sitecore-content-sdk/react';
+import { defineAtomsRegistry as defineAtomsRegistry_2 } from '@sitecore-content-sdk/react';
 import { DesignLibrary } from '@sitecore-content-sdk/react';
 import { DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/content/editing';
 import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 import { DictionaryService } from '@sitecore-content-sdk/content/i18n';
 import { DictionaryServiceConfig } from '@sitecore-content-sdk/content/i18n';
-import { EditableComponentProps } from '@sitecore-content-sdk/react';
 import { EDITING_COMPONENT_ID } from '@sitecore-content-sdk/content/layout';
 import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/content/layout';
 import { EditingRenderQueryParams } from '@sitecore-content-sdk/content/editing';
@@ -85,7 +84,6 @@ import { getComponentList } from '@sitecore-content-sdk/content/node-tools';
 import { getContentStylesheetLink } from '@sitecore-content-sdk/content/layout';
 import { getDesignLibraryStylesheetLinks } from '@sitecore-content-sdk/react';
 import { getEdgeProxyContentUrl } from '@sitecore-content-sdk/content/client';
-import { getFieldMeta } from '@sitecore-content-sdk/react';
 import { getFieldValue } from '@sitecore-content-sdk/content/layout';
 import { getGroomedVariantIds } from '@sitecore-content-sdk/content/personalize';
 import { getPersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
@@ -201,9 +199,9 @@ import { Text as Text_2 } from '@sitecore-content-sdk/react';
 import { TextField } from '@sitecore-content-sdk/react';
 import { TextFieldSchema } from '@sitecore-content-sdk/react';
 import { textFieldSchema } from '@sitecore-content-sdk/react';
+import { useBoundProp } from '@sitecore-content-sdk/react';
 import { useSitecore } from '@sitecore-content-sdk/react';
 import { withAppPlaceholder } from '@sitecore-content-sdk/react';
-import { withArgMeta } from '@sitecore-content-sdk/react';
 import { withDatasourceCheck } from '@sitecore-content-sdk/react';
 import { withEditorChromes } from '@sitecore-content-sdk/react';
 import { withEmptyFieldEditingComponent } from '@sitecore-content-sdk/react';
@@ -243,6 +241,20 @@ export class AppRouterMultisiteProxy extends MultisiteProxy {
     protected shouldSkipWhenDisabled(): boolean;
     protected shouldWarnWhenDisabled(_res: NextResponse): void;
 }
+
+export { AtomActionDefinition }
+
+export { AtomActionHandler }
+
+export { AtomComponentDefinition }
+
+export { AtomsActionsMap }
+
+export { AtomsCatalogInput }
+
+export { AtomsComponentsMap }
+
+export { AtomsConfig }
 
 // @public
 export class BotTrackingProxy extends ProxyBase {
@@ -297,10 +309,6 @@ export type CachedPageParams = {
 };
 
 export { CacheOptions }
-
-export { CallbackArgZodTuple }
-
-export { CallbackPropKeys }
 
 export { CdpHelper }
 
@@ -377,8 +385,6 @@ export { ComponentRendering }
 
 export { constants }
 
-export { createAtom }
-
 // Warning: (ae-forgotten-export) The symbol "EditingConfigRouteHandlerOptions" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
@@ -434,8 +440,6 @@ export { dateFieldSchema }
 const debug_2: Record<string, debug.Debugger>;
 export { debug_2 as debug }
 
-export { DefaultChild }
-
 export { DefaultEmptyFieldEditingComponentImage }
 
 export { DefaultEmptyFieldEditingComponentText }
@@ -447,6 +451,12 @@ export { DefaultRetryStrategy }
 
 // @public
 export const defaultServerImportEntries: ImportEntry[];
+
+// @public
+export const defineAtomsCatalog: typeof defineAtomsCatalog_2;
+
+// @public
+export const defineAtomsRegistry: typeof defineAtomsRegistry_2;
 
 // @public
 export const defineCliConfig: (cliConfig: SitecoreCliConfigInput) => SitecoreCliConfig;
@@ -471,8 +481,6 @@ export { DictionaryPhrases }
 export { DictionaryService }
 
 export { DictionaryServiceConfig }
-
-export { EditableComponentProps }
 
 export { EDITING_COMPONENT_ID }
 
@@ -621,8 +629,6 @@ export { getContentStylesheetLink }
 export { getDesignLibraryStylesheetLinks }
 
 export { getEdgeProxyContentUrl }
-
-export { getFieldMeta }
 
 export { getFieldValue }
 
@@ -900,6 +906,8 @@ export class PreviewProxy extends ProxyBase {
 export type PreviewProxyConfig = {
     client: SitecoreClient;
 };
+
+export { PropMeta }
 
 // @public
 export type ProxiesContext = Map<string, ProxiesContextMapValue>;
@@ -1184,14 +1192,14 @@ export { TextFieldSchema }
 
 export { textFieldSchema }
 
+export { useBoundProp }
+
 // @public
 export function useComponentProps<ComponentData>(componentUid: string | undefined): ComponentData | undefined;
 
 export { useSitecore }
 
 export { withAppPlaceholder }
-
-export { withArgMeta }
 
 export { withDatasourceCheck }
 

@@ -61,7 +61,7 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     mode: {
       name: 'normal',
       isDesignLibrary: false,
-      designLibrary: { isVariantGeneration: false },
+      designLibrary: { isVariantGeneration: false, isLowCode: false },
       isNormal: true,
       isPreview: false,
       isEditing: false,

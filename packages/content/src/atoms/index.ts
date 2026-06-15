@@ -14,4 +14,4 @@ export {
   sendAtomsErrorEvent,
   DesignLibraryAtomsError,
   addDocumentUpdateHandler,
-} from './desing-library-bridge';
+} from './design-library-bridge';

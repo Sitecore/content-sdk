@@ -29,7 +29,7 @@ export const __mockDependencies = (mocks: any) => {
  * Facilitates the communication between the Design Studio and the Rendering Host when previewing a low code component built with the Atoms.
  * - On mount, it serializes the atoms catalog and sends it to the Design Studio via the `atoms:catalog` event.
  * - Receives Component model data updates via document update handler and renders the low code component
- * via {@link StudioComponentWrapper} (same client path as Studio / NCC preview elsewhere).
+ * via `StudioComponentWrapper` (same client path as Studio / NCC preview elsewhere).
  * @internal
  */
 export const DesignLibraryLowCodeComponent = () => {

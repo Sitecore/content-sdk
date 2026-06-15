@@ -80,7 +80,7 @@ async function validateLockFile(): Promise<ValidateResult> {
     }
 
     const current = currentAtoms[name];
-    const currentVersion = current.version || undefined;
+    const currentVersion = current.version ?? undefined;
 
     // Check per-atom version drift (skip only when neither side declares a version)
     if (entry.version !== undefined || currentVersion !== undefined) {
