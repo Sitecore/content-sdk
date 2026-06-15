@@ -81,4 +81,6 @@ export interface AtomsConfig {
   catalog: Catalog<any, AtomsCatalogInput>;
   /** The registry result returned by defineAtomsRegistry. */
   registry: DefineRegistryResult;
+  /** Optional navigate function to be passed to action handlers for navigation purposes. */
+  navigate?: (path: string) => void;
 }

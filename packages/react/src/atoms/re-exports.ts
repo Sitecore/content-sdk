@@ -8,7 +8,6 @@ import { useBoundProp as useBoundPropInternal } from '@json-render/react';
  *
  * Designed to work with the `bindings` map that the renderer provides when
  * a prop uses `{ $bindState: "/path" }` or `{ $bindItem: "field" }`.
- *
  * @example
  * ```tsx
  * import { useBoundProp } from '@sitecore-content-sdk/react';
@@ -18,6 +17,7 @@ import { useBoundProp as useBoundPropInternal } from '@json-render/react';
  *   return <input value={value ?? ""} onChange={(e) => setValue(e.target.value)} />;
  * };
  * ```
+ * @public
  */
 export const useBoundProp = useBoundPropInternal;
 

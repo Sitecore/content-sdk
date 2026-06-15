@@ -81,11 +81,6 @@ const MMS_COMPONENT_PATH_PREFIX = 'mms';
  * @returns {Promise<Document | null>} the resolved component layout, or `null` on missing path, fetch failure, or un-parseable body.
  */
 async function fetchDocument(path: string): Promise<Document | null> {
-  if (!path) {
-    console.warn('StudioComponentServerWrapper: missing component reference path');
-    return null;
-  }
-
   let url: string;
   try {
     const pathWithMmsPrefix = path.startsWith('/')

@@ -5,6 +5,7 @@ import type { DefineRegistryResult } from '@json-render/react';
 import { createStateStore } from '@json-render/react';
 import type { StateModel } from '@json-render/core';
 import { Document } from '@sitecore-content-sdk/content/atoms';
+import { useSitecore } from '../components/SitecoreProvider';
 
 /**
  * Creates a React functional component that renders the given Component Layout document
@@ -25,6 +26,7 @@ export function createNCC(
   };
 
   const Generated: FC<Record<string, unknown>> = (runtimeProps) => {
+    const { atomsConfig } = useSitecore();
     const [store] = useState(() =>
       createStateStore({
         ...initialState,
@@ -41,7 +43,7 @@ export function createNCC(
     return (
       <StateProvider store={store}>
         <VisibilityProvider>
-          <ActionProvider handlers={resolvedHandlers}>
+          <ActionProvider handlers={resolvedHandlers} navigate={atomsConfig?.navigate}>
             <Renderer spec={doc} registry={registry} />
           </ActionProvider>
         </VisibilityProvider>
