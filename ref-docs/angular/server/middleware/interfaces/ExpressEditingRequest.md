@@ -6,7 +6,7 @@
 
 # Interface: ExpressEditingRequest
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:76](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/middleware/editing-render-middleware.ts#L76)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:76](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/editing-render-middleware.ts#L76)
 
 Editing-aware request. The render middleware attaches `scEditing` to allow
 downstream code to detect the editing branch without reparsing headers.
@@ -21,7 +21,7 @@ downstream code to detect the editing branch without reparsing headers.
 
 > **body**: `unknown`
 
-Defined in: [packages/angular/src/server/models.ts:22](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L22)
+Defined in: [packages/angular/src/server/models.ts:22](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L22)
 
 #### Inherited from
 
@@ -33,7 +33,7 @@ Defined in: [packages/angular/src/server/models.ts:22](https://github.com/Siteco
 
 > `optional` **cookies?**: `Record`\<`string`, `string`\>
 
-Defined in: [packages/angular/src/server/models.ts:27](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L27)
+Defined in: [packages/angular/src/server/models.ts:27](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L27)
 
 Cookies from the request (requires cookie-parser middleware)
 
@@ -47,7 +47,7 @@ Cookies from the request (requires cookie-parser middleware)
 
 > `optional` **headers?**: `Record`\<`string`, `string` \| `string`[] \| `undefined`\>
 
-Defined in: [packages/angular/src/server/models.ts:31](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L31)
+Defined in: [packages/angular/src/server/models.ts:31](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L31)
 
 Headers from the request
 
@@ -61,7 +61,7 @@ Headers from the request
 
 > **method**: `string`
 
-Defined in: [packages/angular/src/server/models.ts:19](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L19)
+Defined in: [packages/angular/src/server/models.ts:19](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L19)
 
 #### Inherited from
 
@@ -73,7 +73,7 @@ Defined in: [packages/angular/src/server/models.ts:19](https://github.com/Siteco
 
 > **path**: `string`
 
-Defined in: [packages/angular/src/server/models.ts:20](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L20)
+Defined in: [packages/angular/src/server/models.ts:20](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L20)
 
 #### Inherited from
 
@@ -85,7 +85,7 @@ Defined in: [packages/angular/src/server/models.ts:20](https://github.com/Siteco
 
 > **query**: `Record`\<`string`, `string` \| `string`[] \| `undefined`\>
 
-Defined in: [packages/angular/src/server/models.ts:23](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L23)
+Defined in: [packages/angular/src/server/models.ts:23](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L23)
 
 #### Inherited from
 
@@ -97,7 +97,7 @@ Defined in: [packages/angular/src/server/models.ts:23](https://github.com/Siteco
 
 > `optional` **scEditing?**: `EditingPreviewData`
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:77](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/middleware/editing-render-middleware.ts#L77)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:77](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/editing-render-middleware.ts#L77)
 
 ***
 
@@ -105,7 +105,7 @@ Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts
 
 > **url**: `string`
 
-Defined in: [packages/angular/src/server/models.ts:21](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/server/models.ts#L21)
+Defined in: [packages/angular/src/server/models.ts:21](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L21)
 
 #### Inherited from
 

@@ -6,7 +6,7 @@
 
 # Interface: AngularSitecoreConfig
 
-Defined in: [packages/angular/src/config/define-config.ts:55](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/config/define-config.ts#L55)
+Defined in: [packages/angular/src/config/define-config.ts:55](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/config/define-config.ts#L55)
 
 Resolved Sitecore configuration for Angular apps. Extends the fully-resolved
 [SitecoreConfig](../content/config/type-aliases/SitecoreConfig.md); structurally still a `SitecoreConfig`, so existing callers that
@@ -23,7 +23,7 @@ omitted at the type level — read the canonical locale list from `angular.local
 
 > **angular**: `object`
 
-Defined in: [packages/angular/src/config/define-config.ts:57](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/config/define-config.ts#L57)
+Defined in: [packages/angular/src/config/define-config.ts:57](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/config/define-config.ts#L57)
 
 #### loadersCache
 
@@ -183,7 +183,7 @@ Settings for Personalize functionality
 
 > **redirects**: `Omit`\<[`SitecoreConfig`](../content/config/type-aliases/SitecoreConfig.md)\[`"redirects"`\], `"locales"`\>
 
-Defined in: [packages/angular/src/config/define-config.ts:56](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/config/define-config.ts#L56)
+Defined in: [packages/angular/src/config/define-config.ts:56](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/config/define-config.ts#L56)
 
 ***
 

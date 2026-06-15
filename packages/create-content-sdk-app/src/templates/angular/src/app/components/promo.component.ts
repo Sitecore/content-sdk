@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component, Directive, computed } from '@angular/core';
 import {
   ImageField,
   LinkField,
@@ -18,98 +18,131 @@ interface PromoFields {
   PromoLink?: LinkField;
 }
 
-function promoImageSrc(fields: Record<string, unknown>): string | undefined {
-  const icon = fields.PromoIcon as ImageField | undefined;
-  const src = icon?.value?.src;
-  return typeof src === 'string' ? src : undefined;
-}
+const PROMO_HOST = {
+  '[attr.class]': "('component promo ' + styles().trim())",
+  '[attr.id]': 'renderingId()',
+  'attr.itemscope': '',
+  'attr.itemtype': 'https://schema.org/Product',
+} as const;
 
-/** Maps Promo / Promo-WithText layout fields to Product JSON-LD. */
-function promoProductJsonLd(
-  fields: Record<string, unknown>,
-  link: LinkField | undefined,
-  primaryText: TextField | undefined,
-  secondaryText: TextField | undefined
-) {
-  const descriptionHtml =
-    [primaryText?.value, secondaryText?.value]
-      .filter((segment) => segment != null && String(segment).length > 0)
-      .map((segment) => String(segment))
-      .join(' ') || undefined;
-
-  return buildProductJsonLd({
-    name:
-      link?.value?.title || (primaryText?.value != null ? String(primaryText.value) : undefined),
-    descriptionHtml,
-    url: link?.value?.href,
-    image: promoImageSrc(fields),
-  });
-}
-
-/**
- * Promo Default and Promo With Text share one implementation: optional `PromoText2` drives the
- * second rich-text column and merged JSON-LD description.
- */
-@Component({
-  selector: 'app-promo',
-  imports: [ScRichTextDirective, ScImageDirective, ScLinkDirective, StructuredDataComponent],
-  host: {
-    '[attr.class]': "('component promo ' + styles().trim())",
-    '[attr.id]': 'renderingId()',
-  },
-  template: `
-    <article itemscope itemtype="https://schema.org/Product">
-      <div class="component-content">
-        <div class="field-promoicon" itemprop="image">
-          <img *scImage="promoIcon()" alt="" />
-        </div>
-        <div class="promo-text" itemprop="description">
-          <div class="field-promotext">
-            @if (promoText(); as primaryRichText) {
-            <div *scRichText="primaryRichText"></div>
-            }
-          </div>
-          @if (promoText2(); as secondaryRichText) {
-          <div class="field-promotext">
-            <div *scRichText="secondaryRichText"></div>
-          </div>
-          }
-          <div class="field-promolink">
-            <a *scLink="promoLink()"></a>
-          </div>
-        </div>
-        @if (jsonLd()) {
-        <app-structured-data [scriptId]="jsonLdScriptId()" [data]="jsonLd()" />
-        }
-      </div>
-    </article>
-  `,
-})
-export class PromoComponent extends SxaComponent {
+@Directive()
+abstract class PromoBase extends SxaComponent {
   readonly promoIcon = computed(() => (this.fields() as PromoFields)?.PromoIcon);
   readonly promoText = computed(() => (this.fields() as PromoFields)?.PromoText);
   readonly promoText2 = computed(() => (this.fields() as PromoFields)?.PromoText2);
   readonly promoLink = computed(() => (this.fields() as PromoFields)?.PromoLink);
 
+  readonly isEmpty = computed(() => this.arePromoFieldsEmpty(this.fields() as PromoFields | undefined));
+
   readonly jsonLd = computed(() => {
     const promoFields = this.fields() as PromoFields;
-    if (
-      promoFields?.PromoIcon == null &&
-      promoFields?.PromoText == null &&
-      promoFields?.PromoText2 == null &&
-      promoFields?.PromoLink == null
-    ) {
+    if (this.arePromoFieldsEmpty(promoFields)) {
       return null;
     }
-    return promoProductJsonLd(
+    return this.buildPromoProductJsonLd(
       promoFields as Record<string, unknown>,
       this.promoLink(),
-      this.promoText(),
-      this.promoText2()
+      this.promoText()
     );
   });
 
   readonly jsonLdScriptId = computed(() => `jsonld-product-${this.renderingId() ?? 'promo'}`);
+
+  protected arePromoFieldsEmpty(fields: PromoFields | undefined): boolean {
+    if (!fields) {
+      return true;
+    }
+    return (
+      fields.PromoIcon == null &&
+      fields.PromoText == null &&
+      fields.PromoText2 == null &&
+      fields.PromoLink == null
+    );
+  }
+
+  private buildPromoProductJsonLd(
+    fields: Record<string, unknown>,
+    link: LinkField | undefined,
+    primaryText: TextField | undefined
+  ) {
+    return buildProductJsonLd({
+      name:
+        link?.value?.title || (primaryText?.value != null ? String(primaryText.value) : undefined),
+      descriptionHtml: primaryText?.value != null ? String(primaryText.value) : undefined,
+      url: link?.value?.href,
+      image: this.promoImageSrc(fields),
+    });
+  }
+
+  private promoImageSrc(fields: Record<string, unknown>): string | undefined {
+    const icon = fields.PromoIcon as ImageField | undefined;
+    const src = icon?.value?.src;
+    return typeof src === 'string' ? src : undefined;
+  }
 }
 
-export { PromoComponent as Default, PromoComponent as WithText };
+@Component({
+  selector: 'app-promo-default',
+  imports: [ScRichTextDirective, ScImageDirective, ScLinkDirective, StructuredDataComponent],
+  host: PROMO_HOST,
+  template: `
+    <div class="component-content">
+      @if (isEmpty()) {
+        <span class="is-empty-hint">Promo</span>
+      } @else {
+        <figure class="field-promoicon" itemprop="image">
+          <img *scImage="promoIcon()" alt="" />
+        </figure>
+        <div class="promo-text" itemprop="description">
+          <div class="field-promotext">
+            @if (promoText(); as primaryRichText) {
+              <div *scRichText="primaryRichText"></div>
+            }
+          </div>
+          <div class="field-promolink">
+            <a *scLink="promoLink()"></a>
+          </div>
+        </div>
+        @if (jsonLd()) {
+          <app-structured-data [scriptId]="jsonLdScriptId()" [data]="jsonLd()" />
+        }
+      }
+    </div>
+  `,
+})
+class PromoDefaultComponent extends PromoBase {}
+
+@Component({
+  selector: 'app-promo-with-text',
+  imports: [ScRichTextDirective, ScImageDirective, StructuredDataComponent],
+  host: PROMO_HOST,
+  template: `
+    <div class="component-content">
+      @if (isEmpty()) {
+        <span class="is-empty-hint">Promo</span>
+      } @else {
+        <figure class="field-promoicon" itemprop="image">
+          <img *scImage="promoIcon()" alt="" />
+        </figure>
+        <div class="promo-text" itemprop="description">
+          <div class="field-promotext">
+            @if (promoText(); as primaryRichText) {
+              <div class="promo-text" *scRichText="primaryRichText"></div>
+            }
+          </div>
+          <div class="field-promotext">
+            @if (promoText2(); as secondaryRichText) {
+              <div class="promo-text" *scRichText="secondaryRichText"></div>
+            }
+          </div>
+        </div>
+        @if (jsonLd()) {
+          <app-structured-data [scriptId]="jsonLdScriptId()" [data]="jsonLd()" />
+        }
+      }
+    </div>
+  `,
+})
+class PromoWithTextComponent extends PromoBase {}
+
+export { PromoDefaultComponent as Default, PromoWithTextComponent as WithText };

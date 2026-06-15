@@ -6,7 +6,7 @@
 
 # Class: SitecoreContextService
 
-Defined in: [packages/angular/src/lib/sitecore-context.service.ts:41](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/lib/sitecore-context.service.ts#L41)
+Defined in: [packages/angular/src/lib/sitecore-context.service.ts:41](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/lib/sitecore-context.service.ts#L41)
 
 Request-scoped Sitecore context derived reactively from the Angular Router.
 
@@ -32,7 +32,7 @@ No manual `setPage` / `setDictionary` / `setLocale` wiring required in app compo
 
 > `readonly` **dictionary**: `Signal`\<`DictionaryPhrases` \| `null`\>
 
-Defined in: [packages/angular/src/lib/sitecore-context.service.ts:45](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/lib/sitecore-context.service.ts#L45)
+Defined in: [packages/angular/src/lib/sitecore-context.service.ts:45](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/lib/sitecore-context.service.ts#L45)
 
 Current Sitecore dictionary data.
 
@@ -42,7 +42,7 @@ Current Sitecore dictionary data.
 
 > `readonly` **effectiveLocale**: `Signal`\<`string`\>
 
-Defined in: [packages/angular/src/lib/sitecore-context.service.ts:63](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/lib/sitecore-context.service.ts#L63)
+Defined in: [packages/angular/src/lib/sitecore-context.service.ts:63](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/lib/sitecore-context.service.ts#L63)
 
 Effective locale for data fetching: `page.locale ?? urlLocale ?? defaultLanguage`.
 
@@ -52,7 +52,7 @@ Effective locale for data fetching: `page.locale ?? urlLocale ?? defaultLanguage
 
 > `readonly` **isEditing**: `Signal`\<`boolean`\>
 
-Defined in: [packages/angular/src/lib/sitecore-context.service.ts:49](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/lib/sitecore-context.service.ts#L49)
+Defined in: [packages/angular/src/lib/sitecore-context.service.ts:49](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/lib/sitecore-context.service.ts#L49)
 
 Whether the current page is in editing mode.
 
@@ -62,7 +62,7 @@ Whether the current page is in editing mode.
 
 > `readonly` **page**: `Signal`\<`Page` \| `null`\>
 
-Defined in: [packages/angular/src/lib/sitecore-context.service.ts:43](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/lib/sitecore-context.service.ts#L43)
+Defined in: [packages/angular/src/lib/sitecore-context.service.ts:43](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/lib/sitecore-context.service.ts#L43)
 
 Current Sitecore page data (layout + mode).
 
@@ -72,7 +72,7 @@ Current Sitecore page data (layout + mode).
 
 > `readonly` **urlLocale**: `Signal`\<`string` \| `null`\>
 
-Defined in: [packages/angular/src/lib/sitecore-context.service.ts:54](https://github.com/Sitecore/content-sdk/blob/042f0f07645687a3cdaff7cd55b17797747e5352/packages/angular/src/lib/sitecore-context.service.ts#L54)
+Defined in: [packages/angular/src/lib/sitecore-context.service.ts:54](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/lib/sitecore-context.service.ts#L54)
 
 Locale extracted from the current URL; `null` when no configured-locale prefix
 or when locales are not configured.
