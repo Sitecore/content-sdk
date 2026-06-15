@@ -54,7 +54,7 @@
     "typescript": "~5.8.3"
   },
   "scripts": {
-    "build": "cross-env NODE_ENV=production npm-run-all --serial sitecore-tools:generate-map sitecore-tools:build next:build",
+    "build": "cross-env NODE_ENV=production npm-run-all --serial sitecore-tools:atoms:validate sitecore-tools:generate-map sitecore-tools:build next:build",
     "lint": "eslint ./src/**/*.tsx ./src/**/*.ts",
     "next:build": "next build",
     "next:dev": "cross-env NODE_OPTIONS='--inspect' next dev",
@@ -62,7 +62,9 @@
     "sitecore-tools:generate-map": "sitecore-tools project component generate-map",
     "sitecore-tools:generate-map:watch": "sitecore-tools project component generate-map --watch",
     "sitecore-tools:build": "sitecore-tools project build",
-    "dev": "cross-env NODE_ENV=development npm-run-all --serial sitecore-tools:generate-map sitecore-tools:build --parallel next:dev sitecore-tools:generate-map:watch",
-    "start": "cross-env-shell NODE_ENV=production npm-run-all --serial build next:start"
+    "dev": "cross-env NODE_ENV=development npm-run-all --serial sitecore-tools:atoms:validate sitecore-tools:generate-map sitecore-tools:build --parallel next:dev sitecore-tools:generate-map:watch",
+    "start": "cross-env-shell NODE_ENV=production npm-run-all --serial build next:start",
+    "sitecore-tools:atoms:validate": "sitecore-tools project atoms validate",
+    "sitecore-tools:atoms:update": "sitecore-tools project atoms update"
   }
 }
