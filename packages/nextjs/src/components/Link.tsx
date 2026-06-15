@@ -53,10 +53,22 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
       children,
       internalLinkMatcher = /^\//g,
       showLinkTextWithChildrenPresent,
+      renderChildrenWhenEmpty,
       ...rest
     } = props;
 
     if (!field || (!field.value && !(field as LinkFieldValue).href && !field.metadata)) {
+      if (renderChildrenWhenEmpty && children) {
+        const cleanRest = { ...rest };
+        for (const prop of supportedNextLinkProps) {
+          delete cleanRest[prop as keyof typeof cleanRest];
+        }
+        return (
+          <a {...cleanRest} ref={ref}>
+            {children}
+          </a>
+        );
+      }
       return null;
     }
 

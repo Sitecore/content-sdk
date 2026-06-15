@@ -45,11 +45,19 @@ export type LinkProps = EditableFieldProps<LinkProps> &
      * Displays a link text ('description' in Sitecore) even when children exist
      */
     showLinkTextWithChildrenPresent?: boolean;
+
+    /**
+     * Renders children even when the link field value is empty.
+     * When true, an empty anchor element containing the children is rendered instead of null.
+     * @default false
+     */
+    renderChildrenWhenEmpty?: boolean;
   };
 
 const LinkComponent: React.FC<LinkProps> = ({
   field,
   showLinkTextWithChildrenPresent,
+  renderChildrenWhenEmpty,
   ref,
   ...otherProps
 }) => {
@@ -57,17 +65,29 @@ const LinkComponent: React.FC<LinkProps> = ({
   const dynamicField: LinkField | LinkFieldValue = field;
   delete otherProps.editable; // prevent editable from being passed to the DOM
 
-  if (isFieldValueEmpty(dynamicField)) {
-    return null;
-  }
+  const renderEmptyLink = () => {
+    if (!renderChildrenWhenEmpty || !children) {
+      return null;
+    }
+
+    return (
+      <a {...otherProps} key="link" ref={ref}>
+        {children}
+      </a>
+    );
+  };
+
+  const isEmptyField = isFieldValueEmpty(dynamicField);
 
   // handle link directly on field for forgetful devs
-  const link = (dynamicField as LinkFieldValue).href
-    ? (field as LinkFieldValue)
-    : (dynamicField as LinkField).value;
+  const link = !isEmptyField
+    ? (dynamicField as LinkFieldValue).href
+      ? (field as LinkFieldValue)
+      : (dynamicField as LinkField).value
+    : undefined;
 
-  if (!link) {
-    return null;
+  if (isEmptyField || !link) {
+    return renderEmptyLink();
   }
 
   const anchor = link.linktype !== 'anchor' && link.anchor ? `#${link.anchor}` : '';
