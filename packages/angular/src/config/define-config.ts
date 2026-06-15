@@ -19,12 +19,7 @@ function getProcessEnv(): Record<string, string | undefined> {
  * source of truth for the locale list.
  * @public
  */
-export interface AngularSitecoreConfigInput extends Omit<SitecoreConfigInput, 'redirects'> {
-  /**
-   * Settings for redirects functionality. `locales` is derived automatically from
-   * `angular.locales`; only `enabled` is configurable at this layer.
-   */
-  redirects?: Omit<NonNullable<SitecoreConfigInput['redirects']>, 'locales'>;
+export interface AngularSitecoreConfigInput extends SitecoreConfigInput {
   /** Angular-specific configuration. */
   angular?: {
     /**
@@ -52,8 +47,7 @@ export interface AngularSitecoreConfigInput extends Omit<SitecoreConfigInput, 'r
  * omitted at the type level — read the canonical locale list from `angular.locales`.
  * @public
  */
-export interface AngularSitecoreConfig extends Omit<SitecoreConfig, 'redirects'> {
-  redirects: Omit<SitecoreConfig['redirects'], 'locales'>;
+export interface AngularSitecoreConfig extends SitecoreConfig {
   angular: {
     /** Resolved locales for the Angular app. Always contains at least `defaultLanguage`. */
     locales: string[];

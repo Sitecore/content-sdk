@@ -12,11 +12,11 @@
   },
   "files": [
     "dist",
-    "cli-node"
+    "dist-node"
   ],
   "scripts": {
     "ng": "ng",
-    "build": "del-cli dist cli-node && ng build && tsc -p tsconfig.server.json",
+    "build": "del-cli dist dist-node && ng build && tsc -p tsconfig.server.json",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false",
     "coverage": "ng test --watch=false --coverage",
@@ -104,6 +104,10 @@
     ".": {
       "types": "./dist/types/sitecore-content-sdk-angular.d.ts",
       "default": "./dist/fesm2022/sitecore-content-sdk-angular.mjs"
+    },
+    "./config": {
+      "types": "./dist/types/sitecore-content-sdk-angular-config.d.ts",
+      "default": "./dist/fesm2022/sitecore-content-sdk-angular-config.mjs"
     },
     "./config-cli": {
       "types": "./dist-node/server/config-cli/index.d.ts",

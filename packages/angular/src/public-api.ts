@@ -3,11 +3,6 @@ export { type AngularCSDKAppInit } from './lib/providers';
 export { SITECORE_CONFIG_TOKEN, SITECORE_CLIENT_TOKEN } from './lib/tokens';
 
 export {
-  defineConfig,
-  type AngularSitecoreConfigInput,
-  type AngularSitecoreConfig,
-} from './config/define-config';
-export {
   getContentStylesheetLink,
   getDesignLibraryStylesheetLinks,
   LayoutServiceData,

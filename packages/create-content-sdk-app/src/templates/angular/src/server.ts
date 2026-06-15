@@ -15,10 +15,13 @@ import {
   createEditingRenderMiddleware,
   createLoaderCache,
   createLoaderDataServiceMiddleware,
+  createMultisiteMiddleware,
+  createPersonalizeMiddleware,
   createSitecoreRevalidateMiddleware,
 } from '@sitecore-content-sdk/angular';
 import { LOADERS } from './content-sdk/loaders';
 import { componentMap } from '.sitecore/component-map';
+import sites from '.sitecore/sites.json';
 import config from '../sitecore.config';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
@@ -90,10 +93,43 @@ app.use(
 app.use(createEditingRenderMiddleware());
 
 /**
+ * Multisite middleware. Resolves the site for each request (sc_site query → cookie →
+ * hostname → default) from the generated site list and writes it onto `req.scParams`
+ * for downstream loaders and the loader cache key. Must run before the personalize
+ * middleware, which reads the resolved site.
+ */
+app.use(
+  createMultisiteMiddleware({
+    ...config.multisite,
+    sites,
+    defaultSite: config.defaultSite,
+  })
+);
+
+/**
+ * Personalize middleware. Identifies page/component variants for the request via
+ * Sitecore CDP and writes them onto `req.scParams` so the page loader fetches the
+ * personalized layout and the loader cache keys per variant.
+ *
+ * NOTE: Personalize requires Edge configuration (contextId/clientContextId) and
+ * cannot work with local containers — the middleware disables itself when it is
+ * missing, which is expected in local development.
+ */
+app.use(
+  createPersonalizeMiddleware({
+    ...config.personalize,
+    ...config.api.edge,
+    locales: config.angular.locales,
+    defaultLanguage: config.defaultLanguage,
+    defaultSite: config.defaultSite,
+  })
+);
+
+/**
  * Loader data endpoint (/_data). Must use the same loaders as the client registry
  * so client-side navigation can fetch route data via POST /_data.
  */
-app.use(createLoaderDataServiceMiddleware({ loaders: LOADERS, cache: loaderCache }));
+app.use(createLoaderDataServiceMiddleware(config, { loaders: LOADERS, cache: loaderCache }));
 
 /**
  * Serve static files from /browser
