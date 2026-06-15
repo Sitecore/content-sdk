@@ -6,7 +6,10 @@ type BaseCatalog = InferCatalogInput<ReactSchema['definition']['catalog']>;
 type BaseComponent = BaseCatalog['components'][string];
 type BaseAction = BaseCatalog['actions'][string];
 
-/** Utility type that prevents extra keys beyond those defined in `Base`. */
+/**
+ * Utility type that prevents extra keys beyond those defined in `Base`.
+ * @internal
+ */
 export type Exact<T, Base> = T & Record<Exclude<keyof T, keyof Base>, never>;
 
 /**
@@ -58,19 +61,6 @@ export type AtomActionHandler = (params: Record<string, unknown>) => Promise<voi
  * @public
  */
 export type AtomsActionsMap = Record<string, AtomActionHandler>;
-
-/**
- * Options for defineAtomsRegistry.
- * @public
- */
-export interface AtomsRegistryOptions {
-  /** React component implementations mapped to catalog component names. */
-  components: AtomsComponentsMap;
-  /** Action handler implementations mapped to catalog action names. */
-  actions: AtomsActionsMap;
-}
-
-/* ── Runtime types ── */
 
 /**
  * Props the developer passes to the provider for atoms support.

@@ -13,7 +13,7 @@ import type { AtomsCatalogInput, Exact } from './types';
  * @example
  * ```ts
  * import { z } from 'zod';
- * import { defineAtomsCatalog } from '@sitecore-content-sdk/react/atoms';
+ * import { defineAtomsCatalog } from '@sitecore-content-sdk/react';
  *
  * const catalog = defineAtomsCatalog({
  *   components: {

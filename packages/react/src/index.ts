@@ -111,20 +111,17 @@ export {
 export { ClientEditingChromesUpdate } from './components/ClientEditingChromesUpdate';
 export { SitePathService, SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
 export {
+  useBoundProp,
   defineAtomsCatalog,
   defineAtomsRegistry,
-  serializeCatalog,
   withPropMeta,
-  withArgMeta,
   type PropMeta,
-  type ArgMeta,
   type AtomComponentDefinition,
   type AtomActionDefinition,
   type AtomsCatalogInput,
   type AtomsComponentsMap,
   type AtomActionHandler,
   type AtomsActionsMap,
-  type AtomsRegistryOptions,
   type AtomsConfig,
   textFieldSchema,
   richTextFieldSchema,
@@ -138,5 +135,4 @@ export {
   type LinkFieldSchema,
   type ImageFieldSchema,
   type FileFieldSchema,
-  useBoundProp,
 } from './atoms';

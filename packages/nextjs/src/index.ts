@@ -119,6 +119,8 @@ export {
 export { FEaaSWrapper };
 export { BYOCWrapper };
 
+export * from './atoms';
+
 export {
   ComponentMap,
   Image,
@@ -163,39 +165,6 @@ export {
   AppPlaceholder,
   AppPlaceholderProps,
   renderEmptyPlaceholder,
-  defineAtomsCatalog,
-  defineAtomsRegistry,
-  serializeCatalog,
-  withPropMeta,
-  withArgMeta,
-  getFieldMeta,
-  type AtomComponentDefinition,
-  type AtomActionDefinition,
-  type AtomsCatalogInput,
-  type AtomsComponentsMap,
-  type AtomActionHandler,
-  type AtomsActionsMap,
-  type AtomsRegistryOptions,
-  type AtomsConfig,
-  type AtomsSpec,
-  type AtomRenderProps,
-  type AtomCatalogEntry,
-  type ActionCatalogEntry,
-  type SerializedCatalog,
-  type PropMeta,
-  type ArgMeta,
-  textFieldSchema,
-  richTextFieldSchema,
-  dateFieldSchema,
-  linkFieldSchema,
-  imageFieldSchema,
-  fileFieldSchema,
-  type TextFieldSchema,
-  type RichTextFieldSchema,
-  type DateFieldSchema,
-  type LinkFieldSchema,
-  type ImageFieldSchema,
-  type FileFieldSchema,
 } from '@sitecore-content-sdk/react';
 
 export { initContentSdk } from '@sitecore-content-sdk/core';

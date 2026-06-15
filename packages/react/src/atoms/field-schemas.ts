@@ -129,48 +129,36 @@ export const fileFieldSchema = (extra?: z.ZodRawShape) =>
 /**
  * Inferred type for a Sitecore Single-Line Text / Multi-Line Text field prop.
  * Use this to type component props that accept a text field.
- * @example
- * const MyComponent = (props: { title: TextFieldSchema }) => ...
  * @public
  */
 export type TextFieldSchema = z.infer<ReturnType<typeof textFieldSchema>>;
 
 /**
  * Inferred type for a Sitecore Rich Text field prop.
- * @example
- * const MyComponent = (props: { body: RichTextFieldSchema }) => ...
  * @public
  */
 export type RichTextFieldSchema = z.infer<ReturnType<typeof richTextFieldSchema>>;
 
 /**
  * Inferred type for a Sitecore Date field prop.
- * @example
- * const MyComponent = (props: { publishedAt: DateFieldSchema }) => ...
  * @public
  */
 export type DateFieldSchema = z.infer<ReturnType<typeof dateFieldSchema>>;
 
 /**
  * Inferred type for a Sitecore General Link field prop.
- * @example
- * const MyComponent = (props: { cta: LinkFieldSchema }) => ...
  * @public
  */
 export type LinkFieldSchema = z.infer<ReturnType<typeof linkFieldSchema>>;
 
 /**
  * Inferred type for a Sitecore Image field prop.
- * @example
- * const MyComponent = (props: { image: ImageFieldSchema }) => ...
  * @public
  */
 export type ImageFieldSchema = z.infer<ReturnType<typeof imageFieldSchema>>;
 
 /**
  * Inferred type for a Sitecore File field prop.
- * @example
- * const MyComponent = (props: { doc: FileFieldSchema }) => ...
  * @public
  */
 export type FileFieldSchema = z.infer<ReturnType<typeof fileFieldSchema>>;

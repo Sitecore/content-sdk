@@ -104,6 +104,11 @@
       "require": "./dist/cjs/index.js",
       "types": "./types/index.d.ts"
     },
+    "./atoms": {
+      "import": "./dist/esm/atoms/index.js",
+      "require": "./dist/cjs/atoms/index.js",
+      "types": "./types/atoms/index.d.ts"
+    },
     "./client": {
       "import": "./dist/esm/client/index.js",
       "require": "./dist/cjs/client/index.js",

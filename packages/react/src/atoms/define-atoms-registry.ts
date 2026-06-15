@@ -11,7 +11,7 @@ import { defineRegistry } from '@json-render/react';
  * @example
  *
  * ```tsx
- * import { defineAtomsRegistry } from '@sitecore-content-sdk/react/atoms';
+ * import { defineAtomsRegistry } from '@sitecore-content-sdk/react';
  *
  * const { registry, handlers, executeAction } = defineAtomsRegistry(catalog, {
  *   components: {
@@ -31,4 +31,4 @@ import { defineRegistry } from '@json-render/react';
  * ```
  * @public
  */
-export const defineAtomsRegistry: typeof defineRegistry = defineRegistry;
+export const defineAtomsRegistry = defineRegistry;

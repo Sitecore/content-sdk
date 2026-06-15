@@ -5,13 +5,13 @@ export type {
   AtomsComponentsMap,
   AtomActionHandler,
   AtomsActionsMap,
-  AtomsRegistryOptions,
   AtomsConfig,
+  Exact,
 } from './types';
 export { defineAtomsCatalog } from './define-atoms-catalog';
 export { defineAtomsRegistry } from './define-atoms-registry';
 export { serializeCatalog } from './catalog-serializer';
-export { withPropMeta, withArgMeta, type PropMeta, type ArgMeta } from './schema-utils';
+export { withPropMeta, type PropMeta } from './schema-utils';
 export {
   textFieldSchema,
   richTextFieldSchema,
