@@ -617,6 +617,9 @@ export function getFieldValue<T>(renderingOrFields: ComponentRendering | Compone
 export function getGroomedVariantIds(variantIds: string[]): PersonalizedRewriteData;
 
 // @internal
+export function getHostnameFromHostHeader(host: string): string;
+
+// @internal
 export function getImportMapInfo(importMap: ImportEntry[]): ImportEntryInfo[];
 
 // @public

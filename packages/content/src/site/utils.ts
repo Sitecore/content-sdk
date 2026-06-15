@@ -25,6 +25,8 @@ export type SiteRewriteData = {
  * - `example.com:443` → `example.com`
  * - `::1` → `::1` (does not treat `:1` as a port)
  * @param {string} host - Raw header value
+ * @returns {string} The hostname
+ * @internal
  */
 export function getHostnameFromHostHeader(host: string): string {
   const trimmed = host.trim();
