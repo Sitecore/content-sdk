@@ -158,7 +158,7 @@ function buildCSPHeader(): string {
  * request, sets the CSP header, rewrites `req.url` to the target route, and
  * hands the request off to the Angular SSR pipeline via `next()`.
  *
- * Unlike the Next.js port, no internal HTTP fetch is performed - the editing
+ * No internal HTTP fetch is performed - the editing
  * payload travels alongside the Express request through the existing
  * middleware chain.
  * @param {CreateEditingRenderMiddlewareOptions} [options] - Middleware options.

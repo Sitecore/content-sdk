@@ -5,6 +5,8 @@ import { createLoaderCache } from '../cache/loader-cache';
 import { buildCacheKey } from '../cache/cache-key';
 import { buildLoaderCacheTags } from '../cache/cache-tags';
 import type { ExpressRequest, ExpressResponse } from '../models';
+import { makeLoaderContext } from '../../testing/loader-spec-helpers';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 
 function createMockRes() {
   return {
@@ -25,11 +27,14 @@ describe('createSitecoreRevalidateMiddleware', () => {
     delete process.env.SITECORE_REVALIDATE_SECRET;
     next.mockClear();
     cache = createLoaderCache({ revalidate: 300 });
-    const built = buildCacheKey('page', {
-      url: '/about',
-      params: { site: 'demo', locale: 'en' },
-      query: {},
-    });
+    const built = buildCacheKey(
+      'page',
+      makeLoaderContext({
+        url: '/about',
+        routeParams: { locale: 'en' },
+        scParams: { siteName: 'demo', variantId: DEFAULT_VARIANT },
+      })
+    );
     cacheKey = built.key;
     await cache.set(
       cacheKey,
@@ -172,11 +177,14 @@ describe('createSitecoreRevalidateMiddleware', () => {
   });
 
   it('marks dictionary loader entries stale via sites fan-out even without webhook tags', async () => {
-    const dictBuilt = buildCacheKey('dictionary', {
-      url: '/',
-      params: { site: 'demo', locale: 'en' },
-      query: {},
-    });
+    const dictBuilt = buildCacheKey(
+      'dictionary',
+      makeLoaderContext({
+        url: '/',
+        routeParams: { locale: 'en' },
+        scParams: { siteName: 'demo', variantId: DEFAULT_VARIANT },
+      })
+    );
     const dictKey = dictBuilt.key;
     await cache.set(dictKey, { hello: 'world' }, 300, buildLoaderCacheTags('dictionary', dictBuilt.dimensions, dictKey));
 

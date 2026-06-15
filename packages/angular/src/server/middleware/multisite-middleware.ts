@@ -16,6 +16,7 @@ import { SC_PARAMS_HEADER } from '../../loaders/constants';
 import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import debug from '../../debug';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
+import { getMiddlewareRequest } from '../utils';
 
 type MultsiteMiddlewareOptions = SitecoreConfig['multisite'] & {
   sites?: SiteInfo[];
@@ -26,8 +27,9 @@ type MultsiteMiddlewareOptions = SitecoreConfig['multisite'] & {
 const hostnameMatcher = /(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}/;
 
 /**
- *
- * @param req
+ * Get the hostname from the request.
+ * @param {CsdkExpressRequest} req - The request.
+ * @returns {string} The hostname.
  */
 export function getHostname(req: CsdkExpressRequest): string {
   return getHostnameFromHostHeader(
@@ -39,14 +41,18 @@ export function getHostname(req: CsdkExpressRequest): string {
 }
 
 /**
- *
- * @param options
+ * Create the multisite middleware.
+ * @param {MultsiteMiddlewareOptions} options - The options.
+ * @returns {ExpressMiddleware} The multisite middleware.
  */
 export function createMultisiteMiddleware(options: MultsiteMiddlewareOptions): ExpressMiddleware {
   const siteResolver = new SiteResolver(options.sites ?? []);
   return (req: CsdkExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
     try {
-      if (req.url.startsWith('/api')) {
+      // For browser loader navigations (/_data) routing data comes from the loader payload, not
+      // the request; getMiddlewareRequest normalizes both into path/query/data.
+      const { path, query, data } = getMiddlewareRequest(req);
+      if (path.startsWith('/api')) {
         debug.multisite('multisite middleware skipped for /api/* routes');
         return next();
       }
@@ -56,27 +62,27 @@ export function createMultisiteMiddleware(options: MultsiteMiddlewareOptions): E
       }
       const startTimestamp = Date.now();
       debug.multisite('multisite middleware start: %o', {
-        url: req.url,
-        headers: req.headers,
-        cookies: req.cookies,
-        query: req.query,
+        path,
+        headers: data.headers,
+        cookies: data.cookies,
+        query,
       });
       let resolvedSite: string;
-      const hostname = getHostname(req);
+      const hostname = data.hostname || getHostname(req);
 
-      const isSitecorePreview = req.cookies?.[PREVIEW_KEY];
+      const isSitecorePreview = data.cookies?.[PREVIEW_KEY];
 
       if (isSitecorePreview) {
         // This cookie is required to be set in the Sitecore Preview mode to support navigation
         // and preserve the site name
-        resolvedSite = req.cookies?.[SITE_KEY]!;
+        resolvedSite = data.cookies?.[SITE_KEY]!;
       } else {
         resolvedSite =
-          (req.query?.[SITE_KEY] as string | undefined) ||
-          (req.query?.site as string | undefined) ||
+          (query[SITE_KEY] as string | undefined) ||
+          (query.site as string | undefined) ||
           (options.useCookieResolution &&
             options.useCookieResolution(req as RequestInit) &&
-            (req.cookies?.[SITE_KEY] as string | undefined)) ||
+            (data.cookies?.[SITE_KEY] as string | undefined)) ||
           siteResolver.getByHost(hostname).name;
       }
 

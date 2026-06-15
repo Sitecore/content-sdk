@@ -8,6 +8,7 @@ import { ClientLoaderDataService } from './client-loader-data.service';
 import { FETCH_DATA_ENDPOINT } from './loader-registry.token';
 import { LOADER_DATA_ENDPOINT } from '../server/constants';
 import * as sdkCore from '@sitecore-content-sdk/core';
+import { makeLoaderPayload } from '../testing/loader-spec-helpers';
 
 describe('ClientLoaderDataService', () => {
   let service: ClientLoaderDataService;
@@ -48,7 +49,7 @@ describe('ClientLoaderDataService', () => {
   describe('getData', () => {
     it('should make new data request when no pending requests and no staged prefetched response', async () => {
       setupTestBed();
-      const request = { url: '/test', loaderId: 'page' };
+      const request = makeLoaderPayload({ url: '/test' });
       const resultPromise = service.getData(request);
 
       const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
@@ -56,7 +57,7 @@ describe('ClientLoaderDataService', () => {
       expect(req.request.body).toEqual({
         loaderId: 'page',
         url: '/test',
-        params: {},
+        routeParams: {},
         query: {},
       });
       req.flush({ kind: 'data', data: { title: 'Hello' } });
@@ -67,7 +68,7 @@ describe('ClientLoaderDataService', () => {
 
     it('should return pending request if request for data is already pending', async () => {
       setupTestBed();
-      const request = { url: '/pending', loaderId: 'page' };
+      const request = makeLoaderPayload({ url: '/pending' });
       const promise1 = service.getData(request);
       const promise2 = service.getData(request);
 
@@ -81,7 +82,7 @@ describe('ClientLoaderDataService', () => {
 
     it('should return error when requested in server context (not browser)', async () => {
       setupTestBed({ platformId: 'server' });
-      const result = await service.getData({ url: '/any', loaderId: 'page' });
+      const result = await service.getData(makeLoaderPayload({ url: '/any' }));
       expect(result).toEqual({
         kind: 'error',
         status: 500,
@@ -94,7 +95,7 @@ describe('ClientLoaderDataService', () => {
   describe('prefetch', () => {
     it('should stage prefetched response without consuming so getData can read it without a new request', async () => {
       setupTestBed();
-      const request = { url: '/prefetched', loaderId: 'page' };
+      const request = makeLoaderPayload({ url: '/prefetched' });
       service.prefetch(request);
       const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req.flush({ kind: 'data', data: { prefetched: true } });
@@ -107,13 +108,13 @@ describe('ClientLoaderDataService', () => {
 
     it('should no-op on server', () => {
       setupTestBed({ platformId: 'server' });
-      service.prefetch({ url: '/any', loaderId: 'page' });
+      service.prefetch(makeLoaderPayload({ url: '/any' }));
       httpController.expectNone(LOADER_DATA_ENDPOINT);
     });
 
     it('should not make a new request when prefetched response is already staged', async () => {
       setupTestBed();
-      const request = { url: '/staged', loaderId: 'page' };
+      const request = makeLoaderPayload({ url: '/staged' });
       service.prefetch(request);
       const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req.flush({ kind: 'data', data: { staged: true } });
@@ -125,7 +126,7 @@ describe('ClientLoaderDataService', () => {
 
     it('should not start a second request when one is already pending', () => {
       setupTestBed();
-      const request = { url: '/pending', loaderId: 'page' };
+      const request = makeLoaderPayload({ url: '/pending' });
       service.prefetch(request);
       service.prefetch(request);
 
@@ -138,7 +139,7 @@ describe('ClientLoaderDataService', () => {
     it('should use custom data endpoint when provided in DI', async () => {
       const customEndpoint = '/api/loader-data';
       setupTestBed({ fetchDataEndpoint: customEndpoint });
-      const resultPromise = service.getData({ url: '/test', loaderId: 'page' });
+      const resultPromise = service.getData(makeLoaderPayload({ url: '/test' }));
 
       const req = httpController.expectOne(customEndpoint);
       expect(req.request.method).toBe('POST');
@@ -149,7 +150,7 @@ describe('ClientLoaderDataService', () => {
 
     it('should use default data endpoint when fetchDataEndpoint not provided in DI', async () => {
       setupTestBed();
-      const resultPromise = service.getData({ url: '/test', loaderId: 'page' });
+      const resultPromise = service.getData(makeLoaderPayload({ url: '/test' }));
 
       const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req.flush({ kind: 'data', data: {} });
@@ -158,7 +159,7 @@ describe('ClientLoaderDataService', () => {
 
     it('should use default data endpoint when fetchDataEndpoint is null in DI', async () => {
       setupTestBed({ fetchDataEndpoint: null });
-      const resultPromise = service.getData({ url: '/test', loaderId: 'page' });
+      const resultPromise = service.getData(makeLoaderPayload({ url: '/test' }));
 
       const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req.flush({ kind: 'data', data: {} });
@@ -167,7 +168,7 @@ describe('ClientLoaderDataService', () => {
 
     it('should return error when fetch promise fails', async () => {
       setupTestBed();
-      const resultPromise = service.getData({ url: '/fail', loaderId: 'page' });
+      const resultPromise = service.getData(makeLoaderPayload({ url: '/fail' }));
 
       const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req.error(new ProgressEvent('error'));
@@ -179,8 +180,8 @@ describe('ClientLoaderDataService', () => {
 
     it('should add pending request', async () => {
       setupTestBed();
-      const promise1 = service.getData({ url: '/same', loaderId: 'page' });
-      const promise2 = service.getData({ url: '/same', loaderId: 'page' });
+      const promise1 = service.getData(makeLoaderPayload({ url: '/same' }));
+      const promise2 = service.getData(makeLoaderPayload({ url: '/same' }));
 
       const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req.flush({ kind: 'data', data: { one: 1 } });
@@ -194,7 +195,7 @@ describe('ClientLoaderDataService', () => {
   describe('fetchData error response (no response body)', () => {
     it('should return error with endpoint in message when response is falsy', async () => {
       setupTestBed();
-      const resultPromise = service.getData({ url: '/empty', loaderId: 'page' });
+      const resultPromise = service.getData(makeLoaderPayload({ url: '/empty' }));
 
       const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req.flush(null);
@@ -209,7 +210,7 @@ describe('ClientLoaderDataService', () => {
     it('should return error with custom endpoint in message when custom endpoint and falsy response', async () => {
       const customEndpoint = '/custom/data';
       setupTestBed({ fetchDataEndpoint: customEndpoint });
-      const resultPromise = service.getData({ url: '/empty', loaderId: 'page' });
+      const resultPromise = service.getData(makeLoaderPayload({ url: '/empty' }));
 
       const req = httpController.expectOne(customEndpoint);
       req.flush(null);

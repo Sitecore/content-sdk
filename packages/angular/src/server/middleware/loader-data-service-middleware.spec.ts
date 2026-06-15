@@ -1,13 +1,13 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import type { LoaderFn } from '../../loaders/models';
 import { NotFoundNavigationError, LoaderHttpError } from '../../loaders/models';
 import { createLoaderDataServiceMiddleware } from './loader-data-service-middleware';
 import { LOADER_DATA_ENDPOINT } from '../constants';
-import { EXTRACT_REQUEST_CONTEXT_TOKEN } from '../models';
 import type { LoaderRegistry } from '../../loaders/loader-registry.token';
 import { createLoaderCache } from '../cache/loader-cache';
+import { mockAngularSitecoreConfig } from '../../testing/loader-spec-helpers';
 
 /**
  * Minimal Express `res` stub for middleware tests.
@@ -30,12 +30,10 @@ function createMockNext() {
 
 describe('createLoaderDataServiceMiddleware', () => {
   const endpoint = LOADER_DATA_ENDPOINT;
+  const mockConfig = mockAngularSitecoreConfig({ defaultSite: 'demo' });
 
   beforeEach(() => {
     vi.clearAllMocks();
-    TestBed.configureTestingModule({
-      providers: [{ provide: EXTRACT_REQUEST_CONTEXT_TOKEN, useValue: () => ({}) }],
-    });
   });
 
   /** eslint-disable jsdoc/require-jsdoc */
@@ -45,11 +43,10 @@ describe('createLoaderDataServiceMiddleware', () => {
     endpoint?: string;
     cache?: import('../../loaders/models').LoaderCache;
   }) {
-    const extractReq = TestBed.inject(EXTRACT_REQUEST_CONTEXT_TOKEN);
-    return createLoaderDataServiceMiddleware({
+    return createLoaderDataServiceMiddleware(mockConfig, {
       ...opts,
       endpoint: opts.endpoint ?? endpoint,
-      extractRequestData: extractReq,
+      cache: opts.cache ?? createLoaderCache({ revalidate: 300 }),
     });
   }
 
@@ -62,7 +59,7 @@ describe('createLoaderDataServiceMiddleware', () => {
     const req = {
       method: 'POST',
       path: endpoint,
-      body: { loaderId: 'page', url: '/', params: {}, query: {} },
+      body: { loaderId: 'page', url: '/', routeParams: {}, query: {} },
       query: {},
     };
     const res = createMockRes();
@@ -74,9 +71,10 @@ describe('createLoaderDataServiceMiddleware', () => {
     expect(mockLoader).toHaveBeenCalledWith(
       expect.objectContaining({
         url: '/',
-        params: {},
+        routeParams: {},
         query: {},
-        requestContext: expect.any(Object),
+        scParams: { siteName: 'demo', variantId: DEFAULT_VARIANT, componentVariantIds: [] },
+        csdkRequestData: expect.any(Object),
       })
     );
     expect(res.json).toHaveBeenCalledWith({
@@ -106,8 +104,9 @@ describe('createLoaderDataServiceMiddleware', () => {
     expect(mockLoader).toHaveBeenCalledWith(
       expect.objectContaining({
         url: '/about',
-        params: {},
+        routeParams: {},
         query: { q: 'search' },
+        scParams: { siteName: 'demo', variantId: DEFAULT_VARIANT, componentVariantIds: [] },
       })
     );
     expect(res.json).toHaveBeenCalledWith({
@@ -155,7 +154,7 @@ describe('createLoaderDataServiceMiddleware', () => {
     const req = {
       method: 'POST',
       path: endpoint,
-      body: { loaderId: 'page', url: '/redirect-me', params: {}, query: {} },
+      body: { loaderId: 'page', url: '/redirect-me', routeParams: {}, query: {} },
       query: {},
     };
     const res = createMockRes();
@@ -182,7 +181,7 @@ describe('createLoaderDataServiceMiddleware', () => {
     const req = {
       method: 'POST',
       path: endpoint,
-      body: { loaderId: 'page', url: '/list', params: {}, query: {} },
+      body: { loaderId: 'page', url: '/list', routeParams: {}, query: {} },
       query: {},
     };
     const res = createMockRes();
@@ -207,7 +206,7 @@ describe('createLoaderDataServiceMiddleware', () => {
     const req = {
       method: 'POST',
       path: endpoint,
-      body: { loaderId: 'page', url: '/', params: {}, query: {} },
+      body: { loaderId: 'page', url: '/', routeParams: {}, query: {} },
       query: {},
     };
     const res = createMockRes();
@@ -232,7 +231,7 @@ describe('createLoaderDataServiceMiddleware', () => {
     const req = {
       method: 'POST',
       path: endpoint,
-      body: { loaderId: 'page', url: '/missing', params: {}, query: {} },
+      body: { loaderId: 'page', url: '/missing', routeParams: {}, query: {} },
       query: {},
     };
     const res = createMockRes();
@@ -255,7 +254,7 @@ describe('createLoaderDataServiceMiddleware', () => {
     const req = {
       method: 'POST',
       path: endpoint,
-      body: { loaderId: 'unknownLoader', url: '/', params: {}, query: {} },
+      body: { loaderId: 'unknownLoader', url: '/', routeParams: {}, query: {} },
       query: {},
     };
     const res = createMockRes();
@@ -305,7 +304,7 @@ describe('createLoaderDataServiceMiddleware', () => {
       body: {
         loaderId: 'page',
         url: '/cached-page',
-        params: { site: 'demo', locale: 'en' },
+        routeParams: { locale: 'en' },
         query: {},
       },
       query: {},
@@ -320,11 +319,11 @@ describe('createLoaderDataServiceMiddleware', () => {
     expect(mockLoader).toHaveBeenCalledTimes(1);
     expect(setSpy).toHaveBeenCalledTimes(1);
     expect(setSpy).toHaveBeenCalledWith(
-      'sc:loader:page:demo:en:default:cached-page',
+      'sc:loader:page:demo:en:_default:cached-page',
       { title: 'Cached page' },
       300,
       expect.arrayContaining([
-        'sc:loader:page:demo:en:default:cached-page',
+        'sc:loader:page:demo:en:_default:cached-page',
         'sc:site:demo',
         'sc:locale:en',
       ])
@@ -348,7 +347,7 @@ describe('createLoaderDataServiceMiddleware', () => {
     const req = {
       method: 'POST',
       path: endpoint,
-      body: { url: '/', params: {}, query: {} },
+      body: { url: '/', routeParams: {}, query: {} },
       query: {},
     };
     const res = createMockRes();

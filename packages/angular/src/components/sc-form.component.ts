@@ -102,7 +102,7 @@ export class ScFormComponent {
    * Listens for the form's `form:engage` events (VIEWED / SUBMITTED) and dispatches them through
    * the {@link SITECORE_ANALYTICS} façade, which lazily initializes the events SDK on first use
    * (a no-op on the server and when analytics is disabled). This is the analytics seam for
-   * Angular — unlike Next.js there is no global events bootstrap.
+   * Angular
    * @param {HTMLElement} formElement - Container holding the rendered form markup.
    * @param {string} [componentId] - Rendering uid used as the CDP component instance id.
    * @param {AbortSignal} [signal] - Removes the listener when the component is destroyed.

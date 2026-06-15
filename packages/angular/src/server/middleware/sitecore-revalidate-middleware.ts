@@ -49,7 +49,7 @@ export interface SitecoreRevalidateMiddlewareOptions {
 }
 
 /**
- * Express middleware aligned with Next.js `createSitecoreRevalidateRouteHandler`.
+ * Express middleware aligned with other frameworks' `createSitecoreRevalidateRouteHandler`.
  *
  * Handles `POST /api/revalidate` (configurable via `endpoint`):
  * - Authenticates with `SITECORE_REVALIDATE_SECRET` / `x-revalidate-secret` when configured.

@@ -1,6 +1,4 @@
 import {
-  LoaderPayload,
-  LoaderRunnerInit,
   LoaderApiResponse,
   NotFoundNavigationError,
   LoaderHttpError,
@@ -12,12 +10,11 @@ import {
   ExpressNextFunction,
   ExpressRequest,
   ExpressResponse,
-  CsdkExpressRequest,
   LoaderRegistry,
 } from '../models';
 import { LOADER_DATA_ENDPOINT } from '../constants';
 import { ServerLoaderRunner } from '../server-loader-runner';
-import { extractRequestData } from '../../loaders/utils';
+import { parseLoaderRequest } from '../utils';
 import { AngularSitecoreConfig } from '../../config/define-config';
 
 /**
@@ -81,46 +78,14 @@ function sendResponse(res: ExpressResponse, result: LoaderApiResponse): void {
 }
 
 /**
- * Parse POST body or GET query into LoaderPayload, or return a validation error.
- * @param {ExpressRequest} req - Incoming Express request
- */
-function parseLoaderRequest(
-  req: CsdkExpressRequest
-): LoaderRunnerInit | { status: number; message: string } {
-  if (req.method === 'POST') {
-    const body = req.body as LoaderPayload;
-    if (!body?.loaderId) return { status: 400, message: 'Missing loaderId' };
-    // csdkRequestData is server-derived only — anything request-data-shaped in the
-    // POST body is ignored so clients can't spoof site/variant resolution.
-    return { ...body, csdkRequestData: extractRequestData(req) };
-  }
-  if (req.method === 'GET') {
-    const loaderId = String(req.query?.loaderId ?? '');
-    if (!loaderId) return { status: 400, message: 'Missing loaderId' };
-    const query: Record<string, string> = {};
-    for (const [key, value] of Object.entries(req.query ?? {})) {
-      if (key !== 'loaderId' && key !== 'url' && typeof value === 'string') query[key] = value;
-    }
-    const csdkRequestData = extractRequestData(req) ?? null;
-    return {
-      loaderId,
-      url: String(req.query?.url ?? ''),
-      routeParams: {},
-      query,
-      csdkRequestData,
-    };
-  }
-  return { status: 405, message: 'Method not allowed' };
-}
-
-/**
  * Create an Express middleware for the data endpoint.
  * This middleware handles both GET and POST requests at the configured endpoint path.
  *
  * The endpoint path must match the client: provide the same value to the Angular app via
  * FETCH_DATA_ENDPOINT (e.g. in app.config.ts). There is no Angular DI in Node/Express,
  * so you pass the endpoint here when calling this function (e.g. from server.ts).
- * @param {ExpressDataHandlerOptions} options - Handler options: loaders and optional endpoint (defaults to {@link LOADER_DATA_ENDPOINT})
+ * @param {AngularSitecoreConfig} config - Resolved Sitecore configuration (drives default site/locale).
+ * @param {LoaderDataServiceOptions} options - Handler options: loaders, cache, and optional endpoint (defaults to {@link LOADER_DATA_ENDPOINT})
  * @returns Express middleware that handles the data endpoint
  * @example
  * ```typescript

@@ -1,10 +1,14 @@
-import { TestBed } from '@angular/core/testing';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { createMultisiteMiddleware } from './multisite-middleware';
 
 describe('MultisiteMiddleware', () => {
   it('should return a middleware', () => {
-    expect(createMultisiteMiddleware()).toBeDefined();
+    expect(
+      createMultisiteMiddleware({
+        enabled: false,
+        useCookieResolution: () => true,
+      })
+    ).toBeDefined();
   });
   it('should use provided sites collection', () => {});
   it('should resolve site from request by cookie', () => {});

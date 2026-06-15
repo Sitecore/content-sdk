@@ -5,6 +5,8 @@ import { createLoaderCache } from '../loader-cache';
 import { buildCacheKey } from '../cache-key';
 import { buildLoaderCacheTags } from '../cache-tags';
 import type { ExpressRequest, ExpressResponse } from '../../models';
+import { makeLoaderContext } from '../../../testing/loader-spec-helpers';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 
 function createMockRes() {
   return {
@@ -27,12 +29,14 @@ describe('createCacheAdminMiddleware', () => {
 
   beforeEach(async () => {
     cache = createLoaderCache({ revalidate: 300, defaultSiteName: 'demo' });
-    const ctx = {
-      url: '/about',
-      params: { site: 'demo', locale: 'en' },
-      query: {},
-    };
-    const built = buildCacheKey('page', ctx);
+    const built = buildCacheKey(
+      'page',
+      makeLoaderContext({
+        url: '/about',
+        routeParams: { locale: 'en' },
+        scParams: { siteName: 'demo', variantId: DEFAULT_VARIANT },
+      })
+    );
     cacheKey = built.key;
     await cache.set(
       cacheKey,

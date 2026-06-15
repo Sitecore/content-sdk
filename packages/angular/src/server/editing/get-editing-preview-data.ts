@@ -9,7 +9,7 @@ import { EDITING_PARAMS_HEADER } from '../../editing/constants';
  *
  * Loaders use this to branch between published-content fetching
  * (`client.getPage`) and preview fetching (`client.getPreview`).
- * @param {RequestContext | undefined} requestContext - Loader request context.
+ * @param {CsdkRequestData | undefined} csdkRequestData - Loader request context.
  * @returns {EditingPreviewData | undefined} Parsed preview data or `undefined`.
  * @public
  */

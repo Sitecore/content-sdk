@@ -105,8 +105,8 @@ describe('extractRequestData', () => {
 
   it('handles Express-like request with minimal fields', () => {
     const ctx = extractRequestData({});
-    expect(ctx.headers).toBeUndefined();
-    expect(ctx.cookies).toBeUndefined();
-    expect(ctx.query).toBeUndefined();
+    expect(ctx.headers).toEqual({});
+    expect(ctx.cookies).toEqual({});
+    expect(ctx.query).toEqual({});
   });
 });

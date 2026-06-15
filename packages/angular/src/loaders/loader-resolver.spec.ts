@@ -15,6 +15,10 @@ import type { LoaderFn } from './models';
 import type { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 import type { AngularSitecoreConfig } from '../config/define-config';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
+import { mockAngularSitecoreConfig, makeLoaderPayload } from '../testing/loader-spec-helpers';
+
+const mockSitecoreConfig = mockAngularSitecoreConfig();
 
 function makeRouteSnapshot(
   overrides: Partial<{
@@ -49,6 +53,7 @@ describe('loaderResolver', () => {
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: LOADER_REGISTRY, useValue: { page: (async () => ({})) as LoaderFn } },
           { provide: ClientLoaderDataService, useValue: mockLoaderData },
+          { provide: SITECORE_CONFIG_TOKEN, useValue: mockSitecoreConfig },
         ],
       });
       transferState = TestBed.inject(TransferState);
@@ -95,8 +100,9 @@ describe('loaderResolver', () => {
       expect(mockLoaderData.getData).toHaveBeenCalledWith({
         url: '/page/123',
         loaderId: 'page',
-        params: { id: '123' },
+        routeParams: { id: '123', locale: 'en' },
         query: { q: 'search' },
+        cacheOptions: undefined,
       });
       expect(result).toEqual({ title: 'Home' });
     });
@@ -173,6 +179,7 @@ describe('loaderResolver', () => {
           ClientLoaderDataService,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: LOADER_REGISTRY, useValue: { page: (async () => ({})) as LoaderFn } },
+          { provide: SITECORE_CONFIG_TOKEN, useValue: mockSitecoreConfig },
         ],
       });
       httpController = TestBed.inject(HttpTestingController);
@@ -238,7 +245,7 @@ describe('loaderResolver', () => {
       const route = makeRouteSnapshot({ pathFromRoot: [{ params: {} }] });
       const state = makeRouterStateSnapshot('/after-settle');
 
-      loaderData.prefetch({ loaderId: 'page', url: '/after-settle' });
+      loaderData.prefetch(makeLoaderPayload({ url: '/after-settle' }));
       const req0 = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req0.flush({ kind: 'data', data: { prefetched: true } });
       await new Promise((r) => setTimeout(r, 0));
@@ -278,6 +285,7 @@ describe('loaderResolver', () => {
           { provide: PLATFORM_ID, useValue: 'server' },
           { provide: LOADER_REGISTRY, useValue: { page: mockLoader } },
           { provide: ClientLoaderDataService, useValue: { getData: vi.fn() } },
+          { provide: SITECORE_CONFIG_TOKEN, useValue: mockSitecoreConfig },
           provideServerLoaderRunner(),
         ],
       });
@@ -302,9 +310,14 @@ describe('loaderResolver', () => {
       expect(mockLoader).toHaveBeenCalledTimes(1);
       expect(mockLoader).toHaveBeenCalledWith({
         url: '/about',
-        params: { slug: 'about' },
+        routeParams: { slug: 'about', locale: 'en' },
         query: { lang: 'en' },
-        requestContext: undefined,
+        scParams: {
+          siteName: 'default',
+          variantId: DEFAULT_VARIANT,
+          componentVariantIds: [],
+        },
+        csdkRequestData: {},
       });
       expect(result).toEqual({ server: true, title: 'SSR' });
     });
@@ -371,12 +384,16 @@ describe('loaderResolver', () => {
           { provide: LOADER_REGISTRY, useValue: { page: cachedLoader } },
           { provide: ClientLoaderDataService, useValue: { getData: vi.fn() } },
           { provide: REQUEST_CONTEXT, useValue: { cache } },
+          {
+            provide: SITECORE_CONFIG_TOKEN,
+            useValue: mockAngularSitecoreConfig({ defaultSite: 'demo' }),
+          },
           provideServerLoaderRunner(),
         ],
       });
 
       const resolver = loaderResolver('page');
-      const route = makeRouteSnapshot({ pathFromRoot: [{ params: { site: 'demo' } }] });
+      const route = makeRouteSnapshot({ pathFromRoot: [{ params: { locale: 'en' } }] });
       const state = makeRouterStateSnapshot('/cached-ssr');
 
       await TestBed.runInInjectionContext(async () => {
@@ -413,12 +430,13 @@ describe('loaderResolver', () => {
           { provide: LOADER_REGISTRY, useValue: { page: loaderWithRequest } },
           { provide: ClientLoaderDataService, useValue: { getData: vi.fn() } },
           { provide: REQUEST, useValue: mockRequest },
+          { provide: SITECORE_CONFIG_TOKEN, useValue: mockSitecoreConfig },
           provideServerLoaderRunner(),
         ],
       });
     });
 
-    it('should pass requestContext to loader', async () => {
+    it('should pass csdkRequestData to loader', async () => {
       const resolver = loaderResolver('page');
       const route = makeRouteSnapshot();
       const state = makeRouterStateSnapshot('/path');
@@ -432,13 +450,13 @@ describe('loaderResolver', () => {
       expect(loaderWithRequest).toHaveBeenCalledWith(
         expect.objectContaining({
           url: '/path',
-          requestContext: expect.any(Object),
+          csdkRequestData: expect.any(Object),
         })
       );
       const call = (loaderWithRequest as ReturnType<typeof vi.fn>).mock.calls[0][0];
-      expect(call.requestContext).toBeDefined();
-      expect(call.requestContext?.hostname).toBe('example.com');
-      expect(call.requestContext?.query?.foo).toBe('bar');
+      expect(call.csdkRequestData).toBeDefined();
+      expect(call.csdkRequestData?.hostname).toBe('example.com');
+      expect(call.csdkRequestData?.query?.foo).toBe('bar');
     });
   });
 
@@ -488,7 +506,7 @@ describe('loaderResolver', () => {
       });
 
       expect(mockLoader).toHaveBeenCalledWith(
-        expect.objectContaining({ params: expect.objectContaining({ locale: 'de' }) })
+        expect.objectContaining({ routeParams: expect.objectContaining({ locale: 'de' }) })
       );
     });
 
@@ -504,7 +522,7 @@ describe('loaderResolver', () => {
       });
 
       expect(mockLoader).toHaveBeenCalledWith(
-        expect.objectContaining({ params: expect.objectContaining({ locale: 'en' }) })
+        expect.objectContaining({ routeParams: expect.objectContaining({ locale: 'en' }) })
       );
     });
   });

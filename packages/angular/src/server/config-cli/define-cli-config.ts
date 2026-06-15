@@ -61,7 +61,7 @@ export class ${componentName}Component {}
 }
 
 /**
- * Registers the Angular component map generator (same CLI entrypoint as Next.js).
+ * Registers the Angular component map generator (same CLI entrypoint as other frameworks).
  * @param {AngularCsdkCliConfig} cliConfig - CLI configuration being built up
  */
 function addDefaultComponentMapGenerator(cliConfig: AngularCsdkCliConfig) {

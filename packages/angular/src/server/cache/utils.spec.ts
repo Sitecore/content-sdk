@@ -1,5 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect } from 'vitest';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import {
   approxByteSize,
   dimensionsFromContext,
@@ -29,14 +30,16 @@ describe('dimensionsFromContext', () => {
   it('reads site and locale from route params and derives pathKey', () => {
     const dimensions = dimensionsFromContext('page', {
       url: '/articles/1?ref=email',
-      params: { site: 'blog', locale: 'de' },
+      routeParams: { locale: 'de' },
       query: {},
+      scParams: { siteName: 'blog', variantId: DEFAULT_VARIANT },
     });
 
     expect(dimensions).toEqual({
       site: 'blog',
       locale: 'de',
-      variantId: 'default',
+      variantId: DEFAULT_VARIANT,
+      componentVariantIds: undefined,
       loaderId: 'page',
       pathKey: 'articles/1',
     });
@@ -45,8 +48,9 @@ describe('dimensionsFromContext', () => {
   it('falls back to default site, locale, and home pathKey', () => {
     const dimensions = dimensionsFromContext('page', {
       url: '',
-      params: {},
+      routeParams: {},
       query: {},
+      scParams: { siteName: 'default', variantId: DEFAULT_VARIANT },
     });
 
     expect(dimensions.site).toBe('default');

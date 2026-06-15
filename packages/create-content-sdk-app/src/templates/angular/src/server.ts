@@ -138,12 +138,12 @@ app.use(
 
 /**
  * Handle all other requests by rendering the Angular application.
- * The cache reference rides on REQUEST_CONTEXT so the SSR loader resolver
- * picks it up via inject(REQUEST_CONTEXT).
+ * The cache and the Node req/res ride on REQUEST_CONTEXT: the SSR loader resolver picks up the
+ * cache, and the server analytics provider uses req/res for cookie-based CDP event dispatch.
  */
 app.use((req, res, next) => {
   angularApp
-    .handle(req, { cache: loaderCache })
+    .handle(req, { cache: loaderCache, req, res })
     .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
     .catch((err) => {
       next(err);

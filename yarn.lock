@@ -5212,6 +5212,7 @@ __metadata:
     "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
     "@sitecore-content-sdk/content": "npm:^2.1.0"
     "@sitecore-content-sdk/core": "npm:^2.1.0"
+    "@sitecore-content-sdk/events": "npm:^2.1.0"
     "@sitecore-content-sdk/personalize": "npm:^2.1.0"
     "@types/node": "npm:^24.10.4"
     "@vitest/coverage-v8": "npm:^4.1.5"
@@ -5235,6 +5236,7 @@ __metadata:
     "@angular/ssr": ^21.0.0
     "@ngx-translate/core": ^17.0.0
     "@sitecore-content-sdk/analytics-core": ^2.1.0
+    "@sitecore-content-sdk/events": ^2.1.0
     "@sitecore-content-sdk/personalize": ^2.1.0
     zone.js: ^0.15.0
   peerDependenciesMeta:

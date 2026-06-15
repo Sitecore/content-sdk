@@ -10,10 +10,8 @@ import config from '../../../../sitecore.config';
  * CDP page view component. Dispatches a Sitecore CDP page view event on initial load and on
  * every client-side navigation. Template-less — it only performs the side effect.
  *
- * Angular analog of the Next.js `CdpPageView`: page data comes from
- * {@link SitecoreContextService}, dispatch goes through the {@link SITECORE_ANALYTICS} façade
- * (a no-op on the server and when analytics is disabled), and the work runs in an `effect` that
- * re-executes whenever the page signal changes.
+ * page data comes from {@link SitecoreContextService}, dispatch goes through the {@link SITECORE_ANALYTICS} facade
+ * Runs in browser only.
  *
  * See Sitecore Content SDK documentation for details:
  * https://www.npmjs.com/package/@sitecore-content-sdk/events

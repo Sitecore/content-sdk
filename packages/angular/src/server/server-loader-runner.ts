@@ -32,6 +32,7 @@ export class ServerLoaderRunner {
 
   /**
    * @param {LoaderRegistry} registry - Same loader map as `provideLoaderRegistry` / `/_data` middleware.
+   * @param {AngularSitecoreConfig} config - Resolved Sitecore configuration (drives default site/locale).
    * @param {LoaderCache | undefined} cache - Optional cache instance from createLoaderCache.
    */
   constructor(

@@ -1,5 +1,5 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
 import {
   CdpHelper,
   DEFAULT_VARIANT,
@@ -8,27 +8,55 @@ import {
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
 import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/analytics-core/internal';
-import { initContentSdk } from '@sitecore-content-sdk/core';
-import { personalize } from '@sitecore-content-sdk/personalize';
-import {
-  createPersonalizeMiddleware,
-  PersonalizeMiddlewareOptions,
-} from './personalize-middleware';
-import type { CsdkExpressRequest, ExpressResponse } from '../models';
+import type { CsdkExpressRequest, ExpressMiddleware, ExpressResponse } from '../models';
+
+const {
+  initContentSdkMock,
+  personalizeMock,
+  personalizeServerPluginMock,
+  personalizeServerAdapterMock,
+  analyticsPluginMock,
+  analyticsServerAdapterMock,
+} = vi.hoisted(() => ({
+  initContentSdkMock: vi.fn().mockResolvedValue(undefined),
+  personalizeMock: vi.fn(),
+  personalizeServerPluginMock: vi.fn(),
+  personalizeServerAdapterMock: vi.fn(),
+  analyticsPluginMock: vi.fn(),
+  analyticsServerAdapterMock: vi.fn(),
+}));
 
 vi.mock('@sitecore-content-sdk/core', async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
-  initContentSdk: vi.fn().mockResolvedValue(undefined),
+  initContentSdk: initContentSdkMock,
 }));
 vi.mock('@sitecore-content-sdk/personalize', () => ({
-  personalize: vi.fn(),
-  personalizeServerPlugin: vi.fn(),
-  personalizeServerAdapter: vi.fn(),
+  personalize: personalizeMock,
+  personalizeServerPlugin: personalizeServerPluginMock,
+  personalizeServerAdapter: personalizeServerAdapterMock,
 }));
 vi.mock('@sitecore-content-sdk/analytics-core', () => ({
-  analyticsPlugin: vi.fn(),
-  analyticsServerAdapter: vi.fn(),
+  analyticsPlugin: analyticsPluginMock,
+  analyticsServerAdapter: analyticsServerAdapterMock,
 }));
+
+type PersonalizeMiddlewareOptions = {
+  enabled?: boolean;
+  contextId?: string;
+  defaultSite?: string;
+  defaultLanguage?: string;
+  locales?: string[];
+  personalizeService?: PersonalizeService;
+  skip?: (req: CsdkExpressRequest) => boolean;
+  skipForBot?: boolean;
+  extractGeoDataCb?: () => Record<string, unknown>;
+};
+
+type CreatePersonalizeMiddleware = (
+  options: PersonalizeMiddlewareOptions
+) => ExpressMiddleware;
+
+let createPersonalizeMiddleware: CreatePersonalizeMiddleware;
 
 const getPersonalizeInfo = vi.fn();
 const personalizeService = {
@@ -71,20 +99,25 @@ function createRes() {
 describe('createPersonalizeMiddleware', () => {
   const next = vi.fn();
 
+  beforeAll(async () => {
+    ({ createPersonalizeMiddleware } = await import('./personalize-middleware'));
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
+    initContentSdkMock.mockResolvedValue(undefined);
   });
 
   it('should populate req.scParams with identified page-level variant', async () => {
     getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
-    vi.mocked(personalize).mockResolvedValue({ variantId: 'variant-a' });
+    personalizeMock.mockResolvedValue({ variantId: 'variant-a' });
     const req = createReq();
 
     await createPersonalizeMiddleware(createOptions())(req, createRes(), next);
 
     expect(getPersonalizeInfo).toHaveBeenCalledWith('/about', 'en', 'website');
-    expect(initContentSdk).toHaveBeenCalled();
-    expect(personalize).toHaveBeenCalledWith(
+    expect(initContentSdkMock).toHaveBeenCalled();
+    expect(personalizeMock).toHaveBeenCalledWith(
       expect.objectContaining({
         channel: 'WEB',
         currency: 'USD',
@@ -104,12 +137,12 @@ describe('createPersonalizeMiddleware', () => {
 
   it('should populate req.scParams.componentVariantIds with identified component-level variants', async () => {
     getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['comp1_var1'] });
-    vi.mocked(personalize).mockResolvedValue({ variantId: 'comp1_var1' });
+    personalizeMock.mockResolvedValue({ variantId: 'comp1_var1' });
     const req = createReq();
 
     await createPersonalizeMiddleware(createOptions())(req, createRes(), next);
 
-    expect(personalize).toHaveBeenCalledWith(
+    expect(personalizeMock).toHaveBeenCalledWith(
       expect.objectContaining({
         friendlyId: CdpHelper.getComponentFriendlyId('page-1', 'comp1', 'en'),
         pageVariantIds: [`comp1${DEFAULT_VARIANT}`, 'comp1_var1'],
@@ -125,7 +158,7 @@ describe('createPersonalizeMiddleware', () => {
 
   it('should extract language and content path from locale-prefixed url', async () => {
     getPersonalizeInfo.mockResolvedValue(undefined);
-    const req = createReq({ path: '/da/products/shoes' });
+    const req = createReq({ path: '/da/products/shoes', url: '/da/products/shoes' });
 
     await createPersonalizeMiddleware(createOptions())(req, createRes(), next);
 
@@ -199,7 +232,7 @@ describe('createPersonalizeMiddleware', () => {
     const middleware = createPersonalizeMiddleware(createOptions());
 
     for (const path of ['/api/data', '/sitecore/render', '/assets/logo.png']) {
-      await middleware(createReq({ path }), createRes(), next);
+      await middleware(createReq({ path, url: path }), createRes(), next);
     }
 
     expect(getPersonalizeInfo).not.toHaveBeenCalled();
@@ -242,7 +275,7 @@ describe('createPersonalizeMiddleware', () => {
     getPersonalizeInfo.mockResolvedValueOnce({ pageId: 'page-1', variantIds: [] });
     await middleware(req, createRes(), next);
 
-    expect(personalize).not.toHaveBeenCalled();
+    expect(personalizeMock).not.toHaveBeenCalled();
     expect(req.scParams?.variantId).toBe(DEFAULT_VARIANT);
     expect(next).toHaveBeenCalledTimes(2);
   });
@@ -255,13 +288,13 @@ describe('createPersonalizeMiddleware', () => {
     await createPersonalizeMiddleware(createOptions())(req, res, next);
 
     expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store, must-revalidate');
-    expect(personalize).not.toHaveBeenCalled();
+    expect(personalizeMock).not.toHaveBeenCalled();
     expect(req.scParams?.variantId).toBe(DEFAULT_VARIANT);
   });
 
   it('should ignore variants not configured for the route', async () => {
     getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
-    vi.mocked(personalize).mockResolvedValue({ variantId: 'unknown-variant' });
+    personalizeMock.mockResolvedValue({ variantId: 'unknown-variant' });
     const req = createReq();
 
     await createPersonalizeMiddleware(createOptions())(req, createRes(), next);
@@ -272,7 +305,7 @@ describe('createPersonalizeMiddleware', () => {
 
   it('should pass utm params, referrer and geo data to personalize', async () => {
     getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
-    vi.mocked(personalize).mockResolvedValue({ variantId: 'variant-a' });
+    personalizeMock.mockResolvedValue({ variantId: 'variant-a' });
     const req = createReq({
       query: { utm_campaign: 'sale', utm_source: 'newsletter' },
       headers: { host: 'example.com', referer: 'https://referrer.example' },
@@ -282,7 +315,7 @@ describe('createPersonalizeMiddleware', () => {
       createOptions({ extractGeoDataCb: () => ({ city: 'Oslo' }) })
     )(req, createRes(), next);
 
-    expect(personalize).toHaveBeenCalledWith(
+    expect(personalizeMock).toHaveBeenCalledWith(
       expect.objectContaining({
         params: {
           referrer: 'https://referrer.example',

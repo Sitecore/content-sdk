@@ -25,6 +25,8 @@ import {
 } from '../models';
 import { splitLocaleFromPath } from '../../i18n/locale-utils';
 import { SC_PARAMS_HEADER } from '../../loaders/constants';
+import { getMiddlewareRequest } from '../utils';
+import { toNodeAdapterPair } from '../node-adapter-types';
 import debug from '../../debug';
 
 /**
@@ -86,15 +88,16 @@ const isPrefetch = (req: CsdkExpressRequest): boolean =>
   );
 
 const getExperienceParams = (
-  req: CsdkExpressRequest,
+  query: Record<string, string | string[] | undefined>,
+  referrer: string,
   extraUtmParams: Partial<ExperienceParams['utm']> = {}
 ): ExperienceParams => {
   const utmParam = (name: string) => {
-    const value = req.query?.[name];
+    const value = query[name];
     return (Array.isArray(value) ? value[0] : value) || undefined;
   };
   return {
-    referrer: (req.headers?.referer as string) || '',
+    referrer,
     utm: {
       campaign: utmParam('utm_campaign'),
       content: utmParam('utm_content'),
@@ -182,29 +185,32 @@ export function createPersonalizeMiddleware(
         debug.personalize('personalize middleware skipped');
         return next();
       }
+      // For browser loader navigations (/_data) routing data comes from the loader payload, not
+      // the request; getMiddlewareRequest normalizes both into path/query/data.
+      const { path, query, data } = getMiddlewareRequest(req);
       if (
-        req.path.startsWith('/api') ||
-        req.path.startsWith('/sitecore') ||
-        req.path.includes('.') // ignore files
+        path.startsWith('/api') ||
+        path.startsWith('/sitecore') ||
+        path.includes('.') // ignore files
       ) {
-        debug.personalize('skipped (%s is not a layout route)', req.path);
+        debug.personalize('skipped (%s is not a layout route)', path);
         return next();
       }
-      if (req.cookies?.[PREVIEW_KEY]) {
+      if (data.cookies?.[PREVIEW_KEY]) {
         // No need to personalize for preview (layout data is already prepared for preview)
         debug.personalize('skipped (preview)');
         return next();
       }
-      if ((options.skipForBot ?? true) && req.cookies?.[BOT_DETECTION_COOKIE]) {
+      if ((options.skipForBot ?? true) && data.cookies?.[BOT_DETECTION_COOKIE]) {
         debug.personalize('skipped (bot request)');
         return next();
       }
 
       const startTimestamp = Date.now();
-      const { locale, nonLocalePath } = splitLocaleFromPath(req.path, options.locales ?? []);
+      const { locale, nonLocalePath } = splitLocaleFromPath(path, options.locales ?? []);
       const language = locale || options.defaultLanguage || 'en';
-      const siteName = req.scParams?.siteName || req.cookies?.[SITE_KEY] || options.defaultSite;
-      const hostHeader = req.headers?.['x-forwarded-host'] ?? req.headers?.host;
+      const siteName = req.scParams?.siteName || data.cookies?.[SITE_KEY] || options.defaultSite;
+      const hostHeader = data.headers?.['x-forwarded-host'] ?? data.headers?.host;
       const hostname =
         (Array.isArray(hostHeader) ? hostHeader[0] : hostHeader)?.split(':')[0] || 'localhost';
 
@@ -247,9 +253,8 @@ export function createPersonalizeMiddleware(
       }
 
       // Express req/res are http.IncomingMessage/ServerResponse at runtime; the minimal
-      // Express interfaces don't declare that, so cast for the cookie-based server adapters
-      const httpReq = req;
-      const httpRes = res;
+      // Express interfaces don't declare that, so cast for the cookie-based server adapters.
+      const { req: httpReq, res: httpRes } = toNodeAdapterPair(req, res);
       await initContentSdk({
         config: {
           contextId: options.contextId as string,
@@ -275,7 +280,11 @@ export function createPersonalizeMiddleware(
       });
 
       const geo = options.extractGeoDataCb ? await options.extractGeoDataCb(req) : undefined;
-      const params = getExperienceParams(req, options.getExtraUtmParams?.(req));
+      const params = getExperienceParams(
+        query,
+        (data.headers?.referer as string) || '',
+        options.getExtraUtmParams?.(req)
+      );
       const executions = getPersonalizeExecutions(personalizeInfo, language, options.scope);
       const identifiedVariantIds: string[] = [];
 

@@ -10,7 +10,7 @@ import { LoaderRunnerInit, LoaderDataResult } from './models';
 export interface ServerLoaderRunnerPort {
   /**
    * Resolve loader data on the server (cache-aware) using the shared {@link LOADER_REGISTRY}.
-   * @param {LoaderPayload} request - Loader request payload
+   * @param {LoaderRunnerInit} init - Loader request payload
    * @returns {Promise<LoaderDataResult>} Resolved loader result
    */
   resolve(init: LoaderRunnerInit): Promise<LoaderDataResult>;
