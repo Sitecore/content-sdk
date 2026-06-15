@@ -467,6 +467,14 @@ describe('<Link />', () => {
       expect(anchor?.hasAttribute('prefetch')).to.equal(false);
     });
 
+    it('should render nothing when field is empty and renderChildrenWhenEmpty is true without children', () => {
+      const field = null as unknown as LinkField;
+
+      const rendered = render(<Link field={field} renderChildrenWhenEmpty />);
+
+      expect(rendered.container.innerHTML).to.have.length(0);
+    });
+
     it('should still render nothing when field is empty and renderChildrenWhenEmpty is false', () => {
       const field = null as unknown as LinkField;
 

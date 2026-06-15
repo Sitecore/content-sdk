@@ -137,6 +137,12 @@ describe('<Link />', () => {
       expect(anchor?.getAttribute('class')).to.equal('card');
     });
 
+    it('should render nothing when field is empty and renderChildrenWhenEmpty is true without children', () => {
+      const field = { value: { href: undefined } };
+      const rendered = render(<Link field={field} renderChildrenWhenEmpty />);
+      expect(rendered.container.innerHTML).to.equal('');
+    });
+
     it('should still render nothing when field is empty and renderChildrenWhenEmpty is false', () => {
       const field = { value: { href: undefined } };
       const rendered = render(<Link field={field} renderChildrenWhenEmpty={false} />);

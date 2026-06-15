@@ -65,31 +65,29 @@ const LinkComponent: React.FC<LinkProps> = ({
   const dynamicField: LinkField | LinkFieldValue = field;
   delete otherProps.editable; // prevent editable from being passed to the DOM
 
-  if (isFieldValueEmpty(dynamicField)) {
-    if (renderChildrenWhenEmpty) {
-      return (
-        <a {...otherProps} key="link" ref={ref}>
-          {children}
-        </a>
-      );
+  const renderEmptyLink = () => {
+    if (!renderChildrenWhenEmpty || !children) {
+      return null;
     }
-    return null;
-  }
+
+    return (
+      <a {...otherProps} key="link" ref={ref}>
+        {children}
+      </a>
+    );
+  };
+
+  const isEmptyField = isFieldValueEmpty(dynamicField);
 
   // handle link directly on field for forgetful devs
-  const link = (dynamicField as LinkFieldValue).href
-    ? (field as LinkFieldValue)
-    : (dynamicField as LinkField).value;
+  const link = !isEmptyField
+    ? (dynamicField as LinkFieldValue).href
+      ? (field as LinkFieldValue)
+      : (dynamicField as LinkField).value
+    : undefined;
 
-  if (!link) {
-    if (renderChildrenWhenEmpty) {
-      return (
-        <a {...otherProps} key="link" ref={ref}>
-          {children}
-        </a>
-      );
-    }
-    return null;
+  if (isEmptyField || !link) {
+    return renderEmptyLink();
   }
 
   const anchor = link.linktype !== 'anchor' && link.anchor ? `#${link.anchor}` : '';

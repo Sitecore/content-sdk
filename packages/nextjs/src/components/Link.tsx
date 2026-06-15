@@ -32,13 +32,6 @@ export type LinkProps = ReactLinkProps & {
    * @default /^\//g
    */
   internalLinkMatcher?: RegExp;
-
-  /**
-   * Renders children even when the link field value is empty.
-   * When true, an empty anchor element containing the children is rendered instead of null.
-   * @default false
-   */
-  renderChildrenWhenEmpty?: boolean;
 } & Pick<NextLinkProps, (typeof supportedNextLinkProps)[number]>;
 
 /**
@@ -65,7 +58,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
     } = props;
 
     if (!field || (!field.value && !(field as LinkFieldValue).href && !field.metadata)) {
-      if (renderChildrenWhenEmpty) {
+      if (renderChildrenWhenEmpty && children) {
         const cleanRest = { ...rest };
         for (const prop of supportedNextLinkProps) {
           delete cleanRest[prop as keyof typeof cleanRest];
