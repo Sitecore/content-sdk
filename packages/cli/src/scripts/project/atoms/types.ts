@@ -5,6 +5,7 @@
 export interface AtomLockEntry {
   /** Semver version of this component. Absent when not declared on the component. */
   version?: string;
+  /** Hash of the component's schema, used to detect changes in the schema. */
   hash: string;
 }
 
@@ -15,7 +16,9 @@ export interface AtomLockEntry {
 export interface AtomVersionsLock {
   /** Catalog root version from `defineAtomsCatalog`. Absent when not declared. */
   version?: string;
+  /** Timestamp of when the lock file was generated. */
   generated: string;
+  /** Map of atom name to its lock entry. */
   atoms: Record<string, AtomLockEntry>;
 }
 
@@ -24,7 +27,9 @@ export interface AtomVersionsLock {
  * @internal
  */
 export interface AtomInfo {
+  /** Semver version of this component. Absent when not declared on the component. */
   version: string;
+  /** Hash of the component's schema, used to detect changes in the schema. */
   schemaHash: string;
 }
 
@@ -49,7 +54,8 @@ export interface CatalogLoadResult {
  * @internal
  */
 export interface ValidateResult {
+  /** Whether the lock file is valid (all hashes and versions match). */
   valid: boolean;
+  /** List of issues found during validation, if any. */
   issues: string[];
 }
-
