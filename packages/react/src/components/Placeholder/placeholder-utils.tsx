@@ -20,6 +20,7 @@ import {
   FEAAS_COMPONENT_RENDERING_NAME,
   FEAAS_WRAPPER_RENDERING_NAME,
 } from '../FEaaS';
+import { StudioComponentServerWrapper } from '../DesignLibrary/StudioComponentServerWrapper';
 import { ChildComponentProps, PlaceholderProps, ComponentForRendering } from './models';
 
 /**
@@ -169,6 +170,19 @@ export const getComponentForRendering = (
     };
   }
 
+  if (renderingDefinition.params?.ComponentRef) {
+    return {
+      component: (props: ChildComponentProps) => (
+        <StudioComponentServerWrapper
+          componentRef={props.rendering.params!.ComponentRef}
+          fieldNames={props.rendering.params?.fieldNames}
+        />
+      ),
+      isEmpty: false,
+      componentType: 'server',
+    };
+  }
+
   let component = null;
   if (!componentMap || componentMap.size === 0) {
     console.warn(
@@ -251,4 +265,3 @@ export const getComponentForRendering = (
     isEmpty: false,
   };
 };
-

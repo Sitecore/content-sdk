@@ -14,6 +14,9 @@ export type StudioComponentServerWrapperProps = {
    * Pipe separated relative paths to the Studio component layout JSON in MMS with the last segment as the variant name. The path matching `FieldNames` will be used, or `default` if no match.
    */
   componentRef: string;
+  /**
+   * Field name to match against the last segment of the `componentRef` paths. If no match is found, the `default` path will be used.
+   */
   fieldNames?: string;
 };
 
