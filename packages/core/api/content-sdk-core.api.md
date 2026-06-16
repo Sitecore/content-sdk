@@ -122,6 +122,9 @@ const ERROR_MESSAGES: {
     readonly IV_005: "[IV-005] Incorrect value for \"expiryDate\". Format the value according to ISO 8601.";
     readonly IV_006: (maxAttributes: number) => string;
     readonly IV_007: (siteName: string) => string;
+    readonly IV_008: (lockSide: string, currentSide: string) => string;
+    readonly IV_009: (name: string, lockSide: string, currentSide: string) => string;
+    readonly IV_010: (name: string) => string;
     readonly IE_001: (pluginName: string, dependency: string) => string;
     readonly IE_002: "[IE-002] SDK not initialized. You must first initialize the SDK using \"initContentSdk()\".";
     readonly IE_003: "[IE-003] Timeout exceeded. The server did not respond within the allotted time.";
@@ -129,6 +132,8 @@ const ERROR_MESSAGES: {
     readonly IE_005: "[IE-005] Unable to set the \"sc_cid\" cookie because the client ID could not be retrieved from the server. Make sure to set the correct values for \"contextId\" and \"siteName\". If the issue persists, try again later or use try-catch blocks to handle this error.";
     readonly IE_006: "[IE-006] Unable to set the \"sc_cid_personalize\" cookie because the visitor ID could not be retrieved from the server. Make sure to set the correct values for \"contextId\" and \"siteName\". If the issue persists, try again later or use try-catch blocks to handle this error.";
     readonly IE_007: (hostName: string) => string;
+    readonly IE_008: "[IE-008] Lock file validation failed:";
+    readonly IE_009: "[IE-009] Atom validation failed. See issues above. You see this error because `breakOnError` is enabled in your CLI config.";
     readonly MV_001: "[MV-001] \"contextId\" is required.";
     readonly MV_002: "[MV-002] \"siteName\" is required.";
     readonly MV_003: "[MV-003] \"identifiers\" is required.";
@@ -138,6 +143,11 @@ const ERROR_MESSAGES: {
     readonly MV_007: "[MV-007] Provide either \"contextId\" or both \"apiHost\" and \"apiKey\".";
     readonly MV_008: "[MV-008] Verify that sitecore.config is properly imported and correctly referenced.";
     readonly MV_009: "[MV-009] \"language\" is required.";
+    readonly MV_010: (modulePath: string) => string;
+    readonly MV_011: (modulePath: string) => string;
+    readonly MV_012: "[MV-012] Lock file not found. Run `sitecore-tools project atoms update` to generate it.";
+    readonly MV_013: (name: string) => string;
+    readonly MV_014: (name: string) => string;
     readonly CONTACT_SUPPORT: "If the issue persists, please contact Sitecore Support.";
 };
 
