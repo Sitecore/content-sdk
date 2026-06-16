@@ -33,7 +33,15 @@ export function createSitemapRouteHandler(options: RouteHandlerOptions) {
   const siteResolver = new SiteResolver(sites);
 
   const getOptions = (req: NextRequest): SitemapXmlOptions => {
-    const id = req.nextUrl.pathname.match(/^\/sitemap-(\d+)\.xml$/i)?.[1] || '';
+    const pathname = req.nextUrl.pathname;
+    const idMatch = pathname.match(/^\/sitemap-(\d+)\.xml$/i);
+
+    if (pathname !== '/sitemap.xml' && pathname !== '/sitemap-index.xml' && !idMatch) {
+      throw new Error('REDIRECT_404');
+    }
+
+    const id = idMatch?.[1] ?? '';
+
     const reqHost = req.headers.get('x-forwarded-host') || req.headers.get('host') || '';
     const reqProtocol = req.headers.get('x-forwarded-proto') || 'https';
     const site = siteResolver.getByHost(reqHost);

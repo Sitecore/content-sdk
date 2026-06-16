@@ -105,6 +105,44 @@ describe('createSitemapRouteHandler', () => {
       expect(res.body).to.equal(xmlContent);
     });
 
+    it('should process sitemap index request without id parameter', async () => {
+      req.nextUrl!.pathname = '/sitemap-index.xml';
+      const siteName = sites[0].name;
+      const xmlContent = '<sitemapindex>...</sitemapindex>';
+
+      sitecoreClientStub.getSiteMap.resolves(xmlContent);
+
+      const res = await handler.GET(req);
+
+      expect(sitecoreClientStub.getSiteMap.firstCall.args[0]).to.deep.include({
+        reqHost: 'example.com',
+        reqProtocol: 'https',
+        id: '',
+        siteName: siteName,
+      });
+      expect(res.body).to.equal(xmlContent);
+    });
+
+    it('should return 404 for unsupported sitemap index paths', async () => {
+      req.nextUrl!.pathname = '/sitemap-test-index.xml';
+
+      const res = await handler.GET(req);
+
+      expect(sitecoreClientStub.getSiteMap).not.to.have.been.called;
+      expect(res.status).to.equal(404);
+      expect(res.body).to.equal('Not Found');
+    });
+
+    it('should return 404 for non-numeric sitemap id paths', async () => {
+      req.nextUrl!.pathname = '/sitemap-test.xml';
+
+      const res = await handler.GET(req);
+
+      expect(sitecoreClientStub.getSiteMap).not.to.have.been.called;
+      expect(res.status).to.equal(404);
+      expect(res.body).to.equal('Not Found');
+    });
+
     it('should default to https protocol when x-forwarded-proto header is missing', async () => {
       const reqWithoutProto = {
         ...req,
