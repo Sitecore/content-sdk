@@ -34,12 +34,6 @@ function addDefaultScaffoldTemplates(cliConfig: SitecoreCliConfigInput) {
 }
 
 /**
- * Default exclude patterns for the component map generator.
- * Atoms components are rendered via the json-render registry, not the Sitecore component map.
- */
-const DEFAULT_COMPONENT_MAP_EXCLUDE = ['**/atoms/**'];
-
-/**
  * Add the framework-specific implementaion of the component map generator to the CLI configuration.
  * @param {SitecoreCliConfigInput} cliConfig - The CLI configuration object
  */
@@ -48,6 +42,6 @@ function addDefaultComponentMapGenerator(cliConfig: SitecoreCliConfigInput) {
     generator: generateMap,
     paths: ['src/components'],
     ...cliConfig.componentMap,
-    exclude: [...DEFAULT_COMPONENT_MAP_EXCLUDE, ...(cliConfig.componentMap?.exclude || [])],
+    exclude: [...(cliConfig.componentMap?.exclude || [])],
   };
 }
