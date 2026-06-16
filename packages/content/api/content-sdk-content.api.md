@@ -16,6 +16,8 @@ import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientConfig } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/core';
+import { IncomingMessage } from 'http';
+import { OutgoingMessage } from 'http';
 import { RetryStrategy } from '@sitecore-content-sdk/core';
 
 // @internal
@@ -1310,7 +1312,7 @@ export type SitecoreConfigInput = {
     };
     multisite?: {
         enabled?: boolean;
-        useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;
+        useCookieResolution?: (req?: IncomingMessage, res?: OutgoingMessage) => boolean;
     };
     personalize?: {
         enabled?: boolean;

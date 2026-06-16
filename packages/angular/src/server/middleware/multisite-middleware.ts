@@ -13,7 +13,6 @@ import {
 } from '../models';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { SC_PARAMS_HEADER } from '../../loaders/constants';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import debug from '../../debug';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
 import { getMiddlewareRequest } from '../utils';
@@ -60,6 +59,12 @@ export function createMultisiteMiddleware(options: MultsiteMiddlewareOptions): E
         debug.multisite('multisite middleware skipped');
         return next();
       }
+      const isSitecorePreview = data.cookies?.[PREVIEW_KEY];
+      if (isSitecorePreview) {
+        // Preview will resolve mode will resolve site, variant id etc from previewData
+        debug.multisite('skipped (preview)');
+        return next();
+      }
       const startTimestamp = Date.now();
       debug.multisite('multisite middleware start: %o', {
         path,
@@ -70,28 +75,21 @@ export function createMultisiteMiddleware(options: MultsiteMiddlewareOptions): E
       let resolvedSite: string;
       const hostname = data.hostname || getHostname(req);
 
-      const isSitecorePreview = data.cookies?.[PREVIEW_KEY];
-
-      if (isSitecorePreview) {
-        // This cookie is required to be set in the Sitecore Preview mode to support navigation
-        // and preserve the site name
-        resolvedSite = data.cookies?.[SITE_KEY]!;
-      } else {
-        resolvedSite =
-          (query[SITE_KEY] as string | undefined) ||
-          (query.site as string | undefined) ||
-          (options.useCookieResolution &&
-            options.useCookieResolution(req as RequestInit) &&
-            (data.cookies?.[SITE_KEY] as string | undefined)) ||
-          siteResolver.getByHost(hostname).name;
-      }
+      resolvedSite =
+        (query[SITE_KEY] as string | undefined) ||
+        (query.site as string | undefined) ||
+        (options.useCookieResolution &&
+          options.useCookieResolution(req) &&
+          (data.cookies?.[SITE_KEY] as string | undefined)) ||
+        siteResolver.getByHost(hostname).name;
 
       if (!resolvedSite) {
         resolvedSite = options.defaultSite ?? '';
       }
-      req.scParams
-        ? (req.scParams.siteName = resolvedSite)
-        : (req.scParams = { siteName: resolvedSite, variantId: DEFAULT_VARIANT });
+      req.scParams = {
+        ...(req.scParams || {}),
+        siteName: resolvedSite,
+      };
       // Also ride the params on a header so they survive Angular's conversion of the
       // Express request to a web Request on the SSR path (same mechanism as editing params).
       req.headers = req.headers ?? {};
