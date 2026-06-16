@@ -3709,6 +3709,7 @@ __metadata:
     "@sitecore-content-sdk/events": "npm:^2.1.0"
     "@sitecore-content-sdk/personalize": "npm:^2.1.0"
     "@sitecore-content-sdk/react": "npm:^2.1.0"
+    "@sitecore-content-sdk/search": "npm:^0.3.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@testing-library/dom": "npm:^10.4.0"
     "@testing-library/react": "npm:^16.3.0"
