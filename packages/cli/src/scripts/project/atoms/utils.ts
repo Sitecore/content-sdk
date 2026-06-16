@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
+import { constants } from '@sitecore-content-sdk/core';
 import { ensureSitecoreDirectory } from '../../../utils/ensure-sitecore-directory';
 import { AtomsInfoMap, AtomVersionsLock, CatalogLoadResult } from './types';
 import { ATOMS_MODULE_PATH, LOCK_FILE_DIR, LOCK_FILE_NAME } from './constants';
@@ -73,19 +74,14 @@ export function resolveAtomsModulePath(): string | null {
 export function loadCatalog(): CatalogLoadResult {
   const modulePath = resolveAtomsModulePath();
   if (!modulePath) {
-    throw new Error(
-      `Atoms module not found at ${ATOMS_MODULE_PATH}.{ts,tsx}. Ensure your atoms are defined in src/atoms/index.{ts,tsx}`
-    );
+    throw new Error(constants.ERROR_MESSAGES.MV_010(ATOMS_MODULE_PATH));
   }
 
   const tsx = require('tsx/cjs/api');
 
   const atomsModule = tsx.require(modulePath, __filename);
   const catalog = atomsModule.catalog ?? atomsModule.default?.catalog;
-  if (!catalog)
-    throw new Error(
-      `Atoms module at ${modulePath} does not export "catalog". Export the result of defineAtomsCatalog as "catalog".`
-    );
+  if (!catalog) throw new Error(constants.ERROR_MESSAGES.MV_011(modulePath));
 
   return catalog;
 }
@@ -99,10 +95,7 @@ export function loadCatalog(): CatalogLoadResult {
  */
 export async function loadCurrentAtoms(catalog?: CatalogLoadResult): Promise<AtomsInfoMap> {
   const modulePath = resolveAtomsModulePath();
-  if (!modulePath)
-    throw new Error(
-      `Atoms module not found at ${ATOMS_MODULE_PATH}.{ts,tsx}. Ensure your atoms are defined in src/atoms/index.{ts,tsx} and export a catalog.`
-    );
+  if (!modulePath) throw new Error(constants.ERROR_MESSAGES.MV_010(ATOMS_MODULE_PATH));
 
   const resolvedCatalog = catalog ?? loadCatalog();
   const result: AtomsInfoMap = {};

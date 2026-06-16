@@ -1,3 +1,4 @@
+import { constants } from '@sitecore-content-sdk/core';
 import loadCliConfig from '../../../utils/load-config';
 import { ValidateResult } from './types';
 import { loadCatalog, loadCurrentAtoms, readLockFile } from './utils';
@@ -32,15 +33,12 @@ export async function handler(argv: ValidateArgs) {
   const result = await validateLockFile();
 
   if (!result.valid) {
-    console.error('[atoms validate] Lock file validation failed:');
+    console.error(constants.ERROR_MESSAGES.IE_008);
     for (const issue of result.issues) {
       console.error(`  - ${issue}`);
     }
 
-    if (breakOnError)
-      throw new Error(
-        'Atom validation failed. See issues above. You see this error because `breakOnError` is enabled in your CLI config.'
-      );
+    if (breakOnError) throw new Error(constants.ERROR_MESSAGES.IE_009);
   } else console.log('[atoms validate] atoms.lock.json is up to date.');
 }
 
@@ -54,7 +52,7 @@ async function validateLockFile(): Promise<ValidateResult> {
   if (!lock)
     return {
       valid: false,
-      issues: ['Lock file not found. Run `sitecore-tools project atoms update` to generate it.'],
+      issues: [constants.ERROR_MESSAGES.MV_012],
     };
 
   const currentAtoms = await loadCurrentAtoms();
@@ -67,16 +65,14 @@ async function validateLockFile(): Promise<ValidateResult> {
     if (catalogVersion !== lock.version) {
       const lockSide = lock.version !== undefined ? `"${lock.version}"` : 'not set';
       const currentSide = catalogVersion !== undefined ? `"${catalogVersion}"` : 'not set';
-      issues.push(
-        `Catalog version mismatch: lock file has ${lockSide}, current is ${currentSide}.`
-      );
+      issues.push(constants.ERROR_MESSAGES.IV_008(lockSide, currentSide));
     }
   }
 
   // Check for atoms in lock but missing from current definitions
   for (const [name, entry] of Object.entries(lock.atoms)) {
     if (!currentAtoms[name]) {
-      issues.push(`Atom "${name}" is in the lock file but not found in current definitions.`);
+      issues.push(constants.ERROR_MESSAGES.MV_013(name));
       continue;
     }
 
@@ -88,24 +84,18 @@ async function validateLockFile(): Promise<ValidateResult> {
       if (entry.version !== currentVersion) {
         const lockSide = entry.version !== undefined ? `"${entry.version}"` : 'not set';
         const currentSide = currentVersion !== undefined ? `"${currentVersion}"` : 'not set';
-        issues.push(
-          `Atom "${name}" version mismatch: lock file has ${lockSide}, current is ${currentSide}.`
-        );
+        issues.push(constants.ERROR_MESSAGES.IV_009(name, lockSide, currentSide));
       }
     }
 
     if (current.schemaHash !== entry.hash) {
-      issues.push(`Atom "${name}" schema has changed.`);
+      issues.push(constants.ERROR_MESSAGES.IV_010(name));
     }
   }
 
   // Check for new atoms not in lock file
   for (const name of Object.keys(currentAtoms)) {
-    if (!lock.atoms[name])
-      issues.push(
-        `Atom "${name}" is new and not in the lock file. ` +
-          `Run \`sitecore-tools project atoms update\` to add it.`
-      );
+    if (!lock.atoms[name]) issues.push(constants.ERROR_MESSAGES.MV_014(name));
   }
 
   return {

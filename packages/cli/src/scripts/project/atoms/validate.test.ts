@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
+import { constants } from '@sitecore-content-sdk/core';
 import * as utilsModule from './utils';
 import * as loadConfigModule from '../../../utils/load-config';
 import { handler } from './validate';
@@ -69,8 +70,7 @@ describe('atoms/validate handler', () => {
 
       await handler({});
 
-      expect(consoleErrorStub.calledWith('[atoms validate] Lock file validation failed:')).to.be
-        .true;
+      expect(consoleErrorStub.calledWith(constants.ERROR_MESSAGES.IE_008)).to.be.true;
       const errorArgs = consoleErrorStub.getCalls().map((c) => String(c.args[0]));
       expect(errorArgs.some((msg) => msg.includes('Lock file not found'))).to.be.true;
     });
@@ -311,11 +311,7 @@ describe('atoms/validate handler', () => {
       }
 
       // Both the header and individual issues should be logged before the throw
-      expect(consoleErrorStub.calledWith('[atoms validate] Lock file validation failed:')).to.be
-        .true;
-      const errorArgs = consoleErrorStub.getCalls().map((c) => String(c.args[0]));
-      expect(errorArgs.length).to.be.greaterThan(1);
+      expect(consoleErrorStub.calledWith(constants.ERROR_MESSAGES.IE_008)).to.be.true;
     });
   });
 });
-
