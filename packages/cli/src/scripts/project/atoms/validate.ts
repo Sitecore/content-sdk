@@ -2,7 +2,7 @@ import loadCliConfig from '../../../utils/load-config';
 import { ValidateResult } from './types';
 import { loadCatalog, loadCurrentAtoms, readLockFile } from './utils';
 
-export const command = 'validate';
+export const command = ['validate', 'v'];
 
 export const describe =
   'Validate that the current atom implementations match the lock file. Fails if any atom has changed without a version bump.';
@@ -12,6 +12,7 @@ export const builder = {
     requiresArg: false,
     type: 'string',
     describe: 'Path to the `sitecore.cli.config` file.',
+    alias: 'c',
   },
 };
 

@@ -1,7 +1,7 @@
 import { AtomLockEntry, AtomVersionsLock } from './types';
 import { loadCatalog, loadCurrentAtoms, writeLockFile } from './utils';
 
-export const command = 'update';
+export const command = ['update', 'u'];
 
 export const describe =
   'Regenerate the atom versions lock file from the current atom definitions. Run after intentional schema changes.';
@@ -11,6 +11,7 @@ export const builder = {
     requiresArg: false,
     type: 'string',
     describe: 'Path to the `sitecore.cli.config` file.',
+    alias: 'c',
   },
 };
 
