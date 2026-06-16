@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { withPropMeta } from './schema-utils';
 
 /**
- * Zod schema for a Sitecore Single-Line Text or Multi-Line Text field.
+ * Zod schema for a Sitecore Single-Line Text.
  * Mirrors the Sitecore Text component (`Text.tsx` in `@sitecore-content-sdk/react`).
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the schema.
  * @returns A ZodObject with `value?: string | number` and the DS control hint attached.
