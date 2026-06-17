@@ -1486,7 +1486,7 @@ describe('SitecoreClient', () => {
     const defaultReqConfig = {
       reqHost: 'example.com',
       reqProtocol: 'https',
-      id: '',
+      id: undefined,
       siteName: 'test-site',
     };
 
@@ -1498,11 +1498,11 @@ describe('SitecoreClient', () => {
         .returns(sitemapXmlServiceStub);
     });
 
-    it('should fetch and return default sitemap content when empty id is provided', async () => {
+    it('should fetch and return sitemap content when specific sitemap exists', async () => {
       const absoluteSitemapPath = 'https://cdn.example.com/sitemap.xml';
       const xmlContent = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">...</urlset>';
 
-      sitemapXmlServiceStub.getSitemap.withArgs('').resolves(absoluteSitemapPath);
+      sitemapXmlServiceStub.getSitemap.resolves(absoluteSitemapPath);
       const dataFetcherStub = sandbox
         .stub(NativeDataFetcher.prototype, 'fetch')
         .resolves({ data: xmlContent, status: 200, statusText: 'OK' });
@@ -1510,7 +1510,6 @@ describe('SitecoreClient', () => {
       const result = await sitecoreClient.getSiteMap({ ...defaultReqConfig });
 
       expect(getGraphqlSitemapXMLServiceStub.calledWith(defaultReqConfig.siteName)).to.be.true;
-      expect(sitemapXmlServiceStub.getSitemap.calledWith('')).to.be.true;
       expect(dataFetcherStub.calledWith(absoluteSitemapPath)).to.be.true;
       expect(result).to.equal(xmlContent);
     });
@@ -1525,7 +1524,7 @@ describe('SitecoreClient', () => {
       const xmlContent =
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://edge.sitecorecloud.io/a</loc></url></urlset>';
 
-      sitemapXmlServiceStub.getSitemap.withArgs('').resolves(edgeSitemapPath);
+      sitemapXmlServiceStub.getSitemap.resolves(edgeSitemapPath);
       const dataFetcherStub = sandbox
         .stub(NativeDataFetcher.prototype, 'fetch')
         .resolves({ data: xmlContent, status: 200, statusText: 'OK' });
@@ -1555,13 +1554,13 @@ describe('SitecoreClient', () => {
       expect(result).to.equal(xmlContent);
     });
 
-    it('should generate sitemap index XML when default sitemap is not found', async () => {
+    it('should generate sitemap index XML when no specific sitemap is found', async () => {
       const absoluteSitemapPaths = [
         'https://cdn.example.com/sitemap-0.xml',
         'https://cdn.example.com/sitemap-1.xml',
       ];
 
-      sitemapXmlServiceStub.getSitemap.withArgs('').resolves(undefined);
+      sitemapXmlServiceStub.getSitemap.resolves(undefined);
       sitemapXmlServiceStub.fetchSitemaps.resolves(absoluteSitemapPaths);
 
       const result = await sitecoreClient.getSiteMap({ ...defaultReqConfig });
@@ -1597,7 +1596,7 @@ describe('SitecoreClient', () => {
     });
 
     it('should throw REDIRECT_404 error when no sitemaps are found', async () => {
-      sitemapXmlServiceStub.getSitemap.withArgs('').resolves(null);
+      sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
       sitemapXmlServiceStub.fetchSitemaps.resolves([]);
 
       try {
@@ -1611,7 +1610,7 @@ describe('SitecoreClient', () => {
 
     it('should use specified protocol in generated sitemap index', async () => {
       const absoluteSitemapPaths = ['https://cdn.example.com/sitemap-1.xml'];
-      sitemapXmlServiceStub.getSitemap.withArgs('').resolves(undefined);
+      sitemapXmlServiceStub.getSitemap.resolves(undefined);
       sitemapXmlServiceStub.fetchSitemaps.resolves(absoluteSitemapPaths);
 
       const result = await sitecoreClient.getSiteMap({
@@ -1629,7 +1628,7 @@ describe('SitecoreClient', () => {
         cache: 'no-store' as RequestCache,
       };
 
-      sitemapXmlServiceStub.getSitemap.withArgs('').resolves(null);
+      sitemapXmlServiceStub.getSitemap.withArgs(undefined).resolves(null);
       sitemapXmlServiceStub.fetchSitemaps.resolves(absoluteSitemapPaths);
 
       await sitecoreClient.getSiteMap(defaultReqConfig, fetchOptions);
@@ -1640,7 +1639,7 @@ describe('SitecoreClient', () => {
 
     it('should properly escape special characters in sitemap URLs', async () => {
       const absoluteSitemapPath = 'https://cdn.example.com/sitemap.xml?param=value&other=value';
-      sitemapXmlServiceStub.getSitemap.withArgs('').resolves(undefined);
+      sitemapXmlServiceStub.getSitemap.resolves(undefined);
       sitemapXmlServiceStub.fetchSitemaps.resolves([absoluteSitemapPath]);
 
       const result = await sitecoreClient.getSiteMap(defaultReqConfig);

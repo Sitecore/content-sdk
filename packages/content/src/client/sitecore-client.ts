@@ -650,9 +650,10 @@ export class SitecoreClient implements BaseSitecoreClient {
         const rewrittenSitemapPath = rewriteEdgeHostInResponse(sitemapPath, experienceEdgeUrl);
         const fetcher = new NativeDataFetcher();
         const xmlResponse = await fetcher.fetch<string>(rewrittenSitemapPath);
-        if (xmlResponse.data) {
-          return rewriteEdgeHostInResponse(xmlResponse.data, experienceEdgeUrl);
+        if (!xmlResponse.data) {
+          throw new Error('REDIRECT_404');
         }
+        return rewriteEdgeHostInResponse(xmlResponse.data, experienceEdgeUrl);
         // eslint-disable-next-line no-unused-vars
       } catch (error) {
         throw new Error('REDIRECT_404');
