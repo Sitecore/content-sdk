@@ -86,6 +86,24 @@ describe('createSitemapRouteHandler', () => {
       expect(res.body).to.equal(xmlContent);
     });
 
+    it('should process sitemap-index.xml request with undefined id', async () => {
+      req.nextUrl!.pathname = '/sitemap-index.xml';
+      const siteName = sites[0].name;
+      const xmlContent = '<sitemapindex>...</sitemapindex>';
+
+      sitecoreClientStub.getSiteMap.resolves(xmlContent);
+
+      const res = await handler.GET(req);
+
+      expect(sitecoreClientStub.getSiteMap.firstCall.args[0]).to.deep.include({
+        reqHost: 'example.com',
+        reqProtocol: 'https',
+        id: undefined,
+        siteName: siteName,
+      });
+      expect(res.body).to.equal(xmlContent);
+    });
+
     it('should handle sitemap request with specific id parameter', async () => {
       const sitemapId = '1';
       req.nextUrl!.pathname = `/sitemap-${sitemapId}.xml`;
