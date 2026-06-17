@@ -7,7 +7,6 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
-import fsDriver from 'unstorage/drivers/fs';
 import memoryDriver from 'unstorage/drivers/memory';
 import {
   createCacheAdminMiddleware,
@@ -28,20 +27,13 @@ const angularApp = new AngularNodeAppEngine();
 
 /**
  * Loader cache driver selection (server only).
- *
- *   LOADER_CACHE_DRIVER unset            → in-memory Map (default)
- *   LOADER_CACHE_DRIVER=unstorage-memory → unstorage with memory driver
- *   LOADER_CACHE_DRIVER=unstorage-fs     → unstorage with fs driver (persists)
- *
- * The fs driver writes to `./.cache/loaders/<key>.json`, surviving process restarts.
+ * Uses unstorage memoryDriver by default
+ * Can be considered with other drivers, for example fsDriver:
+ * import fsDriver from 'unstorage/drivers/fs';
+ * ...
+ * const driver = fsDriver({ base: './.cache/loaders' })
  */
-const driverChoice = process.env.LOADER_CACHE_DRIVER;
-const driver =
-  driverChoice === 'unstorage-fs'
-    ? fsDriver({ base: './.cache/loaders' })
-    : driverChoice === 'unstorage-memory'
-      ? memoryDriver()
-      : undefined;
+const driver = memoryDriver();
 
 const loaderCache = createLoaderCache({
   revalidate: config.angular.loadersCache.revalidate,
