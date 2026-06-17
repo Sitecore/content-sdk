@@ -1,12 +1,7 @@
 import { LOADER_DATA_ENDPOINT } from '../constants';
 import type { CsdkRequestData, LoaderPayload, LoaderRunnerInit } from '../../loaders/models';
 import { extractRequestData } from '../../loaders/utils';
-import type {
-  CsdkExpressRequest,
-  ExpressRequest,
-  ExpressResponse,
-  MiddlewareMatcher,
-} from './models';
+import type { ExpressRequest, ExpressResponse, MiddlewareMatcher } from './models';
 import { analyticsServerAdapter } from '@sitecore-content-sdk/analytics-core';
 import { matches, type PathPattern } from '../utils';
 

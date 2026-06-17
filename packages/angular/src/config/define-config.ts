@@ -1,8 +1,4 @@
-import type {
-  DeepRequired,
-  SitecoreConfig,
-  SitecoreConfigInput,
-} from '@sitecore-content-sdk/content/config';
+import type { DeepRequired, SitecoreConfigInput } from '@sitecore-content-sdk/content/config';
 import { defineConfig as baseDefineConfig } from '@sitecore-content-sdk/content/config';
 import type { ExpressRequest, ExpressResponse } from './http-types';
 /**
