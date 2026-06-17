@@ -4,7 +4,7 @@ import {
   debugNamespace,
 } from '@sitecore-content-sdk/core';
 import { debug as contentDebug } from '@sitecore-content-sdk/content';
-import { debug as searchDebug } from '@sitecore-content-sdk/search';
+import { debug as searchDebug } from '@sitecore-content-sdk/react/search';
 
 /**
  * Unified debug object containing all debug namespaces from referenced content-sdk packages.
