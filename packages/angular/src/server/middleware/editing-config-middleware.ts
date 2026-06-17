@@ -5,7 +5,7 @@ import {
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import type { Metadata } from '@sitecore-content-sdk/core/node-tools';
-import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from '../models';
+import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from './models';
 import type { ComponentMap } from '../../components/types';
 import { readProcessEnv } from '../utils';
 import debug from '../../debug';

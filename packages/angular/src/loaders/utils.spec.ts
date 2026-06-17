@@ -1,5 +1,8 @@
 import { RedirectCommand, Router } from '@angular/router';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
+import { EDITING_PARAMS_HEADER } from '../editing/constants';
+import { SC_PARAMS_HEADER } from './constants';
 import { applyRedirect, extractRequestData } from './utils';
 
 describe('applyRedirect', () => {
@@ -108,5 +111,56 @@ describe('extractRequestData', () => {
     expect(ctx.headers).toEqual({});
     expect(ctx.cookies).toEqual({});
     expect(ctx.query).toEqual({});
+  });
+
+  it('reads scParams from SC_PARAMS_HEADER on Fetch Request', () => {
+    const req = new Request('https://example.com/about', {
+      headers: {
+        [SC_PARAMS_HEADER]: JSON.stringify({
+          siteName: 'website',
+          variantId: 'variant-a',
+          componentVariantIds: [],
+        }),
+      },
+    });
+
+    expect(extractRequestData(req).scParams).toEqual({
+      siteName: 'website',
+      variantId: 'variant-a',
+      componentVariantIds: [],
+    });
+  });
+
+  it('reads scParams from SC_PARAMS_HEADER on Express-like request', () => {
+    const ctx = extractRequestData({
+      headers: {
+        [SC_PARAMS_HEADER]: JSON.stringify({ siteName: 'from-header', variantId: DEFAULT_VARIANT }),
+      },
+    });
+    expect(ctx.scParams).toEqual({ siteName: 'from-header', variantId: DEFAULT_VARIANT });
+  });
+
+  it('prefers req.scParams over SC_PARAMS_HEADER when both are present', () => {
+    const ctx = extractRequestData({
+      scParams: { siteName: 'direct', variantId: DEFAULT_VARIANT },
+      headers: {
+        [SC_PARAMS_HEADER]: JSON.stringify({ siteName: 'from-header', variantId: DEFAULT_VARIANT }),
+      },
+    });
+    expect(ctx.scParams?.siteName).toBe('direct');
+  });
+
+  it('parses editing preview data from EDITING_PARAMS_HEADER', () => {
+    const preview = { itemId: 'item-1', language: 'en', version: 1, mode: 'preview' };
+    const ctx = extractRequestData({
+      headers: { [EDITING_PARAMS_HEADER]: JSON.stringify(preview) },
+    });
+    expect(ctx.scPreviewData).toEqual(preview);
+  });
+
+  it('derives hostname from host header on Express-like requests', () => {
+    expect(extractRequestData({ headers: { host: 'fallback.example.com:8080' } }).hostname).toBe(
+      'fallback.example.com'
+    );
   });
 });

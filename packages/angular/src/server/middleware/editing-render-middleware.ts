@@ -5,13 +5,11 @@ import {
 } from '@sitecore-content-sdk/content/editing';
 import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import { getAllowedOriginsFromEnv, getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
-import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from '../models';
+import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from './models';
 import { readProcessEnv } from '../utils';
 import { resolveConfiguredEditingSecret } from './editing-config-middleware';
 import debug from '../../debug';
 import { EDITING_PARAMS_HEADER } from '../../editing/constants';
-
-export { EDITING_PARAMS_HEADER } from '../../editing/constants';
 
 const DEFAULT_ENDPOINT = '/api/editing/render';
 

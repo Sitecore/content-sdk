@@ -10,6 +10,16 @@ import {
 } from './cache-key';
 import type { CacheKeyDimensions } from './models';
 import { makeLoaderContext } from '../../testing/loader-spec-helpers';
+import type { CsdkRequestParams } from '../../loaders/models';
+
+const setDefaultScParams = (scParams: Partial<CsdkRequestParams>) => {
+  return {
+    componentVariantIds: [],
+    siteName: 'default',
+    variantId: DEFAULT_VARIANT,
+    ...scParams,
+  };
+};
 
 describe('buildCacheKey', () => {
   it('builds sc:loader:page key from site, locale, variant, and pathKey', () => {
@@ -17,7 +27,7 @@ describe('buildCacheKey', () => {
       'page',
       makeLoaderContext({
         url: '/about?preview=1',
-        scParams: { siteName: 'mysite', variantId: DEFAULT_VARIANT },
+        scParams: setDefaultScParams({ siteName: 'mysite' }),
       })
     );
 
@@ -27,6 +37,7 @@ describe('buildCacheKey', () => {
       variantId: DEFAULT_VARIANT,
       loaderId: 'page',
       pathKey: 'about',
+      componentVariantIds: [],
     });
     expect(key).toBe(`sc:loader:page:mysite:en:${DEFAULT_VARIANT}:about`);
   });
@@ -34,7 +45,7 @@ describe('buildCacheKey', () => {
   it('uses _ pathKey for home route', () => {
     const { dimensions } = buildCacheKey(
       'page',
-      makeLoaderContext({ url: '/', scParams: { siteName: 'mysite', variantId: DEFAULT_VARIANT } })
+      makeLoaderContext({ url: '/', scParams: setDefaultScParams({ siteName: 'mysite' }) })
     );
     expect(dimensions.pathKey).toBe('_');
   });
@@ -45,7 +56,7 @@ describe('buildCacheKey', () => {
       makeLoaderContext({
         url: '/en/about',
         routeParams: { locale: 'en' },
-        scParams: { siteName: 'mysite', variantId: DEFAULT_VARIANT },
+        scParams: setDefaultScParams({ siteName: 'mysite' }),
       })
     );
     expect(dimensions.pathKey).toBe('about');
@@ -54,7 +65,7 @@ describe('buildCacheKey', () => {
   it('builds dictionary key without variant or path', () => {
     const { key } = buildCacheKey(
       'dictionary',
-      makeLoaderContext({ scParams: { siteName: 'mysite', variantId: DEFAULT_VARIANT } })
+      makeLoaderContext({ scParams: setDefaultScParams({ siteName: 'mysite' }) })
     );
     expect(key).toBe('sc:loader:dictionary:mysite:en');
   });
@@ -62,7 +73,11 @@ describe('buildCacheKey', () => {
   it('defaults site and locale when params omit them', () => {
     const { dimensions } = buildCacheKey(
       'page',
-      makeLoaderContext({ routeParams: {}, url: '/home', scParams: { siteName: 'default', variantId: DEFAULT_VARIANT } })
+      makeLoaderContext({
+        routeParams: {},
+        url: '/home',
+        scParams: setDefaultScParams({ siteName: 'default' }),
+      })
     );
     expect(dimensions.site).toBe('default');
     expect(dimensions.locale).toBe('en');

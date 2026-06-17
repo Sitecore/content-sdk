@@ -1,7 +1,7 @@
 import { RedirectCommand } from '@angular/router';
 import type { Router } from '@angular/router';
 import { CsdkRequestData, CsdkRequestParams } from './models';
-import { EDITING_PARAMS_HEADER } from '../server/middleware/editing-render-middleware';
+import { EDITING_PARAMS_HEADER } from '../server/middleware';
 import { EditingPreviewData } from '@sitecore-content-sdk/content/editing';
 import { SC_PARAMS_HEADER } from './constants';
 import debug from '../debug';

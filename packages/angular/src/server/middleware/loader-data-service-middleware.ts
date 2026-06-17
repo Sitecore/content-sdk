@@ -5,17 +5,12 @@ import {
   LoaderDataResult,
   LoaderCache,
 } from '../../loaders/models';
-import {
-  ExpressMiddleware,
-  ExpressNextFunction,
-  ExpressRequest,
-  ExpressResponse,
-  LoaderRegistry,
-} from '../models';
+import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from './models';
 import { LOADER_DATA_ENDPOINT } from '../constants';
 import { ServerLoaderRunner } from '../server-loader-runner';
-import { parseLoaderRequest } from '../utils';
+import { parseLoaderRequest } from './utils';
 import { AngularSitecoreConfig } from '../../config/define-config';
+import { LoaderRegistry } from '../../loaders/loader-registry.token';
 
 /**
  * Options for the Express data handler

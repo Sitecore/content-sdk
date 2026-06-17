@@ -5,7 +5,11 @@ import { ServerLoaderRunner } from './server-loader-runner';
 import type { LoaderCache, LoaderFn, LoaderRunnerInit } from '../loaders/models';
 import { createLoaderCache } from './cache/loader-cache';
 import { buildCacheKey } from './cache/cache-key';
-import { mockAngularSitecoreConfig, makeLoaderContext } from '../testing/loader-spec-helpers';
+import {
+  mockAngularSitecoreConfig,
+  makeLoaderContext,
+  mockScParams,
+} from '../testing/loader-spec-helpers';
 
 describe('ServerLoaderRunner', () => {
   const mockConfig = mockAngularSitecoreConfig();
@@ -292,7 +296,7 @@ describe('ServerLoaderRunner', () => {
         url: request.url,
         routeParams: request.routeParams,
         query: request.query,
-        scParams: { siteName: 'demo', variantId: DEFAULT_VARIANT },
+        scParams: mockScParams({ siteName: 'demo' }),
       })
     );
     await cache.invalidate({ tags: [key] });
@@ -331,7 +335,7 @@ describe('ServerLoaderRunner', () => {
         url: request.url,
         routeParams: request.routeParams,
         query: request.query,
-        scParams: { siteName: 'demo', variantId: DEFAULT_VARIANT },
+        scParams: mockScParams({ siteName: 'demo' }),
       })
     );
     await cache.invalidate({ tags: [key] });

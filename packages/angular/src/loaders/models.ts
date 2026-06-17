@@ -9,9 +9,9 @@ export const DEFAULT_ERROR_ROUTE = '/500';
  */
 export interface CsdkRequestParams {
   /** Site name. Either resovled from route or set to default site name from sitecore.config */
-  siteName: string;
+  siteName?: string;
   /** Variant id. Either resovled from route or set to default variant id name */
-  variantId: string;
+  variantId?: string;
   componentVariantIds?: string[];
 }
 /**
@@ -72,7 +72,7 @@ export type LoaderContext = {
    */
   req?: Request;
   /** Content SDK request params like site name, variant ids */
-  scParams: CsdkRequestParams;
+  scParams: Required<CsdkRequestParams>;
   /**
    * Server-only: request data extracted from the incoming HTTP request
    * (hostname, headers, cookies, editing preview data). Absent during prerender.

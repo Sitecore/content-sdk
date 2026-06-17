@@ -7,8 +7,9 @@ import {
 } from '@sitecore-content-sdk/content/personalize';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
-import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/analytics-core/internal';
-import type { CsdkExpressRequest, ExpressMiddleware, ExpressResponse } from '../models';
+import { LOADER_DATA_ENDPOINT } from '../constants';
+import { SC_PARAMS_HEADER } from '../../loaders/constants';
+import type { CsdkExpressRequest, ExpressMiddleware, ExpressResponse } from './models';
 
 const {
   initContentSdkMock,
@@ -48,13 +49,12 @@ type PersonalizeMiddlewareOptions = {
   locales?: string[];
   personalizeService?: PersonalizeService;
   skip?: (req: CsdkExpressRequest) => boolean;
-  skipForBot?: boolean;
   extractGeoDataCb?: () => Record<string, unknown>;
+  getExtraUtmParams?: () => Record<string, string | undefined>;
+  matcher?: { excludePaths?: string[] };
 };
 
-type CreatePersonalizeMiddleware = (
-  options: PersonalizeMiddlewareOptions
-) => ExpressMiddleware;
+type CreatePersonalizeMiddleware = (options: PersonalizeMiddlewareOptions) => ExpressMiddleware;
 
 let createPersonalizeMiddleware: CreatePersonalizeMiddleware;
 
@@ -250,21 +250,6 @@ describe('createPersonalizeMiddleware', () => {
     expect(next).toHaveBeenCalledTimes(1);
   });
 
-  it('should skip bot requests unless skipForBot is disabled', async () => {
-    getPersonalizeInfo.mockResolvedValue(undefined);
-    const botReq = createReq({ cookies: { [BOT_DETECTION_COOKIE]: '1' } });
-
-    await createPersonalizeMiddleware(createOptions())(botReq, createRes(), next);
-    expect(getPersonalizeInfo).not.toHaveBeenCalled();
-
-    await createPersonalizeMiddleware(createOptions({ skipForBot: false }))(
-      botReq,
-      createRes(),
-      next
-    );
-    expect(getPersonalizeInfo).toHaveBeenCalledTimes(1);
-  });
-
   it('should skip when personalize info is not found or has no variants', async () => {
     const middleware = createPersonalizeMiddleware(createOptions());
     const req = createReq();
@@ -335,6 +320,121 @@ describe('createPersonalizeMiddleware', () => {
   it('should call next and not fail the request when personalization throws', async () => {
     const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
     getPersonalizeInfo.mockRejectedValue(new Error('edge unavailable'));
+    const req = createReq();
+
+    await createPersonalizeMiddleware(createOptions())(req, createRes(), next);
+
+    expect(req.scParams?.variantId).toBe(DEFAULT_VARIANT);
+    expect(next).toHaveBeenCalledTimes(1);
+    log.mockRestore();
+  });
+
+  it('is enabled by default when enabled is omitted', async () => {
+    getPersonalizeInfo.mockResolvedValue(undefined);
+    const { enabled, ...optionsWithoutEnabled } = createOptions();
+    void enabled;
+
+    await createPersonalizeMiddleware(optionsWithoutEnabled)(createReq(), createRes(), next);
+
+    expect(getPersonalizeInfo).toHaveBeenCalledTimes(1);
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it('skips paths excluded by a custom matcher', async () => {
+    await createPersonalizeMiddleware(createOptions({ matcher: { excludePaths: ['/health'] } }))(
+      createReq({ path: '/health', url: '/health' }),
+      createRes(),
+      next
+    );
+
+    expect(getPersonalizeInfo).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it('resolves path and site from /_data loader payload', async () => {
+    getPersonalizeInfo.mockResolvedValue(undefined);
+    const req = createReq({
+      method: 'POST',
+      path: LOADER_DATA_ENDPOINT,
+      url: LOADER_DATA_ENDPOINT,
+      scParams: undefined,
+      body: {
+        loaderId: 'home',
+        url: '/da/products',
+        routeParams: {},
+        query: {},
+      },
+      cookies: { [SITE_KEY]: 'loader-site' },
+    });
+
+    await createPersonalizeMiddleware(createOptions())(req, createRes(), next);
+
+    expect(getPersonalizeInfo).toHaveBeenCalledWith('/products', 'da', 'loader-site');
+  });
+
+  it('writes SC_PARAMS_HEADER when variants are identified', async () => {
+    getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
+    personalizeMock.mockResolvedValue({ variantId: 'variant-a' });
+    const req = createReq();
+
+    await createPersonalizeMiddleware(createOptions())(req, createRes(), next);
+
+    expect(req.headers?.[SC_PARAMS_HEADER]).toBe(
+      JSON.stringify({
+        siteName: 'website',
+        variantId: 'variant-a',
+        componentVariantIds: [],
+      })
+    );
+  });
+
+  it('skips when site name cannot be resolved', async () => {
+    await createPersonalizeMiddleware(createOptions({ defaultSite: undefined }))(
+      createReq({ scParams: undefined, cookies: {} }),
+      createRes(),
+      next
+    );
+
+    expect(getPersonalizeInfo).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it('merges getExtraUtmParams into experience params', async () => {
+    getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
+    personalizeMock.mockResolvedValue({ variantId: 'variant-a' });
+
+    await createPersonalizeMiddleware(
+      createOptions({ getExtraUtmParams: () => ({ medium: 'email', campaign: 'override' }) })
+    )(createReq({ query: { utm_campaign: 'original' } }), createRes(), next);
+
+    expect(personalizeMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        params: expect.objectContaining({
+          utm: expect.objectContaining({ medium: 'email', campaign: 'override' }),
+        }),
+      }),
+      { timeout: undefined }
+    );
+  });
+
+  it('treats sec-purpose prefetch headers like purpose prefetch', async () => {
+    getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
+    const res = createRes();
+
+    await createPersonalizeMiddleware(createOptions())(
+      createReq({ headers: { host: 'example.com', 'sec-purpose': 'prefetch' } }),
+      res,
+      next
+    );
+
+    expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store, must-revalidate');
+    expect(personalizeMock).not.toHaveBeenCalled();
+  });
+
+  it('calls next when personalize execution throws after info is loaded', async () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
+    personalizeMock.mockRejectedValue(new Error('cdp unavailable'));
     const req = createReq();
 
     await createPersonalizeMiddleware(createOptions())(req, createRes(), next);

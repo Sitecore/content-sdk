@@ -4,9 +4,8 @@ import { createCacheAdminMiddleware } from './cache-admin-middleware';
 import { createLoaderCache } from '../loader-cache';
 import { buildCacheKey } from '../cache-key';
 import { buildLoaderCacheTags } from '../cache-tags';
-import type { ExpressRequest, ExpressResponse } from '../../models';
-import { makeLoaderContext } from '../../../testing/loader-spec-helpers';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
+import type { ExpressRequest, ExpressResponse } from '../../middleware/models';
+import { makeLoaderContext, mockScParams } from '../../../testing/loader-spec-helpers';
 
 function createMockRes() {
   return {
@@ -34,7 +33,7 @@ describe('createCacheAdminMiddleware', () => {
       makeLoaderContext({
         url: '/about',
         routeParams: { locale: 'en' },
-        scParams: { siteName: 'demo', variantId: DEFAULT_VARIANT },
+        scParams: mockScParams({ siteName: 'demo' }),
       })
     );
     cacheKey = built.key;

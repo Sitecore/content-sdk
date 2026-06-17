@@ -10,18 +10,24 @@ import {
   ExpressNextFunction,
   ExpressResponse,
   CookieOptions,
-} from '../models';
+  BaseMiddlewareOptions,
+} from './models';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { SC_PARAMS_HEADER } from '../../loaders/constants';
 import debug from '../../debug';
-import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
-import { getMiddlewareRequest } from '../utils';
+import { getMiddlewareRequest, shouldProcessPath } from './utils';
+import { isEditingPreview } from '../utils';
+import type { IncomingMessage } from 'http';
 
-type MultsiteMiddlewareOptions = SitecoreConfig['multisite'] & {
-  sites?: SiteInfo[];
-  defaultSite?: string;
-  skip?: (req: CsdkExpressRequest) => boolean;
-};
+/**
+ * Configuration options for the multisite middleware.
+ * @public
+ */
+export type MultisiteMiddlewareOptions = BaseMiddlewareOptions &
+  SitecoreConfig['multisite'] & {
+    sites?: SiteInfo[];
+    defaultSite?: string;
+  };
 
 const hostnameMatcher = /(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}/;
 
@@ -44,25 +50,33 @@ export function getHostname(req: CsdkExpressRequest): string {
  * @param {MultsiteMiddlewareOptions} options - The options.
  * @returns {ExpressMiddleware} The multisite middleware.
  */
-export function createMultisiteMiddleware(options: MultsiteMiddlewareOptions): ExpressMiddleware {
+export function createMultisiteMiddleware(options: MultisiteMiddlewareOptions): ExpressMiddleware {
   const siteResolver = new SiteResolver(options.sites ?? []);
   return (req: CsdkExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
     try {
       // For browser loader navigations (/_data) routing data comes from the loader payload, not
       // the request; getMiddlewareRequest normalizes both into path/query/data.
       const { path, query, data } = getMiddlewareRequest(req);
-      if (path.startsWith('/api')) {
-        debug.multisite('multisite middleware skipped for /api/* routes');
+
+      if (options.enabled === false) {
+        debug.multisite('multisite middleware disabled');
         return next();
       }
-      if (!options.enabled || options.skip?.(req)) {
-        debug.multisite('multisite middleware skipped');
+
+      if (isEditingPreview(data.cookies)) {
+        debug.multisite('skipped (editing/preview mode)');
         return next();
       }
-      const isSitecorePreview = data.cookies?.[PREVIEW_KEY];
-      if (isSitecorePreview) {
-        // Preview will resolve mode will resolve site, variant id etc from previewData
-        debug.multisite('skipped (preview)');
+
+      if (!shouldProcessPath(path, options.matcher)) {
+        debug.multisite(
+          'multisite middleware skipped (path does not match provided include/exclude patterns)'
+        );
+        return next();
+      }
+
+      if (options.skip?.(req)) {
+        debug.multisite('multisite middleware skipped (skip predicate)');
         return next();
       }
       const startTimestamp = Date.now();
@@ -79,7 +93,7 @@ export function createMultisiteMiddleware(options: MultsiteMiddlewareOptions): E
         (query[SITE_KEY] as string | undefined) ||
         (query.site as string | undefined) ||
         (options.useCookieResolution &&
-          options.useCookieResolution(req) &&
+          options.useCookieResolution(req as unknown as IncomingMessage) &&
           (data.cookies?.[SITE_KEY] as string | undefined)) ||
         siteResolver.getByHost(hostname).name;
 

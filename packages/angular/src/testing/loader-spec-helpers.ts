@@ -20,10 +20,13 @@ export function mockAngularSitecoreConfig(
 }
 
 /** Default Content SDK request params for loader/cache tests. */
-export function mockScParams(overrides: Partial<CsdkRequestParams> = {}): CsdkRequestParams {
+export function mockScParams(
+  overrides: Partial<CsdkRequestParams> = {}
+): Required<CsdkRequestParams> {
   return {
     siteName: 'default',
     variantId: DEFAULT_VARIANT,
+    componentVariantIds: [],
     ...overrides,
   };
 }

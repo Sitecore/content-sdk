@@ -87,6 +87,22 @@ app.use(
 app.use(createEditingRenderMiddleware());
 
 /**
+ * Shared path matcher for the request-scoped middlewares (multisite + personalize, and any
+ * future redirects middleware). It decides which requests these middlewares act on.
+ *
+ * Patterns are exact strings or RegExp. The SDK already skips API routes (`/api/*`), Sitecore
+ * routes (`/sitecore/*`), static files (any path whose last segment has an extension) and
+ * editing/preview requests by default, so only list app-specific routes here.
+ *
+ *   excludePaths — additionally never processed
+ *   includePaths — when set, ONLY matching paths are processed (everything else is skipped)
+ */
+const middlewareMatcher = {
+  excludePaths: ['/healthz', '/metrics', /\.[^/]+$/],
+  // includePaths: [/^\/[a-z]{2}(-[A-Z]{2})?(\/|$)/], // e.g. restrict to locale-prefixed routes
+};
+
+/**
  * Multisite middleware. Resolves the site for each request (sc_site query → cookie →
  * hostname → default) from the generated site list and writes it onto `req.scParams`
  * for downstream loaders and the loader cache key. Must run before the personalize
@@ -97,6 +113,7 @@ app.use(
     ...config.multisite,
     sites,
     defaultSite: config.defaultSite,
+    matcher: middlewareMatcher,
   })
 );
 
@@ -106,8 +123,7 @@ app.use(
  * personalized layout and the loader cache keys per variant.
  *
  * NOTE: Personalize requires Edge configuration (contextId/clientContextId) and
- * cannot work with local containers — the middleware disables itself when it is
- * missing, which is expected in local development.
+ * cannot work with local containers
  */
 app.use(
   createPersonalizeMiddleware({
@@ -116,6 +132,7 @@ app.use(
     locales: config.angular.locales,
     defaultLanguage: config.defaultLanguage,
     defaultSite: config.defaultSite,
+    matcher: middlewareMatcher,
   })
 );
 

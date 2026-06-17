@@ -7,12 +7,12 @@ import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import type { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ScFormComponent } from './sc-form.component';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
-import { SITECORE_ANALYTICS } from '../lib/analytics/sitecore-analytics';
 import { provideMockSitecoreContext, setMockContextPage } from '../testing/mock-sitecore-context';
 
 const mocks = vi.hoisted(() => ({
   loadForm: vi.fn(),
   executeScriptElements: vi.fn(),
+  subscribeToFormSubmitEvent: vi.fn(),
 }));
 
 vi.mock('@sitecore-content-sdk/content', () => {
@@ -20,18 +20,12 @@ vi.mock('@sitecore-content-sdk/content', () => {
     form: {
       loadForm: (...args: unknown[]) => mocks.loadForm(...args),
       executeScriptElements: mocks.executeScriptElements,
+      subscribeToFormSubmitEvent: mocks.subscribeToFormSubmitEvent,
     },
   };
 });
 
 describe('ScFormComponent', () => {
-  const mockAnalytics = {
-    pageView: vi.fn().mockResolvedValue(undefined),
-    event: vi.fn().mockResolvedValue(undefined),
-    identity: vi.fn().mockResolvedValue(undefined),
-    form: vi.fn().mockResolvedValue(undefined),
-  };
-
   const testSitecoreConfig = {
     api: {
       edge: {
@@ -103,7 +97,6 @@ describe('ScFormComponent', () => {
         ...provideMockSitecoreContext(),
         { provide: PLATFORM_ID, useValue: 'browser' },
         { provide: SITECORE_CONFIG_TOKEN, useValue: testSitecoreConfig },
-        { provide: SITECORE_ANALYTICS, useValue: mockAnalytics },
       ],
     });
   });
@@ -267,7 +260,7 @@ describe('ScFormComponent', () => {
     expect(elArg.tagName).toBe('DIV');
   });
 
-  it('should dispatch form:engage events through the analytics façade when not in editing mode', async () => {
+  it('should subscribe to form submit events when not in editing mode', async () => {
     const fixture = createFixture();
     setMockContextPage(makePage(false));
 
@@ -277,29 +270,21 @@ describe('ScFormComponent', () => {
     );
     await flushFormLoadPipeline(fixture);
 
-    const host = fixture.nativeElement.querySelector('div') as HTMLDivElement;
-    host.dispatchEvent(
-      new CustomEvent('form:engage', { detail: { formId: 'form-1', name: 'SUBMITTED' } })
-    );
-
-    // componentId is the rendering uid with dashes stripped.
-    expect(mockAnalytics.form).toHaveBeenCalledTimes(1);
-    expect(mockAnalytics.form).toHaveBeenCalledWith('form-1', 'SUBMITTED', 'compuid1');
+    expect(mocks.subscribeToFormSubmitEvent).toHaveBeenCalledTimes(1);
+    const [elArg, componentId, signalArg] = mocks.subscribeToFormSubmitEvent.mock.calls[0];
+    expect((elArg as HTMLDivElement).tagName).toBe('DIV');
+    expect(componentId).toBe('comp-uid-1');
+    expect(signalArg).toBeInstanceOf(AbortSignal);
   });
 
-  it('should not dispatch form:engage events in editing mode', async () => {
+  it('should not subscribe to form submit events in editing mode', async () => {
     const fixture = createFixture();
     setMockContextPage(makePage(true));
 
     fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }, { uid: 'x' }));
     await flushFormLoadPipeline(fixture);
 
-    const host = fixture.nativeElement.querySelector('div') as HTMLDivElement;
-    host.dispatchEvent(
-      new CustomEvent('form:engage', { detail: { formId: 'form-1', name: 'VIEWED' } })
-    );
-
-    expect(mockAnalytics.form).not.toHaveBeenCalled();
+    expect(mocks.subscribeToFormSubmitEvent).not.toHaveBeenCalled();
     expect(mocks.executeScriptElements).toHaveBeenCalled();
   });
 

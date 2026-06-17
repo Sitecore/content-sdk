@@ -1,5 +1,5 @@
 import type { SiteInfo } from '@sitecore-content-sdk/content/site';
-import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from '../models';
+import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from './models';
 import { LoaderCache } from '../../loaders/models';
 import { buildLoaderDictionaryCacheTagsFromSites } from '../cache/cache-tags';
 import { dedupeCacheStrings } from '../cache/utils';

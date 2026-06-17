@@ -53,10 +53,15 @@ export class ServerLoaderRunner {
       return { kind: 'error', status: 500, message: `No loader registered for id "${loaderId}"` };
     }
 
+    const defaultScParams = {
+      siteName: this.config.defaultSite,
+      variantId: DEFAULT_VARIANT,
+      componentVariantIds: [],
+    };
+
     const scParams = {
-      siteName: csdkRequestData?.scParams?.siteName ?? this.config.defaultSite,
-      variantId: csdkRequestData?.scParams?.variantId ?? DEFAULT_VARIANT,
-      componentVariantIds: csdkRequestData?.scParams?.componentVariantIds ?? [],
+      ...defaultScParams,
+      ...(csdkRequestData?.scParams || {}),
     };
 
     // ctx carries everything the loader and cache key need; only loaderId travels

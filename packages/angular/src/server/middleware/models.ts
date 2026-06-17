@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
-import type { CsdkRequestParams, CsdkRequestData } from '../loaders/models';
-
+import type { CsdkRequestParams, CsdkRequestData } from '../../loaders/models';
+import type { PathPattern } from '../utils';
 /**
  * Injection token for the request context extractor (used by tests to provide a mock via TestBed).
  * @internal
@@ -35,6 +35,7 @@ export interface ExpressRequest {
   path: string;
   url: string;
   body: unknown;
+  referrer?: string;
   query: Record<string, string | string[] | undefined>;
   /**
    * Cookies from the request (requires cookie-parser middleware)
@@ -91,6 +92,41 @@ export type ExpressMiddleware = (
 ) => void | Promise<void>;
 
 /**
+ * Matcher configuration for middleware path inclusion/exclusion. Each pattern is either a `string`
+ * (matched exactly) or a `RegExp` (matched with `.test`).
  * @public
  */
-export type { LoaderRegistry } from '../loaders/loader-registry.token';
+export interface MiddlewareMatcher {
+  /**
+   * Paths to **include**. If provided, only matching paths are processed.
+   * Example: `['/about', /^\/products\//]`
+   */
+  includePaths?: PathPattern[];
+  /**
+   * Paths to **exclude** (always skipped), evaluated before {@link MiddlewareMatcher.includePaths}.
+   * Example: `['/health', /\.json$/]`
+   */
+  excludePaths?: PathPattern[];
+}
+
+/**
+ * Base configuration for server middlewares (multisite, personalization, redirects, etc).
+ * Provides common path matching and skip logic.
+ * @public
+ */
+export interface BaseMiddlewareOptions {
+  /**
+   * Enable/disable this middleware. When false, all requests skip it.
+   * @default true
+   */
+  enabled?: boolean;
+  /**
+   * Custom request predicate to skip middleware execution. Runs after built-in checks.
+   */
+  skip?: (req: CsdkExpressRequest) => boolean;
+  /**
+   * Path matching rules (glob patterns) to control which requests this middleware processes.
+   * Integrates with default exclusions (API routes, static files, editing/preview).
+   */
+  matcher?: MiddlewareMatcher;
+}

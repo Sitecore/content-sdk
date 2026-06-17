@@ -4,9 +4,8 @@ import { createSitecoreRevalidateMiddleware } from './sitecore-revalidate-middle
 import { createLoaderCache } from '../cache/loader-cache';
 import { buildCacheKey } from '../cache/cache-key';
 import { buildLoaderCacheTags } from '../cache/cache-tags';
-import type { ExpressRequest, ExpressResponse } from '../models';
-import { makeLoaderContext } from '../../testing/loader-spec-helpers';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
+import type { ExpressRequest, ExpressResponse } from './models';
+import { makeLoaderContext, mockScParams } from '../../testing/loader-spec-helpers';
 
 function createMockRes() {
   return {
@@ -32,7 +31,7 @@ describe('createSitecoreRevalidateMiddleware', () => {
       makeLoaderContext({
         url: '/about',
         routeParams: { locale: 'en' },
-        scParams: { siteName: 'demo', variantId: DEFAULT_VARIANT },
+        scParams: mockScParams({ siteName: 'demo' }),
       })
     );
     cacheKey = built.key;
@@ -182,11 +181,16 @@ describe('createSitecoreRevalidateMiddleware', () => {
       makeLoaderContext({
         url: '/',
         routeParams: { locale: 'en' },
-        scParams: { siteName: 'demo', variantId: DEFAULT_VARIANT },
+        scParams: mockScParams({ siteName: 'demo' }),
       })
     );
     const dictKey = dictBuilt.key;
-    await cache.set(dictKey, { hello: 'world' }, 300, buildLoaderCacheTags('dictionary', dictBuilt.dimensions, dictKey));
+    await cache.set(
+      dictKey,
+      { hello: 'world' },
+      300,
+      buildLoaderCacheTags('dictionary', dictBuilt.dimensions, dictKey)
+    );
 
     const middleware = createSitecoreRevalidateMiddleware({
       cache,
@@ -226,7 +230,10 @@ describe('createSitecoreRevalidateMiddleware', () => {
       ...cache,
       invalidate: vi.fn().mockRejectedValue(new Error('invalidate failed')),
     };
-    const middleware = createSitecoreRevalidateMiddleware({ cache: failingCache, defaultLocale: 'en' });
+    const middleware = createSitecoreRevalidateMiddleware({
+      cache: failingCache,
+      defaultLocale: 'en',
+    });
     const res = createMockRes();
 
     await middleware(

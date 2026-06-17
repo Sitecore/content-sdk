@@ -8,10 +8,8 @@ import {
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
-import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { analyticsPlugin, analyticsServerAdapter } from '@sitecore-content-sdk/analytics-core';
-import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/analytics-core/internal';
 import {
   personalize,
   personalizeServerPlugin,
@@ -22,12 +20,13 @@ import {
   ExpressMiddleware,
   ExpressNextFunction,
   ExpressResponse,
-} from '../models';
+  BaseMiddlewareOptions,
+} from './models';
 import { splitLocaleFromPath } from '../../i18n/locale-utils';
 import { SC_PARAMS_HEADER } from '../../loaders/constants';
-import { getMiddlewareRequest } from '../utils';
-import { toNodeAdapterPair } from '../node-adapter-types';
+import { getMiddlewareRequest, shouldProcessPath, toNodeAdapterPair } from './utils';
 import debug from '../../debug';
+import { isEditingPreview } from '../utils';
 
 /**
  * Object model of Experience Context data
@@ -58,7 +57,8 @@ export type PersonalizeGeoData = {
  * Configuration for the personalize middleware
  * @public
  */
-export type PersonalizeMiddlewareOptions = Partial<SitecoreConfig['personalize']> &
+export type PersonalizeMiddlewareOptions = BaseMiddlewareOptions &
+  Partial<SitecoreConfig['personalize']> &
   Partial<SitecoreConfig['api']['edge']> & {
     /** Locales used to extract the language from the request path */
     locales?: string[];
@@ -72,9 +72,6 @@ export type PersonalizeMiddlewareOptions = Partial<SitecoreConfig['personalize']
     extractGeoDataCb?: (
       req: CsdkExpressRequest
     ) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
-    /** Skip personalization for bot requests marked by the bot detection cookie. Default is `true` */
-    skipForBot?: boolean;
-    skip?: (req: CsdkExpressRequest) => boolean;
   };
 
 type PersonalizeExecution = {
@@ -181,28 +178,27 @@ export function createPersonalizeMiddleware(
 
   return async (req: CsdkExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
     try {
-      if (!options.enabled || !personalizeService || options.skip?.(req)) {
-        debug.personalize('personalize middleware skipped');
+      // `enabled` defaults to true: omitting it keeps the middleware on (see BaseMiddlewareOptions).
+      if (options.enabled === false || !personalizeService) {
+        debug.personalize('personalize middleware disabled or not configured');
         return next();
       }
       // For browser loader navigations (/_data) routing data comes from the loader payload, not
       // the request; getMiddlewareRequest normalizes both into path/query/data.
       const { path, query, data } = getMiddlewareRequest(req);
-      if (
-        path.startsWith('/api') ||
-        path.startsWith('/sitecore') ||
-        path.includes('.') // ignore files
-      ) {
-        debug.personalize('skipped (%s is not a layout route)', path);
+
+      if (isEditingPreview(data.cookies)) {
+        debug.personalize('skipped (editing/preview mode)');
         return next();
       }
-      if (data.cookies?.[PREVIEW_KEY]) {
-        // No need to personalize for preview (layout data is already prepared for preview)
-        debug.personalize('skipped (preview)');
+
+      if (!shouldProcessPath(path, options.matcher)) {
+        debug.personalize('personalize middleware skipped (path does not match)');
         return next();
       }
-      if ((options.skipForBot ?? true) && data.cookies?.[BOT_DETECTION_COOKIE]) {
-        debug.personalize('skipped (bot request)');
+
+      if (options.skip?.(req)) {
+        debug.personalize('personalize middleware skipped (skip predicate)');
         return next();
       }
 
@@ -248,6 +244,7 @@ export function createPersonalizeMiddleware(
         // Don't execute a personalize request; otherwise, the metrics for component A/B experiments would be inaccurate.
         // Disable caching to force revalidation on navigation (personalization WILL be influenced).
         debug.personalize('skipped (prefetch)');
+        res.setHeader?.('x-proxy-cache', 'no-cache');
         res.setHeader?.('Cache-Control', 'no-store, must-revalidate');
         return next();
       }
@@ -319,7 +316,7 @@ export function createPersonalizeMiddleware(
       }
 
       const { variantId, componentVariantIds } = getGroomedVariantIds(identifiedVariantIds);
-      req.scParams = { siteName, ...req.scParams, variantId, componentVariantIds };
+      req.scParams = { ...(req.scParams || {}), variantId, componentVariantIds };
       // Also ride the params on a header so they survive Angular's conversion of the
       // Express request to a web Request on the SSR path (same mechanism as editing params).
       req.headers = req.headers ?? {};
