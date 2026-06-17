@@ -16,8 +16,6 @@ import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientConfig } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/core';
-import { IncomingMessage } from 'http';
-import { OutgoingMessage } from 'http';
 import { RetryStrategy } from '@sitecore-content-sdk/core';
 
 // @internal
@@ -1312,7 +1310,7 @@ export type SitecoreConfigInput = {
     };
     multisite?: {
         enabled?: boolean;
-        useCookieResolution?: (req?: IncomingMessage, res?: OutgoingMessage) => boolean;
+        useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;
     };
     personalize?: {
         enabled?: boolean;
@@ -1440,7 +1438,7 @@ export type StaticPath = {
 };
 
 // @internal
-const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: string) => void;
+const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: string, signal?: AbortSignal) => void;
 
 // @public
 export interface TextField extends FieldMetadata {
