@@ -57,7 +57,7 @@ describe('createRobotsMiddleware', () => {
   });
 
   it('returns 404 fallback when content is missing', async () => {
-    vi.mocked(client.getRobots).mockResolvedValue(undefined);
+    vi.mocked(client.getRobots).mockResolvedValue(null);
     await handler(req, res, vi.fn());
 
     expect(res.status).toHaveBeenCalledWith(404);
