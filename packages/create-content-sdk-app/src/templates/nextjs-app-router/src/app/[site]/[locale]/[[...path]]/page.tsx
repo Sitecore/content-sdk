@@ -14,27 +14,43 @@ import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 
 type PageProps = {
-  params: Promise<{ site: string; locale: string; path?: string[]; [key: string]: string | string[] | undefined }>;
+  params: Promise<{ site: string; locale: string; path?: string[];[key: string]: string | string[] | undefined }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params, searchParams }: PageProps) {
   const { site, locale, path } = await params;
 
   // Set site and locale to be available in src/i18n/request.ts for fetching the dictionary
   setRequestLocale(`${site}_${locale}`);
 
   const draft = await draftMode();
+  const resolvedSearchParams = await searchParams;
+
+  // Detect editing mode: draftMode (standard) or URL parameters (fallback for
+  // serverless platforms like Vercel where draft cookies may not propagate)
+  const isEditing =
+    draft.isEnabled ||
+    resolvedSearchParams.sc_mode === 'edit' ||
+    resolvedSearchParams.mode === 'edit' ||
+    resolvedSearchParams.sc_headless_mode === 'edit';
 
   // Fetch the page data from Sitecore
   let page;
-  if (draft.isEnabled) {
+  if (isEditing) {
+    // Try preview data from headers first (SDK internal fetch path),
+    // fall back to searchParams (iframe URL params path on serverless platforms)
     const headers = await nextHeaders();
     const previewData = client.getPreviewData(headers);
+    const editingData =
+      previewData && Object.keys(previewData).length > 0
+        ? previewData
+        : resolvedSearchParams;
 
-    if (isDesignLibraryPreviewData(previewData)) {
-      page = await client.getDesignLibraryData(previewData);
+    if (isDesignLibraryPreviewData(editingData)) {
+      page = await client.getDesignLibraryData(editingData);
     } else {
-      page = await client.getPreview(previewData);
+      page = await client.getPreview(editingData);
     }
   } else {
     page = await client.getPage(path ?? [], { site, locale });
@@ -64,7 +80,15 @@ export const generateStaticParams = async () => {
       routing.locales.slice()
     );
   }
-  return [];
+  // Next.js 16 requires at least one result
+  // Return a default param for the root page
+  return [
+    {
+      site: sites[0]?.name || 'default',
+      locale: routing.defaultLocale || scConfig.defaultLanguage,
+      path: [],
+    },
+  ];
 };
 <% } -%>
 // Metadata fields for the page.

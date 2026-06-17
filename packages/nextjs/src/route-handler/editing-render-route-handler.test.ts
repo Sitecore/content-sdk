@@ -687,7 +687,7 @@ describe('createEditingRenderRouteHandlers', () => {
       const res = await handlers.GET(req as NextRequest);
 
       expect(cleanupNextPreviewCookiesStub).to.have.been.calledOnce;
-      expect(res.headers['Set-Cookie']).to.equal('filtered=cookie');
+      expect(res.headers['Set-Cookie']).to.equal('filtered=cookie; SameSite=None; Secure');
     });
 
     it('should replace static props id in html', async () => {

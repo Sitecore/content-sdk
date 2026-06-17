@@ -17,7 +17,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 
 type PageProps = {
-  params: Promise<{ site: string; locale: string; path?: string[]; [key: string]: string | string[] | undefined }>;
+  params: Promise<{ site: string; locale: string; path?: string[];[key: string]: string | string[] | undefined }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
@@ -41,15 +41,23 @@ export default async function Page({ params, searchParams }: PageProps) {
   setRequestLocale(`${site}_${locale}`);
 
   const draft = await draftMode();
+  const resolvedSearchParams = await searchParams;
+
+  // Detect editing mode: draftMode (standard) or URL parameters (fallback for
+  // serverless platforms like Vercel where draft cookies may not propagate)
+  const isEditing =
+    draft.isEnabled ||
+    resolvedSearchParams.sc_mode === 'edit' ||
+    resolvedSearchParams.mode === 'edit' ||
+    resolvedSearchParams.sc_headless_mode === 'edit';
 
   // Fetch the page data from Sitecore
   let page;
-  if (draft.isEnabled) {
-    const editingParams = await searchParams;
-    if (isDesignLibraryPreviewData(editingParams)) {
-      page = await client.getDesignLibraryData(editingParams);
+  if (isEditing) {
+    if (isDesignLibraryPreviewData(resolvedSearchParams)) {
+      page = await client.getDesignLibraryData(resolvedSearchParams);
     } else {
-      page = await client.getPreview(editingParams);
+      page = await client.getPreview(resolvedSearchParams);
     }
   } else {
     page = cachedPage;
@@ -98,14 +106,22 @@ export const generateMetadata = async ({ params, searchParams }: PageProps) => {
   }
 
   const draft = await draftMode();
+  const resolvedSearchParams = await searchParams;
+
+  // Detect editing mode: draftMode (standard) or URL parameters (fallback for
+  // serverless platforms like Vercel where draft cookies may not propagate)
+  const isEditing =
+    draft.isEnabled ||
+    resolvedSearchParams.sc_mode === 'edit' ||
+    resolvedSearchParams.mode === 'edit' ||
+    resolvedSearchParams.sc_headless_mode === 'edit';
 
   let page;
-  if (draft.isEnabled) {
-    const editingParams = await searchParams;
-    if (isDesignLibraryPreviewData(editingParams)) {
-      page = await client.getDesignLibraryData(editingParams);
+  if (isEditing) {
+    if (isDesignLibraryPreviewData(resolvedSearchParams)) {
+      page = await client.getDesignLibraryData(resolvedSearchParams);
     } else {
-      page = await client.getPreview(editingParams);
+      page = await client.getPreview(resolvedSearchParams);
     }
   } else {
     page = await getSitecorePage({ site, locale, path: path ?? [] });

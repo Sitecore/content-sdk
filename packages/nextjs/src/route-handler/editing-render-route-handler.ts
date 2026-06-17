@@ -29,6 +29,20 @@ import debug from '../debug';
 import type { AllowedQueryParams } from '../editing/types';
 
 /**
+ * Patches a cookie string to include SameSite=None and Secure attributes for
+ * cross-origin iframe compatibility. The Sitecore Editor always renders the
+ * application inside a cross-origin iframe, so editing cookies must opt in to
+ * cross-site delivery.
+ * @param {string} cookie - A cookie string in "name=value" or full Set-Cookie format
+ * @returns {string} The cookie string with SameSite=None; Secure appended
+ */
+const patchCookieForCrossOrigin = (cookie: string): string => {
+  // Strip existing SameSite and Secure attributes to avoid duplicates
+  let patched = cookie.replace(/;\s*SameSite=\w+/gi, '').replace(/;\s*Secure/gi, '');
+  return `${patched}; SameSite=None; Secure`;
+};
+
+/**
  * Helper function to handle cookie operations - can be mocked for testing
  * @returns {Promise<NextCookies>} Next cookies
  */
@@ -259,7 +273,11 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
 
       // remove nextjs preview cookies to not leak them to the browser
       const filteredCookies = cleanupNextPreviewCookies(convertedCookies);
-      responseHeaders['Set-Cookie'] = filteredCookies?.join('; ') || '';
+
+      // Patch all editing cookies with SameSite=None; Secure for cross-origin
+      // iframe compatibility (Sitecore Editor runs in a cross-origin iframe)
+      const patchedCookies = filteredCookies?.map(patchCookieForCrossOrigin);
+      responseHeaders['Set-Cookie'] = patchedCookies?.join(', ') || '';
 
       debug.editing('editing render handler end in %dms: %o', Date.now() - startTimestamp, {
         status: 200,
@@ -359,9 +377,8 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     // add prerender bypass cookie to forwarded request in order to enable draft mode
     const cookieStore = await getNextCookies();
     const reqCookie = req.headers.get('cookie') || '';
-    const prerenderBypassCookie = `${PREVIEW_COOKIES.PRERENDER_BYPASS}=${
-      cookieStore.get(PREVIEW_COOKIES.PRERENDER_BYPASS)?.value || ''
-    }`;
+    const prerenderBypassCookie = `${PREVIEW_COOKIES.PRERENDER_BYPASS}=${cookieStore.get(PREVIEW_COOKIES.PRERENDER_BYPASS)?.value || ''
+      }`;
     const forwardCookie = reqCookie
       ? `${reqCookie}; ${prerenderBypassCookie}`
       : prerenderBypassCookie;
@@ -402,7 +419,11 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
 
     // remove nextjs preview cookies to not leak them to the browser
     const filteredCookies = cleanupNextPreviewCookies(filteredHeaders.get('Set-Cookie'));
-    filteredHeaders.set('Set-Cookie', filteredCookies?.join('; ') || '');
+
+    // Patch all editing cookies with SameSite=None; Secure for cross-origin
+    // iframe compatibility (Sitecore Editor runs in a cross-origin iframe)
+    const patchedCookies = filteredCookies?.map(patchCookieForCrossOrigin);
+    filteredHeaders.set('Set-Cookie', patchedCookies?.join(', ') || '');
 
     return new Response(forwardedResponse.data, {
       status: forwardedResponse.status,
