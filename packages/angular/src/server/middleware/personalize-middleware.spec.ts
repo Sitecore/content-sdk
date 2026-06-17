@@ -10,7 +10,7 @@ import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
 import { LOADER_DATA_ENDPOINT } from '../constants';
 import { SC_PARAMS_HEADER } from '../../loaders/constants';
 import type { CsdkExpressRequest, ExpressMiddleware, ExpressResponse } from './models';
-
+import type { PersonalizeMiddlewareOptions } from './personalize-middleware';
 const {
   initContentSdkMock,
   personalizeMock,
@@ -40,19 +40,6 @@ vi.mock('@sitecore-content-sdk/analytics-core', () => ({
   analyticsPlugin: analyticsPluginMock,
   analyticsServerAdapter: analyticsServerAdapterMock,
 }));
-
-type PersonalizeMiddlewareOptions = {
-  enabled?: boolean;
-  contextId?: string;
-  defaultSite?: string;
-  defaultLanguage?: string;
-  locales?: string[];
-  personalizeService?: PersonalizeService;
-  skip?: (req: CsdkExpressRequest) => boolean;
-  extractGeoDataCb?: () => Record<string, unknown>;
-  getExtraUtmParams?: () => Record<string, string | undefined>;
-  matcher?: { excludePaths?: string[] };
-};
 
 type CreatePersonalizeMiddleware = (options: PersonalizeMiddlewareOptions) => ExpressMiddleware;
 

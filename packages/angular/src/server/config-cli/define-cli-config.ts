@@ -5,8 +5,18 @@ import type {
 import { defineCliConfig as defineCliConfigCore } from '@sitecore-content-sdk/content/config-cli';
 import { generateMap } from '../tools/generate-map';
 import { AngularSitecoreConfig } from '../../config/define-config';
-
+import { generateSites as generateSitesContent } from '@sitecore-content-sdk/content/node-tools';
+import type { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 const noopBuildCommand = async () => {};
+
+export const generateSites = ({ destinationPath }: { destinationPath?: string } = {}): ((args: {
+  scConfig: AngularSitecoreConfig;
+}) => Promise<void>) => {
+  return async ({ scConfig }: { scConfig: AngularSitecoreConfig }) => {
+    const convertedConfig = scConfig as SitecoreConfig;
+    await generateSitesContent({ destinationPath })({ scConfig: convertedConfig });
+  };
+};
 
 /**
  * CLI configuration input for Angular apps. Narrows {@link SitecoreCliConfigInput}

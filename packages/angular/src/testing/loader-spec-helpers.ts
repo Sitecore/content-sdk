@@ -1,6 +1,5 @@
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import type { AngularSitecoreConfig } from '../config/define-config';
 import type { CsdkRequestParams, LoaderContext, LoaderPayload } from '../loaders/models';
 
@@ -20,13 +19,9 @@ export function mockAngularSitecoreConfig(
 }
 
 /** Default Content SDK request params for loader/cache tests. */
-export function mockScParams(
-  overrides: Partial<CsdkRequestParams> = {}
-): Required<CsdkRequestParams> {
+export function mockScParams(overrides: Partial<CsdkRequestParams> = {}) {
   return {
     siteName: 'default',
-    variantId: DEFAULT_VARIANT,
-    componentVariantIds: [],
     ...overrides,
   };
 }

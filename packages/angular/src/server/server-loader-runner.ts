@@ -8,7 +8,6 @@ import {
 import { LoaderRegistry } from '../loaders/loader-registry.token';
 import { buildCacheKey } from './cache/cache-key';
 import { buildLoaderCacheTags } from './cache/cache-tags';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import { AngularSitecoreConfig } from '../config/define-config';
 
 /**
@@ -55,8 +54,6 @@ export class ServerLoaderRunner {
 
     const defaultScParams = {
       siteName: this.config.defaultSite,
-      variantId: DEFAULT_VARIANT,
-      componentVariantIds: [],
     };
 
     const scParams = {

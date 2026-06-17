@@ -55,8 +55,10 @@ export function serializeLoaderCacheKey(dimensions: CacheKeyDimensions): string 
 export function buildPageCacheKey(dimensions: CacheKeyDimensions): string {
   const site = sanitizeSitecoreCacheSegment(dimensions.site);
   const locale = sanitizeSitecoreCacheSegment(dimensions.locale);
-  const variantId = sanitizeSitecoreCacheSegment(dimensions.variantId);
-  return `${CACHE_KEY_PREFIX}:page:${site}:${locale}:${variantId}:${dimensions.pathKey}`;
+  const variantIdSection = dimensions.variantId
+    ? `:${sanitizeSitecoreCacheSegment(dimensions.variantId)}`
+    : '';
+  return `${CACHE_KEY_PREFIX}:page:${site}:${locale}${variantIdSection}:${dimensions.pathKey}`;
 }
 
 /**
@@ -82,6 +84,8 @@ export function buildGenericLoaderCacheKey(dimensions: CacheKeyDimensions): stri
   const loaderId = sanitizeSitecoreCacheSegment(dimensions.loaderId);
   const site = sanitizeSitecoreCacheSegment(dimensions.site);
   const locale = sanitizeSitecoreCacheSegment(dimensions.locale);
-  const variantId = sanitizeSitecoreCacheSegment(dimensions.variantId);
-  return `${CACHE_KEY_PREFIX}:${loaderId}:${site}:${locale}:${variantId}:${dimensions.pathKey}`;
+  const variantIdSection = dimensions.variantId
+    ? `:${sanitizeSitecoreCacheSegment(dimensions.variantId)}`
+    : '';
+  return `${CACHE_KEY_PREFIX}:${loaderId}:${site}:${locale}${variantIdSection}:${dimensions.pathKey}`;
 }

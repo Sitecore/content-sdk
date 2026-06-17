@@ -3,7 +3,11 @@ import { SITE_KEY, type SiteInfo } from '@sitecore-content-sdk/content/site';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
 import { LOADER_DATA_ENDPOINT } from '../constants';
 import { SC_PARAMS_HEADER } from '../../loaders/constants';
-import { createMultisiteMiddleware, getHostname, type MultisiteMiddlewareOptions } from './multisite-middleware';
+import {
+  createMultisiteMiddleware,
+  getHostname,
+  type MultisiteMiddlewareOptions,
+} from './multisite-middleware';
 import type { CsdkExpressRequest, ExpressResponse } from './models';
 
 const SITES: SiteInfo[] = [
@@ -156,9 +160,7 @@ describe('createMultisiteMiddleware', () => {
   it('writes resolved scParams to SC_PARAMS_HEADER for SSR handoff', () => {
     const req = createReq({ query: { [SITE_KEY]: 'site-b' } });
     createMultisiteMiddleware(createOptions())(req, createRes(), next);
-    expect(req.headers?.[SC_PARAMS_HEADER]).toBe(
-      JSON.stringify({ siteName: 'site-b' })
-    );
+    expect(req.headers?.[SC_PARAMS_HEADER]).toBe(JSON.stringify({ siteName: 'site-b' }));
   });
 
   it('resolves site from /_data loader payload query instead of req.path', () => {

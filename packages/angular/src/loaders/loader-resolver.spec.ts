@@ -15,7 +15,6 @@ import type { LoaderFn } from './models';
 import type { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 import type { AngularSitecoreConfig } from '../config/define-config';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import { mockAngularSitecoreConfig, makeLoaderPayload } from '../testing/loader-spec-helpers';
 
 const mockSitecoreConfig = mockAngularSitecoreConfig();
@@ -314,8 +313,6 @@ describe('loaderResolver', () => {
         query: { lang: 'en' },
         scParams: {
           siteName: 'default',
-          variantId: DEFAULT_VARIANT,
-          componentVariantIds: [],
         },
         csdkRequestData: {},
       });

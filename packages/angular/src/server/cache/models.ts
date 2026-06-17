@@ -13,12 +13,12 @@ export interface CacheKeyDimensions {
   site: string;
   /** Locale from route params (defaults to `'en'`). */
   locale: string;
-  /** Personalization variant segment (defaults to `'default'`). */
-  variantId: string;
   /** Loader id (`page`, `dictionary`, etc.). */
   loaderId: string;
   /** Sanitized path segment from the loader URL; home route uses `'_'`. */
   pathKey: string;
+  /** Personalization variant segment (defaults to `'default'`). */
+  variantId?: string;
   /** Component variant ids from request context */
   componentVariantIds?: string[];
 }

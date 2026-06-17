@@ -1,6 +1,5 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import type { LoaderFn } from '../../loaders/models';
 import { NotFoundNavigationError, LoaderHttpError } from '../../loaders/models';
 import { createLoaderDataServiceMiddleware } from './loader-data-service-middleware';
@@ -73,7 +72,7 @@ describe('createLoaderDataServiceMiddleware', () => {
         url: '/',
         routeParams: {},
         query: {},
-        scParams: { siteName: 'demo', variantId: DEFAULT_VARIANT, componentVariantIds: [] },
+        scParams: { siteName: 'demo' },
         csdkRequestData: expect.any(Object),
       })
     );
@@ -106,7 +105,7 @@ describe('createLoaderDataServiceMiddleware', () => {
         url: '/about',
         routeParams: {},
         query: { q: 'search' },
-        scParams: { siteName: 'demo', variantId: DEFAULT_VARIANT, componentVariantIds: [] },
+        scParams: { siteName: 'demo' },
       })
     );
     expect(res.json).toHaveBeenCalledWith({
@@ -319,14 +318,10 @@ describe('createLoaderDataServiceMiddleware', () => {
     expect(mockLoader).toHaveBeenCalledTimes(1);
     expect(setSpy).toHaveBeenCalledTimes(1);
     expect(setSpy).toHaveBeenCalledWith(
-      'sc:loader:page:demo:en:_default:cached-page',
+      'sc:loader:page:demo:en:cached-page',
       { title: 'Cached page' },
       300,
-      expect.arrayContaining([
-        'sc:loader:page:demo:en:_default:cached-page',
-        'sc:site:demo',
-        'sc:locale:en',
-      ])
+      expect.arrayContaining(['sc:loader:page:demo:en:cached-page', 'sc:site:demo', 'sc:locale:en'])
     );
     expect(res1.json).toHaveBeenCalledWith({
       kind: 'data',

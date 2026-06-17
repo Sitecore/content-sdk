@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { LOADER_DATA_ENDPOINT } from '../constants';
 import { SC_PARAMS_HEADER } from '../../loaders/constants';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
-import type { CsdkExpressRequest } from './models';
+import type { ExpressRequest } from './models';
 import {
   getMiddlewareRequest,
   isDataLoaderRequest,
@@ -10,7 +10,7 @@ import {
   shouldProcessPath,
 } from './utils';
 
-function createReq(overrides: Partial<CsdkExpressRequest> = {}): CsdkExpressRequest {
+function createReq(overrides: Partial<ExpressRequest> = {}): ExpressRequest {
   return {
     method: 'GET',
     path: '/about',
@@ -58,7 +58,9 @@ describe('parseLoaderRequest', () => {
       url: '/products?color=red',
       query: { color: 'red' },
     });
-    expect('csdkRequestData' in parsed && parsed.csdkRequestData?.hostname).toBe('shop.example.com');
+    expect('csdkRequestData' in parsed && parsed.csdkRequestData?.hostname).toBe(
+      'shop.example.com'
+    );
     expect('csdkRequestData' in parsed && parsed.csdkRequestData?.cookies?.[SITE_KEY]).toBe(
       'website'
     );

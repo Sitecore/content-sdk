@@ -21,6 +21,7 @@ import {
   ExpressNextFunction,
   ExpressResponse,
   BaseMiddlewareOptions,
+  ExpressRequest,
 } from './models';
 import { splitLocaleFromPath } from '../../i18n/locale-utils';
 import { SC_PARAMS_HEADER } from '../../loaders/constants';
@@ -68,10 +69,10 @@ export type PersonalizeMiddlewareOptions = BaseMiddlewareOptions &
     defaultSite?: string;
     /** Override the personalize service instance */
     personalizeService?: PersonalizeService;
-    getExtraUtmParams?: (req: CsdkExpressRequest) => Partial<ExperienceParams['utm']>;
-    extractGeoDataCb?: (
-      req: CsdkExpressRequest
-    ) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
+    /** Get extra UTM parameters from the request */
+    getExtraUtmParams?: (req: ExpressRequest) => Partial<ExperienceParams['utm']>;
+    /** Extract geolocation data from the request */
+    extractGeoDataCb?: (req: ExpressRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
   };
 
 type PersonalizeExecution = {
@@ -79,7 +80,7 @@ type PersonalizeExecution = {
   variantIds: string[];
 };
 
-const isPrefetch = (req: CsdkExpressRequest): boolean =>
+const isPrefetch = (req: ExpressRequest): boolean =>
   [req.headers?.purpose, req.headers?.['sec-purpose']].some(
     (header) => typeof header === 'string' && header.includes('prefetch')
   );
@@ -176,7 +177,7 @@ export function createPersonalizeMiddleware(
     );
   }
 
-  return async (req: CsdkExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
+  return async (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
     try {
       // `enabled` defaults to true: omitting it keeps the middleware on (see BaseMiddlewareOptions).
       if (options.enabled === false || !personalizeService) {
@@ -205,7 +206,10 @@ export function createPersonalizeMiddleware(
       const startTimestamp = Date.now();
       const { locale, nonLocalePath } = splitLocaleFromPath(path, options.locales ?? []);
       const language = locale || options.defaultLanguage || 'en';
-      const siteName = req.scParams?.siteName || data.cookies?.[SITE_KEY] || options.defaultSite;
+      const siteName =
+        (req as CsdkExpressRequest).scParams?.siteName ||
+        data.cookies?.[SITE_KEY] ||
+        options.defaultSite;
       const hostHeader = data.headers?.['x-forwarded-host'] ?? data.headers?.host;
       const hostname =
         (Array.isArray(hostHeader) ? hostHeader[0] : hostHeader)?.split(':')[0] || 'localhost';
@@ -251,7 +255,7 @@ export function createPersonalizeMiddleware(
 
       // Express req/res are http.IncomingMessage/ServerResponse at runtime; the minimal
       // Express interfaces don't declare that, so cast for the cookie-based server adapters.
-      const { req: httpReq, res: httpRes } = toNodeAdapterPair(req, res);
+      const { req: httpReq, res: httpRes } = toNodeAdapterPair(req as CsdkExpressRequest, res);
       await initContentSdk({
         config: {
           contextId: options.contextId as string,
@@ -279,7 +283,7 @@ export function createPersonalizeMiddleware(
       const geo = options.extractGeoDataCb ? await options.extractGeoDataCb(req) : undefined;
       const params = getExperienceParams(
         query,
-        (data.headers?.referer as string) || '',
+        (data.referrer as string) || (data.headers?.referer as string) || '',
         options.getExtraUtmParams?.(req)
       );
       const executions = getPersonalizeExecutions(personalizeInfo, language, options.scope);
@@ -316,11 +320,15 @@ export function createPersonalizeMiddleware(
       }
 
       const { variantId, componentVariantIds } = getGroomedVariantIds(identifiedVariantIds);
-      req.scParams = { ...(req.scParams || {}), variantId, componentVariantIds };
+      (req as CsdkExpressRequest).scParams = {
+        ...((req as CsdkExpressRequest).scParams || {}),
+        variantId,
+        componentVariantIds,
+      };
       // Also ride the params on a header so they survive Angular's conversion of the
       // Express request to a web Request on the SSR path (same mechanism as editing params).
       req.headers = req.headers ?? {};
-      req.headers[SC_PARAMS_HEADER] = JSON.stringify(req.scParams);
+      req.headers[SC_PARAMS_HEADER] = JSON.stringify((req as CsdkExpressRequest).scParams);
 
       debug.personalize('personalize middleware end in %dms: %o', Date.now() - startTimestamp, {
         variantId,

@@ -1,6 +1,5 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect } from 'vitest';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import {
   approxByteSize,
   dimensionsFromContext,
@@ -39,8 +38,6 @@ describe('dimensionsFromContext', () => {
     expect(dimensions).toEqual({
       site: 'blog',
       locale: 'de',
-      variantId: DEFAULT_VARIANT,
-      componentVariantIds: [],
       loaderId: 'page',
       pathKey: 'articles/1',
     });

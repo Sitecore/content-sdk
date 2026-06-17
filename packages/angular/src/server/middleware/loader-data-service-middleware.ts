@@ -5,7 +5,12 @@ import {
   LoaderDataResult,
   LoaderCache,
 } from '../../loaders/models';
-import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from './models';
+import {
+  ExpressMiddleware,
+  ExpressNextFunction,
+  ExpressRequest,
+  ExpressResponse,
+} from './models';
 import { LOADER_DATA_ENDPOINT } from '../constants';
 import { ServerLoaderRunner } from '../server-loader-runner';
 import { parseLoaderRequest } from './utils';

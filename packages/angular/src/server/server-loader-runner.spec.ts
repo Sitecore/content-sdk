@@ -1,6 +1,5 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import { ServerLoaderRunner } from './server-loader-runner';
 import type { LoaderCache, LoaderFn, LoaderRunnerInit } from '../loaders/models';
 import { createLoaderCache } from './cache/loader-cache';
@@ -53,8 +52,6 @@ describe('ServerLoaderRunner', () => {
       query: { q: '1' },
       scParams: {
         siteName: 'default',
-        variantId: DEFAULT_VARIANT,
-        componentVariantIds: [],
       },
       csdkRequestData: undefined,
     });

@@ -1,7 +1,12 @@
 import { LOADER_DATA_ENDPOINT } from '../constants';
 import type { CsdkRequestData, LoaderPayload, LoaderRunnerInit } from '../../loaders/models';
 import { extractRequestData } from '../../loaders/utils';
-import type { CsdkExpressRequest, ExpressResponse, MiddlewareMatcher } from './models';
+import type {
+  CsdkExpressRequest,
+  ExpressRequest,
+  ExpressResponse,
+  MiddlewareMatcher,
+} from './models';
 import { analyticsServerAdapter } from '@sitecore-content-sdk/analytics-core';
 import { matches, type PathPattern } from '../utils';
 
@@ -9,13 +14,13 @@ import { matches, type PathPattern } from '../utils';
  * Whether the request is a browser loader navigation to the `/_data` endpoint (rather than a
  * regular SSR page request). Such requests carry their routing data in the loader payload, not in
  * `req.path`/`req.query`.
- * @param {CsdkExpressRequest} req - Incoming request.
+ * @param {ExpressRequest} req - Incoming request.
  * @param {string} [dataEndpoint] - Loader data endpoint (default `/_data`).
  * @returns {boolean} True for `/_data` requests.
  * @public
  */
 export function isDataLoaderRequest(
-  req: CsdkExpressRequest,
+  req: ExpressRequest,
   dataEndpoint = LOADER_DATA_ENDPOINT
 ): boolean {
   return req.path === dataEndpoint;
@@ -25,12 +30,12 @@ export function isDataLoaderRequest(
  * Parses a `/_data` request (POST body or GET query) into a {@link LoaderRunnerInit}, or a
  * validation error. `csdkRequestData` is always server-derived via {@link extractRequestData}, so
  * request-data-shaped values in the payload can't spoof site/variant resolution.
- * @param {CsdkExpressRequest} req - Incoming `/_data` request.
+ * @param {ExpressRequest} req - Incoming `/_data` request.
  * @returns {LoaderRunnerInit | { status: number; message: string }} Parsed payload or error.
  * @public
  */
 export function parseLoaderRequest(
-  req: CsdkExpressRequest
+  req: ExpressRequest
 ): LoaderRunnerInit | { status: number; message: string } {
   if (req.method === 'POST') {
     const body = req.body as LoaderPayload;
@@ -76,27 +81,33 @@ export interface MiddlewareRequest {
  * query come from the loader payload (via {@link parseLoaderRequest}); otherwise from the request
  * itself. Headers/cookies/hostname always come from {@link extractRequestData}, so resolution reads
  * the same shape either way and can then enrich `req.scParams` with site/variants.
- * @param {CsdkExpressRequest} req - Incoming request.
+ * @param {ExpressRequest} req - Incoming request.
  * @param {string} [dataEndpoint] - Loader data endpoint (default `/_data`).
  * @returns {MiddlewareRequest} Normalized path/query/data.
  * @public
  */
 export function getMiddlewareRequest(
-  req: CsdkExpressRequest,
+  req: ExpressRequest,
   dataEndpoint = LOADER_DATA_ENDPOINT
 ): MiddlewareRequest {
+  const referrer = (req.headers?.referer as string | undefined) ?? req.referrer;
   if (isDataLoaderRequest(req, dataEndpoint)) {
     const parsed = parseLoaderRequest(req);
     if ('loaderId' in parsed) {
       return {
         path: (parsed.url || req.path).split('?')[0],
         query: parsed.query ?? {},
-        referrer: (req.headers?.referer as string | undefined) ?? req.referrer,
+        referrer,
         data: parsed.csdkRequestData ?? extractRequestData(req),
       };
     }
   }
-  return { path: req.path, query: req.query ?? {}, data: extractRequestData(req) };
+  return {
+    path: req.path,
+    query: req.query ?? {},
+    referrer,
+    data: extractRequestData(req),
+  };
 }
 
 /**
@@ -108,12 +119,12 @@ export type NodeAdapterResponse = Parameters<typeof analyticsServerAdapter>[1];
 
 /**
  * Express req/res are Node `IncomingMessage`/`ServerResponse` at runtime; cast for cookie adapters.
- * @param {CsdkExpressRequest} req - Content SDK Express request
+ * @param {ExpressRequest} req - Content SDK Express request
  * @param {ExpressResponse} res - Content SDK Express response
  * @returns {NodeAdapterRequest & NodeAdapterResponse} The Node adapter request and response
  */
 export function toNodeAdapterPair(
-  req: CsdkExpressRequest,
+  req: ExpressRequest,
   res: ExpressResponse
 ): { req: NodeAdapterRequest; res: NodeAdapterResponse } {
   return {

@@ -1,4 +1,5 @@
 import type { LoaderContext } from './models';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 
 /**
  * Read the site name resolved for the current request (multisite middleware →
@@ -20,7 +21,7 @@ export function getSiteName(context: LoaderContext): string {
  * @public
  */
 export function getVariantId(context: LoaderContext): string {
-  return context.scParams.variantId;
+  return context.scParams.variantId ?? DEFAULT_VARIANT;
 }
 
 /**

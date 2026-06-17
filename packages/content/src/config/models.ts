@@ -1,6 +1,5 @@
 import { RetryStrategy } from '@sitecore-content-sdk/core';
 import { GenerateMapFunction, GenerateMapArgs } from '../tools';
-import { IncomingMessage, OutgoingMessage } from 'http';
 
 /**
  * Utility type to make every property in a type required
@@ -151,7 +150,7 @@ export type SitecoreConfigInput = {
     /**
      * Function used to determine if site should be resolved from sc_site cookie when present
      */
-    useCookieResolution?: (req?: IncomingMessage, res?: OutgoingMessage) => boolean;
+    useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;
   };
 
   /**
