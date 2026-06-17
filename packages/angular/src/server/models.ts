@@ -22,6 +22,10 @@ export interface ExpressRequest {
   body: unknown;
   query: Record<string, string | string[] | undefined>;
   /**
+   * Route params when mounted on a parameterized Express path (e.g. `/sitemap-:id.xml`).
+   */
+  params?: Record<string, string>;
+  /**
    * Cookies from the request (requires cookie-parser middleware)
    */
   cookies?: Record<string, string>;
@@ -48,6 +52,10 @@ export interface ExpressResponse {
    * headers without depending on Express types directly.
    */
   setHeader?(name: string, value: string | string[]): void;
+  /**
+   * Redirect the client to another URL. Used by sitemap middleware for 404 fallbacks.
+   */
+  redirect?(url: string): void;
 }
 
 /**

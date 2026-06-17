@@ -15,11 +15,15 @@ import {
   createEditingRenderMiddleware,
   createLoaderCache,
   createLoaderDataServiceMiddleware,
+  createRobotsMiddleware,
   createSitecoreRevalidateMiddleware,
+  createSitemapMiddleware,
 } from '@sitecore-content-sdk/angular';
 import { LOADERS } from './content-sdk/loaders';
+import { getClient } from './content-sdk/client/sitecore-client';
 import { componentMap } from '.sitecore/component-map';
 import config from '../sitecore.config';
+import sites from '.sitecore/sites.json';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -57,13 +61,24 @@ app.use(
   createSitecoreRevalidateMiddleware({
     cache: loaderCache,
     defaultLocale: config.defaultLanguage,
-    sites: [
-      {
-        name: config.defaultSite,
-        hostName: '*',
-        language: config.defaultLanguage,
-      },
-    ],
+    sites,
+  })
+);
+
+/** Sitemap at `/sitemap.xml` and numbered `/sitemap-{id}.xml`. */
+const sitemapMiddleware = createSitemapMiddleware({
+  client: getClient(),
+  sites,
+});
+app.use('/sitemap.xml', sitemapMiddleware);
+app.use('/sitemap-:id.xml', sitemapMiddleware);
+
+/** robots.txt at `/robots.txt`. */
+app.use(
+  '/robots.txt',
+  createRobotsMiddleware({
+    client: getClient(),
+    sites,
   })
 );
 
