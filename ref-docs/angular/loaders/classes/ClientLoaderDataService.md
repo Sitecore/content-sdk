@@ -6,7 +6,7 @@
 
 # Class: ClientLoaderDataService
 
-Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:46](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/loaders/client-loader-data.service.ts#L46)
+Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:28](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/loaders/client-loader-data.service.ts#L28)
 
 Loader data client for browser loader data resolution. POSTs to the `/_data` endpoint and holds
 short-lived prefetched responses for parallel navigation prefetching.
@@ -28,7 +28,7 @@ Not aware of the server-side [LoaderCache](../interfaces/LoaderCache.md).
 
 > **getData**(`request`): `Promise`\<[`LoaderApiResponse`](../type-aliases/LoaderApiResponse.md)\>
 
-Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:84](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/loaders/client-loader-data.service.ts#L84)
+Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:66](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/loaders/client-loader-data.service.ts#L66)
 
 Get data for the given request, using staged prefetched responses or fetching if needed.
 If a request is already pending for this URL/loader combination,
@@ -39,7 +39,7 @@ Consumes (removes) staged responses after retrieval.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `request` | [`LoaderDataRequest`](../interfaces/LoaderDataRequest.md) | The loader data request |
+| `request` | [`LoaderPayload`](../type-aliases/LoaderPayload.md) | The loader data request |
 
 #### Returns
 
@@ -53,7 +53,7 @@ Promise resolving to the API response
 
 > **prefetch**(`loaderRequest`): `void`
 
-Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:61](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/loaders/client-loader-data.service.ts#L61)
+Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:43](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/loaders/client-loader-data.service.ts#L43)
 
 Prefetch loader data for the given request without consuming staged responses.
 If a response is already staged or a request is pending, does nothing.
@@ -64,7 +64,7 @@ Used by PreLoaderDataService to warm responses for all loaders in a route in par
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `loaderRequest` | [`LoaderDataRequest`](../interfaces/LoaderDataRequest.md) | The loader data request |
+| `loaderRequest` | [`LoaderPayload`](../type-aliases/LoaderPayload.md) | The loader data request |
 
 #### Returns
 

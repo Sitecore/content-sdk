@@ -67,8 +67,10 @@ export class ScFormComponent {
       }
 
       let cancelled = false;
+      const abort = new AbortController();
       this.destroyRef.onDestroy(() => {
         cancelled = true;
+        abort.abort();
       });
 
       loadForm(edgeId, formId, edgeUrl)
@@ -81,7 +83,7 @@ export class ScFormComponent {
 
           const isEditing = this.context.isEditing();
           if (!isEditing) {
-            subscribeToFormSubmitEvent(el, this.rendering()?.uid);
+            subscribeToFormSubmitEvent(el, this.rendering()?.uid, abort.signal);
           }
 
           executeScriptElements(el);

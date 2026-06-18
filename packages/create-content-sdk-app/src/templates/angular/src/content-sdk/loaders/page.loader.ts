@@ -2,6 +2,10 @@ import type { LoaderFn, Page } from '@sitecore-content-sdk/angular';
 import {
   NotFoundNavigationError,
   getEditingPreviewData,
+  getSiteName,
+  getVariantId,
+  getComponentVariantIds,
+  getLanguage,
   splitLocaleFromPath,
 } from '@sitecore-content-sdk/angular';
 import scConfig from '../../../sitecore.config';
@@ -12,14 +16,20 @@ import { getClient } from '../client/sitecore-client';
  * Uses imported config and {@link getClient} so this runs outside Angular injection context.
  */
 export const pageLoader: LoaderFn<Page> = async (context) => {
-  const previewData = getEditingPreviewData(context.requestContext);
-  const locale = (context.params['locale'] as string | undefined) || scConfig.defaultLanguage;
+  const previewData = getEditingPreviewData(context.csdkRequestData);
+  const locale = getLanguage(context) || scConfig.defaultLanguage;
   const { nonLocalePath } = splitLocaleFromPath(context.url, scConfig.angular.locales);
-  const site = scConfig.defaultSite;
 
   const page = previewData
     ? await getClient().getPreview(previewData)
-    : await getClient().getPage(nonLocalePath, { locale, site });
+    : await getClient().getPage(nonLocalePath, {
+        locale,
+        site: getSiteName(context),
+        personalize: {
+          variantId: getVariantId(context),
+          componentVariantIds: getComponentVariantIds(context),
+        },
+      });
 
   if (!page) {
     throw new NotFoundNavigationError();

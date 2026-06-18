@@ -1,4 +1,4 @@
-import { defineConfig } from '@sitecore-content-sdk/angular';
+import { defineConfig } from '@sitecore-content-sdk/angular/config';
 import { environment } from './src/environments/environment';
 
 /**

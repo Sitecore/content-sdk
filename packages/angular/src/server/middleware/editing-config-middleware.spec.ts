@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Component } from '@angular/core';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { createEditingConfigMiddleware } from './editing-config-middleware';
-import type { ExpressRequest, ExpressResponse } from '../models';
+import type { ExpressRequest, ExpressResponse } from './models';
 import type { ComponentMap } from '../../components/types';
 
 @Component({ selector: 'test-a', template: '' })

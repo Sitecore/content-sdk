@@ -8,7 +8,7 @@ import {
 import type { CacheKeyDimensions } from './models';
 
 /**
- * Sitecore OSR namespace prefix shared with Next.js (`sc:`).
+ * Sitecore OSR namespace prefix shared with other frameworks (`sc:`).
  * All loader cache keys and invalidation tags use this prefix.
  * @internal
  */
@@ -77,7 +77,7 @@ export type BuildLoaderDictionaryCacheTagsFromSitesParams = {
 };
 
 /**
- * Builds a Next.js-compatible dictionary tag: `sc:dict:<site>:<locale>`.
+ * Builds a dictionary cache tag: `sc:dict:<site>:<locale>`.
  * Used for dictionary loader entries and cross-stack webhook fan-out.
  * @param {SitecoreDictionaryCacheTagParams} params - Site and locale segments.
  * @returns {string} Dictionary cache tag.
@@ -173,7 +173,7 @@ export function buildSitecoreLocaleCacheTag(locale: string): string {
 }
 
 /**
- * Builds the full tag set written alongside a loader cache entry (Phase 3 OSR alignment).
+ * Builds the full tag set written alongside a loader cache entry.
  * Always includes self-tag, `sc:site:<site>`, and `sc:locale:<locale>`. Conditionally adds
  * `sc:item:…` for page loaders and `sc:dict:…` for dictionary loaders. Custom tags are deduped.
  * @param {string} loaderId - Loader that produced the value.

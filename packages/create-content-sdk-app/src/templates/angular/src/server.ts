@@ -14,10 +14,13 @@ import {
   createEditingRenderMiddleware,
   createLoaderCache,
   createLoaderDataServiceMiddleware,
+  createMultisiteMiddleware,
+  createPersonalizeMiddleware,
   createSitecoreRevalidateMiddleware,
 } from '@sitecore-content-sdk/angular';
 import { LOADERS } from './content-sdk/loaders';
 import { componentMap } from '.sitecore/component-map';
+import sites from '.sitecore/sites.json';
 import config from '../sitecore.config';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
@@ -49,13 +52,7 @@ app.use(
   createSitecoreRevalidateMiddleware({
     cache: loaderCache,
     defaultLocale: config.defaultLanguage,
-    sites: [
-      {
-        name: config.defaultSite,
-        hostName: '*',
-        language: config.defaultLanguage,
-      },
-    ],
+    sites,
   })
 );
 
@@ -82,10 +79,60 @@ app.use(
 app.use(createEditingRenderMiddleware());
 
 /**
+ * Shared path matcher for the request-scoped middlewares (multisite + personalize, and any
+ * future redirects middleware). It decides which requests these middlewares act on.
+ *
+ * Patterns are exact strings or RegExp. The SDK already skips API routes (`/api/*`), Sitecore
+ * routes (`/sitecore/*`), static files (any path whose last segment has an extension) and
+ * editing/preview requests by default, so only list app-specific routes here.
+ *
+ *   excludePaths — additionally never processed
+ *   includePaths — when set, ONLY matching paths are processed (everything else is skipped)
+ */
+const middlewareMatcher = {
+  excludePaths: ['/healthz', '/metrics', /\.[^/]+$/],
+  // includePaths: [/^\/[a-z]{2}(-[A-Z]{2})?(\/|$)/], // e.g. restrict to locale-prefixed routes
+};
+
+/**
+ * Multisite middleware. Resolves the site for each request (sc_site query → cookie →
+ * hostname → default) from the generated site list and writes it onto `req.scParams`
+ * for downstream loaders and the loader cache key. Must run before the personalize
+ * middleware, which reads the resolved site.
+ */
+app.use(
+  createMultisiteMiddleware({
+    ...config.multisite,
+    sites,
+    defaultSite: config.defaultSite,
+    matcher: middlewareMatcher,
+  })
+);
+
+/**
+ * Personalize middleware. Identifies page/component variants for the request via
+ * Sitecore CDP and writes them onto `req.scParams` so the page loader fetches the
+ * personalized layout and the loader cache keys per variant.
+ *
+ * NOTE: Personalize requires Edge configuration (contextId/clientContextId) and
+ * cannot work with local containers
+ */
+app.use(
+  createPersonalizeMiddleware({
+    ...config.personalize,
+    ...config.api.edge,
+    locales: config.angular.locales,
+    defaultLanguage: config.defaultLanguage,
+    defaultSite: config.defaultSite,
+    matcher: middlewareMatcher,
+  })
+);
+
+/**
  * Loader data endpoint (/_data). Must use the same loaders as the client registry
  * so client-side navigation can fetch route data via POST /_data.
  */
-app.use(createLoaderDataServiceMiddleware({ loaders: LOADERS, cache: loaderCache }));
+app.use(createLoaderDataServiceMiddleware(config, { loaders: LOADERS, cache: loaderCache }));
 
 /**
  * Serve static files from /browser
@@ -100,12 +147,12 @@ app.use(
 
 /**
  * Handle all other requests by rendering the Angular application.
- * The cache reference rides on REQUEST_CONTEXT so the SSR loader resolver
- * picks it up via inject(REQUEST_CONTEXT).
+ * The cache and the Node req/res ride on REQUEST_CONTEXT: the SSR loader resolver picks up the
+ * cache, and the server analytics provider uses req/res for cookie-based CDP event dispatch.
  */
 app.use((req, res, next) => {
   angularApp
-    .handle(req, { cache: loaderCache })
+    .handle(req, { cache: loaderCache, req, res })
     .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
     .catch((err) => {
       next(err);

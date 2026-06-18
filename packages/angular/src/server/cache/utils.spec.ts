@@ -12,6 +12,7 @@ import {
   dedupeCacheStrings,
 } from './utils';
 import { DEFAULT_CACHE_TTL } from './models';
+import { mockScParams } from '../../testing/loader-spec-helpers';
 
 describe('urlToPathKey', () => {
   it('sanitizes path segments and uses _ for home', () => {
@@ -29,14 +30,14 @@ describe('dimensionsFromContext', () => {
   it('reads site and locale from route params and derives pathKey', () => {
     const dimensions = dimensionsFromContext('page', {
       url: '/articles/1?ref=email',
-      params: { site: 'blog', locale: 'de' },
+      routeParams: { locale: 'de' },
       query: {},
+      scParams: mockScParams({ siteName: 'blog' }),
     });
 
     expect(dimensions).toEqual({
       site: 'blog',
       locale: 'de',
-      variantId: 'default',
       loaderId: 'page',
       pathKey: 'articles/1',
     });
@@ -45,8 +46,9 @@ describe('dimensionsFromContext', () => {
   it('falls back to default site, locale, and home pathKey', () => {
     const dimensions = dimensionsFromContext('page', {
       url: '',
-      params: {},
+      routeParams: {},
       query: {},
+      scParams: mockScParams({ siteName: 'default' }),
     });
 
     expect(dimensions.site).toBe('default');

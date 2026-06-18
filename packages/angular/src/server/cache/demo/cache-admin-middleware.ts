@@ -8,7 +8,7 @@ import {
   ExpressNextFunction,
   ExpressRequest,
   ExpressResponse,
-} from '../../models';
+} from '../../middleware/models';
 import { InvalidateInput, LoaderCache } from '../../../loaders/models';
 
 /**

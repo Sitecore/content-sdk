@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { LoaderApiRequest, LoaderDataResult } from './models';
+import { LoaderRunnerInit, LoaderDataResult } from './models';
 
 /**
  * SSR injection port for cache-aware loader resolution.
@@ -10,10 +10,10 @@ import { LoaderApiRequest, LoaderDataResult } from './models';
 export interface ServerLoaderRunnerPort {
   /**
    * Resolve loader data on the server (cache-aware) using the shared {@link LOADER_REGISTRY}.
-   * @param {LoaderApiRequest} request - Loader request payload
+   * @param {LoaderRunnerInit} init - Loader request payload
    * @returns {Promise<LoaderDataResult>} Resolved loader result
    */
-  resolve(request: LoaderApiRequest): Promise<LoaderDataResult>;
+  resolve(init: LoaderRunnerInit): Promise<LoaderDataResult>;
 }
 
 /**

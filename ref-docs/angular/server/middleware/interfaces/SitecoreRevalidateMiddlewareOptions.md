@@ -6,7 +6,7 @@
 
 # Interface: SitecoreRevalidateMiddlewareOptions
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:35](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L35)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:35](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L35)
 
 Options for [createSitecoreRevalidateMiddleware](../functions/createSitecoreRevalidateMiddleware.md).
 
@@ -16,7 +16,7 @@ Options for [createSitecoreRevalidateMiddleware](../functions/createSitecoreReva
 
 > **cache**: [`LoaderCache`](../../../loaders/interfaces/LoaderCache.md)
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:37](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L37)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:37](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L37)
 
 Shared cache instance from createLoaderCache call
 
@@ -26,7 +26,7 @@ Shared cache instance from createLoaderCache call
 
 > `optional` **defaultLocale?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:41](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L41)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:41](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L41)
 
 Locale fallback when an update has no `entity_culture`; default `'en'`.
 
@@ -36,7 +36,7 @@ Locale fallback when an update has no `entity_culture`; default `'en'`.
 
 > `optional` **endpoint?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:48](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L48)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:48](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L48)
 
 Endpoint path; default `/api/revalidate`.
 
@@ -46,7 +46,7 @@ Endpoint path; default `/api/revalidate`.
 
 > `optional` **secret?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L39)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L39)
 
 Default: `process.env.SITECORE_REVALIDATE_SECRET`
 
@@ -56,7 +56,7 @@ Default: `process.env.SITECORE_REVALIDATE_SECRET`
 
 > `optional` **sites?**: `SiteInfo`[]
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:46](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L46)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:46](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L46)
 
 When set, every webhook also marks stale one
 `sc:loader:dictionary:<site>:<locale>` entry per site (dictionary fan-out).

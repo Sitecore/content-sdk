@@ -6,9 +6,9 @@
 
 # Function: createEditingRenderMiddleware()
 
-> **createEditingRenderMiddleware**(`options?`): [`ExpressMiddleware`](../../express/type-aliases/ExpressMiddleware.md)
+> **createEditingRenderMiddleware**(`options?`): [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:168](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/editing-render-middleware.ts#L168)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:166](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/editing-render-middleware.ts#L166)
 
 Express middleware that handles the editing render endpoint
 (default path: `/api/editing/render`). On a valid editor request, it
@@ -16,7 +16,7 @@ validates CORS + secret + required params, stashes the preview data on the
 request, sets the CSP header, rewrites `req.url` to the target route, and
 hands the request off to the Angular SSR pipeline via `next()`.
 
-Unlike the Next.js port, no internal HTTP fetch is performed - the editing
+No internal HTTP fetch is performed - the editing
 payload travels alongside the Express request through the existing
 middleware chain.
 
@@ -28,6 +28,6 @@ middleware chain.
 
 ## Returns
 
-[`ExpressMiddleware`](../../express/type-aliases/ExpressMiddleware.md)
+[`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
 The middleware function.

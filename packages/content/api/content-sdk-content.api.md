@@ -617,6 +617,9 @@ export function getFieldValue<T>(renderingOrFields: ComponentRendering | Compone
 export function getGroomedVariantIds(variantIds: string[]): PersonalizedRewriteData;
 
 // @internal
+export function getHostnameFromHostHeader(host: string): string;
+
+// @internal
 export function getImportMapInfo(importMap: ImportEntry[]): ImportEntryInfo[];
 
 // @public
@@ -1435,7 +1438,7 @@ export type StaticPath = {
 };
 
 // @internal
-const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: string) => void;
+const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: string, signal?: AbortSignal) => void;
 
 // @public
 export interface TextField extends FieldMetadata {

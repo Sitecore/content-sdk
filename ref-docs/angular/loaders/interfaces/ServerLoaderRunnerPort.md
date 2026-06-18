@@ -6,7 +6,7 @@
 
 # Interface: ServerLoaderRunnerPort
 
-Defined in: [packages/angular/src/loaders/server-loader-runner.token.ts:10](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/loaders/server-loader-runner.token.ts#L10)
+Defined in: [packages/angular/src/loaders/server-loader-runner.token.ts:10](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/loaders/server-loader-runner.token.ts#L10)
 
 SSR injection port for cache-aware loader resolution.
 Implemented by `ServerLoaderRunner` and wired via
@@ -16,9 +16,9 @@ Implemented by `ServerLoaderRunner` and wired via
 
 ### resolve()
 
-> **resolve**(`request`): `Promise`\<[`LoaderDataResult`](../type-aliases/LoaderDataResult.md)\>
+> **resolve**(`init`): `Promise`\<[`LoaderDataResult`](../type-aliases/LoaderDataResult.md)\>
 
-Defined in: [packages/angular/src/loaders/server-loader-runner.token.ts:16](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/loaders/server-loader-runner.token.ts#L16)
+Defined in: [packages/angular/src/loaders/server-loader-runner.token.ts:16](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/loaders/server-loader-runner.token.ts#L16)
 
 Resolve loader data on the server (cache-aware) using the shared [LOADER\_REGISTRY](../variables/LOADER_REGISTRY.md).
 
@@ -26,7 +26,7 @@ Resolve loader data on the server (cache-aware) using the shared [LOADER\_REGIST
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `request` | [`LoaderApiRequest`](../type-aliases/LoaderApiRequest.md) | Loader request payload |
+| `init` | [`LoaderRunnerInit`](../type-aliases/LoaderRunnerInit.md) | Loader request payload |
 
 #### Returns
 

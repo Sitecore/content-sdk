@@ -8,7 +8,7 @@
 
 > **createLoaderCache**(`config?`): [`LoaderCache`](../../../loaders/interfaces/LoaderCache.md)
 
-Defined in: [packages/angular/src/server/cache/loader-cache.ts:26](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/cache/loader-cache.ts#L26)
+Defined in: [packages/angular/src/server/cache/loader-cache.ts:26](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/cache/loader-cache.ts#L26)
 
 Public factory for the loader cache with unstorage backing.
 Uses the memory driver by default.
@@ -26,7 +26,7 @@ Callers depend on the [LoaderCache](../../../loaders/interfaces/LoaderCache.md) 
 
 [`LoaderCache`](../../../loaders/interfaces/LoaderCache.md)
 
-Cache implementation with Phase 3 SWR + tag semantics.
+Cache implementation with SWR + tag semantics.
 
 ## Example
 

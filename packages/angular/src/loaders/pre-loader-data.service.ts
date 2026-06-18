@@ -10,7 +10,7 @@ import {
   RouterStateSnapshot,
 } from '@angular/router';
 import { ClientLoaderDataService } from './client-loader-data.service';
-import { LoaderDataRequest } from './client-loader-data.service';
+import { LoaderPayload } from './models';
 import { LOADER_ID } from './loader-registry.token';
 
 /**
@@ -83,8 +83,8 @@ export class ClientPreLoaderDataService {
   private collectLoaders(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): LoaderDataRequest[] {
-    const loaderDataRequests: LoaderDataRequest[] = [];
+  ): LoaderPayload[] {
+    const loaderDataRequests: LoaderPayload[] = [];
     const breadcrump = route.pathFromRoot ?? [];
 
     for (const route of breadcrump) {
@@ -99,14 +99,14 @@ export class ClientPreLoaderDataService {
           ) {
             const loaderId = (resolver as ResolverWithLoaderId)[LOADER_ID];
             const url = state.url;
-            const params: Params = (route.pathFromRoot ?? []).reduce(
+            const routeParams: Params = (route.pathFromRoot ?? []).reduce(
               (acc, r) => ({ ...acc, ...(r?.params ?? {}) }),
               {}
             );
             loaderDataRequests.push({
               loaderId,
               url,
-              params,
+              routeParams,
               query: (route.queryParams ?? {}) as Record<string, string | string[]>,
             });
           }

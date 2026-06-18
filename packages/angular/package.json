@@ -12,16 +12,16 @@
   },
   "files": [
     "dist",
-    "cli-node"
+    "dist-node"
   ],
   "scripts": {
     "ng": "ng",
-    "build": "del-cli dist cli-node && ng build && tsc -p tsconfig.server.json",
+    "build": "del-cli dist dist-node && ng build && tsc -p tsconfig.server.json",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false",
     "coverage": "ng test --watch=false --coverage",
     "lint": "eslint \"./src/**/*.ts\"",
-    "generate-docs": "npx typedoc --options typedoc.json --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --tsconfig tsconfig.typedoc.json --out ../../ref-docs/angular --entryPoints src/config/index.ts --entryPoints src/config-cli/index.ts --entryPoints src/lib/index.ts --entryPoints src/loaders/index.ts --entryPoints src/i18n/index.ts --entryPoints src/components/index.ts --entryPoints src/components/field-directives/index.ts --entryPoints src/components/placeholder/index.ts --entryPoints src/server/express/index.ts --entryPoints src/server/cache/index.ts --entryPoints src/server/middleware/index.ts --githubPages false"
+    "generate-docs": "npx typedoc --options typedoc.json --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --tsconfig tsconfig.typedoc.json --out ../../ref-docs/angular --entryPoints src/config/index.ts --entryPoints src/config-cli/index.ts --entryPoints src/lib/index.ts --entryPoints src/loaders/index.ts --entryPoints src/i18n/index.ts --entryPoints src/components/index.ts --entryPoints src/components/field-directives/index.ts --entryPoints src/components/placeholder/index.ts --entryPoints src/server/cache/index.ts --entryPoints src/server/middleware/index.ts --githubPages false"
   },
   "prettier": {
     "printWidth": 100,
@@ -51,6 +51,9 @@
     "@angular/platform-server": "^21.0.0",
     "@angular/ssr": "^21.0.0",
     "@ngx-translate/core": "^17.0.0",
+    "@sitecore-content-sdk/analytics-core": "^2.1.0",
+    "@sitecore-content-sdk/events": "^2.1.0",
+    "@sitecore-content-sdk/personalize": "^2.1.0",
     "zone.js": "^0.15.0"
   },
   "peerDependenciesMeta": {
@@ -63,8 +66,11 @@
   },
   "dependencies": {
     "@ngx-translate/core": "^17.0.0",
+    "@sitecore-content-sdk/analytics-core": "^2.1.0",
     "@sitecore-content-sdk/content": "^2.1.0",
     "@sitecore-content-sdk/core": "^2.1.0",
+    "@sitecore-content-sdk/events": "^2.1.0",
+    "@sitecore-content-sdk/personalize": "^2.1.0",
     "tslib": "^2.3.0",
     "unstorage": "^1.17.5"
   },
@@ -100,6 +106,10 @@
     ".": {
       "types": "./dist/types/sitecore-content-sdk-angular.d.ts",
       "default": "./dist/fesm2022/sitecore-content-sdk-angular.mjs"
+    },
+    "./config": {
+      "types": "./dist/types/sitecore-content-sdk-angular-config.d.ts",
+      "default": "./dist/fesm2022/sitecore-content-sdk-angular-config.mjs"
     },
     "./config-cli": {
       "types": "./dist-node/server/config-cli/index.d.ts",

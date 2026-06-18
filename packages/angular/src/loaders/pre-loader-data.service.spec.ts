@@ -83,13 +83,13 @@ describe('ClientPreLoaderDataService', () => {
       expect(loaderDataPrefetchSpy).toHaveBeenCalledWith({
         loaderId: 'layout',
         url: '/page/123',
-        params: {},
+        routeParams: {},
         query: {},
       });
       expect(loaderDataPrefetchSpy).toHaveBeenCalledWith({
         loaderId: 'page',
         url: '/page/123',
-        params: { id: '123' },
+        routeParams: { id: '123' },
         query: { q: 'search' },
       });
     });
@@ -119,7 +119,7 @@ describe('ClientPreLoaderDataService', () => {
       expect(loaderDataPrefetchSpy).toHaveBeenCalledWith({
         loaderId: 'page',
         url: '/page',
-        params: {},
+        routeParams: {},
         query: {},
       });
     });

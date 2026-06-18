@@ -3,11 +3,13 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { LoaderCache, LoaderContext } from '../../loaders/models';
 import { buildCacheKey } from './cache-key';
 import { buildLoaderCacheTags } from './cache-tags';
+import { mockScParams } from '../../testing/loader-spec-helpers';
 
 export const sampleContext: LoaderContext = {
   url: '/products',
-  params: { site: 'shop', locale: 'en' },
+  routeParams: { locale: 'en' },
   query: {},
+  scParams: mockScParams({ siteName: 'shop' }),
 };
 
 export function sampleKey(loaderId = 'page'): string {

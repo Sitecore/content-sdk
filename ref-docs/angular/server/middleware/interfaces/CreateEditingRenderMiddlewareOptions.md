@@ -6,7 +6,7 @@
 
 # Interface: CreateEditingRenderMiddlewareOptions
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:48](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/editing-render-middleware.ts#L48)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:46](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/editing-render-middleware.ts#L46)
 
 Options for [createEditingRenderMiddleware](../functions/createEditingRenderMiddleware.md).
 
@@ -16,7 +16,7 @@ Options for [createEditingRenderMiddleware](../functions/createEditingRenderMidd
 
 > `optional` **allowedQueryParams?**: [`AllowedQueryParams`](../type-aliases/AllowedQueryParams.md)
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:68](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/editing-render-middleware.ts#L68)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:66](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/editing-render-middleware.ts#L66)
 
 Extra query parameters propagated into the editing preview data
 (e.g. deployment-protection bypass tokens).
@@ -27,7 +27,7 @@ Extra query parameters propagated into the editing preview data
 
 > `optional` **editingSecret?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:53](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/editing-render-middleware.ts#L53)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:51](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/editing-render-middleware.ts#L51)
 
 Editing secret to validate. Defaults to the `SITECORE_EDITING_SECRET`
 environment variable.
@@ -38,7 +38,7 @@ environment variable.
 
 > `optional` **endpoint?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:55](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/editing-render-middleware.ts#L55)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:53](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/editing-render-middleware.ts#L53)
 
 Endpoint path; default `/api/editing/render`.
 
@@ -48,7 +48,7 @@ Endpoint path; default `/api/editing/render`.
 
 > `optional` **resolvePageUrl?**: (`itemPath`, `previewData`) => `string`
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:63](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/editing-render-middleware.ts#L63)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:61](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/editing-render-middleware.ts#L61)
 
 Allows apps to remap the editor's `route` query parameter to their own URL
 shape (e.g. injecting a locale prefix).
