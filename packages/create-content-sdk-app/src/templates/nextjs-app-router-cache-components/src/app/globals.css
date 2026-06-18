@@ -1,1 +1,1 @@
-@import "tailwindcss"<% if (!helper.isDev) {%> source("..")<%}%>;
+@import "tailwindcss"<% if (helper.isDev) {%> source("..")<%}%>;
