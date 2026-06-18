@@ -363,6 +363,8 @@ export interface EditingRenderQueryParams {
     // (undocumented)
     sc_layoutKind?: LayoutKind;
     // (undocumented)
+    sc_previewTime?: string;
+    // (undocumented)
     sc_site: string;
     // (undocumented)
     sc_variant?: string;

@@ -420,6 +420,50 @@ describe('EditingRenderMiddleware', () => {
     expect(fetchRequestUrl.includes('someOtherParam=shouldNotBeIncluded')).to.be.false;
   });
 
+  it('should propagate sc_previewTime as header when present in query params', async () => {
+    const previewTimeQuery = {
+      ...query,
+      sc_previewTime: '2024-12-25T10:00:00Z',
+    } as EditingRenderQueryParams;
+    const req = mockRequest({ query: previewTimeQuery });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    const fetcherGetStub = sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    // Verify the sc_previewTime header was passed to the internal request
+    const fetchRequestOptions = fetcherGetStub.getCall(0).args[1];
+    expect(fetchRequestOptions).to.exist;
+    expect(fetchRequestOptions?.headers).to.have.property('sc_previewTime', '2024-12-25T10:00:00Z');
+    expect(res.send).to.have.been.calledWith('<div>some html</div>');
+  });
+
+  it('should handle request without sc_previewTime (backward compatibility)', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    const fetcherGetStub = sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    // Verify the request succeeds without sc_previewTime header
+    const fetchRequestOptions = fetcherGetStub.getCall(0).args[1];
+    expect(fetchRequestOptions).to.exist;
+    expect(fetchRequestOptions?.headers).to.not.have.property('sc_previewTime');
+    expect(res.send).to.have.been.calledWith('<div>some html</div>');
+  });
+
   describe('allowedQueryParams configuration', () => {
     it('should not include additional query params when allowedQueryParams is not configured', async () => {
       const customQuery = {
