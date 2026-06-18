@@ -12,6 +12,7 @@ export interface CsdkRequestParams {
   siteName?: string;
   /** Variant id. Either resovled from route or set to default variant id name */
   variantId?: string;
+  /** Component variant IDs */
   componentVariantIds?: string[];
 }
 /**
@@ -84,10 +85,26 @@ export type LoaderContext = {
   csdkRequestData?: CsdkRequestData;
 };
 
+/**
+ * Payload for loader resolution.
+ * @public
+ */
 export type LoaderPayload = {
+  /**
+   * The loader ID
+   */
   loaderId: string;
+  /**
+   * The requst URL
+   */
   url: string;
+  /**
+   * The ANgular request route parameters
+   */
   routeParams: Params;
+  /**
+   * The request query parameters
+   */
   query: Record<string, any>;
   /**
    * Per-route cache overrides supplied at the `loaderResolver(id, cacheOptions)`
