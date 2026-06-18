@@ -16,9 +16,7 @@ Register components in the Sitecore component maps so the layout and editing pip
 
 ## How to perform
 
-- `.sitecore/component-map.ts` and `.sitecore/component-map.client.ts` are generated from `src/components/` during `npm run dev` (watch) and `npm run build`, with each component routed to the correct map based on `'use client'`.
-- Use `npm run sitecore-tools:generate-map` or `npm run sitecore-tools:generate-map:watch` when you need to refresh the maps outside the normal dev or build flow.
-- Edit the map files directly only when the generator cannot express your scenario; otherwise keep them generated so server and client registrations stay aligned.
+- The component maps at `.sitecore/component-map.ts` and `.sitecore/component-map.client.ts` are generated from `src/components/` during `npm run dev` or `npm run build` (each component goes to the server or client map based on `'use client'`); run `npm run sitecore-tools:generate-map` to refresh them manually, and edit the maps only when the generator cannot handle your case.
 
 ## Hard Rules
 
