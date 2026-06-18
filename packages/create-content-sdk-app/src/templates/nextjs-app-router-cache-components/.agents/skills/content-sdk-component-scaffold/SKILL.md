@@ -16,12 +16,14 @@ Scaffold new Sitecore components so they integrate with the layout and editing p
 ## How to perform
 
 - Create a new file under `src/components/` (or existing feature folder). Define props (fields, params), export a single default component.
-- Decide Server vs Client: default Server; add `'use client'` only if the component needs hooks or event handlers.
-- Register the component in the correct map (content-sdk-component-registration). Run `npm run build` to verify.
+- Decide Server vs Client: default Server; add `'use client'` only for hooks or event handlers.
+- **Map:** Regenerates automatically during `npm run dev` and `npm run build`; otherwise run `npm run sitecore-tools:generate-map` (see content-sdk-component-registration).
+- Run `npm run build` to verify.
 
 ## Hard Rules
 
 - Place components under `src/components/`. Use existing folder conventions.
+- Prefer `sitecore-tools:generate-map` to regenerate the component maps instead of hand-editing them. Only manually register the component if the generator cannot handle the change.
 - Define a props interface with the component's fields (e.g. `fields: { title: Field; ... }`) and any params. Use types from `@sitecore-content-sdk/react` or the app's types.
 - Export a single default component; one component per file unless the app pattern differs.
 - **Server vs Client:** Use Server Components by default. Add `'use client'` only for interactivity (hooks, event handlers). Register Server components in `.sitecore/component-map.ts`; Client components in `.sitecore/component-map.client.ts`.

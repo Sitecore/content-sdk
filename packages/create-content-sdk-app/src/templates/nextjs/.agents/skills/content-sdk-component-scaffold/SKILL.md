@@ -15,11 +15,14 @@ Scaffold new Sitecore components so they integrate with the layout and editing p
 
 ## How to perform
 
-- Create a new file under `src/components/` (or existing feature folder). Define props (fields, params), export a single default component. Register in `.sitecore/component-map.ts` (content-sdk-component-registration). Run `npm run build` to verify.
+- Create a new file under `src/components/` (or existing feature folder). Define props (fields, params), export a single default component.
+- **Map:** Regenerates automatically during `npm run dev` and `npm run build`; otherwise run `npm run sitecore-tools:generate-map` (see content-sdk-component-registration).
+- Run `npm run build` to verify.
 
 ## Hard Rules
 
 - Place components under `src/components/`. Use existing folder conventions.
+- Prefer `sitecore-tools:generate-map` to regenerate `.sitecore/component-map.ts` instead of hand-editing it. Only manually register the component if the generator cannot handle the change.
 - Define a props interface with the component's fields (e.g. `fields: { title: Field; ... }`) and any params. Use types from `@sitecore-content-sdk/react` or the app's types.
 - Export a single default component; one component per file unless the app pattern differs.
 - After creating the component file, register it in `.sitecore/component-map.ts` (see content-sdk-component-registration). Do not leave the component unregistered. Pages Router has a single map used by getComponentData and editing API routes.

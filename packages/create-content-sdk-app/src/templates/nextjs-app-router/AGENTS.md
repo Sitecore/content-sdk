@@ -21,6 +21,8 @@ npm run type-check   # Run TypeScript compiler
 
 **Environment:** Copy `.env.example` to `.env.local` and set Sitecore API endpoint, key, default site, and language. Never commit `.env` or `.env.local`.
 
+**Component maps:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client) are auto-generated from `src/components/` during `npm run dev` (watch) and `npm run build`. No manual action needed; the generator scans `src/components/` and creates entries in the appropriate map (Server vs Client based on `'use client'`).
+
 ---
 
 ## Application Structure (App Router)
@@ -82,7 +84,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ### More (component maps, editing, env)
 
-- **Component maps:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client). Register every Sitecore component here; keep in sync with `src/components/`.
+- **Component maps:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client) — register every Sitecore component here; are auto-generated from `src/components/`. Do not edit manually unless needed.
 - **Editing/preview:** Use `draftMode()` in Server Components; when enabled, use `client.getPreview(searchParams)` or `client.getDesignLibraryData(searchParams)`. Editing API routes live under `src/app/api/editing/`.
 - **Env:** All config via environment variables in `sitecore.config.ts`. Document vars in `.env.example` (or `.env.remote.example` / `.env.container.example`); never commit `.env` or `.env.local`.
 
@@ -144,7 +146,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ### Component maps and layout
 
-- **Server/client components:** `.sitecore/component-map.ts` (Server); `.sitecore/component-map.client.ts` (Client). Register all Sitecore components; keep in sync with `src/components/`.
+- **Server/client components:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client) — register all Sitecore components. Are auto-generated from `src/components/`. Do not edit manually unless needed.
 - **Layout:** `Layout.tsx` renders page layout and placeholders; `Providers` wrap page and component context; `Bootstrap` in `[site]/layout.tsx` receives `siteName={site}` and preview state.
 
 ---
@@ -154,7 +156,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 - **Quick checks:** If locale or dictionary is wrong, ensure `setRequestLocale(\`${site}_${locale}\`)` is called at the top of the page and `src/i18n/request.ts` parses `requestLocale` and calls `client.getDictionary`. If not-found doesn't show Sitecore content, use `parseRewriteHeader(headers())` for site/locale. Always `await params` (Next.js 15+).
 - **Security:** Use only environment variables in `sitecore.config.ts`; never hardcode API keys, editing secret, or host URLs. Do not expose secrets in client-side code or in logs. Validate and sanitize user input at boundaries.
 - **Performance:** Keep middleware lightweight; use the proxy `matcher` so it does not run on API routes, `_next`, sitemap, robots, or static assets. Use Server Components for data fetching; add `'use client'` only where interactivity is needed. Use `generateStaticParams` and caching as in the existing page.
-- **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Register new components in `.sitecore/component-map.ts` and `.sitecore/component-map.client.ts` as appropriate. Use the single Sitecore client in `lib/sitecore-client.ts` for all data fetching.
+- **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Regenerate the component maps with `npm run sitecore-tools:generate-map` or `npm run sitecore-tools:generate-map:watch`; edit the maps manually only when the generator cannot handle the change. Use the single Sitecore client in `lib/sitecore-client.ts` for all data fetching.
 - **Consistency:** Follow the existing patterns in `[site]/[locale]/[[...path]]/page.tsx`, layout hierarchy, `i18n/request.ts` (site_locale), and API route handlers. When adding routes or rewrites, keep the middleware matcher and next-intl config in sync.
 
 ---
@@ -188,7 +190,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ## Example agent tasks
 
-- **Add a new Sitecore component:** Create the component under `src/components/`, register it in `.sitecore/component-map.ts` and `.sitecore/component-map.client.ts` as appropriate (client components in the client map), and ensure it is rendered in the layout/placeholder as in existing components.
+- **Add a new Sitecore component:** Create the component under `src/components/` (maps regenerate automatically during `npm run dev`; otherwise run `npm run sitecore-tools:generate-map`), and ensure it is rendered in the layout/placeholder as in existing components.
 - **Add an API route:** Create the route under `src/app/api/` (e.g. `src/app/api/my-route/route.ts`), add a rewrite in `next.config.ts` if the route should be reached from a public URL, and ensure the proxy `matcher` in `proxy.ts` still excludes it (e.g. `api/` is already excluded).
 
 ---
@@ -201,7 +203,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 **Edit with care:** `next.config.ts` (rewrites, next-intl plugin), `sitecore.config.ts` (env only), `proxy.ts` (matcher and proxy order), `src/i18n/routing.ts` and `request.ts`. When adding routes or rewrites, keep middleware `matcher` and rewrite rules consistent.
 
-**Focus on:** `src/app/`, `src/components/`, `src/lib/`, `src/i18n/`, `Layout.tsx`, `Providers.tsx`, `sitecore.config.ts`, `next.config.ts`, `proxy.ts`, `.sitecore/component-map.ts`, `.sitecore/component-map.client.ts`.
+**Focus on:** `src/app/`, `src/components/`, `src/lib/`, `src/i18n/`, `Layout.tsx`, `Providers.tsx`, `sitecore.config.ts`, `next.config.ts`, `proxy.ts`. `.sitecore/component-map.ts` and `.sitecore/component-map.client.ts` are auto-generated — do not edit manually.
 
 ---
 

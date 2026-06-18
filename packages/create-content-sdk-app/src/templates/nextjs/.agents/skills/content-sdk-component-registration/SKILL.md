@@ -16,11 +16,13 @@ Register components in the Sitecore component map so the layout and editing pipe
 
 ## How to perform
 
-- Open `.sitecore/component-map.ts` and add an entry mapping the layout component name to the React component import. The map is used by getComponentData and editing API routes; keep keys consistent with layout and existing entries.
+- **Default:** No action — `.sitecore/component-map.ts` is generated during `npm run dev` (watch) and `npm run build`.
+- **Manual regenerate:** `npm run sitecore-tools:generate-map` or `npm run sitecore-tools:generate-map:watch`.
+- **Fallback:** Edit `.sitecore/component-map.ts` only if the generator cannot handle the case.
 
 ## Hard Rules
 
-- Every component rendered from Sitecore layout must be registered in `.sitecore/component-map.ts`. Keep the map in sync with `src/components/`.
+- Every component rendered from Sitecore layout must be registered in `.sitecore/component-map.ts`. Prefer the project's `sitecore-tools:generate-map` script to keep the map in sync with `src/components/`. Do not hand-edit generated map entries unless necessary.
 - The map is used by `getComponentData(page.layout, context, components)` in the catch-all page and by editing API routes (`src/pages/api/editing/config.ts`, `render.ts`, `feaas/render.ts`).
 - Use consistent component names (same key in map as used in layout). Follow existing naming in the map.
 - Do not remove or rename registrations without updating all references (layout, getComponentData, editing routes).

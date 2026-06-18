@@ -21,6 +21,8 @@ npm run type-check   # Run TypeScript compiler
 
 **Environment:** Copy `.env.example` to `.env.local` and set Sitecore API endpoint, key, default site, and language. Never commit `.env` or `.env.local`.
 
+**Component map:** `.sitecore/component-map.ts` is auto-generated from `src/components/` during `npm run dev` (watch) and `npm run build`. No manual action needed; the generator scans `src/components/` and creates entries for all Sitecore-registered components.
+
 ---
 
 ## Application Structure (Pages Router)
@@ -73,7 +75,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ### More (component map, editing, env)
 
-- **Component map:** `.sitecore/component-map.ts` — register every Sitecore component here; keep in sync with `src/components/`. Used by `getComponentData` and by the editing API routes.
+- **Component map:** `.sitecore/component-map.ts` — register every Sitecore component here; Is auto-generated from `src/components/`. Do not edit manually unless needed. Used by `getComponentData` and by the editing API routes.
 - **Editing/preview:** Use `context.preview` and `context.previewData` in the catch-all page; when in preview, use `client.getPreview(context.previewData)` or `client.getDesignLibraryData(context.previewData)`. Editing API routes: `src/pages/api/editing/config.ts`, `render.ts`, `feaas/render.ts`.
 - **Env:** All config via environment variables in `sitecore.config.ts`. Document vars in `.env.example` (or `.env.remote.example` / `.env.container.example`); never commit `.env` or `.env.local`.
 
@@ -121,7 +123,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ### Component map and layout
 
-- **Component map:** `.sitecore/component-map.ts` — register all Sitecore components. Keep in sync with components under `src/components/`.
+- **Component map:** `.sitecore/component-map.ts` — register all Sitecore components. Is auto-generated from `src/components/`. Do not edit manually unless needed.
 - **Layout:** `Layout.tsx` renders page layout and placeholders; `Providers` wrap component props and page context; `Bootstrap` handles site name and preview mode.
 - **404 / 500 / _error:** When the catch-all returns `notFound: true` (no page), Next.js renders `404.tsx`. When the server returns 500, Next.js renders `500.tsx`. Both can optionally fetch and show Sitecore error content via `client.getErrorPage(ErrorPage.NotFound)` / `ErrorPage.InternalServerError` in their getStaticProps (when `scConfig.generateStaticPaths`); otherwise they show a simple fallback. `_error.tsx` is Next.js's error boundary for uncaught errors (client and server); it does not fetch from Sitecore.
 
@@ -132,7 +134,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 - **Quick checks:** If path or locale is wrong, ensure you use `extractPath(context)` and `context.locale` (from getStaticProps/getServerSideProps); do not assume path or locale from elsewhere. Keep the proxy chain order (Multisite → Redirects → Personalize).
 - **Security:** Use only environment variables in `sitecore.config.ts`; never hardcode API keys, editing secret, or host URLs. Do not expose secrets in client-side code or in logs. Validate and sanitize user input at boundaries.
 - **Performance:** Keep middleware lightweight; use the proxy `skip` callback and `matcher` so middleware does not run on `/api`, `_next`, static files, or health checks. Use `revalidate` in getStaticProps for ISR where appropriate. Prefer server-side data fetching for Sitecore content.
-- **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Register new components in `.sitecore/component-map.ts`. Keep the single Sitecore client instance in `lib/sitecore-client.ts` and pass it (or use it) in API routes and getStaticProps/getServerSideProps.
+- **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Regenerate `.sitecore/component-map.ts` with `npm run sitecore-tools:generate-map` or `npm run sitecore-tools:generate-map:watch`; edit the map manually only when the generator cannot handle the change. Keep the single Sitecore client instance in `lib/sitecore-client.ts` and pass it (or use it) in API routes and getStaticProps/getServerSideProps.
 - **Consistency:** Follow the existing patterns in `[[...path]].tsx`, `_app.tsx`, and API routes. When adding API routes, add the corresponding rewrite in `next.config.js` and keep the middleware matcher in sync.
 
 ---
@@ -164,7 +166,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ## Example agent tasks
 
-- **Add a new Sitecore component:** Create the component under `src/components/`, register it in `.sitecore/component-map.ts`, and ensure it is rendered in the layout/placeholder as in existing components.
+- **Add a new Sitecore component:** Create the component under `src/components/` (map regenerates automatically during `npm run dev`; otherwise run `npm run sitecore-tools:generate-map`), and ensure it is rendered in the layout/placeholder as in existing components.
 - **Add an API route:** Create the route under `src/pages/api/`, add a rewrite in `next.config.js` if the route should be reached from a public URL (e.g. `/my-path` → `/api/my-handler`), and ensure the proxy `matcher` in `proxy.ts` still excludes it (or add the path to the matcher exclusions if needed).
 
 ---
@@ -177,7 +179,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 **Edit with care:** `next.config.js` (rewrites, i18n), `sitecore.config.ts` (env only), `proxy.ts` (matcher and proxy order). When adding API routes or rewrites, keep middleware `matcher` and rewrite rules consistent.
 
-**Focus on:** `src/pages/`, `src/components/`, `src/lib/`, `Layout.tsx`, `Providers.tsx`, `sitecore.config.ts`, `next.config.js`, `proxy.ts`, `.sitecore/component-map.ts`.
+**Focus on:** `src/pages/`, `src/components/`, `src/lib/`, `Layout.tsx`, `Providers.tsx`, `sitecore.config.ts`, `next.config.js`, `proxy.ts`. `.sitecore/component-map.ts` is auto-generated — do not edit manually.
 
 ---
 
