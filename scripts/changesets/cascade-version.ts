@@ -140,9 +140,9 @@ async function main(): Promise<void> {
 
   const snapshotParams =
     isSnapshot && config.snapshot.prereleaseTemplate?.includes('{commit}')
-      ? { tag: 'canary' as const, commit: await getCurrentCommitId({ cwd }) }
+      ? { tag: 'beta.atoms' as const, commit: await getCurrentCommitId({ cwd }) }
       : isSnapshot
-      ? { tag: 'canary' as const }
+      ? { tag: 'beta.atoms' as const }
       : undefined;
 
   const releasePlan = assembleReleasePlan(
@@ -166,7 +166,7 @@ async function main(): Promise<void> {
   }
 
   const applyConfig = isSnapshot ? { ...config, changelog: false as const } : config;
-  await applyReleasePlan(releasePlan, packages, applyConfig, isSnapshot ? 'canary' : undefined);
+  await applyReleasePlan(releasePlan, packages, applyConfig, isSnapshot ? 'beta.atoms' : undefined);
 
   if (isSnapshot) {
     writeGithubOutput('snapshot_publish', 'true');
