@@ -47,9 +47,9 @@ The endpoint path for the data handler.
 
 ***
 
-### extractRequestContext?
+### extractRequestData?
 
-> `optional` **extractRequestContext?**: (`req`) => [`RequestContext`](../../../loaders/interfaces/RequestContext.md)
+> `optional` **extractRequestData?**: (`req`) => [`RequestContext`](../../../loaders/interfaces/RequestContext.md)
 
 Defined in: [packages/angular/src/server/models.ts:105](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L105)
 

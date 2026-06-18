@@ -1,11 +1,18 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ServerLoaderRunner } from './server-loader-runner';
-import type { LoaderCache, LoaderFn } from '../loaders/models';
+import type { LoaderCache, LoaderFn, LoaderRunnerInit } from '../loaders/models';
 import { createLoaderCache } from './cache/loader-cache';
 import { buildCacheKey } from './cache/cache-key';
+import {
+  mockAngularSitecoreConfig,
+  makeLoaderContext,
+  mockScParams,
+} from '../testing/loader-spec-helpers';
 
 describe('ServerLoaderRunner', () => {
+  const mockConfig = mockAngularSitecoreConfig();
+  const demoConfig = mockAngularSitecoreConfig({ defaultSite: 'demo' });
   const pageLoader: LoaderFn = vi.fn().mockResolvedValue({ title: 'Page' });
 
   beforeEach(async () => {
@@ -14,12 +21,13 @@ describe('ServerLoaderRunner', () => {
   });
 
   it('should return error when loader id is not in registry', async () => {
-    const provider = new ServerLoaderRunner({});
+    const provider = new ServerLoaderRunner({}, mockConfig);
     const result = await provider.resolve({
       loaderId: 'missing',
       url: '/path',
-      params: {},
+      routeParams: {},
       query: {},
+      csdkRequestData: null,
     });
     expect(result).toEqual({
       kind: 'error',
@@ -29,19 +37,23 @@ describe('ServerLoaderRunner', () => {
   });
 
   it('should invoke loader and return data on cache miss', async () => {
-    const provider = new ServerLoaderRunner({ page: pageLoader });
+    const provider = new ServerLoaderRunner({ page: pageLoader }, mockConfig);
     const result = await provider.resolve({
       loaderId: 'page',
       url: '/about',
-      params: { slug: 'about' },
+      routeParams: { slug: 'about' },
       query: { q: '1' },
+      csdkRequestData: null,
     });
 
     expect(pageLoader).toHaveBeenCalledWith({
       url: '/about',
-      params: { slug: 'about' },
+      routeParams: { slug: 'about' },
       query: { q: '1' },
-      requestContext: undefined,
+      scParams: {
+        siteName: 'default',
+      },
+      csdkRequestData: undefined,
     });
     expect(result).toEqual({ kind: 'data', data: { title: 'Page' } });
   });
@@ -59,12 +71,13 @@ describe('ServerLoaderRunner', () => {
       config: {},
     };
 
-    const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
+    const provider = new ServerLoaderRunner({ page: pageLoader }, mockConfig, cache);
     const result = await provider.resolve({
       loaderId: 'page',
       url: '/cached',
-      params: {},
+      routeParams: {},
       query: {},
+      csdkRequestData: null,
     });
 
     expect(result).toEqual({ kind: 'data', data: { cached: true } });
@@ -76,12 +89,13 @@ describe('ServerLoaderRunner', () => {
       loaderRedirectTarget: '/other',
       status: 302,
     });
-    const provider = new ServerLoaderRunner({ page: pageLoader });
+    const provider = new ServerLoaderRunner({ page: pageLoader }, mockConfig);
     const result = await provider.resolve({
       loaderId: 'page',
       url: '/redirect',
-      params: {},
+      routeParams: {},
       query: {},
+      csdkRequestData: null,
     });
 
     expect(result).toEqual({
@@ -93,12 +107,13 @@ describe('ServerLoaderRunner', () => {
   it('should return error with cause when loader throws', async () => {
     const err = new Error('Loader failed');
     vi.mocked(pageLoader).mockRejectedValueOnce(err);
-    const provider = new ServerLoaderRunner({ page: pageLoader });
+    const provider = new ServerLoaderRunner({ page: pageLoader }, mockConfig);
     const result = await provider.resolve({
       loaderId: 'page',
       url: '/fail',
-      params: {},
+      routeParams: {},
       query: {},
+      csdkRequestData: null,
     });
 
     expect(result.kind).toBe('error');
@@ -121,12 +136,13 @@ describe('ServerLoaderRunner', () => {
       config: {},
     };
 
-    const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
+    const provider = new ServerLoaderRunner({ page: pageLoader }, mockConfig, cache);
     await provider.resolve({
       loaderId: 'page',
       url: '/store',
-      params: {},
+      routeParams: {},
       query: {},
+      csdkRequestData: null,
     });
 
     expect(cache.set).toHaveBeenCalled();
@@ -145,19 +161,16 @@ describe('ServerLoaderRunner', () => {
       config: {},
     };
 
-    const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
-    await provider.resolve({
+    const provider = new ServerLoaderRunner({ page: pageLoader }, mockConfig, cache);
+    const payload = {
       loaderId: 'page',
       url: '/live',
-      params: {},
+      routeParams: {},
       query: {},
-    });
-    await provider.resolve({
-      loaderId: 'page',
-      url: '/live',
-      params: {},
-      query: {},
-    });
+      csdkRequestData: null,
+    };
+    await provider.resolve(payload);
+    await provider.resolve(payload);
 
     expect(pageLoader).toHaveBeenCalledTimes(2);
     expect(cache.get).not.toHaveBeenCalled();
@@ -166,12 +179,13 @@ describe('ServerLoaderRunner', () => {
 
   it('should use the cache for a route that opts in even when global caching is disabled', async () => {
     const cache = createLoaderCache({ enabled: false, revalidate: 300 });
-    const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
-    const request = {
+    const provider = new ServerLoaderRunner({ page: pageLoader }, demoConfig, cache);
+    const request: LoaderRunnerInit = {
       loaderId: 'page',
       url: '/featured',
-      params: { site: 'demo', locale: 'en' },
+      routeParams: { locale: 'en' },
       query: {},
+      csdkRequestData: null,
       cacheOptions: { enabled: true, tags: ['featured'], revalidate: 60 },
     };
 
@@ -184,12 +198,13 @@ describe('ServerLoaderRunner', () => {
   it('should pass cacheOptions.revalidate as TTL to cache.set', async () => {
     const cache = createLoaderCache({ revalidate: 300 });
     const setSpy = vi.spyOn(cache, 'set');
-    const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
-    const request = {
+    const provider = new ServerLoaderRunner({ page: pageLoader }, demoConfig, cache);
+    const request: LoaderRunnerInit = {
       loaderId: 'page',
       url: '/ttl-override',
-      params: { site: 'demo', locale: 'en' },
+      routeParams: { locale: 'en' },
       query: {},
+      csdkRequestData: null,
       cacheOptions: { enabled: true, revalidate: 60 },
     };
 
@@ -208,12 +223,13 @@ describe('ServerLoaderRunner', () => {
   it('should merge cacheOptions.tags into tags passed to cache.set', async () => {
     const cache = createLoaderCache({ revalidate: 300 });
     const setSpy = vi.spyOn(cache, 'set');
-    const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
-    const request = {
+    const provider = new ServerLoaderRunner({ page: pageLoader }, demoConfig, cache);
+    const request: LoaderRunnerInit = {
       loaderId: 'page',
       url: '/tagged',
-      params: { site: 'demo', locale: 'en' },
+      routeParams: { locale: 'en' },
       query: {},
+      csdkRequestData: null,
       cacheOptions: { enabled: true, tags: ['featured', 'campaign-x'] },
     };
 
@@ -244,12 +260,13 @@ describe('ServerLoaderRunner', () => {
       config: {},
     };
 
-    const provider = new ServerLoaderRunner({ page: pageLoader }, cache);
+    const provider = new ServerLoaderRunner({ page: pageLoader }, mockConfig, cache);
     const result = await provider.resolve({
       loaderId: 'page',
       url: '/protected',
-      params: {},
+      routeParams: {},
       query: {},
+      csdkRequestData: null,
     });
 
     expect(result.kind).toBe('redirect');
@@ -260,20 +277,25 @@ describe('ServerLoaderRunner', () => {
     let version = 1;
     const loader = vi.fn(async () => ({ title: `v${version++}` }));
     const cache = createLoaderCache({ revalidate: 300 });
-    const provider = new ServerLoaderRunner({ page: loader }, cache);
-    const request = {
+    const provider = new ServerLoaderRunner({ page: loader }, demoConfig, cache);
+    const request: LoaderRunnerInit = {
       loaderId: 'page',
       url: '/about',
-      params: { site: 'demo', locale: 'en' },
+      routeParams: { locale: 'en' },
       query: {},
+      csdkRequestData: null,
     };
 
     await provider.resolve(request);
-    const { key } = buildCacheKey('page', {
-      url: request.url,
-      params: request.params,
-      query: request.query,
-    });
+    const { key } = buildCacheKey(
+      'page',
+      makeLoaderContext({
+        url: request.url,
+        routeParams: request.routeParams,
+        query: request.query,
+        scParams: mockScParams({ siteName: 'demo' }),
+      })
+    );
     await cache.invalidate({ tags: [key] });
 
     const staleResult = await provider.resolve(request);
@@ -294,20 +316,25 @@ describe('ServerLoaderRunner', () => {
     let version = 1;
     const loader = vi.fn(async () => ({ title: `v${version++}` }));
     const cache = createLoaderCache({ revalidate: 300 });
-    const provider = new ServerLoaderRunner({ page: loader }, cache);
-    const request = {
+    const provider = new ServerLoaderRunner({ page: loader }, demoConfig, cache);
+    const request: LoaderRunnerInit = {
       loaderId: 'page',
       url: '/coalesce',
-      params: { site: 'demo', locale: 'en' },
+      routeParams: { locale: 'en' },
       query: {},
+      csdkRequestData: null,
     };
 
     await provider.resolve(request);
-    const { key } = buildCacheKey('page', {
-      url: request.url,
-      params: request.params,
-      query: request.query,
-    });
+    const { key } = buildCacheKey(
+      'page',
+      makeLoaderContext({
+        url: request.url,
+        routeParams: request.routeParams,
+        query: request.query,
+        scParams: mockScParams({ siteName: 'demo' }),
+      })
+    );
     await cache.invalidate({ tags: [key] });
 
     await Promise.all([provider.resolve(request), provider.resolve(request)]);
@@ -331,12 +358,13 @@ describe('ServerLoaderRunner', () => {
       config: {},
     };
 
-    const provider = new ServerLoaderRunner({ page: loader }, cache);
+    const provider = new ServerLoaderRunner({ page: loader }, demoConfig, cache);
     const result = await provider.resolve({
       loaderId: 'page',
       url: '/warn',
-      params: { site: 'demo', locale: 'en' },
+      routeParams: { locale: 'en' },
       query: {},
+      csdkRequestData: null,
     });
 
     expect(result).toEqual({ kind: 'data', data: { title: 'v1' } });

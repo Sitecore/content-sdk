@@ -47,6 +47,8 @@ export class SitecoreContextService {
   );
   /** Whether the current page is in editing mode. */
   readonly isEditing: Signal<boolean> = computed(() => this.page()?.mode?.isEditing ?? false);
+  /** Whether the current page is in preview mode. */
+  readonly isPreview: Signal<boolean> = computed(() => this.page()?.mode?.isPreview ?? false);
   /**
    * Locale extracted from the current URL; `null` when no configured-locale prefix
    * or when locales are not configured.

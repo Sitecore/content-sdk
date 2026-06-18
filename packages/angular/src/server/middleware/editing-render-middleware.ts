@@ -5,13 +5,11 @@ import {
 } from '@sitecore-content-sdk/content/editing';
 import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import { getAllowedOriginsFromEnv, getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
-import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from '../models';
+import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from './models';
 import { readProcessEnv } from '../utils';
 import { resolveConfiguredEditingSecret } from './editing-config-middleware';
 import debug from '../../debug';
 import { EDITING_PARAMS_HEADER } from '../../editing/constants';
-
-export { EDITING_PARAMS_HEADER } from '../../editing/constants';
 
 const DEFAULT_ENDPOINT = '/api/editing/render';
 
@@ -158,7 +156,7 @@ function buildCSPHeader(): string {
  * request, sets the CSP header, rewrites `req.url` to the target route, and
  * hands the request off to the Angular SSR pipeline via `next()`.
  *
- * Unlike the Next.js port, no internal HTTP fetch is performed - the editing
+ * No internal HTTP fetch is performed - the editing
  * payload travels alongside the Express request through the existing
  * middleware chain.
  * @param {CreateEditingRenderMiddlewareOptions} [options] - Middleware options.

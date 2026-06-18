@@ -22,10 +22,27 @@ export {
 } from './editing-config-middleware';
 export {
   createEditingRenderMiddleware,
-  EDITING_PARAMS_HEADER,
   type CreateEditingRenderMiddlewareOptions,
   type ExpressEditingRequest,
   type AllowedQueryParam,
   type AllowedQueryParams,
   type AllowedQueryParamsResolver,
 } from './editing-render-middleware';
+export { createMultisiteMiddleware, type MultisiteMiddlewareOptions } from './multisite-middleware';
+export {
+  createPersonalizeMiddleware,
+  type PersonalizeMiddlewareOptions,
+} from './personalize-middleware';
+export { shouldProcessPath } from './utils';
+export { isEditingPreview } from '../utils';
+export type { PathPattern } from '../utils';
+export type { MiddlewareMatcher } from './models';
+export { EDITING_PARAMS_HEADER } from '../../editing/constants';
+// Express handlers
+export {
+  ExpressRequest,
+  ExpressResponse,
+  ExpressNextFunction,
+  ExpressMiddleware,
+  BaseMiddlewareOptions,
+} from './models';

@@ -4,7 +4,8 @@ import { createCacheAdminMiddleware } from './cache-admin-middleware';
 import { createLoaderCache } from '../loader-cache';
 import { buildCacheKey } from '../cache-key';
 import { buildLoaderCacheTags } from '../cache-tags';
-import type { ExpressRequest, ExpressResponse } from '../../models';
+import type { ExpressRequest, ExpressResponse } from '../../middleware/models';
+import { makeLoaderContext, mockScParams } from '../../../testing/loader-spec-helpers';
 
 function createMockRes() {
   return {
@@ -27,12 +28,14 @@ describe('createCacheAdminMiddleware', () => {
 
   beforeEach(async () => {
     cache = createLoaderCache({ revalidate: 300, defaultSiteName: 'demo' });
-    const ctx = {
-      url: '/about',
-      params: { site: 'demo', locale: 'en' },
-      query: {},
-    };
-    const built = buildCacheKey('page', ctx);
+    const built = buildCacheKey(
+      'page',
+      makeLoaderContext({
+        url: '/about',
+        routeParams: { locale: 'en' },
+        scParams: mockScParams({ siteName: 'demo' }),
+      })
+    );
     cacheKey = built.key;
     await cache.set(
       cacheKey,

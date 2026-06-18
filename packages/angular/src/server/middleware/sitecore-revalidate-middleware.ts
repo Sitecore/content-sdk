@@ -1,5 +1,5 @@
 import type { SiteInfo } from '@sitecore-content-sdk/content/site';
-import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from '../models';
+import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from './models';
 import { LoaderCache } from '../../loaders/models';
 import { buildLoaderDictionaryCacheTagsFromSites } from '../cache/cache-tags';
 import { dedupeCacheStrings } from '../cache/utils';
@@ -49,7 +49,7 @@ export interface SitecoreRevalidateMiddlewareOptions {
 }
 
 /**
- * Express middleware aligned with Next.js `createSitecoreRevalidateRouteHandler`.
+ * Express middleware aligned with other frameworks' `createSitecoreRevalidateRouteHandler`.
  *
  * Handles `POST /api/revalidate` (configurable via `endpoint`):
  * - Authenticates with `SITECORE_REVALIDATE_SECRET` / `x-revalidate-secret` when configured.

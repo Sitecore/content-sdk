@@ -2,11 +2,11 @@
 
 ***
 
-[@sitecore-content-sdk/angular](../../README.md) / [loaders](../README.md) / LoaderApiRequest
+[@sitecore-content-sdk/angular](../../README.md) / [loaders](../README.md) / LoaderPayload
 
-# Type Alias: LoaderApiRequest
+# Type Alias: LoaderPayload
 
-> **LoaderApiRequest** = `object`
+> **LoaderPayload** = `object`
 
 Defined in: [packages/angular/src/loaders/models.ts:80](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/loaders/models.ts#L80)
 

@@ -30,7 +30,7 @@ interface ConfigResponse {
 const ADMIN_BASE = '/api/_cache';
 
 /**
- * Demo page that lists loader-cache entries and supports tag-based invalidation (Phase 3 OSR).
+ * Demo page that lists loader-cache entries and supports tag-based invalidation.
  */
 @Component({
   selector: 'app-cache-demo',

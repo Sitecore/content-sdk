@@ -4,7 +4,8 @@ import { createSitecoreRevalidateMiddleware } from './sitecore-revalidate-middle
 import { createLoaderCache } from '../cache/loader-cache';
 import { buildCacheKey } from '../cache/cache-key';
 import { buildLoaderCacheTags } from '../cache/cache-tags';
-import type { ExpressRequest, ExpressResponse } from '../models';
+import type { ExpressRequest, ExpressResponse } from './models';
+import { makeLoaderContext, mockScParams } from '../../testing/loader-spec-helpers';
 
 function createMockRes() {
   return {
@@ -25,11 +26,14 @@ describe('createSitecoreRevalidateMiddleware', () => {
     delete process.env.SITECORE_REVALIDATE_SECRET;
     next.mockClear();
     cache = createLoaderCache({ revalidate: 300 });
-    const built = buildCacheKey('page', {
-      url: '/about',
-      params: { site: 'demo', locale: 'en' },
-      query: {},
-    });
+    const built = buildCacheKey(
+      'page',
+      makeLoaderContext({
+        url: '/about',
+        routeParams: { locale: 'en' },
+        scParams: mockScParams({ siteName: 'demo' }),
+      })
+    );
     cacheKey = built.key;
     await cache.set(
       cacheKey,
@@ -172,13 +176,21 @@ describe('createSitecoreRevalidateMiddleware', () => {
   });
 
   it('marks dictionary loader entries stale via sites fan-out even without webhook tags', async () => {
-    const dictBuilt = buildCacheKey('dictionary', {
-      url: '/',
-      params: { site: 'demo', locale: 'en' },
-      query: {},
-    });
+    const dictBuilt = buildCacheKey(
+      'dictionary',
+      makeLoaderContext({
+        url: '/',
+        routeParams: { locale: 'en' },
+        scParams: mockScParams({ siteName: 'demo' }),
+      })
+    );
     const dictKey = dictBuilt.key;
-    await cache.set(dictKey, { hello: 'world' }, 300, buildLoaderCacheTags('dictionary', dictBuilt.dimensions, dictKey));
+    await cache.set(
+      dictKey,
+      { hello: 'world' },
+      300,
+      buildLoaderCacheTags('dictionary', dictBuilt.dimensions, dictKey)
+    );
 
     const middleware = createSitecoreRevalidateMiddleware({
       cache,
@@ -218,7 +230,10 @@ describe('createSitecoreRevalidateMiddleware', () => {
       ...cache,
       invalidate: vi.fn().mockRejectedValue(new Error('invalidate failed')),
     };
-    const middleware = createSitecoreRevalidateMiddleware({ cache: failingCache, defaultLocale: 'en' });
+    const middleware = createSitecoreRevalidateMiddleware({
+      cache: failingCache,
+      defaultLocale: 'en',
+    });
     const res = createMockRes();
 
     await middleware(

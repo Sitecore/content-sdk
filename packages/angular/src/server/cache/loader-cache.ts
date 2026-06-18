@@ -11,7 +11,7 @@ import memoryDriver from 'unstorage/drivers/memory';
  * Drivers are best imported and constructed in the app's `server.ts` and passed here as an instance.
  * Callers depend on the {@link LoaderCache} interface; concrete classes are not exported.
  * @param {GlobalLoaderCacheConfig} [config] - Global cache config and optional unstorage driver.
- * @returns {LoaderCache} Cache implementation with Phase 3 SWR + tag semantics.
+ * @returns {LoaderCache} Cache implementation with SWR + tag semantics.
  * @example
  * ```ts
  * const cache = createLoaderCache({
