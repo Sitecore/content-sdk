@@ -2,13 +2,13 @@
 
 ***
 
-[@sitecore-content-sdk/angular](../../../README.md) / [server/express](../README.md) / ExpressMiddleware
+[@sitecore-content-sdk/angular](../../../README.md) / [server/middleware](../README.md) / ExpressMiddleware
 
 # Type Alias: ExpressMiddleware
 
 > **ExpressMiddleware** = (`req`, `res`, `next`) => `void` \| `Promise`\<`void`\>
 
-Defined in: [packages/angular/src/server/models.ts:75](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L75)
+Defined in: [packages/angular/src/server/middleware/models.ts:26](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/models.ts#L26)
 
 Express-compatible middleware type
 

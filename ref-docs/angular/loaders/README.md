@@ -15,28 +15,29 @@
 
 ## Interfaces
 
+- [CsdkRequestData](interfaces/CsdkRequestData.md)
+- [CsdkRequestParams](interfaces/CsdkRequestParams.md)
 - [InvalidateInput](interfaces/InvalidateInput.md)
 - [LoaderCache](interfaces/LoaderCache.md)
 - [LoaderCacheConfig](interfaces/LoaderCacheConfig.md)
 - [LoaderCacheEntry](interfaces/LoaderCacheEntry.md)
 - [LoaderCacheEntryInfo](interfaces/LoaderCacheEntryInfo.md)
-- [LoaderDataRequest](interfaces/LoaderDataRequest.md)
 - [LoaderIdMap](interfaces/LoaderIdMap.md)
 - [PerRouteLoaderCacheConfig](interfaces/PerRouteLoaderCacheConfig.md)
-- [RequestContext](interfaces/RequestContext.md)
 - [ServerLoaderRunnerPort](interfaces/ServerLoaderRunnerPort.md)
 
 ## Type Aliases
 
-- [LoaderPayload](type-aliases/LoaderPayload.md)
 - [LoaderApiResponse](type-aliases/LoaderApiResponse.md)
 - [LoaderCacheReadResult](type-aliases/LoaderCacheReadResult.md)
 - [LoaderContext](type-aliases/LoaderContext.md)
 - [LoaderDataResult](type-aliases/LoaderDataResult.md)
 - [LoaderFn](type-aliases/LoaderFn.md)
 - [LoaderId](type-aliases/LoaderId.md)
+- [LoaderPayload](type-aliases/LoaderPayload.md)
 - [LoaderRedirectResult](type-aliases/LoaderRedirectResult.md)
 - [LoaderRegistry](type-aliases/LoaderRegistry.md)
+- [LoaderRunnerInit](type-aliases/LoaderRunnerInit.md)
 
 ## Variables
 
@@ -48,6 +49,10 @@
 ## Functions
 
 - [applyRedirect](functions/applyRedirect.md)
+- [getComponentVariantIds](functions/getComponentVariantIds.md)
+- [getLanguage](functions/getLanguage.md)
+- [getSiteName](functions/getSiteName.md)
+- [getVariantId](functions/getVariantId.md)
 - [handleNavigationError](functions/handleNavigationError.md)
 - [loaderResolver](functions/loaderResolver.md)
 - [provideLoaderRegistry](functions/provideLoaderRegistry.md)

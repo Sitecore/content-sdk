@@ -6,9 +6,9 @@
 
 # Function: defineConfig()
 
-> **defineConfig**(`config?`, `clientEnv?`): [`AngularSitecoreConfig`](../interfaces/AngularSitecoreConfig.md)
+> **defineConfig**(`config?`, `clientEnv?`): [`AngularSitecoreConfig`](../type-aliases/AngularSitecoreConfig.md)
 
-Defined in: [packages/angular/src/config/define-config.ts:106](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/config/define-config.ts#L106)
+Defined in: [packages/angular/src/config/define-config.ts:94](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/config/define-config.ts#L94)
 
 Merges `clientEnv` (browser-safe `environment*.ts`) with `process.env` for server-only variables,
 then delegates to the base content `defineConfig` and adds the Angular-specific config layer.
@@ -29,6 +29,6 @@ On Node/SSR, load `.env` in the app entry before importing `sitecore.config` (se
 
 ## Returns
 
-[`AngularSitecoreConfig`](../interfaces/AngularSitecoreConfig.md)
+[`AngularSitecoreConfig`](../type-aliases/AngularSitecoreConfig.md)
 
 Fully merged Sitecore configuration for Angular.

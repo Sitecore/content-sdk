@@ -8,18 +8,49 @@
 
 > **LoaderContext** = `object`
 
-Defined in: [packages/angular/src/loaders/models.ts:34](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/loaders/models.ts#L34)
+Defined in: [packages/angular/src/loaders/models.ts:57](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/loaders/models.ts#L57)
 
 Context provided to loader functions.
 Contains information about the current request including URL, params, query, and request context.
 
 ## Properties
 
-### params
+### csdkRequestData?
 
-> **params**: `Params`
+> `optional` **csdkRequestData?**: [`CsdkRequestData`](../interfaces/CsdkRequestData.md)
 
-Defined in: [packages/angular/src/loaders/models.ts:47](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/loaders/models.ts#L47)
+Defined in: [packages/angular/src/loaders/models.ts:85](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/loaders/models.ts#L85)
+
+Server-only: request data extracted from the incoming HTTP request
+(hostname, headers, cookies, editing preview data). Absent during prerender.
+
+***
+
+### query
+
+> **query**: `Record`\<`string`, `string` \| `string`[]\>
+
+Defined in: [packages/angular/src/loaders/models.ts:74](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/loaders/models.ts#L74)
+
+Query string parameters
+
+***
+
+### req?
+
+> `optional` **req?**: `Request`
+
+Defined in: [packages/angular/src/loaders/models.ts:78](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/loaders/models.ts#L78)
+
+Server-only: the incoming request
+
+***
+
+### routeParams
+
+> **routeParams**: `Params`
+
+Defined in: [packages/angular/src/loaders/models.ts:70](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/loaders/models.ts#L70)
 
 Route parameters from all matched segments.
 
@@ -30,59 +61,19 @@ can rely on a concrete `params.locale` regardless of URL shape.
 
 ***
 
-### query
+### scParams
 
-> **query**: `Record`\<`string`, `string` \| `string`[]\>
+> **scParams**: `Omit`\<[`CsdkRequestParams`](../interfaces/CsdkRequestParams.md), `"siteName"`\> & `object`
 
-Defined in: [packages/angular/src/loaders/models.ts:51](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/loaders/models.ts#L51)
+Defined in: [packages/angular/src/loaders/models.ts:80](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/loaders/models.ts#L80)
 
-Query string parameters
+Content SDK request params like site name, variant ids
 
-***
+#### Type Declaration
 
-### req?
+##### siteName
 
-> `optional` **req?**: `Request`
-
-Defined in: [packages/angular/src/loaders/models.ts:55](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/loaders/models.ts#L55)
-
-Server-only: the incoming request
-
-***
-
-### requestContext?
-
-> `optional` **requestContext?**: [`RequestContext`](../interfaces/RequestContext.md)
-
-Defined in: [packages/angular/src/loaders/models.ts:77](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/loaders/models.ts#L77)
-
-Server-only: context from the incoming HTTP request.
-Contains hostname, cookies, query params, and headers.
-Use with createSiteResolver() to determine the current site.
-
-#### Example
-
-```typescript
-const resolveSite = createSiteResolver({ sites, defaultSite: config.defaultSite });
-
-export const pageLoader: LoaderFn = async (ctx) => {
-  if (ctx.requestContext) {
-    const { site } = resolveSite(ctx.requestContext);
-    return client.getPage(ctx.url, { site: site.name });
-  }
-  return client.getPage(ctx.url);
-};
-```
-
-***
-
-### res?
-
-> `optional` **res?**: `Response`
-
-Defined in: [packages/angular/src/loaders/models.ts:59](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/loaders/models.ts#L59)
-
-Server-only: the response object
+> **siteName**: `string`
 
 ***
 
@@ -90,6 +81,6 @@ Server-only: the response object
 
 > **url**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:38](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/loaders/models.ts#L38)
+Defined in: [packages/angular/src/loaders/models.ts:61](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/loaders/models.ts#L61)
 
 The current URL path

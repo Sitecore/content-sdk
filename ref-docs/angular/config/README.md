@@ -8,8 +8,11 @@
 
 ## Interfaces
 
-- [AngularSitecoreConfig](interfaces/AngularSitecoreConfig.md)
 - [AngularSitecoreConfigInput](interfaces/AngularSitecoreConfigInput.md)
+
+## Type Aliases
+
+- [AngularSitecoreConfig](type-aliases/AngularSitecoreConfig.md)
 
 ## Functions
 
