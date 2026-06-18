@@ -16,9 +16,9 @@ Register components in the Sitecore component map so the layout and editing pipe
 
 ## How to perform
 
-- **Default:** No action — `.sitecore/component-map.ts` is generated during `npm run dev` (watch) and `npm run build`.
-- **Manual regenerate:** `npm run sitecore-tools:generate-map` or `npm run sitecore-tools:generate-map:watch`.
-- **Fallback:** Edit `.sitecore/component-map.ts` only if the generator cannot handle the case.
+- `.sitecore/component-map.ts` is generated from `src/components/` during `npm run dev` (with watch) or `npm run build`, so adding a component there is usually enough.
+- Run `npm run sitecore-tools:generate-map` to refresh the map once, or `npm run sitecore-tools:generate-map:watch` to keep it updated while you work.
+- Change `.sitecore/component-map.ts` by hand only when the generator cannot handle your case; otherwise rely on the scripts so the map stays in sync.
 
 ## Hard Rules
 
