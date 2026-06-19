@@ -8,7 +8,7 @@
 
 > `const` **PLACEHOLDER\_GUARD\_RESOLVER**: `InjectionToken`\<[`PlaceholderGuardResolver`](../type-aliases/PlaceholderGuardResolver.md)\>
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-tokens.ts:45](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/components/placeholder/placeholder-tokens.ts#L45)
+Defined in: [packages/angular/src/components/placeholder/placeholder-tokens.ts:45](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/angular/src/components/placeholder/placeholder-tokens.ts#L45)
 
 Optional hook to filter placeholder renderings before [ScPlaceholderComponent](../../classes/ScPlaceholderComponent.md)
 instantiates child components. Defaults to an identity pass-through.

@@ -6,7 +6,7 @@
 
 # Interface: BaseMiddlewareOptions
 
-Defined in: [packages/angular/src/server/middleware/models.ts:55](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/models.ts#L55)
+Defined in: [packages/angular/src/server/middleware/models.ts:55](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/angular/src/server/middleware/models.ts#L55)
 
 Base configuration for server middlewares (multisite, personalization, redirects, etc).
 Provides common path matching and skip logic.
@@ -17,7 +17,7 @@ Provides common path matching and skip logic.
 
 > `optional` **enabled?**: `boolean`
 
-Defined in: [packages/angular/src/server/middleware/models.ts:60](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/models.ts#L60)
+Defined in: [packages/angular/src/server/middleware/models.ts:60](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/angular/src/server/middleware/models.ts#L60)
 
 Enable/disable this middleware. When false, all requests skip it.
 
@@ -33,7 +33,7 @@ true
 
 > `optional` **matcher?**: [`MiddlewareMatcher`](MiddlewareMatcher.md)
 
-Defined in: [packages/angular/src/server/middleware/models.ts:69](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/models.ts#L69)
+Defined in: [packages/angular/src/server/middleware/models.ts:69](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/angular/src/server/middleware/models.ts#L69)
 
 Path matching rules (glob patterns) to control which requests this middleware processes.
 Integrates with default exclusions (API routes, static files, editing/preview).
@@ -44,7 +44,7 @@ Integrates with default exclusions (API routes, static files, editing/preview).
 
 > `optional` **skip?**: (`req`) => `boolean`
 
-Defined in: [packages/angular/src/server/middleware/models.ts:64](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/models.ts#L64)
+Defined in: [packages/angular/src/server/middleware/models.ts:64](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/angular/src/server/middleware/models.ts#L64)
 
 Custom request predicate to skip middleware execution. Runs after built-in checks.
 

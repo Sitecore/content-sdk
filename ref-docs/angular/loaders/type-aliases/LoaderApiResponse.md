@@ -8,4 +8,4 @@
 
 > **LoaderApiResponse** = \{ `data`: `any`; `kind`: `"data"`; \} \| \{ `kind`: `"redirect"`; `redirect`: [`LoaderRedirectResult`](LoaderRedirectResult.md); \} \| \{ `kind`: `"error"`; `message`: `string`; `status`: `number`; \} \| \{ `kind`: `"notFound"`; `status`: `number`; \}
 
-Defined in: [packages/angular/src/loaders/models.ts:143](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/loaders/models.ts#L143)
+Defined in: [packages/angular/src/loaders/models.ts:143](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/angular/src/loaders/models.ts#L143)
