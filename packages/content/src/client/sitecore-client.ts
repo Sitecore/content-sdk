@@ -781,6 +781,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       case DesignLibraryMode.LowCode:
         pageMode.isDesignLibrary = true;
         pageMode.designLibrary.isLowCode = true;
+        pageMode.isEditing = true;
         break;
 
       default:
