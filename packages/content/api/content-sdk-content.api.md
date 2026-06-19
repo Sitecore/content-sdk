@@ -253,8 +253,6 @@ export interface DesignLibraryRenderPreviewData {
     // (undocumented)
     mode: DesignLibraryMode;
     // (undocumented)
-    previewTime?: string;
-    // (undocumented)
     renderingId?: string;
     // (undocumented)
     site: string;
