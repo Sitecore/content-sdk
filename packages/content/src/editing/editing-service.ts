@@ -50,6 +50,7 @@ export type EditingOptions = {
   mode: Exclude<LayoutServicePageState, 'Normal'>;
   site?: string;
   variantId: string;
+  previewTime?: string;
 };
 
 /**
@@ -78,6 +79,7 @@ export class EditingService {
    * @param {string} [variables.version] - The version of the item (optional).
    * @param {LayoutKind} [variables.layoutKind] - The final or shared layout variant.
    * @param {string} [variables.site] - The site context for fetching layout data (optional).
+   * @param {string} [variables.previewTime] - The preview time for time-based preview (optional).
    * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
    * @returns {Promise} The layout data and dictionary phrases.
    */
@@ -90,6 +92,7 @@ export class EditingService {
       mode,
       site,
       variantId,
+      previewTime,
     }: EditingOptions,
     fetchOptions?: FetchOptions
   ) {
@@ -118,6 +121,7 @@ export class EditingService {
           sc_previewMode: previewModeHeader,
           sc_variant: variantId === DEFAULT_VARIANT ? 'default' : variantId,
           ...(site && { sc_site: site }),
+          ...(previewTime && { sc_previewTime: previewTime }),
         },
       }
     );

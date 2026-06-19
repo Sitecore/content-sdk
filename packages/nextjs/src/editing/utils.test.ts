@@ -231,6 +231,36 @@ describe('editing/utils', () => {
       expect(params).to.have.property('itemId', undefined);
       expect(params).to.have.property('language', undefined);
     });
+
+    it('should include previewTime when sc_previewTime is provided for editing mode', () => {
+      const query = {
+        mode: 'edit',
+        sc_site: 'test-site',
+        sc_itemid: 'item-123',
+        sc_lang: 'en',
+        sc_variant: 'variant-1',
+        sc_previewTime: '2024-12-25T10:00:00Z',
+      };
+
+      const params = mapEditingParams(query);
+
+      expect(params).to.have.property('previewTime', '2024-12-25T10:00:00Z');
+    });
+
+    it('should not include previewTime for design library mode even if sc_previewTime is provided', () => {
+      const query = {
+        mode: DesignLibraryMode.Normal,
+        sc_itemid: 'item-123',
+        sc_uid: 'component-uid',
+        sc_lang: 'en',
+        sc_site: 'test-site',
+        sc_previewTime: '2024-12-25T10:00:00Z',
+      };
+
+      const params = mapEditingParams(query);
+
+      expect(params).to.not.have.property('previewTime');
+    });
   });
 
   describe('getAllowedQueryParams', () => {
