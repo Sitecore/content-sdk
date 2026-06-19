@@ -8,7 +8,7 @@
 
 > **normalizeUrl**(`url`): `string`
 
-Defined in: [packages/core/src/tools/normalize-url.ts:7](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/core/src/tools/normalize-url.ts#L7)
+Defined in: [packages/core/src/tools/normalize-url.ts:7](https://github.com/Sitecore/content-sdk/blob/e22cfe2c02eee8993a7e1f934742492c457a5316/packages/core/src/tools/normalize-url.ts#L7)
 
 Normalize a URL by removing the trailing slash
 

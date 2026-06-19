@@ -6,7 +6,7 @@
 
 # Interface: ComponentForRendering
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:15](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/angular/src/components/placeholder/placeholder-utils.ts#L15)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:15](https://github.com/Sitecore/content-sdk/blob/e22cfe2c02eee8993a7e1f934742492c457a5316/packages/angular/src/components/placeholder/placeholder-utils.ts#L15)
 
 Result of resolving a component for a rendering definition.
 
@@ -16,7 +16,7 @@ Result of resolving a component for a rendering definition.
 
 > **component**: `Type`\<`unknown`\> \| `null`
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:16](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/angular/src/components/placeholder/placeholder-utils.ts#L16)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:16](https://github.com/Sitecore/content-sdk/blob/e22cfe2c02eee8993a7e1f934742492c457a5316/packages/angular/src/components/placeholder/placeholder-utils.ts#L16)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:16
 
 > **isEmpty**: `boolean`
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:17](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/angular/src/components/placeholder/placeholder-utils.ts#L17)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:17](https://github.com/Sitecore/content-sdk/blob/e22cfe2c02eee8993a7e1f934742492c457a5316/packages/angular/src/components/placeholder/placeholder-utils.ts#L17)
