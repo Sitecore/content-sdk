@@ -8,7 +8,7 @@
 
 > **AllowedQueryParamsResolver** = (`queryParams`) => ([`AllowedQueryParam`](../interfaces/AllowedQueryParam.md) \| `string`)[]
 
-Defined in: [nextjs/src/editing/types.ts:22](https://github.com/Sitecore/content-sdk/blob/ecba2755393ad3977546ad3dd9af18483599661e/packages/nextjs/src/editing/types.ts#L22)
+Defined in: [nextjs/src/editing/types.ts:22](https://github.com/Sitecore/content-sdk/blob/0374b3fd6f2473d61063fcd03064bbac0a2c6281/packages/nextjs/src/editing/types.ts#L22)
 
 Resolver function for allowed query parameters, which can be used to extract additional parameters from the query string beyond the required editing parameters.
 

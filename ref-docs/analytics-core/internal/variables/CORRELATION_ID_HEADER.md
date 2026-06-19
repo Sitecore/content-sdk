@@ -8,7 +8,7 @@
 
 > `const` **CORRELATION\_ID\_HEADER**: `"x-sc-correlation-id"` = `'x-sc-correlation-id'`
 
-Defined in: [analytics-core/src/consts.ts:43](https://github.com/Sitecore/content-sdk/blob/ecba2755393ad3977546ad3dd9af18483599661e/packages/analytics-core/src/consts.ts#L43)
+Defined in: [analytics-core/src/consts.ts:43](https://github.com/Sitecore/content-sdk/blob/0374b3fd6f2473d61063fcd03064bbac0a2c6281/packages/analytics-core/src/consts.ts#L43)
 
 **`Internal`**
 

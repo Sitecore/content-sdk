@@ -8,7 +8,7 @@
 
 > `const` **DEFAULT\_SITECORE\_AUTH\_AUDIENCE**: `"https://api.sitecorecloud.io"` = `'https://api.sitecorecloud.io'`
 
-Defined in: [packages/core/src/constants.ts:31](https://github.com/Sitecore/content-sdk/blob/ecba2755393ad3977546ad3dd9af18483599661e/packages/core/src/constants.ts#L31)
+Defined in: [packages/core/src/constants.ts:31](https://github.com/Sitecore/content-sdk/blob/0374b3fd6f2473d61063fcd03064bbac0a2c6281/packages/core/src/constants.ts#L31)
 
 **`Internal`**
 
