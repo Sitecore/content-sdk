@@ -72,6 +72,7 @@ export type EditingPreviewData = {
   variantId: string;
   version?: string;
   layoutKind?: LayoutKind;
+  previewTime?: string;
 };
 
 /**
@@ -108,4 +109,5 @@ export interface DesignLibraryRenderPreviewData {
   version?: string;
   dataSourceId?: string;
   generation?: DesignLibraryVariantGeneration;
+  previewTime?: string;
 }

@@ -253,6 +253,8 @@ export interface DesignLibraryRenderPreviewData {
     // (undocumented)
     mode: DesignLibraryMode;
     // (undocumented)
+    previewTime?: string;
+    // (undocumented)
     renderingId?: string;
     // (undocumented)
     site: string;
@@ -335,6 +337,7 @@ export type EditingOptions = {
     mode: Exclude<LayoutServicePageState, 'Normal'>;
     site?: string;
     variantId: string;
+    previewTime?: string;
 };
 
 // @public
@@ -346,6 +349,7 @@ export type EditingPreviewData = {
     variantId: string;
     version?: string;
     layoutKind?: LayoutKind;
+    previewTime?: string;
 };
 
 // @internal

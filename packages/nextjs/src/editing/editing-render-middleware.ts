@@ -206,10 +206,6 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
         [EDITING_PARAMS_HEADER]: JSON.stringify(previewData),
       };
 
-      if (query.sc_previewTime) {
-        propagatedHeaders.sc_previewTime = query.sc_previewTime as string;
-      }
-
       const html = await getEditingRequestHtml(
         requestUrl,
         propagatedQsParams,
