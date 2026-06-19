@@ -4,7 +4,7 @@ import type { SitecoreClient } from '@sitecore-content-sdk/content/client';
 import type { SiteInfo } from '@sitecore-content-sdk/content/site';
 import { constants } from '@sitecore-content-sdk/core';
 import { createSitemapMiddleware } from './sitemap-middleware';
-import type { ExpressRequest, ExpressResponse } from '../models';
+import type { ExpressRequest, ExpressResponse } from './models';
 
 const { ERROR_MESSAGES } = constants;
 
