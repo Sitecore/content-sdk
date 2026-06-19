@@ -6,7 +6,7 @@
 
 # Interface: PersonalizeServerAdapter
 
-Defined in: [personalize/src/initialization/server-adapter.ts:20](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/personalize/src/initialization/server-adapter.ts#L20)
+Defined in: [personalize/src/initialization/server-adapter.ts:20](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/personalize/src/initialization/server-adapter.ts#L20)
 
 Defines the PersonalizeServerAdapter.
 
@@ -20,7 +20,7 @@ Defines the PersonalizeServerAdapter.
 
 > **getProfileId**: () => `string` \| `null`
 
-Defined in: [personalize/src/initialization/types.ts:165](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/personalize/src/initialization/types.ts#L165)
+Defined in: [personalize/src/initialization/types.ts:165](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/personalize/src/initialization/types.ts#L165)
 
 Gets the profile ID. The method returns a string representing the profile ID if it exists, or null if it does not exist.
 
@@ -40,7 +40,7 @@ The profile ID or null if not found.
 
 > **getUserAgent**: (() => `string` \| `undefined`) \| `undefined`
 
-Defined in: [personalize/src/initialization/server-adapter.ts:28](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/personalize/src/initialization/server-adapter.ts#L28)
+Defined in: [personalize/src/initialization/server-adapter.ts:28](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/personalize/src/initialization/server-adapter.ts#L28)
 
 Gets the user agent from the request headers.
 
@@ -54,7 +54,7 @@ Gets the user agent from the request headers.
 
 > **setProfileId**: () => `Promise`\<`void`\>
 
-Defined in: [personalize/src/initialization/types.ts:170](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/personalize/src/initialization/types.ts#L170)
+Defined in: [personalize/src/initialization/types.ts:170](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/personalize/src/initialization/types.ts#L170)
 
 Sets the profile ID. The method may involve asynchronous operations, such as setting cookies or making API calls, and returns a promise that resolves when the profile ID has been set.
 
@@ -74,7 +74,7 @@ A promise that resolves when the profile ID has been set.
 
 > **type**: `"server"`
 
-Defined in: [personalize/src/initialization/server-adapter.ts:24](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/personalize/src/initialization/server-adapter.ts#L24)
+Defined in: [personalize/src/initialization/server-adapter.ts:24](https://github.com/Sitecore/content-sdk/blob/200841a0259c72fee00f61fef7f94179a0bdad7d/packages/personalize/src/initialization/server-adapter.ts#L24)
 
 The type of the adapter.
 
