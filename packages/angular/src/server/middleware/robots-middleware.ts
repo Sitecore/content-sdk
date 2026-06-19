@@ -2,7 +2,7 @@ import type { SitecoreClient } from '@sitecore-content-sdk/content/client';
 import type { SiteInfo } from '@sitecore-content-sdk/content/site';
 import { SiteResolver } from '@sitecore-content-sdk/content/site';
 import { constants } from '@sitecore-content-sdk/core';
-import { ExpressMiddleware, ExpressRequest, ExpressResponse } from '../models';
+import { ExpressMiddleware, ExpressRequest, ExpressResponse } from './models';
 import debug from '../../debug';
 
 const { ERROR_MESSAGES } = constants;
