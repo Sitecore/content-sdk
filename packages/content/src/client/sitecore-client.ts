@@ -476,7 +476,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         mode,
         site,
         variantId,
-        ...(previewTime && { previewTime }),
+        previewTime,
       },
       fetchOptions
     );

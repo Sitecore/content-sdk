@@ -63,7 +63,6 @@ export const mapEditingParams = (query: {
         dataSourceId: query.dataSourceId,
         version: query.sc_version,
         generation: query.generation,
-        ...(query.sc_previewTime && { previewTime: query.sc_previewTime }),
       }
     : {
         site: query.sc_site,

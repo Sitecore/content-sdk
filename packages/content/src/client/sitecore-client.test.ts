@@ -861,6 +861,7 @@ describe('SitecoreClient', () => {
         version: '1',
         variantId: 'variant1',
         layoutKind: LayoutKind.Final,
+        previewTime: undefined as string | undefined,
       };
 
       const editingData = {
@@ -901,6 +902,7 @@ describe('SitecoreClient', () => {
           mode: previewData.mode,
           site: previewData.site,
           variantId: previewData.variantId,
+          previewTime: previewData.previewTime,
         })
       ).to.be.true;
     });
@@ -914,6 +916,7 @@ describe('SitecoreClient', () => {
         version: '1',
         variantId: 'variant1',
         layoutKind: LayoutKind.Final,
+        previewTime: undefined as string | undefined,
       };
 
       const editingData = {
@@ -954,6 +957,7 @@ describe('SitecoreClient', () => {
           mode: previewData.mode,
           site: previewData.site,
           variantId: previewData.variantId,
+          previewTime: previewData.previewTime,
         })
       ).to.be.true;
     });
@@ -968,6 +972,7 @@ describe('SitecoreClient', () => {
         version: '1',
         variantId: 'mountain_bike_audience',
         layoutKind: LayoutKind.Final,
+        previewTime: undefined as string | undefined,
       };
 
       const editingData = {
@@ -987,6 +992,7 @@ describe('SitecoreClient', () => {
           mode: previewData.mode,
           site: previewData.site,
           variantId: previewData.variantId,
+          previewTime: previewData.previewTime,
         })
       ).to.be.true;
 
@@ -1034,6 +1040,7 @@ describe('SitecoreClient', () => {
         version: '1',
         variantId: DEFAULT_VARIANT,
         layoutKind: LayoutKind.Final,
+        previewTime: undefined as string | undefined,
       };
 
       const fetchOptions = {
@@ -1064,6 +1071,7 @@ describe('SitecoreClient', () => {
           mode: previewData.mode,
           site: previewData.site,
           variantId: previewData.variantId,
+          previewTime: previewData.previewTime,
         })
         .resolves(editingData);
 
@@ -1079,6 +1087,7 @@ describe('SitecoreClient', () => {
             mode: previewData.mode,
             site: previewData.site,
             variantId: previewData.variantId,
+            previewTime: previewData.previewTime,
           },
           fetchOptions
         )

@@ -136,16 +136,19 @@ describe('createEditingRenderRouteHandlers', () => {
         getCSPHeader: getCSPHeaderStub,
         resolveServerUrl: resolveServerUrlStub,
         getAllowedQueryParams: getAllowedQueryParamsStub,
-        mapEditingParams: sandbox.stub().callsFake((query: any) => ({
-          itemId: query.sc_itemid,
-          language: query.sc_lang,
-          site: query.sc_site,
-          mode: query.mode,
-          variantId: query.sc_variant,
-          version: query.sc_version,
-          layoutKind: query.sc_layoutKind,
-          ...(query.sc_previewTime && { previewTime: query.sc_previewTime }),
-        })),
+        mapEditingParams: sandbox.stub().callsFake((query: any) => {
+          const isDesignLibrary = Object.values(DesignLibraryMode).includes(query.mode);
+          return {
+            itemId: query.sc_itemid,
+            language: query.sc_lang,
+            site: query.sc_site,
+            mode: query.mode,
+            variantId: query.sc_variant,
+            version: query.sc_version,
+            layoutKind: query.sc_layoutKind,
+            ...(!isDesignLibrary && query.sc_previewTime && { previewTime: query.sc_previewTime }),
+          };
+        }),
         PREVIEW_COOKIES: {
           PREVIEW_DATA: '__next_preview_data',
           PRERENDER_BYPASS: '__prerender_bypass',
@@ -1522,7 +1525,7 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.body).to.equal('<div>some html</div>');
     });
 
-    it('should include previewTime in editing params for design library requests', async () => {
+    it('should not include previewTime in editing params for design library requests', async () => {
       req.nextUrl!.searchParams = mockSearchParams({
         ...designLibraryQuery,
         route: '/components',
@@ -1533,10 +1536,10 @@ describe('createEditingRenderRouteHandlers', () => {
 
       expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
 
-      // Verify previewTime is included in the EDITING_PARAMS_HEADER JSON, which flows to Edge GraphQL via PreviewProxy
+      // previewTime is not supported for Design Library (Design Studio) — only for Sitecore Pages
       const [, , propagatedHeaders] = getEditingRequestHtmlStub.firstCall.args;
       const editingParams = JSON.parse(propagatedHeaders[EDITING_PARAMS_HEADER]);
-      expect(editingParams).to.have.property('previewTime', '2024-12-25T10:00:00Z');
+      expect(editingParams).to.not.have.property('previewTime');
     });
   });
 
