@@ -8,7 +8,7 @@
 
 > **isSuccessfulProxyExecution**\<`SuccessfulProxyType`, `T`\>(`info`): `info is T & SuccessfulProxyType`
 
-Defined in: [nextjs/src/proxy/utils.ts:11](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/nextjs/src/proxy/utils.ts#L11)
+Defined in: [nextjs/src/proxy/utils.ts:11](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/nextjs/src/proxy/utils.ts#L11)
 
 Type guard to check if the proxy execution was successful
 

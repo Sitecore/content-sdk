@@ -62,7 +62,7 @@ export class ScRouterLinkDirective extends ScLinkDirective {
       return;
     }
 
-    if (this.sitecoreContext.isEditing()) {
+    if (this.sitecoreContext.isEditing() || this.sitecoreContext.isPreview()) {
       return;
     }
 

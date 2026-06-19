@@ -9,9 +9,13 @@
 ## Interfaces
 
 - [AllowedQueryParam](interfaces/AllowedQueryParam.md)
+- [BaseMiddlewareOptions](interfaces/BaseMiddlewareOptions.md)
 - [CreateEditingConfigMiddlewareOptions](interfaces/CreateEditingConfigMiddlewareOptions.md)
 - [CreateEditingRenderMiddlewareOptions](interfaces/CreateEditingRenderMiddlewareOptions.md)
 - [ExpressEditingRequest](interfaces/ExpressEditingRequest.md)
+- [ExpressRequest](interfaces/ExpressRequest.md)
+- [ExpressResponse](interfaces/ExpressResponse.md)
+- [MiddlewareMatcher](interfaces/MiddlewareMatcher.md)
 - [SitecoreRevalidateMiddlewareOptions](interfaces/SitecoreRevalidateMiddlewareOptions.md)
 
 ## Type Aliases
@@ -19,7 +23,12 @@
 - [AllowedQueryParams](type-aliases/AllowedQueryParams.md)
 - [AllowedQueryParamsResolver](type-aliases/AllowedQueryParamsResolver.md)
 - [CollectSitecoreTagsFromEdgeBodyOptions](type-aliases/CollectSitecoreTagsFromEdgeBodyOptions.md)
+- [ExpressMiddleware](type-aliases/ExpressMiddleware.md)
+- [ExpressNextFunction](type-aliases/ExpressNextFunction.md)
 - [MetadataImportFn](type-aliases/MetadataImportFn.md)
+- [MultisiteMiddlewareOptions](type-aliases/MultisiteMiddlewareOptions.md)
+- [PathPattern](type-aliases/PathPattern.md)
+- [PersonalizeMiddlewareOptions](type-aliases/PersonalizeMiddlewareOptions.md)
 - [SitecoreEdgeRevalidateRequestBody](type-aliases/SitecoreEdgeRevalidateRequestBody.md)
 - [SitecoreEdgeRevalidateUpdate](type-aliases/SitecoreEdgeRevalidateUpdate.md)
 
@@ -34,7 +43,11 @@
 - [createEditingConfigMiddleware](functions/createEditingConfigMiddleware.md)
 - [createEditingRenderMiddleware](functions/createEditingRenderMiddleware.md)
 - [createLoaderDataServiceMiddleware](functions/createLoaderDataServiceMiddleware.md)
+- [createMultisiteMiddleware](functions/createMultisiteMiddleware.md)
+- [createPersonalizeMiddleware](functions/createPersonalizeMiddleware.md)
 - [createSitecoreRevalidateMiddleware](functions/createSitecoreRevalidateMiddleware.md)
 - [extractSitecoreEdgeContentId](functions/extractSitecoreEdgeContentId.md)
+- [isEditingPreview](functions/isEditingPreview.md)
 - [normalizeImportedMetadata](functions/normalizeImportedMetadata.md)
 - [resolveConfiguredRevalidateSecret](functions/resolveConfiguredRevalidateSecret.md)
+- [shouldProcessPath](functions/shouldProcessPath.md)

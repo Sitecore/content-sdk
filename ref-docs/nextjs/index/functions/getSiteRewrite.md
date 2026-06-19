@@ -8,7 +8,7 @@
 
 > **getSiteRewrite**(`pathname`, `data`): `string`
 
-Defined in: content/types/site/utils.d.ts:25
+Defined in: content/types/site/utils.d.ts:36
 
 Get a site rewrite path for given pathname
 

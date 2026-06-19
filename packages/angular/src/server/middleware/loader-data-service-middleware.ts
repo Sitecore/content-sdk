@@ -1,20 +1,42 @@
 import {
-  LoaderApiRequest,
   LoaderApiResponse,
   NotFoundNavigationError,
   LoaderHttpError,
   LoaderDataResult,
+  LoaderCache,
 } from '../../loaders/models';
-import { extractRequestContext } from '../../loaders/utils';
 import {
-  ExpressDataHandlerOptions,
   ExpressMiddleware,
   ExpressNextFunction,
   ExpressRequest,
   ExpressResponse,
-} from '../models';
+} from './models';
 import { LOADER_DATA_ENDPOINT } from '../constants';
 import { ServerLoaderRunner } from '../server-loader-runner';
+import { parseLoaderRequest } from './utils';
+import { AngularSitecoreConfig } from '../../config/define-config';
+import { LoaderRegistry } from '../../loaders/loader-registry.token';
+
+/**
+ * Options for the Express data handler
+ * @public
+ */
+export interface LoaderDataServiceOptions {
+  /**
+   * The shared loader registry (same object as provideLoaderRegistry).
+   */
+  loaders: LoaderRegistry;
+  /**
+   * Optional loader cache. When supplied, /_data responses go through
+   * cache-aside; omit to run loaders directly on every request.
+   */
+  cache: LoaderCache;
+  /**
+   * The endpoint path for the data handler.
+   * @default '/_data'
+   */
+  endpoint?: string;
+}
 
 /**
  * Map loader resolution result to wire-level API response.
@@ -56,42 +78,14 @@ function sendResponse(res: ExpressResponse, result: LoaderApiResponse): void {
 }
 
 /**
- * Parse POST body or GET query into LoaderApiRequest, or return a validation error.
- * @param {ExpressRequest} req - Incoming Express request
- */
-function parseLoaderRequest(
-  req: ExpressRequest
-): LoaderApiRequest | { status: number; message: string } {
-  if (req.method === 'POST') {
-    const body = req.body as LoaderApiRequest;
-    if (!body?.loaderId) return { status: 400, message: 'Missing loaderId' };
-    return body;
-  }
-  if (req.method === 'GET') {
-    const loaderId = String(req.query?.loaderId ?? '');
-    if (!loaderId) return { status: 400, message: 'Missing loaderId' };
-    const query: Record<string, string> = {};
-    for (const [key, value] of Object.entries(req.query ?? {})) {
-      if (key !== 'loaderId' && key !== 'url' && typeof value === 'string') query[key] = value;
-    }
-    return {
-      loaderId,
-      url: String(req.query?.url ?? ''),
-      params: {},
-      query,
-    };
-  }
-  return { status: 405, message: 'Method not allowed' };
-}
-
-/**
  * Create an Express middleware for the data endpoint.
  * This middleware handles both GET and POST requests at the configured endpoint path.
  *
  * The endpoint path must match the client: provide the same value to the Angular app via
  * FETCH_DATA_ENDPOINT (e.g. in app.config.ts). There is no Angular DI in Node/Express,
  * so you pass the endpoint here when calling this function (e.g. from server.ts).
- * @param {ExpressDataHandlerOptions} options - Handler options: loaders and optional endpoint (defaults to {@link LOADER_DATA_ENDPOINT})
+ * @param {AngularSitecoreConfig} config - Resolved Sitecore configuration (drives default site/locale).
+ * @param {LoaderDataServiceOptions} options - Handler options: loaders, cache, and optional endpoint (defaults to {@link LOADER_DATA_ENDPOINT})
  * @returns Express middleware that handles the data endpoint
  * @example
  * ```typescript
@@ -107,10 +101,11 @@ function parseLoaderRequest(
  * @public
  */
 export function createLoaderDataServiceMiddleware(
-  options: ExpressDataHandlerOptions
+  config: AngularSitecoreConfig,
+  options: LoaderDataServiceOptions
 ): ExpressMiddleware {
   const { loaders, cache, endpoint = LOADER_DATA_ENDPOINT } = options;
-  const serverLoaderData = new ServerLoaderRunner(loaders, cache);
+  const serverLoaderRunner = new ServerLoaderRunner(loaders, config, cache);
 
   return async (
     req: ExpressRequest,
@@ -124,12 +119,7 @@ export function createLoaderDataServiceMiddleware(
     try {
       const parsed = parseLoaderRequest(req);
       if ('loaderId' in parsed) {
-        // Per refactor plan A2: extract once at the boundary; ride on the payload.
-        // POST body's `angularRequestContext` is ignored — server-derived data
-        // (hostname, headers) must come from the actual request, not from a
-        // payload the browser could spoof.
-        parsed.angularRequestContext = extractRequestContext(req);
-        const result = toApiResponse(await serverLoaderData.resolve(parsed));
+        const result = toApiResponse(await serverLoaderRunner.resolve(parsed));
         sendResponse(res, result);
       } else {
         res

@@ -6,7 +6,7 @@
 
 # Interface: AngularSitecoreConfigInput
 
-Defined in: [packages/angular/src/config/define-config.ts:22](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/config/define-config.ts#L22)
+Defined in: [packages/angular/src/config/define-config.ts:22](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/config/define-config.ts#L22)
 
 Sitecore configuration input for Angular apps. Extends the base
 [SitecoreConfigInput](../content/config/type-aliases/SitecoreConfigInput.md) with an `angular` section. `redirects.locales` is intentionally
@@ -15,7 +15,7 @@ source of truth for the locale list.
 
 ## Extends
 
-- `Omit`\<[`SitecoreConfigInput`](../content/config/type-aliases/SitecoreConfigInput.md), `"redirects"`\>
+- `Omit`\<[`SitecoreConfigInput`](../content/config/type-aliases/SitecoreConfigInput.md), `"multisite"`\>
 
 ## Properties
 
@@ -23,7 +23,7 @@ source of truth for the locale list.
 
 > `optional` **angular?**: `object`
 
-Defined in: [packages/angular/src/config/define-config.ts:29](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/config/define-config.ts#L29)
+Defined in: [packages/angular/src/config/define-config.ts:24](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/config/define-config.ts#L24)
 
 Angular-specific configuration.
 
@@ -266,31 +266,11 @@ custom layout query
 
 > `optional` **multisite?**: `object`
 
-Defined in: packages/content/types/config/models.d.ts:126
-
-Settings for multisite functionality
+Defined in: [packages/angular/src/config/define-config.ts:41](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/config/define-config.ts#L41)
 
 #### enabled?
 
 > `optional` **enabled?**: `boolean`
-
-Enable multisite
-
-**WARNING: Do NOT disable multisite in App Router applications.**
-
-The App Router route structure requires the `[site]` segment in the path (`/[site]/[locale]/[[...path]]`).
-Disabling this will break routing and cause 404 errors for regular requests.
-
-Preview and Editing modes will still work (they bypass this check), but regular page requests will fail.
-
-**For single-site setups**: Keep `enabled: true` and configure only one site in your sites configuration.
-The middleware will always use that single site, achieving the desired single-site behavior.
-
-##### Default
-
-```ts
-true
-```
 
 #### useCookieResolution?
 
@@ -302,16 +282,12 @@ Function used to determine if site should be resolved from sc_site cookie when p
 
 | Parameter | Type |
 | ------ | ------ |
-| `req?` | `RequestInit` |
-| `res?` | `ResponseInit` |
+| `req?` | [`ExpressRequest`](../../server/middleware/interfaces/ExpressRequest.md) |
+| `res?` | [`ExpressResponse`](../../server/middleware/interfaces/ExpressResponse.md) |
 
 ##### Returns
 
 `boolean`
-
-#### Inherited from
-
-`Omit.multisite`
 
 ***
 
@@ -383,12 +359,34 @@ Optional Sitecore Personalize scope ID (to isolate data between environments)
 
 ### redirects?
 
-> `optional` **redirects?**: `Omit`\<\{ `enabled?`: `boolean`; `locales?`: `string`[]; \}, `"locales"`\>
+> `optional` **redirects?**: `object`
 
-Defined in: [packages/angular/src/config/define-config.ts:27](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/config/define-config.ts#L27)
+Defined in: packages/content/types/config/models.d.ts:185
 
-Settings for redirects functionality. `locales` is derived automatically from
-`angular.locales`; only `enabled` is configurable at this layer.
+Settings for redirects functionality
+
+#### enabled?
+
+> `optional` **enabled?**: `boolean`
+
+Enable redirects middleware
+
+##### Default
+
+```ts
+process.env.NODE_ENV !== 'development'
+```
+
+#### locales?
+
+> `optional` **locales?**: `string`[]
+
+These are all the locales you support in your application.
+These should match those in framework-specific configuration of your app.
+
+#### Inherited from
+
+`Omit.redirects`
 
 ***
 

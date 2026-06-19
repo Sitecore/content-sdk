@@ -6,9 +6,9 @@
 
 # Function: createLoaderDataServiceMiddleware()
 
-> **createLoaderDataServiceMiddleware**(`options`): [`ExpressMiddleware`](../../express/type-aliases/ExpressMiddleware.md)
+> **createLoaderDataServiceMiddleware**(`config`, `options`): [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/loader-data-service-middleware.ts:109](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/loader-data-service-middleware.ts#L109)
+Defined in: [packages/angular/src/server/middleware/loader-data-service-middleware.ts:103](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/loader-data-service-middleware.ts#L103)
 
 Create an Express middleware for the data endpoint.
 This middleware handles both GET and POST requests at the configured endpoint path.
@@ -21,11 +21,12 @@ so you pass the endpoint here when calling this function (e.g. from server.ts).
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `options` | [`ExpressDataHandlerOptions`](../../express/interfaces/ExpressDataHandlerOptions.md) | Handler options: loaders and optional endpoint (defaults to [LOADER\_DATA\_ENDPOINT](../../express/variables/LOADER_DATA_ENDPOINT.md)) |
+| `config` | [`AngularSitecoreConfig`](../../../config/type-aliases/AngularSitecoreConfig.md) | Resolved Sitecore configuration (drives default site/locale). |
+| `options` | `LoaderDataServiceOptions` | Handler options: loaders, cache, and optional endpoint (defaults to [LOADER\_DATA\_ENDPOINT](server/express/variables/LOADER_DATA_ENDPOINT.md)) |
 
 ## Returns
 
-[`ExpressMiddleware`](../../express/type-aliases/ExpressMiddleware.md)
+[`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
 Express middleware that handles the data endpoint
 

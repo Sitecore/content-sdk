@@ -29,5 +29,6 @@ export {
   SiteRewriteData,
   SITE_PREFIX,
   SITE_KEY,
+  getHostnameFromHostHeader,
 } from './utils';
 export { SiteResolver } from './site-resolver';

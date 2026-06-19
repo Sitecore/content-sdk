@@ -6,9 +6,9 @@
 
 # Variable: SITECORE\_CONFIG\_TOKEN
 
-> `const` **SITECORE\_CONFIG\_TOKEN**: `InjectionToken`\<[`AngularSitecoreConfig`](../../config/interfaces/AngularSitecoreConfig.md)\>
+> `const` **SITECORE\_CONFIG\_TOKEN**: `InjectionToken`\<`Required`\<\{ `angular?`: `Required`\<\{ `loadersCache?`: `Required`\<\{ `enabled?`: `boolean`; `revalidate?`: `number`; \} \| `undefined`\>; `locales?`: `string`[]; \} \| `undefined`\>; `api?`: `Required`\<\{ `edge?`: `Required`\<\{ `clientContextId?`: `string`; `contextId`: `string`; `edgeUrl?`: `string`; \} \| `undefined`\>; `local?`: `Required`\<\{ `apiHost`: `string`; `apiKey`: `string`; `path?`: `string`; \} \| `undefined`\>; \} \| `undefined`\>; `defaultLanguage?`: `string`; `defaultSite?`: `string`; `dictionary?`: `Required`\<\{ `caching?`: `Required`\<\{ `enabled?`: `boolean`; `timeout?`: `number`; \} \| `undefined`\>; \} \| `undefined`\>; `disableCodeGeneration?`: `boolean`; `editingSecret?`: `string`; `layout?`: `Required`\<\{ `formatLayoutQuery?`: ((`siteName`, `itemPath`, `locale?`) => `string`) \| `null`; \} \| `undefined`\>; `multisite?`: `Required`\<\{ `enabled?`: `boolean`; `useCookieResolution?`: (`req?`, `res?`) => `boolean`; \} \| `undefined`\>; `personalize?`: `Required`\<\{ `cdpTimeout?`: `number`; `channel?`: `string`; `currency?`: `string`; `edgeTimeout?`: `number`; `enabled?`: `boolean`; `scope?`: `string`; \} \| `undefined`\>; `redirects?`: `Required`\<\{ `enabled?`: `boolean`; `locales?`: `string`[]; \} \| `undefined`\>; `retries?`: `Required`\<\{ `count?`: `number`; `retryStrategy?`: `RetryStrategy`; \} \| `undefined`\>; `rewriteMediaUrls?`: `boolean` \| ((`value`) => `string`); \}\>\>
 
-Defined in: [packages/angular/src/lib/tokens.ts:12](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/lib/tokens.ts#L12)
+Defined in: [packages/angular/src/lib/tokens.ts:12](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/lib/tokens.ts#L12)
 
 Injection token for the Sitecore configuration.
 Provided by `provideSitecoreAngular({ sitecoreConfig, sitecoreClient })`. Inject this to read config app-wide.

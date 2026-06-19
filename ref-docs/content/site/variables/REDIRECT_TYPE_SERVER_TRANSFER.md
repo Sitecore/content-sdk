@@ -8,6 +8,6 @@
 
 > `const` **REDIRECT\_TYPE\_SERVER\_TRANSFER**: `"SERVER_TRANSFER"` = `'SERVER_TRANSFER'`
 
-Defined in: [content/src/site/redirects-service.ts:30](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/content/src/site/redirects-service.ts#L30)
+Defined in: [content/src/site/redirects-service.ts:30](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/content/src/site/redirects-service.ts#L30)
 
 Redirect type for server transfer

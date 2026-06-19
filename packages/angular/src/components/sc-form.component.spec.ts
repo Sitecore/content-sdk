@@ -260,7 +260,7 @@ describe('ScFormComponent', () => {
     expect(elArg.tagName).toBe('DIV');
   });
 
-  it('should call subscribeToFormSubmitEvent when not in editing mode', async () => {
+  it('should subscribe to form submit events when not in editing mode', async () => {
     const fixture = createFixture();
     setMockContextPage(makePage(false));
 
@@ -271,13 +271,13 @@ describe('ScFormComponent', () => {
     await flushFormLoadPipeline(fixture);
 
     expect(mocks.subscribeToFormSubmitEvent).toHaveBeenCalledTimes(1);
-    expect(mocks.subscribeToFormSubmitEvent).toHaveBeenCalledWith(
-      expect.any(HTMLElement),
-      'comp-uid-1'
-    );
+    const [elArg, componentId, signalArg] = mocks.subscribeToFormSubmitEvent.mock.calls[0];
+    expect((elArg as HTMLDivElement).tagName).toBe('DIV');
+    expect(componentId).toBe('comp-uid-1');
+    expect(signalArg).toBeInstanceOf(AbortSignal);
   });
 
-  it('should not call subscribeToFormSubmitEvent in editing mode', async () => {
+  it('should not subscribe to form submit events in editing mode', async () => {
     const fixture = createFixture();
     setMockContextPage(makePage(true));
 

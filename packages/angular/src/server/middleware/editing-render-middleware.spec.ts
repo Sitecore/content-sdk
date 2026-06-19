@@ -2,10 +2,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   createEditingRenderMiddleware,
-  EDITING_PARAMS_HEADER,
   type ExpressEditingRequest,
 } from './editing-render-middleware';
-import type { ExpressRequest, ExpressResponse } from '../models';
+import type { ExpressRequest, ExpressResponse } from './models';
+import { EDITING_PARAMS_HEADER } from '../../editing/constants';
 
 function createMockRes() {
   return {

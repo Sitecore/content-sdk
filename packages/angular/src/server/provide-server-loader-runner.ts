@@ -6,8 +6,9 @@ import {
 } from '@angular/core';
 import { LOADER_REGISTRY } from '../loaders/loader-registry.token';
 import { SERVER_LOADER_RUNNER } from '../loaders/server-loader-runner.token';
-import { LoaderCache, LoaderApiRequest } from '../loaders/models';
+import { LoaderCache, LoaderRunnerInit } from '../loaders/models';
 import { ServerLoaderRunner } from './server-loader-runner';
+import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 
 /**
  * Wires SSR {@link SERVER_LOADER_RUNNER} to ServerLoaderRunner
@@ -22,13 +23,14 @@ export function provideServerLoaderRunner(): EnvironmentProviders {
       provide: SERVER_LOADER_RUNNER,
       useFactory: () => {
         const registry = inject(LOADER_REGISTRY);
+        const config = inject(SITECORE_CONFIG_TOKEN);
         return {
-          resolve(request: LoaderApiRequest) {
+          resolve(request: LoaderRunnerInit) {
             const ssrContext = inject(REQUEST_CONTEXT, { optional: true }) as
               | { cache?: LoaderCache }
               | undefined;
             const cache = ssrContext?.cache;
-            return new ServerLoaderRunner(registry, cache).resolve(request);
+            return new ServerLoaderRunner(registry, config, cache).resolve(request);
           },
         };
       },

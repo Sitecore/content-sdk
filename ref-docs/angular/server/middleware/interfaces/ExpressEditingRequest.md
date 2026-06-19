@@ -6,14 +6,14 @@
 
 # Interface: ExpressEditingRequest
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:76](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/editing-render-middleware.ts#L76)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:74](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/editing-render-middleware.ts#L74)
 
 Editing-aware request. The render middleware attaches `scEditing` to allow
 downstream code to detect the editing branch without reparsing headers.
 
 ## Extends
 
-- [`ExpressRequest`](../../express/interfaces/ExpressRequest.md)
+- [`ExpressRequest`](ExpressRequest.md)
 
 ## Properties
 
@@ -21,11 +21,11 @@ downstream code to detect the editing branch without reparsing headers.
 
 > **body**: `unknown`
 
-Defined in: [packages/angular/src/server/models.ts:22](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L22)
+Defined in: [packages/angular/src/config/http-types.ts:9](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/config/http-types.ts#L9)
 
 #### Inherited from
 
-[`ExpressRequest`](../../express/interfaces/ExpressRequest.md).[`body`](../../express/interfaces/ExpressRequest.md#body)
+[`ExpressRequest`](ExpressRequest.md).[`body`](ExpressRequest.md#body)
 
 ***
 
@@ -33,13 +33,13 @@ Defined in: [packages/angular/src/server/models.ts:22](https://github.com/Siteco
 
 > `optional` **cookies?**: `Record`\<`string`, `string`\>
 
-Defined in: [packages/angular/src/server/models.ts:27](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L27)
+Defined in: [packages/angular/src/config/http-types.ts:15](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/config/http-types.ts#L15)
 
 Cookies from the request (requires cookie-parser middleware)
 
 #### Inherited from
 
-[`ExpressRequest`](../../express/interfaces/ExpressRequest.md).[`cookies`](../../express/interfaces/ExpressRequest.md#cookies)
+[`ExpressRequest`](ExpressRequest.md).[`cookies`](ExpressRequest.md#cookies)
 
 ***
 
@@ -47,13 +47,13 @@ Cookies from the request (requires cookie-parser middleware)
 
 > `optional` **headers?**: `Record`\<`string`, `string` \| `string`[] \| `undefined`\>
 
-Defined in: [packages/angular/src/server/models.ts:31](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L31)
+Defined in: [packages/angular/src/config/http-types.ts:19](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/config/http-types.ts#L19)
 
 Headers from the request
 
 #### Inherited from
 
-[`ExpressRequest`](../../express/interfaces/ExpressRequest.md).[`headers`](../../express/interfaces/ExpressRequest.md#headers)
+[`ExpressRequest`](ExpressRequest.md).[`headers`](ExpressRequest.md#headers)
 
 ***
 
@@ -61,11 +61,11 @@ Headers from the request
 
 > **method**: `string`
 
-Defined in: [packages/angular/src/server/models.ts:19](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L19)
+Defined in: [packages/angular/src/config/http-types.ts:6](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/config/http-types.ts#L6)
 
 #### Inherited from
 
-[`ExpressRequest`](../../express/interfaces/ExpressRequest.md).[`method`](../../express/interfaces/ExpressRequest.md#method)
+[`ExpressRequest`](ExpressRequest.md).[`method`](ExpressRequest.md#method)
 
 ***
 
@@ -73,11 +73,11 @@ Defined in: [packages/angular/src/server/models.ts:19](https://github.com/Siteco
 
 > **path**: `string`
 
-Defined in: [packages/angular/src/server/models.ts:20](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L20)
+Defined in: [packages/angular/src/config/http-types.ts:7](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/config/http-types.ts#L7)
 
 #### Inherited from
 
-[`ExpressRequest`](../../express/interfaces/ExpressRequest.md).[`path`](../../express/interfaces/ExpressRequest.md#path)
+[`ExpressRequest`](ExpressRequest.md).[`path`](ExpressRequest.md#path)
 
 ***
 
@@ -85,11 +85,23 @@ Defined in: [packages/angular/src/server/models.ts:20](https://github.com/Siteco
 
 > **query**: `Record`\<`string`, `string` \| `string`[] \| `undefined`\>
 
-Defined in: [packages/angular/src/server/models.ts:23](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L23)
+Defined in: [packages/angular/src/config/http-types.ts:11](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/config/http-types.ts#L11)
 
 #### Inherited from
 
-[`ExpressRequest`](../../express/interfaces/ExpressRequest.md).[`query`](../../express/interfaces/ExpressRequest.md#query)
+[`ExpressRequest`](ExpressRequest.md).[`query`](ExpressRequest.md#query)
+
+***
+
+### referrer?
+
+> `optional` **referrer?**: `string`
+
+Defined in: [packages/angular/src/config/http-types.ts:10](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/config/http-types.ts#L10)
+
+#### Inherited from
+
+[`ExpressRequest`](ExpressRequest.md).[`referrer`](ExpressRequest.md#referrer)
 
 ***
 
@@ -97,7 +109,30 @@ Defined in: [packages/angular/src/server/models.ts:23](https://github.com/Siteco
 
 > `optional` **scEditing?**: `EditingPreviewData`
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:77](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/middleware/editing-render-middleware.ts#L77)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:75](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/server/middleware/editing-render-middleware.ts#L75)
+
+***
+
+### setHeader?
+
+> `optional` **setHeader?**: (`name`, `value`) => `void`
+
+Defined in: [packages/angular/src/config/http-types.ts:20](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/config/http-types.ts#L20)
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `name` | `string` |
+| `value` | `string` \| `string`[] \| `undefined` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[`ExpressRequest`](ExpressRequest.md).[`setHeader`](ExpressRequest.md#setheader)
 
 ***
 
@@ -105,8 +140,8 @@ Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts
 
 > **url**: `string`
 
-Defined in: [packages/angular/src/server/models.ts:21](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/server/models.ts#L21)
+Defined in: [packages/angular/src/config/http-types.ts:8](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/config/http-types.ts#L8)
 
 #### Inherited from
 
-[`ExpressRequest`](../../express/interfaces/ExpressRequest.md).[`url`](../../express/interfaces/ExpressRequest.md#url)
+[`ExpressRequest`](ExpressRequest.md).[`url`](ExpressRequest.md#url)

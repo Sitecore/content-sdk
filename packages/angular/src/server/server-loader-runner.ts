@@ -1,5 +1,5 @@
 import {
-  LoaderApiRequest,
+  LoaderRunnerInit,
   LoaderContext,
   isLoaderRedirectResult,
   LoaderCache,
@@ -8,6 +8,7 @@ import {
 import { LoaderRegistry } from '../loaders/loader-registry.token';
 import { buildCacheKey } from './cache/cache-key';
 import { buildLoaderCacheTags } from './cache/cache-tags';
+import { AngularSitecoreConfig } from '../config/define-config';
 
 /**
  * Server-side cache aware loader data resolver.
@@ -30,23 +31,45 @@ export class ServerLoaderRunner {
 
   /**
    * @param {LoaderRegistry} registry - Same loader map as `provideLoaderRegistry` / `/_data` middleware.
+   * @param {AngularSitecoreConfig} config - Resolved Sitecore configuration (drives default site/locale).
    * @param {LoaderCache | undefined} cache - Optional cache instance from createLoaderCache.
    */
-  constructor(private readonly registry: LoaderRegistry, private readonly cache?: LoaderCache) {}
+  constructor(
+    private readonly registry: LoaderRegistry,
+    private readonly config: AngularSitecoreConfig,
+    private readonly cache?: LoaderCache
+  ) {}
 
   /**
    * Resolve loader data with optional cache read-through and SWR refresh.
-   * @param {LoaderApiRequest} request - Loader id, URL, params, optional request context and cache overrides.
+   * @param {LoaderRunnerInit} init - Loader id, URL, params, server-derived request data, and cache overrides.
    * @returns {Promise<LoaderDataResult>} Data, redirect, or error result for the middleware / SSR resolver.
    */
-  async resolve(request: LoaderApiRequest): Promise<LoaderDataResult> {
-    const { loaderId, url, params, query, angularRequestContext, cacheOptions } = request;
+  async resolve(init: LoaderRunnerInit): Promise<LoaderDataResult> {
+    const { loaderId, url, routeParams, query, cacheOptions, csdkRequestData } = init;
     const loader = this.registry[loaderId];
     if (!loader) {
       return { kind: 'error', status: 500, message: `No loader registered for id "${loaderId}"` };
     }
 
-    const ctx: LoaderContext = { url, params, query, requestContext: angularRequestContext };
+    const defaultScParams = {
+      siteName: this.config.defaultSite,
+    };
+
+    const scParams = {
+      ...defaultScParams,
+      ...(csdkRequestData?.scParams || {}),
+    };
+
+    // ctx carries everything the loader and cache key need; only loaderId travels
+    // alongside it, so the init object is not passed any further.
+    const ctx: LoaderContext = {
+      url,
+      routeParams,
+      query,
+      scParams,
+      csdkRequestData: csdkRequestData ?? undefined,
+    };
 
     const cacheable = this.cache && (cacheOptions?.enabled ?? this.cache.enabled());
 
@@ -59,33 +82,33 @@ export class ServerLoaderRunner {
       }
 
       if (read.kind === 'stale') {
-        this.scheduleBackgroundRefresh(request, ctx, key, cacheOptions);
+        this.scheduleBackgroundRefresh(loaderId, ctx, key, cacheOptions);
         return { kind: 'data', data: read.value };
       }
     }
 
-    return this.runLoader({ request, ctx, cacheable: !!cacheable, cacheOptions });
+    return this.runLoader({ loaderId, ctx, cacheable: !!cacheable, cacheOptions });
   }
 
   /**
    * Fire-and-forget SWR refresh; skipped when a refresh is already in flight for the key.
-   * @param {LoaderApiRequest} request - The loader request
+   * @param {string} loaderId - The loader id
    * @param {LoaderContext} ctx - The loader context
    * @param {string} cacheKey - The cache key
-   * @param {LoaderApiRequest['cacheOptions']} cacheOptions - The cache options
+   * @param {LoaderRunnerInit['cacheOptions']} cacheOptions - The cache options
    */
   private scheduleBackgroundRefresh(
-    request: LoaderApiRequest,
+    loaderId: string,
     ctx: LoaderContext,
     cacheKey: string,
-    cacheOptions: LoaderApiRequest['cacheOptions']
+    cacheOptions: LoaderRunnerInit['cacheOptions']
   ): void {
     if (ServerLoaderRunner.pendingCacheOps.has(cacheKey)) {
       return;
     }
     ServerLoaderRunner.pendingCacheOps.add(cacheKey);
     void this.runLoader({
-      request,
+      loaderId,
       ctx,
       cacheable: true,
       cacheOptions,
@@ -101,19 +124,18 @@ export class ServerLoaderRunner {
   }
 
   private async runLoader({
-    request,
+    loaderId,
     ctx,
     cacheable,
     cacheOptions,
     knownCacheKey,
   }: {
-    request: LoaderApiRequest;
+    loaderId: string;
     ctx: LoaderContext;
     cacheable: boolean;
-    cacheOptions?: LoaderApiRequest['cacheOptions'];
+    cacheOptions?: LoaderRunnerInit['cacheOptions'];
     knownCacheKey?: string;
   }): Promise<LoaderDataResult> {
-    const { loaderId } = request;
     const loader = this.registry[loaderId]!;
 
     let value: unknown;

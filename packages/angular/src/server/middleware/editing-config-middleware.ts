@@ -5,7 +5,7 @@ import {
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import type { Metadata } from '@sitecore-content-sdk/core/node-tools';
-import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from '../models';
+import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from './models';
 import type { ComponentMap } from '../../components/types';
 import { readProcessEnv } from '../utils';
 import debug from '../../debug';
@@ -98,8 +98,7 @@ export function normalizeImportedMetadata(module: unknown): Metadata {
 
 /**
  * Express middleware that serves the editing config endpoint
- * (default path: `/api/editing/config`). Mirrors the Next.js
- * `EditingConfigMiddleware` and returns the registered component names,
+ * (default path: `/api/editing/config`). Returns the registered component names,
  * package versions, and the configured edit mode.
  * @param {CreateEditingConfigMiddlewareOptions} options - Middleware options.
  * @returns {ExpressMiddleware} The middleware function.

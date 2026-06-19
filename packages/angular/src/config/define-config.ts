@@ -1,6 +1,6 @@
-import type { SitecoreConfig, SitecoreConfigInput } from '@sitecore-content-sdk/content/config';
+import type { DeepRequired, SitecoreConfigInput } from '@sitecore-content-sdk/content/config';
 import { defineConfig as baseDefineConfig } from '@sitecore-content-sdk/content/config';
-
+import type { ExpressRequest, ExpressResponse } from './http-types';
 /**
  * Reads `process.env` when running under Node; otherwise returns an empty object.
  * @returns {Record<string, string | undefined>} Environment map for merging into config.
@@ -19,12 +19,7 @@ function getProcessEnv(): Record<string, string | undefined> {
  * source of truth for the locale list.
  * @public
  */
-export interface AngularSitecoreConfigInput extends Omit<SitecoreConfigInput, 'redirects'> {
-  /**
-   * Settings for redirects functionality. `locales` is derived automatically from
-   * `angular.locales`; only `enabled` is configurable at this layer.
-   */
-  redirects?: Omit<NonNullable<SitecoreConfigInput['redirects']>, 'locales'>;
+export interface AngularSitecoreConfigInput extends Omit<SitecoreConfigInput, 'multisite'> {
   /** Angular-specific configuration. */
   angular?: {
     /**
@@ -43,6 +38,13 @@ export interface AngularSitecoreConfigInput extends Omit<SitecoreConfigInput, 'r
       revalidate?: number;
     };
   };
+  multisite?: {
+    enabled?: boolean;
+    /**
+     * Function used to determine if site should be resolved from sc_site cookie when present
+     */
+    useCookieResolution?: (req?: ExpressRequest, res?: ExpressResponse) => boolean;
+  };
 }
 
 /**
@@ -52,21 +54,7 @@ export interface AngularSitecoreConfigInput extends Omit<SitecoreConfigInput, 'r
  * omitted at the type level — read the canonical locale list from `angular.locales`.
  * @public
  */
-export interface AngularSitecoreConfig extends Omit<SitecoreConfig, 'redirects'> {
-  redirects: Omit<SitecoreConfig['redirects'], 'locales'>;
-  angular: {
-    /** Resolved locales for the Angular app. Always contains at least `defaultLanguage`. */
-    locales: string[];
-    /**
-     * Resolved configuration for the ISR-like cache. Defaults are applied by
-     * `defineConfig`: `enabled: true`, `revalidate: 300`.
-     */
-    loadersCache: {
-      enabled: boolean;
-      revalidate: number;
-    };
-  };
-}
+export type AngularSitecoreConfig = DeepRequired<AngularSitecoreConfigInput>;
 
 /** Defaults applied to `angular.loadersCache` when input omits fields. */
 const DEFAULT_ISR_CACHE = { enabled: true, revalidate: 300 } as const;

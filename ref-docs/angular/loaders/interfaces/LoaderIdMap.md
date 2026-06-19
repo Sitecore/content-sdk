@@ -6,7 +6,7 @@
 
 # Interface: LoaderIdMap
 
-Defined in: [packages/angular/src/loaders/loader-resolver.ts:48](https://github.com/Sitecore/content-sdk/blob/27b90e02c7a030fc380d3d5e51ad2edbb3c50829/packages/angular/src/loaders/loader-resolver.ts#L48)
+Defined in: [packages/angular/src/loaders/loader-resolver.ts:49](https://github.com/Sitecore/content-sdk/blob/7630555e650297c3e5d511cfc4a94d6add6462b0/packages/angular/src/loaders/loader-resolver.ts#L49)
 
 Extension point for custom loader IDs. Augment this interface so that
 loaderResolver() accepts your loader ids when you add them via provideLoaderRegistry().

@@ -1,6 +1,9 @@
 import { RedirectCommand, Router } from '@angular/router';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { applyRedirect, extractRequestContext } from './utils';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
+import { EDITING_PARAMS_HEADER } from '../editing/constants';
+import { SC_PARAMS_HEADER } from './constants';
+import { applyRedirect, extractRequestData } from './utils';
 
 describe('applyRedirect', () => {
   let mockRouter: { parseUrl: ReturnType<typeof vi.fn> };
@@ -20,10 +23,11 @@ describe('applyRedirect', () => {
   it('returns void and calls window.location.assign for external URL', () => {
     const assignSpy = vi.fn();
     const originalWindow = globalThis.window;
-    (globalThis as unknown as { window: { location: { assign: ReturnType<typeof vi.fn> } } }).window =
-      {
-        location: { assign: assignSpy },
-      };
+    (
+      globalThis as unknown as { window: { location: { assign: ReturnType<typeof vi.fn> } } }
+    ).window = {
+      location: { assign: assignSpy },
+    };
 
     const result = applyRedirect(mockRouter as unknown as Router, 'https://example.com/path');
     expect(result).toBeUndefined();
@@ -36,10 +40,11 @@ describe('applyRedirect', () => {
   it('treats http URL as external', () => {
     const assignSpy = vi.fn();
     const originalWindow = globalThis.window;
-    (globalThis as unknown as { window: { location: { assign: ReturnType<typeof vi.fn> } } }).window =
-      {
-        location: { assign: assignSpy },
-      };
+    (
+      globalThis as unknown as { window: { location: { assign: ReturnType<typeof vi.fn> } } }
+    ).window = {
+      location: { assign: assignSpy },
+    };
 
     const result = applyRedirect(mockRouter as unknown as Router, 'http://example.com');
     expect(result).toBeUndefined();
@@ -60,7 +65,7 @@ describe('applyRedirect', () => {
   });
 });
 
-describe('extractRequestContext', () => {
+describe('extractRequestData', () => {
   it('extracts hostname, headers, cookies, and query from Fetch API Request', () => {
     const req = new Request('https://example.com:8080/path?foo=bar&baz=qux&foo=dup', {
       headers: {
@@ -68,7 +73,7 @@ describe('extractRequestContext', () => {
         cookie: 'session=abc123; theme=dark',
       },
     });
-    const ctx = extractRequestContext(req);
+    const ctx = extractRequestData(req);
     expect(ctx.hostname).toBe('example.com');
     expect(ctx.headers).toEqual(
       expect.objectContaining({
@@ -85,7 +90,7 @@ describe('extractRequestContext', () => {
 
   it('returns empty cookies when Request has no cookie header', () => {
     const req = new Request('https://example.com/', { headers: {} });
-    const ctx = extractRequestContext(req);
+    const ctx = extractRequestData(req);
     expect(ctx.cookies).toEqual({});
   });
 
@@ -95,16 +100,67 @@ describe('extractRequestContext', () => {
       cookies: { a: '1', b: '2' },
       query: { page: '1', sort: 'asc' },
     };
-    const ctx = extractRequestContext(expressReq);
+    const ctx = extractRequestData(expressReq);
     expect(ctx.headers).toEqual({ 'x-custom': 'value', cookie: 'a=1' });
     expect(ctx.cookies).toEqual({ a: '1', b: '2' });
     expect(ctx.query).toEqual({ page: '1', sort: 'asc' });
   });
 
   it('handles Express-like request with minimal fields', () => {
-    const ctx = extractRequestContext({});
-    expect(ctx.headers).toBeUndefined();
-    expect(ctx.cookies).toBeUndefined();
-    expect(ctx.query).toBeUndefined();
+    const ctx = extractRequestData({});
+    expect(ctx.headers).toEqual({});
+    expect(ctx.cookies).toEqual({});
+    expect(ctx.query).toEqual({});
+  });
+
+  it('reads scParams from SC_PARAMS_HEADER on Fetch Request', () => {
+    const req = new Request('https://example.com/about', {
+      headers: {
+        [SC_PARAMS_HEADER]: JSON.stringify({
+          siteName: 'website',
+          variantId: 'variant-a',
+          componentVariantIds: [],
+        }),
+      },
+    });
+
+    expect(extractRequestData(req).scParams).toEqual({
+      siteName: 'website',
+      variantId: 'variant-a',
+      componentVariantIds: [],
+    });
+  });
+
+  it('reads scParams from SC_PARAMS_HEADER on Express-like request', () => {
+    const ctx = extractRequestData({
+      headers: {
+        [SC_PARAMS_HEADER]: JSON.stringify({ siteName: 'from-header', variantId: DEFAULT_VARIANT }),
+      },
+    });
+    expect(ctx.scParams).toEqual({ siteName: 'from-header', variantId: DEFAULT_VARIANT });
+  });
+
+  it('prefers req.scParams over SC_PARAMS_HEADER when both are present', () => {
+    const ctx = extractRequestData({
+      scParams: { siteName: 'direct', variantId: DEFAULT_VARIANT },
+      headers: {
+        [SC_PARAMS_HEADER]: JSON.stringify({ siteName: 'from-header', variantId: DEFAULT_VARIANT }),
+      },
+    });
+    expect(ctx.scParams?.siteName).toBe('direct');
+  });
+
+  it('parses editing preview data from EDITING_PARAMS_HEADER', () => {
+    const preview = { itemId: 'item-1', language: 'en', version: 1, mode: 'preview' };
+    const ctx = extractRequestData({
+      headers: { [EDITING_PARAMS_HEADER]: JSON.stringify(preview) },
+    });
+    expect(ctx.scPreviewData).toEqual(preview);
+  });
+
+  it('derives hostname from host header on Express-like requests', () => {
+    expect(extractRequestData({ headers: { host: 'fallback.example.com:8080' } }).hostname).toBe(
+      'fallback.example.com'
+    );
   });
 });

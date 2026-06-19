@@ -14,5 +14,4 @@
 - [lib](lib/README.md)
 - [loaders](loaders/README.md)
 - [server/cache](server/cache/README.md)
-- [server/express](server/express/README.md)
 - [server/middleware](server/middleware/README.md)
