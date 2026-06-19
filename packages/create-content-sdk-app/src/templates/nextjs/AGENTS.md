@@ -75,7 +75,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ### More (component map, editing, env)
 
-- **Component map:** `.sitecore/component-map.ts` — register every Sitecore component here; Is auto-generated from `src/components/`. Do not edit manually unless needed. Used by `getComponentData` and by the editing API routes.
+- **Component map:** `.sitecore/component-map.ts` — Lists every Sitecore component the layout can render, the map is auto-generated from `src/components/`. Do not edit manually unless needed. Used by `getComponentData` and by the editing API routes.
 - **Editing/preview:** Use `context.preview` and `context.previewData` in the catch-all page; when in preview, use `client.getPreview(context.previewData)` or `client.getDesignLibraryData(context.previewData)`. Editing API routes: `src/pages/api/editing/config.ts`, `render.ts`, `feaas/render.ts`.
 - **Env:** All config via environment variables in `sitecore.config.ts`. Document vars in `.env.example` (or `.env.remote.example` / `.env.container.example`); never commit `.env` or `.env.local`.
 
@@ -123,7 +123,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ### Component map and layout
 
-- **Component map:** `.sitecore/component-map.ts` — register all Sitecore components. Is auto-generated from `src/components/`. Do not edit manually unless needed.
+- **Component map:** `.sitecore/component-map.ts` — Lists every Sitecore component the layout can render, the map is auto-generated from `src/components/`. Do not edit manually unless needed.
 - **Layout:** `Layout.tsx` renders page layout and placeholders; `Providers` wrap component props and page context; `Bootstrap` handles site name and preview mode.
 - **404 / 500 / _error:** When the catch-all returns `notFound: true` (no page), Next.js renders `404.tsx`. When the server returns 500, Next.js renders `500.tsx`. Both can optionally fetch and show Sitecore error content via `client.getErrorPage(ErrorPage.NotFound)` / `ErrorPage.InternalServerError` in their getStaticProps (when `scConfig.generateStaticPaths`); otherwise they show a simple fallback. `_error.tsx` is Next.js's error boundary for uncaught errors (client and server); it does not fetch from Sitecore.
 

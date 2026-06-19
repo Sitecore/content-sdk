@@ -84,7 +84,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ### More (component maps, editing, env)
 
-- **Component maps:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client) — register every Sitecore component here; are auto-generated from `src/components/`. Do not edit manually unless needed.
+- **Component maps:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client) — Lists every Sitecore component the layout can render, the maps are auto-generated from `src/components/`. Do not edit manually unless needed.
 - **Editing/preview:** Use `draftMode()` in Server Components; when enabled, use `client.getPreview(searchParams)` or `client.getDesignLibraryData(searchParams)`. Editing API routes live under `src/app/api/editing/`.
 - **Env:** All config via environment variables in `sitecore.config.ts`. Document vars in `.env.example` (or `.env.remote.example` / `.env.container.example`); never commit `.env` or `.env.local`.
 
@@ -146,7 +146,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ### Component maps and layout
 
-- **Server/client components:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client) — register all Sitecore components. Are auto-generated from `src/components/`. Do not edit manually unless needed.
+- **Server/client components:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client) — Lists every Sitecore component the layout can render, the maps are auto-generated from `src/components/`. Do not edit manually unless needed.
 - **Layout:** `Layout.tsx` renders page layout and placeholders; `Providers` wrap page and component context; `Bootstrap` in `[site]/layout.tsx` receives `siteName={site}` and preview state.
 
 ---

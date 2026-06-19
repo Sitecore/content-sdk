@@ -26,9 +26,9 @@ Scaffold new Sitecore components so they integrate with the layout and editing p
 - Prefer `sitecore-tools:generate-map` to regenerate the component maps instead of hand-editing them. Only manually register the component if the generator cannot handle the change.
 - Define a props interface with the component's fields (e.g. `fields: { title: Field; ... }`) and any params. Use types from `@sitecore-content-sdk/react` or the app's types.
 - Export a single default component; one component per file unless the app pattern differs.
-- **Server vs Client:** Use Server Components by default. Add `'use client'` only for interactivity (hooks, event handlers). Register Server components in `.sitecore/component-map.ts`; Client components in `.sitecore/component-map.client.ts`.
+- **Server vs Client:** Use Server Components by default. Add `'use client'` only for interactivity (hooks, event handlers). The generator places Server components in `.sitecore/component-map.ts` and Client components in `.sitecore/component-map.client.ts`.
 - Do not fetch Sitecore data inside the component (no `getSitecorePage` / `client.getPage` calls). Component data comes from the cached page read at the page level.
-- After creating the component file, register it in the correct component map (see content-sdk-component-registration). Do not leave the component unregistered.
+- Ensure the component appears in the correct map after regeneration (or update the map manually only if the generator cannot handle the case) before considering the task complete (see content-sdk-component-registration).
 
 ## Stop Conditions
 
