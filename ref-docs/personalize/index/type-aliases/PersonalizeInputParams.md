@@ -8,6 +8,6 @@
 
 > **PersonalizeInputParams** = `NestedObject`
 
-Defined in: [personalize/src/personalization/personalizer.ts:254](https://github.com/Sitecore/content-sdk/blob/ecba2755393ad3977546ad3dd9af18483599661e/packages/personalize/src/personalization/personalizer.ts#L254)
+Defined in: [personalize/src/personalization/personalizer.ts:254](https://github.com/Sitecore/content-sdk/blob/0374b3fd6f2473d61063fcd03064bbac0a2c6281/packages/personalize/src/personalization/personalizer.ts#L254)
 
 A type that describes the params field

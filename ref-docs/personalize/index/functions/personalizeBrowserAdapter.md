@@ -8,7 +8,7 @@
 
 > **personalizeBrowserAdapter**(): [`PersonalizeBrowserAdapter`](../interfaces/PersonalizeBrowserAdapter.md)
 
-Defined in: [personalize/src/initialization/browser-adapter.ts:32](https://github.com/Sitecore/content-sdk/blob/ecba2755393ad3977546ad3dd9af18483599661e/packages/personalize/src/initialization/browser-adapter.ts#L32)
+Defined in: [personalize/src/initialization/browser-adapter.ts:32](https://github.com/Sitecore/content-sdk/blob/0374b3fd6f2473d61063fcd03064bbac0a2c6281/packages/personalize/src/initialization/browser-adapter.ts#L32)
 
 Creates a browser-based personalize adapter that reads and writes the profile ID
 using cookies and can resolve a new profile ID from the Edge proxy when needed.

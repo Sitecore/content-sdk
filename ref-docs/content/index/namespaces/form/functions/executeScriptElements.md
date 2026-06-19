@@ -8,7 +8,7 @@
 
 > **executeScriptElements**(`rootElement`): `void`
 
-Defined in: [content/src/form/form.ts:55](https://github.com/Sitecore/content-sdk/blob/ecba2755393ad3977546ad3dd9af18483599661e/packages/content/src/form/form.ts#L55)
+Defined in: [content/src/form/form.ts:55](https://github.com/Sitecore/content-sdk/blob/0374b3fd6f2473d61063fcd03064bbac0a2c6281/packages/content/src/form/form.ts#L55)
 
 **`Internal`**
 
