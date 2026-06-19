@@ -109,5 +109,4 @@ export interface DesignLibraryRenderPreviewData {
   version?: string;
   dataSourceId?: string;
   generation?: DesignLibraryVariantGeneration;
-  previewTime?: string;
 }
