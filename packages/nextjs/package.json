@@ -60,7 +60,6 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "5.2.0",
-    "glob": "^13.0.0",
     "jsdom": "^26.1.0",
     "mocha": "^11.2.2",
     "next": "^16.2.0",

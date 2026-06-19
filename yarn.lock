@@ -3735,7 +3735,6 @@ __metadata:
     eslint-plugin-prettier: "npm:^4.0.0"
     eslint-plugin-react: "npm:7.37.5"
     eslint-plugin-react-hooks: "npm:5.2.0"
-    glob: "npm:^13.0.0"
     jsdom: "npm:^26.1.0"
     mocha: "npm:^11.2.2"
     next: "npm:^16.2.0"
