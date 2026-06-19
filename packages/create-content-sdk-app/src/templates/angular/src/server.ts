@@ -15,11 +15,14 @@ import {
   createEditingRenderMiddleware,
   createLoaderCache,
   createLoaderDataServiceMiddleware,
+  createRobotsMiddleware,
   createMultisiteMiddleware,
   createPersonalizeMiddleware,
   createSitecoreRevalidateMiddleware,
+  createSitemapMiddleware,
 } from '@sitecore-content-sdk/angular';
 import { LOADERS } from './content-sdk/loaders';
+import { getClient } from './content-sdk/client/sitecore-client';
 import { componentMap } from '.sitecore/component-map';
 import sites from '.sitecore/sites.json';
 import config from '../sitecore.config';
@@ -60,6 +63,23 @@ app.use(
   createSitecoreRevalidateMiddleware({
     cache: loaderCache,
     defaultLocale: config.defaultLanguage,
+    sites,
+  })
+);
+
+/** Sitemap at `/sitemap.xml` and numbered `/sitemap-{id}.xml`. */
+const sitemapMiddleware = createSitemapMiddleware({
+  client: getClient(),
+  sites,
+});
+app.use('/sitemap.xml', sitemapMiddleware);
+app.use('/sitemap-:id.xml', sitemapMiddleware);
+
+/** robots.txt at `/robots.txt`. */
+app.use(
+  '/robots.txt',
+  createRobotsMiddleware({
+    client: getClient(),
     sites,
   })
 );
