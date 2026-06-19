@@ -136,15 +136,19 @@ describe('createEditingRenderRouteHandlers', () => {
         getCSPHeader: getCSPHeaderStub,
         resolveServerUrl: resolveServerUrlStub,
         getAllowedQueryParams: getAllowedQueryParamsStub,
-        mapEditingParams: sandbox.stub().callsFake((query: any) => ({
-          itemId: query.sc_itemid,
-          language: query.sc_lang,
-          site: query.sc_site,
-          mode: query.mode,
-          variantId: query.sc_variant,
-          version: query.sc_version,
-          layoutKind: query.sc_layoutKind,
-        })),
+        mapEditingParams: sandbox.stub().callsFake((query: any) => {
+          const isDesignLibrary = Object.values(DesignLibraryMode).includes(query.mode);
+          return {
+            itemId: query.sc_itemid,
+            language: query.sc_lang,
+            site: query.sc_site,
+            mode: query.mode,
+            variantId: query.sc_variant,
+            version: query.sc_version,
+            layoutKind: query.sc_layoutKind,
+            ...(!isDesignLibrary && query.sc_previewTime && { previewTime: query.sc_previewTime }),
+          };
+        }),
         PREVIEW_COOKIES: {
           PREVIEW_DATA: '__next_preview_data',
           PRERENDER_BYPASS: '__prerender_bypass',
@@ -446,6 +450,47 @@ describe('createEditingRenderRouteHandlers', () => {
       const [, , propagatedHeaders] = getEditingRequestHtmlStub.firstCall.args;
       expect(propagatedHeaders).to.deep.include(expectedPropagatedHeaders);
       expect(propagatedHeaders[EDITING_PARAMS_HEADER]).to.be.a('string');
+    });
+
+    it('should include previewTime in editing params when sc_previewTime is present in query params', async () => {
+      req.nextUrl!.searchParams = mockSearchParams({
+        [QUERY_PARAM_EDITING_SECRET]: secret,
+        mode: 'edit',
+        route: '/',
+        sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+        sc_lang: 'en',
+        sc_site: 'website',
+        sc_previewTime: '2024-12-25T10:00:00Z',
+      });
+
+      await handlers.GET(req as NextRequest);
+
+      expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
+
+      // Verify previewTime is included in the EDITING_PARAMS_HEADER JSON, which flows to Edge GraphQL via PreviewProxy
+      const [, , propagatedHeaders] = getEditingRequestHtmlStub.firstCall.args;
+      const editingParams = JSON.parse(propagatedHeaders[EDITING_PARAMS_HEADER]);
+      expect(editingParams).to.have.property('previewTime', '2024-12-25T10:00:00Z');
+    });
+
+    it('should not include previewTime in editing params when sc_previewTime is absent (backward compatibility)', async () => {
+      req.nextUrl!.searchParams = mockSearchParams({
+        [QUERY_PARAM_EDITING_SECRET]: secret,
+        mode: 'edit',
+        route: '/',
+        sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+        sc_lang: 'en',
+        sc_site: 'website',
+      });
+
+      await handlers.GET(req as NextRequest);
+
+      expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
+
+      // Verify previewTime is absent from the EDITING_PARAMS_HEADER JSON
+      const [, , propagatedHeaders] = getEditingRequestHtmlStub.firstCall.args;
+      const editingParams = JSON.parse(propagatedHeaders[EDITING_PARAMS_HEADER]);
+      expect(editingParams).to.not.have.property('previewTime');
     });
 
     it('should pass cookies correctly for internal request', async () => {
@@ -1478,6 +1523,23 @@ describe('createEditingRenderRouteHandlers', () => {
 
       expect(res.status).to.equal(200);
       expect(res.body).to.equal('<div>some html</div>');
+    });
+
+    it('should not include previewTime in editing params for design library requests', async () => {
+      req.nextUrl!.searchParams = mockSearchParams({
+        ...designLibraryQuery,
+        route: '/components',
+        sc_previewTime: '2024-12-25T10:00:00Z',
+      });
+
+      await handlers.GET(req as NextRequest);
+
+      expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
+
+      // previewTime is not supported for Design Library (Design Studio) — only for Sitecore Pages
+      const [, , propagatedHeaders] = getEditingRequestHtmlStub.firstCall.args;
+      const editingParams = JSON.parse(propagatedHeaders[EDITING_PARAMS_HEADER]);
+      expect(editingParams).to.not.have.property('previewTime');
     });
   });
 
