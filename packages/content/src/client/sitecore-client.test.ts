@@ -1374,7 +1374,7 @@ describe('SitecoreClient', () => {
         name: DesignLibraryMode.LowCode,
         isNormal: false,
         isPreview: false,
-        isEditing: false,
+        isEditing: true,
         isDesignLibrary: true,
         designLibrary: {
           isVariantGeneration: false,
