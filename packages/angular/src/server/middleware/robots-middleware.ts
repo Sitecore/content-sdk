@@ -3,6 +3,7 @@ import type { SiteInfo } from '@sitecore-content-sdk/content/site';
 import { SiteResolver } from '@sitecore-content-sdk/content/site';
 import { constants } from '@sitecore-content-sdk/core';
 import { ExpressMiddleware, ExpressRequest, ExpressResponse } from '../models';
+import debug from '../../debug';
 
 const { ERROR_MESSAGES } = constants;
 
@@ -31,14 +32,23 @@ export function createRobotsMiddleware(
       headers['x-forwarded-host'] || String(headers.host ?? '').split(':')[0] || 'localhost';
     const site = siteResolver.getByHost(String(hostName));
 
+    const startTimestamp = Date.now();
+
+    debug.robots('robots middleware start: %o', { hostName, siteName: site.name });
+
     try {
       const robotsContent = await client.getRobots(site.name);
+
+      debug.robots('robots middleware end in %dms', Date.now() - startTimestamp);
+
       if (!robotsContent) {
         res.status(404).send?.('User-agent: *\nDisallow: /');
         return;
       }
       res.status(200).send?.(robotsContent);
-    } catch {
+    } catch (error) {
+      debug.robots('robots middleware error: %o', error);
+
       res.status(500).send?.(`Internal Server Error. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
     }
   };

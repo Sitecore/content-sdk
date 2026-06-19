@@ -3,6 +3,7 @@ import type { SiteInfo } from '@sitecore-content-sdk/content/site';
 import { SiteResolver } from '@sitecore-content-sdk/content/site';
 import { constants } from '@sitecore-content-sdk/core';
 import { ExpressMiddleware, ExpressRequest, ExpressResponse } from '../models';
+import debug from '../../debug';
 
 const { ERROR_MESSAGES } = constants;
 
@@ -38,11 +39,20 @@ export function createSitemapMiddleware(
       siteName: site.name,
     };
 
+    const startTimestamp = Date.now();
+
+    debug.sitemap('sitemap middleware start: %o', sitemapOptions);
+
     try {
       const xmlContent = await client.getSiteMap(sitemapOptions);
+
+      debug.sitemap('sitemap middleware end in %dms', Date.now() - startTimestamp);
+
       res.setHeader?.('Content-Type', 'text/xml;charset=utf-8');
       res.send?.(xmlContent);
     } catch (error) {
+      debug.sitemap('sitemap middleware error: %o', error);
+
       if (error instanceof Error && error.message === 'REDIRECT_404') {
         res.redirect?.('/404');
       } else {
