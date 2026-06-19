@@ -205,7 +205,6 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
         ...getHeadersForPropagation(headers),
         [EDITING_PARAMS_HEADER]: JSON.stringify(previewData),
       };
-
       const html = await getEditingRequestHtml(
         requestUrl,
         propagatedQsParams,
