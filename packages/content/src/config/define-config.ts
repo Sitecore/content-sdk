@@ -18,7 +18,7 @@ const { ERROR_MESSAGES } = constants;
  */
 export const buildFallbackConfig = (env: { [key: string]: string | undefined }): SitecoreConfig => {
   const rawEdgeUrl =
-    env.CSDK_PUBLIC_SITECORE_EDGE_HOSTNAME || env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV];
+    env.CSDK_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME || env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV];
   return {
     api: {
       edge: {
