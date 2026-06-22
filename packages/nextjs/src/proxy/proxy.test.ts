@@ -756,6 +756,107 @@ describe('defineProxy', () => {
     expect(result).to.equal(forbidden);
   });
 
+  it('should short-circuit the chain once a proxy returns a redirect response', async () => {
+    const redirectResponse = {
+      status: 302,
+      redirected: false,
+      url: 'http://localhost:3000/map-redirect-test-page',
+    } as unknown as NextResponse;
+
+    const redirectsProxy: ProxyHandler = {
+      handle: sinon.stub().resolves(redirectResponse),
+    };
+    const downstreamProxy: ProxyHandler = {
+      handle: sinon.stub().resolves({
+        status: 307,
+        redirected: true,
+        url: 'http://localhost:3000/en/redirect-test',
+      } as unknown as NextResponse),
+    };
+
+    const req = {} as NextRequest;
+    const res = { status: 200 } as unknown as NextResponse;
+
+    const result = await defineProxy(redirectsProxy, downstreamProxy).exec(req, res);
+
+    expect(redirectsProxy.handle).to.have.been.calledOnce;
+    expect(downstreamProxy.handle).to.not.have.been.called;
+    expect(result).to.equal(redirectResponse);
+  });
+
+  it('should continue the chain when a proxy returns a rewrite response', async () => {
+    const rewriteResponse = {
+      status: 200,
+      redirected: false,
+      headers: new Headers(),
+    } as unknown as NextResponse;
+
+    const rewriteProxy: ProxyHandler = {
+      handle: sinon.stub().resolves(rewriteResponse),
+    };
+    const downstreamProxy: ProxyHandler = {
+      handle: sinon.stub().callsFake((_req, res) => {
+        res.headers.set('downstream', 'true');
+        return Promise.resolve(res);
+      }),
+    };
+
+    const req = {} as NextRequest;
+    const res = {
+      status: 200,
+      redirected: false,
+      headers: new Headers(),
+    } as unknown as NextResponse;
+
+    const result = await defineProxy(rewriteProxy, downstreamProxy).exec(req, res);
+
+    expect(rewriteProxy.handle).to.have.been.calledOnce;
+    expect(downstreamProxy.handle).to.have.been.calledOnce;
+    expect(result.headers.get('downstream')).to.equal('true');
+  });
+
+  it('should preserve an upstream redirect when a custom redirect proxy is chained last (JSS-8736)', async () => {
+    const sitecoreRedirect = {
+      status: 302,
+      redirected: false,
+      url: 'http://localhost:3000/map-redirect-test-page',
+    } as unknown as NextResponse;
+
+    const redirectsProxy: ProxyHandler = {
+      handle: sinon.stub().resolves(sitecoreRedirect),
+    };
+    const personalizeProxy: ProxyHandler = {
+      handle: sinon.stub().callsFake((_req, res) => Promise.resolve(res)),
+    };
+    const languageRedirectProxy: ProxyHandler = {
+      handle: sinon.stub().resolves({
+        status: 307,
+        redirected: true,
+        url: 'http://localhost:3000/en/redirect-test',
+      } as unknown as NextResponse),
+    };
+
+    const req = {
+      url: 'http://localhost:3000/redirect-test',
+      nextUrl: {
+        locale: 'default',
+        pathname: '/redirect-test',
+        search: '',
+      },
+    } as unknown as NextRequest;
+
+    const result = await defineProxy(
+      redirectsProxy,
+      personalizeProxy,
+      languageRedirectProxy
+    ).exec(req);
+
+    expect(redirectsProxy.handle).to.have.been.calledOnce;
+    expect(personalizeProxy.handle).to.not.have.been.called;
+    expect(languageRedirectProxy.handle).to.not.have.been.called;
+    expect(result).to.equal(sitecoreRedirect);
+  });
+
   it('should pass context to proxies when generateContext is true', async () => {
     const proxiesContext: ProxiesContext = new Map();
     const successfulExecution: { marker: string } & SuccessfulProxyExecution = {
