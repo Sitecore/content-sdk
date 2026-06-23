@@ -8,7 +8,7 @@
 
 > **isDesignLibraryMode**(`mode`): `mode is DesignLibraryMode`
 
-Defined in: [content/src/editing/design-library.ts:259](https://github.com/Sitecore/content-sdk/blob/e22cfe2c02eee8993a7e1f934742492c457a5316/packages/content/src/editing/design-library.ts#L259)
+Defined in: [content/src/editing/design-library.ts:259](https://github.com/Sitecore/content-sdk/blob/0e7dce683a0be4b8942bf4dc050856cd3c28ba07/packages/content/src/editing/design-library.ts#L259)
 
 **`Internal`**
 

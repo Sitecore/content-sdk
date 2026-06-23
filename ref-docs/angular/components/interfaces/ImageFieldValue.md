@@ -6,7 +6,7 @@
 
 # Interface: ImageFieldValue
 
-Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:12](https://github.com/Sitecore/content-sdk/blob/e22cfe2c02eee8993a7e1f934742492c457a5316/packages/angular/src/components/field-directives/sc-image.directive.ts#L12)
+Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:12](https://github.com/Sitecore/content-sdk/blob/0e7dce683a0be4b8942bf4dc050856cd3c28ba07/packages/angular/src/components/field-directives/sc-image.directive.ts#L12)
 
 Image field value shape.
 
@@ -20,7 +20,7 @@ Image field value shape.
 
 > `optional` **alt?**: `string`
 
-Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:15](https://github.com/Sitecore/content-sdk/blob/e22cfe2c02eee8993a7e1f934742492c457a5316/packages/angular/src/components/field-directives/sc-image.directive.ts#L15)
+Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:15](https://github.com/Sitecore/content-sdk/blob/0e7dce683a0be4b8942bf4dc050856cd3c28ba07/packages/angular/src/components/field-directives/sc-image.directive.ts#L15)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [packages/angular/src/components/field-directives/sc-image.directive
 
 > `optional` **height?**: `number`
 
-Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:17](https://github.com/Sitecore/content-sdk/blob/e22cfe2c02eee8993a7e1f934742492c457a5316/packages/angular/src/components/field-directives/sc-image.directive.ts#L17)
+Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:17](https://github.com/Sitecore/content-sdk/blob/0e7dce683a0be4b8942bf4dc050856cd3c28ba07/packages/angular/src/components/field-directives/sc-image.directive.ts#L17)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [packages/angular/src/components/field-directives/sc-image.directive
 
 > `optional` **src?**: `string`
 
-Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:14](https://github.com/Sitecore/content-sdk/blob/e22cfe2c02eee8993a7e1f934742492c457a5316/packages/angular/src/components/field-directives/sc-image.directive.ts#L14)
+Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:14](https://github.com/Sitecore/content-sdk/blob/0e7dce683a0be4b8942bf4dc050856cd3c28ba07/packages/angular/src/components/field-directives/sc-image.directive.ts#L14)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [packages/angular/src/components/field-directives/sc-image.directive
 
 > `optional` **srcSet?**: `object`[]
 
-Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:18](https://github.com/Sitecore/content-sdk/blob/e22cfe2c02eee8993a7e1f934742492c457a5316/packages/angular/src/components/field-directives/sc-image.directive.ts#L18)
+Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:18](https://github.com/Sitecore/content-sdk/blob/0e7dce683a0be4b8942bf4dc050856cd3c28ba07/packages/angular/src/components/field-directives/sc-image.directive.ts#L18)
 
 #### Index Signature
 
@@ -56,4 +56,4 @@ Defined in: [packages/angular/src/components/field-directives/sc-image.directive
 
 > `optional` **width?**: `number`
 
-Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:16](https://github.com/Sitecore/content-sdk/blob/e22cfe2c02eee8993a7e1f934742492c457a5316/packages/angular/src/components/field-directives/sc-image.directive.ts#L16)
+Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:16](https://github.com/Sitecore/content-sdk/blob/0e7dce683a0be4b8942bf4dc050856cd3c28ba07/packages/angular/src/components/field-directives/sc-image.directive.ts#L16)

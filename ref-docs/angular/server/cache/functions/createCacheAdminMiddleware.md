@@ -8,7 +8,7 @@
 
 > **createCacheAdminMiddleware**(`options`): [`ExpressMiddleware`](../../middleware/type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/cache/demo/cache-admin-middleware.ts:40](https://github.com/Sitecore/content-sdk/blob/e22cfe2c02eee8993a7e1f934742492c457a5316/packages/angular/src/server/cache/demo/cache-admin-middleware.ts#L40)
+Defined in: [packages/angular/src/server/cache/demo/cache-admin-middleware.ts:40](https://github.com/Sitecore/content-sdk/blob/0e7dce683a0be4b8942bf4dc050856cd3c28ba07/packages/angular/src/server/cache/demo/cache-admin-middleware.ts#L40)
 
 Lightweight admin surface for the loader cache:
   GET    <endpoint>/entries        → list entries (metadata only, no values)
