@@ -52,13 +52,16 @@ export class ServerLoaderRunner {
       return { kind: 'error', status: 500, message: `No loader registered for id "${loaderId}"` };
     }
 
-    const defaultScParams = {
-      siteName: this.config.defaultSite,
-    };
+    const resolvedScParams = csdkRequestData?.scParams ?? {};
+
+    // Multisite middleware never resolves site for editing requests (it skips `/api/*`
+    // entirely), so the scPreviewData is the only source of the site name here.
+    const siteName =
+      resolvedScParams.siteName || csdkRequestData?.scPreviewData?.site || this.config.defaultSite;
 
     const scParams = {
-      ...defaultScParams,
-      ...(csdkRequestData?.scParams || {}),
+      ...resolvedScParams,
+      siteName,
     };
 
     // ctx carries everything the loader and cache key need; only loaderId travels
