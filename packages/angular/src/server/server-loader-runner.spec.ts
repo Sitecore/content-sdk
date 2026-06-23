@@ -9,6 +9,7 @@ import {
   makeLoaderContext,
   mockScParams,
 } from '../testing/loader-spec-helpers';
+import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 
 describe('ServerLoaderRunner', () => {
   const mockConfig = mockAngularSitecoreConfig();
@@ -56,6 +57,74 @@ describe('ServerLoaderRunner', () => {
       csdkRequestData: undefined,
     });
     expect(result).toEqual({ kind: 'data', data: { title: 'Page' } });
+  });
+
+  it('should use scPreviewData.site as siteName for editing requests (multisite middleware skips /api/*)', async () => {
+    const provider = new ServerLoaderRunner({ page: pageLoader }, mockConfig);
+    await provider.resolve({
+      loaderId: 'page',
+      url: '/about',
+      routeParams: {},
+      query: {},
+      csdkRequestData: {
+        scPreviewData: {
+          site: 'demo',
+          itemId: 'item-1',
+          language: 'en',
+          mode: LayoutServicePageState.Edit,
+          variantIds: ['_default'],
+        },
+      },
+    });
+
+    expect(pageLoader).toHaveBeenCalledWith(
+      expect.objectContaining({
+        scParams: { siteName: 'demo' },
+      })
+    );
+  });
+
+  it('should fall back to defaultSite when scParams.siteName is an empty string', async () => {
+    const provider = new ServerLoaderRunner({ page: pageLoader }, demoConfig);
+    await provider.resolve({
+      loaderId: 'page',
+      url: '/about',
+      routeParams: {},
+      query: {},
+      csdkRequestData: { scParams: { siteName: '' } },
+    });
+
+    expect(pageLoader).toHaveBeenCalledWith(
+      expect.objectContaining({
+        scParams: { siteName: 'demo' },
+      })
+    );
+  });
+
+  it('should fall back to scPreviewData.site when scParams.siteName is an empty string', async () => {
+    const provider = new ServerLoaderRunner({ page: pageLoader }, mockConfig);
+    await provider.resolve({
+      loaderId: 'page',
+      url: '/about',
+      routeParams: {},
+      query: {},
+      csdkRequestData: {
+        scParams: { siteName: '' },
+        scPreviewData: {
+          site: 'demo',
+          itemId: 'item-1',
+          language: 'en',
+          mode: LayoutServicePageState.Edit,
+          variantIds: ['_default'],
+        },
+      },
+    });
+
+    expect(pageLoader).toHaveBeenCalledWith(
+      expect.objectContaining({
+        scParams: { siteName: 'demo' },
+      })
+    );
   });
 
   it('should return cached data without invoking loader', async () => {
