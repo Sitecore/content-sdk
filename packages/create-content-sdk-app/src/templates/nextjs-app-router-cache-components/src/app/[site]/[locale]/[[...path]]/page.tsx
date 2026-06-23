@@ -66,10 +66,14 @@ export default async function Page({ params, searchParams }: PageProps) {
 // pages for SSG ("paths", as tokenized array).
 export const generateStaticParams = async () => {
   if (process.env.NODE_ENV !== 'development' && scConfig.generateStaticPaths) {
-    return await client.getAppRouterStaticParams(
-      sites.map((site: SiteInfo) => site.name),
-      routing.locales.slice()
-    );
+    try {
+      return await client.getAppRouterStaticParams(
+        sites.map((site: SiteInfo) => site.name),
+        routing.locales.slice()
+      );
+    } catch {
+      // Edge may be unavailable at build time (e.g. editing host or fresh environment).
+    }
   }
   // Next.js 16 requires at least one result
   // Return a default param for the root page

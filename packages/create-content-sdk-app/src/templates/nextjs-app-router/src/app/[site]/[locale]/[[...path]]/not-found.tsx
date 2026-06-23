@@ -9,10 +9,15 @@ import { NextIntlClientProvider } from 'next-intl';
 export default async function NotFound() {
   const { site, locale } = getCachedPageParams();
 
-  const page = await client.getErrorPage(ErrorPage.NotFound, {
-    site: site || scConfig.defaultSite,
-    locale: locale || scConfig.defaultLanguage,
-  });
+  let page;
+  try {
+    page = await client.getErrorPage(ErrorPage.NotFound, {
+      site: site || scConfig.defaultSite,
+      locale: locale || scConfig.defaultLanguage,
+    });
+  } catch {
+    page = null;
+  }
 
   if (page) {
     return (
