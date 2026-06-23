@@ -164,10 +164,6 @@ const sampleDoc: Document = {
   elements: { 'root-el': { type: 'Box', props: {}, children: [] } },
 };
 
-// =============================================================================
-// Tests
-// =============================================================================
-
 describe('<StudioComponentWrapper />', () => {
   const renderInProvider = (ui: React.ReactNode, atoms = textBoxConfig) =>
     render(wrapInProvider(ui, atoms));
@@ -1000,6 +996,38 @@ describe('<StudioComponentWrapper />', () => {
       });
 
       expect(getByTestId('text-el').textContent).to.equal('b');
+    });
+
+    it('shallowly merges fields on re-render, preserving keys absent from the new prop', async () => {
+      const doc: Document = {
+        name: 'fields-merge',
+        root: 'r',
+        elements: {
+          r: {
+            type: 'Text',
+            props: { content: { $state: '/fields/b' } },
+            children: [],
+          },
+        },
+      };
+      const { getByTestId, rerender } = render(
+        wrapInProvider(
+          <StudioComponentWrapper document={doc} fields={{ a: 'v1', b: 'keep-me' } as any} />,
+          textBoxConfig
+        )
+      );
+      expect(getByTestId('text-el').textContent).to.equal('keep-me');
+
+      await act(async () => {
+        rerender(
+          wrapInProvider(
+            <StudioComponentWrapper document={doc} fields={{ a: 'v2' } as any} />,
+            textBoxConfig
+          )
+        );
+      });
+
+      expect(getByTestId('text-el').textContent).to.equal('keep-me');
     });
   });
 });

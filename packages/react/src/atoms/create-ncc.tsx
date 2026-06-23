@@ -44,7 +44,12 @@ export function createNCC(doc: Document, registryResult: DefineRegistryResult): 
     );
 
     useEffect(() => {
-      store.update({ fields, params });
+      const snapshot = store.getSnapshot();
+
+      store.update({
+        fields: { ...(snapshot.fields as object), ...fields },
+        params: { ...(snapshot.params as object), ...params },
+      });
     }, [fields, params, store]);
 
     const [resolvedHandlers] = useState(() =>
