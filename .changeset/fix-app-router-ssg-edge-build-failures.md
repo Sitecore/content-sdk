@@ -2,4 +2,4 @@
 'create-content-sdk-app': patch
 ---
 
-Handle Sitecore Edge failures during app-router SSG build when prerendering default routes (e.g. editing hosts with `GENERATE_STATIC_PATHS=false`).
+Skip app-router build-time Edge fetches when `generateStaticPaths` is false (editing hosts) and handle Edge failures when full SSG is enabled.

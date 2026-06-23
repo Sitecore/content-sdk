@@ -69,18 +69,10 @@ export const generateStaticParams = async () => {
         routing.locales.slice()
       );
     } catch {
-      // Edge may be unavailable at build time (e.g. editing host or fresh environment).
+      // Edge may be unavailable at build time (e.g. fresh environment).
     }
   }
-  // Next.js 16 requires at least one result
-  // Return a default param for the root page
-  return [
-    {
-      site: sites[0]?.name || 'default',
-      locale: routing.defaultLocale || scConfig.defaultLanguage,
-      path: [],
-    },
-  ];
+  return [];
 };
 <% } -%>
 // Metadata fields for the page.
