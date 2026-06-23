@@ -12,11 +12,16 @@ export default async function NotFound() {
   const resolvedSite = site || scConfig.defaultSite;
   const resolvedLocale = locale || scConfig.defaultLanguage;
 
-  const page = await getSitecoreErrorPage({
+  let page;
+  try {
+    page = await getSitecoreErrorPage({
     site: resolvedSite,
     locale: resolvedLocale,
     code: ErrorPage.NotFound,
   });
+  } catch {
+    page = null;
+  }
 
   // Set site and locale for next-intl dictionary resolution in src/i18n/request.ts.
   // Called after the cached error-page fetch so the locale is resolved from route params, not a Dynamic API.

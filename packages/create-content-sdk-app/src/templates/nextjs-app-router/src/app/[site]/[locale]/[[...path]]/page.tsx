@@ -37,7 +37,11 @@ export default async function Page({ params }: PageProps) {
       page = await client.getPreview(previewData);
     }
   } else {
-    page = await client.getPage(path ?? [], { site, locale });
+    try {
+      page = await client.getPage(path ?? [], { site, locale });
+    } catch {
+      notFound();
+    }
   }
 
   // If the page is not found, return a 404
@@ -59,29 +63,29 @@ export default async function Page({ params }: PageProps) {
 // pages for SSG ("paths", as tokenized array).
 export const generateStaticParams = async () => {
   if (process.env.NODE_ENV !== 'development' && scConfig.generateStaticPaths) {
-    return await client.getAppRouterStaticParams(
-      sites.map((site: SiteInfo) => site.name),
-      routing.locales.slice()
-    );
+    try {
+      return await client.getAppRouterStaticParams(
+        sites.map((site: SiteInfo) => site.name),
+        routing.locales.slice()
+      );
+    } catch {
+      // Edge may be unavailable at build time (e.g. fresh environment).
+    }
   }
-  // Next.js 16 requires at least one result
-  // Return a default param for the root page
-  return [
-    {
-      site: sites[0]?.name || 'default',
-      locale: routing.defaultLocale || scConfig.defaultLanguage,
-      path: [],
-    },
-  ];
+  return [];
 };
 <% } -%>
 // Metadata fields for the page.
 export const generateMetadata = async ({ params }: PageProps) => {
   const { path, site, locale } = await params;
 
-  // The same call as for rendering the page. Should be cached by default react behavior
-  const page = await client.getPage(path ?? [], { site, locale });
-  return {
-    title: (page?.layout.sitecore.route?.fields as RouteFields)?.Title?.value?.toString() || 'Page',
-  };
+  try {
+    // The same call as for rendering the page. Should be cached by default react behavior
+    const page = await client.getPage(path ?? [], { site, locale });
+    return {
+      title: (page?.layout.sitecore.route?.fields as RouteFields)?.Title?.value?.toString() || 'Page',
+    };
+  } catch {
+    return { title: 'Page' };
+  }
 };
