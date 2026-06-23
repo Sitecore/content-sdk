@@ -172,10 +172,6 @@ describe('<StudioComponentWrapper />', () => {
   const renderInProvider = (ui: React.ReactNode, atoms = textBoxConfig) =>
     render(wrapInProvider(ui, atoms));
 
-  // ---------------------------------------------------------------------------
-  // Guard conditions
-  // ---------------------------------------------------------------------------
-
   describe('guard conditions', () => {
     it('renders null when document is null', () => {
       const { container } = renderInProvider(<StudioComponentWrapper document={null} />);
@@ -199,10 +195,6 @@ describe('<StudioComponentWrapper />', () => {
       expect(container.innerHTML).to.not.equal('');
     });
   });
-
-  // ---------------------------------------------------------------------------
-  // Prop resolution
-  // ---------------------------------------------------------------------------
 
   describe('prop resolution', () => {
     describe('$state', () => {
@@ -293,10 +285,6 @@ describe('<StudioComponentWrapper />', () => {
       });
     });
   });
-
-  // ---------------------------------------------------------------------------
-  // Actions
-  // ---------------------------------------------------------------------------
 
   describe('actions', () => {
     const renderInteractive = (ui: React.ReactNode) => renderInProvider(ui, interactiveConfig);
@@ -711,10 +699,6 @@ describe('<StudioComponentWrapper />', () => {
     });
   });
 
-  // ---------------------------------------------------------------------------
-  // List rendering with repeat
-  // ---------------------------------------------------------------------------
-
   describe('list rendering with repeat', () => {
     const renderList = (doc: Document) =>
       renderInProvider(<StudioComponentWrapper document={doc} />, interactiveConfig);
@@ -801,10 +785,6 @@ describe('<StudioComponentWrapper />', () => {
       expect(texts).to.deep.equal(['Buy groceries', 'Go running']);
     });
   });
-
-  // ---------------------------------------------------------------------------
-  // $bindState — two-way binding
-  // ---------------------------------------------------------------------------
 
   describe('$bindState — two-way binding', () => {
     it('reflects the initial state value in the bound prop', () => {
@@ -895,5 +875,131 @@ describe('<StudioComponentWrapper />', () => {
       expect((getByTestId('checkbox-el') as HTMLInputElement).checked).to.be.true;
     });
   });
-});
 
+  describe('fields and params props', () => {
+    it('makes fields accessible in the document via $state', () => {
+      const doc: Document = {
+        name: 'fields-state',
+        root: 'r',
+        elements: {
+          r: {
+            type: 'Text',
+            props: { content: { $state: '/fields/heading/value' } },
+            children: [],
+          },
+        },
+      };
+      const { getByTestId } = renderInProvider(
+        <StudioComponentWrapper
+          document={doc}
+          fields={{ heading: { value: 'Sitecore Heading' } } as any}
+        />
+      );
+      expect(getByTestId('text-el').textContent).to.equal('Sitecore Heading');
+    });
+
+    it('makes params accessible in the document via $state', () => {
+      const doc: Document = {
+        name: 'params-state',
+        root: 'r',
+        elements: {
+          r: {
+            type: 'Text',
+            props: { content: { $state: '/params/styles' } },
+            children: [],
+          },
+        },
+      };
+      const { getByTestId } = renderInProvider(
+        <StudioComponentWrapper document={doc} params={{ styles: 'primary' }} />
+      );
+      expect(getByTestId('text-el').textContent).to.equal('primary');
+    });
+
+    it('fields prop takes precedence over doc.state fields key', () => {
+      const doc: Document = {
+        name: 'fields-override',
+        root: 'r',
+        elements: {
+          r: {
+            type: 'Text',
+            props: { content: { $state: '/fields/heading/value' } },
+            children: [],
+          },
+        },
+        state: { fields: { heading: { value: 'from state' } } },
+      };
+      const { getByTestId } = renderInProvider(
+        <StudioComponentWrapper
+          document={doc}
+          fields={{ heading: { value: 'from prop' } } as any}
+        />
+      );
+      expect(getByTestId('text-el').textContent).to.equal('from prop');
+    });
+
+    it('updates the store when fields prop changes on re-render', async () => {
+      const doc: Document = {
+        name: 'fields-rerender',
+        root: 'r',
+        elements: {
+          r: {
+            type: 'Text',
+            props: { content: { $state: '/fields/heading/value' } },
+            children: [],
+          },
+        },
+      };
+      const { getByTestId, rerender } = render(
+        wrapInProvider(
+          <StudioComponentWrapper document={doc} fields={{ heading: { value: 'v1' } } as any} />,
+          textBoxConfig
+        )
+      );
+      expect(getByTestId('text-el').textContent).to.equal('v1');
+
+      await act(async () => {
+        rerender(
+          wrapInProvider(
+            <StudioComponentWrapper document={doc} fields={{ heading: { value: 'v2' } } as any} />,
+            textBoxConfig
+          )
+        );
+      });
+
+      expect(getByTestId('text-el').textContent).to.equal('v2');
+    });
+
+    it('updates the store when params prop changes on re-render', async () => {
+      const doc: Document = {
+        name: 'params-rerender',
+        root: 'r',
+        elements: {
+          r: {
+            type: 'Text',
+            props: { content: { $state: '/params/key' } },
+            children: [],
+          },
+        },
+      };
+      const { getByTestId, rerender } = render(
+        wrapInProvider(
+          <StudioComponentWrapper document={doc} params={{ key: 'a' }} />,
+          textBoxConfig
+        )
+      );
+      expect(getByTestId('text-el').textContent).to.equal('a');
+
+      await act(async () => {
+        rerender(
+          wrapInProvider(
+            <StudioComponentWrapper document={doc} params={{ key: 'b' }} />,
+            textBoxConfig
+          )
+        );
+      });
+
+      expect(getByTestId('text-el').textContent).to.equal('b');
+    });
+  });
+});

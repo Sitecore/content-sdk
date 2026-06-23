@@ -417,6 +417,27 @@ describe('placeholder-utils', () => {
       expect(result?.componentType).to.equal('server');
     });
 
+    it('should forward fields and params from ChildComponentProps to StudioComponentServerWrapper', () => {
+      const rendering: ComponentRendering = {
+        componentName: 'Sample',
+        uid: 'test-uid',
+        params: { ComponentRef: 'api/media/v2/delivery/abc/component/def/default' },
+      };
+      const fields = { heading: { value: 'Test Heading' } };
+      const params = { styles: 'primary', size: 'large' };
+
+      const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const element = (result.component as React.FC<any>)({
+        fields: fields as any,
+        params,
+        rendering,
+      });
+
+      expect((element as any).props.fields).to.equal(fields);
+      expect((element as any).props.params).to.equal(params);
+    });
+
     it('should return null when componentMap is not provided', () => {
       const rendering: ComponentRendering = {
         componentName: 'TestComponent',

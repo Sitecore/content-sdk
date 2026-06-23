@@ -6,7 +6,7 @@ import { expect, use as chaiUse } from 'chai';
 import sinonChai from 'sinon-chai';
 
 chaiUse(sinonChai);
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { DesignLibraryLowCodeComponent, __mockDependencies } from './DesignLibraryLowCodeComponent';
 import { SitecoreProvider } from '../SitecoreProvider';
 import {
@@ -129,6 +129,27 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     renderComponent(atomsConfig);
     await waitFor(() => {
       expect(addDocumentUpdateHandlerStub).to.have.been.called;
+    });
+  });
+
+  it('sets current document and increments render key when document update is received', async () => {
+    renderComponent(atomsConfig);
+
+    await waitFor(() => {
+      expect(addDocumentUpdateHandlerStub).to.have.been.called;
+    });
+
+    const callback = addDocumentUpdateHandlerStub.firstCall.args[0];
+    const updatedDocument = { name: 'test-doc' } as any;
+
+    act(() => {
+      callback(updatedDocument);
+    });
+
+    await waitFor(() => {
+      expect(postToDesignLibrarySpy).to.have.been.calledWith(
+        getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'low-code-component')
+      );
     });
   });
 });

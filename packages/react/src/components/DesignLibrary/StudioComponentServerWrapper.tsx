@@ -4,6 +4,7 @@ import { NativeDataFetcher, NativeDataFetcherResponse } from '@sitecore-content-
 import { debug } from '@sitecore-content-sdk/content';
 import { Document } from '@sitecore-content-sdk/content/atoms';
 import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
+import type { ChildComponentProps } from '../Placeholder/models';
 
 /**
  * Props accepted by the RSC `StudioComponentServerWrapper`.
@@ -18,6 +19,14 @@ export type StudioComponentServerWrapperProps = {
    * Field name to match against the last segment of the `componentRef` paths. If no match is found, the `default` path will be used.
    */
   fieldNames?: string;
+  /**
+   * Sitecore component fields passed from the rendering context.
+   */
+  fields: ChildComponentProps['fields'];
+  /**
+   * Sitecore rendering parameters passed from the rendering context.
+   */
+  params: ChildComponentProps['params'];
 };
 
 /**
@@ -37,7 +46,7 @@ export const StudioComponentServerWrapper = async (props: StudioComponentServerW
   const document = await fetchDocument(path);
   if (!document) return null;
 
-  return <StudioComponentWrapper document={document} />;
+  return <StudioComponentWrapper document={document} fields={props.fields} params={props.params} />;
 };
 
 /**
