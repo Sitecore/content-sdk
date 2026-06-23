@@ -222,4 +222,47 @@ describe('StudioComponentServerWrapper', () => {
       expect(result.props.document).to.deep.equal(sampleDocument);
     });
   });
+
+  describe('fields and params forwarding', () => {
+    it('forwards fields to StudioComponentWrapper', async () => {
+      const fields = { heading: { value: 'Hello' } };
+
+      const result = await StudioComponentServerWrapper({
+        componentRef: 'components/hero/default',
+        fields: fields as any,
+        params: {},
+      });
+
+      expect(result).to.not.be.null;
+      expect(result.props.fields).to.equal(fields);
+    });
+
+    it('forwards params to StudioComponentWrapper', async () => {
+      const params = { styles: 'primary', size: 'large' };
+
+      const result = await StudioComponentServerWrapper({
+        componentRef: 'components/hero/default',
+        fields: {} as any,
+        params,
+      });
+
+      expect(result).to.not.be.null;
+      expect(result.props.params).to.equal(params);
+    });
+
+    it('forwards both fields and params together', async () => {
+      const fields = { title: { value: 'My Title' } };
+      const params = { styles: 'dark' };
+
+      const result = await StudioComponentServerWrapper({
+        componentRef: 'components/hero/default',
+        fields: fields as any,
+        params,
+      });
+
+      expect(result).to.not.be.null;
+      expect(result.props.fields).to.equal(fields);
+      expect(result.props.params).to.equal(params);
+    });
+  });
 });

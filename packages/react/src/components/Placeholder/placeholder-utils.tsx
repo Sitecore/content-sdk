@@ -176,6 +176,8 @@ export const getComponentForRendering = (
         <StudioComponentServerWrapper
           componentRef={props.rendering.params!.ComponentRef}
           fieldNames={props.rendering.params?.fieldNames}
+          fields={props.fields}
+          params={props.params}
         />
       ),
       isEmpty: false,

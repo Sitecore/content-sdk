@@ -3,6 +3,7 @@ import React, { JSX, useMemo } from 'react';
 import { createNCC } from '../../atoms';
 import { useSitecore } from '../SitecoreProvider';
 import { Document } from '@sitecore-content-sdk/content/atoms';
+import type { ChildComponentProps } from '../Placeholder/models';
 
 /**
  * Props accepted by the `StudioComponentWrapper` used to render a Studio component layout on the client. Expects a pre-fetched `document` containing the component layout data.
@@ -10,6 +11,8 @@ import { Document } from '@sitecore-content-sdk/content/atoms';
  */
 type StudioComponentWrapperProps = {
   document: Document | null;
+  fields?: ChildComponentProps['fields'];
+  params?: ChildComponentProps['params'];
 };
 
 /**
@@ -22,16 +25,20 @@ type StudioComponentWrapperProps = {
  * @param {StudioComponentWrapperProps} props component props
  * @internal
  */
-export const StudioComponentWrapper = (props: StudioComponentWrapperProps): JSX.Element | null => {
+export const StudioComponentWrapper = ({
+  document,
+  fields,
+  params,
+}: StudioComponentWrapperProps): JSX.Element | null => {
   const { atomsConfig } = useSitecore();
 
   const NCComponent = useMemo(() => {
-    if (!props.document || !atomsConfig) return null;
+    if (!document || !atomsConfig) return null;
 
-    return createNCC(props.document, atomsConfig.registry);
-  }, [props.document, atomsConfig]);
+    return createNCC(document, atomsConfig.registry);
+  }, [document, atomsConfig]);
 
   if (!NCComponent) return null;
 
-  return <NCComponent />;
+  return <NCComponent fields={fields} params={params} />;
 };
