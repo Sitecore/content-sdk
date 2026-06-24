@@ -72,13 +72,9 @@ describe('generateSites', () => {
     const expectedPath = path.resolve('.sitecore/sites.json');
     expect(ensurePathExistsStub.calledWith(expectedPath)).to.be.true;
     expect(
-      fsWriteFileSyncStub.calledWith(
-        expectedPath,
-        JSON.stringify([defaultSite, defaultSite], null, 2),
-        {
-          encoding: 'utf8',
-        }
-      )
+      fsWriteFileSyncStub.calledWith(expectedPath, JSON.stringify([defaultSite], null, 2), {
+        encoding: 'utf8',
+      })
     ).to.be.true;
   });
 
@@ -96,7 +92,7 @@ describe('generateSites', () => {
     expect(
       fsWriteFileSyncStub.calledWith(
         expectedPath,
-        JSON.stringify([defaultSite, defaultSite], null, 2),
+        JSON.stringify([defaultSite], null, 2),
         {
           encoding: 'utf8',
         }
@@ -122,6 +118,17 @@ describe('generateSites', () => {
       fsWriteFileSyncStub.calledWith(expectedPath, JSON.stringify(fetchedSites, null, 2), {
         encoding: 'utf8',
       })
+    ).to.be.true;
+  });
+
+  it('should write an empty sites file when Edge returns no sites', async () => {
+    sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').resolves([]);
+
+    await runCommand({});
+
+    const expectedPath = path.resolve('.sitecore/sites.json');
+    expect(
+      fsWriteFileSyncStub.calledWith(expectedPath, JSON.stringify([], null, 2), { encoding: 'utf8' })
     ).to.be.true;
   });
 
