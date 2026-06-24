@@ -65,6 +65,14 @@ export const generateSites = ({ destinationPath }: GenerateSitesConfig = {}): ((
       }
     }
 
+    // Add default site to the list
+    const defaultSite: SiteInfo = {
+      name: scConfig.defaultSite,
+      hostName: '*',
+      language: scConfig.defaultLanguage,
+    };
+    sites.unshift(defaultSite);
+
     ensurePathExists(sitesFilePath);
 
     fs.writeFileSync(sitesFilePath, JSON.stringify(sites, null, 2), { encoding: 'utf8' });
