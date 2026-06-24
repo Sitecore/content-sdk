@@ -165,6 +165,9 @@ describe('createEditingRenderMiddleware', () => {
     );
     const editingReq = req as ExpressEditingRequest;
     expect(editingReq.url).toBe('/en/about');
+    // @angular/ssr builds its Request from `originalUrl ?? url`, so this must be rewritten too
+    // or the SSR engine renders the pre-rewrite /api/editing/render URL.
+    expect(editingReq.originalUrl).toBe('/en/about');
     expect(editingReq.method).toBe('GET');
     expect(editingReq.scEditing).toEqual({
       site: 'demo',

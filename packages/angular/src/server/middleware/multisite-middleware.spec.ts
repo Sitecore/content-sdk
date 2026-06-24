@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { SITE_KEY, type SiteInfo } from '@sitecore-content-sdk/content/site';
-import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
+import { EDITING_PARAMS_HEADER } from '../../editing/constants';
 import { LOADER_DATA_ENDPOINT } from '../constants';
 import { SC_PARAMS_HEADER } from '../../loaders/constants';
 import {
@@ -103,10 +103,13 @@ describe('createMultisiteMiddleware', () => {
     expect(req.scParams?.siteName).toBe('site-b');
   });
 
-  it('skips editing/preview requests', () => {
+  it('skips editing render requests via the editing params header', () => {
     const req = createReq({
       query: { [SITE_KEY]: 'site-b' },
-      cookies: { [PREVIEW_KEY]: 'true' },
+      headers: {
+        host: 'a.example.com',
+        [EDITING_PARAMS_HEADER]: JSON.stringify({ site: 'site-b' }),
+      },
     });
     createMultisiteMiddleware(createOptions())(req, createRes(), next);
     expect(req.scParams).toBeUndefined();

@@ -188,7 +188,7 @@ export function createPersonalizeMiddleware(
       // the request; getMiddlewareRequest normalizes both into path/query/data.
       const { path, query, data } = getMiddlewareRequest(req);
 
-      if (isEditingPreview(data.cookies)) {
+      if (isEditingPreview(data.headers)) {
         debug.personalize('skipped (editing/preview mode)');
         return next();
       }
