@@ -2,4 +2,4 @@
 'create-content-sdk-app': patch
 ---
 
-Return empty app-router static params when `generateStaticPaths` is false.
+Return empty app-router static params when `generateStaticPaths` is false (standard app-router template).

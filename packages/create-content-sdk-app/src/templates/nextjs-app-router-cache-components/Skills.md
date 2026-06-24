@@ -32,7 +32,7 @@ Using SDK field components: `<Text>`, `<RichText>`, `<Image>`, `<Link>`, with pr
 
 ### content-sdk-graphql-data-fetching
 
-Page and dictionary fetching via the cache helpers in `src/lib/cache/`. Use `getSitecorePage({ site, locale, path })`, `getSitecoreDictionary({ site, locale })`, `getSitecoreErrorPage({ site, locale, code })` for cached reads with Sitecore tags. Use `client.getPreview` / `client.getDesignLibraryData` directly for preview, and `client.getAppRouterStaticParams` in `generateStaticParams` when `scConfig.generateStaticPaths` is true (otherwise return `[]`).
+Page and dictionary fetching via the cache helpers in `src/lib/cache/`. Use `getSitecorePage({ site, locale, path })`, `getSitecoreDictionary({ site, locale })`, `getSitecoreErrorPage({ site, locale, code })` for cached reads with Sitecore tags. Use `client.getPreview` / `client.getDesignLibraryData` directly for preview, and `client.getAppRouterStaticParams` for SSG.
 
 ### content-sdk-route-configuration
 
