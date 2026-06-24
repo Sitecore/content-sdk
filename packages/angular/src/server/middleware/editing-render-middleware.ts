@@ -279,11 +279,6 @@ export function createEditingRenderMiddleware(
       editingReq.headers[EDITING_PARAMS_HEADER] = JSON.stringify(previewData);
 
       editingReq.url = encodedRoute;
-      // @angular/ssr builds its Request from `originalUrl ?? url`; Express sets `originalUrl`
-      // once at the start of the middleware chain and never updates it on its own, so it must be
-      // rewritten too or the SSR engine renders the original /api/editing/render URL instead of
-      // the target route.
-      editingReq.originalUrl = encodedRoute;
       // Preserve method as GET for downstream Angular SSR.
       editingReq.method = 'GET';
 

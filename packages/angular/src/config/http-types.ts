@@ -6,13 +6,6 @@ export interface ExpressRequest {
   method: string;
   path: string;
   url: string;
-  /**
-   * Express sets this once, to the incoming URL, and never updates it when middleware reassigns
-   * `url`. `@angular/ssr` builds its Request from `originalUrl ?? url`, so middleware that rewrites
-   * `url` (e.g. the editing render middleware) must also rewrite this or the SSR engine renders
-   * the pre-rewrite URL.
-   */
-  originalUrl?: string;
   body: unknown;
   referrer?: string;
   query: Record<string, string | string[] | undefined>;
