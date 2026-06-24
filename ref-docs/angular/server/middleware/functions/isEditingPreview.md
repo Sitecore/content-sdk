@@ -6,19 +6,20 @@
 
 # Function: isEditingPreview()
 
-> **isEditingPreview**(`cookies?`): `boolean`
+> **isEditingPreview**(`headers?`): `boolean`
 
-Defined in: [packages/angular/src/server/utils.ts:44](https://github.com/Sitecore/content-sdk/blob/0e7dce683a0be4b8942bf4dc050856cd3c28ba07/packages/angular/src/server/utils.ts#L44)
+Defined in: [packages/angular/src/server/utils.ts:45](https://github.com/Sitecore/content-sdk/blob/c6c8dd642e4121eb4a68d30358fc75b7fc6cf641/packages/angular/src/server/utils.ts#L45)
 
 **`Internal`**
 
-Check if a request is in editing/preview mode.
+Check if a request is in editing/preview mode, via the editing params header set by
+[createEditingRenderMiddleware](createEditingRenderMiddleware.md) on the render request.
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `cookies` | `Record`\<`string`, `string` \| `undefined`\> | Request cookies |
+| `headers` | `Record`\<`string`, `string` \| `string`[] \| `undefined`\> | Request headers |
 
 ## Returns
 
