@@ -49,7 +49,7 @@ src/
 
 ### @sitecore-content-sdk
 
-- Use `SitecoreClient` directly for preview, editing, and `getAppRouterStaticParams`
+- Use `SitecoreClient` directly for preview, editing, and `getAppRouterStaticParams` (in `generateStaticParams` only when `scConfig.generateStaticPaths` is true; otherwise return `[]`)
 - Use the cache helpers in `src/lib/cache/` (e.g. `getSitecorePage`, `getSitecoreDictionary`, `getSitecoreErrorPage`) for cached reads — these wrap the client under `'use cache'` and attach Sitecore tags
 - Implement proper error handling with try/catch blocks
 - Handle content preview vs. published content scenarios — preview must remain **dynamic** (do not wrap preview in `'use cache'`)

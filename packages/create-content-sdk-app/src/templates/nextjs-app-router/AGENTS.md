@@ -117,7 +117,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 ### Data fetching and preview
 
 - **Page data:** In the page (or a Server Component), use `client.getPage(path ?? [], { site, locale })`. For preview, use `draftMode()`; if `draft.isEnabled`, use `client.getPreview(editingParams)` or `client.getDesignLibraryData(editingParams)` from `searchParams`; otherwise use `getPage` with `site` and `locale`.
-- **SSG:** `generateStaticParams` — use `client.getAppRouterStaticParams(sites, routing.locales)` (sites from `.sitecore/sites.json`). Return at least one default param when not generating full paths (e.g. dev or when `generateStaticPaths` is off).
+- **SSG:** In `generateStaticParams`, call `client.getAppRouterStaticParams(sites, routing.locales)` (sites from `.sitecore/sites.json`) only when `process.env.NODE_ENV !== 'development'` and `scConfig.generateStaticPaths` is true. Otherwise return `[]` (local dev, editing hosts, or `GENERATE_STATIC_PATHS=false`). Do not synthesize a fallback param (e.g. `{ site: 'default', locale, path: [] }`).
 - **Metadata:** `generateMetadata` in the same segment can call `client.getPage(path ?? [], { site, locale })` and derive `title` (e.g. from route fields). Next.js will cache as appropriate.
 
 ### Server vs Client components

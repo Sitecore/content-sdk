@@ -1,6 +1,6 @@
 ---
 name: content-sdk-graphql-data-fetching
-description: Fetches page and dictionary data via the cache helpers in src/lib/cache (Cache Components + Sitecore tags). Use getSitecorePage, getSitecoreDictionary, getSitecoreErrorPage for cached reads; use client.getPreview / client.getDesignLibraryData directly for preview; use client.getAppRouterStaticParams for SSG. Use when fetching page or dictionary content.
+description: Fetches page and dictionary data via the cache helpers in src/lib/cache (Cache Components + Sitecore tags). Use getSitecorePage, getSitecoreDictionary, getSitecoreErrorPage for cached reads; use client.getPreview / client.getDesignLibraryData directly for preview; use client.getAppRouterStaticParams in generateStaticParams when generateStaticPaths is enabled. Use when fetching page or dictionary content.
 ---
 
 # Content SDK GraphQL Data Fetching (App Router + Cache Components)
@@ -20,7 +20,7 @@ This template ships **tag-aware cache helpers** under `src/lib/cache/`. All non-
   - Dictionary: `getSitecoreDictionary({ site, locale })`
   - 404 / 500 Sitecore error content (Server context): `getSitecoreErrorPage({ site, locale, code })`
 - For preview / draft, import the SDK client from `src/lib/sitecore-client.ts` and call `client.getPreview(editingParams)` or `client.getDesignLibraryData(editingParams)` directly. Do **not** wrap these in `'use cache'`.
-- For SSG params, call `client.getAppRouterStaticParams(siteNames, locales)` in `generateStaticParams`.
+- For SSG params in `generateStaticParams`, call `client.getAppRouterStaticParams(siteNames, locales)` only when `process.env.NODE_ENV !== 'development'` and `scConfig.generateStaticPaths` is true; otherwise return `[]`.
 
 ## Hard Rules
 
@@ -28,7 +28,7 @@ This template ships **tag-aware cache helpers** under `src/lib/cache/`. All non-
 - **Preview reads:** Use `client.getPreview(editingParams)` / `client.getDesignLibraryData(editingParams)` **directly**. Preview must stay dynamic; do not put it under `'use cache'`.
 - **Catch-all page (`src/app/[site]/[locale]/[[...path]]/page.tsx`):** `await params` → check `draftMode().isEnabled`; if enabled, use the client directly with `searchParams`; otherwise call `getSitecorePage({ site, locale, path: path ?? [] })`.
 - **`generateMetadata`** in the same segment should also call `getSitecorePage` so it shares the cache entry with the page render.
-- **SSG:** `generateStaticParams` — use `client.getAppRouterStaticParams(siteNames, locales)` where site names come from `.sitecore/sites.json` (e.g. `sites.map((s) => s.name)`), locales from `src/i18n/routing.ts` (e.g. `routing.locales.slice()`). Return at least one default param when not generating full paths.
+- **SSG:** In `generateStaticParams`, call `client.getAppRouterStaticParams(siteNames, locales)` where site names come from `.sitecore/sites.json` (e.g. `sites.map((s) => s.name)`) and locales from `src/i18n/routing.ts` (e.g. `routing.locales.slice()`), but only when `process.env.NODE_ENV !== 'development'` and `scConfig.generateStaticPaths` is true. Otherwise return `[]`. Do not synthesize a fallback param (e.g. `{ site: 'default', locale, path: [] }`).
 - **Single SitecoreClient instance** in `src/lib/sitecore-client.ts`. The cache helpers import this client; do not create a second client.
 - Pass **site** and **locale** from route params (e.g. `await params` in the page). Do not rely on global state for site/locale in server code.
 - Config for the client comes from `sitecore.config.ts`; use environment variables, never hardcode secrets.

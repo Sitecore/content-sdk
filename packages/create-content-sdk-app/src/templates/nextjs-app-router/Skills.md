@@ -32,7 +32,7 @@ Using SDK field components: `<Text>`, `<RichText>`, `<Image>`, `<Link>`, with pr
 
 ### content-sdk-graphql-data-fetching
 
-Page and dictionary fetching via the single Sitecore client in `src/lib/sitecore-client.ts`. Use `getPage(path ?? [], { site, locale })`, `getDictionary`, `getAppRouterStaticParams` for SSG. For preview use `draftMode()` and `getPreview`/`getDesignLibraryData` from searchParams.
+Page and dictionary fetching via the single Sitecore client in `src/lib/sitecore-client.ts`. Use `getPage(path ?? [], { site, locale })`, `getDictionary`, and `client.getAppRouterStaticParams` in `generateStaticParams` when `scConfig.generateStaticPaths` is true (otherwise return `[]`). For preview use `draftMode()` and `getPreview`/`getDesignLibraryData` from searchParams.
 
 ### content-sdk-route-configuration
 

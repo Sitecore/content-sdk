@@ -44,7 +44,7 @@ src/
 ## Library Usage
 
 ### @sitecore-content-sdk
-- Use `SitecoreClient` for content fetching (directly for preview/editing/static-params, indirectly via cache helpers for cached reads)
+- Use `SitecoreClient` for content fetching (directly for preview/editing and `getAppRouterStaticParams` in `generateStaticParams` when `scConfig.generateStaticPaths` is true; otherwise return `[]`; indirectly via cache helpers for cached reads)
 - Implement proper error handling with try/catch blocks
 - Handle content preview vs. published content scenarios — preview must remain **dynamic** (do not wrap preview in `'use cache'`)
 
