@@ -1,5 +1,5 @@
 import { constants } from '@sitecore-content-sdk/core';
-import { validateEvent } from '../../editing/design-library';
+import { validateEvent, ComponentUpdateEventArgs } from '../../editing/design-library';
 import { Document, SerializedCatalog } from '../types';
 import {
   DESIGN_LIBRARY_ATOMS_CATALOG_EVENT_NAME,
@@ -90,3 +90,26 @@ export const addDocumentUpdateHandler = (callback: (updatedRootComponent: Docume
   return unsubscribe;
 };
 
+/**
+ * Adds a handler for component props (fields and params) updates from the design library.
+ * Listens for 'component:update' events and invokes the callback with the updated fields and params.
+ * @param {Function} callback - Called when a 'component:update' message is received.
+ * @returns A function to unsubscribe from the event.
+ * @internal
+ */
+export const addComponentPropsUpdateHandler = (
+  callback: (
+    fields: NonNullable<ComponentUpdateEventArgs['details']>['fields'],
+    params: NonNullable<ComponentUpdateEventArgs['details']>['params']
+  ) => void
+) => {
+  const handler = (e: MessageEvent) => {
+    if (!validateEvent(e, 'component:update')) return;
+    const details = (e.data as ComponentUpdateEventArgs).details;
+    callback(details?.fields, details?.params);
+  };
+
+  window.addEventListener('message', handler);
+
+  return () => window.removeEventListener('message', handler);
+};

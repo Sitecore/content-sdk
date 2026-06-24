@@ -27,6 +27,7 @@ describe('<DesignLibraryLowCodeComponent />', () => {
   let postToDesignLibrarySpy: sinon.SinonStub;
   let sendAtomsErrorEventSpy: sinon.SinonStub;
   let addDocumentUpdateHandlerStub: sinon.SinonStub;
+  let addComponentPropsUpdateHandlerStub: sinon.SinonStub;
 
   const mockRegistry: DefineRegistryResult = {
     registry: {} as any,
@@ -72,10 +73,12 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     postToDesignLibrarySpy = sandbox.stub();
     sendAtomsErrorEventSpy = sandbox.stub();
     addDocumentUpdateHandlerStub = sandbox.stub().returns(() => {});
+    addComponentPropsUpdateHandlerStub = sandbox.stub().returns(() => {});
     __mockDependencies({
       postToDesignLibrary: postToDesignLibrarySpy,
       sendAtomsErrorEvent: sendAtomsErrorEventSpy,
       addDocumentUpdateHandler: addDocumentUpdateHandlerStub,
+      addComponentPropsUpdateHandler: addComponentPropsUpdateHandlerStub,
     });
   });
 
@@ -151,5 +154,30 @@ describe('<DesignLibraryLowCodeComponent />', () => {
         getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'low-code-component')
       );
     });
+  });
+
+  it('subscribes to component props update handler', async () => {
+    renderComponent(atomsConfig);
+    await waitFor(() => {
+      expect(addComponentPropsUpdateHandlerStub).to.have.been.called;
+    });
+  });
+
+  it('updates fields and params state when component:update is received', async () => {
+    const { rerender } = renderComponent(atomsConfig);
+
+    await waitFor(() => {
+      expect(addComponentPropsUpdateHandlerStub).to.have.been.called;
+    });
+
+    const callback = addComponentPropsUpdateHandlerStub.firstCall.args[0];
+    const fields = { heading: { value: 'New Heading' } } as any;
+    const params = { styles: 'dark' };
+
+    act(() => {
+      callback(fields, params);
+    });
+
+    expect(rerender).to.not.throw;
   });
 });
