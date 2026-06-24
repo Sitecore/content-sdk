@@ -7,9 +7,15 @@ import type { Document } from '@sitecore-content-sdk/content/atoms';
 import * as editing from '@sitecore-content-sdk/content/editing';
 import * as atoms from '@sitecore-content-sdk/content/atoms';
 import { DesignLibraryErrorBoundary } from '../..';
+import type { ChildComponentProps } from '../Placeholder/models';
 
 let { postToDesignLibrary, getDesignLibraryStatusEvent, DesignLibraryStatus } = editing;
-let { addDocumentUpdateHandler, getDesignLibraryAtomsCatalogEvent, sendAtomsErrorEvent } = atoms;
+let {
+  addDocumentUpdateHandler,
+  getDesignLibraryAtomsCatalogEvent,
+  sendAtomsErrorEvent,
+  addComponentPropsUpdateHandler,
+} = atoms;
 
 export const __mockDependencies = (mocks: any) => {
   if (mocks.postToDesignLibrary) {
@@ -20,6 +26,9 @@ export const __mockDependencies = (mocks: any) => {
   }
   if (mocks.addDocumentUpdateHandler) {
     addDocumentUpdateHandler = mocks.addDocumentUpdateHandler;
+  }
+  if (mocks.addComponentPropsUpdateHandler) {
+    addComponentPropsUpdateHandler = mocks.addComponentPropsUpdateHandler;
   }
 };
 
@@ -36,11 +45,21 @@ export const DesignLibraryLowCodeComponent = () => {
   const { atomsConfig } = useSitecore();
   const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const [renderKey, setRenderKey] = useState(0);
+  const [fields, setFields] = useState<ChildComponentProps['fields'] | undefined>();
+  const [params, setParams] = useState<ChildComponentProps['params'] | undefined>();
 
   useEffect(() => {
     postToDesignLibrary(
       getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'low-code-component')
     );
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = addComponentPropsUpdateHandler((updatedFields, updatedParams) => {
+      setFields(updatedFields as ChildComponentProps['fields']);
+      setParams(updatedParams);
+    });
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -73,7 +92,7 @@ export const DesignLibraryLowCodeComponent = () => {
       uid={currentDocument?.name ?? 'design-library-low-code-component'}
       renderKey={renderKey}
     >
-      <StudioComponentWrapper document={currentDocument} />
+      <StudioComponentWrapper document={currentDocument} fields={fields} params={params} />
     </DesignLibraryErrorBoundary>
   );
 };
