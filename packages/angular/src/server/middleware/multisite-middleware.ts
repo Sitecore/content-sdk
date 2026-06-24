@@ -65,7 +65,7 @@ export function createMultisiteMiddleware(options: MultisiteMiddlewareOptions): 
         return next();
       }
 
-      if (isEditingPreview(data.cookies)) {
+      if (isEditingPreview(data.headers)) {
         debug.multisite('skipped (editing/preview mode)');
         return next();
       }

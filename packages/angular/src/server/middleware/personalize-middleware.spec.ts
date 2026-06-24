@@ -6,7 +6,7 @@ import {
   PersonalizeService,
 } from '@sitecore-content-sdk/content/personalize';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
-import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
+import { EDITING_PARAMS_HEADER } from '../../editing/constants';
 import { LOADER_DATA_ENDPOINT } from '../constants';
 import { SC_PARAMS_HEADER } from '../../loaders/constants';
 import type { CsdkExpressRequest, ExpressMiddleware, ExpressResponse } from './models';
@@ -226,9 +226,11 @@ describe('createPersonalizeMiddleware', () => {
     expect(next).toHaveBeenCalledTimes(3);
   });
 
-  it('should skip in preview mode', async () => {
+  it('should skip editing render requests via the editing params header', async () => {
     await createPersonalizeMiddleware(createOptions())(
-      createReq({ cookies: { [PREVIEW_KEY]: 'true' } }),
+      createReq({
+        headers: { host: 'example.com', [EDITING_PARAMS_HEADER]: JSON.stringify({ site: 'a' }) },
+      }),
       createRes(),
       next
     );

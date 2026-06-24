@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
+import { EDITING_PARAMS_HEADER } from '../editing/constants';
 import { matches, isEditingPreview } from './utils';
 
 describe('matches', () => {
@@ -39,15 +39,15 @@ describe('matches', () => {
 });
 
 describe('isEditingPreview', () => {
-  it('returns false when no cookies are provided', () => {
+  it('returns false when no headers are provided', () => {
     expect(isEditingPreview()).toBe(false);
   });
 
-  it('returns false when the preview cookie is absent', () => {
+  it('returns false when the editing params header is absent', () => {
     expect(isEditingPreview({ other: '1' })).toBe(false);
   });
 
-  it('returns true when the preview cookie is present', () => {
-    expect(isEditingPreview({ [PREVIEW_KEY]: 'true' })).toBe(true);
+  it('returns true when the editing params header is present', () => {
+    expect(isEditingPreview({ [EDITING_PARAMS_HEADER]: '{"site":"a"}' })).toBe(true);
   });
 });

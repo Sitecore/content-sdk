@@ -1,4 +1,4 @@
-import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
+import { EDITING_PARAMS_HEADER } from '../editing/constants';
 
 /**
  * Reads `process.env` when running under Node; otherwise returns an empty object.
@@ -36,11 +36,14 @@ export function matches(path: string, pattern: PathPattern): boolean {
 }
 
 /**
- * Check if a request is in editing/preview mode.
- * @param {Record<string, string | undefined>} cookies - Request cookies
+ * Check if a request is in editing/preview mode, via the editing params header set by
+ * {@link createEditingRenderMiddleware} on the render request.
+ * @param {Record<string, string | string[] | undefined>} headers - Request headers
  * @returns {boolean} True if editing or preview mode is active
  * @internal
  */
-export function isEditingPreview(cookies: Record<string, string | undefined> = {}): boolean {
-  return !!cookies[PREVIEW_KEY];
+export function isEditingPreview(
+  headers: Record<string, string | string[] | undefined> = {}
+): boolean {
+  return !!headers[EDITING_PARAMS_HEADER];
 }
