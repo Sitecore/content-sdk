@@ -918,6 +918,92 @@ describe('RedirectsProxy', () => {
         expect(redirectUrl).to.include('/example');
         expect(redirectUrl).to.not.include('$1');
       });
+
+      it('should skip malformed regex and still apply a valid redirect rule', async () => {
+        const consoleWarnStub = sandbox.stub(console, 'warn');
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: 'en',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse();
+        const redirectRes = createResponse({
+          redirected: true,
+          status: 301,
+          url: 'http://localhost:3000/new-page',
+        });
+        nextRedirectStub.returns(redirectRes);
+
+        const { proxy } = createProxy({
+          redirectMaps: [
+            {
+              pattern: '^/broken(',
+              target: '/should-not-match',
+              redirectType: REDIRECT_TYPE_301,
+            },
+            {
+              pattern: '/old-page',
+              target: '/new-page',
+              redirectType: REDIRECT_TYPE_301,
+            },
+          ],
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(consoleWarnStub).to.have.been.calledOnce;
+        expect(consoleWarnStub.firstCall.args[0]).to.include('Invalid redirect regex');
+        expect(nextRedirectStub).to.have.been.calledOnce;
+        const redirectUrl = nextRedirectStub.getCall(0).args[0] as string;
+        expect(redirectUrl).to.include('/new-page');
+        expect(finalRes).to.deep.equal(redirectRes);
+
+        consoleWarnStub.restore();
+      });
+
+      it('should skip malformed regex with capture groups without failing capture substitution', async () => {
+        const consoleWarnStub = sandbox.stub(console, 'warn');
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page/123',
+            locale: 'en',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse();
+        const redirectRes = createResponse({
+          redirected: true,
+          status: 301,
+          url: 'http://localhost:3000/new-page/123',
+        });
+        nextRedirectStub.returns(redirectRes);
+
+        const { proxy } = createProxy({
+          redirectMaps: [
+            {
+              pattern: '^/broken(',
+              target: '/bad',
+              redirectType: REDIRECT_TYPE_301,
+            },
+            {
+              pattern: '/old-page/(\\d+)',
+              target: '/new-page/$1',
+              redirectType: REDIRECT_TYPE_301,
+            },
+          ],
+        });
+
+        await proxy.handle(req, res);
+
+        expect(consoleWarnStub).to.have.been.calledOnce;
+        expect(nextRedirectStub).to.have.been.calledOnce;
+        const redirectUrl = nextRedirectStub.getCall(0).args[0] as string;
+        expect(redirectUrl).to.include('/new-page/123');
+
+        consoleWarnStub.restore();
+      });
     });
 
     it('should replace $siteLang token in target', async () => {

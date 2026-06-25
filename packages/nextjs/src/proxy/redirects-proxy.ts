@@ -23,7 +23,20 @@ import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from '
 const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
 const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
 
-type RedirectResult = RedirectInfo & { matchedQueryString?: string; matchedPath?: string };
+/**
+ * Escape a string for safe use inside a RegExp source (e.g. locale segment).
+ * @param {string} string - The string to escape
+ * @returns {string} The escaped string
+ */
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+type RedirectResult = RedirectInfo & {
+  matchedQueryString?: string;
+  matchedPath?: string;
+  compiledPattern?: RegExp;
+};
 
 /**
  * Information about executed proxy to be stored in the context
@@ -267,9 +280,10 @@ export class RedirectsProxy extends ProxyBase {
       // Apply regex replacements to the target URL if the pattern is a regex
       const sourcePath = existsRedirect.matchedPath || reqUrl.pathname;
       const pathForCaptureMatch = sourcePath.replace(/\/*$/gi, '') || '/';
-      const matched = pathForCaptureMatch.match(
-        this.getRedirectPatternRegex(existsRedirect.pattern)
-      );
+      const redirectRegex =
+        existsRedirect.compiledPattern ??
+        this.safeCompileRedirectPattern(existsRedirect.pattern);
+      const matched = redirectRegex ? pathForCaptureMatch.match(redirectRegex) : null;
       if (matched) {
         existsRedirect.target = existsRedirect.target.replace(
           /\$(\d+)/g,
@@ -400,7 +414,7 @@ export class RedirectsProxy extends ProxyBase {
             const patternParts = patternPath.split('/');
             const maybeLocale = patternParts[1].toLowerCase();
             // case insensitive lookup of locales
-            if (new RegExp(this.locales.join('|'), 'i').test(maybeLocale)) {
+            if (new RegExp(this.locales.map(escapeRegExp).join('|'), 'i').test(maybeLocale)) {
               patternPath = patternPath.replace(`/${patternParts[1]}`, `/${maybeLocale}`);
             }
 
@@ -415,7 +429,10 @@ export class RedirectsProxy extends ProxyBase {
           }
 
           // process regex rules
-          const regex = this.getRedirectPatternRegex(redirect.pattern);
+          const regex = this.safeCompileRedirectPattern(redirect.pattern);
+          if (!regex) {
+            return false;
+          }
           const testRegex = (value: string) => {
             regex.lastIndex = 0;
             return regex.test(value);
@@ -437,6 +454,7 @@ export class RedirectsProxy extends ProxyBase {
           // Save the matched query string (if found) into the redirect object
           redirect.matchedQueryString = matchedQueryString || '';
           redirect.matchedPath = matchedPath || matchedPathWithQuery || '';
+          redirect.compiledPattern = regex;
 
           return (
             !!(matchedPath || matchedQueryString) &&
@@ -459,7 +477,10 @@ export class RedirectsProxy extends ProxyBase {
     locale: string,
     currentPath: string
   ): RedirectResult | undefined {
-    const nonLocalePath = currentPath.replace(new RegExp(`^\/?${locale}\/`, 'i'), '/');
+    const nonLocalePath = currentPath.replace(
+      new RegExp(`^/?${escapeRegExp(locale)}/`, 'i'),
+      '/'
+    );
     return redirects.length
       ? redirects.find((redirect: RedirectResult) => {
           const patternPath = redirect.pattern.replace(/\/*$/g, '').toLowerCase();
@@ -617,6 +638,26 @@ export class RedirectsProxy extends ProxyBase {
   }
 
   /**
+   * Compiles a redirect pattern to RegExp; returns null if Sitecore produced a malformed rule
+   * so one bad entry does not fail the entire redirect chain.
+   * @param {string} pattern redirect pattern from redirect map
+   * @returns {RegExp | null} normalized regex instance, or null when invalid
+   * @private
+   */
+  private safeCompileRedirectPattern(pattern: string): RegExp | null {
+    try {
+      return this.getRedirectPatternRegex(pattern);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.warn(
+        `[RedirectsProxy] Invalid redirect regex; skipping rule. pattern=${pattern} (${message})`
+      );
+      debug.redirects('invalid redirect regex; skipping rule: %s (%s)', pattern, message);
+      return null;
+    }
+  }
+
+  /**
    * Converts a redirect pattern string into a RegExp.
    * Supports both JS literal form (`/pattern/i`) and plain regex source (`^/path$`).
    * @param {string} pattern redirect pattern from redirect map
@@ -645,7 +686,7 @@ export class RedirectsProxy extends ProxyBase {
     if (!urlLocale) {
       return path;
     }
-    const localePrefixRegex = new RegExp(`^/${urlLocale}(?=/|$)`, 'i');
+    const localePrefixRegex = new RegExp(`^/${escapeRegExp(urlLocale)}(?=/|$)`, 'i');
     const strippedPath = path.replace(localePrefixRegex, '') || '/';
     return strippedPath.startsWith('/') ? strippedPath : `/${strippedPath}`;
   }
