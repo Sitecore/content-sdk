@@ -756,6 +756,98 @@ describe('defineProxy', () => {
     expect(result).to.equal(forbidden);
   });
 
+  it('should short-circuit the chain once a proxy sets a location header', async () => {
+    const redirect = {
+      status: 307,
+      headers: new Headers({ location: '/en' }),
+    } as unknown as NextResponse;
+
+    const nextIntlProxy: ProxyHandler = {
+      handle: sinon.stub().resolves(redirect),
+    };
+    const localeProxy: ProxyHandler = {
+      handle: sinon.stub().resolves({ status: 200 } as unknown as NextResponse),
+    };
+    const downstreamProxy: ProxyHandler = {
+      handle: sinon.stub().resolves({ status: 200 } as unknown as NextResponse),
+    };
+
+    const req = {} as NextRequest;
+    const res = { status: 200, headers: new Headers() } as unknown as NextResponse;
+
+    const result = await defineProxy(nextIntlProxy, localeProxy, downstreamProxy).exec(req, res);
+
+    expect(nextIntlProxy.handle).to.have.been.calledOnce;
+    expect(localeProxy.handle).to.not.have.been.called;
+    expect(downstreamProxy.handle).to.not.have.been.called;
+    expect(result).to.equal(redirect);
+    expect(result.headers.get('location')).to.equal('/en');
+  });
+
+  it('should short-circuit the chain once a proxy returns a 3xx response without redirected flag', async () => {
+    const redirect = {
+      status: 302,
+      redirected: false,
+      headers: new Headers({ location: '/target' }),
+    } as unknown as NextResponse;
+
+    const redirectsProxy: ProxyHandler = {
+      handle: sinon.stub().resolves(redirect),
+    };
+    const downstreamProxy: ProxyHandler = {
+      handle: sinon.stub().resolves({ status: 200 } as unknown as NextResponse),
+    };
+
+    const req = {} as NextRequest;
+    const res = { status: 200 } as unknown as NextResponse;
+
+    const result = await defineProxy(redirectsProxy, downstreamProxy).exec(req, res);
+
+    expect(redirectsProxy.handle).to.have.been.calledOnce;
+    expect(downstreamProxy.handle).to.not.have.been.called;
+    expect(result).to.equal(redirect);
+  });
+
+  it('should short-circuit the chain once a proxy sets redirected on the response', async () => {
+    const redirect = {
+      status: 301,
+      redirected: true,
+    } as unknown as NextResponse;
+
+    const redirectsProxy: ProxyHandler = {
+      handle: sinon.stub().resolves(redirect),
+    };
+    const downstreamProxy: ProxyHandler = {
+      handle: sinon.stub().resolves({ status: 200 } as unknown as NextResponse),
+    };
+
+    const req = {} as NextRequest;
+    const res = { status: 200 } as unknown as NextResponse;
+
+    const result = await defineProxy(redirectsProxy, downstreamProxy).exec(req, res);
+
+    expect(downstreamProxy.handle).to.not.have.been.called;
+    expect(result).to.equal(redirect);
+  });
+
+  it('should preserve redirect responses passed as the initial response', async () => {
+    const redirect = {
+      status: 307,
+      headers: new Headers({ location: '/en' }),
+    } as unknown as NextResponse;
+
+    const localeProxy: ProxyHandler = {
+      handle: sinon.stub().resolves({ status: 200 } as unknown as NextResponse),
+    };
+
+    const req = {} as NextRequest;
+
+    const result = await defineProxy(localeProxy).exec(req, redirect);
+
+    expect(localeProxy.handle).to.not.have.been.called;
+    expect(result).to.equal(redirect);
+  });
+
   it('should pass context to proxies when generateContext is true', async () => {
     const proxiesContext: ProxiesContext = new Map();
     const successfulExecution: { marker: string } & SuccessfulProxyExecution = {

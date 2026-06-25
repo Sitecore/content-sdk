@@ -283,6 +283,28 @@ export abstract class ProxyBase extends ProxyHandler {
   }
 }
 
+const HTTP_REDIRECT_STATUS_MIN = 300;
+const HTTP_REDIRECT_STATUS_MAX = 399;
+
+const isRedirectStatus = (status: number) =>
+  status >= HTTP_REDIRECT_STATUS_MIN && status <= HTTP_REDIRECT_STATUS_MAX;
+
+/**
+ * Returns true when the proxy chain should stop:
+ * - 403 (e.g. PreviewProxy access denial)
+ * - redirect via `redirected`, or 3xx status (e.g. RedirectsProxy, next-intl locale negotiation)
+ * @param {NextResponse} res response
+ * @returns {boolean} true when remaining handlers should be skipped
+ */
+function shouldShortCircuitProxyChain(res: NextResponse): boolean {
+  if (res.status === 403) {
+    return true;
+  }
+
+  // Next.js 16 may leave `redirected` false on redirect responses; also check 3xx.
+  return !!res.redirected || isRedirectStatus(res.status);
+}
+
 /**
  * Define a proxy with a list of proxy handlers
  * @param {ProxyHandler[]} proxies List of proxy handlers to execute
@@ -306,9 +328,8 @@ export const defineProxy = (...proxies: ProxyHandler[]) => {
       const proxyResponse = await proxies.reduce(
         (p, proxy) =>
           p.then((res) => {
-            // Short-circuit the remaining proxies once a previous one
-            // denied the request (e.g. PreviewProxy returning 403).
-            if (res.status === 403) return res;
+            // Short-circuit once a handler denied the request (403) or issued a redirect.
+            if (shouldShortCircuitProxyChain(res)) return res;
 
             return proxy.handle(req, res, proxiesContext);
           }),
