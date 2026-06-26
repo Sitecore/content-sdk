@@ -1,6 +1,12 @@
 'use client';
 import React, { type FC, useEffect, useState } from 'react';
-import { Renderer, StateProvider, ActionProvider, VisibilityProvider } from '@json-render/react';
+import {
+  Renderer,
+  StateProvider,
+  ActionProvider,
+  VisibilityProvider,
+  ValidationProvider,
+} from '@json-render/react';
 import type { DefineRegistryResult } from '@json-render/react';
 import { createStateStore } from '@json-render/react';
 import type { StateModel } from '@json-render/core';
@@ -64,7 +70,9 @@ export function createNCC(doc: Document, registryResult: DefineRegistryResult): 
         <StateProvider store={store}>
           <VisibilityProvider>
             <ActionProvider handlers={resolvedHandlers} navigate={atomsConfig?.navigate}>
-              <Renderer spec={doc} registry={registry} />
+              <ValidationProvider>
+                <Renderer spec={doc} registry={registry} />
+              </ValidationProvider>
             </ActionProvider>
           </VisibilityProvider>
         </StateProvider>
