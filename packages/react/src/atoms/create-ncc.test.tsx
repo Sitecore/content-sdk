@@ -55,6 +55,7 @@ describe('create-ncc', () => {
           StateProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
           ActionProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
           VisibilityProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+          ValidationProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
           createStateStore: () => mockStore,
         },
         '../components/SitecoreProvider': {
