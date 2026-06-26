@@ -60,13 +60,15 @@ export function createNCC(doc: Document, registryResult: DefineRegistryResult): 
     );
 
     return (
-      <StateProvider store={store}>
-        <VisibilityProvider>
-          <ActionProvider handlers={resolvedHandlers} navigate={atomsConfig?.navigate}>
-            <Renderer spec={doc} registry={registry} />
-          </ActionProvider>
-        </VisibilityProvider>
-      </StateProvider>
+      <div className={`component ${params?.styles || ''}`} id={params?.RenderingIdentifier || ''}>
+        <StateProvider store={store}>
+          <VisibilityProvider>
+            <ActionProvider handlers={resolvedHandlers} navigate={atomsConfig?.navigate}>
+              <Renderer spec={doc} registry={registry} />
+            </ActionProvider>
+          </VisibilityProvider>
+        </StateProvider>
+      </div>
     );
   };
 
