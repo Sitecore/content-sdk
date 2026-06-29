@@ -44,7 +44,7 @@ Site and environment: `sitecore.config.ts`, environment variables, default site 
 
 ### content-sdk-multisite-management
 
-Multisite: `.sitecore/sites.json`, proxy in `src/proxy.ts`. Chain order is **fixed:** LocaleProxy → AppRouterMultisiteProxy → RedirectsProxy → PersonalizeProxy. Do not change proxy order.
+Multisite: `.sitecore/sites.json` (CLI `generateSites` — Edge sites plus configured `defaultSite` only when `NEXT_PUBLIC_DEFAULT_SITE_NAME` is set), proxy in `src/proxy.ts`. Chain order is **fixed:** LocaleProxy → AppRouterMultisiteProxy → RedirectsProxy → PersonalizeProxy. Do not change proxy order.
 
 ### content-sdk-dictionary-and-i18n
 

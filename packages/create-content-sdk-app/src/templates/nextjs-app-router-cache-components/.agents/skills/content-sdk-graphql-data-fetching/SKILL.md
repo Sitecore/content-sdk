@@ -20,15 +20,16 @@ This template ships **tag-aware cache helpers** under `src/lib/cache/`. All non-
   - Dictionary: `getSitecoreDictionary({ site, locale })`
   - 404 / 500 Sitecore error content (Server context): `getSitecoreErrorPage({ site, locale, code })`
 - For preview / draft, import the SDK client from `src/lib/sitecore-client.ts` and call `client.getPreview(editingParams)` or `client.getDesignLibraryData(editingParams)` directly. Do **not** wrap these in `'use cache'`.
-- For SSG params, call `client.getAppRouterStaticParams(siteNames, locales)` in `generateStaticParams`.
+- For SSG params in `generateStaticParams`, call `client.getAppRouterStaticParams(siteNames, locales)` only when `process.env.NODE_ENV !== 'development'` and `scConfig.generateStaticPaths` is true. When `generateStaticPaths` is false, return one param from `BUILD_VALIDATION_SITE` in `src/lib/sitecore-build-validation.ts` (Cache Components forbids `return []`).
 
 ## Hard Rules
 
 - **Cached reads (non-preview):** Use the helpers in `src/lib/cache/`. Do not call `client.getPage` / `client.getDictionary` / `client.getErrorPage` directly in pages, layouts, or i18n config — bypassing the helpers means the read is missing Sitecore cache tags and `revalidateTag` will not invalidate it.
 - **Preview reads:** Use `client.getPreview(editingParams)` / `client.getDesignLibraryData(editingParams)` **directly**. Preview must stay dynamic; do not put it under `'use cache'`.
-- **Catch-all page (`src/app/[site]/[locale]/[[...path]]/page.tsx`):** `await params` → check `draftMode().isEnabled`; if enabled, use the client directly with `searchParams`; otherwise call `getSitecorePage({ site, locale, path: path ?? [] })`.
-- **`generateMetadata`** in the same segment should also call `getSitecorePage` so it shares the cache entry with the page render.
-- **SSG:** `generateStaticParams` — use `client.getAppRouterStaticParams(siteNames, locales)` where site names come from `.sitecore/sites.json` (e.g. `sites.map((s) => s.name)`), locales from `src/i18n/routing.ts` (e.g. `routing.locales.slice()`). Return at least one default param when not generating full paths.
+- **Catch-all page (`src/app/[site]/[locale]/[[...path]]/page.tsx`):** `await params` → if `isBuildValidationSite(site)` (`BUILD_VALIDATION_SITE` / `_DEFAULT_`), call `setCachedPageParams({ site, locale })` then `notFound()` without Edge. Otherwise check `draftMode().isEnabled`; if enabled, use the client directly with `searchParams`; else call `getSitecorePage({ site, locale, path: path ?? [] })`. Call `setCachedPageParams` before every `notFound()` on real routes.
+- **Segment not-found:** `getCachedPageParams()` → static HTML when site is empty or `isBuildValidationSite` matches **site or locale**; otherwise `getSitecoreErrorPage`. Do not call `headers()` in not-found.
+- **`generateMetadata`** in the same segment should call `getSitecorePage` for real sites; return `{ title: 'Page' }` when `isBuildValidationSite(site)`.
+- **SSG:** In `generateStaticParams`, call `client.getAppRouterStaticParams(siteNames, locales)` where site names come from `.sitecore/sites.json` (e.g. `sites.map((s) => s.name)`) and locales from `src/i18n/routing.ts` (e.g. `routing.locales.slice()`), but only when `process.env.NODE_ENV !== 'development'` and `scConfig.generateStaticPaths` is true. When `generateStaticPaths` is false, return `{ site: BUILD_VALIDATION_SITE, locale, path: [] }` from `src/lib/sitecore-build-validation.ts` — not `return []`, not `sites[0]`, not hardcoded `'default'`. See [empty-generate-static-params](https://nextjs.org/docs/messages/empty-generate-static-params).
 - **Single SitecoreClient instance** in `src/lib/sitecore-client.ts`. The cache helpers import this client; do not create a second client.
 - Pass **site** and **locale** from route params (e.g. `await params` in the page). Do not rely on global state for site/locale in server code.
 - Config for the client comes from `sitecore.config.ts`; use environment variables, never hardcode secrets.
