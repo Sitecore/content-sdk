@@ -8,7 +8,7 @@
 
 > **setCache**(`key`, `data`): `void`
 
-Defined in: [packages/core/src/tools/globalCache.ts:14](https://github.com/Sitecore/content-sdk/blob/0c9c85549b17bf9449ad041cf3a48f33666a0472/packages/core/src/tools/globalCache.ts#L14)
+Defined in: [packages/core/src/tools/globalCache.ts:14](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/core/src/tools/globalCache.ts#L14)
 
 **`Internal`**
 
