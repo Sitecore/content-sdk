@@ -2,15 +2,28 @@ import Link from 'next/link';
 import { ErrorPage, getCachedPageParams } from '@sitecore-content-sdk/nextjs';
 import { getSitecoreErrorPage } from 'lib/cache/get-sitecore-error-page';
 import scConfig from 'sitecore.config';
+import { isBuildValidationSite } from 'src/lib/sitecore-build-validation';
 import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 
+const staticNotFound = (
+  <div style={{ padding: 10 }}>
+    <h1>Page not found</h1>
+    <p>This page does not exist.</p>
+    <Link href="/">Go to the Home page</Link>
+  </div>
+);
+
 export default async function NotFound() {
   const { site, locale } = getCachedPageParams();
-  const resolvedSite = site || scConfig.defaultSite;
+  const resolvedSite = (site || scConfig.defaultSite)?.trim();
   const resolvedLocale = locale || scConfig.defaultLanguage;
+
+  if (!resolvedSite || isBuildValidationSite(resolvedSite)) {
+    return staticNotFound;
+  }
 
   const page = await getSitecoreErrorPage({
     site: resolvedSite,
@@ -32,11 +45,5 @@ export default async function NotFound() {
     );
   }
 
-  return (
-    <div style={{ padding: 10 }}>
-      <h1>Page not found</h1>
-      <p>This page does not exist.</p>
-      <Link href="/">Go to the Home page</Link>
-    </div>
-  );
+  return staticNotFound;
 }

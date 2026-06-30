@@ -1,4 +1,5 @@
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
+import { setCachedPageParams } from '@sitecore-content-sdk/nextjs';
 import { notFound } from 'next/navigation';
 import { draftMode } from 'next/headers';
 <% if (prerender === 'SSG') { -%>
@@ -9,6 +10,7 @@ import scConfig from 'sitecore.config';
 <% } -%>
 import client from 'src/lib/sitecore-client';
 import { getSitecorePage } from 'src/lib/cache/get-sitecore-page';
+import { BUILD_VALIDATION_SITE, isBuildValidationSite } from 'src/lib/sitecore-build-validation';
 import Layout, { RouteFields } from 'src/Layout';
 import Providers from 'src/Providers';
 import { NextIntlClientProvider } from 'next-intl';
@@ -22,10 +24,16 @@ type PageProps = {
 export default async function Page({ params, searchParams }: PageProps) {
   const { site, locale, path } = await params;
 
+  if (isBuildValidationSite(site)) {
+    setCachedPageParams({ site, locale });
+    notFound();
+  }
+
   // Cached fetch first so missing routes can notFound() without dynamic APIs in the ancestor tree.
   const cachedPage = await getSitecorePage({ site, locale, path: path ?? [] });
 
   if (!cachedPage) {
+    setCachedPageParams({ site, locale });
     notFound();
   }
 
@@ -49,6 +57,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   // If the page is not found, return a 404
   if (!page) {
+    setCachedPageParams({ site, locale });
     notFound();
   }
 
@@ -71,11 +80,9 @@ export const generateStaticParams = async () => {
       routing.locales.slice()
     );
   }
-  // Next.js 16 requires at least one result
-  // Return a default param for the root page
   return [
     {
-      site: sites[0]?.name || 'default',
+      site: BUILD_VALIDATION_SITE,
       locale: routing.defaultLocale || scConfig.defaultLanguage,
       path: [],
     },
@@ -85,6 +92,10 @@ export const generateStaticParams = async () => {
 // Metadata fields for the page. Mirrors the Page draft-mode branching so the <title> matches the body.
 export const generateMetadata = async ({ params, searchParams }: PageProps) => {
   const { path, site, locale } = await params;
+
+  if (isBuildValidationSite(site)) {
+    return { title: 'Page' };
+  }
 
   const draft = await draftMode();
 
