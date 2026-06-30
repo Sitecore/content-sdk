@@ -446,6 +446,9 @@ export interface ErrorPagesServiceConfig extends GraphQLServiceConfig {
 }
 
 // @internal
+export function escapeRegExp(input: string): string;
+
+// @internal
 const executeScriptElements: (rootElement: HTMLElement) => void;
 
 // Warning: (ae-forgotten-export) The symbol "_extractFiles" needs to be exported by the entry point api-surface.d.ts

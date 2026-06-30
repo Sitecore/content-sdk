@@ -1,3 +1,4 @@
+import { escapeRegExp } from '@sitecore-content-sdk/content/layout';
 import {
   RedirectsService,
   RedirectsServiceConfig,
@@ -22,15 +23,6 @@ import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from '
 
 const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
 const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
-
-/**
- * Escape a string for safe use inside a RegExp source (e.g. locale segment).
- * @param {string} string - The string to escape
- * @returns {string} The escaped string
- */
-function escapeRegExp(string: string): string {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
 
 type RedirectResult = RedirectInfo & {
   matchedQueryString?: string;

@@ -42,4 +42,5 @@ export {
   containsDefaultEdgeHost,
   getDefaultMediaUrlTransformer,
   applyMediaUrlRewrite,
+  escapeRegExp,
 } from './rewrite-edge-host';

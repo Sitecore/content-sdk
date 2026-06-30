@@ -36,7 +36,7 @@ const EDGE_HOST_PATTERN = new RegExp(
  * @returns {string} The escaped string safe for RegExp construction
  * @internal
  */
-function escapeRegExp(input: string): string {
+export function escapeRegExp(input: string): string {
   return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
