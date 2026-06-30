@@ -8,7 +8,7 @@
 
 > **Form**(`props`): `Element`
 
-Defined in: [packages/react/src/components/Form.tsx:56](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/react/src/components/Form.tsx#L56)
+Defined in: [packages/react/src/components/Form.tsx:56](https://github.com/Sitecore/content-sdk/blob/2bff473046a060366910aa0397f8f2e70caf088d/packages/react/src/components/Form.tsx#L56)
 
 The Form component.
 
