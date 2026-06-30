@@ -6,7 +6,7 @@
 
 # Class: LayoutService
 
-Defined in: [content/src/layout/layout-service.ts:25](https://github.com/Sitecore/content-sdk/blob/0c9c85549b17bf9449ad041cf3a48f33666a0472/packages/content/src/layout/layout-service.ts#L25)
+Defined in: [content/src/layout/layout-service.ts:25](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/content/src/layout/layout-service.ts#L25)
 
 Service that fetch layout data using Sitecore's GraphQL API.
 
@@ -24,7 +24,7 @@ GraphQLRequestClient
 
 > **new LayoutService**(`serviceConfig`): `LayoutService`
 
-Defined in: [content/src/layout/layout-service.ts:30](https://github.com/Sitecore/content-sdk/blob/0c9c85549b17bf9449ad041cf3a48f33666a0472/packages/content/src/layout/layout-service.ts#L30)
+Defined in: [content/src/layout/layout-service.ts:30](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/content/src/layout/layout-service.ts#L30)
 
 Fetch layout data using the Sitecore GraphQL endpoint.
 
@@ -48,7 +48,7 @@ Fetch layout data using the Sitecore GraphQL endpoint.
 
 > `protected` **graphQLClient**: [`GraphQLClient`](../../client/interfaces/GraphQLClient.md)
 
-Defined in: [content/src/sitecore-service-base.ts:20](https://github.com/Sitecore/content-sdk/blob/0c9c85549b17bf9449ad041cf3a48f33666a0472/packages/content/src/sitecore-service-base.ts#L20)
+Defined in: [content/src/sitecore-service-base.ts:20](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/content/src/sitecore-service-base.ts#L20)
 
 #### Inherited from
 
@@ -60,7 +60,7 @@ Defined in: [content/src/sitecore-service-base.ts:20](https://github.com/Sitecor
 
 > **serviceConfig**: `Pick`\<[`SitecoreConfigInput`](../../config/type-aliases/SitecoreConfigInput.md), `"retries"`\> & `object` & `Partial`\<\{ `formatLayoutQuery?`: ((`siteName`, `itemPath`, `locale?`) => `string`) \| `null`; \}\>
 
-Defined in: [content/src/layout/layout-service.ts:30](https://github.com/Sitecore/content-sdk/blob/0c9c85549b17bf9449ad041cf3a48f33666a0472/packages/content/src/layout/layout-service.ts#L30)
+Defined in: [content/src/layout/layout-service.ts:30](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/content/src/layout/layout-service.ts#L30)
 
 configuration
 
@@ -89,7 +89,7 @@ Optional debug logger override
 
 > **fetchLayoutData**(`itemPath`, `routeOptions?`, `fetchOptions?`): `Promise`\<[`LayoutServiceData`](../interfaces/LayoutServiceData.md)\>
 
-Defined in: [content/src/layout/layout-service.ts:41](https://github.com/Sitecore/content-sdk/blob/0c9c85549b17bf9449ad041cf3a48f33666a0472/packages/content/src/layout/layout-service.ts#L41)
+Defined in: [content/src/layout/layout-service.ts:41](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/content/src/layout/layout-service.ts#L41)
 
 Fetch layout data for an item.
 
@@ -113,7 +113,7 @@ layout service data
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../client/interfaces/GraphQLClient.md)
 
-Defined in: [content/src/sitecore-service-base.ts:34](https://github.com/Sitecore/content-sdk/blob/0c9c85549b17bf9449ad041cf3a48f33666a0472/packages/content/src/sitecore-service-base.ts#L34)
+Defined in: [content/src/sitecore-service-base.ts:34](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/content/src/sitecore-service-base.ts#L34)
 
 Gets a GraphQL client that can make requests to the API.
 
@@ -133,7 +133,7 @@ implementation
 
 > `protected` **getLayoutQuery**(`itemPath`, `site?`, `language?`): `string`
 
-Defined in: [content/src/layout/layout-service.ts:69](https://github.com/Sitecore/content-sdk/blob/0c9c85549b17bf9449ad041cf3a48f33666a0472/packages/content/src/layout/layout-service.ts#L69)
+Defined in: [content/src/layout/layout-service.ts:69](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/content/src/layout/layout-service.ts#L69)
 
 Returns GraphQL Layout query
 
