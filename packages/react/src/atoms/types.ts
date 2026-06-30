@@ -1,7 +1,7 @@
 import type { Catalog, InferCatalogInput } from '@json-render/core';
 import type { ComponentRenderer, DefineRegistryResult, ReactSchema } from '@json-render/react';
 import { SitecoreComponentMeta } from '@sitecore-content-sdk/content/atoms';
-
+import type { ZodObject } from 'zod';
 type BaseCatalog = InferCatalogInput<ReactSchema['definition']['catalog']>;
 type BaseComponent = BaseCatalog['components'][string];
 type BaseAction = BaseCatalog['actions'][string];
@@ -23,6 +23,24 @@ export type AtomComponentDefinition = BaseComponent & SitecoreComponentMeta;
  * @public
  */
 export type AtomActionDefinition = BaseAction;
+
+/**
+ * Validates that a map of entries does not include a specific key inside a given nested field's Zod schema.
+ * @internal
+ */
+export type RestrictFieldKey<
+  T extends Record<string, object>,
+  Field extends string,
+  Key extends string
+> = {
+  [K in keyof T]: T[K] extends Record<Field, infer V>
+    ? V extends ZodObject<infer Shape>
+      ? Key extends keyof Shape
+        ? Omit<T[K], Field> & { [F in Field]: `${Key} is not allowed inside ${F}` }
+        : T[K]
+      : T[K]
+    : T[K];
+};
 
 /**
  * Input shape for defineAtomsCatalog.
