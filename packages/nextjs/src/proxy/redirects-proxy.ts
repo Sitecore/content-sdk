@@ -642,7 +642,6 @@ export class RedirectsProxy extends ProxyBase {
       console.warn(
         `[RedirectsProxy] Invalid redirect regex; skipping rule. pattern=${pattern} (${message})`
       );
-      debug.redirects('invalid redirect regex; skipping rule: %s (%s)', pattern, message);
       return null;
     }
   }
