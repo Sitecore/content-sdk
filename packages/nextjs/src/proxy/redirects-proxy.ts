@@ -27,7 +27,6 @@ const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
 type RedirectResult = RedirectInfo & {
   matchedQueryString?: string;
   matchedPath?: string;
-  compiledPattern?: RegExp;
 };
 
 /**
@@ -272,17 +271,17 @@ export class RedirectsProxy extends ProxyBase {
       // Apply regex replacements to the target URL if the pattern is a regex
       const sourcePath = existsRedirect.matchedPath || reqUrl.pathname;
       const pathForCaptureMatch = sourcePath.replace(/\/*$/gi, '') || '/';
-      const redirectRegex =
-        existsRedirect.compiledPattern ??
-        this.safeCompileRedirectPattern(existsRedirect.pattern);
-      const matched = redirectRegex ? pathForCaptureMatch.match(redirectRegex) : null;
-      if (matched) {
-        existsRedirect.target = existsRedirect.target.replace(
-          /\$(\d+)/g,
-          (_: string, index: string): string => {
-            return matched[parseInt(index, 10)] || '';
-          }
-        );
+      if (isRegexOrUrl(existsRedirect.pattern) === 'regex') {
+        const redirectRegex = this.safeCompileRedirectPattern(existsRedirect.pattern);
+        const matched = redirectRegex ? pathForCaptureMatch.match(redirectRegex) : null;
+        if (matched) {
+          existsRedirect.target = existsRedirect.target.replace(
+            /\$(\d+)/g,
+            (_: string, index: string): string => {
+              return matched[parseInt(index, 10)] || '';
+            }
+          );
+        }
       }
 
       const isAbsoluteUrl = REGEXP_ABSOLUTE_URL.test(existsRedirect.target);
@@ -446,7 +445,6 @@ export class RedirectsProxy extends ProxyBase {
           // Save the matched query string (if found) into the redirect object
           redirect.matchedQueryString = matchedQueryString || '';
           redirect.matchedPath = matchedPath || matchedPathWithQuery || '';
-          redirect.compiledPattern = regex;
 
           return (
             !!(matchedPath || matchedQueryString) &&
