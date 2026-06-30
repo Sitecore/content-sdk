@@ -22,7 +22,7 @@ One component definition can have multiple presentations or data-driven variants
 - Prefer a single component registration that accepts variant/style data (e.g. params or fields) and branches internally, over multiple map entries for the same logical component unless the app pattern uses separate registrations per variant.
 - Use props (fields, params) from layout to decide variant; do not rely on global state or URL for variant selection when data comes from Sitecore. getComponentData passes the layout-driven props to the component.
 - Register in `.sitecore/component-map.ts` only. If the app uses one key per variant, register each; if one key with variant param, single registration. Follow existing app convention.
-- Keep the component map in sync with src/components/.
+- Prefer `sitecore-tools:generate-map` to keep the map in sync with `src/components/`.
 
 ## Stop Conditions
 
