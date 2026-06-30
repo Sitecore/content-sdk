@@ -8,7 +8,7 @@
 
 > `const` **DEFAULT\_PLACEHOLDER\_UID**: `"00000000-0000-0000-0000-000000000000"` = `'00000000-0000-0000-0000-000000000000'`
 
-Defined in: [content/src/editing/utils.ts:8](https://github.com/Sitecore/content-sdk/blob/7b3b3f30369cf56f5de19926b02ee549d98a34dc/packages/content/src/editing/utils.ts#L8)
+Defined in: [content/src/editing/utils.ts:8](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/content/src/editing/utils.ts#L8)
 
 **`Internal`**
 

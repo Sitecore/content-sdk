@@ -8,7 +8,7 @@
 
 > **RouteOptions** = `object`
 
-Defined in: [content/src/layout/models.ts:177](https://github.com/Sitecore/content-sdk/blob/7b3b3f30369cf56f5de19926b02ee549d98a34dc/packages/content/src/layout/models.ts#L177)
+Defined in: [content/src/layout/models.ts:177](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/content/src/layout/models.ts#L177)
 
 Contract for additional route options when requesting layout data
 
@@ -18,7 +18,7 @@ Contract for additional route options when requesting layout data
 
 > `optional` **locale?**: `string`
 
-Defined in: [content/src/layout/models.ts:179](https://github.com/Sitecore/content-sdk/blob/7b3b3f30369cf56f5de19926b02ee549d98a34dc/packages/content/src/layout/models.ts#L179)
+Defined in: [content/src/layout/models.ts:179](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/content/src/layout/models.ts#L179)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [content/src/layout/models.ts:179](https://github.com/Sitecore/conte
 
 > **site**: `string`
 
-Defined in: [content/src/layout/models.ts:178](https://github.com/Sitecore/content-sdk/blob/7b3b3f30369cf56f5de19926b02ee549d98a34dc/packages/content/src/layout/models.ts#L178)
+Defined in: [content/src/layout/models.ts:178](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/content/src/layout/models.ts#L178)

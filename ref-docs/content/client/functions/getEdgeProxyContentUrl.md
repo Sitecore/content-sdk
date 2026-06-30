@@ -8,7 +8,7 @@
 
 > **getEdgeProxyContentUrl**(`sitecoreEdgeUrl?`): `string`
 
-Defined in: [content/src/client/edge-proxy.ts:19](https://github.com/Sitecore/content-sdk/blob/7b3b3f30369cf56f5de19926b02ee549d98a34dc/packages/content/src/client/edge-proxy.ts#L19)
+Defined in: [content/src/client/edge-proxy.ts:19](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/content/src/client/edge-proxy.ts#L19)
 
 Generates a URL for accessing Sitecore Edge Platform Content using the provided endpoint and context ID.
 
