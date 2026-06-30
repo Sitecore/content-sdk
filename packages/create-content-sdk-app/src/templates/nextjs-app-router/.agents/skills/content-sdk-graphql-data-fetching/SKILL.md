@@ -1,6 +1,6 @@
 ---
 name: content-sdk-graphql-data-fetching
-description: Fetches page data and dictionary via the single Sitecore client. App Router: getPage(path ?? [], { site, locale }), getDictionary, getAppRouterStaticParams; for preview use draftMode() and getPreview/getDesignLibraryData from searchParams. Use when fetching page or dictionary content.
+description: Fetches page data and dictionary via the single Sitecore client. App Router: getPage(path ?? [], { site, locale }), getDictionary, getAppRouterStaticParams in generateStaticParams when generateStaticPaths is enabled; for preview use draftMode() and getPreview/getDesignLibraryData from searchParams. Use when fetching page or dictionary content.
 ---
 
 # Content SDK GraphQL Data Fetching (App Router)
@@ -15,7 +15,7 @@ All Sitecore data fetching goes through the single client in `src/lib/sitecore-c
 
 ## How to perform
 
-- Use the client from `src/lib/sitecore-client.ts` only. In the catch-all page: `await params`, then `client.getPage(path ?? [], { site, locale })`. For SSG use `generateStaticParams` and `client.getAppRouterStaticParams(siteNames, locales)`. For preview use `draftMode()` and `getPreview`/`getDesignLibraryData` from searchParams.
+- Use the client from `src/lib/sitecore-client.ts` only. In the catch-all page: `await params`, then `client.getPage(path ?? [], { site, locale })`. For SSG, follow the `generateStaticParams` rules in Hard Rules below. For preview use `draftMode()` and `getPreview`/`getDesignLibraryData` from searchParams.
 
 ## Hard Rules
 
@@ -23,7 +23,7 @@ All Sitecore data fetching goes through the single client in `src/lib/sitecore-c
 - Pass **site** and **locale** from route params (e.g. `await params` in the page). Do not rely on global state for site/locale in server code.
 - **Catch-all page:** `client.getPage(path ?? [], { site, locale })`. Params are a Promise (Next.js 15+); use `await params` to get `{ site, locale, path? }`.
 - **Preview:** Use `draftMode()`; if `draft.isEnabled`, use `client.getPreview(editingParams)` or `client.getDesignLibraryData(editingParams)` from **searchParams**. Otherwise use getPage with site and locale.
-- **SSG:** `generateStaticParams` — use `client.getAppRouterStaticParams(siteNames, locales)` where site names come from `.sitecore/sites.json` (e.g. `sites.map((s) => s.name)`), locales from `src/i18n/routing.ts` (e.g. `routing.locales.slice()`). Return at least one default param when not generating full paths (e.g. `{ site, locale, path: [] }`).
+- **SSG:** In `generateStaticParams`, call `client.getAppRouterStaticParams(siteNames, locales)` where site names come from `.sitecore/sites.json` (e.g. `sites.map((s) => s.name)`) and locales from `src/i18n/routing.ts` (e.g. `routing.locales.slice()`), but only when `process.env.NODE_ENV !== 'development'` and `scConfig.generateStaticPaths` is true. Otherwise return `[]`. Do not synthesize a fallback param (e.g. `{ site: 'default', locale, path: [] }`).
 - Config for the client comes from `sitecore.config.ts`; use environment variables, never hardcode secrets.
 
 ## Stop Conditions

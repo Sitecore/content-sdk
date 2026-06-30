@@ -32,11 +32,11 @@ Using SDK field components: `<Text>`, `<RichText>`, `<Image>`, `<Link>`, with pr
 
 ### content-sdk-graphql-data-fetching
 
-Page and dictionary fetching via the cache helpers in `src/lib/cache/`. Use `getSitecorePage({ site, locale, path })`, `getSitecoreDictionary({ site, locale })`, `getSitecoreErrorPage({ site, locale, code })` for cached reads with Sitecore tags. Use `client.getPreview` / `client.getDesignLibraryData` directly for preview, and `client.getAppRouterStaticParams` for SSG.
+Page and dictionary fetching via the cache helpers in `src/lib/cache/`. Use `getSitecorePage({ site, locale, path })`, `getSitecoreDictionary({ site, locale })`, `getSitecoreErrorPage({ site, locale, code })` for cached reads with Sitecore tags. Use `client.getPreview` / `client.getDesignLibraryData` directly for preview. In `generateStaticParams`, call `client.getAppRouterStaticParams` when `scConfig.generateStaticPaths` is true; when false, return `{ site: BUILD_VALIDATION_SITE, locale, path: [] }` from `src/lib/sitecore-build-validation.ts` (not `return []`). Skip Edge in page/metadata/not-found when `isBuildValidationSite(site)`.
 
 ### content-sdk-route-configuration
 
-Routing: single catch-all at `src/app/[site]/[locale]/[[...path]]/page.tsx`. Layout chain: `app/layout.tsx` → `app/[site]/layout.tsx` (Bootstrap, draftMode) → `app/[site]/[locale]/[[...path]]/layout.tsx` (calls `setCachedPageParams({ site, locale })`) → page. Call `setRequestLocale(\`${site}_${locale}\`)` at the top of the page. **Two not-founds**: the segment `[[...path]]/not-found.tsx` reads `getCachedPageParams()` (set by the segment layout) and calls `getSitecoreErrorPage` — staying SSG-safe because it never calls `headers()`. The root `src/app/not-found.tsx` falls back to `scConfig.defaultSite` / `scConfig.defaultLanguage` for unrouted requests. `global-error.tsx` uses `client.getErrorPage` directly (it's a Client Component, not cached).
+Routing: single catch-all at `src/app/[site]/[locale]/[[...path]]/page.tsx`. Layout chain: `app/layout.tsx` → `app/[site]/layout.tsx` (Bootstrap, draftMode) → `app/[site]/[locale]/[[...path]]/layout.tsx` (calls `setCachedPageParams({ site, locale })`) → page. Call `setRequestLocale(\`${site}_${locale}\`)` in the page. **Two not-founds**: segment `[[...path]]/not-found.tsx` reads `getCachedPageParams()` (set by layout and by the page before `notFound()`); skips Edge for `BUILD_VALIDATION_SITE` (`_DEFAULT_`) on site, or when site is empty; otherwise calls `getSitecoreErrorPage`. Root `src/app/not-found.tsx` falls back to `scConfig.defaultSite` / `scConfig.defaultLanguage`. `global-error.tsx` uses `client.getErrorPage` directly (Client Component, not cached).
 
 ### content-sdk-site-setup-and-env
 
@@ -44,7 +44,7 @@ Site and environment: `sitecore.config.ts`, environment variables, default site 
 
 ### content-sdk-multisite-management
 
-Multisite: `.sitecore/sites.json`, proxy in `src/proxy.ts`. Chain order is **fixed:** PreviewProxy → BotTrackingProxy → LocaleProxy → AppRouterMultisiteProxy → RedirectsProxy → PersonalizeProxy. Do not change proxy order.
+Multisite: `.sitecore/sites.json` (CLI `generateSites` — Edge sites plus configured `defaultSite` only when `NEXT_PUBLIC_DEFAULT_SITE_NAME` is set), proxy in `src/proxy.ts`. Chain order is **fixed:** PreviewProxy → BotTrackingProxy → LocaleProxy → AppRouterMultisiteProxy → RedirectsProxy → PersonalizeProxy. Do not change proxy order.
 
 ### content-sdk-dictionary-and-i18n
 
