@@ -21,11 +21,7 @@ export default async function NotFound() {
   const resolvedSite = (site || scConfig.defaultSite)?.trim();
   const resolvedLocale = locale || scConfig.defaultLanguage;
 
-  if (
-    !resolvedSite ||
-    isBuildValidationSite(resolvedSite) ||
-    isBuildValidationSite(resolvedLocale)
-  ) {
+  if (!resolvedSite || isBuildValidationSite(resolvedSite)) {
     return staticNotFound;
   }
 

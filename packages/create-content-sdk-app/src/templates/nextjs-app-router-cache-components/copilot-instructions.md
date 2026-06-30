@@ -45,7 +45,7 @@ src/
 
 ### @sitecore-content-sdk
 - Use `SitecoreClient` for content fetching (directly for preview/editing and `getAppRouterStaticParams` when `scConfig.generateStaticPaths` is true; when false return `BUILD_VALIDATION_SITE` from `src/lib/sitecore-build-validation.ts` for Cache Components build validation; indirectly via cache helpers for cached reads)
-- **Build validation:** `_DEFAULT_` is build-only — skip Edge in page/metadata when `isBuildValidationSite(site)`; segment `not-found.tsx` skips Edge when site or locale is `_DEFAULT_`. Call `setCachedPageParams` before `notFound()` on real routes; read with `getCachedPageParams()` in segment not-found (do not use `headers()` there).
+- **Build validation:** `_DEFAULT_` is build-only — skip Edge in page/metadata when `isBuildValidationSite(site)`; segment `not-found.tsx` skips Edge when site is `_DEFAULT_`. Call `setCachedPageParams` before `notFound()` on real routes; read with `getCachedPageParams()` in segment not-found (do not use `headers()` there).
 - Implement proper error handling with try/catch blocks
 - Handle content preview vs. published content scenarios — preview must remain **dynamic** (do not wrap preview in `'use cache'`)
 

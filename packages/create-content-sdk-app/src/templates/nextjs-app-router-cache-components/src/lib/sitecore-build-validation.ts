@@ -3,6 +3,7 @@
  * when `generateStaticPaths` is false. Not a real Sitecore site — routes using this value
  * skip Edge fetches and render the static not-found fallback so `next build` can succeed
  * without a configured default site or content configured in Sitecore AI.
+ * One use case for this is running your application as an editing host when no sites are configured.
  *
  * @see https://nextjs.org/docs/messages/empty-generate-static-params
  */

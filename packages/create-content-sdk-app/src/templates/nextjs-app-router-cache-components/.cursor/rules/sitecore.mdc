@@ -103,7 +103,7 @@ Dynamic Routes:
 
 - Use [[...path]] for Sitecore catch-all routes (under `[site]/[locale]/`)
 - Handle route parameters appropriately
-- Implement proper 404 handling: segment `src/app/[site]/[locale]/[[...path]]/not-found.tsx` (reads `getCachedPageParams()`; static HTML when site is empty or `isBuildValidationSite` matches site or locale; otherwise `getSitecoreErrorPage`) and root `src/app/not-found.tsx` (falls back to `scConfig.defaultSite` / `scConfig.defaultLanguage`)
+- Implement proper 404 handling: segment `src/app/[site]/[locale]/[[...path]]/not-found.tsx` (reads `getCachedPageParams()`; static HTML when site is empty or `isBuildValidationSite(site)`; otherwise `getSitecoreErrorPage`) and root `src/app/not-found.tsx` (falls back to `scConfig.defaultSite` / `scConfig.defaultLanguage`)
 - When `generateStaticPaths` is false, `generateStaticParams` returns `BUILD_VALIDATION_SITE` (`_DEFAULT_`) — not `return []` (Cache Components). Skip Edge in page/metadata for that site.
 - Support preview mode when needed (uncached path)
 
