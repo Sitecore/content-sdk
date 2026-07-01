@@ -144,6 +144,9 @@ const ERROR_MESSAGES: {
 // @public
 export const escapeNonSpecialQuestionMarks: (input: string) => string;
 
+// @internal
+export function escapeRegExp(input: string): string;
+
 // @public
 export type FetchOptions = {
     retries?: number;

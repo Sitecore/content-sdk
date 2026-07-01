@@ -1,4 +1,3 @@
-import { escapeRegExp } from '@sitecore-content-sdk/content/layout';
 import {
   RedirectsService,
   RedirectsServiceConfig,
@@ -11,6 +10,7 @@ import {
 import {
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,
+  escapeRegExp,
   isRegexOrUrl,
   mergeURLSearchParams,
 } from '@sitecore-content-sdk/core/tools';
