@@ -18,5 +18,6 @@ export {
   isRegexOrUrl,
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,
+  escapeRegExp,
   mergeURLSearchParams,
 } from './utils';
