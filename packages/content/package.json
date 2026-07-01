@@ -36,7 +36,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
-    "@sitecore-content-sdk/events": "2.1.0-beta.1",
+    "@sitecore-content-sdk/events": "^2.1.0",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@types/chai": "^5.2.2",
     "@types/chai-spies": "^1.0.6",
@@ -73,7 +73,7 @@
     "typescript": "~5.8.3"
   },
   "peerDependencies": {
-    "@sitecore-content-sdk/events": "2.1.0-beta.1"
+    "@sitecore-content-sdk/events": "^2.1.0"
   },
   "dependencies": {
     "@json-render/core": "0.19.0",

@@ -32,8 +32,8 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.1.0-beta.1",
-    "@sitecore-content-sdk/personalize": "2.1.0-beta.1",
+    "@sitecore-content-sdk/analytics-core": "^2.1.0",
+    "@sitecore-content-sdk/personalize": "^2.1.0",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.0",
@@ -75,9 +75,9 @@
     "typescript": "~5.8.3"
   },
   "peerDependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.1.0-beta.1",
-    "@sitecore-content-sdk/events": "2.1.0-beta.1",
-    "@sitecore-content-sdk/personalize": "2.1.0-beta.1",
+    "@sitecore-content-sdk/analytics-core": "^2.1.0",
+    "@sitecore-content-sdk/events": "^2.1.0",
+    "@sitecore-content-sdk/personalize": "^2.1.0",
     "next": "^16.2.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
