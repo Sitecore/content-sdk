@@ -23,6 +23,8 @@ npm run type-check   # Run TypeScript compiler
 
 **Environment:** Copy `.env.example` to `.env.local` and set Sitecore API endpoint, key, default site, language, and `SITECORE_REVALIDATE_SECRET` (used by `POST /api/revalidate`). Never commit `.env` or `.env.local`.
 
+**Component maps:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client) are auto-generated from `src/components/` during `npm run dev` (watch) and `npm run build`. No manual action needed; the generator scans `src/components/` and creates entries in the appropriate map (Server vs Client based on `'use client'`).
+
 ---
 
 ## Application Structure (App Router + Cache Components)
@@ -77,7 +79,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 - **`POST /api/revalidate`** is a single Sitecore-webhook endpoint. It accepts the Sitecore Experience Edge / Content Operations payload shape:
   - `updates[]` — Sitecore publish-event rows; the handler maps each row's `identifier` (with `-media` / `-layout` stripped) to `sc:item:<id>:<locale>:latest`.
   - `tags[]` — pass-through array. `sc:`-prefixed strings are revalidated verbatim (handy for ad-hoc, operational calls); bare item IDs are mapped to `sc:item:<id>:<defaultLocale>:latest`.
-  - Dictionary tags from `sites` (`.sitecore/sites.json`, including the default site from `generateSites`) are merged on every call so dictionary changes are covered.
+  - Dictionary tags from `sites` (`.sitecore/sites.json`; configured `defaultSite` from `generateSites` only when `NEXT_PUBLIC_DEFAULT_SITE_NAME` is set) are merged on every call so dictionary changes are covered.
 - **Auth (optional):** leave `SITECORE_REVALIDATE_SECRET` empty to skip auth (no `x-revalidate-secret` header). When set, callers must send the same value in `x-revalidate-secret` (configure that header on your Sitecore webhook).
 - **Dictionary cache:** `sitecore.config.ts` disables the SDK's in-process dictionary cache (`dictionary: { caching: { enabled: false } }`). The Cache Components helper is the only dictionary cache layer, so `revalidateTag` works end to end.
 
@@ -90,7 +92,8 @@ These are the main head-app–specific concepts. Details are in the sections bel
 ### SitecoreClient
 
 - **Where:** Single shared instance in `src/lib/sitecore-client.ts` — `new SitecoreClient({ ...scConfig })` with config from `sitecore.config.ts`.
-- **Use directly for:** preview and editing (`getPreview`, `getDesignLibraryData`, internal editing routes), 500 page (`client.getErrorPage(ErrorPage.InternalServerError)` in `global-error.tsx`), and `getAppRouterStaticParams`.
+- **Use directly for:** preview and editing (`getPreview`, `getDesignLibraryData`, internal editing routes), 500 page (`client.getErrorPage(ErrorPage.InternalServerError)` in `global-error.tsx`), and `getAppRouterStaticParams` when `generateStaticPaths` is true.
+- **Build validation:** when `generateStaticPaths` is false, `generateStaticParams` returns `BUILD_VALIDATION_SITE` (`_DEFAULT_` from `src/lib/sitecore-build-validation.ts`); the page and `generateMetadata` skip Edge for that site; segment `not-found.tsx` skips Edge when site is `_DEFAULT_`. See SSG rules under Data fetching.
 - **Use the cache helpers for everything else:** non-preview page reads go through `getSitecorePage`; dictionary reads through `getSitecoreDictionary`; 404 content through `getSitecoreErrorPage`. The cache helpers wrap the same client under `'use cache'` and attach the right tags.
 - **Do not:** Create a second client or instantiate SitecoreClient elsewhere. Pass `site` and `locale` from route params (or `getCachedPageParams()` in the segment `not-found.tsx`, or `scConfig.defaultSite` / `scConfig.defaultLanguage` in the root `not-found.tsx`), not from global state.
 
@@ -109,7 +112,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ### More (component maps, editing, env)
 
-- **Component maps:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client). Register every Sitecore component here; keep in sync with `src/components/`.
+- **Component maps:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client) — Lists every Sitecore component the layout can render, the maps are auto-generated from `src/components/`. Do not edit manually unless needed.
 - **Editing/preview:** Use `draftMode()` in Server Components; when enabled, use `client.getPreview(searchParams)` or `client.getDesignLibraryData(searchParams)` **directly** (do not route preview through the cache helpers). Editing API routes live under `src/app/api/editing/`.
 - **Env:** All config via environment variables in `sitecore.config.ts`. Document vars in `.env.example` (or `.env.remote.example` / `.env.container.example`); never commit `.env` or `.env.local`. `SITECORE_REVALIDATE_SECRET` is optional (see `.env.*.example` comments).
 
@@ -131,7 +134,7 @@ These are the main head-app–specific concepts. Details are in the sections bel
 
 ### Multisite and Edge middleware (proxy)
 
-- **Site list:** `.sitecore/sites.json` — typically generated by the Sitecore CLI or deployment. Used by middleware and API route handlers. Avoid hand-editing unless you know the format.
+- **Site list:** `.sitecore/sites.json` — generated by the Sitecore CLI (`generateSites` in `sitecore.cli.config.ts`). Contains sites from Edge when multisite is enabled; prepends the configured default site **only** when `scConfig.defaultSite` is explicitly set (`NEXT_PUBLIC_DEFAULT_SITE_NAME`). Do not synthesize a fake site when env is unset. Used by middleware and API route handlers. Avoid hand-editing unless you know the format.
 - **Edge middleware:** Implemented in **`src/proxy.ts`**. Next.js only runs middleware from a file named `middleware.ts` at root or in `src/`. If this app has only `proxy.ts`, add `src/middleware.ts` that re-exports it (e.g. `export { default } from './proxy';`) so the proxy runs.
 - **Proxy chain (order is critical):** `defineProxy(preview, botTracking, locale, multisite, redirects, personalize).exec(req)`:
   - **PreviewProxy** — authorizes preview requests on the internal editing host; no-op elsewhere.
@@ -148,8 +151,8 @@ These are the main head-app–specific concepts. Details are in the sections bel
 - **Page data:** In the page (or a Server Component), use `getSitecorePage({ site, locale, path: path ?? [] })` from `src/lib/cache/get-sitecore-page.ts`. For preview, use `draftMode()`; if `draft.isEnabled`, call `client.getPreview(editingParams)` or `client.getDesignLibraryData(editingParams)` **directly on the SDK client** (preview must stay dynamic, not cached).
 - **Dictionary:** Use `getSitecoreDictionary({ site, locale })` from `src/lib/cache/get-sitecore-dictionary.ts` (not `client.getDictionary` directly). This applies the `sc:dict:{site}:{locale}` tag so dictionary updates can be invalidated by webhook.
 - **404 content:** Use `getSitecoreErrorPage({ site, locale, code: ErrorPage.NotFound })` from `src/lib/cache/get-sitecore-error-page.ts`. 500 content (in `global-error.tsx`) calls `client.getErrorPage(ErrorPage.InternalServerError, ...)` directly since `global-error.tsx` is a Client Component.
-- **SSG:** `generateStaticParams` — use `client.getAppRouterStaticParams(sites, routing.locales)` (sites from `.sitecore/sites.json`). Return at least one default param when not generating full paths (e.g. dev or when `generateStaticPaths` is off).
-- **Metadata:** `generateMetadata` in the same segment calls `getSitecorePage` so it hits the same cache entry as the page.
+- **SSG:** In `generateStaticParams`, call `client.getAppRouterStaticParams(sites, routing.locales)` (sites from `.sitecore/sites.json`) only when `process.env.NODE_ENV !== 'development'` and `scConfig.generateStaticPaths` is true. When `generateStaticPaths` is false, return one param `{ site: BUILD_VALIDATION_SITE, locale, path: [] }` from `src/lib/sitecore-build-validation.ts` (`_DEFAULT_`) — a **build-only placeholder**, not a real Sitecore site. Cache Components forbids `return []` ([empty-generate-static-params](https://nextjs.org/docs/messages/empty-generate-static-params)). The catch-all page must call `isBuildValidationSite(site)` and skip Edge (seed `setCachedPageParams`, then `notFound()`); `generateMetadata` must skip Edge for the same site. Do not use `sites[0]` or hardcoded `'default'` for this fallback.
+- **Metadata:** `generateMetadata` in the same segment calls `getSitecorePage` (except for `BUILD_VALIDATION_SITE`) so it hits the same cache entry as the page render. Segment `not-found.tsx` skips Edge when `isBuildValidationSite(resolvedSite)`.
 
 ### On-demand revalidation (`POST /api/revalidate`)
 
@@ -169,8 +172,8 @@ These are the main head-app–specific concepts. Details are in the sections bel
 This template ships **two** not-found components and a segment layout that ties them together while staying compatible with SSG and Cache Components:
 
 - **Root not-found:** `src/app/not-found.tsx`. Used as the fallback when no segment handles the route (e.g. unknown site/locale). Falls back to `scConfig.defaultSite` / `scConfig.defaultLanguage` and calls `getSitecoreErrorPage({ site, locale, code: ErrorPage.NotFound })`, so 404 content gets the same Sitecore cache tags as a normal page.
-- **Segment not-found:** `src/app/[site]/[locale]/[[...path]]/not-found.tsx`. Triggered when the catch-all page calls `notFound()` (e.g. the requested path resolves to no Sitecore page). Reads site/locale via `getCachedPageParams()` (set by the segment layout below) and calls `getSitecoreErrorPage(...)`. Wrapped in `NextIntlClientProvider` to keep i18n working in 404 markup.
-- **Segment layout:** `src/app/[site]/[locale]/[[...path]]/layout.tsx`. Calls `setCachedPageParams({ site, locale })` on every request for this segment. This uses the SDK's React `cache()` based `set/getCachedPageParams` helpers (from `@sitecore-content-sdk/nextjs`) so the segment `not-found.tsx` can read `{ site, locale }` **without** calling `headers()` — which would opt the route out of SSG. **Do not** call `headers()` in the segment not-found; keep using `getCachedPageParams()`.
+- **Segment not-found:** `src/app/[site]/[locale]/[[...path]]/not-found.tsx`. Triggered when the catch-all page calls `notFound()`. Reads site/locale via `getCachedPageParams()` (set by the segment layout and by the page before `notFound()`). If site is empty or `isBuildValidationSite(resolvedSite)` (`_DEFAULT_`), returns static fallback HTML without calling Edge. Otherwise calls `getSitecoreErrorPage(...)`. Wrapped in `NextIntlClientProvider` to keep i18n working in 404 markup.
+- **Segment layout:** `src/app/[site]/[locale]/[[...path]]/layout.tsx`. Calls `setCachedPageParams({ site, locale })` on every request for this segment. The catch-all **page** also calls `setCachedPageParams` immediately before `notFound()` so early 404s during SSG still pass site/locale to segment not-found. Uses the SDK's React `cache()` based `set/getCachedPageParams` helpers (from `@sitecore-content-sdk/nextjs`) so segment `not-found.tsx` can read `{ site, locale }` **without** calling `headers()` — which would opt the route out of SSG. **Do not** call `headers()` in the segment not-found; keep using `getCachedPageParams()`.
 - **Root global error:** `src/app/global-error.tsx` is a Client Component (`'use client'`) that fetches `client.getErrorPage(ErrorPage.InternalServerError, ...)` on the client; it is not cached (the cache helpers are server-side).
 
 ### API route handlers
@@ -188,7 +191,7 @@ This template ships **two** not-found components and a segment layout that ties 
 
 ### Component maps and layout
 
-- **Server/client components:** `.sitecore/component-map.ts` (Server); `.sitecore/component-map.client.ts` (Client). Register all Sitecore components; keep in sync with `src/components/`.
+- **Server/client components:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client) — Lists every Sitecore component the layout can render, the maps are auto-generated from `src/components/`. Do not edit manually unless needed.
 - **Layout:** `Layout.tsx` renders page layout and placeholders; `Providers` wrap page and component context; `Bootstrap` in `[site]/layout.tsx` receives `siteName={site}` and preview state.
 
 ---
@@ -198,7 +201,7 @@ This template ships **two** not-found components and a segment layout that ties 
 - **Quick checks:** If locale or dictionary is wrong, ensure `setRequestLocale(\`${site}_${locale}\`)` is called at the top of the page and `src/i18n/request.ts` parses `requestLocale` and calls `getSitecoreDictionary`. If a content change does not appear, verify the webhook posted to `POST /api/revalidate` with the right secret and check the tag families (`sc:route`, `sc:item`, `sc:dict`) returned by the cache helpers.
 - **Security:** Use only environment variables in `sitecore.config.ts`; never hardcode API keys, editing secret, or `SITECORE_REVALIDATE_SECRET`. Do not expose secrets in client-side code or logs. Validate and sanitize user input at boundaries.
 - **Performance:** Keep middleware lightweight; use the proxy `matcher` so it does not run on `/api/*`, `_next`, sitemap, robots, or static assets. Use Server Components for data fetching and the cache helpers under `'use cache'` so cached payloads carry the right tags. Use `generateStaticParams` and caching as in the existing page.
-- **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Register new components in `.sitecore/component-map.ts` and `.sitecore/component-map.client.ts` as appropriate. Use the cache helpers in `src/lib/cache/` for all non-preview Sitecore reads so tags stay consistent across the app.
+- **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Regenerate the component maps with `npm run sitecore-tools:generate-map` or `npm run sitecore-tools:generate-map:watch`; edit the maps manually only when the generator cannot handle the change. Use the cache helpers in `src/lib/cache/` for all non-preview Sitecore reads so tags stay consistent across the app.
 - **Consistency:** Follow the existing patterns in `[site]/[locale]/[[...path]]/page.tsx`, `not-found.tsx`, `i18n/request.ts` (site_locale + `getSitecoreDictionary`), and API route handlers. When adding routes or rewrites, keep the middleware matcher and next-intl config in sync.
 
 ---
@@ -216,7 +219,8 @@ This template ships **two** not-found components and a segment layout that ties 
 | Set `SITECORE_REVALIDATE_SECRET` and send `x-revalidate-secret` when you want the endpoint protected | Hardcode the revalidate secret or expose it client-side |
 | Keep `sitecore.config.ts` dictionary cache disabled | Re-enable the SDK in-process dictionary cache (bypasses `revalidateTag`) |
 | Use Server Components for async data fetching | Put async data fetching in client components when SSR is intended |
-| Set site/locale via `setCachedPageParams` in `[site]/[locale]/[[...path]]/layout.tsx` and read with `getCachedPageParams()` in the segment `not-found.tsx` | Call `headers()` in not-found (opts out of SSG) or hardcode site/locale |
+| Set site/locale via `setCachedPageParams` in segment layout **and** in the page before `notFound()`; read with `getCachedPageParams()` in segment `not-found.tsx` | Call `headers()` in not-found (opts out of SSG) or hardcode site/locale |
+| Use `BUILD_VALIDATION_SITE` (`_DEFAULT_`) when `generateStaticPaths` is false (Cache Components); skip Edge for that site in page/metadata/not-found | `return []` from `generateStaticParams`, or use `sites[0]` / `'default'` as build fallback |
 | Use createXRouteHandler and `.sitecore/sites.json` for sitemap/robots | Hardcode site list or commit `.env` |
 | Use Sitecore field components and validate fields | Expose API keys or editing secret in client code |
 | Document required env vars in `.env.example` only | Commit `.env` or `.env.local` |
@@ -226,7 +230,7 @@ This template ships **two** not-found components and a segment layout that ties 
 
 ## Guardrails for agentic AI
 
-- **Preserve behavior:** Do not change the proxy order (PreviewProxy → BotTrackingProxy → LocaleProxy → AppRouterMultisiteProxy → …), the `[site]/[locale]/[[...path]]` route shape, the `{site}_{locale}` next-intl convention, the cache-helper boundary (cache helpers wrap non-preview Sitecore reads; preview/editing use `client.*` directly), or the `setCachedPageParams` → `getCachedPageParams` flow between the segment layout and segment `not-found.tsx` (this is what keeps the 404 SSG-safe). Preserve `draftMode` handling in layout and page.
+- **Preserve behavior:** Do not change the proxy order (PreviewProxy → BotTrackingProxy → LocaleProxy → AppRouterMultisiteProxy → …), the `[site]/[locale]/[[...path]]` route shape, the `{site}_{locale}` next-intl convention, the cache-helper boundary (cache helpers wrap non-preview Sitecore reads; preview/editing use `client.*` directly), the `BUILD_VALIDATION_SITE` build-validation flow, or the `setCachedPageParams` → `getCachedPageParams` flow between the segment layout, page, and segment `not-found.tsx` (this is what keeps the 404 SSG-safe). Preserve `draftMode` handling in layout and page.
 - **Do not expand scope:** Limit edits to the app (app router, components, API routes, cache helpers, i18n, config). Do not modify SDK packages or monorepo tooling unless explicitly asked. Do not change CI, lockfiles, or root config.
 - **Follow existing patterns:** When adding routes, layouts, or components, mirror the existing structure. Use the same Sitecore client, cache helpers, component maps, and env-based config. Do not introduce a different way to resolve site/locale, a second client, or a parallel cache layer.
 - **Verify and stay safe:** After edits, the app should build with `npm run build`. Do not commit secrets or `.env`; only document variables in `.env.example`. Do not add npm dependencies without explicit approval. When in doubt, prefer the existing implementation and ask for clarification.
@@ -236,7 +240,7 @@ This template ships **two** not-found components and a segment layout that ties 
 
 ## Example agent tasks
 
-- **Add a new Sitecore component:** Create the component under `src/components/`, register it in `.sitecore/component-map.ts` and `.sitecore/component-map.client.ts` as appropriate (client components in the client map), and ensure it is rendered in the layout/placeholder as in existing components.
+- **Add a new Sitecore component:** Create the component under `src/components/` (maps regenerate automatically during `npm run dev`; otherwise run `npm run sitecore-tools:generate-map`), and ensure it is rendered in the layout/placeholder as in existing components.
 - **Add an API route:** Create the route under `src/app/api/` (e.g. `src/app/api/my-route/route.ts`), add a rewrite in `next.config.ts` if the route should be reached from a public URL, and ensure the proxy `matcher` in `proxy.ts` still excludes it (e.g. `api/` is already excluded). If the route returns cached data, decide whether to use `'use cache'` with a Sitecore tag and how it should be invalidated.
 - **Add a new cache helper:** Add a file under `src/lib/cache/`. Inside the function, declare `'use cache';`, call the SDK client, compute Sitecore tags via the SDK helpers (`collectSitecorePageCacheTags`, `buildSitecoreDictionaryCacheTag`, etc.), and call `cacheTag(tag)` for each one. Match the style of `get-sitecore-page.ts`.
 
@@ -250,7 +254,7 @@ This template ships **two** not-found components and a segment layout that ties 
 
 **Edit with care:** `next.config.ts` (`cacheComponents: true`, rewrites, next-intl plugin), `sitecore.config.ts` (env only; keep dictionary cache disabled), `proxy.ts` (matcher and proxy order), `src/i18n/routing.ts` and `request.ts`, `src/lib/cache/*` (tag computation). When adding routes or rewrites, keep middleware `matcher` and rewrite rules consistent.
 
-**Focus on:** `src/app/`, `src/components/`, `src/lib/`, `src/lib/cache/`, `src/i18n/`, `Layout.tsx`, `Providers.tsx`, `sitecore.config.ts`, `next.config.ts`, `proxy.ts`, `.sitecore/component-map.ts`, `.sitecore/component-map.client.ts`.
+**Focus on:** `src/app/`, `src/components/`, `src/lib/`, `src/lib/cache/`, `src/i18n/`, `Layout.tsx`, `Providers.tsx`, `sitecore.config.ts`, `next.config.ts`, `proxy.ts`. `.sitecore/component-map.ts` and `.sitecore/component-map.client.ts` are auto-generated — do not edit manually.
 
 ---
 
