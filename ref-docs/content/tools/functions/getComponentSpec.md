@@ -8,7 +8,7 @@
 
 > **getComponentSpec**(`params`): `Promise`\<`ComponentSpec`\>
 
-Defined in: [content/src/tools/codegen/component-generation.ts:68](https://github.com/Sitecore/content-sdk/blob/8c0ae95ab5ce5e9d182532dcc6bf504478c506a0/packages/content/src/tools/codegen/component-generation.ts#L68)
+Defined in: [content/src/tools/codegen/component-generation.ts:68](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/content/src/tools/codegen/component-generation.ts#L68)
 
 **`Internal`**
 

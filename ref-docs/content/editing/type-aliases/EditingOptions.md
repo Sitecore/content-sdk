@@ -8,7 +8,7 @@
 
 > **EditingOptions** = `object`
 
-Defined in: [content/src/editing/editing-service.ts:45](https://github.com/Sitecore/content-sdk/blob/8c0ae95ab5ce5e9d182532dcc6bf504478c506a0/packages/content/src/editing/editing-service.ts#L45)
+Defined in: [content/src/editing/editing-service.ts:45](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/content/src/editing/editing-service.ts#L45)
 
 Options for fetching editing data
 
@@ -18,7 +18,7 @@ Options for fetching editing data
 
 > **itemId**: `string`
 
-Defined in: [content/src/editing/editing-service.ts:46](https://github.com/Sitecore/content-sdk/blob/8c0ae95ab5ce5e9d182532dcc6bf504478c506a0/packages/content/src/editing/editing-service.ts#L46)
+Defined in: [content/src/editing/editing-service.ts:46](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/content/src/editing/editing-service.ts#L46)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [content/src/editing/editing-service.ts:46](https://github.com/Sitec
 
 > **language**: `string`
 
-Defined in: [content/src/editing/editing-service.ts:47](https://github.com/Sitecore/content-sdk/blob/8c0ae95ab5ce5e9d182532dcc6bf504478c506a0/packages/content/src/editing/editing-service.ts#L47)
+Defined in: [content/src/editing/editing-service.ts:47](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/content/src/editing/editing-service.ts#L47)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [content/src/editing/editing-service.ts:47](https://github.com/Sitec
 
 > `optional` **layoutKind?**: [`LayoutKind`](../enumerations/LayoutKind.md)
 
-Defined in: [content/src/editing/editing-service.ts:49](https://github.com/Sitecore/content-sdk/blob/8c0ae95ab5ce5e9d182532dcc6bf504478c506a0/packages/content/src/editing/editing-service.ts#L49)
+Defined in: [content/src/editing/editing-service.ts:49](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/content/src/editing/editing-service.ts#L49)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [content/src/editing/editing-service.ts:49](https://github.com/Sitec
 
 > **mode**: `Exclude`\<[`LayoutServicePageState`](../../layout/enumerations/LayoutServicePageState.md), `"Normal"`\>
 
-Defined in: [content/src/editing/editing-service.ts:50](https://github.com/Sitecore/content-sdk/blob/8c0ae95ab5ce5e9d182532dcc6bf504478c506a0/packages/content/src/editing/editing-service.ts#L50)
+Defined in: [content/src/editing/editing-service.ts:50](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/content/src/editing/editing-service.ts#L50)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [content/src/editing/editing-service.ts:50](https://github.com/Sitec
 
 > `optional` **previewTime?**: `string`
 
-Defined in: [content/src/editing/editing-service.ts:53](https://github.com/Sitecore/content-sdk/blob/8c0ae95ab5ce5e9d182532dcc6bf504478c506a0/packages/content/src/editing/editing-service.ts#L53)
+Defined in: [content/src/editing/editing-service.ts:53](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/content/src/editing/editing-service.ts#L53)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [content/src/editing/editing-service.ts:53](https://github.com/Sitec
 
 > `optional` **site?**: `string`
 
-Defined in: [content/src/editing/editing-service.ts:51](https://github.com/Sitecore/content-sdk/blob/8c0ae95ab5ce5e9d182532dcc6bf504478c506a0/packages/content/src/editing/editing-service.ts#L51)
+Defined in: [content/src/editing/editing-service.ts:51](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/content/src/editing/editing-service.ts#L51)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [content/src/editing/editing-service.ts:51](https://github.com/Sitec
 
 > **variantId**: `string`
 
-Defined in: [content/src/editing/editing-service.ts:52](https://github.com/Sitecore/content-sdk/blob/8c0ae95ab5ce5e9d182532dcc6bf504478c506a0/packages/content/src/editing/editing-service.ts#L52)
+Defined in: [content/src/editing/editing-service.ts:52](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/content/src/editing/editing-service.ts#L52)
 
 ***
 
@@ -74,4 +74,4 @@ Defined in: [content/src/editing/editing-service.ts:52](https://github.com/Sitec
 
 > `optional` **version?**: `string`
 
-Defined in: [content/src/editing/editing-service.ts:48](https://github.com/Sitecore/content-sdk/blob/8c0ae95ab5ce5e9d182532dcc6bf504478c506a0/packages/content/src/editing/editing-service.ts#L48)
+Defined in: [content/src/editing/editing-service.ts:48](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/content/src/editing/editing-service.ts#L48)
