@@ -213,6 +213,16 @@ export const escapeNonSpecialQuestionMarks = (input: string): string => {
 };
 
 /**
+ * Escapes a string so it can be safely embedded in a RegExp as a literal.
+ * @param {string} input - The string to escape
+ * @returns {string} The escaped string safe for RegExp construction
+ * @internal
+ */
+export function escapeRegExp(input: string): string {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
  * Merges two URLSearchParams objects. If both objects contain the same key, the value from the second object overrides the first.
  * @param {URLSearchParams} params1 - The first set of URL search parameters.
  * @param {URLSearchParams} params2 - The second set of URL search parameters.

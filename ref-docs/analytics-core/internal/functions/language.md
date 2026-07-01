@@ -8,7 +8,7 @@
 
 > **language**(): `string` \| `undefined`
 
-Defined in: [analytics-core/src/infer/infer.ts:7](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/analytics-core/src/infer/infer.ts#L7)
+Defined in: [analytics-core/src/infer/infer.ts:7](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/analytics-core/src/infer/infer.ts#L7)
 
 **`Internal`**
 

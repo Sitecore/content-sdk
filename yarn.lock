@@ -3560,43 +3560,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/analytics-core@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@sitecore-content-sdk/analytics-core@npm:2.1.0"
-  dependencies:
-    "@sitecore-content-sdk/core": "npm:^2.1.0"
-    debug: "npm:^4.4.3"
-    isbot: "npm:^5.1.39"
-  checksum: 10/7470251836399e1205477719f493bf238c6267686dd7131334376356377f55d0c7c67fe231c32e8067fc89df67150be063dc020069a2f2af9709d020cbd402d0
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/cli@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@sitecore-content-sdk/cli@npm:2.1.0"
-  dependencies:
-    "@sitecore-content-sdk/content": "npm:^2.1.0"
-    "@sitecore-content-sdk/core": "npm:^2.1.0"
-    chokidar: "npm:^4.0.3"
-    dotenv: "npm:^16.5.0"
-    dotenv-expand: "npm:^12.0.2"
-    inquirer: "npm:^12.9.6"
-    resolve: "npm:^1.22.10"
-    tmp: "npm:^0.2.3"
-    tsx: "npm:^4.19.4"
-    yargs: "npm:^17.7.2"
-  bin:
-    sitecore-tools: dist/cjs/bin/sitecore-tools.js
-  checksum: 10/e5d2d999a3ff6b5027da972f4db75266f23be93368bfc6e878012620b136fbfe64203c3998ac894da3557f754a7a696401a54959d4bc240eef78167c17e08a64
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/cli@workspace:packages/cli":
+"@sitecore-content-sdk/cli@npm:^2.2.0, @sitecore-content-sdk/cli@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
-    "@sitecore-content-sdk/content": "npm:2.1.0-beta.1"
-    "@sitecore-content-sdk/core": "npm:2.1.0-beta.1"
+    "@sitecore-content-sdk/content": "npm:^2.2.0"
+    "@sitecore-content-sdk/core": "npm:^2.1.1"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
     "@types/inquirer": "npm:^9.0.9"
@@ -3635,13 +3604,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/content@npm:2.1.0-beta.1, @sitecore-content-sdk/content@workspace:packages/content":
+"@sitecore-content-sdk/content@npm:^2.2.0, @sitecore-content-sdk/content@workspace:packages/content":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/content@workspace:packages/content"
   dependencies:
-    "@json-render/core": "npm:0.19.0"
-    "@sitecore-content-sdk/core": "npm:2.1.0-beta.1"
-    "@sitecore-content-sdk/events": "npm:2.1.0-beta.1"
+    "@sitecore-content-sdk/core": "npm:^2.1.1"
+    "@sitecore-content-sdk/events": "npm:^2.1.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
     "@types/chai-spies": "npm:^1.0.6"
@@ -3667,7 +3635,7 @@ __metadata:
     eslint-plugin-import: "npm:2.32.0"
     eslint-plugin-jsdoc: "npm:52.0.3"
     eslint-plugin-prettier: "npm:^4.0.0"
-    glob: "npm:^11.0.2"
+    glob: "npm:^13.0.0"
     graphql: "npm:^16.11.0"
     jsdom: "npm:^26.1.0"
     mocha: "npm:^11.2.2"
@@ -3685,23 +3653,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/content@npm:^2.1.0, @sitecore-content-sdk/content@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "@sitecore-content-sdk/content@npm:2.1.1"
-  dependencies:
-    "@sitecore-content-sdk/core": "npm:^2.1.0"
-    chalk: "npm:^4.1.2"
-    debug: "npm:^4.4.0"
-    glob: "npm:^11.0.2"
-    graphql: "npm:^16.11.0"
-    url-parse: "npm:^1.5.10"
-  peerDependencies:
-    "@sitecore-content-sdk/events": ^2.1.0
-  checksum: 10/87e20ac725c389ad81f923db84212789ebb5031a190c4e55230604010397198dd59eff8595467c3a456ba19e9c1cc3b57e80e79819969298ba287e474b491257
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/core@npm:2.1.0-beta.1, @sitecore-content-sdk/core@workspace:packages/core":
+"@sitecore-content-sdk/core@npm:^2.1.0, @sitecore-content-sdk/core@npm:^2.1.1, @sitecore-content-sdk/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/core@workspace:packages/core"
   dependencies:
@@ -3781,55 +3733,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/events@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@sitecore-content-sdk/events@npm:2.1.0"
-  dependencies:
-    "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
-    "@sitecore-content-sdk/core": "npm:^2.1.0"
-    debug: "npm:^4.4.3"
-  checksum: 10/16bc271c8409d638e4f12145ff5c56b5e5f0225e831b9b640d45aa3b51c0cd88ca3b6e5f8c27f0917d3b3efb0bc981e8772ac46d518d17b1a730efcb67c620ff
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/nextjs@npm:^2.1.0":
-  version: 2.1.1
-  resolution: "@sitecore-content-sdk/nextjs@npm:2.1.1"
-  dependencies:
-    "@babel/parser": "npm:^7.27.2"
-    "@sitecore-content-sdk/content": "npm:^2.1.1"
-    "@sitecore-content-sdk/core": "npm:^2.1.0"
-    "@sitecore-content-sdk/events": "npm:^2.1.0"
-    "@sitecore-content-sdk/react": "npm:^2.1.0"
-    recast: "npm:^0.23.11"
-    regex-parser: "npm:^2.3.1"
-    sync-disk-cache: "npm:^2.1.0"
-  peerDependencies:
-    "@sitecore-content-sdk/analytics-core": ^2.1.0
-    "@sitecore-content-sdk/events": ^2.1.0
-    "@sitecore-content-sdk/personalize": ^2.1.0
-    next: ^16.2.0
-    react: ^19.2.1
-    react-dom: ^19.2.1
-    typescript: ^5.4.0
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 10/e5c428714a41334afc5c7592609a225b591653abae8d7e5175fbf95b588344c8139a8f9be94e0ca02acc2a13f85baffaa3ff4a1fa43938ee84fad3d21a0c7e36
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/nextjs@workspace:packages/nextjs":
+"@sitecore-content-sdk/nextjs@npm:^2.2.0, @sitecore-content-sdk/nextjs@workspace:packages/nextjs":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/nextjs@workspace:packages/nextjs"
   dependencies:
-    "@babel/parser": "npm:^7.27.2"
-    "@sitecore-content-sdk/analytics-core": "npm:2.1.0-beta.1"
-    "@sitecore-content-sdk/content": "npm:2.1.0-beta.1"
-    "@sitecore-content-sdk/core": "npm:2.1.0-beta.1"
-    "@sitecore-content-sdk/events": "npm:2.1.0-beta.1"
-    "@sitecore-content-sdk/personalize": "npm:2.1.0-beta.1"
-    "@sitecore-content-sdk/react": "npm:2.1.0-beta.1"
+    "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
+    "@sitecore-content-sdk/content": "npm:^2.2.0"
+    "@sitecore-content-sdk/core": "npm:^2.1.1"
+    "@sitecore-content-sdk/events": "npm:^2.1.0"
+    "@sitecore-content-sdk/personalize": "npm:^2.1.0"
+    "@sitecore-content-sdk/react": "npm:^2.2.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@testing-library/dom": "npm:^10.4.0"
     "@testing-library/react": "npm:^16.3.0"
@@ -3856,7 +3769,6 @@ __metadata:
     eslint-plugin-prettier: "npm:^4.0.0"
     eslint-plugin-react: "npm:7.37.5"
     eslint-plugin-react-hooks: "npm:5.2.0"
-    glob: "npm:^11.0.2"
     jsdom: "npm:^26.1.0"
     mocha: "npm:^11.2.2"
     next: "npm:^16.2.0"
@@ -3915,27 +3827,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/personalize@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@sitecore-content-sdk/personalize@npm:2.1.0"
-  dependencies:
-    "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
-    "@sitecore-content-sdk/core": "npm:^2.1.0"
-    "@sitecore-content-sdk/events": "npm:^2.1.0"
-    debug: "npm:^4.4.3"
-  checksum: 10/975bcc3218629485d80130e1863db78673b4c4cd5c19b1449417a3f86bf2ab6b4ef7cf22aea055f70aec9206d1ab6eb435e6c373eb2c6ddf5417b52acd315af1
-  languageName: node
-  linkType: hard
-
-"@sitecore-content-sdk/react@npm:2.1.0-beta.1, @sitecore-content-sdk/react@workspace:packages/react":
+"@sitecore-content-sdk/react@npm:^2.2.0, @sitecore-content-sdk/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
-    "@json-render/core": "npm:0.19.0"
-    "@json-render/react": "npm:0.19.0"
-    "@sitecore-content-sdk/analytics-core": "npm:2.1.0-beta.1"
-    "@sitecore-content-sdk/content": "npm:2.1.0-beta.1"
-    "@sitecore-content-sdk/core": "npm:2.1.0-beta.1"
+    "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
+    "@sitecore-content-sdk/content": "npm:^2.2.0"
+    "@sitecore-content-sdk/core": "npm:^2.1.1"
     "@sitecore-content-sdk/search": "npm:^0.3.0"
     "@sitecore-feaas/clientside": "npm:^0.6.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
@@ -5826,11 +5724,11 @@ __metadata:
   linkType: hard
 
 "baseline-browser-mapping@npm:^2.10.12, baseline-browser-mapping@npm:^2.9.19":
-  version: 2.10.37
-  resolution: "baseline-browser-mapping@npm:2.10.37"
+  version: 2.10.38
+  resolution: "baseline-browser-mapping@npm:2.10.38"
   bin:
     baseline-browser-mapping: dist/cli.cjs
-  checksum: 10/5bf887e82a238ab2ec216283ab2c44291d5ad917b4c4d21bb88f466be513223bda20d746c2758cdb0be5b3dad1e52ee8b468dbc196096da92673d6904992af66
+  checksum: 10/cb6c9913df1e8f0f9040cdacd3af0371f2daf2b16563d86d3b208c14a392b4783a6be434b9e7cf5dc413d6e40548b7b719e1a12e59789fb4b3db37146fb9e6b2
   languageName: node
   linkType: hard
 
@@ -6586,9 +6484,9 @@ __metadata:
   resolution: "create-content-sdk-app@workspace:packages/create-content-sdk-app"
   dependencies:
     "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
-    "@sitecore-content-sdk/cli": "npm:^2.1.0"
+    "@sitecore-content-sdk/cli": "npm:^2.2.0"
     "@sitecore-content-sdk/events": "npm:^2.1.0"
-    "@sitecore-content-sdk/nextjs": "npm:^2.1.0"
+    "@sitecore-content-sdk/nextjs": "npm:^2.2.0"
     "@sitecore-content-sdk/personalize": "npm:^2.1.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
@@ -6617,7 +6515,7 @@ __metadata:
     eslint-plugin-jsdoc: "npm:52.0.3"
     eslint-plugin-prettier: "npm:^4.0.0"
     fs-extra: "npm:^11.3.0"
-    glob: "npm:^11.0.2"
+    glob: "npm:^13.0.0"
     inquirer: "npm:^8.2.4"
     minimist: "npm:^1.2.8"
     mocha: "npm:^11.2.2"
@@ -7180,9 +7078,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.328":
-  version: 1.5.373
-  resolution: "electron-to-chromium@npm:1.5.373"
-  checksum: 10/f255e8de2e97a69b658b7ddbdf5d9fef9663f98665832eb7ccf583d054a13012c7e90331771abe866a5b4fa3583059bfa699fa381c51e7022d58fc5e997e6077
+  version: 1.5.376
+  resolution: "electron-to-chromium@npm:1.5.376"
+  checksum: 10/7a9ee4c1bb189471be1cb6165fe8c305fe0024ac7425c782fd3bd9a0eb0094d1ca2d161e6886f8c7e691901d76b489700f5c5ae229469fe215f02569a2e9a040
   languageName: node
   linkType: hard
 
@@ -8809,7 +8707,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^11.0.2, glob@npm:^11.0.3":
+"glob@npm:^11.0.3":
   version: 11.1.0
   resolution: "glob@npm:11.1.0"
   dependencies:
@@ -11809,11 +11707,11 @@ __metadata:
   linkType: hard
 
 "nanoid@npm:^3.3.12, nanoid@npm:^3.3.6":
-  version: 3.3.12
-  resolution: "nanoid@npm:3.3.12"
+  version: 3.3.13
+  resolution: "nanoid@npm:3.3.13"
   bin:
     nanoid: bin/nanoid.cjs
-  checksum: 10/6eec280694e2088d18fb802b1e3bfc4578e27b665b7ecfbe36c7356612fea2f814277056e671e2a1529dff551588a652efdc0bfa39f8a3185bc2247be311872e
+  checksum: 10/e9d4c96f0fd42effa696103395c3d71f1123125f7ad926c7a2222b1d1691df4ddfa35e833549bc46bcc807fcfac776ff9fd737226ee37a0561f61747fa061eb9
   languageName: node
   linkType: hard
 
@@ -12011,9 +11909,9 @@ __metadata:
   linkType: hard
 
 "node-releases@npm:^2.0.36":
-  version: 2.0.47
-  resolution: "node-releases@npm:2.0.47"
-  checksum: 10/6ba88359ea4a653bcb428c7ac47a3b9093d0fe873d0fbda8b6714df6d1829630769d1c737d5938458af6a101b4bb7c70bcf7e38f36db469a17a348261d26f822
+  version: 2.0.48
+  resolution: "node-releases@npm:2.0.48"
+  checksum: 10/775cdbd4cfa7dbf663b70d51b1d0d03fd019ff942f9a6a40f2ea0ce62abb82c92b2b120c0b52d1b5143f73bf49691983fed4f6e4d6c5a3d872092a60336096ff
   languageName: node
   linkType: hard
 
@@ -16380,7 +16278,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:17.7.2, yargs@npm:^17.3.1, yargs@npm:^17.7.2":
+"yargs@npm:17.7.2":
   version: 17.7.2
   resolution: "yargs@npm:17.7.2"
   dependencies:
@@ -16415,8 +16313,8 @@ __metadata:
   linkType: hard
 
 "yargs@npm:^16.2.0":
-  version: 16.2.0
-  resolution: "yargs@npm:16.2.0"
+  version: 16.2.2
+  resolution: "yargs@npm:16.2.2"
   dependencies:
     cliui: "npm:^7.0.2"
     escalade: "npm:^3.1.1"
@@ -16425,7 +16323,22 @@ __metadata:
     string-width: "npm:^4.2.0"
     y18n: "npm:^5.0.5"
     yargs-parser: "npm:^20.2.2"
-  checksum: 10/807fa21211d2117135d557f95fcd3c3d390530cda2eca0c840f1d95f0f40209dcfeb5ec18c785a1f3425896e623e3b2681e8bb7b6600060eda1c3f4804e7957e
+  checksum: 10/4ea83fae599077207a663d07c3b8de5d6879e7030bef3ebcddd1e6f9ed63f6622b04c84bf9c2121df626d25f3e2d832a6573e47343a75f05d982df2b60d5e9bd
+  languageName: node
+  linkType: hard
+
+"yargs@npm:^17.3.1, yargs@npm:^17.7.2":
+  version: 17.7.3
+  resolution: "yargs@npm:17.7.3"
+  dependencies:
+    cliui: "npm:^8.0.1"
+    escalade: "npm:^3.1.1"
+    get-caller-file: "npm:^2.0.5"
+    require-directory: "npm:^2.1.1"
+    string-width: "npm:^4.2.3"
+    y18n: "npm:^5.0.5"
+    yargs-parser: "npm:^21.1.1"
+  checksum: 10/a3826798c03b159e139d0580a3b2733953889a9a1bac8e4e1ca7a1a249b55315b213c323a6a1dbdb305f6e59496a9eaa810742c87e34abcf1a0584d8f59212a1
   languageName: node
   linkType: hard
 

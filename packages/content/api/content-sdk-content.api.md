@@ -389,6 +389,7 @@ export type EditingOptions = {
     mode: Exclude<LayoutServicePageState, 'Normal'>;
     site?: string;
     variantId: string;
+    previewTime?: string;
 };
 
 // @public
@@ -400,6 +401,7 @@ export type EditingPreviewData = {
     variantId: string;
     version?: string;
     layoutKind?: LayoutKind;
+    previewTime?: string;
 };
 
 // @internal
@@ -416,6 +418,8 @@ export interface EditingRenderQueryParams {
     sc_lang: string;
     // (undocumented)
     sc_layoutKind?: LayoutKind;
+    // (undocumented)
+    sc_previewTime?: string;
     // (undocumented)
     sc_site: string;
     // (undocumented)

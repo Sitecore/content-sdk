@@ -17,6 +17,7 @@ export interface EditingRenderQueryParams {
   sc_layoutKind?: LayoutKind;
   sc_variant?: string;
   sc_version?: string;
+  sc_previewTime?: string;
 }
 
 /**
@@ -71,6 +72,7 @@ export type EditingPreviewData = {
   variantId: string;
   version?: string;
   layoutKind?: LayoutKind;
+  previewTime?: string;
 };
 
 /**

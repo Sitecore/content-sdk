@@ -8,7 +8,7 @@
 
 > **LinkProps** = `ReactLinkProps` & `object` & `Pick`\<`NextLinkProps`, *typeof* `supportedNextLinkProps`\[`number`\]\>
 
-Defined in: [nextjs/src/components/Link.tsx:29](https://github.com/Sitecore/content-sdk/blob/741a10fca7aacb6f4518425a45f3773d17a013c1/packages/nextjs/src/components/Link.tsx#L29)
+Defined in: [nextjs/src/components/Link.tsx:29](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/nextjs/src/components/Link.tsx#L29)
 
 The interface for the Link component props.
 

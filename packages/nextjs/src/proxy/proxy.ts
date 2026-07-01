@@ -12,6 +12,12 @@ import { ProxiesContext } from './types';
 export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
 export const LOCALE_HEADER_NAME = 'x-sc-locale';
 
+const REDIRECT_STATUS_MIN = 300;
+const REDIRECT_STATUS_MAX = 399;
+
+const isRedirectStatus = (status: number) =>
+  status >= REDIRECT_STATUS_MIN && status <= REDIRECT_STATUS_MAX;
+
 /**
  * The interface for the Proxy configuration.
  * @public
@@ -307,8 +313,11 @@ export const defineProxy = (...proxies: ProxyHandler[]) => {
         (p, proxy) =>
           p.then((res) => {
             // Short-circuit the remaining proxies once a previous one
-            // denied the request (e.g. PreviewProxy returning 403).
-            if (res.status === 403) return res;
+            // denied the request (e.g. PreviewProxy returning 403) or issued
+            // a redirect (e.g. RedirectsProxy returning 302).
+            // Note: Next.js 16 may leave `redirected` false on redirect responses,
+            // so also check for 3xx status codes.
+            if (res.status === 403 || res.redirected || isRedirectStatus(res.status)) return res;
 
             return proxy.handle(req, res, proxiesContext);
           }),
