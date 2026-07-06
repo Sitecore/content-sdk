@@ -119,6 +119,33 @@ describe('<Text />', () => {
     expect(rendered?.innerHTML).to.contain(field.value);
   });
 
+  it('should render multiline html without object coercion when encoding is disabled', () => {
+    const field = {
+      value: 'Line one\n<a href="#"> Hola </a>',
+    };
+    const rendered = render(<Text field={field} encode={false} />).container.querySelector('span');
+    expect(rendered?.innerHTML).to.equal('Line one<br><a href="#"> Hola </a>');
+    expect(rendered?.innerHTML).to.not.contain('[object Object]');
+    expect(rendered?.querySelector('a')?.getAttribute('href')).to.equal('#');
+  });
+
+  it('should render inline html unchanged when encoding is disabled', () => {
+    const field = {
+      value: 'Line one <a href="#"> Hola </a>',
+    };
+    const rendered = render(<Text field={field} encode={false} />).container.querySelector('span');
+    expect(rendered?.innerHTML).to.equal('Line one <a href="#"> Hola </a>');
+    expect(rendered?.innerHTML).to.not.contain('[object Object]');
+  });
+
+  it('should render multiline plain text with line breaks when encoding is disabled', () => {
+    const field = {
+      value: 'xxx\n\naa\nbbb\ndd',
+    };
+    const rendered = render(<Text field={field} encode={false} />).container.querySelector('span');
+    expect(rendered?.innerHTML).to.equal('xxx<br><br>aa<br>bbb<br>dd');
+  });
+  
   it('should render tag with a tag provided', () => {
     const field = {
       value: 'value',
