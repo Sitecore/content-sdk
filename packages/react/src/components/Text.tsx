@@ -39,7 +39,7 @@ const TextComponent: React.FC<TextProps> = ({ field, tag, editable = true, encod
     editable = false;
   }
 
-  const value = field.value === undefined ? '' : field.value;
+  const value = field.value ?? '';
 
   let children = null;
   const htmlProps: {
