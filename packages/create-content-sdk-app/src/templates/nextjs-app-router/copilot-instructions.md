@@ -42,6 +42,7 @@ src/
 
 ### @sitecore-content-sdk
 - Use `SitecoreClient` for content fetching
+- In `generateStaticParams`, call `getAppRouterStaticParams` only when `scConfig.generateStaticPaths` is true; otherwise return `[]`
 - Implement proper error handling with try/catch blocks
 - Cache API responses using React Query or SWR
 - Handle content preview vs. published content scenarios

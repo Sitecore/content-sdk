@@ -1,5 +1,5 @@
 import { constants } from '@sitecore-content-sdk/core';
-import { normalizeUrl } from '@sitecore-content-sdk/core/tools';
+import { normalizeUrl, escapeRegExp } from '@sitecore-content-sdk/core/tools';
 
 /** Default Edge hostname derived from the default Edge URL (edge.sitecorecloud.io). @internal */
 const DEFAULT_EDGE_HOSTNAME = new URL(constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT).hostname;
@@ -29,16 +29,6 @@ const EDGE_HOST_PATTERN = new RegExp(
   `https?://${escapeRegExp(DEFAULT_EDGE_HOSTNAME)}`,
   'gi'
 );
-
-/**
- * Escapes a string so it can be safely embedded in a RegExp as a literal.
- * @param {string} input - The string to escape
- * @returns {string} The escaped string safe for RegExp construction
- * @internal
- */
-export function escapeRegExp(input: string): string {
-  return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
 
 /**
  * Rewrites Experience Edge hostnames in a response object to use the custom hostname.

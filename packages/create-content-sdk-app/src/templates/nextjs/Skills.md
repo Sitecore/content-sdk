@@ -16,11 +16,11 @@ Grouping related capabilities makes it easier to know which area of the app appl
 
 ### content-sdk-component-scaffold
 
-Creating new Sitecore components: file structure, props interface, and placement under `src/components/`. Use when adding a new component from scratch. Register in `.sitecore/component-map.ts`.
+Creating new Sitecore components: file structure, props interface, and placement under `src/components/`. Use when adding a new component from scratch. Map regenerates automatically during `npm run dev`; run `npm run sitecore-tools:generate-map` if dev is not running.
 
 ### content-sdk-component-registration
 
-Registering components in `.sitecore/component-map.ts` only. Required so layout and editing can resolve and render components. Used by getComponentData and editing API routes. Pages Router has a single map.
+Registering components in `.sitecore/component-map.ts` only. Required so layout and editing can resolve and render components. Regenerate `.sitecore/component-map.ts` with `npm run sitecore-tools:generate-map`; edit the map manually only when the generator cannot handle the change. Used by getComponentData and editing API routes.
 
 ### content-sdk-editing-safe-rendering
 
@@ -56,7 +56,7 @@ Sitemap and robots: `src/pages/api/sitemap.ts` and `src/pages/api/robots.ts` wit
 
 ### content-sdk-component-variants
 
-Component variants: different renderings or data-driven variants of the same component type. Use when one component has multiple presentations. Register in `.sitecore/component-map.ts`; getComponentData resolves props.
+Component variants: different renderings or data-driven variants of the same component type. Use when one component has multiple presentations. Regenerate the component map; getComponentData resolves props.
 
 ### content-sdk-troubleshoot-editing
 

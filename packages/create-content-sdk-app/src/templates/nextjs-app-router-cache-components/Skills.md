@@ -16,11 +16,11 @@ Grouping related capabilities makes it easier to know which area of the app appl
 
 ### content-sdk-component-scaffold
 
-Creating new Sitecore components: file structure, props interface, and placement under `src/components/`. Use when adding a new component from scratch. In App Router, decide Server vs Client and register in the appropriate map.
+Creating new Sitecore components: file structure, props interface, and placement under `src/components/`. Use when adding a new component from scratch. Map regenerates automatically during `npm run dev`; run `npm run sitecore-tools:generate-map` if dev is not running. In App Router, decide Server vs Client (`'use client'`) so the generator places the entry in the correct map.
 
 ### content-sdk-component-registration
 
-Registering components in `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client). Required so layout and editing can resolve and render components. App Router has separate server and client maps.
+Registering components in `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client). Required so layout and editing can resolve and render components. Regenerate with `npm run sitecore-tools:generate-map`; edit the maps manually only when the generator cannot handle the change. App Router has separate server and client maps.
 
 ### content-sdk-editing-safe-rendering
 
@@ -32,11 +32,11 @@ Using SDK field components: `<Text>`, `<RichText>`, `<Image>`, `<Link>`, with pr
 
 ### content-sdk-graphql-data-fetching
 
-Page and dictionary fetching via the cache helpers in `src/lib/cache/`. Use `getSitecorePage({ site, locale, path })`, `getSitecoreDictionary({ site, locale })`, `getSitecoreErrorPage({ site, locale, code })` for cached reads with Sitecore tags. Use `client.getPreview` / `client.getDesignLibraryData` directly for preview, and `client.getAppRouterStaticParams` for SSG.
+Page and dictionary fetching via the cache helpers in `src/lib/cache/`. Use `getSitecorePage({ site, locale, path })`, `getSitecoreDictionary({ site, locale })`, `getSitecoreErrorPage({ site, locale, code })` for cached reads with Sitecore tags. Use `client.getPreview` / `client.getDesignLibraryData` directly for preview. In `generateStaticParams`, call `client.getAppRouterStaticParams` when `scConfig.generateStaticPaths` is true; when false, return `{ site: BUILD_VALIDATION_SITE, locale, path: [] }` from `src/lib/sitecore-build-validation.ts` (not `return []`). Skip Edge in page/metadata/not-found when `isBuildValidationSite(site)`.
 
 ### content-sdk-route-configuration
 
-Routing: single catch-all at `src/app/[site]/[locale]/[[...path]]/page.tsx`. Layout chain: `app/layout.tsx` → `app/[site]/layout.tsx` (Bootstrap, draftMode) → `app/[site]/[locale]/[[...path]]/layout.tsx` (calls `setCachedPageParams({ site, locale })`) → page. Call `setRequestLocale(\`${site}_${locale}\`)` at the top of the page. **Two not-founds**: the segment `[[...path]]/not-found.tsx` reads `getCachedPageParams()` (set by the segment layout) and calls `getSitecoreErrorPage` — staying SSG-safe because it never calls `headers()`. The root `src/app/not-found.tsx` falls back to `scConfig.defaultSite` / `scConfig.defaultLanguage` for unrouted requests. `global-error.tsx` uses `client.getErrorPage` directly (it's a Client Component, not cached).
+Routing: single catch-all at `src/app/[site]/[locale]/[[...path]]/page.tsx`. Layout chain: `app/layout.tsx` → `app/[site]/layout.tsx` (Bootstrap, draftMode) → `app/[site]/[locale]/[[...path]]/layout.tsx` (calls `setCachedPageParams({ site, locale })`) → page. Call `setRequestLocale(\`${site}_${locale}\`)` in the page. **Two not-founds**: segment `[[...path]]/not-found.tsx` reads `getCachedPageParams()` (set by layout and by the page before `notFound()`); skips Edge for `BUILD_VALIDATION_SITE` (`_DEFAULT_`) on site, or when site is empty; otherwise calls `getSitecoreErrorPage`. Root `src/app/not-found.tsx` falls back to `scConfig.defaultSite` / `scConfig.defaultLanguage`. `global-error.tsx` uses `client.getErrorPage` directly (Client Component, not cached).
 
 ### content-sdk-site-setup-and-env
 
@@ -44,7 +44,7 @@ Site and environment: `sitecore.config.ts`, environment variables, default site 
 
 ### content-sdk-multisite-management
 
-Multisite: `.sitecore/sites.json`, proxy in `src/proxy.ts`. Chain order is **fixed:** PreviewProxy → BotTrackingProxy → LocaleProxy → AppRouterMultisiteProxy → RedirectsProxy → PersonalizeProxy. Do not change proxy order.
+Multisite: `.sitecore/sites.json` (CLI `generateSites` — Edge sites plus configured `defaultSite` only when `NEXT_PUBLIC_DEFAULT_SITE_NAME` is set), proxy in `src/proxy.ts`. Chain order is **fixed:** PreviewProxy → BotTrackingProxy → LocaleProxy → AppRouterMultisiteProxy → RedirectsProxy → PersonalizeProxy. Do not change proxy order.
 
 ### content-sdk-dictionary-and-i18n
 
@@ -56,7 +56,7 @@ Sitemap and robots: `src/app/api/sitemap/route.ts` and `src/app/api/robots/route
 
 ### content-sdk-component-variants
 
-Component variants: different renderings or data-driven variants of the same component type. Use when one component has multiple presentations. Register in the appropriate component map (server or client).
+Component variants: different renderings or data-driven variants of the same component type. Use when one component has multiple presentations. Regenerate the component maps.
 
 ### content-sdk-troubleshoot-editing
 

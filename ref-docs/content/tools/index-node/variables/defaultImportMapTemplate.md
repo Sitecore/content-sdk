@@ -8,7 +8,7 @@
 
 > **defaultImportMapTemplate**: (`indexedImportMap`, `framework`, `defaultImportEntriesImport`) => `string` = `_defaultMapTemplate`
 
-Defined in: [content/src/tools/codegen/import-map.ts:37](https://github.com/Sitecore/content-sdk/blob/bcebed4474f8688a76cf336fc140f0418499ac2f/packages/content/src/tools/codegen/import-map.ts#L37)
+Defined in: [content/src/tools/codegen/import-map.ts:37](https://github.com/Sitecore/content-sdk/blob/0741bb452b2ea3f885223f053dfeee4bf32d3e9e/packages/content/src/tools/codegen/import-map.ts#L37)
 
 **`Internal`**
 

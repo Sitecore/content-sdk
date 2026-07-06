@@ -109,7 +109,7 @@ describe('generateSites', () => {
       { name: 'site1', hostName: 'site1.com', language: 'de/DE' },
       { name: 'site2', hostName: 'site2.com', language: 'da/DK' },
     ];
-    sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').resolves(fetchedSites);
+    sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').resolves([...fetchedSites]);
 
     const config: GenerateSitesConfig = {};
 
@@ -119,9 +119,50 @@ describe('generateSites', () => {
     expect(ensurePathExistsStub.calledWith(expectedPath)).to.be.true;
 
     expect(
+      fsWriteFileSyncStub.calledWith(
+        expectedPath,
+        JSON.stringify([defaultSite, ...fetchedSites], null, 2),
+        {
+          encoding: 'utf8',
+        }
+      )
+    ).to.be.true;
+  });
+
+  it('should not prepend default site when defaultSite is not configured', async () => {
+    const fetchedSites: SiteInfo[] = [
+      { name: 'site1', hostName: 'site1.com', language: 'de/DE' },
+    ];
+    sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').resolves([...fetchedSites]);
+
+    const scConfig = defineConfig({
+      ...mockConfig,
+      defaultSite: undefined,
+    });
+    const generate = generateSites({});
+    await generate({ scConfig });
+
+    const expectedPath = path.resolve('.sitecore/sites.json');
+    expect(
       fsWriteFileSyncStub.calledWith(expectedPath, JSON.stringify(fetchedSites, null, 2), {
         encoding: 'utf8',
       })
+    ).to.be.true;
+  });
+
+  it('should write an empty sites file when defaultSite is not configured and no sites are fetched', async () => {
+    sinon.stub(SiteInfoService.prototype, 'fetchSiteInfo').resolves([]);
+
+    const scConfig = defineConfig({
+      ...mockConfig,
+      defaultSite: undefined,
+    });
+    const generate = generateSites({});
+    await generate({ scConfig });
+
+    const expectedPath = path.resolve('.sitecore/sites.json');
+    expect(
+      fsWriteFileSyncStub.calledWith(expectedPath, JSON.stringify([], null, 2), { encoding: 'utf8' })
     ).to.be.true;
   });
 
