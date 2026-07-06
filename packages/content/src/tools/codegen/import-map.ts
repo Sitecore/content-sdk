@@ -376,6 +376,32 @@ const prepImportMaps = async (paths: string[], separateMaps?: boolean): Promise<
   ];
 };
 
+const writeStubImportMaps = (
+  args: WriteImportMapArgsInternal,
+  defaultTemplate: (indexedImportMap: Map<string, ModuleExports>) => string,
+  clientTemplate: (indexedImportMap: Map<string, ModuleExports>) => string
+) => {
+  const sitecoreDir = path.join(process.cwd(), '.sitecore');
+  if (!fs.existsSync(sitecoreDir)) {
+    fs.mkdirSync(sitecoreDir, { recursive: true });
+  }
+
+  const emptyMap = new Map<string, ModuleExports>();
+  const stubMaps: ImportMapDef[] = args.separateServerClientMaps
+    ? [
+        { map: emptyMap, path: path.join(sitecoreDir, 'import-map.server.ts') },
+        { map: emptyMap, path: path.join(sitecoreDir, 'import-map.client.ts'), isClient: true },
+      ]
+    : [{ map: emptyMap, path: path.join(sitecoreDir, 'import-map.ts') }];
+
+  for (const importMap of stubMaps) {
+    const importMapContent = importMap.isClient
+      ? clientTemplate(importMap.map)
+      : defaultTemplate(importMap.map);
+    fs.writeFileSync(importMap.path, importMapContent, { encoding: 'utf8' });
+  }
+};
+
 /**
  * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
  * @param {WriteImportMapArgsInternal} args include/exclude paths settings to be processed for import-map, and the Sitecore configuration.
@@ -391,7 +417,10 @@ export const writeImportMap = (args: WriteImportMapArgsInternal) => {
     }
 
     if (scConfig.disableCodeGeneration) {
-      debug.common('Skipping import map generation. Code generation functionality is disabled.');
+      debug.common(
+        'Code generation is disabled. Writing empty import map stubs for bundler resolution.'
+      );
+      writeStubImportMaps(args, defaultTemplate, clientTemplate);
       return;
     }
     const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
