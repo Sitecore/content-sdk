@@ -1,4 +1,3 @@
-import { escapeRegExp } from '@sitecore-content-sdk/content/layout';
 import {
   RedirectsService,
   RedirectsServiceConfig,
