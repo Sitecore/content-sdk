@@ -444,7 +444,7 @@ describe('<DesignLibraryServer />', () => {
         expect(importMapLoaderSpy).to.have.been.called;
       });
 
-      it('should set componentInitError when loadImportMap is not provided', async () => {
+      it('should use noop import map when loadImportMap is not provided', async () => {
         const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
         const page = getPage(layoutData, modeLibraryMetadata_Gen);
         const awaitedDesignLibraryServer = await DesignLibraryServerVariantGeneration({
@@ -455,10 +455,8 @@ describe('<DesignLibraryServer />', () => {
         render(awaitedDesignLibraryServer);
 
         const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
-        expect(propsPassed.componentInitError).to.deep.equal({
-          message: 'No loadImportMap provided',
-          type: DesignLibraryPreviewError.ImportMapMissing,
-        });
+        expect(propsPassed.componentInitError).to.be.undefined;
+        expect(propsPassed.importMap).to.deep.equal([]);
       });
 
       it('should set componentInitError when loadImportMap throws', async () => {

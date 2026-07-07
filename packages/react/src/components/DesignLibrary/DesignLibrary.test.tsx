@@ -607,7 +607,7 @@ describe('<DesignLibrary />', () => {
       });
     });
 
-    it('sends error event when no import map is provided', async () => {
+    it('uses noop import map when loadImportMap is not provided', async () => {
       const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
 
       render(
@@ -617,6 +617,8 @@ describe('<DesignLibrary />', () => {
       );
 
       await waitFor(() => {
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+        expect(addComponentPreviewHandlerSpy.firstCall.args[0]).to.deep.equal([]);
         expect(
           postMessageSpy
             .getCalls()
@@ -631,7 +633,7 @@ describe('<DesignLibrary />', () => {
                 )
               )
             )
-        ).to.be.true;
+        ).to.be.false;
       });
     });
   });
