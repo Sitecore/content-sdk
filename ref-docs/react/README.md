@@ -114,6 +114,7 @@
 - [getChildPlaceholder](functions/getChildPlaceholder.md)
 - [getDesignLibraryStylesheetLinks](functions/getDesignLibraryStylesheetLinks.md)
 - [getFieldValue](functions/getFieldValue.md)
+- [noopLoadImportMap](functions/noopLoadImportMap.md)
 - [Placeholder](functions/Placeholder.md)
 - [PlaceholderMetadata](functions/PlaceholderMetadata.md)
 - [renderEmptyPlaceholder](functions/renderEmptyPlaceholder.md)
