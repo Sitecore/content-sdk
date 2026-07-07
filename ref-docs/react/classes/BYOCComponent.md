@@ -6,7 +6,7 @@
 
 # Class: BYOCComponent
 
-Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:30](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L30)
+Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:30](https://github.com/Sitecore/content-sdk/blob/0741bb452b2ea3f885223f053dfeee4bf32d3e9e/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L30)
 
 BYOCComponent facilitate the rendering of external components. It manages potential errors,
 missing components, and customization of error messages or alternative rendering components.
@@ -27,7 +27,7 @@ component props
 
 > **new BYOCComponent**(`props`): `BYOCComponent`
 
-Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:33](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L33)
+Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:33](https://github.com/Sitecore/content-sdk/blob/0741bb452b2ea3f885223f053dfeee4bf32d3e9e/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L33)
 
 #### Parameters
 
@@ -91,7 +91,7 @@ Defined in: packages/react/node\_modules/@types/react/index.d.ts:979
 
 > **state**: `Readonly`\<\{ `error?`: `Error`; \}\>
 
-Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:31](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L31)
+Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:31](https://github.com/Sitecore/content-sdk/blob/0741bb452b2ea3f885223f053dfeee4bf32d3e9e/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L31)
 
 #### Overrides
 
@@ -154,7 +154,7 @@ Only kept in types for backwards compatibility. Will be removed in a future majo
 
 > **componentDidCatch**(`error`): `void`
 
-Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:43](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L43)
+Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:43](https://github.com/Sitecore/content-sdk/blob/0741bb452b2ea3f885223f053dfeee4bf32d3e9e/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L43)
 
 Catches exceptions generated in descendant components. Unhandled exceptions will cause
 the entire component tree to unmount.
@@ -411,7 +411,7 @@ lifecycle events from running.
 
 > **render**(): `Element`
 
-Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:47](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L47)
+Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:47](https://github.com/Sitecore/content-sdk/blob/0741bb452b2ea3f885223f053dfeee4bf32d3e9e/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L47)
 
 #### Returns
 
@@ -610,7 +610,7 @@ this from being invoked.
 
 > `static` **getDerivedStateFromError**(`error`): `object`
 
-Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:38](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L38)
+Defined in: [packages/react/src/components/FEaaS/BYOCWrapper.tsx:38](https://github.com/Sitecore/content-sdk/blob/0741bb452b2ea3f885223f053dfeee4bf32d3e9e/packages/react/src/components/FEaaS/BYOCWrapper.tsx#L38)
 
 #### Parameters
 
