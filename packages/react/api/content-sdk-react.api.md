@@ -621,7 +621,7 @@ export function withSitecore(options?: UseSitecoreOptions): <ComponentProps exte
 // Warnings were encountered during analysis:
 //
 // src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point api-surface.d.ts
-// src/components/SitecoreProvider.tsx:95:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
+// src/components/SitecoreProvider.tsx:96:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 
