@@ -21,8 +21,9 @@ export interface SitecoreProviderProps {
   page: Page;
   /**
    * The dynamic import for import map to be used in variant generation mode.
+   * When omitted, an empty import map is used (ex: code generation is disabled).
    */
-  loadImportMap: () => Promise<ImportMapImport>;
+  loadImportMap?: () => Promise<ImportMapImport>;
 
   children: React.ReactNode;
 }
@@ -93,7 +94,7 @@ export const ImportMapReactContext = React.createContext<
  * @public
  */
 export const SitecoreProvider = (props: SitecoreProviderProps) => {
-  const { api, page: propsPage, componentMap, loadImportMap, children } = props;
+  const { api, page: propsPage, componentMap, loadImportMap = () => Promise.resolve({ default: [] }), children } = props;
 
   const [page, setPageInternal] = useState<Page>(propsPage);
 

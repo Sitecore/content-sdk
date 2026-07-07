@@ -23,8 +23,9 @@ export type DesignLibraryServerProps = {
   page: Page;
   /**
    * The dynamic import for sever import map to be used in variant generation mode.
+   * When omitted, an empty import map is used (ex: code generation is disabled).
    */
-  loadServerImportMap: () => Promise<ImportMapImport>;
+  loadServerImportMap?: () => Promise<ImportMapImport>;
 };
 
 export type DesingLibraryAppProps = DesignLibraryServerProps;

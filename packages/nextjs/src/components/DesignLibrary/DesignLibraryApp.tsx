@@ -17,7 +17,7 @@ import { DesignLibrary } from '@sitecore-content-sdk/react';
 export const DesignLibraryApp = ({
   page,
   componentMap,
-  loadServerImportMap,
+  loadServerImportMap = () => Promise.resolve({ default: [] }),
 }: DesingLibraryAppProps) => {
   const { route } = page.layout.sitecore;
   if (!route) return null;

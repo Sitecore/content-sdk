@@ -97,7 +97,7 @@ export const DesignLibraryServer = async ({
 export const DesignLibraryServerVariantGeneration = async ({
   page,
   rendering,
-  loadServerImportMap,
+  loadServerImportMap = () => Promise.resolve({ default: [] }),
   componentMap,
 }: DesignLibraryServerVariantGenerationProps) => {
   let designLibraryStatus = DesignLibraryStatus.READY;
@@ -116,23 +116,16 @@ export const DesignLibraryServerVariantGeneration = async ({
   });
 
   // load importmap and importmap payload to pass to FE
-  // if not provided, or errors during load set error to pass to FE
-  if (!loadServerImportMap) {
+  // if errors during load set error to pass to FE
+  try {
+    const mod = await loadServerImportMap();
+    importMap = mod.default;
+    importMapInfo = getImportMapInfo(importMap);
+  } catch (e) {
     componentInitError = getComponentInitError(
-      codegen.DesignLibraryPreviewError.ImportMapMissing,
-      'No loadImportMap provided'
+      codegen.DesignLibraryPreviewError.ImportMapLoad,
+      `Error loading import map: ${e}`
     );
-  } else {
-    try {
-      const mod = await loadServerImportMap();
-      importMap = mod.default;
-      importMapInfo = getImportMapInfo(importMap);
-    } catch (e) {
-      componentInitError = getComponentInitError(
-        codegen.DesignLibraryPreviewError.ImportMapLoad,
-        `Error loading import map: ${e}`
-      );
-    }
   }
 
   let componentToUpdate = rendering?.placeholders?.[EDITING_COMPONENT_PLACEHOLDER]?.[0];
