@@ -1,6 +1,6 @@
 {
   "name": "create-content-sdk-app",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Sitecore Content SDK initializer",
   "bin": "./dist/index.js",
   "scripts": {
@@ -38,12 +38,12 @@
     "minimist": "^1.2.8"
   },
   "devDependencies": {
-    "@sitecore-content-sdk/analytics-core": "^2.1.0",
-    "@sitecore-content-sdk/angular": "~0.0.1",
-    "@sitecore-content-sdk/cli": "^2.1.0",
-    "@sitecore-content-sdk/events": "^2.1.0",
-    "@sitecore-content-sdk/nextjs": "^2.1.0",
-    "@sitecore-content-sdk/personalize": "^2.1.0",
+    "@sitecore-content-sdk/analytics-core": "^2.2.0",
+    "@sitecore-content-sdk/angular": "~1.0.0",
+    "@sitecore-content-sdk/cli": "^2.2.0",
+    "@sitecore-content-sdk/events": "^2.2.0",
+    "@sitecore-content-sdk/nextjs": "^3.0.0",
+    "@sitecore-content-sdk/personalize": "^2.2.0",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@types/chai": "^5.2.2",
     "@types/cross-spawn": "^6.0.6",

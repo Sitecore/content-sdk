@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/content",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -36,7 +36,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
-    "@sitecore-content-sdk/events": "^2.1.0",
+    "@sitecore-content-sdk/events": "^2.2.0",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@types/chai": "^5.2.2",
     "@types/chai-spies": "^1.0.6",
@@ -74,10 +74,10 @@
     "typescript": "~5.8.3"
   },
   "peerDependencies": {
-    "@sitecore-content-sdk/events": "^2.1.0"
+    "@sitecore-content-sdk/events": "^2.2.0"
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "^2.1.0",
+    "@sitecore-content-sdk/core": "^2.2.0",
     "chalk": "^4.1.2",
     "debug": "^4.4.0",
     "glob": "^11.0.2",
