@@ -8,7 +8,7 @@
 
 > `const` **PREVIEW\_KEY**: `"sc_preview"` = `'sc_preview'`
 
-Defined in: [content/src/editing/utils.ts:26](https://github.com/Sitecore/content-sdk/blob/6f494d7de2451d44441c200576d22126cf4eecc0/packages/content/src/editing/utils.ts#L26)
+Defined in: [content/src/editing/utils.ts:26](https://github.com/Sitecore/content-sdk/blob/0741bb452b2ea3f885223f053dfeee4bf32d3e9e/packages/content/src/editing/utils.ts#L26)
 
 **`Internal`**
 
