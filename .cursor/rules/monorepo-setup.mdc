@@ -1,0 +1,13 @@
+---
+description: Getting started with the Sitecore Content SDK monorepo
+alwaysApply: true
+globs: []
+---
+
+# Sitecore Content SDK — Monorepo
+
+TypeScript monorepo (Yarn 4.12.0). **Commands:** `yarn install`, `yarn build`, `yarn test-packages`, `yarn lint-packages`, `yarn api-extractor:verify`.
+
+**Structure:** `packages/{core,content,cli,create-content-sdk-app,nextjs,react,...}`, `samples/`, `scripts/`. Sources in `src/**` per package; never edit `dist/**`.
+
+**Detail:** Guardrails in [`AGENTS.md`](../../AGENTS.md). Depth: [`.agents/docs/`](../../.agents/docs/) (code style, safety, Sitecore, workflows). Head-app skills: [`Skills.md`](../../Skills.md).

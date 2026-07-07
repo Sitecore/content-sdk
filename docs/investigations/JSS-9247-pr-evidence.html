@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSS-9247 — LLM Context Reduction Evidence</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --card: #1a2332;
+      --border: #2d3a4f;
+      --text: #e7ecf3;
+      --muted: #8b9cb3;
+      --accent: #6c5ce7;
+      --good: #00b894;
+      --before: #e17055;
+      --after: #00cec9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    header h1 { font-size: 1.75rem; font-weight: 600; }
+    header p { color: var(--muted); margin-top: 0.5rem; font-size: 0.95rem; }
+    .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .hero-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .hero-card .label { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .hero-card .value { font-size: 2.5rem; font-weight: 700; color: var(--good); margin: 0.25rem 0; }
+    .hero-card .sub { font-size: 0.85rem; color: var(--muted); }
+    section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    section h2 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    th { color: var(--muted); font-weight: 500; font-size: 0.8rem; }
+    .num { font-variant-numeric: tabular-nums; }
+    .good { color: var(--good); font-weight: 600; }
+    .bar-row { margin-bottom: 1rem; }
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 0.35rem;
+    }
+    .bar-track {
+      height: 28px;
+      background: var(--bg);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+    }
+    .bar-before {
+      background: var(--before);
+      opacity: 0.85;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: white;
+      min-width: 40px;
+    }
+    .bar-after {
+      background: var(--after);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #0f1419;
+      min-width: 40px;
+    }
+    .checks { list-style: none; }
+    .checks li {
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+    }
+    .checks li::before { content: '✓ '; color: var(--good); font-weight: bold; }
+    footer {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    code {
+      background: var(--bg);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="badge">JSS-9247</div>
+    <h1>LLM Context Reduction — Measurable Evidence</h1>
+    <p>Sitecore Content SDK · Branch <code>feature/JSS-9247-reduce-llm-context-bloat</code> · Measured 2026-07-07</p>
+  </header>
+
+  <div class="hero">
+    <div class="hero-card">
+      <div class="label">Session-start (S0) — worst template</div>
+      <div class="value">−69%</div>
+      <div class="sub">38.3 KB → 12.0 KB (~9,800 → ~3,100 tok)</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">Total corpus — worst template</div>
+      <div class="value">−58%</div>
+      <div class="sub">137.4 KB → 57.6 KB (~35k → ~15k tok)</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">Scaffolded AGENTS.md</div>
+      <div class="value">−66%</div>
+      <div class="sub">31.8 KB → 10.4 KB (cache-components)</div>
+    </div>
+  </div>
+
+  <section>
+    <h2>Session-start load (S0) — primary fix metric</h2>
+    <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 1.25rem;">
+      Auto-loaded every Cursor / Claude session: AGENTS.md + CLAUDE.md + one alwaysApply rule
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Template</th>
+          <th>Before (dev)</th>
+          <th>After (PR)</th>
+          <th>Reduction</th>
+          <th>~Tokens saved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>nextjs</td>
+          <td class="num">22.3 KB</td>
+          <td class="num good">8.9 KB</td>
+          <td class="num good">−60%</td>
+          <td class="num">~3,400</td>
+        </tr>
+        <tr>
+          <td>nextjs-app-router</td>
+          <td class="num">25.7 KB</td>
+          <td class="num good">10.3 KB</td>
+          <td class="num good">−60%</td>
+          <td class="num">~4,000</td>
+        </tr>
+        <tr>
+          <td><strong>cache-components</strong></td>
+          <td class="num"><strong>38.3 KB</strong></td>
+          <td class="num good"><strong>12.0 KB</strong></td>
+          <td class="num good"><strong>−69%</strong></td>
+          <td class="num"><strong>~6,700</strong></td>
+        </tr>
+        <tr>
+          <td>monorepo-root</td>
+          <td class="num">17.3 KB</td>
+          <td class="num good">6.5 KB</td>
+          <td class="num good">−62%</td>
+          <td class="num">~2,700</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Visual: cache-components session-start (S0)</h2>
+    <div class="bar-row">
+      <div class="bar-label">
+        <span>Before — monolithic always-on stack</span>
+        <span class="num">38.3 KB</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-before" style="width: 100%;">38.3 KB</div>
+      </div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">
+        <span>After — layered S0</span>
+        <span class="num good">12.0 KB</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-after" style="width: 31.3%;">12.0 KB</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Total guidance corpus (all tiers)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Template</th>
+          <th>Before</th>
+          <th>After</th>
+          <th>Reduction</th>
+          <th>Budget</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>nextjs</td>
+          <td class="num">81.7 KB</td>
+          <td class="num">40.4 KB</td>
+          <td class="num good">−51%</td>
+          <td class="good">✅</td>
+        </tr>
+        <tr>
+          <td>nextjs-app-router</td>
+          <td class="num">92.2 KB</td>
+          <td class="num">44.7 KB</td>
+          <td class="num good">−52%</td>
+          <td class="good">✅</td>
+        </tr>
+        <tr>
+          <td>cache-components</td>
+          <td class="num">137.4 KB</td>
+          <td class="num">57.6 KB</td>
+          <td class="num good">−58%</td>
+          <td class="good">✅</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="color: var(--muted); font-size: 0.85rem; margin-top: 0.75rem;">
+      Depth preserved in <code>.agents/docs/</code> (on-demand S2) — guidance relocated, not deleted.
+    </p>
+  </section>
+
+  <section>
+    <h2>Scaffold proof — generated app ships slim corpus</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Template</th>
+          <th>AGENTS.md before</th>
+          <th>AGENTS.md after scaffold</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>nextjs</td>
+          <td class="num">~17.5 KB</td>
+          <td class="num good">7.4 KB</td>
+        </tr>
+        <tr>
+          <td>nextjs-app-router</td>
+          <td class="num">~20.5 KB</td>
+          <td class="num good">8.8 KB</td>
+        </tr>
+        <tr>
+          <td>cache-components</td>
+          <td class="num">~31.8 KB</td>
+          <td class="num good">10.4 KB</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Validation & quality</h2>
+    <ul class="checks">
+      <li><code>measure-llm-context:check</code> — all targets within budget</li>
+      <li>Scaffold test — 3 templates, slim corpus + 1 alwaysApply rule</li>
+      <li>Regression matrix — 18/18 agent-task guidance patterns</li>
+      <li>Accuracy pass — preview, proxy chain, SSG, cache-components vs source</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Ticket scenario</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th>Before (~tokens)</th>
+          <th>After (~tokens)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Open starter — session-start only (S0)</td>
+          <td class="num">~9,800 (cache-components)</td>
+          <td class="num good">~3,100</td>
+        </tr>
+        <tr>
+          <td>Full guidance corpus auto-loaded</td>
+          <td class="num">~35,200</td>
+          <td class="num good">~14,700</td>
+        </tr>
+        <tr>
+          <td>Recommended: S0 + one skill card</td>
+          <td class="num">N/A (old CLAUDE.md said load all)</td>
+          <td class="num good">~3,300</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    Reproduce: <code>npx tsx ./scripts/llm-context/measure-llm-context.ts</code> ·
+    <code>npx tsx ./scripts/llm-context/validate-llm-context.ts</code> (after <code>npm run build</code> in create-content-sdk-app) ·
+    Docs: <code>docs/investigations/JSS-9247-pr-evidence.md</code>
+  </footer>
+</body>
+</html>

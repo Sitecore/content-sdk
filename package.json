@@ -18,7 +18,10 @@
     "changeset:cascade-snapshot-version": "tsx ./scripts/changesets/cascade-version.ts --snapshot",
     "changeset:publish": "changeset publish",
     "csdk:prep-release": "yarn changeset:cascade-version && yarn install",
-    "changeset:test": "vitest run --config ./scripts/changesets/vitest.config.ts"
+    "changeset:test": "vitest run --config ./scripts/changesets/vitest.config.ts",
+    "measure-llm-context": "tsx ./scripts/llm-context/measure-llm-context.ts",
+    "measure-llm-context:check": "tsx ./scripts/llm-context/measure-llm-context.ts --check",
+    "validate-llm-context": "tsx ./scripts/llm-context/validate-llm-context.ts"
   },
   "author": {
     "name": "Sitecore Corporation",
