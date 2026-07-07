@@ -7,6 +7,7 @@ import { SitecoreConfig } from './../../config';
 import crypto from 'crypto';
 import { isNodeModuleImportOrAlias, getRelativeImportPath } from './utils';
 import { constants } from '@sitecore-content-sdk/core';
+import { ensurePathExists } from '@sitecore-content-sdk/core/node-tools';
 
 const { ERROR_MESSAGES } = constants;
 
@@ -376,25 +377,25 @@ const prepImportMaps = async (paths: string[], separateMaps?: boolean): Promise<
   ];
 };
 
-const writeStubImportMaps = (
+const writeEmptyImportMaps = (
   args: WriteImportMapArgsInternal,
   defaultTemplate: (indexedImportMap: Map<string, ModuleExports>) => string,
   clientTemplate: (indexedImportMap: Map<string, ModuleExports>) => string
 ) => {
   const sitecoreDir = path.join(process.cwd(), '.sitecore');
-  if (!fs.existsSync(sitecoreDir)) {
-    fs.mkdirSync(sitecoreDir, { recursive: true });
-  }
 
   const emptyMap = new Map<string, ModuleExports>();
-  const stubMaps: ImportMapDef[] = args.separateServerClientMaps
+  const emptyImportMaps: ImportMapDef[] = args.separateServerClientMaps
     ? [
         { map: emptyMap, path: path.join(sitecoreDir, 'import-map.server.ts') },
         { map: emptyMap, path: path.join(sitecoreDir, 'import-map.client.ts'), isClient: true },
       ]
     : [{ map: emptyMap, path: path.join(sitecoreDir, 'import-map.ts') }];
 
-  for (const importMap of stubMaps) {
+  // Ensure .sitecore directory exists
+  ensurePathExists(emptyImportMaps[0].path);
+
+  for (const importMap of emptyImportMaps) {
     const importMapContent = importMap.isClient
       ? clientTemplate(importMap.map)
       : defaultTemplate(importMap.map);
@@ -418,9 +419,9 @@ export const writeImportMap = (args: WriteImportMapArgsInternal) => {
 
     if (scConfig.disableCodeGeneration) {
       debug.common(
-        'Code generation is disabled. Writing empty import map stubs for bundler resolution.'
+        'Code generation is disabled. Writing empty import maps for bundler resolution.'
       );
-      writeStubImportMaps(args, defaultTemplate, clientTemplate);
+      writeEmptyImportMaps(args, defaultTemplate, clientTemplate);
       return;
     }
     const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);

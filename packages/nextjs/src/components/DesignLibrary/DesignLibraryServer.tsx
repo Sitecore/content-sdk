@@ -22,6 +22,7 @@ import {
   DesignLibraryErrorBoundary,
   DynamicComponent,
   ErrorComponent,
+  noopLoadImportMap,
 } from '@sitecore-content-sdk/react';
 import {
   DesignLibraryServerProps,
@@ -97,7 +98,7 @@ export const DesignLibraryServer = async ({
 export const DesignLibraryServerVariantGeneration = async ({
   page,
   rendering,
-  loadServerImportMap = () => Promise.resolve({ default: [] }),
+  loadServerImportMap = noopLoadImportMap,
   componentMap,
 }: DesignLibraryServerVariantGenerationProps) => {
   let designLibraryStatus = DesignLibraryStatus.READY;

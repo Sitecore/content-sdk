@@ -501,25 +501,25 @@ describe('Import Map Generation', () => {
       return runWruteImportMap({ scConfig });
     };
 
-    it('should write empty stub import maps when code generation is disabled', async () => {
+    it('should write empty import maps when code generation is disabled', async () => {
       const debugStub = sandbox.stub(debug, 'common');
       const scConfig = { disableCodeGeneration: true } as any;
       utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
       const getComponentListStub = sandbox.stub();
       unitMocks({ getComponentListStub });
-      defaultMapTemplateStub.returns('// server stub import map');
+      defaultMapTemplateStub.returns('// empty server import map');
       const fsWriteStub = sandbox.stub(fs, 'writeFileSync');
 
       await runCommand(scConfig, {
         paths: ['foo'],
         exclude: [],
         separateServerClientMaps: true,
-        clientTemplate: () => '// client stub import map',
+        clientTemplate: () => '// empty client import map',
       });
 
       expect(
         debugStub.calledWithMatch(
-          'Code generation is disabled. Writing empty import map stubs for bundler resolution.'
+          'Code generation is disabled. Writing empty import maps for bundler resolution.'
         )
       ).to.be.true;
       expect(getComponentListStub.notCalled).to.be.true;

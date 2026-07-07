@@ -2,7 +2,7 @@ import React from 'react';
 import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/content/layout';
 import { DesingLibraryAppProps } from './models';
 import { DesignLibraryServer } from './DesignLibraryServer';
-import { DesignLibrary } from '@sitecore-content-sdk/react';
+import { DesignLibrary, noopLoadImportMap } from '@sitecore-content-sdk/react';
 
 /**
  * Design Library component intended to be used by the NextJs app router application
@@ -17,7 +17,7 @@ import { DesignLibrary } from '@sitecore-content-sdk/react';
 export const DesignLibraryApp = ({
   page,
   componentMap,
-  loadServerImportMap = () => Promise.resolve({ default: [] }),
+  loadServerImportMap = noopLoadImportMap,
 }: DesingLibraryAppProps) => {
   const { route } = page.layout.sitecore;
   if (!route) return null;
