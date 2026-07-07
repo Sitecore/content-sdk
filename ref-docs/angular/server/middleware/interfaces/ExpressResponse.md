@@ -6,7 +6,7 @@
 
 # Interface: ExpressResponse
 
-Defined in: [packages/angular/src/config/http-types.ts:31](https://github.com/Sitecore/content-sdk/blob/c6c8dd642e4121eb4a68d30358fc75b7fc6cf641/packages/angular/src/config/http-types.ts#L31)
+Defined in: [packages/angular/src/config/http-types.ts:31](https://github.com/Sitecore/content-sdk/blob/2aa732fd2d36762c97dbe79aef5930e72524bea4/packages/angular/src/config/http-types.ts#L31)
 
 Minimal Express Response interface for type safety without requiring Express as a dependency
 
@@ -16,7 +16,7 @@ Minimal Express Response interface for type safety without requiring Express as 
 
 > `optional` **cookie**(`name`, `value`, `options?`): `void`
 
-Defined in: [packages/angular/src/config/http-types.ts:51](https://github.com/Sitecore/content-sdk/blob/c6c8dd642e4121eb4a68d30358fc75b7fc6cf641/packages/angular/src/config/http-types.ts#L51)
+Defined in: [packages/angular/src/config/http-types.ts:51](https://github.com/Sitecore/content-sdk/blob/2aa732fd2d36762c97dbe79aef5930e72524bea4/packages/angular/src/config/http-types.ts#L51)
 
 Set a response cookie. Used by multisite middleware to set the site cookie.
 
@@ -38,7 +38,7 @@ Set a response cookie. Used by multisite middleware to set the site cookie.
 
 > **json**(`data`): `void`
 
-Defined in: [packages/angular/src/config/http-types.ts:33](https://github.com/Sitecore/content-sdk/blob/c6c8dd642e4121eb4a68d30358fc75b7fc6cf641/packages/angular/src/config/http-types.ts#L33)
+Defined in: [packages/angular/src/config/http-types.ts:33](https://github.com/Sitecore/content-sdk/blob/2aa732fd2d36762c97dbe79aef5930e72524bea4/packages/angular/src/config/http-types.ts#L33)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: [packages/angular/src/config/http-types.ts:33](https://github.com/Si
 
 > `optional` **redirect**(`url`): `void`
 
-Defined in: [packages/angular/src/config/http-types.ts:47](https://github.com/Sitecore/content-sdk/blob/c6c8dd642e4121eb4a68d30358fc75b7fc6cf641/packages/angular/src/config/http-types.ts#L47)
+Defined in: [packages/angular/src/config/http-types.ts:47](https://github.com/Sitecore/content-sdk/blob/2aa732fd2d36762c97dbe79aef5930e72524bea4/packages/angular/src/config/http-types.ts#L47)
 
 Redirect the client to another URL. Used by sitemap middleware for 404 fallbacks.
 
@@ -76,7 +76,7 @@ Redirect the client to another URL. Used by sitemap middleware for 404 fallbacks
 
 > `optional` **send**(`body`): `void`
 
-Defined in: [packages/angular/src/config/http-types.ts:38](https://github.com/Sitecore/content-sdk/blob/c6c8dd642e4121eb4a68d30358fc75b7fc6cf641/packages/angular/src/config/http-types.ts#L38)
+Defined in: [packages/angular/src/config/http-types.ts:38](https://github.com/Sitecore/content-sdk/blob/2aa732fd2d36762c97dbe79aef5930e72524bea4/packages/angular/src/config/http-types.ts#L38)
 
 Send a raw response body (string, Buffer, null, etc.). Used for HTML
 responses (editing render endpoint) and 204 no-content replies.
@@ -97,7 +97,7 @@ responses (editing render endpoint) and 204 no-content replies.
 
 > `optional` **setHeader**(`name`, `value`): `void`
 
-Defined in: [packages/angular/src/config/http-types.ts:43](https://github.com/Sitecore/content-sdk/blob/c6c8dd642e4121eb4a68d30358fc75b7fc6cf641/packages/angular/src/config/http-types.ts#L43)
+Defined in: [packages/angular/src/config/http-types.ts:43](https://github.com/Sitecore/content-sdk/blob/2aa732fd2d36762c97dbe79aef5930e72524bea4/packages/angular/src/config/http-types.ts#L43)
 
 Set a response header. Used by editing middleware to apply CORS / CSP
 headers without depending on Express types directly.
@@ -119,7 +119,7 @@ headers without depending on Express types directly.
 
 > **status**(`code`): `ExpressResponse`
 
-Defined in: [packages/angular/src/config/http-types.ts:32](https://github.com/Sitecore/content-sdk/blob/c6c8dd642e4121eb4a68d30358fc75b7fc6cf641/packages/angular/src/config/http-types.ts#L32)
+Defined in: [packages/angular/src/config/http-types.ts:32](https://github.com/Sitecore/content-sdk/blob/2aa732fd2d36762c97dbe79aef5930e72524bea4/packages/angular/src/config/http-types.ts#L32)
 
 #### Parameters
 
