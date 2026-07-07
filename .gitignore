@@ -22,6 +22,8 @@ coverage/
 packages/*/*.tgz
 samples/
 
+.tmp/
+
 .idea
 .next
 
