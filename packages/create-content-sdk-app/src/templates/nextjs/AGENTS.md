@@ -1,6 +1,6 @@
 # AGENTS.md — AI Guidance for Sitecore Content SDK Next.js (Pages Router) App
 
-> **Context:** This file is the **compact** guide (commands, structure, best practices, guardrails, references). Deeper topics live under [.agents/docs/](.agents/docs/) — start with [README](.agents/docs/README.md) or open the layer you need: [AGENTS-overview.md](.agents/docs/AGENTS-overview.md), [AGENTS-key-concepts.md](.agents/docs/AGENTS-key-concepts.md), [AGENTS-router-specifics.md](.agents/docs/AGENTS-router-specifics.md), [AGENTS-workflows-and-boundaries.md](.agents/docs/AGENTS-workflows-and-boundaries.md). Use [Skills.md](Skills.md) to pick **one** [.agents/skills/](.agents/skills/) skill when needed; [CLAUDE.md](CLAUDE.md) explains layered reading. Cursor applies [.cursor/rules/](.cursor/rules/) by glob — you do not need every rule in chat context at once.
+> **Context:** This file is the **compact** guide (commands, structure, best practices, guardrails, references). Deeper topics live under [.agents/docs/](.agents/docs/) — start with [README](.agents/docs/README.md) or open the layer you need. Use [Skills.md](Skills.md) to pick **one** [.agents/skills/](.agents/skills/) skill when needed; [CLAUDE.md](CLAUDE.md) explains layered reading. Cursor applies [.cursor/rules/](.cursor/rules/) by glob — you do not need every rule in chat context at once.
 
 ---
 
