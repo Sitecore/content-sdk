@@ -219,7 +219,7 @@ export const getComponentForRendering = (
   }
 
   // Render SXA Rendering Variant if available
-  const exportName = renderingDefinition.params?.FieldNames;
+  const exportName = getRenderingParamString(renderingDefinition.params?.FieldNames);
 
   const renderedComponent =
     exportName && exportName !== DEFAULT_EXPORT_NAME
@@ -229,7 +229,9 @@ export const getComponentForRendering = (
         (component as ComponentType);
 
   if (!renderedComponent) {
-    logUnknownComponentError(exportName !== DEFAULT_EXPORT_NAME ? exportName : undefined);
+    logUnknownComponentError(
+      exportName && exportName !== DEFAULT_EXPORT_NAME ? exportName : undefined
+    );
 
     return {
       component: missingComponentComponent ?? MissingComponent,
@@ -251,4 +253,3 @@ export const getComponentForRendering = (
     isEmpty: false,
   };
 };
-

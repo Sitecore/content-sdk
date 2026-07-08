@@ -431,6 +431,92 @@ describe('placeholder-utils', () => {
       expect(result?.component).to.equal(TestComponent);
     });
 
+    it('should treat empty string FieldNames as default variant', () => {
+      const module: ReactModule = {
+        default: TestComponent,
+      };
+      componentMap.set('TestComponent', module);
+
+      const rendering: ComponentRendering = {
+        componentName: 'TestComponent',
+        uid: 'test-uid',
+        params: {
+          FieldNames: '',
+        },
+      };
+
+      const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
+
+      expect(result?.component).to.equal(TestComponent);
+      expect(result?.isEmpty).to.be.false;
+    });
+
+    it('should resolve FieldNames from DetailedRenderingParams object', () => {
+      const CustomExport = () => <div>Custom Export</div>;
+      const module: ReactModule = {
+        default: TestComponent,
+        CustomVariant: CustomExport,
+      };
+      componentMap.set('TestComponent', module);
+
+      const rendering: ComponentRendering = {
+        componentName: 'TestComponent',
+        uid: 'test-uid',
+        params: {
+          FieldNames: {
+            Value: { value: 'CustomVariant' },
+          },
+        },
+      };
+
+      const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
+
+      expect(result?.component).to.equal(CustomExport);
+      expect(result?.isEmpty).to.be.false;
+    });
+
+    it('should treat Default in DetailedRenderingParams object as default variant', () => {
+      const module: ReactModule = {
+        Default: TestComponent,
+      };
+      componentMap.set('TestComponent', module);
+
+      const rendering: ComponentRendering = {
+        componentName: 'TestComponent',
+        uid: 'test-uid',
+        params: {
+          FieldNames: {
+            Value: { value: 'Default' },
+          },
+        },
+      };
+
+      const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
+
+      expect(result?.component).to.equal(TestComponent);
+      expect(result?.isEmpty).to.be.false;
+    });
+
+    it('should fallback to default export when FieldNames object is unextractable', () => {
+      const module: ReactModule = {
+        default: TestComponent,
+      };
+      componentMap.set('TestComponent', module);
+
+      const rendering: ComponentRendering = {
+        componentName: 'TestComponent',
+        uid: 'test-uid',
+        params: {
+          FieldNames: {},
+        },
+      };
+
+      const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
+
+      expect(result?.component).to.equal(TestComponent);
+      expect(result?.isEmpty).to.be.false;
+    });
+
     it('should return component directly when it is not a module', () => {
       componentMap.set('TestComponent', TestComponent);
 
