@@ -8,7 +8,7 @@
 
 > `const` **SitecoreProvider**: \{(`props`): `Element`; `displayName`: `string`; \}
 
-Defined in: react/types/components/SitecoreProvider.d.ts:81
+Defined in: react/types/components/SitecoreProvider.d.ts:82
 
 The SitecoreProvider component.
 
