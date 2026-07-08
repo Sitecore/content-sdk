@@ -2,30 +2,17 @@
 description: CLI behavior, prompts, init flow, next steps
 alwaysApply: false
 globs:
-  - "src/initializers/**"
-  - "src/initialize.ts"
-  - "src/index.ts"
-  - "src/bin.ts"
-  - "src/common/processes/**"
+  - 'packages/create-content-sdk-app/src/initializers/**'
+  - 'packages/create-content-sdk-app/src/initialize.ts'
+  - 'packages/create-content-sdk-app/src/index.ts'
+  - 'packages/create-content-sdk-app/src/bin.ts'
+  - 'packages/create-content-sdk-app/src/common/processes/**'
 ---
 
 # CLI
 
 - Drive init via `Initializer.init(args)`
-- Clear prompts and defaults
-- Install dependencies after scaffolding
-- Print next steps
+- Clear prompts and defaults; install dependencies after scaffolding; print next steps
+- Backwards compatible arg names; additive changes with defaults
 
-Non-goals:
-- No deployments or CI flows
-- No global user state changes
-
-Backwards compatibility:
-- Avoid breaking arg names
-- Additive changes with defaults
-
-Referenced:
-@src/initializers/nextjs/index.ts
-@src/initializers/nextjs/prompts.ts
-@src/initialize.ts
-@src/bin.ts
+Full detail: [`.agents/docs/AGENTS-workflows.md`](../../.agents/docs/AGENTS-workflows.md#cli-create-content-sdk-app)

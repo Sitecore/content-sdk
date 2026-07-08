@@ -1,0 +1,30 @@
+# Safety
+
+Critical guardrails for artifacts, secrets, and API security. Cursor: [`.cursor/rules/safety.mdc`](../../.cursor/rules/safety.mdc).
+
+## Artifacts and secrets
+
+- Never edit `dist/**`, `.next/`, `out/`, `build/` (compiled output), `node_modules/`
+- Do not commit secrets. `.env` and `.env.local` are gitignored; use `.env.example` (or `.env.*.example` in templates) to document variables with placeholders only. Never put real API keys or production values in example files
+- Template edits must build/run with `npm install && npm run build` in generated apps
+- Reuse common processes (see `src/common/` in create-content-sdk-app); do not reorganize the template or `src/common/` structure without asking
+
+## Security (input, API, and rendering)
+
+**Input and boundaries:**
+
+- Sanitize user inputs before processing; validate data at application boundaries
+- Use type guards for runtime type checking where needed
+- Never log sensitive information (API keys, tokens, PII); use environment variables for configuration
+
+**API and Sitecore:**
+
+- Always use environment variables for API endpoints and keys; never hardcode API keys in source code
+- Use HTTPS for all XM Cloud / Sitecore endpoints
+- Never expose sensitive configuration (API keys, editing secret) in client-side code or in logs
+- Validate content from Sitecore (or other external sources) before rendering when appropriate
+
+**Rendering:**
+
+- Escape content when rendering to prevent XSS; prefer Sitecore field components (`<Text>`, `<RichText>`, `<Image>`) which handle sanitization
+- Consider Content Security Policy (CSP) headers for applications

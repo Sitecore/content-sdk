@@ -1,0 +1,102 @@
+# JavaScript / TypeScript rules
+
+Naming, layout, JSDoc, and TS patterns. Cursor: [`.cursor/rules/javascript.mdc`](../../.cursor/rules/javascript.mdc).
+
+## Naming conventions
+
+**Variables and functions:**
+
+- Use camelCase: `getUserData()`, `isLoading`, `currentUser`
+- Boolean variables: prefix with `is`, `has`, `can`, `should`
+- Event handlers: prefix with `handle` or `on`: `handleClick`, `onSubmit`
+
+**Components (React):**
+
+- Use PascalCase: `SitecoreComponent`, `PageLayout`, `ContentBlock`
+- File names match component names: `SitecoreComponent.tsx`
+
+**Constants:**
+
+- Use UPPER_SNAKE_CASE: `API_ENDPOINT`, `DEFAULT_TIMEOUT`, `MAX_RETRIES`
+- Export at module level when shared
+
+**Directories:**
+
+- Use kebab-case: `src/components`, `src/api-clients`, `src/sitecore-utils`
+- Organize by feature when appropriate: `src/content-management/`
+
+**Types and interfaces:**
+
+- Use PascalCase with descriptive names: `ContentItem`, `LayoutProps`, `SitecoreConfig`
+- Prefix interfaces with `I` only when needed for disambiguation
+
+## Code layout and organization
+
+```
+src/
+  components/          # UI components (React)
+  utils/               # Helper functions and utilities
+  api/                 # Sitecore integrations and API clients
+  lib/                 # Third-party library configurations
+  types/               # TypeScript type definitions
+  hooks/               # Custom React hooks
+  styles/              # Styling files
+```
+
+- Group related functionality in feature directories
+- Keep components co-located with their styles and tests
+- Export public APIs through `index.ts` files
+
+## Error handling
+
+- Always wrap API calls in try/catch blocks
+- Throw custom errors with context: `SitecoreFetchError`, `ConfigurationError`
+- Handle edge cases with guard clauses
+
+```typescript
+async function fetchPageData(path: string): Promise<Page | null> {
+  if (!path) {
+    throw new Error('Page path is required');
+  }
+  try {
+    const pageData = await client.getPage(path);
+    return pageData;
+  } catch (error) {
+    throw new SitecoreFetchError(`Failed to fetch page data for ${path}`, error);
+  }
+}
+```
+
+Security: see [RULES-safety.md](RULES-safety.md).
+
+## Performance
+
+- Memoize components with `React.memo` when appropriate
+- Lazy-load non-critical modules: `const Component = lazy(() => import('./Component'))`
+- Use `useCallback` and `useMemo` for expensive operations
+
+**TypeScript:**
+
+- Enable strict mode in `tsconfig.json`
+- Prefer type assertions over `any`: `value as ContentItem`
+- Use discriminated unions for complex state management
+
+## Documentation (JSDoc)
+
+- All new functions, interfaces, classes must have JSDoc style comments
+- Include `@param` tags for all parameters with types and descriptions
+- Include `@returns` tag for return values with type and description
+- Use descriptive comments that explain the purpose and behavior
+- Follow existing Content SDK JSDoc patterns
+
+```typescript
+/**
+ * Fetches content item from Sitecore by ID with proper error handling
+ * @param {string} id - The unique identifier for the content item
+ * @param {boolean} [includeChildren] - Whether to include child items
+ * @returns {Promise<ContentItem>} Promise that resolves to the content item
+ */
+async function fetchContentItem(id: string, includeChildren?: boolean): Promise<ContentItem> {
+  // Implementation
+}
+```
