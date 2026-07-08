@@ -41,7 +41,9 @@ export const getContentStylesheetUrl = (
   sitecoreEdgeContextId: string,
   sitecoreEdgeUrl: string = constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT
 ): string =>
-  `${normalizeUrl(sitecoreEdgeUrl)}/v1/files/pages/styles/content-styles.css?sitecoreContextId=${sitecoreEdgeContextId}`;
+  `${normalizeUrl(
+    sitecoreEdgeUrl
+  )}/v1/files/pages/styles/content-styles.css?sitecoreContextId=${sitecoreEdgeContextId}`;
 
 export const traversePlaceholder = (components: Array<ComponentRendering>, config: Config) => {
   if (config.loadStyles) return;

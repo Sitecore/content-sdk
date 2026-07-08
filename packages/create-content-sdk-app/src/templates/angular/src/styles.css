@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+
+/*
+  Hides Sitecore editing chrome markers globally. Must live here (global scope) so
+  Angular's view-encapsulation does not prevent the rule from matching dynamically
+  created <code class="scpm"> elements inside child components.
+*/
+.scChromeData,
+.scpm {
+  display: none !important;
+}
+
+@custom-variant max-mobile (@media (max-width: 380px));
+@custom-variant max-mobile-horizontal (@media (max-width: 640px));
+@custom-variant max-mobile-large (@media (max-width: 992px));
+@custom-variant max-desktop (@media (max-width: 1024px));
+
+@import './assets/main.css';

@@ -43,3 +43,5 @@ export {
   getDefaultMediaUrlTransformer,
   applyMediaUrlRewrite,
 } from './rewrite-edge-host';
+
+export * from './field-types';

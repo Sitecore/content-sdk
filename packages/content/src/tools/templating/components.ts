@@ -44,8 +44,8 @@ export type EnhancedComponentMapTemplate = (
   componentImports: ComponentImport[] | undefined,
   ctx: {
     entries: ComponentMapEntry[];
-    includeVariants: boolean;
-    isClientMap: boolean;
+    includeVariants?: boolean;
+    isClientMap?: boolean;
   }
 ) => string;
 
@@ -108,6 +108,17 @@ export interface ComponentImport {
 }
 
 /**
+ * Converts string to PascalCase.
+ * @param {string} name - kebab-case, snake_case, dot.notation, camelCase, or PascalCase string (e.g. `my-component`, `my_component`, `my.component`, `myComponent`)
+ * @returns {string} PascalCase string (e.g. `MyComponent`)
+ */
+export const toPascalCase = (name: string): string =>
+  name
+    .split(/[-_]/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
+
+/**
  * Get list of components from @var path
  * Returns a list of components in the following format:
  * {
@@ -138,8 +149,8 @@ function _getComponentList(
           return {
             filePath,
             importPath: filePath.match(componentPathPattern)![1].replace(/\\/g, '/'), // use forward slashes for consistency
-            componentName: name,
-            moduleName: name.replace(/[^\w]+/g, ''),
+            componentName: toPascalCase(name),
+            moduleName: toPascalCase(name).replace(/[^\w]+/g, ''),
           };
         })
     );

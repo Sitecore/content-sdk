@@ -79,16 +79,22 @@ export const executeScriptElements = (rootElement: HTMLElement) => {
  * @param {string} [componentId] - The unique identifier of the component
  * @internal
  */
-export const subscribeToFormSubmitEvent = (formElement: HTMLElement, componentId?: string) => {
-  formElement.addEventListener('form:engage', ((
-    e: CustomEvent<{ formId: string; name: 'VIEWED' | 'SUBMITTED' }>
-  ) => {
-    const { formId, name } = e.detail;
+export const subscribeToFormSubmitEvent = (
+  formElement: HTMLElement,
+  componentId?: string,
+  signal?: AbortSignal
+) => {
+  formElement.addEventListener(
+    'form:engage',
+    ((e: CustomEvent<{ formId: string; name: 'VIEWED' | 'SUBMITTED' }>) => {
+      const { formId, name } = e.detail;
 
-    if (formId && name) {
-      debug.form('Sending form event', formId, name);
+      if (formId && name) {
+        debug.form('Sending form event', formId, name);
 
-      form(formId, name, componentId?.replace(/-/g, '') || '');
-    }
-  }) as EventListener);
+        form(formId, name, componentId?.replace(/-/g, '') || '');
+      }
+    }) as EventListener,
+    { signal }
+  );
 };

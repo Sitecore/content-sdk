@@ -10,3 +10,4 @@ export {
   ComponentMapTemplate,
   EnhancedComponentMapTemplate,
 } from './components';
+export { prepareComponentsForMap, buildComponentMapContent } from './utils';
