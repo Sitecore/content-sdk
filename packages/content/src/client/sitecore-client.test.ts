@@ -366,6 +366,7 @@ describe('SitecoreClient', () => {
           isDesignLibrary: false,
           designLibrary: {
             isVariantGeneration: false,
+            isLowCode: false,
           },
         },
       });
@@ -410,6 +411,7 @@ describe('SitecoreClient', () => {
           isDesignLibrary: false,
           designLibrary: {
             isVariantGeneration: false,
+            isLowCode: false,
           },
         },
       });
@@ -608,6 +610,7 @@ describe('SitecoreClient', () => {
           isDesignLibrary: false,
           designLibrary: {
             isVariantGeneration: false,
+            isLowCode: false,
           },
         },
       });
@@ -653,6 +656,7 @@ describe('SitecoreClient', () => {
             isDesignLibrary: false,
             designLibrary: {
               isVariantGeneration: false,
+              isLowCode: false,
             },
           },
         });
@@ -700,6 +704,7 @@ describe('SitecoreClient', () => {
             isDesignLibrary: false,
             designLibrary: {
               isVariantGeneration: false,
+              isLowCode: false,
             },
           },
         });
@@ -888,6 +893,7 @@ describe('SitecoreClient', () => {
           isDesignLibrary: false,
           designLibrary: {
             isVariantGeneration: false,
+            isLowCode: false,
           },
         },
       });
@@ -943,6 +949,7 @@ describe('SitecoreClient', () => {
           isDesignLibrary: false,
           designLibrary: {
             isVariantGeneration: false,
+            isLowCode: false,
           },
         },
       });
@@ -1217,6 +1224,7 @@ describe('SitecoreClient', () => {
           isEditing: false,
           designLibrary: {
             isVariantGeneration: false,
+            isLowCode: false,
           },
         },
       });
@@ -1278,6 +1286,7 @@ describe('SitecoreClient', () => {
           isEditing: true,
           designLibrary: {
             isVariantGeneration: true,
+            isLowCode: false,
           },
         },
       });
@@ -1367,6 +1376,7 @@ describe('SitecoreClient', () => {
         isDesignLibrary: false,
         designLibrary: {
           isVariantGeneration: false,
+          isLowCode: false,
         },
       });
 
@@ -1378,6 +1388,7 @@ describe('SitecoreClient', () => {
         isDesignLibrary: false,
         designLibrary: {
           isVariantGeneration: false,
+          isLowCode: false,
         },
       });
 
@@ -1389,6 +1400,7 @@ describe('SitecoreClient', () => {
         isDesignLibrary: false,
         designLibrary: {
           isVariantGeneration: false,
+          isLowCode: false,
         },
       });
 
@@ -1400,6 +1412,7 @@ describe('SitecoreClient', () => {
         isDesignLibrary: true,
         designLibrary: {
           isVariantGeneration: false,
+          isLowCode: false,
         },
       });
 
@@ -1407,6 +1420,7 @@ describe('SitecoreClient', () => {
         name: DesignLibraryMode.Metadata,
         designLibrary: {
           isVariantGeneration: false,
+          isLowCode: false,
         },
         isNormal: false,
         isPreview: false,
@@ -1418,11 +1432,24 @@ describe('SitecoreClient', () => {
         name: DesignLibraryMode.Normal,
         designLibrary: {
           isVariantGeneration: false,
+          isLowCode: false,
         },
         isNormal: false,
         isPreview: false,
         isEditing: false,
         isDesignLibrary: true,
+      });
+
+      expect(sitecoreClient['getPageMode'](DesignLibraryMode.LowCode)).to.deep.equal({
+        name: DesignLibraryMode.LowCode,
+        isNormal: false,
+        isPreview: false,
+        isEditing: true,
+        isDesignLibrary: true,
+        designLibrary: {
+          isVariantGeneration: false,
+          isLowCode: true,
+        },
       });
 
       expect(sitecoreClient['getPageMode']('invalid-mode' as any)).to.deep.equal({
@@ -1433,6 +1460,7 @@ describe('SitecoreClient', () => {
         isDesignLibrary: false,
         designLibrary: {
           isVariantGeneration: false,
+          isLowCode: false,
         },
       });
     });

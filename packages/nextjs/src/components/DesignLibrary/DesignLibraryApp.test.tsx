@@ -18,6 +18,7 @@ use(sinonChai);
 
 describe('<DesignLibraryApp />', () => {
   let DesignLibraryStub: sinon.SinonStub;
+  let DesignLibraryLowCodeComponentStub: sinon.SinonStub;
   let DesignLibraryServerStub: sinon.SinonStub;
   let DesignLibraryApp: any;
   const sandbox = sinon.createSandbox();
@@ -27,6 +28,10 @@ describe('<DesignLibraryApp />', () => {
       .stub()
       .returns(<div data-testid="design-library-client">Client Component Rendered</div>);
 
+    DesignLibraryLowCodeComponentStub = sandbox
+      .stub()
+      .returns(<div data-testid="design-library-low-code">Low Code Component Rendered</div>);
+
     DesignLibraryServerStub = sandbox
       .stub()
       .resolves(<div data-testid="design-library-server">Server Component Rendered</div>);
@@ -35,6 +40,7 @@ describe('<DesignLibraryApp />', () => {
     const module = proxyquire('./DesignLibraryApp', {
       '@sitecore-content-sdk/react': {
         DesignLibrary: DesignLibraryStub,
+        DesignLibraryLowCodeComponent: DesignLibraryLowCodeComponentStub,
       },
       './DesignLibraryServer': {
         DesignLibraryServer: DesignLibraryServerStub,
@@ -51,10 +57,15 @@ describe('<DesignLibraryApp />', () => {
   const modeLibrary: PageMode = {
     name: DesignLibraryMode.Normal,
     isDesignLibrary: true,
-    designLibrary: { isVariantGeneration: false },
+    designLibrary: { isVariantGeneration: false, isLowCode: false },
     isNormal: false,
     isPreview: false,
     isEditing: true,
+  };
+
+  const modeLibraryLowCode: PageMode = {
+    ...modeLibrary,
+    designLibrary: { ...modeLibrary.designLibrary, isLowCode: true },
   };
 
   const ClientComponent: React.FC<{ [prop: string]: unknown }> = () => <div>Client Component</div>;
@@ -115,6 +126,26 @@ describe('<DesignLibraryApp />', () => {
     render(awaitedDesignLibraryServer);
 
     expect(DesignLibraryStub).to.have.been.calledOnce;
+    expect(DesignLibraryLowCodeComponentStub).to.not.have.been.called;
+    expect(DesignLibraryServerStub).to.not.have.been.called;
+  });
+
+  it('should render DesignLibraryLowCodeComponent when isLowCode is true', () => {
+    const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
+    const page = getPage(layoutData, modeLibraryLowCode);
+    const componentMap = createComponentMap('ContentBlock', 'client');
+
+    const awaitedDesignLibraryServer = DesignLibraryApp({
+      page,
+      rendering: layoutData.sitecore.route as any,
+      componentMap,
+      loadServerImportMap: sinon.stub(),
+    });
+
+    render(awaitedDesignLibraryServer);
+
+    expect(DesignLibraryLowCodeComponentStub).to.have.been.calledOnce;
+    expect(DesignLibraryStub).to.not.have.been.called;
     expect(DesignLibraryServerStub).to.not.have.been.called;
   });
 

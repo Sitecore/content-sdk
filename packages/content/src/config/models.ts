@@ -260,6 +260,22 @@ export type SitecoreCliConfigInput = {
      */
     generator?: GenerateMapFunction;
   };
+  /**
+   * Configuration for the `sitecore-tools project atoms` CLI commands.
+   */
+  atoms?: {
+    /**
+     * Validation configuration for atoms.
+     */
+    validation?: {
+      /**
+       * When true, the CLI will exit with a non-zero code on validation errors.
+       * Useful for CI pipelines that should fail on broken atom contracts.
+       * @default false
+       */
+      breakOnError?: boolean;
+    };
+  };
 };
 
 /**

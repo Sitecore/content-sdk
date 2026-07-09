@@ -15,7 +15,7 @@
     "test": "mocha \"./src/**/*.test.ts\"",
     "prepublishOnly": "npm run build",
     "coverage": "nyc npm test",
-    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/content --entryPoints src/index.ts --entryPoints src/config/index.ts --entryPoints src/config-cli/index.ts --entryPoints src/client/index.ts --entryPoints src/i18n/index.ts --entryPoints src/layout/index.ts --entryPoints src/media/index.ts --entryPoints src/personalize/index.ts --entryPoints src/site/index.ts --entryPoints src/editing/index.ts --entryPoints src/tools/index.ts --entryPoints src/tools/index-node.ts --entryPoints src/codegen/index.ts --githubPages false",
+    "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/content --entryPoints src/index.ts --entryPoints src/config/index.ts --entryPoints src/config-cli/index.ts --entryPoints src/client/index.ts --entryPoints src/i18n/index.ts --entryPoints src/layout/index.ts --entryPoints src/media/index.ts --entryPoints src/personalize/index.ts --entryPoints src/site/index.ts --entryPoints src/editing/index.ts --entryPoints src/atoms/index.ts --entryPoints src/tools/index.ts --entryPoints src/tools/index-node.ts --entryPoints src/codegen/index.ts --githubPages false",
     "api-extractor": "npm run build && api-extractor run --local --verbose",
     "api-extractor:verify": "api-extractor run"
   },
@@ -76,6 +76,7 @@
     "@sitecore-content-sdk/events": "^2.1.0"
   },
   "dependencies": {
+    "@json-render/core": "0.19.0",
     "@sitecore-content-sdk/core": "^2.1.1",
     "chalk": "^4.1.2",
     "debug": "^4.4.0",
@@ -115,6 +116,11 @@
       "import": "./dist/esm/editing/codegen/index.js",
       "require": "./dist/cjs/editing/codegen/index.js",
       "types": "./types/editing/codegen/index.d.ts"
+    },
+    "./atoms": {
+      "import": "./dist/esm/atoms/index.js",
+      "require": "./dist/cjs/atoms/index.js",
+      "types": "./types/atoms/index.d.ts"
     },
     "./editing": {
       "import": "./dist/esm/editing/index.js",

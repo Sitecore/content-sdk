@@ -183,7 +183,7 @@ describe('placeholder-utils', () => {
     });
 
     it('should extract styles from DetailedRenderingParams object', () => {
-      const rendering = ({
+      const rendering = {
         componentName: 'TestComponent',
         uid: 'test-uid',
         params: {
@@ -191,7 +191,7 @@ describe('placeholder-utils', () => {
             Value: { value: 'White-Background' },
           },
         },
-      } as unknown) as ComponentRendering;
+      } as unknown as ComponentRendering;
 
       const result = getSXAParams(rendering);
 
@@ -201,14 +201,14 @@ describe('placeholder-utils', () => {
     });
 
     it('should combine object GridParameters and Styles params', () => {
-      const rendering = ({
+      const rendering = {
         componentName: 'TestComponent',
         uid: 'test-uid',
         params: {
           GridParameters: { Value: { value: 'col-lg-6' } },
           Styles: { Value: { value: 'White-Background' } },
         },
-      } as unknown) as ComponentRendering;
+      } as unknown as ComponentRendering;
 
       const result = getSXAParams(rendering);
 
@@ -216,7 +216,6 @@ describe('placeholder-utils', () => {
         styles: 'col-lg-6 White-Background',
       });
     });
-
   });
 
   describe('getChildComponentProps', () => {
@@ -382,6 +381,61 @@ describe('placeholder-utils', () => {
       expect(result?.component).to.equal(MissingComponent);
       expect(result?.isEmpty).to.be.true;
       expect(consoleWarnStub.calledOnce).to.be.true;
+    });
+
+    it('should return StudioComponentServerWrapper when ComponentRef is in params', () => {
+      const rendering: ComponentRendering = {
+        componentName: 'Sample',
+        uid: 'test-uid',
+        params: {
+          ComponentRef: 'api/media/v2/delivery/abc/component/def/default',
+          fieldNames: 'default',
+        },
+      };
+
+      const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
+
+      expect(result?.component).to.be.a('function');
+      expect(result?.isEmpty).to.be.false;
+      expect(result?.componentType).to.equal('server');
+    });
+
+    it('should return StudioComponentServerWrapper when ComponentRef is in params without fieldNames', () => {
+      const rendering: ComponentRendering = {
+        componentName: 'Sample',
+        uid: 'test-uid',
+        params: {
+          ComponentRef:
+            'api/media/v2/delivery/abc/component/def/default|api/media/v2/delivery/abc/component/def/sample',
+        },
+      };
+
+      const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
+
+      expect(result?.component).to.be.a('function');
+      expect(result?.isEmpty).to.be.false;
+      expect(result?.componentType).to.equal('server');
+    });
+
+    it('should forward fields and params from ChildComponentProps to StudioComponentServerWrapper', () => {
+      const rendering: ComponentRendering = {
+        componentName: 'Sample',
+        uid: 'test-uid',
+        params: { ComponentRef: 'api/media/v2/delivery/abc/component/def/default' },
+      };
+      const fields = { heading: { value: 'Test Heading' } };
+      const params = { styles: 'primary', size: 'large' };
+
+      const result = getComponentForRendering(rendering, 'test-placeholder', componentMap);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const element = (result.component as React.FC<any>)({
+        fields: fields as any,
+        params,
+        rendering,
+      });
+
+      expect((element as any).props.fields).to.equal(fields);
+      expect((element as any).props.params).to.equal(params);
     });
 
     it('should return null when componentMap is not provided', () => {

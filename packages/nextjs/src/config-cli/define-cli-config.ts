@@ -34,7 +34,7 @@ function addDefaultScaffoldTemplates(cliConfig: SitecoreCliConfigInput) {
 }
 
 /**
- * Add the framework-specific implementaion of the component map generator to the CLI configuration.
+ * Add the framework-specific implementation of the component map generator to the CLI configuration.
  * @param {SitecoreCliConfigInput} cliConfig - The CLI configuration object
  */
 function addDefaultComponentMapGenerator(cliConfig: SitecoreCliConfigInput) {

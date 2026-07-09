@@ -51,6 +51,11 @@ export const ERROR_MESSAGES = {
     `[IV-006] "extensionData" supports maximum ${maxAttributes} attributes. Reduce the number of attributes.`,
   IV_007: (siteName: string) =>
     `[IV-007] Site "${siteName}" does not exist or site item tree is missing.`,
+  IV_008: (lockSide: string, currentSide: string) =>
+    `[IV-008] Catalog version mismatch: lock file has ${lockSide}, current is ${currentSide}.`,
+  IV_009: (name: string, lockSide: string, currentSide: string) =>
+    `[IV-009] Atom "${name}" version mismatch: lock file has ${lockSide}, current is ${currentSide}.`,
+  IV_010: (name: string) => `[IV-010] Atom "${name}" schema has changed.`,
 
   /** IE errors are related to incorrect execution */
   IE_001: (pluginName: string, dependency: string) =>
@@ -65,6 +70,9 @@ export const ERROR_MESSAGES = {
   IE_006:
     '[IE-006] Unable to set the "sc_cid_personalize" cookie because the visitor ID could not be retrieved from the server. Make sure to set the correct values for "contextId" and "siteName". If the issue persists, try again later or use try-catch blocks to handle this error.',
   IE_007: (hostName: string) => `[IE-007] Could not resolve site for host "${hostName}".`,
+  IE_008: '[IE-008] Lock file validation failed:',
+  IE_009:
+    '[IE-009] Atom validation failed. See issues above. You see this error because `breakOnError` is enabled in your CLI config.',
 
   /** MV errors are related to missing values */
   MV_001: '[MV-001] "contextId" is required.',
@@ -77,6 +85,15 @@ export const ERROR_MESSAGES = {
   MV_007: '[MV-007] Provide either "contextId" or both "apiHost" and "apiKey".',
   MV_008: '[MV-008] Verify that sitecore.config is properly imported and correctly referenced.',
   MV_009: '[MV-009] "language" is required.',
+  MV_010: (modulePath: string) =>
+    `[MV-010] Atoms module not found at ${modulePath}.{ts,tsx}. Ensure your atoms are defined in src/atoms/index.{ts,tsx} and export a catalog.`,
+  MV_011: (modulePath: string) =>
+    `[MV-011] Atoms module at ${modulePath} does not export "catalog". Export the result of defineAtomsCatalog as "catalog".`,
+  MV_012: '[MV-012] Lock file not found. Run `sitecore-tools project atoms update` to generate it.',
+  MV_013: (name: string) =>
+    `[MV-013] Atom "${name}" is in the lock file but not found in current definitions.`,
+  MV_014: (name: string) =>
+    `[MV-014] Atom "${name}" is new and not in the lock file. Run \`sitecore-tools project atoms update\` to add it.`,
 
   /** Generic follow-up when the user should contact support */
   CONTACT_SUPPORT: 'If the issue persists, please contact Sitecore Support.',

@@ -3,32 +3,37 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React from 'react';
 import sinon from 'sinon';
-import { expect } from 'chai';
+import { expect, use as chaiUse } from 'chai';
+import sinonChai from 'sinon-chai';
 import { Page, PageMode } from '@sitecore-content-sdk/content/client';
 import {
   LayoutServiceData,
   EDITING_COMPONENT_PLACEHOLDER,
 } from '@sitecore-content-sdk/content/layout';
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
-import { DesignLibrary } from './DesignLibrary';
+import { DesignLibrary, __mockDependencies } from './DesignLibrary';
 import { getTestLayoutData } from '../../test-data/component-editing-data';
 import { SitecoreProvider } from '../SitecoreProvider';
 import { RichText } from '../RichText';
 import { Text } from '../Text';
 import { Placeholder } from '../Placeholder';
-
 import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
   DesignLibraryMode,
 } from '@sitecore-content-sdk/content/editing';
-import { __mockDependencies } from './DesignLibrary';
 import {
   DesignLibraryPreviewError,
   getDesignLibraryErrorEvent,
 } from '@sitecore-content-sdk/content/codegen';
+import { getDesignLibraryAtomsCatalogEvent } from '@sitecore-content-sdk/content/atoms';
 import { after } from 'node:test';
 import * as rscUtils from '#rsc-env';
+import { serializeCatalog } from '../../atoms';
+import type { AtomsConfig } from '../../atoms/types';
+import type { DefineRegistryResult } from '@json-render/react';
+
+chaiUse(sinonChai);
 
 before(() => {
   if (typeof window !== 'undefined' && !window.requestAnimationFrame) {
@@ -60,7 +65,7 @@ describe('<DesignLibrary />', () => {
   const modeLibraryMetadata: PageMode = {
     name: DesignLibraryMode.Metadata,
     isDesignLibrary: true,
-    designLibrary: { isVariantGeneration: false },
+    designLibrary: { isVariantGeneration: false, isLowCode: false },
     isNormal: false,
     isPreview: false,
     isEditing: true,
@@ -69,7 +74,7 @@ describe('<DesignLibrary />', () => {
   const modeLibrary_Gen: PageMode = {
     name: DesignLibraryMode.Normal,
     isDesignLibrary: true,
-    designLibrary: { isVariantGeneration: true },
+    designLibrary: { isVariantGeneration: true, isLowCode: false },
     isNormal: false,
     isPreview: false,
     isEditing: false,
@@ -78,13 +83,13 @@ describe('<DesignLibrary />', () => {
   const modeLibraryMetadata_Gen: PageMode = {
     name: DesignLibraryMode.Metadata,
     isDesignLibrary: true,
-    designLibrary: { isVariantGeneration: true },
+    designLibrary: { isVariantGeneration: true, isLowCode: false },
     isNormal: false,
     isPreview: false,
     isEditing: true,
   };
 
-  const getPage = (layout?: LayoutServiceData, pageMode: PageMode = modeLibrary): Page => ({
+  const getPage = (layout?: LayoutServiceData, pageMode: PageMode = modeLibraryMetadata): Page => ({
     locale: 'en',
     layout: layout || { sitecore: { context: {}, route: null } },
     mode: pageMode,
@@ -132,6 +137,23 @@ describe('<DesignLibrary />', () => {
 
   const RENDER_ID = 'test-content';
   const PLACEHOLDER_GUID = '00000000-0000-0000-0000-000000000000';
+
+  const mockAtomsCatalog = {
+    data: {
+      components: {
+        Button: {
+          props: { toJSONSchema: () => ({ type: 'object', properties: {} }) },
+          description: 'Button component',
+        },
+      },
+      actions: {},
+    },
+  } as any;
+
+  const atomsConfigWithCatalog: AtomsConfig = {
+    catalog: mockAtomsCatalog,
+    registry: {} as DefineRegistryResult,
+  };
 
   const joinHtml = (parts: string[]) => parts.join('');
   const expectContains = (html: string, parts: string[]) =>
@@ -635,6 +657,55 @@ describe('<DesignLibrary />', () => {
             )
         ).to.be.false;
       });
+    });
+
+    it('posts atoms catalog payload when atoms catalog is provided', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+          atomsConfig={atomsConfigWithCatalog}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      await waitFor(() => {
+        const expectedCatalogEvent = getDesignLibraryAtomsCatalogEvent(
+          serializeCatalog(atomsConfigWithCatalog.catalog)
+        );
+
+        expect(postToDesignLibrarySpy).to.have.been.calledWith(expectedCatalogEvent);
+      });
+    });
+
+    it('does not post atoms catalog payload when atoms catalog is missing', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      await waitFor(() => {
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+      });
+
+      const catalogEventCall = postToDesignLibrarySpy
+        .getCalls()
+        .find((c: sinon.SinonSpyCall) => c.args[0]?.name === 'atoms:catalog');
+
+      expect(catalogEventCall).to.be.undefined;
     });
   });
 

@@ -18,6 +18,8 @@ import { Placeholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
 import { DynamicComponent } from './models';
 import { ErrorComponent } from '../ErrorBoundary';
+import { serializeCatalog } from '../../atoms';
+import { getDesignLibraryAtomsCatalogEvent } from '@sitecore-content-sdk/content/atoms';
 
 let {
   getDesignLibraryImportMapEvent,
@@ -48,7 +50,7 @@ export const __mockDependencies = (mocks: any) => {
  * @public
  */
 export const DesignLibrary = () => {
-  const { page, loadImportMap } = useSitecore();
+  const { page, loadImportMap, atomsConfig } = useSitecore();
   const route = page.layout.sitecore.route;
   const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
   const uid = rendering?.uid;
@@ -139,6 +141,11 @@ export const DesignLibrary = () => {
       const importMapEvent = getDesignLibraryImportMapEvent(uid, importMap);
       postToDesignLibrary(importMapEvent);
 
+      if (atomsConfig?.catalog) {
+        const catalogPayload = serializeCatalog(atomsConfig.catalog);
+        postToDesignLibrary(getDesignLibraryAtomsCatalogEvent(catalogPayload));
+      }
+
       const propsEvent = getDesignLibraryComponentPropsEvent(
         uid,
         propsState.fields,
@@ -152,7 +159,7 @@ export const DesignLibrary = () => {
       cancelled = true;
       unsubscribe && unsubscribe();
     };
-  }, [isDesignLibrary, isVariantGeneration, uid, loadImportMap, propsState]);
+  }, [isDesignLibrary, isVariantGeneration, uid, loadImportMap, propsState, atomsConfig]);
 
   return (
     <main>

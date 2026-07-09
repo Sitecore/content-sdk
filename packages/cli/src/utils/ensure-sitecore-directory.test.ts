@@ -18,9 +18,11 @@ describe('ensureSitecoreDirectory', () => {
 
     const outputPath = path.resolve(process.cwd(), '.sitecore');
     expect((fs.existsSync as sinon.SinonStub).calledWith(outputPath)).to.be.true;
-    expect((fs.mkdirSync as sinon.SinonStub).calledOnceWithExactly(outputPath, {
-      recursive: true,
-    })).to.be.true;
+    expect(
+      (fs.mkdirSync as sinon.SinonStub).calledOnceWithExactly(outputPath, {
+        recursive: true,
+      })
+    ).to.be.true;
   });
 
   it('should not create the output directory when it already exists', () => {

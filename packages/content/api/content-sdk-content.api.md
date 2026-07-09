@@ -17,12 +17,28 @@ import { GraphQLRequestClientConfig } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/core';
 import { RetryStrategy } from '@sitecore-content-sdk/core';
+import { Spec } from '@json-render/core';
+
+// @internal
+export interface ActionCatalogEntry {
+    description: string;
+    name: string;
+    paramsSchema: object;
+}
 
 // @internal
 export const addComponentPreviewHandler: (importMap: ImportEntry[], callback: (error: unknown | null, Component: unknown) => void) => (() => void) | undefined;
 
+// Warning: (ae-forgotten-export) The symbol "ComponentUpdateEventArgs_2" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export const addComponentPropsUpdateHandler: (callback: (fields: NonNullable<ComponentUpdateEventArgs_2["details"]>["fields"], params: NonNullable<ComponentUpdateEventArgs_2["details"]>["params"]) => void) => () => void;
+
 // @internal
 export const addComponentUpdateHandler: (rootComponent: ComponentRendering, successCallback?: (updatedRootComponent: ComponentRendering) => void) => (() => void) | undefined;
+
+// @internal
+export const addDocumentUpdateHandler: (callback: (updatedRootComponent: Document_2) => void) => () => void;
 
 // @internal
 export const addServerComponentPreviewHandler: (rootComponent: ComponentRendering, callback: (componentToUpdate: ComponentRendering | null, eventArgs: ServerComponentPreviewEventArgs) => void) => () => void;
@@ -32,6 +48,39 @@ export function addStyleElement(stylesContent: string): void;
 
 // @internal
 export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => string): T;
+
+// @internal
+export interface AtomCatalogActionEntry {
+    description: string | undefined;
+    name: string;
+    paramsSchema?: object;
+}
+
+// @internal
+export interface AtomCatalogComponentEntry {
+    allowedChildren?: string[];
+    allowedParents?: string[];
+    description?: string;
+    example?: unknown;
+    name: string;
+    propsSchema: object;
+    slots: string[];
+    version?: string;
+}
+
+// @internal
+export interface AtomCatalogEntry {
+    description: string;
+    name: string;
+    propsSchema: object;
+    slots: string[];
+}
+
+// @internal
+export interface AtomsCatalogPayload {
+    actions: ActionCatalogEntry[];
+    components: AtomCatalogEntry[];
+}
 
 // @public
 export class CdpHelper {
@@ -223,8 +272,12 @@ export const defineCliConfig: (cliConfig: SitecoreCliConfigInput) => SitecoreCli
 // @public
 export const defineConfig: (config: SitecoreConfigInput) => SitecoreConfig;
 
+// @internal
+export type DesignLibraryAtomsError = 'render' | 'atoms-missing';
+
 // @public
 export enum DesignLibraryMode {
+    LowCode = "library-low-code",
     Metadata = "library-metadata",
     Normal = "library"
 }
@@ -316,6 +369,12 @@ export interface DictionaryServiceConfig extends CacheOptions, GraphQLServiceCon
     dictionaryEntryTemplateId?: string;
     pageSize?: number;
 }
+
+// @internal
+interface Document_2 extends Spec {
+    name: string;
+}
+export { Document_2 as Document }
 
 // @internal
 export const EDITING_ALLOWED_ORIGINS: string[];
@@ -559,6 +618,11 @@ export const getContentStylesheetLink: (layoutData: LayoutServiceData, sitecoreE
 
 // @internal
 export function getDefaultMediaUrlTransformer(edgeUrl: string): (value: string) => string;
+
+// Warning: (ae-forgotten-export) The symbol "DesignLibraryAtomsCatalogEvent" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export function getDesignLibraryAtomsCatalogEvent(payload: SerializedCatalog): DesignLibraryAtomsCatalogEvent;
 
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPropsEvent" needs to be exported by the entry point api-surface.d.ts
 //
@@ -846,6 +910,7 @@ export type PageMode = {
     name: PageModeName;
     designLibrary: {
         isVariantGeneration: boolean;
+        isLowCode: boolean;
     };
     isNormal: boolean;
     isPreview: boolean;
@@ -1090,7 +1155,17 @@ export type ScaffoldTemplate = {
 };
 
 // @internal
+export const sendAtomsErrorEvent: (error: unknown, type: DesignLibraryAtomsError) => void;
+
+// @internal
 export const sendErrorEvent: (uid: string, error: unknown, type: DesignLibraryPreviewError) => void;
+
+// @internal
+export interface SerializedCatalog {
+    actions: AtomCatalogActionEntry[];
+    components: AtomCatalogComponentEntry[];
+    version?: string;
+}
 
 // @internal
 export interface ServerComponentPreviewEventArgs extends DesignLibraryEvent {
@@ -1130,6 +1205,11 @@ export type SitecoreCliConfigInput = {
     };
     componentMap?: GenerateMapArgs & {
         generator?: GenerateMapFunction;
+    };
+    atoms?: {
+        validation?: {
+            breakOnError?: boolean;
+        };
     };
 };
 
@@ -1193,6 +1273,13 @@ export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' 
         sitePathService?: SitePathService;
     };
 };
+
+// @public
+export interface SitecoreComponentMeta {
+    allowedChildren?: string[];
+    allowedParents?: string[];
+    version?: string;
+}
 
 // @public
 export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;

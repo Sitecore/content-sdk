@@ -36,3 +36,10 @@ global.jsdom = jsdom;
 
 global.HTMLElement = jsDomWindow.HTMLElement; // makes chai "happy" https://github.com/chaijs/chai/issues/1029
 copyProps(jsDomWindow, global);
+
+// jsdom does not implement requestAnimationFrame; provide a minimal stub
+if (typeof global.requestAnimationFrame === 'undefined') {
+  global.requestAnimationFrame = (cb: FrameRequestCallback) =>
+    setTimeout(cb, 0) as unknown as number;
+  global.cancelAnimationFrame = (id: number) => clearTimeout(id);
+}

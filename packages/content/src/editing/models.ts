@@ -84,6 +84,8 @@ export enum DesignLibraryMode {
   Normal = 'library',
   /** Metadata mode */
   Metadata = 'library-metadata',
+  /** Low code mode */
+  LowCode = 'library-low-code',
 }
 
 /**

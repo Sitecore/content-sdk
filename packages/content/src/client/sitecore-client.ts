@@ -74,6 +74,10 @@ export type PageMode = {
      * Whether the page is in variant generation mode
      */
     isVariantGeneration: boolean;
+    /**
+     * Whether the page is in low code component editing mode
+     */
+    isLowCode: boolean;
   };
   /**
    * Whether the page is in normal mode
@@ -751,7 +755,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       isPreview: false,
       isEditing: false,
       isDesignLibrary: false,
-      designLibrary: { isVariantGeneration: false },
+      designLibrary: { isVariantGeneration: false, isLowCode: false },
     };
 
     switch (mode) {
@@ -773,6 +777,11 @@ export class SitecoreClient implements BaseSitecoreClient {
 
       case DesignLibraryMode.Metadata:
         pageMode.isDesignLibrary = true;
+        pageMode.isEditing = true;
+        break;
+      case DesignLibraryMode.LowCode:
+        pageMode.isDesignLibrary = true;
+        pageMode.designLibrary.isLowCode = true;
         pageMode.isEditing = true;
         break;
 
