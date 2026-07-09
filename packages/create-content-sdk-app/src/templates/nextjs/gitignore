@@ -24,3 +24,4 @@
 # sitecore files
 .sitecore/*
 !.sitecore/atoms.lock.json
+

@@ -14,7 +14,7 @@ import {
  * @example
  * ```ts
  * import { z } from 'zod';
- * import { defineAtomsCatalog } from '@sitecore-content-sdk/nextjs';
+ * import { defineAtomsCatalog } from '@sitecore-content-sdk/nextjs/atoms';
  *
  * const catalog = defineAtomsCatalog({
  *   components: {
@@ -51,7 +51,7 @@ export const defineAtomsCatalog = defineAtomsCatalogReact;
  * @example
  *
  * ```tsx
- * import { defineAtomsRegistry } from '@sitecore-content-sdk/nextjs';
+ * import { defineAtomsRegistry } from '@sitecore-content-sdk/nextjs/atoms';
  *
  * const { registry, handlers, executeAction } = defineAtomsRegistry(catalog, {
  *   components: {

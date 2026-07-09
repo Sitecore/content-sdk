@@ -1,4 +1,4 @@
-import { defineAtomsCatalog, defineAtomsRegistry } from '@sitecore-content-sdk/nextjs';
+import { defineAtomsCatalog, defineAtomsRegistry } from '@sitecore-content-sdk/nextjs/atoms';
 
 export const catalog = defineAtomsCatalog({
   components: {},

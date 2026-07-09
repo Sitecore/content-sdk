@@ -4,7 +4,7 @@
 '@sitecore-content-sdk/nextjs': minor
 '@sitecore-content-sdk/cli': minor
 '@sitecore-content-sdk/core': patch
-'create-content-sdk-app': minor
+'create-content-sdk-app': patch
 ---
 
 Introduce Atoms — the Atomic Design foundation for building low-code components with Design Studio.

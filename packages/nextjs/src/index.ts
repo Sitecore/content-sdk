@@ -119,8 +119,6 @@ export {
 export { FEaaSWrapper };
 export { BYOCWrapper };
 
-export * from './atoms';
-
 export {
   ComponentMap,
   Image,
