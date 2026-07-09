@@ -441,6 +441,67 @@ describe('EditingService', () => {
     });
   });
 
+  it('should include sc_previewTime header when previewTime is provided', async () => {
+    const requestMock = sinon.stub().resolves({
+      item: {
+        rendered: {
+          sitecore: {
+            context: { pageEditing: true, language: 'en' },
+            route: null,
+          },
+        },
+      },
+    });
+
+    sinon.stub(GraphQLRequestClient.prototype, 'request').callsFake(requestMock);
+
+    const service = new EditingService({ clientFactory });
+
+    await service.fetchEditingData({
+      itemId: 'item-123',
+      language: 'en',
+      version: '1',
+      layoutKind: LayoutKind.Final,
+      mode: LayoutServicePageState.Edit,
+      variantId: 'variant-1',
+      previewTime: '2024-12-25T10:00:00Z',
+    });
+
+    expect(requestMock.calledOnce).to.be.true;
+    const requestOptions = requestMock.firstCall.args[2];
+    expect(requestOptions.headers).to.have.property('sc_previewTime', '2024-12-25T10:00:00Z');
+  });
+
+  it('should not include sc_previewTime header when previewTime is absent', async () => {
+    const requestMock = sinon.stub().resolves({
+      item: {
+        rendered: {
+          sitecore: {
+            context: { pageEditing: true, language: 'en' },
+            route: null,
+          },
+        },
+      },
+    });
+
+    sinon.stub(GraphQLRequestClient.prototype, 'request').callsFake(requestMock);
+
+    const service = new EditingService({ clientFactory });
+
+    await service.fetchEditingData({
+      itemId: 'item-123',
+      language: 'en',
+      version: '1',
+      layoutKind: LayoutKind.Final,
+      mode: LayoutServicePageState.Edit,
+      variantId: 'variant-1',
+    });
+
+    expect(requestMock.calledOnce).to.be.true;
+    const requestOptions = requestMock.firstCall.args[2];
+    expect(requestOptions.headers).to.not.have.property('sc_previewTime');
+  });
+
   it('should map the default variant to "default" for the sc_variant header', async () => {
     const requestMock = sinon.stub().resolves({
       item: {

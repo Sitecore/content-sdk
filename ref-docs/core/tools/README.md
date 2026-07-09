@@ -19,6 +19,7 @@
 
 - [areURLSearchParamsEqual](functions/areURLSearchParamsEqual.md)
 - [escapeNonSpecialQuestionMarks](functions/escapeNonSpecialQuestionMarks.md)
+- [escapeRegExp](functions/escapeRegExp.md)
 - [getAllowedOriginsFromEnv](functions/getAllowedOriginsFromEnv.md)
 - [getCache](functions/getCache.md)
 - [getCacheAndClean](functions/getCacheAndClean.md)

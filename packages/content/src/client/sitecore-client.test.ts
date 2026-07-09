@@ -861,6 +861,7 @@ describe('SitecoreClient', () => {
         version: '1',
         variantId: 'variant1',
         layoutKind: LayoutKind.Final,
+        previewTime: undefined as string | undefined,
       };
 
       const editingData = {
@@ -901,6 +902,7 @@ describe('SitecoreClient', () => {
           mode: previewData.mode,
           site: previewData.site,
           variantId: previewData.variantId,
+          previewTime: previewData.previewTime,
         })
       ).to.be.true;
     });
@@ -914,6 +916,7 @@ describe('SitecoreClient', () => {
         version: '1',
         variantId: 'variant1',
         layoutKind: LayoutKind.Final,
+        previewTime: undefined as string | undefined,
       };
 
       const editingData = {
@@ -954,6 +957,7 @@ describe('SitecoreClient', () => {
           mode: previewData.mode,
           site: previewData.site,
           variantId: previewData.variantId,
+          previewTime: previewData.previewTime,
         })
       ).to.be.true;
     });
@@ -968,6 +972,7 @@ describe('SitecoreClient', () => {
         version: '1',
         variantId: 'mountain_bike_audience',
         layoutKind: LayoutKind.Final,
+        previewTime: undefined as string | undefined,
       };
 
       const editingData = {
@@ -987,6 +992,7 @@ describe('SitecoreClient', () => {
           mode: previewData.mode,
           site: previewData.site,
           variantId: previewData.variantId,
+          previewTime: previewData.previewTime,
         })
       ).to.be.true;
 
@@ -1034,6 +1040,7 @@ describe('SitecoreClient', () => {
         version: '1',
         variantId: DEFAULT_VARIANT,
         layoutKind: LayoutKind.Final,
+        previewTime: undefined as string | undefined,
       };
 
       const fetchOptions = {
@@ -1064,6 +1071,7 @@ describe('SitecoreClient', () => {
           mode: previewData.mode,
           site: previewData.site,
           variantId: previewData.variantId,
+          previewTime: previewData.previewTime,
         })
         .resolves(editingData);
 
@@ -1079,10 +1087,72 @@ describe('SitecoreClient', () => {
             mode: previewData.mode,
             site: previewData.site,
             variantId: previewData.variantId,
+            previewTime: previewData.previewTime,
           },
           fetchOptions
         )
       ).to.be.true;
+    });
+
+    it('should pass previewTime to fetchEditingData when present in previewData', async () => {
+      const previewData = {
+        site: 'default-site',
+        itemId: 'test-item-id',
+        mode: LayoutServicePageState.Edit,
+        language: 'en',
+        version: '1',
+        variantId: DEFAULT_VARIANT,
+        layoutKind: LayoutKind.Final,
+        previewTime: '2024-12-25T10:00:00Z',
+      };
+
+      const editingData = {
+        layoutData: {
+          sitecore: {
+            route: { name: 'home', placeholders: {} },
+            context: { site: { name: 'default-site', hostName: 'example.com', language: 'en' } },
+          },
+        },
+      };
+
+      editingServiceStub.fetchEditingData.resolves(editingData);
+
+      await sitecoreClient.getPreview(previewData);
+
+      expect(
+        editingServiceStub.fetchEditingData.calledWith(
+          sinon.match({ previewTime: '2024-12-25T10:00:00Z' })
+        )
+      ).to.be.true;
+    });
+
+    it('should not pass previewTime to fetchEditingData when absent in previewData', async () => {
+      const previewData = {
+        site: 'default-site',
+        itemId: 'test-item-id',
+        mode: LayoutServicePageState.Edit,
+        language: 'en',
+        version: '1',
+        variantId: DEFAULT_VARIANT,
+        layoutKind: LayoutKind.Final,
+      };
+
+      const editingData = {
+        layoutData: {
+          sitecore: {
+            route: { name: 'home', placeholders: {} },
+            context: { site: { name: 'default-site', hostName: 'example.com', language: 'en' } },
+          },
+        },
+      };
+
+      editingServiceStub.fetchEditingData.resolves(editingData);
+
+      await sitecoreClient.getPreview(previewData);
+
+      expect(
+        editingServiceStub.fetchEditingData.calledWith(sinon.match({ previewTime: sinon.match.defined }))
+      ).to.be.false;
     });
 
     it('should return null when route is not found', async () => {

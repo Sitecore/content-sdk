@@ -420,6 +420,52 @@ describe('EditingRenderMiddleware', () => {
     expect(fetchRequestUrl.includes('someOtherParam=shouldNotBeIncluded')).to.be.false;
   });
 
+  it('should include previewTime in editing params when sc_previewTime is present in query params', async () => {
+    const previewTimeQuery = {
+      ...query,
+      sc_previewTime: '2024-12-25T10:00:00Z',
+    } as EditingRenderQueryParams;
+    const req = mockRequest({ query: previewTimeQuery });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    const fetcherGetStub = sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    // Verify previewTime is included in the EDITING_PARAMS_HEADER JSON, which flows to Edge GraphQL via PreviewProxy
+    const fetchRequestOptions = fetcherGetStub.getCall(0).args[1];
+    expect(fetchRequestOptions).to.exist;
+    const editingParams = JSON.parse(fetchRequestOptions?.headers[EDITING_PARAMS_HEADER]);
+    expect(editingParams).to.have.property('previewTime', '2024-12-25T10:00:00Z');
+    expect(res.send).to.have.been.calledWith('<div>some html</div>');
+  });
+
+  it('should not include previewTime in editing params when sc_previewTime is absent (backward compatibility)', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    const fetcherGetStub = sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    // Verify previewTime is absent from the EDITING_PARAMS_HEADER JSON
+    const fetchRequestOptions = fetcherGetStub.getCall(0).args[1];
+    expect(fetchRequestOptions).to.exist;
+    const editingParams = JSON.parse(fetchRequestOptions?.headers[EDITING_PARAMS_HEADER]);
+    expect(editingParams).to.not.have.property('previewTime');
+    expect(res.send).to.have.been.calledWith('<div>some html</div>');
+  });
+
   describe('allowedQueryParams configuration', () => {
     it('should not include additional query params when allowedQueryParams is not configured', async () => {
       const customQuery = {

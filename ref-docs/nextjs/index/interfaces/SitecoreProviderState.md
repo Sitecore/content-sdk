@@ -6,7 +6,7 @@
 
 # Interface: SitecoreProviderState
 
-Defined in: react/types/components/SitecoreProvider.d.ts:29
+Defined in: react/types/components/SitecoreProvider.d.ts:30
 
 The state for the SitecoreProvider component.
 
@@ -16,7 +16,7 @@ The state for the SitecoreProvider component.
 
 > `optional` **api?**: `Required`\<\{ `edge?`: `Required`\<\{ `clientContextId?`: `string`; `contextId`: `string`; `edgeUrl?`: `string`; \} \| `undefined`\>; `local?`: `Required`\<\{ `apiHost`: `string`; `apiKey`: `string`; `path?`: `string`; \} \| `undefined`\>; \}\>
 
-Defined in: react/types/components/SitecoreProvider.d.ts:51
+Defined in: react/types/components/SitecoreProvider.d.ts:52
 
 The API configuration defined in the `SitecoreConfig`.
 
@@ -26,7 +26,7 @@ The API configuration defined in the `SitecoreConfig`.
 
 > **componentMap**: [`ComponentMap`](../type-aliases/ComponentMap.md)
 
-Defined in: react/types/components/SitecoreProvider.d.ts:47
+Defined in: react/types/components/SitecoreProvider.d.ts:48
 
 The component map to use for rendering components.
 
@@ -36,7 +36,7 @@ The component map to use for rendering components.
 
 > **loadImportMap**: () => `Promise`\<`ImportMapImport`\>
 
-Defined in: react/types/components/SitecoreProvider.d.ts:43
+Defined in: react/types/components/SitecoreProvider.d.ts:44
 
 The dynamic import for import map to be used in variant generation mode.
 
@@ -50,7 +50,7 @@ The dynamic import for import map to be used in variant generation mode.
 
 > **page**: [`Page`](../type-aliases/Page.md)
 
-Defined in: react/types/components/SitecoreProvider.d.ts:39
+Defined in: react/types/components/SitecoreProvider.d.ts:40
 
 The page data.
 
@@ -60,7 +60,7 @@ The page data.
 
 > `optional` **setPage?**: (`value`) => `void`
 
-Defined in: react/types/components/SitecoreProvider.d.ts:35
+Defined in: react/types/components/SitecoreProvider.d.ts:36
 
 Method to set the page.
 

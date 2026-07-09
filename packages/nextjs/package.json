@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/nextjs",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -60,7 +60,6 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "5.2.0",
-    "glob": "^11.0.2",
     "jsdom": "^26.1.0",
     "mocha": "^11.2.2",
     "next": "^16.2.0",
@@ -91,10 +90,10 @@
   },
   "dependencies": {
     "@babel/parser": "^7.27.2",
-    "@sitecore-content-sdk/content": "^2.1.0",
-    "@sitecore-content-sdk/core": "^2.1.0",
+    "@sitecore-content-sdk/content": "^2.2.0",
+    "@sitecore-content-sdk/core": "^2.1.1",
     "@sitecore-content-sdk/events": "^2.1.0",
-    "@sitecore-content-sdk/react": "^2.1.0",
+    "@sitecore-content-sdk/react": "^2.2.0",
     "recast": "^0.23.11",
     "regex-parser": "^2.3.1"
   },

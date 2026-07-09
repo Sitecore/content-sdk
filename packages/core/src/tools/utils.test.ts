@@ -8,6 +8,7 @@ import {
   isRegexOrUrl,
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,
+  escapeRegExp,
   mergeURLSearchParams,
 } from './utils';
 
@@ -327,6 +328,26 @@ describe('utils', () => {
 
     it('should handle empty strings', () => {
       expect(escapeNonSpecialQuestionMarks('')).to.equal('');
+    });
+  });
+
+  describe('escapeRegExp', () => {
+    it('should escape regex special characters', () => {
+      expect(escapeRegExp('.*+?^${}()|[]\\')).to.equal('\\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\');
+    });
+
+    it('should leave non-special characters unchanged', () => {
+      expect(escapeRegExp('abc123')).to.equal('abc123');
+    });
+
+    it('should produce a pattern that matches the original string literally', () => {
+      const input = 'edge.sitecorecloud.io';
+      expect(new RegExp(escapeRegExp(input)).test(input)).to.be.true;
+      expect(new RegExp(escapeRegExp(input)).test('edgeXsitecorecloudXio')).to.be.false;
+    });
+
+    it('should handle empty strings', () => {
+      expect(escapeRegExp('')).to.equal('');
     });
   });
 });

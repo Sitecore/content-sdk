@@ -7,6 +7,7 @@ import { SitecoreConfig } from './../../config';
 import crypto from 'crypto';
 import { isNodeModuleImportOrAlias, getRelativeImportPath } from './utils';
 import { constants } from '@sitecore-content-sdk/core';
+import { ensurePathExists } from '@sitecore-content-sdk/core/node-tools';
 
 const { ERROR_MESSAGES } = constants;
 
@@ -376,6 +377,32 @@ const prepImportMaps = async (paths: string[], separateMaps?: boolean): Promise<
   ];
 };
 
+const writeEmptyImportMaps = (
+  args: WriteImportMapArgsInternal,
+  defaultTemplate: (indexedImportMap: Map<string, ModuleExports>) => string,
+  clientTemplate: (indexedImportMap: Map<string, ModuleExports>) => string
+) => {
+  const sitecoreDir = path.join(process.cwd(), '.sitecore');
+
+  const emptyMap = new Map<string, ModuleExports>();
+  const emptyImportMaps: ImportMapDef[] = args.separateServerClientMaps
+    ? [
+        { map: emptyMap, path: path.join(sitecoreDir, 'import-map.server.ts') },
+        { map: emptyMap, path: path.join(sitecoreDir, 'import-map.client.ts'), isClient: true },
+      ]
+    : [{ map: emptyMap, path: path.join(sitecoreDir, 'import-map.ts') }];
+
+  // Ensure .sitecore directory exists
+  ensurePathExists(emptyImportMaps[0].path);
+
+  for (const importMap of emptyImportMaps) {
+    const importMapContent = importMap.isClient
+      ? clientTemplate(importMap.map)
+      : defaultTemplate(importMap.map);
+    fs.writeFileSync(importMap.path, importMapContent, { encoding: 'utf8' });
+  }
+};
+
 /**
  * Entry point function for generating import-map. Parses provided paths and outputs the modules and imports from those files into .sitecore/import-map.ts
  * @param {WriteImportMapArgsInternal} args include/exclude paths settings to be processed for import-map, and the Sitecore configuration.
@@ -391,7 +418,10 @@ export const writeImportMap = (args: WriteImportMapArgsInternal) => {
     }
 
     if (scConfig.disableCodeGeneration) {
-      debug.common('Skipping import map generation. Code generation functionality is disabled.');
+      debug.common(
+        'Code generation is disabled. Writing empty import maps for bundler resolution.'
+      );
+      writeEmptyImportMaps(args, defaultTemplate, clientTemplate);
       return;
     }
     const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
