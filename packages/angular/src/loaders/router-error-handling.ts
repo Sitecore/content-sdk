@@ -42,7 +42,7 @@ export function redirectOnNavigationError(
   errorRoute: string,
   router: Router
 ): RedirectCommand | void {
-  console.log('Navigation error occurred on url: ' + failedUrl, err.message);
+  console.log('Navigation error occurred on url: %s %s', failedUrl, err.message);
 
   const kind: 'error' | 'notFound' = err instanceof NotFoundNavigationError ? 'notFound' : 'error';
 
