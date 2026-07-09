@@ -6,7 +6,7 @@
 
 # Interface: PersonalizeIdentifierInput
 
-Defined in: [personalize/src/personalization/personalizer.ts:239](https://github.com/Sitecore/content-sdk/blob/e70272ac92914a5dc3bc8282bb5cfc7e8c599359/packages/personalize/src/personalization/personalizer.ts#L239)
+Defined in: [personalize/src/personalization/personalizer.ts:239](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/personalize/src/personalization/personalizer.ts#L239)
 
 An interface that describes the identifier model attributes for the library
 
@@ -16,7 +16,7 @@ An interface that describes the identifier model attributes for the library
 
 > **id**: `string`
 
-Defined in: [personalize/src/personalization/personalizer.ts:243](https://github.com/Sitecore/content-sdk/blob/e70272ac92914a5dc3bc8282bb5cfc7e8c599359/packages/personalize/src/personalization/personalizer.ts#L243)
+Defined in: [personalize/src/personalization/personalizer.ts:243](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/personalize/src/personalization/personalizer.ts#L243)
 
 The unique guest (site visitor) identifier provided by your organization's identity system, such as a Customer Relationship Management (CRM) system.
 
@@ -26,6 +26,6 @@ The unique guest (site visitor) identifier provided by your organization's ident
 
 > **provider**: `string`
 
-Defined in: [personalize/src/personalization/personalizer.ts:247](https://github.com/Sitecore/content-sdk/blob/e70272ac92914a5dc3bc8282bb5cfc7e8c599359/packages/personalize/src/personalization/personalizer.ts#L247)
+Defined in: [personalize/src/personalization/personalizer.ts:247](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/personalize/src/personalization/personalizer.ts#L247)
 
 The name of your organization's identity system, external to SitecoreAI, that provided the unique guest (site visitor) identifier.
