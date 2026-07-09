@@ -42,6 +42,5 @@ function addDefaultComponentMapGenerator(cliConfig: SitecoreCliConfigInput) {
     generator: generateMap,
     paths: ['src/components'],
     ...cliConfig.componentMap,
-    exclude: [...(cliConfig.componentMap?.exclude || [])],
   };
 }

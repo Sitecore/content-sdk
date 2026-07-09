@@ -29,6 +29,11 @@ export interface ActionCatalogEntry {
 // @internal
 export const addComponentPreviewHandler: (importMap: ImportEntry[], callback: (error: unknown | null, Component: unknown) => void) => (() => void) | undefined;
 
+// Warning: (ae-forgotten-export) The symbol "ComponentUpdateEventArgs_2" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export const addComponentPropsUpdateHandler: (callback: (fields: NonNullable<ComponentUpdateEventArgs_2["details"]>["fields"], params: NonNullable<ComponentUpdateEventArgs_2["details"]>["params"]) => void) => () => void;
+
 // @internal
 export const addComponentUpdateHandler: (rootComponent: ComponentRendering, successCallback?: (updatedRootComponent: ComponentRendering) => void) => (() => void) | undefined;
 

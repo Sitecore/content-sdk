@@ -68,6 +68,7 @@ import { SitePathService } from '@sitecore-content-sdk/content/site';
 import { SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
 import { useBoundProp as useBoundProp_2 } from '@json-render/react';
 import { z } from 'zod';
+import type { ZodObject } from 'zod';
 
 // @public
 export const AppPlaceholder: (props: AppPlaceholderProps) => React_2.JSX.Element;
@@ -218,7 +219,9 @@ export { DefaultRetryStrategy }
 // Warning: (ae-forgotten-export) The symbol "Exact" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export function defineAtomsCatalog<T extends AtomsCatalogInput>(input: Exact<T, AtomsCatalogInput>): Catalog<    {
+export function defineAtomsCatalog<T extends AtomsCatalogInput>(input: Exact<T, AtomsCatalogInput> & {
+    components: RestrictFieldKey<T['components'], 'props', 'className'>;
+}): Catalog<    {
 spec: SchemaType<"object", {
 root: SchemaType<"string", unknown>;
 elements: SchemaType<"record", SchemaType<"object", {
@@ -240,7 +243,9 @@ params: SchemaType<"zod", unknown>;
 description: SchemaType<"string", unknown>;
 }>;
 }>;
-}, Exact<T, AtomsCatalogInput>>;
+}, T & Record<Exclude<keyof T, "components" | "actions" | "version">, never> & {
+components: RestrictFieldKey<T["components"], "props", "className">;
+}>;
 
 // @public
 export const defineAtomsRegistry: typeof defineRegistry;
@@ -780,6 +785,7 @@ export function withSitecore(options?: UseSitecoreOptions): <ComponentProps exte
 
 // Warnings were encountered during analysis:
 //
+// src/atoms/define-atoms-catalog.ts:43:5 - (ae-forgotten-export) The symbol "RestrictFieldKey" needs to be exported by the entry point api-surface.d.ts
 // src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point api-surface.d.ts
 // src/components/SitecoreProvider.tsx:106:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
 
