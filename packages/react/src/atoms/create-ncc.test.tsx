@@ -45,7 +45,7 @@ describe('create-ncc', () => {
     const mockStore = {
       getSnapshot: () => mockSnapshot,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      update: (_: any) => {},
+      update: () => {},
     };
 
     before(() => {
