@@ -8,7 +8,7 @@
 
 > **initContentSdk**(`params`): `Promise`\<`void`\>
 
-Defined in: [packages/core/src/initialization/init-content-sdk.ts:26](https://github.com/Sitecore/content-sdk/blob/407173b8dd1ade15e570175d8b08fef690e7cef9/packages/core/src/initialization/init-content-sdk.ts#L26)
+Defined in: [packages/core/src/initialization/init-content-sdk.ts:26](https://github.com/Sitecore/content-sdk/blob/e70272ac92914a5dc3bc8282bb5cfc7e8c599359/packages/core/src/initialization/init-content-sdk.ts#L26)
 
 Initializes the Content SDK with the provided params.
 

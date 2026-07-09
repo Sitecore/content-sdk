@@ -45,6 +45,7 @@
 
 ## Functions
 
+- [getHostnameFromHostHeader](functions/getHostnameFromHostHeader.md)
 - [getSiteRewrite](functions/getSiteRewrite.md)
 - [getSiteRewriteData](functions/getSiteRewriteData.md)
 - [normalizeSiteRewrite](functions/normalizeSiteRewrite.md)

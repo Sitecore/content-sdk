@@ -47,8 +47,10 @@ export function resolveEdgeUrl(edgeUrl?: string): string {
     return normalizeUrl(explicit);
   }
 
+  const runtimeEnv = typeof process !== 'undefined' ? process.env : {};
+
   // Check for custom hostname env var
-  const hostnameEnvVar = normalizeEnvValue(process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV]);
+  const hostnameEnvVar = normalizeEnvValue(runtimeEnv[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV]);
   if (hostnameEnvVar) {
     return normalizeHostnameToUrl(hostnameEnvVar);
   }
@@ -65,12 +67,17 @@ export function resolveEdgeUrl(edgeUrl?: string): string {
  * @public
  */
 export function resolveExperienceEdgeUrl(): string {
-  const hostnameEnvVar = normalizeEnvValue(
-    process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV]
-  );
-  if (hostnameEnvVar) {
-    return normalizeHostnameToUrl(hostnameEnvVar);
+  if (process) {
+    const hostnameEnvVar = normalizeEnvValue(process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV]);
+    if (hostnameEnvVar) {
+      return normalizeHostnameToUrl(hostnameEnvVar);
+    }
+  } else {
+    console.warn(
+      'Attempted to read SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV from process.env, but process is undefined'
+    );
   }
+
   return SITECORE_EXPERIENCE_EDGE_URL_DEFAULT;
 }
 
@@ -102,4 +109,3 @@ function normalizeHostnameToUrl(hostnameOrUrl: string): string {
   // Otherwise, treat as hostname and add https://
   return normalizeUrl(`https://${trimmed}`);
 }
-

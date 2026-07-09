@@ -37,19 +37,19 @@
   "types": "types/src/index.d.ts",
   "exports": {
     ".": {
+      "types": "./types/src/index.d.ts",
       "import": "./dist/esm/src/index.js",
-      "require": "./dist/cjs/src/index.js",
-      "types": "./types/src/index.d.ts"
+      "require": "./dist/cjs/src/index.js"
     },
     "./internal": {
+      "types": "./types/src/internal.d.ts",
       "import": "./dist/esm/src/internal.js",
-      "require": "./dist/cjs/src/internal.js",
-      "types": "./types/src/internal.d.ts"
+      "require": "./dist/cjs/src/internal.js"
     },
     "./utils": {
+      "types": "./types/src/utils.d.ts",
       "import": "./dist/esm/src/utils.js",
-      "require": "./dist/cjs/src/utils.js",
-      "types": "./types/src/utils.d.ts"
+      "require": "./dist/cjs/src/utils.js"
     }
   },
   "files": [

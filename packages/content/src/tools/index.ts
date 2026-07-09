@@ -10,4 +10,6 @@ export {
   ComponentMapEntry,
   ComponentMapTemplate,
   EnhancedComponentMapTemplate,
+  prepareComponentsForMap,
+  buildComponentMapContent,
 } from './templating';
