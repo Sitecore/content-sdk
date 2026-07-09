@@ -11,7 +11,7 @@ Introduce Atoms — the Atomic Design foundation for building low-code component
 
 - Add `defineAtomsCatalog` and `defineAtomsRegistry` for Zod-based atom catalogs with component composition constraints, actions, and optional versioning
 - Add Sitecore field schemas (`textFieldSchema`, `linkFieldSchema`, `imageFieldSchema`, and others) and `withPropMeta` for type-safe atom props and Design Studio field binding support
-- Replace beta `atomRegistry` with `atomsConfig` on `SitecoreProvider` for passing catalog, registry, and navigation into the runtime
+- Add `atomsConfig` on `SitecoreProvider` for passing catalog, registry, and navigation into the runtime
 - Support Design Studio low-code preview with live layout, field, and rendering param updates
 - Expose the atom catalog during Design Studio code-generation preview
 - Render low-code components from Layout Service data when a rendering includes a `ComponentRef` parameter, applying `Styles` and `RenderingIdentifier` rendering params
