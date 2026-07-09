@@ -6,6 +6,7 @@
 
 ## Modules
 
+- [atoms](atoms/README.md)
 - [client](client/README.md)
 - [editing](editing/README.md)
 - [editing/codegen](editing/codegen/README.md)

@@ -8,17 +8,46 @@
 
 > **SitecoreCliConfigInput** = `object`
 
-Defined in: [content/src/config/models.ts:231](https://github.com/Sitecore/content-sdk/blob/a14a2c51503b49ea7ea41b8f72b87fbf90dd83d7/packages/content/src/config/models.ts#L231)
+Defined in: [content/src/config/models.ts:231](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/content/src/config/models.ts#L231)
 
 Type used as CLI config input in sitecore.cli.config
 
 ## Properties
 
+### atoms?
+
+> `optional` **atoms?**: `object`
+
+Defined in: [content/src/config/models.ts:266](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/content/src/config/models.ts#L266)
+
+Configuration for the `sitecore-tools project atoms` CLI commands.
+
+#### validation?
+
+> `optional` **validation?**: `object`
+
+Validation configuration for atoms.
+
+##### validation.breakOnError?
+
+> `optional` **breakOnError?**: `boolean`
+
+When true, the CLI will exit with a non-zero code on validation errors.
+Useful for CI pipelines that should fail on broken atom contracts.
+
+###### Default
+
+```ts
+false
+```
+
+***
+
 ### build?
 
 > `optional` **build?**: `object`
 
-Defined in: [content/src/config/models.ts:239](https://github.com/Sitecore/content-sdk/blob/a14a2c51503b49ea7ea41b8f72b87fbf90dd83d7/packages/content/src/config/models.ts#L239)
+Defined in: [content/src/config/models.ts:239](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/content/src/config/models.ts#L239)
 
 Configuration for the `sitecore-tools build` CLI command
 
@@ -45,7 +74,7 @@ Commands to run during the build process
 
 > `optional` **componentMap?**: [`GenerateMapArgs`](../../tools/type-aliases/GenerateMapArgs.md) & `object`
 
-Defined in: [content/src/config/models.ts:257](https://github.com/Sitecore/content-sdk/blob/a14a2c51503b49ea7ea41b8f72b87fbf90dd83d7/packages/content/src/config/models.ts#L257)
+Defined in: [content/src/config/models.ts:257](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/content/src/config/models.ts#L257)
 
 Configuration for the `sitecore-tools component generate-map` CLI command
 
@@ -63,7 +92,7 @@ Function implementation for generating a component map
 
 > **config**: [`SitecoreConfig`](SitecoreConfig.md)
 
-Defined in: [content/src/config/models.ts:235](https://github.com/Sitecore/content-sdk/blob/a14a2c51503b49ea7ea41b8f72b87fbf90dd83d7/packages/content/src/config/models.ts#L235)
+Defined in: [content/src/config/models.ts:235](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/content/src/config/models.ts#L235)
 
 Sitecore configuration (`sitecore.config` file)
 
@@ -73,7 +102,7 @@ Sitecore configuration (`sitecore.config` file)
 
 > `optional` **scaffold?**: `object`
 
-Defined in: [content/src/config/models.ts:248](https://github.com/Sitecore/content-sdk/blob/a14a2c51503b49ea7ea41b8f72b87fbf90dd83d7/packages/content/src/config/models.ts#L248)
+Defined in: [content/src/config/models.ts:248](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/content/src/config/models.ts#L248)
 
 Configuration for the `sitecore-tools scaffold` CLI command
 

@@ -8,7 +8,7 @@
 
 > `const` **ERROR\_MESSAGES**: `object`
 
-Defined in: [packages/core/src/constants.ts:42](https://github.com/Sitecore/content-sdk/blob/a14a2c51503b49ea7ea41b8f72b87fbf90dd83d7/packages/core/src/constants.ts#L42)
+Defined in: [packages/core/src/constants.ts:42](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/core/src/constants.ts#L42)
 
 **`Internal`**
 
@@ -83,6 +83,14 @@ IE errors are related to incorrect execution
 
 `string`
 
+### IE\_008
+
+> `readonly` **IE\_008**: `"[IE-008] Lock file validation failed:"` = `'[IE-008] Lock file validation failed:'`
+
+### IE\_009
+
+> `readonly` **IE\_009**: `` "[IE-009] Atom validation failed. See issues above. You see this error because `breakOnError` is enabled in your CLI config." `` = `` '[IE-009] Atom validation failed. See issues above. You see this error because `breakOnError` is enabled in your CLI config.' ``
+
 ### IV\_001
 
 > `readonly` **IV\_001**: "\[IV-001\] Incorrect value for \"edgeUrl\". Set the value to a valid URL." = `'[IV-001] Incorrect value for "edgeUrl". Set the value to a valid URL.'`
@@ -128,6 +136,51 @@ IV errors are related to incorrect values, wrongly formatted objects, etc.
 | Parameter | Type |
 | ------ | ------ |
 | `siteName` | `string` |
+
+#### Returns
+
+`string`
+
+### IV\_008
+
+> `readonly` **IV\_008**: (`lockSide`, `currentSide`) => `string`
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `lockSide` | `string` |
+| `currentSide` | `string` |
+
+#### Returns
+
+`string`
+
+### IV\_009
+
+> `readonly` **IV\_009**: (`name`, `lockSide`, `currentSide`) => `string`
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `name` | `string` |
+| `lockSide` | `string` |
+| `currentSide` | `string` |
+
+#### Returns
+
+`string`
+
+### IV\_010
+
+> `readonly` **IV\_010**: (`name`) => `string`
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `name` | `string` |
 
 #### Returns
 
@@ -180,3 +233,63 @@ MV errors are related to missing values
 ### MV\_009
 
 > `readonly` **MV\_009**: "\[MV-009\] \"language\" is required." = `'[MV-009] "language" is required.'`
+
+### MV\_010
+
+> `readonly` **MV\_010**: (`modulePath`) => `string`
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `modulePath` | `string` |
+
+#### Returns
+
+`string`
+
+### MV\_011
+
+> `readonly` **MV\_011**: (`modulePath`) => `string`
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `modulePath` | `string` |
+
+#### Returns
+
+`string`
+
+### MV\_012
+
+> `readonly` **MV\_012**: `` "[MV-012] Lock file not found. Run `sitecore-tools project atoms update` to generate it." `` = `` '[MV-012] Lock file not found. Run `sitecore-tools project atoms update` to generate it.' ``
+
+### MV\_013
+
+> `readonly` **MV\_013**: (`name`) => `string`
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `name` | `string` |
+
+#### Returns
+
+`string`
+
+### MV\_014
+
+> `readonly` **MV\_014**: (`name`) => `string`
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `name` | `string` |
+
+#### Returns
+
+`string`

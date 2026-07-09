@@ -8,6 +8,6 @@
 
 > **AppPlaceholderProps** = `Omit`\<[`PlaceholderProps`](../interfaces/PlaceholderProps.md), `"componentMap"` \| `"page"`\> & `Required`\<`Pick`\<[`PlaceholderProps`](../interfaces/PlaceholderProps.md), `"componentMap"` \| `"page"`\>\>
 
-Defined in: [packages/react/src/components/Placeholder/models.ts:119](https://github.com/Sitecore/content-sdk/blob/a14a2c51503b49ea7ea41b8f72b87fbf90dd83d7/packages/react/src/components/Placeholder/models.ts#L119)
+Defined in: [packages/react/src/components/Placeholder/models.ts:119](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/react/src/components/Placeholder/models.ts#L119)
 
 The interface for the AppPlaceholder server-side component props.

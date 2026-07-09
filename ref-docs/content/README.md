@@ -6,6 +6,7 @@
 
 ## Modules
 
+- [atoms](atoms/README.md)
 - [client](client/README.md)
 - [config](config/README.md)
 - [config-cli](config-cli/README.md)
