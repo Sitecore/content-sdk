@@ -144,6 +144,7 @@ export {
   DesignLibrary,
   DefaultEmptyFieldEditingComponentImage,
   DefaultEmptyFieldEditingComponentText,
+  noopLoadImportMap,
   PlaceholderComponentProps,
   SitecoreProvider,
   SitecoreProviderState,

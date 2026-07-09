@@ -1,129 +1,806 @@
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable no-unused-expressions */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React from 'react';
 import sinon from 'sinon';
 import { expect, use as chaiUse } from 'chai';
 import sinonChai from 'sinon-chai';
-
-chaiUse(sinonChai);
-import { render, waitFor } from '@testing-library/react';
+import { Page, PageMode } from '@sitecore-content-sdk/content/client';
+import {
+  LayoutServiceData,
+  EDITING_COMPONENT_PLACEHOLDER,
+} from '@sitecore-content-sdk/content/layout';
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { DesignLibrary, __mockDependencies } from './DesignLibrary';
+import { getTestLayoutData } from '../../test-data/component-editing-data';
 import { SitecoreProvider } from '../SitecoreProvider';
+import { RichText } from '../RichText';
+import { Text } from '../Text';
+import { Placeholder } from '../Placeholder';
 import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
+  DesignLibraryMode,
 } from '@sitecore-content-sdk/content/editing';
+import {
+  DesignLibraryPreviewError,
+  getDesignLibraryErrorEvent,
+} from '@sitecore-content-sdk/content/codegen';
+import { getDesignLibraryAtomsCatalogEvent } from '@sitecore-content-sdk/content/atoms';
+import { after } from 'node:test';
+import * as rscUtils from '#rsc-env';
+import { serializeCatalog } from '../../atoms';
 import type { AtomsConfig } from '../../atoms/types';
-import type { ImportMapImport } from './models';
 import type { DefineRegistryResult } from '@json-render/react';
 
+chaiUse(sinonChai);
+
+before(() => {
+  if (typeof window !== 'undefined' && !window.requestAnimationFrame) {
+    (window as any).requestAnimationFrame = (cb: FrameRequestCallback) => setTimeout(cb, 0);
+  }
+});
+
 describe('<DesignLibrary />', () => {
+  after(() => {
+    sandbox.restore();
+  });
   const sandbox = sinon.createSandbox();
+  before(() => {
+    sandbox.replace(rscUtils, 'rsc', false as any);
+  });
+  const postMessageSpy = sandbox.spy(window, 'postMessage');
+  const components = new Map<string, React.FC>();
 
-  const apiStub = {} as any;
-  const emptyComponentMap = new Map();
-  const loadImportMapStub = async (): Promise<ImportMapImport> =>
-    ({
-      default: [],
-    } as unknown as ImportMapImport);
-
-  let postToDesignLibrarySpy: sinon.SinonStub;
-
-  const mockRegistry: DefineRegistryResult = {
-    registry: {} as any,
-    handlers: () => ({}),
-    executeAction: async () => {},
+  const api = {
+    edge: {
+      contextId: 'test-context-id',
+      clientContextId: 'test-client-context-id',
+      edgeUrl: 'https://test-edge-url.com',
+    },
+    local: { apiKey: 'test-api-key', apiHost: 'https://test-api-host.com', path: '/test-path' },
   };
 
-  const mockCatalog = {
-    componentNames: ['Button'],
-    actionNames: [],
-    data: { components: { Button: { description: 'A button', slots: ['default'] } } },
-    jsonSchema: () => ({}),
-  } as any;
-
-  const atomsConfig: AtomsConfig = {
-    catalog: mockCatalog,
-    registry: mockRegistry,
+  // Modes
+  const modeLibraryMetadata: PageMode = {
+    name: DesignLibraryMode.Metadata,
+    isDesignLibrary: true,
+    designLibrary: { isVariantGeneration: false, isLowCode: false },
+    isNormal: false,
+    isPreview: false,
+    isEditing: true,
   };
 
-  const getPage = (overrides: Record<string, unknown> = {}) => ({
+  const modeLibrary_Gen: PageMode = {
+    name: DesignLibraryMode.Normal,
+    isDesignLibrary: true,
+    designLibrary: { isVariantGeneration: true, isLowCode: false },
+    isNormal: false,
+    isPreview: false,
+    isEditing: false,
+  };
+
+  const modeLibraryMetadata_Gen: PageMode = {
+    name: DesignLibraryMode.Metadata,
+    isDesignLibrary: true,
+    designLibrary: { isVariantGeneration: true, isLowCode: false },
+    isNormal: false,
+    isPreview: false,
+    isEditing: true,
+  };
+
+  const getPage = (layout?: LayoutServiceData, pageMode: PageMode = modeLibraryMetadata): Page => ({
     locale: 'en',
-    layout: {
-      sitecore: {
-        context: {},
-        route: {
-          uid: 'test-uid',
-          placeholders: {
-            'editing-componentmode-placeholder': [
-              {
-                uid: 'component-1',
-                componentName: 'TestComponent',
-                fields: {},
-                params: {},
-              },
-            ],
-          },
+    layout: layout || { sitecore: { context: {}, route: null } },
+    mode: pageMode,
+  });
+
+  const ContentBlock: React.FC<{
+    [prop: string]: unknown;
+    fields?: { content: { value: string }; heading: { value: string } };
+  }> = (props) => (
+    <div className="test">
+      <RichText field={props.fields?.content} />
+      <Placeholder name="inner" rendering={props.rendering} />
+    </div>
+  );
+
+  const InnerBlock: React.FC<{ [prop: string]: unknown; fields?: { text: { value: string } } }> = (
+    props
+  ) => (
+    <div className="inner">
+      <Text field={props.fields?.text} />
+    </div>
+  );
+
+  components.set('ContentBlock', ContentBlock);
+  components.set('InnerBlock', InnerBlock);
+
+  async function sendUpdate(details: { uid: string; fields?: any; params?: any }) {
+    const ev = document.createEvent('Event');
+    ev.initEvent('message', false, true);
+    (ev as any).origin = window.location.origin;
+    (ev as any).data = { name: 'component:update', details };
+    await fireEvent(window, ev);
+  }
+
+  const defaultImportMap = () =>
+    Promise.resolve({
+      default: [{ module: 'react', exports: [{ name: 'default', value: React }] }],
+    });
+
+  const unsubscribeSpy = sandbox.spy();
+  let addComponentPreviewHandlerSpy: sinon.SinonStub;
+  let postToDesignLibrarySpy: sinon.SinonStub;
+  let sendErrorEventSpy: sinon.SinonStub;
+  let callbackEvent: any = null;
+
+  const RENDER_ID = 'test-content';
+  const PLACEHOLDER_GUID = '00000000-0000-0000-0000-000000000000';
+
+  const mockAtomsCatalog = {
+    data: {
+      components: {
+        Button: {
+          props: { toJSONSchema: () => ({ type: 'object', properties: {} }) },
+          description: 'Button component',
         },
       },
+      actions: {},
     },
-    mode: {
-      name: 'normal',
+  } as any;
+
+  const atomsConfigWithCatalog: AtomsConfig = {
+    catalog: mockAtomsCatalog,
+    registry: {} as DefineRegistryResult,
+  };
+
+  const joinHtml = (parts: string[]) => parts.join('');
+  const expectContains = (html: string, parts: string[]) =>
+    expect(html).to.contain(joinHtml(parts));
+
+  const expectedInitialMarkup = (guid = PLACEHOLDER_GUID, id = RENDER_ID) =>
+    joinHtml([
+      '<main><div id="editing-component">',
+      `<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="editing-componentmode-placeholder_${guid}"></code>`,
+      `<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="${id}" data-csdk-component-runtime="client"></code>`,
+      '<div class="test"><div>',
+      '<p>This is a live set of examples of how to use Content SDK</p>\n',
+      '</div><div class="sc-jss-empty-placeholder">',
+      '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id=""></code>',
+      '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
+      '</div></div>',
+      '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
+      '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
+      '</div></main>',
+    ]);
+
+  const postedEventsJson = (spy: sinon.SinonSpy) =>
+    spy.getCalls().map((c) => JSON.stringify(c.args[0]));
+
+  const expectStatus = (
+    spy: sinon.SinonSpy,
+    status: DesignLibraryStatus,
+    id: string,
+    opts: { strict?: boolean } = {}
+  ) => {
+    const target = JSON.stringify(getDesignLibraryStatusEvent(status, id));
+    const events = postedEventsJson(spy);
+    if (opts.strict) {
+      expect(events).to.include(target);
+    } else {
+      expect(events.some((e) => e.includes(target))).to.be.true;
+    }
+  };
+
+  beforeEach(() => {
+    postMessageSpy.resetHistory();
+    unsubscribeSpy.resetHistory();
+    postToDesignLibrarySpy = sandbox.stub().callsFake((evt) => {
+      // postToDesignLibrary calls window.postMessage internally
+      window.postMessage(evt, '*');
+    });
+    sendErrorEventSpy = sandbox.stub().callsFake((uid, error, type) => {
+      // sendErrorEvent calls window.postMessage internally
+      const errorEvent = getDesignLibraryErrorEvent(uid, error, type);
+      window.postMessage(errorEvent, '*');
+    });
+    __mockDependencies({
+      postToDesignLibrary: postToDesignLibrarySpy,
+      sendErrorEvent: sendErrorEventSpy,
+    });
+
+    if (typeof (globalThis as any).requestAnimationFrame === 'undefined') {
+      (globalThis as any).requestAnimationFrame = (cb: Function) => setTimeout(cb, 0);
+      (globalThis as any).cancelAnimationFrame = (id: any) => clearTimeout(id);
+    }
+    if (typeof window !== 'undefined') {
+      (window as any).requestAnimationFrame = (globalThis as any).requestAnimationFrame;
+      (window as any).cancelAnimationFrame = (globalThis as any).cancelAnimationFrame;
+    }
+  });
+
+  it('should render null if not in design library mode', () => {
+    const page = getPage(getTestLayoutData().layoutData, {
+      name: DesignLibraryMode.Normal,
+      isDesignLibrary: false,
+      designLibrary: {
+        isVariantGeneration: false,
+      },
+      isNormal: false,
+      isPreview: false,
+      isEditing: false,
+    });
+
+    const rendered = render(
+      <SitecoreProvider componentMap={components} api={api} page={page}>
+        <DesignLibrary />
+      </SitecoreProvider>,
+      { container: document.body }
+    );
+    expect(rendered.baseElement.innerHTML).to.equal('');
+  });
+
+  describe('mode=library and isVariantGeneration=false', () => {
+    let page: Page;
+
+    const modeLibrary: PageMode = {
+      name: DesignLibraryMode.Normal,
       isDesignLibrary: true,
       designLibrary: { isVariantGeneration: false },
       isNormal: false,
       isPreview: false,
       isEditing: false,
-      ...overrides,
-    },
-  });
+    };
 
-  beforeEach(() => {
-    postToDesignLibrarySpy = sandbox.stub();
-    __mockDependencies({
-      postToDesignLibrary: postToDesignLibrarySpy,
-      addComponentPreviewHandler: sandbox.stub(),
-      sendErrorEvent: sandbox.stub(),
+    async function sendUpdateEvent(details: { uid: string; fields?: any; params?: any }) {
+      const ev = document.createEvent('Event');
+      ev.initEvent('message', false, true);
+      (ev as any).origin = window.location.origin;
+      (ev as any).data = { name: 'component:update', details };
+      await fireEvent(window, ev);
+    }
+
+    beforeEach(() => {
+      const basic = getTestLayoutData();
+      page = {
+        locale: 'en',
+        layout: basic.layoutData,
+        mode: modeLibrary,
+      };
+      postMessageSpy.resetHistory();
     });
-  });
 
-  afterEach(() => {
-    sandbox.restore();
-  });
+    it('renders real component and sends READY + initial RENDERED', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary);
 
-  it('renders null when not in design library mode', () => {
-    const page = getPage({ isDesignLibrary: false });
-    const { container } = render(
-      <SitecoreProvider
-        api={apiStub}
-        componentMap={emptyComponentMap}
-        page={page as any}
-        loadImportMap={loadImportMapStub}
-        atoms={atomsConfig}
-      >
-        <DesignLibrary />
-      </SitecoreProvider>
-    );
-    expect(container.innerHTML).to.equal('');
-  });
+      const rendered = render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
 
-  it('posts READY status on mount when in design library mode', async () => {
-    const page = getPage();
-    render(
-      <SitecoreProvider
-        api={apiStub}
-        componentMap={emptyComponentMap}
-        page={page as any}
-        loadImportMap={loadImportMapStub}
-        atoms={atomsConfig}
-      >
-        <DesignLibrary />
-      </SitecoreProvider>
-    );
-    await waitFor(() => {
-      expect(postToDesignLibrarySpy).to.have.been.calledWith(
-        getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'component-1')
+      expect(rendered.baseElement.innerHTML).to.contain(
+        [
+          '<main><div id="editing-component">',
+          '<div class="test"><div>',
+          '<p>This is a live set of examples of how to use Content SDK</p>\n',
+          '</div></div></div></main>',
+        ].join('')
+      );
+
+      expect(
+        postMessageSpy
+          .getCalls()
+          .some(
+            (c) =>
+              JSON.stringify(c.args[0]) ===
+              JSON.stringify(getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'test-content'))
+          )
+      ).to.be.true;
+
+      await waitFor(() => {
+        expect(
+          postMessageSpy
+            .getCalls()
+            .some((c) =>
+              JSON.stringify(c.args[0]).includes(
+                JSON.stringify(
+                  getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
+                )
+              )
+            )
+        ).to.be.true;
+      });
+    });
+
+    it('should render component with placeholders', () => {
+      page.layout = getTestLayoutData(true).layoutData;
+
+      const rendered = render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary />
+        </SitecoreProvider>,
+        { container: document.body }
+      );
+
+      expect(rendered.baseElement.innerHTML).to.contain(
+        [
+          '<main><div id="editing-component">',
+          '<div class="test"><div>',
+          '<p>This is a live set of examples of how to use Content SDK</p>\n',
+          '</div>',
+          '<div class="inner">',
+          'Its an inner component',
+          '</div></div></div>',
+          '</main>',
+        ].join('')
       );
     });
+
+    it('should update root component', async () => {
+      const rendered = render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary />
+        </SitecoreProvider>,
+        { container: document.body }
+      );
+
+      expect(rendered.baseElement.innerHTML).to.contain(
+        [
+          '<main><div id="editing-component">',
+          '<div class="test"><div>',
+          '<p>This is a live set of examples of how to use Content SDK</p>\n',
+          '</div></div></div></main>',
+        ].join('')
+      );
+
+      await sendUpdateEvent({
+        uid: 'test-content',
+        fields: { content: { value: 'new content!' } },
+      });
+
+      expect(rendered.baseElement.innerHTML).to.contain(
+        [
+          '<main><div id="editing-component">',
+          '<div class="test"><div>',
+          'new content!',
+          '</div></div></div></main>',
+        ].join('')
+      );
+    });
+
+    it('should update nested component', async () => {
+      const withPlaceholder = getTestLayoutData(true);
+      page.layout = withPlaceholder.layoutData;
+
+      const rendered = render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary />
+        </SitecoreProvider>,
+        { container: document.body }
+      );
+
+      expect(rendered.baseElement.innerHTML).to.contain(
+        [
+          '<main><div id="editing-component">',
+          '<div class="test"><div>',
+          '<p>This is a live set of examples of how to use Content SDK</p>\n',
+          '</div>',
+          '<div class="inner">',
+          'Its an inner component',
+          '</div></div></div>',
+          '</main>',
+        ].join('')
+      );
+
+      await sendUpdateEvent({
+        uid: 'test-inner',
+        fields: { text: { value: 'new inner content!' } },
+      });
+
+      expect(rendered.baseElement.innerHTML).to.contain(
+        [
+          '<main><div id="editing-component">',
+          '<div class="test"><div>',
+          '<p>This is a live set of examples of how to use Content SDK</p>\n',
+          '</div>',
+          '<div class="inner">',
+          'new inner content!',
+          '</div></div></div>',
+          '</main>',
+        ].join('')
+      );
+    });
+  });
+
+  describe('mode=library-metadata and isVariantGeneration=false', () => {
+    it('renders real component and sends READY + initial RENDERED (Pages Router)', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata);
+
+      const rendered = render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      expect(rendered.baseElement.innerHTML).to.contain(expectedInitialMarkup());
+
+      expectStatus(postMessageSpy, DesignLibraryStatus.READY, RENDER_ID, { strict: true });
+
+      await waitFor(() => expectStatus(postMessageSpy, DesignLibraryStatus.RENDERED, RENDER_ID));
+    });
+  });
+
+  describe('mode=library&generation=variant and isVariantGeneration=true', () => {
+    beforeEach(() => {
+      addComponentPreviewHandlerSpy = sandbox.stub().callsFake((_importMap, cb) => {
+        callbackEvent = cb;
+        return unsubscribeSpy;
+      });
+      __mockDependencies({
+        addComponentPreviewHandler: addComponentPreviewHandlerSpy,
+        postToDesignLibrary: postToDesignLibrarySpy,
+        sendErrorEvent: sendErrorEventSpy,
+      });
+
+      postMessageSpy.resetHistory();
+    });
+
+    it('fires component:ready on mount', () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      const expectedReady = getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'test-content');
+      expect(
+        postMessageSpy
+          .getCalls()
+          .some((c) => JSON.stringify(c.args[0]) === JSON.stringify(expectedReady))
+      ).to.be.true;
+
+      const readyCount = postMessageSpy
+        .getCalls()
+        .filter(
+          (c) =>
+            c.args[0]?.name === expectedReady.name &&
+            c.args[0]?.message?.uid === expectedReady.message.uid
+        ).length;
+      expect(readyCount).to.equal(1);
+    });
+
+    it('fires component:rendered only after generated component is received', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      const expectedRendered = getDesignLibraryStatusEvent(
+        DesignLibraryStatus.RENDERED,
+        'test-content'
+      );
+      expect(
+        postMessageSpy
+          .getCalls()
+          .some((c) => JSON.stringify(c.args[0]) === JSON.stringify(expectedRendered))
+      ).to.be.false;
+
+      await waitFor(() => {
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+      });
+
+      const TestComponent = () => <div>Generated!</div>;
+      callbackEvent(null, TestComponent);
+
+      await waitFor(() => {
+        expect(
+          postMessageSpy
+            .getCalls()
+            .some((c) => JSON.stringify(c.args[0]) === JSON.stringify(expectedRendered))
+        ).to.be.true;
+      });
+    });
+
+    it('renders real component first, wires generation, then switches to generated component', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      const rendered = render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      expect(rendered.baseElement.innerHTML).to.contain(
+        [
+          '<main><div id="editing-component">',
+          '<div class="test"><div>',
+          '<p>This is a live set of examples of how to use Content SDK</p>\n',
+          '</div></div></div></main>',
+        ].join('')
+      );
+
+      await waitFor(() => {
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+      });
+
+      const TestComponent = () => <div>Generated!</div>;
+      callbackEvent(null, TestComponent);
+
+      await waitFor(() => {
+        expect(rendered.baseElement.innerHTML).to.contain('<div>Generated!</div>');
+      });
+    });
+
+    it('renders real component first, wires generation, then switches to generated component when loadImportMap provided via SitecoreProvider', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      const rendered = render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      expect(rendered.baseElement.innerHTML).to.contain(
+        [
+          '<main><div id="editing-component">',
+          '<div class="test"><div>',
+          '<p>This is a live set of examples of how to use Content SDK</p>\n',
+          '</div></div></div></main>',
+        ].join('')
+      );
+
+      await waitFor(() => {
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+      });
+
+      const TestComponent = () => <div>Generated!</div>;
+      callbackEvent(null, TestComponent);
+
+      await waitFor(() => {
+        expect(rendered.baseElement.innerHTML).to.contain('<div>Generated!</div>');
+      });
+    });
+
+    it('updates via component:update after switch', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      const Gen = (props: any) => <div className="gen">{props.fields?.content?.value}</div>;
+
+      render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      await waitFor(() => {
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+        callbackEvent(null, Gen);
+      });
+
+      await sendUpdate({
+        uid: 'test-content',
+        fields: { content: { value: 'updated!' } },
+      });
+
+      await waitFor(() => {
+        expect(
+          postMessageSpy
+            .getCalls()
+            .some((c) =>
+              JSON.stringify(c.args[0]).includes(
+                JSON.stringify(
+                  getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
+                )
+              )
+            )
+        ).to.be.true;
+      });
+    });
+
+    it('uses noop import map when loadImportMap is not provided', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      await waitFor(() => {
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+        expect(addComponentPreviewHandlerSpy.firstCall.args[0]).to.deep.equal([]);
+        expect(
+          postMessageSpy
+            .getCalls()
+            .some((c) =>
+              JSON.stringify(c.args[0]).includes(
+                JSON.stringify(
+                  getDesignLibraryErrorEvent(
+                    'test-content',
+                    'No loadImportMap provided',
+                    DesignLibraryPreviewError.ImportMapMissing
+                  )
+                )
+              )
+            )
+        ).to.be.false;
+      });
+    });
+
+    it('posts atoms catalog payload when atoms catalog is provided', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+          atomsConfig={atomsConfigWithCatalog}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      await waitFor(() => {
+        const expectedCatalogEvent = getDesignLibraryAtomsCatalogEvent(
+          serializeCatalog(atomsConfigWithCatalog.catalog)
+        );
+
+        expect(postToDesignLibrarySpy).to.have.been.calledWith(expectedCatalogEvent);
+      });
+    });
+
+    it('does not post atoms catalog payload when atoms catalog is missing', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibrary_Gen);
+
+      render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      await waitFor(() => {
+        expect(addComponentPreviewHandlerSpy).to.have.been.called;
+      });
+
+      const catalogEventCall = postToDesignLibrarySpy
+        .getCalls()
+        .find((c: sinon.SinonSpyCall) => c.args[0]?.name === 'atoms:catalog');
+
+      expect(catalogEventCall).to.be.undefined;
+    });
+  });
+
+  describe('?mode=library-metadata&generation=variant and isVariantGeneration=true', () => {
+    beforeEach(() => {
+      addComponentPreviewHandlerSpy = sandbox.stub().callsFake((_importMap, cb) => {
+        callbackEvent = cb;
+        return unsubscribeSpy;
+      });
+      __mockDependencies({
+        addComponentPreviewHandler: addComponentPreviewHandlerSpy,
+        postToDesignLibrary: postToDesignLibrarySpy,
+        sendErrorEvent: sendErrorEventSpy,
+      });
+    });
+
+    const expectedGeneratedParts = [
+      '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close">',
+      '<div>Gen-Metadata</div>',
+      '</code>',
+    ];
+
+    const triggerGeneration = async () => {
+      await act(async () => {
+        callbackEvent(null, () => (
+          <code type="text/sitecore" chrometype="rendering" class="scpm" kind="close">
+            <div>Gen-Metadata</div>
+          </code>
+        ));
+      });
+    };
+
+    it('renders real component first, wires generation, then switches to generated component (Pages Router)', async () => {
+      const page = getPage(getTestLayoutData().layoutData, modeLibraryMetadata_Gen);
+
+      const rendered = render(
+        <SitecoreProvider
+          componentMap={components}
+          api={api}
+          page={page}
+          loadImportMap={defaultImportMap}
+        >
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      expect(rendered.baseElement.innerHTML).to.contain(expectedInitialMarkup());
+
+      await waitFor(() => expect(addComponentPreviewHandlerSpy).to.have.been.called);
+
+      expectStatus(postMessageSpy, DesignLibraryStatus.READY, RENDER_ID, { strict: true });
+
+      await triggerGeneration();
+
+      await waitFor(() => expectContains(rendered.baseElement.innerHTML, expectedGeneratedParts));
+
+      await waitFor(() => expectStatus(postMessageSpy, DesignLibraryStatus.RENDERED, RENDER_ID));
+    });
+  });
+
+  describe('error handling', () => {
+    it('should render ErrorComponent when rendering UID is missing', () => {
+      const layoutData = getTestLayoutData().layoutData;
+
+      // Remove UID from the component
+      const renderingWithoutUid = {
+        ...layoutData.sitecore.route,
+        placeholders: {
+          [EDITING_COMPONENT_PLACEHOLDER]: [
+            {
+              ...layoutData.sitecore.route.placeholders?.[EDITING_COMPONENT_PLACEHOLDER]?.[0],
+              uid: undefined,
+            },
+          ],
+        },
+      };
+
+      const page = {
+        locale: 'en',
+        layout: { ...layoutData, sitecore: { ...layoutData.sitecore, route: renderingWithoutUid } },
+        mode: modeLibraryMetadata,
+      };
+
+      const rendered = render(
+        <SitecoreProvider componentMap={components} api={api} page={page}>
+          <DesignLibrary />
+        </SitecoreProvider>
+      );
+
+      expect(rendered.baseElement.innerHTML).to.contain(
+        'Rendering UID is missing in the rendering data'
+      );
+    });
+  });
+  after(() => {
+    sandbox.restore();
   });
 });

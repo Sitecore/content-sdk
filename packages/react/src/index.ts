@@ -85,6 +85,7 @@ export {
   DesignLibraryErrorBoundary,
   DynamicComponent,
   ImportMapImport,
+  noopLoadImportMap,
 } from './components/DesignLibrary';
 export {} from './components/FEaaS/BYOCComponent';
 export { Link, LinkField, LinkFieldValue, LinkProps } from './components/Link';

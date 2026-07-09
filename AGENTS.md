@@ -1,14 +1,8 @@
 # AGENTS.md — AI Guidance for Sitecore Content SDK
 
-> **Claude Code users:** This file does not include detailed coding rules. Read all `.cursor/rules/*.mdc` files at the start of your session for code style, naming conventions, Sitecore patterns, testing, and safety rules.
+> **Context:** This file is the **compact** guide (commands, structure, guardrails, references). Deeper topics live under [.agents/docs/](.agents/docs/) — start with [README](.agents/docs/README.md) or open the layer you need. Use [Skills.md](Skills.md) for **head-app** capability skills (templates only). [CLAUDE.md](CLAUDE.md) explains layered reading. Cursor applies [.cursor/rules/](.cursor/rules/) by glob — you do not need every rule in chat context at once.
 
-## Project Overview
-
-This repository is the **Sitecore Content SDK** — a TypeScript monorepo of SDK packages, scaffolding CLI, and samples for building applications with Sitecore XM Cloud or Sitecore AI. AI agents work as developer assistants to implement features, fix bugs, add tests, and maintain templates.
-
-**Scope:** This file is for the **Content SDK monorepo** only. For head applications created with `create-content-sdk-app`, use the AGENTS.md that was generated inside that head application (from the template). Do not copy this repo's root AGENTS.md into a head application.
-
-**Main tasks:** Generate SDK code, perform safe edits in packages and templates, update tests. Do not modify global config (CI, root tooling) without explicit instruction.
+**Scope:** This repo is the **Content SDK monorepo**. For a **generated head app**, use that app's `AGENTS.md` (not this file).
 
 ---
 
@@ -27,130 +21,78 @@ yarn reset                # Clean, reinstall, rebuild
 
 **Per-package:** `cd packages/<name>` then `yarn build`, `yarn lint`, `yarn test`.
 
-**Package manager:** Yarn 4.12.0. Workspaces: `packages/*`, `samples/*`.
-
 ---
 
-## Tech Stack
-
-TypeScript (Node LTS), Yarn 4.12.0. Build: `tsc` → `dist/`, templates via `scripts/build-templates.ts`. Testing: Mocha + Sinon + Chai, `nyc`. Lint/format: ESLint + Prettier.
-
----
-
-## Repository Structure
+## Repository structure (compact)
 
 ```
 content-sdk/
 ├── packages/
-│   ├── core/                   # @sitecore-content-sdk/core — Foundation: GraphQL client, cache, retry, fetch utilities. No SDK deps.
-│   ├── analytics-core/         # @sitecore-content-sdk/analytics-core — Analytics foundation. No SDK deps.
-│   ├── content/                # @sitecore-content-sdk/content — Content client: layout, editing, site resolution, media. Depends on core.
-│   ├── search/                 # @sitecore-content-sdk/search — Search service and APIs. Depends on core.
-│   ├── events/                 # @sitecore-content-sdk/events — Event tracking. Depends on analytics-core.
-│   ├── personalize/            # @sitecore-content-sdk/personalize — Personalization. Depends on analytics-core, events.
-│   ├── cli/                    # @sitecore-content-sdk/cli — CLI (sitecore-tools). Depends on content.
-│   ├── create-content-sdk-app/  # Scaffolding CLI + Next.js templates. Output apps use nextjs + cli.
-│   ├── nextjs/                 # @sitecore-content-sdk/nextjs — Next.js integration, middleware, editing. Depends on content, core, react. Final consumer.
-│   └── react/                  # @sitecore-content-sdk/react — React components (Text, Image, Placeholder, etc.). Depends on content, core, search. Consumer.
-├── samples/                    # Example applications (generated from templates)
-└── scripts/                    # Monorepo scripts (scaffold, lint, hooks)
+│   ├── core/                   # GraphQL, cache, retry, fetch
+│   ├── analytics-core/         # Analytics foundation
+│   ├── content/                # Layout, editing, site, media
+│   ├── search/                 # Search APIs
+│   ├── events/                 # Event tracking
+│   ├── personalize/            # Personalization
+│   ├── cli/                    # sitecore-tools CLI
+│   ├── create-content-sdk-app/ # Scaffolding + templates
+│   ├── nextjs/                 # Next.js integration
+│   └── react/                  # React field components
+├── samples/                    # Generated example apps
+└── scripts/                    # Monorepo scripts
 ```
 
-**Key locations:** 
-- Sources: `src/**` per package. 
-- Templates: `packages/create-content-sdk-app/src/templates/`.
-- Initializers: `packages/create-content-sdk-app/src/initializers/` via `Initializer.init(args)`.
-- Env: `.env.*.example` only; never commit `.env`. 
+**Which package?** core (GraphQL/cache) · content (layout/editing) · cli · create-content-sdk-app (templates/init) · nextjs · react. Full table: [.agents/docs/AGENTS-repo-and-packages.md](.agents/docs/AGENTS-repo-and-packages.md).
 
-- Capability groupings and Agent Skills: See [Skills.md](Skills.md) (links to each template’s Skills.md and `.agents/skills/`; skills are maintained in templates only).
-- **When working inside a scaffolded app** (e.g. under `samples/`), use that app’s **AGENTS.md** for app-level guidance
-
-### Which package to edit?
-
-| Task | Package |
-|------|---------|
-| GraphQL, cache, retry, fetch utilities | `packages/core` |
-| Analytics foundation | `packages/analytics-core` |
-| Content fetching, layout, editing, site, media | `packages/content` |
-| Search service | `packages/search` |
-| Event tracking | `packages/events` |
-| Personalization | `packages/personalize` |
-| CLI (sitecore-tools) | `packages/cli` |
-| Scaffolding, templates, init flow | `packages/create-content-sdk-app` |
-| Next.js integration, middleware, editing | `packages/nextjs` |
-| React components (Text, Image, Placeholder, etc.) | `packages/react` |
-
-### Working with samples
-
-`yarn scaffold-samples` (generate); for live template dev: copy `watch.json.example` → `watch.json`, set `destination` under `samples/`, run `yarn watch` from `packages/create-content-sdk-app`; `yarn lint-samples` (lint scaffolded apps).
+**Samples:** `yarn scaffold-samples`; live template dev via `yarn watch` in create-content-sdk-app. Inside `samples/`, use that app's `AGENTS.md`.
 
 ---
 
-## Code Style
+## Best practices
 
-Use existing patterns in the package. **Naming:** camelCase, PascalCase (components/types), UPPER_SNAKE (constants), kebab-case (dirs). Small, focused functions; JSDoc for public APIs (`@param`, `@returns`). Full standards: `.cursor/rules/`
+- **Match existing patterns** in the package you edit; small, focused changes
+- **TypeScript strict mode**; explicit types; JSDoc on new public APIs (`@param`, `@returns`)
+- **Never import from `dist/`**; sources live in `src/**`
+- **Tests:** Mocha + Sinon + Chai; update `*.test.ts` when behavior changes; run `yarn test-packages`
+- **Templates:** must build with `npm install && npm run build` in generated apps; run `yarn build` after template changes
+- **Security:** env vars only for API keys and endpoints; never commit `.env`; never expose secrets in client code or logs
+- **Sitecore:** prefer SDK field components (`<Text>`, `<RichText>`, `<Image>`); validate fields before render
+
+More: [RULES-code-style.md](.agents/docs/RULES-code-style.md) · [RULES-javascript.md](.agents/docs/RULES-javascript.md) · [RULES-sitecore.md](.agents/docs/RULES-sitecore.md)
 
 ---
 
-## Testing
-
-Mocha + Sinon + Chai; `nyc` for coverage. **Run:** `yarn test-packages` (root) or `yarn test` in a package. **Coverage:** `yarn coverage-packages`. **API surface:** `yarn api-extractor:verify` when changing public exports (see `CONTRIBUTING.md`). Update tests when changing behavior; ensure they pass before completing.
-
----
-
-## DO & DON'T Rules
+## DO & DON'T
 
 | DO | DON'T |
 |----|-------|
 | Use existing utilities and common code | Edit `dist/**` or other build output |
 | Follow patterns in templates and packages | Change env vars or commit `.env` files |
-| Ensure template edits build with `npm install && npm run build` | Add dependencies without explicit approval |
+| Ensure template edits build in generated apps | Add dependencies without explicit approval |
 | Drive CLI flows via `Initializer.init(args)` | Modify `yarn.lock` / `package-lock.json` unless required |
-| Reuse common processes (see `src/common/`) | Rewrite folder structure or move files arbitrarily |
+| Reuse common processes (`src/common/` in create-content-sdk-app) | Rewrite folder structure without asking |
 | Run `yarn build` after template changes | Touch CI or global config without explicit instruction |
 | Run `yarn api-extractor` when changing public exports | Modify `.github/workflows/` without instruction |
 
 ---
 
-## Boundaries
+## Guardrails for agentic AI
 
-**Never edit:** `dist/**`, `.next/`, `out/`, `build/` (compiled output), `node_modules/`. Do not modify `yarn.lock` or `package-lock.json` unless explicitly required.
+- **Preserve behavior:** Do not change public API contracts without `api-extractor` verification and tests
+- **Secrets:** Never hardcode API keys, editing secrets, or tokens; use `.env.*.example` with placeholders only
+- **Artifacts:** Never edit `dist/**`, `.next/`, `node_modules/`, `build/`
+- **Head apps vs monorepo:** Do not copy this `AGENTS.md` into scaffolded apps; templates ship their own
+- **Depth on demand:** Open one `.agents/docs/` file or one `.cursor/rules/*.mdc` for the task area — do not load the full corpus
 
-**Environment variables:** You may add new env vars when needed. Do it carefully: document the variable in `.env.example` (or in templates, the appropriate `.env.*.example`), with a placeholder or empty value and a short comment; never put real secrets or production values in example files. If adding to a user’s `.env.local` for local dev, add only the variable name (e.g. `MY_VAR=`) and instruct the user to set the value. **Never commit** `.env` or `.env.local` — they are gitignored. See `.cursor/rules/safety.mdc` for full security and secrets guidance.
-
-**Never edit without explicit instruction:**
-- `.github/workflows/` — CI configuration
-- Root tooling (scripts, lerna config) — unless tasked
-
-**Focus on:**
-- `src/**` in packages
-- `packages/create-content-sdk-app/src/templates/**`
-- `*.test.ts`, `*.spec.ts`
+Full safety: [RULES-safety.md](.agents/docs/RULES-safety.md). Workflows: [AGENTS-workflows.md](.agents/docs/AGENTS-workflows.md).
 
 ---
 
-## Example Agent Tasks
+## References
 
-See `.cursor/rules/agent-tasks.mdc` for step-by-step examples (add utility, fix test, change template).
-
----
-
-## Git Workflow
-
-Branch: `dev`. Feature: `git switch -c feature/my-content-sdk-feature`. PRs against `dev` (not `main`). CI must pass (lint, tests, API surface). See `CONTRIBUTING.md`.
-
----
-
-## Detailed Rules Reference
-
-**Canonical source of truth.** Full guidance: **`.cursor/rules/`** (safety, repo-structure, code-style, sitecore, testing, cli, agent-tasks, etc.), **`CONTRIBUTING.md`** (workflow).
-
----
-
-## MCP
-
-Sitecore Documentation MCP: https://sitecore.mcp.kapa.ai
-
-## Links
-
-[Sitecore Content SDK](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html) · [Creating a JSS App](https://doc.sitecore.com/sai/en/developers/content-sdk/20/creating-a-content-sdk-app.html) · [XM Cloud](https://doc.sitecore.com/sai)
+- **Layered docs:** [.agents/docs/](.agents/docs/)
+- **Cursor rules:** [.cursor/rules/](.cursor/rules/) (glob-scoped)
+- **Head-app skills:** [Skills.md](Skills.md) → template `.agents/skills/`
+- **Contributing:** `CONTRIBUTING.md`
+- **MCP:** https://sitecore.mcp.kapa.ai
+- **Docs:** [Content SDK](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html)

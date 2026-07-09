@@ -1,33 +1,15 @@
 ---
 description: Project-wide context and constraints
-alwaysApply: true
-globs: []
+alwaysApply: false
+globs:
+  - 'packages/**/src/**'
+  - 'scripts/**'
 ---
 
-# Project Context
+# Project context
 
-Language: TypeScript (Node LTS)
+- **TypeScript** (Node LTS); build via `tsc` → `dist/`; templates via `scripts/build-templates.ts`
+- **Tests:** Mocha + Sinon + Chai; `yarn test-packages` / `yarn coverage-packages`
+- **Lint:** ESLint + Prettier; do not import from `dist/`
 
-Build: `tsc` -> `dist/`, templates bundled via `scripts/build-templates.ts`
-
-Tests: Mocha + Sinon + Chai, coverage via `nyc`
-
-Lint/format: ESLint + Prettier
-
-Scripts:
-
-- build
-- clean
-- lint
-- test
-- coverage
-
-Runtime:
-
-- Node LTS
-- Do not import from `dist/`
-- CLI entry: `./dist/index.js`
-
-Referenced:
-@src/index.ts
-@scripts/build-templates.ts
+Overview: [`.agents/docs/AGENTS-overview.md`](../../.agents/docs/AGENTS-overview.md)

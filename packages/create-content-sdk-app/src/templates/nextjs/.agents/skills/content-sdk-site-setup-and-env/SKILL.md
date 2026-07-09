@@ -1,36 +1,24 @@
 ---
 name: content-sdk-site-setup-and-env
-description: Configures site and environment: sitecore.config.ts, environment variables, default site and language. Use when configuring the app or adding env vars. Document in .env.example only; never commit .env or .env.local.
+description: sitecore.config.ts and env vars; document in .env.example only.
 ---
 
-# Content SDK Site Setup and Environment (Pages Router)
+# Site setup and env (Pages Router)
 
-Central config in sitecore.config.ts; all secrets and environment-specific values via env vars.
+**Detail:** [AGENTS-key-concepts.md#component-map-editing-env](../../docs/AGENTS-key-concepts.md#component-map-editing-env)
 
-## When to Use
+## When
 
-- User asks to configure site, default language, API host, or environment.
-- Task involves sitecore.config.ts, .env, or defaultSite/defaultLanguage.
-- User mentions "config," "environment variables," "API key," or "default site."
+- Configuring site, API, or env vars
+- Adding new environment variable
 
-## How to perform
+## Rules
 
-- Edit `sitecore.config.ts` with `defineConfig`; read all secrets and env-specific values from `process.env.*`. Add or change vars in `.env.example` (or `.env.remote.example` / `.env.container.example`) with placeholders; never commit `.env` or `.env.local`.
+- All secrets via env vars in `sitecore.config.ts`
+- Document in `.env.example` only; never commit `.env` / `.env.local`
 
-## Hard Rules
+## Stop
 
-- Use `sitecore.config.ts` with `defineConfig` from the SDK. Expose api (edge, local), defaultSite, defaultLanguage, editingSecret, multisite, redirects, personalize as needed.
-- All sensitive or environment-specific values must come from environment variables (e.g. process.env.SITECORE_API_KEY). Never hardcode API keys, secrets, or production URLs in source.
-- Document every new or changed env var in `.env.example` (or `.env.remote.example` / `.env.container.example`). Use placeholder or empty value and a short comment; never put real secrets in example files.
-- Never commit `.env` or `.env.local`; they are gitignored. Example files are the source of truth for which vars exist.
+- Stop if asked to commit secrets or hardcode API keys
 
-## Stop Conditions
-
-- Stop if the user wants to commit real secrets or production values; insist on env vars and .env.example only.
-- Stop if adding a new env var would require CI or deployment changes without explicit instruction; document the var and note that deployment must set it.
-- Do not edit .next/, node_modules/, or lockfiles unless the task explicitly requires it.
-
-## References
-
-- [AGENTS.md](../../../AGENTS.md) for boundaries and env rules.
-- [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).
+Docs: [Content SDK](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).

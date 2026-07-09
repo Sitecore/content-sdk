@@ -6,6 +6,7 @@ import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { ComponentMap } from './sharedTypes';
 import { ImportMapImport } from './DesignLibrary/models';
 import type { AtomsConfig } from '../atoms/types';
+import { noopLoadImportMap } from './DesignLibrary/loadImportMap';
 
 export interface SitecoreProviderProps {
   /**
@@ -22,8 +23,9 @@ export interface SitecoreProviderProps {
   page: Page;
   /**
    * The dynamic import for import map to be used in variant generation mode.
+   * When omitted, an empty import map is used (ex: code generation is disabled).
    */
-  loadImportMap: () => Promise<ImportMapImport>;
+  loadImportMap?: () => Promise<ImportMapImport>;
   /**
    * Atoms configuration: catalog and registry for rendering low-code components.
    * Pass the catalog from defineAtomsCatalog and the registry result from defineAtomsRegistry.
@@ -97,14 +99,21 @@ export const ImportMapReactContext = React.createContext<
  * @param {SitecoreProviderProps['api']} props.api - The API configuration.
  * @param {SitecoreProviderProps['page']} props.page - The page data.
  * @param {SitecoreProviderProps['componentMap']} props.componentMap - The component map.
- * @param {SitecoreProviderProps['loadImportMap']} props.loadImportMap - The function to load the import map.
+ * @param {SitecoreProviderProps['loadImportMap']} props.loadImportMap - Optional function to load the import map for Design Library variant generation. When omitted, an empty import map is used (ex: code generation is disabled).
  * @param {SitecoreProviderProps['atomsConfig']} props.atomsConfig - Atoms config (catalog + registry) for rendering low-code components.
  * @param {React.ReactNode} props.children - The children to render.
  * @returns {React.ReactNode} The SitecoreProvider component.
  * @public
  */
 export const SitecoreProvider = (props: SitecoreProviderProps) => {
-  const { api, page: propsPage, componentMap, loadImportMap, atomsConfig, children } = props;
+  const {
+    api,
+    page: propsPage,
+    componentMap,
+    loadImportMap = noopLoadImportMap,
+    atomsConfig,
+    children,
+  } = props;
 
   const [page, setPageInternal] = useState<Page>(propsPage);
 

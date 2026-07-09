@@ -132,6 +132,7 @@
 - [Image](variables/Image.md)
 - [Link](variables/Link.md)
 - [NextImage](variables/NextImage.md)
+- [noopLoadImportMap](variables/noopLoadImportMap.md)
 - [REDIRECT\_TYPE\_301](variables/REDIRECT_TYPE_301.md)
 - [REDIRECT\_TYPE\_302](variables/REDIRECT_TYPE_302.md)
 - [REDIRECT\_TYPE\_SERVER\_TRANSFER](variables/REDIRECT_TYPE_SERVER_TRANSFER.md)

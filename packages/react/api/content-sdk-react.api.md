@@ -538,6 +538,11 @@ export { NativeDataFetcherConfig }
 
 export { NativeDataFetcherResponse }
 
+// Warning: (ae-incompatible-release-tags) The symbol "noopLoadImportMap" is marked as @public, but its signature references "ImportMapImport" which is marked as @internal
+//
+// @public
+export const noopLoadImportMap: () => Promise<ImportMapImport>;
+
 export { Page }
 
 export { PageMode }
@@ -787,7 +792,7 @@ export function withSitecore(options?: UseSitecoreOptions): <ComponentProps exte
 //
 // src/atoms/define-atoms-catalog.ts:43:5 - (ae-forgotten-export) The symbol "RestrictFieldKey" needs to be exported by the entry point api-surface.d.ts
 // src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point api-surface.d.ts
-// src/components/SitecoreProvider.tsx:106:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
+// src/components/SitecoreProvider.tsx:97:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

@@ -39,27 +39,7 @@ const TextComponent: React.FC<TextProps> = ({ field, tag, editable = true, encod
     editable = false;
   }
 
-  let output: string | number | (ReactElement | string)[] =
-    field.value === undefined ? '' : field.value;
-
-  // when string value isn't formatted, we should format line breaks
-  const splitted = String(output).split('\n');
-
-  if (splitted.length) {
-    const formatted: (ReactElement | string)[] = [];
-
-    splitted.forEach((str, i) => {
-      const isLast = i === splitted.length - 1;
-
-      formatted.push(str);
-
-      if (!isLast) {
-        formatted.push(<br key={i} />);
-      }
-    });
-
-    output = formatted;
-  }
+  const value = field.value ?? '';
 
   let children = null;
   const htmlProps: {
@@ -71,9 +51,30 @@ const TextComponent: React.FC<TextProps> = ({ field, tag, editable = true, encod
 
   if (!encode) {
     htmlProps.dangerouslySetInnerHTML = {
-      __html: output,
+      __html: String(value).split('\n').join('<br>'),
     };
   } else {
+    let output: string | number | (ReactElement | string)[] = value;
+
+    // when string value isn't formatted, we should format line breaks
+    const splitted = String(output).split('\n');
+
+    if (splitted.length) {
+      const formatted: (ReactElement | string)[] = [];
+
+      splitted.forEach((str, i) => {
+        const isLast = i === splitted.length - 1;
+
+        formatted.push(str);
+
+        if (!isLast) {
+          formatted.push(<br key={i} />);
+        }
+      });
+
+      output = formatted;
+    }
+
     children = output;
   }
 

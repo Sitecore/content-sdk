@@ -139,6 +139,7 @@ import { NextFetchEvent } from 'next/server';
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { NextURL } from 'next/dist/server/web/next-url';
+import { noopLoadImportMap } from '@sitecore-content-sdk/react';
 import { normalizePersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
 import { normalizeSiteRewrite } from '@sitecore-content-sdk/content/site';
 import { Page } from '@sitecore-content-sdk/content/client';
@@ -792,6 +793,8 @@ export type NextjsContentSdkComponent = ReactContentSdkComponent & {
     dynamicModule?: () => Promise<ReactContentSdkComponent>;
     componentType?: 'client' | 'server' | 'universal';
 };
+
+export { noopLoadImportMap }
 
 export { normalizePersonalizedRewrite }
 
