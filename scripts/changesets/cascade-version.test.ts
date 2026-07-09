@@ -575,14 +575,14 @@ describe('cascade-version', () => {
       const commitSha = 'fullcommitid1234567890abcdef1234567890ab';
       const scenarios = [
         {
-          prereleaseTemplate: '0.0.0-canary.{tag}',
+          prereleaseTemplate: '0.0.0-beta.atoms.{tag}',
           configRequiresCommitSha: false,
-          expectedSnapshotParams: { tag: 'canary' as const },
+          expectedSnapshotParams: { tag: 'beta.atoms' as const },
         },
         {
           prereleaseTemplate: '{tag}.{commit}',
           configRequiresCommitSha: true,
-          expectedSnapshotParams: { tag: 'canary' as const, commit: commitSha },
+          expectedSnapshotParams: { tag: 'beta.atoms' as const, commit: commitSha },
         },
       ] as const;
 
@@ -631,7 +631,7 @@ describe('cascade-version', () => {
           unknown,
           unknown,
           unknown,
-          { tag: 'canary'; commit?: string }
+          { tag: 'beta.atoms'; commit?: string }
         ];
         expect(assembleArgs[4]).toEqual(scenario.expectedSnapshotParams);
       }
@@ -660,7 +660,7 @@ describe('cascade-version', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({ changelog: false }),
-        'canary'
+        'beta.atoms'
       );
     });
 
