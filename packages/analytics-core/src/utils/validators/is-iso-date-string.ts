@@ -13,14 +13,15 @@ export function isISODateString(date: string): boolean {
     return false;
   }
 
-  const [year, month, day] = date.split('-').map(Number);
-  const parsed = new Date(Date.UTC(year, month - 1, day));
+  try {
+    const dateString = `${date}T00:00:00Z`;
+    const convertedDate = new Date(dateString).toISOString().substring(0, 10);
 
-  return (
-    parsed.getUTCFullYear() === year &&
-    parsed.getUTCMonth() === month - 1 &&
-    parsed.getUTCDate() === day
-  );
+    return convertedDate === date;
+    // eslint-disable-next-line no-unused-vars
+  } catch (error) {
+    return false;
+  }
 }
 
 /**
