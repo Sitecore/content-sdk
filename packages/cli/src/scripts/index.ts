@@ -2,5 +2,6 @@
 // e.g. setup, deploy
 
 import * as project from './project';
+import * as generateSdk from './generate-sdk';
 
-export { project };
+export { project, generateSdk };
