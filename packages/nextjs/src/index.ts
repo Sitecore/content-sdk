@@ -26,6 +26,7 @@ export {
   PlaceholdersData,
   RouteData,
   Field,
+  FieldMetadata,
   Item,
   getChildPlaceholder,
   getFieldValue,
