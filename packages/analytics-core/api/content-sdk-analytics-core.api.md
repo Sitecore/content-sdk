@@ -219,6 +219,9 @@ export const isBotClientSide: () => boolean;
 export const isBotServerSide: (cookie?: string, userAgent?: string | null) => boolean;
 
 // @internal
+export function isISODateString(date: string): boolean;
+
+// @internal
 export function isShortISODateString(date: string): boolean;
 
 // @internal
@@ -234,6 +237,9 @@ export const LIBRARY_VERSION: string;
 export interface NestedObject {
     [key: string]: BasicTypes | NestedObject;
 }
+
+// @internal
+export function normalizeToISODateString(date: string): string;
 
 // @internal
 export function pageName(): string;

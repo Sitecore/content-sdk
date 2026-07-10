@@ -36,4 +36,8 @@ describe('isShortISODateString', () => {
 
     expect(dateSpy).toHaveBeenCalledWith('2022-01-01T00:00Z');
   });
+
+  it('should return false for API-compatible date-only ISO format (YYYY-MM-DD)', () => {
+    expect(isShortISODateString('1989-03-14')).toEqual(false);
+  });
 });

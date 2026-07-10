@@ -117,7 +117,7 @@ export const ensurePathExists: (filePath: string) => void;
 const ERROR_MESSAGES: {
     readonly IV_001: "[IV-001] Incorrect value for \"edgeUrl\". Set the value to a valid URL.";
     readonly IV_002: "[IV-002] Incorrect value for \"timeout\". Set the value to an integer greater than or equal to 0.";
-    readonly IV_003: "[IV-003] Incorrect value for \"dob\". Format the value according to ISO 8601.";
+    readonly IV_003: "[IV-003] Incorrect value for \"dob\". Format the value as YYYY-MM-DD (ISO 8601 date).";
     readonly IV_004: "[IV-004] Incorrect value for \"email\". Set the value to a valid email address.";
     readonly IV_005: "[IV-005] Incorrect value for \"expiryDate\". Format the value according to ISO 8601.";
     readonly IV_006: (maxAttributes: number) => string;

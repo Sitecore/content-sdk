@@ -370,6 +370,68 @@ describe('Test Identity', () => {
     }).toThrow(ERROR_MESSAGES.IV_003);
   });
 
+  describe('dob date format validation', () => {
+    it('should accept dob in YYYY-MM-DD format', () => {
+      data.dob = '1989-03-14';
+
+      expect(() => {
+        new IdentityEvent({
+          id,
+          identityData: data,
+          sendEvent: sendEvent.sendEvent,
+          config: configMock,
+        });
+      }).not.toThrow(ERROR_MESSAGES.IV_003);
+    });
+
+    it('should send dob as YYYY-MM-DD in the API payload', async () => {
+      const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
+      data.dob = '1989-03-14';
+
+      await new IdentityEvent({
+        id,
+        identityData: data,
+        sendEvent: sendEvent.sendEvent,
+        config: configMock,
+      }).send();
+
+      expect(sendEventSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ dob: '1989-03-14' }),
+        expect.objectContaining(configMock as any)
+      );
+    });
+
+    it('should reject invalid dob values with IV_003', () => {
+      data.dob = '2022-1-1';
+
+      expect(() => {
+        new IdentityEvent({
+          id,
+          identityData: data,
+          sendEvent: sendEvent.sendEvent,
+          config: configMock,
+        });
+      }).toThrow(ERROR_MESSAGES.IV_003);
+    });
+
+    it('should normalize shortened datetime dob to YYYY-MM-DD in the API payload', async () => {
+      const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
+      data.dob = '1989-03-14T00:00';
+
+      await new IdentityEvent({
+        id,
+        identityData: data,
+        sendEvent: sendEvent.sendEvent,
+        config: configMock,
+      }).send();
+
+      expect(sendEventSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ dob: '1989-03-14' }),
+        expect.objectContaining(configMock as any)
+      );
+    });
+  });
+
   it('Should throw an error if expiry date has invalid date format', () => {
     isShortISODateStringSpy.mockReturnValueOnce(false);
     data.identifiers[0].expiryDate = '2022-1-1T00:00.000Z';

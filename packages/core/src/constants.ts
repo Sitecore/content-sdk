@@ -44,7 +44,7 @@ export const ERROR_MESSAGES = {
   IV_001: '[IV-001] Incorrect value for "edgeUrl". Set the value to a valid URL.',
   IV_002:
     '[IV-002] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.',
-  IV_003: '[IV-003] Incorrect value for "dob". Format the value according to ISO 8601.',
+  IV_003: '[IV-003] Incorrect value for "dob". Format the value as YYYY-MM-DD (ISO 8601 date).',
   IV_004: '[IV-004] Incorrect value for "email". Set the value to a valid email address.',
   IV_005: '[IV-005] Incorrect value for "expiryDate". Format the value according to ISO 8601.',
   IV_006: (maxAttributes: number) =>

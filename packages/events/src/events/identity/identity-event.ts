@@ -2,8 +2,10 @@ import type { EPResponse, Infer } from '@sitecore-content-sdk/analytics-core/int
 import type { EventAttributesInput, ExtensionData } from '../common-interfaces';
 import {
   flattenObject,
+  isISODateString,
   isShortISODateString,
   isValidEmail,
+  normalizeToISODateString,
 } from '@sitecore-content-sdk/analytics-core/utils';
 import { BaseEvent } from '../base-event';
 import type { FlattenedObject } from '@sitecore-content-sdk/analytics-core/utils';
@@ -65,7 +67,7 @@ export class IdentityEvent extends BaseEvent {
   private validateAttributes(identityData: IdentityData) {
     if (identityData.identifiers.length === 0) throw new Error(ERROR_MESSAGES.MV_003);
 
-    if (identityData.dob !== undefined && !isShortISODateString(identityData.dob))
+    if (identityData.dob !== undefined && !this.isValidDob(identityData.dob))
       throw new Error(ERROR_MESSAGES.IV_003);
 
     identityData.identifiers.forEach((identifier: Identifier) => {
@@ -78,6 +80,15 @@ export class IdentityEvent extends BaseEvent {
   }
 
   /**
+   * Validates date of birth values accepted by the Identity API.
+   * @param {string} dob The date of birth value to validate.
+   * @returns {boolean} True when the value is a valid ISO date or shortened datetime.
+   */
+  private isValidDob(dob: string): boolean {
+    return isISODateString(dob) || isShortISODateString(dob);
+  }
+
+  /**
    * A function that maps the identity event input data with the payload sent to the API
    * @returns - The payload object
    */
@@ -85,7 +96,10 @@ export class IdentityEvent extends BaseEvent {
     const identityPayload: IdentityEventPayload = {
       city: this.identityData.city,
       country: this.identityData.country,
-      dob: this.identityData.dob,
+      dob:
+        this.identityData.dob !== undefined
+          ? normalizeToISODateString(this.identityData.dob)
+          : undefined,
       email: this.identityData.email,
       firstname: this.identityData.firstName,
       gender: this.identityData.gender,
@@ -145,7 +159,7 @@ export interface IdentityData extends EventAttributesInput {
   /**
    * The site visitor's date of birth.
    *
-   * Format: ISO 8601.
+   * Format: `YYYY-MM-DD` (ISO 8601 date). Shortened datetime values (`YYYY-MM-DDThh:mm`) are accepted and normalized.
    */
   dob?: string;
   /**
