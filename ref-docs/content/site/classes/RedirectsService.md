@@ -6,7 +6,7 @@
 
 # Class: RedirectsService
 
-Defined in: [content/src/site/redirects-service.ts:91](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/content/src/site/redirects-service.ts#L91)
+Defined in: [content/src/site/redirects-service.ts:91](https://github.com/Sitecore/content-sdk/blob/081959dae5f50b36abd9af8b5e9d111d2d12fc2d/packages/content/src/site/redirects-service.ts#L91)
 
 The RedirectsService class is used to query the Content SDK redirects using Graphql endpoint
 
@@ -16,7 +16,7 @@ The RedirectsService class is used to query the Content SDK redirects using Grap
 
 > **new RedirectsService**(`options`): `RedirectsService`
 
-Defined in: [content/src/site/redirects-service.ts:99](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/content/src/site/redirects-service.ts#L99)
+Defined in: [content/src/site/redirects-service.ts:99](https://github.com/Sitecore/content-sdk/blob/081959dae5f50b36abd9af8b5e9d111d2d12fc2d/packages/content/src/site/redirects-service.ts#L99)
 
 Creates an instance of graphQL redirects service with the provided options
 
@@ -38,7 +38,7 @@ Creates an instance of graphQL redirects service with the provided options
 
 > **get** `protected` **query**(): `string`
 
-Defined in: [content/src/site/redirects-service.ts:104](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/content/src/site/redirects-service.ts#L104)
+Defined in: [content/src/site/redirects-service.ts:104](https://github.com/Sitecore/content-sdk/blob/081959dae5f50b36abd9af8b5e9d111d2d12fc2d/packages/content/src/site/redirects-service.ts#L104)
 
 ##### Returns
 
@@ -50,7 +50,7 @@ Defined in: [content/src/site/redirects-service.ts:104](https://github.com/Sitec
 
 > **fetchRedirects**(`siteName`, `fetchOptions?`): `Promise`\<[`RedirectInfo`](../type-aliases/RedirectInfo.md)[]\>
 
-Defined in: [content/src/site/redirects-service.ts:115](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/content/src/site/redirects-service.ts#L115)
+Defined in: [content/src/site/redirects-service.ts:115](https://github.com/Sitecore/content-sdk/blob/081959dae5f50b36abd9af8b5e9d111d2d12fc2d/packages/content/src/site/redirects-service.ts#L115)
 
 Fetch an array of redirects from API
 
@@ -77,7 +77,7 @@ if the siteName is empty.
 
 > `protected` **getCacheClient**(): `CacheClient`\<[`RedirectsQueryResult`](../type-aliases/RedirectsQueryResult.md)\>
 
-Defined in: [content/src/site/redirects-service.ts:159](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/content/src/site/redirects-service.ts#L159)
+Defined in: [content/src/site/redirects-service.ts:159](https://github.com/Sitecore/content-sdk/blob/081959dae5f50b36abd9af8b5e9d111d2d12fc2d/packages/content/src/site/redirects-service.ts#L159)
 
 Gets cache client implementation
 Override this method if custom cache needs to be used
@@ -94,7 +94,7 @@ CacheClient instance
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../client/interfaces/GraphQLClient.md)
 
-Defined in: [content/src/site/redirects-service.ts:143](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/content/src/site/redirects-service.ts#L143)
+Defined in: [content/src/site/redirects-service.ts:143](https://github.com/Sitecore/content-sdk/blob/081959dae5f50b36abd9af8b5e9d111d2d12fc2d/packages/content/src/site/redirects-service.ts#L143)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you

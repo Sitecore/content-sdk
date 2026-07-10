@@ -58,6 +58,7 @@ import { FEaaSWrapper as FEaaSWrapper_2 } from '@sitecore-content-sdk/react';
 import { fetchFEaaSComponentServerProps } from '@sitecore-content-sdk/react';
 import { FetchOptions } from '@sitecore-content-sdk/content/client';
 import { Field } from '@sitecore-content-sdk/content/layout';
+import { FieldMetadata } from '@sitecore-content-sdk/content/layout';
 import { File as File_2 } from '@sitecore-content-sdk/react';
 import { FileField } from '@sitecore-content-sdk/react';
 import { Form } from '@sitecore-content-sdk/react';
@@ -534,6 +535,8 @@ export { FEaaSWrapper }
 export { fetchFEaaSComponentServerProps }
 
 export { Field }
+
+export { FieldMetadata }
 
 export { File_2 as File }
 

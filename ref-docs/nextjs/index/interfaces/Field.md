@@ -12,7 +12,7 @@ Field interface
 
 ## Extends
 
-- `FieldMetadata`
+- [`FieldMetadata`](FieldMetadata.md)
 
 ## Type Parameters
 
@@ -34,7 +34,7 @@ Defined in: content/types/layout/models.d.ts:123
 
 #### Inherited from
 
-`FieldMetadata.metadata`
+[`FieldMetadata`](FieldMetadata.md).[`metadata`](FieldMetadata.md#metadata)
 
 ***
 
