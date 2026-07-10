@@ -51,6 +51,7 @@
 - [DictionaryServiceConfig](interfaces/DictionaryServiceConfig.md)
 - [ErrorPagesServiceConfig](interfaces/ErrorPagesServiceConfig.md)
 - [Field](interfaces/Field.md)
+- [FieldMetadata](interfaces/FieldMetadata.md)
 - [FileField](interfaces/FileField.md)
 - [ImageField](interfaces/ImageField.md)
 - [ImageFieldValue](interfaces/ImageFieldValue.md)

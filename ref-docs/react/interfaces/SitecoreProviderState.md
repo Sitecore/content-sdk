@@ -6,7 +6,7 @@
 
 # Interface: SitecoreProviderState
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:36](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/react/src/components/SitecoreProvider.tsx#L36)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:36](https://github.com/Sitecore/content-sdk/blob/081959dae5f50b36abd9af8b5e9d111d2d12fc2d/packages/react/src/components/SitecoreProvider.tsx#L36)
 
 The state for the SitecoreProvider component.
 
@@ -16,7 +16,7 @@ The state for the SitecoreProvider component.
 
 > `optional` **api?**: `Required`\<\{ `edge?`: `Required`\<\{ `clientContextId?`: `string`; `contextId`: `string`; `edgeUrl?`: `string`; \} \| `undefined`\>; `local?`: `Required`\<\{ `apiHost`: `string`; `apiKey`: `string`; `path?`: `string`; \} \| `undefined`\>; \}\>
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:58](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/react/src/components/SitecoreProvider.tsx#L58)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:58](https://github.com/Sitecore/content-sdk/blob/081959dae5f50b36abd9af8b5e9d111d2d12fc2d/packages/react/src/components/SitecoreProvider.tsx#L58)
 
 The API configuration defined in the `SitecoreConfig`.
 
@@ -26,7 +26,7 @@ The API configuration defined in the `SitecoreConfig`.
 
 > **componentMap**: [`ComponentMap`](../type-aliases/ComponentMap.md)
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:54](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/react/src/components/SitecoreProvider.tsx#L54)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:54](https://github.com/Sitecore/content-sdk/blob/081959dae5f50b36abd9af8b5e9d111d2d12fc2d/packages/react/src/components/SitecoreProvider.tsx#L54)
 
 The component map to use for rendering components.
 
@@ -36,7 +36,7 @@ The component map to use for rendering components.
 
 > **loadImportMap**: () => `Promise`\<[`ImportMapImport`](../type-aliases/ImportMapImport.md)\>
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:50](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/react/src/components/SitecoreProvider.tsx#L50)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:50](https://github.com/Sitecore/content-sdk/blob/081959dae5f50b36abd9af8b5e9d111d2d12fc2d/packages/react/src/components/SitecoreProvider.tsx#L50)
 
 The dynamic import for import map to be used in variant generation mode.
 
@@ -50,7 +50,7 @@ The dynamic import for import map to be used in variant generation mode.
 
 > **page**: [`Page`](../type-aliases/Page.md)
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:46](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/react/src/components/SitecoreProvider.tsx#L46)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:46](https://github.com/Sitecore/content-sdk/blob/081959dae5f50b36abd9af8b5e9d111d2d12fc2d/packages/react/src/components/SitecoreProvider.tsx#L46)
 
 The page data.
 
@@ -60,7 +60,7 @@ The page data.
 
 > `optional` **setPage?**: (`value`) => `void`
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:42](https://github.com/Sitecore/content-sdk/blob/a45363382ef21e6ca947808e5b980aa4f1721e36/packages/react/src/components/SitecoreProvider.tsx#L42)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:42](https://github.com/Sitecore/content-sdk/blob/081959dae5f50b36abd9af8b5e9d111d2d12fc2d/packages/react/src/components/SitecoreProvider.tsx#L42)
 
 Method to set the page.
 

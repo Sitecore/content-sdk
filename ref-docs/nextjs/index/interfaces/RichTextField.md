@@ -12,7 +12,7 @@ The interface for the Rich Text field.
 
 ## Extends
 
-- `FieldMetadata`
+- [`FieldMetadata`](FieldMetadata.md)
 
 ## Properties
 
@@ -28,7 +28,7 @@ Defined in: content/types/layout/models.d.ts:123
 
 #### Inherited from
 
-`FieldMetadata.metadata`
+[`FieldMetadata`](FieldMetadata.md).[`metadata`](FieldMetadata.md#metadata)
 
 ***
 
