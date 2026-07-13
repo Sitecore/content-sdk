@@ -1,5 +1,14 @@
 # @sitecore-content-sdk/nextjs
 
+## 2.2.1
+
+### Patch Changes
+
+- Skip malformed redirect regex rules instead of failing the entire redirect chain. ([6f494d7](https://github.com/sitecore/content-sdk/commit/6f494d7de2451d44441c200576d22126cf4eecc0))
+- [Non breaking] Refactor config and some component logic to be framework reusable ([a453633](https://github.com/sitecore/content-sdk/commit/a45363382ef21e6ca947808e5b980aa4f1721e36))
+- Fix build failure when `disableCodeGeneration: true` by writing empty import maps during codegen and defaulting `loadImportMap` to `noopLoadImportMap` when the prop is omitted. ([13f41bd](https://github.com/sitecore/content-sdk/commit/13f41bd2e6c114594096dffe00abf9fcf456f19f))
+- Export `FieldMetadata` so apps can access component field metadata from the Next.js SDK package. ([081959d](https://github.com/sitecore/content-sdk/commit/081959dae5f50b36abd9af8b5e9d111d2d12fc2d))
+
 ## 2.2.0
 
 ### Minor Changes
