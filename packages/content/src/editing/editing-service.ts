@@ -51,6 +51,11 @@ export type EditingOptions = {
   site?: string;
   variantId: string;
   previewTime?: string;
+  /**
+   * When false, the sc_variant header is omitted so the editing API returns unresolved
+   * layout data (including experiences). Used in edit mode for client-side personalization.
+   */
+  sendVariantHeader?: boolean;
 };
 
 /**
@@ -80,6 +85,7 @@ export class EditingService {
    * @param {LayoutKind} [variables.layoutKind] - The final or shared layout variant.
    * @param {string} [variables.site] - The site context for fetching layout data (optional).
    * @param {string} [variables.previewTime] - The preview time for time-based preview (optional).
+   * @param {boolean} [variables.sendVariantHeader] - When false, omits the sc_variant header (default true).
    * @param {FetchOptions} [fetchOptions] Options to override graphQL client details like retries and fetch implementation
    * @returns {Promise} The layout data and dictionary phrases.
    */
@@ -93,6 +99,7 @@ export class EditingService {
       site,
       variantId,
       previewTime,
+      sendVariantHeader = true,
     }: EditingOptions,
     fetchOptions?: FetchOptions
   ) {
@@ -105,6 +112,19 @@ export class EditingService {
     const editModeHeader = mode === 'edit' ? 'true' : 'false';
     const previewModeHeader = mode === 'preview' ? 'true' : 'false';
 
+    const headers: Record<string, string> = {
+      ...fetchOptions?.headers,
+      sc_layoutKind: layoutKind,
+      sc_editMode: editModeHeader,
+      sc_previewMode: previewModeHeader,
+      ...(site && { sc_site: site }),
+      ...(previewTime && { sc_previewTime: previewTime }),
+    };
+
+    if (sendVariantHeader) {
+      headers.sc_variant = variantId === DEFAULT_VARIANT ? 'default' : variantId;
+    }
+
     const editingData = await this.graphQLClient.request<GraphQLEditingQueryResponse>(
       query,
       {
@@ -114,15 +134,7 @@ export class EditingService {
       },
       {
         ...fetchOptions,
-        headers: {
-          ...fetchOptions?.headers,
-          sc_layoutKind: layoutKind,
-          sc_editMode: editModeHeader,
-          sc_previewMode: previewModeHeader,
-          sc_variant: variantId === DEFAULT_VARIANT ? 'default' : variantId,
-          ...(site && { sc_site: site }),
-          ...(previewTime && { sc_previewTime: previewTime }),
-        },
+        headers,
       }
     );
 

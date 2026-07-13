@@ -25,7 +25,7 @@ import {
   applyMediaUrlRewrite,
 } from '../layout';
 import { HTMLLink, StaticPath } from '../models';
-import { PersonalizedRewriteData } from '../personalize/utils';
+import { PersonalizedRewriteData, getGroomedVariantIds } from '../personalize/utils';
 import { personalizeLayout } from '../personalize/layout-personalizer';
 import { ErrorPages, ErrorPagesService, SitePathService, SitemapXmlService } from '../site';
 import { SitecoreClientInit } from './models';
@@ -477,6 +477,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         site,
         variantId,
         previewTime,
+        sendVariantHeader: mode !== LayoutServicePageState.Edit,
       },
       fetchOptions
     );
@@ -495,6 +496,12 @@ export class SitecoreClient implements BaseSitecoreClient {
     }
 
     let layout = data.layoutData;
+
+    if (mode === LayoutServicePageState.Edit) {
+      const { variantId: pageVariantId, componentVariantIds } = getGroomedVariantIds([variantId]);
+      personalizeLayout(layout, pageVariantId, componentVariantIds);
+    }
+
     layout = this.applyContentRewrite(layout);
     const page: Page = {
       locale: language,

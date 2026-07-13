@@ -351,6 +351,7 @@ export type EditingOptions = {
     site?: string;
     variantId: string;
     previewTime?: string;
+    sendVariantHeader?: boolean;
 };
 
 // @public

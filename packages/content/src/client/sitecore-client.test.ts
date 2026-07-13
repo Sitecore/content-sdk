@@ -15,6 +15,7 @@ import { LayoutServicePageState } from '../layout';
 import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
 import { DesignLibraryVariantGeneration } from '../editing/models';
 import { DEFAULT_VARIANT } from '../personalize';
+import { HIDDEN_RENDERING_NAME } from '../constants';
 
 chai.use(sinonChai);
 
@@ -264,7 +265,7 @@ describe('SitecoreClient', () => {
         language: 'en',
         version: '1',
         layoutKind: LayoutKind.Final,
-        variantIds: 'variant1,comp_variant2',
+        variantId: 'variant1',
       };
 
       const result = await customClient.getPreview(previewData);
@@ -903,6 +904,7 @@ describe('SitecoreClient', () => {
           site: previewData.site,
           variantId: previewData.variantId,
           previewTime: previewData.previewTime,
+          sendVariantHeader: false,
         })
       ).to.be.true;
     });
@@ -958,12 +960,79 @@ describe('SitecoreClient', () => {
           site: previewData.site,
           variantId: previewData.variantId,
           previewTime: previewData.previewTime,
+          sendVariantHeader: true,
         })
       ).to.be.true;
     });
 
-    it('should forward the variant id to the editing service and not resolve personalization client-side', async () => {
+    it('should resolve default-hidden components to Hidden Rendering in edit mode (JSS-9982)', async () => {
+      const hiddenUid = 'af46b366-38e8-4e02-b02b-bba01eb96f14';
+      const previewData = {
+        site: 'test',
+        itemId: '{9FAF10EE-DE21-4A75-BDEF-66121AF60AA5}',
+        mode: LayoutServicePageState.Edit,
+        language: 'en',
+        version: '1',
+        variantId: DEFAULT_VARIANT,
+        layoutKind: LayoutKind.Final,
+        previewTime: undefined as string | undefined,
+      };
+
+      const editingData = {
+        layoutData: {
+          sitecore: {
+            context: { pageEditing: true, language: 'en', site: { name: 'test' } },
+            route: {
+              name: 'About',
+              placeholders: {
+                'headless-main': [
+                  {
+                    uid: 'dfcd0439-158b-46d9-b318-ca41f5040b13',
+                    componentName: 'Container',
+                    dataSource: '',
+                    placeholders: {
+                      'container-{*}': [
+                        {
+                          uid: hiddenUid,
+                          componentName: null,
+                          dataSource: null,
+                          experiences: {},
+                        },
+                        {
+                          uid: '4e6dd3ca-18e4-42ff-a5a8-eccae4aa408b',
+                          componentName: 'RichText',
+                          dataSource: '/sitecore/content/test/test/Home/About/Data/Text 1',
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      };
+
+      editingServiceStub.fetchEditingData.resolves(editingData);
+
+      const result = await sitecoreClient.getPreview(previewData);
+
+      expect(
+        editingServiceStub.fetchEditingData.calledWith(
+          sinon.match({ sendVariantHeader: false, mode: LayoutServicePageState.Edit })
+        )
+      ).to.be.true;
+
+      const hiddenComponent = editingData.layoutData.sitecore.route.placeholders['headless-main'][0]
+        .placeholders['container-{*}'][0];
+      expect(hiddenComponent.componentName).to.equal(HIDDEN_RENDERING_NAME);
+      expect(hiddenComponent.uid).to.equal(hiddenUid);
+      expect(result?.layout).to.equal(editingData.layoutData);
+    });
+
+    it('should apply personalization client-side in edit mode', async () => {
       const testLayoutData = structuredClone(layoutData);
+      testLayoutData.sitecore.context.pageEditing = true;
       const previewData = {
         site: 'default-site',
         itemId: 'test-item-id',
@@ -984,19 +1053,48 @@ describe('SitecoreClient', () => {
       const result = await sitecoreClient.getPreview(previewData);
 
       expect(
-        editingServiceStub.fetchEditingData.calledWith({
-          itemId: previewData.itemId,
-          language: previewData.language,
-          version: previewData.version,
-          layoutKind: previewData.layoutKind,
-          mode: previewData.mode,
-          site: previewData.site,
-          variantId: previewData.variantId,
-          previewTime: previewData.previewTime,
-        })
+        editingServiceStub.fetchEditingData.calledWith(
+          sinon.match({ sendVariantHeader: false, variantId: previewData.variantId })
+        )
       ).to.be.true;
 
-      // personalization is resolved server-side in edit/preview mode, so the layout is returned as-is
+      const mainPlaceholder = result?.layout.sitecore.route?.placeholders['content-sdk-main'];
+      expect(mainPlaceholder?.[0]?.fields?.heading?.value).to.equal('Mountain Bike');
+      expect(mainPlaceholder?.[0]?.componentName).to.equal('ContentBlock');
+    });
+
+    it('should forward the variant id for server-side resolution in preview mode', async () => {
+      const testLayoutData = structuredClone(layoutData);
+      const previewData = {
+        site: 'default-site',
+        itemId: 'test-item-id',
+        mode: LayoutServicePageState.Preview,
+        language: 'en',
+        version: '1',
+        variantId: 'mountain_bike_audience',
+        layoutKind: LayoutKind.Final,
+        previewTime: undefined as string | undefined,
+      };
+
+      const editingData = {
+        layoutData: testLayoutData,
+      };
+
+      editingServiceStub.fetchEditingData.resolves(editingData);
+
+      const result = await sitecoreClient.getPreview(previewData);
+
+      expect(
+        editingServiceStub.fetchEditingData.calledWith(
+          sinon.match({
+            sendVariantHeader: true,
+            mode: LayoutServicePageState.Preview,
+            variantId: previewData.variantId,
+          })
+        )
+      ).to.be.true;
+
+      // personalization is resolved server-side in preview mode, so the layout is returned as-is
       expect(result?.layout).to.deep.equal(testLayoutData);
     });
 
@@ -1072,6 +1170,7 @@ describe('SitecoreClient', () => {
           site: previewData.site,
           variantId: previewData.variantId,
           previewTime: previewData.previewTime,
+          sendVariantHeader: false,
         })
         .resolves(editingData);
 
@@ -1088,6 +1187,7 @@ describe('SitecoreClient', () => {
             site: previewData.site,
             variantId: previewData.variantId,
             previewTime: previewData.previewTime,
+            sendVariantHeader: false,
           },
           fetchOptions
         )
