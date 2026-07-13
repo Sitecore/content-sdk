@@ -37,6 +37,10 @@ export default function proxy(req: NextRequest, event: NextFetchEvent) {
      * List of all supported locales configured in routing.ts
      */
     locales: routing.locales.slice(),
+    /**
+     * Fallback when App Router does not populate nextUrl.locale / defaultLocale
+     */
+    defaultLanguage: scConfig.defaultLanguage,
     // This function determines if the proxy should be turned off on per-request basis.
     // Certain paths are ignored by default (e.g. files and Next.js API routes), but you may wish to disable more.
     // This is an important performance consideration since Next.js Edge proxy runs on every request.
