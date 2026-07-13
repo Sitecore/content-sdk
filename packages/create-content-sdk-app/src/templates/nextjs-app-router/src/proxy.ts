@@ -38,7 +38,7 @@ export default function proxy(req: NextRequest, event: NextFetchEvent) {
      */
     locales: routing.locales.slice(),
     /**
-     * Fallback when App Router does not populate nextUrl.locale / defaultLocale
+     * Default language to use if no language is identified in the request
      */
     defaultLanguage: scConfig.defaultLanguage,
     // This function determines if the proxy should be turned off on per-request basis.
