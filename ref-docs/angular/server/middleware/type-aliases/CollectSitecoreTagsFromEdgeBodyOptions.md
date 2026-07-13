@@ -8,7 +8,7 @@
 
 > **CollectSitecoreTagsFromEdgeBodyOptions** = `object`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:45](https://github.com/Sitecore/content-sdk/blob/081959dae5f50b36abd9af8b5e9d111d2d12fc2d/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L45)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:45](https://github.com/Sitecore/content-sdk/blob/28226c21fb726217be012fb49a35e263d3bf850b/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L45)
 
 Options for [collectSitecoreTagsFromEdgeRevalidateRequestBody](../functions/collectSitecoreTagsFromEdgeRevalidateRequestBody.md).
 
@@ -18,4 +18,4 @@ Options for [collectSitecoreTagsFromEdgeRevalidateRequestBody](../functions/coll
 
 > **defaultLocale**: `string`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:46](https://github.com/Sitecore/content-sdk/blob/081959dae5f50b36abd9af8b5e9d111d2d12fc2d/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L46)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:46](https://github.com/Sitecore/content-sdk/blob/28226c21fb726217be012fb49a35e263d3bf850b/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L46)
