@@ -86,6 +86,12 @@ export interface SearchParameters<T extends SearchDocument = SearchDocument> {
    * @default 0
    */
   offset?: number;
+  /**
+   * The locale to use for the search. Required for multi-locale index configurations.
+   * Format: letters and hyphens only (e.g. 'en', 'fr-FR', 'el-GR').
+   * Omit for single-locale indexes.
+   */
+  locale?: string;
 }
 
 /**
@@ -125,7 +131,7 @@ export class SearchService {
     params: SearchParameters<T>,
     fetchOptions?: SearchServiceFetchOptions
   ): Promise<SearchResponse<T>> {
-    const { searchIndexId, keyphrase = '', sort, limit = 10, offset = 0 } = params;
+    const { searchIndexId, keyphrase = '', sort, limit = 10, offset = 0, locale } = params;
 
     this.validateParameters<T>({
       searchIndexId,
@@ -170,6 +176,7 @@ export class SearchService {
         sort: {
           fields: sortFields,
         },
+        ...(locale !== undefined && { locale }),
       },
       options
     );

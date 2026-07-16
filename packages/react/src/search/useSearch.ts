@@ -40,6 +40,12 @@ export interface UseSearchOptions<T extends SearchDocument = SearchDocument> {
    * @default false
    */
   keepPreviousData?: boolean;
+  /**
+   * The locale to use for the search. Required for multi-locale index configurations.
+   * Format: letters and hyphens only (e.g. 'en', 'fr-FR', 'el-GR').
+   * Omit for single-locale indexes.
+   */
+  locale?: string;
 }
 
 type InternalState<T extends SearchDocument = SearchDocument> = {
@@ -121,6 +127,7 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
     sort,
     enabled = true,
     keepPreviousData = false,
+    locale,
   } = options;
 
   const [state, setState] = useState<InternalState<T>>(() => {
@@ -169,6 +176,7 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
         limit: pageSize,
         offset,
         sort,
+        locale,
       };
 
       const { results: searchResults, total } = await searchService.search<T>(searchParams, {
@@ -205,7 +213,7 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
         previousStatus: 'error',
       });
     }
-  }, [searchService, searchIndexId, page, pageSize, sort, query, keepPreviousData]);
+  }, [searchService, searchIndexId, page, pageSize, sort, query, keepPreviousData, locale]);
 
   useEffect(() => {
     if (enabled) {

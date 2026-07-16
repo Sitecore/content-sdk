@@ -484,6 +484,7 @@ export const useInfiniteSearch: <T extends SearchDocument = SearchDocument>(opti
 // @public
 export interface UseInfiniteSearchOptions<T extends SearchDocument = SearchDocument> {
     enabled?: boolean;
+    locale?: string;
     pageSize?: number;
     query?: string;
     searchIndexId: string;
@@ -510,6 +511,7 @@ export const useSearch: <T extends SearchDocument = SearchDocument>(options: Use
 export interface UseSearchOptions<T extends SearchDocument = SearchDocument> {
     enabled?: boolean;
     keepPreviousData?: boolean;
+    locale?: string;
     page?: number;
     pageSize?: number;
     query?: string;

@@ -31,6 +31,12 @@ export interface UseInfiniteSearchOptions<T extends SearchDocument = SearchDocum
    * @default true
    */
   enabled?: boolean;
+  /**
+   * The locale to use for the search. Required for multi-locale index configurations.
+   * Format: letters and hyphens only (e.g. 'en', 'fr-FR', 'el-GR').
+   * Omit for single-locale indexes.
+   */
+  locale?: string;
 }
 
 /**
@@ -123,7 +129,7 @@ type InternalInfiniteSearchState<T extends SearchDocument = SearchDocument> = {
 export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
   options: UseInfiniteSearchOptions<T>
 ): UseInfiniteSearchState<T> => {
-  const { query, searchIndexId, pageSize = DEFAULT_PAGE_SIZE, sort, enabled = true } = options;
+  const { query, searchIndexId, pageSize = DEFAULT_PAGE_SIZE, sort, enabled = true, locale } = options;
 
   const [state, setState] = useState<InternalInfiniteSearchState<T>>(() => {
     const error = !searchIndexId
@@ -185,6 +191,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
           limit: pageSize,
           offset,
           sort,
+          locale,
         };
 
         const { results: searchResults, total: totalResults } = await searchService.search<T>(
@@ -237,7 +244,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
         }
       }
     },
-    [searchService, pageSize, sort, query, searchIndexId]
+    [searchService, pageSize, sort, query, searchIndexId, locale]
   );
 
   useEffect(() => {

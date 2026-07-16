@@ -19,6 +19,7 @@ export type SearchDocument = {
 export interface SearchParameters<T extends SearchDocument = SearchDocument> {
     keyphrase?: string;
     limit?: number;
+    locale?: string;
     offset?: number;
     searchIndexId: string;
     sort?: SortSetting<T>[] | SortSetting<T>;
