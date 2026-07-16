@@ -7,21 +7,6 @@ import {
 import { GlobalLoaderCacheConfig, CacheKeyDimensions, DEFAULT_CACHE_TTL } from './models';
 
 /**
- * Approximate serialized byte size of a cache value (demo/admin helper).
- * Only used for demo purposes. Remove before release.
- * TODO: Remove before release.
- * @param {unknown} value - Value to measure.
- * @returns {number} JSON string length, or `0` when serialization fails.
- */
-export function approxByteSize(value: unknown): number {
-  try {
-    return JSON.stringify(value).length;
-  } catch {
-    return 0;
-  }
-}
-
-/**
  * Removes the query string from a URL path.
  * @param {string} url - URL or path that may include `?query`.
  * @returns {string} Pathname without query string.
