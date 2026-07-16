@@ -1,7 +1,7 @@
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { getClientId } from '@sitecore-content-sdk/analytics-core';
-import { SearchDocument, PathsToStringProps } from './models';
+import { SearchDocument, PathsToStringProps, FacetRequest, FacetResult } from './models';
 import { debug } from './debug';
 
 /**
@@ -42,6 +42,10 @@ interface SearchAPIResponse<T extends SearchDocument = SearchDocument> {
    * The total number of search results.
    */
   total: number;
+  /**
+   * Facet results, present only when facets were requested.
+   */
+  facet?: FacetResult[];
 }
 
 /**
@@ -57,6 +61,10 @@ export interface SearchResponse<T extends SearchDocument = SearchDocument> {
    * The total number of search results.
    */
   total: number;
+  /**
+   * Facet results, present only when facets were requested.
+   */
+  facets?: FacetResult[];
 }
 
 /**
@@ -92,6 +100,11 @@ export interface SearchParameters<T extends SearchDocument = SearchDocument> {
    * Omit for single-locale indexes.
    */
   locale?: string;
+  /**
+   * Facet configuration. Use 'all: true' to retrieve counts for all enabled facets.
+   * Use 'fields' to filter results by specific facet values. Both can be combined.
+   */
+  facet?: FacetRequest;
 }
 
 /**
@@ -131,7 +144,7 @@ export class SearchService {
     params: SearchParameters<T>,
     fetchOptions?: SearchServiceFetchOptions
   ): Promise<SearchResponse<T>> {
-    const { searchIndexId, keyphrase = '', sort, limit = 10, offset = 0, locale } = params;
+    const { searchIndexId, keyphrase = '', sort, limit = 10, offset = 0, locale, facet } = params;
 
     this.validateParameters<T>({
       searchIndexId,
@@ -177,6 +190,7 @@ export class SearchService {
           fields: sortFields,
         },
         ...(locale !== undefined && { locale }),
+        ...(facet !== undefined && { facet }),
       },
       options
     );
@@ -184,6 +198,7 @@ export class SearchService {
     return {
       results: data.content || [],
       total: data.total || 0,
+      facets: data.facet,
     };
   }
 

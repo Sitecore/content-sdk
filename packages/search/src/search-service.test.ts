@@ -479,6 +479,79 @@ describe('SearchService', () => {
     });
   });
 
+  describe('facets', () => {
+    it('should send facet: { all: true } in the request body and return facets in response', async () => {
+      const facetResponse = [{ name: 'industry', value: [{ text: 'Tech', count: 5 }, { text: 'Finance', count: 3 }] }];
+
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: { 'x-sitecore-contextid': contextId },
+      })
+        .post('/v1/search', {
+          config: { id: searchIndexId },
+          limit: 10,
+          offset: 0,
+          query: { keyphrase: '' },
+          sessionId: '',
+          sort: { fields: [] },
+          facet: { all: true },
+        })
+        .reply(200, { content: [{ id: 1 }], total: 1, facet: facetResponse });
+
+      const searchService = new SearchService({ contextId });
+      const response = await searchService.search({ searchIndexId, facet: { all: true } });
+
+      expect(response.facets).to.deep.equal(facetResponse);
+      expect(response.total).to.equal(1);
+    });
+
+    it('should send facet with fields and filters in the request body', async () => {
+      const facet = {
+        all: true,
+        fields: [{ name: 'industry', filters: [{ operator: 'eq', value: ['Tech', 'Finance'] }] }],
+      };
+      const facetResponse = [{ name: 'industry', value: [{ text: 'Tech', count: 5 }, { text: 'Finance', count: 3 }] }];
+
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: { 'x-sitecore-contextid': contextId },
+      })
+        .post('/v1/search', {
+          config: { id: searchIndexId },
+          limit: 10,
+          offset: 0,
+          query: { keyphrase: '' },
+          sessionId: '',
+          sort: { fields: [] },
+          facet,
+        })
+        .reply(200, { content: [{ id: 1 }], total: 1, facet: facetResponse });
+
+      const searchService = new SearchService({ contextId });
+      const response = await searchService.search({ searchIndexId, facet });
+
+      expect(response.facets).to.deep.equal(facetResponse);
+    });
+
+    it('should not include facet in the request when not provided', async () => {
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: { 'x-sitecore-contextid': contextId },
+      })
+        .post('/v1/search', {
+          config: { id: searchIndexId },
+          limit: 10,
+          offset: 0,
+          query: { keyphrase: '' },
+          sessionId: '',
+          sort: { fields: [] },
+        })
+        .reply(200, { content: [{ id: 1 }], total: 1 });
+
+      const searchService = new SearchService({ contextId });
+      const response = await searchService.search({ searchIndexId });
+
+      expect(response.facets).to.be.undefined;
+    });
+  });
+
   describe('locale', () => {
     it('should send a request with locale when provided', async () => {
       const locale = 'fr-FR';

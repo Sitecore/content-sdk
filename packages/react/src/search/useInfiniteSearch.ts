@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DEFAULT_PAGE_SIZE, SearchStatus, useSearchService } from './utils';
-import { SearchDocument, SearchParameters } from '@sitecore-content-sdk/search';
+import { SearchDocument, SearchParameters, FacetRequest, FacetResult } from '@sitecore-content-sdk/search';
 
 /**
  * Options for the useInfiniteSearch hook.
@@ -37,6 +37,11 @@ export interface UseInfiniteSearchOptions<T extends SearchDocument = SearchDocum
    * Omit for single-locale indexes.
    */
   locale?: string;
+  /**
+   * Facet configuration. Use 'all: true' to retrieve counts for all enabled facets.
+   * Use 'fields' to filter results by specific facet values. Both can be combined.
+   */
+  facet?: FacetRequest;
 }
 
 /**
@@ -91,6 +96,10 @@ type InternalInfiniteSearchState<T extends SearchDocument = SearchDocument> = {
    */
   totalPages: number;
   /**
+   * Facet results, present only when facets were requested.
+   */
+  facets?: FacetResult[];
+  /**
    * The error object if the last search request failed, or null if no error occurred.
    */
   error: Error | null;
@@ -129,7 +138,7 @@ type InternalInfiniteSearchState<T extends SearchDocument = SearchDocument> = {
 export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
   options: UseInfiniteSearchOptions<T>
 ): UseInfiniteSearchState<T> => {
-  const { query, searchIndexId, pageSize = DEFAULT_PAGE_SIZE, sort, enabled = true, locale } = options;
+  const { query, searchIndexId, pageSize = DEFAULT_PAGE_SIZE, sort, enabled = true, locale, facet } = options;
 
   const [state, setState] = useState<InternalInfiniteSearchState<T>>(() => {
     const error = !searchIndexId
@@ -142,6 +151,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
       results: [],
       total: 0,
       totalPages: 0,
+      facets: undefined,
       error,
       offset: 0,
       status,
@@ -177,6 +187,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
           results: [],
           total: 0,
           totalPages: 0,
+          facets: undefined,
           error: null,
           offset: 0,
           status: 'loading',
@@ -192,9 +203,10 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
           offset,
           sort,
           locale,
+          facet,
         };
 
-        const { results: searchResults, total: totalResults } = await searchService.search<T>(
+        const { results: searchResults, total: totalResults, facets } = await searchService.search<T>(
           searchParams,
           { signal }
         );
@@ -208,6 +220,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
           const totalPages = Math.ceil(totalResults / pageSize);
           return {
             results,
+            facets,
             error: null,
             offset,
             status: 'success',
@@ -236,6 +249,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
             results: [],
             total: 0,
             totalPages: 0,
+            facets: undefined,
             error: errorMessage,
             offset: 0,
             status: 'error',
@@ -244,7 +258,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
         }
       }
     },
-    [searchService, pageSize, sort, query, searchIndexId, locale]
+    [searchService, pageSize, sort, query, searchIndexId, locale, facet]
   );
 
   useEffect(() => {
@@ -271,6 +285,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
   return useMemo(
     (): UseInfiniteSearchState<T> => ({
       results: state.results,
+      facets: state.facets,
       status: state.status,
       loadMoreStatus: state.loadMoreStatus,
       total: state.total,
