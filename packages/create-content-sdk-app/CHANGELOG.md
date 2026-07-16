@@ -1,5 +1,35 @@
 # create-content-sdk-app
 
+## 2.3.0
+
+### Minor Changes
+
+- Inital Angular support for Content SDK and Sitecore AI ([a453633](https://github.com/sitecore/content-sdk/commit/a45363382ef21e6ca947808e5b980aa4f1721e36))
+  - Basic rendering and skate-park sample app
+  - Internalization
+  - Multisite
+  - Personalization and analytics page view events support
+  - Stale-while-revalidate data caching (find more in documentation)
+  - Editing and Preview
+  - Sitemap and robots.txt enpoints support
+  - Component-level Angular guards
+
+### Patch Changes
+
+- [create-content-sdk-app] Update template agent docs to describe auto-generated component maps ([8c0ae95](https://github.com/sitecore/content-sdk/commit/8c0ae95ab5ce5e9d182532dcc6bf504478c506a0))
+- [create-content-sdk-app] Layer and slim AI guidance in scaffolded templates to reduce session-start LLM context ([407173b](https://github.com/sitecore/content-sdk/commit/407173b8dd1ade15e570175d8b08fef690e7cef9))
+- Pass `defaultLanguage` from sitecore config to `LocaleProxy` in App Router templates so locale resolution uses the project default instead of hardcoded `en` ([28226c2](https://github.com/sitecore/content-sdk/commit/28226c21fb726217be012fb49a35e263d3bf850b))
+- minor `@sitecore-content-sdk/angular` dependency update:
+  - Inital Angular support for Content SDK and Sitecore AI
+  - Basic rendering and skate-park sample app
+  - Internalization
+  - Multisite
+  - Personalization and analytics page view events support
+  - Stale-while-revalidate data caching (find more in documentation)
+  - Editing and Preview
+  - Sitemap and robots.txt enpoints support
+  - Component-level Angular guards ([a453633](https://github.com/sitecore/content-sdk/commit/a45363382ef21e6ca947808e5b980aa4f1721e36))
+
 ## 2.2.0
 
 ### Minor Changes

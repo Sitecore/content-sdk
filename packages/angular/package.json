@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/angular",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "installConfig": {
     "hoistingLimits": "none"
   },
@@ -51,8 +51,8 @@
     "@angular/platform-server": "^21.0.0",
     "@angular/ssr": "^21.0.0",
     "@ngx-translate/core": "^17.0.0",
-    "@sitecore-content-sdk/analytics-core": "^2.1.0",
-    "@sitecore-content-sdk/events": "^2.1.0",
+    "@sitecore-content-sdk/analytics-core": "^2.1.1",
+    "@sitecore-content-sdk/events": "^2.1.1",
     "@sitecore-content-sdk/personalize": "^2.1.0",
     "zone.js": "^0.15.0"
   },
@@ -66,10 +66,10 @@
   },
   "dependencies": {
     "@ngx-translate/core": "^17.0.0",
-    "@sitecore-content-sdk/analytics-core": "^2.1.0",
-    "@sitecore-content-sdk/content": "^2.1.0",
-    "@sitecore-content-sdk/core": "^2.1.0",
-    "@sitecore-content-sdk/events": "^2.1.0",
+    "@sitecore-content-sdk/analytics-core": "^2.1.1",
+    "@sitecore-content-sdk/content": "^2.2.1",
+    "@sitecore-content-sdk/core": "^2.1.2",
+    "@sitecore-content-sdk/events": "^2.1.1",
     "@sitecore-content-sdk/personalize": "^2.1.0",
     "tslib": "^2.3.0",
     "unstorage": "^1.17.5"
