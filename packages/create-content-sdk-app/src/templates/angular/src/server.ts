@@ -9,7 +9,6 @@ import express from 'express';
 import { join } from 'node:path';
 import memoryDriver from 'unstorage/drivers/memory';
 import {
-  createCacheAdminMiddleware,
   createEditingConfigMiddleware,
   createEditingRenderMiddleware,
   createLoaderCache,
@@ -75,9 +74,6 @@ app.use(
     sites,
   })
 );
-
-/** Admin endpoints for cache inspection and invalidation (see `/api/_cache`). */
-app.use(createCacheAdminMiddleware({ cache: loaderCache, endpoint: '/api/_cache' }));
 
 /**
  * Editing config endpoint (`/api/editing/config`). Replies with the registered
@@ -198,3 +194,4 @@ if (isMainModule(import.meta.url)) {
  * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
  */
 export const reqHandler = createNodeRequestHandler(app);
+export default reqHandler;
