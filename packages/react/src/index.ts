@@ -135,4 +135,7 @@ export {
   type LinkFieldSchema,
   type ImageFieldSchema,
   type FileFieldSchema,
+  extractDocumentClasses,
+  setAtomsCssCompiler,
+  getAtomsCssCompiler,
 } from './atoms';

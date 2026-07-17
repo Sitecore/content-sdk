@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSitecore } from '../SitecoreProvider';
 import { serializeCatalog } from '../../atoms';
+import { extractDocumentClasses } from '../../atoms/extract-document-classes';
 import { StudioComponentWrapper } from './StudioComponentWrapper';
 import type { Document } from '@sitecore-content-sdk/content/atoms';
 import * as editing from '@sitecore-content-sdk/content/editing';
@@ -47,6 +48,7 @@ export const DesignLibraryLowCodeComponent = () => {
   const [renderKey, setRenderKey] = useState(0);
   const [fields, setFields] = useState<ChildComponentProps['fields'] | undefined>();
   const [params, setParams] = useState<ChildComponentProps['params'] | undefined>();
+  const [documentCss, setDocumentCss] = useState('');
 
   useEffect(() => {
     postToDesignLibrary(
@@ -74,6 +76,22 @@ export const DesignLibraryLowCodeComponent = () => {
     const unsubDocumentUpdate = addDocumentUpdateHandler((updatedDocument) => {
       setCurrentDocument(updatedDocument);
       setRenderKey((k) => k + 1);
+
+      if (atomsConfig?.compileCssAction) {
+        const classes = extractDocumentClasses(updatedDocument);
+        if (classes.length) {
+          atomsConfig
+            .compileCssAction(classes)
+            .then(setDocumentCss)
+            .catch((err) => {
+              if (process.env.NODE_ENV !== 'production') {
+                console.warn('[Sitecore] compileCssAction failed:', err);
+              }
+            });
+        } else {
+          setDocumentCss('');
+        }
+      }
     });
 
     return () => unsubDocumentUpdate();
@@ -92,6 +110,7 @@ export const DesignLibraryLowCodeComponent = () => {
       uid={currentDocument?.name ?? 'design-library-low-code-component'}
       renderKey={renderKey}
     >
+      {documentCss && <style dangerouslySetInnerHTML={{ __html: documentCss }} />}
       <StudioComponentWrapper document={currentDocument} fields={fields} params={params} />
     </DesignLibraryErrorBoundary>
   );

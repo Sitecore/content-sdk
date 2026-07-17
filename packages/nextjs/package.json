@@ -1,12 +1,11 @@
 {
   "name": "@sitecore-content-sdk/nextjs",
-  "version": "2.1.0-beta.1",
+  "version": "2.1.0-beta.3",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
   "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://npm.sitecore.com/test/"
   },
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
@@ -32,8 +31,8 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.1.0-beta.1",
-    "@sitecore-content-sdk/personalize": "2.1.0-beta.1",
+    "@sitecore-content-sdk/analytics-core": "2.1.0-beta.3",
+    "@sitecore-content-sdk/personalize": "2.1.0-beta.3",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.0",
@@ -76,9 +75,9 @@
     "typescript": "~5.8.3"
   },
   "peerDependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.1.0-beta.1",
-    "@sitecore-content-sdk/events": "2.1.0-beta.1",
-    "@sitecore-content-sdk/personalize": "2.1.0-beta.1",
+    "@sitecore-content-sdk/analytics-core": "2.1.0-beta.3",
+    "@sitecore-content-sdk/events": "2.1.0-beta.3",
+    "@sitecore-content-sdk/personalize": "2.1.0-beta.3",
     "next": "^16.2.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
@@ -91,10 +90,11 @@
   },
   "dependencies": {
     "@babel/parser": "^7.27.2",
-    "@sitecore-content-sdk/content": "2.1.0-beta.1",
-    "@sitecore-content-sdk/core": "2.1.0-beta.1",
-    "@sitecore-content-sdk/events": "2.1.0-beta.1",
-    "@sitecore-content-sdk/react": "2.1.0-beta.1",
+    "@sitecore-content-sdk/content": "2.1.0-beta.3",
+    "@sitecore-content-sdk/core": "2.1.0-beta.3",
+    "@sitecore-content-sdk/events": "2.1.0-beta.3",
+    "@sitecore-content-sdk/react": "2.1.0-beta.3",
+    "@tailwindcss/node": "^4.3.1",
     "recast": "^0.23.11",
     "regex-parser": "^2.3.1"
   },
@@ -108,6 +108,16 @@
       "import": "./dist/esm/atoms/index.js",
       "require": "./dist/cjs/atoms/index.js",
       "types": "./types/atoms/index.d.ts"
+    },
+    "./server-actions": {
+      "import": "./dist/esm/server-actions/index.js",
+      "require": "./dist/cjs/server-actions/index.js",
+      "types": "./types/server-actions/index.d.ts"
+    },
+    "./instrumentation": {
+      "import": "./dist/esm/instrumentation/index.js",
+      "require": "./dist/cjs/instrumentation/index.js",
+      "types": "./types/instrumentation/index.d.ts"
     },
     "./client": {
       "import": "./dist/esm/client/index.js",

@@ -28,6 +28,8 @@
     "search.d.ts",
     "client.d.ts",
     "atoms.d.ts",
+    "instrumentation.d.ts",
+    "server-actions.d.ts",
     "utils.d.ts",
     "tools.d.ts",
     "config-cli.d.ts",

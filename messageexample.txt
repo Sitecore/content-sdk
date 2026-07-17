@@ -1,0 +1,125 @@
+window.postMessage({
+  name: 'component:atoms:preview',
+  document: {
+    name: 'complex-test-card',
+    root: 'root',
+    elements: {
+      root: {
+        type: 'Stack',
+        props: { direction: 'vertical', gap: 'lg' },
+        children: ['pageTitle', 'pageSubtitle', 'separator1', 'statsRow', 'separator2', 'contentRow', 'ctaRow']
+      },
+
+      // Hero heading — tests text color + custom class
+      pageTitle: {
+        type: 'Heading',
+        props: { level: 'h1', text: 'Analytics Overview', className: 'text-indigo-700' }
+      },
+      pageSubtitle: {
+        type: 'Text',
+        props: { text: 'Live metrics for your workspace — updated every 5 minutes.' }
+      },
+
+      separator1: { type: 'Separator', props: {} },
+
+      // Three stat cards side-by-side
+      statsRow: {
+        type: 'Grid',
+        props: { columns: 3, gap: 'md' },
+        children: ['statVisitors', 'statConversions', 'statRevenue']
+      },
+      statVisitors: {
+        type: 'Card',
+        props: { className: 'bg-blue-50 border-blue-200 p-4 rounded-xl' },
+        children: ['statVisitorsLabel', 'statVisitorsValue', 'statVisitorsBadge']
+      },
+      statVisitorsLabel: {
+        type: 'Text',
+        props: { text: 'Total Visitors', className: 'text-xs font-medium text-blue-500 uppercase tracking-widest' }
+      },
+      statVisitorsValue: {
+        type: 'Heading',
+        props: { level: 'h2', text: '128,430', className: 'text-blue-700 text-3xl' }
+      },
+      statVisitorsBadge: {
+        type: 'Badge',
+        props: { label: '↑ 12.4%', className: 'bg-blue-100 text-blue-700' }
+      },
+
+      statConversions: {
+        type: 'Card',
+        props: { className: 'bg-emerald-50 border-emerald-200 p-4 rounded-xl' },
+        children: ['statConvLabel', 'statConvValue', 'statConvBadge']
+      },
+      statConvLabel: {
+        type: 'Text',
+        props: { text: 'Conversions', className: 'text-xs font-medium text-emerald-600 uppercase tracking-widest' }
+      },
+      statConvValue: {
+        type: 'Heading',
+        props: { level: 'h2', text: '3,891', className: 'text-emerald-700 text-3xl' }
+      },
+      statConvBadge: {
+        type: 'Badge',
+        props: { label: '↑ 5.1%', className: 'bg-emerald-100 text-emerald-700' }
+      },
+
+      statRevenue: {
+        type: 'Card',
+        props: { className: 'bg-rose-50 border-rose-200 p-4 rounded-xl' },
+        children: ['statRevLabel', 'statRevValue', 'statRevBadge']
+      },
+      statRevLabel: {
+        type: 'Text',
+        props: { text: 'Revenue', className: 'text-xs font-medium text-rose-500 uppercase tracking-widest' }
+      },
+      statRevValue: {
+        type: 'Heading',
+        props: { level: 'h2', text: '$42,880', className: 'text-rose-600 text-3xl text-right' }
+      },
+      statRevBadge: {
+        type: 'Badge',
+        props: { label: '↓ 2.3%', className: 'bg-rose-100 text-rose-600' }
+      },
+
+      separator2: { type: 'Separator', props: {} },
+
+      // Content section with an alert and text
+      contentRow: {
+        type: 'Stack',
+        props: { direction: 'vertical', gap: 'sm' },
+        children: ['alertBox', 'detailText']
+      },
+      alertBox: {
+        type: 'Alert',
+        props: {
+          title: 'Scheduled maintenance',
+          description: 'The dashboard will be offline on Sunday 29 June from 02:00–04:00 UTC.',
+          className: 'border-amber-300 bg-amber-50 text-amber-800'
+        }
+      },
+      detailText: {
+        type: 'Text',
+        props: {
+          text: 'Data is aggregated hourly. For real-time access, upgrade to the Pro plan.',
+          className: 'text-sm text-slate-500 italic'
+        }
+      },
+
+      // CTA buttons
+      ctaRow: {
+        type: 'Stack',
+        props: { direction: 'horizontal', gap: 'md' },
+        children: ['btnPrimary', 'btnSecondary']
+      },
+      btnPrimary: {
+        type: 'Button',
+        props: { label: 'Export Report', className: 'bg-red-600 text-white hover:bg-indigo-700' }
+      },
+      btnSecondary: {
+        type: 'Button',
+        props: { label: 'View Details', variant: 'outline', className: 'border-indigo-300 text-red-600' }
+      }
+    }
+  }
+}, window.location.origin);

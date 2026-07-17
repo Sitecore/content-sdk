@@ -7,9 +7,9 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.1.0-beta.1",
-    "@sitecore-content-sdk/core": "2.1.0-beta.1",
-    "@sitecore-content-sdk/events": "2.1.0-beta.1",
+    "@sitecore-content-sdk/analytics-core": "2.1.0-beta.3",
+    "@sitecore-content-sdk/core": "2.1.0-beta.3",
+    "@sitecore-content-sdk/events": "2.1.0-beta.3",
     "debug": "^4.4.3"
   },
   "description": "Provides personalization capabilities to build tailored experiences for site visitors.",
@@ -57,8 +57,7 @@
   "license": "Apache-2.0",
   "name": "@sitecore-content-sdk/personalize",
   "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://npm.sitecore.com/test/"
   },
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
@@ -71,5 +70,5 @@
     "api-extractor": "npm run build && api-extractor run --local --verbose",
     "api-extractor:verify": "api-extractor run"
   },
-  "version": "2.1.0-beta.1"
+  "version": "2.1.0-beta.3"
 }

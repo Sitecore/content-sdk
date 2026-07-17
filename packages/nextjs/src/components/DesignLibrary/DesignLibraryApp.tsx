@@ -1,8 +1,6 @@
 import React from 'react';
-import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/content/layout';
 import { DesingLibraryAppProps } from './models';
-import { DesignLibraryServer } from './DesignLibraryServer';
-import { DesignLibrary, DesignLibraryLowCodeComponent } from '@sitecore-content-sdk/react';
+import { DesignLibraryLowCodeComponent } from '@sitecore-content-sdk/react';
 
 /**
  * Design Library component intended to be used by the NextJs app router application
@@ -15,33 +13,13 @@ import { DesignLibrary, DesignLibraryLowCodeComponent } from '@sitecore-content-
  * @param {DesingLibraryAppProps} props - The properties for the Design Library App.
  * @public
  */
-export const DesignLibraryApp = ({
-  page,
-  componentMap,
-  loadServerImportMap,
-}: DesingLibraryAppProps) => {
+export const DesignLibraryApp = ({ page }: DesingLibraryAppProps) => {
   const { route } = page.layout.sitecore;
   if (!route) return null;
 
-  const isLowCode = page.mode.designLibrary.isLowCode;
-  const rendering = route?.placeholders[EDITING_COMPONENT_PLACEHOLDER]?.[0];
-  const component = componentMap.get(rendering?.componentName || '');
-  const isClient = component && component.componentType === 'client';
-
   return (
     <>
-      {isLowCode ? (
-        <DesignLibraryLowCodeComponent />
-      ) : isClient ? (
-        <DesignLibrary />
-      ) : (
-        <DesignLibraryServer
-          page={page}
-          componentMap={componentMap}
-          loadServerImportMap={loadServerImportMap}
-          rendering={route}
-        />
-      )}
+      <DesignLibraryLowCodeComponent />
     </>
   );
 };

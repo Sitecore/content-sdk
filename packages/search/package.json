@@ -1,12 +1,11 @@
 {
   "name": "@sitecore-content-sdk/search",
-  "version": "0.3.0-beta.1",
+  "version": "0.3.0-beta.3",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
   "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://npm.sitecore.com/test/"
   },
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
@@ -36,8 +35,8 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.1.0-beta.1",
-    "@sitecore-content-sdk/core": "2.1.0-beta.1"
+    "@sitecore-content-sdk/analytics-core": "2.1.0-beta.3",
+    "@sitecore-content-sdk/core": "2.1.0-beta.3"
   },
   "devDependencies": {
     "@types/chai": "^5.2.3",

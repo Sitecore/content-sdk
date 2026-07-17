@@ -4,6 +4,8 @@ import { NativeDataFetcher, NativeDataFetcherResponse } from '@sitecore-content-
 import { debug } from '@sitecore-content-sdk/content';
 import { Document } from '@sitecore-content-sdk/content/atoms';
 import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
+import { extractDocumentClasses } from '../../atoms/extract-document-classes';
+import { getAtomsCssCompiler } from '@sitecore-content-sdk/core';
 import type { ChildComponentProps } from '../Placeholder/models';
 
 /**
@@ -46,7 +48,16 @@ export const StudioComponentServerWrapper = async (props: StudioComponentServerW
   const document = await fetchDocument(path);
   if (!document) return null;
 
-  return <StudioComponentWrapper document={document} fields={props.fields} params={props.params} />;
+  const classes = extractDocumentClasses(document);
+  const compiler = getAtomsCssCompiler();
+  const css = compiler && classes.length ? await compiler(classes) : '';
+
+  return (
+    <>
+      {css && <style dangerouslySetInnerHTML={{ __html: css }} />}
+      <StudioComponentWrapper document={document} fields={props.fields} params={props.params} />
+    </>
+  );
 };
 
 /**

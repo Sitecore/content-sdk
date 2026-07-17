@@ -1,0 +1,26 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# next.js
+/.next*/
+/out/
+
+# misc
+.DS_Store
+
+# local env files
+.env.local
+.env.*.local
+.env
+
+# Log files
+*.log*
+
+# vercel
+.vercel
+
+# sitecore files
+.sitecore/*
+!.sitecore/atoms.lock.json

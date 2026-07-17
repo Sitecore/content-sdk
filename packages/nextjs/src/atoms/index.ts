@@ -24,4 +24,4 @@ export {
 } from '@sitecore-content-sdk/react';
 
 export { defineAtomsCatalog, defineAtomsRegistry } from './re-exports';
-
+export { setAtomsCssCompiler, extractDocumentClasses } from '@sitecore-content-sdk/react';

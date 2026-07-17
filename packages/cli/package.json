@@ -1,13 +1,12 @@
 {
   "name": "@sitecore-content-sdk/cli",
-  "version": "2.1.0-beta.1",
+  "version": "2.1.0-beta.3",
   "description": "Sitecore Content SDK CLI",
   "main": "dist/cjs/cli.js",
   "module": "dist/esm/cli.js",
   "sideEffects": false,
   "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://npm.sitecore.com/test/"
   },
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
@@ -34,8 +33,8 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "dependencies": {
-    "@sitecore-content-sdk/content": "2.1.0-beta.1",
-    "@sitecore-content-sdk/core": "2.1.0-beta.1",
+    "@sitecore-content-sdk/content": "2.1.0-beta.3",
+    "@sitecore-content-sdk/core": "2.1.0-beta.3",
     "chokidar": "^4.0.3",
     "dotenv": "^16.5.0",
     "dotenv-expand": "^12.0.2",

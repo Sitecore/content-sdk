@@ -27,4 +27,6 @@ export {
   type FileFieldSchema,
 } from './field-schemas';
 export { createNCC } from './create-ncc';
+export { extractDocumentClasses } from './extract-document-classes';
+export { setAtomsCssCompiler, getAtomsCssCompiler } from '@sitecore-content-sdk/core';
 export * from './re-exports';
