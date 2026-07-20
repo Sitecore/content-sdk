@@ -6,7 +6,7 @@
 
 # Interface: CsdkRequestData
 
-Defined in: [packages/angular/src/loaders/models.ts:23](https://github.com/Sitecore/content-sdk/blob/28226c21fb726217be012fb49a35e263d3bf850b/packages/angular/src/loaders/models.ts#L23)
+Defined in: [packages/angular/src/loaders/models.ts:23](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/loaders/models.ts#L23)
 
 Request data from the incoming HTTP request.
 Used for request-dependent operations in loaders.
@@ -17,7 +17,7 @@ Used for request-dependent operations in loaders.
 
 > `optional` **cookies?**: `Record`\<`string`, `string`\>
 
-Defined in: [packages/angular/src/loaders/models.ts:31](https://github.com/Sitecore/content-sdk/blob/28226c21fb726217be012fb49a35e263d3bf850b/packages/angular/src/loaders/models.ts#L31)
+Defined in: [packages/angular/src/loaders/models.ts:31](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/loaders/models.ts#L31)
 
 Cookies from the request
 
@@ -27,7 +27,7 @@ Cookies from the request
 
 > `optional` **headers?**: `Record`\<`string`, `string` \| `string`[] \| `undefined`\>
 
-Defined in: [packages/angular/src/loaders/models.ts:39](https://github.com/Sitecore/content-sdk/blob/28226c21fb726217be012fb49a35e263d3bf850b/packages/angular/src/loaders/models.ts#L39)
+Defined in: [packages/angular/src/loaders/models.ts:39](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/loaders/models.ts#L39)
 
 Headers from the request
 
@@ -37,7 +37,7 @@ Headers from the request
 
 > `optional` **hostname?**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:27](https://github.com/Sitecore/content-sdk/blob/28226c21fb726217be012fb49a35e263d3bf850b/packages/angular/src/loaders/models.ts#L27)
+Defined in: [packages/angular/src/loaders/models.ts:27](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/loaders/models.ts#L27)
 
 The hostname from the request (without port)
 
@@ -47,7 +47,7 @@ The hostname from the request (without port)
 
 > `optional` **query?**: `Record`\<`string`, `string` \| `string`[] \| `undefined`\>
 
-Defined in: [packages/angular/src/loaders/models.ts:35](https://github.com/Sitecore/content-sdk/blob/28226c21fb726217be012fb49a35e263d3bf850b/packages/angular/src/loaders/models.ts#L35)
+Defined in: [packages/angular/src/loaders/models.ts:35](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/loaders/models.ts#L35)
 
 Query parameters from the request
 
@@ -57,7 +57,7 @@ Query parameters from the request
 
 > `optional` **referrer?**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:43](https://github.com/Sitecore/content-sdk/blob/28226c21fb726217be012fb49a35e263d3bf850b/packages/angular/src/loaders/models.ts#L43)
+Defined in: [packages/angular/src/loaders/models.ts:43](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/loaders/models.ts#L43)
 
 Referrer from the request
 
@@ -67,7 +67,7 @@ Referrer from the request
 
 > `optional` **scParams?**: [`CsdkRequestParams`](CsdkRequestParams.md)
 
-Defined in: [packages/angular/src/loaders/models.ts:49](https://github.com/Sitecore/content-sdk/blob/28226c21fb726217be012fb49a35e263d3bf850b/packages/angular/src/loaders/models.ts#L49)
+Defined in: [packages/angular/src/loaders/models.ts:49](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/loaders/models.ts#L49)
 
 Content SDK request params
 
@@ -77,6 +77,6 @@ Content SDK request params
 
 > `optional` **scPreviewData?**: `EditingPreviewData`
 
-Defined in: [packages/angular/src/loaders/models.ts:47](https://github.com/Sitecore/content-sdk/blob/28226c21fb726217be012fb49a35e263d3bf850b/packages/angular/src/loaders/models.ts#L47)
+Defined in: [packages/angular/src/loaders/models.ts:47](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/loaders/models.ts#L47)
 
 Preview/editing data for Content SDK

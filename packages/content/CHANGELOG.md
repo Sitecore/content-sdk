@@ -1,5 +1,13 @@
 # @sitecore-content-sdk/content
 
+## 2.2.1
+
+### Patch Changes
+
+- [Non breaking] Refactor config and some component logic to be framework reusable ([a453633](https://github.com/sitecore/content-sdk/commit/a45363382ef21e6ca947808e5b980aa4f1721e36))
+- Fix build failure when `disableCodeGeneration: true` by writing empty import maps during codegen and defaulting `loadImportMap` to `noopLoadImportMap` when the prop is omitted. ([13f41bd](https://github.com/sitecore/content-sdk/commit/13f41bd2e6c114594096dffe00abf9fcf456f19f))
+- [Chore] Change the exports order of `types` in package.json to prevent Angular compiler warnings ([a453633](https://github.com/sitecore/content-sdk/commit/a45363382ef21e6ca947808e5b980aa4f1721e36))
+
 ## 2.2.0
 
 ### Minor Changes
