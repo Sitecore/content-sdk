@@ -8,7 +8,7 @@
 
 > `const` **EDITING\_PARAMS\_HEADER**: `"x-sitecore-editing-params"` = `'x-sitecore-editing-params'`
 
-Defined in: [packages/angular/src/editing/constants.ts:6](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/editing/constants.ts#L6)
+Defined in: [packages/angular/src/editing/constants.ts:6](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/angular/src/editing/constants.ts#L6)
 
 Header used to propagate editing preview parameters from the editing render
 middleware to the page loader via the rewritten Angular SSR request.

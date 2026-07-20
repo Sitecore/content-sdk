@@ -8,7 +8,7 @@
 
 > **loaderResolver**(`loaderId`, `cacheOptions?`): `ResolveFn`\<`unknown`\>
 
-Defined in: [packages/angular/src/loaders/loader-resolver.ts:137](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/loaders/loader-resolver.ts#L137)
+Defined in: [packages/angular/src/loaders/loader-resolver.ts:137](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/angular/src/loaders/loader-resolver.ts#L137)
 
 Create a loader resolver function that resolver loader data with optional cache options on server or browser.
 

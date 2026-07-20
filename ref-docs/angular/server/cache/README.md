@@ -8,10 +8,8 @@
 
 ## Interfaces
 
-- [CacheAdminMiddlewareOptions](interfaces/CacheAdminMiddlewareOptions.md)
 - [GlobalLoaderCacheConfig](interfaces/GlobalLoaderCacheConfig.md)
 
 ## Functions
 
-- [createCacheAdminMiddleware](functions/createCacheAdminMiddleware.md)
 - [createLoaderCache](functions/createLoaderCache.md)

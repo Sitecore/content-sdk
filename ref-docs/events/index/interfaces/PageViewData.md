@@ -6,7 +6,7 @@
 
 # Interface: PageViewData
 
-Defined in: [events/src/events/page-view/page-view-event.ts:182](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/events/src/events/page-view/page-view-event.ts#L182)
+Defined in: [events/src/events/page-view/page-view-event.ts:182](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/events/src/events/page-view/page-view-event.ts#L182)
 
 Type with the required/optional attributes in order to send a view event to the SitecoreCloud API
 
@@ -20,7 +20,7 @@ Type with the required/optional attributes in order to send a view event to the 
 
 > `optional` **channel?**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:37](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/events/src/events/common-interfaces.ts#L37)
+Defined in: [events/src/events/common-interfaces.ts:37](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/events/src/events/common-interfaces.ts#L37)
 
 The touchpoint where the user interacts with your brand.
 
@@ -40,7 +40,7 @@ If unset, this property will not be part of the payload.
 
 > `optional` **currency?**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:47](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/events/src/events/common-interfaces.ts#L47)
+Defined in: [events/src/events/common-interfaces.ts:47](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/events/src/events/common-interfaces.ts#L47)
 
 The alphabetic currency code of the currency the site visitor uses in your app.
 
@@ -60,7 +60,7 @@ If unset, this property will not be part of the payload.
 
 > `optional` **extensionData?**: `NestedObject`
 
-Defined in: [events/src/events/page-view/page-view-event.ts:204](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/events/src/events/page-view/page-view-event.ts#L204)
+Defined in: [events/src/events/page-view/page-view-event.ts:204](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/events/src/events/page-view/page-view-event.ts#L204)
 
 Any custom data to collect about an event in addition to the other attributes provided for the event data.
 
@@ -70,7 +70,7 @@ Any custom data to collect about an event in addition to the other attributes pr
 
 > `optional` **includeUTMParameters?**: `boolean`
 
-Defined in: [events/src/events/page-view/page-view-event.ts:200](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/events/src/events/page-view/page-view-event.ts#L200)
+Defined in: [events/src/events/page-view/page-view-event.ts:200](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/events/src/events/page-view/page-view-event.ts#L200)
 
 Whether to add every UTM parameter from the URL of the current webpage to the event object.
 
@@ -82,7 +82,7 @@ Default: `true`.
 
 > `optional` **language?**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:19](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/events/src/events/common-interfaces.ts#L19)
+Defined in: [events/src/events/common-interfaces.ts:19](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/events/src/events/common-interfaces.ts#L19)
 
 The language the site visitor interacts with your brand in.
 
@@ -104,7 +104,7 @@ Default for server-side events: empty string.
 
 > `optional` **page?**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:27](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/events/src/events/common-interfaces.ts#L27)
+Defined in: [events/src/events/common-interfaces.ts:27](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/events/src/events/common-interfaces.ts#L27)
 
 The name of the webpage where the interaction with your brand takes place.
 
@@ -122,7 +122,7 @@ Default for server-side events: empty string.
 
 > `optional` **pageVariantId?**: `string`
 
-Defined in: [events/src/events/page-view/page-view-event.ts:186](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/events/src/events/page-view/page-view-event.ts#L186)
+Defined in: [events/src/events/page-view/page-view-event.ts:186](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/events/src/events/page-view/page-view-event.ts#L186)
 
 The ID of a personalized page variant.
 
@@ -132,7 +132,7 @@ The ID of a personalized page variant.
 
 > `optional` **referrer?**: `string`
 
-Defined in: [events/src/events/page-view/page-view-event.ts:194](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/events/src/events/page-view/page-view-event.ts#L194)
+Defined in: [events/src/events/page-view/page-view-event.ts:194](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/events/src/events/page-view/page-view-event.ts#L194)
 
 The URI of the webpage that linked to the webpage where the event was captured.
 
@@ -146,7 +146,7 @@ Default for server-side events: null.
 
 > `optional` **searchData?**: `NestedObject`
 
-Defined in: [events/src/events/page-view/page-view-event.ts:210](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/events/src/events/page-view/page-view-event.ts#L210)
+Defined in: [events/src/events/page-view/page-view-event.ts:210](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/events/src/events/page-view/page-view-event.ts#L210)
 
 Sitecore Search data about the event.
 If set, the event and all its data will be available in Sitecore Search.
