@@ -1,7 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect } from 'vitest';
 import {
-  approxByteSize,
   dimensionsFromContext,
   resolveConfig,
   applyLoaderCacheConfigDefaults,
@@ -73,18 +72,6 @@ describe('applyLoaderCacheConfigDefaults', () => {
       sites: [],
       defaultLocale: 'en',
     });
-  });
-});
-
-describe('approxByteSize', () => {
-  it('returns the JSON string length for serializable values', () => {
-    expect(approxByteSize({ title: 'Home' })).toBe(JSON.stringify({ title: 'Home' }).length);
-  });
-
-  it('returns zero when the value cannot be serialized', () => {
-    const circular: { self?: unknown } = {};
-    circular.self = circular;
-    expect(approxByteSize(circular)).toBe(0);
   });
 });
 
