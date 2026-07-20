@@ -6,7 +6,7 @@ import { withPropMeta } from './schema-utils';
  * Zod schema for a Sitecore Single-Line Text.
  * Mirrors the Sitecore Text component (`Text.tsx` in `@sitecore-content-sdk/react`).
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the schema.
- * @returns A ZodObject with `value?: string | number` and the DS control hint attached.
+ * @returns A ZodObject with `value?: string | number` and DS control/fieldType hints attached.
  * @public
  */
 export const textFieldSchema = (extra?: z.ZodRawShape) =>
@@ -15,7 +15,7 @@ export const textFieldSchema = (extra?: z.ZodRawShape) =>
       value: z.union([z.string(), z.number()]).optional(),
       ...extra,
     }),
-    { control: 'Single-Line Text' }
+    { control: 'Single-Line Text', fieldType: 'Text' }
   );
 
 /**
@@ -31,7 +31,7 @@ export const richTextFieldSchema = (extra?: z.ZodRawShape) =>
       value: z.string().optional(),
       ...extra,
     }),
-    { control: 'Rich Text' }
+    { control: 'Rich Text', fieldType: 'RichText' }
   );
 
 /**
@@ -47,7 +47,7 @@ export const dateFieldSchema = (extra?: z.ZodRawShape) =>
       value: z.string().optional(),
       ...extra,
     }),
-    { control: 'Date' }
+    { control: 'Date', fieldType: 'Date' }
   );
 
 /**
@@ -75,7 +75,7 @@ export const linkFieldSchema = (extra?: z.ZodRawShape) =>
       }),
       ...extra,
     }),
-    { control: 'Link' }
+    { control: 'Link', fieldType: 'Link' }
   );
 
 /**
@@ -101,7 +101,7 @@ export const imageFieldSchema = (extra?: z.ZodRawShape) =>
         .optional(),
       ...extra,
     }),
-    { control: 'Image' }
+    { control: 'Image', fieldType: 'Image' }
   );
 
 /**
@@ -123,7 +123,7 @@ export const fileFieldSchema = (extra?: z.ZodRawShape) =>
       }),
       ...extra,
     }),
-    { control: 'File' }
+    { control: 'File', fieldType: 'File' }
   );
 
 /**

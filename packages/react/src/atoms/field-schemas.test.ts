@@ -32,28 +32,38 @@ describe('field-schemas', () => {
   };
 
   const factories = [
-    { name: 'textFieldSchema', factory: textFieldSchema, control: 'Single-Line Text' },
-    { name: 'richTextFieldSchema', factory: richTextFieldSchema, control: 'Rich Text' },
-    { name: 'dateFieldSchema', factory: dateFieldSchema, control: 'Date' },
-    { name: 'linkFieldSchema', factory: linkFieldSchema, control: 'Link' },
-    { name: 'imageFieldSchema', factory: imageFieldSchema, control: 'Image' },
-    { name: 'fileFieldSchema', factory: fileFieldSchema, control: 'File' },
+    {
+      name: 'textFieldSchema',
+      factory: textFieldSchema,
+      control: 'Single-Line Text',
+      fieldType: 'Text',
+    },
+    {
+      name: 'richTextFieldSchema',
+      factory: richTextFieldSchema,
+      control: 'Rich Text',
+      fieldType: 'RichText',
+    },
+    { name: 'dateFieldSchema', factory: dateFieldSchema, control: 'Date', fieldType: 'Date' },
+    { name: 'linkFieldSchema', factory: linkFieldSchema, control: 'Link', fieldType: 'Link' },
+    { name: 'imageFieldSchema', factory: imageFieldSchema, control: 'Image', fieldType: 'Image' },
+    { name: 'fileFieldSchema', factory: fileFieldSchema, control: 'File', fieldType: 'File' },
   ];
 
-  factories.forEach(({ name, factory, control }) => {
+  factories.forEach(({ name, factory, control, fieldType }) => {
     describe(name, () => {
       it('returns a ZodObject', () => {
         expect(factory()).to.be.instanceOf(z.ZodObject);
       });
 
-      it(`has control hint "${control}"`, () => {
+      it(`has control hint "${control}" and fieldType "${fieldType}"`, () => {
         const meta = getFieldMeta(factory());
-        expect(meta).to.deep.equal({ control });
+        expect(meta).to.deep.equal({ control, fieldType });
       });
 
-      it('preserves control hint when extra shape is provided', () => {
+      it('preserves control and fieldType when extra shape is provided', () => {
         const meta = getFieldMeta(factory({ extra: z.string() }));
-        expect(meta).to.deep.equal({ control });
+        expect(meta).to.deep.equal({ control, fieldType });
       });
 
       it('includes extra shape in the schema', () => {
@@ -193,10 +203,10 @@ describe('field-schemas', () => {
       expect(parsed.success).to.equal(true);
     });
 
-    it('preserves control hint on field schemas', () => {
+    it('preserves control and fieldType on field schemas', () => {
       const props = z.object({ cta: linkFieldSchema() });
       const ctaShape = props.shape.cta as z.ZodType;
-      expect(getFieldMeta(ctaShape)).to.deep.equal({ control: 'Link' });
+      expect(getFieldMeta(ctaShape)).to.deep.equal({ control: 'Link', fieldType: 'Link' });
     });
   });
 });
