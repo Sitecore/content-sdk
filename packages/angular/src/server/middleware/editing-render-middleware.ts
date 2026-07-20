@@ -97,6 +97,7 @@ function buildPreviewData(
     variantId,
     version: query.sc_version,
     layoutKind: query.sc_layoutKind as EditingPreviewData['layoutKind'],
+    ...(query.sc_previewTime && { previewTime: query.sc_previewTime }),
     ...allowedQueryParams,
   };
 }
