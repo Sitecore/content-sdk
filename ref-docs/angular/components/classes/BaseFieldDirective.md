@@ -6,7 +6,7 @@
 
 # Abstract Class: BaseFieldDirective\<TField\>
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:48](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L48)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:48](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L48)
 
 **`Internal`**
 
@@ -49,7 +49,7 @@ that run in the subclass's injection context.
 
 > **new BaseFieldDirective**\<`TField`\>(): `BaseFieldDirective`\<`TField`\>
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:64](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L64)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:64](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L64)
 
 #### Returns
 
@@ -61,7 +61,7 @@ Defined in: [packages/angular/src/components/field-directives/base-field.directi
 
 > `protected` `readonly` **context**: [`SitecoreContextService`](../../lib/classes/SitecoreContextService.md) \| `null`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:52](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L52)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:52](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L52)
 
 ***
 
@@ -69,7 +69,7 @@ Defined in: [packages/angular/src/components/field-directives/base-field.directi
 
 > `abstract` `protected` `readonly` **defaultEmptyComponent**: `Type`\<`unknown`\>
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:62](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L62)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:62](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L62)
 
 Default component rendered when the field is empty in editing mode and no template is supplied.
 
@@ -79,7 +79,7 @@ Default component rendered when the field is empty in editing mode and no templa
 
 > `abstract` `readonly` **emptyFieldEditingTemplate**: `Signal`\<`TemplateRef`\<`unknown`\> \| `undefined`\>
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:60](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L60)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:60](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L60)
 
 Consumer-supplied empty-field template; takes precedence over [defaultEmptyComponent](#defaultemptycomponent).
 
@@ -89,7 +89,7 @@ Consumer-supplied empty-field template; takes precedence over [defaultEmptyCompo
 
 > `abstract` `readonly` **field**: `Signal`\<`TField`\>
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:58](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L58)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:58](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L58)
 
 Concrete subclass exposes the Sitecore field via an aliased signal input.
 
@@ -99,7 +99,7 @@ Concrete subclass exposes the Sitecore field via an aliased signal input.
 
 > `protected` `readonly` **renderer**: `Renderer2`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:51](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L51)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:51](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L51)
 
 ***
 
@@ -107,7 +107,7 @@ Defined in: [packages/angular/src/components/field-directives/base-field.directi
 
 > `protected` `readonly` **templateRef**: `TemplateRef`\<`any`\>
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:50](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L50)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:50](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L50)
 
 ***
 
@@ -115,7 +115,7 @@ Defined in: [packages/angular/src/components/field-directives/base-field.directi
 
 > `protected` `readonly` **viewContainer**: `ViewContainerRef`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:49](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L49)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:49](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L49)
 
 ***
 
@@ -123,7 +123,7 @@ Defined in: [packages/angular/src/components/field-directives/base-field.directi
 
 > `protected` `optional` **viewRef?**: `EmbeddedViewRef`\<`unknown`\>
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:55](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L55)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:55](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L55)
 
 Embedded view created by the latest successful render; cleared on each tick.
 
@@ -135,7 +135,7 @@ Embedded view created by the latest successful render; cleared on each tick.
 
 > **get** `protected` **fieldMetadata**(): `Record`\<`string`, `unknown`\> \| `undefined`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:94](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L94)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:94](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L94)
 
 Field metadata payload, when present.
 
@@ -149,7 +149,7 @@ Field metadata payload, when present.
 
 > `protected` **isEditing**(): `boolean`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:89](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L89)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:89](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L89)
 
 Whether the host page is in editing mode. Falls back to `false` when no context is provided.
 
@@ -163,7 +163,7 @@ Whether the host page is in editing mode. Falls back to `false` when no context 
 
 > `protected` **renderEditingChrome**(`kind`): `void`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:123](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L123)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:123](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L123)
 
 Inserts a single chrome marker into the structural slot when both editing mode is active
 and the field carries metadata. No-ops otherwise.
@@ -184,7 +184,7 @@ and the field carries metadata. No-ops otherwise.
 
 > `protected` **renderEmpty**(): `void`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:104](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L104)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:104](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L104)
 
 Renders the empty-field state. In editing mode with field metadata, wraps either the
 consumer's `emptyFieldEditingTemplate` or [defaultEmptyComponent](#defaultemptycomponent) in chrome markers
@@ -201,7 +201,7 @@ nothing.
 
 > `protected` **shouldRender**(): `boolean`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:83](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L83)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:83](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L83)
 
 Returns true when the field has a real value to render. Subclasses can override to add
 field-specific rules (e.g. `ScLinkDirective` preserves authored text + href).
@@ -216,7 +216,7 @@ field-specific rules (e.g. `ScLinkDirective` preserves authored text + href).
 
 > `abstract` `protected` **updateView**(): `void`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:77](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/field-directives/base-field.directive.ts#L77)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:77](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/field-directives/base-field.directive.ts#L77)
 
 Renders the structural slot based on the current field value and editing state.
 Subclasses compose `shouldRender → renderEmpty | (renderOpen → createEmbeddedView →

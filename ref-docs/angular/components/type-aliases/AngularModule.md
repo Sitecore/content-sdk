@@ -8,7 +8,7 @@
 
 > **AngularModule** = `object`
 
-Defined in: [packages/angular/src/components/types.ts:9](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/types.ts#L9)
+Defined in: [packages/angular/src/components/types.ts:9](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/types.ts#L9)
 
 ## Indexable
 
@@ -22,7 +22,7 @@ Named variant exports
 
 > `optional` **default?**: `Type`\<`unknown`\>
 
-Defined in: [packages/angular/src/components/types.ts:13](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/types.ts#L13)
+Defined in: [packages/angular/src/components/types.ts:13](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/types.ts#L13)
 
 Default component for this rendering
 
@@ -32,6 +32,6 @@ Default component for this rendering
 
 > `optional` **Default?**: `Type`\<`unknown`\>
 
-Defined in: [packages/angular/src/components/types.ts:15](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/components/types.ts#L15)
+Defined in: [packages/angular/src/components/types.ts:15](https://github.com/Sitecore/content-sdk/blob/8b18c6e6c2cc3546028f5408655ca263435d7507/packages/angular/src/components/types.ts#L15)
 
 SXA convention: uppercase Default
