@@ -8,7 +8,7 @@
 
 > **event**(`eventData`): `Promise`\<`EPResponse` \| `null`\>
 
-Defined in: [events/src/events/custom-event/event.ts:15](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/events/src/events/custom-event/event.ts#L15)
+Defined in: [events/src/events/custom-event/event.ts:15](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/events/src/events/custom-event/event.ts#L15)
 
 A function that sends an event to the SitecoreCloud API with the specified type
 

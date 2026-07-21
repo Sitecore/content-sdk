@@ -8,7 +8,7 @@
 
 > `const` **SITECORE\_CLI\_MODE\_ENV\_VAR**: `"SITECORE_CLI_MODE"` = `'SITECORE_CLI_MODE'`
 
-Defined in: [content/src/config-cli/models.ts:5](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/content/src/config-cli/models.ts#L5)
+Defined in: [content/src/config-cli/models.ts:5](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/content/src/config-cli/models.ts#L5)
 
 **`Internal`**
 

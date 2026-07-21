@@ -6,7 +6,7 @@
 
 # Class: SitecoreTranslateLoader
 
-Defined in: [packages/angular/src/i18n/sitecore-translate-loader.ts:14](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/i18n/sitecore-translate-loader.ts#L14)
+Defined in: [packages/angular/src/i18n/sitecore-translate-loader.ts:14](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/angular/src/i18n/sitecore-translate-loader.ts#L14)
 
 `ngx-translate` loader using Sitecore dictionary from [SitecoreContextService](../../lib/classes/SitecoreContextService.md).
 Requires a `dictionaryLoader` resolver on the active route — without it, `dictionary()`
@@ -32,7 +32,7 @@ is `null` and translations resolve to `{}`.
 
 > **getTranslation**(): `Observable`\<`Record`\<`string`, `string`\>\>
 
-Defined in: [packages/angular/src/i18n/sitecore-translate-loader.ts:21](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/i18n/sitecore-translate-loader.ts#L21)
+Defined in: [packages/angular/src/i18n/sitecore-translate-loader.ts:21](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/angular/src/i18n/sitecore-translate-loader.ts#L21)
 
 Returns the translation based on the dictionary in the context from [SitecoreContextService](../../lib/classes/SitecoreContextService.md).
 

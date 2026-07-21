@@ -266,4 +266,46 @@ describe('createEditingRenderMiddleware', () => {
     await middleware(req, res, next);
     expect(next).toHaveBeenCalled();
   });
+
+  it('includes previewTime in editing params when sc_previewTime is present in query params', async () => {
+    const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/render',
+      url: '/api/editing/render',
+      body: undefined,
+      query: baseQuery({ sc_previewTime: '2024-12-25T10:00:00Z' }),
+      headers: baseHeaders(),
+    };
+    const res = createMockRes();
+    await middleware(req, res, next);
+
+    const editingReq = req as ExpressEditingRequest;
+    expect(editingReq.scEditing).toHaveProperty('previewTime', '2024-12-25T10:00:00Z');
+    // Verify previewTime is included in the EDITING_PARAMS_HEADER JSON, which flows to Edge GraphQL
+    const editingParams = JSON.parse(editingReq.headers![EDITING_PARAMS_HEADER] as string);
+    expect(editingParams).toHaveProperty('previewTime', '2024-12-25T10:00:00Z');
+    expect(next).toHaveBeenCalled();
+  });
+
+  it('does not include previewTime in editing params when sc_previewTime is absent', async () => {
+    const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/render',
+      url: '/api/editing/render',
+      body: undefined,
+      query: baseQuery(),
+      headers: baseHeaders(),
+    };
+    const res = createMockRes();
+    await middleware(req, res, next);
+
+    const editingReq = req as ExpressEditingRequest;
+    expect(editingReq.scEditing).not.toHaveProperty('previewTime');
+    // Verify previewTime is absent from the EDITING_PARAMS_HEADER JSON
+    const editingParams = JSON.parse(editingReq.headers![EDITING_PARAMS_HEADER] as string);
+    expect(editingParams).not.toHaveProperty('previewTime');
+    expect(next).toHaveBeenCalled();
+  });
 });

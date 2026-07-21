@@ -8,7 +8,7 @@
 
 > **defineConfig**(`config?`, `clientEnv?`): [`AngularSitecoreConfig`](../type-aliases/AngularSitecoreConfig.md)
 
-Defined in: [packages/angular/src/config/define-config.ts:94](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/angular/src/config/define-config.ts#L94)
+Defined in: [packages/angular/src/config/define-config.ts:94](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/angular/src/config/define-config.ts#L94)
 
 Merges `clientEnv` (browser-safe `environment*.ts`) with `process.env` for server-only variables,
 then delegates to the base content `defineConfig` and adds the Angular-specific config layer.

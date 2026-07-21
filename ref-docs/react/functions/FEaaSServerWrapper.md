@@ -8,7 +8,7 @@
 
 > **FEaaSServerWrapper**(`props`): `Promise`\<`Element`\>
 
-Defined in: [packages/react/src/components/FEaaS/FEaaSSeverWrapper.tsx:13](https://github.com/Sitecore/content-sdk/blob/5ecdcaf8b7fae916353dcb4b755a48712bde6ab7/packages/react/src/components/FEaaS/FEaaSSeverWrapper.tsx#L13)
+Defined in: [packages/react/src/components/FEaaS/FEaaSSeverWrapper.tsx:13](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/react/src/components/FEaaS/FEaaSSeverWrapper.tsx#L13)
 
 Server component for FEaaS. Retrieves server props and renders client FEaaSWrapper.
 
