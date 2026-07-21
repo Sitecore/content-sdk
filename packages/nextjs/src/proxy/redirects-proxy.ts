@@ -243,8 +243,11 @@ export class RedirectsProxy extends ProxyBase {
         }
 
         if (!isAppRouterRequest) {
-          // for pages router i18n implementation, apply default locale as backup
-          url.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
+          // Only set locale when Pages Router i18n is configured; otherwise NextURL throws.
+          const localeToApply = targetLocale || req.nextUrl.defaultLocale;
+          if (localeToApply && req.nextUrl.defaultLocale) {
+            url.locale = localeToApply;
+          }
         } else {
           // In App Router, we need to set the locale in the pathname, if present
           if (targetLocale) url.pathname = `/${targetLocale}${url.pathname}`;

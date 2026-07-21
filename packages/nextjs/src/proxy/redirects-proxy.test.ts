@@ -565,6 +565,61 @@ describe('RedirectsProxy', () => {
       expect(finalRes).to.deep.equal(redirectRes);
     });
 
+    it('should redirect relative targets without NextURL.locale when i18n is not configured', async () => {
+      // Simulate App Router NextURL with no i18n: locale is '', assigning it throws.
+      const applyNoI18nLocaleGuard = (url: any) => {
+        Object.defineProperty(url, 'locale', {
+          get() {
+            return '';
+          },
+          set(value: string) {
+            throw new TypeError(`The NextURL configuration includes no locale "${value}"`);
+          },
+          configurable: true,
+        });
+        url.defaultLocale = undefined;
+      };
+
+      const req = createRequest({
+        nextUrl: {
+          pathname: '/test-redirect',
+          defaultLocale: undefined,
+          locale: '',
+        },
+      });
+      applyNoI18nLocaleGuard(req.nextUrl);
+      const originalClone = req.nextUrl.clone.bind(req.nextUrl);
+      req.nextUrl.clone = () => {
+        const cloned = originalClone();
+        applyNoI18nLocaleGuard(cloned);
+        return cloned;
+      };
+
+      const res = createResponse();
+      const redirectRes = createResponse({
+        redirected: true,
+        status: 302,
+        url: 'http://localhost:3000/',
+      });
+      nextRedirectStub.returns(redirectRes);
+
+      const { proxy } = createProxy({
+        pattern: '/test-redirect',
+        target: '/',
+        redirectType: REDIRECT_TYPE_302,
+        isLanguagePreserved: false,
+      });
+
+      const finalRes = await proxy.handle(req, res);
+
+      expect(nextRedirectStub.calledOnce).to.be.true;
+      const redirectUrl = nextRedirectStub.getCall(0).args[0];
+      const urlString =
+        typeof redirectUrl === 'string' ? redirectUrl : redirectUrl.href || String(redirectUrl);
+      expect(urlString).to.equal('http://localhost:3000/');
+      expect(finalRes).to.deep.equal(redirectRes);
+    });
+
     it('should rewrite when redirect type is SERVER_TRANSFER', async () => {
       const req = createRequest({
         nextUrl: {
