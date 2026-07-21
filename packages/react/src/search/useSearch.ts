@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { SearchDocument, SearchParameters } from '@sitecore-content-sdk/search';
+import { SearchDocument, SearchParameters, FacetRequest, FacetResult } from '@sitecore-content-sdk/search';
 import { DEFAULT_PAGE_SIZE, getOffset, SearchStatus, useSearchService } from './utils';
 
 /**
@@ -40,6 +40,17 @@ export interface UseSearchOptions<T extends SearchDocument = SearchDocument> {
    * @default false
    */
   keepPreviousData?: boolean;
+  /**
+   * The locale to use for the search. Required for multi-locale index configurations.
+   * Format: letters and hyphens only (e.g. 'en', 'fr-FR', 'el-GR').
+   * Omit for single-locale indexes.
+   */
+  locale?: string;
+  /**
+   * Facet configuration. Use 'all: true' to retrieve counts for all enabled facets.
+   * Use 'fields' to filter results by specific facet values. Both can be combined.
+   */
+  facet?: FacetRequest;
 }
 
 type InternalState<T extends SearchDocument = SearchDocument> = {
@@ -55,6 +66,10 @@ type InternalState<T extends SearchDocument = SearchDocument> = {
    * Total number of pages available based on `total` and `pageSize`.
    */
   totalPages: number;
+  /**
+   * Facet results, present only when facets were requested.
+   */
+  facets?: FacetResult[];
   /**
    * The error object if the last search request failed, or null if no error occurred.
    */
@@ -121,6 +136,8 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
     sort,
     enabled = true,
     keepPreviousData = false,
+    locale,
+    facet,
   } = options;
 
   const [state, setState] = useState<InternalState<T>>(() => {
@@ -134,6 +151,7 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
       results: [],
       total: 0,
       totalPages: 0,
+      facets: undefined,
       error,
       status,
       previousStatus: 'idle',
@@ -156,6 +174,7 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
       status: 'loading',
       total: keepPreviousData ? prev.total : 0,
       totalPages: keepPreviousData ? prev.totalPages : 0,
+      facets: keepPreviousData ? prev.facets : undefined,
       error: null,
       previousStatus: prev.status,
     }));
@@ -169,9 +188,11 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
         limit: pageSize,
         offset,
         sort,
+        ...(locale !== undefined && { locale }),
+        ...(facet !== undefined && { facet }),
       };
 
-      const { results: searchResults, total } = await searchService.search<T>(searchParams, {
+      const { results: searchResults, total, facets } = await searchService.search<T>(searchParams, {
         signal,
       });
 
@@ -185,6 +206,7 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
         results: searchResults,
         total,
         totalPages,
+        facets,
         status: 'success',
         error: null,
         previousStatus: 'success',
@@ -200,12 +222,13 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
         results: [],
         total: 0,
         totalPages: 0,
+        facets: undefined,
         status: 'error',
         error: errorMessage,
         previousStatus: 'error',
       });
     }
-  }, [searchService, searchIndexId, page, pageSize, sort, query, keepPreviousData]);
+  }, [searchService, searchIndexId, page, pageSize, sort, query, keepPreviousData, locale, facet]);
 
   useEffect(() => {
     if (enabled) {
@@ -223,6 +246,7 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
       results: state.results,
       total: state.total,
       totalPages: state.totalPages,
+      facets: state.facets,
       status: state.status,
       isLoading: state.status === 'loading',
       isSuccess: state.status === 'success',

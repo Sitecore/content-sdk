@@ -4,7 +4,7 @@ import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { render, waitFor, fireEvent, RenderResult } from '@testing-library/react';
 import { createSandbox, SinonSandbox, SinonStub } from 'sinon';
-import { SearchService, SortSetting } from '@sitecore-content-sdk/search';
+import { SearchService, SortSetting, FacetRequest } from '@sitecore-content-sdk/search';
 import {
   SitecoreProviderReactContext,
   SitecoreProviderState,
@@ -853,6 +853,89 @@ describe('useSearch', () => {
       totalPages: 0,
       status: 'error',
       isPreviousData: false,
+    });
+  });
+
+  it('should pass locale to the search service when provided', async () => {
+    const TestComponent: React.FC<any> = () => {
+      const state = useSearch<Model>({
+        searchIndexId: '1234567890',
+        query: 'test',
+        locale: 'fr-FR',
+      });
+
+      return renderState(state);
+    };
+
+    searchServiceStub.resolves({ results: [{ id: 1 }], total: 1 });
+
+    render(
+      <SitecoreProviderReactContext.Provider value={defaultProviderState}>
+        <TestComponent />
+      </SitecoreProviderReactContext.Provider>
+    );
+
+    await waitFor(() => {
+      expect(
+        searchServiceStub.calledOnceWith({
+          searchIndexId: '1234567890',
+          keyphrase: 'test',
+          limit: 10,
+          offset: 0,
+          sort: undefined,
+          locale: 'fr-FR',
+        })
+      ).to.be.true;
+    });
+  });
+
+  it('should pass facet config to the search service and return facets in state', async () => {
+    const facetConfig: FacetRequest = { all: true };
+
+    const TestComponent: React.FC<any> = () => {
+      const state = useSearch<Model>({
+        searchIndexId: '1234567890',
+        query: 'test',
+        facet: facetConfig,
+      });
+
+      return (
+        <>
+          {renderState(state)}
+          <span id="facetName">{state.facets?.[0]?.name ?? 'none'}</span>
+          <span id="facetValue">{state.facets?.[0]?.value?.[0]?.text?.toString() ?? 'none'}</span>
+        </>
+      );
+    };
+
+    searchServiceStub.resolves({
+      results: [{ id: 1 }],
+      total: 1,
+      facets: [{ name: 'Category', value: [{ text: 'Running', count: 5 }] }],
+    });
+
+    const wrapper = render(
+      <SitecoreProviderReactContext.Provider value={defaultProviderState}>
+        <TestComponent />
+      </SitecoreProviderReactContext.Provider>
+    );
+
+    await waitFor(() => {
+      expect(
+        searchServiceStub.calledOnceWith({
+          searchIndexId: '1234567890',
+          keyphrase: 'test',
+          limit: 10,
+          offset: 0,
+          sort: undefined,
+          facet: facetConfig,
+        })
+      ).to.be.true;
+    });
+
+    await waitFor(() => {
+      expect(wrapper.container.querySelector('#facetName')?.textContent).equal('Category');
+      expect(wrapper.container.querySelector('#facetValue')?.textContent).equal('Running');
     });
   });
 });
