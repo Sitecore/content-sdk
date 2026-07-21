@@ -20,6 +20,8 @@ import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { enableDebug } from '@sitecore-content-sdk/core';
 import { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
 import { ErrorPage } from '@sitecore-content-sdk/content/client';
+import { FacetRequest } from '@sitecore-content-sdk/search';
+import { FacetResult } from '@sitecore-content-sdk/search';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import { Field } from '@sitecore-content-sdk/content/layout';
 import { FieldMetadata } from '@sitecore-content-sdk/content/layout';
@@ -484,6 +486,8 @@ export const useInfiniteSearch: <T extends SearchDocument = SearchDocument>(opti
 // @public
 export interface UseInfiniteSearchOptions<T extends SearchDocument = SearchDocument> {
     enabled?: boolean;
+    facet?: FacetRequest;
+    locale?: string;
     pageSize?: number;
     query?: string;
     searchIndexId: string;
@@ -509,7 +513,9 @@ export const useSearch: <T extends SearchDocument = SearchDocument>(options: Use
 // @public
 export interface UseSearchOptions<T extends SearchDocument = SearchDocument> {
     enabled?: boolean;
+    facet?: FacetRequest;
     keepPreviousData?: boolean;
+    locale?: string;
     page?: number;
     pageSize?: number;
     query?: string;
