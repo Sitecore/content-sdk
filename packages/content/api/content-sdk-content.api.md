@@ -881,7 +881,7 @@ export interface LinkFieldValue {
 const loadForm: (contextId: string, formId: string, edgeUrl?: string) => Promise<string>;
 
 // @internal
-export const matchFromRedirectMapRedirect: (redirects: RedirectResult[], configuredLocales: string[], urlLocale: string, incomingURL: string, incomingQS: string) => RedirectResult | undefined;
+export const matchFromRedirectMapRedirect: (redirects: RedirectResult[], requestLocale: string, incomingPathData: ProcessedPath) => RedirectResult | undefined;
 
 // @internal
 export const matchRedirectItemRedirect: (redirects: RedirectResult[], locale: string, nonLocalePath: string) => RedirectResult | undefined;

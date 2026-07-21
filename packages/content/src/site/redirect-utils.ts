@@ -31,15 +31,19 @@ export type ProcessedPath = {
 /**
  * Splits a URL path into its (optional) leading locale segment, the remaining
  * locale-less path, and the query string. Locales are compared case-insensitively.
+ * A leading slash is always ensured on `nonLocalePath`; any trailing slash is preserved
+ * so slash-sensitive regex redirect rules can still be matched downstream.
  * @param {string[]} configuredLocales configured site locales
  * @param {string} urlPath path (optionally including a `?query`)
  * @returns {ProcessedPath} broken-down path parts
  * @internal
  */
 export const breakDownPath = (configuredLocales: string[], urlPath: string): ProcessedPath => {
-  const urlArray = urlPath.endsWith('/') ? urlPath.slice(0, -1).split('?') : urlPath.split('?');
+  const urlArray = urlPath.split('?');
   const urlQs = urlArray[1];
-  const nonQsPath = urlArray[0];
+  // collapse duplicate slashes so degenerate inputs (`//`, `///`) reduce to `/`,
+  // while a single meaningful trailing slash is preserved
+  const nonQsPath = urlArray[0].replace(/\/{2,}/g, '/');
   const pathArray = nonQsPath.startsWith('/')
     ? nonQsPath.slice(1).split('/')
     : nonQsPath.split('/');
@@ -55,50 +59,51 @@ export const breakDownPath = (configuredLocales: string[], urlPath: string): Pro
         locale: maybeLocale,
       }
     : {
-        nonLocalePath: nonQsPath,
+        nonLocalePath: nonQsPath.startsWith('/') ? nonQsPath : `/${nonQsPath}`,
         queryString: urlQs,
       };
 };
 
 /**
- * Matches redirect-map rules without a `locale` field against the incoming URL (static or regex patterns).
- * @param {RedirectResult[]} redirects All redirects from the service (non-locale entries are filtered inside).
- * @param {string[]} configuredLocales configured site locales
- * @param {string} urlLocale Locale segment from the request URL.
- * @param {string} incomingURL Original pathname used for regex tests.
- * @param {string} incomingQS Query string including leading `?` if present.
+ * Matches redirect-map rules (rules without a `locale` field) against the incoming request.
+ * The incoming path is provided pre-split as {@link ProcessedPath}, so matching starts from the
+ * guaranteed locale-less `nonLocalePath` and rebuilds the locale-prefixed variant from it. This
+ * avoids the ambiguity of a raw pathname that may or may not already carry a locale segment.
+ * @param {RedirectResult[]} redirects All redirects from the service (locale-scoped entries are filtered out).
+ * @param {string} requestLocale locale of the current request
+ * @param {ProcessedPath} incomingPathData broken-down incoming path (locale-less path and query)
  * @returns {RedirectResult | undefined} First matching redirect or undefined.
  * @internal
  */
 export const matchFromRedirectMapRedirect = (
   redirects: RedirectResult[],
-  configuredLocales: string[],
-  urlLocale: string,
-  incomingURL: string,
-  incomingQS: string
+  requestLocale: string,
+  incomingPathData: ProcessedPath
 ): RedirectResult | undefined => {
-  const nonLocaleRedirects = redirects.filter((redirect: RedirectResult) => !redirect.locale);
-  const normalizedPath = incomingURL.replace(/\/*$/gi, '').toLowerCase();
-  const localePath = `/${urlLocale.toLowerCase()}${normalizedPath}`;
+  const redirectMapRedirects = redirects.filter((redirect: RedirectResult) => !redirect.locale);
+  // start from the locale-less path and rebuild the locale-prefixed variant from it
+  // (keep root as `/` so anchored `^/...` patterns still match). Trailing slashes are preserved.
+  const nonLocalePath = incomingPathData.nonLocalePath.toLowerCase() || '/';
+  const localePath = `/${requestLocale.toLowerCase()}${nonLocalePath}`;
+  const incomingQS = incomingPathData.queryString || '';
+  // regex rules are matched against the raw candidates (trailing slash preserved so slash-sensitive
+  // patterns still match); static rules ignore trailing slashes, so they use trimmed candidates
+  const pathCandidates = [nonLocalePath, localePath];
+  const staticCandidates = pathCandidates.map((path) => path.replace(/\/+$/g, '') || '/');
 
-  return nonLocaleRedirects.find((redirect: RedirectResult) => {
+  return redirectMapRedirects.find((redirect: RedirectResult) => {
     // process static URL (non-regex) rules
     if (isRegexOrUrl(redirect.pattern) === 'url') {
-      const urlArray = redirect.pattern.endsWith('/')
-        ? redirect.pattern.slice(0, -1).split('?')
-        : redirect.pattern.split('?');
-      const patternQS = urlArray[1];
-      let patternPath = urlArray[0].toLowerCase();
-      // nextjs routes are case-sensitive, but locales should be compared case-insensitively
-      const patternParts = patternPath.split('/');
-      const maybeLocale = (patternParts[1] || '').toLowerCase();
-      // case insensitive lookup of locales
-      if (configuredLocales.find((locale) => locale.toLowerCase() === maybeLocale)) {
-        patternPath = patternPath.replace(`/${patternParts[1]}`, `/${maybeLocale}`);
-      }
+      const [rawPatternPath, patternQS] = (redirect.pattern.endsWith('/')
+        ? redirect.pattern.slice(0, -1)
+        : redirect.pattern
+      ).split('?');
+      // candidates are already lowercased; lowercase the pattern path to keep locale (and route)
+      // comparison case-insensitive
+      const patternPath = rawPatternPath.toLowerCase();
 
       return (
-        (patternPath === localePath || patternPath === normalizedPath) &&
+        staticCandidates.includes(patternPath) &&
         (!patternQS ||
           areURLSearchParamsEqual(new URLSearchParams(patternQS), new URLSearchParams(incomingQS)))
       );
@@ -113,19 +118,13 @@ export const matchFromRedirectMapRedirect = (
       regex.lastIndex = 0;
       return regex.test(value);
     };
-    const pathCandidates = [
-      incomingURL,
-      normalizedPath,
-      breakDownPath(configuredLocales, incomingURL).nonLocalePath,
-      breakDownPath(configuredLocales, normalizedPath).nonLocalePath,
-    ].filter((candidate, index, array) => array.indexOf(candidate) === index);
     const matchedPath = pathCandidates.find((candidate) => testRegex(candidate));
     const matchedPathWithQuery = incomingQS
-      ? pathCandidates.find((candidate) => testRegex(`${candidate}${incomingQS}`))
+      ? pathCandidates.find((candidate) => testRegex(`${candidate}?${incomingQS}`))
       : undefined;
 
     // Save the matched path/query (if found) into the redirect object
-    redirect.matchedQueryString = matchedPathWithQuery ? incomingQS : '';
+    redirect.matchedQueryString = matchedPathWithQuery ? `?${incomingQS}` : '';
     redirect.matchedPath = matchedPath || matchedPathWithQuery || '';
 
     return !!(matchedPath || matchedPathWithQuery);
@@ -146,7 +145,7 @@ export const matchRedirectItemRedirect = (
   nonLocalePath: string
 ): RedirectResult | undefined => {
   return redirects.find((redirect: RedirectResult) => {
-    const patternPath = redirect.pattern.replace(/\/*$/g, '').toLowerCase();
+    const patternPath = redirect.pattern.replace(/\/+$/g, '').toLowerCase();
     // locale rules are easy and nice
     return redirect.locale === locale && patternPath === nonLocalePath;
   });
@@ -206,7 +205,7 @@ export const resolveRedirectTarget = (
   // Apply regex replacements to the target URL if the pattern is a regex
   if (isRegexOrUrl(existsRedirect.pattern) === 'regex') {
     const sourcePath = existsRedirect.matchedPath || requestPath;
-    const pathForCaptureMatch = sourcePath.replace(/\/*$/gi, '') || '/';
+    const pathForCaptureMatch = sourcePath.replace(/\/+$/g, '') || '/';
     const redirectRegex = safeCompileRedirectPattern(existsRedirect.pattern);
     const matched = redirectRegex ? pathForCaptureMatch.match(redirectRegex) : null;
     if (matched) {

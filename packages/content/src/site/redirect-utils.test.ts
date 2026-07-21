@@ -43,14 +43,14 @@ describe('redirect-utils', () => {
       });
     });
 
-    it('should extract the query string and strip a trailing slash', () => {
+    it('should extract the query string and preserve a trailing slash', () => {
       expect(breakDownPath(LOCALES, '/en/foo?x=1')).to.deep.equal({
         nonLocalePath: '/foo',
         queryString: 'x=1',
         locale: 'en',
       });
       expect(breakDownPath(LOCALES, '/en/foo/')).to.deep.equal({
-        nonLocalePath: '/foo',
+        nonLocalePath: '/foo/',
         queryString: undefined,
         locale: 'en',
       });
@@ -61,6 +61,108 @@ describe('redirect-utils', () => {
         nonLocalePath: '/foo',
         queryString: undefined,
         locale: 'EN',
+      });
+      // the locale is stripped but the remaining path keeps its original casing
+      expect(breakDownPath(LOCALES, '/EN/Foo/Bar')).to.deep.equal({
+        nonLocalePath: '/Foo/Bar',
+        queryString: undefined,
+        locale: 'EN',
+      });
+    });
+
+    it('should reduce a locale-only path to root and record the locale', () => {
+      expect(breakDownPath(LOCALES, '/en')).to.deep.equal({
+        nonLocalePath: '/',
+        queryString: undefined,
+        locale: 'en',
+      });
+      expect(breakDownPath(LOCALES, '/en/')).to.deep.equal({
+        nonLocalePath: '/',
+        queryString: undefined,
+        locale: 'en',
+      });
+      expect(breakDownPath(LOCALES, '/en?x=1')).to.deep.equal({
+        nonLocalePath: '/',
+        queryString: 'x=1',
+        locale: 'en',
+      });
+    });
+
+    it('should not strip a leading segment that is not a configured locale', () => {
+      expect(breakDownPath(LOCALES, '/de/foo')).to.deep.equal({
+        nonLocalePath: '/de/foo',
+        queryString: undefined,
+      });
+    });
+
+    it('should never strip a locale when no locales are configured', () => {
+      expect(breakDownPath([], '/en/foo')).to.deep.equal({
+        nonLocalePath: '/en/foo',
+        queryString: undefined,
+      });
+      expect(breakDownPath([], '/foo')).to.deep.equal({
+        nonLocalePath: '/foo',
+        queryString: undefined,
+      });
+    });
+
+    it('should normalize a path without a leading slash', () => {
+      expect(breakDownPath(LOCALES, 'en/foo')).to.deep.equal({
+        nonLocalePath: '/foo',
+        queryString: undefined,
+        locale: 'en',
+      });
+      // a non-locale, slash-less path gets a leading slash added
+      expect(breakDownPath(LOCALES, 'foo')).to.deep.equal({
+        nonLocalePath: '/foo',
+        queryString: undefined,
+      });
+    });
+
+    it('should collapse root, empty and slash-only paths to a single slash', () => {
+      expect(breakDownPath(LOCALES, '/')).to.deep.equal({
+        nonLocalePath: '/',
+        queryString: undefined,
+      });
+      expect(breakDownPath(LOCALES, '')).to.deep.equal({
+        nonLocalePath: '/',
+        queryString: undefined,
+      });
+      expect(breakDownPath(LOCALES, '//')).to.deep.equal({
+        nonLocalePath: '/',
+        queryString: undefined,
+      });
+      expect(breakDownPath(LOCALES, '///')).to.deep.equal({
+        nonLocalePath: '/',
+        queryString: undefined,
+      });
+    });
+
+    it('should keep a query string with no path and normalize the path to root', () => {
+      expect(breakDownPath(LOCALES, '?x=1')).to.deep.equal({
+        nonLocalePath: '/',
+        queryString: 'x=1',
+      });
+    });
+
+    it('should preserve an empty query string produced by a trailing question mark', () => {
+      expect(breakDownPath(LOCALES, '/en/foo?')).to.deep.equal({
+        nonLocalePath: '/foo',
+        queryString: '',
+        locale: 'en',
+      });
+    });
+
+    it('should preserve a trailing slash on the locale-less path', () => {
+      expect(breakDownPath(LOCALES, '/en/foo/bar/')).to.deep.equal({
+        nonLocalePath: '/foo/bar/',
+        queryString: undefined,
+        locale: 'en',
+      });
+      expect(breakDownPath(LOCALES, '/en/foo/?x=1')).to.deep.equal({
+        nonLocalePath: '/foo/',
+        queryString: 'x=1',
+        locale: 'en',
       });
     });
   });
@@ -95,41 +197,81 @@ describe('redirect-utils', () => {
   describe('matchFromRedirectMapRedirect', () => {
     it('should match a static url rule', () => {
       const redirect = makeRedirect({ pattern: '/old-page', target: '/new-page' });
-      expect(matchFromRedirectMapRedirect([redirect], LOCALES, 'en', '/old-page', '')).to.equal(
-        redirect
-      );
+      expect(
+        matchFromRedirectMapRedirect([redirect], 'en', { nonLocalePath: '/old-page' })
+      ).to.equal(redirect);
     });
 
     it('should ignore redirects that carry a locale (redirect-item rules)', () => {
       const localeRule = makeRedirect({ pattern: '/old-page', locale: 'en' });
-      expect(matchFromRedirectMapRedirect([localeRule], LOCALES, 'en', '/old-page', '')).to.be
+      expect(matchFromRedirectMapRedirect([localeRule], 'en', { nonLocalePath: '/old-page' })).to.be
         .undefined;
     });
 
-    it('should match a locale-prefixed static rule against a non-prefixed incoming path', () => {
+    it('should match a locale-prefixed static rule against a locale-less incoming path', () => {
       const redirect = makeRedirect({ pattern: '/en/old-page', target: '/new-page' });
-      expect(matchFromRedirectMapRedirect([redirect], LOCALES, 'en', '/old-page', '')).to.equal(
-        redirect
-      );
+      expect(
+        matchFromRedirectMapRedirect([redirect], 'en', { nonLocalePath: '/old-page' })
+      ).to.equal(redirect);
     });
 
-    it('should match an anchored regex rule and record the matched path', () => {
+    it('should match a locale-less static rule even when the incoming URL carried a locale', () => {
+      // incomingPathData is already locale-stripped, so a non-locale rule still matches
+      const redirect = makeRedirect({ pattern: '/old-page', target: '/new-page' });
+      expect(
+        matchFromRedirectMapRedirect([redirect], 'en', { nonLocalePath: '/old-page', locale: 'en' })
+      ).to.equal(redirect);
+    });
+
+    it('should match a locale-prefixed static rule when the incoming URL carried that locale', () => {
+      const redirect = makeRedirect({ pattern: '/en/old-page', target: '/new-page' });
+      expect(
+        matchFromRedirectMapRedirect([redirect], 'en', { nonLocalePath: '/old-page', locale: 'en' })
+      ).to.equal(redirect);
+    });
+
+    it('should compare locales case-insensitively', () => {
+      const redirect = makeRedirect({ pattern: '/EN/old-page', target: '/new-page' });
+      expect(
+        matchFromRedirectMapRedirect([redirect], 'En', { nonLocalePath: '/old-page' })
+      ).to.equal(redirect);
+    });
+
+    it('should match a static rule with a query string', () => {
+      const redirect = makeRedirect({ pattern: '/search?q=shoes', target: '/results' });
+      expect(
+        matchFromRedirectMapRedirect([redirect], 'en', {
+          nonLocalePath: '/search',
+          queryString: 'q=shoes',
+        })
+      ).to.equal(redirect);
+    });
+
+    it('should match an anchored regex rule and record the locale-less matched path', () => {
       const redirect = makeRedirect({ pattern: '^/test/(.*)$', target: '/about' });
-      const result = matchFromRedirectMapRedirect([redirect], LOCALES, 'en', '/en/test/red', '');
+      const result = matchFromRedirectMapRedirect([redirect], 'en', {
+        nonLocalePath: '/test/red',
+        locale: 'en',
+      });
       expect(result).to.equal(redirect);
       expect(redirect.matchedPath).to.equal('/test/red');
     });
 
     it('should match a regex rule against the path plus query string', () => {
       const redirect = makeRedirect({ pattern: '^/search\\?q=.*$', target: '/results' });
-      const result = matchFromRedirectMapRedirect([redirect], LOCALES, 'en', '/search', '?q=shoes');
+      const result = matchFromRedirectMapRedirect([redirect], 'en', {
+        nonLocalePath: '/search',
+        queryString: 'q=shoes',
+      });
       expect(result).to.equal(redirect);
       expect(redirect.matchedQueryString).to.equal('?q=shoes');
+      expect(redirect.matchedPath).to.equal('/search');
     });
 
     it('should return undefined when nothing matches', () => {
       const redirect = makeRedirect({ pattern: '/old-page' });
-      expect(matchFromRedirectMapRedirect([redirect], LOCALES, 'en', '/other', '')).to.be.undefined;
+      expect(matchFromRedirectMapRedirect([redirect], 'en', { nonLocalePath: '/other' })).to.be
+        .undefined;
     });
 
     it('should skip malformed regex rules without throwing', () => {
@@ -138,7 +280,7 @@ describe('redirect-utils', () => {
       const good = makeRedirect({ pattern: '/old-page', target: '/new-page' });
       try {
         expect(
-          matchFromRedirectMapRedirect([broken, good], LOCALES, 'en', '/old-page', '')
+          matchFromRedirectMapRedirect([broken, good], 'en', { nonLocalePath: '/old-page' })
         ).to.equal(good);
         expect(warn.calledOnce).to.be.true;
       } finally {
@@ -260,14 +402,111 @@ describe('redirect-utils', () => {
 
     it('should merge the incoming query string into the target path when preserved', () => {
       const redirect = makeRedirect({ target: '/new-page', isQueryStringPreserved: true });
-      const result = processRelativeUrlTarget(
-        { nonLocalePath: '/old-page', queryString: 'a=1' },
-        redirect,
-        LOCALES,
-        'en'
-      );
-      expect(result.targetPath).to.startWith('/new-page?');
-      expect(result.targetPath).to.contain('a=1');
+      expect(
+        processRelativeUrlTarget(
+          { nonLocalePath: '/old-page', queryString: 'a=1' },
+          redirect,
+          LOCALES,
+          'en'
+        )
+      ).to.deep.equal({ targetLocale: '', targetPath: '/new-page?a=1' });
+    });
+
+    // --- static (url pattern) targets: the rule's target is used verbatim ---
+
+    it('should keep the query string carried by a static url target when there is no incoming query', () => {
+      const redirect = makeRedirect({ target: '/new-page?ref=1' });
+      expect(
+        processRelativeUrlTarget({ nonLocalePath: '/old-page' }, redirect, LOCALES, 'en')
+      ).to.deep.equal({ targetLocale: '', targetPath: '/new-page?ref=1' });
+    });
+
+    it('should drop the incoming query when preservation is off, keeping only the target query', () => {
+      const redirect = makeRedirect({ target: '/new-page?ref=1', isQueryStringPreserved: false });
+      expect(
+        processRelativeUrlTarget(
+          { nonLocalePath: '/old-page', queryString: 'a=1' },
+          redirect,
+          LOCALES,
+          'en'
+        )
+      ).to.deep.equal({ targetLocale: '', targetPath: '/new-page?ref=1' });
+    });
+
+    it('should merge incoming and target query strings, with the target winning on key collisions', () => {
+      const redirect = makeRedirect({
+        target: '/new-page?ref=1&keep=t',
+        isQueryStringPreserved: true,
+      });
+      expect(
+        processRelativeUrlTarget(
+          { nonLocalePath: '/old-page', queryString: 'ref=9&extra=x' },
+          redirect,
+          LOCALES,
+          'en'
+        )
+      ).to.deep.equal({ targetLocale: '', targetPath: '/new-page?ref=1&extra=x&keep=t' });
+    });
+
+    it('should merge query strings while honoring a locale prefix carried by the target', () => {
+      const redirect = makeRedirect({
+        target: '/da/new-page?ref=1',
+        isQueryStringPreserved: true,
+      });
+      expect(
+        processRelativeUrlTarget(
+          { nonLocalePath: '/old-page', queryString: 'q=2' },
+          redirect,
+          LOCALES,
+          'en'
+        )
+      ).to.deep.equal({ targetLocale: 'da', targetPath: '/new-page?q=2&ref=1' });
+    });
+
+    it('should let a target locale prefix win over isLanguagePreserved', () => {
+      const redirect = makeRedirect({ target: '/en/new-page', isLanguagePreserved: true });
+      expect(
+        processRelativeUrlTarget({ nonLocalePath: '/old-page' }, redirect, LOCALES, 'da')
+      ).to.deep.equal({ targetLocale: 'en', targetPath: '/new-page' });
+    });
+
+    it('should preserve the original casing of a target locale prefix', () => {
+      const redirect = makeRedirect({ target: '/DA/foo' });
+      expect(
+        processRelativeUrlTarget({ nonLocalePath: '/old-page' }, redirect, LOCALES, 'en')
+      ).to.deep.equal({ targetLocale: 'DA', targetPath: '/foo' });
+    });
+
+    it('should preserve the request locale for a bare root target', () => {
+      const redirect = makeRedirect({ target: '/', isLanguagePreserved: true });
+      expect(
+        processRelativeUrlTarget({ nonLocalePath: '/old-page' }, redirect, LOCALES, 'en')
+      ).to.deep.equal({ targetLocale: 'en', targetPath: '/' });
+    });
+
+    // --- regex pattern targets: resolveRedirectTarget has already substituted $1/$siteLang,
+    //     so processRelativeUrlTarget receives a concrete path ---
+
+    it('should preserve the request locale for a locale-less regex-substituted target', () => {
+      const redirect = makeRedirect({
+        pattern: '^/old/(\\d+)$',
+        target: '/products/123',
+        isLanguagePreserved: true,
+      });
+      expect(
+        processRelativeUrlTarget({ nonLocalePath: '/old/123' }, redirect, LOCALES, 'da')
+      ).to.deep.equal({ targetLocale: 'da', targetPath: '/products/123' });
+    });
+
+    it('should honor a locale prefix in a regex-substituted target even when isLanguagePreserved is false', () => {
+      const redirect = makeRedirect({
+        pattern: '^/old/(\\d+)$',
+        target: '/da/products/123',
+        isLanguagePreserved: false,
+      });
+      expect(
+        processRelativeUrlTarget({ nonLocalePath: '/old/123' }, redirect, LOCALES, 'en')
+      ).to.deep.equal({ targetLocale: 'da', targetPath: '/products/123' });
     });
   });
 });

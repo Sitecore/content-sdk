@@ -10,7 +10,6 @@ import {
   matchRedirectItemRedirect as matchRedirectItemRedirectUtil,
   processAbsoluteUrlTarget,
   processRelativeUrlTarget,
-  ProcessedPath,
   RedirectResult,
   resolveRedirectTarget,
 } from '@sitecore-content-sdk/content/site';
@@ -168,10 +167,8 @@ export class RedirectsProxy extends ProxyBase {
       debug.redirects('Matched redirect rule: %o', { existsRedirect });
 
       const reqUrl = this.normalizeUrl(req.nextUrl.clone());
-      const incomingPathData: ProcessedPath = {
-        nonLocalePath: reqUrl.pathname,
-        queryString: reqUrl.search ? reqUrl.search.replace(/^\?/, '') : undefined,
-      };
+      const incomingPathData = breakDownPath(this.locales, reqUrl.pathname);
+      incomingPathData.queryString = reqUrl.search ? reqUrl.search.replace(/^\?/, '') : undefined;
 
       existsRedirect.target = resolveRedirectTarget(existsRedirect, site.language, reqUrl.pathname);
       const isAbsoluteUrl = isAbsoluteTarget(existsRedirect.target);
@@ -302,33 +299,27 @@ export class RedirectsProxy extends ProxyBase {
     if (matchedLocaleRedirect) {
       return matchedLocaleRedirect;
     }
-    // locale of the url - if present in the url, used for redirect map matching
-    const urlLocale = req.nextUrl.locale;
-    return this.matchFromRedirectMapRedirect(redirects, urlLocale, incomingURL, incomingQS);
+    return this.matchFromRedirectMapRedirect(redirects, requestLocale, incomingURL, incomingQS);
   }
 
   /**
    * Matches redirect-map rules without a `locale` field against the incoming URL (static or regex patterns).
    * @param {RedirectResult[]} redirects All redirects from the service (non-locale entries are filtered inside).
-   * @param {string} urlLocale Locale segment from the request URL (`nextUrl.locale`).
-   * @param {string} incomingURL Original pathname used for regex tests.
+   * @param {string} requestLocale Locale of the current request.
+   * @param {string} incomingURL Original pathname (may or may not carry a locale prefix).
    * @param {string} incomingQS Query string including leading `?` if present.
    * @returns {RedirectResult | undefined} First matching redirect or undefined.
    * @private
    */
   protected matchFromRedirectMapRedirect(
     redirects: RedirectResult[],
-    urlLocale: string,
+    requestLocale: string,
     incomingURL: string,
     incomingQS: string
   ): RedirectResult | undefined {
-    return matchFromRedirectMapRedirectUtil(
-      redirects,
-      this.locales,
-      urlLocale,
-      incomingURL,
-      incomingQS
-    );
+    const incomingPathData = breakDownPath(this.locales, incomingURL);
+    incomingPathData.queryString = incomingQS ? incomingQS.replace(/^\?/, '') : undefined;
+    return matchFromRedirectMapRedirectUtil(redirects, requestLocale, incomingPathData);
   }
 
   /**
