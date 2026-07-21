@@ -4,30 +4,22 @@ import {
   REDIRECT_TYPE_301,
   REDIRECT_TYPE_302,
   REDIRECT_TYPE_SERVER_TRANSFER,
-  RedirectInfo,
-  SiteInfo,
+  breakDownPath,
+  isAbsoluteTarget,
+  matchFromRedirectMapRedirect as matchFromRedirectMapRedirectUtil,
+  matchRedirectItemRedirect as matchRedirectItemRedirectUtil,
+  processAbsoluteUrlTarget,
+  processRelativeUrlTarget,
+  ProcessedPath,
+  RedirectResult,
+  resolveRedirectTarget,
 } from '@sitecore-content-sdk/content/site';
-import {
-  areURLSearchParamsEqual,
-  escapeNonSpecialQuestionMarks,
-  escapeRegExp,
-  isRegexOrUrl,
-  mergeURLSearchParams,
-} from '@sitecore-content-sdk/core/tools';
 import { NextURL } from 'next/dist/server/web/next-url';
 import { NextRequest, NextResponse } from 'next/server';
 import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
 import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from './types';
-
-const REGEXP_CONTEXT_SITE_LANG = new RegExp(/\$siteLang/, 'i');
-const REGEXP_ABSOLUTE_URL = new RegExp('^(?:[a-z]+:)?//', 'i');
-
-type RedirectResult = RedirectInfo & {
-  matchedQueryString?: string;
-  matchedPath?: string;
-};
 
 /**
  * Information about executed proxy to be stored in the context
@@ -132,16 +124,13 @@ export class RedirectsProxy extends ProxyBase {
       return res;
     }
     try {
-      const pathname = req.nextUrl.pathname;
       const language = this.getLanguage(req, res);
-      const hostname = this.getHostHeader(req) || this.defaultHostname;
-      let site: SiteInfo | undefined;
       const startTimestamp = Date.now();
 
       debug.redirects('redirects proxy start: %o', {
-        pathname,
+        pathname: req.nextUrl.pathname,
         language,
-        hostname,
+        hostname: this.getHostHeader(req) || this.defaultHostname,
       });
 
       if (this.disabled(req, res)) {
@@ -151,29 +140,21 @@ export class RedirectsProxy extends ProxyBase {
 
       const isAppRouterRequest = this.isAppRouter(res);
 
-      const validateRequest = () => {
-        if (this.isPreview(req)) {
-          debug.redirects('skipped (preview)');
-
-          return false;
-        }
-
-        // Skip prefetch requests from Next.js, which are not original client requests
-        // as they load unnecessary requests that burden the redirects proxy with meaningless traffic
-        if (this.isPrefetch(req)) {
-          debug.redirects('skipped (prefetch)');
-          res.headers.set('x-proxy-cache', 'no-cache');
-          res.headers.set('Cache-Control', 'no-store, must-revalidate');
-          return false;
-        }
-        return true;
-      };
-
-      if (!validateRequest()) {
+      if (this.isPreview(req)) {
+        debug.redirects('skipped (preview)');
         return res;
       }
 
-      site = this.getSite(req, res);
+      // Skip prefetch requests from Next.js, which are not original client requests
+      // as they load unnecessary requests that burden the redirects proxy with meaningless traffic
+      if (this.isPrefetch(req)) {
+        debug.redirects('skipped (prefetch)');
+        res.headers.set('x-proxy-cache', 'no-cache');
+        res.headers.set('Cache-Control', 'no-store, must-revalidate');
+        return res;
+      }
+
+      const site = this.getSite(req, res);
 
       // Find the redirect from result of RedirectService
       const existsRedirect = await this.getExistsRedirect(req, site.name, language);
@@ -186,73 +167,55 @@ export class RedirectsProxy extends ProxyBase {
 
       debug.redirects('Matched redirect rule: %o', { existsRedirect });
 
-      const processAbsoluteUrlTarget = (
-        url: NextURL,
-        existsRedirect: RedirectResult
-      ): NextResponse => {
-        // Redirect logic for absolute (external or not) URLS. To avoid locale stripping: use plain string for external URLs to prevent Next.js rewriting.
-        let targetUrl = existsRedirect.target;
-
-        if (url.search && existsRedirect.isQueryStringPreserved) {
-          const incomingQS = new URLSearchParams(url.search ?? '');
-          const [targetMainUrl, targetQS] = targetUrl.split('?');
-          const mergedQueryString = mergeURLSearchParams(
-            incomingQS,
-            new URLSearchParams(targetQS || '')
-          );
-          targetUrl = `${targetMainUrl}?${mergedQueryString}`;
-        }
-
-        return this.dispatchRedirect(targetUrl, existsRedirect.redirectType, req, res, true);
+      const reqUrl = this.normalizeUrl(req.nextUrl.clone());
+      const incomingPathData: ProcessedPath = {
+        nonLocalePath: reqUrl.pathname,
+        queryString: reqUrl.search ? reqUrl.search.replace(/^\?/, '') : undefined,
       };
 
-      const processRelativeUrlTarget = (
-        url: NextURL,
-        existsRedirect: RedirectResult
-      ): NextResponse => {
-        let targetUrl = existsRedirect.target;
-        const possiblyLocalePrefix = targetUrl.split('/')[1];
-        let targetLocale = '';
+      existsRedirect.target = resolveRedirectTarget(existsRedirect, site.language, reqUrl.pathname);
+      const isAbsoluteUrl = isAbsoluteTarget(existsRedirect.target);
 
-        if (this.locales.includes(possiblyLocalePrefix)) {
-          targetLocale = possiblyLocalePrefix;
-          targetUrl = targetUrl.replace(`/${possiblyLocalePrefix}`, '');
-        } else if (existsRedirect.isLanguagePreserved) {
-          targetLocale = language;
+      const getRedirectTarget = (): NextResponse => {
+        // Redirect logic for absolute (external or not) URLs. To avoid locale stripping:
+        // use a plain string for external URLs to prevent Next.js rewriting.
+        if (isAbsoluteUrl) {
+          const targetUrl = processAbsoluteUrlTarget(incomingPathData, existsRedirect);
+          return this.dispatchRedirect(targetUrl, existsRedirect.redirectType, req, res, true);
         }
 
-        let [targetMainUrl, targetQS] = targetUrl.split('?');
-        if (url.search && existsRedirect.isQueryStringPreserved) {
-          const incomingQS = new URLSearchParams(url.search ?? '');
-          targetQS = mergeURLSearchParams(incomingQS, new URLSearchParams(targetQS || ''));
-        }
-
-        const prepareNewURL = new URL(
-          `${targetMainUrl}${targetQS ? '?' + targetQS : ''}`,
-          url.origin
+        const { targetLocale, targetPath } = processRelativeUrlTarget(
+          incomingPathData,
+          existsRedirect,
+          this.locales,
+          language
         );
 
-        const basePath = url.basePath; // setting NextUrl.href overrides basePath, so we need to store it
-        url.href = prepareNewURL.href;
-        url.pathname = prepareNewURL.pathname;
-        url.search = prepareNewURL.search;
-        // NextUrl setter sets '/' by default if basePath is empty
-        // this causes issues when basePath is not configured so we need to set it only if exists
-        if (basePath) {
-          url.basePath = basePath;
-        }
+        const prepareNewURL = new URL(targetPath, reqUrl.origin);
+
+        const basePath = reqUrl.basePath; // setting NextUrl.href overrides basePath, so we need to store it
+        reqUrl.pathname = prepareNewURL.pathname;
+        reqUrl.search = prepareNewURL.search;
 
         if (!isAppRouterRequest) {
           // for pages router i18n implementation, apply default locale as backup
-          url.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
+          reqUrl.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
         } else {
           // In App Router, we need to set the locale in the pathname, if present
-          if (targetLocale) url.pathname = `/${targetLocale}${url.pathname}`;
+          if (targetLocale) reqUrl.pathname = `/${targetLocale}${reqUrl.pathname}`;
+        }
+
+        // set href last so it reflects the final pathname (incl. any App Router locale prefix)
+        reqUrl.href = `${reqUrl.origin}${reqUrl.pathname}${reqUrl.search}`;
+        // NextUrl setter sets '/' by default if basePath is empty
+        // this causes issues when basePath is not configured so we need to set it only if exists
+        if (basePath) {
+          reqUrl.basePath = basePath;
         }
 
         /** return Response redirect with http code of redirect type */
         return this.dispatchRedirect(
-          this.normalizeUrl(url),
+          this.normalizeUrl(reqUrl),
           existsRedirect.redirectType,
           req,
           res,
@@ -260,35 +223,7 @@ export class RedirectsProxy extends ProxyBase {
         );
       };
 
-      // replace $siteLang token in target if exists
-      existsRedirect.target = existsRedirect.target.replace(
-        REGEXP_CONTEXT_SITE_LANG,
-        site.language
-      );
-
-      const reqUrl = this.normalizeUrl(req.nextUrl.clone());
-
-      // Apply regex replacements to the target URL if the pattern is a regex
-      const sourcePath = existsRedirect.matchedPath || reqUrl.pathname;
-      const pathForCaptureMatch = sourcePath.replace(/\/*$/gi, '') || '/';
-      if (isRegexOrUrl(existsRedirect.pattern) === 'regex') {
-        const redirectRegex = this.safeCompileRedirectPattern(existsRedirect.pattern);
-        const matched = redirectRegex ? pathForCaptureMatch.match(redirectRegex) : null;
-        if (matched) {
-          existsRedirect.target = existsRedirect.target.replace(
-            /\$(\d+)/g,
-            (_: string, index: string): string => {
-              return matched[parseInt(index, 10)] || '';
-            }
-          );
-        }
-      }
-
-      const isAbsoluteUrl = REGEXP_ABSOLUTE_URL.test(existsRedirect.target);
-
-      const redirectedResponse = isAbsoluteUrl
-        ? processAbsoluteUrlTarget(reqUrl, existsRedirect)
-        : processRelativeUrlTarget(reqUrl, existsRedirect);
+      const redirectedResponse = getRedirectTarget();
 
       debug.redirects('redirects proxy end in %dms: %o', Date.now() - startTimestamp, {
         redirected: redirectedResponse.redirected,
@@ -387,71 +322,13 @@ export class RedirectsProxy extends ProxyBase {
     incomingURL: string,
     incomingQS: string
   ): RedirectResult | undefined {
-    const nonLocaleRedirects = redirects.filter((redirect: RedirectResult) => !redirect.locale);
-    let matchedQueryString: string | undefined;
-    const normalizedPath = incomingURL.replace(/\/*$/gi, '').toLowerCase();
-    const localePath = `/${urlLocale.toLowerCase()}${normalizedPath}`;
-
-    return nonLocaleRedirects.length
-      ? nonLocaleRedirects.find((redirect: RedirectResult) => {
-          // process static URL (non-regex) rules
-          if (isRegexOrUrl(redirect.pattern) === 'url') {
-            const urlArray = redirect.pattern.endsWith('/')
-              ? redirect.pattern.slice(0, -1).split('?')
-              : redirect.pattern.split('?');
-            const patternQS = urlArray[1];
-            let patternPath = urlArray[0].toLowerCase();
-            // nextjs routes are case-sensitive, but locales should be compared case-insensitively
-            const patternParts = patternPath.split('/');
-            const maybeLocale = patternParts[1].toLowerCase();
-            // case insensitive lookup of locales
-            if (new RegExp(this.locales.map(escapeRegExp).join('|'), 'i').test(maybeLocale)) {
-              patternPath = patternPath.replace(`/${patternParts[1]}`, `/${maybeLocale}`);
-            }
-
-            return (
-              (patternPath === localePath || patternPath === normalizedPath) &&
-              (!patternQS ||
-                areURLSearchParamsEqual(
-                  new URLSearchParams(patternQS),
-                  new URLSearchParams(incomingQS)
-                ))
-            );
-          }
-
-          // process regex rules
-          const regex = this.safeCompileRedirectPattern(redirect.pattern);
-          if (!regex) {
-            return false;
-          }
-          const testRegex = (value: string) => {
-            regex.lastIndex = 0;
-            return regex.test(value);
-          };
-          const localeStrippedIncoming = this.getLocaleStrippedPath(incomingURL, urlLocale);
-          const localeStrippedNormalized = this.getLocaleStrippedPath(normalizedPath, urlLocale);
-          const pathCandidates = [
-            incomingURL,
-            normalizedPath,
-            localeStrippedIncoming,
-            localeStrippedNormalized,
-          ].filter((candidate, index, array) => array.indexOf(candidate) === index);
-          const matchedPath = pathCandidates.find((candidate) => testRegex(candidate));
-          const matchedPathWithQuery = incomingQS
-            ? pathCandidates.find((candidate) => testRegex(`${candidate}${incomingQS}`))
-            : undefined;
-          matchedQueryString = matchedPathWithQuery ? incomingQS : undefined;
-
-          // Save the matched query string (if found) into the redirect object
-          redirect.matchedQueryString = matchedQueryString || '';
-          redirect.matchedPath = matchedPath || matchedPathWithQuery || '';
-
-          return (
-            !!(matchedPath || matchedQueryString) &&
-            (redirect.locale ? redirect.locale.toLowerCase() === urlLocale.toLowerCase() : true)
-          );
-        })
-      : undefined;
+    return matchFromRedirectMapRedirectUtil(
+      redirects,
+      this.locales,
+      urlLocale,
+      incomingURL,
+      incomingQS
+    );
   }
 
   /**
@@ -467,17 +344,9 @@ export class RedirectsProxy extends ProxyBase {
     locale: string,
     currentPath: string
   ): RedirectResult | undefined {
-    const nonLocalePath = currentPath.replace(
-      new RegExp(`^/?${escapeRegExp(locale)}/`, 'i'),
-      '/'
-    );
-    return redirects.length
-      ? redirects.find((redirect: RedirectResult) => {
-          const patternPath = redirect.pattern.replace(/\/*$/g, '').toLowerCase();
-          // locale rules are easy and nice
-          return redirect.locale === locale && patternPath === nonLocalePath;
-        })
-      : undefined;
+    // strip any configured locale prefix so the path can be compared against locale-less patterns
+    const { nonLocalePath } = breakDownPath(this.locales, currentPath);
+    return matchRedirectItemRedirectUtil(redirects, locale, nonLocalePath);
   }
 
   /**
@@ -626,57 +495,5 @@ export class RedirectsProxy extends ProxyBase {
     }
     return redirect;
   }
-
-  /**
-   * Compiles a redirect pattern to RegExp; returns null if Sitecore produced a malformed rule
-   * so one bad entry does not fail the entire redirect chain.
-   * @param {string} pattern redirect pattern from redirect map
-   * @returns {RegExp | null} normalized regex instance, or null when invalid
-   * @private
-   */
-  private safeCompileRedirectPattern(pattern: string): RegExp | null {
-    try {
-      return this.getRedirectPatternRegex(pattern);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      console.warn(
-        `[RedirectsProxy] Invalid redirect regex; skipping rule. pattern=${pattern} (${message})`
-      );
-      return null;
-    }
-  }
-
-  /**
-   * Converts a redirect pattern string into a RegExp.
-   * Supports both JS literal form (`/pattern/i`) and plain regex source (`^/path$`).
-   * @param {string} pattern redirect pattern from redirect map
-   * @returns {RegExp} normalized regex instance
-   * @private
-   */
-  private getRedirectPatternRegex(pattern: string): RegExp {
-    const normalizedPattern = escapeNonSpecialQuestionMarks(pattern);
-    const literalMatch = normalizedPattern.match(/^\/(.+)\/([a-z]*)$/i);
-    if (literalMatch) {
-      const [, source, flags] = literalMatch;
-      const safeFlags = flags || 'i';
-      return new RegExp(source, safeFlags);
-    }
-    return new RegExp(normalizedPattern, 'i');
-  }
-
-  /**
-   * Strips locale prefix from path when present.
-   * @param {string} path incoming request path
-   * @param {string} urlLocale locale from Next.js URL
-   * @returns {string} locale-stripped path
-   * @private
-   */
-  private getLocaleStrippedPath(path: string, urlLocale: string): string {
-    if (!urlLocale) {
-      return path;
-    }
-    const localePrefixRegex = new RegExp(`^/${escapeRegExp(urlLocale)}(?=/|$)`, 'i');
-    const strippedPath = path.replace(localePrefixRegex, '') || '/';
-    return strippedPath.startsWith('/') ? strippedPath : `/${strippedPath}`;
-  }
 }
+
