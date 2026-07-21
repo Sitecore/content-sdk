@@ -2,18 +2,18 @@
 import { z } from 'zod';
 
 /**
- * Prop metadata (e.g. control hint for Design Studio).
+ * Prop metadata (e.g. control hint and field type for Design Studio).
  *  @public
  */
-export type PropMeta = { control?: string };
+export type PropMeta = { control?: string; fieldType?: string };
 
 const META_KEY = 'meta';
 
 /**
- * Attach editor hint (e.g. control type) to a prop schema. Metadata is stored under a key that
+ * Attach editor hint (e.g. control type, fieldType) to a prop schema. Metadata is stored under a key that
  * survives JSON Schema conversion for Design Studio.
  * @param {import('zod').ZodType} schema - Zod type for the prop
- * @param {PropMeta} meta - Editor metadata (e.g. control)
+ * @param {PropMeta} meta - Editor metadata (e.g. control, fieldType)
  * @returns The same Zod type with meta attached (or schema unchanged if .meta is not callable)
  * @public
  */

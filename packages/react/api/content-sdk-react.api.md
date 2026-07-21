@@ -589,6 +589,7 @@ export { PlaceholderProps }
 // @public
 export type PropMeta = {
     control?: string;
+    fieldType?: string;
 };
 
 // @public

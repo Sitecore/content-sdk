@@ -6,7 +6,7 @@ import { withPropMeta } from './schema-utils';
  * Zod schema for a Sitecore Single-Line Text.
  * Mirrors the Sitecore Text component (`Text.tsx` in `@sitecore-content-sdk/react`).
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the schema.
- * @returns A ZodObject with `value?: string | number` and the DS control hint attached.
+ * @returns A ZodObject with `value?: string | number` and DS control/fieldType hints attached.
  * @public
  */
 export const textFieldSchema = (extra?: z.ZodRawShape) =>
@@ -15,14 +15,14 @@ export const textFieldSchema = (extra?: z.ZodRawShape) =>
       value: z.union([z.string(), z.number()]).optional(),
       ...extra,
     }),
-    { control: 'Single-Line Text' }
+    { control: 'Single-Line Text', fieldType: 'Text' }
   );
 
 /**
  * Zod schema for a Sitecore Rich Text field.
  * Mirrors the Sitecore Rich Text component (`RichText.tsx` in `@sitecore-content-sdk/react`).
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the schema.
- * @returns A ZodObject with `value?: string` and the DS control hint attached.
+ * @returns A ZodObject with `value?: string` and DS control/fieldType hints attached.
  * @public
  */
 export const richTextFieldSchema = (extra?: z.ZodRawShape) =>
@@ -31,14 +31,14 @@ export const richTextFieldSchema = (extra?: z.ZodRawShape) =>
       value: z.string().optional(),
       ...extra,
     }),
-    { control: 'Rich Text' }
+    { control: 'Rich Text', fieldType: 'RichText' }
   );
 
 /**
  * Zod schema for a Sitecore Date field.
  * Mirrors the field shape used in the Date component (`Date.tsx` in `@sitecore-content-sdk/react`).
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the schema.
- * @returns A ZodObject with `value?: string` and the DS control hint attached.
+ * @returns A ZodObject with `value?: string` and DS control/fieldType hints attached.
  * @public
  */
 export const dateFieldSchema = (extra?: z.ZodRawShape) =>
@@ -47,7 +47,7 @@ export const dateFieldSchema = (extra?: z.ZodRawShape) =>
       value: z.string().optional(),
       ...extra,
     }),
-    { control: 'Date' }
+    { control: 'Date', fieldType: 'Date' }
   );
 
 /**
@@ -56,7 +56,7 @@ export const dateFieldSchema = (extra?: z.ZodRawShape) =>
  * The inner value object uses `z.looseObject` to allow arbitrary Sitecore-added attributes,
  * matching the `[attributeName: string]: unknown` index signature on `LinkFieldValue`.
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the outer schema.
- * @returns A ZodObject with `value: LinkFieldValue` and the DS control hint attached.
+ * @returns A ZodObject with `value: LinkFieldValue` and DS control/fieldType hints attached.
  * @public
  */
 export const linkFieldSchema = (extra?: z.ZodRawShape) =>
@@ -75,7 +75,7 @@ export const linkFieldSchema = (extra?: z.ZodRawShape) =>
       }),
       ...extra,
     }),
-    { control: 'Link' }
+    { control: 'Link', fieldType: 'Link' }
   );
 
 /**
@@ -84,7 +84,7 @@ export const linkFieldSchema = (extra?: z.ZodRawShape) =>
  * The inner value object uses `z.looseObject` to allow arbitrary HTML attributes,
  * matching the `[attributeName: string]: unknown` index signature on `ImageFieldValue`.
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the outer schema.
- * @returns A ZodObject with `value?: ImageFieldValue` and the DS control hint attached.
+ * @returns A ZodObject with `value?: ImageFieldValue` and DS control/fieldType hints attached.
  * @public
  */
 export const imageFieldSchema = (extra?: z.ZodRawShape) =>
@@ -101,7 +101,7 @@ export const imageFieldSchema = (extra?: z.ZodRawShape) =>
         .optional(),
       ...extra,
     }),
-    { control: 'Image' }
+    { control: 'Image', fieldType: 'Image' }
   );
 
 /**
@@ -110,7 +110,7 @@ export const imageFieldSchema = (extra?: z.ZodRawShape) =>
  * The inner value object uses `z.looseObject` to allow arbitrary extra properties,
  * matching the `[propName: string]: unknown` index signature on `FileFieldValue`.
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the outer schema.
- * @returns A ZodObject with `value: FileFieldValue` and the DS control hint attached.
+ * @returns A ZodObject with `value: FileFieldValue` and DS control/fieldType hints attached.
  * @public
  */
 export const fileFieldSchema = (extra?: z.ZodRawShape) =>
@@ -123,7 +123,7 @@ export const fileFieldSchema = (extra?: z.ZodRawShape) =>
       }),
       ...extra,
     }),
-    { control: 'File' }
+    { control: 'File', fieldType: 'File' }
   );
 
 /**
