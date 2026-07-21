@@ -8,7 +8,7 @@
 
 > **fileFieldSchema**(`extra?`): `ZodObject`\<\{ `value`: `ZodObject`\<\{ `displayName`: `ZodOptional`\<`ZodString`\>; `src`: `ZodOptional`\<`ZodString`\>; `title`: `ZodOptional`\<`ZodString`\>; \}, `$loose`\>; \}, `$strip`\>
 
-Defined in: [packages/react/src/atoms/field-schemas.ts:116](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/react/src/atoms/field-schemas.ts#L116)
+Defined in: [packages/react/src/atoms/field-schemas.ts:116](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/react/src/atoms/field-schemas.ts#L116)
 
 Zod schema for a Sitecore File field.
 Mirrors the Sitecore File component (`File.tsx` in `@sitecore-content-sdk/react`).
@@ -25,4 +25,4 @@ matching the `[propName: string]: unknown` index signature on `FileFieldValue`.
 
 `ZodObject`\<\{ `value`: `ZodObject`\<\{ `displayName`: `ZodOptional`\<`ZodString`\>; `src`: `ZodOptional`\<`ZodString`\>; `title`: `ZodOptional`\<`ZodString`\>; \}, `$loose`\>; \}, `$strip`\>
 
-A ZodObject with `value: FileFieldValue` and the DS control hint attached.
+A ZodObject with `value: FileFieldValue` and DS control/fieldType hints attached.

@@ -6,7 +6,7 @@
 
 # Interface: AtomsConfig
 
-Defined in: [packages/react/src/atoms/types.ts:87](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/react/src/atoms/types.ts#L87)
+Defined in: [packages/react/src/atoms/types.ts:87](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/react/src/atoms/types.ts#L87)
 
 Props the developer passes to the provider for atoms support.
 
@@ -16,7 +16,7 @@ Props the developer passes to the provider for atoms support.
 
 > **catalog**: `Catalog`\<`any`, [`AtomsCatalogInput`](../type-aliases/AtomsCatalogInput.md)\>
 
-Defined in: [packages/react/src/atoms/types.ts:89](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/react/src/atoms/types.ts#L89)
+Defined in: [packages/react/src/atoms/types.ts:89](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/react/src/atoms/types.ts#L89)
 
 The json-render catalog (schema + component/action definitions).
 
@@ -26,7 +26,7 @@ The json-render catalog (schema + component/action definitions).
 
 > `optional` **navigate?**: (`path`) => `void`
 
-Defined in: [packages/react/src/atoms/types.ts:93](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/react/src/atoms/types.ts#L93)
+Defined in: [packages/react/src/atoms/types.ts:93](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/react/src/atoms/types.ts#L93)
 
 Optional navigate function to be passed to action handlers for navigation purposes.
 
@@ -46,6 +46,6 @@ Optional navigate function to be passed to action handlers for navigation purpos
 
 > **registry**: `DefineRegistryResult`
 
-Defined in: [packages/react/src/atoms/types.ts:91](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/react/src/atoms/types.ts#L91)
+Defined in: [packages/react/src/atoms/types.ts:91](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/react/src/atoms/types.ts#L91)
 
 The registry result returned by defineAtomsRegistry.

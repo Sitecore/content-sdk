@@ -8,6 +8,6 @@
 
 > **DateFieldSchema** = `z.infer`\<`ReturnType`\<*typeof* [`dateFieldSchema`](../functions/dateFieldSchema.md)\>\>
 
-Defined in: [packages/react/src/atoms/field-schemas.ts:146](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/react/src/atoms/field-schemas.ts#L146)
+Defined in: [packages/react/src/atoms/field-schemas.ts:146](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/react/src/atoms/field-schemas.ts#L146)
 
 Inferred type for a Sitecore Date field prop.

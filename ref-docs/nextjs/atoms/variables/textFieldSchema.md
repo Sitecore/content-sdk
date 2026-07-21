@@ -23,4 +23,4 @@ Mirrors the Sitecore Text component (`Text.tsx` in `@sitecore-content-sdk/react`
 
 `z.ZodObject`\<\{ `value`: `z.ZodOptional`\<`z.ZodUnion`\<readonly \[`z.ZodString`, `z.ZodNumber`\]\>\>; \}, `z.core.$strip`\>
 
-A ZodObject with `value?: string | number` and the DS control hint attached.
+A ZodObject with `value?: string | number` and DS control/fieldType hints attached.

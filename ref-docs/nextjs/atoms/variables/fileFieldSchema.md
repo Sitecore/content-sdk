@@ -25,4 +25,4 @@ matching the `[propName: string]: unknown` index signature on `FileFieldValue`.
 
 `z.ZodObject`\<\{ `value`: `z.ZodObject`\<\{ `displayName`: `z.ZodOptional`\<`z.ZodString`\>; `src`: `z.ZodOptional`\<`z.ZodString`\>; `title`: `z.ZodOptional`\<`z.ZodString`\>; \}, `z.core.$loose`\>; \}, `z.core.$strip`\>
 
-A ZodObject with `value: FileFieldValue` and the DS control hint attached.
+A ZodObject with `value: FileFieldValue` and DS control/fieldType hints attached.

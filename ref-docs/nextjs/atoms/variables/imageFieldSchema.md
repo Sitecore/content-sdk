@@ -25,4 +25,4 @@ matching the `[attributeName: string]: unknown` index signature on `ImageFieldVa
 
 `z.ZodObject`\<\{ `value`: `z.ZodOptional`\<`z.ZodObject`\<\{ `alt`: `z.ZodOptional`\<`z.ZodString`\>; `class`: `z.ZodOptional`\<`z.ZodString`\>; `height`: `z.ZodOptional`\<`z.ZodUnion`\<readonly \[`z.ZodString`, `z.ZodNumber`\]\>\>; `src`: `z.ZodOptional`\<`z.ZodString`\>; `width`: `z.ZodOptional`\<`z.ZodUnion`\<readonly \[`z.ZodString`, `z.ZodNumber`\]\>\>; \}, `z.core.$loose`\>\>; \}, `z.core.$strip`\>
 
-A ZodObject with `value?: ImageFieldValue` and the DS control hint attached.
+A ZodObject with `value?: ImageFieldValue` and DS control/fieldType hints attached.

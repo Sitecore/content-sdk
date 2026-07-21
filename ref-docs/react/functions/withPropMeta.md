@@ -8,9 +8,9 @@
 
 > **withPropMeta**\<`T`\>(`schema`, `meta`): `T`
 
-Defined in: [packages/react/src/atoms/schema-utils.ts:20](https://github.com/Sitecore/content-sdk/blob/935d69d056b753a906f23541fe4b788acdc743ae/packages/react/src/atoms/schema-utils.ts#L20)
+Defined in: [packages/react/src/atoms/schema-utils.ts:20](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/react/src/atoms/schema-utils.ts#L20)
 
-Attach editor hint (e.g. control type) to a prop schema. Metadata is stored under a key that
+Attach editor hint (e.g. control type, fieldType) to a prop schema. Metadata is stored under a key that
 survives JSON Schema conversion for Design Studio.
 
 ## Type Parameters
@@ -24,7 +24,7 @@ survives JSON Schema conversion for Design Studio.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `schema` | `T` | Zod type for the prop |
-| `meta` | [`PropMeta`](../type-aliases/PropMeta.md) | Editor metadata (e.g. control) |
+| `meta` | [`PropMeta`](../type-aliases/PropMeta.md) | Editor metadata (e.g. control, fieldType) |
 
 ## Returns
 

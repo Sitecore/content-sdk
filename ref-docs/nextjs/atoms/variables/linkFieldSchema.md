@@ -25,4 +25,4 @@ matching the `[attributeName: string]: unknown` index signature on `LinkFieldVal
 
 `z.ZodObject`\<\{ `value`: `z.ZodObject`\<\{ `anchor`: `z.ZodOptional`\<`z.ZodString`\>; `class`: `z.ZodOptional`\<`z.ZodString`\>; `className`: `z.ZodOptional`\<`z.ZodString`\>; `href`: `z.ZodOptional`\<`z.ZodString`\>; `linktype`: `z.ZodOptional`\<`z.ZodString`\>; `querystring`: `z.ZodOptional`\<`z.ZodString`\>; `target`: `z.ZodOptional`\<`z.ZodString`\>; `text`: `z.ZodOptional`\<`z.ZodString`\>; `title`: `z.ZodOptional`\<`z.ZodString`\>; \}, `z.core.$loose`\>; \}, `z.core.$strip`\>
 
-A ZodObject with `value: LinkFieldValue` and the DS control hint attached.
+A ZodObject with `value: LinkFieldValue` and DS control/fieldType hints attached.

@@ -23,4 +23,4 @@ Mirrors the Sitecore Rich Text component (`RichText.tsx` in `@sitecore-content-s
 
 `z.ZodObject`\<\{ `value`: `z.ZodOptional`\<`z.ZodString`\>; \}, `z.core.$strip`\>
 
-A ZodObject with `value?: string` and the DS control hint attached.
+A ZodObject with `value?: string` and DS control/fieldType hints attached.

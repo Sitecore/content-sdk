@@ -10,7 +10,7 @@
 
 Defined in: react/types/atoms/schema-utils.d.ts:7
 
-Prop metadata (e.g. control hint for Design Studio).
+Prop metadata (e.g. control hint and field type for Design Studio).
 
 ## Properties
 
@@ -19,3 +19,11 @@ Prop metadata (e.g. control hint for Design Studio).
 > `optional` **control?**: `string`
 
 Defined in: react/types/atoms/schema-utils.d.ts:8
+
+***
+
+### fieldType?
+
+> `optional` **fieldType?**: `string`
+
+Defined in: react/types/atoms/schema-utils.d.ts:9
