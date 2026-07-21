@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import {
   breakDownPath,
-  getLocaleStrippedPath,
   isAbsoluteTarget,
   matchFromRedirectMapRedirect,
   matchRedirectItemRedirect,
@@ -169,28 +168,6 @@ describe('redirect-utils', () => {
       } finally {
         warn.restore();
       }
-    });
-  });
-
-  describe('getLocaleStrippedPath', () => {
-    it('should strip a leading locale segment', () => {
-      expect(getLocaleStrippedPath('/en/foo', 'en')).to.equal('/foo');
-    });
-
-    it('should reduce a locale-only path to root', () => {
-      expect(getLocaleStrippedPath('/en', 'en')).to.equal('/');
-    });
-
-    it('should leave a path without the locale prefix untouched', () => {
-      expect(getLocaleStrippedPath('/foo', 'en')).to.equal('/foo');
-    });
-
-    it('should be case-insensitive', () => {
-      expect(getLocaleStrippedPath('/EN/foo', 'en')).to.equal('/foo');
-    });
-
-    it('should return the path unchanged when no locale is provided', () => {
-      expect(getLocaleStrippedPath('/foo', '')).to.equal('/foo');
     });
   });
 

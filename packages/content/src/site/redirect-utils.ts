@@ -2,7 +2,6 @@ import { RedirectInfo } from '../site';
 import {
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,
-  escapeRegExp,
   isRegexOrUrl,
   mergeURLSearchParams,
 } from '@sitecore-content-sdk/core/tools';
@@ -10,11 +9,19 @@ import {
 const REGEXP_CONTEXT_SITE_LANG = /\$siteLang/i;
 const REGEXP_ABSOLUTE_URL = /^(?:[a-z]+:)?\/\//i;
 
+/**
+ * Expanded redirect info to contain matchers for regexp match
+ * @internal
+ */
 export type RedirectResult = RedirectInfo & {
   matchedQueryString?: string;
   matchedPath?: string;
 };
 
+/**
+ * Broken down path with all parts needed to make a match for a redirect rule
+ * @internal
+ */
 export type ProcessedPath = {
   nonLocalePath: string;
   locale?: string;
@@ -27,6 +34,7 @@ export type ProcessedPath = {
  * @param {string[]} configuredLocales configured site locales
  * @param {string} urlPath path (optionally including a `?query`)
  * @returns {ProcessedPath} broken-down path parts
+ * @internal
  */
 export const breakDownPath = (configuredLocales: string[], urlPath: string): ProcessedPath => {
   const urlArray = urlPath.endsWith('/') ? urlPath.slice(0, -1).split('?') : urlPath.split('?');
@@ -60,6 +68,7 @@ export const breakDownPath = (configuredLocales: string[], urlPath: string): Pro
  * @param {string} incomingURL Original pathname used for regex tests.
  * @param {string} incomingQS Query string including leading `?` if present.
  * @returns {RedirectResult | undefined} First matching redirect or undefined.
+ * @internal
  */
 export const matchFromRedirectMapRedirect = (
   redirects: RedirectResult[],
@@ -107,8 +116,8 @@ export const matchFromRedirectMapRedirect = (
     const pathCandidates = [
       incomingURL,
       normalizedPath,
-      getLocaleStrippedPath(incomingURL, urlLocale),
-      getLocaleStrippedPath(normalizedPath, urlLocale),
+      breakDownPath(configuredLocales, incomingURL).nonLocalePath,
+      breakDownPath(configuredLocales, normalizedPath).nonLocalePath,
     ].filter((candidate, index, array) => array.indexOf(candidate) === index);
     const matchedPath = pathCandidates.find((candidate) => testRegex(candidate));
     const matchedPathWithQuery = incomingQS
@@ -129,6 +138,7 @@ export const matchFromRedirectMapRedirect = (
  * @param {string} locale current request locale
  * @param {string} nonLocalePath current request path with locale prefix stripped
  * @returns {RedirectResult | undefined} matched redirect item redirect result or undefined
+ * @internal
  */
 export const matchRedirectItemRedirect = (
   redirects: RedirectResult[],
@@ -148,6 +158,7 @@ export const matchRedirectItemRedirect = (
  * Supports both JS literal form (`/pattern/i`) and plain regex source (`^/path$`).
  * @param {string} pattern redirect pattern from redirect map
  * @returns {RegExp | null} normalized regex instance, or null when invalid
+ * @internal
  */
 export const safeCompileRedirectPattern = (pattern: string): RegExp | null => {
   try {
@@ -169,24 +180,10 @@ export const safeCompileRedirectPattern = (pattern: string): RegExp | null => {
 };
 
 /**
- * Strips locale prefix from path when present.
- * @param {string} path incoming request path
- * @param {string} urlLocale locale from the request URL
- * @returns {string} locale-stripped path
- */
-export const getLocaleStrippedPath = (path: string, urlLocale: string): string => {
-  if (!urlLocale) {
-    return path;
-  }
-  const localePrefixRegex = new RegExp(`^/${escapeRegExp(urlLocale)}(?=/|$)`, 'i');
-  const strippedPath = path.replace(localePrefixRegex, '') || '/';
-  return strippedPath.startsWith('/') ? strippedPath : `/${strippedPath}`;
-};
-
-/**
  * Detects absolute (external or protocol-relative) target URLs.
  * @param {string} target redirect target
  * @returns {boolean} true when the target is an absolute URL
+ * @internal
  */
 export const isAbsoluteTarget = (target: string): boolean => REGEXP_ABSOLUTE_URL.test(target);
 
@@ -197,6 +194,7 @@ export const isAbsoluteTarget = (target: string): boolean => REGEXP_ABSOLUTE_URL
  * @param {string} siteLanguage site language used for the `$siteLang` token
  * @param {string} requestPath incoming request path, used when the rule stored no matched path
  * @returns {string} resolved target
+ * @internal
  */
 export const resolveRedirectTarget = (
   existsRedirect: RedirectResult,
@@ -222,6 +220,13 @@ export const resolveRedirectTarget = (
   return target;
 };
 
+/**
+ * Resolves the absolute redirect target (external redirects), optionally preseriving query string
+ * @param {ProcessedPath} incomingPathData non locale path, locale prefix and query string (if present)
+ * @param {RedirectResult} existsRedirect matched redirect to resolve final result from
+ * @returns {string} URL to redirect to
+ * @internal
+ */
 export const processAbsoluteUrlTarget = (
   incomingPathData: ProcessedPath,
   existsRedirect: RedirectResult
@@ -245,6 +250,7 @@ export const processAbsoluteUrlTarget = (
  * @param {string[]} configuredLocales configured site locales
  * @param {string} reqLocale current request locale (used when `isLanguagePreserved`)
  * @returns {{ targetLocale: string; targetPath: string }} resolved locale and locale-less path (with query)
+ * @internal
  */
 export const processRelativeUrlTarget = (
   incomingPathData: ProcessedPath,
