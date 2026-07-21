@@ -188,8 +188,8 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
         limit: pageSize,
         offset,
         sort,
-        locale,
-        facet,
+        ...(locale !== undefined && { locale }),
+        ...(facet !== undefined && { facet }),
       };
 
       const { results: searchResults, total, facets } = await searchService.search<T>(searchParams, {

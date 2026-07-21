@@ -548,7 +548,7 @@ describe('SearchService', () => {
       const searchService = new SearchService({ contextId });
       const response = await searchService.search({ searchIndexId });
 
-      expect(response.facets).to.be.undefined;
+      expect(response.facets).to.equal(undefined);
     });
   });
 

@@ -202,8 +202,8 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
           limit: pageSize,
           offset,
           sort,
-          locale,
-          facet,
+          ...(locale !== undefined && { locale }),
+          ...(facet !== undefined && { facet }),
         };
 
         const { results: searchResults, total: totalResults, facets } = await searchService.search<T>(
