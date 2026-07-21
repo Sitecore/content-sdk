@@ -6,7 +6,7 @@
 
 # Class: ScHiddenRenderingComponent
 
-Defined in: [packages/angular/src/components/sc-hidden-rendering.component.ts:6](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/angular/src/components/sc-hidden-rendering.component.ts#L6)
+Defined in: [packages/angular/src/components/sc-hidden-rendering.component.ts:6](https://github.com/Sitecore/content-sdk/blob/ce897227369d7cdccf3cbb79b621c67585f7aff6/packages/angular/src/components/sc-hidden-rendering.component.ts#L6)
 
 ## Constructors
 
@@ -26,7 +26,7 @@ Defined in: [packages/angular/src/components/sc-hidden-rendering.component.ts:6]
 
 > **get** **style**(): `string`
 
-Defined in: [packages/angular/src/components/sc-hidden-rendering.component.ts:7](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/angular/src/components/sc-hidden-rendering.component.ts#L7)
+Defined in: [packages/angular/src/components/sc-hidden-rendering.component.ts:7](https://github.com/Sitecore/content-sdk/blob/ce897227369d7cdccf3cbb79b621c67585f7aff6/packages/angular/src/components/sc-hidden-rendering.component.ts#L7)
 
 ##### Returns
 

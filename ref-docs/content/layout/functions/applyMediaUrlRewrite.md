@@ -8,7 +8,7 @@
 
 > **applyMediaUrlRewrite**\<`T`\>(`value`, `transform`): `T`
 
-Defined in: [content/src/layout/rewrite-edge-host.ts:131](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/content/src/layout/rewrite-edge-host.ts#L131)
+Defined in: [content/src/layout/rewrite-edge-host.ts:131](https://github.com/Sitecore/content-sdk/blob/ce897227369d7cdccf3cbb79b621c67585f7aff6/packages/content/src/layout/rewrite-edge-host.ts#L131)
 
 **`Internal`**
 
