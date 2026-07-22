@@ -241,7 +241,6 @@ export class RedirectsProxy extends ProxyBase {
         if (basePath) {
           url.basePath = basePath;
         }
-        console.log("IS APP ROUTERRRRRRRRRRRRRRRRR", isAppRouterRequest);
         if (!isAppRouterRequest) {
           // for pages router i18n implementation, apply default locale as backup
           url.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
