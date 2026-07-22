@@ -1,9 +1,14 @@
 import React from 'react';
 import { StudioComponentWrapper } from './StudioComponentWrapper';
-import { NativeDataFetcher, NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
+import {
+  NativeDataFetcher,
+  NativeDataFetcherResponse,
+  getAtomsCssCompiler,
+} from '@sitecore-content-sdk/core';
 import { debug } from '@sitecore-content-sdk/content';
 import { Document } from '@sitecore-content-sdk/content/atoms';
 import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
+import { extractDocumentClasses } from '../../atoms/extract-document-classes';
 import type { ChildComponentProps } from '../Placeholder/models';
 
 /**
@@ -31,9 +36,11 @@ export type StudioComponentServerWrapperProps = {
 
 /**
  * Server component for Studio (NCC) components. Fetches the component layout
- * `Document` from MMS server-side and renders the client `StudioComponentWrapper`.
+ * `Document` from MMS server-side, optionally compiles Document class names into
+ * CSS (via the registered atoms CSS compiler), and renders the client
+ * `StudioComponentWrapper`.
  * @param {StudioComponentServerWrapperProps} props incoming props
- * @returns rendered `StudioComponentWrapper`
+ * @returns Fragment with optional `<style>` tag and `StudioComponentWrapper`
  * @internal
  */
 export const StudioComponentServerWrapper = async (props: StudioComponentServerWrapperProps) => {
@@ -46,7 +53,33 @@ export const StudioComponentServerWrapper = async (props: StudioComponentServerW
   const document = await fetchDocument(path);
   if (!document) return null;
 
-  return <StudioComponentWrapper document={document} fields={props.fields} params={props.params} />;
+  const classes = extractDocumentClasses(document);
+  const compiler = getAtomsCssCompiler();
+  let css = '';
+
+  if (classes.length) {
+    if (compiler) {
+      try {
+        css = await compiler(classes);
+      } catch (err) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('StudioComponentServerWrapper: CSS compile failed', err);
+        }
+      }
+    } else if (process.env.NODE_ENV !== 'production') {
+      console.warn(
+        'StudioComponentServerWrapper: Document has class names but no atoms CSS compiler is registered. ' +
+          'Call registerTailwindCssCompiler() from @sitecore-content-sdk/nextjs/instrumentation in instrumentation-node.ts.'
+      );
+    }
+  }
+
+  return (
+    <>
+      {css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null}
+      <StudioComponentWrapper document={document} fields={props.fields} params={props.params} />
+    </>
+  );
 };
 
 /**

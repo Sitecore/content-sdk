@@ -15,6 +15,9 @@ import { ParsedUrlQueryInput } from 'querystring';
 export const areURLSearchParamsEqual: (params1: URLSearchParams, params2: URLSearchParams) => boolean;
 
 // @public
+export type AtomsCssCompiler = (classes: string[]) => Promise<string>;
+
+// @public
 export const auth: {
     readonly clientCredentialsFlow: typeof authModule.clientCredentialsFlow;
 };
@@ -184,6 +187,9 @@ export type GenericGraphQLClientError = Partial<Error> & {
 
 // @public
 export const getAllowedOriginsFromEnv: () => string[];
+
+// @public
+export function getAtomsCssCompiler(): AtomsCssCompiler | null;
 
 // @internal
 export function getCache<T>(key: string): T | undefined;
@@ -365,6 +371,9 @@ export interface RetryStrategy {
     getDelay(error: GenericGraphQLClientError, attempt: number): number;
     shouldRetry(error: GenericGraphQLClientError, attempt: number, retries: number): boolean;
 }
+
+// @public
+export function setAtomsCssCompiler(fn: AtomsCssCompiler): void;
 
 // @internal
 export function setCache(key: string, data: unknown): void;

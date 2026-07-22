@@ -20,6 +20,7 @@ import { defineRegistry } from '@json-render/react';
 import type { DefineRegistryResult } from '@json-render/react';
 import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 import { DictionaryService } from '@sitecore-content-sdk/content/i18n';
+import type { Document as Document_2 } from '@sitecore-content-sdk/content/atoms';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { enableDebug } from '@sitecore-content-sdk/core';
 import { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
@@ -109,6 +110,7 @@ export type AtomsComponentsMap = Record<string, AtomsComponentRenderer>;
 // @public
 export interface AtomsConfig {
     catalog: Catalog<any, AtomsCatalogInput>;
+    compileCssAction?: (classes: string[]) => Promise<string>;
     navigate?: (path: string) => void;
     registry: DefineRegistryResult;
 }
@@ -306,6 +308,9 @@ export const ErrorComponent: (props: {
 }) => React_2.JSX.Element;
 
 export { ErrorPage }
+
+// @public
+export function extractDocumentClasses(doc: Document_2): string[];
 
 // @public (undocumented)
 export const FEaaSComponent: (props: FEaaSComponentProps) => JSX_2.Element | null;

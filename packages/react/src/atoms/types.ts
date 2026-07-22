@@ -91,4 +91,27 @@ export interface AtomsConfig {
   registry: DefineRegistryResult;
   /** Optional navigate function to be passed to action handlers for navigation purposes. */
   navigate?: (path: string) => void;
+  /**
+   * Optional Server Action used to compile CSS for dynamic Document class names
+   * during editing (Design Library) sessions.
+   *
+   * For Next.js App Router starters, pass `compileCssForDocumentAction` from
+   * `@sitecore-content-sdk/nextjs/server-actions`. When provided,
+   * `DesignLibraryLowCodeComponent` injects a `<style>` tag after each Document
+   * update so classes authored in MMS Documents are styled.
+   *
+   * Has no effect in production; production CSS injection is handled server-side by
+   * `StudioComponentServerWrapper` using the compiler registered via
+   * `setAtomsCssCompiler` / `registerTailwindCssCompiler`.
+   * @example
+   * ```tsx
+   * // src/Providers.tsx  ('use client')
+   * import { compileCssForDocumentAction } from '@sitecore-content-sdk/nextjs/server-actions';
+   *
+   * <SitecoreProvider
+   *   atomsConfig={{ catalog, registry, navigate, compileCssAction: compileCssForDocumentAction }}
+   * />
+   * ```
+   */
+  compileCssAction?: (classes: string[]) => Promise<string>;
 }

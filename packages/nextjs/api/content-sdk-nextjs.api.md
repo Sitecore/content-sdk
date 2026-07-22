@@ -59,6 +59,7 @@ import { ErrorPage } from '@sitecore-content-sdk/content/client';
 import { ErrorPages } from '@sitecore-content-sdk/content/site';
 import { ErrorPagesService } from '@sitecore-content-sdk/content/site';
 import { ErrorPagesServiceConfig } from '@sitecore-content-sdk/content/site';
+import { extractDocumentClasses } from '@sitecore-content-sdk/react';
 import { extractFiles } from '@sitecore-content-sdk/content/node-tools';
 import { FEaaSClientWrapper } from '@sitecore-content-sdk/react';
 import { FEaaSComponent } from '@sitecore-content-sdk/react';
@@ -534,6 +535,8 @@ export { ErrorPages }
 export { ErrorPagesService }
 
 export { ErrorPagesServiceConfig }
+
+export { extractDocumentClasses }
 
 export { extractFiles }
 
