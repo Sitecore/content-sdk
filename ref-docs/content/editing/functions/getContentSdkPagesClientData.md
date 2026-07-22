@@ -8,7 +8,7 @@
 
 > **getContentSdkPagesClientData**(): `Record`\<`string`, `Record`\<`string`, `unknown`\>\>
 
-Defined in: [content/src/editing/utils.ts:132](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/content/src/editing/utils.ts#L132)
+Defined in: [content/src/editing/utils.ts:132](https://github.com/Sitecore/content-sdk/blob/ce897227369d7cdccf3cbb79b621c67585f7aff6/packages/content/src/editing/utils.ts#L132)
 
 **`Internal`**
 

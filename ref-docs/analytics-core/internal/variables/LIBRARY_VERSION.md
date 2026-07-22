@@ -8,7 +8,7 @@
 
 > `const` **LIBRARY\_VERSION**: `string` = `packageJson.version`
 
-Defined in: [analytics-core/src/consts.ts:7](https://github.com/Sitecore/content-sdk/blob/758194c5352b02735bc7dfd29f021597ce763889/packages/analytics-core/src/consts.ts#L7)
+Defined in: [analytics-core/src/consts.ts:7](https://github.com/Sitecore/content-sdk/blob/ce897227369d7cdccf3cbb79b621c67585f7aff6/packages/analytics-core/src/consts.ts#L7)
 
 **`Internal`**
 
