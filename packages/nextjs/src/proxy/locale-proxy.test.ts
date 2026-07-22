@@ -8,6 +8,7 @@ import { LocaleProxy } from './locale-proxy';
 import { REWRITE_HEADER_NAME, LOCALE_HEADER_NAME } from './proxy';
 import type { SuccessfulLocaleProxyExecution } from './locale-proxy';
 import { isSuccessfulProxyExecution } from './utils';
+import { headers } from 'next/headers';
 
 chai.use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -233,9 +234,9 @@ describe('LocaleProxy', () => {
       expect(finalRes.headers.get(REWRITE_HEADER_NAME)).to.equal('/en/about');
     });
 
-    it('should rewrite path and set locale header with default locale setting if locale not in path', async () => {
+    it('should rewrite path and set locale header with target locale setting if locale not in path', async () => {
       const { proxy } = createProxy({
-        config: { ...defaultConfig, defaultLanguage: 'de-DE', locales: ['en', 'de-DE'] },
+        config: { ...defaultConfig, defaultLanguage: 'en', locales: ['en', 'de-DE'] },
       });
 
       const req = createRequest({
@@ -244,7 +245,11 @@ describe('LocaleProxy', () => {
         },
       });
 
-      const res = createResponse();
+      const res = createResponse({
+        headers: {
+          'x-sc-locale': 'de-DE',
+        },
+      });
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
@@ -263,6 +268,42 @@ describe('LocaleProxy', () => {
 
       expect(finalRes.headers.get(LOCALE_HEADER_NAME)).to.equal('de-DE');
       expect(finalRes.headers.get(REWRITE_HEADER_NAME)).to.equal('/de-DE/about');
+    });
+
+    it('should not rewrite path but set locale header with default locale setting, when locale not in path and target locale is defaultLanguage', async () => {
+      const { proxy } = createProxy({
+        config: { ...defaultConfig, defaultLanguage: 'de-DE', locales: ['en', 'de-DE'] },
+      });
+
+      const req = createRequest({
+        nextUrl: {
+          pathname: '/about',
+        },
+      });
+
+      const res = createResponse({
+        headers: {
+          'x-sc-locale': 'de-DE',
+        },
+      });
+
+      nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+
+      const finalRes = await proxy.handle(req, res);
+
+      validateDebugLog('locale proxy start: %o', {
+        pathname: '/about',
+        locale: 'de-DE',
+      });
+
+      validateDebugLog('locale proxy end, with rewrite: %o', {
+        pathname: '/about',
+        locale: 'de-DE',
+        rewritePath: '/about',
+      });
+
+      expect(finalRes.headers.get(LOCALE_HEADER_NAME)).to.equal('de-DE');
+      expect(finalRes.headers.get(REWRITE_HEADER_NAME)).to.equal('/about');
     });
   });
 
