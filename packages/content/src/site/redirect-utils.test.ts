@@ -268,6 +268,19 @@ describe('redirect-utils', () => {
       expect(redirect.matchedPath).to.equal('/search');
     });
 
+    it('should match a regex rule anchored without a trailing slash for both slashed and unslashed paths', () => {
+      // `^/my-page$` should match both `/my-page` and `/my-page/`
+      const withoutSlash = makeRedirect({ pattern: '^/my-page$', target: '/new-page' });
+      expect(
+        matchFromRedirectMapRedirect([withoutSlash], 'en', { nonLocalePath: '/my-page' })
+      ).to.equal(withoutSlash);
+
+      const withSlash = makeRedirect({ pattern: '^/my-page$', target: '/new-page' });
+      expect(
+        matchFromRedirectMapRedirect([withSlash], 'en', { nonLocalePath: '/my-page/' })
+      ).to.equal(withSlash);
+    });
+
     it('should return undefined when nothing matches', () => {
       const redirect = makeRedirect({ pattern: '/old-page' });
       expect(matchFromRedirectMapRedirect([redirect], 'en', { nonLocalePath: '/other' })).to.be

@@ -3,4 +3,4 @@
 '@sitecore-content-sdk/nextjs': patch
 ---
 
-Refactor redirects logic to be reusable across frameworks
+[SXA Redirects] Refactor redirects logic to be reusable across frameworks

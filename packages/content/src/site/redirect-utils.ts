@@ -94,9 +94,8 @@ export const matchFromRedirectMapRedirect = (
   return redirectMapRedirects.find((redirect: RedirectResult) => {
     // process static URL (non-regex) rules
     if (isRegexOrUrl(redirect.pattern) === 'url') {
-      const [rawPatternPath, patternQS] = (redirect.pattern.endsWith('/')
-        ? redirect.pattern.slice(0, -1)
-        : redirect.pattern
+      const [rawPatternPath, patternQS] = (
+        redirect.pattern.endsWith('/') ? redirect.pattern.slice(0, -1) : redirect.pattern
       ).split('?');
       // candidates are already lowercased; lowercase the pattern path to keep locale (and route)
       // comparison case-insensitive
@@ -118,9 +117,13 @@ export const matchFromRedirectMapRedirect = (
       regex.lastIndex = 0;
       return regex.test(value);
     };
-    const matchedPath = pathCandidates.find((candidate) => testRegex(candidate));
+    // remove duplicates
+    const regexCandidates = [...pathCandidates, ...staticCandidates].filter(
+      (candidate, index, array) => array.indexOf(candidate) === index
+    );
+    const matchedPath = regexCandidates.find((candidate) => testRegex(candidate));
     const matchedPathWithQuery = incomingQS
-      ? pathCandidates.find((candidate) => testRegex(`${candidate}?${incomingQS}`))
+      ? regexCandidates.find((candidate) => testRegex(`${candidate}?${incomingQS}`))
       : undefined;
 
     // Save the matched path/query (if found) into the redirect object
