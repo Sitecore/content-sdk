@@ -9,6 +9,7 @@ import express from 'express';
 import { join } from 'node:path';
 import memoryDriver from 'unstorage/drivers/memory';
 import {
+  createBotTrackingMiddleware,
   createEditingConfigMiddleware,
   createEditingRenderMiddleware,
   createLoaderCache,
@@ -126,9 +127,26 @@ app.use(
 );
 
 /**
+ * Bot tracking middleware. Detects bots by User-Agent, sets the `sc_bot` cookie, and sends a
+ * dedicated bot page-view event. Must run before personalize so the bot cookie is set before
+ * personalize decides whether to skip. Skipped in dev/localhost unless
+ * `SITECORE_ENABLE_BOT_TRACKING=true`.
+ */
+app.use(
+  createBotTrackingMiddleware({
+    ...config.api.edge,
+    locales: config.angular.locales,
+    defaultLanguage: config.defaultLanguage,
+    defaultSite: config.defaultSite,
+    matcher: middlewareMatcher,
+  })
+);
+
+/**
  * Personalize middleware. Identifies page/component variants for the request via
  * Sitecore CDP and writes them onto `req.scParams` so the page loader fetches the
- * personalized layout and the loader cache keys per variant.
+ * personalized layout and the loader cache keys per variant. Skips bot requests marked
+ * by the bot tracking middleware (`skipForBot`, default true).
  *
  * NOTE: Personalize requires Edge configuration (contextId/clientContextId) and
  * cannot work with local containers

@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
   loadForm: vi.fn(),
   executeScriptElements: vi.fn(),
   subscribeToFormSubmitEvent: vi.fn(),
+  isBotClientSide: vi.fn(),
 }));
 
 vi.mock('@sitecore-content-sdk/content', () => {
@@ -24,6 +25,10 @@ vi.mock('@sitecore-content-sdk/content', () => {
     },
   };
 });
+
+vi.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
+  isBotClientSide: mocks.isBotClientSide,
+}));
 
 describe('ScFormComponent', () => {
   const testSitecoreConfig = {
@@ -86,6 +91,7 @@ describe('ScFormComponent', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.loadForm.mockResolvedValue('<p data-sc-form="1">loaded</p>');
+    mocks.isBotClientSide.mockReturnValue(false);
 
     errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
@@ -280,6 +286,18 @@ describe('ScFormComponent', () => {
   it('should not subscribe to form submit events in editing mode', async () => {
     const fixture = createFixture();
     setMockContextPage(makePage(true));
+
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }, { uid: 'x' }));
+    await flushFormLoadPipeline(fixture);
+
+    expect(mocks.subscribeToFormSubmitEvent).not.toHaveBeenCalled();
+    expect(mocks.executeScriptElements).toHaveBeenCalled();
+  });
+
+  it('should not subscribe to form submit events for bots but still load the form', async () => {
+    mocks.isBotClientSide.mockReturnValue(true);
+    const fixture = createFixture();
+    setMockContextPage(makePage(false));
 
     fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }, { uid: 'x' }));
     await flushFormLoadPipeline(fixture);

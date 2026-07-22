@@ -41,6 +41,11 @@ export {
   createPersonalizeMiddleware,
   type PersonalizeMiddlewareOptions,
 } from './personalize-middleware';
+export {
+  createBotTrackingMiddleware,
+  shouldSkipForLocalEnvironment,
+  type BotTrackingMiddlewareOptions,
+} from './bot-tracking-middleware';
 export { shouldProcessPath } from './utils';
 export { isEditingPreview } from '../utils';
 export type { PathPattern } from '../utils';

@@ -11,6 +11,7 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { form } from '@sitecore-content-sdk/content';
+import { isBotClientSide } from '@sitecore-content-sdk/analytics-core/internal';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 import { SitecoreContextService } from '../lib/sitecore-context.service';
 
@@ -81,8 +82,9 @@ export class ScFormComponent {
 
           el.innerHTML = html;
 
+          // Don't send form events in editing mode or for bots.
           const isEditing = this.context.isEditing();
-          if (!isEditing) {
+          if (!isEditing && !isBotClientSide()) {
             subscribeToFormSubmitEvent(el, this.rendering()?.uid, abort.signal);
           }
 

@@ -215,6 +215,31 @@ describe('createPersonalizeMiddleware', () => {
     expect(next).toHaveBeenCalledTimes(1);
   });
 
+  it('should skip bot requests marked with the bot cookie by default', async () => {
+    await createPersonalizeMiddleware(createOptions())(
+      createReq({ cookies: { sc_bot: '1' } }),
+      createRes(),
+      next
+    );
+
+    expect(getPersonalizeInfo).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it('should still personalize bot requests when skipForBot is false', async () => {
+    getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
+    personalizeMock.mockResolvedValue({ variantId: 'variant-a' });
+
+    await createPersonalizeMiddleware(createOptions({ skipForBot: false }))(
+      createReq({ cookies: { sc_bot: '1' } }),
+      createRes(),
+      next
+    );
+
+    expect(getPersonalizeInfo).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
   it('should skip api, sitecore and file routes', async () => {
     const middleware = createPersonalizeMiddleware(createOptions());
 
