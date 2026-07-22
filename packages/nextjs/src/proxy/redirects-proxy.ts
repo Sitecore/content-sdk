@@ -16,7 +16,7 @@ import {
 } from '@sitecore-content-sdk/core/tools';
 import { NextURL } from 'next/dist/server/web/next-url';
 import { NextRequest, NextResponse } from 'next/server';
-import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
+import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME, APP_ROUTER_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
 import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from './types';
@@ -241,13 +241,10 @@ export class RedirectsProxy extends ProxyBase {
         if (basePath) {
           url.basePath = basePath;
         }
-
+        console.log("IS APP ROUTERRRRRRRRRRRRRRRRR", isAppRouterRequest);
         if (!isAppRouterRequest) {
-          // Only set locale when Pages Router i18n is configured; otherwise NextURL throws.
-          const localeToApply = targetLocale || req.nextUrl.defaultLocale;
-          if (localeToApply && req.nextUrl.defaultLocale) {
-            url.locale = localeToApply;
-          }
+          // for pages router i18n implementation, apply default locale as backup
+          url.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
         } else {
           // In App Router, we need to set the locale in the pathname, if present
           if (targetLocale) url.pathname = `/${targetLocale}${url.pathname}`;
@@ -626,6 +623,7 @@ export class RedirectsProxy extends ProxyBase {
       redirect.headers.delete('x-middleware-next');
       redirect.headers.delete('x-middleware-rewrite');
       redirect.headers.delete(REWRITE_HEADER_NAME);
+      redirect.headers.delete(APP_ROUTER_HEADER_NAME);
     }
     return redirect;
   }

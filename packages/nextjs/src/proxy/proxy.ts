@@ -16,6 +16,10 @@ import { ProxiesContext } from './types';
 
 export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
 export const LOCALE_HEADER_NAME = 'x-sc-locale';
+/**
+ * Set by AppRouterMultisiteProxy so downstream proxies can detect App Router even LocaleProxy is disabled (no x-sc-locale header).
+ */
+export const APP_ROUTER_HEADER_NAME = 'x-sc-app-router';
 
 const REDIRECT_STATUS_MIN = 300;
 const REDIRECT_STATUS_MAX = 399;
@@ -107,12 +111,13 @@ export abstract class ProxyBase extends ProxyHandler {
   }
 
   /**
-   * Determines if the application is using the app router based on the locale header
+   * Determines if the application is using the App Router.
+   * True when LocaleProxy set the locale header, or AppRouterMultisiteProxy set the app-router header.
    * @param {NextResponse} res response
    * @returns {boolean} true if app router is used
    */
   protected isAppRouter(res: NextResponse): boolean {
-    return !!this.getLanguageFromHeader(res);
+    return !!this.getLanguageFromHeader(res) || res?.headers.get(APP_ROUTER_HEADER_NAME) === '1';
   }
 
   /**

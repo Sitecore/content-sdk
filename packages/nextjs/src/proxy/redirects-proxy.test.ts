@@ -565,8 +565,8 @@ describe('RedirectsProxy', () => {
       expect(finalRes).to.deep.equal(redirectRes);
     });
 
-    it('should redirect relative targets without NextURL.locale when i18n is not configured', async () => {
-      // Simulate App Router NextURL with no i18n: locale is '', assigning it throws.
+    it('should use App Router redirect path when app router header is set without locale header', async () => {
+      // AppRouterMultisiteProxy sets x-sc-app-router; LocaleProxy may be disabled (no x-sc-locale).
       const applyNoI18nLocaleGuard = (url: any) => {
         Object.defineProperty(url, 'locale', {
           get() {
@@ -595,7 +595,11 @@ describe('RedirectsProxy', () => {
         return cloned;
       };
 
-      const res = createResponse();
+      const res = createResponse({
+        headers: {
+          'x-sc-app-router': '1',
+        },
+      });
       const redirectRes = createResponse({
         redirected: true,
         status: 302,

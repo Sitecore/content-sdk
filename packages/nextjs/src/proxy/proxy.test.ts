@@ -143,7 +143,18 @@ describe('ProxyBase', () => {
       expect(proxy['isAppRouter'](res)).to.equal(true);
     });
 
-    it('should return false when locale header is missing', () => {
+    it('should return true when app router header is provided', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const res = createRes({
+        headers: {
+          'x-sc-app-router': '1',
+        },
+      });
+
+      expect(proxy['isAppRouter'](res)).to.equal(true);
+    });
+
+    it('should return false when locale and app router headers are missing', () => {
       const proxy = new SampleProxy({ sites: [] });
       const res = createRes({});
 
