@@ -218,7 +218,6 @@ export class AppRouterMultisiteProxy extends MultisiteProxy {
     protected getSiteRewrite(pathname: string, siteName: string): string;
     protected shouldSkipWhenDisabled(): boolean;
     protected shouldWarnWhenDisabled(_res: NextResponse): void;
-    protected withAppRouterSignal(res: NextResponse): void;
 }
 
 // @public
@@ -713,7 +712,6 @@ export class MultisiteProxy extends ProxyBase {
     get name(): string;
     protected shouldSkipWhenDisabled(): boolean;
     protected shouldWarnWhenDisabled(_res: NextResponse): void;
-    protected withAppRouterSignal(_res: NextResponse): void;
 }
 
 // @public

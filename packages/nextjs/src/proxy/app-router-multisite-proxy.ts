@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { MultisiteProxy } from './multisite-proxy';
-import { APP_ROUTER_HEADER_NAME } from './proxy';
 
 /**
  * Proxy/handler for enabling multisite support in the Next.js App Router.
@@ -40,14 +39,5 @@ export class AppRouterMultisiteProxy extends MultisiteProxy {
   protected getSiteRewrite(pathname: string, siteName: string): string {
     const path = pathname.startsWith('/') ? pathname : '/' + pathname;
     return `/${siteName}${path}`;
-  }
-
-  /**
-   * Marks the response so downstream proxies (e.g. RedirectsProxy) detect App Router
-   * without relying on LocaleProxy / x-sc-locale.
-   * @param {NextResponse} res response
-   */
-  protected withAppRouterSignal(res: NextResponse): void {
-    res.headers.set(APP_ROUTER_HEADER_NAME, '1');
   }
 }

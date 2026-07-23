@@ -16,7 +16,7 @@ import {
 } from '@sitecore-content-sdk/core/tools';
 import { NextURL } from 'next/dist/server/web/next-url';
 import { NextRequest, NextResponse } from 'next/server';
-import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME, APP_ROUTER_HEADER_NAME } from './proxy';
+import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
 import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from './types';
@@ -241,6 +241,7 @@ export class RedirectsProxy extends ProxyBase {
         if (basePath) {
           url.basePath = basePath;
         }
+
         if (!isAppRouterRequest) {
           // for pages router i18n implementation, apply default locale as backup
           url.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
@@ -622,7 +623,6 @@ export class RedirectsProxy extends ProxyBase {
       redirect.headers.delete('x-middleware-next');
       redirect.headers.delete('x-middleware-rewrite');
       redirect.headers.delete(REWRITE_HEADER_NAME);
-      redirect.headers.delete(APP_ROUTER_HEADER_NAME);
     }
     return redirect;
   }

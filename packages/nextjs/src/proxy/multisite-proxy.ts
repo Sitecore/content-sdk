@@ -66,9 +66,6 @@ export class MultisiteProxy extends ProxyBase {
     proxiesContext?: ProxiesContext
   ): Promise<NextResponse> => {
     try {
-      // App Router subclass marks the response once; rewrite() preserves headers for downstream proxies.
-      this.withAppRouterSignal(res);
-
       // Path can be rewritten by previously executed proxy
       const pathname = res?.headers.get(REWRITE_HEADER_NAME) || req.nextUrl.pathname;
       const language = this.getLanguage(req, res);
@@ -198,16 +195,6 @@ export class MultisiteProxy extends ProxyBase {
    */
   protected shouldSkipWhenDisabled(): boolean {
     return true; // Base class skips when disabled
-  }
-
-  /**
-   * Allows App Router subclass to mark the response for downstream proxies.
-   * Pages Router Multisite leaves the response unchanged.
-   * @param {NextResponse} _res response
-   */
-  // eslint-disable-next-line no-unused-vars
-  protected withAppRouterSignal(_res: NextResponse): void {
-    // no-op
   }
 
   /**
