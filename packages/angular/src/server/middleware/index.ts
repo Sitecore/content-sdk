@@ -28,14 +28,8 @@ export {
   type AllowedQueryParams,
   type AllowedQueryParamsResolver,
 } from './editing-render-middleware';
-export {
-  createSitemapMiddleware,
-  type CreateSitemapMiddlewareOptions,
-} from './sitemap-middleware';
-export {
-  createRobotsMiddleware,
-  type CreateRobotsMiddlewareOptions,
-} from './robots-middleware';
+export { createSitemapMiddleware, type CreateSitemapMiddlewareOptions } from './sitemap-middleware';
+export { createRobotsMiddleware, type CreateRobotsMiddlewareOptions } from './robots-middleware';
 export { createMultisiteMiddleware, type MultisiteMiddlewareOptions } from './multisite-middleware';
 export {
   createPersonalizeMiddleware,
@@ -43,7 +37,6 @@ export {
 } from './personalize-middleware';
 export {
   createBotTrackingMiddleware,
-  shouldSkipForLocalEnvironment,
   type BotTrackingMiddlewareOptions,
 } from './bot-tracking-middleware';
 export { shouldProcessPath } from './utils';

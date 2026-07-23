@@ -294,16 +294,31 @@ describe('ScFormComponent', () => {
     expect(mocks.executeScriptElements).toHaveBeenCalled();
   });
 
-  it('should not subscribe to form submit events for bots but still load the form', async () => {
+  it('should not send form submit events for bots but still load the form', async () => {
     mocks.isBotClientSide.mockReturnValue(true);
+
+    // The real subscribeToFormSubmitEvent attaches a submit listener that reports the submit; model
+    // that here so a dispatched submit proves whether tracking was actually wired up.
+    const onSubmitTracked = vi.fn();
+    mocks.subscribeToFormSubmitEvent.mockImplementation((el: HTMLElement) => {
+      el.addEventListener('submit', () => onSubmitTracked());
+    });
+
     const fixture = createFixture();
     setMockContextPage(makePage(false));
 
     fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }, { uid: 'x' }));
     await flushFormLoadPipeline(fixture);
 
-    expect(mocks.subscribeToFormSubmitEvent).not.toHaveBeenCalled();
+    // form content still loads for bots
     expect(mocks.executeScriptElements).toHaveBeenCalled();
+    // no submit subscription is set up for the bot
+    expect(mocks.subscribeToFormSubmitEvent).not.toHaveBeenCalled();
+
+    // submitting the loaded form sends no event, because tracking was never wired up
+    const container = fixture.nativeElement.querySelector('div') as HTMLDivElement;
+    container.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    expect(onSubmitTracked).not.toHaveBeenCalled();
   });
 
   it('should log when loadForm rejects', async () => {

@@ -22,7 +22,7 @@ import debug from '../../debug';
  * @public
  */
 export type BotTrackingMiddlewareOptions = BaseMiddlewareOptions &
-  Partial<SitecoreConfig['api']['edge']> & {
+  SitecoreConfig['api']['edge'] & {
     /** Locales used to extract the language from the request path */
     locales?: string[];
     /** Fallback language when the request path has no locale prefix. Default is `'en'` */
@@ -130,13 +130,6 @@ export function createBotTrackingMiddleware(
         res.cookie(BOT_DETECTION_COOKIE, '1', { secure: true, sameSite: 'lax', path: '/' });
       }
       req.cookies = { ...(req.cookies ?? {}), [BOT_DETECTION_COOKIE]: '1' };
-
-      // Sending the bot page view requires Edge configuration; the cookie above is still useful
-      // without it (personalize/form/page-view gates), so only the dispatch is guarded.
-      if (!options.contextId) {
-        debug.common('bot tracking skipped dispatch (Edge contextId missing)');
-        return next();
-      }
 
       const { locale, nonLocalePath } = splitLocaleFromPath(path, options.locales ?? []);
       const language = locale || options.defaultLanguage || 'en';

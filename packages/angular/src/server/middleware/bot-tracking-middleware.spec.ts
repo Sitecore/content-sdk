@@ -1,5 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect, vi, beforeEach, afterEach, beforeAll } from 'vitest';
+import { EDITING_PARAMS_HEADER } from '../../editing/constants';
 import type { CsdkExpressRequest, ExpressMiddleware, ExpressResponse } from './models';
 import type { BotTrackingMiddlewareOptions } from './bot-tracking-middleware';
 
@@ -48,6 +49,7 @@ function createOptions(
   return {
     enabled: true,
     contextId: 'context-id',
+    clientContextId: 'client-context-id',
     edgeUrl: 'https://edge.test',
     defaultSite: 'website',
     defaultLanguage: 'en',
@@ -179,15 +181,34 @@ describe('createBotTrackingMiddleware', () => {
     expect(next).toHaveBeenCalledTimes(1);
   });
 
-  it('should skip excluded paths (default API exclusion)', async () => {
-    const req = createReq({ path: '/api/data', url: '/api/data' });
+  it('should skip editing render requests, when the editing header present', async () => {
+    const req = createReq({
+      headers: {
+        host: 'example.com',
+        'user-agent': 'Googlebot/2.1',
+        [EDITING_PARAMS_HEADER]: JSON.stringify({ site: 'a' }),
+      },
+    });
     const res = createRes();
 
     await createBotTrackingMiddleware(createOptions())(req, res, next);
 
     expect(isBotMock).not.toHaveBeenCalled();
+    expect(res.cookie).not.toHaveBeenCalled();
     expect(botPageViewMock).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it('should skip api, sitecore and file routes', async () => {
+    const middleware = createBotTrackingMiddleware(createOptions());
+
+    for (const path of ['/api/data', '/sitecore/render', '/assets/logo.png']) {
+      await middleware(createReq({ path, url: path }), createRes(), next);
+    }
+
+    expect(isBotMock).not.toHaveBeenCalled();
+    expect(botPageViewMock).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(3);
   });
 
   it('should skip on localhost when bot tracking is not explicitly enabled', async () => {
@@ -199,23 +220,6 @@ describe('createBotTrackingMiddleware', () => {
 
     expect(isBotMock).not.toHaveBeenCalled();
     expect(res.cookie).not.toHaveBeenCalled();
-    expect(botPageViewMock).not.toHaveBeenCalled();
-    expect(next).toHaveBeenCalledTimes(1);
-  });
-
-  it('should mark the bot cookie but not dispatch when Edge contextId is missing', async () => {
-    const req = createReq();
-    const res = createRes();
-
-    await createBotTrackingMiddleware(createOptions({ contextId: undefined }))(req, res, next);
-
-    expect(res.cookie).toHaveBeenCalledWith(BOT_COOKIE, '1', {
-      secure: true,
-      sameSite: 'lax',
-      path: '/',
-    });
-    expect(req.cookies?.[BOT_COOKIE]).toBe('1');
-    expect(initContentSdkMock).not.toHaveBeenCalled();
     expect(botPageViewMock).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalledTimes(1);
   });
