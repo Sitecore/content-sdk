@@ -33,7 +33,7 @@ describe('define-config', () => {
       cdpTimeout: 1000,
       scope: 'unit-scope',
     },
-    redirects: { enabled: true, locales: ['en'], localeInPath: true },
+    redirects: { enabled: true, locales: ['en'] },
   };
 
   it('merges config from sitecore.config with default values', () => {
@@ -66,7 +66,6 @@ describe('define-config', () => {
     // redirects
     expect(config.redirects.enabled).to.equal(mockConfig.redirects?.enabled);
     expect(config.redirects.locales).to.deep.equal(mockConfig.redirects?.locales);
-    expect(config.redirects.localeInPath).to.equal(mockConfig.redirects?.localeInPath);
 
     // retries (fallback values)
     expect(config.retries?.count).to.equal(fallback.retries.count);
@@ -171,7 +170,6 @@ describe('define-config', () => {
       expect(cfg.defaultLanguage).to.equal('da');
       expect(cfg.personalize.scope).to.equal('scope-record');
       expect(cfg.redirects.enabled).to.equal(true);
-      expect(cfg.redirects.localeInPath).to.equal(null);
       expect(cfg.personalize.enabled).to.equal(true);
     });
   });

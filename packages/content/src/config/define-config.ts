@@ -51,8 +51,6 @@ export const buildFallbackConfig = (env: { [key: string]: string | undefined }):
     redirects: {
       enabled: env.NODE_ENV !== 'development',
       locales: ['en'],
-      // null = unset: RedirectsProxy falls back to LocaleProxy header detection
-      localeInPath: null,
     },
     multisite: {
       enabled: true,

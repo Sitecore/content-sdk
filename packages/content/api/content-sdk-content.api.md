@@ -1334,7 +1334,6 @@ export type SitecoreConfigInput = {
     redirects?: {
         enabled?: boolean;
         locales?: string[];
-        localeInPath?: boolean | null;
     };
     rewriteMediaUrls?: boolean | ((value: string) => string);
     disableCodeGeneration?: boolean;

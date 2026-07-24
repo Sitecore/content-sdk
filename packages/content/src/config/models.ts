@@ -202,16 +202,6 @@ export type SitecoreConfigInput = {
      * These should match those in framework-specific configuration of your app.
      */
     locales?: string[];
-    /**
-     * When `true`, relative redirect targets include a locale path prefix (`/[locale]/...`).
-     * Use this for App Router apps that keep a `[locale]` route segment.
-     * When `false`, Pages Router Next.js i18n `url.locale` is used when configured;
-     * otherwise the redirect path is left unchanged (e.g. App Router without `[locale]`).
-     * When `null` (default), RedirectsProxy falls back to LocaleProxy `x-sc-locale` header
-     * detection for backward compatibility.
-     * @default null
-     */
-    localeInPath?: boolean | null;
   };
   /**
    * Rewrite media/content URLs in layout (media fields, rich text img/src, href, etc.).
