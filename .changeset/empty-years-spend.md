@@ -1,5 +1,7 @@
 ---
+'@sitecore-content-sdk/content': patch
 '@sitecore-content-sdk/nextjs': patch
+'create-content-sdk-app': patch
 ---
 
-Fix App Router detection when LocaleProxy is disabled by having AppRouterMultisiteProxy set `x-sc-app-router` for downstream proxies
+RedirectsProxy no longer depends on LocaleProxy's `x-sc-locale` header for App Router locale shaping. Add `redirects.localeInPath` (`true` | `false` | `null`) and set `localeInPath: true` in App Router templates.
