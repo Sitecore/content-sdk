@@ -47,7 +47,6 @@ function createOptions(
   overrides: Partial<BotTrackingMiddlewareOptions> = {}
 ): BotTrackingMiddlewareOptions {
   return {
-    enabled: true,
     contextId: 'context-id',
     clientContextId: 'client-context-id',
     edgeUrl: 'https://edge.test',
@@ -156,17 +155,6 @@ describe('createBotTrackingMiddleware', () => {
     await createBotTrackingMiddleware(createOptions())(req, res, next);
 
     expect(res.cookie).not.toHaveBeenCalled();
-    expect(botPageViewMock).not.toHaveBeenCalled();
-    expect(next).toHaveBeenCalledTimes(1);
-  });
-
-  it('should skip when disabled', async () => {
-    const req = createReq();
-    const res = createRes();
-
-    await createBotTrackingMiddleware(createOptions({ enabled: false }))(req, res, next);
-
-    expect(isBotMock).not.toHaveBeenCalled();
     expect(botPageViewMock).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalledTimes(1);
   });

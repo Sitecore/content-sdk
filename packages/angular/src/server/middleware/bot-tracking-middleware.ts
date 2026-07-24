@@ -21,7 +21,7 @@ import debug from '../../debug';
  * Configuration for the bot tracking middleware.
  * @public
  */
-export type BotTrackingMiddlewareOptions = BaseMiddlewareOptions &
+export type BotTrackingMiddlewareOptions = Omit<BaseMiddlewareOptions, 'enabled'> &
   SitecoreConfig['api']['edge'] & {
     /** Locales used to extract the language from the request path */
     locales?: string[];
@@ -37,8 +37,7 @@ const isPrefetch = (req: ExpressRequest): boolean =>
   );
 
 /**
- * Whether bot tracking should be skipped for a local / development environment. Set
- * `SITECORE_ENABLE_BOT_TRACKING=true` to force it on locally.
+ * Whether bot tracking should be skipped for a local / development environment.
  * @param {string} hostname - Resolved request hostname (without port).
  * @returns {boolean} True when bot tracking should be skipped.
  * @internal
@@ -73,14 +72,9 @@ export function createBotTrackingMiddleware(
 ): ExpressMiddleware {
   return async (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
     try {
-      if (options.enabled === false) {
-        debug.common('bot tracking middleware disabled');
-        return next();
-      }
-
       // For browser loader navigations (/_data) routing data comes from the loader payload, not
       // the request; getMiddlewareRequest normalizes both into path/query/data.
-      const { path, data } = getMiddlewareRequest(req as CsdkExpressRequest);
+      const { path, data } = getMiddlewareRequest(req);
 
       if (isEditingPreview(data.headers)) {
         debug.common('bot tracking skipped (editing/preview mode)');
@@ -135,7 +129,7 @@ export function createBotTrackingMiddleware(
       const language = locale || options.defaultLanguage || 'en';
       const siteName =
         (req as CsdkExpressRequest).scParams?.siteName ||
-        (data.cookies?.[SITE_KEY] as string | undefined) ||
+        data.cookies?.[SITE_KEY] ||
         options.defaultSite ||
         '';
 
@@ -149,7 +143,7 @@ export function createBotTrackingMiddleware(
 
       // Express req/res are http.IncomingMessage/ServerResponse at runtime; cast for the cookie-based
       // server adapters.
-      const { req: httpReq, res: httpRes } = toNodeAdapterPair(req as CsdkExpressRequest, res);
+      const { req: httpReq, res: httpRes } = toNodeAdapterPair(req, res);
       await initContentSdk({
         config: {
           contextId: options.contextId,

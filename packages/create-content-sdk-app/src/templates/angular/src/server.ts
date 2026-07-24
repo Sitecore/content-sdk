@@ -129,8 +129,7 @@ app.use(
 /**
  * Bot tracking middleware. Detects bots by User-Agent, sets the `sc_bot` cookie, and sends a
  * dedicated bot page-view event. Must run before personalize so the bot cookie is set before
- * personalize decides whether to skip. Skipped in dev/localhost unless
- * `SITECORE_ENABLE_BOT_TRACKING=true`.
+ * personalize decides whether to skip. Does not run in dev/localhost environments.
  */
 app.use(
   createBotTrackingMiddleware({
