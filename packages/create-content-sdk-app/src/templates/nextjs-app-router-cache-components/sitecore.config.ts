@@ -14,4 +14,8 @@ export default defineConfig({
       enabled: false,
     },
   },
+  redirects: {
+    // App Router uses a [locale] segment; keep locale in redirect paths even if LocaleProxy is removed
+    localeInPath: true,
+  },
 });
