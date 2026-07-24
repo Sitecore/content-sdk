@@ -45,6 +45,11 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
       ...config?.personalize,
       scope: config?.personalize?.scope || process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE,
     },
+    redirects: {
+      ...config?.redirects,
+      // null = unset: RedirectsProxy falls back to LocaleProxy header detection
+      localeInPath: config?.redirects?.localeInPath ?? null,
+    },
     generateStaticPaths:
       process.env.GENERATE_STATIC_PATHS !== undefined
         ? process.env.GENERATE_STATIC_PATHS.toLowerCase() === 'true'
@@ -76,6 +81,18 @@ export type SitecoreConfigInput = SitecoreConfigInputCore & {
    * This should be the base URL where the Next.js app is accessible from the server side (e.g., "http://localhost:3000").
    */
   sitecoreInternalEditingHostUrl?: string;
+
+  /**
+   * Next.js-specific redirects settings (App Router vs Pages Router locale shaping).
+   */
+  redirects?: SitecoreConfigInputCore['redirects'] & {
+    /**
+     * Whether redirect targets use a locale path prefix (`/[locale]/...`).
+     * `true` / `false` set App Router behavior; `null` (default) keeps `x-sc-locale` fallback.
+     * @default null
+     */
+    localeInPath?: boolean | null;
+  };
 };
 
 /**

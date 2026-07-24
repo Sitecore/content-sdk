@@ -14,4 +14,9 @@ export default defineConfig({
       enabled: false,
     },
   },
+  redirects: {
+    // Routes live under a [locale] segment (src/app/[site]/[locale]),
+    // so redirect targets must include the locale prefix to resolve.
+    localeInPath: true,
+  },
 });

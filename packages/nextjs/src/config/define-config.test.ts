@@ -510,4 +510,21 @@ describe('defineConfig', () => {
       });
     });
   });
+
+  describe('config.redirects.localeInPath', () => {
+    it('should default to null', () => {
+      defineConfigModule.defineConfig(defaultConfig());
+      const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+      expect(resultConfig.redirects?.localeInPath).to.equal(null);
+    });
+
+    it('should use the value from the config', () => {
+      defineConfigModule.defineConfig({
+        ...defaultConfig(),
+        redirects: { localeInPath: true },
+      });
+      const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+      expect(resultConfig.redirects?.localeInPath).to.equal(true);
+    });
+  });
 });

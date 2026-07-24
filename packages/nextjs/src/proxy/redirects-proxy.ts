@@ -149,7 +149,7 @@ export class RedirectsProxy extends ProxyBase {
         return res;
       }
 
-      const isAppRouterRequest = this.isAppRouter(res);
+      const localeRedirectMode = this.getLocaleRedirectMode(res);
 
       const validateRequest = () => {
         if (this.isPreview(req)) {
@@ -242,13 +242,12 @@ export class RedirectsProxy extends ProxyBase {
           url.basePath = basePath;
         }
 
-        if (!isAppRouterRequest) {
-          // for pages router i18n implementation, apply default locale as backup
+        if (localeRedirectMode === 'pages') {
           url.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
-        } else {
-          // In App Router, we need to set the locale in the pathname, if present
-          if (targetLocale) url.pathname = `/${targetLocale}${url.pathname}`;
+        } else if (localeRedirectMode === 'app-with-locale' && targetLocale) {
+          url.pathname = `/${targetLocale}${url.pathname}`;
         }
+        // else: App Router without [locale] segment — leave pathname unchanged
 
         /** return Response redirect with http code of redirect type */
         return this.dispatchRedirect(
@@ -559,9 +558,8 @@ export class RedirectsProxy extends ProxyBase {
         let rewritePath =
           typeof target === 'string' ? target : `${target.pathname}${target.search || ''}`;
 
-        // For App Router Server Transfer, ensure locale is in the path
-        // This is needed because the route structure requires [locale] segment
-        if (this.isAppRouter(res) && !isExternal) {
+        // When locale is part of the route path, ensure Server Transfer rewrite includes it
+        if (this.getLocaleRedirectMode(res) === 'app-with-locale' && !isExternal) {
           const pathParts = rewritePath.split('/').filter(Boolean);
           const firstSegment = pathParts[0];
           // Check if path doesn't start with a locale
@@ -678,5 +676,28 @@ export class RedirectsProxy extends ProxyBase {
     const localePrefixRegex = new RegExp(`^/${escapeRegExp(urlLocale)}(?=/|$)`, 'i');
     const strippedPath = path.replace(localePrefixRegex, '') || '/';
     return strippedPath.startsWith('/') ? strippedPath : `/${strippedPath}`;
+  }
+
+  /**
+   * Resolves how locale should be applied on relative redirect targets.
+   * - `pages`: Pages Router Next.js i18n (`url.locale`)
+   * - `app-with-locale`: App Router with `[locale]` path segment
+   * - `app-without-locale`: App Router without `[locale]` segment
+   * Explicit `localeInPath` true/false selects App Router modes; when unset/`null`,
+   * falls back to LocaleProxy header detection (App Router) vs Pages Router.
+   * @param {NextResponse} res response
+   * @returns {'pages' | 'app-with-locale' | 'app-without-locale'} locale redirect mode
+   * @private
+   */
+  private getLocaleRedirectMode(
+    res: NextResponse
+  ): 'pages' | 'app-with-locale' | 'app-without-locale' {
+    if (this.config.localeInPath === true) {
+      return 'app-with-locale';
+    }
+    if (this.config.localeInPath === false) {
+      return 'app-without-locale';
+    }
+    return this.isAppRouter(res) ? 'app-with-locale' : 'pages';
   }
 }
