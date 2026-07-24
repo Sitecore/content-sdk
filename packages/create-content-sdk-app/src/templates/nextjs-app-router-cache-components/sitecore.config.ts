@@ -15,7 +15,8 @@ export default defineConfig({
     },
   },
   redirects: {
-    // App Router uses a [locale] segment; keep locale in redirect paths even if LocaleProxy is removed
+    // Routes live under a [locale] segment (src/app/[site]/[locale]),
+    // so redirect targets must include the locale prefix to resolve.
     localeInPath: true,
   },
 });
