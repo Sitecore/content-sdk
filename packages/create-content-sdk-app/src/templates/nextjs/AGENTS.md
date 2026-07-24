@@ -19,6 +19,8 @@ npm run type-check   # Run TypeScript compiler
 
 **Component map:** `.sitecore/component-map.ts` is auto-generated from `src/components/` during `npm run dev` (watch) and `npm run build`. No manual action needed unless the generator cannot handle a case.
 
+**Atoms:** Catalog/registry in `src/atoms/index.tsx`; wired via `atomsConfig` on `SitecoreProvider` (not the component map). Run `npm run sitecore-tools:atoms:update` after intentional schema changes; `atoms:validate` runs on `dev`/`build`. Skills: `content-sdk-atoms-setup`, `content-sdk-atoms-create`, `content-sdk-atoms-maintain`.
+
 ---
 
 ## Application Structure (Pages Router)
@@ -30,11 +32,12 @@ src/
     _app.tsx
     404.tsx, 500.tsx, _error.tsx
     api/             # API routes (sitemap, robots, editing, healthz)
+  atoms/             # Atoms catalog + registry (defineAtomsCatalog / defineAtomsRegistry)
   components/        # React components (Sitecore + app-specific)
   lib/               # sitecore-client, component-props
   Layout.tsx, Providers.tsx, Bootstrap.tsx, Scripts.tsx
 proxy.ts             # Edge middleware (preview, bot-tracking, multisite, redirects, personalize)
-.sitecore/           # component-map.ts, import-map.ts, sites.json, metadata.json
+.sitecore/           # component-map.ts, import-map.ts, atoms.lock.json, sites.json, metadata.json
 sitecore.config.ts   # Sitecore config (api, defaultSite, defaultLanguage, multisite, etc.)
 next.config.js       # i18n (locales, defaultLocale), rewrites, images
 ```
@@ -46,7 +49,7 @@ next.config.js       # i18n (locales, defaultLocale), rewrites, images
 - **Quick checks:** If path or locale is wrong, ensure you use `extractPath(context)` and `context.locale` (from getStaticProps/getServerSideProps); do not assume path or locale from elsewhere. Keep the proxy chain order (PreviewProxy → BotTrackingProxy → Multisite → Redirects → Personalize).
 - **Security:** Use only environment variables in `sitecore.config.ts`; never hardcode API keys, editing secret, or host URLs. Do not expose secrets in client-side code or in logs. Validate and sanitize user input at boundaries.
 - **Performance:** Keep middleware lightweight; use the proxy `skip` callback and `matcher` so middleware does not run on `/api`, `_next`, static files, or health checks. Use `revalidate` in getStaticProps for ISR where appropriate. Prefer server-side data fetching for Sitecore content.
-- **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Regenerate `.sitecore/component-map.ts` with `npm run sitecore-tools:generate-map` or `npm run sitecore-tools:generate-map:watch`; edit the map manually only when the generator cannot handle the change. Keep the single Sitecore client instance in `lib/sitecore-client.ts` and pass it (or use it) in API routes and getStaticProps/getServerSideProps.
+- **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Regenerate `.sitecore/component-map.ts` with `npm run sitecore-tools:generate-map` or `npm run sitecore-tools:generate-map:watch`; edit the map manually only when the generator cannot handle the change. Keep the single Sitecore client instance in `lib/sitecore-client.ts` and pass it (or use it) in API routes and getStaticProps/getServerSideProps. Define atoms in `src/atoms/` via `defineAtomsCatalog` / `defineAtomsRegistry` and `atomsConfig` — do not register atoms in the component map.
 - **Consistency:** Follow the existing patterns in `[[...path]].tsx`, `_app.tsx`, and API routes. When adding API routes, add the corresponding rewrite in `next.config.js` and keep the middleware matcher in sync.
 
 ---
@@ -63,6 +66,7 @@ next.config.js       # i18n (locales, defaultLocale), rewrites, images
 | Use Sitecore field components (`<Text>`, `<RichText>`, `<Image>`) and validate fields | Expose API keys or editing secret in client code |
 | Document required env vars in `.env.example` only | Commit `.env` or `.env.local` |
 | Run `npm run build` after changes to verify the app builds | Add npm dependencies without explicit user approval |
+| Define atoms in `src/atoms/` and pass via `atomsConfig`; run `atoms:update` after schema changes | Register atoms in the component map or hand-edit `atoms.lock.json` hashes |
 
 ---
 
