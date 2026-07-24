@@ -1,5 +1,5 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import { describe, it, expect, vi, beforeEach, afterEach, beforeAll } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { EDITING_PARAMS_HEADER } from '../../editing/constants';
 import type { CsdkExpressRequest, ExpressMiddleware, ExpressResponse } from './models';
 import type { BotTrackingMiddlewareOptions } from './bot-tracking-middleware';
@@ -83,11 +83,11 @@ describe('createBotTrackingMiddleware', () => {
   const next = vi.fn();
   let prevEnableBot: string | undefined;
 
-  beforeAll(async () => {
-    ({ createBotTrackingMiddleware } = await import('./bot-tracking-middleware'));
-  });
-
-  beforeEach(() => {
+  beforeEach(async () => {
+    // The Angular unit-test builder runs Vitest with `isolate: false`, so sibling specs that mock
+    // the same packages (core / analytics-core / events) share one module registry. Reset modules
+    // and re-import the SUT so it binds to THIS file's mocks regardless of file execution order.
+    vi.resetModules();
     vi.clearAllMocks();
     initContentSdkMock.mockResolvedValue(undefined);
     botPageViewMock.mockResolvedValue(undefined);
@@ -95,6 +95,7 @@ describe('createBotTrackingMiddleware', () => {
     // Force bot tracking on so the local-environment guard doesn't skip non-local tests.
     prevEnableBot = process.env.SITECORE_ENABLE_BOT_TRACKING;
     process.env.SITECORE_ENABLE_BOT_TRACKING = 'true';
+    ({ createBotTrackingMiddleware } = await import('./bot-tracking-middleware'));
   });
 
   afterEach(() => {

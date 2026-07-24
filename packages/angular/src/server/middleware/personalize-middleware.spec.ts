@@ -1,5 +1,5 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   CdpHelper,
   DEFAULT_VARIANT,
@@ -86,13 +86,13 @@ function createRes() {
 describe('createPersonalizeMiddleware', () => {
   const next = vi.fn();
 
-  beforeAll(async () => {
-    ({ createPersonalizeMiddleware } = await import('./personalize-middleware'));
-  });
-
-  beforeEach(() => {
+  beforeEach(async () => {
+    // Vitest runs with `isolate: false` under the Angular unit-test builder; reset modules and
+    // re-import the SUT so it binds to this file's mocks regardless of sibling-spec ordering.
+    vi.resetModules();
     vi.clearAllMocks();
     initContentSdkMock.mockResolvedValue(undefined);
+    ({ createPersonalizeMiddleware } = await import('./personalize-middleware'));
   });
 
   it('should populate req.scParams with identified page-level variant', async () => {
