@@ -169,35 +169,60 @@ describe('RedirectsProxy', () => {
       },
     } as NextRequest;
 
-    // Create nextUrl with computed href and methods that reference req
-    req.nextUrl = {
-      ...nextUrlBase,
-      get href() {
-        return `${this.origin}${this.pathname}${this.search}`;
-      },
-      clone() {
-        const cloned: any = {
-          ...req.nextUrl,
-          pathname: req.nextUrl.pathname,
-          search: req.nextUrl.search,
-          origin: req.nextUrl.origin,
-          locale: req.nextUrl.locale,
-          defaultLocale: req.nextUrl.defaultLocale,
-          searchParams: req.nextUrl.searchParams,
-          get href() {
-            return `${this.origin}${this.pathname}${this.search}`;
+    const createNextUrl = (values: {
+      pathname: string;
+      search: string;
+      origin: string;
+      locale: string;
+      defaultLocale: string;
+      searchParams: Record<string, unknown>;
+    }) => {
+      const nextUrl: any = {
+        pathname: values.pathname,
+        search: values.search,
+        origin: values.origin,
+        locale: values.locale,
+        defaultLocale: values.defaultLocale,
+        searchParams: {
+          get(key: string) {
+            const searchParams = values.searchParams || {};
+            return searchParams[key];
           },
-        };
-        return cloned;
-      },
-      searchParams: {
-        get(key) {
-          const searchParams = req.nextUrl.searchParams || {};
-          return searchParams[key];
         },
-      },
-      ...props.nextUrl,
+        get href() {
+          return `${this.origin}${this.pathname}${this.search}`;
+        },
+        set href(value: string) {
+          const parsed = new URL(value);
+          this.pathname = parsed.pathname;
+          this.search = parsed.search;
+        },
+        clone() {
+          return createNextUrl({
+            pathname: nextUrl.pathname,
+            search: nextUrl.search,
+            origin: nextUrl.origin,
+            locale: nextUrl.locale,
+            defaultLocale: nextUrl.defaultLocale,
+            searchParams: values.searchParams,
+          });
+        },
+      };
+      return nextUrl;
     };
+
+    // Create nextUrl with computed href and methods that reference req
+    req.nextUrl = createNextUrl({
+      ...nextUrlBase,
+      ...props.nextUrl,
+      // empty string must win over createRequest defaults (App Router has no Next.js i18n)
+      locale: props.nextUrl?.locale ?? nextUrlBase.locale,
+      defaultLocale: props.nextUrl?.defaultLocale ?? nextUrlBase.defaultLocale,
+      pathname: props.nextUrl?.pathname || nextUrlBase.pathname,
+      search: props.nextUrl?.search || nextUrlBase.search,
+      origin: props.nextUrl?.origin || nextUrlBase.origin,
+      searchParams: props.nextUrl?.searchParams || nextUrlBase.searchParams,
+    });
 
     return req;
   };
@@ -1101,6 +1126,258 @@ describe('RedirectsProxy', () => {
       // request locale ('da') must be preserved as the target has no locale prefix of its own
       expect(urlString).to.include('/da/new-page');
       expect(finalRes.redirected).to.be.true;
+    });
+
+    describe('localeInPath', () => {
+      const stubRedirectWithUrl = () => {
+        nextRedirectStub.callsFake((url) => {
+          return createResponse({
+            redirected: true,
+            status: 301,
+            url: typeof url === 'string' ? url : url.href,
+          });
+        });
+      };
+
+      const getRedirectUrlString = () => {
+        const redirectUrl = nextRedirectStub.getCall(0).args[0];
+        return typeof redirectUrl === 'string'
+          ? redirectUrl
+          : redirectUrl.href || redirectUrl.toString();
+      };
+
+      it('falls back to x-sc-locale header when localeInPath is unset', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: '',
+            defaultLocale: '',
+          },
+        });
+        const res = createResponse({
+          headers: {
+            'x-sc-locale': 'da',
+          },
+        });
+        stubRedirectWithUrl();
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          redirectType: REDIRECT_TYPE_301,
+          locale: 'da',
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        expect(getRedirectUrlString()).to.include('/da/new-page');
+        expect(finalRes.redirected).to.be.true;
+      });
+
+      it('prepends locale when localeInPath is true without x-sc-locale header', async () => {
+        // App Router: no Next.js i18n locale / defaultLocale on the request URL
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: '',
+            defaultLocale: '',
+          },
+        });
+        const res = createResponse();
+        stubRedirectWithUrl();
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          redirectType: REDIRECT_TYPE_301,
+          locale: 'en',
+          redirectsProxyConfig: {
+            localeInPath: true,
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        expect(getRedirectUrlString()).to.include('/en/new-page');
+        expect(finalRes.redirected).to.be.true;
+        expect(finalRes.status).to.equal(301);
+      });
+
+      it('leaves path unchanged when localeInPath is false and defaultLocale is absent', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: '',
+            defaultLocale: '',
+          },
+        });
+        const res = createResponse();
+        stubRedirectWithUrl();
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          redirectType: REDIRECT_TYPE_301,
+          locale: 'en',
+          redirectsProxyConfig: {
+            localeInPath: false,
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const urlString = getRedirectUrlString();
+        expect(urlString).to.include('/new-page');
+        expect(urlString).to.not.include('/en/new-page');
+        expect(finalRes.redirected).to.be.true;
+      });
+
+      it('does not prepend locale for Pages Router when localeInPath is unset', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: 'en',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse();
+        stubRedirectWithUrl();
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          redirectType: REDIRECT_TYPE_301,
+          locale: 'en',
+          redirectsProxyConfig: {
+            localeInPath: null,
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const urlString = getRedirectUrlString();
+        expect(urlString).to.include('/new-page');
+        expect(urlString).to.not.include('/en/new-page');
+        expect(finalRes.redirected).to.be.true;
+      });
+
+      it('does not prepend locale when localeInPath is false even if x-sc-locale is present', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: '',
+            defaultLocale: '',
+          },
+        });
+        const res = createResponse({
+          headers: {
+            'x-sc-locale': 'da',
+          },
+        });
+        stubRedirectWithUrl();
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          redirectType: REDIRECT_TYPE_301,
+          locale: 'da',
+          redirectsProxyConfig: {
+            localeInPath: false,
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const urlString = getRedirectUrlString();
+        expect(urlString).to.include('/new-page');
+        expect(urlString).to.not.include('/da/new-page');
+        expect(finalRes.redirected).to.be.true;
+      });
+
+      it('prefixes locale on Server Transfer rewrite when localeInPath is true', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: '',
+            defaultLocale: '',
+          },
+        });
+        const res = createResponse();
+
+        const rewriteRes = createResponse({
+          redirected: false,
+          status: 200,
+          url: 'http://localhost:3000/en/new-page',
+        });
+        nextRewriteStub.returns(rewriteRes);
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
+          locale: 'en',
+          redirectsProxyConfig: {
+            localeInPath: true,
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRewriteStub.calledOnce).to.be.true;
+        expect(nextRedirectStub.called).to.be.false;
+        const rewriteUrl = nextRewriteStub.getCall(0).args[0];
+        const rewriteUrlString =
+          typeof rewriteUrl === 'string' ? rewriteUrl : rewriteUrl.href || rewriteUrl.toString();
+        expect(rewriteUrlString).to.include('/en/new-page');
+        expect(finalRes.status).to.equal(200);
+      });
+
+      it('does not prefix locale on Server Transfer when localeInPath is false', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: '',
+            defaultLocale: '',
+          },
+        });
+        const res = createResponse({
+          headers: {
+            'x-sc-locale': 'en',
+          },
+        });
+
+        const rewriteRes = createResponse({
+          redirected: false,
+          status: 200,
+          url: 'http://localhost:3000/new-page',
+        });
+        nextRewriteStub.returns(rewriteRes);
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
+          locale: 'en',
+          redirectsProxyConfig: {
+            localeInPath: false,
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRewriteStub.calledOnce).to.be.true;
+        const rewriteUrl = nextRewriteStub.getCall(0).args[0];
+        const rewriteUrlString =
+          typeof rewriteUrl === 'string' ? rewriteUrl : rewriteUrl.href || rewriteUrl.toString();
+        expect(rewriteUrlString).to.include('/new-page');
+        expect(rewriteUrlString).to.not.include('/en/new-page');
+        expect(finalRes.status).to.equal(200);
+      });
     });
 
     it('should handle multiple redirect rules', async () => {

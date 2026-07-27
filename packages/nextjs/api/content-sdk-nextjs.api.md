@@ -1017,6 +1017,9 @@ export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
 export type SitecoreConfigInput = SitecoreConfigInput_2 & {
     generateStaticPaths?: boolean;
     sitecoreInternalEditingHostUrl?: string;
+    redirects?: SitecoreConfigInput_2['redirects'] & {
+        localeInPath?: boolean | null;
+    };
 };
 
 // @public

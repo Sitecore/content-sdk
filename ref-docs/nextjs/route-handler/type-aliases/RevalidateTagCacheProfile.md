@@ -8,7 +8,7 @@
 
 > **RevalidateTagCacheProfile** = `Parameters`\<*typeof* `revalidateTag`\>\[`1`\]
 
-Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:33](https://github.com/Sitecore/content-sdk/blob/ce897227369d7cdccf3cbb79b621c67585f7aff6/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L33)
+Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:33](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L33)
 
 Second argument to Next.js `revalidateTag` (cache profile: e.g. `"max"` or `{ expire }`).
 Aligns with the installed `next/cache` typings.

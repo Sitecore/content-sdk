@@ -6,7 +6,7 @@
 
 # Interface: Identifier
 
-Defined in: [events/src/events/identity/identity-event.ts:217](https://github.com/Sitecore/content-sdk/blob/ce897227369d7cdccf3cbb79b621c67585f7aff6/packages/events/src/events/identity/identity-event.ts#L217)
+Defined in: [events/src/events/identity/identity-event.ts:217](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/events/src/events/identity/identity-event.ts#L217)
 
 The JSON array of objects that contain the identity identifiers
 
@@ -16,7 +16,7 @@ The JSON array of objects that contain the identity identifiers
 
 > `optional` **expiryDate?**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:223](https://github.com/Sitecore/content-sdk/blob/ce897227369d7cdccf3cbb79b621c67585f7aff6/packages/events/src/events/identity/identity-event.ts#L223)
+Defined in: [events/src/events/identity/identity-event.ts:223](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/events/src/events/identity/identity-event.ts#L223)
 
 The date the unique guest (site visitor) identifier expires. This is determined by your organization's identity system.
 
@@ -28,7 +28,7 @@ Format: ISO 8601.
 
 > **id**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:227](https://github.com/Sitecore/content-sdk/blob/ce897227369d7cdccf3cbb79b621c67585f7aff6/packages/events/src/events/identity/identity-event.ts#L227)
+Defined in: [events/src/events/identity/identity-event.ts:227](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/events/src/events/identity/identity-event.ts#L227)
 
 The unique guest (site visitor) identifier provided by your organization's identity system, such as a Customer Relationship Management (CRM) system.
 
@@ -38,6 +38,6 @@ The unique guest (site visitor) identifier provided by your organization's ident
 
 > **provider**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:231](https://github.com/Sitecore/content-sdk/blob/ce897227369d7cdccf3cbb79b621c67585f7aff6/packages/events/src/events/identity/identity-event.ts#L231)
+Defined in: [events/src/events/identity/identity-event.ts:231](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/events/src/events/identity/identity-event.ts#L231)
 
 The name of your organization's identity system, external to SitecoreAI, that provided the unique guest (site visitor) identifier.

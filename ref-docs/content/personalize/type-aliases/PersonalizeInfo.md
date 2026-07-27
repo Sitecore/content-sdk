@@ -8,7 +8,7 @@
 
 > **PersonalizeInfo** = `object`
 
-Defined in: [content/src/personalize/personalize-service.ts:39](https://github.com/Sitecore/content-sdk/blob/ce897227369d7cdccf3cbb79b621c67585f7aff6/packages/content/src/personalize/personalize-service.ts#L39)
+Defined in: [content/src/personalize/personalize-service.ts:39](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/content/src/personalize/personalize-service.ts#L39)
 
 Object model of personlize info
 
@@ -18,7 +18,7 @@ Object model of personlize info
 
 > **pageId**: `string`
 
-Defined in: [content/src/personalize/personalize-service.ts:43](https://github.com/Sitecore/content-sdk/blob/ce897227369d7cdccf3cbb79b621c67585f7aff6/packages/content/src/personalize/personalize-service.ts#L43)
+Defined in: [content/src/personalize/personalize-service.ts:43](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/content/src/personalize/personalize-service.ts#L43)
 
 The page id
 
@@ -28,6 +28,6 @@ The page id
 
 > **variantIds**: `string`[]
 
-Defined in: [content/src/personalize/personalize-service.ts:47](https://github.com/Sitecore/content-sdk/blob/ce897227369d7cdccf3cbb79b621c67585f7aff6/packages/content/src/personalize/personalize-service.ts#L47)
+Defined in: [content/src/personalize/personalize-service.ts:47](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/content/src/personalize/personalize-service.ts#L47)
 
 The configured variant ids
