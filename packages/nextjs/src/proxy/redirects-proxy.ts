@@ -195,14 +195,8 @@ export class RedirectsProxy extends ProxyBase {
 
         if (localeRedirectMode === 'pages') {
           reqUrl.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
-        } else if (localeRedirectMode === 'app-with-locale') {
-          // In App Router, we need to set the locale in the pathname, if present and differs from request - or when incoming request has locale prefix
-          if (
-            targetLocale !== language ||
-            (existsRedirect.isLanguagePreserved && incomingPathData.locale === targetLocale)
-          ) {
-            reqUrl.pathname = `/${targetLocale}${reqUrl.pathname}`;
-          }
+        } else if (localeRedirectMode === 'app-with-locale' && targetLocale) {
+          reqUrl.pathname = `/${targetLocale}${reqUrl.pathname}`;
         }
         // else: App Router without [locale] segment — leave pathname unchanged
 
@@ -417,9 +411,10 @@ export class RedirectsProxy extends ProxyBase {
 
         // When locale is part of the route path, ensure Server Transfer rewrite includes it
         if (this.getLocaleRedirectMode(res) === 'app-with-locale' && !isExternal) {
-          const pathParts = breakDownPath(this.locales, rewritePath);
+          const pathParts = rewritePath.split('/').filter(Boolean);
+          const firstSegment = pathParts[0];
           // Check if path doesn't start with a locale
-          if (!pathParts.locale) {
+          if (!this.locales.includes(firstSegment)) {
             // Add current language as locale prefix
             const language = this.getLanguage(req, res);
             rewritePath = `/${language}${rewritePath}`;
