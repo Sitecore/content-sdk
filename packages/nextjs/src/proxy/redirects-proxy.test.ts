@@ -1087,6 +1087,47 @@ describe('RedirectsProxy', () => {
       expect(finalRes.status).to.equal(301);
     });
 
+    it('should preserve request language for a locale-less target when isLanguagePreserved is true', async () => {
+      const req = createRequest({
+        nextUrl: {
+          pathname: '/old-page',
+        },
+      });
+      // match app router behavior about locale in request
+      delete req.locale;
+      // App Router response so language comes from the locale header and locale is added to the pathname
+      const res = createResponse({
+        headers: {
+          'x-sc-locale': 'da',
+        },
+      });
+
+      nextRedirectStub.callsFake((url) => {
+        return createResponse({
+          redirected: true,
+          status: 301,
+          url: typeof url === 'string' ? url : url.href,
+        });
+      });
+
+      const { proxy } = createProxy({
+        pattern: '/old-page',
+        target: '/new-page',
+        redirectType: REDIRECT_TYPE_301,
+        isLanguagePreserved: true,
+        locale: 'da',
+      });
+
+      const finalRes = await proxy.handle(req, res);
+
+      expect(nextRedirectStub.calledOnce).to.be.true;
+      const redirectUrl = nextRedirectStub.getCall(0).args[0];
+      const urlString = typeof redirectUrl === 'string' ? redirectUrl : redirectUrl.href;
+      // request locale ('da') must be preserved as the target has no locale prefix of its own
+      expect(urlString).to.include('/da/new-page');
+      expect(finalRes.redirected).to.be.true;
+    });
+
     describe('localeInPath', () => {
       const stubRedirectWithUrl = () => {
         nextRedirectStub.callsFake((url) => {

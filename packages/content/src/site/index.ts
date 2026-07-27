@@ -31,4 +31,5 @@ export {
   SITE_KEY,
   getHostnameFromHostHeader,
 } from './utils';
+export * from './redirect-utils';
 export { SiteResolver } from './site-resolver';
