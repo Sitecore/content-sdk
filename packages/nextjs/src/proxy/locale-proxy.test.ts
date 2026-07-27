@@ -8,7 +8,6 @@ import { LocaleProxy } from './locale-proxy';
 import { REWRITE_HEADER_NAME, LOCALE_HEADER_NAME } from './proxy';
 import type { SuccessfulLocaleProxyExecution } from './locale-proxy';
 import { isSuccessfulProxyExecution } from './utils';
-import { headers } from 'next/headers';
 
 chai.use(sinonChai);
 const expect = chai.use(chaiString).expect;
