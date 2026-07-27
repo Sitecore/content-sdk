@@ -42,9 +42,11 @@ export interface ExpressResponse {
    */
   setHeader?(name: string, value: string | string[]): void;
   /**
-   * Redirect the client to another URL. Used by sitemap middleware for 404 fallbacks.
+   * Redirect the client to another URL. Used by the sitemap middleware for 404 fallbacks and by
+   * the redirects middleware (with an explicit status) for 301/302 redirects.
    */
   redirect?(url: string): void;
+  redirect?(status: number, url: string): void;
   /**
    * Set a response cookie. Used by multisite middleware to set the site cookie.
    */
