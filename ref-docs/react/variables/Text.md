@@ -8,6 +8,6 @@
 
 > `const` **Text**: `React.FC`\<`TextProps`\>
 
-Defined in: [packages/react/src/components/Text.tsx:98](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/react/src/components/Text.tsx#L98)
+Defined in: [packages/react/src/components/Text.tsx:98](https://github.com/Sitecore/content-sdk/blob/6f8e423028bdf8a74a2fc4b8cb084961d755b73f/packages/react/src/components/Text.tsx#L98)
 
 The Text component.
