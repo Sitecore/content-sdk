@@ -62,12 +62,10 @@ export const StudioComponentServerWrapper = async (props: StudioComponentServerW
       try {
         css = await compiler(classes);
       } catch (err) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.warn('StudioComponentServerWrapper: CSS compile failed', err);
-        }
+        debug.editing('StudioComponentServerWrapper: CSS compile failed %o', err);
       }
-    } else if (process.env.NODE_ENV !== 'production') {
-      console.warn(
+    } else {
+      debug.editing(
         'StudioComponentServerWrapper: Document has class names but no atoms CSS compiler is registered. ' +
           'Call registerTailwindCssCompiler() from @sitecore-content-sdk/nextjs/instrumentation in instrumentation-node.ts.'
       );

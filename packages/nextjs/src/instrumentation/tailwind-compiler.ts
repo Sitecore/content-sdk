@@ -1,10 +1,7 @@
 import { compile } from '@tailwindcss/node';
 import fs from 'fs';
 import path from 'path';
-import {
-  atomsCssCacheKey,
-  setAtomsCssCacheEntry,
-} from './constants';
+import { atomsCssCacheKey, setAtomsCssCacheEntry } from './css-cache';
 import { extractDocumentCssLayers } from './css-layers';
 
 export type TailwindCompilerHandle = {

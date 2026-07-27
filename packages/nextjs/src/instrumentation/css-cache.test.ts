@@ -4,7 +4,7 @@ import {
   ATOMS_CSS_CACHE_MAX_ENTRIES,
   atomsCssCacheKey,
   setAtomsCssCacheEntry,
-} from './constants';
+} from './css-cache';
 
 describe('atoms CSS cache helpers', () => {
   it('atomsCssCacheKey sorts tokens for stable keys', () => {

@@ -7,6 +7,7 @@ import { StudioComponentWrapper } from './StudioComponentWrapper';
 import type { Document } from '@sitecore-content-sdk/content/atoms';
 import * as editing from '@sitecore-content-sdk/content/editing';
 import * as atoms from '@sitecore-content-sdk/content/atoms';
+import { debug } from '@sitecore-content-sdk/content';
 import { DesignLibraryErrorBoundary } from '../..';
 import type { ChildComponentProps } from '../Placeholder/models';
 
@@ -100,9 +101,7 @@ export const DesignLibraryLowCodeComponent = () => {
           }
         })
         .catch((err) => {
-          if (process.env.NODE_ENV !== 'production') {
-            console.warn('[Sitecore] compileCssAction failed:', err);
-          }
+          debug.editing('[Sitecore] compileCssAction failed: %o', err);
         });
     });
 
