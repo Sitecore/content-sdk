@@ -41,6 +41,10 @@ next.config.js       # i18n (locales, defaultLocale), rewrites, images
 
 ---
 
+## Atoms Document CSS (optional)
+
+Runtime Document class compilation is **usable on Pages Router**, not only App Router. This starter does not wire it by default (no Tailwind stack). To enable it for Design Library Atoms preview, see the comment on `atomsConfig` in `src/Providers.tsx` and mirror the App Router starter (`compileCssAction`, optional `registerTailwindCssCompiler` / instrumentation).
+
 ## Best practices
 
 - **Quick checks:** If path or locale is wrong, ensure you use `extractPath(context)` and `context.locale` (from getStaticProps/getServerSideProps); do not assume path or locale from elsewhere. Keep the proxy chain order (PreviewProxy → BotTrackingProxy → Multisite → Redirects → Personalize).
