@@ -4,3 +4,4 @@
 ---
 
 Bot tracking support for Angular
+  - Expose `createBotTrackingMiddleware` function that creates an Express middleware for identifying bot requests
