@@ -6,7 +6,7 @@
 
 # Interface: SuccessfulRedirectsProxyExecution
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:37](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/nextjs/src/proxy/redirects-proxy.ts#L37)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:28](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/nextjs/src/proxy/redirects-proxy.ts#L28)
 
 Information about executed proxy to be stored in the context
 Used for describing successful execution with details about the redirects that were applied
@@ -21,7 +21,7 @@ Used for describing successful execution with details about the redirects that w
 
 > **error**: `null`
 
-Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/nextjs/src/proxy/types.ts#L18)
+Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/nextjs/src/proxy/types.ts#L18)
 
 #### Inherited from
 
@@ -33,7 +33,7 @@ Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-s
 
 > **executedSuccessfully**: `true`
 
-Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/nextjs/src/proxy/types.ts#L17)
+Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/nextjs/src/proxy/types.ts#L17)
 
 #### Inherited from
 
@@ -45,7 +45,7 @@ Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-s
 
 > **isExternal**: `boolean`
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:41](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/nextjs/src/proxy/redirects-proxy.ts#L41)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:32](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/nextjs/src/proxy/redirects-proxy.ts#L32)
 
 ***
 
@@ -53,7 +53,7 @@ Defined in: [nextjs/src/proxy/redirects-proxy.ts:41](https://github.com/Sitecore
 
 > **redirectStatus**: `number`
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:40](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/nextjs/src/proxy/redirects-proxy.ts#L40)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:31](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/nextjs/src/proxy/redirects-proxy.ts#L31)
 
 ***
 
@@ -61,7 +61,7 @@ Defined in: [nextjs/src/proxy/redirects-proxy.ts:40](https://github.com/Sitecore
 
 > **redirectUrl**: `string`
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:39](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/nextjs/src/proxy/redirects-proxy.ts#L39)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:30](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/nextjs/src/proxy/redirects-proxy.ts#L30)
 
 ***
 
@@ -69,4 +69,4 @@ Defined in: [nextjs/src/proxy/redirects-proxy.ts:39](https://github.com/Sitecore
 
 > **requestUrl**: `string`
 
-Defined in: [nextjs/src/proxy/redirects-proxy.ts:38](https://github.com/Sitecore/content-sdk/blob/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46/packages/nextjs/src/proxy/redirects-proxy.ts#L38)
+Defined in: [nextjs/src/proxy/redirects-proxy.ts:29](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/nextjs/src/proxy/redirects-proxy.ts#L29)

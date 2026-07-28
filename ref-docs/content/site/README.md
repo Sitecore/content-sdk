@@ -24,7 +24,9 @@
 ## Type Aliases
 
 - [ErrorPages](type-aliases/ErrorPages.md)
+- [ProcessedPath](type-aliases/ProcessedPath.md)
 - [RedirectInfo](type-aliases/RedirectInfo.md)
+- [RedirectResult](type-aliases/RedirectResult.md)
 - [RedirectsQueryResult](type-aliases/RedirectsQueryResult.md)
 - [RedirectsServiceConfig](type-aliases/RedirectsServiceConfig.md)
 - [RobotsQueryResult](type-aliases/RobotsQueryResult.md)
@@ -45,7 +47,15 @@
 
 ## Functions
 
+- [breakDownPath](functions/breakDownPath.md)
 - [getHostnameFromHostHeader](functions/getHostnameFromHostHeader.md)
 - [getSiteRewrite](functions/getSiteRewrite.md)
 - [getSiteRewriteData](functions/getSiteRewriteData.md)
+- [isAbsoluteTarget](functions/isAbsoluteTarget.md)
+- [matchFromRedirectMapRedirect](functions/matchFromRedirectMapRedirect.md)
+- [matchRedirectItemRedirect](functions/matchRedirectItemRedirect.md)
 - [normalizeSiteRewrite](functions/normalizeSiteRewrite.md)
+- [processAbsoluteUrlTarget](functions/processAbsoluteUrlTarget.md)
+- [processRelativeUrlTarget](functions/processRelativeUrlTarget.md)
+- [resolveRedirectTarget](functions/resolveRedirectTarget.md)
+- [safeCompileRedirectPattern](functions/safeCompileRedirectPattern.md)

@@ -145,6 +145,7 @@ import { REDIRECT_TYPE_301 } from '@sitecore-content-sdk/content/site';
 import { REDIRECT_TYPE_302 } from '@sitecore-content-sdk/content/site';
 import { REDIRECT_TYPE_SERVER_TRANSFER } from '@sitecore-content-sdk/content/site';
 import { RedirectInfo } from '@sitecore-content-sdk/content/site';
+import { RedirectResult } from '@sitecore-content-sdk/content/site';
 import { RedirectsService } from '@sitecore-content-sdk/content/site';
 import { RedirectsServiceConfig } from '@sitecore-content-sdk/content/site';
 import { renderEmptyPlaceholder } from '@sitecore-content-sdk/react';
@@ -918,11 +919,10 @@ export class RedirectsProxy extends ProxyBase {
     // (undocumented)
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
     protected dispatchRedirect(target: NextURL | string, type: string, req: NextRequest, res: NextResponse, isExternal?: boolean): NextResponse;
-    // Warning: (ae-forgotten-export) The symbol "RedirectResult" needs to be exported by the entry point api-surface.d.ts
     protected getExistsRedirect(req: NextRequest, siteName: string, requestLocale: string): Promise<RedirectResult | undefined>;
     // (undocumented)
     handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
-    protected matchFromRedirectMapRedirect(redirects: RedirectResult[], urlLocale: string, incomingURL: string, incomingQS: string): RedirectResult | undefined;
+    protected matchFromRedirectMapRedirect(redirects: RedirectResult[], requestLocale: string, incomingURL: string, incomingQS: string): RedirectResult | undefined;
     protected matchRedirectItemRedirect(redirects: RedirectResult[], locale: string, currentPath: string): RedirectResult | undefined;
     get name(): string;
     protected normalizeUrl(url: NextURL): NextURL;

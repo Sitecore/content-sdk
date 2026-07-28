@@ -33,6 +33,9 @@ export function addStyleElement(stylesContent: string): void;
 // @internal
 export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => string): T;
 
+// @internal
+export const breakDownPath: (configuredLocales: string[], urlPath: string) => ProcessedPath;
+
 // Warning: (ae-forgotten-export) The symbol "TemplateOptions" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
@@ -742,6 +745,9 @@ export interface ImportEntryInfo {
 export const INVALID_SECRET_HTML_MESSAGE = "<html><body>Missing or invalid secret</body></html>";
 
 // @internal
+export const isAbsoluteTarget: (target: string) => boolean;
+
+// @internal
 export function isDesignLibraryMode(mode: unknown): mode is DesignLibraryMode;
 
 // @internal
@@ -873,6 +879,12 @@ export interface LinkFieldValue {
 
 // @internal
 const loadForm: (contextId: string, formId: string, edgeUrl?: string) => Promise<string>;
+
+// @internal
+export const matchFromRedirectMapRedirect: (redirects: RedirectResult[], requestLocale: string, incomingPathData: ProcessedPath) => RedirectResult | undefined;
+
+// @internal
+export const matchRedirectItemRedirect: (redirects: RedirectResult[], locale: string, nonLocalePath: string) => RedirectResult | undefined;
 
 declare namespace mediaApi {
     export {
@@ -1014,6 +1026,22 @@ export const prepareComponentsForMap: (components: ComponentSource[], opts: {
 export const PREVIEW_KEY = "sc_preview";
 
 // @internal
+export const processAbsoluteUrlTarget: (incomingPathData: ProcessedPath, existsRedirect: RedirectResult) => string;
+
+// @internal
+export type ProcessedPath = {
+    nonLocalePath: string;
+    locale?: string;
+    queryString?: string;
+};
+
+// @internal
+export const processRelativeUrlTarget: (incomingPathData: ProcessedPath, existsRedirect: RedirectResult, configuredLocales: string[], reqLocale: string) => {
+    targetLocale: string;
+    targetPath: string;
+};
+
+// @internal
 export const QUERY_PARAM_EDITING_SECRET = "secret";
 
 // @public
@@ -1033,6 +1061,12 @@ export type RedirectInfo = {
     isQueryStringPreserved: boolean;
     isLanguagePreserved?: boolean;
     locale: string;
+};
+
+// @internal
+export type RedirectResult = RedirectInfo & {
+    matchedQueryString?: string;
+    matchedPath?: string;
 };
 
 // @public
@@ -1095,6 +1129,9 @@ const replaceMediaUrlPrefix: (url: string, mediaUrlPrefix?: RegExp) => string;
 
 // @public
 export const resetEditorChromes: () => void;
+
+// @internal
+export const resolveRedirectTarget: (existsRedirect: RedirectResult, siteLanguage: string, requestPath: string) => string;
 
 export { RetryStrategy }
 
@@ -1169,6 +1206,9 @@ export type RouteOptions = {
 
 // @internal (undocumented)
 export type RouterType = 'app' | 'pages';
+
+// @internal
+export const safeCompileRedirectPattern: (pattern: string) => RegExp | null;
 
 // @internal
 export function scaffoldComponent(outputFolderPath: string, componentName: string, templateName: string, templates: ScaffoldTemplate[]): void;
