@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, beforeAll, vi } from 'vitest';
-import { PLATFORM_ID, REQUEST_CONTEXT } from '@angular/core';
+import { enableProdMode, PLATFORM_ID, REQUEST_CONTEXT } from '@angular/core';
 import type { EventData, IdentityData, PageViewData } from '@sitecore-content-sdk/events';
 import type { AngularSitecoreConfig } from '../../config/define-config';
 import { SITECORE_CONFIG_TOKEN } from '../tokens';
@@ -41,26 +41,18 @@ vi.mock('@sitecore-content-sdk/analytics-core', () => ({
 }));
 
 type ProvideSitecoreAngular = typeof import('../providers').provideSitecoreAngular;
-type SitecoreAnalyticsBrowserCtor =
-  typeof import('./sitecore-analytics.browser').SitecoreAnalyticsBrowser;
-type SitecoreAnalyticsServerCtor =
-  typeof import('./sitecore-analytics.server').SitecoreAnalyticsServer;
+type SitecoreAnalyticsBrowserCtor = typeof import('./sitecore-analytics.browser').SitecoreAnalyticsBrowser;
+type SitecoreAnalyticsServerCtor = typeof import('./sitecore-analytics.server').SitecoreAnalyticsServer;
 
 let provideSitecoreAngular: ProvideSitecoreAngular;
 let SitecoreAnalyticsBrowser: SitecoreAnalyticsBrowserCtor;
 let SitecoreAnalyticsServer: SitecoreAnalyticsServerCtor;
 
 beforeAll(async () => {
+  enableProdMode();
   ({ provideSitecoreAngular } = await import('../providers'));
   ({ SitecoreAnalyticsBrowser } = await import('./sitecore-analytics.browser'));
   ({ SitecoreAnalyticsServer } = await import('./sitecore-analytics.server'));
-  // Force production mode so SitecoreAnalyticsBrowser.doInit proceeds past its dev-mode guard,
-  // instead of the process-wide, irreversible `enableProdMode()`. `isDevMode` is a protected seam on
-  // the class (Angular's `isDevMode` export can't be spied on directly in ESM).
-  vi.spyOn(
-    SitecoreAnalyticsBrowser.prototype as unknown as { isDevMode(): boolean },
-    'isDevMode'
-  ).mockReturnValue(false);
 });
 
 const browserConfig = {
@@ -132,7 +124,10 @@ describe('SITECORE_ANALYTICS injection (provideSitecoreAngular)', () => {
 describe('SitecoreAnalyticsBrowser', () => {
   function create(config: AngularSitecoreConfig | null = browserConfig) {
     TestBed.configureTestingModule({
-      providers: [SitecoreAnalyticsBrowser, { provide: SITECORE_CONFIG_TOKEN, useValue: config }],
+      providers: [
+        SitecoreAnalyticsBrowser,
+        { provide: SITECORE_CONFIG_TOKEN, useValue: config },
+      ],
     });
     return TestBed.inject(SitecoreAnalyticsBrowser);
   }
@@ -236,10 +231,7 @@ describe('SitecoreAnalyticsBrowser', () => {
     });
 
     it('does not initialize or dispatch when clientContextId is missing', async () => {
-      const noEdge = {
-        defaultSite: 'site-a',
-        api: { edge: {} },
-      } as unknown as AngularSitecoreConfig;
+      const noEdge = { defaultSite: 'site-a', api: { edge: {} } } as unknown as AngularSitecoreConfig;
       await create(noEdge).pageView(pageViewData);
       expect(mocks.initContentSdk).not.toHaveBeenCalled();
       expect(mocks.pageView).not.toHaveBeenCalled();
@@ -322,10 +314,7 @@ describe('SitecoreAnalyticsServer', () => {
     });
 
     it('derives the cookie domain from x-forwarded-host (port + www stripped)', async () => {
-      const svc = create(
-        serverConfig,
-        ssrContext({ 'x-forwarded-host': 'www.forwarded.com:8443' })
-      );
+      const svc = create(serverConfig, ssrContext({ 'x-forwarded-host': 'www.forwarded.com:8443' }));
       await svc.event(eventData);
       expect(mocks.analyticsPlugin).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -356,10 +345,7 @@ describe('SitecoreAnalyticsServer', () => {
 
   describe('guards (disabled paths)', () => {
     it('does not initialize when contextId is missing', async () => {
-      const noEdge = {
-        defaultSite: 'site-a',
-        api: { edge: {} },
-      } as unknown as AngularSitecoreConfig;
+      const noEdge = { defaultSite: 'site-a', api: { edge: {} } } as unknown as AngularSitecoreConfig;
       await create(noEdge).pageView(pageViewData);
       expect(mocks.initContentSdk).not.toHaveBeenCalled();
       expect(mocks.pageView).not.toHaveBeenCalled();

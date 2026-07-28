@@ -30,8 +30,7 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "tsConfig": "./tsconfig.spec.json",
-            "runnerConfig": true
+            "tsConfig": "./tsconfig.spec.json"
           }
         }
       }

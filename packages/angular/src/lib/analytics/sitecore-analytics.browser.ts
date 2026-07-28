@@ -76,18 +76,8 @@ export class SitecoreAnalyticsBrowser implements SitecoreAnalyticsWrapper {
     return this.initPromise;
   }
 
-  /**
-   * Whether Angular is running in development mode; analytics stays disabled in dev so local work
-   * doesn't emit CDP events. Wraps `@angular/core`'s `isDevMode` as an overridable seam, since that
-   * export can't be spied on directly in unit tests.
-   * @returns {boolean} True when running in development mode.
-   */
-  protected isDevMode(): boolean {
-    return isDevMode();
-  }
-
   private async doInit(): Promise<boolean> {
-    if (this.isDevMode()) {
+    if (isDevMode()) {
       debug.common('Browser Events SDK is not initialized in development environment');
       return false;
     }
