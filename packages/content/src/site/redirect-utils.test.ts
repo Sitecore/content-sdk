@@ -202,6 +202,20 @@ describe('redirect-utils', () => {
       ).to.equal(redirect);
     });
 
+    it('should match a static url rule with special characters', () => {
+      const redirect = makeRedirect({ pattern: '/üld-page', target: '/new-page' });
+      expect(
+        matchFromRedirectMapRedirect([redirect], 'en', { nonLocalePath: '/üld-page' })
+      ).to.equal(redirect);
+    });
+
+    it('should match a static url rule with encoded special characters', () => {
+      const redirect = makeRedirect({ pattern: '/üld-page', target: '/new-page' });
+      expect(
+        matchFromRedirectMapRedirect([redirect], 'en', { nonLocalePath: '/%C3%BCld-page' })
+      ).to.equal(redirect);
+    });
+
     it('should ignore redirects that carry a locale (redirect-item rules)', () => {
       const localeRule = makeRedirect({ pattern: '/old-page', locale: 'en' });
       expect(matchFromRedirectMapRedirect([localeRule], 'en', { nonLocalePath: '/old-page' })).to.be

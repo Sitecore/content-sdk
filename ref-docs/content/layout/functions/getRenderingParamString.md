@@ -8,7 +8,7 @@
 
 > **getRenderingParamString**(`value`): `string` \| `undefined`
 
-Defined in: [content/src/layout/utils.ts:33](https://github.com/Sitecore/content-sdk/blob/6f8e423028bdf8a74a2fc4b8cb084961d755b73f/packages/content/src/layout/utils.ts#L33)
+Defined in: [content/src/layout/utils.ts:33](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/content/src/layout/utils.ts#L33)
 
 **`Internal`**
 

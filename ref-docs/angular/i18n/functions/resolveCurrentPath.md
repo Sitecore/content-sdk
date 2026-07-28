@@ -8,7 +8,7 @@
 
 > **resolveCurrentPath**(`req`, `isBrowser`): `string`
 
-Defined in: [packages/angular/src/i18n/locale-utils.ts:70](https://github.com/Sitecore/content-sdk/blob/6f8e423028bdf8a74a2fc4b8cb084961d755b73f/packages/angular/src/i18n/locale-utils.ts#L70)
+Defined in: [packages/angular/src/i18n/locale-utils.ts:70](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/angular/src/i18n/locale-utils.ts#L70)
 
 Resolves the initial URL pathname from the current execution environment.
 Returns `'/'` when neither REQUEST nor `window.location` is available.
