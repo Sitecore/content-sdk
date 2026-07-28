@@ -25,7 +25,8 @@ import {
 } from './models';
 import { splitLocaleFromPath } from '../../i18n/locale-utils';
 import { SC_PARAMS_HEADER } from '../../loaders/constants';
-import { getMiddlewareRequest, shouldProcessPath, toNodeAdapterPair } from './utils';
+import { getMiddlewareRequest, shouldProcessPath } from './utils';
+import { toNodeAdapterPair } from './utils-analytics';
 import debug from '../../debug';
 import { isEditingPreview } from '../utils';
 

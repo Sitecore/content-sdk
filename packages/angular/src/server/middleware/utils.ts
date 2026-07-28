@@ -1,8 +1,7 @@
 import { LOADER_DATA_ENDPOINT } from '../constants';
 import type { CsdkRequestData, LoaderPayload, LoaderRunnerInit } from '../../loaders/models';
 import { extractRequestData } from '../../loaders/utils';
-import type { ExpressRequest, ExpressResponse, MiddlewareMatcher } from './models';
-import { analyticsServerAdapter } from '@sitecore-content-sdk/analytics-core';
+import type { ExpressRequest, MiddlewareMatcher } from './models';
 import { matches, type PathPattern } from '../utils';
 
 /**
@@ -102,29 +101,6 @@ export function getMiddlewareRequest(
     query: req.query ?? {},
     referrer,
     data: extractRequestData(req),
-  };
-}
-
-/**
- * Server adapter request/response types derived from {@link analyticsServerAdapter}.
- * Avoids importing `@types/node` at middleware call sites that use {@link CsdkExpressRequest}.
- */
-export type NodeAdapterRequest = Parameters<typeof analyticsServerAdapter>[0];
-export type NodeAdapterResponse = Parameters<typeof analyticsServerAdapter>[1];
-
-/**
- * Express req/res are Node `IncomingMessage`/`ServerResponse` at runtime; cast for cookie adapters.
- * @param {ExpressRequest} req - Content SDK Express request
- * @param {ExpressResponse} res - Content SDK Express response
- * @returns {NodeAdapterRequest & NodeAdapterResponse} The Node adapter request and response
- */
-export function toNodeAdapterPair(
-  req: ExpressRequest,
-  res: ExpressResponse
-): { req: NodeAdapterRequest; res: NodeAdapterResponse } {
-  return {
-    req: req as unknown as NodeAdapterRequest,
-    res: res as unknown as NodeAdapterResponse,
   };
 }
 
