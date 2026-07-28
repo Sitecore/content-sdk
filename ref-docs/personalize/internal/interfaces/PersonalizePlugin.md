@@ -6,7 +6,7 @@
 
 # Interface: PersonalizePlugin
 
-Defined in: [personalize/src/initialization/types.ts:92](https://github.com/Sitecore/content-sdk/blob/6f8e423028bdf8a74a2fc4b8cb084961d755b73f/packages/personalize/src/initialization/types.ts#L92)
+Defined in: [personalize/src/initialization/types.ts:92](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/personalize/src/initialization/types.ts#L92)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Represents the personalize plugin interface.
 
 > **adapter**: [`PersonalizeAdapter`](PersonalizeAdapter.md)
 
-Defined in: [personalize/src/initialization/types.ts:97](https://github.com/Sitecore/content-sdk/blob/6f8e423028bdf8a74a2fc4b8cb084961d755b73f/packages/personalize/src/initialization/types.ts#L97)
+Defined in: [personalize/src/initialization/types.ts:97](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/personalize/src/initialization/types.ts#L97)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [personalize/src/initialization/types.ts:97](https://github.com/Site
 
 > **dependencies**: `string`[]
 
-Defined in: [personalize/src/initialization/types.ts:96](https://github.com/Sitecore/content-sdk/blob/6f8e423028bdf8a74a2fc4b8cb084961d755b73f/packages/personalize/src/initialization/types.ts#L96)
+Defined in: [personalize/src/initialization/types.ts:96](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/personalize/src/initialization/types.ts#L96)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [personalize/src/initialization/types.ts:96](https://github.com/Site
 
 > **init**: () => `Promise`\<`void`\>
 
-Defined in: [personalize/src/initialization/types.ts:94](https://github.com/Sitecore/content-sdk/blob/6f8e423028bdf8a74a2fc4b8cb084961d755b73f/packages/personalize/src/initialization/types.ts#L94)
+Defined in: [personalize/src/initialization/types.ts:94](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/personalize/src/initialization/types.ts#L94)
 
 #### Returns
 
@@ -46,7 +46,7 @@ Defined in: [personalize/src/initialization/types.ts:94](https://github.com/Site
 
 > **name**: `"PersonalizePlugin"`
 
-Defined in: [personalize/src/initialization/types.ts:95](https://github.com/Sitecore/content-sdk/blob/6f8e423028bdf8a74a2fc4b8cb084961d755b73f/packages/personalize/src/initialization/types.ts#L95)
+Defined in: [personalize/src/initialization/types.ts:95](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/personalize/src/initialization/types.ts#L95)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: [personalize/src/initialization/types.ts:95](https://github.com/Site
 
 > **options**: [`PersonalizeOptions`](PersonalizeOptions.md) \| [`PersonalizeServerOptions`](../type-aliases/PersonalizeServerOptions.md)
 
-Defined in: [personalize/src/initialization/types.ts:93](https://github.com/Sitecore/content-sdk/blob/6f8e423028bdf8a74a2fc4b8cb084961d755b73f/packages/personalize/src/initialization/types.ts#L93)
+Defined in: [personalize/src/initialization/types.ts:93](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/personalize/src/initialization/types.ts#L93)

@@ -8,7 +8,7 @@
 
 > **createMultisiteMiddleware**(`options`): [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/multisite-middleware.ts:55](https://github.com/Sitecore/content-sdk/blob/6f8e423028bdf8a74a2fc4b8cb084961d755b73f/packages/angular/src/server/middleware/multisite-middleware.ts#L55)
+Defined in: [packages/angular/src/server/middleware/multisite-middleware.ts:55](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/angular/src/server/middleware/multisite-middleware.ts#L55)
 
 Create the multisite middleware.
 

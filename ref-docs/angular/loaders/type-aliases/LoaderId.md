@@ -8,6 +8,6 @@
 
 > **LoaderId** = keyof [`LoaderIdMap`](../interfaces/LoaderIdMap.md) *extends* `never` ? `string` : keyof [`LoaderIdMap`](../interfaces/LoaderIdMap.md)
 
-Defined in: [packages/angular/src/loaders/loader-resolver.ts:52](https://github.com/Sitecore/content-sdk/blob/6f8e423028bdf8a74a2fc4b8cb084961d755b73f/packages/angular/src/loaders/loader-resolver.ts#L52)
+Defined in: [packages/angular/src/loaders/loader-resolver.ts:52](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/angular/src/loaders/loader-resolver.ts#L52)
 
 Loader ID type. Use string keys that match the keys you pass to provideLoaderRegistry.
