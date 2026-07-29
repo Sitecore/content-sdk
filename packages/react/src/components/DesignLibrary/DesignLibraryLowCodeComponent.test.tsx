@@ -13,6 +13,7 @@ import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
 } from '@sitecore-content-sdk/content/editing';
+import type { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import type { AtomsConfig } from '../../atoms/types';
 import type { ImportMapImport } from './models';
 import type { DefineRegistryResult } from '@json-render/react';
@@ -56,6 +57,11 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     registry: mockRegistry,
   };
 
+  const rendering: ComponentRendering = {
+    uid: 'test-content',
+    componentName: 'LowCodeComponent',
+  };
+
   const getPage = () => ({
     locale: 'en',
     layout: { sitecore: { context: {}, route: null } },
@@ -86,7 +92,10 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     sandbox.restore();
   });
 
-  const renderComponent = (runtime?: AtomsConfig) =>
+  const renderComponent = (
+    runtime?: AtomsConfig,
+    renderingProp: ComponentRendering | undefined = rendering
+  ) =>
     render(
       <SitecoreProvider
         api={apiStub}
@@ -95,17 +104,22 @@ describe('<DesignLibraryLowCodeComponent />', () => {
         loadImportMap={loadImportMapStub}
         atomsConfig={runtime}
       >
-        <DesignLibraryLowCodeComponent />
+        <DesignLibraryLowCodeComponent rendering={renderingProp} />
       </SitecoreProvider>
     );
 
-  it('posts READY status on mount', async () => {
+  it('posts READY status on mount with rendering uid', async () => {
     renderComponent(atomsConfig);
     await waitFor(() => {
       expect(postToDesignLibrarySpy).to.have.been.calledWith(
-        getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'low-code-component')
+        getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'test-content')
       );
     });
+  });
+
+  it('renders error when rendering uid is missing', () => {
+    const { container } = renderComponent(atomsConfig, { componentName: 'LowCodeComponent' });
+    expect(container.textContent).to.include('Rendering UID is missing in the rendering data');
   });
 
   it('sends error when no catalog is provided', async () => {
@@ -151,9 +165,28 @@ describe('<DesignLibraryLowCodeComponent />', () => {
 
     await waitFor(() => {
       expect(postToDesignLibrarySpy).to.have.been.calledWith(
-        getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'low-code-component')
+        getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
       );
     });
+  });
+
+  it('wraps preview with PlaceholderMetadata chromes using rendering uid', async () => {
+    const { container } = renderComponent(atomsConfig);
+
+    await waitFor(() => {
+      expect(addDocumentUpdateHandlerStub).to.have.been.called;
+    });
+
+    const openChrome = container.querySelector(
+      'code.scpm[chrometype="rendering"][kind="open"][id="test-content"]'
+    );
+    const closeChrome = container.querySelector(
+      'code.scpm[chrometype="rendering"][kind="close"]'
+    );
+
+    expect(openChrome).to.not.be.null;
+    expect(closeChrome).to.not.be.null;
+    expect(openChrome?.getAttribute('data-csdk-component-runtime')).to.equal('client');
   });
 
   it('subscribes to component props update handler', async () => {

@@ -1,12 +1,14 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { useSitecore } from '../SitecoreProvider';
 import { serializeCatalog } from '../../atoms';
 import { StudioComponentWrapper } from './StudioComponentWrapper';
 import type { Document } from '@sitecore-content-sdk/content/atoms';
 import * as editing from '@sitecore-content-sdk/content/editing';
 import * as atoms from '@sitecore-content-sdk/content/atoms';
-import { DesignLibraryErrorBoundary } from '../..';
+import { DesignLibraryErrorBoundary, PlaceholderMetadata } from '../..';
+import { ErrorComponent } from '../ErrorBoundary';
 import type { ChildComponentProps } from '../Placeholder/models';
 
 let { postToDesignLibrary, getDesignLibraryStatusEvent, DesignLibraryStatus } = editing;
@@ -32,6 +34,14 @@ export const __mockDependencies = (mocks: any) => {
   }
 };
 
+export type DesignLibraryLowCodeComponentProps = {
+  /**
+   * Sitecore rendering from the Design Library editing placeholder.
+   * UID must match READY/RENDERED status events and chrome metadata (same contract as DesignLibrary).
+   */
+  rendering?: ComponentRendering;
+};
+
 /**
  * Design Library Low Code component.
  *
@@ -39,21 +49,30 @@ export const __mockDependencies = (mocks: any) => {
  * - On mount, it serializes the atoms catalog and sends it to the Design Studio via the `atoms:catalog` event.
  * - Receives Component model data updates via document update handler and renders the low code component
  * via `StudioComponentWrapper` (same client path as Studio / NCC preview elsewhere).
+ * - Wraps preview output with `PlaceholderMetadata` using the layout rendering UID so Design Studio
+ * receives the same chrome handshake as normal Design Library components.
+ * @param {DesignLibraryLowCodeComponentProps} props - Component props.
+ * @returns {JSX.Element} The low-code preview surface.
  * @internal
  */
-export const DesignLibraryLowCodeComponent = () => {
+export const DesignLibraryLowCodeComponent = ({ rendering }: DesignLibraryLowCodeComponentProps) => {
   const { atomsConfig } = useSitecore();
+  const uid = rendering?.uid;
   const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const [renderKey, setRenderKey] = useState(0);
   const [fields, setFields] = useState<ChildComponentProps['fields'] | undefined>();
   const [params, setParams] = useState<ChildComponentProps['params'] | undefined>();
 
-  useEffect(() => {
-    postToDesignLibrary(
-      getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'low-code-component')
-    );
-  }, []);
+  if (!uid) {
+    return <ErrorComponent message="Rendering UID is missing in the rendering data" />;
+  }
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    postToDesignLibrary(getDesignLibraryStatusEvent(DesignLibraryStatus.READY, uid));
+  }, [uid]);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const unsubscribe = addComponentPropsUpdateHandler((updatedFields, updatedParams) => {
       setFields(updatedFields as ChildComponentProps['fields']);
@@ -62,6 +81,7 @@ export const DesignLibraryLowCodeComponent = () => {
     return () => unsubscribe();
   }, []);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (!atomsConfig?.catalog) {
       sendAtomsErrorEvent('No atoms catalog provided', 'atoms-missing');
@@ -79,20 +99,18 @@ export const DesignLibraryLowCodeComponent = () => {
     return () => unsubDocumentUpdate();
   }, [atomsConfig]);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (renderKey === 0) return;
 
-    postToDesignLibrary(
-      getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'low-code-component')
-    );
-  }, [renderKey]);
+    postToDesignLibrary(getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, uid));
+  }, [renderKey, uid]);
 
   return (
-    <DesignLibraryErrorBoundary
-      uid={currentDocument?.name ?? 'design-library-low-code-component'}
-      renderKey={renderKey}
-    >
-      <StudioComponentWrapper document={currentDocument} fields={fields} params={params} />
+    <DesignLibraryErrorBoundary uid={uid} renderKey={renderKey}>
+      <PlaceholderMetadata rendering={rendering!} componentRuntime="client">
+        <StudioComponentWrapper document={currentDocument} fields={fields} params={params} />
+      </PlaceholderMetadata>
     </DesignLibraryErrorBoundary>
   );
 };
