@@ -1,28 +1,16 @@
-import { describe, it, expect, vi, beforeAll, beforeEach, type Mock } from 'vitest';
-import type { RedirectInfo, RedirectsService, SiteInfo } from '@sitecore-content-sdk/content/site';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
+import {
+  RedirectInfo,
+  RedirectsService,
+  REDIRECT_TYPE_301,
+  REDIRECT_TYPE_302,
+  REDIRECT_TYPE_SERVER_TRANSFER,
+  type SiteInfo,
+} from '@sitecore-content-sdk/content/site';
 import { EDITING_PARAMS_HEADER } from '../../editing/constants';
 import { LOADER_DATA_ENDPOINT } from '../constants';
-import type { RedirectsMiddlewareOptions } from './redirects-middleware';
+import { createRedirectsMiddleware, type RedirectsMiddlewareOptions } from './redirects-middleware';
 import type { CsdkExpressRequest, ExpressResponse } from './models';
-
-// Loaded lazily in beforeAll rather than via static top-level imports. Statically importing the
-// real ./redirects-middleware (and @sitecore-content-sdk/content/site) would eagerly pull the real
-// @sitecore-content-sdk/core and /analytics-core into the module registry at file-eval time. Under
-// the Angular test runner's `isolate: false`, that caches the real modules before sibling specs
-// (personalize-middleware) register their `vi.mock`, defeating those mocks. This spec mocks nothing,
-// so deferring the load keeps it from polluting the shared registry.
-type SiteModule = typeof import('@sitecore-content-sdk/content/site');
-let createRedirectsMiddleware: typeof import('./redirects-middleware').createRedirectsMiddleware;
-let REDIRECT_TYPE_301: SiteModule['REDIRECT_TYPE_301'];
-let REDIRECT_TYPE_302: SiteModule['REDIRECT_TYPE_302'];
-let REDIRECT_TYPE_SERVER_TRANSFER: SiteModule['REDIRECT_TYPE_SERVER_TRANSFER'];
-
-beforeAll(async () => {
-  ({ REDIRECT_TYPE_301, REDIRECT_TYPE_302, REDIRECT_TYPE_SERVER_TRANSFER } = await import(
-    '@sitecore-content-sdk/content/site'
-  ));
-  ({ createRedirectsMiddleware } = await import('./redirects-middleware'));
-});
 
 const SITES: SiteInfo[] = [{ hostName: '*', language: 'en', name: 'site-a' }];
 
