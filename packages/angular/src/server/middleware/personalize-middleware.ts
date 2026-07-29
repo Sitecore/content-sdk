@@ -10,6 +10,7 @@ import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { analyticsPlugin, analyticsServerAdapter } from '@sitecore-content-sdk/analytics-core';
+import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/analytics-core/internal';
 import {
   personalize,
   personalizeServerPlugin,
@@ -73,6 +74,10 @@ export type PersonalizeMiddlewareOptions = BaseMiddlewareOptions &
     getExtraUtmParams?: (req: ExpressRequest) => Partial<ExperienceParams['utm']>;
     /** Extract geolocation data from the request */
     extractGeoDataCb?: (req: ExpressRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
+    /**
+     * Skip personalization for bot requests marked by the bot tracking middleware. Default `true`.
+     */
+    skipForBot?: boolean;
   };
 
 type PersonalizeExecution = {
@@ -200,6 +205,12 @@ export function createPersonalizeMiddleware(
 
       if (options.skip?.(req)) {
         debug.personalize('personalize middleware skipped (skip predicate)');
+        return next();
+      }
+
+      // Skip personalization for bot requests marked by the bot tracking middleware.
+      if ((options.skipForBot ?? true) && data.cookies?.[BOT_DETECTION_COOKIE]) {
+        debug.personalize('skipped (bot request)');
         return next();
       }
 

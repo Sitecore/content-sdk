@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
   loadForm: vi.fn(),
   executeScriptElements: vi.fn(),
   subscribeToFormSubmitEvent: vi.fn(),
+  isBotClientSide: vi.fn(),
 }));
 
 vi.mock('@sitecore-content-sdk/content', () => {
@@ -24,6 +25,10 @@ vi.mock('@sitecore-content-sdk/content', () => {
     },
   };
 });
+
+vi.mock('@sitecore-content-sdk/analytics-core/internal', () => ({
+  isBotClientSide: mocks.isBotClientSide,
+}));
 
 describe('ScFormComponent', () => {
   const testSitecoreConfig = {
@@ -86,6 +91,7 @@ describe('ScFormComponent', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.loadForm.mockResolvedValue('<p data-sc-form="1">loaded</p>');
+    mocks.isBotClientSide.mockReturnValue(false);
 
     errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
@@ -286,6 +292,33 @@ describe('ScFormComponent', () => {
 
     expect(mocks.subscribeToFormSubmitEvent).not.toHaveBeenCalled();
     expect(mocks.executeScriptElements).toHaveBeenCalled();
+  });
+
+  it('should not send form submit events for bots but still load the form', async () => {
+    mocks.isBotClientSide.mockReturnValue(true);
+
+    // The real subscribeToFormSubmitEvent attaches a submit listener that reports the submit; model
+    // that here so a dispatched submit proves whether tracking was actually wired up.
+    const onSubmitTracked = vi.fn();
+    mocks.subscribeToFormSubmitEvent.mockImplementation((el: HTMLElement) => {
+      el.addEventListener('submit', () => onSubmitTracked());
+    });
+
+    const fixture = createFixture();
+    setMockContextPage(makePage(false));
+
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }, { uid: 'x' }));
+    await flushFormLoadPipeline(fixture);
+
+    // form content still loads for bots
+    expect(mocks.executeScriptElements).toHaveBeenCalled();
+    // no submit subscription is set up for the bot
+    expect(mocks.subscribeToFormSubmitEvent).not.toHaveBeenCalled();
+
+    // submitting the loaded form sends no event, because tracking was never wired up
+    const container = fixture.nativeElement.querySelector('div') as HTMLDivElement;
+    container.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    expect(onSubmitTracked).not.toHaveBeenCalled();
   });
 
   it('should log when loadForm rejects', async () => {

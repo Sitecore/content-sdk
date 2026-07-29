@@ -8,7 +8,7 @@
 
 > **PersonalizeMiddlewareOptions** = [`BaseMiddlewareOptions`](../interfaces/BaseMiddlewareOptions.md) & `Partial`\<[`SitecoreConfig`](../content/config/type-aliases/SitecoreConfig.md)\[`"personalize"`\]\> & `Partial`\<[`SitecoreConfig`](../content/config/type-aliases/SitecoreConfig.md)\[`"api"`\]\[`"edge"`\]\> & `object`
 
-Defined in: [packages/angular/src/server/middleware/personalize-middleware.ts:61](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/angular/src/server/middleware/personalize-middleware.ts#L61)
+Defined in: [packages/angular/src/server/middleware/personalize-middleware.ts:62](https://github.com/Sitecore/content-sdk/blob/4c907d5f6aac9870a7c40fd993f1f70ddce4802f/packages/angular/src/server/middleware/personalize-middleware.ts#L62)
 
 Configuration for the personalize middleware
 
@@ -69,3 +69,9 @@ Locales used to extract the language from the request path
 > `optional` **personalizeService?**: `PersonalizeService`
 
 Override the personalize service instance
+
+### skipForBot?
+
+> `optional` **skipForBot?**: `boolean`
+
+Skip personalization for bot requests marked by the bot tracking middleware. Default `true`.

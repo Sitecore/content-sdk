@@ -1,5 +1,5 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   CdpHelper,
   DEFAULT_VARIANT,
@@ -86,13 +86,13 @@ function createRes() {
 describe('createPersonalizeMiddleware', () => {
   const next = vi.fn();
 
-  beforeAll(async () => {
-    ({ createPersonalizeMiddleware } = await import('./personalize-middleware'));
-  });
-
-  beforeEach(() => {
+  beforeEach(async () => {
+    // Vitest runs with `isolate: false` under the Angular unit-test builder; reset modules and
+    // re-import the SUT so it binds to this file's mocks regardless of sibling-spec ordering.
+    vi.resetModules();
     vi.clearAllMocks();
     initContentSdkMock.mockResolvedValue(undefined);
+    ({ createPersonalizeMiddleware } = await import('./personalize-middleware'));
   });
 
   it('should populate req.scParams with identified page-level variant', async () => {
@@ -212,6 +212,31 @@ describe('createPersonalizeMiddleware', () => {
     );
 
     expect(getPersonalizeInfo).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it('should skip bot requests marked with the bot cookie by default', async () => {
+    await createPersonalizeMiddleware(createOptions())(
+      createReq({ cookies: { sc_bot: '1' } }),
+      createRes(),
+      next
+    );
+
+    expect(getPersonalizeInfo).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it('should still personalize bot requests when skipForBot is false', async () => {
+    getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
+    personalizeMock.mockResolvedValue({ variantId: 'variant-a' });
+
+    await createPersonalizeMiddleware(createOptions({ skipForBot: false }))(
+      createReq({ cookies: { sc_bot: '1' } }),
+      createRes(),
+      next
+    );
+
+    expect(getPersonalizeInfo).toHaveBeenCalled();
     expect(next).toHaveBeenCalledTimes(1);
   });
 

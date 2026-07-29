@@ -24,6 +24,7 @@
 
 - [AllowedQueryParams](type-aliases/AllowedQueryParams.md)
 - [AllowedQueryParamsResolver](type-aliases/AllowedQueryParamsResolver.md)
+- [BotTrackingMiddlewareOptions](type-aliases/BotTrackingMiddlewareOptions.md)
 - [CollectSitecoreTagsFromEdgeBodyOptions](type-aliases/CollectSitecoreTagsFromEdgeBodyOptions.md)
 - [ExpressMiddleware](type-aliases/ExpressMiddleware.md)
 - [ExpressNextFunction](type-aliases/ExpressNextFunction.md)
@@ -42,6 +43,7 @@
 ## Functions
 
 - [collectSitecoreTagsFromEdgeRevalidateRequestBody](functions/collectSitecoreTagsFromEdgeRevalidateRequestBody.md)
+- [createBotTrackingMiddleware](functions/createBotTrackingMiddleware.md)
 - [createEditingConfigMiddleware](functions/createEditingConfigMiddleware.md)
 - [createEditingRenderMiddleware](functions/createEditingRenderMiddleware.md)
 - [createLoaderDataServiceMiddleware](functions/createLoaderDataServiceMiddleware.md)

@@ -8,7 +8,7 @@
 
 > **getVariantId**(`context`): `string`
 
-Defined in: [packages/angular/src/loaders/context-helpers.ts:23](https://github.com/Sitecore/content-sdk/blob/6563736fb3fdcd5885f88fcfe20c15d0800efbd7/packages/angular/src/loaders/context-helpers.ts#L23)
+Defined in: [packages/angular/src/loaders/context-helpers.ts:23](https://github.com/Sitecore/content-sdk/blob/4c907d5f6aac9870a7c40fd993f1f70ddce4802f/packages/angular/src/loaders/context-helpers.ts#L23)
 
 Read the page-level personalization variant id resolved for the current request
 (personalize middleware → `scParams`). Returns the default variant id when the
