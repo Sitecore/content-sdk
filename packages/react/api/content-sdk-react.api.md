@@ -274,7 +274,12 @@ export class DesignLibraryErrorBoundary extends React_2.Component<DesignLibraryE
 }
 
 // @internal
-export const DesignLibraryLowCodeComponent: () => React_2.JSX.Element;
+export const DesignLibraryLowCodeComponent: (input: DesignLibraryLowCodeComponentProps) => React_2.JSX.Element;
+
+// @internal
+export type DesignLibraryLowCodeComponentProps = {
+    rendering?: ComponentRendering;
+};
 
 export { DictionaryPhrases }
 

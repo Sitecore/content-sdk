@@ -34,6 +34,10 @@ export const __mockDependencies = (mocks: any) => {
   }
 };
 
+/**
+ * Props for {@link DesignLibraryLowCodeComponent}.
+ * @internal
+ */
 export type DesignLibraryLowCodeComponentProps = {
   /**
    * Sitecore rendering from the Design Library editing placeholder.
