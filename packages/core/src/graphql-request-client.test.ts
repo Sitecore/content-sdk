@@ -104,9 +104,12 @@ describe('GraphQLRequestClient', () => {
       .post('/graphql')
       .reply(200, function () {
         const receivedHeaders = this.req.headers;
+        // Native fetch/undici may surface headers as strings; node-fetch used arrays.
+        const headerValues = (value: string | string[] | undefined): string[] =>
+          value === undefined ? [] : Array.isArray(value) ? value : [value];
 
-        expect(receivedHeaders['sc_apikey']).to.deep.equal([apiKey]);
-        expect(receivedHeaders['custom-header']).to.deep.equal([customHeader]);
+        expect(headerValues(receivedHeaders['sc_apikey'])).to.deep.equal([apiKey]);
+        expect(headerValues(receivedHeaders['custom-header'])).to.deep.equal([customHeader]);
 
         return {
           data: {
@@ -252,6 +255,28 @@ describe('GraphQLRequestClient', () => {
       expect(requestHeaders.get('content-type')).to.contain('application/json');
       expect(requestInit.body).to.contain('query Test { test }');
     });
+  });
+
+  it('should default to global fetch instead of graphql-request cross-fetch', async () => {
+    const nativeFetch = sinon.stub().resolves(
+      new Response(JSON.stringify({ data: { result: 'from-native-fetch' } }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    );
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = nativeFetch as unknown as typeof fetch;
+
+    try {
+      const graphQLClient = new GraphQLRequestClient('https://foo.com/graphql');
+      const result = await graphQLClient.request<{ result: string }>('query Test { test }');
+
+      expect(result).to.deep.equal({ result: 'from-native-fetch' });
+      expect(nativeFetch.calledOnce).to.equal(true);
+      expect(nativeFetch.firstCall.args[0]).to.equal('https://foo.com/graphql');
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
   });
 
   describe('Working with retryer', () => {
