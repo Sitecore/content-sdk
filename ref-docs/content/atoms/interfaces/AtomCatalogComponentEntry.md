@@ -6,7 +6,7 @@
 
 # Interface: AtomCatalogComponentEntry
 
-Defined in: [content/src/atoms/types.ts:7](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/content/src/atoms/types.ts#L7)
+Defined in: [content/src/atoms/types.ts:7](https://github.com/Sitecore/content-sdk/blob/ce87c676fc99682dfe788e7ca7dc2a0c95e8cb51/packages/content/src/atoms/types.ts#L7)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Serialized atom info for a single component, sent to Design Studio.
 
 > `optional` **allowedChildren?**: `string`[]
 
-Defined in: [content/src/atoms/types.ts:19](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/content/src/atoms/types.ts#L19)
+Defined in: [content/src/atoms/types.ts:19](https://github.com/Sitecore/content-sdk/blob/ce87c676fc99682dfe788e7ca7dc2a0c95e8cb51/packages/content/src/atoms/types.ts#L19)
 
 Component names that are allowed as children in this component's slots.
 
@@ -28,7 +28,7 @@ Component names that are allowed as children in this component's slots.
 
 > `optional` **allowedParents?**: `string`[]
 
-Defined in: [content/src/atoms/types.ts:21](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/content/src/atoms/types.ts#L21)
+Defined in: [content/src/atoms/types.ts:21](https://github.com/Sitecore/content-sdk/blob/ce87c676fc99682dfe788e7ca7dc2a0c95e8cb51/packages/content/src/atoms/types.ts#L21)
 
 Component names that this component is allowed to be placed inside.
 
@@ -38,7 +38,7 @@ Component names that this component is allowed to be placed inside.
 
 > `optional` **description?**: `string`
 
-Defined in: [content/src/atoms/types.ts:13](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/content/src/atoms/types.ts#L13)
+Defined in: [content/src/atoms/types.ts:13](https://github.com/Sitecore/content-sdk/blob/ce87c676fc99682dfe788e7ca7dc2a0c95e8cb51/packages/content/src/atoms/types.ts#L13)
 
 Human-readable description.
 
@@ -48,7 +48,7 @@ Human-readable description.
 
 > `optional` **example?**: `unknown`
 
-Defined in: [content/src/atoms/types.ts:23](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/content/src/atoms/types.ts#L23)
+Defined in: [content/src/atoms/types.ts:23](https://github.com/Sitecore/content-sdk/blob/ce87c676fc99682dfe788e7ca7dc2a0c95e8cb51/packages/content/src/atoms/types.ts#L23)
 
 Example prop values for AI prompt generation. Auto-generated from Zod schema if omitted.
 
@@ -58,7 +58,7 @@ Example prop values for AI prompt generation. Auto-generated from Zod schema if 
 
 > **name**: `string`
 
-Defined in: [content/src/atoms/types.ts:9](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/content/src/atoms/types.ts#L9)
+Defined in: [content/src/atoms/types.ts:9](https://github.com/Sitecore/content-sdk/blob/ce87c676fc99682dfe788e7ca7dc2a0c95e8cb51/packages/content/src/atoms/types.ts#L9)
 
 Component name (key in the catalog).
 
@@ -68,7 +68,7 @@ Component name (key in the catalog).
 
 > **propsSchema**: `object`
 
-Defined in: [content/src/atoms/types.ts:11](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/content/src/atoms/types.ts#L11)
+Defined in: [content/src/atoms/types.ts:11](https://github.com/Sitecore/content-sdk/blob/ce87c676fc99682dfe788e7ca7dc2a0c95e8cb51/packages/content/src/atoms/types.ts#L11)
 
 JSON Schema representation of the component props.
 
@@ -78,7 +78,7 @@ JSON Schema representation of the component props.
 
 > **slots**: `string`[]
 
-Defined in: [content/src/atoms/types.ts:15](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/content/src/atoms/types.ts#L15)
+Defined in: [content/src/atoms/types.ts:15](https://github.com/Sitecore/content-sdk/blob/ce87c676fc99682dfe788e7ca7dc2a0c95e8cb51/packages/content/src/atoms/types.ts#L15)
 
 Named slots (children).
 
@@ -88,6 +88,6 @@ Named slots (children).
 
 > `optional` **version?**: `string`
 
-Defined in: [content/src/atoms/types.ts:17](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/content/src/atoms/types.ts#L17)
+Defined in: [content/src/atoms/types.ts:17](https://github.com/Sitecore/content-sdk/blob/ce87c676fc99682dfe788e7ca7dc2a0c95e8cb51/packages/content/src/atoms/types.ts#L17)
 
 Semver version of this component definition.
