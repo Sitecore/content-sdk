@@ -17,6 +17,7 @@ import {
   createRobotsMiddleware,
   createMultisiteMiddleware,
   createPersonalizeMiddleware,
+  createRedirectsMiddleware,
   createSitecoreRevalidateMiddleware,
   createSitemapMiddleware,
 } from '@sitecore-content-sdk/angular';
@@ -96,8 +97,8 @@ app.use(
 app.use(createEditingRenderMiddleware());
 
 /**
- * Shared path matcher for the request-scoped middlewares (multisite + personalize, and any
- * future redirects middleware). It decides which requests these middlewares act on.
+ * Shared path matcher for the request-scoped middlewares (multisite, redirects and personalize).
+ * It decides which requests these middlewares act on.
  *
  * Patterns are exact strings or RegExp. The SDK already skips API routes (`/api/*`), Sitecore
  * routes (`/sitecore/*`), static files (any path whose last segment has an extension) and
@@ -126,7 +127,7 @@ app.use(
   })
 );
 
-/**
+/*
  * Bot tracking middleware. Detects bots by User-Agent, sets the `sc_bot` cookie, and sends a
  * dedicated bot page-view event. Must run before personalize so the bot cookie is set before
  * personalize decides whether to skip. Does not run in dev/localhost environments.
@@ -135,6 +136,24 @@ app.use(
   createBotTrackingMiddleware({
     ...config.api.edge,
     locales: config.angular.locales,
+    defaultLanguage: config.defaultLanguage,
+    defaultSite: config.defaultSite,
+    matcher: middlewareMatcher,
+  })
+);
+
+/**
+ * Redirects middleware. Matches each request against the site's Sitecore redirects (locale,
+ * static and regex rules) and issues a 301/302 redirect or an internal server-transfer rewrite.
+ * Runs after multisite (which resolves the site it fetches redirects for) and before personalize
+ * so a redirect short-circuits the request before a CDP call is made.
+ */
+app.use(
+  createRedirectsMiddleware({
+    ...config.redirects,
+    ...config.api.edge,
+    ...(config.api.local ?? {}),
+    sites,
     defaultLanguage: config.defaultLanguage,
     defaultSite: config.defaultSite,
     matcher: middlewareMatcher,
