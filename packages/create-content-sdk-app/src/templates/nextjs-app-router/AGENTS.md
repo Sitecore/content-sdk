@@ -19,6 +19,8 @@ npm run type-check   # Run TypeScript compiler
 
 **Component maps:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client) are auto-generated from `src/components/` during `npm run dev` (watch) and `npm run build`. The generator scans `src/components/` and creates entries in the appropriate map (Server vs Client based on `'use client'`).
 
+**Atoms:** Catalog/registry in `src/atoms/index.tsx`; wired via `atomsConfig` on `SitecoreProvider` (not the component map). Run `npm run sitecore-tools:atoms:update` after intentional schema changes; `atoms:validate` runs on `dev`/`build`. Skills: `content-sdk-atoms-setup`, `content-sdk-atoms-create`, `content-sdk-atoms-maintain`.
+
 ---
 
 ## Application Structure (App Router)
@@ -37,6 +39,7 @@ src/
     not-found.tsx                 # Root not-found
     api/                          # Route handlers
       sitemap/route.ts, robots/route.ts, editing/config/route.ts, editing/render/route.ts
+  atoms/                         # Atoms catalog + registry (defineAtomsCatalog / defineAtomsRegistry)
   components/                    # React components (Sitecore + app-specific)
   lib/                           # sitecore-client, component-props
   i18n/                          # next-intl
@@ -44,7 +47,7 @@ src/
     request.ts                    # getRequestConfig, getDictionary per site
   Layout.tsx, Providers.tsx, Bootstrap.tsx, Scripts.tsx
 proxy.ts                         # Edge middleware (preview, bot-tracking, locale, multisite, redirects, personalize)
-.sitecore/                       # component-map.ts, component-map.client.ts, import-map.*, sites.json, metadata.json
+.sitecore/                       # component-map.ts, component-map.client.ts, import-map.*, atoms.lock.json, sites.json, metadata.json
 sitecore.config.ts               # Sitecore config (api, defaultSite, defaultLanguage, multisite, etc.)
 next.config.ts                   # next-intl plugin, rewrites, images
 ```
@@ -56,7 +59,7 @@ next.config.ts                   # next-intl plugin, rewrites, images
 - **Quick checks:** If locale or dictionary is wrong, ensure `setRequestLocale(\`${site}_${locale}\`)` is called at the top of the page and `src/i18n/request.ts` parses `requestLocale` and calls `client.getDictionary`. If segment not-found lacks site/locale, ensure `setCachedPageParams` runs in `[[...path]]/layout.tsx` and read with `getCachedPageParams()` in `not-found.tsx` (do not use `headers()` — it opts out of SSG). Always `await params` (Next.js 15+).
 - **Security:** Use only environment variables in `sitecore.config.ts`; never hardcode API keys, editing secret, or host URLs. Do not expose secrets in client-side code or in logs. Validate and sanitize user input at boundaries.
 - **Performance:** Keep middleware lightweight; use the proxy `matcher` so it does not run on API routes, `_next`, sitemap, robots, or static assets. Use Server Components for data fetching; add `'use client'` only where interactivity is needed. Use `generateStaticParams` and caching as in the existing page.
-- **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Regenerate the component maps with `npm run sitecore-tools:generate-map` or `npm run sitecore-tools:generate-map:watch`; edit the maps manually only when the generator cannot handle the change. Use the single Sitecore client in `lib/sitecore-client.ts` for all data fetching.
+- **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Regenerate the component maps with `npm run sitecore-tools:generate-map` or `npm run sitecore-tools:generate-map:watch`; edit the maps manually only when the generator cannot handle the change. Use the single Sitecore client in `lib/sitecore-client.ts` for all data fetching. Define atoms in `src/atoms/` via `defineAtomsCatalog` / `defineAtomsRegistry` and `atomsConfig` — do not register atoms in the component map.
 - **Consistency:** Follow the existing patterns in `[site]/[locale]/[[...path]]/page.tsx`, layout hierarchy, `i18n/request.ts` (site_locale), and API route handlers. When adding routes or rewrites, keep the middleware matcher and next-intl config in sync.
 
 ---
@@ -75,6 +78,7 @@ next.config.ts                   # next-intl plugin, rewrites, images
 | Use Sitecore field components and validate fields | Expose API keys or editing secret in client code |
 | Document required env vars in `.env.example` only | Commit `.env` or `.env.local` |
 | Run `npm run build` after changes to verify the app builds | Add npm dependencies without explicit user approval |
+| Define atoms in `src/atoms/` and pass via `atomsConfig`; run `atoms:update` after schema changes | Register atoms in the component map or hand-edit `atoms.lock.json` hashes |
 
 ---
 
