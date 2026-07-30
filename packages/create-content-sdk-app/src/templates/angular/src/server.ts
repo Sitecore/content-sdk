@@ -143,6 +143,24 @@ app.use(
 );
 
 /**
+ * Redirects middleware. Matches each request against the site's Sitecore redirects (locale,
+ * static and regex rules) and issues a 301/302 redirect or an internal server-transfer rewrite.
+ * Runs after multisite (which resolves the site it fetches redirects for) and before personalize
+ * so a redirect short-circuits the request before a CDP call is made.
+ */
+app.use(
+  createRedirectsMiddleware({
+    ...config.redirects,
+    ...config.api.edge,
+    ...(config.api.local ?? {}),
+    sites,
+    defaultLanguage: config.defaultLanguage,
+    defaultSite: config.defaultSite,
+    matcher: middlewareMatcher,
+  })
+);
+
+/**
  * Personalize middleware. Identifies page/component variants for the request via
  * Sitecore CDP and writes them onto `req.scParams` so the page loader fetches the
  * personalized layout and the loader cache keys per variant. Skips bot requests marked
@@ -156,24 +174,6 @@ app.use(
     ...config.personalize,
     ...config.api.edge,
     locales: config.angular.locales,
-    defaultLanguage: config.defaultLanguage,
-    defaultSite: config.defaultSite,
-    matcher: middlewareMatcher,
-  })
-);
-
-/**
- * Redirects middleware. Matches each request against the site's Sitecore redirects (locale,
- * static and regex rules) and issues a 301/302 redirect or an internal server-transfer rewrite.
- * Runs after multisite (which resolves the site it fetches redirects for) and before personalize
- * so a redirect short-circuits the request before a CDP call is made.
- */
-app.use(
-  createRedirectsMiddleware({
-    ...config.redirects,
-    ...config.api.edge,
-    ...(config.api.local ?? {}),
-    sites,
     defaultLanguage: config.defaultLanguage,
     defaultSite: config.defaultSite,
     matcher: middlewareMatcher,
