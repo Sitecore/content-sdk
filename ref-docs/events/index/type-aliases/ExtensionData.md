@@ -8,6 +8,6 @@
 
 > **ExtensionData** = `NestedObject`
 
-Defined in: [events/src/events/common-interfaces.ts:54](https://github.com/Sitecore/content-sdk/blob/4c907d5f6aac9870a7c40fd993f1f70ddce4802f/packages/events/src/events/common-interfaces.ts#L54)
+Defined in: [events/src/events/common-interfaces.ts:54](https://github.com/Sitecore/content-sdk/blob/07c6169d94098a2bc2f491ef61de4d253b52b098/packages/events/src/events/common-interfaces.ts#L54)
 
 Type of the extension data that the developer can pass to events.

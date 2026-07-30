@@ -8,6 +8,6 @@
 
 > `const` **PERSONALIZE\_PLUGIN\_NAME**: `"PersonalizePlugin"` = `'PersonalizePlugin'`
 
-Defined in: [personalize/src/initialization/const.ts:5](https://github.com/Sitecore/content-sdk/blob/4c907d5f6aac9870a7c40fd993f1f70ddce4802f/packages/personalize/src/initialization/const.ts#L5)
+Defined in: [personalize/src/initialization/const.ts:5](https://github.com/Sitecore/content-sdk/blob/07c6169d94098a2bc2f491ef61de4d253b52b098/packages/personalize/src/initialization/const.ts#L5)
 
 The name of the Personalize plugin.
