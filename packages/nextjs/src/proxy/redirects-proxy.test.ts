@@ -1087,15 +1087,17 @@ describe('RedirectsProxy', () => {
       expect(finalRes.status).to.equal(301);
     });
 
-    it('should preserve request language for a locale-less target when isLanguagePreserved is true', async () => {
+    it('should preserve locale prefix when present on incoming request and locale does not change between redirect', async () => {
+      // App Router. Incoming '/da/old-page' carries the 'da' prefix and the locale does not change on
+      // redirect, so the prefix is preserved on the target (and not dropped or duplicated).
       const req = createRequest({
         nextUrl: {
-          pathname: '/old-page',
+          pathname: '/da/old-page',
         },
       });
       // match app router behavior about locale in request
       delete req.locale;
-      // App Router response so language comes from the locale header and locale is added to the pathname
+      // App Router response so the locale is resolved from the x-sc-locale header
       const res = createResponse({
         headers: {
           'x-sc-locale': 'da',
@@ -1113,9 +1115,9 @@ describe('RedirectsProxy', () => {
       const { proxy } = createProxy({
         pattern: '/old-page',
         target: '/new-page',
+        locales: ['en', 'da'],
         redirectType: REDIRECT_TYPE_301,
         isLanguagePreserved: true,
-        locale: 'da',
       });
 
       const finalRes = await proxy.handle(req, res);
@@ -1123,8 +1125,9 @@ describe('RedirectsProxy', () => {
       expect(nextRedirectStub.calledOnce).to.be.true;
       const redirectUrl = nextRedirectStub.getCall(0).args[0];
       const urlString = typeof redirectUrl === 'string' ? redirectUrl : redirectUrl.href;
-      // request locale ('da') must be preserved as the target has no locale prefix of its own
+      // request locale ('da') prefix is preserved, not dropped or duplicated
       expect(urlString).to.include('/da/new-page');
+      expect(urlString).to.not.include('/da/da/new-page');
       expect(finalRes.redirected).to.be.true;
     });
 
@@ -1146,12 +1149,14 @@ describe('RedirectsProxy', () => {
           : redirectUrl.href || redirectUrl.toString();
       };
 
-      it('falls back to x-sc-locale header when localeInPath is unset', async () => {
+      it('should not apply locale prefix when incoming request does not have prefix and locale does not change between origin and redirect in App Router', async () => {
+        // App Router (locale mode detected from the x-sc-locale header). Incoming '/old-page' has no
+        // locale prefix and the locale does not change on redirect ('da' -> 'da'), so no prefix is added.
         const req = createRequest({
           nextUrl: {
             pathname: '/old-page',
             locale: '',
-            defaultLocale: '',
+            defaultLocale: 'en',
           },
         });
         const res = createResponse({
@@ -1164,6 +1169,7 @@ describe('RedirectsProxy', () => {
         const { proxy } = createProxy({
           pattern: '/old-page',
           target: '/new-page',
+          locales: ['en', 'da'],
           redirectType: REDIRECT_TYPE_301,
           locale: 'da',
         });
@@ -1171,7 +1177,9 @@ describe('RedirectsProxy', () => {
         const finalRes = await proxy.handle(req, res);
 
         expect(nextRedirectStub.calledOnce).to.be.true;
-        expect(getRedirectUrlString()).to.include('/da/new-page');
+        const urlString = getRedirectUrlString();
+        expect(urlString).to.include('/new-page');
+        expect(urlString).to.not.include('/da/new-page');
         expect(finalRes.redirected).to.be.true;
       });
 
@@ -1179,9 +1187,9 @@ describe('RedirectsProxy', () => {
         // App Router: no Next.js i18n locale / defaultLocale on the request URL
         const req = createRequest({
           nextUrl: {
-            pathname: '/old-page',
+            pathname: '/en/old-page',
             locale: '',
-            defaultLocale: '',
+            defaultLocale: 'en',
           },
         });
         const res = createResponse();
@@ -1190,8 +1198,10 @@ describe('RedirectsProxy', () => {
         const { proxy } = createProxy({
           pattern: '/old-page',
           target: '/new-page',
+          locales: ['en', 'da'],
           redirectType: REDIRECT_TYPE_301,
           locale: 'en',
+          isLanguagePreserved: true,
           redirectsProxyConfig: {
             localeInPath: true,
           },

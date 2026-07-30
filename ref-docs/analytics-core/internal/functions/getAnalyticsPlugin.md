@@ -8,7 +8,7 @@
 
 > **getAnalyticsPlugin**(): [`AnalyticsPlugin`](../../index/interfaces/AnalyticsPlugin.md)
 
-Defined in: [analytics-core/src/initialization/plugin.ts:123](https://github.com/Sitecore/content-sdk/blob/6f8e423028bdf8a74a2fc4b8cb084961d755b73f/packages/analytics-core/src/initialization/plugin.ts#L123)
+Defined in: [analytics-core/src/initialization/plugin.ts:123](https://github.com/Sitecore/content-sdk/blob/4c907d5f6aac9870a7c40fd993f1f70ddce4802f/packages/analytics-core/src/initialization/plugin.ts#L123)
 
 **`Internal`**
 
