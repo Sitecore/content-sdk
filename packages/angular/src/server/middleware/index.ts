@@ -35,6 +35,7 @@ export {
   createPersonalizeMiddleware,
   type PersonalizeMiddlewareOptions,
 } from './personalize-middleware';
+export { createRedirectsMiddleware, type RedirectsMiddlewareOptions } from './redirects-middleware';
 export {
   createBotTrackingMiddleware,
   type BotTrackingMiddlewareOptions,

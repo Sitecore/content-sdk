@@ -32,6 +32,7 @@
 - [MultisiteMiddlewareOptions](type-aliases/MultisiteMiddlewareOptions.md)
 - [PathPattern](type-aliases/PathPattern.md)
 - [PersonalizeMiddlewareOptions](type-aliases/PersonalizeMiddlewareOptions.md)
+- [RedirectsMiddlewareOptions](type-aliases/RedirectsMiddlewareOptions.md)
 - [SitecoreEdgeRevalidateRequestBody](type-aliases/SitecoreEdgeRevalidateRequestBody.md)
 - [SitecoreEdgeRevalidateUpdate](type-aliases/SitecoreEdgeRevalidateUpdate.md)
 
@@ -49,6 +50,7 @@
 - [createLoaderDataServiceMiddleware](functions/createLoaderDataServiceMiddleware.md)
 - [createMultisiteMiddleware](functions/createMultisiteMiddleware.md)
 - [createPersonalizeMiddleware](functions/createPersonalizeMiddleware.md)
+- [createRedirectsMiddleware](functions/createRedirectsMiddleware.md)
 - [createRobotsMiddleware](functions/createRobotsMiddleware.md)
 - [createSitecoreRevalidateMiddleware](functions/createSitecoreRevalidateMiddleware.md)
 - [createSitemapMiddleware](functions/createSitemapMiddleware.md)
