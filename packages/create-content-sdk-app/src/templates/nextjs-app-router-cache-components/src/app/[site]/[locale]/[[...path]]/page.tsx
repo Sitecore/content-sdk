@@ -29,20 +29,13 @@ export default async function Page({ params, searchParams }: PageProps) {
     notFound();
   }
 
-  // Cached fetch first so missing routes can notFound() without dynamic APIs in the ancestor tree.
-  const cachedPage = await getSitecorePage({ site, locale, path: path ?? [] });
-
-  if (!cachedPage) {
-    setCachedPageParams({ site, locale });
-    notFound();
-  }
-
   // Set site and locale to be available in src/i18n/request.ts for fetching the dictionary
   setRequestLocale(`${site}_${locale}`);
 
+  // Draft/preview first so editing is not blocked by locale-dependent cached lookups.
+  // Editing often resolves language via query string, while [locale] may fall back to defaultLanguage.
   const draft = await draftMode();
 
-  // Fetch the page data from Sitecore
   let page;
   if (draft.isEnabled) {
     const editingParams = await searchParams;
@@ -52,7 +45,7 @@ export default async function Page({ params, searchParams }: PageProps) {
       page = await client.getPreview(editingParams);
     }
   } else {
-    page = cachedPage;
+    page = await getSitecorePage({ site, locale, path: path ?? [] });
   }
 
   // If the page is not found, return a 404
