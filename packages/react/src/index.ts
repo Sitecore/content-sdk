@@ -82,6 +82,7 @@ export {
 export {
   DesignLibrary,
   DesignLibraryLowCodeComponent,
+  DesignLibraryLowCodeComponentProps,
   DesignLibraryErrorBoundary,
   DynamicComponent,
   ImportMapImport,
