@@ -8,7 +8,7 @@
 
 > `const` **defineAtomsRegistry**: *typeof* `defineAtomsRegistryReact` = `defineAtomsRegistryReact`
 
-Defined in: [nextjs/src/atoms/re-exports.ts:74](https://github.com/Sitecore/content-sdk/blob/67aa52ba0cee57732483f58d187367f0b89f05a1/packages/nextjs/src/atoms/re-exports.ts#L74)
+Defined in: [nextjs/src/atoms/re-exports.ts:74](https://github.com/Sitecore/content-sdk/blob/6953fcad50ce4e3d8b089190f6aed2a6b0cfd4e2/packages/nextjs/src/atoms/re-exports.ts#L74)
 
 Define an atoms registry that maps catalog definitions to Nextjs implementations.
 

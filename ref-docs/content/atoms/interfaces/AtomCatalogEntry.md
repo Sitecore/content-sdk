@@ -6,7 +6,7 @@
 
 # Interface: AtomCatalogEntry
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:29](https://github.com/Sitecore/content-sdk/blob/67aa52ba0cee57732483f58d187367f0b89f05a1/packages/content/src/atoms/design-library-bridge/types.ts#L29)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:29](https://github.com/Sitecore/content-sdk/blob/6953fcad50ce4e3d8b089190f6aed2a6b0cfd4e2/packages/content/src/atoms/design-library-bridge/types.ts#L29)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Serialized component entry in the catalog payload sent to Design Studio.
 
 > **description**: `string`
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:35](https://github.com/Sitecore/content-sdk/blob/67aa52ba0cee57732483f58d187367f0b89f05a1/packages/content/src/atoms/design-library-bridge/types.ts#L35)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:35](https://github.com/Sitecore/content-sdk/blob/6953fcad50ce4e3d8b089190f6aed2a6b0cfd4e2/packages/content/src/atoms/design-library-bridge/types.ts#L35)
 
 Human-readable description.
 
@@ -28,7 +28,7 @@ Human-readable description.
 
 > **name**: `string`
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:31](https://github.com/Sitecore/content-sdk/blob/67aa52ba0cee57732483f58d187367f0b89f05a1/packages/content/src/atoms/design-library-bridge/types.ts#L31)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:31](https://github.com/Sitecore/content-sdk/blob/6953fcad50ce4e3d8b089190f6aed2a6b0cfd4e2/packages/content/src/atoms/design-library-bridge/types.ts#L31)
 
 Component name (key in the catalog).
 
@@ -38,7 +38,7 @@ Component name (key in the catalog).
 
 > **propsSchema**: `object`
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:33](https://github.com/Sitecore/content-sdk/blob/67aa52ba0cee57732483f58d187367f0b89f05a1/packages/content/src/atoms/design-library-bridge/types.ts#L33)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:33](https://github.com/Sitecore/content-sdk/blob/6953fcad50ce4e3d8b089190f6aed2a6b0cfd4e2/packages/content/src/atoms/design-library-bridge/types.ts#L33)
 
 JSON Schema representation of the component props.
 
@@ -48,6 +48,6 @@ JSON Schema representation of the component props.
 
 > **slots**: `string`[]
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:37](https://github.com/Sitecore/content-sdk/blob/67aa52ba0cee57732483f58d187367f0b89f05a1/packages/content/src/atoms/design-library-bridge/types.ts#L37)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:37](https://github.com/Sitecore/content-sdk/blob/6953fcad50ce4e3d8b089190f6aed2a6b0cfd4e2/packages/content/src/atoms/design-library-bridge/types.ts#L37)
 
 Named slots (children).

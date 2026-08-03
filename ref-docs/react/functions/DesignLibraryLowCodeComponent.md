@@ -6,9 +6,9 @@
 
 # Function: DesignLibraryLowCodeComponent()
 
-> **DesignLibraryLowCodeComponent**(`props`): `Element`
+> **DesignLibraryLowCodeComponent**(): `Element`
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryLowCodeComponent.tsx:62](https://github.com/Sitecore/content-sdk/blob/67aa52ba0cee57732483f58d187367f0b89f05a1/packages/react/src/components/DesignLibrary/DesignLibraryLowCodeComponent.tsx#L62)
+Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryLowCodeComponent.tsx:47](https://github.com/Sitecore/content-sdk/blob/6953fcad50ce4e3d8b089190f6aed2a6b0cfd4e2/packages/react/src/components/DesignLibrary/DesignLibraryLowCodeComponent.tsx#L47)
 
 **`Internal`**
 
@@ -20,12 +20,6 @@ Facilitates the communication between the Design Studio and the Rendering Host w
 via `StudioComponentWrapper` (same client path as Studio / NCC preview elsewhere).
 - Wraps preview output with `PlaceholderMetadata` using the layout rendering UID so Design Studio
 receives the same chrome handshake as normal Design Library components.
-
-## Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `props` | [`DesignLibraryLowCodeComponentProps`](../type-aliases/DesignLibraryLowCodeComponentProps.md) | Component props. |
 
 ## Returns
 
