@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { isFieldValueEmpty, type RichTextField } from '@sitecore-content-sdk/content/layout';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
@@ -23,14 +23,28 @@ export interface RichTextProps extends EditableFieldProps<RichTextProps> {
   ref?: React.Ref<HTMLElement>;
 }
 
+// Keep a stable dangerouslySetInnerHTML object per HTML string across re-renders.
+const dangerouslySetInnerHTMLCache = new Map<string, { __html: string }>();
+
+const getStableDangerouslySetInnerHTML = (
+  html: string | undefined
+): { __html: string } | undefined => {
+  if (html === undefined || html === '') {
+    return undefined;
+  }
+
+  let prop = dangerouslySetInnerHTMLCache.get(html);
+  if (!prop) {
+    prop = { __html: html };
+    dangerouslySetInnerHTMLCache.set(html, prop);
+  }
+  return prop;
+};
+
 const RichTextComponent: React.FC<RichTextProps> = ({ field, tag = 'div', ref, ...otherProps }) => {
   // Stabilize the object reference so React DOM does not rewrite innerHTML on every
   // parent re-render when the HTML string is unchanged (preserves DOM nodes / listeners).
-  const html = field?.value;
-  const dangerouslySetInnerHTML = useMemo(
-    () => (html !== undefined && html !== '' ? { __html: html } : undefined),
-    [html]
-  );
+  const dangerouslySetInnerHTML = getStableDangerouslySetInnerHTML(field?.value);
 
   if (isFieldValueEmpty(field) || !dangerouslySetInnerHTML) {
     return null;
