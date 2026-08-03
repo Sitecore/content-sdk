@@ -8,7 +8,7 @@ import { expect, use } from 'chai';
 import sinonChai from 'sinon-chai';
 import { render } from '@testing-library/react';
 import { Page, PageMode } from '@sitecore-content-sdk/content/client';
-import { EDITING_COMPONENT_PLACEHOLDER, LayoutServiceData } from '@sitecore-content-sdk/content/layout';
+import { LayoutServiceData } from '@sitecore-content-sdk/content/layout';
 import { DesignLibraryMode } from '@sitecore-content-sdk/content/editing';
 import { ComponentMapEntry } from '../models';
 import { getTestLayoutData } from '../../test-data/component-editing-data';
@@ -145,9 +145,6 @@ describe('<DesignLibraryApp />', () => {
     render(awaitedDesignLibraryServer);
 
     expect(DesignLibraryLowCodeComponentStub).to.have.been.calledOnce;
-    expect(DesignLibraryLowCodeComponentStub).to.have.been.calledWith({
-      rendering: layoutData.sitecore.route?.placeholders?.[EDITING_COMPONENT_PLACEHOLDER]?.[0],
-    });
     expect(DesignLibraryStub).to.not.have.been.called;
     expect(DesignLibraryServerStub).to.not.have.been.called;
   });

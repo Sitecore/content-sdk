@@ -13,7 +13,6 @@ import {
   DesignLibraryStatus,
   getDesignLibraryStatusEvent,
 } from '@sitecore-content-sdk/content/editing';
-import type { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import type { AtomsConfig } from '../../atoms/types';
 import type { ImportMapImport } from './models';
 import type { DefineRegistryResult } from '@json-render/react';
@@ -57,11 +56,6 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     registry: mockRegistry,
   };
 
-  const rendering: ComponentRendering = {
-    uid: 'test-content',
-    componentName: 'LowCodeComponent',
-  };
-
   const getPage = () => ({
     locale: 'en',
     layout: { sitecore: { context: {}, route: null } },
@@ -92,10 +86,7 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     sandbox.restore();
   });
 
-  const renderComponent = (
-    runtime?: AtomsConfig,
-    renderingProp: ComponentRendering | undefined = rendering
-  ) =>
+  const renderComponent = (runtime?: AtomsConfig) =>
     render(
       <SitecoreProvider
         api={apiStub}
@@ -104,7 +95,7 @@ describe('<DesignLibraryLowCodeComponent />', () => {
         loadImportMap={loadImportMapStub}
         atomsConfig={runtime}
       >
-        <DesignLibraryLowCodeComponent rendering={renderingProp} />
+        <DesignLibraryLowCodeComponent />
       </SitecoreProvider>
     );
 
@@ -112,14 +103,12 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     renderComponent(atomsConfig);
     await waitFor(() => {
       expect(postToDesignLibrarySpy).to.have.been.calledWith(
-        getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'test-content')
+        getDesignLibraryStatusEvent(
+          DesignLibraryStatus.READY,
+          'design-library-low-code-component'
+        )
       );
     });
-  });
-
-  it('renders error when rendering uid is missing', () => {
-    const { container } = renderComponent(atomsConfig, { componentName: 'LowCodeComponent' });
-    expect(container.textContent).to.include('Rendering UID is missing in the rendering data');
   });
 
   it('sends error when no catalog is provided', async () => {
@@ -165,16 +154,23 @@ describe('<DesignLibraryLowCodeComponent />', () => {
 
     await waitFor(() => {
       expect(postToDesignLibrarySpy).to.have.been.calledWith(
-        getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-content')
+        getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-doc')
       );
     });
   });
 
-  it('wraps preview with PlaceholderMetadata chromes using rendering uid', async () => {
+  it('wraps preview with PlaceholderMetadata chromes using document uid', async () => {
     const { container } = renderComponent(atomsConfig);
 
     await waitFor(() => {
       expect(addDocumentUpdateHandlerStub).to.have.been.called;
+    });
+
+    const callback = addDocumentUpdateHandlerStub.firstCall.args[0];
+    const updatedDocument = { name: 'test-content' } as any;
+
+    act(() => {
+      callback(updatedDocument);
     });
 
     const openChrome = container.querySelector(
@@ -212,5 +208,38 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     });
 
     expect(rerender).to.not.throw;
+  });
+
+  it('wraps the rendered component with PlaceholderMetadata using the default uid before a document is received', async () => {
+    const { container } = renderComponent(atomsConfig);
+
+    await waitFor(() => {
+      const codeBlocks = container.querySelectorAll('code');
+      expect(codeBlocks).to.have.length(2);
+      expect(codeBlocks[0].getAttribute('chrometype')).to.equal('rendering');
+      expect(codeBlocks[0].getAttribute('id')).to.equal('design-library-low-code-component');
+      expect(codeBlocks[0].getAttribute('data-csdk-component-runtime')).to.equal('client');
+    });
+  });
+
+  it('wraps the rendered component with PlaceholderMetadata using the document name once a document is received', async () => {
+    const { container } = renderComponent(atomsConfig);
+
+    await waitFor(() => {
+      expect(addDocumentUpdateHandlerStub).to.have.been.called;
+    });
+
+    const callback = addDocumentUpdateHandlerStub.firstCall.args[0];
+    const updatedDocument = { name: 'test-doc' } as any;
+
+    act(() => {
+      callback(updatedDocument);
+    });
+
+    await waitFor(() => {
+      const codeBlocks = container.querySelectorAll('code');
+      expect(codeBlocks[0].getAttribute('id')).to.equal('test-doc');
+      expect(codeBlocks[0].getAttribute('data-csdk-component-runtime')).to.equal('client');
+    });
   });
 });
