@@ -6,7 +6,7 @@ import { StudioComponentWrapper } from './StudioComponentWrapper';
 import type { Document } from '@sitecore-content-sdk/content/atoms';
 import * as editing from '@sitecore-content-sdk/content/editing';
 import * as atoms from '@sitecore-content-sdk/content/atoms';
-import { DesignLibraryErrorBoundary } from '../..';
+import { DesignLibraryErrorBoundary, PlaceholderMetadata } from '../..';
 import type { ChildComponentProps } from '../Placeholder/models';
 
 let { postToDesignLibrary, getDesignLibraryStatusEvent, DesignLibraryStatus } = editing;
@@ -44,13 +44,14 @@ export const __mockDependencies = (mocks: any) => {
 export const DesignLibraryLowCodeComponent = () => {
   const { atomsConfig } = useSitecore();
   const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
+  const uid = currentDocument?.name || 'design-library-low-code-component'
   const [renderKey, setRenderKey] = useState(0);
   const [fields, setFields] = useState<ChildComponentProps['fields'] | undefined>();
   const [params, setParams] = useState<ChildComponentProps['params'] | undefined>();
 
   useEffect(() => {
     postToDesignLibrary(
-      getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'low-code-component')
+      getDesignLibraryStatusEvent(DesignLibraryStatus.READY, uid)
     );
   }, []);
 
@@ -83,16 +84,22 @@ export const DesignLibraryLowCodeComponent = () => {
     if (renderKey === 0) return;
 
     postToDesignLibrary(
-      getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'low-code-component')
+      getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, uid)
     );
   }, [renderKey]);
 
   return (
     <DesignLibraryErrorBoundary
-      uid={currentDocument?.name ?? 'design-library-low-code-component'}
+      uid={uid}
       renderKey={renderKey}
     >
-      <StudioComponentWrapper document={currentDocument} fields={fields} params={params} />
+        <PlaceholderMetadata rendering={
+      {
+        uid: uid,
+        componentName: uid,
+      }} componentRuntime="client">
+        <StudioComponentWrapper document={currentDocument} fields={fields} params={params} />
+      </PlaceholderMetadata>
     </DesignLibraryErrorBoundary>
   );
 };
