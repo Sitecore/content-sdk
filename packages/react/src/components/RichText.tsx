@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { isFieldValueEmpty, type RichTextField } from '@sitecore-content-sdk/content/layout';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
@@ -24,16 +24,22 @@ export interface RichTextProps extends EditableFieldProps<RichTextProps> {
 }
 
 const RichTextComponent: React.FC<RichTextProps> = ({ field, tag = 'div', ref, ...otherProps }) => {
-  if (isFieldValueEmpty(field)) {
+  // Stabilize the object reference so React DOM does not rewrite innerHTML on every
+  // parent re-render when the HTML string is unchanged (preserves DOM nodes / listeners).
+  const html = field?.value;
+  const dangerouslySetInnerHTML = useMemo(
+    () => (html != null && html !== '' ? { __html: html } : undefined),
+    [html]
+  );
+
+  if (isFieldValueEmpty(field) || !dangerouslySetInnerHTML) {
     return null;
   }
 
   delete otherProps.editable; // prevent editable from being passed to the DOM
 
   const htmlProps = {
-    dangerouslySetInnerHTML: {
-      __html: field.value,
-    },
+    dangerouslySetInnerHTML,
     ref,
     suppressHydrationWarning: field.metadata ? true : undefined,
     ...otherProps,

@@ -55,6 +55,33 @@ describe('<RichText />', () => {
     expect(rendered[0].innerHTML).to.contain(field.value);
   });
 
+  it('should keep the same DOM nodes when re-rendered with unchanged html', () => {
+    const field = {
+      value: '<p>Hello <a id="rt-link" href="/foo">link</a></p>',
+    };
+
+    const Parent = ({ tick }: { tick: number }) => (
+      <div data-tick={tick}>
+        <RichText field={field} />
+      </div>
+    );
+
+    const { container, rerender } = render(<Parent tick={0} />);
+    const linkBefore = container.querySelector('#rt-link') as HTMLAnchorElement & {
+      __marker?: boolean;
+    };
+    expect(linkBefore).to.not.equal(null);
+    linkBefore.__marker = true;
+
+    rerender(<Parent tick={1} />);
+
+    const linkAfter = container.querySelector('#rt-link') as HTMLAnchorElement & {
+      __marker?: boolean;
+    };
+    expect(linkAfter).to.equal(linkBefore);
+    expect(linkAfter.__marker).to.equal(true);
+  });
+
   it('should render tag with a tag provided', () => {
     const field = {
       value: 'value',
