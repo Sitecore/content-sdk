@@ -8,7 +8,7 @@
 
 > **setCachedPageParams**(`pageParams`): `void`
 
-Defined in: [nextjs/src/cache/page-params.ts:40](https://github.com/Sitecore/content-sdk/blob/ce87c676fc99682dfe788e7ca7dc2a0c95e8cb51/packages/nextjs/src/cache/page-params.ts#L40)
+Defined in: [nextjs/src/cache/page-params.ts:40](https://github.com/Sitecore/content-sdk/blob/67aa52ba0cee57732483f58d187367f0b89f05a1/packages/nextjs/src/cache/page-params.ts#L40)
 
 Sets the cached page params, including locale and site.
 

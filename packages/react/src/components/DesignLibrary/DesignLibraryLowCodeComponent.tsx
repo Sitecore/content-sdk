@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { useSitecore } from '../SitecoreProvider';
 import { serializeCatalog } from '../../atoms';
 import { StudioComponentWrapper } from './StudioComponentWrapper';
@@ -33,28 +34,51 @@ export const __mockDependencies = (mocks: any) => {
 };
 
 /**
+ * Props for {@link DesignLibraryLowCodeComponent}.
+ * @internal
+ */
+export type DesignLibraryLowCodeComponentProps = {
+  /**
+   * Sitecore rendering from the Design Library editing placeholder.
+   * UID must match READY/RENDERED status events and chrome metadata (same contract as DesignLibrary).
+   */
+  rendering?: ComponentRendering;
+};
+
+/**
  * Design Library Low Code component.
  *
  * Facilitates the communication between the Design Studio and the Rendering Host when previewing a low code component built with the Atoms.
  * - On mount, it serializes the atoms catalog and sends it to the Design Studio via the `atoms:catalog` event.
  * - Receives Component model data updates via document update handler and renders the low code component
  * via `StudioComponentWrapper` (same client path as Studio / NCC preview elsewhere).
+ * - Wraps preview output with `PlaceholderMetadata` using the layout rendering UID so Design Studio
+ * receives the same chrome handshake as normal Design Library components.
+ * @param {DesignLibraryLowCodeComponentProps} props - Component props.
+ * @returns {JSX.Element} The low-code preview surface.
  * @internal
  */
-export const DesignLibraryLowCodeComponent = () => {
+export const DesignLibraryLowCodeComponent = ({ rendering }: DesignLibraryLowCodeComponentProps) => {
   const { atomsConfig } = useSitecore();
+  const uid = rendering?.uid;
   const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const uid = currentDocument?.name || 'design-library-low-code-component'
   const [renderKey, setRenderKey] = useState(0);
   const [fields, setFields] = useState<ChildComponentProps['fields'] | undefined>();
   const [params, setParams] = useState<ChildComponentProps['params'] | undefined>();
 
+  if (!uid) {
+    return <ErrorComponent message="Rendering UID is missing in the rendering data" />;
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     postToDesignLibrary(
       getDesignLibraryStatusEvent(DesignLibraryStatus.READY, uid)
     );
   }, []);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const unsubscribe = addComponentPropsUpdateHandler((updatedFields, updatedParams) => {
       setFields(updatedFields as ChildComponentProps['fields']);
@@ -63,6 +87,7 @@ export const DesignLibraryLowCodeComponent = () => {
     return () => unsubscribe();
   }, []);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (!atomsConfig?.catalog) {
       sendAtomsErrorEvent('No atoms catalog provided', 'atoms-missing');
@@ -80,6 +105,7 @@ export const DesignLibraryLowCodeComponent = () => {
     return () => unsubDocumentUpdate();
   }, [atomsConfig]);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (renderKey === 0) return;
 

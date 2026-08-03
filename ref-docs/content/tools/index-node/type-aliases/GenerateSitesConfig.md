@@ -8,7 +8,7 @@
 
 > **GenerateSitesConfig** = `object`
 
-Defined in: [content/src/tools/generateSites.ts:18](https://github.com/Sitecore/content-sdk/blob/ce87c676fc99682dfe788e7ca7dc2a0c95e8cb51/packages/content/src/tools/generateSites.ts#L18)
+Defined in: [content/src/tools/generateSites.ts:18](https://github.com/Sitecore/content-sdk/blob/67aa52ba0cee57732483f58d187367f0b89f05a1/packages/content/src/tools/generateSites.ts#L18)
 
 Configuration object for generating sites.
 
@@ -18,7 +18,7 @@ Configuration object for generating sites.
 
 > `optional` **destinationPath?**: `string`
 
-Defined in: [content/src/tools/generateSites.ts:23](https://github.com/Sitecore/content-sdk/blob/ce87c676fc99682dfe788e7ca7dc2a0c95e8cb51/packages/content/src/tools/generateSites.ts#L23)
+Defined in: [content/src/tools/generateSites.ts:23](https://github.com/Sitecore/content-sdk/blob/67aa52ba0cee57732483f58d187367f0b89f05a1/packages/content/src/tools/generateSites.ts#L23)
 
 Optional path where the generated sites will be saved.
 If not provided, the default '.sitecore/sites.json' will be used.

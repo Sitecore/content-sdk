@@ -35,7 +35,7 @@ export const DesignLibraryApp = ({
   return (
     <>
       {isLowCode ? (
-        <DesignLibraryLowCodeComponent />
+        <DesignLibraryLowCodeComponent rendering={rendering} />
       ) : isClient ? (
         <DesignLibrary />
       ) : (
