@@ -74,6 +74,7 @@
 - [BYOCComponentProps](type-aliases/BYOCComponentProps.md)
 - [ComponentMap](type-aliases/ComponentMap.md)
 - [DateFieldSchema](type-aliases/DateFieldSchema.md)
+- [DesignLibraryLowCodeComponentProps](type-aliases/DesignLibraryLowCodeComponentProps.md)
 - [DynamicComponent](type-aliases/DynamicComponent.md)
 - [EnhancedOmit](type-aliases/EnhancedOmit.md)
 - [FEaaSComponentParams](type-aliases/FEaaSComponentParams.md)
