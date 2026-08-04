@@ -146,7 +146,7 @@ export interface IdentityData extends EventAttributesInput {
   /**
    * The site visitor's date of birth.
    *
-   * Format: ISO 8601.
+   * Format: date only, YYYY-MM-DD.
    */
   dob?: string;
   /**
