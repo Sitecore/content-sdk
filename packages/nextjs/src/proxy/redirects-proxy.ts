@@ -196,15 +196,25 @@ export class RedirectsProxy extends ProxyBase {
         if (localeRedirectMode === 'pages') {
           reqUrl.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
         } else if (localeRedirectMode === 'app-with-locale') {
-          // In App Router, we need to set the locale in the pathname, if present and differs from request - or when incoming request has locale prefix
-          if (
-            targetLocale !== language ||
-            (existsRedirect.isLanguagePreserved && incomingPathData.locale === targetLocale)
-          ) {
+          // App Router with a [locale] segment. Prefix decision:
+          // - `always`: prefix every locale, including the site default.
+          // - `as-needed` (explicit): prefix only non-default locales; the site default stays
+          //   bare, matching next-intl. This holds even for `isLanguagePreserved` rules.
+          // - unset: behave as `as-needed`, EXCEPT that `isLanguagePreserved` rules always keep
+          //   the locale prefix (Sitecore preservation wins over next-intl canonicalization).
+          //   Set `appLocalePrefix` explicitly to opt out of this Sitecore-specific behavior.
+          const prefixMode = this.config.appLocalePrefix;
+          const shouldPrefix =
+            !!targetLocale &&
+            (prefixMode === 'always' ||
+              (prefixMode === undefined && existsRedirect.isLanguagePreserved) ||
+              targetLocale !== site.language);
+
+          if (shouldPrefix) {
             reqUrl.pathname = `/${targetLocale}${reqUrl.pathname}`;
           }
         }
-        // else: App Router without [locale] segment — leave pathname unchanged
+        // else: App Router without [locale] segment (`never`) — leave pathname unchanged
 
         /** return Response redirect with http code of redirect type */
         return this.dispatchRedirect(
@@ -486,8 +496,8 @@ export class RedirectsProxy extends ProxyBase {
    * - `pages`: Pages Router Next.js i18n (`url.locale`)
    * - `app-with-locale`: App Router with `[locale]` path segment
    * - `app-without-locale`: App Router without `[locale]` segment
-   * Explicit `localeInPath` true/false selects App Router modes; when unset/`null`,
-   * falls back to LocaleProxy header detection (App Router) vs Pages Router.
+   * `appLocalePrefix` `always`/`never` selects App Router modes explicitly; `as-needed`
+   * (or unset) falls back to LocaleProxy header detection (App Router) vs Pages Router.
    * @param {NextResponse} res response
    * @returns {'pages' | 'app-with-locale' | 'app-without-locale'} locale redirect mode
    * @private
@@ -495,10 +505,10 @@ export class RedirectsProxy extends ProxyBase {
   private getLocaleRedirectMode(
     res: NextResponse
   ): 'pages' | 'app-with-locale' | 'app-without-locale' {
-    if (this.config.localeInPath === true) {
+    if (this.config.appLocalePrefix === 'always') {
       return 'app-with-locale';
     }
-    if (this.config.localeInPath === false) {
+    if (this.config.appLocalePrefix === 'never') {
       return 'app-without-locale';
     }
     return this.isAppRouter(res) ? 'app-with-locale' : 'pages';
