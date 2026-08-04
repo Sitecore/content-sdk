@@ -2,7 +2,8 @@ import type { EPResponse, Infer } from '@sitecore-content-sdk/analytics-core/int
 import type { EventAttributesInput, ExtensionData } from '../common-interfaces';
 import {
   flattenObject,
-  isShortISODateString,
+  isValidISODateOnlyString,
+  isValidISODateAndTimeString,
   isValidEmail,
 } from '@sitecore-content-sdk/analytics-core/utils';
 import { BaseEvent } from '../base-event';
@@ -65,11 +66,11 @@ export class IdentityEvent extends BaseEvent {
   private validateAttributes(identityData: IdentityData) {
     if (identityData.identifiers.length === 0) throw new Error(ERROR_MESSAGES.MV_003);
 
-    if (identityData.dob !== undefined && !isShortISODateString(identityData.dob))
+    if (identityData.dob !== undefined && !isValidISODateOnlyString(identityData.dob))
       throw new Error(ERROR_MESSAGES.IV_003);
 
     identityData.identifiers.forEach((identifier: Identifier) => {
-      if (identifier.expiryDate && !isShortISODateString(identifier.expiryDate))
+      if (identifier.expiryDate && !isValidISODateAndTimeString(identifier.expiryDate))
         throw new Error(ERROR_MESSAGES.IV_005);
     });
 
@@ -145,7 +146,7 @@ export interface IdentityData extends EventAttributesInput {
   /**
    * The site visitor's date of birth.
    *
-   * Format: ISO 8601.
+   * Format: date only, YYYY-MM-DD.
    */
   dob?: string;
   /**

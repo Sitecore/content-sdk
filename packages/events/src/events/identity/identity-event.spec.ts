@@ -34,7 +34,8 @@ describe('Test Identity', () => {
   let configMock: { contextId: string; edgeUrl: string; siteName: string };
   const id = 'test_id';
 
-  const isShortISODateStringSpy = jest.spyOn(utils, 'isShortISODateString');
+  const isValidISODateOnlyStringSpy = jest.spyOn(utils, 'isValidISODateOnlyString');
+  const isValidISODateAndTimeStringSpy = jest.spyOn(utils, 'isValidISODateAndTimeString');
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
@@ -357,7 +358,7 @@ describe('Test Identity', () => {
   });
 
   it('Should throw an error if dob has invalid date format', () => {
-    isShortISODateStringSpy.mockReturnValueOnce(false);
+    isValidISODateOnlyStringSpy.mockReturnValueOnce(false);
     data.dob = '2022-1-1T00:00.000Z';
 
     expect(() => {
@@ -371,7 +372,7 @@ describe('Test Identity', () => {
   });
 
   it('Should throw an error if expiry date has invalid date format', () => {
-    isShortISODateStringSpy.mockReturnValueOnce(false);
+    isValidISODateAndTimeStringSpy.mockReturnValueOnce(false);
     data.identifiers[0].expiryDate = '2022-1-1T00:00.000Z';
 
     expect(() => {
