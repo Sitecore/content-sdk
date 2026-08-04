@@ -54,7 +54,7 @@ Override debugger for logging. Uses 'content-sdk:http' by default.
 
 Defined in: core/types/graphql-request-client.d.ts:45
 
-Override fetch method. Uses 'graphql-request' library default otherwise ('cross-fetch').
+Override fetch method. Defaults to global `fetch` to avoid `graphql-request`'s node-fetch path (DEP0169).
 
 ***
 
