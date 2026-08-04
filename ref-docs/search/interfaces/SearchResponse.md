@@ -6,7 +6,7 @@
 
 # Interface: SearchResponse\<T\>
 
-Defined in: [search-service.ts:55](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/search-service.ts#L55)
+Defined in: [search-service.ts:55](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/search-service.ts#L55)
 
 Response from the Search Service.
 
@@ -22,7 +22,7 @@ Response from the Search Service.
 
 > `optional` **facets?**: [`FacetResult`](FacetResult.md)[]
 
-Defined in: [search-service.ts:67](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/search-service.ts#L67)
+Defined in: [search-service.ts:67](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/search-service.ts#L67)
 
 Facet results, present only when facets were requested.
 
@@ -32,7 +32,7 @@ Facet results, present only when facets were requested.
 
 > **results**: `T`[]
 
-Defined in: [search-service.ts:59](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/search-service.ts#L59)
+Defined in: [search-service.ts:59](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/search-service.ts#L59)
 
 The search results.
 
@@ -42,6 +42,6 @@ The search results.
 
 > **total**: `number`
 
-Defined in: [search-service.ts:63](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/search-service.ts#L63)
+Defined in: [search-service.ts:63](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/search-service.ts#L63)
 
 The total number of search results.

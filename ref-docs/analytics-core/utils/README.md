@@ -29,5 +29,6 @@
 - [getCookie](functions/getCookie.md)
 - [getCookieServerSide](functions/getCookieServerSide.md)
 - [getCookieValueClientSide](functions/getCookieValueClientSide.md)
-- [isShortISODateString](functions/isShortISODateString.md)
 - [isValidEmail](functions/isValidEmail.md)
+- [isValidISODateAndTimeString](functions/isValidISODateAndTimeString.md)
+- [isValidISODateOnlyString](functions/isValidISODateOnlyString.md)

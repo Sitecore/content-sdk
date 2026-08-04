@@ -6,7 +6,7 @@
 
 # Interface: VisitorIds
 
-Defined in: [analytics-core/src/interfaces.ts:17](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/analytics-core/src/interfaces.ts#L17)
+Defined in: [analytics-core/src/interfaces.ts:17](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/analytics-core/src/interfaces.ts#L17)
 
 The visitor IDs returned from the Edge Proxy.
 
@@ -16,7 +16,7 @@ The visitor IDs returned from the Edge Proxy.
 
 > **clientId**: `string`
 
-Defined in: [analytics-core/src/interfaces.ts:21](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/analytics-core/src/interfaces.ts#L21)
+Defined in: [analytics-core/src/interfaces.ts:21](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/analytics-core/src/interfaces.ts#L21)
 
 The client ID associated with the visitor.
 
@@ -26,6 +26,6 @@ The client ID associated with the visitor.
 
 > **profileId**: `string`
 
-Defined in: [analytics-core/src/interfaces.ts:25](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/analytics-core/src/interfaces.ts#L25)
+Defined in: [analytics-core/src/interfaces.ts:25](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/analytics-core/src/interfaces.ts#L25)
 
 The profile ID associated with the visitor.

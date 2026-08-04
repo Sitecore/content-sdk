@@ -8,7 +8,7 @@
 
 > **collectSitecorePageCacheTags**(`params`): `string`[]
 
-Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:63](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L63)
+Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:63](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L63)
 
 Builds cache tags for a Sitecore page read (`getPage`): the route tag and the route's item tag.
 Dictionary data is not part of `getPage`; tag dictionary fetches separately (for example with

@@ -6,7 +6,7 @@
 
 # Interface: FacetValue
 
-Defined in: [models.ts:64](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/models.ts#L64)
+Defined in: [models.ts:64](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/models.ts#L64)
 
 A single facet value with the number of matching results.
 
@@ -16,7 +16,7 @@ A single facet value with the number of matching results.
 
 > **count**: `number`
 
-Defined in: [models.ts:72](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/models.ts#L72)
+Defined in: [models.ts:72](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/models.ts#L72)
 
 The number of search results that have this facet value.
 
@@ -26,6 +26,6 @@ The number of search results that have this facet value.
 
 > **text**: `string` \| `number` \| `boolean`
 
-Defined in: [models.ts:68](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/models.ts#L68)
+Defined in: [models.ts:68](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/models.ts#L68)
 
 The facet value (e.g. a category name, a price, a boolean flag).

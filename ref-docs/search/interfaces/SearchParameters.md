@@ -6,7 +6,7 @@
 
 # Interface: SearchParameters\<T\>
 
-Defined in: [search-service.ts:74](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/search-service.ts#L74)
+Defined in: [search-service.ts:74](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/search-service.ts#L74)
 
 A set of request parameters for the Search Service.
 
@@ -22,7 +22,7 @@ A set of request parameters for the Search Service.
 
 > `optional` **facet?**: [`FacetRequest`](FacetRequest.md)
 
-Defined in: [search-service.ts:107](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/search-service.ts#L107)
+Defined in: [search-service.ts:107](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/search-service.ts#L107)
 
 Facet configuration. Use 'all: true' to retrieve counts for all enabled facets.
 Use 'fields' to filter results by specific facet values. Both can be combined.
@@ -33,7 +33,7 @@ Use 'fields' to filter results by specific facet values. Both can be combined.
 
 > `optional` **keyphrase?**: `string`
 
-Defined in: [search-service.ts:82](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/search-service.ts#L82)
+Defined in: [search-service.ts:82](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/search-service.ts#L82)
 
 Text value to search for. If not provided, the search will return all results.
 
@@ -43,7 +43,7 @@ Text value to search for. If not provided, the search will return all results.
 
 > `optional` **limit?**: `number`
 
-Defined in: [search-service.ts:91](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/search-service.ts#L91)
+Defined in: [search-service.ts:91](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/search-service.ts#L91)
 
 Specifies the maximum number of items to return. Maximum value 500.
 
@@ -59,7 +59,7 @@ Specifies the maximum number of items to return. Maximum value 500.
 
 > `optional` **locale?**: `string`
 
-Defined in: [search-service.ts:102](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/search-service.ts#L102)
+Defined in: [search-service.ts:102](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/search-service.ts#L102)
 
 The locale to use for the search. Required for multi-locale index configurations.
 Format: letters and hyphens only (e.g. 'en', 'fr-FR', 'el-GR').
@@ -71,7 +71,7 @@ Omit for single-locale indexes.
 
 > `optional` **offset?**: `number`
 
-Defined in: [search-service.ts:96](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/search-service.ts#L96)
+Defined in: [search-service.ts:96](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/search-service.ts#L96)
 
 Specifies how many items to skip before starting to collect the result set.
 
@@ -87,7 +87,7 @@ Specifies how many items to skip before starting to collect the result set.
 
 > **searchIndexId**: `string`
 
-Defined in: [search-service.ts:78](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/search-service.ts#L78)
+Defined in: [search-service.ts:78](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/search-service.ts#L78)
 
 The ID of the search index to use.
 
@@ -97,6 +97,6 @@ The ID of the search index to use.
 
 > `optional` **sort?**: [`SortSetting`](../type-aliases/SortSetting.md)\<`T`\> \| [`SortSetting`](../type-aliases/SortSetting.md)\<`T`\>[]
 
-Defined in: [search-service.ts:86](https://github.com/Sitecore/content-sdk/blob/f3401a8f88338ab1fd34e5ea98096e167973633a/packages/search/src/search-service.ts#L86)
+Defined in: [search-service.ts:86](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/search/src/search-service.ts#L86)
 
 Specifies the sorting of the search results.
