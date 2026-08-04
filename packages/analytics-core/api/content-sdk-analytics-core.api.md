@@ -219,10 +219,13 @@ export const isBotClientSide: () => boolean;
 export const isBotServerSide: (cookie?: string, userAgent?: string | null) => boolean;
 
 // @internal
-export function isShortISODateString(date: string): boolean;
+export function isValidEmail(email: string): boolean;
 
 // @internal
-export function isValidEmail(email: string): boolean;
+export function isValidISODateAndTimeString(date: string): boolean;
+
+// @internal
+export function isValidISODateOnlyString(date: string): boolean;
 
 // @internal
 export function language(): string | undefined;
