@@ -1096,7 +1096,7 @@ describe('RedirectsProxy', () => {
         },
       });
       // match app router behavior about locale in request
-      delete req.locale;
+      delete req.nextUrl.locale;
       // App Router response so the locale is resolved from the x-sc-locale header
       const res = createResponse({
         headers: {

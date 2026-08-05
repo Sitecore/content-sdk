@@ -137,8 +137,6 @@ export class RedirectsProxy extends ProxyBase {
         return res;
       }
 
-      const localeRedirectMode = this.getLocaleRedirectMode(res);
-
       if (this.isPreview(req)) {
         debug.redirects('skipped (preview)');
         return res;
@@ -192,10 +190,10 @@ export class RedirectsProxy extends ProxyBase {
 
         reqUrl.pathname = prepareNewURL.pathname;
         reqUrl.search = prepareNewURL.search;
-
-        if (localeRedirectMode === 'pages') {
+        const prefixMode = this.config.appLocalePrefix;
+        if (this.getRouterMode(req) === 'pages') {
           reqUrl.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
-        } else if (localeRedirectMode === 'app-with-locale') {
+        } else if (prefixMode !== 'never') {
           // App Router with a [locale] segment. Prefix decision:
           // - `always`: prefix every locale, including the site default.
           // - `as-needed` (explicit): prefix only non-default locales; the site default stays
@@ -203,12 +201,11 @@ export class RedirectsProxy extends ProxyBase {
           // - unset: behave as `as-needed`, EXCEPT that `isLanguagePreserved` rules always keep
           //   the locale prefix (Sitecore preservation wins over next-intl canonicalization).
           //   Set `appLocalePrefix` explicitly to opt out of this Sitecore-specific behavior.
-          const prefixMode = this.config.appLocalePrefix;
           const shouldPrefix =
-            !!targetLocale &&
-            (prefixMode === 'always' ||
-              (prefixMode === undefined && existsRedirect.isLanguagePreserved) ||
-              targetLocale !== site.language);
+            prefixMode === 'always' ||
+            (!!targetLocale &&
+              ((!prefixMode && existsRedirect.isLanguagePreserved) ||
+                (prefixMode === 'as-needed' && targetLocale !== site.language)));
 
           if (shouldPrefix) {
             reqUrl.pathname = `/${targetLocale}${reqUrl.pathname}`;
@@ -425,17 +422,6 @@ export class RedirectsProxy extends ProxyBase {
         let rewritePath =
           typeof target === 'string' ? target : `${target.pathname}${target.search || ''}`;
 
-        // When locale is part of the route path, ensure Server Transfer rewrite includes it
-        if (this.getLocaleRedirectMode(res) === 'app-with-locale' && !isExternal) {
-          const pathParts = breakDownPath(this.locales, rewritePath);
-          // Check if path doesn't start with a locale
-          if (!pathParts.locale) {
-            // Add current language as locale prefix
-            const language = this.getLanguage(req, res);
-            rewritePath = `/${language}${rewritePath}`;
-          }
-        }
-
         // Check if it has a site prefix
         // If so, preserve it for the redirect target to maintain proper routing
         const incomingRewrite = res?.headers.get(REWRITE_HEADER_NAME);
@@ -498,19 +484,15 @@ export class RedirectsProxy extends ProxyBase {
    * - `app-without-locale`: App Router without `[locale]` segment
    * `appLocalePrefix` `always`/`never` selects App Router modes explicitly; `as-needed`
    * (or unset) falls back to LocaleProxy header detection (App Router) vs Pages Router.
+   * @param {NextRequest} req request
    * @param {NextResponse} res response
-   * @returns {'pages' | 'app-with-locale' | 'app-without-locale'} locale redirect mode
+   * @returns {'pages' | 'not-pages'} locale redirect mode
    * @private
    */
-  private getLocaleRedirectMode(
-    res: NextResponse
-  ): 'pages' | 'app-with-locale' | 'app-without-locale' {
-    if (this.config.appLocalePrefix === 'always') {
-      return 'app-with-locale';
+  private getRouterMode(req: NextRequest): 'pages' | 'not-pages' {
+    if (req.nextUrl.locale && req.nextUrl.defaultLocale) {
+      return 'pages';
     }
-    if (this.config.appLocalePrefix === 'never') {
-      return 'app-without-locale';
-    }
-    return this.isAppRouter(res) ? 'app-with-locale' : 'pages';
+    return 'not-pages';
   }
 }

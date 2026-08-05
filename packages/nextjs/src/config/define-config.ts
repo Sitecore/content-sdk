@@ -55,17 +55,6 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
 };
 
 /**
- * Locale prefix strategy for App Router redirect targets, mirroring next-intl's `localePrefix`.
- * - `always`: every locale is prefixed (`/[locale]/...`), including the default.
- * - `as-needed`: only non-default locales are prefixed; the default locale stays bare.
- * - `never`: no locale prefix is applied.
- * When left `undefined`, RedirectsProxy behaves as `as-needed` and falls back to
- * `x-sc-locale` header detection (Pages Router when the header is absent).
- * @public
- */
-export type AppLocalePrefix = 'always' | 'as-needed' | 'never';
-
-/**
  * Type to be used as config input in sitecore.config
  * @public
  */
@@ -94,10 +83,12 @@ export type SitecoreConfigInput = SitecoreConfigInputCore & {
   redirects?: SitecoreConfigInputCore['redirects'] & {
     /**
      * Controls whether App Router redirect targets carry a locale path prefix (`/[locale]/...`).
-     * Mirrors next-intl's `localePrefix` strategy. Only relevant for App Router applications.
-     * @default undefined (treated as `as-needed` with `x-sc-locale` header fallback)
+     * When explicitly set, mirrors next-intl's `localePrefix` strategy. When undefined, redirects proxy will use 'as-needed' strategy
+     * with override from 'isLanguagePreseved' checkbox from redirect maps
+     * Only relevant for App Router applications.
+     * @default undefined
      */
-    appLocalePrefix?: AppLocalePrefix;
+    appLocalePrefix?: 'never' | 'as-needed' | 'always';
   };
 };
 
