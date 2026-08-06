@@ -83,9 +83,10 @@ export type SitecoreConfigInput = SitecoreConfigInputCore & {
   redirects?: SitecoreConfigInputCore['redirects'] & {
     /**
      * Controls whether App Router redirect targets carry a locale path prefix (`/[locale]/...`).
-     * When explicitly set, mirrors next-intl's `localePrefix` strategy. When undefined, redirects proxy will use 'as-needed' strategy
-     * with override from 'isLanguagePreseved' checkbox from redirect maps
-     * Only relevant for App Router applications.
+     * - `always`: prefix every locale, including the site default.
+     * - `as-needed`: prefix only non-default locales; the site default stays bare. This holds even for `isLanguagePreserved` rules.
+     * - `never`: never include locale prefix
+     * - unset: behave as `as-needed`, EXCEPT that `isLanguagePreserved` from redirect map's checkbox would always ensure locale prefix, when set.
      * @default undefined
      */
     appLocalePrefix?: 'never' | 'as-needed' | 'always';

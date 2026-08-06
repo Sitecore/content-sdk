@@ -210,9 +210,6 @@ export interface AnalyticsProxyAdapter extends AnalyticsAdapter {
 // @public
 export function analyticsProxyAdapter(request: NextRequest, response: NextResponse): AnalyticsProxyAdapter;
 
-// @public
-export type AppLocalePrefix = 'always' | 'as-needed' | 'never';
-
 export { AppPlaceholder }
 
 export { AppPlaceholderProps }
@@ -1021,7 +1018,7 @@ export type SitecoreConfigInput = SitecoreConfigInput_2 & {
     generateStaticPaths?: boolean;
     sitecoreInternalEditingHostUrl?: string;
     redirects?: SitecoreConfigInput_2['redirects'] & {
-        appLocalePrefix?: AppLocalePrefix;
+        appLocalePrefix?: 'never' | 'as-needed' | 'always';
     };
 };
 

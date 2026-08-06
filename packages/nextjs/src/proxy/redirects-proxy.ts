@@ -191,16 +191,9 @@ export class RedirectsProxy extends ProxyBase {
         reqUrl.pathname = prepareNewURL.pathname;
         reqUrl.search = prepareNewURL.search;
         const prefixMode = this.config.appLocalePrefix;
-        if (this.getRouterMode(req) === 'pages') {
+        if (this.isPagesRouterI18n(req)) {
           reqUrl.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
         } else if (prefixMode !== 'never') {
-          // App Router with a [locale] segment. Prefix decision:
-          // - `always`: prefix every locale, including the site default.
-          // - `as-needed` (explicit): prefix only non-default locales; the site default stays
-          //   bare, matching next-intl. This holds even for `isLanguagePreserved` rules.
-          // - unset: behave as `as-needed`, EXCEPT that `isLanguagePreserved` rules always keep
-          //   the locale prefix (Sitecore preservation wins over next-intl canonicalization).
-          //   Set `appLocalePrefix` explicitly to opt out of this Sitecore-specific behavior.
           const shouldPrefix =
             prefixMode === 'always' ||
             (!!targetLocale &&
@@ -478,21 +471,15 @@ export class RedirectsProxy extends ProxyBase {
   }
 
   /**
-   * Resolves how locale should be applied on relative redirect targets.
-   * - `pages`: Pages Router Next.js i18n (`url.locale`)
-   * - `app-with-locale`: App Router with `[locale]` path segment
-   * - `app-without-locale`: App Router without `[locale]` segment
-   * `appLocalePrefix` `always`/`never` selects App Router modes explicitly; `as-needed`
-   * (or unset) falls back to LocaleProxy header detection (App Router) vs Pages Router.
+   * Determines if the request should be processed with Pages Router i18n consideration.
    * @param {NextRequest} req request
-   * @param {NextResponse} res response
-   * @returns {'pages' | 'not-pages'} locale redirect mode
+   * @returns {boolean} true if the request is for the Pages Router, false otherwise
    * @private
    */
-  private getRouterMode(req: NextRequest): 'pages' | 'not-pages' {
+  private isPagesRouterI18n(req: NextRequest): boolean {
     if (req.nextUrl.locale && req.nextUrl.defaultLocale) {
-      return 'pages';
+      return true;
     }
-    return 'not-pages';
+    return false;
   }
 }
