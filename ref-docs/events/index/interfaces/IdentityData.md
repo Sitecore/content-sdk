@@ -6,7 +6,7 @@
 
 # Interface: IdentityData
 
-Defined in: [events/src/events/identity/identity-event.ts:133](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L133)
+Defined in: [events/src/events/identity/identity-event.ts:133](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L133)
 
 Interface with the necessary attributes for the input for sending identity events
 
@@ -20,7 +20,7 @@ Interface with the necessary attributes for the input for sending identity event
 
 > `optional` **channel?**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:37](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/common-interfaces.ts#L37)
+Defined in: [events/src/events/common-interfaces.ts:37](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/common-interfaces.ts#L37)
 
 The touchpoint where the user interacts with your brand.
 
@@ -40,7 +40,7 @@ If unset, this property will not be part of the payload.
 
 > `optional` **city?**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:139](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L139)
+Defined in: [events/src/events/identity/identity-event.ts:139](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L139)
 
 The site visitor's city address.
 
@@ -52,7 +52,7 @@ Format: title case recommended.
 
 > `optional` **country?**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:145](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L145)
+Defined in: [events/src/events/identity/identity-event.ts:145](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L145)
 
 The site visitor's country address.
 
@@ -64,7 +64,7 @@ Format: uppercase ISO 3166-1 alpha-2.
 
 > `optional` **currency?**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:47](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/common-interfaces.ts#L47)
+Defined in: [events/src/events/common-interfaces.ts:47](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/common-interfaces.ts#L47)
 
 The alphabetic currency code of the currency the site visitor uses in your app.
 
@@ -84,7 +84,7 @@ If unset, this property will not be part of the payload.
 
 > `optional` **dob?**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:151](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L151)
+Defined in: [events/src/events/identity/identity-event.ts:151](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L151)
 
 The site visitor's date of birth.
 
@@ -96,7 +96,7 @@ Format: date only, YYYY-MM-DD.
 
 > `optional` **email?**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:157](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L157)
+Defined in: [events/src/events/identity/identity-event.ts:157](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L157)
 
 The site visitor's email address.
 
@@ -108,7 +108,7 @@ Format: lowercase recommended.
 
 > `optional` **extensionData?**: `NestedObject`
 
-Defined in: [events/src/events/identity/identity-event.ts:211](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L211)
+Defined in: [events/src/events/identity/identity-event.ts:211](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L211)
 
 Any custom data to collect about an event in addition to the other attributes provided for the event data.
 
@@ -118,7 +118,7 @@ Any custom data to collect about an event in addition to the other attributes pr
 
 > `optional` **firstName?**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:163](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L163)
+Defined in: [events/src/events/identity/identity-event.ts:163](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L163)
 
 The site visitor's first name.
 
@@ -130,7 +130,7 @@ Format: title case recommended.
 
 > `optional` **gender?**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:167](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L167)
+Defined in: [events/src/events/identity/identity-event.ts:167](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L167)
 
 The site visitor's gender.
 
@@ -140,7 +140,7 @@ The site visitor's gender.
 
 > **identifiers**: [`Identifier`](Identifier.md)[]
 
-Defined in: [events/src/events/identity/identity-event.ts:171](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L171)
+Defined in: [events/src/events/identity/identity-event.ts:171](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L171)
 
 The identifiers used for identifying site visitors.
 
@@ -150,7 +150,7 @@ The identifiers used for identifying site visitors.
 
 > `optional` **language?**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:19](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/common-interfaces.ts#L19)
+Defined in: [events/src/events/common-interfaces.ts:19](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/common-interfaces.ts#L19)
 
 The language the site visitor interacts with your brand in.
 
@@ -172,7 +172,7 @@ Default for server-side events: empty string.
 
 > `optional` **lastName?**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:177](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L177)
+Defined in: [events/src/events/identity/identity-event.ts:177](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L177)
 
 The site visitor's last name.
 
@@ -184,7 +184,7 @@ Format: title case recommended.
 
 > `optional` **mobile?**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:181](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L181)
+Defined in: [events/src/events/identity/identity-event.ts:181](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L181)
 
 The site visitor's mobile number.
 
@@ -194,7 +194,7 @@ The site visitor's mobile number.
 
 > `optional` **page?**: `string`
 
-Defined in: [events/src/events/common-interfaces.ts:27](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/common-interfaces.ts#L27)
+Defined in: [events/src/events/common-interfaces.ts:27](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/common-interfaces.ts#L27)
 
 The name of the webpage where the interaction with your brand takes place.
 
@@ -212,7 +212,7 @@ Default for server-side events: empty string.
 
 > `optional` **phone?**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:185](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L185)
+Defined in: [events/src/events/identity/identity-event.ts:185](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L185)
 
 The site visitor's phone number.
 
@@ -222,7 +222,7 @@ The site visitor's phone number.
 
 > `optional` **postalCode?**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:189](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L189)
+Defined in: [events/src/events/identity/identity-event.ts:189](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L189)
 
 The site visitor's postal code.
 
@@ -232,7 +232,7 @@ The site visitor's postal code.
 
 > `optional` **state?**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:195](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L195)
+Defined in: [events/src/events/identity/identity-event.ts:195](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L195)
 
 The site visitor's state address.
 
@@ -244,7 +244,7 @@ Format: title case recommended.
 
 > `optional` **street?**: `string`[]
 
-Defined in: [events/src/events/identity/identity-event.ts:201](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L201)
+Defined in: [events/src/events/identity/identity-event.ts:201](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L201)
 
 The site visitor's street address.
 
@@ -256,7 +256,7 @@ Format: title case recommended.
 
 > `optional` **title?**: `string`
 
-Defined in: [events/src/events/identity/identity-event.ts:207](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/events/src/events/identity/identity-event.ts#L207)
+Defined in: [events/src/events/identity/identity-event.ts:207](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/events/src/events/identity/identity-event.ts#L207)
 
 The site visitor's title.
 

@@ -6,7 +6,7 @@
 
 # Class: ScMissingComponentComponent
 
-Defined in: [packages/angular/src/components/sc-missing-component.component.ts:17](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/angular/src/components/sc-missing-component.component.ts#L17)
+Defined in: [packages/angular/src/components/sc-missing-component.component.ts:17](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/angular/src/components/sc-missing-component.component.ts#L17)
 
 Default component rendered when a Sitecore rendering has no matching entry in the component map.
 
@@ -26,7 +26,7 @@ Default component rendered when a Sitecore rendering has no matching entry in th
 
 > `readonly` **fields**: `InputSignal`\<\{\[`key`: `string`\]: `unknown`; \} \| `undefined`\>
 
-Defined in: [packages/angular/src/components/sc-missing-component.component.ts:19](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/angular/src/components/sc-missing-component.component.ts#L19)
+Defined in: [packages/angular/src/components/sc-missing-component.component.ts:19](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/angular/src/components/sc-missing-component.component.ts#L19)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/angular/src/components/sc-missing-component.component.ts:1
 
 > `readonly` **params**: `InputSignal`\<\{\[`key`: `string`\]: `string`; \} \| `undefined`\>
 
-Defined in: [packages/angular/src/components/sc-missing-component.component.ts:20](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/angular/src/components/sc-missing-component.component.ts#L20)
+Defined in: [packages/angular/src/components/sc-missing-component.component.ts:20](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/angular/src/components/sc-missing-component.component.ts#L20)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [packages/angular/src/components/sc-missing-component.component.ts:2
 
 > `readonly` **rendering**: `InputSignal`\<`ComponentRendering`\<`ComponentFields`\> \| `undefined`\>
 
-Defined in: [packages/angular/src/components/sc-missing-component.component.ts:18](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/angular/src/components/sc-missing-component.component.ts#L18)
+Defined in: [packages/angular/src/components/sc-missing-component.component.ts:18](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/angular/src/components/sc-missing-component.component.ts#L18)
 
 ## Methods
 
@@ -50,7 +50,7 @@ Defined in: [packages/angular/src/components/sc-missing-component.component.ts:1
 
 > `readonly` **componentName**(): `string`
 
-Defined in: [packages/angular/src/components/sc-missing-component.component.ts:22](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/angular/src/components/sc-missing-component.component.ts#L22)
+Defined in: [packages/angular/src/components/sc-missing-component.component.ts:22](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/angular/src/components/sc-missing-component.component.ts#L22)
 
 #### Returns
 
