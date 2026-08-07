@@ -102,13 +102,21 @@ export const PlaceholderMetadata = ({
     return attributes;
   };
 
+  // suppressHydrationWarning: Pages Editor attaches attributes to these chrome markers
+  // directly in the DOM (outside of React), which can happen before hydration completes.
+  // That mutation is expected in edit mode and isn't something app code can control, so it
+  // shouldn't surface as a hydration mismatch.
   return (
     <>
       <code
+        suppressHydrationWarning
         {...getCodeBlockAttributes({ kind: MetadataKind.Open, id: rendering.uid, placeholderName })}
       />
       {children}
-      <code {...getCodeBlockAttributes({ kind: MetadataKind.Close, placeholderName })} />
+      <code
+        suppressHydrationWarning
+        {...getCodeBlockAttributes({ kind: MetadataKind.Close, placeholderName })}
+      />
     </>
   );
 };
