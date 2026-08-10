@@ -1,3 +1,4 @@
+import { Agent } from 'undici';
 import {
   FetchOptions,
   GraphQLRequestClient,
@@ -11,6 +12,31 @@ import { getEdgeProxyContentUrl } from './edge-proxy';
  * @public
  */
 export type GraphQLClientOptions = Pick<SitecoreConfigInput, 'api'> & FetchOptions;
+
+export const createCliGraphQLClientFactory = (options: GraphQLClientOptions) => {
+  const nonHangingFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+    // Removes the chance of lingering connections after fetch has completed
+    // This prevents CLI logic from crashing when process.exit is called explicitly after a fetch call
+    const nonHangingAgent = new Agent({
+      keepAliveTimeout: 1,
+      keepAliveMaxTimeout: 1,
+      connections: 1,
+      pipelining: 0,
+    });
+    let res: Response;
+    try {
+      const customInit = { ...init, dispatcher: nonHangingAgent };
+      const fetchFunction =
+        options.fetch ??
+        ((input: RequestInfo | URL, init?: RequestInit) => globalThis.fetch(input, init));
+      res = await fetchFunction(input, customInit);
+    } finally {
+      await nonHangingAgent.destroy();
+    }
+    return res;
+  };
+  return createGraphQLClientFactory({ ...options, fetch: nonHangingFetch });
+};
 
 /**
  * Creates a new GraphQLRequestClientFactory instance
