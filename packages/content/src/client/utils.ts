@@ -13,6 +13,12 @@ import { getEdgeProxyContentUrl } from './edge-proxy';
  */
 export type GraphQLClientOptions = Pick<SitecoreConfigInput, 'api'> & FetchOptions;
 
+/**
+ * Creates a new GraphQLRequestClientFactory instance to be used in CLI commands
+ * @param {GraphQLClientOptions} options content sdk config
+ * @returns GraphQLRequestClientFactory instance
+ * @public
+ */
 export const createCliGraphQLClientFactory = (options: GraphQLClientOptions) => {
   const nonHangingFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
     // Removes the chance of lingering connections after fetch has completed

@@ -190,7 +190,7 @@ export interface ComponentUpdateEventArgs {
 // @public
 export function containsDefaultEdgeHost(str: string): boolean;
 
-// @public (undocumented)
+// @public
 export const createCliGraphQLClientFactory: (options: GraphQLClientOptions) => GraphQLRequestClientFactory;
 
 // @internal
