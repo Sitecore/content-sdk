@@ -93,14 +93,14 @@
   ],
   "exports": {
     ".": {
+      "types": "./types/index.d.ts",
       "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
-      "types": "./types/index.d.ts"
+      "require": "./dist/cjs/index.js"      
     },
     "./search": {
+      "types": "./types/search/index.d.ts",
       "import": "./dist/esm/search/index.js",
-      "require": "./dist/cjs/search/index.js",
-      "types": "./types/search/index.d.ts"
+      "require": "./dist/cjs/search/index.js"      
     }
   },
   "imports": {
