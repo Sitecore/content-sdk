@@ -5,7 +5,7 @@ import { ensurePathExists } from '@sitecore-content-sdk/core/node-tools';
 import { constants } from '@sitecore-content-sdk/core';
 import { SiteInfo, SiteInfoService } from '../site';
 import { SitecoreConfig } from '../config';
-import { createCliGraphQLClientFactory } from '../client';
+import { createGraphQLClientFactory } from '../client';
 import debug from '../debug';
 
 const { ERROR_MESSAGES } = constants;
@@ -49,7 +49,7 @@ export const generateSites = ({ destinationPath }: GenerateSitesConfig = {}): ((
     if (scConfig.multisite.enabled) {
       try {
         const siteInfoService = new SiteInfoService({
-          clientFactory: createCliGraphQLClientFactory({
+          clientFactory: createGraphQLClientFactory({
             api: scConfig.api,
             retries: scConfig.retries.count,
             retryStrategy: scConfig.retries.retryStrategy,
