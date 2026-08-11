@@ -133,6 +133,11 @@
       "require": "./dist/cjs/editing/index.js",
       "types": "./types/editing/index.d.ts"
     },
+    "./experimental": {
+      "import": "./dist/esm/experimental-features/index.js",
+      "require": "./dist/cjs/experimental-features/index.js",
+      "types": "./types/experimental-features/index.d.ts"
+    },
     "./proxy": {
       "import": "./dist/esm/proxy/index.js",
       "require": "./dist/cjs/proxy/index.js",

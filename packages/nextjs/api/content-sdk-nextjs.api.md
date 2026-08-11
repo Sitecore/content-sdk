@@ -239,6 +239,9 @@ export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Omit<Prox
 };
 
 // @public
+export const buildExperimentalFeaturesResponse: (features?: ExperimentalFeatureData[]) => ExperimentalFeaturesResponse;
+
+// @public
 export function buildSitecoreDictionaryCacheTag(params: BuildSitecoreDictionaryCacheTagParams): string;
 
 // @public
@@ -367,6 +370,12 @@ export const createEditingRenderRouteHandlers: (options: EditingHandlerOptions) 
     OPTIONS: (req: NextRequest) => Response;
 };
 
+// @public
+export const createExperimentalFeaturesRouteHandler: (options?: ExperimentalFeaturesRouteHandlerOptions) => {
+    GET: (req: NextRequest) => Promise<Response>;
+    OPTIONS: (req: NextRequest) => Promise<Response>;
+};
+
 export { createGraphQLClientFactory }
 
 // Warning: (ae-forgotten-export) The symbol "RouteHandlerOptions_2" needs to be exported by the entry point api-surface.d.ts
@@ -404,6 +413,9 @@ export { debug_2 as debug }
 export { DefaultEmptyFieldEditingComponentImage }
 
 export { DefaultEmptyFieldEditingComponentText }
+
+// @public
+export const defaultExperimentalFeatures: ExperimentalFeatureData[];
 
 // @public
 export const defaultImportEntries: ImportEntry[];
@@ -488,6 +500,42 @@ export { ErrorPages }
 export { ErrorPagesService }
 
 export { ErrorPagesServiceConfig }
+
+// @public
+export type ExperimentalFeatureData = {
+    idName: string;
+    displayName: string;
+    envVarName: string;
+    description: string;
+};
+
+// @public
+export class ExperimentalFeaturesMiddleware {
+    constructor(config?: ExperimentalFeaturesMiddlewareConfig);
+    // (undocumented)
+    protected config: ExperimentalFeaturesMiddlewareConfig;
+    getHandler(): (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
+}
+
+// @public
+export type ExperimentalFeaturesMiddlewareConfig = {
+    features?: ExperimentalFeatureData[];
+};
+
+// @public
+export type ExperimentalFeaturesResponse = {
+    features: ExperimentalFeatureStatus[];
+};
+
+// @public
+export type ExperimentalFeaturesRouteHandlerOptions = {
+    features?: ExperimentalFeatureData[];
+};
+
+// @public
+export type ExperimentalFeatureStatus = ExperimentalFeatureData & {
+    enabled: boolean;
+};
 
 export { extractFiles }
 
@@ -643,6 +691,9 @@ export { initContentSdk }
 export const isDesignLibraryPreviewData: (data: unknown) => data is DesignLibraryRenderPreviewData;
 
 export { isEditorActive }
+
+// @public
+export const isExperimentalEnvFlagEnabled: (value: string | undefined) => boolean;
 
 // @public
 export const isServerSidePropsContext: (context: GetServerSidePropsContext | GetStaticPropsContext) => context is GetServerSidePropsContext;
@@ -944,6 +995,9 @@ export { renderEmptyPlaceholder }
 export { RenderingType }
 
 export { resetEditorChromes }
+
+// @public
+export const resolveExperimentalFeatureStatuses: (features: ExperimentalFeatureData[]) => ExperimentalFeatureStatus[];
 
 export { resolveUrl }
 
