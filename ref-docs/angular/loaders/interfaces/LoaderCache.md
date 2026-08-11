@@ -6,7 +6,7 @@
 
 # Interface: LoaderCache
 
-Defined in: [packages/angular/src/loaders/models.ts:281](https://github.com/Sitecore/content-sdk/blob/6777bd573a801c6d8822657b5b3406a0469068be/packages/angular/src/loaders/models.ts#L281)
+Defined in: [packages/angular/src/loaders/models.ts:281](https://github.com/Sitecore/content-sdk/blob/0b0b7233e8cb6cbd454dd69aece52311789f8eec/packages/angular/src/loaders/models.ts#L281)
 
 Server-only cache instance. Constructed once in `server.ts` via
 `createLoaderCache` (see `server/cache`) and passed by reference to middleware factories
@@ -25,7 +25,7 @@ can mark entries stale without scanning every key.
 
 > **get** **config**(): `Readonly`\<[`LoaderCacheConfig`](LoaderCacheConfig.md)\>
 
-Defined in: [packages/angular/src/loaders/models.ts:285](https://github.com/Sitecore/content-sdk/blob/6777bd573a801c6d8822657b5b3406a0469068be/packages/angular/src/loaders/models.ts#L285)
+Defined in: [packages/angular/src/loaders/models.ts:285](https://github.com/Sitecore/content-sdk/blob/0b0b7233e8cb6cbd454dd69aece52311789f8eec/packages/angular/src/loaders/models.ts#L285)
 
 Resolved configuration (useful for admin UI and diagnostics).
 
@@ -41,7 +41,7 @@ Resolved configuration (useful for admin UI and diagnostics).
 
 > **get** **ttl**(): `number`
 
-Defined in: [packages/angular/src/loaders/models.ts:283](https://github.com/Sitecore/content-sdk/blob/6777bd573a801c6d8822657b5b3406a0469068be/packages/angular/src/loaders/models.ts#L283)
+Defined in: [packages/angular/src/loaders/models.ts:283](https://github.com/Sitecore/content-sdk/blob/0b0b7233e8cb6cbd454dd69aece52311789f8eec/packages/angular/src/loaders/models.ts#L283)
 
 Global default TTL in seconds from [LoaderCacheConfig.revalidate](PerRouteLoaderCacheConfig.md#revalidate).
 
@@ -55,7 +55,7 @@ Global default TTL in seconds from [LoaderCacheConfig.revalidate](PerRouteLoader
 
 > **delete**(`key`): `Promise`\<`boolean`\>
 
-Defined in: [packages/angular/src/loaders/models.ts:306](https://github.com/Sitecore/content-sdk/blob/6777bd573a801c6d8822657b5b3406a0469068be/packages/angular/src/loaders/models.ts#L306)
+Defined in: [packages/angular/src/loaders/models.ts:306](https://github.com/Sitecore/content-sdk/blob/0b0b7233e8cb6cbd454dd69aece52311789f8eec/packages/angular/src/loaders/models.ts#L306)
 
 Removes a single entry and unlinks it from the tag index.
 
@@ -75,7 +75,7 @@ Removes a single entry and unlinks it from the tag index.
 
 > **enabled**(): `boolean`
 
-Defined in: [packages/angular/src/loaders/models.ts:312](https://github.com/Sitecore/content-sdk/blob/6777bd573a801c6d8822657b5b3406a0469068be/packages/angular/src/loaders/models.ts#L312)
+Defined in: [packages/angular/src/loaders/models.ts:312](https://github.com/Sitecore/content-sdk/blob/0b0b7233e8cb6cbd454dd69aece52311789f8eec/packages/angular/src/loaders/models.ts#L312)
 
 Whether caching is enabled globally. Per-route overrides may still opt in.
 
@@ -89,7 +89,7 @@ Whether caching is enabled globally. Per-route overrides may still opt in.
 
 > **entries**(): `Promise`\<[`LoaderCacheEntryInfo`](LoaderCacheEntryInfo.md)[]\>
 
-Defined in: [packages/angular/src/loaders/models.ts:310](https://github.com/Sitecore/content-sdk/blob/6777bd573a801c6d8822657b5b3406a0469068be/packages/angular/src/loaders/models.ts#L310)
+Defined in: [packages/angular/src/loaders/models.ts:310](https://github.com/Sitecore/content-sdk/blob/0b0b7233e8cb6cbd454dd69aece52311789f8eec/packages/angular/src/loaders/models.ts#L310)
 
 Returns lightweight metadata for admin tooling (values are omitted).
 
@@ -103,7 +103,7 @@ Returns lightweight metadata for admin tooling (values are omitted).
 
 > **flush**(): `Promise`\<`void`\>
 
-Defined in: [packages/angular/src/loaders/models.ts:308](https://github.com/Sitecore/content-sdk/blob/6777bd573a801c6d8822657b5b3406a0469068be/packages/angular/src/loaders/models.ts#L308)
+Defined in: [packages/angular/src/loaders/models.ts:308](https://github.com/Sitecore/content-sdk/blob/0b0b7233e8cb6cbd454dd69aece52311789f8eec/packages/angular/src/loaders/models.ts#L308)
 
 Removes every entry and clears the tag index.
 
@@ -117,7 +117,7 @@ Removes every entry and clears the tag index.
 
 > **get**(`key`): `Promise`\<[`LoaderCacheReadResult`](../type-aliases/LoaderCacheReadResult.md)\>
 
-Defined in: [packages/angular/src/loaders/models.ts:290](https://github.com/Sitecore/content-sdk/blob/6777bd573a801c6d8822657b5b3406a0469068be/packages/angular/src/loaders/models.ts#L290)
+Defined in: [packages/angular/src/loaders/models.ts:290](https://github.com/Sitecore/content-sdk/blob/0b0b7233e8cb6cbd454dd69aece52311789f8eec/packages/angular/src/loaders/models.ts#L290)
 
 Reads a cache entry and classifies it as hit, stale, or miss.
 
@@ -137,7 +137,7 @@ Reads a cache entry and classifies it as hit, stale, or miss.
 
 > **invalidate**(`filter`): `Promise`\<`number`\>
 
-Defined in: [packages/angular/src/loaders/models.ts:304](https://github.com/Sitecore/content-sdk/blob/6777bd573a801c6d8822657b5b3406a0469068be/packages/angular/src/loaders/models.ts#L304)
+Defined in: [packages/angular/src/loaders/models.ts:304](https://github.com/Sitecore/content-sdk/blob/0b0b7233e8cb6cbd454dd69aece52311789f8eec/packages/angular/src/loaders/models.ts#L304)
 
 Marks every entry linked to any of the supplied tags as stale.
 
@@ -159,7 +159,7 @@ Number of entries marked stale (includes entries already stale).
 
 > **set**(`key`, `value`, `ttlSeconds`, `tags`): `Promise`\<`void`\>
 
-Defined in: [packages/angular/src/loaders/models.ts:298](https://github.com/Sitecore/content-sdk/blob/6777bd573a801c6d8822657b5b3406a0469068be/packages/angular/src/loaders/models.ts#L298)
+Defined in: [packages/angular/src/loaders/models.ts:298](https://github.com/Sitecore/content-sdk/blob/0b0b7233e8cb6cbd454dd69aece52311789f8eec/packages/angular/src/loaders/models.ts#L298)
 
 Stores an entry and links it to the supplied tag set.
 

@@ -8,7 +8,7 @@
 
 > `const` **createGraphQLClientFactory**: (`options`) => [`GraphQLRequestClientFactory`](../type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: content/types/client/utils.d.ts:14
+Defined in: content/types/client/utils.d.ts:21
 
 Creates a new GraphQLRequestClientFactory instance
 

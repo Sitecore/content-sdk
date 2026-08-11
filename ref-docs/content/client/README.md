@@ -38,6 +38,7 @@
 
 ## Functions
 
+- [createCliGraphQLClientFactory](functions/createCliGraphQLClientFactory.md)
 - [createGraphQLClientFactory](functions/createGraphQLClientFactory.md)
 - [getEdgeProxyContentUrl](functions/getEdgeProxyContentUrl.md)
 - [getEdgeProxyFormsUrl](functions/getEdgeProxyFormsUrl.md)
