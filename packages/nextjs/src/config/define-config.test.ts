@@ -511,20 +511,20 @@ describe('defineConfig', () => {
     });
   });
 
-  describe('config.redirects.localeInPath', () => {
-    it('should default to null', () => {
+  describe('config.redirects.appLocalePrefix', () => {
+    it('should default to undefined', () => {
       defineConfigModule.defineConfig(defaultConfig());
       const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-      expect(resultConfig.redirects?.localeInPath).to.equal(null);
+      expect(resultConfig.redirects?.appLocalePrefix).to.equal(undefined);
     });
 
     it('should use the value from the config', () => {
       defineConfigModule.defineConfig({
         ...defaultConfig(),
-        redirects: { localeInPath: true },
+        redirects: { appLocalePrefix: 'always' },
       });
       const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-      expect(resultConfig.redirects?.localeInPath).to.equal(true);
+      expect(resultConfig.redirects?.appLocalePrefix).to.equal('always');
     });
   });
 });

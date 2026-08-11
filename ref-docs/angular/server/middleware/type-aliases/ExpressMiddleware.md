@@ -8,7 +8,7 @@
 
 > **ExpressMiddleware** = (`req`, `res`, `next`) => `void` \| `Promise`\<`void`\>
 
-Defined in: [packages/angular/src/server/middleware/models.ts:26](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/angular/src/server/middleware/models.ts#L26)
+Defined in: [packages/angular/src/server/middleware/models.ts:26](https://github.com/Sitecore/content-sdk/blob/0b0b7233e8cb6cbd454dd69aece52311789f8eec/packages/angular/src/server/middleware/models.ts#L26)
 
 Express-compatible middleware type
 

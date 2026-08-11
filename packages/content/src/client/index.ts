@@ -7,7 +7,7 @@ export {
   GraphQLRequestClientFactoryConfig,
   DefaultRetryStrategy,
   RetryStrategy,
-  FetchOptions
+  FetchOptions,
 } from '@sitecore-content-sdk/core';
 export { PageInfo } from '../models';
 export { getEdgeProxyContentUrl, getEdgeProxyFormsUrl } from './edge-proxy';
@@ -20,4 +20,8 @@ export {
   ErrorPage,
 } from './sitecore-client';
 export { SitecoreClientInit } from './models';
-export { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
+export {
+  createGraphQLClientFactory,
+  createCliGraphQLClientFactory,
+  GraphQLClientOptions,
+} from './utils';

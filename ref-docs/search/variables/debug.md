@@ -8,6 +8,6 @@
 
 > `const` **debug**: `Debugger`
 
-Defined in: [debug.ts:7](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/search/src/debug.ts#L7)
+Defined in: [debug.ts:7](https://github.com/Sitecore/content-sdk/blob/0b0b7233e8cb6cbd454dd69aece52311789f8eec/packages/search/src/debug.ts#L7)
 
 Debugger for the search package
