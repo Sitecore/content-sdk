@@ -136,7 +136,7 @@ const getPlaceholderComponents = (
 
   return [
     <PlaceholderMetadata
-      key={(rendering as ComponentRendering).uid}
+      key={(rendering as ComponentRendering).uid || `placeholder-metadata-${name}`}
       placeholderName={name}
       rendering={rendering as ComponentRendering}
     >

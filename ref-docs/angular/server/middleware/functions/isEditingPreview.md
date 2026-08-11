@@ -8,7 +8,7 @@
 
 > **isEditingPreview**(`headers?`): `boolean`
 
-Defined in: [packages/angular/src/server/utils.ts:45](https://github.com/Sitecore/content-sdk/blob/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71/packages/angular/src/server/utils.ts#L45)
+Defined in: [packages/angular/src/server/utils.ts:45](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/angular/src/server/utils.ts#L45)
 
 **`Internal`**
 
