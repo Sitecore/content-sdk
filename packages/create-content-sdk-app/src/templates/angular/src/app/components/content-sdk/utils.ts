@@ -3,7 +3,7 @@ import { computed, type Signal } from '@angular/core';
 type LayoutParams = { RenderingIdentifier?: string; Styles?: string };
 
 /**
- * CSS class/id helpers aligned with kit-nextjs-skate-park component wrappers.
+ * CSS class/id helpers for component wrappers.
  */
 export function computedRenderingId(
   params: () => { [key: string]: string } | undefined,
