@@ -137,8 +137,6 @@ export class RedirectsProxy extends ProxyBase {
         return res;
       }
 
-      const localeRedirectMode = this.getLocaleRedirectMode(res);
-
       if (this.isPreview(req)) {
         debug.redirects('skipped (preview)');
         return res;
@@ -192,19 +190,21 @@ export class RedirectsProxy extends ProxyBase {
 
         reqUrl.pathname = prepareNewURL.pathname;
         reqUrl.search = prepareNewURL.search;
-
-        if (localeRedirectMode === 'pages') {
+        const prefixMode = this.config.appLocalePrefix;
+        if (this.isPagesRouterI18n(req)) {
           reqUrl.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
-        } else if (localeRedirectMode === 'app-with-locale') {
-          // In App Router, we need to set the locale in the pathname, if present and differs from request - or when incoming request has locale prefix
-          if (
-            targetLocale !== language ||
-            (existsRedirect.isLanguagePreserved && incomingPathData.locale === targetLocale)
-          ) {
+        } else if (prefixMode !== 'never') {
+          const shouldPrefix =
+            prefixMode === 'always' ||
+            (!!targetLocale &&
+              ((!prefixMode && existsRedirect.isLanguagePreserved) ||
+                (prefixMode === 'as-needed' && targetLocale !== site.language)));
+
+          if (shouldPrefix) {
             reqUrl.pathname = `/${targetLocale}${reqUrl.pathname}`;
           }
         }
-        // else: App Router without [locale] segment — leave pathname unchanged
+        // else: App Router without [locale] segment (`never`) — leave pathname unchanged
 
         /** return Response redirect with http code of redirect type */
         return this.dispatchRedirect(
@@ -415,17 +415,6 @@ export class RedirectsProxy extends ProxyBase {
         let rewritePath =
           typeof target === 'string' ? target : `${target.pathname}${target.search || ''}`;
 
-        // When locale is part of the route path, ensure Server Transfer rewrite includes it
-        if (this.getLocaleRedirectMode(res) === 'app-with-locale' && !isExternal) {
-          const pathParts = breakDownPath(this.locales, rewritePath);
-          // Check if path doesn't start with a locale
-          if (!pathParts.locale) {
-            // Add current language as locale prefix
-            const language = this.getLanguage(req, res);
-            rewritePath = `/${language}${rewritePath}`;
-          }
-        }
-
         // Check if it has a site prefix
         // If so, preserve it for the redirect target to maintain proper routing
         const incomingRewrite = res?.headers.get(REWRITE_HEADER_NAME);
@@ -482,25 +471,15 @@ export class RedirectsProxy extends ProxyBase {
   }
 
   /**
-   * Resolves how locale should be applied on relative redirect targets.
-   * - `pages`: Pages Router Next.js i18n (`url.locale`)
-   * - `app-with-locale`: App Router with `[locale]` path segment
-   * - `app-without-locale`: App Router without `[locale]` segment
-   * Explicit `localeInPath` true/false selects App Router modes; when unset/`null`,
-   * falls back to LocaleProxy header detection (App Router) vs Pages Router.
-   * @param {NextResponse} res response
-   * @returns {'pages' | 'app-with-locale' | 'app-without-locale'} locale redirect mode
+   * Determines if the request should be processed with Pages Router i18n consideration.
+   * @param {NextRequest} req request
+   * @returns {boolean} true if the request is for the Pages Router, false otherwise
    * @private
    */
-  private getLocaleRedirectMode(
-    res: NextResponse
-  ): 'pages' | 'app-with-locale' | 'app-without-locale' {
-    if (this.config.localeInPath === true) {
-      return 'app-with-locale';
+  private isPagesRouterI18n(req: NextRequest): boolean {
+    if (req.nextUrl.locale && req.nextUrl.defaultLocale) {
+      return true;
     }
-    if (this.config.localeInPath === false) {
-      return 'app-without-locale';
-    }
-    return this.isAppRouter(res) ? 'app-with-locale' : 'pages';
+    return false;
   }
 }
