@@ -8,7 +8,7 @@
 
 > **RedirectsMiddlewareOptions** = [`BaseMiddlewareOptions`](../interfaces/BaseMiddlewareOptions.md) & `Omit`\<`RedirectsServiceConfig`, `"fetch"` \| `"clientFactory"`\> & `Partial`\<[`SitecoreConfig`](../content/config/type-aliases/SitecoreConfig.md)\[`"api"`\]\[`"edge"`\]\> & `Partial`\<`NonNullable`\<[`SitecoreConfig`](../content/config/type-aliases/SitecoreConfig.md)\[`"api"`\]\[`"local"`\]\>\> & [`SitecoreConfig`](../content/config/type-aliases/SitecoreConfig.md)\[`"redirects"`\] & `object`
 
-Defined in: [packages/angular/src/server/middleware/redirects-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627/packages/angular/src/server/middleware/redirects-middleware.ts#L39)
+Defined in: [packages/angular/src/server/middleware/redirects-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/6777bd573a801c6d8822657b5b3406a0469068be/packages/angular/src/server/middleware/redirects-middleware.ts#L39)
 
 Configuration for the redirects middleware.
 
