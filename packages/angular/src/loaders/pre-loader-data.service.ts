@@ -5,12 +5,13 @@ import { filter } from 'rxjs';
 import {
   ActivatedRouteSnapshot,
   ActivationStart,
+  Params,
   PRIMARY_OUTLET,
+  Route,
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
 import { ClientLoaderDataService } from './client-loader-data.service';
-import { LoaderPayload } from './models';
 import { collectLoaderIds, mergeRouteParams } from './route-loader-utils';
 import { matchRouteChain } from './route-matcher';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
@@ -64,39 +65,52 @@ export class ClientPreLoaderDataService {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    const loaders = this.collectLoaders(route, state);
-    for (const loaderData of loaders) {
-      this.loaderData.prefetch(loaderData);
-    }
+    const levels = (route.pathFromRoot ?? [])
+      .filter((ancestor): ancestor is ActivatedRouteSnapshot => !!ancestor)
+      .map((ancestor) => ({ resolve: ancestor.routeConfig?.resolve, params: ancestor.params ?? {} }));
+    // queryParams are global to the URL (identical across every snapshot level), so the leaf's
+    // are representative of the whole chain.
+    this.prefetchChain(
+      levels,
+      state.url,
+      (route.queryParams ?? {}) as Record<string, string | string[]>
+    );
   }
 
   /**
-   * Collect LoaderDataRequest for each resolver that has LOADER_ID on the current route
-   * and its parent routes (pathFromRoot). Deduplicates by (loaderId, url).
-   * @param {ActivatedRouteSnapshot} route - The current route
-   * @param {RouterStateSnapshot} state - The router state snapshot, used for url and params
+   * Shared functionality of {@link prefetchForRoute} and {@link prefetchForUrl}: walks an ordered
+   * (root → leaf) list of matched route levels and, for every `LOADER_ID`-tagged resolver
+   * found, kicks off one {@link ClientLoaderDataService.prefetch} call.
+   *
+   * Params are merged per level (root..that level), so a loader on a parent route never sees
+   * params contributed only by a deeper child route — mirroring how a live navigation scopes
+   * each resolver's `ActivatedRouteSnapshot.pathFromRoot`. `locale` falls back to the config's
+   * `defaultLanguage` when no level captured one.
+   * @param {{ resolve: Route['resolve']; params: Params }[]} levels - Matched route levels, root to leaf.
+   * @param {string} url - Navigation URL forwarded to each prefetch payload.
+   * @param {Record<string, string | string[]>} query - Query params forwarded to each prefetch payload.
+   * @param {object} [options] - Prefetch options
+   * @param {boolean} [options.force] - Forwarded to {@link ClientLoaderDataService.prefetch}.
    */
-  private collectLoaders(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): LoaderPayload[] {
-    const loaderDataRequests: LoaderPayload[] = [];
-    const breadcrumb = route.pathFromRoot ?? [];
-
-    for (const ancestor of breadcrumb) {
-      if (!ancestor) continue;
-      const loaderIds = collectLoaderIds([ancestor.routeConfig?.resolve]);
-      if (loaderIds.length === 0) continue;
-
-      const routeParams = mergeRouteParams((ancestor.pathFromRoot ?? []).map((r) => r?.params ?? {}));
-      const query = (ancestor.queryParams ?? {}) as Record<string, string | string[]>;
-
-      for (const loaderId of loaderIds) {
-        loaderDataRequests.push({ loaderId, url: state.url, routeParams, query });
+  private prefetchChain(
+    levels: { resolve: Route['resolve']; params: Params }[],
+    url: string,
+    query: Record<string, string | string[]>,
+    options?: { force?: boolean }
+  ): void {
+    levels.forEach((level, index) => {
+      const loaderIds = collectLoaderIds([level.resolve]);
+      if (loaderIds.length === 0) {
+        return;
       }
-    }
-
-    return loaderDataRequests;
+      const routeParams = mergeRouteParams(
+        levels.slice(0, index + 1).map((l) => l.params),
+        this.defaultLanguage
+      );
+      for (const loaderId of loaderIds) {
+        this.loaderData.prefetch({ loaderId, url, routeParams, query }, options);
+      }
+    });
   }
 
   /**
@@ -140,21 +154,11 @@ export class ClientPreLoaderDataService {
       return;
     }
 
-    // Params are merged per level (root..that level), same as a real navigation would give
-    // each resolver its own ActivatedRouteSnapshot.pathFromRoot — a loader on a parent route
-    // never sees params contributed only by a deeper child route.
-    chain.forEach((level, index) => {
-      const loaderIds = collectLoaderIds([level.route.resolve]);
-      if (loaderIds.length === 0) {
-        return;
-      }
-      const routeParams = mergeRouteParams(
-        chain.slice(0, index + 1).map((c) => c.params),
-        this.defaultLanguage
-      );
-      for (const loaderId of loaderIds) {
-        this.loaderData.prefetch({ loaderId, url, routeParams, query }, options);
-      }
-    });
+    this.prefetchChain(
+      chain.map((level) => ({ resolve: level.route.resolve, params: level.params })),
+      url,
+      query,
+      options
+    );
   }
 }

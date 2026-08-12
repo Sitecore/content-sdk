@@ -84,18 +84,24 @@ describe('ClientPreLoaderDataService', () => {
       await service.prefetchForRoute(child as ActivatedRouteSnapshot, state);
 
       expect(loaderDataPrefetchSpy).toHaveBeenCalledTimes(2);
-      expect(loaderDataPrefetchSpy).toHaveBeenCalledWith({
-        loaderId: 'layout',
-        url: '/page/123',
-        routeParams: {},
-        query: {},
-      });
-      expect(loaderDataPrefetchSpy).toHaveBeenCalledWith({
-        loaderId: 'page',
-        url: '/page/123',
-        routeParams: { id: '123' },
-        query: { q: 'search' },
-      });
+      expect(loaderDataPrefetchSpy).toHaveBeenCalledWith(
+        {
+          loaderId: 'layout',
+          url: '/page/123',
+          routeParams: {},
+          query: { q: 'search' },
+        },
+        undefined
+      );
+      expect(loaderDataPrefetchSpy).toHaveBeenCalledWith(
+        {
+          loaderId: 'page',
+          url: '/page/123',
+          routeParams: { id: '123' },
+          query: { q: 'search' },
+        },
+        undefined
+      );
     });
 
     it('should prefetch only for routes that have resolver with LOADER_ID', async () => {
@@ -120,12 +126,51 @@ describe('ClientPreLoaderDataService', () => {
       await service.prefetchForRoute(child as ActivatedRouteSnapshot, state);
 
       expect(loaderDataPrefetchSpy).toHaveBeenCalledTimes(1);
-      expect(loaderDataPrefetchSpy).toHaveBeenCalledWith({
-        loaderId: 'page',
-        url: '/page',
-        routeParams: {},
-        query: {},
+      expect(loaderDataPrefetchSpy).toHaveBeenCalledWith(
+        {
+          loaderId: 'page',
+          url: '/page',
+          routeParams: {},
+          query: {},
+        },
+        undefined
+      );
+    });
+
+    it('defaults locale from config.defaultLanguage when no route level captured one', async () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          ClientPreLoaderDataService,
+          provideRouter([]),
+          { provide: PLATFORM_ID, useValue: 'browser' },
+          { provide: ClientLoaderDataService, useValue: { prefetch: loaderDataPrefetchSpy } },
+          { provide: SITECORE_CONFIG_TOKEN, useValue: { defaultLanguage: 'en' } },
+        ],
       });
+
+      const pageResolver = makeResolverWithLoaderId('page');
+      const root = makeRouteSnapshot({
+        pathFromRoot: [] as ActivatedRouteSnapshot[],
+        routeConfig: { resolve: { page: pageResolver } },
+        params: {},
+      });
+      (root as MutableSnapshot).pathFromRoot = [root];
+
+      const state = makeRouterStateSnapshot('/page');
+      const service = TestBed.inject(ClientPreLoaderDataService);
+
+      await service.prefetchForRoute(root as ActivatedRouteSnapshot, state);
+
+      expect(loaderDataPrefetchSpy).toHaveBeenCalledWith(
+        {
+          loaderId: 'page',
+          url: '/page',
+          routeParams: { locale: 'en' },
+          query: {},
+        },
+        undefined
+      );
     });
 
     it('should no-op on server', async () => {
