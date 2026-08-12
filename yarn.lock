@@ -3418,7 +3418,6 @@ __metadata:
     regex-parser: ^2.3.1
     sinon: ^20.0.0
     sinon-chai: ^3.7.0
-    sync-disk-cache: ^2.1.0
     ts-node: ^10.9.2
     typescript: ~5.8.3
   peerDependencies:
@@ -8017,15 +8016,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"heimdalljs@npm:^0.2.6":
-  version: 0.2.6
-  resolution: "heimdalljs@npm:0.2.6"
-  dependencies:
-    rsvp: ~3.2.1
-  checksum: 5b28d3df4e77ea94293b43c29f0a358381aa811079817f780a1dafc9d244c891a0a713691a3c53d0d2dc31a76484fb36d998e7ae5040ef4b52e8c4a00d2173ae
-  languageName: node
-  linkType: hard
-
 "hosted-git-info@npm:^2.1.4":
   version: 2.8.9
   resolution: "hosted-git-info@npm:2.8.9"
@@ -10073,17 +10063,6 @@ __metadata:
     infer-owner: ^1.0.4
     mkdirp: ^1.0.3
   checksum: 759dbc3c4266e25028bb051ca0d5003860bf68249a0d2c3417dc26a0d0f1b883936866e19840f93a0ffceaf8d3c1982cc0fad6667e55418d63eed0af684bcb54
-  languageName: node
-  linkType: hard
-
-"mkdirp@npm:^0.5.0":
-  version: 0.5.6
-  resolution: "mkdirp@npm:0.5.6"
-  dependencies:
-    minimist: ^1.2.6
-  bin:
-    mkdirp: bin/cmd.js
-  checksum: 0c91b721bb12c3f9af4b77ebf73604baf350e64d80df91754dc509491ae93bf238581e59c7188360cec7cb62fc4100959245a42cfe01834efedc5e9d068376c2
   languageName: node
   linkType: hard
 
@@ -12313,13 +12292,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rsvp@npm:~3.2.1":
-  version: 3.2.1
-  resolution: "rsvp@npm:3.2.1"
-  checksum: e2ac49cbe35b8c2701b07698066d7cd8004115b070f3352d45759dfcd820fa57e687230331ba41f5a40e1871789cbf122de6e73559598777a0b18b66953dc09b
-  languageName: node
-  linkType: hard
-
 "run-async@npm:^2.4.0":
   version: 2.4.1
   resolution: "run-async@npm:2.4.1"
@@ -13218,19 +13190,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sync-disk-cache@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "sync-disk-cache@npm:2.1.0"
-  dependencies:
-    debug: ^4.1.1
-    heimdalljs: ^0.2.6
-    mkdirp: ^0.5.0
-    rimraf: ^3.0.0
-    username-sync: ^1.0.2
-  checksum: 02f02d2842c69da088c28f5c6e39df7f22b68b06fd309a91eee9266a561d1a50759a8ba058df51017b89f3e70608dc884ec086b572fc9ae51165de0585029abb
-  languageName: node
-  linkType: hard
-
 "synckit@npm:^0.11.7":
   version: 0.11.11
   resolution: "synckit@npm:0.11.11"
@@ -14031,13 +13990,6 @@ __metadata:
     querystringify: ^2.1.1
     requires-port: ^1.0.0
   checksum: fbdba6b1d83336aca2216bbdc38ba658d9cfb8fc7f665eb8b17852de638ff7d1a162c198a8e4ed66001ddbf6c9888d41e4798912c62b4fd777a31657989f7bdf
-  languageName: node
-  linkType: hard
-
-"username-sync@npm:^1.0.2":
-  version: 1.0.3
-  resolution: "username-sync@npm:1.0.3"
-  checksum: 1a2aaa8629d018daebd8500272a3064041e18ed157eb32d098dab6ea7dc111b2904222c61bb50f25340d378f003aacbefb3fd6313dd42586137532bc38befe8e
   languageName: node
   linkType: hard
 
