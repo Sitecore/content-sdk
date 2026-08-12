@@ -90,6 +90,11 @@ export abstract class BaseFieldDirective<TField> {
     return this.context?.isEditing() ?? false;
   }
 
+  /** Whether the host page is in preview mode. Falls back to `false` when no context is provided. */
+  protected isPreview(): boolean {
+    return this.context?.isPreview() ?? false;
+  }
+
   /** Field metadata payload, when present. */
   protected get fieldMetadata(): Record<string, unknown> | undefined {
     return (this.field() as FieldLike | undefined)?.metadata;

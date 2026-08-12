@@ -401,4 +401,24 @@ describe('ScRichTextDirective editing mode', () => {
     expect(prefetchSpy).not.toHaveBeenCalled();
     vi.useRealTimers();
   });
+
+  it('does not attach prefetch (any mode, incl. eager) while in preview mode', () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [TestHostComponent],
+      providers: provideMockSitecoreContext(),
+    });
+    setMockContextPage({ mode: { isPreview: true } } as any);
+    const fixture = TestBed.createComponent(TestHostComponent);
+
+    const prefetchSpy = vi
+      .spyOn(TestBed.inject(ClientPreLoaderDataService), 'prefetchForUrl')
+      .mockImplementation(() => undefined);
+
+    // Eager is the default mode, so this also proves preview suppresses eager, not just hover.
+    fixture.componentRef.setInput('field', { value: '<p><a href="/about">About</a></p>' });
+    fixture.detectChanges();
+
+    expect(prefetchSpy).not.toHaveBeenCalled();
+  });
 });

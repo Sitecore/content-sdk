@@ -118,7 +118,9 @@ export class ScRichTextDirective extends BaseFieldDirective<TextField | undefine
 
   /**
    * Applies the resolved prefetch mode to `anchor` when running in the browser and the page
-   * isn't in editing mode. External/`target="_blank"`/empty hrefs are already filtered out by
+   * isn't in editing or preview mode (checked here directly rather than relied on from
+   * {@link hookLinks}'s own editing-only gate, so this method's preconditions are self
+   * contained). External/`target="_blank"`/empty hrefs are already filtered out by
    * {@link hookLinks} before this is called. `'hover'` attaches a debounced listener; `true`
    * prefetches immediately; `false` does nothing.
    * @param {HTMLAnchorElement} anchor - Anchor element to observe/prefetch.
@@ -126,6 +128,7 @@ export class ScRichTextDirective extends BaseFieldDirective<TextField | undefine
    */
   private applyPrefetch(anchor: HTMLAnchorElement, href: string): void {
     if (!isPlatformBrowser(this.platformId)) return;
+    if (this.isEditing() || this.isPreview()) return;
 
     const mode = this.prefetch() ?? this.linkPrefetchConfig?.mode ?? FALLBACK_PREFETCH_MODE;
     if (mode === false) return;
