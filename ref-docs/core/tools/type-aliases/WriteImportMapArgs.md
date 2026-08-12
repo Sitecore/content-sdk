@@ -8,7 +8,7 @@
 
 > **WriteImportMapArgs** = `object`
 
-Defined in: [packages/core/src/tools/codegen/import-map.ts:76](https://github.com/Sitecore/content-sdk/blob/74f753fcc8df43b8a640d63ab690a924e2ab84c5/packages/core/src/tools/codegen/import-map.ts#L76)
+Defined in: [packages/core/src/tools/codegen/import-map.ts:76](https://github.com/Sitecore/content-sdk/blob/5e586300554a131c9488a0b89af8f85d395d0b88/packages/core/src/tools/codegen/import-map.ts#L76)
 
 Args for import map generation
 Specifies paths to include and exclude when generating imports
@@ -19,7 +19,7 @@ Specifies paths to include and exclude when generating imports
 
 > `optional` **exclude**: `string`[]
 
-Defined in: [packages/core/src/tools/codegen/import-map.ts:82](https://github.com/Sitecore/content-sdk/blob/74f753fcc8df43b8a640d63ab690a924e2ab84c5/packages/core/src/tools/codegen/import-map.ts#L82)
+Defined in: [packages/core/src/tools/codegen/import-map.ts:82](https://github.com/Sitecore/content-sdk/blob/5e586300554a131c9488a0b89af8f85d395d0b88/packages/core/src/tools/codegen/import-map.ts#L82)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/core/src/tools/codegen/import-map.ts:82](https://github.co
 
 > **paths**: `string`[]
 
-Defined in: [packages/core/src/tools/codegen/import-map.ts:77](https://github.com/Sitecore/content-sdk/blob/74f753fcc8df43b8a640d63ab690a924e2ab84c5/packages/core/src/tools/codegen/import-map.ts#L77)
+Defined in: [packages/core/src/tools/codegen/import-map.ts:77](https://github.com/Sitecore/content-sdk/blob/5e586300554a131c9488a0b89af8f85d395d0b88/packages/core/src/tools/codegen/import-map.ts#L77)
 
 ***
 
@@ -35,7 +35,7 @@ Defined in: [packages/core/src/tools/codegen/import-map.ts:77](https://github.co
 
 > `optional` **scConfig**: [`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md)
 
-Defined in: [packages/core/src/tools/codegen/import-map.ts:81](https://github.com/Sitecore/content-sdk/blob/74f753fcc8df43b8a640d63ab690a924e2ab84c5/packages/core/src/tools/codegen/import-map.ts#L81)
+Defined in: [packages/core/src/tools/codegen/import-map.ts:81](https://github.com/Sitecore/content-sdk/blob/5e586300554a131c9488a0b89af8f85d395d0b88/packages/core/src/tools/codegen/import-map.ts#L81)
 
 #### Deprecated
 

@@ -8,7 +8,7 @@
 
 > `const` **auth**: `object`
 
-Defined in: [packages/core/src/tools/index.ts:26](https://github.com/Sitecore/content-sdk/blob/74f753fcc8df43b8a640d63ab690a924e2ab84c5/packages/core/src/tools/index.ts#L26)
+Defined in: [packages/core/src/tools/index.ts:26](https://github.com/Sitecore/content-sdk/blob/5e586300554a131c9488a0b89af8f85d395d0b88/packages/core/src/tools/index.ts#L26)
 
 Preserve "live binding" semantics similar to ES module imports: production
 code always sees the current implementation; tests can swap it safely and

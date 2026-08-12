@@ -6,7 +6,7 @@
 
 # Interface: PlaceholderData
 
-Defined in: [packages/core/src/layout/models.ts:159](https://github.com/Sitecore/content-sdk/blob/74f753fcc8df43b8a640d63ab690a924e2ab84c5/packages/core/src/layout/models.ts#L159)
+Defined in: [packages/core/src/layout/models.ts:159](https://github.com/Sitecore/content-sdk/blob/5e586300554a131c9488a0b89af8f85d395d0b88/packages/core/src/layout/models.ts#L159)
 
 Contents of a single placeholder returned from placeholder service
 
@@ -16,7 +16,7 @@ Contents of a single placeholder returned from placeholder service
 
 > **elements**: [`ComponentRendering`](ComponentRendering.md)\<[`ComponentFields`](ComponentFields.md)\>[]
 
-Defined in: [packages/core/src/layout/models.ts:162](https://github.com/Sitecore/content-sdk/blob/74f753fcc8df43b8a640d63ab690a924e2ab84c5/packages/core/src/layout/models.ts#L162)
+Defined in: [packages/core/src/layout/models.ts:162](https://github.com/Sitecore/content-sdk/blob/5e586300554a131c9488a0b89af8f85d395d0b88/packages/core/src/layout/models.ts#L162)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/core/src/layout/models.ts:162](https://github.com/Sitecore
 
 > **name**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:160](https://github.com/Sitecore/content-sdk/blob/74f753fcc8df43b8a640d63ab690a924e2ab84c5/packages/core/src/layout/models.ts#L160)
+Defined in: [packages/core/src/layout/models.ts:160](https://github.com/Sitecore/content-sdk/blob/5e586300554a131c9488a0b89af8f85d395d0b88/packages/core/src/layout/models.ts#L160)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [packages/core/src/layout/models.ts:160](https://github.com/Sitecore
 
 > **path**: `string`
 
-Defined in: [packages/core/src/layout/models.ts:161](https://github.com/Sitecore/content-sdk/blob/74f753fcc8df43b8a640d63ab690a924e2ab84c5/packages/core/src/layout/models.ts#L161)
+Defined in: [packages/core/src/layout/models.ts:161](https://github.com/Sitecore/content-sdk/blob/5e586300554a131c9488a0b89af8f85d395d0b88/packages/core/src/layout/models.ts#L161)
