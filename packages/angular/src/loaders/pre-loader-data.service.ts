@@ -5,21 +5,15 @@ import { filter } from 'rxjs';
 import {
   ActivatedRouteSnapshot,
   ActivationStart,
-  Params,
+  PRIMARY_OUTLET,
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
 import { ClientLoaderDataService } from './client-loader-data.service';
 import { LoaderPayload } from './models';
-import { LOADER_ID } from './loader-registry.token';
-
-/**
- * Resolver function shape used in route config (minimal for LOADER_ID detection).
- * @internal
- */
-interface ResolverWithLoaderId {
-  [key: symbol]: string;
-}
+import { collectLoaderIds, mergeRouteParams } from './route-loader-utils';
+import { matchRouteChain } from './route-matcher';
+import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 
 /**
  * ClientPreLoaderDataService kicks off loader data fetches for all loaders in the current route
@@ -41,6 +35,8 @@ export class ClientPreLoaderDataService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly defaultLanguage = inject(SITECORE_CONFIG_TOKEN, { optional: true })
+    ?.defaultLanguage;
 
   constructor() {
     this.router.events
@@ -85,35 +81,80 @@ export class ClientPreLoaderDataService {
     state: RouterStateSnapshot
   ): LoaderPayload[] {
     const loaderDataRequests: LoaderPayload[] = [];
-    const breadcrump = route.pathFromRoot ?? [];
+    const breadcrumb = route.pathFromRoot ?? [];
 
-    for (const route of breadcrump) {
-      if (!route) continue;
-      const resolveDefinition = route.routeConfig?.resolve;
-      if (resolveDefinition) {
-        for (const resolver of Object.values(resolveDefinition)) {
-          if (
-            typeof resolver === 'function' &&
-            LOADER_ID in resolver &&
-            typeof (resolver as ResolverWithLoaderId)[LOADER_ID] === 'string'
-          ) {
-            const loaderId = (resolver as ResolverWithLoaderId)[LOADER_ID];
-            const url = state.url;
-            const routeParams: Params = (route.pathFromRoot ?? []).reduce(
-              (acc, r) => ({ ...acc, ...(r?.params ?? {}) }),
-              {}
-            );
-            loaderDataRequests.push({
-              loaderId,
-              url,
-              routeParams,
-              query: (route.queryParams ?? {}) as Record<string, string | string[]>,
-            });
-          }
-        }
+    for (const ancestor of breadcrumb) {
+      if (!ancestor) continue;
+      const loaderIds = collectLoaderIds([ancestor.routeConfig?.resolve]);
+      if (loaderIds.length === 0) continue;
+
+      const routeParams = mergeRouteParams((ancestor.pathFromRoot ?? []).map((r) => r?.params ?? {}));
+      const query = (ancestor.queryParams ?? {}) as Record<string, string | string[]>;
+
+      for (const loaderId of loaderIds) {
+        loaderDataRequests.push({ loaderId, url: state.url, routeParams, query });
       }
     }
 
     return loaderDataRequests;
+  }
+
+  /**
+   * Resolves the loaders that would apply to `url` — without navigating — and prefetches each
+   * via {@link ClientLoaderDataService.prefetch}. Walks the app's route config
+   * (`Router.config`) with {@link matchRouteChain} to find the matched route chain for `url`,
+   * merges params across parent + child levels the same way live navigation does, and kicks
+   * off one prefetch per `LOADER_ID`-tagged resolver found across that chain.
+   *
+   * No-ops on server, or when no route matches `url`, or when the matched chain has no loaders.
+   * Intended as the entry point for hover/eager link prefetch (see the `scRouterLink`/`scRichText`
+   * directives); does not itself gate on an enable/disable flag — callers decide when to invoke it.
+   *
+   * `url` is author-controlled in practice (a Sitecore link/rich-text field), so parsing is
+   * wrapped defensively: `Router.parseUrl` can throw (e.g. `URIError` on malformed
+   * percent-encoding like a stray `%`). The eager-mode caller invokes this synchronously,
+   * inline, while looping over every link on the page — an unhandled throw for one bad href
+   * would abort that loop and leave later links without their click handlers attached, so a
+   * bad href here must degrade to a no-op, not propagate.
+   * @param {string} url - Candidate navigation URL (e.g. an anchor's `href`).
+   * @param {object} [options] - Prefetch options
+   * @param {boolean} [options.force] - Forwarded to {@link ClientLoaderDataService.prefetch} — bypass the staged-response check. Hover callers pass `true` (every hover re-asks); eager callers omit it (dedupes permanently once staged).
+   */
+  prefetchForUrl(url: string, options?: { force?: boolean }): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    let chain: ReturnType<typeof matchRouteChain>;
+    let query: Record<string, string | string[]>;
+    try {
+      const tree = this.router.parseUrl(url);
+      const segments = tree.root.children[PRIMARY_OUTLET]?.segments ?? [];
+      chain = matchRouteChain(this.router.config, segments);
+      query = tree.queryParams as Record<string, string | string[]>;
+    } catch {
+      // Malformed href (e.g. invalid percent-encoding) — not this feature's job to surface.
+      return;
+    }
+    if (!chain) {
+      return;
+    }
+
+    // Params are merged per level (root..that level), same as a real navigation would give
+    // each resolver its own ActivatedRouteSnapshot.pathFromRoot — a loader on a parent route
+    // never sees params contributed only by a deeper child route.
+    chain.forEach((level, index) => {
+      const loaderIds = collectLoaderIds([level.route.resolve]);
+      if (loaderIds.length === 0) {
+        return;
+      }
+      const routeParams = mergeRouteParams(
+        chain.slice(0, index + 1).map((c) => c.params),
+        this.defaultLanguage
+      );
+      for (const loaderId of loaderIds) {
+        this.loaderData.prefetch({ loaderId, url, routeParams, query }, options);
+      }
+    });
   }
 }

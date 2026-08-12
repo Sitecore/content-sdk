@@ -1,6 +1,16 @@
 import type { DeepRequired, SitecoreConfigInput } from '@sitecore-content-sdk/content/config';
 import { defineConfig as baseDefineConfig } from '@sitecore-content-sdk/content/config';
 import type { ExpressRequest, ExpressResponse } from './http-types';
+
+/**
+ * Link-prefetch strategy for `scRouterLink`/`scRichText` links:
+ * - `true` (default) — prefetch eagerly, as soon as the link renders.
+ * - `'hover'` — prefetch only once the pointer dwells on the link (see `delayMs`); starts
+ *   disabled and is enabled the moment the user shows intent.
+ * - `false` — never prefetch.
+ * @public
+ */
+export type LinkPrefetchMode = boolean | 'hover';
 /**
  * Reads `process.env` when running under Node; otherwise returns an empty object.
  * @returns {Record<string, string | undefined>} Environment map for merging into config.
@@ -37,6 +47,17 @@ export interface AngularSitecoreConfigInput extends Omit<SitecoreConfigInput, 'm
       /** The global revalidate time in seconds. */
       revalidate?: number;
     };
+    /**
+     * Configuration for loader prefetch on `scRouterLink`/`scRichText` links. Both fields
+     * default when omitted (`mode: true`, `delayMs: 100`). Can be overridden per-link via
+     * each directive's `prefetch` input.
+     */
+    linkPrefetch?: {
+      /** Prefetch strategy. See {@link LinkPrefetchMode}. */
+      mode?: LinkPrefetchMode;
+      /** Hover dwell time (ms) before prefetch fires when `mode: 'hover'`. */
+      delayMs?: number;
+    };
   };
   multisite?: {
     enabled?: boolean;
@@ -58,6 +79,12 @@ export type AngularSitecoreConfig = DeepRequired<AngularSitecoreConfigInput>;
 
 /** Defaults applied to `angular.loadersCache` when input omits fields. */
 const DEFAULT_ISR_CACHE = { enabled: true, revalidate: 300 } as const;
+
+/**
+ * Defaults applied to `angular.linkPrefetch` when input omits fields. `mode: true` prefetches
+ * eagerly on render unless a consumer opts into `'hover'` or disables it with `false`.
+ */
+const DEFAULT_LINK_PREFETCH = { mode: true, delayMs: 100 } as const;
 
 /**
  * Ensures `defaultLanguage` is present in the locales list (prepended when missing) and
@@ -110,8 +137,13 @@ export function defineConfig(
     revalidate: angular?.loadersCache?.revalidate ?? DEFAULT_ISR_CACHE.revalidate,
   };
 
+  const linkPrefetch = {
+    mode: angular?.linkPrefetch?.mode ?? DEFAULT_LINK_PREFETCH.mode,
+    delayMs: angular?.linkPrefetch?.delayMs ?? DEFAULT_LINK_PREFETCH.delayMs,
+  };
+
   return {
     ...scConfig,
-    angular: { locales, loadersCache },
+    angular: { locales, loadersCache, linkPrefetch },
   } as AngularSitecoreConfig;
 }
