@@ -10,7 +10,7 @@ import { SITECORE_CONFIG_TOKEN } from '../../lib/tokens';
 import type { LinkPrefetchMode } from '../../config/define-config';
 
 /** Ultimate fallback when no `SITECORE_CONFIG_TOKEN` is provided. Mirrors `DEFAULT_LINK_PREFETCH` in `config/define-config.ts`. */
-const FALLBACK_PREFETCH_MODE: LinkPrefetchMode = true;
+const FALLBACK_PREFETCH_MODE: LinkPrefetchMode = 'eager';
 const FALLBACK_PREFETCH_DELAY_MS = 100;
 
 /**
@@ -21,10 +21,10 @@ const FALLBACK_PREFETCH_DELAY_MS = 100;
  *
  * Internal links (browser only) prefetch the loaders that apply to them via
  * {@link ClientPreLoaderDataService.prefetchForUrl}, per `sitecore.config`'s
- * `angular.linkPrefetch.mode` (default `true`):
- * - `true` (default) — prefetch eagerly, as soon as the link renders.
+ * `angular.linkPrefetch.mode` (default `'eager'`):
+ * - `'eager'` (default) — prefetch as soon as the link renders.
  * - `'hover'` — prefetch once the pointer dwells on the link for `angular.linkPrefetch.delayMs`.
- * - `false` — never prefetch.
+ * - `'off'` — never prefetch.
  *
  * Override per link with `scRouterLinkPrefetch`.
  *
@@ -37,8 +37,8 @@ const FALLBACK_PREFETCH_DELAY_MS = 100;
  *      overrides must use the microsyntax key:value form (not a separate
  *      [scRouterLinkPrefetch] binding, which would bind to the inner <a> — where this
  *      directive isn't present after structural desugaring). -->
- * <a *scRouterLink="fields.Link; prefetch: true">Prefetch eagerly on render</a>
- * <a *scRouterLink="fields.Link; prefetch: false">Never prefetch this link</a>
+ * <a *scRouterLink="fields.Link; prefetch: 'eager'">Prefetch eagerly on render</a>
+ * <a *scRouterLink="fields.Link; prefetch: 'off'">Never prefetch this link</a>
  * ```
  * @public
  */
@@ -84,8 +84,8 @@ export class ScRouterLinkDirective extends ScLinkDirective {
   /**
    * Applies the resolved prefetch mode to `anchor` when running in the browser, the page isn't
    * in editing/preview mode, and the href isn't one the browser handles directly (external,
-   * `target="_blank"`, empty). `'hover'` attaches a debounced listener; `true` prefetches
-   * immediately; `false` does nothing.
+   * `target="_blank"`, empty). `'hover'` attaches a debounced listener; `'eager'` prefetches
+   * immediately; `'off'` does nothing.
    * @param {HTMLAnchorElement} anchor - Anchor element to observe/prefetch.
    */
   private applyPrefetch(anchor: HTMLAnchorElement): void {
@@ -97,7 +97,7 @@ export class ScRouterLinkDirective extends ScLinkDirective {
     if (this.shouldDeferNavigation(hrefAttr, targetAttr)) return;
 
     const mode = this.prefetch() ?? this.linkPrefetchConfig?.mode ?? FALLBACK_PREFETCH_MODE;
-    if (mode === false) return;
+    if (mode === 'off') return;
 
     if (mode === 'hover') {
       const delayMs = this.linkPrefetchConfig?.delayMs ?? FALLBACK_PREFETCH_DELAY_MS;
@@ -109,7 +109,7 @@ export class ScRouterLinkDirective extends ScLinkDirective {
       return;
     }
 
-    // mode === true: eager
+    // mode === 'eager'
     this.preLoaderData.prefetchForUrl(hrefAttr);
   }
 

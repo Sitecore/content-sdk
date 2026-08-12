@@ -351,9 +351,9 @@ describe('ScRouterLinkDirective', () => {
       expect(prefetchSpy).toHaveBeenCalledExactlyOnceWith('/eager');
     });
 
-    it('prefetches immediately when the global config mode is explicitly true', async () => {
+    it("prefetches immediately when the global config mode is explicitly 'eager'", async () => {
       const { fixture } = await createFixture([
-        { provide: SITECORE_CONFIG_TOKEN, useValue: { angular: { linkPrefetch: { mode: true, delayMs: 100 } } } },
+        { provide: SITECORE_CONFIG_TOKEN, useValue: { angular: { linkPrefetch: { mode: 'eager', delayMs: 100 } } } },
       ]);
       const prefetchSpy = vi
         .spyOn(TestBed.inject(ClientPreLoaderDataService), 'prefetchForUrl')
@@ -370,10 +370,10 @@ describe('ScRouterLinkDirective', () => {
         [
           {
             provide: SITECORE_CONFIG_TOKEN,
-            useValue: { angular: { linkPrefetch: { mode: false, delayMs: 100 } } },
+            useValue: { angular: { linkPrefetch: { mode: 'off', delayMs: 100 } } },
           },
         ],
-        true
+        'eager'
       );
       const prefetchSpy = vi
         .spyOn(TestBed.inject(ClientPreLoaderDataService), 'prefetchForUrl')
@@ -386,7 +386,7 @@ describe('ScRouterLinkDirective', () => {
     });
 
     it('does not prefetch external links even in eager mode', async () => {
-      const { fixture } = await createFixture([], true);
+      const { fixture } = await createFixture([], 'eager');
       const prefetchSpy = vi
         .spyOn(TestBed.inject(ClientPreLoaderDataService), 'prefetchForUrl')
         .mockImplementation(() => undefined);
@@ -400,7 +400,7 @@ describe('ScRouterLinkDirective', () => {
     });
 
     it('does not prefetch target="_blank" links even in eager mode', async () => {
-      const { fixture } = await createFixture([], true);
+      const { fixture } = await createFixture([], 'eager');
       const prefetchSpy = vi
         .spyOn(TestBed.inject(ClientPreLoaderDataService), 'prefetchForUrl')
         .mockImplementation(() => undefined);
@@ -423,8 +423,8 @@ describe('ScRouterLinkDirective', () => {
       vi.useRealTimers();
     });
 
-    it('suppresses prefetch when the per-link input is false, even though the global default is eager', async () => {
-      const { fixture } = await createFixture([], false);
+    it("suppresses prefetch when the per-link input is 'off', even though the global default is eager", async () => {
+      const { fixture } = await createFixture([], 'off');
       const prefetchSpy = vi
         .spyOn(TestBed.inject(ClientPreLoaderDataService), 'prefetchForUrl')
         .mockImplementation(() => undefined);
@@ -436,11 +436,11 @@ describe('ScRouterLinkDirective', () => {
       expect(prefetchSpy).not.toHaveBeenCalled();
     });
 
-    it('suppresses prefetch by default when angular.linkPrefetch.mode is false in config', async () => {
+    it("suppresses prefetch by default when angular.linkPrefetch.mode is 'off' in config", async () => {
       const { fixture } = await createFixture([
         {
           provide: SITECORE_CONFIG_TOKEN,
-          useValue: { angular: { linkPrefetch: { mode: false, delayMs: 100 } } },
+          useValue: { angular: { linkPrefetch: { mode: 'off', delayMs: 100 } } },
         },
       ]);
       const prefetchSpy = vi
@@ -459,10 +459,10 @@ describe('ScRouterLinkDirective', () => {
         [
           {
             provide: SITECORE_CONFIG_TOKEN,
-            useValue: { angular: { linkPrefetch: { mode: false, delayMs: 100 } } },
+            useValue: { angular: { linkPrefetch: { mode: 'off', delayMs: 100 } } },
           },
         ],
-        true
+        'eager'
       );
       const prefetchSpy = vi
         .spyOn(TestBed.inject(ClientPreLoaderDataService), 'prefetchForUrl')
@@ -480,7 +480,7 @@ describe('ScRouterLinkDirective', () => {
         [
           {
             provide: SITECORE_CONFIG_TOKEN,
-            useValue: { angular: { linkPrefetch: { mode: false, delayMs: 100 } } },
+            useValue: { angular: { linkPrefetch: { mode: 'off', delayMs: 100 } } },
           },
         ],
         'hover'

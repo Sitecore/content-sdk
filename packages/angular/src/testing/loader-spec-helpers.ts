@@ -13,7 +13,7 @@ export function mockAngularSitecoreConfig(
     angular: {
       locales: ['en'],
       loadersCache: { enabled: true, revalidate: 300 },
-      linkPrefetch: { mode: true, delayMs: 100 },
+      linkPrefetch: { mode: 'eager', delayMs: 100 },
     },
     ...overrides,
   } as AngularSitecoreConfig;

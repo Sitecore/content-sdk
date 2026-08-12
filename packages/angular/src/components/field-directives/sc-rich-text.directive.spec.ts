@@ -183,9 +183,9 @@ describe('ScRichTextDirective', () => {
       expect(prefetchSpy).toHaveBeenCalledWith('/two');
     });
 
-    it('prefetches every internal link immediately when the global config mode is explicitly true', () => {
+    it("prefetches every internal link immediately when the global config mode is explicitly 'eager'", () => {
       const fixture = createFixture([
-        { provide: SITECORE_CONFIG_TOKEN, useValue: { angular: { linkPrefetch: { mode: true, delayMs: 100 } } } },
+        { provide: SITECORE_CONFIG_TOKEN, useValue: { angular: { linkPrefetch: { mode: 'eager', delayMs: 100 } } } },
       ]);
       const prefetchSpy = vi
         .spyOn(TestBed.inject(ClientPreLoaderDataService), 'prefetchForUrl')
@@ -205,10 +205,10 @@ describe('ScRichTextDirective', () => {
       const fixture = createFixture([
         {
           provide: SITECORE_CONFIG_TOKEN,
-          useValue: { angular: { linkPrefetch: { mode: false, delayMs: 100 } } },
+          useValue: { angular: { linkPrefetch: { mode: 'off', delayMs: 100 } } },
         },
       ]);
-      fixture.componentRef.setInput('prefetchMode', true);
+      fixture.componentRef.setInput('prefetchMode', 'eager');
       const prefetchSpy = vi
         .spyOn(TestBed.inject(ClientPreLoaderDataService), 'prefetchForUrl')
         .mockImplementation(() => undefined);
@@ -221,7 +221,7 @@ describe('ScRichTextDirective', () => {
 
     it('does not prefetch external links even in eager mode', () => {
       const fixture = createFixture();
-      fixture.componentRef.setInput('prefetchMode', true);
+      fixture.componentRef.setInput('prefetchMode', 'eager');
       const prefetchSpy = vi
         .spyOn(TestBed.inject(ClientPreLoaderDataService), 'prefetchForUrl')
         .mockImplementation(() => undefined);
@@ -244,9 +244,9 @@ describe('ScRichTextDirective', () => {
       vi.useRealTimers();
     });
 
-    it('suppresses prefetch when the per-field input is false, even though the global default is eager', () => {
+    it("suppresses prefetch when the per-field input is 'off', even though the global default is eager", () => {
       const fixture = createFixture();
-      fixture.componentRef.setInput('prefetchMode', false);
+      fixture.componentRef.setInput('prefetchMode', 'off');
       const prefetchSpy = vi
         .spyOn(TestBed.inject(ClientPreLoaderDataService), 'prefetchForUrl')
         .mockImplementation(() => undefined);
@@ -261,11 +261,11 @@ describe('ScRichTextDirective', () => {
       expect(prefetchSpy).not.toHaveBeenCalled();
     });
 
-    it('suppresses prefetch by default when angular.linkPrefetch.mode is false in config', () => {
+    it("suppresses prefetch by default when angular.linkPrefetch.mode is 'off' in config", () => {
       const fixture = createFixture([
         {
           provide: SITECORE_CONFIG_TOKEN,
-          useValue: { angular: { linkPrefetch: { mode: false, delayMs: 100 } } },
+          useValue: { angular: { linkPrefetch: { mode: 'off', delayMs: 100 } } },
         },
       ]);
       const prefetchSpy = vi
@@ -286,7 +286,7 @@ describe('ScRichTextDirective', () => {
       const fixture = createFixture([
         {
           provide: SITECORE_CONFIG_TOKEN,
-          useValue: { angular: { linkPrefetch: { mode: false, delayMs: 100 } } },
+          useValue: { angular: { linkPrefetch: { mode: 'off', delayMs: 100 } } },
         },
       ]);
       fixture.componentRef.setInput('prefetchMode', 'hover');
@@ -308,10 +308,10 @@ describe('ScRichTextDirective', () => {
       const fixture = createFixture([
         {
           provide: SITECORE_CONFIG_TOKEN,
-          useValue: { angular: { linkPrefetch: { mode: false, delayMs: 100 } } },
+          useValue: { angular: { linkPrefetch: { mode: 'off', delayMs: 100 } } },
         },
       ]);
-      fixture.componentRef.setInput('prefetchMode', true);
+      fixture.componentRef.setInput('prefetchMode', 'eager');
       const prefetchSpy = vi
         .spyOn(TestBed.inject(ClientPreLoaderDataService), 'prefetchForUrl')
         .mockImplementation(() => undefined);

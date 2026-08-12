@@ -5,6 +5,6 @@
 Add loader prefetch for `scRouterLink`/`scRichText` links, so route data is already loaded by the time a user navigates.
 
 Controlled per-link via each directive's `prefetch` input, or globally via `sitecore.config`'s `angular.linkPrefetch`:
-- `true` (default) — prefetch eagerly, as soon as the link renders.
+- `'eager'` (default) — prefetch as soon as the link renders.
 - `'hover'` — defer prefetching until the pointer dwells on the link for `angular.linkPrefetch.delayMs` (default 100ms).
-- `false` — never prefetch.
+- `'off'` — never prefetch.

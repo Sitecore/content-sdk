@@ -4,13 +4,13 @@ import type { ExpressRequest, ExpressResponse } from './http-types';
 
 /**
  * Link-prefetch strategy for `scRouterLink`/`scRichText` links:
- * - `true` (default) — prefetch eagerly, as soon as the link renders.
+ * - `'eager'` (default) — prefetch as soon as the link renders.
  * - `'hover'` — prefetch only once the pointer dwells on the link (see `delayMs`); starts
  *   disabled and is enabled the moment the user shows intent.
- * - `false` — never prefetch.
+ * - `'off'` — never prefetch.
  * @public
  */
-export type LinkPrefetchMode = boolean | 'hover';
+export type LinkPrefetchMode = 'eager' | 'hover' | 'off';
 /**
  * Reads `process.env` when running under Node; otherwise returns an empty object.
  * @returns {Record<string, string | undefined>} Environment map for merging into config.
@@ -49,7 +49,7 @@ export interface AngularSitecoreConfigInput extends Omit<SitecoreConfigInput, 'm
     };
     /**
      * Configuration for loader prefetch on `scRouterLink`/`scRichText` links. Both fields
-     * default when omitted (`mode: true`, `delayMs: 100`). Can be overridden per-link via
+     * default when omitted (`mode: 'eager'`, `delayMs: 100`). Can be overridden per-link via
      * each directive's `prefetch` input.
      */
     linkPrefetch?: {
@@ -81,10 +81,10 @@ export type AngularSitecoreConfig = DeepRequired<AngularSitecoreConfigInput>;
 const DEFAULT_ISR_CACHE = { enabled: true, revalidate: 300 } as const;
 
 /**
- * Defaults applied to `angular.linkPrefetch` when input omits fields. `mode: true` prefetches
- * eagerly on render unless a consumer opts into `'hover'` or disables it with `false`.
+ * Defaults applied to `angular.linkPrefetch` when input omits fields. `mode: 'eager'` prefetches
+ * on render unless a consumer opts into `'hover'` or disables it with `'off'`.
  */
-const DEFAULT_LINK_PREFETCH = { mode: true, delayMs: 100 } as const;
+const DEFAULT_LINK_PREFETCH = { mode: 'eager', delayMs: 100 } as const;
 
 /**
  * Ensures `defaultLanguage` is present in the locales list (prepended when missing) and

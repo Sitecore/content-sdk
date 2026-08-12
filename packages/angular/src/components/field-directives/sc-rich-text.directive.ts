@@ -21,7 +21,7 @@ import { MetadataKind } from '@sitecore-content-sdk/content/editing';
 import type { LinkPrefetchMode } from '../../config/define-config';
 
 /** Ultimate fallback when no `SITECORE_CONFIG_TOKEN` is provided. Mirrors `DEFAULT_LINK_PREFETCH` in `config/define-config.ts`. */
-const FALLBACK_PREFETCH_MODE: LinkPrefetchMode = true;
+const FALLBACK_PREFETCH_MODE: LinkPrefetchMode = 'eager';
 const FALLBACK_PREFETCH_DELAY_MS = 100;
 
 /**
@@ -35,8 +35,8 @@ const FALLBACK_PREFETCH_DELAY_MS = 100;
  *
  * Internal links (browser only) prefetch the loaders that apply to them via
  * {@link ClientPreLoaderDataService.prefetchForUrl}, per `sitecore.config`'s
- * `angular.linkPrefetch.mode` (default `true` — eager; `'hover'` defers until the pointer
- * dwells on the link; `false` disables it). Override per field with `scRichTextPrefetch`.
+ * `angular.linkPrefetch.mode` (default `'eager'`; `'hover'` defers until the pointer
+ * dwells on the link; `'off'` disables it). Override per field with `scRichTextPrefetch`.
  * @public
  */
 @Directive({
@@ -121,8 +121,8 @@ export class ScRichTextDirective extends BaseFieldDirective<TextField | undefine
    * isn't in editing or preview mode (checked here directly rather than relied on from
    * {@link hookLinks}'s own editing-only gate, so this method's preconditions are self
    * contained). External/`target="_blank"`/empty hrefs are already filtered out by
-   * {@link hookLinks} before this is called. `'hover'` attaches a debounced listener; `true`
-   * prefetches immediately; `false` does nothing.
+   * {@link hookLinks} before this is called. `'hover'` attaches a debounced listener; `'eager'`
+   * prefetches immediately; `'off'` does nothing.
    * @param {HTMLAnchorElement} anchor - Anchor element to observe/prefetch.
    * @param {string} href - The anchor's already-validated internal href.
    */
@@ -131,7 +131,7 @@ export class ScRichTextDirective extends BaseFieldDirective<TextField | undefine
     if (this.isEditing() || this.isPreview()) return;
 
     const mode = this.prefetch() ?? this.linkPrefetchConfig?.mode ?? FALLBACK_PREFETCH_MODE;
-    if (mode === false) return;
+    if (mode === 'off') return;
 
     if (mode === 'hover') {
       const delayMs = this.linkPrefetchConfig?.delayMs ?? FALLBACK_PREFETCH_DELAY_MS;
@@ -143,7 +143,7 @@ export class ScRichTextDirective extends BaseFieldDirective<TextField | undefine
       return;
     }
 
-    // mode === true: eager
+    // mode === 'eager'
     this.preLoaderData.prefetchForUrl(href);
   }
 
