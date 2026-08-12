@@ -27,7 +27,7 @@ export const generateSites = ({ destinationPath }: { destinationPath?: string } 
 export type AngularCsdkCliConfig = Omit<SitecoreCliConfigInput, 'config' | 'build'> & {
   config: AngularSitecoreConfig;
   build?: {
-    commands?: Array<(args?: { scConfig: AngularSitecoreConfig }) => Promise<void>>;
+    commands?: Array<(args: { scConfig: AngularSitecoreConfig }) => Promise<void>>;
   };
 };
 

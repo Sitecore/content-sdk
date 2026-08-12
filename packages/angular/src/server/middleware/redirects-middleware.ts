@@ -8,7 +8,6 @@ import {
   resolveRedirectTarget,
   RedirectResult,
   RedirectsService,
-  RedirectsServiceConfig,
   REDIRECT_TYPE_301,
   REDIRECT_TYPE_302,
   REDIRECT_TYPE_SERVER_TRANSFER,
@@ -16,7 +15,6 @@ import {
   SiteInfo,
   SiteResolver,
 } from '@sitecore-content-sdk/content/site';
-import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
 import {
   BaseMiddlewareOptions,
@@ -31,16 +29,17 @@ import { splitLocaleFromPath } from '../../i18n/locale-utils';
 import { isEditingPreview } from '../utils';
 import type { LoaderApiResponse, LoaderPayload } from '../../loaders/models';
 import debug from '../../debug';
+import { AngularSitecoreConfig } from '../../config';
 
 /**
  * Configuration for the redirects middleware.
  * @public
  */
 export type RedirectsMiddlewareOptions = BaseMiddlewareOptions &
-  Omit<RedirectsServiceConfig, 'fetch' | 'clientFactory'> &
-  Partial<SitecoreConfig['api']['edge']> &
-  Partial<NonNullable<SitecoreConfig['api']['local']>> &
-  SitecoreConfig['redirects'] & {
+  Partial<AngularSitecoreConfig['api']['edge']> &
+  Partial<AngularSitecoreConfig['api']['local']> &
+  AngularSitecoreConfig['redirects'] &
+  Pick<AngularSitecoreConfig['angular'], 'locales'> & {
     /** Fallback language when the request path has no locale prefix. Default is `'en'`. */
     defaultLanguage?: string;
     /** Fallback site name when not resolved by the multisite middleware or site cookie. */
@@ -75,7 +74,7 @@ const serializeQuery = (query: Record<string, string | string[] | undefined>): s
 };
 
 /**
- * Builds the redirects service from the middleware options, mirroring the Next.js proxy:
+ * Builds the redirects service from the middleware options:
  * uses an injected service when provided, otherwise requires Edge (contextId/clientContextId) or
  * local (apiHost/apiKey) API config. Returns `null` (disabling the middleware) when neither is set.
  * @param {RedirectsMiddlewareOptions} options - Middleware options.
@@ -381,6 +380,7 @@ function dispatchRedirect(
       }
       // Internal rewrite: render the target route without changing the browser URL.
       if (isDataRequest) {
+        // for _data requests, rewrite URL in payload, so loader-data-service resolves the new target route's data
         setLoaderRequestUrl(req, target);
       } else {
         const [pathname] = target.split('?');
