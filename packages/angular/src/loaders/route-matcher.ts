@@ -19,6 +19,24 @@ export interface MatchedRouteSegment {
 }
 
 /**
+ * True when `url` is an absolute or protocol-relative URL rather than an app-internal path:
+ * it carries a scheme (`https:`, `mailto:`, `tel:`, `javascript:`, …) or starts with `//`
+ * (protocol-relative). Such URLs point off-app or are handled directly by the browser, so
+ * there is no in-app route to resolve loaders for.
+ *
+ * The `scRouterLink`/`scRichText` directives already skip these via `EXTERNAL_HREF_PREFIXES`
+ * before calling {@link ClientPreLoaderDataService.prefetchForUrl}; this is the service-level
+ * backstop for direct callers
+ * @param {string} url - Candidate navigation URL (e.g. an anchor's `href`).
+ * @returns {boolean} `true` for absolute/protocol-relative URLs, `false` for app-internal paths.
+ * @internal
+ */
+export function isAbsoluteUrl(url: string): boolean {
+  // `scheme:` (RFC 3986 scheme chars) or a leading `//` (protocol-relative).
+  return /^[a-z][a-z0-9+.-]*:/i.test(url) || url.startsWith('//');
+}
+
+/**
  * Matches a `Route` against the given segments the same way Angular's own recognizer does:
  * a custom `route.matcher` when present, otherwise `defaultUrlMatcher` (static segments,
  * `:param` segments, `**`). Routes we cannot safely evaluate without side effects

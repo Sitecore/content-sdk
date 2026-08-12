@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect } from 'vitest';
 import type { CanMatchFn, Routes, UrlMatcher, UrlSegment } from '@angular/router';
-import { matchRouteChain } from './route-matcher';
+import { isAbsoluteUrl, matchRouteChain } from './route-matcher';
 
 function segments(path: string): UrlSegment[] {
   const parts = path.split('/').filter(Boolean);
@@ -207,5 +207,36 @@ describe('matchRouteChain', () => {
 
   it('returns null for an empty route config', () => {
     expect(matchRouteChain([], segments('/anything'))).toBeNull();
+  });
+});
+
+describe('isAbsoluteUrl', () => {
+  it.each([
+    'http://example.com',
+    'https://example.com/about',
+    'HTTPS://EXAMPLE.COM', // scheme match is case-insensitive
+    '//example.com/about', // protocol-relative
+    'mailto:hi@example.com',
+    'tel:+123456789',
+    'sms:+123456789',
+    'javascript:void(0)',
+    'data:text/plain,hello',
+    'ftp://host/file',
+    'custom-scheme1.0+x:payload', // any RFC 3986 scheme
+  ])('is true for absolute/protocol-relative URL %s', (url) => {
+    expect(isAbsoluteUrl(url)).toBe(true);
+  });
+
+  it.each([
+    '/about', // app-internal absolute path
+    '/section/33/page',
+    'about', // relative path
+    'page/123',
+    '#fragment', // same-page fragment
+    '?q=search', // query-only
+    '', // empty href
+    '/', // home
+  ])('is false for app-internal path %s', (url) => {
+    expect(isAbsoluteUrl(url)).toBe(false);
   });
 });

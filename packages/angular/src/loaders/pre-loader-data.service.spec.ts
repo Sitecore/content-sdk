@@ -340,6 +340,29 @@ describe('ClientPreLoaderDataService', () => {
       expect(loaderDataPrefetchSpy).not.toHaveBeenCalled();
     });
 
+    it.each([
+      'https://external.example.com/about',
+      'http://external.example.com/about',
+      '//external.example.com/about',
+      'mailto:hi@example.com',
+      'tel:+123456789',
+      'javascript:void(0)',
+    ])('no-ops for absolute/external URL %s (no in-app route to prefetch)', (url) => {
+      const routes: Routes = [
+        { path: 'about', component: TestComponent, resolve: { page: makeResolverWithLoaderId('page') } },
+      ];
+      configureWithRoutes(routes);
+      const service = TestBed.inject(ClientPreLoaderDataService);
+      const router = TestBed.inject(Router);
+      const parseUrlSpy = vi.spyOn(router, 'parseUrl');
+
+      service.prefetchForUrl(url);
+
+      expect(loaderDataPrefetchSpy).not.toHaveBeenCalled();
+      // Skipped before parsing — a scheme like `mailto:` must not be mis-parsed as a path.
+      expect(parseUrlSpy).not.toHaveBeenCalled();
+    });
+
     it('does not throw and no-ops when Router.parseUrl throws (e.g. malformed percent-encoding)', () => {
       const routes: Routes = [
         { path: 'about', component: TestComponent, resolve: { page: makeResolverWithLoaderId('page') } },

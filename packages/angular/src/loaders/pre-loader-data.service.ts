@@ -13,7 +13,7 @@ import {
 } from '@angular/router';
 import { ClientLoaderDataService } from './client-loader-data.service';
 import { collectLoaderIds, mergeRouteParams } from './route-loader-utils';
-import { matchRouteChain } from './route-matcher';
+import { isAbsoluteUrl, matchRouteChain } from './route-matcher';
 import { SITECORE_CONFIG_TOKEN } from '../lib/tokens';
 
 /**
@@ -120,9 +120,11 @@ export class ClientPreLoaderDataService {
    * merges params across parent + child levels the same way live navigation does, and kicks
    * off one prefetch per `LOADER_ID`-tagged resolver found across that chain.
    *
-   * No-ops on server, or when no route matches `url`, or when the matched chain has no loaders.
-   * Intended as the entry point for hover/eager link prefetch (see the `scRouterLink`/`scRichText`
-   * directives); does not itself gate on an enable/disable flag — callers decide when to invoke it.
+   * No-ops on server, for absolute/external URLs (`https:`, `mailto:`, `//host`, … — there is no
+   * in-app route to prefetch), when no route matches `url`, or when the matched chain has no
+   * loaders. Intended as the entry point for hover/eager link prefetch (see the
+   * `scRouterLink`/`scRichText` directives); does not itself gate on an enable/disable flag —
+   * callers decide when to invoke it.
    *
    * `url` is author-controlled in practice (a Sitecore link/rich-text field), so parsing is
    * wrapped defensively: `Router.parseUrl` can throw (e.g. `URIError` on malformed
@@ -136,6 +138,12 @@ export class ClientPreLoaderDataService {
    */
   prefetchForUrl(url: string, options?: { force?: boolean }): void {
     if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    // Absolute/external URLs (external site, mailto:, tel:, protocol-relative, …) never map to an
+    // in-app route — skip before parsing so a scheme like `mailto:` isn't mis-parsed as a path.
+    if (isAbsoluteUrl(url)) {
       return;
     }
 
