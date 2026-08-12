@@ -94,8 +94,7 @@
     "@sitecore-content-sdk/core": "^1.6.0",
     "@sitecore-content-sdk/react": "^1.6.0",
     "recast": "^0.23.11",
-    "regex-parser": "^2.3.1",
-    "sync-disk-cache": "^2.1.0"
+    "regex-parser": "^2.3.1"
   },
   "exports": {
     ".": {
