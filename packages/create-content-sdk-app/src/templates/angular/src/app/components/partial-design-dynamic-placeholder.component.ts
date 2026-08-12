@@ -2,7 +2,7 @@ import { Component, computed, input } from '@angular/core';
 import { ComponentRendering, ScPlaceholderComponent } from '@sitecore-content-sdk/angular';
 
 /**
- * Parity with kit-nextjs-skate-park PartialDesignDynamicPlaceholder:
+ * Partial design dynamic placeholder:
  * renders a single placeholder whose name comes from rendering.params.sig.
  */
 @Component({

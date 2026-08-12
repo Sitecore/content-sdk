@@ -16,7 +16,6 @@ import debug from '../debug';
  * @public
  */
 export function applyRedirect(router: Router, location: string): RedirectCommand | void {
-  // TODO: implement server-side redirect with custom status code when implementing SXA redirects proxy
   const isExternal = /^https?:\/\//i.test(location);
   if (isExternal) {
     if (typeof window !== 'undefined') {
@@ -24,6 +23,7 @@ export function applyRedirect(router: Router, location: string): RedirectCommand
     }
     return;
   }
+  // Angular redirect logic doesn't allow for 301/302 status codes, we use RedirectCommand always on browser nav
   return new RedirectCommand(router.parseUrl(location), {});
 }
 

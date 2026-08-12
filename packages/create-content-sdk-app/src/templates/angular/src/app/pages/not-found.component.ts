@@ -7,7 +7,7 @@ import { LayoutComponent } from '../shared/layout.component';
 
 /**
  * 404 page. Uses the Sitecore not-found page when the loader returns layout data;
- * otherwise shows a static fallback (aligned with kit-nextjs not-found behavior).
+ * otherwise shows a static fallback.
  */
 @Component({
   selector: 'app-404',
