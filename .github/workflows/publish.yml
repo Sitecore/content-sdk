@@ -86,14 +86,35 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
 
+      - name: NPM tags and version
+        id: npm-tags
+        env:
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: |
+          if [[ "$BRANCH_NAME" == release/* ]]; then
+            BRANCH_END="${BRANCH_NAME#release/}"
+            if [[ "$BRANCH_END" == 1.x.x ]]; then
+              RELEASE="NextJS v1.x hotfix"
+              NPM_TAG="ver1"
+            else
+              RELEASE="legacy version hotfix"
+              NPM_TAG="legacy"
+            fi
+          else
+            NPM_TAG="latest"
+            RELEASE="latest release"
+          fi
+          echo "release_text=$RELEASE" >> "$GITHUB_OUTPUT"
+          echo "npm_tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
+
       - name: Prepare and Process Changesets Release
         id: changesets
         uses: changesets/action@v1
         with:
           version: yarn csdk:prep-release
-          publish: yarn changeset:publish --tag latest
+          publish: yarn changeset:publish --tag ${{ steps.npm-tags.outputs.npm_tag }}
           commit: '[release][ci] Version bump and changelog'
-          title: ${{ github.ref_name == 'dev' && '[csdk] latest release' || format('[csdk] patch release - {0}', github.ref_name) }}
+          title: ${{ format('[csdk] {0}', steps.npm-tags.outputs.release_text) }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
