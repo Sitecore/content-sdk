@@ -156,9 +156,13 @@ function _getComponentList(
     );
   }, []);
 
-  return includeVariants
-    ? components
-    : components.filter((component) => !component.componentName.includes('.'));
+  if (includeVariants) return components;
+
+  const componentSet = new Set(components.map((c) => c.componentName));
+  return components.filter((component) => {
+    const dot = component.componentName.lastIndexOf('.');
+    return dot === -1 || !componentSet.has(component.componentName.slice(0, dot));
+  });
 }
 
 /**
