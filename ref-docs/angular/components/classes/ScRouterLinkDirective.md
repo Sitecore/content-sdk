@@ -6,19 +6,21 @@
 
 # Class: ScRouterLinkDirective
 
-Defined in: [packages/angular/src/components/field-directives/sc-router-link.directive.ts:24](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/sc-router-link.directive.ts#L24)
+Defined in: [packages/angular/src/components/field-directives/sc-router-link.directive.ts:35](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/sc-router-link.directive.ts#L35)
 
 Structural directive that renders a Sitecore link field onto a consumer-supplied `<a>` and
 routes in-app navigation through `Router.navigateByUrl`. Clicks are left to the browser
 when `href` is missing/empty, when `target="_blank"`, or when the href uses an external
 scheme (http(s), mailto, tel, sms, javascript, data, ftp, protocol-relative `//`).
 
-Editing chrome + empty-field placeholder behavior is inherited from [ScLinkDirective](ScLinkDirective.md).
+Internal links (browser only) prefetch the loaders that apply to them via
+[ClientPreLoaderDataService.prefetchForUrl](../../loaders/classes/ClientPreLoaderDataService.md#prefetchforurl), per `sitecore.config`'s
+`angular.linkPrefetch.mode` (default `'eager'`; `'hover'` defers until the pointer dwells
+on the link; `'off'` disables it). Override per link with `scRouterLinkPrefetch` - pass it
+via the structural microsyntax (`*scRouterLink="fields.Link; prefetch: 'off'"`), since a
+separate `[scRouterLinkPrefetch]` binding would target the inner `<a>`, not this directive.
 
-Usage:
-```html
-<a *scRouterLink="fields.Link">Optional child content</a>
-```
+Editing chrome + empty-field placeholder behavior is inherited from [ScLinkDirective](ScLinkDirective.md).
 
 ## Extends
 
@@ -30,7 +32,7 @@ Usage:
 
 > **new ScRouterLinkDirective**(): `ScRouterLinkDirective`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:64](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/base-field.directive.ts#L64)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:64](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/base-field.directive.ts#L64)
 
 #### Returns
 
@@ -46,7 +48,7 @@ Defined in: [packages/angular/src/components/field-directives/base-field.directi
 
 > `protected` `readonly` **context**: [`SitecoreContextService`](../../lib/classes/SitecoreContextService.md) \| `null`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:52](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/base-field.directive.ts#L52)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:52](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/base-field.directive.ts#L52)
 
 #### Inherited from
 
@@ -58,7 +60,7 @@ Defined in: [packages/angular/src/components/field-directives/base-field.directi
 
 > `protected` `readonly` **defaultEmptyComponent**: `Type`\<`unknown`\> = `DefaultEmptyFieldEditingComponent`
 
-Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:71](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/sc-link.directive.ts#L71)
+Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:71](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/sc-link.directive.ts#L71)
 
 Default component rendered when the field is empty in editing mode and no template is supplied.
 
@@ -72,7 +74,7 @@ Default component rendered when the field is empty in editing mode and no templa
 
 > `readonly` **emptyFieldEditingTemplate**: `InputSignal`\<`TemplateRef`\<`unknown`\> \| `undefined`\>
 
-Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:67](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/sc-link.directive.ts#L67)
+Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:67](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/sc-link.directive.ts#L67)
 
 Consumer-supplied template rendered between chrome markers when the field is empty in editing mode.
 
@@ -86,7 +88,7 @@ Consumer-supplied template rendered between chrome markers when the field is emp
 
 > `readonly` **field**: `InputSignal`\<`LinkField` \| `LinkFieldValue` \| `undefined`\>
 
-Defined in: [packages/angular/src/components/field-directives/sc-router-link.directive.ts:26](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/sc-router-link.directive.ts#L26)
+Defined in: [packages/angular/src/components/field-directives/sc-router-link.directive.ts:37](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/sc-router-link.directive.ts#L37)
 
 Sitecore link field; aliases the base [ScLinkDirective.field](ScLinkDirective.md#field) input to `scRouterLink`.
 
@@ -100,7 +102,7 @@ Sitecore link field; aliases the base [ScLinkDirective.field](ScLinkDirective.md
 
 > `readonly` **preferTextFromField**: `InputSignal`\<`boolean`\>
 
-Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:65](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/sc-link.directive.ts#L65)
+Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:65](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/sc-link.directive.ts#L65)
 
 Whether to override existing anchor text with the field's text value.
 
@@ -110,11 +112,21 @@ Whether to override existing anchor text with the field's text value.
 
 ***
 
+### prefetch
+
+> `readonly` **prefetch**: `InputSignal`\<[`LinkPrefetchMode`](../../config/type-aliases/LinkPrefetchMode.md) \| `undefined`\>
+
+Defined in: [packages/angular/src/components/field-directives/sc-router-link.directive.ts:41](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/sc-router-link.directive.ts#L41)
+
+Per-link override for loader prefetch. See [LinkPrefetchMode](../../config/type-aliases/LinkPrefetchMode.md). Falls back to `angular.linkPrefetch.mode` when unset.
+
+***
+
 ### renderer
 
 > `protected` `readonly` **renderer**: `Renderer2`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:51](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/base-field.directive.ts#L51)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:51](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/base-field.directive.ts#L51)
 
 #### Inherited from
 
@@ -126,7 +138,7 @@ Defined in: [packages/angular/src/components/field-directives/base-field.directi
 
 > `protected` `readonly` **sitecoreContext**: [`SitecoreContextService`](../../lib/classes/SitecoreContextService.md)
 
-Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:72](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/sc-link.directive.ts#L72)
+Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:72](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/sc-link.directive.ts#L72)
 
 #### Inherited from
 
@@ -138,7 +150,7 @@ Defined in: [packages/angular/src/components/field-directives/sc-link.directive.
 
 > `protected` `readonly` **templateRef**: `TemplateRef`\<`any`\>
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:50](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/base-field.directive.ts#L50)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:50](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/base-field.directive.ts#L50)
 
 #### Inherited from
 
@@ -150,7 +162,7 @@ Defined in: [packages/angular/src/components/field-directives/base-field.directi
 
 > `protected` `readonly` **viewContainer**: `ViewContainerRef`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:49](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/base-field.directive.ts#L49)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:49](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/base-field.directive.ts#L49)
 
 #### Inherited from
 
@@ -162,7 +174,7 @@ Defined in: [packages/angular/src/components/field-directives/base-field.directi
 
 > `protected` `optional` **viewRef?**: `EmbeddedViewRef`\<`unknown`\>
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:55](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/base-field.directive.ts#L55)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:55](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/base-field.directive.ts#L55)
 
 Embedded view created by the latest successful render; cleared on each tick.
 
@@ -178,7 +190,7 @@ Embedded view created by the latest successful render; cleared on each tick.
 
 > **get** `protected` **fieldMetadata**(): `Record`\<`string`, `unknown`\> \| `undefined`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:94](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/base-field.directive.ts#L94)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:99](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/base-field.directive.ts#L99)
 
 Field metadata payload, when present.
 
@@ -196,7 +208,7 @@ Field metadata payload, when present.
 
 > `protected` **applyValue**(): `void`
 
-Defined in: [packages/angular/src/components/field-directives/sc-router-link.directive.ts:33](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/sc-router-link.directive.ts#L33)
+Defined in: [packages/angular/src/components/field-directives/sc-router-link.directive.ts:52](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/sc-router-link.directive.ts#L52)
 
 #### Returns
 
@@ -212,7 +224,7 @@ Defined in: [packages/angular/src/components/field-directives/sc-router-link.dir
 
 > `protected` **isEditing**(): `boolean`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:89](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/base-field.directive.ts#L89)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:89](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/base-field.directive.ts#L89)
 
 Whether the host page is in editing mode. Falls back to `false` when no context is provided.
 
@@ -226,11 +238,29 @@ Whether the host page is in editing mode. Falls back to `false` when no context 
 
 ***
 
+### isPreview()
+
+> `protected` **isPreview**(): `boolean`
+
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:94](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/base-field.directive.ts#L94)
+
+Whether the host page is in preview mode. Falls back to `false` when no context is provided.
+
+#### Returns
+
+`boolean`
+
+#### Inherited from
+
+[`ScLinkDirective`](ScLinkDirective.md).[`isPreview`](ScLinkDirective.md#ispreview)
+
+***
+
 ### renderEditingChrome()
 
 > `protected` **renderEditingChrome**(`kind`): `void`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:123](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/base-field.directive.ts#L123)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:128](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/base-field.directive.ts#L128)
 
 Inserts a single chrome marker into the structural slot when both editing mode is active
 and the field carries metadata. No-ops otherwise.
@@ -255,7 +285,7 @@ and the field carries metadata. No-ops otherwise.
 
 > `protected` **renderEmpty**(): `void`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:104](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/base-field.directive.ts#L104)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:109](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/base-field.directive.ts#L109)
 
 Renders the empty-field state. In editing mode with field metadata, wraps either the
 consumer's `emptyFieldEditingTemplate` or [defaultEmptyComponent](#defaultemptycomponent) in chrome markers
@@ -276,7 +306,7 @@ nothing.
 
 > `protected` **shouldRender**(): `boolean`
 
-Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:92](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/sc-link.directive.ts#L92)
+Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:92](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/sc-link.directive.ts#L92)
 
 Returns true when the field has a real value to render. Subclasses can override to add
 field-specific rules (e.g. `ScLinkDirective` preserves authored text + href).
@@ -295,7 +325,7 @@ field-specific rules (e.g. `ScLinkDirective` preserves authored text + href).
 
 > `protected` **updateView**(): `void`
 
-Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:77](https://github.com/Sitecore/content-sdk/blob/08b5216f27c90a395a5ac8aa21cca1fd107676c6/packages/angular/src/components/field-directives/sc-link.directive.ts#L77)
+Defined in: [packages/angular/src/components/field-directives/sc-link.directive.ts:77](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/components/field-directives/sc-link.directive.ts#L77)
 
 Renders the structural slot based on the current field value and editing state.
 Subclasses compose `shouldRender → renderEmpty | (renderOpen → createEmbeddedView →
