@@ -11,6 +11,7 @@ import {
 import { LOADER_ID } from './loader-registry.token';
 import { ClientLoaderDataService } from './client-loader-data.service';
 import { extractRequestData, applyRedirect } from './utils';
+import { mergeRouteParams } from './route-loader-utils';
 import { EDITING_PARAMS_HEADER } from '../editing/constants';
 import {
   DEFAULT_ERROR_ROUTE,
@@ -60,11 +61,10 @@ export type LoaderId = keyof LoaderIdMap extends never ? string : keyof LoaderId
  * @returns {Params} Merged params with a guaranteed `locale` when `defaultLanguage` is set.
  */
 function buildLoaderParams(route: ActivatedRouteSnapshot, defaultLanguage: string): Params {
-  const merged = route.pathFromRoot.reduce((acc, r) => ({ ...acc, ...r.params }), {} as Params);
-  if (!merged.locale && defaultLanguage) {
-    merged.locale = defaultLanguage;
-  }
-  return merged;
+  return mergeRouteParams(
+    route.pathFromRoot.map((r) => r.params),
+    defaultLanguage
+  );
 }
 
 /**

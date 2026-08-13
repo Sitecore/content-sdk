@@ -1,8 +1,17 @@
-import { Directive, inject, input } from '@angular/core';
+import { Directive, inject, input, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import type { LinkField, LinkFieldValue } from '@sitecore-content-sdk/content/layout';
 import { ScLinkDirective } from './sc-link.directive';
 import { EXTERNAL_HREF_PREFIXES } from './utils';
+import { attachHoverPrefetch } from './link-hover-prefetch';
+import { ClientPreLoaderDataService } from '../../loaders/pre-loader-data.service';
+import { SITECORE_CONFIG_TOKEN } from '../../lib/tokens';
+import type { LinkPrefetchMode } from '../../config/define-config';
+
+/** Ultimate fallback when no `SITECORE_CONFIG_TOKEN` is provided. Mirrors `DEFAULT_LINK_PREFETCH` in `config/define-config.ts`. */
+const FALLBACK_PREFETCH_MODE: LinkPrefetchMode = 'eager';
+const FALLBACK_PREFETCH_DELAY_MS = 100;
 
 /**
  * Structural directive that renders a Sitecore link field onto a consumer-supplied `<a>` and
@@ -10,12 +19,14 @@ import { EXTERNAL_HREF_PREFIXES } from './utils';
  * when `href` is missing/empty, when `target="_blank"`, or when the href uses an external
  * scheme (http(s), mailto, tel, sms, javascript, data, ftp, protocol-relative `//`).
  *
- * Editing chrome + empty-field placeholder behavior is inherited from {@link ScLinkDirective}.
+ * Internal links (browser only) prefetch the loaders that apply to them via
+ * {@link ClientPreLoaderDataService.prefetchForUrl}, per `sitecore.config`'s
+ * `angular.linkPrefetch.mode` (default `'eager'`; `'hover'` defers until the pointer dwells
+ * on the link; `'off'` disables it). Override per link with `scRouterLinkPrefetch` - pass it
+ * via the structural microsyntax (`*scRouterLink="fields.Link; prefetch: 'off'"`), since a
+ * separate `[scRouterLinkPrefetch]` binding would target the inner `<a>`, not this directive.
  *
- * Usage:
- * ```html
- * <a *scRouterLink="fields.Link">Optional child content</a>
- * ```
+ * Editing chrome + empty-field placeholder behavior is inherited from {@link ScLinkDirective}.
  * @public
  */
 @Directive({
@@ -26,8 +37,16 @@ export class ScRouterLinkDirective extends ScLinkDirective {
   override readonly field = input.required<LinkField | LinkFieldValue | undefined>({
     alias: 'scRouterLink',
   });
+  /** Per-link override for loader prefetch. See {@link LinkPrefetchMode}. Falls back to `angular.linkPrefetch.mode` when unset. */
+  readonly prefetch = input<LinkPrefetchMode | undefined>(undefined, {
+    alias: 'scRouterLinkPrefetch',
+  });
 
   private readonly router = inject(Router);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly preLoaderData = inject(ClientPreLoaderDataService);
+  private readonly linkPrefetchConfig = inject(SITECORE_CONFIG_TOKEN, { optional: true })?.angular
+    ?.linkPrefetch;
   private readonly unlisteners: (() => void)[] = [];
 
   protected override applyValue(): void {
@@ -40,12 +59,45 @@ export class ScRouterLinkDirective extends ScLinkDirective {
         this.onClick(event, node)
       );
       this.unlisteners.push(unlisten);
+      this.applyPrefetch(node);
     }
   }
 
   private disposeListeners(): void {
     for (const u of this.unlisteners) u();
     this.unlisteners.length = 0;
+  }
+
+  /**
+   * Applies the resolved prefetch mode to `anchor` when running in the browser, the page isn't
+   * in editing/preview mode, and the href isn't one the browser handles directly (external,
+   * `target="_blank"`, empty). `'hover'` attaches a debounced listener; `'eager'` prefetches
+   * immediately; `'off'` does nothing.
+   * @param {HTMLAnchorElement} anchor - Anchor element to observe/prefetch.
+   */
+  private applyPrefetch(anchor: HTMLAnchorElement): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    if (this.sitecoreContext.isEditing() || this.sitecoreContext.isPreview()) return;
+
+    const hrefAttr = anchor.getAttribute('href')?.trim() ?? '';
+    const targetAttr = anchor.getAttribute('target');
+    if (this.shouldDeferNavigation(hrefAttr, targetAttr)) return;
+
+    const mode = this.prefetch() ?? this.linkPrefetchConfig?.mode ?? FALLBACK_PREFETCH_MODE;
+    if (mode === 'off') return;
+
+    if (mode === 'hover') {
+      const delayMs = this.linkPrefetchConfig?.delayMs ?? FALLBACK_PREFETCH_DELAY_MS;
+      const unlisten = attachHoverPrefetch(this.renderer, anchor, {
+        delayMs,
+        onPrefetch: (href) => this.preLoaderData.prefetchForUrl(href, { force: true }),
+      });
+      this.unlisteners.push(unlisten);
+      return;
+    }
+
+    // mode === 'eager'
+    this.preLoaderData.prefetchForUrl(hrefAttr);
   }
 
   /**
