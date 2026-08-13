@@ -90,14 +90,6 @@ function matchRoute(
  * mirroring Angular Router's own matching semantics using only public Router primitives
  * (`defaultUrlMatcher`, custom `route.matcher`s). Used to determine, from a raw href, which
  * loader-bearing routes apply without triggering an actual navigation.
- *
- * Known v1 limitations (routes are skipped rather than matched incorrectly):
- * - `redirectTo` routes are not followed.
- * - `canMatch`-gated routes are skipped without invoking the guard (prefetching data behind
- *   an unevaluated auth check would be unsafe).
- * - Named/auxiliary outlets are not supported.
- * - Routes with `loadChildren` and no static `children` are treated as a matching boundary;
- *   matching stops there rather than dynamically importing the lazy module.
  * @param {Routes} routes - Route config to match against (e.g. `Router.config`).
  * @param {UrlSegment[]} segments - URL segments to match (e.g. from `Router.parseUrl(url)`).
  * @returns {MatchedRouteSegment[] | null} Root-to-leaf matched route chain, or `null` when no route matches.

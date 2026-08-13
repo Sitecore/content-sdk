@@ -21,25 +21,12 @@ const FALLBACK_PREFETCH_DELAY_MS = 100;
  *
  * Internal links (browser only) prefetch the loaders that apply to them via
  * {@link ClientPreLoaderDataService.prefetchForUrl}, per `sitecore.config`'s
- * `angular.linkPrefetch.mode` (default `'eager'`):
- * - `'eager'` (default) — prefetch as soon as the link renders.
- * - `'hover'` — prefetch once the pointer dwells on the link for `angular.linkPrefetch.delayMs`.
- * - `'off'` — never prefetch.
- *
- * Override per link with `scRouterLinkPrefetch`.
+ * `angular.linkPrefetch.mode` (default `'eager'`; `'hover'` defers until the pointer dwells
+ * on the link; `'off'` disables it). Override per link with `scRouterLinkPrefetch` - pass it
+ * via the structural microsyntax (`*scRouterLink="fields.Link; prefetch: 'off'"`), since a
+ * separate `[scRouterLinkPrefetch]` binding would target the inner `<a>`, not this directive.
  *
  * Editing chrome + empty-field placeholder behavior is inherited from {@link ScLinkDirective}.
- *
- * Usage:
- * ```html
- * <a *scRouterLink="fields.Link">Optional child content</a>
- * <!-- scRouterLinkPrefetch is another input of *this same* structural directive, so
- *      overrides must use the microsyntax key:value form (not a separate
- *      [scRouterLinkPrefetch] binding, which would bind to the inner <a> — where this
- *      directive isn't present after structural desugaring). -->
- * <a *scRouterLink="fields.Link; prefetch: 'eager'">Prefetch eagerly on render</a>
- * <a *scRouterLink="fields.Link; prefetch: 'off'">Never prefetch this link</a>
- * ```
  * @public
  */
 @Directive({

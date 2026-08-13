@@ -78,14 +78,9 @@ export class ClientPreLoaderDataService {
   }
 
   /**
-   * Shared functionality of {@link prefetchForRoute} and {@link prefetchForUrl}: walks an ordered
-   * (root → leaf) list of matched route levels and, for every `LOADER_ID`-tagged resolver
-   * found, kicks off one {@link ClientLoaderDataService.prefetch} call.
-   *
-   * Params are merged per level (root..that level), so a loader on a parent route never sees
-   * params contributed only by a deeper child route — mirroring how a live navigation scopes
-   * each resolver's `ActivatedRouteSnapshot.pathFromRoot`. `locale` falls back to the config's
-   * `defaultLanguage` when no level captured one.
+   * Shared by {@link prefetchForRoute} and {@link prefetchForUrl}: prefetches every
+   * `LOADER_ID`-tagged resolver across an ordered (root → leaf) list of matched route levels.
+   * Params are merged per level, so a parent-route loader never sees a child's params.
    * @param {{ resolve: Route['resolve']; params: Params }[]} levels - Matched route levels, root to leaf.
    * @param {string} url - Navigation URL forwarded to each prefetch payload.
    * @param {Record<string, string | string[]>} query - Query params forwarded to each prefetch payload.
@@ -114,27 +109,15 @@ export class ClientPreLoaderDataService {
   }
 
   /**
-   * Resolves the loaders that would apply to `url` — without navigating — and prefetches each
-   * via {@link ClientLoaderDataService.prefetch}. Walks the app's route config
-   * (`Router.config`) with {@link matchRouteChain} to find the matched route chain for `url`,
-   * merges params across parent + child levels the same way live navigation does, and kicks
-   * off one prefetch per `LOADER_ID`-tagged resolver found across that chain.
+   * Resolves the loaders that apply to `url` - without navigating - via {@link matchRouteChain}
+   * against `Router.config`, then prefetches each one, same as {@link prefetchForRoute} does
+   * for a live navigation. Entry point for hover/eager link prefetch; doesn't gate on an enable/disable flag itself - callers decide when to call it.
    *
-   * No-ops on server, for absolute/external URLs (`https:`, `mailto:`, `//host`, … — there is no
-   * in-app route to prefetch), when no route matches `url`, or when the matched chain has no
-   * loaders. Intended as the entry point for hover/eager link prefetch (see the
-   * `scRouterLink`/`scRichText` directives); does not itself gate on an enable/disable flag —
-   * callers decide when to invoke it.
-   *
-   * `url` is author-controlled in practice (a Sitecore link/rich-text field), so parsing is
-   * wrapped defensively: `Router.parseUrl` can throw (e.g. `URIError` on malformed
-   * percent-encoding like a stray `%`). The eager-mode caller invokes this synchronously,
-   * inline, while looping over every link on the page — an unhandled throw for one bad href
-   * would abort that loop and leave later links without their click handlers attached, so a
-   * bad href here must degrade to a no-op, not propagate.
+   * No-ops on server, for absolute/external URLs, when `url` matches no route, or when the
+   * matched chain has no loaders.
    * @param {string} url - Candidate navigation URL (e.g. an anchor's `href`).
    * @param {object} [options] - Prefetch options
-   * @param {boolean} [options.force] - Forwarded to {@link ClientLoaderDataService.prefetch} — bypass the staged-response check. Hover callers pass `true` (every hover re-asks); eager callers omit it (dedupes permanently once staged).
+   * @param {boolean} [options.force] - Forwarded to {@link ClientLoaderDataService.prefetch}; hover callers pass `true`, eager callers omit it.
    */
   prefetchForUrl(url: string, options?: { force?: boolean }): void {
     if (!isPlatformBrowser(this.platformId)) {
