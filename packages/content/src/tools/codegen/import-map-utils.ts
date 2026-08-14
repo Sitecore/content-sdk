@@ -1,11 +1,9 @@
-import { ImportEntry } from '@sitecore-content-sdk/content/codegen';
+import { ImportEntry } from '../../editing/codegen';
 
 /**
  * Combines the default import entries with the generated import entries.
- * Generated entries take precedence; default entries are merged in only when the module
- * (or a specific named export within a shared module) is not already present.
- * @param {ImportEntry[]} defaultImportEntries - The framework/built-in import entries.
- * @param {ImportEntry[]} generatedImportEntries - The import entries produced from app components.
+ * @param {ImportEntry[]} defaultImportEntries - The default import entries.
+ * @param {ImportEntry[]} generatedImportEntries - The generated import entries.
  * @returns {ImportEntry[]} The combined import entries.
  * @public
  */
