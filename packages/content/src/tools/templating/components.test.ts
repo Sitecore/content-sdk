@@ -245,6 +245,53 @@ describe('components', () => {
       ]);
     });
 
+    it('should strip a variant when the non-variant component is at the same path', () => {
+      const stubbedPaths = [
+        'src/components/Hero.tsx',
+        'src/components/Hero.variant.tsx',
+      ];
+      const globSyncStub = sandbox.stub(require('glob'), 'sync').returns(stubbedPaths);
+
+      const result = getComponentList(['src/components/*.tsx'], ['**/*.test.*'], false);
+      expect(result).to.deep.equal([
+        {
+          importPath: 'src/components/Hero',
+          filePath: 'src/components/Hero.tsx',
+          componentName: 'Hero',
+          moduleName: 'Hero',
+        },
+      ]);
+
+      globSyncStub.restore();
+    });
+
+    it('should keep a variant-named component when the non-variant is at a different path', () => {
+      const stubbedPaths = [
+        'src/features/Hero.tsx',
+        'src/widgets/Hero.variant.tsx',
+      ];
+      const globSyncStub = sandbox.stub(require('glob'), 'sync').returns(stubbedPaths);
+
+      const result = getComponentList(['src/**/*.tsx'], ['**/*.test.*'], false);
+      expect(result).to.deep.equal([
+        {
+          importPath: 'src/features/Hero',
+          filePath: 'src/features/Hero.tsx',
+          componentName: 'Hero',
+          moduleName: 'Hero',
+        },
+        // kept: shares Hero's base name but lives at a different path, so it is not a variant
+        {
+          importPath: 'src/widgets/Hero.variant',
+          filePath: 'src/widgets/Hero.variant.tsx',
+          componentName: 'Hero.variant',
+          moduleName: 'Herovariant',
+        },
+      ]);
+
+      globSyncStub.restore();
+    });
+
     it('should return filtered results when "exclude" contains an exact path', () => {
       const exclude = ['src/test-data/components/Foo.jsx'];
       getComponentList(['src/test-data/components/*.tsx'], exclude);

@@ -157,11 +157,23 @@ function _getComponentList(
   }, []);
 
   if (includeVariants) return components;
-
-  const componentSet = new Set(components.map((c) => c.componentName));
+  // keep track of component names and paths
+  const componentPathRecord = {} as Record<string, Set<string>>;
+  components.forEach((component) => {
+    if (componentPathRecord[component.componentName])
+      componentPathRecord[component.componentName].add(component.importPath);
+    else componentPathRecord[component.componentName] = new Set([component.importPath]);
+  });
   return components.filter((component) => {
     const dot = component.componentName.lastIndexOf('.');
-    return dot === -1 || !componentSet.has(component.componentName.slice(0, dot));
+    if (dot === -1) return true;
+    const nonVariant = component.componentName.substring(0, dot);
+    return !(
+      componentPathRecord[nonVariant] &&
+      componentPathRecord[nonVariant].has(
+        component.importPath.substring(0, component.importPath.lastIndexOf('.'))
+      )
+    );
   });
 }
 
