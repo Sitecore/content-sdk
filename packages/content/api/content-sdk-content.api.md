@@ -1519,6 +1519,7 @@ export const writeImportMap: (args: WriteImportMapArgsInternal) => (input: {
 export type WriteImportMapArgs = {
     paths: string[];
     exclude?: string[];
+    includeVariants?: boolean;
 };
 
 // @internal
