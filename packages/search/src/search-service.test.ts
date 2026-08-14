@@ -709,4 +709,298 @@ describe('SearchService', () => {
       expect(searchResponse.results).to.deep.equal([]);
     });
   });
+
+  describe('suggest', () => {
+    it('should send a suggest request with the keyphrase', async () => {
+      const querySuggestions = [
+        { text: 'running sho', queryPlusText: 'running shoes' },
+        { text: 'running sho', queryPlusText: 'running shorts' },
+      ];
+      const previewResults = [
+        { sc_item_id: 'doc-1', title: 'Running Shoes' },
+        { sc_item_id: 'doc-2', title: 'Trail Shoes' },
+      ];
+
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: {
+          'x-sitecore-contextid': contextId,
+        },
+      })
+        .post(`/v1/search/suggest`, {
+          config: {
+            id: searchIndexId,
+          },
+          query: {
+            keyphrase: 'running sho',
+          },
+        })
+        .reply(200, {
+          querySuggestions,
+          previewResults,
+        });
+
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      const suggestResponse = await searchService.suggest({
+        searchIndexId,
+        keyphrase: 'running sho',
+      });
+
+      expect(suggestResponse.querySuggestions).to.deep.equal(querySuggestions);
+      expect(suggestResponse.previewResults).to.deep.equal(previewResults);
+    });
+
+    it('should send a suggest request with custom edge url', async () => {
+      const customEdgeUrl = 'https://custom-edge-url.com';
+
+      nock(customEdgeUrl, {
+        reqheaders: {
+          'x-sitecore-contextid': contextId,
+        },
+      })
+        .post(`/v1/search/suggest`, {
+          config: {
+            id: searchIndexId,
+          },
+          query: {
+            keyphrase: 'test',
+          },
+        })
+        .reply(200, {
+          querySuggestions: [],
+          previewResults: [],
+        });
+
+      const searchService = new SearchService({
+        contextId,
+        edgeUrl: customEdgeUrl,
+      });
+
+      const suggestResponse = await searchService.suggest({
+        searchIndexId,
+        keyphrase: 'test',
+      });
+
+      expect(suggestResponse.querySuggestions).to.deep.equal([]);
+      expect(suggestResponse.previewResults).to.deep.equal([]);
+    });
+
+    it('should trim keyphrase before sending the request', async () => {
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: {
+          'x-sitecore-contextid': contextId,
+        },
+      })
+        .post(`/v1/search/suggest`, {
+          config: {
+            id: searchIndexId,
+          },
+          query: {
+            keyphrase: 'shoes',
+          },
+        })
+        .reply(200, {
+          querySuggestions: [{ text: 'shoes', queryPlusText: 'shoes' }],
+          previewResults: [],
+        });
+
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      const suggestResponse = await searchService.suggest({
+        searchIndexId,
+        keyphrase: '  shoes  ',
+      });
+
+      expect(suggestResponse.querySuggestions).to.deep.equal([
+        { text: 'shoes', queryPlusText: 'shoes' },
+      ]);
+    });
+
+    it('should send a suggest request with locale when provided', async () => {
+      const locale = 'fr-FR';
+
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: {
+          'x-sitecore-contextid': contextId,
+        },
+      })
+        .post(`/v1/search/suggest`, {
+          config: {
+            id: searchIndexId,
+          },
+          query: {
+            keyphrase: 'test',
+          },
+          locale,
+        })
+        .reply(200, {
+          querySuggestions: [],
+          previewResults: [{ id: 1 }],
+        });
+
+      const searchService = new SearchService({ contextId });
+
+      const suggestResponse = await searchService.suggest({
+        searchIndexId,
+        keyphrase: 'test',
+        locale,
+      });
+
+      expect(suggestResponse.previewResults).to.deep.equal([{ id: 1 }]);
+    });
+
+    it('should not include locale in the suggest request when not provided', async () => {
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: {
+          'x-sitecore-contextid': contextId,
+        },
+      })
+        .post(`/v1/search/suggest`, {
+          config: {
+            id: searchIndexId,
+          },
+          query: {
+            keyphrase: 'test',
+          },
+        })
+        .reply(200, {
+          querySuggestions: [],
+          previewResults: [],
+        });
+
+      const searchService = new SearchService({ contextId });
+
+      const suggestResponse = await searchService.suggest({
+        searchIndexId,
+        keyphrase: 'test',
+      });
+
+      expect(suggestResponse.querySuggestions).to.deep.equal([]);
+      expect(suggestResponse.previewResults).to.deep.equal([]);
+    });
+
+    it('should default missing suggest arrays to empty arrays', async () => {
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: {
+          'x-sitecore-contextid': contextId,
+        },
+      })
+        .post(`/v1/search/suggest`, {
+          config: {
+            id: searchIndexId,
+          },
+          query: {
+            keyphrase: 'test',
+          },
+        })
+        .reply(200, {});
+
+      const searchService = new SearchService({ contextId });
+
+      const suggestResponse = await searchService.suggest({
+        searchIndexId,
+        keyphrase: 'test',
+      });
+
+      expect(suggestResponse.querySuggestions).to.deep.equal([]);
+      expect(suggestResponse.previewResults).to.deep.equal([]);
+    });
+
+    it('should throw an error if the suggest request fails', async () => {
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: {
+          'x-sitecore-contextid': contextId,
+        },
+      })
+        .post(`/v1/search/suggest`, {
+          config: {
+            id: searchIndexId,
+          },
+          query: {
+            keyphrase: 'test',
+          },
+        })
+        .reply(500, { message: 'Internal server error' });
+
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      try {
+        await searchService.suggest({
+          searchIndexId,
+          keyphrase: 'test',
+        });
+      } catch (error) {
+        expect((error as NativeDataFetcherError).name).to.equal('Error');
+        expect((error as NativeDataFetcherError).message).to.equal('HTTP 500 Internal Server Error');
+        expect((error as NativeDataFetcherError).stack).to.be.a('string');
+        expect((error as NativeDataFetcherError).response).to.deep.equal({
+          status: 500,
+          statusText: 'Internal Server Error',
+          headers: {
+            'content-type': 'application/json',
+          },
+          data: { message: 'Internal server error' },
+        });
+      }
+    });
+
+    describe('validation', () => {
+      it('should throw an error if search index ID is not provided', async () => {
+        const searchService = new SearchService({
+          contextId,
+        });
+
+        try {
+          await searchService.suggest({
+            searchIndexId: '',
+            keyphrase: 'test',
+          });
+        } catch (error) {
+          expect(error)
+            .to.be.an.instanceOf(TypeError)
+            .and.to.have.property('message', 'Search index ID is required');
+        }
+      });
+
+      it('should throw an error if keyphrase is empty', async () => {
+        const searchService = new SearchService({
+          contextId,
+        });
+
+        try {
+          await searchService.suggest({
+            searchIndexId,
+            keyphrase: '',
+          });
+        } catch (error) {
+          expect(error)
+            .to.be.an.instanceOf(TypeError)
+            .and.to.have.property('message', 'Keyphrase is required');
+        }
+      });
+
+      it('should throw an error if keyphrase is whitespace only', async () => {
+        const searchService = new SearchService({
+          contextId,
+        });
+
+        try {
+          await searchService.suggest({
+            searchIndexId,
+            keyphrase: '   ',
+          });
+        } catch (error) {
+          expect(error)
+            .to.be.an.instanceOf(TypeError)
+            .and.to.have.property('message', 'Keyphrase is required');
+        }
+      });
+    });
+  });
 });

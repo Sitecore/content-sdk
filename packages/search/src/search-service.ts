@@ -1,7 +1,13 @@
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { getClientId } from '@sitecore-content-sdk/analytics-core';
-import { SearchDocument, PathsToStringProps, FacetRequest, FacetResult } from './models';
+import {
+  SearchDocument,
+  PathsToStringProps,
+  FacetRequest,
+  FacetResult,
+  QuerySuggestionItem,
+} from './models';
 import { debug } from './debug';
 
 /**
@@ -114,6 +120,57 @@ export interface SearchParameters<T extends SearchDocument = SearchDocument> {
 export type SearchServiceFetchOptions = Omit<RequestInit, 'method' | 'body' | 'mode'>;
 
 /**
+ * A set of request parameters for the Suggest Service.
+ * @public
+ */
+export interface SuggestParameters {
+  /**
+   * The ID of the search index to use.
+   */
+  searchIndexId: string;
+  /**
+   * Partial text used for typeahead suggestions. Must be a non-empty string.
+   */
+  keyphrase: string;
+  /**
+   * The locale to use for the suggest request. Required for multi-locale index configurations.
+   * Format: letters and hyphens only (e.g. 'en', 'fr-FR', 'el-GR').
+   * Omit for single-locale indexes.
+   */
+  locale?: string;
+}
+
+/**
+ * Response from the Suggest API.
+ * @internal
+ */
+interface SuggestAPIResponse<T extends SearchDocument = SearchDocument> {
+  /**
+   * Autocomplete completions from query suggestion mode.
+   */
+  querySuggestions: QuerySuggestionItem[];
+  /**
+   * Document previews from preview results mode.
+   */
+  previewResults: T[];
+}
+
+/**
+ * Response from the Suggest Service.
+ * @public
+ */
+export interface SuggestResponse<T extends SearchDocument = SearchDocument> {
+  /**
+   * Autocomplete completions from query suggestion mode.
+   */
+  querySuggestions: QuerySuggestionItem[];
+  /**
+   * Document previews from preview results mode.
+   */
+  previewResults: T[];
+}
+
+/**
  * Service that fetches search results from Sitecore.
  * @public
  */
@@ -202,6 +259,57 @@ export class SearchService {
     };
   }
 
+  /**
+   * Retrieve typeahead suggestions for a keyphrase.
+   * @param {SuggestParameters} params - The suggest parameters.
+   * @param {SearchServiceFetchOptions} [fetchOptions] - The fetch options.
+   * @returns {Promise<SuggestResponse<T>>} The suggest response.
+   * @throws {NativeDataFetcherError} if the request fails.
+   * @throws {TypeError} If search index ID is not provided.
+   * @throws {TypeError} If keyphrase is not provided or is empty.
+   */
+  async suggest<T extends SearchDocument = SearchDocument>(
+    params: SuggestParameters,
+    fetchOptions?: SearchServiceFetchOptions
+  ): Promise<SuggestResponse<T>> {
+    const { searchIndexId, keyphrase, locale } = params;
+    const trimmedKeyphrase = typeof keyphrase === 'string' ? keyphrase.trim() : '';
+
+    this.validateSuggestParameters({
+      searchIndexId,
+      keyphrase: trimmedKeyphrase,
+    });
+
+    const url = new URL('/v1/search/suggest', this.config.edgeUrl);
+
+    const options = {
+      ...fetchOptions,
+      headers: {
+        ...fetchOptions?.headers,
+        'x-sitecore-contextid': this.config.contextId,
+      },
+    };
+
+    const { data } = await this.fetcher.post<SuggestAPIResponse<T>>(
+      url.toString(),
+      {
+        config: {
+          id: searchIndexId,
+        },
+        query: {
+          keyphrase: trimmedKeyphrase,
+        },
+        ...(locale !== undefined && { locale }),
+      },
+      options
+    );
+
+    return {
+      querySuggestions: data.querySuggestions || [],
+      previewResults: data.previewResults || [],
+    };
+  }
+
   private validateParameters<T extends SearchDocument = SearchDocument>(
     params: SearchParameters<T>
   ) {
@@ -225,6 +333,18 @@ export class SearchService {
 
     if (sort && !Array.isArray(sort) && typeof sort !== 'object') {
       throw new TypeError('Sort must be an array or an object');
+    }
+  }
+
+  private validateSuggestParameters(params: SuggestParameters) {
+    const { searchIndexId, keyphrase } = params;
+
+    if (!searchIndexId) {
+      throw new TypeError('Search index ID is required');
+    }
+
+    if (!keyphrase) {
+      throw new TypeError('Keyphrase is required');
     }
   }
 }

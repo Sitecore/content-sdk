@@ -96,6 +96,21 @@ export type SearchDocument = {
 };
 
 /**
+ * A single autocomplete completion from query suggestion mode.
+ * @public
+ */
+export interface QuerySuggestionItem {
+  /**
+   * Completed term from autocomplete.
+   */
+  text: string;
+  /**
+   * Full query with the completion applied.
+   */
+  queryPlusText: string;
+}
+
+/**
  * Utility type to extract all possible dot-notation paths from a nested object type.
  * @internal
  */

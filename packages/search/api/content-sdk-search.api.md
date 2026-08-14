@@ -44,6 +44,12 @@ export interface FacetValue {
 }
 
 // @public
+export interface QuerySuggestionItem {
+    queryPlusText: string;
+    text: string;
+}
+
+// @public
 export type SearchDocument = {
     [key: string]: PrimitiveType | PrimitiveType[] | SearchDocument | SearchDocument[];
 };
@@ -70,6 +76,7 @@ export interface SearchResponse<T extends SearchDocument = SearchDocument> {
 export class SearchService {
     constructor(config: SearchServiceConfig);
     search<T extends SearchDocument = SearchDocument>(params: SearchParameters<T>, fetchOptions?: SearchServiceFetchOptions): Promise<SearchResponse<T>>;
+    suggest<T extends SearchDocument = SearchDocument>(params: SuggestParameters, fetchOptions?: SearchServiceFetchOptions): Promise<SuggestResponse<T>>;
 }
 
 // @public
@@ -87,10 +94,23 @@ export type SortSetting<T extends SearchDocument = SearchDocument> = {
     order: 'asc' | 'desc';
 };
 
+// @public
+export interface SuggestParameters {
+    keyphrase: string;
+    locale?: string;
+    searchIndexId: string;
+}
+
+// @public
+export interface SuggestResponse<T extends SearchDocument = SearchDocument> {
+    previewResults: T[];
+    querySuggestions: QuerySuggestionItem[];
+}
+
 // Warnings were encountered during analysis:
 //
 // src/models.ts:95:3 - (ae-forgotten-export) The symbol "PrimitiveType" needs to be exported by the entry point index.d.ts
-// src/search-service.ts:12:3 - (ae-forgotten-export) The symbol "PathsToStringProps" needs to be exported by the entry point index.d.ts
+// src/search-service.ts:18:3 - (ae-forgotten-export) The symbol "PathsToStringProps" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
