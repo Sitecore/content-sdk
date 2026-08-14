@@ -3,6 +3,7 @@ import {
   FetchOptions,
   Page,
   PageOptions,
+  PreviewOptions,
   SitecoreClient,
   SitecoreClientInit,
 } from '@sitecore-content-sdk/content/client';
@@ -108,11 +109,20 @@ export class SitecoreNextjsClient extends SitecoreClient {
 
   /**
    * Retrieves preview page and layout details
+   *
+   * Pass the route currently being rendered via `previewOptions.path` so that client side
+   * navigation within an active preview session resolves the destination item, instead of
+   * re-rendering the item the session was opened on.
    * @param {PreviewData} previewData - The editing preview data for metadata mode.
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
+   * @param {PreviewOptions} [previewOptions] The route currently being rendered
    */
-  async getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null> {
-    return super.getPreview(previewData as EditingPreviewData, fetchOptions);
+  async getPreview(
+    previewData: PreviewData,
+    fetchOptions?: FetchOptions,
+    previewOptions?: PreviewOptions
+  ): Promise<Page | null> {
+    return super.getPreview(previewData as EditingPreviewData, fetchOptions, previewOptions);
   }
 
   /**

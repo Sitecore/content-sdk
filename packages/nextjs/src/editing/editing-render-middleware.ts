@@ -25,7 +25,11 @@ import {
   PREVIEW_COOKIES,
 } from './utils';
 import type { AllowedQueryParams } from './types';
-import { EDITING_PARAMS_HEADER } from './constants';
+import {
+  EDITING_PARAMS_HEADER,
+  EDITING_RENDER_PREVIEW_MAX_AGE,
+  PREVIEW_SESSION_MAX_AGE,
+} from './constants';
 
 /**
  * Configuration for the Editing Render Middleware.
@@ -50,6 +54,40 @@ export type EditingRenderMiddlewareConfig = {
    * - Function: receives the request's query parameter names and returns the list of allowed parameters.
    */
   allowedQueryParams?: AllowedQueryParams;
+  /**
+   * Sitecore Preview session support.
+   *
+   * Disabled by default, because it requires a matching change in the app: the page must pass the
+   * route currently being rendered to `client.getPreview(...)`. Enabling the session without that
+   * change makes every navigation re-render the page the session started on.
+   *
+   * Only applies to Preview mode. Editing and Design Library renders always use a short-lived
+   * handoff, since they only need the cookies for the single internal render request.
+   */
+  previewSession?: PreviewSessionConfig;
+};
+
+/**
+ * Configuration for the Sitecore Preview session.
+ * @public
+ */
+export type PreviewSessionConfig = {
+  /**
+   * Whether the preview session outlives the initial render, so the author can navigate between
+   * pages without losing the preview context.
+   *
+   * Requires the page to pass the current route to `client.getPreview(previewData, fetchOptions, { path })`.
+   * @default false
+   */
+  enabled?: boolean;
+  /**
+   * Lifetime of the session in seconds. Ignored when `enabled` is false.
+   *
+   * This is a security parameter as much as a convenience one: it is the window in which a stolen
+   * preview cookie can read unpublished content.
+   * @default 3600
+   */
+  maxAge?: number;
 };
 
 /**
@@ -164,18 +202,36 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       });
     }
 
+    const isPreviewMode = mode === LayoutServicePageState.Preview;
+    // Opt-in: enabling the session without a page that passes the current route to getPreview()
+    // would make every navigation re-render the page the session started on.
+    const isPreviewSession = isPreviewMode && (this.config?.previewSession?.enabled ?? false);
+
     const previewDataParams = mapEditingParams(query as { [key: string]: string });
+
+    // The entry route only means something to a session that outlives its first render. Leaving it
+    // out otherwise keeps the preview data byte-identical to the pre-session behaviour, and keeps
+    // the "page was not updated" warning in getPreview() from firing on apps that never opted in.
+    if (!isPreviewSession) {
+      delete previewDataParams.route;
+    }
+
     const previewData = {
       ...previewDataParams,
       ...allowedQueryParams,
     };
 
+    // With the session enabled the Next.js preview cookies back the whole authoring session rather
+    // than a single render: they keep client side navigation out of the static cache and carry the
+    // session scoped preview parameters with every subsequent request.
     res.setPreviewData(previewData, {
-      maxAge: 3,
+      maxAge: isPreviewSession
+        ? this.config?.previewSession?.maxAge ?? PREVIEW_SESSION_MAX_AGE
+        : EDITING_RENDER_PREVIEW_MAX_AGE,
     });
 
     // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
-    if (mode === LayoutServicePageState.Preview) {
+    if (isPreviewMode) {
       const cookies = res.getHeader('Set-Cookie') as string[];
       const previewCookies = getPreviewCookies(query.sc_site);
 
@@ -213,8 +269,10 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
         this.dataFetcher
       );
 
-      // remove preview cookies to not leak them to the browser
-      if (cookies && Array.isArray(cookies)) {
+      // With the session enabled the cookies are the session, so they have to reach the browser for
+      // navigation to stay in preview. Otherwise the render is a one-off handoff and the cookies
+      // are removed so they don't leak.
+      if (!isPreviewSession && cookies && Array.isArray(cookies)) {
         const filteredCookies = cleanupNextPreviewCookies(cookies);
         filteredCookies && res.setHeader('Set-Cookie', filteredCookies);
       }

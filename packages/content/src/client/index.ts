@@ -15,6 +15,8 @@ export {
   SitecoreClient,
   Page,
   PageOptions,
+  PreviewOptions,
+  PreviewItem,
   SitemapXmlOptions,
   PageMode,
   ErrorPage,

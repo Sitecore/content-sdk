@@ -2,6 +2,7 @@ export { EditingService } from '@sitecore-content-sdk/content/editing';
 export {
   EditingRenderMiddleware,
   EditingRenderMiddlewareConfig,
+  PreviewSessionConfig,
 } from './editing-render-middleware';
 export {
   PREVIEW_COOKIES,

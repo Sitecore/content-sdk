@@ -138,6 +138,7 @@ import { PlaceholderComponentProps } from '@sitecore-content-sdk/react';
 import { PlaceholderData } from '@sitecore-content-sdk/content/layout';
 import { PlaceholdersData } from '@sitecore-content-sdk/content/layout';
 import { PreviewData } from 'next';
+import { PreviewOptions } from '@sitecore-content-sdk/content/client';
 import { default as React_2 } from 'react';
 import { ReactContentSdkComponent } from '@sitecore-content-sdk/react';
 import { ReactNode } from 'react';
@@ -471,6 +472,7 @@ export type EditingRenderMiddlewareConfig = {
     resolvePageUrl?: (itemPath: string) => string;
     sitecoreInternalEditingHostUrl?: string;
     allowedQueryParams?: AllowedQueryParams;
+    previewSession?: PreviewSessionConfig;
 };
 
 export { EditingScripts }
@@ -855,6 +857,12 @@ export type PreviewProxyConfig = {
 };
 
 // @public
+export type PreviewSessionConfig = {
+    enabled?: boolean;
+    maxAge?: number;
+};
+
+// @public
 export type ProxiesContext = Map<string, ProxiesContextMapValue>;
 
 // @public
@@ -998,7 +1006,7 @@ export class SitecoreClient extends SitecoreClient_2 {
     // (undocumented)
     getPage(path: string | string[], pageOptions: PageOptions, options?: FetchOptions): Promise<Page | null>;
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
-    getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null>;
+    getPreview(previewData: PreviewData, fetchOptions?: FetchOptions, previewOptions?: PreviewOptions): Promise<Page | null>;
     getPreviewData(headers: Headers): PreviewData;
     getSiteNameFromPath(path: string | string[]): string;
     // Warning: (ae-forgotten-export) The symbol "SitecoreNextjsClientInit" needs to be exported by the entry point api-surface.d.ts

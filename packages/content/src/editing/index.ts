@@ -1,5 +1,16 @@
 export { EditingService, EditingOptions, EditingServiceConfig } from './editing-service';
 export {
+  PreviewRouteService,
+  PreviewRouteOptions,
+  previewRouteQuery,
+} from './preview-route-service';
+export {
+  buildPreviewHeaders,
+  PreviewHeaderOptions,
+  PREVIEW_SESSION_PARAMS,
+  PREVIEW_ROUTE_PARAMS,
+} from './preview-headers';
+export {
   DEFAULT_PLACEHOLDER_UID,
   PagesEditor,
   isEditorActive,

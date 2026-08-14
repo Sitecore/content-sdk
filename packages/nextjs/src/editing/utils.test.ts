@@ -190,6 +190,35 @@ describe('editing/utils', () => {
       });
     });
 
+    it('should record the route the preview session was opened on', () => {
+      const query = {
+        mode: 'preview',
+        route: '/styleguide',
+        sc_site: 'test-site',
+        sc_itemid: 'item-123',
+        sc_lang: 'en',
+      };
+
+      const params = mapEditingParams(query);
+
+      expect(params.route).to.equal('/styleguide');
+    });
+
+    it('should not record a route for design library params', () => {
+      const query = {
+        mode: DesignLibraryMode.Normal,
+        route: '/styleguide',
+        sc_itemid: 'item-123',
+        sc_uid: 'component-uid',
+        sc_lang: 'en',
+        sc_site: 'test-site',
+      };
+
+      const params = mapEditingParams(query);
+
+      expect(params).to.not.have.property('route');
+    });
+
     it('should use default variant when no variant is specified', () => {
       const query = {
         mode: 'edit',

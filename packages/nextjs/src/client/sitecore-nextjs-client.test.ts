@@ -365,6 +365,17 @@ describe('SitecoreClient', () => {
       expect(forwardedPreview).to.equal(previewData);
       expect(forwardedFetchOptions).to.be.undefined;
     });
+
+    it('should forward the current path so navigation resolves the right item', async () => {
+      const previewOptions = { path: ['about', 'team'] };
+
+      await sitecoreClient.getPreview(previewData, undefined, previewOptions);
+
+      expect(basePreviewStub).to.have.been.calledOnce;
+
+      const [, , forwardedPreviewOptions] = basePreviewStub.firstCall.args;
+      expect(forwardedPreviewOptions).to.equal(previewOptions);
+    });
   });
 
   describe('getDesignLibraryData', () => {

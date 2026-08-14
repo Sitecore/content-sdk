@@ -1,5 +1,6 @@
 import { SitecoreConfig } from '../config';
 import { EditingService } from '../editing/editing-service';
+import { PreviewRouteService } from '../editing/preview-route-service';
 import { ComponentLayoutService } from '../editing/component-layout-service';
 import { DictionaryService } from '../i18n/dictionary-service';
 import { LayoutService } from '../layout/layout-service';
@@ -14,6 +15,7 @@ export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' 
     layoutService?: LayoutService;
     dictionaryService?: DictionaryService;
     editingService?: EditingService;
+    previewRouteService?: PreviewRouteService;
     errorPagesService?: ErrorPagesService;
     componentService?: ComponentLayoutService;
     sitePathService?: SitePathService;

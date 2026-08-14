@@ -89,8 +89,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (context.preview && isDesignLibraryPreviewData(context.previewData)) {
     page = await client.getDesignLibraryData(context.previewData);
   } else {
+    // A preview session outlives the render it was opened with, so the author can navigate
+    // between pages. Passing the current path lets the client resolve the item being rendered
+    // instead of re-rendering the one the session started on.
     page = context.preview
-      ? await client.getPreview(context.previewData)
+      ? await client.getPreview(context.previewData, undefined, { path })
       : await client.getPage(path, { locale: context.locale });
   }
   if (page) {

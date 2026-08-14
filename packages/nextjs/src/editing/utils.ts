@@ -73,6 +73,10 @@ export const mapEditingParams = (query: {
         mode: query.mode,
         layoutKind: query.sc_layoutKind,
         ...(query.sc_previewTime && { previewTime: query.sc_previewTime }),
+        // Recorded so that a later render can tell whether it is still on the route the
+        // preview session was opened on. `itemId`, `version` and `variantId` describe this
+        // route only and are re-resolved once the author navigates elsewhere.
+        ...(query.route && { route: query.route }),
       };
   return params;
 };

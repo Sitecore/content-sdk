@@ -23,6 +23,13 @@ export const config = {
 };
 
 // Wire up the EditingRenderMiddleware handler
-const handler = new EditingRenderMiddleware().getHandler();
+const handler = new EditingRenderMiddleware({
+  // Keeps Sitecore Preview alive while the author navigates between pages, instead of ending it
+  // after the first render. Requires the page to pass the route being rendered to
+  // `client.getPreview(...)` - see `src/pages/[[...path]].tsx`.
+  previewSession: {
+    enabled: true,
+  },
+}).getHandler();
 
 export default handler;

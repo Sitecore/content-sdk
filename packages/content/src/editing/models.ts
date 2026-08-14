@@ -73,6 +73,12 @@ export type EditingPreviewData = {
   version?: string;
   layoutKind?: LayoutKind;
   previewTime?: string;
+  /**
+   * The route the preview session was opened on. `itemId`, `version` and `variantId` describe
+   * this route only. When a later request renders a different route, they are re-resolved
+   * rather than reused.
+   */
+  route?: string;
 };
 
 /**

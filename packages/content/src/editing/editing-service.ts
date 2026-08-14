@@ -6,7 +6,7 @@ import {
 import debug from '../debug';
 import { LayoutServiceData, LayoutServicePageState } from '../layout';
 import { LayoutKind } from './models';
-import { DEFAULT_VARIANT } from '../personalize';
+import { buildPreviewHeaders } from './preview-headers';
 
 /**
  * GraphQL query for fetching editing data.
@@ -102,9 +102,6 @@ export class EditingService {
       throw new RangeError('The language must be a non-empty string');
     }
 
-    const editModeHeader = mode === 'edit' ? 'true' : 'false';
-    const previewModeHeader = mode === 'preview' ? 'true' : 'false';
-
     const editingData = await this.graphQLClient.request<GraphQLEditingQueryResponse>(
       query,
       {
@@ -116,12 +113,7 @@ export class EditingService {
         ...fetchOptions,
         headers: {
           ...fetchOptions?.headers,
-          sc_layoutKind: layoutKind,
-          sc_editMode: editModeHeader,
-          sc_previewMode: previewModeHeader,
-          sc_variant: variantId === DEFAULT_VARIANT ? 'default' : variantId,
-          ...(site && { sc_site: site }),
-          ...(previewTime && { sc_previewTime: previewTime }),
+          ...buildPreviewHeaders({ mode, layoutKind, variantId, site, previewTime }),
         },
       }
     );

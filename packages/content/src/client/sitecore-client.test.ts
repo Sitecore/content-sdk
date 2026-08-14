@@ -65,6 +65,10 @@ describe('SitecoreClient', () => {
     fetchSiteRoutes: sandbox.stub(),
   };
 
+  let previewRouteServiceStub = {
+    resolveItemId: sandbox.stub(),
+  };
+
   let sitemapXmlServiceStub: any;
 
   afterEach(() => {
@@ -93,6 +97,10 @@ describe('SitecoreClient', () => {
       fetchSiteRoutes: sandbox.stub(),
     };
 
+    previewRouteServiceStub = {
+      resolveItemId: sandbox.stub(),
+    };
+
     sitemapXmlServiceStub = {
       getSitemap: sandbox.stub(),
       fetchSitemaps: sandbox.stub(),
@@ -107,6 +115,7 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).editingService = editingServiceStub;
     (sitecoreClient as any).componentService = restComponentServiceStub;
     (sitecoreClient as any).sitePathService = sitePathServiceStub;
+    (sitecoreClient as any).previewRouteService = previewRouteServiceStub;
     (sitecoreClient as any).sitemapXmlService = sitemapXmlServiceStub;
   });
 
@@ -960,6 +969,144 @@ describe('SitecoreClient', () => {
           previewTime: previewData.previewTime,
         })
       ).to.be.true;
+    });
+
+    describe('navigation within a preview session', () => {
+      const sessionPreviewData = {
+        site: 'default-site',
+        itemId: 'entry-item-id',
+        mode: LayoutServicePageState.Preview,
+        language: 'en',
+        version: '2',
+        variantId: 'variant1',
+        layoutKind: LayoutKind.Final,
+        previewTime: '2026-08-20T14:00:00Z',
+        route: '/home',
+      };
+
+      const editingData = {
+        layoutData: {
+          sitecore: {
+            route: { name: 'about', placeholders: {} },
+            context: { site: { name: 'default-site' } },
+          },
+        },
+      };
+
+      beforeEach(() => {
+        editingServiceStub.fetchEditingData.resolves(editingData);
+      });
+
+      it('should reuse the item captured by Pages when rendering the route the session was opened on', async () => {
+        const result = await sitecoreClient.getPreview(sessionPreviewData, undefined, {
+          path: '/home',
+        });
+
+        expect(result).to.not.be.null;
+        expect(previewRouteServiceStub.resolveItemId.called).to.be.false;
+        expect(
+          editingServiceStub.fetchEditingData.calledWithMatch({
+            itemId: 'entry-item-id',
+            version: '2',
+            variantId: 'variant1',
+          })
+        ).to.be.true;
+      });
+
+      it('should resolve the item for the destination route when navigating elsewhere', async () => {
+        previewRouteServiceStub.resolveItemId.resolves('about-item-id');
+
+        const result = await sitecoreClient.getPreview(sessionPreviewData, undefined, {
+          path: '/about',
+        });
+
+        expect(result).to.not.be.null;
+        expect(
+          previewRouteServiceStub.resolveItemId.calledWithMatch({
+            site: 'default-site',
+            routePath: '/about',
+            language: 'en',
+            mode: LayoutServicePageState.Preview,
+            layoutKind: LayoutKind.Final,
+            previewTime: '2026-08-20T14:00:00Z',
+          })
+        ).to.be.true;
+        expect(
+          editingServiceStub.fetchEditingData.calledWithMatch({
+            itemId: 'about-item-id',
+            language: 'en',
+            layoutKind: LayoutKind.Final,
+            previewTime: '2026-08-20T14:00:00Z',
+          })
+        ).to.be.true;
+      });
+
+      it('should drop the route scoped version and variant when navigating elsewhere', async () => {
+        previewRouteServiceStub.resolveItemId.resolves('about-item-id');
+
+        await sitecoreClient.getPreview(sessionPreviewData, undefined, { path: '/about' });
+
+        const args = editingServiceStub.fetchEditingData.firstCall.args[0];
+        expect(args.version).to.be.undefined;
+        expect(args.variantId).to.equal(DEFAULT_VARIANT);
+      });
+
+      it('should accept a tokenized path', async () => {
+        previewRouteServiceStub.resolveItemId.resolves('nested-item-id');
+
+        await sitecoreClient.getPreview(sessionPreviewData, undefined, {
+          path: ['about', 'team'],
+        });
+
+        expect(
+          previewRouteServiceStub.resolveItemId.calledWithMatch({ routePath: '/about/team' })
+        ).to.be.true;
+      });
+
+      it('should return null when the destination route cannot be resolved', async () => {
+        previewRouteServiceStub.resolveItemId.resolves(null);
+
+        const result = await sitecoreClient.getPreview(sessionPreviewData, undefined, {
+          path: '/missing',
+        });
+
+        expect(result).to.be.null;
+        expect(editingServiceStub.fetchEditingData.called).to.be.false;
+      });
+
+      it('should reuse the captured item when no route was recorded for the session', async () => {
+        const { route, ...withoutRoute } = sessionPreviewData;
+        expect(route).to.equal('/home');
+
+        const result = await sitecoreClient.getPreview(withoutRoute, undefined, {
+          path: '/about',
+        });
+
+        expect(result).to.not.be.null;
+        expect(previewRouteServiceStub.resolveItemId.called).to.be.false;
+        expect(editingServiceStub.fetchEditingData.calledWithMatch({ itemId: 'entry-item-id' })).to
+          .be.true;
+      });
+
+      it('should reuse the captured item when no current path is supplied', async () => {
+        const result = await sitecoreClient.getPreview(sessionPreviewData);
+
+        expect(result).to.not.be.null;
+        expect(previewRouteServiceStub.resolveItemId.called).to.be.false;
+        expect(editingServiceStub.fetchEditingData.calledWithMatch({ itemId: 'entry-item-id' })).to
+          .be.true;
+      });
+
+      it('should forward fetch options to the route resolution request', async () => {
+        previewRouteServiceStub.resolveItemId.resolves('about-item-id');
+        const fetchOptions = { retries: { count: 1 } };
+
+        await sitecoreClient.getPreview(sessionPreviewData, fetchOptions as any, {
+          path: '/about',
+        });
+
+        expect(previewRouteServiceStub.resolveItemId.firstCall.args[1]).to.deep.equal(fetchOptions);
+      });
     });
 
     it('should forward the variant id to the editing service and not resolve personalization client-side', async () => {

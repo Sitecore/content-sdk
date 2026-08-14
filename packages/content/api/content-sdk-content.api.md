@@ -47,6 +47,9 @@ export const buildFallbackConfig: (env: {
 }) => SitecoreConfig;
 
 // @public
+export const buildPreviewHeaders: (input: PreviewHeaderOptions) => Record<string, string>;
+
+// @public
 export class CdpHelper {
     static getComponentFriendlyId(pageId: string, componentId: string, language: string, scope?: string): string;
     static getPageFriendlyId(pageId: string, language: string, scope?: string): string;
@@ -366,6 +369,7 @@ export type EditingPreviewData = {
     version?: string;
     layoutKind?: LayoutKind;
     previewTime?: string;
+    route?: string;
 };
 
 // @internal
@@ -1025,6 +1029,54 @@ export const prepareComponentsForMap: (components: ComponentSource[], opts: {
 // @internal
 export const PREVIEW_KEY = "sc_preview";
 
+// @public
+export const PREVIEW_ROUTE_PARAMS: readonly ["sc_itemid", "sc_version", "sc_variant"];
+
+// @public
+export const PREVIEW_SESSION_PARAMS: readonly ["sc_layoutKind", "sc_previewTime"];
+
+// @public
+export type PreviewHeaderOptions = {
+    mode: Exclude<LayoutServicePageState, 'Normal'>;
+    layoutKind?: LayoutKind;
+    variantId?: string;
+    site?: string;
+    previewTime?: string;
+};
+
+// @public
+export type PreviewItem = {
+    itemId: string;
+    version?: string;
+    variantId: string;
+};
+
+// @public
+export type PreviewOptions = {
+    path?: string | string[];
+};
+
+// @public
+export type PreviewRouteOptions = {
+    site: string;
+    routePath: string;
+    language: string;
+    mode: Exclude<LayoutServicePageState, 'Normal'>;
+    layoutKind?: LayoutKind;
+    previewTime?: string;
+};
+
+// @internal
+export const previewRouteQuery = "\n  query PreviewRouteQuery($site: String!, $routePath: String!, $language: String!) {\n    layout(site: $site, routePath: $routePath, language: $language) {\n      item {\n        id\n      }\n    }\n  }\n";
+
+// @public
+export class PreviewRouteService extends SitecoreServiceBase {
+    constructor(serviceConfig: GraphQLServiceConfig);
+    resolveItemId(input: PreviewRouteOptions, fetchOptions?: FetchOptions): Promise<string | null>;
+    // (undocumented)
+    serviceConfig: GraphQLServiceConfig;
+}
+
 // @internal
 export const processAbsoluteUrlTarget: (incomingPathData: ProcessedPath, existsRedirect: RedirectResult) => string;
 
@@ -1270,7 +1322,7 @@ export type SitecoreCliConfigInput = {
 // @public
 export class SitecoreClient implements BaseSitecoreClient {
     constructor(initOptions: SitecoreClientInit);
-    // @internal
+    // (undocumented)
     protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData;
     // (undocumented)
     protected clientFactory: GraphQLRequestClientFactory;
@@ -1298,7 +1350,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     }): HTMLLink[];
     getPage(path: string | string[], pageOptions?: PageOptions, fetchOptions?: FetchOptions): Promise<Page | null>;
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
-    getPreview(previewData: EditingPreviewData | undefined, fetchOptions?: FetchOptions): Promise<Page | null>;
+    getPreview(previewData: EditingPreviewData | undefined, fetchOptions?: FetchOptions, previewOptions?: PreviewOptions): Promise<Page | null>;
     getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string | null>;
     // (undocumented)
     protected getRobotsService(siteName: string): RobotsService;
@@ -1311,6 +1363,9 @@ export class SitecoreClient implements BaseSitecoreClient {
     protected layoutService: LayoutService;
     parsePath(path: string | string[]): string;
     // (undocumented)
+    protected previewRouteService: PreviewRouteService;
+    protected resolvePreviewItem(previewData: EditingPreviewData, previewOptions?: PreviewOptions, fetchOptions?: FetchOptions): Promise<PreviewItem | null>;
+    // (undocumented)
     protected sitePathService: SitePathService;
 }
 
@@ -1320,6 +1375,7 @@ export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' 
         layoutService?: LayoutService;
         dictionaryService?: DictionaryService;
         editingService?: EditingService;
+        previewRouteService?: PreviewRouteService;
         errorPagesService?: ErrorPagesService;
         componentService?: ComponentLayoutService;
         sitePathService?: SitePathService;
@@ -1530,7 +1586,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:68:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:69:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:115:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal

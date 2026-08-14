@@ -17,9 +17,17 @@ import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import {
   EDITING_PARAMS_HEADER,
+  EDITING_RENDER_PREVIEW_MAX_AGE,
+  PREVIEW_SESSION_MAX_AGE,
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from './constants';
+
+const getSetCookieValues = (res: NextApiResponse) =>
+  (res.setHeader as sinon.SinonSpy)
+    .getCalls()
+    .filter((call) => call.args[0] === 'Set-Cookie')
+    .map((call) => call.args[1]);
 
 use(sinonChai);
 
@@ -1158,6 +1166,181 @@ describe('EditingRenderMiddleware', () => {
         `frame-ancestors 'self' https://allowed.com ${EDITING_ALLOWED_ORIGINS.join(' ')}`
       );
       expect(res.setHeader).to.have.been.calledWith('Content-Type', 'text/html; charset=utf-8');
+    });
+
+    it('should not extend the session unless it is explicitly enabled', async () => {
+      const req = mockRequest({ query });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware();
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      const [previewData, options] = (res.setPreviewData as sinon.SinonSpy).firstCall.args;
+      expect(options).to.deep.equal({ maxAge: EDITING_RENDER_PREVIEW_MAX_AGE });
+      // Preview data stays byte-identical to the pre-session behaviour when not opted in
+      expect(previewData).to.not.have.property('route');
+    });
+
+    it('should still strip the Next.js preview cookies when the session is not enabled', async () => {
+      const req = mockRequest({ query });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware();
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      expect(getSetCookieValues(res)).to.deep.include([]);
+    });
+
+    it('should keep the preview session alive beyond the initial render when enabled', async () => {
+      const req = mockRequest({ query });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware({ previewSession: { enabled: true } });
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      const [previewData, options] = (res.setPreviewData as sinon.SinonSpy).firstCall.args;
+      expect(options).to.deep.equal({ maxAge: PREVIEW_SESSION_MAX_AGE });
+      expect(previewData).to.include({ route: '/styleguide' });
+    });
+
+    it('should allow the preview session lifetime to be configured', async () => {
+      const req = mockRequest({ query });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware({
+        previewSession: { enabled: true, maxAge: 120 },
+      });
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      const [, options] = (res.setPreviewData as sinon.SinonSpy).firstCall.args;
+      expect(options).to.deep.equal({ maxAge: 120 });
+    });
+
+    it('should ignore the configured lifetime when the session is not enabled', async () => {
+      const req = mockRequest({ query });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware({ previewSession: { maxAge: 120 } });
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      const [, options] = (res.setPreviewData as sinon.SinonSpy).firstCall.args;
+      expect(options).to.deep.equal({ maxAge: EDITING_RENDER_PREVIEW_MAX_AGE });
+    });
+
+    it('should not strip the Next.js preview cookies when the session is enabled', async () => {
+      const req = mockRequest({ query });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware({ previewSession: { enabled: true } });
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      const setCookieValues = getSetCookieValues(res);
+
+      // The editing render strips these; preview keeps them because they are the session.
+      expect(setCookieValues).to.not.deep.include([]);
+      expect(setCookieValues[setCookieValues.length - 1]).to.deep.equal([
+        ...mockNextJsPreviewCookies,
+        `sc_preview_token=${defaultAuthHeader}; Path=/; HttpOnly; SameSite=None; Secure`,
+      ]);
+    });
+  });
+
+  describe('Sitecore editing handling', () => {
+    it('should issue short lived preview cookies for the single editing render', async () => {
+      const req = mockRequest({ query });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware();
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      const [, options] = (res.setPreviewData as sinon.SinonSpy).firstCall.args;
+      expect(options).to.deep.equal({ maxAge: EDITING_RENDER_PREVIEW_MAX_AGE });
+    });
+
+    it('should still strip the Next.js preview cookies after the editing render', async () => {
+      const req = mockRequest({ query });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware();
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      expect(getSetCookieValues(res)).to.deep.include([]);
+    });
+
+    it('should not extend the session lifetime for Design Library renders', async () => {
+      const req = mockRequest({
+        query: {
+          mode: DesignLibraryMode.Normal,
+          sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+          sc_lang: 'en',
+          sc_site: 'website',
+          sc_uid: '{22222222-2222-2222-2222-222222222222}',
+          secret: secret,
+        } as unknown as EditingRenderQueryParams,
+      });
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware({
+        previewSession: { enabled: true, maxAge: 120 },
+      });
+      const handler = middleware.getHandler();
+
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+      await handler(req, res);
+
+      const [, options] = (res.setPreviewData as sinon.SinonSpy).firstCall.args;
+      expect(options).to.deep.equal({ maxAge: EDITING_RENDER_PREVIEW_MAX_AGE });
     });
   });
 

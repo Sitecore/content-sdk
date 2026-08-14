@@ -25,7 +25,7 @@ import {
   applyMediaUrlRewrite,
 } from '../layout';
 import { HTMLLink, StaticPath } from '../models';
-import { PersonalizedRewriteData } from '../personalize/utils';
+import { DEFAULT_VARIANT, PersonalizedRewriteData } from '../personalize/utils';
 import { personalizeLayout } from '../personalize/layout-personalizer';
 import { ErrorPages, ErrorPagesService, SitePathService, SitemapXmlService } from '../site';
 import { SitecoreClientInit } from './models';
@@ -38,6 +38,7 @@ import {
   EditingService,
   ComponentLayoutService,
   DesignLibraryMode,
+  PreviewRouteService,
 } from '../editing';
 
 const { ERROR_MESSAGES } = constants;
@@ -125,6 +126,38 @@ export type PageOptions = Partial<RouteOptions> & {
 };
 
 /**
+ * Options for retrieving a preview page
+ * @public
+ */
+export type PreviewOptions = {
+  /**
+   * The route path currently being rendered.
+   *
+   * Supply this on every preview render so that navigation within an active preview session
+   * is resolved correctly. When the path differs from the route the session was opened on,
+   * the route scoped details captured by Pages (`itemId`, `version`, `variantId`) no longer
+   * apply and the item is resolved for this path instead.
+   */
+  path?: string | string[];
+};
+
+/**
+ * Route scoped details used to build the editing query for a single preview render
+ * @public
+ */
+export type PreviewItem = {
+  itemId: string;
+  version?: string;
+  variantId: string;
+};
+
+/**
+ * Emitted once per process when a preview session is active but the caller never supplies the
+ * route being rendered. Deduplicated because it would otherwise fire on every request.
+ */
+let hasWarnedMissingPreviewPath = false;
+
+/**
  * Request options for the getSiteMap method
  * @public
  */
@@ -207,10 +240,12 @@ export interface BaseSitecoreClient {
    * Get preview layout details based on details from EditingPreviewData input
    * @param {EditingPreviewData | undefined} previewData preview details like route, site, language etc used to retrieve preview page and layout
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
+   * @param {PreviewOptions} [previewOptions] the route currently being rendered, used to support navigation within a preview session
    */
   getPreview(
     previewData: EditingPreviewData | undefined,
-    fetchOptions?: FetchOptions
+    fetchOptions?: FetchOptions,
+    previewOptions?: PreviewOptions
   ): Promise<Page | null>;
   /**
    * Get error page details for a given error code
@@ -281,6 +316,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   protected layoutService: LayoutService;
   protected dictionaryService: DictionaryService;
   protected editingService: EditingService;
+  protected previewRouteService: PreviewRouteService;
   protected clientFactory: GraphQLRequestClientFactory;
   protected errorPagesService: ErrorPagesService;
   protected componentService: ComponentLayoutService;
@@ -304,6 +340,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     this.dictionaryService =
       initOptions.custom?.dictionaryService ?? this.getDictionaryService(baseServiceOptions);
     this.editingService = initOptions.custom?.editingService ?? this.getEditingService();
+    this.previewRouteService =
+      initOptions.custom?.previewRouteService ?? this.getPreviewRouteService(baseServiceOptions);
     this.errorPagesService = initOptions.custom?.errorPagesService ?? this.getErrorPagesService();
     this.sitePathService = initOptions.custom?.sitePathService ?? this.getSitePathService();
     this.componentService = this.getComponentService();
@@ -453,29 +491,39 @@ export class SitecoreClient implements BaseSitecoreClient {
    * Retrieves preview page and layout details
    * @param {EditingPreviewData | undefined} previewData - The editing preview data for metadata mode.
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests
+   * @param {PreviewOptions} [previewOptions] The route currently being rendered, used to support navigation within a preview session
    * @returns {Page} preview page details
    */
   async getPreview(
     previewData: EditingPreviewData | undefined,
-    fetchOptions?: FetchOptions
+    fetchOptions?: FetchOptions,
+    previewOptions?: PreviewOptions
   ): Promise<Page | null> {
     if (!previewData) {
       console.error('Preview data missing');
       return null;
     }
     // If we're in Pages preview (editing) mode, prefetch the editing data
-    const { site, itemId, language, version, layoutKind, mode, variantId, previewTime } =
-      previewData as EditingPreviewData;
+    const { site, language, layoutKind, mode, previewTime } = previewData as EditingPreviewData;
+
+    // Resolve the route scoped details for the route being rendered. On the initial render
+    // these come straight from Pages; after client side navigation they are resolved for the
+    // destination route.
+    const previewItem = await this.resolvePreviewItem(previewData, previewOptions, fetchOptions);
+
+    if (!previewItem) {
+      return null;
+    }
 
     const data = await this.editingService.fetchEditingData(
       {
-        itemId,
+        itemId: previewItem.itemId,
         language,
-        version,
+        version: previewItem.version,
         layoutKind,
         mode,
         site,
-        variantId,
+        variantId: previewItem.variantId,
         previewTime,
       },
       fetchOptions
@@ -734,6 +782,77 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @returns {LayoutServiceData} Rewritten layout (or same reference if rewrite disabled)
    * @internal
    */
+  /**
+   * Resolves the route scoped details (`itemId`, `version`, `variantId`) for the route being
+   * rendered in preview.
+   *
+   * Pages supplies these for the route the preview session was opened on. They describe that
+   * item only, so once the author navigates elsewhere they cannot be reused - the destination
+   * item is resolved from its route path instead, and the variant falls back to the default
+   * because the author expressed no variant intent by following a link.
+   * @param {EditingPreviewData} previewData preview data captured when the session was opened
+   * @param {PreviewOptions} [previewOptions] the route currently being rendered
+   * @param {FetchOptions} [fetchOptions] Additional fetch options to override GraphQL requests
+   * @returns {Promise<PreviewItem | null>} route scoped details, or null when the route cannot be resolved
+   */
+  protected async resolvePreviewItem(
+    previewData: EditingPreviewData,
+    previewOptions?: PreviewOptions,
+    fetchOptions?: FetchOptions
+  ): Promise<PreviewItem | null> {
+    const {
+      site,
+      itemId,
+      language,
+      version,
+      variantId,
+      layoutKind,
+      mode,
+      previewTime,
+      route,
+    } = previewData;
+
+    const currentPath =
+      previewOptions?.path !== undefined ? this.parsePath(previewOptions.path) : undefined;
+
+    // `route` is only present when the preview session is enabled, so its presence alongside a
+    // caller that never supplies the current path means the app was not updated for navigation.
+    if (route && currentPath === undefined && !hasWarnedMissingPreviewPath) {
+      hasWarnedMissingPreviewPath = true;
+      console.warn(
+        '[Sitecore] The preview session is enabled but the route being rendered was not supplied to getPreview(). ' +
+          'Navigation will re-render the page the session started on. ' +
+          'Pass the current path, e.g. client.getPreview(previewData, fetchOptions, { path }).'
+      );
+    }
+
+    // Either no route is being rendered yet, the session predates route tracking, or we are
+    // still on the route the session was opened on. The details from Pages are authoritative.
+    if (!currentPath || !route || this.parsePath(route) === currentPath) {
+      return { itemId, version, variantId };
+    }
+
+    const resolvedItemId = await this.previewRouteService.resolveItemId(
+      {
+        site,
+        routePath: currentPath,
+        language,
+        mode,
+        layoutKind,
+        previewTime,
+      },
+      fetchOptions
+    );
+
+    if (!resolvedItemId) {
+      return null;
+    }
+
+    // `version` is deliberately dropped: an item version number is meaningful only relative to
+    // an item, so the version captured for the entry route says nothing about this one.
+    return { itemId: resolvedItemId, variantId: DEFAULT_VARIANT };
+  }
+
   protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData {
     const opt = this.initOptions.rewriteMediaUrls;
     if (!opt) {
@@ -814,6 +933,10 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   private getEditingService(): EditingService {
     return new EditingService({ clientFactory: this.clientFactory });
+  }
+
+  private getPreviewRouteService(baseOptions: BaseServiceOptions): PreviewRouteService {
+    return new PreviewRouteService(baseOptions);
   }
 
   private getErrorPagesService(): ErrorPagesService {
