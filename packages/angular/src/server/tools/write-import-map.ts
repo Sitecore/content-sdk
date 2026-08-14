@@ -32,6 +32,6 @@ export const writeImportMap = (
   return async ({ scConfig }: { scConfig: AngularSitecoreConfig }) => {
     // AngularSitecoreConfig is a structural superset of SitecoreConfig; only redirects.locales
     // and the Express-typed multisite callback differ, neither of which the import map reads.
-    await command({ scConfig: scConfig as unknown as SitecoreConfig });
+    await command({ scConfig: scConfig as SitecoreConfig });
   };
 };
