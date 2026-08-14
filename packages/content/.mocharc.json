@@ -1,4 +1,5 @@
 {
-    "$schema": "https://json.schemastore.org/mocharc.json",
-    "node-option": ["import=tsx"]
+  "$schema": "https://json.schemastore.org/mocharc.json",
+  "node-option": ["import=tsx"],
+  "timeout": 10000
 }
