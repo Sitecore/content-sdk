@@ -630,6 +630,263 @@ describe('SearchService', () => {
     });
   });
 
+  describe('MLT', () => {
+    it('should send a request with seedItemId and map content to results', async () => {
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: {
+          'x-sitecore-contextid': contextId,
+        },
+      })
+        .post(`/v1/search`, {
+          config: {
+            id: searchIndexId,
+          },
+          limit: 10,
+          offset: 0,
+          query: {
+            seedItemId: 'item-123',
+          },
+          sessionId: '',
+          sort: {
+            fields: [],
+          },
+        })
+        .reply(200, {
+          content: [{ id: 'related-1' }, { id: 'related-2' }],
+          total: 2,
+        });
+
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      const searchResponse = await searchService.search({
+        searchIndexId,
+        seedItemId: 'item-123',
+      });
+
+      expect(searchResponse.results).to.deep.equal([{ id: 'related-1' }, { id: 'related-2' }]);
+      expect(searchResponse.total).to.equal(2);
+    });
+
+    it('should send a request with seedItemUrl and map content to results', async () => {
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: {
+          'x-sitecore-contextid': contextId,
+        },
+      })
+        .post(`/v1/search`, {
+          config: {
+            id: searchIndexId,
+          },
+          limit: 5,
+          offset: 0,
+          query: {
+            seedItemUrl: 'https://example.com/articles/cloud',
+          },
+          sessionId: '',
+          sort: {
+            fields: [],
+          },
+        })
+        .reply(200, {
+          content: [{ id: 'related-1' }],
+          total: 1,
+          facet: [{ name: 'type', value: [{ text: 'article', count: 1 }] }],
+        });
+
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      const searchResponse = await searchService.search({
+        searchIndexId,
+        seedItemUrl: 'https://example.com/articles/cloud',
+        limit: 5,
+      });
+
+      expect(searchResponse.results).to.deep.equal([{ id: 'related-1' }]);
+      expect(searchResponse.total).to.equal(1);
+      expect(searchResponse.facets).to.deep.equal([
+        { name: 'type', value: [{ text: 'article', count: 1 }] },
+      ]);
+    });
+
+    it('should trim seedItemId before sending the request', async () => {
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: {
+          'x-sitecore-contextid': contextId,
+        },
+      })
+        .post(`/v1/search`, {
+          config: {
+            id: searchIndexId,
+          },
+          limit: 10,
+          offset: 0,
+          query: {
+            seedItemId: 'item-123',
+          },
+          sessionId: '',
+          sort: {
+            fields: [],
+          },
+        })
+        .reply(200, {
+          content: [{ id: 'related-1' }],
+          total: 1,
+        });
+
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      const searchResponse = await searchService.search({
+        searchIndexId,
+        seedItemId: '  item-123  ',
+      });
+
+      expect(searchResponse.results).to.deep.equal([{ id: 'related-1' }]);
+    });
+
+    it('should default missing MLT content to an empty results array', async () => {
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: {
+          'x-sitecore-contextid': contextId,
+        },
+      })
+        .post(`/v1/search`, {
+          config: {
+            id: searchIndexId,
+          },
+          limit: 10,
+          offset: 0,
+          query: {
+            seedItemId: 'item-123',
+          },
+          sessionId: '',
+          sort: {
+            fields: [],
+          },
+        })
+        .reply(200, {});
+
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      const searchResponse = await searchService.search({
+        searchIndexId,
+        seedItemId: 'item-123',
+      });
+
+      expect(searchResponse.results).to.deep.equal([]);
+      expect(searchResponse.total).to.equal(0);
+    });
+
+    it('should throw an error if keyphrase and seedItemId are both provided', async () => {
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      try {
+        await searchService.search({
+          searchIndexId,
+          keyphrase: 'running shoes',
+          seedItemId: 'item-123',
+        });
+        expect.fail('Expected search to throw');
+      } catch (error) {
+        expect(error)
+          .to.be.an.instanceOf(TypeError)
+          .and.to.have.property(
+            'message',
+            'Query fields are mutually exclusive. Provide only one of: keyphrase, seedItemId, seedItemUrl. Received: keyphrase, seedItemId'
+          );
+      }
+    });
+
+    it('should throw an error if keyphrase and seedItemUrl are both provided', async () => {
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      try {
+        await searchService.search({
+          searchIndexId,
+          keyphrase: 'running shoes',
+          seedItemUrl: 'https://example.com/articles/cloud',
+        });
+        expect.fail('Expected search to throw');
+      } catch (error) {
+        expect(error)
+          .to.be.an.instanceOf(TypeError)
+          .and.to.have.property(
+            'message',
+            'Query fields are mutually exclusive. Provide only one of: keyphrase, seedItemId, seedItemUrl. Received: keyphrase, seedItemUrl'
+          );
+      }
+    });
+
+    it('should throw an error if seedItemId and seedItemUrl are both provided', async () => {
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      try {
+        await searchService.search({
+          searchIndexId,
+          seedItemId: 'item-123',
+          seedItemUrl: 'https://example.com/articles/cloud',
+        });
+        expect.fail('Expected search to throw');
+      } catch (error) {
+        expect(error)
+          .to.be.an.instanceOf(TypeError)
+          .and.to.have.property(
+            'message',
+            'Query fields are mutually exclusive. Provide only one of: keyphrase, seedItemId, seedItemUrl. Received: seedItemId, seedItemUrl'
+          );
+      }
+    });
+
+    it('should throw an error if seedItemId is empty', async () => {
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      try {
+        await searchService.search({
+          searchIndexId,
+          seedItemId: '',
+        });
+        expect.fail('Expected search to throw');
+      } catch (error) {
+        expect(error)
+          .to.be.an.instanceOf(TypeError)
+          .and.to.have.property('message', 'seedItemId must be a non-empty string');
+      }
+    });
+
+    it('should throw an error if seedItemUrl is whitespace only', async () => {
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      try {
+        await searchService.search({
+          searchIndexId,
+          seedItemUrl: '   ',
+        });
+        expect.fail('Expected search to throw');
+      } catch (error) {
+        expect(error)
+          .to.be.an.instanceOf(TypeError)
+          .and.to.have.property('message', 'seedItemUrl must be a non-empty string');
+      }
+    });
+  });
+
   describe('sessionId', () => {
     it('should send the sessionId when the analytics plugin is registered', async () => {
       const clientId = 'test-client-id';

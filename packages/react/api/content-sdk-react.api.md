@@ -491,6 +491,8 @@ export interface UseInfiniteSearchOptions<T extends SearchDocument = SearchDocum
     pageSize?: number;
     query?: string;
     searchIndexId: string;
+    seedItemId?: string;
+    seedItemUrl?: string;
     sort?: SearchParameters<T>['sort'];
 }
 
@@ -520,6 +522,8 @@ export interface UseSearchOptions<T extends SearchDocument = SearchDocument> {
     pageSize?: number;
     query?: string;
     searchIndexId: string;
+    seedItemId?: string;
+    seedItemUrl?: string;
     sort?: SearchParameters<T>['sort'];
 }
 

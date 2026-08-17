@@ -96,6 +96,31 @@ export type SearchDocument = {
 };
 
 /**
+ * Query payload for the `/v1/search` API.
+ * `keyphrase`, `seedItemId`, and `seedItemUrl` are mutually exclusive; provide at most one.
+ * `seedItemId` and `seedItemUrl` are used for More Like This (MLT) queries and are not
+ * supported by `/v1/search/suggest`.
+ * @public
+ */
+export interface SearchQuery {
+  /**
+   * Text value to search for. If omitted or empty, the search returns all results.
+   * Mutually exclusive with `seedItemId` and `seedItemUrl`.
+   */
+  keyphrase?: string;
+  /**
+   * Item ID used as the seed for More Like This (MLT) results.
+   * Mutually exclusive with `keyphrase` and `seedItemUrl`. Not supported by `/v1/search/suggest`.
+   */
+  seedItemId?: string;
+  /**
+   * Item URL used as the seed for More Like This (MLT) results.
+   * Mutually exclusive with `keyphrase` and `seedItemId`. Not supported by `/v1/search/suggest`.
+   */
+  seedItemUrl?: string;
+}
+
+/**
  * A single autocomplete completion from query suggestion mode.
  * @public
  */

@@ -62,7 +62,16 @@ export interface SearchParameters<T extends SearchDocument = SearchDocument> {
     locale?: string;
     offset?: number;
     searchIndexId: string;
+    seedItemId?: string;
+    seedItemUrl?: string;
     sort?: SortSetting<T>[] | SortSetting<T>;
+}
+
+// @public
+export interface SearchQuery {
+    keyphrase?: string;
+    seedItemId?: string;
+    seedItemUrl?: string;
 }
 
 // @public
@@ -110,7 +119,7 @@ export interface SuggestResponse<T extends SearchDocument = SearchDocument> {
 // Warnings were encountered during analysis:
 //
 // src/models.ts:95:3 - (ae-forgotten-export) The symbol "PrimitiveType" needs to be exported by the entry point index.d.ts
-// src/search-service.ts:18:3 - (ae-forgotten-export) The symbol "PathsToStringProps" needs to be exported by the entry point index.d.ts
+// src/search-service.ts:19:3 - (ae-forgotten-export) The symbol "PathsToStringProps" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

@@ -10,6 +10,7 @@ export {
 } from './search-service';
 export {
   SearchDocument,
+  SearchQuery,
   FacetRequest,
   FacetField,
   FacetFilter,

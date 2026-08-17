@@ -3,6 +3,7 @@ import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { getClientId } from '@sitecore-content-sdk/analytics-core';
 import {
   SearchDocument,
+  SearchQuery,
   PathsToStringProps,
   FacetRequest,
   FacetResult,
@@ -56,11 +57,13 @@ interface SearchAPIResponse<T extends SearchDocument = SearchDocument> {
 
 /**
  * Response from the Search Service.
+ * Keyword search and More Like This (MLT) queries share this mapped shape,
+ * so MLT widget consumers can read `results` without additional patching.
  * @public
  */
 export interface SearchResponse<T extends SearchDocument = SearchDocument> {
   /**
-   * The search results.
+   * The search results. For MLT queries, these are items similar to the seed item.
    */
   results: T[];
   /**
@@ -75,6 +78,10 @@ export interface SearchResponse<T extends SearchDocument = SearchDocument> {
 
 /**
  * A set of request parameters for the Search Service.
+ * Query fields `keyphrase`, `seedItemId`, and `seedItemUrl` are mutually exclusive.
+ * Provide at most one. Omitting all three returns unfiltered results.
+ * Use `seedItemId` or `seedItemUrl` for More Like This (MLT) widget queries.
+ * These seed fields are sent only to `/v1/search`, not `/v1/search/suggest`.
  * @public
  */
 export interface SearchParameters<T extends SearchDocument = SearchDocument> {
@@ -84,8 +91,21 @@ export interface SearchParameters<T extends SearchDocument = SearchDocument> {
   searchIndexId: string;
   /**
    * Text value to search for. If not provided, the search will return all results.
+   * Mutually exclusive with `seedItemId` and `seedItemUrl`.
    */
   keyphrase?: string;
+  /**
+   * Item ID used as the seed for More Like This (MLT) results.
+   * Mutually exclusive with `keyphrase` and `seedItemUrl`.
+   * Used only by `/v1/search`, not `/v1/search/suggest`.
+   */
+  seedItemId?: string;
+  /**
+   * Item URL used as the seed for More Like This (MLT) results.
+   * Mutually exclusive with `keyphrase` and `seedItemId`.
+   * Used only by `/v1/search`, not `/v1/search/suggest`.
+   */
+  seedItemUrl?: string;
   /**
    * Specifies the sorting of the search results.
    */
@@ -121,6 +141,8 @@ export type SearchServiceFetchOptions = Omit<RequestInit, 'method' | 'body' | 'm
 
 /**
  * A set of request parameters for the Suggest Service.
+ * `/v1/search/suggest` accepts only `keyphrase` in the query payload.
+ * `seedItemId` and `seedItemUrl` are not supported.
  * @public
  */
 export interface SuggestParameters {
@@ -187,6 +209,9 @@ export class SearchService {
 
   /**
    * Search for items in the search index.
+   * For keyword search, pass `keyphrase`. For More Like This (MLT) widget queries,
+   * pass `seedItemId` or `seedItemUrl` instead. These query fields are mutually exclusive.
+   * MLT responses are mapped to the same `results` / `total` / `facets` shape as keyword search.
    * @param {SearchParameters<T>} params - The search parameters.
    * @param {SearchServiceFetchOptions} [fetchOptions] - The fetch options.
    * @returns {Promise<SearchResponse<T>>} The search response.
@@ -196,16 +221,18 @@ export class SearchService {
    * @throws {RangeError} If offset is not a positive number.
    * @throws {TypeError} If search index ID is not provided.
    * @throws {TypeError} If sort is not an array or an object.
+   * @throws {TypeError} If more than one of keyphrase, seedItemId, or seedItemUrl is provided.
+   * @throws {TypeError} If seedItemId or seedItemUrl is empty or whitespace only.
    */
   async search<T extends SearchDocument = SearchDocument>(
     params: SearchParameters<T>,
     fetchOptions?: SearchServiceFetchOptions
   ): Promise<SearchResponse<T>> {
-    const { searchIndexId, keyphrase = '', sort, limit = 10, offset = 0, locale, facet } = params;
+    const { searchIndexId, sort, limit = 10, offset = 0, locale, facet } = params;
 
     this.validateParameters<T>({
+      ...params,
       searchIndexId,
-      keyphrase,
       sort,
       limit,
       offset,
@@ -239,9 +266,7 @@ export class SearchService {
         },
         limit,
         offset,
-        query: {
-          keyphrase,
-        },
+        query: this.buildSearchQuery(params),
         sessionId,
         sort: {
           fields: sortFields,
@@ -334,6 +359,62 @@ export class SearchService {
     if (sort && !Array.isArray(sort) && typeof sort !== 'object') {
       throw new TypeError('Sort must be an array or an object');
     }
+
+    this.validateQueryExclusivity(params);
+  }
+
+  private validateQueryExclusivity<T extends SearchDocument = SearchDocument>(
+    params: SearchParameters<T>
+  ) {
+    const provided: string[] = [];
+    const keyphrase = typeof params.keyphrase === 'string' ? params.keyphrase.trim() : '';
+    const seedItemId = typeof params.seedItemId === 'string' ? params.seedItemId.trim() : '';
+    const seedItemUrl = typeof params.seedItemUrl === 'string' ? params.seedItemUrl.trim() : '';
+
+    if (params.seedItemId !== undefined && !seedItemId) {
+      throw new TypeError('seedItemId must be a non-empty string');
+    }
+
+    if (params.seedItemUrl !== undefined && !seedItemUrl) {
+      throw new TypeError('seedItemUrl must be a non-empty string');
+    }
+
+    if (keyphrase) {
+      provided.push('keyphrase');
+    }
+
+    if (seedItemId) {
+      provided.push('seedItemId');
+    }
+
+    if (seedItemUrl) {
+      provided.push('seedItemUrl');
+    }
+
+    if (provided.length > 1) {
+      throw new TypeError(
+        `Query fields are mutually exclusive. Provide only one of: keyphrase, seedItemId, seedItemUrl. Received: ${provided.join(
+          ', '
+        )}`
+      );
+    }
+  }
+
+  private buildSearchQuery<T extends SearchDocument = SearchDocument>(
+    params: SearchParameters<T>
+  ): SearchQuery {
+    const seedItemId = typeof params.seedItemId === 'string' ? params.seedItemId.trim() : '';
+    const seedItemUrl = typeof params.seedItemUrl === 'string' ? params.seedItemUrl.trim() : '';
+
+    if (seedItemId) {
+      return { seedItemId };
+    }
+
+    if (seedItemUrl) {
+      return { seedItemUrl };
+    }
+
+    return { keyphrase: params.keyphrase ?? '' };
   }
 
   private validateSuggestParameters(params: SuggestParameters) {
