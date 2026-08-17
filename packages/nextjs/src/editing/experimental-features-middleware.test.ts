@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/content/editing';
-import { ExperimentalFeatureData } from '../experimental-features';
+import { ExperimentalFeatureData } from '@sitecore-content-sdk/content/experimental';
 import { ExperimentalFeaturesMiddleware } from './experimental-features-middleware';
 
 type Query = {

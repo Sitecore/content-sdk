@@ -11,6 +11,7 @@ import memoryDriver from 'unstorage/drivers/memory';
 import {
   createBotTrackingMiddleware,
   createEditingConfigMiddleware,
+  createExperimentalFeaturesMiddleware,
   createEditingRenderMiddleware,
   createLoaderCache,
   createLoaderDataServiceMiddleware,
@@ -88,6 +89,12 @@ app.use(
     metadataImport: () => import('.sitecore/metadata.json'),
   })
 );
+
+/**
+ * Experimental features endpoint (`/api/editing/experimental`). Exposes available
+ * Content SDK experimental features and whether each is currently enabled.
+ */
+app.use(createExperimentalFeaturesMiddleware());
 
 /**
  * Editing render endpoint (`/api/editing/render`). Rewrites `req.url` to the

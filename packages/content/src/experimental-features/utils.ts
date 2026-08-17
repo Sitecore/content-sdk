@@ -22,8 +22,8 @@ export const isExperimentalEnvFlagEnabled = (value: string | undefined): boolean
 };
 
 /**
- * Default experimental features catalog shipped with the Next.js package
- * (`src/experimental.json`).
+ * Default experimental features catalog shipped with the Content package
+ * (`src/experimental.json`). Shared by framework packages (Next.js, Angular, etc.).
  *
  * Production default should be `[]`. Dummy entries may be present temporarily for
  * display/testing of the visibility API.

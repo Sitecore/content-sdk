@@ -1,15 +1,13 @@
 import { NextRequest } from 'next/server';
 import {
-  EDITING_ALLOWED_ORIGINS,
-  QUERY_PARAM_EDITING_SECRET,
-} from '@sitecore-content-sdk/content/editing';
-import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
-import debug from '../debug';
-import {
   buildExperimentalFeaturesResponse,
   ExperimentalFeatureData,
-} from '../experimental-features';
-import { getEditingSecret } from '../utils/utils';
+} from '@sitecore-content-sdk/content/experimental';
+import debug from '../debug';
+import {
+  authorizeEditingEndpointRequest,
+  getEditingSecretQueryParamName,
+} from '../editing/editing-endpoint-auth';
 
 /**
  * Options for {@link createExperimentalFeaturesRouteHandler}.
@@ -17,7 +15,7 @@ import { getEditingSecret } from '../utils/utils';
  */
 export type ExperimentalFeaturesRouteHandlerOptions = {
   /**
-   * Experimental features catalog. Defaults to the package `experimental.json` catalog.
+   * Experimental features catalog. Defaults to the shared Content SDK catalog.
    */
   features?: ExperimentalFeatureData[];
 };
@@ -35,49 +33,27 @@ export const createExperimentalFeaturesRouteHandler = (
 ) => {
   const { features } = options;
 
-  const validateRequest = (req: NextRequest) => {
-    const secret = req.nextUrl.searchParams.get(QUERY_PARAM_EDITING_SECRET);
-    const corsHeaders = getEnforcedCorsHeaders({
-      requestMethod: req.method,
+  const authorize = (req: NextRequest, requireSecret: boolean) =>
+    authorizeEditingEndpointRequest({
+      method: req.method,
       headers: req.headers,
-      presetCorsHeader: undefined,
-      allowedOrigins: EDITING_ALLOWED_ORIGINS,
+      secret: req.nextUrl.searchParams.get(getEditingSecretQueryParamName()),
+      requireSecret,
     });
-
-    return { secret, corsHeaders };
-  };
 
   const GET = async (req: NextRequest) => {
     try {
       const startTimestamp = Date.now();
       debug.editing('experimental features route handler start');
 
-      const { secret, corsHeaders } = validateRequest(req);
+      const auth = authorize(req, true);
 
-      if (!corsHeaders) {
-        debug.editing(
-          'invalid origin host - set allowed origins in JSS_ALLOWED_ORIGINS environment variable'
-        );
-        return new Response(JSON.stringify({ message: 'Invalid origin' }), {
-          status: 401,
+      if (!auth.ok) {
+        return new Response(JSON.stringify(auth.body), {
+          status: auth.status,
           headers: {
             'Content-Type': 'application/json',
-          },
-        });
-      }
-
-      if (secret !== getEditingSecret()) {
-        debug.editing(
-          'invalid editing secret - sent "%s" expected "%s"',
-          secret,
-          getEditingSecret()
-        );
-
-        return new Response(JSON.stringify({ message: 'Missing or invalid editing secret' }), {
-          status: 401,
-          headers: {
-            'Content-Type': 'application/json',
-            ...corsHeaders,
+            ...(auth.corsHeaders ?? {}),
           },
         });
       }
@@ -93,7 +69,7 @@ export const createExperimentalFeaturesRouteHandler = (
         status: 200,
         headers: {
           'Content-Type': 'application/json',
-          ...corsHeaders,
+          ...auth.corsHeaders,
         },
       });
     } catch (error) {
@@ -110,14 +86,12 @@ export const createExperimentalFeaturesRouteHandler = (
     try {
       debug.editing('preflight request');
 
-      const { corsHeaders } = validateRequest(req);
+      // Match previous behavior: OPTIONS validates CORS only (secret not required).
+      const auth = authorize(req, false);
 
-      if (!corsHeaders) {
-        debug.editing(
-          'invalid origin host - set allowed origins in JSS_ALLOWED_ORIGINS environment variable'
-        );
-        return new Response(JSON.stringify({ message: 'Invalid origin' }), {
-          status: 401,
+      if (!auth.ok) {
+        return new Response(JSON.stringify(auth.body), {
+          status: auth.status,
           headers: {
             'Content-Type': 'application/json',
           },
@@ -126,7 +100,7 @@ export const createExperimentalFeaturesRouteHandler = (
 
       return new Response(null, {
         status: 204,
-        headers: corsHeaders,
+        headers: auth.corsHeaders,
       });
     } catch (error) {
       console.log('Experimental features OPTIONS route handler failed:');

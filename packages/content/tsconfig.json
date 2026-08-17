@@ -15,6 +15,7 @@
     "dist",
     "config.d.ts",
     "editing.d.ts",
+    "experimental.d.ts",
     "layout.d.ts",
     "media.d.ts",
     "client.d.ts",

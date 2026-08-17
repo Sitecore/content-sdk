@@ -5,7 +5,7 @@ import sinonChai from 'sinon-chai';
 import { NextRequest } from 'next/server';
 import proxyquire from 'proxyquire';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/content/editing';
-import { ExperimentalFeatureData } from '../experimental-features';
+import { ExperimentalFeatureData } from '@sitecore-content-sdk/content/experimental';
 
 chai.use(sinonChai);
 
@@ -44,10 +44,12 @@ describe('createExperimentalFeaturesRouteHandler', () => {
     experimentalFeaturesRouteHandlerModule = proxyquire(
       './experimental-features-route-handler',
       {
-        '../utils/utils': { getEditingSecret: getEditingSecretStub },
-        '@sitecore-content-sdk/core/tools': {
-          getEnforcedCorsHeaders: getEnforcedCorsHeadersStub,
-        },
+        '../editing/editing-endpoint-auth': proxyquire('../editing/editing-endpoint-auth', {
+          '../utils/utils': { getEditingSecret: getEditingSecretStub },
+          '@sitecore-content-sdk/core/tools': {
+            getEnforcedCorsHeaders: getEnforcedCorsHeadersStub,
+          },
+        }),
       }
     );
 

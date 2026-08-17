@@ -7,6 +7,7 @@
 import { AnalyticsAdapter } from '@sitecore-content-sdk/analytics-core/internal';
 import { AppPlaceholder } from '@sitecore-content-sdk/react';
 import { AppPlaceholderProps } from '@sitecore-content-sdk/react';
+import { buildExperimentalFeaturesResponse } from '@sitecore-content-sdk/content/experimental';
 import { BYOCClientWrapper } from '@sitecore-content-sdk/react';
 import { BYOCComponent } from '@sitecore-content-sdk/react';
 import { BYOCComponentParams } from '@sitecore-content-sdk/react';
@@ -30,6 +31,7 @@ import { DateField } from '@sitecore-content-sdk/react';
 import { DeepRequired } from '@sitecore-content-sdk/content/config';
 import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/react';
 import { DefaultEmptyFieldEditingComponentText } from '@sitecore-content-sdk/react';
+import { defaultExperimentalFeatures } from '@sitecore-content-sdk/content/experimental';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
 import { DesignLibrary } from '@sitecore-content-sdk/react';
 import { DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/content/editing';
@@ -48,6 +50,9 @@ import { ErrorPage } from '@sitecore-content-sdk/content/client';
 import { ErrorPages } from '@sitecore-content-sdk/content/site';
 import { ErrorPagesService } from '@sitecore-content-sdk/content/site';
 import { ErrorPagesServiceConfig } from '@sitecore-content-sdk/content/site';
+import { ExperimentalFeatureData } from '@sitecore-content-sdk/content/experimental';
+import { ExperimentalFeaturesResponse } from '@sitecore-content-sdk/content/experimental';
+import { ExperimentalFeatureStatus } from '@sitecore-content-sdk/content/experimental';
 import { extractFiles } from '@sitecore-content-sdk/content/node-tools';
 import { FEaaSClientWrapper } from '@sitecore-content-sdk/react';
 import { FEaaSComponent } from '@sitecore-content-sdk/react';
@@ -98,6 +103,7 @@ import { ImportMapImport } from '@sitecore-content-sdk/react';
 import { IncomingHttpHeaders } from 'http';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { isEditorActive } from '@sitecore-content-sdk/content/editing';
+import { isExperimentalEnvFlagEnabled } from '@sitecore-content-sdk/content/experimental';
 import { Item } from '@sitecore-content-sdk/content/layout';
 import { JSX as JSX_2 } from 'react';
 import { LayoutService } from '@sitecore-content-sdk/content/layout';
@@ -151,6 +157,7 @@ import { RedirectsServiceConfig } from '@sitecore-content-sdk/content/site';
 import { renderEmptyPlaceholder } from '@sitecore-content-sdk/react';
 import { RenderingType } from '@sitecore-content-sdk/content/layout';
 import { resetEditorChromes } from '@sitecore-content-sdk/content/editing';
+import { resolveExperimentalFeatureStatuses } from '@sitecore-content-sdk/content/experimental';
 import { resolveUrl } from '@sitecore-content-sdk/core/tools';
 import { RetryStrategy } from '@sitecore-content-sdk/content/client';
 import { revalidateTag } from 'next/cache';
@@ -238,8 +245,7 @@ export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Omit<Prox
     fetchEvent?: NextFetchEvent;
 };
 
-// @public
-export const buildExperimentalFeaturesResponse: (features?: ExperimentalFeatureData[]) => ExperimentalFeaturesResponse;
+export { buildExperimentalFeaturesResponse }
 
 // @public
 export function buildSitecoreDictionaryCacheTag(params: BuildSitecoreDictionaryCacheTagParams): string;
@@ -414,8 +420,7 @@ export { DefaultEmptyFieldEditingComponentImage }
 
 export { DefaultEmptyFieldEditingComponentText }
 
-// @public
-export const defaultExperimentalFeatures: ExperimentalFeatureData[];
+export { defaultExperimentalFeatures }
 
 // @public
 export const defaultImportEntries: ImportEntry[];
@@ -501,13 +506,7 @@ export { ErrorPagesService }
 
 export { ErrorPagesServiceConfig }
 
-// @public
-export type ExperimentalFeatureData = {
-    idName: string;
-    displayName: string;
-    envVarName: string;
-    description: string;
-};
+export { ExperimentalFeatureData }
 
 // @public
 export class ExperimentalFeaturesMiddleware {
@@ -522,20 +521,14 @@ export type ExperimentalFeaturesMiddlewareConfig = {
     features?: ExperimentalFeatureData[];
 };
 
-// @public
-export type ExperimentalFeaturesResponse = {
-    features: ExperimentalFeatureStatus[];
-};
+export { ExperimentalFeaturesResponse }
 
 // @public
 export type ExperimentalFeaturesRouteHandlerOptions = {
     features?: ExperimentalFeatureData[];
 };
 
-// @public
-export type ExperimentalFeatureStatus = ExperimentalFeatureData & {
-    enabled: boolean;
-};
+export { ExperimentalFeatureStatus }
 
 export { extractFiles }
 
@@ -692,8 +685,7 @@ export const isDesignLibraryPreviewData: (data: unknown) => data is DesignLibrar
 
 export { isEditorActive }
 
-// @public
-export const isExperimentalEnvFlagEnabled: (value: string | undefined) => boolean;
+export { isExperimentalEnvFlagEnabled }
 
 // @public
 export const isServerSidePropsContext: (context: GetServerSidePropsContext | GetStaticPropsContext) => context is GetServerSidePropsContext;
@@ -996,8 +988,7 @@ export { RenderingType }
 
 export { resetEditorChromes }
 
-// @public
-export const resolveExperimentalFeatureStatuses: (features: ExperimentalFeatureData[]) => ExperimentalFeatureStatus[];
+export { resolveExperimentalFeatureStatuses }
 
 export { resolveUrl }
 

@@ -28,10 +28,10 @@ export type {
   ExperimentalFeatureData,
   ExperimentalFeatureStatus,
   ExperimentalFeaturesResponse,
-} from '../experimental-features';
+} from '@sitecore-content-sdk/content/experimental';
 export {
   buildExperimentalFeaturesResponse,
   defaultExperimentalFeatures,
   isExperimentalEnvFlagEnabled,
   resolveExperimentalFeatureStatuses,
-} from '../experimental-features';
+} from '@sitecore-content-sdk/content/experimental';
