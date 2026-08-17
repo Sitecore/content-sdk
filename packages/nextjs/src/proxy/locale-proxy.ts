@@ -71,8 +71,7 @@ export class LocaleProxy extends ProxyBase {
 
       if (!localeFromPath) {
         // locale is not present in path, we need to rewrite to include the locale segment
-        const rewritePath =
-          locale === this.config.defaultLanguage ? pathname : getLocaleRewrite(pathname, locale);
+        const rewritePath = getLocaleRewrite(pathname, locale);
         const response = this.rewrite(rewritePath, req, res);
         this.setLocaleHeader(response, locale);
 

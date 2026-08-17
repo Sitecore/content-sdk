@@ -15,8 +15,9 @@ export default defineConfig({
     },
   },
   redirects: {
-    // Routes live under a [locale] segment (src/app/[site]/[locale]),
-    // so redirect targets must include the locale prefix to resolve.
-    localeInPath: true,
+    // Locale prefix strategy for App Router redirect targets, matching next-intl's
+    // `localePrefix` in src/i18n/routing.ts. `as-needed` keeps the default locale bare
+    // and only prefixes non-default locales. Use `always` if routing prefixes every locale.
+    appLocalePrefix: 'as-needed',
   },
 });
