@@ -6,7 +6,7 @@
 
 # Interface: AngularSitecoreConfigInput
 
-Defined in: [packages/angular/src/config/define-config.ts:22](https://github.com/Sitecore/content-sdk/blob/87b8db38cdfb3e7cc6391de3955f794aecc8b8e9/packages/angular/src/config/define-config.ts#L22)
+Defined in: [packages/angular/src/config/define-config.ts:32](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/config/define-config.ts#L32)
 
 Sitecore configuration input for Angular apps. Extends the base
 [SitecoreConfigInput](../content/config/type-aliases/SitecoreConfigInput.md) with an `angular` section. `redirects.locales` is intentionally
@@ -23,9 +23,29 @@ source of truth for the locale list.
 
 > `optional` **angular?**: `object`
 
-Defined in: [packages/angular/src/config/define-config.ts:24](https://github.com/Sitecore/content-sdk/blob/87b8db38cdfb3e7cc6391de3955f794aecc8b8e9/packages/angular/src/config/define-config.ts#L24)
+Defined in: [packages/angular/src/config/define-config.ts:34](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/config/define-config.ts#L34)
 
 Angular-specific configuration.
+
+#### linkPrefetch?
+
+> `optional` **linkPrefetch?**: `object`
+
+Configuration for loader prefetch on `scRouterLink`/`scRichText` links. Both fields
+default when omitted (`mode: 'eager'`, `delayMs: 100`). Can be overridden per-link via
+each directive's `prefetch` input.
+
+##### linkPrefetch.delayMs?
+
+> `optional` **delayMs?**: `number`
+
+Hover dwell time (ms) before prefetch fires when `mode: 'hover'`.
+
+##### linkPrefetch.mode?
+
+> `optional` **mode?**: [`LinkPrefetchMode`](../type-aliases/LinkPrefetchMode.md)
+
+Prefetch strategy. See [LinkPrefetchMode](../type-aliases/LinkPrefetchMode.md).
 
 #### loadersCache?
 
@@ -272,7 +292,7 @@ custom layout query
 
 > `optional` **multisite?**: `object`
 
-Defined in: [packages/angular/src/config/define-config.ts:41](https://github.com/Sitecore/content-sdk/blob/87b8db38cdfb3e7cc6391de3955f794aecc8b8e9/packages/angular/src/config/define-config.ts#L41)
+Defined in: [packages/angular/src/config/define-config.ts:62](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/config/define-config.ts#L62)
 
 #### enabled?
 

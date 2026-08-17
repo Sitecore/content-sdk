@@ -664,6 +664,78 @@ describe('cascade-version', () => {
       );
     });
 
+    it('should use CANARY_PREFIX env var as the snapshot tag when it is set', async () => {
+      vi.stubEnv('CANARY_PREFIX', 'beta');
+      process.argv.push('--snapshot');
+      mocks.readConfig.mockResolvedValue(
+        baseConfig({ snapshot: { prereleaseTemplate: '0.0.0-{tag}' } })
+      );
+      mocks.readChangesets.mockResolvedValue([
+        {
+          id: 'r1',
+          summary: 'S',
+          releases: [{ name: '@sitecore-content-sdk/core', type: 'patch' }],
+        },
+      ]);
+      mocks.getCommitsThatAddFiles.mockResolvedValue([undefined]);
+      mocks.getPackages.mockResolvedValue(mkPackages(['@sitecore-content-sdk/core']));
+      mocks.getDependentsGraph.mockReturnValue(new Map([['@sitecore-content-sdk/core', []]]));
+
+      await importCascade();
+      await waitFor(() => mocks.applyReleasePlan.mock.calls.length > 0);
+
+      const assembleArgs = mocks.assembleReleasePlan.mock.calls[0] as unknown as [
+        unknown,
+        unknown,
+        unknown,
+        unknown,
+        { tag: string; commit?: string },
+      ];
+      expect(assembleArgs[4]).toEqual({ tag: 'beta' });
+      expect(mocks.applyReleasePlan).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ changelog: false }),
+        'beta'
+      );
+    });
+
+    it('should fall back to canary tag when CANARY_PREFIX is set to empty string', async () => {
+      vi.stubEnv('CANARY_PREFIX', '');
+      process.argv.push('--snapshot');
+      mocks.readConfig.mockResolvedValue(
+        baseConfig({ snapshot: { prereleaseTemplate: '0.0.0-{tag}' } })
+      );
+      mocks.readChangesets.mockResolvedValue([
+        {
+          id: 'r1',
+          summary: 'S',
+          releases: [{ name: '@sitecore-content-sdk/core', type: 'patch' }],
+        },
+      ]);
+      mocks.getCommitsThatAddFiles.mockResolvedValue([undefined]);
+      mocks.getPackages.mockResolvedValue(mkPackages(['@sitecore-content-sdk/core']));
+      mocks.getDependentsGraph.mockReturnValue(new Map([['@sitecore-content-sdk/core', []]]));
+
+      await importCascade();
+      await waitFor(() => mocks.applyReleasePlan.mock.calls.length > 0);
+
+      const assembleArgs = mocks.assembleReleasePlan.mock.calls[0] as unknown as [
+        unknown,
+        unknown,
+        unknown,
+        unknown,
+        { tag: string; commit?: string },
+      ];
+      expect(assembleArgs[4]).toEqual({ tag: 'canary' });
+      expect(mocks.applyReleasePlan).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ changelog: false }),
+        'canary'
+      );
+    });
+
     it('should apply the same cascade release type to create-content-sdk-app as to other dependents when in snapshot mode', async () => {
       process.argv.push('--snapshot');
       mocks.readConfig.mockResolvedValue(

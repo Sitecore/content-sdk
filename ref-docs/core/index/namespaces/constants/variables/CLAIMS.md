@@ -8,7 +8,7 @@
 
 > `const` **CLAIMS**: `"https://auth.sitecorecloud.io/claims"` = `'https://auth.sitecorecloud.io/claims'`
 
-Defined in: [packages/core/src/constants.ts:21](https://github.com/Sitecore/content-sdk/blob/87b8db38cdfb3e7cc6391de3955f794aecc8b8e9/packages/core/src/constants.ts#L21)
+Defined in: [packages/core/src/constants.ts:21](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/core/src/constants.ts#L21)
 
 **`Internal`**
 

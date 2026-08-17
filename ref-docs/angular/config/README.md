@@ -13,6 +13,7 @@
 ## Type Aliases
 
 - [AngularSitecoreConfig](type-aliases/AngularSitecoreConfig.md)
+- [LinkPrefetchMode](type-aliases/LinkPrefetchMode.md)
 
 ## Functions
 

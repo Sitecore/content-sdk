@@ -1,7 +1,7 @@
 import { Component, ElementRef, Renderer2, effect, inject, input } from '@angular/core';
 
 /**
- * Emits a JSON-LD script tag (kit-nextjs-skate-park StructuredData parity).
+ * Emits a JSON-LD script tag.
  * Uses the DOM API so Angular does not strip script tags from templates.
  */
 @Component({

@@ -133,6 +133,33 @@ describe('ClientLoaderDataService', () => {
       const req = httpController.expectOne(LOADER_DATA_ENDPOINT);
       req.flush({ kind: 'data', data: { pending: true } });
     });
+
+    it('with { force: true } makes a fresh request even when a response is already staged (bypasses the "already prefetched" check)', async () => {
+      setupTestBed();
+      const request = makeLoaderPayload({ url: '/staged-but-forced' });
+      service.prefetch(request);
+      const first = httpController.expectOne(LOADER_DATA_ENDPOINT);
+      first.flush({ kind: 'data', data: { first: true } });
+      await new Promise((r) => setTimeout(r, 0));
+
+      service.prefetch(request, { force: true });
+      const second = httpController.expectOne(LOADER_DATA_ENDPOINT);
+      second.flush({ kind: 'data', data: { second: true } });
+      await new Promise((r) => setTimeout(r, 0));
+
+      // The fresher response overwrote the staged entry.
+      const result = await service.getData(request);
+      expect(result).toEqual({ kind: 'data', data: { second: true } });
+    });
+
+    it('with { force: true } still does not start a second request when one is already pending (in-flight coalescing is unaffected by force)', () => {
+      setupTestBed();
+      const request = makeLoaderPayload({ url: '/pending-forced' });
+      service.prefetch(request);
+      service.prefetch(request, { force: true });
+
+      httpController.expectOne(LOADER_DATA_ENDPOINT);
+    });
   });
 
   describe('fetchData (via getData)', () => {

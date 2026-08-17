@@ -31,6 +31,7 @@ class MockSitecoreContextService {
   readonly dictionary = this._dictionary.asReadonly();
   readonly urlLocale = this._urlLocale.asReadonly();
   readonly isEditing = computed(() => this._page()?.mode?.isEditing ?? false);
+  readonly isPreview = computed(() => this._page()?.mode?.isPreview ?? false);
   readonly effectiveLocale = computed(
     () => this._page()?.locale ?? this._urlLocale() ?? this.config?.defaultLanguage ?? 'en'
   );
