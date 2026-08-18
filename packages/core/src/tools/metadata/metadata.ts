@@ -5,25 +5,38 @@ type Package = {
   version: string;
 };
 
+/**
+ * Supported package managers for metadata collection.
+ * @internal
+ */
 type PackageManagerName = 'npm' | 'pnpm' | 'yarn' | 'bun';
 
+/**
+ * Package manager running the current process.
+ * @internal
+ */
 type PackageManager = {
   name: PackageManagerName;
   /**
-   * Commands differ between major versions, most notably between yarn classic (1.x) and yarn
-   * berry (2 and above). Undefined when the version could not be determined.
+   * Major version of the package manager, when it could be determined.
+   * Commands differ between yarn classic (1.x) and yarn berry (2+).
    */
   majorVersion?: number;
 };
 
 /**
  * A package manager specific command to list installed packages, with a parser for its output.
+ * @internal
  */
 type PackagesQuery = {
   command: string;
   parse: (output: string) => Package[];
 };
 
+/**
+ * A node in the dependency tree returned by `pnpm list --json`.
+ * @internal
+ */
 type PnpmDependencyNode = {
   version?: string;
   dependencies?: Record<string, PnpmDependencyNode>;
@@ -109,6 +122,7 @@ function getPackagesFromQueryResult(scPackages: Package[]): Record<string, strin
  * disk - which matters because the app being built is not necessarily the project that declares
  * the package manager (workspaces).
  * @returns {PackageManager} the detected package manager, npm when it could not be determined
+ * @internal
  */
 function detectPackageManager(): PackageManager {
   const { npm_config_user_agent: userAgent, npm_execpath: execPath } = process.env;
@@ -151,6 +165,7 @@ function detectPackageManager(): PackageManager {
  * @param {PackageManager} packageManager package manager to build the command for
  * @param {boolean} allowWorkspaces whether packages of all workspaces should be included
  * @returns {PackagesQuery} the command and a parser for its output
+ * @internal
  */
 function getPackagesQuery(
   packageManager: PackageManager,
@@ -195,6 +210,7 @@ function getPackagesQuery(
  * Parse the output of `npm query`, which is a JSON array of package manifests
  * @param {string} output command output
  * @returns {Package[]} installed packages
+ * @internal
  */
 function parseNpmQuery(output: string): Package[] {
   const parsed = JSON.parse(output);
@@ -211,6 +227,7 @@ function parseNpmQuery(output: string): Package[] {
  * Parse the output of `pnpm list --json`, which is a dependency tree per project
  * @param {string} output command output
  * @returns {Package[]} installed packages
+ * @internal
  */
 function parsePnpmList(output: string): Package[] {
   if (!output.trim()) {
@@ -259,6 +276,7 @@ function parsePnpmList(output: string): Package[] {
  * Parse the output of `yarn info --json`, which is an NDJSON stream of package locators
  * @param {string} output command output
  * @returns {Package[]} installed packages
+ * @internal
  */
 function parseYarnInfo(output: string): Package[] {
   return parseJsonLines(output).reduce<Package[]>((packages, entry) => {
@@ -274,6 +292,7 @@ function parseYarnInfo(output: string): Package[] {
  * 'tree' entry holds the hoisted dependency trees
  * @param {string} output command output
  * @returns {Package[]} installed packages
+ * @internal
  */
 function parseYarnClassicList(output: string): Package[] {
   return parseJsonLines(output).reduce<Package[]>((packages, entry) => {
@@ -293,6 +312,7 @@ function parseYarnClassicList(output: string): Package[] {
  * Parse the dependency tree printed by `bun pm ls`
  * @param {string} output command output
  * @returns {Package[]} installed packages
+ * @internal
  */
 function parseBunPackageList(output: string): Package[] {
   return output.split(/\r?\n/).reduce<Package[]>((packages, line) => {
@@ -307,6 +327,7 @@ function parseBunPackageList(output: string): Package[] {
  * diagnostics into their output
  * @param {string} output command output
  * @returns {any[]} parsed entries
+ * @internal
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseJsonLines(output: string): any[] {
@@ -331,6 +352,7 @@ function parseJsonLines(output: string): any[] {
  * reference with the protocol it was resolved with, which is not part of the version.
  * @param {string} locator package locator
  * @returns {Package | undefined} the package, or undefined when the locator could not be parsed
+ * @internal
  */
 function parsePackageLocator(locator: string): Package | undefined {
   const separatorIndex = locator.lastIndexOf('@');
