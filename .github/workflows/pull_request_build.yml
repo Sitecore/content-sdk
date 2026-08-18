@@ -51,7 +51,6 @@ jobs:
         env:
           testEnv: ci
           IMPORT_ALIAS_STRATEGY: plain
-          NODE_OPTIONS: --max-old-space-size=6144
 
       - name: Generate code coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@v5
