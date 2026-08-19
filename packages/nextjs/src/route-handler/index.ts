@@ -3,6 +3,7 @@ export { createRobotsRouteHandler } from './robots-route-handler';
 export { createLlmsTxtRouteHandler } from './llms-txt-route-handler';
 export { createEditingConfigRouteHandler } from './editing-config-route-handler';
 export { createEditingRenderRouteHandlers } from './editing-render-route-handler';
+export { createExperimentalFeaturesRouteHandler } from './experimental-features-route-handler';
 export {
   createSitecoreRevalidateRouteHandler,
   type SitecoreRevalidateRouteHandlerOptions,
