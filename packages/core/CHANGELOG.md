@@ -1,5 +1,11 @@
 # @sitecore-content-sdk/core
 
+## 2.1.3
+
+### Patch Changes
+
+- Default GraphQLRequestClient to the global fetch API so graphql-request does not use cross-fetch/node-fetch, which triggers Node DEP0169 via url.parse(). ([f3401a8](https://github.com/sitecore/content-sdk/commit/f3401a8f88338ab1fd34e5ea98096e167973633a))
+
 ## 2.1.2
 
 ### Patch Changes
