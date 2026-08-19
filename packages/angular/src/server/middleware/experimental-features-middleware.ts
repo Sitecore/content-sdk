@@ -2,14 +2,15 @@ import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
 } from '@sitecore-content-sdk/content/editing';
-import {
-  buildExperimentalFeaturesResponse,
-  ExperimentalFeatureData,
-} from '@sitecore-content-sdk/content/experimental';
+import { buildExperimentalFeaturesResponse } from '@sitecore-content-sdk/content/experimental';
+import type { ExperimentalFeatureData } from '@sitecore-content-sdk/content/experimental';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from './models';
-import { resolveConfiguredEditingSecret } from './editing-config-middleware';
+import { readProcessEnv } from '../utils';
 import debug from '../../debug';
+import experimentalFeaturesCatalogJson from '../../experimental.json';
+
+const experimentalFeaturesCatalog = experimentalFeaturesCatalogJson as ExperimentalFeatureData[];
 
 const DEFAULT_ENDPOINT = '/api/editing/experimental';
 
@@ -18,15 +19,6 @@ const DEFAULT_ENDPOINT = '/api/editing/experimental';
  * @public
  */
 export interface CreateExperimentalFeaturesMiddlewareOptions {
-  /**
-   * Experimental features catalog. Defaults to the shared Content SDK catalog.
-   */
-  features?: ExperimentalFeatureData[];
-  /**
-   * Editing secret to validate. Defaults to the `SITECORE_EDITING_SECRET`
-   * environment variable.
-   */
-  editingSecret?: string;
   /** Endpoint path; default `/api/editing/experimental`. */
   endpoint?: string;
 }
@@ -35,6 +27,8 @@ export interface CreateExperimentalFeaturesMiddlewareOptions {
  * Express middleware that serves the experimental features visibility endpoint
  * (default path: `/api/editing/experimental`). Returns available experimental
  * features and whether each is currently enabled.
+ *
+ * Catalog is owned by this package (`src/experimental.json`) and is not app-configurable.
  * @param {CreateExperimentalFeaturesMiddlewareOptions} [options] - Middleware options.
  * @returns {ExpressMiddleware} The middleware function.
  * @public
@@ -42,7 +36,7 @@ export interface CreateExperimentalFeaturesMiddlewareOptions {
 export function createExperimentalFeaturesMiddleware(
   options: CreateExperimentalFeaturesMiddlewareOptions = {}
 ): ExpressMiddleware {
-  const { features, endpoint = DEFAULT_ENDPOINT } = options;
+  const { endpoint = DEFAULT_ENDPOINT } = options;
 
   return async (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
     if (req.path !== endpoint) {
@@ -79,7 +73,7 @@ export function createExperimentalFeaturesMiddleware(
     const query = (req.query ?? {}) as Record<string, string | string[] | undefined>;
     const secretParam = query[QUERY_PARAM_EDITING_SECRET];
     const secret = Array.isArray(secretParam) ? secretParam[0] : secretParam;
-    const configuredSecret = resolveConfiguredEditingSecret(options.editingSecret);
+    const configuredSecret = readProcessEnv('SITECORE_EDITING_SECRET')?.trim() || undefined;
 
     if (!configuredSecret || secret !== configuredSecret) {
       debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, configuredSecret);
@@ -98,6 +92,6 @@ export function createExperimentalFeaturesMiddleware(
       return;
     }
 
-    res.status(200).json(buildExperimentalFeaturesResponse(features));
+    res.status(200).json(buildExperimentalFeaturesResponse(experimentalFeaturesCatalog));
   };
 }

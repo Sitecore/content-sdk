@@ -14,10 +14,7 @@ export {
   EditingConfigMiddleware,
   EditingConfigMiddlewareConfig,
 } from './editing-config-middleware';
-export {
-  ExperimentalFeaturesMiddleware,
-  ExperimentalFeaturesMiddlewareConfig,
-} from './experimental-features-middleware';
+export { ExperimentalFeaturesMiddleware } from './experimental-features-middleware';
 export {
   RenderingType,
   EDITING_COMPONENT_PLACEHOLDER,
@@ -31,7 +28,6 @@ export type {
 } from '@sitecore-content-sdk/content/experimental';
 export {
   buildExperimentalFeaturesResponse,
-  defaultExperimentalFeatures,
   isExperimentalEnvFlagEnabled,
   resolveExperimentalFeatureStatuses,
 } from '@sitecore-content-sdk/content/experimental';

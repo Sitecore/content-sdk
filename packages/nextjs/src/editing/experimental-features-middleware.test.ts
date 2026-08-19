@@ -3,8 +3,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/content/editing';
-import { ExperimentalFeatureData } from '@sitecore-content-sdk/content/experimental';
 import { ExperimentalFeaturesMiddleware } from './experimental-features-middleware';
+import experimentalFeaturesCatalog from '../experimental.json';
 
 type Query = {
   [key: string]: string;
@@ -43,22 +43,18 @@ const mockResponse = () => {
   return res;
 };
 
-const features: ExperimentalFeatureData[] = [
+const expectedResultForbidden = { message: 'Missing or invalid editing secret' };
+
+const expectedCatalog = [
   {
-    idName: 'feature-one',
-    displayName: 'Feature One',
-    envVarName: 'CSDK_EXPERIMENTAL_FEATURE_ONE',
-    description: 'First experimental feature',
+    ...experimentalFeaturesCatalog[0],
+    enabled: true,
   },
   {
-    idName: 'feature-two',
-    displayName: 'Feature Two',
-    envVarName: 'CSDK_EXPERIMENTAL_FEATURE_TWO',
-    description: 'Second experimental feature',
+    ...experimentalFeaturesCatalog[1],
+    enabled: false,
   },
 ];
-
-const expectedResultForbidden = { message: 'Missing or invalid editing secret' };
 
 describe('ExperimentalFeaturesMiddleware', () => {
   const secret = 'jss-editing-secret-mock';
@@ -66,8 +62,6 @@ describe('ExperimentalFeaturesMiddleware', () => {
   beforeEach(() => {
     process.env.SITECORE_EDITING_SECRET = secret;
     process.env.JSS_ALLOWED_ORIGINS = allowedOrigin;
-    delete process.env.CSDK_EXPERIMENTAL_FEATURE_ONE;
-    delete process.env.CSDK_EXPERIMENTAL_FEATURE_TWO;
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO;
   });
@@ -80,8 +74,6 @@ describe('ExperimentalFeaturesMiddleware', () => {
   after(() => {
     delete process.env.SITECORE_EDITING_SECRET;
     delete process.env.JSS_ALLOWED_ORIGINS;
-    delete process.env.CSDK_EXPERIMENTAL_FEATURE_ONE;
-    delete process.env.CSDK_EXPERIMENTAL_FEATURE_TWO;
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO;
   });
@@ -89,7 +81,7 @@ describe('ExperimentalFeaturesMiddleware', () => {
   it('should respond with 401 for missing secret', async () => {
     const req = mockRequest('GET', {});
     const res = mockResponse();
-    const handler = new ExperimentalFeaturesMiddleware({ features }).getHandler();
+    const handler = new ExperimentalFeaturesMiddleware().getHandler();
 
     await handler(req, res);
 
@@ -100,7 +92,7 @@ describe('ExperimentalFeaturesMiddleware', () => {
   it('should stop request and return 401 when CORS match is not met', async () => {
     const req = mockRequest('GET', {}, { origin: 'https://notallowed.com' });
     const res = mockResponse();
-    const handler = new ExperimentalFeaturesMiddleware({ features }).getHandler();
+    const handler = new ExperimentalFeaturesMiddleware().getHandler();
 
     await handler(req, res);
 
@@ -113,7 +105,7 @@ describe('ExperimentalFeaturesMiddleware', () => {
     query[QUERY_PARAM_EDITING_SECRET] = 'wrongsekret';
     const req = mockRequest('GET', query);
     const res = mockResponse();
-    const handler = new ExperimentalFeaturesMiddleware({ features }).getHandler();
+    const handler = new ExperimentalFeaturesMiddleware().getHandler();
 
     await handler(req, res);
 
@@ -126,7 +118,7 @@ describe('ExperimentalFeaturesMiddleware', () => {
     query[QUERY_PARAM_EDITING_SECRET] = secret;
     const req = mockRequest('OPTIONS', query);
     const res = mockResponse();
-    const handler = new ExperimentalFeaturesMiddleware({ features }).getHandler();
+    const handler = new ExperimentalFeaturesMiddleware().getHandler();
 
     await handler(req, res);
 
@@ -137,34 +129,8 @@ describe('ExperimentalFeaturesMiddleware', () => {
     expect(res.send).to.have.been.calledOnceWith(null);
   });
 
-  it('should respond with 200 and feature statuses', async () => {
-    process.env.CSDK_EXPERIMENTAL_FEATURE_ONE = 'true';
-
-    const query = {} as Query;
-    query[QUERY_PARAM_EDITING_SECRET] = secret;
-    const req = mockRequest('GET', query);
-    const res = mockResponse();
-    const handler = new ExperimentalFeaturesMiddleware({ features }).getHandler();
-
-    await handler(req, res);
-
-    expect(res.status).to.have.been.calledWith(200);
-    expect(res.json).to.have.been.calledWith({
-      features: [
-        {
-          ...features[0],
-          enabled: true,
-        },
-        {
-          ...features[1],
-          enabled: false,
-        },
-      ],
-    });
-  });
-
-  it('should respond with default package catalog when no features override is provided', async () => {
-    process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE = '1';
+  it('should respond with 200 and the package catalog feature statuses', async () => {
+    process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE = 'true';
 
     const query = {} as Query;
     query[QUERY_PARAM_EDITING_SECRET] = secret;
@@ -175,23 +141,6 @@ describe('ExperimentalFeaturesMiddleware', () => {
     await handler(req, res);
 
     expect(res.status).to.have.been.calledWith(200);
-    expect(res.json).to.have.been.calledWith({
-      features: [
-        {
-          idName: 'dummy-feature',
-          displayName: 'Dummy Feature',
-          envVarName: 'CSDK_EXPERIMENTAL_DUMMY_FEATURE',
-          description: 'Sample experimental feature used to verify the visibility API.',
-          enabled: true,
-        },
-        {
-          idName: 'dummy-feature-two',
-          displayName: 'Dummy Feature Two',
-          envVarName: 'CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO',
-          description: 'Second sample experimental feature for API testing.',
-          enabled: false,
-        },
-      ],
-    });
+    expect(res.json).to.have.been.calledWith({ features: expectedCatalog });
   });
 });

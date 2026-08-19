@@ -2,10 +2,7 @@ export { createSitemapRouteHandler } from './sitemap-route-handler';
 export { createRobotsRouteHandler } from './robots-route-handler';
 export { createEditingConfigRouteHandler } from './editing-config-route-handler';
 export { createEditingRenderRouteHandlers } from './editing-render-route-handler';
-export {
-  createExperimentalFeaturesRouteHandler,
-  type ExperimentalFeaturesRouteHandlerOptions,
-} from './experimental-features-route-handler';
+export { createExperimentalFeaturesRouteHandler } from './experimental-features-route-handler';
 export {
   createSitecoreRevalidateRouteHandler,
   type SitecoreRevalidateRouteHandlerOptions,

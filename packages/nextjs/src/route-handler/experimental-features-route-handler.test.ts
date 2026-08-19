@@ -5,7 +5,7 @@ import sinonChai from 'sinon-chai';
 import { NextRequest } from 'next/server';
 import proxyquire from 'proxyquire';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/content/editing';
-import { ExperimentalFeatureData } from '@sitecore-content-sdk/content/experimental';
+import experimentalFeaturesCatalog from '../experimental.json';
 
 chai.use(sinonChai);
 
@@ -21,15 +21,6 @@ describe('createExperimentalFeaturesRouteHandler', () => {
   const allowedOrigin = 'https://allowed.com';
   const secret = 'jss-editing-secret-mock';
 
-  const features: ExperimentalFeatureData[] = [
-    {
-      idName: 'feature-one',
-      displayName: 'Feature One',
-      envVarName: 'CSDK_EXPERIMENTAL_FEATURE_ONE',
-      description: 'First experimental feature',
-    },
-  ];
-
   const corsHeaders = {
     'Access-Control-Allow-Origin': allowedOrigin,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT, PATCH',
@@ -39,7 +30,7 @@ describe('createExperimentalFeaturesRouteHandler', () => {
   beforeEach(() => {
     getEditingSecretStub = sandbox.stub().returns(secret);
     getEnforcedCorsHeadersStub = sandbox.stub().returns(corsHeaders);
-    delete process.env.CSDK_EXPERIMENTAL_FEATURE_ONE;
+    delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
 
     experimentalFeaturesRouteHandlerModule = proxyquire(
       './experimental-features-route-handler',
@@ -62,16 +53,14 @@ describe('createExperimentalFeaturesRouteHandler', () => {
       };
     });
 
-    handler = experimentalFeaturesRouteHandlerModule.createExperimentalFeaturesRouteHandler({
-      features,
-    });
+    handler = experimentalFeaturesRouteHandlerModule.createExperimentalFeaturesRouteHandler();
   });
 
   afterEach(() => {
     sandbox.restore();
     sinon.restore();
     (globalThis as any).Response = OriginalResponse;
-    delete process.env.CSDK_EXPERIMENTAL_FEATURE_ONE;
+    delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
   });
 
   describe('GET handler', () => {
@@ -118,8 +107,8 @@ describe('createExperimentalFeaturesRouteHandler', () => {
       expect(res.body).to.equal(JSON.stringify({ message: 'Missing or invalid editing secret' }));
     });
 
-    it('should return 200 with feature statuses for valid request', async () => {
-      process.env.CSDK_EXPERIMENTAL_FEATURE_ONE = '1';
+    it('should return 200 with package catalog feature statuses for valid request', async () => {
+      process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE = '1';
 
       const res = await handler.GET(req as NextRequest);
 
@@ -128,8 +117,12 @@ describe('createExperimentalFeaturesRouteHandler', () => {
         JSON.stringify({
           features: [
             {
-              ...features[0],
+              ...experimentalFeaturesCatalog[0],
               enabled: true,
+            },
+            {
+              ...experimentalFeaturesCatalog[1],
+              enabled: false,
             },
           ],
         })

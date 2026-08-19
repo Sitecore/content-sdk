@@ -31,7 +31,6 @@ import { DateField } from '@sitecore-content-sdk/react';
 import { DeepRequired } from '@sitecore-content-sdk/content/config';
 import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/react';
 import { DefaultEmptyFieldEditingComponentText } from '@sitecore-content-sdk/react';
-import { defaultExperimentalFeatures } from '@sitecore-content-sdk/content/experimental';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
 import { DesignLibrary } from '@sitecore-content-sdk/react';
 import { DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/content/editing';
@@ -377,7 +376,7 @@ export const createEditingRenderRouteHandlers: (options: EditingHandlerOptions) 
 };
 
 // @public
-export const createExperimentalFeaturesRouteHandler: (options?: ExperimentalFeaturesRouteHandlerOptions) => {
+export const createExperimentalFeaturesRouteHandler: () => {
     GET: (req: NextRequest) => Promise<Response>;
     OPTIONS: (req: NextRequest) => Promise<Response>;
 };
@@ -419,8 +418,6 @@ export { debug_2 as debug }
 export { DefaultEmptyFieldEditingComponentImage }
 
 export { DefaultEmptyFieldEditingComponentText }
-
-export { defaultExperimentalFeatures }
 
 // @public
 export const defaultImportEntries: ImportEntry[];
@@ -510,23 +507,10 @@ export { ExperimentalFeatureData }
 
 // @public
 export class ExperimentalFeaturesMiddleware {
-    constructor(config?: ExperimentalFeaturesMiddlewareConfig);
-    // (undocumented)
-    protected config: ExperimentalFeaturesMiddlewareConfig;
     getHandler(): (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 }
 
-// @public
-export type ExperimentalFeaturesMiddlewareConfig = {
-    features?: ExperimentalFeatureData[];
-};
-
 export { ExperimentalFeaturesResponse }
-
-// @public
-export type ExperimentalFeaturesRouteHandlerOptions = {
-    features?: ExperimentalFeatureData[];
-};
 
 export { ExperimentalFeatureStatus }
 

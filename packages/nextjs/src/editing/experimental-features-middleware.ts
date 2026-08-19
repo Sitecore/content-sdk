@@ -1,37 +1,24 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import {
-  buildExperimentalFeaturesResponse,
-  ExperimentalFeatureData,
-} from '@sitecore-content-sdk/content/experimental';
+import { buildExperimentalFeaturesResponse } from '@sitecore-content-sdk/content/experimental';
+import type { ExperimentalFeatureData } from '@sitecore-content-sdk/content/experimental';
 import debug from '../debug';
 import {
   authorizeEditingEndpointRequest,
   getEditingSecretQueryParamName,
 } from './editing-endpoint-auth';
+import experimentalFeaturesCatalogJson from '../experimental.json';
 
-/**
- * Configuration for {@link ExperimentalFeaturesMiddleware}.
- * @public
- */
-export type ExperimentalFeaturesMiddlewareConfig = {
-  /**
-   * Experimental features catalog. Defaults to the shared Content SDK catalog.
-   */
-  features?: ExperimentalFeatureData[];
-};
+const experimentalFeaturesCatalog = experimentalFeaturesCatalogJson as ExperimentalFeatureData[];
 
 /**
  * Middleware / handler used in the experimental features API route
  * (e.g. '/api/editing/experimental'). Exposes available experimental features
  * and whether each is currently enabled, for Sitecore AI / editing host consumers.
+ *
+ * Catalog is owned by this package (`src/experimental.json`) and is not app-configurable.
  * @public
  */
 export class ExperimentalFeaturesMiddleware {
-  /**
-   * @param {ExperimentalFeaturesMiddlewareConfig} [config] Experimental features middleware config
-   */
-  constructor(protected config: ExperimentalFeaturesMiddlewareConfig = {}) {}
-
   /**
    * Gets the Next.js API route handler
    * @returns middleware handler
@@ -66,6 +53,6 @@ export class ExperimentalFeaturesMiddleware {
       return res.status(204).send(null);
     }
 
-    return res.status(200).json(buildExperimentalFeaturesResponse(this.config.features));
+    return res.status(200).json(buildExperimentalFeaturesResponse(experimentalFeaturesCatalog));
   };
 }

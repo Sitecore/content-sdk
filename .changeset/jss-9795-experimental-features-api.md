@@ -5,4 +5,4 @@
 'create-content-sdk-app': patch
 ---
 
-[experimental] Add experimental features visibility API shared across frameworks. Catalog/types/utils live in `@sitecore-content-sdk/content`; Next.js and Angular expose editing-secret protected endpoints, wired in all Next.js templates and the Angular server.
+[experimental] Add experimental features visibility API shared across frameworks. Types/utils live in `@sitecore-content-sdk/content`; each framework package owns its `experimental.json` catalog. Next.js and Angular expose editing-secret protected endpoints, wired in all Next.js templates and the Angular server.

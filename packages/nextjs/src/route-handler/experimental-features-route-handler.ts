@@ -1,38 +1,25 @@
 import { NextRequest } from 'next/server';
-import {
-  buildExperimentalFeaturesResponse,
-  ExperimentalFeatureData,
-} from '@sitecore-content-sdk/content/experimental';
+import { buildExperimentalFeaturesResponse } from '@sitecore-content-sdk/content/experimental';
+import type { ExperimentalFeatureData } from '@sitecore-content-sdk/content/experimental';
 import debug from '../debug';
 import {
   authorizeEditingEndpointRequest,
   getEditingSecretQueryParamName,
 } from '../editing/editing-endpoint-auth';
+import experimentalFeaturesCatalogJson from '../experimental.json';
 
-/**
- * Options for {@link createExperimentalFeaturesRouteHandler}.
- * @public
- */
-export type ExperimentalFeaturesRouteHandlerOptions = {
-  /**
-   * Experimental features catalog. Defaults to the shared Content SDK catalog.
-   */
-  features?: ExperimentalFeatureData[];
-};
+const experimentalFeaturesCatalog = experimentalFeaturesCatalogJson as ExperimentalFeatureData[];
 
 /**
  * Creates a route handler for the experimental features API route
  * (e.g. '/api/editing/experimental'). Exposes available experimental features
  * and whether each is currently enabled, for Sitecore AI / editing host consumers.
- * @param {ExperimentalFeaturesRouteHandlerOptions} [options] - The options for the route handler.
+ *
+ * Catalog is owned by this package (`src/experimental.json`) and is not app-configurable.
  * @returns The route handler with GET and OPTIONS methods.
  * @public
  */
-export const createExperimentalFeaturesRouteHandler = (
-  options: ExperimentalFeaturesRouteHandlerOptions = {}
-) => {
-  const { features } = options;
-
+export const createExperimentalFeaturesRouteHandler = () => {
   const authorize = (req: NextRequest, requireSecret: boolean) =>
     authorizeEditingEndpointRequest({
       method: req.method,
@@ -58,7 +45,7 @@ export const createExperimentalFeaturesRouteHandler = (
         });
       }
 
-      const responseData = buildExperimentalFeaturesResponse(features);
+      const responseData = buildExperimentalFeaturesResponse(experimentalFeaturesCatalog);
 
       debug.editing(
         'experimental features route handler end in %dms',

@@ -42,7 +42,7 @@ export const breakDownPath: (configuredLocales: string[], urlPath: string) => Pr
 export const buildComponentMapContent: (entries: ComponentMapEntry[], componentImports: ComponentImport[] | undefined, options: TemplateOptions) => string;
 
 // @public
-export const buildExperimentalFeaturesResponse: (features?: ExperimentalFeatureData[]) => ExperimentalFeaturesResponse;
+export const buildExperimentalFeaturesResponse: (features: ExperimentalFeatureData[]) => ExperimentalFeaturesResponse;
 
 // @internal
 export const buildFallbackConfig: (env: {
@@ -230,9 +230,6 @@ export const DEFAULT_PLACEHOLDER_UID = "00000000-0000-0000-0000-000000000000";
 
 // @internal (undocumented)
 export const DEFAULT_VARIANT = "_default";
-
-// @public
-export const defaultExperimentalFeatures: ExperimentalFeatureData[];
 
 // Warning: (ae-forgotten-export) The symbol "_defaultMapTemplate" needs to be exported by the entry point api-surface.d.ts
 //

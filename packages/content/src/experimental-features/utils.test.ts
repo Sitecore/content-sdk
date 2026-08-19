@@ -16,8 +16,6 @@ describe('experimental utils', () => {
 
   afterEach(() => {
     delete process.env.CSDK_EXPERIMENTAL_FEATURE_ONE;
-    delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
-    delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO;
   });
 
   describe('isExperimentalEnvFlagEnabled', () => {
@@ -60,29 +58,6 @@ describe('experimental utils', () => {
         features: [
           {
             ...feature,
-            enabled: false,
-          },
-        ],
-      });
-    });
-
-    it('should default to package experimental.json catalog', () => {
-      process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE = 'true';
-
-      expect(buildExperimentalFeaturesResponse()).to.deep.equal({
-        features: [
-          {
-            idName: 'dummy-feature',
-            displayName: 'Dummy Feature',
-            envVarName: 'CSDK_EXPERIMENTAL_DUMMY_FEATURE',
-            description: 'Sample experimental feature used to verify the visibility API.',
-            enabled: true,
-          },
-          {
-            idName: 'dummy-feature-two',
-            displayName: 'Dummy Feature Two',
-            envVarName: 'CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO',
-            description: 'Second sample experimental feature for API testing.',
             enabled: false,
           },
         ],

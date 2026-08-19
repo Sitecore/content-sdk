@@ -1,4 +1,3 @@
-import experimentalFeaturesCatalog from '../experimental.json';
 import {
   ExperimentalFeatureData,
   ExperimentalFeatureStatus,
@@ -22,19 +21,8 @@ export const isExperimentalEnvFlagEnabled = (value: string | undefined): boolean
 };
 
 /**
- * Default experimental features catalog shipped with the Content package
- * (`src/experimental.json`). Shared by framework packages (Next.js, Angular, etc.).
- *
- * Production default should be `[]`. Dummy entries may be present temporarily for
- * display/testing of the visibility API.
- * @public
- */
-export const defaultExperimentalFeatures =
-  experimentalFeaturesCatalog as ExperimentalFeatureData[];
-
-/**
  * Resolves experimental feature metadata with current enabled status from env vars.
- * @param {ExperimentalFeatureData[]} features - Experimental features catalog.
+ * @param {ExperimentalFeatureData[]} features - Experimental features catalog from a framework package.
  * @returns {ExperimentalFeatureStatus[]} Features with enabled status.
  * @public
  */
@@ -49,12 +37,12 @@ export const resolveExperimentalFeatureStatuses = (
 
 /**
  * Builds the experimental features API response payload.
- * @param {ExperimentalFeatureData[]} [features] - Optional catalog override. Defaults to package catalog.
+ * @param {ExperimentalFeatureData[]} features - Catalog from the framework package (`experimental.json`).
  * @returns {ExperimentalFeaturesResponse} Response payload.
  * @public
  */
 export const buildExperimentalFeaturesResponse = (
-  features: ExperimentalFeatureData[] = defaultExperimentalFeatures
+  features: ExperimentalFeatureData[]
 ): ExperimentalFeaturesResponse => {
   return {
     features: resolveExperimentalFeatureStatuses(features),

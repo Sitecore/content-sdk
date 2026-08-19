@@ -2,6 +2,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createExperimentalFeaturesMiddleware } from './experimental-features-middleware';
 import type { ExpressRequest, ExpressResponse } from './models';
+import experimentalFeaturesCatalog from '../../experimental.json';
 
 function createMockRes() {
   return {
@@ -19,32 +20,22 @@ function createMockRes() {
 
 describe('createExperimentalFeaturesMiddleware', () => {
   const next = vi.fn();
-  const features = [
-    {
-      idName: 'feature-one',
-      displayName: 'Feature One',
-      envVarName: 'CSDK_EXPERIMENTAL_FEATURE_ONE',
-      description: 'First experimental feature',
-    },
-  ];
 
   beforeEach(() => {
     next.mockClear();
     delete process.env.SITECORE_EDITING_SECRET;
-    delete process.env.CSDK_EXPERIMENTAL_FEATURE_ONE;
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO;
   });
 
   afterEach(() => {
     delete process.env.SITECORE_EDITING_SECRET;
-    delete process.env.CSDK_EXPERIMENTAL_FEATURE_ONE;
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO;
   });
 
   it('passes through when path does not match', async () => {
-    const middleware = createExperimentalFeaturesMiddleware({ features });
+    const middleware = createExperimentalFeaturesMiddleware();
     const req: ExpressRequest = {
       method: 'GET',
       path: '/api/not-it',
@@ -59,10 +50,8 @@ describe('createExperimentalFeaturesMiddleware', () => {
   });
 
   it('rejects 401 when origin is not allowed', async () => {
-    const middleware = createExperimentalFeaturesMiddleware({
-      features,
-      editingSecret: 's',
-    });
+    process.env.SITECORE_EDITING_SECRET = 's';
+    const middleware = createExperimentalFeaturesMiddleware();
     const req: ExpressRequest = {
       method: 'GET',
       path: '/api/editing/experimental',
@@ -79,10 +68,8 @@ describe('createExperimentalFeaturesMiddleware', () => {
 
   it('rejects 401 when secret is missing', async () => {
     process.env.JSS_ALLOWED_ORIGINS = 'https://allowed.com';
-    const middleware = createExperimentalFeaturesMiddleware({
-      features,
-      editingSecret: 's',
-    });
+    process.env.SITECORE_EDITING_SECRET = 's';
+    const middleware = createExperimentalFeaturesMiddleware();
     const req: ExpressRequest = {
       method: 'GET',
       path: '/api/editing/experimental',
@@ -97,13 +84,11 @@ describe('createExperimentalFeaturesMiddleware', () => {
     expect(res.json).toHaveBeenCalledWith({ message: 'Missing or invalid editing secret' });
   });
 
-  it('returns feature statuses for valid request', async () => {
+  it('returns package catalog feature statuses for valid request', async () => {
     process.env.JSS_ALLOWED_ORIGINS = 'https://allowed.com';
-    process.env.CSDK_EXPERIMENTAL_FEATURE_ONE = 'true';
-    const middleware = createExperimentalFeaturesMiddleware({
-      features,
-      editingSecret: 's',
-    });
+    process.env.SITECORE_EDITING_SECRET = 's';
+    process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE = 'true';
+    const middleware = createExperimentalFeaturesMiddleware();
     const req: ExpressRequest = {
       method: 'GET',
       path: '/api/editing/experimental',
@@ -118,44 +103,11 @@ describe('createExperimentalFeaturesMiddleware', () => {
     expect(res.json).toHaveBeenCalledWith({
       features: [
         {
-          ...features[0],
-          enabled: true,
-        },
-      ],
-    });
-  });
-
-  it('returns default shared catalog when features are not provided', async () => {
-    process.env.JSS_ALLOWED_ORIGINS = 'https://allowed.com';
-    process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE = '1';
-    const middleware = createExperimentalFeaturesMiddleware({
-      editingSecret: 's',
-    });
-    const req: ExpressRequest = {
-      method: 'GET',
-      path: '/api/editing/experimental',
-      url: '/api/editing/experimental?secret=s',
-      body: undefined,
-      query: { secret: 's' },
-      headers: { origin: 'https://allowed.com' },
-    };
-    const res = createMockRes();
-    await middleware(req, res, next);
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({
-      features: [
-        {
-          idName: 'dummy-feature',
-          displayName: 'Dummy Feature',
-          envVarName: 'CSDK_EXPERIMENTAL_DUMMY_FEATURE',
-          description: 'Sample experimental feature used to verify the visibility API.',
+          ...experimentalFeaturesCatalog[0],
           enabled: true,
         },
         {
-          idName: 'dummy-feature-two',
-          displayName: 'Dummy Feature Two',
-          envVarName: 'CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO',
-          description: 'Second sample experimental feature for API testing.',
+          ...experimentalFeaturesCatalog[1],
           enabled: false,
         },
       ],
