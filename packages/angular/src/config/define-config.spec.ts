@@ -105,4 +105,48 @@ describe('defineConfig', () => {
 
     expect(result.angular.locales).toEqual(['de', 'fr']);
   });
+
+  it("should default angular.linkPrefetch to mode:'eager', delayMs:100 when not configured", () => {
+    vi.spyOn(contentConfig, 'defineConfig').mockReturnValue({
+      defaultLanguage: 'en',
+      redirects: { enabled: true, locales: [] },
+    } as unknown as contentConfig.SitecoreConfig);
+
+    const result = defineConfig({});
+
+    expect(result.angular.linkPrefetch).toEqual({ mode: 'eager', delayMs: 100 });
+  });
+
+  it('should honor explicit angular.linkPrefetch overrides (eager mode)', () => {
+    vi.spyOn(contentConfig, 'defineConfig').mockReturnValue({
+      defaultLanguage: 'en',
+      redirects: { enabled: true, locales: [] },
+    } as unknown as contentConfig.SitecoreConfig);
+
+    const result = defineConfig({ angular: { linkPrefetch: { mode: 'eager', delayMs: 250 } } });
+
+    expect(result.angular.linkPrefetch).toEqual({ mode: 'eager', delayMs: 250 });
+  });
+
+  it("should honor angular.linkPrefetch.mode: 'off' (disabled)", () => {
+    vi.spyOn(contentConfig, 'defineConfig').mockReturnValue({
+      defaultLanguage: 'en',
+      redirects: { enabled: true, locales: [] },
+    } as unknown as contentConfig.SitecoreConfig);
+
+    const result = defineConfig({ angular: { linkPrefetch: { mode: 'off' } } });
+
+    expect(result.angular.linkPrefetch).toEqual({ mode: 'off', delayMs: 100 });
+  });
+
+  it('should apply linkPrefetch defaults independently per field', () => {
+    vi.spyOn(contentConfig, 'defineConfig').mockReturnValue({
+      defaultLanguage: 'en',
+      redirects: { enabled: true, locales: [] },
+    } as unknown as contentConfig.SitecoreConfig);
+
+    const result = defineConfig({ angular: { linkPrefetch: { mode: 'eager' } } });
+
+    expect(result.angular.linkPrefetch).toEqual({ mode: 'eager', delayMs: 100 });
+  });
 });

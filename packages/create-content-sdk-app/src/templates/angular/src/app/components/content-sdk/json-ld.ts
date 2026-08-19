@@ -1,4 +1,4 @@
-/** Minimal JSON-LD builders aligned with kit-nextjs-skate-park structured data. */
+/** Minimal JSON-LD builders for structured data. */
 
 export type ArticleJsonLd = {
   '@context': 'https://schema.org';

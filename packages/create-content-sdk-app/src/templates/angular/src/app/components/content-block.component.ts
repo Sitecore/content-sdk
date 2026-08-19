@@ -4,7 +4,7 @@ import { ScTextDirective, ScRichTextDirective, TextField } from '@sitecore-conte
 import { SxaComponent } from './content-sdk/sxa.component';
 
 /**
- * Parity with kit-nextjs-skate-park ContentBlock (minimal section, no Sitecore chrome wrapper).
+ * Minimal content section (no Sitecore chrome wrapper).
  */
 @Component({
   selector: 'app-content-block',

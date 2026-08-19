@@ -161,6 +161,7 @@ export {
   type FieldLike,
 } from './components';
 export { ScFormComponent } from './components/sc-form.component';
+export { type LinkPrefetchMode } from './config/define-config';
 
 export const _coreVersionMarker = CORE_VERSION;
 export const _routerTokenMarker = Router;

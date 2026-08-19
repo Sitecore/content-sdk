@@ -35,17 +35,27 @@ export class ClientLoaderDataService {
 
   /**
    * Prefetch loader data for the given request without consuming staged responses.
-   * If a response is already staged or a request is pending, does nothing.
-   * Otherwise starts a fetch and stores the result for a later getData() call.
-   * Used by PreLoaderDataService to warm responses for all loaders in a route in parallel.
+   * If a request is already pending for this key, does nothing (avoids two overlapping HTTP
+   * calls for the identical in-flight ask). Otherwise starts a fetch and stores the result for
+   * a later getData() call, overwriting any existing staged entry with the fresh one.
+   *
+   * By default (`force: false`) also skips the fetch when a response is already staged and
+   * unconsumed. Pass `force: true` to always re-ask regardless of an existing staged entry —
+   * used by hover prefetch, since hover is a fresh, repeatable signal of intent that a
+   * possibly-stale staged answer shouldn't suppress.
    * @param {LoaderPayload} loaderRequest - The loader data request
+   * @param {object} [options] - Prefetch options
+   * @param {boolean} [options.force] - When true, bypass the staged-response check (still coalesces concurrent in-flight requests)
    */
-  prefetch(loaderRequest: LoaderPayload): void {
+  prefetch(loaderRequest: LoaderPayload, options?: { force?: boolean }): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
     const key = requestKey(loaderRequest.loaderId, loaderRequest.url);
-    if (this.prefetchedResponses.has(key) || this.pending.has(key)) {
+    if (this.pending.has(key)) {
+      return;
+    }
+    if (!options?.force && this.prefetchedResponses.has(key)) {
       return;
     }
     const promise = this.fetchData(loaderRequest);

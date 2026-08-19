@@ -6,7 +6,7 @@ import { LayoutComponent } from '../shared/layout.component';
 
 /**
  * 500 error page. Uses the Sitecore server-error page when the loader returns layout data;
- * otherwise shows a static fallback (aligned with kit-nextjs global-error behavior).
+ * otherwise shows a static fallback.
  */
 @Component({
   selector: 'app-error',

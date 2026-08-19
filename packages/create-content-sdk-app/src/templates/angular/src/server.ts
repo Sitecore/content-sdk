@@ -160,6 +160,7 @@ app.use(
     ...config.redirects,
     ...config.api.edge,
     ...(config.api.local ?? {}),
+    ...config.angular,
     sites,
     defaultLanguage: config.defaultLanguage,
     defaultSite: config.defaultSite,

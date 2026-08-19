@@ -8,7 +8,7 @@
 
 > **SitecoreEdgeRevalidateUpdate** = `object`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:8](https://github.com/Sitecore/content-sdk/blob/87b8db38cdfb3e7cc6391de3955f794aecc8b8e9/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L8)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:8](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L8)
 
 One content change entry as commonly seen in Experience Edge / Content Operations payloads.
 
@@ -18,7 +18,7 @@ One content change entry as commonly seen in Experience Edge / Content Operation
 
 > `optional` **entity\_culture?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:12](https://github.com/Sitecore/content-sdk/blob/87b8db38cdfb3e7cc6391de3955f794aecc8b8e9/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L12)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:12](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L12)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revali
 
 > `optional` **entity\_definition?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:10](https://github.com/Sitecore/content-sdk/blob/87b8db38cdfb3e7cc6391de3955f794aecc8b8e9/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L10)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:10](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L10)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revali
 
 > `optional` **identifier?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:9](https://github.com/Sitecore/content-sdk/blob/87b8db38cdfb3e7cc6391de3955f794aecc8b8e9/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L9)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:9](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L9)
 
 ***
 
@@ -42,4 +42,4 @@ Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revali
 
 > `optional` **operation?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:11](https://github.com/Sitecore/content-sdk/blob/87b8db38cdfb3e7cc6391de3955f794aecc8b8e9/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L11)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:11](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L11)

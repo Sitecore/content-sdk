@@ -32,6 +32,7 @@ import { getDependentsGraph } from '@changesets/get-dependents-graph';
 import type { VersionType, NewChangesetWithCommit, NewChangeset } from '@changesets/types';
 
 const REPO = 'sitecore/content-sdk';
+const canaryTag = process.env.CANARY_PREFIX || 'canary';
 
 // List of packages that will get patch bumps instead of minor/major via cascade versioning
 const cascadeVersionPatchOnlyPkgs = ['create-content-sdk-app'];
@@ -140,9 +141,9 @@ async function main(): Promise<void> {
 
   const snapshotParams =
     isSnapshot && config.snapshot.prereleaseTemplate?.includes('{commit}')
-      ? { tag: 'canary' as const, commit: await getCurrentCommitId({ cwd }) }
+      ? { tag: canaryTag, commit: await getCurrentCommitId({ cwd }) }
       : isSnapshot
-      ? { tag: 'canary' as const }
+      ? { tag: canaryTag }
       : undefined;
 
   const releasePlan = assembleReleasePlan(
@@ -166,7 +167,7 @@ async function main(): Promise<void> {
   }
 
   const applyConfig = isSnapshot ? { ...config, changelog: false as const } : config;
-  await applyReleasePlan(releasePlan, packages, applyConfig, isSnapshot ? 'canary' : undefined);
+  await applyReleasePlan(releasePlan, packages, applyConfig, isSnapshot ? canaryTag : undefined);
 
   if (isSnapshot) {
     writeGithubOutput('snapshot_publish', 'true');
