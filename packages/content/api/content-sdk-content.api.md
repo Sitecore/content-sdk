@@ -154,6 +154,7 @@ export interface ComponentRendering<T = ComponentFields> {
     componentName: string;
     // (undocumented)
     dataSource?: string;
+    dataSourceResolveFailed?: boolean;
     // (undocumented)
     fields?: T;
     // (undocumented)
