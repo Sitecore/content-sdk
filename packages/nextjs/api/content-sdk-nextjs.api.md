@@ -28,6 +28,7 @@ import { constants } from '@sitecore-content-sdk/core';
 import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
 import { DateField } from '@sitecore-content-sdk/react';
 import { DeepRequired } from '@sitecore-content-sdk/content/config';
+import { DEFAULT_LLMS_TXT } from '@sitecore-content-sdk/content/site';
 import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/react';
 import { DefaultEmptyFieldEditingComponentText } from '@sitecore-content-sdk/react';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
@@ -110,6 +111,7 @@ import { LinkField } from '@sitecore-content-sdk/react';
 import { LinkFieldValue } from '@sitecore-content-sdk/react';
 import { LinkProps as LinkProps_2 } from '@sitecore-content-sdk/react';
 import { LinkProps as LinkProps_3 } from 'next/link';
+import { LLMS_TXT_CONTENT_TYPE } from '@sitecore-content-sdk/content/site';
 import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
 import { Metadata } from '@sitecore-content-sdk/core/node-tools';
@@ -369,6 +371,13 @@ export const createEditingRenderRouteHandlers: (options: EditingHandlerOptions) 
 
 export { createGraphQLClientFactory }
 
+// Warning: (ae-forgotten-export) The symbol "RouteHandlerOptions_3" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export const createLlmsTxtRouteHandler: (options: RouteHandlerOptions_3) => {
+    GET: (req: NextRequest) => Promise<Response>;
+};
+
 // Warning: (ae-forgotten-export) The symbol "RouteHandlerOptions_2" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
@@ -400,6 +409,8 @@ export { DateField }
 // @public
 const debug_2: Record<string, debug.Debugger>;
 export { debug_2 as debug }
+
+export { DEFAULT_LLMS_TXT }
 
 export { DefaultEmptyFieldEditingComponentImage }
 
@@ -677,6 +688,15 @@ export { LinkFieldValue }
 export type LinkProps = LinkProps_2 & {
     internalLinkMatcher?: RegExp;
 } & Pick<LinkProps_3, (typeof supportedNextLinkProps)[number]>;
+
+export { LLMS_TXT_CONTENT_TYPE }
+
+// @public
+export class LlmsTxtMiddleware {
+    constructor(client: SitecoreClient_2, sites: SiteInfo[]);
+    // (undocumented)
+    getHandler(): (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
+}
 
 // @public
 export class LocaleProxy extends ProxyBase {
