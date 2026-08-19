@@ -8,6 +8,6 @@
 
 > **PathPattern** = `string` \| `RegExp`
 
-Defined in: [packages/angular/src/server/utils.ts:24](https://github.com/Sitecore/content-sdk/blob/04f0dc6ce596d5395ca75fa2d35b683819beed92/packages/angular/src/server/utils.ts#L24)
+Defined in: [packages/angular/src/server/utils.ts:24](https://github.com/Sitecore/content-sdk/blob/b4fad5bfdcf00eb3138cebc08959d248545d0a22/packages/angular/src/server/utils.ts#L24)
 
 A middleware path pattern: a `string` (matched exactly) or a `RegExp` (matched with `.test`).
