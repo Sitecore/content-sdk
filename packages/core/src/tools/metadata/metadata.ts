@@ -6,30 +6,18 @@ type Package = {
 };
 
 /**
- * Supported package managers for metadata collection.
+ * Package manager identifiers used for metadata collection.
+ * Yarn classic is a separate key because its listing command differs from yarn berry.
  * @internal
  */
-type PackageManagerName = 'npm' | 'pnpm' | 'yarn' | 'bun';
-
-/**
- * Package manager running the current process.
- * @internal
- */
-type PackageManager = {
-  name: PackageManagerName;
-  /**
-   * Major version of the package manager, when it could be determined.
-   * Commands differ between yarn classic (1.x) and yarn berry (2+).
-   */
-  majorVersion?: number;
-};
+type PackageManagerName = 'npm' | 'pnpm' | 'yarn' | 'yarnClassic' | 'bun';
 
 /**
  * A package manager specific command to list installed packages, with a parser for its output.
  * @internal
  */
 type PackagesQuery = {
-  command: string;
+  query: string;
   parse: (output: string) => Package[];
 };
 
@@ -52,9 +40,6 @@ export interface Metadata {
 
 const trackedScopes = ['@sitecore', '@sitecore-feaas', '@sitecore-content-sdk'];
 
-// Longest name first, since 'pnpm' contains 'npm' and would be matched by it.
-const packageManagerNames: PackageManagerName[] = ['pnpm', 'yarn', 'bun', 'npm'];
-
 // pnpm and yarn match name patterns as globs, in which '*' does not cross the scope separator,
 // so both segments are wildcarded to cover every '@sitecore*' scope.
 const TRACKED_SCOPE_GLOB = '"@sitecore*/*"';
@@ -64,7 +49,7 @@ const PNPM_DEPENDENCY_GROUPS = [
   'devDependencies',
   'optionalDependencies',
   'unsavedDependencies',
-] as const;
+];
 
 // Matches the 'name@version' entries of the tree printed by `bun pm ls`, e.g '├── @scope/pkg@1.0.0'
 const BUN_PACKAGE_ENTRY = /^[\s│├└─]*((?:@[^\s@/]+\/)?[^\s@/]+)@([^\s]+)$/;
@@ -79,18 +64,19 @@ const MAX_OUTPUT_BUFFER = 10 * 1024 * 1024;
  */
 export function getMetadata(allowWorkspaces: boolean = false): Metadata {
   const metadata: Metadata = { packages: {} };
-  const { command, parse } = getPackagesQuery(detectPackageManager(), allowWorkspaces);
+  const packageManagement = getPackageManagement(allowWorkspaces);
+  const { query, parse } = packageManagement[detectPackageManager(packageManagement)];
 
   let queryResult: Package[] = [];
   try {
     queryResult = parse(
-      execSync(command, {
+      execSync(query, {
         maxBuffer: MAX_OUTPUT_BUFFER,
         stdio: ['ignore', 'pipe', 'pipe'],
       }).toString()
     );
   } catch (error) {
-    console.error(`Failed to retrieve sitecore packages using '${command}'`, error);
+    console.error(`Failed to retrieve sitecore packages using '${query}'`, error);
     return metadata;
   }
 
@@ -117,14 +103,58 @@ function getPackagesFromQueryResult(scPackages: Package[]): Record<string, strin
 }
 
 /**
+ * Build the listing command and parser for each supported package manager.
+ * Yarn classic is a dedicated entry because its command differs from yarn berry.
+ * @param {boolean} allowWorkspaces whether packages of all workspaces should be included
+ * @returns {Record<PackageManagerName, PackagesQuery>} query and parser per package manager
+ * @internal
+ */
+function getPackageManagement(allowWorkspaces: boolean): Record<PackageManagerName, PackagesQuery> {
+  return {
+    pnpm: {
+      query: `pnpm list --depth Infinity --json ${
+        allowWorkspaces ? '--recursive ' : ''
+      }${TRACKED_SCOPE_GLOB}`,
+      parse: parsePnpmList,
+    },
+    npm: {
+      query: `npm query [name*=@sitecore] --workspaces ${allowWorkspaces}`,
+      parse: parseNpmQuery,
+    },
+    yarn: {
+      query: `yarn info --json --name-only --recursive ${
+        allowWorkspaces ? '--all ' : ''
+      }${TRACKED_SCOPE_GLOB}`,
+      parse: parseYarnInfo,
+    },
+    yarnClassic: {
+      query: `yarn list --json --depth 0 --pattern ${TRACKED_SCOPE_GLOB}`,
+      parse: parseYarnClassicList,
+    },
+    bun: {
+      // `bun pm ls` has no name filter and only recently gained JSON output, so the tree it
+      // prints is parsed instead, and filtered by scope afterwards.
+      query: 'bun pm ls --all',
+      parse: parseBunPackageList,
+    },
+  };
+}
+
+/**
  * Detect the package manager that runs the current process. Package managers advertise themselves
  * through the environment they set up for the commands they run, so nothing has to be read from
  * disk - which matters because the app being built is not necessarily the project that declares
  * the package manager (workspaces).
- * @returns {PackageManager} the detected package manager, npm when it could not be determined
+ * @param {Record<PackageManagerName, PackagesQuery>} packageManagement supported package managers
+ * @returns {PackageManagerName} the detected package manager, npm when it could not be determined
  * @internal
  */
-function detectPackageManager(): PackageManager {
+function detectPackageManager(
+  packageManagement: Record<PackageManagerName, PackagesQuery>
+): PackageManagerName {
+  const managerNames = (Object.keys(packageManagement) as PackageManagerName[]).sort(
+    (left, right) => right.length - left.length
+  );
   const { npm_config_user_agent: userAgent, npm_execpath: execPath } = process.env;
 
   // e.g. 'pnpm/10.33.0 npm/? node/v22.11.0 win32 x64'
@@ -134,15 +164,12 @@ function detectPackageManager(): PackageManager {
     const name = (
       separatorIndex === -1 ? descriptor : descriptor.slice(0, separatorIndex)
     ).toLowerCase();
-    const knownName = packageManagerNames.find((candidate) => candidate === name);
+    const knownName = managerNames.find((candidate) => candidate === name);
 
     if (knownName) {
       const majorVersion = parseInt(descriptor.slice(separatorIndex + 1), 10);
 
-      return {
-        name: knownName,
-        majorVersion: Number.isNaN(majorVersion) ? undefined : majorVersion,
-      };
+      return knownName === 'yarn' && majorVersion === 1 ? 'yarnClassic' : knownName;
     }
   }
 
@@ -150,60 +177,14 @@ function detectPackageManager(): PackageManager {
   // not carry a version
   if (execPath) {
     const executable = execPath.toLowerCase().split(/[\\/]/).pop() as string;
-    const knownName = packageManagerNames.find((candidate) => executable.includes(candidate));
+    const knownName = managerNames.find((candidate) => executable.includes(candidate));
 
     if (knownName) {
-      return { name: knownName };
+      return knownName;
     }
   }
 
-  return { name: 'npm' };
-}
-
-/**
- * Build the command that lists the installed sitecore packages with the given package manager
- * @param {PackageManager} packageManager package manager to build the command for
- * @param {boolean} allowWorkspaces whether packages of all workspaces should be included
- * @returns {PackagesQuery} the command and a parser for its output
- * @internal
- */
-function getPackagesQuery(
-  packageManager: PackageManager,
-  allowWorkspaces: boolean
-): PackagesQuery {
-  switch (packageManager.name) {
-    case 'pnpm':
-      return {
-        command: `pnpm list --depth Infinity --json ${
-          allowWorkspaces ? '--recursive ' : ''
-        }${TRACKED_SCOPE_GLOB}`,
-        parse: parsePnpmList,
-      };
-    case 'yarn':
-      return packageManager.majorVersion === 1
-        ? {
-            command: `yarn list --json --depth 0 --pattern ${TRACKED_SCOPE_GLOB}`,
-            parse: parseYarnClassicList,
-          }
-        : {
-            command: `yarn info --json --name-only --recursive ${
-              allowWorkspaces ? '--all ' : ''
-            }${TRACKED_SCOPE_GLOB}`,
-            parse: parseYarnInfo,
-          };
-    case 'bun':
-      // `bun pm ls` has no name filter and only recently gained JSON output, so the tree it
-      // prints is parsed instead, and filtered by scope afterwards.
-      return {
-        command: 'bun pm ls --all',
-        parse: parseBunPackageList,
-      };
-    default:
-      return {
-        command: `npm query [name*=@sitecore] --workspaces ${allowWorkspaces}`,
-        parse: parseNpmQuery,
-      };
-  }
+  return 'npm';
 }
 
 /**
