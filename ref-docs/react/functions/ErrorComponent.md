@@ -8,7 +8,7 @@
 
 > **ErrorComponent**(`props`): `Element`
 
-Defined in: [packages/react/src/components/ErrorBoundary.tsx:26](https://github.com/Sitecore/content-sdk/blob/b144b81e7600e42e4de922c8a39635d9a9ecf1ba/packages/react/src/components/ErrorBoundary.tsx#L26)
+Defined in: [packages/react/src/components/ErrorBoundary.tsx:26](https://github.com/Sitecore/content-sdk/blob/6953fcad50ce4e3d8b089190f6aed2a6b0cfd4e2/packages/react/src/components/ErrorBoundary.tsx#L26)
 
 **`Internal`**
 

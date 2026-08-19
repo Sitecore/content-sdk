@@ -17,6 +17,8 @@ npm run type-check   # Run TypeScript compiler
 
 **Environment:** Copy `.env.example` to `.env.local` and set Sitecore API endpoint, key, default site, language, and `SITECORE_REVALIDATE_SECRET` (used by `POST /api/revalidate`). Never commit `.env` or `.env.local`.
 
+**Atoms:** Catalog/registry in `src/atoms/index.tsx`; wired via `atomsConfig` on `SitecoreProvider` (not the component map). Run `npm run sitecore-tools:atoms:update` after intentional schema changes; `atoms:validate` runs on `dev`/`build`. Skills: `content-sdk-atoms-setup`, `content-sdk-atoms-create`, `content-sdk-atoms-maintain`.
+
 ---
 
 ## Application Structure (App Router + Cache Components)
@@ -38,6 +40,7 @@ src/
       sitemap/route.ts, robots/route.ts
       editing/config/route.ts, editing/render/route.ts
       revalidate/route.ts         # POST /api/revalidate (OSR)
+  atoms/                         # Atoms catalog + registry (defineAtomsCatalog / defineAtomsRegistry)
   components/                    # React components (Sitecore + app-specific)
   lib/
     sitecore-client.ts            # Single SitecoreClient instance
@@ -50,7 +53,7 @@ src/
     request.ts                    # getRequestConfig, getSitecoreDictionary per site
   Layout.tsx, Providers.tsx, Bootstrap.tsx, Scripts.tsx
 proxy.ts                         # Edge middleware (preview, bot-tracking, locale, multisite, redirects, personalize)
-.sitecore/                       # component-map.ts, component-map.client.ts, import-map.*, sites.json, metadata.json
+.sitecore/                       # component-map.ts, component-map.client.ts, import-map.*, atoms.lock.json, sites.json, metadata.json
 sitecore.config.ts               # Sitecore config (api, defaultSite, defaultLanguage, dictionary cache off)
 next.config.ts                   # cacheComponents: true, next-intl plugin, rewrites, images
 ```
@@ -62,7 +65,7 @@ next.config.ts                   # cacheComponents: true, next-intl plugin, rewr
 - **Quick checks:** If locale or dictionary is wrong, ensure `setRequestLocale(\`${site}_${locale}\`)` is called at the top of the page and `src/i18n/request.ts` parses `requestLocale` and calls `getSitecoreDictionary`. If a content change does not appear, verify the webhook posted to `POST /api/revalidate` with the right secret and check the tag families (`sc:route`, `sc:item`, `sc:dict`) returned by the cache helpers.
 - **Security:** Use only environment variables in `sitecore.config.ts`; never hardcode API keys, editing secret, or `SITECORE_REVALIDATE_SECRET`. Do not expose secrets in client-side code or logs. Validate and sanitize user input at boundaries.
 - **Performance:** Keep middleware lightweight; use the proxy `matcher` so it does not run on `/api/*`, `_next`, sitemap, robots, or static assets. Use Server Components for data fetching and the cache helpers under `'use cache'` so cached payloads carry the right tags. Use `generateStaticParams` and caching as in the existing page.
-- **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Regenerate the component maps with `npm run sitecore-tools:generate-map` or `npm run sitecore-tools:generate-map:watch`; edit the maps manually only when the generator cannot handle the change. Use the cache helpers in `src/lib/cache/` for all non-preview Sitecore reads so tags stay consistent across the app.
+- **Sitecore patterns:** Use SDK field components (`<Text>`, `<RichText>`, `<Image>`) and validate field existence before render. Regenerate the component maps with `npm run sitecore-tools:generate-map` or `npm run sitecore-tools:generate-map:watch`; edit the maps manually only when the generator cannot handle the change. Use the cache helpers in `src/lib/cache/` for all non-preview Sitecore reads so tags stay consistent across the app. Define atoms in `src/atoms/` via `defineAtomsCatalog` / `defineAtomsRegistry` and `atomsConfig` — do not register atoms in the component map.
 - **Consistency:** Follow the existing patterns in `[site]/[locale]/[[...path]]/page.tsx`, `not-found.tsx`, `i18n/request.ts` (site_locale + `getSitecoreDictionary`), and API route handlers. When adding routes or rewrites, keep the middleware matcher and next-intl config in sync.
 
 ---
@@ -85,6 +88,7 @@ next.config.ts                   # cacheComponents: true, next-intl plugin, rewr
 | Use Sitecore field components and validate fields | Expose API keys or editing secret in client code |
 | Document required env vars in `.env.example` only | Commit `.env` or `.env.local` |
 | Run `npm run build` after changes to verify the app builds | Add npm dependencies without explicit user approval |
+| Define atoms in `src/atoms/` and pass via `atomsConfig`; run `atoms:update` after schema changes | Register atoms in the component map or hand-edit `atoms.lock.json` hashes |
 
 ---
 

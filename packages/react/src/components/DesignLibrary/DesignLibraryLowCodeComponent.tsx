@@ -59,7 +59,9 @@ export const DesignLibraryLowCodeComponent = () => {
   const cssRequestIdRef = useRef(0);
 
   useEffect(() => {
-    postToDesignLibrary(getDesignLibraryStatusEvent(DesignLibraryStatus.READY, uid));
+    postToDesignLibrary(
+      getDesignLibraryStatusEvent(DesignLibraryStatus.READY, uid)
+    );
   }, [uid]);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -115,7 +117,9 @@ export const DesignLibraryLowCodeComponent = () => {
   useEffect(() => {
     if (renderKey === 0) return;
 
-    postToDesignLibrary(getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, uid));
+    postToDesignLibrary(
+      getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, uid)
+    );
   }, [renderKey, uid]);
 
   return (
