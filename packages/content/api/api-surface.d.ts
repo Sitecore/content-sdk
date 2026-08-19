@@ -11,7 +11,6 @@ export * from '../types';
 export * from '../config';
 export * from '../config-cli';
 export * from '../editing';
-export * from '../experimental';
 export * from '../codegen';
 export * from '../client';
 export * from '../i18n';
