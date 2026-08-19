@@ -1,0 +1,14 @@
+[
+  {
+    "idName": "dummy-feature",
+    "displayName": "Dummy Feature",
+    "envVarName": "CSDK_EXPERIMENTAL_DUMMY_FEATURE",
+    "description": "Sample experimental feature used to verify the visibility API."
+  },
+  {
+    "idName": "dummy-feature-two",
+    "displayName": "Dummy Feature Two",
+    "envVarName": "CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO",
+    "description": "Second sample experimental feature for API testing."
+  }
+]

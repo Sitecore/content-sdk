@@ -8,7 +8,7 @@
 
 > **isValidISODateAndTimeString**(`date`): `boolean`
 
-Defined in: [analytics-core/src/utils/validators/is-valid-iso-date-and-time-string.ts:7](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/analytics-core/src/utils/validators/is-valid-iso-date-and-time-string.ts#L7)
+Defined in: [analytics-core/src/utils/validators/is-valid-iso-date-and-time-string.ts:7](https://github.com/Sitecore/content-sdk/blob/b4fad5bfdcf00eb3138cebc08959d248545d0a22/packages/analytics-core/src/utils/validators/is-valid-iso-date-and-time-string.ts#L7)
 
 **`Internal`**
 
