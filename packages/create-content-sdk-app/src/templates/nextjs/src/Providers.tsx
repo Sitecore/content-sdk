@@ -16,13 +16,13 @@ import { useRouter } from 'next/navigation';
  *
  * To enable styled Atoms Documents in Design Library on Pages Router:
  * 1. Add `@tailwindcss/node` (and a Tailwind stylesheet, if you do not already have one).
- * 2. Pass `compileCssAction: compileCssForDocumentAction` from
- *    `@sitecore-content-sdk/nextjs/server-actions` into `atomsConfig` below.
- * 3. Optionally register the compiler at startup via `registerTailwindCssCompiler`
- *    from `@sitecore-content-sdk/nextjs/instrumentation` (see the App Router
+ * 2. Register the compiler at startup via `registerTailwindCssCompiler` from
+ *    `@sitecore-content-sdk/nextjs/instrumentation` (see the App Router
  *    `instrumentation.ts` / `instrumentation-node.ts` starter files).
+ * 3. Pass `compileCssAction: compileCssForDocumentAction` from
+ *    `@sitecore-content-sdk/nextjs/server-actions` into `atomsConfig` below.
  *
- * Without step 2, Atoms still render; Document-only utility classes simply will not
+ * Without steps 2–3, Atoms still render; Document-only utility classes will not
  * get compiled CSS during editing.
  */
 const Providers = ({

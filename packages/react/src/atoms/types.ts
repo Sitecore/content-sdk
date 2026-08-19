@@ -96,13 +96,13 @@ export interface AtomsConfig {
    * during editing (Design Library) sessions.
    *
    * For Next.js App Router starters, pass `compileCssForDocumentAction` from
-   * `@sitecore-content-sdk/nextjs/server-actions`. When provided,
-   * `DesignLibraryLowCodeComponent` injects a `<style>` tag after each Document
-   * update so classes authored in MMS Documents are styled.
+   * `@sitecore-content-sdk/nextjs/server-actions`. Register a compiler first via
+   * `registerTailwindCssCompiler` (or `setAtomsCssCompiler`) in `instrumentation.ts`.
+   * When provided, `DesignLibraryLowCodeComponent` injects a `<style>` tag after each
+   * Document update so classes authored in MMS Documents are styled.
    *
    * Has no effect in production; production CSS injection is handled server-side by
-   * `StudioComponentServerWrapper` using the compiler registered via
-   * `setAtomsCssCompiler` / `registerTailwindCssCompiler`.
+   * `StudioComponentServerWrapper` using the same registered compiler.
    * @example
    * ```tsx
    * // src/Providers.tsx  ('use client')
