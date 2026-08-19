@@ -8,7 +8,7 @@
 
 > **ensurePathExists**(`filePath`): `void`
 
-Defined in: [packages/core/src/tools/ensurePath.ts:10](https://github.com/Sitecore/content-sdk/blob/04f0dc6ce596d5395ca75fa2d35b683819beed92/packages/core/src/tools/ensurePath.ts#L10)
+Defined in: [packages/core/src/tools/ensurePath.ts:10](https://github.com/Sitecore/content-sdk/blob/b4fad5bfdcf00eb3138cebc08959d248545d0a22/packages/core/src/tools/ensurePath.ts#L10)
 
 **`Internal`**
 
