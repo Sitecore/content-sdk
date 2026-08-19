@@ -8,7 +8,7 @@
 
 > **fetchClientIdFromEdgeProxy**(`edgeUrl`, `contextId`, `timeout?`): `Promise`\<[`VisitorIds`](../interfaces/VisitorIds.md)\>
 
-Defined in: [analytics-core/src/client-id/fetch-client-id-from-edge-proxy.ts:16](https://github.com/Sitecore/content-sdk/blob/c5d4841398e8e93474f43a16ca497a2fa4e0efae/packages/analytics-core/src/client-id/fetch-client-id-from-edge-proxy.ts#L16)
+Defined in: [analytics-core/src/client-id/fetch-client-id-from-edge-proxy.ts:16](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/analytics-core/src/client-id/fetch-client-id-from-edge-proxy.ts#L16)
 
 **`Internal`**
 
