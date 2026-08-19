@@ -111,6 +111,10 @@
       "types": "./dist/types/sitecore-content-sdk-angular-config.d.ts",
       "default": "./dist/fesm2022/sitecore-content-sdk-angular-config.mjs"
     },
+    "./codegen": {
+      "types": "./dist-node/server/codegen/index.d.ts",
+      "default": "./dist-node/server/codegen/index.js"
+    },
     "./config-cli": {
       "types": "./dist-node/server/config-cli/index.d.ts",
       "default": "./dist-node/server/config-cli/index.js"
