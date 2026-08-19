@@ -11,6 +11,8 @@ export type {
 } from './types';
 export {
   buildExperimentalFeaturesResponse,
+  CSDK_EXPERIMENTAL_FEATURES_ENABLED,
   isExperimentalEnvFlagEnabled,
+  isExperimentalFeaturesGloballyEnabled,
   resolveExperimentalFeatureStatuses,
 } from './utils';

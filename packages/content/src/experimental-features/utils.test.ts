@@ -1,7 +1,9 @@
 import { expect } from 'chai';
 import {
   buildExperimentalFeaturesResponse,
+  CSDK_EXPERIMENTAL_FEATURES_ENABLED,
   isExperimentalEnvFlagEnabled,
+  isExperimentalFeaturesGloballyEnabled,
   resolveExperimentalFeatureStatuses,
 } from './utils';
 import { ExperimentalFeatureData } from './types';
@@ -16,6 +18,7 @@ describe('experimental utils', () => {
 
   afterEach(() => {
     delete process.env.CSDK_EXPERIMENTAL_FEATURE_ONE;
+    delete process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED];
   });
 
   describe('isExperimentalEnvFlagEnabled', () => {
@@ -39,8 +42,34 @@ describe('experimental utils', () => {
     });
   });
 
+  describe('isExperimentalFeaturesGloballyEnabled', () => {
+    it('should return false when the global switch is not set', () => {
+      expect(isExperimentalFeaturesGloballyEnabled()).to.equal(false);
+    });
+
+    it('should return true for true/1 values', () => {
+      process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = 'true';
+      expect(isExperimentalFeaturesGloballyEnabled()).to.equal(true);
+
+      process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = '1';
+      expect(isExperimentalFeaturesGloballyEnabled()).to.equal(true);
+    });
+  });
+
   describe('resolveExperimentalFeatureStatuses', () => {
-    it('should map enabled status from env vars', () => {
+    it('should return disabled features when the global switch is off', () => {
+      process.env.CSDK_EXPERIMENTAL_FEATURE_ONE = 'true';
+
+      expect(resolveExperimentalFeatureStatuses([feature])).to.deep.equal([
+        {
+          ...feature,
+          enabled: false,
+        },
+      ]);
+    });
+
+    it('should map enabled status from env vars when the global switch is on', () => {
+      process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = 'true';
       process.env.CSDK_EXPERIMENTAL_FEATURE_ONE = 'true';
 
       expect(resolveExperimentalFeatureStatuses([feature])).to.deep.equal([
@@ -59,6 +88,20 @@ describe('experimental utils', () => {
           {
             ...feature,
             enabled: false,
+          },
+        ],
+      });
+    });
+
+    it('should honor the global switch in the response payload', () => {
+      process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = '1';
+      process.env.CSDK_EXPERIMENTAL_FEATURE_ONE = 'true';
+
+      expect(buildExperimentalFeaturesResponse([feature])).to.deep.equal({
+        features: [
+          {
+            ...feature,
+            enabled: true,
           },
         ],
       });

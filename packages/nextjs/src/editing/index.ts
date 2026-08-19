@@ -28,6 +28,8 @@ export type {
 } from '@sitecore-content-sdk/content/experimental';
 export {
   buildExperimentalFeaturesResponse,
+  CSDK_EXPERIMENTAL_FEATURES_ENABLED,
   isExperimentalEnvFlagEnabled,
+  isExperimentalFeaturesGloballyEnabled,
   resolveExperimentalFeatureStatuses,
 } from '@sitecore-content-sdk/content/experimental';

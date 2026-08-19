@@ -6,6 +6,7 @@ import { NextRequest } from 'next/server';
 import proxyquire from 'proxyquire';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/content/editing';
 import experimentalFeaturesCatalog from '../experimental.json';
+import { CSDK_EXPERIMENTAL_FEATURES_ENABLED } from '../../../content/src/experimental-features';
 
 chai.use(sinonChai);
 
@@ -30,6 +31,7 @@ describe('createExperimentalFeaturesRouteHandler', () => {
   beforeEach(() => {
     getEditingSecretStub = sandbox.stub().returns(secret);
     getEnforcedCorsHeadersStub = sandbox.stub().returns(corsHeaders);
+    delete process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED];
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
 
     experimentalFeaturesRouteHandlerModule = proxyquire(
@@ -60,6 +62,7 @@ describe('createExperimentalFeaturesRouteHandler', () => {
     sandbox.restore();
     sinon.restore();
     (globalThis as any).Response = OriginalResponse;
+    delete process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED];
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
   });
 
@@ -108,6 +111,7 @@ describe('createExperimentalFeaturesRouteHandler', () => {
     });
 
     it('should return 200 with package catalog feature statuses for valid request', async () => {
+      process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = '1';
       process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE = '1';
 
       const res = await handler.GET(req as NextRequest);

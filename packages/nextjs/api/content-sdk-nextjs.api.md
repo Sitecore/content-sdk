@@ -16,6 +16,7 @@ import { BYOCServerWrapper } from '@sitecore-content-sdk/react';
 import { BYOCWrapper as BYOCWrapper_2 } from '@sitecore-content-sdk/react';
 import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
+import { CSDK_EXPERIMENTAL_FEATURES_ENABLED } from '@sitecore-content-sdk/content/experimental';
 import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { ClientEditingChromesUpdate } from '@sitecore-content-sdk/react';
 import { ComponentFields } from '@sitecore-content-sdk/content/layout';
@@ -103,6 +104,7 @@ import { IncomingHttpHeaders } from 'http';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { isEditorActive } from '@sitecore-content-sdk/content/editing';
 import { isExperimentalEnvFlagEnabled } from '@sitecore-content-sdk/content/experimental';
+import { isExperimentalFeaturesGloballyEnabled } from '@sitecore-content-sdk/content/experimental';
 import { Item } from '@sitecore-content-sdk/content/layout';
 import { JSX as JSX_2 } from 'react';
 import { LayoutService } from '@sitecore-content-sdk/content/layout';
@@ -243,6 +245,8 @@ export class BotTrackingProxy extends ProxyBase {
 export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Omit<ProxyBaseConfig, 'defaultLanguage'> & {
     fetchEvent?: NextFetchEvent;
 };
+
+export { CSDK_EXPERIMENTAL_FEATURES_ENABLED }
 
 export { buildExperimentalFeaturesResponse }
 
@@ -670,6 +674,8 @@ export const isDesignLibraryPreviewData: (data: unknown) => data is DesignLibrar
 export { isEditorActive }
 
 export { isExperimentalEnvFlagEnabled }
+
+export { isExperimentalFeaturesGloballyEnabled }
 
 // @public
 export const isServerSidePropsContext: (context: GetServerSidePropsContext | GetStaticPropsContext) => context is GetServerSidePropsContext;

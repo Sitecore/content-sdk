@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/content/editing';
 import { ExperimentalFeaturesMiddleware } from './experimental-features-middleware';
 import experimentalFeaturesCatalog from '../experimental.json';
+import { CSDK_EXPERIMENTAL_FEATURES_ENABLED } from '../../../content/src/experimental-features';
 
 type Query = {
   [key: string]: string;
@@ -62,11 +63,13 @@ describe('ExperimentalFeaturesMiddleware', () => {
   beforeEach(() => {
     process.env.SITECORE_EDITING_SECRET = secret;
     process.env.JSS_ALLOWED_ORIGINS = allowedOrigin;
+    delete process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED];
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO;
   });
 
   afterEach(() => {
+    delete process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED];
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO;
   });
@@ -74,6 +77,7 @@ describe('ExperimentalFeaturesMiddleware', () => {
   after(() => {
     delete process.env.SITECORE_EDITING_SECRET;
     delete process.env.JSS_ALLOWED_ORIGINS;
+    delete process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED];
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO;
   });
@@ -122,7 +126,9 @@ describe('ExperimentalFeaturesMiddleware', () => {
 
     await handler(req, res);
 
-    const setHeaders = res.setHeader.getCalls().map((call) => call.args);
+    const setHeaders = (res.setHeader as ReturnType<typeof spy>)
+      .getCalls()
+      .map((call: { args: unknown[] }) => call.args);
 
     expect(setHeaders).to.deep.include(['Access-Control-Allow-Origin', allowedOrigin]);
     expect(res.status).to.have.been.calledWith(204);
@@ -130,6 +136,7 @@ describe('ExperimentalFeaturesMiddleware', () => {
   });
 
   it('should respond with 200 and the package catalog feature statuses', async () => {
+    process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = 'true';
     process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE = 'true';
 
     const query = {} as Query;

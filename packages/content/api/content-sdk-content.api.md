@@ -44,6 +44,9 @@ export const buildComponentMapContent: (entries: ComponentMapEntry[], componentI
 // @public
 export const buildExperimentalFeaturesResponse: (features: ExperimentalFeatureData[]) => ExperimentalFeaturesResponse;
 
+// @public
+export const CSDK_EXPERIMENTAL_FEATURES_ENABLED = "CSDK_EXPERIMENTAL_FEATURES_ENABLED";
+
 // @internal
 export const buildFallbackConfig: (env: {
     [key: string]: string | undefined;
@@ -779,6 +782,9 @@ export const isEditorActive: () => boolean;
 
 // @public
 export const isExperimentalEnvFlagEnabled: (value: string | undefined) => boolean;
+
+// @public
+export const isExperimentalFeaturesGloballyEnabled: () => boolean;
 
 // @public
 export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field> | null | undefined): field is null | undefined;

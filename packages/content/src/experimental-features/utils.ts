@@ -5,6 +5,12 @@ import {
 } from './types';
 
 /**
+ * Environment variable that globally enables experimental features for an app.
+ * @public
+ */
+export const CSDK_EXPERIMENTAL_FEATURES_ENABLED = 'CSDK_EXPERIMENTAL_FEATURES_ENABLED';
+
+/**
  * Returns true when an experimental feature env flag is opted in.
  * Accepts `true` / `1` (case-insensitive, trimmed).
  * @param {string | undefined} value - Environment variable value.
@@ -21,7 +27,17 @@ export const isExperimentalEnvFlagEnabled = (value: string | undefined): boolean
 };
 
 /**
+ * Returns true when experimental features are globally enabled for the app.
+ * Accepts `true` / `1` (case-insensitive, trimmed).
+ * @returns {boolean} Whether experimental features are globally enabled.
+ * @public
+ */
+export const isExperimentalFeaturesGloballyEnabled = (): boolean =>
+  isExperimentalEnvFlagEnabled(process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED]);
+
+/**
  * Resolves experimental feature metadata with current enabled status from env vars.
+ * Feature flags only take effect when the global experimental features switch is enabled.
  * @param {ExperimentalFeatureData[]} features - Experimental features catalog from a framework package.
  * @returns {ExperimentalFeatureStatus[]} Features with enabled status.
  * @public
@@ -29,9 +45,12 @@ export const isExperimentalEnvFlagEnabled = (value: string | undefined): boolean
 export const resolveExperimentalFeatureStatuses = (
   features: ExperimentalFeatureData[]
 ): ExperimentalFeatureStatus[] => {
+  const experimentalFeaturesEnabled = isExperimentalFeaturesGloballyEnabled();
+
   return features.map((feature) => ({
     ...feature,
-    enabled: isExperimentalEnvFlagEnabled(process.env[feature.envVarName]),
+    enabled:
+      experimentalFeaturesEnabled && isExperimentalEnvFlagEnabled(process.env[feature.envVarName]),
   }));
 };
 
