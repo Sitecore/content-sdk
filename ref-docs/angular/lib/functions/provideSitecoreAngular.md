@@ -8,7 +8,7 @@
 
 > **provideSitecoreAngular**(`init`): `EnvironmentProviders`
 
-Defined in: [packages/angular/src/lib/providers.ts:60](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/angular/src/lib/providers.ts#L60)
+Defined in: [packages/angular/src/lib/providers.ts:60](https://github.com/Sitecore/content-sdk/blob/04f0dc6ce596d5395ca75fa2d35b683819beed92/packages/angular/src/lib/providers.ts#L60)
 
 Provides Sitecore Angular SDK services to the application.
 Call this in your `app.config.ts` `providers` array.

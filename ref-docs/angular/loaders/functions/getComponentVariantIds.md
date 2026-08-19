@@ -8,7 +8,7 @@
 
 > **getComponentVariantIds**(`context`): `string`[]
 
-Defined in: [packages/angular/src/loaders/context-helpers.ts:34](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/angular/src/loaders/context-helpers.ts#L34)
+Defined in: [packages/angular/src/loaders/context-helpers.ts:34](https://github.com/Sitecore/content-sdk/blob/04f0dc6ce596d5395ca75fa2d35b683819beed92/packages/angular/src/loaders/context-helpers.ts#L34)
 
 Read the component A/B test variant ids resolved for the current request
 (personalize middleware → `scParams`). Empty when the request was not personalized.

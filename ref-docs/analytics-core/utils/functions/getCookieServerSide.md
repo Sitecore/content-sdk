@@ -8,7 +8,7 @@
 
 > **getCookieServerSide**(`cookiesHeader`, `cookieName`): \{ `name`: `string`; `value`: `string`; \} \| `undefined`
 
-Defined in: [analytics-core/src/utils/cookies/get-cookie-server-side.ts:10](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/analytics-core/src/utils/cookies/get-cookie-server-side.ts#L10)
+Defined in: [analytics-core/src/utils/cookies/get-cookie-server-side.ts:10](https://github.com/Sitecore/content-sdk/blob/04f0dc6ce596d5395ca75fa2d35b683819beed92/packages/analytics-core/src/utils/cookies/get-cookie-server-side.ts#L10)
 
 **`Internal`**
 

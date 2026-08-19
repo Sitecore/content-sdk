@@ -8,7 +8,7 @@
 
 > `const` **auth**: `object`
 
-Defined in: [packages/core/src/tools/index-node.ts:15](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/core/src/tools/index-node.ts#L15)
+Defined in: [packages/core/src/tools/index-node.ts:15](https://github.com/Sitecore/content-sdk/blob/04f0dc6ce596d5395ca75fa2d35b683819beed92/packages/core/src/tools/index-node.ts#L15)
 
 Preserve "live binding" semantics similar to ES module imports: production
 code always sees the current implementation; tests can swap it safely and

@@ -8,7 +8,7 @@
 
 > `const` **SITECORE\_EXPERIENCE\_EDGE\_HOSTNAME\_ENV**: `"SITECORE_EXPERIENCE_EDGE_HOSTNAME"` = `'SITECORE_EXPERIENCE_EDGE_HOSTNAME'`
 
-Defined in: [packages/core/src/tools/resolve-edge-url.ts:20](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/core/src/tools/resolve-edge-url.ts#L20)
+Defined in: [packages/core/src/tools/resolve-edge-url.ts:20](https://github.com/Sitecore/content-sdk/blob/04f0dc6ce596d5395ca75fa2d35b683819beed92/packages/core/src/tools/resolve-edge-url.ts#L20)
 
 Environment variable name for the custom Experience Edge hostname.
 Used only when rewriting media URLs in layout/editing (rewrite-edge-host). Server-side only.
