@@ -111,8 +111,8 @@ describe('createExperimentalFeaturesRouteHandler', () => {
     });
 
     it('should return 200 with package catalog feature statuses for valid request', async () => {
-      process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = '1';
-      process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE = '1';
+      process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = 'true';
+      process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE = 'true';
 
       const res = await handler.GET(req as NextRequest);
 

@@ -28,16 +28,16 @@ describe('experimental utils', () => {
       expect(isExperimentalEnvFlagEnabled('   ')).to.equal(false);
     });
 
-    it('should return true for true/1 values', () => {
+    it('should return true for true values', () => {
       expect(isExperimentalEnvFlagEnabled('true')).to.equal(true);
-      expect(isExperimentalEnvFlagEnabled('TRUE')).to.equal(true);
-      expect(isExperimentalEnvFlagEnabled('1')).to.equal(true);
-      expect(isExperimentalEnvFlagEnabled(' 1 ')).to.equal(true);
+      expect(isExperimentalEnvFlagEnabled(' true ')).to.equal(true);
     });
 
     it('should return false for other values', () => {
       expect(isExperimentalEnvFlagEnabled('false')).to.equal(false);
       expect(isExperimentalEnvFlagEnabled('0')).to.equal(false);
+      expect(isExperimentalEnvFlagEnabled('1')).to.equal(false);
+      expect(isExperimentalEnvFlagEnabled('TRUE')).to.equal(false);
       expect(isExperimentalEnvFlagEnabled('yes')).to.equal(false);
     });
   });
@@ -47,11 +47,8 @@ describe('experimental utils', () => {
       expect(isExperimentalFeaturesGloballyEnabled()).to.equal(false);
     });
 
-    it('should return true for true/1 values', () => {
+    it('should return true when the global switch is set to true', () => {
       process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = 'true';
-      expect(isExperimentalFeaturesGloballyEnabled()).to.equal(true);
-
-      process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = '1';
       expect(isExperimentalFeaturesGloballyEnabled()).to.equal(true);
     });
   });
@@ -94,7 +91,7 @@ describe('experimental utils', () => {
     });
 
     it('should honor the global switch in the response payload', () => {
-      process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = '1';
+      process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = 'true';
       process.env.CSDK_EXPERIMENTAL_FEATURE_ONE = 'true';
 
       expect(buildExperimentalFeaturesResponse([feature])).to.deep.equal({
