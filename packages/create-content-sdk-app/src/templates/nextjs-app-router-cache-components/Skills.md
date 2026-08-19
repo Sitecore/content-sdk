@@ -19,6 +19,9 @@ App Router + Cache Components (`src/lib/cache/`, `POST /api/revalidate`). Load *
 | [content-sdk-upgrade-assistant](.agents/skills/content-sdk-upgrade-assistant/SKILL.md) | Upgrade @sitecore-content-sdk/*; follow CHANGELOG and migration guides |
 | [content-sdk-component-data-strategy](.agents/skills/content-sdk-component-data-strategy/SKILL.md) | Cached layout data via cache helpers; preview via client; site/locale from params |
 | [content-sdk-cache-components-and-osr](.agents/skills/content-sdk-cache-components-and-osr/SKILL.md) | Tag-based caching in src/lib/cache/ and POST /api/revalidate webhook for on-demand invalidation |
+| [content-sdk-atoms-setup](.agents/skills/content-sdk-atoms-setup/SKILL.md) | Starter atoms wiring: src/atoms, Providers atomsConfig, CLI validate/update, first lock file |
+| [content-sdk-atoms-create](.agents/skills/content-sdk-atoms-create/SKILL.md) | Define catalog + registry (props, field schemas, slots, actions); not component-map |
+| [content-sdk-atoms-maintain](.agents/skills/content-sdk-atoms-maintain/SKILL.md) | Atom versioning and atoms.lock.json: validate, update, breakOnError, schema drift |
 
 Do **not** load every skill at session start. Open [AGENTS.md](AGENTS.md) first; add one skill when the task matches a row above.
 
