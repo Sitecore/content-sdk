@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-expressions */
-import { expect, use } from 'chai';
+import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import proxyquire from 'proxyquire';
 
-use(sinonChai);
+chai.use(sinonChai);
 
 describe('compileCssForDocumentAction', () => {
   let getAtomsCssCompilerStub: sinon.SinonStub;
