@@ -15,6 +15,7 @@
 
 - [createEditingConfigRouteHandler](functions/createEditingConfigRouteHandler.md)
 - [createEditingRenderRouteHandlers](functions/createEditingRenderRouteHandlers.md)
+- [createExperimentalFeaturesRouteHandler](functions/createExperimentalFeaturesRouteHandler.md)
 - [createRobotsRouteHandler](functions/createRobotsRouteHandler.md)
 - [createSitecoreRevalidateRouteHandler](functions/createSitecoreRevalidateRouteHandler.md)
 - [createSitemapRouteHandler](functions/createSitemapRouteHandler.md)
