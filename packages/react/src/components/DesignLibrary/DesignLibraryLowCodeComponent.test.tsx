@@ -99,11 +99,14 @@ describe('<DesignLibraryLowCodeComponent />', () => {
       </SitecoreProvider>
     );
 
-  it('posts READY status on mount', async () => {
+  it('posts READY status on mount with rendering uid', async () => {
     renderComponent(atomsConfig);
     await waitFor(() => {
       expect(postToDesignLibrarySpy).to.have.been.calledWith(
-        getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'low-code-component')
+        getDesignLibraryStatusEvent(
+          DesignLibraryStatus.READY,
+          'design-library-low-code-component'
+        )
       );
     });
   });
@@ -151,9 +154,35 @@ describe('<DesignLibraryLowCodeComponent />', () => {
 
     await waitFor(() => {
       expect(postToDesignLibrarySpy).to.have.been.calledWith(
-        getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'low-code-component')
+        getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, 'test-doc')
       );
     });
+  });
+
+  it('wraps preview with PlaceholderMetadata chromes using document uid', async () => {
+    const { container } = renderComponent(atomsConfig);
+
+    await waitFor(() => {
+      expect(addDocumentUpdateHandlerStub).to.have.been.called;
+    });
+
+    const callback = addDocumentUpdateHandlerStub.firstCall.args[0];
+    const updatedDocument = { name: 'test-content' } as any;
+
+    act(() => {
+      callback(updatedDocument);
+    });
+
+    const openChrome = container.querySelector(
+      'code.scpm[chrometype="rendering"][kind="open"][id="test-content"]'
+    );
+    const closeChrome = container.querySelector(
+      'code.scpm[chrometype="rendering"][kind="close"]'
+    );
+
+    expect(openChrome).to.not.be.null;
+    expect(closeChrome).to.not.be.null;
+    expect(openChrome?.getAttribute('data-csdk-component-runtime')).to.equal('client');
   });
 
   it('subscribes to component props update handler', async () => {
@@ -179,5 +208,38 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     });
 
     expect(rerender).to.not.throw;
+  });
+
+  it('wraps the rendered component with PlaceholderMetadata using the default uid before a document is received', async () => {
+    const { container } = renderComponent(atomsConfig);
+
+    await waitFor(() => {
+      const codeBlocks = container.querySelectorAll('code');
+      expect(codeBlocks).to.have.length(2);
+      expect(codeBlocks[0].getAttribute('chrometype')).to.equal('rendering');
+      expect(codeBlocks[0].getAttribute('id')).to.equal('design-library-low-code-component');
+      expect(codeBlocks[0].getAttribute('data-csdk-component-runtime')).to.equal('client');
+    });
+  });
+
+  it('wraps the rendered component with PlaceholderMetadata using the document name once a document is received', async () => {
+    const { container } = renderComponent(atomsConfig);
+
+    await waitFor(() => {
+      expect(addDocumentUpdateHandlerStub).to.have.been.called;
+    });
+
+    const callback = addDocumentUpdateHandlerStub.firstCall.args[0];
+    const updatedDocument = { name: 'test-doc' } as any;
+
+    act(() => {
+      callback(updatedDocument);
+    });
+
+    await waitFor(() => {
+      const codeBlocks = container.querySelectorAll('code');
+      expect(codeBlocks[0].getAttribute('id')).to.equal('test-doc');
+      expect(codeBlocks[0].getAttribute('data-csdk-component-runtime')).to.equal('client');
+    });
   });
 });
