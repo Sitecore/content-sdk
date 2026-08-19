@@ -163,21 +163,6 @@ export interface SuggestParameters {
 }
 
 /**
- * Response from the Suggest API.
- * @internal
- */
-interface SuggestAPIResponse<T extends SearchDocument = SearchDocument> {
-  /**
-   * Autocomplete completions from query suggestion mode.
-   */
-  querySuggestions: QuerySuggestionItem[];
-  /**
-   * Document previews from preview results mode.
-   */
-  previewResults: T[];
-}
-
-/**
  * Response from the Suggest Service.
  * @public
  */
@@ -266,7 +251,7 @@ export class SearchService {
         },
         limit,
         offset,
-        query: this.buildSearchQuery(params),
+        query: this.buildSearchUrlQuery(params),
         sessionId,
         sort: {
           fields: sortFields,
@@ -315,7 +300,7 @@ export class SearchService {
       },
     };
 
-    const { data } = await this.fetcher.post<SuggestAPIResponse<T>>(
+    const { data } = await this.fetcher.post<SuggestResponse<T>>(
       url.toString(),
       {
         config: {
@@ -363,32 +348,50 @@ export class SearchService {
     this.validateQueryExclusivity(params);
   }
 
-  private validateQueryExclusivity<T extends SearchDocument = SearchDocument>(
+  private getTrimmedQueryFields<T extends SearchDocument = SearchDocument>(
     params: SearchParameters<T>
-  ) {
-    const provided: string[] = [];
-    const keyphrase = typeof params.keyphrase === 'string' ? params.keyphrase.trim() : '';
-    const seedItemId = typeof params.seedItemId === 'string' ? params.seedItemId.trim() : '';
-    const seedItemUrl = typeof params.seedItemUrl === 'string' ? params.seedItemUrl.trim() : '';
+  ): { keyphrase: string; seedItemId: string; seedItemUrl: string } {
+    return {
+      keyphrase: typeof params.keyphrase === 'string' ? params.keyphrase.trim() : '',
+      seedItemId: typeof params.seedItemId === 'string' ? params.seedItemId.trim() : '',
+      seedItemUrl: typeof params.seedItemUrl === 'string' ? params.seedItemUrl.trim() : '',
+    };
+  }
 
-    if (params.seedItemId !== undefined && !seedItemId) {
-      throw new TypeError('seedItemId must be a non-empty string');
-    }
+  private getProvidedQueryFields(fields: {
+    keyphrase: string;
+    seedItemId: string;
+    seedItemUrl: string;
+  }): Array<'keyphrase' | 'seedItemId' | 'seedItemUrl'> {
+    const provided: Array<'keyphrase' | 'seedItemId' | 'seedItemUrl'> = [];
 
-    if (params.seedItemUrl !== undefined && !seedItemUrl) {
-      throw new TypeError('seedItemUrl must be a non-empty string');
-    }
-
-    if (keyphrase) {
+    if (fields.keyphrase) {
       provided.push('keyphrase');
     }
 
-    if (seedItemId) {
+    if (fields.seedItemId) {
       provided.push('seedItemId');
     }
 
-    if (seedItemUrl) {
+    if (fields.seedItemUrl) {
       provided.push('seedItemUrl');
+    }
+
+    return provided;
+  }
+
+  private validateQueryExclusivity<T extends SearchDocument = SearchDocument>(
+    params: SearchParameters<T>
+  ) {
+    const fields = this.getTrimmedQueryFields(params);
+    const provided = this.getProvidedQueryFields(fields);
+
+    if (params.seedItemId !== undefined && !fields.seedItemId) {
+      throw new TypeError('seedItemId must be a non-empty string');
+    }
+
+    if (params.seedItemUrl !== undefined && !fields.seedItemUrl) {
+      throw new TypeError('seedItemUrl must be a non-empty string');
     }
 
     if (provided.length > 1) {
@@ -400,21 +403,24 @@ export class SearchService {
     }
   }
 
-  private buildSearchQuery<T extends SearchDocument = SearchDocument>(
+  private buildSearchUrlQuery<T extends SearchDocument = SearchDocument>(
     params: SearchParameters<T>
   ): SearchQuery {
-    const seedItemId = typeof params.seedItemId === 'string' ? params.seedItemId.trim() : '';
-    const seedItemUrl = typeof params.seedItemUrl === 'string' ? params.seedItemUrl.trim() : '';
+    this.validateQueryExclusivity(params);
 
-    if (seedItemId) {
-      return { seedItemId };
+    const fields = this.getTrimmedQueryFields(params);
+    const provided = this.getProvidedQueryFields(fields);
+
+    switch (provided[0]) {
+      case 'seedItemId':
+        return { seedItemId: fields.seedItemId };
+      case 'seedItemUrl':
+        return { seedItemUrl: fields.seedItemUrl };
+      case 'keyphrase':
+        return { keyphrase: params.keyphrase ?? '' };
+      default:
+        return { keyphrase: params.keyphrase ?? '' };
     }
-
-    if (seedItemUrl) {
-      return { seedItemUrl };
-    }
-
-    return { keyphrase: params.keyphrase ?? '' };
   }
 
   private validateSuggestParameters(params: SuggestParameters) {

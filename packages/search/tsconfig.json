@@ -14,5 +14,6 @@
     "types",
     "dist",
     "src/**/*.test.ts",
+    "scratch"
   ]
 }

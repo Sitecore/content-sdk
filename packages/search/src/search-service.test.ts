@@ -850,6 +850,29 @@ describe('SearchService', () => {
       }
     });
 
+    it('should throw an error if keyphrase, seedItemId, and seedItemUrl are all provided', async () => {
+      const searchService = new SearchService({
+        contextId,
+      });
+
+      try {
+        await searchService.search({
+          searchIndexId,
+          keyphrase: 'running shoes',
+          seedItemId: 'item-123',
+          seedItemUrl: 'https://example.com/articles/cloud',
+        });
+        expect.fail('Expected search to throw');
+      } catch (error) {
+        expect(error)
+          .to.be.an.instanceOf(TypeError)
+          .and.to.have.property(
+            'message',
+            'Query fields are mutually exclusive. Provide only one of: keyphrase, seedItemId, seedItemUrl. Received: keyphrase, seedItemId, seedItemUrl'
+          );
+      }
+    });
+
     it('should throw an error if seedItemId is empty', async () => {
       const searchService = new SearchService({
         contextId,
