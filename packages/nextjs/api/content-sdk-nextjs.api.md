@@ -16,7 +16,6 @@ import { BYOCServerWrapper } from '@sitecore-content-sdk/react';
 import { BYOCWrapper as BYOCWrapper_2 } from '@sitecore-content-sdk/react';
 import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
-import { CSDK_EXPERIMENTAL_FEATURES_ENABLED } from '@sitecore-content-sdk/content/experimental';
 import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { ClientEditingChromesUpdate } from '@sitecore-content-sdk/react';
 import { ComponentFields } from '@sitecore-content-sdk/content/layout';
@@ -28,6 +27,7 @@ import { ComponentParams } from '@sitecore-content-sdk/content/layout';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { constants } from '@sitecore-content-sdk/core';
 import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
+import { CSDK_EXPERIMENTAL_FEATURES_ENABLED } from '@sitecore-content-sdk/content/experimental';
 import { DateField } from '@sitecore-content-sdk/react';
 import { DeepRequired } from '@sitecore-content-sdk/content/config';
 import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/react';
@@ -246,8 +246,6 @@ export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Omit<Prox
     fetchEvent?: NextFetchEvent;
 };
 
-export { CSDK_EXPERIMENTAL_FEATURES_ENABLED }
-
 export { buildExperimentalFeaturesResponse }
 
 // @public
@@ -412,6 +410,8 @@ export function createSitecoreRevalidateRouteHandler(options?: SitecoreRevalidat
 export function createSitemapRouteHandler(options: RouteHandlerOptions): {
     GET: (req: NextRequest) => Promise<Response>;
 };
+
+export { CSDK_EXPERIMENTAL_FEATURES_ENABLED }
 
 export { DateField }
 

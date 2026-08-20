@@ -44,9 +44,6 @@ export const buildComponentMapContent: (entries: ComponentMapEntry[], componentI
 // @public
 export const buildExperimentalFeaturesResponse: (features: ExperimentalFeatureData[]) => ExperimentalFeaturesResponse;
 
-// @public
-export const CSDK_EXPERIMENTAL_FEATURES_ENABLED = "CSDK_EXPERIMENTAL_FEATURES_ENABLED";
-
 // @internal
 export const buildFallbackConfig: (env: {
     [key: string]: string | undefined;
@@ -201,6 +198,9 @@ export const createComponentInstance: (importMap: ImportEntry[], generatedCompon
 
 // @public
 export const createGraphQLClientFactory: (options: GraphQLClientOptions) => GraphQLRequestClientFactory;
+
+// @public
+export const CSDK_EXPERIMENTAL_FEATURES_ENABLED = "CSDK_EXPERIMENTAL_FEATURES_ENABLED";
 
 // @public
 const debug_2: {
