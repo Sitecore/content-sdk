@@ -41,6 +41,9 @@ export const breakDownPath: (configuredLocales: string[], urlPath: string) => Pr
 // @internal
 export const buildComponentMapContent: (entries: ComponentMapEntry[], componentImports: ComponentImport[] | undefined, options: TemplateOptions) => string;
 
+// @public
+export const buildExperimentalFeaturesResponse: (features: ExperimentalFeatureData[]) => ExperimentalFeaturesResponse;
+
 // @internal
 export const buildFallbackConfig: (env: {
     [key: string]: string | undefined;
@@ -53,6 +56,9 @@ export class CdpHelper {
     static getPageVariantId(pageId: string, language: string, variantId: string, scope?: string): string;
     static normalizeScope(scope?: string): string;
 }
+
+// @public
+export const combineImportEntries: (defaultImportEntries: ImportEntry[], generatedImportEntries: ImportEntry[]) => ImportEntry[];
 
 // @internal
 export const COMPONENT_PREVIEW_CACHE_KEY_PREFIX = "component-preview-";
@@ -466,6 +472,24 @@ export interface ErrorPagesServiceConfig extends GraphQLServiceConfig {
 // @internal
 const executeScriptElements: (rootElement: HTMLElement) => void;
 
+// @public
+export type ExperimentalFeatureData = {
+    idName: string;
+    displayName: string;
+    envVarName: string;
+    description: string;
+};
+
+// @public
+export type ExperimentalFeaturesResponse = {
+    features: ExperimentalFeatureStatus[];
+};
+
+// @public
+export type ExperimentalFeatureStatus = ExperimentalFeatureData & {
+    enabled: boolean;
+};
+
 // Warning: (ae-forgotten-export) The symbol "_extractFiles" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
@@ -755,6 +779,9 @@ export const isDynamicPlaceholder: (placeholder: string) => boolean;
 
 // @public
 export const isEditorActive: () => boolean;
+
+// @public
+export const isExperimentalEnvFlagEnabled: (value: string | undefined) => boolean;
 
 // @public
 export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field> | null | undefined): field is null | undefined;
@@ -1129,6 +1156,9 @@ const replaceMediaUrlPrefix: (url: string, mediaUrlPrefix?: RegExp) => string;
 
 // @public
 export const resetEditorChromes: () => void;
+
+// @public
+export const resolveExperimentalFeatureStatuses: (features: ExperimentalFeatureData[]) => ExperimentalFeatureStatus[];
 
 // @internal
 export const resolveRedirectTarget: (existsRedirect: RedirectResult, siteLanguage: string, requestPath: string) => string;
@@ -1519,6 +1549,7 @@ export const writeImportMap: (args: WriteImportMapArgsInternal) => (input: {
 export type WriteImportMapArgs = {
     paths: string[];
     exclude?: string[];
+    includeVariants?: boolean;
 };
 
 // @internal

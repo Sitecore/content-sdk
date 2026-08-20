@@ -13,3 +13,4 @@ export {
   prepareComponentsForMap,
   buildComponentMapContent,
 } from './templating';
+export { combineImportEntries } from './codegen/import-map-utils';

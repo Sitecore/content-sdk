@@ -1,5 +1,40 @@
 # @sitecore-content-sdk/nextjs
 
+## 2.3.0
+
+### Minor Changes
+
+- minor `@sitecore-content-sdk/react` dependency update:
+
+  - Add locale and facet support to search package and React hooks
+
+  - `SearchParameters` now accepts an optional `locale` field for multi-locale index configurations
+  - `SearchParameters` now accepts an optional `facet` field (`FacetRequest`) to request facet counts and filter by facet values
+  - `SearchResponse` now includes an optional `facets` field (`FacetResult[]`) with facet data when requested
+  - Six new public types exported from `@sitecore-content-sdk/search`: `FacetRequest`, `FacetField`, `FacetFilter`, `FacetFilterOperator`, `FacetValue`, `FacetResult`
+  - `useSearch` and `useInfiniteSearch` hooks in `@sitecore-content-sdk/react` updated to support the new `locale` and `facet` options and expose `facets` in the returned state ([ce89722](https://github.com/sitecore/content-sdk/commit/ce897227369d7cdccf3cbb79b621c67585f7aff6))
+
+- minor `@sitecore-content-sdk/search` dependency update:
+
+  - Add locale and facet support to search package and React hooks
+
+  - `SearchParameters` now accepts an optional `locale` field for multi-locale index configurations
+  - `SearchParameters` now accepts an optional `facet` field (`FacetRequest`) to request facet counts and filter by facet values
+  - `SearchResponse` now includes an optional `facets` field (`FacetResult[]`) with facet data when requested
+  - Six new public types exported from `@sitecore-content-sdk/search`: `FacetRequest`, `FacetField`, `FacetFilter`, `FacetFilterOperator`, `FacetValue`, `FacetResult`
+  - `useSearch` and `useInfiniteSearch` hooks in `@sitecore-content-sdk/react` updated to support the new `locale` and `facet` options and expose `facets` in the returned state ([ce89722](https://github.com/sitecore/content-sdk/commit/ce897227369d7cdccf3cbb79b621c67585f7aff6))
+
+### Patch Changes
+
+- [SXA Redirects] Refactor redirects logic to be reusable across frameworks ([6f8e423](https://github.com/sitecore/content-sdk/commit/6f8e423028bdf8a74a2fc4b8cb084961d755b73f))
+- [SXA Redirects] Ensure locales are compared case-insensitively ([6f8e423](https://github.com/sitecore/content-sdk/commit/6f8e423028bdf8a74a2fc4b8cb084961d755b73f))
+- [App router] Locale always attached on redirect when `isLanguagePreserved` is true, request URL does not have locale prefix and redirect does not change locale. Adds new behavior controlled by `appLocalePrefix` setting values passed into redirect proxy: ([6563736](https://github.com/sitecore/content-sdk/commit/6563736fb3fdcd5885f88fcfe20c15d0800efbd7))
+  - `always`: prefix every locale, including the site default.
+  - `as-needed`: prefix only non-default locales; the site default stays bare. This holds even for `isLanguagePreserved` rules.
+  - `never`: never include locale prefix
+  - unset: behave as `as-needed`, EXCEPT that `isLanguagePreserved` from redirect map's checkbox would always ensure locale prefix, when set (Sitecore logic takes precedence).
+- Redirect Proxy not matching encoded URLs with unicode characters in Redirect Map ([6563736](https://github.com/sitecore/content-sdk/commit/6563736fb3fdcd5885f88fcfe20c15d0800efbd7))
+
 ## 2.2.1
 
 ### Patch Changes
