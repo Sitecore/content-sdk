@@ -57,6 +57,9 @@ export class CdpHelper {
     static normalizeScope(scope?: string): string;
 }
 
+// @public
+export const combineImportEntries: (defaultImportEntries: ImportEntry[], generatedImportEntries: ImportEntry[]) => ImportEntry[];
+
 // @internal
 export const COMPONENT_PREVIEW_CACHE_KEY_PREFIX = "component-preview-";
 
@@ -1582,6 +1585,7 @@ export const writeImportMap: (args: WriteImportMapArgsInternal) => (input: {
 export type WriteImportMapArgs = {
     paths: string[];
     exclude?: string[];
+    includeVariants?: boolean;
 };
 
 // @internal

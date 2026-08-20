@@ -1,5 +1,49 @@
 # create-content-sdk-app
 
+## 2.3.1
+
+### Patch Changes
+
+- Resolve draft/preview before cached page lookup so Pages Editor works for non-default locales ([3a21c12](https://github.com/sitecore/content-sdk/commit/3a21c1285ac924b2e5a0de164e3e0443e587c7f7))
+- Leverage `appLocalePrefix` config setting in AppRouter ensuring redirect locale handling works when LocaleProxy is removed (`x-sc-locale` is optional). ([e2bac91](https://github.com/sitecore/content-sdk/commit/e2bac910e40a6a22e8fa9fcb73f79f143a5fcf46))
+- [Chore] Cleanup demo code ([758194c](https://github.com/sitecore/content-sdk/commit/758194c5352b02735bc7dfd29f021597ce763889))
+- Bot tracking support for Angular ([4c907d5](https://github.com/sitecore/content-sdk/commit/4c907d5f6aac9870a7c40fd993f1f70ddce4802f))
+  - Expose `createBotTrackingMiddleware` function that creates an Express middleware for identifying bot requests
+- SXA Redirects support in Angular ([07c6169](https://github.com/sitecore/content-sdk/commit/07c6169d94098a2bc2f491ef61de4d253b52b098))
+- minor `@sitecore-content-sdk/angular` dependency update:
+
+  - Add loader prefetch for `scRouterLink`/`scRichText` links, so route data is already loaded by the time a user navigates.
+
+  Controlled per-link via each directive's `prefetch` input, or globally via `sitecore.config`'s `angular.linkPrefetch`:
+
+  - `'eager'` (default) — prefetch as soon as the link renders.
+  - `'hover'` — defer prefetching until the pointer dwells on the link for `angular.linkPrefetch.delayMs` (default 100ms).
+  - `'off'` — never prefetch. ([84866de](https://github.com/sitecore/content-sdk/commit/84866ded66f6f8f69e7f007b2311494e086b493b))
+    - Support optional `sc_previewTime` on the Angular editing render endpoint for time-based Edge preview. ([8b18c6e](https://github.com/sitecore/content-sdk/commit/8b18c6e6c2cc3546028f5408655ca263435d7507))
+    - Bot tracking support for Angular
+    - Expose `createBotTrackingMiddleware` function that creates an Express middleware for identifying bot requests ([4c907d5](https://github.com/sitecore/content-sdk/commit/4c907d5f6aac9870a7c40fd993f1f70ddce4802f))
+    - SXA Redirects support in Angular ([07c6169](https://github.com/sitecore/content-sdk/commit/07c6169d94098a2bc2f491ef61de4d253b52b098))
+
+- minor `@sitecore-content-sdk/react` dependency update:
+
+  - Add locale and facet support to search package and React hooks
+
+  - `SearchParameters` now accepts an optional `locale` field for multi-locale index configurations
+  - `SearchParameters` now accepts an optional `facet` field (`FacetRequest`) to request facet counts and filter by facet values
+  - `SearchResponse` now includes an optional `facets` field (`FacetResult[]`) with facet data when requested
+  - Six new public types exported from `@sitecore-content-sdk/search`: `FacetRequest`, `FacetField`, `FacetFilter`, `FacetFilterOperator`, `FacetValue`, `FacetResult`
+  - `useSearch` and `useInfiniteSearch` hooks in `@sitecore-content-sdk/react` updated to support the new `locale` and `facet` options and expose `facets` in the returned state ([ce89722](https://github.com/sitecore/content-sdk/commit/ce897227369d7cdccf3cbb79b621c67585f7aff6))
+
+- minor `@sitecore-content-sdk/search` dependency update:
+
+  - Add locale and facet support to search package and React hooks
+
+  - `SearchParameters` now accepts an optional `locale` field for multi-locale index configurations
+  - `SearchParameters` now accepts an optional `facet` field (`FacetRequest`) to request facet counts and filter by facet values
+  - `SearchResponse` now includes an optional `facets` field (`FacetResult[]`) with facet data when requested
+  - Six new public types exported from `@sitecore-content-sdk/search`: `FacetRequest`, `FacetField`, `FacetFilter`, `FacetFilterOperator`, `FacetValue`, `FacetResult`
+  - `useSearch` and `useInfiniteSearch` hooks in `@sitecore-content-sdk/react` updated to support the new `locale` and `facet` options and expose `facets` in the returned state ([ce89722](https://github.com/sitecore/content-sdk/commit/ce897227369d7cdccf3cbb79b621c67585f7aff6))
+
 ## 2.3.0
 
 ### Minor Changes

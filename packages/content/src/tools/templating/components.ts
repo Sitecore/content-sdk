@@ -156,9 +156,25 @@ function _getComponentList(
     );
   }, []);
 
-  return includeVariants
-    ? components
-    : components.filter((component) => !component.componentName.includes('.'));
+  if (includeVariants) return components;
+  // keep track of component names and paths
+  const componentPathRecord = {} as Record<string, Set<string>>;
+  components.forEach((component) => {
+    if (componentPathRecord[component.componentName])
+      componentPathRecord[component.componentName].add(component.importPath);
+    else componentPathRecord[component.componentName] = new Set([component.importPath]);
+  });
+  return components.filter((component) => {
+    const dot = component.componentName.lastIndexOf('.');
+    if (dot === -1) return true;
+    const nonVariant = component.componentName.substring(0, dot);
+    return !(
+      componentPathRecord[nonVariant] &&
+      componentPathRecord[nonVariant].has(
+        component.importPath.substring(0, component.importPath.lastIndexOf('.'))
+      )
+    );
+  });
 }
 
 /**

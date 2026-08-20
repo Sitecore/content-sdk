@@ -1,4 +1,4 @@
-import { ImportEntry } from '@sitecore-content-sdk/content/codegen';
+import { ImportEntry } from '../../editing/codegen';
 
 /**
  * Combines the default import entries with the generated import entries.
