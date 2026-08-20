@@ -1,21 +1,7 @@
-import {
-  Component,
-  ComponentRef,
-  Injector,
-  TemplateRef,
-  Type,
-  ViewContainerRef,
-  computed,
-  effect,
-  inject,
-  input,
-  isDevMode,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, Injector, Type, computed, effect, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
-import { MetadataKind, resetEditorChromes } from '@sitecore-content-sdk/content/editing';
+import { resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 import { SitecoreContextService } from '../../lib/sitecore-context.service';
 import { SITECORE_COMPONENT_MAP } from '../tokens';
 import type { AngularContentSdkComponent, ComponentMap } from '../types';
@@ -23,10 +9,10 @@ import {
   getPlaceholderRenderings,
   getChildComponentProps,
   resolveComponentForRendering,
-  computePlaceholderChromeId,
   isPlaceholderDeclaredInLayout,
   type PassThroughProps,
 } from './placeholder-utils';
+import { ScPlaceholderMetadata } from './sc-placeholder-metadata';
 import { ScMissingComponentComponent } from '../sc-missing-component.component';
 import { ScHiddenRenderingComponent } from '../sc-hidden-rendering.component';
 import {
@@ -72,23 +58,30 @@ import {
 @Component({
   selector: 'sc-placeholder',
   host: { '[class.sc-jss-empty-placeholder]': 'emptyInEditing()' },
-  imports: [CommonModule],
+  imports: [CommonModule, ScPlaceholderMetadata],
   template: `
-    <ng-template
-      #editingChromeBlock
-      let-kind="kind"
-      let-chrometype="chrometype"
-      let-chromeId="chromeId"
-    >
-      <code
-        type="text/sitecore"
-        class="scpm"
-        [attr.chrometype]="chrometype"
-        [attr.kind]="kind"
-        [attr.id]="chromeId || null"
-      ></code>
-    </ng-template>
-    <ng-template #placeholderView></ng-template>
+    @if(isEditing()){
+    <sc-placeholder-metadata [rendering]="componentRendering()" [placeholderName]="name()">
+      @for(cmpRendering of resolvedRenderings(); track cmpRendering.rendering.uid) {
+      <sc-placeholder-metadata [rendering]="cmpRendering.rendering">
+        @if(cmpRendering.component) {
+        <ng-container
+          [ngComponentOutlet]="cmpRendering.component"
+          [ngComponentOutletInputs]="cmpRendering.inputs"
+          [ngComponentOutletInjector]="injector"
+        ></ng-container>
+        }
+      </sc-placeholder-metadata>
+      }
+    </sc-placeholder-metadata>
+    } @else { @for(cmpRendering of resolvedRenderings(); track cmpRendering.rendering.uid) {
+    @if(cmpRendering.component) {
+    <ng-container
+      [ngComponentOutlet]="cmpRendering.component"
+      [ngComponentOutletInputs]="cmpRendering.inputs"
+      [ngComponentOutletInjector]="injector"
+    ></ng-container>
+    } } }
   `,
 })
 export class ScPlaceholderComponent {
@@ -97,13 +90,20 @@ export class ScPlaceholderComponent {
 
   /** Rendering or route data containing placeholders. */
   readonly rendering = input.required<ComponentRendering | RouteData>();
+  readonly componentRendering = computed(() => this.rendering() as ComponentRendering);
 
   /** Optional placeholder-level fields merged into each child. */
   readonly fields = input<{ [key: string]: unknown }>();
 
   /** Optional placeholder-level params merged into each child's `params` input. */
   readonly params = input<{ [key: string]: string }>();
-
+  protected readonly resolvedRenderings = signal<
+    Array<{
+      rendering: ComponentRendering;
+      component: Type<unknown> | null;
+      inputs: Record<string, unknown>;
+    }>
+  >([]);
   /**
    * Extra inputs to set on each dynamically created component, after the standard `fields`,
    * `params`, and `rendering` inputs. Keys must match `input()` names on the target components.
@@ -121,22 +121,17 @@ export class ScPlaceholderComponent {
 
   private readonly context = inject(SitecoreContextService);
   private readonly contextComponentMap = inject(SITECORE_COMPONENT_MAP, { optional: true });
-  private readonly injector = inject(Injector);
   private readonly guardResolver = inject(PLACEHOLDER_GUARD_RESOLVER);
   private readonly dataResolver = inject(PLACEHOLDER_DATA_RESOLVER);
 
-  private readonly placeholderViewRef = viewChild('placeholderView', { read: ViewContainerRef });
-  private readonly editingChromeBlock = viewChild('editingChromeBlock', { read: TemplateRef });
-
-  private readonly isEditing = computed(() => this.context.isEditing());
+  protected readonly isEditing = computed(() => this.context.isEditing());
 
   /** True when the placeholder has no renderings and the page is in editing mode. */
   protected readonly emptyInEditing = signal(false);
+  protected readonly injector = inject(Injector);
 
   constructor() {
     effect(() => {
-      const container = this.placeholderViewRef();
-      const editingChromeBlock = this.editingChromeBlock();
       const rendering = this.rendering();
       const name = this.name();
       const isEditing = this.isEditing();
@@ -145,11 +140,7 @@ export class ScPlaceholderComponent {
         this.contextComponentMap ??
         new Map<string, AngularContentSdkComponent>();
 
-      if (!container) {
-        return;
-      }
-
-      this.updateView({ container, editingChromeBlock, rendering, name, isEditing, componentMap });
+      this.updateView({ rendering, name, isEditing, componentMap });
     });
   }
 
@@ -165,15 +156,12 @@ export class ScPlaceholderComponent {
    * @param {object} args.componentMap - Component map.
    */
   private updateView(args: {
-    container: ViewContainerRef;
-    editingChromeBlock: TemplateRef<unknown> | undefined;
     rendering: ComponentRendering | RouteData;
     name: string;
     isEditing: boolean;
     componentMap: ComponentMap;
   }): void {
-    const { container, editingChromeBlock, rendering, name, isEditing, componentMap } = args;
-    container.clear();
+    const { rendering, name, isEditing, componentMap } = args;
 
     const rawRenderings = getPlaceholderRenderings(rendering, name, isEditing);
     const placeholderDeclared = isPlaceholderDeclaredInLayout(rendering, name, isEditing);
@@ -183,14 +171,11 @@ export class ScPlaceholderComponent {
     // pair so Pages can discover and target the empty region. Skip when the name is not
     // declared on the parent rendering (matches JSS PlaceholderComponent early return).
     if (rawRenderings.length === 0) {
-      if (isEditing && editingChromeBlock && placeholderDeclared) {
+      if (isEditing && placeholderDeclared) {
         resetEditorChromes();
-        this.emitOuterChrome(container, editingChromeBlock, MetadataKind.Open, rendering, name);
-        this.emitOuterChrome(container, editingChromeBlock, MetadataKind.Close, rendering, name);
       }
       return;
     }
-
     const ctx: PlaceholderResolverContext = { name, rendering };
 
     let filtered: ComponentRendering[];
@@ -209,105 +194,27 @@ export class ScPlaceholderComponent {
       return;
     }
 
-    if (isEditing && editingChromeBlock) {
-      this.emitOuterChrome(container, editingChromeBlock, MetadataKind.Open, rendering, name);
-    }
-
-    for (const componentRendering of enriched) {
-      const { component } = resolveComponentForRendering({
-        renderingDefinition: componentRendering,
-        placeholderName: name,
-        componentMap,
-        hiddenRenderingComponent: this.hiddenRenderingComponent() ?? ScHiddenRenderingComponent,
-        missingComponentComponent: this.missingComponent() ?? ScMissingComponentComponent,
-      });
-
-      if (isEditing && editingChromeBlock) {
-        container.createEmbeddedView(editingChromeBlock, {
-          kind: MetadataKind.Open,
-          chrometype: 'rendering',
-          chromeId: componentRendering.uid,
+    this.resolvedRenderings.set(
+      enriched.map((componentRendering) => {
+        const { component } = resolveComponentForRendering({
+          renderingDefinition: componentRendering,
+          placeholderName: name,
+          componentMap,
+          hiddenRenderingComponent: this.hiddenRenderingComponent() ?? ScHiddenRenderingComponent,
+          missingComponentComponent: this.missingComponent() ?? ScMissingComponentComponent,
         });
-      }
-
-      if (component) {
-        const ref = container.createComponent(component, { injector: this.injector });
         const childProps = getChildComponentProps(this.fields(), this.params(), componentRendering);
-        this.trySetInput(ref, 'fields', childProps.fields);
-        this.trySetInput(ref, 'params', childProps.params);
-        this.trySetInput(ref, 'rendering', childProps.rendering);
-
-        const passThrough = this.passThroughProps();
-        if (passThrough && typeof passThrough === 'object') {
-          for (const [inputName, value] of Object.entries(passThrough)) {
-            this.trySetInput(ref, inputName, value);
-          }
-        }
-      }
-
-      if (isEditing && editingChromeBlock) {
-        container.createEmbeddedView(editingChromeBlock, {
-          kind: MetadataKind.Close,
-          chrometype: 'rendering',
-        });
-      }
-    }
-
-    if (isEditing && editingChromeBlock) {
-      this.emitOuterChrome(container, editingChromeBlock, MetadataKind.Close, rendering, name);
-    }
-  }
-
-  /**
-   * Emit a single outer placeholder open/close marker into the structural slot. The open
-   * marker's `id` uses the parent rendering uid when nested, otherwise falls back to
-   * `placeholderName_DEFAULT_PLACEHOLDER_UID` (or the matching dynamic-placeholder pattern).
-   * @param {ViewContainerRef} container - Target view container.
-   * @param {TemplateRef<unknown>} editingChromeBlock - The chrome `<ng-template>`.
-   * @param {MetadataKind} kind - Open or close.
-   * @param {ComponentRendering | RouteData} rendering - Parent rendering / route node.
-   * @param {string} name - Placeholder name.
-   */
-  private emitOuterChrome(
-    container: ViewContainerRef,
-    editingChromeBlock: TemplateRef<unknown>,
-    kind: MetadataKind,
-    rendering: ComponentRendering | RouteData,
-    name: string
-  ): void {
-    if (kind === MetadataKind.Open) {
-      const parentUid = (rendering as ComponentRendering).uid;
-      const chromeId = computePlaceholderChromeId(rendering as ComponentRendering, name, parentUid);
-      container.createEmbeddedView(editingChromeBlock, {
-        kind: MetadataKind.Open,
-        chrometype: 'placeholder',
-        chromeId,
-      });
-    } else {
-      container.createEmbeddedView(editingChromeBlock, {
-        kind: MetadataKind.Close,
-        chrometype: 'placeholder',
-      });
-    }
-  }
-
-  /**
-   * Best-effort input setter that silently ignores undeclared inputs on the target component.
-   * Logs in dev mode for diagnostic purposes.
-   * @param {ComponentRef<unknown>} ref - The dynamically created component reference.
-   * @param {string} inputName - Name of the input to set.
-   * @param {unknown} value - Input value.
-   */
-  private trySetInput(ref: ComponentRef<unknown>, inputName: string, value: unknown): void {
-    try {
-      ref.setInput(inputName, value);
-    } catch (e) {
-      if (isDevMode()) {
-        console.debug(
-          `[sc-placeholder] Skipped input "${inputName}" — not declared on component`,
-          e
-        );
-      }
-    }
+        return {
+          rendering: componentRendering,
+          component,
+          inputs: {
+            fields: childProps.fields,
+            params: childProps.params,
+            rendering: childProps.rendering,
+            ...this.passThroughProps(),
+          },
+        };
+      })
+    );
   }
 }
