@@ -19,6 +19,12 @@ describe('components', () => {
     it('should return results when one of "paths" is a glob pattern', () => {
       const items = [
         {
+          componentName: 'Hero',
+          filePath: path.normalize('src/test-data/components/Hero.tsx'),
+          importPath: 'src/test-data/components/Hero',
+          moduleName: 'Hero',
+        },
+        {
           importPath: 'src/test-data/components/Bar',
           filePath: path.normalize('src/test-data/components/Bar.tsx'),
           componentName: 'Bar',
@@ -37,6 +43,12 @@ describe('components', () => {
           filePath: path.normalize('src/test-data/components/Qux.js'),
           componentName: 'Qux',
           moduleName: 'Qux',
+        },
+        {
+          componentName: 'Hero',
+          filePath: path.normalize('src/test-data/components/Hero.tsx'),
+          importPath: 'src/test-data/components/Hero',
+          moduleName: 'Hero',
         },
         {
           importPath: 'src/test-data/components/Foo',
@@ -77,6 +89,12 @@ describe('components', () => {
           moduleName: 'Qux',
         },
         {
+          componentName: 'Hero',
+          filePath: path.normalize('src/test-data/components/Hero.tsx'),
+          importPath: 'src/test-data/components/Hero',
+          moduleName: 'Hero',
+        },
+        {
           importPath: 'src/test-data/components/Foo',
           filePath: path.normalize('src/test-data/components/Foo.jsx'),
           componentName: 'Foo',
@@ -102,7 +120,7 @@ describe('components', () => {
         },
       ] as ComponentFile[];
 
-      const result = getComponentList(['src/test-data/components/**/*']);
+      const result = getComponentList(['src/test-data/components/**/*'], [], false);
       expect(result).to.deep.equal(items);
     });
 
@@ -166,6 +184,12 @@ describe('components', () => {
           moduleName: 'Herovariant',
         },
         {
+          componentName: 'Hero',
+          filePath: path.normalize('src/test-data/components/Hero.tsx'),
+          importPath: 'src/test-data/components/Hero',
+          moduleName: 'Hero',
+        },
+        {
           importPath: 'src/test-data/components/Foo',
           filePath: path.normalize('src/test-data/components/Foo.jsx'),
           componentName: 'Foo',
@@ -193,6 +217,79 @@ describe('components', () => {
 
       const result = getComponentList(['src/test-data/components'], ['**/*.test.*'], true);
       expect(result).to.deep.equal(items);
+    });
+
+    it('should only strip variants when both variant and non-variant component names are present', () => {
+      sandbox.stub(console, 'debug');
+
+      const result = getComponentList(['src/test-data/component-variants'], ['**/*.test.*'], false);
+      expect(result).to.deep.equal([
+        {
+          importPath: 'src/test-data/component-variants/qux.component',
+          filePath: path.normalize('src/test-data/component-variants/qux.component.ts'),
+          componentName: 'Qux.component',
+          moduleName: 'Quxcomponent',
+        },
+        {
+          importPath: 'src/test-data/component-variants/foo.component',
+          filePath: path.normalize('src/test-data/component-variants/foo.component.ts'),
+          componentName: 'Foo.component',
+          moduleName: 'Foocomponent',
+        },
+        {
+          componentName: 'Baz',
+          filePath: path.normalize('src/test-data/component-variants/Baz.ts'),
+          importPath: 'src/test-data/component-variants/Baz',
+          moduleName: 'Baz',
+        },
+      ]);
+    });
+
+    it('should strip a variant when the non-variant component is at the same path', () => {
+      const stubbedPaths = [
+        path.normalize('src/components/Hero.tsx'),
+        path.normalize('src/components/Hero.variant.tsx'),
+      ];
+      const globSyncStub = sandbox.stub(require('glob'), 'sync').returns(stubbedPaths);
+
+      const result = getComponentList(['src/components/*.tsx'], ['**/*.test.*'], false);
+      expect(result).to.deep.equal([
+        {
+          importPath: 'src/components/Hero',
+          filePath: path.normalize('src/components/Hero.tsx'),
+          componentName: 'Hero',
+          moduleName: 'Hero',
+        },
+      ]);
+
+      globSyncStub.restore();
+    });
+
+    it('should keep a variant-named component when the non-variant is at a different path', () => {
+      const stubbedPaths = [
+        path.normalize('src/features/Hero.tsx'),
+        path.normalize('src/widgets/Hero.variant.tsx'),
+      ];
+      const globSyncStub = sandbox.stub(require('glob'), 'sync').returns(stubbedPaths);
+
+      const result = getComponentList(['src/**/*.tsx'], ['**/*.test.*'], false);
+      expect(result).to.deep.equal([
+        {
+          importPath: 'src/features/Hero',
+          filePath: path.normalize('src/features/Hero.tsx'),
+          componentName: 'Hero',
+          moduleName: 'Hero',
+        },
+        // kept: shares Hero's base name but lives at a different path, so it is not a variant
+        {
+          importPath: 'src/widgets/Hero.variant',
+          filePath: path.normalize('src/widgets/Hero.variant.tsx'),
+          componentName: 'Hero.variant',
+          moduleName: 'Herovariant',
+        },
+      ]);
+
+      globSyncStub.restore();
     });
 
     it('should return filtered results when "exclude" contains an exact path', () => {

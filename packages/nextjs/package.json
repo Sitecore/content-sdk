@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/nextjs",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -32,7 +32,7 @@
     "url": "https://github.com/sitecore/content-sdk/issues"
   },
   "devDependencies": {
-    "@sitecore-content-sdk/analytics-core": "^2.1.1",
+    "@sitecore-content-sdk/analytics-core": "^2.1.2",
     "@sitecore-content-sdk/personalize": "^2.1.0",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@testing-library/dom": "^10.4.0",
@@ -75,8 +75,8 @@
     "typescript": "~5.8.3"
   },
   "peerDependencies": {
-    "@sitecore-content-sdk/analytics-core": "^2.1.1",
-    "@sitecore-content-sdk/events": "^2.1.1",
+    "@sitecore-content-sdk/analytics-core": "^2.1.2",
+    "@sitecore-content-sdk/events": "^2.1.2",
     "@sitecore-content-sdk/personalize": "^2.1.0",
     "next": "^16.2.0",
     "react": "^19.2.1",
@@ -90,10 +90,10 @@
   },
   "dependencies": {
     "@babel/parser": "^7.27.2",
-    "@sitecore-content-sdk/content": "^2.2.1",
-    "@sitecore-content-sdk/core": "^2.1.2",
-    "@sitecore-content-sdk/events": "^2.1.1",
-    "@sitecore-content-sdk/react": "^2.2.1",
+    "@sitecore-content-sdk/content": "^2.2.2",
+    "@sitecore-content-sdk/core": "^2.1.3",
+    "@sitecore-content-sdk/events": "^2.1.2",
+    "@sitecore-content-sdk/react": "^2.3.0",
     "recast": "^0.23.11",
     "regex-parser": "^2.3.1"
   },
@@ -101,77 +101,82 @@
     ".": {
       "types": "./types/index.d.ts",
       "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"      
+      "require": "./dist/cjs/index.js"
     },
     "./client": {
       "types": "./types/client/index.d.ts",
       "import": "./dist/esm/client/index.js",
-      "require": "./dist/cjs/client/index.js"      
+      "require": "./dist/cjs/client/index.js"
     },
     "./codegen": {
       "types": "./types/editing/codegen/index.d.ts",
       "import": "./dist/esm/editing/codegen/index.js",
-      "require": "./dist/cjs/editing/codegen/index.js"      
+      "require": "./dist/cjs/editing/codegen/index.js"
     },
     "./component-props-loader": {
       "types": "./types/component-props-loader/index.d.ts",
       "import": "./dist/esm/component-props-loader/index.js",
-      "require": "./dist/cjs/component-props-loader/index.js"      
+      "require": "./dist/cjs/component-props-loader/index.js"
     },
     "./config": {
       "types": "./types/config/index.d.ts",
       "import": "./dist/esm/config/index.js",
-      "require": "./dist/cjs/config/index.js"      
+      "require": "./dist/cjs/config/index.js"
     },
     "./config-cli": {
       "types": "./types/config-cli/index.d.ts",
       "import": "./dist/esm/config-cli/index.js",
-      "require": "./dist/cjs/config-cli/index.js"      
+      "require": "./dist/cjs/config-cli/index.js"
     },
     "./editing": {
       "types": "./types/editing/index.d.ts",
       "import": "./dist/esm/editing/index.js",
-      "require": "./dist/cjs/editing/index.js"      
+      "require": "./dist/cjs/editing/index.js"
+    },
+    "./experimental": {
+      "import": "./dist/esm/experimental-features/index.js",
+      "require": "./dist/cjs/experimental-features/index.js",
+      "types": "./types/experimental-features/index.d.ts"
     },
     "./proxy": {
       "types": "./types/proxy/index.d.ts",
       "import": "./dist/esm/proxy/index.js",
-      "require": "./dist/cjs/proxy/index.js"      
+      "require": "./dist/cjs/proxy/index.js"
     },
     "./middleware": {
       "types": "./types/middleware/index.d.ts",
       "import": "./dist/esm/middleware/index.js",
-      "require": "./dist/cjs/middleware/index.js"      
+      "require": "./dist/cjs/middleware/index.js"
     },
     "./monitoring": {
       "types": "./types/monitoring/index.d.ts",
       "import": "./dist/esm/monitoring/index.js",
-      "require": "./dist/cjs/monitoring/index.js"      
+      "require": "./dist/cjs/monitoring/index.js"
     },
     "./route-handler": {
       "types": "./types/route-handler/index.d.ts",
       "import": "./dist/esm/route-handler/index.js",
-      "require": "./dist/cjs/route-handler/index.js"      
+      "require": "./dist/cjs/route-handler/index.js"
     },
     "./search": {
       "types": "./types/search/index.d.ts",
       "import": "./dist/esm/search/index.js",
-      "require": "./dist/cjs/search/index.js"      
+      "require": "./dist/cjs/search/index.js"
     },
     "./site": {
       "types": "./types/site/index.d.ts",
       "import": "./dist/esm/site/index.js",
-      "require": "./dist/cjs/site/index.js"      
+      "require": "./dist/cjs/site/index.js"
     },
     "./tools": {
       "types": "./types/tools/index.d.ts",
       "import": "./dist/esm/tools/index.js",
-      "require": "./dist/cjs/tools/index.js"      
+      "require": "./dist/cjs/tools/index.js"
     },
     "./utils": {
       "types": "./types/utils/index.d.ts",
       "import": "./dist/esm/utils/index.js",
-      "require": "./dist/cjs/utils/index.js"      
+      "require": "./dist/cjs/utils/index.js"
     }
   },
   "description": "",
