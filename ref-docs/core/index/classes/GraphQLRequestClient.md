@@ -6,7 +6,7 @@
 
 # Class: GraphQLRequestClient
 
-Defined in: [packages/core/src/graphql-request-client.ts:96](https://github.com/Sitecore/content-sdk/blob/c5d4841398e8e93474f43a16ca497a2fa4e0efae/packages/core/src/graphql-request-client.ts#L96)
+Defined in: [packages/core/src/graphql-request-client.ts:96](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/core/src/graphql-request-client.ts#L96)
 
 A GraphQL client for Sitecore APIs that uses the 'graphql-request' library.
 https://github.com/prisma-labs/graphql-request
@@ -21,7 +21,7 @@ https://github.com/prisma-labs/graphql-request
 
 > **new GraphQLRequestClient**(`endpoint`, `clientConfig?`): `GraphQLRequestClient`
 
-Defined in: [packages/core/src/graphql-request-client.ts:110](https://github.com/Sitecore/content-sdk/blob/c5d4841398e8e93474f43a16ca497a2fa4e0efae/packages/core/src/graphql-request-client.ts#L110)
+Defined in: [packages/core/src/graphql-request-client.ts:110](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/core/src/graphql-request-client.ts#L110)
 
 Provides ability to execute graphql query using given `endpoint`
 
@@ -42,7 +42,7 @@ Provides ability to execute graphql query using given `endpoint`
 
 > **request**\<`T`\>(`query`, `variables?`, `options?`): `Promise`\<`T`\>
 
-Defined in: [packages/core/src/graphql-request-client.ts:168](https://github.com/Sitecore/content-sdk/blob/c5d4841398e8e93474f43a16ca497a2fa4e0efae/packages/core/src/graphql-request-client.ts#L168)
+Defined in: [packages/core/src/graphql-request-client.ts:168](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/core/src/graphql-request-client.ts#L168)
 
 Execute graphql request
 
@@ -74,7 +74,7 @@ Execute graphql request
 
 > `static` **createClientFactory**(`config`): [`GraphQLRequestClientFactory`](../type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [packages/core/src/graphql-request-client.ts:155](https://github.com/Sitecore/content-sdk/blob/c5d4841398e8e93474f43a16ca497a2fa4e0efae/packages/core/src/graphql-request-client.ts#L155)
+Defined in: [packages/core/src/graphql-request-client.ts:155](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/core/src/graphql-request-client.ts#L155)
 
 Factory method for creating a GraphQLRequestClientFactory.
 

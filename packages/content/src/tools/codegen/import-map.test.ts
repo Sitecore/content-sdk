@@ -569,6 +569,38 @@ describe('Import Map Generation', () => {
       expect(defaultMapTemplateStub.calledOnce).to.be.true;
     });
 
+    it('should process variants by default', async () => {
+      const scConfig = { disableCodeGeneration: false } as any;
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+
+      getComponentListStub.returns([{ filePath: 'component1.tsx' }]);
+      getImportMapStub.returns(new Map());
+      sandbox.stub(require('fs'), 'writeFileSync');
+      defaultMapTemplateStub.returns('// import map content');
+
+      // includeVariants is not provided
+      await runCommand(scConfig, { paths: ['foo'], exclude: ['bar'] });
+
+      // variants should be included, so getComponentList is called with includeVariants === true
+      expect(getComponentListStub.calledWith(['foo'], ['bar'], true)).to.be.true;
+    });
+
+    it('should accept includeVariants arg', async () => {
+      const scConfig = { disableCodeGeneration: false } as any;
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+
+      getComponentListStub.returns([{ filePath: 'component1.tsx' }]);
+      getImportMapStub.returns(new Map());
+      sandbox.stub(require('fs'), 'writeFileSync');
+      defaultMapTemplateStub.returns('// import map content');
+
+      // explicitly opt out of variants
+      await runCommand(scConfig, { paths: ['foo'], exclude: ['bar'], includeVariants: false });
+
+      // the provided includeVariants arg should be forwarded to getComponentList
+      expect(getComponentListStub.calledWith(['foo'], ['bar'], false)).to.be.true;
+    });
+
     it('should write server and client import maps', async () => {
       // run the full unobstructed flow for this test
       /* eslint-disable-next-line */

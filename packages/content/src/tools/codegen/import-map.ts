@@ -80,6 +80,7 @@ type ImportMapEntry = {
 export type WriteImportMapArgs = {
   paths: string[];
   exclude?: string[];
+  includeVariants?: boolean;
 };
 
 /**
@@ -424,7 +425,9 @@ export const writeImportMap = (args: WriteImportMapArgsInternal) => {
       writeEmptyImportMaps(args, defaultTemplate, clientTemplate);
       return;
     }
-    const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
+    const paths = _getComponentList(args.paths, args.exclude, args.includeVariants !== false).map(
+      (entry) => entry.filePath
+    );
     // TODO: don't run in pages router
     const importMaps = await prepImportMaps(paths, args.separateServerClientMaps);
     for (const importMap of importMaps) {
