@@ -386,6 +386,14 @@ export class SearchService {
     const fields = this.getTrimmedQueryFields(params);
     const provided = this.getProvidedQueryFields(fields);
 
+    if (provided.length > 1) {
+      throw new TypeError(
+        `Query fields are mutually exclusive. Provide only one of: keyphrase, seedItemId, seedItemUrl. Received: ${provided.join(
+          ', '
+        )}`
+      );
+    }
+
     if (params.seedItemId !== undefined && !fields.seedItemId) {
       throw new TypeError('seedItemId must be a non-empty string');
     }
@@ -394,19 +402,11 @@ export class SearchService {
       throw new TypeError('seedItemUrl must be a non-empty string');
     }
 
-    if (provided.length > 1) {
-      throw new TypeError(
-        `Query fields are mutually exclusive. Provide only one of: keyphrase, seedItemId, seedItemUrl. Received: ${provided.join(
-          ', '
-        )}`
-      );
-    }
   }
 
   private buildSearchUrlQuery<T extends SearchDocument = SearchDocument>(
     params: SearchParameters<T>
   ): SearchQuery {
-    this.validateQueryExclusivity(params);
 
     const fields = this.getTrimmedQueryFields(params);
     const provided = this.getProvidedQueryFields(fields);
@@ -417,9 +417,9 @@ export class SearchService {
       case 'seedItemUrl':
         return { seedItemUrl: fields.seedItemUrl };
       case 'keyphrase':
-        return { keyphrase: params.keyphrase ?? '' };
+        return { keyphrase: fields.keyphrase };
       default:
-        return { keyphrase: params.keyphrase ?? '' };
+        return { keyphrase: fields.keyphrase };
     }
   }
 

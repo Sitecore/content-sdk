@@ -88,6 +88,44 @@ describe('SearchService', () => {
     expect(searchResponse.total).to.equal(3);
   });
 
+  it('should trim keyphrase before sending the request', async () => {
+    nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+      reqheaders: {
+        'x-sitecore-contextid': contextId,
+      },
+    })
+      .post(`/v1/search`, {
+        config: {
+          id: searchIndexId,
+        },
+        limit: 10,
+        offset: 0,
+        query: {
+          keyphrase: 'test',
+        },
+        sessionId: '',
+        sort: {
+          fields: [],
+        },
+      })
+      .reply(200, {
+        content: [{ id: 1 }],
+        total: 1,
+      });
+
+    const searchService = new SearchService({
+      contextId,
+    });
+
+    const searchResponse = await searchService.search({
+      searchIndexId,
+      keyphrase: '  test  ',
+    });
+
+    expect(searchResponse.results).to.deep.equal([{ id: 1 }]);
+    expect(searchResponse.total).to.equal(1);
+  });
+
   it('should send a request with custom edge url', async () => {
     const customEdgeUrl = 'https://custom-edge-url.com';
 
