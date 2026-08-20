@@ -252,8 +252,8 @@ function parsePnpmList(output: string): Package[] {
  */
 function parseYarnInfo(output: string): Package[] {
   return parseJsonLines(output).reduce<Package[]>((packages, entry) => {
-    const locator = typeof entry === 'string' ? entry : entry?.value;
-    const scPackage = typeof locator === 'string' ? parsePackageLocator(locator) : undefined;
+    const locator = typeof entry === 'string' ? entry : getRecordString(entry, 'value');
+    const scPackage = locator ? parsePackageLocator(locator) : undefined;
 
     return scPackage ? [...packages, scPackage] : packages;
   }, []);
@@ -268,12 +268,16 @@ function parseYarnInfo(output: string): Package[] {
  */
 function parseYarnClassicList(output: string): Package[] {
   return parseJsonLines(output).reduce<Package[]>((packages, entry) => {
-    if (entry?.type !== 'tree' || !Array.isArray(entry.data?.trees)) {
+    const data = isRecord(entry) && entry.type === 'tree' ? entry.data : undefined;
+    const trees = isRecord(data) && Array.isArray(data.trees) ? data.trees : undefined;
+
+    if (!trees) {
       return packages;
     }
 
-    return (entry.data.trees as { name?: string }[]).reduce<Package[]>((treePackages, tree) => {
-      const scPackage = tree?.name ? parsePackageLocator(tree.name) : undefined;
+    return trees.reduce<Package[]>((treePackages, tree) => {
+      const name = getRecordString(tree, 'name');
+      const scPackage = name ? parsePackageLocator(name) : undefined;
 
       return scPackage ? [...treePackages, scPackage] : treePackages;
     }, packages);
@@ -298,13 +302,11 @@ function parseBunPackageList(output: string): Package[] {
  * Parse an NDJSON stream, skipping lines that are not valid JSON - package managers mix
  * diagnostics into their output
  * @param {string} output command output
- * @returns {any[]} parsed entries
+ * @returns {unknown[]} parsed entries
  * @internal
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function parseJsonLines(output: string): any[] {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return output.split(/\r?\n/).reduce<any[]>((entries, line) => {
+function parseJsonLines(output: string): unknown[] {
+  return output.split(/\r?\n/).reduce<unknown[]>((entries, line) => {
     const trimmed = line.trim();
 
     if (!trimmed) {
@@ -317,6 +319,33 @@ function parseJsonLines(output: string): any[] {
       return entries;
     }
   }, []);
+}
+
+/**
+ * Narrow an unknown value to a plain object record
+ * @param {unknown} value value to check
+ * @returns {value is Record<string, unknown>} whether the value is a non-null object
+ * @internal
+ */
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+/**
+ * Read a string property from an unknown object
+ * @param {unknown} value object that may contain the property
+ * @param {string} key property name
+ * @returns {string | undefined} the string value, or undefined when it is missing or not a string
+ * @internal
+ */
+function getRecordString(value: unknown, key: string): string | undefined {
+  if (!isRecord(value)) {
+    return undefined;
+  }
+
+  const property = value[key];
+
+  return typeof property === 'string' ? property : undefined;
 }
 
 /**
