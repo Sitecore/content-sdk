@@ -6,13 +6,6 @@ type Package = {
 };
 
 /**
- * Package manager identifiers used for metadata collection.
- * Yarn classic is a separate key because its listing command differs from yarn berry.
- * @internal
- */
-type PackageManagerName = 'npm' | 'pnpm' | 'yarn' | 'yarnClassic' | 'bun';
-
-/**
  * A package manager specific command to list installed packages, with a parser for its output.
  * @internal
  */
@@ -106,10 +99,10 @@ function getPackagesFromQueryResult(scPackages: Package[]): Record<string, strin
  * Build the listing command and parser for each supported package manager.
  * Yarn classic is a dedicated entry because its command differs from yarn berry.
  * @param {boolean} allowWorkspaces whether packages of all workspaces should be included
- * @returns {Record<PackageManagerName, PackagesQuery>} query and parser per package manager
+ * @returns {Record<string, PackagesQuery>} query and parser per package manager
  * @internal
  */
-function getPackageManagement(allowWorkspaces: boolean): Record<PackageManagerName, PackagesQuery> {
+function getPackageManagement(allowWorkspaces: boolean): Record<string, PackagesQuery> {
   return {
     pnpm: {
       query: `pnpm list --depth Infinity --json ${
@@ -145,14 +138,12 @@ function getPackageManagement(allowWorkspaces: boolean): Record<PackageManagerNa
  * through the environment they set up for the commands they run, so nothing has to be read from
  * disk - which matters because the app being built is not necessarily the project that declares
  * the package manager (workspaces).
- * @param {Record<PackageManagerName, PackagesQuery>} packageManagement supported package managers
- * @returns {PackageManagerName} the detected package manager, npm when it could not be determined
+ * @param {Record<string, PackagesQuery>} packageManagement supported package managers
+ * @returns {string} the detected package manager, npm when it could not be determined
  * @internal
  */
-function detectPackageManager(
-  packageManagement: Record<PackageManagerName, PackagesQuery>
-): PackageManagerName {
-  const managerNames = (Object.keys(packageManagement) as PackageManagerName[]).sort(
+function detectPackageManager(packageManagement: Record<string, PackagesQuery>): string {
+  const managerNames = Object.keys(packageManagement).sort(
     (left, right) => right.length - left.length
   );
   const { npm_config_user_agent: userAgent, npm_execpath: execPath } = process.env;
