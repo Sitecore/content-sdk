@@ -8,7 +8,7 @@
 
 > `const` **COMPONENT\_UPDATE\_CACHE\_KEY\_PREFIX**: `"component-update-"` = `'component-update-'`
 
-Defined in: [content/src/editing/design-library.ts:23](https://github.com/Sitecore/content-sdk/blob/c5d4841398e8e93474f43a16ca497a2fa4e0efae/packages/content/src/editing/design-library.ts#L23)
+Defined in: [content/src/editing/design-library.ts:23](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/content/src/editing/design-library.ts#L23)
 
 **`Internal`**
 

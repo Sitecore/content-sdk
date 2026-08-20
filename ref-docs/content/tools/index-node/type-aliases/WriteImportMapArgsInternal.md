@@ -8,7 +8,7 @@
 
 > **WriteImportMapArgsInternal** = [`WriteImportMapArgs`](WriteImportMapArgs.md) & `object`
 
-Defined in: [content/src/tools/codegen/import-map.ts:90](https://github.com/Sitecore/content-sdk/blob/c5d4841398e8e93474f43a16ca497a2fa4e0efae/packages/content/src/tools/codegen/import-map.ts#L90)
+Defined in: [content/src/tools/codegen/import-map.ts:91](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/content/src/tools/codegen/import-map.ts#L91)
 
 **`Internal`**
 

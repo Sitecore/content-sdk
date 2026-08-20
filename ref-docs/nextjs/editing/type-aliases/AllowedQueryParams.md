@@ -8,6 +8,6 @@
 
 > **AllowedQueryParams** = ([`AllowedQueryParam`](../interfaces/AllowedQueryParam.md) \| `string`)[] \| [`AllowedQueryParamsResolver`](AllowedQueryParamsResolver.md)
 
-Defined in: [nextjs/src/editing/types.ts:30](https://github.com/Sitecore/content-sdk/blob/c5d4841398e8e93474f43a16ca497a2fa4e0efae/packages/nextjs/src/editing/types.ts#L30)
+Defined in: [nextjs/src/editing/types.ts:30](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/nextjs/src/editing/types.ts#L30)
 
 Allowed query parameters which can be defined as an array of parameter names or objects, or a resolver function which can be used to extract additional parameters from the query string beyond the required editing parameters.

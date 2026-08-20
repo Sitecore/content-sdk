@@ -8,7 +8,7 @@
 
 > **buildExperimentalFeaturesResponse**(`features`): [`ExperimentalFeaturesResponse`](../type-aliases/ExperimentalFeaturesResponse.md)
 
-Defined in: [content/src/experimental-features/utils.ts:44](https://github.com/Sitecore/content-sdk/blob/c5d4841398e8e93474f43a16ca497a2fa4e0efae/packages/content/src/experimental-features/utils.ts#L44)
+Defined in: [content/src/experimental-features/utils.ts:44](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/content/src/experimental-features/utils.ts#L44)
 
 Builds the experimental features API response payload.
 

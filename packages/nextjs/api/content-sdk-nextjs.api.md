@@ -19,6 +19,7 @@ import { CacheOptions } from '@sitecore-content-sdk/core';
 import { CSDK_EXPERIMENTAL_FEATURES_ENABLED } from '@sitecore-content-sdk/content/experimental';
 import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { ClientEditingChromesUpdate } from '@sitecore-content-sdk/react';
+import { combineImportEntries } from '@sitecore-content-sdk/content/tools';
 import { ComponentFields } from '@sitecore-content-sdk/content/layout';
 import { ComponentFile } from '@sitecore-content-sdk/content/tools';
 import { ComponentImport } from '@sitecore-content-sdk/content/tools';
@@ -302,8 +303,7 @@ export type CollectSitecorePageCacheTagsParams = {
     route?: RouteData | null;
 };
 
-// @public
-export const combineImportEntries: (defaultImportEntries: ImportEntry[], generatedImportEntries: ImportEntry[]) => ImportEntry[];
+export { combineImportEntries }
 
 export { ComponentFields }
 
