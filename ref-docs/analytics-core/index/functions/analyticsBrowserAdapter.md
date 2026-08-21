@@ -8,7 +8,7 @@
 
 > **analyticsBrowserAdapter**(): [`AnalyticsBrowserAdapter`](../interfaces/AnalyticsBrowserAdapter.md)
 
-Defined in: [analytics-core/src/initialization/browser-adapter.ts:31](https://github.com/Sitecore/content-sdk/blob/2dc64e62333bc02156fe37ffdcae6ab8a71ff4cc/packages/analytics-core/src/initialization/browser-adapter.ts#L31)
+Defined in: [analytics-core/src/initialization/browser-adapter.ts:31](https://github.com/Sitecore/content-sdk/blob/e17d474f9d8e82d1d42d4d085f91ccae5ee8b662/packages/analytics-core/src/initialization/browser-adapter.ts#L31)
 
 Creates a browser-based analytics adapter that reads and writes the visitor ID
 using cookies and can resolve a new client ID from the Edge proxy when needed.

@@ -8,7 +8,7 @@
 
 > **withAppPlaceholder**\<`T`, `W`\>(`Component`): (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withAppPlaceholder.tsx:25](https://github.com/Sitecore/content-sdk/blob/2dc64e62333bc02156fe37ffdcae6ab8a71ff4cc/packages/react/src/enhancers/withAppPlaceholder.tsx#L25)
+Defined in: [packages/react/src/enhancers/withAppPlaceholder.tsx:25](https://github.com/Sitecore/content-sdk/blob/e17d474f9d8e82d1d42d4d085f91ccae5ee8b662/packages/react/src/enhancers/withAppPlaceholder.tsx#L25)
 
 Provides a slot-like functionality by wrapping a component and rendering placeholders defined in the layout data.
 

@@ -8,7 +8,7 @@
 
 > **escapeRegExp**(`input`): `string`
 
-Defined in: [packages/core/src/tools/utils.ts:221](https://github.com/Sitecore/content-sdk/blob/2dc64e62333bc02156fe37ffdcae6ab8a71ff4cc/packages/core/src/tools/utils.ts#L221)
+Defined in: [packages/core/src/tools/utils.ts:221](https://github.com/Sitecore/content-sdk/blob/e17d474f9d8e82d1d42d4d085f91ccae5ee8b662/packages/core/src/tools/utils.ts#L221)
 
 **`Internal`**
 

@@ -8,7 +8,7 @@
 
 > **SiteInfo** = `object`
 
-Defined in: [content/src/site/models.ts:5](https://github.com/Sitecore/content-sdk/blob/2dc64e62333bc02156fe37ffdcae6ab8a71ff4cc/packages/content/src/site/models.ts#L5)
+Defined in: [content/src/site/models.ts:5](https://github.com/Sitecore/content-sdk/blob/e17d474f9d8e82d1d42d4d085f91ccae5ee8b662/packages/content/src/site/models.ts#L5)
 
 Object model of Site Info result
 
@@ -24,7 +24,7 @@ Additional user-defined properties
 
 > **hostName**: `string`
 
-Defined in: [content/src/site/models.ts:17](https://github.com/Sitecore/content-sdk/blob/2dc64e62333bc02156fe37ffdcae6ab8a71ff4cc/packages/content/src/site/models.ts#L17)
+Defined in: [content/src/site/models.ts:17](https://github.com/Sitecore/content-sdk/blob/e17d474f9d8e82d1d42d4d085f91ccae5ee8b662/packages/content/src/site/models.ts#L17)
 
 Site host name. May include multiple values (separated by '|') and wildcards ('*')
 
@@ -34,7 +34,7 @@ Site host name. May include multiple values (separated by '|') and wildcards ('*
 
 > **language**: `string`
 
-Defined in: [content/src/site/models.ts:21](https://github.com/Sitecore/content-sdk/blob/2dc64e62333bc02156fe37ffdcae6ab8a71ff4cc/packages/content/src/site/models.ts#L21)
+Defined in: [content/src/site/models.ts:21](https://github.com/Sitecore/content-sdk/blob/e17d474f9d8e82d1d42d4d085f91ccae5ee8b662/packages/content/src/site/models.ts#L21)
 
 Site default language
 
@@ -44,6 +44,6 @@ Site default language
 
 > **name**: `string`
 
-Defined in: [content/src/site/models.ts:13](https://github.com/Sitecore/content-sdk/blob/2dc64e62333bc02156fe37ffdcae6ab8a71ff4cc/packages/content/src/site/models.ts#L13)
+Defined in: [content/src/site/models.ts:13](https://github.com/Sitecore/content-sdk/blob/e17d474f9d8e82d1d42d4d085f91ccae5ee8b662/packages/content/src/site/models.ts#L13)
 
 Site name

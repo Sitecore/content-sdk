@@ -8,6 +8,6 @@
 
 > **ProxiesContextMapValue** = [`FailedProxyExecution`](../interfaces/FailedProxyExecution.md) \| [`SuccessfulProxyExecution`](../interfaces/SuccessfulProxyExecution.md)
 
-Defined in: [nextjs/src/proxy/types.ts:25](https://github.com/Sitecore/content-sdk/blob/2dc64e62333bc02156fe37ffdcae6ab8a71ff4cc/packages/nextjs/src/proxy/types.ts#L25)
+Defined in: [nextjs/src/proxy/types.ts:25](https://github.com/Sitecore/content-sdk/blob/e17d474f9d8e82d1d42d4d085f91ccae5ee8b662/packages/nextjs/src/proxy/types.ts#L25)
 
 Information about executed proxy to be stored in the context
