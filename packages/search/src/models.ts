@@ -96,29 +96,51 @@ export type SearchDocument = {
 };
 
 /**
+ * Distributes `keyof` over a union so each member contributes its keys.
+ * @internal
+ */
+type UnionKeys<T> = T extends T ? keyof T : never;
+
+/**
+ * Makes union members mutually exclusive: keys from other members are typed as `never`.
+ * @internal
+ */
+type StrictUnion<T, TAll = T> = T extends unknown
+  ? T & Partial<Record<Exclude<UnionKeys<TAll>, keyof T>, never>>
+  : never;
+
+type KeyphraseQuery = {
+  /**
+   * Text value to search for. If omitted or empty, the search returns all results.
+   */
+  keyphrase?: string;
+};
+
+type SeedItemIdQuery = {
+  /**
+   * Item ID used as the seed for More Like This (MLT) results.
+   * Not supported by `/v1/search/suggest`.
+   */
+  seedItemId: string;
+};
+
+type SeedItemUrlQuery = {
+  /**
+   * Item URL used as the seed for More Like This (MLT) results.
+   * Not supported by `/v1/search/suggest`.
+   */
+  seedItemUrl: string;
+};
+
+/**
  * Query payload for the `/v1/search` API.
  * `keyphrase`, `seedItemId`, and `seedItemUrl` are mutually exclusive; provide at most one.
+ * Omitting all three (or sending an empty `keyphrase`) returns unfiltered results.
  * `seedItemId` and `seedItemUrl` are used for More Like This (MLT) queries and are not
  * supported by `/v1/search/suggest`.
  * @public
  */
-export interface SearchQuery {
-  /**
-   * Text value to search for. If omitted or empty, the search returns all results.
-   * Mutually exclusive with `seedItemId` and `seedItemUrl`.
-   */
-  keyphrase?: string;
-  /**
-   * Item ID used as the seed for More Like This (MLT) results.
-   * Mutually exclusive with `keyphrase` and `seedItemUrl`. Not supported by `/v1/search/suggest`.
-   */
-  seedItemId?: string;
-  /**
-   * Item URL used as the seed for More Like This (MLT) results.
-   * Mutually exclusive with `keyphrase` and `seedItemId`. Not supported by `/v1/search/suggest`.
-   */
-  seedItemUrl?: string;
-}
+export type SearchQuery = StrictUnion<KeyphraseQuery | SeedItemIdQuery | SeedItemUrlQuery>;
 
 /**
  * A single autocomplete completion from query suggestion mode.
