@@ -276,7 +276,7 @@ export interface BaseSitecoreClient {
    * Retrieves the llms.txt content (managed via Sitecore AI) for a given site name.
    * @param {string} siteName - The name of the site for which to fetch llms.txt content.
    * @param {FetchOptions} fetchOptions Additional fetch options to override GraphQL requests
-   * @returns {Promise<string>} A promise that resolves to the llms.txt content.
+   * @returns {Promise<string | null> A promise that resolves to the llms.txt content.
    */
   getLlmsTxt(siteName: string, fetchOptions?: FetchOptions): Promise<string | null>;
 }
