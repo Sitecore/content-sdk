@@ -1,6 +1,7 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import chalk from 'chalk';
 import {
+  ExtractedFile,
   ExtractedFileType,
   resolveComponentImportFiles,
   sendCode,
@@ -15,10 +16,20 @@ import fs from 'fs';
 
 const { ERROR_MESSAGES } = constants;
 
+/**
+ * Configuration for the {@link extractFiles} build command.
+ * @public
+ */
 export type ExtractFilesConfig = {
   componentMapPath?: string;
   clientComponentMapPath?: string;
   customValidateDeployContext?: () => boolean;
+  /**
+   * Optional hook to gather additional source files a resolved component references
+   * externally (e.g. Angular `templateUrl` / `styleUrls`). Called once per resolved
+   * component file; each returned file is dispatched to the mesh endpoint alongside it.
+   */
+  gatherCompanionFiles?: (componentFilePath: string, componentKey: string) => ExtractedFile[];
 };
 
 /**
@@ -121,6 +132,24 @@ function _extractFiles(args: ExtractFilesConfig = {}) {
             token: accessToken,
           })
         );
+
+        // Companion files referenced externally by the component (e.g. Angular templates/styles)
+        const companions = args.gatherCompanionFiles?.(filePath, componentKey) ?? [];
+        for (const companion of companions) {
+          fileDispatches.push(
+            sendCode({
+              file: {
+                ...companion,
+                labels: {
+                  ...(companion.labels || {}),
+                  ...(renderingHost ? { renderingHost } : {}),
+                },
+              },
+              targetUrl,
+              token: accessToken,
+            })
+          );
+        }
       }
 
       fileDispatches.push(
