@@ -8,7 +8,7 @@
 
 > **PlaceholderDataResolver** = (`renderings`, `context`) => `ComponentRendering`[]
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-tokens.ts:31](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/angular/src/components/placeholder/placeholder-tokens.ts#L31)
+Defined in: [packages/angular/src/components/placeholder/placeholder-tokens.ts:31](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/angular/src/components/placeholder/placeholder-tokens.ts#L31)
 
 Synchronous enrichment pass applied after the guard and before instantiation.
 Use to decorate `fields` / `params` on renderings (e.g. personalization metadata).

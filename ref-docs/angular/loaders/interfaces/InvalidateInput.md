@@ -6,7 +6,7 @@
 
 # Interface: InvalidateInput
 
-Defined in: [packages/angular/src/loaders/models.ts:265](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/angular/src/loaders/models.ts#L265)
+Defined in: [packages/angular/src/loaders/models.ts:265](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/angular/src/loaders/models.ts#L265)
 
 Tag-based invalidation input.
 Marks matching entries stale via the tag index; does not delete them (SWR semantics).
@@ -17,6 +17,6 @@ Marks matching entries stale via the tag index; does not delete them (SWR semant
 
 > `optional` **tags?**: `string`[]
 
-Defined in: [packages/angular/src/loaders/models.ts:267](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/angular/src/loaders/models.ts#L267)
+Defined in: [packages/angular/src/loaders/models.ts:267](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/angular/src/loaders/models.ts#L267)
 
 Non-empty list of OSR tags (for example `sc:item:…`, `sc:site:…`, or a cache key self-tag).

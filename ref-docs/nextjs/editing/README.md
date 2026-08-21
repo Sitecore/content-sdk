@@ -11,6 +11,7 @@
 - [EditingConfigMiddleware](classes/EditingConfigMiddleware.md)
 - [EditingRenderMiddleware](classes/EditingRenderMiddleware.md)
 - [EditingService](classes/EditingService.md)
+- [ExperimentalFeaturesMiddleware](classes/ExperimentalFeaturesMiddleware.md)
 - [FEAASRenderMiddleware](classes/FEAASRenderMiddleware.md)
 
 ## Interfaces
@@ -24,12 +25,18 @@
 - [AllowedQueryParamsResolver](type-aliases/AllowedQueryParamsResolver.md)
 - [EditingConfigMiddlewareConfig](type-aliases/EditingConfigMiddlewareConfig.md)
 - [EditingRenderMiddlewareConfig](type-aliases/EditingRenderMiddlewareConfig.md)
+- [ExperimentalFeatureData](type-aliases/ExperimentalFeatureData.md)
+- [ExperimentalFeaturesResponse](type-aliases/ExperimentalFeaturesResponse.md)
+- [ExperimentalFeatureStatus](type-aliases/ExperimentalFeatureStatus.md)
 
 ## Variables
 
+- [buildExperimentalFeaturesResponse](variables/buildExperimentalFeaturesResponse.md)
 - [EDITING\_COMPONENT\_ID](variables/EDITING_COMPONENT_ID.md)
 - [EDITING\_COMPONENT\_PLACEHOLDER](variables/EDITING_COMPONENT_PLACEHOLDER.md)
+- [isExperimentalEnvFlagEnabled](variables/isExperimentalEnvFlagEnabled.md)
 - [PREVIEW\_COOKIES](variables/PREVIEW_COOKIES.md)
+- [resolveExperimentalFeatureStatuses](variables/resolveExperimentalFeatureStatuses.md)
 
 ## Functions
 

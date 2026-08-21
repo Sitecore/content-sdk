@@ -1,5 +1,11 @@
 # @sitecore-content-sdk/cli
 
+## 2.2.1
+
+### Patch Changes
+
+- Fix build command throwing an error when build commands use fetch calls ([87b8db3](https://github.com/sitecore/content-sdk/commit/87b8db38cdfb3e7cc6391de3955f794aecc8b8e9))
+
 ## 2.2.0
 
 ### Minor Changes

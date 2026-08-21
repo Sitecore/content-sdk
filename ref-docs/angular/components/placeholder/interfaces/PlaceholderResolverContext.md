@@ -6,7 +6,7 @@
 
 # Interface: PlaceholderResolverContext
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-tokens.ts:8](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/angular/src/components/placeholder/placeholder-tokens.ts#L8)
+Defined in: [packages/angular/src/components/placeholder/placeholder-tokens.ts:8](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/angular/src/components/placeholder/placeholder-tokens.ts#L8)
 
 Context passed to [PlaceholderGuardResolver](../type-aliases/PlaceholderGuardResolver.md) and [PlaceholderDataResolver](../type-aliases/PlaceholderDataResolver.md).
 
@@ -16,7 +16,7 @@ Context passed to [PlaceholderGuardResolver](../type-aliases/PlaceholderGuardRes
 
 > **name**: `string`
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-tokens.ts:10](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/angular/src/components/placeholder/placeholder-tokens.ts#L10)
+Defined in: [packages/angular/src/components/placeholder/placeholder-tokens.ts:10](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/angular/src/components/placeholder/placeholder-tokens.ts#L10)
 
 Placeholder key being rendered (e.g. `headless-main`).
 
@@ -26,6 +26,6 @@ Placeholder key being rendered (e.g. `headless-main`).
 
 > **rendering**: `RouteData`\<`Record`\<`string`, `Field`\<`GenericFieldValue`\> \| `Item` \| `Item`[]\>\> \| `ComponentRendering`\<`ComponentFields`\>
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-tokens.ts:12](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/angular/src/components/placeholder/placeholder-tokens.ts#L12)
+Defined in: [packages/angular/src/components/placeholder/placeholder-tokens.ts:12](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/angular/src/components/placeholder/placeholder-tokens.ts#L12)
 
 Parent route or rendering node that owns the placeholder map.

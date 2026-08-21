@@ -8,7 +8,7 @@
 
 > **matchFromRedirectMapRedirect**(`redirects`, `requestLocale`, `incomingPathData`): [`RedirectResult`](../type-aliases/RedirectResult.md) \| `undefined`
 
-Defined in: [content/src/site/redirect-utils.ts:94](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/content/src/site/redirect-utils.ts#L94)
+Defined in: [content/src/site/redirect-utils.ts:94](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/content/src/site/redirect-utils.ts#L94)
 
 **`Internal`**
 
