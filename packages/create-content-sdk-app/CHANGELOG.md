@@ -1,5 +1,11 @@
 # create-content-sdk-app
 
+## 2.3.2
+
+### Patch Changes
+
+- Ensure correct cli package version for angular sample ([2dc64e6](https://github.com/sitecore/content-sdk/commit/2dc64e62333bc02156fe37ffdcae6ab8a71ff4cc))
+
 ## 2.3.1
 
 ### Patch Changes
