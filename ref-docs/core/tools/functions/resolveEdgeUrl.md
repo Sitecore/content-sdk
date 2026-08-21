@@ -8,7 +8,7 @@
 
 > **resolveEdgeUrl**(`edgeUrl?`): `string`
 
-Defined in: [packages/core/src/tools/resolve-edge-url.ts:43](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/core/src/tools/resolve-edge-url.ts#L43)
+Defined in: [packages/core/src/tools/resolve-edge-url.ts:43](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/core/src/tools/resolve-edge-url.ts#L43)
 
 Resolves the Sitecore Edge URL based on configuration and environment.
 

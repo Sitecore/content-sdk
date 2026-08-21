@@ -8,7 +8,7 @@
 
 > `const` **debug**: `object`
 
-Defined in: [content/src/debug.ts:7](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/content/src/debug.ts#L7)
+Defined in: [content/src/debug.ts:7](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/content/src/debug.ts#L7)
 
 Debug module for content package
 

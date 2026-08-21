@@ -8,7 +8,7 @@
 
 > **getLanguage**(`context`): `string` \| `undefined`
 
-Defined in: [packages/angular/src/loaders/context-helpers.ts:47](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/angular/src/loaders/context-helpers.ts#L47)
+Defined in: [packages/angular/src/loaders/context-helpers.ts:47](https://github.com/Sitecore/content-sdk/blob/143695efc166e0dcfac2b29af7c627ada50e9327/packages/angular/src/loaders/context-helpers.ts#L47)
 
 Read the language for the current request from the matched route params
 (`scLocaleMatcher` exposes the locale URL segment as `routeParams.locale`).
