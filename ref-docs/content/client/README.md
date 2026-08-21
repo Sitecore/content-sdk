@@ -30,6 +30,7 @@
 - [GraphQLRequestClientConfig](type-aliases/GraphQLRequestClientConfig.md)
 - [GraphQLRequestClientFactory](type-aliases/GraphQLRequestClientFactory.md)
 - [GraphQLRequestClientFactoryConfig](type-aliases/GraphQLRequestClientFactoryConfig.md)
+- [LlmsTxtOptions](type-aliases/LlmsTxtOptions.md)
 - [Page](type-aliases/Page.md)
 - [PageMode](type-aliases/PageMode.md)
 - [PageOptions](type-aliases/PageOptions.md)
