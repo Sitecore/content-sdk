@@ -152,6 +152,7 @@ export type RobotsOptions = {
 
 /**
  * Options for fetching llms.txt content.
+ * @public
  */
 export type LlmsTxtOptions = {
   /**
@@ -273,12 +274,12 @@ export interface BaseSitecoreClient {
    */
   getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string | null>;
   /**
-   * Retrieves the llms.txt content (managed via Sitecore AI) for a given site name.
-   * @param {string} siteName - The name of the site for which to fetch llms.txt content.
+   * Retrieves the llms.txt content (managed via Sitecore AI) for a given site.
+   * @param {LlmsTxtOptions} options - Options containing the site name for which to fetch llms.txt content.
    * @param {FetchOptions} fetchOptions Additional fetch options to override GraphQL requests
-   * @returns {Promise<string | null> A promise that resolves to the llms.txt content.
+   * @returns {Promise<string>} A promise that resolves to the llms.txt content.
    */
-  getLlmsTxt(siteName: string, fetchOptions?: FetchOptions): Promise<string | null>;
+  getLlmsTxt(options: LlmsTxtOptions, fetchOptions?: FetchOptions): Promise<string | null>;
 }
 
 export interface BaseServiceOptions {
@@ -713,14 +714,14 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   /**
-   * Retrieves the llms.txt content (managed via Sitecore AI) for a given site name.
-   * @param {string} siteName - The name of the site to retrieve the llms.txt for.
+   * Retrieves the llms.txt content (managed via Sitecore AI) for a given site.
+   * @param {LlmsTxtOptions} options - Options containing the site name to retrieve the llms.txt for.
    * @param {FetchOptions} [fetchOptions] - Optional fetch options.
    * @returns {Promise<string | null>} A promise that resolves to the llms.txt content,
    * or null if no content is found.
    */
-  async getLlmsTxt(siteName: string, fetchOptions?: FetchOptions): Promise<string | null> {
-    const llmsTxtService = this.getLlmsTxtService(siteName || this.initOptions.defaultSite);
+  async getLlmsTxt(options: LlmsTxtOptions, fetchOptions?: FetchOptions): Promise<string | null> {
+    const llmsTxtService = this.getLlmsTxtService(options.siteName || this.initOptions.defaultSite);
     const content = await llmsTxtService.fetchLlmsTxt(fetchOptions);
     return content || null;
   }

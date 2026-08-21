@@ -39,7 +39,7 @@ export const createLlmsTxtRouteHandler = (options: RouteHandlerOptions) => {
 
   const getLlmsTxt = unstable_cache(
     async (site: string) => {
-      return client.getLlmsTxt(site);
+      return client.getLlmsTxt({ siteName: site });
     },
     ['llms-txt'],
     {

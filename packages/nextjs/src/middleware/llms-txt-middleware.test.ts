@@ -73,7 +73,7 @@ describe('LlmsTxtMiddleware', () => {
 
     await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
 
-    expect(sitecoreClientStub.getLlmsTxt).to.have.been.calledWith('test-site');
+    expect(sitecoreClientStub.getLlmsTxt).to.have.been.calledWith({ siteName: 'test-site' });
   });
 
   it('should return 200 with llms.txt content', async () => {
@@ -112,7 +112,7 @@ describe('LlmsTxtMiddleware', () => {
 
     await middleware.getHandler()(req as NextApiRequest, res as NextApiResponse);
 
-    expect(sitecoreClientStub.getLlmsTxt).to.have.been.calledWith('test-site-two');
+    expect(sitecoreClientStub.getLlmsTxt).to.have.been.calledWith({ siteName: 'test-site-two' });
     expect(res.status).to.have.been.calledWith(200);
     expect(res.send).to.have.been.calledWith('# llms.txt\n\n> Example site.');
   });

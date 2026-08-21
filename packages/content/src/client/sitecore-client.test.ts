@@ -1796,7 +1796,7 @@ describe('SitecoreClient', () => {
       const content = '# llms.txt\n\n> Example site.';
       mockLlmsTxtService.fetchLlmsTxt.resolves(content);
 
-      const result = await sitecoreClient.getLlmsTxt(siteName);
+      const result = await sitecoreClient.getLlmsTxt({ siteName });
 
       expect(getLlmsTxtServiceStub.calledWith(siteName)).to.be.true;
       expect(result).to.equal(content);
@@ -1805,7 +1805,7 @@ describe('SitecoreClient', () => {
     it('should return null if fetchLlmsTxt returns null or empty', async () => {
       mockLlmsTxtService.fetchLlmsTxt.resolves(null);
 
-      const result = await sitecoreClient.getLlmsTxt(siteName);
+      const result = await sitecoreClient.getLlmsTxt({ siteName });
 
       expect(getLlmsTxtServiceStub.calledWith(siteName)).to.be.true;
       expect(result).to.be.null;
@@ -1816,7 +1816,7 @@ describe('SitecoreClient', () => {
       mockLlmsTxtService.fetchLlmsTxt.rejects(error);
 
       try {
-        await sitecoreClient.getLlmsTxt(siteName);
+        await sitecoreClient.getLlmsTxt({ siteName });
         expect.fail('Expected error to be thrown');
       } catch (err) {
         expect(getLlmsTxtServiceStub.calledWith(siteName)).to.be.true;
@@ -1832,7 +1832,7 @@ describe('SitecoreClient', () => {
 
       mockLlmsTxtService.fetchLlmsTxt.resolves('# llms.txt\n\n> Example site.');
 
-      await sitecoreClient.getLlmsTxt(siteName, fetchOptions);
+      await sitecoreClient.getLlmsTxt({ siteName }, fetchOptions);
 
       expect(mockLlmsTxtService.fetchLlmsTxt.calledWith(fetchOptions)).to.be.true;
     });

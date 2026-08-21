@@ -912,6 +912,11 @@ export interface LinkFieldValue {
 export const LLMS_TXT_CONTENT_TYPE = "text/markdown; charset=utf-8";
 
 // @public
+export type LlmsTxtOptions = {
+    siteName: string;
+};
+
+// @public
 export type LlmsTxtQueryResult = {
     site: {
         siteInfo: {
@@ -1359,7 +1364,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         enableStyles?: boolean;
         enableThemes?: boolean;
     }): HTMLLink[];
-    getLlmsTxt(siteName: string, fetchOptions?: FetchOptions): Promise<string | null>;
+    getLlmsTxt(options: LlmsTxtOptions, fetchOptions?: FetchOptions): Promise<string | null>;
     // (undocumented)
     protected getLlmsTxtService(siteName: string): LlmsTxtService;
     getPage(path: string | string[], pageOptions?: PageOptions, fetchOptions?: FetchOptions): Promise<Page | null>;

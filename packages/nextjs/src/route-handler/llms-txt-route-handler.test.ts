@@ -72,7 +72,7 @@ describe('createLlmsTxtRouteHandler', () => {
 
     await handler.GET(req as NextRequest);
 
-    expect(sitecoreClientStub.getLlmsTxt).to.have.been.calledWith('test-site');
+    expect(sitecoreClientStub.getLlmsTxt).to.have.been.calledWith({ siteName: 'test-site' });
   });
 
   it('should return 200 with llms.txt content', async () => {
@@ -109,7 +109,7 @@ describe('createLlmsTxtRouteHandler', () => {
 
     const res = await handler.GET(req as NextRequest);
 
-    expect(sitecoreClientStub.getLlmsTxt).to.have.been.calledWith('test-site-two');
+    expect(sitecoreClientStub.getLlmsTxt).to.have.been.calledWith({ siteName: 'test-site-two' });
     expect(res.status).to.equal(200);
     expect(res.body).to.equal('# llms.txt\n\n> Example site.');
   });
@@ -126,7 +126,7 @@ describe('createLlmsTxtRouteHandler', () => {
 
     await handler.GET(req as NextRequest);
 
-    expect(sitecoreClientStub.getLlmsTxt).to.have.been.calledWith('test-site');
+    expect(sitecoreClientStub.getLlmsTxt).to.have.been.calledWith({ siteName: 'test-site' });
   });
 
   it('should cache the response for default revalidate time', async () => {

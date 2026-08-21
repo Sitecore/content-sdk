@@ -30,7 +30,7 @@ export class LlmsTxtMiddleware {
     const site = this.siteResolver.getByHost(hostName);
 
     try {
-      const llmsTxtContent = await this.client.getLlmsTxt(site.name);
+      const llmsTxtContent = await this.client.getLlmsTxt({ siteName: site.name });
       if (!llmsTxtContent) {
         return res.status(404).send(DEFAULT_LLMS_TXT);
       }
