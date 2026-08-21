@@ -69,7 +69,7 @@
     "npm-run-all2": "^7.0.2",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.12",
-    "@sitecore-content-sdk/cli": "^2.0.0-canary.6",
+    "@sitecore-content-sdk/cli": "<%- versions['@sitecore-content-sdk/cli'] %>",
     "tsx": "^4.19.4",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.59.1",

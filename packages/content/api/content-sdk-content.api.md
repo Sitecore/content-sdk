@@ -212,6 +212,7 @@ const debug_2: {
     sitemap: Debugger;
     multisite: Debugger;
     robots: Debugger;
+    llmsTxt: Debugger;
     redirects: Debugger;
     personalize: Debugger;
     locale: Debugger;
@@ -228,6 +229,9 @@ export function deepMerge<T>(base: T, override?: DeepPartial<T>): T;
 export type DeepRequired<T> = Required<{
     [K in keyof T]: T[K] extends Required<T[K]> ? T[K] : DeepRequired<T[K]>;
 }>;
+
+// @public
+export const DEFAULT_LLMS_TXT = "# llms.txt\n\n> No llms.txt content configured for this site.";
 
 // @internal
 export const DEFAULT_PLACEHOLDER_UID = "00000000-0000-0000-0000-000000000000";
@@ -905,6 +909,40 @@ export interface LinkFieldValue {
     title?: string;
 }
 
+// @public
+export const LLMS_TXT_CONTENT_TYPE = "text/markdown; charset=utf-8";
+
+// @public
+export type LlmsTxtOptions = {
+    siteName: string;
+};
+
+// @public
+export type LlmsTxtQueryResult = {
+    site: {
+        siteInfo: {
+            llmsTxt: string;
+        };
+    };
+};
+
+// @public
+export class LlmsTxtService {
+    constructor(options: LlmsTxtServiceConfig);
+    fetchLlmsTxt(fetchOptions?: FetchOptions): Promise<string>;
+    protected getGraphQLClient(): GraphQLClient;
+    // (undocumented)
+    options: LlmsTxtServiceConfig;
+    // (undocumented)
+    protected get query(): string;
+}
+
+// @public
+export type LlmsTxtServiceConfig = {
+    siteName: string;
+    clientFactory: GraphQLRequestClientFactory;
+};
+
 // @internal
 const loadForm: (contextId: string, formId: string, edgeUrl?: string) => Promise<string>;
 
@@ -1327,6 +1365,9 @@ export class SitecoreClient implements BaseSitecoreClient {
         enableStyles?: boolean;
         enableThemes?: boolean;
     }): HTMLLink[];
+    getLlmsTxt(options: LlmsTxtOptions, fetchOptions?: FetchOptions): Promise<string | null>;
+    // (undocumented)
+    protected getLlmsTxtService(siteName: string): LlmsTxtService;
     getPage(path: string | string[], pageOptions?: PageOptions, fetchOptions?: FetchOptions): Promise<Page | null>;
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
     getPreview(previewData: EditingPreviewData | undefined, fetchOptions?: FetchOptions): Promise<Page | null>;
@@ -1562,7 +1603,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:68:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:69:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:115:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal

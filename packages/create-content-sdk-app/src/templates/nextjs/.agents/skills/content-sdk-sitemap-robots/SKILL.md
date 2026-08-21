@@ -1,20 +1,21 @@
 ---
 name: content-sdk-sitemap-robots
-description: API routes src/pages/api/sitemap.ts and robots.ts with SDK middleware.
+description: API routes src/pages/api/sitemap.ts, robots.ts and llms-txt.ts with SDK middleware.
 ---
 
-# Sitemap and robots (Pages Router)
+# Sitemap, robots and llms.txt (Pages Router)
 
 **Detail:** [AGENTS-router-specifics.md#api-routes](../../docs/AGENTS-router-specifics.md#api-routes)
 
 ## When
 
-- Sitemap, robots.txt, or SEO route handlers
+- Sitemap, robots.txt, llms.txt, or other SEO/well-known-file route handlers
 
 ## Rules
 
-- Use `SitemapMiddleware` / `RobotsMiddleware` with `sites` from `.sitecore/sites.json`
-- Add rewrites in `next.config.js` for public URLs
+- Use `SitemapMiddleware` / `RobotsMiddleware` / `LlmsTxtMiddleware` with `sites` from `.sitecore/sites.json`
+- Add rewrites in `next.config.js` for public URLs (`/sitemap*.xml`, `/robots.txt`, `/llms.txt`)
+- llms.txt content is managed via Sitecore AI configuration; Content SDK only consumes/serves it (no authoring UX, no content generation)
 
 ## Stop
 

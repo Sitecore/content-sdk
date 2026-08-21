@@ -25,7 +25,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // use this configuration to serve the sitemap.xml and robots.txt files from the API route handlers
+  // use this configuration to serve the sitemap.xml, robots.txt and llms.txt files from the API route handlers
   rewrites: async () => {
     return [
       {
@@ -36,6 +36,11 @@ const nextConfig: NextConfig = {
       {
         source: '/robots.txt',
         destination: '/api/robots',
+        locale: false,
+      },
+      {
+        source: '/llms.txt',
+        destination: '/api/llms-txt',
         locale: false,
       },
     ];
