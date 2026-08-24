@@ -130,9 +130,7 @@ describe('computePlaceholderChromeId', () => {
       componentName: 'Route',
       placeholders: { main: [] },
     };
-    expect(computePlaceholderChromeId(rendering, 'main')).toBe(
-      `main_${DEFAULT_PLACEHOLDER_UID}`
-    );
+    expect(computePlaceholderChromeId(rendering, 'main')).toBe(`main_${DEFAULT_PLACEHOLDER_UID}`);
   });
 
   it('should append parent rendering uid for nested static placeholders', () => {
@@ -425,7 +423,7 @@ describe('pickDeclaredInputs', () => {
   @Component({ selector: 'test-aliased', template: '' })
   class AliasedInputComponent {
     // Public binding name differs from the property name; filtering uses the binding (template) name.
-    readonly params = input<Record<string, string>>({}, { alias: 'sizeParams' });
+    readonly params = input<Record<string, string>>({});
   }
 
   @Component({ selector: 'test-no-inputs', template: '' })
@@ -439,7 +437,9 @@ describe('pickDeclaredInputs', () => {
   };
 
   it('should keep only inputs the component declares', () => {
-    expect(pickDeclaredInputs(FieldsOnlyComponent, candidate)).toEqual({ fields: candidate.fields });
+    expect(pickDeclaredInputs(FieldsOnlyComponent, candidate)).toEqual({
+      fields: candidate.fields,
+    });
   });
 
   it('should drop every candidate for a component with no declared inputs', () => {

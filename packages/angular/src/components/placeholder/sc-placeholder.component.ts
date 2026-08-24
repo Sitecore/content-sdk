@@ -158,8 +158,6 @@ export class ScPlaceholderComponent {
    * Render the placeholder slot. Composes:
    *   `[outer placeholder open] → [rendering open + child + rendering close]* → [outer placeholder close]`
    * @param {object} args - Render arguments captured from the reactive effect.
-   * @param {object} args.container - Target view container.
-   * @param {object} args.editingChromeBlock - The chrome `<ng-template>`.
    * @param {object} args.rendering - Parent rendering / route node.
    * @param {object} args.name - Placeholder name.
    * @param {object} args.isEditing - Whether the page is in editing mode.

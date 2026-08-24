@@ -99,7 +99,7 @@ const DESIGN_LIBRARY_REQUIRED_PARAMS = [
 /**
  * The required query parameters for the given editing mode.
  * @param {string | undefined} mode - The `mode` query parameter.
- * @returns {readonly string[]} Required parameter names.
+ * @returns {string[]} Required parameter names.
  * @internal
  */
 function getRequiredParams(mode: string | undefined): readonly string[] {
