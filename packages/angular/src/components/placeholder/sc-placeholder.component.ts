@@ -10,6 +10,7 @@ import {
   getChildComponentProps,
   resolveComponentForRendering,
   isPlaceholderDeclaredInLayout,
+  pickDeclaredInputs,
   type PassThroughProps,
 } from './placeholder-utils';
 import { ScPlaceholderMetadata } from './sc-placeholder-metadata';
@@ -60,7 +61,7 @@ import {
   host: { '[class.sc-jss-empty-placeholder]': 'emptyInEditing()' },
   imports: [CommonModule, ScPlaceholderMetadata],
   template: `
-    @if(isEditing()){
+    @if(showEditingChrome()){
     <sc-placeholder-metadata [rendering]="componentRendering()" [placeholderName]="name()">
       @for(cmpRendering of resolvedRenderings(); track cmpRendering.rendering.uid) {
       <sc-placeholder-metadata [rendering]="cmpRendering.rendering">
@@ -128,6 +129,15 @@ export class ScPlaceholderComponent {
 
   /** True when the placeholder has no renderings and the page is in editing mode. */
   protected readonly emptyInEditing = signal(false);
+
+  /**
+   * Whether to emit the outer editing chrome. Only in editing mode, and only when the placeholder
+   * has renderings or is a declared-but-empty placeholder. An undeclared placeholder name emits no
+   * chrome (parity with JSS PlaceholderComponent's early return).
+   */
+  protected readonly showEditingChrome = computed(
+    () => this.isEditing() && (this.resolvedRenderings().length > 0 || this.emptyInEditing())
+  );
   protected readonly injector = inject(Injector);
 
   constructor() {
@@ -204,15 +214,18 @@ export class ScPlaceholderComponent {
           missingComponentComponent: this.missingComponent() ?? ScMissingComponentComponent,
         });
         const childProps = getChildComponentProps(this.fields(), this.params(), componentRendering);
+        const candidateInputs = {
+          fields: childProps.fields,
+          params: childProps.params,
+          rendering: childProps.rendering,
+          ...this.passThroughProps(),
+        };
         return {
           rendering: componentRendering,
           component,
-          inputs: {
-            fields: childProps.fields,
-            params: childProps.params,
-            rendering: childProps.rendering,
-            ...this.passThroughProps(),
-          },
+          // Only set inputs the component actually declares — NgComponentOutlet's setInput throws
+          // NG0303 for undeclared keys, so components opt into fields/params/rendering as needed.
+          inputs: component ? pickDeclaredInputs(component, candidateInputs) : {},
         };
       })
     );

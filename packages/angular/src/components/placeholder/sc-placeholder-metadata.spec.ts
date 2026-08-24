@@ -77,7 +77,7 @@ describe('ScPlaceholderMetadata', () => {
     TestBed.configureTestingModule({ imports: [TestHost] });
   });
 
-  it('renders rendering chrome when no placeholderName is given', () => {
+  it('should render rendering chrome when no placeholderName is given', () => {
     const { open, close } = setup(
       { uid: '123', componentName: 'RichText' } as ComponentRendering
     );
@@ -86,7 +86,7 @@ describe('ScPlaceholderMetadata', () => {
     expectCode(close, { chrometype: 'rendering', kind: 'close' });
   });
 
-  it('renders placeholder chrome when placeholderName matches a static placeholder key', () => {
+  it('should render placeholder chrome when placeholderName matches a static placeholder key', () => {
     const { open, close } = setup(
       { uid: '123', componentName: 'RichText', placeholders: { main: [] } } as unknown as ComponentRendering,
       'main',
@@ -97,7 +97,7 @@ describe('ScPlaceholderMetadata', () => {
     expectCode(close, { chrometype: 'placeholder', kind: 'close' });
   });
 
-  it('uses DEFAULT_PLACEHOLDER_UID in placeholder chrome when rendering uid is absent', () => {
+  it('should use DEFAULT_PLACEHOLDER_UID in placeholder chrome when rendering uid is absent', () => {
     const { open, close } = setup(
       { componentName: 'RichText', placeholders: { main: [] } } as unknown as ComponentRendering,
       'main',
@@ -112,7 +112,7 @@ describe('ScPlaceholderMetadata', () => {
     expectCode(close, { chrometype: 'placeholder', kind: 'close' });
   });
 
-  it('resolves a dynamic placeholder key and uses the rendering uid', () => {
+  it('should resolve a dynamic placeholder key and use the rendering uid', () => {
     const { open, close } = setup(
       {
         uid: 'renderinguid',
@@ -127,7 +127,7 @@ describe('ScPlaceholderMetadata', () => {
     expectCode(close, { chrometype: 'placeholder', kind: 'close' });
   });
 
-  it('uses DEFAULT_PLACEHOLDER_UID for dynamic placeholder when rendering uid is absent', () => {
+  it('should use DEFAULT_PLACEHOLDER_UID for dynamic placeholder when rendering uid is absent', () => {
     const { open, close } = setup(
       { componentName: 'RichText', placeholders: { 'main-{*}': [] } } as unknown as ComponentRendering,
       'main-1',
@@ -142,7 +142,7 @@ describe('ScPlaceholderMetadata', () => {
     expectCode(close, { chrometype: 'placeholder', kind: 'close' });
   });
 
-  it('resolves a multi-segment dynamic placeholder key', () => {
+  it('should resolve a multi-segment dynamic placeholder key', () => {
     const { open, close } = setup(
       {
         uid: 'renderinguid',

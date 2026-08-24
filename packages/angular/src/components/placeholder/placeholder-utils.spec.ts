@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
 import { DEFAULT_EXPORT_NAME, type AngularModule, type ComponentMap } from '../types';
 import {
@@ -10,6 +10,7 @@ import {
   resolveComponentForRendering,
   computePlaceholderChromeId,
   isPlaceholderDeclaredInLayout,
+  pickDeclaredInputs,
 } from './placeholder-utils';
 import { DEFAULT_PLACEHOLDER_UID } from '@sitecore-content-sdk/content/editing';
 
@@ -412,5 +413,58 @@ describe('resolveComponentForRendering', () => {
     expect(result.component).toBeNull();
     expect(result.isEmpty).toBe(true);
     expect(errorSpy).toHaveBeenCalled();
+  });
+});
+
+describe('pickDeclaredInputs', () => {
+  @Component({ selector: 'test-fields-only', template: '' })
+  class FieldsOnlyComponent {
+    readonly fields = input<Record<string, unknown>>();
+  }
+
+  @Component({ selector: 'test-aliased', template: '' })
+  class AliasedInputComponent {
+    // Public binding name differs from the property name; filtering uses the binding (template) name.
+    readonly params = input<Record<string, string>>({}, { alias: 'sizeParams' });
+  }
+
+  @Component({ selector: 'test-no-inputs', template: '' })
+  class NoInputsComponent {}
+
+  const candidate = {
+    fields: { Title: { value: 'x' } },
+    params: { size: 'lg' },
+    rendering: { componentName: 'Hero' },
+    tag: 'from-parent',
+  };
+
+  it('should keep only inputs the component declares', () => {
+    expect(pickDeclaredInputs(FieldsOnlyComponent, candidate)).toEqual({ fields: candidate.fields });
+  });
+
+  it('should drop every candidate for a component with no declared inputs', () => {
+    expect(pickDeclaredInputs(NoInputsComponent, candidate)).toEqual({});
+  });
+
+  it('should match on the public (template/alias) input name, not the property name', () => {
+    // `params` property is aliased to `sizeParams`, so a `params` candidate is dropped…
+    expect(pickDeclaredInputs(AliasedInputComponent, candidate)).toEqual({});
+    // …and the aliased name is kept.
+    expect(pickDeclaredInputs(AliasedInputComponent, { sizeParams: { size: 'sm' } })).toEqual({
+      sizeParams: { size: 'sm' },
+    });
+  });
+
+  it('should keep a passThrough-style key when the component declares it as an input', () => {
+    @Component({ selector: 'test-tag', template: '' })
+    class TagComponent {
+      readonly tag = input<string>();
+    }
+    expect(pickDeclaredInputs(TagComponent, candidate)).toEqual({ tag: 'from-parent' });
+  });
+
+  it('should return an empty object for a non-component class', () => {
+    class PlainClass {}
+    expect(pickDeclaredInputs(PlainClass, candidate)).toEqual({});
   });
 });
