@@ -14,3 +14,13 @@ declare module 'http' {
     'x-forwarded-host'?: string | undefined;
   }
 }
+
+declare module '@tailwindcss/node' {
+  export interface Compiler {
+    build(classes: string[]): string;
+  }
+  export function compile(
+    css: string,
+    options: { base: string; onDependency: (path: string) => void }
+  ): Promise<Compiler>;
+}

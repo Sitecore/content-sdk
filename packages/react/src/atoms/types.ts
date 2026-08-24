@@ -1,7 +1,6 @@
 import type { Catalog, InferCatalogInput } from '@json-render/core';
 import type { ComponentRenderer, DefineRegistryResult, ReactSchema } from '@json-render/react';
 import { SitecoreComponentMeta } from '@sitecore-content-sdk/content/atoms';
-import type { ZodObject } from 'zod';
 type BaseCatalog = InferCatalogInput<ReactSchema['definition']['catalog']>;
 type BaseComponent = BaseCatalog['components'][string];
 type BaseAction = BaseCatalog['actions'][string];
@@ -23,24 +22,6 @@ export type AtomComponentDefinition = BaseComponent & SitecoreComponentMeta;
  * @public
  */
 export type AtomActionDefinition = BaseAction;
-
-/**
- * Validates that a map of entries does not include a specific key inside a given nested field's Zod schema.
- * @internal
- */
-export type RestrictFieldKey<
-  T extends Record<string, object>,
-  Field extends string,
-  Key extends string
-> = {
-  [K in keyof T]: T[K] extends Record<Field, infer V>
-    ? V extends ZodObject<infer Shape>
-      ? Key extends keyof Shape
-        ? Omit<T[K], Field> & { [F in Field]: `${Key} is not allowed inside ${F}` }
-        : T[K]
-      : T[K]
-    : T[K];
-};
 
 /**
  * Input shape for defineAtomsCatalog.
@@ -91,4 +72,27 @@ export interface AtomsConfig {
   registry: DefineRegistryResult;
   /** Optional navigate function to be passed to action handlers for navigation purposes. */
   navigate?: (path: string) => void;
+  /**
+   * Optional Server Action used to compile CSS for dynamic Document class names
+   * during editing (Design Library) sessions.
+   *
+   * For Next.js App Router starters, pass `compileCssForDocumentAction` from
+   * `@sitecore-content-sdk/nextjs/server-actions`. Register a compiler first via
+   * `registerTailwindCssCompiler` (or `setAtomsCssCompiler`) in `instrumentation.ts`.
+   * When provided, `DesignLibraryLowCodeComponent` injects a `<style>` tag after each
+   * Document update so classes authored in MMS Documents are styled.
+   *
+   * Has no effect in production; production CSS injection is handled server-side by
+   * `StudioComponentServerWrapper` using the same registered compiler.
+   * @example
+   * ```tsx
+   * // src/Providers.tsx  ('use client')
+   * import { compileCssForDocumentAction } from '@sitecore-content-sdk/nextjs/server-actions';
+   *
+   * <SitecoreProvider
+   *   atomsConfig={{ catalog, registry, navigate, compileCssAction: compileCssForDocumentAction }}
+   * />
+   * ```
+   */
+  compileCssAction?: (classes: string[]) => Promise<string>;
 }

@@ -20,6 +20,7 @@ import { defineRegistry } from '@json-render/react';
 import type { DefineRegistryResult } from '@json-render/react';
 import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 import { DictionaryService } from '@sitecore-content-sdk/content/i18n';
+import type { Document as Document_2 } from '@sitecore-content-sdk/content/atoms';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { enableDebug } from '@sitecore-content-sdk/core';
 import { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
@@ -68,7 +69,6 @@ import { SitePathService } from '@sitecore-content-sdk/content/site';
 import { SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
 import { useBoundProp as useBoundProp_2 } from '@json-render/react';
 import { z } from 'zod';
-import type { ZodObject } from 'zod';
 
 // @public
 export const AppPlaceholder: (props: AppPlaceholderProps) => React_2.JSX.Element;
@@ -109,6 +109,7 @@ export type AtomsComponentsMap = Record<string, AtomsComponentRenderer>;
 // @public
 export interface AtomsConfig {
     catalog: Catalog<any, AtomsCatalogInput>;
+    compileCssAction?: (classes: string[]) => Promise<string>;
     navigate?: (path: string) => void;
     registry: DefineRegistryResult;
 }
@@ -219,9 +220,7 @@ export { DefaultRetryStrategy }
 // Warning: (ae-forgotten-export) The symbol "Exact" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export function defineAtomsCatalog<T extends AtomsCatalogInput>(input: Exact<T, AtomsCatalogInput> & {
-    components: RestrictFieldKey<T['components'], 'props', 'className'>;
-}): Catalog<    {
+export function defineAtomsCatalog<T extends AtomsCatalogInput>(input: Exact<T, AtomsCatalogInput>): Catalog<    {
 spec: SchemaType<"object", {
 root: SchemaType<"string", unknown>;
 elements: SchemaType<"record", SchemaType<"object", {
@@ -243,9 +242,7 @@ params: SchemaType<"zod", unknown>;
 description: SchemaType<"string", unknown>;
 }>;
 }>;
-}, T & Record<Exclude<keyof T, "components" | "actions" | "version">, never> & {
-components: RestrictFieldKey<T["components"], "props", "className">;
-}>;
+}, Exact<T, AtomsCatalogInput>>;
 
 // @public
 export const defineAtomsRegistry: typeof defineRegistry;
@@ -306,6 +303,9 @@ export const ErrorComponent: (props: {
 }) => React_2.JSX.Element;
 
 export { ErrorPage }
+
+// @public
+export function extractDocumentClasses(doc: Document_2): string[];
 
 // @public (undocumented)
 export const FEaaSComponent: (props: FEaaSComponentProps) => JSX_2.Element | null;
@@ -791,7 +791,6 @@ export function withSitecore(options?: UseSitecoreOptions): <ComponentProps exte
 
 // Warnings were encountered during analysis:
 //
-// src/atoms/define-atoms-catalog.ts:43:5 - (ae-forgotten-export) The symbol "RestrictFieldKey" needs to be exported by the entry point api-surface.d.ts
 // src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point api-surface.d.ts
 // src/components/SitecoreProvider.tsx:108:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
 

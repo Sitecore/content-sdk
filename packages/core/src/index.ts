@@ -28,3 +28,8 @@ export {
 export { RetryStrategy, GenericGraphQLClientError, FetchOptions } from './models';
 export { constants };
 export * from './initialization';
+export {
+  setAtomsCssCompiler,
+  getAtomsCssCompiler,
+  type AtomsCssCompiler,
+} from './atoms-css-compiler-registry';

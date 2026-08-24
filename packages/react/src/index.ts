@@ -116,6 +116,7 @@ export {
   defineAtomsCatalog,
   defineAtomsRegistry,
   withPropMeta,
+  extractDocumentClasses,
   type PropMeta,
   type AtomComponentDefinition,
   type AtomActionDefinition,

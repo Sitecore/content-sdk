@@ -1,6 +1,7 @@
 export {
   useBoundProp,
   withPropMeta,
+  extractDocumentClasses,
   type AtomComponentDefinition,
   type AtomActionDefinition,
   type AtomsCatalogInput,

@@ -27,4 +27,5 @@ export {
   type FileFieldSchema,
 } from './field-schemas';
 export { createNCC } from './create-ncc';
+export { extractDocumentClasses } from './extract-document-classes';
 export * from './re-exports';

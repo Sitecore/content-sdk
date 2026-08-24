@@ -45,12 +45,16 @@ describe('StudioComponentServerWrapper', () => {
             this.get = fetcherGetStub;
           }
         },
+        getAtomsCssCompiler: () => null,
       },
       '@sitecore-content-sdk/core/tools': {
         resolveEdgeUrl: resolveEdgeUrlStub,
       },
       '@sitecore-content-sdk/content': {
         debug: { layout: undefined },
+      },
+      '../../atoms/extract-document-classes': {
+        extractDocumentClasses: () => [],
       },
       './StudioComponentWrapper': {
         StudioComponentWrapper: StudioComponentWrapperStub,
@@ -191,8 +195,11 @@ describe('StudioComponentServerWrapper', () => {
 
       expect(result).to.not.be.null;
       expect(fetcherGetStub).to.have.been.calledOnce;
-      expect(result.type).to.equal(StudioComponentWrapperStub);
-      expect(result.props.document).to.deep.equal(sampleDocument);
+      const wrapper = React.Children.toArray(result.props.children).find(
+        (child: any) => child && child.type === StudioComponentWrapperStub
+      ) as React.ReactElement;
+      expect(wrapper).to.not.be.undefined;
+      expect(wrapper.props.document).to.deep.equal(sampleDocument);
     });
 
     it('returns null and errors when URL resolution fails', async () => {
@@ -209,17 +216,63 @@ describe('StudioComponentServerWrapper', () => {
     });
   });
 
+  const getWrapperElement = (result: any) => {
+    const children = React.Children.toArray(result.props.children);
+    return children.find(
+      (child: any) => child && child.type === StudioComponentWrapperStub
+    ) as React.ReactElement;
+  };
+
   describe('successful render', () => {
     it('renders StudioComponentWrapper with the fetched document', async () => {
       const result = await StudioComponentServerWrapper({
         componentRef: 'components/hero/default',
       });
 
-      // The server wrapper returns a React element (JSX), not a rendered output.
-      // Assert the element type and props directly.
+      // The server wrapper returns a fragment with an optional style tag + wrapper.
       expect(result).to.not.be.null;
-      expect(result.type).to.equal(StudioComponentWrapperStub);
-      expect(result.props.document).to.deep.equal(sampleDocument);
+      const wrapper = getWrapperElement(result);
+      expect(wrapper).to.not.be.undefined;
+      expect(wrapper.props.document).to.deep.equal(sampleDocument);
+    });
+
+    it('injects compiled CSS when a compiler is registered', async () => {
+      const compileStub = sandbox.stub().resolves('.text-red-500{color:red}');
+      module = proxyquire('./StudioComponentServerWrapper', {
+        '@sitecore-content-sdk/core': {
+          NativeDataFetcher: class {
+            get: SinonStub;
+            constructor() {
+              this.get = fetcherGetStub;
+            }
+          },
+          getAtomsCssCompiler: () => compileStub,
+        },
+        '@sitecore-content-sdk/core/tools': {
+          resolveEdgeUrl: resolveEdgeUrlStub,
+        },
+        '@sitecore-content-sdk/content': {
+          debug: { layout: undefined },
+        },
+        '../../atoms/extract-document-classes': {
+          extractDocumentClasses: () => ['text-red-500'],
+        },
+        './StudioComponentWrapper': {
+          StudioComponentWrapper: StudioComponentWrapperStub,
+        },
+      });
+
+      const result = await module.StudioComponentServerWrapper({
+        componentRef: 'components/hero/default',
+      });
+
+      expect(compileStub).to.have.been.calledOnceWith(['text-red-500']);
+      const children = React.Children.toArray(result.props.children);
+      const style = children.find((child: any) => child && child.type === 'style') as any;
+      expect(style).to.not.be.undefined;
+      expect(style.props.dangerouslySetInnerHTML).to.deep.equal({
+        __html: '.text-red-500{color:red}',
+      });
     });
   });
 
@@ -234,7 +287,7 @@ describe('StudioComponentServerWrapper', () => {
       });
 
       expect(result).to.not.be.null;
-      expect(result.props.fields).to.equal(fields);
+      expect(getWrapperElement(result).props.fields).to.equal(fields);
     });
 
     it('forwards params to StudioComponentWrapper', async () => {
@@ -247,7 +300,7 @@ describe('StudioComponentServerWrapper', () => {
       });
 
       expect(result).to.not.be.null;
-      expect(result.props.params).to.equal(params);
+      expect(getWrapperElement(result).props.params).to.equal(params);
     });
 
     it('forwards both fields and params together', async () => {
@@ -261,8 +314,9 @@ describe('StudioComponentServerWrapper', () => {
       });
 
       expect(result).to.not.be.null;
-      expect(result.props.fields).to.equal(fields);
-      expect(result.props.params).to.equal(params);
+      const wrapper = getWrapperElement(result);
+      expect(wrapper.props.fields).to.equal(fields);
+      expect(wrapper.props.params).to.equal(params);
     });
   });
 });
