@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { CSDK_EXPERIMENTAL_FEATURES_ENABLED } from '../../../../content/src/experimental-features';
+import { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG } from '../../../../content/src/experimental-features';
 import { createExperimentalFeaturesMiddleware } from './experimental-features-middleware';
 import type { ExpressRequest, ExpressResponse } from './models';
 import experimentalFeaturesCatalog from '../../experimental.json';
@@ -25,14 +25,14 @@ describe('createExperimentalFeaturesMiddleware', () => {
   beforeEach(() => {
     next.mockClear();
     delete process.env.SITECORE_EDITING_SECRET;
-    delete process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED];
+    delete process.env[CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG];
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO;
   });
 
   afterEach(() => {
     delete process.env.SITECORE_EDITING_SECRET;
-    delete process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED];
+    delete process.env[CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG];
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO;
   });
@@ -90,8 +90,9 @@ describe('createExperimentalFeaturesMiddleware', () => {
   it('returns package catalog feature statuses for valid request', async () => {
     process.env.JSS_ALLOWED_ORIGINS = 'https://allowed.com';
     process.env.SITECORE_EDITING_SECRET = 's';
-    process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = 'true';
+    process.env[CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG] = 'true';
     process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE = 'true';
+    process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO = 'true';
     const middleware = createExperimentalFeaturesMiddleware();
     const req: ExpressRequest = {
       method: 'GET',
@@ -112,7 +113,7 @@ describe('createExperimentalFeaturesMiddleware', () => {
         },
         {
           ...experimentalFeaturesCatalog[1],
-          enabled: false,
+          enabled: true,
         },
       ],
     });

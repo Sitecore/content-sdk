@@ -7,4 +7,4 @@
 
 [experimental] Add a global env switch for experimental features.
 
-Experimental feature status now requires the app-level `CSDK_EXPERIMENTAL_FEATURES_ENABLED` flag in addition to any feature-specific env vars. The shared experimental helpers expose the global env var constant and helper, and starter env examples document how to enable experimental features during development.
+Experimental feature status now treats the app-level `CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG` as a global enable switch. When the global switch is off, feature status falls back to individual feature env vars. The shared experimental helpers expose the global env var constant and helper, and starter env examples document how to enable experimental features during development.

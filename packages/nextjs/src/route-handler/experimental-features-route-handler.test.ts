@@ -6,7 +6,7 @@ import { NextRequest } from 'next/server';
 import proxyquire from 'proxyquire';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/content/editing';
 import experimentalFeaturesCatalog from '../experimental.json';
-import { CSDK_EXPERIMENTAL_FEATURES_ENABLED } from '../../../content/src/experimental-features';
+import { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG } from '../../../content/src/experimental-features';
 
 chai.use(sinonChai);
 
@@ -31,7 +31,7 @@ describe('createExperimentalFeaturesRouteHandler', () => {
   beforeEach(() => {
     getEditingSecretStub = sandbox.stub().returns(secret);
     getEnforcedCorsHeadersStub = sandbox.stub().returns(corsHeaders);
-    delete process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED];
+    delete process.env[CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG];
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
 
     experimentalFeaturesRouteHandlerModule = proxyquire(
@@ -62,7 +62,7 @@ describe('createExperimentalFeaturesRouteHandler', () => {
     sandbox.restore();
     sinon.restore();
     (globalThis as any).Response = OriginalResponse;
-    delete process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED];
+    delete process.env[CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG];
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
   });
 
@@ -111,8 +111,9 @@ describe('createExperimentalFeaturesRouteHandler', () => {
     });
 
     it('should return 200 with package catalog feature statuses for valid request', async () => {
-      process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = 'true';
+      process.env[CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG] = 'true';
       process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE = 'true';
+      process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE_TWO = 'true';
 
       const res = await handler.GET(req as NextRequest);
 
@@ -126,7 +127,7 @@ describe('createExperimentalFeaturesRouteHandler', () => {
             },
             {
               ...experimentalFeaturesCatalog[1],
-              enabled: false,
+              enabled: true,
             },
           ],
         })

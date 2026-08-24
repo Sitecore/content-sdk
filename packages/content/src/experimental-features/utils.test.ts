@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import {
   buildExperimentalFeaturesResponse,
-  CSDK_EXPERIMENTAL_FEATURES_ENABLED,
+  CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG,
   isExperimentalEnvFlagEnabled,
   isExperimentalFeaturesGloballyEnabled,
   resolveExperimentalFeatureStatuses,
@@ -18,7 +18,7 @@ describe('experimental utils', () => {
 
   afterEach(() => {
     delete process.env.CSDK_EXPERIMENTAL_FEATURE_ONE;
-    delete process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED];
+    delete process.env[CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG];
   });
 
   describe('isExperimentalEnvFlagEnabled', () => {
@@ -48,26 +48,25 @@ describe('experimental utils', () => {
     });
 
     it('should return true when the global switch is set to true', () => {
-      process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = 'true';
+      process.env[CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG] = 'true';
       expect(isExperimentalFeaturesGloballyEnabled()).to.equal(true);
     });
   });
 
   describe('resolveExperimentalFeatureStatuses', () => {
-    it('should return disabled features when the global switch is off', () => {
+    it('should fall back to individual feature env vars when global switch is off', () => {
       process.env.CSDK_EXPERIMENTAL_FEATURE_ONE = 'true';
 
       expect(resolveExperimentalFeatureStatuses([feature])).to.deep.equal([
         {
           ...feature,
-          enabled: false,
+          enabled: true,
         },
       ]);
     });
 
-    it('should map enabled status from env vars when the global switch is on', () => {
-      process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = 'true';
-      process.env.CSDK_EXPERIMENTAL_FEATURE_ONE = 'true';
+    it('should enable features when the global switch is on', () => {
+      process.env[CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG] = 'true';
 
       expect(resolveExperimentalFeatureStatuses([feature])).to.deep.equal([
         {
@@ -79,19 +78,21 @@ describe('experimental utils', () => {
   });
 
   describe('buildExperimentalFeaturesResponse', () => {
-    it('should wrap features in response object', () => {
+    it('should wrap individual feature status in response object', () => {
+      process.env.CSDK_EXPERIMENTAL_FEATURE_ONE = 'true';
+
       expect(buildExperimentalFeaturesResponse([feature])).to.deep.equal({
         features: [
           {
             ...feature,
-            enabled: false,
+            enabled: true,
           },
         ],
       });
     });
 
     it('should honor the global switch in the response payload', () => {
-      process.env[CSDK_EXPERIMENTAL_FEATURES_ENABLED] = 'true';
+      process.env[CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG] = 'true';
       process.env.CSDK_EXPERIMENTAL_FEATURE_ONE = 'true';
 
       expect(buildExperimentalFeaturesResponse([feature])).to.deep.equal({

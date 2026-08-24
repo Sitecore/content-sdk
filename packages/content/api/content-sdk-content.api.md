@@ -203,7 +203,7 @@ export const createComponentInstance: (importMap: ImportEntry[], generatedCompon
 export const createGraphQLClientFactory: (options: GraphQLClientOptions) => GraphQLRequestClientFactory;
 
 // @public
-export const CSDK_EXPERIMENTAL_FEATURES_ENABLED = "CSDK_EXPERIMENTAL_FEATURES_ENABLED";
+export const CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG = "CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG";
 
 // @public
 const debug_2: {

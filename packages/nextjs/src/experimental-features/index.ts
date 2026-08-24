@@ -9,7 +9,7 @@ export type {
 } from '@sitecore-content-sdk/content/experimental';
 export {
   buildExperimentalFeaturesResponse,
-  CSDK_EXPERIMENTAL_FEATURES_ENABLED,
+  CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG,
   isExperimentalEnvFlagEnabled,
   isExperimentalFeaturesGloballyEnabled,
   resolveExperimentalFeatureStatuses,

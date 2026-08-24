@@ -28,7 +28,7 @@ import { ComponentParams } from '@sitecore-content-sdk/content/layout';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { constants } from '@sitecore-content-sdk/core';
 import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
-import { CSDK_EXPERIMENTAL_FEATURES_ENABLED } from '@sitecore-content-sdk/content/experimental';
+import { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG } from '@sitecore-content-sdk/content/experimental';
 import { DateField } from '@sitecore-content-sdk/react';
 import { DeepRequired } from '@sitecore-content-sdk/content/config';
 import { DEFAULT_LLMS_TXT } from '@sitecore-content-sdk/content/site';
@@ -420,7 +420,7 @@ export function createSitemapRouteHandler(options: RouteHandlerOptions): {
     GET: (req: NextRequest) => Promise<Response>;
 };
 
-export { CSDK_EXPERIMENTAL_FEATURES_ENABLED }
+export { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG }
 
 export { DateField }
 
