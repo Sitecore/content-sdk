@@ -21,12 +21,13 @@ import { gatherAngularCompanionFiles } from './angular-source-utils';
 export const extractFiles = (
   args: ExtractFilesConfig = {}
 ): ((ctx: { scConfig: AngularSitecoreConfig }) => Promise<void>) => {
+  const run = contentExtractFiles({
+    gatherCompanionFiles: gatherAngularCompanionFiles,
+    ...args,
+  });
   // AngularSitecoreConfig is a structural superset of SitecoreConfig (see define-cli-config.ts).
   return async ({ scConfig }: { scConfig: AngularSitecoreConfig }) =>
-    contentExtractFiles({
-      gatherCompanionFiles: gatherAngularCompanionFiles,
-      ...args,
-    })({ scConfig: scConfig as SitecoreConfig });
+    run({ scConfig: scConfig as SitecoreConfig });
 };
 
 export type { ExtractFilesConfig };
