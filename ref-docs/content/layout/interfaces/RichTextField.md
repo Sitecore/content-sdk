@@ -6,7 +6,7 @@
 
 # Interface: RichTextField
 
-Defined in: [content/src/layout/field-types.ts:80](https://github.com/Sitecore/content-sdk/blob/d2b0a9ffcd19364330158edd407f2f3e8df68565/packages/content/src/layout/field-types.ts#L80)
+Defined in: [content/src/layout/field-types.ts:80](https://github.com/Sitecore/content-sdk/blob/9b45c283e831ade8b97eab10178dc32f73796f7e/packages/content/src/layout/field-types.ts#L80)
 
 The interface for the Rich Text field.
 
@@ -20,7 +20,7 @@ The interface for the Rich Text field.
 
 > `optional` **metadata?**: `object`
 
-Defined in: [content/src/layout/models.ts:138](https://github.com/Sitecore/content-sdk/blob/d2b0a9ffcd19364330158edd407f2f3e8df68565/packages/content/src/layout/models.ts#L138)
+Defined in: [content/src/layout/models.ts:138](https://github.com/Sitecore/content-sdk/blob/9b45c283e831ade8b97eab10178dc32f73796f7e/packages/content/src/layout/models.ts#L138)
 
 #### Index Signature
 
@@ -36,4 +36,4 @@ Defined in: [content/src/layout/models.ts:138](https://github.com/Sitecore/conte
 
 > `optional` **value?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:81](https://github.com/Sitecore/content-sdk/blob/d2b0a9ffcd19364330158edd407f2f3e8df68565/packages/content/src/layout/field-types.ts#L81)
+Defined in: [content/src/layout/field-types.ts:81](https://github.com/Sitecore/content-sdk/blob/9b45c283e831ade8b97eab10178dc32f73796f7e/packages/content/src/layout/field-types.ts#L81)
