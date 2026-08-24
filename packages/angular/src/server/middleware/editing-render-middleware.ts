@@ -2,6 +2,10 @@ import {
   EDITING_ALLOWED_ORIGINS,
   EditingPreviewData,
   QUERY_PARAM_EDITING_SECRET,
+  isDesignLibraryMode,
+  DesignLibraryMode,
+  DesignLibraryVariantGeneration,
+  DesignLibraryRenderPreviewData,
 } from '@sitecore-content-sdk/content/editing';
 import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import { getAllowedOriginsFromEnv, getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
@@ -55,10 +59,10 @@ export interface CreateEditingRenderMiddlewareOptions {
    * Allows apps to remap the editor's `route` query parameter to their own URL
    * shape (e.g. injecting a locale prefix).
    * @param {string} itemPath - Decoded route from the query parameter.
-   * @param {EditingPreviewData} previewData - Preview data parsed from the request.
+   * @param {EditingRenderPreviewData} previewData - Preview data parsed from the request.
    * @returns {string} The route the Angular SSR engine should render.
    */
-  resolvePageUrl?: (itemPath: string, previewData: EditingPreviewData) => string;
+  resolvePageUrl?: (itemPath: string, previewData: EditingRenderPreviewData) => string;
   /**
    * Extra query parameters propagated into the editing preview data
    * (e.g. deployment-protection bypass tokens).
@@ -67,33 +71,79 @@ export interface CreateEditingRenderMiddlewareOptions {
 }
 
 /**
+ * Preview data parsed from an editing render request: standard edit/preview data, or Design
+ * Library data when the request is in a Design Library mode (`library` / `library-metadata`).
+ * @public
+ */
+export type EditingRenderPreviewData = EditingPreviewData | DesignLibraryRenderPreviewData;
+
+/**
  * Editing-aware request. The render middleware attaches `scEditing` to allow
  * downstream code to detect the editing branch without reparsing headers.
  * @public
  */
 export interface ExpressEditingRequest extends ExpressRequest {
-  scEditing?: EditingPreviewData;
+  scEditing?: EditingRenderPreviewData;
 }
 
 const REQUIRED_PARAMS = ['sc_site', 'sc_itemid', 'sc_lang', 'route', 'mode'] as const;
+// Design Library identifies the component by `sc_uid` and has no `route`
+const DESIGN_LIBRARY_REQUIRED_PARAMS = [
+  'sc_site',
+  'sc_itemid',
+  'sc_lang',
+  'sc_uid',
+  'mode',
+] as const;
 
 /**
- * Build the {@link EditingPreviewData} payload from the request query string.
+ * The required query parameters for the given editing mode.
+ * @param {string | undefined} mode - The `mode` query parameter.
+ * @returns {readonly string[]} Required parameter names.
+ * @internal
+ */
+function getRequiredParams(mode: string | undefined): readonly string[] {
+  return isDesignLibraryMode(mode) ? DESIGN_LIBRARY_REQUIRED_PARAMS : REQUIRED_PARAMS;
+}
+
+/**
+ * Build the preview-data payload from the request query string. Produces
+ * {@link DesignLibraryRenderPreviewData} for a Design Library mode (`SitecoreClient.getDesignLibraryData`)
+ * and {@link EditingPreviewData} otherwise (`SitecoreClient.getPreview`)
  * @param {Record<string, string | undefined>} query - Query parameters.
  * @param {Record<string, unknown>} allowedQueryParams - Extra forwarded parameters.
- * @returns {EditingPreviewData} Preview data for `SitecoreClient.getPreview`.
+ * @returns {EditingRenderPreviewData} Preview data for the matching client call.
  * @internal
  */
 function buildPreviewData(
   query: Record<string, string | undefined>,
   allowedQueryParams: Record<string, unknown>
-): EditingPreviewData {
+): EditingRenderPreviewData {
+  const mode = String(query.mode ?? '');
+
+  if (isDesignLibraryMode(mode)) {
+    return {
+      site: String(query.sc_site ?? ''),
+      itemId: String(query.sc_itemid ?? ''),
+      componentUid: String(query.sc_uid ?? ''),
+      language: String(query.sc_lang ?? ''),
+      mode: mode as DesignLibraryMode,
+      ...(query.sc_renderingId && { renderingId: query.sc_renderingId }),
+      ...(query.dataSourceId && { dataSourceId: query.dataSourceId }),
+      ...(query.sc_version && { version: query.sc_version }),
+      ...(query.generation && {
+        generation: query.generation as DesignLibraryVariantGeneration,
+      }),
+      ...allowedQueryParams,
+    };
+  }
+
   const variantId = query.sc_variant ?? DEFAULT_VARIANT;
   return {
     site: String(query.sc_site ?? ''),
     itemId: String(query.sc_itemid ?? ''),
     language: String(query.sc_lang ?? ''),
-    mode: String(query.mode ?? '') as EditingPreviewData['mode'],
+    mode: mode as EditingPreviewData['mode'],
     variantId,
     version: query.sc_version,
     layoutKind: query.sc_layoutKind as EditingPreviewData['layoutKind'],
@@ -243,7 +293,7 @@ export function createEditingRenderMiddleware(
         flatQuery[key] = Array.isArray(value) ? value[0] : value;
       }
 
-      const missingRequired = REQUIRED_PARAMS.filter((p) => !flatQuery[p]);
+      const missingRequired = getRequiredParams(flatQuery.mode).filter((p) => !flatQuery[p]);
       const { allowedQueryParams, missingAllowedParams } = resolveAllowedQueryParams(
         query,
         options?.allowedQueryParams

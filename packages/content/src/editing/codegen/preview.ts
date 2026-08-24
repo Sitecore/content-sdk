@@ -17,8 +17,9 @@ const DESIGN_LIBRARY_COMPONENT_PROPS_EVENT_NAME = 'component:generation:componen
 
 /**
  * Event to receive component data from design library
+ * @internal
  */
-const DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME = 'component:generation:component-preview';
+export const DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME = 'component:generation:component-preview';
 
 /**
  * Event to send component preview error to design library
