@@ -124,6 +124,7 @@
 - [DesignLibraryLowCodeComponent](functions/DesignLibraryLowCodeComponent.md)
 - [EditingScripts](functions/EditingScripts.md)
 - [ErrorComponent](functions/ErrorComponent.md)
+- [extractDocumentClasses](functions/extractDocumentClasses.md)
 - [FEaaSComponent](functions/FEaaSComponent.md)
 - [FEaaSServerWrapper](functions/FEaaSServerWrapper.md)
 - [FEaaSWrapper](functions/FEaaSWrapper.md)

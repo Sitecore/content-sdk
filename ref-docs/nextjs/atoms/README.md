@@ -40,4 +40,5 @@
 
 ## Functions
 
+- [extractDocumentClasses](functions/extractDocumentClasses.md)
 - [withPropMeta](functions/withPropMeta.md)

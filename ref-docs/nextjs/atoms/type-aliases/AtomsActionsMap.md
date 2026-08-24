@@ -8,6 +8,6 @@
 
 > **AtomsActionsMap** = `Record`\<`string`, [`AtomActionHandler`](AtomActionHandler.md)\>
 
-Defined in: react/types/atoms/types.d.ts:64
+Defined in: react/types/atoms/types.d.ts:54
 
 Action implementations map for defineAtomsRegistry.

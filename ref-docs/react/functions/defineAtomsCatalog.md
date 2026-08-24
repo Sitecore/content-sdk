@@ -6,9 +6,9 @@
 
 # Function: defineAtomsCatalog()
 
-> **defineAtomsCatalog**\<`T`\>(`input`): `Catalog`\<\{ `catalog`: `SchemaType`\<`"object"`, \{ `actions`: `SchemaType`\<`"map"`, \{ `description`: `SchemaType`\<`"string"`, `unknown`\>; `params`: `SchemaType`\<`"zod"`, `unknown`\>; \}\>; `components`: `SchemaType`\<`"map"`, \{ `description`: `SchemaType`\<`"string"`, `unknown`\>; `example`: `SchemaType`\<`"any"`, `unknown`\>; `props`: `SchemaType`\<`"zod"`, `unknown`\>; `slots`: `SchemaType`\<`"array"`, `SchemaType`\<`"string"`, `unknown`\>\>; \}\>; \}\>; `spec`: `SchemaType`\<`"object"`, \{ `elements`: `SchemaType`\<`"record"`, `SchemaType`\<`"object"`, \{ `children`: `SchemaType`\<`"array"`, `SchemaType`\<`"string"`, `unknown`\>\>; `props`: `SchemaType`\<`"propsOf"`, `string`\>; `type`: `SchemaType`\<`"ref"`, `string`\>; `visible`: `SchemaType`\<`"any"`, `unknown`\>; \}\>\>; `root`: `SchemaType`\<`"string"`, `unknown`\>; \}\>; \}, `T` & `Record`\<`Exclude`\<keyof `T`, `"components"` \| `"actions"` \| `"version"`\>, `never`\> & `object`\>
+> **defineAtomsCatalog**\<`T`\>(`input`): `Catalog`\<\{ `catalog`: `SchemaType`\<`"object"`, \{ `actions`: `SchemaType`\<`"map"`, \{ `description`: `SchemaType`\<`"string"`, `unknown`\>; `params`: `SchemaType`\<`"zod"`, `unknown`\>; \}\>; `components`: `SchemaType`\<`"map"`, \{ `description`: `SchemaType`\<`"string"`, `unknown`\>; `example`: `SchemaType`\<`"any"`, `unknown`\>; `props`: `SchemaType`\<`"zod"`, `unknown`\>; `slots`: `SchemaType`\<`"array"`, `SchemaType`\<`"string"`, `unknown`\>\>; \}\>; \}\>; `spec`: `SchemaType`\<`"object"`, \{ `elements`: `SchemaType`\<`"record"`, `SchemaType`\<`"object"`, \{ `children`: `SchemaType`\<`"array"`, `SchemaType`\<`"string"`, `unknown`\>\>; `props`: `SchemaType`\<`"propsOf"`, `string`\>; `type`: `SchemaType`\<`"ref"`, `string`\>; `visible`: `SchemaType`\<`"any"`, `unknown`\>; \}\>\>; `root`: `SchemaType`\<`"string"`, `unknown`\>; \}\>; \}, `Exact`\<`T`, [`AtomsCatalogInput`](../type-aliases/AtomsCatalogInput.md)\>\>
 
-Defined in: [packages/react/src/atoms/define-atoms-catalog.ts:41](https://github.com/Sitecore/content-sdk/blob/6953fcad50ce4e3d8b089190f6aed2a6b0cfd4e2/packages/react/src/atoms/define-atoms-catalog.ts#L41)
+Defined in: [packages/react/src/atoms/define-atoms-catalog.ts:41](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/react/src/atoms/define-atoms-catalog.ts#L41)
 
 Define an atoms catalog from component and action definitions.
 
@@ -26,11 +26,11 @@ can infer props per component.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `input` | `T` & `Record`\<`Exclude`\<keyof `T`, `"components"` \| `"actions"` \| `"version"`\>, `never`\> & `object` | Catalog input with `components` and optionally `actions` |
+| `input` | `Exact`\<`T`, [`AtomsCatalogInput`](../type-aliases/AtomsCatalogInput.md)\> | Catalog input with `components` and optionally `actions` |
 
 ## Returns
 
-`Catalog`\<\{ `catalog`: `SchemaType`\<`"object"`, \{ `actions`: `SchemaType`\<`"map"`, \{ `description`: `SchemaType`\<`"string"`, `unknown`\>; `params`: `SchemaType`\<`"zod"`, `unknown`\>; \}\>; `components`: `SchemaType`\<`"map"`, \{ `description`: `SchemaType`\<`"string"`, `unknown`\>; `example`: `SchemaType`\<`"any"`, `unknown`\>; `props`: `SchemaType`\<`"zod"`, `unknown`\>; `slots`: `SchemaType`\<`"array"`, `SchemaType`\<`"string"`, `unknown`\>\>; \}\>; \}\>; `spec`: `SchemaType`\<`"object"`, \{ `elements`: `SchemaType`\<`"record"`, `SchemaType`\<`"object"`, \{ `children`: `SchemaType`\<`"array"`, `SchemaType`\<`"string"`, `unknown`\>\>; `props`: `SchemaType`\<`"propsOf"`, `string`\>; `type`: `SchemaType`\<`"ref"`, `string`\>; `visible`: `SchemaType`\<`"any"`, `unknown`\>; \}\>\>; `root`: `SchemaType`\<`"string"`, `unknown`\>; \}\>; \}, `T` & `Record`\<`Exclude`\<keyof `T`, `"components"` \| `"actions"` \| `"version"`\>, `never`\> & `object`\>
+`Catalog`\<\{ `catalog`: `SchemaType`\<`"object"`, \{ `actions`: `SchemaType`\<`"map"`, \{ `description`: `SchemaType`\<`"string"`, `unknown`\>; `params`: `SchemaType`\<`"zod"`, `unknown`\>; \}\>; `components`: `SchemaType`\<`"map"`, \{ `description`: `SchemaType`\<`"string"`, `unknown`\>; `example`: `SchemaType`\<`"any"`, `unknown`\>; `props`: `SchemaType`\<`"zod"`, `unknown`\>; `slots`: `SchemaType`\<`"array"`, `SchemaType`\<`"string"`, `unknown`\>\>; \}\>; \}\>; `spec`: `SchemaType`\<`"object"`, \{ `elements`: `SchemaType`\<`"record"`, `SchemaType`\<`"object"`, \{ `children`: `SchemaType`\<`"array"`, `SchemaType`\<`"string"`, `unknown`\>\>; `props`: `SchemaType`\<`"propsOf"`, `string`\>; `type`: `SchemaType`\<`"ref"`, `string`\>; `visible`: `SchemaType`\<`"any"`, `unknown`\>; \}\>\>; `root`: `SchemaType`\<`"string"`, `unknown`\>; \}\>; \}, `Exact`\<`T`, [`AtomsCatalogInput`](../type-aliases/AtomsCatalogInput.md)\>\>
 
 A typed json-render Catalog
 

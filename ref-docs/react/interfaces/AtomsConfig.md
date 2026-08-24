@@ -6,7 +6,7 @@
 
 # Interface: AtomsConfig
 
-Defined in: [packages/react/src/atoms/types.ts:87](https://github.com/Sitecore/content-sdk/blob/6953fcad50ce4e3d8b089190f6aed2a6b0cfd4e2/packages/react/src/atoms/types.ts#L87)
+Defined in: [packages/react/src/atoms/types.ts:68](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/react/src/atoms/types.ts#L68)
 
 Props the developer passes to the provider for atoms support.
 
@@ -16,9 +16,50 @@ Props the developer passes to the provider for atoms support.
 
 > **catalog**: `Catalog`\<`any`, [`AtomsCatalogInput`](../type-aliases/AtomsCatalogInput.md)\>
 
-Defined in: [packages/react/src/atoms/types.ts:89](https://github.com/Sitecore/content-sdk/blob/6953fcad50ce4e3d8b089190f6aed2a6b0cfd4e2/packages/react/src/atoms/types.ts#L89)
+Defined in: [packages/react/src/atoms/types.ts:70](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/react/src/atoms/types.ts#L70)
 
 The json-render catalog (schema + component/action definitions).
+
+***
+
+### compileCssAction?
+
+> `optional` **compileCssAction?**: (`classes`) => `Promise`\<`string`\>
+
+Defined in: [packages/react/src/atoms/types.ts:97](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/react/src/atoms/types.ts#L97)
+
+Optional Server Action used to compile CSS for dynamic Document class names
+during editing (Design Library) sessions.
+
+For Next.js App Router starters, pass `compileCssForDocumentAction` from
+`@sitecore-content-sdk/nextjs/server-actions`. Register a compiler first via
+`registerTailwindCssCompiler` (or `setAtomsCssCompiler`) in `instrumentation.ts`.
+When provided, `DesignLibraryLowCodeComponent` injects a `<style>` tag after each
+Document update so classes authored in MMS Documents are styled.
+
+Has no effect in production; production CSS injection is handled server-side by
+`StudioComponentServerWrapper` using the same registered compiler.
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `classes` | `string`[] |
+
+#### Returns
+
+`Promise`\<`string`\>
+
+#### Example
+
+```tsx
+// src/Providers.tsx  ('use client')
+import { compileCssForDocumentAction } from '@sitecore-content-sdk/nextjs/server-actions';
+
+<SitecoreProvider
+  atomsConfig={{ catalog, registry, navigate, compileCssAction: compileCssForDocumentAction }}
+/>
+```
 
 ***
 
@@ -26,7 +67,7 @@ The json-render catalog (schema + component/action definitions).
 
 > `optional` **navigate?**: (`path`) => `void`
 
-Defined in: [packages/react/src/atoms/types.ts:93](https://github.com/Sitecore/content-sdk/blob/6953fcad50ce4e3d8b089190f6aed2a6b0cfd4e2/packages/react/src/atoms/types.ts#L93)
+Defined in: [packages/react/src/atoms/types.ts:74](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/react/src/atoms/types.ts#L74)
 
 Optional navigate function to be passed to action handlers for navigation purposes.
 
@@ -46,6 +87,6 @@ Optional navigate function to be passed to action handlers for navigation purpos
 
 > **registry**: `DefineRegistryResult`
 
-Defined in: [packages/react/src/atoms/types.ts:91](https://github.com/Sitecore/content-sdk/blob/6953fcad50ce4e3d8b089190f6aed2a6b0cfd4e2/packages/react/src/atoms/types.ts#L91)
+Defined in: [packages/react/src/atoms/types.ts:72](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/react/src/atoms/types.ts#L72)
 
 The registry result returned by defineAtomsRegistry.

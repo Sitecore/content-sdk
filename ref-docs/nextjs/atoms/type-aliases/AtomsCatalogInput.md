@@ -8,7 +8,7 @@
 
 > **AtomsCatalogInput** = `BaseCatalog` & `object`
 
-Defined in: react/types/atoms/types.d.ts:37
+Defined in: react/types/atoms/types.d.ts:27
 
 Input shape for defineAtomsCatalog.
 Extends json-render's base catalog input with Sitecore-specific fields.

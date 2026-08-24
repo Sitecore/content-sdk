@@ -8,7 +8,7 @@
 
 > **DesignLibraryLowCodeComponent**(): `Element`
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryLowCodeComponent.tsx:47](https://github.com/Sitecore/content-sdk/blob/6953fcad50ce4e3d8b089190f6aed2a6b0cfd4e2/packages/react/src/components/DesignLibrary/DesignLibraryLowCodeComponent.tsx#L47)
+Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryLowCodeComponent.tsx:51](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/react/src/components/DesignLibrary/DesignLibraryLowCodeComponent.tsx#L51)
 
 **`Internal`**
 
@@ -18,6 +18,8 @@ Facilitates the communication between the Design Studio and the Rendering Host w
 - On mount, it serializes the atoms catalog and sends it to the Design Studio via the `atoms:catalog` event.
 - Receives Component model data updates via document update handler and renders the low code component
 via `StudioComponentWrapper` (same client path as Studio / NCC preview elsewhere).
+- When `atomsConfig.compileCssAction` is provided, compiles Document class names and injects CSS so
+utilities that exist only in MMS Document JSON are styled during editing.
 - Wraps preview output with `PlaceholderMetadata` using the layout rendering UID so Design Studio
 receives the same chrome handshake as normal Design Library components.
 

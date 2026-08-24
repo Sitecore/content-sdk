@@ -32,6 +32,7 @@
 
 ## Type Aliases
 
+- [AtomsCssCompiler](type-aliases/AtomsCssCompiler.md)
 - [Debugger](type-aliases/Debugger.md)
 - [FetchOptions](type-aliases/FetchOptions.md)
 - [GenericGraphQLClientError](type-aliases/GenericGraphQLClientError.md)
@@ -52,6 +53,8 @@
 ## Functions
 
 - [enableDebug](functions/enableDebug.md)
+- [getAtomsCssCompiler](functions/getAtomsCssCompiler.md)
 - [getCoreContext](functions/getCoreContext.md)
 - [initContentSdk](functions/initContentSdk.md)
 - [isNamespaceEnabled](functions/isNamespaceEnabled.md)
+- [setAtomsCssCompiler](functions/setAtomsCssCompiler.md)

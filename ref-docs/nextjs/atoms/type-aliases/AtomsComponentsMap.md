@@ -8,6 +8,6 @@
 
 > **AtomsComponentsMap** = `Record`\<`string`, `AtomsComponentRenderer`\>
 
-Defined in: react/types/atoms/types.d.ts:54
+Defined in: react/types/atoms/types.d.ts:44
 
 Component implementations map for defineAtomsRegistry.
