@@ -8,7 +8,7 @@
 
 > `const` **debug**: `object`
 
-Defined in: [content/src/debug.ts:7](https://github.com/Sitecore/content-sdk/blob/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3/packages/content/src/debug.ts#L7)
+Defined in: [content/src/debug.ts:7](https://github.com/Sitecore/content-sdk/blob/9b45c283e831ade8b97eab10178dc32f73796f7e/packages/content/src/debug.ts#L7)
 
 Debug module for content package
 
@@ -33,6 +33,10 @@ Debug module for content package
 ### layout
 
 > **layout**: `Debugger`
+
+### llmsTxt
+
+> **llmsTxt**: `Debugger`
 
 ### locale
 
