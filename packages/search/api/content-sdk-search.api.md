@@ -67,12 +67,13 @@ export interface SearchParameters<T extends SearchDocument = SearchDocument> {
     sort?: SortSetting<T>[] | SortSetting<T>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "StrictUnion" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "KeyphraseQuery" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "SeedItemIdQuery" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "SeedItemUrlQuery" needs to be exported by the entry point index.d.ts
+//
 // @public
-export interface SearchQuery {
-    keyphrase?: string;
-    seedItemId?: string;
-    seedItemUrl?: string;
-}
+export type SearchQuery = StrictUnion<KeyphraseQuery | SeedItemIdQuery | SeedItemUrlQuery>;
 
 // @public
 export interface SearchResponse<T extends SearchDocument = SearchDocument> {
