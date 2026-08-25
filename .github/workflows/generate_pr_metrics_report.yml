@@ -7,9 +7,6 @@ on:
 jobs:
   generate-package-metrics-report:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
 
     steps:
       - name: Checkout code
@@ -26,8 +23,7 @@ jobs:
         run: node ./scripts/generate-package-metrics-report.js
 
       - name: Post PR comment
-        if: github.event.pull_request.head.repo.full_name == github.repository
-        uses: marocchino/sticky-pull-request-comment@v3
+        uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: Metrics Report
           path: metrics-report.md
