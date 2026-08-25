@@ -324,6 +324,92 @@ describe('Import Map Generation', () => {
         ts.sys.fileExists = originalFileExists;
       }
     });
+
+    // Regression test for JSS-9328: packages that only expose an "exports" map
+    // (no top-level main/module/types) - e.g. @sitecore-content-sdk/angular - were
+    // not resolved because the classic node10 resolver ignores the "exports" field.
+    // The fix converts the JSON compiler options (so moduleResolution: 'bundler'
+    // is honored) and uses ts.resolveModuleName, which reads the "exports" map.
+    it('should resolve packages that only expose an "exports" map (no main/types)', () => {
+      const fakeCode = `import { exportsOnlyFeature } from '@fake-scope/exports-only';
+        export default function comp() {
+          return exportsOnlyFeature;
+        };
+      `;
+
+      const ts = require('typescript');
+      const fakeFilePath = path.resolve(process.cwd(), 'exports-only-consumer.ts');
+
+      // Package that has no main/module/types - only an "exports" map pointing at
+      // built output, exactly like @sitecore-content-sdk/angular.
+      const exportsOnlyPackageJson = JSON.stringify({
+        name: '@fake-scope/exports-only',
+        exports: {
+          '.': {
+            types: './dist/types/index.d.ts',
+            default: './dist/index.mjs',
+          },
+        },
+      });
+
+      const isPkgJson = (p: string) =>
+        p.replace(/\\/g, '/').endsWith('@fake-scope/exports-only/package.json');
+      const isPkgTypes = (p: string) =>
+        p.replace(/\\/g, '/').endsWith('@fake-scope/exports-only/dist/types/index.d.ts');
+      const isPkgDir = (p: string) => p.replace(/\\/g, '/').includes('@fake-scope');
+
+      const originalReadFile = ts.sys.readFile;
+      const originalFileExists = ts.sys.fileExists;
+      const originalDirectoryExists = ts.sys.directoryExists;
+
+      try {
+        ts.sys.readFile = (filePath: string) => {
+          if (filePath === fakeFilePath) {
+            return fakeCode;
+          }
+          if (isPkgJson(filePath)) {
+            return exportsOnlyPackageJson;
+          }
+          // Force bundler module resolution so the "exports" map is honored,
+          // regardless of the shared test-data tsconfig.
+          if (filePath.replace(/\\/g, '/').endsWith('tsconfig.json')) {
+            return JSON.stringify({ compilerOptions: { moduleResolution: 'bundler' } });
+          }
+          return originalReadFile(filePath);
+        };
+
+        ts.sys.fileExists = (filePath: string) => {
+          if (filePath === fakeFilePath || isPkgJson(filePath) || isPkgTypes(filePath)) {
+            return true;
+          }
+          return originalFileExists(filePath);
+        };
+
+        ts.sys.directoryExists = (dirPath: string) => {
+          if (isPkgDir(dirPath)) {
+            return true;
+          }
+          return originalDirectoryExists(dirPath);
+        };
+
+        const result = getImportMap([fakeFilePath]);
+        const expected = [
+          {
+            module: '@fake-scope/exports-only',
+            namedImports: [{ name: 'exportsOnlyFeature', value: 'exportsOnlyFeature' }],
+            defaultImport: null,
+            namespaceImport: null,
+          },
+        ];
+
+        expect(convertToTestable(result)).to.deep.equal(expected);
+      } finally {
+        // Always restore original functions, even if test fails
+        ts.sys.readFile = originalReadFile;
+        ts.sys.fileExists = originalFileExists;
+        ts.sys.directoryExists = originalDirectoryExists;
+      }
+    });
   });
 
   describe('defaultMapTemplate', () => {

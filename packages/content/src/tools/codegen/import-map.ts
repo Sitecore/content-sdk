@@ -207,9 +207,15 @@ function _getImportMap(paths: string[]) {
       `[Codegen] Error reading tsconfig.json from app root: ${tsConfig.error.messageText}`
     );
   } else {
+    const converted = ts.convertCompilerOptionsFromJson(
+      tsConfig.config.compilerOptions,
+      appPath
+    ).options;
     cliCompilerOptions = {
-      ...tsConfig.config.compilerOptions,
-      ...cliCompilerOptions,
+      baseUrl: appPath,
+      target: ts.ScriptTarget.ESNext,
+      ...converted,
+      allowJs: true,
     };
   }
 
@@ -257,7 +263,7 @@ function _getImportMap(paths: string[]) {
 
         // import path is extracted
         const moduleName = childNode.moduleSpecifier.getText().replace(/['"]/g, '');
-        const resolvedModule = ts.nodeModuleNameResolver(
+        const resolvedModule = ts.resolveModuleName(
           moduleName,
           codeFileFullPath,
           cliCompilerOptions,
@@ -269,6 +275,12 @@ function _getImportMap(paths: string[]) {
 
         if (!resolvedImportPath) {
           console.warn('[Codegen] Could not resolve a file for import %s', moduleName);
+          console.log('Diag data %o', {
+            moduleName,
+            codeFileFullPath,
+            cliCompilerOptions,
+            resolvedModule,
+          });
           return;
         }
 
