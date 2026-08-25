@@ -423,7 +423,8 @@ describe('pickDeclaredInputs', () => {
   @Component({ selector: 'test-aliased', template: '' })
   class AliasedInputComponent {
     // Public binding name differs from the property name; filtering uses the binding (template) name.
-    readonly params = input<Record<string, string>>({});
+    // eslint-disable-next-line
+    readonly params = input<Record<string, string>>({}, { alias: 'sizeParams' });
   }
 
   @Component({ selector: 'test-no-inputs', template: '' })
