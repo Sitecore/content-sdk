@@ -6,7 +6,7 @@ import { NextRequest } from 'next/server';
 import proxyquire from 'proxyquire';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/content/editing';
 import experimentalFeaturesCatalog from '../experimental.json';
-import { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG } from '../../../content/src/experimental-features';
+import { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG } from '@sitecore-content-sdk/content/experimental';
 
 chai.use(sinonChai);
 

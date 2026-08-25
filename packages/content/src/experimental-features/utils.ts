@@ -6,10 +6,10 @@ import {
 
 /**
  * Environment variable that globally enables experimental features for an app.
- * Set to `true` to enable experimental features.
+ * Set `CSDK_GLOBAL_EXPERIMENTAL_FEATURES_ENABLED` to `true` to enable experimental features.
  * @public
  */
-export const CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG = 'CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG';
+export const CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG = 'CSDK_GLOBAL_EXPERIMENTAL_FEATURES_ENABLED';
 
 /**
  * Returns true when an experimental feature env flag is enabled.
@@ -28,7 +28,7 @@ export const isExperimentalEnvFlagEnabled = (value: string | undefined): boolean
 
 /**
  * Returns true when experimental features are globally enabled for the app.
- * Set `CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG` to `true` to enable them.
+ * Set `CSDK_GLOBAL_EXPERIMENTAL_FEATURES_ENABLED` to `true` to enable them.
  * @returns {boolean} Whether experimental features are globally enabled.
  * @public
  */

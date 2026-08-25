@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG } from '../../../../content/src/experimental-features';
+import { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG } from '@sitecore-content-sdk/content/experimental';
 import { createExperimentalFeaturesMiddleware } from './experimental-features-middleware';
 import type { ExpressRequest, ExpressResponse } from './models';
 import experimentalFeaturesCatalog from '../../experimental.json';
