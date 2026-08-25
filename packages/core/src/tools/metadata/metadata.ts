@@ -15,15 +15,6 @@ type PackagesQuery = {
 };
 
 /**
- * A node in the dependency tree returned by `pnpm list --json`.
- * @internal
- */
-type PnpmDependencyNode = {
-  version?: string;
-  dependencies?: Record<string, PnpmDependencyNode>;
-};
-
-/**
  * Application metadata
  * @public
  */
@@ -33,19 +24,17 @@ export interface Metadata {
 
 const trackedScopes = ['@sitecore', '@sitecore-feaas', '@sitecore-content-sdk'];
 
-// pnpm and yarn match name patterns as globs, in which '*' does not cross the scope separator,
-// so both segments are wildcarded to cover every '@sitecore*' scope.
+// yarn matches name patterns as globs, in which '*' does not cross the scope separator, so both
+// segments are wildcarded to cover every '@sitecore*' scope.
 const TRACKED_SCOPE_GLOB = '"@sitecore*/*"';
-
-const PNPM_DEPENDENCY_GROUPS = [
-  'dependencies',
-  'devDependencies',
-  'optionalDependencies',
-  'unsavedDependencies',
-];
 
 // Matches the 'name@version' entries of the tree printed by `bun pm ls`, e.g '├── @scope/pkg@1.0.0'
 const BUN_PACKAGE_ENTRY = /^[\s│├└─]*((?:@[^\s@/]+\/)?[^\s@/]+)@([^\s]+)$/;
+
+// Matches the trailing 'name@version' of the 'path:name@version' entries printed by
+// `pnpm list --parseable --long`. The leading path is excluded from the match because it holds
+// directory separators, and a drive letter followed by a colon on Windows.
+const PNPM_PACKAGE_ENTRY = /:((?:@[^\s@:/\\]+\/)?[^\s@:/\\]+)@([^\s]+)$/;
 
 // Dependency trees of an app can be sizeable, the 1MB default of execSync is not enough.
 const MAX_OUTPUT_BUFFER = 10 * 1024 * 1024;
@@ -105,9 +94,12 @@ function getPackagesFromQueryResult(scPackages: Package[]): Record<string, strin
 function getPackageManagement(allowWorkspaces: boolean): Record<string, PackagesQuery> {
   return {
     pnpm: {
-      query: `pnpm list --depth Infinity --json ${
-        allowWorkspaces ? '--recursive ' : ''
-      }${TRACKED_SCOPE_GLOB}`,
+      // `pnpm list` silently drops packages from its result when it is given a name pattern, and
+      // the tree it prints as JSON repeats every shared dependency, which overruns the output
+      // buffer of real apps. Its parseable output lists each installed package once instead.
+      query: `pnpm list --depth Infinity --parseable --long${
+        allowWorkspaces ? ' --recursive' : ''
+      }`,
       parse: parsePnpmList,
     },
     npm: {
@@ -196,52 +188,18 @@ function parseNpmQuery(output: string): Package[] {
 }
 
 /**
- * Parse the output of `pnpm list --json`, which is a dependency tree per project
+ * Parse the output of `pnpm list --parseable --long`, which is one 'path:name@version' entry per
+ * installed package
  * @param {string} output command output
  * @returns {Package[]} installed packages
  * @internal
  */
 function parsePnpmList(output: string): Package[] {
-  if (!output.trim()) {
-    return [];
-  }
+  return output.split(/\r?\n/).reduce<Package[]>((packages, line) => {
+    const scPackage = PNPM_PACKAGE_ENTRY.exec(line.trim());
 
-  const parsed = JSON.parse(output);
-  const projects = Array.isArray(parsed) ? parsed : [parsed];
-  const packages: Package[] = [];
-  const visited = new Set<string>();
-
-  const collect = (dependencies?: Record<string, PnpmDependencyNode>) => {
-    if (!dependencies) {
-      return;
-    }
-
-    Object.entries(dependencies).forEach(([name, node]) => {
-      if (!node) {
-        return;
-      }
-
-      const key = `${name}@${node.version ?? ''}`;
-
-      // the same package can be reached through many paths, walk it once
-      if (visited.has(key)) {
-        return;
-      }
-      visited.add(key);
-
-      if (node.version) {
-        packages.push({ name, version: node.version });
-      }
-
-      collect(node.dependencies);
-    });
-  };
-
-  projects.forEach((project) =>
-    PNPM_DEPENDENCY_GROUPS.forEach((group) => collect(project?.[group]))
-  );
-
-  return packages;
+    return scPackage ? [...packages, { name: scPackage[1], version: scPackage[2] }] : packages;
+  }, []);
 }
 
 /**
