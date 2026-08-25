@@ -8,9 +8,10 @@
 
 > `const` **isExperimentalEnvFlagEnabled**: (`value`) => `boolean`
 
-Defined in: content/types/experimental-features/utils.d.ts:9
+Defined in: content/types/experimental-features/utils.d.ts:15
 
-Returns true when an experimental feature env flag is enabled. Set the env var to `true` to opt in.
+Returns true when an experimental feature env flag is enabled.
+Set the env var to `true` to opt in.
 
 ## Parameters
 

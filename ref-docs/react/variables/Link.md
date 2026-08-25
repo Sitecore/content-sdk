@@ -8,7 +8,7 @@
 
 > `const` **Link**: `React.FC`\<[`LinkProps`](../type-aliases/LinkProps.md)\>
 
-Defined in: [packages/react/src/components/Link.tsx:103](https://github.com/Sitecore/content-sdk/blob/9b45c283e831ade8b97eab10178dc32f73796f7e/packages/react/src/components/Link.tsx#L103)
+Defined in: [packages/react/src/components/Link.tsx:103](https://github.com/Sitecore/content-sdk/blob/c9c8d1c0cd9bd014c418f5695be825137a97e6ba/packages/react/src/components/Link.tsx#L103)
 
 The Link component.
 
