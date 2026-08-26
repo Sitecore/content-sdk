@@ -71,6 +71,7 @@ export interface OpenGraphFields {
   baseOgTitle?: Field<string>;
   baseOgDescription?: Field<string>;
   baseOgImage?: OpenGraphImageField;
+  baseOgType?: Field<string>;
 }
 
 /**

@@ -84,6 +84,10 @@ export const generateMetadata = async ({ params }: PageProps): Promise<Metadata>
   const ogTitle = fields?.baseOgTitle?.value;
   const ogDescription = fields?.baseOgDescription?.value;
   const ogImage = fields?.baseOgImage?.value;
+  const ogType = fields?.baseOgType?.value;
+  // article:published_time / article:modified_time are only defined by the Open Graph protocol for the "article" type
+  const publishedTime = ogType === 'article' ? page?.layout.sitecore.route?.published : undefined;
+  const modifiedTime = ogType === 'article' ? page?.layout.sitecore.route?.updated : undefined;
 
   return {
     title,
@@ -91,7 +95,7 @@ export const generateMetadata = async ({ params }: PageProps): Promise<Metadata>
     ...(description && { description }),
     ...(keywords && { keywords }),
     ...(author && { authors: [{ name: author }] }),
-    ...((ogTitle || ogDescription || ogImage?.src) && {
+    ...((ogTitle || ogDescription || ogImage?.src || ogType) && {
       openGraph: {
         ...(ogTitle && { title: ogTitle }),
         ...(ogDescription && { description: ogDescription }),
@@ -105,7 +109,10 @@ export const generateMetadata = async ({ params }: PageProps): Promise<Metadata>
             },
           ],
         }),
-      },
+        ...(ogType && { type: ogType }),
+        ...(publishedTime && { publishedTime }),
+        ...(modifiedTime && { modifiedTime }),
+      } as Metadata['openGraph'],
     }),
   };
 };

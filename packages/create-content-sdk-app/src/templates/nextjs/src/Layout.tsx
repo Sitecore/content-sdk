@@ -30,6 +30,10 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
   const ogTitle = fields?.baseOgTitle?.value;
   const ogDescription = fields?.baseOgDescription?.value;
   const ogImage = fields?.baseOgImage?.value;
+  const ogType = fields?.baseOgType?.value;
+  // article:published_time / article:modified_time are only defined by the Open Graph protocol for the "article" type
+  const publishedTime = ogType === 'article' ? route?.published : undefined;
+  const modifiedTime = ogType === 'article' ? route?.updated : undefined;
 
   return (
     <>
@@ -48,6 +52,9 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
         {ogImage?.src && ogImage?.width && <meta property="og:image:width" content={ogImage.width} />}
         {ogImage?.src && ogImage?.height && <meta property="og:image:height" content={ogImage.height} />}
         {ogImage?.src && ogImage?.alt && <meta property="og:image:alt" content={ogImage.alt} />}
+        {ogType && <meta property="og:type" content={ogType} />}
+        {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+        {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
       </Head>
 
       {/* root placeholder for the app, which we add components to using route data */}
