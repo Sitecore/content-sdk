@@ -204,6 +204,9 @@ export const createComponentInstance: (importMap: ImportEntry[], generatedCompon
 export const createGraphQLClientFactory: (options: GraphQLClientOptions) => GraphQLRequestClientFactory;
 
 // @public
+export const CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG = "CSDK_GLOBAL_EXPERIMENTAL_FEATURES_ENABLED";
+
+// @public
 const debug_2: {
     form: Debugger;
     layout: Debugger;
@@ -787,6 +790,9 @@ export const isEditorActive: () => boolean;
 
 // @public
 export const isExperimentalEnvFlagEnabled: (value: string | undefined) => boolean;
+
+// @public
+export const isExperimentalFeaturesGloballyEnabled: () => boolean;
 
 // @public
 export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field> | null | undefined): field is null | undefined;

@@ -8,7 +8,7 @@
 
 > `const` **buildExperimentalFeaturesResponse**: (`features`) => [`ExperimentalFeaturesResponse`](../type-aliases/ExperimentalFeaturesResponse.md)
 
-Defined in: content/types/experimental-features/utils.d.ts:23
+Defined in: content/types/experimental-features/utils.d.ts:38
 
 Builds the experimental features API response payload.
 

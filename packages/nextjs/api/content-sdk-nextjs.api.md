@@ -28,6 +28,7 @@ import { ComponentParams } from '@sitecore-content-sdk/content/layout';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { constants } from '@sitecore-content-sdk/core';
 import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
+import { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG } from '@sitecore-content-sdk/content/experimental';
 import { DateField } from '@sitecore-content-sdk/react';
 import { DeepRequired } from '@sitecore-content-sdk/content/config';
 import { DEFAULT_LLMS_TXT } from '@sitecore-content-sdk/content/site';
@@ -105,6 +106,7 @@ import { IncomingHttpHeaders } from 'http';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { isEditorActive } from '@sitecore-content-sdk/content/editing';
 import { isExperimentalEnvFlagEnabled } from '@sitecore-content-sdk/content/experimental';
+import { isExperimentalFeaturesGloballyEnabled } from '@sitecore-content-sdk/content/experimental';
 import { Item } from '@sitecore-content-sdk/content/layout';
 import { JSX as JSX_2 } from 'react';
 import { LayoutService } from '@sitecore-content-sdk/content/layout';
@@ -418,6 +420,8 @@ export function createSitemapRouteHandler(options: RouteHandlerOptions): {
     GET: (req: NextRequest) => Promise<Response>;
 };
 
+export { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG }
+
 export { DateField }
 
 // @public
@@ -681,6 +685,8 @@ export const isDesignLibraryPreviewData: (data: unknown) => data is DesignLibrar
 export { isEditorActive }
 
 export { isExperimentalEnvFlagEnabled }
+
+export { isExperimentalFeaturesGloballyEnabled }
 
 // @public
 export const isServerSidePropsContext: (context: GetServerSidePropsContext | GetStaticPropsContext) => context is GetServerSidePropsContext;
