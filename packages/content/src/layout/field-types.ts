@@ -1,4 +1,4 @@
-import type { FieldMetadata } from './models';
+import type { Field, FieldMetadata } from './models';
 
 /**
  * The interface for the Link field value.
@@ -42,6 +42,53 @@ export interface ImageFieldValue {
 export interface ImageField {
   value?: ImageFieldValue;
 }
+
+/**
+ * The interface for the Open Graph image field value (og:image and its dimension/alt attributes).
+ * @public
+ */
+export interface OpenGraphImageFieldValue {
+  [attributeName: string]: unknown;
+  src?: string;
+  alt?: string;
+  width?: string;
+  height?: string;
+}
+
+/**
+ * The interface for the Open Graph image field.
+ * @public
+ */
+export interface OpenGraphImageField {
+  value?: OpenGraphImageFieldValue;
+}
+
+/**
+ * The interface for a page's Open Graph fields (siblings of Title in a route's fields).
+ * @public
+ */
+export interface OpenGraphFields {
+  baseOgTitle?: Field<string>;
+  baseOgDescription?: Field<string>;
+  baseOgImage?: OpenGraphImageField;
+}
+
+/**
+ * The interface for a page's metadata fields (siblings of Title in a route's fields).
+ * @public
+ */
+export interface MetadataFields {
+  baseMetadataTitle?: Field<string>;
+  baseMetadataDescription?: Field<string>;
+  baseMetadataAuthor?: Field<string>;
+  baseMetadataKeywords?: Field<string>;
+}
+
+/**
+ * The combined interface for a page's metadata and Open Graph fields.
+ * @public
+ */
+export interface PageMetadataFields extends MetadataFields, OpenGraphFields {}
 
 /**
  * The interface for the Image size parameters.

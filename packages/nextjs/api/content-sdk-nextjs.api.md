@@ -123,6 +123,7 @@ import { LLMS_TXT_CONTENT_TYPE } from '@sitecore-content-sdk/content/site';
 import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
 import { Metadata } from '@sitecore-content-sdk/core/node-tools';
+import { MetadataFields } from '@sitecore-content-sdk/react';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
@@ -136,7 +137,11 @@ import { NextURL } from 'next/dist/server/web/next-url';
 import { noopLoadImportMap } from '@sitecore-content-sdk/react';
 import { normalizePersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
 import { normalizeSiteRewrite } from '@sitecore-content-sdk/content/site';
+import { OpenGraphFields } from '@sitecore-content-sdk/react';
+import { OpenGraphImageField } from '@sitecore-content-sdk/react';
+import { OpenGraphImageFieldValue } from '@sitecore-content-sdk/react';
 import { Page } from '@sitecore-content-sdk/content/client';
+import { PageMetadataFields } from '@sitecore-content-sdk/react';
 import { PageMode } from '@sitecore-content-sdk/content/client';
 import { PageOptions } from '@sitecore-content-sdk/content/client';
 import { PersonalizeAdapter } from '@sitecore-content-sdk/personalize/internal';
@@ -753,6 +758,8 @@ export { mediaApi }
 
 export { MemoryCacheClient }
 
+export { MetadataFields }
+
 // @public
 export class MultisiteProxy extends ProxyBase {
     constructor(config: MultisiteProxyConfig);
@@ -797,7 +804,15 @@ export { normalizePersonalizedRewrite }
 
 export { normalizeSiteRewrite }
 
+export { OpenGraphFields }
+
+export { OpenGraphImageField }
+
+export { OpenGraphImageFieldValue }
+
 export { Page }
+
+export { PageMetadataFields }
 
 export { PageMode }
 

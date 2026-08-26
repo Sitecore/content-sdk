@@ -3,7 +3,7 @@
  */
 import { JSX } from 'react';
 import Head from 'next/head';
-import { Placeholder, Field, DesignLibrary, Page } from '@sitecore-content-sdk/nextjs';
+import { Placeholder, Field, PageMetadataFields, DesignLibrary, Page } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'src/components/content-sdk/SitecoreStyles';
 
@@ -11,7 +11,7 @@ interface LayoutProps {
   page: Page;
 }
 
-interface RouteFields {
+interface RouteFields extends PageMetadataFields {
   [key: string]: unknown;
   Title?: Field;
 }
@@ -22,13 +22,32 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
   const fields = route?.fields as RouteFields;
   const mainClassPageEditing = mode.isEditing ? 'editing-mode' : 'prod-mode';
 
+  const title = fields?.Title?.value?.toString() || 'Page';
+  const metaTitle = fields?.baseMetadataTitle?.value;
+  const description = fields?.baseMetadataDescription?.value;
+  const keywords = fields?.baseMetadataKeywords?.value;
+  const author = fields?.baseMetadataAuthor?.value;
+  const ogTitle = fields?.baseOgTitle?.value;
+  const ogDescription = fields?.baseOgDescription?.value;
+  const ogImage = fields?.baseOgImage?.value;
+
   return (
     <>
       <Scripts />
       <SitecoreStyles layoutData={layout} />
       <Head>
-        <title>{fields?.Title?.value?.toString() || 'Page'}</title>
+        <title>{title}</title>
         <link rel="icon" href="/favicon.ico" />
+        {metaTitle && <meta name="title" content={metaTitle} />}
+        {description && <meta name="description" content={description} />}
+        {keywords && <meta name="keywords" content={keywords} />}
+        {author && <meta name="author" content={author} />}
+        {ogTitle && <meta property="og:title" content={ogTitle} />}
+        {ogDescription && <meta property="og:description" content={ogDescription} />}
+        {ogImage?.src && <meta property="og:image" content={ogImage.src} />}
+        {ogImage?.src && ogImage?.width && <meta property="og:image:width" content={ogImage.width} />}
+        {ogImage?.src && ogImage?.height && <meta property="og:image:height" content={ogImage.height} />}
+        {ogImage?.src && ogImage?.alt && <meta property="og:image:alt" content={ogImage.alt} />}
       </Head>
 
       {/* root placeholder for the app, which we add components to using route data */}

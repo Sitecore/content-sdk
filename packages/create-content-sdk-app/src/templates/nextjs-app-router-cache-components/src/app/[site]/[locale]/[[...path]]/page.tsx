@@ -2,6 +2,7 @@ import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing
 import { setCachedPageParams } from '@sitecore-content-sdk/nextjs';
 import { notFound } from 'next/navigation';
 import { draftMode } from 'next/headers';
+import { Metadata } from 'next';
 <% if (prerender === 'SSG') { -%>
 import { SiteInfo } from '@sitecore-content-sdk/nextjs';
 import sites from '.sitecore/sites.json';
@@ -83,7 +84,7 @@ export const generateStaticParams = async () => {
 };
 <% } -%>
 // Metadata fields for the page. Mirrors the Page draft-mode branching so the <title> matches the body.
-export const generateMetadata = async ({ params, searchParams }: PageProps) => {
+export const generateMetadata = async ({ params, searchParams }: PageProps): Promise<Metadata> => {
   const { path, site, locale } = await params;
 
   if (isBuildValidationSite(site)) {
@@ -104,7 +105,38 @@ export const generateMetadata = async ({ params, searchParams }: PageProps) => {
     page = await getSitecorePage({ site, locale, path: path ?? [] });
   }
 
+  const fields = page?.layout.sitecore.route?.fields as RouteFields;
+
+  const title = fields?.Title?.value?.toString() || 'Page';
+  const metaTitle = fields?.baseMetadataTitle?.value;
+  const description = fields?.baseMetadataDescription?.value;
+  const keywords = fields?.baseMetadataKeywords?.value;
+  const author = fields?.baseMetadataAuthor?.value;
+  const ogTitle = fields?.baseOgTitle?.value;
+  const ogDescription = fields?.baseOgDescription?.value;
+  const ogImage = fields?.baseOgImage?.value;
+
   return {
-    title: (page?.layout.sitecore.route?.fields as RouteFields)?.Title?.value?.toString() || 'Page',
+    title,
+    ...(metaTitle && { other: { title: metaTitle } }),
+    ...(description && { description }),
+    ...(keywords && { keywords }),
+    ...(author && { authors: [{ name: author }] }),
+    ...((ogTitle || ogDescription || ogImage?.src) && {
+      openGraph: {
+        ...(ogTitle && { title: ogTitle }),
+        ...(ogDescription && { description: ogDescription }),
+        ...(ogImage?.src && {
+          images: [
+            {
+              url: ogImage.src,
+              ...(ogImage.width && { width: ogImage.width }),
+              ...(ogImage.height && { height: ogImage.height }),
+              ...(ogImage.alt && { alt: ogImage.alt }),
+            },
+          ],
+        }),
+      },
+    }),
   };
 };

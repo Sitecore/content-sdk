@@ -49,10 +49,15 @@ import { LinkField } from '@sitecore-content-sdk/content/layout';
 import { LinkFieldValue } from '@sitecore-content-sdk/content/layout';
 import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
+import { MetadataFields } from '@sitecore-content-sdk/content/layout';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
+import { OpenGraphFields } from '@sitecore-content-sdk/content/layout';
+import { OpenGraphImageField } from '@sitecore-content-sdk/content/layout';
+import { OpenGraphImageFieldValue } from '@sitecore-content-sdk/content/layout';
 import { Page } from '@sitecore-content-sdk/content/client';
+import { PageMetadataFields } from '@sitecore-content-sdk/content/layout';
 import { PageMode } from '@sitecore-content-sdk/content/client';
 import { default as React_2 } from 'react';
 import { ReactNode } from 'react';
@@ -357,6 +362,8 @@ export { mediaApi }
 
 export { MemoryCacheClient }
 
+export { MetadataFields }
+
 export { NativeDataFetcher }
 
 export { NativeDataFetcherConfig }
@@ -368,7 +375,15 @@ export { NativeDataFetcherResponse }
 // @public
 export const noopLoadImportMap: () => Promise<ImportMapImport>;
 
+export { OpenGraphFields }
+
+export { OpenGraphImageField }
+
+export { OpenGraphImageFieldValue }
+
 export { Page }
+
+export { PageMetadataFields }
 
 export { PageMode }
 
