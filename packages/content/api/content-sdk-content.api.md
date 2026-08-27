@@ -498,10 +498,42 @@ export type ExperimentalFeatureStatus = ExperimentalFeatureData & {
     enabled: boolean;
 };
 
+// @public
+export type ExtractedFile = {
+    name: string;
+    path: string;
+    type: ExtractedFileType;
+    labels?: Record<string, unknown>;
+};
+
+// @public
+export enum ExtractedFileType {
+    // (undocumented)
+    Component = "component",
+    // (undocumented)
+    Json = "json",
+    // (undocumented)
+    PackageJson = "package.json",
+    // (undocumented)
+    Style = "style",
+    // (undocumented)
+    Template = "template",
+    // (undocumented)
+    Variant = "variant"
+}
+
 // Warning: (ae-forgotten-export) The symbol "_extractFiles" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export let extractFiles: typeof _extractFiles;
+
+// @public
+export type ExtractFilesConfig = {
+    componentMapPath?: string;
+    clientComponentMapPath?: string;
+    customValidateDeployContext?: () => boolean;
+    gatherCompanionFiles?: (componentFilePath: string, componentKey: string) => ExtractedFile[];
+};
 
 // @internal
 export function fetchGeneratedComponentFromCache(id: string, token: string, edgeUrl?: string): Promise<GeneratedComponentData>;
