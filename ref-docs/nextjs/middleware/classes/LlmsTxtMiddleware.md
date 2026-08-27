@@ -6,7 +6,7 @@
 
 # Class: LlmsTxtMiddleware
 
-Defined in: [nextjs/src/middleware/llms-txt-middleware.ts:12](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/nextjs/src/middleware/llms-txt-middleware.ts#L12)
+Defined in: [nextjs/src/middleware/llms-txt-middleware.ts:12](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/nextjs/src/middleware/llms-txt-middleware.ts#L12)
 
 Middleware for handling llms.txt requests in a Next.js application.
 
@@ -16,7 +16,7 @@ Middleware for handling llms.txt requests in a Next.js application.
 
 > **new LlmsTxtMiddleware**(`client`, `sites`): `LlmsTxtMiddleware`
 
-Defined in: [nextjs/src/middleware/llms-txt-middleware.ts:16](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/nextjs/src/middleware/llms-txt-middleware.ts#L16)
+Defined in: [nextjs/src/middleware/llms-txt-middleware.ts:16](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/nextjs/src/middleware/llms-txt-middleware.ts#L16)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [nextjs/src/middleware/llms-txt-middleware.ts:16](https://github.com
 
 > **getHandler**(): (`req`, `res`) => `Promise`\<`void`\>
 
-Defined in: [nextjs/src/middleware/llms-txt-middleware.ts:21](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/nextjs/src/middleware/llms-txt-middleware.ts#L21)
+Defined in: [nextjs/src/middleware/llms-txt-middleware.ts:21](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/nextjs/src/middleware/llms-txt-middleware.ts#L21)
 
 #### Returns
 

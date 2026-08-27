@@ -8,7 +8,7 @@
 
 > `const` **EDITING\_ALLOWED\_ORIGINS**: `string`[]
 
-Defined in: [content/src/editing/utils.ts:39](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/content/src/editing/utils.ts#L39)
+Defined in: [content/src/editing/utils.ts:39](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/content/src/editing/utils.ts#L39)
 
 **`Internal`**
 
