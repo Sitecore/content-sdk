@@ -15,4 +15,5 @@ export {
   ComponentPreviewEventArgs,
   ServerComponentPreviewEventArgs,
   fetchGeneratedComponentFromCache,
+  DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME,
 } from './preview';

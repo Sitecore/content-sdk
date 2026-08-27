@@ -6,7 +6,7 @@
 
 # Interface: ServerLoaderRunnerPort
 
-Defined in: [packages/angular/src/loaders/server-loader-runner.token.ts:10](https://github.com/Sitecore/content-sdk/blob/c9c8d1c0cd9bd014c418f5695be825137a97e6ba/packages/angular/src/loaders/server-loader-runner.token.ts#L10)
+Defined in: [packages/angular/src/loaders/server-loader-runner.token.ts:10](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/loaders/server-loader-runner.token.ts#L10)
 
 SSR injection port for cache-aware loader resolution.
 Implemented by `ServerLoaderRunner` and wired via
@@ -18,7 +18,7 @@ Implemented by `ServerLoaderRunner` and wired via
 
 > **resolve**(`init`): `Promise`\<[`LoaderDataResult`](../type-aliases/LoaderDataResult.md)\>
 
-Defined in: [packages/angular/src/loaders/server-loader-runner.token.ts:16](https://github.com/Sitecore/content-sdk/blob/c9c8d1c0cd9bd014c418f5695be825137a97e6ba/packages/angular/src/loaders/server-loader-runner.token.ts#L16)
+Defined in: [packages/angular/src/loaders/server-loader-runner.token.ts:16](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/loaders/server-loader-runner.token.ts#L16)
 
 Resolve loader data on the server (cache-aware) using the shared [LOADER\_REGISTRY](../variables/LOADER_REGISTRY.md).
 

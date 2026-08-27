@@ -5,7 +5,11 @@ export { ServerLoaderRunner } from './server-loader-runner';
 export { provideServerLoaderRunner } from './provide-server-loader-runner';
 
 export * from './middleware';
-export { getEditingPreviewData } from './editing/get-editing-preview-data';
+export {
+  getEditingPreviewData,
+  isDesignLibraryPreviewData,
+  type EditingRenderPreviewData,
+} from './editing/get-editing-preview-data';
 
 // Loader cache (server-only). Browser code must not reach createLoaderCache —
 // see plan §1 (Browser safety). The exports here are types + server factories;

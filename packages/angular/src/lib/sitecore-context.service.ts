@@ -5,6 +5,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, startWith } from 'rxjs';
 import type { Page } from '@sitecore-content-sdk/content/client';
 import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
+import {
+  ComponentRendering,
+  EDITING_COMPONENT_PLACEHOLDER,
+} from '@sitecore-content-sdk/content/layout';
 import { SITECORE_CONFIG_TOKEN } from './tokens';
 import { splitLocaleFromPath, resolveCurrentPath } from '../i18n/locale-utils';
 /** Merged keys from route resolve data (same keys apps use today). */
@@ -41,14 +45,37 @@ function getMergedRouteData(router: Router): SitecoreRouteData {
 export class SitecoreContextService {
   /** Current Sitecore page data (layout + mode). */
   readonly page: Signal<Page | null> = computed(() => this.routeData()?.page ?? null);
+
   /** Current Sitecore dictionary data. */
   readonly dictionary: Signal<DictionaryPhrases | null> = computed(
     () => this.routeData()?.dictionary ?? null
   );
+
   /** Whether the current page is in editing mode. */
   readonly isEditing: Signal<boolean> = computed(() => this.page()?.mode?.isEditing ?? false);
+
   /** Whether the current page is in preview mode. */
   readonly isPreview: Signal<boolean> = computed(() => this.page()?.mode?.isPreview ?? false);
+
+  /** Whether the current page is in Design Library mode. */
+  readonly isDesignLibrary: Signal<boolean> = computed(
+    () => this.page()?.mode?.isDesignLibrary ?? false
+  );
+
+  /** Whether the current Design Library page is in variant-generation mode. */
+  readonly isVariantGeneration: Signal<boolean> = computed(
+    () => this.page()?.mode?.designLibrary?.isVariantGeneration ?? false
+  );
+
+  /**
+   * The rendering placed in the Design Library editing placeholder, or `null` when absent.
+   */
+  readonly editingRendering: Signal<ComponentRendering | null> = computed(() => {
+    const route = this.page()?.layout.sitecore.route;
+    const rendering = route?.placeholders?.[EDITING_COMPONENT_PLACEHOLDER]?.[0];
+    return (rendering as ComponentRendering | undefined) ?? null;
+  });
+
   /**
    * Locale extracted from the current URL; `null` when no configured-locale prefix
    * or when locales are not configured.
@@ -59,12 +86,14 @@ export class SitecoreContextService {
     }
     return splitLocaleFromPath(this.pathname(), this.locales).locale;
   });
+
   /**
    * Effective locale for data fetching: `page.locale ?? urlLocale ?? defaultLanguage`.
    */
   readonly effectiveLocale: Signal<string> = computed(
     () => this.page()?.locale ?? this.urlLocale() ?? this.defaultLanguage
   );
+
   private readonly router = inject(Router);
   private readonly config = inject(SITECORE_CONFIG_TOKEN, { optional: true });
   private readonly platformId = inject(PLATFORM_ID);
@@ -72,6 +101,7 @@ export class SitecoreContextService {
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly locales = this.config?.angular?.locales ?? [];
   private readonly defaultLanguage = this.config?.defaultLanguage ?? 'en';
+
   /** Merged resolve data; updates on every completed navigation. */
   private readonly routeData = toSignal(
     this.router.events.pipe(
@@ -81,6 +111,7 @@ export class SitecoreContextService {
     ),
     { initialValue: getMergedRouteData(this.router) }
   );
+
   /**
    * Current pathname without query string.
    * SSR/bootstrap: REQUEST or window.location; client: NavigationEnd.urlAfterRedirects.
