@@ -8,6 +8,6 @@
 
 > `const` **EVENTS\_PLUGIN\_NAME**: `"EventsPlugin"` = `'EventsPlugin'`
 
-Defined in: [events/src/initialization/const.ts:5](https://github.com/Sitecore/content-sdk/blob/9b45c283e831ade8b97eab10178dc32f73796f7e/packages/events/src/initialization/const.ts#L5)
+Defined in: [events/src/initialization/const.ts:5](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/events/src/initialization/const.ts#L5)
 
 The name of the Events plugin.

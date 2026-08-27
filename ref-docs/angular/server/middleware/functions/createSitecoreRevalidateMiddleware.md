@@ -8,7 +8,7 @@
 
 > **createSitecoreRevalidateMiddleware**(`options`): [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:65](https://github.com/Sitecore/content-sdk/blob/9b45c283e831ade8b97eab10178dc32f73796f7e/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L65)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:65](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L65)
 
 Express middleware aligned with other frameworks' `createSitecoreRevalidateRouteHandler`.
 

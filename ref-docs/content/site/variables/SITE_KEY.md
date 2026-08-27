@@ -8,6 +8,6 @@
 
 > `const` **SITE\_KEY**: `"sc_site"` = `'sc_site'`
 
-Defined in: [content/src/site/utils.ts:11](https://github.com/Sitecore/content-sdk/blob/9b45c283e831ade8b97eab10178dc32f73796f7e/packages/content/src/site/utils.ts#L11)
+Defined in: [content/src/site/utils.ts:11](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/content/src/site/utils.ts#L11)
 
 Site key for cookie and query string parameter access

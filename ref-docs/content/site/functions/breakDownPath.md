@@ -8,7 +8,7 @@
 
 > **breakDownPath**(`configuredLocales`, `urlPath`): [`ProcessedPath`](../type-aliases/ProcessedPath.md)
 
-Defined in: [content/src/site/redirect-utils.ts:41](https://github.com/Sitecore/content-sdk/blob/9b45c283e831ade8b97eab10178dc32f73796f7e/packages/content/src/site/redirect-utils.ts#L41)
+Defined in: [content/src/site/redirect-utils.ts:41](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/content/src/site/redirect-utils.ts#L41)
 
 **`Internal`**
 

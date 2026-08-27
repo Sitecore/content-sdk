@@ -8,9 +8,11 @@
 
 > `const` **resolveExperimentalFeatureStatuses**: (`features`) => [`ExperimentalFeatureStatus`](../type-aliases/ExperimentalFeatureStatus.md)[]
 
-Defined in: content/types/experimental-features/utils.d.ts:16
+Defined in: content/types/experimental-features/utils.d.ts:31
 
 Resolves experimental feature metadata with current enabled status from env vars.
+The global switch enables all experimental features. When it is off, feature
+status falls back to individual feature env flags.
 
 ## Parameters
 

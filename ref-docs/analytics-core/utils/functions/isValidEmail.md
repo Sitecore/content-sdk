@@ -8,7 +8,7 @@
 
 > **isValidEmail**(`email`): `boolean`
 
-Defined in: [analytics-core/src/utils/validators/is-valid-email.ts:7](https://github.com/Sitecore/content-sdk/blob/9b45c283e831ade8b97eab10178dc32f73796f7e/packages/analytics-core/src/utils/validators/is-valid-email.ts#L7)
+Defined in: [analytics-core/src/utils/validators/is-valid-email.ts:7](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/analytics-core/src/utils/validators/is-valid-email.ts#L7)
 
 **`Internal`**
 
