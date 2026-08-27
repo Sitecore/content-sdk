@@ -49,7 +49,7 @@ describe('createEditingRenderMiddleware', () => {
     delete process.env.SITECORE_EDITING_SECRET;
   });
 
-  it('passes through when path does not match', async () => {
+  it('should pass through when path does not match', async () => {
     const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
     const req: ExpressRequest = {
       method: 'GET',
@@ -64,7 +64,7 @@ describe('createEditingRenderMiddleware', () => {
     expect(res.status).not.toHaveBeenCalled();
   });
 
-  it('rejects 401 when origin is not allowed', async () => {
+  it('should reject 401 when origin is not allowed', async () => {
     const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
     const req: ExpressRequest = {
       method: 'GET',
@@ -80,7 +80,7 @@ describe('createEditingRenderMiddleware', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it('responds 204 on OPTIONS preflight', async () => {
+  it('should respond 204 on OPTIONS preflight', async () => {
     const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
     const req: ExpressRequest = {
       method: 'OPTIONS',
@@ -97,7 +97,7 @@ describe('createEditingRenderMiddleware', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it('rejects 401 when secret is invalid', async () => {
+  it('should reject 401 when secret is invalid', async () => {
     const middleware = createEditingRenderMiddleware({ editingSecret: 'good' });
     const req: ExpressRequest = {
       method: 'GET',
@@ -113,7 +113,7 @@ describe('createEditingRenderMiddleware', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it('rejects 405 on non-GET methods', async () => {
+  it('should reject 405 on non-GET methods', async () => {
     const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
     const req: ExpressRequest = {
       method: 'POST',
@@ -130,7 +130,7 @@ describe('createEditingRenderMiddleware', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it('rejects 400 when required params are missing', async () => {
+  it('should reject 400 when required params are missing', async () => {
     const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
     const req: ExpressRequest = {
       method: 'GET',
@@ -146,7 +146,7 @@ describe('createEditingRenderMiddleware', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it('rewrites req.url, attaches scEditing, sets header + CSP, and calls next', async () => {
+  it('should rewrite req.url, attach scEditing, set header + CSP, and call next', async () => {
     const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
     const req: ExpressRequest = {
       method: 'GET',
@@ -182,7 +182,7 @@ describe('createEditingRenderMiddleware', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it('applies resolvePageUrl override', async () => {
+  it('should apply resolvePageUrl override', async () => {
     const middleware = createEditingRenderMiddleware({
       editingSecret: 's',
       resolvePageUrl: (itemPath) => `/en${itemPath}`,
@@ -201,7 +201,7 @@ describe('createEditingRenderMiddleware', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it('applies resolvePageUrl override with language', async () => {
+  it('should apply resolvePageUrl override with language', async () => {
     const middleware = createEditingRenderMiddleware({
       editingSecret: 's',
       resolvePageUrl: (itemPath, previewData) => `/${previewData.language}${itemPath}`,
@@ -236,7 +236,7 @@ describe('createEditingRenderMiddleware', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it('encodes the rewritten route', async () => {
+  it('should encode the rewritten route', async () => {
     const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
     const req: ExpressRequest = {
       method: 'GET',
@@ -251,7 +251,7 @@ describe('createEditingRenderMiddleware', () => {
     expect(req.url).toBe('/en/styleguide/section%202');
   });
 
-  it('falls back to SITECORE_EDITING_SECRET env when option omitted', async () => {
+  it('should fall back to SITECORE_EDITING_SECRET env when option omitted', async () => {
     process.env.SITECORE_EDITING_SECRET = 'env-s';
     const middleware = createEditingRenderMiddleware();
     const req: ExpressRequest = {
@@ -267,7 +267,7 @@ describe('createEditingRenderMiddleware', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it('includes previewTime in editing params when sc_previewTime is present in query params', async () => {
+  it('should include previewTime in editing params when sc_previewTime is present in query params', async () => {
     const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
     const req: ExpressRequest = {
       method: 'GET',
@@ -288,7 +288,7 @@ describe('createEditingRenderMiddleware', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it('does not include previewTime in editing params when sc_previewTime is absent', async () => {
+  it('should not include previewTime in editing params when sc_previewTime is absent', async () => {
     const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
     const req: ExpressRequest = {
       method: 'GET',
@@ -306,6 +306,116 @@ describe('createEditingRenderMiddleware', () => {
     // Verify previewTime is absent from the EDITING_PARAMS_HEADER JSON
     const editingParams = JSON.parse(editingReq.headers![EDITING_PARAMS_HEADER] as string);
     expect(editingParams).not.toHaveProperty('previewTime');
+    expect(next).toHaveBeenCalled();
+  });
+
+  // ─── Design Library ──────────────────────────────────────────────────────
+  function dlQuery(overrides: Record<string, string> = {}): Record<string, string> {
+    return {
+      secret: 's',
+      sc_site: 'demo',
+      sc_itemid: '11111111-1111-1111-1111-111111111111',
+      sc_lang: 'en',
+      sc_uid: 'component-uid-1',
+      mode: 'library',
+      ...overrides,
+    };
+  }
+
+  it('should build DesignLibraryRenderPreviewData from sc_uid for a library-mode request', async () => {
+    const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/render',
+      url: '/api/editing/render',
+      body: undefined,
+      query: dlQuery(),
+      headers: baseHeaders(),
+    };
+    const res = createMockRes();
+    await middleware(req, res, next);
+
+    const editingReq = req as ExpressEditingRequest;
+    expect(editingReq.scEditing).toEqual({
+      site: 'demo',
+      itemId: '11111111-1111-1111-1111-111111111111',
+      componentUid: 'component-uid-1',
+      language: 'en',
+      mode: 'library',
+    });
+    // No `route` for Design Library: URL rewrites to the localized root.
+    expect(editingReq.url).toBe('/en/');
+    expect(next).toHaveBeenCalled();
+  });
+
+  it('should not require route for a Design Library request', async () => {
+    const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/render',
+      url: '/api/editing/render',
+      body: undefined,
+      // no `route`, no `sc_variant`
+      query: dlQuery(),
+      headers: baseHeaders(),
+    };
+    const res = createMockRes();
+    await middleware(req, res, next);
+    expect(res.status).not.toHaveBeenCalledWith(400);
+    expect(next).toHaveBeenCalled();
+  });
+
+  it('should reject a Design Library request missing sc_uid with 400', async () => {
+    const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+    const { sc_uid, ...withoutUid } = dlQuery();
+    void sc_uid;
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/render',
+      url: '/api/editing/render',
+      body: undefined,
+      query: withoutUid,
+      headers: baseHeaders(),
+    };
+    const res = createMockRes();
+    await middleware(req, res, next);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  it('should include generation in preview data for library-metadata variant generation', async () => {
+    const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/render',
+      url: '/api/editing/render',
+      body: undefined,
+      query: dlQuery({
+        mode: 'library-metadata',
+        generation: 'variant',
+        sc_renderingId: 'rendering-1',
+        dataSourceId: 'ds-1',
+        sc_version: '2',
+      }),
+      headers: baseHeaders(),
+    };
+    const res = createMockRes();
+    await middleware(req, res, next);
+
+    const editingReq = req as ExpressEditingRequest;
+    expect(editingReq.scEditing).toEqual({
+      site: 'demo',
+      itemId: '11111111-1111-1111-1111-111111111111',
+      componentUid: 'component-uid-1',
+      language: 'en',
+      mode: 'library-metadata',
+      renderingId: 'rendering-1',
+      dataSourceId: 'ds-1',
+      version: '2',
+      generation: 'variant',
+    });
+    const editingParams = JSON.parse(editingReq.headers![EDITING_PARAMS_HEADER] as string);
+    expect(editingParams.generation).toBe('variant');
     expect(next).toHaveBeenCalled();
   });
 });
