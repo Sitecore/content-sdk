@@ -8,7 +8,7 @@
 
 > **scaffoldComponent**(`outputFolderPath`, `componentName`, `templateName`, `templates`): `void`
 
-Defined in: [content/src/tools/scaffold.ts:47](https://github.com/Sitecore/content-sdk/blob/c9c8d1c0cd9bd014c418f5695be825137a97e6ba/packages/content/src/tools/scaffold.ts#L47)
+Defined in: [content/src/tools/scaffold.ts:47](https://github.com/Sitecore/content-sdk/blob/b0823f3a364598af8034e451448160c20b885d18/packages/content/src/tools/scaffold.ts#L47)
 
 **`Internal`**
 

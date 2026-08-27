@@ -8,7 +8,7 @@
 
 > **normalizeImportedMetadata**(`module`): `Metadata`
 
-Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:88](https://github.com/Sitecore/content-sdk/blob/c9c8d1c0cd9bd014c418f5695be825137a97e6ba/packages/angular/src/server/middleware/editing-config-middleware.ts#L88)
+Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:88](https://github.com/Sitecore/content-sdk/blob/b0823f3a364598af8034e451448160c20b885d18/packages/angular/src/server/middleware/editing-config-middleware.ts#L88)
 
 **`Internal`**
 

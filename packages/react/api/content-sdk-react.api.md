@@ -59,6 +59,7 @@ import { OpenGraphImageFieldValue } from '@sitecore-content-sdk/content/layout';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { PageMetadataFields } from '@sitecore-content-sdk/content/layout';
 import { PageMode } from '@sitecore-content-sdk/content/client';
+import { QuerySuggestionItem } from '@sitecore-content-sdk/search';
 import { default as React_2 } from 'react';
 import { ReactNode } from 'react';
 import { RefAttributes } from 'react';
@@ -506,6 +507,8 @@ export interface UseInfiniteSearchOptions<T extends SearchDocument = SearchDocum
     pageSize?: number;
     query?: string;
     searchIndexId: string;
+    seedItemId?: string;
+    seedItemUrl?: string;
     sort?: SearchParameters<T>['sort'];
 }
 
@@ -535,6 +538,8 @@ export interface UseSearchOptions<T extends SearchDocument = SearchDocument> {
     pageSize?: number;
     query?: string;
     searchIndexId: string;
+    seedItemId?: string;
+    seedItemUrl?: string;
     sort?: SearchParameters<T>['sort'];
 }
 
@@ -552,6 +557,28 @@ export type UseSearchState<T extends SearchDocument = SearchDocument> = Omit<Int
 //
 // @public
 export function useSitecore(options?: UseSitecoreOptions): SitecoreProviderState;
+
+// @public
+export const useSuggest: <T extends SearchDocument = SearchDocument>(options: UseSuggestOptions) => UseSuggestState<T>;
+
+// @public
+export interface UseSuggestOptions {
+    enabled?: boolean;
+    keepPreviousData?: boolean;
+    locale?: string;
+    query?: string;
+    searchIndexId: string;
+}
+
+// Warning: (ae-forgotten-export) The symbol "InternalSuggestState" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export type UseSuggestState<T extends SearchDocument = SearchDocument> = Omit<InternalSuggestState<T>, 'previousStatus'> & {
+    isLoading: boolean;
+    isSuccess: boolean;
+    isError: boolean;
+    isPreviousData: boolean;
+};
 
 // Warning: (ae-forgotten-export) The symbol "ComponentProps" needs to be exported by the entry point api-surface.d.ts
 // Warning: (ae-forgotten-export) The symbol "WrapperProps" needs to be exported by the entry point api-surface.d.ts
