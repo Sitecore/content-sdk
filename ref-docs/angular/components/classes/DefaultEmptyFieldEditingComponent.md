@@ -6,7 +6,7 @@
 
 # Class: DefaultEmptyFieldEditingComponent
 
-Defined in: [packages/angular/src/components/default-empty-text-field.component.ts:10](https://github.com/Sitecore/content-sdk/blob/c9c8d1c0cd9bd014c418f5695be825137a97e6ba/packages/angular/src/components/default-empty-text-field.component.ts#L10)
+Defined in: [packages/angular/src/components/default-empty-text-field.component.ts:10](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/angular/src/components/default-empty-text-field.component.ts#L10)
 
 Default component that will be rendered in pages when field is empty; applies for text, richtext, date and link fields.
 

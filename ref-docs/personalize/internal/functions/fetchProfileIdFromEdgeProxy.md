@@ -8,7 +8,7 @@
 
 > **fetchProfileIdFromEdgeProxy**(`clientId`, `contextId`, `edgeUrl`): `Promise`\<`string`\>
 
-Defined in: [personalize/src/profile-id/fetch-profile-id-from-edge-proxy.ts:16](https://github.com/Sitecore/content-sdk/blob/c9c8d1c0cd9bd014c418f5695be825137a97e6ba/packages/personalize/src/profile-id/fetch-profile-id-from-edge-proxy.ts#L16)
+Defined in: [personalize/src/profile-id/fetch-profile-id-from-edge-proxy.ts:16](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/personalize/src/profile-id/fetch-profile-id-from-edge-proxy.ts#L16)
 
 **`Internal`**
 

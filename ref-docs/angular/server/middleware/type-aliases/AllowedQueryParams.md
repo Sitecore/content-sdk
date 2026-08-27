@@ -8,7 +8,7 @@
 
 > **AllowedQueryParams** = ([`AllowedQueryParam`](../interfaces/AllowedQueryParam.md) \| `string`)[] \| [`AllowedQueryParamsResolver`](AllowedQueryParamsResolver.md)
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:40](https://github.com/Sitecore/content-sdk/blob/c9c8d1c0cd9bd014c418f5695be825137a97e6ba/packages/angular/src/server/middleware/editing-render-middleware.ts#L40)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:44](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/angular/src/server/middleware/editing-render-middleware.ts#L44)
 
 Allowed query parameters configuration for [createEditingRenderMiddleware](../functions/createEditingRenderMiddleware.md).
 Either an array of parameter names / specs, or a resolver function.

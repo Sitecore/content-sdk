@@ -8,6 +8,6 @@
 
 > `const` **DEFAULT\_VARIANT**: `"_default"` = `'_default'`
 
-Defined in: [content/src/personalize/utils.ts:2](https://github.com/Sitecore/content-sdk/blob/c9c8d1c0cd9bd014c418f5695be825137a97e6ba/packages/content/src/personalize/utils.ts#L2)
+Defined in: [content/src/personalize/utils.ts:2](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/content/src/personalize/utils.ts#L2)
 
 **`Internal`**

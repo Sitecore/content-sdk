@@ -4,12 +4,15 @@ import { DEFAULT_PAGE_SIZE, getOffset, SearchStatus, useSearchService } from './
 
 /**
  * Options for the useSearch hook.
+ * `query`, `seedItemId`, and `seedItemUrl` are mutually exclusive.
+ * Use `seedItemId` or `seedItemUrl` for More Like This (MLT) widget queries.
  * @public
  */
 export interface UseSearchOptions<T extends SearchDocument = SearchDocument> {
   /**
    * The query string to search for.
    * By default empty string is used.
+   * Mutually exclusive with `seedItemId` and `seedItemUrl`.
    */
   query?: string;
   /**
@@ -51,6 +54,16 @@ export interface UseSearchOptions<T extends SearchDocument = SearchDocument> {
    * Use 'fields' to filter results by specific facet values. Both can be combined.
    */
   facet?: FacetRequest;
+  /**
+   * Item ID used as the seed for More Like This (MLT) results.
+   * Mutually exclusive with `query` and `seedItemUrl`.
+   */
+  seedItemId?: string;
+  /**
+   * Item URL used as the seed for More Like This (MLT) results.
+   * Mutually exclusive with `query` and `seedItemId`.
+   */
+  seedItemUrl?: string;
 }
 
 type InternalState<T extends SearchDocument = SearchDocument> = {
@@ -120,6 +133,8 @@ export type UseSearchState<T extends SearchDocument = SearchDocument> = Omit<
 
 /**
  * React hook for performing search queries with pagination.
+ * Supports keyword search via `query` and More Like This (MLT) via `seedItemId` or `seedItemUrl`.
+ * Those query fields are mutually exclusive.
  * @param {UseSearchOptions} options - Configuration options for the search hook.
  * @returns {UseSearchState} The search state.
  * @throws {Error} if the search index ID is not provided.
@@ -138,6 +153,8 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
     keepPreviousData = false,
     locale,
     facet,
+    seedItemId,
+    seedItemUrl,
   } = options;
 
   const [state, setState] = useState<InternalState<T>>(() => {
@@ -190,6 +207,8 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
         sort,
         ...(locale !== undefined && { locale }),
         ...(facet !== undefined && { facet }),
+        ...(seedItemId !== undefined && { seedItemId }),
+        ...(seedItemUrl !== undefined && { seedItemUrl }),
       };
 
       const { results: searchResults, total, facets } = await searchService.search<T>(searchParams, {
@@ -228,7 +247,7 @@ export const useSearch = <T extends SearchDocument = SearchDocument>(
         previousStatus: 'error',
       });
     }
-  }, [searchService, searchIndexId, page, pageSize, sort, query, keepPreviousData, locale, facet]);
+  }, [searchService, searchIndexId, page, pageSize, sort, query, keepPreviousData, locale, facet, seedItemId, seedItemUrl]);
 
   useEffect(() => {
     if (enabled) {

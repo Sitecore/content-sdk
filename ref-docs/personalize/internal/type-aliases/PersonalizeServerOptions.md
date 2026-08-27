@@ -8,6 +8,6 @@
 
 > **PersonalizeServerOptions** = `Omit`\<[`PersonalizeOptions`](../interfaces/PersonalizeOptions.md), `"webPersonalization"`\>
 
-Defined in: [personalize/src/initialization/types.ts:86](https://github.com/Sitecore/content-sdk/blob/c9c8d1c0cd9bd014c418f5695be825137a97e6ba/packages/personalize/src/initialization/types.ts#L86)
+Defined in: [personalize/src/initialization/types.ts:86](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/personalize/src/initialization/types.ts#L86)
 
 Represents the personalize plugin interface.

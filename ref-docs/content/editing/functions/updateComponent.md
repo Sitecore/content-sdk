@@ -8,7 +8,7 @@
 
 > **updateComponent**(`component`, `fields`, `params`): `void`
 
-Defined in: [content/src/editing/design-library.ts:204](https://github.com/Sitecore/content-sdk/blob/c9c8d1c0cd9bd014c418f5695be825137a97e6ba/packages/content/src/editing/design-library.ts#L204)
+Defined in: [content/src/editing/design-library.ts:205](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/content/src/editing/design-library.ts#L205)
 
 **`Internal`**
 

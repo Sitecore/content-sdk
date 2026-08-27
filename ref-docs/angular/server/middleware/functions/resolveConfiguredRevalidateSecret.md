@@ -8,7 +8,7 @@
 
 > **resolveConfiguredRevalidateSecret**(`secretOption`, `envValue`): `string` \| `undefined`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:22](https://github.com/Sitecore/content-sdk/blob/c9c8d1c0cd9bd014c418f5695be825137a97e6ba/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L22)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:22](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L22)
 
 **`Internal`**
 

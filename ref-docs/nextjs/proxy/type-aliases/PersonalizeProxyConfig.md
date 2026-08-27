@@ -8,7 +8,7 @@
 
 > **PersonalizeProxyConfig** = [`ProxyBaseConfig`](ProxyBaseConfig.md) & `SitecoreConfig`\[`"api"`\]\[`"edge"`\] & `SitecoreConfig`\[`"personalize"`\] & `object`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:45](https://github.com/Sitecore/content-sdk/blob/c9c8d1c0cd9bd014c418f5695be825137a97e6ba/packages/nextjs/src/proxy/personalize-proxy.ts#L45)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:45](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/nextjs/src/proxy/personalize-proxy.ts#L45)
 
 The interface for the PersonalizeProxy configuration.
 
