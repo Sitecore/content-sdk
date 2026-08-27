@@ -938,4 +938,82 @@ describe('useSearch', () => {
       expect(wrapper.container.querySelector('#facetValue')?.textContent).equal('Running');
     });
   });
+
+  it('should pass seedItemId to the search service for MLT queries', async () => {
+    const TestComponent: React.FC<any> = () => {
+      const state = useSearch<Model>({
+        searchIndexId: '1234567890',
+        seedItemId: 'item-123',
+      });
+
+      return renderState(state);
+    };
+
+    searchServiceStub.resolves({ results: [{ id: 'related-1' }, { id: 'related-2' }], total: 2 });
+
+    const wrapper = render(
+      <SitecoreProviderReactContext.Provider value={defaultProviderState}>
+        <TestComponent />
+      </SitecoreProviderReactContext.Provider>
+    );
+
+    await waitFor(() => {
+      expect(
+        searchServiceStub.calledOnceWith({
+          searchIndexId: '1234567890',
+          keyphrase: undefined,
+          limit: 10,
+          offset: 0,
+          sort: undefined,
+          seedItemId: 'item-123',
+        })
+      ).to.be.true;
+    });
+
+    await waitFor(() => {
+      assertState(wrapper, {
+        results: [{ id: 'related-1' }, { id: 'related-2' }],
+        isLoading: false,
+        isSuccess: true,
+        isError: false,
+        error: null,
+        total: 2,
+        totalPages: 1,
+        status: 'success',
+        isPreviousData: false,
+      });
+    });
+  });
+
+  it('should pass seedItemUrl to the search service for MLT queries', async () => {
+    const TestComponent: React.FC<any> = () => {
+      const state = useSearch<Model>({
+        searchIndexId: '1234567890',
+        seedItemUrl: 'https://example.com/articles/cloud',
+      });
+
+      return renderState(state);
+    };
+
+    searchServiceStub.resolves({ results: [{ id: 'related-1' }], total: 1 });
+
+    render(
+      <SitecoreProviderReactContext.Provider value={defaultProviderState}>
+        <TestComponent />
+      </SitecoreProviderReactContext.Provider>
+    );
+
+    await waitFor(() => {
+      expect(
+        searchServiceStub.calledOnceWith({
+          searchIndexId: '1234567890',
+          keyphrase: undefined,
+          limit: 10,
+          offset: 0,
+          sort: undefined,
+          seedItemUrl: 'https://example.com/articles/cloud',
+        })
+      ).to.be.true;
+    });
+  });
 });

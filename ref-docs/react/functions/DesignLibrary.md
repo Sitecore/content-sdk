@@ -8,7 +8,7 @@
 
 > **DesignLibrary**(): `Element` \| `null`
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibrary.tsx:50](https://github.com/Sitecore/content-sdk/blob/c9c8d1c0cd9bd014c418f5695be825137a97e6ba/packages/react/src/components/DesignLibrary/DesignLibrary.tsx#L50)
+Defined in: [packages/react/src/components/DesignLibrary/DesignLibrary.tsx:50](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/react/src/components/DesignLibrary/DesignLibrary.tsx#L50)
 
 Design Library component.
 
