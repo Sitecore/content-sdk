@@ -8,7 +8,7 @@
 
 > **deepMerge**\<`T`\>(`base`, `override?`): `T`
 
-Defined in: [content/src/config/define-config.ts:107](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/content/src/config/define-config.ts#L107)
+Defined in: [content/src/config/define-config.ts:107](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/content/src/config/define-config.ts#L107)
 
 **`Internal`**
 

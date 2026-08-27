@@ -6,7 +6,7 @@
 
 # Interface: CreateRobotsMiddlewareOptions
 
-Defined in: [packages/angular/src/server/middleware/robots-middleware.ts:11](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/angular/src/server/middleware/robots-middleware.ts#L11)
+Defined in: [packages/angular/src/server/middleware/robots-middleware.ts:11](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/server/middleware/robots-middleware.ts#L11)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/angular/src/server/middleware/robots-middleware.ts:11](htt
 
 > **client**: [`SitecoreClient`](../content/client/classes/SitecoreClient.md)
 
-Defined in: [packages/angular/src/server/middleware/robots-middleware.ts:12](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/angular/src/server/middleware/robots-middleware.ts#L12)
+Defined in: [packages/angular/src/server/middleware/robots-middleware.ts:12](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/server/middleware/robots-middleware.ts#L12)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [packages/angular/src/server/middleware/robots-middleware.ts:12](htt
 
 > **sites**: `SiteInfo`[]
 
-Defined in: [packages/angular/src/server/middleware/robots-middleware.ts:13](https://github.com/Sitecore/content-sdk/blob/23c9158a9fae985d2aaa32ec807904acdf22d6e7/packages/angular/src/server/middleware/robots-middleware.ts#L13)
+Defined in: [packages/angular/src/server/middleware/robots-middleware.ts:13](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/server/middleware/robots-middleware.ts#L13)
