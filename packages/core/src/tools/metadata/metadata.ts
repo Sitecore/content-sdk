@@ -28,13 +28,9 @@ const trackedScopes = ['@sitecore', '@sitecore-feaas', '@sitecore-content-sdk'];
 // segments are wildcarded to cover every '@sitecore*' scope.
 const TRACKED_SCOPE_GLOB = '"@sitecore*/*"';
 
-// Matches the 'name@version' entries of the tree printed by `bun pm ls`, e.g '├── @scope/pkg@1.0.0'
-const BUN_PACKAGE_ENTRY = /^[\s│├└─]*((?:@[^\s@/]+\/)?[^\s@/]+)@([^\s]+)$/;
-
-// Matches the trailing 'name@version' of the 'path:name@version' entries printed by
-// `pnpm list --parseable --long`. The leading path is excluded from the match because it holds
-// directory separators, and a drive letter followed by a colon on Windows.
-const PNPM_PACKAGE_ENTRY = /:((?:@[^\s@:/\\]+\/)?[^\s@:/\\]+)@([^\s]+)$/;
+// Matches trailing 'name@version' after bun's tree prefix or pnpm's 'path:' delimiter. The path
+// is skipped because it contains separators, @version store folders, and Windows 'C:'.
+const PACKAGE_ENTRY = /(?:^[\s│├└─]*|:)((?:@[^\s@:/\\]+\/)?[^\s@:/\\]+)@([^\s]+)$/;
 
 // Dependency trees of an app can be sizeable, the 1MB default of execSync is not enough.
 const MAX_OUTPUT_BUFFER = 10 * 1024 * 1024;
@@ -94,13 +90,12 @@ function getPackagesFromQueryResult(scPackages: Package[]): Record<string, strin
 function getPackageManagement(allowWorkspaces: boolean): Record<string, PackagesQuery> {
   return {
     pnpm: {
-      // `pnpm list` silently drops packages from its result when it is given a name pattern, and
-      // the tree it prints as JSON repeats every shared dependency, which overruns the output
-      // buffer of real apps. Its parseable output lists each installed package once instead.
+      // Name filters silently drop packages; JSON trees overrun the buffer. Parseable --long
+      // lists each install once with name@version. Depth Infinity is required (default is 0).
       query: `pnpm list --depth Infinity --parseable --long${
         allowWorkspaces ? ' --recursive' : ''
       }`,
-      parse: parsePnpmList,
+      parse: parsePackageList,
     },
     npm: {
       query: `npm query [name*=@sitecore] --workspaces ${allowWorkspaces}`,
@@ -120,7 +115,7 @@ function getPackageManagement(allowWorkspaces: boolean): Record<string, Packages
       // `bun pm ls` has no name filter and only recently gained JSON output, so the tree it
       // prints is parsed instead, and filtered by scope afterwards.
       query: 'bun pm ls --all',
-      parse: parseBunPackageList,
+      parse: parsePackageList,
     },
   };
 }
@@ -188,15 +183,14 @@ function parseNpmQuery(output: string): Package[] {
 }
 
 /**
- * Parse the output of `pnpm list --parseable --long`, which is one 'path:name@version' entry per
- * installed package
+ * Parse bun `pm ls` tree lines and pnpm `list --parseable --long` path:name@version lines
  * @param {string} output command output
  * @returns {Package[]} installed packages
  * @internal
  */
-function parsePnpmList(output: string): Package[] {
+function parsePackageList(output: string): Package[] {
   return output.split(/\r?\n/).reduce<Package[]>((packages, line) => {
-    const scPackage = PNPM_PACKAGE_ENTRY.exec(line.trim());
+    const scPackage = PACKAGE_ENTRY.exec(line.trim());
 
     return scPackage ? [...packages, { name: scPackage[1], version: scPackage[2] }] : packages;
   }, []);
@@ -239,20 +233,6 @@ function parseYarnClassicList(output: string): Package[] {
 
       return scPackage ? [...treePackages, scPackage] : treePackages;
     }, packages);
-  }, []);
-}
-
-/**
- * Parse the dependency tree printed by `bun pm ls`
- * @param {string} output command output
- * @returns {Package[]} installed packages
- * @internal
- */
-function parseBunPackageList(output: string): Package[] {
-  return output.split(/\r?\n/).reduce<Package[]>((packages, line) => {
-    const match = BUN_PACKAGE_ENTRY.exec(line.trim());
-
-    return match ? [...packages, { name: match[1], version: match[2] }] : packages;
   }, []);
 }
 
