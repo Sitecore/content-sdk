@@ -122,7 +122,8 @@ import { LinkProps as LinkProps_3 } from 'next/link';
 import { LLMS_TXT_CONTENT_TYPE } from '@sitecore-content-sdk/content/site';
 import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
-import { Metadata } from '@sitecore-content-sdk/core/node-tools';
+import type { Metadata } from 'next';
+import { Metadata as Metadata_2 } from '@sitecore-content-sdk/core/node-tools';
 import { MetadataFields } from '@sitecore-content-sdk/react';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
@@ -142,6 +143,7 @@ import { OpenGraphImageField } from '@sitecore-content-sdk/react';
 import { OpenGraphImageFieldValue } from '@sitecore-content-sdk/react';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { PageMetadataFields } from '@sitecore-content-sdk/react';
+import type { PageMetadataFields as PageMetadataFields_2 } from '@sitecore-content-sdk/content/layout';
 import { PageMode } from '@sitecore-content-sdk/content/client';
 import { PageOptions } from '@sitecore-content-sdk/content/client';
 import { PersonalizeAdapter } from '@sitecore-content-sdk/personalize/internal';
@@ -486,7 +488,7 @@ export class EditingConfigMiddleware {
 // @public
 export type EditingConfigMiddlewareConfig = {
     components: ComponentMap<NextjsContentSdkComponent>;
-    metadata: Metadata;
+    metadata: Metadata_2;
 };
 
 // Warning: (ae-forgotten-export) The symbol "RenderMiddlewareBase" needs to be exported by the entry point api-surface.d.ts
@@ -636,6 +638,9 @@ export { getGroomedVariantIds }
 export const getHeadersForPropagation: (headers: IncomingHttpHeaders | Headers) => {
     [key: string]: string;
 };
+
+// @public
+export function getPageMetadata(route?: RouteData<PageMetadataRouteFields> | null, defaultTitle?: string): Metadata;
 
 export { getPersonalizedRewrite }
 
@@ -813,6 +818,11 @@ export { OpenGraphImageFieldValue }
 export { Page }
 
 export { PageMetadataFields }
+
+// @public
+export type PageMetadataRouteFields = PageMetadataFields_2 & {
+    Title?: Field;
+};
 
 export { PageMode }
 

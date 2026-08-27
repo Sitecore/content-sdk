@@ -1008,6 +1008,8 @@ export interface OpenGraphFields {
     baseOgImage?: OpenGraphImageField;
     // (undocumented)
     baseOgTitle?: Field<string>;
+    // (undocumented)
+    baseOgType?: Field<string>;
 }
 
 // @public
@@ -1312,10 +1314,12 @@ export interface RouteData<Fields = Record<string, Field | Item | Item[]>> {
     name: string;
     // (undocumented)
     placeholders: PlaceholdersData;
+    published?: string;
     // (undocumented)
     templateId?: string;
     // (undocumented)
     templateName?: string;
+    updated?: string;
 }
 
 // @public

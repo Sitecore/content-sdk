@@ -39,6 +39,7 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
   const ogTitle = fields?.baseOgTitle?.value;
   const ogDescription = fields?.baseOgDescription?.value;
   const ogImage = fields?.baseOgImage?.value;
+  const ogImageSrc = ogImage?.src;
   const ogType = fields?.baseOgType?.value;
   const creationTimeProperty = ogType ? OG_CREATION_TIME_PROPERTY[ogType] : undefined;
   const creationTime = creationTimeProperty ? route?.published : undefined;
@@ -58,10 +59,10 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
         {author && <meta name="author" content={author} />}
         {ogTitle && <meta property="og:title" content={ogTitle} />}
         {ogDescription && <meta property="og:description" content={ogDescription} />}
-        {ogImage?.src && <meta property="og:image" content={ogImage.src} />}
-        {ogImage?.src && ogImage?.width && <meta property="og:image:width" content={ogImage.width} />}
-        {ogImage?.src && ogImage?.height && <meta property="og:image:height" content={ogImage.height} />}
-        {ogImage?.src && ogImage?.alt && <meta property="og:image:alt" content={ogImage.alt} />}
+        {ogImageSrc && <meta property="og:image" content={ogImageSrc} />}
+        {ogImageSrc && ogImage?.width && <meta property="og:image:width" content={ogImage.width} />}
+        {ogImageSrc && ogImage?.height && <meta property="og:image:height" content={ogImage.height} />}
+        {ogImageSrc && ogImage?.alt && <meta property="og:image:alt" content={ogImage.alt} />}
         {ogType && <meta property="og:type" content={ogType} />}
         {creationTimeProperty && creationTime && <meta property={creationTimeProperty} content={creationTime} />}
         {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}

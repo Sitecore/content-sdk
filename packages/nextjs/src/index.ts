@@ -199,3 +199,5 @@ export {
   collectSitecorePageCacheTags,
   type CollectSitecorePageCacheTagsParams,
 } from './cache/sitecore-page-cache-tags';
+
+export { getPageMetadata, type PageMetadataRouteFields } from './metadata/page-metadata';

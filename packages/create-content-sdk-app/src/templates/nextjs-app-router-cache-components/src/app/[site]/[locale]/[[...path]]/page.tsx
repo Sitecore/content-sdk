@@ -1,5 +1,5 @@
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
-import { setCachedPageParams } from '@sitecore-content-sdk/nextjs';
+import { setCachedPageParams, getPageMetadata } from '@sitecore-content-sdk/nextjs';
 import { notFound } from 'next/navigation';
 import { draftMode } from 'next/headers';
 import { Metadata } from 'next';
@@ -12,7 +12,7 @@ import scConfig from 'sitecore.config';
 import client from 'src/lib/sitecore-client';
 import { getSitecorePage } from 'src/lib/cache/get-sitecore-page';
 import { BUILD_VALIDATION_SITE, isBuildValidationSite } from 'src/lib/sitecore-build-validation';
-import Layout, { RouteFields } from 'src/Layout';
+import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
@@ -83,15 +83,6 @@ export const generateStaticParams = async () => {
   ];
 };
 <% } -%>
-// Open Graph types that define a creation-time field, and which Metadata.openGraph key it maps to
-const OG_CREATION_TIME_FIELD: Record<string, 'publishedTime' | 'releaseDate'> = {
-  article: 'publishedTime',
-  book: 'releaseDate',
-  'music.album': 'releaseDate',
-  'video.movie': 'releaseDate',
-  'video.episode': 'releaseDate',
-};
-
 // Metadata fields for the page. Mirrors the Page draft-mode branching so the <title> matches the body.
 export const generateMetadata = async ({ params, searchParams }: PageProps): Promise<Metadata> => {
   const { path, site, locale } = await params;
@@ -114,46 +105,5 @@ export const generateMetadata = async ({ params, searchParams }: PageProps): Pro
     page = await getSitecorePage({ site, locale, path: path ?? [] });
   }
 
-  const fields = page?.layout.sitecore.route?.fields as RouteFields;
-
-  const title = fields?.Title?.value?.toString() || 'Page';
-  const metaTitle = fields?.baseMetadataTitle?.value;
-  const description = fields?.baseMetadataDescription?.value;
-  const keywords = fields?.baseMetadataKeywords?.value;
-  const author = fields?.baseMetadataAuthor?.value;
-  const ogTitle = fields?.baseOgTitle?.value;
-  const ogDescription = fields?.baseOgDescription?.value;
-  const ogImage = fields?.baseOgImage?.value;
-  const ogType = fields?.baseOgType?.value;
-  const creationTimeField = ogType ? OG_CREATION_TIME_FIELD[ogType] : undefined;
-  const creationTime = creationTimeField ? page?.layout.sitecore.route?.published : undefined;
-  // article is the only Open Graph type with a distinct update-time field
-  const modifiedTime = ogType === 'article' ? page?.layout.sitecore.route?.updated : undefined;
-
-  return {
-    title,
-    ...(metaTitle && { other: { title: metaTitle } }),
-    ...(description && { description }),
-    ...(keywords && { keywords }),
-    ...(author && { authors: [{ name: author }] }),
-    ...((ogTitle || ogDescription || ogImage?.src || ogType) && {
-      openGraph: {
-        ...(ogTitle && { title: ogTitle }),
-        ...(ogDescription && { description: ogDescription }),
-        ...(ogImage?.src && {
-          images: [
-            {
-              url: ogImage.src,
-              ...(ogImage.width && { width: ogImage.width }),
-              ...(ogImage.height && { height: ogImage.height }),
-              ...(ogImage.alt && { alt: ogImage.alt }),
-            },
-          ],
-        }),
-        ...(ogType && { type: ogType }),
-        ...(creationTimeField && creationTime && { [creationTimeField]: creationTime }),
-        ...(modifiedTime && { modifiedTime }),
-      } as Metadata['openGraph'],
-    }),
-  };
+  return getPageMetadata(page?.layout.sitecore.route);
 };
