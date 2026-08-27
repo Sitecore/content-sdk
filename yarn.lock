@@ -2125,14 +2125,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@json-render/react@npm:0.19.0":
-  version: 0.19.0
-  resolution: "@json-render/react@npm:0.19.0"
+"@json-render/core@npm:0.20.0":
+  version: 0.20.0
+  resolution: "@json-render/core@npm:0.20.0"
   dependencies:
-    "@json-render/core": "npm:0.19.0"
+    zod: "npm:^4.3.6"
+  peerDependencies:
+    zod: ^4.0.0
+  checksum: 10/9db4673779e313693b278c0a91a0b70c4b37d1e27a7e68be344442db45e9e1ae2da5eb478f581e39b8bfed37c4fba8a8fb7e1997f51da9b9887bb9d7a4d1c5d4
+  languageName: node
+  linkType: hard
+
+"@json-render/react@npm:0.20.0":
+  version: 0.20.0
+  resolution: "@json-render/react@npm:0.20.0"
+  dependencies:
+    "@json-render/core": "npm:0.20.0"
   peerDependencies:
     react: ^19.2.3
-  checksum: 10/52f53740204521f04749fb93b6aa4e7181387baab9588c213781017e2345e8ff1711074b2720c9603a43103864b3c128a1c96a089d6132c6d71d50c3817821a9
+  checksum: 10/e20284ec1bd52406fd6d69080c70bea2336954d6111e664dd2f9d5c3ecb34de0451c7e59449fe29ba622a8a971d3852590d9c47d9e0ae170934cbd585982ffde
   languageName: node
   linkType: hard
 
@@ -3639,8 +3650,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
-    "@json-render/core": "npm:0.19.0"
-    "@json-render/react": "npm:0.19.0"
+    "@json-render/core": "npm:0.20.0"
+    "@json-render/react": "npm:0.20.0"
     "@sitecore-content-sdk/analytics-core": "npm:^2.1.0"
     "@sitecore-content-sdk/content": "npm:^2.2.0"
     "@sitecore-content-sdk/core": "npm:^2.1.1"
