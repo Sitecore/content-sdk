@@ -6,7 +6,7 @@
 
 # Interface: AngularSitecoreConfigInput
 
-Defined in: [packages/angular/src/config/define-config.ts:32](https://github.com/Sitecore/content-sdk/blob/b0823f3a364598af8034e451448160c20b885d18/packages/angular/src/config/define-config.ts#L32)
+Defined in: [packages/angular/src/config/define-config.ts:32](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/angular/src/config/define-config.ts#L32)
 
 Sitecore configuration input for Angular apps. Extends the base
 [SitecoreConfigInput](../content/config/type-aliases/SitecoreConfigInput.md) with an `angular` section. `redirects.locales` is intentionally
@@ -23,7 +23,7 @@ source of truth for the locale list.
 
 > `optional` **angular?**: `object`
 
-Defined in: [packages/angular/src/config/define-config.ts:34](https://github.com/Sitecore/content-sdk/blob/b0823f3a364598af8034e451448160c20b885d18/packages/angular/src/config/define-config.ts#L34)
+Defined in: [packages/angular/src/config/define-config.ts:34](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/angular/src/config/define-config.ts#L34)
 
 Angular-specific configuration.
 
@@ -292,7 +292,7 @@ custom layout query
 
 > `optional` **multisite?**: `object`
 
-Defined in: [packages/angular/src/config/define-config.ts:62](https://github.com/Sitecore/content-sdk/blob/b0823f3a364598af8034e451448160c20b885d18/packages/angular/src/config/define-config.ts#L62)
+Defined in: [packages/angular/src/config/define-config.ts:62](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/angular/src/config/define-config.ts#L62)
 
 #### enabled?
 

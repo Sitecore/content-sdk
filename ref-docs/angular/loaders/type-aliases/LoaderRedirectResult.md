@@ -8,7 +8,7 @@
 
 > **LoaderRedirectResult** = `object`
 
-Defined in: [packages/angular/src/loaders/models.ts:124](https://github.com/Sitecore/content-sdk/blob/b0823f3a364598af8034e451448160c20b885d18/packages/angular/src/loaders/models.ts#L124)
+Defined in: [packages/angular/src/loaders/models.ts:124](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/angular/src/loaders/models.ts#L124)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/angular/src/loaders/models.ts:124](https://github.com/Site
 
 > **loaderRedirectTarget**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:125](https://github.com/Sitecore/content-sdk/blob/b0823f3a364598af8034e451448160c20b885d18/packages/angular/src/loaders/models.ts#L125)
+Defined in: [packages/angular/src/loaders/models.ts:125](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/angular/src/loaders/models.ts#L125)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [packages/angular/src/loaders/models.ts:125](https://github.com/Site
 
 > `optional` **status?**: `number`
 
-Defined in: [packages/angular/src/loaders/models.ts:126](https://github.com/Sitecore/content-sdk/blob/b0823f3a364598af8034e451448160c20b885d18/packages/angular/src/loaders/models.ts#L126)
+Defined in: [packages/angular/src/loaders/models.ts:126](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/angular/src/loaders/models.ts#L126)

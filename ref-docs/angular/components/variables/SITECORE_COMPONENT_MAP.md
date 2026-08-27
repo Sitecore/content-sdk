@@ -8,7 +8,7 @@
 
 > `const` **SITECORE\_COMPONENT\_MAP**: `InjectionToken`\<[`ComponentMap`](../type-aliases/ComponentMap.md)\>
 
-Defined in: [packages/angular/src/components/tokens.ts:10](https://github.com/Sitecore/content-sdk/blob/b0823f3a364598af8034e451448160c20b885d18/packages/angular/src/components/tokens.ts#L10)
+Defined in: [packages/angular/src/components/tokens.ts:10](https://github.com/Sitecore/content-sdk/blob/fbd07f45d77bcc00772e33d09bde850e688b09b2/packages/angular/src/components/tokens.ts#L10)
 
 Injection token for the Sitecore component map.
 Provide this at the application level via `provideSitecoreAngular` or
