@@ -1,4 +1,5 @@
 ---
+'@sitecore-content-sdk/content': patch
 '@sitecore-content-sdk/react': patch
 ---
 
