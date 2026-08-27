@@ -16,6 +16,15 @@ interface RouteFields extends PageMetadataFields {
   Title?: Field;
 }
 
+// Open Graph types that define a creation-time meta tag, and its exact property name per the Open Graph protocol
+const OG_CREATION_TIME_PROPERTY: Record<string, string> = {
+  article: 'article:published_time',
+  book: 'book:release_date',
+  'music.album': 'music:release_date',
+  'video.movie': 'video:release_date',
+  'video.episode': 'video:release_date',
+};
+
 const Layout = ({ page }: LayoutProps): JSX.Element => {
   const { layout, mode } = page;
   const { route } = layout.sitecore;
@@ -31,8 +40,9 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
   const ogDescription = fields?.baseOgDescription?.value;
   const ogImage = fields?.baseOgImage?.value;
   const ogType = fields?.baseOgType?.value;
-  // article:published_time / article:modified_time are only defined by the Open Graph protocol for the "article" type
-  const publishedTime = ogType === 'article' ? route?.published : undefined;
+  const creationTimeProperty = ogType ? OG_CREATION_TIME_PROPERTY[ogType] : undefined;
+  const creationTime = creationTimeProperty ? route?.published : undefined;
+  // article is the only Open Graph type with a distinct update-time tag
   const modifiedTime = ogType === 'article' ? route?.updated : undefined;
 
   return (
@@ -53,7 +63,7 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
         {ogImage?.src && ogImage?.height && <meta property="og:image:height" content={ogImage.height} />}
         {ogImage?.src && ogImage?.alt && <meta property="og:image:alt" content={ogImage.alt} />}
         {ogType && <meta property="og:type" content={ogType} />}
-        {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+        {creationTimeProperty && creationTime && <meta property={creationTimeProperty} content={creationTime} />}
         {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
       </Head>
 

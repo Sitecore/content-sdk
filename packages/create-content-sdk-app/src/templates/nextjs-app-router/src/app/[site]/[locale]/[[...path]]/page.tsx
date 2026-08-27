@@ -68,6 +68,15 @@ export const generateStaticParams = async () => {
   return [];
 };
 <% } -%>
+// Open Graph types that define a creation-time field, and which Metadata.openGraph key it maps to
+const OG_CREATION_TIME_FIELD: Record<string, 'publishedTime' | 'releaseDate'> = {
+  article: 'publishedTime',
+  book: 'releaseDate',
+  'music.album': 'releaseDate',
+  'video.movie': 'releaseDate',
+  'video.episode': 'releaseDate',
+};
+
 // Metadata fields for the page.
 export const generateMetadata = async ({ params }: PageProps): Promise<Metadata> => {
   const { path, site, locale } = await params;
@@ -85,8 +94,9 @@ export const generateMetadata = async ({ params }: PageProps): Promise<Metadata>
   const ogDescription = fields?.baseOgDescription?.value;
   const ogImage = fields?.baseOgImage?.value;
   const ogType = fields?.baseOgType?.value;
-  // article:published_time / article:modified_time are only defined by the Open Graph protocol for the "article" type
-  const publishedTime = ogType === 'article' ? page?.layout.sitecore.route?.published : undefined;
+  const creationTimeField = ogType ? OG_CREATION_TIME_FIELD[ogType] : undefined;
+  const creationTime = creationTimeField ? page?.layout.sitecore.route?.published : undefined;
+  // article is the only Open Graph type with a distinct update-time field
   const modifiedTime = ogType === 'article' ? page?.layout.sitecore.route?.updated : undefined;
 
   return {
@@ -110,7 +120,7 @@ export const generateMetadata = async ({ params }: PageProps): Promise<Metadata>
           ],
         }),
         ...(ogType && { type: ogType }),
-        ...(publishedTime && { publishedTime }),
+        ...(creationTimeField && creationTime && { [creationTimeField]: creationTime }),
         ...(modifiedTime && { modifiedTime }),
       } as Metadata['openGraph'],
     }),
