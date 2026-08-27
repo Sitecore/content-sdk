@@ -275,12 +275,6 @@ function _getImportMap(paths: string[]) {
 
         if (!resolvedImportPath) {
           console.warn('[Codegen] Could not resolve a file for import %s', moduleName);
-          console.log('Diag data %o', {
-            moduleName,
-            codeFileFullPath,
-            cliCompilerOptions,
-            resolvedModule,
-          });
           return;
         }
 
