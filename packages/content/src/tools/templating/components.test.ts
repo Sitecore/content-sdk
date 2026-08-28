@@ -1,7 +1,13 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { getComponentList, filterComponentsByType, toPascalCase } from './components';
+import {
+  getComponentList,
+  filterComponentsByType,
+  toPascalCase,
+  buildVariantSiblingIndex,
+  isVariantComponent,
+} from './components';
 import { ComponentFile, ComponentFileWithType } from './components';
 import path from 'path';
 
@@ -456,6 +462,42 @@ describe('components', () => {
     it('should return all components when all types specified', () => {
       const result = filterComponentsByType(mockComponents, ['client', 'server', 'universal']);
       expect(result).to.have.lengthOf(3);
+    });
+  });
+
+  describe('isVariantComponent (shared variant detection)', () => {
+    it('treats a plain (dotless) name as a base component, not a variant', () => {
+      const index = buildVariantSiblingIndex([
+        { componentName: 'Promo', importPathNoExt: 'src/components/Promo' },
+      ]);
+      expect(isVariantComponent('Promo', 'src/components/Promo', index)).to.equal(false);
+    });
+
+    it('treats a dotted name WITH a base sibling as a variant', () => {
+      const index = buildVariantSiblingIndex([
+        { componentName: 'Promo', importPathNoExt: 'src/components/Promo' },
+        { componentName: 'Promo.Cooler', importPathNoExt: 'src/components/Promo.Cooler' },
+      ]);
+      expect(isVariantComponent('Promo.Cooler', 'src/components/Promo.Cooler', index)).to.equal(
+        true
+      );
+    });
+
+    it('treats a dotted name WITHOUT a base sibling as a component (e.g. Angular foo.component)', () => {
+      // Only `content-block.component` resolved — there is no base `content-block` sibling.
+      const index = buildVariantSiblingIndex([
+        {
+          componentName: 'content-block.component',
+          importPathNoExt: 'src/app/components/content-block.component',
+        },
+      ]);
+      expect(
+        isVariantComponent(
+          'content-block.component',
+          'src/app/components/content-block.component',
+          index
+        )
+      ).to.equal(false);
     });
   });
 });

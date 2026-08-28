@@ -148,8 +148,6 @@ export interface ComponentParams {
 export interface ComponentPreviewEventArgs extends DesignLibraryEvent {
     // (undocumented)
     message: GeneratedComponentData;
-    // Warning: (ae-forgotten-export) The symbol "DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME" needs to be exported by the entry point api-surface.d.ts
-    //
     // (undocumented)
     name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
 }
@@ -253,6 +251,9 @@ export const defineCliConfig: (cliConfig: SitecoreCliConfigInput) => SitecoreCli
 
 // @public
 export const defineConfig: (config?: SitecoreConfigInput, env?: Record<string, string | undefined>) => SitecoreConfig;
+
+// @internal
+export const DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME = "component:generation:component-preview";
 
 // @public
 export enum DesignLibraryMode {
@@ -497,10 +498,42 @@ export type ExperimentalFeatureStatus = ExperimentalFeatureData & {
     enabled: boolean;
 };
 
+// @public
+export type ExtractedFile = {
+    name: string;
+    path: string;
+    type: ExtractedFileType;
+    labels?: Record<string, unknown>;
+};
+
+// @public
+export enum ExtractedFileType {
+    // (undocumented)
+    Component = "component",
+    // (undocumented)
+    Json = "json",
+    // (undocumented)
+    PackageJson = "package.json",
+    // (undocumented)
+    Style = "style",
+    // (undocumented)
+    Template = "template",
+    // (undocumented)
+    Variant = "variant"
+}
+
 // Warning: (ae-forgotten-export) The symbol "_extractFiles" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export let extractFiles: typeof _extractFiles;
+
+// @public
+export type ExtractFilesConfig = {
+    componentMapPath?: string;
+    clientComponentMapPath?: string;
+    customValidateDeployContext?: () => boolean;
+    gatherCompanionFiles?: (componentFilePath: string, componentKey: string) => ExtractedFile[];
+};
 
 // @internal
 export function fetchGeneratedComponentFromCache(id: string, token: string, edgeUrl?: string): Promise<GeneratedComponentData>;
@@ -1582,6 +1615,9 @@ const updateImageUrl: (url: string, params?: {
     [key: string]: string | number | undefined;
 } | null, mediaUrlPrefix?: RegExp) => string;
 
+// @internal
+export const validateEvent: (e: MessageEvent, eventName: string) => boolean;
+
 // @internal (undocumented)
 export const VARIANT_PREFIX = "_variantId_";
 
@@ -1609,7 +1645,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 // Warnings were encountered during analysis:
 //
 // src/client/sitecore-client.ts:69:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
-// src/editing/codegen/preview.ts:115:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
+// src/editing/codegen/preview.ts:116:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
