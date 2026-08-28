@@ -8,7 +8,7 @@
 
 > `const` **EDITING\_COMPONENT\_ID**: `"editing-component"` = `"editing-component"`
 
-Defined in: content/types/layout/models.d.ts:173
+Defined in: content/types/layout/models.d.ts:177
 
 **`Internal`**
 

@@ -6,7 +6,7 @@
 
 # Interface: GlobalLoaderCacheConfig
 
-Defined in: [packages/angular/src/server/cache/models.ts:38](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/server/cache/models.ts#L38)
+Defined in: [packages/angular/src/server/cache/models.ts:38](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/server/cache/models.ts#L38)
 
 Global config for the loader cache. Consumed by `createLoaderCache()` in
 the app's `server.ts`.
@@ -28,7 +28,7 @@ in-memory implementation.
 
 > `optional` **defaultLocale?**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:201](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/loaders/models.ts#L201)
+Defined in: [packages/angular/src/loaders/models.ts:201](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/loaders/models.ts#L201)
 
 Fallback locale for tag helpers when a site entry has no `language`. Defaults to `'en'`.
 
@@ -42,7 +42,7 @@ Fallback locale for tag helpers when a site entry has no `language`. Defaults to
 
 > `optional` **defaultSiteName?**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:194](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/loaders/models.ts#L194)
+Defined in: [packages/angular/src/loaders/models.ts:194](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/loaders/models.ts#L194)
 
 Default site name for tag helpers and admin tooling. Defaults to `'default'`.
 
@@ -56,7 +56,7 @@ Default site name for tag helpers and admin tooling. Defaults to `'default'`.
 
 > `optional` **driver?**: `Driver`\<`any`, `any`\>
 
-Defined in: [packages/angular/src/server/cache/models.ts:43](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/server/cache/models.ts#L43)
+Defined in: [packages/angular/src/server/cache/models.ts:43](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/server/cache/models.ts#L43)
 
 Unstorage `Driver` instance. Pass an imported driver — the cache wraps it
 with `createStorage({ driver })` internally. Omit for the in-memory default.
@@ -67,7 +67,7 @@ with `createStorage({ driver })` internally. Omit for the in-memory default.
 
 > `optional` **enabled?**: `boolean`
 
-Defined in: [packages/angular/src/loaders/models.ts:212](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/loaders/models.ts#L212)
+Defined in: [packages/angular/src/loaders/models.ts:212](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/loaders/models.ts#L212)
 
 Master switch — when false, every call falls through to the raw loader.
 
@@ -81,7 +81,7 @@ Master switch — when false, every call falls through to the raw loader.
 
 > `optional` **revalidate?**: `number`
 
-Defined in: [packages/angular/src/loaders/models.ts:210](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/loaders/models.ts#L210)
+Defined in: [packages/angular/src/loaders/models.ts:210](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/loaders/models.ts#L210)
 
 TTL in seconds. Positive → expires after N seconds; `0` or negative → never expires.
 
@@ -95,7 +95,7 @@ TTL in seconds. Positive → expires after N seconds; `0` or negative → never 
 
 > `optional` **sites?**: `string`[]
 
-Defined in: [packages/angular/src/loaders/models.ts:199](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/loaders/models.ts#L199)
+Defined in: [packages/angular/src/loaders/models.ts:199](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/loaders/models.ts#L199)
 
 Site names used by revalidation middleware to fan out dictionary loader tags
 (`sc:loader:dictionary:<site>:<locale>`) on every webhook call.
@@ -110,7 +110,7 @@ Site names used by revalidation middleware to fan out dictionary loader tags
 
 > `optional` **tags?**: `string`[]
 
-Defined in: [packages/angular/src/loaders/models.ts:217](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/loaders/models.ts#L217)
+Defined in: [packages/angular/src/loaders/models.ts:217](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/loaders/models.ts#L217)
 
 Custom tags applied to every entry this loader writes. Merged with built-in
 OSR tags (self-key, `sc:site`, `sc:locale`, and `sc:item` for page loaders).
