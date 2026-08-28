@@ -8,7 +8,7 @@
 
 > **createEditingRenderMiddleware**(`options?`): [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:167](https://github.com/Sitecore/content-sdk/blob/b0823f3a364598af8034e451448160c20b885d18/packages/angular/src/server/middleware/editing-render-middleware.ts#L167)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:217](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/server/middleware/editing-render-middleware.ts#L217)
 
 Express middleware that handles the editing render endpoint
 (default path: `/api/editing/render`). On a valid editor request, it

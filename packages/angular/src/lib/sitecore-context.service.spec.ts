@@ -4,7 +4,10 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Component, PLATFORM_ID, REQUEST } from '@angular/core';
 import { provideRouter, Router, RouterOutlet, type ResolveFn } from '@angular/router';
 import type { Page } from '@sitecore-content-sdk/content/client';
-import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
+import {
+  LayoutServicePageState,
+  EDITING_COMPONENT_PLACEHOLDER,
+} from '@sitecore-content-sdk/content/layout';
 import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 import { SitecoreContextService } from './sitecore-context.service';
 import { SITECORE_CONFIG_TOKEN } from './tokens';
@@ -385,5 +388,84 @@ describe('SitecoreContextService effectiveLocale', () => {
     const service = await navigateWithContext('/about', hostFixture);
     expect(service.urlLocale()).toBeNull();
     expect(service.effectiveLocale()).toBe('en');
+  });
+});
+
+describe('SitecoreContextService design library signals', () => {
+  let hostFixture: ComponentFixture<RouterHostCmp>;
+
+  const editingRendering = {
+    componentName: 'Hero',
+    uid: 'uid-1',
+    fields: {},
+    params: {},
+  };
+
+  function makeDlPage(options: {
+    isDesignLibrary?: boolean;
+    isVariantGeneration?: boolean;
+    withRendering?: boolean;
+  }): Page {
+    return makePage({
+      mode: {
+        name: LayoutServicePageState.Normal,
+        isNormal: false,
+        isPreview: false,
+        isEditing: false,
+        isDesignLibrary: options.isDesignLibrary ?? true,
+        designLibrary: { isVariantGeneration: options.isVariantGeneration ?? false },
+      },
+      layout: {
+        sitecore: {
+          context: {},
+          route: options.withRendering
+            ? { name: 'r', placeholders: { [EDITING_COMPONENT_PLACEHOLDER]: [editingRendering] } }
+            : null,
+        },
+      },
+    } as unknown as Partial<Page>);
+  }
+
+  function configureWithPage(page: Page): void {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [RouterHostCmp, BlankCmp],
+      providers: [
+        provideRouter(appLikeRoutes({ page })),
+        { provide: SITECORE_CONFIG_TOKEN, useValue: makeConfig([...TEST_LOCALES]) },
+        SitecoreContextService,
+      ],
+    });
+    hostFixture = TestBed.createComponent(RouterHostCmp);
+  }
+
+  it('should report non-design-library pages as not design library', async () => {
+    configureWithPage(makePage());
+    const service = await navigateWithContext('/de/about', hostFixture);
+    expect(service.isDesignLibrary()).toBe(false);
+    expect(service.isVariantGeneration()).toBe(false);
+    expect(service.editingRendering()).toBeNull();
+  });
+
+  it('should expose the editing rendering for a library-mode page', async () => {
+    configureWithPage(makeDlPage({ withRendering: true }));
+    const service = await navigateWithContext('/de/about', hostFixture);
+    expect(service.isDesignLibrary()).toBe(true);
+    expect(service.isVariantGeneration()).toBe(false);
+    expect(service.editingRendering()).toBe(editingRendering);
+  });
+
+  it('should report variant-generation mode', async () => {
+    configureWithPage(makeDlPage({ withRendering: true, isVariantGeneration: true }));
+    const service = await navigateWithContext('/de/about', hostFixture);
+    expect(service.isDesignLibrary()).toBe(true);
+    expect(service.isVariantGeneration()).toBe(true);
+  });
+
+  it('should return null editing rendering when the placeholder is absent', async () => {
+    configureWithPage(makeDlPage({ withRendering: false }));
+    const service = await navigateWithContext('/de/about', hostFixture);
+    expect(service.isDesignLibrary()).toBe(true);
+    expect(service.editingRendering()).toBeNull();
   });
 });

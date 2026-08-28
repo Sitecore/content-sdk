@@ -8,7 +8,7 @@
 
 > **MetadataImportFn** = () => `Promise`\<\{ `default`: `Metadata`; \} \| `Metadata`\>
 
-Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:21](https://github.com/Sitecore/content-sdk/blob/b0823f3a364598af8034e451448160c20b885d18/packages/angular/src/server/middleware/editing-config-middleware.ts#L21)
+Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:21](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/angular/src/server/middleware/editing-config-middleware.ts#L21)
 
 Factory that dynamically imports application metadata (typically
 `.sitecore/metadata.json` emitted by `sitecore-tools`).

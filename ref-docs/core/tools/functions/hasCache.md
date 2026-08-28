@@ -8,7 +8,7 @@
 
 > **hasCache**(`key`): `boolean`
 
-Defined in: [packages/core/src/tools/globalCache.ts:54](https://github.com/Sitecore/content-sdk/blob/b0823f3a364598af8034e451448160c20b885d18/packages/core/src/tools/globalCache.ts#L54)
+Defined in: [packages/core/src/tools/globalCache.ts:54](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/core/src/tools/globalCache.ts#L54)
 
 **`Internal`**
 
