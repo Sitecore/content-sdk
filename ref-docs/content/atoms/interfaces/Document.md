@@ -6,7 +6,7 @@
 
 # Interface: Document
 
-Defined in: [content/src/atoms/types.ts:69](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/content/src/atoms/types.ts#L69)
+Defined in: [content/src/atoms/types.ts:69](https://github.com/Sitecore/content-sdk/blob/2db997286d1a49ba2de622f5535feed2205c999a/packages/content/src/atoms/types.ts#L69)
 
 **`Internal`**
 
@@ -22,7 +22,7 @@ A document is a JSON object that conforms to the JSON Schema specification.
 
 > **elements**: `Record`\<`string`, `UIElement`\>
 
-Defined in: content/node\_modules/@json-render/core/dist/store-utils-D98Czbil.d.ts:384
+Defined in: content/node\_modules/@json-render/core/dist/store-utils-CGwRAVOR.d.ts:408
 
 Flat map of elements by key
 
@@ -36,7 +36,7 @@ Flat map of elements by key
 
 > **name**: `string`
 
-Defined in: [content/src/atoms/types.ts:71](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/content/src/atoms/types.ts#L71)
+Defined in: [content/src/atoms/types.ts:71](https://github.com/Sitecore/content-sdk/blob/2db997286d1a49ba2de622f5535feed2205c999a/packages/content/src/atoms/types.ts#L71)
 
 Human-readable identifier of the document.
 
@@ -46,7 +46,7 @@ Human-readable identifier of the document.
 
 > **root**: `string`
 
-Defined in: content/node\_modules/@json-render/core/dist/store-utils-D98Czbil.d.ts:382
+Defined in: content/node\_modules/@json-render/core/dist/store-utils-CGwRAVOR.d.ts:406
 
 Root element key
 
@@ -60,7 +60,7 @@ Root element key
 
 > `optional` **state?**: `Record`\<`string`, `unknown`\>
 
-Defined in: content/node\_modules/@json-render/core/dist/store-utils-D98Czbil.d.ts:387
+Defined in: content/node\_modules/@json-render/core/dist/store-utils-CGwRAVOR.d.ts:411
 
 Optional initial state to seed the state model.
  Components using statePath will read from / write to this state.

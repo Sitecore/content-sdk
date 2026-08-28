@@ -6,7 +6,7 @@
 
 # Interface: AtomsConfig
 
-Defined in: [packages/react/src/atoms/types.ts:68](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/react/src/atoms/types.ts#L68)
+Defined in: [packages/react/src/atoms/types.ts:68](https://github.com/Sitecore/content-sdk/blob/2db997286d1a49ba2de622f5535feed2205c999a/packages/react/src/atoms/types.ts#L68)
 
 Props the developer passes to the provider for atoms support.
 
@@ -16,7 +16,7 @@ Props the developer passes to the provider for atoms support.
 
 > **catalog**: `Catalog`\<`any`, [`AtomsCatalogInput`](../type-aliases/AtomsCatalogInput.md)\>
 
-Defined in: [packages/react/src/atoms/types.ts:70](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/react/src/atoms/types.ts#L70)
+Defined in: [packages/react/src/atoms/types.ts:70](https://github.com/Sitecore/content-sdk/blob/2db997286d1a49ba2de622f5535feed2205c999a/packages/react/src/atoms/types.ts#L70)
 
 The json-render catalog (schema + component/action definitions).
 
@@ -26,7 +26,7 @@ The json-render catalog (schema + component/action definitions).
 
 > `optional` **compileCssAction?**: (`classes`) => `Promise`\<`string`\>
 
-Defined in: [packages/react/src/atoms/types.ts:97](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/react/src/atoms/types.ts#L97)
+Defined in: [packages/react/src/atoms/types.ts:97](https://github.com/Sitecore/content-sdk/blob/2db997286d1a49ba2de622f5535feed2205c999a/packages/react/src/atoms/types.ts#L97)
 
 Optional Server Action used to compile CSS for dynamic Document class names
 during editing (Design Library) sessions.
@@ -67,7 +67,7 @@ import { compileCssForDocumentAction } from '@sitecore-content-sdk/nextjs/server
 
 > `optional` **navigate?**: (`path`) => `void`
 
-Defined in: [packages/react/src/atoms/types.ts:74](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/react/src/atoms/types.ts#L74)
+Defined in: [packages/react/src/atoms/types.ts:74](https://github.com/Sitecore/content-sdk/blob/2db997286d1a49ba2de622f5535feed2205c999a/packages/react/src/atoms/types.ts#L74)
 
 Optional navigate function to be passed to action handlers for navigation purposes.
 
@@ -87,6 +87,6 @@ Optional navigate function to be passed to action handlers for navigation purpos
 
 > **registry**: `DefineRegistryResult`
 
-Defined in: [packages/react/src/atoms/types.ts:72](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/react/src/atoms/types.ts#L72)
+Defined in: [packages/react/src/atoms/types.ts:72](https://github.com/Sitecore/content-sdk/blob/2db997286d1a49ba2de622f5535feed2205c999a/packages/react/src/atoms/types.ts#L72)
 
 The registry result returned by defineAtomsRegistry.

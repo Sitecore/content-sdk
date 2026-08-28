@@ -8,7 +8,7 @@
 
 > **AtomsCssCompiler** = (`classes`) => `Promise`\<`string`\>
 
-Defined in: [packages/core/src/atoms-css-compiler-registry.ts:19](https://github.com/Sitecore/content-sdk/blob/983922d9befd808bfc886e48936661b9e7afa003/packages/core/src/atoms-css-compiler-registry.ts#L19)
+Defined in: [packages/core/src/atoms-css-compiler-registry.ts:19](https://github.com/Sitecore/content-sdk/blob/2db997286d1a49ba2de622f5535feed2205c999a/packages/core/src/atoms-css-compiler-registry.ts#L19)
 
 Async function that accepts CSS class tokens and returns compiled CSS.
 
