@@ -1000,6 +1000,18 @@ declare namespace mediaApi {
 }
 export { mediaApi }
 
+// @public
+export interface MetadataFields {
+    // (undocumented)
+    baseMetadataAuthor?: Field<string>;
+    // (undocumented)
+    baseMetadataDescription?: Field<string>;
+    // (undocumented)
+    baseMetadataKeywords?: Field<string>;
+    // (undocumented)
+    baseMetadataTitle?: Field<string>;
+}
+
 // @internal
 export enum MetadataKind {
     // (undocumented)
@@ -1022,6 +1034,44 @@ export function normalizePersonalizedRewrite(pathname: string): string;
 export function normalizeSiteRewrite(pathname: string): string;
 
 // @public
+export const OG_CREATION_TIME_TAG: Record<string, string>;
+
+// @public
+export const OG_MODIFIED_TIME_TAG: Record<string, string>;
+
+// @public
+export interface OpenGraphFields {
+    // (undocumented)
+    baseOgDescription?: Field<string>;
+    // (undocumented)
+    baseOgImage?: OpenGraphImageField;
+    // (undocumented)
+    baseOgTitle?: Field<string>;
+    // (undocumented)
+    baseOgType?: Field<string>;
+}
+
+// @public
+export interface OpenGraphImageField {
+    // (undocumented)
+    value?: OpenGraphImageFieldValue;
+}
+
+// @public
+export interface OpenGraphImageFieldValue {
+    // (undocumented)
+    [attributeName: string]: unknown;
+    // (undocumented)
+    alt?: string;
+    // (undocumented)
+    height?: string;
+    // (undocumented)
+    src?: string;
+    // (undocumented)
+    width?: string;
+}
+
+// @public
 export type Page = {
     layout: LayoutServiceData;
     siteName?: string;
@@ -1033,6 +1083,10 @@ export type Page = {
 export interface PageInfo {
     endCursor: string;
     hasNext: boolean;
+}
+
+// @public
+export interface PageMetadataFields extends MetadataFields, OpenGraphFields {
 }
 
 // @public
@@ -1299,10 +1353,12 @@ export interface RouteData<Fields = Record<string, Field | Item | Item[]>> {
     name: string;
     // (undocumented)
     placeholders: PlaceholdersData;
+    published?: string;
     // (undocumented)
     templateId?: string;
     // (undocumented)
     templateName?: string;
+    updated?: string;
 }
 
 // @public
