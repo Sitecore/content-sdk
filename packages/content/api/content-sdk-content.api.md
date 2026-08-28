@@ -1001,6 +1001,12 @@ export function normalizePersonalizedRewrite(pathname: string): string;
 export function normalizeSiteRewrite(pathname: string): string;
 
 // @public
+export const OG_CREATION_TIME_TAG: Record<string, string>;
+
+// @public
+export const OG_MODIFIED_TIME_TAG: Record<string, string>;
+
+// @public
 export interface OpenGraphFields {
     // (undocumented)
     baseOgDescription?: Field<string>;

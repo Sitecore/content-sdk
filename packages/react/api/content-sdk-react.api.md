@@ -53,6 +53,8 @@ import { MetadataFields } from '@sitecore-content-sdk/content/layout';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
+import { OG_CREATION_TIME_TAG } from '@sitecore-content-sdk/content/layout';
+import { OG_MODIFIED_TIME_TAG } from '@sitecore-content-sdk/content/layout';
 import { OpenGraphFields } from '@sitecore-content-sdk/content/layout';
 import { OpenGraphImageField } from '@sitecore-content-sdk/content/layout';
 import { OpenGraphImageFieldValue } from '@sitecore-content-sdk/content/layout';
@@ -375,6 +377,10 @@ export { NativeDataFetcherResponse }
 //
 // @public
 export const noopLoadImportMap: () => Promise<ImportMapImport>;
+
+export { OG_CREATION_TIME_TAG }
+
+export { OG_MODIFIED_TIME_TAG }
 
 export { OpenGraphFields }
 

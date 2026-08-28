@@ -1,21 +1,18 @@
 import type { Metadata as NextMetadata } from 'next';
-import type { Field, PageMetadataFields, RouteData } from '@sitecore-content-sdk/content/layout';
+import type { RouteData } from '@sitecore-content-sdk/content/layout';
+import { resolvePageMetadataFields } from './resolve-page-metadata-fields';
+import type { PageMetadataRouteFields } from './resolve-page-metadata-fields';
 
-/** Open Graph types that define a creation-time field, and which `Metadata.openGraph` key it maps to. */
-const OG_CREATION_TIME_FIELD: Record<string, 'publishedTime' | 'releaseDate'> = {
-  article: 'publishedTime',
-  book: 'releaseDate',
-  'music.album': 'releaseDate',
-  'video.movie': 'releaseDate',
-  'video.episode': 'releaseDate',
+export type { PageMetadataRouteFields };
+
+/** Official Open Graph time tag names mapped to their Next.js `Metadata.openGraph` key. */
+const OG_TIME_METADATA_KEY: Record<string, 'publishedTime' | 'releaseDate' | 'modifiedTime'> = {
+  'article:published_time': 'publishedTime',
+  'book:release_date': 'releaseDate',
+  'music:release_date': 'releaseDate',
+  'video:release_date': 'releaseDate',
+  'article:modified_time': 'modifiedTime',
 };
-
-/**
- * Route fields consumed by {@link getPageMetadata}: the page's `Title` plus the metadata/Open
- * Graph fields Sitecore returns as siblings of `Title` in the route's `fields`.
- * @public
- */
-export type PageMetadataRouteFields = PageMetadataFields & { Title?: Field };
 
 /**
  * Builds a Next.js `Metadata` object (`<title>`, description/keywords/author meta, and Open Graph
@@ -34,22 +31,24 @@ export function getPageMetadata(
   route?: RouteData<PageMetadataRouteFields> | null,
   defaultTitle = 'Page'
 ): NextMetadata {
-  const fields = route?.fields;
-
-  const title = fields?.Title?.value?.toString() || defaultTitle;
-  const metaTitle = fields?.baseMetadataTitle?.value;
-  const description = fields?.baseMetadataDescription?.value;
-  const keywords = fields?.baseMetadataKeywords?.value;
-  const author = fields?.baseMetadataAuthor?.value;
-  const ogTitle = fields?.baseOgTitle?.value;
-  const ogDescription = fields?.baseOgDescription?.value;
-  const ogImage = fields?.baseOgImage?.value;
-  const ogImageSrc = ogImage?.src;
-  const ogType = fields?.baseOgType?.value;
-  const creationTimeField = ogType ? OG_CREATION_TIME_FIELD[ogType] : undefined;
-  const creationTime = creationTimeField ? route?.published : undefined;
-  // article is the only Open Graph type with a distinct update-time field
-  const modifiedTime = ogType === 'article' ? route?.updated : undefined;
+  const {
+    title,
+    metaTitle,
+    description,
+    keywords,
+    author,
+    ogTitle,
+    ogDescription,
+    ogImage,
+    ogImageSrc,
+    ogType,
+    creationTimeTag,
+    creationTime,
+    modifiedTimeTag,
+    modifiedTime,
+  } = resolvePageMetadataFields(route, defaultTitle);
+  const creationTimeField = creationTimeTag ? OG_TIME_METADATA_KEY[creationTimeTag] : undefined;
+  const modifiedTimeField = modifiedTimeTag ? OG_TIME_METADATA_KEY[modifiedTimeTag] : undefined;
 
   return {
     title,
@@ -73,7 +72,7 @@ export function getPageMetadata(
         }),
         ...(ogType && { type: ogType }),
         ...(creationTimeField && creationTime && { [creationTimeField]: creationTime }),
-        ...(modifiedTime && { modifiedTime }),
+        ...(modifiedTimeField && modifiedTime && { [modifiedTimeField]: modifiedTime }),
       } as NextMetadata['openGraph'],
     }),
   };

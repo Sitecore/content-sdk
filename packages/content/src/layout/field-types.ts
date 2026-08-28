@@ -92,6 +92,28 @@ export interface MetadataFields {
 export interface PageMetadataFields extends MetadataFields, OpenGraphFields {}
 
 /**
+ * Open Graph types that define a creation-time meta tag, mapped to its exact property name
+ * per the Open Graph protocol (e.g. `article:published_time`, `book:release_date`).
+ * @public
+ */
+export const OG_CREATION_TIME_TAG: Record<string, string> = {
+  article: 'article:published_time',
+  book: 'book:release_date',
+  'music.album': 'music:release_date',
+  'video.movie': 'video:release_date',
+  'video.episode': 'video:release_date',
+};
+
+/**
+ * Open Graph types that define an update-time meta tag, mapped to its exact property name
+ * per the Open Graph protocol. `article` is the only type the protocol defines one for.
+ * @public
+ */
+export const OG_MODIFIED_TIME_TAG: Record<string, string> = {
+  article: 'article:modified_time',
+};
+
+/**
  * The interface for the Image size parameters.
  * @public
  */

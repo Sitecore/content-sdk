@@ -138,6 +138,8 @@ import { NextURL } from 'next/dist/server/web/next-url';
 import { noopLoadImportMap } from '@sitecore-content-sdk/react';
 import { normalizePersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
 import { normalizeSiteRewrite } from '@sitecore-content-sdk/content/site';
+import { OG_CREATION_TIME_TAG } from '@sitecore-content-sdk/react';
+import { OG_MODIFIED_TIME_TAG } from '@sitecore-content-sdk/react';
 import { OpenGraphFields } from '@sitecore-content-sdk/react';
 import { OpenGraphImageField } from '@sitecore-content-sdk/react';
 import { OpenGraphImageFieldValue } from '@sitecore-content-sdk/react';
@@ -809,6 +811,10 @@ export { normalizePersonalizedRewrite }
 
 export { normalizeSiteRewrite }
 
+export { OG_CREATION_TIME_TAG }
+
+export { OG_MODIFIED_TIME_TAG }
+
 export { OpenGraphFields }
 
 export { OpenGraphImageField }
@@ -823,6 +829,15 @@ export { PageMetadataFields }
 export type PageMetadataRouteFields = PageMetadataFields_2 & {
     Title?: Field;
 };
+
+// @public
+export const PageMetaTags: (input: PageMetaTagsProps) => JSX_2.Element;
+
+// @public
+export interface PageMetaTagsProps {
+    defaultTitle?: string;
+    route?: RouteData<PageMetadataRouteFields> | null;
+}
 
 export { PageMode }
 
