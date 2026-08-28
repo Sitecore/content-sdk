@@ -227,7 +227,21 @@ elements: SchemaType<"record", SchemaType<"object", {
 type: SchemaType<"ref", string>;
 props: SchemaType<"propsOf", string>;
 children: SchemaType<"array", SchemaType<"string", unknown>>;
-visible: SchemaType<"any", unknown>;
+slots: {
+optional: true;
+kind: "record";
+inner?: SchemaType<"array", SchemaType<"string", unknown>> | undefined;
+};
+visible: {
+optional: true;
+kind: "any";
+inner?: unknown;
+};
+repeat: {
+optional: true;
+kind: "any";
+inner?: unknown;
+};
 }>>;
 }>;
 catalog: SchemaType<"object", {
