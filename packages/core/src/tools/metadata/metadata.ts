@@ -28,9 +28,8 @@ const trackedScopes = ['@sitecore', '@sitecore-feaas', '@sitecore-content-sdk'];
 // segments are wildcarded to cover every '@sitecore*' scope.
 const TRACKED_SCOPE_GLOB = '"@sitecore*/*"';
 
-// Matches trailing 'name@version' after bun's tree prefix or pnpm's 'path:' delimiter. The path
-// is skipped because it contains separators, @version store folders, and Windows 'C:'.
-const PACKAGE_ENTRY = /(?:^[\s│├└─]*|:)((?:@[^\s@:/\\]+\/)?[^\s@:/\\]+)@([^\s]+)$/;
+// Trailing @scope/name@version. Shared by bun and pnpm; $ keeps the match off pnpm store paths.
+const PACKAGE_ENTRY = /(@[^\s/:\\]+\/[^\s/:\\]+)@([^\s]+)$/;
 
 // Dependency trees of an app can be sizeable, the 1MB default of execSync is not enough.
 const MAX_OUTPUT_BUFFER = 10 * 1024 * 1024;
@@ -90,11 +89,9 @@ function getPackagesFromQueryResult(scPackages: Package[]): Record<string, strin
 function getPackageManagement(allowWorkspaces: boolean): Record<string, PackagesQuery> {
   return {
     pnpm: {
-      // Name filters silently drop packages; JSON trees overrun the buffer. Parseable --long
-      // lists each install once with name@version. Depth Infinity is required (default is 0).
-      query: `pnpm list --depth Infinity --parseable --long${
-        allowWorkspaces ? ' --recursive' : ''
-      }`,
+      // Name filters silently drop packages (the original pnpm omission). Parseable --long lists
+      // each install once with name@version. Depth 3 covers nested Sitecore packages (default is 0).
+      query: `pnpm list --depth 3 --parseable --long${allowWorkspaces ? ' --recursive' : ''}`,
       parse: parsePackageList,
     },
     npm: {
@@ -183,7 +180,7 @@ function parseNpmQuery(output: string): Package[] {
 }
 
 /**
- * Parse bun `pm ls` tree lines and pnpm `list --parseable --long` path:name@version lines
+ * Parse bun `pm ls` and pnpm `list --parseable --long` lines for trailing '@scope/name@version'
  * @param {string} output command output
  * @returns {Package[]} installed packages
  * @internal

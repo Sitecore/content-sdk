@@ -17,7 +17,7 @@ const USER_AGENTS = {
 };
 
 const NPM_QUERY = 'npm query [name*=@sitecore] --workspaces false';
-const PNPM_LIST = 'pnpm list --depth Infinity --parseable --long';
+const PNPM_LIST = 'pnpm list --depth 3 --parseable --long';
 const YARN_INFO = 'yarn info --json --name-only --recursive "@sitecore*/*"';
 const YARN_CLASSIC_LIST = 'yarn list --json --depth 0 --pattern "@sitecore*/*"';
 const BUN_LIST = 'bun pm ls --all';
@@ -200,7 +200,7 @@ describe('metadata', () => {
 
     it('should include workspace packages when workspaces are allowed', () => {
       runWithPackageManager(USER_AGENTS.pnpm);
-      const command = 'pnpm list --depth Infinity --parseable --long --recursive';
+      const command = 'pnpm list --depth 3 --parseable --long --recursive';
       execSyncStub.withArgs(command).returns(pnpmListResult);
 
       const metadata = getMetadata(true);
