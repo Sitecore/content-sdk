@@ -6,7 +6,7 @@
 
 # Interface: SuggestParameters
 
-Defined in: [search-service.ts:148](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/search/src/search-service.ts#L148)
+Defined in: [search-service.ts:148](https://github.com/Sitecore/content-sdk/blob/6320ef720fd2c837d6aad938ce6e7c5806cb2aa6/packages/search/src/search-service.ts#L148)
 
 A set of request parameters for the Suggest Service.
 `/v1/search/suggest` accepts only `keyphrase` in the query payload.
@@ -18,7 +18,7 @@ A set of request parameters for the Suggest Service.
 
 > **keyphrase**: `string`
 
-Defined in: [search-service.ts:156](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/search/src/search-service.ts#L156)
+Defined in: [search-service.ts:156](https://github.com/Sitecore/content-sdk/blob/6320ef720fd2c837d6aad938ce6e7c5806cb2aa6/packages/search/src/search-service.ts#L156)
 
 Partial text used for typeahead suggestions. Must be a non-empty string.
 
@@ -28,7 +28,7 @@ Partial text used for typeahead suggestions. Must be a non-empty string.
 
 > `optional` **locale?**: `string`
 
-Defined in: [search-service.ts:162](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/search/src/search-service.ts#L162)
+Defined in: [search-service.ts:162](https://github.com/Sitecore/content-sdk/blob/6320ef720fd2c837d6aad938ce6e7c5806cb2aa6/packages/search/src/search-service.ts#L162)
 
 The locale to use for the suggest request. Required for multi-locale index configurations.
 Format: letters and hyphens only (e.g. 'en', 'fr-FR', 'el-GR').
@@ -40,6 +40,6 @@ Omit for single-locale indexes.
 
 > **searchIndexId**: `string`
 
-Defined in: [search-service.ts:152](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/search/src/search-service.ts#L152)
+Defined in: [search-service.ts:152](https://github.com/Sitecore/content-sdk/blob/6320ef720fd2c837d6aad938ce6e7c5806cb2aa6/packages/search/src/search-service.ts#L152)
 
 The ID of the search index to use.
