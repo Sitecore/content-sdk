@@ -6,7 +6,7 @@
 
 # Interface: RichTextField
 
-Defined in: packages/content/types/layout/field-types.d.ts:72
+Defined in: packages/content/types/layout/field-types.d.ts:128
 
 The interface for the Rich Text field.
 
@@ -20,7 +20,7 @@ The interface for the Rich Text field.
 
 > `optional` **metadata?**: `object`
 
-Defined in: packages/content/types/layout/models.d.ts:123
+Defined in: packages/content/types/layout/models.d.ts:127
 
 #### Index Signature
 
@@ -36,4 +36,4 @@ Defined in: packages/content/types/layout/models.d.ts:123
 
 > `optional` **value?**: `string`
 
-Defined in: packages/content/types/layout/field-types.d.ts:73
+Defined in: packages/content/types/layout/field-types.d.ts:129

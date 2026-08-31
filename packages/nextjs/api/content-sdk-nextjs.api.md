@@ -18,6 +18,7 @@ import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
 import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { ClientEditingChromesUpdate } from '@sitecore-content-sdk/react';
+import { combineImportEntries } from '@sitecore-content-sdk/content/tools';
 import { ComponentFields } from '@sitecore-content-sdk/content/layout';
 import { ComponentFile } from '@sitecore-content-sdk/content/tools';
 import { ComponentImport } from '@sitecore-content-sdk/content/tools';
@@ -27,8 +28,10 @@ import { ComponentParams } from '@sitecore-content-sdk/content/layout';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { constants } from '@sitecore-content-sdk/core';
 import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
+import { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG } from '@sitecore-content-sdk/content/experimental';
 import { DateField } from '@sitecore-content-sdk/react';
 import { DeepRequired } from '@sitecore-content-sdk/content/config';
+import { DEFAULT_LLMS_TXT } from '@sitecore-content-sdk/content/site';
 import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/react';
 import { DefaultEmptyFieldEditingComponentText } from '@sitecore-content-sdk/react';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
@@ -103,6 +106,7 @@ import { IncomingHttpHeaders } from 'http';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { isEditorActive } from '@sitecore-content-sdk/content/editing';
 import { isExperimentalEnvFlagEnabled } from '@sitecore-content-sdk/content/experimental';
+import { isExperimentalFeaturesGloballyEnabled } from '@sitecore-content-sdk/content/experimental';
 import { Item } from '@sitecore-content-sdk/content/layout';
 import { JSX as JSX_2 } from 'react';
 import { LayoutService } from '@sitecore-content-sdk/content/layout';
@@ -115,9 +119,12 @@ import { LinkField } from '@sitecore-content-sdk/react';
 import { LinkFieldValue } from '@sitecore-content-sdk/react';
 import { LinkProps as LinkProps_2 } from '@sitecore-content-sdk/react';
 import { LinkProps as LinkProps_3 } from 'next/link';
+import { LLMS_TXT_CONTENT_TYPE } from '@sitecore-content-sdk/content/site';
 import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
-import { Metadata } from '@sitecore-content-sdk/core/node-tools';
+import type { Metadata } from 'next';
+import { Metadata as Metadata_2 } from '@sitecore-content-sdk/core/node-tools';
+import { MetadataFields } from '@sitecore-content-sdk/react';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
@@ -131,7 +138,14 @@ import { NextURL } from 'next/dist/server/web/next-url';
 import { noopLoadImportMap } from '@sitecore-content-sdk/react';
 import { normalizePersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
 import { normalizeSiteRewrite } from '@sitecore-content-sdk/content/site';
+import { OG_CREATION_TIME_TAG } from '@sitecore-content-sdk/react';
+import { OG_MODIFIED_TIME_TAG } from '@sitecore-content-sdk/react';
+import { OpenGraphFields } from '@sitecore-content-sdk/react';
+import { OpenGraphImageField } from '@sitecore-content-sdk/react';
+import { OpenGraphImageFieldValue } from '@sitecore-content-sdk/react';
 import { Page } from '@sitecore-content-sdk/content/client';
+import { PageMetadataFields } from '@sitecore-content-sdk/react';
+import type { PageMetadataFields as PageMetadataFields_2 } from '@sitecore-content-sdk/content/layout';
 import { PageMode } from '@sitecore-content-sdk/content/client';
 import { PageOptions } from '@sitecore-content-sdk/content/client';
 import { PersonalizeAdapter } from '@sitecore-content-sdk/personalize/internal';
@@ -298,8 +312,7 @@ export type CollectSitecorePageCacheTagsParams = {
     route?: RouteData | null;
 };
 
-// @public
-export const combineImportEntries: (defaultImportEntries: ImportEntry[], generatedImportEntries: ImportEntry[]) => ImportEntry[];
+export { combineImportEntries }
 
 export { ComponentFields }
 
@@ -383,6 +396,13 @@ export const createExperimentalFeaturesRouteHandler: () => {
 
 export { createGraphQLClientFactory }
 
+// Warning: (ae-forgotten-export) The symbol "RouteHandlerOptions_3" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export const createLlmsTxtRouteHandler: (options: RouteHandlerOptions_3) => {
+    GET: (req: NextRequest) => Promise<Response>;
+};
+
 // Warning: (ae-forgotten-export) The symbol "RouteHandlerOptions_2" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
@@ -409,11 +429,15 @@ export function createSitemapRouteHandler(options: RouteHandlerOptions): {
     GET: (req: NextRequest) => Promise<Response>;
 };
 
+export { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG }
+
 export { DateField }
 
 // @public
 const debug_2: Record<string, debug.Debugger>;
 export { debug_2 as debug }
+
+export { DEFAULT_LLMS_TXT }
 
 export { DefaultEmptyFieldEditingComponentImage }
 
@@ -466,7 +490,7 @@ export class EditingConfigMiddleware {
 // @public
 export type EditingConfigMiddlewareConfig = {
     components: ComponentMap<NextjsContentSdkComponent>;
-    metadata: Metadata;
+    metadata: Metadata_2;
 };
 
 // Warning: (ae-forgotten-export) The symbol "RenderMiddlewareBase" needs to be exported by the entry point api-surface.d.ts
@@ -617,6 +641,9 @@ export const getHeadersForPropagation: (headers: IncomingHttpHeaders | Headers) 
     [key: string]: string;
 };
 
+// @public
+export function getPageMetadata(route?: RouteData<PageMetadataRouteFields> | null, defaultTitle?: string): Metadata;
+
 export { getPersonalizedRewrite }
 
 export { getPersonalizedRewriteData }
@@ -671,6 +698,8 @@ export { isEditorActive }
 
 export { isExperimentalEnvFlagEnabled }
 
+export { isExperimentalFeaturesGloballyEnabled }
+
 // @public
 export const isServerSidePropsContext: (context: GetServerSidePropsContext | GetStaticPropsContext) => context is GetServerSidePropsContext;
 
@@ -705,6 +734,15 @@ export type LinkProps = LinkProps_2 & {
     internalLinkMatcher?: RegExp;
 } & Pick<LinkProps_3, (typeof supportedNextLinkProps)[number]>;
 
+export { LLMS_TXT_CONTENT_TYPE }
+
+// @public
+export class LlmsTxtMiddleware {
+    constructor(client: SitecoreClient_2, sites: SiteInfo[]);
+    // (undocumented)
+    getHandler(): (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
+}
+
 // @public
 export class LocaleProxy extends ProxyBase {
     constructor(config: LocaleProxyConfig);
@@ -726,6 +764,8 @@ export type LocaleProxyConfig = ProxyBaseConfig & {
 export { mediaApi }
 
 export { MemoryCacheClient }
+
+export { MetadataFields }
 
 // @public
 export class MultisiteProxy extends ProxyBase {
@@ -771,7 +811,33 @@ export { normalizePersonalizedRewrite }
 
 export { normalizeSiteRewrite }
 
+export { OG_CREATION_TIME_TAG }
+
+export { OG_MODIFIED_TIME_TAG }
+
+export { OpenGraphFields }
+
+export { OpenGraphImageField }
+
+export { OpenGraphImageFieldValue }
+
 export { Page }
+
+export { PageMetadataFields }
+
+// @public
+export type PageMetadataRouteFields = PageMetadataFields_2 & {
+    Title?: Field;
+};
+
+// @public
+export const PageMetaTags: (input: PageMetaTagsProps) => JSX_2.Element;
+
+// @public
+export interface PageMetaTagsProps {
+    defaultTitle?: string;
+    route?: RouteData<PageMetadataRouteFields> | null;
+}
 
 export { PageMode }
 

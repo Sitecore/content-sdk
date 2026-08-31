@@ -8,7 +8,7 @@
 
 > **LoaderPayload** = `object`
 
-Defined in: [packages/angular/src/loaders/models.ts:92](https://github.com/Sitecore/content-sdk/blob/b4fad5bfdcf00eb3138cebc08959d248545d0a22/packages/angular/src/loaders/models.ts#L92)
+Defined in: [packages/angular/src/loaders/models.ts:95](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/loaders/models.ts#L95)
 
 Payload for loader resolution.
 
@@ -18,7 +18,7 @@ Payload for loader resolution.
 
 > `optional` **cacheOptions?**: [`LoaderCacheConfig`](../interfaces/LoaderCacheConfig.md)
 
-Defined in: [packages/angular/src/loaders/models.ts:114](https://github.com/Sitecore/content-sdk/blob/b4fad5bfdcf00eb3138cebc08959d248545d0a22/packages/angular/src/loaders/models.ts#L114)
+Defined in: [packages/angular/src/loaders/models.ts:117](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/loaders/models.ts#L117)
 
 Per-route cache overrides supplied at the `loaderResolver(id, cacheOptions)`
 call site. The browser includes them in the `/_data` POST body so the same
@@ -30,7 +30,7 @@ per-route policy applies on CSR navigations.
 
 > **loaderId**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:96](https://github.com/Sitecore/content-sdk/blob/b4fad5bfdcf00eb3138cebc08959d248545d0a22/packages/angular/src/loaders/models.ts#L96)
+Defined in: [packages/angular/src/loaders/models.ts:99](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/loaders/models.ts#L99)
 
 The loader ID
 
@@ -40,7 +40,7 @@ The loader ID
 
 > **query**: `Record`\<`string`, `any`\>
 
-Defined in: [packages/angular/src/loaders/models.ts:108](https://github.com/Sitecore/content-sdk/blob/b4fad5bfdcf00eb3138cebc08959d248545d0a22/packages/angular/src/loaders/models.ts#L108)
+Defined in: [packages/angular/src/loaders/models.ts:111](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/loaders/models.ts#L111)
 
 The request query parameters
 
@@ -50,7 +50,7 @@ The request query parameters
 
 > **routeParams**: `Params`
 
-Defined in: [packages/angular/src/loaders/models.ts:104](https://github.com/Sitecore/content-sdk/blob/b4fad5bfdcf00eb3138cebc08959d248545d0a22/packages/angular/src/loaders/models.ts#L104)
+Defined in: [packages/angular/src/loaders/models.ts:107](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/loaders/models.ts#L107)
 
 The ANgular request route parameters
 
@@ -60,6 +60,6 @@ The ANgular request route parameters
 
 > **url**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:100](https://github.com/Sitecore/content-sdk/blob/b4fad5bfdcf00eb3138cebc08959d248545d0a22/packages/angular/src/loaders/models.ts#L100)
+Defined in: [packages/angular/src/loaders/models.ts:103](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/loaders/models.ts#L103)
 
 The requst URL

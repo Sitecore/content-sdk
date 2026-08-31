@@ -119,6 +119,45 @@ export const toPascalCase = (name: string): string =>
     .join('');
 
 /**
+ * Builds a lookup of component name -> set of (extensionless) import paths, used by
+ * {@link isVariantComponent} to decide whether a dotted filename is a real SXA variant.
+ * @param {Array<{ componentName: string; importPathNoExt: string }>} components - component name + extensionless import path pairs
+ * @returns {Record<string, Set<string>>} index of component name to the set of import paths that produced it
+ * @internal
+ */
+export const buildVariantSiblingIndex = (
+  components: { componentName: string; importPathNoExt: string }[]
+): Record<string, Set<string>> => {
+  const index: Record<string, Set<string>> = {};
+  for (const { componentName, importPathNoExt } of components) {
+    (index[componentName] ??= new Set<string>()).add(importPathNoExt);
+  }
+  return index;
+};
+
+/**
+ * Determines whether a component file is an SXA *variant* — its name carries a dotted
+ * suffix AND a base (non-variant) sibling exists at the same import-path root. A dotted
+ * name without a base sibling (e.g. Angular's `foo.component`) is NOT a variant.
+ * @param {string} componentName - component name, possibly with a dotted variant suffix
+ * @param {string} importPathNoExt - the component's import path with the file extension removed
+ * @param {Record<string, Set<string>>} siblingIndex - index from {@link buildVariantSiblingIndex}
+ * @returns {boolean} true when the file is a variant of an existing base component
+ * @internal
+ */
+export const isVariantComponent = (
+  componentName: string,
+  importPathNoExt: string,
+  siblingIndex: Record<string, Set<string>>
+): boolean => {
+  const dot = componentName.lastIndexOf('.');
+  if (dot === -1) return false;
+  const base = componentName.substring(0, dot);
+  const importRoot = importPathNoExt.substring(0, importPathNoExt.lastIndexOf('.'));
+  return Boolean(siblingIndex[base]?.has(importRoot));
+};
+
+/**
  * Get list of components from @var path
  * Returns a list of components in the following format:
  * {
@@ -156,9 +195,14 @@ function _getComponentList(
     );
   }, []);
 
-  return includeVariants
-    ? components
-    : components.filter((component) => !component.componentName.includes('.'));
+  if (includeVariants) return components;
+  // Drop variant files that have a base (non-variant) sibling at the same import-path root.
+  const siblingIndex = buildVariantSiblingIndex(
+    components.map((c) => ({ componentName: c.componentName, importPathNoExt: c.importPath }))
+  );
+  return components.filter(
+    (component) => !isVariantComponent(component.componentName, component.importPath, siblingIndex)
+  );
 }
 
 /**

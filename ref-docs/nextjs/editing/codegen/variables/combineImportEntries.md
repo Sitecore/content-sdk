@@ -4,11 +4,11 @@
 
 [@sitecore-content-sdk/nextjs](../../../README.md) / [editing/codegen](../README.md) / combineImportEntries
 
-# Function: combineImportEntries()
+# Variable: combineImportEntries
 
-> **combineImportEntries**(`defaultImportEntries`, `generatedImportEntries`): [`ImportEntry`](../interfaces/ImportEntry.md)[]
+> `const` **combineImportEntries**: (`defaultImportEntries`, `generatedImportEntries`) => [`ImportEntry`](../interfaces/ImportEntry.md)[]
 
-Defined in: [nextjs/src/editing/codegen/import-map-utils.ts:10](https://github.com/Sitecore/content-sdk/blob/b4fad5bfdcf00eb3138cebc08959d248545d0a22/packages/nextjs/src/editing/codegen/import-map-utils.ts#L10)
+Defined in: content/types/tools/codegen/import-map-utils.d.ts:9
 
 Combines the default import entries with the generated import entries.
 

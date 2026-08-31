@@ -8,7 +8,7 @@
 
 > **buildSitecoreDictionaryCacheTag**(`params`): `string`
 
-Defined in: [nextjs/src/cache/sitecore-cache-tags.ts:101](https://github.com/Sitecore/content-sdk/blob/b4fad5bfdcf00eb3138cebc08959d248545d0a22/packages/nextjs/src/cache/sitecore-cache-tags.ts#L101)
+Defined in: [nextjs/src/cache/sitecore-cache-tags.ts:101](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/nextjs/src/cache/sitecore-cache-tags.ts#L101)
 
 Tag for dictionary data scoped to site + locale.
 

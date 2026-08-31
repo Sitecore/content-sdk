@@ -25,6 +25,7 @@
 ## Functions
 
 - [buildComponentMapContent](functions/buildComponentMapContent.md)
+- [combineImportEntries](functions/combineImportEntries.md)
 - [filterComponentsByType](functions/filterComponentsByType.md)
 - [getComponentSpec](functions/getComponentSpec.md)
 - [getComponentSpecUrl](functions/getComponentSpecUrl.md)
