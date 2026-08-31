@@ -1,7 +1,8 @@
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
-import { setCachedPageParams } from '@sitecore-content-sdk/nextjs';
+import { setCachedPageParams, getPageMetadata } from '@sitecore-content-sdk/nextjs';
 import { notFound } from 'next/navigation';
 import { draftMode } from 'next/headers';
+import { Metadata } from 'next';
 <% if (prerender === 'SSG') { -%>
 import { SiteInfo } from '@sitecore-content-sdk/nextjs';
 import sites from '.sitecore/sites.json';
@@ -11,7 +12,7 @@ import scConfig from 'sitecore.config';
 import client from 'src/lib/sitecore-client';
 import { getSitecorePage } from 'src/lib/cache/get-sitecore-page';
 import { BUILD_VALIDATION_SITE, isBuildValidationSite } from 'src/lib/sitecore-build-validation';
-import Layout, { RouteFields } from 'src/Layout';
+import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
@@ -83,7 +84,7 @@ export const generateStaticParams = async () => {
 };
 <% } -%>
 // Metadata fields for the page. Mirrors the Page draft-mode branching so the <title> matches the body.
-export const generateMetadata = async ({ params, searchParams }: PageProps) => {
+export const generateMetadata = async ({ params, searchParams }: PageProps): Promise<Metadata> => {
   const { path, site, locale } = await params;
 
   if (isBuildValidationSite(site)) {
@@ -104,7 +105,5 @@ export const generateMetadata = async ({ params, searchParams }: PageProps) => {
     page = await getSitecorePage({ site, locale, path: path ?? [] });
   }
 
-  return {
-    title: (page?.layout.sitecore.route?.fields as RouteFields)?.Title?.value?.toString() || 'Page',
-  };
+  return getPageMetadata(page?.layout.sitecore.route);
 };

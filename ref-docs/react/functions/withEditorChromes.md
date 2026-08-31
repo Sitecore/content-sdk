@@ -8,7 +8,7 @@
 
 > **withEditorChromes**(`WrappedComponent`): \{(`props`): `Element`; `displayName`: `string`; \}
 
-Defined in: [packages/react/src/enhancers/withEditorChromes.tsx:10](https://github.com/Sitecore/content-sdk/blob/99809bafe75cd59525023226061287a2ced48886/packages/react/src/enhancers/withEditorChromes.tsx#L10)
+Defined in: [packages/react/src/enhancers/withEditorChromes.tsx:10](https://github.com/Sitecore/content-sdk/blob/6320ef720fd2c837d6aad938ce6e7c5806cb2aa6/packages/react/src/enhancers/withEditorChromes.tsx#L10)
 
 HOC to inject editor chromes reset on component update.
 
