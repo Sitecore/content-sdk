@@ -68,7 +68,7 @@ After that, configure redirect rules for Vercel request to reach your app code, 
 }
 ```
 
-3. In Vercel portal, set the required Content SDK environment variables. Additionally, set `NG_ALLOWED_HOSTS` and `NG_TRUST_PROXY_HEADERS` environment variabled to allow Vercel URLs and prevent Vercel rendering from falling back to CSR:
+3. In Vercel portal, set the required Content SDK environment variables. Additionally, set `NG_ALLOWED_HOSTS` and `NG_TRUST_PROXY_HEADERS` environment variables to allow Vercel URLs and prevent Vercel rendering from falling back to CSR:
 ```
   NG_ALLOWED_HOSTS=*.vercel.app
   NG_TRUST_PROXY_HEADERS=X-FORWARDED-PORT,X-FORWARDED-PATH,X-FORWARDED-FOR,X-FORWARDED-HOST,X-FORWARDED-PROTO
