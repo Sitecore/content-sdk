@@ -8,7 +8,7 @@
 
 > `const` **FETCH\_DATA\_ENDPOINT**: `InjectionToken`\<`string` \| `null` \| `undefined`\>
 
-Defined in: [packages/angular/src/loaders/loader-registry.token.ts:9](https://github.com/Sitecore/content-sdk/blob/8f962400f3b79f00425a8cd76a6d2082b5b47c47/packages/angular/src/loaders/loader-registry.token.ts#L9)
+Defined in: [packages/angular/src/loaders/loader-registry.token.ts:9](https://github.com/Sitecore/content-sdk/blob/d8ac4e3318843744564114f23a00a7a35cd2e2c3/packages/angular/src/loaders/loader-registry.token.ts#L9)
 
 Optional endpoint path for loader data fetch (e.g. '/_data' or '/api/data').
 When null or undefined, LOADER_DATA_ENDPOINT is used.
