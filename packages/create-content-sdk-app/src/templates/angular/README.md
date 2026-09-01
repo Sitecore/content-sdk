@@ -153,6 +153,6 @@ where `<your_app_name>` is the name of application set in `package.json`.
 
 4. In Netlify portal, set the required Content SDK environment variables. Additionally, set `NG_ALLOWED_HOSTS` and `NG_TRUST_PROXY_HEADERS` environment variables to allow netlify URLs and ensure Angular SSR works correctly from behind the Netlify proxy:
 ```
-  NG_ALLOWED_HOSTS=*.vercel.app
+  NG_ALLOWED_HOSTS=*.netlify.app
   NG_TRUST_PROXY_HEADERS=X-FORWARDED-PORT,X-FORWARDED-PATH,X-FORWARDED-FOR,X-FORWARDED-HOST,X-FORWARDED-PROTO
 ```
