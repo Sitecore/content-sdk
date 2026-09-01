@@ -53,7 +53,7 @@ After that, configure redirect rules for Vercel request to reach your app code, 
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/<your_app_name>",
+  "outputDirectory": "dist/<your_app_name>/browser",
   "rewrites": [
     {
       "source": "/(.*)",
