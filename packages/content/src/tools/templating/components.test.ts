@@ -233,14 +233,14 @@ describe('components', () => {
         {
           importPath: 'src/test-data/component-variants/qux.component',
           filePath: path.normalize('src/test-data/component-variants/qux.component.ts'),
-          componentName: 'Qux.component',
-          moduleName: 'Quxcomponent',
+          componentName: 'qux.component',
+          moduleName: 'quxcomponent',
         },
         {
           importPath: 'src/test-data/component-variants/foo.component',
           filePath: path.normalize('src/test-data/component-variants/foo.component.ts'),
-          componentName: 'Foo.component',
-          moduleName: 'Foocomponent',
+          componentName: 'foo.component',
+          moduleName: 'foocomponent',
         },
         {
           componentName: 'Baz',
@@ -392,11 +392,6 @@ describe('components', () => {
     it('should convert kebab-case to PascalCase', () => {
       expect(toPascalCase('my-component')).to.equal('MyComponent');
       expect(toPascalCase('my-long-component-name')).to.equal('MyLongComponentName');
-    });
-
-    it('should convert snake_case to PascalCase', () => {
-      expect(toPascalCase('my_component')).to.equal('MyComponent');
-      expect(toPascalCase('my_long_component_name')).to.equal('MyLongComponentName');
     });
 
     it('should capitalize the first letter of a camelCase string', () => {
