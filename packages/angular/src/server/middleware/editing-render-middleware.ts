@@ -6,6 +6,7 @@ import {
   DesignLibraryMode,
   DesignLibraryVariantGeneration,
   DesignLibraryRenderPreviewData,
+  PREVIEW_TOKEN,
 } from '@sitecore-content-sdk/content/editing';
 import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import { getAllowedOriginsFromEnv, getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
@@ -312,6 +313,18 @@ export function createEditingRenderMiddleware(
 
       if (typeof res.setHeader === 'function') {
         res.setHeader('Content-Security-Policy', buildCSPHeader());
+      }
+
+      // On the internal editing host, persist the editor-issued bearer as the
+      // preview token cookie so later navigation stays authorized; re-set on every
+      // render to refresh it.
+      const authHeader = req.headers?.authorization;
+      const token = Array.isArray(authHeader) ? authHeader[0] : authHeader;
+      if (token && readProcessEnv('SITECORE') && typeof res.setHeader === 'function') {
+        res.setHeader(
+          'Set-Cookie',
+          `${PREVIEW_TOKEN}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=None`
+        );
       }
 
       const decodedRoute = flatQuery.route ?? '';

@@ -2,7 +2,9 @@ import type { LoaderFn, Page } from '@sitecore-content-sdk/angular';
 import {
   NotFoundNavigationError,
   getEditingPreviewData,
-  isDesignLibraryPreviewData,
+  getPreviewAuthToken,
+  resolvePreviewPage,
+  resolvePreviewNavigation,
   getSiteName,
   getVariantId,
   getComponentVariantIds,
@@ -21,21 +23,30 @@ export const pageLoader: LoaderFn<Page> = async (context) => {
   const locale = getLanguage(context) || scConfig.defaultLanguage;
   const { nonLocalePath } = splitLocaleFromPath(context.url, scConfig.angular.locales);
 
-  let page: Page | null;
-  if (isDesignLibraryPreviewData(previewData)) {
-    page = await getClient().getDesignLibraryData(previewData);
-  } else if (previewData) {
-    page = await getClient().getPreview(previewData);
-  } else {
-    page = await getClient().getPage(nonLocalePath, {
-      locale,
-      site: getSiteName(context),
-      personalize: {
-        variantId: getVariantId(context),
-        componentVariantIds: getComponentVariantIds(context),
-      },
-    });
+  // Editing render: fetch preview / Design Library layout with the forwarded token.
+  if (previewData) {
+    return resolvePreviewPage(getClient(), previewData, context.csdkRequestData);
   }
+
+  // Follow-up preview navigation: the preview token cookie is present but there is
+  // no editing header, so fetch via getPage with the preview headers.
+  if (getPreviewAuthToken(context.csdkRequestData)) {
+    return resolvePreviewNavigation(
+      getClient(),
+      nonLocalePath,
+      { site: getSiteName(context), locale },
+      context.csdkRequestData
+    );
+  }
+
+  const page = await getClient().getPage(nonLocalePath, {
+    locale,
+    site: getSiteName(context),
+    personalize: {
+      variantId: getVariantId(context),
+      componentVariantIds: getComponentVariantIds(context),
+    },
+  });
 
   if (!page) {
     throw new NotFoundNavigationError();

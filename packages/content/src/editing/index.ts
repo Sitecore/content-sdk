@@ -11,6 +11,7 @@ export {
   PAGES_EDITING_MARKER,
   ComponentUpdateEventArgs,
   PREVIEW_KEY,
+  PREVIEW_TOKEN,
 } from './utils';
 export {
   ComponentLayoutService,

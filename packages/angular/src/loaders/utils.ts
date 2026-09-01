@@ -137,8 +137,17 @@ export function extractRequestData(req: FetchLikeRequest | ExpressLikeRequest): 
     }
   } else {
     headers = req.headers ?? {};
-    cookies = req.cookies ?? {};
     query = req.query ?? {};
+    // Prefer parsed cookies (cookie-parser); otherwise parse the raw Cookie header
+    // so cookies are available on the Express `/_data` leg without cookie-parser.
+    if (req.cookies && Object.keys(req.cookies).length > 0) {
+      cookies = req.cookies;
+    } else {
+      const rawCookie = headers.cookie;
+      cookies = parseCookieHeader(
+        (Array.isArray(rawCookie) ? rawCookie.join(';') : rawCookie) ?? null
+      );
+    }
   }
   hostname =
     hostname ??

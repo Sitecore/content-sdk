@@ -26,6 +26,12 @@ export const INVALID_SECRET_HTML_MESSAGE = '<html><body>Missing or invalid secre
 export const PREVIEW_KEY = 'sc_preview';
 
 /**
+ * Cookie holding the bearer token that authorizes preview / edit layout.
+ * @public
+ */
+export const PREVIEW_TOKEN = 'sc_preview_token';
+
+/**
  * ID to be used as a marker for a script rendered in XMC Pages
  * Should identify app is in XM Cloud Pages editing mode
  * @internal

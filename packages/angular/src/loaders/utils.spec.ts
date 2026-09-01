@@ -113,6 +113,13 @@ describe('extractRequestData', () => {
     expect(ctx.query).toEqual({});
   });
 
+  it('parses cookies from the Cookie header when req.cookies is absent (no cookie-parser)', () => {
+    const ctx = extractRequestData({
+      headers: { cookie: 'sc_preview_token=Bearer%20abc; sc_site=website' },
+    });
+    expect(ctx.cookies).toEqual({ sc_preview_token: 'Bearer%20abc', sc_site: 'website' });
+  });
+
   it('reads scParams from SC_PARAMS_HEADER on Fetch Request', () => {
     const req = new Request('https://example.com/about', {
       headers: {

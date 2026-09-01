@@ -10,6 +10,11 @@ export {
   isDesignLibraryPreviewData,
   type EditingRenderPreviewData,
 } from './editing/get-editing-preview-data';
+export {
+  getPreviewAuthToken,
+  resolvePreviewPage,
+  resolvePreviewNavigation,
+} from './editing/resolve-preview';
 
 // Loader cache (server-only). Browser code must not reach createLoaderCache —
 // see plan §1 (Browser safety). The exports here are types + server factories;

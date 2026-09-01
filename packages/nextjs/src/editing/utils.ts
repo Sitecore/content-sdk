@@ -4,6 +4,7 @@ import {
   EditingRenderQueryParams,
   isDesignLibraryMode,
   PREVIEW_KEY,
+  PREVIEW_TOKEN,
   QUERY_PARAM_EDITING_SECRET,
 } from '@sitecore-content-sdk/content/editing';
 import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
@@ -124,7 +125,7 @@ export const getAllowedQueryParams = (
 export const PREVIEW_COOKIES = {
   PREVIEW_DATA: '__next_preview_data',
   PRERENDER_BYPASS: '__prerender_bypass',
-  PREVIEW_TOKEN: 'sc_preview_token',
+  PREVIEW_TOKEN,
 };
 
 /**
