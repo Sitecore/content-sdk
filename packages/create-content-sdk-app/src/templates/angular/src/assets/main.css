@@ -1,7 +1,6 @@
 @import 'tailwindcss';
 
 @import './base/index.css';
-@import './components/index.css';
 
 /* bootstrap grid to tailwind plugin */
 @plugin 'tailwind-bootstrap-grid' {
