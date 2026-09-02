@@ -234,13 +234,13 @@ describe('components', () => {
           importPath: 'src/test-data/component-variants/qux.component',
           filePath: path.normalize('src/test-data/component-variants/qux.component.ts'),
           componentName: 'qux.component',
-          moduleName: 'quxcomponent',
+          moduleName: 'Quxcomponent',
         },
         {
           importPath: 'src/test-data/component-variants/foo.component',
           filePath: path.normalize('src/test-data/component-variants/foo.component.ts'),
           componentName: 'foo.component',
-          moduleName: 'foocomponent',
+          moduleName: 'Foocomponent',
         },
         {
           componentName: 'Baz',
