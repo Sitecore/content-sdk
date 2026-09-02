@@ -1,0 +1,23 @@
+---
+description: Sitecore development patterns for your Angular project
+alwaysApply: false
+globs:
+  - 'src/app/components/**'
+  - 'src/content-sdk/**'
+  - 'sitecore.config.ts'
+  - 'sitecore.cli.config.ts'
+  - '**/*sitecore*'
+---
+
+# Sitecore (Angular)
+
+- **Data:** loaders in `src/content-sdk/loaders/` attached with `loaderResolver('<key>')`; locale via `getLanguage(context)`, path via `splitLocaleFromPath`, site via `getSiteName(context)`
+- **Client:** single lazy singleton `getClient()` in `src/content-sdk/client/sitecore-client.ts`; never `new SitecoreClient(...)` elsewhere
+- **Preview:** `getEditingPreviewData(context.csdkRequestData)` → `getPreview()` / `getDesignLibraryData()`; editing is Metadata mode only
+- **Fields:** structural directives `*scText`, `*scRichText`, `*scImage`, `*scLink`, `*scRouterLink`; validate before render; `scTextEncode="false"` only for trusted content
+- **Placeholders:** `<sc-placeholder [name]="..." [rendering]="...">`
+- **Components:** standalone under `src/app/components/`, `fields` / `params` / `rendering` inputs, default export
+- **Map:** `.sitecore/component-map.ts` generated from `src/app/components/`; provided via `SITECORE_COMPONENT_MAP`
+- **Config:** change it only in `sitecore.config.ts` — structural settings (`angular.locales`, `angular.loadersCache`, `angular.linkPrefetch`, `multisite`, `redirects`, `personalize`) go in the **first argument** of `defineConfig`, secrets and endpoints come from env. `scConfig.*` is the resolved read-only result — never assign to it
+
+Depth: [`.agents/docs/`](../../.agents/docs/) · skill: [content-sdk-loader-authoring](../../.agents/skills/content-sdk-loader-authoring/SKILL.md)

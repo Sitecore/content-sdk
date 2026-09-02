@@ -1,0 +1,13 @@
+# Sitecore Content SDK — Angular
+
+**Primary:** [`AGENTS.md`](AGENTS.md) — commands, structure, best practices, guardrails.
+
+**Layering:** [`CLAUDE.md`](CLAUDE.md) — start with `AGENTS.md`; open one [`.agents/docs/`](.agents/docs/) layer, [`.agents/skills/`](.agents/skills/) skill, or [`.cursor/rules/`](.cursor/rules/) file when needed.
+
+**Capabilities:** [`Skills.md`](Skills.md) → one folder under `.agents/skills/` per task.
+
+**Commands:** `npm install`, `npm run dev`, `npm run build`, `npm run lint`, `npm test`. Copy `.env.example` → `.env`; never commit secrets.
+
+**Hard rule:** loaders under `src/content-sdk/` run outside the Angular injector (Express `/_data` middleware as well as Angular SSR). No `inject()` or constructor DI in loader bodies — use static imports and the `LoaderContext` argument.
+
+**Docs:** [Content SDK for Angular](https://doc.sitecore.com/sai/en/developers/content-sdk/angular/10/sitecore-content-sdk-for-angular.html)
