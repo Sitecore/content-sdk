@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import fs from 'fs';
 import path from 'path';
 import tmp from 'tmp';
+import { debugNamespace, enableDebug, isNamespaceEnabled } from '@sitecore-content-sdk/core';
 import processEnv from './process-env';
 
 interface EnvFile {
@@ -12,6 +13,7 @@ interface EnvFile {
 
 describe('processEnv', () => {
   let nodeEnvOriginal: string | undefined;
+  let debugOriginal: string | undefined;
 
   const testTempEnv = (files: EnvFile[], callback: () => void) => {
     const { name, removeCallback } = tmp.dirSync({ unsafeCleanup: true });
@@ -30,18 +32,29 @@ describe('processEnv', () => {
   before(() => {
     // stash if set to Test
     nodeEnvOriginal = process.env.NODE_ENV;
+    debugOriginal = process.env.DEBUG;
     delete process.env.NODE_ENV;
   });
 
   after(() => {
     // restore original
     process.env.NODE_ENV = nodeEnvOriginal;
+
+    if (debugOriginal === undefined) {
+      delete process.env.DEBUG;
+    } else {
+      process.env.DEBUG = debugOriginal;
+    }
+
+    enableDebug(debugOriginal || '');
   });
 
   beforeEach(() => {
     delete process.env.NODE_ENV;
     delete process.env.FOO;
     delete process.env.BAR;
+    delete process.env.DEBUG;
+    enableDebug('');
   });
 
   it('should load environment values from the provided path', () => {
@@ -113,6 +126,21 @@ describe('processEnv', () => {
     testTempEnv(files, () => {
       expect(process.env.FOO).to.be.undefined;
       expect(process.env.BAR).to.be.undefined;
+    });
+  });
+
+  it('should enable the debug scopes defined in the environment files', () => {
+    const files = [{ name: '.env', value: `DEBUG=${debugNamespace}:*` }];
+    testTempEnv(files, () => {
+      expect(process.env.DEBUG).to.equal(`${debugNamespace}:*`);
+      expect(isNamespaceEnabled(`${debugNamespace}:layout`)).to.be.true;
+    });
+  });
+
+  it('should not enable any debug scope when DEBUG is not defined', () => {
+    const files = [{ name: '.env', value: 'FOO=foo' }];
+    testTempEnv(files, () => {
+      expect(isNamespaceEnabled(`${debugNamespace}:layout`)).to.be.false;
     });
   });
 

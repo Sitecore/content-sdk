@@ -28,18 +28,8 @@ resolve('@sitecore-content-sdk/cli', { basedir: process.cwd() }, (error, project
   // load environment variables from current working directory
   // if the current working directory is not an app project root .env file will be missing and nothing will be loaded
   // in that case loading environment variables will be handled by the actual cli command
+  // this also enables the debug scopes defined by the loaded DEBUG environment variable
   processEnv(process.cwd());
-
-  // Re-enable debug logging after environment variables are loaded
-  // This ensures that DEBUG environment variables from .env files take effect
-  if (process.env.DEBUG) {
-    const debugScopes = process.env.DEBUG.split(',')
-      .map((scope) => scope.trim())
-      .filter(Boolean);
-    console.log(`Debug enabled for scopes: [${debugScopes.join(', ')}]`);
-    const debug = require('debug');
-    debug.enable(process.env.DEBUG);
-  }
 
   cli(commands);
 });
