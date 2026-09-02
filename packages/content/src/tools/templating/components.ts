@@ -191,7 +191,7 @@ function _getComponentList(
             importPath: filePath.match(componentPathPattern)![1].replace(/\\/g, '/'), // use forward slashes for consistency
             // TODO: enabled using `toPascalCase()` for the two lines below with NextJS CSDK major release
             componentName: name,
-            moduleName: name.replace(/[^\w]+/g, ''),
+            moduleName: toPascalCase(name).replace(/[^\w]+/g, ''),
           };
         })
     );
