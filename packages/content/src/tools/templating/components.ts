@@ -109,8 +109,9 @@ export interface ComponentImport {
 
 /**
  * Converts string to PascalCase.
- * @param {string} name - kebab-case, snake_case, dot.notation, camelCase, or PascalCase string (e.g. `my-component`, `my_component`, `my.component`, `myComponent`)
+ * @param {string} name - kebab-case, dot.notation, camelCase, or PascalCase string (e.g. `my-component`, `my_component`, `my.component`, `myComponent`)
  * @returns {string} PascalCase string (e.g. `MyComponent`)
+ * @internal
  */
 export const toPascalCase = (name: string): string =>
   name
@@ -188,7 +189,8 @@ function _getComponentList(
           return {
             filePath,
             importPath: filePath.match(componentPathPattern)![1].replace(/\\/g, '/'), // use forward slashes for consistency
-            componentName: toPascalCase(name),
+            // TODO: enabled using `toPascalCase()` for the two lines below with NextJS CSDK major release
+            componentName: name,
             moduleName: toPascalCase(name).replace(/[^\w]+/g, ''),
           };
         })
