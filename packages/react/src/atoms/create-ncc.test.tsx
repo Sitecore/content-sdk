@@ -33,13 +33,20 @@ describe('create-ncc', () => {
     executeAction: async () => {},
   };
 
+  const mockCatalog = defineAtomsCatalog({
+    components: {
+      Card: { props: z.object({ title: z.string().optional() }), description: 'Card' },
+    },
+    actions: {},
+  });
+
   it('returns an FC with the document name as displayName', () => {
-    const View = createNCC(mockDoc, mockRegistry);
+    const View = createNCC(mockDoc, mockRegistry, mockCatalog);
     expect(View.displayName).to.equal('TestComponent');
   });
 
   it('returns a functional component', () => {
-    const View = createNCC(mockDoc, mockRegistry);
+    const View = createNCC(mockDoc, mockRegistry, mockCatalog);
     expect(typeof View).to.equal('function');
   });
 
@@ -139,7 +146,7 @@ describe('create-ncc', () => {
           'card-el': { type: 'Card', props: { title: 'Hello' } },
         },
       };
-      const View = createNCC(doc, registry);
+      const View = createNCC(doc, registry, catalog);
       const { container } = renderInProvider(<View />);
 
       expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][element-name="list-el"]`)).to.not.be.null;
@@ -161,7 +168,7 @@ describe('create-ncc', () => {
         },
         state: { cards: [{ title: 'One' }, { title: 'Two' }] },
       };
-      const View = createNCC(doc, registry);
+      const View = createNCC(doc, registry, catalog);
       const { container } = renderInProvider(<View />);
 
       expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][element-name="list-el"]`)).to.not.be.null;

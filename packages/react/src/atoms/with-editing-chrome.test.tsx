@@ -2,10 +2,12 @@
 /* eslint-disable no-unused-expressions */
 import React from 'react';
 import { expect } from 'chai';
+import { z } from 'zod';
 import { render } from '@testing-library/react';
 import { RepeatScopeProvider } from '@json-render/react';
 import type { ComponentRenderProps } from '@json-render/react';
 import type { Document } from '@sitecore-content-sdk/content/atoms';
+import { defineAtomsCatalog } from './define-atoms-catalog';
 import { ATOM_TYPE } from './constants';
 import {
   CHROME_ELEMENT_KEY_PROP,
@@ -82,6 +84,29 @@ describe('withEditingChrome', () => {
     expect(open?.getAttribute('atom-type')).to.equal('Stub');
     expect(open?.className).to.equal('scpm');
     expect(close).to.not.be.null;
+  });
+
+  it('includes the atom slot mapping in the opening chrome block', () => {
+    const catalog = defineAtomsCatalog({
+      components: {
+        Stub: { props: z.object({}), description: 'Stub', slots: ['header', 'body'] },
+      },
+      actions: {},
+    });
+    const Wrapped = withEditingChrome(Stub, catalog.data.components.Stub);
+    const { container } = render(
+      <Wrapped
+        {...baseRenderProps({
+          element: {
+            type: 'Stub',
+            props: { [CHROME_ELEMENT_KEY_PROP]: 'card-1' },
+          },
+        })}
+      />
+    );
+
+    const open = container.querySelector(`code[chrometype="${ATOM_TYPE}"][kind="open"]`);
+    expect(open?.getAttribute('atom-slots')).to.equal(JSON.stringify(['header', 'body']));
   });
 
   it('strips the internal chrome-key prop before it reaches the wrapped component', () => {

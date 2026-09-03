@@ -1,8 +1,10 @@
 import React from 'react';
 import type { ComponentRegistry, ComponentRenderer, ComponentRenderProps } from '@json-render/react';
 import { useRepeatScope } from '@json-render/react';
+import type { Catalog } from '@json-render/core';
 import type { Document } from '@sitecore-content-sdk/content/atoms';
 import { MetadataKind } from '@sitecore-content-sdk/content/editing';
+import type { AtomsCatalogInput } from './types';
 import { ATOM_TYPE } from './constants';
 
 /**
@@ -45,10 +47,14 @@ export function withElementChromeKeys(doc: Document): Document {
  * Reads the element's flat-spec key (injected by `withElementChromeKeys`) for the chrome id,
  * appending the current repeat index via `useRepeatScope()` when rendered inside a repeat scope.
  * @param {ComponentRenderer} Component - The registry component renderer to wrap
+ * @param {AtomsCatalogInput['components'][string]} [componentDefinition] - The catalog definition for the component
  * @returns {ComponentRenderer} A component renderer that renders the same output surrounded by atom chrome
  * @internal
  */
-export function withEditingChrome(Component: ComponentRenderer): ComponentRenderer {
+export function withEditingChrome(
+  Component: ComponentRenderer,
+  componentDefinition?: AtomsCatalogInput['components'][string]
+): ComponentRenderer {
   const WithEditingChrome = ({ element, ...rest }: ComponentRenderProps) => {
     const repeatScope = useRepeatScope();
     const elementProps = (element.props ?? {}) as Record<string, unknown>;
@@ -65,6 +71,7 @@ export function withEditingChrome(Component: ComponentRenderer): ComponentRender
       kind: MetadataKind.Open,
       'element-name': indexedElementKey,
       'atom-type': element.type,
+      ...(componentDefinition?.slots ? { 'atom-slots': JSON.stringify(componentDefinition.slots) } : {}),
     };
     const closeAttributes = { ...baseAttributes, kind: MetadataKind.Close };
 
@@ -85,14 +92,18 @@ export function withEditingChrome(Component: ComponentRenderer): ComponentRender
 /**
  * Wraps every component in a registry with {@link withEditingChrome}.
  * @param {ComponentRegistry} registry - The registry produced by `defineAtomsRegistry`
+ * @param {Catalog<any, AtomsCatalogInput>} [catalog] - The catalog containing component slot definitions
  * @returns {ComponentRegistry} A new registry with every component wrapped in atom editing chrome
  * @internal
  */
-export function withEditingChromeRegistry(registry: ComponentRegistry): ComponentRegistry {
+export function withEditingChromeRegistry(
+  registry: ComponentRegistry,
+  catalog?: Catalog<any, AtomsCatalogInput>
+): ComponentRegistry {
   const wrapped: ComponentRegistry = {};
 
   for (const [type, Component] of Object.entries(registry)) {
-    wrapped[type] = withEditingChrome(Component);
+    wrapped[type] = withEditingChrome(Component, catalog?.data.components[type]);
   }
 
   return wrapped;
