@@ -77,8 +77,9 @@ describe('withEditingChrome', () => {
     const open = container.querySelector(`code[chrometype="${ATOM_TYPE}"][kind="open"]`);
     const close = container.querySelector(`code[chrometype="${ATOM_TYPE}"][kind="close"]`);
 
-    expect(open?.getAttribute('id')).to.equal('card-1');
+    expect(open?.getAttribute('element-name')).to.equal('card-1');
     expect(open?.getAttribute('type')).to.equal('text/sitecore');
+    expect(open?.getAttribute('atom-type')).to.equal('Stub');
     expect(open?.className).to.equal('scpm');
     expect(close).to.not.be.null;
   });
@@ -119,7 +120,7 @@ describe('withEditingChrome', () => {
     );
 
     const open = container.querySelector(`code[chrometype="${ATOM_TYPE}"][kind="open"]`);
-    expect(open?.getAttribute('id')).to.equal('item_2');
+    expect(open?.getAttribute('element-name')).to.equal('item_2');
   });
 
   it('keeps the plain unsuffixed id for the container owning the repeat itself', () => {
@@ -133,7 +134,7 @@ describe('withEditingChrome', () => {
     );
 
     const open = container.querySelector(`code[chrometype="${ATOM_TYPE}"][kind="open"]`);
-    expect(open?.getAttribute('id')).to.equal('list');
+    expect(open?.getAttribute('element-name')).to.equal('list');
   });
 });
 
@@ -161,7 +162,7 @@ describe('withEditingChromeRegistry', () => {
       </>
     );
 
-    expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][id="text-1"]`)).to.not.be.null;
-    expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][id="box-1"]`)).to.not.be.null;
+    expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][element-name="text-1"]`)).to.not.be.null;
+    expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][element-name="box-1"]`)).to.not.be.null;
   });
 });

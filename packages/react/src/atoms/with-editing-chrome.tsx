@@ -58,9 +58,14 @@ export function withEditingChrome(Component: ComponentRenderer): ComponentRender
       return <Component element={element} {...rest} />;
     }
 
-    const chromeId = repeatScope ? `${elementKey}_${repeatScope.index}` : elementKey;
+    const indexedElementKey = repeatScope ? `${elementKey}_${repeatScope.index}` : elementKey;
     const baseAttributes = { type: 'text/sitecore', chrometype: ATOM_TYPE, className: 'scpm' };
-    const openAttributes = { ...baseAttributes, kind: MetadataKind.Open, id: chromeId };
+    const openAttributes = {
+      ...baseAttributes,
+      kind: MetadataKind.Open,
+      'element-name': indexedElementKey,
+      'atom-type': element.type,
+    };
     const closeAttributes = { ...baseAttributes, kind: MetadataKind.Close };
 
     return (
