@@ -10,6 +10,7 @@ import * as atoms from '@sitecore-content-sdk/content/atoms';
 import { debug } from '@sitecore-content-sdk/content';
 import { DesignLibraryErrorBoundary, PlaceholderMetadata } from '../..';
 import type { ChildComponentProps } from '../Placeholder/models';
+import { ATOM_TYPE } from '../../atoms/constants';
 
 let { postToDesignLibrary, getDesignLibraryStatusEvent, DesignLibraryStatus } = editing;
 let {
@@ -44,7 +45,8 @@ export const __mockDependencies = (mocks: any) => {
  * - When `atomsConfig.compileCssAction` is provided, compiles Document class names and injects CSS so
  * utilities that exist only in MMS Document JSON are styled during editing.
  * - Wraps preview output with `PlaceholderMetadata` using the layout rendering UID so Design Studio
- * receives the same chrome handshake as normal Design Library components.
+ * receives the same chrome handshake as normal Design Library components. Adds `component-type="atom"`
+ * to that wrap so Sitecore Pages can skip the whole Atoms subtree by ancestor when querying chrome.
  * @returns {JSX.Element} The low-code preview surface.
  * @internal
  */
@@ -125,7 +127,11 @@ export const DesignLibraryLowCodeComponent = () => {
   return (
     <DesignLibraryErrorBoundary uid={uid} renderKey={renderKey}>
       {documentCss ? <style dangerouslySetInnerHTML={{ __html: documentCss }} /> : null}
-      <PlaceholderMetadata rendering={{ uid: uid, componentName: uid }} componentRuntime="client">
+      <PlaceholderMetadata
+        rendering={{ uid: uid, componentName: uid }}
+        componentRuntime="client"
+        componentType={ATOM_TYPE}
+      >
         <StudioComponentWrapper document={currentDocument} fields={fields} params={params} />
       </PlaceholderMetadata>
     </DesignLibraryErrorBoundary>

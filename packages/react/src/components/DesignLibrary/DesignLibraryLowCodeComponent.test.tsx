@@ -14,6 +14,7 @@ import {
   getDesignLibraryStatusEvent,
 } from '@sitecore-content-sdk/content/editing';
 import type { AtomsConfig } from '../../atoms/types';
+import { ATOM_TYPE } from '../../atoms/constants';
 import type { ImportMapImport } from './models';
 import type { DefineRegistryResult } from '@json-render/react';
 
@@ -183,6 +184,7 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     expect(openChrome).to.not.be.null;
     expect(closeChrome).to.not.be.null;
     expect(openChrome?.getAttribute('data-csdk-component-runtime')).to.equal('client');
+    expect(openChrome?.getAttribute('component-type')).to.equal(ATOM_TYPE);
   });
 
   it('subscribes to component props update handler', async () => {
@@ -219,6 +221,7 @@ describe('<DesignLibraryLowCodeComponent />', () => {
       expect(codeBlocks[0].getAttribute('chrometype')).to.equal('rendering');
       expect(codeBlocks[0].getAttribute('id')).to.equal('design-library-low-code-component');
       expect(codeBlocks[0].getAttribute('data-csdk-component-runtime')).to.equal('client');
+      expect(codeBlocks[0].getAttribute('component-type')).to.equal(ATOM_TYPE);
     });
   });
 

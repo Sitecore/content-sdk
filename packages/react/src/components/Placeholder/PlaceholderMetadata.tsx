@@ -17,6 +17,12 @@ export interface PlaceholderMetadataProps {
    * Component runtime type. Used to add data-csdk-component-runtime attribute to rendering chromes
    */
   componentRuntime?: 'server' | 'client';
+  /**
+   * Adds a `component-type` attribute to the outer rendering chrome, so Sitecore Pages can
+   * identify (and skip nested chrome queries within) a whole subtree by ancestor, e.g. `"atom"`
+   * for the Atoms low-code wrapper.
+   */
+  componentType?: string;
 }
 
 export type CodeBlockAttributes = {
@@ -26,6 +32,7 @@ export type CodeBlockAttributes = {
   kind: string;
   id?: string;
   'data-csdk-component-runtime'?: 'server' | 'client';
+  'component-type'?: string;
 };
 
 /**
@@ -36,6 +43,7 @@ export type CodeBlockAttributes = {
  * @param {ComponentRendering} props.rendering The rendering data.
  * @param {string} [props.placeholderName] The name of the placeholder.
  * @param {'server' | 'client'} [props.componentRuntime] Component runtime type. Used to add data-csdk-component-runtime attribute to rendering chromes.
+ * @param {string} [props.componentType] Adds a component-type attribute to the outer rendering chrome (e.g. "atom").
  * @param {JSX.Element} props.children The child components or elements to be wrapped by the metadata code blocks.
  * @returns {JSX.Element} A React fragment containing open and close code blocks surrounding the children elements.
  * @internal
@@ -45,6 +53,7 @@ export const PlaceholderMetadata = ({
   placeholderName,
   children,
   componentRuntime,
+  componentType,
 }: PlaceholderMetadataProps): JSX.Element => {
   const getCodeBlockAttributes = ({
     kind,
@@ -96,6 +105,10 @@ export const PlaceholderMetadata = ({
       // Add component runtime attribute for rendering chromes
       if (chrometype === 'rendering' && componentRuntime) {
         attributes['data-csdk-component-runtime'] = componentRuntime;
+      }
+
+      if (componentType) {
+        attributes['component-type'] = componentType;
       }
     }
 

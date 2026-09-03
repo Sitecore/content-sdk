@@ -13,6 +13,7 @@ import type { StateModel } from '@json-render/core';
 import { Document } from '@sitecore-content-sdk/content/atoms';
 import { useSitecore } from '../components/SitecoreProvider';
 import type { ChildComponentProps } from '../components/Placeholder/models';
+import { withElementChromeKeys, withEditingChromeRegistry } from './with-editing-chrome';
 
 /**
  * Props accepted by the NCC component created by `createNCC`.
@@ -34,6 +35,8 @@ type NCCProps = {
  */
 export function createNCC(doc: Document, registryResult: DefineRegistryResult): FC<NCCProps> {
   const { registry, handlers } = registryResult;
+  const chromeDoc = withElementChromeKeys(doc);
+  const chromeRegistry = withEditingChromeRegistry(registry);
 
   const initialState: StateModel = {
     ...(doc.state ?? {}),
@@ -66,12 +69,12 @@ export function createNCC(doc: Document, registryResult: DefineRegistryResult): 
     );
 
     return (
-      <div className={`component ${params?.styles || ''}`} id={params?.RenderingIdentifier || ''}>
+      <div className={`component${params?.styles ? ` ${params.styles}` : ''}`} id={params?.RenderingIdentifier || ''}>
         <StateProvider store={store}>
           <VisibilityProvider>
             <ActionProvider handlers={resolvedHandlers} navigate={atomsConfig?.navigate}>
               <ValidationProvider>
-                <Renderer spec={doc} registry={registry} />
+                <Renderer spec={chromeDoc} registry={chromeRegistry} />
               </ValidationProvider>
             </ActionProvider>
           </VisibilityProvider>
