@@ -20,14 +20,17 @@ const { executeScriptElements, loadForm, subscribeToFormSubmitEvent } = form;
 /* eslint-disable @typescript-eslint/member-ordering -- ViewChild + signal inputs + constructor ordering conflicts with default groups */
 /**
  * Angular wrapper for Sitecore Forms.
- * Loads form HTML from Edge, executes embedded scripts, and subscribes to form events.
+ * Loads form HTML from Edge using the page language, exposes that language on the
+ * host element, executes embedded scripts, and subscribes to form events.
  *
  * Usage: register in the component map with the rendering name "Form".
  * @public
  */
 @Component({
   selector: 'sc-form',
-  template: ` <div #formContainer [class]="styles()" [id]="renderingId()"></div> `,
+  template: `
+    <div #formContainer [class]="styles()" [id]="renderingId()" [attr.lang]="language()"></div>
+  `,
 })
 export class ScFormComponent {
   @ViewChild('formContainer', { static: true })
@@ -74,7 +77,7 @@ export class ScFormComponent {
         abort.abort();
       });
 
-      loadForm(edgeId, formId, edgeUrl)
+      loadForm(edgeId, formId, edgeUrl, this.language())
         .then((html: string) => {
           if (cancelled) return;
           const el = this.formContainerRef?.nativeElement;
@@ -107,5 +110,6 @@ export class ScFormComponent {
     const p = this.mergedFormParams();
     return p.RenderingIdentifier || undefined;
   };
+  readonly language = () => this.context.effectiveLocale();
 }
 /* eslint-enable @typescript-eslint/member-ordering */
