@@ -9,10 +9,9 @@ import {
 } from '@json-render/react';
 import type { DefineRegistryResult } from '@json-render/react';
 import { createStateStore } from '@json-render/react';
-import type { Catalog } from '@json-render/core';
 import type { StateModel } from '@json-render/core';
 import { Document } from '@sitecore-content-sdk/content/atoms';
-import type { AtomsCatalogInput } from './types';
+import type { AtomsCatalog } from './types';
 import { useSitecore } from '../components/SitecoreProvider';
 import type { ChildComponentProps } from '../components/Placeholder/models';
 import { withElementChromeKeys, withEditingChromeRegistry } from './with-editing-chrome';
@@ -32,14 +31,14 @@ type NCCProps = {
  * using json-render's Renderer. The document's flat element map is passed as a spec.
  * @param {Document} doc - Component Layout document (flat spec format)
  * @param {DefineRegistryResult} registryResult - The registry from defineAtomsRegistry
- * @param {Catalog<any, AtomsCatalogInput>} catalog - The catalog containing component definitions
+ * @param {AtomsCatalog} catalog - The catalog containing component definitions
  * @returns {FC<NCCProps>} FC that accepts runtime props merged into spec state
  * @internal
  */
 export function createNCC(
   doc: Document,
   registryResult: DefineRegistryResult,
-  catalog: Catalog<any, AtomsCatalogInput>
+  catalog: AtomsCatalog
 ): FC<NCCProps> {
   const { registry, handlers } = registryResult;
   const chromeDoc = withElementChromeKeys(doc);

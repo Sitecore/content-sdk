@@ -1,5 +1,4 @@
-import type { Catalog } from '@json-render/core';
-import { AtomsCatalogInput } from './types';
+import type { AtomsCatalog } from './types';
 import {
   AtomCatalogActionEntry,
   AtomCatalogComponentEntry,
@@ -8,11 +7,11 @@ import {
 
 /**
  * Serialize a json-render Catalog into the payload shape expected by Design Studio.
- * @param { Catalog<any, AtomsCatalogInput> } catalog - The json-render Catalog to serialize
+ * @param {AtomsCatalog} catalog - The Atoms catalog to serialize
  * @returns Serialized catalog for the Design Library event
  * @internal
  */
-export function serializeCatalog(catalog: Catalog<any, AtomsCatalogInput>): SerializedCatalog {
+export function serializeCatalog(catalog: AtomsCatalog): SerializedCatalog {
   const { version, components, actions } = catalog.data;
 
   const serializedComponents: AtomCatalogComponentEntry[] = Object.entries(components).map(

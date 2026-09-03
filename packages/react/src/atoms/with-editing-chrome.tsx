@@ -1,10 +1,9 @@
 import React from 'react';
 import type { ComponentRegistry, ComponentRenderer, ComponentRenderProps } from '@json-render/react';
 import { useRepeatScope } from '@json-render/react';
-import type { Catalog } from '@json-render/core';
 import type { Document } from '@sitecore-content-sdk/content/atoms';
 import { MetadataKind } from '@sitecore-content-sdk/content/editing';
-import type { AtomsCatalogInput } from './types';
+import type { AtomsCatalog, AtomsCatalogInput } from './types';
 import { ATOM_TYPE } from './constants';
 
 /**
@@ -92,18 +91,18 @@ export function withEditingChrome(
 /**
  * Wraps every component in a registry with {@link withEditingChrome}.
  * @param {ComponentRegistry} registry - The registry produced by `defineAtomsRegistry`
- * @param {Catalog<any, AtomsCatalogInput>} [catalog] - The catalog containing component slot definitions
+ * @param {AtomsCatalog} catalog - The catalog containing component slot definitions
  * @returns {ComponentRegistry} A new registry with every component wrapped in atom editing chrome
  * @internal
  */
 export function withEditingChromeRegistry(
   registry: ComponentRegistry,
-  catalog?: Catalog<any, AtomsCatalogInput>
+  catalog: AtomsCatalog
 ): ComponentRegistry {
   const wrapped: ComponentRegistry = {};
 
   for (const [type, Component] of Object.entries(registry)) {
-    wrapped[type] = withEditingChrome(Component, catalog?.data.components[type]);
+    wrapped[type] = withEditingChrome(Component, catalog.data.components[type]);
   }
 
   return wrapped;

@@ -167,8 +167,15 @@ describe('withEditingChromeRegistry', () => {
   it('wraps every component in the registry', () => {
     const Text = ({ element }: ComponentRenderProps) => <span>{JSON.stringify(element.props)}</span>;
     const Box = ({ children }: ComponentRenderProps) => <div>{children}</div>;
+    const catalog = defineAtomsCatalog({
+      components: {
+        Text: { props: z.object({}), description: 'Text' },
+        Box: { props: z.object({}), description: 'Box' },
+      },
+      actions: {},
+    });
 
-    const registry = withEditingChromeRegistry({ Text, Box });
+    const registry = withEditingChromeRegistry({ Text, Box }, catalog);
 
     const { container } = render(
       <>
