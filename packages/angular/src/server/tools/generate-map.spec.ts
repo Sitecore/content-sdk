@@ -25,6 +25,17 @@ const fsMock = vi.hoisted(() => ({
   writeFileSync: vi.fn(),
 }));
 
+// Spy backed by the real PascalCase implementation so we can both keep the
+// generated output faithful and assert that generateMap applies it.
+const toPascalCaseMock = vi.hoisted(() =>
+  vi.fn((name: string) =>
+    name
+      .split(/[-_]/)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join('')
+  )
+);
+
 vi.mock('node:fs', () => fsMock);
 
 vi.mock('@sitecore-content-sdk/content/node-tools', () => ({
@@ -34,6 +45,7 @@ vi.mock('@sitecore-content-sdk/content/node-tools', () => ({
 vi.mock('@sitecore-content-sdk/content/tools', () => ({
   prepareComponentsForMap: vi.fn(),
   buildComponentMapContent: vi.fn(() => '// generated map'),
+  toPascalCase: toPascalCaseMock,
 }));
 
 import { generateMap } from '../tools/generate-map';
@@ -74,6 +86,7 @@ describe('generateMap', () => {
     mockBuildComponentMapContent.mockReturnValue('// map file body');
     mockGetComponentList.mockReset();
     mockGetComponentList.mockReturnValue([]);
+    toPascalCaseMock.mockClear();
   });
 
   afterEach(() => {
@@ -125,6 +138,29 @@ describe('generateMap', () => {
     const [passedComponents] = mockPrepareComponentsForMap.mock.calls[0];
     expect(passedComponents).toHaveLength(1);
     expect(passedComponents[0].filePath).toContain('with.component');
+  });
+
+  it('should apply toPascalCase to componentName and moduleName', () => {
+    const comp = makeComponent({
+      filePath: '/project/root/src/my-hero.component.ts',
+      componentName: 'my-hero',
+      moduleName: 'my_hero',
+      importPath: 'src/my-hero.component',
+    });
+    mockGetComponentList.mockReturnValue([comp]);
+
+    generateMap({ paths: ['src'] });
+
+    // Raw names from getComponentList are normalized through toPascalCase.
+    expect(toPascalCaseMock).toHaveBeenCalledWith('my-hero');
+    expect(toPascalCaseMock).toHaveBeenCalledWith('my_hero');
+
+    // The components forwarded to the map builder carry the PascalCased names.
+    expect(mockPrepareComponentsForMap).toHaveBeenCalledTimes(1);
+    const [passedComponents] = mockPrepareComponentsForMap.mock.calls[0];
+    expect(passedComponents).toHaveLength(1);
+    expect(passedComponents[0].componentName).toBe('MyHero');
+    expect(passedComponents[0].moduleName).toBe('MyHero');
   });
 
   it('should use default buildAngularComponentMap function when no mapTemplate is provided', () => {
