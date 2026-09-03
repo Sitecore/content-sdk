@@ -82,7 +82,7 @@ describe('create-ncc', () => {
       const View = createNCCWithMocks(mockDoc, mockRegistry);
       const { container } = render(<View />);
       const div = container.firstChild as HTMLElement;
-      expect(div.className).to.equal('component ');
+      expect(div.className).to.equal('component');
     });
 
     it('applies params.RenderingIdentifier to the wrapper div id', () => {
