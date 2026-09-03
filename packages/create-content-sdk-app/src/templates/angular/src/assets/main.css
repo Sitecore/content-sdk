@@ -1,7 +1,5 @@
 @import 'tailwindcss';
 
-@import './base/index.css';
-
 /* bootstrap grid to tailwind plugin */
 @plugin 'tailwind-bootstrap-grid' {
   container_max_widths: 'sm', '576px', 'md', '768px', 'lg', '992px', 'xl', '1200px', '2xl', '1400px';

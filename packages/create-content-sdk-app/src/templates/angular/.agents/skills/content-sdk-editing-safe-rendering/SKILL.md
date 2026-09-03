@@ -16,10 +16,10 @@ description: Metadata-mode editing and preview via getEditingPreviewData in the 
 ## Rules
 
 - Editing is **Metadata mode only** — there is no Experience Editor chrome support
-- Preview payload arrives on the same Express `req`; read it with `getEditingPreviewData(context.csdkRequestData)` in the loader, then `getClient().getPreview()` or `getDesignLibraryData()` when `isDesignLibraryPreviewData()`
+- Preview payload arrives on the same Express `req`; read it with `getEditingPreviewData(context.csdkRequestData)` in the loader, then `getClient().getPreview()`
 - `<sc-editing-scripts />` stays as the first element of `src/app/app.html`
 - Render editable fields through the `*sc*` directives so the `<code class="scpm">` markers are emitted
-- Branch on `page.mode.isEditing` / `.isPreview` / `.isNormal` / `.isDesignLibrary`, not on env checks
+- Branch on `page.mode.isEditing` / `.isPreview` / `.isNormal` not on env checks
 - The loader cache is bypassed for editing requests — do not add caching that ignores that
 
 ## Stop

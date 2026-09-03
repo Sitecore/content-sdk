@@ -20,7 +20,7 @@ description: Page/dictionary fetch via getClient() inside src/content-sdk/loader
 - One client: `getClient()` lazy singleton; do not call `new SitecoreClient(...)` elsewhere
 - Path from `splitLocaleFromPath(context.url, scConfig.angular.locales).nonLocalePath`; locale from `getLanguage(context)`; site from `getSiteName(context)`
 - `getClient().getPage(path, { locale, site, personalize })`; dictionary via `getClient().getDictionary({ locale, site })`
-- Preview: `getEditingPreviewData(context.csdkRequestData)` → `getPreview()` or `getDesignLibraryData()`
+- Preview: `getEditingPreviewData(context.csdkRequestData)` → `getPreview()`
 
 ## Stop
 

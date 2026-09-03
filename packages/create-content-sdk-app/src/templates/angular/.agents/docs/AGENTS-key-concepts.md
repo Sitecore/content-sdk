@@ -5,7 +5,7 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 ## SitecoreClient
 
 - **Where:** `src/content-sdk/client/sitecore-client.ts` exports `getClient()` — a **lazy singleton** that constructs `new SitecoreClient(scConfig)` on first use. It is lazy on purpose: build-time route extraction runs without credentials, and eager construction would throw.
-- **Use for:** `getPage`, `getDictionary`, `getPreview`, `getDesignLibraryData`, `getErrorPage`, `getPagePaths`, `getSiteMap`, `getHeadLinks`.
+- **Use for:** `getPage`, `getDictionary`, `getPreview`, `getErrorPage`, `getPagePaths`, `getSiteMap`, `getHeadLinks`.
 - **Consumed by:** loaders (`getClient()` directly), `provideSitecoreAngular({ sitecoreClient: getClient() })` in `app.config.ts`, and the Express middleware in `server.ts` (sitemap, robots).
 - **In components:** inject `SITECORE_CLIENT_TOKEN` (as `LayoutComponent` does for `getHeadLinks`). Do **not** call `new SitecoreClient(...)` anywhere else.
 
@@ -42,8 +42,8 @@ Rendered with `<sc-placeholder [name]="'headless-main'" [rendering]="scRoute()!"
 
 - **Mode:** Metadata only. There is no Experience Editor chrome support.
 - **Flow:** Sitecore Pages calls `GET /api/editing/render`; `createEditingRenderMiddleware()` validates the secret, sets the CSP `frame-ancestors` header, attaches the preview payload to the same Express `req`, rewrites the URL and hands off to Angular SSR. Unlike Next.js there are no preview cookies and no internal HTTP round-trip.
-- **In the loader:** `getEditingPreviewData(context.csdkRequestData)` → `getClient().getPreview(previewData)` or `getDesignLibraryData(previewData)`.
-- **In the app:** `<sc-editing-scripts />` is the first element in `src/app/app.html`; it injects the Pages client scripts when `page.mode.isEditing`. `page.mode` exposes `isEditing`, `isPreview`, `isNormal`, `isDesignLibrary`.
+- **In the loader:** `getEditingPreviewData(context.csdkRequestData)` → `getClient().getPreview(previewData)`.
+- **In the app:** `<sc-editing-scripts />` is the first element in `src/app/app.html`; it injects the Pages client scripts when `page.mode.isEditing`. `page.mode` exposes `isEditing`, `isPreview`, `isNormal`.
 - **Endpoints:** `/api/editing/config` (component map keys + `.sitecore/metadata.json` + `editMode: 'metadata'`), `/api/editing/experimental`, `/api/editing/render`. All must stay registered **before** the static handler and the SSR handler.
 - **Cache:** disabled for editing requests.
 

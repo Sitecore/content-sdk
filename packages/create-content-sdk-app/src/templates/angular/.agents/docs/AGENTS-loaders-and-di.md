@@ -40,7 +40,6 @@ Helpers from `@sitecore-content-sdk/angular` that read the context for you:
 | `getVariantId(context)` | Page variant from `createPersonalizeMiddleware` |
 | `getComponentVariantIds(context)` | Component variants from personalization |
 | `getEditingPreviewData(context.csdkRequestData)` | Editing/preview payload stashed by the editing render middleware |
-| `isDesignLibraryPreviewData(previewData)` | Whether the payload is a Design Library request |
 | `splitLocaleFromPath(url, scConfig.angular.locales)` | `{ locale, nonLocalePath }` |
 
 ## Reference implementation
@@ -61,7 +60,7 @@ export const pageLoader: LoaderFn<Page> = async (context) => {
   const previewData = getEditingPreviewData(context.csdkRequestData);
   const locale = getLanguage(context) || scConfig.defaultLanguage;
   const { nonLocalePath } = splitLocaleFromPath(context.url, scConfig.angular.locales);
-  // … getDesignLibraryData / getPreview / getPage
+  // getPreview / getPage
   if (!page) throw new NotFoundNavigationError();
   return page;
 };

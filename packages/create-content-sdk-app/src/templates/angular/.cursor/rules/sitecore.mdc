@@ -13,7 +13,7 @@ globs:
 
 - **Data:** loaders in `src/content-sdk/loaders/` attached with `loaderResolver('<key>')`; locale via `getLanguage(context)`, path via `splitLocaleFromPath`, site via `getSiteName(context)`
 - **Client:** single lazy singleton `getClient()` in `src/content-sdk/client/sitecore-client.ts`; never `new SitecoreClient(...)` elsewhere
-- **Preview:** `getEditingPreviewData(context.csdkRequestData)` → `getPreview()` / `getDesignLibraryData()`; editing is Metadata mode only
+- **Preview:** `getEditingPreviewData(context.csdkRequestData)` → `getPreview()`; editing is Metadata mode only
 - **Fields:** structural directives `*scText`, `*scRichText`, `*scImage`, `*scLink`, `*scRouterLink`; validate before render; `scTextEncode="false"` only for trusted content
 - **Placeholders:** `<sc-placeholder [name]="..." [rendering]="...">`
 - **Components:** standalone under `src/app/components/`, `fields` / `params` / `rendering` inputs, default export
