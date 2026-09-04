@@ -1664,6 +1664,9 @@ export interface TextField extends FieldMetadata {
 }
 
 // @internal
+export const toPascalCase: (name: string) => string;
+
+// @internal
 export const updateComponent: (component: ComponentRendering<ComponentFields>, fields: ComponentFields | undefined, params: ComponentParams | undefined) => void;
 
 // @public

@@ -6,7 +6,7 @@
 
 # Enumeration: ExtractedFileType
 
-Defined in: [content/src/tools/codegen/utils.ts:81](https://github.com/Sitecore/content-sdk/blob/8f962400f3b79f00425a8cd76a6d2082b5b47c47/packages/content/src/tools/codegen/utils.ts#L81)
+Defined in: [content/src/tools/codegen/utils.ts:81](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/tools/codegen/utils.ts#L81)
 
 Type of file to be sent to the mesh endpoint
 
@@ -16,7 +16,7 @@ Type of file to be sent to the mesh endpoint
 
 > **Component**: `"component"`
 
-Defined in: [content/src/tools/codegen/utils.ts:82](https://github.com/Sitecore/content-sdk/blob/8f962400f3b79f00425a8cd76a6d2082b5b47c47/packages/content/src/tools/codegen/utils.ts#L82)
+Defined in: [content/src/tools/codegen/utils.ts:82](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/tools/codegen/utils.ts#L82)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [content/src/tools/codegen/utils.ts:82](https://github.com/Sitecore/
 
 > **Json**: `"json"`
 
-Defined in: [content/src/tools/codegen/utils.ts:84](https://github.com/Sitecore/content-sdk/blob/8f962400f3b79f00425a8cd76a6d2082b5b47c47/packages/content/src/tools/codegen/utils.ts#L84)
+Defined in: [content/src/tools/codegen/utils.ts:84](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/tools/codegen/utils.ts#L84)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [content/src/tools/codegen/utils.ts:84](https://github.com/Sitecore/
 
 > **PackageJson**: `"package.json"`
 
-Defined in: [content/src/tools/codegen/utils.ts:85](https://github.com/Sitecore/content-sdk/blob/8f962400f3b79f00425a8cd76a6d2082b5b47c47/packages/content/src/tools/codegen/utils.ts#L85)
+Defined in: [content/src/tools/codegen/utils.ts:85](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/tools/codegen/utils.ts#L85)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [content/src/tools/codegen/utils.ts:85](https://github.com/Sitecore/
 
 > **Style**: `"style"`
 
-Defined in: [content/src/tools/codegen/utils.ts:88](https://github.com/Sitecore/content-sdk/blob/8f962400f3b79f00425a8cd76a6d2082b5b47c47/packages/content/src/tools/codegen/utils.ts#L88)
+Defined in: [content/src/tools/codegen/utils.ts:88](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/tools/codegen/utils.ts#L88)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [content/src/tools/codegen/utils.ts:88](https://github.com/Sitecore/
 
 > **Template**: `"template"`
 
-Defined in: [content/src/tools/codegen/utils.ts:87](https://github.com/Sitecore/content-sdk/blob/8f962400f3b79f00425a8cd76a6d2082b5b47c47/packages/content/src/tools/codegen/utils.ts#L87)
+Defined in: [content/src/tools/codegen/utils.ts:87](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/tools/codegen/utils.ts#L87)
 
 ***
 
@@ -56,4 +56,4 @@ Defined in: [content/src/tools/codegen/utils.ts:87](https://github.com/Sitecore/
 
 > **Variant**: `"variant"`
 
-Defined in: [content/src/tools/codegen/utils.ts:83](https://github.com/Sitecore/content-sdk/blob/8f962400f3b79f00425a8cd76a6d2082b5b47c47/packages/content/src/tools/codegen/utils.ts#L83)
+Defined in: [content/src/tools/codegen/utils.ts:83](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/tools/codegen/utils.ts#L83)

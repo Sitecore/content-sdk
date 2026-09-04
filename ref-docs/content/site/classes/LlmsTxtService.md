@@ -6,7 +6,7 @@
 
 # Class: LlmsTxtService
 
-Defined in: [content/src/site/llms-txt-service.ts:57](https://github.com/Sitecore/content-sdk/blob/8f962400f3b79f00425a8cd76a6d2082b5b47c47/packages/content/src/site/llms-txt-service.ts#L57)
+Defined in: [content/src/site/llms-txt-service.ts:57](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/site/llms-txt-service.ts#L57)
 
 Service that fetches the llms.txt content managed via Sitecore AI, using Sitecore's GraphQL API.
 
@@ -16,7 +16,7 @@ Service that fetches the llms.txt content managed via Sitecore AI, using Sitecor
 
 > **new LlmsTxtService**(`options`): `LlmsTxtService`
 
-Defined in: [content/src/site/llms-txt-service.ts:64](https://github.com/Sitecore/content-sdk/blob/8f962400f3b79f00425a8cd76a6d2082b5b47c47/packages/content/src/site/llms-txt-service.ts#L64)
+Defined in: [content/src/site/llms-txt-service.ts:64](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/site/llms-txt-service.ts#L64)
 
 Creates an instance of graphQL llms.txt service with the provided options
 
@@ -36,7 +36,7 @@ Creates an instance of graphQL llms.txt service with the provided options
 
 > **options**: [`LlmsTxtServiceConfig`](../type-aliases/LlmsTxtServiceConfig.md)
 
-Defined in: [content/src/site/llms-txt-service.ts:64](https://github.com/Sitecore/content-sdk/blob/8f962400f3b79f00425a8cd76a6d2082b5b47c47/packages/content/src/site/llms-txt-service.ts#L64)
+Defined in: [content/src/site/llms-txt-service.ts:64](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/site/llms-txt-service.ts#L64)
 
 instance
 
@@ -48,7 +48,7 @@ instance
 
 > **get** `protected` **query**(): `string`
 
-Defined in: [content/src/site/llms-txt-service.ts:68](https://github.com/Sitecore/content-sdk/blob/8f962400f3b79f00425a8cd76a6d2082b5b47c47/packages/content/src/site/llms-txt-service.ts#L68)
+Defined in: [content/src/site/llms-txt-service.ts:68](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/site/llms-txt-service.ts#L68)
 
 ##### Returns
 
@@ -60,7 +60,7 @@ Defined in: [content/src/site/llms-txt-service.ts:68](https://github.com/Sitecor
 
 > **fetchLlmsTxt**(`fetchOptions?`): `Promise`\<`string`\>
 
-Defined in: [content/src/site/llms-txt-service.ts:78](https://github.com/Sitecore/content-sdk/blob/8f962400f3b79f00425a8cd76a6d2082b5b47c47/packages/content/src/site/llms-txt-service.ts#L78)
+Defined in: [content/src/site/llms-txt-service.ts:78](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/site/llms-txt-service.ts#L78)
 
 Fetch a data of llms.txt from API
 
@@ -86,7 +86,7 @@ if the siteName is empty.
 
 > `protected` **getGraphQLClient**(): [`GraphQLClient`](../../client/interfaces/GraphQLClient.md)
 
-Defined in: [content/src/site/llms-txt-service.ts:107](https://github.com/Sitecore/content-sdk/blob/8f962400f3b79f00425a8cd76a6d2082b5b47c47/packages/content/src/site/llms-txt-service.ts#L107)
+Defined in: [content/src/site/llms-txt-service.ts:107](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/site/llms-txt-service.ts#L107)
 
 Gets a GraphQL client that can make requests to the API. Uses graphql-request as the default
 library for fetching graphql data (@see GraphQLRequestClient). Override this method if you
