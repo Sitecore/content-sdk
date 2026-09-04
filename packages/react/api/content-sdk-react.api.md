@@ -92,6 +92,9 @@ export type AtomComponentDefinition = BaseComponent & SitecoreComponentMeta;
 // @public
 export type AtomsActionsMap = Record<string, AtomActionHandler>;
 
+// @public
+export type AtomsCatalog = Catalog<any, AtomsCatalogInput>;
+
 // Warning: (ae-forgotten-export) The symbol "BaseCatalog" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
@@ -108,7 +111,7 @@ export type AtomsComponentsMap = Record<string, AtomsComponentRenderer>;
 
 // @public
 export interface AtomsConfig {
-    catalog: Catalog<any, AtomsCatalogInput>;
+    catalog: AtomsCatalog;
     compileCssAction?: (classes: string[]) => Promise<string>;
     navigate?: (path: string) => void;
     registry: DefineRegistryResult;

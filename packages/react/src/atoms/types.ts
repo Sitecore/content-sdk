@@ -38,6 +38,12 @@ export type AtomsCatalogInput = BaseCatalog & {
 };
 
 /**
+ * Catalog used by the Atoms APIs.
+ * @public
+ */
+export type AtomsCatalog = Catalog<any, AtomsCatalogInput>;
+
+/**
  * Type alias for the component renderer.
  * @public
  */
@@ -67,7 +73,7 @@ export type AtomsActionsMap = Record<string, AtomActionHandler>;
  */
 export interface AtomsConfig {
   /** The json-render catalog (schema + component/action definitions). */
-  catalog: Catalog<any, AtomsCatalogInput>;
+  catalog: AtomsCatalog;
   /** The registry result returned by defineAtomsRegistry. */
   registry: DefineRegistryResult;
   /** Optional navigate function to be passed to action handlers for navigation purposes. */
