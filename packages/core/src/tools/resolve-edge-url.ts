@@ -7,7 +7,7 @@ import { normalizeUrl } from './normalize-url';
 
 /**
  * Environment variable name for the custom Edge Platform hostname (framework-agnostic).
- * Used for service endpoints (GraphQL, APIs, forms). Server-side only.
+ * Used for service endpoints (GraphQL, APIs, forms, assets). Server-side only.
  * @public
  */
 export const SITECORE_EDGE_PLATFORM_HOSTNAME_ENV = 'SITECORE_EDGE_PLATFORM_HOSTNAME';
