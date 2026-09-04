@@ -12,13 +12,10 @@ import scConfig from './sitecore.config';
 export default defineCliConfig({
   config: scConfig,
   build: {
-    commands: [
-      generateMetadata(),
-      generateSites(),
-    ],
+    commands: [generateMetadata(), generateSites()],
   },
   componentMap: {
     paths: ['src/app/components'],
-    exclude: ['**/*.spec.ts'],
+    exclude: ['**/*.spec.ts', 'src/app/components/content-sdk/*'],
   },
 });
