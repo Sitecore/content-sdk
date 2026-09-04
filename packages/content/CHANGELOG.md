@@ -1,5 +1,27 @@
 # @sitecore-content-sdk/content
 
+## 2.3.0
+
+### Minor Changes
+
+- Pass the page language to Sitecore Forms to support new multilingual form versions. ([fa0496c](https://github.com/sitecore/content-sdk/commit/fa0496c6ff6f86b0a1256461d585a8535456bf38))
+- Add metadata and Open Graph tags to the NextJs scaffolding templates ([914f94a](https://github.com/sitecore/content-sdk/commit/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d))
+- [experimental] Add a global env switch for experimental features. ([c9c8d1c](https://github.com/sitecore/content-sdk/commit/c9c8d1c0cd9bd014c418f5695be825137a97e6ba))
+
+  Experimental feature status now treats the app-level `CSDK_GLOBAL_EXPERIMENTAL_FEATURES_ENABLED` as a global enable switch. When the global switch is off, feature status falls back to individual feature env vars. The shared experimental helpers expose the global env var constant (`CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG`) and helper, and starter env examples document how to enable experimental features during development.
+
+- [experimental] Add experimental features visibility API shared across frameworks. Types/utils live in `@sitecore-content-sdk/content`; each framework package owns its `experimental.json` catalog. Next.js and Angular expose editing-secret protected endpoints, wired in all Next.js templates and the Angular server. ([b4fad5b](https://github.com/sitecore/content-sdk/commit/b4fad5bfdcf00eb3138cebc08959d248545d0a22))
+- Add support of llms txt for all next apps through api routes. ([d2b0a9f](https://github.com/sitecore/content-sdk/commit/d2b0a9ffcd19364330158edd407f2f3e8df68565))
+
+### Patch Changes
+
+- [Design Library] Compatibility refactor for Angular ([b43b89c](https://github.com/sitecore/content-sdk/commit/b43b89c4517d088086fb9ff5cb80c35197e4d46f))
+- Resolve FEaaS/BYOC stylesheet links against the configured Edge URL (framework-wide). App Router only: drop `precedence="high"` so styles apply instead of preload. ([16e405f](https://github.com/sitecore/content-sdk/commit/16e405f3667f5f05e5fd97b8174bd2b99de45db6))
+- Ensure more strict variant filtering in getComponentList calls ([1f90cbe](https://github.com/sitecore/content-sdk/commit/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3))
+- Code extraction support for Angular CSDK ([23c9158](https://github.com/sitecore/content-sdk/commit/23c9158a9fae985d2aaa32ec807904acdf22d6e7))
+- Revert to using the unmodified file name as componentName in getComponentList ([8eb01ef](https://github.com/sitecore/content-sdk/commit/8eb01ef1062b410d0a689de49635870a3d3afbde))
+- Ensure import map processes node modules with `exports` defined ([99809ba](https://github.com/sitecore/content-sdk/commit/99809bafe75cd59525023226061287a2ced48886))
+
 ## 2.2.2
 
 ### Patch Changes
