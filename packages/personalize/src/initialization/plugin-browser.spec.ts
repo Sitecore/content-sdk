@@ -6,6 +6,7 @@ import * as coreModule from '@sitecore-content-sdk/core';
 import * as analyticsPluginModule from '@sitecore-content-sdk/analytics-core/internal';
 import * as analyticsUtilsModule from '@sitecore-content-sdk/analytics-core/utils';
 import * as getCdnUrlModule from '../web-personalization/get-cdn-url';
+import * as setWebPersonalizationGlobalModule from '../web-personalization/set-web-personalization-global';
 import * as getProfileIdModule from './get-profile-id';
 import { PersonalizeAdapter } from './types';
 import { jest, expect } from '@jest/globals';
@@ -42,6 +43,10 @@ jest.mock('@sitecore-content-sdk/analytics-core/utils', () => ({
 
 jest.mock('../web-personalization/get-cdn-url', () => ({
   getCdnUrl: jest.fn(),
+}));
+
+jest.mock('../web-personalization/set-web-personalization-global', () => ({
+  setWebPersonalizationGlobal: jest.fn(),
 }));
 
 describe('personalizeBrowserPlugin', () => {
@@ -443,6 +448,60 @@ describe('personalizeBrowserPlugin', () => {
           defer: true,
           language: 'en',
         });
+      });
+
+      it('should populate the web personalization global via setWebPersonalizationGlobal before injecting the CDN script', async () => {
+        const adapter = createMockAdapter();
+        (
+          getCdnUrlModule.getCdnUrl as jest.Mock<typeof getCdnUrlModule.getCdnUrl>
+        ).mockResolvedValue('https://cdn.test.com/script.js');
+
+        const plugin = personalizeBrowserPlugin({
+          adapter,
+          options: { webPersonalization: { async: true } },
+        });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        expect(setWebPersonalizationGlobalModule.setWebPersonalizationGlobal).toHaveBeenCalledWith(
+          mockCoreContext.config,
+          { async: true, defer: false, language: undefined }
+        );
+      });
+
+      it('should not populate the web personalization global when webPersonalization is false', async () => {
+        const adapter = createMockAdapter();
+
+        const plugin = personalizeBrowserPlugin({
+          adapter,
+          options: { webPersonalization: false },
+        });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        expect(setWebPersonalizationGlobalModule.setWebPersonalizationGlobal).not.toHaveBeenCalled();
+      });
+
+      it('should not populate the web personalization global when CDN URL is not available', async () => {
+        const adapter = createMockAdapter();
+        (
+          getCdnUrlModule.getCdnUrl as jest.Mock<typeof getCdnUrlModule.getCdnUrl>
+        ).mockResolvedValue(null);
+
+        const plugin = personalizeBrowserPlugin({
+          adapter,
+          options: { webPersonalization: { async: true } },
+        });
+
+        (sharedModule.getPersonalizePlugin as jest.Mock).mockReturnValue(plugin);
+
+        await plugin.init();
+
+        expect(setWebPersonalizationGlobalModule.setWebPersonalizationGlobal).not.toHaveBeenCalled();
       });
     });
   });
