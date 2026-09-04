@@ -1,0 +1,20 @@
+---
+description: Angular conventions for your Sitecore Content SDK project
+alwaysApply: false
+globs:
+  - 'src/app/**'
+  - '**/*.html'
+---
+
+# Angular conventions
+
+- **Standalone components only** — no `NgModule` feature pattern; declare dependencies in `imports`
+- **Signals:** `input()` / `input.required()` for inputs, `computed()` for derived state, `toSignal()` for route data
+- **Selectors:** `app` prefix, kebab-case for components, camelCase for directives
+- **DI belongs here** — `inject()` is fine in components, providers and resolvers, but never in `src/content-sdk/`
+- **Providers:** `app.config.ts` (browser) and `app.config.server.ts` (adds `provideServerRendering` + `provideServerLoaderRunner`). `provideClientHydration()` is intentionally omitted so `RouterLink` attaches after bootstrap
+- **Routes:** `app.routes.ts` and `app.routes.server.ts` must stay in sync (paths, render mode, HTTP status)
+- **No server-only imports** (`express`, `unstorage`, `node:*`) anywhere under `src/app/`; `process.env` is unavailable in the browser — use the generated `environment*.ts`
+- **Templates:** `@if` / `@for` control flow; Sitecore fields via `*scText` / `*scRichText` / `*scImage` / `*scLink`; placeholders via `<sc-placeholder [name] [rendering]>`
+
+Depth: [`.agents/docs/AGENTS-angular-specifics.md`](../../.agents/docs/AGENTS-angular-specifics.md)

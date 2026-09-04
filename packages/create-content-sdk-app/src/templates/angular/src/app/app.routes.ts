@@ -4,7 +4,6 @@ import scConfig from '../../sitecore.config';
 import { PageComponent } from './pages/page.component';
 import { NotFoundComponent } from './pages/not-found.component';
 import { ErrorComponent } from './pages/error.component';
-import { CacheDemoComponent } from './admin/cache-demo.component';
 
 /**
  * Error routes (`404` / `500`) live at the top level — both unprefixed and with a
@@ -25,10 +24,6 @@ export const routes: Routes = [
   {
     matcher: scLocaleMatcher(scConfig.angular.locales),
     children: [
-      {
-        path: 'admin/cache',
-        component: CacheDemoComponent,
-      },
       {
         path: '500',
         component: ErrorComponent,
