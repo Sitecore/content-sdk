@@ -4,4 +4,4 @@
 '@sitecore-content-sdk/core': patch
 ---
 
-Resolve FEaaS/BYOC stylesheet links against the configured Edge URL, and apply them in App Router instead of only preloading them.
+Resolve FEaaS/BYOC stylesheet links against the configured Edge URL (framework-wide). App Router only: drop `precedence="high"` so styles apply instead of preload.
