@@ -61,5 +61,15 @@ describe('edge-proxy', () => {
         `https://test.com/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`
       );
     });
+
+    it('should append language when provided', () => {
+      const sitecoreEdgeUrl = 'https://test.com';
+
+      const url = getEdgeProxyFormsUrl(sitecoreEdgeContextId, formId, sitecoreEdgeUrl, 'fr-FR');
+
+      expect(url).to.equal(
+        `https://test.com/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}&language=fr-FR`
+      );
+    });
   });
 });
