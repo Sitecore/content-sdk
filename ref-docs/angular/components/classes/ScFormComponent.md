@@ -6,10 +6,11 @@
 
 # Class: ScFormComponent
 
-Defined in: [packages/angular/src/components/sc-form.component.ts:32](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/components/sc-form.component.ts#L32)
+Defined in: [packages/angular/src/components/sc-form.component.ts:35](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/components/sc-form.component.ts#L35)
 
 Angular wrapper for Sitecore Forms.
-Loads form HTML from Edge, executes embedded scripts, and subscribes to form events.
+Loads form HTML from Edge using the page language, exposes that language on the
+host element, executes embedded scripts, and subscribes to form events.
 
 Usage: register in the component map with the rendering name "Form".
 
@@ -19,7 +20,7 @@ Usage: register in the component map with the rendering name "Form".
 
 > **new ScFormComponent**(): `ScFormComponent`
 
-Defined in: [packages/angular/src/components/sc-form.component.ts:51](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/components/sc-form.component.ts#L51)
+Defined in: [packages/angular/src/components/sc-form.component.ts:54](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/components/sc-form.component.ts#L54)
 
 #### Returns
 
@@ -31,7 +32,7 @@ Defined in: [packages/angular/src/components/sc-form.component.ts:51](https://gi
 
 > `readonly` **params**: `InputSignal`\<\{\[`key`: `string`\]: `string`; \}\>
 
-Defined in: [packages/angular/src/components/sc-form.component.ts:37](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/components/sc-form.component.ts#L37)
+Defined in: [packages/angular/src/components/sc-form.component.ts:40](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/components/sc-form.component.ts#L40)
 
 ***
 
@@ -39,15 +40,27 @@ Defined in: [packages/angular/src/components/sc-form.component.ts:37](https://gi
 
 > `readonly` **rendering**: `InputSignal`\<`ComponentRendering`\<`ComponentFields`\> \| `undefined`\>
 
-Defined in: [packages/angular/src/components/sc-form.component.ts:36](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/components/sc-form.component.ts#L36)
+Defined in: [packages/angular/src/components/sc-form.component.ts:39](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/components/sc-form.component.ts#L39)
 
 ## Methods
+
+### language()
+
+> `readonly` **language**(): `string`
+
+Defined in: [packages/angular/src/components/sc-form.component.ts:113](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/components/sc-form.component.ts#L113)
+
+#### Returns
+
+`string`
+
+***
 
 ### renderingId()
 
 > `readonly` **renderingId**(): `string` \| `undefined`
 
-Defined in: [packages/angular/src/components/sc-form.component.ts:106](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/components/sc-form.component.ts#L106)
+Defined in: [packages/angular/src/components/sc-form.component.ts:109](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/components/sc-form.component.ts#L109)
 
 #### Returns
 
@@ -59,7 +72,7 @@ Defined in: [packages/angular/src/components/sc-form.component.ts:106](https://g
 
 > `readonly` **styles**(): `string`
 
-Defined in: [packages/angular/src/components/sc-form.component.ts:101](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/components/sc-form.component.ts#L101)
+Defined in: [packages/angular/src/components/sc-form.component.ts:104](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/components/sc-form.component.ts#L104)
 
 #### Returns
 

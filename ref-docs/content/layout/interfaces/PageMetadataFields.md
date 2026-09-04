@@ -6,7 +6,7 @@
 
 # Interface: PageMetadataFields
 
-Defined in: [content/src/layout/field-types.ts:92](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/layout/field-types.ts#L92)
+Defined in: [content/src/layout/field-types.ts:92](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L92)
 
 The combined interface for a page's metadata and Open Graph fields.
 
@@ -20,7 +20,7 @@ The combined interface for a page's metadata and Open Graph fields.
 
 > `optional` **baseMetadataAuthor?**: [`Field`](Field.md)\<`string`\>
 
-Defined in: [content/src/layout/field-types.ts:84](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/layout/field-types.ts#L84)
+Defined in: [content/src/layout/field-types.ts:84](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L84)
 
 #### Inherited from
 
@@ -32,7 +32,7 @@ Defined in: [content/src/layout/field-types.ts:84](https://github.com/Sitecore/c
 
 > `optional` **baseMetadataDescription?**: [`Field`](Field.md)\<`string`\>
 
-Defined in: [content/src/layout/field-types.ts:83](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/layout/field-types.ts#L83)
+Defined in: [content/src/layout/field-types.ts:83](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L83)
 
 #### Inherited from
 
@@ -44,7 +44,7 @@ Defined in: [content/src/layout/field-types.ts:83](https://github.com/Sitecore/c
 
 > `optional` **baseMetadataKeywords?**: [`Field`](Field.md)\<`string`\>
 
-Defined in: [content/src/layout/field-types.ts:85](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/layout/field-types.ts#L85)
+Defined in: [content/src/layout/field-types.ts:85](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L85)
 
 #### Inherited from
 
@@ -56,7 +56,7 @@ Defined in: [content/src/layout/field-types.ts:85](https://github.com/Sitecore/c
 
 > `optional` **baseMetadataTitle?**: [`Field`](Field.md)\<`string`\>
 
-Defined in: [content/src/layout/field-types.ts:82](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/layout/field-types.ts#L82)
+Defined in: [content/src/layout/field-types.ts:82](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L82)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: [content/src/layout/field-types.ts:82](https://github.com/Sitecore/c
 
 > `optional` **baseOgDescription?**: [`Field`](Field.md)\<`string`\>
 
-Defined in: [content/src/layout/field-types.ts:72](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/layout/field-types.ts#L72)
+Defined in: [content/src/layout/field-types.ts:72](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L72)
 
 #### Inherited from
 
@@ -80,7 +80,7 @@ Defined in: [content/src/layout/field-types.ts:72](https://github.com/Sitecore/c
 
 > `optional` **baseOgImage?**: [`OpenGraphImageField`](OpenGraphImageField.md)
 
-Defined in: [content/src/layout/field-types.ts:73](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/layout/field-types.ts#L73)
+Defined in: [content/src/layout/field-types.ts:73](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L73)
 
 #### Inherited from
 
@@ -92,7 +92,7 @@ Defined in: [content/src/layout/field-types.ts:73](https://github.com/Sitecore/c
 
 > `optional` **baseOgTitle?**: [`Field`](Field.md)\<`string`\>
 
-Defined in: [content/src/layout/field-types.ts:71](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/layout/field-types.ts#L71)
+Defined in: [content/src/layout/field-types.ts:71](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L71)
 
 #### Inherited from
 
@@ -104,7 +104,7 @@ Defined in: [content/src/layout/field-types.ts:71](https://github.com/Sitecore/c
 
 > `optional` **baseOgType?**: [`Field`](Field.md)\<`string`\>
 
-Defined in: [content/src/layout/field-types.ts:74](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/content/src/layout/field-types.ts#L74)
+Defined in: [content/src/layout/field-types.ts:74](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L74)
 
 #### Inherited from
 

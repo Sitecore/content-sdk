@@ -8,4 +8,4 @@
 
 > `const` **NOT\_FOUND\_ROUTE\_TOKEN**: `InjectionToken`\<`string`\>
 
-Defined in: [packages/angular/src/lib/tokens.ts:23](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/lib/tokens.ts#L23)
+Defined in: [packages/angular/src/lib/tokens.ts:23](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/lib/tokens.ts#L23)

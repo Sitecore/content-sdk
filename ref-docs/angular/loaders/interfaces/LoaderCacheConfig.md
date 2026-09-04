@@ -6,7 +6,7 @@
 
 # Interface: LoaderCacheConfig
 
-Defined in: [packages/angular/src/loaders/models.ts:192](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/loaders/models.ts#L192)
+Defined in: [packages/angular/src/loaders/models.ts:192](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/loaders/models.ts#L192)
 
 Base browser-safe config type for loader cache.
 
@@ -28,7 +28,7 @@ invalidation). There is no `'infinite'` sentinel.
 
 > `optional` **defaultLocale?**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:201](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/loaders/models.ts#L201)
+Defined in: [packages/angular/src/loaders/models.ts:201](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/loaders/models.ts#L201)
 
 Fallback locale for tag helpers when a site entry has no `language`. Defaults to `'en'`.
 
@@ -38,7 +38,7 @@ Fallback locale for tag helpers when a site entry has no `language`. Defaults to
 
 > `optional` **defaultSiteName?**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:194](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/loaders/models.ts#L194)
+Defined in: [packages/angular/src/loaders/models.ts:194](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/loaders/models.ts#L194)
 
 Default site name for tag helpers and admin tooling. Defaults to `'default'`.
 
@@ -48,7 +48,7 @@ Default site name for tag helpers and admin tooling. Defaults to `'default'`.
 
 > `optional` **enabled?**: `boolean`
 
-Defined in: [packages/angular/src/loaders/models.ts:212](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/loaders/models.ts#L212)
+Defined in: [packages/angular/src/loaders/models.ts:212](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/loaders/models.ts#L212)
 
 Master switch — when false, every call falls through to the raw loader.
 
@@ -62,7 +62,7 @@ Master switch — when false, every call falls through to the raw loader.
 
 > `optional` **revalidate?**: `number`
 
-Defined in: [packages/angular/src/loaders/models.ts:210](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/loaders/models.ts#L210)
+Defined in: [packages/angular/src/loaders/models.ts:210](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/loaders/models.ts#L210)
 
 TTL in seconds. Positive → expires after N seconds; `0` or negative → never expires.
 
@@ -76,7 +76,7 @@ TTL in seconds. Positive → expires after N seconds; `0` or negative → never 
 
 > `optional` **sites?**: `string`[]
 
-Defined in: [packages/angular/src/loaders/models.ts:199](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/loaders/models.ts#L199)
+Defined in: [packages/angular/src/loaders/models.ts:199](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/loaders/models.ts#L199)
 
 Site names used by revalidation middleware to fan out dictionary loader tags
 (`sc:loader:dictionary:<site>:<locale>`) on every webhook call.
@@ -87,7 +87,7 @@ Site names used by revalidation middleware to fan out dictionary loader tags
 
 > `optional` **tags?**: `string`[]
 
-Defined in: [packages/angular/src/loaders/models.ts:217](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/loaders/models.ts#L217)
+Defined in: [packages/angular/src/loaders/models.ts:217](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/loaders/models.ts#L217)
 
 Custom tags applied to every entry this loader writes. Merged with built-in
 OSR tags (self-key, `sc:site`, `sc:locale`, and `sc:item` for page loaders).

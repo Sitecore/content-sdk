@@ -8,7 +8,7 @@
 
 > **getSiteName**(`context`): `string`
 
-Defined in: [packages/angular/src/loaders/context-helpers.ts:11](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/loaders/context-helpers.ts#L11)
+Defined in: [packages/angular/src/loaders/context-helpers.ts:11](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/loaders/context-helpers.ts#L11)
 
 Read the site name resolved for the current request (multisite middleware →
 `scParams`, with the configured default site applied by the server loader runner).

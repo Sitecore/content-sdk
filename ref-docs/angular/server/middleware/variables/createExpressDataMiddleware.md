@@ -8,7 +8,7 @@
 
 > `const` **createExpressDataMiddleware**: (`config`, `options`) => [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md) = `createLoaderDataServiceMiddleware`
 
-Defined in: [packages/angular/src/server/middleware/loader-data-service-middleware.ts:137](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/server/middleware/loader-data-service-middleware.ts#L137)
+Defined in: [packages/angular/src/server/middleware/loader-data-service-middleware.ts:137](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/server/middleware/loader-data-service-middleware.ts#L137)
 
 Create an Express middleware for the data endpoint.
 This middleware handles both GET and POST requests at the configured endpoint path.
