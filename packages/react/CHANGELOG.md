@@ -1,5 +1,55 @@
 # @sitecore-content-sdk/react
 
+## 2.4.0
+
+### Minor Changes
+
+- Pass the page language to Sitecore Forms to support new multilingual form versions. ([fa0496c](https://github.com/sitecore/content-sdk/commit/fa0496c6ff6f86b0a1256461d585a8535456bf38))
+- Add metadata and Open Graph tags to the NextJs scaffolding templates ([914f94a](https://github.com/sitecore/content-sdk/commit/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d))
+- Add More Like This (MLT) query support to SearchService and React search hooks ([b0823f3](https://github.com/sitecore/content-sdk/commit/b0823f3a364598af8034e451448160c20b885d18))
+
+  - New public `SearchQuery` type models the `/v1/search` query payload (`keyphrase`, `seedItemId`, `seedItemUrl`)
+  - `SearchParameters` now accepts optional mutually exclusive `seedItemId` and `seedItemUrl` fields for MLT widget queries
+  - `SearchService.search()` validates that only one of `keyphrase`, `seedItemId`, or `seedItemUrl` is provided
+  - Seed fields are sent only to `/v1/search`; `/v1/search/suggest` continues to accept `keyphrase` only
+  - MLT responses map to the existing `results` / `total` / `facets` shape
+  - `useSearch` and `useInfiniteSearch` accept `seedItemId` and `seedItemUrl`
+
+- Add `useSuggest` React hook for `/v1/search/suggest` typeahead ([b0823f3](https://github.com/sitecore/content-sdk/commit/b0823f3a364598af8034e451448160c20b885d18))
+
+  - Accepts `searchIndexId`, `query` (mapped to `keyphrase`), optional `locale`, `enabled`, and `keepPreviousData`
+  - Returns `querySuggestions`, `previewResults`, and the same loading/error flags as `useSearch`
+  - Does not send a request when `query` is empty or whitespace only
+
+- minor `@sitecore-content-sdk/content` dependency update:
+
+  - Pass the page language to Sitecore Forms to support new multilingual form versions. ([fa0496c](https://github.com/sitecore/content-sdk/commit/fa0496c6ff6f86b0a1256461d585a8535456bf38))
+  - Add metadata and Open Graph tags to the NextJs scaffolding templates ([914f94a](https://github.com/sitecore/content-sdk/commit/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d))
+  - [experimental] Add a global env switch for experimental features.
+
+  Experimental feature status now treats the app-level `CSDK_GLOBAL_EXPERIMENTAL_FEATURES_ENABLED` as a global enable switch. When the global switch is off, feature status falls back to individual feature env vars. The shared experimental helpers expose the global env var constant (`CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG`) and helper, and starter env examples document how to enable experimental features during development. ([c9c8d1c](https://github.com/sitecore/content-sdk/commit/c9c8d1c0cd9bd014c418f5695be825137a97e6ba))
+
+  - [experimental] Add experimental features visibility API shared across frameworks. Types/utils live in `@sitecore-content-sdk/content`; each framework package owns its `experimental.json` catalog. Next.js and Angular expose editing-secret protected endpoints, wired in all Next.js templates and the Angular server. ([b4fad5b](https://github.com/sitecore/content-sdk/commit/b4fad5bfdcf00eb3138cebc08959d248545d0a22))
+  - Add support of llms txt for all next apps through api routes. ([d2b0a9f](https://github.com/sitecore/content-sdk/commit/d2b0a9ffcd19364330158edd407f2f3e8df68565))
+
+- minor `@sitecore-content-sdk/search` dependency update:
+
+  - Add More Like This (MLT) query support to SearchService and React search hooks
+
+  - New public `SearchQuery` type models the `/v1/search` query payload (`keyphrase`, `seedItemId`, `seedItemUrl`)
+  - `SearchParameters` now accepts optional mutually exclusive `seedItemId` and `seedItemUrl` fields for MLT widget queries
+  - `SearchService.search()` validates that only one of `keyphrase`, `seedItemId`, or `seedItemUrl` is provided
+  - Seed fields are sent only to `/v1/search`; `/v1/search/suggest` continues to accept `keyphrase` only
+  - MLT responses map to the existing `results` / `total` / `facets` shape
+  - `useSearch` and `useInfiniteSearch` accept `seedItemId` and `seedItemUrl` ([b0823f3](https://github.com/sitecore/content-sdk/commit/b0823f3a364598af8034e451448160c20b885d18))
+
+    - Add typeahead suggest support to `SearchService`
+
+  - New `SearchService.suggest()` method calling `POST {edgeUrl}/v1/search/suggest`
+  - Accepts `searchIndexId`, required non-empty `keyphrase`, and optional `locale`
+  - Returns wire-shaped `querySuggestions` and `previewResults`
+  - New public types: `SuggestParameters`, `SuggestResponse`, `QuerySuggestionItem` ([b0823f3](https://github.com/sitecore/content-sdk/commit/b0823f3a364598af8034e451448160c20b885d18))
+
 ## 2.3.0
 
 ### Minor Changes
