@@ -68,9 +68,10 @@ After that, configure redirect rules for Vercel request to reach your app code, 
 }
 ```
 
-3. In Vercel portal, set the required Content SDK environment variables. Additionally, set `NG_ALLOWED_HOSTS` environment variable to allow Vercel URLs:
+3. In Vercel portal, set the required Content SDK environment variables. Additionally, set `NG_ALLOWED_HOSTS` and `NG_TRUST_PROXY_HEADERS` environment variables to allow Vercel URLs and prevent Vercel rendering from falling back to CSR:
 ```
-  NG_ALLOWED_HOSTS=*.vercel.app`
+  NG_ALLOWED_HOSTS=*.vercel.app
+  NG_TRUST_PROXY_HEADERS=X-FORWARDED-PORT,X-FORWARDED-PATH,X-FORWARDED-FOR,X-FORWARDED-HOST,X-FORWARDED-PROTO
 ```
 
 Deploying your app to Vercel should now result in the site being correctly served.
@@ -150,7 +151,8 @@ where `<your_app_name>` is the name of application set in `package.json`.
 
 ```
 
-4. In Netlify portal, set the required Content SDK environment variables. Additionally, set `NG_ALLOWED_HOSTS` environment variable to allow netlify URLs:
+4. In Netlify portal, set the required Content SDK environment variables. Additionally, set `NG_ALLOWED_HOSTS` and `NG_TRUST_PROXY_HEADERS` environment variables to allow netlify URLs and ensure Angular SSR works correctly from behind the Netlify proxy:
 ```
-  NG_ALLOWED_HOSTS=*.netlify.app`
+  NG_ALLOWED_HOSTS=*.netlify.app
+  NG_TRUST_PROXY_HEADERS=X-FORWARDED-PORT,X-FORWARDED-PATH,X-FORWARDED-FOR,X-FORWARDED-HOST,X-FORWARDED-PROTO
 ```

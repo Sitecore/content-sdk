@@ -8,7 +8,7 @@
 
 > **AngularSitecoreConfig** = `DeepRequired`\<[`AngularSitecoreConfigInput`](../interfaces/AngularSitecoreConfigInput.md)\>
 
-Defined in: [packages/angular/src/config/define-config.ts:78](https://github.com/Sitecore/content-sdk/blob/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d/packages/angular/src/config/define-config.ts#L78)
+Defined in: [packages/angular/src/config/define-config.ts:78](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/config/define-config.ts#L78)
 
 Resolved Sitecore configuration for Angular apps. Extends the fully-resolved
 SitecoreConfig; structurally still a `SitecoreConfig`, so existing callers that

@@ -10,16 +10,22 @@ const { ERROR_MESSAGES } = constants;
  * @param {string} contextId - The unique identifier of the current context
  * @param {string} formId - The unique identifier of the form
  * @param {string} [edgeUrl] - The URL of the Sitecore Edge Platform
+ * @param {string} [language] - Page language used to load the matching multilingual form version
  * @internal
  */
-export const loadForm = async (contextId: string, formId: string, edgeUrl?: string) => {
+export const loadForm = async (
+  contextId: string,
+  formId: string,
+  edgeUrl?: string,
+  language?: string
+) => {
   if (!contextId) {
     debug.form(`${ERROR_MESSAGES.MV_001}. Form was not able to render.`);
 
     return '';
   }
 
-  const url = getEdgeProxyFormsUrl(contextId, formId, edgeUrl);
+  const url = getEdgeProxyFormsUrl(contextId, formId, edgeUrl, language);
 
   try {
     debug.form(`Fetching form data from ${url}`);
