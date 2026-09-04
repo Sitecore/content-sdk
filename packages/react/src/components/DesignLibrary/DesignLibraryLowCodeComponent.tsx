@@ -45,7 +45,7 @@ export const __mockDependencies = (mocks: any) => {
  * - When `atomsConfig.compileCssAction` is provided, compiles Document class names and injects CSS so
  * utilities that exist only in MMS Document JSON are styled during editing.
  * - Wraps preview output with `PlaceholderMetadata` using the layout rendering UID so Design Studio
- * receives the same chrome handshake as normal Design Library components. Adds `component-type="atom"`
+ * receives the same chrome handshake as normal Design Library components. Adds `data-component-type="atom"`
  * to that wrap so Sitecore Pages can skip the whole Atoms subtree by ancestor when querying chrome.
  * @returns {JSX.Element} The low-code preview surface.
  * @internal

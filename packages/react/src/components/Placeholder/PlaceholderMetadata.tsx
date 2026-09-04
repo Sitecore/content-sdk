@@ -18,7 +18,7 @@ export interface PlaceholderMetadataProps {
    */
   componentRuntime?: 'server' | 'client';
   /**
-   * Adds a `component-type` attribute to the outer rendering chrome, so Sitecore Pages can
+   * Adds a `data-component-type` attribute to the outer rendering chrome, so Sitecore Pages can
    * identify (and skip nested chrome queries within) a whole subtree by ancestor, e.g. `"atom"`
    * for the Atoms low-code wrapper.
    */
@@ -32,7 +32,7 @@ export type CodeBlockAttributes = {
   kind: string;
   id?: string;
   'data-csdk-component-runtime'?: 'server' | 'client';
-  'component-type'?: string;
+  'data-component-type'?: string;
 };
 
 /**
@@ -43,7 +43,7 @@ export type CodeBlockAttributes = {
  * @param {ComponentRendering} props.rendering The rendering data.
  * @param {string} [props.placeholderName] The name of the placeholder.
  * @param {'server' | 'client'} [props.componentRuntime] Component runtime type. Used to add data-csdk-component-runtime attribute to rendering chromes.
- * @param {string} [props.componentType] Adds a component-type attribute to the outer rendering chrome (e.g. "atom").
+ * @param {string} [props.componentType] Adds a data-component-type attribute to the outer rendering chrome (e.g. "atom").
  * @param {JSX.Element} props.children The child components or elements to be wrapped by the metadata code blocks.
  * @returns {JSX.Element} A React fragment containing open and close code blocks surrounding the children elements.
  * @internal
@@ -108,7 +108,7 @@ export const PlaceholderMetadata = ({
       }
 
       if (componentType) {
-        attributes['component-type'] = componentType;
+        attributes['data-component-type'] = componentType;
       }
     }
 

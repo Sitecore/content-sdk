@@ -68,9 +68,9 @@ export function withEditingChrome(
     const openAttributes = {
       ...baseAttributes,
       kind: MetadataKind.Open,
-      'element-name': indexedElementKey,
-      'atom-type': element.type,
-      ...(componentDefinition?.slots ? { 'atom-slots': JSON.stringify(componentDefinition.slots) } : {}),
+      'data-element-name': indexedElementKey,
+      'data-atom-type': element.type,
+      ...(componentDefinition?.slots ? { 'data-atom-slots': JSON.stringify(componentDefinition.slots) } : {}),
     };
     const closeAttributes = { ...baseAttributes, kind: MetadataKind.Close };
 

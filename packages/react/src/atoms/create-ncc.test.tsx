@@ -149,8 +149,8 @@ describe('create-ncc', () => {
       const View = createNCC(doc, registry, catalog);
       const { container } = renderInProvider(<View />);
 
-      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][element-name="list-el"]`)).to.not.be.null;
-      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][element-name="card-el"]`)).to.not.be.null;
+      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="list-el"]`)).to.not.be.null;
+      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="card-el"]`)).to.not.be.null;
     });
 
     it('suffixes repeated atoms with the repeat index and keeps the repeat owner unsuffixed', () => {
@@ -171,9 +171,9 @@ describe('create-ncc', () => {
       const View = createNCC(doc, registry, catalog);
       const { container } = renderInProvider(<View />);
 
-      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][element-name="list-el"]`)).to.not.be.null;
-      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][element-name="card-el_0"]`)).to.not.be.null;
-      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][element-name="card-el_1"]`)).to.not.be.null;
+      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="list-el"]`)).to.not.be.null;
+      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="card-el_0"]`)).to.not.be.null;
+      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="card-el_1"]`)).to.not.be.null;
     });
   });
 });

@@ -184,7 +184,7 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     expect(openChrome).to.not.be.null;
     expect(closeChrome).to.not.be.null;
     expect(openChrome?.getAttribute('data-csdk-component-runtime')).to.equal('client');
-    expect(openChrome?.getAttribute('component-type')).to.equal(ATOM_TYPE);
+    expect(openChrome?.getAttribute('data-component-type')).to.equal(ATOM_TYPE);
   });
 
   it('subscribes to component props update handler', async () => {
@@ -221,7 +221,7 @@ describe('<DesignLibraryLowCodeComponent />', () => {
       expect(codeBlocks[0].getAttribute('chrometype')).to.equal('rendering');
       expect(codeBlocks[0].getAttribute('id')).to.equal('design-library-low-code-component');
       expect(codeBlocks[0].getAttribute('data-csdk-component-runtime')).to.equal('client');
-      expect(codeBlocks[0].getAttribute('component-type')).to.equal(ATOM_TYPE);
+      expect(codeBlocks[0].getAttribute('data-component-type')).to.equal(ATOM_TYPE);
     });
   });
 
