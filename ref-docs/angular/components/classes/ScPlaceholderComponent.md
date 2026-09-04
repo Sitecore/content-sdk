@@ -6,7 +6,7 @@
 
 # Class: ScPlaceholderComponent
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:88](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L88)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:88](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L88)
 
 Angular placeholder component. Renders components from layout data for a given placeholder name.
 
@@ -46,7 +46,7 @@ loader and feed cached results into the resolver.
 
 > **new ScPlaceholderComponent**(): `ScPlaceholderComponent`
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:143](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L143)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:143](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L143)
 
 #### Returns
 
@@ -58,7 +58,7 @@ Defined in: [packages/angular/src/components/placeholder/sc-placeholder.componen
 
 > `readonly` **componentMap**: `InputSignal`\<[`ComponentMap`](../type-aliases/ComponentMap.md) \| `undefined`\>
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:115](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L115)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:115](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L115)
 
 Override component map (defaults to injected `SITECORE_COMPONENT_MAP`).
 
@@ -68,7 +68,7 @@ Override component map (defaults to injected `SITECORE_COMPONENT_MAP`).
 
 > `readonly` **componentRendering**: `Signal`\<`ComponentRendering`\<`ComponentFields`\>\>
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:94](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L94)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:94](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L94)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [packages/angular/src/components/placeholder/sc-placeholder.componen
 
 > `protected` `readonly` **emptyInEditing**: `WritableSignal`\<`boolean`\>
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:131](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L131)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:131](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L131)
 
 True when the placeholder has no renderings and the page is in editing mode.
 
@@ -86,7 +86,7 @@ True when the placeholder has no renderings and the page is in editing mode.
 
 > `readonly` **fields**: `InputSignal`\<\{\[`key`: `string`\]: `unknown`; \} \| `undefined`\>
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:97](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L97)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:97](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L97)
 
 Optional placeholder-level fields merged into each child.
 
@@ -96,7 +96,7 @@ Optional placeholder-level fields merged into each child.
 
 > `readonly` **hiddenRenderingComponent**: `InputSignal`\<`Type`\<`unknown`\> \| `undefined`\>
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:121](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L121)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:121](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L121)
 
 Override for hidden rendering component.
 
@@ -106,7 +106,7 @@ Override for hidden rendering component.
 
 > `protected` `readonly` **injector**: `Injector`
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:141](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L141)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:141](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L141)
 
 ***
 
@@ -114,7 +114,7 @@ Defined in: [packages/angular/src/components/placeholder/sc-placeholder.componen
 
 > `protected` `readonly` **isEditing**: `Signal`\<`boolean`\>
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:128](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L128)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:128](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L128)
 
 ***
 
@@ -122,7 +122,7 @@ Defined in: [packages/angular/src/components/placeholder/sc-placeholder.componen
 
 > `readonly` **missingComponent**: `InputSignal`\<`Type`\<`unknown`\> \| `undefined`\>
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:118](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L118)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:118](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L118)
 
 Override for missing component rendering.
 
@@ -132,7 +132,7 @@ Override for missing component rendering.
 
 > `readonly` **name**: `InputSignal`\<`string`\>
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:90](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L90)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:90](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L90)
 
 Name of the placeholder to render.
 
@@ -142,7 +142,7 @@ Name of the placeholder to render.
 
 > `readonly` **params**: `InputSignal`\<\{\[`key`: `string`\]: `string`; \} \| `undefined`\>
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:100](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L100)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:100](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L100)
 
 Optional placeholder-level params merged into each child's `params` input.
 
@@ -152,7 +152,7 @@ Optional placeholder-level params merged into each child's `params` input.
 
 > `readonly` **passThroughProps**: `InputSignal`\<`Readonly`\<`Record`\<`string`, `unknown`\>\>\>
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:112](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L112)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:112](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L112)
 
 Extra inputs to set on each dynamically created component, after the standard `fields`,
 `params`, and `rendering` inputs. Keys must match `input()` names on the target components.
@@ -163,7 +163,7 @@ Extra inputs to set on each dynamically created component, after the standard `f
 
 > `readonly` **rendering**: `InputSignal`\<`RouteData`\<`Record`\<`string`, `Field`\<`GenericFieldValue`\> \| `Item` \| `Item`[]\>\> \| `ComponentRendering`\<`ComponentFields`\>\>
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:93](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L93)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:93](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L93)
 
 Rendering or route data containing placeholders.
 
@@ -173,7 +173,7 @@ Rendering or route data containing placeholders.
 
 > `protected` `readonly` **resolvedRenderings**: `WritableSignal`\<`object`[]\>
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:101](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L101)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:101](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L101)
 
 ***
 
@@ -181,7 +181,7 @@ Defined in: [packages/angular/src/components/placeholder/sc-placeholder.componen
 
 > `protected` `readonly` **showEditingChrome**: `Signal`\<`boolean`\>
 
-Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:138](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L138)
+Defined in: [packages/angular/src/components/placeholder/sc-placeholder.component.ts:138](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/angular/src/components/placeholder/sc-placeholder.component.ts#L138)
 
 Whether to emit the outer editing chrome. Only in editing mode, and only when the placeholder
 has renderings or is a declared-but-empty placeholder. An undeclared placeholder name emits no

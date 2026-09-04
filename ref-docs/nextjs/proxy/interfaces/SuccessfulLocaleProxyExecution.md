@@ -6,7 +6,7 @@
 
 # Interface: SuccessfulLocaleProxyExecution
 
-Defined in: [nextjs/src/proxy/locale-proxy.ts:14](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/nextjs/src/proxy/locale-proxy.ts#L14)
+Defined in: [nextjs/src/proxy/locale-proxy.ts:14](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/nextjs/src/proxy/locale-proxy.ts#L14)
 
 Information about executed proxy to be stored in the context
 Used for describing successful execution with details about the locale that was applied
@@ -21,7 +21,7 @@ Used for describing successful execution with details about the locale that was 
 
 > **error**: `null`
 
-Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/nextjs/src/proxy/types.ts#L18)
+Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/nextjs/src/proxy/types.ts#L18)
 
 #### Inherited from
 
@@ -33,7 +33,7 @@ Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-s
 
 > **executedSuccessfully**: `true`
 
-Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/nextjs/src/proxy/types.ts#L17)
+Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/nextjs/src/proxy/types.ts#L17)
 
 #### Inherited from
 
@@ -45,7 +45,7 @@ Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-s
 
 > **locale**: `string`
 
-Defined in: [nextjs/src/proxy/locale-proxy.ts:16](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/nextjs/src/proxy/locale-proxy.ts#L16)
+Defined in: [nextjs/src/proxy/locale-proxy.ts:16](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/nextjs/src/proxy/locale-proxy.ts#L16)
 
 ***
 
@@ -53,4 +53,4 @@ Defined in: [nextjs/src/proxy/locale-proxy.ts:16](https://github.com/Sitecore/co
 
 > **rewrote**: `boolean`
 
-Defined in: [nextjs/src/proxy/locale-proxy.ts:15](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/nextjs/src/proxy/locale-proxy.ts#L15)
+Defined in: [nextjs/src/proxy/locale-proxy.ts:15](https://github.com/Sitecore/content-sdk/blob/0c4a8c787ed4dbcd40afe865a25275812940c555/packages/nextjs/src/proxy/locale-proxy.ts#L15)
