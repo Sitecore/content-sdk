@@ -8,7 +8,7 @@
 
 > **getFallbackConfig**(): [`SitecoreConfig`](../type-aliases/SitecoreConfig.md)
 
-Defined in: [content/src/config/define-config.ts:97](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/config/define-config.ts#L97)
+Defined in: [content/src/config/define-config.ts:97](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/content/src/config/define-config.ts#L97)
 
 **`Internal`**
 

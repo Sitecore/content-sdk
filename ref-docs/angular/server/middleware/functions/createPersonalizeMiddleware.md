@@ -8,7 +8,7 @@
 
 > **createPersonalizeMiddleware**(`options`): [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/personalize-middleware.ts:156](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/server/middleware/personalize-middleware.ts#L156)
+Defined in: [packages/angular/src/server/middleware/personalize-middleware.ts:156](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/server/middleware/personalize-middleware.ts#L156)
 
 Middleware to support Sitecore Personalize.
 Identifies page/component variants for the request via Sitecore CDP and populates

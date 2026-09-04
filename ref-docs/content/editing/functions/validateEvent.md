@@ -8,7 +8,7 @@
 
 > **validateEvent**(`e`, `eventName`): `boolean`
 
-Defined in: [content/src/editing/design-library.ts:120](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/editing/design-library.ts#L120)
+Defined in: [content/src/editing/design-library.ts:120](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/content/src/editing/design-library.ts#L120)
 
 **`Internal`**
 

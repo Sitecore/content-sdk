@@ -6,7 +6,7 @@
 
 # Interface: ImageSizeParameters
 
-Defined in: [content/src/layout/field-types.ts:120](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L120)
+Defined in: [content/src/layout/field-types.ts:120](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/content/src/layout/field-types.ts#L120)
 
 The interface for the Image size parameters.
 
@@ -20,7 +20,7 @@ The interface for the Image size parameters.
 
 > `optional` **as?**: `0` \| `1`
 
-Defined in: [content/src/layout/field-types.ts:133](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L133)
+Defined in: [content/src/layout/field-types.ts:133](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/content/src/layout/field-types.ts#L133)
 
 Allow stretch
 
@@ -30,7 +30,7 @@ Allow stretch
 
 > `optional` **h?**: `number`
 
-Defined in: [content/src/layout/field-types.ts:125](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L125)
+Defined in: [content/src/layout/field-types.ts:125](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/content/src/layout/field-types.ts#L125)
 
 Fixed height of the image
 
@@ -40,7 +40,7 @@ Fixed height of the image
 
 > `optional` **iar?**: `0` \| `1`
 
-Defined in: [content/src/layout/field-types.ts:131](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L131)
+Defined in: [content/src/layout/field-types.ts:131](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/content/src/layout/field-types.ts#L131)
 
 Ignore aspect ratio
 
@@ -50,7 +50,7 @@ Ignore aspect ratio
 
 > `optional` **mh?**: `number`
 
-Defined in: [content/src/layout/field-types.ts:129](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L129)
+Defined in: [content/src/layout/field-types.ts:129](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/content/src/layout/field-types.ts#L129)
 
 Max height of the image
 
@@ -60,7 +60,7 @@ Max height of the image
 
 > `optional` **mw?**: `number`
 
-Defined in: [content/src/layout/field-types.ts:127](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L127)
+Defined in: [content/src/layout/field-types.ts:127](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/content/src/layout/field-types.ts#L127)
 
 Max width of the image
 
@@ -70,7 +70,7 @@ Max width of the image
 
 > `optional` **sc?**: `number`
 
-Defined in: [content/src/layout/field-types.ts:135](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L135)
+Defined in: [content/src/layout/field-types.ts:135](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/content/src/layout/field-types.ts#L135)
 
 Image scale. Defaults to 1.0
 
@@ -80,6 +80,6 @@ Image scale. Defaults to 1.0
 
 > `optional` **w?**: `number`
 
-Defined in: [content/src/layout/field-types.ts:123](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/content/src/layout/field-types.ts#L123)
+Defined in: [content/src/layout/field-types.ts:123](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/content/src/layout/field-types.ts#L123)
 
 Fixed width of the image

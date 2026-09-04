@@ -6,7 +6,7 @@
 
 # Interface: SearchParameters\<T\>
 
-Defined in: [search-service.ts:87](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/search/src/search-service.ts#L87)
+Defined in: [search-service.ts:87](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/search/src/search-service.ts#L87)
 
 A set of request parameters for the Search Service.
 Query fields `keyphrase`, `seedItemId`, and `seedItemUrl` are mutually exclusive.
@@ -26,7 +26,7 @@ These seed fields are sent only to `/v1/search`, not `/v1/search/suggest`.
 
 > `optional` **facet?**: [`FacetRequest`](FacetRequest.md)
 
-Defined in: [search-service.ts:133](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/search/src/search-service.ts#L133)
+Defined in: [search-service.ts:133](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/search/src/search-service.ts#L133)
 
 Facet configuration. Use 'all: true' to retrieve counts for all enabled facets.
 Use 'fields' to filter results by specific facet values. Both can be combined.
@@ -37,7 +37,7 @@ Use 'fields' to filter results by specific facet values. Both can be combined.
 
 > `optional` **keyphrase?**: `string`
 
-Defined in: [search-service.ts:96](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/search/src/search-service.ts#L96)
+Defined in: [search-service.ts:96](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/search/src/search-service.ts#L96)
 
 Text value to search for. If not provided, the search will return all results.
 Mutually exclusive with `seedItemId` and `seedItemUrl`.
@@ -48,7 +48,7 @@ Mutually exclusive with `seedItemId` and `seedItemUrl`.
 
 > `optional` **limit?**: `number`
 
-Defined in: [search-service.ts:117](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/search/src/search-service.ts#L117)
+Defined in: [search-service.ts:117](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/search/src/search-service.ts#L117)
 
 Specifies the maximum number of items to return. Maximum value 500.
 
@@ -64,7 +64,7 @@ Specifies the maximum number of items to return. Maximum value 500.
 
 > `optional` **locale?**: `string`
 
-Defined in: [search-service.ts:128](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/search/src/search-service.ts#L128)
+Defined in: [search-service.ts:128](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/search/src/search-service.ts#L128)
 
 The locale to use for the search. Required for multi-locale index configurations.
 Format: letters and hyphens only (e.g. 'en', 'fr-FR', 'el-GR').
@@ -76,7 +76,7 @@ Omit for single-locale indexes.
 
 > `optional` **offset?**: `number`
 
-Defined in: [search-service.ts:122](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/search/src/search-service.ts#L122)
+Defined in: [search-service.ts:122](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/search/src/search-service.ts#L122)
 
 Specifies how many items to skip before starting to collect the result set.
 
@@ -92,7 +92,7 @@ Specifies how many items to skip before starting to collect the result set.
 
 > **searchIndexId**: `string`
 
-Defined in: [search-service.ts:91](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/search/src/search-service.ts#L91)
+Defined in: [search-service.ts:91](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/search/src/search-service.ts#L91)
 
 The ID of the search index to use.
 
@@ -102,7 +102,7 @@ The ID of the search index to use.
 
 > `optional` **seedItemId?**: `string`
 
-Defined in: [search-service.ts:102](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/search/src/search-service.ts#L102)
+Defined in: [search-service.ts:102](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/search/src/search-service.ts#L102)
 
 Item ID used as the seed for More Like This (MLT) results.
 Mutually exclusive with `keyphrase` and `seedItemUrl`.
@@ -114,7 +114,7 @@ Used only by `/v1/search`, not `/v1/search/suggest`.
 
 > `optional` **seedItemUrl?**: `string`
 
-Defined in: [search-service.ts:108](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/search/src/search-service.ts#L108)
+Defined in: [search-service.ts:108](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/search/src/search-service.ts#L108)
 
 Item URL used as the seed for More Like This (MLT) results.
 Mutually exclusive with `keyphrase` and `seedItemId`.
@@ -126,6 +126,6 @@ Used only by `/v1/search`, not `/v1/search/suggest`.
 
 > `optional` **sort?**: [`SortSetting`](../type-aliases/SortSetting.md)\<`T`\> \| [`SortSetting`](../type-aliases/SortSetting.md)\<`T`\>[]
 
-Defined in: [search-service.ts:112](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/search/src/search-service.ts#L112)
+Defined in: [search-service.ts:112](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/search/src/search-service.ts#L112)
 
 Specifies the sorting of the search results.

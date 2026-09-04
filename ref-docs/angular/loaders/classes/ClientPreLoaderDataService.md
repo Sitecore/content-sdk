@@ -6,7 +6,7 @@
 
 # Class: ClientPreLoaderDataService
 
-Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:34](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/loaders/pre-loader-data.service.ts#L34)
+Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:34](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/loaders/pre-loader-data.service.ts#L34)
 
 ClientPreLoaderDataService kicks off loader data fetches for all loaders in the current route
 and its parent routes in parallel, so that when Angular runs resolvers sequentially,
@@ -24,7 +24,7 @@ run in parallel; results are stored in ClientLoaderDataService prefetchedRespons
 
 > **new ClientPreLoaderDataService**(): `ClientPreLoaderDataService`
 
-Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:42](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/loaders/pre-loader-data.service.ts#L42)
+Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:42](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/loaders/pre-loader-data.service.ts#L42)
 
 #### Returns
 
@@ -36,7 +36,7 @@ Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:42](https:/
 
 > **prefetchForRoute**(`route`, `state`): `Promise`\<`void`\>
 
-Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:64](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/loaders/pre-loader-data.service.ts#L64)
+Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:64](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/loaders/pre-loader-data.service.ts#L64)
 
 Prefetch loader data for all loaders in the route tree.
 Call this at the start of browser resolver execution so all loaders for the route
@@ -60,7 +60,7 @@ No-op on server.
 
 > **prefetchForUrl**(`url`, `options?`): `void`
 
-Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:122](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/loaders/pre-loader-data.service.ts#L122)
+Defined in: [packages/angular/src/loaders/pre-loader-data.service.ts:122](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/loaders/pre-loader-data.service.ts#L122)
 
 Resolves the loaders that apply to `url` - without navigating - via matchRouteChain
 against `Router.config`, then prefetches each one, same as [prefetchForRoute](#prefetchforroute) does

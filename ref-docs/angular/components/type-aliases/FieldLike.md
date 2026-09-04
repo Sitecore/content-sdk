@@ -8,7 +8,7 @@
 
 > **FieldLike** = `object`
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:24](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/components/field-directives/base-field.directive.ts#L24)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:24](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/field-directives/base-field.directive.ts#L24)
 
 Subset of the Sitecore field shape used by the base directive: anything that may carry
 editor `metadata`. Concrete subclasses constrain the value via their own field type.
@@ -19,4 +19,4 @@ editor `metadata`. Concrete subclasses constrain the value via their own field t
 
 > `optional` **metadata?**: `Record`\<`string`, `unknown`\>
 
-Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:24](https://github.com/Sitecore/content-sdk/blob/fa0496c6ff6f86b0a1256461d585a8535456bf38/packages/angular/src/components/field-directives/base-field.directive.ts#L24)
+Defined in: [packages/angular/src/components/field-directives/base-field.directive.ts:24](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/components/field-directives/base-field.directive.ts#L24)
