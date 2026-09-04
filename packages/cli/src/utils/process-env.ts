@@ -2,6 +2,7 @@ import path from 'path';
 import * as dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 import { SITECORE_CLI_MODE_ENV_VAR } from '@sitecore-content-sdk/content/config-cli';
+import enableDebugLogging from './enable-debug';
 
 /**
  * Loads and processes environment variables from `.env` files in the specified directory.
@@ -31,4 +32,11 @@ export default function processEnv(dir: string) {
   dotenvFiles.forEach(function(env) {
     dotenvExpand.expand(dotenv.config({ path: path.resolve(dir, env) }));
   });
+
+  // apply the DEBUG value now that the environment variables are loaded
+  const debugScopes = enableDebugLogging();
+
+  if (debugScopes.length) {
+    console.log(`Debug enabled for scopes: [${debugScopes.join(', ')}]`);
+  }
 }
