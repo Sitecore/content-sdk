@@ -423,8 +423,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     const headLinks: HTMLLink[] = [];
 
     const contextId = serverContextId || clientContextId;
-    // Use default Edge URL for styles (ignore custom hostname) so stylesheets load from platform
-    const edgeUrlForStyles = resolveEdgeUrlForStaticFiles();
+    const edgeUrlForStyles = resolveEdgeUrlForStaticFiles(this.initOptions.api.edge.edgeUrl);
 
     if (enableStyles) {
       const contentStyles = getContentStylesheetLink(layoutData, contextId, edgeUrlForStyles);
