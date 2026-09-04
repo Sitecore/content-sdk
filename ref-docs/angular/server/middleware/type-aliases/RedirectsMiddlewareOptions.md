@@ -8,7 +8,7 @@
 
 > **RedirectsMiddlewareOptions** = [`BaseMiddlewareOptions`](../interfaces/BaseMiddlewareOptions.md) & `Partial`\<[`AngularSitecoreConfig`](../../../config/type-aliases/AngularSitecoreConfig.md)\[`"api"`\]\[`"edge"`\]\> & `Partial`\<[`AngularSitecoreConfig`](../../../config/type-aliases/AngularSitecoreConfig.md)\[`"api"`\]\[`"local"`\]\> & [`AngularSitecoreConfig`](../../../config/type-aliases/AngularSitecoreConfig.md)\[`"redirects"`\] & `Pick`\<[`AngularSitecoreConfig`](../../../config/type-aliases/AngularSitecoreConfig.md)\[`"angular"`\], `"locales"`\> & `object`
 
-Defined in: [packages/angular/src/server/middleware/redirects-middleware.ts:38](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/angular/src/server/middleware/redirects-middleware.ts#L38)
+Defined in: [packages/angular/src/server/middleware/redirects-middleware.ts:38](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/angular/src/server/middleware/redirects-middleware.ts#L38)
 
 Configuration for the redirects middleware.
 

@@ -6,7 +6,7 @@
 
 # Interface: SuccessfulMultisiteProxyExecution
 
-Defined in: [nextjs/src/proxy/multisite-proxy.ts:14](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/nextjs/src/proxy/multisite-proxy.ts#L14)
+Defined in: [nextjs/src/proxy/multisite-proxy.ts:14](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/nextjs/src/proxy/multisite-proxy.ts#L14)
 
 Information about executed proxy to be stored in the context
 Used for describing successful execution with details about the multisite that was applied
@@ -21,7 +21,7 @@ Used for describing successful execution with details about the multisite that w
 
 > **error**: `null`
 
-Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/nextjs/src/proxy/types.ts#L18)
+Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/nextjs/src/proxy/types.ts#L18)
 
 #### Inherited from
 
@@ -33,7 +33,7 @@ Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-s
 
 > **executedSuccessfully**: `true`
 
-Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/nextjs/src/proxy/types.ts#L17)
+Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/nextjs/src/proxy/types.ts#L17)
 
 #### Inherited from
 
@@ -45,7 +45,7 @@ Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-s
 
 > **isSitecorePreview**: `string` \| `undefined`
 
-Defined in: [nextjs/src/proxy/multisite-proxy.ts:17](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/nextjs/src/proxy/multisite-proxy.ts#L17)
+Defined in: [nextjs/src/proxy/multisite-proxy.ts:17](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/nextjs/src/proxy/multisite-proxy.ts#L17)
 
 ***
 
@@ -53,7 +53,7 @@ Defined in: [nextjs/src/proxy/multisite-proxy.ts:17](https://github.com/Sitecore
 
 > **rewritePath**: `string`
 
-Defined in: [nextjs/src/proxy/multisite-proxy.ts:15](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/nextjs/src/proxy/multisite-proxy.ts#L15)
+Defined in: [nextjs/src/proxy/multisite-proxy.ts:15](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/nextjs/src/proxy/multisite-proxy.ts#L15)
 
 ***
 
@@ -61,4 +61,4 @@ Defined in: [nextjs/src/proxy/multisite-proxy.ts:15](https://github.com/Sitecore
 
 > **siteName**: `string`
 
-Defined in: [nextjs/src/proxy/multisite-proxy.ts:16](https://github.com/Sitecore/content-sdk/blob/8eb01ef1062b410d0a689de49635870a3d3afbde/packages/nextjs/src/proxy/multisite-proxy.ts#L16)
+Defined in: [nextjs/src/proxy/multisite-proxy.ts:16](https://github.com/Sitecore/content-sdk/blob/16e405f3667f5f05e5fd97b8174bd2b99de45db6/packages/nextjs/src/proxy/multisite-proxy.ts#L16)
