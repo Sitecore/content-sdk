@@ -35,7 +35,7 @@ export const StudioComponentWrapper = ({
   const NCComponent = useMemo(() => {
     if (!document || !atomsConfig) return null;
 
-    return createNCC(document, atomsConfig.registry);
+    return createNCC(document, atomsConfig.registry, atomsConfig.catalog);
   }, [document, atomsConfig]);
 
   if (!NCComponent) return null;

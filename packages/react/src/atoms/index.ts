@@ -1,6 +1,7 @@
 export type {
   AtomComponentDefinition,
   AtomActionDefinition,
+  AtomsCatalog,
   AtomsCatalogInput,
   AtomsComponentsMap,
   AtomActionHandler,

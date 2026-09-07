@@ -4,6 +4,7 @@ export {
   extractDocumentClasses,
   type AtomComponentDefinition,
   type AtomActionDefinition,
+  type AtomsCatalog,
   type AtomsCatalogInput,
   type AtomsComponentsMap,
   type AtomActionHandler,

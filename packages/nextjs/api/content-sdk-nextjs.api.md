@@ -11,6 +11,7 @@ import { AtomActionDefinition } from '@sitecore-content-sdk/react';
 import { AtomActionHandler } from '@sitecore-content-sdk/react';
 import { AtomComponentDefinition } from '@sitecore-content-sdk/react';
 import { AtomsActionsMap } from '@sitecore-content-sdk/react';
+import { AtomsCatalog } from '@sitecore-content-sdk/react';
 import { AtomsCatalogInput } from '@sitecore-content-sdk/react';
 import { AtomsComponentsMap } from '@sitecore-content-sdk/react';
 import { AtomsConfig } from '@sitecore-content-sdk/react';
@@ -251,6 +252,8 @@ export { AtomActionHandler }
 export { AtomComponentDefinition }
 
 export { AtomsActionsMap }
+
+export { AtomsCatalog }
 
 export { AtomsCatalogInput }
 
