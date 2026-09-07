@@ -12,5 +12,6 @@ export {
   EnhancedComponentMapTemplate,
   prepareComponentsForMap,
   buildComponentMapContent,
+  toPascalCase,
 } from './templating';
 export { combineImportEntries } from './codegen/import-map-utils';

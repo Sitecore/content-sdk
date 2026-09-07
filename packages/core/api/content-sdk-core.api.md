@@ -342,7 +342,7 @@ export type PluginDependency = string;
 export function resolveEdgeUrl(edgeUrl?: string): string;
 
 // @public
-export function resolveEdgeUrlForStaticFiles(): string;
+export function resolveEdgeUrlForStaticFiles(edgeUrl?: string): string;
 
 // @public
 export function resolveExperienceEdgeUrl(): string;

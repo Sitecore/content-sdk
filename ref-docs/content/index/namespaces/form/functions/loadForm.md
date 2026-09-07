@@ -6,9 +6,9 @@
 
 # Function: loadForm()
 
-> **loadForm**(`contextId`, `formId`, `edgeUrl?`): `Promise`\<`string`\>
+> **loadForm**(`contextId`, `formId`, `edgeUrl?`, `language?`): `Promise`\<`string`\>
 
-Defined in: [content/src/form/form.ts:15](https://github.com/Sitecore/content-sdk/blob/d8ac4e3318843744564114f23a00a7a35cd2e2c3/packages/content/src/form/form.ts#L15)
+Defined in: [content/src/form/form.ts:16](https://github.com/Sitecore/content-sdk/blob/afdfd1979b6ab6fba690d64bcf17ea29b4d851bb/packages/content/src/form/form.ts#L16)
 
 **`Internal`**
 
@@ -21,6 +21,7 @@ Fetches the form markup from the Sitecore Edge service and renders it in the com
 | `contextId` | `string` | The unique identifier of the current context |
 | `formId` | `string` | The unique identifier of the form |
 | `edgeUrl?` | `string` | The URL of the Sitecore Edge Platform |
+| `language?` | `string` | Page language used to load the matching multilingual form version |
 
 ## Returns
 

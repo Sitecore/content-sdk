@@ -8,6 +8,7 @@ import {
   type GenerateMapFunction,
 } from '@sitecore-content-sdk/content/tools';
 import { getComponentList } from '@sitecore-content-sdk/content/node-tools';
+import { toPascalCase } from '@sitecore-content-sdk/content/tools';
 
 export type AngularGenerateMapArgs = Omit<
   GenerateMapArgs,
@@ -58,7 +59,11 @@ export const generateMap: GenerateMapFunction = (params: GenerateMapArgs) => {
     mapTemplate,
   } = params;
 
-  const comps = getComponentList(paths, exclude, includeVariants);
+  const comps = getComponentList(paths, exclude, includeVariants).map((component) => ({
+    ...component,
+    componentName: toPascalCase(component.componentName),
+    moduleName: toPascalCase(component.moduleName),
+  }));
 
   const withComponentDecorator = comps.filter((c) => fileHasAngularComponentDecorator(c.filePath));
 

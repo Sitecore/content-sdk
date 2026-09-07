@@ -1,0 +1,24 @@
+---
+description: Loader rules — no Angular dependency injection under src/content-sdk/
+alwaysApply: false
+globs:
+  - 'src/content-sdk/**'
+  - 'src/app/app.routes.ts'
+  - 'src/server.ts'
+---
+
+# Loaders (no Angular DI)
+
+Code under `src/content-sdk/` runs in **two** contexts: the Angular SSR resolver, and the plain Express `POST /_data` middleware where **no Angular injector exists**. That is why loaders live here and not in `src/app/`.
+
+- **Never** use `inject()`, constructor injection, or Angular services in a loader body or anywhere under `src/content-sdk/`
+- Config and client come from **static imports**: `scConfig` from `sitecore.config.ts`, `getClient()` from `src/content-sdk/client/sitecore-client.ts`
+- `scConfig` is read-only here. Changing a config value means editing `sitecore.config.ts` and passing it in the **first argument** of `defineConfig` — not assigning to `scConfig` and not inlining a literal in the loader
+- Request state comes from the `LoaderContext` argument: `getLanguage`, `getSiteName`, `getVariantId`, `getComponentVariantIds`, `getEditingPreviewData`, `splitLocaleFromPath`
+- One `LOADERS` object feeds both `provideLoaderRegistry(LOADERS)` (`app.config.ts`) and `createLoaderDataServiceMiddleware(config, { loaders: LOADERS, cache })` (`server.ts`) — no separate server loader set
+- Registry key must match the `loaderResolver('<key>')` argument in `app.routes.ts`
+- Return JSON-serializable data — results cross `TransferState` and the `/_data` HTTP boundary
+- Not found → `throw new NotFoundNavigationError()`; redirects are never cached
+- `unstorage`, `express`, `node:*` and every `create*Middleware` are server-only — keep them out of anything reachable from `src/main.ts`
+
+Depth: [`.agents/docs/AGENTS-loaders-and-di.md`](../../.agents/docs/AGENTS-loaders-and-di.md) · skill: [content-sdk-loader-authoring](../../.agents/skills/content-sdk-loader-authoring/SKILL.md)

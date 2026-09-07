@@ -9,7 +9,6 @@ import {
   SITECORE_COMPONENT_MAP,
   SitecoreTranslateLoader,
   LocaleUrlSerializer,
-  DESIGN_LIBRARY_IMPORT_MAP,
 } from '@sitecore-content-sdk/angular';
 import { routes } from './app.routes';
 import scConfig from '../../sitecore.config';
@@ -38,12 +37,6 @@ export const appConfig: ApplicationConfig = {
     provideLoaderRegistry(LOADERS),
     ClientPreLoaderDataService,
     { provide: SITECORE_COMPONENT_MAP, useValue: componentMap },
-    // Design Library variant-generation: lazily load the generated import map so it stays out of
-    // the main bundle (only needed when previewing generated components).
-    {
-      provide: DESIGN_LIBRARY_IMPORT_MAP,
-      useValue: () => import('.sitecore/import-map').then((m) => m.default),
-    },
     provideTranslateService({
       loader: provideTranslateLoader(SitecoreTranslateLoader),
     }),

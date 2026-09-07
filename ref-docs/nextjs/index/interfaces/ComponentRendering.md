@@ -38,7 +38,19 @@ Defined in: content/types/layout/models.d.ts:100
 
 > `optional` **fields?**: `T`
 
-Defined in: content/types/layout/models.d.ts:103
+Defined in: content/types/layout/models.d.ts:109
+
+***
+
+### isContentResolved?
+
+> `optional` **isContentResolved?**: `boolean`
+
+Defined in: content/types/layout/models.d.ts:106
+
+`true` when Layout Service resolved this rendering's datasource content.
+`false` when resolution failed (for example because the item was deleted or archived).
+Omitted by older Layout Service versions; absence preserves existing behavior.
 
 ***
 
@@ -46,7 +58,7 @@ Defined in: content/types/layout/models.d.ts:103
 
 > `optional` **params?**: [`ComponentParams`](ComponentParams.md)
 
-Defined in: content/types/layout/models.d.ts:104
+Defined in: content/types/layout/models.d.ts:110
 
 ***
 
@@ -54,7 +66,7 @@ Defined in: content/types/layout/models.d.ts:104
 
 > `optional` **placeholders?**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\>
 
-Defined in: content/types/layout/models.d.ts:102
+Defined in: content/types/layout/models.d.ts:108
 
 ***
 
@@ -62,4 +74,4 @@ Defined in: content/types/layout/models.d.ts:102
 
 > `optional` **uid?**: `string`
 
-Defined in: content/types/layout/models.d.ts:101
+Defined in: content/types/layout/models.d.ts:107

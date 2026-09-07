@@ -8,7 +8,7 @@
 
 > **RedirectResult** = [`RedirectInfo`](RedirectInfo.md) & `object`
 
-Defined in: [content/src/site/redirect-utils.ts:16](https://github.com/Sitecore/content-sdk/blob/d8ac4e3318843744564114f23a00a7a35cd2e2c3/packages/content/src/site/redirect-utils.ts#L16)
+Defined in: [content/src/site/redirect-utils.ts:16](https://github.com/Sitecore/content-sdk/blob/afdfd1979b6ab6fba690d64bcf17ea29b4d851bb/packages/content/src/site/redirect-utils.ts#L16)
 
 **`Internal`**
 

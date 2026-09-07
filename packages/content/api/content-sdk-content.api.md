@@ -160,6 +160,7 @@ export interface ComponentRendering<T = ComponentFields> {
     dataSource?: string;
     // (undocumented)
     fields?: T;
+    isContentResolved?: boolean;
     // (undocumented)
     params?: ComponentParams;
     // (undocumented)
@@ -674,7 +675,7 @@ export const getDynamicPlaceholderPattern: (placeholder: string) => RegExp;
 export const getEdgeProxyContentUrl: (sitecoreEdgeUrl?: string) => string;
 
 // @internal
-export const getEdgeProxyFormsUrl: (sitecoreEdgeContextId: string, formId: string, sitecoreEdgeUrl?: string) => string;
+export const getEdgeProxyFormsUrl: (sitecoreEdgeContextId: string, formId: string, sitecoreEdgeUrl?: string, language?: string) => string;
 
 // @internal
 export const getFallbackConfig: () => SitecoreConfig;
@@ -982,7 +983,7 @@ export type LlmsTxtServiceConfig = {
 };
 
 // @internal
-const loadForm: (contextId: string, formId: string, edgeUrl?: string) => Promise<string>;
+const loadForm: (contextId: string, formId: string, edgeUrl?: string, language?: string) => Promise<string>;
 
 // @internal
 export const matchFromRedirectMapRedirect: (redirects: RedirectResult[], requestLocale: string, incomingPathData: ProcessedPath) => RedirectResult | undefined;
@@ -1662,6 +1663,9 @@ export interface TextField extends FieldMetadata {
     // (undocumented)
     value?: string | number;
 }
+
+// @internal
+export const toPascalCase: (name: string) => string;
 
 // @internal
 export const updateComponent: (component: ComponentRendering<ComponentFields>, fields: ComponentFields | undefined, params: ComponentParams | undefined) => void;
