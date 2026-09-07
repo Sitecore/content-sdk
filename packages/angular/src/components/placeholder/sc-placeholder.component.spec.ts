@@ -190,6 +190,36 @@ describe('ScPlaceholderComponent', () => {
     expect(el.textContent).toContain('from-parent');
   });
 
+  it('should render a component that declares only some of the standard inputs without NG0303', () => {
+    // Declares `fields` but NOT `params`/`rendering`. NgComponentOutlet's setInput would throw
+    // NG0303 if the placeholder set undeclared inputs, so a clean render proves they are filtered out.
+    @Component({ selector: 'test-fields-only', template: `<h2>{{ label() }}</h2>` })
+    class FieldsOnlyComponent {
+      readonly fields = input<{ [key: string]: unknown }>({});
+      label = () => (this.fields()?.Label as { value: string } | undefined)?.value ?? '';
+    }
+
+    const map: ComponentMap = new Map([['FieldsOnly', FieldsOnlyComponent]]);
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [ScPlaceholderComponent],
+      providers: [...provideMockSitecoreContext(), { provide: SITECORE_COMPONENT_MAP, useValue: map }],
+    });
+    setMockContextPage(makePage());
+
+    const fixture = TestBed.createComponent(ScPlaceholderComponent);
+    fixture.componentRef.setInput('rendering', {
+      name: 'route',
+      placeholders: {
+        main: [{ componentName: 'FieldsOnly', fields: { Label: { value: 'Only fields' } } }],
+      },
+    });
+    fixture.componentRef.setInput('name', 'main');
+    // Would throw NG0303 during change detection if params/rendering were set on the component.
+    expect(() => fixture.detectChanges()).not.toThrow();
+    expect((fixture.nativeElement as HTMLElement).querySelector('h2')?.textContent).toBe('Only fields');
+  });
+
   it('should pass merged fields and params to child components', () => {
     const rendering: RouteData = {
       name: 'route',

@@ -32,6 +32,11 @@
 - [LayoutServiceData](interfaces/LayoutServiceData.md)
 - [LinkField](interfaces/LinkField.md)
 - [LinkFieldValue](interfaces/LinkFieldValue.md)
+- [MetadataFields](interfaces/MetadataFields.md)
+- [OpenGraphFields](interfaces/OpenGraphFields.md)
+- [OpenGraphImageField](interfaces/OpenGraphImageField.md)
+- [OpenGraphImageFieldValue](interfaces/OpenGraphImageFieldValue.md)
+- [PageMetadataFields](interfaces/PageMetadataFields.md)
 - [PlaceholderData](interfaces/PlaceholderData.md)
 - [RichTextField](interfaces/RichTextField.md)
 - [RouteData](interfaces/RouteData.md)
@@ -50,6 +55,8 @@
 - [EDITING\_COMPONENT\_PLACEHOLDER](variables/EDITING_COMPONENT_PLACEHOLDER.md)
 - [EMPTY\_DATE\_FIELD\_VALUE](variables/EMPTY_DATE_FIELD_VALUE.md)
 - [GRAPHQL\_LAYOUT\_QUERY\_NAME](variables/GRAPHQL_LAYOUT_QUERY_NAME.md)
+- [OG\_CREATION\_TIME\_TAG](variables/OG_CREATION_TIME_TAG.md)
+- [OG\_MODIFIED\_TIME\_TAG](variables/OG_MODIFIED_TIME_TAG.md)
 
 ## Functions
 

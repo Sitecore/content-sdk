@@ -13,7 +13,7 @@ App Router + Cache Components (`src/lib/cache/`, `POST /api/revalidate`). Load *
 | [content-sdk-site-setup-and-env](.agents/skills/content-sdk-site-setup-and-env/SKILL.md) | sitecore |
 | [content-sdk-multisite-management](.agents/skills/content-sdk-multisite-management/SKILL.md) | Proxy: PreviewProxy → BotTracking → Locale → Multisite → Redirects → Personalize |
 | [content-sdk-dictionary-and-i18n](.agents/skills/content-sdk-dictionary-and-i18n/SKILL.md) | next-intl with requestLocale = `${site}_${locale}`; routing |
-| [content-sdk-sitemap-robots](.agents/skills/content-sdk-sitemap-robots/SKILL.md) | Route handlers under src/app/api/ with createSitemapRouteHandler / createRobotsRouteHandler |
+| [content-sdk-sitemap-robots](.agents/skills/content-sdk-sitemap-robots/SKILL.md) | Route handlers under src/app/api/ with createSitemapRouteHandler / createRobotsRouteHandler / createLlmsTxtRouteHandler |
 | [content-sdk-component-variants](.agents/skills/content-sdk-component-variants/SKILL.md) | Multiple presentations per component; regenerate maps after changes |
 | [content-sdk-troubleshoot-editing](.agents/skills/content-sdk-troubleshoot-editing/SKILL.md) | Check draftMode, preview on client (not cache helpers), setRequestLocale, maps |
 | [content-sdk-upgrade-assistant](.agents/skills/content-sdk-upgrade-assistant/SKILL.md) | Upgrade @sitecore-content-sdk/*; follow CHANGELOG and migration guides |

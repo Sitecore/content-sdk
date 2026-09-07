@@ -6,8 +6,14 @@
 
 # tools/index-node
 
+## Enumerations
+
+- [ExtractedFileType](enumerations/ExtractedFileType.md)
+
 ## Type Aliases
 
+- [ExtractedFile](type-aliases/ExtractedFile.md)
+- [ExtractFilesConfig](type-aliases/ExtractFilesConfig.md)
 - [GenerateSitesConfig](type-aliases/GenerateSitesConfig.md)
 - [ModuleExports](type-aliases/ModuleExports.md)
 - [WriteImportMapArgs](type-aliases/WriteImportMapArgs.md)

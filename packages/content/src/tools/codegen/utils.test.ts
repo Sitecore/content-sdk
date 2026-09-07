@@ -398,6 +398,39 @@ describe('codegen-utils', () => {
     });
   });
 
+  describe('readNamedExports', () => {
+    it('collects exported class declarations (e.g. Angular components)', () => {
+      const filePath = '/app/src/app/components/promo.component.ts';
+      const source = [
+        "import { Component } from '@angular/core';",
+        '@Component({ selector: "app-promo", template: "" })',
+        'export class PromoComponent {}',
+        'export default PromoComponent;',
+      ].join('\n');
+      sandbox.stub(fs, 'readFileSync').withArgs(filePath).returns(source);
+
+      const names = codegenUtils.readNamedExports(filePath);
+
+      expect(names).to.include('PromoComponent');
+      expect(names).to.include('Default');
+    });
+
+    it('collects const, function and named re-exports', () => {
+      const filePath = '/app/src/components/Widget.tsx';
+      const source = [
+        'export const Alpha = () => null;',
+        'export function Beta() {}',
+        'const Gamma = 1;',
+        'export { Gamma };',
+      ].join('\n');
+      sandbox.stub(fs, 'readFileSync').withArgs(filePath).returns(source);
+
+      const names = codegenUtils.readNamedExports(filePath);
+
+      expect(names).to.have.members(['Alpha', 'Beta', 'Gamma']);
+    });
+  });
+
   describe('validateDeployContext', () => {
     afterEach(() => {
       delete process.env.NETLIFY;

@@ -35,12 +35,12 @@
   },
   "types": "types/src/index.d.ts",
   "main": "dist/cjs/src/index.js",
-  "module": "dist/esm/src/index.js",  
+  "module": "dist/esm/src/index.js",
   "exports": {
     ".": {
       "types": "./types/src/index.d.ts",
       "import": "./dist/esm/src/index.js",
-      "require": "./dist/cjs/src/index.js"      
+      "require": "./dist/cjs/src/index.js"
     },
     "./internal": {
       "types": "./types/src/internal.d.ts",

@@ -4,10 +4,9 @@ import chai, { expect } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import { DocumentNode } from 'graphql';
-import { DefaultRetryStrategy, NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
+import { DefaultRetryStrategy, NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV } from '@sitecore-content-sdk/core/tools';
 
-const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 import { ErrorPage, SitecoreClient } from './sitecore-client';
 import { LayoutKind, DesignLibraryMode } from '../../src/editing';
 import { LayoutServiceData } from '../../layout';
@@ -1480,11 +1479,11 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
+          href: `https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
         {
-          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
+          href: `https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1506,11 +1505,11 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=client-context-id`,
+          href: `https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=client-context-id`,
           rel: 'stylesheet',
         },
         {
-          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=client-context-id`,
+          href: `https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=client-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1523,7 +1522,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
+          href: `https://edge.example.com/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1536,7 +1535,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
+          href: `https://edge.example.com/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1776,6 +1775,65 @@ describe('SitecoreClient', () => {
       await sitecoreClient.getRobots(siteName, fetchOptions);
 
       expect(mockRobotsService.fetchRobots.calledWith(fetchOptions)).to.be.true;
+    });
+  });
+
+  describe('getLlmsTxt', () => {
+    const siteName = 'test-site';
+    let getLlmsTxtServiceStub: sinon.SinonStub;
+    const mockLlmsTxtService = {
+      fetchLlmsTxt: sandbox.stub(),
+    };
+
+    beforeEach(() => {
+      getLlmsTxtServiceStub = sandbox
+        .stub(SitecoreClient.prototype, 'getLlmsTxtService')
+        .returns(mockLlmsTxtService as any);
+    });
+
+    it('should return llms.txt content if available', async () => {
+      const content = '# llms.txt\n\n> Example site.';
+      mockLlmsTxtService.fetchLlmsTxt.resolves(content);
+
+      const result = await sitecoreClient.getLlmsTxt({ siteName });
+
+      expect(getLlmsTxtServiceStub.calledWith(siteName)).to.be.true;
+      expect(result).to.equal(content);
+    });
+
+    it('should return null if fetchLlmsTxt returns null or empty', async () => {
+      mockLlmsTxtService.fetchLlmsTxt.resolves(null);
+
+      const result = await sitecoreClient.getLlmsTxt({ siteName });
+
+      expect(getLlmsTxtServiceStub.calledWith(siteName)).to.be.true;
+      expect(result).to.be.null;
+    });
+
+    it('should propagate errors from fetchLlmsTxt', async () => {
+      const error = new Error('Network error');
+      mockLlmsTxtService.fetchLlmsTxt.rejects(error);
+
+      try {
+        await sitecoreClient.getLlmsTxt({ siteName });
+        expect.fail('Expected error to be thrown');
+      } catch (err) {
+        expect(getLlmsTxtServiceStub.calledWith(siteName)).to.be.true;
+        expect(err).to.equal(error);
+      }
+    });
+
+    it('should pass fetchOptions to fetchLlmsTxt', async () => {
+      const fetchOptions = {
+        headers: { 'X-Test': 'true' },
+        cache: 'no-store' as RequestCache,
+      };
+
+      mockLlmsTxtService.fetchLlmsTxt.resolves('# llms.txt\n\n> Example site.');
+
+      await sitecoreClient.getLlmsTxt({ siteName }, fetchOptions);
+
+      expect(mockLlmsTxtService.fetchLlmsTxt.calledWith(fetchOptions)).to.be.true;
     });
   });
 });

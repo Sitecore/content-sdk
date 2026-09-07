@@ -41,6 +41,9 @@ export const breakDownPath: (configuredLocales: string[], urlPath: string) => Pr
 // @internal
 export const buildComponentMapContent: (entries: ComponentMapEntry[], componentImports: ComponentImport[] | undefined, options: TemplateOptions) => string;
 
+// @public
+export const buildExperimentalFeaturesResponse: (features: ExperimentalFeatureData[]) => ExperimentalFeaturesResponse;
+
 // @internal
 export const buildFallbackConfig: (env: {
     [key: string]: string | undefined;
@@ -53,6 +56,9 @@ export class CdpHelper {
     static getPageVariantId(pageId: string, language: string, variantId: string, scope?: string): string;
     static normalizeScope(scope?: string): string;
 }
+
+// @public
+export const combineImportEntries: (defaultImportEntries: ImportEntry[], generatedImportEntries: ImportEntry[]) => ImportEntry[];
 
 // @internal
 export const COMPONENT_PREVIEW_CACHE_KEY_PREFIX = "component-preview-";
@@ -142,8 +148,6 @@ export interface ComponentParams {
 export interface ComponentPreviewEventArgs extends DesignLibraryEvent {
     // (undocumented)
     message: GeneratedComponentData;
-    // Warning: (ae-forgotten-export) The symbol "DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME" needs to be exported by the entry point api-surface.d.ts
-    //
     // (undocumented)
     name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
 }
@@ -156,6 +160,7 @@ export interface ComponentRendering<T = ComponentFields> {
     dataSource?: string;
     // (undocumented)
     fields?: T;
+    isContentResolved?: boolean;
     // (undocumented)
     params?: ComponentParams;
     // (undocumented)
@@ -197,6 +202,9 @@ export const createComponentInstance: (importMap: ImportEntry[], generatedCompon
 export const createGraphQLClientFactory: (options: GraphQLClientOptions) => GraphQLRequestClientFactory;
 
 // @public
+export const CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG = "CSDK_GLOBAL_EXPERIMENTAL_FEATURES_ENABLED";
+
+// @public
 const debug_2: {
     form: Debugger;
     layout: Debugger;
@@ -205,6 +213,7 @@ const debug_2: {
     sitemap: Debugger;
     multisite: Debugger;
     robots: Debugger;
+    llmsTxt: Debugger;
     redirects: Debugger;
     personalize: Debugger;
     locale: Debugger;
@@ -221,6 +230,9 @@ export function deepMerge<T>(base: T, override?: DeepPartial<T>): T;
 export type DeepRequired<T> = Required<{
     [K in keyof T]: T[K] extends Required<T[K]> ? T[K] : DeepRequired<T[K]>;
 }>;
+
+// @public
+export const DEFAULT_LLMS_TXT = "# llms.txt\n\n> No llms.txt content configured for this site.";
 
 // @internal
 export const DEFAULT_PLACEHOLDER_UID = "00000000-0000-0000-0000-000000000000";
@@ -240,6 +252,9 @@ export const defineCliConfig: (cliConfig: SitecoreCliConfigInput) => SitecoreCli
 
 // @public
 export const defineConfig: (config?: SitecoreConfigInput, env?: Record<string, string | undefined>) => SitecoreConfig;
+
+// @internal
+export const DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME = "component:generation:component-preview";
 
 // @public
 export enum DesignLibraryMode {
@@ -466,10 +481,60 @@ export interface ErrorPagesServiceConfig extends GraphQLServiceConfig {
 // @internal
 const executeScriptElements: (rootElement: HTMLElement) => void;
 
+// @public
+export type ExperimentalFeatureData = {
+    idName: string;
+    displayName: string;
+    envVarName: string;
+    description: string;
+};
+
+// @public
+export type ExperimentalFeaturesResponse = {
+    features: ExperimentalFeatureStatus[];
+};
+
+// @public
+export type ExperimentalFeatureStatus = ExperimentalFeatureData & {
+    enabled: boolean;
+};
+
+// @public
+export type ExtractedFile = {
+    name: string;
+    path: string;
+    type: ExtractedFileType;
+    labels?: Record<string, unknown>;
+};
+
+// @public
+export enum ExtractedFileType {
+    // (undocumented)
+    Component = "component",
+    // (undocumented)
+    Json = "json",
+    // (undocumented)
+    PackageJson = "package.json",
+    // (undocumented)
+    Style = "style",
+    // (undocumented)
+    Template = "template",
+    // (undocumented)
+    Variant = "variant"
+}
+
 // Warning: (ae-forgotten-export) The symbol "_extractFiles" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export let extractFiles: typeof _extractFiles;
+
+// @public
+export type ExtractFilesConfig = {
+    componentMapPath?: string;
+    clientComponentMapPath?: string;
+    customValidateDeployContext?: () => boolean;
+    gatherCompanionFiles?: (componentFilePath: string, componentKey: string) => ExtractedFile[];
+};
 
 // @internal
 export function fetchGeneratedComponentFromCache(id: string, token: string, edgeUrl?: string): Promise<GeneratedComponentData>;
@@ -757,6 +822,12 @@ export const isDynamicPlaceholder: (placeholder: string) => boolean;
 export const isEditorActive: () => boolean;
 
 // @public
+export const isExperimentalEnvFlagEnabled: (value: string | undefined) => boolean;
+
+// @public
+export const isExperimentalFeaturesGloballyEnabled: () => boolean;
+
+// @public
 export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field> | null | undefined): field is null | undefined;
 
 // @public
@@ -877,6 +948,40 @@ export interface LinkFieldValue {
     title?: string;
 }
 
+// @public
+export const LLMS_TXT_CONTENT_TYPE = "text/markdown; charset=utf-8";
+
+// @public
+export type LlmsTxtOptions = {
+    siteName: string;
+};
+
+// @public
+export type LlmsTxtQueryResult = {
+    site: {
+        siteInfo: {
+            llmsTxt: string;
+        };
+    };
+};
+
+// @public
+export class LlmsTxtService {
+    constructor(options: LlmsTxtServiceConfig);
+    fetchLlmsTxt(fetchOptions?: FetchOptions): Promise<string>;
+    protected getGraphQLClient(): GraphQLClient;
+    // (undocumented)
+    options: LlmsTxtServiceConfig;
+    // (undocumented)
+    protected get query(): string;
+}
+
+// @public
+export type LlmsTxtServiceConfig = {
+    siteName: string;
+    clientFactory: GraphQLRequestClientFactory;
+};
+
 // @internal
 const loadForm: (contextId: string, formId: string, edgeUrl?: string, language?: string) => Promise<string>;
 
@@ -895,6 +1000,18 @@ declare namespace mediaApi {
     }
 }
 export { mediaApi }
+
+// @public
+export interface MetadataFields {
+    // (undocumented)
+    baseMetadataAuthor?: Field<string>;
+    // (undocumented)
+    baseMetadataDescription?: Field<string>;
+    // (undocumented)
+    baseMetadataKeywords?: Field<string>;
+    // (undocumented)
+    baseMetadataTitle?: Field<string>;
+}
 
 // @internal
 export enum MetadataKind {
@@ -918,6 +1035,44 @@ export function normalizePersonalizedRewrite(pathname: string): string;
 export function normalizeSiteRewrite(pathname: string): string;
 
 // @public
+export const OG_CREATION_TIME_TAG: Record<string, string>;
+
+// @public
+export const OG_MODIFIED_TIME_TAG: Record<string, string>;
+
+// @public
+export interface OpenGraphFields {
+    // (undocumented)
+    baseOgDescription?: Field<string>;
+    // (undocumented)
+    baseOgImage?: OpenGraphImageField;
+    // (undocumented)
+    baseOgTitle?: Field<string>;
+    // (undocumented)
+    baseOgType?: Field<string>;
+}
+
+// @public
+export interface OpenGraphImageField {
+    // (undocumented)
+    value?: OpenGraphImageFieldValue;
+}
+
+// @public
+export interface OpenGraphImageFieldValue {
+    // (undocumented)
+    [attributeName: string]: unknown;
+    // (undocumented)
+    alt?: string;
+    // (undocumented)
+    height?: string;
+    // (undocumented)
+    src?: string;
+    // (undocumented)
+    width?: string;
+}
+
+// @public
 export type Page = {
     layout: LayoutServiceData;
     siteName?: string;
@@ -929,6 +1084,10 @@ export type Page = {
 export interface PageInfo {
     endCursor: string;
     hasNext: boolean;
+}
+
+// @public
+export interface PageMetadataFields extends MetadataFields, OpenGraphFields {
 }
 
 // @public
@@ -1130,6 +1289,9 @@ const replaceMediaUrlPrefix: (url: string, mediaUrlPrefix?: RegExp) => string;
 // @public
 export const resetEditorChromes: () => void;
 
+// @public
+export const resolveExperimentalFeatureStatuses: (features: ExperimentalFeatureData[]) => ExperimentalFeatureStatus[];
+
 // @internal
 export const resolveRedirectTarget: (existsRedirect: RedirectResult, siteLanguage: string, requestPath: string) => string;
 
@@ -1192,10 +1354,12 @@ export interface RouteData<Fields = Record<string, Field | Item | Item[]>> {
     name: string;
     // (undocumented)
     placeholders: PlaceholdersData;
+    published?: string;
     // (undocumented)
     templateId?: string;
     // (undocumented)
     templateName?: string;
+    updated?: string;
 }
 
 // @public
@@ -1296,6 +1460,9 @@ export class SitecoreClient implements BaseSitecoreClient {
         enableStyles?: boolean;
         enableThemes?: boolean;
     }): HTMLLink[];
+    getLlmsTxt(options: LlmsTxtOptions, fetchOptions?: FetchOptions): Promise<string | null>;
+    // (undocumented)
+    protected getLlmsTxtService(siteName: string): LlmsTxtService;
     getPage(path: string | string[], pageOptions?: PageOptions, fetchOptions?: FetchOptions): Promise<Page | null>;
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
     getPreview(previewData: EditingPreviewData | undefined, fetchOptions?: FetchOptions): Promise<Page | null>;
@@ -1498,12 +1665,18 @@ export interface TextField extends FieldMetadata {
 }
 
 // @internal
+export const toPascalCase: (name: string) => string;
+
+// @internal
 export const updateComponent: (component: ComponentRendering<ComponentFields>, fields: ComponentFields | undefined, params: ComponentParams | undefined) => void;
 
 // @public
 const updateImageUrl: (url: string, params?: {
     [key: string]: string | number | undefined;
 } | null, mediaUrlPrefix?: RegExp) => string;
+
+// @internal
+export const validateEvent: (e: MessageEvent, eventName: string) => boolean;
 
 // @internal (undocumented)
 export const VARIANT_PREFIX = "_variantId_";
@@ -1519,6 +1692,7 @@ export const writeImportMap: (args: WriteImportMapArgsInternal) => (input: {
 export type WriteImportMapArgs = {
     paths: string[];
     exclude?: string[];
+    includeVariants?: boolean;
 };
 
 // @internal
@@ -1530,8 +1704,8 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:68:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
-// src/editing/codegen/preview.ts:115:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:69:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/editing/codegen/preview.ts:116:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal

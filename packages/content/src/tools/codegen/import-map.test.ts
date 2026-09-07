@@ -23,6 +23,10 @@ describe('Import Map Generation', () => {
   const sandbox = sinon.createSandbox();
   let cwdStub: sinon.SinonStub;
   let testExportsModulePath = '';
+  const ts = require('typescript');
+  const originalReadFile = ts.sys.readFile;
+  const originalFileExists = ts.sys.fileExists;
+  const originalDirectoryExists = ts.sys.directoryExists;
 
   beforeEach(() => {
     const appFolder = path.resolve(process.cwd(), './src/tools/codegen/test-data/import-map');
@@ -258,71 +262,134 @@ describe('Import Map Generation', () => {
         };
       `;
 
-      const ts = require('typescript');
       const fakeFilePath = path.resolve(process.cwd(), 'fake-file.ts');
       const nodeModulesPath = path.resolve(process.cwd(), 'node_modules');
 
-      // Store original functions
-      const originalReadFile = ts.sys.readFile;
-      const originalFileExists = ts.sys.fileExists;
-
-      try {
-        // Mock ts.sys.readFile to return our fake code
-        ts.sys.readFile = (filePath: string) => {
-          if (filePath === fakeFilePath) {
-            return fakeCode;
-          }
-          if (filePath.includes('tsconfig.json')) {
-            return originalReadFile(filePath);
-          }
-          // For node_modules resolution, return minimal valid module content
-          if (
-            filePath.includes('coolFeatureLib') ||
-            filePath.includes('fancy.js') ||
-            filePath.includes(nodeModulesPath)
-          ) {
-            return 'export const placeholder = true;';
-          }
+      // Mock ts.sys.readFile to return our fake code
+      ts.sys.readFile = (filePath: string) => {
+        if (filePath === fakeFilePath) {
+          return fakeCode;
+        }
+        if (filePath.includes('tsconfig.json')) {
           return originalReadFile(filePath);
+        }
+        // For node_modules resolution, return minimal valid module content
+        if (
+          filePath.includes('coolFeatureLib') ||
+          filePath.includes('fancy.js') ||
+          filePath.includes(nodeModulesPath)
+        ) {
+          return 'export const placeholder = true;';
+        }
+        return originalReadFile(filePath);
+      };
+
+      // Mock ts.sys.fileExists to confirm our files exist
+      ts.sys.fileExists = (filePath: string) => {
+        if (filePath === fakeFilePath) {
+          return true;
+        }
+        if (
+          filePath.includes('coolFeatureLib') ||
+          filePath.includes('fancy.js') ||
+          filePath.includes(nodeModulesPath)
+        ) {
+          return true;
+        }
+        return originalFileExists(filePath);
+      };
+
+      const result = getImportMap([fakeFilePath]);
+      const expected = [
+        {
+          module: 'coolFeatureLib',
+          namedImports: [{ name: 'coolFeature', value: 'coolFeature' }],
+          defaultImport: null,
+          namespaceImport: null,
+        },
+        {
+          module: 'fancy.js',
+          namedImports: [{ name: 'fancyNameFeature', value: 'fancyNameFeature' }],
+          defaultImport: null,
+          namespaceImport: null,
+        },
+      ];
+
+      expect(convertToTestable(result)).to.deep.equal(expected);
+    });
+
+    // Regression test for JSS-9328: packages that only expose an "exports" map
+    // (no top-level main/module/types) - e.g. @sitecore-content-sdk/angular - were
+    // not resolved because the classic node10 resolver ignores the "exports" field.
+    // The fix converts the JSON compiler options (so moduleResolution: 'bundler'
+    // is honored) and uses ts.resolveModuleName, which reads the "exports" map.
+    it('should resolve packages that only expose an "exports" map (no main/types)', () => {
+      const fakeCode = `import { exportsOnlyFeature } from '@fake-scope/exports-only';
+        export default function comp() {
+          return exportsOnlyFeature;
         };
+      `;
 
-        // Mock ts.sys.fileExists to confirm our files exist
-        ts.sys.fileExists = (filePath: string) => {
-          if (filePath === fakeFilePath) {
-            return true;
-          }
-          if (
-            filePath.includes('coolFeatureLib') ||
-            filePath.includes('fancy.js') ||
-            filePath.includes(nodeModulesPath)
-          ) {
-            return true;
-          }
-          return originalFileExists(filePath);
-        };
+      const fakeFilePath = path.resolve(process.cwd(), 'exports-only-consumer.ts');
 
-        const result = getImportMap([fakeFilePath]);
-        const expected = [
-          {
-            module: 'coolFeatureLib',
-            namedImports: [{ name: 'coolFeature', value: 'coolFeature' }],
-            defaultImport: null,
-            namespaceImport: null,
+      // Package that has no main/module/types - only an "exports" map pointing at
+      // built output, exactly like @sitecore-content-sdk/angular.
+      const exportsOnlyPackageJson = JSON.stringify({
+        name: '@fake-scope/exports-only',
+        exports: {
+          '.': {
+            types: './dist/types/index.d.ts',
+            default: './dist/index.mjs',
           },
-          {
-            module: 'fancy.js',
-            namedImports: [{ name: 'fancyNameFeature', value: 'fancyNameFeature' }],
-            defaultImport: null,
-            namespaceImport: null,
-          },
-        ];
+        },
+      });
 
-        expect(convertToTestable(result)).to.deep.equal(expected);
-      } finally {
-        // Always restore original functions, even if test fails
-        ts.sys.readFile = originalReadFile;
-        ts.sys.fileExists = originalFileExists;
-      }
+      const isPkgJson = (p: string) =>
+        p.replace(/\\/g, '/').endsWith('@fake-scope/exports-only/package.json');
+      const isPkgTypes = (p: string) =>
+        p.replace(/\\/g, '/').endsWith('@fake-scope/exports-only/dist/types/index.d.ts');
+      const isPkgDir = (p: string) => p.replace(/\\/g, '/').includes('@fake-scope');
+
+      ts.sys.readFile = (filePath: string) => {
+        if (filePath === fakeFilePath) {
+          return fakeCode;
+        }
+        if (isPkgJson(filePath)) {
+          return exportsOnlyPackageJson;
+        }
+        // Force bundler module resolution so the "exports" map is honored,
+        // regardless of the shared test-data tsconfig.
+        if (filePath.replace(/\\/g, '/').endsWith('tsconfig.json')) {
+          return JSON.stringify({ compilerOptions: { moduleResolution: 'bundler' } });
+        }
+        return originalReadFile(filePath);
+      };
+
+      ts.sys.fileExists = (filePath: string) => {
+        if (filePath === fakeFilePath || isPkgJson(filePath) || isPkgTypes(filePath)) {
+          return true;
+        }
+        return originalFileExists(filePath);
+      };
+
+      ts.sys.directoryExists = (dirPath: string) => {
+        if (isPkgDir(dirPath)) {
+          return true;
+        }
+        return originalDirectoryExists(dirPath);
+      };
+
+      const result = getImportMap([fakeFilePath]);
+      const expected = [
+        {
+          module: '@fake-scope/exports-only',
+          namedImports: [{ name: 'exportsOnlyFeature', value: 'exportsOnlyFeature' }],
+          defaultImport: null,
+          namespaceImport: null,
+        },
+      ];
+
+      expect(convertToTestable(result)).to.deep.equal(expected);
     });
   });
 
@@ -478,6 +545,10 @@ describe('Import Map Generation', () => {
       /* eslint-disable-next-line */
       importUnitMocks.defaultMapTemplate = importUnitMocks.defaultMapTemplate;
       unitMocks({ getComponentListStub: componentUnitMocks.getComponentList });
+      // Always restore original functions, even if test fails
+      ts.sys.readFile = originalReadFile;
+      ts.sys.fileExists = originalFileExists;
+      ts.sys.directoryExists = originalDirectoryExists;
     });
 
     let getImportMapStub: sinon.SinonStub;
@@ -567,6 +638,38 @@ describe('Import Map Generation', () => {
       expect(getImportMapStub.calledWith(['component1.tsx', 'component2.tsx'])).to.be.true;
       expect(fsWriteStub.calledOnce).to.be.true;
       expect(defaultMapTemplateStub.calledOnce).to.be.true;
+    });
+
+    it('should process variants by default', async () => {
+      const scConfig = { disableCodeGeneration: false } as any;
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+
+      getComponentListStub.returns([{ filePath: 'component1.tsx' }]);
+      getImportMapStub.returns(new Map());
+      sandbox.stub(require('fs'), 'writeFileSync');
+      defaultMapTemplateStub.returns('// import map content');
+
+      // includeVariants is not provided
+      await runCommand(scConfig, { paths: ['foo'], exclude: ['bar'] });
+
+      // variants should be included, so getComponentList is called with includeVariants === true
+      expect(getComponentListStub.calledWith(['foo'], ['bar'], true)).to.be.true;
+    });
+
+    it('should accept includeVariants arg', async () => {
+      const scConfig = { disableCodeGeneration: false } as any;
+      utilsUnitMocks.xmCloudDeploy = sandbox.stub().returns(true) as any;
+
+      getComponentListStub.returns([{ filePath: 'component1.tsx' }]);
+      getImportMapStub.returns(new Map());
+      sandbox.stub(require('fs'), 'writeFileSync');
+      defaultMapTemplateStub.returns('// import map content');
+
+      // explicitly opt out of variants
+      await runCommand(scConfig, { paths: ['foo'], exclude: ['bar'], includeVariants: false });
+
+      // the provided includeVariants arg should be forwarded to getComponentList
+      expect(getComponentListStub.calledWith(['foo'], ['bar'], false)).to.be.true;
     });
 
     it('should write server and client import maps', async () => {

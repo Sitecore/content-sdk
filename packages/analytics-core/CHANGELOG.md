@@ -1,5 +1,11 @@
 # @sitecore-content-sdk/analytics-core
 
+## 2.1.2
+
+### Patch Changes
+
+- Fix misalignment of the date of birth `dob` field in the identity event payload between backend and sdk ([9329e6e](https://github.com/sitecore/content-sdk/commit/9329e6e2d33c2b5d7d6c8bef29aa6663d4bb5a71))
+
 ## 2.1.1
 
 ### Patch Changes

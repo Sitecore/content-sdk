@@ -6,7 +6,7 @@
 
 # Interface: ComponentRendering\<T\>
 
-Defined in: content/types/layout/models.d.ts:94
+Defined in: content/types/layout/models.d.ts:98
 
 Definition of a component instance within a placeholder on a route
 
@@ -22,7 +22,7 @@ Definition of a component instance within a placeholder on a route
 
 > **componentName**: `string`
 
-Defined in: content/types/layout/models.d.ts:95
+Defined in: content/types/layout/models.d.ts:99
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: content/types/layout/models.d.ts:95
 
 > `optional` **dataSource?**: `string`
 
-Defined in: content/types/layout/models.d.ts:96
+Defined in: content/types/layout/models.d.ts:100
 
 ***
 
@@ -38,7 +38,19 @@ Defined in: content/types/layout/models.d.ts:96
 
 > `optional` **fields?**: `T`
 
-Defined in: content/types/layout/models.d.ts:99
+Defined in: content/types/layout/models.d.ts:109
+
+***
+
+### isContentResolved?
+
+> `optional` **isContentResolved?**: `boolean`
+
+Defined in: content/types/layout/models.d.ts:106
+
+`true` when Layout Service resolved this rendering's datasource content.
+`false` when resolution failed (for example because the item was deleted or archived).
+Omitted by older Layout Service versions; absence preserves existing behavior.
 
 ***
 
@@ -46,7 +58,7 @@ Defined in: content/types/layout/models.d.ts:99
 
 > `optional` **params?**: [`ComponentParams`](ComponentParams.md)
 
-Defined in: content/types/layout/models.d.ts:100
+Defined in: content/types/layout/models.d.ts:110
 
 ***
 
@@ -54,7 +66,7 @@ Defined in: content/types/layout/models.d.ts:100
 
 > `optional` **placeholders?**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\>
 
-Defined in: content/types/layout/models.d.ts:98
+Defined in: content/types/layout/models.d.ts:108
 
 ***
 
@@ -62,4 +74,4 @@ Defined in: content/types/layout/models.d.ts:98
 
 > `optional` **uid?**: `string`
 
-Defined in: content/types/layout/models.d.ts:97
+Defined in: content/types/layout/models.d.ts:107

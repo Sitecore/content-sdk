@@ -126,6 +126,13 @@ export {
   ImageField,
   ImageFieldValue,
   ImageProps,
+  OpenGraphImageField,
+  OpenGraphImageFieldValue,
+  OpenGraphFields,
+  MetadataFields,
+  PageMetadataFields,
+  OG_CREATION_TIME_TAG,
+  OG_MODIFIED_TIME_TAG,
   LinkField,
   LinkFieldValue,
   Text,
@@ -194,3 +201,6 @@ export {
   collectSitecorePageCacheTags,
   type CollectSitecorePageCacheTagsParams,
 } from './cache/sitecore-page-cache-tags';
+
+export { getPageMetadata, type PageMetadataRouteFields } from './metadata/page-metadata';
+export { PageMetaTags, type PageMetaTagsProps } from './components/PageMetaTags';

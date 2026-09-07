@@ -98,6 +98,16 @@ Defined in: content/types/layout/models.d.ts:66
 
 ***
 
+### published?
+
+> `optional` **published?**: `string`
+
+Defined in: content/types/layout/models.d.ts:69
+
+ISO datetime the item was published, if available.
+
+***
+
 ### templateId?
 
 > `optional` **templateId?**: `string`
@@ -111,3 +121,13 @@ Defined in: content/types/layout/models.d.ts:64
 > `optional` **templateName?**: `string`
 
 Defined in: content/types/layout/models.d.ts:65
+
+***
+
+### updated?
+
+> `optional` **updated?**: `string`
+
+Defined in: content/types/layout/models.d.ts:71
+
+ISO datetime the item was last updated, if available.

@@ -19,7 +19,8 @@
             "allowedCommonJsDependencies": [
               "debug",
               "memory-cache",
-              "cross-fetch"
+              "cross-fetch",
+              "@sitecore-content-sdk/angular/codegen"
             ],
             "security": {
               "allowedHosts": ["localhost", "*.localhost"]

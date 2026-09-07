@@ -40,6 +40,17 @@ describe('form', () => {
       expect(result).to.equal('form data');
     });
 
+    it('should load form with language', async () => {
+      nock(getEdgeProxyFormsUrl('contextId', 'formId', 'https://bar.com', 'da-DK'))
+        .get('')
+        .query({ sitecoreContextId: 'contextId', language: 'da-DK' })
+        .reply(200, 'localized form data');
+
+      const result = await loadForm('contextId', 'formId', 'https://bar.com', 'da-DK');
+
+      expect(result).to.equal('localized form data');
+    });
+
     it('should throw error if form loading fails', async () => {
       nock(getEdgeProxyFormsUrl('contextId', 'formId', 'https://bar.com'))
         .get('')

@@ -18,29 +18,29 @@ interface RouteFields {
   selector: 'app-layout',
   imports: [ScPlaceholderComponent],
   template: `
-    <div [attr.class]="layoutClassAttr()">
-      <header class="w-full">
-        <div id="header">
-          @if (scRoute()) {
-            <sc-placeholder name="headless-header" [rendering]="scRoute()!"></sc-placeholder>
-          }
-        </div>
-      </header>
-      <main class="min-w-0 w-full flex-1">
-        <div id="content" class="w-full min-w-0 max-w-none">
-          @if (scRoute()) {
-            <sc-placeholder name="headless-main" [rendering]="scRoute()!"></sc-placeholder>
-          }
-        </div>
-      </main>
-      <footer class="w-full">
-        <div id="footer">
-          @if (scRoute()) {
-            <sc-placeholder name="headless-footer" [rendering]="scRoute()!"></sc-placeholder>
-          }
-        </div>
-      </footer>
-    </div>
+      <div [attr.class]="layoutClassAttr()">
+        <header class="w-full">
+          <div id="header">
+            @if (scRoute()) {
+              <sc-placeholder name="headless-header" [rendering]="scRoute()!"></sc-placeholder>
+            }
+          </div>
+        </header>
+        <main class="min-w-0 w-full flex-1">
+          <div id="content" class="w-full min-w-0 max-w-none">
+            @if (scRoute()) {
+              <sc-placeholder name="headless-main" [rendering]="scRoute()!"></sc-placeholder>
+            }
+          </div>
+        </main>
+        <footer class="w-full">
+          <div id="footer">
+            @if (scRoute()) {
+              <sc-placeholder name="headless-footer" [rendering]="scRoute()!"></sc-placeholder>
+            }
+          </div>
+        </footer>
+      </div>
   `,
   styles: `
     :host {

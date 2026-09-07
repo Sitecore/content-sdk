@@ -80,6 +80,7 @@ type ImportMapEntry = {
 export type WriteImportMapArgs = {
   paths: string[];
   exclude?: string[];
+  includeVariants?: boolean;
 };
 
 /**
@@ -206,9 +207,15 @@ function _getImportMap(paths: string[]) {
       `[Codegen] Error reading tsconfig.json from app root: ${tsConfig.error.messageText}`
     );
   } else {
+    const converted = ts.convertCompilerOptionsFromJson(
+      tsConfig.config.compilerOptions,
+      appPath
+    ).options;
     cliCompilerOptions = {
-      ...tsConfig.config.compilerOptions,
-      ...cliCompilerOptions,
+      baseUrl: appPath,
+      target: ts.ScriptTarget.ESNext,
+      ...converted,
+      allowJs: true,
     };
   }
 
@@ -256,7 +263,7 @@ function _getImportMap(paths: string[]) {
 
         // import path is extracted
         const moduleName = childNode.moduleSpecifier.getText().replace(/['"]/g, '');
-        const resolvedModule = ts.nodeModuleNameResolver(
+        const resolvedModule = ts.resolveModuleName(
           moduleName,
           codeFileFullPath,
           cliCompilerOptions,
@@ -424,7 +431,9 @@ export const writeImportMap = (args: WriteImportMapArgsInternal) => {
       writeEmptyImportMaps(args, defaultTemplate, clientTemplate);
       return;
     }
-    const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
+    const paths = _getComponentList(args.paths, args.exclude, args.includeVariants !== false).map(
+      (entry) => entry.filePath
+    );
     // TODO: don't run in pages router
     const importMaps = await prepImportMaps(paths, args.separateServerClientMaps);
     for (const importMap of importMaps) {

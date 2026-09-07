@@ -1,5 +1,12 @@
 # @sitecore-content-sdk/content
 
+## 2.2.2
+
+### Patch Changes
+
+- [SXA Redirects] Refactor redirects logic to be reusable across frameworks ([6f8e423](https://github.com/sitecore/content-sdk/commit/6f8e423028bdf8a74a2fc4b8cb084961d755b73f))
+- Redirect Proxy not matching encoded URLs with unicode characters in Redirect Map ([6563736](https://github.com/sitecore/content-sdk/commit/6563736fb3fdcd5885f88fcfe20c15d0800efbd7))
+
 ## 2.2.1
 
 ### Patch Changes

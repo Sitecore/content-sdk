@@ -21,6 +21,7 @@
     "proxy.d.ts",
     "route-handler.d.ts",
     "editing.d.ts",
+    "experimental.d.ts",
     "monitoring.d.ts",
     "middleware.d.ts",
     "component-props-loader.d.ts",

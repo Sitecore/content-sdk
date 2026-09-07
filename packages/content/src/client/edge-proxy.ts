@@ -35,7 +35,8 @@ export const getEdgeProxyFormsUrl = (
   sitecoreEdgeUrl: string = constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT,
   language?: string
 ) => {
-  const languageQuery = language && language.trim() ? `&language=${encodeURIComponent(language)}` : '';
+  const normalizedLanguage = language?.trim();
+  const languageQuery = normalizedLanguage ? `&language=${encodeURIComponent(normalizedLanguage)}` : '';
 
   return `${getBaseEdgeUrl(
     sitecoreEdgeUrl

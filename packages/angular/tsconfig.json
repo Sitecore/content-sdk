@@ -8,5 +8,10 @@
     "types": ["node"],
     "skipLibCheck": true
   },
-  "exclude": ["./src/**/*.spec.ts", "./src/server/config-cli/**/*", "./src/server/tools/**/*"]
+  "exclude": [
+    "./src/**/*.spec.ts",
+    "./src/server/config-cli/**/*",
+    "./src/server/tools/**/*",
+    "./src/server/codegen/**/*"
+  ]
 }

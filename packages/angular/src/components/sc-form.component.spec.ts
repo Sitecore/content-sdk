@@ -142,7 +142,21 @@ describe('ScFormComponent', () => {
     expect(mocks.loadForm).not.toHaveBeenCalled();
   });
 
-  it('should call loadForm with edge context id, FormId, edgeUrl, and effective locale from config', async () => {
+  it('should call loadForm with page locale from Sitecore context', async () => {
+    setMockContextPage({ ...makePage(false), locale: 'da-DK' });
+    const fixture = createFixture();
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'my-form-id' }));
+    await flushFormLoadPipeline(fixture);
+
+    expect(mocks.loadForm).toHaveBeenCalledWith(
+      'test-edge-context-id',
+      'my-form-id',
+      'https://edge.example.com',
+      'da-DK'
+    );
+  });
+
+  it('should call loadForm with edge context id, FormId, edgeUrl, and default locale', async () => {
     const fixture = createFixture();
     fixture.componentRef.setInput('rendering', formRendering({ FormId: 'my-form-id' }));
     await flushFormLoadPipeline(fixture);
@@ -152,21 +166,6 @@ describe('ScFormComponent', () => {
       'my-form-id',
       'https://edge.example.com',
       'en'
-    );
-  });
-
-  it('should call loadForm with the page locale when set', async () => {
-    const fixture = createFixture();
-    setMockContextPage(makePage(false, 'fr-FR'));
-
-    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'my-form-id' }));
-    await flushFormLoadPipeline(fixture);
-
-    expect(mocks.loadForm).toHaveBeenCalledWith(
-      'test-edge-context-id',
-      'my-form-id',
-      'https://edge.example.com',
-      'fr-FR'
     );
   });
 
@@ -254,6 +253,18 @@ describe('ScFormComponent', () => {
 
     const host = fixture.nativeElement.querySelector('div') as HTMLDivElement;
     expect(host.className.trim()).toBe('my-form-style');
+  });
+
+  it('should expose page locale as lang on the form container', async () => {
+    setMockContextPage({ ...makePage(false), locale: 'da-DK' });
+
+    const fixture = createFixture();
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'f1' }));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const host = fixture.nativeElement.querySelector('div') as HTMLDivElement;
+    expect(host.getAttribute('lang')).toBe('da-DK');
   });
 
   it('should bind RenderingIdentifier as element id', async () => {

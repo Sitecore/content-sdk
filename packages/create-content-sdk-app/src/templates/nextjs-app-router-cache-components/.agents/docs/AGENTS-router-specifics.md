@@ -62,9 +62,10 @@ This template ships **two** not-found components and a segment layout that ties 
 
 - **Sitemap:** `src/app/api/sitemap/route.ts` — `createSitemapRouteHandler({ client, sites })`. Export `{ GET }`; use `sites` from `.sitecore/sites.json`. With `cacheComponents: true`, the explicit `dynamic = 'force-dynamic'` is not needed (Next.js handles it automatically).
 - **Robots:** `src/app/api/robots/route.ts` — `createRobotsRouteHandler({ client, sites })`. Same pattern.
+- **Llms.txt:** `src/app/api/llms-txt/route.ts` — `createLlmsTxtRouteHandler({ client, sites })`. Same pattern; content is managed via Sitecore AI configuration (Content SDK only consumes/serves it, not authoring or generation).
 - **Editing:** `src/app/api/editing/config/route.ts` and `editing/render/route.ts` — use `createEditingConfigRouteHandler` and `createEditingRenderRouteHandlers` with `components`, `clientComponents` (`.sitecore/component-map.client.ts`), `metadata`, and `client`.
 - **Revalidate:** `src/app/api/revalidate/route.ts` — `createSitecoreRevalidateRouteHandler({ defaultLocale, sites })` with `sites` from `.sitecore/sites.json`. Export `{ POST }`.
-- **Rewrites:** `next.config.ts` → rewrites for `/sitemap*.xml`, `/robots.txt` with `locale: false` so they are not localized.
+- **Rewrites:** `next.config.ts` → rewrites for `/sitemap*.xml`, `/robots.txt`, `/llms.txt` with `locale: false` so they are not localized.
 
 ## Sitecore client and config
 

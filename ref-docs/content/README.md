@@ -10,6 +10,7 @@
 - [config](config/README.md)
 - [config-cli](config-cli/README.md)
 - [editing](editing/README.md)
+- [experimental-features](experimental-features/README.md)
 - [i18n](i18n/README.md)
 - [index](index/README.md)
 - [layout](layout/README.md)

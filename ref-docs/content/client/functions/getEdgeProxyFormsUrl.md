@@ -6,9 +6,9 @@
 
 # Function: getEdgeProxyFormsUrl()
 
-> **getEdgeProxyFormsUrl**(`sitecoreEdgeContextId`, `formId`, `sitecoreEdgeUrl?`): `string`
+> **getEdgeProxyFormsUrl**(`sitecoreEdgeContextId`, `formId`, `sitecoreEdgeUrl?`, `language?`): `string`
 
-Defined in: [content/src/client/edge-proxy.ts:31](https://github.com/Sitecore/content-sdk/blob/84866ded66f6f8f69e7f007b2311494e086b493b/packages/content/src/client/edge-proxy.ts#L31)
+Defined in: [content/src/client/edge-proxy.ts:32](https://github.com/Sitecore/content-sdk/blob/b14e7385638b1a83e39bdec36bcb058289820372/packages/content/src/client/edge-proxy.ts#L32)
 
 **`Internal`**
 
@@ -21,6 +21,7 @@ Generates a URL for accessing Sitecore Edge Platform Forms using the provided fo
 | `sitecoreEdgeContextId` | `string` | `undefined` | The unique context id. |
 | `formId` | `string` | `undefined` | The unique form id. |
 | `sitecoreEdgeUrl?` | `string` | `constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT` | The base endpoint URL for the Edge Platform (resolved at config level). Defaults to platform URL. |
+| `language?` | `string` | `undefined` | Page language used to load the matching multilingual form version. |
 
 ## Returns
 

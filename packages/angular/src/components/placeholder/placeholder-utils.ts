@@ -1,4 +1,4 @@
-import { Type } from '@angular/core';
+import { Type, reflectComponentType } from '@angular/core';
 import {
   ComponentRendering,
   RouteData,
@@ -178,6 +178,32 @@ export function getChildComponentProps(
     },
     rendering: componentRendering,
   };
+}
+
+/**
+ * Keep only the entries whose keys are declared inputs on `component`.
+ *
+ * `NgComponentOutlet` applies `[ngComponentOutletInputs]` via `ComponentRef.setInput`, which throws
+ * `NG0303` in dev builds for any key the component does not declare as an input. Filtering here means
+ * a placeholder-rendered component only needs to declare the inputs it actually uses (e.g. a component
+ * that wants `fields` but not `params`/`rendering`), instead of being forced to declare all of them.
+ * @param {Type<unknown>} component - The target component class.
+ * @param {Record<string, unknown>} inputs - Candidate inputs (fields/params/rendering/passThroughProps).
+ * @returns {Record<string, unknown>} Only the inputs the component declares.
+ * @internal
+ */
+export function pickDeclaredInputs(
+  component: Type<unknown>,
+  inputs: Record<string, unknown>
+): Record<string, unknown> {
+  const mirror = reflectComponentType(component);
+  if (!mirror) return {};
+  const declared = new Set(mirror.inputs.map((input) => input.templateName));
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(inputs)) {
+    if (declared.has(key)) result[key] = value;
+  }
+  return result;
 }
 
 /**

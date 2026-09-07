@@ -6,6 +6,11 @@
 
 # site
 
+## Variables
+
+- [DEFAULT\_LLMS\_TXT](variables/DEFAULT_LLMS_TXT.md)
+- [LLMS\_TXT\_CONTENT\_TYPE](variables/LLMS_TXT_CONTENT_TYPE.md)
+
 ## References
 
 ### SiteInfo

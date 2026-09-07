@@ -12,9 +12,6 @@
 
 ## Variables
 
+- [combineImportEntries](variables/combineImportEntries.md)
 - [defaultImportEntries](variables/defaultImportEntries.md)
 - [defaultServerImportEntries](variables/defaultServerImportEntries.md)
-
-## Functions
-
-- [combineImportEntries](functions/combineImportEntries.md)

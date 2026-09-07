@@ -1,5 +1,12 @@
 export { RobotsQueryResult, RobotsService, RobotsServiceConfig } from './robots-service';
 export {
+  LlmsTxtQueryResult,
+  LlmsTxtService,
+  LlmsTxtServiceConfig,
+  LLMS_TXT_CONTENT_TYPE,
+  DEFAULT_LLMS_TXT,
+} from './llms-txt-service';
+export {
   RedirectInfo,
   RedirectsQueryResult,
   REDIRECT_TYPE_301,

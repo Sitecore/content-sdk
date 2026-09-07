@@ -59,6 +59,8 @@ export const Form = ({ params, rendering }: FormProps) => {
   const [content, setContent] = useState('');
   const context = useSitecore();
   const formRef = useRef<HTMLDivElement>(null);
+  /** Page language passed to the Forms publisher and set on the host element. */
+  const language = context.page.locale;
 
   const isEditing = context.page.mode.isEditing;
   const language = context.page.locale;
@@ -99,6 +101,7 @@ export const Form = ({ params, rendering }: FormProps) => {
     content,
     isEditing,
     params.FormId,
+    language,
     context.api?.edge?.clientContextId,
     context.api?.edge?.edgeUrl,
     language,
@@ -121,5 +124,12 @@ export const Form = ({ params, rendering }: FormProps) => {
     return <ErrorComponent message="There was a problem loading this section" />;
   }
 
-  return <div ref={formRef} className={params.styles?.trimEnd()} id={id ? id : undefined}></div>;
+  return (
+    <div
+      ref={formRef}
+      className={params.styles?.trimEnd()}
+      id={id ? id : undefined}
+      lang={language || undefined}
+    ></div>
+  );
 };

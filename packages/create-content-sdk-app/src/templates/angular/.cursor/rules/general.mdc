@@ -1,0 +1,18 @@
+---
+description: Core coding principles for your Sitecore Angular project
+alwaysApply: false
+globs:
+  - 'src/**'
+---
+
+# General principles
+
+Follow [`AGENTS.md`](../../AGENTS.md) guardrails. Prefer small, focused changes; match existing patterns in `src/`.
+
+- DRY, SOLID, explicit naming
+- Validate inputs at boundaries; never log secrets
+- Respect the `src/app/` (Angular DI) vs `src/content-sdk/` (no DI) split
+- Keep server-only modules (`express`, `unstorage`, `node:*`) out of anything reachable from `src/main.ts`
+- Run `npm run build` and `npm run lint` after substantive edits
+
+More: [`.agents/docs/`](../../.agents/docs/) · [`.cursor/rules/angular.mdc`](./angular.mdc) · [`.cursor/rules/sitecore.mdc`](./sitecore.mdc)

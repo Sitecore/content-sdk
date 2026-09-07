@@ -13,7 +13,7 @@ Pages Router app with `[[...path]].tsx`, Next.js i18n (`context.locale`), single
 | [content-sdk-site-setup-and-env](.agents/skills/content-sdk-site-setup-and-env/SKILL.md) | sitecore |
 | [content-sdk-multisite-management](.agents/skills/content-sdk-multisite-management/SKILL.md) | Multisite via proxy |
 | [content-sdk-dictionary-and-i18n](.agents/skills/content-sdk-dictionary-and-i18n/SKILL.md) | Next |
-| [content-sdk-sitemap-robots](.agents/skills/content-sdk-sitemap-robots/SKILL.md) | API routes src/pages/api/sitemap |
+| [content-sdk-sitemap-robots](.agents/skills/content-sdk-sitemap-robots/SKILL.md) | API routes src/pages/api/sitemap, robots and llms-txt |
 | [content-sdk-component-variants](.agents/skills/content-sdk-component-variants/SKILL.md) | Multiple renderings of one component type; regenerate component map after changes |
 | [content-sdk-troubleshoot-editing](.agents/skills/content-sdk-troubleshoot-editing/SKILL.md) | Debug Pages Router preview: context |
 | [content-sdk-upgrade-assistant](.agents/skills/content-sdk-upgrade-assistant/SKILL.md) | Upgrade @sitecore-content-sdk/* packages; check CHANGELOG and migration guides |

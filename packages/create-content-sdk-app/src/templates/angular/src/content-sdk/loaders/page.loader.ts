@@ -2,6 +2,7 @@ import type { LoaderFn, Page } from '@sitecore-content-sdk/angular';
 import {
   NotFoundNavigationError,
   getEditingPreviewData,
+  isDesignLibraryPreviewData,
   getSiteName,
   getVariantId,
   getComponentVariantIds,
@@ -20,16 +21,21 @@ export const pageLoader: LoaderFn<Page> = async (context) => {
   const locale = getLanguage(context) || scConfig.defaultLanguage;
   const { nonLocalePath } = splitLocaleFromPath(context.url, scConfig.angular.locales);
 
-  const page = previewData
-    ? await getClient().getPreview(previewData)
-    : await getClient().getPage(nonLocalePath, {
-        locale,
-        site: getSiteName(context),
-        personalize: {
-          variantId: getVariantId(context),
-          componentVariantIds: getComponentVariantIds(context),
-        },
-      });
+  let page: Page | null;
+  if (isDesignLibraryPreviewData(previewData)) {
+    page = await getClient().getDesignLibraryData(previewData);
+  } else if (previewData) {
+    page = await getClient().getPreview(previewData);
+  } else {
+    page = await getClient().getPage(nonLocalePath, {
+      locale,
+      site: getSiteName(context),
+      personalize: {
+        variantId: getVariantId(context),
+        componentVariantIds: getComponentVariantIds(context),
+      },
+    });
+  }
 
   if (!page) {
     throw new NotFoundNavigationError();

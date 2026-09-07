@@ -2,7 +2,10 @@ import { RedirectCommand } from '@angular/router';
 import type { Router } from '@angular/router';
 import { CsdkRequestData, CsdkRequestParams } from './models';
 import { EDITING_PARAMS_HEADER } from '../server/middleware';
-import { EditingPreviewData } from '@sitecore-content-sdk/content/editing';
+import {
+  EditingPreviewData,
+  DesignLibraryRenderPreviewData,
+} from '@sitecore-content-sdk/content/editing';
 import { SC_PARAMS_HEADER } from './constants';
 import debug from '../debug';
 
@@ -120,7 +123,7 @@ export function extractRequestData(req: FetchLikeRequest | ExpressLikeRequest): 
   let headers: Record<string, string | string[] | undefined> = {};
   let cookies: Record<string, string> = {};
   let query: Record<string, string | string[] | undefined> = {};
-  let scPreviewData: EditingPreviewData | undefined;
+  let scPreviewData: EditingPreviewData | DesignLibraryRenderPreviewData | undefined;
   let scParams = 'scParams' in req ? req.scParams : undefined;
   // Check if it's a Fetch API Request object - we're in browser loaders flow in this case
   if (req instanceof Request) {
@@ -144,7 +147,9 @@ export function extractRequestData(req: FetchLikeRequest | ExpressLikeRequest): 
   const scPreviewDataHeader = headers?.[EDITING_PARAMS_HEADER] as string;
   if (scPreviewDataHeader) {
     try {
-      scPreviewData = JSON.parse(scPreviewDataHeader) as EditingPreviewData;
+      scPreviewData = JSON.parse(scPreviewDataHeader) as
+        | EditingPreviewData
+        | DesignLibraryRenderPreviewData;
     } catch {
       debug.editing('Failed to parse editing preview data from header');
     }

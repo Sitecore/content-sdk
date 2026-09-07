@@ -9,5 +9,6 @@ export {
   ComponentMapEntry,
   ComponentMapTemplate,
   EnhancedComponentMapTemplate,
+  toPascalCase,
 } from './components';
 export { prepareComponentsForMap, buildComponentMapContent } from './utils';

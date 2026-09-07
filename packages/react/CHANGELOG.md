@@ -1,5 +1,34 @@
 # @sitecore-content-sdk/react
 
+## 2.3.0
+
+### Minor Changes
+
+- Add locale and facet support to search package and React hooks ([ce89722](https://github.com/sitecore/content-sdk/commit/ce897227369d7cdccf3cbb79b621c67585f7aff6))
+
+  - `SearchParameters` now accepts an optional `locale` field for multi-locale index configurations
+  - `SearchParameters` now accepts an optional `facet` field (`FacetRequest`) to request facet counts and filter by facet values
+  - `SearchResponse` now includes an optional `facets` field (`FacetResult[]`) with facet data when requested
+  - Six new public types exported from `@sitecore-content-sdk/search`: `FacetRequest`, `FacetField`, `FacetFilter`, `FacetFilterOperator`, `FacetValue`, `FacetResult`
+  - `useSearch` and `useInfiniteSearch` hooks in `@sitecore-content-sdk/react` updated to support the new `locale` and `facet` options and expose `facets` in the returned state
+
+- minor `@sitecore-content-sdk/search` dependency update:
+
+  - Add locale and facet support to search package and React hooks
+
+  - `SearchParameters` now accepts an optional `locale` field for multi-locale index configurations
+  - `SearchParameters` now accepts an optional `facet` field (`FacetRequest`) to request facet counts and filter by facet values
+  - `SearchResponse` now includes an optional `facets` field (`FacetResult[]`) with facet data when requested
+  - Six new public types exported from `@sitecore-content-sdk/search`: `FacetRequest`, `FacetField`, `FacetFilter`, `FacetFilterOperator`, `FacetValue`, `FacetResult`
+  - `useSearch` and `useInfiniteSearch` hooks in `@sitecore-content-sdk/react` updated to support the new `locale` and `facet` options and expose `facets` in the returned state ([ce89722](https://github.com/sitecore/content-sdk/commit/ce897227369d7cdccf3cbb79b621c67585f7aff6))
+
+### Patch Changes
+
+- Fix `RichText` recreating nested DOM on parent re-renders by memoizing `dangerouslySetInnerHTML`, preserving event listeners on unchanged HTML. ([938ddb6](https://github.com/sitecore/content-sdk/commit/938ddb61579c0679f428b539202c0046ffa084a9))
+- Fix hydration mismatch warnings in Pages Editor for empty placeholders and placeholder/rendering chrome markers, most visibly with `AppPlaceholder` in Next.js App Router. Sitecore Pages attaches chrome attributes (e.g. `cursor: pointer` styling) to these SDK-owned elements directly in the DOM, which can happen before React hydration completes and previously surfaced as a "server rendered HTML didn't match the client" warning. `suppressHydrationWarning` is now set on these editing-only elements, since their DOM is expected to be mutated externally. ([3b9edfe](https://github.com/sitecore/content-sdk/commit/3b9edfe853f8f321e9bd2dff8cfbdda2c3d66627))
+
+  Also fixes a separate "Each child in a list should have a unique key prop" warning from the same code path: `AppPlaceholder`'s outer `PlaceholderMetadata` key now falls back to a placeholder-name-based key (`placeholder-metadata-${name}`) when the route rendering has no `uid`.
+
 ## 2.2.1
 
 ### Patch Changes

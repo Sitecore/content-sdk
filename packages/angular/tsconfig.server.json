@@ -12,5 +12,9 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["src/server/config-cli/**/*.ts", "src/server/tools/**/*.ts"]
+  "include": [
+    "src/server/config-cli/**/*.ts",
+    "src/server/tools/**/*.ts",
+    "src/server/codegen/**/*.ts"
+  ]
 }

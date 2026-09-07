@@ -1,4 +1,4 @@
-import type { FieldMetadata } from './models';
+import type { Field, FieldMetadata } from './models';
 
 /**
  * The interface for the Link field value.
@@ -42,6 +42,76 @@ export interface ImageFieldValue {
 export interface ImageField {
   value?: ImageFieldValue;
 }
+
+/**
+ * The interface for the Open Graph image field value (og:image and its dimension/alt attributes).
+ * @public
+ */
+export interface OpenGraphImageFieldValue {
+  [attributeName: string]: unknown;
+  src?: string;
+  alt?: string;
+  width?: string;
+  height?: string;
+}
+
+/**
+ * The interface for the Open Graph image field.
+ * @public
+ */
+export interface OpenGraphImageField {
+  value?: OpenGraphImageFieldValue;
+}
+
+/**
+ * The interface for a page's Open Graph fields (siblings of Title in a route's fields).
+ * @public
+ */
+export interface OpenGraphFields {
+  baseOgTitle?: Field<string>;
+  baseOgDescription?: Field<string>;
+  baseOgImage?: OpenGraphImageField;
+  baseOgType?: Field<string>;
+}
+
+/**
+ * The interface for a page's metadata fields (siblings of Title in a route's fields).
+ * @public
+ */
+export interface MetadataFields {
+  baseMetadataTitle?: Field<string>;
+  baseMetadataDescription?: Field<string>;
+  baseMetadataAuthor?: Field<string>;
+  baseMetadataKeywords?: Field<string>;
+}
+
+/**
+ * The combined interface for a page's metadata and Open Graph fields.
+ * @public
+ */
+export interface PageMetadataFields extends MetadataFields, OpenGraphFields {}
+
+/**
+ * Open Graph types that define a creation-time meta tag, mapped to its exact property name
+ * per the Open Graph protocol (e.g. `article:published_time`, `book:release_date`).
+ * @public
+ */
+export const OG_CREATION_TIME_TAG: Record<string, string> = {
+  article: 'article:published_time',
+  book: 'book:release_date',
+  'music.album': 'music:release_date',
+  'video.movie': 'video:release_date',
+  'video.episode': 'video:release_date',
+};
+
+/**
+ * Open Graph types that define an update-time meta tag, mapped to its exact property name
+ * per the Open Graph protocol. `article` is the only type the protocol defines one for.
+ * @public
+ */
+export const OG_MODIFIED_TIME_TAG: Record<string, string> = {
+  article: 'article:modified_time',
+};
 
 /**
  * The interface for the Image size parameters.

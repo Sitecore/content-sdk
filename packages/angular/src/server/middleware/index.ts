@@ -21,6 +21,10 @@ export {
   type MetadataImportFn,
 } from './editing-config-middleware';
 export {
+  createExperimentalFeaturesMiddleware,
+  type CreateExperimentalFeaturesMiddlewareOptions,
+} from './experimental-features-middleware';
+export {
   createEditingRenderMiddleware,
   type CreateEditingRenderMiddlewareOptions,
   type ExpressEditingRequest,

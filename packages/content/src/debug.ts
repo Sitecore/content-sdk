@@ -12,6 +12,7 @@ const debug = {
   sitemap: debugModule(`${debugNamespace}:sitemap`),
   multisite: debugModule(`${debugNamespace}:multisite`),
   robots: debugModule(`${debugNamespace}:robots`),
+  llmsTxt: debugModule(`${debugNamespace}:llmsTxt`),
   redirects: debugModule(`${debugNamespace}:redirects`),
   personalize: debugModule(`${debugNamespace}:personalize`),
   locale: debugModule(`${debugNamespace}:locale`),

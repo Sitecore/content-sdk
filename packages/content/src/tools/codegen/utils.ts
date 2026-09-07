@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import * as ts from 'typescript';
 import { debug, constants } from '@sitecore-content-sdk/core';
+import { buildVariantSiblingIndex, isVariantComponent } from '../templating/components';
 import { isBuiltin } from 'module';
 
 const { ERROR_MESSAGES } = constants;
@@ -64,6 +65,7 @@ export const utilsUnitMocks = {
 
 /**
  * Description properties for the files sent to the mesh endpoint
+ * @public
  */
 export type ExtractedFile = {
   name: string;
@@ -74,12 +76,16 @@ export type ExtractedFile = {
 
 /**
  * Type of file to be sent to the mesh endpoint
+ * @public
  */
 export enum ExtractedFileType {
   Component = 'component',
   Variant = 'variant',
   Json = 'json',
   PackageJson = 'package.json',
+  // Companion source files a component references externally (e.g. Angular templateUrl / styleUrls)
+  Template = 'template',
+  Style = 'style',
 }
 
 export type ResolvedImport = {
@@ -183,12 +189,6 @@ function _resolveComponentImportFiles(
   const mapText = fs.readFileSync(mapPath, 'utf8');
   const source = ts.createSourceFile(mapPath, mapText, ts.ScriptTarget.Latest, true);
 
-  const getFileType = (absPath: string): ExtractedFileType => {
-    const base = path.basename(absPath); // "PromoBlock.extra.tsx"
-    const name = base.replace(/\.[^.]+$/, ''); // "PromoBlock.extra"
-    return name.includes('.') ? ExtractedFileType.Variant : ExtractedFileType.Component;
-  };
-
   // 1) Collect import (import %importString% from %importModule%) strings
   const componentMapImports = new Map<string, string>();
   source.forEachChild((node) => {
@@ -220,8 +220,9 @@ function _resolveComponentImportFiles(
 
       results.push({
         componentKey: importStringsEntry,
+        // fileType is classified in a post-pass once the full set is known (needs sibling context)
         filePath: toPosixPath(fileAbs),
-        fileType: getFileType(fileAbs),
+        fileType: ExtractedFileType.Component,
       });
     };
 
@@ -340,7 +341,26 @@ function _resolveComponentImportFiles(
 
   ts.forEachChild(source, traverseAst);
 
-  return results.filter((r) => !isDeclarationFile(r.filePath));
+  const resolved = results.filter((r) => !isDeclarationFile(r.filePath));
+
+  // Classify each file as Component vs Variant using the shared, sibling-aware detection
+  // from templating/components.ts. A dotted name (e.g. Angular's `foo.component`) is only a
+  // Variant when a base sibling (`foo`) resolved at the same import-path root.
+  const baseNameNoExt = (posixPath: string) =>
+    stripExtension(posixPath.substring(posixPath.lastIndexOf('/') + 1));
+  const siblingIndex = buildVariantSiblingIndex(
+    resolved.map((r) => ({
+      componentName: baseNameNoExt(r.filePath),
+      importPathNoExt: stripExtension(r.filePath),
+    }))
+  );
+
+  return resolved.map((r) => ({
+    ...r,
+    fileType: isVariantComponent(baseNameNoExt(r.filePath), stripExtension(r.filePath), siblingIndex)
+      ? ExtractedFileType.Variant
+      : ExtractedFileType.Component,
+  }));
 }
 
 function _readNamedExports(filePath: string): string[] {
@@ -362,6 +382,14 @@ function _readNamedExports(filePath: string): string[] {
     // export function X() {}
     if (
       ts.isFunctionDeclaration(node) &&
+      node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword) &&
+      node.name
+    ) {
+      names.add(node.name.text);
+    }
+    // export class X {} (e.g. Angular `export class FooComponent`)
+    if (
+      ts.isClassDeclaration(node) &&
       node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword) &&
       node.name
     ) {
