@@ -1,12 +1,7 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import { constants, DefaultRetryStrategy } from '@sitecore-content-sdk/core';
-import {
-  buildFallbackConfig,
-  deepMerge,
-  defineConfig,
-  getFallbackConfig,
-} from './define-config';
+import { buildFallbackConfig, deepMerge, defineConfig, getFallbackConfig } from './define-config';
 import { SitecoreConfigInput } from './models';
 import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
 

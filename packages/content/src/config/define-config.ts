@@ -71,6 +71,7 @@ export const buildFallbackConfig = (env: { [key: string]: string | undefined }):
     defaultSite:
       env.SITECORE_DEFAULT_SITE ||
       env.CSDK_PUBLIC_SITECORE_DEFAULT_SITE ||
+      env.CSDK_PUBLIC_DEFAULT_SITE_NAME ||
       env.CSDK_PUBLIC_DEFAULT_SITE ||
       '',
     defaultLanguage: env.SITECORE_DEFAULT_LANGUAGE || env.CSDK_PUBLIC_DEFAULT_LANGUAGE || 'en',
