@@ -106,6 +106,43 @@ describe('loaderResolver', () => {
       expect(result).toEqual({ title: 'Home' });
     });
 
+    it('should decode the encoded state.url before passing it to ClientLoaderDataService.getData', async () => {
+      mockLoaderData.getData.mockResolvedValue({ kind: 'data', data: { title: 'Über uns' } });
+
+      const resolver = loaderResolver('page');
+      const route = makeRouteSnapshot({ pathFromRoot: [{ params: {} }] });
+      const state = makeRouterStateSnapshot('/de/%C3%BCber%20uns');
+
+      await TestBed.runInInjectionContext(async () => {
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
+      });
+
+      expect(mockLoaderData.getData).toHaveBeenCalledTimes(1);
+      expect(mockLoaderData.getData).toHaveBeenCalledWith(
+        expect.objectContaining({ url: '/de/über uns' })
+      );
+    });
+
+    it('should key transfer state by the decoded url', async () => {
+      const resolver = loaderResolver('page');
+      const key = makeStateKey<unknown>('loader:page:/de/über uns');
+      transferState.set(key, { fromTransfer: true });
+
+      const route = makeRouteSnapshot();
+      const state = makeRouterStateSnapshot('/de/%C3%BCber%20uns');
+      const result = await TestBed.runInInjectionContext(async () => {
+        return (
+          resolver as (_r: ActivatedRouteSnapshot, _s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
+      });
+
+      expect(result).toEqual({ fromTransfer: true });
+      expect(transferState.hasKey(key)).toBe(false);
+      expect(mockLoaderData.getData).not.toHaveBeenCalled();
+    });
+
     it('should return RedirectCommand when getData returns redirect', async () => {
       mockLoaderData.getData.mockResolvedValue({
         kind: 'redirect',
@@ -317,6 +354,39 @@ describe('loaderResolver', () => {
         csdkRequestData: {},
       });
       expect(result).toEqual({ server: true, title: 'SSR' });
+    });
+
+    it('should decode the encoded state.url before passing it to the loader', async () => {
+      const resolver = loaderResolver('page');
+      const route = makeRouteSnapshot({ pathFromRoot: [{ params: {} }] });
+      const state = makeRouterStateSnapshot('/de/%C3%BCber%20uns');
+
+      await TestBed.runInInjectionContext(async () => {
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
+      });
+
+      expect(mockLoader).toHaveBeenCalledTimes(1);
+      expect(mockLoader).toHaveBeenCalledWith(
+        expect.objectContaining({ url: '/de/über uns' })
+      );
+    });
+
+    it('should key transfer state by the decoded url on the server', async () => {
+      const resolver = loaderResolver('page');
+      const route = makeRouteSnapshot({ pathFromRoot: [{ params: {} }] });
+      const state = makeRouterStateSnapshot('/de/%C3%BCber%20uns');
+
+      await TestBed.runInInjectionContext(async () => {
+        return (
+          resolver as (r: ActivatedRouteSnapshot, s: RouterStateSnapshot) => Promise<unknown>
+        )(route, state);
+      });
+
+      const key = makeStateKey<unknown>('loader:page:/de/über uns');
+      expect(transferState.hasKey(key)).toBe(true);
+      expect(transferState.get(key, null)).toEqual({ server: true, title: 'SSR' });
     });
 
     it('should set transfer state with loader result and return data', async () => {

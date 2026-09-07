@@ -153,8 +153,9 @@ function generateMetricReport(baseSizes, prSizes, baseCoverage, prCoverage) {
     const prCov = prCoverage[pkg];
     const covDelta = formatCoverageDelta(baseCov, prCov);
 
-    markdown += `| ${pkg} | ${baseSize?.toFixed(2) ?? 'N/A'} KB | ${prSize?.toFixed(2) ??
-      'N/A'} KB | ${formatPackageSizeDelta(sizeDelta)} | ${
+    markdown += `| ${pkg} | ${baseSize?.toFixed(2) ?? 'N/A'} KB | ${
+      prSize?.toFixed(2) ?? 'N/A'
+    } KB | ${formatPackageSizeDelta(sizeDelta)} | ${
       baseCov !== null ? baseCov.toFixed(2) + '%' : '⚠️ N/A'
     } | ${prCov !== null ? prCov.toFixed(2) + '%' : '⚠️ N/A'} | ${covDelta} |\n`;
   }
@@ -175,9 +176,11 @@ function generateMetricReport(baseSizes, prSizes, baseCoverage, prCoverage) {
 function run() {
   if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
 
+  const prCommit = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+
   console.log(`🔀 Checking out base(dev) branch: ${baseBranch}`);
 
-  execSync(`git checkout ${baseBranch}`, { stdio: 'ignore' });
+  execSync(`git checkout ${baseBranch}`, { stdio: 'inherit' });
   execSync('yarn cache clean --all', { stdio: 'ignore' });
   execSync('yarn install --immutable', { stdio: 'ignore' });
 
@@ -188,7 +191,7 @@ function run() {
 
   console.log('🔁 Checking out PR branch...');
 
-  execSync('git checkout -', { stdio: 'ignore' });
+  execSync(`git checkout ${prCommit}`, { stdio: 'inherit' });
   execSync('yarn cache clean --all', { stdio: 'ignore' });
   execSync('yarn install --immutable', { stdio: 'ignore' });
 

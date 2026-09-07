@@ -30,3 +30,4 @@
 - [getComponentSpec](functions/getComponentSpec.md)
 - [getComponentSpecUrl](functions/getComponentSpecUrl.md)
 - [prepareComponentsForMap](functions/prepareComponentsForMap.md)
+- [toPascalCase](functions/toPascalCase.md)

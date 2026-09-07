@@ -6,7 +6,7 @@
 
 # Interface: TextField
 
-Defined in: packages/content/types/layout/field-types.d.ts:65
+Defined in: packages/content/types/layout/field-types.d.ts:121
 
 The interface for the Text field.
 
@@ -20,7 +20,7 @@ The interface for the Text field.
 
 > `optional` **metadata?**: `object`
 
-Defined in: packages/content/types/layout/models.d.ts:123
+Defined in: packages/content/types/layout/models.d.ts:127
 
 #### Index Signature
 
@@ -36,4 +36,4 @@ Defined in: packages/content/types/layout/models.d.ts:123
 
 > `optional` **value?**: `string` \| `number`
 
-Defined in: packages/content/types/layout/field-types.d.ts:66
+Defined in: packages/content/types/layout/field-types.d.ts:122

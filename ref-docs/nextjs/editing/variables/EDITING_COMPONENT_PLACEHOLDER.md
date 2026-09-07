@@ -8,7 +8,7 @@
 
 > `const` **EDITING\_COMPONENT\_PLACEHOLDER**: `"editing-componentmode-placeholder"` = `"editing-componentmode-placeholder"`
 
-Defined in: content/types/layout/models.d.ts:168
+Defined in: content/types/layout/models.d.ts:172
 
 **`Internal`**
 

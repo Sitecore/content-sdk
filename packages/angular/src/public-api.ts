@@ -19,6 +19,8 @@ export {
   ComponentFields,
   ComponentParams,
   EditMode,
+  EDITING_COMPONENT_ID,
+  EDITING_COMPONENT_PLACEHOLDER,
 } from '@sitecore-content-sdk/content/layout';
 export type {
   ImageField,
@@ -33,8 +35,30 @@ export {
   isEditorActive,
   resetEditorChromes,
   EditingPreviewData,
+  DesignLibraryRenderPreviewData,
   PAGES_EDITING_MARKER,
 } from '@sitecore-content-sdk/content/editing';
+// ─── Design Library client-side event protocol (re-exported, not re-implemented) ───
+export {
+  addComponentUpdateHandler,
+  postToDesignLibrary,
+  getDesignLibraryStatusEvent,
+  DesignLibraryStatus,
+  isDesignLibraryMode,
+  updateComponent,
+} from '@sitecore-content-sdk/content/editing';
+export {
+  addComponentPreviewHandler,
+  getDesignLibraryImportMapEvent,
+  getDesignLibraryComponentPropsEvent,
+  sendErrorEvent,
+  DesignLibraryPreviewError,
+} from '@sitecore-content-sdk/content/codegen';
+export type {
+  ImportEntry,
+  ImportEntryInfo,
+  GeneratedComponentData,
+} from '@sitecore-content-sdk/content/codegen';
 export {
   GraphQLClientError,
   RetryStrategy,
@@ -111,6 +135,19 @@ export * from './server';
 // ─── Sitecore Context ──────────────────────────────────────────
 export { SitecoreContextService } from './lib/sitecore-context.service';
 export { ScEditingScriptsComponent } from './lib/sc-editing-scripts.component';
+
+// ─── Design Library ────────────────────────────────────────────
+export {
+  type DesignLibraryComponentFactory,
+  type DesignLibraryComponentMetadata,
+  DESIGN_LIBRARY_COMPONENT_FACTORY,
+  RuntimeCompileComponentFactory,
+  ScDesignLibraryComponent,
+  addAngularComponentPreviewHandler,
+  DESIGN_LIBRARY_IMPORT_MAP,
+  type DesignLibraryImportMap,
+  type DesignLibraryImportMapLoader,
+} from './lib/design-library';
 
 export { SitecoreTranslateLoader } from './i18n/sitecore-translate-loader';
 

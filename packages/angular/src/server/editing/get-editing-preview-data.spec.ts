@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect } from 'vitest';
-import { getEditingPreviewData } from './get-editing-preview-data';
+import { getEditingPreviewData, isDesignLibraryPreviewData } from './get-editing-preview-data';
 import { EDITING_PARAMS_HEADER } from '../../editing/constants';
 
 describe('getEditingPreviewData', () => {
@@ -39,5 +39,36 @@ describe('getEditingPreviewData', () => {
     };
     const ctx = { headers: { [EDITING_PARAMS_HEADER]: [JSON.stringify(previewData)] } };
     expect(getEditingPreviewData(ctx)).toEqual(previewData);
+  });
+
+  it('should parse Design Library preview data from the editing header', () => {
+    const previewData = {
+      site: 'demo',
+      itemId: 'i',
+      componentUid: 'uid-1',
+      language: 'en',
+      mode: 'library',
+    };
+    const ctx = { headers: { [EDITING_PARAMS_HEADER]: JSON.stringify(previewData) } };
+    expect(getEditingPreviewData(ctx)).toEqual(previewData);
+  });
+});
+
+describe('isDesignLibraryPreviewData', () => {
+  it('should return true for library mode', () => {
+    expect(isDesignLibraryPreviewData({ mode: 'library' } as never)).toBe(true);
+  });
+
+  it('should return true for library-metadata mode', () => {
+    expect(isDesignLibraryPreviewData({ mode: 'library-metadata' } as never)).toBe(true);
+  });
+
+  it('should return false for edit/preview modes', () => {
+    expect(isDesignLibraryPreviewData({ mode: 'edit' } as never)).toBe(false);
+    expect(isDesignLibraryPreviewData({ mode: 'preview' } as never)).toBe(false);
+  });
+
+  it('should return false for undefined', () => {
+    expect(isDesignLibraryPreviewData(undefined)).toBe(false);
   });
 });

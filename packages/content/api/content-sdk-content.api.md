@@ -148,8 +148,6 @@ export interface ComponentParams {
 export interface ComponentPreviewEventArgs extends DesignLibraryEvent {
     // (undocumented)
     message: GeneratedComponentData;
-    // Warning: (ae-forgotten-export) The symbol "DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME" needs to be exported by the entry point api-surface.d.ts
-    //
     // (undocumented)
     name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
 }
@@ -254,6 +252,9 @@ export const defineCliConfig: (cliConfig: SitecoreCliConfigInput) => SitecoreCli
 
 // @public
 export const defineConfig: (config?: SitecoreConfigInput, env?: Record<string, string | undefined>) => SitecoreConfig;
+
+// @internal
+export const DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME = "component:generation:component-preview";
 
 // @public
 export enum DesignLibraryMode {
@@ -498,10 +499,42 @@ export type ExperimentalFeatureStatus = ExperimentalFeatureData & {
     enabled: boolean;
 };
 
+// @public
+export type ExtractedFile = {
+    name: string;
+    path: string;
+    type: ExtractedFileType;
+    labels?: Record<string, unknown>;
+};
+
+// @public
+export enum ExtractedFileType {
+    // (undocumented)
+    Component = "component",
+    // (undocumented)
+    Json = "json",
+    // (undocumented)
+    PackageJson = "package.json",
+    // (undocumented)
+    Style = "style",
+    // (undocumented)
+    Template = "template",
+    // (undocumented)
+    Variant = "variant"
+}
+
 // Warning: (ae-forgotten-export) The symbol "_extractFiles" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export let extractFiles: typeof _extractFiles;
+
+// @public
+export type ExtractFilesConfig = {
+    componentMapPath?: string;
+    clientComponentMapPath?: string;
+    customValidateDeployContext?: () => boolean;
+    gatherCompanionFiles?: (componentFilePath: string, componentKey: string) => ExtractedFile[];
+};
 
 // @internal
 export function fetchGeneratedComponentFromCache(id: string, token: string, edgeUrl?: string): Promise<GeneratedComponentData>;
@@ -642,7 +675,7 @@ export const getDynamicPlaceholderPattern: (placeholder: string) => RegExp;
 export const getEdgeProxyContentUrl: (sitecoreEdgeUrl?: string) => string;
 
 // @internal
-export const getEdgeProxyFormsUrl: (sitecoreEdgeContextId: string, formId: string, sitecoreEdgeUrl?: string) => string;
+export const getEdgeProxyFormsUrl: (sitecoreEdgeContextId: string, formId: string, sitecoreEdgeUrl?: string, language?: string) => string;
 
 // @internal
 export const getFallbackConfig: () => SitecoreConfig;
@@ -950,7 +983,7 @@ export type LlmsTxtServiceConfig = {
 };
 
 // @internal
-const loadForm: (contextId: string, formId: string, edgeUrl?: string) => Promise<string>;
+const loadForm: (contextId: string, formId: string, edgeUrl?: string, language?: string) => Promise<string>;
 
 // @internal
 export const matchFromRedirectMapRedirect: (redirects: RedirectResult[], requestLocale: string, incomingPathData: ProcessedPath) => RedirectResult | undefined;
@@ -967,6 +1000,18 @@ declare namespace mediaApi {
     }
 }
 export { mediaApi }
+
+// @public
+export interface MetadataFields {
+    // (undocumented)
+    baseMetadataAuthor?: Field<string>;
+    // (undocumented)
+    baseMetadataDescription?: Field<string>;
+    // (undocumented)
+    baseMetadataKeywords?: Field<string>;
+    // (undocumented)
+    baseMetadataTitle?: Field<string>;
+}
 
 // @internal
 export enum MetadataKind {
@@ -990,6 +1035,44 @@ export function normalizePersonalizedRewrite(pathname: string): string;
 export function normalizeSiteRewrite(pathname: string): string;
 
 // @public
+export const OG_CREATION_TIME_TAG: Record<string, string>;
+
+// @public
+export const OG_MODIFIED_TIME_TAG: Record<string, string>;
+
+// @public
+export interface OpenGraphFields {
+    // (undocumented)
+    baseOgDescription?: Field<string>;
+    // (undocumented)
+    baseOgImage?: OpenGraphImageField;
+    // (undocumented)
+    baseOgTitle?: Field<string>;
+    // (undocumented)
+    baseOgType?: Field<string>;
+}
+
+// @public
+export interface OpenGraphImageField {
+    // (undocumented)
+    value?: OpenGraphImageFieldValue;
+}
+
+// @public
+export interface OpenGraphImageFieldValue {
+    // (undocumented)
+    [attributeName: string]: unknown;
+    // (undocumented)
+    alt?: string;
+    // (undocumented)
+    height?: string;
+    // (undocumented)
+    src?: string;
+    // (undocumented)
+    width?: string;
+}
+
+// @public
 export type Page = {
     layout: LayoutServiceData;
     siteName?: string;
@@ -1001,6 +1084,10 @@ export type Page = {
 export interface PageInfo {
     endCursor: string;
     hasNext: boolean;
+}
+
+// @public
+export interface PageMetadataFields extends MetadataFields, OpenGraphFields {
 }
 
 // @public
@@ -1267,10 +1354,12 @@ export interface RouteData<Fields = Record<string, Field | Item | Item[]>> {
     name: string;
     // (undocumented)
     placeholders: PlaceholdersData;
+    published?: string;
     // (undocumented)
     templateId?: string;
     // (undocumented)
     templateName?: string;
+    updated?: string;
 }
 
 // @public
@@ -1576,12 +1665,18 @@ export interface TextField extends FieldMetadata {
 }
 
 // @internal
+export const toPascalCase: (name: string) => string;
+
+// @internal
 export const updateComponent: (component: ComponentRendering<ComponentFields>, fields: ComponentFields | undefined, params: ComponentParams | undefined) => void;
 
 // @public
 const updateImageUrl: (url: string, params?: {
     [key: string]: string | number | undefined;
 } | null, mediaUrlPrefix?: RegExp) => string;
+
+// @internal
+export const validateEvent: (e: MessageEvent, eventName: string) => boolean;
 
 // @internal (undocumented)
 export const VARIANT_PREFIX = "_variantId_";
@@ -1610,7 +1705,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 // Warnings were encountered during analysis:
 //
 // src/client/sitecore-client.ts:69:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
-// src/editing/codegen/preview.ts:115:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
+// src/editing/codegen/preview.ts:116:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal

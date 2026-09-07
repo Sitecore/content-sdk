@@ -17,66 +17,26 @@ const USER_AGENTS = {
 };
 
 const NPM_QUERY = 'npm query [name*=@sitecore] --workspaces false';
-const PNPM_LIST = 'pnpm list --depth Infinity --json "@sitecore*/*"';
+const PNPM_LIST = 'pnpm list --depth 3 --parseable --long';
 const YARN_INFO = 'yarn info --json --name-only --recursive "@sitecore*/*"';
 const YARN_CLASSIC_LIST = 'yarn list --json --depth 0 --pattern "@sitecore*/*"';
 const BUN_LIST = 'bun pm ls --all';
 
-// `pnpm list` reports a dependency tree per project, in which the same package can be reached
-// through several paths
+// `pnpm list --parseable --long` reports an install path and the package it holds per line. The
+// project itself and the links in its node_modules are listed next to the packages in the pnpm
+// store, and paths hold a drive letter when the app runs on Windows.
 const pnpmListResult = [
-  {
-    name: 'next-new-app',
-    version: '0.1.0',
-    path: '/app',
-    private: true,
-    dependencies: {
-      '@sitecore-content-sdk/nextjs': {
-        from: '@sitecore-content-sdk/nextjs',
-        version: '22.2.0-canary.69',
-        path: '/app/node_modules/.pnpm/@sitecore-content-sdk+nextjs@22.2.0-canary.69/node_modules/@sitecore-content-sdk/nextjs',
-        dependencies: {
-          '@sitecore-content-sdk/core': {
-            from: '@sitecore-content-sdk/core',
-            version: '22.2.0-canary.69',
-            path: '/app/node_modules/.pnpm/@sitecore-content-sdk+core@22.2.0-canary.69/node_modules/@sitecore-content-sdk/core',
-          },
-          '@sitecore-cloudsdk/events': {
-            from: '@sitecore-cloudsdk/events',
-            version: '0.3.1',
-            path: '/app/node_modules/.pnpm/@sitecore-cloudsdk+events@0.3.1/node_modules/@sitecore-cloudsdk/events',
-            dependencies: {
-              '@sitecore-cloudsdk/core': {
-                from: '@sitecore-cloudsdk/core',
-                version: '0.3.1',
-                path: '/app/node_modules/.pnpm/@sitecore-cloudsdk+core@0.3.1/node_modules/@sitecore-cloudsdk/core',
-              },
-            },
-          },
-        },
-      },
-      next: {
-        from: 'next',
-        version: '14.2.7',
-        path: '/app/node_modules/.pnpm/next@14.2.7/node_modules/next',
-      },
-    },
-    devDependencies: {
-      '@sitecore-content-sdk/cli': {
-        from: '@sitecore-content-sdk/cli',
-        version: '22.2.0-canary.69',
-        path: '/app/node_modules/.pnpm/@sitecore-content-sdk+cli@22.2.0-canary.69/node_modules/@sitecore-content-sdk/cli',
-        dependencies: {
-          '@sitecore-content-sdk/core': {
-            from: '@sitecore-content-sdk/core',
-            version: '22.2.0-canary.69',
-            path: '/app/node_modules/.pnpm/@sitecore-content-sdk+core@22.2.0-canary.69/node_modules/@sitecore-content-sdk/core',
-          },
-        },
-      },
-    },
-  },
-];
+  '/app:next-new-app@0.1.0',
+  '/app/node_modules/.pnpm/@sitecore-content-sdk+nextjs@22.2.0-canary.69/node_modules/@sitecore-content-sdk/nextjs:@sitecore-content-sdk/nextjs@22.2.0-canary.69',
+  '/app/node_modules/@sitecore-content-sdk/nextjs:@sitecore-content-sdk/nextjs@22.2.0-canary.69',
+  '/app/node_modules/.pnpm/@sitecore-content-sdk+core@22.2.0-canary.69/node_modules/@sitecore-content-sdk/core:@sitecore-content-sdk/core@22.2.0-canary.69',
+  '/app/node_modules/.pnpm/@sitecore-cloudsdk+events@0.3.1/node_modules/@sitecore-cloudsdk/events:@sitecore-cloudsdk/events@0.3.1',
+  '/app/node_modules/.pnpm/@sitecore-cloudsdk+core@0.3.1/node_modules/@sitecore-cloudsdk/core:@sitecore-cloudsdk/core@0.3.1',
+  'C:\\app\\node_modules\\.pnpm\\@sitecore+components@2.1.2_react@19.2.8\\node_modules\\@sitecore\\components:@sitecore/components@2.1.2',
+  '/app/node_modules/.pnpm/@sitecore+byoc@0.3.4_react@19.2.8/node_modules/@sitecore/byoc:@sitecore/byoc@0.3.4',
+  '/app/node_modules/.pnpm/next@14.2.7/node_modules/next:next@14.2.7',
+  '/app/node_modules/.pnpm/@sitecore-content-sdk+cli@22.2.0-canary.69/node_modules/@sitecore-content-sdk/cli:@sitecore-content-sdk/cli@22.2.0-canary.69',
+].join('\n');
 
 const pnpmMetadata = {
   packages: {
@@ -84,6 +44,8 @@ const pnpmMetadata = {
     '@sitecore-content-sdk/core': '22.2.0-canary.69',
     '@sitecore-cloudsdk/events': '0.3.1',
     '@sitecore-cloudsdk/core': '0.3.1',
+    '@sitecore/components': '2.1.2',
+    '@sitecore/byoc': '0.3.4',
     '@sitecore-content-sdk/cli': '22.2.0-canary.69',
   },
 };
@@ -149,7 +111,7 @@ describe('metadata', () => {
     it('should detect the package manager from the executable path when there is no user agent', () => {
       runWithPackageManager();
       setEnv('npm_execpath', '/usr/local/share/pnpm/store/v10/pnpm/bin/pnpm.cjs');
-      execSyncStub.withArgs(PNPM_LIST).returns(JSON.stringify(pnpmListResult));
+      execSyncStub.withArgs(PNPM_LIST).returns(pnpmListResult);
 
       const metadata = getMetadata();
 
@@ -159,7 +121,7 @@ describe('metadata', () => {
 
     it('should return tracked packages with exact versions from result of pnpm list', () => {
       runWithPackageManager(USER_AGENTS.pnpm);
-      execSyncStub.withArgs(PNPM_LIST).returns(JSON.stringify(pnpmListResult));
+      execSyncStub.withArgs(PNPM_LIST).returns(pnpmListResult);
 
       const metadata = getMetadata();
 
@@ -238,8 +200,8 @@ describe('metadata', () => {
 
     it('should include workspace packages when workspaces are allowed', () => {
       runWithPackageManager(USER_AGENTS.pnpm);
-      const command = 'pnpm list --depth Infinity --json --recursive "@sitecore*/*"';
-      execSyncStub.withArgs(command).returns(JSON.stringify(pnpmListResult));
+      const command = 'pnpm list --depth 3 --parseable --long --recursive';
+      execSyncStub.withArgs(command).returns(pnpmListResult);
 
       const metadata = getMetadata(true);
 

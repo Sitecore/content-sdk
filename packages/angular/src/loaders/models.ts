@@ -1,5 +1,8 @@
 import type { Params } from '@angular/router';
-import { EditingPreviewData } from '@sitecore-content-sdk/content/editing';
+import {
+  EditingPreviewData,
+  DesignLibraryRenderPreviewData,
+} from '@sitecore-content-sdk/content/editing';
 export const DEFAULT_NOT_FOUND_ROUTE = '/404';
 export const DEFAULT_ERROR_ROUTE = '/500';
 
@@ -42,9 +45,9 @@ export interface CsdkRequestData {
    */
   referrer?: string;
   /**
-   * Preview/editing data for Content SDK
+   * Preview/editing data for Content SDK (standard edit/preview, or Design Library data).
    */
-  scPreviewData?: EditingPreviewData;
+  scPreviewData?: EditingPreviewData | DesignLibraryRenderPreviewData;
   /** Content SDK request params */
   scParams?: CsdkRequestParams;
 }

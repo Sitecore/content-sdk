@@ -6,7 +6,7 @@
 
 # Interface: ImageSizeParameters
 
-Defined in: content/types/layout/field-types.d.ts:44
+Defined in: content/types/layout/field-types.d.ts:100
 
 The interface for the Image size parameters.
 
@@ -20,7 +20,7 @@ The interface for the Image size parameters.
 
 > `optional` **as?**: `0` \| `1`
 
-Defined in: content/types/layout/field-types.d.ts:57
+Defined in: content/types/layout/field-types.d.ts:113
 
 Allow stretch
 
@@ -30,7 +30,7 @@ Allow stretch
 
 > `optional` **h?**: `number`
 
-Defined in: content/types/layout/field-types.d.ts:49
+Defined in: content/types/layout/field-types.d.ts:105
 
 Fixed height of the image
 
@@ -40,7 +40,7 @@ Fixed height of the image
 
 > `optional` **iar?**: `0` \| `1`
 
-Defined in: content/types/layout/field-types.d.ts:55
+Defined in: content/types/layout/field-types.d.ts:111
 
 Ignore aspect ratio
 
@@ -50,7 +50,7 @@ Ignore aspect ratio
 
 > `optional` **mh?**: `number`
 
-Defined in: content/types/layout/field-types.d.ts:53
+Defined in: content/types/layout/field-types.d.ts:109
 
 Max height of the image
 
@@ -60,7 +60,7 @@ Max height of the image
 
 > `optional` **mw?**: `number`
 
-Defined in: content/types/layout/field-types.d.ts:51
+Defined in: content/types/layout/field-types.d.ts:107
 
 Max width of the image
 
@@ -70,7 +70,7 @@ Max width of the image
 
 > `optional` **sc?**: `number`
 
-Defined in: content/types/layout/field-types.d.ts:59
+Defined in: content/types/layout/field-types.d.ts:115
 
 Image scale. Defaults to 1.0
 
@@ -80,6 +80,6 @@ Image scale. Defaults to 1.0
 
 > `optional` **w?**: `number`
 
-Defined in: content/types/layout/field-types.d.ts:47
+Defined in: content/types/layout/field-types.d.ts:103
 
 Fixed width of the image

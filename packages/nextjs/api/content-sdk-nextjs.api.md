@@ -122,7 +122,9 @@ import { LinkProps as LinkProps_3 } from 'next/link';
 import { LLMS_TXT_CONTENT_TYPE } from '@sitecore-content-sdk/content/site';
 import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
-import { Metadata } from '@sitecore-content-sdk/core/node-tools';
+import type { Metadata } from 'next';
+import { Metadata as Metadata_2 } from '@sitecore-content-sdk/core/node-tools';
+import { MetadataFields } from '@sitecore-content-sdk/react';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherError } from '@sitecore-content-sdk/core';
@@ -136,7 +138,14 @@ import { NextURL } from 'next/dist/server/web/next-url';
 import { noopLoadImportMap } from '@sitecore-content-sdk/react';
 import { normalizePersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
 import { normalizeSiteRewrite } from '@sitecore-content-sdk/content/site';
+import { OG_CREATION_TIME_TAG } from '@sitecore-content-sdk/react';
+import { OG_MODIFIED_TIME_TAG } from '@sitecore-content-sdk/react';
+import { OpenGraphFields } from '@sitecore-content-sdk/react';
+import { OpenGraphImageField } from '@sitecore-content-sdk/react';
+import { OpenGraphImageFieldValue } from '@sitecore-content-sdk/react';
 import { Page } from '@sitecore-content-sdk/content/client';
+import { PageMetadataFields } from '@sitecore-content-sdk/react';
+import type { PageMetadataFields as PageMetadataFields_2 } from '@sitecore-content-sdk/content/layout';
 import { PageMode } from '@sitecore-content-sdk/content/client';
 import { PageOptions } from '@sitecore-content-sdk/content/client';
 import { PersonalizeAdapter } from '@sitecore-content-sdk/personalize/internal';
@@ -481,7 +490,7 @@ export class EditingConfigMiddleware {
 // @public
 export type EditingConfigMiddlewareConfig = {
     components: ComponentMap<NextjsContentSdkComponent>;
-    metadata: Metadata;
+    metadata: Metadata_2;
 };
 
 // Warning: (ae-forgotten-export) The symbol "RenderMiddlewareBase" needs to be exported by the entry point api-surface.d.ts
@@ -632,6 +641,9 @@ export const getHeadersForPropagation: (headers: IncomingHttpHeaders | Headers) 
     [key: string]: string;
 };
 
+// @public
+export function getPageMetadata(route?: RouteData<PageMetadataRouteFields> | null, defaultTitle?: string): Metadata;
+
 export { getPersonalizedRewrite }
 
 export { getPersonalizedRewriteData }
@@ -753,6 +765,8 @@ export { mediaApi }
 
 export { MemoryCacheClient }
 
+export { MetadataFields }
+
 // @public
 export class MultisiteProxy extends ProxyBase {
     constructor(config: MultisiteProxyConfig);
@@ -797,7 +811,33 @@ export { normalizePersonalizedRewrite }
 
 export { normalizeSiteRewrite }
 
+export { OG_CREATION_TIME_TAG }
+
+export { OG_MODIFIED_TIME_TAG }
+
+export { OpenGraphFields }
+
+export { OpenGraphImageField }
+
+export { OpenGraphImageFieldValue }
+
 export { Page }
+
+export { PageMetadataFields }
+
+// @public
+export type PageMetadataRouteFields = PageMetadataFields_2 & {
+    Title?: Field;
+};
+
+// @public
+export const PageMetaTags: (input: PageMetaTagsProps) => JSX_2.Element;
+
+// @public
+export interface PageMetaTagsProps {
+    defaultTitle?: string;
+    route?: RouteData<PageMetadataRouteFields> | null;
+}
 
 export { PageMode }
 

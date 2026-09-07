@@ -72,7 +72,7 @@ function buildLoaderParams(route: ActivatedRouteSnapshot, defaultLanguage: strin
  * Injects TransferState, ClientLoaderDataService. Called by the resolver when isPlatformBrowser.
  * @param {object} options - The options for the resolveOnBrowser function
  * @param {ActivatedRouteSnapshot} options.route - The current route snapshot
- * @param {RouterStateSnapshot} options.state - The router state snapshot
+ * @param {stateUrl} options.stateUrl - URL for current route from RouteState
  * @param {string} options.loaderId - loader ID to resolve, used for transfer state key and ClientLoaderDataService call
  * @param {Router} options.router - The Angular router instance
  * @param {string} [options.defaultLanguage] - Default language for locale fallback in params
@@ -81,14 +81,14 @@ function buildLoaderParams(route: ActivatedRouteSnapshot, defaultLanguage: strin
  */
 async function resolveOnBrowser({
   route,
-  state,
+  stateUrl,
   loaderId,
   router,
   defaultLanguage,
   cacheOptions,
 }: {
   route: ActivatedRouteSnapshot;
-  state: RouterStateSnapshot;
+  stateUrl: string;
   loaderId: string;
   router: Router;
   defaultLanguage: string;
@@ -97,8 +97,7 @@ async function resolveOnBrowser({
   const transferState = inject(TransferState);
   const browserLoaderData = inject(ClientLoaderDataService);
 
-  const url = state.url;
-  const key = stateKey(loaderId, url);
+  const key = stateKey(loaderId, stateUrl);
 
   if (transferState.hasKey(key)) {
     const data = transferState.get(key, null);
@@ -109,7 +108,7 @@ async function resolveOnBrowser({
   const allParams = buildLoaderParams(route, defaultLanguage);
 
   const resp = await browserLoaderData.getData({
-    url,
+    url: stateUrl,
     loaderId,
     routeParams: allParams,
     query: route.queryParams as Record<string, string | string[]>,
@@ -149,14 +148,15 @@ export const loaderResolver = (
     const config = inject(SITECORE_CONFIG_TOKEN);
     const defaultLanguage = config.defaultLanguage;
 
-    const url = state.url;
+    // Angular state will have an encoded path. CSDK logic needs a decoded one
+    const url = decodeURIComponent(state.url);
     const key = stateKey(loaderId, url);
 
     if (isPlatformBrowser(platformId)) {
       try {
         return await resolveOnBrowser({
           route,
-          state,
+          stateUrl: url,
           loaderId,
           router,
           defaultLanguage,

@@ -70,6 +70,10 @@ export interface RouteData<Fields = Record<string, Field | Item | Item[]>> {
   templateName?: string;
   placeholders: PlaceholdersData;
   itemId?: string;
+  /** ISO datetime the item was published, if available. */
+  published?: string;
+  /** ISO datetime the item was last updated, if available. */
+  updated?: string;
 }
 
 /**

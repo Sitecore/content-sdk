@@ -6,3 +6,8 @@ export {
   NOT_FOUND_ROUTE_TOKEN,
 } from './tokens';
 export { SitecoreContextService } from './sitecore-context.service';
+export {
+  type DesignLibraryComponentFactory,
+  DESIGN_LIBRARY_COMPONENT_FACTORY,
+  RuntimeCompileComponentFactory,
+} from './design-library';

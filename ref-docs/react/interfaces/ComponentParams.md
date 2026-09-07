@@ -6,7 +6,7 @@
 
 # Interface: ComponentParams
 
-Defined in: packages/content/types/layout/models.d.ts:87
+Defined in: packages/content/types/layout/models.d.ts:91
 
 Component params
 

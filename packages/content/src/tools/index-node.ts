@@ -1,6 +1,8 @@
 export { generateSites, GenerateSitesConfig } from './generateSites';
 export { scaffoldComponent } from './scaffold';
-export { extractFiles } from './codegen/extract-files';
+export { extractFiles, ExtractFilesConfig } from './codegen/extract-files';
+export { ExtractedFileType } from './codegen/utils';
+export type { ExtractedFile } from './codegen/utils';
 export {
   writeImportMap,
   WriteImportMapArgs,
