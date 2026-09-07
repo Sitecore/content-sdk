@@ -8,7 +8,7 @@
 
 > **addDocumentUpdateHandler**(`callback`): () => `void`
 
-Defined in: [content/src/atoms/design-library-bridge/events.ts:73](https://github.com/Sitecore/content-sdk/blob/2db997286d1a49ba2de622f5535feed2205c999a/packages/content/src/atoms/design-library-bridge/events.ts#L73)
+Defined in: [content/src/atoms/design-library-bridge/events.ts:73](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/content/src/atoms/design-library-bridge/events.ts#L73)
 
 **`Internal`**
 

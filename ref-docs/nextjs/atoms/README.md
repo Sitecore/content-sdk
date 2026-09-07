@@ -16,6 +16,7 @@
 - [AtomActionHandler](type-aliases/AtomActionHandler.md)
 - [AtomComponentDefinition](type-aliases/AtomComponentDefinition.md)
 - [AtomsActionsMap](type-aliases/AtomsActionsMap.md)
+- [AtomsCatalog](type-aliases/AtomsCatalog.md)
 - [AtomsCatalogInput](type-aliases/AtomsCatalogInput.md)
 - [AtomsComponentsMap](type-aliases/AtomsComponentsMap.md)
 - [DateFieldSchema](type-aliases/DateFieldSchema.md)

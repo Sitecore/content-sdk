@@ -6,7 +6,7 @@
 
 # Interface: AtomsConfig
 
-Defined in: react/types/atoms/types.d.ts:59
+Defined in: react/types/atoms/types.d.ts:64
 
 Props the developer passes to the provider for atoms support.
 
@@ -14,9 +14,9 @@ Props the developer passes to the provider for atoms support.
 
 ### catalog
 
-> **catalog**: `Catalog`\<`any`, [`AtomsCatalogInput`](../type-aliases/AtomsCatalogInput.md)\>
+> **catalog**: [`AtomsCatalog`](../type-aliases/AtomsCatalog.md)
 
-Defined in: react/types/atoms/types.d.ts:61
+Defined in: react/types/atoms/types.d.ts:66
 
 The json-render catalog (schema + component/action definitions).
 
@@ -26,7 +26,7 @@ The json-render catalog (schema + component/action definitions).
 
 > `optional` **compileCssAction?**: (`classes`) => `Promise`\<`string`\>
 
-Defined in: react/types/atoms/types.d.ts:88
+Defined in: react/types/atoms/types.d.ts:93
 
 Optional Server Action used to compile CSS for dynamic Document class names
 during editing (Design Library) sessions.
@@ -67,7 +67,7 @@ import { compileCssForDocumentAction } from '@sitecore-content-sdk/nextjs/server
 
 > `optional` **navigate?**: (`path`) => `void`
 
-Defined in: react/types/atoms/types.d.ts:65
+Defined in: react/types/atoms/types.d.ts:70
 
 Optional navigate function to be passed to action handlers for navigation purposes.
 
@@ -87,6 +87,6 @@ Optional navigate function to be passed to action handlers for navigation purpos
 
 > **registry**: `DefineRegistryResult`
 
-Defined in: react/types/atoms/types.d.ts:63
+Defined in: react/types/atoms/types.d.ts:68
 
 The registry result returned by defineAtomsRegistry.

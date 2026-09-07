@@ -8,7 +8,7 @@
 
 > `const` **defineAtomsCatalog**: \<`T`\>(`input`) => `Catalog`\<\{ `catalog`: `SchemaType`\<`"object"`, \{ `actions`: `SchemaType`\<`"map"`, \{ `description`: `SchemaType`\<`"string"`, `unknown`\>; `params`: `SchemaType`\<`"zod"`, `unknown`\>; \}\>; `components`: `SchemaType`\<`"map"`, \{ `description`: `SchemaType`\<`"string"`, `unknown`\>; `example`: `SchemaType`\<`"any"`, `unknown`\>; `props`: `SchemaType`\<`"zod"`, `unknown`\>; `slots`: `SchemaType`\<`"array"`, `SchemaType`\<`"string"`, `unknown`\>\>; \}\>; \}\>; `spec`: `SchemaType`\<`"object"`, \{ `elements`: `SchemaType`\<`"record"`, `SchemaType`\<`"object"`, \{ `children`: `SchemaType`\<`"array"`, `SchemaType`\<`"string"`, `unknown`\>\>; `props`: `SchemaType`\<`"propsOf"`, `string`\>; `repeat`: \{ `inner?`: `unknown`; `kind`: `"any"`; `optional`: `true`; \}; `slots`: \{ `inner?`: `SchemaType`\<..., ...\>; `kind`: `"record"`; `optional`: `true`; \}; `type`: `SchemaType`\<`"ref"`, `string`\>; `visible`: \{ `inner?`: `unknown`; `kind`: `"any"`; `optional`: `true`; \}; \}\>\>; `root`: `SchemaType`\<`"string"`, `unknown`\>; \}\>; \}, `Exact`\<`T`, [`AtomsCatalogInput`](../type-aliases/AtomsCatalogInput.md)\>\> = `defineAtomsCatalogReact`
 
-Defined in: [nextjs/src/atoms/re-exports.ts:42](https://github.com/Sitecore/content-sdk/blob/2db997286d1a49ba2de622f5535feed2205c999a/packages/nextjs/src/atoms/re-exports.ts#L42)
+Defined in: [nextjs/src/atoms/re-exports.ts:42](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/nextjs/src/atoms/re-exports.ts#L42)
 
 Define an atoms catalog from component and action definitions.
 

@@ -8,7 +8,7 @@
 
 > **DesignLibraryLowCodeComponent**(): `Element`
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryLowCodeComponent.tsx:51](https://github.com/Sitecore/content-sdk/blob/2db997286d1a49ba2de622f5535feed2205c999a/packages/react/src/components/DesignLibrary/DesignLibraryLowCodeComponent.tsx#L51)
+Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryLowCodeComponent.tsx:53](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/react/src/components/DesignLibrary/DesignLibraryLowCodeComponent.tsx#L53)
 
 **`Internal`**
 
@@ -21,7 +21,8 @@ via `StudioComponentWrapper` (same client path as Studio / NCC preview elsewhere
 - When `atomsConfig.compileCssAction` is provided, compiles Document class names and injects CSS so
 utilities that exist only in MMS Document JSON are styled during editing.
 - Wraps preview output with `PlaceholderMetadata` using the layout rendering UID so Design Studio
-receives the same chrome handshake as normal Design Library components.
+receives the same chrome handshake as normal Design Library components. Adds `data-component-type="atom"`
+to that wrap so Sitecore Pages can skip the whole Atoms subtree by ancestor when querying chrome.
 
 ## Returns
 
