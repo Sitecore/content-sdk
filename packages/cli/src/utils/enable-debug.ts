@@ -11,10 +11,8 @@ import { enableDebug } from '@sitecore-content-sdk/core';
  * @returns {string[]} the debug scopes which have been enabled
  */
 export default function enableDebugLogging(): string[] {
-  const scopes = (process.env.DEBUG || '')
-    .split(',')
-    .map((scope) => scope.trim())
-    .filter(Boolean);
+  // scopes can be separated by commas or whitespace, matching how the 'debug' module parses them
+  const scopes = (process.env.DEBUG || '').trim().split(/[\s,]+/).filter(Boolean);
 
   if (!scopes.length) {
     return [];

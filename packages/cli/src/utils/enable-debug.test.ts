@@ -65,6 +65,18 @@ describe('enableDebugLogging', () => {
     expect(isNamespaceEnabled(`${debugNamespace}:sitemap`)).to.be.false;
   });
 
+  it('should enable each of the whitespace separated scopes', () => {
+    process.env.DEBUG = ` ${debugNamespace}:layout ${debugNamespace}:http `;
+
+    expect(enableDebugLogging()).to.deep.equal([
+      `${debugNamespace}:layout`,
+      `${debugNamespace}:http`,
+    ]);
+    expect(isNamespaceEnabled(`${debugNamespace}:layout`)).to.be.true;
+    expect(isNamespaceEnabled(`${debugNamespace}:http`)).to.be.true;
+    expect(isNamespaceEnabled(`${debugNamespace}:sitemap`)).to.be.false;
+  });
+
   it('should not enable any scope when DEBUG is not defined', () => {
     expect(enableDebugLogging()).to.deep.equal([]);
     expect(isNamespaceEnabled(`${debugNamespace}:layout`)).to.be.false;
