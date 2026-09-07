@@ -160,6 +160,7 @@ export interface ComponentRendering<T = ComponentFields> {
     dataSource?: string;
     // (undocumented)
     fields?: T;
+    isContentResolved?: boolean;
     // (undocumented)
     params?: ComponentParams;
     // (undocumented)
