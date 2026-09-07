@@ -63,7 +63,6 @@ export const Form = ({ params, rendering }: FormProps) => {
   const language = context.page.locale;
 
   const isEditing = context.page.mode.isEditing;
-  const language = context.page.locale;
   const previousLanguageRef = useRef(language);
 
   // fetch form content
@@ -104,7 +103,6 @@ export const Form = ({ params, rendering }: FormProps) => {
     language,
     context.api?.edge?.clientContextId,
     context.api?.edge?.edgeUrl,
-    language,
   ]);
 
   // Set innerHTML and execute scripts whenever form content changes
