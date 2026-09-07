@@ -327,4 +327,69 @@ describe('Form', () => {
       expect(inputAfterRerender?.value).to.equal('user-entered-value');
     });
   });
+
+  it('passes context.page.locale to loadForm', async () => {
+    const loadFormSpy = sinon.stub().resolves('<form id="test-form"></form>');
+
+    mockFormModule({
+      loadForm: loadFormSpy,
+      subscribeToFormSubmitEvent: sinon.spy(),
+      executeScriptElements: sinon.spy(),
+    });
+
+    mockAnalyticsInternalModule({
+      isBotClientSide: sinon.stub().returns(false),
+    });
+
+    await render(
+      <SitecoreProvider api={ctx.api} page={ctx.page.normal}>
+        <Form rendering={rendering} params={rendering.params} />
+      </SitecoreProvider>
+    );
+
+    await waitFor(() => {
+      expect(loadFormSpy.calledOnceWith('client-id', '456', 'edge-url', 'en')).to.be.true;
+    });
+  });
+
+  it('refetches the form when the page locale changes', async () => {
+    const loadFormSpy = sinon.stub();
+    loadFormSpy.onFirstCall().resolves('<form id="en-form"></form>');
+    loadFormSpy.onSecondCall().resolves('<form id="fr-form"></form>');
+
+    mockFormModule({
+      loadForm: loadFormSpy,
+      subscribeToFormSubmitEvent: sinon.spy(),
+      executeScriptElements: sinon.spy(),
+    });
+
+    mockAnalyticsInternalModule({
+      isBotClientSide: sinon.stub().returns(false),
+    });
+
+    const frPage = { ...ctx.page.normal, locale: 'fr-FR' };
+
+    const rendered = await render(
+      <SitecoreProvider api={ctx.api} page={ctx.page.normal}>
+        <Form rendering={rendering} params={rendering.params} />
+      </SitecoreProvider>
+    );
+
+    await waitFor(() => {
+      expect(rendered.container.innerHTML).to.contain('en-form');
+    });
+
+    rendered.rerender(
+      <SitecoreProvider api={ctx.api} page={frPage}>
+        <Form rendering={rendering} params={rendering.params} />
+      </SitecoreProvider>
+    );
+
+    await waitFor(() => {
+      expect(loadFormSpy.calledTwice).to.be.true;
+      expect(loadFormSpy.secondCall.calledWith('client-id', '456', 'edge-url', 'fr-FR')).to.be
+        .true;
+      expect(rendered.container.innerHTML).to.contain('fr-form');
+    });
+  });
 });

@@ -59,6 +59,7 @@ export class ScFormComponent {
       const cfg = this.config;
       const edgeId = cfg?.api?.edge?.clientContextId;
       const edgeUrl = cfg?.api?.edge?.edgeUrl;
+      const language = this.context.effectiveLocale();
 
       if (!edgeId) {
         console.warn(
@@ -74,7 +75,7 @@ export class ScFormComponent {
         abort.abort();
       });
 
-      loadForm(edgeId, formId, edgeUrl)
+      loadForm(edgeId, formId, edgeUrl, language)
         .then((html: string) => {
           if (cancelled) return;
           const el = this.formContainerRef?.nativeElement;

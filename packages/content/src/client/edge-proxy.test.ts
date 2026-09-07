@@ -61,5 +61,39 @@ describe('edge-proxy', () => {
         `https://test.com/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`
       );
     });
+
+    it('should append language when provided', () => {
+      const sitecoreEdgeUrl = 'https://test.com';
+
+      const url = getEdgeProxyFormsUrl(sitecoreEdgeContextId, formId, sitecoreEdgeUrl, 'fr-FR');
+
+      expect(url).to.equal(
+        `https://test.com/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}&language=fr-FR`
+      );
+    });
+
+    it('should omit language when not provided', () => {
+      const url = getEdgeProxyFormsUrl(sitecoreEdgeContextId, formId, undefined, undefined);
+
+      expect(url).to.equal(
+        `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`
+      );
+    });
+
+    it('should omit language when it is an empty or whitespace string', () => {
+      const url = getEdgeProxyFormsUrl(sitecoreEdgeContextId, formId, undefined, '   ');
+
+      expect(url).to.equal(
+        `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`
+      );
+    });
+
+    it('should URL-encode the language value', () => {
+      const url = getEdgeProxyFormsUrl(sitecoreEdgeContextId, formId, undefined, 'ar AE');
+
+      expect(url).to.equal(
+        `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}&language=ar%20AE`
+      );
+    });
   });
 });

@@ -52,6 +52,28 @@ describe('form', () => {
         expect(error).to.be.an('error');
       }
     });
+
+    it('should include language in the request URL when provided', async () => {
+      nock(getEdgeProxyFormsUrl('contextId', 'formId', 'https://bar.com', 'fr-FR'))
+        .get('')
+        .query({ sitecoreContextId: 'contextId', language: 'fr-FR' })
+        .reply(200, 'form data fr');
+
+      const result = await loadForm('contextId', 'formId', 'https://bar.com', 'fr-FR');
+
+      expect(result).to.equal('form data fr');
+    });
+
+    it('should not include language in the request URL when omitted', async () => {
+      nock(getEdgeProxyFormsUrl('contextId', 'formId', 'https://bar.com'))
+        .get('')
+        .query({ sitecoreContextId: 'contextId' })
+        .reply(200, 'form data default');
+
+      const result = await loadForm('contextId', 'formId', 'https://bar.com');
+
+      expect(result).to.equal('form data default');
+    });
   });
 
   describe('executeScriptElements', () => {

@@ -47,9 +47,9 @@ describe('ScFormComponent', () => {
     return { componentName: 'Form', params, ...extra } as ComponentRendering;
   }
 
-  const makePage = (isEditing: boolean): Page =>
+  const makePage = (isEditing: boolean, locale = 'en'): Page =>
     ({
-      locale: 'en',
+      locale,
       layout: { sitecore: { context: {}, route: null } },
       mode: {
         name: isEditing ? LayoutServicePageState.Edit : LayoutServicePageState.Normal,
@@ -142,7 +142,7 @@ describe('ScFormComponent', () => {
     expect(mocks.loadForm).not.toHaveBeenCalled();
   });
 
-  it('should call loadForm with edge context id, FormId, and edgeUrl from config', async () => {
+  it('should call loadForm with edge context id, FormId, edgeUrl, and effective locale from config', async () => {
     const fixture = createFixture();
     fixture.componentRef.setInput('rendering', formRendering({ FormId: 'my-form-id' }));
     await flushFormLoadPipeline(fixture);
@@ -150,7 +150,23 @@ describe('ScFormComponent', () => {
     expect(mocks.loadForm).toHaveBeenCalledWith(
       'test-edge-context-id',
       'my-form-id',
-      'https://edge.example.com'
+      'https://edge.example.com',
+      'en'
+    );
+  });
+
+  it('should call loadForm with the page locale when set', async () => {
+    const fixture = createFixture();
+    setMockContextPage(makePage(false, 'fr-FR'));
+
+    fixture.componentRef.setInput('rendering', formRendering({ FormId: 'my-form-id' }));
+    await flushFormLoadPipeline(fixture);
+
+    expect(mocks.loadForm).toHaveBeenCalledWith(
+      'test-edge-context-id',
+      'my-form-id',
+      'https://edge.example.com',
+      'fr-FR'
     );
   });
 
@@ -163,7 +179,8 @@ describe('ScFormComponent', () => {
     expect(mocks.loadForm).toHaveBeenCalledWith(
       'test-edge-context-id',
       'form-from-params-only',
-      'https://edge.example.com'
+      'https://edge.example.com',
+      'en'
     );
   });
 
@@ -176,7 +193,8 @@ describe('ScFormComponent', () => {
     expect(mocks.loadForm).toHaveBeenCalledWith(
       'test-edge-context-id',
       'component-form-id',
-      'https://edge.example.com'
+      'https://edge.example.com',
+      'en'
     );
   });
 

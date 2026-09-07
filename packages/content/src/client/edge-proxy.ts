@@ -25,14 +25,19 @@ export const getEdgeProxyContentUrl = (
  * @param {string} sitecoreEdgeContextId - The unique context id.
  * @param {string} formId - The unique form id.
  * @param {string} [sitecoreEdgeUrl] - The base endpoint URL for the Edge Platform (resolved at config level). Defaults to platform URL.
+ * @param {string} [language] - Optional Sitecore language name (e.g. "fr-FR") to request a translated form variant. Omitted when empty.
  * @returns {string} The complete URL for accessing forms through the Edge Platform.
  * @internal
  */
 export const getEdgeProxyFormsUrl = (
   sitecoreEdgeContextId: string,
   formId: string,
-  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT
-) =>
-  `${getBaseEdgeUrl(
+  sitecoreEdgeUrl: string = constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT,
+  language?: string
+) => {
+  const languageQuery = language && language.trim() ? `&language=${encodeURIComponent(language)}` : '';
+
+  return `${getBaseEdgeUrl(
     sitecoreEdgeUrl
-  )}/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`;
+  )}/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}${languageQuery}`;
+};

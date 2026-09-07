@@ -61,9 +61,19 @@ export const Form = ({ params, rendering }: FormProps) => {
   const formRef = useRef<HTMLDivElement>(null);
 
   const isEditing = context.page.mode.isEditing;
+  const language = context.page.locale;
+  const previousLanguageRef = useRef(language);
 
   // fetch form content
   useEffect(() => {
+    // Locale changed since the last fetch - clear content so the effect below refetches
+    // the correct language variant instead of keeping the stale one.
+    if (previousLanguageRef.current !== language) {
+      previousLanguageRef.current = language;
+      setContent('');
+      return;
+    }
+
     if (!content) {
       // Forms must use clientContextId since they are rendered client-side
       const edgeId = context.api?.edge?.clientContextId;
@@ -74,7 +84,7 @@ export const Form = ({ params, rendering }: FormProps) => {
         return;
       }
 
-      loadForm(edgeId, params.FormId, context.api?.edge?.edgeUrl)
+      loadForm(edgeId, params.FormId, context.api?.edge?.edgeUrl, language)
         .then(setContent)
         .catch(() => {
           if (isEditing) {
@@ -91,6 +101,7 @@ export const Form = ({ params, rendering }: FormProps) => {
     params.FormId,
     context.api?.edge?.clientContextId,
     context.api?.edge?.edgeUrl,
+    language,
   ]);
 
   // Set innerHTML and execute scripts whenever form content changes
