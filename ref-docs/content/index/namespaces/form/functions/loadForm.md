@@ -8,7 +8,7 @@
 
 > **loadForm**(`contextId`, `formId`, `edgeUrl?`, `language?`): `Promise`\<`string`\>
 
-Defined in: [content/src/form/form.ts:16](https://github.com/Sitecore/content-sdk/blob/b14e7385638b1a83e39bdec36bcb058289820372/packages/content/src/form/form.ts#L16)
+Defined in: [content/src/form/form.ts:16](https://github.com/Sitecore/content-sdk/blob/adcce7f8e82dea229d7f6dfc8f2ee144026b91f0/packages/content/src/form/form.ts#L16)
 
 **`Internal`**
 
