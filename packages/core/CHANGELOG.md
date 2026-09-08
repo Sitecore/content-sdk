@@ -1,5 +1,13 @@
 # @sitecore-content-sdk/core
 
+## 2.1.4
+
+### Patch Changes
+
+- Resolve FEaaS/BYOC stylesheet links against the configured Edge URL (framework-wide). App Router only: drop `precedence="high"` so styles apply instead of preload. ([16e405f](https://github.com/sitecore/content-sdk/commit/16e405f3667f5f05e5fd97b8174bd2b99de45db6))
+- Fix pnpm omitting Sitecore packages from `metadata.json`. List with `pnpm list --parseable --long` and parse bun and pnpm output with the same regex. ([8f96240](https://github.com/sitecore/content-sdk/commit/8f962400f3b79f00425a8cd76a6d2082b5b47c47))
+- Detect the active package manager from `npm_config_user_agent` (falling back to `npm_execpath`) and use that manager's listing command when collecting Sitecore package metadata, so metadata generation follows the package manager that is running the build. ([9b45c28](https://github.com/sitecore/content-sdk/commit/9b45c283e831ade8b97eab10178dc32f73796f7e))
+
 ## 2.1.3
 
 ### Patch Changes
