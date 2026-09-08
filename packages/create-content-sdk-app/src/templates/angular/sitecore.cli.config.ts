@@ -2,8 +2,6 @@ import {
   defineCliConfig,
   generateMetadata,
   generateSites,
-  writeImportMap,
-  extractFiles,
 } from '@sitecore-content-sdk/angular/config-cli';
 import scConfig from './sitecore.config';
 
@@ -14,17 +12,10 @@ import scConfig from './sitecore.config';
 export default defineCliConfig({
   config: scConfig,
   build: {
-    commands: [
-      generateMetadata(),
-      generateSites(),
-      extractFiles(),
-      writeImportMap({
-        paths: ['src/app/components'],
-      }),
-    ],
+    commands: [generateMetadata(), generateSites()],
   },
   componentMap: {
     paths: ['src/app/components'],
-    exclude: ['**/*.spec.ts'],
+    exclude: ['**/*.spec.ts', 'src/app/components/content-sdk/*'],
   },
 });

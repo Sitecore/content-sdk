@@ -128,10 +128,15 @@ describe('resolveEdgeUrl', () => {
       expect(result).to.equal(SITECORE_EDGE_PLATFORM_URL_DEFAULT);
     });
 
-    it('should return default even when custom hostname is set', () => {
+    it('should use SITECORE_EDGE_PLATFORM_HOSTNAME when set', () => {
       process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'custom.example.com';
       const result = resolveEdgeUrlForStaticFiles();
-      expect(result).to.equal(SITECORE_EDGE_PLATFORM_URL_DEFAULT);
+      expect(result).to.equal('https://custom.example.com');
+    });
+
+    it('should use and normalize an explicit Edge URL', () => {
+      const result = resolveEdgeUrlForStaticFiles('https://staging.example.com/');
+      expect(result).to.equal('https://staging.example.com');
     });
   });
 });

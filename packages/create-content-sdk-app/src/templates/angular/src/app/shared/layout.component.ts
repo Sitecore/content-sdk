@@ -6,7 +6,6 @@ import {
   Field,
   RouteData,
   ScPlaceholderComponent,
-  ScDesignLibraryComponent,
   SITECORE_CLIENT_TOKEN,
 } from '@sitecore-content-sdk/angular';
 
@@ -17,11 +16,8 @@ interface RouteFields {
 
 @Component({
   selector: 'app-layout',
-  imports: [ScPlaceholderComponent, ScDesignLibraryComponent],
+  imports: [ScPlaceholderComponent],
   template: `
-    @if (page().mode.isDesignLibrary) {
-      <sc-design-library />
-    } @else {
       <div [attr.class]="layoutClassAttr()">
         <header class="w-full">
           <div id="header">
@@ -45,7 +41,6 @@ interface RouteFields {
           </div>
         </footer>
       </div>
-    }
   `,
   styles: `
     :host {

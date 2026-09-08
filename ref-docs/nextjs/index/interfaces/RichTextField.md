@@ -20,7 +20,7 @@ The interface for the Rich Text field.
 
 > `optional` **metadata?**: `object`
 
-Defined in: content/types/layout/models.d.ts:127
+Defined in: content/types/layout/models.d.ts:133
 
 #### Index Signature
 

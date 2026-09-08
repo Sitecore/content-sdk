@@ -1,7 +1,7 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CdpPageViewComponent } from './components/content-sdk/cdp-page-view.component';
 import { ScEditingScriptsComponent, SitecoreContextService } from '@sitecore-content-sdk/angular';
+import { CdpPageViewComponent } from './components/content-sdk/cdp-page-view.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({

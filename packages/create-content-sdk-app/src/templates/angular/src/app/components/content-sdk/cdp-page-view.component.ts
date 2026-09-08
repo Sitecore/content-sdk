@@ -4,7 +4,7 @@ import {
   SITECORE_ANALYTICS,
   SitecoreContextService,
 } from '@sitecore-content-sdk/angular';
-import config from '../../../../sitecore.config';
+import config from 'sitecore.config';
 
 /**
  * CDP page view component. Dispatches a Sitecore CDP page view event on initial load and on

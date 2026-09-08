@@ -1,0 +1,17 @@
+---
+description: Getting started with your Sitecore Content SDK Angular project
+alwaysApply: true
+globs: []
+---
+
+# Sitecore Content SDK — Angular
+
+Angular (standalone components, signals, SSR) + TypeScript. **Commands:** `npm install`, `npm run dev`, `npm run build`, `npm run lint`, `npm test`. There is no `type-check` script — `npm run build` type-checks. Copy `.env.example` → `.env` (never commit secrets).
+
+**Structure:** `src/app/` (Angular DI world: routes, providers, components, layout) and `src/content-sdk/` (loaders + `getClient()`, **no Angular DI**); `src/server.ts` (Express + SSR), `.sitecore/`, `sitecore.config.ts`, `sitecore.cli.config.ts`, `angular.json`.
+
+**Hard rule:** loaders run both inside Angular SSR and inside plain Express middleware (`POST /_data`). Loader bodies must not use `inject()` or constructor DI — that is why they live under `src/content-sdk/`, not `src/app/`.
+
+**Configuration:** all Sitecore config changes happen in `sitecore.config.ts`, in the **first argument** of `defineConfig` (currently an empty `{}`) — e.g. `defineConfig({ angular: { locales: ['en', 'fr-FR'] } }, environment)`. `scConfig.*` elsewhere in the app is the resolved, read-only result.
+
+**Detail:** Guardrails in [`AGENTS.md`](../../AGENTS.md). Depth: [`.agents/docs/`](../../.agents/docs/) (loaders and DI, middleware order, env split). Skills: [`Skills.md`](../../Skills.md).

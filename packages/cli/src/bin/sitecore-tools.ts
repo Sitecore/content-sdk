@@ -2,6 +2,7 @@
 
 import resolve from 'resolve';
 import processEnv from '../utils/process-env';
+import enableDebugLogging from '../utils/enable-debug';
 import * as commands from '../scripts';
 
 /**
@@ -30,15 +31,11 @@ resolve('@sitecore-content-sdk/cli', { basedir: process.cwd() }, (error, project
   // in that case loading environment variables will be handled by the actual cli command
   processEnv(process.cwd());
 
-  // Re-enable debug logging after environment variables are loaded
-  // This ensures that DEBUG environment variables from .env files take effect
-  if (process.env.DEBUG) {
-    const debugScopes = process.env.DEBUG.split(',')
-      .map((scope) => scope.trim())
-      .filter(Boolean);
+  // enable the debug scopes now that the DEBUG environment variable has been loaded
+  const debugScopes = enableDebugLogging();
+
+  if (debugScopes.length) {
     console.log(`Debug enabled for scopes: [${debugScopes.join(', ')}]`);
-    const debug = require('debug');
-    debug.enable(process.env.DEBUG);
   }
 
   cli(commands);
