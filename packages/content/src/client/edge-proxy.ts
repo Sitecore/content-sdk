@@ -21,8 +21,8 @@ export const getEdgeProxyContentUrl = (
 ) => `${getBaseEdgeUrl(sitecoreEdgeUrl)}/v1/content/api/graphql/v1`;
 
 /**
- * Generates a URL for accessing Sitecore Edge Platform Forms using the provided form ID and context ID.
- * @param {string} sitecoreEdgeContextId - The unique context id.
+ * Generates a URL for accessing Sitecore Edge Platform Forms using the provided form ID.
+ * The context id is sent in the `x-sitecore-contextid` request header by the caller.
  * @param {string} formId - The unique form id.
  * @param {string} [sitecoreEdgeUrl] - The base endpoint URL for the Edge Platform (resolved at config level). Defaults to platform URL.
  * @param {string} [language] - Page language used to load the matching multilingual form version.
@@ -30,13 +30,10 @@ export const getEdgeProxyContentUrl = (
  * @internal
  */
 export const getEdgeProxyFormsUrl = (
-  sitecoreEdgeContextId: string,
   formId: string,
   sitecoreEdgeUrl: string = constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT,
   language?: string
 ) => {
-  const url = `${getBaseEdgeUrl(
-    sitecoreEdgeUrl
-  )}/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`;
-  return language ? `${url}&language=${encodeURIComponent(language)}` : url;
+  const url = `${getBaseEdgeUrl(sitecoreEdgeUrl)}/v1/forms/publisher/${formId}`;
+  return language ? `${url}?language=${encodeURIComponent(language)}` : url;
 };
