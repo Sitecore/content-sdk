@@ -8,7 +8,7 @@
 
 > **createBotTrackingMiddleware**(`options`): [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/bot-tracking-middleware.ts:70](https://github.com/Sitecore/content-sdk/blob/adcce7f8e82dea229d7f6dfc8f2ee144026b91f0/packages/angular/src/server/middleware/bot-tracking-middleware.ts#L70)
+Defined in: [packages/angular/src/server/middleware/bot-tracking-middleware.ts:70](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/angular/src/server/middleware/bot-tracking-middleware.ts#L70)
 
 Middleware that runs bot detection once per request. When the request is from a bot it marks the
 request/response with the `sc_bot` cookie (so downstream middlewares — e.g. personalize — and the
