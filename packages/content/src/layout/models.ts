@@ -43,6 +43,8 @@ export interface LayoutServiceContext {
   renderingType?: RenderingType;
   clientScripts?: string[];
   clientData?: Record<string, Record<string, unknown>>;
+  /** JSON-LD structured data node objects (each with its own `@context`/`@type`) for the current route. */
+  schemas?: Record<string, unknown>[];
 }
 
 /**

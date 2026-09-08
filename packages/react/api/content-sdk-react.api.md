@@ -337,6 +337,14 @@ export { isEditorActive }
 
 export { Item }
 
+// @public
+export const JsonLdSchema: (input: JsonLdSchemaProps) => JSX_2.Element | null;
+
+// @public
+export interface JsonLdSchemaProps {
+    context?: LayoutServiceContext | null;
+}
+
 export { LayoutService }
 
 export { LayoutServiceContext }

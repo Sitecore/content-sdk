@@ -96,6 +96,7 @@ export {
 } from './components/DesignLibrary';
 export {} from './components/FEaaS/BYOCComponent';
 export { Link, LinkProps } from './components/Link';
+export { JsonLdSchema, JsonLdSchemaProps } from './components/JsonLdSchema';
 export { File, FileField } from './components/File';
 export {
   SitecoreProvider,

@@ -695,6 +695,9 @@ export function getHostnameFromHostHeader(host: string): string;
 export function getImportMapInfo(importMap: ImportEntry[]): ImportEntryInfo[];
 
 // @public
+export const getJsonLdSchema: (context?: LayoutServiceContext | null) => HTMLScript | null;
+
+// @public
 export function getLocaleRewrite(pathname: string, locale: string): string;
 
 // @public
@@ -758,6 +761,13 @@ export const HIDDEN_RENDERING_NAME = "Hidden Rendering";
 export type HTMLLink = {
     [key: string]: unknown;
 } & Pick<HTMLLinkElement, 'rel' | 'href'>;
+
+// @public
+export type HTMLScript = {
+    [key: string]: unknown;
+} & Pick<HTMLScriptElement, 'type'> & {
+    innerHTML: string;
+};
 
 // @public
 export interface ImageField {
@@ -885,6 +895,7 @@ export interface LayoutServiceContext {
     pageState?: LayoutServicePageState;
     // (undocumented)
     renderingType?: RenderingType;
+    schemas?: Record<string, unknown>[];
     // (undocumented)
     site?: {
         name?: string;

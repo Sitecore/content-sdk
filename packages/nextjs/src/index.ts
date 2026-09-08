@@ -13,7 +13,7 @@ export {
   MemoryCacheClient,
 } from '@sitecore-content-sdk/core';
 
-export { HTMLLink } from '@sitecore-content-sdk/content';
+export { HTMLLink, HTMLScript } from '@sitecore-content-sdk/content';
 
 export {
   LayoutServiceData,
@@ -34,6 +34,7 @@ export {
   ComponentFields,
   ComponentParams,
   getContentStylesheetLink,
+  getJsonLdSchema,
   EditMode,
   RenderingType,
 } from '@sitecore-content-sdk/content/layout';
@@ -146,6 +147,8 @@ export {
   BYOCComponent,
   BYOCComponentProps,
   getDesignLibraryStylesheetLinks,
+  JsonLdSchema,
+  JsonLdSchemaProps,
   File,
   FileField,
   RichTextField,

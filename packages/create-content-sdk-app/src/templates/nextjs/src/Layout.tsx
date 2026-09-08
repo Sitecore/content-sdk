@@ -3,7 +3,7 @@
  */
 import { JSX } from 'react';
 import Head from 'next/head';
-import { Placeholder, DesignLibrary, Page, PageMetaTags } from '@sitecore-content-sdk/nextjs';
+import { Placeholder, DesignLibrary, Page, PageMetaTags, JsonLdSchema } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
 import SitecoreStyles from 'src/components/content-sdk/SitecoreStyles';
 
@@ -13,7 +13,7 @@ interface LayoutProps {
 
 const Layout = ({ page }: LayoutProps): JSX.Element => {
   const { layout, mode } = page;
-  const { route } = layout.sitecore;
+  const { route, context } = layout.sitecore;
   const mainClassPageEditing = mode.isEditing ? 'editing-mode' : 'prod-mode';
 
   return (
@@ -24,6 +24,7 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
       <Head>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <JsonLdSchema context={context} />
 
       {/* root placeholder for the app, which we add components to using route data */}
       <div className={mainClassPageEditing}>
