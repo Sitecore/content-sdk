@@ -6,7 +6,7 @@
 
 # Interface: ActionCatalogEntry
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:44](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/content/src/atoms/design-library-bridge/types.ts#L44)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:44](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/design-library-bridge/types.ts#L44)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Serialized action entry in the catalog payload sent to Design Studio.
 
 > **description**: `string`
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:50](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/content/src/atoms/design-library-bridge/types.ts#L50)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:50](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/design-library-bridge/types.ts#L50)
 
 Human-readable description.
 
@@ -28,7 +28,7 @@ Human-readable description.
 
 > **name**: `string`
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:46](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/content/src/atoms/design-library-bridge/types.ts#L46)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:46](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/design-library-bridge/types.ts#L46)
 
 Action name (key in the catalog).
 
@@ -38,6 +38,6 @@ Action name (key in the catalog).
 
 > **paramsSchema**: `object`
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:48](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/content/src/atoms/design-library-bridge/types.ts#L48)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:48](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/design-library-bridge/types.ts#L48)
 
 JSON Schema representation of the action params.

@@ -8,7 +8,7 @@
 
 > **fileFieldSchema**(`extra?`): `ZodObject`\<\{ `value`: `ZodObject`\<\{ `displayName`: `ZodOptional`\<`ZodString`\>; `src`: `ZodOptional`\<`ZodString`\>; `title`: `ZodOptional`\<`ZodString`\>; \}, `$loose`\>; \}, `$strip`\>
 
-Defined in: [packages/react/src/atoms/field-schemas.ts:116](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/react/src/atoms/field-schemas.ts#L116)
+Defined in: [packages/react/src/atoms/field-schemas.ts:116](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/react/src/atoms/field-schemas.ts#L116)
 
 Zod schema for a Sitecore File field.
 Mirrors the Sitecore File component (`File.tsx` in `@sitecore-content-sdk/react`).

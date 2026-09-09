@@ -8,7 +8,7 @@
 
 > **linkFieldSchema**(`extra?`): `ZodObject`\<\{ `value`: `ZodObject`\<\{ `anchor`: `ZodOptional`\<`ZodString`\>; `class`: `ZodOptional`\<`ZodString`\>; `className`: `ZodOptional`\<`ZodString`\>; `href`: `ZodOptional`\<`ZodString`\>; `linktype`: `ZodOptional`\<`ZodString`\>; `querystring`: `ZodOptional`\<`ZodString`\>; `target`: `ZodOptional`\<`ZodString`\>; `text`: `ZodOptional`\<`ZodString`\>; `title`: `ZodOptional`\<`ZodString`\>; \}, `$loose`\>; \}, `$strip`\>
 
-Defined in: [packages/react/src/atoms/field-schemas.ts:62](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/react/src/atoms/field-schemas.ts#L62)
+Defined in: [packages/react/src/atoms/field-schemas.ts:62](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/react/src/atoms/field-schemas.ts#L62)
 
 Zod schema for a Sitecore Link field.
 Mirrors the Sitecore Link component (`Link.tsx` in `@sitecore-content-sdk/react`).

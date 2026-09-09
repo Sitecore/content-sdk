@@ -8,7 +8,7 @@
 
 > **richTextFieldSchema**(`extra?`): `ZodObject`\<\{ `value`: `ZodOptional`\<`ZodString`\>; \}, `$strip`\>
 
-Defined in: [packages/react/src/atoms/field-schemas.ts:28](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/react/src/atoms/field-schemas.ts#L28)
+Defined in: [packages/react/src/atoms/field-schemas.ts:28](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/react/src/atoms/field-schemas.ts#L28)
 
 Zod schema for a Sitecore Rich Text field.
 Mirrors the Sitecore Rich Text component (`RichText.tsx` in `@sitecore-content-sdk/react`).

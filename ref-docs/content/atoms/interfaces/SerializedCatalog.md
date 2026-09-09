@@ -6,7 +6,7 @@
 
 # Interface: SerializedCatalog
 
-Defined in: [content/src/atoms/types.ts:43](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/content/src/atoms/types.ts#L43)
+Defined in: [content/src/atoms/types.ts:43](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/types.ts#L43)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Full catalog payload sent to Design Studio.
 
 > **actions**: [`AtomCatalogActionEntry`](AtomCatalogActionEntry.md)[]
 
-Defined in: [content/src/atoms/types.ts:49](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/content/src/atoms/types.ts#L49)
+Defined in: [content/src/atoms/types.ts:49](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/types.ts#L49)
 
 Serialized action entries.
 
@@ -28,7 +28,7 @@ Serialized action entries.
 
 > **components**: [`AtomCatalogComponentEntry`](AtomCatalogComponentEntry.md)[]
 
-Defined in: [content/src/atoms/types.ts:47](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/content/src/atoms/types.ts#L47)
+Defined in: [content/src/atoms/types.ts:47](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/types.ts#L47)
 
 Serialized component entries.
 
@@ -38,6 +38,6 @@ Serialized component entries.
 
 > `optional` **version?**: `string`
 
-Defined in: [content/src/atoms/types.ts:45](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/content/src/atoms/types.ts#L45)
+Defined in: [content/src/atoms/types.ts:45](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/types.ts#L45)
 
 Catalog root version from `defineAtomsCatalog`. Absent when not declared.

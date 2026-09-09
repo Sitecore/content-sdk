@@ -8,7 +8,7 @@
 
 > **extractDocumentClasses**(`doc`): `string`[]
 
-Defined in: [packages/react/src/atoms/extract-document-classes.ts:14](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/react/src/atoms/extract-document-classes.ts#L14)
+Defined in: [packages/react/src/atoms/extract-document-classes.ts:14](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/react/src/atoms/extract-document-classes.ts#L14)
 
 Extracts all unique CSS class tokens from a Document's element props.
 

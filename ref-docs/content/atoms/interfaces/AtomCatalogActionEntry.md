@@ -6,7 +6,7 @@
 
 # Interface: AtomCatalogActionEntry
 
-Defined in: [content/src/atoms/types.ts:30](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/content/src/atoms/types.ts#L30)
+Defined in: [content/src/atoms/types.ts:30](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/types.ts#L30)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Serialized action info, sent to Design Studio.
 
 > **description**: `string` \| `undefined`
 
-Defined in: [content/src/atoms/types.ts:36](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/content/src/atoms/types.ts#L36)
+Defined in: [content/src/atoms/types.ts:36](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/types.ts#L36)
 
 Human-readable description.
 
@@ -28,7 +28,7 @@ Human-readable description.
 
 > **name**: `string`
 
-Defined in: [content/src/atoms/types.ts:32](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/content/src/atoms/types.ts#L32)
+Defined in: [content/src/atoms/types.ts:32](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/types.ts#L32)
 
 Action name (key in the catalog).
 
@@ -38,6 +38,6 @@ Action name (key in the catalog).
 
 > `optional` **paramsSchema?**: `object`
 
-Defined in: [content/src/atoms/types.ts:34](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/content/src/atoms/types.ts#L34)
+Defined in: [content/src/atoms/types.ts:34](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/types.ts#L34)
 
 JSON Schema representation of the action params.

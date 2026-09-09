@@ -8,7 +8,7 @@
 
 > `const` **useBoundProp**: \<`T`\>(`propValue`, `bindingPath`) => \[`T` \| `undefined`, (`value`) => `void`\] = `useBoundPropInternal`
 
-Defined in: [packages/react/src/atoms/re-exports.ts:22](https://github.com/Sitecore/content-sdk/blob/ca7272bc1a009ef1f2cccf0a06e430177d67b266/packages/react/src/atoms/re-exports.ts#L22)
+Defined in: [packages/react/src/atoms/re-exports.ts:22](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/react/src/atoms/re-exports.ts#L22)
 
 Hook for two-way bound props. Returns `[value, setValue]` where:
 
