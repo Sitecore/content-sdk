@@ -52,6 +52,9 @@ const loaderCache = createLoaderCache({
 
 app.use(express.json());
 
+/** Health check endpoint. */
+app.get('/healthz', (_req, res) => res.sendStatus(200));
+
 /** Production webhook: POST /api/revalidate (Sitecore Edge OSR). */
 app.use(
   createSitecoreRevalidateMiddleware({

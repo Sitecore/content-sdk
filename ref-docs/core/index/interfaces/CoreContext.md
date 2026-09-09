@@ -6,7 +6,7 @@
 
 # Interface: CoreContext
 
-Defined in: [packages/core/src/initialization/types.ts:29](https://github.com/Sitecore/content-sdk/blob/afdfd1979b6ab6fba690d64bcf17ea29b4d851bb/packages/core/src/initialization/types.ts#L29)
+Defined in: [packages/core/src/initialization/types.ts:29](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/core/src/initialization/types.ts#L29)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Internal config of the SDK initialization
 
 > **config**: `object`
 
-Defined in: [packages/core/src/initialization/types.ts:33](https://github.com/Sitecore/content-sdk/blob/afdfd1979b6ab6fba690d64bcf17ea29b4d851bb/packages/core/src/initialization/types.ts#L33)
+Defined in: [packages/core/src/initialization/types.ts:33](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/core/src/initialization/types.ts#L33)
 
 The SDK initialization config
 
@@ -40,7 +40,7 @@ The SDK initialization config
 
 > **plugins**: `Map`\<`string`, [`Plugin`](Plugin.md)\<`unknown`, `unknown`\>\>
 
-Defined in: [packages/core/src/initialization/types.ts:37](https://github.com/Sitecore/content-sdk/blob/afdfd1979b6ab6fba690d64bcf17ea29b4d851bb/packages/core/src/initialization/types.ts#L37)
+Defined in: [packages/core/src/initialization/types.ts:37](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/core/src/initialization/types.ts#L37)
 
 Map of enabled plugins by name
 
@@ -50,6 +50,6 @@ Map of enabled plugins by name
 
 > **readyPromise**: `Promise`\<`void`\> \| `null`
 
-Defined in: [packages/core/src/initialization/types.ts:41](https://github.com/Sitecore/content-sdk/blob/afdfd1979b6ab6fba690d64bcf17ea29b4d851bb/packages/core/src/initialization/types.ts#L41)
+Defined in: [packages/core/src/initialization/types.ts:41](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/core/src/initialization/types.ts#L41)
 
 Promise that resolves when initialization is complete

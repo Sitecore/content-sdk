@@ -6,7 +6,7 @@
 
 # Class: NotFoundNavigationError
 
-Defined in: [packages/angular/src/loaders/models.ts:172](https://github.com/Sitecore/content-sdk/blob/afdfd1979b6ab6fba690d64bcf17ea29b4d851bb/packages/angular/src/loaders/models.ts#L172)
+Defined in: [packages/angular/src/loaders/models.ts:172](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/angular/src/loaders/models.ts#L172)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [packages/angular/src/loaders/models.ts:172](https://github.com/Site
 
 > **new NotFoundNavigationError**(`message?`): `NotFoundNavigationError`
 
-Defined in: [packages/angular/src/loaders/models.ts:173](https://github.com/Sitecore/content-sdk/blob/afdfd1979b6ab6fba690d64bcf17ea29b4d851bb/packages/angular/src/loaders/models.ts#L173)
+Defined in: [packages/angular/src/loaders/models.ts:173](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/angular/src/loaders/models.ts#L173)
 
 #### Parameters
 
