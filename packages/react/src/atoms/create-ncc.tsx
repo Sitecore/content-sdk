@@ -1,5 +1,5 @@
 'use client';
-import React, { type FC, useEffect, useState } from 'react';
+import React, { type FC, useEffect, useMemo, useState } from 'react';
 import {
   Renderer,
   StateProvider,
@@ -41,15 +41,21 @@ export function createNCC(
   catalog: AtomsCatalog
 ): FC<NCCProps> {
   const { registry, handlers } = registryResult;
-  const chromeDoc = withElementChromeKeys(doc);
-  const chromeRegistry = withEditingChromeRegistry(registry, catalog);
 
   const initialState: StateModel = {
     ...(doc.state ?? {}),
   };
 
   const Generated: FC<NCCProps> = ({ fields, params }) => {
-    const { atomsConfig } = useSitecore();
+    const { atomsConfig, page } = useSitecore();
+    // Chrome (`<code type="text/sitecore">`) is only meaningful to Design Studio/Pages, so it
+    // must not leak into normal (non-editing) rendered output.
+    const isEditing = page?.mode?.isEditing ?? false;
+    const spec = useMemo(() => (isEditing ? withElementChromeKeys(doc) : doc), [isEditing]);
+    const renderRegistry = useMemo(
+      () => (isEditing ? withEditingChromeRegistry(registry, catalog) : registry),
+      [isEditing]
+    );
     const [store] = useState(() =>
       createStateStore({
         ...initialState,
@@ -75,12 +81,15 @@ export function createNCC(
     );
 
     return (
-      <div className={`component${params?.styles ? ` ${params.styles}` : ''}`} id={params?.RenderingIdentifier || ''}>
+      <div
+        className={`component${params?.styles ? ` ${params.styles}` : ''}`}
+        id={params?.RenderingIdentifier || ''}
+      >
         <StateProvider store={store}>
           <VisibilityProvider>
             <ActionProvider handlers={resolvedHandlers} navigate={atomsConfig?.navigate}>
               <ValidationProvider>
-                <Renderer spec={chromeDoc} registry={chromeRegistry} />
+                <Renderer spec={spec} registry={renderRegistry} />
               </ValidationProvider>
             </ActionProvider>
           </VisibilityProvider>

@@ -129,13 +129,49 @@ describe('create-ncc', () => {
         <SitecoreProvider
           api={{} as any}
           componentMap={new Map()}
-          page={{ locale: 'en', layout: { sitecore: { context: {}, route: null } } } as any}
+          page={
+            {
+              locale: 'en',
+              mode: { isEditing: true },
+              layout: { sitecore: { context: {}, route: null } },
+            } as any
+          }
           loadImportMap={async () => ({} as any)}
           atomsConfig={{ catalog, registry }}
         >
           {ui}
         </SitecoreProvider>
       );
+
+    it('does not render chrome when the page is not in editing mode', () => {
+      const doc: Document = {
+        name: 'chrome-doc',
+        root: 'card-el',
+        elements: {
+          'card-el': { type: 'Card', props: { title: 'Hello' } },
+        },
+      };
+      const View = createNCC(doc, registry, catalog);
+      const { container } = render(
+        <SitecoreProvider
+          api={{} as any}
+          componentMap={new Map()}
+          page={
+            {
+              locale: 'en',
+              mode: { isEditing: false },
+              layout: { sitecore: { context: {}, route: null } },
+            } as any
+          }
+          loadImportMap={async () => ({} as any)}
+          atomsConfig={{ catalog, registry }}
+        >
+          <View />
+        </SitecoreProvider>
+      );
+
+      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"]`)).to.be.null;
+    });
 
     it('wraps every rendered atom with chrometype="atom" chrome using the element key', () => {
       const doc: Document = {
@@ -149,8 +185,12 @@ describe('create-ncc', () => {
       const View = createNCC(doc, registry, catalog);
       const { container } = renderInProvider(<View />);
 
-      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="list-el"]`)).to.not.be.null;
-      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="card-el"]`)).to.not.be.null;
+      expect(
+        container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="list-el"]`)
+      ).to.not.be.null;
+      expect(
+        container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="card-el"]`)
+      ).to.not.be.null;
     });
 
     it('suffixes repeated atoms with the repeat index and keeps the repeat owner unsuffixed', () => {
@@ -171,9 +211,15 @@ describe('create-ncc', () => {
       const View = createNCC(doc, registry, catalog);
       const { container } = renderInProvider(<View />);
 
-      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="list-el"]`)).to.not.be.null;
-      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="card-el_0"]`)).to.not.be.null;
-      expect(container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="card-el_1"]`)).to.not.be.null;
+      expect(
+        container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="list-el"]`)
+      ).to.not.be.null;
+      expect(
+        container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="card-el_0"]`)
+      ).to.not.be.null;
+      expect(
+        container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="card-el_1"]`)
+      ).to.not.be.null;
     });
   });
 });
