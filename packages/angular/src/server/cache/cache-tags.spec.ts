@@ -34,6 +34,20 @@ describe('buildSitecoreItemCacheTag', () => {
       `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:abc:en:v3`
     );
   });
+
+  it('matches Edge webhook identifiers and mixed-case locales to the same tag', () => {
+    expect(
+      buildSitecoreItemCacheTag({
+        itemId: '{6CA225DB-4DE8-4048-BCC1-61B13027B63A}',
+        locale: 'ja-jp',
+      })
+    ).toBe(
+      buildSitecoreItemCacheTag({
+        itemId: '6CA225DB4DE84048BCC161B13027B63A',
+        locale: 'ja-JP',
+      })
+    );
+  });
 });
 
 describe('buildSitecoreDictionaryCacheTag', () => {
