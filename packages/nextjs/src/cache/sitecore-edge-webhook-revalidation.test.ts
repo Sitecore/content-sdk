@@ -40,7 +40,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
         },
         { defaultLocale: 'en' }
       );
-      expect(tags).to.deep.equal(['sc:item:71b0ba0716214254aee4429b1a970c8b:en']);
+      expect(tags).to.deep.equal(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en']);
     });
 
     it('should use defaultLocale when entity_culture is missing', () => {
@@ -50,7 +50,41 @@ describe('sitecore-edge-webhook-revalidation', () => {
         },
         { defaultLocale: 'da' }
       );
-      expect(tags).to.deep.equal(['sc:item:71b0ba0716214254aee4429b1a970c8b:da']);
+      expect(tags).to.deep.equal(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:da']);
+    });
+
+    it('should lowercase entity_culture and hyphenate Edge identifiers', () => {
+      const tags = collectSitecoreTagsFromEdgeRevalidateRequestBody(
+        {
+          invocation_id: 'a56e4689-63be-4eb3-bbd4-a709c65819dc',
+          updates: [
+            {
+              identifier: 'A52F951407774085B2A2D9E9D76EBDC9',
+              entity_definition: 'Item',
+              operation: 'Update',
+              entity_culture: 'ja-JP',
+            },
+            {
+              identifier: '6CA225DB4DE84048BCC161B13027B63A-layout',
+              entity_definition: 'LayoutData',
+              operation: 'Update',
+              entity_culture: 'ja-JP',
+            },
+            {
+              identifier: '6CA225DB4DE84048BCC161B13027B63A',
+              entity_definition: 'Item',
+              operation: 'Update',
+              entity_culture: 'ja-JP',
+            },
+          ],
+          continues: false,
+        },
+        { defaultLocale: 'en' }
+      );
+      expect(tags).to.deep.equal([
+        'sc:item:a52f9514-0777-4085-b2a2-d9e9d76ebdc9:ja-jp',
+        'sc:item:6ca225db-4de8-4048-bcc1-61b13027b63a:ja-jp',
+      ]);
     });
 
     it('should pass through full sc: tags in tags array', () => {
@@ -70,7 +104,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
         },
         { defaultLocale: 'en' }
       );
-      expect(tags).to.deep.equal(['sc:item:71b0ba0716214254aee4429b1a970c8b:en']);
+      expect(tags).to.deep.equal(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en']);
     });
 
     it('should dedupe across updates and tags', () => {
@@ -80,7 +114,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
             { identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' },
             { identifier: '71B0BA0716214254AEE4429B1A970C8B-media', entity_culture: 'en' },
           ],
-          tags: ['sc:item:71b0ba0716214254aee4429b1a970c8b:en'],
+          tags: ['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en'],
         },
         { defaultLocale: 'en' }
       );

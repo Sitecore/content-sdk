@@ -22,10 +22,20 @@ describe('sitecore-cache-tags', () => {
   });
 
   describe('normalizeSitecoreItemIdForCacheTag', () => {
-    it('strips braces and lowercases', () => {
+    it('strips braces and lowercases hyphenated GUIDs', () => {
       expect(normalizeSitecoreItemIdForCacheTag('{52961EEA-BAFD-5287-A532-A72E36BD8A36}')).to.equal(
         '52961eea-bafd-5287-a532-a72e36bd8a36'
       );
+    });
+
+    it('hyphenates unhyphenated Experience Edge identifiers', () => {
+      expect(normalizeSitecoreItemIdForCacheTag('6CA225DB4DE84048BCC161B13027B63A')).to.equal(
+        '6ca225db-4de8-4048-bcc1-61b13027b63a'
+      );
+    });
+
+    it('leaves non-GUID identifiers after brace strip and lowercase', () => {
+      expect(normalizeSitecoreItemIdForCacheTag('{ABC-123}')).to.equal('abc-123');
     });
   });
 
@@ -60,6 +70,20 @@ describe('sitecore-cache-tags', () => {
     });
   });
 
+  it('matches Edge webhook identifiers and mixed-case locales to the same tag', () => {
+    expect(
+      buildSitecoreItemCacheTag({
+        itemId: '{6CA225DB-4DE8-4048-BCC1-61B13027B63A}',
+        locale: 'ja-jp',
+      })
+    ).to.equal(
+      buildSitecoreItemCacheTag({
+        itemId: '6CA225DB4DE84048BCC161B13027B63A',
+        locale: 'ja-JP',
+      })
+    );
+  });
+  
   describe('buildSitecoreDictionaryCacheTag', () => {
     it('scopes by site and locale', () => {
       expect(buildSitecoreDictionaryCacheTag({ site: 'Website', locale: 'da-DK' })).to.equal(
@@ -133,14 +157,14 @@ describe('sitecore-cache-tags', () => {
       );
     });
 
-    it('falls back to fallbackLocale', () => {
+    it('falls back to fallbackLocale and hyphenates unhyphenated item ids', () => {
       expect(
         buildSitecoreItemCacheTagFromRouteData(
           { itemId: 'a1111111111111111111111111111111', placeholders: {} } as RouteData,
           'en-US'
         )
       ).to.equal(
-        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:a1111111111111111111111111111111:en-us`
+        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:a1111111-1111-1111-1111-111111111111:en-us`
       );
     });
   });
