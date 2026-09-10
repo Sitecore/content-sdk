@@ -8,7 +8,7 @@
 
 > **resolveExperimentalFeatureStatuses**(`features`): [`ExperimentalFeatureStatus`](../type-aliases/ExperimentalFeatureStatus.md)[]
 
-Defined in: [content/src/experimental-features/utils.ts:46](https://github.com/Sitecore/content-sdk/blob/adcce7f8e82dea229d7f6dfc8f2ee144026b91f0/packages/content/src/experimental-features/utils.ts#L46)
+Defined in: [content/src/experimental-features/utils.ts:46](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/experimental-features/utils.ts#L46)
 
 Resolves experimental feature metadata with current enabled status from env vars.
 The global switch enables all experimental features. When it is off, feature
