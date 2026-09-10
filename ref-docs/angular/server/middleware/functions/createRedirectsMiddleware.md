@@ -8,7 +8,7 @@
 
 > **createRedirectsMiddleware**(`options`): [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/redirects-middleware.ts:139](https://github.com/Sitecore/content-sdk/blob/a8a17de670f6378fa21e08a9c76841c041afb7fd/packages/angular/src/server/middleware/redirects-middleware.ts#L139)
+Defined in: [packages/angular/src/server/middleware/redirects-middleware.ts:139](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/angular/src/server/middleware/redirects-middleware.ts#L139)
 
 Middleware to support Sitecore redirects on the Angular Express SSR server.
 

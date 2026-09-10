@@ -8,7 +8,7 @@
 
 > **getCacheAndClean**\<`T`\>(`key`): `T` \| `undefined`
 
-Defined in: [packages/core/src/tools/globalCache.ts:40](https://github.com/Sitecore/content-sdk/blob/a8a17de670f6378fa21e08a9c76841c041afb7fd/packages/core/src/tools/globalCache.ts#L40)
+Defined in: [packages/core/src/tools/globalCache.ts:40](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/core/src/tools/globalCache.ts#L40)
 
 **`Internal`**
 

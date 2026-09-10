@@ -8,7 +8,7 @@
 
 > **SiteInfoServiceConfig** = `CacheOptions` & `object`
 
-Defined in: [content/src/site/siteinfo-service.ts:22](https://github.com/Sitecore/content-sdk/blob/a8a17de670f6378fa21e08a9c76841c041afb7fd/packages/content/src/site/siteinfo-service.ts#L22)
+Defined in: [content/src/site/siteinfo-service.ts:22](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/site/siteinfo-service.ts#L22)
 
 Configuration for
 
