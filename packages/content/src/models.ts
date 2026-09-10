@@ -13,9 +13,9 @@ export type HTMLLink = {
 export type HTMLScript = {
   [key: string]: unknown;
 } & Pick<HTMLScriptElement, 'type'> & {
-  /** Serialized script body, safe to assign directly (e.g. via `dangerouslySetInnerHTML`). */
-  innerHTML: string;
-};
+    /** Serialized script body, safe to assign directly (e.g. via `dangerouslySetInnerHTML`). */
+    innerHTML: string;
+  };
 
 /**
  * Object model of a sitemap's site page item.

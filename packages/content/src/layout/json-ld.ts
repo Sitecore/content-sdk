@@ -59,4 +59,3 @@ export const getJsonLdSchemas = (schemas?: Record<string, unknown>[] | null): HT
     innerHTML: escapeForScriptTag(JSON.stringify(validSchemas)),
   };
 };
-

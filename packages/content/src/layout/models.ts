@@ -133,7 +133,6 @@ export type GenericFieldValue =
   | { [key: string]: unknown }
   | Array<{ [key: string]: unknown }>;
 
-
 /**
  * Field interface
  * @public

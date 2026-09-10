@@ -16,15 +16,20 @@ describe('getJsonLdSchemas', () => {
   });
 
   it('returns null when schemas is not an array', () => {
-    expect(getJsonLdSchemas({ '@type': 'Article' } as unknown as Record<string, unknown>[])).to.be.null;
+    expect(getJsonLdSchemas({ '@type': 'Article' } as unknown as Record<string, unknown>[])).to.be
+      .null;
   });
 
   it('filters out null/undefined/non-object entries, keeping only valid schema objects', () => {
     const validSchema = { '@type': 'Article', headline: 'Page1-title' };
-    const schemas = [null, undefined, validSchema, 'invalid', 42, ['nested', 'array']] as unknown as Record<
-      string,
-      unknown
-    >[];
+    const schemas = [
+      null,
+      undefined,
+      validSchema,
+      'invalid',
+      42,
+      ['nested', 'array'],
+    ] as unknown as Record<string, unknown>[];
 
     const script = getJsonLdSchemas(schemas);
 
@@ -77,7 +82,9 @@ describe('getJsonLdSchemas', () => {
   });
 
   it('escapes "/" (e.g. in URLs) for defense-in-depth, without breaking JSON parsing', () => {
-    const schemas = [{ '@context': 'https://schema.org', '@type': 'Article', url: 'https://a.b/c/d' }];
+    const schemas = [
+      { '@context': 'https://schema.org', '@type': 'Article', url: 'https://a.b/c/d' },
+    ];
 
     const script = getJsonLdSchemas(schemas);
 
