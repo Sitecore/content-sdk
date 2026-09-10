@@ -40,7 +40,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
         },
         { defaultLocale: 'en' }
       );
-      expect(tags).to.deep.equal(['sc:item:71b0ba0716214254aee4429b1a970c8b:en:latest']);
+      expect(tags).to.deep.equal(['sc:item:71b0ba0716214254aee4429b1a970c8b:en']);
     });
 
     it('should use defaultLocale when entity_culture is missing', () => {
@@ -50,7 +50,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
         },
         { defaultLocale: 'da' }
       );
-      expect(tags).to.deep.equal(['sc:item:71b0ba0716214254aee4429b1a970c8b:da:latest']);
+      expect(tags).to.deep.equal(['sc:item:71b0ba0716214254aee4429b1a970c8b:da']);
     });
 
     it('should pass through full sc: tags in tags array', () => {
@@ -70,7 +70,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
         },
         { defaultLocale: 'en' }
       );
-      expect(tags).to.deep.equal(['sc:item:71b0ba0716214254aee4429b1a970c8b:en:latest']);
+      expect(tags).to.deep.equal(['sc:item:71b0ba0716214254aee4429b1a970c8b:en']);
     });
 
     it('should dedupe across updates and tags', () => {
@@ -80,7 +80,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
             { identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' },
             { identifier: '71B0BA0716214254AEE4429B1A970C8B-media', entity_culture: 'en' },
           ],
-          tags: ['sc:item:71b0ba0716214254aee4429b1a970c8b:en:latest'],
+          tags: ['sc:item:71b0ba0716214254aee4429b1a970c8b:en'],
         },
         { defaultLocale: 'en' }
       );

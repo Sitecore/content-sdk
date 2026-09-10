@@ -23,24 +23,18 @@ export type BuildSitecoreItemCacheTagParams = {
   itemId: string;
   /** Locale/culture for the item tag. */
   locale: string;
-  /** Optional published version; omitted values produce a `latest` suffix. */
-  version?: number;
 };
 
 /**
- * Builds an item-scoped revalidation tag: `sc:item:<id>:<locale>:<version>`.
- * @param {BuildSitecoreItemCacheTagParams} params - Item id, locale, and optional version.
+ * Builds an item-scoped revalidation tag: `sc:item:<id>:<locale>`.
+ * @param {BuildSitecoreItemCacheTagParams} params - Item id and locale.
  * @returns {string} Sitecore item cache tag.
  * @internal
  */
 export function buildSitecoreItemCacheTag(params: BuildSitecoreItemCacheTagParams): string {
   const id = normalizeSitecoreItemIdForCacheKey(params.itemId);
   const locale = sanitizeSitecoreCacheSegment(params.locale);
-  const ver =
-    params.version !== undefined && Number.isFinite(params.version)
-      ? `v${Math.trunc(params.version)}`
-      : 'latest';
-  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}:${ver}`;
+  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}`;
 }
 
 /**
@@ -108,11 +102,7 @@ export function buildSitecoreItemCacheTagFromRouteData(
     ? sanitizeSitecoreCacheSegment(route.itemLanguage)
     : sanitizeSitecoreCacheSegment(fallbackLocale);
   const id = normalizeSitecoreItemIdForCacheKey(route.itemId);
-  const ver =
-    route.itemVersion !== undefined && Number.isFinite(route.itemVersion)
-      ? `v${Math.trunc(route.itemVersion)}`
-      : 'latest';
-  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}:${ver}`;
+  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}`;
 }
 
 /**

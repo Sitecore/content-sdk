@@ -67,11 +67,11 @@ export type SitecoreRevalidateRouteHandlerOptions = {
  * The body is expected to be a JSON object that resolves to at least one Sitecore cache tag:
  *
  * - **`updates[]`** — Sitecore publish-event rows. Each row's `identifier` (with `-media` / `-layout`
- *   suffix stripped) maps to an `sc:item:<id>:<locale>:latest` tag, using `entity_culture` for locale
+ *   suffix stripped) maps to an `sc:item:<id>:<locale>` tag, using `entity_culture` for locale
  *   (falling back to the handler's `defaultLocale`).
  * - **`tags[]`** — pass-through and convenience array:
  *   - Strings already starting with `sc:` are used verbatim (e.g. `sc:route:...`, `sc:item:...`, `sc:dict:...`).
- *   - Bare values are treated as Sitecore item ids and mapped to `sc:item:<id>:<defaultLocale>:latest`.
+ *   - Bare values are treated as Sitecore item ids and mapped to `sc:item:<id>:<defaultLocale>`.
  *
  * When **`sites`** is configured, the handler also appends one `sc:dict:<site>:<locale>` tag per
  * site so dictionary updates flow through the same call.

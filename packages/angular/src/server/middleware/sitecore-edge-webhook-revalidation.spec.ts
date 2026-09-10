@@ -30,7 +30,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
         },
         { defaultLocale: 'en' }
       );
-      expect(tags).toEqual(['sc:item:71b0ba0716214254aee4429b1a970c8b:en:latest']);
+      expect(tags).toEqual(['sc:item:71b0ba0716214254aee4429b1a970c8b:en']);
     });
 
     it('passes through full sc: tags in tags array', () => {
@@ -46,7 +46,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
         { tags: ['71B0BA0716214254AEE4429B1A970C8B'] },
         { defaultLocale: 'en' }
       );
-      expect(tags).toEqual(['sc:item:71b0ba0716214254aee4429b1a970c8b:en:latest']);
+      expect(tags).toEqual(['sc:item:71b0ba0716214254aee4429b1a970c8b:en']);
     });
   });
 });

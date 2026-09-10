@@ -63,25 +63,17 @@ export function buildSitecoreRouteCacheTag(params: BuildSitecoreRouteCacheTagPar
 export type BuildSitecoreItemCacheTagParams = {
   itemId: string;
   locale: string;
-  /**
-   * Published version number, or omit / `undefined` for "latest".
-   */
-  version?: number;
 };
 
 /**
  * Tag for a layout/route item (and anything else keyed the same way). Use for item-level invalidation.
- * @param {BuildSitecoreItemCacheTagParams} params - Item id, locale, and optional published version.
+ * @param {BuildSitecoreItemCacheTagParams} params - Item id and locale.
  * @internal
  */
 export function buildSitecoreItemCacheTag(params: BuildSitecoreItemCacheTagParams): string {
   const id = normalizeSitecoreItemIdForCacheTag(params.itemId);
   const locale = sanitizeSitecoreCacheTagSegment(params.locale);
-  const ver =
-    params.version !== undefined && Number.isFinite(params.version)
-      ? `v${Math.trunc(params.version)}`
-      : 'latest';
-  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}:${ver}`;
+  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}`;
 }
 
 /**
@@ -145,7 +137,7 @@ export function buildSitecoreDictionaryCacheTagsFromSites(
  * Prefers `itemLanguage` from Sitecore when set; otherwise uses `fallbackLocale`.
  * Accepts the same `RouteData` shape returned by the layout service (e.g. `page.layout.sitecore.route`,
  * which is `RouteData | null`) or `undefined` when the page did not resolve.
- * @param {RouteData | null | undefined} route - Route node from layout (item id, language, version).
+ * @param {RouteData | null | undefined} route - Route node from layout (item id and language).
  * @param {string} fallbackLocale - Locale used when `route.itemLanguage` is not set.
  * @returns `null` when `route` is missing or `route.itemId` is not set.
  * @internal
@@ -161,11 +153,7 @@ export function buildSitecoreItemCacheTagFromRouteData(
     ? sanitizeSitecoreCacheTagSegment(route.itemLanguage)
     : sanitizeSitecoreCacheTagSegment(fallbackLocale);
   const id = normalizeSitecoreItemIdForCacheTag(route.itemId);
-  const ver =
-    route.itemVersion !== undefined && Number.isFinite(route.itemVersion)
-      ? `v${Math.trunc(route.itemVersion)}`
-      : 'latest';
-  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}:${ver}`;
+  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}`;
 }
 
 /**
