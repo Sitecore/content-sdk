@@ -342,7 +342,7 @@ export const JsonLdSchema: (input: JsonLdSchemaProps) => JSX_2.Element | null;
 
 // @public
 export interface JsonLdSchemaProps {
-    context?: LayoutServiceContext | null;
+    page?: Page | null;
 }
 
 export { LayoutService }

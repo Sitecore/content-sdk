@@ -34,7 +34,7 @@ export {
   ComponentFields,
   ComponentParams,
   getContentStylesheetLink,
-  getJsonLdSchema,
+  getJsonLdSchemas,
   EditMode,
   RenderingType,
 } from '@sitecore-content-sdk/content/layout';

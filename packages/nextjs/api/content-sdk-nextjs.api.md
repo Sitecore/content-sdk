@@ -81,7 +81,7 @@ import { getDesignLibraryStylesheetLinks } from '@sitecore-content-sdk/react';
 import { getEdgeProxyContentUrl } from '@sitecore-content-sdk/content/client';
 import { getFieldValue } from '@sitecore-content-sdk/content/layout';
 import { getGroomedVariantIds } from '@sitecore-content-sdk/content/personalize';
-import { getJsonLdSchema } from '@sitecore-content-sdk/content/layout';
+import { getJsonLdSchemas } from '@sitecore-content-sdk/content/layout';
 import { getPersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
 import { getPersonalizedRewriteData } from '@sitecore-content-sdk/content/personalize';
 import { GetServerSidePropsContext } from 'next';
@@ -645,7 +645,7 @@ export const getHeadersForPropagation: (headers: IncomingHttpHeaders | Headers) 
     [key: string]: string;
 };
 
-export { getJsonLdSchema }
+export { getJsonLdSchemas }
 
 // @public
 export function getPageMetadata(route?: RouteData<PageMetadataRouteFields> | null, defaultTitle?: string): Metadata;

@@ -696,7 +696,7 @@ export function getHostnameFromHostHeader(host: string): string;
 export function getImportMapInfo(importMap: ImportEntry[]): ImportEntryInfo[];
 
 // @public
-export const getJsonLdSchema: (context?: LayoutServiceContext | null) => HTMLScript | null;
+export const getJsonLdSchemas: (schemas?: Record<string, unknown>[] | null) => HTMLScript | null;
 
 // @public
 export function getLocaleRewrite(pathname: string, locale: string): string;

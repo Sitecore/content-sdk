@@ -1,7 +1,12 @@
 import { JSX } from 'react';
-import { AppPlaceholder, DesignLibraryApp, Field, PageMetadataFields, Page, JsonLdSchema } from '@sitecore-content-sdk/nextjs';
-import Scripts from 'src/Scripts';
-import SitecoreStyles from 'components/content-sdk/SitecoreStyles';
+import {
+  AppPlaceholder,
+  DesignLibraryApp,
+  Field,
+  PageMetadataFields,
+  Page,
+} from '@sitecore-content-sdk/nextjs';
+import SitecoreHead from 'src/SitecoreHead';
 import componentMap from '.sitecore/component-map';
 
 interface LayoutProps {
@@ -15,13 +20,11 @@ export interface RouteFields extends PageMetadataFields {
 
 const Layout = ({ page }: LayoutProps): JSX.Element => {
   const { layout, mode } = page;
-  const { route, context } = layout.sitecore;
+  const { route } = layout.sitecore;
   const mainClassPageEditing = mode.isEditing ? 'editing-mode' : 'prod-mode';
   return (
     <>
-      <Scripts />
-      <SitecoreStyles layoutData={layout} />
-      <JsonLdSchema context={context} />
+      <SitecoreHead page={page} />
       {/* root placeholder for the app, which we add components to using route data */}
       <div className={mainClassPageEditing}>
         {mode.isDesignLibrary ? (
