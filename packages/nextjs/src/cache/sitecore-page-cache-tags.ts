@@ -39,8 +39,8 @@ export type CollectSitecorePageCacheTagsParams = {
   path?: string;
   /**
    * Route node from a Sitecore layout response (e.g. `page.layout.sitecore.route`, which is
-   * `RouteData | null`). Optional because the page may not resolve; only `itemId`, `itemLanguage`,
-   * and `itemVersion` are read when present.
+   * `RouteData | null`). Optional because the page may not resolve; only `itemId` and `itemLanguage`
+   * are read when present.
    */
   route?: RouteData | null;
 };

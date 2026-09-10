@@ -8,7 +8,7 @@
 
 > **ExperimentalFeatureData** = `object`
 
-Defined in: [content/src/experimental-features/types.ts:5](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/experimental-features/types.ts#L5)
+Defined in: [content/src/experimental-features/types.ts:5](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/experimental-features/types.ts#L5)
 
 Metadata describing an experimental Content SDK feature.
 
@@ -18,7 +18,7 @@ Metadata describing an experimental Content SDK feature.
 
 > **description**: `string`
 
-Defined in: [content/src/experimental-features/types.ts:21](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/experimental-features/types.ts#L21)
+Defined in: [content/src/experimental-features/types.ts:21](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/experimental-features/types.ts#L21)
 
 Short description of the experimental feature.
 
@@ -28,7 +28,7 @@ Short description of the experimental feature.
 
 > **displayName**: `string`
 
-Defined in: [content/src/experimental-features/types.ts:13](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/experimental-features/types.ts#L13)
+Defined in: [content/src/experimental-features/types.ts:13](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/experimental-features/types.ts#L13)
 
 User-friendly feature name.
 
@@ -38,7 +38,7 @@ User-friendly feature name.
 
 > **envVarName**: `string`
 
-Defined in: [content/src/experimental-features/types.ts:17](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/experimental-features/types.ts#L17)
+Defined in: [content/src/experimental-features/types.ts:17](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/experimental-features/types.ts#L17)
 
 Environment variable used to opt into the feature (e.g. `CSDK_EXPERIMENTAL_FEATURE_NAME`).
 
@@ -48,6 +48,6 @@ Environment variable used to opt into the feature (e.g. `CSDK_EXPERIMENTAL_FEATU
 
 > **idName**: `string`
 
-Defined in: [content/src/experimental-features/types.ts:9](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/experimental-features/types.ts#L9)
+Defined in: [content/src/experimental-features/types.ts:9](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/experimental-features/types.ts#L9)
 
 Stable alphanumeric feature id.

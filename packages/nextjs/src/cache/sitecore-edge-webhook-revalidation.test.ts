@@ -40,7 +40,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
         },
         { defaultLocale: 'en' }
       );
-      expect(tags).to.deep.equal(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en:latest']);
+      expect(tags).to.deep.equal(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en']);
     });
 
     it('should use defaultLocale when entity_culture is missing', () => {
@@ -50,7 +50,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
         },
         { defaultLocale: 'da' }
       );
-      expect(tags).to.deep.equal(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:da:latest']);
+      expect(tags).to.deep.equal(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:da']);
     });
 
     it('should lowercase entity_culture and hyphenate Edge identifiers', () => {
@@ -82,8 +82,8 @@ describe('sitecore-edge-webhook-revalidation', () => {
         { defaultLocale: 'en' }
       );
       expect(tags).to.deep.equal([
-        'sc:item:a52f9514-0777-4085-b2a2-d9e9d76ebdc9:ja-jp:latest',
-        'sc:item:6ca225db-4de8-4048-bcc1-61b13027b63a:ja-jp:latest',
+        'sc:item:a52f9514-0777-4085-b2a2-d9e9d76ebdc9:ja-jp',
+        'sc:item:6ca225db-4de8-4048-bcc1-61b13027b63a:ja-jp',
       ]);
     });
 
@@ -104,7 +104,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
         },
         { defaultLocale: 'en' }
       );
-      expect(tags).to.deep.equal(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en:latest']);
+      expect(tags).to.deep.equal(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en']);
     });
 
     it('should dedupe across updates and tags', () => {
@@ -114,7 +114,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
             { identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' },
             { identifier: '71B0BA0716214254AEE4429B1A970C8B-media', entity_culture: 'en' },
           ],
-          tags: ['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en:latest'],
+          tags: ['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en'],
         },
         { defaultLocale: 'en' }
       );

@@ -8,7 +8,7 @@
 
 > **LlmsTxtQueryResult** = `object`
 
-Defined in: [content/src/site/llms-txt-service.ts:51](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/site/llms-txt-service.ts#L51)
+Defined in: [content/src/site/llms-txt-service.ts:51](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/site/llms-txt-service.ts#L51)
 
 The schema of data returned in response to llms.txt request
 
@@ -18,7 +18,7 @@ The schema of data returned in response to llms.txt request
 
 > **site**: `object`
 
-Defined in: [content/src/site/llms-txt-service.ts:51](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/site/llms-txt-service.ts#L51)
+Defined in: [content/src/site/llms-txt-service.ts:51](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/site/llms-txt-service.ts#L51)
 
 #### siteInfo
 

@@ -6,7 +6,7 @@
 
 # Interface: OpenGraphImageField
 
-Defined in: [content/src/layout/field-types.ts:62](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/layout/field-types.ts#L62)
+Defined in: [content/src/layout/field-types.ts:62](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/layout/field-types.ts#L62)
 
 The interface for the Open Graph image field.
 
@@ -16,4 +16,4 @@ The interface for the Open Graph image field.
 
 > `optional` **value?**: [`OpenGraphImageFieldValue`](OpenGraphImageFieldValue.md)
 
-Defined in: [content/src/layout/field-types.ts:63](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/layout/field-types.ts#L63)
+Defined in: [content/src/layout/field-types.ts:63](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/layout/field-types.ts#L63)

@@ -30,7 +30,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
         },
         { defaultLocale: 'en' }
       );
-      expect(tags).toEqual(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en:latest']);
+      expect(tags).toEqual(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en']);
     });
 
     it('passes through full sc: tags in tags array', () => {
@@ -46,7 +46,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
         { tags: ['71B0BA0716214254AEE4429B1A970C8B'] },
         { defaultLocale: 'en' }
       );
-      expect(tags).toEqual(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en:latest']);
+      expect(tags).toEqual(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en']);
     });
 
     it('lowercases entity_culture and hyphenates Edge identifiers', () => {
@@ -70,8 +70,8 @@ describe('sitecore-edge-webhook-revalidation', () => {
         { defaultLocale: 'en' }
       );
       expect(tags).toEqual([
-        'sc:item:a52f9514-0777-4085-b2a2-d9e9d76ebdc9:ja-jp:latest',
-        'sc:item:6ca225db-4de8-4048-bcc1-61b13027b63a:ja-jp:latest',
+        'sc:item:a52f9514-0777-4085-b2a2-d9e9d76ebdc9:ja-jp',
+        'sc:item:6ca225db-4de8-4048-bcc1-61b13027b63a:ja-jp',
       ]);
     });
   });
