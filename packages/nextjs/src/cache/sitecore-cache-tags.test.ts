@@ -48,26 +48,14 @@ describe('sitecore-cache-tags', () => {
   });
 
   describe('buildSitecoreItemCacheTag', () => {
-    it('uses latest when version omitted', () => {
+    it('normalizes id and locale', () => {
       expect(
         buildSitecoreItemCacheTag({
           itemId: '{52961EEA-BAFD-5287-A532-A72E36BD8A36}',
           locale: 'en-US',
         })
       ).to.equal(
-        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:52961eea-bafd-5287-a532-a72e36bd8a36:en-us:latest`
-      );
-    });
-
-    it('includes integer version', () => {
-      expect(
-        buildSitecoreItemCacheTag({
-          itemId: '52961eea-bafd-5287-a532-a72e36bd8a36',
-          locale: 'en-US',
-          version: 4,
-        })
-      ).to.equal(
-        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:52961eea-bafd-5287-a532-a72e36bd8a36:en-us:v4`
+        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:52961eea-bafd-5287-a532-a72e36bd8a36:en-us`
       );
     });
   });
@@ -120,13 +108,28 @@ describe('sitecore-cache-tags', () => {
           {
             itemId: '{A1111111-1111-1111-1111-111111111111}',
             itemLanguage: 'fr-FR',
+            placeholders: {},
+          } as RouteData,
+          'en-US'
+        )
+      ).to.equal(
+        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:a1111111-1111-1111-1111-111111111111:fr-fr`
+      );
+    });
+
+    it('ignores route.itemVersion (no version segment in the tag)', () => {
+      expect(
+        buildSitecoreItemCacheTagFromRouteData(
+          {
+            itemId: '{A1111111-1111-1111-1111-111111111111}',
+            itemLanguage: 'fr-FR',
             itemVersion: 2,
             placeholders: {},
           } as RouteData,
           'en-US'
         )
       ).to.equal(
-        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:a1111111-1111-1111-1111-111111111111:fr-fr:v2`
+        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:a1111111-1111-1111-1111-111111111111:fr-fr`
       );
     });
 
@@ -137,7 +140,7 @@ describe('sitecore-cache-tags', () => {
           'en-US'
         )
       ).to.equal(
-        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:a1111111111111111111111111111111:en-us:latest`
+        `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:a1111111111111111111111111111111:en-us`
       );
     });
   });
