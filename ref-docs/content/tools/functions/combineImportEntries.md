@@ -8,7 +8,7 @@
 
 > **combineImportEntries**(`defaultImportEntries`, `generatedImportEntries`): `ImportEntry`[]
 
-Defined in: [content/src/tools/codegen/import-map-utils.ts:10](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/content/src/tools/codegen/import-map-utils.ts#L10)
+Defined in: [content/src/tools/codegen/import-map-utils.ts:10](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/tools/codegen/import-map-utils.ts#L10)
 
 Combines the default import entries with the generated import entries.
 

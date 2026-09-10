@@ -8,7 +8,7 @@
 
 > **createSitecoreRevalidateRouteHandler**(`options?`): `object`
 
-Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:84](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L84)
+Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:84](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L84)
 
 Creates a single `POST` handler for `/api/revalidate` that consumes Sitecore Experience Edge / Content
 Operations webhook bodies (and equivalent ad-hoc calls that reuse the same body shape).
@@ -16,11 +16,11 @@ Operations webhook bodies (and equivalent ad-hoc calls that reuse the same body 
 The body is expected to be a JSON object that resolves to at least one Sitecore cache tag:
 
 - **`updates[]`** — Sitecore publish-event rows. Each row's `identifier` (with `-media` / `-layout`
-  suffix stripped) maps to an `sc:item:<id>:<locale>:latest` tag, using `entity_culture` for locale
+  suffix stripped) maps to an `sc:item:<id>:<locale>` tag, using `entity_culture` for locale
   (falling back to the handler's `defaultLocale`).
 - **`tags[]`** — pass-through and convenience array:
   - Strings already starting with `sc:` are used verbatim (e.g. `sc:route:...`, `sc:item:...`, `sc:dict:...`).
-  - Bare values are treated as Sitecore item ids and mapped to `sc:item:<id>:<defaultLocale>:latest`.
+  - Bare values are treated as Sitecore item ids and mapped to `sc:item:<id>:<defaultLocale>`.
 
 When **`sites`** is configured, the handler also appends one `sc:dict:<site>:<locale>` tag per
 site so dictionary updates flow through the same call.
