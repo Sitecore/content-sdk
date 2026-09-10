@@ -1,4 +1,4 @@
-import { buildSitecoreItemCacheTag, SITECORE_CONTENT_CACHE_TAG_PREFIX } from '../cache/cache-tags';
+import { buildSitecoreItemCacheTag } from '../cache/cache-tags';
 import { dedupeCacheStrings } from '../cache/utils';
 
 /**
@@ -20,7 +20,6 @@ export type SitecoreEdgeRevalidateRequestBody = {
   invocation_id?: string;
   updates?: SitecoreEdgeRevalidateUpdate[];
   continues?: boolean;
-  tags?: string[];
 };
 
 /**
@@ -36,8 +35,6 @@ export function extractSitecoreEdgeContentId(identifier: string): string {
   return trimmed.replace(/-(?:media|layout)$/i, '');
 }
 
-const FULL_TAG_PREFIX = `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:`;
-
 /**
  * Options for {@link collectSitecoreTagsFromEdgeRevalidateRequestBody}.
  * @public
@@ -49,9 +46,7 @@ export type CollectSitecoreTagsFromEdgeBodyOptions = {
 /**
  * Maps an Experience Edge webhook JSON body to Sitecore cache tag strings.
  *
- * Accepts fully qualified `sc:…` tags in `body.tags`, raw content identifiers
- * (with optional `-media`/`-layout` suffixes), and `updates[]` rows with
- * `identifier` + `entity_culture`.
+ * Accepts `updates[]` rows with `identifier` (with optional `-media`/`-layout` suffixes) + `entity_culture`.
  * @param {SitecoreEdgeRevalidateRequestBody | null | undefined} body - Parsed webhook JSON body.
  * @param {CollectSitecoreTagsFromEdgeBodyOptions} options - Locale fallback when an update omits `entity_culture`.
  * @returns {string[]} Deduplicated Sitecore cache tags ready for `LoaderCache.invalidate`.
@@ -63,23 +58,6 @@ export function collectSitecoreTagsFromEdgeRevalidateRequestBody(
 ): string[] {
   const { defaultLocale } = options;
   const out: string[] = [];
-
-  for (const tag of body?.tags ?? []) {
-    if (typeof tag !== 'string') {
-      continue;
-    }
-    if (!tag) {
-      continue;
-    }
-    if (tag.startsWith(FULL_TAG_PREFIX)) {
-      out.push(tag);
-    } else {
-      const id = extractSitecoreEdgeContentId(tag);
-      if (id) {
-        out.push(buildSitecoreItemCacheTag({ itemId: id, locale: defaultLocale }));
-      }
-    }
-  }
 
   for (const u of body?.updates ?? []) {
     const id = extractSitecoreEdgeContentId(u?.identifier ?? '');

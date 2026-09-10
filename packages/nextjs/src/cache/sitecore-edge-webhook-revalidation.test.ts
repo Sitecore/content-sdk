@@ -53,34 +53,13 @@ describe('sitecore-edge-webhook-revalidation', () => {
       expect(tags).to.deep.equal(['sc:item:71b0ba0716214254aee4429b1a970c8b:da']);
     });
 
-    it('should pass through full sc: tags in tags array', () => {
-      const tags = collectSitecoreTagsFromEdgeRevalidateRequestBody(
-        {
-          tags: ['sc:dict:default:en'],
-        },
-        { defaultLocale: 'en' }
-      );
-      expect(tags).to.deep.equal(['sc:dict:default:en']);
-    });
-
-    it('should map bare ids in tags array to item tags with defaultLocale', () => {
-      const tags = collectSitecoreTagsFromEdgeRevalidateRequestBody(
-        {
-          tags: ['71B0BA0716214254AEE4429B1A970C8B'],
-        },
-        { defaultLocale: 'en' }
-      );
-      expect(tags).to.deep.equal(['sc:item:71b0ba0716214254aee4429b1a970c8b:en']);
-    });
-
-    it('should dedupe across updates and tags', () => {
+    it('should dedupe across updates', () => {
       const tags = collectSitecoreTagsFromEdgeRevalidateRequestBody(
         {
           updates: [
             { identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' },
             { identifier: '71B0BA0716214254AEE4429B1A970C8B-media', entity_culture: 'en' },
           ],
-          tags: ['sc:item:71b0ba0716214254aee4429b1a970c8b:en'],
         },
         { defaultLocale: 'en' }
       );

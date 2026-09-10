@@ -109,8 +109,7 @@ export function createSitecoreRevalidateMiddleware(
 
       if (tags.length === 0) {
         res.status(400).json({
-          error:
-            'Provide non-empty `updates` (with identifiers) and/or `tags` that resolve to at least one cache tag.',
+          error: 'Provide non-empty `updates` (with identifiers) that resolve to at least one cache tag.',
         });
         return;
       }

@@ -99,7 +99,7 @@ describe('createSitecoreRevalidateMiddleware', () => {
         path: '/api/revalidate',
         url: '/api/revalidate',
         headers: {},
-        body: { tags: ['sc:site:demo'] },
+        body: {},
         query: {},
       } as ExpressRequest,
       res,
@@ -170,8 +170,7 @@ describe('createSitecoreRevalidateMiddleware', () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
-      error:
-        'Provide non-empty `updates` (with identifiers) and/or `tags` that resolve to at least one cache tag.',
+      error: 'Provide non-empty `updates` (with identifiers) that resolve to at least one cache tag.',
     });
   });
 
@@ -242,7 +241,9 @@ describe('createSitecoreRevalidateMiddleware', () => {
         path: '/api/revalidate',
         url: '/api/revalidate',
         headers: {},
-        body: { tags: ['sc:site:demo'] },
+        body: {
+          updates: [{ identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' }],
+        },
         query: {},
       } as ExpressRequest,
       res,

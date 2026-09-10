@@ -69,9 +69,6 @@ export type SitecoreRevalidateRouteHandlerOptions = {
  * - **`updates[]`** — Sitecore publish-event rows. Each row's `identifier` (with `-media` / `-layout`
  *   suffix stripped) maps to an `sc:item:<id>:<locale>` tag, using `entity_culture` for locale
  *   (falling back to the handler's `defaultLocale`).
- * - **`tags[]`** — pass-through and convenience array:
- *   - Strings already starting with `sc:` are used verbatim (e.g. `sc:route:...`, `sc:item:...`, `sc:dict:...`).
- *   - Bare values are treated as Sitecore item ids and mapped to `sc:item:<id>:<defaultLocale>`.
  *
  * When **`sites`** is configured, the handler also appends one `sc:dict:<site>:<locale>` tag per
  * site so dictionary updates flow through the same call.
@@ -131,7 +128,6 @@ export function createSitecoreRevalidateRouteHandler(
         invocation_id: webhookBody.invocation_id ?? null,
         continues: webhookBody.continues ?? false,
         updatesCount: webhookBody.updates?.length ?? 0,
-        tagsCount: Array.isArray(webhookBody.tags) ? webhookBody.tags.length : 0,
         dictionaryTagsCount: dictionaryTags.length,
         defaultLocale,
       });
@@ -148,8 +144,7 @@ export function createSitecoreRevalidateRouteHandler(
         );
         return NextResponse.json(
           {
-            error:
-              'Provide non-empty `updates` (with identifiers) and/or `tags` that resolve to at least one cache tag.',
+            error: 'Provide non-empty `updates` (with identifiers) that resolve to at least one cache tag.',
           },
           { status: 400 }
         );

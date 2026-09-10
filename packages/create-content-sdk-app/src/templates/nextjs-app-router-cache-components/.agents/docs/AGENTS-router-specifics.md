@@ -40,8 +40,7 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 
 - **Where:** `src/app/api/revalidate/route.ts`. Uses `createSitecoreRevalidateRouteHandler` from `@sitecore-content-sdk/nextjs/route-handler` — a single Sitecore-webhook endpoint.
 - **Auth:** When `SITECORE_REVALIDATE_SECRET` is non-empty, callers must send the same value in `x-revalidate-secret`. When empty, revalidation works without that header.
-- **Webhook payload (`updates[]`):** Send the Sitecore Experience Edge / Content Operations body (`updates`, `invocation_id`, `continues`). The handler maps each `identifier` (with `-media` / `-layout` stripped) to `sc:item:<id>:<locale>` and revalidates it.
-- **Ad-hoc invalidation (`tags[]`):** Reuse the same endpoint with `{ "tags": ["sc:route:...", "sc:item:..."] }` (`sc:`-prefixed strings are revalidated verbatim) or `{ "tags": ["<itemId>"] }` (bare item IDs are mapped to `sc:item:<id>:<defaultLocale>`). Dictionary tags from `sites` are appended on **every** call.
+- **Webhook payload (`updates[]`):** Send the Sitecore Experience Edge / Content Operations body (`updates`, `invocation_id`, `continues`). The handler maps each `identifier` (with `-media` / `-layout` stripped) to `sc:item:<id>:<locale>` and revalidates it. Dictionary tags from `sites` are appended on **every** call.
 - **Do not:** Bypass auth, expose the secret in client code, or call `revalidateTag` directly from components.
 
 ## Server vs Client components
