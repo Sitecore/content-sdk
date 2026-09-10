@@ -422,7 +422,16 @@ export class SitecoreClient implements BaseSitecoreClient {
     const { contextId: serverContextId, clientContextId } = this.initOptions.api.edge;
     const headLinks: HTMLLink[] = [];
 
-    const contextId = serverContextId || clientContextId;
+    // Stylesheets are requested by the browser through <link> elements, so the context id cannot be
+    // moved into the x-sitecore-contextid header. Prefer the client context id to keep the
+    // server-side one out of publicly rendered markup.
+    const contextId = clientContextId || serverContextId;
+
+    if (!clientContextId) {
+      debug.common(
+        'clientContextId is not configured, falling back to the server context id for stylesheet links'
+      );
+    }
     const edgeUrlForStyles = resolveEdgeUrlForStaticFiles(this.initOptions.api.edge.edgeUrl);
 
     if (enableStyles) {
