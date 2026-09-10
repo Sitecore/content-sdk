@@ -8,7 +8,7 @@
 
 > **defineCliConfig**(`cliConfig`): [`SitecoreCliConfig`](../../config/type-aliases/SitecoreCliConfig.md)
 
-Defined in: [content/src/config-cli/define-cli-config.ts:21](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/config-cli/define-cli-config.ts#L21)
+Defined in: [content/src/config-cli/define-cli-config.ts:21](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/content/src/config-cli/define-cli-config.ts#L21)
 
 Accepts a `SitecoreCliConfigInput` object and returns Sitecore Content SDK CLI configuration, updated with required default values
 

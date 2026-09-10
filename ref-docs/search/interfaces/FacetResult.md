@@ -6,7 +6,7 @@
 
 # Interface: FacetResult
 
-Defined in: [models.ts:79](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/search/src/models.ts#L79)
+Defined in: [models.ts:79](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/search/src/models.ts#L79)
 
 A facet result containing the facet's display name and its available values.
 
@@ -16,7 +16,7 @@ A facet result containing the facet's display name and its available values.
 
 > **name**: `string`
 
-Defined in: [models.ts:83](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/search/src/models.ts#L83)
+Defined in: [models.ts:83](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/search/src/models.ts#L83)
 
 The display name of the facet.
 
@@ -26,6 +26,6 @@ The display name of the facet.
 
 > **value**: [`FacetValue`](FacetValue.md)[]
 
-Defined in: [models.ts:87](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/search/src/models.ts#L87)
+Defined in: [models.ts:87](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/search/src/models.ts#L87)
 
 The list of values found for this facet, each with a result count.

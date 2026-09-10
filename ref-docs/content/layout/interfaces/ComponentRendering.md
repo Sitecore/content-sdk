@@ -6,7 +6,7 @@
 
 # Interface: ComponentRendering\<T\>
 
-Defined in: [content/src/layout/models.ts:107](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/layout/models.ts#L107)
+Defined in: [content/src/layout/models.ts:107](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/content/src/layout/models.ts#L107)
 
 Definition of a component instance within a placeholder on a route
 
@@ -22,7 +22,7 @@ Definition of a component instance within a placeholder on a route
 
 > **componentName**: `string`
 
-Defined in: [content/src/layout/models.ts:108](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/layout/models.ts#L108)
+Defined in: [content/src/layout/models.ts:108](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/content/src/layout/models.ts#L108)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [content/src/layout/models.ts:108](https://github.com/Sitecore/conte
 
 > `optional` **dataSource?**: `string`
 
-Defined in: [content/src/layout/models.ts:109](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/layout/models.ts#L109)
+Defined in: [content/src/layout/models.ts:109](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/content/src/layout/models.ts#L109)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [content/src/layout/models.ts:109](https://github.com/Sitecore/conte
 
 > `optional` **fields?**: `T`
 
-Defined in: [content/src/layout/models.ts:118](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/layout/models.ts#L118)
+Defined in: [content/src/layout/models.ts:118](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/content/src/layout/models.ts#L118)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [content/src/layout/models.ts:118](https://github.com/Sitecore/conte
 
 > `optional` **isContentResolved?**: `boolean`
 
-Defined in: [content/src/layout/models.ts:115](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/layout/models.ts#L115)
+Defined in: [content/src/layout/models.ts:115](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/content/src/layout/models.ts#L115)
 
 `true` when Layout Service resolved this rendering's datasource content.
 `false` when resolution failed (for example because the item was deleted or archived).
@@ -58,7 +58,7 @@ Omitted by older Layout Service versions; absence preserves existing behavior.
 
 > `optional` **params?**: [`ComponentParams`](ComponentParams.md)
 
-Defined in: [content/src/layout/models.ts:119](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/layout/models.ts#L119)
+Defined in: [content/src/layout/models.ts:119](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/content/src/layout/models.ts#L119)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [content/src/layout/models.ts:119](https://github.com/Sitecore/conte
 
 > `optional` **placeholders?**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\>
 
-Defined in: [content/src/layout/models.ts:117](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/layout/models.ts#L117)
+Defined in: [content/src/layout/models.ts:117](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/content/src/layout/models.ts#L117)
 
 ***
 
@@ -74,4 +74,4 @@ Defined in: [content/src/layout/models.ts:117](https://github.com/Sitecore/conte
 
 > `optional` **uid?**: `string`
 
-Defined in: [content/src/layout/models.ts:116](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/layout/models.ts#L116)
+Defined in: [content/src/layout/models.ts:116](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/content/src/layout/models.ts#L116)

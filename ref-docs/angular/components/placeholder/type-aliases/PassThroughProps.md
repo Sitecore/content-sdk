@@ -8,7 +8,7 @@
 
 > **PassThroughProps** = `Readonly`\<`Record`\<`string`, `unknown`\>\>
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:139](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/angular/src/components/placeholder/placeholder-utils.ts#L139)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:139](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/angular/src/components/placeholder/placeholder-utils.ts#L139)
 
 Extra inputs to set on each dynamically rendered component (in addition to `fields`, `params`, and `rendering`).
 Keys are Angular `input()` names on the host component.

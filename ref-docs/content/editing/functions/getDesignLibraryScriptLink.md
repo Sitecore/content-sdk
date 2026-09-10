@@ -8,7 +8,7 @@
 
 > **getDesignLibraryScriptLink**(`sitecoreEdgeUrl?`): `string`
 
-Defined in: [content/src/editing/design-library.ts:248](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/content/src/editing/design-library.ts#L248)
+Defined in: [content/src/editing/design-library.ts:248](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/content/src/editing/design-library.ts#L248)
 
 **`Internal`**
 

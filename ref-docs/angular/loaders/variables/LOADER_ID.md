@@ -8,7 +8,7 @@
 
 > `const` **LOADER\_ID**: *typeof* `LOADER_ID`
 
-Defined in: [packages/angular/src/loaders/loader-registry.token.ts:45](https://github.com/Sitecore/content-sdk/blob/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639/packages/angular/src/loaders/loader-registry.token.ts#L45)
+Defined in: [packages/angular/src/loaders/loader-registry.token.ts:45](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/angular/src/loaders/loader-registry.token.ts#L45)
 
 **`Internal`**
 
