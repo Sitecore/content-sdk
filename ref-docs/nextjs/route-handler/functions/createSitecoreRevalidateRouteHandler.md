@@ -8,7 +8,7 @@
 
 > **createSitecoreRevalidateRouteHandler**(`options?`): `object`
 
-Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:84](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L84)
+Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:84](https://github.com/Sitecore/content-sdk/blob/a8a17de670f6378fa21e08a9c76841c041afb7fd/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L84)
 
 Creates a single `POST` handler for `/api/revalidate` that consumes Sitecore Experience Edge / Content
 Operations webhook bodies (and equivalent ad-hoc calls that reuse the same body shape).

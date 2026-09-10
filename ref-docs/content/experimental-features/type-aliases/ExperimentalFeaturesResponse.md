@@ -8,7 +8,7 @@
 
 > **ExperimentalFeaturesResponse** = `object`
 
-Defined in: [content/src/experimental-features/types.ts:39](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/experimental-features/types.ts#L39)
+Defined in: [content/src/experimental-features/types.ts:39](https://github.com/Sitecore/content-sdk/blob/a8a17de670f6378fa21e08a9c76841c041afb7fd/packages/content/src/experimental-features/types.ts#L39)
 
 Response payload for the experimental features visibility API.
 
@@ -18,4 +18,4 @@ Response payload for the experimental features visibility API.
 
 > **features**: [`ExperimentalFeatureStatus`](ExperimentalFeatureStatus.md)[]
 
-Defined in: [content/src/experimental-features/types.ts:40](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/experimental-features/types.ts#L40)
+Defined in: [content/src/experimental-features/types.ts:40](https://github.com/Sitecore/content-sdk/blob/a8a17de670f6378fa21e08a9c76841c041afb7fd/packages/content/src/experimental-features/types.ts#L40)

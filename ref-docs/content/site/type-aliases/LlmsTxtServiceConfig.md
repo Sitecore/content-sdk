@@ -8,7 +8,7 @@
 
 > **LlmsTxtServiceConfig** = `object`
 
-Defined in: [content/src/site/llms-txt-service.ts:35](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/site/llms-txt-service.ts#L35)
+Defined in: [content/src/site/llms-txt-service.ts:35](https://github.com/Sitecore/content-sdk/blob/a8a17de670f6378fa21e08a9c76841c041afb7fd/packages/content/src/site/llms-txt-service.ts#L35)
 
 Configuration for
 
@@ -22,7 +22,7 @@ LlmsTxtService instances
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [content/src/site/llms-txt-service.ts:44](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/site/llms-txt-service.ts#L44)
+Defined in: [content/src/site/llms-txt-service.ts:44](https://github.com/Sitecore/content-sdk/blob/a8a17de670f6378fa21e08a9c76841c041afb7fd/packages/content/src/site/llms-txt-service.ts#L44)
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -33,6 +33,6 @@ This factory function is used to create and configure GraphQL clients for making
 
 > **siteName**: `string`
 
-Defined in: [content/src/site/llms-txt-service.ts:39](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/site/llms-txt-service.ts#L39)
+Defined in: [content/src/site/llms-txt-service.ts:39](https://github.com/Sitecore/content-sdk/blob/a8a17de670f6378fa21e08a9c76841c041afb7fd/packages/content/src/site/llms-txt-service.ts#L39)
 
 The Content SDK application name

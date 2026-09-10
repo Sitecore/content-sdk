@@ -8,7 +8,7 @@
 
 > **resolveEdgeUrlForStaticFiles**(`edgeUrl?`): `string`
 
-Defined in: [packages/core/src/tools/resolve-edge-url.ts:91](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/core/src/tools/resolve-edge-url.ts#L91)
+Defined in: [packages/core/src/tools/resolve-edge-url.ts:91](https://github.com/Sitecore/content-sdk/blob/a8a17de670f6378fa21e08a9c76841c041afb7fd/packages/core/src/tools/resolve-edge-url.ts#L91)
 
 Resolves the Edge URL for static files (e.g. stylesheets).
 Uses the same explicit URL, environment hostname, and default fallback as other Edge requests.

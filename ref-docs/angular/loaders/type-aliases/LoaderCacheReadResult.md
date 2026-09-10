@@ -8,7 +8,7 @@
 
 > **LoaderCacheReadResult** = \{ `cacheKey`: `string`; `kind`: `"hit"`; `value`: `unknown`; \} \| \{ `cacheKey`: `string`; `kind`: `"stale"`; `value`: `unknown`; \} \| \{ `cacheKey`: `string`; `kind`: `"miss"`; \}
 
-Defined in: [packages/angular/src/loaders/models.ts:241](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/angular/src/loaders/models.ts#L241)
+Defined in: [packages/angular/src/loaders/models.ts:241](https://github.com/Sitecore/content-sdk/blob/a8a17de670f6378fa21e08a9c76841c041afb7fd/packages/angular/src/loaders/models.ts#L241)
 
 Three-outcome read result for stale-while-revalidate
 

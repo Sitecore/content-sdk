@@ -32,44 +32,41 @@ describe('edge-proxy', () => {
 
   describe('getEdgeProxyFormsUrl', () => {
     const formId = 'test-form-id';
-    const sitecoreEdgeContextId = '0730fc5a-3333-5555-5555-08db6d7ddb49';
 
     it('should return url', () => {
-      const url = getEdgeProxyFormsUrl(sitecoreEdgeContextId, formId);
+      const url = getEdgeProxyFormsUrl(formId);
 
-      expect(url).to.equal(
-        `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`
-      );
+      expect(url).to.equal(`${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/forms/publisher/${formId}`);
     });
 
     it('should return url when custom sitecoreEdgeUrl is provided', () => {
       const sitecoreEdgeUrl = 'https://test.com';
 
-      const url = getEdgeProxyFormsUrl(sitecoreEdgeContextId, formId, sitecoreEdgeUrl);
+      const url = getEdgeProxyFormsUrl(formId, sitecoreEdgeUrl);
 
-      expect(url).to.equal(
-        `https://test.com/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`
-      );
+      expect(url).to.equal(`https://test.com/v1/forms/publisher/${formId}`);
     });
 
     it('should return url when sitecoreEdgeUrl ends with /', () => {
       const sitecoreEdgeUrl = 'https://test.com/';
 
-      const url = getEdgeProxyFormsUrl(sitecoreEdgeContextId, formId, sitecoreEdgeUrl);
+      const url = getEdgeProxyFormsUrl(formId, sitecoreEdgeUrl);
 
-      expect(url).to.equal(
-        `https://test.com/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}`
-      );
+      expect(url).to.equal(`https://test.com/v1/forms/publisher/${formId}`);
+    });
+
+    it('should not include the context id in the query string', () => {
+      const url = getEdgeProxyFormsUrl(formId, 'https://test.com', 'fr-FR');
+
+      expect(url).to.not.contain('sitecoreContextId');
     });
 
     it('should append language when provided', () => {
       const sitecoreEdgeUrl = 'https://test.com';
 
-      const url = getEdgeProxyFormsUrl(sitecoreEdgeContextId, formId, sitecoreEdgeUrl, 'fr-FR');
+      const url = getEdgeProxyFormsUrl(formId, sitecoreEdgeUrl, 'fr-FR');
 
-      expect(url).to.equal(
-        `https://test.com/v1/forms/publisher/${formId}?sitecoreContextId=${sitecoreEdgeContextId}&language=fr-FR`
-      );
+      expect(url).to.equal(`https://test.com/v1/forms/publisher/${formId}?language=fr-FR`);
     });
   });
 });
