@@ -8,7 +8,7 @@
 
 > **PlaceholderMetadata**(`props`): `Element`
 
-Defined in: [packages/react/src/components/Placeholder/PlaceholderMetadata.tsx:43](https://github.com/Sitecore/content-sdk/blob/adcce7f8e82dea229d7f6dfc8f2ee144026b91f0/packages/react/src/components/Placeholder/PlaceholderMetadata.tsx#L43)
+Defined in: [packages/react/src/components/Placeholder/PlaceholderMetadata.tsx:43](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/react/src/components/Placeholder/PlaceholderMetadata.tsx#L43)
 
 **`Internal`**
 

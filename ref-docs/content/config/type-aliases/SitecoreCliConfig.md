@@ -8,6 +8,6 @@
 
 > **SitecoreCliConfig** = [`DeepRequired`](DeepRequired.md)\<[`SitecoreCliConfigInput`](SitecoreCliConfigInput.md)\>
 
-Defined in: [content/src/config/models.ts:269](https://github.com/Sitecore/content-sdk/blob/adcce7f8e82dea229d7f6dfc8f2ee144026b91f0/packages/content/src/config/models.ts#L269)
+Defined in: [content/src/config/models.ts:269](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/config/models.ts#L269)
 
 Final Sitecore CLI config type required by the CLI.

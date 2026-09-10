@@ -8,7 +8,7 @@
 
 > **createLlmsTxtRouteHandler**(`options`): `object`
 
-Defined in: [nextjs/src/route-handler/llms-txt-route-handler.ts:35](https://github.com/Sitecore/content-sdk/blob/adcce7f8e82dea229d7f6dfc8f2ee144026b91f0/packages/nextjs/src/route-handler/llms-txt-route-handler.ts#L35)
+Defined in: [nextjs/src/route-handler/llms-txt-route-handler.ts:35](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/nextjs/src/route-handler/llms-txt-route-handler.ts#L35)
 
 Creates a route handler to serve the llms.txt file.
 

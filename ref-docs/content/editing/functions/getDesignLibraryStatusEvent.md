@@ -8,7 +8,7 @@
 
 > **getDesignLibraryStatusEvent**(`status`, `uid`, `isRenderingServerComponent?`): [`DesignLibraryStatusEvent`](../interfaces/DesignLibraryStatusEvent.md)
 
-Defined in: [content/src/editing/design-library.ts:226](https://github.com/Sitecore/content-sdk/blob/adcce7f8e82dea229d7f6dfc8f2ee144026b91f0/packages/content/src/editing/design-library.ts#L226)
+Defined in: [content/src/editing/design-library.ts:226](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/content/src/editing/design-library.ts#L226)
 
 **`Internal`**
 

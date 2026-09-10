@@ -8,7 +8,7 @@
 
 > **useComponentProps**\<`ComponentData`\>(`componentUid`): `ComponentData` \| `undefined`
 
-Defined in: [nextjs/src/components/ComponentPropsContext.tsx:18](https://github.com/Sitecore/content-sdk/blob/adcce7f8e82dea229d7f6dfc8f2ee144026b91f0/packages/nextjs/src/components/ComponentPropsContext.tsx#L18)
+Defined in: [nextjs/src/components/ComponentPropsContext.tsx:18](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/nextjs/src/components/ComponentPropsContext.tsx#L18)
 
 Hook in order to get access to props related to specific component. Data comes from ComponentPropsContext.
 

@@ -8,7 +8,7 @@
 
 > `const` **DEFAULT\_COOKIE\_EXPIRY\_DAYS**: `730` = `730`
 
-Defined in: [analytics-core/src/consts.ts:25](https://github.com/Sitecore/content-sdk/blob/adcce7f8e82dea229d7f6dfc8f2ee144026b91f0/packages/analytics-core/src/consts.ts#L25)
+Defined in: [analytics-core/src/consts.ts:25](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/analytics-core/src/consts.ts#L25)
 
 **`Internal`**
 

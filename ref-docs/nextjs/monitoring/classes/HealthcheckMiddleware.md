@@ -6,7 +6,7 @@
 
 # Class: HealthcheckMiddleware
 
-Defined in: [nextjs/src/monitoring/healthcheck-middleware.ts:7](https://github.com/Sitecore/content-sdk/blob/adcce7f8e82dea229d7f6dfc8f2ee144026b91f0/packages/nextjs/src/monitoring/healthcheck-middleware.ts#L7)
+Defined in: [nextjs/src/monitoring/healthcheck-middleware.ts:7](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/nextjs/src/monitoring/healthcheck-middleware.ts#L7)
 
 Middleware / handler for use in healthcheck Next.js API route (e.g. '/api/healthz').
 
@@ -26,7 +26,7 @@ Middleware / handler for use in healthcheck Next.js API route (e.g. '/api/health
 
 > **getHandler**(): (`req`, `res`) => `Promise`\<`void`\>
 
-Defined in: [nextjs/src/monitoring/healthcheck-middleware.ts:12](https://github.com/Sitecore/content-sdk/blob/adcce7f8e82dea229d7f6dfc8f2ee144026b91f0/packages/nextjs/src/monitoring/healthcheck-middleware.ts#L12)
+Defined in: [nextjs/src/monitoring/healthcheck-middleware.ts:12](https://github.com/Sitecore/content-sdk/blob/bdfa67377694c76573cfc03186b832708bdb43b7/packages/nextjs/src/monitoring/healthcheck-middleware.ts#L12)
 
 Gets the Next.js API route handler
 
