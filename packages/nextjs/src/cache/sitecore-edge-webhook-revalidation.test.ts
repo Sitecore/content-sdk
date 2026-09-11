@@ -95,12 +95,12 @@ describe('sitecore-edge-webhook-revalidation', () => {
 
     it('should be independent of input order for overlapping site names', () => {
       const identifier = 'test-2-1a1905a154414da3883fd9ca7074b128-value-en';
-      expect(resolveSitecoreDictionarySiteNameFromIdentifier(identifier, ['test', 'test-2'])).to.equal(
-        'test-2'
-      );
-      expect(resolveSitecoreDictionarySiteNameFromIdentifier(identifier, ['test-2', 'test'])).to.equal(
-        'test-2'
-      );
+      expect(
+        resolveSitecoreDictionarySiteNameFromIdentifier(identifier, ['test', 'test-2'])
+      ).to.equal('test-2');
+      expect(
+        resolveSitecoreDictionarySiteNameFromIdentifier(identifier, ['test-2', 'test'])
+      ).to.equal('test-2');
     });
 
     it('should not match a site name that is a prefix without a separating hyphen (e.g. "test" vs "test2")', () => {
@@ -252,7 +252,7 @@ describe('sitecore-edge-webhook-revalidation', () => {
         },
         { defaultLocale: 'en', siteNames: ['iki-vercel-site'] }
       );
-      expect(tags).to.deep.equal(['sc:item:71b0ba0716214254aee4429b1a970c8b:en']);
+      expect(tags).to.deep.equal(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en']);
     });
   });
 });
