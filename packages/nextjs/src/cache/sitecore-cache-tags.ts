@@ -99,40 +99,6 @@ export function buildSitecoreDictionaryCacheTag(
 }
 
 /**
- * Parameters for buildSitecoreDictionaryCacheTagsFromSites.
- * @internal
- */
-export type BuildSitecoreDictionaryCacheTagsFromSitesParams = {
-  /** Sites list (e.g. from generated multisite JSON). */
-  sites: readonly { name: string; language?: string }[];
-  /** Locale used when a site has no `language` value. */
-  baseLocale: string;
-};
-
-/**
- * Builds deduplicated dictionary cache tags from a sites list.
- * @param {BuildSitecoreDictionaryCacheTagsFromSitesParams} params - Sites list and fallback locale.
- * @internal
- */
-export function buildSitecoreDictionaryCacheTagsFromSites(
-  params: BuildSitecoreDictionaryCacheTagsFromSitesParams
-): string[] {
-  const seen = new Set<string>();
-  const out: string[] = [];
-  const push = (tag: string) => {
-    if (!seen.has(tag)) {
-      seen.add(tag);
-      out.push(tag);
-    }
-  };
-  for (const site of params.sites) {
-    const locale = site.language?.trim() ? site.language : params.baseLocale;
-    push(buildSitecoreDictionaryCacheTag({ site: site.name, locale }));
-  }
-  return out;
-}
-
-/**
  * Builds an item cache tag from Sitecore layout route data when `itemId` is present.
  * Prefers `itemLanguage` from Sitecore when set; otherwise uses `fallbackLocale`.
  * Accepts the same `RouteData` shape returned by the layout service (e.g. `page.layout.sitecore.route`,

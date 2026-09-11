@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import type { RouteData } from '@sitecore-content-sdk/content/layout';
 import {
   buildSitecoreDictionaryCacheTag,
-  buildSitecoreDictionaryCacheTagsFromSites,
   buildSitecoreItemCacheTag,
   buildSitecoreItemCacheTagFromRouteData,
   buildSitecoreRouteCacheTag,
@@ -65,29 +64,6 @@ describe('sitecore-cache-tags', () => {
       expect(buildSitecoreDictionaryCacheTag({ site: 'Website', locale: 'da-DK' })).to.equal(
         `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:website:da-dk`
       );
-    });
-  });
-
-  describe('buildSitecoreDictionaryCacheTagsFromSites', () => {
-    it('dedupes duplicate site locale combinations', () => {
-      expect(
-        buildSitecoreDictionaryCacheTagsFromSites({
-          sites: [
-            { name: 'Website', language: 'en' },
-            { name: 'Website', language: 'en' },
-          ],
-          baseLocale: 'en',
-        })
-      ).to.deep.equal([`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:website:en`]);
-    });
-
-    it('uses baseLocale when site language is empty', () => {
-      expect(
-        buildSitecoreDictionaryCacheTagsFromSites({
-          sites: [{ name: 'Solo', language: '' }],
-          baseLocale: 'fr-FR',
-        })
-      ).to.deep.equal([`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:solo:fr-fr`]);
     });
   });
 

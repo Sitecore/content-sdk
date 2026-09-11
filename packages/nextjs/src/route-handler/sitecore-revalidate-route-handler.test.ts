@@ -135,7 +135,7 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     });
   });
 
-  it('should include dictionary tags from sites on every call when configured', async () => {
+  it('should not touch dictionary tags for a non-dictionary update, even when sites is configured', async () => {
     process.env.SITECORE_REVALIDATE_SECRET = 'expected';
     const handler = module.createSitecoreRevalidateRouteHandler({
       defaultLocale: 'en',
@@ -156,10 +156,64 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     );
 
     expect(res.status).to.equal(200);
-    expect(revalidateTagStub.calledTwice).to.equal(true);
+    expect(revalidateTagStub.calledOnce).to.equal(true);
     expect(revalidateTagStub.firstCall.args[0]).to.equal(
       'sc:item:71b0ba0716214254aee4429b1a970c8b:en'
     );
-    expect(revalidateTagStub.secondCall.args[0]).to.equal('sc:dict:new-testing-site-mn:en');
+  });
+
+  it('should resolve a Dictionary entry update to that site\'s dictionary tag only', async () => {
+    process.env.SITECORE_REVALIDATE_SECRET = 'expected';
+    const handler = module.createSitecoreRevalidateRouteHandler({
+      defaultLocale: 'en',
+      sites: [
+        { name: 'new-testing-site-mn', hostName: 'localhost', language: 'en' },
+        { name: 'other-site', hostName: 'localhost', language: 'en' },
+      ],
+    });
+    const res = await handler.POST(
+      createReq({
+        headers: { 'x-revalidate-secret': 'expected' },
+        body: {
+          updates: [
+            {
+              identifier: 'new-testing-site-mn-1a1905a154414da3883fd9ca7074b128-test 5555-en-gb',
+              entity_definition: 'DictionaryEntry',
+              operation: 'Update',
+              entity_culture: 'en-GB',
+            },
+          ],
+        },
+      })
+    );
+
+    expect(res.status).to.equal(200);
+    expect(revalidateTagStub.calledOnce).to.equal(true);
+    expect(revalidateTagStub.firstCall.args[0]).to.equal('sc:dict:new-testing-site-mn:en-gb');
+  });
+
+  it('should skip a Dictionary entry update when no configured site matches the identifier', async () => {
+    process.env.SITECORE_REVALIDATE_SECRET = 'expected';
+    const handler = module.createSitecoreRevalidateRouteHandler({
+      defaultLocale: 'en',
+      sites: [{ name: 'new-testing-site-mn', hostName: 'localhost', language: 'en' }],
+    });
+    const res = await handler.POST(
+      createReq({
+        headers: { 'x-revalidate-secret': 'expected' },
+        body: {
+          updates: [
+            {
+              identifier: 'unknown-site-1a1905a154414da3883fd9ca7074b128-test 5555-en-gb',
+              entity_definition: 'DictionaryEntry',
+              entity_culture: 'en-GB',
+            },
+          ],
+        },
+      })
+    );
+
+    expect(res.status).to.equal(400);
+    expect(revalidateTagStub.called).to.equal(false);
   });
 });
