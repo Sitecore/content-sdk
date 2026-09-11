@@ -158,7 +158,7 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     expect(res.status).to.equal(200);
     expect(revalidateTagStub.calledOnce).to.equal(true);
     expect(revalidateTagStub.firstCall.args[0]).to.equal(
-      'sc:item:71b0ba0716214254aee4429b1a970c8b:en'
+      'sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en'
     );
   });
 

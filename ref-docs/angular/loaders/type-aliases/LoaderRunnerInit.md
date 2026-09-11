@@ -8,7 +8,7 @@
 
 > **LoaderRunnerInit** = [`LoaderPayload`](LoaderPayload.md) & `object`
 
-Defined in: [packages/angular/src/loaders/models.ts:120](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/angular/src/loaders/models.ts#L120)
+Defined in: [packages/angular/src/loaders/models.ts:120](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/angular/src/loaders/models.ts#L120)
 
 ## Type Declaration
 
