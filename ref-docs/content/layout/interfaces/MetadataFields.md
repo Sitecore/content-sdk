@@ -6,7 +6,7 @@
 
 # Interface: MetadataFields
 
-Defined in: [content/src/layout/field-types.ts:81](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/field-types.ts#L81)
+Defined in: [content/src/layout/field-types.ts:81](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/field-types.ts#L81)
 
 The interface for a page's metadata fields (siblings of Title in a route's fields).
 
@@ -20,7 +20,7 @@ The interface for a page's metadata fields (siblings of Title in a route's field
 
 > `optional` **baseMetadataAuthor?**: [`Field`](Field.md)\<`string`\>
 
-Defined in: [content/src/layout/field-types.ts:84](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/field-types.ts#L84)
+Defined in: [content/src/layout/field-types.ts:84](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/field-types.ts#L84)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [content/src/layout/field-types.ts:84](https://github.com/Sitecore/c
 
 > `optional` **baseMetadataDescription?**: [`Field`](Field.md)\<`string`\>
 
-Defined in: [content/src/layout/field-types.ts:83](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/field-types.ts#L83)
+Defined in: [content/src/layout/field-types.ts:83](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/field-types.ts#L83)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [content/src/layout/field-types.ts:83](https://github.com/Sitecore/c
 
 > `optional` **baseMetadataKeywords?**: [`Field`](Field.md)\<`string`\>
 
-Defined in: [content/src/layout/field-types.ts:85](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/field-types.ts#L85)
+Defined in: [content/src/layout/field-types.ts:85](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/field-types.ts#L85)
 
 ***
 
@@ -44,4 +44,4 @@ Defined in: [content/src/layout/field-types.ts:85](https://github.com/Sitecore/c
 
 > `optional` **baseMetadataTitle?**: [`Field`](Field.md)\<`string`\>
 
-Defined in: [content/src/layout/field-types.ts:82](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/field-types.ts#L82)
+Defined in: [content/src/layout/field-types.ts:82](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/field-types.ts#L82)

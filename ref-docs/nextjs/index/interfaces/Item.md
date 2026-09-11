@@ -6,7 +6,7 @@
 
 # Interface: Item
 
-Defined in: content/types/layout/models.d.ts:141
+Defined in: content/types/layout/models.d.ts:143
 
 Content data returned from Layout Service
 
@@ -16,7 +16,7 @@ Content data returned from Layout Service
 
 > `optional` **displayName?**: `string`
 
-Defined in: content/types/layout/models.d.ts:143
+Defined in: content/types/layout/models.d.ts:145
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: content/types/layout/models.d.ts:143
 
 > **fields**: `object`
 
-Defined in: content/types/layout/models.d.ts:146
+Defined in: content/types/layout/models.d.ts:148
 
 #### Index Signature
 
@@ -36,7 +36,7 @@ Defined in: content/types/layout/models.d.ts:146
 
 > `optional` **id?**: `string`
 
-Defined in: content/types/layout/models.d.ts:144
+Defined in: content/types/layout/models.d.ts:146
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: content/types/layout/models.d.ts:144
 
 > **name**: `string`
 
-Defined in: content/types/layout/models.d.ts:142
+Defined in: content/types/layout/models.d.ts:144
 
 ***
 
@@ -52,4 +52,4 @@ Defined in: content/types/layout/models.d.ts:142
 
 > `optional` **url?**: `string`
 
-Defined in: content/types/layout/models.d.ts:145
+Defined in: content/types/layout/models.d.ts:147

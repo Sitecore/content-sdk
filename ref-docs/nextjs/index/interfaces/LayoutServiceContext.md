@@ -72,6 +72,16 @@ Defined in: content/types/layout/models.d.ts:40
 
 ***
 
+### schemas?
+
+> `optional` **schemas?**: `Record`\<`string`, `unknown`\>[]
+
+Defined in: content/types/layout/models.d.ts:44
+
+JSON-LD structured data node objects (each with its own `@context`/`@type`) for the current route.
+
+***
+
 ### site?
 
 > `optional` **site?**: `object`

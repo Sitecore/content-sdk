@@ -20,7 +20,7 @@ The interface for the Text field.
 
 > `optional` **metadata?**: `object`
 
-Defined in: content/types/layout/models.d.ts:133
+Defined in: content/types/layout/models.d.ts:135
 
 #### Index Signature
 

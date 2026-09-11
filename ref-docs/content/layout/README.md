@@ -68,6 +68,7 @@
 - [getDesignLibraryStylesheetLinks](functions/getDesignLibraryStylesheetLinks.md)
 - [getDynamicPlaceholderPattern](functions/getDynamicPlaceholderPattern.md)
 - [getFieldValue](functions/getFieldValue.md)
+- [getJsonLdSchemas](functions/getJsonLdSchemas.md)
 - [getRenderingParamString](functions/getRenderingParamString.md)
 - [isDynamicPlaceholder](functions/isDynamicPlaceholder.md)
 - [isFieldValueEmpty](functions/isFieldValueEmpty.md)

@@ -6,7 +6,7 @@
 
 # Interface: LayoutServiceContext
 
-Defined in: [content/src/layout/models.ts:33](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/models.ts#L33)
+Defined in: [content/src/layout/models.ts:33](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/models.ts#L33)
 
 Shape of context data from the Sitecore Layout Service
 
@@ -20,7 +20,7 @@ Shape of context data from the Sitecore Layout Service
 
 > `optional` **clientData?**: `Record`\<`string`, `Record`\<`string`, `unknown`\>\>
 
-Defined in: [content/src/layout/models.ts:45](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/models.ts#L45)
+Defined in: [content/src/layout/models.ts:45](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/models.ts#L45)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [content/src/layout/models.ts:45](https://github.com/Sitecore/conten
 
 > `optional` **clientScripts?**: `string`[]
 
-Defined in: [content/src/layout/models.ts:44](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/models.ts#L44)
+Defined in: [content/src/layout/models.ts:44](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/models.ts#L44)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [content/src/layout/models.ts:44](https://github.com/Sitecore/conten
 
 > `optional` **itemPath?**: `string`
 
-Defined in: [content/src/layout/models.ts:37](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/models.ts#L37)
+Defined in: [content/src/layout/models.ts:37](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/models.ts#L37)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [content/src/layout/models.ts:37](https://github.com/Sitecore/conten
 
 > `optional` **language?**: `string`
 
-Defined in: [content/src/layout/models.ts:36](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/models.ts#L36)
+Defined in: [content/src/layout/models.ts:36](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/models.ts#L36)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [content/src/layout/models.ts:36](https://github.com/Sitecore/conten
 
 > `optional` **pageEditing?**: `boolean`
 
-Defined in: [content/src/layout/models.ts:35](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/models.ts#L35)
+Defined in: [content/src/layout/models.ts:35](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/models.ts#L35)
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: [content/src/layout/models.ts:35](https://github.com/Sitecore/conten
 
 > `optional` **pageState?**: [`LayoutServicePageState`](../enumerations/LayoutServicePageState.md)
 
-Defined in: [content/src/layout/models.ts:38](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/models.ts#L38)
+Defined in: [content/src/layout/models.ts:38](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/models.ts#L38)
 
 ***
 
@@ -68,7 +68,17 @@ Defined in: [content/src/layout/models.ts:38](https://github.com/Sitecore/conten
 
 > `optional` **renderingType?**: [`Component`](../enumerations/RenderingType.md#component)
 
-Defined in: [content/src/layout/models.ts:43](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/models.ts#L43)
+Defined in: [content/src/layout/models.ts:43](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/models.ts#L43)
+
+***
+
+### schemas?
+
+> `optional` **schemas?**: `Record`\<`string`, `unknown`\>[]
+
+Defined in: [content/src/layout/models.ts:47](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/models.ts#L47)
+
+JSON-LD structured data node objects (each with its own `@context`/`@type`) for the current route.
 
 ***
 
@@ -76,7 +86,7 @@ Defined in: [content/src/layout/models.ts:43](https://github.com/Sitecore/conten
 
 > `optional` **site?**: `object`
 
-Defined in: [content/src/layout/models.ts:40](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/models.ts#L40)
+Defined in: [content/src/layout/models.ts:40](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/models.ts#L40)
 
 #### name?
 
@@ -88,4 +98,4 @@ Defined in: [content/src/layout/models.ts:40](https://github.com/Sitecore/conten
 
 > `optional` **visitorIdentificationTimestamp?**: `number`
 
-Defined in: [content/src/layout/models.ts:39](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/layout/models.ts#L39)
+Defined in: [content/src/layout/models.ts:39](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/content/src/layout/models.ts#L39)
