@@ -1,5 +1,15 @@
 # @sitecore-content-sdk/content
 
+## 2.4.0
+
+### Minor Changes
+
+- Schema.org & JSON-LD Support ([b858df1](https://github.com/sitecore/content-sdk/commit/b858df1f6f27c4f7a00a2d33c81c5e5233790233))
+
+### Patch Changes
+
+- Send the Sitecore Context ID for Forms in the `x-sitecore-contextid` header instead of the query string, and use the public/client context ID for stylesheet `<link>` URLs so the server context ID is not rendered in page markup. ([a8a17de](https://github.com/sitecore/content-sdk/commit/a8a17de670f6378fa21e08a9c76841c041afb7fd))
+
 ## 2.3.0
 
 ### Minor Changes
