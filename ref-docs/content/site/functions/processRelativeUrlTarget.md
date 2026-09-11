@@ -8,7 +8,7 @@
 
 > **processRelativeUrlTarget**(`incomingPathData`, `existsRedirect`, `configuredLocales`, `reqLocale`): `object`
 
-Defined in: [content/src/site/redirect-utils.ts:261](https://github.com/Sitecore/content-sdk/blob/adcce7f8e82dea229d7f6dfc8f2ee144026b91f0/packages/content/src/site/redirect-utils.ts#L261)
+Defined in: [content/src/site/redirect-utils.ts:261](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/content/src/site/redirect-utils.ts#L261)
 
 **`Internal`**
 

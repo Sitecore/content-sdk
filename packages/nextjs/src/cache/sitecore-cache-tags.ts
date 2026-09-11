@@ -21,12 +21,20 @@ export function sanitizeSitecoreCacheTagSegment(value: string): string {
 }
 
 /**
- * Normalizes a Sitecore item GUID for use in cache tags (lowercase, no braces).
+ * Normalizes a Sitecore item GUID for use in cache tags.
+ * Lowercases, strips braces, and canonicalizes 32-character hex GUIDs to hyphenated form
+ * so layout-service ids (`{guid}`) and Experience Edge identifiers (`GUID` without hyphens)
+ * produce the same `sc:item:` tag.
  * @param {string} itemId - Sitecore item id or GUID string.
  * @internal
  */
 export function normalizeSitecoreItemIdForCacheTag(itemId: string): string {
-  return itemId.trim().toLowerCase().replace(/[{}]/g, '');
+  const cleaned = itemId.trim().toLowerCase().replace(/[{}]/g, '');
+  const hex = cleaned.replace(/-/g, '');
+  if (/^[0-9a-f]{32}$/.test(hex)) {
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+  }
+  return cleaned;
 }
 
 /**
@@ -63,25 +71,17 @@ export function buildSitecoreRouteCacheTag(params: BuildSitecoreRouteCacheTagPar
 export type BuildSitecoreItemCacheTagParams = {
   itemId: string;
   locale: string;
-  /**
-   * Published version number, or omit / `undefined` for "latest".
-   */
-  version?: number;
 };
 
 /**
  * Tag for a layout/route item (and anything else keyed the same way). Use for item-level invalidation.
- * @param {BuildSitecoreItemCacheTagParams} params - Item id, locale, and optional published version.
+ * @param {BuildSitecoreItemCacheTagParams} params - Item id and locale.
  * @internal
  */
 export function buildSitecoreItemCacheTag(params: BuildSitecoreItemCacheTagParams): string {
   const id = normalizeSitecoreItemIdForCacheTag(params.itemId);
   const locale = sanitizeSitecoreCacheTagSegment(params.locale);
-  const ver =
-    params.version !== undefined && Number.isFinite(params.version)
-      ? `v${Math.trunc(params.version)}`
-      : 'latest';
-  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}:${ver}`;
+  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}`;
 }
 
 /**
@@ -145,7 +145,7 @@ export function buildSitecoreDictionaryCacheTagsFromSites(
  * Prefers `itemLanguage` from Sitecore when set; otherwise uses `fallbackLocale`.
  * Accepts the same `RouteData` shape returned by the layout service (e.g. `page.layout.sitecore.route`,
  * which is `RouteData | null`) or `undefined` when the page did not resolve.
- * @param {RouteData | null | undefined} route - Route node from layout (item id, language, version).
+ * @param {RouteData | null | undefined} route - Route node from layout (item id and language).
  * @param {string} fallbackLocale - Locale used when `route.itemLanguage` is not set.
  * @returns `null` when `route` is missing or `route.itemId` is not set.
  * @internal
@@ -161,11 +161,7 @@ export function buildSitecoreItemCacheTagFromRouteData(
     ? sanitizeSitecoreCacheTagSegment(route.itemLanguage)
     : sanitizeSitecoreCacheTagSegment(fallbackLocale);
   const id = normalizeSitecoreItemIdForCacheTag(route.itemId);
-  const ver =
-    route.itemVersion !== undefined && Number.isFinite(route.itemVersion)
-      ? `v${Math.trunc(route.itemVersion)}`
-      : 'latest';
-  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}:${ver}`;
+  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}`;
 }
 
 /**

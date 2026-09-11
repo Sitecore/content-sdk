@@ -675,7 +675,7 @@ export const getDynamicPlaceholderPattern: (placeholder: string) => RegExp;
 export const getEdgeProxyContentUrl: (sitecoreEdgeUrl?: string) => string;
 
 // @internal
-export const getEdgeProxyFormsUrl: (sitecoreEdgeContextId: string, formId: string, sitecoreEdgeUrl?: string, language?: string) => string;
+export const getEdgeProxyFormsUrl: (formId: string, sitecoreEdgeUrl?: string, language?: string) => string;
 
 // @internal
 export const getFallbackConfig: () => SitecoreConfig;
