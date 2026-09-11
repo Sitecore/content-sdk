@@ -6,7 +6,6 @@ import {
   buildSitecoreItemCacheTag,
   buildSitecoreDictionaryCacheTag,
   buildSitecoreItemCacheTagFromRouteData,
-  buildLoaderDictionaryCacheTagsFromSites,
   buildLoaderDictionaryCacheTag,
   buildSitecoreSiteCacheTag,
   buildSitecoreLocaleCacheTag,
@@ -61,24 +60,6 @@ describe('buildSitecoreItemCacheTagFromRouteData', () => {
     expect(buildSitecoreItemCacheTagFromRouteData(route, 'fr-CA')).toBe(
       `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:item-1:fr-ca`
     );
-  });
-});
-
-describe('buildLoaderDictionaryCacheTagsFromSites', () => {
-  it('dedupes tags and falls back to base locale', () => {
-    const tags = buildLoaderDictionaryCacheTagsFromSites({
-      sites: [
-        { name: 'shop', language: 'en' },
-        { name: 'shop', language: 'en' },
-        { name: 'blog', language: '   ' },
-      ],
-      baseLocale: 'de',
-    });
-
-    expect(tags).toEqual([
-      `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:loader:dictionary:shop:en`,
-      `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:loader:dictionary:blog:de`,
-    ]);
   });
 });
 

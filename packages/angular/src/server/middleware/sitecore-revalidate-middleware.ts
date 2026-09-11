@@ -1,7 +1,6 @@
 import type { SiteInfo } from '@sitecore-content-sdk/content/site';
 import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from './models';
 import { LoaderCache } from '../../loaders/models';
-import { buildLoaderDictionaryCacheTagsFromSites } from '../cache/cache-tags';
 import { dedupeCacheStrings } from '../cache/utils';
 import {
   collectSitecoreTagsFromEdgeRevalidateRequestBody,
@@ -40,8 +39,9 @@ export interface SitecoreRevalidateMiddlewareOptions {
   /** Locale fallback when an update has no `entity_culture`; default `'en'`. */
   defaultLocale?: string;
   /**
-   * When set, every webhook also marks stale one
-   * `sc:loader:dictionary:<site>:<locale>` entry per site (dictionary fan-out).
+   * Sites list (e.g. from `.sitecore/sites.json`), used to resolve which site a Dictionary entry
+   * update (`entity_definition: "DictionaryEntry"`) belongs to, so only that site's
+   * `sc:dict:<site>:<locale>` tag is marked stale instead of every configured site's.
    */
   sites?: SiteInfo[];
   /** Endpoint path; default `/api/revalidate`. */
@@ -53,8 +53,8 @@ export interface SitecoreRevalidateMiddlewareOptions {
  *
  * Handles `POST /api/revalidate` (configurable via `endpoint`):
  * - Authenticates with `SITECORE_REVALIDATE_SECRET` / `x-revalidate-secret` when configured.
- * - Parses Experience Edge webhook bodies via {@link collectSitecoreTagsFromEdgeRevalidateRequestBody}.
- * - Optionally appends dictionary loader tags for each configured site.
+ * - Parses Experience Edge webhook bodies via {@link collectSitecoreTagsFromEdgeRevalidateRequestBody},
+ *   which resolves Dictionary entry updates to the specific site's dictionary tag using `sites`.
  * - Calls `LoaderCache.invalidate` (marks entries stale; does not delete).
  *
  * Response shape: `{ revalidated, tagsCount, marked, invocation_id, continues, durationMs }`.
@@ -66,11 +66,7 @@ export function createSitecoreRevalidateMiddleware(
   options: SitecoreRevalidateMiddlewareOptions
 ): ExpressMiddleware {
   const { cache, secret, defaultLocale = 'en', sites, endpoint = DEFAULT_ENDPOINT } = options;
-
-  const dictionaryTags =
-    sites !== undefined
-      ? buildLoaderDictionaryCacheTagsFromSites({ sites, baseLocale: defaultLocale })
-      : [];
+  const siteNames = sites?.map((site) => site.name) ?? [];
 
   return async (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
     if (req.method !== 'POST' || req.path !== endpoint) {
@@ -102,10 +98,9 @@ export function createSitecoreRevalidateMiddleware(
 
       const webhookBody = body as SitecoreEdgeRevalidateRequestBody;
 
-      const tags = dedupeCacheStrings([
-        ...collectSitecoreTagsFromEdgeRevalidateRequestBody(webhookBody, { defaultLocale }),
-        ...dictionaryTags,
-      ]);
+      const tags = dedupeCacheStrings(
+        collectSitecoreTagsFromEdgeRevalidateRequestBody(webhookBody, { defaultLocale, siteNames })
+      );
 
       if (tags.length === 0) {
         res.status(400).json({
