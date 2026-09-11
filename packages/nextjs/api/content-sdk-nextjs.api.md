@@ -81,6 +81,7 @@ import { getDesignLibraryStylesheetLinks } from '@sitecore-content-sdk/react';
 import { getEdgeProxyContentUrl } from '@sitecore-content-sdk/content/client';
 import { getFieldValue } from '@sitecore-content-sdk/content/layout';
 import { getGroomedVariantIds } from '@sitecore-content-sdk/content/personalize';
+import { getJsonLdSchemas } from '@sitecore-content-sdk/content/layout';
 import { getPersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
 import { getPersonalizedRewriteData } from '@sitecore-content-sdk/content/personalize';
 import { GetServerSidePropsContext } from 'next';
@@ -94,6 +95,7 @@ import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/content/clien
 import { GraphQLRequestClientFactory as GraphQLRequestClientFactory_2 } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/content/client';
 import { HTMLLink } from '@sitecore-content-sdk/content';
+import { HTMLScript } from '@sitecore-content-sdk/content';
 import { Image as Image_2 } from '@sitecore-content-sdk/react';
 import { ImageField } from '@sitecore-content-sdk/react';
 import { ImageFieldValue } from '@sitecore-content-sdk/react';
@@ -108,6 +110,8 @@ import { isEditorActive } from '@sitecore-content-sdk/content/editing';
 import { isExperimentalEnvFlagEnabled } from '@sitecore-content-sdk/content/experimental';
 import { isExperimentalFeaturesGloballyEnabled } from '@sitecore-content-sdk/content/experimental';
 import { Item } from '@sitecore-content-sdk/content/layout';
+import { JsonLdSchema } from '@sitecore-content-sdk/react';
+import { JsonLdSchemaProps } from '@sitecore-content-sdk/react';
 import { JSX as JSX_2 } from 'react';
 import { LayoutService } from '@sitecore-content-sdk/content/layout';
 import { LayoutServiceConfig } from '@sitecore-content-sdk/content/layout';
@@ -641,6 +645,8 @@ export const getHeadersForPropagation: (headers: IncomingHttpHeaders | Headers) 
     [key: string]: string;
 };
 
+export { getJsonLdSchemas }
+
 // @public
 export function getPageMetadata(route?: RouteData<PageMetadataRouteFields> | null, defaultTitle?: string): Metadata;
 
@@ -677,6 +683,8 @@ export class HealthcheckMiddleware {
 
 export { HTMLLink }
 
+export { HTMLScript }
+
 export { Image_2 as Image }
 
 export { ImageField }
@@ -707,6 +715,10 @@ export const isServerSidePropsContext: (context: GetServerSidePropsContext | Get
 export function isSuccessfulProxyExecution<SuccessfulProxyType = unknown, T extends ProxiesContextMapValue | undefined = ProxiesContextMapValue | undefined>(info: T): info is T & SuccessfulProxyType;
 
 export { Item }
+
+export { JsonLdSchema }
+
+export { JsonLdSchemaProps }
 
 export { LayoutService }
 
