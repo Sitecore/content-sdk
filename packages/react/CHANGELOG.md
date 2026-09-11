@@ -1,5 +1,13 @@
 # @sitecore-content-sdk/react
 
+## 2.5.0
+
+### Minor Changes
+
+- Schema.org & JSON-LD Support ([b858df1](https://github.com/sitecore/content-sdk/commit/b858df1f6f27c4f7a00a2d33c81c5e5233790233))
+- minor `@sitecore-content-sdk/content` dependency update:
+  - Schema.org & JSON-LD Support ([b858df1](https://github.com/sitecore/content-sdk/commit/b858df1f6f27c4f7a00a2d33c81c5e5233790233))
+
 ## 2.4.0
 
 ### Minor Changes
