@@ -30,14 +30,15 @@ describe('sitecore-edge-webhook-revalidation', () => {
   });
 
   describe('isSitecoreDictionaryEntryUpdate', () => {
-    it('should match "DictionaryEntry" case-insensitively', () => {
+    it('should match "DictionaryEntry" exactly', () => {
       expect(isSitecoreDictionaryEntryUpdate('DictionaryEntry')).to.equal(true);
     });
 
-    it('should return false for other entity definitions or missing values', () => {
+    it('should return false for other entity definitions, missing values, or a different casing', () => {
       expect(isSitecoreDictionaryEntryUpdate('Item')).to.equal(false);
       expect(isSitecoreDictionaryEntryUpdate(undefined)).to.equal(false);
       expect(isSitecoreDictionaryEntryUpdate('')).to.equal(false);
+      expect(isSitecoreDictionaryEntryUpdate('dictionaryentry')).to.equal(false);
     });
   });
 

@@ -42,7 +42,7 @@ export function extractSitecoreEdgeContentId(identifier: string): string {
 }
 
 /**
- * `entity_definition` value Experience Edge sends for Dictionary entry updates, matched case-insensitively.
+ * `entity_definition` value Experience Edge sends for Dictionary entry updates. This is the literal value Experience Edge sends.
  * @internal
  */
 const DICTIONARY_ENTRY_ENTITY_DEFINITION = 'DictionaryEntry';
@@ -77,10 +77,33 @@ export function resolveSitecoreDictionarySiteNameFromIdentifier(
   if (!normalized) {
     return undefined;
   }
-  const byLengthDesc = [...siteNames].sort((a, b) => b.length - a.length);
-  for (const siteName of byLengthDesc) {
+  return matchSitecoreDictionarySiteName(normalized, sortSiteNamesByLengthDesc(siteNames));
+}
+
+/**
+ * Sorts site names longest-first, for {@link matchSitecoreDictionarySiteName}.
+ * @param {string[]} siteNames - Configured site names.
+ * @internal
+ */
+function sortSiteNamesByLengthDesc(siteNames: readonly string[]): string[] {
+  return [...siteNames].sort((a, b) => b.length - a.length);
+}
+
+/**
+ * Matches a normalized (trimmed, lowercased) identifier against site names already sorted
+ * longest-first. Split out of {@link resolveSitecoreDictionarySiteNameFromIdentifier} so a request
+ * with many Dictionary entry updates in one payload sorts `siteNames` once instead of per update.
+ * @param {string} normalizedIdentifier - Identifier, already trimmed and lowercased.
+ * @param {string[]} siteNamesByLengthDesc - Site names sorted longest-first.
+ * @internal
+ */
+function matchSitecoreDictionarySiteName(
+  normalizedIdentifier: string,
+  siteNamesByLengthDesc: readonly string[]
+): string | undefined {
+  for (const siteName of siteNamesByLengthDesc) {
     const prefix = `${siteName.trim().toLowerCase()}-`;
-    if (prefix.length > 1 && normalized.startsWith(prefix)) {
+    if (prefix.length > 1 && normalizedIdentifier.startsWith(prefix)) {
       return siteName;
     }
   }
@@ -121,14 +144,17 @@ export function collectSitecoreTagsFromEdgeRevalidateRequestBody(
   options: CollectSitecoreTagsFromEdgeBodyOptions
 ): string[] {
   const { defaultLocale, siteNames = [] } = options;
+  const siteNamesByLengthDesc = sortSiteNamesByLengthDesc(siteNames);
   const out: string[] = [];
 
   for (const u of body?.updates ?? []) {
     const locale = u?.entity_culture?.trim() || defaultLocale;
 
     if (isSitecoreDictionaryEntryUpdate(u?.entity_definition)) {
-      const identifier = u?.identifier ?? '';
-      const site = resolveSitecoreDictionarySiteNameFromIdentifier(identifier, siteNames);
+      const identifier = (u?.identifier ?? '').trim().toLowerCase();
+      const site = identifier
+        ? matchSitecoreDictionarySiteName(identifier, siteNamesByLengthDesc)
+        : undefined;
 
       if (!site) {
         debug.revalidate(
