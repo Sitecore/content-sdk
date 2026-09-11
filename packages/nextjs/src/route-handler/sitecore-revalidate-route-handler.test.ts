@@ -45,7 +45,7 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     const handler = module.createSitecoreRevalidateRouteHandler({ defaultLocale: 'en' });
     const res = await handler.POST(
       createReq({
-        body: { tags: ['sc:route:site:en:_'] },
+        body: { updates: [{ identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' }] },
       })
     );
 
@@ -58,7 +58,7 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     const handler = module.createSitecoreRevalidateRouteHandler({ defaultLocale: 'en' });
     const res = await handler.POST(
       createReq({
-        body: { tags: ['sc:route:site:en:_'] },
+        body: { updates: [{ identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' }] },
       })
     );
 
@@ -71,7 +71,7 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     const handler = module.createSitecoreRevalidateRouteHandler();
     const res = await handler.POST(
       createReq({
-        body: { tags: ['sc:route:site:en:_'] },
+        body: { updates: [{ identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' }] },
       })
     );
 
@@ -85,7 +85,7 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     const res = await handler.POST(
       createReq({
         headers: { 'x-revalidate-secret': 'wrong' },
-        body: { tags: ['sc:route:site:en:_'] },
+        body: { updates: [{ identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' }] },
       })
     );
 
@@ -105,44 +105,6 @@ describe('createSitecoreRevalidateRouteHandler', () => {
 
     expect(res.status).to.equal(400);
     expect(revalidateTagStub.called).to.equal(false);
-  });
-
-  it('should pass sc:-prefixed tags through verbatim and echo invocation metadata', async () => {
-    process.env.SITECORE_REVALIDATE_SECRET = 'expected';
-    const handler = module.createSitecoreRevalidateRouteHandler();
-    const res = await handler.POST(
-      createReq({
-        headers: { 'x-revalidate-secret': 'expected' },
-        body: { tags: ['sc:route:site:en:_', 'sc:dict:site:en'] },
-      })
-    );
-
-    expect(res.status).to.equal(200);
-    expect(revalidateTagStub.callCount).to.equal(2);
-    expect(res.body).to.deep.equal({
-      revalidated: true,
-      tagsCount: 2,
-      invocation_id: null,
-      continues: false,
-    });
-  });
-
-  it('should map bare item id in tags via webhook resolution', async () => {
-    process.env.SITECORE_REVALIDATE_SECRET = 'expected';
-    const handler = module.createSitecoreRevalidateRouteHandler({ defaultLocale: 'en' });
-    const res = await handler.POST(
-      createReq({
-        headers: { 'x-revalidate-secret': 'expected' },
-        body: { tags: ['71B0BA0716214254AEE4429B1A970C8B'] },
-      })
-    );
-
-    expect(res.status).to.equal(200);
-    expect(revalidateTagStub.calledOnce).to.equal(true);
-    expect(revalidateTagStub.firstCall.args[0]).to.equal(
-      'sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en'
-    );
-    expect(res.body).to.deep.include({ revalidated: true, tagsCount: 1, continues: false });
   });
 
   it('should handle webhook updates and echo invocation metadata', async () => {
@@ -173,7 +135,7 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     });
   });
 
-  it('should include dictionary tags from sites on every call when configured', async () => {
+  it('should not touch dictionary tags for a non-dictionary update, even when sites is configured', async () => {
     process.env.SITECORE_REVALIDATE_SECRET = 'expected';
     const handler = module.createSitecoreRevalidateRouteHandler({
       defaultLocale: 'en',
@@ -194,29 +156,64 @@ describe('createSitecoreRevalidateRouteHandler', () => {
     );
 
     expect(res.status).to.equal(200);
-    expect(revalidateTagStub.calledTwice).to.equal(true);
+    expect(revalidateTagStub.calledOnce).to.equal(true);
     expect(revalidateTagStub.firstCall.args[0]).to.equal(
       'sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en'
     );
-    expect(revalidateTagStub.secondCall.args[0]).to.equal('sc:dict:new-testing-site-mn:en');
   });
 
-  it('should also append dictionary tags when only sc: tags are sent', async () => {
+  it('should resolve a Dictionary entry update to that site\'s dictionary tag only', async () => {
     process.env.SITECORE_REVALIDATE_SECRET = 'expected';
     const handler = module.createSitecoreRevalidateRouteHandler({
       defaultLocale: 'en',
-      sites: [{ name: 'site-a', hostName: 'a.local', language: 'en' }],
+      sites: [
+        { name: 'new-testing-site-mn', hostName: 'localhost', language: 'en' },
+        { name: 'other-site', hostName: 'localhost', language: 'en' },
+      ],
     });
     const res = await handler.POST(
       createReq({
         headers: { 'x-revalidate-secret': 'expected' },
-        body: { tags: ['sc:route:site-a:en:_'] },
+        body: {
+          updates: [
+            {
+              identifier: 'new-testing-site-mn-1a1905a154414da3883fd9ca7074b128-test 5555-en-gb',
+              entity_definition: 'DictionaryEntry',
+              operation: 'Update',
+              entity_culture: 'en-GB',
+            },
+          ],
+        },
       })
     );
 
     expect(res.status).to.equal(200);
-    expect(revalidateTagStub.callCount).to.equal(2);
-    expect(revalidateTagStub.firstCall.args[0]).to.equal('sc:route:site-a:en:_');
-    expect(revalidateTagStub.secondCall.args[0]).to.equal('sc:dict:site-a:en');
+    expect(revalidateTagStub.calledOnce).to.equal(true);
+    expect(revalidateTagStub.firstCall.args[0]).to.equal('sc:dict:new-testing-site-mn:en-gb');
+  });
+
+  it('should skip a Dictionary entry update when no configured site matches the identifier', async () => {
+    process.env.SITECORE_REVALIDATE_SECRET = 'expected';
+    const handler = module.createSitecoreRevalidateRouteHandler({
+      defaultLocale: 'en',
+      sites: [{ name: 'new-testing-site-mn', hostName: 'localhost', language: 'en' }],
+    });
+    const res = await handler.POST(
+      createReq({
+        headers: { 'x-revalidate-secret': 'expected' },
+        body: {
+          updates: [
+            {
+              identifier: 'unknown-site-1a1905a154414da3883fd9ca7074b128-test 5555-en-gb',
+              entity_definition: 'DictionaryEntry',
+              entity_culture: 'en-GB',
+            },
+          ],
+        },
+      })
+    );
+
+    expect(res.status).to.equal(400);
+    expect(revalidateTagStub.called).to.equal(false);
   });
 });

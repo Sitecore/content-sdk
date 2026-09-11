@@ -3,6 +3,8 @@ import { describe, it, expect } from 'vitest';
 import {
   collectSitecoreTagsFromEdgeRevalidateRequestBody,
   extractSitecoreEdgeContentId,
+  isSitecoreDictionaryEntryUpdate,
+  resolveSitecoreDictionarySiteNameFromIdentifier,
 } from './sitecore-edge-webhook-revalidation';
 
 describe('sitecore-edge-webhook-revalidation', () => {
@@ -14,6 +16,60 @@ describe('sitecore-edge-webhook-revalidation', () => {
       expect(extractSitecoreEdgeContentId('71B0BA0716214254AEE4429B1A970C8B-LAYOUT')).toBe(
         '71B0BA0716214254AEE4429B1A970C8B'
       );
+    });
+  });
+
+  describe('isSitecoreDictionaryEntryUpdate', () => {
+    it('matches "DictionaryEntry" exactly', () => {
+      expect(isSitecoreDictionaryEntryUpdate('DictionaryEntry')).toBe(true);
+    });
+
+    it('returns false for other entity definitions, missing values, or a different casing', () => {
+      expect(isSitecoreDictionaryEntryUpdate('Item')).toBe(false);
+      expect(isSitecoreDictionaryEntryUpdate(undefined)).toBe(false);
+      expect(isSitecoreDictionaryEntryUpdate('dictionaryentry')).toBe(false);
+    });
+  });
+
+  describe('resolveSitecoreDictionarySiteNameFromIdentifier', () => {
+    it('resolves the configured site name that prefixes the identifier', () => {
+      expect(
+        resolveSitecoreDictionarySiteNameFromIdentifier(
+          'iki-vercel-site-1a1905a154414da3883fd9ca7074b128-test 5555-en-gb',
+          ['iki-vercel-site', 'other-site']
+        )
+      ).toBe('iki-vercel-site');
+    });
+
+    it('prefers the longest matching site name to avoid overlapping prefixes', () => {
+      expect(
+        resolveSitecoreDictionarySiteNameFromIdentifier(
+          'test-2-1a1905a154414da3883fd9ca7074b128-value-en',
+          ['test', 'test-2']
+        )
+      ).toBe('test-2');
+      // and doesn't steal a real match belonging to the shorter name
+      expect(
+        resolveSitecoreDictionarySiteNameFromIdentifier(
+          'test-1a1905a154414da3883fd9ca7074b128-value-en',
+          ['test', 'test-2']
+        )
+      ).toBe('test');
+    });
+
+    it('returns undefined when no configured site name matches', () => {
+      expect(
+        resolveSitecoreDictionarySiteNameFromIdentifier(
+          'unknown-site-1a1905a154414da3883fd9ca7074b128-value-en',
+          ['iki-vercel-site']
+        )
+      ).toBeUndefined();
+    });
+
+    it('returns undefined when siteNames is empty', () => {
+      expect(
+        resolveSitecoreDictionarySiteNameFromIdentifier('iki-vercel-site-abc-value-en', [])
+      ).toBeUndefined();
     });
   });
 
@@ -33,18 +89,45 @@ describe('sitecore-edge-webhook-revalidation', () => {
       expect(tags).toEqual(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en']);
     });
 
-    it('passes through full sc: tags in tags array', () => {
+    it('maps a Dictionary entry update to sc:dict for the resolved site, not sc:item', () => {
       const tags = collectSitecoreTagsFromEdgeRevalidateRequestBody(
-        { tags: ['sc:loader:dictionary:default:en'] },
-        { defaultLocale: 'en' }
+        {
+          updates: [
+            {
+              identifier: 'iki-vercel-site-1a1905a154414da3883fd9ca7074b128-test 5555-en-gb',
+              entity_definition: 'DictionaryEntry',
+              operation: 'Update',
+              entity_culture: 'en-GB',
+            },
+          ],
+        },
+        { defaultLocale: 'en', siteNames: ['iki-vercel-site'] }
       );
-      expect(tags).toEqual(['sc:loader:dictionary:default:en']);
+      expect(tags).toEqual(['sc:dict:iki-vercel-site:en-gb']);
     });
 
-    it('maps bare ids in tags array to item tags with defaultLocale', () => {
+    it('does not add a dictionary tag for a Dictionary entry update with no matching site', () => {
       const tags = collectSitecoreTagsFromEdgeRevalidateRequestBody(
-        { tags: ['71B0BA0716214254AEE4429B1A970C8B'] },
-        { defaultLocale: 'en' }
+        {
+          updates: [
+            {
+              identifier: 'unknown-site-1a1905a154414da3883fd9ca7074b128-test 5555-en-gb',
+              entity_definition: 'DictionaryEntry',
+              entity_culture: 'en-GB',
+            },
+          ],
+        },
+        { defaultLocale: 'en', siteNames: ['iki-vercel-site'] }
+      );
+      expect(tags).toEqual([]);
+    });
+
+    it('does not add a dictionary tag for a non-dictionary update, even with siteNames configured', () => {
+      const tags = collectSitecoreTagsFromEdgeRevalidateRequestBody(
+        {
+          updates: [{ identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' }],
+        },
+        { defaultLocale: 'en', siteNames: ['iki-vercel-site'] }
       );
       expect(tags).toEqual(['sc:item:71b0ba07-1621-4254-aee4-429b1a970c8b:en']);
     });

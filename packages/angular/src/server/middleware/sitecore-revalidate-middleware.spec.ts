@@ -99,7 +99,7 @@ describe('createSitecoreRevalidateMiddleware', () => {
         path: '/api/revalidate',
         url: '/api/revalidate',
         headers: {},
-        body: { tags: ['sc:site:demo'] },
+        body: {},
         query: {},
       } as ExpressRequest,
       res,
@@ -170,12 +170,11 @@ describe('createSitecoreRevalidateMiddleware', () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
-      error:
-        'Provide non-empty `updates` (with identifiers) and/or `tags` that resolve to at least one cache tag.',
+      error: 'Provide non-empty `updates` (with identifiers) that resolve to at least one cache tag.',
     });
   });
 
-  it('marks dictionary loader entries stale via sites fan-out even without webhook tags', async () => {
+  it('does not mark dictionary entries stale on a call with no resolvable updates, even when sites is configured', async () => {
     const dictBuilt = buildCacheKey(
       'dictionary',
       makeLoaderContext({
@@ -212,16 +211,73 @@ describe('createSitecoreRevalidateMiddleware', () => {
       next
     );
 
+    // No `updates` in the body resolves to zero tags, so this is now a 400 rather than a
+    // blanket dictionary fan-out across every configured site.
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect((await cache.get(dictKey)).kind).not.toBe('stale');
+  });
+
+  it('marks only the resolved site\'s dictionary entry stale on a Dictionary entry webhook', async () => {
+    const dictBuilt = buildCacheKey(
+      'dictionary',
+      makeLoaderContext({
+        url: '/',
+        routeParams: { locale: 'en' },
+        scParams: mockScParams({ siteName: 'demo' }),
+      })
+    );
+    const dictKey = dictBuilt.key;
+    await cache.set(
+      dictKey,
+      { hello: 'world' },
+      300,
+      buildLoaderCacheTags('dictionary', dictBuilt.dimensions, dictKey)
+    );
+
+    const middleware = createSitecoreRevalidateMiddleware({
+      cache,
+      defaultLocale: 'en',
+      sites: [
+        { name: 'demo', hostName: '*', language: 'en' },
+        { name: 'other-site', hostName: '*', language: 'en' },
+      ],
+    });
+    const res = createMockRes();
+
+    await middleware(
+      {
+        method: 'POST',
+        path: '/api/revalidate',
+        url: '/api/revalidate',
+        headers: {},
+        body: {
+          invocation_id: 'dict-update',
+          updates: [
+            {
+              identifier: 'demo-1a1905a154414da3883fd9ca7074b128-test 5555-en',
+              entity_definition: 'DictionaryEntry',
+              entity_culture: 'en',
+            },
+          ],
+        },
+        query: {},
+      } as ExpressRequest,
+      res,
+      next
+    );
+
     expect(res.status).toHaveBeenCalledWith(200);
     expect((await cache.get(dictKey)).kind).toBe('stale');
-    expect(res.json).toHaveBeenCalledWith({
-      revalidated: true,
-      tagsCount: 1,
-      marked: 1,
-      invocation_id: 'dict-fanout',
-      continues: true,
-      durationMs: expect.any(Number),
-    });
+    // The page entry (untouched by this Dictionary-only update) stays fresh.
+    expect((await cache.get(cacheKey)).kind).not.toBe('stale');
+    expect(res.json).toHaveBeenCalledWith(
+      expect.objectContaining({
+        revalidated: true,
+        tagsCount: 1,
+        marked: 1,
+        invocation_id: 'dict-update',
+      })
+    );
   });
 
   it('returns 500 when cache.invalidate throws', async () => {
@@ -242,7 +298,9 @@ describe('createSitecoreRevalidateMiddleware', () => {
         path: '/api/revalidate',
         url: '/api/revalidate',
         headers: {},
-        body: { tags: ['sc:site:demo'] },
+        body: {
+          updates: [{ identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' }],
+        },
         query: {},
       } as ExpressRequest,
       res,

@@ -49,28 +49,6 @@ export type SitecoreDictionaryCacheTagParams = {
 };
 
 /**
- * Site entry used when fanning out dictionary loader tags from webhook middleware.
- * @internal
- */
-export type LoaderDictionaryCacheSiteInfo = {
-  /** Site name. */
-  name: string;
-  /** Optional site language; falls back to `baseLocale` when blank. */
-  language?: string;
-};
-
-/**
- * Parameters for {@link buildLoaderDictionaryCacheTagsFromSites}.
- * @internal
- */
-export type BuildLoaderDictionaryCacheTagsFromSitesParams = {
-  /** Sites to emit dictionary loader tags for. */
-  sites: readonly LoaderDictionaryCacheSiteInfo[];
-  /** Locale used when a site entry has no `language`. */
-  baseLocale: string;
-};
-
-/**
  * Builds a dictionary cache tag: `sc:dict:<site>:<locale>`.
  * Used for dictionary loader entries and cross-stack webhook fan-out.
  * @param {SitecoreDictionaryCacheTagParams} params - Site and locale segments.
@@ -103,30 +81,6 @@ export function buildSitecoreItemCacheTagFromRouteData(
     : sanitizeSitecoreCacheSegment(fallbackLocale);
   const id = normalizeSitecoreItemIdForCacheKey(route.itemId);
   return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}`;
-}
-
-/**
- * Builds loader-cache dictionary self-tags for webhook fan-out across sites.
- * Produces `sc:loader:dictionary:<site>:<locale>` tags, deduped in first-seen order.
- * When a site has no `language`, `baseLocale` is used.
- * @param {BuildLoaderDictionaryCacheTagsFromSitesParams} params - Sites and fallback locale.
- * @returns {string[]} Deduplicated loader dictionary cache tags.
- * @internal
- */
-export function buildLoaderDictionaryCacheTagsFromSites(
-  params: BuildLoaderDictionaryCacheTagsFromSitesParams
-): string[] {
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const site of params.sites) {
-    const locale = site.language?.trim() ? site.language : params.baseLocale;
-    const tag = buildLoaderDictionaryCacheTag({ site: site.name, locale });
-    if (!seen.has(tag)) {
-      seen.add(tag);
-      out.push(tag);
-    }
-  }
-  return out;
 }
 
 /**
