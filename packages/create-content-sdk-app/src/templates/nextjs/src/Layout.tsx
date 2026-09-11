@@ -3,7 +3,7 @@
  */
 import { JSX } from 'react';
 import Head from 'next/head';
-import { Placeholder, DesignLibrary, Page, PageMetaTags } from '@sitecore-content-sdk/nextjs';
+import { Placeholder, DesignLibrary, Page } from '@sitecore-content-sdk/nextjs';
 import SitecoreHead from 'src/SitecoreHead';
 
 interface LayoutProps {
@@ -18,7 +18,6 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
   return (
     <>
       <SitecoreHead page={page} />
-      <PageMetaTags route={route} />
       <Head>
         <link rel="icon" href="/favicon.ico" />
       </Head>
