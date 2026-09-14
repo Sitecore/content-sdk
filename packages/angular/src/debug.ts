@@ -1,4 +1,9 @@
-import { debug as coreDebug, Debugger } from '@sitecore-content-sdk/core';
+import {
+  debug as coreDebug,
+  debugModule,
+  debugNamespace,
+  Debugger,
+} from '@sitecore-content-sdk/core';
 import { debug as contentDebug } from '@sitecore-content-sdk/content';
 
 /**
@@ -8,6 +13,7 @@ import { debug as contentDebug } from '@sitecore-content-sdk/content';
 const debug: Record<string, Debugger> = {
   ...coreDebug,
   ...contentDebug,
+  revalidate: debugModule(`${debugNamespace}:revalidate`),
 };
 
 export default debug;

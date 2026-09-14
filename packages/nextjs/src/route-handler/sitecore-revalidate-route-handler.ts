@@ -2,7 +2,7 @@ import {
   collectSitecoreTagsFromEdgeRevalidateRequestBody,
   type SitecoreEdgeRevalidateRequestBody,
 } from '../cache/sitecore-edge-webhook-revalidation';
-import { buildSitecoreDictionaryCacheTagsFromSites, dedupeSitecoreCacheTags } from '../cache/sitecore-cache-tags';
+import { dedupeSitecoreCacheTags } from '../cache/sitecore-cache-tags';
 import debug from '../debug';
 import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
@@ -49,13 +49,15 @@ export type SitecoreRevalidateRouteHandlerOptions = {
    */
   cacheProfile?: RevalidateTagCacheProfile;
   /**
-   * Locale for item tags when culture is missing, and for dictionary tags when a site has no language.
+   * Locale for item and dictionary tags when an update omits `entity_culture`.
    * Defaults to `'en'` when omitted.
    */
   defaultLocale?: string;
   /**
-   * Sites list (e.g. from `.sitecore/sites.json`). Adds one `sc:dict:<site>:<locale>` tag per
-   * site on every revalidation call. `generateSites` always includes the configured default site.
+   * Sites list (e.g. from `.sitecore/sites.json`), used to resolve which site a Dictionary entry
+   * update (`entity_definition: "DictionaryEntry"`) belongs to, so only that site's
+   * `sc:dict:<site>:<locale>` tag is revalidated instead of every configured site's. `generateSites`
+   * always includes the configured default site.
    */
   sites?: SiteInfo[];
 };
@@ -68,31 +70,22 @@ export type SitecoreRevalidateRouteHandlerOptions = {
  *
  * - **`updates[]`** — Sitecore publish-event rows. Each row's `identifier` (with `-media` / `-layout`
  *   suffix stripped) maps to an `sc:item:<id>:<locale>` tag, using `entity_culture` for locale
- *   (falling back to the handler's `defaultLocale`).
- * - **`tags[]`** — pass-through and convenience array:
- *   - Strings already starting with `sc:` are used verbatim (e.g. `sc:route:...`, `sc:item:...`, `sc:dict:...`).
- *   - Bare values are treated as Sitecore item ids and mapped to `sc:item:<id>:<defaultLocale>`.
- *
- * When **`sites`** is configured, the handler also appends one `sc:dict:<site>:<locale>` tag per
- * site so dictionary updates flow through the same call.
+ *   (falling back to the handler's `defaultLocale`) — except rows where `entity_definition` is
+ *   `"DictionaryEntry"`, which map to `sc:dict:<site>:<locale>` for the site resolved from the
+ *   identifier via the configured **`sites`** option (skipped, with a debug log, when no configured
+ *   site matches). Only updates that are actually Dictionary changes revalidate dictionary tags — a
+ *   webhook for an unrelated item never touches them.
  *
  * Auth (optional): when `SITECORE_REVALIDATE_SECRET` (or the `secret` option) is non-empty, callers must
  * send the same value in the **`x-revalidate-secret`** header. When unset or blank, no header is required.
- * @param {SitecoreRevalidateRouteHandlerOptions} [options] - Optional inline `secret`, `cacheProfile`, locale, sites, and dictionary options.
+ * @param {SitecoreRevalidateRouteHandlerOptions} [options] - Optional inline `secret`, `cacheProfile`, locale, and sites options.
  * @public
  */
 export function createSitecoreRevalidateRouteHandler(
   options: SitecoreRevalidateRouteHandlerOptions = {}
 ) {
   const { defaultLocale = 'en', sites, secret, cacheProfile = 'max' } = options;
-
-  const dictionaryTags =
-    sites !== undefined
-      ? buildSitecoreDictionaryCacheTagsFromSites({
-          sites,
-          baseLocale: defaultLocale,
-        })
-      : [];
+  const siteNames = sites?.map((site) => site.name) ?? [];
 
   const POST = async (req: NextRequest) => {
     const startTimestamp = Date.now();
@@ -131,15 +124,12 @@ export function createSitecoreRevalidateRouteHandler(
         invocation_id: webhookBody.invocation_id ?? null,
         continues: webhookBody.continues ?? false,
         updatesCount: webhookBody.updates?.length ?? 0,
-        tagsCount: Array.isArray(webhookBody.tags) ? webhookBody.tags.length : 0,
-        dictionaryTagsCount: dictionaryTags.length,
         defaultLocale,
       });
 
-      const tags = dedupeSitecoreCacheTags([
-        ...collectSitecoreTagsFromEdgeRevalidateRequestBody(webhookBody, { defaultLocale }),
-        ...dictionaryTags,
-      ]);
+      const tags = dedupeSitecoreCacheTags(
+        collectSitecoreTagsFromEdgeRevalidateRequestBody(webhookBody, { defaultLocale, siteNames })
+      );
 
       if (tags.length === 0) {
         debug.revalidate(
@@ -148,8 +138,7 @@ export function createSitecoreRevalidateRouteHandler(
         );
         return NextResponse.json(
           {
-            error:
-              'Provide non-empty `updates` (with identifiers) and/or `tags` that resolve to at least one cache tag.',
+            error: 'Provide non-empty `updates` (with identifiers) that resolve to at least one cache tag.',
           },
           { status: 400 }
         );
