@@ -8,7 +8,7 @@
 
 > **getChildComponentProps**(`placeholderFields`, `placeholderParams`, `componentRendering`): [`ChildComponentProps`](../interfaces/ChildComponentProps.md)
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:165](https://github.com/Sitecore/content-sdk/blob/330793b3538a3eba00242844c28348678a5704cf/packages/angular/src/components/placeholder/placeholder-utils.ts#L165)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:165](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/angular/src/components/placeholder/placeholder-utils.ts#L165)
 
 Merge placeholder-level fields/params with per-component fields/params.
 

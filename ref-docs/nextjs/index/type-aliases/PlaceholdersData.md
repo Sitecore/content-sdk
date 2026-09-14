@@ -8,7 +8,7 @@
 
 > **PlaceholdersData**\<`TYPEDNAME`\> = `{ [P in TYPEDNAME]: ComponentRendering[] }`
 
-Defined in: content/types/layout/models.d.ts:77
+Defined in: content/types/layout/models.d.ts:79
 
 Placeholder contents data (name: placeholder name, then array of components within that placeholder name)
 

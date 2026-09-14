@@ -6,7 +6,7 @@
 
 # Interface: FieldMetadata
 
-Defined in: content/types/layout/models.d.ts:132
+Defined in: content/types/layout/models.d.ts:134
 
 Field metadata in editing mode
 
@@ -22,7 +22,7 @@ Field metadata in editing mode
 
 > `optional` **metadata?**: `object`
 
-Defined in: content/types/layout/models.d.ts:133
+Defined in: content/types/layout/models.d.ts:135
 
 #### Index Signature
 

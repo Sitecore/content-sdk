@@ -6,7 +6,7 @@
 
 # Interface: RouteData\<Fields\>
 
-Defined in: content/types/layout/models.d.ts:55
+Defined in: content/types/layout/models.d.ts:57
 
 Shape of route data returned from Sitecore Layout Service
 
@@ -22,7 +22,7 @@ Shape of route data returned from Sitecore Layout Service
 
 > `optional` **databaseName?**: `string`
 
-Defined in: content/types/layout/models.d.ts:59
+Defined in: content/types/layout/models.d.ts:61
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: content/types/layout/models.d.ts:59
 
 > `optional` **deviceId?**: `string`
 
-Defined in: content/types/layout/models.d.ts:60
+Defined in: content/types/layout/models.d.ts:62
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: content/types/layout/models.d.ts:60
 
 > `optional` **displayName?**: `string`
 
-Defined in: content/types/layout/models.d.ts:57
+Defined in: content/types/layout/models.d.ts:59
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: content/types/layout/models.d.ts:57
 
 > `optional` **fields?**: `Fields`
 
-Defined in: content/types/layout/models.d.ts:58
+Defined in: content/types/layout/models.d.ts:60
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: content/types/layout/models.d.ts:58
 
 > `optional` **itemId?**: `string`
 
-Defined in: content/types/layout/models.d.ts:67
+Defined in: content/types/layout/models.d.ts:69
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: content/types/layout/models.d.ts:67
 
 > `optional` **itemLanguage?**: `string`
 
-Defined in: content/types/layout/models.d.ts:61
+Defined in: content/types/layout/models.d.ts:63
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: content/types/layout/models.d.ts:61
 
 > `optional` **itemVersion?**: `number`
 
-Defined in: content/types/layout/models.d.ts:62
+Defined in: content/types/layout/models.d.ts:64
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: content/types/layout/models.d.ts:62
 
 > `optional` **layoutId?**: `string`
 
-Defined in: content/types/layout/models.d.ts:63
+Defined in: content/types/layout/models.d.ts:65
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: content/types/layout/models.d.ts:63
 
 > **name**: `string`
 
-Defined in: content/types/layout/models.d.ts:56
+Defined in: content/types/layout/models.d.ts:58
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: content/types/layout/models.d.ts:56
 
 > **placeholders**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)
 
-Defined in: content/types/layout/models.d.ts:66
+Defined in: content/types/layout/models.d.ts:68
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: content/types/layout/models.d.ts:66
 
 > `optional` **published?**: `string`
 
-Defined in: content/types/layout/models.d.ts:69
+Defined in: content/types/layout/models.d.ts:71
 
 ISO datetime the item was published, if available.
 
@@ -112,7 +112,7 @@ ISO datetime the item was published, if available.
 
 > `optional` **templateId?**: `string`
 
-Defined in: content/types/layout/models.d.ts:64
+Defined in: content/types/layout/models.d.ts:66
 
 ***
 
@@ -120,7 +120,7 @@ Defined in: content/types/layout/models.d.ts:64
 
 > `optional` **templateName?**: `string`
 
-Defined in: content/types/layout/models.d.ts:65
+Defined in: content/types/layout/models.d.ts:67
 
 ***
 
@@ -128,6 +128,6 @@ Defined in: content/types/layout/models.d.ts:65
 
 > `optional` **updated?**: `string`
 
-Defined in: content/types/layout/models.d.ts:71
+Defined in: content/types/layout/models.d.ts:73
 
 ISO datetime the item was last updated, if available.

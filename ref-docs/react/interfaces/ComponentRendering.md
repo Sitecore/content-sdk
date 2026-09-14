@@ -6,7 +6,7 @@
 
 # Interface: ComponentRendering\<T\>
 
-Defined in: packages/content/types/layout/models.d.ts:98
+Defined in: packages/content/types/layout/models.d.ts:100
 
 Definition of a component instance within a placeholder on a route
 
@@ -22,7 +22,7 @@ Definition of a component instance within a placeholder on a route
 
 > **componentName**: `string`
 
-Defined in: packages/content/types/layout/models.d.ts:99
+Defined in: packages/content/types/layout/models.d.ts:101
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/content/types/layout/models.d.ts:99
 
 > `optional` **dataSource?**: `string`
 
-Defined in: packages/content/types/layout/models.d.ts:100
+Defined in: packages/content/types/layout/models.d.ts:102
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/content/types/layout/models.d.ts:100
 
 > `optional` **fields?**: `T`
 
-Defined in: packages/content/types/layout/models.d.ts:109
+Defined in: packages/content/types/layout/models.d.ts:111
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/content/types/layout/models.d.ts:109
 
 > `optional` **isContentResolved?**: `boolean`
 
-Defined in: packages/content/types/layout/models.d.ts:106
+Defined in: packages/content/types/layout/models.d.ts:108
 
 `true` when Layout Service resolved this rendering's datasource content.
 `false` when resolution failed (for example because the item was deleted or archived).
@@ -58,7 +58,7 @@ Omitted by older Layout Service versions; absence preserves existing behavior.
 
 > `optional` **params?**: [`ComponentParams`](ComponentParams.md)
 
-Defined in: packages/content/types/layout/models.d.ts:110
+Defined in: packages/content/types/layout/models.d.ts:112
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: packages/content/types/layout/models.d.ts:110
 
 > `optional` **placeholders?**: `PlaceholdersData`\<`string`\>
 
-Defined in: packages/content/types/layout/models.d.ts:108
+Defined in: packages/content/types/layout/models.d.ts:110
 
 ***
 
@@ -74,4 +74,4 @@ Defined in: packages/content/types/layout/models.d.ts:108
 
 > `optional` **uid?**: `string`
 
-Defined in: packages/content/types/layout/models.d.ts:107
+Defined in: packages/content/types/layout/models.d.ts:109

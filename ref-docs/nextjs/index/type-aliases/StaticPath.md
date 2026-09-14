@@ -8,7 +8,7 @@
 
 > **StaticPath** = `object`
 
-Defined in: content/types/models.d.ts:12
+Defined in: content/types/models.d.ts:22
 
 Object model of a sitemap's site page item.
 
@@ -18,7 +18,7 @@ Object model of a sitemap's site page item.
 
 > `optional` **locale?**: `string`
 
-Defined in: content/types/models.d.ts:16
+Defined in: content/types/models.d.ts:26
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: content/types/models.d.ts:16
 
 > **params**: `object`
 
-Defined in: content/types/models.d.ts:13
+Defined in: content/types/models.d.ts:23
 
 #### path
 

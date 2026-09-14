@@ -6,7 +6,7 @@
 
 # Interface: Field\<T\>
 
-Defined in: packages/content/types/layout/models.d.ts:125
+Defined in: packages/content/types/layout/models.d.ts:127
 
 Field interface
 
@@ -26,7 +26,7 @@ Field interface
 
 > `optional` **metadata?**: `object`
 
-Defined in: packages/content/types/layout/models.d.ts:133
+Defined in: packages/content/types/layout/models.d.ts:135
 
 #### Index Signature
 
@@ -42,4 +42,4 @@ Defined in: packages/content/types/layout/models.d.ts:133
 
 > **value**: `T`
 
-Defined in: packages/content/types/layout/models.d.ts:126
+Defined in: packages/content/types/layout/models.d.ts:128
