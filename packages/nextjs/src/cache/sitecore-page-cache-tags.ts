@@ -51,8 +51,8 @@ export type CollectSitecorePageCacheTagsParams = {
  * `buildSitecoreDictionaryCacheTag` on a dedicated `use cache` helper).
  *
  * Registers **`sc:route:…`** and **`sc:item:…`** (when layout has `itemId`). Edge-style webhooks emit
- * item ids, which the Sitecore revalidate route handler maps to **`sc:item:…`**; route tags are only
- * invalidated when callers send the full `sc:route:…` strings in the `tags[]` array of the same revalidate request.
+ * item ids, which the Sitecore revalidate route handler maps to **`sc:item:…`**; route tags are not
+ * invalidated by that webhook flow.
  *
  * Personalization variants are isolated naturally by URL path (each variant rewrite yields a distinct
  * Cache Components key) so no `sc:pvv:…` tag is added here. If a personalize-specific webhook is wired

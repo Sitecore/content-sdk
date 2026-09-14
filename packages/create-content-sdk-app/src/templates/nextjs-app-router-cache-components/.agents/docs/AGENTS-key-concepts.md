@@ -11,8 +11,7 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
   - `getSitecoreErrorPage({ site, locale, code })` → 404 / 500 Sitecore content with the same tag strategy as `getSitecorePage`.
 - **`POST /api/revalidate`** is a single Sitecore-webhook endpoint. It accepts the Sitecore Experience Edge / Content Operations payload shape:
   - `updates[]` — Sitecore publish-event rows; the handler maps each row's `identifier` (with `-media` / `-layout` stripped) to `sc:item:<id>:<locale>`.
-  - `tags[]` — pass-through array. `sc:`-prefixed strings are revalidated verbatim (handy for ad-hoc, operational calls); bare item IDs are mapped to `sc:item:<id>:<defaultLocale>`.
-  - Dictionary tags from `sites` (`.sitecore/sites.json`; configured `defaultSite` from `generateSites` only when `NEXT_PUBLIC_DEFAULT_SITE_NAME` is set) are merged on every call so dictionary changes are covered.
+  - Dictionary entry updates (`entity_definition: "DictionaryEntry"`) map to `sc:dict:<site>:<locale>` for the specific site resolved from the identifier via `sites` (`.sitecore/sites.json`; configured `defaultSite` from `generateSites` only when `NEXT_PUBLIC_DEFAULT_SITE_NAME` is set) — only that site's dictionary tag is revalidated, not every configured site's.
 - **Auth (optional):** leave `SITECORE_REVALIDATE_SECRET` empty to skip auth (no `x-revalidate-secret` header). When set, callers must send the same value in `x-revalidate-secret` (configure that header on your Sitecore webhook).
 - **Dictionary cache:** `sitecore.config.ts` disables the SDK's in-process dictionary cache (`dictionary: { caching: { enabled: false } }`). The Cache Components helper is the only dictionary cache layer, so `revalidateTag` works end to end.
 
