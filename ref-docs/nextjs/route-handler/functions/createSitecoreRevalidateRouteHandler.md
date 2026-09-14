@@ -8,7 +8,7 @@
 
 > **createSitecoreRevalidateRouteHandler**(`options?`): `object`
 
-Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:84](https://github.com/Sitecore/content-sdk/blob/b858df1f6f27c4f7a00a2d33c81c5e5233790233/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L84)
+Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:84](https://github.com/Sitecore/content-sdk/blob/df0ab91f7e1cc1e11e1d2458da0d151ccdbea3af/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L84)
 
 Creates a single `POST` handler for `/api/revalidate` that consumes Sitecore Experience Edge / Content
 Operations webhook bodies (and equivalent ad-hoc calls that reuse the same body shape).
@@ -17,13 +17,11 @@ The body is expected to be a JSON object that resolves to at least one Sitecore 
 
 - **`updates[]`** — Sitecore publish-event rows. Each row's `identifier` (with `-media` / `-layout`
   suffix stripped) maps to an `sc:item:<id>:<locale>` tag, using `entity_culture` for locale
-  (falling back to the handler's `defaultLocale`).
-- **`tags[]`** — pass-through and convenience array:
-  - Strings already starting with `sc:` are used verbatim (e.g. `sc:route:...`, `sc:item:...`, `sc:dict:...`).
-  - Bare values are treated as Sitecore item ids and mapped to `sc:item:<id>:<defaultLocale>`.
-
-When **`sites`** is configured, the handler also appends one `sc:dict:<site>:<locale>` tag per
-site so dictionary updates flow through the same call.
+  (falling back to the handler's `defaultLocale`) — except rows where `entity_definition` is
+  `"DictionaryEntry"`, which map to `sc:dict:<site>:<locale>` for the site resolved from the
+  identifier via the configured **`sites`** option (skipped, with a debug log, when no configured
+  site matches). Only updates that are actually Dictionary changes revalidate dictionary tags — a
+  webhook for an unrelated item never touches them.
 
 Auth (optional): when `SITECORE_REVALIDATE_SECRET` (or the `secret` option) is non-empty, callers must
 send the same value in the **`x-revalidate-secret`** header. When unset or blank, no header is required.
@@ -32,7 +30,7 @@ send the same value in the **`x-revalidate-secret`** header. When unset or blank
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `options?` | [`SitecoreRevalidateRouteHandlerOptions`](../type-aliases/SitecoreRevalidateRouteHandlerOptions.md) | Optional inline `secret`, `cacheProfile`, locale, sites, and dictionary options. |
+| `options?` | [`SitecoreRevalidateRouteHandlerOptions`](../type-aliases/SitecoreRevalidateRouteHandlerOptions.md) | Optional inline `secret`, `cacheProfile`, locale, and sites options. |
 
 ## Returns
 
