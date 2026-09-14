@@ -1,5 +1,12 @@
 # @sitecore-content-sdk/cli
 
+## 2.4.0
+
+### Minor Changes
+
+- minor `@sitecore-content-sdk/content` dependency update:
+  - Schema.org & JSON-LD Support ([b858df1](https://github.com/sitecore/content-sdk/commit/b858df1f6f27c4f7a00a2d33c81c5e5233790233))
+
 ## 2.3.0
 
 ### Minor Changes
