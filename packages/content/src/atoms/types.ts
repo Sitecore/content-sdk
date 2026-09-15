@@ -37,12 +37,20 @@ export interface AtomCatalogActionEntry {
 }
 
 /**
+ * Styling solution used to style the app.
+ * @public
+ */
+export type AtomsStylingSolution = 'tailwind' | 'inline-css';
+
+/**
  * Full catalog payload sent to Design Studio.
  * @internal
  */
 export interface SerializedCatalog {
   /** Catalog root version from `defineAtomsCatalog`. Absent when not declared. */
   version?: string;
+  /** Styling solution used to style the app, from `defineAtomsCatalog`. Always present (defaults to `'tailwind'`). */
+  stylingSolution: AtomsStylingSolution;
   /** Serialized component entries. */
   components: AtomCatalogComponentEntry[];
   /** Serialized action entries. */

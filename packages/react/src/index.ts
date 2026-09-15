@@ -122,6 +122,7 @@ export {
   type AtomActionDefinition,
   type AtomsCatalog,
   type AtomsCatalogInput,
+  type AtomsStylingSolution,
   type AtomsComponentsMap,
   type AtomActionHandler,
   type AtomsActionsMap,

@@ -83,6 +83,9 @@ export interface AtomsCatalogPayload {
 }
 
 // @public
+export type AtomsStylingSolution = 'tailwind' | 'inline-css';
+
+// @public
 export class CdpHelper {
     static getComponentFriendlyId(pageId: string, componentId: string, language: string, scope?: string): string;
     static getPageFriendlyId(pageId: string, language: string, scope?: string): string;
@@ -1164,6 +1167,7 @@ export const sendErrorEvent: (uid: string, error: unknown, type: DesignLibraryPr
 export interface SerializedCatalog {
     actions: AtomCatalogActionEntry[];
     components: AtomCatalogComponentEntry[];
+    stylingSolution: AtomsStylingSolution;
     version?: string;
 }
 

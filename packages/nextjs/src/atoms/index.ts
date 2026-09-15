@@ -6,6 +6,7 @@ export {
   type AtomActionDefinition,
   type AtomsCatalog,
   type AtomsCatalogInput,
+  type AtomsStylingSolution,
   type AtomsComponentsMap,
   type AtomActionHandler,
   type AtomsActionsMap,
@@ -26,4 +27,3 @@ export {
 } from '@sitecore-content-sdk/react';
 
 export { defineAtomsCatalog, defineAtomsRegistry } from './re-exports';
-

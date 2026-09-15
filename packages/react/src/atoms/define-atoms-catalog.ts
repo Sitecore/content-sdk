@@ -1,6 +1,6 @@
 import { defineCatalog } from '@json-render/core';
 import { schema } from '@json-render/react';
-import type { AtomsCatalogInput, Exact } from './types';
+import type { AtomsCatalog, AtomsCatalogInput, Exact } from './types';
 
 /**
  * Define an atoms catalog from component and action definitions.
@@ -40,6 +40,6 @@ import type { AtomsCatalogInput, Exact } from './types';
  */
 export function defineAtomsCatalog<T extends AtomsCatalogInput>(
   input: Exact<T, AtomsCatalogInput>
-) {
-  return defineCatalog(schema, input);
+): AtomsCatalog<T> {
+  return defineCatalog(schema, { stylingSolution: 'tailwind', ...input });
 }
