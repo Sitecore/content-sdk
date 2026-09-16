@@ -12,10 +12,13 @@ import {
   SitecoreProviderReactContext,
 } from '@sitecore-content-sdk/react';
 import { ImageLoader } from 'next/image';
+import { ImageConfigContext } from 'next/dist/shared/lib/image-config-context.shared-runtime';
+import { imageConfigDefault } from 'next/dist/shared/lib/image-config';
 import { spy, match } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { SinonSpy } from 'sinon';
 import { DesignLibraryMode } from '@sitecore-content-sdk/content/editing';
+import { cloneNextImageConfig } from './next-image-utils';
 
 use(sinonChai);
 const setPage = spy();
@@ -608,6 +611,53 @@ describe('<NextImage />', () => {
         </SitecoreProviderReactContext.Provider>
       ).container.querySelector('img');
       expect(rendered?.getAttribute('data-unoptimized')).to.equal('true');
+    });
+  });
+
+  describe('frozen layout and image config', () => {
+    it('should render when Sitecore image field objects are frozen', () => {
+      const field = Object.freeze({
+        value: Object.freeze({
+          src: '/assets/img/test0.png',
+          alt: 'frozen field',
+          width: 8,
+          height: 10,
+        }),
+      });
+
+      const rendered = render(
+        <SitecoreProviderReactContext.Provider value={testContextProps}>
+          <NextImage field={field} />
+        </SitecoreProviderReactContext.Provider>
+      ).container.querySelectorAll('img');
+
+      expect(rendered).to.have.lengthOf(1);
+      expect(rendered[0].getAttribute('alt')).to.equal('frozen field');
+    });
+
+    it('should render when Next.js image config arrays are frozen', () => {
+      const frozenConfig = cloneNextImageConfig(imageConfigDefault);
+      Object.freeze(frozenConfig.deviceSizes);
+      Object.freeze(frozenConfig.imageSizes);
+      if (frozenConfig.qualities) {
+        Object.freeze(frozenConfig.qualities);
+      }
+      Object.freeze(frozenConfig);
+
+      const rendered = render(
+        <ImageConfigContext.Provider value={frozenConfig}>
+          <SitecoreProviderReactContext.Provider value={testContextProps}>
+            <NextImage
+              field={{
+                value: { src: '/assets/img/test0.png', alt: 'frozen config', width: 8, height: 10 },
+              }}
+            />
+          </SitecoreProviderReactContext.Provider>
+        </ImageConfigContext.Provider>
+      ).container.querySelectorAll('img');
+
+      expect(rendered).to.have.lengthOf(1);
+      expect(rendered[0].getAttribute('alt')).to.equal('frozen config');
     });
   });
 });
