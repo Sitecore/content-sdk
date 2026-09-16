@@ -328,6 +328,39 @@ describe('defineConfig', () => {
     });
   });
 
+  describe('config.theming', () => {
+    it('defaults to none when no env is set', () => {
+      defineConfigModule.defineConfig(defaultConfig());
+      const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+      expect(resultConfig.theming?.mode).to.equal('none');
+    });
+
+    it('uses the value from the config if present', () => {
+      defineConfigModule.defineConfig({
+        ...defaultConfig(),
+        theming: { mode: 'site' },
+      });
+      const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+      expect(resultConfig.theming?.mode).to.equal('site');
+    });
+
+    describe('environment variable is set', () => {
+      before(() => {
+        process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING = 'site';
+      });
+
+      after(() => {
+        delete process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING;
+      });
+
+      it('should use the env var if config value not present', () => {
+        defineConfigModule.defineConfig(defaultConfig());
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.theming?.mode).to.equal('site');
+      });
+    });
+  });
+
   describe('config.multisite', () => {
     describe('enabled', () => {
       it('should default to undefined', () => {

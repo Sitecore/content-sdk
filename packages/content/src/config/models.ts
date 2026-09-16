@@ -215,7 +215,27 @@ export type SitecoreConfigInput = {
    * Disables code extraction procedure
    */
   disableCodeGeneration?: boolean;
+  /**
+   * Design-token theming. Independent from Design Library `enableThemes` stylesheets.
+   * Default is off so existing apps are unchanged.
+   */
+  theming?: {
+    /**
+     * Theming depth.
+     * `none` (default) adds no theme links.
+     * `site` adds the site-level design-token stylesheet when a site id is available.
+     * `page` is reserved; phase 1 treats it as site-level only.
+     * @default 'none'
+     */
+    mode?: ThemingMode;
+  };
 };
+
+/**
+ * Design-token theming depth controlled by `CSDK_FEATURE_THEMING`.
+ * @public
+ */
+export type ThemingMode = 'none' | 'site' | 'page';
 
 /**
  * Final Sitecore config type used at runtime.

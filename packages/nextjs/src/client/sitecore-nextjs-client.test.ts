@@ -35,6 +35,7 @@ describe('SitecoreClient', () => {
     defaultLanguage: 'en',
     layout: { formatLayoutQuery: sandbox.stub() },
     dictionary: { caching: { enabled: true, timeout: 60000 } },
+    theming: { mode: 'none' as const },
   };
 
   let sitecoreClient = new SitecoreNextjsClient(defaultInitOptions);
