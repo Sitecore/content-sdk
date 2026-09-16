@@ -11,14 +11,14 @@ import {
   LayoutServicePageState,
   SitecoreProviderReactContext,
 } from '@sitecore-content-sdk/react';
-import { ImageLoader } from 'next/image';
+import type { ImageLoader } from 'next/image';
 import { ImageConfigContext } from 'next/dist/shared/lib/image-config-context.shared-runtime';
 import { imageConfigDefault } from 'next/dist/shared/lib/image-config';
-import { spy, match } from 'sinon';
+import { spy, match, stub } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { SinonSpy } from 'sinon';
 import { DesignLibraryMode } from '@sitecore-content-sdk/content/editing';
-import { cloneNextImageConfig } from './next-image-utils';
+import * as nextImageUtils from './next-image-utils';
 
 use(sinonChai);
 const setPage = spy();
@@ -615,49 +615,113 @@ describe('<NextImage />', () => {
   });
 
   describe('frozen layout and image config', () => {
-    it('should render when Sitecore image field objects are frozen', () => {
-      const field = Object.freeze({
-        value: Object.freeze({
-          src: '/assets/img/test0.png',
-          alt: 'frozen field',
-          width: 8,
-          height: 10,
+    const props = {
+      field: { value: { src: '/assets/img/test0.png', alt: 'my image' } },
+      width,
+      height: 10,
+    };
+    let originalImageOpts: string | undefined;
+
+    beforeEach(() => {
+      // External next/image (Pages Router / Vercel) has no inlined __NEXT_IMAGE_OPTS,
+      // so it reads frozen arrays from ImageConfigContext. Mirror that here.
+      originalImageOpts = process.env.__NEXT_IMAGE_OPTS;
+      delete process.env.__NEXT_IMAGE_OPTS;
+    });
+
+    afterEach(() => {
+      if (originalImageOpts === undefined) {
+        delete process.env.__NEXT_IMAGE_OPTS;
+      } else {
+        process.env.__NEXT_IMAGE_OPTS = originalImageOpts;
+      }
+    });
+
+    it('should render image with url when Sitecore image field objects are frozen', () => {
+      const frozenProps = {
+        ...props,
+        field: Object.freeze({
+          value: Object.freeze({ ...props.field.value }),
         }),
-      });
+      };
 
       const rendered = render(
         <SitecoreProviderReactContext.Provider value={testContextProps}>
-          <NextImage field={field} />
+          <NextImage loader={mockLoader} {...frozenProps} />
         </SitecoreProviderReactContext.Provider>
       ).container.querySelectorAll('img');
+      const img = rendered[0];
 
       expect(rendered).to.have.lengthOf(1);
-      expect(rendered[0].getAttribute('alt')).to.equal('frozen field');
+      expect(img.getAttribute('src')).to.equal(
+        `${HOSTNAME}${props.field.value.src}?w=${props.width}`
+      );
+      expect(img.getAttribute('alt')).to.equal(props.field.value.alt);
+      expect(img.getAttribute('width')).to.equal(props.width.toString());
+      expect(img.getAttribute('height')).to.equal(props.height.toString());
+      expect(img.getAttribute('data-nimg')).to.not.equal(null);
+      expect(mockLoader.called).to.be.true;
+      expect(mockLoader).to.have.been.calledWith(
+        match({ src: props.field.value.src, width: props.width })
+      );
     });
 
-    it('should render when Next.js image config arrays are frozen', () => {
-      const frozenConfig = cloneNextImageConfig(imageConfigDefault);
-      Object.freeze(frozenConfig.deviceSizes);
-      Object.freeze(frozenConfig.imageSizes);
-      if (frozenConfig.qualities) {
-        Object.freeze(frozenConfig.qualities);
-      }
-      Object.freeze(frozenConfig);
+    it('should render image with url when Next.js image config arrays are frozen', () => {
+      const frozenConfig = Object.freeze({
+        ...imageConfigDefault,
+        deviceSizes: Object.freeze([...(imageConfigDefault.deviceSizes ?? [])]),
+        imageSizes: Object.freeze([...(imageConfigDefault.imageSizes ?? [])]),
+        qualities: imageConfigDefault.qualities
+          ? Object.freeze([...imageConfigDefault.qualities])
+          : undefined,
+      });
 
       const rendered = render(
         <ImageConfigContext.Provider value={frozenConfig}>
           <SitecoreProviderReactContext.Provider value={testContextProps}>
-            <NextImage
-              field={{
-                value: { src: '/assets/img/test0.png', alt: 'frozen config', width: 8, height: 10 },
-              }}
-            />
+            <NextImage loader={mockLoader} {...props} />
           </SitecoreProviderReactContext.Provider>
         </ImageConfigContext.Provider>
       ).container.querySelectorAll('img');
+      const img = rendered[0];
 
       expect(rendered).to.have.lengthOf(1);
-      expect(rendered[0].getAttribute('alt')).to.equal('frozen config');
+      expect(img.getAttribute('src')).to.equal(
+        `${HOSTNAME}${props.field.value.src}?w=${props.width}`
+      );
+      expect(img.getAttribute('alt')).to.equal(props.field.value.alt);
+      expect(img.getAttribute('width')).to.equal(props.width.toString());
+      expect(img.getAttribute('height')).to.equal(props.height.toString());
+      expect(img.getAttribute('data-nimg')).to.not.equal(null);
+      expect(mockLoader.called).to.be.true;
+      expect(mockLoader).to.have.been.calledWith(
+        match({ src: props.field.value.src, width: props.width })
+      );
+    });
+
+    it('should render a native img when next/image cannot resolve frozen config', () => {
+      (mockLoader as unknown as SinonSpy).resetHistory();
+      const canResolveStub = stub(nextImageUtils, 'canSafelyResolveNextImageProps').returns(false);
+
+      try {
+        const rendered = render(
+          <SitecoreProviderReactContext.Provider value={testContextProps}>
+            <NextImage loader={mockLoader} {...props} />
+          </SitecoreProviderReactContext.Provider>
+        ).container.querySelectorAll('img');
+        const img = rendered[0];
+
+        expect(rendered).to.have.lengthOf(1);
+        expect(img.getAttribute('src')).to.equal(props.field.value.src);
+        expect(img.getAttribute('alt')).to.equal(props.field.value.alt);
+        expect(img.getAttribute('width')).to.equal(props.width.toString());
+        expect(img.getAttribute('height')).to.equal(props.height.toString());
+        expect(img.getAttribute('data-nimg')).to.equal(null);
+        expect(img.getAttribute('loading')).to.equal('lazy');
+        expect(mockLoader.called).to.be.false;
+      } finally {
+        canResolveStub.restore();
+      }
     });
   });
 });
