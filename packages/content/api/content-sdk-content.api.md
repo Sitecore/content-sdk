@@ -233,6 +233,9 @@ export const createComponentInstance: (importMap: ImportEntry[], generatedCompon
 export const createGraphQLClientFactory: (options: GraphQLClientOptions) => GraphQLRequestClientFactory;
 
 // @public
+export const CSDK_FEATURE_THEMING_ENV = "CSDK_FEATURE_THEMING";
+
+// @public
 const debug_2: {
     form: Debugger;
     layout: Debugger;
@@ -709,6 +712,12 @@ const getSrcSet: (url: string, srcSet: Array<{
     [key: string]: string | number | undefined;
 }, mediaUrlPrefix?: RegExp) => string;
 
+// @public
+export const getThemingBodyClassName: (mode: ThemingMode) => string | undefined;
+
+// @public
+export const getThemingStylesheetLinks: (input: ThemingStylesheetLinksOptions) => HTMLLink[];
+
 // @internal
 export const GRAPHQL_LAYOUT_QUERY_NAME = "ContentSdkLayoutQuery";
 
@@ -828,6 +837,7 @@ export interface LayoutServiceContext {
     // (undocumented)
     site?: {
         name?: string;
+        id?: string;
     };
     // (undocumented)
     visitorIdentificationTimestamp?: number;
@@ -886,6 +896,9 @@ export type ModuleExports = {
 };
 
 // @public
+export const NEXT_PUBLIC_CSDK_FEATURE_THEMING_ENV = "NEXT_PUBLIC_CSDK_FEATURE_THEMING";
+
+// @public
 export function normalizePersonalizedRewrite(pathname: string): string;
 
 // @public
@@ -932,6 +945,9 @@ export class PagesEditor {
     // (undocumented)
     static resetChromes(): void;
 }
+
+// @public
+export const parseThemingMode: (value?: string) => ThemingMode;
 
 // @public (undocumented)
 export type PersonalizedRewriteData = {
@@ -1074,6 +1090,11 @@ const replaceMediaUrlPrefix: (url: string, mediaUrlPrefix?: RegExp) => string;
 
 // @public
 export const resetEditorChromes: () => void;
+
+// @public
+export const resolveThemingModeFromEnv: (env?: {
+    [key: string]: string | undefined;
+}) => ThemingMode;
 
 export { RetryStrategy }
 
@@ -1332,6 +1353,9 @@ export type SitecoreConfigInput = {
     };
     rewriteMediaUrls?: boolean | ((value: string) => string);
     disableCodeGeneration?: boolean;
+    theming?: {
+        mode?: ThemingMode;
+    };
 };
 
 // @public
@@ -1446,6 +1470,19 @@ export type StaticPath = {
 // @internal
 const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: string) => void;
 
+// @public
+export const THEMING_BODY_CLASS_NAME = "sc-ds-theme";
+
+// @public
+export type ThemingMode = 'none' | 'site' | 'page';
+
+// @public
+export type ThemingStylesheetLinksOptions = {
+    mode: ThemingMode;
+    siteId?: string;
+    sitecoreEdgeUrl?: string;
+};
+
 // @internal
 export const updateComponent: (component: ComponentRendering<ComponentFields>, fields: ComponentFields | undefined, params: ComponentParams | undefined) => void;
 
@@ -1479,7 +1516,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:68:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:69:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:115:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal

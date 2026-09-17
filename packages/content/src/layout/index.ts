@@ -38,6 +38,18 @@ export { LayoutService, LayoutServiceConfig, GRAPHQL_LAYOUT_QUERY_NAME } from '.
 export { getDesignLibraryStylesheetLinks } from './themes';
 
 export {
+  ThemingMode,
+  ThemingStylesheetLinksOptions,
+  CSDK_FEATURE_THEMING_ENV,
+  NEXT_PUBLIC_CSDK_FEATURE_THEMING_ENV,
+  THEMING_BODY_CLASS_NAME,
+  parseThemingMode,
+  resolveThemingModeFromEnv,
+  getThemingBodyClassName,
+  getThemingStylesheetLinks,
+} from './theming';
+
+export {
   rewriteEdgeHostInResponse,
   containsDefaultEdgeHost,
   getDefaultMediaUrlTransformer,

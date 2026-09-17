@@ -1,9 +1,33 @@
 import {
-  DeepRequired,
   defineConfig as defineConfigCore,
-  SitecoreConfigInput as SitecoreConfigInputCore,
+  type DeepRequired,
+  type SitecoreConfigInput as SitecoreConfigInputCore,
+  type ThemingMode,
 } from '@sitecore-content-sdk/content/config';
 import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
+
+const resolveThemingModeFromEnv = (): ThemingMode => {
+  const value =
+    process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING ||
+    process.env.CSDK_FEATURE_THEMING ||
+    process.env.FEATURE_THEMING;
+
+  if (!value) {
+    return 'none';
+  }
+
+  const normalized = value.trim().toLowerCase();
+
+  if (normalized === 'site' || normalized === '1') {
+    return 'site';
+  }
+
+  if (normalized === 'page' || normalized === '2') {
+    return 'page';
+  }
+
+  return 'none';
+};
 
 /** Next.js env var for Edge hostname; exposed to the browser so client code can use it. */
 const NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV =
@@ -51,6 +75,10 @@ export const getNextFallbackConfig = (config?: SitecoreConfigInput): SitecoreCon
         : config?.generateStaticPaths ?? true,
     sitecoreInternalEditingHostUrl:
       config?.sitecoreInternalEditingHostUrl || process.env.SITECORE_INTERNAL_EDITING_HOST_URL,
+    theming: {
+      ...config?.theming,
+      mode: config?.theming?.mode ?? resolveThemingModeFromEnv(),
+    },
   };
 };
 

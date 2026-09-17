@@ -16,6 +16,7 @@ import { DictionaryPhrases, DictionaryService } from '../i18n';
 import {
   getDesignLibraryStylesheetLinks,
   getContentStylesheetLink,
+  getThemingStylesheetLinks,
   LayoutService,
   LayoutServiceData,
   RouteOptions,
@@ -241,10 +242,12 @@ export interface BaseSitecoreClient {
   ): Promise<StaticPath[]>;
   /**
    * Retrieves the links to be loaded in app's <head> element for each page.
+   * Design-token theming links are controlled by `theming.mode` / `CSDK_FEATURE_THEMING`
+   * and are independent from Design Library `enableThemes`.
    * @param {LayoutServiceData} layoutData - The layout data containing styles and themes.
    * @param {object} [options] - Optional configuration for enabling styles and themes.
    * @param {boolean} [options.enableStyles] - Whether to include content styles.
-   * @param {boolean} [options.enableThemes] - Whether to include theme styles.
+   * @param {boolean} [options.enableThemes] - Whether to include Design Library theme styles.
    * @returns {HTMLLink[]} An array of `<link>` elements.
    */
   getHeadLinks(
@@ -393,10 +396,12 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   /**
    * Retrieves the head `<link>` elements for Sitecore styles and themes.
+   * Design-token theming links are controlled by `theming.mode` / `CSDK_FEATURE_THEMING`
+   * and are independent from Design Library `enableThemes`.
    * @param {LayoutServiceData} layoutData - The layout data containing styles and themes.
    * @param {object} [options] - Optional configuration for enabling styles and themes.
    * @param {boolean} [options.enableStyles] - Whether to include content styles.
-   * @param {boolean} [options.enableThemes] - Whether to include theme styles.
+   * @param {boolean} [options.enableThemes] - Whether to include Design Library theme styles.
    * @returns {HTMLLink[]} An array of `<link>` elements for stylesheets.
    */
   getHeadLinks(
@@ -419,6 +424,15 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (enableThemes) {
       headLinks.push(...getDesignLibraryStylesheetLinks(layoutData, contextId, edgeUrlForStyles));
     }
+
+    const siteId = layoutData.sitecore.context.site?.id;
+    headLinks.push(
+      ...getThemingStylesheetLinks({
+        mode: this.initOptions.theming?.mode ?? 'none',
+        siteId,
+        sitecoreEdgeUrl: edgeUrlForStyles,
+      })
+    );
 
     return headLinks;
   }

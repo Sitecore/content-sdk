@@ -69,6 +69,17 @@ describe('define-config', () => {
     // dictionary caching
     expect(config.dictionary.caching.enabled).to.equal(fallback.dictionary.caching.enabled);
     expect(config.dictionary.caching.timeout).to.equal(fallback.dictionary.caching.timeout);
+
+    // theming defaults off
+    expect(config.theming.mode).to.equal('none');
+  });
+
+  it('allows theming.mode to be overridden in sitecore.config', () => {
+    const config = defineConfig({
+      ...mockConfig,
+      theming: { mode: 'site' },
+    });
+    expect(config.theming.mode).to.equal('site');
   });
 
   it('applies fallback personalize timeouts when values are falsy', () => {
@@ -124,6 +135,9 @@ describe('define-config', () => {
       delete process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT;
       delete process.env.NEXT_PUBLIC_SITECORE_API_KEY;
       delete process.env.NEXT_PUBLIC_SITECORE_API_HOST;
+      delete process.env.CSDK_FEATURE_THEMING;
+      delete process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING;
+      delete process.env.FEATURE_THEMING;
 
       const cfg = getFallbackConfig();
       expect(cfg.api.edge.contextId).to.equal('');
@@ -133,6 +147,14 @@ describe('define-config', () => {
       expect(cfg.personalize.cdpTimeout).to.equal(400);
       expect(cfg.api.local.apiKey).to.equal('');
       expect(cfg.api.local.apiHost).to.equal('');
+      expect(cfg.theming.mode).to.equal('none');
+    });
+
+    it('reads CSDK_FEATURE_THEMING into theming.mode', () => {
+      process.env.CSDK_FEATURE_THEMING = 'site';
+      const cfg = getFallbackConfig();
+      expect(cfg.theming.mode).to.equal('site');
+      delete process.env.CSDK_FEATURE_THEMING;
     });
   });
 
