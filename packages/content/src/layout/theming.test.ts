@@ -3,10 +3,12 @@ import { expect } from 'chai';
 import { constants } from '@sitecore-content-sdk/core';
 import {
   CSDK_FEATURE_THEMING_ENV,
+  getThemingBodyClassName,
   getThemingStylesheetLinks,
   getThemingStylesheetUrl,
   parseThemingMode,
   resolveThemingModeFromEnv,
+  THEMING_BODY_CLASS_NAME,
 } from './theming';
 
 const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
@@ -70,6 +72,21 @@ describe('theming', () => {
       expect(getThemingStylesheetUrl('site-1', 'https://edge.example.com/')).to.equal(
         'https://edge.example.com/theming/site-1'
       );
+    });
+  });
+
+  describe('getThemingBodyClassName', () => {
+    it('returns undefined when theming is disabled', () => {
+      expect(getThemingBodyClassName('none')).to.be.undefined;
+    });
+
+    it('returns the body class when site theming is enabled', () => {
+      expect(getThemingBodyClassName('site')).to.equal(THEMING_BODY_CLASS_NAME);
+      expect(THEMING_BODY_CLASS_NAME).to.equal('sc-ds-theme');
+    });
+
+    it('treats page mode as site-level for the body class', () => {
+      expect(getThemingBodyClassName('page')).to.equal(THEMING_BODY_CLASS_NAME);
     });
   });
 

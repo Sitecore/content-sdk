@@ -93,6 +93,7 @@ import { getPersonalizedRewriteData } from '@sitecore-content-sdk/content/person
 import { GetServerSidePropsContext } from 'next';
 import { getSiteRewrite } from '@sitecore-content-sdk/content/site';
 import { getSiteRewriteData } from '@sitecore-content-sdk/content/site';
+import { getThemingBodyClassName } from '@sitecore-content-sdk/content/layout';
 import { GetStaticPropsContext } from 'next';
 import { GraphQLClientError } from '@sitecore-content-sdk/content/client';
 import { GraphQLClientOptions } from '@sitecore-content-sdk/content/client';
@@ -198,6 +199,7 @@ import { SitePathService } from '@sitecore-content-sdk/content/site';
 import { SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
 import { SiteResolver } from '@sitecore-content-sdk/content/site';
 import { StaticPath } from '@sitecore-content-sdk/content';
+import { THEMING_BODY_CLASS_NAME } from '@sitecore-content-sdk/content/layout';
 import { Text as Text_2 } from '@sitecore-content-sdk/react';
 import { TextField } from '@sitecore-content-sdk/react';
 import { TextFieldSchema } from '@sitecore-content-sdk/react';
@@ -660,6 +662,8 @@ export const getQueryParamsForPropagation: (query: Partial<{
 export { getSiteRewrite }
 
 export { getSiteRewriteData }
+
+export { getThemingBodyClassName }
 
 export { GraphQLClientError }
 
@@ -1192,6 +1196,8 @@ export interface SuccessfulRedirectsProxyExecution extends SuccessfulProxyExecut
     // (undocumented)
     requestUrl: string;
 }
+
+export { THEMING_BODY_CLASS_NAME }
 
 export { Text_2 as Text }
 

@@ -33,6 +33,8 @@ export {
   ComponentFields,
   ComponentParams,
   getContentStylesheetLink,
+  getThemingBodyClassName,
+  THEMING_BODY_CLASS_NAME,
   EditMode,
   RenderingType,
 } from '@sitecore-content-sdk/content/layout';

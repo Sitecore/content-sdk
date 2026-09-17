@@ -713,6 +713,9 @@ const getSrcSet: (url: string, srcSet: Array<{
 }, mediaUrlPrefix?: RegExp) => string;
 
 // @public
+export const getThemingBodyClassName: (mode: ThemingMode) => string | undefined;
+
+// @public
 export const getThemingStylesheetLinks: (input: ThemingStylesheetLinksOptions) => HTMLLink[];
 
 // @internal
@@ -1466,6 +1469,9 @@ export type StaticPath = {
 
 // @internal
 const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: string) => void;
+
+// @public
+export const THEMING_BODY_CLASS_NAME = "sc-ds-theme";
 
 // @public
 export type ThemingMode = 'none' | 'site' | 'page';

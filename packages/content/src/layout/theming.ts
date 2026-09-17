@@ -68,6 +68,22 @@ export const resolveThemingModeFromEnv = (
 const isSiteThemingEnabled = (mode: ThemingMode): boolean => mode === 'site' || mode === 'page';
 
 /**
+ * CSS class applied to `<body>` when site-level design-token theming is enabled.
+ * @public
+ */
+export const THEMING_BODY_CLASS_NAME = 'sc-ds-theme';
+
+/**
+ * Returns the body class name for site-level design-token theming, or `undefined` when theming is off.
+ * `page` is treated as site-level until page theming is implemented.
+ * @param {ThemingMode} mode Theming mode
+ * @returns {string | undefined} Body class name when site theming is enabled
+ * @public
+ */
+export const getThemingBodyClassName = (mode: ThemingMode): string | undefined =>
+  isSiteThemingEnabled(mode) ? THEMING_BODY_CLASS_NAME : undefined;
+
+/**
  * Builds the design-token theme stylesheet URL for a site.
  * @param {string} siteId Site identifier used in `/theming/<site-id>`. Source/format is pending confirmation.
  * @param {string} [sitecoreEdgeUrl] Sitecore Edge Platform URL. Defaults to the platform URL.
