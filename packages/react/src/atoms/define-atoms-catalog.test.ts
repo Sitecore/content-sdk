@@ -4,20 +4,8 @@ import { z } from 'zod';
 import { defineAtomsCatalog } from './define-atoms-catalog';
 
 describe('defineAtomsCatalog()', () => {
-  it('defaults stylingSolution to tailwind when not provided', () => {
+  it('defaults stylingSolution to inline-css when not provided', () => {
     const catalog = defineAtomsCatalog({
-      components: {
-        Text: { props: z.object({ content: z.string() }), description: 'A text node' },
-      },
-      actions: {},
-    });
-
-    expect(catalog.data.stylingSolution).to.equal('tailwind');
-  });
-
-  it('respects an explicit stylingSolution value', () => {
-    const catalog = defineAtomsCatalog({
-      stylingSolution: 'inline-css',
       components: {
         Text: { props: z.object({ content: z.string() }), description: 'A text node' },
       },
@@ -25,6 +13,18 @@ describe('defineAtomsCatalog()', () => {
     });
 
     expect(catalog.data.stylingSolution).to.equal('inline-css');
+  });
+
+  it('respects an explicit stylingSolution value', () => {
+    const catalog = defineAtomsCatalog({
+      stylingSolution: 'tailwind',
+      components: {
+        Text: { props: z.object({ content: z.string() }), description: 'A text node' },
+      },
+      actions: {},
+    });
+
+    expect(catalog.data.stylingSolution).to.equal('tailwind');
   });
 
   it('does not affect components and actions passthrough', () => {

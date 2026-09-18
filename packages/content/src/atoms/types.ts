@@ -49,7 +49,7 @@ export type AtomsStylingSolution = 'tailwind' | 'inline-css';
 export interface SerializedCatalog {
   /** Catalog root version from `defineAtomsCatalog`. Absent when not declared. */
   version?: string;
-  /** Styling solution used to style the app, from `defineAtomsCatalog`. Always present (defaults to `'tailwind'`). */
+  /** Styling solution used to style the app, from `defineAtomsCatalog`. Always present (defaults to `'inline-css'`). */
   stylingSolution: AtomsStylingSolution;
   /** Serialized component entries. */
   components: AtomCatalogComponentEntry[];

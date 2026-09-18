@@ -41,5 +41,5 @@ import type { AtomsCatalog, AtomsCatalogInput, Exact } from './types';
 export function defineAtomsCatalog<T extends AtomsCatalogInput>(
   input: Exact<T, AtomsCatalogInput>
 ): AtomsCatalog<T> {
-  return defineCatalog(schema, { ...input, stylingSolution: input.stylingSolution ?? 'tailwind' });
+  return defineCatalog(schema, { ...input, stylingSolution: input.stylingSolution ?? 'inline-css' });
 }

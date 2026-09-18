@@ -36,7 +36,7 @@ export type AtomsCatalogInput = BaseCatalog & {
   version?: string;
   /**
    * Styling solution used to style the app.
-   * @default 'tailwind'
+   * @default 'inline-css'
    */
   stylingSolution?: AtomsStylingSolution;
   /** Component definitions keyed by name. */
