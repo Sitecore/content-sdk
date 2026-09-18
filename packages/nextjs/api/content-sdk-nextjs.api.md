@@ -15,6 +15,7 @@ import { AtomsCatalog } from '@sitecore-content-sdk/react';
 import { AtomsCatalogInput } from '@sitecore-content-sdk/react';
 import { AtomsComponentsMap } from '@sitecore-content-sdk/react';
 import { AtomsConfig } from '@sitecore-content-sdk/react';
+import { AtomsStylingSolution } from '@sitecore-content-sdk/react';
 import { BYOCClientWrapper } from '@sitecore-content-sdk/react';
 import { BYOCComponent } from '@sitecore-content-sdk/react';
 import { BYOCComponentParams } from '@sitecore-content-sdk/react';
@@ -260,6 +261,8 @@ export { AtomsCatalogInput }
 export { AtomsComponentsMap }
 
 export { AtomsConfig }
+
+export { AtomsStylingSolution }
 
 // @public
 export class BotTrackingProxy extends ProxyBase {
