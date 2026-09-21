@@ -12,7 +12,7 @@ import {
  * @internal
  */
 export function serializeCatalog(catalog: AtomsCatalog): SerializedCatalog {
-  const { version, components, actions } = catalog.data;
+  const { version, stylingSolution, components, actions } = catalog.data;
 
   const serializedComponents: AtomCatalogComponentEntry[] = Object.entries(components).map(
     ([name, component]) => {
@@ -46,6 +46,7 @@ export function serializeCatalog(catalog: AtomsCatalog): SerializedCatalog {
   );
 
   const serializedCatalog: SerializedCatalog = {
+    stylingSolution,
     components: serializedComponents,
     actions: serializedActions,
   };

@@ -44,6 +44,33 @@ describe('serializeCatalog()', () => {
     expect(result).to.have.property('version', '2.0.0');
   });
 
+  it('defaults stylingSolution to inline-css when not set on the catalog', () => {
+    const catalog = defineAtomsCatalog({
+      components: {
+        Text: { props: z.object({ content: z.string() }), description: 'A text node' },
+      },
+      actions: {},
+    });
+
+    const result = serializeCatalog(catalog);
+
+    expect(result).to.have.property('stylingSolution', 'inline-css');
+  });
+
+  it('includes explicit stylingSolution when set on the catalog', () => {
+    const catalog = defineAtomsCatalog({
+      stylingSolution: 'tailwind',
+      components: {
+        Text: { props: z.object({ content: z.string() }), description: 'A text node' },
+      },
+      actions: {},
+    });
+
+    const result = serializeCatalog(catalog);
+
+    expect(result).to.have.property('stylingSolution', 'tailwind');
+  });
+
   it('serializes component with full schema', () => {
     const catalog = defineAtomsCatalog({
       components: {
@@ -163,4 +190,3 @@ describe('serializeCatalog()', () => {
     expect(names).to.deep.equal(['open', 'close']);
   });
 });
-

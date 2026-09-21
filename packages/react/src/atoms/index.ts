@@ -3,6 +3,7 @@ export type {
   AtomActionDefinition,
   AtomsCatalog,
   AtomsCatalogInput,
+  AtomsStylingSolution,
   AtomsComponentsMap,
   AtomActionHandler,
   AtomsActionsMap,

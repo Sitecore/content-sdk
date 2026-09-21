@@ -3,6 +3,7 @@ export type {
   SitecoreComponentMeta,
   AtomCatalogComponentEntry,
   AtomCatalogActionEntry,
+  AtomsStylingSolution,
   Document,
 } from './types';
 

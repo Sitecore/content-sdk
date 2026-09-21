@@ -4,9 +4,10 @@
 
 ```ts
 
+import { AtomsStylingSolution } from '@sitecore-content-sdk/content/atoms';
 import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
-import { Catalog } from '@json-render/core';
+import type { Catalog } from '@json-render/core';
 import { ClientError } from '@sitecore-content-sdk/core';
 import { ComponentFields } from '@sitecore-content-sdk/content/layout';
 import { ComponentParams } from '@sitecore-content-sdk/content/layout';
@@ -60,7 +61,6 @@ import { RefAttributes } from 'react';
 import { resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 import { RetryStrategy } from '@sitecore-content-sdk/content/client';
 import { RouteData } from '@sitecore-content-sdk/content/layout';
-import { SchemaType } from '@json-render/core';
 import { SearchDocument } from '@sitecore-content-sdk/search';
 import { SearchParameters } from '@sitecore-content-sdk/search';
 import { SitecoreComponentMeta } from '@sitecore-content-sdk/content/atoms';
@@ -93,13 +93,16 @@ export type AtomComponentDefinition = BaseComponent & SitecoreComponentMeta;
 export type AtomsActionsMap = Record<string, AtomActionHandler>;
 
 // @public
-export type AtomsCatalog = Catalog<any, AtomsCatalogInput>;
+export type AtomsCatalog<T extends AtomsCatalogInput = AtomsCatalogInput> = Catalog<any, Omit<T, 'stylingSolution'> & {
+    stylingSolution: AtomsStylingSolution;
+}>;
 
 // Warning: (ae-forgotten-export) The symbol "BaseCatalog" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export type AtomsCatalogInput = BaseCatalog & {
     version?: string;
+    stylingSolution?: AtomsStylingSolution;
     components: Record<string, AtomComponentDefinition>;
     actions: Record<string, AtomActionDefinition>;
 };
@@ -116,6 +119,8 @@ export interface AtomsConfig {
     navigate?: (path: string) => void;
     registry: DefineRegistryResult;
 }
+
+export { AtomsStylingSolution }
 
 // @public
 export class BYOCComponent extends React_2.Component<BYOCComponentProps> {
@@ -223,43 +228,7 @@ export { DefaultRetryStrategy }
 // Warning: (ae-forgotten-export) The symbol "Exact" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export function defineAtomsCatalog<T extends AtomsCatalogInput>(input: Exact<T, AtomsCatalogInput>): Catalog<    {
-spec: SchemaType<"object", {
-root: SchemaType<"string", unknown>;
-elements: SchemaType<"record", SchemaType<"object", {
-type: SchemaType<"ref", string>;
-props: SchemaType<"propsOf", string>;
-children: SchemaType<"array", SchemaType<"string", unknown>>;
-slots: {
-optional: true;
-kind: "record";
-inner?: SchemaType<"array", SchemaType<"string", unknown>> | undefined;
-};
-visible: {
-optional: true;
-kind: "any";
-inner?: unknown;
-};
-repeat: {
-optional: true;
-kind: "any";
-inner?: unknown;
-};
-}>>;
-}>;
-catalog: SchemaType<"object", {
-components: SchemaType<"map", {
-props: SchemaType<"zod", unknown>;
-slots: SchemaType<"array", SchemaType<"string", unknown>>;
-description: SchemaType<"string", unknown>;
-example: SchemaType<"any", unknown>;
-}>;
-actions: SchemaType<"map", {
-params: SchemaType<"zod", unknown>;
-description: SchemaType<"string", unknown>;
-}>;
-}>;
-}, Exact<T, AtomsCatalogInput>>;
+export function defineAtomsCatalog<T extends AtomsCatalogInput>(input: Exact<T, AtomsCatalogInput>): AtomsCatalog<T>;
 
 // @public
 export const defineAtomsRegistry: typeof defineRegistry;

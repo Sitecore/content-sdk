@@ -1,6 +1,9 @@
 import type { Catalog, InferCatalogInput } from '@json-render/core';
 import type { ComponentRenderer, DefineRegistryResult, ReactSchema } from '@json-render/react';
-import { SitecoreComponentMeta } from '@sitecore-content-sdk/content/atoms';
+import { AtomsStylingSolution, SitecoreComponentMeta } from '@sitecore-content-sdk/content/atoms';
+
+export type { AtomsStylingSolution } from '@sitecore-content-sdk/content/atoms';
+
 type BaseCatalog = InferCatalogInput<ReactSchema['definition']['catalog']>;
 type BaseComponent = BaseCatalog['components'][string];
 type BaseAction = BaseCatalog['actions'][string];
@@ -31,6 +34,11 @@ export type AtomActionDefinition = BaseAction;
 export type AtomsCatalogInput = BaseCatalog & {
   /** Semver version of the catalog as a whole. Used by the lock file and Design Studio. */
   version?: string;
+  /**
+   * Styling solution used to style the app.
+   * @default 'inline-css'
+   */
+  stylingSolution?: AtomsStylingSolution;
   /** Component definitions keyed by name. */
   components: Record<string, AtomComponentDefinition>;
   /** Action definitions keyed by name (required). */
@@ -41,7 +49,10 @@ export type AtomsCatalogInput = BaseCatalog & {
  * Catalog used by the Atoms APIs.
  * @public
  */
-export type AtomsCatalog = Catalog<any, AtomsCatalogInput>;
+export type AtomsCatalog<T extends AtomsCatalogInput = AtomsCatalogInput> = Catalog<
+  any,
+  Omit<T, 'stylingSolution'> & { stylingSolution: AtomsStylingSolution }
+>;
 
 /**
  * Type alias for the component renderer.
