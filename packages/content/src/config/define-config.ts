@@ -2,7 +2,6 @@ import { constants, DefaultRetryStrategy } from '@sitecore-content-sdk/core';
 import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 import { DeepPartial, SitecoreConfig, SitecoreConfigInput } from './models';
 import { SITECORE_CLI_MODE_ENV_VAR } from '../config-cli';
-import { resolveThemingModeFromEnv } from '../layout/theming';
 
 const { ERROR_MESSAGES } = constants;
 
@@ -60,7 +59,7 @@ export const getFallbackConfig = (): SitecoreConfig => ({
   rewriteMediaUrls: false,
   disableCodeGeneration: false,
   theming: {
-    mode: resolveThemingModeFromEnv(),
+    mode: 'none',
   },
 });
 

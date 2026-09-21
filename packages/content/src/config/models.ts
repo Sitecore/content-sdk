@@ -216,8 +216,8 @@ export type SitecoreConfigInput = {
    */
   disableCodeGeneration?: boolean;
   /**
-   * Design-token theming. Independent from Design Library `enableThemes` stylesheets.
-   * Default is off so existing apps are unchanged.
+   * Design-token theming from `sitecore.config`. Independent from Design Library `enableThemes` stylesheets.
+   * Default is off so existing apps are unchanged. Apps that want env-based control can map an env var here.
    */
   theming?: {
     /**
@@ -232,7 +232,7 @@ export type SitecoreConfigInput = {
 };
 
 /**
- * Design-token theming depth controlled by `CSDK_FEATURE_THEMING`.
+ * Design-token theming depth from `sitecore.config` `theming.mode`.
  * @public
  */
 export type ThemingMode = 'none' | 'site' | 'page';

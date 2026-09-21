@@ -135,9 +135,6 @@ describe('define-config', () => {
       delete process.env.PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT;
       delete process.env.NEXT_PUBLIC_SITECORE_API_KEY;
       delete process.env.NEXT_PUBLIC_SITECORE_API_HOST;
-      delete process.env.CSDK_FEATURE_THEMING;
-      delete process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING;
-      delete process.env.FEATURE_THEMING;
 
       const cfg = getFallbackConfig();
       expect(cfg.api.edge.contextId).to.equal('');
@@ -150,11 +147,15 @@ describe('define-config', () => {
       expect(cfg.theming.mode).to.equal('none');
     });
 
-    it('reads CSDK_FEATURE_THEMING into theming.mode', () => {
+    it('does not read theming.mode from environment variables', () => {
       process.env.CSDK_FEATURE_THEMING = 'site';
+      process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING = 'site';
+      process.env.FEATURE_THEMING = 'site';
       const cfg = getFallbackConfig();
-      expect(cfg.theming.mode).to.equal('site');
+      expect(cfg.theming.mode).to.equal('none');
       delete process.env.CSDK_FEATURE_THEMING;
+      delete process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING;
+      delete process.env.FEATURE_THEMING;
     });
   });
 

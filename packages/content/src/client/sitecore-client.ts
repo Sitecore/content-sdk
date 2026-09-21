@@ -242,7 +242,7 @@ export interface BaseSitecoreClient {
   ): Promise<StaticPath[]>;
   /**
    * Retrieves the links to be loaded in app's <head> element for each page.
-   * Design-token theming links are controlled by `theming.mode` / `CSDK_FEATURE_THEMING`
+   * Design-token theming links are controlled by `sitecore.config` `theming.mode`
    * and are independent from Design Library `enableThemes`.
    * @param {LayoutServiceData} layoutData - The layout data containing styles and themes.
    * @param {object} [options] - Optional configuration for enabling styles and themes.
@@ -396,7 +396,7 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   /**
    * Retrieves the head `<link>` elements for Sitecore styles and themes.
-   * Design-token theming links are controlled by `theming.mode` / `CSDK_FEATURE_THEMING`
+   * Design-token theming links are controlled by `sitecore.config` `theming.mode`
    * and are independent from Design Library `enableThemes`.
    * @param {LayoutServiceData} layoutData - The layout data containing styles and themes.
    * @param {object} [options] - Optional configuration for enabling styles and themes.

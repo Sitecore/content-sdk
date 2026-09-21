@@ -6,6 +6,7 @@ import {
 import { Metadata } from '@sitecore-content-sdk/core/node-tools';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
+import { ThemingMode } from '@sitecore-content-sdk/content/config';
 import { getEditingSecret } from '../utils/utils';
 import { ComponentMap } from '@sitecore-content-sdk/react';
 import { NextjsContentSdkComponent } from '../sharedTypes/component-props';
@@ -24,6 +25,12 @@ export type EditingConfigRouteHandlerOptions = {
    * Contains only client and universal components that can be used in client bundles
    */
   clientComponents?: ComponentMap<NextjsContentSdkComponent>;
+  /**
+   * Design-token theming from `sitecore.config`. Exposed so Pages can detect feature compatibility.
+   */
+  theming?: {
+    mode?: ThemingMode;
+  };
 };
 
 /**
@@ -34,7 +41,7 @@ export type EditingConfigRouteHandlerOptions = {
  * @public
  */
 export const createEditingConfigRouteHandler = (options: EditingConfigRouteHandlerOptions) => {
-  const { components, metadata, clientComponents } = options;
+  const { components, metadata, clientComponents, theming } = options;
 
   const validateRequest = (req: NextRequest) => {
     const secret = req.nextUrl.searchParams.get(QUERY_PARAM_EDITING_SECRET);
@@ -93,6 +100,9 @@ export const createEditingConfigRouteHandler = (options: EditingConfigRouteHandl
         clientComponents: clientComponentNames,
         packages: metadata.packages,
         editMode: EditMode.Metadata,
+        theming: {
+          mode: theming?.mode ?? 'none',
+        },
       };
 
       debug.editing('editing config route handler end in %dms', Date.now() - startTimestamp);

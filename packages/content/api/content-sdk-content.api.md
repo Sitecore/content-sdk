@@ -233,9 +233,6 @@ export const createComponentInstance: (importMap: ImportEntry[], generatedCompon
 export const createGraphQLClientFactory: (options: GraphQLClientOptions) => GraphQLRequestClientFactory;
 
 // @public
-export const CSDK_FEATURE_THEMING_ENV = "CSDK_FEATURE_THEMING";
-
-// @public
 const debug_2: {
     form: Debugger;
     layout: Debugger;
@@ -896,9 +893,6 @@ export type ModuleExports = {
 };
 
 // @public
-export const NEXT_PUBLIC_CSDK_FEATURE_THEMING_ENV = "NEXT_PUBLIC_CSDK_FEATURE_THEMING";
-
-// @public
 export function normalizePersonalizedRewrite(pathname: string): string;
 
 // @public
@@ -945,9 +939,6 @@ export class PagesEditor {
     // (undocumented)
     static resetChromes(): void;
 }
-
-// @public
-export const parseThemingMode: (value?: string) => ThemingMode;
 
 // @public (undocumented)
 export type PersonalizedRewriteData = {
@@ -1090,11 +1081,6 @@ const replaceMediaUrlPrefix: (url: string, mediaUrlPrefix?: RegExp) => string;
 
 // @public
 export const resetEditorChromes: () => void;
-
-// @public
-export const resolveThemingModeFromEnv: (env?: {
-    [key: string]: string | undefined;
-}) => ThemingMode;
 
 export { RetryStrategy }
 

@@ -329,35 +329,24 @@ describe('defineConfig', () => {
   });
 
   describe('config.theming', () => {
-    it('defaults to none when no env is set', () => {
-      defineConfigModule.defineConfig(defaultConfig());
-      const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-      expect(resultConfig.theming?.mode).to.equal('none');
+    it('does not set a theming fallback from environment variables', () => {
+      process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING = 'site';
+      try {
+        defineConfigModule.defineConfig(defaultConfig());
+        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+        expect(resultConfig.theming).to.be.undefined;
+      } finally {
+        delete process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING;
+      }
     });
 
-    it('uses the value from the config if present', () => {
+    it('passes the value from sitecore.config through', () => {
       defineConfigModule.defineConfig({
         ...defaultConfig(),
         theming: { mode: 'site' },
       });
       const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
       expect(resultConfig.theming?.mode).to.equal('site');
-    });
-
-    describe('environment variable is set', () => {
-      before(() => {
-        process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING = 'site';
-      });
-
-      after(() => {
-        delete process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING;
-      });
-
-      it('should use the env var if config value not present', () => {
-        defineConfigModule.defineConfig(defaultConfig());
-        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.theming?.mode).to.equal('site');
-      });
     });
   });
 

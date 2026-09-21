@@ -204,6 +204,7 @@ import { TextField } from '@sitecore-content-sdk/react';
 import { TextFieldSchema } from '@sitecore-content-sdk/react';
 import { textFieldSchema } from '@sitecore-content-sdk/react';
 import { THEMING_BODY_CLASS_NAME } from '@sitecore-content-sdk/content/layout';
+import { ThemingMode } from '@sitecore-content-sdk/content/config';
 import { useBoundProp } from '@sitecore-content-sdk/react';
 import { useSitecore } from '@sitecore-content-sdk/react';
 import { withAppPlaceholder } from '@sitecore-content-sdk/react';
@@ -505,6 +506,9 @@ export class EditingConfigMiddleware {
 export type EditingConfigMiddlewareConfig = {
     components: ComponentMap<NextjsContentSdkComponent>;
     metadata: Metadata;
+    theming?: {
+        mode?: ThemingMode;
+    };
 };
 
 // Warning: (ae-forgotten-export) The symbol "RenderMiddlewareBase" needs to be exported by the entry point api-surface.d.ts

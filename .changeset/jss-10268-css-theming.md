@@ -4,4 +4,4 @@
 'create-content-sdk-app': patch
 ---
 
-Add opt-in site-level design-token theming via `CSDK_FEATURE_THEMING` / `theming.mode`, injecting a stylesheet link through the existing head-links pipeline and applying `sc-ds-theme` on `<body>` when site theming is enabled.
+Add opt-in site-level design-token theming via `sitecore.config` `theming.mode`, injecting a stylesheet link through the existing head-links pipeline, applying `sc-ds-theme` on `<body>` when site theming is enabled, and exposing the same setting from the editing config endpoint.

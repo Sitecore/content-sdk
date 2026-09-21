@@ -2,6 +2,7 @@ import { createEditingConfigRouteHandler } from '@sitecore-content-sdk/nextjs/ro
 import components from '.sitecore/component-map';
 import clientComponents from '.sitecore/component-map.client';
 import metadata from '.sitecore/metadata.json';
+import scConfig from 'sitecore.config';
 
 /**
  * This API route is used by Sitecore Editor in XM Cloud
@@ -15,4 +16,5 @@ export const { GET, OPTIONS } = createEditingConfigRouteHandler({
   components,
   clientComponents,
   metadata,
+  theming: scConfig.theming,
 });
