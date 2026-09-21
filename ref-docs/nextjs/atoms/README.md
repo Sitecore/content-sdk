@@ -19,6 +19,7 @@
 - [AtomsCatalog](type-aliases/AtomsCatalog.md)
 - [AtomsCatalogInput](type-aliases/AtomsCatalogInput.md)
 - [AtomsComponentsMap](type-aliases/AtomsComponentsMap.md)
+- [AtomsStylingSolution](type-aliases/AtomsStylingSolution.md)
 - [DateFieldSchema](type-aliases/DateFieldSchema.md)
 - [FileFieldSchema](type-aliases/FileFieldSchema.md)
 - [ImageFieldSchema](type-aliases/ImageFieldSchema.md)

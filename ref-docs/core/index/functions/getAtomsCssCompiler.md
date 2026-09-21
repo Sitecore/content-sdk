@@ -8,7 +8,7 @@
 
 > **getAtomsCssCompiler**(): [`AtomsCssCompiler`](../type-aliases/AtomsCssCompiler.md) \| `null`
 
-Defined in: [packages/core/src/atoms-css-compiler-registry.ts:43](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/core/src/atoms-css-compiler-registry.ts#L43)
+Defined in: [packages/core/src/atoms-css-compiler-registry.ts:43](https://github.com/Sitecore/content-sdk/blob/eb4a5a9ee099182eed23366c9fea12d5faf5c541/packages/core/src/atoms-css-compiler-registry.ts#L43)
 
 Returns the currently registered CSS compiler, or `null` if none has been set.
 

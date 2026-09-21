@@ -8,7 +8,7 @@
 
 > **AtomActionHandler** = (`params`) => `Promise`\<`void`\> \| `void`
 
-Defined in: react/types/atoms/types.d.ts:54
+Defined in: react/types/atoms/types.d.ts:62
 
 Action handler function.
 

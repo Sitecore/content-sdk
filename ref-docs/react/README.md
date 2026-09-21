@@ -71,6 +71,7 @@
 - [AtomsCatalog](type-aliases/AtomsCatalog.md)
 - [AtomsCatalogInput](type-aliases/AtomsCatalogInput.md)
 - [AtomsComponentsMap](type-aliases/AtomsComponentsMap.md)
+- [AtomsStylingSolution](type-aliases/AtomsStylingSolution.md)
 - [BYOCComponentParams](type-aliases/BYOCComponentParams.md)
 - [BYOCComponentProps](type-aliases/BYOCComponentProps.md)
 - [ComponentMap](type-aliases/ComponentMap.md)

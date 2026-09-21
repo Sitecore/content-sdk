@@ -8,7 +8,7 @@
 
 > **AtomsCatalogInput** = `BaseCatalog` & `object`
 
-Defined in: [packages/react/src/atoms/types.ts:31](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/react/src/atoms/types.ts#L31)
+Defined in: [packages/react/src/atoms/types.ts:34](https://github.com/Sitecore/content-sdk/blob/eb4a5a9ee099182eed23366c9fea12d5faf5c541/packages/react/src/atoms/types.ts#L34)
 
 Input shape for defineAtomsCatalog.
 Extends json-render's base catalog input with Sitecore-specific fields.
@@ -26,6 +26,18 @@ Action definitions keyed by name (required).
 > **components**: `Record`\<`string`, [`AtomComponentDefinition`](AtomComponentDefinition.md)\>
 
 Component definitions keyed by name.
+
+### stylingSolution?
+
+> `optional` **stylingSolution?**: [`AtomsStylingSolution`](AtomsStylingSolution.md)
+
+Styling solution used to style the app.
+
+#### Default
+
+```ts
+'inline-css'
+```
 
 ### version?
 

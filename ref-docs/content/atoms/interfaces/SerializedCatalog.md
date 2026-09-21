@@ -6,7 +6,7 @@
 
 # Interface: SerializedCatalog
 
-Defined in: [content/src/atoms/types.ts:43](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/types.ts#L43)
+Defined in: [content/src/atoms/types.ts:49](https://github.com/Sitecore/content-sdk/blob/eb4a5a9ee099182eed23366c9fea12d5faf5c541/packages/content/src/atoms/types.ts#L49)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Full catalog payload sent to Design Studio.
 
 > **actions**: [`AtomCatalogActionEntry`](AtomCatalogActionEntry.md)[]
 
-Defined in: [content/src/atoms/types.ts:49](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/types.ts#L49)
+Defined in: [content/src/atoms/types.ts:57](https://github.com/Sitecore/content-sdk/blob/eb4a5a9ee099182eed23366c9fea12d5faf5c541/packages/content/src/atoms/types.ts#L57)
 
 Serialized action entries.
 
@@ -28,9 +28,19 @@ Serialized action entries.
 
 > **components**: [`AtomCatalogComponentEntry`](AtomCatalogComponentEntry.md)[]
 
-Defined in: [content/src/atoms/types.ts:47](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/types.ts#L47)
+Defined in: [content/src/atoms/types.ts:55](https://github.com/Sitecore/content-sdk/blob/eb4a5a9ee099182eed23366c9fea12d5faf5c541/packages/content/src/atoms/types.ts#L55)
 
 Serialized component entries.
+
+***
+
+### stylingSolution
+
+> **stylingSolution**: [`AtomsStylingSolution`](../type-aliases/AtomsStylingSolution.md)
+
+Defined in: [content/src/atoms/types.ts:53](https://github.com/Sitecore/content-sdk/blob/eb4a5a9ee099182eed23366c9fea12d5faf5c541/packages/content/src/atoms/types.ts#L53)
+
+Styling solution used to style the app, from `defineAtomsCatalog`. Always present (defaults to `'inline-css'`).
 
 ***
 
@@ -38,6 +48,6 @@ Serialized component entries.
 
 > `optional` **version?**: `string`
 
-Defined in: [content/src/atoms/types.ts:45](https://github.com/Sitecore/content-sdk/blob/c876e4539ff3eeebb114160dc3159c5d1ae13766/packages/content/src/atoms/types.ts#L45)
+Defined in: [content/src/atoms/types.ts:51](https://github.com/Sitecore/content-sdk/blob/eb4a5a9ee099182eed23366c9fea12d5faf5c541/packages/content/src/atoms/types.ts#L51)
 
 Catalog root version from `defineAtomsCatalog`. Absent when not declared.

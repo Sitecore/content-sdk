@@ -19,6 +19,7 @@
 
 ## Type Aliases
 
+- [AtomsStylingSolution](type-aliases/AtomsStylingSolution.md)
 - [DesignLibraryAtomsError](type-aliases/DesignLibraryAtomsError.md)
 
 ## Functions
