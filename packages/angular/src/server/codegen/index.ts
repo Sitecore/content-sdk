@@ -6,6 +6,6 @@
  */
 export { defaultImportEntries } from './default-import-entries';
 export { ImportEntry } from '@sitecore-content-sdk/content/codegen';
-// Local, browser-safe copy — importing from `content/tools` would drag `glob`/`node:*` into the
-// browser bundle via the generated `.sitecore/import-map.ts`. See ./combine-import-entries.ts.
-export { combineImportEntries } from './combine-import-entries';
+// Must come from `content/codegen-utils`, not `content/tools`: the generated `.sitecore/import-map.ts`
+// imports this helper and is bundled for the browser, and the `tools` barrel reaches `glob`/`node:*`.
+export { combineImportEntries } from '@sitecore-content-sdk/content/codegen-utils';

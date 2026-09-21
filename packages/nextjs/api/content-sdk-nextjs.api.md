@@ -18,7 +18,7 @@ import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
 import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { ClientEditingChromesUpdate } from '@sitecore-content-sdk/react';
-import { combineImportEntries } from '@sitecore-content-sdk/content/tools';
+import { combineImportEntries } from '@sitecore-content-sdk/content/codegen-utils';
 import { ComponentFields } from '@sitecore-content-sdk/content/layout';
 import { ComponentFile } from '@sitecore-content-sdk/content/tools';
 import { ComponentImport } from '@sitecore-content-sdk/content/tools';

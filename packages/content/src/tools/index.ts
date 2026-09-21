@@ -14,4 +14,6 @@ export {
   buildComponentMapContent,
   toPascalCase,
 } from './templating';
-export { combineImportEntries } from './codegen/import-map-utils';
+// Re-exported for backwards compatibility. Browser bundles should import this from
+// `@sitecore-content-sdk/content/codegen-utils` — this barrel is Node/build-time only.
+export { combineImportEntries } from '../codegen-utils';
