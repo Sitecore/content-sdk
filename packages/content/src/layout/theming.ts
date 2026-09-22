@@ -6,28 +6,20 @@ import { HTMLLink } from '../models';
 export type { ThemingMode };
 
 /**
- * Returns whether site-level design-token theming should emit a stylesheet link.
+ * Returns whether site-level design-token theming is enabled.
  * `page` is treated as site-level until page theming is implemented.
- * @param {ThemingMode} mode Theming mode
- * @returns {boolean} Whether the site theme stylesheet should be included
+ * @param {ThemingMode} mode Theming mode from `sitecore.config`
+ * @returns {boolean} Whether site-level theming is enabled
+ * @public
  */
-const isSiteThemingEnabled = (mode: ThemingMode): boolean => mode === 'site' || mode === 'page';
+export const isSiteThemingEnabled = (mode: ThemingMode): boolean =>
+  mode === 'site' || mode === 'page';
 
 /**
  * CSS class applied to `<body>` when site-level design-token theming is enabled.
  * @public
  */
 export const THEMING_BODY_CLASS_NAME = 'sc-ds-theme';
-
-/**
- * Returns the body class name for site-level design-token theming, or `undefined` when theming is off.
- * `page` is treated as site-level until page theming is implemented.
- * @param {ThemingMode} mode Theming mode from `sitecore.config`
- * @returns {string | undefined} Body class name when site theming is enabled
- * @public
- */
-export const getThemingBodyClassName = (mode: ThemingMode): string | undefined =>
-  isSiteThemingEnabled(mode) ? THEMING_BODY_CLASS_NAME : undefined;
 
 /**
  * Builds the design-token theme stylesheet URL for a site.
@@ -46,7 +38,7 @@ export const getThemingStylesheetUrl = (
  */
 export type ThemingStylesheetLinksOptions = {
   /**
-   * Theming depth from `sitecore.config` `theming.mode`.
+   * Theming mode from `sitecore.config` `theming.mode`.
    */
   mode: ThemingMode;
   /**

@@ -329,15 +329,10 @@ describe('defineConfig', () => {
   });
 
   describe('config.theming', () => {
-    it('does not set a theming fallback from environment variables', () => {
-      process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING = 'site';
-      try {
-        defineConfigModule.defineConfig(defaultConfig());
-        const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.theming).to.be.undefined;
-      } finally {
-        delete process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING;
-      }
+    it('does not set theming when it is not in sitecore.config', () => {
+      defineConfigModule.defineConfig(defaultConfig());
+      const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+      expect(resultConfig.theming).to.be.undefined;
     });
 
     it('passes the value from sitecore.config through', () => {

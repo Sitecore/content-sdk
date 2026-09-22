@@ -41,7 +41,7 @@ export {
   ThemingMode,
   ThemingStylesheetLinksOptions,
   THEMING_BODY_CLASS_NAME,
-  getThemingBodyClassName,
+  isSiteThemingEnabled,
   getThemingStylesheetLinks,
 } from './theming';
 

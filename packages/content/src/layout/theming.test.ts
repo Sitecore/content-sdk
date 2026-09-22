@@ -2,9 +2,9 @@
 import { expect } from 'chai';
 import { constants } from '@sitecore-content-sdk/core';
 import {
-  getThemingBodyClassName,
   getThemingStylesheetLinks,
   getThemingStylesheetUrl,
+  isSiteThemingEnabled,
   THEMING_BODY_CLASS_NAME,
 } from './theming';
 
@@ -25,18 +25,18 @@ describe('theming', () => {
     });
   });
 
-  describe('getThemingBodyClassName', () => {
-    it('returns undefined when theming is disabled', () => {
-      expect(getThemingBodyClassName('none')).to.be.undefined;
+  describe('isSiteThemingEnabled', () => {
+    it('returns false when theming is disabled', () => {
+      expect(isSiteThemingEnabled('none')).to.be.false;
     });
 
-    it('returns the body class when site theming is enabled', () => {
-      expect(getThemingBodyClassName('site')).to.equal(THEMING_BODY_CLASS_NAME);
+    it('returns true when site theming is enabled', () => {
+      expect(isSiteThemingEnabled('site')).to.be.true;
       expect(THEMING_BODY_CLASS_NAME).to.equal('sc-ds-theme');
     });
 
-    it('treats page mode as site-level for the body class', () => {
-      expect(getThemingBodyClassName('page')).to.equal(THEMING_BODY_CLASS_NAME);
+    it('treats page mode as site-level', () => {
+      expect(isSiteThemingEnabled('page')).to.be.true;
     });
   });
 

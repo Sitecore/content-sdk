@@ -1,12 +1,16 @@
 import { Html, Head, Main, NextScript } from 'next/document';
-import { getThemingBodyClassName } from '@sitecore-content-sdk/nextjs';
+import { isSiteThemingEnabled, THEMING_BODY_CLASS_NAME } from '@sitecore-content-sdk/nextjs';
 import scConfig from 'sitecore.config';
 
 export default function Document() {
   return (
     <Html>
       <Head />
-      <body className={getThemingBodyClassName(scConfig.theming.mode)}>
+      <body
+        className={
+          isSiteThemingEnabled(scConfig.theming.mode) ? THEMING_BODY_CLASS_NAME : undefined
+        }
+      >
         <Main />
         <NextScript />
       </body>

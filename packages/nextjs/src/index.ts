@@ -33,7 +33,7 @@ export {
   ComponentFields,
   ComponentParams,
   getContentStylesheetLink,
-  getThemingBodyClassName,
+  isSiteThemingEnabled,
   THEMING_BODY_CLASS_NAME,
   EditMode,
   RenderingType,

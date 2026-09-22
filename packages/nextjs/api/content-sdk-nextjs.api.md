@@ -94,7 +94,6 @@ import { GetServerSidePropsContext } from 'next';
 import { getSiteRewrite } from '@sitecore-content-sdk/content/site';
 import { getSiteRewriteData } from '@sitecore-content-sdk/content/site';
 import { GetStaticPropsContext } from 'next';
-import { getThemingBodyClassName } from '@sitecore-content-sdk/content/layout';
 import { GraphQLClientError } from '@sitecore-content-sdk/content/client';
 import { GraphQLClientOptions } from '@sitecore-content-sdk/content/client';
 import { GraphQLRequestClient } from '@sitecore-content-sdk/content/client';
@@ -115,6 +114,7 @@ import { ImportMapImport } from '@sitecore-content-sdk/react';
 import { IncomingHttpHeaders } from 'http';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { isEditorActive } from '@sitecore-content-sdk/content/editing';
+import { isSiteThemingEnabled } from '@sitecore-content-sdk/content/layout';
 import { Item } from '@sitecore-content-sdk/content/layout';
 import { JSX as JSX_2 } from 'react';
 import { LayoutService } from '@sitecore-content-sdk/content/layout';
@@ -667,8 +667,6 @@ export { getSiteRewrite }
 
 export { getSiteRewriteData }
 
-export { getThemingBodyClassName }
-
 export { GraphQLClientError }
 
 export { GraphQLRequestClient }
@@ -712,6 +710,8 @@ export { isEditorActive }
 
 // @public
 export const isServerSidePropsContext: (context: GetServerSidePropsContext | GetStaticPropsContext) => context is GetServerSidePropsContext;
+
+export { isSiteThemingEnabled }
 
 // @public
 export function isSuccessfulProxyExecution<SuccessfulProxyType = unknown, T extends ProxiesContextMapValue | undefined = ProxiesContextMapValue | undefined>(info: T): info is T & SuccessfulProxyType;

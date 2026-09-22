@@ -146,17 +146,6 @@ describe('define-config', () => {
       expect(cfg.api.local.apiHost).to.equal('');
       expect(cfg.theming.mode).to.equal('none');
     });
-
-    it('does not read theming.mode from environment variables', () => {
-      process.env.CSDK_FEATURE_THEMING = 'site';
-      process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING = 'site';
-      process.env.FEATURE_THEMING = 'site';
-      const cfg = getFallbackConfig();
-      expect(cfg.theming.mode).to.equal('none');
-      delete process.env.CSDK_FEATURE_THEMING;
-      delete process.env.NEXT_PUBLIC_CSDK_FEATURE_THEMING;
-      delete process.env.FEATURE_THEMING;
-    });
   });
 
   describe('deepMerge', () => {

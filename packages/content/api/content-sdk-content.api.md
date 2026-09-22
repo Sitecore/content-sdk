@@ -710,9 +710,6 @@ const getSrcSet: (url: string, srcSet: Array<{
 }, mediaUrlPrefix?: RegExp) => string;
 
 // @public
-export const getThemingBodyClassName: (mode: ThemingMode) => string | undefined;
-
-// @public
 export const getThemingStylesheetLinks: (input: ThemingStylesheetLinksOptions) => HTMLLink[];
 
 // @internal
@@ -774,6 +771,9 @@ export const isEditorActive: () => boolean;
 
 // @public
 export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field> | null | undefined): field is null | undefined;
+
+// @public
+export const isSiteThemingEnabled: (mode: ThemingMode) => boolean;
 
 // @public
 export interface Item {
