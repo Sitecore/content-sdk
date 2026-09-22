@@ -328,6 +328,23 @@ describe('defineConfig', () => {
     });
   });
 
+  describe('config.theming', () => {
+    it('does not set theming when it is not in sitecore.config', () => {
+      defineConfigModule.defineConfig(defaultConfig());
+      const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+      expect(resultConfig.theming).to.be.undefined;
+    });
+
+    it('passes the value from sitecore.config through', () => {
+      defineConfigModule.defineConfig({
+        ...defaultConfig(),
+        theming: { mode: 'site' },
+      });
+      const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+      expect(resultConfig.theming?.mode).to.equal('site');
+    });
+  });
+
   describe('config.multisite', () => {
     describe('enabled', () => {
       it('should default to undefined', () => {

@@ -35,6 +35,7 @@ describe('createEditingConfigRouteHandler', () => {
     clientComponents: [],
     packages: { testPackageOne: '0.1.1' },
     editMode: 'metadata',
+    theming: { mode: 'none' },
   };
 
   const corsHeaders = {
@@ -262,6 +263,20 @@ describe('createEditingConfigRouteHandler', () => {
       const responseBody = JSON.parse(res.body);
       expect(responseBody.framework).to.equal('nextjs-approuter');
       expect(responseBody.clientComponents).to.deep.equal([]);
+    });
+
+    it('should include theming from sitecore.config when provided', async () => {
+      const customHandler = editingConfigRouteHandlerModule.createEditingConfigRouteHandler({
+        components: componentsMap,
+        metadata,
+        theming: { mode: 'site' },
+      });
+
+      const res = await customHandler.GET(req as NextRequest);
+
+      expect(res.status).to.equal(200);
+      const responseBody = JSON.parse(res.body);
+      expect(responseBody.theming).to.deep.equal({ mode: 'site' });
     });
   });
 });

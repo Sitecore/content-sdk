@@ -1,7 +1,7 @@
 import {
-  DeepRequired,
   defineConfig as defineConfigCore,
-  SitecoreConfigInput as SitecoreConfigInputCore,
+  type DeepRequired,
+  type SitecoreConfigInput as SitecoreConfigInputCore,
 } from '@sitecore-content-sdk/content/config';
 import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 

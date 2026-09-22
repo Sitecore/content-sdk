@@ -7,6 +7,7 @@ import debug from '../debug';
 import { Metadata } from '@sitecore-content-sdk/core/node-tools';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
+import { ThemingMode } from '@sitecore-content-sdk/content/config';
 import { getEditingSecret } from '../utils/utils';
 import { ComponentMap } from '@sitecore-content-sdk/react';
 import { NextjsContentSdkComponent } from '../sharedTypes/component-props';
@@ -24,6 +25,12 @@ export type EditingConfigMiddlewareConfig = {
    * Application metadata
    */
   metadata: Metadata;
+  /**
+   * Design-token theming from `sitecore.config`. Exposed so Pages can detect feature compatibility.
+   */
+  theming?: {
+    mode?: ThemingMode;
+  };
 };
 
 /**
@@ -81,6 +88,9 @@ export class EditingConfigMiddleware {
       components,
       packages: this.config.metadata.packages,
       editMode: EditMode.Metadata,
+      theming: {
+        mode: this.config.theming?.mode ?? 'none',
+      },
     });
   };
 }
