@@ -7,13 +7,11 @@ export type { ThemingMode };
 
 /**
  * Returns whether site-level design-token theming is enabled.
- * `page` is treated as site-level until page theming is implemented.
  * @param {ThemingMode} mode Theming mode from `sitecore.config`
  * @returns {boolean} Whether site-level theming is enabled
  * @public
  */
-export const isSiteThemingEnabled = (mode: ThemingMode): boolean =>
-  mode === 'site' || mode === 'page';
+export const isSiteThemingEnabled = (mode: ThemingMode): boolean => mode === 'site';
 
 /**
  * CSS class applied to `<body>` when site-level design-token theming is enabled.
@@ -55,7 +53,7 @@ export type ThemingStylesheetLinksOptions = {
 /**
  * Returns `<link>` elements for Sitecore design-token theming.
  * Independent from Design Library stylesheets (`getDesignLibraryStylesheetLinks`).
- * Phase 1 emits only the site-level stylesheet when mode is `site` or `page` and `siteId` is provided.
+ * Emits the site-level stylesheet when mode is `site` and `siteId` is provided.
  * @param {ThemingStylesheetLinksOptions} options Theming options
  * @returns {HTMLLink[]} Theme stylesheet links
  * @public

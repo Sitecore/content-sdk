@@ -1460,7 +1460,7 @@ const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: strin
 export const THEMING_BODY_CLASS_NAME = "sc-ds-theme";
 
 // @public
-export type ThemingMode = 'none' | 'site' | 'page';
+export type ThemingMode = 'none' | 'site';
 
 // @public
 export type ThemingStylesheetLinksOptions = {

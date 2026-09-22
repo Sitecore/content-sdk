@@ -34,10 +34,6 @@ describe('theming', () => {
       expect(isSiteThemingEnabled('site')).to.be.true;
       expect(THEMING_BODY_CLASS_NAME).to.equal('sc-ds-theme');
     });
-
-    it('treats page mode as site-level', () => {
-      expect(isSiteThemingEnabled('page')).to.be.true;
-    });
   });
 
   describe('getThemingStylesheetLinks', () => {
@@ -69,10 +65,10 @@ describe('theming', () => {
       ]);
     });
 
-    it('treats page mode as site-level only', () => {
+    it('uses the provided Edge URL', () => {
       expect(
         getThemingStylesheetLinks({
-          mode: 'page',
+          mode: 'site',
           siteId: 'site-1',
           sitecoreEdgeUrl: 'https://edge.example.com',
         })

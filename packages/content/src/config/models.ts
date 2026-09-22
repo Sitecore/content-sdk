@@ -224,7 +224,6 @@ export type SitecoreConfigInput = {
      * Theming mode.
      * `none` (default) adds no theme links.
      * `site` adds the site-level design-token stylesheet when a site id is available.
-     * `page` is reserved; phase 1 treats it as site-level only.
      * @default 'none'
      */
     mode?: ThemingMode;
@@ -235,7 +234,7 @@ export type SitecoreConfigInput = {
  * Design-token theming mode from `sitecore.config` `theming.mode`.
  * @public
  */
-export type ThemingMode = 'none' | 'site' | 'page';
+export type ThemingMode = 'none' | 'site';
 
 /**
  * Final Sitecore config type used at runtime.

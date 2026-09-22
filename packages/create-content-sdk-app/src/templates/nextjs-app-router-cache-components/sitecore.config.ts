@@ -8,7 +8,7 @@ import { defineConfig } from '@sitecore-content-sdk/nextjs/config';
  * (`use cache` / `cacheTag`) and is not cleared by `revalidateTag`. This template relies on tag-based
  * dictionary caching in `getSitecoreDictionary` instead.
  *
- * Design-token theming is controlled by `theming.mode` (`none` | `site` | `page`). Default is `none`.
+ * Design-token theming is controlled by `theming.mode` (`none` | `site`). Default is `none`.
  */
 export default defineConfig({
   dictionary: {

@@ -4,6 +4,6 @@ import { defineConfig } from '@sitecore-content-sdk/nextjs/config';
  * See the documentation for `defineConfig`:
  * https://doc.sitecore.com/xmc/en/developers/content-sdk/the-sitecore-configuration-file.html
  *
- * Design-token theming is controlled by `theming.mode` (`none` | `site` | `page`). Default is `none`.
+ * Design-token theming is controlled by `theming.mode` (`none` | `site`). Default is `none`.
  */
 export default defineConfig({});
