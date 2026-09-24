@@ -13,7 +13,6 @@ export * from '../config-cli';
 export * from '../editing';
 export * from '../experimental';
 export * from '../codegen';
-export * from '../codegen-utils';
 export * from '../client';
 export * from '../i18n';
 export * from '../layout';

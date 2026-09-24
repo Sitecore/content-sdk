@@ -1,5 +1,7 @@
 export { GenerateMapFunction, GenerateMapArgs } from './generate-map';
 export { getComponentSpec, getComponentSpecUrl } from './codegen/component-generation';
+// Browser-safe helpers only. Do not re-export `./templating` — that barrel also
+// reaches `glob` (component list) and `path` (component-map file generation).
 export {
   ComponentFile,
   ComponentImport,
@@ -10,10 +12,6 @@ export {
   ComponentMapEntry,
   ComponentMapTemplate,
   EnhancedComponentMapTemplate,
-  prepareComponentsForMap,
-  buildComponentMapContent,
   toPascalCase,
-} from './templating';
-// Re-exported for backwards compatibility. Browser bundles should import this from
-// `@sitecore-content-sdk/content/codegen-utils` — this barrel is Node/build-time only.
-export { combineImportEntries } from '../codegen-utils';
+} from './templating/component-builder';
+export { combineImportEntries } from './codegen/import-map-utils';

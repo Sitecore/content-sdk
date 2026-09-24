@@ -4,7 +4,7 @@
 import path from 'path';
 import { expect } from 'chai';
 import { prepareComponentsForMap, buildComponentMapContent } from './utils';
-import type { ComponentFile, ComponentFileWithType, ComponentImport } from './components';
+import type { ComponentFile, ComponentFileWithType, ComponentImport } from './component-builder';
 
 const abs = (p: string) => path.resolve(process.cwd(), p);
 

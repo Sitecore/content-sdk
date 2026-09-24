@@ -1,7 +1,7 @@
 /* eslint-disable quotes */
 import { expect } from 'chai';
 import { combineImportEntries } from './import-map-utils';
-import { ImportEntry } from '../editing/codegen';
+import { ImportEntry } from '../../editing/codegen';
 
 describe('Import Map Utils', () => {
   describe('combineImportEntries', () => {
