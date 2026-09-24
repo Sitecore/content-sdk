@@ -8,7 +8,7 @@
 
 > **getSXAParams**(`rendering`): \{ `Styles`: `string`; \} \| `undefined`
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:146](https://github.com/Sitecore/content-sdk/blob/df0ab91f7e1cc1e11e1d2458da0d151ccdbea3af/packages/angular/src/components/placeholder/placeholder-utils.ts#L146)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:146](https://github.com/Sitecore/content-sdk/blob/0356f0f053fb300f84eda3078cc81874eba59bc8/packages/angular/src/components/placeholder/placeholder-utils.ts#L146)
 
 Get SXA specific params from Sitecore rendering params.
 

@@ -8,7 +8,7 @@
 
 > **PageMetadataRouteFields** = [`PageMetadataFields`](../interfaces/PageMetadataFields.md) & `object`
 
-Defined in: [nextjs/src/metadata/resolve-page-metadata-fields.ts:14](https://github.com/Sitecore/content-sdk/blob/df0ab91f7e1cc1e11e1d2458da0d151ccdbea3af/packages/nextjs/src/metadata/resolve-page-metadata-fields.ts#L14)
+Defined in: [nextjs/src/metadata/resolve-page-metadata-fields.ts:14](https://github.com/Sitecore/content-sdk/blob/0356f0f053fb300f84eda3078cc81874eba59bc8/packages/nextjs/src/metadata/resolve-page-metadata-fields.ts#L14)
 
 Route fields consumed when resolving page metadata: the page's `Title` plus the metadata/Open
 Graph fields Sitecore returns as siblings of `Title` in the route's `fields`.
