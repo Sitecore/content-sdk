@@ -8,6 +8,6 @@
 
 > `const` **DEFAULT\_EXPORT\_NAME**: `"Default"` = `'Default'`
 
-Defined in: [packages/angular/src/components/types.ts:7](https://github.com/Sitecore/content-sdk/blob/0356f0f053fb300f84eda3078cc81874eba59bc8/packages/angular/src/components/types.ts#L7)
+Defined in: [packages/angular/src/components/types.ts:7](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/angular/src/components/types.ts#L7)
 
 SXA uses a special export name to identify the "default" variant.

@@ -6,7 +6,7 @@
 
 # Interface: CreateExperimentalFeaturesMiddlewareOptions
 
-Defined in: [packages/angular/src/server/middleware/experimental-features-middleware.ts:21](https://github.com/Sitecore/content-sdk/blob/0356f0f053fb300f84eda3078cc81874eba59bc8/packages/angular/src/server/middleware/experimental-features-middleware.ts#L21)
+Defined in: [packages/angular/src/server/middleware/experimental-features-middleware.ts:21](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/angular/src/server/middleware/experimental-features-middleware.ts#L21)
 
 Options for [createExperimentalFeaturesMiddleware](../functions/createExperimentalFeaturesMiddleware.md).
 
@@ -16,6 +16,6 @@ Options for [createExperimentalFeaturesMiddleware](../functions/createExperiment
 
 > `optional` **endpoint?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/experimental-features-middleware.ts:23](https://github.com/Sitecore/content-sdk/blob/0356f0f053fb300f84eda3078cc81874eba59bc8/packages/angular/src/server/middleware/experimental-features-middleware.ts#L23)
+Defined in: [packages/angular/src/server/middleware/experimental-features-middleware.ts:23](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/angular/src/server/middleware/experimental-features-middleware.ts#L23)
 
 Endpoint path; default `/api/editing/experimental`.
