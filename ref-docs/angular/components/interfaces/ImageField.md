@@ -6,7 +6,7 @@
 
 # Interface: ImageField
 
-Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:24](https://github.com/Sitecore/content-sdk/blob/df0ab91f7e1cc1e11e1d2458da0d151ccdbea3af/packages/angular/src/components/field-directives/sc-image.directive.ts#L24)
+Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:24](https://github.com/Sitecore/content-sdk/blob/0356f0f053fb300f84eda3078cc81874eba59bc8/packages/angular/src/components/field-directives/sc-image.directive.ts#L24)
 
 Image field shape (with optional value wrapper).
 
@@ -16,7 +16,7 @@ Image field shape (with optional value wrapper).
 
 > `optional` **metadata?**: `Record`\<`string`, `unknown`\>
 
-Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:26](https://github.com/Sitecore/content-sdk/blob/df0ab91f7e1cc1e11e1d2458da0d151ccdbea3af/packages/angular/src/components/field-directives/sc-image.directive.ts#L26)
+Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:26](https://github.com/Sitecore/content-sdk/blob/0356f0f053fb300f84eda3078cc81874eba59bc8/packages/angular/src/components/field-directives/sc-image.directive.ts#L26)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [packages/angular/src/components/field-directives/sc-image.directive
 
 > `optional` **value?**: [`ImageFieldValue`](ImageFieldValue.md)
 
-Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:25](https://github.com/Sitecore/content-sdk/blob/df0ab91f7e1cc1e11e1d2458da0d151ccdbea3af/packages/angular/src/components/field-directives/sc-image.directive.ts#L25)
+Defined in: [packages/angular/src/components/field-directives/sc-image.directive.ts:25](https://github.com/Sitecore/content-sdk/blob/0356f0f053fb300f84eda3078cc81874eba59bc8/packages/angular/src/components/field-directives/sc-image.directive.ts#L25)
