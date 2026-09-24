@@ -1,3 +1,5 @@
+'use client';
+
 export { useSearch, UseSearchState, UseSearchOptions } from './useSearch';
 export {
   useInfiniteSearch,

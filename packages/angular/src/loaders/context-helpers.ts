@@ -1,5 +1,5 @@
 import type { LoaderContext } from './models';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
+import { DEFAULT_VARIANT, TokenMap } from '@sitecore-content-sdk/content/personalize';
 
 /**
  * Read the site name resolved for the current request (multisite middleware →
@@ -47,4 +47,40 @@ export function getComponentVariantIds(context: LoaderContext): string[] {
 export function getLanguage(context: LoaderContext): string | undefined {
   const locale = context.routeParams.locale;
   return typeof locale === 'string' ? locale : undefined;
+}
+
+/**
+ * Reads middleware-written personalize tokens, including `{}`.
+ * Returns `undefined` when the trusted map is absent.
+ * Pass-through of `undefined` to `finalizePersonalizedPage` preserves
+ * authored `{{...}}`. Stock hosts use `getPersonalizeTokens(context) ?? {}`
+ * so normal renders always process tokens. Strip inbound client `tokens`
+ * before calling this helper; `x-sitecore-params` may contain visitor PII.
+ * @param {LoaderContext} context Loader context
+ * @returns {TokenMap | undefined} Trusted token map
+ * @public
+ */
+export function getPersonalizeTokens(context: LoaderContext): TokenMap | undefined {
+  return context.scParams.tokens;
+}
+
+/**
+ * True when page finalization must be skipped so Preview and Design Library
+ * keep authored token literals and their existing content rewrite.
+ * @param {object | null | undefined} page Page or nullish loader result
+ * @param {object} [page.mode] Page mode flags
+ * @param {boolean} [page.mode.isPreview] Preview / editing
+ * @param {boolean} [page.mode.isDesignLibrary] Design Library
+ * @returns {boolean} Whether `finalizePersonalizedPage` must not run
+ * @public
+ */
+export function shouldBypassPageFinalization(
+  page:
+    | {
+        mode?: { isPreview?: boolean; isDesignLibrary?: boolean };
+      }
+    | null
+    | undefined
+): boolean {
+  return !page || !!page.mode?.isPreview || !!page.mode?.isDesignLibrary;
 }

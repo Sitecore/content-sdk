@@ -1,6 +1,4 @@
-import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
 import { notFound } from 'next/navigation';
-import { draftMode, headers as nextHeaders } from 'next/headers';
 import { Metadata } from 'next';
 import { getPageMetadata } from '@sitecore-content-sdk/nextjs';
 <% if (prerender === 'SSG') { -%>
@@ -8,8 +6,9 @@ import { SiteInfo } from '@sitecore-content-sdk/nextjs';
 import sites from '.sitecore/sites.json';
 import { routing } from 'src/i18n/routing';
 import scConfig from 'sitecore.config';
-<% } -%>
 import client from 'src/lib/sitecore-client';
+<% } -%>
+import { getSitecorePageForRequest } from 'src/lib/sitecore-page';
 import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 import { NextIntlClientProvider } from 'next-intl';
@@ -25,22 +24,7 @@ export default async function Page({ params }: PageProps) {
   // Set site and locale to be available in src/i18n/request.ts for fetching the dictionary
   setRequestLocale(`${site}_${locale}`);
 
-  const draft = await draftMode();
-
-  // Fetch the page data from Sitecore
-  let page;
-  if (draft.isEnabled) {
-    const headers = await nextHeaders();
-    const previewData = client.getPreviewData(headers);
-
-    if (isDesignLibraryPreviewData(previewData)) {
-      page = await client.getDesignLibraryData(previewData);
-    } else {
-      page = await client.getPreview(previewData);
-    }
-  } else {
-    page = await client.getPage(path ?? [], { site, locale });
-  }
+  const page = await getSitecorePageForRequest(path ?? [], site, locale);
 
   // If the page is not found, return a 404
   if (!page) {
@@ -73,7 +57,6 @@ export const generateStaticParams = async () => {
 export const generateMetadata = async ({ params }: PageProps): Promise<Metadata> => {
   const { path, site, locale } = await params;
 
-  // The same call as for rendering the page. Should be cached by default react behavior
-  const page = await client.getPage(path ?? [], { site, locale });
+  const page = await getSitecorePageForRequest(path ?? [], site, locale);
   return getPageMetadata(page?.layout.sitecore.route);
 };

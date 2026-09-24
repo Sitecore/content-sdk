@@ -30,8 +30,10 @@ import { constants } from '@sitecore-content-sdk/core';
 import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
 import { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG } from '@sitecore-content-sdk/content/experimental';
 import { DateField } from '@sitecore-content-sdk/react';
+import { decodePersonalizeTokensHeader } from '@sitecore-content-sdk/content/personalize';
 import { DeepRequired } from '@sitecore-content-sdk/content/config';
 import { DEFAULT_LLMS_TXT } from '@sitecore-content-sdk/content/site';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/react';
 import { DefaultEmptyFieldEditingComponentText } from '@sitecore-content-sdk/react';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
@@ -47,6 +49,7 @@ import { EditingScripts } from '@sitecore-content-sdk/react';
 import { EditingService } from '@sitecore-content-sdk/content/editing';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { enableDebug } from '@sitecore-content-sdk/core';
+import { encodePersonalizeTokensHeader } from '@sitecore-content-sdk/content/personalize';
 import { EnhancedOmit } from '@sitecore-content-sdk/react';
 import { ErrorPage } from '@sitecore-content-sdk/content/client';
 import { ErrorPages } from '@sitecore-content-sdk/content/site';
@@ -152,7 +155,10 @@ import { PageMetadataFields } from '@sitecore-content-sdk/react';
 import type { PageMetadataFields as PageMetadataFields_2 } from '@sitecore-content-sdk/content/layout';
 import { PageMode } from '@sitecore-content-sdk/content/client';
 import { PageOptions } from '@sitecore-content-sdk/content/client';
+import { PERSONALIZE_TOKENS_HEADER } from '@sitecore-content-sdk/content/personalize';
+import { PERSONALIZE_TOKENS_HEADER_MAX_BYTES } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeAdapter } from '@sitecore-content-sdk/personalize/internal';
+import { PersonalizeExecutionResult } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeInfo } from '@sitecore-content-sdk/content/personalize';
 import { personalizeLayout } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeService } from '@sitecore-content-sdk/content/personalize';
@@ -204,7 +210,9 @@ import { SiteResolver } from '@sitecore-content-sdk/content/site';
 import { StaticPath } from '@sitecore-content-sdk/content';
 import { Text as Text_2 } from '@sitecore-content-sdk/react';
 import { TextField } from '@sitecore-content-sdk/react';
+import { TokenMap } from '@sitecore-content-sdk/content/personalize';
 import { useSitecore } from '@sitecore-content-sdk/react';
+import { VARIANT_PREFIX } from '@sitecore-content-sdk/content/personalize';
 import { withAppPlaceholder } from '@sitecore-content-sdk/react';
 import { withDatasourceCheck } from '@sitecore-content-sdk/react';
 import { withEditorChromes } from '@sitecore-content-sdk/react';
@@ -441,7 +449,11 @@ export { DateField }
 const debug_2: Record<string, debug.Debugger>;
 export { debug_2 as debug }
 
+export { decodePersonalizeTokensHeader }
+
 export { DEFAULT_LLMS_TXT }
+
+export { DEFAULT_VARIANT }
 
 export { DefaultEmptyFieldEditingComponentImage }
 
@@ -522,6 +534,8 @@ export { EditingService }
 export { EditMode }
 
 export { enableDebug }
+
+export { encodePersonalizeTokensHeader }
 
 export { ErrorPage }
 
@@ -859,6 +873,12 @@ export const parseRewriteHeader: (headers: Headers) => {
     locale: string;
 };
 
+export { PERSONALIZE_TOKENS_HEADER }
+
+export { PERSONALIZE_TOKENS_HEADER_MAX_BYTES }
+
+export { PersonalizeExecutionResult }
+
 // @public
 export type PersonalizeGeoData = {
     city?: string;
@@ -899,9 +919,7 @@ export class PersonalizeProxy extends ProxyBase {
         timeout?: number;
         variantIds?: string[];
         geo?: PersonalizeGeoData;
-    }): Promise<{
-        variantId: string;
-    }>;
+    }): Promise<unknown>;
     // (undocumented)
     protected personalizeService: PersonalizeService | null;
 }
@@ -977,6 +995,8 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     protected extractDebugHeaders(incomingHeaders: Headers): {
         [key: string]: string;
     };
+    // @internal
+    protected forward(_req: NextRequest, res: NextResponse, requestHeaders: Headers): NextResponse;
     // (undocumented)
     protected getClientFactory(graphQLOptions: GraphQLClientOptions): GraphQLRequestClientFactory_2;
     protected getHostHeader(req: NextRequest): string;
@@ -987,7 +1007,7 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     protected isPrefetch(req: NextRequest): boolean;
     protected isPreview(req: NextRequest): boolean;
     get name(): string;
-    protected rewrite(rewritePath: string, req: NextRequest, res: NextResponse, skipHeader?: boolean): NextResponse;
+    protected rewrite(rewritePath: string, req: NextRequest, res: NextResponse, skipHeader?: boolean, requestHeaders?: Headers): NextResponse;
     // (undocumented)
     protected siteResolver: SiteResolver;
 }
@@ -1006,6 +1026,9 @@ abstract class ProxyHandler_2 {
     abstract get name(): string;
 }
 export { ProxyHandler_2 as ProxyHandler }
+
+// @public
+export function readPersonalizeTokens(headers: Headers | IncomingHttpHeaders | undefined): TokenMap | undefined;
 
 export { REDIRECT_TYPE_301 }
 
@@ -1103,7 +1126,7 @@ export class SitecoreClient extends SitecoreClient_2 {
     protected getComponentPropsService(): ComponentPropsService;
     getDesignLibraryData(designLibData: PreviewData, fetchOptions?: FetchOptions): Promise<Page>;
     // (undocumented)
-    getPage(path: string | string[], pageOptions: PageOptions, options?: FetchOptions): Promise<Page | null>;
+    getPage(path: string | string[], pageOptions?: PageOptions, fetchOptions?: FetchOptions): Promise<Page | null>;
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
     getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null>;
     getPreviewData(headers: Headers): PreviewData;
@@ -1238,10 +1261,14 @@ export { Text_2 as Text }
 
 export { TextField }
 
+export { TokenMap }
+
 // @public
 export function useComponentProps<ComponentData>(componentUid: string | undefined): ComponentData | undefined;
 
 export { useSitecore }
+
+export { VARIANT_PREFIX }
 
 export { withAppPlaceholder }
 

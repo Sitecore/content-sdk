@@ -1,5 +1,5 @@
 import { InjectionToken, Provider } from '@angular/core';
-import type { LoaderFn } from './models';
+import type { LoaderDefinition, LoaderFinalizer, LoaderFn } from './models';
 
 /**
  * Optional endpoint path for loader data fetch (e.g. '/_data' or '/api/data').
@@ -11,21 +11,43 @@ export const FETCH_DATA_ENDPOINT = new InjectionToken<string | null | undefined>
 );
 
 /**
- * Cross-boundary loader registry — maps loader IDs to loader functions.
+ * Cross-boundary loader registry — maps loader IDs to {@link LoaderDefinition}
+ * entries (functions or `{ load, finalize? }` descriptors).
  * The same registry is used for SSR, CSR (`/_data`), and route resolvers.
- * There is no separate server vs client loader set.
+ * Widening from `Record<string, LoaderFn>` is source-compatible for
+ * constructors; do not invoke entries as `registry[id](ctx)`.
  * @public
  */
-export type LoaderRegistry = Record<string, LoaderFn>;
+export type LoaderRegistry = Record<string, LoaderDefinition>;
+
+/**
+ * Normalizes a registry entry so callers do not invoke `registry[id](ctx)`
+ * directly after the public type widening.
+ * @param {LoaderDefinition | undefined} definition Registry entry
+ * @returns {{ load: LoaderFn; finalize?: LoaderFinalizer } | undefined} Normalized definition
+ * @public
+ */
+export function resolveLoaderDefinition(
+  definition?: LoaderDefinition
+): { load: LoaderFn; finalize?: LoaderFinalizer } | undefined {
+  if (!definition) {
+    return undefined;
+  }
+  if (typeof definition === 'function') {
+    return { load: definition };
+  }
+  return definition;
+}
 
 export const LOADER_REGISTRY = new InjectionToken<LoaderRegistry>('LOADER_REGISTRY');
 
 /**
  * Registers the app's loader registry for DI. Pass the loaders your app uses
  * (e.g. page, '404', '500'). Use the **same object** with
- *createLoaderDataServiceMiddleware in `server.ts` so SSR and CSR
- * navigations resolve the same loader functions.
- * @param {LoaderRegistry} loaders - Map of loader id to loader function
+ * createLoaderDataServiceMiddleware in `server.ts` so SSR and CSR
+ * navigations resolve the same loader definitions (`LoaderFn` or
+ * `{ load, finalize }`).
+ * @param {LoaderRegistry} loaders - Map of loader id to loader definition
  * @public
  */
 export const provideLoaderRegistry = (loaders: LoaderRegistry): Provider[] => {

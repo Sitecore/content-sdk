@@ -27,12 +27,15 @@ import {
 import { HTMLLink, StaticPath } from '../models';
 import { PersonalizedRewriteData } from '../personalize/utils';
 import { personalizeLayout } from '../personalize/layout-personalizer';
+import { TokenMap } from '../personalize/token-map';
+import { finalizeSitecoreTree } from '../personalize/token-walk';
 import { ErrorPages, ErrorPagesService, SitePathService, SitemapXmlService } from '../site';
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 import { RobotsService } from '../site/robots-service';
 import { LlmsTxtService } from '../site/llms-txt-service';
 import { DesignLibraryVariantGeneration } from '../editing/models';
+import contentDebug from '../debug';
 import {
   DesignLibraryRenderPreviewData,
   EditingPreviewData,
@@ -123,6 +126,17 @@ export type Page = {
  */
 export type PageOptions = Partial<RouteOptions> & {
   personalize?: PersonalizedRewriteData;
+  /**
+   * Activates dynamic content token replacement on the selected layout.
+   * Omit to preserve authored `{{...}}` text (Preview / Design Library).
+   * Pass `{}` for fallbacks and removal, or a visitor map from a trusted host hop.
+   */
+  tokens?: TokenMap;
+  /**
+   * Cache-producer option. Stop after personalization, before tokens and
+   * content rewrite. The result must be finalized before use.
+   */
+  deferFinalization?: boolean;
 };
 
 /**
@@ -227,13 +241,13 @@ export interface BaseSitecoreClient {
   /**
    * Get error page details for a given error code
    * @param {ErrorPage} code - The error code to get the error page for
-   * @param {Partial<RouteOptions>} [pageOptions] - The page options to get the error page for
+   * @param {PageOptions} [pageOptions] - The page options to get the error page for
    * @param {FetchOptions} [fetchOptions] - Additional fetch fetch options to override GraphQL requests
    * @returns {Promise<Page | null>} A promise that resolves to the error page details or null if not found
    */
   getErrorPage(
     code: ErrorPage,
-    pageOptions?: Partial<RouteOptions>,
+    pageOptions?: PageOptions,
     fetchOptions?: FetchOptions
   ): Promise<Page | null>;
   /**
@@ -280,6 +294,14 @@ export interface BaseSitecoreClient {
    * @returns {Promise<string>} A promise that resolves to the llms.txt content.
    */
   getLlmsTxt(options: LlmsTxtOptions, fetchOptions?: FetchOptions): Promise<string | null>;
+  /**
+   * Applies token replacement (when `tokens` is provided) and the configured
+   * content/media rewrite. Never mutates the input page.
+   * @param {Page} page Personalized or raw page
+   * @param {TokenMap} [tokens] Token map that activates replacement
+   * @returns {Page} Finalized page
+   */
+  finalizePersonalizedPage(page: Page, tokens?: TokenMap): Page;
 }
 
 export interface BaseServiceOptions {
@@ -305,6 +327,7 @@ export class SitecoreClient implements BaseSitecoreClient {
   protected componentService: ComponentLayoutService;
   protected sitePathService: SitePathService;
   protected graphQLClient: GraphQLClient;
+  private readonly finalizedPages = new WeakSet<Page>();
 
   /**
    * Init SitecoreClient
@@ -387,8 +410,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     if (!layout.sitecore.route) {
       return null;
     }
-    // Apply personalization first to select the variant(s) that will be used,
-    // then rewrite content URLs so we only process the selected variant(s)
+    // Personalize first, then finalize (tokens + content/media rewrite) unless
+    // the caller is producing a shared raw cache value.
     if (pageOptions?.personalize?.variantId) {
       personalizeLayout(
         layout,
@@ -396,14 +419,66 @@ export class SitecoreClient implements BaseSitecoreClient {
         pageOptions.personalize.componentVariantIds
       );
     }
-    layout = this.applyContentRewrite(layout);
 
-    return {
+    const page: Page = {
       layout,
       siteName: layout.sitecore.context.site?.name || site,
       locale,
       mode: this.getPageMode(LayoutServicePageState.Normal),
     };
+
+    if (pageOptions?.deferFinalization) {
+      return page;
+    }
+
+    return this.finalizePersonalizedPage(page, pageOptions?.tokens);
+  }
+
+  /**
+   * Applies token replacement (when `tokens` is provided) and the configured
+   * content/media rewrite to a personalized page. Never mutates the input page
+   * or its layout tree. Always returns a new top-level Page for previously
+   * unfinalized input and structurally shares unchanged layout subtrees.
+   *
+   * `tokens !== undefined` processes tokens using that map, including `{}`.
+   * `tokens === undefined` preserves authored mustache text.
+   * When tokens are omitted and media rewrite is disabled, the layout tree is
+   * not walked; a new top-level Page wrapper is still returned.
+   * @param {Page} page Personalized or raw page
+   * @param {TokenMap} [tokens] Token map that activates replacement
+   * @returns {Page} Finalized page
+   * @public
+   */
+  finalizePersonalizedPage(page: Page, tokens?: TokenMap): Page {
+    if (this.finalizedPages.has(page)) {
+      contentDebug.personalize('skipped finalizePersonalizedPage (page already finalized)');
+      return page;
+    }
+
+    const rewriteEnabled = !!this.initOptions.rewriteMediaUrls;
+    if (tokens === undefined && !rewriteEnabled) {
+      const finalized: Page = {
+        ...page,
+        layout: { ...page.layout },
+      };
+      this.finalizedPages.add(finalized);
+      return finalized;
+    }
+
+    const sitecore = finalizeSitecoreTree(page.layout.sitecore, {
+      tokens,
+      transform: rewriteEnabled ? this.getContentTransformer() : undefined,
+    });
+
+    const finalized: Page = {
+      ...page,
+      layout: {
+        ...page.layout,
+        sitecore,
+      },
+    };
+    this.finalizedPages.add(finalized);
+    return finalized;
   }
 
   /**
@@ -590,13 +665,13 @@ export class SitecoreClient implements BaseSitecoreClient {
   /**
    * Get error page details for a given error code
    * @param {ErrorPage} code - The error code to get the error page for
-   * @param {Partial<RouteOptions>} pageOptions - The page options to get the error page for
+   * @param {PageOptions} [pageOptions] - The page options to get the error page for
    * @param {FetchOptions} [fetchOptions] - Additional fetch fetch options to override GraphQL requests
    * @returns {Promise<Page | null>} A promise that resolves to the error page details or null if not found
    */
   async getErrorPage(
     code: ErrorPage,
-    pageOptions?: Partial<RouteOptions>,
+    pageOptions?: PageOptions,
     fetchOptions?: FetchOptions
   ): Promise<Page | null> {
     const locale = pageOptions?.locale || this.initOptions.defaultLanguage;
@@ -627,14 +702,18 @@ export class SitecoreClient implements BaseSitecoreClient {
       return null;
     }
 
-    layout = this.applyContentRewrite(layout);
-
-    return {
+    const page: Page = {
       layout,
       locale,
       mode: this.getPageMode(LayoutServicePageState.Normal),
       siteName: site,
     };
+
+    if (pageOptions?.deferFinalization) {
+      return page;
+    }
+
+    return this.finalizePersonalizedPage(page, pageOptions?.tokens);
   }
 
   /**
@@ -769,12 +848,6 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   /**
-   * Get page mode based on mode name
-   * @param {PageModeName} mode - The mode name to get the page mode for
-   * @param { DesignLibraryVariantGeneration} generation - The variant generation mode, if applicable
-   * @returns {PageMode} The page mode
-   */
-  /**
    * Applies media URL rewrite when rewriteMediaUrls is enabled.
    * When true, uses default Edge host rewriter; when a function, transforms each string.
    * @param {LayoutServiceData} layout - Layout data from layout/editing/component/error service
@@ -782,15 +855,28 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @internal
    */
   protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData {
-    const opt = this.initOptions.rewriteMediaUrls;
-    if (!opt) {
+    const transformer = this.getContentTransformer();
+    if (!this.initOptions.rewriteMediaUrls) {
       return layout;
     }
-    const experienceEdgeUrl = resolveExperienceEdgeUrl();
-    const transformer = opt === true ? getDefaultMediaUrlTransformer(experienceEdgeUrl) : opt;
     return applyMediaUrlRewrite(layout, transformer);
   }
 
+  private getContentTransformer(): (value: string) => string {
+    const opt = this.initOptions.rewriteMediaUrls;
+    if (!opt) {
+      return (value) => value;
+    }
+    const experienceEdgeUrl = resolveExperienceEdgeUrl();
+    return opt === true ? getDefaultMediaUrlTransformer(experienceEdgeUrl) : opt;
+  }
+
+  /**
+   * Get page mode flags for a layout page-state name.
+   * @param {PageModeName} mode Mode name
+   * @param {DesignLibraryVariantGeneration} [generation] Variant generation, if applicable
+   * @returns {PageMode} Page mode
+   */
   private getPageMode(mode: PageModeName, generation?: DesignLibraryVariantGeneration): PageMode {
     const pageMode: PageMode = {
       name: mode,

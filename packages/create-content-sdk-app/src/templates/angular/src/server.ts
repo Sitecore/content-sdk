@@ -216,7 +216,18 @@ app.use(
 app.use((req, res, next) => {
   angularApp
     .handle(req, { cache: loaderCache, req, res })
-    .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
+    .then(async (response) => {
+      if (!response) {
+        return next();
+      }
+      // Personalize middleware may have set private, no-store for visitor tokens.
+      // SSR header copy can replace it; keep the stricter hop when present.
+      const cacheControl = res.getHeader('Cache-Control');
+      await writeResponseToNodeResponse(response, res);
+      if (typeof cacheControl === 'string' && /no-store/i.test(cacheControl)) {
+        res.setHeader('Cache-Control', cacheControl);
+      }
+    })
     .catch((err) => {
       next(err);
     });

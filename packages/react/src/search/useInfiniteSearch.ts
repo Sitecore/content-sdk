@@ -1,3 +1,5 @@
+'use client';
+
 /* eslint-disable no-unused-vars */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DEFAULT_PAGE_SIZE, SearchStatus, useSearchService } from './utils';
