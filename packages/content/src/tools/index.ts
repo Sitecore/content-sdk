@@ -1,7 +1,5 @@
 export { GenerateMapFunction, GenerateMapArgs } from './generate-map';
 export { getComponentSpec, getComponentSpecUrl } from './codegen/component-generation';
-// Browser-safe helpers only. Do not re-export `./templating` — that barrel also
-// reaches `glob` (component list) and `path` (component-map file generation).
 export {
   ComponentFile,
   ComponentImport,
