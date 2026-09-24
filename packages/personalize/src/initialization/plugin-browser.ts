@@ -14,6 +14,7 @@ import {
 import { EVENTS_PLUGIN_NAME } from '@sitecore-content-sdk/events/internal';
 import { getCoreContext } from '@sitecore-content-sdk/core';
 import { getCdnUrl } from '../web-personalization/get-cdn-url';
+import { setWebPersonalizationGlobal } from '../web-personalization/set-web-personalization-global';
 import { appendScriptWithAttributes } from '@sitecore-content-sdk/analytics-core/utils';
 import { getPersonalizePlugin } from './shared';
 import {
@@ -61,6 +62,11 @@ async function init() {
   const cdnUrl = await getCdnUrl(coreConfig.contextId, coreConfig.edgeUrl);
 
   if (!cdnUrl) return;
+
+  // The Sitecore-hosted web personalization library injected below reads a `window.scCloudSDK`
+  // global at load time. Populate it from the Content SDK's own identity before injecting the
+  // script so the library can render web experiences. See setWebPersonalizationGlobal for details.
+  setWebPersonalizationGlobal(coreConfig, personalizeOptions.webPersonalization);
 
   appendScriptWithAttributes({
     async: personalizeOptions.webPersonalization.async,
