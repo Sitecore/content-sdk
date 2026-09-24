@@ -415,7 +415,7 @@ export class PersonalizeProxy extends ProxyBase {
   }) {
     debug.personalize('executing experience for %s %o', friendlyId, params);
 
-    return personalize(
+    return (await personalize(
       {
         channel: this.config.channel || 'WEB',
         currency: this.config.currency ?? 'USD',
@@ -426,7 +426,10 @@ export class PersonalizeProxy extends ProxyBase {
         ...(geo && { geo }),
       },
       { timeout }
-    );
+    )) as {
+      variantId: string;
+      tokens?: Record<string, string | number>;
+    };
   }
 
   /**

@@ -223,10 +223,10 @@ app.use((req, res, next) => {
       // Personalize middleware may have set private, no-store for visitor tokens.
       // SSR header copy can replace it; keep the stricter hop when present.
       const cacheControl = res.getHeader('Cache-Control');
-      await writeResponseToNodeResponse(response, res);
       if (typeof cacheControl === 'string' && /no-store/i.test(cacheControl)) {
-        res.setHeader('Cache-Control', cacheControl);
+        response.headers.set('Cache-Control', cacheControl);
       }
+      await writeResponseToNodeResponse(response, res);
     })
     .catch((err) => {
       next(err);

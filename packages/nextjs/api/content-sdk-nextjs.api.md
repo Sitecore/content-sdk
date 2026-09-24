@@ -919,7 +919,10 @@ export class PersonalizeProxy extends ProxyBase {
         timeout?: number;
         variantIds?: string[];
         geo?: PersonalizeGeoData;
-    }): Promise<unknown>;
+    }): Promise<{
+        variantId: string;
+        tokens?: Record<string, string | number>;
+    }>;
     // (undocumented)
     protected personalizeService: PersonalizeService | null;
 }
