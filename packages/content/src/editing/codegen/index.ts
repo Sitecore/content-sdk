@@ -17,4 +17,3 @@ export {
   fetchGeneratedComponentFromCache,
   DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME,
 } from './preview';
-export { combineImportEntries } from '../../tools/codegen/import-map-utils';

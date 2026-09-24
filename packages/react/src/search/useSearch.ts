@@ -1,5 +1,3 @@
-'use client';
-
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SearchDocument, SearchParameters, FacetRequest, FacetResult } from '@sitecore-content-sdk/search';
 import { DEFAULT_PAGE_SIZE, getOffset, SearchStatus, useSearchService } from './utils';
