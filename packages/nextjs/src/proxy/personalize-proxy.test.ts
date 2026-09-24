@@ -9,7 +9,12 @@ import nextjs, { NextRequest, NextResponse } from 'next/server';
 import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
 import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/analytics-core/internal';
 import { SiteResolver } from '@sitecore-content-sdk/content/site';
-import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
+import {
+  CdpHelper,
+  decodePersonalizeTokensHeader,
+  encodePersonalizeTokensHeader,
+  PERSONALIZE_TOKENS_HEADER,
+} from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeProxyConfig } from './personalize-proxy';
 import type { SuccessfulPersonalizeProxyExecution } from './personalize-proxy';
 import proxyquire from 'proxyquire';
@@ -145,6 +150,7 @@ describe('PersonalizeProxy', () => {
       },
       ...props,
     } as NextResponse;
+    (res.headers as any)._response = res;
 
     Object.defineProperties(res.headers, {
       set: {
@@ -257,6 +263,14 @@ describe('PersonalizeProxy', () => {
   beforeEach(() => {
     userAgentStub.resetHistory();
     debugSpy.resetHistory();
+    sandbox.stub(nextjs.NextResponse, 'next').callsFake((init: any) => {
+      const owner = init?.headers?._response;
+      if (owner) {
+        owner.forwardedRequestHeaders = init?.request?.headers;
+        return owner;
+      }
+      return createResponse({ forwardedRequestHeaders: init?.request?.headers });
+    });
   });
 
   afterEach(() => {
@@ -594,7 +608,7 @@ describe('PersonalizeProxy', () => {
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en')).to.be.true;
       expect(initPersonalizeServer.called).to.be.true;
       expect(personalize.called).to.be.true;
-      validateDebugLog('invalid variant %s', invalidVariant);
+      validateDebugLog('skipped (no variant(s) identified)');
       expect(finalRes).to.deep.equal(res);
     });
 
@@ -1434,6 +1448,132 @@ describe('PersonalizeProxy', () => {
       // Verify proxy was created and personalizeService is initialized
       expect(proxy).to.not.be.undefined;
       expect(proxy['personalizeService']).to.not.be.null;
+    });
+  });
+
+  describe('dynamic content tokens', () => {
+    it('writes an empty trusted token header when personalize fails after the route is eligible', async () => {
+      const req = createRequest();
+      const res = createResponse();
+      const { proxy, initPersonalizeServer } = createProxy();
+      initPersonalizeServer.rejects(new Error('sdk unavailable'));
+      const errorSpy = sandbox.stub(console, 'log');
+
+      const finalRes = await proxy.handle(req, res);
+      const forwarded = (finalRes as any).forwardedRequestHeaders as Headers;
+      expect(forwarded.get(PERSONALIZE_TOKENS_HEADER)).to.equal(encodePersonalizeTokensHeader({}));
+      errorSpy.restore();
+    });
+
+    it('strips a forged token header on every application-forwarding skip path', async () => {
+      const skipCases: Array<{ name: string; req?: any; res?: any; proxy?: any }> = [
+        { name: 'globally disabled', proxy: { config: { ...defaultConfig, enabled: false } } },
+        { name: 'preview', req: { cookieValues: { __prerender_bypass: true } } },
+        { name: 'bot', req: { cookieValues: { [BOT_DETECTION_COOKIE]: '1' } } },
+        { name: 'missing personalize info', proxy: { personalizeInfo: null } },
+        { name: 'empty variants', proxy: { personalizeInfo: { pageId, variantIds: [] } } },
+        { name: 'prefetch', req: { headerValues: { purpose: 'prefetch' } } },
+      ];
+
+      for (const skipCase of skipCases) {
+        const req = createRequest({
+          headerValues: {
+            [PERSONALIZE_TOKENS_HEADER]: 'forged',
+            ...(skipCase.req?.headerValues || {}),
+          },
+          cookieValues: skipCase.req?.cookieValues,
+        });
+        const res = createResponse();
+        const { proxy } = createProxy(skipCase.proxy);
+        const finalRes = await proxy.handle(req, res);
+        const forwarded = (finalRes as any).forwardedRequestHeaders as Headers;
+        expect(forwarded.get(PERSONALIZE_TOKENS_HEADER), skipCase.name).to.equal(null);
+      }
+    });
+
+    it('forwards encoded tokens as a request header on a successful rewrite', async () => {
+      const req = createRequest({
+        headerValues: {
+          [PERSONALIZE_TOKENS_HEADER]: 'forged',
+        },
+      });
+      const res = createResponse();
+      const captured: Headers[] = [];
+      sandbox.stub(nextjs.NextResponse, 'rewrite').callsFake((_url, init: any) => {
+        captured.push(init?.request?.headers);
+        return res;
+      });
+      const { proxy } = createProxy({
+        variantId: 'variant-2',
+        personalizeStub: sandbox.stub().resolves({
+          variantId: 'variant-2',
+          tokens: { firstName: 'Ada' },
+        }),
+      });
+
+      await proxy.handle(req, res);
+      expect(decodePersonalizeTokensHeader(captured[0].get(PERSONALIZE_TOKENS_HEADER) as string)).to.deep.equal({
+        firstName: 'Ada',
+      });
+      expect(res.headers['Cache-Control']).to.equal('private, no-store');
+    });
+
+    it('does not set private no-store for fallback-only token maps', async () => {
+      const req = createRequest();
+      const res = createResponse();
+      sandbox.stub(nextjs.NextResponse, 'rewrite').returns(res);
+      const { proxy } = createProxy({
+        variantId: 'variant-2',
+        personalizeStub: sandbox.stub().resolves({
+          variantId: 'variant-2',
+          tokens: {},
+        }),
+      });
+
+      await proxy.handle(req, res);
+      expect(res.headers['Cache-Control']).to.not.equal('private, no-store');
+    });
+
+    it('forwards encoded {} when the trusted token map exceeds the common budget', async () => {
+      const req = createRequest();
+      const res = createResponse();
+      const captured: Headers[] = [];
+      sandbox.stub(nextjs.NextResponse, 'rewrite').callsFake((_url, init: any) => {
+        captured.push(init?.request?.headers);
+        return res;
+      });
+      const { proxy } = createProxy({
+        variantId: 'variant-2',
+        personalizeStub: sandbox.stub().resolves({
+          variantId: 'variant-2',
+          tokens: { blob: 'x'.repeat(8000) },
+        }),
+      });
+
+      await proxy.handle(req, res);
+      expect(decodePersonalizeTokensHeader(captured[0].get(PERSONALIZE_TOKENS_HEADER) as string)).to.deep.equal({});
+      expect(res.headers['Cache-Control']).to.not.equal('private, no-store');
+    });
+
+    it('reissues an earlier x-middleware-rewrite instead of reconstructing from x-sc-rewrite', async () => {
+      const req = createRequest();
+      const res = createResponse({
+        headerValues: {
+          'x-middleware-rewrite': 'https://external.example/transfer',
+        },
+      });
+      const rewriteStub = sandbox.stub(nextjs.NextResponse, 'rewrite').callsFake((url) => {
+        return createResponse({ url });
+      });
+      const { proxy } = createProxy({
+        config: { ...defaultConfig, enabled: false },
+      });
+
+      await proxy.handle(req, res);
+      expect(rewriteStub).to.have.been.calledWith(
+        'https://external.example/transfer',
+        sandbox.match({ request: sandbox.match.object })
+      );
     });
   });
 });

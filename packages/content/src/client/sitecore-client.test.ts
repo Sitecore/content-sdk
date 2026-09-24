@@ -586,6 +586,155 @@ describe('SitecoreClient', () => {
         )
       ).to.be.true;
     });
+
+    it('should replace tokens after personalization and before content rewrite', async () => {
+      const path = '/test/path';
+      const rawLayout = {
+        sitecore: {
+          route: {
+            name: 'home',
+            fields: {
+              title: { value: 'Hello {{name}}' },
+              image: { value: { src: 'https://edge.sitecorecloud.io/-/media/{{name}}.jpg' } },
+            },
+            placeholders: {},
+          },
+          context: { site: { name: 'default-site' }, pageState: LayoutServicePageState.Normal },
+        },
+      };
+      layoutServiceStub.fetchLayoutData.returns(rawLayout);
+      process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV] = 'custom.example.com';
+      const clientWithRewrite = new SitecoreClient({
+        ...defaultInitOptions,
+        rewriteMediaUrls: true,
+      } as any);
+      (clientWithRewrite as any).layoutService = layoutServiceStub;
+
+      const result = await clientWithRewrite.getPage(path, {
+        locale: 'en',
+        tokens: { name: 'Ada' },
+      });
+
+      expect(result?.layout.sitecore.route?.fields?.title).to.deep.equal({ value: 'Hello Ada' });
+      expect((result?.layout.sitecore.route?.fields?.image?.value as { src: string }).src).to.equal(
+        'https://custom.example.com/-/media/Ada.jpg'
+      );
+      expect(rawLayout.sitecore.route.fields.title.value).to.equal('Hello {{name}}');
+      delete process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV];
+    });
+
+    it('should return a raw page when deferFinalization is true', async () => {
+      const rawLayout = {
+        sitecore: {
+          route: {
+            name: 'home',
+            fields: { title: { value: 'Hello {{name}}' } },
+            placeholders: {},
+          },
+          context: { site: { name: 'default-site' } },
+        },
+      };
+      layoutServiceStub.fetchLayoutData.returns(rawLayout);
+      const stringTransformer = (value: string) => value.replace('Hello', 'Rewritten');
+      const clientWithRewrite = new SitecoreClient({
+        ...defaultInitOptions,
+        rewriteMediaUrls: stringTransformer,
+      } as any);
+      (clientWithRewrite as any).layoutService = layoutServiceStub;
+
+      const rawPage = await clientWithRewrite.getPage('/test/path', {
+        deferFinalization: true,
+        tokens: { name: 'Ada' },
+      });
+
+      expect(rawPage?.layout.sitecore.route?.fields?.title).to.deep.equal({
+        value: 'Hello {{name}}',
+      });
+
+      const finalized = clientWithRewrite.finalizePersonalizedPage(rawPage as any, { name: 'Ada' });
+      expect(finalized.layout.sitecore.route?.fields?.title).to.deep.equal({
+        value: 'Rewritten Ada',
+      });
+      expect(rawPage?.layout.sitecore.route?.fields?.title).to.deep.equal({
+        value: 'Hello {{name}}',
+      });
+      expect(finalized).to.not.equal(rawPage);
+    });
+
+    it('should preserve mustache text when tokens are omitted', async () => {
+      const rawLayout = {
+        sitecore: {
+          route: {
+            name: 'home',
+            fields: { title: { value: 'Hello {{name}}' } },
+            placeholders: {},
+          },
+          context: { site: { name: 'default-site' } },
+        },
+      };
+      layoutServiceStub.fetchLayoutData.returns(rawLayout);
+
+      const result = await sitecoreClient.getPage('/test/path');
+      expect(result?.layout.sitecore.route?.fields?.title).to.deep.equal({
+        value: 'Hello {{name}}',
+      });
+    });
+
+    it('should finalize one raw cached page independently for many visitors', async () => {
+      const rawLayout = {
+        sitecore: {
+          route: {
+            name: 'home',
+            fields: { title: { value: 'Hello {{name}}' } },
+            placeholders: {},
+          },
+          context: { site: { name: 'default-site' } },
+        },
+      };
+      layoutServiceStub.fetchLayoutData.returns(rawLayout);
+
+      const rawPage = await sitecoreClient.getPage('/test/path', { deferFinalization: true });
+      const visitorA = sitecoreClient.finalizePersonalizedPage(rawPage as any, { name: 'Ada' });
+      const visitorB = sitecoreClient.finalizePersonalizedPage(rawPage as any, { name: 'Bob' });
+
+      expect(visitorA).to.not.equal(rawPage);
+      expect(visitorB).to.not.equal(rawPage);
+      expect(visitorA).to.not.equal(visitorB);
+      expect(visitorA.layout.sitecore.route?.fields?.title).to.deep.equal({ value: 'Hello Ada' });
+      expect(visitorB.layout.sitecore.route?.fields?.title).to.deep.equal({ value: 'Hello Bob' });
+      expect(rawPage?.layout.sitecore.route?.fields?.title).to.deep.equal({
+        value: 'Hello {{name}}',
+      });
+      expect((sitecoreClient as any).finalizedPages.has(rawPage)).to.equal(false);
+      expect((sitecoreClient as any).finalizedPages.has(visitorA)).to.equal(true);
+      expect((sitecoreClient as any).finalizedPages.has(visitorB)).to.equal(true);
+    });
+
+    it('should not rerun a custom transformer when finalizing an already finalized page', async () => {
+      const rawLayout = {
+        sitecore: {
+          route: {
+            name: 'home',
+            fields: { title: { value: 'Hello {{name}}' } },
+            placeholders: {},
+          },
+          context: { site: { name: 'default-site' } },
+        },
+      };
+      layoutServiceStub.fetchLayoutData.returns(rawLayout);
+      const transformer = sinon.spy((value: string) => value);
+      const clientWithRewrite = new SitecoreClient({
+        ...defaultInitOptions,
+        rewriteMediaUrls: transformer,
+      } as any);
+      (clientWithRewrite as any).layoutService = layoutServiceStub;
+
+      const page = await clientWithRewrite.getPage('/test/path', { tokens: { name: 'Ada' } });
+      const firstCalls = transformer.callCount;
+      const again = clientWithRewrite.finalizePersonalizedPage(page as any, { name: 'Ada' });
+      expect(again).to.equal(page);
+      expect(transformer.callCount).to.equal(firstCalls);
+    });
   });
 
   describe('getErrorPage', () => {
@@ -621,6 +770,26 @@ describe('SitecoreClient', () => {
         )
       ).to.be.true;
       expect(errorPagesServiceStub.fetchErrorPages.calledOnce).to.be.true;
+    });
+
+    it('should replace tokens on error pages when tokens are supplied', async () => {
+      const errorPage = {
+        notFoundPage: {
+          rendered: {
+            sitecore: { route: { name: 'home', fields: { title: { value: 'Hello {{name}}' } } } },
+          },
+        },
+      };
+      errorPagesServiceStub.fetchErrorPages.resolves(errorPage);
+
+      const result = await sitecoreClient.getErrorPage(ErrorPage.NotFound, {
+        tokens: { name: 'Ada' },
+      });
+
+      expect(result?.layout.sitecore.route?.fields?.title).to.deep.equal({ value: 'Hello Ada' });
+      expect(errorPage.notFoundPage.rendered.sitecore.route.fields.title.value).to.equal(
+        'Hello {{name}}'
+      );
     });
 
     it('should return null when unknown error page is requested', async () => {

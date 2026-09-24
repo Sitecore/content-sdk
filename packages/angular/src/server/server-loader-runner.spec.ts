@@ -10,6 +10,7 @@ import {
   mockScParams,
 } from '../testing/loader-spec-helpers';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
+import { EDITING_PARAMS_HEADER } from '../editing/constants';
 
 describe('ServerLoaderRunner', () => {
   const mockConfig = mockAngularSitecoreConfig();
@@ -446,5 +447,209 @@ describe('ServerLoaderRunner', () => {
     );
 
     warnSpy.mockRestore();
+  });
+
+  it('should finalize hit, stale, and miss values while caching only raw data', async () => {
+    const load = vi.fn(async () => ({ title: 'raw' }));
+    const finalize = vi.fn(async (value: unknown, ctx) => ({
+      title: `${(value as { title: string }).title}:${ctx.scParams.siteName}`,
+    }));
+    const cache = createLoaderCache({ revalidate: 300 });
+    const setSpy = vi.spyOn(cache, 'set');
+    const provider = new ServerLoaderRunner({ page: { load, finalize } }, demoConfig, cache);
+    const request: LoaderRunnerInit = {
+      loaderId: 'page',
+      url: '/about',
+      routeParams: { locale: 'en' },
+      query: {},
+      csdkRequestData: null,
+    };
+
+    const miss = await provider.resolve(request);
+    expect(miss).toEqual({ kind: 'data', data: { title: 'raw:demo' } });
+    expect(setSpy.mock.calls[0][1]).toEqual({ title: 'raw' });
+
+    const hit = await provider.resolve(request);
+    expect(hit).toEqual({ kind: 'data', data: { title: 'raw:demo' } });
+    expect(load).toHaveBeenCalledTimes(1);
+    expect(finalize).toHaveBeenCalledTimes(2);
+  });
+
+  it('should finalize cache-disabled foreground values', async () => {
+    const load = vi.fn(async () => ({ title: 'raw' }));
+    const finalize = vi.fn(async (value: unknown) => ({
+      title: `${(value as { title: string }).title}:done`,
+    }));
+    const cache: LoaderCache = {
+      get: vi.fn(),
+      set: vi.fn(),
+      invalidate: vi.fn(),
+      delete: vi.fn(),
+      flush: vi.fn(),
+      entries: vi.fn(),
+      ttl: 300,
+      enabled: vi.fn().mockReturnValue(false),
+      config: {},
+    };
+    const provider = new ServerLoaderRunner({ page: { load, finalize } }, mockConfig, cache);
+    const result = await provider.resolve({
+      loaderId: 'page',
+      url: '/live',
+      routeParams: {},
+      query: {},
+      csdkRequestData: null,
+    });
+    expect(result).toEqual({ kind: 'data', data: { title: 'raw:done' } });
+    expect(cache.get).not.toHaveBeenCalled();
+    expect(cache.set).not.toHaveBeenCalled();
+    expect(finalize).toHaveBeenCalledTimes(1);
+  });
+
+  it('should skip finalize during background refresh', async () => {
+    const load = vi.fn(async () => ({ title: 'raw' }));
+    const finalize = vi.fn(async (value: unknown, ctx) => ({
+      title: `${(value as { title: string }).title}:${ctx.scParams.siteName}`,
+    }));
+    const cache = createLoaderCache({ revalidate: 300 });
+    const provider = new ServerLoaderRunner({ page: { load, finalize } }, demoConfig, cache);
+    const request: LoaderRunnerInit = {
+      loaderId: 'page',
+      url: '/about',
+      routeParams: { locale: 'en' },
+      query: {},
+      csdkRequestData: null,
+    };
+
+    await provider.resolve(request);
+    const { key } = buildCacheKey(
+      'page',
+      makeLoaderContext({
+        url: request.url,
+        routeParams: request.routeParams,
+        query: request.query,
+        scParams: mockScParams({ siteName: 'demo' }),
+      })
+    );
+    await cache.invalidate({ tags: [key] });
+
+    const staleResult = await provider.resolve(request);
+    expect(staleResult).toEqual({ kind: 'data', data: { title: 'raw:demo' } });
+    expect(finalize).toHaveBeenCalledTimes(2);
+
+    await vi.waitFor(async () => {
+      expect(await cache.get(key)).toEqual(
+        expect.objectContaining({ kind: 'hit', value: { title: 'raw' } })
+      );
+    });
+    expect(load).toHaveBeenCalledTimes(2);
+    expect(finalize).toHaveBeenCalledTimes(2);
+  });
+
+  it('should finalize a stale foreground value from the current request context', async () => {
+    const load = vi.fn(async () => ({ title: 'raw' }));
+    const finalize = vi.fn(async (value: unknown, ctx) => ({
+      title: `${(value as { title: string }).title}:${ctx.scParams.siteName}`,
+    }));
+    const cache: LoaderCache = {
+      get: vi.fn().mockResolvedValue({ kind: 'stale', value: { title: 'raw' }, cacheKey: 'k' }),
+      set: vi.fn().mockResolvedValue(undefined),
+      invalidate: vi.fn(),
+      delete: vi.fn(),
+      flush: vi.fn(),
+      entries: vi.fn(),
+      ttl: 300,
+      enabled: vi.fn().mockReturnValue(true),
+      config: {},
+    };
+    const provider = new ServerLoaderRunner({ page: { load, finalize } }, demoConfig, cache);
+    const result = await provider.resolve({
+      loaderId: 'page',
+      url: '/stale',
+      routeParams: { locale: 'en' },
+      query: {},
+      csdkRequestData: null,
+    });
+    expect(result).toEqual({ kind: 'data', data: { title: 'raw:demo' } });
+    expect(finalize).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not cache editing/preview renders', async () => {
+    const cache = createLoaderCache({ revalidate: 300 });
+    const setSpy = vi.spyOn(cache, 'set');
+    const getSpy = vi.spyOn(cache, 'get');
+    const provider = new ServerLoaderRunner({ page: pageLoader }, mockConfig, cache);
+
+    const result = await provider.resolve({
+      loaderId: 'page',
+      url: '/about',
+      routeParams: {},
+      query: {},
+      csdkRequestData: {
+        headers: { [EDITING_PARAMS_HEADER]: JSON.stringify({ site: 'demo' }) },
+      },
+    });
+
+    expect(result).toEqual({ kind: 'data', data: { title: 'Page' } });
+    expect(getSpy).not.toHaveBeenCalled();
+    expect(setSpy).not.toHaveBeenCalled();
+  });
+
+  it('should not serve a preview render to a subsequent visitor', async () => {
+    // Regression: a preview render is keyed like a published one and its
+    // finalizer is bypassed, so caching it would leak authored `{{token}}`
+    // literals to ordinary visitors on the next request for the same key.
+    const cache = createLoaderCache({ revalidate: 300 });
+    const load = vi.fn(async (ctx) => ({
+      title: '{{promoText}}',
+      mode: ctx.csdkRequestData?.headers?.[EDITING_PARAMS_HEADER]
+        ? { isPreview: true }
+        : { isPreview: false },
+    }));
+    const finalize = vi.fn(async (value: unknown) => {
+      const page = value as { title: string; mode: { isPreview: boolean } };
+      return page.mode.isPreview ? page : { ...page, title: 'Promo!' };
+    });
+    const provider = new ServerLoaderRunner({ page: { load, finalize } }, mockConfig, cache);
+
+    const previewInit: LoaderRunnerInit = {
+      loaderId: 'page',
+      url: '/about',
+      routeParams: {},
+      query: {},
+      csdkRequestData: {
+        headers: { [EDITING_PARAMS_HEADER]: JSON.stringify({ site: 'demo' }) },
+      },
+    };
+    const previewResult = await provider.resolve(previewInit);
+    expect(previewResult).toEqual({
+      kind: 'data',
+      data: { title: '{{promoText}}', mode: { isPreview: true } },
+    });
+
+    const visitorResult = await provider.resolve({
+      loaderId: 'page',
+      url: '/about',
+      routeParams: {},
+      query: {},
+      csdkRequestData: null,
+    });
+
+    expect(visitorResult).toEqual({
+      kind: 'data',
+      data: { title: 'Promo!', mode: { isPreview: false } },
+    });
+    expect(load).toHaveBeenCalledTimes(2);
+  });
+
+  it('should keep function-only loader registrations compatible', async () => {
+    const provider = new ServerLoaderRunner({ page: pageLoader }, mockConfig);
+    const result = await provider.resolve({
+      loaderId: 'page',
+      url: '/about',
+      routeParams: {},
+      query: {},
+      csdkRequestData: null,
+    });
+    expect(result).toEqual({ kind: 'data', data: { title: 'Page' } });
   });
 });

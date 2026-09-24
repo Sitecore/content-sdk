@@ -30,6 +30,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
       props.page = await client.getErrorPage(ErrorPage.NotFound, {
         site: scConfig.defaultSite,
         locale: context.locale || context.defaultLocale || scConfig.defaultLanguage,
+        tokens: {},
       });
     } catch (error) {
       console.log('Error occurred while fetching error pages');

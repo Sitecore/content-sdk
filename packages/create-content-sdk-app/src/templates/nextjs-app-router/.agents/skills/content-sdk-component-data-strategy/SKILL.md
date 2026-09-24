@@ -14,7 +14,7 @@ description: Layout from getPage; site/locale from route params; serializable cl
 
 ## Rules
 
-- `client.getPage(path ?? [], { site, locale })` in page Server Components
+- `getSitecorePageForRequest(path ?? [], site, locale)` in page Server Components (do not omit `tokens` on published renders)
 - Pass `{ site, locale }` from `await params`
 - Client components get serializable props only
 

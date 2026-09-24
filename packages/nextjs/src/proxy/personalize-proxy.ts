@@ -5,7 +5,16 @@ import {
   PersonalizeInfo,
   CdpHelper,
   DEFAULT_VARIANT,
+  PERSONALIZE_TOKENS_HEADER,
+  PERSONALIZE_TOKENS_HEADER_MAX_BYTES,
+  encodePersonalizeTokensHeader,
 } from '@sitecore-content-sdk/content/personalize';
+import {
+  clampEncodedTokenMap,
+  collectPersonalizeExecutionTokens,
+  createEmptyTokenMap,
+  tokenMapHasUsableVisitorValues,
+} from '@sitecore-content-sdk/content/personalize/internal';
 import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/analytics-core/internal';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { personalize } from '@sitecore-content-sdk/personalize';
@@ -78,7 +87,15 @@ type PersonalizeExecution = {
 };
 
 /**
- * Proxy / handler to support Sitecore Personalize
+ * Proxy / handler to support Sitecore Personalize.
+ *
+ * **Security:** this hop is the only trusted writer of the request header
+ * `x-sc-personalize-tokens`. That header is not authenticated and may carry
+ * visitor PII. PersonalizeProxy deletes any inbound client value at the start
+ * of `handle` and writes only a server-merged map (or encoded `{}`).
+ * A custom host that omits PersonalizeProxy must strip
+ * `x-sc-personalize-tokens` itself before `readPersonalizeTokens`. Otherwise
+ * clients can spoof visitor token values into layout substitution.
  * @public
  */
 export class PersonalizeProxy extends ProxyBase {
@@ -134,10 +151,30 @@ export class PersonalizeProxy extends ProxyBase {
     res: NextResponse,
     proxiesContext?: ProxiesContext
   ): Promise<NextResponse> => {
+    const requestHeaders = new Headers();
+    req.headers.forEach((value, key) => {
+      if (typeof value === 'string') {
+        requestHeaders.append(key, value);
+      }
+    });
+    requestHeaders.delete(PERSONALIZE_TOKENS_HEADER);
+
+    const forward = (writeEmptyTokens = false) => {
+      if (writeEmptyTokens) {
+        requestHeaders.set(
+          PERSONALIZE_TOKENS_HEADER,
+          encodePersonalizeTokensHeader(createEmptyTokenMap())
+        );
+      }
+      return this.forward(req, res, requestHeaders);
+    };
+
     if (!this.config.enabled) {
       debug.personalize('skipped (personalize proxy is disabled globally)');
-      return res;
+      return forward();
     }
+
+    let eligible = false;
     try {
       const skipForBot = this.config.skipForBot ?? true;
       const pathname = req.nextUrl.pathname;
@@ -159,7 +196,7 @@ export class PersonalizeProxy extends ProxyBase {
 
       if (this.disabled(req, res)) {
         debug.personalize('skipped (personalize proxy is disabled)');
-        return res;
+        return forward();
       }
 
       if (
@@ -167,12 +204,12 @@ export class PersonalizeProxy extends ProxyBase {
         this.isPreview(req) // No need to personalize for preview (layout data is already prepared for preview)
       ) {
         debug.personalize('skipped (%s)', res.redirected ? 'redirected' : 'preview');
-        return res;
+        return forward();
       }
 
       if (skipForBot && req.cookies.get(BOT_DETECTION_COOKIE)?.value) {
         debug.personalize('skipped (bot request)');
-        return res;
+        return forward();
       }
 
       const site = this.getSite(req, res);
@@ -180,7 +217,7 @@ export class PersonalizeProxy extends ProxyBase {
       // Get personalization info from Experience Edge
       // personalizeService is guaranteed to be non-null here because disabled() check passed
       if (!this.personalizeService) {
-        return res;
+        return forward();
       }
       const personalizeInfo = await this.personalizeService.getPersonalizeInfo(
         pathname,
@@ -190,13 +227,15 @@ export class PersonalizeProxy extends ProxyBase {
       if (!personalizeInfo) {
         // Likely an invalid route / language
         debug.personalize('skipped (personalize info not found)');
-        return res;
+        return forward();
       }
 
       if (personalizeInfo.variantIds.length === 0) {
         debug.personalize('skipped (no personalization configured)');
-        return res;
+        return forward();
       }
+
+      eligible = true;
 
       if (this.isPrefetch(req)) {
         debug.personalize('skipped (prefetch)');
@@ -206,7 +245,7 @@ export class PersonalizeProxy extends ProxyBase {
         // Note the reason we don't move this any earlier in the proxy is that we would then be sacrificing performance for non-personalized pages.
         res.headers.set('x-proxy-cache', 'no-cache');
         res.headers.set('Cache-Control', 'no-store, must-revalidate');
-        return res;
+        return forward();
       }
 
       await this.initPersonalizeServer({
@@ -218,10 +257,9 @@ export class PersonalizeProxy extends ProxyBase {
 
       const params = this.getExperienceParams(req);
       const executions = this.getPersonalizeExecutions(personalizeInfo, language);
-      const identifiedVariantIds: string[] = [];
-
-      await Promise.all(
-        executions.map((execution) =>
+      const { identifiedVariantIds, tokens } = await collectPersonalizeExecutionTokens(
+        executions,
+        (execution) =>
           this.personalize({
             friendlyId: execution.friendlyId,
             variantIds: execution.variantIds,
@@ -229,22 +267,28 @@ export class PersonalizeProxy extends ProxyBase {
             language,
             timeout: cdpTimeout,
             ...(geo && { geo }),
-          }).then((personalization) => {
-            const variantId = personalization.variantId;
-            if (variantId) {
-              if (!execution.variantIds.includes(variantId)) {
-                debug.personalize('invalid variant %s', variantId);
-              } else {
-                identifiedVariantIds.push(variantId);
-              }
-            }
           })
-        )
       );
+
+      const preClampEncoded = encodePersonalizeTokensHeader(tokens);
+      const clamped = clampEncodedTokenMap(tokens);
+      if (clamped.oversized) {
+        debug.personalize(
+          'personalize tokens header oversized encodedBytes=%s limit=%s',
+          preClampEncoded.length,
+          PERSONALIZE_TOKENS_HEADER_MAX_BYTES
+        );
+      }
+      const usableVisitorTokens = tokenMapHasUsableVisitorValues(clamped.tokens);
+      requestHeaders.set(PERSONALIZE_TOKENS_HEADER, clamped.encoded);
 
       if (identifiedVariantIds.length === 0) {
         debug.personalize('skipped (no variant(s) identified)');
-        return res;
+        const forwarded = forward();
+        if (usableVisitorTokens) {
+          forwarded.headers.set('Cache-Control', 'private, no-store');
+        }
+        return forwarded;
       }
 
       // Path can be rewritten by previously executed proxy
@@ -252,11 +296,14 @@ export class PersonalizeProxy extends ProxyBase {
 
       // Rewrite to persononalized path
       const rewritePath = getPersonalizedRewrite(basePath, identifiedVariantIds);
-      const response = this.rewrite(rewritePath, req, res);
+      const response = this.rewrite(rewritePath, req, res, false, requestHeaders);
 
       // Disable preflight caching to force revalidation on client-side navigation (personalization MAY be influenced).
       // See https://github.com/vercel/next.js/pull/32767
       response.headers.set('x-proxy-cache', 'no-cache');
+      if (usableVisitorTokens) {
+        response.headers.set('Cache-Control', 'private, no-store');
+      }
 
       debug.personalize('personalize proxy end in %dms: %o', Date.now() - startTimestamp, {
         rewritePath,
@@ -284,7 +331,7 @@ export class PersonalizeProxy extends ProxyBase {
 
       proxiesContext?.set(this.name, failedExecution);
 
-      return res;
+      return forward(eligible);
     }
   };
 
@@ -381,6 +428,7 @@ export class PersonalizeProxy extends ProxyBase {
       { timeout }
     )) as {
       variantId: string;
+      tokens?: Record<string, string | number>;
     };
   }
 

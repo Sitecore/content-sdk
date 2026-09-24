@@ -100,11 +100,13 @@ export {
   SERVER_LOADER_RUNNER,
   type ServerLoaderRunnerPort,
 } from './loaders/server-loader-runner.token';
-export { type LoaderRegistry } from './loaders/loader-registry.token';
+export { type LoaderRegistry, resolveLoaderDefinition } from './loaders/loader-registry.token';
 export {
   NotFoundNavigationError,
   LoaderHttpError,
   type LoaderFn,
+  type LoaderFinalizer,
+  type LoaderDefinition,
   type LoaderContext,
   type LoaderDataResult,
   type LoaderPayload,
@@ -121,6 +123,8 @@ export {
   getVariantId,
   getComponentVariantIds,
   getLanguage,
+  getPersonalizeTokens,
+  shouldBypassPageFinalization,
 } from './loaders/context-helpers';
 export { SC_PARAMS_HEADER } from './loaders/constants';
 export { provideSitecoreAngular } from './lib/providers';

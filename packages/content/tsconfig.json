@@ -24,6 +24,7 @@
     "tools.d.ts",
     "node-tools.d.ts",
     "personalize.d.ts",
+    "personalize",
     "config-cli.d.ts",
     "codegen.d.ts",
     "src/**/*.test.ts",

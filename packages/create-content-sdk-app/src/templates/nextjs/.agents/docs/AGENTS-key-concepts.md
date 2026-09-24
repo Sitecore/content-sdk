@@ -17,13 +17,13 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 ## Catch-all route
 
 - **Where:** `src/pages/[[...path]].tsx`. This is the **only** page component that renders Sitecore content; the optional `[[...path]]` segment captures the content path.
-- **Flow:** Use `extractPath(context)` (from `@sitecore-content-sdk/nextjs/utils`) to get the path array; use `context.locale` for locale. In getStaticProps/getServerSideProps: `client.getPage(path, { locale: context.locale })`, then `client.getDictionary({ site: page.siteName, locale: page.locale })` and `client.getComponentData(page.layout, context, components)`. For SSG, paths from `client.getPagePaths(sites, context?.locales)` with `sites` from `.sitecore/sites.json`. For preview, use `context.preview` and `context.previewData` with `client.getPreview(context.previewData)` or `client.getDesignLibraryData(context.previewData)`.
+- **Flow:** Use `extractPath(context)` (from `@sitecore-content-sdk/nextjs/utils`) to get the path array; use `context.locale` for locale. In getStaticProps/getServerSideProps: `client.getPage(path, { locale: context.locale, tokens: prerender === 'SSR' ? readPersonalizeTokens(context.req.headers) ?? {} : {} })`, then `client.getDictionary({ site: page.siteName, locale: page.locale })` and `client.getComponentData(page.layout, context, components)`. Omit `tokens` only for preview / Design Library. For SSG, paths from `client.getPagePaths(sites, context?.locales)` with `sites` from `.sitecore/sites.json`. For preview, use `context.preview` and `context.previewData` with `client.getPreview(context.previewData)` or `client.getDesignLibraryData(context.previewData)`.
 - **Do not:** Add another page or catch-all for Sitecore content; keep this single entry point.
 
 ## How locale works
 
 - **Config:** `next.config.js` → `i18n.locales` and `i18n.defaultLocale`. Match (or subset) Sitecore languages. There is no `[locale]` in the URL path; Next.js i18n handles locale via its built-in behavior (e.g. prefix or cookie).
-- **In the app:** Per-request locale is `context.locale` in `getStaticProps` and `getServerSideProps`. Pass it to `client.getPage(path, { locale: context.locale })`. After fetching the page, use `page.siteName` and `page.locale` (or `context.locale`) for `client.getDictionary` and `client.getComponentData`.
+- **In the app:** Per-request locale is `context.locale` in `getStaticProps` and `getServerSideProps`. Pass it to `client.getPage(path, { locale: context.locale, tokens })`. After fetching the page, use `page.siteName` and `page.locale` (or `context.locale`) for `client.getDictionary` and `client.getComponentData`.
 - **Do not:** Assume locale from headers or a different source; always use `context.locale` and the page's site/locale for Sitecore calls.
 
 ## Component map, editing, env
