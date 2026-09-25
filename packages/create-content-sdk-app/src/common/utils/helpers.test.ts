@@ -3,7 +3,7 @@ import fs from 'fs';
 import { expect } from 'chai';
 import chalk from 'chalk';
 import sinon, { SinonStub } from 'sinon';
-import { openJsonFile, writeJsonFile, sortKeys, getAllTemplates } from './helpers';
+import { openJsonFile, writeJsonFile, sortKeys } from './helpers';
 import { JsonObjectType } from '../processes/transform';
 import testPackage from '../test-data/test.package.json';
 import testJson from '../test-data/test.json';
@@ -162,25 +162,6 @@ describe('helpers', () => {
       }
 
       expect(JSON.stringify(result)).to.equal(JSON.stringify(expected));
-    });
-  });
-
-  describe('getAllTemplates', () => {
-    let readdirSync: SinonStub;
-
-    afterEach(() => {
-      readdirSync?.restore();
-    });
-
-    it('should return templates', () => {
-      readdirSync = sinon.stub(fs, 'readdirSync');
-      readdirSync.returns(['foo', 'bar', 'baz']);
-
-      const templates = getAllTemplates();
-
-      expect(readdirSync.calledOnce).to.equal(true);
-      expect(readdirSync.getCall(0).args[0]).to.equal(path.resolve(__dirname, './../../templates'));
-      expect(templates).to.deep.equal(['foo', 'bar', 'baz']);
     });
   });
 });

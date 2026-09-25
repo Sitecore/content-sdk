@@ -1,15 +1,19 @@
 import path from 'path';
 import inquirer from 'inquirer';
 import { prompts, NextjsAppRouterAnswer } from '../nextjs-app-router/prompts';
-import { Initializer, transform } from '../../common';
+import { Initializer, InitContext } from '../../scaffolding';
+import { getVersions } from '../../versions';
 import { NextjsAppRouterCacheComponentsArgs } from './args';
 
 export default class NextjsAppRouterCacheComponentsInitializer implements Initializer {
-  async init(args: NextjsAppRouterCacheComponentsArgs) {
-    const answers = await inquirer.prompt<NextjsAppRouterAnswer>(prompts, args);
+  async init(args: NextjsAppRouterCacheComponentsArgs, ctx: InitContext) {
+    const answers = await inquirer.prompt<NextjsAppRouterAnswer>(
+      [...ctx.baseAppPrompts, ...prompts],
+      args
+    );
     const templatePath = path.resolve(__dirname, '../../templates/nextjs-app-router-cache-components');
 
-    await transform(templatePath, { ...args, ...answers });
+    await ctx.transform(templatePath, { ...args, ...answers }, getVersions());
 
     return {};
   }

@@ -54,6 +54,7 @@
   },
   "workspaces": [
     "packages/*",
+    "csdk-templates/*",
     "samples/*"
   ],
   "resolutions": {

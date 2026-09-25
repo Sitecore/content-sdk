@@ -1,5 +1,5 @@
-import { QuestionCollection } from 'inquirer';
-import { baseAppPrompts, BaseAppAnswer } from '../../common';
+import { DistinctQuestion } from 'inquirer';
+import { BaseAppAnswer } from '../../scaffolding';
 
 export enum Prerender {
   SSG = 'SSG',
@@ -12,8 +12,7 @@ export type NextjsAppRouterAnswer = BaseAppAnswer & {
 
 const DEFAULT_PRERENDER = Prerender.SSG;
 
-export const prompts: QuestionCollection<NextjsAppRouterAnswer> = [
-  ...baseAppPrompts,
+export const prompts: DistinctQuestion<NextjsAppRouterAnswer>[] = [
   {
     type: 'list',
     name: 'prerender',
