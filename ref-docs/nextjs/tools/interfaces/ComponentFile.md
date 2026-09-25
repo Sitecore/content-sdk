@@ -6,7 +6,7 @@
 
 # Interface: ComponentFile
 
-Defined in: content/types/tools/templating/components.d.ts:46
+Defined in: content/types/tools/templating/component-builder.d.ts:39
 
 Definition for a component file
 
@@ -16,7 +16,7 @@ Definition for a component file
 
 > **componentName**: `string`
 
-Defined in: content/types/tools/templating/components.d.ts:54
+Defined in: content/types/tools/templating/component-builder.d.ts:47
 
 Name of the code file
 
@@ -26,7 +26,7 @@ Name of the code file
 
 > `optional` **componentType?**: `ComponentType`
 
-Defined in: content/types/tools/templating/components.d.ts:56
+Defined in: content/types/tools/templating/component-builder.d.ts:49
 
 Detected component type (server, client, or universal)
 
@@ -36,7 +36,7 @@ Detected component type (server, client, or universal)
 
 > **filePath**: `string`
 
-Defined in: content/types/tools/templating/components.d.ts:48
+Defined in: content/types/tools/templating/component-builder.d.ts:41
 
 The original file path of the component
 
@@ -46,7 +46,7 @@ The original file path of the component
 
 > **importPath**: `string`
 
-Defined in: content/types/tools/templating/components.d.ts:50
+Defined in: content/types/tools/templating/component-builder.d.ts:43
 
 Normalized path that can be used for import statements
 
@@ -56,6 +56,6 @@ Normalized path that can be used for import statements
 
 > **moduleName**: `string`
 
-Defined in: content/types/tools/templating/components.d.ts:52
+Defined in: content/types/tools/templating/component-builder.d.ts:45
 
 Normalized name that can be used as import

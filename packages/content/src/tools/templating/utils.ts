@@ -4,7 +4,7 @@ import {
   ComponentFileWithType,
   ComponentImport,
   ComponentMapEntry,
-} from './components';
+} from './component-builder';
 
 const DEFAULT_HEADER_COMMENT =
   "Below are built-in components that are available in the app, it's recommended to keep them as is";

@@ -1,14 +1,14 @@
-[**@sitecore-content-sdk/content**](../../README.md)
+[**@sitecore-content-sdk/content**](../../../README.md)
 
 ***
 
-[@sitecore-content-sdk/content](../../README.md) / [tools](../README.md) / prepareComponentsForMap
+[@sitecore-content-sdk/content](../../../README.md) / [tools/index-node](../README.md) / prepareComponentsForMap
 
 # Function: prepareComponentsForMap()
 
-> **prepareComponentsForMap**(`components`, `opts`): [`ComponentMapEntry`](../type-aliases/ComponentMapEntry.md)[]
+> **prepareComponentsForMap**(`components`, `opts`): [`ComponentMapEntry`](../../type-aliases/ComponentMapEntry.md)[]
 
-Defined in: [content/src/tools/templating/utils.ts:42](https://github.com/Sitecore/content-sdk/blob/df0ab91f7e1cc1e11e1d2458da0d151ccdbea3af/packages/content/src/tools/templating/utils.ts#L42)
+Defined in: [content/src/tools/templating/utils.ts:42](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/tools/templating/utils.ts#L42)
 
 **`Internal`**
 
@@ -25,6 +25,6 @@ Transform component description entries for the component map.
 
 ## Returns
 
-[`ComponentMapEntry`](../type-aliases/ComponentMapEntry.md)[]
+[`ComponentMapEntry`](../../type-aliases/ComponentMapEntry.md)[]
 
 The transformed component description entries.

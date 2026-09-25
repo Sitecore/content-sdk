@@ -27,6 +27,8 @@
 
 ## Functions
 
+- [buildComponentMapContent](functions/buildComponentMapContent.md)
 - [generateSites](functions/generateSites.md)
+- [prepareComponentsForMap](functions/prepareComponentsForMap.md)
 - [scaffoldComponent](functions/scaffoldComponent.md)
 - [writeImportMap](functions/writeImportMap.md)
