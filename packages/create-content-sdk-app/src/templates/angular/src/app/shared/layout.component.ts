@@ -1,23 +1,27 @@
 import { Component, PLATFORM_ID, Renderer2, input, computed, effect, inject } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   Page,
   Field,
+  PageMetadataFields,
   RouteData,
+  ScJsonLdSchemaComponent,
+  ScPageMetaTagsComponent,
   ScPlaceholderComponent,
   SITECORE_CLIENT_TOKEN,
 } from '@sitecore-content-sdk/angular';
 
-interface RouteFields {
+export interface RouteFields extends PageMetadataFields {
   [key: string]: unknown;
   Title?: Field<string>;
 }
 
 @Component({
   selector: 'app-layout',
-  imports: [ScPlaceholderComponent],
+  imports: [ScPlaceholderComponent, ScPageMetaTagsComponent, ScJsonLdSchemaComponent],
   template: `
+      <sc-page-meta-tags [route]="scRoute()" />
+      <sc-json-ld-schema [page]="page()" />
       <div [attr.class]="layoutClassAttr()">
         <header class="w-full">
           <div id="header">
@@ -51,7 +55,9 @@ interface RouteFields {
 export class LayoutComponent {
   readonly page = input.required<Page>();
 
-  readonly scRoute = computed(() => this.page().layout?.sitecore?.route as RouteData | null);
+  readonly scRoute = computed(
+    () => this.page().layout?.sitecore?.route as RouteData<RouteFields> | null
+  );
 
   readonly layoutClassAttr = computed(() => {
     const editing = this.page().mode?.isEditing;
@@ -59,22 +65,12 @@ export class LayoutComponent {
     return editing ? `${base} editing-mode` : `${base} prod-mode`;
   });
 
-  private readonly titleService = inject(Title);
   private readonly sitecoreClient = inject(SITECORE_CLIENT_TOKEN, { optional: true });
   private readonly document = inject(DOCUMENT);
   private readonly renderer = inject(Renderer2);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   constructor() {
-    effect(() => {
-      const route = this.scRoute();
-      if (route) {
-        const fields = route.fields as RouteFields | undefined;
-        const title = fields?.Title?.value ?? 'Content SDK Page';
-        this.titleService.setTitle(title);
-      }
-    });
-
     effect(() => {
       if (this.isBrowser || !this.sitecoreClient) return;
       const layout = this.page().layout;

@@ -30,6 +30,12 @@ export type {
   LinkFieldValue,
   RichTextField,
   TextField,
+  MetadataFields,
+  OpenGraphFields,
+  OpenGraphImageField,
+  OpenGraphImageFieldValue,
+  PageMetadataFields,
+  PageMetadataRouteFields,
 } from '@sitecore-content-sdk/content/layout';
 export {
   isEditorActive,
@@ -135,6 +141,13 @@ export * from './server';
 // ─── Sitecore Context ──────────────────────────────────────────
 export { SitecoreContextService } from './lib/sitecore-context.service';
 export { ScEditingScriptsComponent } from './lib/sc-editing-scripts.component';
+
+export {
+  PageMetadataService,
+  JsonLdSchemaService,
+  ScPageMetaTagsComponent,
+  ScJsonLdSchemaComponent,
+} from './lib/head';
 
 // ─── Design Library ────────────────────────────────────────────
 export {

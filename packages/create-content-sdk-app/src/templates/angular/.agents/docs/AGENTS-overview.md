@@ -1,6 +1,6 @@
 # Project overview (Angular)
 
-This is a **Sitecore Content SDK** application built with **Angular** (standalone components, signals, Angular SSR) and **TypeScript**. AI agents work as developer assistants within this scaffolded head application. The app integrates with Sitecore AI / XM Cloud for content, supports i18n, multisite, personalization and analytics, and serves SSR through an Express server that also hosts the Content SDK middleware (sitemap, robots, editing, redirects, revalidation, loader data).
+This is a **Sitecore Content SDK** application built with **Angular** (standalone components, signals, Angular SSR) and **TypeScript**. AI agents work as developer assistants within this scaffolded head application. The app integrates with Sitecore AI / XM Cloud for content, supports i18n, multisite, personalization and analytics, and serves SSR through an Express server that also hosts the Content SDK middleware (sitemap, robots, llms.txt, editing, redirects, revalidation, loader data).
 
 **Scope:** This file applies to **this application only** (a scaffolded head app). It is **not** the Content SDK monorepo — for SDK package development use that repo's `AGENTS.md`. Here we edit app code and config (`src/app/`, `src/content-sdk/`, `src/server.ts`, `sitecore.config.ts`); we do not modify SDK packages or CI.
 

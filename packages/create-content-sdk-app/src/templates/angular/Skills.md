@@ -20,7 +20,7 @@ Angular head app: catch-all route behind `scLocaleMatcher`, Sitecore data throug
 | [content-sdk-multisite-management](.agents/skills/content-sdk-multisite-management/SKILL.md) | Site resolution and `.sitecore/sites.json` |
 | [content-sdk-personalization-and-analytics](.agents/skills/content-sdk-personalization-and-analytics/SKILL.md) | Variants, CDP, analytics events, bot tracking |
 | [content-sdk-site-setup-and-env](.agents/skills/content-sdk-site-setup-and-env/SKILL.md) | `sitecore.config.ts` and the `CSDK_PUBLIC_*` env split |
-| [content-sdk-sitemap-robots](.agents/skills/content-sdk-sitemap-robots/SKILL.md) | Sitemap and robots middleware |
+| [content-sdk-sitemap-robots](.agents/skills/content-sdk-sitemap-robots/SKILL.md) | Sitemap, robots and llms.txt middleware |
 | [content-sdk-upgrade-assistant](.agents/skills/content-sdk-upgrade-assistant/SKILL.md) | Upgrading SDK or Angular packages |
 
 Do **not** load every skill at session start. Open [AGENTS.md](AGENTS.md) first; add one skill when the task matches a row above.

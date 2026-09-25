@@ -16,7 +16,7 @@ description: Express middleware chain in src/server.ts; fixed order and the serv
 
 ## Rules
 
-- Order is fixed: `express.json()` → revalidate → sitemap → robots → editing (config, experimental, render) → multisite → bot tracking → redirects → personalize → `/_data` loader middleware → static → `angularApp.handle`
+- Order is fixed: `express.json()` → revalidate → sitemap → robots → llms.txt → editing (config, experimental, render) → multisite → bot tracking → redirects → personalize → `/_data` loader middleware → static → `angularApp.handle`
 - Multisite before personalize; bot tracking before personalize; redirects before personalize; editing before static and SSR; `/_data` before the SSR handler
 - New endpoints register before `express.static`; add app-specific exemptions to `middlewareMatcher.excludePaths`
 - Pass the **same** `loaderCache` instance to the revalidate middleware, the `/_data` middleware, and `angularApp.handle(req, { cache, req, res })`

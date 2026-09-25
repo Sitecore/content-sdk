@@ -35,16 +35,17 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 2. `createSitecoreRevalidateMiddleware({ cache, defaultLocale, sites })` — `POST /api/revalidate`
 3. `createSitemapMiddleware({ client, sites })` — `/sitemap.xml`, `/sitemap-:id.xml`
 4. `createRobotsMiddleware({ client, sites })` — `/robots.txt`
-5. `createEditingConfigMiddleware({ components, metadataImport })` — `/api/editing/config`
-6. `createExperimentalFeaturesMiddleware()` — `/api/editing/experimental`
-7. `createEditingRenderMiddleware()` — `/api/editing/render`
-8. `createMultisiteMiddleware(...)` — resolves the site onto `req.scParams`
-9. `createBotTrackingMiddleware(...)` — sets the `sc_bot` cookie **before** personalize decides to skip
-10. `createRedirectsMiddleware(...)` — short-circuits before any CDP call
-11. `createPersonalizeMiddleware(...)` — reads the site resolved in step 8
-12. `createLoaderDataServiceMiddleware(config, { loaders: LOADERS, cache })` — `POST /_data`
-13. `express.static(browserDistFolder, ...)`
-14. `angularApp.handle(req, { cache: loaderCache, req, res })` — SSR
+5. `createLlmsTxtMiddleware({ client, sites })` — `/llms.txt`
+6. `createEditingConfigMiddleware({ components, metadataImport })` — `/api/editing/config`
+7. `createExperimentalFeaturesMiddleware()` — `/api/editing/experimental`
+8. `createEditingRenderMiddleware()` — `/api/editing/render`
+9. `createMultisiteMiddleware(...)` — resolves the site onto `req.scParams`
+10. `createBotTrackingMiddleware(...)` — sets the `sc_bot` cookie **before** personalize decides to skip
+11. `createRedirectsMiddleware(...)` — short-circuits before any CDP call
+12. `createPersonalizeMiddleware(...)` — reads the site resolved in step 9
+13. `createLoaderDataServiceMiddleware(config, { loaders: LOADERS, cache })` — `POST /_data`
+14. `express.static(browserDistFolder, ...)`
+15. `angularApp.handle(req, { cache: loaderCache, req, res })` — SSR
 
 Why it matters: multisite must precede personalize (personalize reads the resolved site); bot tracking must precede personalize (the cookie gates the skip); redirects must precede personalize (avoid a wasted CDP call); editing endpoints must precede static and SSR; `/_data` must precede the SSR catch-all handler.
 
@@ -118,6 +119,15 @@ Angular has no framework ISR. This app caches **loader results** instead:
 - **`angular.json`** — `@angular/build:application` builder, `outputMode: "server"`, SSR entry `src/server.ts`, environment `fileReplacements` per configuration, and `allowedCommonJsDependencies`. Lint covers `src/**/*.ts`, `src/**/*.html` and `sitecore.config.ts`.
 - **`tsconfig.json`** — path aliases `client/*`, `components/*`, `lib/*`, `.sitecore/*`; includes `sitecore.config.ts`, `sitecore.cli.config.ts` and `.sitecore/**/*.ts`.
 
+## Page metadata and structured data
+
+`src/app/shared/layout.component.ts` renders two SDK components that write to `<head>` and render no DOM of their own:
+
+- `<sc-page-meta-tags [route]="scRoute()" />` — `<title>` (from the route `Title` field, falling back to `'Page'`) plus metadata and Open Graph `<meta>` tags from the route's `baseMetadata*` / `baseOg*` fields (`RouteFields extends PageMetadataFields`). A field with no value omits only its own tag; tags left from the previous route are removed on navigation.
+- `<sc-json-ld-schema [page]="page()" />` — one `<script type="application/ld+json">` with the Layout Service's `sitecore.context.schemas`. Rendered only in normal mode (not in editing or preview).
+
+Both work during SSR and on client-side navigation and clean up when destroyed. For metadata outside a component template, inject `PageMetadataService` / `JsonLdSchemaService` and call `apply(...)` directly. Do not set `<title>` or these `<meta>` tags manually elsewhere — the services own them.
+
 ## Differences from the Next.js templates
 
 Useful when porting guidance or code from a Next.js head app:
@@ -132,3 +142,4 @@ Useful when porting guidance or code from a Next.js head app:
 | Component map | `SITECORE_COMPONENT_MAP` injection token | Props / `SitecoreProvider` |
 | Field rendering | Structural directives (`*scText`) | Components (`<Text>`) |
 | Locale | URL segment + `scLocaleMatcher` | `context.locale` from Next.js i18n |
+| Page metadata / JSON-LD | `<sc-page-meta-tags>` / `<sc-json-ld-schema>` (Angular `Meta` / `Title` services) | `generateMetadata` + `getPageMetadata` or `<PageMetaTags>`; `<JsonLdSchema>` |

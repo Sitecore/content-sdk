@@ -6,7 +6,7 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 
 - **Where:** `src/content-sdk/client/sitecore-client.ts` exports `getClient()` — a **lazy singleton** that constructs `new SitecoreClient(scConfig)` on first use. It is lazy on purpose: build-time route extraction runs without credentials, and eager construction would throw.
 - **Use for:** `getPage`, `getDictionary`, `getPreview`, `getErrorPage`, `getPagePaths`, `getSiteMap`, `getHeadLinks`.
-- **Consumed by:** loaders (`getClient()` directly), `provideSitecoreAngular({ sitecoreClient: getClient() })` in `app.config.ts`, and the Express middleware in `server.ts` (sitemap, robots).
+- **Consumed by:** loaders (`getClient()` directly), `provideSitecoreAngular({ sitecoreClient: getClient() })` in `app.config.ts`, and the Express middleware in `server.ts` (sitemap, robots, llms.txt).
 - **In components:** inject `SITECORE_CLIENT_TOKEN` (as `LayoutComponent` does for `getHeadLinks`). Do **not** call `new SitecoreClient(...)` anywhere else.
 
 ## Loaders

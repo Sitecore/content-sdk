@@ -16,6 +16,7 @@ import {
   createLoaderCache,
   createLoaderDataServiceMiddleware,
   createRobotsMiddleware,
+  createLlmsTxtMiddleware,
   createMultisiteMiddleware,
   createPersonalizeMiddleware,
   createRedirectsMiddleware,
@@ -76,6 +77,15 @@ app.use('/sitemap-:id.xml', sitemapMiddleware);
 app.use(
   '/robots.txt',
   createRobotsMiddleware({
+    client: getClient(),
+    sites,
+  })
+);
+
+/** llms.txt at `/llms.txt` */
+app.use(
+  '/llms.txt',
+  createLlmsTxtMiddleware({
     client: getClient(),
     sites,
   })

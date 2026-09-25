@@ -1102,6 +1102,11 @@ export interface PageMetadataFields extends MetadataFields, OpenGraphFields {
 }
 
 // @public
+export type PageMetadataRouteFields = PageMetadataFields & {
+    Title?: Field;
+};
+
+// @public
 export type PageMode = {
     name: PageModeName;
     designLibrary: {
@@ -1301,7 +1306,28 @@ const replaceMediaUrlPrefix: (url: string, mediaUrlPrefix?: RegExp) => string;
 export const resetEditorChromes: () => void;
 
 // @public
+export interface ResolvedPageMetadataFields {
+    author?: string;
+    creationTime?: string;
+    creationTimeTag?: string;
+    description?: string;
+    keywords?: string;
+    metaTitle?: string;
+    modifiedTime?: string;
+    modifiedTimeTag?: string;
+    ogDescription?: string;
+    ogImage?: OpenGraphImageFieldValue;
+    ogImageSrc?: string;
+    ogTitle?: string;
+    ogType?: string;
+    title: string;
+}
+
+// @public
 export const resolveExperimentalFeatureStatuses: (features: ExperimentalFeatureData[]) => ExperimentalFeatureStatus[];
+
+// @public
+export function resolvePageMetadataFields(route: RouteData<PageMetadataRouteFields> | null | undefined, defaultTitle: string): ResolvedPageMetadataFields;
 
 // @internal
 export const resolveRedirectTarget: (existsRedirect: RedirectResult, siteLanguage: string, requestPath: string) => string;

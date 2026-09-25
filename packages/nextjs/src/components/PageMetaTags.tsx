@@ -1,8 +1,7 @@
 import React, { JSX } from 'react';
 import Head from 'next/head';
-import type { RouteData } from '@sitecore-content-sdk/content/layout';
-import { resolvePageMetadataFields } from '../metadata/resolve-page-metadata-fields';
-import type { PageMetadataRouteFields } from '../metadata/resolve-page-metadata-fields';
+import { resolvePageMetadataFields } from '@sitecore-content-sdk/content/layout';
+import type { PageMetadataRouteFields, RouteData } from '@sitecore-content-sdk/content/layout';
 
 /**
  * Props for {@link PageMetaTags}.

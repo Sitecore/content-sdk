@@ -149,7 +149,7 @@ import { OpenGraphImageField } from '@sitecore-content-sdk/react';
 import { OpenGraphImageFieldValue } from '@sitecore-content-sdk/react';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { PageMetadataFields } from '@sitecore-content-sdk/react';
-import type { PageMetadataFields as PageMetadataFields_2 } from '@sitecore-content-sdk/content/layout';
+import type { PageMetadataRouteFields } from '@sitecore-content-sdk/content/layout';
 import { PageMode } from '@sitecore-content-sdk/content/client';
 import { PageOptions } from '@sitecore-content-sdk/content/client';
 import { PersonalizeAdapter } from '@sitecore-content-sdk/personalize/internal';
@@ -837,10 +837,7 @@ export { Page }
 
 export { PageMetadataFields }
 
-// @public
-export type PageMetadataRouteFields = PageMetadataFields_2 & {
-    Title?: Field;
-};
+export { PageMetadataRouteFields }
 
 // @public
 export const PageMetaTags: (input: PageMetaTagsProps) => JSX_2.Element;
