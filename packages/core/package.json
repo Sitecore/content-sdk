@@ -9,7 +9,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
+    "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json && node ../../scripts/finalize-esm-build.js",
     "clean": "del-cli dist types",
     "lint": "eslint \"./src/**/*.ts\"",
     "test": "mocha \"./src/**/*.test.ts\"",
