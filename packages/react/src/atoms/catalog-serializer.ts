@@ -24,6 +24,10 @@ export function serializeCatalog(catalog: AtomsCatalog): SerializedCatalog {
         allowedChildren: component.allowedChildren,
         allowedParents: component.allowedParents,
         example: component.example,
+        // Defaulted here rather than in defineAtomsCatalog: the CLI hashes the whole
+        // component definition, so writing this back into the catalog would change
+        // every atom's hash and invalidate existing lock files.
+        legacy: component.legacy ?? false,
       };
 
       if (component.version) serializedComponent.version = component.version;

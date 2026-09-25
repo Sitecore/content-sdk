@@ -62,6 +62,7 @@ export interface AtomCatalogComponentEntry {
     allowedParents?: string[];
     description?: string;
     example?: unknown;
+    legacy: boolean;
     name: string;
     propsSchema: object;
     slots: string[];
@@ -1282,6 +1283,7 @@ export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' 
 export interface SitecoreComponentMeta {
     allowedChildren?: string[];
     allowedParents?: string[];
+    legacy?: boolean;
     version?: string;
 }
 
