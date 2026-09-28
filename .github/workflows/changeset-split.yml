@@ -1,0 +1,85 @@
+name: Changeset Split
+
+# Enforces one package per changeset file on every PR.
+#
+# For same-repo branches: aggregated (multi-package) changesets are split
+# automatically and the result is pushed back onto the PR branch, so changesets
+# stay attached to the PR that introduces them. The push uses the GitHub App
+# token (not GITHUB_TOKEN) so it re-triggers this workflow; the follow-up run
+# finds nothing to split and the required check goes green on the new head SHA.
+#
+# For forks (bot cannot push to the head branch): the check fails with
+# instructions to run `yarn csdk:split-changesets` locally.
+#
+# Mark this workflow's check as required on the protected branch to gate merges.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '.changeset/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: changeset-split-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  split:
+    runs-on: ubuntu-latest
+    env:
+      YARN_ENABLE_IMMUTABLE_INSTALLS: false
+      # A PR from a fork has a head repo different from the base repo.
+      IS_FORK: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+    steps:
+      - name: Generate GitHub App Token
+        id: generate-token
+        if: env.IS_FORK == 'false'
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          # For same-repo branches, check out the head branch (not the merge ref)
+          # and use the app token so we can push the split commit back.
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+          token: ${{ steps.generate-token.outputs.token || github.token }}
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: yarn install
+
+      # Forks: we cannot push to the contributor's branch, so only validate.
+      - name: Validate changesets (fork PRs)
+        if: env.IS_FORK == 'true'
+        run: yarn csdk:split-changesets --check
+
+      # Same-repo branches: split in place and push the result back to the PR.
+      - name: Split and push (same-repo PRs)
+        if: env.IS_FORK == 'false'
+        run: |
+          set -euo pipefail
+          git config user.email builds@sitecore.com
+          git config user.name "content-sdk-bot"
+          git remote set-url origin https://x-access-token:${{ steps.generate-token.outputs.token }}@github.com/${{ github.repository }}
+
+          yarn csdk:split-changesets
+
+          if [ -z "$(git status --porcelain .changeset)" ]; then
+            echo "No aggregated changesets to split."
+            exit 0
+          fi
+          git add .changeset
+          git commit -m "[ci] Split aggregated changesets (one package per file)"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
