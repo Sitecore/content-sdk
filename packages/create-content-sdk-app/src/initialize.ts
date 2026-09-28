@@ -13,10 +13,18 @@ import {
 import { getInitializer } from './registry';
 
 export const initialize = async (template: string, args: BaseAppArgs) => {
-  const initializer = await getInitializer(template, args.version as string | undefined);
+  const { initializer, versions } = await getInitializer(
+    template,
+    args.version as string | undefined
+  );
   args.silent || console.log(chalk.cyan(`Initializing '${template}'...`));
 
-  const ctx: InitContext = { transform, baseAppPrompts };
+  // Bind the resolved template package's versions so initializers render
+  // templates without needing to source versions themselves.
+  const ctx: InitContext = {
+    transform: (templatePath, transformArgs) => transform(templatePath, transformArgs, versions),
+    baseAppPrompts,
+  };
   const response = await initializer.init(args, ctx);
 
   // final steps (install, lint)

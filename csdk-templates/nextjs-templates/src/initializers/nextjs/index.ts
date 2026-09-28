@@ -2,7 +2,6 @@ import path from 'path';
 import inquirer from 'inquirer';
 import { prompts, NextjsAnswer } from './prompts';
 import { Initializer, InitContext } from '../../scaffolding';
-import { getVersions } from '../../versions';
 import { NextjsArgs } from './args';
 
 export default class NextjsInitializer implements Initializer {
@@ -10,7 +9,7 @@ export default class NextjsInitializer implements Initializer {
     const answers = await inquirer.prompt<NextjsAnswer>([...ctx.baseAppPrompts, ...prompts], args);
     const templatePath = path.resolve(__dirname, '../../templates/nextjs');
 
-    await ctx.transform(templatePath, { ...args, ...answers }, getVersions());
+    await ctx.transform(templatePath, { ...args, ...answers });
 
     const response = {};
     return response;

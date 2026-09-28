@@ -7,39 +7,40 @@ const loadGetVersions = (packageJson: object) => {
       readFileSync: () => JSON.stringify(packageJson),
     },
   });
-  return mod.getVersions as () => { [key: string]: string };
+  return mod.getVersions as (packageDir: string) => { [key: string]: string };
 };
 
-describe('angular-templates getVersions', () => {
+describe('getVersions', () => {
   it('should return only content sdk package versions for a stable release', () => {
     const getVersions = loadGetVersions({
-      version: '1.0.0',
+      version: '2.4.0',
       devDependencies: {
-        '@sitecore-content-sdk/angular': '~1.0.0',
+        '@sitecore-content-sdk/nextjs': '^2.4.0',
         '@sitecore-content-sdk/cli': '^2.3.0',
         '@types/node': '^24.10.4',
         typescript: '~5.8.3',
       },
     });
 
-    expect(getVersions()).to.deep.equal({
-      '@sitecore-content-sdk/angular': '~1.0.0',
+    expect(getVersions('/pkg')).to.deep.equal({
+      '@sitecore-content-sdk/nextjs': '^2.4.0',
       '@sitecore-content-sdk/cli': '^2.3.0',
     });
   });
 
-  it('should strip range prefixes from pre-release deps when the package is pre-release', () => {
+  it('should preserve prefixes for dependency versions', () => {
     const getVersions = loadGetVersions({
-      version: '1.0.0-canary.4',
+      version: '2.4.0',
       devDependencies: {
-        '@sitecore-content-sdk/angular': '~1.0.0-canary.0',
-        '@sitecore-content-sdk/cli': '~2.3.1-beta.2',
+        '@sitecore-content-sdk/nextjs': '^2.4.0',
+        '@sitecore-content-sdk/events': '~2.1.2',
       },
     });
 
-    expect(getVersions()).to.deep.equal({
-      '@sitecore-content-sdk/angular': '1.0.0-canary.0',
-      '@sitecore-content-sdk/cli': '2.3.1-beta.2',
+    expect(getVersions('/pkg')).to.deep.equal({
+      '@sitecore-content-sdk/nextjs': '^2.4.0',
+      '@sitecore-content-sdk/events': '~2.1.2',
     });
   });
 });
+

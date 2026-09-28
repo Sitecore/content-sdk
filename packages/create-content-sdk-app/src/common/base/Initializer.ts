@@ -1,7 +1,6 @@
 import { DistinctQuestion } from 'inquirer';
 import { BaseAppArgs } from './args';
 import { BaseAppAnswer } from './prompts';
-import { CsdkVersions } from '../processes/transform';
 
 export type InitializerResults = {
   nextSteps?: string;
@@ -14,9 +13,11 @@ export type InitializerResults = {
  */
 export type InitContext = {
   /**
-   * Renders a template folder to the destination using the provided package versions.
+   * Renders a template folder to the destination. The Content SDK package
+   * versions are resolved and bound by create-content-sdk-app from the template
+   * package's own package.json, so initializers do not pass them.
    */
-  transform: (templatePath: string, args: BaseAppArgs, versions: CsdkVersions) => Promise<void>;
+  transform: (templatePath: string, args: BaseAppArgs) => Promise<void>;
   /**
    * Base prompts contributed by the CLI, prepended to each initializer's prompts.
    */

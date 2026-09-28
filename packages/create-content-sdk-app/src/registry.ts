@@ -2,7 +2,7 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs-extra';
 import spawn from 'cross-spawn';
-import { Initializer } from './common';
+import { CsdkVersions, Initializer, getVersions } from './common';
 
 /**
  * Shape a template package (e.g. `@sitecore-content-sdk/nextjs-templates`)
@@ -11,8 +11,6 @@ import { Initializer } from './common';
 export interface TemplatePackageModule {
   /** Registry of template name -> initializer instance. */
   initializers: { [template: string]: Initializer };
-  /** Content SDK package versions this package scaffolds into generated apps. */
-  getVersions: () => { [key: string]: string };
 }
 
 /**
@@ -59,39 +57,46 @@ const installTemplatePackage = (pkgName: string, version: string): string => {
  * Lazily loads a template package. When no version is provided the package that
  * ships as a dependency of create-content-sdk-app is imported. When a version is
  * provided, that exact version is installed on demand and imported instead.
+ *
+ * Returns the loaded module together with the directory it was resolved from, so
+ * the caller can read the package's own `package.json` (e.g. to compute the
+ * Content SDK versions it scaffolds).
  * @param {string} pkgName template package name
  * @param {string} [version] optional version to load
- * @returns {Promise<TemplatePackageModule>} the loaded template package module
+ * @returns {Promise<{ mod: TemplatePackageModule; packageDir: string }>} the loaded module and its directory
  */
 export const loadTemplatePackage = async (
   pkgName: string,
   version?: string
-): Promise<TemplatePackageModule> => {
-  const specifier = version ? installTemplatePackage(pkgName, version) : pkgName;
-  const mod = (await import(specifier)) as TemplatePackageModule;
-  return mod;
+): Promise<{ mod: TemplatePackageModule; packageDir: string }> => {
+  const packageDir = version
+    ? installTemplatePackage(pkgName, version)
+    : path.dirname(require.resolve(`${pkgName}/package.json`));
+  const mod = (await import(packageDir)) as TemplatePackageModule;
+  return { mod, packageDir };
 };
 
 /**
- * Resolves the initializer for a template, lazily loading its template package.
+ * Resolves the initializer for a template, lazily loading its template package,
+ * along with the Content SDK versions read from that package's package.json.
  * @param {string} template template name
  * @param {string} [version] optional template package version to load
- * @returns {Promise<Initializer>} the template's initializer
+ * @returns {Promise<{ initializer: Initializer; versions: CsdkVersions }>} the template's initializer and versions
  */
 export const getInitializer = async (
   template: string,
   version?: string
-): Promise<Initializer> => {
+): Promise<{ initializer: Initializer; versions: CsdkVersions }> => {
   const pkgName = TEMPLATE_PACKAGES[template];
   if (!pkgName) {
     throw new Error(`Unknown template provided: '${template}'`);
   }
 
-  const mod = await loadTemplatePackage(pkgName, version);
+  const { mod, packageDir } = await loadTemplatePackage(pkgName, version);
   const initializer = mod.initializers[template];
   if (!initializer) {
     throw new Error(`Template '${template}' is not provided by '${pkgName}'`);
   }
 
-  return initializer;
+  return { initializer, versions: getVersions(packageDir) };
 };

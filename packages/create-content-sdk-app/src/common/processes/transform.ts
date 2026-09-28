@@ -16,7 +16,7 @@ export type JsonObjectType = {
 
 /**
  * Content SDK package versions to inject into a template, keyed by package name.
- * Provided by the resolving template package's `getVersions()`.
+ * Resolved from the template package's package.json by `getVersions()`.
  */
 export type CsdkVersions = { [key: string]: string };
 

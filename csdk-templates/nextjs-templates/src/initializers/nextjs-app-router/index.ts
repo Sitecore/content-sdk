@@ -2,7 +2,6 @@ import path from 'path';
 import inquirer from 'inquirer';
 import { prompts, NextjsAppRouterAnswer } from './prompts';
 import { Initializer, InitContext } from '../../scaffolding';
-import { getVersions } from '../../versions';
 import { NextjsAppRouterArgs } from './args';
 
 export default class NextjsAppRouterInitializer implements Initializer {
@@ -13,7 +12,7 @@ export default class NextjsAppRouterInitializer implements Initializer {
     );
     const templatePath = path.resolve(__dirname, '../../templates/nextjs-app-router');
 
-    await ctx.transform(templatePath, { ...args, ...answers }, getVersions());
+    await ctx.transform(templatePath, { ...args, ...answers });
 
     const response = {};
     return response;

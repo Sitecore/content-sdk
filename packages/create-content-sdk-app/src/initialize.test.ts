@@ -59,7 +59,7 @@ describe('initialize', () => {
     };
 
     const mockFoo = mockInitializer({});
-    getInitializerStub.withArgs('foo').returns(mockFoo);
+    getInitializerStub.withArgs('foo').returns({ initializer: mockFoo, versions: {} });
 
     await initializeFunc(template, args);
 
@@ -80,7 +80,7 @@ describe('initialize', () => {
     };
 
     const mockFoo = mockInitializer({ nextSteps: 'foo next step' });
-    getInitializerStub.withArgs('foo').returns(mockFoo);
+    getInitializerStub.withArgs('foo').returns({ initializer: mockFoo, versions: {} });
 
     await initializeFunc(template, args);
 
@@ -96,7 +96,7 @@ describe('initialize', () => {
     };
 
     const mockFoo = mockInitializer({});
-    getInitializerStub.withArgs('foo').returns(mockFoo);
+    getInitializerStub.withArgs('foo').returns({ initializer: mockFoo, versions: {} });
 
     await initializeFunc(template, args);
 
@@ -116,7 +116,7 @@ describe('initialize', () => {
     };
 
     const mockFoo = mockInitializer({});
-    getInitializerStub.withArgs('foo').returns(mockFoo);
+    getInitializerStub.withArgs('foo').returns({ initializer: mockFoo, versions: {} });
 
     await initializeFunc(template, args);
 

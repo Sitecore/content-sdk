@@ -3,7 +3,6 @@ import NextjsAppRouterInitializer from './initializers/nextjs-app-router';
 import NextjsAppRouterCacheComponentsInitializer from './initializers/nextjs-app-router-cache-components';
 import { Initializer } from './scaffolding';
 
-export { getVersions } from './versions';
 export * from './scaffolding';
 
 /**

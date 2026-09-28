@@ -1,7 +1,6 @@
 import AngularInitializer from './initializers/angular';
 import { Initializer } from './scaffolding';
 
-export { getVersions } from './versions';
 export * from './scaffolding';
 
 /**
