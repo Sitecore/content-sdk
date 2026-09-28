@@ -1,7 +1,6 @@
 import type { Metadata as NextMetadata } from 'next';
-import type { RouteData } from '@sitecore-content-sdk/content/layout';
-import { resolvePageMetadataFields } from './resolve-page-metadata-fields';
-import type { PageMetadataRouteFields } from './resolve-page-metadata-fields';
+import { resolvePageMetadataFields } from '@sitecore-content-sdk/content/layout';
+import type { PageMetadataRouteFields, RouteData } from '@sitecore-content-sdk/content/layout';
 
 export type { PageMetadataRouteFields };
 
