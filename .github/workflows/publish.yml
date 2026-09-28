@@ -70,18 +70,14 @@ jobs:
             echo "No API doc changes to commit"
           fi
 
-      - name: Creating .npmrc
+      - name: Configure publish registry auth
         run: |
-          NPM_REGISTRY="${NPM_REGISTRY%/}"
-          NPM_REGISTRY="${NPM_REGISTRY}/"
-          write_npmrc() {
-            {
-              echo "@sitecore-content-sdk:registry=https://$NPM_REGISTRY"
-              echo "registry=https://$NPM_REGISTRY"
-              echo "//$NPM_REGISTRY:_authToken=$NPM_TOKEN"
-            } > "$1"
-          }
-          write_npmrc "$GITHUB_WORKSPACE/.npmrc"
+          yarn config set npmScopes.sitecore-content-sdk.npmPublishRegistry "https://$NPM_REGISTRY"
+          yarn config set npmScopes.sitecore-content-sdk.npmRegistryServer "https://$NPM_REGISTRY"
+          yarn config set npmScopes.sitecore-content-sdk.npmAuthToken "$NPM_TOKEN"
+          yarn config set npmPublishRegistry "https://$NPM_REGISTRY"
+          yarn config set npmRegistryServer "https://$NPM_REGISTRY"
+          yarn config set npmAuthToken "$NPM_TOKEN"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
@@ -160,18 +156,14 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Creating .npmrc
+      - name: Configure publish registry auth
         run: |
-          NPM_REGISTRY="${NPM_REGISTRY%/}"
-          NPM_REGISTRY="${NPM_REGISTRY}/"
-          write_npmrc() {
-            {
-              echo "@sitecore-content-sdk:registry=https://$NPM_REGISTRY"
-              echo "registry=https://$NPM_REGISTRY"
-              echo "//$NPM_REGISTRY:_authToken=$NPM_TOKEN"
-            } > "$1"
-          }
-          write_npmrc "$GITHUB_WORKSPACE/.npmrc"
+          yarn config set npmScopes.sitecore-content-sdk.npmPublishRegistry "https://$NPM_REGISTRY"
+          yarn config set npmScopes.sitecore-content-sdk.npmRegistryServer "https://$NPM_REGISTRY"
+          yarn config set npmScopes.sitecore-content-sdk.npmAuthToken "$NPM_TOKEN"
+          yarn config set npmPublishRegistry "https://$NPM_REGISTRY"
+          yarn config set npmRegistryServer "https://$NPM_REGISTRY"
+          yarn config set npmAuthToken "$NPM_TOKEN"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
