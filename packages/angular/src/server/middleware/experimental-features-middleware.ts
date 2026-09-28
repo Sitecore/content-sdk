@@ -3,14 +3,11 @@ import {
   QUERY_PARAM_EDITING_SECRET,
 } from '@sitecore-content-sdk/content/editing';
 import { buildExperimentalFeaturesResponse } from '@sitecore-content-sdk/content/experimental';
-import type { ExperimentalFeatureData } from '@sitecore-content-sdk/content/experimental';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from './models';
 import { readProcessEnv } from '../utils';
 import debug from '../../debug';
-import experimentalFeaturesCatalogJson from '../../experimental.json';
-
-const experimentalFeaturesCatalog = experimentalFeaturesCatalogJson as ExperimentalFeatureData[];
+import { experimentalFeaturesCatalog } from '../experimental-features';
 
 const DEFAULT_ENDPOINT = '/api/editing/experimental';
 

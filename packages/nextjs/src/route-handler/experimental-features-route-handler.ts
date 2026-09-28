@@ -1,14 +1,11 @@
 import { NextRequest } from 'next/server';
 import { buildExperimentalFeaturesResponse } from '@sitecore-content-sdk/content/experimental';
-import type { ExperimentalFeatureData } from '@sitecore-content-sdk/content/experimental';
 import debug from '../debug';
 import {
   authorizeEditingEndpointRequest,
   getEditingSecretQueryParamName,
 } from '../editing/editing-endpoint-auth';
-import experimentalFeaturesCatalogJson from '../experimental.json';
-
-const experimentalFeaturesCatalog = experimentalFeaturesCatalogJson as ExperimentalFeatureData[];
+import { experimentalFeaturesCatalog } from '../experimental-features';
 
 /**
  * Creates a route handler for the experimental features API route
