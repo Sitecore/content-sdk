@@ -105,16 +105,14 @@ jobs:
 
       - name: Prepare and Process Changesets Release
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          version: yarn csdk:prep-release
-          publish: yarn changeset:publish --tag ${{ steps.npm-tags.outputs.npm_tag }}
-          commit: '[release][ci] Version bump and changelog'
-          title: ${{ format('[csdk] {0}', steps.npm-tags.outputs.release_text) }}
+          version-script: yarn csdk:prep-release
+          publish-script: yarn changeset:publish --tag ${{ steps.npm-tags.outputs.npm_tag }}
+          commit-message: '[release][ci] Version bump and changelog'
+          pr-title: ${{ format('[csdk] {0}', steps.npm-tags.outputs.release_text) }}
+          github-token: ${{ steps.generate-token.outputs.token }}
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
 
   canary-snapshot:
