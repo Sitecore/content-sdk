@@ -28,4 +28,17 @@ describe('atoms-css-compiler-registry', () => {
     const result = await getAtomsCssCompiler()!(['text-red-500']);
     expect(result).to.equal('.text-red-500{}');
   });
+
+  it('stores the compiler on globalThis so separate bundles share it', () => {
+    const compiler: AtomsCssCompiler = async (classes) => classes.join(',');
+    setAtomsCssCompiler(compiler);
+
+    // A second copy of this module (Next.js bundles instrumentation, RSC, and
+    // Server Actions separately) reaches the same value through the shared symbol.
+    const key = Symbol.for('sitecore-content-sdk.atomsCssCompiler');
+    expect((globalThis as Record<symbol, unknown>)[key]).to.equal(compiler);
+
+    __resetAtomsCssCompiler();
+    expect((globalThis as Record<symbol, unknown>)[key]).to.be.undefined;
+  });
 });

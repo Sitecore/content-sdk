@@ -3,9 +3,8 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
   // @tailwindcss/node ships native Rust binaries via @tailwindcss/oxide that cannot
-  // be bundled by Turbopack/webpack. @sitecore-content-sdk/core must also be external
-  // so instrumentation and Server Actions share the same atoms CSS compiler registry.
-  serverExternalPackages: ['@tailwindcss/node', '@sitecore-content-sdk/core'],
+  // be bundled by Turbopack/webpack.
+  serverExternalPackages: ['@tailwindcss/node'],
 
   // Enable Cache Components (`use cache`, `cacheTag`) in Next.js App Router.
   cacheComponents: true,

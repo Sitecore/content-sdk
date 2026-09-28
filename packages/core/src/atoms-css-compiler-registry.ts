@@ -5,11 +5,11 @@
  * so it can be safely imported in server-only contexts such as
  * Next.js `instrumentation.ts`, Server Actions, and RSC.
  *
- * A plain module-level variable is used here. This works reliably because
- * `@sitecore-content-sdk/core` must be listed in the Next.js application's
- * `serverExternalPackages`. That tells Next.js to load it as a native Node.js
- * module rather than bundling it, so all imports across instrumentation code
- * and Server Actions resolve to the same cached module instance.
+ * The compiler is stored on `globalThis` under a `Symbol.for` key. Next.js builds
+ * instrumentation, RSC, and Server Actions as separate bundles, each with its own
+ * copy of this module, but they all run in the same Node.js process and therefore
+ * share one `globalThis`. `Symbol.for` returns the same symbol from every copy, so
+ * the compiler registered during instrumentation is visible everywhere.
  */
 
 /**
@@ -18,7 +18,9 @@
  */
 export type AtomsCssCompiler = (classes: string[]) => Promise<string>;
 
-let _compiler: AtomsCssCompiler | null = null;
+const COMPILER_KEY = Symbol.for('sitecore-content-sdk.atomsCssCompiler');
+
+const holder = globalThis as { [COMPILER_KEY]?: AtomsCssCompiler | null };
 
 /**
  * Registers the CSS compiler used by `StudioComponentServerWrapper` (production)
@@ -32,7 +34,7 @@ let _compiler: AtomsCssCompiler | null = null;
  * @public
  */
 export function setAtomsCssCompiler(fn: AtomsCssCompiler): void {
-  _compiler = fn;
+  holder[COMPILER_KEY] = fn;
 }
 
 /**
@@ -41,7 +43,7 @@ export function setAtomsCssCompiler(fn: AtomsCssCompiler): void {
  * @public
  */
 export function getAtomsCssCompiler(): AtomsCssCompiler | null {
-  return _compiler;
+  return holder[COMPILER_KEY] ?? null;
 }
 
 /**
@@ -49,5 +51,5 @@ export function getAtomsCssCompiler(): AtomsCssCompiler | null {
  * @internal
  */
 export function __resetAtomsCssCompiler(): void {
-  _compiler = null;
+  delete holder[COMPILER_KEY];
 }
