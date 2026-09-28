@@ -29,7 +29,7 @@
     "dist"
   ],
   "dependencies": {
-    "@sitecore-content-sdk/angular-templates": "~1.0.0",
+    "@sitecore-content-sdk/angular-templates": "^1.0.0",
     "@sitecore-content-sdk/nextjs-templates": "^2.4.0",
     "chalk": "^4.1.2",
     "cross-spawn": "^7.0.6",
