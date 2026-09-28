@@ -6,7 +6,7 @@
 
 # Interface: PersonalizePluginOptions
 
-Defined in: [personalize/src/initialization/types.ts:27](https://github.com/Sitecore/content-sdk/blob/eb4a5a9ee099182eed23366c9fea12d5faf5c541/packages/personalize/src/initialization/types.ts#L27)
+Defined in: [personalize/src/initialization/types.ts:27](https://github.com/Sitecore/content-sdk/blob/12c0a210ef65690d61f7ca0dbaa89ebf79d5ebb3/packages/personalize/src/initialization/types.ts#L27)
 
 Parameters for creating a personalize plugin.
 
@@ -16,7 +16,7 @@ Parameters for creating a personalize plugin.
 
 > `optional` **enablePersonalizeCookie?**: `boolean`
 
-Defined in: [personalize/src/initialization/types.ts:39](https://github.com/Sitecore/content-sdk/blob/eb4a5a9ee099182eed23366c9fea12d5faf5c541/packages/personalize/src/initialization/types.ts#L39)
+Defined in: [personalize/src/initialization/types.ts:39](https://github.com/Sitecore/content-sdk/blob/12c0a210ef65690d61f7ca0dbaa89ebf79d5ebb3/packages/personalize/src/initialization/types.ts#L39)
 
 Whether to set the sc_cid_personalize cookie.
 
@@ -34,7 +34,7 @@ Default: `false`.
 
 > `optional` **webPersonalization?**: `boolean` \| `Partial`\<[`WebPersonalizationOptions`](WebPersonalizationOptions.md)\>
 
-Defined in: [personalize/src/initialization/types.ts:49](https://github.com/Sitecore/content-sdk/blob/eb4a5a9ee099182eed23366c9fea12d5faf5c541/packages/personalize/src/initialization/types.ts#L49)
+Defined in: [personalize/src/initialization/types.ts:49](https://github.com/Sitecore/content-sdk/blob/12c0a210ef65690d61f7ca0dbaa89ebf79d5ebb3/packages/personalize/src/initialization/types.ts#L49)
 
 Whether to enable web personalization.
 

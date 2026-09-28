@@ -8,7 +8,7 @@
 
 > **setAtomsCssCompiler**(`fn`): `void`
 
-Defined in: [packages/core/src/atoms-css-compiler-registry.ts:34](https://github.com/Sitecore/content-sdk/blob/eb4a5a9ee099182eed23366c9fea12d5faf5c541/packages/core/src/atoms-css-compiler-registry.ts#L34)
+Defined in: [packages/core/src/atoms-css-compiler-registry.ts:36](https://github.com/Sitecore/content-sdk/blob/12c0a210ef65690d61f7ca0dbaa89ebf79d5ebb3/packages/core/src/atoms-css-compiler-registry.ts#L36)
 
 Registers the CSS compiler used by `StudioComponentServerWrapper` (production)
 and `compileCssForDocumentAction` (editing) to generate CSS for class names

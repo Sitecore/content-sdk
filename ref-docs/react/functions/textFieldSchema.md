@@ -8,7 +8,7 @@
 
 > **textFieldSchema**(`extra?`): `ZodObject`\<\{ `value`: `ZodOptional`\<`ZodUnion`\<readonly \[`ZodString`, `ZodNumber`\]\>\>; \}, `$strip`\>
 
-Defined in: [packages/react/src/atoms/field-schemas.ts:12](https://github.com/Sitecore/content-sdk/blob/eb4a5a9ee099182eed23366c9fea12d5faf5c541/packages/react/src/atoms/field-schemas.ts#L12)
+Defined in: [packages/react/src/atoms/field-schemas.ts:12](https://github.com/Sitecore/content-sdk/blob/12c0a210ef65690d61f7ca0dbaa89ebf79d5ebb3/packages/react/src/atoms/field-schemas.ts#L12)
 
 Zod schema for a Sitecore Single-Line Text.
 Mirrors the Sitecore Text component (`Text.tsx` in `@sitecore-content-sdk/react`).
