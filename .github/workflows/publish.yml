@@ -70,18 +70,14 @@ jobs:
             echo "No API doc changes to commit"
           fi
 
-      - name: Creating .npmrc
+      - name: Configure publish registry auth
         run: |
-          NPM_REGISTRY="${NPM_REGISTRY%/}"
-          NPM_REGISTRY="${NPM_REGISTRY}/"
-          write_npmrc() {
-            {
-              echo "@sitecore-content-sdk:registry=https://$NPM_REGISTRY"
-              echo "registry=https://$NPM_REGISTRY"
-              echo "//$NPM_REGISTRY:_authToken=$NPM_TOKEN"
-            } > "$1"
-          }
-          write_npmrc "$GITHUB_WORKSPACE/.npmrc"
+          yarn config set npmScopes.sitecore-content-sdk.npmPublishRegistry "https://$NPM_REGISTRY"
+          yarn config set npmScopes.sitecore-content-sdk.npmRegistryServer "https://$NPM_REGISTRY"
+          yarn config set npmScopes.sitecore-content-sdk.npmAuthToken "$NPM_TOKEN"
+          yarn config set npmPublishRegistry "https://$NPM_REGISTRY"
+          yarn config set npmRegistryServer "https://$NPM_REGISTRY"
+          yarn config set npmAuthToken "$NPM_TOKEN"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
@@ -91,35 +87,79 @@ jobs:
         env:
           BRANCH_NAME: ${{ github.ref_name }}
         run: |
-          if [[ "$BRANCH_NAME" == release/* ]]; then
-            BRANCH_END="${BRANCH_NAME#release/}"
-            if [[ "$BRANCH_END" == 1.x.x ]]; then
-              RELEASE="NextJS v1.x hotfix"
-              NPM_TAG="ver1"
-            else
-              RELEASE="legacy version hotfix"
-              NPM_TAG="legacy"
-            fi
+          # Tag by release type, not just "is a release branch":
+          #  - dev, limited release (release/limited/*) and latest hotfix (release/hotfix/*)
+          #    all publish current packages -> `latest`
+          #  - the NextJS v1.x maintenance line -> `ver1`
+          #  - legacy maintenance branches (release/legacy/*) and any other release branch -> `legacy`
+          if [[ "$BRANCH_NAME" == release/limited/* || "$BRANCH_NAME" == release/hotfix/* ]]; then
+            NPM_TAG="latest"
+          elif [[ "$BRANCH_NAME" == release/1.x.x ]]; then
+            NPM_TAG="ver1"
+          elif [[ "$BRANCH_NAME" == release/legacy/* ]]; then
+            NPM_TAG="legacy"
           else
             NPM_TAG="latest"
-            RELEASE="latest release"
           fi
-          echo "release_text=$RELEASE" >> "$GITHUB_OUTPUT"
           echo "npm_tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
 
       - name: Prepare and Process Changesets Release
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          version: yarn csdk:prep-release
-          publish: yarn changeset:publish --tag ${{ steps.npm-tags.outputs.npm_tag }}
-          commit: '[release][ci] Version bump and changelog'
-          title: ${{ format('[csdk] {0}', steps.npm-tags.outputs.release_text) }}
+          version-script: yarn csdk:prep-release
+          publish-script: yarn changeset:publish --tag ${{ steps.npm-tags.outputs.npm_tag }}
+          commit-message: '[release][ci] Version bump and changelog'
+          pr-title: ${{ github.ref_name == 'dev' && '[csdk][release] full release' || format('[csdk][release] Limited release - {0}', github.ref_name) }}
+          github-token: ${{ steps.generate-token.outputs.token }}
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
+
+      # After a stable publish (this job runs only on dev and release/* branches), branch off a
+      # legacy maintenance line for any product (nextjs/angular) that just received a major bump:
+      # release/legacy/<product>/v<previous-major>.
+      - name: Create legacy product branches after major releases
+        if: steps.changesets.outputs.published == 'true'
+        env:
+          PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.publishedPackages }}
+        run: yarn csdk:create-legacy-branches
+
+      # Limited (release/limited/*) and hotfix (release/*-hotfix) releases publish from a side
+      # branch. Cherry-pick the resulting version-bump commit back onto dev so dev's versions and
+      # changelogs stay in sync. github.sha is the pushed release commit and is unaffected by the
+      # earlier "Generate API docs" commit that may sit on top of this branch.
+      - name: Cherry-pick release version bump to dev
+        if: steps.changesets.outputs.published == 'true' && (startsWith(github.ref_name, 'release/limited/') || startsWith(github.ref_name, 'release/hotfix/'))
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          RELEASE_SHA="${{ github.sha }}"
+          # A merge-commit release needs -m 1; a squash/rebase merge is single-parent.
+          if [ "$(git rev-list --parents -n 1 "$RELEASE_SHA" | wc -w)" -ge 3 ]; then
+            MAINLINE="-m 1"
+          else
+            MAINLINE=""
+          fi
+          git fetch origin dev
+          git checkout -B dev origin/dev
+          if git cherry-pick $MAINLINE "$RELEASE_SHA"; then
+            git push origin HEAD:dev
+            echo "✅ Cherry-picked $RELEASE_SHA onto dev."
+            exit 0
+          fi
+
+          # Conflicts: commit the conflicted state on a sync branch and open a PR so the
+          # conflict markers can be resolved and reviewed before landing on dev.
+          echo "⚠️ Cherry-pick conflicts; opening a PR to dev for manual resolution."
+          SYNC_BRANCH="chore/sync-${GITHUB_REF_NAME//\//-}-to-dev"
+          git add -A
+          GIT_EDITOR=true git cherry-pick --continue
+          git push -f origin "HEAD:refs/heads/$SYNC_BRANCH"
+          gh pr create --base dev --head "$SYNC_BRANCH" \
+            --title "[csdk] Sync $GITHUB_REF_NAME release to dev" \
+            --body "Automated cherry-pick of \`$RELEASE_SHA\` ($GITHUB_REF_NAME version bump) onto dev hit conflicts. Resolve the conflict markers in this PR before merging." \
+            || echo "A PR for $SYNC_BRANCH may already exist."
 
   canary-snapshot:
     runs-on: ubuntu-latest
@@ -147,11 +187,21 @@ jobs:
         env:
           BRANCH_NAME: ${{ github.ref_name }}
         run: |
+          # Canary prefix by release type, mirroring the stable dist-tag logic:
+          #  - betas keep their per-branch beta.<name> prefix
+          #  - limited release (release/limited/*)  -> canary-prerelease
+          #  - latest hotfix (release/hotfix/*)      -> canary-hotfix
+          #  - legacy lines (release/legacy/* etc.)  -> canary-legacy
+          #  - dev (and anything else)               -> canary
           if [[ "$BRANCH_NAME" == release/betas/* ]]; then
             BRANCH_END="${BRANCH_NAME#release/betas/}"
             PREFIX="beta.${BRANCH_END//\//-}"
-          elif [[ "$BRANCH_NAME" == release/* ]]; then
+          elif [[ "$BRANCH_NAME" == release/limited/* ]]; then
+            PREFIX="canary-prerelease"
+          elif [[ "$BRANCH_NAME" == release/hotfix/* ]]; then
             PREFIX="canary-hotfix"
+          elif [[ "$BRANCH_NAME" == release/legacy/* ]]; then
+            PREFIX="canary-legacy"
           else
             PREFIX="canary"
           fi
@@ -160,18 +210,14 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Creating .npmrc
+      - name: Configure publish registry auth
         run: |
-          NPM_REGISTRY="${NPM_REGISTRY%/}"
-          NPM_REGISTRY="${NPM_REGISTRY}/"
-          write_npmrc() {
-            {
-              echo "@sitecore-content-sdk:registry=https://$NPM_REGISTRY"
-              echo "registry=https://$NPM_REGISTRY"
-              echo "//$NPM_REGISTRY:_authToken=$NPM_TOKEN"
-            } > "$1"
-          }
-          write_npmrc "$GITHUB_WORKSPACE/.npmrc"
+          yarn config set npmScopes.sitecore-content-sdk.npmPublishRegistry "https://$NPM_REGISTRY"
+          yarn config set npmScopes.sitecore-content-sdk.npmRegistryServer "https://$NPM_REGISTRY"
+          yarn config set npmScopes.sitecore-content-sdk.npmAuthToken "$NPM_TOKEN"
+          yarn config set npmPublishRegistry "https://$NPM_REGISTRY"
+          yarn config set npmRegistryServer "https://$NPM_REGISTRY"
+          yarn config set npmAuthToken "$NPM_TOKEN"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}

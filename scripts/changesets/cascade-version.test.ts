@@ -44,11 +44,11 @@ vi.mock('@changesets/git', () => ({
 }));
 
 vi.mock('@changesets/read', () => ({
-  default: mocks.readChangesets,
+  readChangesets: mocks.readChangesets,
 }));
 
 vi.mock('@changesets/config', () => ({
-  read: mocks.readConfig,
+  readConfig: mocks.readConfig,
 }));
 
 vi.mock('@changesets/pre', () => ({
@@ -64,11 +64,11 @@ vi.mock('@changesets/get-dependents-graph', () => ({
 }));
 
 vi.mock('@changesets/assemble-release-plan', () => ({
-  default: mocks.assembleReleasePlan,
+  assembleReleasePlan: mocks.assembleReleasePlan,
 }));
 
 vi.mock('@changesets/apply-release-plan', () => ({
-  default: mocks.applyReleasePlan,
+  applyReleasePlan: mocks.applyReleasePlan,
 }));
 
 function mkPackages(names: string[]) {

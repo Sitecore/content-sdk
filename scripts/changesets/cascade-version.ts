@@ -21,11 +21,11 @@
 /* eslint-disable jsdoc/require-param */
 
 import { appendFileSync } from 'fs';
-import assembleReleasePlan from '@changesets/assemble-release-plan';
-import applyReleasePlan from '@changesets/apply-release-plan';
-import readChangesets from '@changesets/read';
+import { assembleReleasePlan } from '@changesets/assemble-release-plan';
+import { applyReleasePlan } from '@changesets/apply-release-plan';
+import { readChangesets } from '@changesets/read';
 import { getCommitsThatAddFiles, getCurrentCommitId } from '@changesets/git';
-import { read as readConfig } from '@changesets/config';
+import { readConfig } from '@changesets/config';
 import { readPreState } from '@changesets/pre';
 import { getPackages, Packages } from '@manypkg/get-packages';
 import { getDependentsGraph } from '@changesets/get-dependents-graph';

@@ -71,7 +71,7 @@ jobs:
       - name: Create release branch
         id: create-branch
         run: |
-          BRANCH_NAME="release/${{ steps.setup-gh-action.outputs.base_release }}-hotfix"
+          BRANCH_NAME="release/hotfix/${{ steps.setup-gh-action.outputs.base_release }}"
 
           if git ls-remote --heads origin "$BRANCH_NAME" | grep -q .; then
             echo "Hotfix branch $BRANCH_NAME already exists"
