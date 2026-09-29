@@ -1,4 +1,8 @@
-import { ComponentImport, ComponentMapTemplate, EnhancedComponentMapTemplate } from './templating';
+import type {
+  ComponentImport,
+  ComponentMapTemplate,
+  EnhancedComponentMapTemplate,
+} from './templating/component-builder';
 
 /**
  * @public

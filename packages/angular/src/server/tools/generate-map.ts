@@ -1,14 +1,16 @@
 import * as fs from 'node:fs';
 import * as path from 'path';
 import {
-  buildComponentMapContent,
-  prepareComponentsForMap,
+  toPascalCase,
   type EnhancedComponentMapTemplate,
   type GenerateMapArgs,
   type GenerateMapFunction,
 } from '@sitecore-content-sdk/content/tools';
-import { getComponentList } from '@sitecore-content-sdk/content/node-tools';
-import { toPascalCase } from '@sitecore-content-sdk/content/tools';
+import {
+  buildComponentMapContent,
+  getComponentList,
+  prepareComponentsForMap,
+} from '@sitecore-content-sdk/content/node-tools';
 
 export type AngularGenerateMapArgs = Omit<
   GenerateMapArgs,

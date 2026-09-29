@@ -1,6 +1,6 @@
 import { Page } from '@sitecore-content-sdk/content/client';
 import { ComponentRendering, Field, Item, RouteData } from '@sitecore-content-sdk/content/layout';
-import { ComponentType } from '@sitecore-content-sdk/content/tools';
+import type { ComponentType } from '@sitecore-content-sdk/content/tools';
 import { ComponentMap } from '../sharedTypes';
 
 // Re-export ComponentType to maintain API compatibility

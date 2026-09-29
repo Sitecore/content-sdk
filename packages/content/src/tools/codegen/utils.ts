@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import * as ts from 'typescript';
 import { debug, constants } from '@sitecore-content-sdk/core';
-import { buildVariantSiblingIndex, isVariantComponent } from '../templating/components';
+import { buildVariantSiblingIndex, isVariantComponent } from '../templating/component-builder';
 import { isBuiltin } from 'module';
 
 const { ERROR_MESSAGES } = constants;

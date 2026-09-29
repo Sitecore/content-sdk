@@ -38,6 +38,7 @@
 - [OpenGraphImageFieldValue](interfaces/OpenGraphImageFieldValue.md)
 - [PageMetadataFields](interfaces/PageMetadataFields.md)
 - [PlaceholderData](interfaces/PlaceholderData.md)
+- [ResolvedPageMetadataFields](interfaces/ResolvedPageMetadataFields.md)
 - [RichTextField](interfaces/RichTextField.md)
 - [RouteData](interfaces/RouteData.md)
 - [TextField](interfaces/TextField.md)
@@ -46,6 +47,7 @@
 
 - [GenericFieldValue](type-aliases/GenericFieldValue.md)
 - [LayoutServiceConfig](type-aliases/LayoutServiceConfig.md)
+- [PageMetadataRouteFields](type-aliases/PageMetadataRouteFields.md)
 - [PlaceholdersData](type-aliases/PlaceholdersData.md)
 - [RouteOptions](type-aliases/RouteOptions.md)
 
@@ -72,4 +74,5 @@
 - [getRenderingParamString](functions/getRenderingParamString.md)
 - [isDynamicPlaceholder](functions/isDynamicPlaceholder.md)
 - [isFieldValueEmpty](functions/isFieldValueEmpty.md)
+- [resolvePageMetadataFields](functions/resolvePageMetadataFields.md)
 - [rewriteEdgeHostInResponse](functions/rewriteEdgeHostInResponse.md)

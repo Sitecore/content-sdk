@@ -10,4 +10,4 @@ export {
   defaultMapTemplate as defaultImportMapTemplate,
   ModuleExports,
 } from './codegen/import-map';
-export { getComponentList } from './templating';
+export { getComponentList, prepareComponentsForMap, buildComponentMapContent } from './templating';
