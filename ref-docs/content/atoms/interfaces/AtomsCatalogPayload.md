@@ -6,7 +6,7 @@
 
 # Interface: AtomsCatalogPayload
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:57](https://github.com/Sitecore/content-sdk/blob/12c0a210ef65690d61f7ca0dbaa89ebf79d5ebb3/packages/content/src/atoms/design-library-bridge/types.ts#L57)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:57](https://github.com/Sitecore/content-sdk/blob/6c65c39153c1345166224f0f46be85f70f13c595/packages/content/src/atoms/design-library-bridge/types.ts#L57)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Payload of the atoms:catalog event sent to Design Studio.
 
 > **actions**: [`ActionCatalogEntry`](ActionCatalogEntry.md)[]
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:61](https://github.com/Sitecore/content-sdk/blob/12c0a210ef65690d61f7ca0dbaa89ebf79d5ebb3/packages/content/src/atoms/design-library-bridge/types.ts#L61)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:61](https://github.com/Sitecore/content-sdk/blob/6c65c39153c1345166224f0f46be85f70f13c595/packages/content/src/atoms/design-library-bridge/types.ts#L61)
 
 Serialized action entries.
 
@@ -28,6 +28,6 @@ Serialized action entries.
 
 > **components**: [`AtomCatalogEntry`](AtomCatalogEntry.md)[]
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:59](https://github.com/Sitecore/content-sdk/blob/12c0a210ef65690d61f7ca0dbaa89ebf79d5ebb3/packages/content/src/atoms/design-library-bridge/types.ts#L59)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:59](https://github.com/Sitecore/content-sdk/blob/6c65c39153c1345166224f0f46be85f70f13c595/packages/content/src/atoms/design-library-bridge/types.ts#L59)
 
 Serialized component entries.

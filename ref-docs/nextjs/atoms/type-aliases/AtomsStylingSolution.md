@@ -8,6 +8,6 @@
 
 > **AtomsStylingSolution** = `"tailwind"` \| `"inline-css"`
 
-Defined in: content/types/atoms/types.d.ts:40
+Defined in: content/types/atoms/types.d.ts:42
 
 Styling solution used to style the app.
