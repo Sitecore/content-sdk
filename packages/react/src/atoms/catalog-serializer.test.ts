@@ -82,6 +82,7 @@ describe('serializeCatalog()', () => {
           allowedChildren: ['Button', 'Text'],
           allowedParents: ['Column', 'Row'],
           slots: ['header', 'body', 'footer'],
+          legacy: true,
         },
       },
       actions: {},
@@ -103,6 +104,36 @@ describe('serializeCatalog()', () => {
     expect(comp.allowedParents).to.deep.equal(['Column', 'Row']);
     expect(comp.example).to.deep.equal({ label: 'Hello world' });
     expect(comp.version).to.equal('0.3.0');
+    expect(comp.legacy).to.equal(true);
+  });
+
+  it('defaults legacy to false when not set on the component', () => {
+    const catalog = defineAtomsCatalog({
+      components: {
+        Text: { props: z.object({ content: z.string() }), description: 'A text node' },
+      },
+      actions: {},
+    });
+
+    const [comp] = serializeCatalog(catalog).components;
+
+    expect(comp.legacy).to.equal(false);
+  });
+
+  it('marks only the components declared as legacy', () => {
+    const catalog = defineAtomsCatalog({
+      components: {
+        Current: { props: z.object({}), description: 'Current' },
+        Retired: { props: z.object({}), description: 'Retired', legacy: true },
+      },
+      actions: {},
+    });
+
+    const legacyByName = Object.fromEntries(
+      serializeCatalog(catalog).components.map((c) => [c.name, c.legacy])
+    );
+
+    expect(legacyByName).to.deep.equal({ Current: false, Retired: true });
   });
 
   it('serializes multiple components in catalog key order', () => {

@@ -21,6 +21,8 @@ export interface AtomCatalogComponentEntry {
   allowedParents?: string[];
   /** Example prop values for AI prompt generation. Auto-generated from Zod schema if omitted. */
   example?: unknown;
+  /** Whether the component is excluded from new AI component generations. */
+  legacy: boolean;
 }
 
 /**
@@ -68,6 +70,12 @@ export interface SitecoreComponentMeta {
   allowedChildren?: string[];
   /** Component names that this component is allowed to be placed inside. */
   allowedParents?: string[];
+  /**
+   * Marks the component as legacy so Design Studio excludes it from new AI component
+   * generations. Existing usages are unaffected.
+   * @default false
+   */
+  legacy?: boolean;
 }
 
 /**
