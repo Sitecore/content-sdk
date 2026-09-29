@@ -18,24 +18,19 @@
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
 
-import { realpathSync, unlinkSync } from 'fs';
-import { fileURLToPath } from 'url';
+import { unlinkSync } from 'fs';
 import path from 'path';
 import { readChangesets } from '@changesets/read';
 import { writeChangeset } from '@changesets/write';
 import { readConfig } from '@changesets/config';
 import { getPackages } from '@manypkg/get-packages';
+import { isMainModule } from './utils';
 
 /** Minimal shape of a parsed changeset needed to detect and split multi-package entries. */
 export interface ChangesetLike {
   id: string;
   summary: string;
   releases: { name: string; type: string }[];
-}
-
-/** Changesets that release more than one package (i.e. violate one-package-per-file). */
-export function findMultiPackageChangesets<T extends { releases: unknown[] }>(changesets: T[]): T[] {
-  return changesets.filter((cs) => cs.releases.length > 1);
 }
 
 /** Splits one multi-package changeset into N single-package changeset inputs, keeping the summary. */
@@ -50,18 +45,20 @@ async function main(): Promise<void> {
   const checkOnly = process.argv.includes('--check');
   const cwd = process.cwd();
 
-  console.log(`📦 Split changesets: start${checkOnly ? ' (check only)' : dryRun ? ' (dry run)' : ''}...`);
+  console.log(
+    ` Split changesets: start${checkOnly ? ' (check only)' : dryRun ? ' (dry run)' : ''}...`
+  );
 
   const packages = await getPackages(cwd);
   const config = await readConfig(cwd, packages);
 
-  const changesets = await readChangesets(cwd);
+  const changesets = (await readChangesets(cwd)) as ChangesetLike[];
   if (changesets.length === 0) {
     console.log('No pending changesets found.');
     return;
   }
 
-  const multiPackage = findMultiPackageChangesets(changesets);
+  const multiPackage = changesets.filter((cs) => cs.releases.length > 1);
   if (multiPackage.length === 0) {
     console.log('✅ All changesets target a single package.');
     return;
@@ -69,7 +66,7 @@ async function main(): Promise<void> {
 
   if (checkOnly) {
     console.error(
-      `\n❌ ${multiPackage.length} changeset(s) release more than one package. ` +
+      `\n ${multiPackage.length} changeset(s) release more than one package. ` +
         `Each changeset must target exactly one package.\n`
     );
     for (const cs of multiPackage) {
@@ -81,7 +78,7 @@ async function main(): Promise<void> {
 
   let createdCount = 0;
   for (const changeset of multiPackage) {
-    console.log(`\n✂️  ${changeset.id}.md → ${changeset.releases.length} single-package changesets:`);
+    console.log(`\n ${changeset.id}.md → ${changeset.releases.length} single-package changesets:`);
 
     for (const single of splitChangeset(changeset)) {
       const [release] = single.releases;
@@ -102,17 +99,9 @@ async function main(): Promise<void> {
   }
 
   console.log(
-    `\n${dryRun ? '🔍 [dry-run] Would create' : '✅ Created'} ${createdCount} single-package ` +
+    `\n${dryRun ? '[dry-run] Would create' : 'Created'} ${createdCount} single-package ` +
       `changeset(s) from ${multiPackage.length} multi-package file(s).`
   );
-}
-
-function isMainModule(): boolean {
-  try {
-    return !!process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url));
-  } catch {
-    return false;
-  }
 }
 
 if (isMainModule()) {
@@ -123,3 +112,4 @@ if (isMainModule()) {
     process.exit(1);
   });
 }
+

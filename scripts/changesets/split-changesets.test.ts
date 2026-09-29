@@ -1,28 +1,11 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect } from 'vitest';
-import { findMultiPackageChangesets, splitChangeset, type ChangesetLike } from './split-changesets';
+import { splitChangeset, type ChangesetLike } from './split-changesets';
 
 const cs = (id: string, releases: { name: string; type: string }[]): ChangesetLike => ({
   id,
   summary: `summary for ${id}`,
   releases,
-});
-
-describe('findMultiPackageChangesets', () => {
-  it('returns only changesets that release more than one package', () => {
-    const single = cs('single', [{ name: '@x/a', type: 'patch' }]);
-    const multi = cs('multi', [
-      { name: '@x/a', type: 'minor' },
-      { name: '@x/b', type: 'patch' },
-    ]);
-    const none = cs('none', []);
-
-    expect(findMultiPackageChangesets([single, multi, none])).toEqual([multi]);
-  });
-
-  it('returns an empty array when all changesets are single-package', () => {
-    expect(findMultiPackageChangesets([cs('a', [{ name: '@x/a', type: 'patch' }])])).toEqual([]);
-  });
 });
 
 describe('splitChangeset', () => {

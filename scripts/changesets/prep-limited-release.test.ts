@@ -34,8 +34,8 @@ describe('resolveIgnoreList', () => {
     expect(resolveIgnoreList(PUBLISHABLE, [...PUBLISHABLE])).toEqual([]);
   });
 
-  it('throws when nothing is selected', () => {
-    expect(() => resolveIgnoreList(PUBLISHABLE, [])).toThrow(/No packages selected/);
+  it('ignores every publishable package when nothing is selected', () => {
+    expect(resolveIgnoreList(PUBLISHABLE, [])).toEqual(PUBLISHABLE);
   });
 
   it('throws and lists the offenders when a selected package is not publishable', () => {

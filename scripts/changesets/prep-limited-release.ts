@@ -17,12 +17,20 @@
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
 
-import { readFileSync, realpathSync, writeFileSync } from 'fs';
-import { fileURLToPath } from 'url';
+import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import { getPackages } from '@manypkg/get-packages';
+import { isMainModule } from './utils';
 
 const CONFIG_RELATIVE_PATH = '.changeset/config.json';
+
+interface PackageLike {
+  packageJson: {
+    name: string;
+    releases: string[];
+    private: boolean;
+  };
+}
 
 export function parseList(raw: string | undefined): string[] {
   if (!raw) return [];
@@ -36,7 +44,7 @@ function getSelectedPackages(): string[] {
   const flagIndex = process.argv.indexOf('--select');
   const fromFlag = flagIndex !== -1 ? process.argv[flagIndex + 1] : undefined;
   const raw = fromFlag ?? process.env.RELEASE_PACKAGES;
-  return Array.from(new Set(parseList(raw)));
+  return parseList(raw);
 }
 
 /**
@@ -44,11 +52,6 @@ function getSelectedPackages(): string[] {
  * not selected, sorted. Throws if nothing is selected or if a selected name is not publishable.
  */
 export function resolveIgnoreList(publishable: string[], selected: string[]): string[] {
-  if (selected.length === 0) {
-    throw new Error(
-      'No packages selected. Pass --select "@sitecore-content-sdk/*" and other packages or set RELEASE_PACKAGES env.'
-    );
-  }
   const publishableSet = new Set(publishable);
   const unknown = selected.filter((name) => !publishableSet.has(name));
   if (unknown.length > 0) {
@@ -58,7 +61,7 @@ export function resolveIgnoreList(publishable: string[], selected: string[]): st
     );
   }
   const selectedSet = new Set(selected);
-  return publishable.filter((name) => !selectedSet.has(name)).sort();
+  return publishable.filter((name) => !selectedSet.has(name));
 }
 
 async function main(): Promise<void> {
@@ -68,8 +71,13 @@ async function main(): Promise<void> {
   console.log('📦 Set limited-release ignore list: start...');
 
   const selected = getSelectedPackages();
+  if (selected.length === 0) {
+    throw new Error(
+      'No packages selected. Pass --select "@sitecore-content-sdk/*" and other packages or set RELEASE_PACKAGES env.'
+    );
+  }
 
-  const { packages } = await getPackages(cwd);
+  const { packages } = (await getPackages(cwd)) as { packages: PackageLike[] };
   const publishable = packages
     .filter((pkg) => !pkg.packageJson.private)
     .map((pkg) => pkg.packageJson.name);
@@ -97,14 +105,6 @@ async function main(): Promise<void> {
 
   writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`, 'utf8');
   console.log(`\n✅ Updated ${CONFIG_RELATIVE_PATH} with ${ignore.length} ignored package(s).`);
-}
-
-function isMainModule(): boolean {
-  try {
-    return !!process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url));
-  } catch {
-    return false;
-  }
 }
 
 if (isMainModule()) {
