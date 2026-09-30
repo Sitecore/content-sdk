@@ -70,18 +70,6 @@ jobs:
             echo "No API doc changes to commit"
           fi
 
-      - name: Configure publish registry auth
-        run: |
-          yarn config set npmScopes.sitecore-content-sdk.npmPublishRegistry "https://$NPM_REGISTRY"
-          yarn config set npmScopes.sitecore-content-sdk.npmRegistryServer "https://$NPM_REGISTRY"
-          yarn config set npmScopes.sitecore-content-sdk.npmAuthToken "$NPM_TOKEN"
-          yarn config set npmPublishRegistry "https://$NPM_REGISTRY"
-          yarn config set npmRegistryServer "https://$NPM_REGISTRY"
-          yarn config set npmAuthToken "$NPM_TOKEN"
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
-
       - name: NPM tags and version
         id: npm-tags
         env:
@@ -112,8 +100,10 @@ jobs:
           commit-message: '[release][ci] Version bump and changelog'
           pr-title: ${{ format('[csdk] {0}', steps.npm-tags.outputs.release_text) }}
           github-token: ${{ steps.generate-token.outputs.token }}
+          push-with-git-cli: true
         env:
-          npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          YARN_NPM_REGISTRY_SERVER: ${{secrets.NPM_REGISTRY}} # ensure registry is a fully defined URL with a protocol specified
 
   canary-snapshot:
     runs-on: ubuntu-latest
@@ -154,18 +144,6 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Configure publish registry auth
-        run: |
-          yarn config set npmScopes.sitecore-content-sdk.npmPublishRegistry "https://$NPM_REGISTRY"
-          yarn config set npmScopes.sitecore-content-sdk.npmRegistryServer "https://$NPM_REGISTRY"
-          yarn config set npmScopes.sitecore-content-sdk.npmAuthToken "$NPM_TOKEN"
-          yarn config set npmPublishRegistry "https://$NPM_REGISTRY"
-          yarn config set npmRegistryServer "https://$NPM_REGISTRY"
-          yarn config set npmAuthToken "$NPM_TOKEN"
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
-
       - name: Pre-release canary version bump and snapshot cascade
         id: canary_snapshot
         run: yarn changeset:cascade-snapshot-version
@@ -180,7 +158,8 @@ jobs:
         if: steps.canary_snapshot.outputs.snapshot_publish == 'true'
         env:
           CANARY_PREFIX: ${{ steps.canary-prefix.outputs.prefix }}
-          npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          YARN_NPM_REGISTRY_SERVER: ${{secrets.NPM_REGISTRY}} # ensure registry is a fully defined URL with a protocol specified
         run: |
           yarn build
           yarn changeset:publish --tag $CANARY_PREFIX --no-git-tag
