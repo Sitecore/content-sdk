@@ -6,5 +6,6 @@ export {
   ScaffoldTemplate,
   ComponentTemplateType,
   DeepRequired,
+  ThemingMode,
 } from './models';
 export { defineConfig } from './define-config';

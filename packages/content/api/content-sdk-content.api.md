@@ -713,6 +713,9 @@ const getSrcSet: (url: string, srcSet: Array<{
     [key: string]: string | number | undefined;
 }, mediaUrlPrefix?: RegExp) => string;
 
+// @public
+export const getThemingStylesheetLinks: (input: ThemingStylesheetLinksOptions) => HTMLLink[];
+
 // @internal
 export const GRAPHQL_LAYOUT_QUERY_NAME = "ContentSdkLayoutQuery";
 
@@ -772,6 +775,9 @@ export const isEditorActive: () => boolean;
 
 // @public
 export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field> | null | undefined): field is null | undefined;
+
+// @public
+export const isSiteThemingEnabled: (mode: ThemingMode) => boolean;
 
 // @public
 export interface Item {
@@ -1338,6 +1344,9 @@ export type SitecoreConfigInput = {
     };
     rewriteMediaUrls?: boolean | ((value: string) => string);
     disableCodeGeneration?: boolean;
+    theming?: {
+        mode?: ThemingMode;
+    };
 };
 
 // @public
@@ -1452,6 +1461,23 @@ export type StaticPath = {
 // @internal
 const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: string) => void;
 
+// @public
+export const THEMING_BODY_CLASS_NAME = "sc-ds-theme";
+
+// @public
+export const THEMING_DELIVERY_CHANNEL = "web-css";
+
+// @public
+export type ThemingMode = 'none' | 'site';
+
+// @public
+export type ThemingStylesheetLinksOptions = {
+    mode: ThemingMode;
+    siteName?: string;
+    clientContextId?: string;
+    sitecoreEdgeUrl?: string;
+};
+
 // @internal
 export const updateComponent: (component: ComponentRendering<ComponentFields>, fields: ComponentFields | undefined, params: ComponentParams | undefined) => void;
 
@@ -1485,7 +1511,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:68:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:69:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:115:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal

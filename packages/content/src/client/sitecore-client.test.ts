@@ -40,6 +40,7 @@ describe('SitecoreClient', () => {
     layout: { formatLayoutQuery: sandbox.stub() },
     dictionary: { caching: { enabled: true, timeout: 60000 } },
     disableCodeGeneration: false,
+    theming: { mode: 'none' as const },
   };
 
   let sitecoreClient = new SitecoreClient(defaultInitOptions);
@@ -1577,6 +1578,82 @@ describe('SitecoreClient', () => {
       });
 
       expect(result).to.deep.equal([]);
+    });
+
+    it('should not add design-token theming links when mode is site but site name is unknown', () => {
+      const client = new SitecoreClient({
+        ...defaultInitOptions,
+        theming: { mode: 'site' },
+      });
+
+      const result = client.getHeadLinks(layoutData, {
+        enableStyles: false,
+        enableThemes: false,
+      });
+
+      expect(result).to.deep.equal([]);
+    });
+
+    it('should not add design-token theming links when client context id is missing', () => {
+      const client = new SitecoreClient({
+        ...defaultInitOptions,
+        api: {
+          ...defaultInitOptions.api,
+          edge: {
+            ...defaultInitOptions.api.edge,
+            clientContextId: '',
+          },
+        },
+        theming: { mode: 'site' },
+      });
+      const themedLayout = {
+        ...layoutData,
+        sitecore: {
+          ...layoutData.sitecore,
+          context: {
+            site: {
+              name: 'example',
+            },
+          },
+        },
+      };
+
+      const result = client.getHeadLinks(themedLayout, {
+        enableStyles: false,
+        enableThemes: false,
+      });
+
+      expect(result).to.deep.equal([]);
+    });
+
+    it('should add the site theming stylesheet independently from Design Library themes', () => {
+      const client = new SitecoreClient({
+        ...defaultInitOptions,
+        theming: { mode: 'site' },
+      });
+      const themedLayout = {
+        ...layoutData,
+        sitecore: {
+          ...layoutData.sitecore,
+          context: {
+            site: {
+              name: 'example',
+            },
+          },
+        },
+      };
+
+      const result = client.getHeadLinks(themedLayout, {
+        enableStyles: false,
+        enableThemes: false,
+      });
+
+      expect(result).to.deep.equal([
+        {
+          href: 'https://edge.example.com/authoring/api/v1/themes/delivery/example/web-css?contextID=client-context-id',
+          rel: 'stylesheet',
+        },
+      ]);
     });
   });
 

@@ -1,17 +1,19 @@
-import './globals.css';
-import scConfig from 'sitecore.config';
+import { Html, Head, Main, NextScript } from 'next/document';
 import { isSiteThemingEnabled, THEMING_BODY_CLASS_NAME } from '@sitecore-content-sdk/nextjs';
+import scConfig from 'sitecore.config';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function Document() {
   return (
-    <html lang="en">
+    <Html>
+      <Head />
       <body
         className={
           isSiteThemingEnabled(scConfig.theming.mode) ? THEMING_BODY_CLASS_NAME : undefined
         }
       >
-        {children}
+        <Main />
+        <NextScript />
       </body>
-    </html>
+    </Html>
   );
 }

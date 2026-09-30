@@ -1,6 +1,7 @@
 import { EditingConfigMiddleware } from '@sitecore-content-sdk/nextjs/editing';
 import components from '.sitecore/component-map';
 import metadata from '.sitecore/metadata.json';
+import scConfig from 'sitecore.config';
 
 /**
  * This Next.js API route is used by Sitecore Editor in XM Cloud
@@ -10,6 +11,7 @@ import metadata from '.sitecore/metadata.json';
 const handler = new EditingConfigMiddleware({
   components,
   metadata,
+  theming: scConfig.theming,
 }).getHandler();
 
 export default handler;

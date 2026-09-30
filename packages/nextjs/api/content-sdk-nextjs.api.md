@@ -115,6 +115,7 @@ import { ImportMapImport } from '@sitecore-content-sdk/react';
 import { IncomingHttpHeaders } from 'http';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { isEditorActive } from '@sitecore-content-sdk/content/editing';
+import { isSiteThemingEnabled } from '@sitecore-content-sdk/content/layout';
 import { Item } from '@sitecore-content-sdk/content/layout';
 import { JSX as JSX_2 } from 'react';
 import { LayoutService } from '@sitecore-content-sdk/content/layout';
@@ -203,6 +204,8 @@ import { Text as Text_2 } from '@sitecore-content-sdk/react';
 import { TextField } from '@sitecore-content-sdk/react';
 import { TextFieldSchema } from '@sitecore-content-sdk/react';
 import { textFieldSchema } from '@sitecore-content-sdk/react';
+import { THEMING_BODY_CLASS_NAME } from '@sitecore-content-sdk/content/layout';
+import { ThemingMode } from '@sitecore-content-sdk/content/config';
 import { useBoundProp } from '@sitecore-content-sdk/react';
 import { useSitecore } from '@sitecore-content-sdk/react';
 import { withAppPlaceholder } from '@sitecore-content-sdk/react';
@@ -506,6 +509,9 @@ export class EditingConfigMiddleware {
 export type EditingConfigMiddlewareConfig = {
     components: ComponentMap<NextjsContentSdkComponent>;
     metadata: Metadata;
+    theming?: {
+        mode?: ThemingMode;
+    };
 };
 
 // Warning: (ae-forgotten-export) The symbol "RenderMiddlewareBase" needs to be exported by the entry point api-surface.d.ts
@@ -707,6 +713,8 @@ export { isEditorActive }
 
 // @public
 export const isServerSidePropsContext: (context: GetServerSidePropsContext | GetStaticPropsContext) => context is GetServerSidePropsContext;
+
+export { isSiteThemingEnabled }
 
 // @public
 export function isSuccessfulProxyExecution<SuccessfulProxyType = unknown, T extends ProxiesContextMapValue | undefined = ProxiesContextMapValue | undefined>(info: T): info is T & SuccessfulProxyType;
@@ -1203,6 +1211,8 @@ export { TextField }
 export { TextFieldSchema }
 
 export { textFieldSchema }
+
+export { THEMING_BODY_CLASS_NAME }
 
 export { useBoundProp }
 

@@ -58,6 +58,9 @@ export const getFallbackConfig = (): SitecoreConfig => ({
   },
   rewriteMediaUrls: false,
   disableCodeGeneration: false,
+  theming: {
+    mode: 'none',
+  },
 });
 
 /**
