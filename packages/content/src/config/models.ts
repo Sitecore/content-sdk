@@ -223,7 +223,7 @@ export type SitecoreConfigInput = {
     /**
      * Theming mode.
      * `none` (default) adds no theme links.
-     * `site` adds the site-level design-token stylesheet when a site id is available.
+     * `site` adds the site-level design-token stylesheet when site name and client context id are available.
      * @default 'none'
      */
     mode?: ThemingMode;

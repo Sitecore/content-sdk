@@ -39,11 +39,6 @@ export interface LayoutServiceContext {
   visitorIdentificationTimestamp?: number;
   site?: {
     name?: string;
-    /**
-     * Site identifier used for design-token theming (`/theming/<site-id>`) when present.
-     * Source and format are pending confirmation.
-     */
-    id?: string;
   };
   renderingType?: RenderingType;
   clientScripts?: string[];

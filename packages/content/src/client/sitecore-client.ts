@@ -425,12 +425,12 @@ export class SitecoreClient implements BaseSitecoreClient {
       headLinks.push(...getDesignLibraryStylesheetLinks(layoutData, contextId, edgeUrlForStyles));
     }
 
-    const siteId = layoutData.sitecore.context.site?.id;
     headLinks.push(
       ...getThemingStylesheetLinks({
         mode: this.initOptions.theming?.mode ?? 'none',
-        siteId,
-        sitecoreEdgeUrl: edgeUrlForStyles,
+        siteName: layoutData.sitecore.context.site?.name,
+        clientContextId,
+        sitecoreEdgeUrl: this.initOptions.api.edge.edgeUrl || undefined,
       })
     );
 

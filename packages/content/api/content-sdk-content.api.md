@@ -834,7 +834,6 @@ export interface LayoutServiceContext {
     // (undocumented)
     site?: {
         name?: string;
-        id?: string;
     };
     // (undocumented)
     visitorIdentificationTimestamp?: number;
@@ -1460,12 +1459,16 @@ const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: strin
 export const THEMING_BODY_CLASS_NAME = "sc-ds-theme";
 
 // @public
+export const THEMING_DELIVERY_CHANNEL = "web-css";
+
+// @public
 export type ThemingMode = 'none' | 'site';
 
 // @public
 export type ThemingStylesheetLinksOptions = {
     mode: ThemingMode;
-    siteId?: string;
+    siteName?: string;
+    clientContextId?: string;
     sitecoreEdgeUrl?: string;
 };
 
