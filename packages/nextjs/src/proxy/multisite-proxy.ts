@@ -118,7 +118,6 @@ export class MultisiteProxy extends ProxyBase {
       } else {
         // Site name can be forced by query string parameter or cookie
         // 'site' is provided in draft mode by the App Router editing render route handler
-        // TODO: Use sc_site instead in the next major release
         siteName =
           req.nextUrl.searchParams.get(SITE_KEY) ||
           (this.isAppRouter(res) && this.isPreview(req) && req.nextUrl.searchParams.get('site')) ||
