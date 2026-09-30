@@ -1,7 +1,11 @@
 {
-  "name": "@sitecore-content-sdk/nextjs-templates",
-  "version": "2.4.0",
-  "description": "Next.js scaffolding templates and initializers for the Sitecore Content SDK create-content-sdk-app CLI",
+  "name": "@sitecore-content-sdk/angular-templates",
+  "version": "1.0.0",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "description": "Angular scaffolding templates and initializers for the Sitecore Content SDK create-content-sdk-app CLI",
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
   "scripts": {
@@ -18,7 +22,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Sitecore/content-sdk.git",
-    "directory": "csdk-templates/nextjs-templates"
+    "directory": "csdk-templates/angular-templates"
   },
   "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
   "author": "Sitecore Corporation",
@@ -34,11 +38,8 @@
     "inquirer": "^8.2.4"
   },
   "devDependencies": {
-    "@sitecore-content-sdk/analytics-core": "^2.1.2",
+    "@sitecore-content-sdk/angular": "^1.0.0",
     "@sitecore-content-sdk/cli": "^2.3.0",
-    "@sitecore-content-sdk/events": "^2.1.2",
-    "@sitecore-content-sdk/nextjs": "^2.4.0",
-    "@sitecore-content-sdk/personalize": "^2.1.0",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@types/chai": "^5.2.2",
     "@types/fs-extra": "^11.0.4",
