@@ -3,9 +3,9 @@ import { expect } from 'chai';
 import fs from 'fs';
 import path from 'path';
 import sinon from 'sinon';
-import { resolveFrameworkPackageName } from './framework-package';
+import { resolveContentSdkPackageNames } from './framework-package';
 
-describe('resolveFrameworkPackageName', () => {
+describe('resolveContentSdkPackageNames', () => {
   const appPath = '/app';
 
   const stubPackageJson = (contents: string) => {
@@ -20,7 +20,7 @@ describe('resolveFrameworkPackageName', () => {
   it('should return undefined when the folder has no package.json', () => {
     sinon.stub(fs, 'existsSync').returns(false);
 
-    expect(resolveFrameworkPackageName(appPath)).to.be.undefined;
+    expect(resolveContentSdkPackageNames(appPath)).to.be.undefined;
     expect((fs.existsSync as sinon.SinonStub).calledWith(path.resolve(appPath, 'package.json'))).to
       .be.true;
   });
@@ -28,33 +28,54 @@ describe('resolveFrameworkPackageName', () => {
   it('should return undefined when package.json cannot be parsed', () => {
     stubPackageJson('not json');
 
-    expect(resolveFrameworkPackageName(appPath)).to.be.undefined;
+    expect(resolveContentSdkPackageNames(appPath)).to.be.undefined;
   });
 
-  it('should return undefined when no framework package is referenced', () => {
+  it('should return an empty list when no Content SDK package is referenced', () => {
     stubPackageJson(JSON.stringify({ dependencies: { next: '^16.2.0' } }));
 
-    expect(resolveFrameworkPackageName(appPath)).to.be.undefined;
+    expect(resolveContentSdkPackageNames(appPath)).to.deep.equal([]);
   });
 
-  it('should return the framework package from dependencies', () => {
+  it('should return the Content SDK package from dependencies', () => {
     stubPackageJson(JSON.stringify({ dependencies: { '@sitecore-content-sdk/nextjs': '^2.4.0' } }));
 
-    expect(resolveFrameworkPackageName(appPath)).to.equal('@sitecore-content-sdk/nextjs');
+    expect(resolveContentSdkPackageNames(appPath)).to.deep.equal(['@sitecore-content-sdk/nextjs']);
   });
 
-  it('should return the framework package from devDependencies', () => {
+  it('should return the Content SDK package from devDependencies', () => {
     stubPackageJson(
       JSON.stringify({ devDependencies: { '@sitecore-content-sdk/angular': '^1.0.0' } })
     );
 
-    expect(resolveFrameworkPackageName(appPath)).to.equal('@sitecore-content-sdk/angular');
+    expect(resolveContentSdkPackageNames(appPath)).to.deep.equal(['@sitecore-content-sdk/angular']);
+  });
+
+  it('should return every Content SDK package the app depends on', () => {
+    stubPackageJson(
+      JSON.stringify({
+        dependencies: {
+          '@sitecore-content-sdk/nextjs': '^2.4.0',
+          '@sitecore-content-sdk/events': '^2.1.0',
+          next: '^16.2.0',
+        },
+        devDependencies: {
+          '@sitecore-content-sdk/cli': '^2.3.0',
+        },
+      })
+    );
+
+    expect(resolveContentSdkPackageNames(appPath)).to.deep.equal([
+      '@sitecore-content-sdk/cli',
+      '@sitecore-content-sdk/events',
+      '@sitecore-content-sdk/nextjs',
+    ]);
   });
 
   it('should default to the current working directory', () => {
     stubPackageJson(JSON.stringify({ dependencies: { '@sitecore-content-sdk/nextjs': '^2.4.0' } }));
 
-    expect(resolveFrameworkPackageName()).to.equal('@sitecore-content-sdk/nextjs');
+    expect(resolveContentSdkPackageNames()).to.deep.equal(['@sitecore-content-sdk/nextjs']);
     expect(
       (fs.existsSync as sinon.SinonStub).calledWith(path.resolve(process.cwd(), 'package.json'))
     ).to.be.true;

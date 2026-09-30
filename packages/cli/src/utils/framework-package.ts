@@ -3,23 +3,31 @@ import path from 'path';
 import { createRequire } from 'module';
 
 /**
- * Content SDK framework packages that own an experimental features catalog.
+ * Scope of Content SDK packages that may expose an `./experimental` catalog.
+ * Product packages such as `nextjs` and `angular` own catalogs. Other packages in the
+ * scope are probed and skipped when they do not export one.
  */
-export const FRAMEWORK_PACKAGES = ['@sitecore-content-sdk/nextjs', '@sitecore-content-sdk/angular'];
+const CONTENT_SDK_PACKAGE_SCOPE = '@sitecore-content-sdk/';
 
 /**
- * Determines which Content SDK framework package an app depends on by reading its `package.json`.
+ * Reads the Content SDK packages an app depends on.
+ * Every direct `@sitecore-content-sdk/*` dependency is included, so a new product
+ * package is picked up without updating a curated framework list.
  * @param {string} [appPath] - Root directory of the Content SDK app. Defaults to the current working directory.
- * @returns {string | undefined} The framework package name, or `undefined` when the directory is not a Content SDK app.
+ * @returns {string[] | undefined} Sorted package names, an empty list when the app has none, or
+ * `undefined` when the directory has no readable `package.json`.
  */
-export function resolveFrameworkPackageName(appPath = process.cwd()): string | undefined {
+export function resolveContentSdkPackageNames(appPath = process.cwd()): string[] | undefined {
   const packageJsonPath = path.resolve(appPath, 'package.json');
 
   if (!fs.existsSync(packageJsonPath)) {
     return undefined;
   }
 
-  let packageJson: { dependencies?: object; devDependencies?: object };
+  let packageJson: {
+    dependencies?: Record<string, unknown>;
+    devDependencies?: Record<string, unknown>;
+  };
 
   try {
     packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
@@ -29,7 +37,9 @@ export function resolveFrameworkPackageName(appPath = process.cwd()): string | u
 
   const dependencies = { ...packageJson.devDependencies, ...packageJson.dependencies };
 
-  return FRAMEWORK_PACKAGES.find((name) => name in dependencies);
+  return Object.keys(dependencies)
+    .filter((name) => name.startsWith(CONTENT_SDK_PACKAGE_SCOPE))
+    .sort();
 }
 
 /**
@@ -44,4 +54,21 @@ export function loadAppModule<T>(specifier: string, appPath = process.cwd()): T 
   const appRequire = createRequire(path.resolve(appPath, 'package.json'));
 
   return appRequire(specifier) as T;
+}
+
+/**
+ * Reports whether a module can be resolved from the app without loading it.
+ * @param {string} specifier - Module specifier to resolve, e.g. `@sitecore-content-sdk/cli`.
+ * @param {string} [appPath] - Root directory of the Content SDK app. Defaults to the current working directory.
+ * @returns {boolean} `true` when the module is installed in the app.
+ */
+export function canResolveAppModule(specifier: string, appPath = process.cwd()): boolean {
+  try {
+    const appRequire = createRequire(path.resolve(appPath, 'package.json'));
+    appRequire.resolve(specifier);
+
+    return true;
+  } catch {
+    return false;
+  }
 }
