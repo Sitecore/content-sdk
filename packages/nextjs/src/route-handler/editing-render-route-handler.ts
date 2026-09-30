@@ -244,10 +244,6 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       const propagatedQsParams = {
         ...getQueryParamsForPropagation(query as { [key: string]: string }),
         ...editingPreviewData,
-        // Required by MultisiteProxy to resolve the [site] route segment of the page.
-        // TODO: Remove the duplicate `site` param (from editing preview data) in the next major release,
-        // keep only sc_site.
-        [SITE_KEY]: query.sc_site,
       };
       const propagatedHeaders = {
         ...getHeadersForPropagation(headers),
@@ -341,13 +337,9 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     /**
      * TODO: Remove preview data from qs before next major release.
      */
-    const propagatedQsParams: { [key: string]: string } = {
+    const propagatedQsParams = {
       ...getQueryParamsForPropagation(query as { [key: string]: string }),
       ...editingPreviewData,
-      // Required by MultisiteProxy to resolve the [site] route segment of the page.
-      // TODO: Remove the duplicate `site` param (from editing preview data) in the next major release,
-      // keep only sc_site.
-      [SITE_KEY]: query.sc_site,
     };
 
     const base = resolveServerUrl(req);
