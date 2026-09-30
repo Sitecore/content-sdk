@@ -70,22 +70,6 @@ jobs:
             echo "No API doc changes to commit"
           fi
 
-      - name: Creating .npmrc
-        run: |
-          NPM_REGISTRY="${NPM_REGISTRY%/}"
-          NPM_REGISTRY="${NPM_REGISTRY}/"
-          write_npmrc() {
-            {
-              echo "@sitecore-content-sdk:registry=https://$NPM_REGISTRY"
-              echo "registry=https://$NPM_REGISTRY"
-              echo "//$NPM_REGISTRY:_authToken=$NPM_TOKEN"
-            } > "$1"
-          }
-          write_npmrc "$GITHUB_WORKSPACE/.npmrc"
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
-
       - name: NPM tags and version
         id: npm-tags
         env:
@@ -109,17 +93,16 @@ jobs:
 
       - name: Prepare and Process Changesets Release
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          version: yarn csdk:prep-release
-          publish: yarn changeset:publish --tag ${{ steps.npm-tags.outputs.npm_tag }}
-          commit: '[release][ci] Version bump and changelog'
-          title: ${{ format('[csdk] {0}', steps.npm-tags.outputs.release_text) }}
+          version-script: yarn csdk:prep-release
+          publish-script: yarn changeset:publish --tag ${{ steps.npm-tags.outputs.npm_tag }}
+          commit-message: '[release][ci] Version bump and changelog'
+          pr-title: ${{ format('[csdk] {0}', steps.npm-tags.outputs.release_text) }}
+          github-token: ${{ steps.generate-token.outputs.token }}
+          push-with-git-cli: true
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-          npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   canary-snapshot:
     runs-on: ubuntu-latest
@@ -160,22 +143,6 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Creating .npmrc
-        run: |
-          NPM_REGISTRY="${NPM_REGISTRY%/}"
-          NPM_REGISTRY="${NPM_REGISTRY}/"
-          write_npmrc() {
-            {
-              echo "@sitecore-content-sdk:registry=https://$NPM_REGISTRY"
-              echo "registry=https://$NPM_REGISTRY"
-              echo "//$NPM_REGISTRY:_authToken=$NPM_TOKEN"
-            } > "$1"
-          }
-          write_npmrc "$GITHUB_WORKSPACE/.npmrc"
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
-
       - name: Pre-release canary version bump and snapshot cascade
         id: canary_snapshot
         run: yarn changeset:cascade-snapshot-version
@@ -190,7 +157,7 @@ jobs:
         if: steps.canary_snapshot.outputs.snapshot_publish == 'true'
         env:
           CANARY_PREFIX: ${{ steps.canary-prefix.outputs.prefix }}
-          npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           yarn build
           yarn changeset:publish --tag $CANARY_PREFIX --no-git-tag

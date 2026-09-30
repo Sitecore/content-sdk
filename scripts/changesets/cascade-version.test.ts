@@ -10,9 +10,13 @@ const mocks = vi.hoisted(() => {
     packages: [] as { dir: string; packageJson: { name: string; version: string } }[],
   };
   const defaultReadConfig = {
-    commit: true,
-    changelog: true,
-    snapshot: { prereleaseTemplate: undefined as string | undefined },
+    config: {
+      commit: true,
+      changelog: true,
+      snapshot: { prereleaseTemplate: undefined as string | undefined },
+    },
+    warnings: [] as string[],
+    errors: undefined,
   };
   return {
     getCommitsThatAddFiles: vi.fn().mockResolvedValue([]),
@@ -44,11 +48,11 @@ vi.mock('@changesets/git', () => ({
 }));
 
 vi.mock('@changesets/read', () => ({
-  default: mocks.readChangesets,
+  readChangesets: mocks.readChangesets,
 }));
 
 vi.mock('@changesets/config', () => ({
-  read: mocks.readConfig,
+  readConfig: mocks.readConfig,
 }));
 
 vi.mock('@changesets/pre', () => ({
@@ -64,11 +68,11 @@ vi.mock('@changesets/get-dependents-graph', () => ({
 }));
 
 vi.mock('@changesets/assemble-release-plan', () => ({
-  default: mocks.assembleReleasePlan,
+  assembleReleasePlan: mocks.assembleReleasePlan,
 }));
 
 vi.mock('@changesets/apply-release-plan', () => ({
-  default: mocks.applyReleasePlan,
+  applyReleasePlan: mocks.applyReleasePlan,
 }));
 
 function mkPackages(names: string[]) {
@@ -81,12 +85,14 @@ function mkPackages(names: string[]) {
   };
 }
 
-function baseConfig(overrides: Record<string, unknown> = {}) {
+function mockReadConfig(overrides: Record<string, unknown> = {}) {
   return {
-    commit: true,
-    changelog: true,
-    snapshot: { prereleaseTemplate: undefined as string | undefined },
-    ...overrides,
+    config: {
+      commit: true,
+      changelog: true,
+      snapshot: { prereleaseTemplate: undefined as string | undefined },
+      ...overrides,
+    },
   };
 }
 
@@ -114,7 +120,7 @@ describe('cascade-version', () => {
     delete process.env.GITHUB_OUTPUT;
     process.argv = ['node', 'tsx', 'scripts/changesets/cascade-version.ts'];
     mocks.getPackages.mockResolvedValue(mkPackages([]));
-    mocks.readConfig.mockResolvedValue(baseConfig());
+    mocks.readConfig.mockResolvedValue(mockReadConfig());
     mocks.readPreState.mockResolvedValue(undefined);
     mocks.readChangesets.mockResolvedValue([]);
     mocks.getCommitsThatAddFiles.mockResolvedValue([]);
@@ -146,8 +152,8 @@ describe('cascade-version', () => {
 
   describe('non-snapshot mode (full release)', () => {
     it('should not apply release plan when --dry-run is passed', async () => {
-      const cfg = baseConfig({ commit: true });
-      mocks.readConfig.mockResolvedValue(cfg);
+      const result = mockReadConfig({ commit: true });
+      mocks.readConfig.mockResolvedValue(result);
       process.argv.push('--dry-run');
       mocks.readChangesets.mockResolvedValue([
         {
@@ -169,7 +175,7 @@ describe('cascade-version', () => {
 
       await importCascade();
       await waitFor(() => mocks.assembleReleasePlan.mock.calls.length > 0);
-      expect(cfg.commit).toBe(false);
+      expect(result.config.commit).toBe(false);
       expect(mocks.applyReleasePlan).not.toHaveBeenCalled();
     });
 
@@ -517,6 +523,36 @@ describe('cascade-version', () => {
     });
   });
 
+  describe('config validation', () => {
+    it('should throw when readConfig returns empty', async () => {
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+      mocks.readConfig.mockResolvedValue(undefined);
+
+      await importCascade();
+      await waitFor(() => exitSpy.mock.calls.length > 0);
+      expect(exitSpy).toHaveBeenCalledWith(1);
+      expect(errorSpy).toHaveBeenCalledWith(
+        '❌ Error:',
+        'Failed to read changesets config (.changeset/config.json).'
+      );
+      expect(mocks.assembleReleasePlan).not.toHaveBeenCalled();
+    });
+
+    it('should throw when readConfig result has empty config', async () => {
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+      mocks.readConfig.mockResolvedValue({ config: undefined });
+
+      await importCascade();
+      await waitFor(() => exitSpy.mock.calls.length > 0);
+      expect(exitSpy).toHaveBeenCalledWith(1);
+      expect(errorSpy).toHaveBeenCalledWith(
+        '❌ Error:',
+        'Failed to read changesets config (.changeset/config.json).'
+      );
+      expect(mocks.assembleReleasePlan).not.toHaveBeenCalled();
+    });
+  });
+
   describe('snapshot mode', () => {
     it('should exit with error when --snapshot is passed but changesets is in "pre" mode', async () => {
       process.argv.push('--snapshot');
@@ -531,7 +567,7 @@ describe('cascade-version', () => {
       process.argv.push('--snapshot');
       process.env.GITHUB_OUTPUT = '/tmp/github-output-mock';
       mocks.readConfig.mockResolvedValue(
-        baseConfig({ snapshot: { prereleaseTemplate: '0.0.0-{tag}' } })
+        mockReadConfig({ snapshot: { prereleaseTemplate: '0.0.0-{tag}' } })
       );
       mocks.readChangesets.mockResolvedValue([
         {
@@ -592,7 +628,7 @@ describe('cascade-version', () => {
         process.argv = ['node', 'tsx', 'scripts/changesets/cascade-version.ts', '--snapshot'];
         mocks.getPackages.mockResolvedValue(mkPackages(['@sitecore-content-sdk/core']));
         mocks.readConfig.mockResolvedValue(
-          baseConfig({
+          mockReadConfig({
             snapshot: { prereleaseTemplate: scenario.prereleaseTemplate },
           })
         );
@@ -639,10 +675,9 @@ describe('cascade-version', () => {
 
     it('should call applyReleasePlan with changelog disabled and the canary tag when snapshot mode is on', async () => {
       process.argv.push('--snapshot');
-      const cfg = baseConfig({
-        snapshot: { prereleaseTemplate: '0.0.0-{tag}' },
-      });
-      mocks.readConfig.mockResolvedValue(cfg);
+      mocks.readConfig.mockResolvedValue(
+        mockReadConfig({ snapshot: { prereleaseTemplate: '0.0.0-{tag}' } })
+      );
       mocks.readChangesets.mockResolvedValue([
         {
           id: 'r1',
@@ -668,7 +703,7 @@ describe('cascade-version', () => {
       vi.stubEnv('CANARY_PREFIX', 'beta');
       process.argv.push('--snapshot');
       mocks.readConfig.mockResolvedValue(
-        baseConfig({ snapshot: { prereleaseTemplate: '0.0.0-{tag}' } })
+        mockReadConfig({ snapshot: { prereleaseTemplate: '0.0.0-{tag}' } })
       );
       mocks.readChangesets.mockResolvedValue([
         {
@@ -689,7 +724,7 @@ describe('cascade-version', () => {
         unknown,
         unknown,
         unknown,
-        { tag: string; commit?: string },
+        { tag: string; commit?: string }
       ];
       expect(assembleArgs[4]).toEqual({ tag: 'beta' });
       expect(mocks.applyReleasePlan).toHaveBeenCalledWith(
@@ -704,7 +739,7 @@ describe('cascade-version', () => {
       vi.stubEnv('CANARY_PREFIX', '');
       process.argv.push('--snapshot');
       mocks.readConfig.mockResolvedValue(
-        baseConfig({ snapshot: { prereleaseTemplate: '0.0.0-{tag}' } })
+        mockReadConfig({ snapshot: { prereleaseTemplate: '0.0.0-{tag}' } })
       );
       mocks.readChangesets.mockResolvedValue([
         {
@@ -725,7 +760,7 @@ describe('cascade-version', () => {
         unknown,
         unknown,
         unknown,
-        { tag: string; commit?: string },
+        { tag: string; commit?: string }
       ];
       expect(assembleArgs[4]).toEqual({ tag: 'canary' });
       expect(mocks.applyReleasePlan).toHaveBeenCalledWith(
@@ -739,7 +774,7 @@ describe('cascade-version', () => {
     it('should apply the same cascade release type to create-content-sdk-app as to other dependents when in snapshot mode', async () => {
       process.argv.push('--snapshot');
       mocks.readConfig.mockResolvedValue(
-        baseConfig({ snapshot: { prereleaseTemplate: '0.0.0-{tag}' } })
+        mockReadConfig({ snapshot: { prereleaseTemplate: '0.0.0-{tag}' } })
       );
       mocks.readChangesets.mockResolvedValue([
         {
