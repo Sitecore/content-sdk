@@ -6,7 +6,7 @@
 
 # Interface: Document
 
-Defined in: [content/src/atoms/types.ts:85](https://github.com/Sitecore/content-sdk/blob/6c65c39153c1345166224f0f46be85f70f13c595/packages/content/src/atoms/types.ts#L85)
+Defined in: [content/src/atoms/types.ts:85](https://github.com/Sitecore/content-sdk/blob/d8ef09ee24ff4e01fb1e538a88aebba13f3fe89b/packages/content/src/atoms/types.ts#L85)
 
 **`Internal`**
 
@@ -36,7 +36,7 @@ Flat map of elements by key
 
 > **name**: `string`
 
-Defined in: [content/src/atoms/types.ts:87](https://github.com/Sitecore/content-sdk/blob/6c65c39153c1345166224f0f46be85f70f13c595/packages/content/src/atoms/types.ts#L87)
+Defined in: [content/src/atoms/types.ts:87](https://github.com/Sitecore/content-sdk/blob/d8ef09ee24ff4e01fb1e538a88aebba13f3fe89b/packages/content/src/atoms/types.ts#L87)
 
 Human-readable identifier of the document.
 

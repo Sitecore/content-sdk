@@ -18,6 +18,7 @@
 - [SitecoreCliConfigInput](type-aliases/SitecoreCliConfigInput.md)
 - [SitecoreConfig](type-aliases/SitecoreConfig.md)
 - [SitecoreConfigInput](type-aliases/SitecoreConfigInput.md)
+- [ThemingMode](type-aliases/ThemingMode.md)
 
 ## References
 

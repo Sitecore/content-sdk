@@ -8,6 +8,6 @@
 
 > **AtomComponentDefinition** = `BaseComponent` & `SitecoreComponentMeta`
 
-Defined in: [packages/react/src/atoms/types.ts:21](https://github.com/Sitecore/content-sdk/blob/6c65c39153c1345166224f0f46be85f70f13c595/packages/react/src/atoms/types.ts#L21)
+Defined in: [packages/react/src/atoms/types.ts:21](https://github.com/Sitecore/content-sdk/blob/d8ef09ee24ff4e01fb1e538a88aebba13f3fe89b/packages/react/src/atoms/types.ts#L21)
 
 Component definition in the atoms catalog input.

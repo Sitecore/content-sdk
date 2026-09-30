@@ -36,6 +36,7 @@
 - [LayoutServiceConfig](type-aliases/LayoutServiceConfig.md)
 - [PlaceholdersData](type-aliases/PlaceholdersData.md)
 - [RouteOptions](type-aliases/RouteOptions.md)
+- [ThemingStylesheetLinksOptions](type-aliases/ThemingStylesheetLinksOptions.md)
 
 ## Variables
 
@@ -43,6 +44,8 @@
 - [EDITING\_COMPONENT\_PLACEHOLDER](variables/EDITING_COMPONENT_PLACEHOLDER.md)
 - [EMPTY\_DATE\_FIELD\_VALUE](variables/EMPTY_DATE_FIELD_VALUE.md)
 - [GRAPHQL\_LAYOUT\_QUERY\_NAME](variables/GRAPHQL_LAYOUT_QUERY_NAME.md)
+- [THEMING\_BODY\_CLASS\_NAME](variables/THEMING_BODY_CLASS_NAME.md)
+- [THEMING\_DELIVERY\_CHANNEL](variables/THEMING_DELIVERY_CHANNEL.md)
 
 ## Functions
 
@@ -55,6 +58,14 @@
 - [getDynamicPlaceholderPattern](functions/getDynamicPlaceholderPattern.md)
 - [getFieldValue](functions/getFieldValue.md)
 - [getRenderingParamString](functions/getRenderingParamString.md)
+- [getThemingStylesheetLinks](functions/getThemingStylesheetLinks.md)
 - [isDynamicPlaceholder](functions/isDynamicPlaceholder.md)
 - [isFieldValueEmpty](functions/isFieldValueEmpty.md)
+- [isSiteThemingEnabled](functions/isSiteThemingEnabled.md)
 - [rewriteEdgeHostInResponse](functions/rewriteEdgeHostInResponse.md)
+
+## References
+
+### ThemingMode
+
+Re-exports [ThemingMode](../config/type-aliases/ThemingMode.md)
