@@ -103,7 +103,6 @@ jobs:
           push-with-git-cli: true
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          YARN_NPM_REGISTRY_SERVER: ${{secrets.NPM_REGISTRY}} # ensure registry is a fully defined URL with a protocol specified
 
   canary-snapshot:
     runs-on: ubuntu-latest
@@ -159,7 +158,6 @@ jobs:
         env:
           CANARY_PREFIX: ${{ steps.canary-prefix.outputs.prefix }}
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          YARN_NPM_REGISTRY_SERVER: ${{secrets.NPM_REGISTRY}} # ensure registry is a fully defined URL with a protocol specified
         run: |
           yarn build
           yarn changeset:publish --tag $CANARY_PREFIX --no-git-tag
