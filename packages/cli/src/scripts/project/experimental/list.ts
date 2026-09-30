@@ -154,7 +154,6 @@ export function handler() {
 
     try {
       loaded = loadCatalog(packageName);
-      console.log("sssssssssssssssss", packageName, loaded);
     } catch (error) {
       if (isMissingExperimentalExport(error) || isMissingExperimentalFile(error, packageName)) {
         continue;
@@ -179,7 +178,6 @@ export function handler() {
     }
 
     catalogs.push({ packageName, catalog: loaded.catalog });
-    console.log("CATAGLOGHESSS", catalogs);
   }
 
   if (!catalogs.length) {
