@@ -366,6 +366,7 @@ describe('createEditingRenderRouteHandlers', () => {
         variantId: mockQuery.sc_variant,
         version: mockQuery.sc_version,
         layoutKind: mockQuery.sc_layoutKind,
+        [SITE_KEY]: mockQuery.sc_site,
       });
 
       // Verify propagated headers (includes editing params header for preview)
@@ -1252,6 +1253,7 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(targetUrl.searchParams.get('itemId')).to.equal(mockQuery.sc_itemid);
       expect(targetUrl.searchParams.get('language')).to.equal(mockQuery.sc_language);
       expect(targetUrl.searchParams.get('site')).to.equal(mockQuery.sc_site);
+      expect(targetUrl.searchParams.get(SITE_KEY)).to.equal(mockQuery.sc_site);
       expect(targetUrl.searchParams.get('mode')).to.equal(mockQuery.mode);
       expect(targetUrl.searchParams.get('variantId')).to.equal(mockQuery.sc_variant);
       expect(targetUrl.searchParams.get('version')).to.equal(mockQuery.sc_version);
@@ -1480,6 +1482,19 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.body).to.include('Design Library');
       expect(res.body).to.include('component-library');
       expect(res.body).to.include('Library Content');
+    });
+
+    it('should propagate sc_site query parameter for site resolution with mode=library', async () => {
+      req.nextUrl!.searchParams = mockSearchParams({
+        ...designLibraryQuery,
+        route: '/components',
+      });
+
+      await handlers.GET(req as NextRequest);
+
+      expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
+      const [, propagatedQsParams] = getEditingRequestHtmlStub.firstCall.args;
+      expect(propagatedQsParams[SITE_KEY]).to.equal(designLibraryQuery.sc_site);
     });
 
     it('should handle request with mode=library-metadata', async () => {
