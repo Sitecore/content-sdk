@@ -1,15 +1,15 @@
 import path from 'path';
 import inquirer from 'inquirer';
 import { prompts, NextjsAnswer } from './prompts';
-import { Initializer, transform } from '../../common';
+import { Initializer, InitContext } from '../../scaffolding';
 import { NextjsArgs } from './args';
 
 export default class NextjsInitializer implements Initializer {
-  async init(args: NextjsArgs) {
-    const answers = await inquirer.prompt<NextjsAnswer>(prompts, args);
+  async init(args: NextjsArgs, ctx: InitContext) {
+    const answers = await inquirer.prompt<NextjsAnswer>([...ctx.baseAppPrompts, ...prompts], args);
     const templatePath = path.resolve(__dirname, '../../templates/nextjs');
 
-    await transform(templatePath, { ...args, ...answers });
+    await ctx.transform(templatePath, { ...args, ...answers });
 
     const response = {};
     return response;

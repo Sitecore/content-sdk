@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { initialize } from './initialize';
 import minimist, { ParsedArgs } from 'minimist';
-import { getAllTemplates } from './common';
+import { getAllTemplates } from './registry';
 
 export const parseArgs = (): ParsedArgs => {
   // parse any command line arguments passed into `npx create-content-sdk-app`
@@ -15,7 +15,7 @@ export const parseArgs = (): ParsedArgs => {
     alias: {
       h: 'help',
     },
-    string: ['destination', 'template'],
+    string: ['destination', 'template', 'version'],
     default: {},
   };
   const args: ParsedArgs = minimist(process.argv.slice(2), options);
@@ -42,6 +42,7 @@ ${templatesList}
 
 ${chalk.bold('Options:')}
   ${chalk.yellow('--destination')} ${chalk.dim('<path>')}    Destination folder
+  ${chalk.yellow('--version')} ${chalk.dim('<version>')}     Template package version to use (installed on demand)
   ${chalk.yellow('--yes')}                   Use defaults and skip prompts where possible
   ${chalk.yellow('--force')}                 Continue if destination is not empty
   ${chalk.yellow('--noInstall')}             Skip package install and lint fix

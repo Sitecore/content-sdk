@@ -5,11 +5,12 @@ import sinonChai from 'sinon-chai';
 import chalk from 'chalk';
 import { Initializer, InitializerResults } from './common/base/Initializer';
 import * as initialize from './initialize';
+import * as registry from './registry';
 import * as helpers from './common/utils/helpers';
 import * as install from './common/processes/install';
 import * as next from './common/processes/next';
 
-const { getInitializer, initialize: initializeFunc } = initialize;
+const { initialize: initializeFunc } = initialize;
 
 chai.use(sinonChai);
 
@@ -34,7 +35,7 @@ describe('initialize', () => {
     installPackagesStub = sinon.stub(install, 'installPackages');
     lintFixStub = sinon.stub(install, 'lintFix');
     nextStepsStub = sinon.stub(next, 'nextSteps');
-    getInitializerStub = sinon.stub(initialize, 'getInitializer');
+    getInitializerStub = sinon.stub(registry, 'getInitializer');
     openJsonFileStub = sinon
       .stub(helpers, 'openJsonFile')
       .returns({ name: defaultAppName });
@@ -58,7 +59,7 @@ describe('initialize', () => {
     };
 
     const mockFoo = mockInitializer({});
-    getInitializerStub.withArgs('foo').returns(mockFoo);
+    getInitializerStub.withArgs('foo').returns({ initializer: mockFoo, versions: {} });
 
     await initializeFunc(template, args);
 
@@ -79,7 +80,7 @@ describe('initialize', () => {
     };
 
     const mockFoo = mockInitializer({ nextSteps: 'foo next step' });
-    getInitializerStub.withArgs('foo').returns(mockFoo);
+    getInitializerStub.withArgs('foo').returns({ initializer: mockFoo, versions: {} });
 
     await initializeFunc(template, args);
 
@@ -95,7 +96,7 @@ describe('initialize', () => {
     };
 
     const mockFoo = mockInitializer({});
-    getInitializerStub.withArgs('foo').returns(mockFoo);
+    getInitializerStub.withArgs('foo').returns({ initializer: mockFoo, versions: {} });
 
     await initializeFunc(template, args);
 
@@ -115,20 +116,11 @@ describe('initialize', () => {
     };
 
     const mockFoo = mockInitializer({});
-    getInitializerStub.withArgs('foo').returns(mockFoo);
+    getInitializerStub.withArgs('foo').returns({ initializer: mockFoo, versions: {} });
 
     await initializeFunc(template, args);
 
     expect(installPackagesStub).to.not.have.been.called;
     expect(lintFixStub).to.not.have.been.called;
-  });
-});
-
-describe('getInitializer', () => {
-  it('should return initializer', async () => {
-    const initializer = await getInitializer('./../../src/common/test-data/initializers/test');
-
-    expect(initializer).to.not.be.undefined;
-    expect(initializer?.constructor.name).to.equal('TestInitializer');
   });
 });

@@ -1,15 +1,10 @@
 export { BaseAppArgs } from './base/args';
 export { BaseAppAnswer, baseAppPrompts } from './base/prompts';
-export { Initializer } from './base/Initializer';
+export { Initializer, InitContext, InitializerResults } from './base/Initializer';
 
-export {
-  isDevEnvironment,
-  openJsonFile,
-  writeJsonFile,
-  getAllTemplates,
-  removeFile,
-} from './utils/helpers';
+export { isDevEnvironment, openJsonFile, writeJsonFile, removeFile } from './utils/helpers';
+export { getVersions } from './utils/versions';
 
-export { transform } from './processes/transform';
+export { transform, populateEjsData, CsdkVersions } from './processes/transform';
 export { nextSteps } from './processes/next';
 export { installPackages, lintFix } from './processes/install';

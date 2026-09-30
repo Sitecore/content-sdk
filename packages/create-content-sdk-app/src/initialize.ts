@@ -6,13 +6,26 @@ import {
   nextSteps,
   BaseAppArgs,
   openJsonFile,
-  Initializer,
+  InitContext,
+  transform,
+  baseAppPrompts,
 } from './common';
+import { getInitializer } from './registry';
 
 export const initialize = async (template: string, args: BaseAppArgs) => {
-  const initializer = await getInitializer(template);
+  const { initializer, versions } = await getInitializer(
+    template,
+    args.version as string | undefined
+  );
   args.silent || console.log(chalk.cyan(`Initializing '${template}'...`));
-  const response = await initializer.init(args);
+
+  // Bind the resolved template package's versions so initializers render
+  // templates without needing to source versions themselves.
+  const ctx: InitContext = {
+    transform: (templatePath, transformArgs) => transform(templatePath, transformArgs, versions),
+    baseAppPrompts,
+  };
+  const response = await initializer.init(args, ctx);
 
   // final steps (install, lint)
   if (!args.noInstall) {
@@ -24,11 +37,4 @@ export const initialize = async (template: string, args: BaseAppArgs) => {
     const pkg = openJsonFile(path.resolve(`${args.destination}${sep}package.json`));
     nextSteps(pkg.name, response.nextSteps);
   }
-};
-
-export const getInitializer = async (template: string): Promise<Initializer> => {
-  const { default: Initializer } = await import(
-    path.resolve(__dirname, 'initializers', template, 'index')
-  );
-  return new Initializer();
 };

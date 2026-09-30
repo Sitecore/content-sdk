@@ -1,5 +1,5 @@
-import { QuestionCollection } from 'inquirer';
-import { baseAppPrompts, BaseAppAnswer } from '../../common';
+import { DistinctQuestion } from 'inquirer';
+import { BaseAppAnswer } from '../../scaffolding';
 
 export type AngularAnswer = BaseAppAnswer & {
   appName: string;
@@ -7,8 +7,7 @@ export type AngularAnswer = BaseAppAnswer & {
 
 const defaultName = 'content-sdk-angular';
 
-export const prompts: QuestionCollection<AngularAnswer> = [
-  ...baseAppPrompts,
+export const prompts: DistinctQuestion<AngularAnswer>[] = [
   {
     type: 'input',
     name: 'appName',

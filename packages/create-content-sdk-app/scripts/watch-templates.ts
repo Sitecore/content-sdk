@@ -5,8 +5,14 @@ import chokidar from 'chokidar';
 
 import { main } from '../src/bin';
 
+// Templates now live in the dedicated template packages under ../../csdk-templates.
+const templateDirs = [
+  path.resolve(process.cwd(), '../../csdk-templates/nextjs-templates/src/templates'),
+  path.resolve(process.cwd(), '../../csdk-templates/angular-templates/src/templates'),
+];
+
 chokidar
-  .watch(path.join(process.cwd(), '.\\src\\templates'), { ignoreInitial: true })
+  .watch(templateDirs, { ignoreInitial: true })
   .on('ready', () => ready())
   .on('all', (event, path) => callback(event, path));
 
