@@ -2,7 +2,7 @@ export { ProxyBase, ProxyBaseConfig, ProxyHandler, defineProxy } from './proxy';
 export { RedirectsProxy, RedirectsProxyConfig } from './redirects-proxy';
 export { PersonalizeProxy, PersonalizeProxyConfig } from './personalize-proxy';
 export { MultisiteProxy, MultisiteProxyConfig } from './multisite-proxy';
-export { AppRouterMultisiteProxy } from './app-router-multisite-proxy';
+export { MultisiteRewriteProxy } from './multisite-rewrite-proxy';
 export { LocaleProxy, LocaleProxyConfig } from './locale-proxy';
 export {
   PersonalizeService,

@@ -191,9 +191,10 @@ export class RedirectsProxy extends ProxyBase {
         reqUrl.pathname = prepareNewURL.pathname;
         reqUrl.search = prepareNewURL.search;
         const prefixMode = this.config.appLocalePrefix;
-        if (this.isPagesRouterI18n(req)) {
-          reqUrl.locale = targetLocale || req.nextUrl.defaultLocale || 'en';
-        } else if (prefixMode !== 'never') {
+        // Unified locale prefixing for both routers. The Pages Router no longer uses
+        // Next.js built-in i18n, so locale is a real `/[locale]` path segment (resolved
+        // by LocaleProxy) exactly like the App Router — a single code path shapes both.
+        if (prefixMode !== 'never') {
           const shouldPrefix =
             prefixMode === 'always' ||
             (!!targetLocale &&
@@ -204,7 +205,7 @@ export class RedirectsProxy extends ProxyBase {
             reqUrl.pathname = `/${targetLocale}${reqUrl.pathname}`;
           }
         }
-        // else: App Router without [locale] segment (`never`) — leave pathname unchanged
+        // else: no [locale] segment (`never`) — leave pathname unchanged
 
         /** return Response redirect with http code of redirect type */
         return this.dispatchRedirect(
@@ -468,18 +469,5 @@ export class RedirectsProxy extends ProxyBase {
       redirect.headers.delete(REWRITE_HEADER_NAME);
     }
     return redirect;
-  }
-
-  /**
-   * Determines if the request should be processed with Pages Router i18n consideration.
-   * @param {NextRequest} req request
-   * @returns {boolean} true if the request is for the Pages Router, false otherwise
-   * @private
-   */
-  private isPagesRouterI18n(req: NextRequest): boolean {
-    if (req.nextUrl.locale && req.nextUrl.defaultLocale) {
-      return true;
-    }
-    return false;
   }
 }

@@ -22,7 +22,7 @@
     "@sitecore-feaas/clientside": "^0.6.0",
     "@sitecore/components": "~2.1.0",
     "next": "^16.2.0",
-    "next-localization": "^0.12.0",
+    "next-intl": "^4.3.5",
     "react": "^19.2.1",
     "react-dom": "^19.2.1"
   },

@@ -28,7 +28,9 @@ export type LocaleProxyConfig = ProxyBaseConfig & {
 };
 
 /**
- * Proxy/handler for handling locale-based routing in the Next.js App Router.
+ * Proxy/handler for handling locale-based routing.
+ * Router-neutral: used by both the App Router and the Pages Router once the latter adopts
+ * the shared `/[site]/[locale]/[[...path]]` route structure (no Next.js built-in i18n).
  * This proxy is responsible for extracting the locale from the request path and rewriting it if necessary.
  * It also sets the locale header in the response.
  * @public

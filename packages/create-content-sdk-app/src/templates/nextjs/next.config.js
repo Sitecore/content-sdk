@@ -13,14 +13,11 @@ const nextConfig = {
     turbopackFileSystemCacheForDev: true,
   },
 
-  i18n: {
-    // These are all the locales you want to support in your application.
-    // These should generally match (or at least be a subset of) those in Sitecore.
-    locales: ['en'],
-    // This is the locale that will be used when visiting a non-locale
-    // prefixed path e.g. `/about`.
-    defaultLocale: process.env.DEFAULT_LANGUAGE || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',
-  },
+  // NOTE: The Next.js built-in `i18n` routing block has been removed.
+  // Locale (and site) are now expressed as explicit route segments
+  // `/[site]/[locale]/...` and resolved by `LocaleProxy` + `MultisiteRewriteProxy`
+  // in `src/proxy.ts` (matching the App Router). Supported locales are defined in
+  // `src/i18n/routing.ts`.
 
   // Enable React Strict Mode
   reactStrictMode: true,

@@ -1,7 +1,7 @@
 import { NextFetchEvent, type NextRequest } from 'next/server';
 import {
   defineProxy,
-  AppRouterMultisiteProxy,
+  MultisiteRewriteProxy,
   PersonalizeProxy,
   RedirectsProxy,
   LocaleProxy,
@@ -27,7 +27,7 @@ export default function proxy(req: NextRequest, event: NextFetchEvent) {
     fetchEvent: event,
   });
 
-  // LocaleProxy and AppRouterMultisiteProxy must always run for App Router routing
+  // LocaleProxy and MultisiteRewriteProxy must always run for App Router routing
   const locale = new LocaleProxy({
     /**
      * List of sites for site resolver to work with
@@ -48,7 +48,7 @@ export default function proxy(req: NextRequest, event: NextFetchEvent) {
     skip: () => false,
   });
 
-  const multisite = new AppRouterMultisiteProxy({
+  const multisite = new MultisiteRewriteProxy({
     /**
      * List of sites for site resolver to work with
      */

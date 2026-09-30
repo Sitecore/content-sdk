@@ -1282,7 +1282,10 @@ describe('RedirectsProxy', () => {
         expect(finalRes.redirected).to.be.true;
       });
 
-      it('does not prepend locale for Pages Router when appLocalePrefix is unset', async () => {
+      // Unified routing: with built-in i18n removed, a Pages Router request is treated
+      // identically to the App Router. A language-preserved redirect with an unset
+      // appLocalePrefix therefore prepends the locale segment (same code path as App Router).
+      it('prepends locale for a language-preserved redirect when appLocalePrefix is unset', async () => {
         const req = createRequest({
           nextUrl: {
             pathname: '/old-page',
@@ -1304,8 +1307,7 @@ describe('RedirectsProxy', () => {
 
         expect(nextRedirectStub.calledOnce).to.be.true;
         const urlString = getRedirectUrlString();
-        expect(urlString).to.include('/new-page');
-        expect(urlString).to.not.include('/en/new-page');
+        expect(urlString).to.include('/en/new-page');
         expect(finalRes.redirected).to.be.true;
       });
 
@@ -1720,7 +1722,8 @@ describe('RedirectsProxy', () => {
         redirectStatus: 301,
         isExternal: false,
       });
-      expect(info?.requestUrl).to.equal('http://localhost:3000/new-page');
+      // Unified routing prepends the locale segment (same path as the App Router).
+      expect(info?.requestUrl).to.equal('http://localhost:3000/en/new-page');
       expect(info?.redirectUrl).to.equal('http://localhost:3000/new-page');
     });
   });

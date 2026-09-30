@@ -5,12 +5,12 @@ import chai, { use } from 'chai';
 import chaiString from 'chai-string';
 import sinonChai from 'sinon-chai';
 
-import { AppRouterMultisiteProxy } from './app-router-multisite-proxy';
+import { MultisiteRewriteProxy } from './multisite-rewrite-proxy';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
 
-describe('AppRouterMultisiteProxy', () => {
+describe('MultisiteRewriteProxy', () => {
   const defaultConfig = {
     sites: [],
     enabled: true,
@@ -19,7 +19,7 @@ describe('AppRouterMultisiteProxy', () => {
   };
 
   describe('getSiteRewrite', () => {
-    const proxy = new AppRouterMultisiteProxy({
+    const proxy = new MultisiteRewriteProxy({
       ...defaultConfig,
     });
 

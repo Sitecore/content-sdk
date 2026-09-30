@@ -239,7 +239,7 @@ export { AppPlaceholder }
 export { AppPlaceholderProps }
 
 // @public
-export class AppRouterMultisiteProxy extends MultisiteProxy {
+export class MultisiteRewriteProxy extends MultisiteProxy {
     protected getSiteRewrite(pathname: string, siteName: string): string;
     protected shouldSkipWhenDisabled(): boolean;
     protected shouldWarnWhenDisabled(_res: NextResponse): void;

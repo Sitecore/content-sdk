@@ -1,14 +1,16 @@
 import { NextFetchEvent, type NextRequest } from 'next/server';
 import {
   defineProxy,
-  MultisiteProxy,
+  MultisiteRewriteProxy,
   PersonalizeProxy,
   RedirectsProxy,
+  LocaleProxy,
   BotTrackingProxy,
   PreviewProxy,
 } from '@sitecore-content-sdk/nextjs/proxy';
 import sites from '.sitecore/sites.json';
 import scConfig from 'sitecore.config';
+import { routing } from 'src/i18n/routing';
 import client from 'lib/sitecore-client';
 
 export default function proxy(req: NextRequest, event: NextFetchEvent) {
@@ -25,9 +27,28 @@ export default function proxy(req: NextRequest, event: NextFetchEvent) {
     fetchEvent: event,
   });
 
-  // Instantiate proxies - they will use Edge config if available, otherwise fall back to local config
-  // Each proxy will skip processing if required API configuration is not available
-  const multisite = new MultisiteProxy({
+  // LocaleProxy resolves the locale and rewrites to include the `/[locale]` segment.
+  // It must run before the other proxies so that locale/site context (via LOCALE_HEADER_NAME)
+  // is available and RedirectsProxy behaves identically to the App Router.
+  const locale = new LocaleProxy({
+    /**
+     * List of sites for site resolver to work with
+     */
+    sites,
+    /**
+     * List of all supported locales configured in src/i18n/routing.ts
+     */
+    locales: routing.locales.slice(),
+    /**
+     * Default language to use if no language is identified in the request
+     */
+    defaultLanguage: scConfig.defaultLanguage,
+    skip: () => false,
+  });
+
+  // MultisiteRewriteProxy rewrites to include the `/[site]` segment required by the
+  // `/[site]/[locale]/[[...path]]` route structure (shared with the App Router).
+  const multisite = new MultisiteRewriteProxy({
     /**
      * List of sites for site resolver to work with
      */
@@ -78,7 +99,7 @@ export default function proxy(req: NextRequest, event: NextFetchEvent) {
     // },
   });
 
-  return defineProxy(preview, botTracking, multisite, redirects, personalize).exec(req);
+  return defineProxy(preview, botTracking, locale, multisite, redirects, personalize).exec(req);
 }
 
 export const config = {
