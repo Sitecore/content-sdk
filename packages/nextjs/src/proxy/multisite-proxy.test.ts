@@ -688,7 +688,7 @@ describe('MultisiteProxy', () => {
       expect(nextRewriteStub).calledWith('http://localhost:3000/_site_foo/styleguide');
     });
 
-    it('site querystring parameter is provided', async () => {
+    it('should ignore unprefixed site querystring parameter when not in draft mode', async () => {
       const req = createRequest({
         searchParams: { site: 'qsFoo' },
       });
@@ -697,9 +697,7 @@ describe('MultisiteProxy', () => {
 
       nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
 
-      const { proxy, siteResolver } = createProxy({
-        useCookieResolution: () => true,
-      });
+      const { proxy, siteResolver } = createProxy({});
 
       const finalRes = await proxy.handle(req, res);
 
@@ -710,18 +708,100 @@ describe('MultisiteProxy', () => {
       });
 
       validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
+        rewritePath: '/_site_foo/styleguide',
+        siteName: 'foo',
+        headers: {
+          'x-sc-rewrite': '/_site_foo/styleguide',
+        },
+        cookies: {
+          ...res.cookies,
+          sc_site: {
+            ...defaultSiteCookieAttributes,
+            value: 'foo',
+          },
+        },
+      });
+
+      expect(siteResolver.getByHost).to.be.calledWith('foo.net');
+
+      expect(finalRes).to.deep.equal(res);
+
+      expect(nextRewriteStub).calledWith('http://localhost:3000/_site_foo/styleguide');
+    });
+
+    it('should ignore unprefixed site querystring parameter when not in draft mode for app router application', async () => {
+      const req = createRequest({
+        searchParams: { site: 'qsFoo' },
+      });
+
+      const res = createResponse({
+        headers: { 'x-sc-locale': 'en' },
+      });
+
+      nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+
+      const { proxy, siteResolver } = createProxy({});
+
+      const finalRes = await proxy.handle(req, res);
+
+      validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
+        rewritePath: '/_site_foo/styleguide',
+        siteName: 'foo',
+        headers: {
+          'x-sc-rewrite': '/_site_foo/styleguide',
+          'x-sc-locale': 'en',
+        },
+        cookies: {
+          ...res.cookies,
+          sc_site: {
+            ...defaultSiteCookieAttributes,
+            value: 'foo',
+          },
+        },
+      });
+
+      expect(siteResolver.getByHost).to.be.calledWith('foo.net');
+
+      expect(finalRes).to.deep.equal(res);
+
+      expect(nextRewriteStub).calledWith('http://localhost:3000/_site_foo/styleguide');
+    });
+
+    it('should use unprefixed site querystring parameter in draft mode for app router application', async () => {
+      const req = createRequest({
+        searchParams: { site: 'qsFoo' },
+        cookieValues: {
+          __prerender_bypass: true,
+        },
+      });
+
+      const res = createResponse({
+        headers: { 'x-sc-locale': 'en' },
+      });
+
+      nextRewriteStub = sinon.stub(nextjs.NextResponse, 'rewrite').returns(res);
+
+      const { proxy, siteResolver } = createProxy({});
+
+      const finalRes = await proxy.handle(req, res);
+
+      validateEndMessageDebugLog('multisite proxy end in %dms: %o', {
         rewritePath: '/_site_qsFoo/styleguide',
         siteName: 'qsFoo',
         headers: {
           'x-sc-rewrite': '/_site_qsFoo/styleguide',
+          'x-sc-locale': 'en',
         },
         cookies: {
           ...res.cookies,
+          sc_site: {
+            ...defaultSiteCookieAttributes,
+            value: 'qsFoo',
+          },
         },
       });
 
       expect(siteResolver.getByHost).not.called.equal(true);
-      expect(siteResolver.getByName).not.called.equal(true);
 
       expect(finalRes).to.deep.equal(res);
 
