@@ -6,7 +6,7 @@
 
 # Interface: ExpressRequest
 
-Defined in: [packages/angular/src/config/http-types.ts:5](https://github.com/Sitecore/content-sdk/blob/c7801c33fe661bb4b9b6f414c72a29794de8b26a/packages/angular/src/config/http-types.ts#L5)
+Defined in: [packages/angular/src/config/http-types.ts:5](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/angular/src/config/http-types.ts#L5)
 
 Minimal Express Request interface for type safety without requiring Express as a dependency
 
@@ -20,7 +20,7 @@ Minimal Express Request interface for type safety without requiring Express as a
 
 > **body**: `unknown`
 
-Defined in: [packages/angular/src/config/http-types.ts:9](https://github.com/Sitecore/content-sdk/blob/c7801c33fe661bb4b9b6f414c72a29794de8b26a/packages/angular/src/config/http-types.ts#L9)
+Defined in: [packages/angular/src/config/http-types.ts:9](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/angular/src/config/http-types.ts#L9)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [packages/angular/src/config/http-types.ts:9](https://github.com/Sit
 
 > `optional` **cookies?**: `Record`\<`string`, `string`\>
 
-Defined in: [packages/angular/src/config/http-types.ts:15](https://github.com/Sitecore/content-sdk/blob/c7801c33fe661bb4b9b6f414c72a29794de8b26a/packages/angular/src/config/http-types.ts#L15)
+Defined in: [packages/angular/src/config/http-types.ts:15](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/angular/src/config/http-types.ts#L15)
 
 Cookies from the request (requires cookie-parser middleware)
 
@@ -38,7 +38,7 @@ Cookies from the request (requires cookie-parser middleware)
 
 > `optional` **headers?**: `Record`\<`string`, `string` \| `string`[] \| `undefined`\>
 
-Defined in: [packages/angular/src/config/http-types.ts:19](https://github.com/Sitecore/content-sdk/blob/c7801c33fe661bb4b9b6f414c72a29794de8b26a/packages/angular/src/config/http-types.ts#L19)
+Defined in: [packages/angular/src/config/http-types.ts:19](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/angular/src/config/http-types.ts#L19)
 
 Headers from the request
 
@@ -48,7 +48,7 @@ Headers from the request
 
 > **method**: `string`
 
-Defined in: [packages/angular/src/config/http-types.ts:6](https://github.com/Sitecore/content-sdk/blob/c7801c33fe661bb4b9b6f414c72a29794de8b26a/packages/angular/src/config/http-types.ts#L6)
+Defined in: [packages/angular/src/config/http-types.ts:6](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/angular/src/config/http-types.ts#L6)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [packages/angular/src/config/http-types.ts:6](https://github.com/Sit
 
 > `optional` **params?**: `Record`\<`string`, `string`\>
 
-Defined in: [packages/angular/src/config/http-types.ts:24](https://github.com/Sitecore/content-sdk/blob/c7801c33fe661bb4b9b6f414c72a29794de8b26a/packages/angular/src/config/http-types.ts#L24)
+Defined in: [packages/angular/src/config/http-types.ts:24](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/angular/src/config/http-types.ts#L24)
 
 Route params when mounted on a parameterized Express path (e.g. `/sitemap-:id.xml`).
 
@@ -66,7 +66,7 @@ Route params when mounted on a parameterized Express path (e.g. `/sitemap-:id.xm
 
 > **path**: `string`
 
-Defined in: [packages/angular/src/config/http-types.ts:7](https://github.com/Sitecore/content-sdk/blob/c7801c33fe661bb4b9b6f414c72a29794de8b26a/packages/angular/src/config/http-types.ts#L7)
+Defined in: [packages/angular/src/config/http-types.ts:7](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/angular/src/config/http-types.ts#L7)
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: [packages/angular/src/config/http-types.ts:7](https://github.com/Sit
 
 > **query**: `Record`\<`string`, `string` \| `string`[] \| `undefined`\>
 
-Defined in: [packages/angular/src/config/http-types.ts:11](https://github.com/Sitecore/content-sdk/blob/c7801c33fe661bb4b9b6f414c72a29794de8b26a/packages/angular/src/config/http-types.ts#L11)
+Defined in: [packages/angular/src/config/http-types.ts:11](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/angular/src/config/http-types.ts#L11)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [packages/angular/src/config/http-types.ts:11](https://github.com/Si
 
 > `optional` **referrer?**: `string`
 
-Defined in: [packages/angular/src/config/http-types.ts:10](https://github.com/Sitecore/content-sdk/blob/c7801c33fe661bb4b9b6f414c72a29794de8b26a/packages/angular/src/config/http-types.ts#L10)
+Defined in: [packages/angular/src/config/http-types.ts:10](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/angular/src/config/http-types.ts#L10)
 
 ***
 
@@ -90,7 +90,7 @@ Defined in: [packages/angular/src/config/http-types.ts:10](https://github.com/Si
 
 > `optional` **setHeader?**: (`name`, `value`) => `void`
 
-Defined in: [packages/angular/src/config/http-types.ts:20](https://github.com/Sitecore/content-sdk/blob/c7801c33fe661bb4b9b6f414c72a29794de8b26a/packages/angular/src/config/http-types.ts#L20)
+Defined in: [packages/angular/src/config/http-types.ts:20](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/angular/src/config/http-types.ts#L20)
 
 #### Parameters
 
@@ -109,4 +109,4 @@ Defined in: [packages/angular/src/config/http-types.ts:20](https://github.com/Si
 
 > **url**: `string`
 
-Defined in: [packages/angular/src/config/http-types.ts:8](https://github.com/Sitecore/content-sdk/blob/c7801c33fe661bb4b9b6f414c72a29794de8b26a/packages/angular/src/config/http-types.ts#L8)
+Defined in: [packages/angular/src/config/http-types.ts:8](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/angular/src/config/http-types.ts#L8)
