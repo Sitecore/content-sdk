@@ -120,7 +120,7 @@ export class MultisiteProxy extends ProxyBase {
         // 'site' is provided in draft mode by the App Router editing render route handler
         siteName =
           req.nextUrl.searchParams.get(SITE_KEY) ||
-          (this.isAppRouter(res) && this.isPreview(req) && req.nextUrl.searchParams.get('site')) ||
+          (this.isPreview(req) && req.nextUrl.searchParams.get('site')) ||
           (this.config.useCookieResolution &&
             this.config.useCookieResolution(req) &&
             req.cookies.get(SITE_KEY)?.value) ||
