@@ -6,7 +6,7 @@
 
 # Interface: FacetFilter
 
-Defined in: [models.ts:14](https://github.com/Sitecore/content-sdk/blob/c7801c33fe661bb4b9b6f414c72a29794de8b26a/packages/search/src/models.ts#L14)
+Defined in: [models.ts:14](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/search/src/models.ts#L14)
 
 A filter to apply to a facet field, narrowing search results to items matching the given value(s).
 
@@ -16,7 +16,7 @@ A filter to apply to a facet field, narrowing search results to items matching t
 
 > **operator**: [`FacetFilterOperator`](../type-aliases/FacetFilterOperator.md)
 
-Defined in: [models.ts:19](https://github.com/Sitecore/content-sdk/blob/c7801c33fe661bb4b9b6f414c72a29794de8b26a/packages/search/src/models.ts#L19)
+Defined in: [models.ts:19](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/search/src/models.ts#L19)
 
 Comparison operator. Use 'eq' for strings, tags, and booleans.
 Numeric and datetime fields additionally support 'gt', 'lt', 'ge', 'le'.
@@ -27,7 +27,7 @@ Numeric and datetime fields additionally support 'gt', 'lt', 'ge', 'le'.
 
 > **value**: `string` \| `number` \| `boolean` \| (`string` \| `number` \| `boolean`)[]
 
-Defined in: [models.ts:24](https://github.com/Sitecore/content-sdk/blob/c7801c33fe661bb4b9b6f414c72a29794de8b26a/packages/search/src/models.ts#L24)
+Defined in: [models.ts:24](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/search/src/models.ts#L24)
 
 The value to filter by. Pass an array to match any of the given values (OR semantics).
 Array values are only supported with the 'eq' operator.
