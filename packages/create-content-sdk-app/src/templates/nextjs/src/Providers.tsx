@@ -42,6 +42,7 @@ const Providers = ({
         componentMap={components}
         api={scConfig.api}
         page={page}
+        theming={scConfig.theming}
         loadImportMap={() => import('.sitecore/import-map')}
         atomsConfig={{ catalog, registry, navigate: router.push }}
       >

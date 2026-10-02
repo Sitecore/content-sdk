@@ -646,6 +646,7 @@ export interface SitecoreProviderState {
     loadImportMap: () => Promise<ImportMapImport>;
     page: Page;
     setPage?: (value: Page) => void;
+    theming?: SitecoreProviderProps['theming'];
 }
 
 export { SitePathService }
@@ -671,6 +672,9 @@ export type TextFieldSchema = z.infer<ReturnType<typeof textFieldSchema>>;
 export const textFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
     value: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>;
 }, z.core.$strip>;
+
+// @public
+export const ThemePreviewEvents: () => null;
 
 // @public
 export const useBoundProp: typeof useBoundProp_2;
@@ -778,7 +782,7 @@ export function withSitecore(options?: UseSitecoreOptions): <ComponentProps exte
 // Warnings were encountered during analysis:
 //
 // src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point api-surface.d.ts
-// src/components/SitecoreProvider.tsx:108:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
+// src/components/SitecoreProvider.tsx:116:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

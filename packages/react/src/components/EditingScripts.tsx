@@ -5,6 +5,7 @@ import {
   getContentSdkPagesClientData,
   getDesignLibraryScriptLink,
 } from '@sitecore-content-sdk/content/editing';
+import { ThemePreviewEvents } from './ThemePreviewEvents';
 
 /**
  * Renders client scripts and data for editing/preview mode for Pages.
@@ -38,6 +39,7 @@ export const EditingScripts = () => {
     return (
       <>
         <script src={scriptUrl} suppressHydrationWarning></script>
+        <ThemePreviewEvents />
       </>
     );
   }
@@ -57,6 +59,7 @@ export const EditingScripts = () => {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(contentSdkClientData[id]) }}
         />
       ))}
+      <ThemePreviewEvents />
     </>
   );
 };

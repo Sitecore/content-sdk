@@ -204,6 +204,7 @@ import { Text as Text_2 } from '@sitecore-content-sdk/react';
 import { TextField } from '@sitecore-content-sdk/react';
 import { TextFieldSchema } from '@sitecore-content-sdk/react';
 import { textFieldSchema } from '@sitecore-content-sdk/react';
+import { ThemePreviewEvents } from '@sitecore-content-sdk/react';
 import { THEMING_BODY_CLASS_NAME } from '@sitecore-content-sdk/content/layout';
 import { ThemingMode } from '@sitecore-content-sdk/content/config';
 import { useBoundProp } from '@sitecore-content-sdk/react';
@@ -1211,6 +1212,8 @@ export { TextField }
 export { TextFieldSchema }
 
 export { textFieldSchema }
+
+export { ThemePreviewEvents }
 
 export { THEMING_BODY_CLASS_NAME }
 
