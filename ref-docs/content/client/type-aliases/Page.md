@@ -8,7 +8,7 @@
 
 > **Page** = `object`
 
-Defined in: [content/src/client/sitecore-client.ts:101](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/content/src/client/sitecore-client.ts#L101)
+Defined in: [content/src/client/sitecore-client.ts:101](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/content/src/client/sitecore-client.ts#L101)
 
 Represent a Page model returned from Edge endpoint
 
@@ -18,7 +18,7 @@ Represent a Page model returned from Edge endpoint
 
 > **layout**: [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)
 
-Defined in: [content/src/client/sitecore-client.ts:105](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/content/src/client/sitecore-client.ts#L105)
+Defined in: [content/src/client/sitecore-client.ts:105](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/content/src/client/sitecore-client.ts#L105)
 
 Layout details and props for the page
 
@@ -28,7 +28,7 @@ Layout details and props for the page
 
 > **locale**: `string`
 
-Defined in: [content/src/client/sitecore-client.ts:113](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/content/src/client/sitecore-client.ts#L113)
+Defined in: [content/src/client/sitecore-client.ts:113](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/content/src/client/sitecore-client.ts#L113)
 
 Route locale
 
@@ -38,7 +38,7 @@ Route locale
 
 > **mode**: [`PageMode`](PageMode.md)
 
-Defined in: [content/src/client/sitecore-client.ts:117](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/content/src/client/sitecore-client.ts#L117)
+Defined in: [content/src/client/sitecore-client.ts:117](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/content/src/client/sitecore-client.ts#L117)
 
 Page mode
 
@@ -48,6 +48,6 @@ Page mode
 
 > `optional` **siteName?**: `string`
 
-Defined in: [content/src/client/sitecore-client.ts:109](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/content/src/client/sitecore-client.ts#L109)
+Defined in: [content/src/client/sitecore-client.ts:109](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/content/src/client/sitecore-client.ts#L109)
 
 Site name for current page / route

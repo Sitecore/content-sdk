@@ -8,7 +8,7 @@
 
 > **PlaceholderGuardResolver** = (`renderings`, `context`) => `ComponentRendering`[]
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-tokens.ts:20](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/angular/src/components/placeholder/placeholder-tokens.ts#L20)
+Defined in: [packages/angular/src/components/placeholder/placeholder-tokens.ts:20](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/angular/src/components/placeholder/placeholder-tokens.ts#L20)
 
 Synchronous filter applied after layout renderings are fetched and before components
 are instantiated. Return the renderings that should mount — omit entries to block them.

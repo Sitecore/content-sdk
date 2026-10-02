@@ -6,7 +6,7 @@
 
 # Class: ExperimentalFeaturesMiddleware
 
-Defined in: [nextjs/src/editing/experimental-features-middleware.ts:21](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/nextjs/src/editing/experimental-features-middleware.ts#L21)
+Defined in: [nextjs/src/editing/experimental-features-middleware.ts:18](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/nextjs/src/editing/experimental-features-middleware.ts#L18)
 
 Middleware / handler used in the experimental features API route
 (e.g. '/api/editing/experimental'). Exposes available experimental features
@@ -30,7 +30,7 @@ Catalog is owned by this package (`src/experimental.json`) and is not app-config
 
 > **getHandler**(): (`req`, `res`) => `Promise`\<`void`\>
 
-Defined in: [nextjs/src/editing/experimental-features-middleware.ts:26](https://github.com/Sitecore/content-sdk/blob/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a/packages/nextjs/src/editing/experimental-features-middleware.ts#L26)
+Defined in: [nextjs/src/editing/experimental-features-middleware.ts:23](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/nextjs/src/editing/experimental-features-middleware.ts#L23)
 
 Gets the Next.js API route handler
 
