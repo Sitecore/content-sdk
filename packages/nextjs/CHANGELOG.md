@@ -1,5 +1,62 @@
 # @sitecore-content-sdk/nextjs
 
+## 2.5.0
+
+### Minor Changes
+
+- Add `sitecore-tools project experimental list` to show the experimental features available in the current Content SDK app. ([e1d0156](https://github.com/sitecore/content-sdk/commit/e1d01567743ba659061230b4c463eb068f9fd3da))
+  The command reads the app's framework package (`@sitecore-content-sdk/nextjs` or `@sitecore-content-sdk/angular`) and prints each feature with its enabled status. Framework packages now export `experimentalFeaturesCatalog` from their `/experimental` entry.
+- Schema.org & JSON-LD Support ([b858df1](https://github.com/sitecore/content-sdk/commit/b858df1f6f27c4f7a00a2d33c81c5e5233790233))
+- minor `@sitecore-content-sdk/content` dependency update:
+
+  - [angular] Metadata, Open Graph and Schema.org & JSON-LD Support
+
+  - `@sitecore-content-sdk/content`: `resolvePageMetadataFields` (with `PageMetadataRouteFields` / `ResolvedPageMetadataFields`) moved from `@sitecore-content-sdk/nextjs` to `@sitecore-content-sdk/content/layout`, so every framework shares the same field-to-tag rules. `@sitecore-content-sdk/nextjs` keeps re-exporting `PageMetadataRouteFields`.
+  - `@sitecore-content-sdk/angular`: added `PageMetadataService` + `<sc-page-meta-tags [route]>` (`<title>`, metadata and Open Graph `<meta>` tags via Angular's `Title`/`Meta` services) and `JsonLdSchemaService` + `<sc-json-ld-schema [page]>` (a single `<script type="application/ld+json">` in `<head>`, normal mode only). Re-exported the `PageMetadataFields`, `MetadataFields`, `OpenGraphFields`, `OpenGraphImageField(Value)` and `PageMetadataRouteFields` types.
+  - Angular template: `LayoutComponent` renders both components; `RouteFields` extends `PageMetadataFields`. ([c7801c3](https://github.com/sitecore/content-sdk/commit/c7801c33fe661bb4b9b6f414c72a29794de8b26a))
+    - Schema.org & JSON-LD Support ([b858df1](https://github.com/sitecore/content-sdk/commit/b858df1f6f27c4f7a00a2d33c81c5e5233790233))
+
+- minor `@sitecore-content-sdk/react` dependency update:
+  - Schema.org & JSON-LD Support ([b858df1](https://github.com/sitecore/content-sdk/commit/b858df1f6f27c4f7a00a2d33c81c5e5233790233))
+
+### Patch Changes
+
+- [angular] Metadata, Open Graph and Schema.org & JSON-LD Support ([c7801c3](https://github.com/sitecore/content-sdk/commit/c7801c33fe661bb4b9b6f414c72a29794de8b26a))
+
+  - `@sitecore-content-sdk/content`: `resolvePageMetadataFields` (with `PageMetadataRouteFields` / `ResolvedPageMetadataFields`) moved from `@sitecore-content-sdk/nextjs` to `@sitecore-content-sdk/content/layout`, so every framework shares the same field-to-tag rules. `@sitecore-content-sdk/nextjs` keeps re-exporting `PageMetadataRouteFields`.
+  - `@sitecore-content-sdk/angular`: added `PageMetadataService` + `<sc-page-meta-tags [route]>` (`<title>`, metadata and Open Graph `<meta>` tags via Angular's `Title`/`Meta` services) and `JsonLdSchemaService` + `<sc-json-ld-schema [page]>` (a single `<script type="application/ld+json">` in `<head>`, normal mode only). Re-exported the `PageMetadataFields`, `MetadataFields`, `OpenGraphFields`, `OpenGraphImageField(Value)` and `PageMetadataRouteFields` types.
+  - Angular template: `LayoutComponent` renders both components; `RouteFields` extends `PageMetadataFields`.
+
+- Fixed `next dev --webpack` / `next build --webpack` failing with `UnhandledSchemeError` for ([ab9e875](https://github.com/sitecore/content-sdk/commit/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09))
+  `node:events` when the generated `.sitecore/import-map.ts` imported `combineImportEntries`.
+
+  `content/tools` stays the browser-safe entry for that helper. Pure component-map helpers now live
+  apart from `glob`, and the Node-only `prepareComponentsForMap` / `buildComponentMapContent`
+  helpers (which depend on `path`) are exported from `content/node-tools`.
+
+- Sitecore webhook revalidation no longer invalidates dictionary data for every configured site on ([df0ab91](https://github.com/sitecore/content-sdk/commit/df0ab91f7e1cc1e11e1d2458da0d151ccdbea3af))
+  every call — only an actual Dictionary entry update revalidates its own site's dictionary tag.
+
+  `createSitecoreRevalidateRouteHandler` (Next.js) and `createSitecoreRevalidateMiddleware` (Angular)
+  previously appended a `sc:dict:<site>:<locale>` tag for every site in `sites` on every webhook
+  call, regardless of what the payload actually changed. Because dictionary data is shared across
+  nearly every page, this meant any unrelated content update - or even a call with no dictionary
+  changes at all - revalidated every page for that site and locale, defeating the benefit of
+  targeted, on-demand revalidation.
+
+- `MultisiteProxy` now resolves the site from the unprefixed `site` query string parameter only for draft mode App Router requests, so third-party requests containing `?site=...` no longer override the resolved site or overwrite the `sc_site` cookie. ([d6b8d75](https://github.com/sitecore/content-sdk/commit/d6b8d754abd1b9d0b9c44ac6c3c4eb267322689a))
+
+  If you need to force the site via query string, use the `sc_site` parameter (the supported one) instead of `site`. Site resolution in editing is unaffected.
+
+- `sc:item` tags no longer carry a version segment (`sc:item:<id>:<locale>`), so cache writes and ([bdfa673](https://github.com/sitecore/content-sdk/commit/bdfa67377694c76573cfc03186b832708bdb43b7))
+  webhook revalidation always agree.
+  Item cache tags could previously include a specific published version (`sc:item:<id>:<locale>:v<N>`)
+  when the layout response reported `itemVersion`, but webhook-driven revalidation always targets
+  `sc:item:<id>:<locale>:latest`. The mismatch meant those page cache entries were silently unreachable by `revalidateTag` and only went stale on cache TTL expiry.
+- `sc:item` tags now always use hyphenated lowercase GUIDs (`sc:item:<hyphenated-id>:<locale>:latest`), so cache writes and webhook revalidation always agree. ([330793b](https://github.com/sitecore/content-sdk/commit/330793b3538a3eba00242844c28348678a5704cf))
+
+  Experience Edge publish payloads send unhyphenated item IDs (`xxxxxxxxx`). Cached pages already tag content with hyphenated lowercase GUIDs (`sc:item:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx:...`). Because Next.js / loader cache tags are compared as exact strings, those invalidation tags missed and published updates could stay stale.
+
 ## 2.4.0
 
 ### Minor Changes
