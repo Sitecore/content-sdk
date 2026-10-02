@@ -3,6 +3,7 @@ import {
   EditingPreviewData,
   DesignLibraryRenderPreviewData,
 } from '@sitecore-content-sdk/content/editing';
+import type { TokenMap } from '@sitecore-content-sdk/content/personalize';
 export const DEFAULT_NOT_FOUND_ROUTE = '/404';
 export const DEFAULT_ERROR_ROUTE = '/500';
 
@@ -17,6 +18,8 @@ export interface CsdkRequestParams {
   variantId?: string;
   /** Component variant IDs */
   componentVariantIds?: string[];
+  /** Trusted dynamic content tokens written by personalize middleware */
+  tokens?: TokenMap;
 }
 /**
  * Request data from the incoming HTTP request.
@@ -168,6 +171,38 @@ export type LoaderDataResult =
  * @public
  */
 export type LoaderFn<T = unknown> = (ctx: LoaderContext) => Promise<T> | T | LoaderRedirectResult;
+
+/**
+ * Post-cache request-local finalizer. Receives the raw cached or freshly loaded
+ * value and the current request context.
+ * @param {T} value Raw loader result (never a visitor-finalized page from cache)
+ * @param {LoaderContext} context Current request loader context
+ * @returns {Promise<T> | T} Request-local value for TransferState / the response
+ * @public
+ */
+export type LoaderFinalizer<T = unknown> = (
+  value: T,
+  context: LoaderContext
+) => Promise<T> | T;
+
+/**
+ * Loader registry entry. Existing function-only registrations remain valid.
+ * Prefer {@link resolveLoaderDefinition} over calling `registry[id](ctx)`.
+ * @public
+ */
+export type LoaderDefinition<T = unknown> =
+  | LoaderFn<T>
+  | {
+      /** Raw loader. Cache this result, not the finalized value. */
+      load: LoaderFn<T>;
+      /**
+       * Optional request-local finalizer (tokens, rewrite).
+       * @param {T} value Raw value
+       * @param {LoaderContext} context Current request context
+       * @returns {Promise<T> | T} Finalized value
+       */
+      finalize?: LoaderFinalizer<T>;
+    };
 
 export class NotFoundNavigationError extends Error {
   constructor(message = 'Not Found') {

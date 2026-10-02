@@ -34,6 +34,7 @@ export const pageLoader: LoaderFn<Page> = async (context) => {
         variantId: getVariantId(context),
         componentVariantIds: getComponentVariantIds(context),
       },
+      deferFinalization: true,
     });
   }
 

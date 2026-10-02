@@ -9,6 +9,12 @@ import { getPersonalizePlugin } from '../initialization/shared';
  * A function that executes an interactive/web experiment over any web-based/mobile application.
  * @param {PersonalizeData} personalizeData - The required/optional attributes for a flow execution.
  * @param {PersonalizeOpts} opts - An object containing additional options.
+ * Token-enabled Content SDK flow outputs are expected to be a flat object with an
+ * optional `variantId` that is valid for the execution and an optional `tokens`
+ * map of string or finite-number values. Nested token objects are unsupported.
+ * Empty token strings are retained and mean missing at replacement time.
+ * This function continues to return `unknown | null | FailedCalledFlowsResponse`;
+ * hosts validate the runtime shape before use.
  * @returns {Promise<unknown | null | FailedCalledFlowsResponse>} A flow execution response.
  * @public
  */

@@ -8,15 +8,11 @@ type GetSitecoreErrorPageParams = {
   code: ErrorPage;
 };
 
-/**
- * Loads Sitecore error pages with Next.js Cache Components and the same tag strategy as
- * {@link getSitecorePage}, so webhook / `revalidateTag` flows can invalidate updated error experiences.
- */
-export async function getSitecoreErrorPage(params: GetSitecoreErrorPageParams): Promise<Page | null> {
+async function getRawSitecoreErrorPage(params: GetSitecoreErrorPageParams): Promise<Page | null> {
   'use cache';
 
   const { site, locale, code } = params;
-  const page = await client.getErrorPage(code, { site, locale });
+  const page = await client.getErrorPage(code, { site, locale, deferFinalization: true });
 
   const sitecore = page?.layout?.sitecore;
   const itemPath = sitecore?.context?.itemPath;
@@ -33,4 +29,17 @@ export async function getSitecoreErrorPage(params: GetSitecoreErrorPageParams): 
   }
 
   return page;
+}
+
+/**
+ * Loads Sitecore error pages with Next.js Cache Components and the same tag strategy as
+ * {@link getSitecorePage}, so webhook / `revalidateTag` flows can invalidate updated error experiences.
+ * Visitor-facing error pages finalize with `{}` outside the shared cache.
+ */
+export async function getSitecoreErrorPage(params: GetSitecoreErrorPageParams): Promise<Page | null> {
+  const rawPage = await getRawSitecoreErrorPage(params);
+  if (!rawPage) {
+    return null;
+  }
+  return client.finalizePersonalizedPage(rawPage, {});
 }
