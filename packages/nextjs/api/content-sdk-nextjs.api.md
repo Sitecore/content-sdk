@@ -534,6 +534,9 @@ export { ErrorPagesServiceConfig }
 export { ExperimentalFeatureData }
 
 // @public
+export const experimentalFeaturesCatalog: ExperimentalFeatureData[];
+
+// @public
 export class ExperimentalFeaturesMiddleware {
     getHandler(): (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 }
