@@ -555,8 +555,8 @@ describe('App Placeholder logic', () => {
 
     it('should pass only componentName and uid of the rendering to ErrorBoundary', () => {
       const page = getPage();
-      const component = (page.layout.sitecore.route as RouteData).placeholders
-        .main[0] as ComponentRendering;
+      page.layout = byocWrapperData;
+      const route = byocWrapperData.sitecore.route as RouteData;
       const phKey = 'main';
 
       const errorBoundarySpy = sandbox.spy(ErrorBoundary, 'default');
@@ -564,18 +564,23 @@ describe('App Placeholder logic', () => {
       render(
         <AppPlaceholder
           name={phKey}
-          rendering={page.layout.sitecore.route as RouteData}
+          rendering={route}
           componentMap={componentMap}
           page={page}
         />
       );
 
-      const { rendering } = errorBoundarySpy.getCall(0).args[0];
+      const renderings = errorBoundarySpy
+        .getCalls()
+        .map((call) => call.args[0].rendering)
+        .filter(Boolean);
 
-      expect(rendering).to.deep.equal({
-        componentName: component.componentName,
-        uid: component.uid,
-      });
+      expect(renderings).to.deep.equal(
+        (route.placeholders.main as ComponentRendering[]).map(({ componentName, uid }) => ({
+          componentName,
+          uid,
+        }))
+      );
     });
   });
 
