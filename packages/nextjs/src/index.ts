@@ -161,6 +161,7 @@ export {
   withFieldMetadata,
   withEmptyFieldEditingComponent,
   EditingScripts,
+  ThemePreviewEvents,
   Form,
   ClientEditingChromesUpdate,
   AppPlaceholder,

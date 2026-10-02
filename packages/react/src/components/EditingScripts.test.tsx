@@ -286,4 +286,97 @@ describe('<EditingScripts />', () => {
       });
     });
   });
+
+  describe('theme preview wiring', () => {
+    const themeStyleId = 'sitecore-theme-preview';
+
+    const dispatchThemeUpdate = (css: string) => {
+      window.dispatchEvent(
+        new window.MessageEvent('message', {
+          origin: window.location.origin,
+          data: { name: 'theme-update', message: { css } },
+        })
+      );
+    };
+
+    afterEach(() => {
+      document.getElementById(themeStyleId)?.remove();
+    });
+
+    it('should inject theme-update css when rendering full-page editing scripts', () => {
+      const layoutData = getLayoutData({
+        pageState: LayoutServicePageState.Edit,
+        pageEditing: true,
+      });
+
+      const page = { locale: 'en', layout: layoutData, mode };
+
+      render(
+        <SitecoreProvider componentMap={mockComponentMap} page={page}>
+          <EditingScripts />
+        </SitecoreProvider>
+      );
+
+      dispatchThemeUpdate('body { color: teal; }');
+
+      expect(document.getElementById(themeStyleId)?.textContent).to.equal('body { color: teal; }');
+    });
+
+    it('should inject theme-update css when rendering Design Library scripts', () => {
+      const designLibraryMode: PageMode = {
+        name: DesignLibraryMode.LowCode,
+        isEditing: true,
+        isDesignLibrary: true,
+        designLibrary: { isVariantGeneration: false, isLowCode: true },
+      };
+
+      const layoutData = getLayoutData({
+        pageEditing: false,
+        pageState: LayoutServicePageState.Normal,
+        renderingType: RenderingType.Component,
+        clientData: {},
+        clientScripts: [],
+      });
+
+      const page = { locale: 'en', layout: layoutData, mode: designLibraryMode };
+
+      render(
+        <SitecoreProvider componentMap={mockComponentMap} page={page}>
+          <EditingScripts />
+        </SitecoreProvider>
+      );
+
+      dispatchThemeUpdate('body { color: navy; }');
+
+      expect(document.getElementById(themeStyleId)?.textContent).to.equal('body { color: navy; }');
+    });
+
+    it('should not inject theme-update css when not in editing mode', () => {
+      const normalMode: PageMode = {
+        name: LayoutServicePageState.Normal,
+        isNormal: true,
+        isPreview: false,
+        isEditing: false,
+        isDesignLibrary: false,
+        designLibrary: { isVariantGeneration: false, isLowCode: false },
+      };
+
+      const layoutData = getLayoutData({
+        pageState: LayoutServicePageState.Normal,
+        pageEditing: false,
+      });
+
+      const page = { locale: 'en', layout: layoutData, mode: normalMode };
+
+      render(
+        <SitecoreProvider componentMap={mockComponentMap} page={page}>
+          <EditingScripts />
+        </SitecoreProvider>
+      );
+
+      dispatchThemeUpdate('body { color: maroon; }');
+
+      expect(document.getElementById(themeStyleId)).to.be.null;
+    });
+  });
 });

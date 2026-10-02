@@ -15,6 +15,7 @@ export default function Providers({ children, page }: { children: React.ReactNod
       api={scConfig.api}
       componentMap={components}
       page={page}
+      theming={scConfig.theming}
       loadImportMap={() => import('.sitecore/import-map.client')}
       atomsConfig={{
         catalog,

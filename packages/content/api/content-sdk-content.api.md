@@ -47,7 +47,13 @@ export const addServerComponentPreviewHandler: (rootComponent: ComponentRenderin
 export function addStyleElement(stylesContent: string): void;
 
 // @internal
+export const addThemeUpdateHandler: () => (() => void) | undefined;
+
+// @internal
 export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => string): T;
+
+// @internal
+export const applyThemePreviewCss: (css: string) => void;
 
 // @internal
 export interface AtomCatalogActionEntry {
@@ -1460,6 +1466,22 @@ export type StaticPath = {
 
 // @internal
 const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: string) => void;
+
+// @internal
+export const THEME_PREVIEW_STYLE_ID = "sitecore-theme-preview";
+
+// @public
+export const THEME_UPDATE_EVENT_NAME = "theme-update";
+
+// @public
+export interface ThemeUpdateEventArgs extends DesignLibraryEvent {
+    // (undocumented)
+    message: {
+        css: string;
+    };
+    // (undocumented)
+    name: typeof THEME_UPDATE_EVENT_NAME;
+}
 
 // @public
 export const THEMING_BODY_CLASS_NAME = "sc-ds-theme";
