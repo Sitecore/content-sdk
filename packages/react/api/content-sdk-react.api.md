@@ -63,6 +63,7 @@ import { RetryStrategy } from '@sitecore-content-sdk/content/client';
 import { RouteData } from '@sitecore-content-sdk/content/layout';
 import { SearchDocument } from '@sitecore-content-sdk/search';
 import { SearchParameters } from '@sitecore-content-sdk/search';
+import { SitecoreActionMeta } from '@sitecore-content-sdk/content/atoms';
 import { SitecoreComponentMeta } from '@sitecore-content-sdk/content/atoms';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { SitePathService } from '@sitecore-content-sdk/content/site';
@@ -79,7 +80,7 @@ export type AppPlaceholderProps = Omit<PlaceholderProps, 'componentMap' | 'page'
 // Warning: (ae-forgotten-export) The symbol "BaseAction" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export type AtomActionDefinition = BaseAction;
+export type AtomActionDefinition = BaseAction & SitecoreActionMeta;
 
 // @public
 export type AtomActionHandler = (params: Record<string, unknown>) => Promise<void> | void;

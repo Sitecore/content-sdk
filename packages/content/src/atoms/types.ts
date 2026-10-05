@@ -36,6 +36,8 @@ export interface AtomCatalogActionEntry {
   paramsSchema?: object;
   /** Human-readable description. */
   description: string | undefined;
+  /** Whether the action is excluded from new AI component generations. */
+  legacy: boolean;
 }
 
 /**
@@ -72,6 +74,19 @@ export interface SitecoreComponentMeta {
   allowedParents?: string[];
   /**
    * Marks the component as legacy so Design Studio excludes it from new AI component
+   * generations. Existing usages are unaffected.
+   * @default false
+   */
+  legacy?: boolean;
+}
+
+/**
+ * Sitecore-specific metadata added to an action definition.
+ * @public
+ */
+export interface SitecoreActionMeta {
+  /**
+   * Marks the action as legacy so Design Studio excludes it from new AI component
    * generations. Existing usages are unaffected.
    * @default false
    */

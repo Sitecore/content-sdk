@@ -1,6 +1,7 @@
 export type {
   SerializedCatalog,
   SitecoreComponentMeta,
+  SitecoreActionMeta,
   AtomCatalogComponentEntry,
   AtomCatalogActionEntry,
   AtomsStylingSolution,

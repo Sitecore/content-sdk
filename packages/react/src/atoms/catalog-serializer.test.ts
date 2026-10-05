@@ -220,4 +220,33 @@ describe('serializeCatalog()', () => {
     const names = serializeCatalog(catalog).actions.map((a) => a.name);
     expect(names).to.deep.equal(['open', 'close']);
   });
+
+  it('defaults action legacy to false when not set', () => {
+    const catalog = defineAtomsCatalog({
+      components: {},
+      actions: {
+        navigate: { description: 'Navigate' },
+      },
+    });
+
+    const [action] = serializeCatalog(catalog).actions;
+
+    expect(action.legacy).to.equal(false);
+  });
+
+  it('marks only the actions declared as legacy', () => {
+    const catalog = defineAtomsCatalog({
+      components: {},
+      actions: {
+        current: { description: 'Current' },
+        retired: { description: 'Retired', legacy: true },
+      },
+    });
+
+    const legacyByName = Object.fromEntries(
+      serializeCatalog(catalog).actions.map((a) => [a.name, a.legacy])
+    );
+
+    expect(legacyByName).to.deep.equal({ current: false, retired: true });
+  });
 });
