@@ -8,7 +8,7 @@
 
 > **useSitecore**(`options?`): [`SitecoreProviderState`](../interfaces/SitecoreProviderState.md)
 
-Defined in: react/types/components/SitecoreProvider.d.ts:108
+Defined in: react/types/components/SitecoreProvider.d.ts:116
 
 This hook grants acсess to the current Sitecore page and api.
 

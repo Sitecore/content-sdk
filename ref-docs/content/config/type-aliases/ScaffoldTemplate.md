@@ -8,7 +8,7 @@
 
 > **ScaffoldTemplate** = `object`
 
-Defined in: [content/src/config/models.ts:310](https://github.com/Sitecore/content-sdk/blob/d8ef09ee24ff4e01fb1e538a88aebba13f3fe89b/packages/content/src/config/models.ts#L310)
+Defined in: [content/src/config/models.ts:310](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/content/src/config/models.ts#L310)
 
 Represents a scaffold template used for generating components
 
@@ -18,7 +18,7 @@ Represents a scaffold template used for generating components
 
 > **fileExtension**: `string`
 
-Defined in: [content/src/config/models.ts:318](https://github.com/Sitecore/content-sdk/blob/d8ef09ee24ff4e01fb1e538a88aebba13f3fe89b/packages/content/src/config/models.ts#L318)
+Defined in: [content/src/config/models.ts:318](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/content/src/config/models.ts#L318)
 
 File extension for the generated component
 
@@ -28,7 +28,7 @@ File extension for the generated component
 
 > **generateTemplate**: (`componentName`) => `string`
 
-Defined in: [content/src/config/models.ts:324](https://github.com/Sitecore/content-sdk/blob/d8ef09ee24ff4e01fb1e538a88aebba13f3fe89b/packages/content/src/config/models.ts#L324)
+Defined in: [content/src/config/models.ts:324](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/content/src/config/models.ts#L324)
 
 Function to generate the component file contents based on the component name.
 
@@ -50,7 +50,7 @@ The generated content as a string.
 
 > `optional` **getNextSteps?**: (`componentOutputPath`) => `string`[]
 
-Defined in: [content/src/config/models.ts:330](https://github.com/Sitecore/content-sdk/blob/d8ef09ee24ff4e01fb1e538a88aebba13f3fe89b/packages/content/src/config/models.ts#L330)
+Defined in: [content/src/config/models.ts:330](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/content/src/config/models.ts#L330)
 
 Optional function to get the next steps to be shown by the cli after generating the component.
 
@@ -72,6 +72,6 @@ An array of strings representing the next steps.
 
 > **name**: `string`
 
-Defined in: [content/src/config/models.ts:314](https://github.com/Sitecore/content-sdk/blob/d8ef09ee24ff4e01fb1e538a88aebba13f3fe89b/packages/content/src/config/models.ts#L314)
+Defined in: [content/src/config/models.ts:314](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/content/src/config/models.ts#L314)
 
 Name of the template

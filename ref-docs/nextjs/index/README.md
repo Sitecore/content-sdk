@@ -141,6 +141,7 @@
 - [SitecoreProvider](variables/SitecoreProvider.md)
 - [SitecoreProviderReactContext](variables/SitecoreProviderReactContext.md)
 - [Text](variables/Text.md)
+- [ThemePreviewEvents](variables/ThemePreviewEvents.md)
 - [THEMING\_BODY\_CLASS\_NAME](variables/THEMING_BODY_CLASS_NAME.md)
 - [withAppPlaceholder](variables/withAppPlaceholder.md)
 - [withEditorChromes](variables/withEditorChromes.md)

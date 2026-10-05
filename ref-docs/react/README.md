@@ -146,6 +146,7 @@
 - [richTextFieldSchema](functions/richTextFieldSchema.md)
 - [SitecoreProvider](functions/SitecoreProvider.md)
 - [textFieldSchema](functions/textFieldSchema.md)
+- [ThemePreviewEvents](functions/ThemePreviewEvents.md)
 - [useSitecore](functions/useSitecore.md)
 - [withAppPlaceholder](functions/withAppPlaceholder.md)
 - [withDatasourceCheck](functions/withDatasourceCheck.md)

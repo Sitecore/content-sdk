@@ -8,7 +8,7 @@
 
 > **registerTailwindCssCompiler**(`cssFilePath?`): `Promise`\<`void`\>
 
-Defined in: [nextjs/src/instrumentation/index.ts:23](https://github.com/Sitecore/content-sdk/blob/d8ef09ee24ff4e01fb1e538a88aebba13f3fe89b/packages/nextjs/src/instrumentation/index.ts#L23)
+Defined in: [nextjs/src/instrumentation/index.ts:23](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/nextjs/src/instrumentation/index.ts#L23)
 
 Compiles Tailwind CSS from the app's main stylesheet and registers the result as the
 atoms CSS compiler (via `setAtomsCssCompiler`) so that class names that exist only in

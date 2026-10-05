@@ -30,6 +30,7 @@
 - [EditingRenderQueryParams](interfaces/EditingRenderQueryParams.md)
 - [EditingServiceConfig](interfaces/EditingServiceConfig.md)
 - [RenderComponentQueryParams](interfaces/RenderComponentQueryParams.md)
+- [ThemeUpdateEventArgs](interfaces/ThemeUpdateEventArgs.md)
 
 ## Type Aliases
 
@@ -46,10 +47,14 @@
 - [PAGES\_EDITING\_MARKER](variables/PAGES_EDITING_MARKER.md)
 - [PREVIEW\_KEY](variables/PREVIEW_KEY.md)
 - [QUERY\_PARAM\_EDITING\_SECRET](variables/QUERY_PARAM_EDITING_SECRET.md)
+- [THEME\_PREVIEW\_STYLE\_ID](variables/THEME_PREVIEW_STYLE_ID.md)
+- [THEME\_UPDATE\_EVENT\_NAME](variables/THEME_UPDATE_EVENT_NAME.md)
 
 ## Functions
 
 - [addComponentUpdateHandler](functions/addComponentUpdateHandler.md)
+- [addThemeUpdateHandler](functions/addThemeUpdateHandler.md)
+- [applyThemePreviewCss](functions/applyThemePreviewCss.md)
 - [getContentSdkPagesClientData](functions/getContentSdkPagesClientData.md)
 - [getDesignLibraryScriptLink](functions/getDesignLibraryScriptLink.md)
 - [getDesignLibraryStatusEvent](functions/getDesignLibraryStatusEvent.md)

@@ -8,7 +8,7 @@
 
 > **dateFieldSchema**(`extra?`): `ZodObject`\<\{ `value`: `ZodOptional`\<`ZodString`\>; \}, `$strip`\>
 
-Defined in: [packages/react/src/atoms/field-schemas.ts:44](https://github.com/Sitecore/content-sdk/blob/d8ef09ee24ff4e01fb1e538a88aebba13f3fe89b/packages/react/src/atoms/field-schemas.ts#L44)
+Defined in: [packages/react/src/atoms/field-schemas.ts:44](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/react/src/atoms/field-schemas.ts#L44)
 
 Zod schema for a Sitecore Date field.
 Mirrors the field shape used in the Date component (`Date.tsx` in `@sitecore-content-sdk/react`).
