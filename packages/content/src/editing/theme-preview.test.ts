@@ -73,14 +73,24 @@ describe('theme preview', () => {
       expect(appendChildSpy.calledOnceWith(styleElement)).to.be.true;
     });
 
-    it('should support clearing the previewed theme with an empty string', () => {
+    it('should remove the existing style element and not add an empty one when css is an empty string', () => {
       getElementByIdSpy.returns({ remove: removeSpy });
 
       applyThemePreviewCss('');
 
+      expect(getElementByIdSpy.calledOnceWith(THEME_PREVIEW_STYLE_ID)).to.be.true;
       expect(removeSpy.calledOnce).to.be.true;
-      expect(styleElement.textContent).to.equal('');
-      expect(appendChildSpy.calledOnceWith(styleElement)).to.be.true;
+      expect(createElementSpy.notCalled).to.be.true;
+      expect(appendChildSpy.notCalled).to.be.true;
+    });
+
+    it('should not add a style element when css is an empty string and none exists', () => {
+      getElementByIdSpy.returns(null);
+
+      applyThemePreviewCss('');
+
+      expect(createElementSpy.notCalled).to.be.true;
+      expect(appendChildSpy.notCalled).to.be.true;
     });
   });
 
@@ -197,6 +207,39 @@ describe('theme preview', () => {
 
       documentSpy.restore();
     });
+
+    it('should remove the style element without adding an empty one for an empty-css theme-update message', () => {
+      const addEventListenerSpy = sinon.spy();
+      (global as any).window = {
+        addEventListener: addEventListenerSpy,
+        removeEventListener: sinon.stub(),
+      };
+
+      const appendChildSpy = sinon.stub();
+      const createElementSpy = sinon.stub();
+      const removeSpy = sinon.stub();
+      global.document = {} as any;
+      const documentSpy = sinon.stub(global, 'document' as any).value({
+        head: { appendChild: appendChildSpy },
+        createElement: createElementSpy,
+        getElementById: sinon.stub().returns({ remove: removeSpy }),
+      });
+
+      addThemeUpdateHandler();
+      const handler = addEventListenerSpy.getCall(0).args[1];
+
+      const message = new MessageEvent('message', {
+        origin: 'http://localhost',
+        data: { name: THEME_UPDATE_EVENT_NAME, message: { css: '' } },
+      });
+
+      handler(message);
+
+      expect(removeSpy.calledOnce).to.be.true;
+      expect(createElementSpy.notCalled).to.be.true;
+      expect(appendChildSpy.notCalled).to.be.true;
+
+      documentSpy.restore();
+    });
   });
 });
-

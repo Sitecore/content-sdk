@@ -15,7 +15,7 @@ export const THEME_PREVIEW_STYLE_ID = 'sitecore-theme-preview';
 
 /**
  * Event args for the `theme-update` event.
- * `message.css` is the raw CSS to inject; an empty string clears the previewed theme.
+ * `message.css` is the raw CSS to inject; an empty string removes the previewed theme.
  * @public
  */
 export interface ThemeUpdateEventArgs extends DesignLibraryEvent {
@@ -29,12 +29,14 @@ export interface ThemeUpdateEventArgs extends DesignLibraryEvent {
  * Finds the theme preview `<style>` element (creating it if needed) and replaces its
  * content with the given CSS. Always (re)appended as the last child of `<head>` so it
  * takes precedence over the page-level theme `<link>` (same specificity, later source
- * order wins). Passing an empty string clears the previewed theme.
+ * order wins). Passing an empty string removes the style element without adding a new one.
  * @param {string} css raw CSS to inject into the style element
  * @internal
  */
 export const applyThemePreviewCss = (css: string): void => {
   document.getElementById(THEME_PREVIEW_STYLE_ID)?.remove();
+
+  if (!css) return;
 
   const style = document.createElement('style');
   style.setAttribute('id', THEME_PREVIEW_STYLE_ID);
@@ -78,4 +80,3 @@ export const addThemeUpdateHandler = (): (() => void) | undefined => {
     window.removeEventListener('message', handler);
   };
 };
-

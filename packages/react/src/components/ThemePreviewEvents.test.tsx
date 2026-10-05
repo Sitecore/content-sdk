@@ -105,7 +105,7 @@ describe('<ThemePreviewEvents />', () => {
     );
   });
 
-  it('should clear the previewed theme when message css is an empty string', () => {
+  it('should remove the previewed theme style element when message css is an empty string', () => {
     const mode: PageMode = {
       name: LayoutServicePageState.Edit,
       isNormal: false,
@@ -124,7 +124,7 @@ describe('<ThemePreviewEvents />', () => {
     dispatchThemeUpdate('body { color: blue; }');
     dispatchThemeUpdate('');
 
-    expect(document.getElementById(THEME_PREVIEW_STYLE_ID)?.textContent).to.equal('');
+    expect(document.getElementById(THEME_PREVIEW_STYLE_ID)).to.be.null;
   });
 
   it('should stop listening after unmount', () => {
@@ -149,4 +149,3 @@ describe('<ThemePreviewEvents />', () => {
     expect(document.getElementById(THEME_PREVIEW_STYLE_ID)).to.be.null;
   });
 });
-
