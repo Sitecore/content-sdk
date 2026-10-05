@@ -107,6 +107,18 @@ describe('define-config', () => {
     ]);
   });
 
+  describe('config.theming.mode', () => {
+    it("defaults to 'none' when not provided", () => {
+      const config = defineConfig(mockConfig);
+      expect(config.theming.mode).to.equal('none');
+    });
+
+    it('respects an explicit override', () => {
+      const config = defineConfig({ ...mockConfig, theming: { mode: 'site' } });
+      expect(config.theming.mode).to.equal('site');
+    });
+  });
+
   describe('getFallbackConfig', () => {
     it('populates env variables in fallback config', () => {
       process.env.SITECORE_EDGE_CONTEXT_ID = 'env-context';

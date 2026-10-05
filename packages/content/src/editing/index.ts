@@ -41,3 +41,10 @@ export {
   COMPONENT_PREVIEW_CACHE_KEY_PREFIX,
   updateComponent,
 } from './design-library';
+export {
+  THEME_UPDATE_EVENT_NAME,
+  THEME_PREVIEW_STYLE_ID,
+  ThemeUpdateEventArgs,
+  addThemeUpdateHandler,
+  applyThemePreviewCss,
+} from './theme-preview';

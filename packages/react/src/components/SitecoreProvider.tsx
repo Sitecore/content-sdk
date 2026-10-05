@@ -31,6 +31,10 @@ export interface SitecoreProviderProps {
    * Pass the catalog from defineAtomsCatalog and the registry result from defineAtomsRegistry.
    */
   atomsConfig?: AtomsConfig;
+  /**
+   * The theming configuration defined in the `SitecoreConfig`.
+   */
+  theming?: SitecoreConfig['theming'];
 
   children: React.ReactNode;
 }
@@ -66,6 +70,10 @@ export interface SitecoreProviderState {
    * The API configuration defined in the `SitecoreConfig`.
    */
   api?: SitecoreProviderProps['api'];
+  /**
+   * The theming configuration defined in the `SitecoreConfig`.
+   */
+  theming?: SitecoreProviderProps['theming'];
 }
 
 /**
@@ -112,6 +120,7 @@ export const SitecoreProvider = (props: SitecoreProviderProps) => {
     componentMap,
     loadImportMap = noopLoadImportMap,
     atomsConfig,
+    theming,
     children,
   } = props;
 
@@ -138,8 +147,9 @@ export const SitecoreProvider = (props: SitecoreProviderProps) => {
       componentMap,
       loadImportMap,
       atomsConfig,
+      theming,
     }),
-    [page, setPage, api, componentMap, loadImportMap, atomsConfig]
+    [page, setPage, api, componentMap, loadImportMap, atomsConfig, theming]
   );
 
   return (

@@ -105,6 +105,7 @@ export { withEmptyFieldEditingComponent } from './enhancers/withEmptyFieldEditin
 export { withAppPlaceholder } from './enhancers/withAppPlaceholder';
 export { withPlaceholder } from './enhancers/withPlaceholder';
 export { EditingScripts } from './components/EditingScripts';
+export { ThemePreviewEvents } from './components/ThemePreviewEvents';
 export {
   DefaultEmptyFieldEditingComponentText,
   DefaultEmptyFieldEditingComponentImage,
