@@ -5,10 +5,6 @@
   "access": "public",
   "baseBranch": "dev",
   "ignore": [],
-  "linked": [
-    ["@sitecore-content-sdk/nextjs-templates", "@sitecore-content-sdk/nextjs"],
-    ["@sitecore-content-sdk/angular-templates", "@sitecore-content-sdk/angular"]
-  ],
   "snapshot": {
     "useCalculatedVersion": true,
     "prereleaseTemplate": "{tag}.{datetime}"
