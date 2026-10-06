@@ -8,7 +8,7 @@
 
 > `const` **INVALID\_SECRET\_HTML\_MESSAGE**: `"<html><body>Missing or invalid secret</body></html>"` = `'<html><body>Missing or invalid secret</body></html>'`
 
-Defined in: [content/src/editing/utils.ts:20](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/content/src/editing/utils.ts#L20)
+Defined in: [content/src/editing/utils.ts:20](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/editing/utils.ts#L20)
 
 **`Internal`**
 
