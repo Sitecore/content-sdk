@@ -1,6 +1,10 @@
 import type { Catalog, InferCatalogInput } from '@json-render/core';
 import type { ComponentRenderer, DefineRegistryResult, ReactSchema } from '@json-render/react';
-import { AtomsStylingSolution, SitecoreComponentMeta } from '@sitecore-content-sdk/content/atoms';
+import {
+  AtomsStylingSolution,
+  SitecoreActionMeta,
+  SitecoreComponentMeta,
+} from '@sitecore-content-sdk/content/atoms';
 
 export type { AtomsStylingSolution } from '@sitecore-content-sdk/content/atoms';
 
@@ -24,7 +28,7 @@ export type AtomComponentDefinition = BaseComponent & SitecoreComponentMeta;
  * Action definition in the atoms catalog input.
  * @public
  */
-export type AtomActionDefinition = BaseAction;
+export type AtomActionDefinition = BaseAction & SitecoreActionMeta;
 
 /**
  * Input shape for defineAtomsCatalog.

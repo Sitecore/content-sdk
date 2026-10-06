@@ -58,6 +58,7 @@ export const applyThemePreviewCss: (css: string) => void;
 // @internal
 export interface AtomCatalogActionEntry {
     description: string | undefined;
+    legacy: boolean;
     name: string;
     paramsSchema?: object;
 }
@@ -1205,6 +1206,11 @@ export const SITE_PREFIX = "_site_";
 
 // @internal
 export const SITECORE_CLI_MODE_ENV_VAR = "SITECORE_CLI_MODE";
+
+// @public
+export interface SitecoreActionMeta {
+    legacy?: boolean;
+}
 
 // @public
 export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInput>;

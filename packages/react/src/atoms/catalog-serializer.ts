@@ -39,6 +39,8 @@ export function serializeCatalog(catalog: AtomsCatalog): SerializedCatalog {
       const serializedAction: AtomCatalogActionEntry = {
         name,
         description: action.description,
+        // Defaulted at serialization: defaulting in the catalog would change every atom's hash.
+        legacy: action.legacy ?? false,
       };
 
       if (action.params) serializedAction.paramsSchema = action.params.toJSONSchema();
