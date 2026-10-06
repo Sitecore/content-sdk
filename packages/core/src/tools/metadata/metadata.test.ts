@@ -4,6 +4,9 @@ import { expect } from 'chai';
 import { getMetadata } from './metadata';
 import sinon, { SinonStub } from 'sinon';
 import childProcess from 'child_process';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import metadataNextjs from './test-data/metadata-nextjs.json';
 import npmQueryResultNext from './test-data/npm-query-nextjs.json';
 import npmQueryResultNoSc from './test-data/npm-query-no-sc.json';
@@ -131,15 +134,17 @@ describe('metadata', () => {
 
     it('should return tracked packages with exact versions from result of yarn info', () => {
       runWithPackageManager(USER_AGENTS.yarn);
-      execSyncStub.withArgs(YARN_INFO).returns(
-        [
-          '{"value":"@sitecore-content-sdk/nextjs@npm:22.2.0-canary.69","children":{}}',
-          '"@sitecore-content-sdk/core@npm:22.2.0-canary.69"',
-          '{"value":"@sitecore-content-sdk/react@virtual:1a2b3c#npm:22.2.0-canary.69"}',
-          '➤ YN0000: a diagnostic that is not json',
-          '',
-        ].join('\n')
-      );
+      execSyncStub
+        .withArgs(YARN_INFO)
+        .returns(
+          [
+            '{"value":"@sitecore-content-sdk/nextjs@npm:22.2.0-canary.69","children":{}}',
+            '"@sitecore-content-sdk/core@npm:22.2.0-canary.69"',
+            '{"value":"@sitecore-content-sdk/react@virtual:1a2b3c#npm:22.2.0-canary.69"}',
+            '➤ YN0000: a diagnostic that is not json',
+            '',
+          ].join('\n')
+        );
 
       const metadata = getMetadata();
 
@@ -153,14 +158,122 @@ describe('metadata', () => {
       });
     });
 
-    it('should return tracked packages with exact versions from result of yarn classic list', () => {
+    const writeManifest = (root: string, name: string, manifest: unknown) => {
+      const manifestDirectory = path.join(root, 'node_modules', name);
+
+      fs.mkdirSync(manifestDirectory, { recursive: true });
+      fs.writeFileSync(path.join(manifestDirectory, 'package.json'), JSON.stringify(manifest));
+    };
+
+    const withProject = (manifests: { name: string; manifest: unknown }[], run: () => void) => {
+      const root = fs.mkdtempSync(path.join(os.tmpdir(), 'metadata-peers-'));
+      const cwd = process.cwd();
+
+      manifests.forEach(({ name, manifest }) => writeManifest(root, name, manifest));
+      process.chdir(root);
+
+      try {
+        run();
+      } finally {
+        process.chdir(cwd);
+        fs.rmSync(root, { recursive: true, force: true });
+      }
+    };
+
+    const nextjsPeerManifest = {
+      peerDependencies: {
+        '@sitecore-content-sdk/personalize': '^2.1.0',
+        react: '^19.2.1',
+        typescript: '^5.4.0',
+      },
+      peerDependenciesMeta: {
+        typescript: { optional: true },
+      },
+    };
+
+    it('should include a tracked peer dependency Yarn did not install', () => {
       runWithPackageManager(USER_AGENTS.yarnClassic);
       execSyncStub.withArgs(YARN_CLASSIC_LIST).returns(
-        [
-          '{"type":"progressStart","data":{"id":0,"total":5}}',
-          '{"type":"tree","data":{"type":"list","trees":[{"name":"@sitecore-content-sdk/core@22.2.0-canary.69","children":[],"depth":0},{"name":"@sitecore/byoc@0.2.15","children":[],"depth":0}]}}',
-        ].join('\n')
+        '{"type":"tree","data":{"type":"list","trees":[{"name":"@sitecore-content-sdk/nextjs@2.5.0-canary.1","children":[]}]}}'
       );
+      const execFileSyncStub = sinon.stub(childProcess, 'execFileSync').returns(
+        JSON.stringify(['2.0.0', '2.1.0', '2.1.1-canary.1', '3.0.0'])
+      );
+
+      withProject([{ name: '@sitecore-content-sdk/nextjs', manifest: nextjsPeerManifest }], () => {
+        const metadata = getMetadata();
+
+        expect(execFileSyncStub.calledOnce).to.be.true;
+        expect(execFileSyncStub.firstCall.args[2].env.METADATA_PACKAGE_NAME).to.equal(
+          '@sitecore-content-sdk/personalize'
+        );
+        expect(metadata).to.deep.equal({
+          packages: {
+            '@sitecore-content-sdk/nextjs': '2.5.0-canary.1',
+            '@sitecore-content-sdk/personalize': '2.1.0',
+          },
+        });
+      });
+    });
+
+    it('should use the installed version of a tracked peer dependency', () => {
+      runWithPackageManager(USER_AGENTS.yarnClassic);
+      execSyncStub.withArgs(YARN_CLASSIC_LIST).returns(
+        '{"type":"tree","data":{"type":"list","trees":[{"name":"@sitecore-content-sdk/nextjs@2.5.0-canary.1","children":[]}]}}'
+      );
+      const execFileSyncStub = sinon.stub(childProcess, 'execFileSync');
+
+      withProject(
+        [
+          { name: '@sitecore-content-sdk/nextjs', manifest: nextjsPeerManifest },
+          {
+            name: '@sitecore-content-sdk/personalize',
+            manifest: { version: '2.1.0' },
+          },
+        ],
+        () => {
+          const metadata = getMetadata();
+
+          expect(execFileSyncStub.called).to.be.false;
+          expect(metadata.packages['@sitecore-content-sdk/personalize']).to.equal('2.1.0');
+        }
+      );
+    });
+
+    it('should keep metadata when a missing peer dependency cannot be resolved', () => {
+      runWithPackageManager(USER_AGENTS.yarn);
+      execSyncStub
+        .withArgs(YARN_INFO)
+        .returns('"@sitecore-content-sdk/nextjs@npm:2.5.0-canary.1"');
+      sinon.stub(childProcess, 'execFileSync').throws(new Error('offline'));
+      logStub = sinon.stub(console, 'warn');
+
+      withProject([{ name: '@sitecore-content-sdk/nextjs', manifest: nextjsPeerManifest }], () => {
+        const metadata = getMetadata();
+
+        expect(
+          logStub.calledOnceWith(
+            "Unable to resolve peer dependency '@sitecore-content-sdk/personalize@^2.1.0' for metadata"
+          )
+        ).to.be.true;
+        expect(metadata).to.deep.equal({
+          packages: {
+            '@sitecore-content-sdk/nextjs': '2.5.0-canary.1',
+          },
+        });
+      });
+    });
+
+    it('should return tracked packages with exact versions from result of yarn classic list', () => {
+      runWithPackageManager(USER_AGENTS.yarnClassic);
+      execSyncStub
+        .withArgs(YARN_CLASSIC_LIST)
+        .returns(
+          [
+            '{"type":"progressStart","data":{"id":0,"total":5}}',
+            '{"type":"tree","data":{"type":"list","trees":[{"name":"@sitecore-content-sdk/core@22.2.0-canary.69","children":[],"depth":0},{"name":"@sitecore/byoc@0.2.15","children":[],"depth":0}]}}',
+          ].join('\n')
+        );
 
       const metadata = getMetadata();
 
