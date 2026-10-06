@@ -4,10 +4,10 @@ import {
   GraphQLRequestClient,
   GraphQLRequestClientFactory,
   GraphQLRequestClientFactoryConfig,
+  debug,
 } from '@sitecore-content-sdk/core';
 import { SitecoreConfigInput } from '../config';
 import { getEdgeProxyContentUrl } from './edge-proxy';
-import { debug } from '@sitecore-content-sdk/core';
 
 /**
  * GraphQL client options
@@ -17,6 +17,7 @@ export type GraphQLClientOptions = Pick<SitecoreConfigInput, 'api'> & FetchOptio
 
 /**
  * No op client to be used in browser context, when client API settings and env variables are missing
+ * @internal
  */
 export class NoOpGraphQLClient implements GraphQLClient {
   request<T>(): Promise<T> {
