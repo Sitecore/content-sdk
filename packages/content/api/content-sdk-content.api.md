@@ -1480,6 +1480,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     // (undocumented)
     protected dictionaryService: DictionaryService;
     // (undocumented)
+    edgeInitialized: boolean;
+    // (undocumented)
     protected editingService: EditingService;
     // (undocumented)
     protected errorPagesService: ErrorPagesService;

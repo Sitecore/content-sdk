@@ -1,7 +1,10 @@
 import {
   FetchOptions,
+  GraphQLClient,
   GraphQLRequestClient,
+  GraphQLRequestClientFactory,
   GraphQLRequestClientFactoryConfig,
+  debug,
 } from '@sitecore-content-sdk/core';
 import { SitecoreConfigInput } from '../config';
 import { getEdgeProxyContentUrl } from './edge-proxy';
@@ -11,6 +14,19 @@ import { getEdgeProxyContentUrl } from './edge-proxy';
  * @public
  */
 export type GraphQLClientOptions = Pick<SitecoreConfigInput, 'api'> & FetchOptions;
+
+/**
+ * No op client to be used in browser context, when client API settings and env variables are missing
+ * @internal
+ */
+export class NoOpGraphQLClient implements GraphQLClient {
+  request<T>(): Promise<T> {
+    debug.common(
+      'GraphQL client was initialized without a valid context ID in browser context. Using fallback client that returns empty results.'
+    );
+    return Promise.resolve({} as T);
+  }
+}
 
 /**
  * Creates a new GraphQLRequestClientFactory instance
@@ -47,9 +63,9 @@ export const createGraphQLClientFactory = (options: GraphQLClientOptions) => {
     // Browser bundle has no IDs – initialise a dummy client and warn
     /* eslint-disable no-console */
     console.warn(
-      'GraphQL client initialised in the browser without Edge or local API configuration; client-side requests may fail.'
+      'GraphQL client initialized in the browser without Edge or local API configuration; client-side requests will return empty results.'
     );
-    clientConfig = { endpoint: '/api/graphql' };
+    return (() => new NoOpGraphQLClient()) as unknown as GraphQLRequestClientFactory;
   } else {
     throw new Error(
       `GraphQL client misconfigured.
