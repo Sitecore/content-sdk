@@ -8,7 +8,7 @@
 
 > **compileCssForDocumentAction**(`classes`): `Promise`\<`string`\>
 
-Defined in: [nextjs/src/server-actions/compile-document-css-action.ts:31](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/nextjs/src/server-actions/compile-document-css-action.ts#L31)
+Defined in: [nextjs/src/server-actions/compile-document-css-action.ts:31](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/nextjs/src/server-actions/compile-document-css-action.ts#L31)
 
 Server Action that compiles CSS for a given set of class tokens extracted from an MMS
 Document. Returns compiled CSS from the registered atoms compiler, or an empty string

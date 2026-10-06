@@ -15,6 +15,7 @@
 - [AtomsCatalogPayload](interfaces/AtomsCatalogPayload.md)
 - [Document](interfaces/Document.md)
 - [SerializedCatalog](interfaces/SerializedCatalog.md)
+- [SitecoreActionMeta](interfaces/SitecoreActionMeta.md)
 - [SitecoreComponentMeta](interfaces/SitecoreComponentMeta.md)
 
 ## Type Aliases

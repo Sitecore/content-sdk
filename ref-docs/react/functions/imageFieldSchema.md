@@ -8,7 +8,7 @@
 
 > **imageFieldSchema**(`extra?`): `ZodObject`\<\{ `value`: `ZodOptional`\<`ZodObject`\<\{ `alt`: `ZodOptional`\<`ZodString`\>; `class`: `ZodOptional`\<`ZodString`\>; `height`: `ZodOptional`\<`ZodUnion`\<readonly \[`ZodString`, `ZodNumber`\]\>\>; `src`: `ZodOptional`\<`ZodString`\>; `width`: `ZodOptional`\<`ZodUnion`\<readonly \[`ZodString`, `ZodNumber`\]\>\>; \}, `$loose`\>\>; \}, `$strip`\>
 
-Defined in: [packages/react/src/atoms/field-schemas.ts:90](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/react/src/atoms/field-schemas.ts#L90)
+Defined in: [packages/react/src/atoms/field-schemas.ts:90](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/react/src/atoms/field-schemas.ts#L90)
 
 Zod schema for a Sitecore Image field.
 Mirrors the Sitecore Image component (`Image.tsx` in `@sitecore-content-sdk/react`).

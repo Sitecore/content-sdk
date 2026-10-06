@@ -8,7 +8,7 @@
 
 > **CachedPageParams** = `object`
 
-Defined in: [nextjs/src/cache/page-params.ts:7](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/nextjs/src/cache/page-params.ts#L7)
+Defined in: [nextjs/src/cache/page-params.ts:7](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/nextjs/src/cache/page-params.ts#L7)
 
 Represents the page params, including locale and site.
 
@@ -18,7 +18,7 @@ Represents the page params, including locale and site.
 
 > **locale**: `string`
 
-Defined in: [nextjs/src/cache/page-params.ts:11](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/nextjs/src/cache/page-params.ts#L11)
+Defined in: [nextjs/src/cache/page-params.ts:11](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/nextjs/src/cache/page-params.ts#L11)
 
 The locale of the current page.
 
@@ -28,6 +28,6 @@ The locale of the current page.
 
 > **site**: `string`
 
-Defined in: [nextjs/src/cache/page-params.ts:15](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/nextjs/src/cache/page-params.ts#L15)
+Defined in: [nextjs/src/cache/page-params.ts:15](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/nextjs/src/cache/page-params.ts#L15)
 
 The site associated with the current page.

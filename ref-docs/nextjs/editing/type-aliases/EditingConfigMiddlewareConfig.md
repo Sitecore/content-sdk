@@ -8,7 +8,7 @@
 
 > **EditingConfigMiddlewareConfig** = `object`
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:19](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/nextjs/src/editing/editing-config-middleware.ts#L19)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:19](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/nextjs/src/editing/editing-config-middleware.ts#L19)
 
 The interface for the EditingConfigMiddleware configuration.
 
@@ -18,7 +18,7 @@ The interface for the EditingConfigMiddleware configuration.
 
 > **components**: [`ComponentMap`](../../index/type-aliases/ComponentMap.md)\<[`NextjsContentSdkComponent`](../../index/type-aliases/NextjsContentSdkComponent.md)\>
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:23](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/nextjs/src/editing/editing-config-middleware.ts#L23)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:23](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/nextjs/src/editing/editing-config-middleware.ts#L23)
 
 Components available in the application
 
@@ -28,7 +28,7 @@ Components available in the application
 
 > **metadata**: `Metadata`
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:27](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/nextjs/src/editing/editing-config-middleware.ts#L27)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:27](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/nextjs/src/editing/editing-config-middleware.ts#L27)
 
 Application metadata
 
@@ -38,7 +38,7 @@ Application metadata
 
 > `optional` **theming?**: `object`
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:31](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/nextjs/src/editing/editing-config-middleware.ts#L31)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:31](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/nextjs/src/editing/editing-config-middleware.ts#L31)
 
 Design-token theming from `sitecore.config`. Exposed so Pages can detect feature compatibility.
 

@@ -8,7 +8,7 @@
 
 > **PropMeta** = `object`
 
-Defined in: [packages/react/src/atoms/schema-utils.ts:8](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/react/src/atoms/schema-utils.ts#L8)
+Defined in: [packages/react/src/atoms/schema-utils.ts:8](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/react/src/atoms/schema-utils.ts#L8)
 
 Prop metadata (e.g. control hint and field type for Design Studio).
 
@@ -18,7 +18,7 @@ Prop metadata (e.g. control hint and field type for Design Studio).
 
 > `optional` **control?**: `string`
 
-Defined in: [packages/react/src/atoms/schema-utils.ts:8](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/react/src/atoms/schema-utils.ts#L8)
+Defined in: [packages/react/src/atoms/schema-utils.ts:8](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/react/src/atoms/schema-utils.ts#L8)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [packages/react/src/atoms/schema-utils.ts:8](https://github.com/Site
 
 > `optional` **fieldType?**: `string`
 
-Defined in: [packages/react/src/atoms/schema-utils.ts:8](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/react/src/atoms/schema-utils.ts#L8)
+Defined in: [packages/react/src/atoms/schema-utils.ts:8](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/react/src/atoms/schema-utils.ts#L8)

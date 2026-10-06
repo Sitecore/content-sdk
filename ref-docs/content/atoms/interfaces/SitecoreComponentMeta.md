@@ -6,7 +6,7 @@
 
 # Interface: SitecoreComponentMeta
 
-Defined in: [content/src/atoms/types.ts:66](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/content/src/atoms/types.ts#L66)
+Defined in: [content/src/atoms/types.ts:68](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/content/src/atoms/types.ts#L68)
 
 Sitecore-specific placement metadata added to a component definition.
 
@@ -16,7 +16,7 @@ Sitecore-specific placement metadata added to a component definition.
 
 > `optional` **allowedChildren?**: `string`[]
 
-Defined in: [content/src/atoms/types.ts:70](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/content/src/atoms/types.ts#L70)
+Defined in: [content/src/atoms/types.ts:72](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/content/src/atoms/types.ts#L72)
 
 Component names that are allowed as children in this component's slots.
 
@@ -26,7 +26,7 @@ Component names that are allowed as children in this component's slots.
 
 > `optional` **allowedParents?**: `string`[]
 
-Defined in: [content/src/atoms/types.ts:72](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/content/src/atoms/types.ts#L72)
+Defined in: [content/src/atoms/types.ts:74](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/content/src/atoms/types.ts#L74)
 
 Component names that this component is allowed to be placed inside.
 
@@ -36,7 +36,7 @@ Component names that this component is allowed to be placed inside.
 
 > `optional` **legacy?**: `boolean`
 
-Defined in: [content/src/atoms/types.ts:78](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/content/src/atoms/types.ts#L78)
+Defined in: [content/src/atoms/types.ts:80](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/content/src/atoms/types.ts#L80)
 
 Marks the component as legacy so Design Studio excludes it from new AI component
 generations. Existing usages are unaffected.
@@ -53,6 +53,6 @@ false
 
 > `optional` **version?**: `string`
 
-Defined in: [content/src/atoms/types.ts:68](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/content/src/atoms/types.ts#L68)
+Defined in: [content/src/atoms/types.ts:70](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/content/src/atoms/types.ts#L70)
 
 Semver version of this component definition.

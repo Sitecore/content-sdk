@@ -8,7 +8,7 @@
 
 > **isBotServerSide**(`cookie?`, `userAgent?`): `boolean`
 
-Defined in: [analytics-core/src/bot-detection/bot-detection.ts:41](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/analytics-core/src/bot-detection/bot-detection.ts#L41)
+Defined in: [analytics-core/src/bot-detection/bot-detection.ts:41](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/analytics-core/src/bot-detection/bot-detection.ts#L41)
 
 **`Internal`**
 

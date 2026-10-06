@@ -8,7 +8,7 @@
 
 > **DesignLibraryAtomsError** = `"render"` \| `"atoms-missing"`
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:11](https://github.com/Sitecore/content-sdk/blob/958b502d1704bb305d7d8f1373f43324336459f6/packages/content/src/atoms/design-library-bridge/types.ts#L11)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:11](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/content/src/atoms/design-library-bridge/types.ts#L11)
 
 **`Internal`**
 

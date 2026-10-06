@@ -6,7 +6,7 @@
 
 # Type Alias: AtomActionDefinition
 
-> **AtomActionDefinition** = `BaseAction`
+> **AtomActionDefinition** = `BaseAction` & `SitecoreActionMeta`
 
 Defined in: react/types/atoms/types.d.ts:22
 
