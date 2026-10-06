@@ -12,7 +12,6 @@
     "build": "npm run clean && tsc && ts-node ./scripts/build-templates.ts",
     "clean": "del-cli dist types",
     "lint": "eslint \"./src/**/*.ts\"",
-    "watch": "ts-node ./scripts/watch-templates.ts",
     "test": "mocha --require ts-node/register \"./src/**/*.test.ts\"",
     "coverage": "nyc npm test"
   },
@@ -37,6 +36,9 @@
   "dependencies": {
     "inquirer": "^8.2.4"
   },
+  "peerDependencies": {
+    "@sitecore-content-sdk/cli": "^2.3.0"
+  },
   "devDependencies": {
     "@sitecore-content-sdk/angular": "^1.0.0",
     "@sitecore-content-sdk/cli": "^2.3.0",
@@ -46,12 +48,9 @@
     "@types/inquirer": "^9.0.8",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.10.4",
-    "@types/proxyquire": "^1.3.31",
     "@typescript-eslint/eslint-plugin": "8.39.0",
     "@typescript-eslint/parser": "8.39.0",
     "chai": "^4.4.1",
-    "chalk": "^4.1.2",
-    "chokidar": "^4.0.3",
     "del-cli": "^6.0.0",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.8",
@@ -62,7 +61,6 @@
     "mocha": "^11.2.2",
     "nyc": "^17.1.0",
     "prettier": "^2.8.0",
-    "proxyquire": "^2.1.3",
     "ts-node": "^10.9.2",
     "typescript": "~5.8.3"
   }

@@ -3,12 +3,15 @@ import chai, { expect } from 'chai';
 import sinon, { SinonStub } from 'sinon';
 import sinonChai from 'sinon-chai';
 import chalk from 'chalk';
-import { Initializer, InitializerResults } from './common/base/Initializer';
+import inquirer from 'inquirer';
+import { Question } from 'inquirer';
+import { ScaffoldInitData } from '@sitecore-content-sdk/cli/scaffolding';
 import * as initialize from './initialize';
 import * as registry from './registry';
 import * as helpers from './common/utils/helpers';
 import * as install from './common/processes/install';
 import * as next from './common/processes/next';
+import * as transformModule from './common/processes/transform';
 
 const { initialize: initializeFunc } = initialize;
 
@@ -16,6 +19,8 @@ chai.use(sinonChai);
 
 describe('initialize', () => {
   let log: SinonStub;
+  let promptStub: SinonStub;
+  let transformStub: SinonStub;
   let installPackagesStub: SinonStub;
   let lintFixStub: SinonStub;
   let nextStepsStub: SinonStub;
@@ -24,25 +29,33 @@ describe('initialize', () => {
 
   const defaultAppName = 'content-sdk-foo-app';
 
-  const mockInitializer = (results: Partial<InitializerResults>) => {
-    const mock = <Initializer>{};
-    mock.init = sinon.stub().returns(results);
-    return mock;
-  };
+  // Template packages now export plain data (ScaffoldInitData) rather than an
+  // initializer with an `init()` method — the CLI drives prompting + transform.
+  const mockInitializer = (
+    overrides: Partial<ScaffoldInitData<Question>> = {}
+  ): ScaffoldInitData<Question> => ({
+    name: 'foo',
+    prompts: [],
+    templatePath: 'templates/foo',
+    versions: {},
+    ...overrides,
+  });
 
   beforeEach(() => {
     log = sinon.stub(console, 'log');
+    promptStub = sinon.stub(inquirer, 'prompt').resolves({} as never);
+    transformStub = sinon.stub(transformModule, 'transform').resolves();
     installPackagesStub = sinon.stub(install, 'installPackages');
     lintFixStub = sinon.stub(install, 'lintFix');
     nextStepsStub = sinon.stub(next, 'nextSteps');
-    getInitializerStub = sinon.stub(registry, 'getInitializer');
-    openJsonFileStub = sinon
-      .stub(helpers, 'openJsonFile')
-      .returns({ name: defaultAppName });
+    getInitializerStub = sinon.stub(registry, 'getInitializerData');
+    openJsonFileStub = sinon.stub(helpers, 'openJsonFile').returns({ name: defaultAppName });
   });
 
   afterEach(() => {
     log?.restore();
+    promptStub?.restore();
+    transformStub?.restore();
     installPackagesStub?.restore();
     lintFixStub?.restore();
     nextStepsStub?.restore();
@@ -58,14 +71,17 @@ describe('initialize', () => {
       template,
     };
 
-    const mockFoo = mockInitializer({});
-    getInitializerStub.withArgs('foo').returns({ initializer: mockFoo, versions: {} });
+    const mockFoo = mockInitializer();
+    getInitializerStub.withArgs('foo').resolves(mockFoo);
 
     await initializeFunc(template, args);
 
     expect(log.getCalls().length).to.equal(1);
     expect(log.getCall(0).args[0]).to.equal(chalk.cyan(`Initializing '${template}'...`));
-    expect(mockFoo.init).to.be.calledOnceWith(args);
+    // the CLI renders the template package's folder with its bound versions
+    expect(transformStub).to.be.calledOnce;
+    expect(transformStub.getCall(0).args[0]).to.equal(mockFoo.templatePath);
+    expect(transformStub.getCall(0).args[2]).to.deep.equal(mockFoo.versions);
     expect(installPackagesStub).to.be.calledOnceWith(args.destination, args.silent);
     expect(lintFixStub).to.be.calledOnceWith(args.destination, args.silent);
     expect(nextStepsStub).to.be.calledOnceWith(defaultAppName, undefined);
@@ -80,7 +96,7 @@ describe('initialize', () => {
     };
 
     const mockFoo = mockInitializer({ nextSteps: 'foo next step' });
-    getInitializerStub.withArgs('foo').returns({ initializer: mockFoo, versions: {} });
+    getInitializerStub.withArgs('foo').resolves(mockFoo);
 
     await initializeFunc(template, args);
 
@@ -95,8 +111,8 @@ describe('initialize', () => {
       template,
     };
 
-    const mockFoo = mockInitializer({});
-    getInitializerStub.withArgs('foo').returns({ initializer: mockFoo, versions: {} });
+    const mockFoo = mockInitializer();
+    getInitializerStub.withArgs('foo').resolves(mockFoo);
 
     await initializeFunc(template, args);
 
@@ -115,8 +131,8 @@ describe('initialize', () => {
       template,
     };
 
-    const mockFoo = mockInitializer({});
-    getInitializerStub.withArgs('foo').returns({ initializer: mockFoo, versions: {} });
+    const mockFoo = mockInitializer();
+    getInitializerStub.withArgs('foo').resolves(mockFoo);
 
     await initializeFunc(template, args);
 
@@ -124,3 +140,4 @@ describe('initialize', () => {
     expect(lintFixStub).to.not.have.been.called;
   });
 });
+

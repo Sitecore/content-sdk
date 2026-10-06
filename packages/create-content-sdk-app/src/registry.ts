@@ -2,99 +2,59 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs-extra';
 import spawn from 'cross-spawn';
-import { CsdkVersions, Initializer, getVersions } from './common';
+import { ScaffoldInitData } from '@sitecore-content-sdk/cli/scaffolding';
+import AngularInitializers from '@sitecore-content-sdk/angular-templates';
+import NextJsTemplates from '@sitecore-content-sdk/nextjs-templates';
+import { Question } from 'inquirer';
+
+const curInits = [...AngularInitializers, ...NextJsTemplates];
 
 /**
  * Shape a template package (e.g. `@sitecore-content-sdk/nextjs-templates`)
  * exposes to create-content-sdk-app.
  */
 export interface TemplatePackageModule {
-  /** Registry of template name -> initializer instance. */
-  initializers: { [template: string]: Initializer };
+  /** Initializers provided by the package, one per template, keyed by `name`. */
+  default: ScaffoldInitData<Question>[];
 }
 
-/**
- * Maps each template name to the npm package that provides it.
- * Kept static so the CLI can list templates without importing every package.
- */
-const TEMPLATE_PACKAGES: { [template: string]: string } = {
-  nextjs: '@sitecore-content-sdk/nextjs-templates',
-  'nextjs-app-router': '@sitecore-content-sdk/nextjs-templates',
-  'nextjs-app-router-cache-components': '@sitecore-content-sdk/nextjs-templates',
-  angular: '@sitecore-content-sdk/angular-templates',
-};
+/** Matches the leading product prefix of a template name (e.g. `nextjs` in `nextjs-app-router`). */
+export const templateFormat = /^([a-zA-Z]+)(-.*)?/;
 
 /**
- * Lowest template package version each package supports through this CLI.
- * Requests below these baselines are served by an earlier major of the CLI.
+ * Extracts the product prefix from a template name. The product is the leading
+ * framework segment before any variant suffix (e.g. `nextjs` from
+ * `nextjs-app-router`, `angular` from `angular`).
+ * @param {string} template template name
+ * @returns {string | undefined} the product prefix, or undefined when none matches
  */
-const MIN_TEMPLATE_VERSIONS: { [pkgName: string]: string } = {
-  '@sitecore-content-sdk/nextjs-templates': '2.4.0',
-  '@sitecore-content-sdk/angular-templates': '1.0.0',
-};
+export const getProduct = (template: string): string | undefined =>
+  template.match(templateFormat)?.[1];
 
 /** CLI to point users at for template versions below the supported baselines. */
-const LEGACY_CLI_COMMAND = 'create-content-sdk-app@2';
-
-/**
- * Returns all template names known to the CLI.
- * @returns {string[]} template names
- */
-export const getAllTemplates = (): string[] => Object.keys(TEMPLATE_PACKAGES);
-
-/**
- * Extracts the numeric `major.minor.patch` core from a version-like string,
- * ignoring range prefixes (`^`, `~`) and pre-release/build suffixes. Returns
- * null when no numeric version can be determined (e.g. a dist-tag like `latest`).
- * @param {string} version version, range, or tag
- * @returns {[number, number, number] | null} the parsed version core
- */
-const parseVersionCore = (version: string): [number, number, number] | null => {
-  const match = version.trim().match(/(\d+)(?:\.(\d+))?(?:\.(\d+))?/);
-  if (!match) {
-    return null;
-  }
-  return [Number(match[1]), Number(match[2] ?? 0), Number(match[3] ?? 0)];
-};
-
-/**
- * Determines whether a requested version is below a minimum baseline, comparing
- * only the numeric core so pre-releases of the baseline (e.g. `2.4.0-canary.0`)
- * are not treated as below it. Non-numeric inputs (dist-tags) are never below.
- * @param {string} version requested version, range, or tag
- * @param {string} minimum minimum supported version
- * @returns {boolean} true when version is strictly below minimum
- */
-const isBelowMinimum = (version: string, minimum: string): boolean => {
-  const requested = parseVersionCore(version);
-  const baseline = parseVersionCore(minimum);
-  if (!requested || !baseline) {
-    return false;
-  }
-  for (let i = 0; i < 3; i++) {
-    if (requested[i] < baseline[i]) {
-      return true;
-    }
-    if (requested[i] > baseline[i]) {
-      return false;
-    }
-  }
-  return false;
-};
+const LEGACY_CLI_COMMAND = 'npx create-content-sdk-app@1';
 
 /**
  * Installs a specific version of a template package into a temporary directory
  * and returns the path from which it can be imported. Used only when the caller
  * requests a version other than the one bundled as a dependency.
  * @param {string} pkgName template package name
- * @param {string} version exact version or range to install
+ * @param {number} version major version to install
  * @returns {string} path to the installed package
  */
-const installTemplatePackage = (pkgName: string, version: string): string => {
+const installTemplatePackage = (pkgName: string, version: number): string => {
   const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'csdk-templates-'));
   const result = spawn.sync(
     'npm',
-    ['install', `${pkgName}@${version}`, '--prefix', tmpRoot, '--no-audit', '--no-fund', '--no-save'],
+    [
+      'install',
+      `${pkgName}@${version}`,
+      '--prefix',
+      tmpRoot,
+      '--no-audit',
+      '--no-fund',
+      '--no-save',
+    ],
     { stdio: 'inherit' }
   );
 
@@ -106,72 +66,67 @@ const installTemplatePackage = (pkgName: string, version: string): string => {
 };
 
 /**
- * Lazily loads a template package. When no version is provided the package that
- * ships as a dependency of create-content-sdk-app is imported. When a version is
- * provided, that exact version is installed on demand and imported instead.
- *
- * Returns the loaded module together with the directory it was resolved from, so
- * the caller can read the package's own `package.json` (e.g. to compute the
- * Content SDK versions it scaffolds).
- * @param {string} pkgName template package name
- * @param {string} [version] optional version to load
- * @returns {Promise<{ mod: TemplatePackageModule; packageDir: string }>} the loaded module and its directory
+ * Installs the requested major version of a template package on demand and imports
+ * it, returning the loaded module. Used only when the caller requests a version
+ * other than the one bundled as a dependency.
+ * @param {string} product template product (e.g. `nextjs`, `angular`)
+ * @param {number} version major version to install
+ * @returns {Promise<TemplatePackageModule>} the loaded template package module
  */
 export const loadTemplatePackage = async (
-  pkgName: string,
-  version?: string
-): Promise<{ mod: TemplatePackageModule; packageDir: string }> => {
-  const packageDir = version
-    ? installTemplatePackage(pkgName, version)
-    : path.dirname(require.resolve(`${pkgName}/package.json`));
+  product: string,
+  version: number
+): Promise<TemplatePackageModule> => {
+  const pkgName = `@sitecore-content-sdk/${product}-templates`;
+  const packageDir = installTemplatePackage(pkgName, version);
   const mod = (await import(packageDir)) as TemplatePackageModule;
-  return { mod, packageDir };
+  return mod;
 };
 
 /**
  * Resolves the initializer for a template, lazily loading its template package,
  * along with the Content SDK versions read from that package's package.json.
  * @param {string} template template name
- * @param {string} [version] optional template package version to load
- * @returns {Promise<{ initializer: Initializer; versions: CsdkVersions }>} the template's initializer and versions
+ * @param {number} [majorVersion] optional template package major version to load
+ * @returns {Promise<ScaffoldInitData<Question>>} the template's initializer and versions
  */
-export const getInitializer = async (
+export const getInitializerData = async (
   template: string,
-  version?: string
-): Promise<{ initializer: Initializer; versions: CsdkVersions }> => {
-  const pkgName = TEMPLATE_PACKAGES[template];
-  if (!pkgName) {
-    throw new Error(`Unknown template provided: '${template}'`);
+  majorVersion?: number
+): Promise<ScaffoldInitData<Question>> => {
+  if (majorVersion && majorVersion < 2 && template.startsWith('nextjs')) {
+    throw new Error(
+      `Nextjs template version '${majorVersion}' can only be scaffolded by legacy versions of create-content-sdk-app. ` +
+        `To scaffold '${template}' at v1, run \`${LEGACY_CLI_COMMAND}\` instead.`
+    );
   }
-
-  if (version) {
-    const minimum = MIN_TEMPLATE_VERSIONS[pkgName];
-    if (minimum && isBelowMinimum(version, minimum)) {
+  // use default initializers from current deps by default
+  let initializers = curInits;
+  if (majorVersion) {
+    // lazy load template package for another version
+    const product = getProduct(template);
+    if (!product) {
       throw new Error(
-        `Template version '${version}' is no longer supported by create-content-sdk-app. ` +
-          `To scaffold '${template}' below version ${minimum}, run \`${LEGACY_CLI_COMMAND}\` instead.`
+        `${template} does not belong to any known product. Please verify the input is correct.`
       );
     }
-  }
-
-  let loaded: { mod: TemplatePackageModule; packageDir: string };
-  try {
-    loaded = await loadTemplatePackage(pkgName, version);
-  } catch (error) {
-    if (version) {
+    try {
+      const loadedMod = await loadTemplatePackage(product, majorVersion);
+      initializers = loadedMod.default;
+    } catch (error) {
       throw new Error(
-        `Could not load '${pkgName}@${version}'. Verify that the version exists. ` +
+        `Could not load '${product}@${majorVersion}'. Verify that the version exists. ` +
           `(${(error as Error).message})`
       );
     }
-    throw error;
   }
-
-  const { mod, packageDir } = loaded;
-  const initializer = mod.initializers[template];
+  const initializer = initializers.find((x) => x.name === template);
   if (!initializer) {
-    throw new Error(`Template '${template}' is not provided by '${pkgName}'`);
+    throw new Error(`Template '${template}' is not available in this version`);
   }
+  return initializer;
+};
 
-  return { initializer, versions: getVersions(packageDir) };
+export const getAllTemplates = () => {
+  return curInits.map((x) => x.name);
 };

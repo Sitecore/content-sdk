@@ -1,12 +1,10 @@
-import AngularInitializer from './initializers/angular';
-import { Initializer } from './scaffolding';
-
-export * from './scaffolding';
+import { AngularInit } from './initializers/angular';
 
 /**
- * Registry of template name -> initializer instance provided by this package.
- * create-content-sdk-app discovers and lazily loads this map.
+ * Initializers provided by this package, one per template.
+ * create-content-sdk-app discovers and lazily loads this array, keying on each
+ * initializer's `name`.
  */
-export const initializers: { [template: string]: Initializer } = {
-  angular: new AngularInitializer(),
-};
+const initializers = [AngularInit];
+
+export default initializers;

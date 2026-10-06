@@ -1,16 +1,12 @@
-import NextjsInitializer from './initializers/nextjs';
-import NextjsAppRouterInitializer from './initializers/nextjs-app-router';
-import NextjsAppRouterCacheComponentsInitializer from './initializers/nextjs-app-router-cache-components';
-import { Initializer } from './scaffolding';
-
-export * from './scaffolding';
+import { NextjsInit } from './initializers/nextjs';
+import { NextjsAppRouterInit } from './initializers/nextjs-app-router';
+import { NextjsAppRouterCacheComponentsInit } from './initializers/nextjs-app-router-cache-components';
 
 /**
- * Registry of template name -> initializer instance provided by this package.
- * create-content-sdk-app discovers and lazily loads this map.
+ * Initializers provided by this package, one per template.
+ * create-content-sdk-app discovers and lazily loads this array, keying on each
+ * initializer's `name`.
  */
-export const initializers: { [template: string]: Initializer } = {
-  nextjs: new NextjsInitializer(),
-  'nextjs-app-router': new NextjsAppRouterInitializer(),
-  'nextjs-app-router-cache-components': new NextjsAppRouterCacheComponentsInitializer(),
-};
+const initializers = [NextjsInit, NextjsAppRouterInit, NextjsAppRouterCacheComponentsInit];
+
+export default initializers;

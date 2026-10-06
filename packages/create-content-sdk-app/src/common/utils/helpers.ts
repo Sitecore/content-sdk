@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
-import { JsonObjectType } from '../processes/transform';
 
 /**
  * Determines whether you are in a dev environment.
@@ -11,7 +10,6 @@ import { JsonObjectType } from '../processes/transform';
  */
 export const isDevEnvironment = (cwd?: string): boolean => {
   const currentPath = path.resolve(cwd || process.cwd());
-  // TODO: is there a better way to detect this?
   const lernaPath = path.join(currentPath, '..', '..');
 
   return fs.existsSync(path.join(lernaPath, 'lerna.json'));
@@ -32,35 +30,6 @@ export const openJsonFile = (jsonFilePath: string) => {
   }
 };
 
-/**
- * Creates a .json file and inserts provided data
- * @param {object} data data to be written into the .json file
- * @param {string} jsonFilePath a path to a file.
- */
-export const writeJsonFile = (data: { [key: string]: unknown }, jsonFilePath: string) => {
-  try {
-    fs.writeFileSync(jsonFilePath, JSON.stringify(data, null, 2), {
-      encoding: 'utf8',
-    });
-  } catch (error) {
-    console.log(chalk.red(`The following error occurred while trying to write ${jsonFilePath}:`));
-    console.log(chalk.red(error));
-  }
-};
-
-export const sortKeys = (obj: JsonObjectType) => {
-  const sorted: any = {};
-  Object.keys(obj)
-    .sort()
-    .forEach((key: string) => (sorted[key] = obj[key]));
-
-  return sorted;
-};
-
 export const writeFileToPath = (destinationPath: string, content: string) => {
   fs.writeFileSync(destinationPath, content, 'utf8');
-};
-
-export const removeFile = (filePath: string) => {
-  fs.unlinkSync(filePath);
 };

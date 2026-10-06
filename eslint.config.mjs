@@ -27,10 +27,10 @@ export default defineConfig([
     'packages/*/dist/',
     'packages/create-content-sdk-app/src/templates/**/*',
     'packages/create-content-sdk-app/src/templates/**/*.json',
-    'csdk-templates/*/node_modules/',
-    'csdk-templates/*/dist/',
-    'csdk-templates/*/src/templates/**/*',
-    'csdk-templates/*/src/templates/**/*.json',
+    'templates/*/node_modules/',
+    'templates/*/dist/',
+    'templates/*/src/templates/**/*',
+    'templates/*/src/templates/**/*.json',
   ]),
 
   // Global linter settings
@@ -169,7 +169,7 @@ export default defineConfig([
     files: ['**/*.test.{js,jsx,ts,tsx}', '**/__tests__/**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
       globals: {
-        ...globals.jest
+        ...globals.jest,
       },
     },
   },

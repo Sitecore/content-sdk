@@ -27,4 +27,8 @@ export type BaseAppArgs = {
    * Default values will be used
    */
   yes?: boolean;
+  /**
+   * major version of the product template to initialize
+   */
+  majorVersion?: number;
 };

@@ -2,14 +2,11 @@ import { DistinctQuestion } from 'inquirer';
 import { BaseAppArgs } from './args';
 import { BaseAppAnswer } from './prompts';
 
-export type InitializerResults = {
-  nextSteps?: string;
-};
-
 /**
- * Shared utilities injected by create-content-sdk-app into a template package's
- * initializer at runtime. Template packages implement `Initializer` but do not
- * depend on create-content-sdk-app; they receive the rendering pipeline here.
+ * Internal context assembled by create-content-sdk-app to drive scaffolding: the
+ * rendering pipeline bound to a template package's versions plus the CLI's base
+ * prompts. Template packages contribute data only (`ScaffoldInitData`); the CLI
+ * owns this pipeline.
  */
 export type InitContext = {
   /**
@@ -23,15 +20,3 @@ export type InitContext = {
    */
   baseAppPrompts: DistinctQuestion<BaseAppAnswer>[];
 };
-
-/**
- * Initializer base type
- */
-export interface Initializer {
-  /**
-   * Entrypoint for initializer
-   * @param {BaseAppArgs} args CLI arguments
-   * @param {InitContext} ctx shared utilities injected by create-content-sdk-app
-   */
-  init: (args: BaseAppArgs, ctx: InitContext) => Promise<InitializerResults>;
-}
