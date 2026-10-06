@@ -2,7 +2,7 @@
 
 import { NextResponse, NextRequest } from 'next/server';
 import { getSiteRewrite, SITE_KEY } from '@sitecore-content-sdk/content/site';
-import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
+import { ProxyBase, ProxyBaseConfig } from './proxy';
 import { SitecoreConfig } from '../config';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
 
@@ -67,7 +67,7 @@ export class MultisiteProxy extends ProxyBase {
   ): Promise<NextResponse> => {
     try {
       // Path can be rewritten by previously executed proxy
-      const pathname = res?.headers.get(REWRITE_HEADER_NAME) || req.nextUrl.pathname;
+      const pathname = this.getPathname(req, res);
       const language = this.getLanguage(req, res);
       const hostname = this.getHostHeader(req) || this.defaultHostname;
       const startTimestamp = Date.now();
