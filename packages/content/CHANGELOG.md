@@ -1,5 +1,32 @@
 # @sitecore-content-sdk/content
 
+## 2.4.0
+
+### Minor Changes
+
+- [angular] Metadata, Open Graph and Schema.org & JSON-LD Support ([c7801c3](https://github.com/sitecore/content-sdk/commit/c7801c33fe661bb4b9b6f414c72a29794de8b26a))
+
+  - `@sitecore-content-sdk/content`: `resolvePageMetadataFields` (with `PageMetadataRouteFields` / `ResolvedPageMetadataFields`) moved from `@sitecore-content-sdk/nextjs` to `@sitecore-content-sdk/content/layout`, so every framework shares the same field-to-tag rules. `@sitecore-content-sdk/nextjs` keeps re-exporting `PageMetadataRouteFields`.
+  - `@sitecore-content-sdk/angular`: added `PageMetadataService` + `<sc-page-meta-tags [route]>` (`<title>`, metadata and Open Graph `<meta>` tags via Angular's `Title`/`Meta` services) and `JsonLdSchemaService` + `<sc-json-ld-schema [page]>` (a single `<script type="application/ld+json">` in `<head>`, normal mode only). Re-exported the `PageMetadataFields`, `MetadataFields`, `OpenGraphFields`, `OpenGraphImageField(Value)` and `PageMetadataRouteFields` types.
+  - Angular template: `LayoutComponent` renders both components; `RouteFields` extends `PageMetadataFields`.
+
+- Schema.org & JSON-LD Support ([b858df1](https://github.com/sitecore/content-sdk/commit/b858df1f6f27c4f7a00a2d33c81c5e5233790233))
+
+### Patch Changes
+
+- Fixed `next dev --webpack` / `next build --webpack` failing with `UnhandledSchemeError` for ([ab9e875](https://github.com/sitecore/content-sdk/commit/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09))
+  `node:events` when the generated `.sitecore/import-map.ts` imported `combineImportEntries`.
+
+  `content/tools` stays the browser-safe entry for that helper. Pure component-map helpers now live
+  apart from `glob`, and the Node-only `prepareComponentsForMap` / `buildComponentMapContent`
+  helpers (which depend on `path`) are exported from `content/node-tools`.
+
+- Avoid throwing errors in scClient calls when context ID in browser is missing. ([5184ea7](https://github.com/sitecore/content-sdk/commit/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec))
+  - Replaces the GraphQL client used by scClient with no-op fallback in browser context, when public content ID is missing, preventing `getPage()`, `getDictionary()` and other GraphQL-bound method from throwing.
+  - Adds `edgeInitialized` to scClient to indicate the status of Sitecore Edge connectivity. `false` in browser when public Edge context ID is missing.
+  - Adds a guard into `getHeadLinks()` call to return empty results when both server and client context IDs are missing, instead of throwing an error.
+- Send the Sitecore Context ID for Forms in the `x-sitecore-contextid` header instead of the query string, and use the public/client context ID for stylesheet `<link>` URLs so the server context ID is not rendered in page markup. ([a8a17de](https://github.com/sitecore/content-sdk/commit/a8a17de670f6378fa21e08a9c76841c041afb7fd))
+
 ## 2.3.0
 
 ### Minor Changes
