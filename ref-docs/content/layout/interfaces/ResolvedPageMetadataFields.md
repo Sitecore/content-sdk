@@ -6,7 +6,7 @@
 
 # Interface: ResolvedPageMetadataFields
 
-Defined in: [content/src/layout/page-metadata.ts:17](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L17)
+Defined in: [content/src/layout/page-metadata.ts:17](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L17)
 
 Field values shared by every metadata/Open Graph output shape (Next.js `Metadata`, `<head>`
 tags, Angular `Meta` service, etc).
@@ -17,7 +17,7 @@ tags, Angular `Meta` service, etc).
 
 > `optional` **author?**: `string`
 
-Defined in: [content/src/layout/page-metadata.ts:27](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L27)
+Defined in: [content/src/layout/page-metadata.ts:27](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L27)
 
 Value for `<meta name="author">`, from `baseMetadataAuthor`.
 
@@ -27,7 +27,7 @@ Value for `<meta name="author">`, from `baseMetadataAuthor`.
 
 > `optional` **creationTime?**: `string`
 
-Defined in: [content/src/layout/page-metadata.ts:41](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L41)
+Defined in: [content/src/layout/page-metadata.ts:41](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L41)
 
 Creation time (route `published`), only when `creationTimeTag` is defined.
 
@@ -37,7 +37,7 @@ Creation time (route `published`), only when `creationTimeTag` is defined.
 
 > `optional` **creationTimeTag?**: `string`
 
-Defined in: [content/src/layout/page-metadata.ts:39](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L39)
+Defined in: [content/src/layout/page-metadata.ts:39](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L39)
 
 Official Open Graph creation-time tag name (e.g. `article:published_time`), if `ogType` defines one.
 
@@ -47,7 +47,7 @@ Official Open Graph creation-time tag name (e.g. `article:published_time`), if `
 
 > `optional` **description?**: `string`
 
-Defined in: [content/src/layout/page-metadata.ts:23](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L23)
+Defined in: [content/src/layout/page-metadata.ts:23](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L23)
 
 Value for `<meta name="description">`, from `baseMetadataDescription`.
 
@@ -57,7 +57,7 @@ Value for `<meta name="description">`, from `baseMetadataDescription`.
 
 > `optional` **keywords?**: `string`
 
-Defined in: [content/src/layout/page-metadata.ts:25](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L25)
+Defined in: [content/src/layout/page-metadata.ts:25](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L25)
 
 Value for `<meta name="keywords">`, from `baseMetadataKeywords`.
 
@@ -67,7 +67,7 @@ Value for `<meta name="keywords">`, from `baseMetadataKeywords`.
 
 > `optional` **metaTitle?**: `string`
 
-Defined in: [content/src/layout/page-metadata.ts:21](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L21)
+Defined in: [content/src/layout/page-metadata.ts:21](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L21)
 
 Value for `<meta name="title">`, from `baseMetadataTitle`.
 
@@ -77,7 +77,7 @@ Value for `<meta name="title">`, from `baseMetadataTitle`.
 
 > `optional` **modifiedTime?**: `string`
 
-Defined in: [content/src/layout/page-metadata.ts:45](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L45)
+Defined in: [content/src/layout/page-metadata.ts:45](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L45)
 
 Update time (route `updated`), only when `modifiedTimeTag` is defined.
 
@@ -87,7 +87,7 @@ Update time (route `updated`), only when `modifiedTimeTag` is defined.
 
 > `optional` **modifiedTimeTag?**: `string`
 
-Defined in: [content/src/layout/page-metadata.ts:43](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L43)
+Defined in: [content/src/layout/page-metadata.ts:43](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L43)
 
 Official Open Graph update-time tag name (e.g. `article:modified_time`), if `ogType` defines one.
 
@@ -97,7 +97,7 @@ Official Open Graph update-time tag name (e.g. `article:modified_time`), if `ogT
 
 > `optional` **ogDescription?**: `string`
 
-Defined in: [content/src/layout/page-metadata.ts:31](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L31)
+Defined in: [content/src/layout/page-metadata.ts:31](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L31)
 
 Value for `og:description`, from `baseOgDescription`.
 
@@ -107,7 +107,7 @@ Value for `og:description`, from `baseOgDescription`.
 
 > `optional` **ogImage?**: [`OpenGraphImageFieldValue`](OpenGraphImageFieldValue.md)
 
-Defined in: [content/src/layout/page-metadata.ts:33](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L33)
+Defined in: [content/src/layout/page-metadata.ts:33](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L33)
 
 Full `baseOgImage` field value (`src`, `width`, `height`, `alt`).
 
@@ -117,7 +117,7 @@ Full `baseOgImage` field value (`src`, `width`, `height`, `alt`).
 
 > `optional` **ogImageSrc?**: `string`
 
-Defined in: [content/src/layout/page-metadata.ts:35](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L35)
+Defined in: [content/src/layout/page-metadata.ts:35](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L35)
 
 Value for `og:image`, from `baseOgImage.src`.
 
@@ -127,7 +127,7 @@ Value for `og:image`, from `baseOgImage.src`.
 
 > `optional` **ogTitle?**: `string`
 
-Defined in: [content/src/layout/page-metadata.ts:29](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L29)
+Defined in: [content/src/layout/page-metadata.ts:29](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L29)
 
 Value for `og:title`, from `baseOgTitle`.
 
@@ -137,7 +137,7 @@ Value for `og:title`, from `baseOgTitle`.
 
 > `optional` **ogType?**: `string`
 
-Defined in: [content/src/layout/page-metadata.ts:37](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L37)
+Defined in: [content/src/layout/page-metadata.ts:37](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L37)
 
 Value for `og:type`, from `baseOgType`.
 
@@ -147,6 +147,6 @@ Value for `og:type`, from `baseOgType`.
 
 > **title**: `string`
 
-Defined in: [content/src/layout/page-metadata.ts:19](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/content/src/layout/page-metadata.ts#L19)
+Defined in: [content/src/layout/page-metadata.ts:19](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/content/src/layout/page-metadata.ts#L19)
 
 Value for `<title>`, from the route's `Title` field or the provided default title.
