@@ -6,7 +6,7 @@
 
 # Interface: CreateSitemapMiddlewareOptions
 
-Defined in: [packages/angular/src/server/middleware/sitemap-middleware.ts:11](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/angular/src/server/middleware/sitemap-middleware.ts#L11)
+Defined in: [packages/angular/src/server/middleware/sitemap-middleware.ts:11](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/angular/src/server/middleware/sitemap-middleware.ts#L11)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/angular/src/server/middleware/sitemap-middleware.ts:11](ht
 
 > **client**: [`SitecoreClient`](../content/client/classes/SitecoreClient.md)
 
-Defined in: [packages/angular/src/server/middleware/sitemap-middleware.ts:12](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/angular/src/server/middleware/sitemap-middleware.ts#L12)
+Defined in: [packages/angular/src/server/middleware/sitemap-middleware.ts:12](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/angular/src/server/middleware/sitemap-middleware.ts#L12)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [packages/angular/src/server/middleware/sitemap-middleware.ts:12](ht
 
 > **sites**: `SiteInfo`[]
 
-Defined in: [packages/angular/src/server/middleware/sitemap-middleware.ts:13](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/angular/src/server/middleware/sitemap-middleware.ts#L13)
+Defined in: [packages/angular/src/server/middleware/sitemap-middleware.ts:13](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/angular/src/server/middleware/sitemap-middleware.ts#L13)

@@ -6,7 +6,7 @@
 
 # Class: RuntimeCompileComponentFactory
 
-Defined in: [packages/angular/src/lib/design-library/component-factory.ts:79](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/angular/src/lib/design-library/component-factory.ts#L79)
+Defined in: [packages/angular/src/lib/design-library/component-factory.ts:79](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/angular/src/lib/design-library/component-factory.ts#L79)
 
 Default [DesignLibraryComponentFactory](../interfaces/DesignLibraryComponentFactory.md): executes the plain-JS preview payload against an
 import map, then compiles the resulting class explicitly via `@angular/compiler` (JIT).
@@ -35,7 +35,7 @@ still override the token with `useClass: RuntimeCompileComponentFactory` or a su
 
 > `protected` **buildImportsMap**(`importMap`): `Record`\<`string`, `Record`\<`string`, `unknown`\>\>
 
-Defined in: [packages/angular/src/lib/design-library/component-factory.ts:120](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/angular/src/lib/design-library/component-factory.ts#L120)
+Defined in: [packages/angular/src/lib/design-library/component-factory.ts:120](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/angular/src/lib/design-library/component-factory.ts#L120)
 
 Builds the ESM-style `imports` map the payload resolves bare specifiers against: a keyed object of
 `{ [module]: { [exportName]: value } }`. Accessing a module that is not in the map throws a clear
@@ -59,7 +59,7 @@ the guarded import map object.
 
 > **compile**(`source`, `importMap`): `Promise`\<`Type`\<`unknown`\>\>
 
-Defined in: [packages/angular/src/lib/design-library/component-factory.ts:89](https://github.com/Sitecore/content-sdk/blob/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec/packages/angular/src/lib/design-library/component-factory.ts#L89)
+Defined in: [packages/angular/src/lib/design-library/component-factory.ts:89](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/angular/src/lib/design-library/component-factory.ts#L89)
 
 Compiles a preview payload into a renderable component class.
 Browser-only: loads `@angular/compiler` lazily so it stays out of the SSR/prod bundle.
