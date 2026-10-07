@@ -1,6 +1,4 @@
-﻿import { execFileSync, execSync } from 'child_process';
-import fs from 'fs';
-import path from 'path';
+﻿import { execSync } from 'child_process';
 
 type Package = {
   name: string;
@@ -37,9 +35,7 @@ const PACKAGE_ENTRY = /(@[^\s/:\\]+\/[^\s/:\\]+)@([^\s]+)$/;
 const MAX_OUTPUT_BUFFER = 10 * 1024 * 1024;
 
 /**
- * Get application metadata. Non-optional tracked peer dependencies are included as well.
- * npm installs those peers on its own; Yarn does not, so a peer such as
- * `@sitecore-content-sdk/personalize` would otherwise be missing from metadata.
+ * Get application metadata
  * @param {boolean} allowWorkspaces - Whether to allow workspaces in the metadata generation.
  * @returns {Metadata} The generated metadata.
  */
@@ -62,7 +58,6 @@ export function getMetadata(allowWorkspaces: boolean = false): Metadata {
   }
 
   metadata.packages = getPackagesFromQueryResult(queryResult);
-  addMissingTrackedPeers(metadata.packages);
 
   return metadata;
 }
@@ -76,315 +71,12 @@ function getPackagesFromQueryResult(scPackages: Package[]): Record<string, strin
   const packages: Record<string, string> = {};
 
   scPackages.forEach((scPackage) => {
-    if (isTrackedPackage(scPackage.name)) {
+    if (trackedScopes.some((trackedScope) => scPackage.name.startsWith(trackedScope))) {
       packages[scPackage.name] = scPackage.version;
     }
   });
 
   return packages;
-}
-
-type PackageManifest = {
-  version?: string;
-  peerDependencies?: Record<string, string>;
-  peerDependenciesMeta?: Record<string, { optional?: boolean }>;
-};
-
-type Semver = {
-  major: number;
-  minor: number;
-  patch: number;
-  prerelease: boolean;
-};
-
-// Prints the published versions of METADATA_PACKAGE_NAME. The name stays in the environment so a
-// caret range never has to be escaped for cmd.exe.
-const PUBLISHED_VERSIONS_SCRIPT = `
-const name = process.env.METADATA_PACKAGE_NAME || '';
-const registry = (process.env.npm_config_registry || 'https://registry.npmjs.org').replace(/\\/$/, '');
-fetch(registry + '/' + encodeURIComponent(name))
-  .then((response) => (response.ok ? response.json() : {}))
-  .then((doc) => {
-    const versions = doc && doc.versions ? Object.keys(doc.versions) : [];
-    process.stdout.write(JSON.stringify(versions));
-  })
-  .catch(() => process.stdout.write('[]'));
-`;
-
-/**
- * Add tracked peer dependencies that the package manager did not list.
- * An installed copy wins. Otherwise the highest published version of the peer range is used,
- * which is the version npm would have installed.
- * @param {Record<string, string>} packages tracked packages already discovered
- */
-function addMissingTrackedPeers(packages: Record<string, string>): void {
-  const seen = new Set<string>();
-  const pending = Object.keys(packages);
-
-  while (pending.length > 0) {
-    const name = pending.pop();
-
-    if (!name || seen.has(name)) {
-      continue;
-    }
-
-    seen.add(name);
-
-    const manifest = readInstalledManifest(name);
-
-    if (!manifest) {
-      continue;
-    }
-
-    getRequiredTrackedPeers(manifest).forEach((peer) => {
-      if (packages[peer.name]) {
-        return;
-      }
-
-      const version =
-        readInstalledManifest(peer.name)?.version || resolvePublishedVersion(peer.name, peer.range);
-
-      if (!version) {
-        console.warn(
-          `Unable to resolve peer dependency '${peer.name}@${peer.range}' for metadata`
-        );
-        return;
-      }
-
-      packages[peer.name] = version;
-      pending.push(peer.name);
-    });
-  }
-}
-
-/**
- * Non-optional peer dependencies that belong to a tracked scope
- * @param {PackageManifest} manifest package manifest
- * @returns {{ name: string; range: string }[]} peers metadata should record
- */
-function getRequiredTrackedPeers(manifest: PackageManifest): { name: string; range: string }[] {
-  const peers = manifest.peerDependencies ?? {};
-  const meta = manifest.peerDependenciesMeta ?? {};
-
-  return Object.entries(peers).flatMap(([name, range]) => {
-    const optional = meta[name]?.optional === true;
-
-    return isTrackedPackage(name) && !optional && range ? [{ name, range }] : [];
-  });
-}
-
-/**
- * Read an installed package manifest from the project node_modules.
- * Resolution stays at the project root so a workspace checkout of the SDK is not picked up
- * while tests run from a package directory.
- * @param {string} name package name
- * @returns {PackageManifest | undefined} the manifest, when it is installed
- */
-function readInstalledManifest(name: string): PackageManifest | undefined {
-  const manifestPath = path.join(process.cwd(), 'node_modules', name, 'package.json');
-
-  try {
-    if (!fs.existsSync(manifestPath)) {
-      return undefined;
-    }
-
-    const parsed: unknown = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-
-    return isPackageManifest(parsed) ? parsed : undefined;
-  } catch {
-    return undefined;
-  }
-}
-
-/**
- * Highest published version that satisfies a caret or exact peer range
- * @param {string} name package name
- * @param {string} range peer dependency range
- * @returns {string | undefined} the resolved version
- */
-function resolvePublishedVersion(name: string, range: string): string | undefined {
-  if (!/^\^?\d+\.\d+\.\d+$/.test(range.trim())) {
-    return undefined;
-  }
-
-  return maxSatisfying(fetchPublishedVersions(name), range);
-}
-
-/**
- * Published versions of a package from the npm registry
- * @param {string} name package name
- * @returns {string[]} versions, empty when the registry could not be read
- */
-function fetchPublishedVersions(name: string): string[] {
-  try {
-    const output = execFileSync(process.execPath, ['-e', PUBLISHED_VERSIONS_SCRIPT], {
-      encoding: 'utf8',
-      env: { ...process.env, METADATA_PACKAGE_NAME: name },
-      maxBuffer: MAX_OUTPUT_BUFFER,
-      timeout: 20000,
-      stdio: ['ignore', 'pipe', 'pipe'],
-    });
-    const parsed: unknown = JSON.parse(output);
-
-    return Array.isArray(parsed) ? parsed.filter((version) => typeof version === 'string') : [];
-  } catch {
-    return [];
-  }
-}
-
-/**
- * @param {string[]} versions published versions
- * @param {string} range caret or exact version range
- * @returns {string | undefined} the highest matching version
- */
-function maxSatisfying(versions: string[], range: string): string | undefined {
-  return versions.reduce<string | undefined>((best, version) => {
-    if (!satisfiesRange(version, range)) {
-      return best;
-    }
-
-    return !best || compareVersions(version, best) > 0 ? version : best;
-  }, undefined);
-}
-
-/**
- * Caret and exact ranges cover the peer ranges the SDK packages declare.
- * Prereleases are excluded, so `^2.1.0` stays on releases.
- * @param {string} version published version
- * @param {string} range peer range
- * @returns {boolean} whether the version satisfies the range
- */
-function satisfiesRange(version: string, range: string): boolean {
-  const parsedVersion = parseVersion(version);
-  const trimmed = range.trim();
-  const caret = /^\^(\d+)\.(\d+)\.(\d+)$/.exec(trimmed);
-  const exact = /^(\d+)\.(\d+)\.(\d+)$/.exec(trimmed);
-
-  if (!parsedVersion || parsedVersion.prerelease) {
-    return false;
-  }
-
-  if (exact) {
-    return compareVersions(version, `${exact[1]}.${exact[2]}.${exact[3]}`) === 0;
-  }
-
-  if (!caret) {
-    return false;
-  }
-
-  const lowerBound = `${caret[1]}.${caret[2]}.${caret[3]}`;
-  const major = Number(caret[1]);
-  const minor = Number(caret[2]);
-
-  if (compareVersions(version, lowerBound) < 0) {
-    return false;
-  }
-
-  if (major > 0) {
-    return parsedVersion.major === major;
-  }
-
-  if (minor > 0) {
-    return parsedVersion.major === 0 && parsedVersion.minor === minor;
-  }
-
-  return (
-    parsedVersion.major === 0 &&
-    parsedVersion.minor === 0 &&
-    parsedVersion.patch === Number(caret[3])
-  );
-}
-
-/**
- * @param {string} version version string
- * @returns {Semver | undefined} parsed version
- */
-function parseVersion(version: string): Semver | undefined {
-  const match = /^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+.*)?$/.exec(version);
-
-  if (!match) {
-    return undefined;
-  }
-
-  return {
-    major: Number(match[1]),
-    minor: Number(match[2]),
-    patch: Number(match[3]),
-    prerelease: Boolean(match[4]),
-  };
-}
-
-/**
- * @param {string} left version
- * @param {string} right version
- * @returns {number} negative when left is older
- */
-function compareVersions(left: string, right: string): number {
-  const a = parseVersion(left);
-  const b = parseVersion(right);
-
-  if (!a || !b) {
-    return 0;
-  }
-
-  if (a.major !== b.major) {
-    return a.major - b.major;
-  }
-
-  if (a.minor !== b.minor) {
-    return a.minor - b.minor;
-  }
-
-  return a.patch - b.patch;
-}
-
-/**
- * @param {string} name package name
- * @returns {boolean} whether the package belongs to a tracked scope
- */
-function isTrackedPackage(name: string): boolean {
-  return trackedScopes.some((trackedScope) => name.startsWith(trackedScope));
-}
-
-/**
- * @param {unknown} value parsed package.json
- * @returns {value is PackageManifest} whether the value can be read as a manifest
- */
-function isPackageManifest(value: unknown): value is PackageManifest {
-  if (!isRecord(value)) {
-    return false;
-  }
-
-  const peers = value.peerDependencies;
-  const meta = value.peerDependenciesMeta;
-
-  return (
-    (value.version === undefined || typeof value.version === 'string') &&
-    (peers === undefined || isStringRecord(peers)) &&
-    (meta === undefined || isPeerMeta(meta))
-  );
-}
-
-/**
- * @param {unknown} value value to check
- * @returns {value is Record<string, string>} whether every property is a string
- */
-function isStringRecord(value: unknown): value is Record<string, string> {
-  return isRecord(value) && Object.values(value).every((entry) => typeof entry === 'string');
-}
-
-/**
- * @param {unknown} value peerDependenciesMeta
- * @returns {value is Record<string, { optional?: boolean }>} whether the meta is usable
- */
-function isPeerMeta(value: unknown): value is Record<string, { optional?: boolean }> {
-  return (
-    isRecord(value) &&
-    Object.values(value).every(
-      (entry) =>
-        isRecord(entry) && (entry.optional === undefined || typeof entry.optional === 'boolean')
-    )
-  );
 }
 
 /**
@@ -481,7 +173,8 @@ function parseNpmQuery(output: string): Package[] {
 
   return Array.isArray(parsed)
     ? parsed.filter(
-        (scPackage) => typeof scPackage?.name === 'string' && typeof scPackage?.version === 'string'
+        (scPackage) =>
+          typeof scPackage?.name === 'string' && typeof scPackage?.version === 'string'
       )
     : [];
 }
