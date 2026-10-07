@@ -11,6 +11,7 @@ import {
 } from '@sitecore-content-sdk/core/tools';
 
 import { ErrorPage, SitecoreClient } from './sitecore-client';
+import { NoOpGraphQLClient } from './utils';
 import { LayoutKind, DesignLibraryMode } from '../../src/editing';
 import { LayoutServiceData } from '../../layout';
 import { LayoutServicePageState } from '../layout';
@@ -110,6 +111,46 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).componentService = restComponentServiceStub;
     (sitecoreClient as any).sitePathService = sitePathServiceStub;
     (sitecoreClient as any).sitemapXmlService = sitemapXmlServiceStub;
+  });
+
+  describe('constructor', () => {
+    const originalWindow = global.window;
+
+    afterEach(() => {
+      global.window = originalWindow;
+    });
+
+    it('should set edgeInitialized when instantiated with a context id', () => {
+      const client = new SitecoreClient(defaultInitOptions);
+
+      expect(client.edgeInitialized).to.be.true;
+    });
+
+    it('should set edgeInitialized to false when both server and client context ids are missing', () => {
+      const client = new SitecoreClient({
+        ...defaultInitOptions,
+        api: {
+          ...defaultInitOptions.api,
+          edge: { edgeUrl: defaultInitOptions.api.edge.edgeUrl },
+        },
+      });
+
+      expect(client.edgeInitialized).to.be.false;
+    });
+
+    it('should use a NoOpGraphQLClient in the browser when the browser context id is not provided', () => {
+      const warnStub = sandbox.stub(console, 'warn');
+      // Simulate a browser bundle with no Edge/local configuration
+      (global as any).window = {};
+
+      const client = new SitecoreClient({
+        ...defaultInitOptions,
+        api: { edge: { edgeUrl: defaultInitOptions.api.edge.edgeUrl } },
+      });
+
+      expect((client as any).graphQLClient).to.be.instanceOf(NoOpGraphQLClient);
+      expect(warnStub.called).to.be.true;
+    });
   });
 
   describe('getData', () => {
@@ -1553,6 +1594,26 @@ describe('SitecoreClient', () => {
       });
 
       expect(result).to.deep.equal([]);
+    });
+
+    it('should log and return an empty array when both server and client context ids are missing', () => {
+      const warnStub = sandbox.stub(console, 'warn');
+      const clientWithoutContext = new SitecoreClient({
+        ...defaultInitOptions,
+        api: {
+          ...defaultInitOptions.api,
+          edge: { edgeUrl: defaultInitOptions.api.edge.edgeUrl },
+        },
+      });
+
+      const result = clientWithoutContext.getHeadLinks(layoutData);
+
+      expect(result).to.deep.equal([]);
+      expect(
+        warnStub.calledWith(
+          'Both client and server context IDs are absent. Cannot retrieve head links.'
+        )
+      ).to.be.true;
     });
   });
 
