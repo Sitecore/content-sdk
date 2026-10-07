@@ -5172,7 +5172,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/angular@npm:~1.0.0, @sitecore-content-sdk/angular@workspace:packages/angular":
+"@sitecore-content-sdk/angular@npm:~1.1.0, @sitecore-content-sdk/angular@workspace:packages/angular":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/angular@workspace:packages/angular"
   dependencies:
@@ -5189,7 +5189,7 @@ __metadata:
     "@eslint/js": "npm:^9.32.0"
     "@ngx-translate/core": "npm:^17.0.0"
     "@sitecore-content-sdk/analytics-core": "npm:^2.1.2"
-    "@sitecore-content-sdk/content": "npm:^2.3.0"
+    "@sitecore-content-sdk/content": "npm:^2.4.0"
     "@sitecore-content-sdk/core": "npm:^2.1.4"
     "@sitecore-content-sdk/events": "npm:^2.1.2"
     "@sitecore-content-sdk/personalize": "npm:^2.1.0"
@@ -5226,11 +5226,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/cli@npm:^2.3.0, @sitecore-content-sdk/cli@workspace:packages/cli":
+"@sitecore-content-sdk/cli@npm:^2.4.0, @sitecore-content-sdk/cli@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/cli@workspace:packages/cli"
   dependencies:
-    "@sitecore-content-sdk/content": "npm:^2.3.0"
+    "@sitecore-content-sdk/content": "npm:^2.4.0"
     "@sitecore-content-sdk/core": "npm:^2.1.4"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
@@ -5270,7 +5270,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/content@npm:^2.3.0, @sitecore-content-sdk/content@workspace:packages/content":
+"@sitecore-content-sdk/content@npm:^2.4.0, @sitecore-content-sdk/content@workspace:packages/content":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/content@workspace:packages/content"
   dependencies:
@@ -5388,17 +5388,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/nextjs@npm:^2.4.0, @sitecore-content-sdk/nextjs@workspace:packages/nextjs":
+"@sitecore-content-sdk/nextjs@npm:^2.5.0, @sitecore-content-sdk/nextjs@workspace:packages/nextjs":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/nextjs@workspace:packages/nextjs"
   dependencies:
     "@babel/parser": "npm:^7.27.2"
     "@sitecore-content-sdk/analytics-core": "npm:^2.1.2"
-    "@sitecore-content-sdk/content": "npm:^2.3.0"
+    "@sitecore-content-sdk/content": "npm:^2.4.0"
     "@sitecore-content-sdk/core": "npm:^2.1.4"
     "@sitecore-content-sdk/events": "npm:^2.1.2"
     "@sitecore-content-sdk/personalize": "npm:^2.1.0"
-    "@sitecore-content-sdk/react": "npm:^2.4.0"
+    "@sitecore-content-sdk/react": "npm:^2.5.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@testing-library/dom": "npm:^10.4.0"
     "@testing-library/react": "npm:^16.3.0"
@@ -5483,12 +5483,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sitecore-content-sdk/react@npm:^2.4.0, @sitecore-content-sdk/react@workspace:packages/react":
+"@sitecore-content-sdk/react@npm:^2.5.0, @sitecore-content-sdk/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@sitecore-content-sdk/react@workspace:packages/react"
   dependencies:
     "@sitecore-content-sdk/analytics-core": "npm:^2.1.2"
-    "@sitecore-content-sdk/content": "npm:^2.3.0"
+    "@sitecore-content-sdk/content": "npm:^2.4.0"
     "@sitecore-content-sdk/core": "npm:^2.1.4"
     "@sitecore-content-sdk/search": "npm:^0.5.0"
     "@sitecore-feaas/clientside": "npm:^0.6.0"
@@ -8689,10 +8689,10 @@ __metadata:
   resolution: "create-content-sdk-app@workspace:packages/create-content-sdk-app"
   dependencies:
     "@sitecore-content-sdk/analytics-core": "npm:^2.1.2"
-    "@sitecore-content-sdk/angular": "npm:~1.0.0"
-    "@sitecore-content-sdk/cli": "npm:^2.3.0"
+    "@sitecore-content-sdk/angular": "npm:~1.1.0"
+    "@sitecore-content-sdk/cli": "npm:^2.4.0"
     "@sitecore-content-sdk/events": "npm:^2.1.2"
-    "@sitecore-content-sdk/nextjs": "npm:^2.4.0"
+    "@sitecore-content-sdk/nextjs": "npm:^2.5.0"
     "@sitecore-content-sdk/personalize": "npm:^2.1.0"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/chai": "npm:^5.2.2"
