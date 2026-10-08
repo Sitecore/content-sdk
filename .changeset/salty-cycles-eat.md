@@ -1,7 +1,5 @@
 ---
-'@sitecore-content-sdk/content': patch
-'@sitecore-content-sdk/nextjs': patch
-'@sitecore-content-sdk/angular': patch
+"@sitecore-content-sdk/angular": patch
 ---
 
 Fixed `next dev --webpack` / `next build --webpack` failing with `UnhandledSchemeError` for

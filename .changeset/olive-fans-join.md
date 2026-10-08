@@ -1,7 +1,5 @@
 ---
-'create-content-sdk-app': patch
-'@sitecore-content-sdk/angular': patch
-'@sitecore-content-sdk/nextjs': patch
+"@sitecore-content-sdk/angular": patch
 ---
 
 Sitecore webhook revalidation no longer invalidates dictionary data for every configured site on
