@@ -390,6 +390,47 @@ describe('ProxyBase', () => {
     });
   });
 
+  describe('getPathname', () => {
+    it('should return pathname from nextUrl', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq({
+        nextUrl: {
+          pathname: '/test/path',
+        },
+      });
+
+      expect(proxy['getPathname'](req)).to.equal('/test/path');
+    });
+
+    it('should return rewrite header when present', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq();
+      const res = createRes({
+        headers: {
+          [REWRITE_HEADER_NAME]: '/rewritten/path',
+        },
+      });
+
+      expect(proxy['getPathname'](req, res)).to.equal('/rewritten/path');
+    });
+
+    it('should prefer rewrite header over nextUrl pathname', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq({
+        nextUrl: {
+          pathname: '/test/path',
+        },
+      });
+      const res = createRes({
+        headers: {
+          [REWRITE_HEADER_NAME]: '/rewritten/path',
+        },
+      });
+
+      expect(proxy['getPathname'](req, res)).to.equal('/rewritten/path');
+    });
+  });
+
   describe('getLanguage', () => {
     it('should return defined language', () => {
       const proxy = new SampleProxy({ sites: [] });
@@ -845,11 +886,9 @@ describe('defineProxy', () => {
       },
     } as unknown as NextRequest;
 
-    const result = await defineProxy(
-      redirectsProxy,
-      personalizeProxy,
-      languageRedirectProxy
-    ).exec(req);
+    const result = await defineProxy(redirectsProxy, personalizeProxy, languageRedirectProxy).exec(
+      req
+    );
 
     expect(redirectsProxy.handle).to.have.been.calledOnce;
     expect(personalizeProxy.handle).to.not.have.been.called;
