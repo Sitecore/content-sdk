@@ -1,16 +1,22 @@
+import { DistinctQuestion } from 'inquirer';
 import { BaseAppArgs } from './args';
-
-export type InitializerResults = {
-  nextSteps?: string;
-};
+import { BaseAppAnswer } from './prompts';
 
 /**
- * Initializer base type
+ * Internal context assembled by create-content-sdk-app to drive scaffolding: the
+ * rendering pipeline bound to a template package's versions plus the CLI's base
+ * prompts. Template packages contribute data only (`ScaffoldInitData`); the CLI
+ * owns this pipeline.
  */
-export interface Initializer {
+export type InitContext = {
   /**
-   * Entrypoint for initializer
-   * @param {BaseArgs} args CLI arguments
+   * Renders a template folder to the destination. The Content SDK package
+   * versions are resolved and bound by create-content-sdk-app from the template
+   * package's own package.json, so initializers do not pass them.
    */
-  init: (args: BaseAppArgs) => Promise<InitializerResults>;
-}
+  transform: (templatePath: string, args: BaseAppArgs) => Promise<void>;
+  /**
+   * Base prompts contributed by the CLI, prepended to each initializer's prompts.
+   */
+  baseAppPrompts: DistinctQuestion<BaseAppAnswer>[];
+};

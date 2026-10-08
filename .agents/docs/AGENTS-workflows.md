@@ -26,7 +26,9 @@ yarn test-packages
 
 ### 3. Change a scaffolding template
 
-- Edit under `packages/create-content-sdk-app/src/templates/nextjs/`, `nextjs-app-router/`, or `nextjs-app-router-cache-components/`
+- Edit under `templates/nextjs/src/templates/nextjs/`, `nextjs-app-router/`, or `nextjs-app-router-cache-components/`; Angular under `templates/angular/src/templates/angular/`
+- New template: add `src/templates/<template>/` and `src/initializers/<template>.ts` in the template package, then export it from that package's `src/index.ts`
+- To change SDK versions stamped into generated apps, update the template package's `@sitecore-content-sdk/*` devDependencies
 - Use `.env.*.example` for env vars (never `.env`)
 - Verify: Run `yarn watch` (with `watch.json`) or `yarn scaffold-samples`, then `npm install && npm run build` in the generated sample
 
@@ -44,7 +46,9 @@ yarn test-packages
 
 ## CLI (create-content-sdk-app)
 
-- Drive init via `Initializer.init(args)`
+- Template packages contribute **data only**: `ScaffoldInitData` (`name`, `prompts`, `templatePath`, `versions`, `nextSteps?`) from `@sitecore-content-sdk/cli/scaffolding`
+- `src/registry.ts` resolves the initializer by template name; `--majorVersion <n>` installs `@sitecore-content-sdk/<product>-templates@<n>` on demand
+- `src/initialize.ts` + `src/common/` own the pipeline (base prompts, transform)
 - Clear prompts and defaults
 - Install dependencies after scaffolding
 - Print next steps
@@ -65,7 +69,7 @@ yarn test-packages
 **Focus on:**
 
 - `src/**` in packages
-- `packages/create-content-sdk-app/src/templates/**`
+- `templates/*/src/**` (templates and initializers)
 - `*.test.ts`, `*.spec.ts`
 
 **Environment variables:** Document in `.env.example` (or template `.env.*.example`) with placeholders only. Never commit `.env` or `.env.local`. See [RULES-safety.md](RULES-safety.md).

@@ -4,6 +4,19 @@
   "description": "Sitecore Content SDK CLI",
   "main": "dist/cjs/cli.js",
   "module": "dist/esm/cli.js",
+  "types": "types/cli.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/cli.d.ts",
+      "import": "./dist/esm/cli.js",
+      "require": "./dist/cjs/cli.js"
+    },
+    "./scaffolding": {
+      "types": "./types/scaffolding/index.d.ts",
+      "import": "./dist/esm/scaffolding/index.js",
+      "require": "./dist/cjs/scaffolding/index.js"
+    }
+  },
   "sideEffects": false,
   "publishConfig": {
     "access": "public",
@@ -75,6 +88,7 @@
   "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
   "files": [
     "dist",
-    "types"
+    "types",
+    "/*.d.ts"
   ]
 }

@@ -3,6 +3,7 @@ description: Code style, error handling, logging, imports, lint/format
 alwaysApply: false
 globs:
   - 'packages/**/src/**'
+  - 'templates/*/src/**'
   - 'scripts/**'
 ---
 

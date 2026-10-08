@@ -35,14 +35,17 @@ content-sdk/
 │   ├── events/                 # Event tracking
 │   ├── personalize/            # Personalization
 │   ├── cli/                    # sitecore-tools CLI
-│   ├── create-content-sdk-app/ # Scaffolding + templates
+│   ├── create-content-sdk-app/ # Scaffolding CLI (registry, init flow)
 │   ├── nextjs/                 # Next.js integration
 │   └── react/                  # React field components
+├── templates/                  # Versioned template packages (@sitecore-content-sdk/<product>-templates)
+│   ├── nextjs/                 # nextjs, nextjs-app-router, nextjs-app-router-cache-components
+│   └── angular/                # angular
 ├── samples/                    # Generated example apps
 └── scripts/                    # Monorepo scripts
 ```
 
-**Which package?** core (GraphQL/cache) · content (layout/editing) · cli · create-content-sdk-app (templates/init) · nextjs · react. Full table: [.agents/docs/AGENTS-repo-and-packages.md](.agents/docs/AGENTS-repo-and-packages.md).
+**Which package?** core (GraphQL/cache) · content (layout/editing) · cli · create-content-sdk-app (CLI/registry) · templates/<product> (template files + initializers) · nextjs · react. Full table: [.agents/docs/AGENTS-repo-and-packages.md](.agents/docs/AGENTS-repo-and-packages.md).
 
 **Samples:** `yarn scaffold-samples`; live template dev via `yarn watch` in create-content-sdk-app. Inside `samples/`, use that app's `AGENTS.md`.
 
@@ -69,8 +72,8 @@ More: [RULES-code-style.md](.agents/docs/RULES-code-style.md) · [RULES-javascri
 | Use existing utilities and common code | Edit `dist/**` or other build output |
 | Follow patterns in templates and packages | Change env vars or commit `.env` files |
 | Ensure template edits build in generated apps | Add dependencies without explicit approval |
-| Drive CLI flows via `Initializer.init(args)` | Modify `yarn.lock` / `package-lock.json` unless required |
-| Reuse common processes (`src/common/` in create-content-sdk-app) | Rewrite folder structure without asking |
+| Add templates as `ScaffoldInitData` exports in `templates/<product>/src/initializers/` | Modify `yarn.lock` / `package-lock.json` unless required |
+| Reuse CLI common processes (`packages/create-content-sdk-app/src/common/`) | Rewrite folder structure without asking |
 | Run `yarn build` after template changes | Touch CI or global config without explicit instruction |
 | Run `yarn api-extractor` when changing public exports | Modify `.github/workflows/` without instruction |
 

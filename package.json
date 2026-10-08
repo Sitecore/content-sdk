@@ -54,6 +54,7 @@
   },
   "workspaces": [
     "packages/*",
+    "templates/*",
     "samples/*"
   ],
   "resolutions": {

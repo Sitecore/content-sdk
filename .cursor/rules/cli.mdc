@@ -1,17 +1,22 @@
 ---
-description: CLI behavior, prompts, init flow, next steps
+description: Scaffolding CLI behavior, template registry, initializers, prompts, init flow, next steps
 alwaysApply: false
 globs:
-  - 'packages/create-content-sdk-app/src/initializers/**'
+  - 'packages/create-content-sdk-app/src/registry.ts'
   - 'packages/create-content-sdk-app/src/initialize.ts'
   - 'packages/create-content-sdk-app/src/index.ts'
   - 'packages/create-content-sdk-app/src/bin.ts'
-  - 'packages/create-content-sdk-app/src/common/processes/**'
+  - 'packages/create-content-sdk-app/src/common/**'
+  - 'packages/cli/src/scaffolding/**'
+  - 'templates/*/src/initializers/**'
+  - 'templates/*/src/index.ts'
 ---
 
 # CLI
 
-- Drive init via `Initializer.init(args)`
+- Template packages (`templates/<product>`) export `ScaffoldInitData` (`name`, `prompts`, `templatePath`, `versions`) — data only, no init logic
+- `registry.ts` resolves initializers by template name; `--majorVersion` installs `@sitecore-content-sdk/<product>-templates@<major>` on demand
+- Pipeline (base prompts, transform) lives in `initialize.ts` + `src/common/`
 - Clear prompts and defaults; install dependencies after scaffolding; print next steps
 - Backwards compatible arg names; additive changes with defaults
 

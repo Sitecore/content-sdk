@@ -5,6 +5,7 @@ globs:
   - '**/*.test.ts'
   - '**/*.spec.ts'
   - 'packages/**/.nycrc'
+  - 'templates/*/.nycrc'
   - 'coverage/**'
 ---
 

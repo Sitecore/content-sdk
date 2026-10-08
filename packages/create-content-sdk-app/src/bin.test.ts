@@ -8,7 +8,7 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { ParsedArgs } from 'minimist';
 import { parseArgs, main, printHelp, promptDestination, getDestination } from './bin';
-import * as helpers from './common/utils/helpers';
+import * as registry from './registry';
 import * as initialize from './initialize';
 
 chai.use(sinonChai);
@@ -130,7 +130,7 @@ describe('bin', () => {
     };
 
     beforeEach(() => {
-      getAllTemplatesStub = sinon.stub(helpers, 'getAllTemplates');
+      getAllTemplatesStub = sinon.stub(registry, 'getAllTemplates');
       inquirerPromptStub = sinon.stub(inquirer, 'prompt');
       fsExistsSyncStub = sinon.stub(fs, 'existsSync');
       fsReaddirSyncStub = sinon.stub(fs, 'readdirSync');
