@@ -16,7 +16,7 @@ description: Page/dictionary fetch via SitecoreClient in [[...path]].tsx getStat
 ## Rules
 
 - Path from `extractPath(context)`; locale from `context.locale`
-- `client.getPage(path, { locale })` then `getDictionary` and `getComponentData`
+- `client.getPage(path, { locale, tokens: readPersonalizeTokens(...) ?? {} })` then `getDictionary` and `getComponentData`. Omit `tokens` only in preview.
 - SSG paths: `client.getPagePaths(sites, context?.locales)`
 
 ## Stop

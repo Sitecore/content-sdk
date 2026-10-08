@@ -15,7 +15,7 @@ description: Personalize middleware variants in loaders; SITECORE_ANALYTICS even
 
 ## Rules
 
-- `createPersonalizeMiddleware` writes variants to `req.scParams`; the loader forwards them with `getVariantId(context)` / `getComponentVariantIds(context)` into `getPage(..., { personalize })`
+- `createPersonalizeMiddleware` writes variants and trusted `tokens` to `req.scParams`; the page loader forwards variants into `getPage(..., { personalize, deferFinalization: true })` and `finalizePageLoader` applies `getPersonalizeTokens(context) ?? {}`
 - Personalize runs after multisite, bot tracking and redirects — do not move it
 - Prefetch requests (`x-sc-purpose: prefetch`), bots, editing/preview and `/api/*` are skipped; a prefetch must never fire a CDP exposure event
 - A CDP timeout falls back to the default variant — never block the render on CDP

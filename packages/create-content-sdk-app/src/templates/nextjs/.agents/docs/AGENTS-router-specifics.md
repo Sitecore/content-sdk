@@ -9,7 +9,7 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 - **SSG:** Uses `getStaticPaths` and `getStaticProps`. Paths from `client.getPagePaths(sites, context?.locales)` with `sites` from `.sitecore/sites.json`. Use `revalidate` for ISR.
 - **SSR:** Uses `getServerSideProps` only; no `getStaticPaths`.
 - **Preview:** `context.preview` and `context.previewData`; use `client.getPreview(context.previewData)` or `client.getDesignLibraryData(context.previewData)` when applicable.
-- **Page data:** `client.getPage(path, { locale: context.locale })`, then `client.getDictionary({ site: page.siteName, locale: page.locale })` and `client.getComponentData(page.layout, context, components)` for component props.
+- **Page data:** `client.getPage(path, { locale: context.locale, tokens })` where `tokens` is `readPersonalizeTokens(context.req.headers) ?? {}` on SSR and `{}` on SSG. Then `client.getDictionary({ site: page.siteName, locale: page.locale })` and `client.getComponentData(page.layout, context, components)`. Omitting `tokens` preserves `{{...}}` placeholders.
 
 ## i18n (Pages Router)
 
