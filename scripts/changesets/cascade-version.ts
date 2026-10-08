@@ -53,9 +53,11 @@ async function main(): Promise<void> {
   const cwd = process.cwd();
 
   console.log('📦 Custom changeset cascade version script: start...');
-  // Read all necessary data
   const packages = await getPackages(cwd);
-  const config = await readConfig(cwd, packages);
+  const config = (await readConfig(cwd, packages))?.config;
+  if (!config) {
+    throw new Error('Failed to read changesets config (.changeset/config.json).');
+  }
   if (dryRun) {
     console.log('🔍 DRY RUN MODE - Forcing no git commit to be made');
     config.commit = false;
@@ -243,4 +245,3 @@ main().catch((error: unknown) => {
   console.error(err.stack);
   process.exit(1);
 });
-
