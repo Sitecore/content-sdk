@@ -12,6 +12,8 @@ on:
     branches:
       - dev
       - 'release/**'
+      # Holds released code only; updated by the publish job itself.
+      - '!release/latest'
     paths:
       - '**'
 
@@ -21,6 +23,11 @@ jobs:
   stable-release-prep:
     runs-on: ubuntu-latest
     if: ${{ !startsWith(github.ref_name, 'release/betas') }}
+    # One stable run per branch at a time, so overlapping pushes don't race on the API docs push,
+    # the release/latest sync and the dev cherry-pick. Never cancel a run that may be publishing.
+    concurrency:
+      group: stable-release-${{ github.ref }}
+      cancel-in-progress: false
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
     steps:
@@ -75,21 +82,30 @@ jobs:
         env:
           BRANCH_NAME: ${{ github.ref_name }}
         run: |
-          if [[ "$BRANCH_NAME" == release/* ]]; then
-            BRANCH_END="${BRANCH_NAME#release/}"
-            if [[ "$BRANCH_END" == 1.x.x ]]; then
-              RELEASE="NextJS v1.x hotfix"
-              NPM_TAG="ver1"
-            else
-              RELEASE="legacy version hotfix"
-              NPM_TAG="legacy"
-            fi
+          # Tag by release type, not just "is a release branch":
+          #  - dev, limited release (release/limited/*) and latest hotfix (release/hotfix/*)
+          #    all publish current packages -> `latest`
+          #  - the NextJS v1.x maintenance line -> `ver1`
+          #  - legacy maintenance branches (release/legacy/*) and any other release branch -> `legacy`
+          if [[ "$BRANCH_NAME" == release/limited/* || "$BRANCH_NAME" == release/hotfix/* ]]; then
+            NPM_TAG="latest"
+          elif [[ "$BRANCH_NAME" == release/1.x.x ]]; then
+            NPM_TAG="ver1"
+          elif [[ "$BRANCH_NAME" == release/legacy/* ]]; then
+            NPM_TAG="legacy"
           else
             NPM_TAG="latest"
-            RELEASE="latest release"
           fi
-          echo "release_text=$RELEASE" >> "$GITHUB_OUTPUT"
           echo "npm_tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
+
+      # Guardrail for lines publishing to npm `latest` from a side branch: fail if a version this push
+      # is about to publish is already on npm from another line (changeset publish would skip it
+      # silently) or is lower than npm `latest` (it would move `latest` back).
+      - name: Check release versions against npm
+        if: startsWith(github.ref_name, 'release/limited/') || startsWith(github.ref_name, 'release/hotfix/')
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+        run: yarn csdk:check-release-versions
 
       - name: Prepare and Process Changesets Release
         id: changesets
@@ -98,11 +114,67 @@ jobs:
           version-script: yarn csdk:prep-release
           publish-script: yarn changeset:publish --tag ${{ steps.npm-tags.outputs.npm_tag }}
           commit-message: '[release][ci] Version bump and changelog'
-          pr-title: ${{ format('[csdk] {0}', steps.npm-tags.outputs.release_text) }}
+          pr-title: ${{ github.ref_name == 'dev' && '[csdk][release] full release' || format('[csdk][release] Limited release - {0}', github.ref_name) }}
           github-token: ${{ steps.generate-token.outputs.token }}
           push-with-git-cli: true
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Keep `release/latest` holding strictly released code and tag its head `latest`
+      # (hotfix_release_prep.yml branches hotfixes off that tag). Dev release: re-create the branch
+      # at the published commit. Limited/hotfix release: overlay the published packages'
+      # directories onto it. Package tags stay on this release branch; legacy lines never touch it.
+      - name: Sync release/latest branch and latest tag
+        if: steps.changesets.outputs.published == 'true' && (github.ref_name == 'dev' || startsWith(github.ref_name, 'release/limited/') || startsWith(github.ref_name, 'release/hotfix/'))
+        env:
+          PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.published-packages }}
+        run: yarn csdk:sync-latest-branch
+
+      # After a stable publish (this job runs only on dev and release/* branches), branch off a
+      # legacy maintenance line for any product (nextjs/angular) that just received a major bump:
+      # release/legacy/<product>/v<previous-major>.
+      - name: Create legacy product branches after major releases
+        if: steps.changesets.outputs.published == 'true'
+        env:
+          PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.published-packages }}
+        run: yarn csdk:create-legacy-branches
+
+      # Limited (release/limited/*) and hotfix (release/hotfix/*) releases publish from a side
+      # branch. Cherry-pick the resulting version-bump commit back onto dev so dev's versions and
+      # changelogs stay in sync. github.sha is the pushed release commit and is unaffected by the
+      # earlier "Generate API docs" commit that may sit on top of this branch.
+      - name: Cherry-pick release version bump to dev
+        if: steps.changesets.outputs.published == 'true' && (startsWith(github.ref_name, 'release/limited/') || startsWith(github.ref_name, 'release/hotfix/'))
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          RELEASE_SHA="${{ github.sha }}"
+          # A merge-commit release needs -m 1; a squash/rebase merge is single-parent.
+          if [ "$(git rev-list --parents -n 1 "$RELEASE_SHA" | wc -w)" -ge 3 ]; then
+            MAINLINE="-m 1"
+          else
+            MAINLINE=""
+          fi
+          git fetch origin dev
+          git checkout -B dev origin/dev
+          if git cherry-pick $MAINLINE "$RELEASE_SHA"; then
+            git push origin HEAD:dev
+            echo "✅ Cherry-picked $RELEASE_SHA onto dev."
+            exit 0
+          fi
+
+          # Conflicts: commit the conflicted state on a sync branch and open a PR so the
+          # conflict markers can be resolved and reviewed before landing on dev.
+          echo "⚠️ Cherry-pick conflicts; opening a PR to dev for manual resolution."
+          SYNC_BRANCH="chore/sync-${GITHUB_REF_NAME//\//-}-to-dev"
+          git add -A
+          GIT_EDITOR=true git cherry-pick --continue
+          git push -f origin "HEAD:refs/heads/$SYNC_BRANCH"
+          gh pr create --base dev --head "$SYNC_BRANCH" \
+            --title "[csdk] Sync $GITHUB_REF_NAME release to dev" \
+            --body "Automated cherry-pick of \`$RELEASE_SHA\` ($GITHUB_REF_NAME version bump) onto dev hit conflicts. Resolve the conflict markers in this PR before merging." \
+            || echo "A PR for $SYNC_BRANCH may already exist."
 
   canary-snapshot:
     runs-on: ubuntu-latest
@@ -130,11 +202,21 @@ jobs:
         env:
           BRANCH_NAME: ${{ github.ref_name }}
         run: |
+          # Canary prefix by release type, mirroring the stable dist-tag logic:
+          #  - betas keep their per-branch beta.<name> prefix
+          #  - limited release (release/limited/*)  -> canary-prerelease
+          #  - latest hotfix (release/hotfix/*)      -> canary-hotfix
+          #  - legacy lines (release/legacy/* etc.)  -> canary-legacy
+          #  - dev (and anything else)               -> canary
           if [[ "$BRANCH_NAME" == release/betas/* ]]; then
             BRANCH_END="${BRANCH_NAME#release/betas/}"
             PREFIX="beta.${BRANCH_END//\//-}"
-          elif [[ "$BRANCH_NAME" == release/* ]]; then
+          elif [[ "$BRANCH_NAME" == release/limited/* ]]; then
+            PREFIX="canary-prerelease"
+          elif [[ "$BRANCH_NAME" == release/hotfix/* ]]; then
             PREFIX="canary-hotfix"
+          elif [[ "$BRANCH_NAME" == release/legacy/* ]]; then
+            PREFIX="canary-legacy"
           else
             PREFIX="canary"
           fi
