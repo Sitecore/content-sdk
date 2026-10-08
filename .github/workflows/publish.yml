@@ -12,6 +12,8 @@ on:
     branches:
       - dev
       - 'release/**'
+      # Holds released code only; updated by the publish job itself.
+      - '!release/latest'
     paths:
       - '**'
 
@@ -21,6 +23,11 @@ jobs:
   stable-release-prep:
     runs-on: ubuntu-latest
     if: ${{ !startsWith(github.ref_name, 'release/betas') }}
+    # One stable run per branch at a time, so overlapping pushes don't race on the API docs push,
+    # the release/latest sync and the dev cherry-pick. Never cancel a run that may be publishing.
+    concurrency:
+      group: stable-release-${{ github.ref }}
+      cancel-in-progress: false
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
     steps:
@@ -91,6 +98,15 @@ jobs:
           fi
           echo "npm_tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
 
+      # Guardrail for lines publishing to npm `latest` from a side branch: fail if a version this push
+      # is about to publish is already on npm from another line (changeset publish would skip it
+      # silently) or is lower than npm `latest` (it would move `latest` back).
+      - name: Check release versions against npm
+        if: startsWith(github.ref_name, 'release/limited/') || startsWith(github.ref_name, 'release/hotfix/')
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+        run: yarn csdk:check-release-versions
+
       - name: Prepare and Process Changesets Release
         id: changesets
         uses: changesets/action@v2
@@ -104,6 +120,16 @@ jobs:
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      # Keep `release/latest` holding strictly released code and tag its head `latest`
+      # (hotfix_release_prep.yml branches hotfixes off that tag). Dev release: re-create the branch
+      # at the published commit. Limited/hotfix release: overlay the published packages'
+      # directories onto it. Package tags stay on this release branch; legacy lines never touch it.
+      - name: Sync release/latest branch and latest tag
+        if: steps.changesets.outputs.published == 'true' && (github.ref_name == 'dev' || startsWith(github.ref_name, 'release/limited/') || startsWith(github.ref_name, 'release/hotfix/'))
+        env:
+          PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.published-packages }}
+        run: yarn csdk:sync-latest-branch
+
       # After a stable publish (this job runs only on dev and release/* branches), branch off a
       # legacy maintenance line for any product (nextjs/angular) that just received a major bump:
       # release/legacy/<product>/v<previous-major>.
@@ -113,7 +139,7 @@ jobs:
           PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.published-packages }}
         run: yarn csdk:create-legacy-branches
 
-      # Limited (release/limited/*) and hotfix (release/*-hotfix) releases publish from a side
+      # Limited (release/limited/*) and hotfix (release/hotfix/*) releases publish from a side
       # branch. Cherry-pick the resulting version-bump commit back onto dev so dev's versions and
       # changelogs stay in sync. github.sha is the pushed release commit and is unaffected by the
       # earlier "Generate API docs" commit that may sit on top of this branch.

@@ -1,0 +1,4 @@
+{
+  "nextjs": ["@sitecore-content-sdk/nextjs", "@sitecore-content-sdk/react"],
+  "angular": ["@sitecore-content-sdk/angular"]
+}

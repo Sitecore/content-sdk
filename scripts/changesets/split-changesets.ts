@@ -50,7 +50,10 @@ async function main(): Promise<void> {
   );
 
   const packages = await getPackages(cwd);
-  const config = await readConfig(cwd, packages);
+  const { config, errors } = await readConfig(cwd, packages);
+  if (!config) {
+    throw new Error(`Invalid .changeset/config.json:\n${errors.join('\n')}`);
+  }
 
   const changesets = (await readChangesets(cwd)) as ChangesetLike[];
   if (changesets.length === 0) {
@@ -104,7 +107,7 @@ async function main(): Promise<void> {
   );
 }
 
-if (isMainModule()) {
+if (isMainModule(import.meta.url)) {
   main().catch((error: unknown) => {
     const err = error as Error;
     console.error('❌ Error:', err.message);

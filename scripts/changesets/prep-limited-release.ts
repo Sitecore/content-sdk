@@ -1,118 +1,145 @@
 /**
- * Configures `.changeset/config.json` for a limited release.
+ * Prepares a product-based limited release branch (run by `limited_release_prep.yml`).
  *
- * Given the set of packages that SHOULD be released, every other publishable
- * (non-private) workspace package is added to the changesets `ignore` list so
- * that `changeset version` / publish only touches the selected packages.
- * See https://changesets.dev/guide/config#ignore
+ * A limited release ships one product with every package below it. Product-specific packages are
+ * defined in `.changeset/products.json`; the other products' packages sit at the top of the
+ * dependency chain (nothing released depends on them), so they go into `.changeset/config.json`
+ * `ignore`, which changesets validates natively. Packages that need a release on their own go
+ * through the hotfix flow.
  *
- * Selected packages are read from (in order of precedence):
- *   --select "@scope/a,@scope/b"   (comma/space/newline separated)
- *   RELEASE_PACKAGES env var       (comma/space/newline separated)
+ * Steps, on the release branch (this commit is never cherry-picked back to dev):
+ * 1. write the other products' packages to `.changeset/config.json` `ignore` and validate it;
+ * 2. refuse a propagating major bump outside the product's own packages: a major in a shared package
+ *    with dependents (e.g. core) cascades to them, including the ignored product, whose range would
+ *    go stale on dev and whose cascade bump would be lost. It must ship in a full release from dev;
+ * 3. delete the ignored packages' changesets: changesets/action only publishes once no changeset
+ *    files remain. They stay on dev.
  *
- * Usage:
- *   tsx ./scripts/changesets/prep-limited-release.ts --select "@sitecore-content-sdk/core" [--dry-run]
- *   RELEASE_PACKAGES="@sitecore-content-sdk/core @sitecore-content-sdk/react" tsx ./scripts/changesets/prep-limited-release.ts
+ * Usage: tsx ./scripts/changesets/prep-limited-release.ts <product> [--dry-run]
  */
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
 
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, unlinkSync, writeFileSync } from 'fs';
 import path from 'path';
+import { validateConfig } from '@changesets/config';
+import { getDependentsGraph } from '@changesets/get-dependents-graph';
+import { readChangesets } from '@changesets/read';
 import { getPackages } from '@manypkg/get-packages';
 import { isMainModule } from './utils';
 
-const CONFIG_RELATIVE_PATH = '.changeset/config.json';
+const CONFIG_PATH = '.changeset/config.json';
+export const PRODUCTS_PATH = '.changeset/products.json';
 
-interface PackageLike {
-  packageJson: {
-    name: string;
-    releases: string[];
-    private: boolean;
-  };
+/** Product name -> its product-specific packages. */
+export type Products = Record<string, string[]>;
+
+interface ChangesetLike {
+  id: string;
+  releases: { name: string; type: string }[];
 }
 
-export function parseList(raw: string | undefined): string[] {
-  if (!raw) return [];
-  return raw
-    .split(/[\s,]+/)
-    .map((s) => s.trim())
-    .filter(Boolean);
+export function readProducts(cwd: string): Products {
+  return JSON.parse(readFileSync(path.join(cwd, PRODUCTS_PATH), 'utf8'));
 }
 
-function getSelectedPackages(): string[] {
-  const flagIndex = process.argv.indexOf('--select');
-  const fromFlag = flagIndex !== -1 ? process.argv[flagIndex + 1] : undefined;
-  const raw = fromFlag ?? process.env.RELEASE_PACKAGES;
-  return parseList(raw);
+/** Packages ignored by a product's limited release: every other product's packages. */
+export function productIgnore(products: Products, product: string): string[] {
+  return Object.entries(products)
+    .filter(([name]) => name !== product)
+    .flatMap(([, packages]) => packages);
 }
 
 /**
- * Computes the changesets `ignore` list for a limited release: every publishable package that was
- * not selected, sorted. Throws if nothing is selected or if a selected name is not publishable.
+ * Changesets with a major bump that would propagate (the package has dependents) for a package that
+ * is not one of the product's own packages.
  */
-export function resolveIgnoreList(publishable: string[], selected: string[]): string[] {
-  const publishableSet = new Set(publishable);
-  const unknown = selected.filter((name) => !publishableSet.has(name));
-  if (unknown.length > 0) {
-    throw new Error(
-      `Selected package(s) are not publishable workspace packages: ${unknown.join(', ')}\n` +
-        `Known publishable packages:\n  ${publishable.join('\n  ')}`
-    );
-  }
-  const selectedSet = new Set(selected);
-  return publishable.filter((name) => !selectedSet.has(name));
+export function propagatingMajors(
+  changesets: ChangesetLike[],
+  productPackages: string[],
+  dependents: Map<string, string[]>
+): ChangesetLike[] {
+  return changesets.filter((cs) =>
+    cs.releases.some(
+      (r) =>
+        r.type === 'major' &&
+        !productPackages.includes(r.name) &&
+        (dependents.get(r.name)?.length ?? 0) > 0
+    )
+  );
 }
 
+/** Changesets naming an ignored package (removed from the limited release branch). */
+export function ignoredChangesets(changesets: ChangesetLike[], ignore: string[]): ChangesetLike[] {
+  return changesets.filter((cs) => cs.releases.some((r) => ignore.includes(r.name)));
+}
+
+const listChangesets = (changesets: ChangesetLike[]) =>
+  changesets
+    .map((cs) => `  .changeset/${cs.id}.md (${cs.releases.map((r) => `${r.name} ${r.type}`).join(', ')})`)
+    .join('\n');
+
 async function main(): Promise<void> {
-  const dryRun = process.argv.includes('--dry-run');
   const cwd = process.cwd();
+  const product = process.argv[2];
+  const dryRun = process.argv.includes('--dry-run');
 
-  console.log('📦 Set limited-release ignore list: start...');
-
-  const selected = getSelectedPackages();
-  if (selected.length === 0) {
+  const products = readProducts(cwd);
+  if (!products[product]) {
     throw new Error(
-      'No packages selected. Pass --select "@sitecore-content-sdk/*" and other packages or set RELEASE_PACKAGES env.'
+      `Unknown product "${product ?? ''}". ${PRODUCTS_PATH} defines: ${Object.keys(products).join(', ')}.`
     );
   }
 
-  const { packages } = (await getPackages(cwd)) as { packages: PackageLike[] };
-  const publishable = packages
-    .filter((pkg) => !pkg.packageJson.private)
-    .map((pkg) => pkg.packageJson.name);
-
-  const ignore = resolveIgnoreList(publishable, selected);
-
-  console.log('\n✅ Releasing:');
-  selected.forEach((name) => console.log(`  + ${name}`));
-  console.log('\n🚫 Ignoring:');
-  if (ignore.length === 0) {
-    console.log('  (none — all publishable packages selected)');
-  } else {
-    ignore.forEach((name) => console.log(`  - ${name}`));
+  const packages = await getPackages(cwd);
+  const workspace = new Set(packages.packages.map((pkg) => pkg.packageJson.name));
+  const unknown = Object.values(products)
+    .flat()
+    .filter((name) => !workspace.has(name));
+  if (unknown.length > 0) {
+    throw new Error(`${PRODUCTS_PATH} lists packages not in the workspace: ${unknown.join(', ')}`);
   }
 
-  const configPath = path.join(cwd, CONFIG_RELATIVE_PATH);
-  const config = JSON.parse(readFileSync(configPath, 'utf8')) as Record<string, unknown>;
+  const ignore = productIgnore(products, product);
+  const configPath = path.join(cwd, CONFIG_PATH);
+  const config = JSON.parse(readFileSync(configPath, 'utf8'));
   config.ignore = ignore;
+  const { errors } = validateConfig(config, packages);
+  if (errors) throw new Error(`Invalid ignore list for ${product}:\n${errors.join('\n')}`);
 
+  const changesets = await readChangesets(cwd);
+  const removed = ignoredChangesets(changesets, ignore);
+  const released = changesets.filter((cs) => !removed.includes(cs));
+
+  const majors = propagatingMajors(released, products[product], getDependentsGraph(packages));
+  if (majors.length > 0) {
+    throw new Error(
+      `Propagating major bumps outside the ${product} packages (${products[product].join(', ')}). ` +
+        `They cascade to every dependent, including ignored ones, so release them in a full ` +
+        `release from dev instead:\n${listChangesets(majors)}`
+    );
+  }
+  if (released.length === 0) {
+    throw new Error(`No pending changesets for the ${product} release; nothing to release.`);
+  }
+
+  console.log(`🎯 ${product} limited release. Ignored: ${ignore.join(', ')}`);
+  console.log(`🧹 Removing ${removed.length} of ${changesets.length} changeset(s) for ignored packages:`);
+  if (removed.length > 0) console.log(listChangesets(removed));
   if (dryRun) {
-    console.log('\n🔍 DRY RUN MODE - config not written. Resulting "ignore":');
-    console.log(JSON.stringify(ignore, null, 2));
+    console.log('\n🔍 DRY RUN: nothing written.');
     return;
   }
 
   writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`, 'utf8');
-  console.log(`\n✅ Updated ${CONFIG_RELATIVE_PATH} with ${ignore.length} ignored package(s).`);
+  removed.forEach((cs) => unlinkSync(path.join(cwd, '.changeset', `${cs.id}.md`)));
+  console.log(`\n✅ Updated ${CONFIG_PATH} and removed ${removed.length} changeset(s).`);
 }
 
-if (isMainModule()) {
+if (isMainModule(import.meta.url)) {
   main().catch((error: unknown) => {
     const err = error as Error;
     console.error('❌ Error:', err.message);
-    console.error(err.stack);
     process.exit(1);
   });
 }
-

@@ -47,6 +47,7 @@ jobs:
         with:
           # For same-repo branches, check out the head branch (not the merge ref)
           # and use the app token so we can push the split commit back.
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
           persist-credentials: false

@@ -1,6 +1,8 @@
 name: Prepare Hotfix Release
 
-# Branches `release/hotfix/<UTC timestamp>` off the `latest` git tag: the state of `v<latest>`` published release
+# Branches `release/hotfix/<UTC timestamp>` off the `latest` git tag: the head of `release/latest`,
+# which holds strictly released code (publish.yml keeps it in sync after dev, limited and hotfix
+# releases). Also the path for releasing a single package on its own.
 on:
   workflow_dispatch:
 
@@ -36,7 +38,7 @@ jobs:
         run: |
           set -euo pipefail
           if ! BASE_SHA="$(git rev-parse --verify --quiet 'refs/tags/latest^{commit}')"; then
-            echo "Git tag 'latest' not found. It is set by publish.yml after a release from dev, release/limited/* or release/hotfix/*."
+            echo "Git tag 'latest' not found. It is set by publish.yml on release/latest after a release from dev, release/limited/* or release/hotfix/*."
             exit 1
           fi
           BRANCH_NAME="release/hotfix/$(date -u +%Y%m%d%H%M%S)"

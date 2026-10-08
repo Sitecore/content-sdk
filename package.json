@@ -18,9 +18,11 @@
     "changeset:cascade-snapshot-version": "tsx ./scripts/changesets/cascade-version.ts --snapshot",
     "changeset:publish": "changeset publish",
     "csdk:prep-release": "yarn changeset:cascade-version && yarn install",
+    "csdk:check-release-versions": "tsx ./scripts/release/check-release-versions.ts",
     "csdk:create-legacy-branches": "tsx ./scripts/release/create-legacy-branches.ts",
     "csdk:prep-limited-release": "tsx ./scripts/changesets/prep-limited-release.ts",
     "csdk:split-changesets": "tsx ./scripts/changesets/split-changesets.ts",
+    "csdk:sync-latest-branch": "tsx ./scripts/release/sync-latest-branch.ts",
     "changeset:test": "vitest run --config ./scripts/changesets/vitest.config.ts"
   },
   "author": {
