@@ -137,7 +137,7 @@ export default defineConfig([
 
   // TypeScript-specific overrides
   {
-    files: ['packages/**/*.{ts,tsx}', 'csdk-templates/**/*.{ts,tsx}'],
+    files: ['packages/**/*.{ts,tsx}', 'templates/**/*.{ts,tsx}'],
     rules: {
       '@typescript-eslint/naming-convention': [
         'error',

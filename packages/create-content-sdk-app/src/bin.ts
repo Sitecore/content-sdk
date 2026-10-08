@@ -32,7 +32,9 @@ export const parseArgs = (): ParsedArgs => {
 export const printHelp = (templates: string[]) => {
   const templatesList = templates.map((template) => `  ${chalk.cyan(template)}`).join('\n');
 
-  console.log(`${chalk.bold('Usage:')} create-content-sdk-app ${chalk.cyan('[template]')} ${chalk.yellow('[options]')}
+  console.log(`${chalk.bold('Usage:')} create-content-sdk-app ${chalk.cyan(
+    '[template]'
+  )} ${chalk.yellow('[options]')}
 
 ${chalk.bold('Arguments:')}
   ${chalk.cyan('template')}                Template to scaffold
@@ -42,7 +44,9 @@ ${templatesList}
 
 ${chalk.bold('Options:')}
   ${chalk.yellow('--destination')} ${chalk.dim('<path>')}    Destination folder
-  ${chalk.yellow('--version')} ${chalk.dim('<version>')}     Template package version to use (installed on demand)
+  ${chalk.yellow('--majorVersion')} ${chalk.dim(
+    '<version>'
+  )}     Template package version to use (installed on demand)
   ${chalk.yellow('--yes')}                   Use defaults and skip prompts where possible
   ${chalk.yellow('--force')}                 Continue if destination is not empty
   ${chalk.yellow('--noInstall')}             Skip package install and lint fix

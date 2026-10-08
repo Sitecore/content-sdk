@@ -1,4 +1,3 @@
-// packages/create-content-sdk-app/src/templates/nextjs/eslint.config.mjs
 import { defineConfig } from 'eslint/config'
 import js from '@eslint/js'
 import * as nextEslintPlugin from '@next/eslint-plugin-next'

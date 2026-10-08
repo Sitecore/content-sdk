@@ -21,6 +21,6 @@
   },
   "exclude": [
     "packages/create-content-sdk-app/src/templates/**/*",
-    "csdk-templates/*/src/templates/**/*"
+    "templates/*/src/templates/**/*"
   ]
 }
