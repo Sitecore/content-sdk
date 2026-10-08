@@ -3,14 +3,17 @@ description: Repository structure and templates policy
 alwaysApply: false
 globs:
   - 'packages/create-content-sdk-app/**'
+  - 'templates/**'
   - 'samples/**'
 ---
 
 # Repository structure
 
-**Templates:** `packages/create-content-sdk-app/src/templates/` — copied to generated apps; self-contained; `.env.*.example` for env values.
+**Templates:** `templates/<product>/src/templates/<template>/` (`templates/nextjs`, `templates/angular`) — copied to generated apps; self-contained; `.env.*.example` for env values. Each template package's major version matches its product package's major (minor/patch bumped independently); its `@sitecore-content-sdk/*` devDependencies set scaffolded versions.
 
-**Initializers:** `Initializer.init(args)` in `packages/create-content-sdk-app/src/initializers/`. Reuse `src/common/` processes.
+**Initializers:** `ScaffoldInitData` exports in `templates/<product>/src/initializers/<template>.ts`, listed in the package's `src/index.ts`.
+
+**CLI:** `packages/create-content-sdk-app` — `registry.ts`, `initialize.ts`; reuse `src/common/` processes.
 
 **Samples:** `yarn scaffold-samples`; inside `samples/` use that app's `AGENTS.md`.
 

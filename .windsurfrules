@@ -4,7 +4,7 @@
 
 **Layering:** [`CLAUDE.md`](CLAUDE.md) — start with `AGENTS.md`; open one [`.cursor/rules/`](.cursor/rules/) file when the task needs it.
 
-**Capabilities:** [`Skills.md`](Skills.md) — template skills under `packages/create-content-sdk-app/src/templates/`.
+**Capabilities:** [`Skills.md`](Skills.md) — template skills under `templates/<product>/src/templates/<template>/` (e.g. `templates/nextjs/src/templates/nextjs-app-router/`).
 
 **Commands:** `yarn install`, `yarn build`, `yarn test-packages`, `yarn lint-packages`. Never edit `dist/**` or commit secrets.
 

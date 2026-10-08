@@ -3,6 +3,7 @@ description: Core coding principles and universal standards for the Content SDK
 alwaysApply: false
 globs:
   - 'packages/**/src/**'
+  - 'templates/*/src/**'
 ---
 
 # General principles

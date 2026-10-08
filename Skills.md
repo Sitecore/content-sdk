@@ -4,9 +4,10 @@ Capability groupings and Agent Skills are **maintained in the scaffolding templa
 
 | Template | Capability index & skills |
 |----------|---------------------------|
-| **App Router** | [Skills.md](packages/create-content-sdk-app/src/templates/nextjs-app-router/Skills.md) · [.agents/skills/](packages/create-content-sdk-app/src/templates/nextjs-app-router/.agents/skills/) |
-| **App Router + Cache Components** | [Skills.md](packages/create-content-sdk-app/src/templates/nextjs-app-router-cache-components/Skills.md) · [.agents/skills/](packages/create-content-sdk-app/src/templates/nextjs-app-router-cache-components/.agents/skills/) |
-| **Pages Router** | [Skills.md](packages/create-content-sdk-app/src/templates/nextjs/Skills.md) · [.agents/skills/](packages/create-content-sdk-app/src/templates/nextjs/.agents/skills/) |
+| **App Router** | [Skills.md](templates/nextjs/src/templates/nextjs-app-router/Skills.md) · [.agents/skills/](templates/nextjs/src/templates/nextjs-app-router/.agents/skills/) |
+| **App Router + Cache Components** | [Skills.md](templates/nextjs/src/templates/nextjs-app-router-cache-components/Skills.md) · [.agents/skills/](templates/nextjs/src/templates/nextjs-app-router-cache-components/.agents/skills/) |
+| **Pages Router** | [Skills.md](templates/nextjs/src/templates/nextjs/Skills.md) · [.agents/skills/](templates/nextjs/src/templates/nextjs/.agents/skills/) |
+| **Angular** | [Skills.md](templates/angular/src/templates/angular/Skills.md) · [.agents/skills/](templates/angular/src/templates/angular/.agents/skills/) |
 
 Each template's `Skills.md` is a compact index. Each `.agents/skills/<name>/SKILL.md` is a short task card that points to that template's `AGENTS.md` and `.agents/docs/` for depth. Load **one** skill per task.
 
