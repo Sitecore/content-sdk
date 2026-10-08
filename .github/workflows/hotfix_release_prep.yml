@@ -1,31 +1,11 @@
 name: Prepare Hotfix Release
 
-permissions:
-  contents: write
-
+# Branches `release/hotfix/<UTC timestamp>` off the `latest` git tag: the state of `v<latest>`` published release
 on:
   workflow_dispatch:
-    inputs:
-      package_name:
-        description: 'Full package name'
-        required: true
-        type: choice
-        options:
-          - '@sitecore-content-sdk/nextjs'
-          - '@sitecore-content-sdk/cli'
-          - '@sitecore-content-sdk/react'
-          - '@sitecore-content-sdk/search'
-          - 'create-content-sdk-app'
-          - '@sitecore-content-sdk/core'
-          - '@sitecore-content-sdk/content'
-          - '@sitecore-content-sdk/analytics-core'
-          - '@sitecore-content-sdk/events'
-          - '@sitecore-content-sdk/personalize'
 
-      version:
-        description: 'Base version to hotfix'
-        required: true
-        type: string
+permissions:
+  contents: write
 
 jobs:
   prep-release:
@@ -51,54 +31,47 @@ jobs:
           git config --global user.name "content-sdk-bot"
           git remote set-url origin https://x-access-token:${{ steps.generate-token.outputs.token }}@github.com/${{ github.repository }}
 
-      - name: Use Node.js 24
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Setup GH action
-        id: setup-gh-action
-        run: |
-          BASE_RELEASE="${{ inputs.package_name }}@${{ inputs.version }}"
-
-          if ! git rev-parse "refs/tags/$BASE_RELEASE" >/dev/null 2>&1; then
-            echo "Release tag $BASE_RELEASE not found. Please validate your inputs."
-            exit 1
-          fi
-
-          echo "base_release=$BASE_RELEASE" >> $GITHUB_OUTPUT
-
-      - name: Create release branch
+      - name: Create hotfix branch
         id: create-branch
         run: |
-          BRANCH_NAME="release/hotfix/${{ steps.setup-gh-action.outputs.base_release }}"
-
-          if git ls-remote --heads origin "$BRANCH_NAME" | grep -q .; then
-            echo "Hotfix branch $BRANCH_NAME already exists"
-            echo "Please check if this is expected. Delete the branch and run action again if not."
+          set -euo pipefail
+          if ! BASE_SHA="$(git rev-parse --verify --quiet 'refs/tags/latest^{commit}')"; then
+            echo "Git tag 'latest' not found. It is set by publish.yml after a release from dev, release/limited/* or release/hotfix/*."
             exit 1
-          else
-            git checkout -b "$BRANCH_NAME" "${{ steps.setup-gh-action.outputs.base_release }}"
-            git push -u origin "$BRANCH_NAME"
-            echo "Branch $BRANCH_NAME created and pushed"
           fi
+          BRANCH_NAME="release/hotfix/$(date -u +%Y%m%d%H%M%S)"
+          if git ls-remote --exit-code --heads origin "$BRANCH_NAME" >/dev/null; then
+            echo "Hotfix branch $BRANCH_NAME already exists. Re-run the workflow."
+            exit 1
+          fi
+          git push origin "$BASE_SHA:refs/heads/$BRANCH_NAME"
+          echo "Branch $BRANCH_NAME created from latest ($BASE_SHA) and pushed"
+          {
+            echo "branch_name=$BRANCH_NAME"
+            echo "base_sha=$BASE_SHA"
+            echo "base_release=$(git tag -l --format='%(contents:subject)' latest)"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Summary
+        env:
+          BRANCH_NAME: ${{ steps.create-branch.outputs.branch_name }}
+          BASE_SHA: ${{ steps.create-branch.outputs.base_sha }}
+          BASE_RELEASE: ${{ steps.create-branch.outputs.base_release }}
         run: |
-          BRANCH_NAME="${{ steps.create-branch.outputs.branch_name }}"
-          BASE_RELEASE="${{ steps.setup-gh-action.outputs.base_release }}"
+          {
+            echo "## Hotfix Branch Prepared"
+            echo ""
+            echo "| Property | Value |"
+            echo "|----------|-------|"
+            echo "| **Hotfix Branch** | \`$BRANCH_NAME\` |"
+            echo "| **Base** | \`latest\` tag at \`$BASE_SHA\` |"
+            echo "| **Base Release** | $BASE_RELEASE |"
+            echo ""
+            echo "### Next Steps:"
+            echo "1. Checkout the branch: \`git checkout $BRANCH_NAME\`"
+            echo "2. Cherry-pick or add the fix, with its changeset (\`yarn changeset\`). Cherry-pick the dev commit including its changeset file so dev does not get a duplicate changelog entry"
+            echo "3. Open PR(s) with the hotfix changes against \`$BRANCH_NAME\`"
+            echo "4. Merging them updates the hotfix canaries and opens the hotfix release PR"
+            echo "5. Merge the release PR to publish (\`latest\`); the version bump is cherry-picked back to dev"
+          } >> "$GITHUB_STEP_SUMMARY"
 
-          echo "## Release Branch Prepared" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
-          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
-          echo "| **Target Package** | \`$BASE_RELEASE\` |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Release Branch** | \`$BRANCH_NAME\` |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Next Steps:" >> $GITHUB_STEP_SUMMARY
-          echo "1. Checkout the branch: \`git checkout $BRANCH_NAME\`" >> $GITHUB_STEP_SUMMARY
-          echo "2. Cherrypick or add patch changes" >> $GITHUB_STEP_SUMMARY
-          echo "3. Add changesets (\`yarn changeset\`)" >> $GITHUB_STEP_SUMMARY
-          echo "4. Prepare PR(s) with hotfix changes" >> $GITHUB_STEP_SUMMARY
-          echo "5. Push changes. This will update pre-patch canaries and automatically create the hotfix release PR" >> $GITHUB_STEP_SUMMARY
-          echo "6. Merge hotfix release PR to trigger the release" >> $GITHUB_STEP_SUMMARY
