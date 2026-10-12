@@ -8,15 +8,15 @@
 
 > **collectSitecorePageCacheTags**(`params`): `string`[]
 
-Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:63](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L63)
+Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:63](https://github.com/Sitecore/content-sdk/blob/b2b57211e918f0fbe85aea0aba55c185efb1699e/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L63)
 
 Builds cache tags for a Sitecore page read (`getPage`): the route tag and the route's item tag.
 Dictionary data is not part of `getPage`; tag dictionary fetches separately (for example with
 `buildSitecoreDictionaryCacheTag` on a dedicated `use cache` helper).
 
 Registers **`sc:route:…`** and **`sc:item:…`** (when layout has `itemId`). Edge-style webhooks emit
-item ids, which the Sitecore revalidate route handler maps to **`sc:item:…`**; route tags are only
-invalidated when callers send the full `sc:route:…` strings in the `tags[]` array of the same revalidate request.
+item ids, which the Sitecore revalidate route handler maps to **`sc:item:…`**; route tags are not
+invalidated by that webhook flow.
 
 Personalization variants are isolated naturally by URL path (each variant rewrite yields a distinct
 Cache Components key) so no `sc:pvv:…` tag is added here. If a personalize-specific webhook is wired

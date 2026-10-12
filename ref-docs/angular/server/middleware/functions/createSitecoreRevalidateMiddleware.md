@@ -8,14 +8,14 @@
 
 > **createSitecoreRevalidateMiddleware**(`options`): [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:65](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L65)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:65](https://github.com/Sitecore/content-sdk/blob/b2b57211e918f0fbe85aea0aba55c185efb1699e/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L65)
 
 Express middleware aligned with other frameworks' `createSitecoreRevalidateRouteHandler`.
 
 Handles `POST /api/revalidate` (configurable via `endpoint`):
 - Authenticates with `SITECORE_REVALIDATE_SECRET` / `x-revalidate-secret` when configured.
-- Parses Experience Edge webhook bodies via [collectSitecoreTagsFromEdgeRevalidateRequestBody](collectSitecoreTagsFromEdgeRevalidateRequestBody.md).
-- Optionally appends dictionary loader tags for each configured site.
+- Parses Experience Edge webhook bodies via [collectSitecoreTagsFromEdgeRevalidateRequestBody](collectSitecoreTagsFromEdgeRevalidateRequestBody.md),
+  which resolves Dictionary entry updates to the specific site's dictionary tag using `sites`.
 - Calls `LoaderCache.invalidate` (marks entries stale; does not delete).
 
 Response shape: `{ revalidated, tagsCount, marked, invocation_id, continues, durationMs }`.

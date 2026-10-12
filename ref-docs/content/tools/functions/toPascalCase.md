@@ -8,7 +8,7 @@
 
 > **toPascalCase**(`name`): `string`
 
-Defined in: [content/src/tools/templating/components.ts:116](https://github.com/Sitecore/content-sdk/blob/2f14286ddbb524cc49993783ef29cc66d697e78d/packages/content/src/tools/templating/components.ts#L116)
+Defined in: [content/src/tools/templating/component-builder.ts:96](https://github.com/Sitecore/content-sdk/blob/b2b57211e918f0fbe85aea0aba55c185efb1699e/packages/content/src/tools/templating/component-builder.ts#L96)
 
 **`Internal`**
 
