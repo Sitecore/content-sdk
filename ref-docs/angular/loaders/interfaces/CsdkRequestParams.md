@@ -6,7 +6,7 @@
 
 # Interface: CsdkRequestParams
 
-Defined in: [packages/angular/src/loaders/models.ts:13](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/angular/src/loaders/models.ts#L13)
+Defined in: [packages/angular/src/loaders/models.ts:13](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/angular/src/loaders/models.ts#L13)
 
 Content SDK request params like site name, variant ids
 
@@ -16,7 +16,7 @@ Content SDK request params like site name, variant ids
 
 > `optional` **componentVariantIds?**: `string`[]
 
-Defined in: [packages/angular/src/loaders/models.ts:19](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/angular/src/loaders/models.ts#L19)
+Defined in: [packages/angular/src/loaders/models.ts:19](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/angular/src/loaders/models.ts#L19)
 
 Component variant IDs
 
@@ -26,7 +26,7 @@ Component variant IDs
 
 > `optional` **siteName?**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:15](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/angular/src/loaders/models.ts#L15)
+Defined in: [packages/angular/src/loaders/models.ts:15](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/angular/src/loaders/models.ts#L15)
 
 Site name. Resolved from the request hostname
 
@@ -36,6 +36,6 @@ Site name. Resolved from the request hostname
 
 > `optional` **variantId?**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:17](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/angular/src/loaders/models.ts#L17)
+Defined in: [packages/angular/src/loaders/models.ts:17](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/angular/src/loaders/models.ts#L17)
 
 Variant id. Either resovled from route or set to default variant id name
