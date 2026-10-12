@@ -1,5 +1,16 @@
 # @sitecore-content-sdk/content
 
+## 2.3.1
+
+### Patch Changes
+
+- Fixed `next dev --webpack` / `next build --webpack` failing with `UnhandledSchemeError` for ([153a804](https://github.com/sitecore/content-sdk/commit/153a804dcbabe3b52165f62332fb6d61d99b1ffe))
+  `node:events` when the generated `.sitecore/import-map.ts` imported `combineImportEntries`.
+
+  `content/tools` stays the browser-safe entry for that helper. Pure component-map helpers now live
+  apart from `glob`, and the Node-only `prepareComponentsForMap` / `buildComponentMapContent`
+  helpers (which depend on `path`) are exported from `content/node-tools`.
+
 ## 2.3.0
 
 ### Minor Changes
