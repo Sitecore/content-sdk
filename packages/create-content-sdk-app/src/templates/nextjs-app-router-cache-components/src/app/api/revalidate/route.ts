@@ -1,7 +1,6 @@
 /**
  * POST /api/revalidate — Sitecore webhook (Experience Edge / Content Operations) endpoint.
- * Also accepts ad-hoc `tags[]` (`sc:`-prefixed strings or bare item IDs). See SDK
- * `createSitecoreRevalidateRouteHandler` for the full payload contract.
+ * See SDK `createSitecoreRevalidateRouteHandler` for the full payload contract.
  *
  * Dictionary tags are derived from `.sitecore/sites.json` (includes the default site from `generateSites`).
  */

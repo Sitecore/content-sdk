@@ -23,24 +23,18 @@ export type BuildSitecoreItemCacheTagParams = {
   itemId: string;
   /** Locale/culture for the item tag. */
   locale: string;
-  /** Optional published version; omitted values produce a `latest` suffix. */
-  version?: number;
 };
 
 /**
- * Builds an item-scoped revalidation tag: `sc:item:<id>:<locale>:<version>`.
- * @param {BuildSitecoreItemCacheTagParams} params - Item id, locale, and optional version.
+ * Builds an item-scoped revalidation tag: `sc:item:<id>:<locale>`.
+ * @param {BuildSitecoreItemCacheTagParams} params - Item id and locale.
  * @returns {string} Sitecore item cache tag.
  * @internal
  */
 export function buildSitecoreItemCacheTag(params: BuildSitecoreItemCacheTagParams): string {
   const id = normalizeSitecoreItemIdForCacheKey(params.itemId);
   const locale = sanitizeSitecoreCacheSegment(params.locale);
-  const ver =
-    params.version !== undefined && Number.isFinite(params.version)
-      ? `v${Math.trunc(params.version)}`
-      : 'latest';
-  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}:${ver}`;
+  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}`;
 }
 
 /**
@@ -52,28 +46,6 @@ export type SitecoreDictionaryCacheTagParams = {
   site: string;
   /** Locale segment. */
   locale: string;
-};
-
-/**
- * Site entry used when fanning out dictionary loader tags from webhook middleware.
- * @internal
- */
-export type LoaderDictionaryCacheSiteInfo = {
-  /** Site name. */
-  name: string;
-  /** Optional site language; falls back to `baseLocale` when blank. */
-  language?: string;
-};
-
-/**
- * Parameters for {@link buildLoaderDictionaryCacheTagsFromSites}.
- * @internal
- */
-export type BuildLoaderDictionaryCacheTagsFromSitesParams = {
-  /** Sites to emit dictionary loader tags for. */
-  sites: readonly LoaderDictionaryCacheSiteInfo[];
-  /** Locale used when a site entry has no `language`. */
-  baseLocale: string;
 };
 
 /**
@@ -108,35 +80,7 @@ export function buildSitecoreItemCacheTagFromRouteData(
     ? sanitizeSitecoreCacheSegment(route.itemLanguage)
     : sanitizeSitecoreCacheSegment(fallbackLocale);
   const id = normalizeSitecoreItemIdForCacheKey(route.itemId);
-  const ver =
-    route.itemVersion !== undefined && Number.isFinite(route.itemVersion)
-      ? `v${Math.trunc(route.itemVersion)}`
-      : 'latest';
-  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}:${ver}`;
-}
-
-/**
- * Builds loader-cache dictionary self-tags for webhook fan-out across sites.
- * Produces `sc:loader:dictionary:<site>:<locale>` tags, deduped in first-seen order.
- * When a site has no `language`, `baseLocale` is used.
- * @param {BuildLoaderDictionaryCacheTagsFromSitesParams} params - Sites and fallback locale.
- * @returns {string[]} Deduplicated loader dictionary cache tags.
- * @internal
- */
-export function buildLoaderDictionaryCacheTagsFromSites(
-  params: BuildLoaderDictionaryCacheTagsFromSitesParams
-): string[] {
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const site of params.sites) {
-    const locale = site.language?.trim() ? site.language : params.baseLocale;
-    const tag = buildLoaderDictionaryCacheTag({ site: site.name, locale });
-    if (!seen.has(tag)) {
-      seen.add(tag);
-      out.push(tag);
-    }
-  }
-  return out;
+  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:${id}:${locale}`;
 }
 
 /**

@@ -3,15 +3,18 @@
 /* eslint-disable no-unused-vars */
 
 import path from 'path';
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
 import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
+
+chai.use(sinonChai);
 import { generateMap } from './generate-map';
 import fs from 'fs';
+import { ComponentImport } from '@sitecore-content-sdk/content/tools';
 import {
-  ComponentImport,
   prepareComponentsForMap,
   buildComponentMapContent,
-} from '@sitecore-content-sdk/content/tools';
+} from '@sitecore-content-sdk/content/node-tools';
 import * as coreTools from '@sitecore-content-sdk/content/tools';
 import * as coreServerTools from '@sitecore-content-sdk/content/node-tools';
 import * as templatingUtils from './templating/utils';
@@ -92,9 +95,13 @@ describe('generateMap', () => {
         .callsFake(getComponentListWithTypesStub);
       sandbox.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
       sandbox.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
-      sandbox.replaceGetter(coreTools, 'prepareComponentsForMap', () => prepareComponentsForMapStub);
       sandbox.replaceGetter(
-        coreTools,
+        coreServerTools,
+        'prepareComponentsForMap',
+        () => prepareComponentsForMapStub
+      );
+      sandbox.replaceGetter(
+        coreServerTools,
         'buildComponentMapContent',
         () => buildComponentMapContentStub
       );
@@ -725,9 +732,13 @@ describe('generateMap', () => {
         .callsFake(getComponentListWithTypesStub);
       sandbox.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
       sandbox.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
-      sandbox.replaceGetter(coreTools, 'prepareComponentsForMap', () => prepareComponentsForMapStub);
       sandbox.replaceGetter(
-        coreTools,
+        coreServerTools,
+        'prepareComponentsForMap',
+        () => prepareComponentsForMapStub
+      );
+      sandbox.replaceGetter(
+        coreServerTools,
         'buildComponentMapContent',
         () => buildComponentMapContentStub
       );

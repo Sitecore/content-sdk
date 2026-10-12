@@ -124,8 +124,20 @@ describe('sanitizeSitecoreCacheSegment', () => {
 });
 
 describe('normalizeSitecoreItemIdForCacheKey', () => {
-  it('strips braces and lowercases item ids', () => {
+  it('strips braces and lowercases non-GUID item ids', () => {
     expect(normalizeSitecoreItemIdForCacheKey(' {ABC-123} ')).toBe('abc-123');
+  });
+
+  it('hyphenates unhyphenated Experience Edge identifiers', () => {
+    expect(normalizeSitecoreItemIdForCacheKey('6CA225DB4DE84048BCC161B13027B63A')).toBe(
+      '6ca225db-4de8-4048-bcc1-61b13027b63a'
+    );
+  });
+
+  it('keeps already-hyphenated GUIDs after lowercase and brace strip', () => {
+    expect(normalizeSitecoreItemIdForCacheKey('{52961EEA-BAFD-5287-A532-A72E36BD8A36}')).toBe(
+      '52961eea-bafd-5287-a532-a72e36bd8a36'
+    );
   });
 });
 

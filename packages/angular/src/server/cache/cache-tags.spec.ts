@@ -6,7 +6,6 @@ import {
   buildSitecoreItemCacheTag,
   buildSitecoreDictionaryCacheTag,
   buildSitecoreItemCacheTagFromRouteData,
-  buildLoaderDictionaryCacheTagsFromSites,
   buildLoaderDictionaryCacheTag,
   buildSitecoreSiteCacheTag,
   buildSitecoreLocaleCacheTag,
@@ -23,15 +22,23 @@ const pageDimensions: CacheKeyDimensions = {
 };
 
 describe('buildSitecoreItemCacheTag', () => {
-  it('normalizes item id and builds latest version tag by default', () => {
-    expect(
-      buildSitecoreItemCacheTag({ itemId: '{ABC-123}', locale: 'en-US', version: undefined })
-    ).toBe(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:abc-123:en-us:latest`);
+  it('normalizes id and locale', () => {
+    expect(buildSitecoreItemCacheTag({ itemId: '{ABC-123}', locale: 'en-US' })).toBe(
+      `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:abc-123:en-us`
+    );
   });
 
-  it('includes numeric version when provided', () => {
-    expect(buildSitecoreItemCacheTag({ itemId: 'abc', locale: 'en', version: 3.7 })).toBe(
-      `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:abc:en:v3`
+  it('matches Edge webhook identifiers and mixed-case locales to the same tag', () => {
+    expect(
+      buildSitecoreItemCacheTag({
+        itemId: '{6CA225DB-4DE8-4048-BCC1-61B13027B63A}',
+        locale: 'ja-jp',
+      })
+    ).toBe(
+      buildSitecoreItemCacheTag({
+        itemId: '6CA225DB4DE84048BCC161B13027B63A',
+        locale: 'ja-JP',
+      })
     );
   });
 });
@@ -50,7 +57,7 @@ describe('buildSitecoreItemCacheTagFromRouteData', () => {
     expect(buildSitecoreItemCacheTagFromRouteData({} as RouteData, 'en')).toBeNull();
   });
 
-  it('uses route language and version when present', () => {
+  it('uses route language when present', () => {
     const route = {
       itemId: '{GUID}',
       itemLanguage: 'de',
@@ -58,33 +65,15 @@ describe('buildSitecoreItemCacheTagFromRouteData', () => {
     } as RouteData;
 
     expect(buildSitecoreItemCacheTagFromRouteData(route, 'en')).toBe(
-      `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:guid:de:v5`
+      `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:guid:de`
     );
   });
 
   it('falls back to provided locale when route language is absent', () => {
     const route = { itemId: 'item-1' } as RouteData;
     expect(buildSitecoreItemCacheTagFromRouteData(route, 'fr-CA')).toBe(
-      `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:item-1:fr-ca:latest`
+      `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:item-1:fr-ca`
     );
-  });
-});
-
-describe('buildLoaderDictionaryCacheTagsFromSites', () => {
-  it('dedupes tags and falls back to base locale', () => {
-    const tags = buildLoaderDictionaryCacheTagsFromSites({
-      sites: [
-        { name: 'shop', language: 'en' },
-        { name: 'shop', language: 'en' },
-        { name: 'blog', language: '   ' },
-      ],
-      baseLocale: 'de',
-    });
-
-    expect(tags).toEqual([
-      `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:loader:dictionary:shop:en`,
-      `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:loader:dictionary:blog:de`,
-    ]);
   });
 });
 
@@ -137,7 +126,7 @@ describe('buildLoaderCacheTags', () => {
 
     const tags = buildLoaderCacheTags('page', pageDimensions, cacheKey, pageValue);
 
-    expect(tags).toContain(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:item-1:en:latest`);
+    expect(tags).toContain(`${SITECORE_CONTENT_CACHE_TAG_PREFIX}:item:item-1:en`);
   });
 
   it('skips item tag for page loader when value is not a page shape', () => {

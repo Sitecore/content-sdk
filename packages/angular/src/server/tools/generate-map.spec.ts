@@ -1,11 +1,11 @@
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable no-unused-vars */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { getComponentList } from '@sitecore-content-sdk/content/node-tools';
 import {
   buildComponentMapContent,
+  getComponentList,
   prepareComponentsForMap,
-} from '@sitecore-content-sdk/content/tools';
+} from '@sitecore-content-sdk/content/node-tools';
 import type {
   ComponentFile,
   ComponentImport,
@@ -40,11 +40,11 @@ vi.mock('node:fs', () => fsMock);
 
 vi.mock('@sitecore-content-sdk/content/node-tools', () => ({
   getComponentList: vi.fn(),
+  prepareComponentsForMap: vi.fn(),
+  buildComponentMapContent: vi.fn(() => '// generated map'),
 }));
 
 vi.mock('@sitecore-content-sdk/content/tools', () => ({
-  prepareComponentsForMap: vi.fn(),
-  buildComponentMapContent: vi.fn(() => '// generated map'),
   toPascalCase: toPascalCaseMock,
 }));
 
