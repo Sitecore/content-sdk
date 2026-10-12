@@ -1,6 +1,9 @@
-import { expect } from 'chai';
+import { expect, use as chaiUse } from 'chai';
 import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 import { AtomsCatalogPayload } from './types';
+
+chaiUse(sinonChai);
 import {
   addDocumentUpdateHandler,
   addComponentPropsUpdateHandler,
@@ -47,16 +50,38 @@ describe('design-library-bridge events', () => {
       expect(event.message.error).to.equal('some error');
       expect(event.message.type).to.equal('render');
     });
+
+    it('returns a validation error event with the issues payload', () => {
+      const error = {
+        issues: [{ severity: 'error', message: 'Root missing', code: 'missing_root' }],
+        formatted: 'Root missing',
+      };
+      const event = getDesignLibraryAtomsErrorEvent(error, 'validation');
+
+      expect(event.name).to.equal('atoms:error');
+      expect(event.message.type).to.equal('validation');
+      expect(event.message.error).to.deep.equal(error);
+    });
   });
 
   describe('addDocumentUpdateHandler', () => {
     let addEventListener: sinon.SinonStub;
     let removeEventListener: sinon.SinonStub;
+    let postMessage: sinon.SinonStub;
+
+    const validDocument = {
+      name: 'hero',
+      root: 'root',
+      elements: {
+        root: { type: 'Text', props: { text: 'Hello' }, children: [] },
+      },
+    };
 
     beforeEach(() => {
       addEventListener = sinon.stub();
       removeEventListener = sinon.stub();
-      (global as any).window = { addEventListener, removeEventListener };
+      postMessage = sinon.stub();
+      (global as any).window = { addEventListener, removeEventListener, postMessage };
     });
 
     afterEach(() => {
@@ -77,6 +102,49 @@ describe('design-library-bridge events', () => {
       unsubscribe();
 
       expect(removeEventListener).to.have.been.calledWith('message', sinon.match.func);
+    });
+
+    it('invokes the callback when the document is valid', () => {
+      const callback = sinon.stub();
+      addDocumentUpdateHandler(callback);
+
+      const handler = addEventListener.firstCall.args[1];
+      handler({
+        origin: 'http://localhost',
+        data: { name: 'component:atoms:preview', document: validDocument },
+      });
+
+      expect(callback.callCount).to.equal(1);
+      expect(callback.firstCall.args[0]).to.equal(validDocument);
+      expect(postMessage.callCount).to.equal(0);
+    });
+
+    it('sends atoms:error and does not render when the document is invalid', () => {
+      const callback = sinon.stub();
+      addDocumentUpdateHandler(callback);
+
+      const invalidDocument = {
+        name: 'broken',
+        root: 'missing',
+        elements: {
+          title: { type: 'Text', props: {}, children: [] },
+        },
+      };
+      const handler = addEventListener.firstCall.args[1];
+      handler({
+        origin: 'http://localhost',
+        data: { name: 'component:atoms:preview', document: invalidDocument },
+      });
+
+      expect(callback.callCount).to.equal(0);
+      expect(postMessage.callCount).to.equal(1);
+      const event = postMessage.firstCall.args[0];
+      expect(event.name).to.equal('atoms:error');
+      expect(event.message.type).to.equal('validation');
+      expect(event.message.error.issues.some((issue: { code: string }) => issue.code === 'root_not_found'))
+        .to.equal(true);
+      expect(event.message.error.formatted).to.be.a('string');
+      expect(event.message.error.formatted.length).to.be.greaterThan(0);
     });
   });
 
