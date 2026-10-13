@@ -19,5 +19,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "exclude": ["packages/create-content-sdk-app/src/templates/**/*"]
+  "exclude": [
+    "packages/create-content-sdk-app/src/templates/**/*",
+    "templates/*/src/templates/**/*"
+  ]
 }

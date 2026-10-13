@@ -3,12 +3,13 @@ description: Project-wide context and constraints
 alwaysApply: false
 globs:
   - 'packages/**/src/**'
+  - 'templates/*/src/**'
   - 'scripts/**'
 ---
 
 # Project context
 
-- **TypeScript** (Node LTS); build via `tsc` → `dist/`; templates via `scripts/build-templates.ts`
+- **TypeScript** (Node LTS); build via `tsc` → `dist/`; template packages copy `src/templates` → `dist/templates` via `templates/<product>/scripts/build-templates.ts`
 - **Tests:** Mocha + Sinon + Chai; `yarn test-packages` / `yarn coverage-packages`
 - **Lint:** ESLint + Prettier; do not import from `dist/`
 

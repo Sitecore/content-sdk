@@ -9,8 +9,8 @@ This repository is the **Sitecore Content SDK** — a TypeScript monorepo of SDK
 ## Tech stack
 
 - **Language:** TypeScript (Node LTS)
-- **Package manager:** Yarn 4.12.0. Workspaces: `packages/*`, `samples/*`
-- **Build:** `tsc` → `dist/`; templates bundled via `scripts/build-templates.ts`
+- **Package manager:** Yarn 4.12.0. Workspaces: `packages/*`, `templates/*`, `samples/*`
+- **Build:** `tsc` → `dist/`; each template package (`templates/<product>`) copies its templates to `dist/templates` via its own `scripts/build-templates.ts`
 - **Tests:** Mocha + Sinon + Chai; coverage via `nyc`
 - **Lint/format:** ESLint + Prettier
 - **Runtime:** Node LTS; do not import from `dist/`; CLI entry `./dist/index.js`

@@ -3,6 +3,7 @@ description: Safety rules for artifacts, secrets, and API security
 alwaysApply: false
 globs:
   - 'packages/**'
+  - 'templates/**'
   - 'samples/**'
   - 'scripts/**'
 ---

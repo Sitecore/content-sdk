@@ -15,41 +15,22 @@ export type JsonObjectType = {
 };
 
 /**
- * Retrieves Content SDK package versions from devDependencies.
- *
- * Reads the package.json from the create-content-sdk-app package root and
- * extracts all `@sitecore-content-sdk` dependencies with their versions.
- *
- * When the create-content-sdk-app package itself has a pre-release suffix
- * (e.g., `-canary`, `-beta`), any pre-release dependencies will have their
- * range prefixes (`^` or `~`) stripped to ensure exact version matching.
- * Stable dependencies retain their original version prefixes.
- *
- * @returns A dictionary of Content SDK package names to their versions
+ * Content SDK package versions to inject into a template, keyed by package name.
+ * Resolved from the template package's package.json and is part of init data.
  */
-export const getCsdkVersions = (): { [key: string]: string } => {
-  const packageJson = fs.readJsonSync(path.resolve(__dirname, '../../../package.json'));
-  const packageVersion = packageJson.version as string;
-  const devDependencies = packageJson.devDependencies as { [key: string]: string };
-  const csdkDependencies: { [key: string]: string } = {};
+export type CsdkVersions = { [key: string]: string };
 
-  const isPackagePreRelease = packageVersion.includes('-');
-
-  for (const [name, version] of Object.entries(devDependencies)) {
-    if (name.startsWith('@sitecore-content-sdk')) {
-      const isDependencyPreRelease = version.includes('-');
-      const shouldStripPrefix = isPackagePreRelease && isDependencyPreRelease;
-      const resolvedVersion = shouldStripPrefix ? version.replace(/^[\^~]/, '') : version;
-      csdkDependencies[name] = resolvedVersion;
-    }
-  }
-
-  return csdkDependencies;
-};
-
-export const populateEjsData = (args: BaseAppArgs, destination?: string) => {
-  const versions = getCsdkVersions();
-
+/**
+ * Builds the data object passed to ejs when rendering a template.
+ * @param {BaseAppArgs} args CLI arguments
+ * @param {CsdkVersions} versions Content SDK package versions from the template package
+ * @param {string} [destination] destination override used for dev-environment detection
+ */
+export const populateEjsData = (
+  args: BaseAppArgs,
+  versions: CsdkVersions,
+  destination?: string
+) => {
   const ejsData: Data = {
     ...args,
     versions,
@@ -86,18 +67,20 @@ type TransformOptions = {
  * - Determines files for skip.
  * @param {string} templatePath path to the template
  * @param {BaseArgs} args CLI arguments
+ * @param {CsdkVersions} versions Content SDK package versions from the template package
  * @param {TransformOptions} options custom options
  */
 export const transform = async (
   templatePath: string,
   args: BaseAppArgs,
+  versions: CsdkVersions,
   options: TransformOptions = {}
 ) => {
   const { isFileForCopy, isFileForSkip, fileForCopyRegExp = FILE_FOR_COPY_REGEXP } = options;
 
   const destinationPath = path.resolve(args.destination);
 
-  const ejsData: Data = populateEjsData(args);
+  const ejsData: Data = populateEjsData(args, versions);
   // the templates to be run through ejs render or copied directly
   const files = glob.sync('**/*', {
     cwd: templatePath,
