@@ -55,8 +55,11 @@ yarn workspaces foreach -Rt --no-private run build
 
 For the creation of the samples we are using `initializers` approach.
 
-- `initializer` - the process for handling the creation of the appropriate template. See [initializers](https://github.com/Sitecore/content-sdk/tree/dev/packages/create-content-sdk-app/src/initializers).
-- `template` - the sample populated by [ejs](https://ejs.co/) tokens. See [templates](https://github.com/Sitecore/content-sdk/tree/dev/packages/create-content-sdk-app/src/templates). Templates can be for e.g. _nextjs_.
+- `template package` - a versioned package per product under [templates](https://github.com/Sitecore/content-sdk/tree/dev/templates) (e.g. `@sitecore-content-sdk/nextjs-templates`, `@sitecore-content-sdk/angular-templates`). Its **major** version matches the product package's major version (e.g. `nextjs-templates@2.x` ↔ `@sitecore-content-sdk/nextjs@2.x`); within a major, template and product packages are bumped independently. Its `@sitecore-content-sdk/*` devDependencies define the package versions stamped into scaffolded apps.
+- `initializer` - a `ScaffoldInitData` object (`name`, `prompts`, `templatePath`, `versions`) from `@sitecore-content-sdk/cli/scaffolding`, exported from `templates/<product>/src/initializers/<template>.ts` and listed in the package's `src/index.ts`. `create-content-sdk-app` resolves it by template name (see `packages/create-content-sdk-app/src/registry.ts`).
+- `template` - the sample populated by [ejs](https://ejs.co/) tokens, under `templates/<product>/src/templates/<template>/`. Templates can be for e.g. _nextjs_, _nextjs-app-router_, _angular_.
+
+By default the CLI scaffolds from the template packages it depends on. Pass `--majorVersion <n>` to install and scaffold from a specific major version of the template package instead.
 
 If you want to use [_create-content-sdk-app_](https://github.com/Sitecore/content-sdk/tree/dev/packages/create-content-sdk-app) from your local repository, run:
 
@@ -68,7 +71,7 @@ npm i -g
 To start developing the sample you have to do next:
 
 - Copy [watch.json.example](https://github.com/Sitecore/content-sdk/blob/dev/packages/create-content-sdk-app/watch.json.example) file and name it **watch.json**. You have to set up appropriate arguments for the sample which you want to start to develop. Monorepo symlinking will work if you specify a `destination` under the source root `samples` directory (i.e. `<root>\samples\<my-app>`).
-- Run `yarn watch`. A new sample will be created in the specified `destination` path. You can modify any file related to your sample under `src/templates` folder, and changed files will be automatically copied into your sample.
+- Run `yarn watch`. A new sample will be created in the specified `destination` path. You can modify any file related to your sample under `templates/<product>/src/templates/<template>`, and changed files will be automatically copied into your sample.
 
 ## Linting and Code Style guidelines
 

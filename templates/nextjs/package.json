@@ -1,0 +1,70 @@
+{
+  "name": "@sitecore-content-sdk/nextjs-templates",
+  "version": "2.4.0",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "description": "Next.js scaffolding templates and initializers for the Sitecore Content SDK create-content-sdk-app CLI",
+  "main": "./dist/index.js",
+  "types": "./types/index.d.ts",
+  "scripts": {
+    "build": "npm run clean && tsc && ts-node ./scripts/build-templates.ts",
+    "clean": "del-cli dist types",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "test": "mocha --require ts-node/register \"./src/**/*.test.ts\"",
+    "coverage": "nyc npm test"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sitecore/content-sdk.git",
+    "directory": "templates/nextjs"
+  },
+  "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",
+  "author": "Sitecore Corporation",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Sitecore/content-sdk/issues"
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "dependencies": {
+    "inquirer": "^8.2.4"
+  },
+  "peerDependencies": {
+    "@sitecore-content-sdk/cli": "^2.3.0"
+  },
+  "devDependencies": {
+    "@sitecore-content-sdk/analytics-core": "^2.1.2",
+    "@sitecore-content-sdk/cli": "^2.3.0",
+    "@sitecore-content-sdk/events": "^2.1.2",
+    "@sitecore-content-sdk/nextjs": "^2.4.0",
+    "@sitecore-content-sdk/personalize": "^2.1.0",
+    "@stylistic/eslint-plugin": "^5.2.2",
+    "@types/chai": "^5.2.2",
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.8",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.10.4",
+    "@typescript-eslint/eslint-plugin": "8.39.0",
+    "@typescript-eslint/parser": "8.39.0",
+    "chai": "^4.4.1",
+    "del-cli": "^6.0.0",
+    "eslint": "^9.32.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-jsdoc": "52.0.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "fs-extra": "^11.3.0",
+    "mocha": "^11.2.2",
+    "nyc": "^17.1.0",
+    "prettier": "^2.8.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.8.3"
+  }
+}

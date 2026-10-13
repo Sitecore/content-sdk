@@ -6,13 +6,32 @@ import {
   nextSteps,
   BaseAppArgs,
   openJsonFile,
-  Initializer,
+  InitContext,
+  transform,
+  baseAppPrompts,
 } from './common';
+import { getInitializerData } from './registry';
+import inquirer from 'inquirer';
 
 export const initialize = async (template: string, args: BaseAppArgs) => {
-  const initializer = await getInitializer(template);
+  const init = await getInitializerData(template, args.majorVersion);
   args.silent || console.log(chalk.cyan(`Initializing '${template}'...`));
-  const response = await initializer.init(args);
+
+  // Bind the resolved template package's versions so initializers render
+  // templates without needing to source versions themselves.
+  const ctx: InitContext = {
+    transform: (templatePath, transformArgs) =>
+      transform(templatePath, transformArgs, init.versions),
+    baseAppPrompts,
+  };
+  try {
+    const answers = await inquirer.prompt([...ctx.baseAppPrompts, ...init.prompts], args);
+    const templatePath = init.templatePath;
+    await ctx.transform(templatePath, { ...args, ...answers });
+  } catch (e) {
+    console.error('App scaffolding failed', e);
+    process.exit(1);
+  }
 
   // final steps (install, lint)
   if (!args.noInstall) {
@@ -22,13 +41,6 @@ export const initialize = async (template: string, args: BaseAppArgs) => {
 
   if (!args.silent) {
     const pkg = openJsonFile(path.resolve(`${args.destination}${sep}package.json`));
-    nextSteps(pkg.name, response.nextSteps);
+    nextSteps(pkg.name, init.nextSteps);
   }
-};
-
-export const getInitializer = async (template: string): Promise<Initializer> => {
-  const { default: Initializer } = await import(
-    path.resolve(__dirname, 'initializers', template, 'index')
-  );
-  return new Initializer();
 };
