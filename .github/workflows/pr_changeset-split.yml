@@ -12,14 +12,16 @@ name: Changeset Split
 # instructions to run `yarn csdk:split-changesets` locally.
 #
 # Mark this workflow's check as required on the protected branch to gate merges.
+# No `paths` filter on purpose: a required check that never runs stays pending and blocks the
+# merge. Instead the job runs on every PR and finishes early, green, when the PR doesn't
+# touch `.changeset/`.
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    paths:
-      - '.changeset/**'
 
 permissions:
   contents: read
+  pull-requests: read # list the PR's changed files
 
 concurrency:
   group: changeset-split-${{ github.event.pull_request.number }}
@@ -33,9 +35,28 @@ jobs:
       # A PR from a fork has a head repo different from the base repo.
       IS_FORK: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
     steps:
+      # From the API rather than git: a fork's clone may not contain the base commit.
+      - name: Check for changeset changes
+        id: changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          CHANGED=$(gh api --paginate "repos/${{ github.repository }}/pulls/$PR_NUMBER/files" \
+            --jq '.[] | select(.filename | startswith(".changeset/")) | .filename')
+          if [ -z "$CHANGED" ]; then
+            echo "This PR doesn't touch .changeset/; nothing to check."
+            echo "touched=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Changed changeset files:"
+            echo "$CHANGED"
+            echo "touched=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Generate GitHub App Token
         id: generate-token
-        if: env.IS_FORK == 'false'
+        if: steps.changes.outputs.touched == 'true' && env.IS_FORK == 'false'
         uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ secrets.GH_APP_ID }}
@@ -43,6 +64,7 @@ jobs:
           owner: ${{ github.repository_owner }}
 
       - name: Checkout PR head
+        if: steps.changes.outputs.touched == 'true'
         uses: actions/checkout@v4
         with:
           # For same-repo branches, check out the head branch (not the merge ref)
@@ -54,21 +76,23 @@ jobs:
           token: ${{ steps.generate-token.outputs.token || github.token }}
 
       - name: Use Node.js 24
+        if: steps.changes.outputs.touched == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 24
 
       - name: Install dependencies
+        if: steps.changes.outputs.touched == 'true'
         run: yarn install
 
       # Forks: we cannot push to the contributor's branch, so only validate.
       - name: Validate changesets (fork PRs)
-        if: env.IS_FORK == 'true'
+        if: steps.changes.outputs.touched == 'true' && env.IS_FORK == 'true'
         run: yarn csdk:split-changesets --check
 
       # Same-repo branches: split in place and push the result back to the PR.
       - name: Split and push (same-repo PRs)
-        if: env.IS_FORK == 'false'
+        if: steps.changes.outputs.touched == 'true' && env.IS_FORK == 'false'
         run: |
           set -euo pipefail
           git config user.email builds@sitecore.com

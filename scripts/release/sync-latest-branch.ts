@@ -1,131 +1,108 @@
 /**
- * Keeps the `release/latest` branch holding strictly released code and tags its head `latest`.
- * Hotfix branches are cut from that tag (`hotfix_release_prep.yml`).
+ * Keeps the `release/latest` branch holding strictly released code. Hotfix / feature release
+ * branches (`prep_hotfix_feature_release.yml`) and legacy branches are cut from its head.
  *
- * Runs in `publish.yml` after a stable publish from dev, `release/limited/*` or `release/hotfix/*`
- * (legacy lines never touch it), with HEAD at the published commit:
+ * Called by `post-release-sync.ts` after a stable publish from dev, `release/limited/*` or
+ * `release/hotfix/*` (legacy lines never touch it):
  * - dev release: re-create `release/latest` at the published commit;
  * - limited / hotfix release: overlay only the published packages' directories from the published
  *   commit onto `release/latest`. Every other package keeps the state of its last release: packages
  *   in scope but not bumped may hold unreleased code, and a hotfix branch may be older than
  *   `release/latest` by the time it publishes. Then refresh `yarn.lock` (publish installs with
  *   `--immutable`) and commit.
- *
- * Package tags (`<pkg>@<version>`) stay where changesets created them, on the release branch.
- * The checkout is returned to the published commit afterwards.
- *
- * Input (env):
- * - PUBLISHED_PACKAGES: JSON `[{ name, version }]` from changesets/action `published-packages`
- * - GITHUB_REF_NAME: the branch the release was published from
- *
- * Usage: tsx ./scripts/release/sync-latest-branch.ts
  */
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
 
-import { execFileSync } from 'child_process';
-import path from 'path';
 import { getPackages } from '@manypkg/get-packages';
-import { isMainModule } from '../changesets/utils';
+import { releaseLine } from './release-line';
+import {
+  git,
+  releaseTag,
+  repoPath,
+  updateLockfile,
+  type PackageVersion,
+  type WorkspacePackage,
+} from './release-state';
 
-export const LATEST_BRANCH = 'release/latest';
-export const LATEST_TAG = 'latest';
-const MAIN_BRANCH = 'dev';
-
-interface PublishedPackage {
-  name: string;
-  version: string;
-}
-
-interface PackageLike {
-  dir: string;
-  packageJson: { name: string };
-}
+export const RELEASE_LATEST = 'release/latest';
 
 /** Repo-relative directories of the published packages. Throws on a package not in the workspace. */
 export function publishedPackageDirs(
-  packages: PackageLike[],
+  packages: WorkspacePackage[],
   rootDir: string,
-  published: PublishedPackage[]
+  published: PackageVersion[]
 ): string[] {
   const dirs = new Map(packages.map((pkg) => [pkg.packageJson.name, pkg.dir]));
   return published.map(({ name }) => {
     const dir = dirs.get(name);
     if (!dir) throw new Error(`Published package ${name} is not in the workspace.`);
-    return path.relative(rootDir, dir).split(path.sep).join('/');
+    return repoPath(rootDir, dir);
   });
 }
 
-export function describePublished(published: PublishedPackage[]): string {
-  return published.map((p) => `${p.name}@${p.version}`).join(', ');
+/** Dev release: re-create `release/latest` at the published commit. */
+export function copyDevToLatest(releaseSha: string): void {
+  git('push', '-f', 'origin', `${releaseSha}:refs/heads/${RELEASE_LATEST}`);
+  console.log(`✅ Re-created ${RELEASE_LATEST} at ${releaseSha.slice(0, 7)}.`);
 }
 
-function git(...args: string[]): string {
-  return execFileSync('git', args, { encoding: 'utf8' }).trim();
-}
-
-function tagLatest(message: string): void {
-  git('tag', '-f', '-a', LATEST_TAG, 'HEAD', '-m', message);
-  git('push', '-f', 'origin', `refs/tags/${LATEST_TAG}`);
-}
-
-async function main(): Promise<void> {
-  const branch = process.env.GITHUB_REF_NAME;
-  const published: PublishedPackage[] = JSON.parse(process.env.PUBLISHED_PACKAGES || '[]');
-  if (!branch) throw new Error('GITHUB_REF_NAME is not set.');
-  if (published.length === 0) {
-    console.log('Nothing was published; release/latest is unchanged.');
-    return;
-  }
-
-  const releaseSha = git('rev-parse', 'HEAD');
-  const message = `Latest release from ${branch}: ${describePublished(published)}`;
-
-  if (branch === MAIN_BRANCH) {
-    git('push', '-f', 'origin', `${releaseSha}:refs/heads/${LATEST_BRANCH}`);
-    tagLatest(message);
-    console.log(`✅ Re-created ${LATEST_BRANCH} at ${releaseSha.slice(0, 7)} and tagged it ${LATEST_TAG}.`);
-    return;
-  }
-
+/**
+ * Limited / hotfix release: overlay the published packages' directories from the published commit
+ * onto `release/latest`, refresh `yarn.lock` and commit.
+ */
+export async function copyLimitedToLatest(
+  releaseSha: string,
+  message: string,
+  published: PackageVersion[]
+): Promise<void> {
   try {
-    git('fetch', 'origin', LATEST_BRANCH);
+    git('fetch', 'origin', RELEASE_LATEST);
   } catch {
     throw new Error(
-      `${LATEST_BRANCH} does not exist yet. Create it once from the last dev release commit, ` +
-        `e.g. git push origin <sha>:refs/heads/${LATEST_BRANCH}.`
+      `${RELEASE_LATEST} does not exist yet. Create it once from the last dev release commit, ` +
+        `e.g. git push origin <sha>:refs/heads/${RELEASE_LATEST}.`
     );
   }
 
   const { packages, rootDir } = await getPackages(process.cwd());
-  const dirs = publishedPackageDirs(packages, rootDir, published);
+  const publishedPackages = publishedPackageDirs(packages, rootDir, published);
 
-  git('checkout', '-q', '-B', LATEST_BRANCH, `origin/${LATEST_BRANCH}`);
+  git('checkout', '-q', '-B', RELEASE_LATEST, `origin/${RELEASE_LATEST}`);
   try {
-    git('restore', `--source=${releaseSha}`, '--staged', '--worktree', '--', ...dirs);
-    execFileSync('yarn', ['install', '--mode=update-lockfile'], {
-      stdio: 'inherit',
-      env: { ...process.env, YARN_ENABLE_IMMUTABLE_INSTALLS: 'false' },
-      shell: process.platform === 'win32',
-    });
-    git('add', '--', 'yarn.lock', ...dirs);
+    git('restore', `--source=${releaseSha}`, '--staged', '--worktree', '--', ...publishedPackages);
+    updateLockfile();
+    git('add', '--', 'yarn.lock', ...publishedPackages);
     if (git('diff', '--cached', '--name-only') === '') {
-      console.log(`${LATEST_BRANCH} already holds these packages; nothing to commit.`);
+      console.log(`${RELEASE_LATEST} already holds these packages; nothing to commit.`);
     } else {
       git('commit', '-q', '-m', `[ci] ${message}`);
-      git('push', 'origin', `HEAD:refs/heads/${LATEST_BRANCH}`);
+      git('push', 'origin', `HEAD:refs/heads/${RELEASE_LATEST}`);
     }
-    tagLatest(message);
-    console.log(`✅ Synced ${dirs.join(', ')} onto ${LATEST_BRANCH} and tagged it ${LATEST_TAG}.`);
+    console.log(`✅ Synced ${publishedPackages.join(', ')} onto ${RELEASE_LATEST}.`);
   } finally {
     git('checkout', '-q', '-f', '--detach', releaseSha);
   }
 }
 
-if (isMainModule(import.meta.url)) {
-  main().catch((error: unknown) => {
-    const err = error as Error;
-    console.error('❌ Error:', err.message);
-    process.exit(1);
-  });
+/**
+ * Brings `release/latest` up to a release: re-created at the release commit for dev, the published
+ * packages overlaid for limited / hotfix releases. Other lines are skipped.
+ */
+export async function syncLatestBranch(
+  branch: string,
+  releaseSha: string,
+  published: PackageVersion[]
+): Promise<void> {
+  const line = releaseLine(branch);
+  if (!line.syncsLatest) {
+    console.log(`${branch} releases don't update ${RELEASE_LATEST}; skipping.`);
+    return;
+  }
+  if (line.type === 'full') {
+    copyDevToLatest(releaseSha);
+  } else {
+    const message = `Latest release from ${branch}: ${published.map(releaseTag).join(', ')}`;
+    await copyLimitedToLatest(releaseSha, message, published);
+  }
 }

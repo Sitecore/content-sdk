@@ -24,13 +24,11 @@ import { readChangesets } from '@changesets/read';
 import { writeChangeset } from '@changesets/write';
 import { readConfig } from '@changesets/config';
 import { getPackages } from '@manypkg/get-packages';
-import { isMainModule } from './utils';
+import { runMain, type ChangesetLike as BaseChangesetLike } from './utils';
 
 /** Minimal shape of a parsed changeset needed to detect and split multi-package entries. */
-export interface ChangesetLike {
-  id: string;
+export interface ChangesetLike extends BaseChangesetLike {
   summary: string;
-  releases: { name: string; type: string }[];
 }
 
 /** Splits one multi-package changeset into N single-package changeset inputs, keeping the summary. */
@@ -107,12 +105,4 @@ async function main(): Promise<void> {
   );
 }
 
-if (isMainModule(import.meta.url)) {
-  main().catch((error: unknown) => {
-    const err = error as Error;
-    console.error('❌ Error:', err.message);
-    console.error(err.stack);
-    process.exit(1);
-  });
-}
-
+runMain(import.meta.url, main);

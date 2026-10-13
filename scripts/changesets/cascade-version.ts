@@ -4,12 +4,13 @@
  * Original `changeset version` command does not support cascading version bumps
  * This script replaces `changeset version` with a custom implementation that:
  * 1. Reads pending changesets
- * 2. Cascades major/minor bumps from ANY package to all its dependents
- * 3. Assembles a new release plan with cascade changesets
+ * 2. Cascades major bumps from ANY package to all its dependents
+ * 3. Assembles a new release plan with cascade changesets (`getCascadeReleasePlan`, also used by
+ *    `prep-limited-release.ts`)
  * 4. Applies the modified release plan
  *
  * Cascading rules:
- * - If package A has a version bump (minor/major; or any bump when --snapshot),
+ * - If package A has a major bump (any bump when --snapshot),
  * the version bump is propagated to all packages that depend on A (directly or transitively).
  *
  * With --snapshot: all change types cascade; snapshot semver suffixes are applied via changesets;
@@ -29,7 +30,15 @@ import { readConfig } from '@changesets/config';
 import { readPreState } from '@changesets/pre';
 import { getPackages, Packages } from '@manypkg/get-packages';
 import { getDependentsGraph } from '@changesets/get-dependents-graph';
-import type { VersionType, NewChangesetWithCommit, NewChangeset } from '@changesets/types';
+import type {
+  Config,
+  NewChangeset,
+  NewChangesetWithCommit,
+  PreState,
+  ReleasePlan,
+  VersionType,
+} from '@changesets/types';
+import { runMain } from './utils';
 
 const REPO = 'sitecore/content-sdk';
 const canaryTag = process.env.CANARY_PREFIX || 'canary';
@@ -47,40 +56,14 @@ function writeGithubOutput(key: string, value: string): void {
   appendFileSync(out, `${key}=${value}\n`);
 }
 
-async function main(): Promise<void> {
-  const dryRun = process.argv.includes('--dry-run');
-  const isSnapshot = process.argv.includes('--snapshot');
-  const cwd = process.cwd();
-
-  console.log('📦 Custom changeset cascade version script: start...');
-  const packages = await getPackages(cwd);
-  const config = (await readConfig(cwd, packages))?.config;
-  if (!config) {
-    throw new Error('Failed to read changesets config (.changeset/config.json).');
-  }
-  if (dryRun) {
-    console.log('🔍 DRY RUN MODE - Forcing no git commit to be made');
-    config.commit = false;
-  }
-
-  const preState = await readPreState(cwd);
-  if (isSnapshot && preState?.mode === 'pre') {
-    throw new Error('Snapshot release is not allowed in pre mode. Run `changeset pre exit` first.');
-  }
-
-  const originalChangesets = await getChangesetsWithCommits(cwd);
-
-  if (originalChangesets.length === 0) {
-    console.log('No pending changesets found.');
-    if (isSnapshot && !dryRun) {
-      writeGithubOutput('snapshot_publish', 'false');
-    }
-    return;
-  }
-
+export function getCascadeChangesets(
+  originalChangesets: NewChangeset[],
+  packages: Packages,
+  isSnapshot?: boolean
+) {
   // get per-package changesets for easier processing
   const changesetMap = getPackageChangesetMap(originalChangesets);
-
+  const cascadeChangeTypes: VersionType[] = isSnapshot ? ['major', 'minor', 'patch'] : ['major'];
   // package -> all dependents graph/map
   const dependentsGraph = getTransitiveDependents(packages);
 
@@ -96,10 +79,6 @@ async function main(): Promise<void> {
     const random = crypto.randomUUID();
     return `${'cascade-changeset-' + random}`;
   };
-
-  const cascadeChangeTypes: VersionType[] = isSnapshot
-    ? ['major', 'minor', 'patch']
-    : ['major', 'minor'];
 
   // Apply additional changesets to dependent packages
   const cascadeChangesets = [] as NewChangeset[];
@@ -138,44 +117,29 @@ async function main(): Promise<void> {
       });
     });
   });
+  return cascadeChangesets;
+}
 
-  const finalChangesets = [...originalChangesets, ...cascadeChangesets];
-
-  const snapshotParams =
-    isSnapshot && config.snapshot.prereleaseTemplate?.includes('{commit}')
-      ? { tag: canaryTag, commit: await getCurrentCommitId({ cwd }) }
-      : isSnapshot
-      ? { tag: canaryTag }
-      : undefined;
-
-  const releasePlan = assembleReleasePlan(
-    finalChangesets,
+/**
+ * Release plan for the pending changesets plus their cascade changesets, assembled natively by
+ * changesets (dependents, fixed and linked groups, `ignore`, pre mode).
+ * With `snapshot` set, every bump type cascades.
+ */
+export function getCascadeReleasePlan(
+  changesets: NewChangeset[],
+  packages: Packages,
+  config: Config,
+  preState: PreState | undefined,
+  snapshot?: { tag: string; commit?: string }
+): ReleasePlan {
+  const cascadeChangesets = getCascadeChangesets(changesets, packages, !!snapshot);
+  return assembleReleasePlan(
+    [...changesets, ...cascadeChangesets],
     packages,
     config,
     preState,
-    snapshotParams
+    snapshot
   );
-
-  console.log('\n📋 Final release plan:');
-  releasePlan.releases
-    .filter((r) => r.type !== 'none')
-    .forEach((r) => {
-      console.log(`  ${r.name}: ${r.oldVersion} → ${r.newVersion} (${r.type})`);
-    });
-
-  if (dryRun) {
-    console.log('🔍 DRY RUN MODE - skipping applyReleasePlan (no files changed)');
-    return;
-  }
-
-  const applyConfig = isSnapshot ? { ...config, changelog: false as const } : config;
-  await applyReleasePlan(releasePlan, packages, applyConfig, isSnapshot ? canaryTag : undefined);
-
-  if (isSnapshot) {
-    writeGithubOutput('snapshot_publish', 'true');
-  }
-
-  console.log('✅ Version updates applied with cascading bumps.');
 }
 
 export function getTransitiveDependents(packages: Packages): Map<string, string[]> {
@@ -239,9 +203,72 @@ export function getPackageChangesetMap(
   return changesetMap;
 }
 
-main().catch((error: unknown) => {
-  const err = error as Error;
-  console.error('❌ Error:', err.message);
-  console.error(err.stack);
-  process.exit(1);
-});
+async function main(): Promise<void> {
+  const dryRun = process.argv.includes('--dry-run');
+  const isSnapshot = process.argv.includes('--snapshot');
+  const cwd = process.cwd();
+
+  console.log('📦 Custom changeset cascade version script: start...');
+  const packages = await getPackages(cwd);
+  const config = (await readConfig(cwd, packages))?.config;
+  if (!config) {
+    throw new Error('Failed to read changesets config (.changeset/config.json).');
+  }
+  if (dryRun) {
+    console.log('🔍 DRY RUN MODE - Forcing no git commit to be made');
+    config.commit = false;
+  }
+
+  const preState = await readPreState(cwd);
+  if (isSnapshot && preState?.mode === 'pre') {
+    throw new Error('Snapshot release is not allowed in pre mode. Run `changeset pre exit` first.');
+  }
+
+  const originalChangesets = await getChangesetsWithCommits(cwd);
+
+  if (originalChangesets.length === 0) {
+    console.log('No pending changesets found.');
+    if (isSnapshot && !dryRun) {
+      writeGithubOutput('snapshot_publish', 'false');
+    }
+    return;
+  }
+
+  const snapshotParams =
+    isSnapshot && config.snapshot.prereleaseTemplate?.includes('{commit}')
+      ? { tag: canaryTag, commit: await getCurrentCommitId({ cwd }) }
+      : isSnapshot
+      ? { tag: canaryTag }
+      : undefined;
+
+  const releasePlan = getCascadeReleasePlan(
+    originalChangesets,
+    packages,
+    config,
+    preState,
+    snapshotParams
+  );
+
+  console.log('\n📋 Final release plan:');
+  releasePlan.releases
+    .filter((r) => r.type !== 'none')
+    .forEach((r) => {
+      console.log(`  ${r.name}: ${r.oldVersion} → ${r.newVersion} (${r.type})`);
+    });
+
+  if (dryRun) {
+    console.log('🔍 DRY RUN MODE - skipping applyReleasePlan (no files changed)');
+    return;
+  }
+
+  const applyConfig = isSnapshot ? { ...config, changelog: false as const } : config;
+  await applyReleasePlan(releasePlan, packages, applyConfig, isSnapshot ? canaryTag : undefined);
+
+  if (isSnapshot) {
+    writeGithubOutput('snapshot_publish', 'true');
+  }
+
+  console.log('✅ Version updates applied with cascading bumps.');
+}
+
+runMain(import.meta.url, main);

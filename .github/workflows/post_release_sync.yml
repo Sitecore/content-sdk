@@ -1,0 +1,68 @@
+name: Post-release Sync
+
+# Recovery for a stable publish that failed part-way: runs the same post-release script as
+# publish.yml (scripts/release/post-release-sync.ts) on the branch this workflow is started from.
+# It derives the release's published packages from the release commit and npm, then restores
+# missing <pkg>@<version> tags, creates legacy branches after a product major (from release/latest,
+# before it moves), syncs release/latest and cherry-picks a limited / hotfix version bump onto dev. Every step is
+# idempotent, so it is safe to run more than once.
+#
+# Runbook when the publish job failed:
+# 1. Run this workflow on the release branch with the failed run's commit (its `github.sha`, the
+#    release commit). This restores the tags of whatever was already published, so the release
+#    guard accepts those versions as released on this line.
+# 2. Re-run the failed publish job: changeset publish publishes the remaining packages, and the
+#    job's own post-release sync covers the whole release.
+# 3. If the publish job had already published everything and only a later step failed, step 1 is
+#    the whole fix.
+# GitHub releases for packages restored in step 1 are not created; add them by hand if needed.
+on:
+  workflow_dispatch:
+    inputs:
+      release_sha:
+        description: 'Release commit (the failed publish run commit)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  post-release-sync:
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'dev' || startsWith(github.ref_name, 'release/')
+    # Same group as publish.yml's stable job: never race a publish on this branch.
+    concurrency:
+      group: stable-release-${{ github.ref }}
+      cancel-in-progress: false
+    env:
+      YARN_ENABLE_IMMUTABLE_INSTALLS: false
+    steps:
+      - name: Generate GitHub App Token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - name: Release setup
+        uses: ./.github/actions/release-setup
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - name: Post-release sync
+        env:
+          RELEASE_SHA: ${{ inputs.release_sha }}
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: yarn csdk:post-release-sync
+

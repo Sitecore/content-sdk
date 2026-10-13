@@ -1,0 +1,10 @@
+// definitions for Content SDK product-specific packages
+{
+  "nextjs": [
+    "@sitecore-content-sdk/nextjs",
+    "@sitecore-content-sdk/react",
+    "create-content-sdk-app"
+  ],
+  "angular": ["@sitecore-content-sdk/angular", "create-content-sdk-app"]
+}
+

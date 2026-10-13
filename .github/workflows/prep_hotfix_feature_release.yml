@@ -1,8 +1,13 @@
-name: Prepare Hotfix Release
+name: Prepare Hotfix / Feature Release
 
-# Branches `release/hotfix/<UTC timestamp>` off the `latest` git tag: the head of `release/latest`,
-# which holds strictly released code (publish.yml keeps it in sync after dev, limited and hotfix
-# releases). Also the path for releasing a single package on its own.
+# Branches `release/hotfix/<UTC timestamp>` off the head of `release/latest`, which holds strictly
+# released code (publish.yml keeps it in sync after dev, limited and hotfix
+# releases). The release ships only what is cherry-picked onto it from dev:
+# - a hotfix: the fix commit(s);
+# - a feature release: the commits of one feature, without the rest of dev;
+# - a single package released on its own.
+# Cherry-pick each commit with its changeset file (same name), so dev doesn't get a duplicate
+# changelog entry when the version bump is cherry-picked back.
 on:
   workflow_dispatch:
 
@@ -27,31 +32,32 @@ jobs:
           persist-credentials: false
           token: ${{ steps.generate-token.outputs.token }}
 
-      - name: Set git configuration
-        run: |
-          git config --global user.email builds@sitecore.com
-          git config --global user.name "content-sdk-bot"
-          git remote set-url origin https://x-access-token:${{ steps.generate-token.outputs.token }}@github.com/${{ github.repository }}
+      - name: Release setup
+        uses: ./.github/actions/release-setup
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          install: none
 
       - name: Create hotfix branch
         id: create-branch
         run: |
           set -euo pipefail
-          if ! BASE_SHA="$(git rev-parse --verify --quiet 'refs/tags/latest^{commit}')"; then
-            echo "Git tag 'latest' not found. It is set by publish.yml on release/latest after a release from dev, release/limited/* or release/hotfix/*."
+          if ! git fetch origin release/latest; then
+            echo "Branch release/latest not found. publish.yml sets it after a release from dev, release/limited/* or release/hotfix/*."
             exit 1
           fi
+          BASE_SHA="$(git rev-parse origin/release/latest)"
           BRANCH_NAME="release/hotfix/$(date -u +%Y%m%d%H%M%S)"
           if git ls-remote --exit-code --heads origin "$BRANCH_NAME" >/dev/null; then
             echo "Hotfix branch $BRANCH_NAME already exists. Re-run the workflow."
             exit 1
           fi
           git push origin "$BASE_SHA:refs/heads/$BRANCH_NAME"
-          echo "Branch $BRANCH_NAME created from latest ($BASE_SHA) and pushed"
+          echo "Branch $BRANCH_NAME created from release/latest ($BASE_SHA) and pushed"
           {
             echo "branch_name=$BRANCH_NAME"
             echo "base_sha=$BASE_SHA"
-            echo "base_release=$(git tag -l --format='%(contents:subject)' latest)"
+            echo "base_release=$(git log -1 --format=%s "$BASE_SHA")"
           } >> "$GITHUB_OUTPUT"
 
       - name: Summary
@@ -61,19 +67,19 @@ jobs:
           BASE_RELEASE: ${{ steps.create-branch.outputs.base_release }}
         run: |
           {
-            echo "## Hotfix Branch Prepared"
+            echo "## Hotfix / Feature Release Branch Prepared"
             echo ""
             echo "| Property | Value |"
             echo "|----------|-------|"
             echo "| **Hotfix Branch** | \`$BRANCH_NAME\` |"
-            echo "| **Base** | \`latest\` tag at \`$BASE_SHA\` |"
+            echo "| **Base** | \`release/latest\` at \`$BASE_SHA\` |"
             echo "| **Base Release** | $BASE_RELEASE |"
             echo ""
             echo "### Next Steps:"
             echo "1. Checkout the branch: \`git checkout $BRANCH_NAME\`"
-            echo "2. Cherry-pick or add the fix, with its changeset (\`yarn changeset\`). Cherry-pick the dev commit including its changeset file so dev does not get a duplicate changelog entry"
-            echo "3. Open PR(s) with the hotfix changes against \`$BRANCH_NAME\`"
-            echo "4. Merging them updates the hotfix canaries and opens the hotfix release PR"
+            echo "2. Cherry-pick from dev the fix, or the commits of the feature to release, each with its changeset file (same name, so dev does not get a duplicate changelog entry). A change without a changeset needs one (\`yarn changeset:add\`)"
+            echo "3. Open PR(s) with the cherry-picked changes against \`$BRANCH_NAME\`"
+            echo "4. Merging them updates the hotfix canaries and opens the release PR"
             echo "5. Merge the release PR to publish (\`latest\`); the version bump is cherry-picked back to dev"
           } >> "$GITHUB_STEP_SUMMARY"
 
