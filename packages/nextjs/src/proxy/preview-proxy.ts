@@ -9,6 +9,9 @@ import debug from '../debug';
 import { ProxyBase } from './proxy';
 import { ProxiesContext, SuccessfulProxyExecution } from './types';
 
+const STATIC_FILE_REGEX =
+  /\.(?:svg|png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf|eot|css|js|map|webmanifest)$/i;
+
 /**
  * Configuration for PreviewProxy
  * @public
@@ -63,6 +66,13 @@ export class PreviewProxy extends ProxyBase {
       req.cookies.get(PREVIEW_COOKIES.PREVIEW_TOKEN)?.value ||
       '';
     let editingOptions: EditingOptions | null = previewParams ? JSON.parse(previewParams) : null;
+
+    // Only known asset extensions are skipped: a broader check (e.g. any dot in the path)
+    // would let Sitecore routes containing a dot bypass preview authorization.
+    if (!editingOptions && STATIC_FILE_REGEX.test(req.nextUrl.pathname)) {
+      debug.editing('preview proxy skipped (static file)');
+      return res;
+    }
 
     debug.editing('preview proxy start');
 

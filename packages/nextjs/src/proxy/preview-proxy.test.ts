@@ -203,6 +203,24 @@ describe('PreviewProxy', () => {
         expect(result).to.equal(fakeForbidden);
       });
 
+      it('should still authorize an editing request when the path has a static file extension', async () => {
+        const req = createRequest({
+          nextUrl: { pathname: '/sample-logo.svg', locale: 'en' },
+          headerValues: {
+            [EDITING_PARAMS_HEADER]: JSON.stringify(editingOptions),
+            Authorization: 'Bearer abc',
+          },
+        });
+        const res = createResponse();
+        clientStub.getPreview.resolves({} as any);
+
+        const result = await proxy.handle(req, res);
+
+        expect(clientStub.getPreview).to.have.been.calledOnce;
+        expect(clientStub.getPage).to.not.have.been.called;
+        expect(result).to.equal(res);
+      });
+
       it('should skip and return response unchanged when mode is not preview or edit', async () => {
         const editEditingOptions = { ...editingOptions, mode: 'normal' };
         const req = createRequest({
@@ -310,6 +328,52 @@ describe('PreviewProxy', () => {
         );
         expect(clientStub.getPreview).to.not.have.been.called;
         expect(result).to.equal(res);
+      });
+
+      it('should pass static files through without calling getPage', async () => {
+        const req = createRequest({
+          nextUrl: { pathname: '/sample-logo.svg', locale: 'en' },
+          cookieValues: { [SITE_KEY]: 'my-site', [PREVIEW_COOKIES.PREVIEW_TOKEN]: 'Bearer abc' },
+        });
+        const res = createResponse();
+
+        const result = await proxy.handle(req, res);
+
+        expect(result).to.equal(res);
+        expect(clientStub.getPage).to.not.have.been.called;
+        expect(clientStub.getPreview).to.not.have.been.called;
+      });
+
+      it('should pass nested public assets through without calling getPage', async () => {
+        const req = createRequest({
+          nextUrl: { pathname: '/fonts/site.woff2', locale: 'en' },
+        });
+        const res = createResponse();
+
+        const result = await proxy.handle(req, res);
+
+        expect(result).to.equal(res);
+        expect(clientStub.getPage).to.not.have.been.called;
+      });
+
+      ['/about.v2', '/basic/en/release-2.1', '/data.json'].forEach((pathname) => {
+        it(`should still authorize ${pathname} since it is not a known static file`, async () => {
+          const req = createRequest({
+            nextUrl: { pathname, locale: 'en' },
+            cookieValues: { [SITE_KEY]: 'my-site' },
+          });
+          const res = createResponse();
+          clientStub.getPage.resolves(null);
+
+          const fakeForbidden = { status: 403 } as unknown as NextResponse;
+          sandbox.stub(NextResponse, 'json').returns(fakeForbidden);
+
+          const result = await proxy.handle(req, res);
+
+          expect(clientStub.getPage).to.have.been.calledOnce;
+          expect(clientStub.getPage.firstCall.args[0]).to.equal(pathname);
+          expect(result).to.equal(fakeForbidden);
+        });
       });
 
       it('should respond with 403 when getPage resolves null', async () => {
