@@ -1,7 +1,5 @@
 ---
-'@sitecore-content-sdk/angular': patch
-'@sitecore-content-sdk/nextjs': patch
-'create-content-sdk-app': patch
+"create-content-sdk-app": patch
 ---
 
 `sc:item` tags no longer carry a version segment (`sc:item:<id>:<locale>`), so cache writes and
