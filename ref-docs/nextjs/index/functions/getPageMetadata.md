@@ -8,7 +8,7 @@
 
 > **getPageMetadata**(`route?`, `defaultTitle?`): `Metadata`
 
-Defined in: [nextjs/src/metadata/page-metadata.ts:29](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/nextjs/src/metadata/page-metadata.ts#L29)
+Defined in: [nextjs/src/metadata/page-metadata.ts:29](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/nextjs/src/metadata/page-metadata.ts#L29)
 
 Builds a Next.js `Metadata` object (`<title>`, description/keywords/author meta, and Open Graph
 tags) from a Sitecore route, for direct use as the return value of a page's `generateMetadata`.

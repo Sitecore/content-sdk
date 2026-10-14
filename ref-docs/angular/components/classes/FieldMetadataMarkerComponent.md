@@ -6,7 +6,7 @@
 
 # Class: FieldMetadataMarkerComponent
 
-Defined in: [packages/angular/src/components/field-directives/metadata-chrome.component.ts:17](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/angular/src/components/field-directives/metadata-chrome.component.ts#L17)
+Defined in: [packages/angular/src/components/field-directives/metadata-chrome.component.ts:17](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/angular/src/components/field-directives/metadata-chrome.component.ts#L17)
 
 Component that renders a field' metadata chrome element.
 
@@ -26,7 +26,7 @@ Component that renders a field' metadata chrome element.
 
 > `readonly` **kind**: `InputSignal`\<`MetadataKind`\>
 
-Defined in: [packages/angular/src/components/field-directives/metadata-chrome.component.ts:20](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/angular/src/components/field-directives/metadata-chrome.component.ts#L20)
+Defined in: [packages/angular/src/components/field-directives/metadata-chrome.component.ts:20](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/angular/src/components/field-directives/metadata-chrome.component.ts#L20)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/angular/src/components/field-directives/metadata-chrome.co
 
 > `readonly` **metadata**: `InputSignal`\<`Record`\<`string`, `unknown`\> \| `undefined`\>
 
-Defined in: [packages/angular/src/components/field-directives/metadata-chrome.component.ts:18](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/angular/src/components/field-directives/metadata-chrome.component.ts#L18)
+Defined in: [packages/angular/src/components/field-directives/metadata-chrome.component.ts:18](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/angular/src/components/field-directives/metadata-chrome.component.ts#L18)
 
 ***
 
@@ -42,4 +42,4 @@ Defined in: [packages/angular/src/components/field-directives/metadata-chrome.co
 
 > `readonly` **metadataString**: `Signal`\<`string`\>
 
-Defined in: [packages/angular/src/components/field-directives/metadata-chrome.component.ts:22](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/angular/src/components/field-directives/metadata-chrome.component.ts#L22)
+Defined in: [packages/angular/src/components/field-directives/metadata-chrome.component.ts:22](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/angular/src/components/field-directives/metadata-chrome.component.ts#L22)
