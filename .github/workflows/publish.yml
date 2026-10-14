@@ -14,6 +14,7 @@ on:
     branches:
       - dev
       - 'release/latest'
+      - 'release/legacy/**'
       - 'release/1.x.x'
       - 'release/betas/**'
     paths:
@@ -78,6 +79,7 @@ jobs:
           case "$BRANCH" in
             dev) npm_tag=latest; pr_title="Full release" ;;
             release/latest) npm_tag=latest; pr_title="Latest release" ;;
+            release/legacy/*) npm_tag=legacy; pr_title="Legacy release - $BRANCH" ;;
             release/1.x.x) npm_tag=ver1; pr_title="Legacy release (ver1) - $BRANCH" ;;
             *) echo "::error::$BRANCH has no stable release info"; exit 1 ;;
           esac
@@ -99,6 +101,7 @@ jobs:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Everything after a stable publish, in one idempotent script (scripts/release/post-release-sync.ts):
+      # create legacy branches after a product major (cut at the `latest` tag, the previous release);
       # dev: re-create release/latest at the release; release/latest: cherry-pick the version bump
       # onto dev (PR on conflicts).
       # The published packages are changesets/action's output: a re-run publishes nothing, so it
@@ -111,6 +114,14 @@ jobs:
           PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.published-packages }}
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: yarn csdk:post-release-sync
+
+      # The `latest` tag marks the latest release of dev or release/latest; legacy branches are cut
+      # at it. After the post-release sync, which cuts them at the previous release.
+      - name: Move the latest tag
+        if: >-
+          steps.changesets.outputs.published == 'true' &&
+          (github.ref_name == 'dev' || github.ref_name == 'release/latest')
+        run: git push -f origin "${{ github.sha }}:refs/tags/latest"
 
   canary-snapshot:
     runs-on: ubuntu-latest
@@ -136,6 +147,7 @@ jobs:
         run: |
           case "$BRANCH" in
             dev | release/latest) canary_prefix=canary ;;
+            release/legacy/*) canary_prefix=canary-legacy ;;
             release/1.x.x) canary_prefix=ver1-canary ;;
             release/betas/*) suffix="${BRANCH#release/betas/}"; canary_prefix="beta.${suffix//\//-}" ;;
             *) echo "::error::$BRANCH has no canary release info"; exit 1 ;;

@@ -1,6 +1,6 @@
 /**
- * Shared helpers of the release scripts (`post-release-sync.ts`, the limited release prep): git,
- * npm and workspace state.
+ * Shared helpers of the release scripts (`post-release-sync.ts`, the limited release prep and the
+ * legacy branches): git, npm and workspace state.
  */
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */

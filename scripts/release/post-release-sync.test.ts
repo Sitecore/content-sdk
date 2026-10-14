@@ -7,10 +7,19 @@ import { RELEASE_LATEST } from '../constants';
 const mocks = vi.hoisted(() => ({
   execFileSync: vi.fn(),
   getPackages: vi.fn(),
+  createLegacyBranches: vi.fn(),
+  // steps are logged and reported by function name
+  refreshLegacyLockfiles: Object.defineProperty(vi.fn(), 'name', {
+    value: 'refreshLegacyLockfiles',
+  }),
 }));
 
 vi.mock('child_process', () => ({ execFileSync: mocks.execFileSync }));
 vi.mock('@manypkg/get-packages', () => ({ getPackages: mocks.getPackages }));
+vi.mock('./legacy/create-legacy-branches', () => ({
+  createLegacyBranches: mocks.createLegacyBranches,
+  refreshLegacyLockfiles: mocks.refreshLegacyLockfiles,
+}));
 
 const NEXTJS = '@sitecore-content-sdk/nextjs';
 const CORE = '@sitecore-content-sdk/core';
@@ -140,13 +149,33 @@ describe('runSteps', () => {
 });
 
 describe('syncRelease', () => {
+  const order: string[] = [];
   const releaseLatestPushes = () =>
     gitCalls().filter(
       ([cmd, ...rest]) => cmd === 'push' && rest.join(' ').includes(RELEASE_LATEST)
     );
 
   beforeEach(() => {
+    order.length = 0;
     stubGit({ devVersion: '2.5.0' }); // dev already has the bump: no cherry-pick
+    mocks.createLegacyBranches.mockImplementation(async () => {
+      order.push(`legacy (release/latest pushes so far: ${releaseLatestPushes().length})`);
+    });
+  });
+
+  it('creates legacy branches from the release, before release/latest moves to it', async () => {
+    await syncRelease('dev', SHA, released);
+    expect(mocks.createLegacyBranches).toHaveBeenCalledWith(released);
+    expect(order).toEqual(['legacy (release/latest pushes so far: 0)']);
+    expect(releaseLatestPushes()).toHaveLength(1);
+  });
+
+  it('stops at the first failing step: release/latest keeps the previous release', async () => {
+    mocks.createLegacyBranches.mockRejectedValue(new Error('no tag for nextjs@2.4.0'));
+    await expect(syncRelease('dev', SHA, released)).rejects.toThrow(
+      'createLegacyBranchesOnMajor: no tag for nextjs@2.4.0'
+    );
+    expect(releaseLatestPushes()).toEqual([]);
   });
 
   const stepNames = () =>
@@ -158,12 +187,20 @@ describe('syncRelease', () => {
 
   it('runs the steps of the branch prefix', async () => {
     await syncRelease('dev', SHA, released);
-    expect(stepNames()).toEqual(['latestBranchSync']);
+    expect(stepNames()).toEqual([
+      'createLegacyBranchesOnMajor',
+      'latestBranchSync',
+      'refreshLegacyLockfiles',
+    ]);
     vi.mocked(console.log).mockClear();
     await syncRelease(RELEASE_LATEST, SHA, released);
-    expect(stepNames()).toEqual(['devBranchSync']);
+    expect(stepNames()).toEqual([
+      'createLegacyBranchesOnMajor',
+      'refreshLegacyLockfiles',
+      'devBranchSync',
+    ]);
     vi.mocked(console.log).mockClear();
-    await syncRelease('release/1.x.x', SHA, released);
+    await syncRelease('release/legacy/nextjs/v2', SHA, released);
     expect(stepNames()).toEqual([]);
   });
 
@@ -184,7 +221,7 @@ describe('syncRelease', () => {
 
   it('never pushes release/latest from other branches, release/latest included', async () => {
     await syncRelease(RELEASE_LATEST, SHA, released);
-    await syncRelease('release/1.x.x', SHA, released);
+    await syncRelease('release/legacy/nextjs/v2', SHA, released);
     expect(releaseLatestPushes()).toEqual([]);
   });
 });

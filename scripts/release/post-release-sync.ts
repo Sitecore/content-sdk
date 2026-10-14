@@ -2,11 +2,14 @@
  * Everything that follows a stable publish to sync monorepo release branches.
  * `publish.yml` runs it after changesets/action publishes. The steps depend on the branch
  * (`POST_RELEASE_STEPS`):
- * - dev (full release): re-create `release/latest` at the release commit;
- * - `release/latest` (limited, hotfix and feature releases): cherry-pick the version bump onto dev
- *   (a PR on conflicts). Its changes came from dev (the limited copy, cherry-picked fixes), so the
- *   bump is all dev lacks;
+ * - dev (full release): create legacy branches on a product major, re-create `release/latest` at
+ *   the release commit, refresh the legacy lockfiles;
+ * - `release/latest` (limited, hotfix and feature releases): create legacy branches on a product
+ *   major, refresh the legacy lockfiles, cherry-pick the version bump onto dev (a PR on conflicts).
+ *   Its changes came from dev (the limited copy, cherry-picked fixes), so the bump is all dev lacks;
  * - other branches: none.
+ * Legacy branches are cut at the `latest` tag (the previous release); `publish.yml` moves it to the
+ * release commit after this script.
  * Every step is idempotent: when one failed, fix the cause and re-run the publish workflow.
  *
  * Input (env):
@@ -25,13 +28,14 @@ import path from 'path';
 import { getPackages } from '@manypkg/get-packages';
 import semver from 'semver';
 import { runMain } from '../changesets/utils';
+import { createLegacyBranches, refreshLegacyLockfiles } from './legacy/create-legacy-branches';
 import { git, tryGit, repoPath, type PackageVersion, branchPrefix } from './utils';
 import { MAIN_BRANCH, RELEASE_LATEST } from '../constants';
 
 /** Post-release steps by branch prefix (`branchPrefix`), run in order (see header). */
 const POST_RELEASE_STEPS = new Map<string, Step[]>([
-  [MAIN_BRANCH, [latestBranchSync]],
-  [RELEASE_LATEST, [devBranchSync]],
+  [MAIN_BRANCH, [createLegacyBranchesOnMajor, latestBranchSync, refreshLegacyLockfiles]],
+  [RELEASE_LATEST, [createLegacyBranchesOnMajor, refreshLegacyLockfiles, devBranchSync]],
 ]);
 
 /** The release a post-release run is for. */
@@ -143,6 +147,11 @@ export async function runSteps(steps: Step[], ctx: SyncContext): Promise<void> {
       throw new Error(`${step.name}: ${(error as Error).message}`);
     }
   }
+}
+
+/** Legacy branches on a product major, cut at the product's previous release. */
+function createLegacyBranchesOnMajor({ published }: SyncContext): Promise<void> {
+  return createLegacyBranches(published);
 }
 
 /** Runs the post-release steps of the branch's prefix; throws at the first failing step. */
