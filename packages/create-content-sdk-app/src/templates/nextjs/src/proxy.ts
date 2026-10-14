@@ -93,6 +93,6 @@ export const config = {
    */
   matcher: [
     '/',
-    '/((?!api/|_next/|healthz|sitecore/api/|-/|.*\\.(?:svg|png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf|eot|css|js|map|webmanifest)$).*)',
+    '/((?!api/|_next/|healthz|sitecore/api/|-/|.*[.](?:svg|png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf|eot|css|js|map|webmanifest)$).*)',
   ],
 };

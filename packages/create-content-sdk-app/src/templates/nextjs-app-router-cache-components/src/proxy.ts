@@ -117,6 +117,6 @@ export const config = {
    */
   matcher: [
     '/',
-    '/((?!api/|sitemap|robots|_next/|healthz|sitecore/api/|-/|.*\\.(?:svg|png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf|eot|css|js|map|webmanifest)$).*)',
+    '/((?!api/|sitemap|robots|_next/|healthz|sitecore/api/|-/|.*[.](?:svg|png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf|eot|css|js|map|webmanifest)$).*)',
   ],
 };

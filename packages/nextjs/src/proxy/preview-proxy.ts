@@ -67,9 +67,8 @@ export class PreviewProxy extends ProxyBase {
       '';
     let editingOptions: EditingOptions | null = previewParams ? JSON.parse(previewParams) : null;
 
-    // Only known asset extensions are skipped: a broader check (e.g. any dot in the path)
-    // would let Sitecore routes containing a dot bypass preview authorization.
-    if (!editingOptions && STATIC_FILE_REGEX.test(req.nextUrl.pathname)) {
+    // Skip known static asset extensions so public files aren't denied in editing mode.
+    if (!editingOptions && this.disabled(req)) {
       debug.editing('preview proxy skipped (static file)');
       return res;
     }
@@ -158,4 +157,9 @@ export class PreviewProxy extends ProxyBase {
 
     return res;
   };
+
+  protected disabled(req: NextRequest): boolean {
+    // Skip static files with known asset extensions
+    return STATIC_FILE_REGEX.test(req.nextUrl.pathname);
+  }
 }
