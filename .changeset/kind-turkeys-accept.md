@@ -1,6 +1,5 @@
 ---
-'@sitecore-content-sdk/angular': patch
-'@sitecore-content-sdk/nextjs': patch
+"@sitecore-content-sdk/angular": patch
 ---
 
 `sc:item` tags now always use hyphenated lowercase GUIDs (`sc:item:<hyphenated-id>:<locale>:latest`), so cache writes and webhook revalidation always agree.

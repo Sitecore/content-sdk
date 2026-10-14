@@ -42,6 +42,18 @@ vi.mock('fs', () => ({
   appendFileSync: vi.fn(),
 }));
 
+// run main() on import, as when the script is executed directly
+vi.mock('./utils', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('./utils')>()),
+  // as the real runMain, minus the "is this the script being run" check
+  runMain: (_url: string, main: () => Promise<void>) => {
+    main().catch((error: Error) => {
+      console.error('❌ Error:', error.message);
+      process.exit(1);
+    });
+  },
+}));
+
 vi.mock('@changesets/git', () => ({
   getCommitsThatAddFiles: mocks.getCommitsThatAddFiles,
   getCurrentCommitId: mocks.getCurrentCommitId,
@@ -220,7 +232,7 @@ describe('cascade-version', () => {
       expect(finalCs?.length).toBe(1);
     });
 
-    it('should generate casacade changesets for dependent packages when major or minor changesets present', async () => {
+    it('should generate casacade changesets for dependent packages when major changesets present', async () => {
       mocks.readChangesets.mockResolvedValue([
         {
           id: 'r1',
@@ -261,12 +273,12 @@ describe('cascade-version', () => {
       expect(forReact?.releases[0]?.type).toBe('major');
     });
 
-    it('should generate synthetic cascade changesets for every transitive downstream dependent when the source changeset qualifies for cascade', async () => {
+    it('should generate synthetic cascade changesets for every transitive downstream dependent when the source changeset qualifies for cascade (major)', async () => {
       mocks.readChangesets.mockResolvedValue([
         {
           id: 'r1',
-          summary: 'Minor',
-          releases: [{ name: '@sitecore-content-sdk/search', type: 'minor' }],
+          summary: 'Major',
+          releases: [{ name: '@sitecore-content-sdk/search', type: 'major' }],
         },
       ]);
       mocks.getCommitsThatAddFiles.mockResolvedValue(['2222222']);
@@ -366,14 +378,14 @@ describe('cascade-version', () => {
       expect(finalCs?.length).toBeGreaterThan(0);
     });
 
-    it('should attach the correct per-package release type to cascade changesets when one changeset releases multiple packages', async () => {
+    it('should attach the major per-package release type to cascade changesets when one changeset releases multiple packages', async () => {
       mocks.readChangesets.mockResolvedValue([
         {
           id: 'multi',
           summary: 'Both',
           releases: [
-            { name: '@sitecore-content-sdk/core', type: 'major' },
-            { name: '@sitecore-content-sdk/content', type: 'minor' },
+            { name: '@sitecore-content-sdk/core', type: 'minor' },
+            { name: '@sitecore-content-sdk/content', type: 'major' },
           ],
         },
       ]);
@@ -400,18 +412,18 @@ describe('cascade-version', () => {
         summary: string;
         releases: { type: string }[];
       }[];
-      const majorSynth = finalCs?.find(
-        (c) =>
-          c.id.startsWith('cascade-changeset-') &&
-          c.summary.includes('major `@sitecore-content-sdk/core`')
-      );
       const minorSynth = finalCs?.find(
         (c) =>
           c.id.startsWith('cascade-changeset-') &&
-          c.summary.includes('minor `@sitecore-content-sdk/content`')
+          c.summary.includes('minor `@sitecore-content-sdk/core`')
+      );
+      const majorSynth = finalCs?.find(
+        (c) =>
+          c.id.startsWith('cascade-changeset-') &&
+          c.summary.includes('major `@sitecore-content-sdk/content`')
       );
       expect(majorSynth?.releases[0]?.type).toBe('major');
-      expect(minorSynth?.releases[0]?.type).toBe('minor');
+      expect(minorSynth).toBe(undefined);
     });
 
     it('should merge readChangesets output with getCommitsThatAddFiles results in .changeset path order when building changesets-with-commits', async () => {
