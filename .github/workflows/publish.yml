@@ -87,6 +87,12 @@ jobs:
           echo "pr_title=[csdk][release] $pr_title" >> "$GITHUB_OUTPUT"
           echo "$BRANCH: npm_tag=$npm_tag, pr_title=[csdk][release] $pr_title"
 
+      # release/latest: every version the pending changesets release must be above npm `latest`
+      # (equal: dev published it already, changeset publish would skip it silently; lower: it would
+      # move `latest` back); legacy fails on changesets it can't release. Other branches pass.
+      - name: Release branch guards
+        run: node ./scripts/release/release-branch-guards.ts
+
       - name: Prepare and Process Changesets Release
         id: changesets
         uses: changesets/action@v2

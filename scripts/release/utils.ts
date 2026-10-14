@@ -1,6 +1,6 @@
 /**
- * Shared helpers of the release scripts (`post-release-sync.ts`, the limited release prep and the
- * legacy branches): git, npm and workspace state.
+ * Shared helpers of the release scripts (`release-branch-guards.ts`, `post-release-sync.ts`, the
+ * limited release prep and the legacy branches): git, npm and workspace state.
  */
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
@@ -38,7 +38,7 @@ export function packageDirs(
 }
 
 /**
- * A branch's prefix, the key of the per-branch Maps (post-release steps):
+ * A branch's prefix, the key of the per-branch Maps (release info, post-release steps, guards):
  * `release/<name>` (the first two path segments), else the whole branch (e.g. `dev`).
  */
 export const branchPrefix = (branch: string): string =>
