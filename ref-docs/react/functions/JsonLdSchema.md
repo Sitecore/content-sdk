@@ -8,7 +8,7 @@
 
 > **JsonLdSchema**(`props`): `Element` \| `null`
 
-Defined in: [packages/react/src/components/JsonLdSchema.tsx:26](https://github.com/Sitecore/content-sdk/blob/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499/packages/react/src/components/JsonLdSchema.tsx#L26)
+Defined in: [packages/react/src/components/JsonLdSchema.tsx:26](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/react/src/components/JsonLdSchema.tsx#L26)
 
 Renders a single `<script type="application/ld+json">` tag containing all JSON-LD structured
 data schemas from a Sitecore route (`sitecore.context.schemas`), serialized as a JSON array.
