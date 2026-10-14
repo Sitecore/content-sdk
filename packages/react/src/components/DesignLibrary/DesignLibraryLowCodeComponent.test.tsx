@@ -17,6 +17,10 @@ import type { AtomsConfig } from '../../atoms/types';
 import { ATOM_TYPE } from '../../atoms/constants';
 import type { ImportMapImport } from './models';
 import type { DefineRegistryResult } from '@json-render/react';
+import type { Document } from '@sitecore-content-sdk/content/atoms';
+import { z } from 'zod';
+import { defineAtomsCatalog } from '../../atoms/define-atoms-catalog';
+import { defineAtomsRegistry } from '../../atoms/define-atoms-registry';
 
 describe('<DesignLibraryLowCodeComponent />', () => {
   const sandbox = sinon.createSandbox();
@@ -28,7 +32,7 @@ describe('<DesignLibraryLowCodeComponent />', () => {
   let postToDesignLibrarySpy: sinon.SinonStub;
   let sendAtomsErrorEventSpy: sinon.SinonStub;
   let addDocumentUpdateHandlerStub: sinon.SinonStub;
-  let addComponentPropsUpdateHandlerStub: sinon.SinonStub;
+  let unsubscribeDocumentUpdateStub: sinon.SinonStub;
 
   const mockRegistry: DefineRegistryResult = {
     registry: {} as any,
@@ -57,6 +61,33 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     registry: mockRegistry,
   };
 
+  const previewCatalog = defineAtomsCatalog({
+    components: {
+      Button: { props: z.object({ label: z.string().optional() }), description: 'A button' },
+    },
+    actions: {},
+  });
+  const previewConfig: AtomsConfig = {
+    catalog: previewCatalog,
+    registry: defineAtomsRegistry(previewCatalog, {
+      components: {
+        Button: ({ props }) => <button data-testid="preview-button">{props.label}</button>,
+      },
+    }),
+  };
+  const getPreviewDocument = (state: Document['state']): Document => ({
+    name: 'preview',
+    root: 'button',
+    elements: {
+      button: {
+        type: 'Button',
+        props: { label: { $state: '/fields/heading/value' } },
+        children: [],
+      },
+    },
+    state,
+  });
+
   const getPage = () => ({
     locale: 'en',
     layout: { sitecore: { context: {}, route: null } },
@@ -73,13 +104,12 @@ describe('<DesignLibraryLowCodeComponent />', () => {
   beforeEach(() => {
     postToDesignLibrarySpy = sandbox.stub();
     sendAtomsErrorEventSpy = sandbox.stub();
-    addDocumentUpdateHandlerStub = sandbox.stub().returns(() => {});
-    addComponentPropsUpdateHandlerStub = sandbox.stub().returns(() => {});
+    unsubscribeDocumentUpdateStub = sandbox.stub();
+    addDocumentUpdateHandlerStub = sandbox.stub().returns(unsubscribeDocumentUpdateStub);
     __mockDependencies({
       postToDesignLibrary: postToDesignLibrarySpy,
       sendAtomsErrorEvent: sendAtomsErrorEventSpy,
       addDocumentUpdateHandler: addDocumentUpdateHandlerStub,
-      addComponentPropsUpdateHandler: addComponentPropsUpdateHandlerStub,
     });
   });
 
@@ -104,10 +134,7 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     renderComponent(atomsConfig);
     await waitFor(() => {
       expect(postToDesignLibrarySpy).to.have.been.calledWith(
-        getDesignLibraryStatusEvent(
-          DesignLibraryStatus.READY,
-          'design-library-low-code-component'
-        )
+        getDesignLibraryStatusEvent(DesignLibraryStatus.READY, 'design-library-low-code-component')
       );
     });
   });
@@ -177,9 +204,7 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     const openChrome = container.querySelector(
       'code.scpm[chrometype="rendering"][kind="open"][id="test-content"]'
     );
-    const closeChrome = container.querySelector(
-      'code.scpm[chrometype="rendering"][kind="close"]'
-    );
+    const closeChrome = container.querySelector('code.scpm[chrometype="rendering"][kind="close"]');
 
     expect(openChrome).to.not.be.null;
     expect(closeChrome).to.not.be.null;
@@ -187,29 +212,75 @@ describe('<DesignLibraryLowCodeComponent />', () => {
     expect(openChrome?.getAttribute('data-component-type')).to.equal(ATOM_TYPE);
   });
 
-  it('subscribes to component props update handler', async () => {
-    renderComponent(atomsConfig);
+  it('renders fields and params from the preview document state', async () => {
+    const { container, getByTestId } = renderComponent(previewConfig);
+    const document = getPreviewDocument({
+      fields: { heading: { value: 'New Heading' } },
+      params: { styles: 'dark', RenderingIdentifier: 'preview-id' },
+    });
+
+    act(() => {
+      addDocumentUpdateHandlerStub.firstCall.args[0](document);
+    });
+
     await waitFor(() => {
-      expect(addComponentPropsUpdateHandlerStub).to.have.been.called;
+      expect(getByTestId('preview-button').textContent).to.equal('New Heading');
+      expect(container.querySelector('#preview-id')?.className).to.equal('component dark');
     });
   });
 
-  it('updates fields and params state when component:update is received', async () => {
-    const { rerender } = renderComponent(atomsConfig);
-
-    await waitFor(() => {
-      expect(addComponentPropsUpdateHandlerStub).to.have.been.called;
-    });
-
-    const callback = addComponentPropsUpdateHandlerStub.firstCall.args[0];
-    const fields = { heading: { value: 'New Heading' } } as any;
-    const params = { styles: 'dark' };
+  it('refreshes fields and params when a same-name replacement document arrives', async () => {
+    const { container, getByTestId } = renderComponent(previewConfig);
+    const callback = addDocumentUpdateHandlerStub.firstCall.args[0];
 
     act(() => {
-      callback(fields, params);
+      callback(
+        getPreviewDocument({
+          fields: { heading: { value: 'Original Heading' } },
+          params: { styles: 'light', RenderingIdentifier: 'original-id' },
+        })
+      );
+    });
+    await waitFor(() => {
+      expect(getByTestId('preview-button').textContent).to.equal('Original Heading');
+      expect(container.querySelector('#original-id')?.className).to.equal('component light');
     });
 
-    expect(rerender).to.not.throw;
+    act(() => {
+      callback(
+        getPreviewDocument({
+          fields: { heading: { value: 'Replacement Heading' } },
+          params: { styles: 'dark', RenderingIdentifier: 'replacement-id' },
+        })
+      );
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('preview-button').textContent).to.equal('Replacement Heading');
+      expect(container.querySelector('#replacement-id')?.className).to.equal('component dark');
+      expect(container.querySelector('#original-id')).to.be.null;
+      expect(getByTestId('preview-button').closest('.component')?.textContent).to.not.contain(
+        'Original Heading'
+      );
+    });
+    const renderedCalls = postToDesignLibrarySpy
+      .getCalls()
+      .filter(
+        (call: sinon.SinonSpyCall) => call.args[0]?.message?.status === DesignLibraryStatus.RENDERED
+      );
+    expect(renderedCalls).to.have.length(2);
+    expect(addDocumentUpdateHandlerStub).to.have.been.calledOnce;
+  });
+
+  it('unsubscribes from document updates on unmount', () => {
+    const { unmount } = renderComponent(atomsConfig);
+
+    expect(addDocumentUpdateHandlerStub).to.have.been.calledOnce;
+    expect(unsubscribeDocumentUpdateStub).to.not.have.been.called;
+
+    unmount();
+
+    expect(unsubscribeDocumentUpdateStub).to.have.been.calledOnce;
   });
 
   it('wraps the rendered component with PlaceholderMetadata using the default uid before a document is received', async () => {

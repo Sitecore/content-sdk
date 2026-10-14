@@ -50,8 +50,17 @@ export const StudioComponentServerWrapper = async (props: StudioComponentServerW
   const path = extractVariantPathFromComponentRef(componentRef, props.fieldNames);
   if (!path) return null;
 
-  const document = await fetchDocument(path);
-  if (!document) return null;
+  const rawDocument = await fetchDocument(path);
+  if (!rawDocument) return null;
+
+  const document = {
+    ...rawDocument,
+    state: {
+      ...(rawDocument.state ?? {}),
+      fields: props.fields,
+      params: props.params,
+    },
+  };
 
   const classes = extractDocumentClasses(document);
   const compiler = getAtomsCssCompiler();
@@ -75,7 +84,7 @@ export const StudioComponentServerWrapper = async (props: StudioComponentServerW
   return (
     <>
       {css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null}
-      <StudioComponentWrapper document={document} fields={props.fields} params={props.params} />
+      <StudioComponentWrapper document={document} />
     </>
   );
 };

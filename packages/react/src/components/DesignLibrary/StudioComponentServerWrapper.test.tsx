@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { expect } from 'chai';
-import { createSandbox, SinonSandbox, SinonStub } from 'sinon';
+import { assert, createSandbox, SinonSandbox, SinonStub } from 'sinon';
 import proxyquire from 'proxyquire';
 import type { Document } from '@sitecore-content-sdk/content/atoms';
 
@@ -89,7 +89,8 @@ describe('StudioComponentServerWrapper', () => {
       });
       // 'nonexistent' does not match 'variant1' and there is no 'default' segment
       expect(result).to.be.null;
-      expect(consoleWarnStub).to.have.been.calledWithMatch(
+      assert.calledWithMatch(
+        consoleWarnStub,
         'StudioComponentServerWrapper: failed to extract path'
       );
     });
@@ -136,7 +137,8 @@ describe('StudioComponentServerWrapper', () => {
       });
 
       expect(result).to.be.null;
-      expect(consoleWarnStub).to.have.been.calledWithMatch(
+      assert.calledWithMatch(
+        consoleWarnStub,
         'StudioComponentServerWrapper: failed to extract path'
       );
     });
@@ -167,7 +169,8 @@ describe('StudioComponentServerWrapper', () => {
       });
 
       expect(result).to.be.null;
-      expect(consoleErrorStub).to.have.been.calledWithMatch(
+      assert.calledWithMatch(
+        consoleErrorStub,
         'StudioComponentServerWrapper: failed to fetch component layout'
       );
     });
@@ -180,7 +183,8 @@ describe('StudioComponentServerWrapper', () => {
       });
 
       expect(result).to.be.null;
-      expect(consoleErrorStub).to.have.been.calledWithMatch(
+      assert.calledWithMatch(
+        consoleErrorStub,
         'StudioComponentServerWrapper: failed to parse component layout response'
       );
     });
@@ -194,12 +198,15 @@ describe('StudioComponentServerWrapper', () => {
       });
 
       expect(result).to.not.be.null;
-      expect(fetcherGetStub).to.have.been.calledOnce;
+      assert.calledOnce(fetcherGetStub);
       const wrapper = React.Children.toArray(result.props.children).find(
         (child: any) => child && child.type === StudioComponentWrapperStub
       ) as React.ReactElement;
       expect(wrapper).to.not.be.undefined;
-      expect(wrapper.props.document).to.deep.equal(sampleDocument);
+      expect(wrapper.props.document).to.deep.equal({
+        ...sampleDocument,
+        state: { fields: undefined, params: undefined },
+      });
     });
 
     it('returns null and errors when URL resolution fails', async () => {
@@ -210,7 +217,8 @@ describe('StudioComponentServerWrapper', () => {
       });
 
       expect(result).to.be.null;
-      expect(consoleErrorStub).to.have.been.calledWithMatch(
+      assert.calledWithMatch(
+        consoleErrorStub,
         'StudioComponentServerWrapper: failed to resolve component from'
       );
     });
@@ -233,7 +241,10 @@ describe('StudioComponentServerWrapper', () => {
       expect(result).to.not.be.null;
       const wrapper = getWrapperElement(result);
       expect(wrapper).to.not.be.undefined;
-      expect(wrapper.props.document).to.deep.equal(sampleDocument);
+      expect(wrapper.props.document).to.deep.equal({
+        ...sampleDocument,
+        state: { fields: undefined, params: undefined },
+      });
     });
 
     it('injects compiled CSS when a compiler is registered', async () => {
@@ -266,7 +277,7 @@ describe('StudioComponentServerWrapper', () => {
         componentRef: 'components/hero/default',
       });
 
-      expect(compileStub).to.have.been.calledOnceWith(['text-red-500']);
+      assert.calledOnceWithExactly(compileStub, ['text-red-500']);
       const children = React.Children.toArray(result.props.children);
       const style = children.find((child: any) => child && child.type === 'style') as any;
       expect(style).to.not.be.undefined;
@@ -276,8 +287,8 @@ describe('StudioComponentServerWrapper', () => {
     });
   });
 
-  describe('fields and params forwarding', () => {
-    it('forwards fields to StudioComponentWrapper', async () => {
+  describe('fields and params injection into document state', () => {
+    it('injects fields into a fetched document without initial state', async () => {
       const fields = { heading: { value: 'Hello' } };
 
       const result = await StudioComponentServerWrapper({
@@ -287,10 +298,13 @@ describe('StudioComponentServerWrapper', () => {
       });
 
       expect(result).to.not.be.null;
-      expect(getWrapperElement(result).props.fields).to.equal(fields);
+      const wrapper = getWrapperElement(result);
+      expect(wrapper.props.document.state.fields).to.equal(fields);
+      expect(wrapper.props.document.state.params).to.deep.equal({});
+      expect(wrapper.props).to.not.have.property('fields');
     });
 
-    it('forwards params to StudioComponentWrapper', async () => {
+    it('injects params into a fetched document without initial state', async () => {
       const params = { styles: 'primary', size: 'large' };
 
       const result = await StudioComponentServerWrapper({
@@ -300,12 +314,29 @@ describe('StudioComponentServerWrapper', () => {
       });
 
       expect(result).to.not.be.null;
-      expect(getWrapperElement(result).props.params).to.equal(params);
+      const wrapper = getWrapperElement(result);
+      expect(wrapper.props.document.state.params).to.equal(params);
+      expect(wrapper.props.document.state.fields).to.deep.equal({});
+      expect(wrapper.props).to.not.have.property('params');
     });
 
-    it('forwards both fields and params together', async () => {
+    it('overwrites document fields and params with runtime values without merging', async () => {
       const fields = { title: { value: 'My Title' } };
       const params = { styles: 'dark' };
+      const document: Document = {
+        ...sampleDocument,
+        state: {
+          fields: { title: { value: 'Document Title' }, stale: { value: 'Remove me' } },
+          params: { styles: 'light', RenderingIdentifier: 'stale-id' },
+          counter: 3,
+          user: { name: 'Alice' },
+        },
+      };
+      const serializedDocument = JSON.stringify(document);
+      fetcherGetStub.resolves({ data: serializedDocument });
+      sandbox.stub(JSON, 'parse').callThrough().withArgs(serializedDocument).returns(document);
+      Object.freeze(document.state);
+      Object.freeze(document);
 
       const result = await StudioComponentServerWrapper({
         componentRef: 'components/hero/default',
@@ -315,8 +346,53 @@ describe('StudioComponentServerWrapper', () => {
 
       expect(result).to.not.be.null;
       const wrapper = getWrapperElement(result);
-      expect(wrapper.props.fields).to.equal(fields);
-      expect(wrapper.props.params).to.equal(params);
+      const injectedDocument = wrapper.props.document;
+      expect(injectedDocument).to.not.equal(document);
+      expect(injectedDocument.state).to.not.equal(document.state);
+      expect(injectedDocument.state).to.deep.equal({
+        fields,
+        params,
+        counter: 3,
+        user: { name: 'Alice' },
+      });
+      expect(injectedDocument.state.fields).to.equal(fields);
+      expect(injectedDocument.state.params).to.equal(params);
+      expect(injectedDocument.state.user).to.equal(document.state?.user);
+      expect(injectedDocument.elements).to.equal(document.elements);
+      expect(JSON.stringify(document)).to.equal(serializedDocument);
+      expect(wrapper.props).to.not.have.property('fields');
+      expect(wrapper.props).to.not.have.property('params');
+    });
+
+    [
+      { fields: undefined, params: { styles: 'runtime' } },
+      { fields: { title: { value: 'Runtime Title' } }, params: undefined },
+      { fields: undefined, params: undefined },
+    ].forEach(({ fields, params }) => {
+      it(`overwrites stored values when runtime fields are ${
+        fields ? 'defined' : 'undefined'
+      } and params are ${params ? 'defined' : 'undefined'}`, async () => {
+        const document: Document = {
+          ...sampleDocument,
+          state: {
+            fields: { title: { value: 'Document Title' } },
+            params: { styles: 'document' },
+            message: 'preserved',
+          },
+        };
+        fetcherGetStub.resolves({ data: JSON.stringify(document) });
+
+        const result = await StudioComponentServerWrapper({
+          componentRef: 'components/hero/default',
+          fields,
+          params,
+        });
+
+        const state = getWrapperElement(result).props.document.state;
+        expect(state).to.deep.equal({ fields, params, message: 'preserved' });
+        expect(state).to.have.own.property('fields', fields);
+        expect(state).to.have.own.property('params', params);
+      });
     });
   });
 });

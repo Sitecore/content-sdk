@@ -79,30 +79,51 @@ describe('create-ncc', () => {
     });
 
     it('applies params.styles to the wrapper div className', () => {
-      const View = createNCCWithMocks(mockDoc, mockRegistry);
-      const { container } = render(<View params={{ styles: 'my-style' }} />);
+      const View = createNCCWithMocks(
+        { ...mockDoc, state: { ...mockDoc.state, params: { styles: 'my-style' } } },
+        mockRegistry,
+        mockCatalog
+      );
+      const { container } = render(<View />);
       const div = container.firstChild as HTMLElement;
       expect(div.className).to.equal('component my-style');
     });
 
     it('uses empty string for className when params.styles is not provided', () => {
-      const View = createNCCWithMocks(mockDoc, mockRegistry);
+      const View = createNCCWithMocks(mockDoc, mockRegistry, mockCatalog);
       const { container } = render(<View />);
       const div = container.firstChild as HTMLElement;
       expect(div.className).to.equal('component');
     });
 
     it('applies params.RenderingIdentifier to the wrapper div id', () => {
-      const View = createNCCWithMocks(mockDoc, mockRegistry);
-      const { container } = render(<View params={{ RenderingIdentifier: 'my-rendering-id' }} />);
+      const View = createNCCWithMocks(
+        { ...mockDoc, state: { params: { RenderingIdentifier: 'my-rendering-id' } } },
+        mockRegistry,
+        mockCatalog
+      );
+      const { container } = render(<View />);
       const div = container.firstChild as HTMLElement;
       expect(div.id).to.equal('my-rendering-id');
     });
 
     it('uses empty string for id when params.RenderingIdentifier is not provided', () => {
-      const View = createNCCWithMocks(mockDoc, mockRegistry);
+      const View = createNCCWithMocks(mockDoc, mockRegistry, mockCatalog);
       const { container } = render(<View />);
       const div = container.firstChild as HTMLElement;
+      expect(div.id).to.equal('');
+    });
+
+    it('renders a document without initial state', () => {
+      const statelessDocument: Document = {
+        name: mockDoc.name,
+        root: mockDoc.root,
+        elements: mockDoc.elements,
+      };
+      const View = createNCCWithMocks(statelessDocument, mockRegistry, mockCatalog);
+      const { container } = render(<View />);
+      const div = container.firstChild as HTMLElement;
+      expect(div.className).to.equal('component');
       expect(div.id).to.equal('');
     });
   });

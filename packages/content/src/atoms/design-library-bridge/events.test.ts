@@ -1,12 +1,14 @@
-import { expect } from 'chai';
+import { expect, use as chaiUse } from 'chai';
 import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 import { AtomsCatalogPayload } from './types';
 import {
   addDocumentUpdateHandler,
-  addComponentPropsUpdateHandler,
   getDesignLibraryAtomsCatalogEvent,
   getDesignLibraryAtomsErrorEvent,
 } from './events';
+
+chaiUse(sinonChai);
 
 describe('design-library-bridge events', () => {
   describe('getDesignLibraryAtomsCatalogEvent', () => {
@@ -76,71 +78,69 @@ describe('design-library-bridge events', () => {
 
       unsubscribe();
 
-      expect(removeEventListener).to.have.been.calledWith('message', sinon.match.func);
-    });
-  });
-
-  describe('addComponentPropsUpdateHandler', () => {
-    let addEventListener: sinon.SinonStub;
-    let removeEventListener: sinon.SinonStub;
-
-    beforeEach(() => {
-      addEventListener = sinon.stub();
-      removeEventListener = sinon.stub();
-      (global as any).window = { addEventListener, removeEventListener };
+      expect(removeEventListener).to.have.been.calledOnceWithExactly(
+        'message',
+        addEventListener.firstCall.args[1]
+      );
     });
 
-    afterEach(() => {
-      (global as any).window = undefined;
-    });
-
-    it('registers a message event listener', () => {
-      addComponentPropsUpdateHandler(sinon.stub());
-      expect(addEventListener).to.have.been.calledWith('message', sinon.match.func);
-    });
-
-    it('returns an unsubscribe function that removes the listener', () => {
-      const unsubscribe = addComponentPropsUpdateHandler(sinon.stub());
-      unsubscribe();
-      expect(removeEventListener).to.have.been.calledWith('message', sinon.match.func);
-    });
-
-    it('invokes the callback with fields and params from a valid component:update event', () => {
+    it('delivers the preview document with its fields and params state unchanged', () => {
       const callback = sinon.stub();
-      addComponentPropsUpdateHandler(callback);
+      addDocumentUpdateHandler(callback);
 
-      const fields = { title: { value: 'Hello' } };
-      const params = { styles: 'primary' };
+      const document = {
+        name: 'preview',
+        root: 'button',
+        elements: { button: { type: 'Button', props: {}, children: [] } },
+        state: {
+          fields: { title: { value: 'Hello' } },
+          params: { styles: 'primary' },
+          message: 'Preserved state',
+        },
+      };
       const handler = addEventListener.firstCall.args[1];
       handler({
         origin: 'http://localhost',
-        data: { name: 'component:update', details: { uid: 'abc', fields, params } },
+        data: { name: 'component:atoms:preview', document },
       });
 
-      expect(callback.callCount).to.equal(1);
-      expect(callback.firstCall.args[0]).to.equal(fields);
-      expect(callback.firstCall.args[1]).to.equal(params);
+      expect(callback).to.have.been.calledOnceWithExactly(document);
+      expect(callback.firstCall.args[0]).to.equal(document);
     });
 
-    it('invokes the callback with undefined fields and params when details is absent', () => {
+    it('delivers each replacement preview document', () => {
       const callback = sinon.stub();
-      addComponentPropsUpdateHandler(callback);
+      addDocumentUpdateHandler(callback);
 
+      const document = { name: 'preview', state: { params: { styles: 'primary' } } };
+      const replacement = { name: 'preview', state: { params: { styles: 'secondary' } } };
       const handler = addEventListener.firstCall.args[1];
-      handler({ origin: 'http://localhost', data: { name: 'component:update' } });
+      [document, replacement].forEach((updatedDocument) => {
+        handler({
+          origin: 'http://localhost',
+          data: { name: 'component:atoms:preview', document: updatedDocument },
+        });
+      });
 
-      expect(callback).to.have.been.calledOnceWith(undefined, undefined);
+      expect(callback.callCount).to.equal(2);
+      expect(callback.firstCall.args[0]).to.equal(document);
+      expect(callback.secondCall.args[0]).to.equal(replacement);
     });
 
-    it('does not invoke the callback for events with a different name', () => {
+    it('ignores obsolete component:update events and invalid preview events', () => {
       const callback = sinon.stub();
-      addComponentPropsUpdateHandler(callback);
+      addDocumentUpdateHandler(callback);
 
       const handler = addEventListener.firstCall.args[1];
       handler({
         origin: 'http://localhost',
+        data: { name: 'component:update', details: { fields: {}, params: {} } },
+      });
+      handler({
+        origin: '',
         data: { name: 'component:atoms:preview', document: {} },
       });
+      handler({ origin: 'http://localhost', data: null });
 
       expect(callback.callCount).to.equal(0);
     });

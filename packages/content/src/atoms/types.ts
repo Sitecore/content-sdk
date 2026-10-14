@@ -100,4 +100,8 @@ export interface SitecoreActionMeta {
 export interface Document extends Spec {
   /** Human-readable identifier of the document. */
   name: string;
+  state?: Spec['state'] & {
+    fields?: Record<string, unknown>;
+    params?: Record<string, unknown>;
+  };
 }
