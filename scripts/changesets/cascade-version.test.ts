@@ -43,7 +43,8 @@ vi.mock('fs', () => ({
 }));
 
 // run main() on import, as when the script is executed directly
-vi.mock('./utils', () => ({
+vi.mock('./utils', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('./utils')>()),
   // as the real runMain, minus the "is this the script being run" check
   runMain: (_url: string, main: () => Promise<void>) => {
     main().catch((error: Error) => {

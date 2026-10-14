@@ -1,19 +1,17 @@
 name: Limited Release Prep
 
-# Product-based limited release: pick a product from `.changeset/products.json` (keep the `product`
-# choices below in sync). The release ships that product with everything below it; the other
-# products' packages are left out: ignored (`.changeset/config.json` `ignore`), or held back at
-# their released version when a released package depends on them at runtime (e.g. the other
-# product's templates package, which create-content-sdk-app depends on). Packages that need a
-# release on their own go through the hotfix flow.
+# Product-based limited release: pick a product from `.changeset/products.config.json` (keep the
+# `product` choices below in sync). The release ships that product with everything below it; the
+# other products' packages are left out by removing their changesets (no changesets `ignore`): they
+# keep their released version, so nothing may bump them and they must already be on npm. Packages
+# that need a release on their own go through the hotfix flow.
 #
 # The workflow:
 # 1. checks that every changeset names one package (pruning drops changesets naming a left-out
 #    package, so a multi-package one would lose its in-scope part);
 # 2. creates `release/limited/<product>-<timestamp>` from dev;
-# 3. writes the ignore list, builds the cascade release plan and fails when it would give an ignored
-#    package a major or bump a held-back one (or a held-back one isn't on npm yet), then removes
-#    the left-out packages' changesets (they stay on dev);
+# 3. builds the cascade release plan and fails when it would bump a left-out package (or one isn't
+#    on npm yet), then removes the left-out packages' changesets (they stay on dev);
 # 4. on failure: reports in the job summary, nothing pushed; otherwise commits and pushes the
 #    branch, which opens the limited release PR via publish.yml.
 # The prep commit is never cherry-picked back to dev; only the version bump is.
@@ -70,7 +68,7 @@ jobs:
           BRANCH_NAME="release/limited/${PRODUCT}-$(date -u +%Y%m%d%H%M%S)"
           echo "branch_name=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
           git checkout -b "$BRANCH_NAME"
-          # Validates the release (ignore list, release plan) before anything is pushed.
+          # Validates the release (left-out packages, release plan) before anything is pushed.
           yarn csdk:prep-limited-release "$PRODUCT" 2>&1 | tee "$RUNNER_TEMP/prep-limited-release.log"
           git add -A .changeset
           git commit -m "[release][ci] Limited release: $PRODUCT"
@@ -87,8 +85,8 @@ jobs:
             echo "## ❌ Limited Release Aborted"
             echo ""
             echo "The \`$PRODUCT\` limited release failed validation; branch \`$BRANCH_NAME\` was not pushed."
-            echo "Changes that would bump the other product (a major cascading into it, or any bump of its"
-            echo "held-back templates package) must ship in a full release from dev."
+            echo "Changes that would bump the other product's packages (e.g. a shared major cascading into"
+            echo "them) must ship in a full release from dev."
             echo ""
             echo '```'
             grep -v '^\s*$' "$RUNNER_TEMP/prep-limited-release.log" | tail -n 40 || true
@@ -108,7 +106,6 @@ jobs:
             echo "| **Release Branch** | \`$BRANCH_NAME\` |"
             echo "| **Product** | \`$PRODUCT\` |"
             echo ""
-            echo "\`.changeset/config.json\` ignores the other product (a templates package it needs is held"
-            echo "back at its released version); their changesets were removed from the branch (they stay"
-            echo "on dev). The push opens the limited release PR."
+            echo "The other product's packages stay at their released version: their changesets were"
+            echo "removed from the branch (they stay on dev). The push opens the limited release PR."
           } >> "$GITHUB_STEP_SUMMARY"

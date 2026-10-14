@@ -1,29 +1,12 @@
 /**
- * Everything that follows a stable publish, in one idempotent script. `publish.yml` runs it
- * after changesets/action publishes; `post_release_sync.yml` runs the same script by hand to recover
- * when the publish job failed part-way (some packages published, the follow-up steps skipped).
- *
- * The published packages are changesets/action's `published-packages` (when run from publish.yml)
- * plus the release commit's other packages that are on npm: publishable packages whose version
- * changed in the release (`BASE_SHA`..`RELEASE_SHA`). A re-run after a partial publish therefore
- * sees every package of the release, including those an earlier attempt published (changeset
- * publish only reports what it published itself), and a version published moments ago counts even
- * while npm's metadata lags.
- *
- * Steps (each one is idempotent; a failing step doesn't stop the others, the script fails at the end):
- * 1. restore missing `<pkg>@<version>` tags at the release commit (changesets/action pushes them
- *    only after a fully successful publish; the release guard and legacy branches rely on them);
- * 2. create legacy branches for product majors (`create-legacy-branches.ts`), cut from
- *    `release/latest` while it still holds the previous release, so before step 3;
- * 3. sync `release/latest` (`sync-latest-branch.ts`; dev, limited, hotfix);
- * 4. limited / hotfix releases: cherry-pick the version bump onto dev, unless dev already has these
- *    versions; on conflicts, open a PR to dev instead.
+ * Everything that follows a stable publish to sync monorepo release branches.
+ * `publish.yml` runs it after changesets/action publishes;
  *
  * Input (env):
  * - GITHUB_REF_NAME: the release branch
  * - RELEASE_SHA: the release commit (default: GITHUB_SHA, then HEAD); must be on the checked-out branch
  * - BASE_SHA: the commit before the release (default: the release commit's first parent)
- * - PUBLISHED_PACKAGES: changesets/action `published-packages` JSON (optional; absent in a recovery)
+ * - PUBLISHED_PACKAGES: changesets/action `published-packages` JSON (optional; absent in a retry)
  * - GH_TOKEN: for the conflict PR to dev
  *
  * Usage: tsx ./scripts/release/post-release-sync.ts
@@ -32,21 +15,48 @@
 /* eslint-disable jsdoc/require-param */
 
 import { execFileSync } from 'child_process';
+import { getPackages } from '@manypkg/get-packages';
 import { runMain } from '../changesets/utils';
-import semver from 'semver';
-import { createLegacyBranches } from './legacy/create-legacy-branches';
+import { createLegacyBranches, refreshLegacyLockfiles } from './legacy/create-legacy-branches';
 import {
   changedVersions,
   git,
-  gitSucceeds,
+  tryGit,
+  holdsVersions,
   isUnsetSha,
   npmInfo,
   releaseTag,
+  repoPath,
+  updateLockfile,
   versionsAt,
   type PackageVersion,
-} from './release-state';
-import { MAIN_BRANCH, releaseLine } from './release-line';
-import { syncLatestBranch } from './sync-latest-branch';
+  type WorkspacePackage,
+  branchPrefix,
+} from './utils';
+import { MAIN_BRANCH, RELEASE_LATEST } from '../constants';
+
+/** Post-release steps by branch prefix (`branchPrefix`), run in order (see header). */
+const POST_RELEASE_STEPS = new Map<string, Step[]>([
+  [MAIN_BRANCH, [createLegacyBranchesOnMajor, latestBranchSync, refreshLegacyLockfiles]],
+  [
+    'release/limited',
+    [createLegacyBranchesOnMajor, latestPackagesSync, refreshLegacyLockfiles, devBranchSync],
+  ],
+  ['release/hotfix', [latestPackagesSync, refreshLegacyLockfiles, devBranchSync]],
+]);
+
+/** Other branches (legacy, ver1, betas, ...) don't touch `release/latest` or dev. */
+const OTHER_STEPS: Step[] = [refreshLegacyLockfiles];
+
+/** The release a post-release run is for. */
+export interface SyncContext {
+  branch: string;
+  releaseSha: string;
+  published: PackageVersion[];
+}
+
+// eslint-disable-next-line no-unused-vars
+type Step = (ctx: SyncContext) => unknown;
 
 /**
  * The release's published packages: those changesets/action reports for this run (authoritative,
@@ -66,36 +76,86 @@ export function releasedPackages(
   return [...reported, ...fromNpm];
 }
 
-/** Dev already holds these versions (or newer): the bump was cherry-picked before. */
-export function devHasVersions(
-  published: PackageVersion[],
-  devVersions: Map<string, string>
-): boolean {
-  return published.every((pkg) => {
-    const dev = devVersions.get(pkg.name);
-    return !!dev && semver.gte(dev, pkg.version);
+/** Repo-relative directories of the published packages. Throws on a package not in the workspace. */
+export function publishedPackageDirs(
+  packages: WorkspacePackage[],
+  rootDir: string,
+  published: PackageVersion[]
+): string[] {
+  const dirs = new Map(packages.map((pkg) => [pkg.packageJson.name, pkg.dir]));
+  return published.map(({ name }) => {
+    const dir = dirs.get(name);
+    if (!dir) throw new Error(`Published package ${name} is not in the workspace.`);
+    return repoPath(rootDir, dir);
   });
 }
 
-/** Creates and pushes the release's missing `<pkg>@<version>` tags at the release commit. */
-export function restoreReleaseTags(published: PackageVersion[], releaseSha: string): void {
-  for (const pkg of published) {
-    const tag = releaseTag(pkg);
-    if (git('ls-remote', '--tags', 'origin', `refs/tags/${tag}`)) continue;
-    git('tag', '-f', '-a', tag, '-m', tag, releaseSha);
-    git('push', 'origin', `refs/tags/${tag}`);
-    console.log(`  restored tag ${tag}`);
+/**
+ * Dev release: re-create `release/latest` at the release commit. Skipped when it already holds the
+ * release or newer (a re-run after a later release must not roll it back).
+ */
+export async function latestBranchSync({ releaseSha, published }: SyncContext): Promise<void> {
+  if (
+    tryGit('fetch', 'origin', RELEASE_LATEST) !== null &&
+    holdsVersions(published, await versionsAt(`origin/${RELEASE_LATEST}`))
+  ) {
+    console.log(`${RELEASE_LATEST} already holds these versions or newer; nothing to sync.`);
+    return;
+  }
+  git('push', '-f', 'origin', `${releaseSha}:refs/heads/${RELEASE_LATEST}`);
+  console.log(`✅ Re-created ${RELEASE_LATEST} at ${releaseSha.slice(0, 7)}.`);
+}
+
+/**
+ * Limited / hotfix release: overlay the published packages' directories from the release commit
+ * onto `release/latest`, refresh `yarn.lock` and commit. Skipped when it already holds the release
+ * or newer (a re-run after a later release must not roll it back).
+ */
+export async function latestPackagesSync({
+  branch,
+  releaseSha,
+  published,
+}: SyncContext): Promise<void> {
+  if (tryGit('fetch', 'origin', RELEASE_LATEST) === null) {
+    throw new Error(
+      `${RELEASE_LATEST} does not exist yet. Create it once from the last dev release commit, ` +
+        `e.g. git push origin <sha>:refs/heads/${RELEASE_LATEST}.`
+    );
+  }
+  if (holdsVersions(published, await versionsAt(`origin/${RELEASE_LATEST}`))) {
+    console.log(`${RELEASE_LATEST} already holds these versions or newer; nothing to sync.`);
+    return;
+  }
+
+  const { packages, rootDir } = await getPackages(process.cwd());
+  const publishedPackages = publishedPackageDirs(packages, rootDir, published);
+
+  git('checkout', '-q', '-B', RELEASE_LATEST, `origin/${RELEASE_LATEST}`);
+  try {
+    git('restore', `--source=${releaseSha}`, '--staged', '--worktree', '--', ...publishedPackages);
+    updateLockfile();
+    git('add', '--', 'yarn.lock', ...publishedPackages);
+    if (git('diff', '--cached', '--name-only') === '') {
+      console.log(`${RELEASE_LATEST} already holds these packages; nothing to commit.`);
+    } else {
+      const released = published.map(releaseTag).join(', ');
+      git('commit', '-q', '-m', `[ci] Latest release from ${branch}: ${released}`);
+      git('push', 'origin', `HEAD:refs/heads/${RELEASE_LATEST}`);
+    }
+    console.log(`✅ Synced ${publishedPackages.join(', ')} onto ${RELEASE_LATEST}.`);
+  } finally {
+    git('checkout', '-q', '-f', '--detach', releaseSha);
   }
 }
 
 /** Cherry-picks the release's version bump onto dev (see header, step 4). */
-export async function cherryPickToDev(
-  branch: string,
-  releaseSha: string,
-  published: PackageVersion[]
-): Promise<'picked' | 'already-on-dev' | 'conflict-pr'> {
+export async function devBranchSync({
+  branch,
+  releaseSha,
+  published,
+}: SyncContext): Promise<'picked' | 'already-on-dev' | 'conflict-pr'> {
   git('fetch', 'origin', MAIN_BRANCH);
-  if (devHasVersions(published, await versionsAt(`origin/${MAIN_BRANCH}`))) {
+  if (holdsVersions(published, await versionsAt(`origin/${MAIN_BRANCH}`))) {
     console.log(`  ${MAIN_BRANCH} already has these versions; nothing to cherry-pick.`);
     return 'already-on-dev';
   }
@@ -104,7 +164,7 @@ export async function cherryPickToDev(
   const parents = git('rev-list', '--parents', '-n', '1', releaseSha).split(' ').length - 1;
   const mainline = parents >= 2 ? ['-m', '1'] : [];
   git('checkout', '-q', '-B', MAIN_BRANCH, `origin/${MAIN_BRANCH}`);
-  if (gitSucceeds('cherry-pick', ...mainline, releaseSha)) {
+  if (tryGit('cherry-pick', ...mainline, releaseSha) !== null) {
     git('push', 'origin', `HEAD:${MAIN_BRANCH}`);
     console.log(`  cherry-picked ${releaseSha.slice(0, 7)} onto ${MAIN_BRANCH}`);
     return 'picked';
@@ -141,67 +201,48 @@ export async function cherryPickToDev(
   return 'conflict-pr';
 }
 
-/** Runs every step, even after a failure, and returns the failed steps' errors. */
-type Step = [name: string, run: () => unknown];
-
-export async function runSteps(steps: Step[]): Promise<string[]> {
-  const failures: string[] = [];
-  for (const [name, run] of steps) {
-    console.log(`\n▶ ${name}`);
+/**
+ * Runs the steps one by one and stops at the first failure: a later step may depend on an earlier
+ * one (the `release/latest` sync must wait for the legacy branches, which are cut from it). Every
+ * step is idempotent: fix the cause and re-run (Retry Failed Release Sync).
+ */
+export async function runSteps(steps: Step[], ctx: SyncContext): Promise<void> {
+  for (const step of steps) {
+    console.log(`\n▶ ${step.name}`);
     try {
-      await run();
+      await step(ctx);
     } catch (error) {
-      const message = `${name}: ${(error as Error).message}`;
-      console.error(`❌ ${message}`);
-      failures.push(message);
+      throw new Error(`${step.name}: ${(error as Error).message}`);
     }
   }
-  return failures;
 }
 
-/** Runs the post-release steps for a release (see header) and returns the failed ones. */
+/** Legacy branches are cut from `release/latest` before this release, so this runs before the sync. */
+function createLegacyBranchesOnMajor({ published }: SyncContext): Promise<void> {
+  return createLegacyBranches(published);
+}
+
+/** Runs the post-release steps of the branch's prefix; throws at the first failing step. */
 export async function syncRelease(
   branch: string,
   releaseSha: string,
   published: PackageVersion[]
-): Promise<string[]> {
-  // legacy branches first: they are cut from release/latest's state before this release
-  const failures = await runSteps([
-    ['Restore release tags', () => restoreReleaseTags(published, releaseSha)],
-    ['Create legacy branches', () => createLegacyBranches(published)],
-  ]);
-  const legacyFailed = failures.some((f) => f.startsWith('Create legacy branches:'));
-
-  const steps: Step[] = [];
-  if (legacyFailed) {
-    // keep release/latest at the previous release, so a re-run can still cut the legacy branch
-    failures.push(
-      'Sync release/latest: skipped while a legacy branch is missing; re-run after fixing'
-    );
-  } else {
-    steps.push(['Sync release/latest', () => syncLatestBranch(branch, releaseSha, published)]);
-  }
-  if (releaseLine(branch).sideLine) {
-    steps.push([
-      'Cherry-pick version bump to dev',
-      () => cherryPickToDev(branch, releaseSha, published),
-    ]);
-  }
-  failures.push(...(await runSteps(steps)));
-  return failures;
+): Promise<void> {
+  const steps = POST_RELEASE_STEPS.get(branchPrefix(branch)) ?? OTHER_STEPS;
+  await runSteps(steps, { branch, releaseSha, published });
 }
 
 async function main(): Promise<void> {
   const branch = process.env.GITHUB_REF_NAME;
   if (!branch) throw new Error('GITHUB_REF_NAME is not set.');
   const releaseSha = git('rev-parse', process.env.RELEASE_SHA || process.env.GITHUB_SHA || 'HEAD');
-  if (!gitSucceeds('merge-base', '--is-ancestor', releaseSha, 'HEAD')) {
+  if (tryGit('merge-base', '--is-ancestor', releaseSha, 'HEAD') === null) {
     throw new Error(`${releaseSha} is not on ${branch}; pass the release commit of this branch.`);
   }
   const envBase = process.env.BASE_SHA ?? '';
   const base = isUnsetSha(envBase) ? `${releaseSha}^1` : envBase;
 
-  // changesets/action's published-packages when run from publish.yml; absent in a manual recovery
+  // changesets/action's published-packages when run from publish.yml; absent in a retry
   const reported: PackageVersion[] = JSON.parse(process.env.PUBLISHED_PACKAGES || '[]');
   const published = releasedPackages(await changedVersions(base, releaseSha), npmInfo, reported);
   if (published.length === 0) {
@@ -212,10 +253,7 @@ async function main(): Promise<void> {
     `Release ${releaseSha.slice(0, 7)} on ${branch}: ${published.map(releaseTag).join(', ')}`
   );
 
-  const failures = await syncRelease(branch, releaseSha, published);
-  if (failures.length > 0) {
-    throw new Error(`Post-release sync incomplete:\n${failures.map((f) => `  - ${f}`).join('\n')}`);
-  }
+  await syncRelease(branch, releaseSha, published);
   console.log('\n✅ Post-release sync complete.');
 }
 

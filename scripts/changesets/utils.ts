@@ -1,8 +1,7 @@
 import { readFileSync, realpathSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-export const PRODUCTS_PATH = '.changeset/products.config.json';
+import { PRODUCTS_PATH } from '../constants.ts';
 
 /** The part of a changeset the scripts read. */
 export interface ChangesetLike {

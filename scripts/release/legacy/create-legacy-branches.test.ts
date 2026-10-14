@@ -2,11 +2,13 @@
 import path from 'path';
 import { describe, it, expect } from 'vitest';
 import {
+  latestLegacyBranches,
+  npmResolvedSdkDeps,
   legacyBranch,
-  planLegacyBranch,
+  planLegacyBranches,
   legacyPrunedDirs,
-  withScaffolderIgnored,
 } from './create-legacy-branches';
+import { SCAFFOLDER } from '../../constants';
 
 describe('legacyBranch', () => {
   it('builds the release/legacy/<slug>/v<major> path', () => {
@@ -14,35 +16,39 @@ describe('legacyBranch', () => {
   });
 });
 
-describe('planLegacyBranch', () => {
-  it("creates a branch for release/latest's major on a major bump", () => {
-    expect(planLegacyBranch('nextjs', '3.0.0', '2.4.1')).toEqual({
-      action: 'create',
-      targetBranch: 'release/legacy/nextjs/v2',
-      previousMajor: 2,
-    });
+describe('planLegacyBranches', () => {
+  const products = {
+    nextjs: ['@sitecore-content-sdk/nextjs'],
+    angular: ['@sitecore-content-sdk/angular'],
+  };
+  const NEXTJS = '@sitecore-content-sdk/nextjs';
+  const ANGULAR = '@sitecore-content-sdk/angular';
+  const onLatest = new Map([
+    [NEXTJS, '2.4.1'],
+    [ANGULAR, '1.0.1'],
+  ]);
+  const needs = (published: { name: string; version: string }[], latest = onLatest) =>
+    planLegacyBranches(products, published, latest);
+
+  it("picks a product published with a major above release/latest's, keeping that major", () => {
+    expect(needs([{ name: NEXTJS, version: '3.0.0' }])).toEqual([
+      { slug: 'nextjs', branch: 'release/legacy/nextjs/v2', versionOnLatest: '2.4.1' },
+    ]);
+    // a release that skips majors still keeps the one on release/latest
+    expect(needs([{ name: ANGULAR, version: '3.0.0' }])).toMatchObject([
+      { branch: 'release/legacy/angular/v1' },
+    ]);
   });
 
-  it('keeps the major on release/latest when the release skips majors', () => {
-    expect(planLegacyBranch('angular', '4.0.0', '2.1.0')).toMatchObject({
-      targetBranch: 'release/legacy/angular/v2',
-    });
-  });
-
-  it('skips when the published version is not a major bump', () => {
-    expect(planLegacyBranch('nextjs', '2.5.0', '2.4.0')).toEqual({
-      action: 'skip',
-      reason: expect.stringContaining('not a major bump'),
-    });
+  it('returns nothing without a product major', () => {
+    expect(needs([{ name: NEXTJS, version: '2.5.0' }])).toEqual([]);
+    expect(needs([{ name: '@sitecore-content-sdk/core', version: '3.0.0' }])).toEqual([]);
     // a re-run after release/latest already moved to the release
-    expect(planLegacyBranch('nextjs', '3.0.0', '3.0.0')).toMatchObject({ action: 'skip' });
+    expect(needs([{ name: NEXTJS, version: '3.0.0' }], new Map([[NEXTJS, '3.0.0']]))).toEqual([]);
   });
 
-  it('skips a product not on release/latest yet', () => {
-    expect(planLegacyBranch('angular', '1.0.0', undefined)).toEqual({
-      action: 'skip',
-      reason: expect.stringContaining('no prior release'),
-    });
+  it('returns nothing for a product not on release/latest yet', () => {
+    expect(needs([{ name: NEXTJS, version: '3.0.0' }], new Map())).toEqual([]);
   });
 });
 
@@ -60,7 +66,7 @@ describe('legacyPrunedDirs', () => {
     pkg('@sitecore-content-sdk/angular', 'packages', 'angular'),
     pkg('@sitecore-content-sdk/nextjs-templates', 'templates', 'nextjs'),
     pkg('@sitecore-content-sdk/angular-templates', 'templates', 'angular'),
-    pkg('create-content-sdk-app', 'packages', 'create-content-sdk-app'),
+    pkg(SCAFFOLDER, 'packages', 'create-content-sdk-app'),
   ];
   const products = {
     nextjs: [
@@ -92,20 +98,69 @@ describe('legacyPrunedDirs', () => {
   });
 });
 
-describe('withScaffolderIgnored', () => {
-  it('adds create-content-sdk-app to the ignore list', () => {
-    expect(withScaffolderIgnored({ access: 'public', ignore: ['x'] })).toEqual({
-      access: 'public',
-      ignore: ['x', 'create-content-sdk-app'],
+describe('refresh helpers', () => {
+  const NEXTJS = '@sitecore-content-sdk/nextjs';
+  const REACT = '@sitecore-content-sdk/react';
+
+  describe('npmResolvedSdkDeps', () => {
+    it('lists Content SDK dependencies that are not workspace packages', () => {
+      const packages = [
+        {
+          packageJson: {
+            name: NEXTJS,
+            dependencies: {
+              '@sitecore-content-sdk/core': '^2.1.4',
+              [REACT]: '^2.4.0',
+              debug: '^4.4.0',
+            },
+            devDependencies: { '@sitecore-content-sdk/personalize': '^2.1.0' },
+            peerDependencies: { '@sitecore-content-sdk/events': '^2.1.2' },
+          },
+        },
+        {
+          packageJson: {
+            name: REACT,
+            dependencies: {
+              '@sitecore-content-sdk/core': '^2.1.4',
+              '@sitecore-content-sdk/search': '^0.5.0',
+            },
+          },
+        },
+        { packageJson: { name: 'create-content-sdk-app', dependencies: { [NEXTJS]: '^2.4.0' } } },
+      ];
+      expect(npmResolvedSdkDeps(packages)).toEqual([
+        '@sitecore-content-sdk/core',
+        '@sitecore-content-sdk/events',
+        '@sitecore-content-sdk/personalize',
+        '@sitecore-content-sdk/search',
+      ]);
     });
-    expect(withScaffolderIgnored({ access: 'public' })).toEqual({
-      access: 'public',
-      ignore: ['create-content-sdk-app'],
+
+    it('returns nothing when every Content SDK dependency is in the workspace', () => {
+      expect(
+        npmResolvedSdkDeps([
+          { packageJson: { name: NEXTJS, dependencies: { [REACT]: '^2.4.0' } } },
+          { packageJson: { name: REACT } },
+        ])
+      ).toEqual([]);
     });
   });
 
-  it('leaves a config that already ignores it unchanged', () => {
-    const config = { ignore: ['create-content-sdk-app'] };
-    expect(withScaffolderIgnored(config)).toBe(config);
+  describe('latestLegacyBranches', () => {
+    it("keeps each product's highest v<N> branch", () => {
+      expect(
+        latestLegacyBranches([
+          'release/legacy/nextjs/v2',
+          'release/legacy/nextjs/v10',
+          'release/legacy/angular/v1',
+          'release/legacy/nextjs/v9',
+          'release/legacy/nextjs/notes',
+        ])
+      ).toEqual(['release/legacy/angular/v1', 'release/legacy/nextjs/v10']);
+    });
+
+    it('returns nothing without legacy branches', () => {
+      expect(latestLegacyBranches([])).toEqual([]);
+    });
   });
 });

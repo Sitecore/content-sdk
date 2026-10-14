@@ -8,12 +8,16 @@ on:
   # Trigger for canary and stable releases:
   # - Stable prod release: When PR from changeset-release/* branch is merged with [release] prefix
   # - Canary release: Push to dev or release/* branches (not from changeset-release merge)
+  # Only the release branch types of scripts/release/release-info.ts (RELEASE_INFOS); any other
+  # release/* branch (e.g. release/latest, old release/2.x.x) publishes nothing.
   push:
     branches:
       - dev
-      - 'release/**'
-      # Holds released code only; updated by the publish job itself.
-      - '!release/latest'
+      - 'release/limited/**'
+      - 'release/hotfix/**'
+      - 'release/legacy/**'
+      - 'release/1.x.x'
+      - 'release/betas/**'
     paths:
       - '**'
 
@@ -67,42 +71,40 @@ jobs:
             echo "No API doc changes to commit"
           fi
 
-      # npm dist-tag, release PR title and side-line flag of this branch's release line
-      # (scripts/release/release-line.ts, the single source for branch types).
-      - name: Release line
-        id: release-line
-        run: yarn csdk:release-line
+      # npm dist-tag, release PR title and other release info for this branch
+      - name: Release info
+        id: release-info
+        run: yarn csdk:release-info
 
-      # Guardrail for lines publishing to npm `latest` from a side branch: fail if a version this push
-      # is about to publish is already on npm from another line (changeset publish would skip it
-      # silently) or is lower than npm `latest` (it would move `latest` back).
-      - name: Check release versions against npm
-        if: steps.release-line.outputs.side_line == 'true'
+      # limited / hotfix fail on a version already on npm from another branch (changeset publish would
+      # skip it silently) or lower than npm `latest` (it would move `latest` back); legacy fails on
+      # changesets it can't release. Other branches pass.
+      - name: Release branch guards
         env:
           BASE_SHA: ${{ github.event.before }}
-        run: yarn csdk:release-versions-guard
+        run: node ./scripts/release/release-branch-guards.ts
 
       - name: Prepare and Process Changesets Release
         id: changesets
         uses: changesets/action@v2
         with:
           version-script: yarn csdk:prep-release
-          publish-script: yarn changeset:publish --tag ${{ steps.release-line.outputs.npm_tag }}
+          publish-script: yarn changeset:publish --tag ${{ steps.release-info.outputs.npm_tag }}
           commit-message: '[release][ci] Version bump and changelog'
-          pr-title: ${{ steps.release-line.outputs.pr_title }}
+          pr-title: ${{ steps.release-info.outputs.pr_title }}
           github-token: ${{ steps.generate-token.outputs.token }}
           push-with-git-cli: true
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Everything after a stable publish, in one idempotent script (scripts/release/post-release-sync.ts):
-      # restore missing <pkg>@<version> tags; create legacy branches after a product major (cut from
+      # create legacy branches after a product major (cut from
       # release/latest before it moves); sync release/latest (dev, limited, hotfix;
       # prep_hotfix_feature_release.yml branches off it); cherry-pick a limited / hotfix version bump
       # onto dev (PR on conflicts).
-      # The published packages are derived from the release commit, so a re-run after a partial
-      # publish covers the whole release. To recover when this job failed part-way, run the
-      # "Post-release Sync" workflow (post_release_sync.yml) on the branch with this commit.
+      # The published packages are derived from the release commit, so a re-run covers the whole
+      # release. When this step failed, fix the cause and run the "Retry Failed Release Sync" workflow
+      # (retry_failed_release_sync.yml) on the branch with this commit.
       # github.sha is the release commit, unaffected by the "Generate API docs" commit on top.
       - name: Post-release sync
         if: steps.changesets.outputs.published == 'true'
@@ -129,10 +131,10 @@ jobs:
         with:
           clean-cache: 'true'
 
-      # Canary dist-tag of this branch's release line (scripts/release/release-line.ts).
-      - name: Release line
-        id: release-line
-        run: yarn csdk:release-line
+      # Canary dist-tag from this branch's release info (scripts/release/release-info.ts).
+      - name: Release info
+        id: release-info
+        run: yarn csdk:release-info
 
       - name: Build packages
         run: npm run build
@@ -141,7 +143,7 @@ jobs:
         id: canary_snapshot
         run: yarn changeset:cascade-snapshot-version
         env:
-          CANARY_PREFIX: ${{ steps.release-line.outputs.canary_prefix }}
+          CANARY_PREFIX: ${{ steps.release-info.outputs.canary_prefix }}
 
       - name: Re-Install dependencies
         run: |
@@ -150,7 +152,7 @@ jobs:
       - name: Publish canary snapshot packages to npm
         if: steps.canary_snapshot.outputs.snapshot_publish == 'true'
         env:
-          CANARY_PREFIX: ${{ steps.release-line.outputs.canary_prefix }}
+          CANARY_PREFIX: ${{ steps.release-info.outputs.canary_prefix }}
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           yarn build

@@ -1,6 +1,6 @@
 /**
- * Release state read from git and npm, shared by the release scripts (`release-versions-guard.ts`,
- * `post-release-sync.ts`, the prep and legacy checks).
+ * Shared helpers of the release scripts (`release-branch-guards.ts`, `post-release-sync.ts`, the
+ * limited release prep and the legacy branches): git, npm and workspace state.
  */
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
@@ -8,6 +8,7 @@
 import { execFileSync } from 'child_process';
 import path from 'path';
 import { getPackages } from '@manypkg/get-packages';
+import semver from 'semver';
 
 export interface NpmInfo {
   versions: string[];
@@ -32,6 +33,13 @@ export const repoPath = (rootDir: string, absolutePath: string): string =>
 /** An unset commit: empty, or GitHub's all-zero `before` of a branch's first push. */
 export const isUnsetSha = (sha: string | undefined): boolean => !sha || /^0+$/.test(sha);
 
+/**
+ * A branch's prefix, the key of the per-branch Maps (release info, post-release steps, guards):
+ * `release/<name>` (the first two path segments), else the whole branch (e.g. `dev`).
+ */
+export const branchPrefix = (branch: string): string =>
+  /^release\/[^/]+/.exec(branch)?.[0] ?? branch;
+
 /** Rewrites `yarn.lock` for the current workspace without linking (`--mode=update-lockfile`). */
 export function updateLockfile(): void {
   execFileSync('yarn', ['install', '--mode=update-lockfile'], {
@@ -41,17 +49,20 @@ export function updateLockfile(): void {
   });
 }
 
+/** Runs git and returns its trimmed output; throws when git fails. */
 export function git(...args: string[]): string {
   return execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 }
 
-/** `git` that reports failure instead of throwing (e.g. `merge-base --is-ancestor`). */
-export function gitSucceeds(...args: string[]): boolean {
+/**
+ * `git` for calls where failure is an expected answer (a missing ref or file, `merge-base
+ * --is-ancestor`, a conflicting cherry-pick): the output, or null when git failed.
+ */
+export function tryGit(...args: string[]): string | null {
   try {
-    git(...args);
-    return true;
+    return git(...args);
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -79,11 +90,8 @@ export function npmInfo(name: string): NpmInfo | null {
 }
 
 function versionAt(sha: string, manifestPath: string): string | null {
-  try {
-    return JSON.parse(git('show', `${sha}:${manifestPath}`)).version;
-  } catch {
-    return null; // package did not exist at that commit
-  }
+  const manifest = tryGit('show', `${sha}:${manifestPath}`); // null: no package at that commit
+  return manifest === null ? null : JSON.parse(manifest).version;
 }
 
 /**
@@ -100,6 +108,17 @@ export async function versionsAt(ref: string): Promise<Map<string, string>> {
   return versions;
 }
 
+/**
+ * A ref's versions (`versionsAt`) hold every released version, or a newer one: the release already
+ * reached it (e.g. dev after the cherry-pick, `release/latest` after the sync or a later release).
+ */
+export function holdsVersions(published: PackageVersion[], versions: Map<string, string>): boolean {
+  return published.every((pkg) => {
+    const held = versions.get(pkg.name);
+    return !!held && semver.gte(held, pkg.version);
+  });
+}
+
 /** Publishable packages whose version at `sha` differs from `base` (a release commit's bumps). */
 export async function changedVersions(base: string, sha: string): Promise<PackageVersion[]> {
   const [before, after] = await Promise.all([versionsAt(base), versionsAt(sha)]);
@@ -111,6 +130,6 @@ export async function changedVersions(base: string, sha: string): Promise<Packag
 /** The `<pkg>@<version>` git tag changesets creates for a published version. */
 export const releaseTag = ({ name, version }: PackageVersion): string => `${name}@${version}`;
 
-/** The version's release tag is an ancestor of `sha`, i.e. it was released on this line. */
-export const taggedOnThisLine = (pkg: PackageVersion, sha: string): boolean =>
-  gitSucceeds('merge-base', '--is-ancestor', `refs/tags/${releaseTag(pkg)}`, sha);
+/** The version's release tag is an ancestor of `sha`, i.e. it was released on this branch. */
+export const taggedOnThisBranch = (pkg: PackageVersion, sha: string): boolean =>
+  tryGit('merge-base', '--is-ancestor', `refs/tags/${releaseTag(pkg)}`, sha) !== null;

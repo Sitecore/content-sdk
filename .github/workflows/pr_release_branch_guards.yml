@@ -1,0 +1,48 @@
+name: Release Branch Guards
+
+# PR check for release branches (scripts/release/release-branch-guards.ts). The base branch picks the guards:
+# - release/limited/**, release/hotfix/**: release versions. On the release PR (opened by
+#   changesets/action), fails when a version it bumps to is already on npm from another release branch or is
+#   lower than npm `latest`. Other PRs pass: they keep changesets or change no versions.
+# - release/legacy/**: legacy changesets. Fails on changesets a legacy branch can't release: for a package
+#   that resolves from npm (e.g. a cherry-picked core changeset; ship it from dev) or for
+#   create-content-sdk-app (would stay pending and silently block publishing).
+# Other release branches pass. Mark this check as required on these branches.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - 'release/limited/**'
+      - 'release/hotfix/**'
+      - 'release/legacy/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-branch-guards-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    env:
+      YARN_ENABLE_IMMUTABLE_INSTALLS: false
+    steps:
+      # The default PR merge ref: what the merge would bring to the release branch. Full history and
+      # tags for the base commit and the "tagged on this branch" check.
+      - name: Checkout PR merge commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Release setup
+        uses: ./.github/actions/release-setup
+        with:
+          install: update
+
+      - name: Release branch guards
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: node ./scripts/release/release-branch-guards.ts
+

@@ -11,7 +11,11 @@ const repoRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..'
 export default defineConfig({
   root: repoRoot,
   test: {
-    include: ['scripts/changesets/**/*.test.ts', 'scripts/release/**/*.test.ts'],
+    include: [
+      'scripts/*.test.ts',
+      'scripts/changesets/**/*.test.ts',
+      'scripts/release/**/*.test.ts',
+    ],
     environment: 'node',
     testTimeout: 15000,
   },

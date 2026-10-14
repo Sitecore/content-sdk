@@ -38,13 +38,13 @@ import type {
   ReleasePlan,
   VersionType,
 } from '@changesets/types';
+import { REPO, SCAFFOLDER } from '../constants';
 import { runMain } from './utils';
 
-const REPO = 'sitecore/content-sdk';
 const canaryTag = process.env.CANARY_PREFIX || 'canary';
 
 // List of packages that will get patch bumps instead of minor/major via cascade versioning
-const cascadeVersionPatchOnlyPkgs = ['create-content-sdk-app'];
+const cascadeVersionPatchOnlyPkgs = [SCAFFOLDER];
 
 type PackageChangeset = NewChangesetWithCommit & {
   releaseType: VersionType;

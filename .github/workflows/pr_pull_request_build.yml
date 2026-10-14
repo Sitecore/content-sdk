@@ -35,13 +35,6 @@ jobs:
           yarn cache clean --all
           yarn install --immutable
 
-      # Legacy branches hold only their product's packages; the shared ones resolve from npm (P1).
-      # Build and test against the newest in-range versions, as the product's consumers install
-      # them, not the ones pinned when yarn.lock was last written. Not committed.
-      - name: Refresh npm-resolved Content SDK packages (legacy)
-        if: startsWith(github.base_ref, 'release/legacy/')
-        run: yarn csdk:refresh-legacy-deps
-
       - name: Build packages
         run: npm run build
 
@@ -77,10 +70,19 @@ jobs:
         shell: bash
 
       # Release scripts are maintained on dev. A legacy branch holds only its product's packages, so
-      # the products.json tests (both products' ignore lists vs the workspace) can't pass there.
+      # the tests that read the full workspace can't pass there.
       - name: Run tests for release scripts
         if: ${{ !startsWith(github.base_ref, 'release/legacy/') }}
         run: yarn changeset:test
+
+      # publish.yml and pr_release_branch_guards.yml run these with plain node (Node 24 type
+      # stripping), which vitest doesn't exercise: a local import without its .ts extension or a
+      # type imported without `type` only fails here. Read-only runs on branches without guards.
+      - name: Smoke-test release scripts run by plain node
+        if: ${{ !startsWith(github.base_ref, 'release/legacy/') }}
+        run: |
+          node ./scripts/release/release-info.ts dev
+          node ./scripts/release/release-branch-guards.ts dev
 
       # Legacy branches (release/legacy/<product>/v<N>) hold only their product, so scaffold only
       # its samples; everywhere else scaffold all products' samples.
