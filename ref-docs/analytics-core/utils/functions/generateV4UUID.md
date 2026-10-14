@@ -8,7 +8,7 @@
 
 > **generateV4UUID**(): `string`
 
-Defined in: [analytics-core/src/utils/generators/generate-v4-uuid.ts:6](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/analytics-core/src/utils/generators/generate-v4-uuid.ts#L6)
+Defined in: [analytics-core/src/utils/generators/generate-v4-uuid.ts:6](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/analytics-core/src/utils/generators/generate-v4-uuid.ts#L6)
 
 **`Internal`**
 

@@ -8,6 +8,6 @@
 
 > **ProxiesContext** = `Map`\<`string`, [`ProxiesContextMapValue`](ProxiesContextMapValue.md)\>
 
-Defined in: [nextjs/src/proxy/types.ts:31](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/nextjs/src/proxy/types.ts#L31)
+Defined in: [nextjs/src/proxy/types.ts:31](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/nextjs/src/proxy/types.ts#L31)
 
 The context object that can be used by proxies to share information between each other or to return information about executed proxies. It is a Map with proxy name as key and an object with any information as value.

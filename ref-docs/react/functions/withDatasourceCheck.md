@@ -8,7 +8,7 @@
 
 > **withDatasourceCheck**(`options?`): \<`ComponentProps`\>(`Component`) => (`props`) => `Element` \| `null`
 
-Defined in: [packages/react/src/enhancers/withDatasourceCheck.tsx:54](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/react/src/enhancers/withDatasourceCheck.tsx#L54)
+Defined in: [packages/react/src/enhancers/withDatasourceCheck.tsx:54](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/react/src/enhancers/withDatasourceCheck.tsx#L54)
 
 Checks whether a Sitecore datasource is present and valid, then renders appropriately depending on page mode (normal vs editing).
 `isContentResolved: false` is treated the same as a missing datasource. If the property is omitted, the original presence check is used.

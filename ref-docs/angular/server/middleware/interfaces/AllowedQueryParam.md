@@ -6,7 +6,7 @@
 
 # Interface: AllowedQueryParam
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:25](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/angular/src/server/middleware/editing-render-middleware.ts#L25)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:25](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/angular/src/server/middleware/editing-render-middleware.ts#L25)
 
 Specification for an additional query parameter to forward into the editing
 preview data.
@@ -17,7 +17,7 @@ preview data.
 
 > **name**: `string`
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:26](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/angular/src/server/middleware/editing-render-middleware.ts#L26)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:26](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/angular/src/server/middleware/editing-render-middleware.ts#L26)
 
 ***
 
@@ -25,4 +25,4 @@ Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts
 
 > `optional` **required?**: `boolean`
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:27](https://github.com/Sitecore/content-sdk/blob/8e4055e2a3f5606035c179d1f57c421ea4be2e41/packages/angular/src/server/middleware/editing-render-middleware.ts#L27)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:27](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/angular/src/server/middleware/editing-render-middleware.ts#L27)
