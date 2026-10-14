@@ -1,0 +1,101 @@
+name: Limited Release Prep
+
+# Product-based limited release on release/latest: pick a product from
+# `.changeset/products.config.json` (keep the `product` choices below in sync). The release ships that
+# product with everything below it; the other products' packages stay at their released version.
+#
+# The workflow (scripts/release/prep-limited-release.ts):
+# 1. checks that every changeset names one package (the other products' changesets stay on dev, so
+#    a multi-package one would lose its in-scope part);
+# 2. builds the release plan from dev's changesets for the product and fails when it would bump one
+#    of the other products' packages (e.g. a shared major cascading into it);
+# 3. copies the plan's package directories and changesets from dev onto release/latest (a merge of
+#    dev that keeps release/latest's tree, so changelog commit links point at dev), refreshes
+#    yarn.lock and pushes release/latest, which opens its release PR via publish.yml.
+# On failure nothing is pushed. Hotfixes and feature releases are cherry-picked onto release/latest
+# directly (with their changeset files).
+on:
+  workflow_dispatch:
+    inputs:
+      product:
+        description: 'Product to release'
+        required: true
+        type: choice
+        options:
+          - nextjs
+          - angular
+
+permissions:
+  contents: write
+
+jobs:
+  prep-limited-release:
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'dev'
+    env:
+      YARN_ENABLE_IMMUTABLE_INSTALLS: false
+    steps:
+      - name: Generate GitHub App Token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - name: Release setup
+        uses: ./.github/actions/release-setup
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          install: update
+
+      - name: Verify one package per changeset
+        run: yarn csdk:split-changesets --check
+
+      - name: Copy the limited release onto release/latest
+        id: prep
+        env:
+          PRODUCT: ${{ inputs.product }}
+        run: |
+          set -o pipefail
+          yarn csdk:prep-limited-release "$PRODUCT" 2>&1 | tee "$RUNNER_TEMP/prep-limited-release.log"
+
+      # The push is the script's last command, so nothing reached origin.
+      - name: Report failure
+        if: failure() && steps.prep.outcome == 'failure'
+        env:
+          PRODUCT: ${{ inputs.product }}
+        run: |
+          {
+            echo "## ❌ Limited Release Aborted"
+            echo ""
+            echo "The \`$PRODUCT\` limited release failed; nothing was pushed to \`release/latest\`."
+            echo "Changes that would bump the other product's packages (e.g. a shared major cascading into"
+            echo "them) must ship in a full release from dev."
+            echo ""
+            echo '```'
+            grep -v '^\s*$' "$RUNNER_TEMP/prep-limited-release.log" | tail -n 40 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Summary
+        env:
+          PRODUCT: ${{ inputs.product }}
+        run: |
+          {
+            echo "## Limited Release Prepared"
+            echo ""
+            echo "The \`$PRODUCT\` release was copied from dev onto \`release/latest\`; the push opens its"
+            echo "release PR. The other product's packages stay at their released version and its"
+            echo "changesets stay on dev."
+            echo ""
+            echo '```'
+            grep -v '^\s*$' "$RUNNER_TEMP/prep-limited-release.log" | tail -n 40 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

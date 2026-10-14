@@ -18,7 +18,9 @@
     "changeset:cascade-snapshot-version": "tsx ./scripts/changesets/cascade-version.ts --snapshot",
     "changeset:publish": "changeset publish",
     "csdk:prep-release": "yarn changeset:cascade-version && yarn install",
+    "csdk:prep-limited-release": "tsx ./scripts/release/prep-limited-release.ts",
     "csdk:split-changesets": "tsx ./scripts/changesets/split-changesets.ts",
+    "csdk:post-release-sync": "tsx ./scripts/release/post-release-sync.ts",
     "changeset:test": "vitest run --config ./scripts/changesets/vitest.config.ts"
   },
   "author": {
@@ -35,6 +37,7 @@
     "@microsoft/api-extractor": "^7.55.0",
     "@rushstack/eslint-patch": "^1.10.3",
     "@stylistic/eslint-plugin": "^5.2.2",
+    "@types/semver": "^7.7.0",
     "@typescript-eslint/eslint-plugin": "^8.39.0",
     "@typescript-eslint/parser": "^8.39.0",
     "eslint": "^9.32.0",
@@ -47,6 +50,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "lerna": "^9.0.3",
     "prettier": "^2.8.0",
+    "semver": "^7.8.4",
     "tsx": "^4.19.4",
     "typedoc": "^0.28.4",
     "typedoc-plugin-markdown": "^4.6.3",

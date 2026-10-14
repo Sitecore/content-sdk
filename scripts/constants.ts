@@ -13,3 +13,12 @@ export const SCAFFOLDER = 'create-content-sdk-app';
 
 /** Product -> packages (`readProducts`). */
 export const PRODUCTS_PATH = '.changeset/products.config.json';
+
+/** The main branch: full releases. */
+export const MAIN_BRANCH = 'dev';
+
+/**
+ * Limited, hotfix and feature releases are made on it; re-created at each full release. Between
+ * releases it can hold code not released yet (a limited copy, cherry-picked fixes).
+ */
+export const RELEASE_LATEST = 'release/latest';
