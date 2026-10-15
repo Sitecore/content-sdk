@@ -286,7 +286,7 @@ Defined in: [nextjs/src/client/sitecore-nextjs-client.ts:236](https://github.com
 Defined in: content/types/client/sitecore-client.d.ts:253
 
 Execute a raw GraphQL request using the client's configured GraphQL Edge endpoint.
-This is a thin pass-through to the underlying `GraphQLClient.request` method,
+When `rewriteMediaUrls` is enabled, string values in the result are rewritten the same way as layout data.
 
 #### Type Parameters
 

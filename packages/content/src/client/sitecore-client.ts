@@ -167,7 +167,9 @@ export type LlmsTxtOptions = {
 export interface BaseSitecoreClient {
   /**
    * Execute a raw GraphQL request using the client's configured GraphQL endpoint(s).
-   * This is a thin pass-through to the underlying {@link GraphQLClient.request},
+   * This is a thin pass-through to the underlying {@link GraphQLClient.request}.
+   * When `rewriteMediaUrls` is enabled, string values in the result are rewritten
+   * the same way as layout data.
    * @param query GraphQL string or DocumentNode
    * @param variables Optional variables bag
    * @param fetchOptions Optional fetch/retry overrides (headers, retries, fetch impl, debugger)
@@ -352,17 +354,20 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   /**
    * Execute a raw GraphQL request using the client's configured GraphQL Edge endpoint.
-   * This is a thin pass-through to the underlying `GraphQLClient.request` method,
+   * When `rewriteMediaUrls` is enabled, string values in the result are rewritten
+   * the same way as layout data.
    * @param {string | DocumentNode} query GraphQL query
    * @param {Record<string, unknown>} [variables] Optional variables bag
    * @param {FetchOptions} [fetchOptions] Optional fetch overrides (e.g. fetch, headers)
+   * @returns {Promise<T>} GraphQL result, with media hostnames rewritten when `rewriteMediaUrls` is enabled
    */
-  getData<T = unknown>(
+  async getData<T = unknown>(
     query: string | DocumentNode,
     variables?: Record<string, unknown>,
     fetchOptions?: FetchOptions
   ): Promise<T> {
-    return this.graphQLClient.request<T>(query, variables, fetchOptions);
+    const data = await this.graphQLClient.request<T>(query, variables, fetchOptions);
+    return this.rewriteContentUrls(data);
   }
 
   /**
@@ -792,13 +797,25 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @internal
    */
   protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData {
+    return this.rewriteContentUrls(layout);
+  }
+
+  /**
+   * Rewrites media hostnames when `rewriteMediaUrls` is enabled.
+   * Shared by layout responses and `getData` so both follow the same option.
+   * When the option is omitted or false, returns the same reference.
+   * The default rewriter changes only the default Experience Edge hostname.
+   * @param {T} data - Layout data or a GraphQL response
+   * @returns {T} Rewritten data, or the original reference when rewrite is disabled
+   */
+  private rewriteContentUrls<T>(data: T): T {
     const opt = this.initOptions.rewriteMediaUrls;
     if (!opt) {
-      return layout;
+      return data;
     }
     const experienceEdgeUrl = resolveExperienceEdgeUrl();
     const transformer = opt === true ? getDefaultMediaUrlTransformer(experienceEdgeUrl) : opt;
-    return applyMediaUrlRewrite(layout, transformer);
+    return applyMediaUrlRewrite(data, transformer);
   }
 
   private getPageMode(mode: PageModeName, generation?: DesignLibraryVariantGeneration): PageMode {
