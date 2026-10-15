@@ -6,7 +6,7 @@
 
 # Interface: AtomsDocumentValidationError
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:33](https://github.com/Sitecore/content-sdk/blob/2ebaba6454c3e55795d63c8d38a7bfd15c6ab5ac/packages/content/src/atoms/design-library-bridge/types.ts#L33)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:33](https://github.com/Sitecore/content-sdk/blob/5b6de22f85fe8291e5526ff894ecf1aa2f7ab37c/packages/content/src/atoms/design-library-bridge/types.ts#L33)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Payload sent on `atoms:error` when Document validation fails before render.
 
 > **formatted**: `string`
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:37](https://github.com/Sitecore/content-sdk/blob/2ebaba6454c3e55795d63c8d38a7bfd15c6ab5ac/packages/content/src/atoms/design-library-bridge/types.ts#L37)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:37](https://github.com/Sitecore/content-sdk/blob/5b6de22f85fe8291e5526ff894ecf1aa2f7ab37c/packages/content/src/atoms/design-library-bridge/types.ts#L37)
 
 Human-readable issue list suitable for an AI repair prompt.
 
@@ -28,6 +28,6 @@ Human-readable issue list suitable for an AI repair prompt.
 
 > **issues**: [`AtomsDocumentValidationIssue`](AtomsDocumentValidationIssue.md)[]
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:35](https://github.com/Sitecore/content-sdk/blob/2ebaba6454c3e55795d63c8d38a7bfd15c6ab5ac/packages/content/src/atoms/design-library-bridge/types.ts#L35)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:35](https://github.com/Sitecore/content-sdk/blob/5b6de22f85fe8291e5526ff894ecf1aa2f7ab37c/packages/content/src/atoms/design-library-bridge/types.ts#L35)
 
 Structured issues from `validateSpec`.

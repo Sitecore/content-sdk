@@ -28,7 +28,6 @@
 
 ## Functions
 
-- [addComponentPropsUpdateHandler](functions/addComponentPropsUpdateHandler.md)
 - [addDocumentUpdateHandler](functions/addDocumentUpdateHandler.md)
 - [getDesignLibraryAtomsCatalogEvent](functions/getDesignLibraryAtomsCatalogEvent.md)
 - [sendAtomsErrorEvent](functions/sendAtomsErrorEvent.md)

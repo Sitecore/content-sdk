@@ -6,7 +6,7 @@
 
 # Interface: Document
 
-Defined in: [content/src/atoms/types.ts:100](https://github.com/Sitecore/content-sdk/blob/2ebaba6454c3e55795d63c8d38a7bfd15c6ab5ac/packages/content/src/atoms/types.ts#L100)
+Defined in: [content/src/atoms/types.ts:100](https://github.com/Sitecore/content-sdk/blob/5b6de22f85fe8291e5526ff894ecf1aa2f7ab37c/packages/content/src/atoms/types.ts#L100)
 
 **`Internal`**
 
@@ -36,7 +36,7 @@ Flat map of elements by key
 
 > **name**: `string`
 
-Defined in: [content/src/atoms/types.ts:102](https://github.com/Sitecore/content-sdk/blob/2ebaba6454c3e55795d63c8d38a7bfd15c6ab5ac/packages/content/src/atoms/types.ts#L102)
+Defined in: [content/src/atoms/types.ts:102](https://github.com/Sitecore/content-sdk/blob/5b6de22f85fe8291e5526ff894ecf1aa2f7ab37c/packages/content/src/atoms/types.ts#L102)
 
 Human-readable identifier of the document.
 
@@ -58,13 +58,23 @@ Root element key
 
 ### state?
 
-> `optional` **state?**: `Record`\<`string`, `unknown`\>
+> `optional` **state?**: `Record`\<`string`, `unknown`\> & `object`
 
-Defined in: content/node\_modules/@json-render/core/dist/store-utils-CGwRAVOR.d.ts:411
+Defined in: [content/src/atoms/types.ts:103](https://github.com/Sitecore/content-sdk/blob/5b6de22f85fe8291e5526ff894ecf1aa2f7ab37c/packages/content/src/atoms/types.ts#L103)
 
 Optional initial state to seed the state model.
  Components using statePath will read from / write to this state.
 
-#### Inherited from
+#### Type Declaration
+
+##### fields?
+
+> `optional` **fields?**: `Record`\<`string`, `unknown`\>
+
+##### params?
+
+> `optional` **params?**: `Record`\<`string`, `unknown`\>
+
+#### Overrides
 
 `Spec.state`
