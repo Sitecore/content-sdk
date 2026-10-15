@@ -9,20 +9,19 @@ export type ValidateAtomsDocumentResult =
   | { valid: true }
   | { valid: false; error: AtomsDocumentValidationError };
 
-const invalidDocumentError = (message: string): AtomsDocumentValidationError => {
-  const issues: SpecIssue[] = [
+const toValidationError = (issues: SpecIssue[]): AtomsDocumentValidationError => ({
+  issues,
+  formatted: formatSpecIssues(issues),
+});
+
+const invalidDocumentError = (message: string): AtomsDocumentValidationError =>
+  toValidationError([
     {
       severity: 'error',
       message,
       code: 'empty_spec',
     },
-  ];
-
-  return {
-    issues,
-    formatted: formatSpecIssues(issues),
-  };
-};
+  ]);
 
 /**
  * Validates an atoms Document with json-render's `validateSpec` before it is rendered.
@@ -43,13 +42,7 @@ export function validateAtomsDocument(document: unknown): ValidateAtomsDocumentR
 
   const result = validateSpec(spec);
   if (!result.valid) {
-    return {
-      valid: false,
-      error: {
-        issues: result.issues,
-        formatted: formatSpecIssues(result.issues),
-      },
-    };
+    return { valid: false, error: toValidationError(result.issues) };
   }
 
   return { valid: true };
