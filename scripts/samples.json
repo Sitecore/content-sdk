@@ -1,15 +1,29 @@
-[
-  {
-    "template": "nextjs",
-    "args": {
-      "prerender": "SSG",
-      "silent": false
+{
+  "nextjs": [
+    {
+      "template": "nextjs",
+      "args": {
+        "prerender": "SSG",
+        "silent": false
+      }
+    },
+    {
+      "template": "nextjs-app-router-cache-components",
+      "args": {
+        "prerender": "SSG"
+      }
+    },
+    {
+      "template": "nextjs-app-router",
+      "args": {
+        "prerender": "SSG"
+      }
     }
-  },
-  {
-    "template": "nextjs-app-router-cache-components",
-    "args": {
-      "prerender": "SSG"
+  ],
+  "angular": [
+    {
+      "template": "angular",
+      "args": {}
     }
-  }
-]
+  ]
+}

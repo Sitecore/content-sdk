@@ -1,9 +1,9 @@
 import type { ChangelogFunctions, NewChangesetWithCommit } from '@changesets/types';
+// with the extension: changesets loads this file with a native import()
+import { REPO } from '../constants.ts';
 
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
-
-const REPO = 'sitecore/content-sdk';
 
 /**
  * Custom changelog entry renderer that includes commit links and package prefix

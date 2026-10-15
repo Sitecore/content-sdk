@@ -1,0 +1,9 @@
+{
+  "nextjs": [
+    "@sitecore-content-sdk/nextjs",
+    "@sitecore-content-sdk/react",
+    "@sitecore-content-sdk/nextjs-templates"
+  ],
+  "angular": ["@sitecore-content-sdk/angular", "@sitecore-content-sdk/angular-templates"]
+}
+

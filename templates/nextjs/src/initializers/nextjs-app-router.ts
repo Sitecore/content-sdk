@@ -5,7 +5,7 @@ import { nextjsPrompts, readVersions } from './common';
 
 export const NextjsAppRouterInit: ScaffoldInitData<Question> = {
   name: 'nextjs-app-router',
-  prompts: nextjsPrompts,
+  prompts: [...nextjsPrompts('content-sdk-nextjs-app-router')],
   templatePath: path.resolve(__dirname, '../templates/nextjs-app-router'),
   versions: readVersions(),
 };
