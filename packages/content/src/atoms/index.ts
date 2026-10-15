@@ -18,7 +18,6 @@ export {
   sendAtomsErrorEvent,
   DesignLibraryAtomsError,
   addDocumentUpdateHandler,
-  addComponentPropsUpdateHandler,
   validateAtomsDocument,
   ValidateAtomsDocumentResult,
 } from './design-library-bridge';

@@ -3,7 +3,6 @@ import React, { JSX, useMemo } from 'react';
 import { createNCC } from '../../atoms';
 import { useSitecore } from '../SitecoreProvider';
 import { Document } from '@sitecore-content-sdk/content/atoms';
-import type { ChildComponentProps } from '../Placeholder/models';
 
 /**
  * Props accepted by the `StudioComponentWrapper` used to render a Studio component layout on the client. Expects a pre-fetched `document` containing the component layout data.
@@ -11,8 +10,6 @@ import type { ChildComponentProps } from '../Placeholder/models';
  */
 type StudioComponentWrapperProps = {
   document: Document | null;
-  fields?: ChildComponentProps['fields'];
-  params?: ChildComponentProps['params'];
 };
 
 /**
@@ -27,8 +24,6 @@ type StudioComponentWrapperProps = {
  */
 export const StudioComponentWrapper = ({
   document,
-  fields,
-  params,
 }: StudioComponentWrapperProps): JSX.Element | null => {
   const { atomsConfig } = useSitecore();
 
@@ -40,5 +35,5 @@ export const StudioComponentWrapper = ({
 
   if (!NCComponent) return null;
 
-  return <NCComponent fields={fields} params={params} />;
+  return <NCComponent />;
 };

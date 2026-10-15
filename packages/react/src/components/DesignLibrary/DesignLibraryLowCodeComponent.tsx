@@ -9,16 +9,10 @@ import * as editing from '@sitecore-content-sdk/content/editing';
 import * as atoms from '@sitecore-content-sdk/content/atoms';
 import { debug } from '@sitecore-content-sdk/content';
 import { DesignLibraryErrorBoundary, PlaceholderMetadata } from '../..';
-import type { ChildComponentProps } from '../Placeholder/models';
 import { ATOM_TYPE } from '../../atoms/constants';
 
 let { postToDesignLibrary, getDesignLibraryStatusEvent, DesignLibraryStatus } = editing;
-let {
-  addDocumentUpdateHandler,
-  getDesignLibraryAtomsCatalogEvent,
-  sendAtomsErrorEvent,
-  addComponentPropsUpdateHandler,
-} = atoms;
+let { addDocumentUpdateHandler, getDesignLibraryAtomsCatalogEvent, sendAtomsErrorEvent } = atoms;
 
 export const __mockDependencies = (mocks: any) => {
   if (mocks.postToDesignLibrary) {
@@ -29,9 +23,6 @@ export const __mockDependencies = (mocks: any) => {
   }
   if (mocks.addDocumentUpdateHandler) {
     addDocumentUpdateHandler = mocks.addDocumentUpdateHandler;
-  }
-  if (mocks.addComponentPropsUpdateHandler) {
-    addComponentPropsUpdateHandler = mocks.addComponentPropsUpdateHandler;
   }
 };
 
@@ -55,25 +46,12 @@ export const DesignLibraryLowCodeComponent = () => {
   const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const uid = currentDocument?.name || 'design-library-low-code-component';
   const [renderKey, setRenderKey] = useState(0);
-  const [fields, setFields] = useState<ChildComponentProps['fields'] | undefined>();
-  const [params, setParams] = useState<ChildComponentProps['params'] | undefined>();
   const [documentCss, setDocumentCss] = useState('');
   const cssRequestIdRef = useRef(0);
 
   useEffect(() => {
-    postToDesignLibrary(
-      getDesignLibraryStatusEvent(DesignLibraryStatus.READY, uid)
-    );
+    postToDesignLibrary(getDesignLibraryStatusEvent(DesignLibraryStatus.READY, uid));
   }, [uid]);
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useEffect(() => {
-    const unsubscribe = addComponentPropsUpdateHandler((updatedFields, updatedParams) => {
-      setFields(updatedFields as ChildComponentProps['fields']);
-      setParams(updatedParams);
-    });
-    return () => unsubscribe();
-  }, []);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
@@ -119,9 +97,7 @@ export const DesignLibraryLowCodeComponent = () => {
   useEffect(() => {
     if (renderKey === 0) return;
 
-    postToDesignLibrary(
-      getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, uid)
-    );
+    postToDesignLibrary(getDesignLibraryStatusEvent(DesignLibraryStatus.RENDERED, uid));
   }, [renderKey, uid]);
 
   return (
@@ -132,7 +108,7 @@ export const DesignLibraryLowCodeComponent = () => {
         componentRuntime="client"
         componentType={ATOM_TYPE}
       >
-        <StudioComponentWrapper document={currentDocument} fields={fields} params={params} />
+        <StudioComponentWrapper document={currentDocument} />
       </PlaceholderMetadata>
     </DesignLibraryErrorBoundary>
   );

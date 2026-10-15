@@ -1,12 +1,11 @@
 import { expect, use as chaiUse } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import { AtomsCatalogPayload } from './types';
+import { SerializedCatalog } from '../types';
 
 chaiUse(sinonChai);
 import {
   addDocumentUpdateHandler,
-  addComponentPropsUpdateHandler,
   getDesignLibraryAtomsCatalogEvent,
   getDesignLibraryAtomsErrorEvent,
 } from './events';
@@ -14,31 +13,41 @@ import {
 describe('design-library-bridge events', () => {
   describe('getDesignLibraryAtomsCatalogEvent', () => {
     it('returns an event with name "atoms:catalog"', () => {
-      const payload: AtomsCatalogPayload = { components: [], actions: [] };
+      const payload: SerializedCatalog = {
+        stylingSolution: 'inline-css',
+        components: [],
+        actions: [],
+      };
       const event = getDesignLibraryAtomsCatalogEvent(payload);
 
       expect(event.name).to.equal('atoms:catalog');
     });
 
     it('returns an event containing the provided catalog payload', () => {
-      const payload: AtomsCatalogPayload = {
+      const payload: SerializedCatalog = {
+        stylingSolution: 'inline-css',
         components: [
           {
             name: 'Button',
             propsSchema: { type: 'object' },
             description: 'A button',
             slots: ['default'],
+            legacy: false,
           },
         ],
-        actions: [{ name: 'submit', paramsSchema: { type: 'object' }, description: 'Submit form' }],
+        actions: [
+          {
+            name: 'submit',
+            paramsSchema: { type: 'object' },
+            description: 'Submit form',
+            legacy: false,
+          },
+        ],
       };
 
       const event = getDesignLibraryAtomsCatalogEvent(payload);
 
-      expect(event.message.components).to.have.length(1);
-      expect(event.message.components[0].name).to.equal('Button');
-      expect(event.message.actions).to.have.length(1);
-      expect(event.message.actions[0].name).to.equal('submit');
+      expect(event.message).to.deep.equal(payload);
     });
   });
 
@@ -101,7 +110,10 @@ describe('design-library-bridge events', () => {
 
       unsubscribe();
 
-      expect(removeEventListener).to.have.been.calledWith('message', sinon.match.func);
+      expect(removeEventListener).to.have.been.calledOnceWithExactly(
+        'message',
+        addEventListener.firstCall.args[1]
+      );
     });
 
     it('invokes the callback when the document is valid', () => {
@@ -141,74 +153,70 @@ describe('design-library-bridge events', () => {
       const event = postMessage.firstCall.args[0];
       expect(event.name).to.equal('atoms:error');
       expect(event.message.type).to.equal('validation');
-      expect(event.message.error.issues.some((issue: { code: string }) => issue.code === 'root_not_found'))
-        .to.equal(true);
+      expect(
+        event.message.error.issues.some((issue: { code: string }) => issue.code === 'root_not_found')
+      ).to.equal(true);
       expect(event.message.error.formatted).to.be.a('string');
       expect(event.message.error.formatted.length).to.be.greaterThan(0);
     });
-  });
 
-  describe('addComponentPropsUpdateHandler', () => {
-    let addEventListener: sinon.SinonStub;
-    let removeEventListener: sinon.SinonStub;
-
-    beforeEach(() => {
-      addEventListener = sinon.stub();
-      removeEventListener = sinon.stub();
-      (global as any).window = { addEventListener, removeEventListener };
-    });
-
-    afterEach(() => {
-      (global as any).window = undefined;
-    });
-
-    it('registers a message event listener', () => {
-      addComponentPropsUpdateHandler(sinon.stub());
-      expect(addEventListener).to.have.been.calledWith('message', sinon.match.func);
-    });
-
-    it('returns an unsubscribe function that removes the listener', () => {
-      const unsubscribe = addComponentPropsUpdateHandler(sinon.stub());
-      unsubscribe();
-      expect(removeEventListener).to.have.been.calledWith('message', sinon.match.func);
-    });
-
-    it('invokes the callback with fields and params from a valid component:update event', () => {
+    it('delivers the preview document with its fields and params state unchanged', () => {
       const callback = sinon.stub();
-      addComponentPropsUpdateHandler(callback);
+      addDocumentUpdateHandler(callback);
 
-      const fields = { title: { value: 'Hello' } };
-      const params = { styles: 'primary' };
+      const document = {
+        name: 'preview',
+        root: 'button',
+        elements: { button: { type: 'Button', props: {}, children: [] } },
+        state: {
+          fields: { title: { value: 'Hello' } },
+          params: { styles: 'primary' },
+          message: 'Preserved state',
+        },
+      };
       const handler = addEventListener.firstCall.args[1];
       handler({
         origin: 'http://localhost',
-        data: { name: 'component:update', details: { uid: 'abc', fields, params } },
+        data: { name: 'component:atoms:preview', document },
       });
 
-      expect(callback.callCount).to.equal(1);
-      expect(callback.firstCall.args[0]).to.equal(fields);
-      expect(callback.firstCall.args[1]).to.equal(params);
+      expect(callback).to.have.been.calledOnceWithExactly(document);
+      expect(callback.firstCall.args[0]).to.equal(document);
     });
 
-    it('invokes the callback with undefined fields and params when details is absent', () => {
+    it('delivers each replacement preview document', () => {
       const callback = sinon.stub();
-      addComponentPropsUpdateHandler(callback);
+      addDocumentUpdateHandler(callback);
 
+      const document = { ...validDocument, state: { params: { styles: 'primary' } } };
+      const replacement = { ...validDocument, state: { params: { styles: 'secondary' } } };
       const handler = addEventListener.firstCall.args[1];
-      handler({ origin: 'http://localhost', data: { name: 'component:update' } });
+      [document, replacement].forEach((updatedDocument) => {
+        handler({
+          origin: 'http://localhost',
+          data: { name: 'component:atoms:preview', document: updatedDocument },
+        });
+      });
 
-      expect(callback).to.have.been.calledOnceWith(undefined, undefined);
+      expect(callback.callCount).to.equal(2);
+      expect(callback.firstCall.args[0]).to.equal(document);
+      expect(callback.secondCall.args[0]).to.equal(replacement);
     });
 
-    it('does not invoke the callback for events with a different name', () => {
+    it('ignores obsolete component:update events and invalid preview events', () => {
       const callback = sinon.stub();
-      addComponentPropsUpdateHandler(callback);
+      addDocumentUpdateHandler(callback);
 
       const handler = addEventListener.firstCall.args[1];
       handler({
         origin: 'http://localhost',
+        data: { name: 'component:update', details: { fields: {}, params: {} } },
+      });
+      handler({
+        origin: '',
         data: { name: 'component:atoms:preview', document: {} },
       });
+      handler({ origin: 'http://localhost', data: null });
 
       expect(callback.callCount).to.equal(0);
     });

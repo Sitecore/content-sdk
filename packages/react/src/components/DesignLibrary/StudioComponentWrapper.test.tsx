@@ -872,7 +872,7 @@ describe('<StudioComponentWrapper />', () => {
     });
   });
 
-  describe('fields and params props', () => {
+  describe('fields and params in document state', () => {
     it('makes fields accessible in the document via $state', () => {
       const doc: Document = {
         name: 'fields-state',
@@ -884,13 +884,9 @@ describe('<StudioComponentWrapper />', () => {
             children: [],
           },
         },
+        state: { fields: { heading: { value: 'Sitecore Heading' } } },
       };
-      const { getByTestId } = renderInProvider(
-        <StudioComponentWrapper
-          document={doc}
-          fields={{ heading: { value: 'Sitecore Heading' } } as any}
-        />
-      );
+      const { getByTestId } = renderInProvider(<StudioComponentWrapper document={doc} />);
       expect(getByTestId('text-el').textContent).to.equal('Sitecore Heading');
     });
 
@@ -905,36 +901,36 @@ describe('<StudioComponentWrapper />', () => {
             children: [],
           },
         },
+        state: { params: { styles: 'primary' } },
       };
-      const { getByTestId } = renderInProvider(
-        <StudioComponentWrapper document={doc} params={{ styles: 'primary' }} />
-      );
+      const { getByTestId } = renderInProvider(<StudioComponentWrapper document={doc} />);
       expect(getByTestId('text-el').textContent).to.equal('primary');
     });
 
-    it('fields prop takes precedence over doc.state fields key', () => {
+    it('resolves fields and params together in a template, preserving unrelated state', () => {
       const doc: Document = {
         name: 'fields-override',
         root: 'r',
         elements: {
           r: {
             type: 'Text',
-            props: { content: { $state: '/fields/heading/value' } },
+            props: {
+              content: { $template: '${/fields/heading/value} ${/params/styles} ${/message}' },
+            },
             children: [],
           },
         },
-        state: { fields: { heading: { value: 'from state' } } },
+        state: {
+          fields: { heading: { value: 'from state' } },
+          params: { styles: 'primary' },
+          message: 'unchanged',
+        },
       };
-      const { getByTestId } = renderInProvider(
-        <StudioComponentWrapper
-          document={doc}
-          fields={{ heading: { value: 'from prop' } } as any}
-        />
-      );
-      expect(getByTestId('text-el').textContent).to.equal('from prop');
+      const { getByTestId } = renderInProvider(<StudioComponentWrapper document={doc} />);
+      expect(getByTestId('text-el').textContent).to.equal('from state primary unchanged');
     });
 
-    it('updates the store when fields prop changes on re-render', async () => {
+    it('renders changed fields from a replacement document and remounts the component', async () => {
       const doc: Document = {
         name: 'fields-rerender',
         root: 'r',
@@ -945,28 +941,31 @@ describe('<StudioComponentWrapper />', () => {
             children: [],
           },
         },
+        state: { fields: { heading: { value: 'v1' } } },
       };
       const { getByTestId, rerender } = render(
-        wrapInProvider(
-          <StudioComponentWrapper document={doc} fields={{ heading: { value: 'v1' } } as any} />,
-          textBoxConfig
-        )
+        wrapInProvider(<StudioComponentWrapper document={doc} />, textBoxConfig)
       );
+      const initialElement = getByTestId('text-el');
       expect(getByTestId('text-el').textContent).to.equal('v1');
 
       await act(async () => {
         rerender(
           wrapInProvider(
-            <StudioComponentWrapper document={doc} fields={{ heading: { value: 'v2' } } as any} />,
+            <StudioComponentWrapper
+              document={{ ...doc, state: { fields: { heading: { value: 'v2' } } } }}
+            />,
             textBoxConfig
           )
         );
       });
 
       expect(getByTestId('text-el').textContent).to.equal('v2');
+      expect(getByTestId('text-el')).to.not.equal(initialElement);
+      expect(doc.state?.fields).to.deep.equal({ heading: { value: 'v1' } });
     });
 
-    it('updates the store when params prop changes on re-render', async () => {
+    it('updates state expressions, wrapper styles and id from replacement document params', async () => {
       const doc: Document = {
         name: 'params-rerender',
         root: 'r',
@@ -977,57 +976,111 @@ describe('<StudioComponentWrapper />', () => {
             children: [],
           },
         },
+        state: { params: { key: 'a', styles: 'primary', RenderingIdentifier: 'first' } },
       };
-      const { getByTestId, rerender } = render(
-        wrapInProvider(
-          <StudioComponentWrapper document={doc} params={{ key: 'a' }} />,
-          textBoxConfig
-        )
+      const { container, getByTestId, rerender } = render(
+        wrapInProvider(<StudioComponentWrapper document={doc} />, textBoxConfig)
       );
       expect(getByTestId('text-el').textContent).to.equal('a');
+      expect(container.firstElementChild?.className).to.equal('component primary');
+      expect(container.firstElementChild?.id).to.equal('first');
 
       await act(async () => {
         rerender(
           wrapInProvider(
-            <StudioComponentWrapper document={doc} params={{ key: 'b' }} />,
+            <StudioComponentWrapper
+              document={{
+                ...doc,
+                state: { params: { key: 'b', styles: 'secondary', RenderingIdentifier: 'second' } },
+              }}
+            />,
             textBoxConfig
           )
         );
       });
 
       expect(getByTestId('text-el').textContent).to.equal('b');
+      expect(container.firstElementChild?.className).to.equal('component secondary');
+      expect(container.firstElementChild?.id).to.equal('second');
     });
 
-    it('shallowly merges fields on re-render, preserving keys absent from the new prop', async () => {
+    it('replaces fields rather than retaining keys absent from the replacement document', async () => {
       const doc: Document = {
         name: 'fields-merge',
         root: 'r',
         elements: {
           r: {
             type: 'Text',
-            props: { content: { $state: '/fields/b' } },
+            props: {
+              content: { $cond: { $state: '/fields/b/value' }, $then: 'present', $else: 'absent' },
+            },
             children: [],
           },
         },
+        state: { fields: { a: { value: 'v1' }, b: { value: 'keep-me' } } },
       };
       const { getByTestId, rerender } = render(
-        wrapInProvider(
-          <StudioComponentWrapper document={doc} fields={{ a: 'v1', b: 'keep-me' } as any} />,
-          textBoxConfig
-        )
+        wrapInProvider(<StudioComponentWrapper document={doc} />, textBoxConfig)
       );
-      expect(getByTestId('text-el').textContent).to.equal('keep-me');
+      expect(getByTestId('text-el').textContent).to.equal('present');
 
       await act(async () => {
         rerender(
           wrapInProvider(
-            <StudioComponentWrapper document={doc} fields={{ a: 'v2' } as any} />,
+            <StudioComponentWrapper
+              document={{ ...doc, state: { fields: { a: { value: 'v2' } } } }}
+            />,
             textBoxConfig
           )
         );
       });
 
-      expect(getByTestId('text-el').textContent).to.equal('keep-me');
+      expect(getByTestId('text-el').textContent).to.equal('absent');
+    });
+
+    it('resets runtime state and clears wrapper params when replaced by a stateless document', async () => {
+      const doc: Document = {
+        name: 'state-reset',
+        root: 'root',
+        elements: {
+          root: { type: 'Box', props: {}, children: ['btn', 'display'] },
+          btn: {
+            type: 'Button',
+            props: { label: 'Update' },
+            on: {
+              press: { action: 'setState', params: { statePath: '/message', value: 'updated' } },
+            },
+            children: [],
+          },
+          display: {
+            type: 'Text',
+            props: { content: { $cond: { $state: '/message' }, $then: 'set', $else: 'empty' } },
+            children: [],
+          },
+        },
+        state: { params: { styles: 'primary', RenderingIdentifier: 'initial' } },
+      };
+      const { container, getByTestId, rerender } = renderInProvider(
+        <StudioComponentWrapper document={doc} />,
+        interactiveConfig
+      );
+      expect(getByTestId('text-el').textContent).to.equal('empty');
+
+      await act(async () => {
+        fireEvent.click(getByTestId('btn'));
+      });
+      expect(getByTestId('text-el').textContent).to.equal('set');
+
+      const replacement: Document = { name: doc.name, root: doc.root, elements: doc.elements };
+      await act(async () => {
+        rerender(
+          wrapInProvider(<StudioComponentWrapper document={replacement} />, interactiveConfig)
+        );
+      });
+
+      expect(getByTestId('text-el').textContent).to.equal('empty');
+      expect(container.firstElementChild?.className).to.equal('component');
+      expect(container.firstElementChild?.id).to.equal('');
     });
   });
 });

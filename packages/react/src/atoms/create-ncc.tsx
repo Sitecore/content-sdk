@@ -1,5 +1,5 @@
 'use client';
-import React, { type FC, useEffect, useMemo, useState } from 'react';
+import React, { type FC, useMemo, useState } from 'react';
 import {
   Renderer,
   StateProvider,
@@ -9,22 +9,10 @@ import {
 } from '@json-render/react';
 import type { DefineRegistryResult } from '@json-render/react';
 import { createStateStore } from '@json-render/react';
-import type { StateModel } from '@json-render/core';
 import { Document } from '@sitecore-content-sdk/content/atoms';
 import type { AtomsCatalog } from './types';
 import { useSitecore } from '../components/SitecoreProvider';
-import type { ChildComponentProps } from '../components/Placeholder/models';
 import { withElementChromeKeys, withEditingChromeRegistry } from './with-editing-chrome';
-
-/**
- * Props accepted by the NCC component created by `createNCC`.
- * @internal
- */
-type NCCProps = {
-  [key: string]: unknown;
-  fields?: ChildComponentProps['fields'];
-  params?: ChildComponentProps['params'];
-};
 
 /**
  * Creates a React functional component that renders the given Component Layout document
@@ -32,21 +20,17 @@ type NCCProps = {
  * @param {Document} doc - Component Layout document (flat spec format)
  * @param {DefineRegistryResult} registryResult - The registry from defineAtomsRegistry
  * @param {AtomsCatalog} catalog - The catalog containing component definitions
- * @returns {FC<NCCProps>} FC that accepts runtime props merged into spec state
+ * @returns {FC} A react functional component that renders the given Component Layout document
  * @internal
  */
 export function createNCC(
   doc: Document,
   registryResult: DefineRegistryResult,
   catalog: AtomsCatalog
-): FC<NCCProps> {
+): FC {
   const { registry, handlers } = registryResult;
 
-  const initialState: StateModel = {
-    ...(doc.state ?? {}),
-  };
-
-  const Generated: FC<NCCProps> = ({ fields, params }) => {
+  const Generated = () => {
     const { atomsConfig, page } = useSitecore();
     // Chrome (`<code type="text/sitecore">`) is only meaningful to Design Studio/Pages, so it
     // must not leak into normal (non-editing) rendered output.
@@ -56,22 +40,7 @@ export function createNCC(
       () => (isEditing ? withEditingChromeRegistry(registry, catalog) : registry),
       [isEditing]
     );
-    const [store] = useState(() =>
-      createStateStore({
-        ...initialState,
-        fields,
-        params,
-      })
-    );
-
-    useEffect(() => {
-      const snapshot = store.getSnapshot();
-
-      store.update({
-        fields: { ...(snapshot.fields as object), ...fields },
-        params: { ...(snapshot.params as object), ...params },
-      });
-    }, [fields, params, store]);
+    const [store] = useState(() => createStateStore(doc.state));
 
     const [resolvedHandlers] = useState(() =>
       handlers(
@@ -82,8 +51,8 @@ export function createNCC(
 
     return (
       <div
-        className={`component${params?.styles ? ` ${params.styles}` : ''}`}
-        id={params?.RenderingIdentifier || ''}
+        className={`component${doc.state?.params?.styles ? ` ${doc.state?.params.styles}` : ''}`}
+        id={(doc.state?.params?.RenderingIdentifier as string) || ''}
       >
         <StateProvider store={store}>
           <VisibilityProvider>
