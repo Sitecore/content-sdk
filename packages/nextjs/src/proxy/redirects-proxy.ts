@@ -191,9 +191,6 @@ export class RedirectsProxy extends ProxyBase {
           pathLocales.find(
             (locale) => locale.toLowerCase() === matchedTargetLocale.toLowerCase()
           ) || matchedTargetLocale;
-        console.log('targetLocale', targetLocale);
-        console.log('matchedTargetLocale', matchedTargetLocale);
-        console.log('pathLocales', pathLocales);
         const prepareNewURL = new URL(targetPath, reqUrl.origin);
 
         reqUrl.pathname = prepareNewURL.pathname;
