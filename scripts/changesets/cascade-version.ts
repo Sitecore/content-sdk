@@ -10,8 +10,9 @@
  * 4. Applies the modified release plan
  *
  * Cascading rules:
- * - If package A has a major bump (any bump when --snapshot),
- * the version bump is propagated to all packages that depend on A (directly or transitively).
+ * - If package A has a major bump (any bump when --snapshot; a minor bump too while A is 0.x, where a
+ * minor is breaking), the version bump is propagated to all packages that depend on A (directly or
+ * transitively).
  *
  * With --snapshot: all change types cascade; snapshot semver suffixes are applied via changesets;
  * changelogs are not updated (CI-only; changesets are not removed from the remote branch).
@@ -64,7 +65,16 @@ export function getCascadeChangesets(
 ) {
   // get per-package changesets for easier processing
   const changesetMap = getPackageChangesetMap(originalChangesets);
-  const cascadeChangeTypes: VersionType[] = isSnapshot ? ['major', 'minor', 'patch'] : ['major'];
+  const versions = new Map(
+    packages.packages.map((p) => [p.packageJson.name, p.packageJson.version])
+  );
+  // bumps of a source package that cascade: a minor is breaking while the package is 0.x
+  const cascadeChangeTypesFor = (sourcePkg: string): VersionType[] =>
+    isSnapshot
+      ? ['major', 'minor', 'patch']
+      : versions.get(sourcePkg)?.startsWith('0.')
+      ? ['major', 'minor']
+      : ['major'];
   // package -> all dependents graph/map
   const dependentsGraph = getTransitiveDependents(packages);
 
@@ -86,6 +96,7 @@ export function getCascadeChangesets(
   dependentsGraph.forEach((dependentPkgs, sourcePkg) => {
     const sourceChangesets = changesetMap.get(sourcePkg);
     if (!sourceChangesets) return;
+    const cascadeChangeTypes = cascadeChangeTypesFor(sourcePkg);
 
     const aggregatedSummaries: Record<VersionType, string[]> = {
       major: [],

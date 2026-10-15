@@ -87,12 +87,12 @@ vi.mock('@changesets/apply-release-plan', () => ({
   applyReleasePlan: mocks.applyReleasePlan,
 }));
 
-function mkPackages(names: string[]) {
+function mkPackages(names: string[], versions: Record<string, string> = {}) {
   return {
     rootDir: '/repo',
     packages: names.map((name) => ({
       dir: `/repo/${name.replace(/\//g, '-')}`,
-      packageJson: { name, version: '1.0.0' },
+      packageJson: { name, version: versions[name] ?? '1.0.0' },
     })),
   };
 }
@@ -230,6 +230,54 @@ describe('cascade-version', () => {
       const finalCs = mocks.assembleReleasePlan.mock.calls[0]?.[0] as NewChangesetWithCommit[];
       expect(finalCs?.filter((c) => c.id.startsWith('cascade-changeset-')).length).toBe(0);
       expect(finalCs?.length).toBe(1);
+    });
+
+    describe('minor source bumps', () => {
+      const run = async (sourceVersion: string) => {
+        mocks.readChangesets.mockResolvedValue([
+          {
+            id: 'r1',
+            summary: 'Minor search',
+            releases: [{ name: '@sitecore-content-sdk/search', type: 'minor' }],
+          },
+        ]);
+        mocks.getCommitsThatAddFiles.mockResolvedValue(['abc']);
+        mocks.getPackages.mockResolvedValue(
+          mkPackages(
+            [
+              '@sitecore-content-sdk/search',
+              '@sitecore-content-sdk/react',
+              'create-content-sdk-app',
+            ],
+            { '@sitecore-content-sdk/search': sourceVersion }
+          )
+        );
+        mocks.getDependentsGraph.mockReturnValue(
+          new Map([
+            ['@sitecore-content-sdk/search', ['@sitecore-content-sdk/react']],
+            ['@sitecore-content-sdk/react', ['create-content-sdk-app']],
+            ['create-content-sdk-app', []],
+          ])
+        );
+
+        await importCascade();
+        await waitFor(() => mocks.assembleReleasePlan.mock.calls.length > 0);
+        const finalCs = mocks.assembleReleasePlan.mock.calls[0]?.[0] as NewChangesetWithCommit[];
+        return finalCs.filter((c) => c.id.startsWith('cascade-changeset-'));
+      };
+
+      it('should cascade a minor bump of a 0.x package as minor (patch for the scaffolder)', async () => {
+        const synthetic = await run('0.3.1');
+        const typeFor = (name: string) =>
+          synthetic.find((c) => c.releases[0].name === name)?.releases[0].type;
+        expect(synthetic).toHaveLength(2);
+        expect(typeFor('@sitecore-content-sdk/react')).toBe('minor');
+        expect(typeFor('create-content-sdk-app')).toBe('patch');
+      });
+
+      it('should not cascade a minor bump of a package at 1.0.0 or above', async () => {
+        expect(await run('1.2.0')).toHaveLength(0);
+      });
     });
 
     it('should generate casacade changesets for dependent packages when major changesets present', async () => {
