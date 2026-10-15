@@ -8,7 +8,7 @@
 
 > **resolvePageMetadataFields**(`route?`, `defaultTitle`): [`ResolvedPageMetadataFields`](../interfaces/ResolvedPageMetadataFields.md)
 
-Defined in: [content/src/layout/page-metadata.ts:58](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/content/src/layout/page-metadata.ts#L58)
+Defined in: [content/src/layout/page-metadata.ts:58](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/content/src/layout/page-metadata.ts#L58)
 
 Derives the metadata/Open Graph field values for a Sitecore route, for consumption by any
 rendering layer (Next.js, React, Angular, etc). No cross-field fallback: a field with no value

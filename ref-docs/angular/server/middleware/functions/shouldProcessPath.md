@@ -8,7 +8,7 @@
 
 > **shouldProcessPath**(`path`, `matcher?`): `boolean`
 
-Defined in: [packages/angular/src/server/middleware/utils.ts:156](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/angular/src/server/middleware/utils.ts#L156)
+Defined in: [packages/angular/src/server/middleware/utils.ts:156](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/angular/src/server/middleware/utils.ts#L156)
 
 Determine whether a middleware should process a request based on path matching.
 Applies the default exclusions (API routes, Sitecore routes, static files) and then any custom

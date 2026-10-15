@@ -6,7 +6,7 @@
 
 # Interface: SuccessfulProxyExecution
 
-Defined in: [nextjs/src/proxy/types.ts:16](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/nextjs/src/proxy/types.ts#L16)
+Defined in: [nextjs/src/proxy/types.ts:16](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/nextjs/src/proxy/types.ts#L16)
 
 Information about executed proxy to be stored in the context
 Used for describing successful execution
@@ -26,7 +26,7 @@ Used for describing successful execution
 
 > **error**: `null`
 
-Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/nextjs/src/proxy/types.ts#L18)
+Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/nextjs/src/proxy/types.ts#L18)
 
 ***
 
@@ -34,4 +34,4 @@ Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-s
 
 > **executedSuccessfully**: `true`
 
-Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/nextjs/src/proxy/types.ts#L17)
+Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/nextjs/src/proxy/types.ts#L17)

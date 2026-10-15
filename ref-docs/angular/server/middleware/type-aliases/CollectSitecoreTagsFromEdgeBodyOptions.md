@@ -8,7 +8,7 @@
 
 > **CollectSitecoreTagsFromEdgeBodyOptions** = `object`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:112](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L112)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:112](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L112)
 
 Options for [collectSitecoreTagsFromEdgeRevalidateRequestBody](../functions/collectSitecoreTagsFromEdgeRevalidateRequestBody.md).
 
@@ -18,7 +18,7 @@ Options for [collectSitecoreTagsFromEdgeRevalidateRequestBody](../functions/coll
 
 > **defaultLocale**: `string`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:116](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L116)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:116](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L116)
 
 Used when an update omits `entity_culture`.
 
@@ -28,7 +28,7 @@ Used when an update omits `entity_culture`.
 
 > `optional` **siteNames?**: readonly `string`[]
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:122](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L122)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:122](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L122)
 
 Configured site names (e.g. from `.sitecore/sites.json`), used only to resolve which site a
 Dictionary entry update (`entity_definition: "DictionaryEntry"`) belongs to. When omitted (or when

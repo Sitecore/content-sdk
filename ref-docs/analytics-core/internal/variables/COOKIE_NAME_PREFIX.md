@@ -8,7 +8,7 @@
 
 > `const` **COOKIE\_NAME\_PREFIX**: `"sc_"` = `'sc_'`
 
-Defined in: [analytics-core/src/consts.ts:13](https://github.com/Sitecore/content-sdk/blob/39e7906136a3f4d536b6cf742452481a0c9b6957/packages/analytics-core/src/consts.ts#L13)
+Defined in: [analytics-core/src/consts.ts:13](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/analytics-core/src/consts.ts#L13)
 
 **`Internal`**
 
