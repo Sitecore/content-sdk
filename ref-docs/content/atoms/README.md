@@ -13,6 +13,8 @@
 - [AtomCatalogComponentEntry](interfaces/AtomCatalogComponentEntry.md)
 - [AtomCatalogEntry](interfaces/AtomCatalogEntry.md)
 - [AtomsCatalogPayload](interfaces/AtomsCatalogPayload.md)
+- [AtomsDocumentValidationError](interfaces/AtomsDocumentValidationError.md)
+- [AtomsDocumentValidationIssue](interfaces/AtomsDocumentValidationIssue.md)
 - [Document](interfaces/Document.md)
 - [SerializedCatalog](interfaces/SerializedCatalog.md)
 - [SitecoreActionMeta](interfaces/SitecoreActionMeta.md)
@@ -22,6 +24,7 @@
 
 - [AtomsStylingSolution](type-aliases/AtomsStylingSolution.md)
 - [DesignLibraryAtomsError](type-aliases/DesignLibraryAtomsError.md)
+- [ValidateAtomsDocumentResult](type-aliases/ValidateAtomsDocumentResult.md)
 
 ## Functions
 
@@ -29,3 +32,4 @@
 - [addDocumentUpdateHandler](functions/addDocumentUpdateHandler.md)
 - [getDesignLibraryAtomsCatalogEvent](functions/getDesignLibraryAtomsCatalogEvent.md)
 - [sendAtomsErrorEvent](functions/sendAtomsErrorEvent.md)
+- [validateAtomsDocument](functions/validateAtomsDocument.md)

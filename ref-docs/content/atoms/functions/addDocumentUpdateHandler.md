@@ -8,17 +8,19 @@
 
 > **addDocumentUpdateHandler**(`callback`): () => `void`
 
-Defined in: [content/src/atoms/design-library-bridge/events.ts:73](https://github.com/Sitecore/content-sdk/blob/bd4d0720071b7055a086bf071f7474f03927a82d/packages/content/src/atoms/design-library-bridge/events.ts#L73)
+Defined in: [content/src/atoms/design-library-bridge/events.ts:76](https://github.com/Sitecore/content-sdk/blob/2ebaba6454c3e55795d63c8d38a7bfd15c6ab5ac/packages/content/src/atoms/design-library-bridge/events.ts#L76)
 
 **`Internal`**
 
 Adds a handler for atom document update events from the design library.
+Validates the Document with json-render's `validateSpec` before invoking the callback.
+On failure, sends an `atoms:error` event with `type: 'validation'` and does not render.
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `callback` | (`updatedRootComponent`) => `void` | The callback to be invoked when a document update event is received. |
+| `callback` | (`updatedRootComponent`) => `void` | The callback to be invoked when a valid document update event is received. |
 
 ## Returns
 
