@@ -3,10 +3,6 @@ name: Changeset Split
 # Reports the PR's changesets that release more than one package. The pre-commit hook
 # (scripts/install-hooks.js, installed by `yarn install`) splits them on commit; this check
 # catches the ones committed without it (`--no-verify`, the GitHub UI, no `yarn install`).
-#
-# Report only: it adds a notice and a job summary and never fails, so it doesn't block the merge.
-# Same for same-repo and fork PRs: it only reads, so it needs no secrets.
-# No `paths` filter on purpose: the job finishes early when the PR adds or changes no changesets.
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -79,4 +75,3 @@ jobs:
             echo "$FIX"
           } >> "$GITHUB_STEP_SUMMARY"
           exit 1
-
