@@ -18,6 +18,7 @@ for (const sample of samplesToScaffold) {
   sample.args.destination = `./samples/${appFolder}`;
   console.log(chalk.green(`Initializing sample ${appFolder} ...`));
   let scaffoldArgs = {
+    appName: appFolder,
     template: sample.template,
     yes: true,
     force: true,

@@ -12,6 +12,12 @@
       "args": {
         "prerender": "SSG"
       }
+    },
+    {
+      "template": "nextjs-app-router",
+      "args": {
+        "prerender": "SSG"
+      }
     }
   ],
   "angular": [
