@@ -85,6 +85,20 @@ export interface AtomsCatalogPayload {
     components: AtomCatalogEntry[];
 }
 
+// @internal
+export interface AtomsDocumentValidationError {
+    formatted: string;
+    issues: AtomsDocumentValidationIssue[];
+}
+
+// @internal
+export interface AtomsDocumentValidationIssue {
+    code: string;
+    elementKey?: string;
+    message: string;
+    severity: 'error' | 'warning';
+}
+
 // @public
 export type AtomsStylingSolution = 'tailwind' | 'inline-css';
 
@@ -279,7 +293,7 @@ export const defineCliConfig: (cliConfig: SitecoreCliConfigInput) => SitecoreCli
 export const defineConfig: (config: SitecoreConfigInput) => SitecoreConfig;
 
 // @internal
-export type DesignLibraryAtomsError = 'render' | 'atoms-missing';
+export type DesignLibraryAtomsError = 'render' | 'atoms-missing' | 'validation';
 
 // @public
 export enum DesignLibraryMode {
@@ -1513,6 +1527,17 @@ export const updateComponent: (component: ComponentRendering<ComponentFields>, f
 const updateImageUrl: (url: string, params?: {
     [key: string]: string | number | undefined;
 } | null, mediaUrlPrefix?: RegExp) => string;
+
+// @internal
+export function validateAtomsDocument(document: unknown): ValidateAtomsDocumentResult;
+
+// @internal
+export type ValidateAtomsDocumentResult = {
+    valid: true;
+} | {
+    valid: false;
+    error: AtomsDocumentValidationError;
+};
 
 // @internal (undocumented)
 export const VARIANT_PREFIX = "_variantId_";

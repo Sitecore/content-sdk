@@ -11,6 +11,7 @@ import {
   DesignLibraryAtomsError,
   DesignLibraryAtomsErrorEvent,
 } from './types';
+import { validateAtomsDocument } from './validate-document';
 
 const { ERROR_MESSAGES } = constants;
 
@@ -66,7 +67,9 @@ export const sendAtomsErrorEvent = (error: unknown, type: DesignLibraryAtomsErro
 
 /**
  * Adds a handler for atom document update events from the design library.
- * @param {(updatedRootComponent: Document) => void} callback - The callback to be invoked when a document update event is received.
+ * Validates the Document with json-render's `validateSpec` before invoking the callback.
+ * On failure, sends an `atoms:error` event with `type: 'validation'` and does not render.
+ * @param {(updatedRootComponent: Document) => void} callback - The callback to be invoked when a valid document update event is received.
  * @returns A function to unsubscribe from the atom document update events.
  * @internal
  */
@@ -77,6 +80,12 @@ export const addDocumentUpdateHandler = (callback: (updatedRootComponent: Docume
     }
 
     console.debug('Component Library atoms: message received', e.data);
+
+    const result = validateAtomsDocument(e.data.document);
+    if (!result.valid) {
+      sendAtomsErrorEvent(result.error, 'validation');
+      return;
+    }
 
     callback(e.data.document as Document);
   };
