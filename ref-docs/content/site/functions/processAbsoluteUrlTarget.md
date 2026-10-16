@@ -8,7 +8,7 @@
 
 > **processAbsoluteUrlTarget**(`incomingPathData`, `existsRedirect`): `string`
 
-Defined in: [content/src/site/redirect-utils.ts:236](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/content/src/site/redirect-utils.ts#L236)
+Defined in: [content/src/site/redirect-utils.ts:236](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/site/redirect-utils.ts#L236)
 
 **`Internal`**
 
