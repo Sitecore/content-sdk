@@ -406,7 +406,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         pageOptions.personalize.componentVariantIds
       );
     }
-    layout = this.applyContentRewrite(layout);
+    layout = this.rewriteContentUrls(layout);
 
     return {
       layout,
@@ -537,7 +537,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     }
 
     let layout = data.layoutData;
-    layout = this.applyContentRewrite(layout);
+    layout = this.rewriteContentUrls(layout);
     const page: Page = {
       locale: language,
       layout,
@@ -592,7 +592,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         }`
       );
     }
-    const layout = this.applyContentRewrite(componentData);
+    const layout = this.rewriteContentUrls(componentData);
     const page: Page = {
       locale: designLibData.language,
       layout,
@@ -642,7 +642,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       return null;
     }
 
-    layout = this.applyContentRewrite(layout);
+    layout = this.rewriteContentUrls(layout);
 
     return {
       layout,
@@ -794,6 +794,7 @@ export class SitecoreClient implements BaseSitecoreClient {
    * When true, uses default Edge host rewriter; when a function, transforms each string.
    * @param {LayoutServiceData} layout - Layout data from layout/editing/component/error service
    * @returns {LayoutServiceData} Rewritten layout (or same reference if rewrite disabled)
+   * @deprecated Use {@link SitecoreClient.rewriteContentUrls} instead. This method only accepts layout data.
    * @internal
    */
   protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData {
@@ -807,8 +808,9 @@ export class SitecoreClient implements BaseSitecoreClient {
    * The default rewriter changes only the default Experience Edge hostname.
    * @param {T} data - Layout data or a GraphQL response
    * @returns {T} Rewritten data, or the original reference when rewrite is disabled
+   * @internal
    */
-  private rewriteContentUrls<T>(data: T): T {
+  protected rewriteContentUrls<T>(data: T): T {
     const opt = this.initOptions.rewriteMediaUrls;
     if (!opt) {
       return data;

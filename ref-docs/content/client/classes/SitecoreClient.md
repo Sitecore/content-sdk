@@ -127,6 +127,10 @@ Defined in: [content/src/client/sitecore-client.ts:794](https://github.com/Sitec
 
 **`Internal`**
 
+#### Deprecated
+
+Use `rewriteContentUrls` instead. This method only accepts layout data.
+
 Applies media URL rewrite when rewriteMediaUrls is enabled.
 When true, uses default Edge host rewriter; when a function, transforms each string.
 
