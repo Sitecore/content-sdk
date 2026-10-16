@@ -494,9 +494,6 @@ export class RedirectsProxy extends ProxyBase {
    * @returns {string[]} configured locales plus the request locale
    */
   private getPathLocales(requestLocale: string): string[] {
-    const locales = this.locales || [];
-    return !requestLocale || locales.includes(requestLocale)
-      ? locales
-      : [...locales, requestLocale];
+    return [...(this.locales || []), requestLocale].filter(Boolean);
   }
 }
