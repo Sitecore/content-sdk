@@ -127,6 +127,10 @@ Defined in: [content/src/client/sitecore-client.ts:794](https://github.com/Sitec
 
 **`Internal`**
 
+#### Deprecated
+
+Use `rewriteContentUrls` instead. This method only accepts layout data.
+
 Applies media URL rewrite when rewriteMediaUrls is enabled.
 When true, uses default Edge host rewriter; when a function, transforms each string.
 
@@ -163,7 +167,7 @@ Defined in: [content/src/client/sitecore-client.ts:773](https://github.com/Sitec
 Defined in: [content/src/client/sitecore-client.ts:360](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/content/src/client/sitecore-client.ts#L360)
 
 Execute a raw GraphQL request using the client's configured GraphQL Edge endpoint.
-This is a thin pass-through to the underlying `GraphQLClient.request` method,
+When `rewriteMediaUrls` is enabled, string values in the result are rewritten the same way as layout data.
 
 #### Type Parameters
 

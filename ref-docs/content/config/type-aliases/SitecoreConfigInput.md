@@ -380,9 +380,10 @@ DefaultRetryStrategy
 
 Defined in: [content/src/config/models.ts:212](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/content/src/config/models.ts#L212)
 
-Rewrite media/content URLs in layout (media fields, rich text img/src, href, etc.).
-- When `true`: use default rewriter (Edge hostnames -> custom hostname from env).
-- When a function: transform each string value; the SDK traverses the layout for you.
+Rewrite media/content URLs in layout data and in `SitecoreClient.getData` results (media fields, rich text img/src, href, and other strings that contain a URL).
+- When `true`: rewrite the default Experience Edge hostname (`edge.sitecorecloud.io`) to the custom hostname from `SITECORE_EXPERIENCE_EDGE_HOSTNAME`.
+- When a function: transform each string value; the SDK traverses the response for you.
+Relative paths and hostnames other than the default Experience Edge host are left unchanged by the default rewriter.
 
 #### Default
 
