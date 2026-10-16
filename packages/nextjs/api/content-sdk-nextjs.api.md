@@ -950,6 +950,8 @@ export class PreviewProxy extends ProxyBase {
     // (undocumented)
     protected client: SitecoreClient;
     // (undocumented)
+    protected disabled(req: NextRequest): boolean;
+    // (undocumented)
     handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
     get name(): string;
 }
