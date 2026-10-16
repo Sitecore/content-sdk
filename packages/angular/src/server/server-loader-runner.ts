@@ -5,9 +5,10 @@ import {
   LoaderCache,
   LoaderDataResult,
 } from '../loaders/models';
-import { LoaderRegistry } from '../loaders/loader-registry.token';
+import { LoaderRegistry, resolveLoaderDefinition } from '../loaders/loader-registry.token';
 import { buildCacheKey } from './cache/cache-key';
 import { buildLoaderCacheTags } from './cache/cache-tags';
+import { isEditingPreview } from './utils';
 import { AngularSitecoreConfig } from '../config/define-config';
 
 /**
@@ -15,10 +16,11 @@ import { AngularSitecoreConfig } from '../config/define-config';
  * LoaderResolver is exposed to both server and browser. This layer ensures browser safety and acts as connecting layer to cache.
  *
  * Resolution order when a {@link LoaderCache} is attached:
- * 1. **hit** — return cached value immediately.
- * 2. **stale** — return cached value immediately and schedule a background refresh
- *    (coalesced per cache key via `pendingCacheOps`).
- * 3. **miss** — run the loader, persist the result with OSR tags, return data.
+ * 1. **hit** — finalize the cached raw value and return it.
+ * 2. **stale** — finalize the cached raw value, return it, and schedule a
+ *    background refresh (coalesced per cache key via `pendingCacheOps`).
+ * 3. **miss** — run the loader, persist the raw result with OSR tags,
+ *    finalize request-locally, return data.
  *
  * Redirect responses are never cached. Per-route LoaderCacheConfig overrides
  * from `loaderResolver(id, cacheOptions)` control TTL, tags, and opt-in caching when
@@ -47,7 +49,7 @@ export class ServerLoaderRunner {
    */
   async resolve(init: LoaderRunnerInit): Promise<LoaderDataResult> {
     const { loaderId, url, routeParams, query, cacheOptions, csdkRequestData } = init;
-    const loader = this.registry[loaderId];
+    const loader = resolveLoaderDefinition(this.registry[loaderId]);
     if (!loader) {
       return { kind: 'error', status: 500, message: `No loader registered for id "${loaderId}"` };
     }
@@ -74,19 +76,33 @@ export class ServerLoaderRunner {
       csdkRequestData: csdkRequestData ?? undefined,
     };
 
-    const cacheable = this.cache && (cacheOptions?.enabled ?? this.cache.enabled());
+    // Editing and preview renders must never touch the shared cache. They are
+    // keyed like published renders (no preview dimension), and their finalizer
+    // is bypassed, so a cached preview value would later be served to ordinary
+    // visitors with authored token literals left unresolved. The editing header
+    // is attacker-supplyable on the public `/_data` endpoint, so this guard is
+    // enforced here at the single chokepoint rather than per entry point.
+    const editingRequest = isEditingPreview(csdkRequestData?.headers);
+    const cacheable =
+      !editingRequest && this.cache && (cacheOptions?.enabled ?? this.cache.enabled());
 
     if (cacheable) {
       const { key } = buildCacheKey(loaderId, ctx);
       const read = await this.cache.get(key);
 
       if (read.kind === 'hit') {
-        return { kind: 'data', data: read.value };
+        return {
+          kind: 'data',
+          data: await this.finalizeValue(loaderId, read.value, ctx, false),
+        };
       }
 
       if (read.kind === 'stale') {
         this.scheduleBackgroundRefresh(loaderId, ctx, key, cacheOptions);
-        return { kind: 'data', data: read.value };
+        return {
+          kind: 'data',
+          data: await this.finalizeValue(loaderId, read.value, ctx, false),
+        };
       }
     }
 
@@ -116,6 +132,7 @@ export class ServerLoaderRunner {
       cacheable: true,
       cacheOptions,
       knownCacheKey: cacheKey,
+      skipFinalize: true,
     }).then(
       () => {
         ServerLoaderRunner.pendingCacheOps.delete(cacheKey);
@@ -132,18 +149,23 @@ export class ServerLoaderRunner {
     cacheable,
     cacheOptions,
     knownCacheKey,
+    skipFinalize,
   }: {
     loaderId: string;
     ctx: LoaderContext;
     cacheable: boolean;
     cacheOptions?: LoaderRunnerInit['cacheOptions'];
     knownCacheKey?: string;
+    skipFinalize?: boolean;
   }): Promise<LoaderDataResult> {
-    const loader = this.registry[loaderId]!;
+    const loader = resolveLoaderDefinition(this.registry[loaderId]);
+    if (!loader) {
+      return { kind: 'error', status: 500, message: `No loader registered for id "${loaderId}"` };
+    }
 
     let value: unknown;
     try {
-      value = await loader(ctx);
+      value = await loader.load(ctx);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Loader failed';
       return {
@@ -179,6 +201,25 @@ export class ServerLoaderRunner {
       }
     }
 
-    return { kind: 'data', data: value };
+    return {
+      kind: 'data',
+      data: await this.finalizeValue(loaderId, value, ctx, !!skipFinalize),
+    };
+  }
+
+  private async finalizeValue(
+    loaderId: string,
+    value: unknown,
+    ctx: LoaderContext,
+    skipFinalize: boolean
+  ): Promise<unknown> {
+    if (skipFinalize) {
+      return value;
+    }
+    const definition = resolveLoaderDefinition(this.registry[loaderId]);
+    if (!definition?.finalize) {
+      return value;
+    }
+    return definition.finalize(value, ctx);
   }
 }

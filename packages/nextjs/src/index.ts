@@ -55,7 +55,18 @@ export {
   normalizePersonalizedRewrite,
   CdpHelper,
   PersonalizeService,
+  DEFAULT_VARIANT,
+  VARIANT_PREFIX,
+  PERSONALIZE_TOKENS_HEADER,
+  PERSONALIZE_TOKENS_HEADER_MAX_BYTES,
+  encodePersonalizeTokensHeader,
+  decodePersonalizeTokensHeader,
 } from '@sitecore-content-sdk/content/personalize';
+export type {
+  TokenMap,
+  PersonalizeExecutionResult,
+} from '@sitecore-content-sdk/content/personalize';
+export { readPersonalizeTokens } from './personalize/tokens';
 
 export {
   SitePathService,

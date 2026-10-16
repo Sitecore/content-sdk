@@ -136,14 +136,33 @@ export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => stri
     return transform(value) as T;
   }
   if (Array.isArray(value)) {
-    return value.map((item) => applyMediaUrlRewrite(item, transform)) as T;
+    let changed = false;
+    const result: unknown[] = [];
+    result.length = value.length;
+    for (let i = 0; i < value.length; i++) {
+      if (!Object.prototype.hasOwnProperty.call(value, i)) {
+        continue;
+      }
+      const child = applyMediaUrlRewrite(value[i], transform);
+      if (child !== value[i]) {
+        changed = true;
+      }
+      result[i] = child;
+    }
+    return (changed ? result : value) as T;
   }
   if (typeof value === 'object' && Object.getPrototypeOf(value) === Object.prototype) {
+    let changed = false;
     const result: Record<string, unknown> = {};
     for (const key of Object.keys(value as Record<string, unknown>)) {
-      result[key] = applyMediaUrlRewrite((value as Record<string, unknown>)[key], transform);
+      const current = (value as Record<string, unknown>)[key];
+      const child = applyMediaUrlRewrite(current, transform);
+      if (child !== current) {
+        changed = true;
+      }
+      result[key] = child;
     }
-    return result as T;
+    return (changed ? result : value) as T;
   }
   return value;
 }

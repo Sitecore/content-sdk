@@ -15,7 +15,7 @@ description: Page/dictionary via SitecoreClient; SSG via getAppRouterStaticParam
 
 ## Rules
 
-- `client.getPage(path ?? [], { site, locale })` in page Server Components
+- `getSitecorePageForRequest(path ?? [], site, locale)` in page Server Components (published paths pass `tokens: readPersonalizeTokens(...) ?? {}`)
 - `client.getDictionary({ locale, site })` in `src/i18n/request.ts`
 - SSG: `getAppRouterStaticParams` when `generateStaticPaths` true; else `return []`
 - Preview: `draftMode()` + `client.getPreviewData(await headers())` then `getPreview` / `getDesignLibraryData`

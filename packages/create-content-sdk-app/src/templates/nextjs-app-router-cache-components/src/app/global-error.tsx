@@ -17,6 +17,7 @@ export default function GlobalError() {
         const page = await client.getErrorPage(ErrorPage.InternalServerError, {
           site: scConfig.defaultSite,
           locale: scConfig.defaultLanguage,
+          tokens: {},
         });
         setPage(page);
       } catch {

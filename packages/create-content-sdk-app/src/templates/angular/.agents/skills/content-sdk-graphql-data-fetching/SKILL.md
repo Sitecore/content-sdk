@@ -19,7 +19,7 @@ description: Page/dictionary fetch via getClient() inside src/content-sdk/loader
 - All Sitecore data enters through loaders — never `HttpClient` in a component for layout data
 - One client: `getClient()` lazy singleton; do not call `new SitecoreClient(...)` elsewhere
 - Path from `splitLocaleFromPath(context.url, scConfig.angular.locales).nonLocalePath`; locale from `getLanguage(context)`; site from `getSiteName(context)`
-- `getClient().getPage(path, { locale, site, personalize })`; dictionary via `getClient().getDictionary({ locale, site })`
+- Raw loaders: `getClient().getPage(path, { locale, site, personalize, deferFinalization: true })`. Register `{ load, finalize }` so `finalizePageLoader` applies `getPersonalizeTokens(context) ?? {}` request-locally. Dictionary via `getClient().getDictionary({ locale, site })`.
 - Preview: `getEditingPreviewData(context.csdkRequestData)` → `getPreview()`
 
 ## Stop

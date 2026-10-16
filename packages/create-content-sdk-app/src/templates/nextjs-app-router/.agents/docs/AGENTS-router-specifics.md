@@ -5,7 +5,7 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 ## Routing: `[site]` / `[locale]` / `[[...path]]`
 
 - **URL shape:** `/[site]/[locale]/...path` (e.g. `/default/en`, `/default/en/about`). Site and locale are **in the path**; the Edge proxy rewrites incoming requests to this shape.
-- **Page component:** `src/app/[site]/[locale]/[[...path]]/page.tsx`. Receives `params: Promise<{ site, locale, path? }>`. Use `await params`; pass `site` and `locale` to `client.getPage(path ?? [], { site, locale })`.
+- **Page component:** `src/app/[site]/[locale]/[[...path]]/page.tsx`. Receives `params: Promise<{ site, locale, path? }>`. Use `await params`. Call `getSitecorePageForRequest(path ?? [], site, locale)` so page and metadata share one request (draft omits tokens; published uses `readPersonalizeTokens(...) ?? {}`).
 - **Layout hierarchy:** `app/layout.tsx` → `app/[site]/layout.tsx` (per-site; runs Bootstrap with `siteName={site}` and `draftMode()`) → `app/[site]/[locale]/[[...path]]/layout.tsx` (calls `setCachedPageParams({ site, locale })` for SSG-safe segment not-found) → page. Do not put site/locale-specific data fetching in the root layout; use the `[site]` or segment layout.
 
 ## i18n (next-intl)
@@ -30,9 +30,9 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 
 ## Data fetching and preview
 
-- **Page data:** In the page (or a Server Component), use `client.getPage(path ?? [], { site, locale })`. For preview, use `draftMode()`; if `draft.isEnabled`, `const previewData = client.getPreviewData(await headers())`, then `client.getPreview(previewData)` or `client.getDesignLibraryData(previewData)`; otherwise use `getPage` with `site` and `locale`.
+- **Page data:** Use `getSitecorePageForRequest` from `src/lib/sitecore-page.ts`. Do not call `client.getPage` without `tokens` on normal renders — omitted `tokens` preserves `{{...}}` placeholders.
 - **SSG:** In `generateStaticParams`, call `client.getAppRouterStaticParams(sites, routing.locales)` (sites from `.sitecore/sites.json`) only when `process.env.NODE_ENV !== 'development'` and `scConfig.generateStaticPaths` is true. Otherwise return `[]` (local dev, editing hosts, or `GENERATE_STATIC_PATHS=false`). Do not synthesize a fallback param (e.g. `{ site: 'default', locale, path: [] }`).
-- **Metadata:** `generateMetadata` in the same segment can call `client.getPage(path ?? [], { site, locale })` and derive `title` (e.g. from route fields). Next.js will cache as appropriate.
+- **Metadata:** `generateMetadata` must call the same `getSitecorePageForRequest` helper as the page so draft mode preserves token literals and published titles match the body.
 
 ## Server vs Client components
 

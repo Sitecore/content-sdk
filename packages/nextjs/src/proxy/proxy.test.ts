@@ -296,6 +296,9 @@ describe('ProxyBase', () => {
       foo: 'net',
       bar: 'one',
     });
+
+    headers.set('x-sc-personalize-tokens', 'secret-payload');
+    expect(proxy['extractDebugHeaders'](headers)['x-sc-personalize-tokens']).to.equal('[redacted]');
   });
 
   describe('getHostHeader', () => {
@@ -633,6 +636,50 @@ describe('ProxyBase', () => {
       const response = proxy['rewrite']('/new', req, res, true);
       expect(response.headers.get(REWRITE_HEADER_NAME)).to.be.undefined;
       expect(response.url).to.endWith('/new');
+    });
+  });
+
+  describe('forward', () => {
+    it('reissues x-middleware-rewrite and never uses x-sc-rewrite as the target', () => {
+      const rewriteStub = sinon.stub(NextResponse, 'rewrite').callsFake((url) => {
+        return createRes({ url, headers: new Map() });
+      });
+      const nextStub = sinon.stub(NextResponse, 'next');
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq();
+      const res = createRes({
+        headers: {
+          'x-middleware-rewrite': 'https://external.example/path',
+          'x-sc-rewrite': '/should-not-be-used',
+        },
+      });
+      const requestHeaders = new Headers({ foo: 'bar' });
+
+      proxy['forward'](req, res, requestHeaders);
+
+      expect(rewriteStub).to.have.been.calledWith(
+        'https://external.example/path',
+        sinon.match({ request: { headers: requestHeaders } })
+      );
+      expect(nextStub).to.not.have.been.called;
+      rewriteStub.restore();
+      nextStub.restore();
+    });
+
+    it('uses NextResponse.next when no middleware rewrite is present', () => {
+      const nextStub = sinon.stub(NextResponse, 'next').callsFake((init) => {
+        return createRes({ init });
+      });
+      const proxy = new SampleProxy({ sites: [] });
+      const requestHeaders = new Headers({ foo: 'bar' });
+      const res = createRes();
+
+      proxy['forward'](createReq(), res, requestHeaders);
+
+      expect(nextStub).to.have.been.calledWith(
+        sinon.match({ request: { headers: requestHeaders } })
+      );
+      nextStub.restore();
     });
   });
 });

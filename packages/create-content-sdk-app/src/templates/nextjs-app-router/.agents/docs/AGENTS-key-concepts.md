@@ -17,7 +17,7 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 ## Catch-all route
 
 - **Where:** `src/app/[site]/[locale]/[[...path]]/page.tsx`. This is the **only** page component that renders Sitecore content; the optional `[[...path]]` segment captures the content path.
-- **Flow:** `params` is a Promise (Next.js 15+) — `await params` to get `{ site, locale, path? }`. Call `setRequestLocale(\`${site}_${locale}\`)` at the top of the page for next-intl. For published content use `client.getPage(path ?? [], { site, locale })`. For preview, use `draftMode()`; when enabled, `const previewData = client.getPreviewData(await headers())`, then `client.getPreview(previewData)` or `client.getDesignLibraryData(previewData)`.
+- **Flow:** `params` is a Promise (Next.js 15+) — `await params` to get `{ site, locale, path? }`. Call `setRequestLocale(\`${site}_${locale}\`)` at the top of the page for next-intl. For published and preview content use `getSitecorePageForRequest(path ?? [], site, locale)` (`tokens: readPersonalizeTokens(...) ?? {}` on published paths). Never call `client.getPage` without `tokens` on a visitor render.
 - **Do not:** Add another catch-all or page at a different path for Sitecore pages; keep this single entry point.
 
 ## How locale works
