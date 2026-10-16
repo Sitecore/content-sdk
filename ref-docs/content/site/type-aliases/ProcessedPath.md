@@ -8,7 +8,7 @@
 
 > **ProcessedPath** = `object`
 
-Defined in: [content/src/site/redirect-utils.ts:25](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/content/src/site/redirect-utils.ts#L25)
+Defined in: [content/src/site/redirect-utils.ts:25](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/content/src/site/redirect-utils.ts#L25)
 
 **`Internal`**
 
@@ -20,7 +20,7 @@ Broken down path with all parts needed to make a match for a redirect rule
 
 > `optional` **locale?**: `string`
 
-Defined in: [content/src/site/redirect-utils.ts:27](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/content/src/site/redirect-utils.ts#L27)
+Defined in: [content/src/site/redirect-utils.ts:27](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/content/src/site/redirect-utils.ts#L27)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [content/src/site/redirect-utils.ts:27](https://github.com/Sitecore/
 
 > **nonLocalePath**: `string`
 
-Defined in: [content/src/site/redirect-utils.ts:26](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/content/src/site/redirect-utils.ts#L26)
+Defined in: [content/src/site/redirect-utils.ts:26](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/content/src/site/redirect-utils.ts#L26)
 
 ***
 
@@ -36,4 +36,4 @@ Defined in: [content/src/site/redirect-utils.ts:26](https://github.com/Sitecore/
 
 > `optional` **queryString?**: `string`
 
-Defined in: [content/src/site/redirect-utils.ts:28](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/content/src/site/redirect-utils.ts#L28)
+Defined in: [content/src/site/redirect-utils.ts:28](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/content/src/site/redirect-utils.ts#L28)

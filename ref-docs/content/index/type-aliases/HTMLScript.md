@@ -8,7 +8,7 @@
 
 > **HTMLScript** = `object` & `Pick`\<`HTMLScriptElement`, `"type"`\> & `object`
 
-Defined in: [content/src/models.ts:13](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/content/src/models.ts#L13)
+Defined in: [content/src/models.ts:13](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/content/src/models.ts#L13)
 
 Html <script> tag data model
 

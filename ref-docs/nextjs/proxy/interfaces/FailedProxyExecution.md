@@ -6,7 +6,7 @@
 
 # Interface: FailedProxyExecution
 
-Defined in: [nextjs/src/proxy/types.ts:6](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/nextjs/src/proxy/types.ts#L6)
+Defined in: [nextjs/src/proxy/types.ts:6](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/nextjs/src/proxy/types.ts#L6)
 
 Information about executed proxy to be stored in the context
 Used for describing failed execution with error information
@@ -17,7 +17,7 @@ Used for describing failed execution with error information
 
 > **error**: `unknown`
 
-Defined in: [nextjs/src/proxy/types.ts:8](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/nextjs/src/proxy/types.ts#L8)
+Defined in: [nextjs/src/proxy/types.ts:8](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/nextjs/src/proxy/types.ts#L8)
 
 ***
 
@@ -25,4 +25,4 @@ Defined in: [nextjs/src/proxy/types.ts:8](https://github.com/Sitecore/content-sd
 
 > **executedSuccessfully**: `false`
 
-Defined in: [nextjs/src/proxy/types.ts:7](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/nextjs/src/proxy/types.ts#L7)
+Defined in: [nextjs/src/proxy/types.ts:7](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/nextjs/src/proxy/types.ts#L7)

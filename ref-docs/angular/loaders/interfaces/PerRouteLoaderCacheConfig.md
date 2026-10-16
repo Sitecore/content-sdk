@@ -6,7 +6,7 @@
 
 # Interface: PerRouteLoaderCacheConfig
 
-Defined in: [packages/angular/src/loaders/models.ts:208](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/angular/src/loaders/models.ts#L208)
+Defined in: [packages/angular/src/loaders/models.ts:208](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/angular/src/loaders/models.ts#L208)
 
 Per-route cache configuration.
 
@@ -20,7 +20,7 @@ Per-route cache configuration.
 
 > `optional` **enabled?**: `boolean`
 
-Defined in: [packages/angular/src/loaders/models.ts:212](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/angular/src/loaders/models.ts#L212)
+Defined in: [packages/angular/src/loaders/models.ts:212](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/angular/src/loaders/models.ts#L212)
 
 Master switch — when false, every call falls through to the raw loader.
 
@@ -30,7 +30,7 @@ Master switch — when false, every call falls through to the raw loader.
 
 > `optional` **revalidate?**: `number`
 
-Defined in: [packages/angular/src/loaders/models.ts:210](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/angular/src/loaders/models.ts#L210)
+Defined in: [packages/angular/src/loaders/models.ts:210](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/angular/src/loaders/models.ts#L210)
 
 TTL in seconds. Positive → expires after N seconds; `0` or negative → never expires.
 
@@ -40,7 +40,7 @@ TTL in seconds. Positive → expires after N seconds; `0` or negative → never 
 
 > `optional` **tags?**: `string`[]
 
-Defined in: [packages/angular/src/loaders/models.ts:217](https://github.com/Sitecore/content-sdk/blob/cc697f1b79c7ea3d0da73c83f919cdbb67d0d0c9/packages/angular/src/loaders/models.ts#L217)
+Defined in: [packages/angular/src/loaders/models.ts:217](https://github.com/Sitecore/content-sdk/blob/96d36170a4e88e0d43d2575e3412e8921e0a8da8/packages/angular/src/loaders/models.ts#L217)
 
 Custom tags applied to every entry this loader writes. Merged with built-in
 OSR tags (self-key, `sc:site`, `sc:locale`, and `sc:item` for page loaders).
