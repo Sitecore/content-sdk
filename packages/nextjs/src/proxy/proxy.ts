@@ -199,6 +199,18 @@ export abstract class ProxyBase extends ProxyHandler {
   }
 
   /**
+   * Get requested pathname.
+   * - If response is passed and REWRITE_HEADER_NAME header is set, use it as the pathname
+   * - If response isn't passed or REWRITE_HEADER_NAME header is not set, use the pathname from the request URL
+   * @param {NextRequest} req request
+   * @param {NextResponse} [res] response (optional)
+   * @returns {string} requested pathname
+   */
+  protected getPathname(req: NextRequest, res?: NextResponse): string {
+    return res?.headers.get(REWRITE_HEADER_NAME) ?? req.nextUrl.pathname;
+  }
+
+  /**
    * Get site information. If site name is stored in cookie, use it, otherwise resolve by hostname
    * - If site can't be resolved by site name cookie use default site info based on provided parameters
    * - If site can't be resolved by hostname throw an error
