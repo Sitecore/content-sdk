@@ -9,7 +9,7 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 - **SSG:** Uses `getStaticPaths` and `getStaticProps`. Paths from `client.getPagePaths(sites, context?.locales)` with `sites` from `.sitecore/sites.json`. Use `revalidate` for ISR.
 - **SSR:** Uses `getServerSideProps` only; no `getStaticPaths`.
 - **Preview:** `context.preview` and `context.previewData`; use `client.getPreview(context.previewData)` or `client.getDesignLibraryData(context.previewData)` when applicable.
-- **Page data:** `client.getPage(path, { locale: context.locale, tokens })` where `tokens` is `readPersonalizeTokens(context.req.headers) ?? {}` on SSR and `{}` on SSG. Then `client.getDictionary({ site: page.siteName, locale: page.locale })` and `client.getComponentData(page.layout, context, components)`. Omitting `tokens` preserves `{{...}}` placeholders.
+- **Page data:** `client.getPage(path, { locale: context.locale })`, then `client.getDictionary({ site: page.siteName, locale: page.locale })` and `client.getComponentData(page.layout, context, components)` for component props.
 
 ## i18n (Pages Router)
 
@@ -26,6 +26,7 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
   - **MultisiteProxy** — resolves site from request (e.g. hostname or cookie), rewrites to internal path; uses `scConfig.api.edge` and `scConfig.multisite` (e.g. `useCookieResolution`).
   - **RedirectsProxy** — handles redirects; uses `scConfig.redirects`, `scConfig.api.edge`, `scConfig.api.local`.
   - **PersonalizeProxy** — personalization; uses `scConfig.personalize`; often disabled in dev.
+    - **Dynamic content tokens** (`personalize.dynamicContent`): forwards Personalize tokens in the `x-sc-personalize-tokens` request header and adds a `_sctokens` rewrite segment. Pass `tokens: await getPersonalizeTokens(path, () => context.req.headers)` to `getPage` in `getServerSideProps`; statically generated pages render token fallbacks. Preview, Design Library and error pages are never processed.
 - **Skip function:** Each proxy has a `skip` callback. Use it to avoid running on certain paths (e.g. `/api`, `/_next`, static files) for performance.
 - **Config:** `sitecore.config.ts` → `multisite.enabled`, `redirects.enabled`, `personalize`; never commit secrets.
 

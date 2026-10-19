@@ -1,75 +1,60 @@
 import type { IncomingHttpHeaders } from 'http';
-import { PERSONALIZE_TOKENS_HEADER, TokenMap } from '@sitecore-content-sdk/content/personalize';
-import { decodePersonalizeTokensHeaderDetailed } from '@sitecore-content-sdk/content/personalize/internal';
-import debug from '../debug';
+import {
+  decodePersonalizeTokens,
+  hasPersonalizeTokensRewrite,
+  PERSONALIZE_TOKENS_HEADER,
+  TokenMap,
+} from '@sitecore-content-sdk/content/personalize';
 
 /**
- * Reads the trusted personalize token header.
+ * Returns the dynamic content tokens that PersonalizeProxy forwarded for this request, for
+ * `getPage(path, { tokens })`.
  *
- * Missing header → `undefined`. Valid encoded map → decoded map, including `{}`.
- * Present but invalid or oversized → debug warning and `{}`.
- * Lookup is case-insensitive. For Node `string[]` values, the first value is used.
- *
- * The header is not authenticated. Stock hosts rely on PersonalizeProxy to strip
- * inbound client values before this reader runs. A custom chain that omits that
- * proxy must strip `x-sc-personalize-tokens` itself before calling this helper.
- *
- * Activation: `undefined` (missing header) means do not process tokens if you
- * pass it through as `pageOptions.tokens`. Stock hosts use
- * `readPersonalizeTokens(headers) ?? {}` so processing is always on for
- * normal renders (`{}` = fallbacks / removal).
- * @param {Headers | IncomingHttpHeaders | undefined} headers Request headers
- * @returns {TokenMap | undefined} Decoded tokens, empty map, or undefined
+ * Headers are read only when the (rewritten) path carries the tokens marker that PersonalizeProxy
+ * adds when Personalize returned tokens. Renders without tokens never touch request headers, so
+ * they stay static.
+ * @param {string | string[] | undefined} path Route path or path segments received by the page
+ * @param {Function} getHeaders Returns the request headers
+ * (for example `headers` from `next/headers`, or `() => context.req.headers`); called only when needed
+ * @returns {Promise<TokenMap | undefined>} Tokens, or `undefined` when there are none
  * @public
+ * @example
+ * // App Router
+ * import { headers } from 'next/headers';
+ * const page = await client.getPage(path ?? [], {
+ *   site,
+ *   locale,
+ *   tokens: await getPersonalizeTokens(path, headers),
+ * });
+ * @example
+ * // Pages Router (getServerSideProps)
+ * const page = await client.getPage(path, {
+ *   locale: context.locale,
+ *   tokens: await getPersonalizeTokens(path, () => context.req.headers),
+ * });
  */
-export function readPersonalizeTokens(
-  headers: Headers | IncomingHttpHeaders | undefined
-): TokenMap | undefined {
-  if (!headers) {
+export async function getPersonalizeTokens(
+  path: string | string[] | undefined,
+  getHeaders: () =>
+    | Pick<Headers, 'get'>
+    | IncomingHttpHeaders
+    | Promise<Pick<Headers, 'get'> | IncomingHttpHeaders>
+): Promise<TokenMap | undefined> {
+  if (!path || !hasPersonalizeTokensRewrite(path)) {
     return undefined;
   }
-
-  const value = getHeaderValue(headers, PERSONALIZE_TOKENS_HEADER);
-  if (value === undefined) {
-    return undefined;
-  }
-
-  const decoded = decodePersonalizeTokensHeaderDetailed(value);
-  if (decoded.ok) {
-    return decoded.tokens;
-  }
-
-  debug.personalize(
-    'invalid personalize tokens header reason=%s encodedBytes=%s',
-    decoded.reason,
-    decoded.encodedBytes ?? 'n/a'
-  );
-  return {};
+  return decodePersonalizeTokens(getHeaderValue(await getHeaders()));
 }
 
-function getHeaderValue(
-  headers: Headers | IncomingHttpHeaders,
-  name: string
-): string | undefined {
-  if (typeof Headers !== 'undefined' && headers instanceof Headers) {
-    return firstHeaderValue(headers.get(name) ?? undefined);
+/**
+ * Reads the tokens header from web or Node request headers.
+ * @param {Pick<Headers, 'get'> | IncomingHttpHeaders} headers Request headers
+ * @returns {string | undefined} Header value
+ */
+function getHeaderValue(headers: Pick<Headers, 'get'> | IncomingHttpHeaders): string | undefined {
+  if (typeof (headers as Headers).get === 'function') {
+    return (headers as Headers).get(PERSONALIZE_TOKENS_HEADER) ?? undefined;
   }
-
-  if (typeof (headers as Headers).get === 'function' && !Array.isArray(headers)) {
-    return firstHeaderValue((headers as Headers).get(name) ?? undefined);
-  }
-
-  const record = headers as IncomingHttpHeaders;
-  const match = Object.keys(record).find((key) => key.toLowerCase() === name.toLowerCase());
-  if (!match) {
-    return undefined;
-  }
-  return firstHeaderValue(record[match]);
-}
-
-function firstHeaderValue(value: string | string[] | undefined): string | undefined {
-  if (value === undefined) {
-    return undefined;
-  }
+  const value = (headers as IncomingHttpHeaders)[PERSONALIZE_TOKENS_HEADER];
   return Array.isArray(value) ? value[0] : value;
 }

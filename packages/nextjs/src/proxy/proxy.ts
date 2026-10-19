@@ -162,7 +162,8 @@ export abstract class ProxyBase extends ProxyHandler {
     const headers = {} as { [key: string]: string };
     incomingHeaders.forEach((value, key) => {
       headers[key] =
-        key.toLowerCase() === PERSONALIZE_TOKENS_HEADER ? '[redacted]' : value;
+        // Covers Next's `x-middleware-request-*` request override copies on responses too
+        key.toLowerCase().endsWith(PERSONALIZE_TOKENS_HEADER) ? '[redacted]' : value;
     });
     return headers;
   }
@@ -241,6 +242,8 @@ export abstract class ProxyBase extends ProxyHandler {
    * @param {NextRequest} req the current request
    * @param {NextResponse} res the current response
    * @param {boolean} [skipHeader] don't write 'x-sc-rewrite' header
+   * @param {Headers} [requestHeaders] request headers to forward to the rewrite destination instead of the incoming ones
+   * @returns {NextResponse} rewrite response
    */
   protected rewrite(
     rewritePath: string,
@@ -276,13 +279,12 @@ export abstract class ProxyBase extends ProxyHandler {
    * If the response already carries Next's `x-middleware-rewrite`, the rewrite is
    * re-issued using that absolute URL. `x-sc-rewrite` is never used as the
    * reconstruction source.
-   * @param {NextRequest} req Incoming request
    * @param {NextResponse} res Current response
    * @param {Headers} requestHeaders Request headers to forward
    * @returns {NextResponse} Forwarded response
    * @internal
    */
-  protected forward(_req: NextRequest, res: NextResponse, requestHeaders: Headers): NextResponse {
+  protected forward(res: NextResponse, requestHeaders: Headers): NextResponse {
     const rewriteUrl = res.headers.get(MIDDLEWARE_REWRITE_HEADER_NAME);
     if (rewriteUrl) {
       const rewritten = NextResponse.rewrite(rewriteUrl, {
@@ -303,6 +305,11 @@ export abstract class ProxyBase extends ProxyHandler {
   }
 }
 
+/**
+ * Copies cookies set on one response to another, so rebuilding a response keeps cookies set by earlier proxies.
+ * @param {NextResponse} from Source response
+ * @param {NextResponse} to Destination response
+ */
 function copyResponseCookies(from: NextResponse, to: NextResponse): void {
   const cookies = from.cookies?.getAll?.();
   if (!cookies) {

@@ -1,5 +1,6 @@
 import { constants } from '@sitecore-content-sdk/core';
 import { normalizeUrl, escapeRegExp } from '@sitecore-content-sdk/core/tools';
+import { transformLayoutStrings } from './layout-walker';
 
 /** Default Edge hostname derived from the default Edge URL (edge.sitecorecloud.io). @internal */
 const DEFAULT_EDGE_HOSTNAME = new URL(constants.SITECORE_EXPERIENCE_EDGE_URL_DEFAULT).hostname;
@@ -51,48 +52,7 @@ export function rewriteEdgeHostInResponse<T>(response: T, edgeUrl: string): T {
   if (!isCustomEdgeUrl(customEdgeUrl)) {
     return response;
   }
-  return deepRewriteEdgeHost(response, customEdgeUrl);
-}
-
-/**
- * Recursively traverses an object/array and rewrites Edge hostnames in string values.
- * @param {T} value - The value to process
- * @param {string} customEdgeUrl - The custom Edge URL to replace with
- * @returns {T} The processed value with Edge hostnames replaced
- * @internal
- */
-function deepRewriteEdgeHost<T>(value: T, customEdgeUrl: string): T {
-  // Handle null/undefined
-  if (value === null || value === undefined) {
-    return value;
-  }
-
-  // Handle strings - perform the actual replacement
-  if (typeof value === 'string') {
-    return rewriteEdgeHostInString(value, customEdgeUrl) as T;
-  }
-
-  // Handle arrays
-  if (Array.isArray(value)) {
-    return value.map((item) => deepRewriteEdgeHost(item, customEdgeUrl)) as T;
-  }
-
-  // Handle plain objects
-  if (typeof value === 'object') {
-    // Skip non-plain objects (Date, RegExp, etc.)
-    if (Object.getPrototypeOf(value) !== Object.prototype) {
-      return value;
-    }
-
-    const result: Record<string, unknown> = {};
-    for (const key of Object.keys(value as Record<string, unknown>)) {
-      result[key] = deepRewriteEdgeHost((value as Record<string, unknown>)[key], customEdgeUrl);
-    }
-    return result as T;
-  }
-
-  // Return primitives (numbers, booleans) unchanged
-  return value;
+  return transformLayoutStrings(response, (s) => rewriteEdgeHostInString(s, customEdgeUrl));
 }
 
 /**
@@ -125,46 +85,11 @@ export function getDefaultMediaUrlTransformer(edgeUrl: string): (value: string) 
  * Deeply traverses a value and applies a string transformer to every string.
  * @param {T} value - Value to process (layout, object, array, string)
  * @param {(s: string) => string} transform - Function that transforms each string
- * @returns {T} New value with transformed strings
+ * @returns {T} Transformed value; unchanged subtrees keep their original references
  * @internal
  */
 export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => string): T {
-  if (value === null || value === undefined) {
-    return value;
-  }
-  if (typeof value === 'string') {
-    return transform(value) as T;
-  }
-  if (Array.isArray(value)) {
-    let changed = false;
-    const result: unknown[] = [];
-    result.length = value.length;
-    for (let i = 0; i < value.length; i++) {
-      if (!Object.prototype.hasOwnProperty.call(value, i)) {
-        continue;
-      }
-      const child = applyMediaUrlRewrite(value[i], transform);
-      if (child !== value[i]) {
-        changed = true;
-      }
-      result[i] = child;
-    }
-    return (changed ? result : value) as T;
-  }
-  if (typeof value === 'object' && Object.getPrototypeOf(value) === Object.prototype) {
-    let changed = false;
-    const result: Record<string, unknown> = {};
-    for (const key of Object.keys(value as Record<string, unknown>)) {
-      const current = (value as Record<string, unknown>)[key];
-      const child = applyMediaUrlRewrite(current, transform);
-      if (child !== current) {
-        changed = true;
-      }
-      result[key] = child;
-    }
-    return (changed ? result : value) as T;
-  }
-  return value;
+  return transformLayoutStrings(value, (s) => transform(s));
 }
 
 /**

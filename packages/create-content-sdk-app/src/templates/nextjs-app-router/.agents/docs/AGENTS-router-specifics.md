@@ -5,7 +5,7 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 ## Routing: `[site]` / `[locale]` / `[[...path]]`
 
 - **URL shape:** `/[site]/[locale]/...path` (e.g. `/default/en`, `/default/en/about`). Site and locale are **in the path**; the Edge proxy rewrites incoming requests to this shape.
-- **Page component:** `src/app/[site]/[locale]/[[...path]]/page.tsx`. Receives `params: Promise<{ site, locale, path? }>`. Use `await params`. Call `getSitecorePageForRequest(path ?? [], site, locale)` so page and metadata share one request (draft omits tokens; published uses `readPersonalizeTokens(...) ?? {}`).
+- **Page component:** `src/app/[site]/[locale]/[[...path]]/page.tsx`. Receives `params: Promise<{ site, locale, path? }>`. Use `await params`; pass `site` and `locale` to `client.getPage(path ?? [], { site, locale })`.
 - **Layout hierarchy:** `app/layout.tsx` → `app/[site]/layout.tsx` (per-site; runs Bootstrap with `siteName={site}` and `draftMode()`) → `app/[site]/[locale]/[[...path]]/layout.tsx` (calls `setCachedPageParams({ site, locale })` for SSG-safe segment not-found) → page. Do not put site/locale-specific data fetching in the root layout; use the `[site]` or segment layout.
 
 ## i18n (next-intl)
@@ -25,14 +25,15 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
   - **AppRouterMultisiteProxy** — rewrites to `/[site]/[locale]/[...path]`; uses `scConfig.multisite`.
   - **RedirectsProxy** — redirects; uses `scConfig.redirects`, `scConfig.api.edge`, `scConfig.api.local`.
   - **PersonalizeProxy** — personalization; uses `scConfig.personalize`; often disabled in dev.
+    - **Dynamic content tokens** (`personalize.dynamicContent`): forwards Personalize tokens in the `x-sc-personalize-tokens` request header and adds a `_sctokens` rewrite segment. In SSR mode `page.tsx` passes `tokens: await getPersonalizeTokens(path, headers)` to `getPage`. Statically generated (SSG) routes must not read request headers at runtime (Next.js returns a 500 for on-demand paths), so they render token fallbacks. Preview, Design Library and error pages are never processed.
 - **Matcher:** Exclude API routes, `_next/`, sitemap, robots, healthz, Sitecore paths, and static assets so middleware does not run on every static request. The matcher is defined in `config` in `proxy.ts` (or in `middleware.ts` if it re-exports the proxy).
 - **Config:** `sitecore.config.ts` → `multisite`, `redirects`, `personalize`; never commit secrets.
 
 ## Data fetching and preview
 
-- **Page data:** Use `getSitecorePageForRequest` from `src/lib/sitecore-page.ts`. Do not call `client.getPage` without `tokens` on normal renders — omitted `tokens` preserves `{{...}}` placeholders.
+- **Page data:** In the page (or a Server Component), use `client.getPage(path ?? [], { site, locale })`. For preview, use `draftMode()`; if `draft.isEnabled`, `const previewData = client.getPreviewData(await headers())`, then `client.getPreview(previewData)` or `client.getDesignLibraryData(previewData)`; otherwise use `getPage` with `site` and `locale`.
 - **SSG:** In `generateStaticParams`, call `client.getAppRouterStaticParams(sites, routing.locales)` (sites from `.sitecore/sites.json`) only when `process.env.NODE_ENV !== 'development'` and `scConfig.generateStaticPaths` is true. Otherwise return `[]` (local dev, editing hosts, or `GENERATE_STATIC_PATHS=false`). Do not synthesize a fallback param (e.g. `{ site: 'default', locale, path: [] }`).
-- **Metadata:** `generateMetadata` must call the same `getSitecorePageForRequest` helper as the page so draft mode preserves token literals and published titles match the body.
+- **Metadata:** `generateMetadata` in the same segment can call `client.getPage(path ?? [], { site, locale })` and derive `title` (e.g. from route fields). Next.js will cache as appropriate.
 
 ## Server vs Client components
 

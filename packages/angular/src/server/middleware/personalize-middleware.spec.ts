@@ -3,6 +3,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   CdpHelper,
   DEFAULT_VARIANT,
+  decodePersonalizeTokens,
+  PERSONALIZE_TOKENS_HEADER,
   PersonalizeService,
 } from '@sitecore-content-sdk/content/personalize';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
@@ -118,7 +120,6 @@ describe('createPersonalizeMiddleware', () => {
       siteName: 'website',
       variantId: 'variant-a',
       componentVariantIds: [],
-      tokens: {},
     });
     expect(next).toHaveBeenCalledTimes(1);
   });
@@ -141,7 +142,6 @@ describe('createPersonalizeMiddleware', () => {
       siteName: 'website',
       variantId: DEFAULT_VARIANT,
       componentVariantIds: ['comp1_var1'],
-      tokens: {},
     });
   });
 
@@ -400,7 +400,6 @@ describe('createPersonalizeMiddleware', () => {
         siteName: 'website',
         variantId: 'variant-a',
         componentVariantIds: [],
-        tokens: {},
       })
     );
   });
@@ -457,113 +456,78 @@ describe('createPersonalizeMiddleware', () => {
     await createPersonalizeMiddleware(createOptions())(req, createRes(), next);
 
     expect(req.scParams?.variantId).toBe(DEFAULT_VARIANT);
-    expect(req.scParams?.tokens).toEqual({});
     expect(next).toHaveBeenCalledTimes(1);
     log.mockRestore();
   });
 
-  it('does not set private no-store for fallback-only token maps', async () => {
-    getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
-    personalizeMock.mockResolvedValue({ variantId: 'variant-a', tokens: {} });
-    const res = createRes();
+  describe('dynamic content tokens', () => {
+    it('removes a client-sent tokens header even when the middleware skips', async () => {
+      const req = createReq({ headers: { host: 'example.com', [PERSONALIZE_TOKENS_HEADER]: 'x' } });
 
-    await createPersonalizeMiddleware(createOptions())(createReq(), res, next);
+      await createPersonalizeMiddleware(createOptions({ enabled: false }))(req, createRes(), next);
 
-    expect(res.setHeader).not.toHaveBeenCalledWith('Cache-Control', 'private, no-store');
-  });
-
-  it('discards oversized trusted tokens and keeps identified variants', async () => {
-    getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
-    personalizeMock.mockResolvedValue({
-      variantId: 'variant-a',
-      tokens: { blob: 'x'.repeat(8000) },
-    });
-    const req = createReq();
-
-    await createPersonalizeMiddleware(createOptions())(req, createRes(), next);
-
-    expect(req.scParams?.variantId).toBe('variant-a');
-    expect(req.scParams?.tokens).toEqual({});
-  });
-
-  it('forwards Personalize tokens and marks the response uncacheable', async () => {
-    getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
-    personalizeMock.mockResolvedValue({ variantId: 'variant-a', tokens: { firstName: 'Ada' } });
-    const req = createReq();
-    const res = createRes();
-
-    await createPersonalizeMiddleware(createOptions())(req, res, next);
-
-    expect(req.scParams).toEqual({
-      siteName: 'website',
-      variantId: 'variant-a',
-      componentVariantIds: [],
-      tokens: { firstName: 'Ada' },
-    });
-    expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', 'private, no-store');
-  });
-
-  it('strips inbound client tokens before processing', async () => {
-    getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: [] });
-    const req = createReq({
-      scParams: {
-        siteName: 'website',
-        variantId: DEFAULT_VARIANT,
-        tokens: { firstName: 'evil' },
-      },
-      headers: {
-        host: 'example.com',
-        [SC_PARAMS_HEADER]: JSON.stringify({ tokens: { firstName: 'evil' } }),
-      },
+      expect(req.headers?.[PERSONALIZE_TOKENS_HEADER]).toBeUndefined();
+      expect(next).toHaveBeenCalledTimes(1);
     });
 
-    await createPersonalizeMiddleware(createOptions())(req, createRes(), next);
+    it('forwards tokens in a header-safe value and disables shared caching', async () => {
+      getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['comp1_var1'] });
+      personalizeMock.mockResolvedValue({
+        variantId: 'comp1_var1',
+        tokens: { firstName: 'Łukasz 李', visits: 3 },
+      });
+      const req = createReq({ headers: { host: 'example.com', [PERSONALIZE_TOKENS_HEADER]: 'x' } });
+      const res = createRes();
 
-    expect(req.scParams?.tokens).toBeUndefined();
-    expect(JSON.parse(String(req.headers?.[SC_PARAMS_HEADER])).tokens).toBeUndefined();
-  });
+      await createPersonalizeMiddleware(createOptions({ dynamicContent: true }))(req, res, next);
 
-  it('drops an unparseable or non-string inbound scParams header', async () => {
-    getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: [] });
-    const invalid = createReq({
-      headers: {
-        host: 'example.com',
-        [SC_PARAMS_HEADER]: '{not-json',
-      },
-    });
-    await createPersonalizeMiddleware(createOptions())(invalid, createRes(), next);
-    expect(invalid.headers?.[SC_PARAMS_HEADER]).toBeUndefined();
-
-    const arrayHeader = createReq({
-      headers: {
-        host: 'example.com',
-        [SC_PARAMS_HEADER]: [JSON.stringify({ tokens: { firstName: 'evil' } })] as any,
-      },
-    });
-    await createPersonalizeMiddleware(createOptions())(arrayHeader, createRes(), next);
-    expect(JSON.parse(String(arrayHeader.headers?.[SC_PARAMS_HEADER])).tokens).toBeUndefined();
-  });
-
-  it('writes trusted empty tokens when personalize fails after the route is eligible', async () => {
-    const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
-    getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
-    initContentSdkMock.mockRejectedValue(new Error('sdk unavailable'));
-    const req = createReq({
-      scParams: {
-        siteName: 'website',
-        variantId: DEFAULT_VARIANT,
-        tokens: { firstName: 'evil' },
-      },
+      const value = req.headers?.[PERSONALIZE_TOKENS_HEADER] as string;
+      // Angular SSR copies request headers into a web Headers object, which rejects non-Latin-1 values.
+      expect(() => new Headers({ [PERSONALIZE_TOKENS_HEADER]: value })).not.toThrow();
+      expect({ ...decodePersonalizeTokens(value) }).toEqual({ firstName: 'Łukasz 李', visits: '3' });
+      expect(JSON.parse(req.headers?.[SC_PARAMS_HEADER] as string)).not.toHaveProperty('tokens');
+      expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', 'private, no-store');
     });
 
-    await createPersonalizeMiddleware(createOptions())(req, createRes(), next);
+    it('forwards tokens returned with the default branch', async () => {
+      getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['comp1_var1'] });
+      personalizeMock.mockResolvedValue({ variantId: `comp1${DEFAULT_VARIANT}`, tokens: { a: 'b' } });
+      const req = createReq();
 
-    expect(req.scParams).toEqual({
-      siteName: 'website',
-      variantId: DEFAULT_VARIANT,
-      tokens: {},
+      await createPersonalizeMiddleware(createOptions({ dynamicContent: true }))(
+        req,
+        createRes(),
+        next
+      );
+
+      expect({ ...decodePersonalizeTokens(req.headers?.[PERSONALIZE_TOKENS_HEADER] as string) }).toEqual({
+        a: 'b',
+      });
     });
-    expect(next).toHaveBeenCalledTimes(1);
-    log.mockRestore();
+
+    it('ignores tokens when dynamicContent is off', async () => {
+      getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
+      personalizeMock.mockResolvedValue({ variantId: 'variant-a', tokens: { a: 'b' } });
+      const req = createReq();
+      const res = createRes();
+
+      await createPersonalizeMiddleware(createOptions())(req, res, next);
+
+      expect(req.headers?.[PERSONALIZE_TOKENS_HEADER]).toBeUndefined();
+      expect(res.setHeader).not.toHaveBeenCalledWith('Cache-Control', 'private, no-store');
+      expect(req.scParams?.variantId).toBe('variant-a');
+    });
+
+    it('drops tokens that exceed the header budget', async () => {
+      getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
+      personalizeMock.mockResolvedValue({ variantId: 'variant-a', tokens: { a: 'x'.repeat(8000) } });
+      const req = createReq();
+      const res = createRes();
+
+      await createPersonalizeMiddleware(createOptions({ dynamicContent: true }))(req, res, next);
+
+      expect(req.headers?.[PERSONALIZE_TOKENS_HEADER]).toBeUndefined();
+      expect(res.setHeader).not.toHaveBeenCalledWith('Cache-Control', 'private, no-store');
+    });
   });
 });

@@ -13,12 +13,11 @@ import {
   <% if (prerender === 'SSG') { -%>
   StaticPath,
   SiteInfo
+  <% } else if (prerender === 'SSR') { -%>
+  getPersonalizeTokens,
   <% } -%>
 } from '@sitecore-content-sdk/nextjs';
 import { extractPath, handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
-<% if (prerender === 'SSR') { -%>
-import { readPersonalizeTokens } from '@sitecore-content-sdk/nextjs';
-<% } -%>
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
 import components from '.sitecore/component-map';
 import client from 'lib/sitecore-client';
@@ -96,10 +95,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       ? await client.getPreview(context.previewData)
       : await client.getPage(path, {
           locale: context.locale,
-<% if (prerender === 'SSG') { -%>
-          tokens: {},
-<% } else if (prerender === 'SSR') { -%>
-          tokens: readPersonalizeTokens(context.req.headers) ?? {},
+<% if (prerender === 'SSR') { -%>
+          // Dynamic content tokens forwarded by PersonalizeProxy (statically generated pages render fallbacks)
+          tokens: await getPersonalizeTokens(path, () => context.req.headers),
 <% } -%>
         });
   }

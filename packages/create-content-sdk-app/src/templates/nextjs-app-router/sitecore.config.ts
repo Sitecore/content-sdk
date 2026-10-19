@@ -11,4 +11,8 @@ export default defineConfig({
     // and only prefixes non-default locales. Use `always` if routing prefixes every locale.
     appLocalePrefix: 'as-needed',
   },
+  personalize: {
+    // Resolve dynamic content tokens ({{key}} / {{key|fallback}}) authored in page content
+    dynamicContent: true,
+  },
 });

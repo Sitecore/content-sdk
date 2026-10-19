@@ -165,7 +165,7 @@ describe('SitecoreClient', () => {
       });
     });
 
-    it('should forward tokens and deferFinalization to the base client', async () => {
+    it('should forward tokens to the base client', async () => {
       const testLayoutData = structuredClone(layoutData);
       layoutServiceStub.fetchLayoutData.returns(testLayoutData);
       const superGetPage = sandbox.spy(Object.getPrototypeOf(SitecoreNextjsClient.prototype), 'getPage');
@@ -173,7 +173,6 @@ describe('SitecoreClient', () => {
       await sitecoreClient.getPage('/test/path', {
         locale: 'en-US',
         tokens: { name: 'Ada' },
-        deferFinalization: true,
       });
 
       expect(superGetPage).to.be.calledWith(
@@ -181,7 +180,6 @@ describe('SitecoreClient', () => {
         sandbox.match({
           locale: 'en-US',
           tokens: { name: 'Ada' },
-          deferFinalization: true,
         })
       );
       superGetPage.restore();

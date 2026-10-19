@@ -1,43 +1,46 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
+import sinon from 'sinon';
 import {
-  encodePersonalizeTokensHeader,
+  encodePersonalizeTokens,
   PERSONALIZE_TOKENS_HEADER,
 } from '@sitecore-content-sdk/content/personalize';
-import { readPersonalizeTokens } from './tokens';
+import { getPersonalizeTokens } from './tokens';
 
-describe('readPersonalizeTokens', () => {
-  it('returns undefined when the header is missing', () => {
-    expect(readPersonalizeTokens(undefined)).to.equal(undefined);
-    expect(readPersonalizeTokens(new Headers())).to.equal(undefined);
+describe('getPersonalizeTokens', () => {
+  const encoded = encodePersonalizeTokens({ name: 'Łukasz' }) as string;
+
+  it('does not read headers when the path has no tokens marker', async () => {
+    const getHeaders = sinon.stub().returns(new Headers());
+
+    expect(await getPersonalizeTokens(['about', '_variantId_c1_a'], getHeaders)).to.be.undefined;
+    expect(await getPersonalizeTokens('/about', getHeaders)).to.be.undefined;
+    expect(await getPersonalizeTokens(undefined, getHeaders)).to.be.undefined;
+    expect(getHeaders.called).to.be.false;
   });
 
-  it('decodes a valid encoded map including empty maps', () => {
-    const headers = new Headers();
-    headers.set(PERSONALIZE_TOKENS_HEADER, encodePersonalizeTokensHeader({ name: 'Ada' }));
-    expect(readPersonalizeTokens(headers)).to.deep.equal({ name: 'Ada' });
+  it('decodes tokens from web headers on marked paths', async () => {
+    const headers = new Headers({ [PERSONALIZE_TOKENS_HEADER]: encoded });
 
-    const empty = new Headers();
-    empty.set(PERSONALIZE_TOKENS_HEADER, encodePersonalizeTokensHeader({}));
-    expect(readPersonalizeTokens(empty)).to.deep.equal({});
+    const tokens = await getPersonalizeTokens(['about', '_variantId_c1_a', '_sctokens'], () =>
+      Promise.resolve(headers)
+    );
+
+    expect({ ...tokens }).to.deep.equal({ name: 'Łukasz' });
   });
 
-  it('returns {} for invalid payloads and uses the first Node array value', () => {
-    expect(
-      readPersonalizeTokens({ [PERSONALIZE_TOKENS_HEADER]: '@@@@' })
-    ).to.deep.equal({});
-    expect(
-      readPersonalizeTokens({
-        [PERSONALIZE_TOKENS_HEADER]: [encodePersonalizeTokensHeader({ name: 'Ada' }), 'ignored'],
-      })
-    ).to.deep.equal({ name: 'Ada' });
+  it('decodes tokens from Node headers on marked paths', async () => {
+    const tokens = await getPersonalizeTokens('/about/_sctokens', () => ({
+      [PERSONALIZE_TOKENS_HEADER]: [encoded, 'ignored'],
+    }));
+
+    expect({ ...tokens }).to.deep.equal({ name: 'Łukasz' });
   });
 
-  it('looks up the header case-insensitively', () => {
+  it('returns undefined when the header is missing or invalid', async () => {
+    expect(await getPersonalizeTokens('/_sctokens', () => new Headers())).to.be.undefined;
     expect(
-      readPersonalizeTokens({
-        'X-SC-PERSONALIZE-TOKENS': encodePersonalizeTokensHeader({ city: 'Oslo' }),
-      })
-    ).to.deep.equal({ city: 'Oslo' });
+      await getPersonalizeTokens('/_sctokens', () => ({ [PERSONALIZE_TOKENS_HEADER]: '%%%' }))
+    ).to.be.undefined;
   });
 });

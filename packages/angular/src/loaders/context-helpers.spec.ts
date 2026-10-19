@@ -1,25 +1,34 @@
-/* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect } from 'vitest';
-import { getPersonalizeTokens, shouldBypassPageFinalization } from './context-helpers';
+import {
+  encodePersonalizeTokens,
+  PERSONALIZE_TOKENS_HEADER,
+} from '@sitecore-content-sdk/content/personalize';
+import { getPersonalizeTokens } from './context-helpers';
+import type { LoaderContext } from './models';
 
-describe('shouldBypassPageFinalization', () => {
-  it('bypasses Preview and Design Library so token literals are preserved', () => {
-    expect(shouldBypassPageFinalization(null)).toBe(true);
-    expect(shouldBypassPageFinalization(undefined)).toBe(true);
-    expect(shouldBypassPageFinalization({ mode: { isPreview: true } })).toBe(true);
-    expect(shouldBypassPageFinalization({ mode: { isDesignLibrary: true } })).toBe(true);
-    expect(shouldBypassPageFinalization({ mode: { isPreview: false, isDesignLibrary: false } })).toBe(
-      false
-    );
-  });
+const context = (headers?: Record<string, string | string[] | undefined>): LoaderContext => ({
+  url: '/about',
+  routeParams: {},
+  query: {},
+  scParams: { siteName: 'website' },
+  csdkRequestData: headers ? { headers } : undefined,
 });
 
 describe('getPersonalizeTokens', () => {
-  it('returns the trusted map, including empty, and undefined when absent', () => {
-    expect(getPersonalizeTokens({ scParams: { tokens: { name: 'Ada' } } } as any)).toEqual({
+  it('returns the tokens forwarded by the personalize middleware', () => {
+    const encoded = encodePersonalizeTokens({ name: 'Ada' }) as string;
+
+    expect({ ...getPersonalizeTokens(context({ [PERSONALIZE_TOKENS_HEADER]: encoded })) }).toEqual({
       name: 'Ada',
     });
-    expect(getPersonalizeTokens({ scParams: { tokens: {} } } as any)).toEqual({});
-    expect(getPersonalizeTokens({ scParams: {} } as any)).toBeUndefined();
+    expect({ ...getPersonalizeTokens(context({ [PERSONALIZE_TOKENS_HEADER]: [encoded] })) }).toEqual(
+      { name: 'Ada' }
+    );
+  });
+
+  it('returns undefined when there are no valid tokens', () => {
+    expect(getPersonalizeTokens(context())).toBeUndefined();
+    expect(getPersonalizeTokens(context({}))).toBeUndefined();
+    expect(getPersonalizeTokens(context({ [PERSONALIZE_TOKENS_HEADER]: '%%' }))).toBeUndefined();
   });
 });

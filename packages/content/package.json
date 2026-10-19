@@ -90,8 +90,7 @@
   "files": [
     "dist",
     "types",
-    "/*.d.ts",
-    "personalize"
+    "/*.d.ts"
   ],
   "exports": {
     ".": {
@@ -148,11 +147,6 @@
       "types": "./types/personalize/index.d.ts",
       "import": "./dist/esm/personalize/index.js",
       "require": "./dist/cjs/personalize/index.js"
-    },
-    "./personalize/internal": {
-      "types": "./types/personalize/internal.d.ts",
-      "import": "./dist/esm/personalize/internal.js",
-      "require": "./dist/cjs/personalize/internal.js"
     },
     "./site": {
       "types": "./types/site/index.d.ts",

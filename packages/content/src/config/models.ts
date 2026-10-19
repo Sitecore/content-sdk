@@ -187,6 +187,17 @@ export type SitecoreConfigInput = {
      * @default 'USA'
      */
     currency?: string;
+    /**
+     * Enable Dynamic Content Tokens. Authors place `{{key}}` or `{{key|fallback}}` in
+     * route content; normal `getPage` renders replace them with values returned by the
+     * Personalize execution, or with the fallback when no value is available.
+     * Unmatched tokens without a fallback are removed.
+     * - Visitor values are applied only on per-request renders that pass `tokens`
+     * (SSR, dynamic App Router renders, Angular SSR). Statically generated pages render fallbacks.
+     * - Preview, Design Library and error pages are never processed.
+     * @default false
+     */
+    dynamicContent?: boolean;
   };
   /**
    * Settings for redirects functionality

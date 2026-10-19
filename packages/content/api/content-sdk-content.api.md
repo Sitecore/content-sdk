@@ -57,6 +57,14 @@ export class CdpHelper {
     static normalizeScope(scope?: string): string;
 }
 
+// @internal
+export function collectPersonalizeExecutionTokens<T extends {
+    variantIds: string[];
+}>(executions: T[], execute: (execution: T) => Promise<unknown>): Promise<{
+    identifiedVariantIds: string[];
+    tokens: TokenMap;
+}>;
+
 // @public
 export const combineImportEntries: (defaultImportEntries: ImportEntry[], generatedImportEntries: ImportEntry[]) => ImportEntry[];
 
@@ -221,8 +229,8 @@ const debug_2: {
 };
 export { debug_2 as debug }
 
-// @public
-export function decodePersonalizeTokensHeader(value: string): TokenMap | null;
+// @internal
+export function decodePersonalizeTokens(value: string | null | undefined): TokenMap | undefined;
 
 // Warning: (ae-forgotten-export) The symbol "DeepPartial" needs to be exported by the entry point api-surface.d.ts
 //
@@ -437,8 +445,8 @@ export enum EditMode {
 // @internal
 export const EMPTY_DATE_FIELD_VALUE = "0001-01-01T00:00:00Z";
 
-// @public
-export function encodePersonalizeTokensHeader(tokens: TokenMap): string;
+// @internal
+export function encodePersonalizeTokens(tokens: TokenMap): string | undefined;
 
 // @internal (undocumented)
 export type EnhancedComponentMapTemplate = (components: (ComponentFile | ComponentFileWithType)[], componentImports: ComponentImport[] | undefined, ctx: {
@@ -708,7 +716,7 @@ export const getJsonLdSchemas: (schemas?: Record<string, unknown>[] | null) => H
 export function getLocaleRewrite(pathname: string, locale: string): string;
 
 // @public
-export function getPersonalizedRewrite(pathname: string, variantIds: string[]): string;
+export function getPersonalizedRewrite(pathname: string, variantIds: string[], hasTokens?: boolean): string;
 
 // @public
 export function getPersonalizedRewriteData(pathname: string): PersonalizedRewriteData;
@@ -760,6 +768,9 @@ export { GraphQLRequestClientConfig }
 export { GraphQLRequestClientFactory }
 
 export { GraphQLRequestClientFactoryConfig }
+
+// @public
+export function hasPersonalizeTokensRewrite(path: string | string[]): boolean;
 
 // @internal
 export const HIDDEN_RENDERING_NAME = "Hidden Rendering";
@@ -1019,9 +1030,6 @@ declare namespace mediaApi {
 export { mediaApi }
 
 // @public
-export function mergePersonalizeTokens(into: TokenMap, raw: unknown, onCollision?: (key: string) => void): TokenMap;
-
-// @public
 export interface MetadataFields {
     // (undocumented)
     baseMetadataAuthor?: Field<string>;
@@ -1131,7 +1139,6 @@ export type PageMode = {
 export type PageOptions = Partial<RouteOptions> & {
     personalize?: PersonalizedRewriteData;
     tokens?: TokenMap;
-    deferFinalization?: boolean;
 };
 
 // @internal
@@ -1144,22 +1151,13 @@ export class PagesEditor {
     static resetChromes(): void;
 }
 
-// @public
+// @internal
 export const PERSONALIZE_TOKENS_HEADER = "x-sc-personalize-tokens";
-
-// @public
-export const PERSONALIZE_TOKENS_HEADER_MAX_BYTES = 7000;
 
 // @public (undocumented)
 export type PersonalizedRewriteData = {
     variantId: string;
     componentVariantIds?: string[];
-};
-
-// @public
-export type PersonalizeExecutionResult = {
-    variantId?: string;
-    tokens?: Record<string, string | number>;
 };
 
 // @public
@@ -1324,12 +1322,6 @@ export enum RenderingType {
 
 // @public
 const replaceMediaUrlPrefix: (url: string, mediaUrlPrefix?: RegExp) => string;
-
-// @public
-export function replaceTokens(input: string, tokens: TokenMap): string;
-
-// @public
-export function replaceTokensInObject<T>(obj: T, tokens: TokenMap): T;
 
 // @public
 export const resetEditorChromes: () => void;
@@ -1502,6 +1494,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     constructor(initOptions: SitecoreClientInit);
     // @internal @deprecated
     protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData;
+    // @internal
+    protected applyPageTransforms(layout: LayoutServiceData, tokens?: TokenMap): LayoutServiceData;
     // (undocumented)
     protected clientFactory: GraphQLRequestClientFactory;
     // (undocumented)
@@ -1514,7 +1508,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     protected editingService: EditingService;
     // (undocumented)
     protected errorPagesService: ErrorPagesService;
-    finalizePersonalizedPage(page: Page, tokens?: TokenMap): Page;
     // Warning: (ae-forgotten-export) The symbol "BaseServiceOptions" needs to be exported by the entry point api-surface.d.ts
     //
     // (undocumented)
@@ -1522,7 +1515,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     getData<T = unknown>(query: string | DocumentNode, variables?: Record<string, unknown>, fetchOptions?: FetchOptions): Promise<T>;
     getDesignLibraryData(designLibData: DesignLibraryRenderPreviewData, fetchOptions?: FetchOptions): Promise<Page>;
     getDictionary(routeOptions?: Partial<RouteOptions>, fetchOptions?: FetchOptions): Promise<DictionaryPhrases>;
-    getErrorPage(code: ErrorPage, pageOptions?: PageOptions, fetchOptions?: FetchOptions): Promise<Page | null>;
+    getErrorPage(code: ErrorPage, pageOptions?: Partial<RouteOptions>, fetchOptions?: FetchOptions): Promise<Page | null>;
     getErrorPages(routeOptions?: RouteOptions, fetchOptions?: FetchOptions): Promise<ErrorPages | null>;
     protected getGraphqlSitemapXMLService(siteName: string): SitemapXmlService;
     getHeadLinks(layoutData: LayoutServiceData, options?: {
@@ -1554,6 +1547,7 @@ export class SitecoreClient implements BaseSitecoreClient {
 
 // @public
 export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' | 'personalize'> & {
+    personalize?: Partial<Pick<SitecoreConfig['personalize'], 'dynamicContent'>>;
     custom?: {
         layoutService?: LayoutService;
         dictionaryService?: DictionaryService;
@@ -1608,6 +1602,7 @@ export type SitecoreConfigInput = {
         scope?: string;
         channel?: string;
         currency?: string;
+        dynamicContent?: boolean;
     };
     redirects?: {
         enabled?: boolean;
@@ -1778,7 +1773,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:72:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:73:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:116:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal

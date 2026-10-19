@@ -1,20 +1,13 @@
 import {
   CdpHelper,
+  collectPersonalizeExecutionTokens,
   DEFAULT_VARIANT,
-  encodePersonalizeTokensHeader,
+  encodePersonalizeTokens,
   getGroomedVariantIds,
+  PERSONALIZE_TOKENS_HEADER,
   PersonalizeInfo,
   PersonalizeService,
-  PERSONALIZE_TOKENS_HEADER_MAX_BYTES,
-  TokenMap,
 } from '@sitecore-content-sdk/content/personalize';
-import {
-  clampEncodedTokenMap,
-  collectPersonalizeExecutionTokens,
-  createEmptyTokenMap,
-  PERSONALIZE_SCPARAMS_ENVELOPE_MAX_BYTES,
-  tokenMapHasUsableVisitorValues,
-} from '@sitecore-content-sdk/content/personalize/internal';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
@@ -193,9 +186,10 @@ export function createPersonalizeMiddleware(
   }
 
   return async (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
-    stripUntrustedTokens(req as CsdkExpressRequest);
-    let eligible = false;
-
+    // Only this middleware may set the tokens header: drop any value sent by the client.
+    if (req.headers?.[PERSONALIZE_TOKENS_HEADER] !== undefined) {
+      delete req.headers[PERSONALIZE_TOKENS_HEADER];
+    }
     try {
       // `enabled` defaults to true: omitting it keeps the middleware on (see BaseMiddlewareOptions).
       if (options.enabled === false || !personalizeService) {
@@ -243,7 +237,7 @@ export function createPersonalizeMiddleware(
         language,
         siteName,
         hostname,
-        headers: redactTokenHeaders(req.headers),
+        headers: req.headers,
       });
 
       if (!siteName) {
@@ -266,8 +260,6 @@ export function createPersonalizeMiddleware(
         debug.personalize('skipped (no personalization configured)');
         return next();
       }
-
-      eligible = true;
 
       if (isPrefetch(req)) {
         // Personalized, but this is a prefetch request.
@@ -332,147 +324,40 @@ export function createPersonalizeMiddleware(
         }
       );
 
-      const groomed: { variantId?: string; componentVariantIds?: string[] } =
-        identifiedVariantIds.length > 0 ? getGroomedVariantIds(identifiedVariantIds) : {};
-      const trustedTokens = applyTokenBudgets(
-        tokens,
-        (req as CsdkExpressRequest).scParams,
-        groomed
-      );
+      const encodedTokens = options.dynamicContent ? encodePersonalizeTokens(tokens) : undefined;
+      if (encodedTokens) {
+        // Ride a request header (like SC_PARAMS_HEADER) so the tokens survive Angular's conversion
+        // of the Express request to a web Request. base64url keeps the value header-safe.
+        req.headers = req.headers ?? {};
+        req.headers[PERSONALIZE_TOKENS_HEADER] = encodedTokens;
+        // The render now contains visitor data: keep it out of shared caches.
+        res.setHeader?.('Cache-Control', 'private, no-store');
+      }
 
       if (identifiedVariantIds.length === 0) {
         debug.personalize('skipped (no variant(s) identified)');
-        writeTrustedParams(req as CsdkExpressRequest, {
-          ...((req as CsdkExpressRequest).scParams || {}),
-          tokens: trustedTokens,
-        });
-        applyPrivateNoStore(res, trustedTokens);
         return next();
       }
 
-      writeTrustedParams(req as CsdkExpressRequest, {
+      const { variantId, componentVariantIds } = getGroomedVariantIds(identifiedVariantIds);
+      (req as CsdkExpressRequest).scParams = {
         ...((req as CsdkExpressRequest).scParams || {}),
-        ...groomed,
-        tokens: trustedTokens,
-      });
-      applyPrivateNoStore(res, trustedTokens);
+        variantId,
+        componentVariantIds,
+      };
+      // Also ride the params on a header so they survive Angular's conversion of the
+      // Express request to a web Request on the SSR path (same mechanism as editing params).
+      req.headers = req.headers ?? {};
+      req.headers[SC_PARAMS_HEADER] = JSON.stringify((req as CsdkExpressRequest).scParams);
 
       debug.personalize('personalize middleware end in %dms: %o', Date.now() - startTimestamp, {
-        variantId: groomed.variantId,
-        componentVariantIds: groomed.componentVariantIds,
+        variantId,
+        componentVariantIds,
       });
     } catch (error) {
       console.log('Personalize middleware failed:');
       console.log(error);
-      if (eligible) {
-        writeTrustedParams(req as CsdkExpressRequest, {
-          ...((req as CsdkExpressRequest).scParams || {}),
-          tokens: createEmptyTokenMap(),
-        });
-      }
     }
     next();
   };
-}
-
-function stripUntrustedTokens(req: CsdkExpressRequest): void {
-  if (req.scParams?.tokens) {
-    const { tokens: _tokens, ...rest } = req.scParams;
-    req.scParams = rest;
-  }
-  const raw = req.headers?.[SC_PARAMS_HEADER];
-  if (raw === undefined) {
-    return;
-  }
-  const serialized = serializeRequestHeader(raw);
-  req.headers = req.headers ?? {};
-  if (serialized === undefined) {
-    delete req.headers[SC_PARAMS_HEADER];
-    return;
-  }
-  try {
-    const parsed = JSON.parse(serialized) as unknown;
-    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-      delete (parsed as Record<string, unknown>).tokens;
-      req.headers[SC_PARAMS_HEADER] = JSON.stringify(parsed);
-      return;
-    }
-  } catch {
-    // Invalid inbound envelopes must not remain on the wire.
-  }
-  delete req.headers[SC_PARAMS_HEADER];
-}
-
-function serializeRequestHeader(value: unknown): string | undefined {
-  if (typeof value === 'string') {
-    return value;
-  }
-  if (Array.isArray(value) && value.length > 0 && value.every((part) => typeof part === 'string')) {
-    return value[0];
-  }
-  return undefined;
-}
-
-function applyPrivateNoStore(
-  res: { setHeader?: (name: string, value: string) => void },
-  tokens: TokenMap
-): void {
-  if (tokenMapHasUsableVisitorValues(tokens)) {
-    res.setHeader?.('Cache-Control', 'private, no-store');
-  }
-}
-
-function writeTrustedParams(
-  req: CsdkExpressRequest,
-  scParams: CsdkExpressRequest['scParams']
-): void {
-  req.scParams = scParams;
-  req.headers = req.headers ?? {};
-  req.headers[SC_PARAMS_HEADER] = JSON.stringify(scParams);
-}
-
-function applyTokenBudgets(
-  tokens: TokenMap,
-  existing: CsdkExpressRequest['scParams'],
-  variants: { variantId?: string; componentVariantIds?: string[] }
-): TokenMap {
-  const preClampEncoded = encodePersonalizeTokensHeader(tokens);
-  const clamped = clampEncodedTokenMap(tokens);
-  let next = clamped.tokens;
-  if (clamped.oversized) {
-    debug.personalize(
-      'personalize tokens header oversized encodedBytes=%s limit=%s',
-      preClampEncoded.length,
-      PERSONALIZE_TOKENS_HEADER_MAX_BYTES
-    );
-  }
-
-  const envelope = JSON.stringify({
-    ...(existing || {}),
-    ...variants,
-    tokens: next,
-  });
-  const envelopeBytes = new TextEncoder().encode(envelope).length;
-  if (envelopeBytes > PERSONALIZE_SCPARAMS_ENVELOPE_MAX_BYTES) {
-    debug.personalize(
-      'personalize scParams envelope oversized encodedBytes=%s limit=%s',
-      envelopeBytes,
-      PERSONALIZE_SCPARAMS_ENVELOPE_MAX_BYTES
-    );
-    next = createEmptyTokenMap();
-  }
-  return next;
-}
-
-function redactTokenHeaders(
-  headers: ExpressRequest['headers']
-): Record<string, unknown> | undefined {
-  if (!headers) {
-    return headers;
-  }
-  const redacted: Record<string, unknown> = { ...headers };
-  if (SC_PARAMS_HEADER in redacted) {
-    redacted[SC_PARAMS_HEADER] = '[redacted]';
-  }
-  return redacted;
 }

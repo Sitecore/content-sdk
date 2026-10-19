@@ -1,14 +1,21 @@
-import { setCachedPageParams, getPageMetadata } from '@sitecore-content-sdk/nextjs';
+import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
+import {
+  setCachedPageParams,
+  getPageMetadata,
+  hasPersonalizeTokensRewrite,
+} from '@sitecore-content-sdk/nextjs';
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
+import { draftMode } from 'next/headers';
 import { Metadata } from 'next';
 <% if (prerender === 'SSG') { -%>
 import { SiteInfo } from '@sitecore-content-sdk/nextjs';
 import sites from '.sitecore/sites.json';
 import { routing } from 'src/i18n/routing';
 import scConfig from 'sitecore.config';
-import client from 'src/lib/sitecore-client';
 <% } -%>
-import { loadSitecoreRoutePage } from 'src/lib/cache/get-sitecore-page';
+import client from 'src/lib/sitecore-client';
+import { getSitecorePage } from 'src/lib/cache/get-sitecore-page';
 import { BUILD_VALIDATION_SITE, isBuildValidationSite } from 'src/lib/sitecore-build-validation';
 import Layout from 'src/Layout';
 import Providers from 'src/Providers';
@@ -20,7 +27,23 @@ type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function Page({ params, searchParams }: PageProps) {
+export default async function Page(props: PageProps) {
+  const { path } = await props.params;
+
+  // Requests that carry dynamic content tokens (marked by PersonalizeProxy) read request headers,
+  // so they render at request time inside Suspense. Every other page keeps its prerendered output.
+  if (hasPersonalizeTokensRewrite(path ?? [])) {
+    return (
+      <Suspense fallback={null}>
+        <SitecorePage {...props} />
+      </Suspense>
+    );
+  }
+
+  return <SitecorePage {...props} />;
+}
+
+async function SitecorePage({ params, searchParams }: PageProps) {
   const { site, locale, path } = await params;
 
   if (isBuildValidationSite(site)) {
@@ -33,12 +56,19 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   // Draft/preview first so editing is not blocked by locale-dependent cached lookups.
   // Editing often resolves language via query string, while [locale] may fall back to defaultLanguage.
-  const page = await loadSitecoreRoutePage({
-    site,
-    locale,
-    path: path ?? [],
-    searchParams: await searchParams,
-  });
+  const draft = await draftMode();
+
+  let page;
+  if (draft.isEnabled) {
+    const editingParams = await searchParams;
+    if (isDesignLibraryPreviewData(editingParams)) {
+      page = await client.getDesignLibraryData(editingParams);
+    } else {
+      page = await client.getPreview(editingParams);
+    }
+  } else {
+    page = await getSitecorePage({ site, locale, path: path ?? [] });
+  }
 
   // If the page is not found, return a 404
   if (!page) {
@@ -74,7 +104,7 @@ export const generateStaticParams = async () => {
   ];
 };
 <% } -%>
-// Metadata fields for the page. Shares loadSitecoreRoutePage with the body so <title> matches.
+// Metadata fields for the page. Mirrors the Page draft-mode branching so the <title> matches the body.
 export const generateMetadata = async ({ params, searchParams }: PageProps): Promise<Metadata> => {
   const { path, site, locale } = await params;
 
@@ -82,12 +112,19 @@ export const generateMetadata = async ({ params, searchParams }: PageProps): Pro
     return { title: 'Page' };
   }
 
-  const page = await loadSitecoreRoutePage({
-    site,
-    locale,
-    path: path ?? [],
-    searchParams: await searchParams,
-  });
+  const draft = await draftMode();
+
+  let page;
+  if (draft.isEnabled) {
+    const editingParams = await searchParams;
+    if (isDesignLibraryPreviewData(editingParams)) {
+      page = await client.getDesignLibraryData(editingParams);
+    } else {
+      page = await client.getPreview(editingParams);
+    }
+  } else {
+    page = await getSitecorePage({ site, locale, path: path ?? [] });
+  }
 
   return getPageMetadata(page?.layout.sitecore.route);
 };

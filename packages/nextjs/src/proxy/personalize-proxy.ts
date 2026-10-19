@@ -6,15 +6,9 @@ import {
   CdpHelper,
   DEFAULT_VARIANT,
   PERSONALIZE_TOKENS_HEADER,
-  PERSONALIZE_TOKENS_HEADER_MAX_BYTES,
-  encodePersonalizeTokensHeader,
-} from '@sitecore-content-sdk/content/personalize';
-import {
-  clampEncodedTokenMap,
   collectPersonalizeExecutionTokens,
-  createEmptyTokenMap,
-  tokenMapHasUsableVisitorValues,
-} from '@sitecore-content-sdk/content/personalize/internal';
+  encodePersonalizeTokens,
+} from '@sitecore-content-sdk/content/personalize';
 import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/analytics-core/internal';
 import { initContentSdk } from '@sitecore-content-sdk/core';
 import { personalize } from '@sitecore-content-sdk/personalize';
@@ -26,6 +20,9 @@ import { SitecoreConfig } from '../config';
 import debug from '../debug';
 import { personalizeProxyAdapter } from '../initialization/proxy/personalize-adapter';
 import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from './types';
+
+// Prefix Next.js uses on response headers to carry request header overrides set by a proxy.
+const REQUEST_OVERRIDE_PREFIX = 'x-middleware-request-';
 
 /**
  * Information about executed proxy to be stored in the context
@@ -53,7 +50,8 @@ export type PersonalizeGeoData = {
  */
 export type PersonalizeProxyConfig = ProxyBaseConfig &
   SitecoreConfig['api']['edge'] &
-  SitecoreConfig['personalize'] & {
+  Omit<SitecoreConfig['personalize'], 'dynamicContent'> &
+  Partial<Pick<SitecoreConfig['personalize'], 'dynamicContent'>> & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
     extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
@@ -89,13 +87,10 @@ type PersonalizeExecution = {
 /**
  * Proxy / handler to support Sitecore Personalize.
  *
- * **Security:** this hop is the only trusted writer of the request header
- * `x-sc-personalize-tokens`. That header is not authenticated and may carry
- * visitor PII. PersonalizeProxy deletes any inbound client value at the start
- * of `handle` and writes only a server-merged map (or encoded `{}`).
- * A custom host that omits PersonalizeProxy must strip
- * `x-sc-personalize-tokens` itself before `readPersonalizeTokens`. Otherwise
- * clients can spoof visitor token values into layout substitution.
+ * When `dynamicContent` is enabled, tokens returned by the Personalize executions are forwarded
+ * to the render in the `x-sc-personalize-tokens` request header, and the rewrite path gets a
+ * marker segment so renders read that header only when it is set. The proxy always removes an
+ * inbound `x-sc-personalize-tokens` header, so it must run before the render for tokens to be trusted.
  * @public
  */
 export class PersonalizeProxy extends ProxyBase {
@@ -151,30 +146,12 @@ export class PersonalizeProxy extends ProxyBase {
     res: NextResponse,
     proxiesContext?: ProxiesContext
   ): Promise<NextResponse> => {
-    const requestHeaders = new Headers();
-    req.headers.forEach((value, key) => {
-      if (typeof value === 'string') {
-        requestHeaders.append(key, value);
-      }
-    });
-    requestHeaders.delete(PERSONALIZE_TOKENS_HEADER);
-
-    const forward = (writeEmptyTokens = false) => {
-      if (writeEmptyTokens) {
-        requestHeaders.set(
-          PERSONALIZE_TOKENS_HEADER,
-          encodePersonalizeTokensHeader(createEmptyTokenMap())
-        );
-      }
-      return this.forward(req, res, requestHeaders);
-    };
+    const skip = () => this.forwardWithoutInboundTokens(req, res);
 
     if (!this.config.enabled) {
       debug.personalize('skipped (personalize proxy is disabled globally)');
-      return forward();
+      return skip();
     }
-
-    let eligible = false;
     try {
       const skipForBot = this.config.skipForBot ?? true;
       const pathname = req.nextUrl.pathname;
@@ -196,7 +173,7 @@ export class PersonalizeProxy extends ProxyBase {
 
       if (this.disabled(req, res)) {
         debug.personalize('skipped (personalize proxy is disabled)');
-        return forward();
+        return skip();
       }
 
       if (
@@ -204,12 +181,12 @@ export class PersonalizeProxy extends ProxyBase {
         this.isPreview(req) // No need to personalize for preview (layout data is already prepared for preview)
       ) {
         debug.personalize('skipped (%s)', res.redirected ? 'redirected' : 'preview');
-        return forward();
+        return skip();
       }
 
       if (skipForBot && req.cookies.get(BOT_DETECTION_COOKIE)?.value) {
         debug.personalize('skipped (bot request)');
-        return forward();
+        return skip();
       }
 
       const site = this.getSite(req, res);
@@ -217,7 +194,7 @@ export class PersonalizeProxy extends ProxyBase {
       // Get personalization info from Experience Edge
       // personalizeService is guaranteed to be non-null here because disabled() check passed
       if (!this.personalizeService) {
-        return forward();
+        return skip();
       }
       const personalizeInfo = await this.personalizeService.getPersonalizeInfo(
         pathname,
@@ -227,15 +204,13 @@ export class PersonalizeProxy extends ProxyBase {
       if (!personalizeInfo) {
         // Likely an invalid route / language
         debug.personalize('skipped (personalize info not found)');
-        return forward();
+        return skip();
       }
 
       if (personalizeInfo.variantIds.length === 0) {
         debug.personalize('skipped (no personalization configured)');
-        return forward();
+        return skip();
       }
-
-      eligible = true;
 
       if (this.isPrefetch(req)) {
         debug.personalize('skipped (prefetch)');
@@ -245,7 +220,7 @@ export class PersonalizeProxy extends ProxyBase {
         // Note the reason we don't move this any earlier in the proxy is that we would then be sacrificing performance for non-personalized pages.
         res.headers.set('x-proxy-cache', 'no-cache');
         res.headers.set('Cache-Control', 'no-store, must-revalidate');
-        return forward();
+        return skip();
       }
 
       await this.initPersonalizeServer({
@@ -269,39 +244,32 @@ export class PersonalizeProxy extends ProxyBase {
             ...(geo && { geo }),
           })
       );
+      const encodedTokens = this.config.dynamicContent ? encodePersonalizeTokens(tokens) : undefined;
 
-      const preClampEncoded = encodePersonalizeTokensHeader(tokens);
-      const clamped = clampEncodedTokenMap(tokens);
-      if (clamped.oversized) {
-        debug.personalize(
-          'personalize tokens header oversized encodedBytes=%s limit=%s',
-          preClampEncoded.length,
-          PERSONALIZE_TOKENS_HEADER_MAX_BYTES
-        );
-      }
-      const usableVisitorTokens = tokenMapHasUsableVisitorValues(clamped.tokens);
-      requestHeaders.set(PERSONALIZE_TOKENS_HEADER, clamped.encoded);
-
-      if (identifiedVariantIds.length === 0) {
+      if (identifiedVariantIds.length === 0 && !encodedTokens) {
         debug.personalize('skipped (no variant(s) identified)');
-        const forwarded = forward();
-        if (usableVisitorTokens) {
-          forwarded.headers.set('Cache-Control', 'private, no-store');
-        }
-        return forwarded;
+        return skip();
       }
 
       // Path can be rewritten by previously executed proxy
       const basePath = res?.headers.get(REWRITE_HEADER_NAME) || pathname;
 
       // Rewrite to persononalized path
-      const rewritePath = getPersonalizedRewrite(basePath, identifiedVariantIds);
-      const response = this.rewrite(rewritePath, req, res, false, requestHeaders);
+      const rewritePath = getPersonalizedRewrite(basePath, identifiedVariantIds, !!encodedTokens);
+      const response = this.rewrite(
+        rewritePath,
+        req,
+        res,
+        false,
+        this.getForwardedRequestHeaders(req, res, encodedTokens)
+      );
 
       // Disable preflight caching to force revalidation on client-side navigation (personalization MAY be influenced).
       // See https://github.com/vercel/next.js/pull/32767
       response.headers.set('x-proxy-cache', 'no-cache');
-      if (usableVisitorTokens) {
+      if (encodedTokens) {
+        // The render can contain visitor data from the tokens: keep it out of shared caches,
+        // even when the app sets its own caching headers.
         response.headers.set('Cache-Control', 'private, no-store');
       }
 
@@ -331,7 +299,7 @@ export class PersonalizeProxy extends ProxyBase {
 
       proxiesContext?.set(this.name, failedExecution);
 
-      return forward(eligible);
+      return skip();
     }
   };
 
@@ -427,9 +395,58 @@ export class PersonalizeProxy extends ProxyBase {
       },
       { timeout }
     )) as {
-      variantId: string;
+      variantId?: string;
       tokens?: Record<string, string | number>;
     };
+  }
+
+  /**
+   * Returns the request headers to forward when they must change: the inbound tokens header is
+   * removed and, when given, replaced with the tokens from this request's Personalize executions.
+   * Request header overrides set by earlier proxies in the chain are kept.
+   * @param {NextRequest} req Incoming request
+   * @param {NextResponse} res Current response
+   * @param {string} [encodedTokens] Encoded tokens to forward
+   * @returns {Headers | undefined} Headers to forward, or `undefined` when the request headers can be used as-is
+   * @internal
+   */
+  protected getForwardedRequestHeaders(
+    req: NextRequest,
+    res: NextResponse,
+    encodedTokens?: string
+  ): Headers | undefined {
+    if (!encodedTokens && !req.headers.get(PERSONALIZE_TOKENS_HEADER)) {
+      return undefined;
+    }
+    const headers = new Headers();
+    req.headers.forEach((value, key) => {
+      if (typeof value === 'string') {
+        headers.append(key, value);
+      }
+    });
+    res.headers.forEach((value, key) => {
+      if (typeof value === 'string' && key.startsWith(REQUEST_OVERRIDE_PREFIX)) {
+        headers.set(key.slice(REQUEST_OVERRIDE_PREFIX.length), value);
+      }
+    });
+    headers.delete(PERSONALIZE_TOKENS_HEADER);
+    if (encodedTokens) {
+      headers.set(PERSONALIZE_TOKENS_HEADER, encodedTokens);
+    }
+    return headers;
+  }
+
+  /**
+   * Returns the response unchanged, unless the request carries an inbound tokens header that must
+   * not reach the render.
+   * @param {NextRequest} req Incoming request
+   * @param {NextResponse} res Current response
+   * @returns {NextResponse} Response to return from the proxy
+   * @internal
+   */
+  protected forwardWithoutInboundTokens(req: NextRequest, res: NextResponse): NextResponse {
+    const headers = this.getForwardedRequestHeaders(req, res);
+    return headers ? this.forward(res, headers) : res;
   }
 
   /**

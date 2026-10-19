@@ -1,5 +1,10 @@
-import type { LoaderContext } from './models';
-import { DEFAULT_VARIANT, TokenMap } from '@sitecore-content-sdk/content/personalize';
+import type { CsdkRequestData, LoaderContext } from './models';
+import {
+  DEFAULT_VARIANT,
+  decodePersonalizeTokens,
+  PERSONALIZE_TOKENS_HEADER,
+  TokenMap,
+} from '@sitecore-content-sdk/content/personalize';
 
 /**
  * Read the site name resolved for the current request (multisite middleware →
@@ -50,37 +55,24 @@ export function getLanguage(context: LoaderContext): string | undefined {
 }
 
 /**
- * Reads middleware-written personalize tokens, including `{}`.
- * Returns `undefined` when the trusted map is absent.
- * Pass-through of `undefined` to `finalizePersonalizedPage` preserves
- * authored `{{...}}`. Stock hosts use `getPersonalizeTokens(context) ?? {}`
- * so normal renders always process tokens. Strip inbound client `tokens`
- * before calling this helper; `x-sitecore-params` may contain visitor PII.
- * @param {LoaderContext} context Loader context
- * @returns {TokenMap | undefined} Trusted token map
+ * Read the dynamic content tokens that the personalize middleware forwarded for the current
+ * request, for `getPage(path, { tokens })`. Returns `undefined` when there are none.
+ * The personalize middleware removes any client-sent value, so keep it in the server chain.
+ * @param {LoaderContext} context - Loader context.
+ * @returns {TokenMap | undefined} Tokens for the current request.
  * @public
  */
 export function getPersonalizeTokens(context: LoaderContext): TokenMap | undefined {
-  return context.scParams.tokens;
+  return readPersonalizeTokens(context.csdkRequestData?.headers);
 }
 
 /**
- * True when page finalization must be skipped so Preview and Design Library
- * keep authored token literals and their existing content rewrite.
- * @param {object | null | undefined} page Page or nullish loader result
- * @param {object} [page.mode] Page mode flags
- * @param {boolean} [page.mode.isPreview] Preview / editing
- * @param {boolean} [page.mode.isDesignLibrary] Design Library
- * @returns {boolean} Whether `finalizePersonalizedPage` must not run
- * @public
+ * Decode the dynamic content tokens header from request headers.
+ * @param {CsdkRequestData['headers']} headers - Request headers.
+ * @returns {TokenMap | undefined} Tokens, or `undefined` when there are none.
+ * @internal
  */
-export function shouldBypassPageFinalization(
-  page:
-    | {
-        mode?: { isPreview?: boolean; isDesignLibrary?: boolean };
-      }
-    | null
-    | undefined
-): boolean {
-  return !page || !!page.mode?.isPreview || !!page.mode?.isDesignLibrary;
+export function readPersonalizeTokens(headers: CsdkRequestData['headers']): TokenMap | undefined {
+  const value = headers?.[PERSONALIZE_TOKENS_HEADER];
+  return decodePersonalizeTokens(Array.isArray(value) ? value[0] : value);
 }

@@ -299,6 +299,12 @@ describe('ProxyBase', () => {
 
     headers.set('x-sc-personalize-tokens', 'secret-payload');
     expect(proxy['extractDebugHeaders'](headers)['x-sc-personalize-tokens']).to.equal('[redacted]');
+
+    // Next.js copies request header overrides onto the response as x-middleware-request-*
+    headers.set('x-middleware-request-x-sc-personalize-tokens', 'secret-payload');
+    expect(
+      proxy['extractDebugHeaders'](headers)['x-middleware-request-x-sc-personalize-tokens']
+    ).to.equal('[redacted]');
   });
 
   describe('getHostHeader', () => {
@@ -646,7 +652,6 @@ describe('ProxyBase', () => {
       });
       const nextStub = sinon.stub(NextResponse, 'next');
       const proxy = new SampleProxy({ sites: [] });
-      const req = createReq();
       const res = createRes({
         headers: {
           'x-middleware-rewrite': 'https://external.example/path',
@@ -655,7 +660,7 @@ describe('ProxyBase', () => {
       });
       const requestHeaders = new Headers({ foo: 'bar' });
 
-      proxy['forward'](req, res, requestHeaders);
+      proxy['forward'](res, requestHeaders);
 
       expect(rewriteStub).to.have.been.calledWith(
         'https://external.example/path',
@@ -674,7 +679,7 @@ describe('ProxyBase', () => {
       const requestHeaders = new Headers({ foo: 'bar' });
       const res = createRes();
 
-      proxy['forward'](createReq(), res, requestHeaders);
+      proxy['forward'](res, requestHeaders);
 
       expect(nextStub).to.have.been.calledWith(
         sinon.match({ request: { headers: requestHeaders } })

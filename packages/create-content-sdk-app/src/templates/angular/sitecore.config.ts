@@ -7,6 +7,11 @@ import { environment } from './src/environments/environment';
  * @see https://doc.sitecore.com/xmc/en/developers/content-sdk/the-sitecore-configuration-file.html
  */
 export default defineConfig(
-  {},
+  {
+    personalize: {
+      // Resolve dynamic content tokens ({{key}} / {{key|fallback}}) authored in page content
+      dynamicContent: true,
+    },
+  },
   environment satisfies Record<string, string | undefined>
 );
