@@ -25,13 +25,15 @@ export const Placeholder = (props: PlaceholderProps) => {
     <ReactPlaceholder
       {...props}
       modifyComponentProps={(initialProps) => {
-        if (!initialProps.rendering.uid) return initialProps;
+        let componentProps = initialProps;
+        if (initialProps.rendering.uid) {
+          const data = componentPropsContext[initialProps.rendering.uid] as Record<string, unknown>;
+          componentProps = { ...initialProps, ...data };
+        }
 
-        const data = componentPropsContext[initialProps.rendering.uid] as {
-          [key: string]: unknown;
-        };
-
-        return { ...initialProps, ...data };
+        return props.modifyComponentProps
+          ? props.modifyComponentProps(componentProps)
+          : componentProps;
       }}
     />
   );

@@ -99,12 +99,10 @@ const getPlaceholderComponents = (
       }
 
       if (!componentEmpty) {
-        const errorBoundaryKey = rendered.type + '-' + index;
-
         rendered = (
           <ErrorBoundary
             data-testid="error-boundary"
-            key={errorBoundaryKey}
+            key={key}
             errorComponent={errorComponent}
             componentLoadingMessage={componentLoadingMessage}
             isDynamic={dynamic}
