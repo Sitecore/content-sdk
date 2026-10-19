@@ -8,6 +8,6 @@
 
 > `const` **ANALYTICS\_PLUGIN\_NAME**: `"AnalyticsPlugin"` = `'AnalyticsPlugin'`
 
-Defined in: [analytics-core/src/initialization/const.ts:5](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/analytics-core/src/initialization/const.ts#L5)
+Defined in: [analytics-core/src/initialization/const.ts:5](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/analytics-core/src/initialization/const.ts#L5)
 
 The name of the Analytics plugin.

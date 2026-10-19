@@ -1111,6 +1111,11 @@ export interface PageMetadataFields extends MetadataFields, OpenGraphFields {
 }
 
 // @public
+export type PageMetadataRouteFields = PageMetadataFields & {
+    Title?: Field;
+};
+
+// @public
 export type PageMode = {
     name: PageModeName;
     designLibrary: {
@@ -1330,7 +1335,28 @@ export function replaceTokensInObject<T>(obj: T, tokens: TokenMap): T;
 export const resetEditorChromes: () => void;
 
 // @public
+export interface ResolvedPageMetadataFields {
+    author?: string;
+    creationTime?: string;
+    creationTimeTag?: string;
+    description?: string;
+    keywords?: string;
+    metaTitle?: string;
+    modifiedTime?: string;
+    modifiedTimeTag?: string;
+    ogDescription?: string;
+    ogImage?: OpenGraphImageFieldValue;
+    ogImageSrc?: string;
+    ogTitle?: string;
+    ogType?: string;
+    title: string;
+}
+
+// @public
 export const resolveExperimentalFeatureStatuses: (features: ExperimentalFeatureData[]) => ExperimentalFeatureStatus[];
+
+// @public
+export function resolvePageMetadataFields(route: RouteData<PageMetadataRouteFields> | null | undefined, defaultTitle: string): ResolvedPageMetadataFields;
 
 // @internal
 export const resolveRedirectTarget: (existsRedirect: RedirectResult, siteLanguage: string, requestPath: string) => string;
@@ -1474,7 +1500,7 @@ export type SitecoreCliConfigInput = {
 // @public
 export class SitecoreClient implements BaseSitecoreClient {
     constructor(initOptions: SitecoreClientInit);
-    // @internal
+    // @internal @deprecated
     protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData;
     // (undocumented)
     protected clientFactory: GraphQLRequestClientFactory;
@@ -1482,6 +1508,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     protected componentService: ComponentLayoutService;
     // (undocumented)
     protected dictionaryService: DictionaryService;
+    // (undocumented)
+    edgeInitialized: boolean;
     // (undocumented)
     protected editingService: EditingService;
     // (undocumented)
@@ -1518,6 +1546,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     // (undocumented)
     protected layoutService: LayoutService;
     parsePath(path: string | string[]): string;
+    // @internal
+    protected rewriteContentUrls<T>(data: T): T;
     // (undocumented)
     protected sitePathService: SitePathService;
 }

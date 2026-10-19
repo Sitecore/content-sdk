@@ -6,7 +6,7 @@
 
 # Class: SitecoreClient
 
-Defined in: [content/src/client/sitecore-client.ts:299](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L299)
+Defined in: [content/src/client/sitecore-client.ts:301](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L301)
 
 This is a generic content client that can be used by any framework.
 Use it to retrieve pages, preview data, dictionary and other data
@@ -21,7 +21,7 @@ Use it to retrieve pages, preview data, dictionary and other data
 
 > **new SitecoreClient**(`initOptions`): `SitecoreClient`
 
-Defined in: [content/src/client/sitecore-client.ts:313](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L313)
+Defined in: [content/src/client/sitecore-client.ts:316](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L316)
 
 Init SitecoreClient
 
@@ -41,7 +41,7 @@ Init SitecoreClient
 
 > `protected` **clientFactory**: [`GraphQLRequestClientFactory`](../type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [content/src/client/sitecore-client.ts:303](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L303)
+Defined in: [content/src/client/sitecore-client.ts:306](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L306)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: [content/src/client/sitecore-client.ts:303](https://github.com/Sitec
 
 > `protected` **componentService**: [`ComponentLayoutService`](../../editing/classes/ComponentLayoutService.md)
 
-Defined in: [content/src/client/sitecore-client.ts:305](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L305)
+Defined in: [content/src/client/sitecore-client.ts:308](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L308)
 
 ***
 
@@ -57,7 +57,15 @@ Defined in: [content/src/client/sitecore-client.ts:305](https://github.com/Sitec
 
 > `protected` **dictionaryService**: [`DictionaryService`](../../i18n/classes/DictionaryService.md)
 
-Defined in: [content/src/client/sitecore-client.ts:301](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L301)
+Defined in: [content/src/client/sitecore-client.ts:304](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L304)
+
+***
+
+### edgeInitialized
+
+> **edgeInitialized**: `boolean` = `true`
+
+Defined in: [content/src/client/sitecore-client.ts:302](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L302)
 
 ***
 
@@ -65,7 +73,7 @@ Defined in: [content/src/client/sitecore-client.ts:301](https://github.com/Sitec
 
 > `protected` **editingService**: [`EditingService`](../../editing/classes/EditingService.md)
 
-Defined in: [content/src/client/sitecore-client.ts:302](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L302)
+Defined in: [content/src/client/sitecore-client.ts:305](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L305)
 
 ***
 
@@ -73,7 +81,7 @@ Defined in: [content/src/client/sitecore-client.ts:302](https://github.com/Sitec
 
 > `protected` **errorPagesService**: [`ErrorPagesService`](../../site/classes/ErrorPagesService.md)
 
-Defined in: [content/src/client/sitecore-client.ts:304](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L304)
+Defined in: [content/src/client/sitecore-client.ts:307](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L307)
 
 ***
 
@@ -81,7 +89,7 @@ Defined in: [content/src/client/sitecore-client.ts:304](https://github.com/Sitec
 
 > `protected` **graphQLClient**: [`GraphQLClient`](../interfaces/GraphQLClient.md)
 
-Defined in: [content/src/client/sitecore-client.ts:307](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L307)
+Defined in: [content/src/client/sitecore-client.ts:310](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L310)
 
 ***
 
@@ -89,7 +97,7 @@ Defined in: [content/src/client/sitecore-client.ts:307](https://github.com/Sitec
 
 > `protected` **initOptions**: [`SitecoreClientInit`](../type-aliases/SitecoreClientInit.md)
 
-Defined in: [content/src/client/sitecore-client.ts:313](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L313)
+Defined in: [content/src/client/sitecore-client.ts:316](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L316)
 
 initOptions for the client, containing site and Sitecore connection details
 
@@ -99,7 +107,7 @@ initOptions for the client, containing site and Sitecore connection details
 
 > `protected` **layoutService**: [`LayoutService`](../../layout/classes/LayoutService.md)
 
-Defined in: [content/src/client/sitecore-client.ts:300](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L300)
+Defined in: [content/src/client/sitecore-client.ts:303](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L303)
 
 ***
 
@@ -107,15 +115,15 @@ Defined in: [content/src/client/sitecore-client.ts:300](https://github.com/Sitec
 
 > `protected` **sitePathService**: [`SitePathService`](../../site/classes/SitePathService.md)
 
-Defined in: [content/src/client/sitecore-client.ts:306](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L306)
+Defined in: [content/src/client/sitecore-client.ts:309](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L309)
 
 ## Methods
 
-### applyContentRewrite()
+### ~~applyContentRewrite()~~
 
 > `protected` **applyContentRewrite**(`layout`): [`LayoutServiceData`](../../layout/interfaces/LayoutServiceData.md)
 
-Defined in: [content/src/client/sitecore-client.ts:784](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L784)
+Defined in: [content/src/client/sitecore-client.ts:800](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L800)
 
 **`Internal`**
 
@@ -134,13 +142,17 @@ When true, uses default Edge host rewriter; when a function, transforms each str
 
 Rewritten layout (or same reference if rewrite disabled)
 
+#### Deprecated
+
+Use [SitecoreClient.rewriteContentUrls](#rewritecontenturls) instead. This method only accepts layout data.
+
 ***
 
 ### getBaseServiceOptions()
 
 > `protected` **getBaseServiceOptions**(): `BaseServiceOptions`
 
-Defined in: [content/src/client/sitecore-client.ts:763](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L763)
+Defined in: [content/src/client/sitecore-client.ts:778](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L778)
 
 #### Returns
 
@@ -152,10 +164,11 @@ Defined in: [content/src/client/sitecore-client.ts:763](https://github.com/Sitec
 
 > **getData**\<`T`\>(`query`, `variables?`, `fetchOptions?`): `Promise`\<`T`\>
 
-Defined in: [content/src/client/sitecore-client.ts:355](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L355)
+Defined in: [content/src/client/sitecore-client.ts:364](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L364)
 
 Execute a raw GraphQL request using the client's configured GraphQL Edge endpoint.
-This is a thin pass-through to the underlying `GraphQLClient.request` method,
+When `rewriteMediaUrls` is enabled, string values in the result are rewritten
+the same way as layout data.
 
 #### Type Parameters
 
@@ -175,6 +188,8 @@ This is a thin pass-through to the underlying `GraphQLClient.request` method,
 
 `Promise`\<`T`\>
 
+GraphQL result, with media hostnames rewritten when `rewriteMediaUrls` is enabled
+
 #### Implementation of
 
 `BaseSitecoreClient.getData`
@@ -185,7 +200,7 @@ This is a thin pass-through to the underlying `GraphQLClient.request` method,
 
 > **getDesignLibraryData**(`designLibData`, `fetchOptions?`): `Promise`\<[`Page`](../type-aliases/Page.md)\>
 
-Defined in: [content/src/client/sitecore-client.ts:542](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L542)
+Defined in: [content/src/client/sitecore-client.ts:557](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L557)
 
 Get design library page details for Design Library mode of your app
 
@@ -208,7 +223,7 @@ preview page for Design Library
 
 > **getDictionary**(`routeOptions?`, `fetchOptions?`): `Promise`\<[`DictionaryPhrases`](../../i18n/interfaces/DictionaryPhrases.md)\>
 
-Defined in: [content/src/client/sitecore-client.ts:455](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L455)
+Defined in: [content/src/client/sitecore-client.ts:470](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L470)
 
 Retrieves dictionary phrases for a given site and locale.
 
@@ -235,7 +250,7 @@ A promise that resolves to the dictionary phrases.
 
 > **getErrorPage**(`code`, `pageOptions?`, `fetchOptions?`): `Promise`\<[`Page`](../type-aliases/Page.md) \| `null`\>
 
-Defined in: [content/src/client/sitecore-client.ts:597](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L597)
+Defined in: [content/src/client/sitecore-client.ts:612](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L612)
 
 Get error page details for a given error code
 
@@ -263,7 +278,7 @@ A promise that resolves to the error page details or null if not found
 
 > **getErrorPages**(`routeOptions?`, `fetchOptions?`): `Promise`\<[`ErrorPages`](../../site/type-aliases/ErrorPages.md) \| `null`\>
 
-Defined in: [content/src/client/sitecore-client.ts:470](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L470)
+Defined in: [content/src/client/sitecore-client.ts:485](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L485)
 
 Retrieves error pages for a given site and locale.
 
@@ -290,7 +305,7 @@ A promise that resolves to the error pages or null if not found.
 
 > `protected` **getGraphqlSitemapXMLService**(`siteName`): [`SitemapXmlService`](../../site/classes/SitemapXmlService.md)
 
-Defined in: [content/src/client/sitecore-client.ts:742](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L742)
+Defined in: [content/src/client/sitecore-client.ts:757](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L757)
 
 Factory methods for creating dependencies
 Subclasses can override these to provide custom implementations.
@@ -311,7 +326,7 @@ Subclasses can override these to provide custom implementations.
 
 > **getHeadLinks**(`layoutData`, `options?`): [`HTMLLink`](../../index/type-aliases/HTMLLink.md)[]
 
-Defined in: [content/src/client/sitecore-client.ts:417](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L417)
+Defined in: [content/src/client/sitecore-client.ts:427](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L427)
 
 Retrieves the head `<link>` elements for Sitecore styles and themes.
 
@@ -340,7 +355,7 @@ An array of `<link>` elements for stylesheets.
 
 > **getLlmsTxt**(`options`, `fetchOptions?`): `Promise`\<`string` \| `null`\>
 
-Defined in: [content/src/client/sitecore-client.ts:731](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L731)
+Defined in: [content/src/client/sitecore-client.ts:746](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L746)
 
 Retrieves the llms.txt content (managed via Sitecore AI) for a given site.
 
@@ -368,7 +383,7 @@ or null if no content is found.
 
 > `protected` **getLlmsTxtService**(`siteName`): [`LlmsTxtService`](../../site/classes/LlmsTxtService.md)
 
-Defined in: [content/src/client/sitecore-client.ts:756](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L756)
+Defined in: [content/src/client/sitecore-client.ts:771](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L771)
 
 #### Parameters
 
@@ -386,7 +401,7 @@ Defined in: [content/src/client/sitecore-client.ts:756](https://github.com/Sitec
 
 > **getPage**(`path`, `pageOptions?`, `fetchOptions?`): `Promise`\<[`Page`](../type-aliases/Page.md) \| `null`\>
 
-Defined in: [content/src/client/sitecore-client.ts:370](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L370)
+Defined in: [content/src/client/sitecore-client.ts:380](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L380)
 
 Get page details for a route, with layout and other details
 
@@ -414,7 +429,7 @@ page details
 
 > **getPagePaths**(`sites`, `languages?`, `fetchOptions?`): `Promise`\<[`StaticPath`](../../index/type-aliases/StaticPath.md)[]\>
 
-Defined in: [content/src/client/sitecore-client.ts:647](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L647)
+Defined in: [content/src/client/sitecore-client.ts:662](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L662)
 
 Retrieves the static paths for pages based on the given languages.
 
@@ -442,7 +457,7 @@ A promise that resolves to an array of static paths.
 
 > **getPreview**(`previewData`, `fetchOptions?`): `Promise`\<[`Page`](../type-aliases/Page.md) \| `null`\>
 
-Defined in: [content/src/client/sitecore-client.ts:485](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L485)
+Defined in: [content/src/client/sitecore-client.ts:500](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L500)
 
 Retrieves preview page and layout details
 
@@ -469,7 +484,7 @@ preview page details
 
 > **getRobots**(`siteName`, `fetchOptions?`): `Promise`\<`string` \| `null`\>
 
-Defined in: [content/src/client/sitecore-client.ts:718](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L718)
+Defined in: [content/src/client/sitecore-client.ts:733](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L733)
 
 Retrieves the robots.txt content for a given site name.
 
@@ -497,7 +512,7 @@ or null if no content is found.
 
 > `protected` **getRobotsService**(`siteName`): [`RobotsService`](../../site/classes/RobotsService.md)
 
-Defined in: [content/src/client/sitecore-client.ts:749](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L749)
+Defined in: [content/src/client/sitecore-client.ts:764](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L764)
 
 #### Parameters
 
@@ -515,7 +530,7 @@ Defined in: [content/src/client/sitecore-client.ts:749](https://github.com/Sitec
 
 > **getSiteMap**(`reqOptions`, `fetchOptions?`): `Promise`\<`string`\>
 
-Defined in: [content/src/client/sitecore-client.ts:662](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L662)
+Defined in: [content/src/client/sitecore-client.ts:677](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L677)
 
 Retrieves sitemap XML content - either a specific sitemap or the index of all sitemaps.
 
@@ -546,7 +561,7 @@ Throws 'REDIRECT_404' if requested sitemap is not found
 
 > **parsePath**(`path`): `string`
 
-Defined in: [content/src/client/sitecore-client.ts:336](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/content/src/client/sitecore-client.ts#L336)
+Defined in: [content/src/client/sitecore-client.ts:343](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L343)
 
 Normalize path regardless of type
 
@@ -561,3 +576,36 @@ Normalize path regardless of type
 `string`
 
 string path
+
+***
+
+### rewriteContentUrls()
+
+> `protected` **rewriteContentUrls**\<`T`\>(`data`): `T`
+
+Defined in: [content/src/client/sitecore-client.ts:813](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/client/sitecore-client.ts#L813)
+
+**`Internal`**
+
+Rewrites media hostnames when `rewriteMediaUrls` is enabled.
+Shared by layout responses and `getData` so both follow the same option.
+When the option is omitted or false, returns the same reference.
+The default rewriter changes only the default Experience Edge hostname.
+
+#### Type Parameters
+
+| Type Parameter |
+| ------ |
+| `T` |
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `data` | `T` | Layout data or a GraphQL response |
+
+#### Returns
+
+`T`
+
+Rewritten data, or the original reference when rewrite is disabled

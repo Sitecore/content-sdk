@@ -8,7 +8,7 @@
 
 > **FacetFilterOperator** = `"eq"` \| `"gt"` \| `"lt"` \| `"ge"` \| `"le"`
 
-Defined in: [models.ts:8](https://github.com/Sitecore/content-sdk/blob/ab9e875d0e7b49a2476a9634f4e57b1fe6847d09/packages/search/src/models.ts#L8)
+Defined in: [models.ts:8](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/search/src/models.ts#L8)
 
 Allowed filter operators for a facet field.
 Note: string and boolean fields only support 'eq'; numeric and datetime fields support all operators.

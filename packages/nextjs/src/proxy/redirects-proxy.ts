@@ -165,7 +165,7 @@ export class RedirectsProxy extends ProxyBase {
       debug.redirects('Matched redirect rule: %o', { existsRedirect });
 
       const reqUrl = this.normalizeUrl(req.nextUrl.clone());
-      const incomingPathData = breakDownPath(this.locales, reqUrl.pathname);
+      const incomingPathData = breakDownPath(this.getPathLocales(language), reqUrl.pathname);
       incomingPathData.queryString = reqUrl.search ? reqUrl.search.replace(/^\?/, '') : undefined;
 
       existsRedirect.target = resolveRedirectTarget(existsRedirect, site.language, reqUrl.pathname);
@@ -179,13 +179,18 @@ export class RedirectsProxy extends ProxyBase {
           return this.dispatchRedirect(targetUrl, existsRedirect.redirectType, req, res, true);
         }
 
-        const { targetLocale, targetPath } = processRelativeUrlTarget(
+        const pathLocales = this.getPathLocales(language);
+        const { targetLocale: matchedTargetLocale, targetPath } = processRelativeUrlTarget(
           incomingPathData,
           existsRedirect,
-          this.locales,
+          pathLocales,
           language
         );
-
+        // matched paths are lowercased, so restore the configured casing (e.g. `en-ca` -> `en-CA`)
+        const targetLocale =
+          pathLocales.find(
+            (locale) => locale.toLowerCase() === matchedTargetLocale.toLowerCase()
+          ) || matchedTargetLocale;
         const prepareNewURL = new URL(targetPath, reqUrl.origin);
 
         reqUrl.pathname = prepareNewURL.pathname;
@@ -313,7 +318,7 @@ export class RedirectsProxy extends ProxyBase {
     incomingURL: string,
     incomingQS: string
   ): RedirectResult | undefined {
-    const incomingPathData = breakDownPath(this.locales, incomingURL);
+    const incomingPathData = breakDownPath(this.getPathLocales(requestLocale), incomingURL);
     incomingPathData.queryString = incomingQS ? incomingQS.replace(/^\?/, '') : undefined;
     return matchFromRedirectMapRedirectUtil(redirects, requestLocale, incomingPathData);
   }
@@ -332,7 +337,7 @@ export class RedirectsProxy extends ProxyBase {
     currentPath: string
   ): RedirectResult | undefined {
     // strip any configured locale prefix so the path can be compared against locale-less patterns
-    const { nonLocalePath } = breakDownPath(this.locales, currentPath);
+    const { nonLocalePath } = breakDownPath(this.getPathLocales(locale), currentPath);
     return matchRedirectItemRedirectUtil(redirects, locale, nonLocalePath);
   }
 
@@ -481,5 +486,14 @@ export class RedirectsProxy extends ProxyBase {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Locales to recognize as a leading path segment: configured locales plus the request locale.
+   * @param {string} requestLocale locale of the current request
+   * @returns {string[]} configured locales plus the request locale
+   */
+  private getPathLocales(requestLocale: string): string[] {
+    return [...(this.locales || []), requestLocale].filter(Boolean);
   }
 }

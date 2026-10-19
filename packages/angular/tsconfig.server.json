@@ -9,12 +9,14 @@
     "declarationMap": true,
     "strict": true,
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "types": ["node"]
   },
   "include": [
     "src/server/config-cli/**/*.ts",
     "src/server/tools/**/*.ts",
-    "src/server/codegen/**/*.ts"
+    "src/server/codegen/**/*.ts",
+    "src/server/experimental-features/**/*.ts"
   ]
 }

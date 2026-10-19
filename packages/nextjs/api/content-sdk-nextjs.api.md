@@ -152,7 +152,7 @@ import { OpenGraphImageField } from '@sitecore-content-sdk/react';
 import { OpenGraphImageFieldValue } from '@sitecore-content-sdk/react';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { PageMetadataFields } from '@sitecore-content-sdk/react';
-import type { PageMetadataFields as PageMetadataFields_2 } from '@sitecore-content-sdk/content/layout';
+import type { PageMetadataRouteFields } from '@sitecore-content-sdk/content/layout';
 import { PageMode } from '@sitecore-content-sdk/content/client';
 import { PageOptions } from '@sitecore-content-sdk/content/client';
 import { PERSONALIZE_TOKENS_HEADER } from '@sitecore-content-sdk/content/personalize';
@@ -548,6 +548,9 @@ export { ErrorPagesServiceConfig }
 export { ExperimentalFeatureData }
 
 // @public
+export const experimentalFeaturesCatalog: ExperimentalFeatureData[];
+
+// @public
 export class ExperimentalFeaturesMiddleware {
     getHandler(): (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 }
@@ -851,10 +854,7 @@ export { Page }
 
 export { PageMetadataFields }
 
-// @public
-export type PageMetadataRouteFields = PageMetadataFields_2 & {
-    Title?: Field;
-};
+export { PageMetadataRouteFields }
 
 // @public
 export const PageMetaTags: (input: PageMetaTagsProps) => JSX_2.Element;
@@ -970,6 +970,8 @@ export class PreviewProxy extends ProxyBase {
     constructor(config: PreviewProxyConfig);
     // (undocumented)
     protected client: SitecoreClient;
+    // (undocumented)
+    protected disabled(req: NextRequest): boolean;
     // (undocumented)
     handle: (req: NextRequest, res: NextResponse, proxiesContext?: ProxiesContext) => Promise<NextResponse>;
     get name(): string;
