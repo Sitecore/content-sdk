@@ -8,6 +8,6 @@
 
 > `const` **DEFAULT\_ATOMS\_CSS\_FILE**: `"src/app/globals.css"` = `'src/app/globals.css'`
 
-Defined in: [nextjs/src/instrumentation/constants.ts:2](https://github.com/Sitecore/content-sdk/blob/5b6de22f85fe8291e5526ff894ecf1aa2f7ab37c/packages/nextjs/src/instrumentation/constants.ts#L2)
+Defined in: [nextjs/src/instrumentation/constants.ts:2](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/nextjs/src/instrumentation/constants.ts#L2)
 
 Default path to the App Router stylesheet used by starter templates.

@@ -8,7 +8,7 @@
 
 > **getThemingStylesheetLinks**(`options`): [`HTMLLink`](../../index/type-aliases/HTMLLink.md)[]
 
-Defined in: [content/src/layout/theming.ts:78](https://github.com/Sitecore/content-sdk/blob/5b6de22f85fe8291e5526ff894ecf1aa2f7ab37c/packages/content/src/layout/theming.ts#L78)
+Defined in: [content/src/layout/theming.ts:78](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/layout/theming.ts#L78)
 
 Returns `<link>` elements for Sitecore design-token theming.
 Independent from Design Library stylesheets (`getDesignLibraryStylesheetLinks`).

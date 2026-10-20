@@ -8,6 +8,6 @@
 
 > **AtomsStylingSolution** = `"tailwind"` \| `"inline-css"`
 
-Defined in: [content/src/atoms/types.ts:47](https://github.com/Sitecore/content-sdk/blob/5b6de22f85fe8291e5526ff894ecf1aa2f7ab37c/packages/content/src/atoms/types.ts#L47)
+Defined in: [content/src/atoms/types.ts:47](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/types.ts#L47)
 
 Styling solution used to style the app.

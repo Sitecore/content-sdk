@@ -6,7 +6,7 @@
 
 # Interface: AtomsDocumentValidationIssue
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:18](https://github.com/Sitecore/content-sdk/blob/5b6de22f85fe8291e5526ff894ecf1aa2f7ab37c/packages/content/src/atoms/design-library-bridge/types.ts#L18)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:18](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/design-library-bridge/types.ts#L18)
 
 **`Internal`**
 
@@ -19,7 +19,7 @@ Mirrors json-render's `SpecIssue` so Design Studio can send the payload to AI fo
 
 > **code**: `string`
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:26](https://github.com/Sitecore/content-sdk/blob/5b6de22f85fe8291e5526ff894ecf1aa2f7ab37c/packages/content/src/atoms/design-library-bridge/types.ts#L26)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:26](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/design-library-bridge/types.ts#L26)
 
 Machine-readable issue code from json-render.
 
@@ -29,7 +29,7 @@ Machine-readable issue code from json-render.
 
 > `optional` **elementKey?**: `string`
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:24](https://github.com/Sitecore/content-sdk/blob/5b6de22f85fe8291e5526ff894ecf1aa2f7ab37c/packages/content/src/atoms/design-library-bridge/types.ts#L24)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:24](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/design-library-bridge/types.ts#L24)
 
 The element key where the issue was found, when applicable.
 
@@ -39,7 +39,7 @@ The element key where the issue was found, when applicable.
 
 > **message**: `string`
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:22](https://github.com/Sitecore/content-sdk/blob/5b6de22f85fe8291e5526ff894ecf1aa2f7ab37c/packages/content/src/atoms/design-library-bridge/types.ts#L22)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:22](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/design-library-bridge/types.ts#L22)
 
 Human-readable description of the issue.
 
@@ -49,6 +49,6 @@ Human-readable description of the issue.
 
 > **severity**: `"error"` \| `"warning"`
 
-Defined in: [content/src/atoms/design-library-bridge/types.ts:20](https://github.com/Sitecore/content-sdk/blob/5b6de22f85fe8291e5526ff894ecf1aa2f7ab37c/packages/content/src/atoms/design-library-bridge/types.ts#L20)
+Defined in: [content/src/atoms/design-library-bridge/types.ts:20](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/design-library-bridge/types.ts#L20)
 
 Severity: errors should be fixed, warnings are informational.
