@@ -392,7 +392,7 @@ describe('Import Map Generation', () => {
       expect(convertToTestable(result)).to.deep.equal(expected);
     });
 
-    // JSS-9776: SCSS modules, SVGs, and other bundler assets cannot be resolved by the
+    // SCSS modules, SVGs, and other bundler assets cannot be resolved by the
     // TypeScript module resolver. They are omitted from the import map without a warning.
     // Unresolved JS/TS modules still warn.
     it('should omit unresolved non-JS asset imports without warning', () => {
