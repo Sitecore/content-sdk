@@ -1,14 +1,15 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
+import { getComponentList } from './components';
 import {
-  getComponentList,
   filterComponentsByType,
   toPascalCase,
   buildVariantSiblingIndex,
   isVariantComponent,
-} from './components';
-import { ComponentFile, ComponentFileWithType } from './components';
+  ComponentFile,
+  ComponentFileWithType,
+} from './component-builder';
 import path from 'path';
 
 describe('components', () => {

@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
-import { createGraphQLClientFactory } from './utils';
+import { createGraphQLClientFactory, NoOpGraphQLClient } from './utils';
 
 describe('createGraphQLClientFactory', () => {
   const originalWindow = global.window;
@@ -90,6 +90,23 @@ describe('createGraphQLClientFactory', () => {
         },
       })
     ).to.not.throw();
+  });
+
+  it('returns a NoOpGraphQLClient factory in the browser when no IDs are configured', () => {
+    const warnStub = sinon.stub(console, 'warn');
+    const createClientFactorySpy = sinon.spy(GraphQLRequestClient, 'createClientFactory');
+
+    // Browser bundle with no Edge/local configuration
+    (global as any).window = {};
+
+    const factory = createGraphQLClientFactory({ api: {} });
+    const client = factory();
+
+    expect(client).to.be.instanceOf(NoOpGraphQLClient);
+    // Should not fall through to the real client factory
+    expect(createClientFactorySpy.called).to.be.false;
+    // Should warn that client-side requests will fail
+    expect(warnStub.calledOnce).to.be.true;
   });
 
   it('throws error on server when no valid configuration is provided', () => {

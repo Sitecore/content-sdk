@@ -20,6 +20,9 @@ export type CodeBlockAttributes = {
  */
 @Component({
   selector: 'sc-placeholder-metadata',
+  // Keep the wrapper out of the box tree so projected children participate
+  // directly in the parent's layout (e.g. as flex/grid items).
+  host: { style: 'display: contents' },
   template: `
     <code
       type="text/sitecore"

@@ -9,6 +9,9 @@ import debug from '../debug';
 import { ProxyBase } from './proxy';
 import { ProxiesContext, SuccessfulProxyExecution } from './types';
 
+const STATIC_FILE_REGEX =
+  /\.(?:svg|png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf|eot|css|js|map|webmanifest)$/i;
+
 /**
  * Configuration for PreviewProxy
  * @public
@@ -63,6 +66,12 @@ export class PreviewProxy extends ProxyBase {
       req.cookies.get(PREVIEW_COOKIES.PREVIEW_TOKEN)?.value ||
       '';
     let editingOptions: EditingOptions | null = previewParams ? JSON.parse(previewParams) : null;
+
+    // Skip known static asset extensions so public files aren't denied in editing mode.
+    if (!editingOptions && this.disabled(req)) {
+      debug.editing('preview proxy skipped (static file)');
+      return res;
+    }
 
     debug.editing('preview proxy start');
 
@@ -148,4 +157,9 @@ export class PreviewProxy extends ProxyBase {
 
     return res;
   };
+
+  protected disabled(req: NextRequest): boolean {
+    // Skip static files with known asset extensions
+    return STATIC_FILE_REGEX.test(req.nextUrl.pathname);
+  }
 }

@@ -4,11 +4,11 @@ export {
   ComponentFileWithType,
   ComponentType,
   RouterType,
-  getComponentList,
   filterComponentsByType,
   ComponentMapEntry,
   ComponentMapTemplate,
   EnhancedComponentMapTemplate,
   toPascalCase,
-} from './components';
+} from './component-builder';
+export { getComponentList } from './components';
 export { prepareComponentsForMap, buildComponentMapContent } from './utils';

@@ -1,5 +1,35 @@
 # @sitecore-content-sdk/angular
 
+## 1.0.1
+
+### Patch Changes
+
+- Fixed `next dev --webpack` / `next build --webpack` failing with `UnhandledSchemeError` for ([153a804](https://github.com/sitecore/content-sdk/commit/153a804dcbabe3b52165f62332fb6d61d99b1ffe))
+  `node:events` when the generated `.sitecore/import-map.ts` imported `combineImportEntries`.
+
+  `content/tools` stays the browser-safe entry for that helper. Pure component-map helpers now live
+  apart from `glob`, and the Node-only `prepareComponentsForMap` / `buildComponentMapContent`
+  helpers (which depend on `path`) are exported from `content/node-tools`.
+
+- Sitecore webhook revalidation no longer invalidates dictionary data for every configured site on ([a321794](https://github.com/sitecore/content-sdk/commit/a321794e545c859e7477c482f96c12809f48661b))
+  every call — only an actual Dictionary entry update revalidates its own site's dictionary tag.
+
+  `createSitecoreRevalidateRouteHandler` (Next.js) and `createSitecoreRevalidateMiddleware` (Angular)
+  previously appended a `sc:dict:<site>:<locale>` tag for every site in `sites` on every webhook
+  call, regardless of what the payload actually changed. Because dictionary data is shared across
+  nearly every page, this meant any unrelated content update - or even a call with no dictionary
+  changes at all - revalidated every page for that site and locale, defeating the benefit of
+  targeted, on-demand revalidation.
+
+- `sc:item` tags no longer carry a version segment (`sc:item:<id>:<locale>`), so cache writes and ([9d6168b](https://github.com/sitecore/content-sdk/commit/9d6168b60ac2b41118803f3caca9b8a7b5ab8f9d))
+  webhook revalidation always agree.
+  Item cache tags could previously include a specific published version (`sc:item:<id>:<locale>:v<N>`)
+  when the layout response reported `itemVersion`, but webhook-driven revalidation always targets
+  `sc:item:<id>:<locale>:latest`. The mismatch meant those page cache entries were silently unreachable by `revalidateTag` and only went stale on cache TTL expiry.
+- `sc:item` tags now always use hyphenated lowercase GUIDs (`sc:item:<hyphenated-id>:<locale>:latest`), so cache writes and webhook revalidation always agree. ([fae7cb9](https://github.com/sitecore/content-sdk/commit/fae7cb9a962526f2eaad23c9d9a6b2b7202ebaf6))
+
+  Experience Edge publish payloads send unhyphenated item IDs (`xxxxxxxxx`). Cached pages already tag content with hyphenated lowercase GUIDs (`sc:item:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx:...`). Because Next.js / loader cache tags are compared as exact strings, those invalidation tags missed and published updates could stay stale.
+
 ## 1.0.0
 
 ### Major Changes

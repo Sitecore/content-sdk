@@ -34,6 +34,10 @@ export {
 } from './editing-render-middleware';
 export { createSitemapMiddleware, type CreateSitemapMiddlewareOptions } from './sitemap-middleware';
 export { createRobotsMiddleware, type CreateRobotsMiddlewareOptions } from './robots-middleware';
+export {
+  createLlmsTxtMiddleware,
+  type CreateLlmsTxtMiddlewareOptions,
+} from './llms-txt-middleware';
 export { createMultisiteMiddleware, type MultisiteMiddlewareOptions } from './multisite-middleware';
 export {
   createPersonalizeMiddleware,

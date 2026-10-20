@@ -10,8 +10,6 @@ export {
   ComponentMapEntry,
   ComponentMapTemplate,
   EnhancedComponentMapTemplate,
-  prepareComponentsForMap,
-  buildComponentMapContent,
   toPascalCase,
-} from './templating';
+} from './templating/component-builder';
 export { combineImportEntries } from './codegen/import-map-utils';

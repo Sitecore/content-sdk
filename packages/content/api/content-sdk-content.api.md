@@ -1102,6 +1102,11 @@ export interface PageMetadataFields extends MetadataFields, OpenGraphFields {
 }
 
 // @public
+export type PageMetadataRouteFields = PageMetadataFields & {
+    Title?: Field;
+};
+
+// @public
 export type PageMode = {
     name: PageModeName;
     designLibrary: {
@@ -1301,7 +1306,28 @@ const replaceMediaUrlPrefix: (url: string, mediaUrlPrefix?: RegExp) => string;
 export const resetEditorChromes: () => void;
 
 // @public
+export interface ResolvedPageMetadataFields {
+    author?: string;
+    creationTime?: string;
+    creationTimeTag?: string;
+    description?: string;
+    keywords?: string;
+    metaTitle?: string;
+    modifiedTime?: string;
+    modifiedTimeTag?: string;
+    ogDescription?: string;
+    ogImage?: OpenGraphImageFieldValue;
+    ogImageSrc?: string;
+    ogTitle?: string;
+    ogType?: string;
+    title: string;
+}
+
+// @public
 export const resolveExperimentalFeatureStatuses: (features: ExperimentalFeatureData[]) => ExperimentalFeatureStatus[];
+
+// @public
+export function resolvePageMetadataFields(route: RouteData<PageMetadataRouteFields> | null | undefined, defaultTitle: string): ResolvedPageMetadataFields;
 
 // @internal
 export const resolveRedirectTarget: (existsRedirect: RedirectResult, siteLanguage: string, requestPath: string) => string;
@@ -1445,7 +1471,7 @@ export type SitecoreCliConfigInput = {
 // @public
 export class SitecoreClient implements BaseSitecoreClient {
     constructor(initOptions: SitecoreClientInit);
-    // @internal
+    // @internal @deprecated
     protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData;
     // (undocumented)
     protected clientFactory: GraphQLRequestClientFactory;
@@ -1453,6 +1479,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     protected componentService: ComponentLayoutService;
     // (undocumented)
     protected dictionaryService: DictionaryService;
+    // (undocumented)
+    edgeInitialized: boolean;
     // (undocumented)
     protected editingService: EditingService;
     // (undocumented)
@@ -1488,6 +1516,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     // (undocumented)
     protected layoutService: LayoutService;
     parsePath(path: string | string[]): string;
+    // @internal
+    protected rewriteContentUrls<T>(data: T): T;
     // (undocumented)
     protected sitePathService: SitePathService;
 }
@@ -1717,10 +1747,10 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 //
 // src/client/sitecore-client.ts:69:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:116:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
-// src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
-// src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
-// src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
-// src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
+// src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
+// src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
+// src/tools/generate-map.ts:32:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
+// src/tools/generate-map.ts:32:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 

@@ -1,5 +1,25 @@
 # create-content-sdk-app
 
+## 2.4.1
+
+### Patch Changes
+
+- Sitecore webhook revalidation no longer invalidates dictionary data for every configured site on ([a321794](https://github.com/sitecore/content-sdk/commit/a321794e545c859e7477c482f96c12809f48661b))
+  every call — only an actual Dictionary entry update revalidates its own site's dictionary tag.
+
+  `createSitecoreRevalidateRouteHandler` (Next.js) and `createSitecoreRevalidateMiddleware` (Angular)
+  previously appended a `sc:dict:<site>:<locale>` tag for every site in `sites` on every webhook
+  call, regardless of what the payload actually changed. Because dictionary data is shared across
+  nearly every page, this meant any unrelated content update - or even a call with no dictionary
+  changes at all - revalidated every page for that site and locale, defeating the benefit of
+  targeted, on-demand revalidation.
+
+- `sc:item` tags no longer carry a version segment (`sc:item:<id>:<locale>`), so cache writes and ([9d6168b](https://github.com/sitecore/content-sdk/commit/9d6168b60ac2b41118803f3caca9b8a7b5ab8f9d))
+  webhook revalidation always agree.
+  Item cache tags could previously include a specific published version (`sc:item:<id>:<locale>:v<N>`)
+  when the layout response reported `itemVersion`, but webhook-driven revalidation always targets
+  `sc:item:<id>:<locale>:latest`. The mismatch meant those page cache entries were silently unreachable by `revalidateTag` and only went stale on cache TTL expiry.
+
 ## 2.4.0
 
 ### Minor Changes

@@ -6,7 +6,7 @@
 
 # Interface: PageMetaTagsProps
 
-Defined in: [nextjs/src/components/PageMetaTags.tsx:11](https://github.com/Sitecore/content-sdk/blob/df0ab91f7e1cc1e11e1d2458da0d151ccdbea3af/packages/nextjs/src/components/PageMetaTags.tsx#L11)
+Defined in: [nextjs/src/components/PageMetaTags.tsx:10](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/nextjs/src/components/PageMetaTags.tsx#L10)
 
 Props for [PageMetaTags](../functions/PageMetaTags.md).
 
@@ -16,7 +16,7 @@ Props for [PageMetaTags](../functions/PageMetaTags.md).
 
 > `optional` **defaultTitle?**: `string`
 
-Defined in: [nextjs/src/components/PageMetaTags.tsx:15](https://github.com/Sitecore/content-sdk/blob/df0ab91f7e1cc1e11e1d2458da0d151ccdbea3af/packages/nextjs/src/components/PageMetaTags.tsx#L15)
+Defined in: [nextjs/src/components/PageMetaTags.tsx:14](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/nextjs/src/components/PageMetaTags.tsx#L14)
 
 Fallback for `<title>` when the route has no `Title` field. Defaults to `'Page'`.
 
@@ -26,6 +26,6 @@ Fallback for `<title>` when the route has no `Title` field. Defaults to `'Page'`
 
 > `optional` **route?**: [`RouteData`](RouteData.md)\<[`PageMetadataRouteFields`](../type-aliases/PageMetadataRouteFields.md)\> \| `null`
 
-Defined in: [nextjs/src/components/PageMetaTags.tsx:13](https://github.com/Sitecore/content-sdk/blob/df0ab91f7e1cc1e11e1d2458da0d151ccdbea3af/packages/nextjs/src/components/PageMetaTags.tsx#L13)
+Defined in: [nextjs/src/components/PageMetaTags.tsx:12](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/nextjs/src/components/PageMetaTags.tsx#L12)
 
 Route node from a Sitecore layout response (for example `page.layout.sitecore.route`).
