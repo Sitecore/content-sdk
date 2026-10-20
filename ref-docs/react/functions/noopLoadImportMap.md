@@ -8,7 +8,7 @@
 
 > **noopLoadImportMap**(): `Promise`\<[`ImportMapImport`](../type-aliases/ImportMapImport.md)\>
 
-Defined in: [packages/react/src/components/DesignLibrary/loadImportMap.ts:8](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/react/src/components/DesignLibrary/loadImportMap.ts#L8)
+Defined in: [packages/react/src/components/DesignLibrary/loadImportMap.ts:8](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/react/src/components/DesignLibrary/loadImportMap.ts#L8)
 
 No-op import map loader used when code generation is disabled or no import map is available.
 

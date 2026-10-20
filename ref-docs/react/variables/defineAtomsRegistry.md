@@ -8,7 +8,7 @@
 
 > `const` **defineAtomsRegistry**: \<`C`\>(`catalog`, `options`) => `DefineRegistryResult` = `defineRegistry`
 
-Defined in: [packages/react/src/atoms/define-atoms-registry.ts:34](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/react/src/atoms/define-atoms-registry.ts#L34)
+Defined in: [packages/react/src/atoms/define-atoms-registry.ts:34](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/react/src/atoms/define-atoms-registry.ts#L34)
 
 Define an atoms registry that maps catalog definitions to React implementations.
 

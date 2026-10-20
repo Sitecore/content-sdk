@@ -6,7 +6,7 @@
 
 # Interface: ThemeUpdateEventArgs
 
-Defined in: [content/src/editing/theme-preview.ts:21](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/editing/theme-preview.ts#L21)
+Defined in: [content/src/editing/theme-preview.ts:21](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/editing/theme-preview.ts#L21)
 
 Event args for the `theme-update` event.
 `message.css` is the raw CSS to inject; an empty string removes the previewed theme.
@@ -21,7 +21,7 @@ Event args for the `theme-update` event.
 
 > **message**: `object`
 
-Defined in: [content/src/editing/theme-preview.ts:23](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/editing/theme-preview.ts#L23)
+Defined in: [content/src/editing/theme-preview.ts:23](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/editing/theme-preview.ts#L23)
 
 The message payload for the event.
 
@@ -39,7 +39,7 @@ The message payload for the event.
 
 > **name**: `"theme-update"`
 
-Defined in: [content/src/editing/theme-preview.ts:22](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/editing/theme-preview.ts#L22)
+Defined in: [content/src/editing/theme-preview.ts:22](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/editing/theme-preview.ts#L22)
 
 The name of the event.
 

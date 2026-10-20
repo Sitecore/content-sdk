@@ -6,7 +6,7 @@
 
 # Interface: Metadata
 
-Defined in: [packages/core/src/tools/metadata/metadata.ts:12](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/core/src/tools/metadata/metadata.ts#L12)
+Defined in: [packages/core/src/tools/metadata/metadata.ts:12](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/core/src/tools/metadata/metadata.ts#L12)
 
 Application metadata
 
@@ -16,7 +16,7 @@ Application metadata
 
 > **packages**: `object`
 
-Defined in: [packages/core/src/tools/metadata/metadata.ts:13](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/core/src/tools/metadata/metadata.ts#L13)
+Defined in: [packages/core/src/tools/metadata/metadata.ts:13](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/core/src/tools/metadata/metadata.ts#L13)
 
 #### Index Signature
 

@@ -8,7 +8,7 @@
 
 > **ValidateAtomsDocumentResult** = \{ `valid`: `true`; \} \| \{ `error`: [`AtomsDocumentValidationError`](../interfaces/AtomsDocumentValidationError.md); `valid`: `false`; \}
 
-Defined in: [content/src/atoms/design-library-bridge/validate-document.ts:8](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/design-library-bridge/validate-document.ts#L8)
+Defined in: [content/src/atoms/design-library-bridge/validate-document.ts:8](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/atoms/design-library-bridge/validate-document.ts#L8)
 
 **`Internal`**
 

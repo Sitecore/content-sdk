@@ -8,6 +8,6 @@
 
 > `const` **SitecoreProviderReactContext**: `Context`\<[`SitecoreProviderState`](../interfaces/SitecoreProviderState.md)\>
 
-Defined in: [packages/react/src/components/SitecoreProvider.tsx:94](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/react/src/components/SitecoreProvider.tsx#L94)
+Defined in: [packages/react/src/components/SitecoreProvider.tsx:94](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/react/src/components/SitecoreProvider.tsx#L94)
 
 The context for the SitecoreProvider component.

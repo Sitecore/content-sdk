@@ -6,7 +6,7 @@
 
 # Interface: Document
 
-Defined in: [content/src/atoms/types.ts:100](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/types.ts#L100)
+Defined in: [content/src/atoms/types.ts:100](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/atoms/types.ts#L100)
 
 **`Internal`**
 
@@ -36,7 +36,7 @@ Flat map of elements by key
 
 > **name**: `string`
 
-Defined in: [content/src/atoms/types.ts:102](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/types.ts#L102)
+Defined in: [content/src/atoms/types.ts:102](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/atoms/types.ts#L102)
 
 Human-readable identifier of the document.
 
@@ -60,7 +60,7 @@ Root element key
 
 > `optional` **state?**: `Record`\<`string`, `unknown`\> & `object`
 
-Defined in: [content/src/atoms/types.ts:103](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/types.ts#L103)
+Defined in: [content/src/atoms/types.ts:103](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/atoms/types.ts#L103)
 
 Optional initial state to seed the state model.
  Components using statePath will read from / write to this state.

@@ -6,7 +6,7 @@
 
 # Interface: AtomCatalogActionEntry
 
-Defined in: [content/src/atoms/types.ts:32](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/types.ts#L32)
+Defined in: [content/src/atoms/types.ts:32](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/atoms/types.ts#L32)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Serialized action info, sent to Design Studio.
 
 > **description**: `string` \| `undefined`
 
-Defined in: [content/src/atoms/types.ts:38](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/types.ts#L38)
+Defined in: [content/src/atoms/types.ts:38](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/atoms/types.ts#L38)
 
 Human-readable description.
 
@@ -28,7 +28,7 @@ Human-readable description.
 
 > **legacy**: `boolean`
 
-Defined in: [content/src/atoms/types.ts:40](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/types.ts#L40)
+Defined in: [content/src/atoms/types.ts:40](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/atoms/types.ts#L40)
 
 Whether the action is excluded from new AI component generations.
 
@@ -38,7 +38,7 @@ Whether the action is excluded from new AI component generations.
 
 > **name**: `string`
 
-Defined in: [content/src/atoms/types.ts:34](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/types.ts#L34)
+Defined in: [content/src/atoms/types.ts:34](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/atoms/types.ts#L34)
 
 Action name (key in the catalog).
 
@@ -48,6 +48,6 @@ Action name (key in the catalog).
 
 > `optional` **paramsSchema?**: `object`
 
-Defined in: [content/src/atoms/types.ts:36](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/types.ts#L36)
+Defined in: [content/src/atoms/types.ts:36](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/atoms/types.ts#L36)
 
 JSON Schema representation of the action params.

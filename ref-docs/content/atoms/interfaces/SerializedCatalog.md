@@ -6,7 +6,7 @@
 
 # Interface: SerializedCatalog
 
-Defined in: [content/src/atoms/types.ts:53](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/types.ts#L53)
+Defined in: [content/src/atoms/types.ts:53](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/atoms/types.ts#L53)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Full catalog payload sent to Design Studio.
 
 > **actions**: [`AtomCatalogActionEntry`](AtomCatalogActionEntry.md)[]
 
-Defined in: [content/src/atoms/types.ts:61](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/types.ts#L61)
+Defined in: [content/src/atoms/types.ts:61](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/atoms/types.ts#L61)
 
 Serialized action entries.
 
@@ -28,7 +28,7 @@ Serialized action entries.
 
 > **components**: [`AtomCatalogComponentEntry`](AtomCatalogComponentEntry.md)[]
 
-Defined in: [content/src/atoms/types.ts:59](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/types.ts#L59)
+Defined in: [content/src/atoms/types.ts:59](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/atoms/types.ts#L59)
 
 Serialized component entries.
 
@@ -38,7 +38,7 @@ Serialized component entries.
 
 > **stylingSolution**: [`AtomsStylingSolution`](../type-aliases/AtomsStylingSolution.md)
 
-Defined in: [content/src/atoms/types.ts:57](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/types.ts#L57)
+Defined in: [content/src/atoms/types.ts:57](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/atoms/types.ts#L57)
 
 Styling solution used to style the app, from `defineAtomsCatalog`. Always present (defaults to `'inline-css'`).
 
@@ -48,6 +48,6 @@ Styling solution used to style the app, from `defineAtomsCatalog`. Always presen
 
 > `optional` **version?**: `string`
 
-Defined in: [content/src/atoms/types.ts:55](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/atoms/types.ts#L55)
+Defined in: [content/src/atoms/types.ts:55](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/atoms/types.ts#L55)
 
 Catalog root version from `defineAtomsCatalog`. Absent when not declared.

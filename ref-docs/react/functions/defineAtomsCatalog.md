@@ -8,7 +8,7 @@
 
 > **defineAtomsCatalog**\<`T`\>(`input`): [`AtomsCatalog`](../type-aliases/AtomsCatalog.md)\<`T`\>
 
-Defined in: [packages/react/src/atoms/define-atoms-catalog.ts:41](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/react/src/atoms/define-atoms-catalog.ts#L41)
+Defined in: [packages/react/src/atoms/define-atoms-catalog.ts:41](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/react/src/atoms/define-atoms-catalog.ts#L41)
 
 Define an atoms catalog from component and action definitions.
 

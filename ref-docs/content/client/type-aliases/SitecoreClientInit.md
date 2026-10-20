@@ -8,7 +8,7 @@
 
 > **SitecoreClientInit** = `Omit`\<[`SitecoreConfig`](../../config/type-aliases/SitecoreConfig.md), `"multisite"` \| `"redirects"` \| `"personalize"`\> & `object`
 
-Defined in: [content/src/client/models.ts:12](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/client/models.ts#L12)
+Defined in: [content/src/client/models.ts:12](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/client/models.ts#L12)
 
 Init options for Sitecore Client that allows you to override services too
 

@@ -6,7 +6,7 @@
 
 # Interface: FieldMetadata
 
-Defined in: [content/src/layout/models.ts:137](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/layout/models.ts#L137)
+Defined in: [content/src/layout/models.ts:137](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/layout/models.ts#L137)
 
 Field metadata in editing mode
 
@@ -20,7 +20,7 @@ Field metadata in editing mode
 
 > `optional` **metadata?**: `object`
 
-Defined in: [content/src/layout/models.ts:138](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/layout/models.ts#L138)
+Defined in: [content/src/layout/models.ts:138](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/layout/models.ts#L138)
 
 #### Index Signature
 

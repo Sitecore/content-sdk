@@ -8,7 +8,7 @@
 
 > **Placeholder**(`props`): `Element`
 
-Defined in: [packages/react/src/components/Placeholder/Placeholder.tsx:16](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/react/src/components/Placeholder/Placeholder.tsx#L16)
+Defined in: [packages/react/src/components/Placeholder/Placeholder.tsx:16](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/react/src/components/Placeholder/Placeholder.tsx#L16)
 
 The Placeholder component.
 Renders the components assigned to a placeholder in Sitecore. It also supports custom rendering and empty state.

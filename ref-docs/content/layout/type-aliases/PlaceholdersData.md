@@ -8,7 +8,7 @@
 
 > **PlaceholdersData**\<`TYPEDNAME`\> = `{ [P in TYPEDNAME]: ComponentRendering[] }`
 
-Defined in: [content/src/layout/models.ts:79](https://github.com/Sitecore/content-sdk/blob/3e573fc42ab394415c9745258970d127cda84bbd/packages/content/src/layout/models.ts#L79)
+Defined in: [content/src/layout/models.ts:79](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/layout/models.ts#L79)
 
 Placeholder contents data (name: placeholder name, then array of components within that placeholder name)
 
