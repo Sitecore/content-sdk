@@ -3,7 +3,6 @@ name: Publish
 permissions:
   contents: read
   pull-requests: write
-  id-token: write
 
 on:
   # Trigger for canary and stable releases:
@@ -20,6 +19,8 @@ on:
 # Canary snapshot must run in a separate job with its own checkout so changesets still exist.
 jobs:
   stable-release-prep:
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     if: ${{ !startsWith(github.ref_name, 'release/betas') }}
     env:
@@ -106,6 +107,8 @@ jobs:
           npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
 
   canary-snapshot:
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
@@ -120,7 +123,7 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 24
-          registry-url: ${{ secrets.NPM_REGISTRY }}
+          registry-url: https://registry.npmjs.org/
 
       - name: Install dependencies
         run: |
