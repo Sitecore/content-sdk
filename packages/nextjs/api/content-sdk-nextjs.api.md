@@ -94,6 +94,7 @@ import { GraphQLRequestClient } from '@sitecore-content-sdk/content/client';
 import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/content/client';
 import { GraphQLRequestClientFactory as GraphQLRequestClientFactory_2 } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/content/client';
+import { hasPersonalizeTokensRewrite } from '@sitecore-content-sdk/content/personalize';
 import { HTMLLink } from '@sitecore-content-sdk/content';
 import { HTMLScript } from '@sitecore-content-sdk/content';
 import { Image as Image_2 } from '@sitecore-content-sdk/react';
@@ -204,6 +205,7 @@ import { SiteResolver } from '@sitecore-content-sdk/content/site';
 import { StaticPath } from '@sitecore-content-sdk/content';
 import { Text as Text_2 } from '@sitecore-content-sdk/react';
 import { TextField } from '@sitecore-content-sdk/react';
+import { TokenMap } from '@sitecore-content-sdk/content/personalize';
 import { useSitecore } from '@sitecore-content-sdk/react';
 import { withAppPlaceholder } from '@sitecore-content-sdk/react';
 import { withDatasourceCheck } from '@sitecore-content-sdk/react';
@@ -657,6 +659,9 @@ export { getPersonalizedRewrite }
 
 export { getPersonalizedRewriteData }
 
+// @public
+export function getPersonalizeTokens(path: string | string[] | undefined, getHeaders: () => Pick<Headers, 'get'> | IncomingHttpHeaders | Promise<Pick<Headers, 'get'> | IncomingHttpHeaders>): Promise<TokenMap | undefined>;
+
 // @internal
 export const getQueryParamsForPropagation: (query: Partial<{
     [key: string]: string | string[];
@@ -678,6 +683,8 @@ export { GraphQLRequestClientFactoryConfig }
 
 // @public
 export const handleEditorFastRefresh: (forceReload?: boolean) => void;
+
+export { hasPersonalizeTokensRewrite }
 
 // @public
 export class HealthcheckMiddleware {
@@ -875,10 +882,14 @@ export class PersonalizeProxy extends ProxyBase {
     protected config: PersonalizeProxyConfig;
     // (undocumented)
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
+    // @internal
+    protected forwardWithoutInboundTokens(req: NextRequest, res: NextResponse): NextResponse;
     // Warning: (ae-forgotten-export) The symbol "ExperienceParams" needs to be exported by the entry point api-surface.d.ts
     //
     // (undocumented)
     protected getExperienceParams(req: NextRequest): ExperienceParams;
+    // @internal
+    protected getForwardedRequestHeaders(req: NextRequest, res: NextResponse, encodedTokens?: string): Headers | undefined;
     // Warning: (ae-forgotten-export) The symbol "PersonalizeExecution" needs to be exported by the entry point api-surface.d.ts
     protected getPersonalizeExecutions(personalizeInfo: PersonalizeInfo, language: string): PersonalizeExecution[];
     // (undocumented)
@@ -900,7 +911,8 @@ export class PersonalizeProxy extends ProxyBase {
         variantIds?: string[];
         geo?: PersonalizeGeoData;
     }): Promise<{
-        variantId: string;
+        variantId?: string;
+        tokens?: Record<string, string | number>;
     }>;
     // (undocumented)
     protected personalizeService: PersonalizeService | null;
@@ -915,7 +927,7 @@ export interface PersonalizeProxyAdapter extends Required<PersonalizeAdapter> {
 export function personalizeProxyAdapter(request: NextRequest, response: NextResponse): PersonalizeProxyAdapter;
 
 // @public
-export type PersonalizeProxyConfig = ProxyBaseConfig & SitecoreConfig['api']['edge'] & SitecoreConfig['personalize'] & {
+export type PersonalizeProxyConfig = ProxyBaseConfig & SitecoreConfig['api']['edge'] & Omit<SitecoreConfig['personalize'], 'dynamicContent'> & Partial<Pick<SitecoreConfig['personalize'], 'dynamicContent'>> & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
     extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
@@ -979,6 +991,8 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     protected extractDebugHeaders(incomingHeaders: Headers): {
         [key: string]: string;
     };
+    // @internal
+    protected forward(res: NextResponse, requestHeaders: Headers): NextResponse;
     // (undocumented)
     protected getClientFactory(graphQLOptions: GraphQLClientOptions): GraphQLRequestClientFactory_2;
     protected getHostHeader(req: NextRequest): string;
@@ -989,7 +1003,7 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     protected isPrefetch(req: NextRequest): boolean;
     protected isPreview(req: NextRequest): boolean;
     get name(): string;
-    protected rewrite(rewritePath: string, req: NextRequest, res: NextResponse, skipHeader?: boolean): NextResponse;
+    protected rewrite(rewritePath: string, req: NextRequest, res: NextResponse, skipHeader?: boolean, requestHeaders?: Headers): NextResponse;
     // (undocumented)
     protected siteResolver: SiteResolver;
 }
@@ -1105,7 +1119,7 @@ export class SitecoreClient extends SitecoreClient_2 {
     protected getComponentPropsService(): ComponentPropsService;
     getDesignLibraryData(designLibData: PreviewData, fetchOptions?: FetchOptions): Promise<Page>;
     // (undocumented)
-    getPage(path: string | string[], pageOptions: PageOptions, options?: FetchOptions): Promise<Page | null>;
+    getPage(path: string | string[], pageOptions?: PageOptions, fetchOptions?: FetchOptions): Promise<Page | null>;
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
     getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null>;
     getPreviewData(headers: Headers): PreviewData;
@@ -1239,6 +1253,8 @@ export interface SuccessfulRedirectsProxyExecution extends SuccessfulProxyExecut
 export { Text_2 as Text }
 
 export { TextField }
+
+export { TokenMap }
 
 // @public
 export function useComponentProps<ComponentData>(componentUid: string | undefined): ComponentData | undefined;

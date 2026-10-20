@@ -13,6 +13,8 @@ import {
   <% if (prerender === 'SSG') { -%>
   StaticPath,
   SiteInfo
+  <% } else if (prerender === 'SSR') { -%>
+  getPersonalizeTokens,
   <% } -%>
 } from '@sitecore-content-sdk/nextjs';
 import { extractPath, handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
@@ -91,7 +93,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } else {
     page = context.preview
       ? await client.getPreview(context.previewData)
-      : await client.getPage(path, { locale: context.locale });
+      : await client.getPage(path, {
+          locale: context.locale,
+<% if (prerender === 'SSR') { -%>
+          // Dynamic content tokens forwarded by PersonalizeProxy (statically generated pages render fallbacks)
+          tokens: await getPersonalizeTokens(path, () => context.req.headers),
+<% } -%>
+        });
   }
   if (page) {
     props = {

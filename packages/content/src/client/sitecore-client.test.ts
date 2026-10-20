@@ -748,6 +748,136 @@ describe('SitecoreClient', () => {
     });
   });
 
+  describe('dynamic content tokens', () => {
+    const tokenLayout = () => ({
+      sitecore: {
+        route: {
+          name: 'home',
+          fields: {
+            title: { value: 'Hello {{name|friend}}{{missing}}' },
+            image: { value: { src: 'https://edge.sitecorecloud.io/-/media/{{city|london}}.jpg' } },
+          },
+          placeholders: {
+            main: [{ uid: 'c1', componentName: 'Static', fields: { text: { value: 'Static' } } }],
+          },
+        },
+        context: {
+          site: { name: 'default-site' },
+          pageState: LayoutServicePageState.Normal,
+          custom: '{{name}}',
+        },
+      },
+    });
+
+    const createClient = (options: Record<string, unknown> = {}) => {
+      const client = new SitecoreClient({
+        ...defaultInitOptions,
+        personalize: { dynamicContent: true },
+        ...options,
+      } as any);
+      (client as any).layoutService = layoutServiceStub;
+      (client as any).errorPagesService = errorPagesServiceStub;
+      return client;
+    };
+
+    afterEach(() => {
+      delete process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV];
+    });
+
+    it('should leave tokens as authored when personalize.dynamicContent is off', async () => {
+      layoutServiceStub.fetchLayoutData.returns(tokenLayout());
+      const client = createClient({ personalize: undefined });
+
+      const page = await client.getPage('/test', { locale: 'en', tokens: { name: 'Ada' } });
+
+      expect(page?.layout.sitecore.route?.fields?.title).to.deep.equal({
+        value: 'Hello {{name|friend}}{{missing}}',
+      });
+    });
+
+    it('should render fallbacks when enabled and no tokens are passed', async () => {
+      layoutServiceStub.fetchLayoutData.returns(tokenLayout());
+
+      const page = await createClient().getPage('/test', { locale: 'en' });
+
+      expect(page?.layout.sitecore.route?.fields?.title).to.deep.equal({ value: 'Hello friend' });
+      expect((page?.layout.sitecore.route?.fields?.image?.value as { src: string }).src).to.equal(
+        'https://edge.sitecorecloud.io/-/media/london.jpg'
+      );
+    });
+
+    it('should replace tokens in the route only, with media rewrite, without mutating the input', async () => {
+      const raw = tokenLayout();
+      layoutServiceStub.fetchLayoutData.returns(raw);
+      process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV] = 'custom.example.com';
+      const client = createClient({ rewriteMediaUrls: true });
+
+      const page = await client.getPage('/test', {
+        locale: 'en',
+        tokens: { name: 'Ada', city: 'Rome' },
+      });
+
+      const route = page?.layout.sitecore.route;
+      expect(route?.fields?.title).to.deep.equal({ value: 'Hello Ada' });
+      expect((route?.fields?.image?.value as { src: string }).src).to.equal(
+        'https://custom.example.com/-/media/Rome.jpg'
+      );
+      expect((page?.layout.sitecore.context as Record<string, unknown>).custom).to.equal('{{name}}');
+      expect(route?.placeholders.main[0]).to.equal(raw.sitecore.route.placeholders.main[0]);
+      expect(raw.sitecore.route.fields.title.value).to.equal('Hello {{name|friend}}{{missing}}');
+    });
+
+    it('should resolve tokens after personalization selects component variants', async () => {
+      layoutServiceStub.fetchLayoutData.returns({
+        sitecore: {
+          route: {
+            name: 'home',
+            placeholders: {
+              main: [
+                {
+                  uid: 'c1',
+                  componentName: 'Promo',
+                  fields: { text: { value: 'Default' } },
+                  experiences: {
+                    c1_a: {
+                      uid: 'c1',
+                      componentName: 'Promo',
+                      fields: { text: { value: 'Visit {{city|Paris}}' } },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          context: { site: { name: 'default-site' } },
+        },
+      });
+
+      const page = await createClient().getPage('/test', {
+        locale: 'en',
+        personalize: { variantId: '_default', componentVariantIds: ['c1_a'] },
+        tokens: { city: 'Rome' },
+      });
+
+      expect(
+        (page?.layout.sitecore.route?.placeholders.main[0] as { fields: { text: unknown } }).fields
+          .text
+      ).to.deep.equal({ value: 'Visit Rome' });
+    });
+
+    it('should not process tokens on error pages', async () => {
+      errorPagesServiceStub.fetchErrorPages.resolves({
+        notFoundPage: { rendered: tokenLayout() },
+      });
+
+      const page = await createClient().getErrorPage(ErrorPage.NotFound);
+
+      expect(page?.layout.sitecore.route?.fields?.title).to.deep.equal({
+        value: 'Hello {{name|friend}}{{missing}}',
+      });
+    });
+  });
+
   describe('getErrorPage', () => {
     it('should fetch error page with default site and language', async () => {
       const errorPage = {

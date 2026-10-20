@@ -25,6 +25,7 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
   - **AppRouterMultisiteProxy** — rewrites to `/[site]/[locale]/[...path]`; uses `scConfig.multisite`.
   - **RedirectsProxy** — redirects; uses `scConfig.redirects`, `scConfig.api.edge`, `scConfig.api.local`.
   - **PersonalizeProxy** — personalization; uses `scConfig.personalize`; often disabled in dev.
+    - **Dynamic content tokens** (`personalize.dynamicContent`): forwards Personalize tokens in the `x-sc-personalize-tokens` request header and adds a `_sctokens` rewrite segment. `page.tsx` renders token requests (`hasPersonalizeTokensRewrite(path)`) inside `<Suspense>` and `getSitecorePage` renders them outside `'use cache'` (`getPersonalizeTokens(path, headers)`), so every other page stays prerendered. Never pass tokens into a `'use cache'` function or read headers outside that Suspense boundary. Preview, Design Library and error pages are never processed.
 - **Matcher:** Exclude API routes (including `/api/revalidate`), `_next/`, sitemap, robots, healthz, Sitecore paths, and static assets so middleware does not run on every static request. The matcher is defined in `config` in `proxy.ts` (or in `middleware.ts` if it re-exports the proxy).
 - **Config:** `sitecore.config.ts` → `multisite`, `redirects`, `personalize`; never commit secrets.
 

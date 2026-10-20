@@ -10,6 +10,10 @@ import {
   mockScParams,
 } from '../testing/loader-spec-helpers';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
+import {
+  encodePersonalizeTokens,
+  PERSONALIZE_TOKENS_HEADER,
+} from '@sitecore-content-sdk/content/personalize';
 
 describe('ServerLoaderRunner', () => {
   const mockConfig = mockAngularSitecoreConfig();
@@ -215,6 +219,62 @@ describe('ServerLoaderRunner', () => {
     });
 
     expect(cache.set).toHaveBeenCalled();
+  });
+
+  it('should neither read nor write the cache when the request carries dynamic content tokens', async () => {
+    const cache: LoaderCache = {
+      get: vi.fn().mockResolvedValue({ kind: 'hit', value: { cached: true }, cacheKey: 'k' }),
+      set: vi.fn(),
+      invalidate: vi.fn(),
+      delete: vi.fn(),
+      flush: vi.fn(),
+      entries: vi.fn(),
+      ttl: 300,
+      enabled: vi.fn().mockReturnValue(true),
+      config: {},
+    };
+
+    const provider = new ServerLoaderRunner({ page: pageLoader }, mockConfig, cache);
+    const result = await provider.resolve({
+      loaderId: 'page',
+      url: '/about',
+      routeParams: {},
+      query: {},
+      cacheOptions: { enabled: true },
+      csdkRequestData: {
+        headers: { [PERSONALIZE_TOKENS_HEADER]: encodePersonalizeTokens({ name: 'Ada' }) },
+      },
+    });
+
+    expect(result).toEqual({ kind: 'data', data: { title: 'Page' } });
+    expect(pageLoader).toHaveBeenCalled();
+    expect(cache.get).not.toHaveBeenCalled();
+    expect(cache.set).not.toHaveBeenCalled();
+  });
+
+  it('should use the cache when the tokens header is invalid', async () => {
+    const cache: LoaderCache = {
+      get: vi.fn().mockResolvedValue({ kind: 'hit', value: { cached: true }, cacheKey: 'k' }),
+      set: vi.fn(),
+      invalidate: vi.fn(),
+      delete: vi.fn(),
+      flush: vi.fn(),
+      entries: vi.fn(),
+      ttl: 300,
+      enabled: vi.fn().mockReturnValue(true),
+      config: {},
+    };
+
+    const provider = new ServerLoaderRunner({ page: pageLoader }, mockConfig, cache);
+    const result = await provider.resolve({
+      loaderId: 'page',
+      url: '/about',
+      routeParams: {},
+      query: {},
+      csdkRequestData: { headers: { [PERSONALIZE_TOKENS_HEADER]: 'not-valid' } },
+    });
+
+    expect(result).toEqual({ kind: 'data', data: { cached: true } });
   });
 
   it('should skip the cache when it is globally disabled and the route did not opt in', async () => {

@@ -2,6 +2,12 @@
 export const DEFAULT_VARIANT = '_default';
 /** @internal */
 export const VARIANT_PREFIX = '_variantId_';
+/**
+ * Rewrite path segment added by the personalize proxy when the request carries dynamic content
+ * tokens, so renders read the tokens header only when there is something to read.
+ * @internal
+ */
+export const TOKENS_REWRITE_SEGMENT = '_sctokens';
 
 /** @public */
 export type PersonalizedRewriteData = {
@@ -13,12 +19,30 @@ export type PersonalizedRewriteData = {
  * Get a personalized rewrite path for given pathname
  * @param {string} pathname the pathname
  * @param {string[]} variantIds the variantIds to include in the rewrite
+ * @param {boolean} [hasTokens] whether the request carries dynamic content tokens
  * @returns {string} the rewrite path
  * @public
  */
-export function getPersonalizedRewrite(pathname: string, variantIds: string[]): string {
+export function getPersonalizedRewrite(
+  pathname: string,
+  variantIds: string[],
+  hasTokens = false
+): string {
   const path = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
-  return `${path}${variantIds.map((variantId) => `/${VARIANT_PREFIX}${variantId}`).join('')}`;
+  const variants = variantIds.map((variantId) => `/${VARIANT_PREFIX}${variantId}`).join('');
+  return `${path}${variants}${hasTokens ? `/${TOKENS_REWRITE_SEGMENT}` : ''}`;
+}
+
+/**
+ * Whether a (rewritten) path was marked by the personalize proxy as carrying dynamic content tokens.
+ * Such requests render with visitor data, so they must be rendered per request.
+ * @param {string | string[]} path the pathname or path segments
+ * @returns {boolean} true when the path contains the tokens marker segment
+ * @public
+ */
+export function hasPersonalizeTokensRewrite(path: string | string[]): boolean {
+  const segments = Array.isArray(path) ? path : path.split('/');
+  return segments.includes(TOKENS_REWRITE_SEGMENT);
 }
 
 /**
@@ -74,11 +98,13 @@ export function getGroomedVariantIds(variantIds: string[]) {
  * @public
  */
 export function normalizePersonalizedRewrite(pathname: string): string {
-  if (!pathname.includes(VARIANT_PREFIX)) {
+  if (!pathname.includes(VARIANT_PREFIX) && !pathname.includes(TOKENS_REWRITE_SEGMENT)) {
     return pathname;
   }
   let segments = pathname.split('/');
-  segments = segments.filter((segment) => !segment.includes(VARIANT_PREFIX));
+  segments = segments.filter(
+    (segment) => !segment.includes(VARIANT_PREFIX) && segment !== TOKENS_REWRITE_SEGMENT
+  );
   const result = segments.join('/');
   // return root path if all segments were personalize data
   return result ? result : '/';

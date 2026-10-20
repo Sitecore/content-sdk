@@ -30,4 +30,5 @@ export {
   getVariantId,
   getComponentVariantIds,
   getLanguage,
+  getPersonalizeTokens,
 } from './context-helpers';

@@ -10,12 +10,14 @@ import {
   createGraphQLClientFactory,
   GraphQLClientOptions,
 } from '@sitecore-content-sdk/content/client';
+import { PERSONALIZE_TOKENS_HEADER } from '@sitecore-content-sdk/content/personalize';
 import { PREVIEW_COOKIES } from '../editing/utils';
 import debug from '../debug';
 import { ProxiesContext } from './types';
 
 export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
 export const LOCALE_HEADER_NAME = 'x-sc-locale';
+export const MIDDLEWARE_REWRITE_HEADER_NAME = 'x-middleware-rewrite';
 
 const REDIRECT_STATUS_MIN = 300;
 const REDIRECT_STATUS_MAX = 399;
@@ -158,7 +160,11 @@ export abstract class ProxyBase extends ProxyHandler {
    */
   protected extractDebugHeaders(incomingHeaders: Headers) {
     const headers = {} as { [key: string]: string };
-    incomingHeaders.forEach((value, key) => (headers[key] = value));
+    incomingHeaders.forEach((value, key) => {
+      headers[key] =
+        // Covers Next's `x-middleware-request-*` request override copies on responses too
+        key.toLowerCase().endsWith(PERSONALIZE_TOKENS_HEADER) ? '[redacted]' : value;
+    });
     return headers;
   }
 
@@ -236,18 +242,29 @@ export abstract class ProxyBase extends ProxyHandler {
    * @param {NextRequest} req the current request
    * @param {NextResponse} res the current response
    * @param {boolean} [skipHeader] don't write 'x-sc-rewrite' header
+   * @param {Headers} [requestHeaders] request headers to forward to the rewrite destination instead of the incoming ones
+   * @returns {NextResponse} rewrite response
    */
   protected rewrite(
     rewritePath: string,
     req: NextRequest,
     res: NextResponse,
-    skipHeader?: boolean
+    skipHeader?: boolean,
+    requestHeaders?: Headers
   ): NextResponse {
     // Note an absolute URL is required: https://nextjs.org/docs/messages/middleware-relative-urls
     const rewriteUrl = req.nextUrl.clone();
     rewriteUrl.pathname = rewritePath;
-    // NextResponse.rewrite requires a string URL, not a NextURL object
-    const response = NextResponse.rewrite(rewriteUrl.href, res);
+    const response = NextResponse.rewrite(
+      rewriteUrl.href,
+      requestHeaders
+        ? { request: { headers: requestHeaders }, headers: res.headers, status: res.status }
+        : res
+    );
+
+    if (requestHeaders) {
+      copyResponseCookies(res, response);
+    }
 
     // Share rewrite path with following executed proxies
     if (!skipHeader) {
@@ -255,6 +272,51 @@ export abstract class ProxyBase extends ProxyHandler {
     }
 
     return response;
+  }
+
+  /**
+   * Forwards a response to the application with sanitized request headers.
+   * If the response already carries Next's `x-middleware-rewrite`, the rewrite is
+   * re-issued using that absolute URL. `x-sc-rewrite` is never used as the
+   * reconstruction source.
+   * @param {NextResponse} res Current response
+   * @param {Headers} requestHeaders Request headers to forward
+   * @returns {NextResponse} Forwarded response
+   * @internal
+   */
+  protected forward(res: NextResponse, requestHeaders: Headers): NextResponse {
+    const rewriteUrl = res.headers.get(MIDDLEWARE_REWRITE_HEADER_NAME);
+    if (rewriteUrl) {
+      const rewritten = NextResponse.rewrite(rewriteUrl, {
+        request: { headers: requestHeaders },
+        headers: res.headers,
+        status: res.status,
+      });
+      copyResponseCookies(res, rewritten);
+      return rewritten;
+    }
+
+    const next = NextResponse.next({
+      request: { headers: requestHeaders },
+      headers: res.headers,
+    });
+    copyResponseCookies(res, next);
+    return next;
+  }
+}
+
+/**
+ * Copies cookies set on one response to another, so rebuilding a response keeps cookies set by earlier proxies.
+ * @param {NextResponse} from Source response
+ * @param {NextResponse} to Destination response
+ */
+function copyResponseCookies(from: NextResponse, to: NextResponse): void {
+  const cookies = from.cookies?.getAll?.();
+  if (!cookies) {
+    return;
+  }
+  for (const cookie of cookies) {
+    to.cookies.set(cookie);
   }
 }
 

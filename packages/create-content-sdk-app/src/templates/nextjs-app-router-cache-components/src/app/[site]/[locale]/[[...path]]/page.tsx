@@ -1,5 +1,10 @@
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
-import { setCachedPageParams, getPageMetadata } from '@sitecore-content-sdk/nextjs';
+import {
+  setCachedPageParams,
+  getPageMetadata,
+  hasPersonalizeTokensRewrite,
+} from '@sitecore-content-sdk/nextjs';
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { draftMode } from 'next/headers';
 import { Metadata } from 'next';
@@ -22,7 +27,23 @@ type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function Page({ params, searchParams }: PageProps) {
+export default async function Page(props: PageProps) {
+  const { path } = await props.params;
+
+  // Requests that carry dynamic content tokens (marked by PersonalizeProxy) read request headers,
+  // so they render at request time inside Suspense. Every other page keeps its prerendered output.
+  if (hasPersonalizeTokensRewrite(path ?? [])) {
+    return (
+      <Suspense fallback={null}>
+        <SitecorePage {...props} />
+      </Suspense>
+    );
+  }
+
+  return <SitecorePage {...props} />;
+}
+
+async function SitecorePage({ params, searchParams }: PageProps) {
   const { site, locale, path } = await params;
 
   if (isBuildValidationSite(site)) {

@@ -1,7 +1,10 @@
 import {
   CdpHelper,
+  collectPersonalizeExecutionTokens,
   DEFAULT_VARIANT,
+  encodePersonalizeTokens,
   getGroomedVariantIds,
+  PERSONALIZE_TOKENS_HEADER,
   PersonalizeInfo,
   PersonalizeService,
 } from '@sitecore-content-sdk/content/personalize';
@@ -183,6 +186,10 @@ export function createPersonalizeMiddleware(
   }
 
   return async (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
+    // Only this middleware may set the tokens header: drop any value sent by the client.
+    if (req.headers?.[PERSONALIZE_TOKENS_HEADER] !== undefined) {
+      delete req.headers[PERSONALIZE_TOKENS_HEADER];
+    }
     try {
       // `enabled` defaults to true: omitting it keeps the middleware on (see BaseMiddlewareOptions).
       if (options.enabled === false || !personalizeService) {
@@ -298,12 +305,11 @@ export function createPersonalizeMiddleware(
         options.getExtraUtmParams?.(req)
       );
       const executions = getPersonalizeExecutions(personalizeInfo, language, options.scope);
-      const identifiedVariantIds: string[] = [];
-
-      await Promise.all(
-        executions.map(async (execution) => {
+      const { identifiedVariantIds, tokens } = await collectPersonalizeExecutionTokens(
+        executions,
+        (execution) => {
           debug.personalize('executing experience for %s %o', execution.friendlyId, params);
-          const personalization = (await personalize(
+          return personalize(
             {
               channel: options.channel || 'WEB',
               currency: options.currency ?? 'USD',
@@ -314,16 +320,19 @@ export function createPersonalizeMiddleware(
               ...(geo && { geo }),
             },
             { timeout: options.cdpTimeout }
-          )) as { variantId?: string } | null;
-          const variantId = personalization?.variantId;
-          if (!variantId) return;
-          if (!execution.variantIds.includes(variantId)) {
-            debug.personalize('invalid variant %s', variantId);
-          } else {
-            identifiedVariantIds.push(variantId);
-          }
-        })
+          );
+        }
       );
+
+      const encodedTokens = options.dynamicContent ? encodePersonalizeTokens(tokens) : undefined;
+      if (encodedTokens) {
+        // Ride a request header (like SC_PARAMS_HEADER) so the tokens survive Angular's conversion
+        // of the Express request to a web Request. base64url keeps the value header-safe.
+        req.headers = req.headers ?? {};
+        req.headers[PERSONALIZE_TOKENS_HEADER] = encodedTokens;
+        // The render now contains visitor data: keep it out of shared caches.
+        res.setHeader?.('Cache-Control', 'private, no-store');
+      }
 
       if (identifiedVariantIds.length === 0) {
         debug.personalize('skipped (no variant(s) identified)');

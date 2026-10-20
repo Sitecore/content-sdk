@@ -20,5 +20,6 @@ export {
   PageMode,
   ErrorPage,
 } from './sitecore-client';
+export type { TokenMap } from '../personalize/token-map';
 export { SitecoreClientInit } from './models';
 export { createGraphQLClientFactory, GraphQLClientOptions } from './utils';

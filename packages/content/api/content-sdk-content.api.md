@@ -57,6 +57,14 @@ export class CdpHelper {
     static normalizeScope(scope?: string): string;
 }
 
+// @internal
+export function collectPersonalizeExecutionTokens<T extends {
+    variantIds: string[];
+}>(executions: T[], execute: (execution: T) => Promise<unknown>): Promise<{
+    identifiedVariantIds: string[];
+    tokens: TokenMap;
+}>;
+
 // @public
 export const combineImportEntries: (defaultImportEntries: ImportEntry[], generatedImportEntries: ImportEntry[]) => ImportEntry[];
 
@@ -220,6 +228,9 @@ const debug_2: {
     errorpages: Debugger;
 };
 export { debug_2 as debug }
+
+// @internal
+export function decodePersonalizeTokens(value: string | null | undefined): TokenMap | undefined;
 
 // Warning: (ae-forgotten-export) The symbol "DeepPartial" needs to be exported by the entry point api-surface.d.ts
 //
@@ -433,6 +444,9 @@ export enum EditMode {
 
 // @internal
 export const EMPTY_DATE_FIELD_VALUE = "0001-01-01T00:00:00Z";
+
+// @internal
+export function encodePersonalizeTokens(tokens: TokenMap): string | undefined;
 
 // @internal (undocumented)
 export type EnhancedComponentMapTemplate = (components: (ComponentFile | ComponentFileWithType)[], componentImports: ComponentImport[] | undefined, ctx: {
@@ -702,7 +716,7 @@ export const getJsonLdSchemas: (schemas?: Record<string, unknown>[] | null) => H
 export function getLocaleRewrite(pathname: string, locale: string): string;
 
 // @public
-export function getPersonalizedRewrite(pathname: string, variantIds: string[]): string;
+export function getPersonalizedRewrite(pathname: string, variantIds: string[], hasTokens?: boolean): string;
 
 // @public
 export function getPersonalizedRewriteData(pathname: string): PersonalizedRewriteData;
@@ -754,6 +768,9 @@ export { GraphQLRequestClientConfig }
 export { GraphQLRequestClientFactory }
 
 export { GraphQLRequestClientFactoryConfig }
+
+// @public
+export function hasPersonalizeTokensRewrite(path: string | string[]): boolean;
 
 // @internal
 export const HIDDEN_RENDERING_NAME = "Hidden Rendering";
@@ -1121,6 +1138,7 @@ export type PageMode = {
 // @public
 export type PageOptions = Partial<RouteOptions> & {
     personalize?: PersonalizedRewriteData;
+    tokens?: TokenMap;
 };
 
 // @internal
@@ -1132,6 +1150,9 @@ export class PagesEditor {
     // (undocumented)
     static resetChromes(): void;
 }
+
+// @internal
+export const PERSONALIZE_TOKENS_HEADER = "x-sc-personalize-tokens";
 
 // @public (undocumented)
 export type PersonalizedRewriteData = {
@@ -1473,6 +1494,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     constructor(initOptions: SitecoreClientInit);
     // @internal @deprecated
     protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData;
+    // @internal
+    protected applyPageTransforms(layout: LayoutServiceData, tokens?: TokenMap): LayoutServiceData;
     // (undocumented)
     protected clientFactory: GraphQLRequestClientFactory;
     // (undocumented)
@@ -1524,6 +1547,7 @@ export class SitecoreClient implements BaseSitecoreClient {
 
 // @public
 export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' | 'personalize'> & {
+    personalize?: Partial<Pick<SitecoreConfig['personalize'], 'dynamicContent'>>;
     custom?: {
         layoutService?: LayoutService;
         dictionaryService?: DictionaryService;
@@ -1578,6 +1602,7 @@ export type SitecoreConfigInput = {
         scope?: string;
         channel?: string;
         currency?: string;
+        dynamicContent?: boolean;
     };
     redirects?: {
         enabled?: boolean;
@@ -1705,6 +1730,9 @@ export interface TextField extends FieldMetadata {
     value?: string | number;
 }
 
+// @public
+export type TokenMap = Record<string, string>;
+
 // @internal
 export const toPascalCase: (name: string) => string;
 
@@ -1745,7 +1773,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:69:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:73:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:116:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
