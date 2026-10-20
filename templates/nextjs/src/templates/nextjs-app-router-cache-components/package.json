@@ -1,5 +1,5 @@
 {
-  "name": "content-sdk-nextjs-app-router-cache-components",
+  "name": "<%- appName %>",
   "description": "Content SDK Next.js App Router sample with Cache Components and On-demand revalidation",
   "version": "0.1.0",
   "private": true,

@@ -24,7 +24,19 @@ export const readVersions = (): { [key: string]: string } => {
 const PRERENDER_CHOICES = ['SSG', 'SSR'];
 const DEFAULT_PRERENDER = 'SSG';
 
-export const nextjsPrompts: DistinctQuestion[] = [
+export const nextjsPrompts = (defaultName: string): DistinctQuestion[] => [
+  {
+    type: 'input',
+    name: 'appName',
+    message: 'What would you like to name your application?',
+    default: defaultName,
+    when: (answers: { [key: string]: unknown }): boolean => {
+      if (answers.yes && !answers.appName) {
+        answers.appName = defaultName;
+      }
+      return !answers.appName;
+    },
+  },
   {
     type: 'list',
     name: 'prerender',

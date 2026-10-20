@@ -7971,9 +7971,9 @@ __metadata:
   linkType: hard
 
 "cac@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "cac@npm:7.0.0"
-  checksum: 10/1ada3b090403d0051619b1519c21db1cb0b32c7772d6c8782cc55c5349caac9efbb1076ba513c5975331ff0bdb104e2be9421fd3ff6c0ef5db9d58a04a4aa6f5
+  version: 7.1.0
+  resolution: "cac@npm:7.1.0"
+  checksum: 10/2be44f8fd9e60ad21c0f2e2aad914c9666e0a14045b89b90696f79140fcb3ffd296626f3807d360603efa2c488bc15c61774d2573593a543966b0733660cc2b3
   languageName: node
   linkType: hard
 
@@ -11688,11 +11688,11 @@ __metadata:
   linkType: hard
 
 "human-id@npm:^4.2.0":
-  version: 4.2.1
-  resolution: "human-id@npm:4.2.1"
+  version: 4.2.2
+  resolution: "human-id@npm:4.2.2"
   bin:
     human-id: dist/cli.js
-  checksum: 10/76948278a1821a8e212816792cec45606c98f1299ce32dad04466a6ec942717c012d276bdde6ddf2f37fbe7e6f05dba1d3003e95a4bf4efed9638c74d0b4f093
+  checksum: 10/2d8d596d1e2d3fb83d8a0b28d8a09604ad2803afe37d7b984716461411ad26fabbf00a60ca8b8144844d70fb2d3937ecfe530f8772c9064680bb6c236aa97128
   languageName: node
   linkType: hard
 
@@ -13634,12 +13634,12 @@ __metadata:
   linkType: hard
 
 "launch-editor@npm:^2.14.1":
-  version: 2.14.1
-  resolution: "launch-editor@npm:2.14.1"
+  version: 2.14.2
+  resolution: "launch-editor@npm:2.14.2"
   dependencies:
     picocolors: "npm:^1.1.1"
-    shell-quote: "npm:^1.8.4"
-  checksum: 10/335d12ca437280e77070657531c251b6c91c62bc653f70ab66ddd2a6e50131b1b043480411c5b93d54955a0a6eb8ec01e9a5b5cfe2d887341d878d19394a126b
+    shell-quote: "npm:^1.10.0"
+  checksum: 10/8a3a82314ed6705d8f6795c409ea31ed2a106d0f0bc0528a60f8b53ec972cce1db9088bb4647987b2ef4bb16b804fcc85e54529acaa26aae22f39eaba704401b
   languageName: node
   linkType: hard
 
@@ -15979,9 +15979,9 @@ __metadata:
   linkType: hard
 
 "package-manager-detector@npm:^1.6.0, package-manager-detector@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "package-manager-detector@npm:1.8.0"
-  checksum: 10/5d79b8bf3d0d3da312ec08749c74a3b7e4d4139c259fe3561538772c65ece8ff733e002c67a4324b5c505d2ac625c121b94cf3d5135e1b4e43fed5bced148763
+  version: 1.9.0
+  resolution: "package-manager-detector@npm:1.9.0"
+  checksum: 10/8a9b229a913dd07e69cdff4ca0ad0b83cc826593637c179c770b84e48bc792aefb5b4361542656579a4ceb202d9425ca598e6b70fd0cdb02a72ca0f8c58d2560
   languageName: node
   linkType: hard
 
@@ -17886,10 +17886,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shell-quote@npm:^1.8.4":
-  version: 1.10.0
-  resolution: "shell-quote@npm:1.10.0"
-  checksum: 10/d4a22aeefe64919290af753ac6098239d7ffee52a5db62c20edef69794bd10b5f86e298f68be26af9606ac435e890dd391994a5405a90bb8aebef1ff1dde839b
+"shell-quote@npm:^1.10.0":
+  version: 1.12.0
+  resolution: "shell-quote@npm:1.12.0"
+  checksum: 10/18b3e382272804e79fd3187c18877cfd4e736b5afb576bf1ab66a561b0a0e26eada4b7c8eb45473d1f17268ffcf12d0aaa90b9235132123eb673df5d0a5df943
   languageName: node
   linkType: hard
 
