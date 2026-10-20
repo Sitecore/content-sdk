@@ -8,7 +8,7 @@
 
 > **getHostnameFromHostHeader**(`host`): `string`
 
-Defined in: [content/src/site/utils.ts:31](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/site/utils.ts#L31)
+Defined in: [content/src/site/utils.ts:31](https://github.com/Sitecore/content-sdk/blob/08d0014b541d19ec57e8f671e786634f43eef2e8/packages/content/src/site/utils.ts#L31)
 
 **`Internal`**
 

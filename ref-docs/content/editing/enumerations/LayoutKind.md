@@ -6,7 +6,7 @@
 
 # Enumeration: LayoutKind
 
-Defined in: [content/src/editing/models.ts:47](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/editing/models.ts#L47)
+Defined in: [content/src/editing/models.ts:47](https://github.com/Sitecore/content-sdk/blob/08d0014b541d19ec57e8f671e786634f43eef2e8/packages/content/src/editing/models.ts#L47)
 
 Represents the Editing Layout variant.
 - shared - shared layout
@@ -18,7 +18,7 @@ Represents the Editing Layout variant.
 
 > **Final**: `"final"`
 
-Defined in: [content/src/editing/models.ts:48](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/editing/models.ts#L48)
+Defined in: [content/src/editing/models.ts:48](https://github.com/Sitecore/content-sdk/blob/08d0014b541d19ec57e8f671e786634f43eef2e8/packages/content/src/editing/models.ts#L48)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [content/src/editing/models.ts:48](https://github.com/Sitecore/conte
 
 > **Shared**: `"shared"`
 
-Defined in: [content/src/editing/models.ts:49](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/editing/models.ts#L49)
+Defined in: [content/src/editing/models.ts:49](https://github.com/Sitecore/content-sdk/blob/08d0014b541d19ec57e8f671e786634f43eef2e8/packages/content/src/editing/models.ts#L49)
