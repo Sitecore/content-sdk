@@ -8,7 +8,7 @@
 
 > **ExperimentalFeatureStatus** = [`ExperimentalFeatureData`](ExperimentalFeatureData.md) & `object`
 
-Defined in: [content/src/experimental-features/types.ts:28](https://github.com/Sitecore/content-sdk/blob/08d0014b541d19ec57e8f671e786634f43eef2e8/packages/content/src/experimental-features/types.ts#L28)
+Defined in: [content/src/experimental-features/types.ts:28](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/experimental-features/types.ts#L28)
 
 Experimental feature metadata including whether it is currently enabled.
 

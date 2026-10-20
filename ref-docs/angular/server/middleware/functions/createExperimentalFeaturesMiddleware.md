@@ -8,7 +8,7 @@
 
 > **createExperimentalFeaturesMiddleware**(`options?`): [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/experimental-features-middleware.ts:33](https://github.com/Sitecore/content-sdk/blob/08d0014b541d19ec57e8f671e786634f43eef2e8/packages/angular/src/server/middleware/experimental-features-middleware.ts#L33)
+Defined in: [packages/angular/src/server/middleware/experimental-features-middleware.ts:33](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/angular/src/server/middleware/experimental-features-middleware.ts#L33)
 
 Express middleware that serves the experimental features visibility endpoint
 (default path: `/api/editing/experimental`). Returns available experimental
