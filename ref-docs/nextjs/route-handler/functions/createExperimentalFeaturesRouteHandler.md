@@ -8,7 +8,7 @@
 
 > **createExperimentalFeaturesRouteHandler**(): `object`
 
-Defined in: [nextjs/src/route-handler/experimental-features-route-handler.ts:19](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/nextjs/src/route-handler/experimental-features-route-handler.ts#L19)
+Defined in: [nextjs/src/route-handler/experimental-features-route-handler.ts:19](https://github.com/Sitecore/content-sdk/blob/08d0014b541d19ec57e8f671e786634f43eef2e8/packages/nextjs/src/route-handler/experimental-features-route-handler.ts#L19)
 
 Creates a route handler for the experimental features API route
 (e.g. '/api/editing/experimental'). Exposes available experimental features
