@@ -105,8 +105,8 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Pre-release canary version bump and snapshot cascade
-        id: canary_snapshot
+      - name: Pre-release beta.atoms version bump and snapshot cascade
+        id: beta_snapshot
         run: yarn changeset:cascade-snapshot-version
 
       - name: Re-Install dependencies
