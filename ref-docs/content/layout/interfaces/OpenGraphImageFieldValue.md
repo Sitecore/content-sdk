@@ -6,7 +6,7 @@
 
 # Interface: OpenGraphImageFieldValue
 
-Defined in: [content/src/layout/field-types.ts:50](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/content/src/layout/field-types.ts#L50)
+Defined in: [content/src/layout/field-types.ts:50](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/content/src/layout/field-types.ts#L50)
 
 The interface for the Open Graph image field value (og:image and its dimension/alt attributes).
 
@@ -20,7 +20,7 @@ The interface for the Open Graph image field value (og:image and its dimension/a
 
 > `optional` **alt?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:53](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/content/src/layout/field-types.ts#L53)
+Defined in: [content/src/layout/field-types.ts:53](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/content/src/layout/field-types.ts#L53)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [content/src/layout/field-types.ts:53](https://github.com/Sitecore/c
 
 > `optional` **height?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:55](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/content/src/layout/field-types.ts#L55)
+Defined in: [content/src/layout/field-types.ts:55](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/content/src/layout/field-types.ts#L55)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [content/src/layout/field-types.ts:55](https://github.com/Sitecore/c
 
 > `optional` **src?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:52](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/content/src/layout/field-types.ts#L52)
+Defined in: [content/src/layout/field-types.ts:52](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/content/src/layout/field-types.ts#L52)
 
 ***
 
@@ -44,4 +44,4 @@ Defined in: [content/src/layout/field-types.ts:52](https://github.com/Sitecore/c
 
 > `optional` **width?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:54](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/content/src/layout/field-types.ts#L54)
+Defined in: [content/src/layout/field-types.ts:54](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/content/src/layout/field-types.ts#L54)

@@ -6,7 +6,7 @@
 
 # Interface: Infer
 
-Defined in: [analytics-core/src/interfaces.ts:32](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/analytics-core/src/interfaces.ts#L32)
+Defined in: [analytics-core/src/interfaces.ts:32](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/analytics-core/src/interfaces.ts#L32)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Interface for supporting response `IncomingMessage` HTTP node type.
 
 > **language**: () => `string` \| `undefined`
 
-Defined in: [analytics-core/src/interfaces.ts:33](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/analytics-core/src/interfaces.ts#L33)
+Defined in: [analytics-core/src/interfaces.ts:33](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/analytics-core/src/interfaces.ts#L33)
 
 #### Returns
 
@@ -30,7 +30,7 @@ Defined in: [analytics-core/src/interfaces.ts:33](https://github.com/Sitecore/co
 
 > **pageName**: () => `string`
 
-Defined in: [analytics-core/src/interfaces.ts:34](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/analytics-core/src/interfaces.ts#L34)
+Defined in: [analytics-core/src/interfaces.ts:34](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/analytics-core/src/interfaces.ts#L34)
 
 #### Returns
 

@@ -8,7 +8,7 @@
 
 > **createLoaderCache**(`config?`): [`LoaderCache`](../../../loaders/interfaces/LoaderCache.md)
 
-Defined in: [packages/angular/src/server/cache/loader-cache.ts:26](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/angular/src/server/cache/loader-cache.ts#L26)
+Defined in: [packages/angular/src/server/cache/loader-cache.ts:26](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/angular/src/server/cache/loader-cache.ts#L26)
 
 Public factory for the loader cache with unstorage backing.
 Uses the memory driver by default.

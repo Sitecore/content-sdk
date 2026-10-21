@@ -8,7 +8,7 @@
 
 > **collectSitecoreTagsFromEdgeRevalidateRequestBody**(`body`, `options`): `string`[]
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:138](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L138)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:138](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L138)
 
 Maps an Experience Edge webhook JSON body to Sitecore cache tag strings.
 

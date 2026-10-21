@@ -8,7 +8,7 @@
 
 > `const` **DEFAULT\_LLMS\_TXT**: "# llms.txt\n\n\> No llms.txt content configured for this site." = '# llms.txt\n\n\> No llms.txt content configured for this site.'
 
-Defined in: [content/src/site/llms-txt-service.ts:29](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/content/src/site/llms-txt-service.ts#L29)
+Defined in: [content/src/site/llms-txt-service.ts:29](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/content/src/site/llms-txt-service.ts#L29)
 
 Default llms.txt content to serve when no content is configured for the resolved site.
 Shaped as minimal valid llms.txt Markdown (H1 + blockquote) per https://llmstxt.org.
