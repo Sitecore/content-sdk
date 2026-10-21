@@ -429,6 +429,22 @@ describe('ProxyBase', () => {
 
       expect(proxy['getPathname'](req, res)).to.equal('/rewritten/path');
     });
+
+    it('should return nextUrl pathname when rewrite header is empty string', () => {
+      const proxy = new SampleProxy({ sites: [] });
+      const req = createReq({
+        nextUrl: {
+          pathname: '/test/path',
+        },
+      });
+      const res = createRes({
+        headers: {
+          [REWRITE_HEADER_NAME]: '',
+        },
+      });
+
+      expect(proxy['getPathname'](req, res)).to.equal('/test/path');
+    });
   });
 
   describe('getLanguage', () => {

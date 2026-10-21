@@ -207,7 +207,7 @@ export abstract class ProxyBase extends ProxyHandler {
    * @returns {string} requested pathname
    */
   protected getPathname(req: NextRequest, res?: NextResponse): string {
-    return res?.headers.get(REWRITE_HEADER_NAME) ?? req.nextUrl.pathname;
+    return res?.headers.get(REWRITE_HEADER_NAME) || req.nextUrl.pathname;
   }
 
   /**
