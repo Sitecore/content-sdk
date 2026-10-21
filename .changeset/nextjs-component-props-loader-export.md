@@ -1,5 +1,6 @@
 ---
 '@sitecore-content-sdk/nextjs': patch
+'create-content-sdk-app': patch
 ---
 
-Point the `./component-props-loader` export at the published root shim. The previous `dist` and `types` paths were never built, so webpack could not resolve the loader used to strip `getComponentServerProps` from client bundles.
+Strip `getComponentServerProps` from client bundles in the Next.js Pages Router template. The loader export now points at the published files, and the template registers it for Turbopack and webpack on client builds only. Existing apps need the same `next.config.js` changes.
