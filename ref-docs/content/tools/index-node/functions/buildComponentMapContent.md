@@ -8,7 +8,7 @@
 
 > **buildComponentMapContent**(`entries`, `componentImports`, `options`): `string`
 
-Defined in: [content/src/tools/templating/utils.ts:140](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/content/src/tools/templating/utils.ts#L140)
+Defined in: [content/src/tools/templating/utils.ts:140](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/tools/templating/utils.ts#L140)
 
 **`Internal`**
 
