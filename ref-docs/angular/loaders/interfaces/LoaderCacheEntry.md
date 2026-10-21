@@ -6,7 +6,7 @@
 
 # Interface: LoaderCacheEntry
 
-Defined in: [packages/angular/src/loaders/models.ts:254](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/angular/src/loaders/models.ts#L254)
+Defined in: [packages/angular/src/loaders/models.ts:254](https://github.com/Sitecore/content-sdk/blob/ee7d15fb7ff51ecf52f6c48a5dd927ab6855f385/packages/angular/src/loaders/models.ts#L254)
 
 Persisted cache entry shape. Stored under the composite cache key built by
 buildCacheKey(); see cache-key.ts.
@@ -17,7 +17,7 @@ buildCacheKey(); see cache-key.ts.
 
 > **expiresAt**: `number` \| `null`
 
-Defined in: [packages/angular/src/loaders/models.ts:258](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/angular/src/loaders/models.ts#L258)
+Defined in: [packages/angular/src/loaders/models.ts:258](https://github.com/Sitecore/content-sdk/blob/ee7d15fb7ff51ecf52f6c48a5dd927ab6855f385/packages/angular/src/loaders/models.ts#L258)
 
 ***
 
@@ -25,7 +25,7 @@ Defined in: [packages/angular/src/loaders/models.ts:258](https://github.com/Site
 
 > **stale**: `boolean`
 
-Defined in: [packages/angular/src/loaders/models.ts:260](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/angular/src/loaders/models.ts#L260)
+Defined in: [packages/angular/src/loaders/models.ts:260](https://github.com/Sitecore/content-sdk/blob/ee7d15fb7ff51ecf52f6c48a5dd927ab6855f385/packages/angular/src/loaders/models.ts#L260)
 
 When true (or TTL expired), entry is served stale while refreshing.
 
@@ -35,7 +35,7 @@ When true (or TTL expired), entry is served stale while refreshing.
 
 > **storedAt**: `number`
 
-Defined in: [packages/angular/src/loaders/models.ts:257](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/angular/src/loaders/models.ts#L257)
+Defined in: [packages/angular/src/loaders/models.ts:257](https://github.com/Sitecore/content-sdk/blob/ee7d15fb7ff51ecf52f6c48a5dd927ab6855f385/packages/angular/src/loaders/models.ts#L257)
 
 ***
 
@@ -43,7 +43,7 @@ Defined in: [packages/angular/src/loaders/models.ts:257](https://github.com/Site
 
 > **tags**: `string`[]
 
-Defined in: [packages/angular/src/loaders/models.ts:256](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/angular/src/loaders/models.ts#L256)
+Defined in: [packages/angular/src/loaders/models.ts:256](https://github.com/Sitecore/content-sdk/blob/ee7d15fb7ff51ecf52f6c48a5dd927ab6855f385/packages/angular/src/loaders/models.ts#L256)
 
 ***
 
@@ -51,4 +51,4 @@ Defined in: [packages/angular/src/loaders/models.ts:256](https://github.com/Site
 
 > **value**: `unknown`
 
-Defined in: [packages/angular/src/loaders/models.ts:255](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/angular/src/loaders/models.ts#L255)
+Defined in: [packages/angular/src/loaders/models.ts:255](https://github.com/Sitecore/content-sdk/blob/ee7d15fb7ff51ecf52f6c48a5dd927ab6855f385/packages/angular/src/loaders/models.ts#L255)
