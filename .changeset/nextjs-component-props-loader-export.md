@@ -3,4 +3,4 @@
 'create-content-sdk-app': patch
 ---
 
-Strip `getComponentServerProps` from client bundles in the Next.js Pages Router template. The loader export now points at the published files, and the template registers it for Turbopack and webpack on client builds only. Existing apps need the same `next.config.js` changes.
+Enable Turbopack support for the component props loader in the Next.js Pages Router template, so `getComponentServerProps` is stripped from client bundles. Also fix the loader's package export path and make the webpack rule work on all platforms.
