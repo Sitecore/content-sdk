@@ -13,6 +13,7 @@
 ## Type Aliases
 
 - [HTMLLink](type-aliases/HTMLLink.md)
+- [HTMLScript](type-aliases/HTMLScript.md)
 - [StaticPath](type-aliases/StaticPath.md)
 
 ## Variables

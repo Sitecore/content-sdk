@@ -76,6 +76,21 @@ export type SitecoreConfigInput = SitecoreConfigInputCore & {
    * This should be the base URL where the Next.js app is accessible from the server side (e.g., "http://localhost:3000").
    */
   sitecoreInternalEditingHostUrl?: string;
+
+  /**
+   * Next.js-specific redirects settings (App Router vs Pages Router locale shaping).
+   */
+  redirects?: SitecoreConfigInputCore['redirects'] & {
+    /**
+     * Controls whether App Router redirect targets carry a locale path prefix (`/[locale]/...`).
+     * - `always`: prefix every locale, including the site default.
+     * - `as-needed`: prefix only non-default locales; the site default stays bare. This holds even for `isLanguagePreserved` rules.
+     * - `never`: never include locale prefix
+     * - unset: behave as `as-needed`, EXCEPT that `isLanguagePreserved` from redirect map's checkbox would always ensure locale prefix, when set.
+     * @default undefined
+     */
+    appLocalePrefix?: 'never' | 'as-needed' | 'always';
+  };
 };
 
 /**

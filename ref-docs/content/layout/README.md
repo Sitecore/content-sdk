@@ -23,20 +23,33 @@
 - [ComponentRendering](interfaces/ComponentRendering.md)
 - [Field](interfaces/Field.md)
 - [FieldMetadata](interfaces/FieldMetadata.md)
+- [ImageField](interfaces/ImageField.md)
+- [ImageFieldValue](interfaces/ImageFieldValue.md)
+- [ImageSizeParameters](interfaces/ImageSizeParameters.md)
 - [Item](interfaces/Item.md)
 - [LayoutServiceContext](interfaces/LayoutServiceContext.md)
 - [LayoutServiceContextData](interfaces/LayoutServiceContextData.md)
 - [LayoutServiceData](interfaces/LayoutServiceData.md)
+- [LinkField](interfaces/LinkField.md)
+- [LinkFieldValue](interfaces/LinkFieldValue.md)
+- [MetadataFields](interfaces/MetadataFields.md)
+- [OpenGraphFields](interfaces/OpenGraphFields.md)
+- [OpenGraphImageField](interfaces/OpenGraphImageField.md)
+- [OpenGraphImageFieldValue](interfaces/OpenGraphImageFieldValue.md)
+- [PageMetadataFields](interfaces/PageMetadataFields.md)
 - [PlaceholderData](interfaces/PlaceholderData.md)
+- [ResolvedPageMetadataFields](interfaces/ResolvedPageMetadataFields.md)
+- [RichTextField](interfaces/RichTextField.md)
 - [RouteData](interfaces/RouteData.md)
+- [TextField](interfaces/TextField.md)
 
 ## Type Aliases
 
 - [GenericFieldValue](type-aliases/GenericFieldValue.md)
 - [LayoutServiceConfig](type-aliases/LayoutServiceConfig.md)
+- [PageMetadataRouteFields](type-aliases/PageMetadataRouteFields.md)
 - [PlaceholdersData](type-aliases/PlaceholdersData.md)
 - [RouteOptions](type-aliases/RouteOptions.md)
-- [ThemingStylesheetLinksOptions](type-aliases/ThemingStylesheetLinksOptions.md)
 
 ## Variables
 
@@ -44,8 +57,8 @@
 - [EDITING\_COMPONENT\_PLACEHOLDER](variables/EDITING_COMPONENT_PLACEHOLDER.md)
 - [EMPTY\_DATE\_FIELD\_VALUE](variables/EMPTY_DATE_FIELD_VALUE.md)
 - [GRAPHQL\_LAYOUT\_QUERY\_NAME](variables/GRAPHQL_LAYOUT_QUERY_NAME.md)
-- [THEMING\_BODY\_CLASS\_NAME](variables/THEMING_BODY_CLASS_NAME.md)
-- [THEMING\_DELIVERY\_CHANNEL](variables/THEMING_DELIVERY_CHANNEL.md)
+- [OG\_CREATION\_TIME\_TAG](variables/OG_CREATION_TIME_TAG.md)
+- [OG\_MODIFIED\_TIME\_TAG](variables/OG_MODIFIED_TIME_TAG.md)
 
 ## Functions
 
@@ -57,15 +70,9 @@
 - [getDesignLibraryStylesheetLinks](functions/getDesignLibraryStylesheetLinks.md)
 - [getDynamicPlaceholderPattern](functions/getDynamicPlaceholderPattern.md)
 - [getFieldValue](functions/getFieldValue.md)
+- [getJsonLdSchemas](functions/getJsonLdSchemas.md)
 - [getRenderingParamString](functions/getRenderingParamString.md)
-- [getThemingStylesheetLinks](functions/getThemingStylesheetLinks.md)
 - [isDynamicPlaceholder](functions/isDynamicPlaceholder.md)
 - [isFieldValueEmpty](functions/isFieldValueEmpty.md)
-- [isSiteThemingEnabled](functions/isSiteThemingEnabled.md)
+- [resolvePageMetadataFields](functions/resolvePageMetadataFields.md)
 - [rewriteEdgeHostInResponse](functions/rewriteEdgeHostInResponse.md)
-
-## References
-
-### ThemingMode
-
-Re-exports [ThemingMode](../config/type-aliases/ThemingMode.md)

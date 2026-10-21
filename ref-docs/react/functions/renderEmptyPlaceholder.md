@@ -8,9 +8,14 @@
 
 > **renderEmptyPlaceholder**(`node`): `Element`
 
-Defined in: [packages/react/src/components/Placeholder/placeholder-utils.tsx:106](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/react/src/components/Placeholder/placeholder-utils.tsx#L106)
+Defined in: [packages/react/src/components/Placeholder/placeholder-utils.tsx:110](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/react/src/components/Placeholder/placeholder-utils.tsx#L110)
 
 Renders the placeholder when it is empty. The required CSS styles are applied to the placeholder in edit mode.
+
+`suppressHydrationWarning` is set because Pages Editor attaches chrome (e.g. `cursor: pointer`
+styling, click handlers) directly to this element outside of React, which can happen before
+client-side hydration completes. That DOM mutation is expected in edit mode and isn't something
+app code can control, so it shouldn't surface as a hydration mismatch.
 
 ## Parameters
 

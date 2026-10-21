@@ -6,13 +6,13 @@
 
 # Interface: TextField
 
-Defined in: react/types/components/Text.d.ts:8
+Defined in: content/types/layout/field-types.d.ts:121
 
 The interface for the Text field.
 
 ## Extends
 
-- `FieldMetadata`
+- [`FieldMetadata`](FieldMetadata.md)
 
 ## Properties
 
@@ -20,7 +20,7 @@ The interface for the Text field.
 
 > `optional` **metadata?**: `object`
 
-Defined in: content/types/layout/models.d.ts:123
+Defined in: content/types/layout/models.d.ts:135
 
 #### Index Signature
 
@@ -28,7 +28,7 @@ Defined in: content/types/layout/models.d.ts:123
 
 #### Inherited from
 
-`FieldMetadata.metadata`
+[`FieldMetadata`](FieldMetadata.md).[`metadata`](FieldMetadata.md#metadata)
 
 ***
 
@@ -36,4 +36,4 @@ Defined in: content/types/layout/models.d.ts:123
 
 > `optional` **value?**: `string` \| `number`
 
-Defined in: react/types/components/Text.d.ts:9
+Defined in: content/types/layout/field-types.d.ts:122

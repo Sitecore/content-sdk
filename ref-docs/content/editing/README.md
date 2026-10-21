@@ -63,3 +63,4 @@
 - [postToDesignLibrary](functions/postToDesignLibrary.md)
 - [resetEditorChromes](functions/resetEditorChromes.md)
 - [updateComponent](functions/updateComponent.md)
+- [validateEvent](functions/validateEvent.md)

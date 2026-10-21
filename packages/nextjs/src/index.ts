@@ -13,7 +13,7 @@ export {
   MemoryCacheClient,
 } from '@sitecore-content-sdk/core';
 
-export { HTMLLink } from '@sitecore-content-sdk/content';
+export { HTMLLink, HTMLScript } from '@sitecore-content-sdk/content';
 
 export {
   LayoutServiceData,
@@ -26,6 +26,7 @@ export {
   PlaceholdersData,
   RouteData,
   Field,
+  FieldMetadata,
   Item,
   getChildPlaceholder,
   getFieldValue,
@@ -35,6 +36,7 @@ export {
   getContentStylesheetLink,
   isSiteThemingEnabled,
   THEMING_BODY_CLASS_NAME,
+  getJsonLdSchemas,
   EditMode,
   RenderingType,
 } from '@sitecore-content-sdk/content/layout';
@@ -127,6 +129,13 @@ export {
   ImageField,
   ImageFieldValue,
   ImageProps,
+  OpenGraphImageField,
+  OpenGraphImageFieldValue,
+  OpenGraphFields,
+  MetadataFields,
+  PageMetadataFields,
+  OG_CREATION_TIME_TAG,
+  OG_MODIFIED_TIME_TAG,
   LinkField,
   LinkFieldValue,
   Text,
@@ -140,6 +149,8 @@ export {
   BYOCComponent,
   BYOCComponentProps,
   getDesignLibraryStylesheetLinks,
+  JsonLdSchema,
+  JsonLdSchemaProps,
   File,
   FileField,
   RichTextField,
@@ -196,3 +207,6 @@ export {
   collectSitecorePageCacheTags,
   type CollectSitecorePageCacheTagsParams,
 } from './cache/sitecore-page-cache-tags';
+
+export { getPageMetadata, type PageMetadataRouteFields } from './metadata/page-metadata';
+export { PageMetaTags, type PageMetaTagsProps } from './components/PageMetaTags';

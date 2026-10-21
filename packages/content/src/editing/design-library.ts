@@ -115,6 +115,7 @@ export const validateOrigin = (event: MessageEvent) => {
  * @param {MessageEvent} e - The message event to validate.
  * @param {string} eventName - The expected event name to match against e.data.name.
  * @returns {boolean} True if the event has a valid origin, data object, and matching event name; otherwise false.
+ * @internal
  */
 export const validateEvent = (e: MessageEvent, eventName: string): boolean => {
   if (!e.origin || !e.data || e.data.name !== eventName) {

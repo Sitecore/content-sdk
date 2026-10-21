@@ -5,6 +5,18 @@ export {
   SearchResponse,
   SortSetting,
   SearchServiceFetchOptions,
+  SuggestParameters,
+  SuggestResponse,
 } from './search-service';
-export { SearchDocument } from './models';
+export {
+  SearchDocument,
+  SearchQuery,
+  FacetRequest,
+  FacetField,
+  FacetFilter,
+  FacetFilterOperator,
+  FacetValue,
+  FacetResult,
+  QuerySuggestionItem,
+} from './models';
 export { debug } from './debug';

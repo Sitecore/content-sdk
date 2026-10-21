@@ -40,6 +40,7 @@ export {
   COMPONENT_UPDATE_CACHE_KEY_PREFIX,
   COMPONENT_PREVIEW_CACHE_KEY_PREFIX,
   updateComponent,
+  validateEvent,
 } from './design-library';
 export {
   THEME_UPDATE_EVENT_NAME,

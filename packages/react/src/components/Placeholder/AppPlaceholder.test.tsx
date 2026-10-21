@@ -552,6 +552,36 @@ describe('App Placeholder logic', () => {
       expect(components[0].textContent).to.equal('Foo');
       expect(components[1].textContent).to.equal('Foo');
     });
+
+    it('should pass only componentName and uid of the rendering to ErrorBoundary', () => {
+      const page = getPage();
+      page.layout = byocWrapperData;
+      const route = byocWrapperData.sitecore.route as RouteData;
+      const phKey = 'main';
+
+      const errorBoundarySpy = sandbox.spy(ErrorBoundary, 'default');
+
+      render(
+        <AppPlaceholder
+          name={phKey}
+          rendering={route}
+          componentMap={componentMap}
+          page={page}
+        />
+      );
+
+      const renderings = errorBoundarySpy
+        .getCalls()
+        .map((call) => call.args[0].rendering)
+        .filter(Boolean);
+
+      expect(renderings).to.deep.equal(
+        (route.placeholders.main as ComponentRendering[]).map(({ componentName, uid }) => ({
+          componentName,
+          uid,
+        }))
+      );
+    });
   });
 
   describe('AppPlaceholder FEaaS fallback', () => {
@@ -1186,6 +1216,31 @@ describe('App Placeholder logic', () => {
       );
 
       expect(wrapper?.container.querySelectorAll('.scpm').length).to.equal(8);
+    });
+
+    it('should fall back to a placeholder-name-based key for the outer <PlaceholderMetadata> when the route rendering has no uid', () => {
+      // layoutData.sitecore.route has no `uid` (route data isn't a ComponentRendering). React
+      // never exposes a `key` value through rendered output (it's stripped before touching the
+      // DOM), so the only observable symptom of a missing/undefined key is the
+      // "unique key" console warning - assert that doesn't fire.
+      expect((layoutData.sitecore.route as unknown as ComponentRendering).uid).to.be.undefined;
+
+      const errorSpy = sandbox.stub(console, 'error');
+
+      render(
+        <AppPlaceholder
+          name="main"
+          rendering={layoutData.sitecore.route}
+          componentMap={componentMap}
+          page={page}
+        />,
+        { container: document.body }
+      );
+
+      const keyWarning = errorSpy
+        .getCalls()
+        .find((call) => String(call.args[0]).includes('unique "key" prop'));
+      expect(keyWarning, 'expected no React "unique key" warning').to.be.undefined;
     });
 
     it('should add data-csdk-component-runtime="server" when rsc is true', () => {

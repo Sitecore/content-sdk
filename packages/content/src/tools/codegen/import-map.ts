@@ -80,6 +80,7 @@ type ImportMapEntry = {
 export type WriteImportMapArgs = {
   paths: string[];
   exclude?: string[];
+  includeVariants?: boolean;
 };
 
 /**
@@ -191,6 +192,44 @@ export const getImportValueAlias = (
   return `${importValue}_${suffix}`;
 };
 
+// Bundler assets (styles, images, fonts, media) are resolved by the app bundler.
+// The TypeScript resolver used here cannot see them, and they are omitted from the import map.
+const NON_JS_ASSET_EXTENSIONS = new Set([
+  '.css',
+  '.scss',
+  '.sass',
+  '.less',
+  '.svg',
+  '.png',
+  '.jpg',
+  '.jpeg',
+  '.gif',
+  '.webp',
+  '.avif',
+  '.ico',
+  '.bmp',
+  '.woff',
+  '.woff2',
+  '.ttf',
+  '.eot',
+  '.otf',
+  '.mp4',
+  '.webm',
+  '.mp3',
+  '.wav',
+]);
+
+/**
+ * Whether an import specifier is a bundler asset the TypeScript resolver cannot resolve.
+ * Query strings and hashes (for example `icon.svg?url`) are ignored when checking the extension.
+ * @param {string} moduleName import specifier from the source file
+ * @returns {boolean} true for known non-JS asset extensions
+ */
+const isNonJsAssetImport = (moduleName: string): boolean => {
+  const specifier = moduleName.split(/[?#]/)[0];
+  return NON_JS_ASSET_EXTENSIONS.has(path.extname(specifier).toLowerCase());
+};
+
 // eslint-disable-next-line jsdoc/require-jsdoc
 function _getImportMap(paths: string[]) {
   // make preparations for handling ts/js files
@@ -206,9 +245,15 @@ function _getImportMap(paths: string[]) {
       `[Codegen] Error reading tsconfig.json from app root: ${tsConfig.error.messageText}`
     );
   } else {
+    const converted = ts.convertCompilerOptionsFromJson(
+      tsConfig.config.compilerOptions,
+      appPath
+    ).options;
     cliCompilerOptions = {
-      ...tsConfig.config.compilerOptions,
-      ...cliCompilerOptions,
+      baseUrl: appPath,
+      target: ts.ScriptTarget.ESNext,
+      ...converted,
+      allowJs: true,
     };
   }
 
@@ -256,7 +301,7 @@ function _getImportMap(paths: string[]) {
 
         // import path is extracted
         const moduleName = childNode.moduleSpecifier.getText().replace(/['"]/g, '');
-        const resolvedModule = ts.nodeModuleNameResolver(
+        const resolvedModule = ts.resolveModuleName(
           moduleName,
           codeFileFullPath,
           cliCompilerOptions,
@@ -267,7 +312,9 @@ function _getImportMap(paths: string[]) {
         const resolvedImportPath = resolvedModule?.resolvedModule?.resolvedFileName;
 
         if (!resolvedImportPath) {
-          console.warn('[Codegen] Could not resolve a file for import %s', moduleName);
+          if (!isNonJsAssetImport(moduleName)) {
+            console.warn('[Codegen] Could not resolve a file for import %s', moduleName);
+          }
           return;
         }
 
@@ -424,7 +471,9 @@ export const writeImportMap = (args: WriteImportMapArgsInternal) => {
       writeEmptyImportMaps(args, defaultTemplate, clientTemplate);
       return;
     }
-    const paths = _getComponentList(args.paths, args.exclude).map((entry) => entry.filePath);
+    const paths = _getComponentList(args.paths, args.exclude, args.includeVariants !== false).map(
+      (entry) => entry.filePath
+    );
     // TODO: don't run in pages router
     const importMaps = await prepImportMaps(paths, args.separateServerClientMaps);
     for (const importMap of importMaps) {

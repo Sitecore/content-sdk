@@ -1,35 +1,15 @@
 'use client';
 import React, { RefAttributes } from 'react';
-import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
+import {
+  FieldMetadata,
+  isFieldValueEmpty,
+  type LinkField,
+  type LinkFieldValue,
+} from '@sitecore-content-sdk/content/layout';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-
-/**
- * The interface for the Link field value.
- * @public
- */
-export interface LinkFieldValue {
-  [attributeName: string]: unknown;
-  href?: string;
-  className?: string;
-  class?: string;
-  title?: string;
-  target?: string;
-  text?: string;
-  anchor?: string;
-  querystring?: string;
-  linktype?: string;
-}
-
-/**
- * The interface for the Link field.
- * @public
- */
-export interface LinkField {
-  value: LinkFieldValue;
-}
 
 /**
  * The interface for the Link component props.

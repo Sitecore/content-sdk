@@ -6,7 +6,7 @@
 
 # Interface: LinkFieldValue
 
-Defined in: react/types/components/Link.d.ts:8
+Defined in: content/types/layout/field-types.d.ts:6
 
 The interface for the Link field value.
 
@@ -20,7 +20,7 @@ The interface for the Link field value.
 
 > `optional` **anchor?**: `string`
 
-Defined in: react/types/components/Link.d.ts:16
+Defined in: content/types/layout/field-types.d.ts:14
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: react/types/components/Link.d.ts:16
 
 > `optional` **class?**: `string`
 
-Defined in: react/types/components/Link.d.ts:12
+Defined in: content/types/layout/field-types.d.ts:10
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: react/types/components/Link.d.ts:12
 
 > `optional` **className?**: `string`
 
-Defined in: react/types/components/Link.d.ts:11
+Defined in: content/types/layout/field-types.d.ts:9
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: react/types/components/Link.d.ts:11
 
 > `optional` **href?**: `string`
 
-Defined in: react/types/components/Link.d.ts:10
+Defined in: content/types/layout/field-types.d.ts:8
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: react/types/components/Link.d.ts:10
 
 > `optional` **linktype?**: `string`
 
-Defined in: react/types/components/Link.d.ts:18
+Defined in: content/types/layout/field-types.d.ts:16
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: react/types/components/Link.d.ts:18
 
 > `optional` **querystring?**: `string`
 
-Defined in: react/types/components/Link.d.ts:17
+Defined in: content/types/layout/field-types.d.ts:15
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: react/types/components/Link.d.ts:17
 
 > `optional` **target?**: `string`
 
-Defined in: react/types/components/Link.d.ts:14
+Defined in: content/types/layout/field-types.d.ts:12
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: react/types/components/Link.d.ts:14
 
 > `optional` **text?**: `string`
 
-Defined in: react/types/components/Link.d.ts:15
+Defined in: content/types/layout/field-types.d.ts:13
 
 ***
 
@@ -84,4 +84,4 @@ Defined in: react/types/components/Link.d.ts:15
 
 > `optional` **title?**: `string`
 
-Defined in: react/types/components/Link.d.ts:13
+Defined in: content/types/layout/field-types.d.ts:11

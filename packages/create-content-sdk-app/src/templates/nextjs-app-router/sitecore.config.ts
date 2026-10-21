@@ -6,4 +6,11 @@ import { defineConfig } from '@sitecore-content-sdk/nextjs/config';
  *
  * Design-token theming is controlled by `theming.mode` (`none` | `site`). Default is `none`.
  */
-export default defineConfig({});
+export default defineConfig({
+  redirects: {
+    // Locale prefix strategy for App Router redirect targets, matching next-intl's
+    // `localePrefix` in src/i18n/routing.ts. `as-needed` keeps the default locale bare
+    // and only prefixes non-default locales. Use `always` if routing prefixes every locale.
+    appLocalePrefix: 'as-needed',
+  },
+});

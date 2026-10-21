@@ -17,14 +17,6 @@ import { GraphQLRequestClientConfig } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/core';
 import { RetryStrategy } from '@sitecore-content-sdk/core';
-import { Spec } from '@json-render/core';
-
-// @internal
-export interface ActionCatalogEntry {
-    description: string;
-    name: string;
-    paramsSchema: object;
-}
 
 // @internal
 export const addComponentPreviewHandler: (importMap: ImportEntry[], callback: (error: unknown | null, Component: unknown) => void) => (() => void) | undefined;
@@ -33,74 +25,29 @@ export const addComponentPreviewHandler: (importMap: ImportEntry[], callback: (e
 export const addComponentUpdateHandler: (rootComponent: ComponentRendering, successCallback?: (updatedRootComponent: ComponentRendering) => void) => (() => void) | undefined;
 
 // @internal
-export const addDocumentUpdateHandler: (callback: (updatedRootComponent: Document_2) => void) => () => void;
-
-// @internal
 export const addServerComponentPreviewHandler: (rootComponent: ComponentRendering, callback: (componentToUpdate: ComponentRendering | null, eventArgs: ServerComponentPreviewEventArgs) => void) => () => void;
 
 // @internal
 export function addStyleElement(stylesContent: string): void;
 
 // @internal
-export const addThemeUpdateHandler: () => (() => void) | undefined;
-
-// @internal
 export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => string): T;
 
 // @internal
-export const applyThemePreviewCss: (css: string) => void;
+export const breakDownPath: (configuredLocales: string[], urlPath: string) => ProcessedPath;
 
+// Warning: (ae-forgotten-export) The symbol "TemplateOptions" needs to be exported by the entry point api-surface.d.ts
+//
 // @internal
-export interface AtomCatalogActionEntry {
-    description: string | undefined;
-    legacy: boolean;
-    name: string;
-    paramsSchema?: object;
-}
-
-// @internal
-export interface AtomCatalogComponentEntry {
-    allowedChildren?: string[];
-    allowedParents?: string[];
-    description?: string;
-    example?: unknown;
-    legacy: boolean;
-    name: string;
-    propsSchema: object;
-    slots: string[];
-    version?: string;
-}
-
-// @internal
-export interface AtomCatalogEntry {
-    description: string;
-    name: string;
-    propsSchema: object;
-    slots: string[];
-}
-
-// @internal
-export interface AtomsCatalogPayload {
-    actions: ActionCatalogEntry[];
-    components: AtomCatalogEntry[];
-}
-
-// @internal
-export interface AtomsDocumentValidationError {
-    formatted: string;
-    issues: AtomsDocumentValidationIssue[];
-}
-
-// @internal
-export interface AtomsDocumentValidationIssue {
-    code: string;
-    elementKey?: string;
-    message: string;
-    severity: 'error' | 'warning';
-}
+export const buildComponentMapContent: (entries: ComponentMapEntry[], componentImports: ComponentImport[] | undefined, options: TemplateOptions) => string;
 
 // @public
-export type AtomsStylingSolution = 'tailwind' | 'inline-css';
+export const buildExperimentalFeaturesResponse: (features: ExperimentalFeatureData[]) => ExperimentalFeaturesResponse;
+
+// @internal
+export const buildFallbackConfig: (env: {
+    [key: string]: string | undefined;
+}) => SitecoreConfig;
 
 // @public
 export class CdpHelper {
@@ -109,6 +56,9 @@ export class CdpHelper {
     static getPageVariantId(pageId: string, language: string, variantId: string, scope?: string): string;
     static normalizeScope(scope?: string): string;
 }
+
+// @public
+export const combineImportEntries: (defaultImportEntries: ImportEntry[], generatedImportEntries: ImportEntry[]) => ImportEntry[];
 
 // @internal
 export const COMPONENT_PREVIEW_CACHE_KEY_PREFIX = "component-preview-";
@@ -198,8 +148,6 @@ export interface ComponentParams {
 export interface ComponentPreviewEventArgs extends DesignLibraryEvent {
     // (undocumented)
     message: GeneratedComponentData;
-    // Warning: (ae-forgotten-export) The symbol "DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME" needs to be exported by the entry point api-surface.d.ts
-    //
     // (undocumented)
     name: typeof DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME;
 }
@@ -212,6 +160,7 @@ export interface ComponentRendering<T = ComponentFields> {
     dataSource?: string;
     // (undocumented)
     fields?: T;
+    isContentResolved?: boolean;
     // (undocumented)
     params?: ComponentParams;
     // (undocumented)
@@ -253,6 +202,9 @@ export const createComponentInstance: (importMap: ImportEntry[], generatedCompon
 export const createGraphQLClientFactory: (options: GraphQLClientOptions) => GraphQLRequestClientFactory;
 
 // @public
+export const CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG = "CSDK_GLOBAL_EXPERIMENTAL_FEATURES_ENABLED";
+
+// @public
 const debug_2: {
     form: Debugger;
     layout: Debugger;
@@ -261,6 +213,7 @@ const debug_2: {
     sitemap: Debugger;
     multisite: Debugger;
     robots: Debugger;
+    llmsTxt: Debugger;
     redirects: Debugger;
     personalize: Debugger;
     locale: Debugger;
@@ -268,10 +221,18 @@ const debug_2: {
 };
 export { debug_2 as debug }
 
+// Warning: (ae-forgotten-export) The symbol "DeepPartial" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export function deepMerge<T>(base: T, override?: DeepPartial<T>): T;
+
 // @public
 export type DeepRequired<T> = Required<{
     [K in keyof T]: T[K] extends Required<T[K]> ? T[K] : DeepRequired<T[K]>;
 }>;
+
+// @public
+export const DEFAULT_LLMS_TXT = "# llms.txt\n\n> No llms.txt content configured for this site.";
 
 // @internal
 export const DEFAULT_PLACEHOLDER_UID = "00000000-0000-0000-0000-000000000000";
@@ -290,14 +251,13 @@ export { DefaultRetryStrategy }
 export const defineCliConfig: (cliConfig: SitecoreCliConfigInput) => SitecoreCliConfig;
 
 // @public
-export const defineConfig: (config: SitecoreConfigInput) => SitecoreConfig;
+export const defineConfig: (config?: SitecoreConfigInput, env?: Record<string, string | undefined>) => SitecoreConfig;
 
 // @internal
-export type DesignLibraryAtomsError = 'render' | 'atoms-missing' | 'validation';
+export const DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME = "component:generation:component-preview";
 
 // @public
 export enum DesignLibraryMode {
-    LowCode = "library-low-code",
     Metadata = "library-metadata",
     Normal = "library"
 }
@@ -391,17 +351,6 @@ export interface DictionaryServiceConfig extends CacheOptions, GraphQLServiceCon
 }
 
 // @internal
-interface Document_2 extends Spec {
-    name: string;
-    // (undocumented)
-    state?: Spec['state'] & {
-        fields?: Record<string, unknown>;
-        params?: Record<string, unknown>;
-    };
-}
-export { Document_2 as Document }
-
-// @internal
 export const EDITING_ALLOWED_ORIGINS: string[];
 
 // @internal
@@ -488,8 +437,8 @@ export const EMPTY_DATE_FIELD_VALUE = "0001-01-01T00:00:00Z";
 // @internal (undocumented)
 export type EnhancedComponentMapTemplate = (components: (ComponentFile | ComponentFileWithType)[], componentImports: ComponentImport[] | undefined, ctx: {
     entries: ComponentMapEntry[];
-    includeVariants: boolean;
-    isClientMap: boolean;
+    includeVariants?: boolean;
+    isClientMap?: boolean;
 }) => string;
 
 // @public
@@ -532,10 +481,60 @@ export interface ErrorPagesServiceConfig extends GraphQLServiceConfig {
 // @internal
 const executeScriptElements: (rootElement: HTMLElement) => void;
 
+// @public
+export type ExperimentalFeatureData = {
+    idName: string;
+    displayName: string;
+    envVarName: string;
+    description: string;
+};
+
+// @public
+export type ExperimentalFeaturesResponse = {
+    features: ExperimentalFeatureStatus[];
+};
+
+// @public
+export type ExperimentalFeatureStatus = ExperimentalFeatureData & {
+    enabled: boolean;
+};
+
+// @public
+export type ExtractedFile = {
+    name: string;
+    path: string;
+    type: ExtractedFileType;
+    labels?: Record<string, unknown>;
+};
+
+// @public
+export enum ExtractedFileType {
+    // (undocumented)
+    Component = "component",
+    // (undocumented)
+    Json = "json",
+    // (undocumented)
+    PackageJson = "package.json",
+    // (undocumented)
+    Style = "style",
+    // (undocumented)
+    Template = "template",
+    // (undocumented)
+    Variant = "variant"
+}
+
 // Warning: (ae-forgotten-export) The symbol "_extractFiles" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export let extractFiles: typeof _extractFiles;
+
+// @public
+export type ExtractFilesConfig = {
+    componentMapPath?: string;
+    clientComponentMapPath?: string;
+    customValidateDeployContext?: () => boolean;
+    gatherCompanionFiles?: (componentFilePath: string, componentKey: string) => ExtractedFile[];
+};
 
 // @internal
 export function fetchGeneratedComponentFromCache(id: string, token: string, edgeUrl?: string): Promise<GeneratedComponentData>;
@@ -644,11 +643,6 @@ export const getContentStylesheetLink: (layoutData: LayoutServiceData, sitecoreE
 // @internal
 export function getDefaultMediaUrlTransformer(edgeUrl: string): (value: string) => string;
 
-// Warning: (ae-forgotten-export) The symbol "DesignLibraryAtomsCatalogEvent" needs to be exported by the entry point api-surface.d.ts
-//
-// @internal
-export function getDesignLibraryAtomsCatalogEvent(payload: SerializedCatalog): DesignLibraryAtomsCatalogEvent;
-
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPropsEvent" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
@@ -681,7 +675,10 @@ export const getDynamicPlaceholderPattern: (placeholder: string) => RegExp;
 export const getEdgeProxyContentUrl: (sitecoreEdgeUrl?: string) => string;
 
 // @internal
-export const getEdgeProxyFormsUrl: (sitecoreEdgeContextId: string, formId: string, sitecoreEdgeUrl?: string) => string;
+export const getEdgeProxyFormsUrl: (formId: string, sitecoreEdgeUrl?: string, language?: string) => string;
+
+// @internal
+export const getFallbackConfig: () => SitecoreConfig;
 
 // @public
 export function getFieldValue<T>(renderingOrFields: ComponentRendering | ComponentFields, fieldName: string): T | undefined;
@@ -693,7 +690,13 @@ export function getFieldValue<T>(renderingOrFields: ComponentRendering | Compone
 export function getGroomedVariantIds(variantIds: string[]): PersonalizedRewriteData;
 
 // @internal
+export function getHostnameFromHostHeader(host: string): string;
+
+// @internal
 export function getImportMapInfo(importMap: ImportEntry[]): ImportEntryInfo[];
+
+// @public
+export const getJsonLdSchemas: (schemas?: Record<string, unknown>[] | null) => HTMLScript | null;
 
 // @public
 export function getLocaleRewrite(pathname: string, locale: string): string;
@@ -734,9 +737,6 @@ const getSrcSet: (url: string, srcSet: Array<{
     [key: string]: string | number | undefined;
 }, mediaUrlPrefix?: RegExp) => string;
 
-// @public
-export const getThemingStylesheetLinks: (input: ThemingStylesheetLinksOptions) => HTMLLink[];
-
 // @internal
 export const GRAPHQL_LAYOUT_QUERY_NAME = "ContentSdkLayoutQuery";
 
@@ -764,6 +764,40 @@ export type HTMLLink = {
 } & Pick<HTMLLinkElement, 'rel' | 'href'>;
 
 // @public
+export type HTMLScript = {
+    [key: string]: unknown;
+} & Pick<HTMLScriptElement, 'type'> & {
+    innerHTML: string;
+};
+
+// @public
+export interface ImageField {
+    // (undocumented)
+    value?: ImageFieldValue;
+}
+
+// @public
+export interface ImageFieldValue {
+    // (undocumented)
+    [attributeName: string]: unknown;
+    // (undocumented)
+    src?: string;
+}
+
+// @public
+export interface ImageSizeParameters {
+    // (undocumented)
+    [attr: string]: string | number | undefined;
+    as?: 1 | 0;
+    h?: number;
+    iar?: 1 | 0;
+    mh?: number;
+    mw?: number;
+    sc?: number;
+    w?: number;
+}
+
+// @public
 export interface ImportEntry {
     // (undocumented)
     exports: {
@@ -786,6 +820,9 @@ export interface ImportEntryInfo {
 export const INVALID_SECRET_HTML_MESSAGE = "<html><body>Missing or invalid secret</body></html>";
 
 // @internal
+export const isAbsoluteTarget: (target: string) => boolean;
+
+// @internal
 export function isDesignLibraryMode(mode: unknown): mode is DesignLibraryMode;
 
 // @internal
@@ -795,10 +832,13 @@ export const isDynamicPlaceholder: (placeholder: string) => boolean;
 export const isEditorActive: () => boolean;
 
 // @public
-export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field> | null | undefined): field is null | undefined;
+export const isExperimentalEnvFlagEnabled: (value: string | undefined) => boolean;
 
 // @public
-export const isSiteThemingEnabled: (mode: ThemingMode) => boolean;
+export const isExperimentalFeaturesGloballyEnabled: () => boolean;
+
+// @public
+export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field> | null | undefined): field is null | undefined;
 
 // @public
 export interface Item {
@@ -856,6 +896,7 @@ export interface LayoutServiceContext {
     pageState?: LayoutServicePageState;
     // (undocumented)
     renderingType?: RenderingType;
+    schemas?: Record<string, unknown>[];
     // (undocumented)
     site?: {
         name?: string;
@@ -888,8 +929,78 @@ export enum LayoutServicePageState {
     Preview = "preview"
 }
 
+// @public
+export interface LinkField {
+    // (undocumented)
+    value: LinkFieldValue;
+}
+
+// @public
+export interface LinkFieldValue {
+    // (undocumented)
+    [attributeName: string]: unknown;
+    // (undocumented)
+    anchor?: string;
+    // (undocumented)
+    class?: string;
+    // (undocumented)
+    className?: string;
+    // (undocumented)
+    href?: string;
+    // (undocumented)
+    linktype?: string;
+    // (undocumented)
+    querystring?: string;
+    // (undocumented)
+    target?: string;
+    // (undocumented)
+    text?: string;
+    // (undocumented)
+    title?: string;
+}
+
+// @public
+export const LLMS_TXT_CONTENT_TYPE = "text/markdown; charset=utf-8";
+
+// @public
+export type LlmsTxtOptions = {
+    siteName: string;
+};
+
+// @public
+export type LlmsTxtQueryResult = {
+    site: {
+        siteInfo: {
+            llmsTxt: string;
+        };
+    };
+};
+
+// @public
+export class LlmsTxtService {
+    constructor(options: LlmsTxtServiceConfig);
+    fetchLlmsTxt(fetchOptions?: FetchOptions): Promise<string>;
+    protected getGraphQLClient(): GraphQLClient;
+    // (undocumented)
+    options: LlmsTxtServiceConfig;
+    // (undocumented)
+    protected get query(): string;
+}
+
+// @public
+export type LlmsTxtServiceConfig = {
+    siteName: string;
+    clientFactory: GraphQLRequestClientFactory;
+};
+
 // @internal
-const loadForm: (contextId: string, formId: string, edgeUrl?: string) => Promise<string>;
+const loadForm: (contextId: string, formId: string, edgeUrl?: string, language?: string) => Promise<string>;
+
+// @internal
+export const matchFromRedirectMapRedirect: (redirects: RedirectResult[], requestLocale: string, incomingPathData: ProcessedPath) => RedirectResult | undefined;
+
+// @internal
+export const matchRedirectItemRedirect: (redirects: RedirectResult[], locale: string, nonLocalePath: string) => RedirectResult | undefined;
 
 declare namespace mediaApi {
     export {
@@ -900,6 +1011,18 @@ declare namespace mediaApi {
     }
 }
 export { mediaApi }
+
+// @public
+export interface MetadataFields {
+    // (undocumented)
+    baseMetadataAuthor?: Field<string>;
+    // (undocumented)
+    baseMetadataDescription?: Field<string>;
+    // (undocumented)
+    baseMetadataKeywords?: Field<string>;
+    // (undocumented)
+    baseMetadataTitle?: Field<string>;
+}
 
 // @internal
 export enum MetadataKind {
@@ -923,6 +1046,44 @@ export function normalizePersonalizedRewrite(pathname: string): string;
 export function normalizeSiteRewrite(pathname: string): string;
 
 // @public
+export const OG_CREATION_TIME_TAG: Record<string, string>;
+
+// @public
+export const OG_MODIFIED_TIME_TAG: Record<string, string>;
+
+// @public
+export interface OpenGraphFields {
+    // (undocumented)
+    baseOgDescription?: Field<string>;
+    // (undocumented)
+    baseOgImage?: OpenGraphImageField;
+    // (undocumented)
+    baseOgTitle?: Field<string>;
+    // (undocumented)
+    baseOgType?: Field<string>;
+}
+
+// @public
+export interface OpenGraphImageField {
+    // (undocumented)
+    value?: OpenGraphImageFieldValue;
+}
+
+// @public
+export interface OpenGraphImageFieldValue {
+    // (undocumented)
+    [attributeName: string]: unknown;
+    // (undocumented)
+    alt?: string;
+    // (undocumented)
+    height?: string;
+    // (undocumented)
+    src?: string;
+    // (undocumented)
+    width?: string;
+}
+
+// @public
 export type Page = {
     layout: LayoutServiceData;
     siteName?: string;
@@ -937,11 +1098,19 @@ export interface PageInfo {
 }
 
 // @public
+export interface PageMetadataFields extends MetadataFields, OpenGraphFields {
+}
+
+// @public
+export type PageMetadataRouteFields = PageMetadataFields & {
+    Title?: Field;
+};
+
+// @public
 export type PageMode = {
     name: PageModeName;
     designLibrary: {
         isVariantGeneration: boolean;
-        isLowCode: boolean;
     };
     isNormal: boolean;
     isPreview: boolean;
@@ -1020,8 +1189,32 @@ export type PlaceholdersData<TYPEDNAME extends string = string> = {
 // @internal
 export const postToDesignLibrary: (evt: DesignLibraryEvent) => void;
 
+// Warning: (ae-forgotten-export) The symbol "ComponentSource" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export const prepareComponentsForMap: (components: ComponentSource[], opts: {
+    includeVariants: boolean;
+    shouldAnnotateClient?: boolean;
+}) => ComponentMapEntry[];
+
 // @internal
 export const PREVIEW_KEY = "sc_preview";
+
+// @internal
+export const processAbsoluteUrlTarget: (incomingPathData: ProcessedPath, existsRedirect: RedirectResult) => string;
+
+// @internal
+export type ProcessedPath = {
+    nonLocalePath: string;
+    locale?: string;
+    queryString?: string;
+};
+
+// @internal
+export const processRelativeUrlTarget: (incomingPathData: ProcessedPath, existsRedirect: RedirectResult, configuredLocales: string[], reqLocale: string) => {
+    targetLocale: string;
+    targetPath: string;
+};
 
 // @internal
 export const QUERY_PARAM_EDITING_SECRET = "secret";
@@ -1043,6 +1236,12 @@ export type RedirectInfo = {
     isQueryStringPreserved: boolean;
     isLanguagePreserved?: boolean;
     locale: string;
+};
+
+// @internal
+export type RedirectResult = RedirectInfo & {
+    matchedQueryString?: string;
+    matchedPath?: string;
 };
 
 // @public
@@ -1106,10 +1305,43 @@ const replaceMediaUrlPrefix: (url: string, mediaUrlPrefix?: RegExp) => string;
 // @public
 export const resetEditorChromes: () => void;
 
+// @public
+export interface ResolvedPageMetadataFields {
+    author?: string;
+    creationTime?: string;
+    creationTimeTag?: string;
+    description?: string;
+    keywords?: string;
+    metaTitle?: string;
+    modifiedTime?: string;
+    modifiedTimeTag?: string;
+    ogDescription?: string;
+    ogImage?: OpenGraphImageFieldValue;
+    ogImageSrc?: string;
+    ogTitle?: string;
+    ogType?: string;
+    title: string;
+}
+
+// @public
+export const resolveExperimentalFeatureStatuses: (features: ExperimentalFeatureData[]) => ExperimentalFeatureStatus[];
+
+// @public
+export function resolvePageMetadataFields(route: RouteData<PageMetadataRouteFields> | null | undefined, defaultTitle: string): ResolvedPageMetadataFields;
+
+// @internal
+export const resolveRedirectTarget: (existsRedirect: RedirectResult, siteLanguage: string, requestPath: string) => string;
+
 export { RetryStrategy }
 
 // @public
 export function rewriteEdgeHostInResponse<T>(response: T, edgeUrl: string): T;
+
+// @public
+export interface RichTextField extends FieldMetadata {
+    // (undocumented)
+    value?: string;
+}
 
 // @public
 export type RobotsQueryResult = {
@@ -1159,10 +1391,12 @@ export interface RouteData<Fields = Record<string, Field | Item | Item[]>> {
     name: string;
     // (undocumented)
     placeholders: PlaceholdersData;
+    published?: string;
     // (undocumented)
     templateId?: string;
     // (undocumented)
     templateName?: string;
+    updated?: string;
 }
 
 // @public
@@ -1173,6 +1407,9 @@ export type RouteOptions = {
 
 // @internal (undocumented)
 export type RouterType = 'app' | 'pages';
+
+// @internal
+export const safeCompileRedirectPattern: (pattern: string) => RegExp | null;
 
 // @internal
 export function scaffoldComponent(outputFolderPath: string, componentName: string, templateName: string, templates: ScaffoldTemplate[]): void;
@@ -1186,18 +1423,7 @@ export type ScaffoldTemplate = {
 };
 
 // @internal
-export const sendAtomsErrorEvent: (error: unknown, type: DesignLibraryAtomsError) => void;
-
-// @internal
 export const sendErrorEvent: (uid: string, error: unknown, type: DesignLibraryPreviewError) => void;
-
-// @internal
-export interface SerializedCatalog {
-    actions: AtomCatalogActionEntry[];
-    components: AtomCatalogComponentEntry[];
-    stylingSolution: AtomsStylingSolution;
-    version?: string;
-}
 
 // @internal
 export interface ServerComponentPreviewEventArgs extends DesignLibraryEvent {
@@ -1222,11 +1448,6 @@ export const SITE_PREFIX = "_site_";
 export const SITECORE_CLI_MODE_ENV_VAR = "SITECORE_CLI_MODE";
 
 // @public
-export interface SitecoreActionMeta {
-    legacy?: boolean;
-}
-
-// @public
 export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInput>;
 
 // @public
@@ -1243,11 +1464,6 @@ export type SitecoreCliConfigInput = {
     componentMap?: GenerateMapArgs & {
         generator?: GenerateMapFunction;
     };
-    atoms?: {
-        validation?: {
-            breakOnError?: boolean;
-        };
-    };
 };
 
 // Warning: (ae-forgotten-export) The symbol "BaseSitecoreClient" needs to be exported by the entry point api-surface.d.ts
@@ -1255,7 +1471,7 @@ export type SitecoreCliConfigInput = {
 // @public
 export class SitecoreClient implements BaseSitecoreClient {
     constructor(initOptions: SitecoreClientInit);
-    // @internal
+    // @internal @deprecated
     protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData;
     // (undocumented)
     protected clientFactory: GraphQLRequestClientFactory;
@@ -1263,6 +1479,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     protected componentService: ComponentLayoutService;
     // (undocumented)
     protected dictionaryService: DictionaryService;
+    // (undocumented)
+    edgeInitialized: boolean;
     // (undocumented)
     protected editingService: EditingService;
     // (undocumented)
@@ -1281,6 +1499,9 @@ export class SitecoreClient implements BaseSitecoreClient {
         enableStyles?: boolean;
         enableThemes?: boolean;
     }): HTMLLink[];
+    getLlmsTxt(options: LlmsTxtOptions, fetchOptions?: FetchOptions): Promise<string | null>;
+    // (undocumented)
+    protected getLlmsTxtService(siteName: string): LlmsTxtService;
     getPage(path: string | string[], pageOptions?: PageOptions, fetchOptions?: FetchOptions): Promise<Page | null>;
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
     getPreview(previewData: EditingPreviewData | undefined, fetchOptions?: FetchOptions): Promise<Page | null>;
@@ -1295,6 +1516,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     // (undocumented)
     protected layoutService: LayoutService;
     parsePath(path: string | string[]): string;
+    // @internal
+    protected rewriteContentUrls<T>(data: T): T;
     // (undocumented)
     protected sitePathService: SitePathService;
 }
@@ -1310,14 +1533,6 @@ export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' 
         sitePathService?: SitePathService;
     };
 };
-
-// @public
-export interface SitecoreComponentMeta {
-    allowedChildren?: string[];
-    allowedParents?: string[];
-    legacy?: boolean;
-    version?: string;
-}
 
 // @public
 export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
@@ -1370,9 +1585,6 @@ export type SitecoreConfigInput = {
     };
     rewriteMediaUrls?: boolean | ((value: string) => string);
     disableCodeGeneration?: boolean;
-    theming?: {
-        mode?: ThemingMode;
-    };
 };
 
 // @public
@@ -1485,40 +1697,16 @@ export type StaticPath = {
 };
 
 // @internal
-const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: string) => void;
-
-// @internal
-export const THEME_PREVIEW_STYLE_ID = "sitecore-theme-preview";
+const subscribeToFormSubmitEvent: (formElement: HTMLElement, componentId?: string, signal?: AbortSignal) => void;
 
 // @public
-export const THEME_UPDATE_EVENT_NAME = "theme-update";
-
-// @public
-export interface ThemeUpdateEventArgs extends DesignLibraryEvent {
+export interface TextField extends FieldMetadata {
     // (undocumented)
-    message: {
-        css: string;
-    };
-    // (undocumented)
-    name: typeof THEME_UPDATE_EVENT_NAME;
+    value?: string | number;
 }
 
-// @public
-export const THEMING_BODY_CLASS_NAME = "sc-ds-theme";
-
-// @public
-export const THEMING_DELIVERY_CHANNEL = "web-css";
-
-// @public
-export type ThemingMode = 'none' | 'site';
-
-// @public
-export type ThemingStylesheetLinksOptions = {
-    mode: ThemingMode;
-    siteName?: string;
-    clientContextId?: string;
-    sitecoreEdgeUrl?: string;
-};
+// @internal
+export const toPascalCase: (name: string) => string;
 
 // @internal
 export const updateComponent: (component: ComponentRendering<ComponentFields>, fields: ComponentFields | undefined, params: ComponentParams | undefined) => void;
@@ -1529,15 +1717,7 @@ const updateImageUrl: (url: string, params?: {
 } | null, mediaUrlPrefix?: RegExp) => string;
 
 // @internal
-export function validateAtomsDocument(document: unknown): ValidateAtomsDocumentResult;
-
-// @internal
-export type ValidateAtomsDocumentResult = {
-    valid: true;
-} | {
-    valid: false;
-    error: AtomsDocumentValidationError;
-};
+export const validateEvent: (e: MessageEvent, eventName: string) => boolean;
 
 // @internal (undocumented)
 export const VARIANT_PREFIX = "_variantId_";
@@ -1553,6 +1733,7 @@ export const writeImportMap: (args: WriteImportMapArgsInternal) => (input: {
 export type WriteImportMapArgs = {
     paths: string[];
     exclude?: string[];
+    includeVariants?: boolean;
 };
 
 // @internal
@@ -1565,11 +1746,11 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 // Warnings were encountered during analysis:
 //
 // src/client/sitecore-client.ts:69:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
-// src/editing/codegen/preview.ts:115:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
-// src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
-// src/tools/generate-map.ts:24:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
-// src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
-// src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
+// src/editing/codegen/preview.ts:116:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
+// src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
+// src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
+// src/tools/generate-map.ts:32:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
+// src/tools/generate-map.ts:32:3 - (ae-incompatible-release-tags) The symbol "clientMapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 

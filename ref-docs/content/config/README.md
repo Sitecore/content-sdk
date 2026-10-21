@@ -20,6 +20,12 @@
 - [SitecoreConfigInput](type-aliases/SitecoreConfigInput.md)
 - [ThemingMode](type-aliases/ThemingMode.md)
 
+## Functions
+
+- [buildFallbackConfig](functions/buildFallbackConfig.md)
+- [deepMerge](functions/deepMerge.md)
+- [getFallbackConfig](functions/getFallbackConfig.md)
+
 ## References
 
 ### defineConfig

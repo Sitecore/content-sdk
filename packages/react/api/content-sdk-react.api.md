@@ -4,28 +4,24 @@
 
 ```ts
 
-import { AtomsStylingSolution } from '@sitecore-content-sdk/content/atoms';
 import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
-import type { Catalog } from '@json-render/core';
 import { ClientError } from '@sitecore-content-sdk/core';
 import { ComponentFields } from '@sitecore-content-sdk/content/layout';
 import { ComponentParams } from '@sitecore-content-sdk/content/layout';
-import type { ComponentRenderer } from '@json-render/react';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { ComponentType } from 'react';
 import { constants } from '@sitecore-content-sdk/core';
 import { debug as debug_2 } from '@sitecore-content-sdk/search';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
-import { defineRegistry } from '@json-render/react';
-import type { DefineRegistryResult } from '@json-render/react';
 import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 import { DictionaryService } from '@sitecore-content-sdk/content/i18n';
-import type { Document as Document_2 } from '@sitecore-content-sdk/content/atoms';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { enableDebug } from '@sitecore-content-sdk/core';
 import { EnhancedOmit } from '@sitecore-content-sdk/core/tools';
 import { ErrorPage } from '@sitecore-content-sdk/content/client';
+import { FacetRequest } from '@sitecore-content-sdk/search';
+import { FacetResult } from '@sitecore-content-sdk/search';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import { Field } from '@sitecore-content-sdk/content/layout';
 import { FieldMetadata } from '@sitecore-content-sdk/content/layout';
@@ -37,8 +33,10 @@ import { getFieldValue } from '@sitecore-content-sdk/content/layout';
 import { GraphQLClientError } from '@sitecore-content-sdk/content/client';
 import { GraphQLRequestClient } from '@sitecore-content-sdk/content/client';
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/content/client';
+import { ImageField } from '@sitecore-content-sdk/content/layout';
+import { ImageFieldValue } from '@sitecore-content-sdk/content/layout';
+import { ImageSizeParameters } from '@sitecore-content-sdk/content/layout';
 import { ImportEntry } from '@sitecore-content-sdk/content/codegen';
-import type { InferCatalogInput } from '@json-render/core';
 import { isEditorActive } from '@sitecore-content-sdk/content/editing';
 import { Item } from '@sitecore-content-sdk/content/layout';
 import { JSX as JSX_2 } from 'react';
@@ -47,81 +45,42 @@ import { LayoutServiceContext } from '@sitecore-content-sdk/content/layout';
 import { LayoutServiceContextData } from '@sitecore-content-sdk/content/layout';
 import { LayoutServiceData } from '@sitecore-content-sdk/content/layout';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
+import { LinkField } from '@sitecore-content-sdk/content/layout';
+import { LinkFieldValue } from '@sitecore-content-sdk/content/layout';
 import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { MemoryCacheClient } from '@sitecore-content-sdk/core';
+import { MetadataFields } from '@sitecore-content-sdk/content/layout';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherConfig } from '@sitecore-content-sdk/core';
 import { NativeDataFetcherResponse } from '@sitecore-content-sdk/core';
+import { OG_CREATION_TIME_TAG } from '@sitecore-content-sdk/content/layout';
+import { OG_MODIFIED_TIME_TAG } from '@sitecore-content-sdk/content/layout';
+import { OpenGraphFields } from '@sitecore-content-sdk/content/layout';
+import { OpenGraphImageField } from '@sitecore-content-sdk/content/layout';
+import { OpenGraphImageFieldValue } from '@sitecore-content-sdk/content/layout';
 import { Page } from '@sitecore-content-sdk/content/client';
+import { PageMetadataFields } from '@sitecore-content-sdk/content/layout';
 import { PageMode } from '@sitecore-content-sdk/content/client';
+import { QuerySuggestionItem } from '@sitecore-content-sdk/search';
 import { default as React_2 } from 'react';
 import { ReactNode } from 'react';
-import type { ReactSchema } from '@json-render/react';
 import { RefAttributes } from 'react';
 import { resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 import { RetryStrategy } from '@sitecore-content-sdk/content/client';
+import { RichTextField } from '@sitecore-content-sdk/content/layout';
 import { RouteData } from '@sitecore-content-sdk/content/layout';
 import { SearchDocument } from '@sitecore-content-sdk/search';
 import { SearchParameters } from '@sitecore-content-sdk/search';
-import { SitecoreActionMeta } from '@sitecore-content-sdk/content/atoms';
-import { SitecoreComponentMeta } from '@sitecore-content-sdk/content/atoms';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
 import { SitePathService } from '@sitecore-content-sdk/content/site';
 import { SitePathServiceConfig } from '@sitecore-content-sdk/content/site';
-import { useBoundProp as useBoundProp_2 } from '@json-render/react';
-import { z } from 'zod';
+import { TextField } from '@sitecore-content-sdk/content/layout';
 
 // @public
 export const AppPlaceholder: (props: AppPlaceholderProps) => React_2.JSX.Element;
 
 // @public
 export type AppPlaceholderProps = Omit<PlaceholderProps, 'componentMap' | 'page'> & Required<Pick<PlaceholderProps, 'componentMap' | 'page'>>;
-
-// Warning: (ae-forgotten-export) The symbol "BaseAction" needs to be exported by the entry point api-surface.d.ts
-//
-// @public
-export type AtomActionDefinition = BaseAction & SitecoreActionMeta;
-
-// @public
-export type AtomActionHandler = (params: Record<string, unknown>) => Promise<void> | void;
-
-// Warning: (ae-forgotten-export) The symbol "BaseComponent" needs to be exported by the entry point api-surface.d.ts
-//
-// @public
-export type AtomComponentDefinition = BaseComponent & SitecoreComponentMeta;
-
-// @public
-export type AtomsActionsMap = Record<string, AtomActionHandler>;
-
-// @public
-export type AtomsCatalog<T extends AtomsCatalogInput = AtomsCatalogInput> = Catalog<any, Omit<T, 'stylingSolution'> & {
-    stylingSolution: AtomsStylingSolution;
-}>;
-
-// Warning: (ae-forgotten-export) The symbol "BaseCatalog" needs to be exported by the entry point api-surface.d.ts
-//
-// @public
-export type AtomsCatalogInput = BaseCatalog & {
-    version?: string;
-    stylingSolution?: AtomsStylingSolution;
-    components: Record<string, AtomComponentDefinition>;
-    actions: Record<string, AtomActionDefinition>;
-};
-
-// Warning: (ae-forgotten-export) The symbol "AtomsComponentRenderer" needs to be exported by the entry point api-surface.d.ts
-//
-// @public
-export type AtomsComponentsMap = Record<string, AtomsComponentRenderer>;
-
-// @public
-export interface AtomsConfig {
-    catalog: AtomsCatalog;
-    compileCssAction?: (classes: string[]) => Promise<string>;
-    navigate?: (path: string) => void;
-    registry: DefineRegistryResult;
-}
-
-export { AtomsStylingSolution }
 
 // @public
 export class BYOCComponent extends React_2.Component<BYOCComponentProps> {
@@ -202,14 +161,6 @@ export interface DateFieldProps extends EditableFieldProps<DateFieldProps> {
     tag?: string;
 }
 
-// @public
-export type DateFieldSchema = z.infer<ReturnType<typeof dateFieldSchema>>;
-
-// @public
-export const dateFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
-    value: z.ZodOptional<z.ZodString>;
-}, z.core.$strip>;
-
 export { debug_2 as debug }
 
 // @public
@@ -225,14 +176,6 @@ export const DefaultEmptyFieldEditingComponentText: React_2.FC<{
 }>;
 
 export { DefaultRetryStrategy }
-
-// Warning: (ae-forgotten-export) The symbol "Exact" needs to be exported by the entry point api-surface.d.ts
-//
-// @public
-export function defineAtomsCatalog<T extends AtomsCatalogInput>(input: Exact<T, AtomsCatalogInput>): AtomsCatalog<T>;
-
-// @public
-export const defineAtomsRegistry: typeof defineRegistry;
 
 // @public
 export const DesignLibrary: () => React_2.JSX.Element | null;
@@ -256,9 +199,6 @@ export class DesignLibraryErrorBoundary extends React_2.Component<DesignLibraryE
         hasError: boolean;
     };
 }
-
-// @internal
-export const DesignLibraryLowCodeComponent: () => React_2.JSX.Element;
 
 export { DictionaryPhrases }
 
@@ -290,9 +230,6 @@ export const ErrorComponent: (props: {
 }) => React_2.JSX.Element;
 
 export { ErrorPage }
-
-// @public
-export function extractDocumentClasses(doc: Document_2): string[];
 
 // @public (undocumented)
 export const FEaaSComponent: (props: FEaaSComponentProps) => JSX_2.Element | null;
@@ -349,18 +286,6 @@ export interface FileField {
     value: FileFieldValue;
 }
 
-// @public
-export type FileFieldSchema = z.infer<ReturnType<typeof fileFieldSchema>>;
-
-// @public
-export const fileFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
-    value: z.ZodObject<{
-        src: z.ZodOptional<z.ZodString>;
-        title: z.ZodOptional<z.ZodString>;
-        displayName: z.ZodOptional<z.ZodString>;
-    }, z.core.$loose>;
-}, z.core.$strip>;
-
 // Warning: (ae-forgotten-export) The symbol "FormProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
@@ -384,33 +309,9 @@ export { GraphQLRequestClientFactoryConfig }
 const Image_2: React_2.FC<ImageProps>;
 export { Image_2 as Image }
 
-// @public
-export interface ImageField {
-    // (undocumented)
-    value?: ImageFieldValue;
-}
+export { ImageField }
 
-// @public
-export type ImageFieldSchema = z.infer<ReturnType<typeof imageFieldSchema>>;
-
-// @public
-export const imageFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
-    value: z.ZodOptional<z.ZodObject<{
-        src: z.ZodOptional<z.ZodString>;
-        alt: z.ZodOptional<z.ZodString>;
-        width: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>;
-        height: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>;
-        class: z.ZodOptional<z.ZodString>;
-    }, z.core.$loose>>;
-}, z.core.$strip>;
-
-// @public
-export interface ImageFieldValue {
-    // (undocumented)
-    [attributeName: string]: unknown;
-    // (undocumented)
-    src?: string;
-}
+export { ImageFieldValue }
 
 // @public
 export interface ImageProps extends EditableFieldProps<ImageProps> {
@@ -425,18 +326,7 @@ export interface ImageProps extends EditableFieldProps<ImageProps> {
     srcSet?: ImageSizeParameters[];
 }
 
-// @public
-export interface ImageSizeParameters {
-    // (undocumented)
-    [attr: string]: string | number | undefined;
-    as?: 1 | 0;
-    h?: number;
-    iar?: 1 | 0;
-    mh?: number;
-    mw?: number;
-    sc?: number;
-    w?: number;
-}
+export { ImageSizeParameters }
 
 // @internal
 export type ImportMapImport = {
@@ -446,6 +336,14 @@ export type ImportMapImport = {
 export { isEditorActive }
 
 export { Item }
+
+// @public
+export const JsonLdSchema: (input: JsonLdSchemaProps) => JSX_2.Element | null;
+
+// @public
+export interface JsonLdSchemaProps {
+    page?: Page | null;
+}
 
 export { LayoutService }
 
@@ -460,53 +358,9 @@ export { LayoutServicePageState }
 // @public
 export const Link: React_2.FC<LinkProps>;
 
-// @public
-export interface LinkField {
-    // (undocumented)
-    value: LinkFieldValue;
-}
+export { LinkField }
 
-// @public
-export type LinkFieldSchema = z.infer<ReturnType<typeof linkFieldSchema>>;
-
-// @public
-export const linkFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
-    value: z.ZodObject<{
-        href: z.ZodOptional<z.ZodString>;
-        className: z.ZodOptional<z.ZodString>;
-        class: z.ZodOptional<z.ZodString>;
-        title: z.ZodOptional<z.ZodString>;
-        target: z.ZodOptional<z.ZodString>;
-        text: z.ZodOptional<z.ZodString>;
-        anchor: z.ZodOptional<z.ZodString>;
-        querystring: z.ZodOptional<z.ZodString>;
-        linktype: z.ZodOptional<z.ZodString>;
-    }, z.core.$loose>;
-}, z.core.$strip>;
-
-// @public
-export interface LinkFieldValue {
-    // (undocumented)
-    [attributeName: string]: unknown;
-    // (undocumented)
-    anchor?: string;
-    // (undocumented)
-    class?: string;
-    // (undocumented)
-    className?: string;
-    // (undocumented)
-    href?: string;
-    // (undocumented)
-    linktype?: string;
-    // (undocumented)
-    querystring?: string;
-    // (undocumented)
-    target?: string;
-    // (undocumented)
-    text?: string;
-    // (undocumented)
-    title?: string;
-}
+export { LinkFieldValue }
 
 // @public
 export type LinkProps = EditableFieldProps<LinkProps> & React_2.AnchorHTMLAttributes<HTMLAnchorElement> & RefAttributes<HTMLAnchorElement> & {
@@ -519,6 +373,8 @@ export { mediaApi }
 
 export { MemoryCacheClient }
 
+export { MetadataFields }
+
 export { NativeDataFetcher }
 
 export { NativeDataFetcherConfig }
@@ -530,7 +386,19 @@ export { NativeDataFetcherResponse }
 // @public
 export const noopLoadImportMap: () => Promise<ImportMapImport>;
 
+export { OG_CREATION_TIME_TAG }
+
+export { OG_MODIFIED_TIME_TAG }
+
+export { OpenGraphFields }
+
+export { OpenGraphImageField }
+
+export { OpenGraphImageFieldValue }
+
 export { Page }
+
+export { PageMetadataFields }
 
 export { PageMode }
 
@@ -574,12 +442,6 @@ export { PlaceholderProps as PlaceholderComponentProps }
 export { PlaceholderProps }
 
 // @public
-export type PropMeta = {
-    control?: string;
-    fieldType?: string;
-};
-
-// @public
 export type ReactContentSdkComponent = (ComponentType | ReactModule) & {
     componentType?: 'server' | 'client' | 'universal';
 };
@@ -601,19 +463,7 @@ export { RetryStrategy }
 // @public
 export const RichText: React_2.FC<RichTextProps>;
 
-// @public
-export interface RichTextField extends FieldMetadata {
-    // (undocumented)
-    value?: string;
-}
-
-// @public
-export type RichTextFieldSchema = z.infer<ReturnType<typeof richTextFieldSchema>>;
-
-// @public
-export const richTextFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
-    value: z.ZodOptional<z.ZodString>;
-}, z.core.$strip>;
+export { RichTextField }
 
 // @public
 export interface RichTextProps extends EditableFieldProps<RichTextProps> {
@@ -641,13 +491,11 @@ export const SitecoreProviderReactContext: React_2.Context<SitecoreProviderState
 // @public
 export interface SitecoreProviderState {
     api?: SitecoreProviderProps['api'];
-    atomsConfig?: AtomsConfig;
     componentMap: ComponentMap;
     // Warning: (ae-incompatible-release-tags) The symbol "loadImportMap" is marked as @public, but its signature references "ImportMapImport" which is marked as @internal
     loadImportMap: () => Promise<ImportMapImport>;
     page: Page;
     setPage?: (value: Page) => void;
-    theming?: SitecoreProviderProps['theming'];
 }
 
 export { SitePathService }
@@ -660,25 +508,7 @@ export { SitePathServiceConfig }
 const Text_2: React_2.FC<TextProps>;
 export { Text_2 as Text }
 
-// @public
-export interface TextField extends FieldMetadata {
-    // (undocumented)
-    value?: string | number;
-}
-
-// @public
-export type TextFieldSchema = z.infer<ReturnType<typeof textFieldSchema>>;
-
-// @public
-export const textFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
-    value: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>;
-}, z.core.$strip>;
-
-// @public
-export const ThemePreviewEvents: () => null;
-
-// @public
-export const useBoundProp: typeof useBoundProp_2;
+export { TextField }
 
 // @public
 export const useInfiniteSearch: <T extends SearchDocument = SearchDocument>(options: UseInfiniteSearchOptions<T>) => UseInfiniteSearchState<T>;
@@ -686,9 +516,13 @@ export const useInfiniteSearch: <T extends SearchDocument = SearchDocument>(opti
 // @public
 export interface UseInfiniteSearchOptions<T extends SearchDocument = SearchDocument> {
     enabled?: boolean;
+    facet?: FacetRequest;
+    locale?: string;
     pageSize?: number;
     query?: string;
     searchIndexId: string;
+    seedItemId?: string;
+    seedItemUrl?: string;
     sort?: SearchParameters<T>['sort'];
 }
 
@@ -711,11 +545,15 @@ export const useSearch: <T extends SearchDocument = SearchDocument>(options: Use
 // @public
 export interface UseSearchOptions<T extends SearchDocument = SearchDocument> {
     enabled?: boolean;
+    facet?: FacetRequest;
     keepPreviousData?: boolean;
+    locale?: string;
     page?: number;
     pageSize?: number;
     query?: string;
     searchIndexId: string;
+    seedItemId?: string;
+    seedItemUrl?: string;
     sort?: SearchParameters<T>['sort'];
 }
 
@@ -733,6 +571,28 @@ export type UseSearchState<T extends SearchDocument = SearchDocument> = Omit<Int
 //
 // @public
 export function useSitecore(options?: UseSitecoreOptions): SitecoreProviderState;
+
+// @public
+export const useSuggest: <T extends SearchDocument = SearchDocument>(options: UseSuggestOptions) => UseSuggestState<T>;
+
+// @public
+export interface UseSuggestOptions {
+    enabled?: boolean;
+    keepPreviousData?: boolean;
+    locale?: string;
+    query?: string;
+    searchIndexId: string;
+}
+
+// Warning: (ae-forgotten-export) The symbol "InternalSuggestState" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export type UseSuggestState<T extends SearchDocument = SearchDocument> = Omit<InternalSuggestState<T>, 'previousStatus'> & {
+    isLoading: boolean;
+    isSuccess: boolean;
+    isError: boolean;
+    isPreviousData: boolean;
+};
 
 // Warning: (ae-forgotten-export) The symbol "ComponentProps" needs to be exported by the entry point api-surface.d.ts
 // Warning: (ae-forgotten-export) The symbol "WrapperProps" needs to be exported by the entry point api-surface.d.ts
@@ -772,9 +632,6 @@ export function withFieldMetadata<FieldComponentProps extends WithMetadataProps,
 // @public
 export const withPlaceholder: <T extends ComponentProps, W extends T & WrapperProps_2>(Component: ComponentType<T>) => (props: W) => React_2.JSX.Element;
 
-// @public
-export function withPropMeta<T extends z.ZodType>(schema: T, meta: PropMeta): T;
-
 // Warning: (ae-forgotten-export) The symbol "WithSitecoreHocProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public @deprecated (undocumented)
@@ -783,7 +640,7 @@ export function withSitecore(options?: UseSitecoreOptions): <ComponentProps exte
 // Warnings were encountered during analysis:
 //
 // src/components/FEaaS/models.ts:96:3 - (ae-forgotten-export) The symbol "RevisionType" needs to be exported by the entry point api-surface.d.ts
-// src/components/SitecoreProvider.tsx:116:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
+// src/components/SitecoreProvider.tsx:97:30 - (ae-forgotten-export) The symbol "SitecoreProviderProps" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

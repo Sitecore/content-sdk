@@ -32,6 +32,7 @@ import { ErrorPages, ErrorPagesService, SitePathService, SitemapXmlService } fro
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 import { RobotsService } from '../site/robots-service';
+import { LlmsTxtService } from '../site/llms-txt-service';
 import { DesignLibraryVariantGeneration } from '../editing/models';
 import {
   DesignLibraryRenderPreviewData,
@@ -155,12 +156,25 @@ export type RobotsOptions = {
 };
 
 /**
+ * Options for fetching llms.txt content.
+ * @public
+ */
+export type LlmsTxtOptions = {
+  /**
+   * The name of the site for which to fetch llms.txt content.
+   */
+  siteName: string;
+};
+
+/**
  * Contract for the Sitecore Client implementations
  */
 export interface BaseSitecoreClient {
   /**
    * Execute a raw GraphQL request using the client's configured GraphQL endpoint(s).
-   * This is a thin pass-through to the underlying {@link GraphQLClient.request},
+   * This is a thin pass-through to the underlying {@link GraphQLClient.request}.
+   * When `rewriteMediaUrls` is enabled, string values in the result are rewritten
+   * the same way as layout data.
    * @param query GraphQL string or DocumentNode
    * @param variables Optional variables bag
    * @param fetchOptions Optional fetch/retry overrides (headers, retries, fetch impl, debugger)
@@ -268,6 +282,13 @@ export interface BaseSitecoreClient {
    * @returns {Promise<string>} A promise that resolves to the robots.txt content.
    */
   getRobots(siteName: string, fetchOptions?: FetchOptions): Promise<string | null>;
+  /**
+   * Retrieves the llms.txt content (managed via Sitecore AI) for a given site.
+   * @param {LlmsTxtOptions} options - Options containing the site name for which to fetch llms.txt content.
+   * @param {FetchOptions} fetchOptions Additional fetch options to override GraphQL requests
+   * @returns {Promise<string>} A promise that resolves to the llms.txt content.
+   */
+  getLlmsTxt(options: LlmsTxtOptions, fetchOptions?: FetchOptions): Promise<string | null>;
 }
 
 export interface BaseServiceOptions {
@@ -285,6 +306,7 @@ export interface BaseServiceOptions {
  * @public
  */
 export class SitecoreClient implements BaseSitecoreClient {
+  public edgeInitialized = true;
   protected layoutService: LayoutService;
   protected dictionaryService: DictionaryService;
   protected editingService: EditingService;
@@ -303,6 +325,10 @@ export class SitecoreClient implements BaseSitecoreClient {
     this.graphQLClient = this.clientFactory({
       debugger: debug.http,
     });
+    const { contextId: serverContextId, clientContextId } = this.initOptions.api.edge;
+    if (!serverContextId && !clientContextId) {
+      this.edgeInitialized = false;
+    }
 
     const baseServiceOptions = this.getBaseServiceOptions();
 
@@ -335,17 +361,20 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   /**
    * Execute a raw GraphQL request using the client's configured GraphQL Edge endpoint.
-   * This is a thin pass-through to the underlying `GraphQLClient.request` method,
+   * When `rewriteMediaUrls` is enabled, string values in the result are rewritten
+   * the same way as layout data.
    * @param {string | DocumentNode} query GraphQL query
    * @param {Record<string, unknown>} [variables] Optional variables bag
    * @param {FetchOptions} [fetchOptions] Optional fetch overrides (e.g. fetch, headers)
+   * @returns {Promise<T>} GraphQL result, with media hostnames rewritten when `rewriteMediaUrls` is enabled
    */
-  getData<T = unknown>(
+  async getData<T = unknown>(
     query: string | DocumentNode,
     variables?: Record<string, unknown>,
     fetchOptions?: FetchOptions
   ): Promise<T> {
-    return this.graphQLClient.request<T>(query, variables, fetchOptions);
+    const data = await this.graphQLClient.request<T>(query, variables, fetchOptions);
+    return this.rewriteContentUrls(data);
   }
 
   /**
@@ -384,7 +413,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         pageOptions.personalize.componentVariantIds
       );
     }
-    layout = this.applyContentRewrite(layout);
+    layout = this.rewriteContentUrls(layout);
 
     return {
       layout,
@@ -410,11 +439,24 @@ export class SitecoreClient implements BaseSitecoreClient {
   ): HTMLLink[] {
     const { enableStyles = true, enableThemes = true } = options;
     const { contextId: serverContextId, clientContextId } = this.initOptions.api.edge;
+    if (!this.edgeInitialized) {
+      console.warn('Both client and server context IDs are absent. Cannot retrieve head links.');
+      return [];
+    }
+
     const headLinks: HTMLLink[] = [];
 
-    const contextId = serverContextId || clientContextId;
-    // Use default Edge URL for styles (ignore custom hostname) so stylesheets load from platform
-    const edgeUrlForStyles = resolveEdgeUrlForStaticFiles();
+    // Stylesheets are requested by the browser through <link> elements, so the context id cannot be
+    // moved into the x-sitecore-contextid header. Prefer the client context id to keep the
+    // server-side one out of publicly rendered markup.
+    const contextId = clientContextId || serverContextId;
+    if (!clientContextId) {
+      debug.common(
+        'clientContextId is not configured, falling back to the server context id for stylesheet links'
+      );
+    }
+
+    const edgeUrlForStyles = resolveEdgeUrlForStaticFiles(this.initOptions.api.edge.edgeUrl);
 
     if (enableStyles) {
       const contentStyles = getContentStylesheetLink(layoutData, contextId, edgeUrlForStyles);
@@ -513,7 +555,7 @@ export class SitecoreClient implements BaseSitecoreClient {
     }
 
     let layout = data.layoutData;
-    layout = this.applyContentRewrite(layout);
+    layout = this.rewriteContentUrls(layout);
     const page: Page = {
       locale: language,
       layout,
@@ -568,7 +610,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         }`
       );
     }
-    const layout = this.applyContentRewrite(componentData);
+    const layout = this.rewriteContentUrls(componentData);
     const page: Page = {
       locale: designLibData.language,
       layout,
@@ -618,7 +660,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       return null;
     }
 
-    layout = this.applyContentRewrite(layout);
+    layout = this.rewriteContentUrls(layout);
 
     return {
       layout,
@@ -713,6 +755,19 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   /**
+   * Retrieves the llms.txt content (managed via Sitecore AI) for a given site.
+   * @param {LlmsTxtOptions} options - Options containing the site name to retrieve the llms.txt for.
+   * @param {FetchOptions} [fetchOptions] - Optional fetch options.
+   * @returns {Promise<string | null>} A promise that resolves to the llms.txt content,
+   * or null if no content is found.
+   */
+  async getLlmsTxt(options: LlmsTxtOptions, fetchOptions?: FetchOptions): Promise<string | null> {
+    const llmsTxtService = this.getLlmsTxtService(options.siteName || this.initOptions.defaultSite);
+    const content = await llmsTxtService.fetchLlmsTxt(fetchOptions);
+    return content || null;
+  }
+
+  /**
    * Factory methods for creating dependencies
    * Subclasses can override these to provide custom implementations.
    */
@@ -726,6 +781,13 @@ export class SitecoreClient implements BaseSitecoreClient {
 
   protected getRobotsService(siteName: string): RobotsService {
     return new RobotsService({
+      clientFactory: this.clientFactory,
+      siteName,
+    });
+  }
+
+  protected getLlmsTxtService(siteName: string): LlmsTxtService {
+    return new LlmsTxtService({
       clientFactory: this.clientFactory,
       siteName,
     });
@@ -750,16 +812,30 @@ export class SitecoreClient implements BaseSitecoreClient {
    * When true, uses default Edge host rewriter; when a function, transforms each string.
    * @param {LayoutServiceData} layout - Layout data from layout/editing/component/error service
    * @returns {LayoutServiceData} Rewritten layout (or same reference if rewrite disabled)
+   * @deprecated Use {@link SitecoreClient.rewriteContentUrls} instead. This method only accepts layout data.
    * @internal
    */
   protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData {
+    return this.rewriteContentUrls(layout);
+  }
+
+  /**
+   * Rewrites media hostnames when `rewriteMediaUrls` is enabled.
+   * Shared by layout responses and `getData` so both follow the same option.
+   * When the option is omitted or false, returns the same reference.
+   * The default rewriter changes only the default Experience Edge hostname.
+   * @param {T} data - Layout data or a GraphQL response
+   * @returns {T} Rewritten data, or the original reference when rewrite is disabled
+   * @internal
+   */
+  protected rewriteContentUrls<T>(data: T): T {
     const opt = this.initOptions.rewriteMediaUrls;
     if (!opt) {
-      return layout;
+      return data;
     }
     const experienceEdgeUrl = resolveExperienceEdgeUrl();
     const transformer = opt === true ? getDefaultMediaUrlTransformer(experienceEdgeUrl) : opt;
-    return applyMediaUrlRewrite(layout, transformer);
+    return applyMediaUrlRewrite(data, transformer);
   }
 
   private getPageMode(mode: PageModeName, generation?: DesignLibraryVariantGeneration): PageMode {

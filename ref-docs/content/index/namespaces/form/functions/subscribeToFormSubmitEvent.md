@@ -6,9 +6,9 @@
 
 # Function: subscribeToFormSubmitEvent()
 
-> **subscribeToFormSubmitEvent**(`formElement`, `componentId?`): `void`
+> **subscribeToFormSubmitEvent**(`formElement`, `componentId?`, `signal?`): `void`
 
-Defined in: [content/src/form/form.ts:82](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/form/form.ts#L82)
+Defined in: [content/src/form/form.ts:91](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/form/form.ts#L91)
 
 **`Internal`**
 
@@ -21,6 +21,7 @@ This listener captures interactions such as form views or submissions
 | ------ | ------ | ------ |
 | `formElement` | `HTMLElement` | The form element to subscribe to events on |
 | `componentId?` | `string` | The unique identifier of the component |
+| `signal?` | `AbortSignal` | - |
 
 ## Returns
 

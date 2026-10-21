@@ -39,6 +39,8 @@ export async function handler(argv: BuildArgs) {
     }
   }
 
+  // grace period for all pooled connections to close (https://github.com/nodejs/undici/issues/5680)
+  await new Promise((resolve) => setTimeout(resolve, 250));
   // Exit the process to avoid hanging the process by custom build commands
   process.exit(0);
 }

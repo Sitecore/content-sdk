@@ -19,6 +19,44 @@ export type SiteRewriteData = {
 };
 
 /**
+ * Hostname from a `Host` or `x-forwarded-host` value, without port.
+ * - `[::1]:3000` → `::1`
+ * - `127.0.0.1:3000` → `127.0.0.1`
+ * - `example.com:443` → `example.com`
+ * - `::1` → `::1` (does not treat `:1` as a port)
+ * @param {string} host - Raw header value
+ * @returns {string} The hostname
+ * @internal
+ */
+export function getHostnameFromHostHeader(host: string): string {
+  const trimmed = host.trim();
+
+  // Bracketed IPv6: "[...]:port" or "[...]"
+  if (trimmed.startsWith('[')) {
+    const end = trimmed.indexOf(']');
+    if (end !== -1) {
+      return trimmed.slice(1, end).toLowerCase();
+    }
+  }
+
+  // Unbracketed IPv6 (e.g. ::1, 2001:db8::1) — never strip on last ":digits"
+  if (trimmed.includes('::')) {
+    return trimmed.toLowerCase();
+  }
+
+  // IPv4 or DNS name with ":port" (port = decimal digits only)
+  const lastColon = trimmed.lastIndexOf(':');
+  if (lastColon > 0) {
+    const after = trimmed.slice(lastColon + 1);
+    if (/^\d+$/.test(after)) {
+      return trimmed.slice(0, lastColon).toLowerCase();
+    }
+  }
+
+  return trimmed.toLowerCase();
+}
+
+/**
  * Get a site rewrite path for given pathname
  * @param {string} pathname the pathname
  * @param {SiteRewriteData} data the site data to include in the rewrite

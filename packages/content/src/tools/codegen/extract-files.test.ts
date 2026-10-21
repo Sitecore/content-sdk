@@ -63,7 +63,7 @@ describe('extract-files', () => {
         url: 'https://example/mesh/push/api/v1/contentsdk/code/extracted',
         headers: {},
         text: async () => '',
-      }) as any;
+      } as any);
 
     fetchFake = sinon.fake((url: any, init: any) => fetchBehavior(url, init));
     sandbox.replace(globalThis as any, 'fetch', fetchFake);

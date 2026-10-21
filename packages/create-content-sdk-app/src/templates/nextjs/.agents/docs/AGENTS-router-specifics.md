@@ -33,9 +33,10 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 
 - **Sitemap:** `src/pages/api/sitemap.ts` — `SitemapMiddleware(scClient, sites).getHandler()`. Serves sitemap XML; uses `sites` from `.sitecore/sites.json`.
 - **Robots:** `src/pages/api/robots.ts` — `RobotsMiddleware(scClient, sites).getHandler()`. Serves `robots.txt`; site can be resolved from request.
+- **Llms.txt:** `src/pages/api/llms-txt.ts` — `LlmsTxtMiddleware(scClient, sites).getHandler()`. Serves `llms.txt`; content is managed via Sitecore AI configuration (Content SDK only consumes/serves it, not authoring or generation).
 - **Editing:** `src/pages/api/editing/config.ts`, `render.ts`, `feaas/render.ts` — used by Sitecore Editor (XM Cloud); use SDK middleware/handlers and `.sitecore/component-map`, `.sitecore/metadata.json`.
 - **Health:** `src/pages/api/healthz.ts` — health check. Rewrite in `next.config.js`: `/healthz` → `/api/healthz`.
-- **Rewrites:** `next.config.js` → `rewrites()` for `/robots.txt`, `/sitemap*.xml`, `/feaas-render` to the corresponding API routes.
+- **Rewrites:** `next.config.js` → `rewrites()` for `/robots.txt`, `/llms.txt`, `/sitemap*.xml`, `/feaas-render` to the corresponding API routes.
 
 ## Sitecore client and config
 

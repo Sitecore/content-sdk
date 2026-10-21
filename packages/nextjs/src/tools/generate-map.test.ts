@@ -3,11 +3,18 @@
 /* eslint-disable no-unused-vars */
 
 import path from 'path';
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
 import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
+
+chai.use(sinonChai);
 import { generateMap } from './generate-map';
 import fs from 'fs';
 import { ComponentImport } from '@sitecore-content-sdk/content/tools';
+import {
+  prepareComponentsForMap,
+  buildComponentMapContent,
+} from '@sitecore-content-sdk/content/node-tools';
 import * as coreTools from '@sitecore-content-sdk/content/tools';
 import * as coreServerTools from '@sitecore-content-sdk/content/node-tools';
 import * as templatingUtils from './templating/utils';
@@ -52,6 +59,8 @@ describe('generateMap', () => {
     let getComponentListWithTypesStub: sinon.SinonStub;
     let detectRouterTypeStub: sinon.SinonStub;
     let filterComponentsByTypeStub: sinon.SinonStub;
+    let prepareComponentsForMapStub: sinon.SinonStub;
+    let buildComponentMapContentStub: sinon.SinonStub;
 
     const fakeComponentsWithTypes = [
       {
@@ -77,6 +86,8 @@ describe('generateMap', () => {
       getComponentListWithTypesStub = sandbox.stub().returns(fakeComponentsWithTypes);
       detectRouterTypeStub = sandbox.stub().returns('app'); // Default to App Router for tests
       filterComponentsByTypeStub = sandbox.stub().returns(fakeComponentsWithTypes);
+      prepareComponentsForMapStub = sandbox.stub().callsFake(prepareComponentsForMap);
+      buildComponentMapContentStub = sandbox.stub().callsFake(buildComponentMapContent);
 
       sandbox.replaceGetter(coreServerTools, 'getComponentList', () => getComponentListStub);
       sandbox
@@ -84,6 +95,16 @@ describe('generateMap', () => {
         .callsFake(getComponentListWithTypesStub);
       sandbox.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
       sandbox.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
+      sandbox.replaceGetter(
+        coreServerTools,
+        'prepareComponentsForMap',
+        () => prepareComponentsForMapStub
+      );
+      sandbox.replaceGetter(
+        coreServerTools,
+        'buildComponentMapContent',
+        () => buildComponentMapContentStub
+      );
       sandbox.stub(fs, 'writeFileSync');
     });
 
@@ -114,7 +135,7 @@ describe('generateMap', () => {
       expect(dest).to.equal(path.join(process.cwd(), '.sitecore', 'component-map.ts'));
 
       expect(content).to.include(
-        "import { BYOCWrapper, NextjsContentSdkComponent, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';"
+        "import { BYOCWrapper, FEaaSWrapper } from '@sitecore-content-sdk/nextjs';"
       );
 
       expect(content).to.include("import * as Button from './src/components/Button';");
@@ -693,6 +714,8 @@ describe('generateMap', () => {
     let getComponentListWithTypesStub: sinon.SinonStub;
     let detectRouterTypeStub: sinon.SinonStub;
     let filterComponentsByTypeStub: sinon.SinonStub;
+    let prepareComponentsForMapStub: sinon.SinonStub;
+    let buildComponentMapContentStub: sinon.SinonStub;
 
     beforeEach(() => {
       getComponentListWithTypesStub = sandbox.stub().returns(fakeComponentsWithTypes);
@@ -701,12 +724,24 @@ describe('generateMap', () => {
         fakeComponentsWithTypes[0], // ClientButton
         fakeComponentsWithTypes[2], // UniversalCard
       ]);
+      prepareComponentsForMapStub = sandbox.stub().callsFake(prepareComponentsForMap);
+      buildComponentMapContentStub = sandbox.stub().callsFake(buildComponentMapContent);
 
       sandbox
         .stub(templatingUtils, 'getComponentListWithTypes')
         .callsFake(getComponentListWithTypesStub);
       sandbox.stub(templatingUtils, 'detectRouterType').callsFake(detectRouterTypeStub);
       sandbox.replaceGetter(coreTools, 'filterComponentsByType', () => filterComponentsByTypeStub);
+      sandbox.replaceGetter(
+        coreServerTools,
+        'prepareComponentsForMap',
+        () => prepareComponentsForMapStub
+      );
+      sandbox.replaceGetter(
+        coreServerTools,
+        'buildComponentMapContent',
+        () => buildComponentMapContentStub
+      );
       sandbox.stub(fs, 'writeFileSync');
     });
 

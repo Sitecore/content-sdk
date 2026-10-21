@@ -6,12 +6,14 @@
 
 # Interface: FieldMetadata
 
-Defined in: [content/src/layout/models.ts:137](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/layout/models.ts#L137)
+Defined in: [content/src/layout/models.ts:148](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/layout/models.ts#L148)
 
 Field metadata in editing mode
 
 ## Extended by
 
+- [`TextField`](TextField.md)
+- [`RichTextField`](RichTextField.md)
 - [`Field`](Field.md)
 
 ## Properties
@@ -20,7 +22,7 @@ Field metadata in editing mode
 
 > `optional` **metadata?**: `object`
 
-Defined in: [content/src/layout/models.ts:138](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/layout/models.ts#L138)
+Defined in: [content/src/layout/models.ts:149](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/layout/models.ts#L149)
 
 #### Index Signature
 

@@ -16,6 +16,7 @@ export {
   Page,
   PageOptions,
   SitemapXmlOptions,
+  LlmsTxtOptions,
   PageMode,
   ErrorPage,
 } from './sitecore-client';

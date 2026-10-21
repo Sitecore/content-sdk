@@ -37,6 +37,10 @@ export default function proxy(req: NextRequest, event: NextFetchEvent) {
      * List of all supported locales configured in routing.ts
      */
     locales: routing.locales.slice(),
+    /**
+     * Default language to use if no language is identified in the request
+     */
+    defaultLanguage: scConfig.defaultLanguage,
     // This function determines if the proxy should be turned off on per-request basis.
     // Certain paths are ignored by default (e.g. files and Next.js API routes), but you may wish to disable more.
     // This is an important performance consideration since Next.js Edge proxy runs on every request.
@@ -109,10 +113,10 @@ export const config = {
    * 3. /sitecore/api (Sitecore API routes)
    * 4. /- (Sitecore media)
    * 5. /healthz (Health check)
-   * 7. all root files inside /public
+   * 6. static files inside /public (images, fonts, css, js, etc.)
    */
   matcher: [
     '/',
-    '/((?!api/|sitemap|robots|_next/|healthz|sitecore/api/|-/|favicon.ico|sc_logo.svg).*)',
+    '/((?!api/|sitemap|robots|_next/|healthz|sitecore/api/|-/|.*[.](?:svg|png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf|eot|css|js|map|webmanifest)$).*)',
   ],
 };

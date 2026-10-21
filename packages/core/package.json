@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/core",
-  "version": "2.1.1",
+  "version": "2.1.4",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -81,19 +81,19 @@
   ],
   "exports": {
     ".": {
+      "types": "./types/index.d.ts",
       "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
-      "types": "./types/index.d.ts"
+      "require": "./dist/cjs/index.js"
     },
     "./tools": {
+      "types": "./types/tools/index.d.ts",
       "import": "./dist/esm/tools/index.js",
-      "require": "./dist/cjs/tools/index.js",
-      "types": "./types/tools/index.d.ts"
+      "require": "./dist/cjs/tools/index.js"
     },
     "./node-tools": {
+      "types": "./types/tools/index-node.d.ts",
       "import": "./dist/esm/tools/index-node.js",
-      "require": "./dist/cjs/tools/index-node.js",
-      "types": "./types/tools/index-node.d.ts"
+      "require": "./dist/cjs/tools/index-node.js"
     }
   }
 }

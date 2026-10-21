@@ -575,14 +575,14 @@ describe('cascade-version', () => {
       const commitSha = 'fullcommitid1234567890abcdef1234567890ab';
       const scenarios = [
         {
-          prereleaseTemplate: '0.0.0-beta.atoms.{tag}',
+          prereleaseTemplate: '0.0.0-canary.{tag}',
           configRequiresCommitSha: false,
-          expectedSnapshotParams: { tag: 'beta.atoms' as const },
+          expectedSnapshotParams: { tag: 'canary' as const },
         },
         {
           prereleaseTemplate: '{tag}.{commit}',
           configRequiresCommitSha: true,
-          expectedSnapshotParams: { tag: 'beta.atoms' as const, commit: commitSha },
+          expectedSnapshotParams: { tag: 'canary' as const, commit: commitSha },
         },
       ] as const;
 
@@ -631,7 +631,7 @@ describe('cascade-version', () => {
           unknown,
           unknown,
           unknown,
-          { tag: 'beta.atoms'; commit?: string }
+          { tag: 'canary'; commit?: string }
         ];
         expect(assembleArgs[4]).toEqual(scenario.expectedSnapshotParams);
       }
@@ -660,7 +660,79 @@ describe('cascade-version', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({ changelog: false }),
-        'beta.atoms'
+        'canary'
+      );
+    });
+
+    it('should use CANARY_PREFIX env var as the snapshot tag when it is set', async () => {
+      vi.stubEnv('CANARY_PREFIX', 'beta');
+      process.argv.push('--snapshot');
+      mocks.readConfig.mockResolvedValue(
+        baseConfig({ snapshot: { prereleaseTemplate: '0.0.0-{tag}' } })
+      );
+      mocks.readChangesets.mockResolvedValue([
+        {
+          id: 'r1',
+          summary: 'S',
+          releases: [{ name: '@sitecore-content-sdk/core', type: 'patch' }],
+        },
+      ]);
+      mocks.getCommitsThatAddFiles.mockResolvedValue([undefined]);
+      mocks.getPackages.mockResolvedValue(mkPackages(['@sitecore-content-sdk/core']));
+      mocks.getDependentsGraph.mockReturnValue(new Map([['@sitecore-content-sdk/core', []]]));
+
+      await importCascade();
+      await waitFor(() => mocks.applyReleasePlan.mock.calls.length > 0);
+
+      const assembleArgs = mocks.assembleReleasePlan.mock.calls[0] as unknown as [
+        unknown,
+        unknown,
+        unknown,
+        unknown,
+        { tag: string; commit?: string },
+      ];
+      expect(assembleArgs[4]).toEqual({ tag: 'beta' });
+      expect(mocks.applyReleasePlan).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ changelog: false }),
+        'beta'
+      );
+    });
+
+    it('should fall back to canary tag when CANARY_PREFIX is set to empty string', async () => {
+      vi.stubEnv('CANARY_PREFIX', '');
+      process.argv.push('--snapshot');
+      mocks.readConfig.mockResolvedValue(
+        baseConfig({ snapshot: { prereleaseTemplate: '0.0.0-{tag}' } })
+      );
+      mocks.readChangesets.mockResolvedValue([
+        {
+          id: 'r1',
+          summary: 'S',
+          releases: [{ name: '@sitecore-content-sdk/core', type: 'patch' }],
+        },
+      ]);
+      mocks.getCommitsThatAddFiles.mockResolvedValue([undefined]);
+      mocks.getPackages.mockResolvedValue(mkPackages(['@sitecore-content-sdk/core']));
+      mocks.getDependentsGraph.mockReturnValue(new Map([['@sitecore-content-sdk/core', []]]));
+
+      await importCascade();
+      await waitFor(() => mocks.applyReleasePlan.mock.calls.length > 0);
+
+      const assembleArgs = mocks.assembleReleasePlan.mock.calls[0] as unknown as [
+        unknown,
+        unknown,
+        unknown,
+        unknown,
+        { tag: string; commit?: string },
+      ];
+      expect(assembleArgs[4]).toEqual({ tag: 'canary' });
+      expect(mocks.applyReleasePlan).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ changelog: false }),
+        'canary'
       );
     });
 

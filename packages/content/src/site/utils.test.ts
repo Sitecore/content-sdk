@@ -1,7 +1,59 @@
 import { expect } from 'chai';
-import { getSiteRewrite, getSiteRewriteData, normalizeSiteRewrite, SITE_PREFIX } from './utils';
+import {
+  getHostnameFromHostHeader,
+  getSiteRewrite,
+  getSiteRewriteData,
+  normalizeSiteRewrite,
+  SITE_PREFIX,
+} from './utils';
 
 describe('utils', () => {
+  describe('getHostnameFromHostHeader', () => {
+    it('should strip port from bracketed IPv6 host', () => {
+      expect(getHostnameFromHostHeader('[::1]:3000')).to.equal('::1');
+    });
+
+    it('should return bracketed IPv6 without port', () => {
+      expect(getHostnameFromHostHeader('[2001:db8::1]')).to.equal('2001:db8::1');
+    });
+
+    it('should strip port from IPv4 host', () => {
+      expect(getHostnameFromHostHeader('127.0.0.1:3000')).to.equal('127.0.0.1');
+    });
+
+    it('should strip port from DNS hostname', () => {
+      expect(getHostnameFromHostHeader('example.com:443')).to.equal('example.com');
+    });
+
+    it('should not treat trailing digits after colon as port for unbracketed IPv6', () => {
+      expect(getHostnameFromHostHeader('::1')).to.equal('::1');
+    });
+
+    it('should preserve unbracketed IPv6 addresses', () => {
+      expect(getHostnameFromHostHeader('2001:db8::1')).to.equal('2001:db8::1');
+    });
+
+    it('should lowercase hostnames', () => {
+      expect(getHostnameFromHostHeader('Example.COM:8080')).to.equal('example.com');
+    });
+
+    it('should return hostname unchanged when no port is present', () => {
+      expect(getHostnameFromHostHeader('localhost')).to.equal('localhost');
+    });
+
+    it('should trim surrounding whitespace', () => {
+      expect(getHostnameFromHostHeader('  example.com:443  ')).to.equal('example.com');
+    });
+
+    it('should not strip colon suffix when it is not a numeric port', () => {
+      expect(getHostnameFromHostHeader('host:name')).to.equal('host:name');
+    });
+
+    it('should handle malformed bracketed IPv6 by lowercasing the raw value', () => {
+      expect(getHostnameFromHostHeader('[::1')).to.equal('[::1');
+    });
+  });
+
   describe('getSiteRewrite', () => {
     const data = {
       siteName: 'content-sdk',

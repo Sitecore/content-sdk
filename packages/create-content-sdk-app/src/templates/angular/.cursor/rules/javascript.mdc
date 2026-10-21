@@ -1,0 +1,18 @@
+---
+description: TypeScript rules for your Sitecore Angular project
+alwaysApply: false
+globs:
+  - '**/*.js'
+  - '**/*.ts'
+  - '**/*.mjs'
+---
+
+# TypeScript / JavaScript
+
+- **Strict mode**; prefer explicit types over `any`
+- **Naming:** camelCase (vars/fns), PascalCase (classes/types), UPPER_SNAKE (constants/tokens), kebab-case (files and dirs)
+- **JSDoc** on new public APIs (`@param`, `@returns`)
+- **Errors:** fail fast with context; guard clauses at boundaries
+- **Security:** sanitize inputs; never expose secrets in client code or logs; `process.env` is server-only
+
+App patterns: [`AGENTS.md`](../../AGENTS.md) · [`.agents/docs/AGENTS-angular-specifics.md`](../../.agents/docs/AGENTS-angular-specifics.md)

@@ -47,7 +47,7 @@ export type GraphQLRequestClientConfig = {
    */
   debugger?: Debugger;
   /**
-   * Override fetch method. Uses 'graphql-request' library default otherwise ('cross-fetch').
+   * Override fetch method. Defaults to global `fetch` to avoid `graphql-request`'s node-fetch path (DEP0169).
    */
   fetch?: typeof fetch;
   /**
@@ -137,7 +137,10 @@ export class GraphQLRequestClient implements GraphQLClient {
       new DefaultRetryStrategy({ statusCodes: [429, 502, 503, 504, 520, 521, 522, 523, 524] });
     this.client = new Client(endpoint, {
       headers: this.headers,
-      fetch: clientConfig.fetch,
+      // Prefer native fetch over graphql-request's node-fetch default (DEP0169). Resolve at call time for runtime patches/stubs.
+      fetch:
+        clientConfig.fetch ??
+        ((input: RequestInfo | URL, init?: RequestInit) => globalThis.fetch(input, init)),
     });
     this.debug = clientConfig.debugger || debuggers.http;
   }

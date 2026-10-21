@@ -6,13 +6,13 @@
 
 # Interface: Field\<T\>
 
-Defined in: content/types/layout/models.d.ts:115
+Defined in: content/types/layout/models.d.ts:127
 
 Field interface
 
 ## Extends
 
-- `FieldMetadata`
+- [`FieldMetadata`](FieldMetadata.md)
 
 ## Type Parameters
 
@@ -26,7 +26,7 @@ Field interface
 
 > `optional` **metadata?**: `object`
 
-Defined in: content/types/layout/models.d.ts:123
+Defined in: content/types/layout/models.d.ts:135
 
 #### Index Signature
 
@@ -34,7 +34,7 @@ Defined in: content/types/layout/models.d.ts:123
 
 #### Inherited from
 
-`FieldMetadata.metadata`
+[`FieldMetadata`](FieldMetadata.md).[`metadata`](FieldMetadata.md#metadata)
 
 ***
 
@@ -42,4 +42,4 @@ Defined in: content/types/layout/models.d.ts:123
 
 > **value**: `T`
 
-Defined in: content/types/layout/models.d.ts:116
+Defined in: content/types/layout/models.d.ts:128

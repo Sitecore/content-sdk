@@ -6,9 +6,9 @@
 
 # Interface: RichTextField
 
-Defined in: [packages/react/src/components/RichText.tsx:13](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/react/src/components/RichText.tsx#L13)
+Defined in: packages/content/types/layout/field-types.d.ts:128
 
-The interface for the RichText field.
+The interface for the Rich Text field.
 
 ## Extends
 
@@ -20,7 +20,7 @@ The interface for the RichText field.
 
 > `optional` **metadata?**: `object`
 
-Defined in: packages/content/types/layout/models.d.ts:123
+Defined in: packages/content/types/layout/models.d.ts:135
 
 #### Index Signature
 
@@ -36,4 +36,4 @@ Defined in: packages/content/types/layout/models.d.ts:123
 
 > `optional` **value?**: `string`
 
-Defined in: [packages/react/src/components/RichText.tsx:14](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/react/src/components/RichText.tsx#L14)
+Defined in: packages/content/types/layout/field-types.d.ts:129
