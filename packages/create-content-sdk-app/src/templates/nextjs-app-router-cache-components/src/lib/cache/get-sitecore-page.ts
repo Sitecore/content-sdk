@@ -1,5 +1,5 @@
 import { collectSitecorePageCacheTags, Page } from '@sitecore-content-sdk/nextjs';
-import { cacheTag } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import client from 'src/lib/sitecore-client';
 
 type GetSitecorePageParams = {
@@ -16,6 +16,11 @@ export async function getSitecorePage(params: GetSitecorePageParams): Promise<Pa
 
   const { site, locale, path } = params;
   const page = await client.getPage(path, { site, locale });
+
+  // Update the cacheLife profile to control the lifespan of Cache Components.
+  // NextJS defaults to the 'default' profile if not called, we explicity call it to make the policy clear.
+  // https://nextjs.org/docs/app/api-reference/functions/cacheLife
+  cacheLife('default');
 
   const tags = collectSitecorePageCacheTags({
     site,
