@@ -1,18 +1,10 @@
 'use client';
-import React from 'react';
-import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
+import React, { useMemo } from 'react';
+import { isFieldValueEmpty, type RichTextField } from '@sitecore-content-sdk/content/layout';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-
-/**
- * The interface for the RichText field.
- * @public
- */
-export interface RichTextField extends FieldMetadata {
-  value?: string;
-}
 
 /**
  * The interface for the RichText component props.
@@ -32,16 +24,24 @@ export interface RichTextProps extends EditableFieldProps<RichTextProps> {
 }
 
 const RichTextComponent: React.FC<RichTextProps> = ({ field, tag = 'div', ref, ...otherProps }) => {
-  if (isFieldValueEmpty(field)) {
+  const html = field?.value;
+
+  // Keep the object reference stable across re-renders when the html is unchanged,
+  // since React DOM compares dangerouslySetInnerHTML by reference and re-sets
+  // innerHTML (recreating all child DOM nodes) whenever it changes.
+  const dangerouslySetInnerHTML = useMemo(
+    () => (html !== undefined && html !== '' ? { __html: html } : undefined),
+    [html]
+  );
+
+  if (isFieldValueEmpty(field) || !dangerouslySetInnerHTML) {
     return null;
   }
 
   delete otherProps.editable; // prevent editable from being passed to the DOM
 
   const htmlProps = {
-    dangerouslySetInnerHTML: {
-      __html: field.value,
-    },
+    dangerouslySetInnerHTML,
     ref,
     suppressHydrationWarning: field.metadata ? true : undefined,
     ...otherProps,

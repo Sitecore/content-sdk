@@ -6,7 +6,7 @@
 
 # Interface: ImageProps
 
-Defined in: react/types/components/Image.d.ts:44
+Defined in: react/types/components/Image.d.ts:8
 
 The interface for the Image component props.
 
@@ -58,7 +58,7 @@ Custom element to render in Pages in edit mode if field value is empty
 
 > `optional` **field?**: (ImageField \| ImageFieldValue) & FieldMetadata
 
-Defined in: react/types/components/Image.d.ts:47
+Defined in: react/types/components/Image.d.ts:11
 
 Image field data (consistent with other field types)
 
@@ -68,7 +68,7 @@ Image field data (consistent with other field types)
 
 > `optional` **imageParams?**: `object`
 
-Defined in: react/types/components/Image.d.ts:51
+Defined in: react/types/components/Image.d.ts:15
 
 Parameters that will be attached to Sitecore media URLs
 
@@ -82,7 +82,7 @@ Parameters that will be attached to Sitecore media URLs
 
 > `optional` **mediaUrlPrefix?**: `RegExp`
 
-Defined in: react/types/components/Image.d.ts:62
+Defined in: react/types/components/Image.d.ts:26
 
 Custom regexp that finds media URL prefix that will be replaced by `/-/jssmedia` or `/~/jssmedia`.
 
@@ -100,4 +100,4 @@ Custom regexp that finds media URL prefix that will be replaced by `/-/jssmedia`
 
 > `optional` **srcSet?**: [`ImageSizeParameters`](ImageSizeParameters.md)[]
 
-Defined in: react/types/components/Image.d.ts:54
+Defined in: react/types/components/Image.d.ts:18

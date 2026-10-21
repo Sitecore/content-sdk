@@ -28,6 +28,20 @@ export {
   ComponentFields,
   ComponentParams,
   EditMode,
+  ImageField,
+  ImageFieldValue,
+  ImageSizeParameters,
+  OpenGraphImageField,
+  OpenGraphImageFieldValue,
+  OpenGraphFields,
+  MetadataFields,
+  PageMetadataFields,
+  OG_CREATION_TIME_TAG,
+  OG_MODIFIED_TIME_TAG,
+  LinkField,
+  LinkFieldValue,
+  TextField,
+  RichTextField,
 } from '@sitecore-content-sdk/content/layout';
 export { DictionaryPhrases, DictionaryService } from '@sitecore-content-sdk/content/i18n';
 export {
@@ -52,15 +66,9 @@ export {
   AppPlaceholderProps,
   renderEmptyPlaceholder,
 } from './components/Placeholder';
-export {
-  Image,
-  ImageProps,
-  ImageField,
-  ImageFieldValue,
-  ImageSizeParameters,
-} from './components/Image';
-export { RichText, RichTextProps, RichTextField } from './components/RichText';
-export { Text, TextField } from './components/Text';
+export { Image, ImageProps } from './components/Image';
+export { RichText, RichTextProps } from './components/RichText';
+export { Text } from './components/Text';
 export { DateField, DateFieldProps } from './components/Date';
 export {
   FEaaSComponent,
@@ -88,7 +96,8 @@ export {
   noopLoadImportMap,
 } from './components/DesignLibrary';
 export {} from './components/FEaaS/BYOCComponent';
-export { Link, LinkField, LinkFieldValue, LinkProps } from './components/Link';
+export { Link, LinkProps } from './components/Link';
+export { JsonLdSchema, JsonLdSchemaProps } from './components/JsonLdSchema';
 export { File, FileField } from './components/File';
 export {
   SitecoreProvider,

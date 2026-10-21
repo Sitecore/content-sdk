@@ -25,10 +25,7 @@ function isCustomEdgeUrl(url: string): boolean {
  * Matches both http:// and https:// protocols.
  * @internal
  */
-const EDGE_HOST_PATTERN = new RegExp(
-  `https?://${escapeRegExp(DEFAULT_EDGE_HOSTNAME)}`,
-  'gi'
-);
+const EDGE_HOST_PATTERN = new RegExp(`https?://${escapeRegExp(DEFAULT_EDGE_HOSTNAME)}`, 'gi');
 
 /**
  * Rewrites Experience Edge hostnames in a response object to use the custom hostname.
@@ -144,10 +141,7 @@ export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => stri
   if (typeof value === 'object' && Object.getPrototypeOf(value) === Object.prototype) {
     const result: Record<string, unknown> = {};
     for (const key of Object.keys(value as Record<string, unknown>)) {
-      result[key] = applyMediaUrlRewrite(
-        (value as Record<string, unknown>)[key],
-        transform
-      );
+      result[key] = applyMediaUrlRewrite((value as Record<string, unknown>)[key], transform);
     }
     return result as T;
   }

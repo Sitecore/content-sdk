@@ -8,7 +8,7 @@
 
 > `const` **Image**: `React.FC`\<[`ImageProps`](../interfaces/ImageProps.md)\>
 
-Defined in: react/types/components/Image.d.ts:69
+Defined in: react/types/components/Image.d.ts:33
 
 The Image component.
 

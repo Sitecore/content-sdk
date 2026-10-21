@@ -204,9 +204,11 @@ export type SitecoreConfigInput = {
     locales?: string[];
   };
   /**
-   * Rewrite media/content URLs in layout (media fields, rich text img/src, href, etc.).
-   * - When `true`: use default rewriter (Edge hostnames -> custom hostname from env).
-   * - When a function: transform each string value; the SDK traverses the layout for you.
+   * Rewrite media/content URLs in layout data and in `SitecoreClient.getData` results
+   * (media fields, rich text img/src, href, and other strings that contain a URL).
+   * - When `true`: rewrite the default Experience Edge hostname (`edge.sitecorecloud.io`) to the custom hostname from `SITECORE_EXPERIENCE_EDGE_HOSTNAME`.
+   * - When a function: transform each string value; the SDK traverses the response for you.
+   * Relative paths and hostnames other than the default Experience Edge host are left unchanged by the default rewriter.
    * @default false
    */
   rewriteMediaUrls?: boolean | ((value: string) => string);
@@ -298,7 +300,7 @@ export type SitecoreCliConfigInput = {
 };
 
 /**
- * Final Sitecore CLI config type required by the CLI
+ * Final Sitecore CLI config type required by the CLI.
  * @public
  */
 export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInput>;

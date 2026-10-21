@@ -6,7 +6,7 @@
 
 # Interface: ComponentRendering\<T\>
 
-Defined in: [content/src/layout/models.ts:103](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/layout/models.ts#L103)
+Defined in: [content/src/layout/models.ts:109](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/layout/models.ts#L109)
 
 Definition of a component instance within a placeholder on a route
 
@@ -22,7 +22,7 @@ Definition of a component instance within a placeholder on a route
 
 > **componentName**: `string`
 
-Defined in: [content/src/layout/models.ts:104](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/layout/models.ts#L104)
+Defined in: [content/src/layout/models.ts:110](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/layout/models.ts#L110)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [content/src/layout/models.ts:104](https://github.com/Sitecore/conte
 
 > `optional` **dataSource?**: `string`
 
-Defined in: [content/src/layout/models.ts:105](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/layout/models.ts#L105)
+Defined in: [content/src/layout/models.ts:111](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/layout/models.ts#L111)
 
 ***
 
@@ -38,7 +38,19 @@ Defined in: [content/src/layout/models.ts:105](https://github.com/Sitecore/conte
 
 > `optional` **fields?**: `T`
 
-Defined in: [content/src/layout/models.ts:108](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/layout/models.ts#L108)
+Defined in: [content/src/layout/models.ts:120](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/layout/models.ts#L120)
+
+***
+
+### isContentResolved?
+
+> `optional` **isContentResolved?**: `boolean`
+
+Defined in: [content/src/layout/models.ts:117](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/layout/models.ts#L117)
+
+`true` when Layout Service resolved this rendering's datasource content.
+`false` when resolution failed (for example because the item was deleted or archived).
+Omitted by older Layout Service versions; absence preserves existing behavior.
 
 ***
 
@@ -46,7 +58,7 @@ Defined in: [content/src/layout/models.ts:108](https://github.com/Sitecore/conte
 
 > `optional` **params?**: [`ComponentParams`](ComponentParams.md)
 
-Defined in: [content/src/layout/models.ts:109](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/layout/models.ts#L109)
+Defined in: [content/src/layout/models.ts:121](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/layout/models.ts#L121)
 
 ***
 
@@ -54,7 +66,7 @@ Defined in: [content/src/layout/models.ts:109](https://github.com/Sitecore/conte
 
 > `optional` **placeholders?**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\>
 
-Defined in: [content/src/layout/models.ts:107](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/layout/models.ts#L107)
+Defined in: [content/src/layout/models.ts:119](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/layout/models.ts#L119)
 
 ***
 
@@ -62,4 +74,4 @@ Defined in: [content/src/layout/models.ts:107](https://github.com/Sitecore/conte
 
 > `optional` **uid?**: `string`
 
-Defined in: [content/src/layout/models.ts:106](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/content/src/layout/models.ts#L106)
+Defined in: [content/src/layout/models.ts:118](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/layout/models.ts#L118)

@@ -7,6 +7,17 @@ export type HTMLLink = {
 } & Pick<HTMLLinkElement, 'rel' | 'href'>;
 
 /**
+ * Html <script> tag data model
+ * @public
+ */
+export type HTMLScript = {
+  [key: string]: unknown;
+} & Pick<HTMLScriptElement, 'type'> & {
+    /** Serialized script body, safe to assign directly (e.g. via `dangerouslySetInnerHTML`). */
+    innerHTML: string;
+  };
+
+/**
  * Object model of a sitemap's site page item.
  * @public
  */

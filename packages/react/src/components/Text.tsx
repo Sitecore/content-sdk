@@ -1,18 +1,10 @@
 'use client';
 import React, { ReactElement } from 'react';
-import { FieldMetadata, isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
+import { isFieldValueEmpty, type TextField } from '@sitecore-content-sdk/content/layout';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-
-/**
- * The interface for the Text field.
- * @public
- */
-export interface TextField extends FieldMetadata {
-  value?: string | number;
-}
 
 export interface TextProps extends EditableFieldProps<TextProps> {
   [htmlAttributes: string]: unknown;
@@ -28,7 +20,13 @@ export interface TextProps extends EditableFieldProps<TextProps> {
   encode?: boolean;
 }
 
-const TextComponent: React.FC<TextProps> = ({ field, tag, editable = true, encode = true, ...otherProps }) => {
+const TextComponent: React.FC<TextProps> = ({
+  field,
+  tag,
+  editable = true,
+  encode = true,
+  ...otherProps
+}) => {
   if (isFieldValueEmpty(field)) {
     return null;
   }

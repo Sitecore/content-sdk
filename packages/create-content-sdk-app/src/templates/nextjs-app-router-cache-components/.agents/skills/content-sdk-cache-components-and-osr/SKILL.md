@@ -17,7 +17,7 @@ description: Tag-based caching in src/lib/cache/ and POST /api/revalidate webhoo
 ## Rules
 
 - Cache helpers use `'use cache'` + `cacheTag` with `sc:route` / `sc:item` / `sc:dict` tags
-- `POST /api/revalidate` accepts `updates[]` and `tags[]`
+- `POST /api/revalidate` accepts `updates[]`
 - Optional `SITECORE_REVALIDATE_SECRET` + `x-revalidate-secret` header
 - Do not call `revalidateTag` from components
 

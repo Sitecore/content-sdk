@@ -43,6 +43,8 @@ export interface LayoutServiceContext {
   renderingType?: RenderingType;
   clientScripts?: string[];
   clientData?: Record<string, Record<string, unknown>>;
+  /** JSON-LD structured data node objects (each with its own `@context`/`@type`) for the current route. */
+  schemas?: Record<string, unknown>[];
 }
 
 /**
@@ -70,6 +72,10 @@ export interface RouteData<Fields = Record<string, Field | Item | Item[]>> {
   templateName?: string;
   placeholders: PlaceholdersData;
   itemId?: string;
+  /** ISO datetime the item was published, if available. */
+  published?: string;
+  /** ISO datetime the item was last updated, if available. */
+  updated?: string;
 }
 
 /**
@@ -103,6 +109,12 @@ export interface ComponentParams {
 export interface ComponentRendering<T = ComponentFields> {
   componentName: string;
   dataSource?: string;
+  /**
+   * `true` when Layout Service resolved this rendering's datasource content.
+   * `false` when resolution failed (for example because the item was deleted or archived).
+   * Omitted by older Layout Service versions; absence preserves existing behavior.
+   */
+  isContentResolved?: boolean;
   uid?: string;
   placeholders?: PlaceholdersData;
   fields?: T;
@@ -120,7 +132,6 @@ export type GenericFieldValue =
   | Date
   | { [key: string]: unknown }
   | Array<{ [key: string]: unknown }>;
-
 
 /**
  * Field interface

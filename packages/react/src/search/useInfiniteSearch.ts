@@ -1,16 +1,19 @@
 /* eslint-disable no-unused-vars */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DEFAULT_PAGE_SIZE, SearchStatus, useSearchService } from './utils';
-import { SearchDocument, SearchParameters } from '@sitecore-content-sdk/search';
+import { SearchDocument, SearchParameters, FacetRequest, FacetResult } from '@sitecore-content-sdk/search';
 
 /**
  * Options for the useInfiniteSearch hook.
+ * `query`, `seedItemId`, and `seedItemUrl` are mutually exclusive.
+ * Use `seedItemId` or `seedItemUrl` for More Like This (MLT) widget queries.
  * @public
  */
 export interface UseInfiniteSearchOptions<T extends SearchDocument = SearchDocument> {
   /**
    * The query string to search for.
    * By default empty string is used.
+   * Mutually exclusive with `seedItemId` and `seedItemUrl`.
    */
   query?: string;
   /**
@@ -31,6 +34,27 @@ export interface UseInfiniteSearchOptions<T extends SearchDocument = SearchDocum
    * @default true
    */
   enabled?: boolean;
+  /**
+   * The locale to use for the search. Required for multi-locale index configurations.
+   * Format: letters and hyphens only (e.g. 'en', 'fr-FR', 'el-GR').
+   * Omit for single-locale indexes.
+   */
+  locale?: string;
+  /**
+   * Facet configuration. Use 'all: true' to retrieve counts for all enabled facets.
+   * Use 'fields' to filter results by specific facet values. Both can be combined.
+   */
+  facet?: FacetRequest;
+  /**
+   * Item ID used as the seed for More Like This (MLT) results.
+   * Mutually exclusive with `query` and `seedItemUrl`.
+   */
+  seedItemId?: string;
+  /**
+   * Item URL used as the seed for More Like This (MLT) results.
+   * Mutually exclusive with `query` and `seedItemId`.
+   */
+  seedItemUrl?: string;
 }
 
 /**
@@ -85,6 +109,10 @@ type InternalInfiniteSearchState<T extends SearchDocument = SearchDocument> = {
    */
   totalPages: number;
   /**
+   * Facet results, present only when facets were requested.
+   */
+  facets?: FacetResult[];
+  /**
    * The error object if the last search request failed, or null if no error occurred.
    */
   error: Error | null;
@@ -115,6 +143,8 @@ type InternalInfiniteSearchState<T extends SearchDocument = SearchDocument> = {
 
 /**
  * React hook for performing infinite search queries.
+ * Supports keyword search via `query` and More Like This (MLT) via `seedItemId` or `seedItemUrl`.
+ * Those query fields are mutually exclusive.
  * @param {UseInfiniteSearchOptions} options - Configuration options for the infinite search hook.
  * @returns {UseInfiniteSearchState} The infinite search state.
  * @throws {Error} if the search index ID is not provided.
@@ -123,7 +153,17 @@ type InternalInfiniteSearchState<T extends SearchDocument = SearchDocument> = {
 export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
   options: UseInfiniteSearchOptions<T>
 ): UseInfiniteSearchState<T> => {
-  const { query, searchIndexId, pageSize = DEFAULT_PAGE_SIZE, sort, enabled = true } = options;
+  const {
+    query,
+    searchIndexId,
+    pageSize = DEFAULT_PAGE_SIZE,
+    sort,
+    enabled = true,
+    locale,
+    facet,
+    seedItemId,
+    seedItemUrl,
+  } = options;
 
   const [state, setState] = useState<InternalInfiniteSearchState<T>>(() => {
     const error = !searchIndexId
@@ -136,6 +176,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
       results: [],
       total: 0,
       totalPages: 0,
+      facets: undefined,
       error,
       offset: 0,
       status,
@@ -171,6 +212,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
           results: [],
           total: 0,
           totalPages: 0,
+          facets: undefined,
           error: null,
           offset: 0,
           status: 'loading',
@@ -185,9 +227,13 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
           limit: pageSize,
           offset,
           sort,
+          ...(locale !== undefined && { locale }),
+          ...(facet !== undefined && { facet }),
+          ...(seedItemId !== undefined && { seedItemId }),
+          ...(seedItemUrl !== undefined && { seedItemUrl }),
         };
 
-        const { results: searchResults, total: totalResults } = await searchService.search<T>(
+        const { results: searchResults, total: totalResults, facets } = await searchService.search<T>(
           searchParams,
           { signal }
         );
@@ -201,6 +247,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
           const totalPages = Math.ceil(totalResults / pageSize);
           return {
             results,
+            facets,
             error: null,
             offset,
             status: 'success',
@@ -229,6 +276,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
             results: [],
             total: 0,
             totalPages: 0,
+            facets: undefined,
             error: errorMessage,
             offset: 0,
             status: 'error',
@@ -237,7 +285,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
         }
       }
     },
-    [searchService, pageSize, sort, query, searchIndexId]
+    [searchService, pageSize, sort, query, searchIndexId, locale, facet, seedItemId, seedItemUrl]
   );
 
   useEffect(() => {
@@ -264,6 +312,7 @@ export const useInfiniteSearch = <T extends SearchDocument = SearchDocument>(
   return useMemo(
     (): UseInfiniteSearchState<T> => ({
       results: state.results,
+      facets: state.facets,
       status: state.status,
       loadMoreStatus: state.loadMoreStatus,
       total: state.total,

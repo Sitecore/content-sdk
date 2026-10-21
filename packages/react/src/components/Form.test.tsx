@@ -70,13 +70,16 @@ describe('Form', () => {
   };
 
   it('renders form using clientContextId when both IDs are present', async () => {
-    const loadFormSpy = sinon.spy((edgeId: string, formId: string, edgeUrl?: string) => {
-      expect(edgeId).to.equal('client-id');
-      expect(formId).to.equal('456');
-      expect(edgeUrl).to.equal('edge-url');
+    const loadFormSpy = sinon.spy(
+      (edgeId: string, formId: string, edgeUrl?: string, language?: string) => {
+        expect(edgeId).to.equal('client-id');
+        expect(formId).to.equal('456');
+        expect(edgeUrl).to.equal('edge-url');
+        expect(language).to.equal('en');
 
-      return Promise.resolve('<form id="test-form"><script>console.log(1);</script></form>');
-    });
+        return Promise.resolve('<form id="test-form"><script>console.log(1);</script></form>');
+      }
+    );
 
     const subscribeSpy = sinon.spy();
     const execSpy = sinon.spy();
@@ -104,9 +107,45 @@ describe('Form', () => {
       expect(subscribeSpy.calledOnce).to.be.true;
       expect(execSpy.calledOnce).to.be.true;
       expect(rendered.container.innerHTML).to.equal(
-        '<div class="form-class" id="form-id">' +
+        '<div class="form-class" id="form-id" lang="en">' +
           '<form id="test-form"><script>console.log(1);</script></form></div>'
       );
+    });
+  });
+
+  it('passes page locale to loadForm', async () => {
+    const localizedPage = {
+      ...ctx.page.normal,
+      locale: 'da-DK',
+    };
+
+    const loadFormSpy = sinon.spy(
+      (_edgeId: string, _formId: string, _edgeUrl?: string, language?: string) => {
+        expect(language).to.equal('da-DK');
+        return Promise.resolve('<form id="localized-form"></form>');
+      }
+    );
+
+    mockFormModule({
+      loadForm: loadFormSpy,
+      subscribeToFormSubmitEvent: sinon.spy(),
+      executeScriptElements: sinon.spy(),
+    });
+
+    mockAnalyticsInternalModule({
+      isBotClientSide: sinon.stub().returns(false),
+    });
+
+    const rendered = await render(
+      <SitecoreProvider api={ctx.api} page={localizedPage}>
+        <Form rendering={rendering} params={rendering.params} />
+      </SitecoreProvider>
+    );
+
+    await waitFor(() => {
+      expect(loadFormSpy.calledOnce).to.be.true;
+      expect(loadFormSpy.firstCall.args[3]).to.equal('da-DK');
+      expect(rendered.container.querySelector('div')?.getAttribute('lang')).to.equal('da-DK');
     });
   });
 
@@ -142,7 +181,9 @@ describe('Form', () => {
 
     await waitFor(() => {
       expect(loadFormSpy.notCalled).to.be.true;
-      expect(rendered.container.innerHTML).to.equal('<div class="form-class" id="form-id"></div>');
+      expect(rendered.container.innerHTML).to.equal(
+        '<div class="form-class" id="form-id" lang="en"></div>'
+      );
     });
   });
 
@@ -230,7 +271,9 @@ describe('Form', () => {
     );
 
     await waitFor(() => {
-      expect(rendered.container.innerHTML).to.equal('<div class="form-class" id="form-id"></div>');
+      expect(rendered.container.innerHTML).to.equal(
+        '<div class="form-class" id="form-id" lang="en"></div>'
+      );
     });
   });
 

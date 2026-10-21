@@ -5,48 +5,13 @@ import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentImage } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-import { FieldMetadata } from '@sitecore-content-sdk/content/layout';
-import { isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
-
-/**
- * The interface for the Image field value.
- * @public
- */
-export interface ImageFieldValue {
-  [attributeName: string]: unknown;
-  src?: string;
-  /** HTML attributes that will be appended to the rendered <img /> tag. */
-}
-
-/**
- * The interface for the Image field.
- * @public
- */
-export interface ImageField {
-  value?: ImageFieldValue;
-}
-
-/**
- * The interface for the Image size parameters.
- * @public
- */
-export interface ImageSizeParameters {
-  [attr: string]: string | number | undefined;
-  /** Fixed width of the image */
-  w?: number;
-  /** Fixed height of the image */
-  h?: number;
-  /** Max width of the image */
-  mw?: number;
-  /** Max height of the image */
-  mh?: number;
-  /** Ignore aspect ratio */
-  iar?: 1 | 0;
-  /** Allow stretch */
-  as?: 1 | 0;
-  /** Image scale. Defaults to 1.0 */
-  sc?: number;
-}
+import {
+  FieldMetadata,
+  isFieldValueEmpty,
+  type ImageField,
+  type ImageFieldValue,
+  type ImageSizeParameters,
+} from '@sitecore-content-sdk/content/layout';
 
 /**
  * The interface for the Image component props.

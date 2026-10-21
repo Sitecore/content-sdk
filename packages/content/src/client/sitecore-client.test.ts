@@ -4,11 +4,14 @@ import chai, { expect } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import { DocumentNode } from 'graphql';
-import { DefaultRetryStrategy, NativeDataFetcher, constants } from '@sitecore-content-sdk/core';
-import { SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV } from '@sitecore-content-sdk/core/tools';
+import { DefaultRetryStrategy, NativeDataFetcher } from '@sitecore-content-sdk/core';
+import {
+  SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV,
+  resolveEdgeUrlForStaticFiles,
+} from '@sitecore-content-sdk/core/tools';
 
-const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 import { ErrorPage, SitecoreClient } from './sitecore-client';
+import { NoOpGraphQLClient } from './utils';
 import { LayoutKind, DesignLibraryMode } from '../../src/editing';
 import { LayoutServiceData } from '../../layout';
 import { LayoutServicePageState } from '../layout';
@@ -111,6 +114,46 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).sitemapXmlService = sitemapXmlServiceStub;
   });
 
+  describe('constructor', () => {
+    const originalWindow = global.window;
+
+    afterEach(() => {
+      global.window = originalWindow;
+    });
+
+    it('should set edgeInitialized when instantiated with a context id', () => {
+      const client = new SitecoreClient(defaultInitOptions);
+
+      expect(client.edgeInitialized).to.be.true;
+    });
+
+    it('should set edgeInitialized to false when both server and client context ids are missing', () => {
+      const client = new SitecoreClient({
+        ...defaultInitOptions,
+        api: {
+          ...defaultInitOptions.api,
+          edge: { edgeUrl: defaultInitOptions.api.edge.edgeUrl },
+        },
+      });
+
+      expect(client.edgeInitialized).to.be.false;
+    });
+
+    it('should use a NoOpGraphQLClient in the browser when the browser context id is not provided', () => {
+      const warnStub = sandbox.stub(console, 'warn');
+      // Simulate a browser bundle with no Edge/local configuration
+      (global as any).window = {};
+
+      const client = new SitecoreClient({
+        ...defaultInitOptions,
+        api: { edge: { edgeUrl: defaultInitOptions.api.edge.edgeUrl } },
+      });
+
+      expect((client as any).graphQLClient).to.be.instanceOf(NoOpGraphQLClient);
+      expect(warnStub.called).to.be.true;
+    });
+  });
+
   describe('getData', () => {
     let requestStub: sinon.SinonStub;
 
@@ -193,6 +236,125 @@ describe('SitecoreClient', () => {
         expect.fail('Expected getData to throw');
       } catch (err: any) {
         expect(err).to.equal(boom);
+      }
+    });
+
+    it('should return the same reference when rewriteMediaUrls is disabled', async () => {
+      const query = 'query { item { url } }';
+      const expected = {
+        item: { url: 'https://edge.sitecorecloud.io/-/media/hero.jpg' },
+      };
+      const client = new SitecoreClient({
+        ...defaultInitOptions,
+        rewriteMediaUrls: false,
+      } as any);
+      const request = sandbox.stub().resolves(expected);
+      (client as any).graphQLClient = { request };
+
+      const result = await client.getData(query);
+
+      expect(result).to.equal(expected);
+    });
+
+    it('should rewrite default Edge hostnames in getData results when rewriteMediaUrls is true', async () => {
+      const query = 'query { item { url body related { url } } }';
+      const payload = {
+        item: {
+          name: 'Home',
+          image: { url: 'https://edge.sitecorecloud.io/-/media/hero.jpg' },
+          body: '<img src="http://edge.sitecorecloud.io/-/media/body.jpg">',
+          related: [
+            { url: 'https://edge-platform.sitecorecloud.io/-/media/skip.jpg' },
+            { url: '/-/media/relative.jpg' },
+            { url: 'https://edge-staging.sitecore-staging.cloud/tenant/media/stage.jpg' },
+          ],
+        },
+      };
+      const client = new SitecoreClient({
+        ...defaultInitOptions,
+        rewriteMediaUrls: true,
+      } as any);
+      const request = sandbox.stub().resolves(payload);
+      (client as any).graphQLClient = { request };
+      process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV] = 'custom.example.com';
+
+      try {
+        const result = await client.getData<typeof payload>(query);
+
+        expect(result).to.deep.equal({
+          item: {
+            name: 'Home',
+            image: { url: 'https://custom.example.com/-/media/hero.jpg' },
+            body: '<img src="https://custom.example.com/-/media/body.jpg">',
+            related: [
+              { url: 'https://edge-platform.sitecorecloud.io/-/media/skip.jpg' },
+              { url: '/-/media/relative.jpg' },
+              { url: 'https://edge-staging.sitecore-staging.cloud/tenant/media/stage.jpg' },
+            ],
+          },
+        });
+      } finally {
+        delete process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV];
+      }
+    });
+
+    it('should leave getData results unchanged when rewriteMediaUrls is true and no custom hostname is set', async () => {
+      const query = 'query { item { url } }';
+      const payload = {
+        item: { url: 'https://edge.sitecorecloud.io/-/media/hero.jpg' },
+      };
+      delete process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV];
+      const client = new SitecoreClient({
+        ...defaultInitOptions,
+        rewriteMediaUrls: true,
+      } as any);
+      const request = sandbox.stub().resolves(payload);
+      (client as any).graphQLClient = { request };
+
+      const result = await client.getData<typeof payload>(query);
+
+      expect(result).to.deep.equal(payload);
+    });
+
+    it('should apply a rewriteMediaUrls function to every string in getData results', async () => {
+      const query = 'query { item { name url } }';
+      const payload = {
+        item: {
+          name: 'Home',
+          url: 'https://edge.sitecorecloud.io/-/media/hero.jpg',
+        },
+      };
+      const client = new SitecoreClient({
+        ...defaultInitOptions,
+        rewriteMediaUrls: (value: string) => value.replace('Home', 'Rewritten'),
+      } as any);
+      const request = sandbox.stub().resolves(payload);
+      (client as any).graphQLClient = { request };
+
+      const result = await client.getData<typeof payload>(query);
+
+      expect(result).to.deep.equal({
+        item: {
+          name: 'Rewritten',
+          url: 'https://edge.sitecorecloud.io/-/media/hero.jpg',
+        },
+      });
+    });
+
+    it('should return null from getData when the GraphQL result is null and rewrite is enabled', async () => {
+      const client = new SitecoreClient({
+        ...defaultInitOptions,
+        rewriteMediaUrls: true,
+      } as any);
+      const request = sandbox.stub().resolves(null);
+      (client as any).graphQLClient = { request };
+      process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV] = 'custom.example.com';
+
+      try {
+        const result = await client.getData('query { item { id } }');
+        expect(result).to.equal(null);
+      } finally {
+        delete process.env[SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV];
       }
     });
   });
@@ -1504,29 +1666,31 @@ describe('SitecoreClient', () => {
       },
     };
 
+    const stylesBaseUrl = resolveEdgeUrlForStaticFiles(defaultInitOptions.api.edge.edgeUrl);
+
     it('should return stylesheets when enableStyles and enableThemes are true', () => {
       const result = sitecoreClient.getHeadLinks(layoutData);
 
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
+          href: `${stylesBaseUrl}/v1/files/pages/styles/content-styles.css?sitecoreContextId=client-context-id`,
           rel: 'stylesheet',
         },
         {
-          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
+          href: `${stylesBaseUrl}/v1/files/components/styles/foo.css?sitecoreContextId=client-context-id`,
           rel: 'stylesheet',
         },
       ]);
     });
 
-    it('should return stylesheets using clientContextId when server contextId is not set', () => {
+    it('should fall back to the server contextId when clientContextId is not set', () => {
       const sitecoreClient = new SitecoreClient({
         ...defaultInitOptions,
         api: {
           ...defaultInitOptions.api,
           edge: {
             ...defaultInitOptions.api.edge,
-            contextId: undefined as any,
+            clientContextId: undefined,
           },
         },
       });
@@ -1535,11 +1699,11 @@ describe('SitecoreClient', () => {
 
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=client-context-id`,
+          href: `${stylesBaseUrl}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
         {
-          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=client-context-id`,
+          href: `${stylesBaseUrl}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1552,7 +1716,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
+          href: `${stylesBaseUrl}/v1/files/components/styles/foo.css?sitecoreContextId=client-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1565,7 +1729,7 @@ describe('SitecoreClient', () => {
       });
       expect(result).to.deep.equal([
         {
-          href: `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
+          href: `${stylesBaseUrl}/v1/files/pages/styles/content-styles.css?sitecoreContextId=client-context-id`,
           rel: 'stylesheet',
         },
       ]);
@@ -1654,6 +1818,26 @@ describe('SitecoreClient', () => {
           rel: 'stylesheet',
         },
       ]);
+    });
+
+    it('should log and return an empty array when both server and client context ids are missing', () => {
+      const warnStub = sandbox.stub(console, 'warn');
+      const clientWithoutContext = new SitecoreClient({
+        ...defaultInitOptions,
+        api: {
+          ...defaultInitOptions.api,
+          edge: { edgeUrl: defaultInitOptions.api.edge.edgeUrl },
+        },
+      });
+
+      const result = clientWithoutContext.getHeadLinks(layoutData);
+
+      expect(result).to.deep.equal([]);
+      expect(
+        warnStub.calledWith(
+          'Both client and server context IDs are absent. Cannot retrieve head links.'
+        )
+      ).to.be.true;
     });
   });
 
@@ -1881,6 +2065,65 @@ describe('SitecoreClient', () => {
       await sitecoreClient.getRobots(siteName, fetchOptions);
 
       expect(mockRobotsService.fetchRobots.calledWith(fetchOptions)).to.be.true;
+    });
+  });
+
+  describe('getLlmsTxt', () => {
+    const siteName = 'test-site';
+    let getLlmsTxtServiceStub: sinon.SinonStub;
+    const mockLlmsTxtService = {
+      fetchLlmsTxt: sandbox.stub(),
+    };
+
+    beforeEach(() => {
+      getLlmsTxtServiceStub = sandbox
+        .stub(SitecoreClient.prototype, 'getLlmsTxtService')
+        .returns(mockLlmsTxtService as any);
+    });
+
+    it('should return llms.txt content if available', async () => {
+      const content = '# llms.txt\n\n> Example site.';
+      mockLlmsTxtService.fetchLlmsTxt.resolves(content);
+
+      const result = await sitecoreClient.getLlmsTxt({ siteName });
+
+      expect(getLlmsTxtServiceStub.calledWith(siteName)).to.be.true;
+      expect(result).to.equal(content);
+    });
+
+    it('should return null if fetchLlmsTxt returns null or empty', async () => {
+      mockLlmsTxtService.fetchLlmsTxt.resolves(null);
+
+      const result = await sitecoreClient.getLlmsTxt({ siteName });
+
+      expect(getLlmsTxtServiceStub.calledWith(siteName)).to.be.true;
+      expect(result).to.be.null;
+    });
+
+    it('should propagate errors from fetchLlmsTxt', async () => {
+      const error = new Error('Network error');
+      mockLlmsTxtService.fetchLlmsTxt.rejects(error);
+
+      try {
+        await sitecoreClient.getLlmsTxt({ siteName });
+        expect.fail('Expected error to be thrown');
+      } catch (err) {
+        expect(getLlmsTxtServiceStub.calledWith(siteName)).to.be.true;
+        expect(err).to.equal(error);
+      }
+    });
+
+    it('should pass fetchOptions to fetchLlmsTxt', async () => {
+      const fetchOptions = {
+        headers: { 'X-Test': 'true' },
+        cache: 'no-store' as RequestCache,
+      };
+
+      mockLlmsTxtService.fetchLlmsTxt.resolves('# llms.txt\n\n> Example site.');
+
+      await sitecoreClient.getLlmsTxt({ siteName }, fetchOptions);
+
+      expect(mockLlmsTxtService.fetchLlmsTxt.calledWith(fetchOptions)).to.be.true;
     });
   });
 });

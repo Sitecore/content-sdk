@@ -1,0 +1,152 @@
+import type { Field, FieldMetadata } from './models';
+
+/**
+ * The interface for the Link field value.
+ * @public
+ */
+export interface LinkFieldValue {
+  [attributeName: string]: unknown;
+  href?: string;
+  className?: string;
+  class?: string;
+  title?: string;
+  target?: string;
+  text?: string;
+  anchor?: string;
+  querystring?: string;
+  linktype?: string;
+}
+
+/**
+ * The interface for the Link field.
+ * @public
+ */
+export interface LinkField {
+  value: LinkFieldValue;
+}
+
+/**
+ * The interface for the Image field value.
+ * @public
+ */
+export interface ImageFieldValue {
+  [attributeName: string]: unknown;
+  src?: string;
+  /** HTML attributes that will be appended to the rendered <img /> tag. */
+}
+
+/**
+ * The interface for the Image field.
+ * @public
+ */
+export interface ImageField {
+  value?: ImageFieldValue;
+}
+
+/**
+ * The interface for the Open Graph image field value (og:image and its dimension/alt attributes).
+ * @public
+ */
+export interface OpenGraphImageFieldValue {
+  [attributeName: string]: unknown;
+  src?: string;
+  alt?: string;
+  width?: string;
+  height?: string;
+}
+
+/**
+ * The interface for the Open Graph image field.
+ * @public
+ */
+export interface OpenGraphImageField {
+  value?: OpenGraphImageFieldValue;
+}
+
+/**
+ * The interface for a page's Open Graph fields (siblings of Title in a route's fields).
+ * @public
+ */
+export interface OpenGraphFields {
+  baseOgTitle?: Field<string>;
+  baseOgDescription?: Field<string>;
+  baseOgImage?: OpenGraphImageField;
+  baseOgType?: Field<string>;
+}
+
+/**
+ * The interface for a page's metadata fields (siblings of Title in a route's fields).
+ * @public
+ */
+export interface MetadataFields {
+  baseMetadataTitle?: Field<string>;
+  baseMetadataDescription?: Field<string>;
+  baseMetadataAuthor?: Field<string>;
+  baseMetadataKeywords?: Field<string>;
+}
+
+/**
+ * The combined interface for a page's metadata and Open Graph fields.
+ * @public
+ */
+export interface PageMetadataFields extends MetadataFields, OpenGraphFields {}
+
+/**
+ * Open Graph types that define a creation-time meta tag, mapped to its exact property name
+ * per the Open Graph protocol (e.g. `article:published_time`, `book:release_date`).
+ * @public
+ */
+export const OG_CREATION_TIME_TAG: Record<string, string> = {
+  article: 'article:published_time',
+  book: 'book:release_date',
+  'music.album': 'music:release_date',
+  'video.movie': 'video:release_date',
+  'video.episode': 'video:release_date',
+};
+
+/**
+ * Open Graph types that define an update-time meta tag, mapped to its exact property name
+ * per the Open Graph protocol. `article` is the only type the protocol defines one for.
+ * @public
+ */
+export const OG_MODIFIED_TIME_TAG: Record<string, string> = {
+  article: 'article:modified_time',
+};
+
+/**
+ * The interface for the Image size parameters.
+ * @public
+ */
+export interface ImageSizeParameters {
+  [attr: string]: string | number | undefined;
+  /** Fixed width of the image */
+  w?: number;
+  /** Fixed height of the image */
+  h?: number;
+  /** Max width of the image */
+  mw?: number;
+  /** Max height of the image */
+  mh?: number;
+  /** Ignore aspect ratio */
+  iar?: 1 | 0;
+  /** Allow stretch */
+  as?: 1 | 0;
+  /** Image scale. Defaults to 1.0 */
+  sc?: number;
+}
+
+/**
+ * The interface for the Text field.
+ * @public
+ */
+export interface TextField extends FieldMetadata {
+  value?: string | number;
+}
+
+/**
+ * The interface for the Rich Text field.
+ * @public
+ */
+export interface RichTextField extends FieldMetadata {
+  value?: string;
+}

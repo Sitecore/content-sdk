@@ -6,7 +6,7 @@
 
 # Interface: LinkField
 
-Defined in: react/types/components/Link.d.ts:24
+Defined in: content/types/layout/field-types.d.ts:22
 
 The interface for the Link field.
 
@@ -16,4 +16,4 @@ The interface for the Link field.
 
 > **value**: [`LinkFieldValue`](LinkFieldValue.md)
 
-Defined in: react/types/components/Link.d.ts:25
+Defined in: content/types/layout/field-types.d.ts:23

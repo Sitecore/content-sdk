@@ -6,7 +6,7 @@
 
 # Class: SearchService
 
-Defined in: [search-service.ts:101](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/search/src/search-service.ts#L101)
+Defined in: [search-service.ts:184](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/search/src/search-service.ts#L184)
 
 Service that fetches search results from Sitecore.
 
@@ -16,7 +16,7 @@ Service that fetches search results from Sitecore.
 
 > **new SearchService**(`config`): `SearchService`
 
-Defined in: [search-service.ts:104](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/search/src/search-service.ts#L104)
+Defined in: [search-service.ts:187](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/search/src/search-service.ts#L187)
 
 #### Parameters
 
@@ -34,9 +34,12 @@ Defined in: [search-service.ts:104](https://github.com/Sitecore/content-sdk/blob
 
 > **search**\<`T`\>(`params`, `fetchOptions?`): `Promise`\<[`SearchResponse`](../interfaces/SearchResponse.md)\<`T`\>\>
 
-Defined in: [search-service.ts:124](https://github.com/Sitecore/content-sdk/blob/d5ea81c08b96d9a7a94e6b7a230773c14fa1940d/packages/search/src/search-service.ts#L124)
+Defined in: [search-service.ts:212](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/search/src/search-service.ts#L212)
 
 Search for items in the search index.
+For keyword search, pass `keyphrase`. For More Like This (MLT) widget queries,
+pass `seedItemId` or `seedItemUrl` instead. These query fields are mutually exclusive.
+MLT responses are mapped to the same `results` / `total` / `facets` shape as keyword search.
 
 #### Type Parameters
 
@@ -80,3 +83,52 @@ If search index ID is not provided.
 #### Throws
 
 If sort is not an array or an object.
+
+#### Throws
+
+If more than one of keyphrase, seedItemId, or seedItemUrl is provided.
+
+#### Throws
+
+If seedItemId or seedItemUrl is empty or whitespace only.
+
+***
+
+### suggest()
+
+> **suggest**\<`T`\>(`params`, `fetchOptions?`): `Promise`\<[`SuggestResponse`](../interfaces/SuggestResponse.md)\<`T`\>\>
+
+Defined in: [search-service.ts:281](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/search/src/search-service.ts#L281)
+
+Retrieve typeahead suggestions for a keyphrase.
+
+#### Type Parameters
+
+| Type Parameter | Default type |
+| ------ | ------ |
+| `T` *extends* [`SearchDocument`](../type-aliases/SearchDocument.md) | [`SearchDocument`](../type-aliases/SearchDocument.md) |
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `params` | [`SuggestParameters`](../interfaces/SuggestParameters.md) | The suggest parameters. |
+| `fetchOptions?` | [`SearchServiceFetchOptions`](../type-aliases/SearchServiceFetchOptions.md) | The fetch options. |
+
+#### Returns
+
+`Promise`\<[`SuggestResponse`](../interfaces/SuggestResponse.md)\<`T`\>\>
+
+The suggest response.
+
+#### Throws
+
+if the request fails.
+
+#### Throws
+
+If search index ID is not provided.
+
+#### Throws
+
+If keyphrase is not provided or is empty.

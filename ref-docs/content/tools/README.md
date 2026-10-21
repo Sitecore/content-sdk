@@ -24,6 +24,8 @@
 
 ## Functions
 
+- [combineImportEntries](functions/combineImportEntries.md)
 - [filterComponentsByType](functions/filterComponentsByType.md)
 - [getComponentSpec](functions/getComponentSpec.md)
 - [getComponentSpecUrl](functions/getComponentSpecUrl.md)
+- [toPascalCase](functions/toPascalCase.md)

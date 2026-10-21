@@ -8,7 +8,7 @@
 
 > **normalizeSiteRewrite**(`pathname`): `string`
 
-Defined in: content/types/site/utils.d.ts:40
+Defined in: content/types/site/utils.d.ts:51
 
 Normalize a site rewrite path (remove site data)
 

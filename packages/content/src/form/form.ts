@@ -10,16 +10,22 @@ const { ERROR_MESSAGES } = constants;
  * @param {string} contextId - The unique identifier of the current context
  * @param {string} formId - The unique identifier of the form
  * @param {string} [edgeUrl] - The URL of the Sitecore Edge Platform
+ * @param {string} [language] - Page language used to load the matching multilingual form version
  * @internal
  */
-export const loadForm = async (contextId: string, formId: string, edgeUrl?: string) => {
+export const loadForm = async (
+  contextId: string,
+  formId: string,
+  edgeUrl?: string,
+  language?: string
+) => {
   if (!contextId) {
     debug.form(`${ERROR_MESSAGES.MV_001}. Form was not able to render.`);
 
     return '';
   }
 
-  const url = getEdgeProxyFormsUrl(contextId, formId, edgeUrl);
+  const url = getEdgeProxyFormsUrl(formId, edgeUrl, language);
 
   try {
     debug.form(`Fetching form data from ${url}`);
@@ -27,6 +33,9 @@ export const loadForm = async (contextId: string, formId: string, edgeUrl?: stri
     const rsp = await fetch(url, {
       method: 'GET',
       cache: 'no-cache',
+      headers: {
+        'x-sitecore-contextid': contextId,
+      },
     });
 
     if (rsp.status !== 200) {
@@ -79,16 +88,22 @@ export const executeScriptElements = (rootElement: HTMLElement) => {
  * @param {string} [componentId] - The unique identifier of the component
  * @internal
  */
-export const subscribeToFormSubmitEvent = (formElement: HTMLElement, componentId?: string) => {
-  formElement.addEventListener('form:engage', ((
-    e: CustomEvent<{ formId: string; name: 'VIEWED' | 'SUBMITTED' }>
-  ) => {
-    const { formId, name } = e.detail;
+export const subscribeToFormSubmitEvent = (
+  formElement: HTMLElement,
+  componentId?: string,
+  signal?: AbortSignal
+) => {
+  formElement.addEventListener(
+    'form:engage',
+    ((e: CustomEvent<{ formId: string; name: 'VIEWED' | 'SUBMITTED' }>) => {
+      const { formId, name } = e.detail;
 
-    if (formId && name) {
-      debug.form('Sending form event', formId, name);
+      if (formId && name) {
+        debug.form('Sending form event', formId, name);
 
-      form(formId, name, componentId?.replace(/-/g, '') || '');
-    }
-  }) as EventListener);
+        form(formId, name, componentId?.replace(/-/g, '') || '');
+      }
+    }) as EventListener,
+    { signal }
+  );
 };

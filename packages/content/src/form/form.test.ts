@@ -30,9 +30,10 @@ describe('form', () => {
 
   describe('loadForm', () => {
     it('should load form', async () => {
-      nock(getEdgeProxyFormsUrl('contextId', 'formId', 'https://bar.com'))
+      nock(getEdgeProxyFormsUrl('formId', 'https://bar.com'), {
+        reqheaders: { 'x-sitecore-contextid': 'contextId' },
+      })
         .get('')
-        .query({ sitecoreContextId: 'contextId' })
         .reply(200, 'form data');
 
       const result = await loadForm('contextId', 'formId', 'https://bar.com');
@@ -40,10 +41,24 @@ describe('form', () => {
       expect(result).to.equal('form data');
     });
 
-    it('should throw error if form loading fails', async () => {
-      nock(getEdgeProxyFormsUrl('contextId', 'formId', 'https://bar.com'))
+    it('should load form with language', async () => {
+      nock(getEdgeProxyFormsUrl('formId', 'https://bar.com'), {
+        reqheaders: { 'x-sitecore-contextid': 'contextId' },
+      })
         .get('')
-        .query({ sitecoreContextId: 'contextId' })
+        .query({ language: 'da-DK' })
+        .reply(200, 'localized form data');
+
+      const result = await loadForm('contextId', 'formId', 'https://bar.com', 'da-DK');
+
+      expect(result).to.equal('localized form data');
+    });
+
+    it('should throw error if form loading fails', async () => {
+      nock(getEdgeProxyFormsUrl('formId', 'https://bar.com'), {
+        reqheaders: { 'x-sitecore-contextid': 'contextId' },
+      })
+        .get('')
         .reply(500);
 
       try {
@@ -102,6 +117,49 @@ describe('form', () => {
       );
 
       expect(formEvent.calledWith('formId', 'SUBMITTED', 'componentId'));
+    });
+
+    it('should pass AbortSignal to addEventListener and stop handling events after abort', () => {
+      const formEl = global.document.createElement('form');
+      global.document.body.appendChild(formEl);
+
+      const formEvent = sinon.stub();
+      const { subscribeToFormSubmitEvent: subscribeWithSignal } = proxyquire('./form', {
+        '@sitecore-content-sdk/events': {
+          form: formEvent,
+        },
+      });
+
+      const controller = new dom.window.AbortController();
+      const addEventListenerSpy = sinon.spy(formEl, 'addEventListener');
+
+      subscribeWithSignal(formEl, 'component-id', controller.signal);
+
+      expect(addEventListenerSpy.calledOnce).to.be.true;
+      expect(
+        addEventListenerSpy.calledWith(
+          'form:engage',
+          sinon.match.func,
+          sinon.match({ signal: controller.signal })
+        )
+      ).to.be.true;
+
+      formEl.dispatchEvent(
+        new dom.window.CustomEvent('form:engage', {
+          detail: { formId: 'formId', name: 'VIEWED' },
+        })
+      );
+      expect(formEvent.calledOnce).to.be.true;
+      expect(formEvent.calledWith('formId', 'VIEWED', 'componentid')).to.be.true;
+
+      controller.abort();
+
+      formEl.dispatchEvent(
+        new dom.window.CustomEvent('form:engage', {
+          detail: { formId: 'formId', name: 'SUBMITTED' },
+        })
+      );
+      expect(formEvent.calledOnce).to.be.true;
     });
   });
 });

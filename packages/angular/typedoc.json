@@ -1,0 +1,32 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "externalSymbolLinkMappings": {
+    "@sitecore-content-sdk/content": {
+      "SitecoreConfigInput": "../content/config/type-aliases/SitecoreConfigInput.md",
+      "SitecoreConfig": "../content/config/type-aliases/SitecoreConfig.md",
+      "SitecoreCliConfigInput": "../content/config/type-aliases/SitecoreCliConfigInput.md",
+      "SitecoreCliConfig": "../content/config/type-aliases/SitecoreCliConfig.md",
+      "SitecoreClient": "../content/client/classes/SitecoreClient.md"
+    },
+    "@sitecore-content-sdk/angular": {
+      "provideServerLoaderRunner": "server/express/functions/provideServerLoaderRunner.md",
+      "ServerLoaderRunner": "server/express/classes/ServerLoaderRunner.md",
+      "createLoaderCache": "server/cache/functions/createLoaderCache.md",
+      "createLoaderDataServiceMiddleware": "server/middleware/functions/createLoaderDataServiceMiddleware.md",
+      "createCacheAdminMiddleware": "server/cache/functions/createCacheAdminMiddleware.md",
+      "createSitecoreRevalidateMiddleware": "server/middleware/functions/createSitecoreRevalidateMiddleware.md",
+      "provideLoaderRegistry": "loaders/functions/provideLoaderRegistry.md",
+      "loaderResolver": "loaders/functions/loaderResolver.md",
+      "LoaderCacheConfig": "loaders/interfaces/LoaderCacheConfig.md",
+      "FETCH_DATA_ENDPOINT": "loaders/variables/FETCH_DATA_ENDPOINT.md",
+      "LOADER_DATA_ENDPOINT": "server/express/variables/LOADER_DATA_ENDPOINT.md",
+      "ScLinkDirective": "components/classes/ScLinkDirective.md"
+    },
+    "@angular/router": {
+      "UrlMatcher": "https://angular.dev/api/router/UrlMatcher",
+      "UrlSerializer": "https://angular.dev/api/router/UrlSerializer",
+      "DefaultUrlSerializer": "https://angular.dev/api/router/DefaultUrlSerializer",
+      "withNavigationErrorHandler": "https://angular.dev/api/router/withNavigationErrorHandler"
+    }
+  }
+}

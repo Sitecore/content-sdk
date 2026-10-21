@@ -169,35 +169,60 @@ describe('RedirectsProxy', () => {
       },
     } as NextRequest;
 
-    // Create nextUrl with computed href and methods that reference req
-    req.nextUrl = {
-      ...nextUrlBase,
-      get href() {
-        return `${this.origin}${this.pathname}${this.search}`;
-      },
-      clone() {
-        const cloned: any = {
-          ...req.nextUrl,
-          pathname: req.nextUrl.pathname,
-          search: req.nextUrl.search,
-          origin: req.nextUrl.origin,
-          locale: req.nextUrl.locale,
-          defaultLocale: req.nextUrl.defaultLocale,
-          searchParams: req.nextUrl.searchParams,
-          get href() {
-            return `${this.origin}${this.pathname}${this.search}`;
+    const createNextUrl = (values: {
+      pathname: string;
+      search: string;
+      origin: string;
+      locale: string;
+      defaultLocale: string;
+      searchParams: Record<string, unknown>;
+    }) => {
+      const nextUrl: any = {
+        pathname: values.pathname,
+        search: values.search,
+        origin: values.origin,
+        locale: values.locale,
+        defaultLocale: values.defaultLocale,
+        searchParams: {
+          get(key: string) {
+            const searchParams = values.searchParams || {};
+            return searchParams[key];
           },
-        };
-        return cloned;
-      },
-      searchParams: {
-        get(key) {
-          const searchParams = req.nextUrl.searchParams || {};
-          return searchParams[key];
         },
-      },
-      ...props.nextUrl,
+        get href() {
+          return `${this.origin}${this.pathname}${this.search}`;
+        },
+        set href(value: string) {
+          const parsed = new URL(value);
+          this.pathname = parsed.pathname;
+          this.search = parsed.search;
+        },
+        clone() {
+          return createNextUrl({
+            pathname: nextUrl.pathname,
+            search: nextUrl.search,
+            origin: nextUrl.origin,
+            locale: nextUrl.locale,
+            defaultLocale: nextUrl.defaultLocale,
+            searchParams: values.searchParams,
+          });
+        },
+      };
+      return nextUrl;
     };
+
+    // Create nextUrl with computed href and methods that reference req
+    req.nextUrl = createNextUrl({
+      ...nextUrlBase,
+      ...props.nextUrl,
+      // empty string must win over createRequest defaults (App Router has no Next.js i18n)
+      locale: props.nextUrl?.locale ?? nextUrlBase.locale,
+      defaultLocale: props.nextUrl?.defaultLocale ?? nextUrlBase.defaultLocale,
+      pathname: props.nextUrl?.pathname || nextUrlBase.pathname,
+      search: props.nextUrl?.search || nextUrlBase.search,
+      origin: props.nextUrl?.origin || nextUrlBase.origin,
+      searchParams: props.nextUrl?.searchParams || nextUrlBase.searchParams,
+    });
 
     return req;
   };
@@ -919,6 +944,94 @@ describe('RedirectsProxy', () => {
         expect(redirectUrl).to.not.include('$1');
       });
 
+      [
+        { pathname: '/initial-page', requestLocale: 'en', expectedPath: '/target-page' },
+        { pathname: '/en/initial-page', requestLocale: 'en', expectedPath: '/target-page' },
+        { pathname: '/da/initial-page', requestLocale: 'da', expectedPath: '/da/target-page' },
+        { pathname: '/en-CA/initial-page', requestLocale: 'en-CA', expectedPath: '/en-CA/target-page' },
+      ].forEach(({ pathname, requestLocale, expectedPath }) => {
+        it(`should match anchored regex rule for App Router path "${pathname}" when only "en" is in redirects locales`, async () => {
+          const req = createRequest({
+            nextUrl: {
+              pathname,
+              locale: '',
+              defaultLocale: '',
+            },
+          });
+          const res = createResponse({
+            headers: {
+              'x-sc-locale': requestLocale,
+            },
+          });
+          nextRedirectStub.callsFake((url) =>
+            createResponse({
+              redirected: true,
+              status: 301,
+              url: typeof url === 'string' ? url : url.href,
+            })
+          );
+
+          const { proxy } = createProxy({
+            pattern: '^/initial-page$',
+            target: '/target-page',
+            locale: 'en',
+            redirectType: REDIRECT_TYPE_301,
+            isLanguagePreserved: true,
+            redirectsProxyConfig: {
+              locales: ['en'],
+              appLocalePrefix: 'as-needed',
+            },
+          });
+
+          const finalRes = await proxy.handle(req, res);
+
+          expect(nextRedirectStub.calledOnce).to.be.true;
+          const redirectUrl = nextRedirectStub.getCall(0).args[0] as string;
+          expect(new URL(redirectUrl).pathname.toLowerCase()).to.equal(expectedPath.toLowerCase());
+          expect(finalRes.status).to.equal(301);
+        });
+      });
+
+      it('should keep configured locale casing when the target locale comes from a regex capture', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/en-CA/initial-page',
+            locale: '',
+            defaultLocale: '',
+          },
+        });
+        const res = createResponse({
+          headers: {
+            'x-sc-locale': 'en-CA',
+          },
+        });
+        nextRedirectStub.callsFake((url) =>
+          createResponse({
+            redirected: true,
+            status: 301,
+            url: typeof url === 'string' ? url : url.href,
+          })
+        );
+
+        const { proxy } = createProxy({
+          pattern: '^/([A-Za-z]{2}(?:-[A-Za-z]{2})?)/initial-page/?$',
+          target: '/$1/target-page',
+          locale: 'en',
+          redirectType: REDIRECT_TYPE_301,
+          isLanguagePreserved: true,
+          redirectsProxyConfig: {
+            locales: ['en'],
+            appLocalePrefix: 'as-needed',
+          },
+        });
+
+        await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const redirectUrl = nextRedirectStub.getCall(0).args[0] as string;
+        expect(new URL(redirectUrl).pathname).to.equal('/en-CA/target-page');
+      });
+
       it('should skip malformed regex and still apply a valid redirect rule', async () => {
         const consoleWarnStub = sandbox.stub(console, 'warn');
         const req = createRequest({
@@ -1060,6 +1173,476 @@ describe('RedirectsProxy', () => {
 
       expect(finalRes.redirected).to.be.true;
       expect(finalRes.status).to.equal(301);
+    });
+
+    it('should preserve locale prefix when present on incoming request and locale does not change between redirect', async () => {
+      // App Router. Incoming '/da/old-page' carries the 'da' prefix and the locale does not change on
+      // redirect, so the prefix is preserved on the target (and not dropped or duplicated).
+      const req = createRequest({
+        nextUrl: {
+          pathname: '/da/old-page',
+        },
+      });
+      // match app router behavior about locale in request
+      delete req.nextUrl.locale;
+      // App Router response so the locale is resolved from the x-sc-locale header
+      const res = createResponse({
+        headers: {
+          'x-sc-locale': 'da',
+        },
+      });
+
+      nextRedirectStub.callsFake((url) => {
+        return createResponse({
+          redirected: true,
+          status: 301,
+          url: typeof url === 'string' ? url : url.href,
+        });
+      });
+
+      const { proxy } = createProxy({
+        pattern: '/old-page',
+        target: '/new-page',
+        locales: ['en', 'da'],
+        redirectType: REDIRECT_TYPE_301,
+        isLanguagePreserved: true,
+      });
+
+      const finalRes = await proxy.handle(req, res);
+
+      expect(nextRedirectStub.calledOnce).to.be.true;
+      const redirectUrl = nextRedirectStub.getCall(0).args[0];
+      const urlString = typeof redirectUrl === 'string' ? redirectUrl : redirectUrl.href;
+      // request locale ('da') prefix is preserved, not dropped or duplicated
+      expect(urlString).to.include('/da/new-page');
+      expect(urlString).to.not.include('/da/da/new-page');
+      expect(finalRes.redirected).to.be.true;
+    });
+
+    describe('appLocalePrefix', () => {
+      const stubRedirectWithUrl = () => {
+        nextRedirectStub.callsFake((url) => {
+          return createResponse({
+            redirected: true,
+            status: 301,
+            url: typeof url === 'string' ? url : url.href,
+          });
+        });
+      };
+
+      const getRedirectUrlString = () => {
+        const redirectUrl = nextRedirectStub.getCall(0).args[0];
+        return typeof redirectUrl === 'string'
+          ? redirectUrl
+          : redirectUrl.href || redirectUrl.toString();
+      };
+
+      it('does not prefix the site default locale with explicit as-needed even when the rule is language-preserved', async () => {
+        // Explicit `as-needed`: the site default ('da' here) stays bare on the redirect target, and the
+        // `isLanguagePreserved` Sitecore override does NOT apply because the strategy is set explicitly.
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: '',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse({
+          headers: {
+            'x-sc-locale': 'da',
+          },
+        });
+        stubRedirectWithUrl();
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          locales: ['en', 'da'],
+          redirectType: REDIRECT_TYPE_301,
+          locale: 'da',
+          isLanguagePreserved: true,
+          redirectsProxyConfig: {
+            appLocalePrefix: 'as-needed',
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const urlString = getRedirectUrlString();
+        expect(urlString).to.include('/new-page');
+        expect(urlString).to.not.include('/da/new-page');
+        expect(finalRes.redirected).to.be.true;
+      });
+
+      it('applies the locale prefix for a language-preserved rule when appLocalePrefix is unset (Sitecore preservation wins)', async () => {
+        // Unset `appLocalePrefix`: mostly as-needed, but an `isLanguagePreserved` rule keeps the locale
+        // prefix even for the site default ('da'), preserving legacy Sitecore behavior.
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: '',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse({
+          headers: {
+            'x-sc-locale': 'da',
+          },
+        });
+        stubRedirectWithUrl();
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          locales: ['en', 'da'],
+          redirectType: REDIRECT_TYPE_301,
+          locale: 'da',
+          isLanguagePreserved: true,
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        expect(getRedirectUrlString()).to.include('/da/new-page');
+        expect(finalRes.redirected).to.be.true;
+      });
+
+      it('prepends locale when appLocalePrefix is always without x-sc-locale header', async () => {
+        // App Router: no Next.js i18n locale / defaultLocale on the request URL
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/en/old-page',
+            locale: '',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse();
+        stubRedirectWithUrl();
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          locales: ['en', 'da'],
+          redirectType: REDIRECT_TYPE_301,
+          locale: 'en',
+          isLanguagePreserved: true,
+          redirectsProxyConfig: {
+            appLocalePrefix: 'always',
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        expect(getRedirectUrlString()).to.include('/en/new-page');
+        expect(finalRes.redirected).to.be.true;
+        expect(finalRes.status).to.equal(301);
+      });
+
+      it('leaves path unchanged when appLocalePrefix is never and defaultLocale is absent', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: '',
+            defaultLocale: '',
+          },
+        });
+        const res = createResponse();
+        stubRedirectWithUrl();
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          redirectType: REDIRECT_TYPE_301,
+          locale: 'en',
+          redirectsProxyConfig: {
+            appLocalePrefix: 'never',
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const urlString = getRedirectUrlString();
+        expect(urlString).to.include('/new-page');
+        expect(urlString).to.not.include('/en/new-page');
+        expect(finalRes.redirected).to.be.true;
+      });
+
+      it('does not prepend locale for Pages Router when appLocalePrefix is unset', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: 'en',
+            defaultLocale: 'en',
+          },
+        });
+        const res = createResponse();
+        stubRedirectWithUrl();
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          redirectType: REDIRECT_TYPE_301,
+          locale: 'en',
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const urlString = getRedirectUrlString();
+        expect(urlString).to.include('/new-page');
+        expect(urlString).to.not.include('/en/new-page');
+        expect(finalRes.redirected).to.be.true;
+      });
+
+      it('does not prepend locale when appLocalePrefix is never even if x-sc-locale is present', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: '',
+            defaultLocale: '',
+          },
+        });
+        const res = createResponse({
+          headers: {
+            'x-sc-locale': 'da',
+          },
+        });
+        stubRedirectWithUrl();
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          redirectType: REDIRECT_TYPE_301,
+          locale: 'da',
+          redirectsProxyConfig: {
+            appLocalePrefix: 'never',
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const urlString = getRedirectUrlString();
+        expect(urlString).to.include('/new-page');
+        expect(urlString).to.not.include('/da/new-page');
+        expect(finalRes.redirected).to.be.true;
+      });
+
+      it('prefixes locale on Server Transfer rewrite when appLocalePrefix is always', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: '',
+            defaultLocale: '',
+          },
+        });
+        const res = createResponse();
+
+        const rewriteRes = createResponse({
+          redirected: false,
+          status: 200,
+          url: 'http://localhost:3000/en/new-page',
+        });
+        nextRewriteStub.returns(rewriteRes);
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
+          locale: 'en',
+          redirectsProxyConfig: {
+            appLocalePrefix: 'always',
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRewriteStub.calledOnce).to.be.true;
+        expect(nextRedirectStub.called).to.be.false;
+        const rewriteUrl = nextRewriteStub.getCall(0).args[0];
+        const rewriteUrlString =
+          typeof rewriteUrl === 'string' ? rewriteUrl : rewriteUrl.href || rewriteUrl.toString();
+        expect(rewriteUrlString).to.include('/en/new-page');
+        expect(finalRes.status).to.equal(200);
+      });
+
+      it('does not prefix locale on Server Transfer when appLocalePrefix is never', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/old-page',
+            locale: '',
+            defaultLocale: '',
+          },
+        });
+        const res = createResponse({
+          headers: {
+            'x-sc-locale': 'en',
+          },
+        });
+
+        const rewriteRes = createResponse({
+          redirected: false,
+          status: 200,
+          url: 'http://localhost:3000/new-page',
+        });
+        nextRewriteStub.returns(rewriteRes);
+
+        const { proxy } = createProxy({
+          pattern: '/old-page',
+          target: '/new-page',
+          redirectType: REDIRECT_TYPE_SERVER_TRANSFER,
+          locale: 'en',
+          redirectsProxyConfig: {
+            appLocalePrefix: 'never',
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRewriteStub.calledOnce).to.be.true;
+        const rewriteUrl = nextRewriteStub.getCall(0).args[0];
+        const rewriteUrlString =
+          typeof rewriteUrl === 'string' ? rewriteUrl : rewriteUrl.href || rewriteUrl.toString();
+        expect(rewriteUrlString).to.include('/new-page');
+        expect(rewriteUrlString).to.not.include('/en/new-page');
+        expect(finalRes.status).to.equal(200);
+      });
+    });
+
+    describe('appLocalePrefix as-needed default locale (jss-10136)', () => {
+      const stubRedirect = () => {
+        nextRedirectStub.callsFake((url) =>
+          createResponse({
+            redirected: true,
+            status: 301,
+            url: typeof url === 'string' ? url : url.href,
+          })
+        );
+      };
+      const getRedirectUrl = () => {
+        const redirectUrl = nextRedirectStub.getCall(0).args[0];
+        return typeof redirectUrl === 'string' ? redirectUrl : redirectUrl.href;
+      };
+
+      it('does not prefix the default locale when LocaleProxy injected it on the incoming path (explicit as-needed)', async () => {
+        // Under explicit `as-needed`, LocaleProxy rewrites '/my-page' to '/en/my-page' so RedirectsProxy
+        // sees the default-locale prefix. The redirect target must stay bare ('/other-page'), not
+        // '/en/other-page' - and the explicit strategy overrides the `isLanguagePreserved` prefix.
+        const req = createRequest({
+          nextUrl: { pathname: '/en/my-page', locale: '', defaultLocale: 'en' },
+        });
+        delete req.locale;
+        const res = createResponse({ headers: { 'x-sc-locale': 'en' } });
+        stubRedirect();
+
+        const { proxy } = createProxy({
+          pattern: '/my-page',
+          target: '/other-page',
+          locales: ['en', 'da'],
+          redirectType: REDIRECT_TYPE_301,
+          isLanguagePreserved: true,
+          locale: 'en', // site default language
+          redirectsProxyConfig: {
+            appLocalePrefix: 'as-needed',
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const urlString = getRedirectUrl();
+        expect(urlString).to.include('/other-page');
+        expect(urlString).to.not.include('/en/other-page');
+        expect(finalRes.redirected).to.be.true;
+      });
+
+      it('still prefixes a non-default locale on redirect (explicit as-needed)', async () => {
+        // Site default is 'en'; the request/redirect locale is the non-default 'da', which must be prefixed.
+        const req = createRequest({
+          nextUrl: { pathname: '/da/my-page', locale: '', defaultLocale: 'en' },
+        });
+        delete req.locale;
+        const res = createResponse({ headers: { 'x-sc-locale': 'da' } });
+        stubRedirect();
+
+        const { proxy } = createProxy({
+          pattern: '/my-page',
+          target: '/other-page',
+          locales: ['en', 'da'],
+          redirectType: REDIRECT_TYPE_301,
+          isLanguagePreserved: true,
+          // no `locale` => site default resolves to 'en'
+          redirectsProxyConfig: {
+            appLocalePrefix: 'as-needed',
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        expect(getRedirectUrl()).to.include('/da/other-page');
+        expect(finalRes.redirected).to.be.true;
+      });
+
+      it('prefixes the default locale when appLocalePrefix is always', async () => {
+        const req = createRequest({
+          nextUrl: { pathname: '/en/my-page', locale: '', defaultLocale: 'en' },
+        });
+        delete req.locale;
+        const res = createResponse({ headers: { 'x-sc-locale': 'en' } });
+        stubRedirect();
+
+        const { proxy } = createProxy({
+          pattern: '/my-page',
+          target: '/other-page',
+          locales: ['en', 'da'],
+          redirectType: REDIRECT_TYPE_301,
+          isLanguagePreserved: true,
+          locale: 'en',
+          redirectsProxyConfig: {
+            appLocalePrefix: 'always',
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        expect(getRedirectUrl()).to.include('/en/other-page');
+        expect(finalRes.redirected).to.be.true;
+      });
+
+      it('does not prefix when locale is not preserved and target has no locale (as-needed)', async () => {
+        const req = createRequest({
+          nextUrl: { pathname: '/en/my-page', locale: '', defaultLocale: 'en' },
+        });
+        delete req.locale;
+        const res = createResponse({ headers: { 'x-sc-locale': 'en' } });
+        stubRedirect();
+
+        const { proxy } = createProxy({
+          pattern: '/my-page',
+          target: '/other-page',
+          locales: ['en', 'da'],
+          redirectType: REDIRECT_TYPE_301,
+          isLanguagePreserved: false,
+          locale: 'en',
+          redirectsProxyConfig: {
+            appLocalePrefix: 'as-needed',
+          },
+        });
+
+        const finalRes = await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const urlString = getRedirectUrl();
+        expect(urlString).to.include('/other-page');
+        expect(urlString).to.not.include('//other-page');
+        expect(urlString).to.not.include('/en/other-page');
+        expect(finalRes.redirected).to.be.true;
+      });
     });
 
     it('should handle multiple redirect rules', async () => {

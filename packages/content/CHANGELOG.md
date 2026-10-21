@@ -1,5 +1,62 @@
 # @sitecore-content-sdk/content
 
+## 2.3.1
+
+### Patch Changes
+
+- Fixed `next dev --webpack` / `next build --webpack` failing with `UnhandledSchemeError` for ([153a804](https://github.com/sitecore/content-sdk/commit/153a804dcbabe3b52165f62332fb6d61d99b1ffe))
+  `node:events` when the generated `.sitecore/import-map.ts` imported `combineImportEntries`.
+
+  `content/tools` stays the browser-safe entry for that helper. Pure component-map helpers now live
+  apart from `glob`, and the Node-only `prepareComponentsForMap` / `buildComponentMapContent`
+  helpers (which depend on `path`) are exported from `content/node-tools`.
+
+## 2.3.0
+
+### Minor Changes
+
+- Pass the page language to Sitecore Forms to support new multilingual form versions. ([fa0496c](https://github.com/sitecore/content-sdk/commit/fa0496c6ff6f86b0a1256461d585a8535456bf38))
+- Add metadata and Open Graph tags to the NextJs scaffolding templates ([914f94a](https://github.com/sitecore/content-sdk/commit/914f94abd5c6f509caaa2c6e19c9dbbdf6bca65d))
+- [experimental] Add a global env switch for experimental features. ([c9c8d1c](https://github.com/sitecore/content-sdk/commit/c9c8d1c0cd9bd014c418f5695be825137a97e6ba))
+
+  Experimental feature status now treats the app-level `CSDK_GLOBAL_EXPERIMENTAL_FEATURES_ENABLED` as a global enable switch. When the global switch is off, feature status falls back to individual feature env vars. The shared experimental helpers expose the global env var constant (`CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG`) and helper, and starter env examples document how to enable experimental features during development.
+
+- [experimental] Add experimental features visibility API shared across frameworks. Types/utils live in `@sitecore-content-sdk/content`; each framework package owns its `experimental.json` catalog. Next.js and Angular expose editing-secret protected endpoints, wired in all Next.js templates and the Angular server. ([b4fad5b](https://github.com/sitecore/content-sdk/commit/b4fad5bfdcf00eb3138cebc08959d248545d0a22))
+- Treat Layout Service `isContentResolved` as datasource validity in `withDatasourceCheck()` ([afdfd19](https://github.com/sitecore/content-sdk/commit/afdfd1979b6ab6fba690d64bcf17ea29b4d851bb))
+
+  - `ComponentRendering` now includes optional `isContentResolved` from the layout `rendered` JSON
+  - When `isContentResolved` is `false`, `withDatasourceCheck()` uses the existing missing-datasource fallback
+  - When the property is omitted or `true`, existing behavior is unchanged
+
+- Use CSDK_PUBLIC_DEFAULT_SITE_NAME variable instead of CSDK_PUBLIC_SITECORE_DEFAULT_SITE, aligning names across frameworks ([ccaa42f](https://github.com/sitecore/content-sdk/commit/ccaa42fb0ef4df028b4e3a0cdf13355c3673c639))
+  - When upgrading from your pre-release Angular app, please ensure you use `CSDK_PUBLIC_DEFAULT_SITE_NAME` and `CSDK_PUBLIC_DEFAULT_LANGUAGE` across your deployments
+  - Check the updated `env.example` in the latest available Angular sample for the up-to-date list of available environnment variables
+- Add support of llms txt for all next apps through api routes. ([d2b0a9f](https://github.com/sitecore/content-sdk/commit/d2b0a9ffcd19364330158edd407f2f3e8df68565))
+
+### Patch Changes
+
+- [Design Library] Compatibility refactor for Angular ([b43b89c](https://github.com/sitecore/content-sdk/commit/b43b89c4517d088086fb9ff5cb80c35197e4d46f))
+- Resolve FEaaS/BYOC stylesheet links against the configured Edge URL (framework-wide). App Router only: drop `precedence="high"` so styles apply instead of preload. ([16e405f](https://github.com/sitecore/content-sdk/commit/16e405f3667f5f05e5fd97b8174bd2b99de45db6))
+- Ensure more strict variant filtering in getComponentList calls ([1f90cbe](https://github.com/sitecore/content-sdk/commit/1f90cbe6031b31512cfc4f80ee1b4f04284b0ee3))
+- Code extraction support for Angular CSDK ([23c9158](https://github.com/sitecore/content-sdk/commit/23c9158a9fae985d2aaa32ec807904acdf22d6e7))
+- Revert to using the unmodified file name as componentName in getComponentList ([8eb01ef](https://github.com/sitecore/content-sdk/commit/8eb01ef1062b410d0a689de49635870a3d3afbde))
+- Ensure import map processes node modules with `exports` defined ([99809ba](https://github.com/sitecore/content-sdk/commit/99809bafe75cd59525023226061287a2ced48886))
+
+## 2.2.2
+
+### Patch Changes
+
+- [SXA Redirects] Refactor redirects logic to be reusable across frameworks ([6f8e423](https://github.com/sitecore/content-sdk/commit/6f8e423028bdf8a74a2fc4b8cb084961d755b73f))
+- Redirect Proxy not matching encoded URLs with unicode characters in Redirect Map ([6563736](https://github.com/sitecore/content-sdk/commit/6563736fb3fdcd5885f88fcfe20c15d0800efbd7))
+
+## 2.2.1
+
+### Patch Changes
+
+- [Non breaking] Refactor config and some component logic to be framework reusable ([a453633](https://github.com/sitecore/content-sdk/commit/a45363382ef21e6ca947808e5b980aa4f1721e36))
+- Fix build failure when `disableCodeGeneration: true` by writing empty import maps during codegen and defaulting `loadImportMap` to `noopLoadImportMap` when the prop is omitted. ([13f41bd](https://github.com/sitecore/content-sdk/commit/13f41bd2e6c114594096dffe00abf9fcf456f19f))
+- [Chore] Change the exports order of `types` in package.json to prevent Angular compiler warnings ([a453633](https://github.com/sitecore/content-sdk/commit/a45363382ef21e6ca947808e5b980aa4f1721e36))
+
 ## 2.2.0
 
 ### Minor Changes

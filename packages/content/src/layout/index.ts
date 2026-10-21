@@ -33,6 +33,14 @@ export {
 
 export { getContentStylesheetLink } from './content-styles';
 
+export { getJsonLdSchemas } from './json-ld';
+
+export {
+  resolvePageMetadataFields,
+  PageMetadataRouteFields,
+  ResolvedPageMetadataFields,
+} from './page-metadata';
+
 export { LayoutService, LayoutServiceConfig, GRAPHQL_LAYOUT_QUERY_NAME } from './layout-service';
 
 export { getDesignLibraryStylesheetLinks } from './themes';
@@ -52,3 +60,5 @@ export {
   getDefaultMediaUrlTransformer,
   applyMediaUrlRewrite,
 } from './rewrite-edge-host';
+
+export * from './field-types';

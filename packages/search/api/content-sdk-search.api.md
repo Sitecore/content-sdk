@@ -11,21 +11,73 @@ const debug_2: Debugger;
 export { debug_2 as debug }
 
 // @public
+export interface FacetField {
+    filters?: FacetFilter[];
+    name: string;
+}
+
+// @public
+export interface FacetFilter {
+    operator: FacetFilterOperator;
+    value: string | number | boolean | Array<string | number | boolean>;
+}
+
+// @public
+export type FacetFilterOperator = 'eq' | 'gt' | 'lt' | 'ge' | 'le';
+
+// @public
+export interface FacetRequest {
+    all?: boolean;
+    fields?: FacetField[];
+}
+
+// @public
+export interface FacetResult {
+    name: string;
+    value: FacetValue[];
+}
+
+// @public
+export interface FacetValue {
+    count: number;
+    text: string | number | boolean;
+}
+
+// @public
+export interface QuerySuggestionItem {
+    queryPlusText: string;
+    text: string;
+}
+
+// @public
 export type SearchDocument = {
     [key: string]: PrimitiveType | PrimitiveType[] | SearchDocument | SearchDocument[];
 };
 
 // @public
 export interface SearchParameters<T extends SearchDocument = SearchDocument> {
+    facet?: FacetRequest;
     keyphrase?: string;
     limit?: number;
+    locale?: string;
     offset?: number;
     searchIndexId: string;
+    seedItemId?: string;
+    seedItemUrl?: string;
     sort?: SortSetting<T>[] | SortSetting<T>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "StrictUnion" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "KeyphraseQuery" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "SeedItemIdQuery" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "SeedItemUrlQuery" needs to be exported by the entry point index.d.ts
+//
+// @public
+export type SearchQuery = StrictUnion<KeyphraseQuery | SeedItemIdQuery | SeedItemUrlQuery>;
+
 // @public
 export interface SearchResponse<T extends SearchDocument = SearchDocument> {
+    facets?: FacetResult[];
     results: T[];
     total: number;
 }
@@ -34,6 +86,7 @@ export interface SearchResponse<T extends SearchDocument = SearchDocument> {
 export class SearchService {
     constructor(config: SearchServiceConfig);
     search<T extends SearchDocument = SearchDocument>(params: SearchParameters<T>, fetchOptions?: SearchServiceFetchOptions): Promise<SearchResponse<T>>;
+    suggest<T extends SearchDocument = SearchDocument>(params: SuggestParameters, fetchOptions?: SearchServiceFetchOptions): Promise<SuggestResponse<T>>;
 }
 
 // @public
@@ -51,10 +104,23 @@ export type SortSetting<T extends SearchDocument = SearchDocument> = {
     order: 'asc' | 'desc';
 };
 
+// @public
+export interface SuggestParameters {
+    keyphrase: string;
+    locale?: string;
+    searchIndexId: string;
+}
+
+// @public
+export interface SuggestResponse<T extends SearchDocument = SearchDocument> {
+    previewResults: T[];
+    querySuggestions: QuerySuggestionItem[];
+}
+
 // Warnings were encountered during analysis:
 //
-// src/models.ts:8:3 - (ae-forgotten-export) The symbol "PrimitiveType" needs to be exported by the entry point index.d.ts
-// src/search-service.ts:12:3 - (ae-forgotten-export) The symbol "PathsToStringProps" needs to be exported by the entry point index.d.ts
+// src/models.ts:95:3 - (ae-forgotten-export) The symbol "PrimitiveType" needs to be exported by the entry point index.d.ts
+// src/search-service.ts:19:3 - (ae-forgotten-export) The symbol "PathsToStringProps" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

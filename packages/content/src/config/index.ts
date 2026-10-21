@@ -8,4 +8,9 @@ export {
   DeepRequired,
   ThemingMode,
 } from './models';
-export { defineConfig } from './define-config';
+export {
+  buildFallbackConfig,
+  defineConfig,
+  getFallbackConfig,
+  deepMerge,
+} from './define-config';
