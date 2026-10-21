@@ -8,7 +8,7 @@
 
 > **LoaderRegistry** = `Record`\<`string`, [`LoaderFn`](LoaderFn.md)\>
 
-Defined in: [packages/angular/src/loaders/loader-registry.token.ts:19](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/angular/src/loaders/loader-registry.token.ts#L19)
+Defined in: [packages/angular/src/loaders/loader-registry.token.ts:19](https://github.com/Sitecore/content-sdk/blob/ee7d15fb7ff51ecf52f6c48a5dd927ab6855f385/packages/angular/src/loaders/loader-registry.token.ts#L19)
 
 Cross-boundary loader registry — maps loader IDs to loader functions.
 The same registry is used for SSR, CSR (`/_data`), and route resolvers.
