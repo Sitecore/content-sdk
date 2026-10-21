@@ -8,3 +8,5 @@ Changesets allows flexible management of multiple packages in a monorepo
 Quick references:
 - `yarn changeset` add a changeset for current changes.
 - `yarn changeset:cascade-version` - apply version changes from current changesets onto the monrepo (usually runs via CI)
+
+Publish trigger for the beta.atoms snapshot.
