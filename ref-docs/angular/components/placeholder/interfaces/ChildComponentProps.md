@@ -6,7 +6,7 @@
 
 # Interface: ChildComponentProps
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:23](https://github.com/Sitecore/content-sdk/blob/ee7d15fb7ff51ecf52f6c48a5dd927ab6855f385/packages/angular/src/components/placeholder/placeholder-utils.ts#L23)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:23](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/angular/src/components/placeholder/placeholder-utils.ts#L23)
 
 Merged props passed to each child component rendered by a placeholder.
 
@@ -16,7 +16,7 @@ Merged props passed to each child component rendered by a placeholder.
 
 > **fields**: `object`
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:24](https://github.com/Sitecore/content-sdk/blob/ee7d15fb7ff51ecf52f6c48a5dd927ab6855f385/packages/angular/src/components/placeholder/placeholder-utils.ts#L24)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:24](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/angular/src/components/placeholder/placeholder-utils.ts#L24)
 
 #### Index Signature
 
@@ -28,7 +28,7 @@ Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:24
 
 > **params**: `object`
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:25](https://github.com/Sitecore/content-sdk/blob/ee7d15fb7ff51ecf52f6c48a5dd927ab6855f385/packages/angular/src/components/placeholder/placeholder-utils.ts#L25)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:25](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/angular/src/components/placeholder/placeholder-utils.ts#L25)
 
 #### Index Signature
 
@@ -40,4 +40,4 @@ Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:25
 
 > **rendering**: `ComponentRendering`
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:26](https://github.com/Sitecore/content-sdk/blob/ee7d15fb7ff51ecf52f6c48a5dd927ab6855f385/packages/angular/src/components/placeholder/placeholder-utils.ts#L26)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:26](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/angular/src/components/placeholder/placeholder-utils.ts#L26)

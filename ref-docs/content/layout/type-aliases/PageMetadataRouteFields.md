@@ -8,7 +8,7 @@
 
 > **PageMetadataRouteFields** = [`PageMetadataFields`](../interfaces/PageMetadataFields.md) & `object`
 
-Defined in: [content/src/layout/page-metadata.ts:10](https://github.com/Sitecore/content-sdk/blob/ee7d15fb7ff51ecf52f6c48a5dd927ab6855f385/packages/content/src/layout/page-metadata.ts#L10)
+Defined in: [content/src/layout/page-metadata.ts:10](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/content/src/layout/page-metadata.ts#L10)
 
 Route fields consumed when resolving page metadata: the page's `Title` plus the metadata/Open
 Graph fields Sitecore returns as siblings of `Title` in the route's `fields`.
