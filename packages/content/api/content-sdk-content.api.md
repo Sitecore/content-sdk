@@ -17,6 +17,14 @@ import { GraphQLRequestClientConfig } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/core';
 import { RetryStrategy } from '@sitecore-content-sdk/core';
+import { Spec } from '@json-render/core';
+
+// @internal
+export interface ActionCatalogEntry {
+    description: string;
+    name: string;
+    paramsSchema: object;
+}
 
 // @internal
 export const addComponentPreviewHandler: (importMap: ImportEntry[], callback: (error: unknown | null, Component: unknown) => void) => (() => void) | undefined;
@@ -25,13 +33,74 @@ export const addComponentPreviewHandler: (importMap: ImportEntry[], callback: (e
 export const addComponentUpdateHandler: (rootComponent: ComponentRendering, successCallback?: (updatedRootComponent: ComponentRendering) => void) => (() => void) | undefined;
 
 // @internal
+export const addDocumentUpdateHandler: (callback: (updatedRootComponent: Document_2) => void) => () => void;
+
+// @internal
 export const addServerComponentPreviewHandler: (rootComponent: ComponentRendering, callback: (componentToUpdate: ComponentRendering | null, eventArgs: ServerComponentPreviewEventArgs) => void) => () => void;
 
 // @internal
 export function addStyleElement(stylesContent: string): void;
 
 // @internal
+export const addThemeUpdateHandler: () => (() => void) | undefined;
+
+// @internal
 export function applyMediaUrlRewrite<T>(value: T, transform: (s: string) => string): T;
+
+// @internal
+export const applyThemePreviewCss: (css: string) => void;
+
+// @internal
+export interface AtomCatalogActionEntry {
+    description: string | undefined;
+    legacy: boolean;
+    name: string;
+    paramsSchema?: object;
+}
+
+// @internal
+export interface AtomCatalogComponentEntry {
+    allowedChildren?: string[];
+    allowedParents?: string[];
+    description?: string;
+    example?: unknown;
+    legacy: boolean;
+    name: string;
+    propsSchema: object;
+    slots: string[];
+    version?: string;
+}
+
+// @internal
+export interface AtomCatalogEntry {
+    description: string;
+    name: string;
+    propsSchema: object;
+    slots: string[];
+}
+
+// @internal
+export interface AtomsCatalogPayload {
+    actions: ActionCatalogEntry[];
+    components: AtomCatalogEntry[];
+}
+
+// @internal
+export interface AtomsDocumentValidationError {
+    formatted: string;
+    issues: AtomsDocumentValidationIssue[];
+}
+
+// @internal
+export interface AtomsDocumentValidationIssue {
+    code: string;
+    elementKey?: string;
+    message: string;
+    severity: 'error' | 'warning';
+}
+
+// @public
+export type AtomsStylingSolution = 'tailwind' | 'inline-css';
 
 // @internal
 export const breakDownPath: (configuredLocales: string[], urlPath: string) => ProcessedPath;
@@ -256,8 +325,12 @@ export const defineConfig: (config?: SitecoreConfigInput, env?: Record<string, s
 // @internal
 export const DESIGN_LIBRARY_COMPONENT_PREVIEW_EVENT_NAME = "component:generation:component-preview";
 
+// @internal
+export type DesignLibraryAtomsError = 'render' | 'atoms-missing' | 'validation';
+
 // @public
 export enum DesignLibraryMode {
+    LowCode = "library-low-code",
     Metadata = "library-metadata",
     Normal = "library"
 }
@@ -349,6 +422,17 @@ export interface DictionaryServiceConfig extends CacheOptions, GraphQLServiceCon
     dictionaryEntryTemplateId?: string;
     pageSize?: number;
 }
+
+// @internal
+interface Document_2 extends Spec {
+    name: string;
+    // (undocumented)
+    state?: Spec['state'] & {
+        fields?: Record<string, unknown>;
+        params?: Record<string, unknown>;
+    };
+}
+export { Document_2 as Document }
 
 // @internal
 export const EDITING_ALLOWED_ORIGINS: string[];
@@ -643,6 +727,11 @@ export const getContentStylesheetLink: (layoutData: LayoutServiceData, sitecoreE
 // @internal
 export function getDefaultMediaUrlTransformer(edgeUrl: string): (value: string) => string;
 
+// Warning: (ae-forgotten-export) The symbol "DesignLibraryAtomsCatalogEvent" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export function getDesignLibraryAtomsCatalogEvent(payload: SerializedCatalog): DesignLibraryAtomsCatalogEvent;
+
 // Warning: (ae-forgotten-export) The symbol "DesignLibraryComponentPropsEvent" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
@@ -736,6 +825,9 @@ const getSrcSet: (url: string, srcSet: Array<{
 }>, imageParams?: {
     [key: string]: string | number | undefined;
 }, mediaUrlPrefix?: RegExp) => string;
+
+// @public
+export const getThemingStylesheetLinks: (input: ThemingStylesheetLinksOptions) => HTMLLink[];
 
 // @internal
 export const GRAPHQL_LAYOUT_QUERY_NAME = "ContentSdkLayoutQuery";
@@ -839,6 +931,9 @@ export const isExperimentalFeaturesGloballyEnabled: () => boolean;
 
 // @public
 export function isFieldValueEmpty(field: GenericFieldValue | Partial<Field> | null | undefined): field is null | undefined;
+
+// @public
+export const isSiteThemingEnabled: (mode: ThemingMode) => boolean;
 
 // @public
 export interface Item {
@@ -1111,6 +1206,7 @@ export type PageMode = {
     name: PageModeName;
     designLibrary: {
         isVariantGeneration: boolean;
+        isLowCode: boolean;
     };
     isNormal: boolean;
     isPreview: boolean;
@@ -1423,7 +1519,18 @@ export type ScaffoldTemplate = {
 };
 
 // @internal
+export const sendAtomsErrorEvent: (error: unknown, type: DesignLibraryAtomsError) => void;
+
+// @internal
 export const sendErrorEvent: (uid: string, error: unknown, type: DesignLibraryPreviewError) => void;
+
+// @internal
+export interface SerializedCatalog {
+    actions: AtomCatalogActionEntry[];
+    components: AtomCatalogComponentEntry[];
+    stylingSolution: AtomsStylingSolution;
+    version?: string;
+}
 
 // @internal
 export interface ServerComponentPreviewEventArgs extends DesignLibraryEvent {
@@ -1448,6 +1555,11 @@ export const SITE_PREFIX = "_site_";
 export const SITECORE_CLI_MODE_ENV_VAR = "SITECORE_CLI_MODE";
 
 // @public
+export interface SitecoreActionMeta {
+    legacy?: boolean;
+}
+
+// @public
 export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInput>;
 
 // @public
@@ -1463,6 +1575,11 @@ export type SitecoreCliConfigInput = {
     };
     componentMap?: GenerateMapArgs & {
         generator?: GenerateMapFunction;
+    };
+    atoms?: {
+        validation?: {
+            breakOnError?: boolean;
+        };
     };
 };
 
@@ -1535,6 +1652,14 @@ export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' 
 };
 
 // @public
+export interface SitecoreComponentMeta {
+    allowedChildren?: string[];
+    allowedParents?: string[];
+    legacy?: boolean;
+    version?: string;
+}
+
+// @public
 export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
 
 // @public
@@ -1585,6 +1710,9 @@ export type SitecoreConfigInput = {
     };
     rewriteMediaUrls?: boolean | ((value: string) => string);
     disableCodeGeneration?: boolean;
+    theming?: {
+        mode?: ThemingMode;
+    };
 };
 
 // @public
@@ -1706,6 +1834,39 @@ export interface TextField extends FieldMetadata {
 }
 
 // @internal
+export const THEME_PREVIEW_STYLE_ID = "sitecore-theme-preview";
+
+// @public
+export const THEME_UPDATE_EVENT_NAME = "theme-update";
+
+// @public
+export interface ThemeUpdateEventArgs extends DesignLibraryEvent {
+    // (undocumented)
+    message: {
+        css: string;
+    };
+    // (undocumented)
+    name: typeof THEME_UPDATE_EVENT_NAME;
+}
+
+// @public
+export const THEMING_BODY_CLASS_NAME = "sc-ds-theme";
+
+// @public
+export const THEMING_DELIVERY_CHANNEL = "web-css";
+
+// @public
+export type ThemingMode = 'none' | 'site';
+
+// @public
+export type ThemingStylesheetLinksOptions = {
+    mode: ThemingMode;
+    siteName?: string;
+    clientContextId?: string;
+    sitecoreEdgeUrl?: string;
+};
+
+// @internal
 export const toPascalCase: (name: string) => string;
 
 // @internal
@@ -1715,6 +1876,17 @@ export const updateComponent: (component: ComponentRendering<ComponentFields>, f
 const updateImageUrl: (url: string, params?: {
     [key: string]: string | number | undefined;
 } | null, mediaUrlPrefix?: RegExp) => string;
+
+// @internal
+export function validateAtomsDocument(document: unknown): ValidateAtomsDocumentResult;
+
+// @internal
+export type ValidateAtomsDocumentResult = {
+    valid: true;
+} | {
+    valid: false;
+    error: AtomsDocumentValidationError;
+};
 
 // @internal
 export const validateEvent: (e: MessageEvent, eventName: string) => boolean;
@@ -1745,7 +1917,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:69:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:70:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:116:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal
