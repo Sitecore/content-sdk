@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/content",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -28,7 +28,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Sitecore/content-sdk"
+    "url": "git+https://github.com/Sitecore/content-sdk.git",
+    "directory": "packages/content"
   },
   "license": "Apache-2.0",
   "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",

@@ -8,7 +8,7 @@
 
 > **ExtractedFile** = `object`
 
-Defined in: [content/src/tools/codegen/utils.ts:70](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/content/src/tools/codegen/utils.ts#L70)
+Defined in: [content/src/tools/codegen/utils.ts:70](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/content/src/tools/codegen/utils.ts#L70)
 
 Description properties for the files sent to the mesh endpoint
 
@@ -18,7 +18,7 @@ Description properties for the files sent to the mesh endpoint
 
 > `optional` **labels?**: `Record`\<`string`, `unknown`\>
 
-Defined in: [content/src/tools/codegen/utils.ts:74](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/content/src/tools/codegen/utils.ts#L74)
+Defined in: [content/src/tools/codegen/utils.ts:74](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/content/src/tools/codegen/utils.ts#L74)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [content/src/tools/codegen/utils.ts:74](https://github.com/Sitecore/
 
 > **name**: `string`
 
-Defined in: [content/src/tools/codegen/utils.ts:71](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/content/src/tools/codegen/utils.ts#L71)
+Defined in: [content/src/tools/codegen/utils.ts:71](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/content/src/tools/codegen/utils.ts#L71)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [content/src/tools/codegen/utils.ts:71](https://github.com/Sitecore/
 
 > **path**: `string`
 
-Defined in: [content/src/tools/codegen/utils.ts:72](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/content/src/tools/codegen/utils.ts#L72)
+Defined in: [content/src/tools/codegen/utils.ts:72](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/content/src/tools/codegen/utils.ts#L72)
 
 ***
 
@@ -42,4 +42,4 @@ Defined in: [content/src/tools/codegen/utils.ts:72](https://github.com/Sitecore/
 
 > **type**: [`ExtractedFileType`](../enumerations/ExtractedFileType.md)
 
-Defined in: [content/src/tools/codegen/utils.ts:73](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/content/src/tools/codegen/utils.ts#L73)
+Defined in: [content/src/tools/codegen/utils.ts:73](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/content/src/tools/codegen/utils.ts#L73)

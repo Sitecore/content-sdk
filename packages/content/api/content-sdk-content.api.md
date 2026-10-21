@@ -1471,7 +1471,7 @@ export type SitecoreCliConfigInput = {
 // @public
 export class SitecoreClient implements BaseSitecoreClient {
     constructor(initOptions: SitecoreClientInit);
-    // @internal
+    // @internal @deprecated
     protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData;
     // (undocumented)
     protected clientFactory: GraphQLRequestClientFactory;
@@ -1479,6 +1479,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     protected componentService: ComponentLayoutService;
     // (undocumented)
     protected dictionaryService: DictionaryService;
+    // (undocumented)
+    edgeInitialized: boolean;
     // (undocumented)
     protected editingService: EditingService;
     // (undocumented)
@@ -1514,6 +1516,8 @@ export class SitecoreClient implements BaseSitecoreClient {
     // (undocumented)
     protected layoutService: LayoutService;
     parsePath(path: string | string[]): string;
+    // @internal
+    protected rewriteContentUrls<T>(data: T): T;
     // (undocumented)
     protected sitePathService: SitePathService;
 }

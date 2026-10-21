@@ -6,7 +6,7 @@
 
 # Interface: AngularSitecoreConfigInput
 
-Defined in: [packages/angular/src/config/define-config.ts:32](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/angular/src/config/define-config.ts#L32)
+Defined in: [packages/angular/src/config/define-config.ts:32](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/angular/src/config/define-config.ts#L32)
 
 Sitecore configuration input for Angular apps. Extends the base
 [SitecoreConfigInput](../content/config/type-aliases/SitecoreConfigInput.md) with an `angular` section. `redirects.locales` is intentionally
@@ -23,7 +23,7 @@ source of truth for the locale list.
 
 > `optional` **angular?**: `object`
 
-Defined in: [packages/angular/src/config/define-config.ts:34](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/angular/src/config/define-config.ts#L34)
+Defined in: [packages/angular/src/config/define-config.ts:34](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/angular/src/config/define-config.ts#L34)
 
 Angular-specific configuration.
 
@@ -214,7 +214,7 @@ Configure local memory caching for Dictionary Service requests
 
 > `optional` **disableCodeGeneration?**: `boolean`
 
-Defined in: packages/content/types/config/models.d.ts:208
+Defined in: packages/content/types/config/models.d.ts:210
 
 Opt-out setting for code generation feature
 Disables code extraction procedure
@@ -292,7 +292,7 @@ custom layout query
 
 > `optional` **multisite?**: `object`
 
-Defined in: [packages/angular/src/config/define-config.ts:62](https://github.com/Sitecore/content-sdk/blob/e1d01567743ba659061230b4c463eb068f9fd3da/packages/angular/src/config/define-config.ts#L62)
+Defined in: [packages/angular/src/config/define-config.ts:62](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/angular/src/config/define-config.ts#L62)
 
 #### enabled?
 
@@ -459,11 +459,13 @@ DefaultRetryStrategy
 
 > `optional` **rewriteMediaUrls?**: `boolean` \| ((`value`) => `string`)
 
-Defined in: packages/content/types/config/models.d.ts:203
+Defined in: packages/content/types/config/models.d.ts:205
 
-Rewrite media/content URLs in layout (media fields, rich text img/src, href, etc.).
-- When `true`: use default rewriter (Edge hostnames -> custom hostname from env).
-- When a function: transform each string value; the SDK traverses the layout for you.
+Rewrite media/content URLs in layout data and in `SitecoreClient.getData` results
+(media fields, rich text img/src, href, and other strings that contain a URL).
+- When `true`: rewrite the default Experience Edge hostname (`edge.sitecorecloud.io`) to the custom hostname from `SITECORE_EXPERIENCE_EDGE_HOSTNAME`.
+- When a function: transform each string value; the SDK traverses the response for you.
+Relative paths and hostnames other than the default Experience Edge host are left unchanged by the default rewriter.
 
 #### Default
 

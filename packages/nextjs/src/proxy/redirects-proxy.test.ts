@@ -944,6 +944,94 @@ describe('RedirectsProxy', () => {
         expect(redirectUrl).to.not.include('$1');
       });
 
+      [
+        { pathname: '/initial-page', requestLocale: 'en', expectedPath: '/target-page' },
+        { pathname: '/en/initial-page', requestLocale: 'en', expectedPath: '/target-page' },
+        { pathname: '/da/initial-page', requestLocale: 'da', expectedPath: '/da/target-page' },
+        { pathname: '/en-CA/initial-page', requestLocale: 'en-CA', expectedPath: '/en-CA/target-page' },
+      ].forEach(({ pathname, requestLocale, expectedPath }) => {
+        it(`should match anchored regex rule for App Router path "${pathname}" when only "en" is in redirects locales`, async () => {
+          const req = createRequest({
+            nextUrl: {
+              pathname,
+              locale: '',
+              defaultLocale: '',
+            },
+          });
+          const res = createResponse({
+            headers: {
+              'x-sc-locale': requestLocale,
+            },
+          });
+          nextRedirectStub.callsFake((url) =>
+            createResponse({
+              redirected: true,
+              status: 301,
+              url: typeof url === 'string' ? url : url.href,
+            })
+          );
+
+          const { proxy } = createProxy({
+            pattern: '^/initial-page$',
+            target: '/target-page',
+            locale: 'en',
+            redirectType: REDIRECT_TYPE_301,
+            isLanguagePreserved: true,
+            redirectsProxyConfig: {
+              locales: ['en'],
+              appLocalePrefix: 'as-needed',
+            },
+          });
+
+          const finalRes = await proxy.handle(req, res);
+
+          expect(nextRedirectStub.calledOnce).to.be.true;
+          const redirectUrl = nextRedirectStub.getCall(0).args[0] as string;
+          expect(new URL(redirectUrl).pathname.toLowerCase()).to.equal(expectedPath.toLowerCase());
+          expect(finalRes.status).to.equal(301);
+        });
+      });
+
+      it('should keep configured locale casing when the target locale comes from a regex capture', async () => {
+        const req = createRequest({
+          nextUrl: {
+            pathname: '/en-CA/initial-page',
+            locale: '',
+            defaultLocale: '',
+          },
+        });
+        const res = createResponse({
+          headers: {
+            'x-sc-locale': 'en-CA',
+          },
+        });
+        nextRedirectStub.callsFake((url) =>
+          createResponse({
+            redirected: true,
+            status: 301,
+            url: typeof url === 'string' ? url : url.href,
+          })
+        );
+
+        const { proxy } = createProxy({
+          pattern: '^/([A-Za-z]{2}(?:-[A-Za-z]{2})?)/initial-page/?$',
+          target: '/$1/target-page',
+          locale: 'en',
+          redirectType: REDIRECT_TYPE_301,
+          isLanguagePreserved: true,
+          redirectsProxyConfig: {
+            locales: ['en'],
+            appLocalePrefix: 'as-needed',
+          },
+        });
+
+        await proxy.handle(req, res);
+
+        expect(nextRedirectStub.calledOnce).to.be.true;
+        const redirectUrl = nextRedirectStub.getCall(0).args[0] as string;
+        expect(new URL(redirectUrl).pathname).to.equal('/en-CA/target-page');
+      });
+
       it('should skip malformed regex and still apply a valid redirect rule', async () => {
         const consoleWarnStub = sandbox.stub(console, 'warn');
         const req = createRequest({

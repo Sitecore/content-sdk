@@ -552,6 +552,36 @@ describe('App Placeholder logic', () => {
       expect(components[0].textContent).to.equal('Foo');
       expect(components[1].textContent).to.equal('Foo');
     });
+
+    it('should pass only componentName and uid of the rendering to ErrorBoundary', () => {
+      const page = getPage();
+      page.layout = byocWrapperData;
+      const route = byocWrapperData.sitecore.route as RouteData;
+      const phKey = 'main';
+
+      const errorBoundarySpy = sandbox.spy(ErrorBoundary, 'default');
+
+      render(
+        <AppPlaceholder
+          name={phKey}
+          rendering={route}
+          componentMap={componentMap}
+          page={page}
+        />
+      );
+
+      const renderings = errorBoundarySpy
+        .getCalls()
+        .map((call) => call.args[0].rendering)
+        .filter(Boolean);
+
+      expect(renderings).to.deep.equal(
+        (route.placeholders.main as ComponentRendering[]).map(({ componentName, uid }) => ({
+          componentName,
+          uid,
+        }))
+      );
+    });
   });
 
   describe('AppPlaceholder FEaaS fallback', () => {

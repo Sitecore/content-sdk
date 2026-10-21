@@ -1,12 +1,17 @@
 {
   "name": "@sitecore-content-sdk/nextjs",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sitecore/content-sdk.git",
+    "directory": "packages/nextjs"
   },
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
@@ -90,7 +95,7 @@
   },
   "dependencies": {
     "@babel/parser": "^7.27.2",
-    "@sitecore-content-sdk/content": "^2.3.0",
+    "@sitecore-content-sdk/content": "^2.3.1",
     "@sitecore-content-sdk/core": "^2.1.4",
     "@sitecore-content-sdk/events": "^2.1.2",
     "@sitecore-content-sdk/react": "^2.4.0",
@@ -114,9 +119,8 @@
       "require": "./dist/cjs/editing/codegen/index.js"
     },
     "./component-props-loader": {
-      "types": "./types/component-props-loader/index.d.ts",
-      "import": "./dist/esm/component-props-loader/index.js",
-      "require": "./dist/cjs/component-props-loader/index.js"
+      "types": "./component-props-loader.d.ts",
+      "default": "./component-props-loader.js"
     },
     "./config": {
       "types": "./types/config/index.d.ts",
