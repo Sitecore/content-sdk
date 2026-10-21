@@ -119,9 +119,8 @@
       "require": "./dist/cjs/editing/codegen/index.js"
     },
     "./component-props-loader": {
-      "types": "./types/component-props-loader/index.d.ts",
-      "import": "./dist/esm/component-props-loader/index.js",
-      "require": "./dist/cjs/component-props-loader/index.js"
+      "types": "./component-props-loader.d.ts",
+      "default": "./component-props-loader.js"
     },
     "./config": {
       "types": "./types/config/index.d.ts",
