@@ -6,7 +6,7 @@
 
 # Abstract Class: ProxyHandler
 
-Defined in: [nextjs/src/proxy/proxy.ts:57](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/nextjs/src/proxy/proxy.ts#L57)
+Defined in: [nextjs/src/proxy/proxy.ts:57](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/nextjs/src/proxy/proxy.ts#L57)
 
 Proxy handler class to be extended by all proxy implementations
 
@@ -32,7 +32,7 @@ Proxy handler class to be extended by all proxy implementations
 
 > **get** `abstract` **name**(): `string`
 
-Defined in: [nextjs/src/proxy/proxy.ts:61](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/nextjs/src/proxy/proxy.ts#L61)
+Defined in: [nextjs/src/proxy/proxy.ts:61](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/nextjs/src/proxy/proxy.ts#L61)
 
 Name of the proxy, used as a key in the context to store information about executed proxies
 
@@ -46,7 +46,7 @@ Name of the proxy, used as a key in the context to store information about execu
 
 > `abstract` **handle**(`req`, `res`, `proxiesContext?`): `Promise`\<`NextResponse`\<`unknown`\>\>
 
-Defined in: [nextjs/src/proxy/proxy.ts:69](https://github.com/Sitecore/content-sdk/blob/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01/packages/nextjs/src/proxy/proxy.ts#L69)
+Defined in: [nextjs/src/proxy/proxy.ts:69](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/nextjs/src/proxy/proxy.ts#L69)
 
 Handler method to execute proxy logic
 

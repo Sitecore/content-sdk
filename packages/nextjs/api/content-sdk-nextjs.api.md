@@ -273,6 +273,15 @@ export type BuildSitecoreDictionaryCacheTagParams = {
     locale: string;
 };
 
+// @public
+export function buildSitecoreItemCacheTag(params: BuildSitecoreItemCacheTagParams): string;
+
+// @public
+export type BuildSitecoreItemCacheTagParams = {
+    itemId: string;
+    locale: string;
+};
+
 export { BYOCClientWrapper }
 
 export { BYOCComponent }
