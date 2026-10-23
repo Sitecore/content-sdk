@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { composeComponentEndpoint } from './feaas-utils';
 import { FEaaSComponentParams, FEaaSComponentProps } from './models';
 import { FEaaSComponent } from './FEaaSWrapper';
@@ -31,6 +32,55 @@ describe('<FEaaSComponent />', () => {
     });
   });
 
+  describe('library styles', () => {
+    it('should request only the stylesheet while using the server-provided template and data', () => {
+      const output = renderToStaticMarkup(
+        <FEaaSComponent
+          params={requiredParams}
+          template='<h1 data-path="title"></h1>'
+          fetchedData={{ title: 'Server content' }}
+        />
+      );
+
+      expect(output).to.contain('fetch="stylesheet"');
+      expect(output).to.contain('<h1 data-path="title">Server content</h1>');
+    });
+
+    it('should preserve the custom CDN and staged revision for stylesheet loading', () => {
+      const output = renderToStaticMarkup(
+        <FEaaSComponent
+          params={{
+            ...requiredParams,
+            ComponentHostName: 'https://feaasstaging.blob.core.windows.net',
+          }}
+        />
+      );
+
+      expect(output).to.contain('cdn="https://feaasstaging.blob.core.windows.net"');
+      expect(output).to.contain('library="library123"');
+      expect(output).to.contain('revision="staged"');
+      expect(output).to.contain('fetch="stylesheet"');
+    });
+
+    it('should preserve the published revision fallback for stylesheet loading', () => {
+      const output = renderToStaticMarkup(
+        <FEaaSComponent
+          params={{ ...requiredParams, ComponentRevision: undefined }}
+          revisionFallback="published"
+        />
+      );
+
+      expect(output).to.contain('revision="published"');
+      expect(output).to.contain('fetch="stylesheet"');
+    });
+
+    it('should not request a stylesheet when the library ID is missing', () => {
+      const output = renderToStaticMarkup(<FEaaSComponent template="<div>test output</div>" />);
+
+      expect(output).to.contain('fetch=""');
+    });
+  });
+
   it('should not render with props and params missing', () => {
     const wrapper = render(<FEaaSComponent />, { container: document.body });
     expect(wrapper.baseElement.innerHTML).to.equal('');
@@ -53,7 +103,7 @@ describe('<FEaaSComponent />', () => {
     };
     const wrapper = render(<FEaaSComponent {...props} />, { container: document.body });
     expect(wrapper.baseElement.innerHTML).to.equal(
-      '<feaas-component class="-feaas" cdn="host123" library="library123" version="version123" component="component123" revision="staged" fetch=""></feaas-component>'
+      '<feaas-component class="-feaas" cdn="host123" library="library123" version="version123" component="component123" revision="staged" fetch="stylesheet"></feaas-component>'
     );
   });
 
@@ -71,7 +121,7 @@ describe('<FEaaSComponent />', () => {
     };
     const wrapper = render(<FEaaSComponent {...props} />, { container: document.body });
     expect(wrapper.baseElement.innerHTML).to.equal(
-      '<feaas-component class="-feaas" cdn="host123" library="library123" version="version123" component="component123" revision="staged" fetch=""></feaas-component>'
+      '<feaas-component class="-feaas" cdn="host123" library="library123" version="version123" component="component123" revision="staged" fetch="stylesheet"></feaas-component>'
     );
   });
 
