@@ -1,5 +1,58 @@
 # create-content-sdk-app
 
+## 2.4.2
+
+### Patch Changes
+
+- [angular] llms.txt Support ([c7801c3](https://github.com/sitecore/content-sdk/commit/c7801c33fe661bb4b9b6f414c72a29794de8b26a))
+
+  Added `createLlmsTxtMiddleware({ client, sites })`, an Express handler serving the llms.txt content managed via SitecoreAI for the site resolved by host name. The Angular template mounts it at `/llms.txt`.
+
+- [angular] Metadata, Open Graph and Schema.org & JSON-LD Support ([c7801c3](https://github.com/sitecore/content-sdk/commit/c7801c33fe661bb4b9b6f414c72a29794de8b26a))
+
+  - `@sitecore-content-sdk/content`: `resolvePageMetadataFields` (with `PageMetadataRouteFields` / `ResolvedPageMetadataFields`) moved from `@sitecore-content-sdk/nextjs` to `@sitecore-content-sdk/content/layout`, so every framework shares the same field-to-tag rules. `@sitecore-content-sdk/nextjs` keeps re-exporting `PageMetadataRouteFields`.
+  - `@sitecore-content-sdk/angular`: added `PageMetadataService` + `<sc-page-meta-tags [route]>` (`<title>`, metadata and Open Graph `<meta>` tags via Angular's `Title`/`Meta` services) and `JsonLdSchemaService` + `<sc-json-ld-schema [page]>` (a single `<script type="application/ld+json">` in `<head>`, normal mode only). Re-exported the `PageMetadataFields`, `MetadataFields`, `OpenGraphFields`, `OpenGraphImageField(Value)` and `PageMetadataRouteFields` types.
+  - Angular template: `LayoutComponent` renders both components; `RouteFields` extends `PageMetadataFields`.
+
+- Schema.org & JSON-LD Support ([b858df1](https://github.com/sitecore/content-sdk/commit/b858df1f6f27c4f7a00a2d33c81c5e5233790233))
+- Enable Turbopack support for the component props loader in the Next.js Pages Router template, so `getComponentServerProps` is stripped from client bundles. Also fix the loader's package export path and make the webpack rule work on all platforms. ([f0d8e2f](https://github.com/sitecore/content-sdk/commit/f0d8e2f2a4d2702c275ba74dc0030e61bf69fd01))
+- [nextjs] Cache Components template: the `getSitecorePage`, `getSitecoreErrorPage` and `getSitecoreDictionary` cache helpers now call `cacheLife('default')` explicitly, as Next.js recommends for every `use cache` scope. Behavior is unchanged (`default` is the implicit profile), but the cache lifetime is now visible at the call site. Change the profile there to tune how long Sitecore content stays cached. ([ee7d15f](https://github.com/sitecore/content-sdk/commit/ee7d15fb7ff51ecf52f6c48a5dd927ab6855f385))
+- Fix `403 Forbidden` for `public` folder static files (e.g. `.svg`, `.woff2`) in Pages Builder editing mode. `PreviewProxy` now skips known static asset extensions, and the template `proxy.ts` matcher excludes them. ([39e7906](https://github.com/sitecore/content-sdk/commit/39e7906136a3f4d536b6cf742452481a0c9b6957))
+- Add `@sitecore-content-sdk/personalize` to the Next.js Pages Router template dependencies. Yarn does not install missing peers, so a Pages Router app built with Yarn could not resolve the package and omitted it from `.sitecore/metadata.json`. ([16c65a2](https://github.com/sitecore/content-sdk/commit/16c65a296cb6c3751cf2bd6cd678c6ae93f8c499))
+- minor `@sitecore-content-sdk/angular` dependency update:
+
+  - [angular] llms.txt Support
+
+  Added `createLlmsTxtMiddleware({ client, sites })`, an Express handler serving the llms.txt content managed via SitecoreAI for the site resolved by host name. The Angular template mounts it at `/llms.txt`. ([c7801c3](https://github.com/sitecore/content-sdk/commit/c7801c33fe661bb4b9b6f414c72a29794de8b26a))
+
+  - [angular] Metadata, Open Graph and Schema.org & JSON-LD Support
+
+  - `@sitecore-content-sdk/content`: `resolvePageMetadataFields` (with `PageMetadataRouteFields` / `ResolvedPageMetadataFields`) moved from `@sitecore-content-sdk/nextjs` to `@sitecore-content-sdk/content/layout`, so every framework shares the same field-to-tag rules. `@sitecore-content-sdk/nextjs` keeps re-exporting `PageMetadataRouteFields`.
+  - `@sitecore-content-sdk/angular`: added `PageMetadataService` + `<sc-page-meta-tags [route]>` (`<title>`, metadata and Open Graph `<meta>` tags via Angular's `Title`/`Meta` services) and `JsonLdSchemaService` + `<sc-json-ld-schema [page]>` (a single `<script type="application/ld+json">` in `<head>`, normal mode only). Re-exported the `PageMetadataFields`, `MetadataFields`, `OpenGraphFields`, `OpenGraphImageField(Value)` and `PageMetadataRouteFields` types.
+  - Angular template: `LayoutComponent` renders both components; `RouteFields` extends `PageMetadataFields`. ([c7801c3](https://github.com/sitecore/content-sdk/commit/c7801c33fe661bb4b9b6f414c72a29794de8b26a))
+    - Add `sitecore-tools project experimental list` to show the experimental features available in the current Content SDK app.
+      The command reads the app's framework package (`@sitecore-content-sdk/nextjs` or `@sitecore-content-sdk/angular`) and prints each feature with its enabled status. Framework packages now export `experimentalFeaturesCatalog` from their `/experimental` entry. ([e1d0156](https://github.com/sitecore/content-sdk/commit/e1d01567743ba659061230b4c463eb068f9fd3da))
+
+- minor `@sitecore-content-sdk/cli` dependency update:
+  - Add `sitecore-tools project experimental list` to show the experimental features available in the current Content SDK app.
+    The command reads the app's framework package (`@sitecore-content-sdk/nextjs` or `@sitecore-content-sdk/angular`) and prints each feature with its enabled status. Framework packages now export `experimentalFeaturesCatalog` from their `/experimental` entry. ([e1d0156](https://github.com/sitecore/content-sdk/commit/e1d01567743ba659061230b4c463eb068f9fd3da))
+- minor `@sitecore-content-sdk/content` dependency update:
+
+  - [angular] Metadata, Open Graph and Schema.org & JSON-LD Support
+
+  - `@sitecore-content-sdk/content`: `resolvePageMetadataFields` (with `PageMetadataRouteFields` / `ResolvedPageMetadataFields`) moved from `@sitecore-content-sdk/nextjs` to `@sitecore-content-sdk/content/layout`, so every framework shares the same field-to-tag rules. `@sitecore-content-sdk/nextjs` keeps re-exporting `PageMetadataRouteFields`.
+  - `@sitecore-content-sdk/angular`: added `PageMetadataService` + `<sc-page-meta-tags [route]>` (`<title>`, metadata and Open Graph `<meta>` tags via Angular's `Title`/`Meta` services) and `JsonLdSchemaService` + `<sc-json-ld-schema [page]>` (a single `<script type="application/ld+json">` in `<head>`, normal mode only). Re-exported the `PageMetadataFields`, `MetadataFields`, `OpenGraphFields`, `OpenGraphImageField(Value)` and `PageMetadataRouteFields` types.
+  - Angular template: `LayoutComponent` renders both components; `RouteFields` extends `PageMetadataFields`. ([c7801c3](https://github.com/sitecore/content-sdk/commit/c7801c33fe661bb4b9b6f414c72a29794de8b26a))
+    - Apply `rewriteMediaUrls` to `SitecoreClient.getData` results so custom Experience Edge hostnames are rewritten in component GraphQL data. ([5509bcd](https://github.com/sitecore/content-sdk/commit/5509bcddfb4134f289ce04760ee3a119d66b3d04))
+    - Schema.org & JSON-LD Support ([b858df1](https://github.com/sitecore/content-sdk/commit/b858df1f6f27c4f7a00a2d33c81c5e5233790233))
+
+- minor `@sitecore-content-sdk/nextjs` dependency update:
+  - Add `sitecore-tools project experimental list` to show the experimental features available in the current Content SDK app.
+    The command reads the app's framework package (`@sitecore-content-sdk/nextjs` or `@sitecore-content-sdk/angular`) and prints each feature with its enabled status. Framework packages now export `experimentalFeaturesCatalog` from their `/experimental` entry. ([e1d0156](https://github.com/sitecore/content-sdk/commit/e1d01567743ba659061230b4c463eb068f9fd3da))
+  - Schema.org & JSON-LD Support ([b858df1](https://github.com/sitecore/content-sdk/commit/b858df1f6f27c4f7a00a2d33c81c5e5233790233))
+- minor `@sitecore-content-sdk/react` dependency update:
+  - Schema.org & JSON-LD Support ([b858df1](https://github.com/sitecore/content-sdk/commit/b858df1f6f27c4f7a00a2d33c81c5e5233790233))
+
 ## 2.4.1
 
 ### Patch Changes
