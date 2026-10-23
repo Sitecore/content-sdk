@@ -65,7 +65,7 @@ const getPlaceholderComponents = (
         hiddenRenderingComponent,
         missingComponentComponent
       );
-      const key = componentRendering.uid || `component-${index}`;
+      const key = componentRendering.uid || `${componentRendering.componentName}-${index}`;
 
       const renderedProps = modifyComponentProps
         ? modifyComponentProps(getChildComponentProps(placeholderProps, componentRendering))

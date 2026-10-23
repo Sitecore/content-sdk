@@ -12,22 +12,30 @@ describe('Placeholder modifyComponentProps', () => {
     params: {},
   };
 
+  let Placeholder: typeof import('./Placeholder').Placeholder;
+  let currentProps: ChildComponentProps;
+  let result: ChildComponentProps | undefined;
+
+  before(() => {
+    ({ Placeholder } = proxyquire('./Placeholder', {
+      '@sitecore-content-sdk/react': {
+        Placeholder: (props: {
+          modifyComponentProps: (props: ChildComponentProps) => ChildComponentProps;
+        }) => {
+          result = props.modifyComponentProps(currentProps);
+          return null;
+        },
+      },
+    }));
+  });
+
   const transformProps = (
     componentProps: ChildComponentProps,
     data: Record<string, Record<string, unknown>>,
     modifyComponentProps?: (props: ChildComponentProps) => ChildComponentProps
   ) => {
-    let result: ChildComponentProps | undefined;
-    const { Placeholder } = proxyquire('./Placeholder', {
-      '@sitecore-content-sdk/react': {
-        Placeholder: (props: {
-          modifyComponentProps: (props: ChildComponentProps) => ChildComponentProps;
-        }) => {
-          result = props.modifyComponentProps(componentProps);
-          return null;
-        },
-      },
-    });
+    currentProps = componentProps;
+    result = undefined;
 
     const view = render(
       <ComponentPropsContext value={data}>

@@ -343,8 +343,30 @@ describe('App Placeholder logic', () => {
           />
         );
 
-        expect(keys).to.deep.equal(['first-rendering', 'component-1']);
+        expect(keys).to.deep.equal(['first-rendering', 'Jumbotron-1']);
       });
+    });
+
+    it('changes the boundary key when a rendering without a UID changes component at the same index', () => {
+      let key: string | null = null;
+      const placeholder = (componentName: string) => (
+        <AppPlaceholder
+          name="main"
+          rendering={{ componentName: 'Home', placeholders: { main: [{ componentName }] } }}
+          componentMap={componentMap}
+          page={getPage()}
+          render={(components) => {
+            key = (components[0] as React.ReactElement).key;
+            return null;
+          }}
+        />
+      );
+
+      const view = render(placeholder('Jumbotron'));
+      expect(key).to.equal('Jumbotron-0');
+
+      view.rerender(placeholder('Home'));
+      expect(key).to.equal('Home-0');
     });
 
     it('keeps UID-based boundary keys when renderings are reordered', () => {
@@ -614,12 +636,7 @@ describe('App Placeholder logic', () => {
       const errorBoundarySpy = sandbox.spy(ErrorBoundary, 'default');
 
       render(
-        <AppPlaceholder
-          name={phKey}
-          rendering={route}
-          componentMap={componentMap}
-          page={page}
-        />
+        <AppPlaceholder name={phKey} rendering={route} componentMap={componentMap} page={page} />
       );
 
       const renderings = errorBoundarySpy
