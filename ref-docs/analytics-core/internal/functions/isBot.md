@@ -8,7 +8,7 @@
 
 > **isBot**(`userAgent?`): `boolean`
 
-Defined in: [analytics-core/src/bot-detection/bot-detection.ts:17](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/analytics-core/src/bot-detection/bot-detection.ts#L17)
+Defined in: [analytics-core/src/bot-detection/bot-detection.ts:17](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/analytics-core/src/bot-detection/bot-detection.ts#L17)
 
 **`Internal`**
 

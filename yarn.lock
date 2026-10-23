@@ -17554,6 +17554,9 @@ __metadata:
     typedoc-plugin-markdown: "npm:^4.6.3"
     typescript: "npm:~5.8.3"
     vitest: "npm:^3.2.4"
+  dependenciesMeta:
+    esbuild:
+      built: true
   languageName: unknown
   linkType: soft
 
