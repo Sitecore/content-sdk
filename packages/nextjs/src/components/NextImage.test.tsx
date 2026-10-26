@@ -448,6 +448,45 @@ describe('<NextImage />', () => {
       );
     });
 
+    it('should let passed style override default empty image inline size', () => {
+      const field = {
+        value: {},
+        metadata: testMetadata,
+      };
+
+      const rendered = render(
+        <SitecoreProviderReactContext.Provider value={testEditingContext}>
+          <NextImage
+            field={field}
+            style={{ minWidth: '16px', minHeight: '16px', width: '16px', height: '16px' }}
+          />
+        </SitecoreProviderReactContext.Provider>
+      );
+      const img = rendered.container.querySelector('img') as HTMLImageElement;
+
+      expect(img.className).to.contain('scEmptyImage');
+      expect(img.style.minWidth).to.equal('16px');
+      expect(img.style.minHeight).to.equal('16px');
+      expect(img.style.width).to.equal('16px');
+      expect(img.style.height).to.equal('16px');
+      expect(img.style.cursor).to.equal('pointer');
+    });
+
+    it('should use the passed alt on the default empty image placeholder', () => {
+      const field = {
+        value: {},
+        metadata: testMetadata,
+      };
+
+      const rendered = render(
+        <SitecoreProviderReactContext.Provider value={testEditingContext}>
+          <NextImage field={field} alt="Missing icon" />
+        </SitecoreProviderReactContext.Provider>
+      );
+
+      expect(rendered.container.querySelector('img')?.getAttribute('alt')).to.equal('Missing icon');
+    });
+
     it('should render custom empty field component when provided, when field value src is not present', () => {
       const field = {
         value: {},

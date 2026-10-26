@@ -310,6 +310,51 @@ describe('<Image />', () => {
       expect(rendered.container.innerHTML).to.contain('scEmptyImage');
     });
 
+    it('should let passed style override default empty image inline size', () => {
+      const field = {
+        value: { src: undefined },
+        metadata: testMetadata,
+      };
+
+      const rendered = render(
+        <Image
+          field={field}
+          style={{ minWidth: '16px', minHeight: '16px', width: '16px', height: '16px' }}
+        />
+      );
+      const img = rendered.container.querySelector('img') as HTMLImageElement;
+
+      expect(img.style.minWidth).to.equal('16px');
+      expect(img.style.minHeight).to.equal('16px');
+      expect(img.style.width).to.equal('16px');
+      expect(img.style.height).to.equal('16px');
+      expect(img.style.maxWidth).to.equal('400px');
+      expect(img.style.maxHeight).to.equal('400px');
+      expect(img.style.cursor).to.equal('pointer');
+    });
+
+    it('should use the passed alt on the default empty image placeholder', () => {
+      const field = {
+        value: { src: undefined },
+        metadata: testMetadata,
+      };
+
+      const rendered = render(<Image field={field} alt="Missing icon" />);
+
+      expect(rendered.container.querySelector('img')?.getAttribute('alt')).to.equal('Missing icon');
+    });
+
+    it('should keep an empty alt when the default empty image placeholder has no alt', () => {
+      const field = {
+        value: { src: undefined },
+        metadata: testMetadata,
+      };
+
+      const rendered = render(<Image field={field} />);
+
+      expect(rendered.container.querySelector('img')?.getAttribute('alt')).to.equal('');
+    });
+
     it('should render custom empty field component when provided, when field value src is not present', () => {
       const field = {
         value: { src: undefined },
