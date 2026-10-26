@@ -1,4 +1,5 @@
 ﻿import { execSync } from 'child_process';
+import type { ResolvedCapabilities } from '../../capabilities';
 
 type Package = {
   name: string;
@@ -20,6 +21,7 @@ type PackagesQuery = {
  */
 export interface Metadata {
   packages: { [key: string]: string };
+  capabilities?: ResolvedCapabilities;
 }
 
 const trackedScopes = ['@sitecore', '@sitecore-feaas', '@sitecore-content-sdk'];
@@ -38,6 +40,7 @@ const MAX_OUTPUT_BUFFER = 10 * 1024 * 1024;
  * Get application metadata
  * @param {boolean} allowWorkspaces - Whether to allow workspaces in the metadata generation.
  * @returns {Metadata} The generated metadata.
+ * @deprecated Package-manager-based package discovery will be removed in a future version.
  */
 export function getMetadata(allowWorkspaces: boolean = false): Metadata {
   const metadata: Metadata = { packages: {} };
@@ -173,8 +176,7 @@ function parseNpmQuery(output: string): Package[] {
 
   return Array.isArray(parsed)
     ? parsed.filter(
-        (scPackage) =>
-          typeof scPackage?.name === 'string' && typeof scPackage?.version === 'string'
+        (scPackage) => typeof scPackage?.name === 'string' && typeof scPackage?.version === 'string'
       )
     : [];
 }

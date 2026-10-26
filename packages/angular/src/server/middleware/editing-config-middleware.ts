@@ -89,10 +89,15 @@ export function normalizeImportedMetadata(module: unknown): Metadata {
   if (!module || typeof module !== 'object') {
     return EMPTY_METADATA;
   }
-  const record = module as { default?: Metadata; packages?: Metadata['packages'] };
+  const record = module as {
+    default?: Metadata;
+    packages?: Metadata['packages'];
+    capabilities?: Metadata['capabilities'];
+  };
   const data = record.default ?? record;
   return {
     packages: { ...(data.packages ?? {}) },
+    capabilities: { ...(data.capabilities ?? {}) },
   };
 }
 
@@ -207,6 +212,7 @@ export function createEditingConfigMiddleware(
     res.status(200).json({
       components: Array.from(components.keys()),
       packages: { ...metadata.packages },
+      capabilities: { ...(metadata.capabilities ?? {}) },
       editMode: EditMode.Metadata,
     });
   };

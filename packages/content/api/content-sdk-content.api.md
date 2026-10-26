@@ -7,6 +7,7 @@
 import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
 import { Debugger } from 'debug';
+import { DeepRequired } from '@sitecore-content-sdk/core';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
 import { DocumentNode } from 'graphql';
 import { FetchOptions } from '@sitecore-content-sdk/core';
@@ -17,6 +18,8 @@ import { GraphQLRequestClientConfig } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/core';
 import { RetryStrategy } from '@sitecore-content-sdk/core';
+import { SitecoreConfig } from '@sitecore-content-sdk/core';
+import { SitecoreConfigInput } from '@sitecore-content-sdk/core';
 
 // @internal
 export const addComponentPreviewHandler: (importMap: ImportEntry[], callback: (error: unknown | null, Component: unknown) => void) => (() => void) | undefined;
@@ -226,10 +229,7 @@ export { debug_2 as debug }
 // @internal
 export function deepMerge<T>(base: T, override?: DeepPartial<T>): T;
 
-// @public
-export type DeepRequired<T> = Required<{
-    [K in keyof T]: T[K] extends Required<T[K]> ? T[K] : DeepRequired<T[K]>;
-}>;
+export { DeepRequired }
 
 // @public
 export const DEFAULT_LLMS_TXT = "# llms.txt\n\n> No llms.txt content configured for this site.";
@@ -1534,58 +1534,9 @@ export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' 
     };
 };
 
-// @public
-export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
+export { SitecoreConfig }
 
-// @public
-export type SitecoreConfigInput = {
-    api?: {
-        edge?: {
-            contextId: string;
-            clientContextId?: string;
-            edgeUrl?: string;
-        };
-        local?: {
-            apiKey: string;
-            apiHost: string;
-            path?: string;
-        };
-    };
-    defaultLanguage?: string;
-    defaultSite?: string;
-    editingSecret?: string;
-    retries?: {
-        count?: number;
-        retryStrategy?: RetryStrategy;
-    };
-    layout?: {
-        formatLayoutQuery?: ((siteName: string, itemPath: string, locale?: string) => string) | null;
-    };
-    dictionary?: {
-        caching?: {
-            enabled?: boolean;
-            timeout?: number;
-        };
-    };
-    multisite?: {
-        enabled?: boolean;
-        useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;
-    };
-    personalize?: {
-        enabled?: boolean;
-        edgeTimeout?: number;
-        cdpTimeout?: number;
-        scope?: string;
-        channel?: string;
-        currency?: string;
-    };
-    redirects?: {
-        enabled?: boolean;
-        locales?: string[];
-    };
-    rewriteMediaUrls?: boolean | ((value: string) => string);
-    disableCodeGeneration?: boolean;
-};
+export { SitecoreConfigInput }
 
 // @public
 export type SiteInfo = {

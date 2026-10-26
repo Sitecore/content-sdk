@@ -92,6 +92,7 @@ export const createEditingConfigRouteHandler = (options: EditingConfigRouteHandl
         components: componentNames,
         clientComponents: clientComponentNames,
         packages: metadata.packages,
+        capabilities: metadata.capabilities ?? {},
         editMode: EditMode.Metadata,
       };
 

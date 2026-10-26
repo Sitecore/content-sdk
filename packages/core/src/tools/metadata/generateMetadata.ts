@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { Metadata, getMetadata } from './metadata';
 import { ensurePathExists } from '../ensurePath';
+import { calculateCapabilities } from '../capabilities';
+import type { CapabilitySitecoreConfig } from '../../capabilities';
 
 /*
   METADATA GENERATION
@@ -11,6 +13,7 @@ import { ensurePathExists } from '../ensurePath';
 
 /**
  * Configuration options for generating metadata.
+ * @public
  */
 export type GenerateMetadataConfig = {
   /**
@@ -21,8 +24,13 @@ export type GenerateMetadataConfig = {
   /**
    * Optional flag to allow npm workspaces in the metadata generation. Should be kept as false for non-npm monorepos.
    * If not provided, the default is false.
+   * @deprecated Package-manager-based package discovery will be removed in a future version.
    */
   allowWorkspaces?: boolean;
+  /**
+   * Whether to calculate installed package capabilities. Defaults to true.
+   */
+  capabilities?: boolean;
 };
 
 /**
@@ -32,9 +40,20 @@ export type GenerateMetadataConfig = {
  * @returns {Promise<void>} A promise that resolves when the metadata generation is complete.
  * @public
  */
-export const generateMetadata = (config?: GenerateMetadataConfig): (() => Promise<void>) => {
-  return async () => {
+export const generateMetadata = (
+  config?: GenerateMetadataConfig
+): ((args?: { scConfig?: CapabilitySitecoreConfig }) => Promise<void>) => {
+  return async (args) => {
     const metadata: Metadata = getMetadata(!!config?.allowWorkspaces);
+    if (config?.capabilities !== false) {
+      try {
+        metadata.capabilities = await calculateCapabilities({
+          sitecoreConfig: args?.scConfig,
+        });
+      } catch (error) {
+        console.error('Failed to calculate application capabilities', error);
+      }
+    }
     writeMetadata(metadata, config?.destinationPath ?? '.sitecore/metadata.json');
   };
 };

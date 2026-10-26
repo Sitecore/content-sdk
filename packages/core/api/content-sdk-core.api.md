@@ -31,10 +31,61 @@ export interface CacheOptions {
     cacheTimeout?: number;
 }
 
+// @public
+export function calculateCapabilities(config?: {
+    appRoot?: string;
+    sitecoreConfig?: CapabilitySitecoreConfig;
+}): Promise<ResolvedCapabilities>;
+
+// @public
+export function canResolveAppModule(specifier: string, appPath?: string): boolean;
+
+// @public
+export type CapabilitiesModule = {
+    default: CSDKCapabilities;
+};
+
+// @public
+export type CapabilityDefinition = {
+    value: boolean | CapabilityMap<CapabilityDefinition>;
+    filter?: CapabilityFilter;
+    metadata?: CapabilityMetadata;
+};
+
+// @public
+export type CapabilityFilter = (context: CapabilityFilterContext) => boolean | Promise<boolean>;
+
+// @public
+export type CapabilityFilterContext = {
+    appRoot: string;
+    sitecoreConfig?: CapabilitySitecoreConfig;
+    fileExists: (relativePath: string) => boolean;
+    readFile: (relativePath: string) => string | undefined;
+    fileContains: (relativePaths: string[], pattern: string | RegExp) => boolean;
+};
+
+// @public
+export type CapabilityMap<T> = Record<string, T>;
+
+// @public
+export type CapabilityMetadata = Record<string, unknown>;
+
+// @public
+export type CapabilitySitecoreConfig = Pick<SitecoreConfig, 'disableCodeGeneration'>;
+
 // @internal
 const CLAIMS = "https://auth.sitecorecloud.io/claims";
 
 export { ClientError }
+
+// @internal
+export function collectCapabilities(appRoot?: string): CollectedCapabilities[];
+
+// @internal (undocumented)
+export type CollectedCapabilities = {
+    packageName: string;
+    capabilities: CSDKCapabilities;
+};
 
 declare namespace constants {
     export {
@@ -60,6 +111,25 @@ export interface CoreContext {
     readyPromise: Promise<void> | null;
 }
 
+// @internal
+export function createCapabilityFilterContext(appRoot?: string, sitecoreConfig?: CapabilitySitecoreConfig): CapabilityFilterContext;
+
+// @public
+export type CSDKCapabilities = {
+    preview?: CapabilityDefinition;
+    editing?: CapabilityDefinition;
+    abTesting?: CapabilityDefinition;
+    byocRender?: CapabilityDefinition;
+    feaasRender?: CapabilityDefinition;
+    designLibrary?: CapabilityDefinition & {
+        value: {
+            variantGeneration?: CapabilityDefinition;
+            variantPreview?: CapabilityDefinition;
+            aiComponentImport?: CapabilityDefinition;
+        };
+    };
+};
+
 // @public
 const debug_2: {
     common: debug_3.Debugger;
@@ -79,6 +149,11 @@ export const debugModule: debug_3.Debug & {
 
 // @public
 export const debugNamespace = "content-sdk";
+
+// @public
+export type DeepRequired<T> = Required<{
+    [K in keyof T]: T[K] extends Required<T[K]> ? T[K] : DeepRequired<T[K]>;
+}>;
 
 // @internal
 const DEFAULT_SITECORE_AUTH_AUDIENCE = "https://api.sitecorecloud.io";
@@ -156,10 +231,17 @@ export type FetchOptions = {
     debugger?: Debugger_2;
 };
 
-// Warning: (ae-forgotten-export) The symbol "GenerateMetadataConfig" needs to be exported by the entry point api-surface.d.ts
-//
 // @public
-export const generateMetadata: (config?: GenerateMetadataConfig) => (() => Promise<void>);
+export const generateMetadata: (config?: GenerateMetadataConfig) => ((args?: {
+    scConfig?: CapabilitySitecoreConfig;
+}) => Promise<void>);
+
+// @public
+export type GenerateMetadataConfig = {
+    destinationPath?: string;
+    allowWorkspaces?: boolean;
+    capabilities?: boolean;
+};
 
 // @public
 export type GenericGraphQLClientError = Partial<Error> & {
@@ -250,6 +332,9 @@ export interface InitContentSdkParams {
 }
 
 // @public
+export function isMissingAppModuleSubpath(error: unknown, specifier: string, appPath?: string): boolean;
+
+// @public
 export function isNamespaceEnabled(namespace: string): boolean;
 
 // @public
@@ -262,6 +347,9 @@ export function isServer(): boolean;
 export const isTimeoutError: (error: unknown) => boolean;
 
 // @public
+export function loadAppModule<T>(specifier: string, appPath?: string): T;
+
+// @public
 export class MemoryCacheClient<T> implements CacheClient<T> {
     constructor(options: CacheOptions);
     getCacheValue(key: string): T | null;
@@ -270,11 +358,28 @@ export class MemoryCacheClient<T> implements CacheClient<T> {
     setCacheValue(key: string, value: T): T;
 }
 
+// @internal
+export function mergeCapabilityExports(packages: CollectedCapabilities[]): MergedCapabilityTree;
+
+// @internal (undocumented)
+export type MergedCapability = {
+    value: boolean | MergedCapabilityTree;
+    filters: CapabilityFilter[];
+    metadata: CapabilityMetadata;
+};
+
+// @internal (undocumented)
+export type MergedCapabilityTree = {
+    [key: string]: MergedCapability;
+};
+
 // @public
 export const mergeURLSearchParams: (params1: URLSearchParams, params2: URLSearchParams) => string;
 
 // @public
 export interface Metadata {
+    // (undocumented)
+    capabilities?: ResolvedCapabilities;
     // (undocumented)
     packages: {
         [key: string]: string;
@@ -338,6 +443,21 @@ export interface PluginAdapter {
 // @public
 export type PluginDependency = string;
 
+// @internal
+export function resolveCapabilities(capabilities: MergedCapabilityTree, context: CapabilityFilterContext): Promise<ResolvedCapabilities>;
+
+// @public
+export function resolveContentSdkPackageNames(appPath?: string): string[] | undefined;
+
+// @public
+export type ResolvedCapabilities = CapabilityMap<ResolvedCapability>;
+
+// @public
+export type ResolvedCapability = true | {
+    [key: string]: ResolvedCapability | CapabilityMetadata | undefined;
+    metadata?: CapabilityMetadata;
+};
+
 // @public
 export function resolveEdgeUrl(edgeUrl?: string): string;
 
@@ -372,6 +492,59 @@ export const SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV = "SITECORE_EXPERIENCE_EDGE_H
 const SITECORE_EXPERIENCE_EDGE_URL_DEFAULT = "https://edge.sitecorecloud.io";
 
 // @public
+export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
+
+// @public
+export type SitecoreConfigInput = {
+    api?: {
+        edge?: {
+            contextId: string;
+            clientContextId?: string;
+            edgeUrl?: string;
+        };
+        local?: {
+            apiKey: string;
+            apiHost: string;
+            path?: string;
+        };
+    };
+    defaultLanguage?: string;
+    defaultSite?: string;
+    editingSecret?: string;
+    retries?: {
+        count?: number;
+        retryStrategy?: RetryStrategy;
+    };
+    layout?: {
+        formatLayoutQuery?: ((siteName: string, itemPath: string, locale?: string) => string) | null;
+    };
+    dictionary?: {
+        caching?: {
+            enabled?: boolean;
+            timeout?: number;
+        };
+    };
+    multisite?: {
+        enabled?: boolean;
+        useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;
+    };
+    personalize?: {
+        enabled?: boolean;
+        edgeTimeout?: number;
+        cdpTimeout?: number;
+        scope?: string;
+        channel?: string;
+        currency?: string;
+    };
+    redirects?: {
+        enabled?: boolean;
+        locales?: string[];
+    };
+    rewriteMediaUrls?: boolean | ((value: string) => string);
+    disableCodeGeneration?: boolean;
+};
+
+// @public
 export interface TenantArgs {
     audience?: string;
     authority?: string;
@@ -384,7 +557,7 @@ export interface TenantArgs {
 
 // Warnings were encountered during analysis:
 //
-// src/tools/index-node.ts:16:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+// src/tools/index-node.ts:18:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

@@ -16,6 +16,7 @@ const CONTENT_SDK_PACKAGE_SCOPE = '@sitecore-content-sdk/';
  * @param {string} [appPath] - Root directory of the Content SDK app. Defaults to the current working directory.
  * @returns {string[] | undefined} Sorted package names, an empty list when the app has none, or
  * `undefined` when the directory has no readable `package.json`.
+ * @public
  */
 export function resolveContentSdkPackageNames(appPath = process.cwd()): string[] | undefined {
   const packageJsonPath = path.resolve(appPath, 'package.json');
@@ -49,6 +50,7 @@ export function resolveContentSdkPackageNames(appPath = process.cwd()): string[]
  * @param {string} [appPath] - Root directory of the Content SDK app. Defaults to the current working directory.
  * @returns {T} The loaded module.
  * @throws Will throw when the module is not installed or cannot be resolved.
+ * @public
  */
 export function loadAppModule<T>(specifier: string, appPath = process.cwd()): T {
   const appRequire = createRequire(path.resolve(appPath, 'package.json'));
@@ -61,6 +63,7 @@ export function loadAppModule<T>(specifier: string, appPath = process.cwd()): T 
  * @param {string} specifier - Module specifier to resolve, e.g. `@sitecore-content-sdk/cli`.
  * @param {string} [appPath] - Root directory of the Content SDK app. Defaults to the current working directory.
  * @returns {boolean} `true` when the module is installed in the app.
+ * @public
  */
 export function canResolveAppModule(specifier: string, appPath = process.cwd()): boolean {
   try {
@@ -71,4 +74,38 @@ export function canResolveAppModule(specifier: string, appPath = process.cwd()):
   } catch {
     return false;
   }
+}
+
+/**
+ * Reports whether an error means an optional package subpath is absent.
+ * @param {unknown} error resolution error
+ * @param {string} specifier requested package subpath
+ * @param {string} [appPath] application root
+ * @returns true when the package exists but the subpath does not
+ * @public
+ */
+export function isMissingAppModuleSubpath(
+  error: unknown,
+  specifier: string,
+  appPath = process.cwd()
+): boolean {
+  if (!error || typeof error !== 'object' || !('code' in error)) {
+    return false;
+  }
+
+  const code = error.code;
+  if (code === 'ERR_PACKAGE_PATH_NOT_EXPORTED') {
+    return true;
+  }
+
+  const packageName = specifier.startsWith('@')
+    ? specifier.split('/').slice(0, 2).join('/')
+    : specifier.split('/')[0];
+
+  return (
+    code === 'MODULE_NOT_FOUND' &&
+    error instanceof Error &&
+    error.message.includes(specifier) &&
+    canResolveAppModule(packageName, appPath)
+  );
 }
