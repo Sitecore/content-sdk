@@ -82,7 +82,7 @@ describe('release plan guards (nextjs release)', () => {
     };
   };
 
-  it('ships a product major with its templates and create-content-sdk-app (P24)', () => {
+  it('ships a product major with its templates and create-content-sdk-app', () => {
     const { releases, problems } = plan([cs('a', 'nextjs', 'major')]);
     expect(problems).toEqual([]);
     // create-content-sdk-app is released, so changesets moves its nextjs-templates range

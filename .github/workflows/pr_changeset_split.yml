@@ -1,0 +1,77 @@
+name: Changeset Split
+
+# Reports the PR's changesets that release more than one package. The pre-commit hook
+# (scripts/install-hooks.js, installed by `yarn install`) splits them on commit; this check
+# catches the ones committed without it (`--no-verify`, the GitHub UI, no `yarn install`).
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read # list the PR's changed files
+
+concurrency:
+  group: changeset-split-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  split:
+    runs-on: ubuntu-latest
+    steps:
+      # From the API rather than git: a fork's clone may not contain the base commit.
+      - name: List the PR's changesets
+        id: changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          FILES=$(gh api --paginate "repos/${{ github.repository }}/pulls/$PR_NUMBER/files" \
+            --jq '.[] | select(.status != "removed") | .filename
+              | select(startswith(".changeset/") and endswith(".md") and . != ".changeset/README.md")')
+          if [ -z "$FILES" ]; then
+            echo "This PR adds or changes no changesets; nothing to check."
+          else
+            echo "Changesets in this PR:"
+            echo "$FILES"
+          fi
+          echo "files=$(echo $FILES)" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        if: steps.changes.outputs.files != ''
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js 24
+        if: steps.changes.outputs.files != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        if: steps.changes.outputs.files != ''
+        run: yarn install
+
+      - name: Check changesets
+        if: steps.changes.outputs.files != ''
+        env:
+          FILES: ${{ steps.changes.outputs.files }}
+        run: |
+          if yarn csdk:split-changesets --check $FILES 2> check.log; then
+            exit 0
+          fi
+          cat check.log
+          FIX="Run \`yarn csdk:split-changesets\` and commit the result. Run \`yarn install\` once to get the pre-commit hook that splits them on commit."
+          echo "::notice title=Changesets release more than one package::$FIX"
+          {
+            echo "### Changesets release more than one package"
+            echo
+            echo '```'
+            cat check.log
+            echo '```'
+            echo
+            echo "$FIX"
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 1
