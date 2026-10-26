@@ -8,7 +8,7 @@
 
 > **buildSitecoreItemCacheTag**(`params`): `string`
 
-Defined in: [packages/angular/src/server/cache/cache-tags.ts:34](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/angular/src/server/cache/cache-tags.ts#L34)
+Defined in: [packages/angular/src/server/cache/cache-tags.ts:34](https://github.com/Sitecore/content-sdk/blob/643022e77d388c53e6d5088b238bfa3bdfc49fc1/packages/angular/src/server/cache/cache-tags.ts#L34)
 
 Builds an item-scoped revalidation tag: `sc:item:<id>:<locale>`.
 
