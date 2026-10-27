@@ -189,6 +189,7 @@ import { SitecoreCliConfigInput } from '@sitecore-content-sdk/content/config';
 import { SitecoreClient as SitecoreClient_2 } from '@sitecore-content-sdk/content/client';
 import { SitecoreClientInit } from '@sitecore-content-sdk/content/client';
 import { SitecoreConfig as SitecoreConfig_2 } from '@sitecore-content-sdk/content/config';
+import { SitecoreConfig as SitecoreConfig_3 } from '@sitecore-content-sdk/core';
 import { SitecoreConfigInput as SitecoreConfigInput_2 } from '@sitecore-content-sdk/content/config';
 import { SitecoreProvider } from '@sitecore-content-sdk/react';
 import { SitecoreProviderReactContext } from '@sitecore-content-sdk/react';
@@ -1270,7 +1271,7 @@ export { withSitecore }
 
 // @public
 export const writeImportMap: (args: WriteImportMapArgs) => (input: {
-    scConfig: SitecoreConfig_2;
+    scConfig: SitecoreConfig_3;
 }) => Promise<void>;
 
 
