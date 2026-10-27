@@ -1295,7 +1295,9 @@ describe('SitecoreClient', () => {
       await sitecoreClient.getPreview(previewData);
 
       expect(
-        editingServiceStub.fetchEditingData.calledWith(sinon.match({ previewTime: sinon.match.defined }))
+        editingServiceStub.fetchEditingData.calledWith(
+          sinon.match({ previewTime: sinon.match.defined })
+        )
       ).to.be.false;
     });
 
@@ -1621,7 +1623,7 @@ describe('SitecoreClient', () => {
 
     const stylesBaseUrl = resolveEdgeUrlForStaticFiles(defaultInitOptions.api.edge.edgeUrl);
     const missingClientContextIdWarn =
-      'Cannot retrieve head links. Provide a client context ID or disable the the `getHeadLinks` call in page layout.';
+      'Cannot retrieve style head links. Provide a client context ID or disable the the `getHeadLinks` call in page layout.';
 
     it('should return stylesheets when enableStyles and enableThemes are true', () => {
       const result = sitecoreClient.getHeadLinks(layoutData);
