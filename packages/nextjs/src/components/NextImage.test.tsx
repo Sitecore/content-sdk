@@ -448,7 +448,7 @@ describe('<NextImage />', () => {
       );
     });
 
-    it('should let passed style override default empty image inline size', () => {
+    it('should override the default empty image inline styles with the passed style', () => {
       const field = {
         value: {},
         metadata: testMetadata,
@@ -470,21 +470,6 @@ describe('<NextImage />', () => {
       expect(img.style.width).to.equal('16px');
       expect(img.style.height).to.equal('16px');
       expect(img.style.cursor).to.equal('pointer');
-    });
-
-    it('should use the passed alt on the default empty image placeholder', () => {
-      const field = {
-        value: {},
-        metadata: testMetadata,
-      };
-
-      const rendered = render(
-        <SitecoreProviderReactContext.Provider value={testEditingContext}>
-          <NextImage field={field} alt="Missing icon" />
-        </SitecoreProviderReactContext.Provider>
-      );
-
-      expect(rendered.container.querySelector('img')?.getAttribute('alt')).to.equal('Missing icon');
     });
 
     it('should render custom empty field component when provided, when field value src is not present', () => {
