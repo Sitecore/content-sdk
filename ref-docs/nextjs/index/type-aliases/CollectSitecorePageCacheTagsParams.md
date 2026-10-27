@@ -8,7 +8,7 @@
 
 > **CollectSitecorePageCacheTagsParams** = `object`
 
-Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:33](https://github.com/Sitecore/content-sdk/blob/2b0c7c2dea4daf4d4e45b5113312f81087c2ba09/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L33)
+Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:33](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L33)
 
 Inputs for assembling cache tags for a typical Sitecore page render (`getPage`).
 
@@ -18,7 +18,7 @@ Inputs for assembling cache tags for a typical Sitecore page render (`getPage`).
 
 > **locale**: `string`
 
-Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:35](https://github.com/Sitecore/content-sdk/blob/2b0c7c2dea4daf4d4e45b5113312f81087c2ba09/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L35)
+Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:35](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L35)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:35](https://github.com
 
 > `optional` **path?**: `string`
 
-Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:39](https://github.com/Sitecore/content-sdk/blob/2b0c7c2dea4daf4d4e45b5113312f81087c2ba09/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L39)
+Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:39](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L39)
 
 Sitecore route path (e.g. `/about`, `/Not-Found`, or `/` for home). Omit for home.
 
@@ -36,7 +36,7 @@ Sitecore route path (e.g. `/about`, `/Not-Found`, or `/` for home). Omit for hom
 
 > `optional` **route?**: [`RouteData`](../interfaces/RouteData.md) \| `null`
 
-Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:45](https://github.com/Sitecore/content-sdk/blob/2b0c7c2dea4daf4d4e45b5113312f81087c2ba09/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L45)
+Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:45](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L45)
 
 Route node from a Sitecore layout response (e.g. `page.layout.sitecore.route`, which is
 `RouteData | null`). Optional because the page may not resolve; only `itemId` and `itemLanguage`
@@ -48,4 +48,4 @@ are read when present.
 
 > **site**: `string`
 
-Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:34](https://github.com/Sitecore/content-sdk/blob/2b0c7c2dea4daf4d4e45b5113312f81087c2ba09/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L34)
+Defined in: [nextjs/src/cache/sitecore-page-cache-tags.ts:34](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/nextjs/src/cache/sitecore-page-cache-tags.ts#L34)

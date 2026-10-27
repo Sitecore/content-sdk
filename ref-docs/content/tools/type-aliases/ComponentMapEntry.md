@@ -8,7 +8,7 @@
 
 > **ComponentMapEntry** = `object`
 
-Defined in: [content/src/tools/templating/component-builder.ts:36](https://github.com/Sitecore/content-sdk/blob/2b0c7c2dea4daf4d4e45b5113312f81087c2ba09/packages/content/src/tools/templating/component-builder.ts#L36)
+Defined in: [content/src/tools/templating/component-builder.ts:36](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/content/src/tools/templating/component-builder.ts#L36)
 
 **`Internal`**
 
@@ -20,7 +20,7 @@ An entry in the component map, including import lines and value expression.
 
 > **annotateClient**: `boolean`
 
-Defined in: [content/src/tools/templating/component-builder.ts:42](https://github.com/Sitecore/content-sdk/blob/2b0c7c2dea4daf4d4e45b5113312f81087c2ba09/packages/content/src/tools/templating/component-builder.ts#L42)
+Defined in: [content/src/tools/templating/component-builder.ts:42](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/content/src/tools/templating/component-builder.ts#L42)
 
 whether base is client (and we're in main map)
 
@@ -30,7 +30,7 @@ whether base is client (and we're in main map)
 
 > **imports**: `string`[]
 
-Defined in: [content/src/tools/templating/component-builder.ts:40](https://github.com/Sitecore/content-sdk/blob/2b0c7c2dea4daf4d4e45b5113312f81087c2ba09/packages/content/src/tools/templating/component-builder.ts#L40)
+Defined in: [content/src/tools/templating/component-builder.ts:40](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/content/src/tools/templating/component-builder.ts#L40)
 
 namespace import lines needed for this entry
 
@@ -40,7 +40,7 @@ namespace import lines needed for this entry
 
 > **key**: `string`
 
-Defined in: [content/src/tools/templating/component-builder.ts:38](https://github.com/Sitecore/content-sdk/blob/2b0c7c2dea4daf4d4e45b5113312f81087c2ba09/packages/content/src/tools/templating/component-builder.ts#L38)
+Defined in: [content/src/tools/templating/component-builder.ts:38](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/content/src/tools/templating/component-builder.ts#L38)
 
 map entry key
 
@@ -50,6 +50,6 @@ map entry key
 
 > **valueExpr**: `string`
 
-Defined in: [content/src/tools/templating/component-builder.ts:44](https://github.com/Sitecore/content-sdk/blob/2b0c7c2dea4daf4d4e45b5113312f81087c2ba09/packages/content/src/tools/templating/component-builder.ts#L44)
+Defined in: [content/src/tools/templating/component-builder.ts:44](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/content/src/tools/templating/component-builder.ts#L44)
 
 expression used as the map value

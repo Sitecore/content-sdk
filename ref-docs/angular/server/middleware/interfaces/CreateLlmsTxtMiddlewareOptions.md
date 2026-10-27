@@ -6,7 +6,7 @@
 
 # Interface: CreateLlmsTxtMiddlewareOptions
 
-Defined in: [packages/angular/src/server/middleware/llms-txt-middleware.ts:15](https://github.com/Sitecore/content-sdk/blob/2b0c7c2dea4daf4d4e45b5113312f81087c2ba09/packages/angular/src/server/middleware/llms-txt-middleware.ts#L15)
+Defined in: [packages/angular/src/server/middleware/llms-txt-middleware.ts:15](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/angular/src/server/middleware/llms-txt-middleware.ts#L15)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/angular/src/server/middleware/llms-txt-middleware.ts:15](h
 
 > **client**: [`SitecoreClient`](../content/client/classes/SitecoreClient.md)
 
-Defined in: [packages/angular/src/server/middleware/llms-txt-middleware.ts:16](https://github.com/Sitecore/content-sdk/blob/2b0c7c2dea4daf4d4e45b5113312f81087c2ba09/packages/angular/src/server/middleware/llms-txt-middleware.ts#L16)
+Defined in: [packages/angular/src/server/middleware/llms-txt-middleware.ts:16](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/angular/src/server/middleware/llms-txt-middleware.ts#L16)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [packages/angular/src/server/middleware/llms-txt-middleware.ts:16](h
 
 > **sites**: `SiteInfo`[]
 
-Defined in: [packages/angular/src/server/middleware/llms-txt-middleware.ts:17](https://github.com/Sitecore/content-sdk/blob/2b0c7c2dea4daf4d4e45b5113312f81087c2ba09/packages/angular/src/server/middleware/llms-txt-middleware.ts#L17)
+Defined in: [packages/angular/src/server/middleware/llms-txt-middleware.ts:17](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/angular/src/server/middleware/llms-txt-middleware.ts#L17)
