@@ -8,7 +8,7 @@
 
 > **PreviewProxyConfig** = `object`
 
-Defined in: [nextjs/src/proxy/preview-proxy.ts:19](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/nextjs/src/proxy/preview-proxy.ts#L19)
+Defined in: [nextjs/src/proxy/preview-proxy.ts:19](https://github.com/Sitecore/content-sdk/blob/643022e77d388c53e6d5088b238bfa3bdfc49fc1/packages/nextjs/src/proxy/preview-proxy.ts#L19)
 
 Configuration for PreviewProxy
 
@@ -18,4 +18,4 @@ Configuration for PreviewProxy
 
 > **client**: [`SitecoreClient`](../../client/classes/SitecoreClient.md)
 
-Defined in: [nextjs/src/proxy/preview-proxy.ts:19](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/nextjs/src/proxy/preview-proxy.ts#L19)
+Defined in: [nextjs/src/proxy/preview-proxy.ts:19](https://github.com/Sitecore/content-sdk/blob/643022e77d388c53e6d5088b238bfa3bdfc49fc1/packages/nextjs/src/proxy/preview-proxy.ts#L19)

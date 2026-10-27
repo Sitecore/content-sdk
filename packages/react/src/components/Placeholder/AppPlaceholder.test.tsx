@@ -320,6 +320,80 @@ describe('App Placeholder logic', () => {
     });
   });
 
+  describe('ErrorBoundary keys', () => {
+    [false, true].forEach((withWrapper) => {
+      it(`uses rendering identity${withWrapper ? ' with a renderEach wrapper' : ''}`, () => {
+        const renderings: ComponentRendering[] = [
+          { componentName: 'Jumbotron', uid: 'first-rendering' },
+          { componentName: 'Jumbotron' },
+        ];
+        let keys: (string | null)[] = [];
+
+        render(
+          <AppPlaceholder
+            name="main"
+            rendering={{ componentName: 'Home', placeholders: { main: renderings } }}
+            componentMap={componentMap}
+            page={getPage()}
+            renderEach={withWrapper ? (child) => <section>{child}</section> : undefined}
+            render={(components) => {
+              keys = components.map((component) => (component as React.ReactElement).key);
+              return null;
+            }}
+          />
+        );
+
+        expect(keys).to.deep.equal(['first-rendering', 'Jumbotron-1']);
+      });
+    });
+
+    it('changes the boundary key when a rendering without a UID changes component at the same index', () => {
+      let key: string | null = null;
+      const placeholder = (componentName: string) => (
+        <AppPlaceholder
+          name="main"
+          rendering={{ componentName: 'Home', placeholders: { main: [{ componentName }] } }}
+          componentMap={componentMap}
+          page={getPage()}
+          render={(components) => {
+            key = (components[0] as React.ReactElement).key;
+            return null;
+          }}
+        />
+      );
+
+      const view = render(placeholder('Jumbotron'));
+      expect(key).to.equal('Jumbotron-0');
+
+      view.rerender(placeholder('Home'));
+      expect(key).to.equal('Home-0');
+    });
+
+    it('keeps UID-based boundary keys when renderings are reordered', () => {
+      const first: ComponentRendering = { componentName: 'Jumbotron', uid: 'first-rendering' };
+      const second: ComponentRendering = { componentName: 'Jumbotron', uid: 'second-rendering' };
+      let keys: (string | null)[] = [];
+      const placeholder = (renderings: ComponentRendering[]) => (
+        <AppPlaceholder
+          name="main"
+          rendering={{ componentName: 'Home', placeholders: { main: renderings } }}
+          componentMap={componentMap}
+          page={getPage()}
+          render={(components) => {
+            keys = components.map((component) => (component as React.ReactElement).key);
+            return null;
+          }}
+        />
+      );
+
+      const view = render(placeholder([first, second]));
+      expect(keys).to.deep.equal(['first-rendering', 'second-rendering']);
+
+      view.rerender(placeholder([second, first]));
+      expect(keys).to.deep.equal(['second-rendering', 'first-rendering']);
+    });
+  });
+
   describe('AppPlaceholder SXA rendering variants', () => {
     const componentMap = new Map();
 
@@ -562,12 +636,7 @@ describe('App Placeholder logic', () => {
       const errorBoundarySpy = sandbox.spy(ErrorBoundary, 'default');
 
       render(
-        <AppPlaceholder
-          name={phKey}
-          rendering={route}
-          componentMap={componentMap}
-          page={page}
-        />
+        <AppPlaceholder name={phKey} rendering={route} componentMap={componentMap} page={page} />
       );
 
       const renderings = errorBoundarySpy

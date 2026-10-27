@@ -6,7 +6,7 @@
 
 # Class: LoaderHttpError
 
-Defined in: [packages/angular/src/loaders/models.ts:178](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/angular/src/loaders/models.ts#L178)
+Defined in: [packages/angular/src/loaders/models.ts:178](https://github.com/Sitecore/content-sdk/blob/643022e77d388c53e6d5088b238bfa3bdfc49fc1/packages/angular/src/loaders/models.ts#L178)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [packages/angular/src/loaders/models.ts:178](https://github.com/Site
 
 > **new LoaderHttpError**(`status`, `message?`): `LoaderHttpError`
 
-Defined in: [packages/angular/src/loaders/models.ts:179](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/angular/src/loaders/models.ts#L179)
+Defined in: [packages/angular/src/loaders/models.ts:179](https://github.com/Sitecore/content-sdk/blob/643022e77d388c53e6d5088b238bfa3bdfc49fc1/packages/angular/src/loaders/models.ts#L179)
 
 #### Parameters
 
@@ -77,7 +77,7 @@ Defined in: node\_modules/typescript/lib/lib.es5.d.ts:1078
 
 > **status**: `number`
 
-Defined in: [packages/angular/src/loaders/models.ts:179](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/angular/src/loaders/models.ts#L179)
+Defined in: [packages/angular/src/loaders/models.ts:179](https://github.com/Sitecore/content-sdk/blob/643022e77d388c53e6d5088b238bfa3bdfc49fc1/packages/angular/src/loaders/models.ts#L179)
 
 ***
 

@@ -8,7 +8,7 @@
 
 > `const` **DESIGN\_LIBRARY\_COMPONENT\_FACTORY**: `InjectionToken`\<[`DesignLibraryComponentFactory`](../interfaces/DesignLibraryComponentFactory.md)\>
 
-Defined in: [packages/angular/src/lib/design-library/component-factory.ts:148](https://github.com/Sitecore/content-sdk/blob/aafdea48268ff14c60c3419c32fb6aeb10a2b118/packages/angular/src/lib/design-library/component-factory.ts#L148)
+Defined in: [packages/angular/src/lib/design-library/component-factory.ts:148](https://github.com/Sitecore/content-sdk/blob/643022e77d388c53e6d5088b238bfa3bdfc49fc1/packages/angular/src/lib/design-library/component-factory.ts#L148)
 
 Injection token for the Design Library [DesignLibraryComponentFactory](../interfaces/DesignLibraryComponentFactory.md). Defaults to
 [RuntimeCompileComponentFactory](../classes/RuntimeCompileComponentFactory.md); override it in an app's providers to supply a custom
