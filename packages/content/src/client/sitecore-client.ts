@@ -299,7 +299,6 @@ export interface BaseServiceOptions {
  * @public
  */
 export class SitecoreClient implements BaseSitecoreClient {
-  public edgeInitialized = true;
   protected layoutService: LayoutService;
   protected dictionaryService: DictionaryService;
   protected editingService: EditingService;
@@ -318,10 +317,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     this.graphQLClient = this.clientFactory({
       debugger: debug.http,
     });
-    const { contextId: serverContextId, clientContextId } = this.initOptions.api.edge;
-    if (!serverContextId && !clientContextId) {
-      this.edgeInitialized = false;
-    }
 
     const baseServiceOptions = this.getBaseServiceOptions();
 
@@ -429,23 +424,15 @@ export class SitecoreClient implements BaseSitecoreClient {
     options: { enableStyles?: boolean; enableThemes?: boolean } = {}
   ): HTMLLink[] {
     const { enableStyles = true, enableThemes = true } = options;
-    const { contextId: serverContextId, clientContextId } = this.initOptions.api.edge;
-    if (!this.edgeInitialized) {
-      console.warn('Both client and server context IDs are absent. Cannot retrieve head links.');
+    const { clientContextId: contextId } = this.initOptions.api.edge;
+    if (!contextId) {
+      console.warn(
+        'Cannot retrieve style head links. Provide a client context ID or disable the the `getHeadLinks` call in page layout.'
+      );
       return [];
     }
 
     const headLinks: HTMLLink[] = [];
-
-    // Stylesheets are requested by the browser through <link> elements, so the context id cannot be
-    // moved into the x-sitecore-contextid header. Prefer the client context id to keep the
-    // server-side one out of publicly rendered markup.
-    const contextId = clientContextId || serverContextId;
-    if (!clientContextId) {
-      debug.common(
-        'clientContextId is not configured, falling back to the server context id for stylesheet links'
-      );
-    }
 
     const edgeUrlForStyles = resolveEdgeUrlForStaticFiles(this.initOptions.api.edge.edgeUrl);
 
