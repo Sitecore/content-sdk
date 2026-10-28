@@ -1,7 +1,6 @@
-﻿'use client';
-import React, { JSX } from 'react';
+﻿import React, { JSX } from 'react';
+import { Page } from '@sitecore-content-sdk/content/client';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
-import { useSitecore } from './../components/SitecoreProvider';
 
 export const DefaultEditingError = (): JSX.Element => (
   <div className="sc-jss-editing-error" role="alert">
@@ -11,6 +10,11 @@ export const DefaultEditingError = (): JSX.Element => (
 
 export interface WithDatasourceCheckProps {
   rendering: ComponentRendering;
+  /**
+   * Page data, supplied by `Placeholder`. Used to detect editing and Design Library modes.
+   * When omitted, normal mode is assumed.
+   */
+  page?: Page;
 }
 
 export interface WithDatasourceCheckOptions {
@@ -37,6 +41,9 @@ function hasValidDatasource(rendering?: ComponentRendering): boolean {
 /**
  * Checks whether a Sitecore datasource is present and valid, then renders appropriately depending on page mode (normal vs editing).
  * `isContentResolved: false` is treated the same as a missing datasource. If the property is omitted, the original presence check is used.
+ *
+ * Works in both Server and Client Components. Apply it in the same module as the wrapped component,
+ * and pass `page` explicitly when rendering the wrapped component outside a `Placeholder`.
  * @param {WithDatasourceCheckOptions} [options]
  * @returns
  *  The wrapped component, if a datasource is present and valid.
@@ -55,16 +62,15 @@ export function withDatasourceCheck(options?: WithDatasourceCheckOptions) {
   return function withDatasourceCheckHoc<ComponentProps extends WithDatasourceCheckProps>(
     Component: React.ComponentType<ComponentProps>
   ) {
-    return (props: ComponentProps) => {
-      const { page } = useSitecore();
+    return function WithDatasourceCheck(props: ComponentProps): JSX.Element | null {
       const EditingError = options?.editingErrorComponent ?? DefaultEditingError;
+      const isDesignLibrary = props.page?.mode?.isDesignLibrary;
+      const isEditing = props.page?.mode?.isEditing;
 
       // If the component is rendered in DesignLibrary, we don't need to check for datasource
-      const isDesignLibrary = page.mode.isDesignLibrary;
-
       return isDesignLibrary || hasValidDatasource(props.rendering) ? (
         <Component {...props} />
-      ) : page.mode.isEditing ? (
+      ) : isEditing ? (
         <EditingError />
       ) : null;
     };
