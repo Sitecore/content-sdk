@@ -8,7 +8,7 @@
 
 > **AllowedQueryParamsResolver** = (`queryParams`) => ([`AllowedQueryParam`](../interfaces/AllowedQueryParam.md) \| `string`)[]
 
-Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:35](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/angular/src/server/middleware/editing-render-middleware.ts#L35)
+Defined in: [packages/angular/src/server/middleware/editing-render-middleware.ts:35](https://github.com/Sitecore/content-sdk/blob/170cbe9237292df82e9fbc54971cd7ffa5d9a3c9/packages/angular/src/server/middleware/editing-render-middleware.ts#L35)
 
 Resolver function: receives the names of every query parameter on the
 incoming editing request and returns the list of parameters to forward.

@@ -8,7 +8,7 @@
 
 > **createEditingConfigMiddleware**(`options`): [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:107](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/angular/src/server/middleware/editing-config-middleware.ts#L107)
+Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:107](https://github.com/Sitecore/content-sdk/blob/170cbe9237292df82e9fbc54971cd7ffa5d9a3c9/packages/angular/src/server/middleware/editing-config-middleware.ts#L107)
 
 Express middleware that serves the editing config endpoint
 (default path: `/api/editing/config`). Returns the registered component names,

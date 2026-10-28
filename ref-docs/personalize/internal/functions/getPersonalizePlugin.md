@@ -8,7 +8,7 @@
 
 > **getPersonalizePlugin**(): [`PersonalizePlugin`](../interfaces/PersonalizePlugin.md)
 
-Defined in: [personalize/src/initialization/shared.ts:12](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/personalize/src/initialization/shared.ts#L12)
+Defined in: [personalize/src/initialization/shared.ts:12](https://github.com/Sitecore/content-sdk/blob/170cbe9237292df82e9fbc54971cd7ffa5d9a3c9/packages/personalize/src/initialization/shared.ts#L12)
 
 **`Internal`**
 

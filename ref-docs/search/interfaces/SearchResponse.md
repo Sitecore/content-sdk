@@ -6,7 +6,7 @@
 
 # Interface: SearchResponse\<T\>
 
-Defined in: [search-service.ts:64](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/search/src/search-service.ts#L64)
+Defined in: [search-service.ts:64](https://github.com/Sitecore/content-sdk/blob/170cbe9237292df82e9fbc54971cd7ffa5d9a3c9/packages/search/src/search-service.ts#L64)
 
 Response from the Search Service.
 Keyword search and More Like This (MLT) queries share this mapped shape,
@@ -24,7 +24,7 @@ so MLT widget consumers can read `results` without additional patching.
 
 > `optional` **facets?**: [`FacetResult`](FacetResult.md)[]
 
-Defined in: [search-service.ts:76](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/search/src/search-service.ts#L76)
+Defined in: [search-service.ts:76](https://github.com/Sitecore/content-sdk/blob/170cbe9237292df82e9fbc54971cd7ffa5d9a3c9/packages/search/src/search-service.ts#L76)
 
 Facet results, present only when facets were requested.
 
@@ -34,7 +34,7 @@ Facet results, present only when facets were requested.
 
 > **results**: `T`[]
 
-Defined in: [search-service.ts:68](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/search/src/search-service.ts#L68)
+Defined in: [search-service.ts:68](https://github.com/Sitecore/content-sdk/blob/170cbe9237292df82e9fbc54971cd7ffa5d9a3c9/packages/search/src/search-service.ts#L68)
 
 The search results. For MLT queries, these are items similar to the seed item.
 
@@ -44,6 +44,6 @@ The search results. For MLT queries, these are items similar to the seed item.
 
 > **total**: `number`
 
-Defined in: [search-service.ts:72](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/search/src/search-service.ts#L72)
+Defined in: [search-service.ts:72](https://github.com/Sitecore/content-sdk/blob/170cbe9237292df82e9fbc54971cd7ffa5d9a3c9/packages/search/src/search-service.ts#L72)
 
 The total number of search results.

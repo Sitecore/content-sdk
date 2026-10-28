@@ -8,7 +8,7 @@
 
 > **getPlaceholderRenderings**(`rendering`, `name`, `isEditing`): `ComponentRendering`\<`ComponentFields`\>[]
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:37](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/angular/src/components/placeholder/placeholder-utils.ts#L37)
+Defined in: [packages/angular/src/components/placeholder/placeholder-utils.ts:37](https://github.com/Sitecore/content-sdk/blob/170cbe9237292df82e9fbc54971cd7ffa5d9a3c9/packages/angular/src/components/placeholder/placeholder-utils.ts#L37)
 
 Get the renderings for the specified placeholder from the rendering layout data.
 Includes dynamic placeholder handling
