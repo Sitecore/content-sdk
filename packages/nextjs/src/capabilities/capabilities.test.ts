@@ -31,9 +31,11 @@ describe('Next.js capabilities', () => {
       'feaasRender',
       'designLibrary',
     ]);
-    expect(
-      Object.keys(capabilities.designLibrary?.value ?? {})
-    ).to.deep.equal(['variantGeneration', 'variantPreview']);
+    expect(Object.keys(capabilities.preview ?? {})).to.deep.equal(['value', 'timeBasedPreview']);
+    expect(Object.keys(capabilities.designLibrary?.value ?? {})).to.deep.equal([
+      'variantGeneration',
+      'variantPreview',
+    ]);
   });
 
   it('filters capabilities based on application wiring', async () => {
@@ -42,8 +44,6 @@ describe('Next.js capabilities', () => {
       'src/byoc/index.tsx': 'export default BYOCInit;',
       'src/pages/api/editing/feaas/render.ts': 'export default handler;',
     });
-
-    expect(await capabilities.preview?.filter?.(context)).to.equal(true);
     expect(capabilities.abTesting?.filter).to.be.a('function');
     expect(await capabilities.byocRender?.filter?.(context)).to.equal(true);
     expect(await capabilities.feaasRender?.filter?.(context)).to.equal(true);
@@ -53,7 +53,6 @@ describe('Next.js capabilities', () => {
   it('filters capabilities out when application wiring is absent', async () => {
     const context = createContext();
 
-    expect(await capabilities.preview?.filter?.(context)).to.equal(false);
     expect(await capabilities.abTesting?.filter?.(context)).to.equal(false);
     expect(await capabilities.byocRender?.filter?.(context)).to.equal(false);
     expect(await capabilities.feaasRender?.filter?.(context)).to.equal(false);
@@ -118,3 +117,4 @@ describe('Next.js capabilities', () => {
     });
   });
 });
+

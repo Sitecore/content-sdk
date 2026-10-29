@@ -18,6 +18,8 @@ import {
   resolveContentSdkPackageNames,
 } from '../framework-packages';
 
+export { importsNamedExport, someSourceFile } from './filter-utils';
+
 /** @internal */
 export type CollectedCapabilities = {
   packageName: string;
@@ -70,11 +72,16 @@ export function collectCapabilities(appRoot = process.cwd()): CollectedCapabilit
  */
 export function mergeCapabilityExports(packages: CollectedCapabilities[]): MergedCapabilityTree {
   return packages.reduce<MergedCapabilityTree>((merged, entry) => {
-    Object.entries(entry.capabilities).forEach(([key, capability]) => {
-      if (capability && isCapabilityDefinition(capability)) {
-        merged[key] = mergeCapability(merged[key], capability, key);
-      }
-    });
+    try {
+      Object.entries(entry.capabilities).forEach(([key, capability]) => {
+        if (capability && isCapabilityDefinition(capability)) {
+          merged[key] = mergeCapability(merged[key], capability, key);
+        }
+      });
+    } catch (error) {
+      debug.common('Failed to merge capabilities from %s: %O', entry.packageName, error);
+    }
+
     return merged;
   }, {});
 }
@@ -258,7 +265,13 @@ export function createCapabilityFilterContext(
   return {
     appRoot: path.resolve(appRoot),
     sitecoreConfig,
-    fileExists: (relativePath) => fs.existsSync(resolvePath(relativePath)),
+    fileExists: (relativePath) => {
+      try {
+        return fs.existsSync(resolvePath(relativePath));
+      } catch {
+        return false;
+      }
+    },
     readFile,
     fileContains: (relativePaths, pattern) =>
       relativePaths.some((relativePath) => {

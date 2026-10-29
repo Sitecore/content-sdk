@@ -51,7 +51,11 @@ export const generateMetadata = (
           sitecoreConfig: args?.scConfig,
         });
       } catch (error) {
-        console.error('Failed to calculate application capabilities', error);
+        console.error(
+          'Failed to calculate application capabilities. This is step is required for correct headless integration.',
+          error
+        );
+        throw error;
       }
     }
     writeMetadata(metadata, config?.destinationPath ?? '.sitecore/metadata.json');

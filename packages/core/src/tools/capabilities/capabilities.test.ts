@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
+import fs from 'fs';
 import sinon from 'sinon';
 import { CapabilityFilterContext } from '../../capabilities';
 import {
@@ -24,6 +25,13 @@ describe('capabilities', () => {
     expect(createCapabilityFilterContext('/app', sitecoreConfig).sitecoreConfig).to.equal(
       sitecoreConfig
     );
+  });
+
+  it('returns false from fileExists when existence checks throw', () => {
+    const context = createCapabilityFilterContext('/app');
+    sinon.stub(fs, 'existsSync').throws(new Error('EINVAL'));
+
+    expect(context.fileExists('src/server.ts')).to.equal(false);
   });
 
   it('merges boolean capabilities using OR', async () => {
@@ -189,5 +197,27 @@ describe('capabilities', () => {
     ]);
 
     expect(await resolveCapabilities(merged, context)).to.deep.equal({});
+  });
+
+  it('ignores a package export that throws during merge and keeps earlier packages', async () => {
+    const merged = mergeCapabilityExports([
+      { packageName: 'one', capabilities: { preview: { value: true } } },
+      {
+        packageName: 'two',
+        capabilities: {
+          editing: {
+            get value(): boolean {
+              throw new Error('broken export');
+            },
+          },
+        },
+      },
+      { packageName: 'three', capabilities: { abTesting: { value: true } } },
+    ]);
+
+    expect(await resolveCapabilities(merged, context)).to.deep.equal({
+      preview: true,
+      abTesting: true,
+    });
   });
 });

@@ -11,7 +11,7 @@ export type {
 } from '@sitecore-content-sdk/core';
 
 /**
- * Utility type to make all properties in a type optional, recursively.
+ * Utility type to make all properties in a type optional, recursively
  * @internal
  */
 export type DeepPartial<T> = {
@@ -19,25 +19,39 @@ export type DeepPartial<T> = {
 };
 
 /**
- * Type used as CLI config input in sitecore.cli.config.
+ * Type used as CLI config input in sitecore.cli.config
  * @public
  */
 export type SitecoreCliConfigInput = {
-  /** Sitecore configuration (`sitecore.config` file). */
+  /**
+   * Sitecore configuration (`sitecore.config` file)
+   */
   config: SitecoreConfig;
-  /** Configuration for the `sitecore-tools build` CLI command. */
+  /**
+   * Configuration for the `sitecore-tools build` CLI command
+   */
   build?: {
-    /** Commands to run during the build process. */
+    /**
+     * Commands to run during the build process
+     */
     commands?: Array<(args?: { scConfig: SitecoreConfig }) => Promise<void>>;
   };
-  /** Configuration for the `sitecore-tools scaffold` CLI command. */
+  /**
+   * Configuration for the `sitecore-tools scaffold` CLI command
+   */
   scaffold?: {
-    /** Scaffold templates available for generating components. */
+    /**
+     * Scaffold templates available for generating components
+     */
     templates?: ScaffoldTemplate[];
   };
-  /** Configuration for the component map generator. */
+  /**
+   * Configuration for the `sitecore-tools component generate-map` CLI command
+   */
   componentMap?: GenerateMapArgs & {
-    /** Function implementation for generating a component map. */
+    /**
+     * Function implementation for generating a component map
+     */
     generator?: GenerateMapFunction;
   };
 };
@@ -49,30 +63,34 @@ export type SitecoreCliConfigInput = {
 export type SitecoreCliConfig = DeepRequired<SitecoreCliConfigInput>;
 
 /**
- * Represents a scaffold template used by component generation.
+ * Represents a scaffold template used for generating components
  * @public
  */
 export type ScaffoldTemplate = {
-  /** Template name. */
+  /**
+   * Name of the template
+   */
   name: string;
-  /** File extension for the generated component. */
+  /**
+   * File extension for the generated component
+   */
   fileExtension: string;
   /**
-   * Generates component file contents.
-   * @param componentName component name
-   * @returns generated component source
+   * Function to generate the component file contents based on the component name.
+   * @param componentName - The name of the component.
+   * @returns The generated content as a string.
    */
   generateTemplate: (componentName: string) => string;
   /**
-   * Gets next steps shown after generating the component.
-   * @param componentOutputPath generated component output path
-   * @returns next-step messages
+   * Optional function to get the next steps to be shown by the cli after generating the component.
+   * @param componentOutputPath - The output path of the generated component.
+   * @returns An array of strings representing the next steps.
    */
   getNextSteps?: (componentOutputPath: string) => string[];
 };
 
 /**
- * Enumeration of default component templates.
+ * Enumeration of default component templates
  * @internal
  */
 export enum ComponentTemplateType {

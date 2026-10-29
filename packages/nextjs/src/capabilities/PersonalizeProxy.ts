@@ -1,6 +1,6 @@
 import type { CapabilityFilter } from '@sitecore-content-sdk/core';
+import { importsNamedExport, someSourceFile } from '@sitecore-content-sdk/core/node-tools';
 import type * as ProxyExports from '../proxy';
-import { importsNamedExport, someSourceFile } from './utils';
 
 const PROXY_MODULE = /^@sitecore-content-sdk\/nextjs\/proxy$/;
 

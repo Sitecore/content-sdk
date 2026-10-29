@@ -3,7 +3,7 @@ import path from 'path';
 import { createRequire } from 'module';
 
 /**
- * Scope of Content SDK packages that may expose an `./experimental` catalog.
+ * Scope of Content SDK packages that may expose an `./experimental` catalog or SDK capabilities.
  * Product packages such as `nextjs` and `angular` own catalogs. Other packages in the
  * scope are probed and skipped when they do not export one.
  */

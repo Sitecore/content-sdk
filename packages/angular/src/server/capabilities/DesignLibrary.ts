@@ -1,5 +1,5 @@
 import type { CapabilityFilter } from '@sitecore-content-sdk/core';
-import { importsNamedExport, someSourceFile } from './utils';
+import { importsNamedExport, someSourceFile } from '@sitecore-content-sdk/core/node-tools';
 
 /**
  * Package exports that signal Design Library support.

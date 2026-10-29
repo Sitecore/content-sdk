@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import type { CapabilityFilterContext } from '@sitecore-content-sdk/core';
+import type { CapabilityFilterContext } from '../../capabilities';
 
 const SOURCE_DIRECTORY = 'src';
-const SOURCE_FILE = /\.[jt]s$/;
-const EXCLUDED_FILE = /\.(d|spec|test)\.[jt]s$/;
+const SOURCE_FILE = /\.[jt]sx?$/;
+const EXCLUDED_FILE = /\.(d|test|spec)\.[jt]sx?$/;
 
 /**
  * Tests whether any application source file under `src` satisfies a predicate.
@@ -12,11 +12,13 @@ const EXCLUDED_FILE = /\.(d|spec|test)\.[jt]s$/;
  * @param {CapabilityFilterContext} context filter context
  * @param {Function} predicate test applied to each file's source code
  * @returns {boolean} whether any source file matches
+ * @internal
  */
 export const someSourceFile = (
-  { appRoot, readFile }: CapabilityFilterContext,
+  context: CapabilityFilterContext,
   predicate: (source: string) => boolean
-) => {
+): boolean => {
+  const { appRoot, readFile } = context;
   let entries: string[];
   try {
     entries = fs.readdirSync(path.join(appRoot, SOURCE_DIRECTORY), { recursive: true }) as string[];
@@ -50,12 +52,13 @@ const getImportedNames = (namedImports: string) =>
  * @param {RegExp} modulePattern pattern the module specifier must match
  * @param {string[]} names exported names to look for
  * @returns {boolean} whether any of the names is imported
+ * @internal
  */
 export const importsNamedExport = (
   source: string,
   modulePattern: RegExp,
   names: readonly string[]
-) =>
+): boolean =>
   Array.from(source.matchAll(NAMED_IMPORT)).some(
     ([, namedImports, moduleName]) =>
       modulePattern.test(moduleName) &&

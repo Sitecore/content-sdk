@@ -116,7 +116,9 @@ export function createCapabilityFilterContext(appRoot?: string, sitecoreConfig?:
 
 // @public
 export type CSDKCapabilities = {
-    preview?: CapabilityDefinition;
+    preview?: CapabilityDefinition & {
+        timeBasedPreview?: CapabilityDefinition;
+    };
     editing?: CapabilityDefinition;
     abTesting?: CapabilityDefinition;
     byocRender?: CapabilityDefinition;
@@ -125,7 +127,7 @@ export type CSDKCapabilities = {
         value: {
             variantGeneration?: CapabilityDefinition;
             variantPreview?: CapabilityDefinition;
-            aiComponentImport?: CapabilityDefinition;
+            aiComponentExport?: CapabilityDefinition;
         };
     };
 };
@@ -317,6 +319,9 @@ export type GraphQLRequestClientFactoryConfig = {
 
 // @internal
 export function hasCache(key: string): boolean;
+
+// @internal
+export const importsNamedExport: (source: string, modulePattern: RegExp, names: readonly string[]) => boolean;
 
 // @public
 export function initContentSdk(params: InitContentSdkParams): Promise<void>;
@@ -543,6 +548,9 @@ export type SitecoreConfigInput = {
     rewriteMediaUrls?: boolean | ((value: string) => string);
     disableCodeGeneration?: boolean;
 };
+
+// @internal
+export const someSourceFile: (context: CapabilityFilterContext, predicate: (source: string) => boolean) => boolean;
 
 // @public
 export interface TenantArgs {

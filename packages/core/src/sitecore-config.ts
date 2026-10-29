@@ -1,7 +1,7 @@
 import type { RetryStrategy } from './models';
 
 /**
- * Utility type to make every property in a type required.
+ * Utility type to make every property in a type required
  * @public
  */
 export type DeepRequired<T> = Required<{
@@ -9,7 +9,7 @@ export type DeepRequired<T> = Required<{
 }>;
 
 /**
- * Type to be used as config input in sitecore.config.
+ * Type to be used as config input in sitecore.config
  * @public
  */
 export type SitecoreConfigInput = {
@@ -19,144 +19,200 @@ export type SitecoreConfigInput = {
    * the correct credentials (Edge or local) at runtime.
    */
   api?: {
-    /** Edge endpoint credentials for connecting to an XM Cloud instance. */
+    /**
+     * Edge endpoint credentials for connecting to an XM Cloud instance.
+     */
     edge?: {
       /**
-       * A unified identifier used to connect and retrieve data from XM Cloud instance.
+       * A unified identifier used to connect and retrieve data from XM Cloud instance
        * Must be provided together with `clientContextId` to support both server-
        * side and browser-side data fetching.
        */
       contextId: string;
-      /** Optional identifier used for client-side functionality. */
+      /**
+       * Optional identifier used to connect and retrieve data from XM Cloud instance in client-side functionality
+       */
       clientContextId?: string;
       /**
-       * XM Cloud endpoint that the app will communicate with.
+       * XM Cloud endpoint that the app will communicate and retrieve data from
        * @default https://edge-platform.sitecorecloud.io
        */
       edgeUrl?: string;
     };
-    /** API endpoint credentials for connecting to a local Sitecore instance. */
+    /**
+     * API endpoint credentials for connecting to a local Sitecore instance.
+     */
     local?: {
-      /** Sitecore API key used to connect to the GraphQL endpoint. */
+      /**
+       * Sitecore API key used to connect to the GraphQL endpoint
+       */
       apiKey: string;
-      /** Sitecore API hostname that the app connects to. */
+      /**
+       * Sitecore API hostname that the app connects to
+       */
       apiHost: string;
       /**
-       * GraphQL endpoint path appended to `apiHost`.
+       * GraphQL endpoint path (appended to `apiHost` to form the full URL).
        * @default /sitecore/api/graph/edge
        */
       path?: string;
     };
   };
 
-  /** The default and fallback locale for your site. */
+  /**
+   * The default and fallback locale for your site.
+   * Ensure it aligns with the framework-specific settings used in your application.
+   */
   defaultLanguage?: string;
-  /** The fallback site name. */
+  /**
+   * Your default site name. When using the multisite feature this variable defines the fallback site.
+   */
   defaultSite?: string;
-  /** Editing secret required for Sitecore editing and preview functionality. */
+  /**
+   * Editing secret required for Sitecore editing and preview functionality.
+   * Default comes from the SITECORE_EDITING_SECRET environment variable.
+   */
   editingSecret?: string;
-
-  /** Retry configuration applied to Layout, Dictionary and ErrorPages services. */
+  /**
+   * Retry configuration applied to Layout, Dictionary and ErrorPages services
+   */
   retries?: {
     /**
      * Number of retries for the GraphQL client.
      * @default 3
      */
     count?: number;
+
     /**
-     * Retry strategy for the client.
+     * Retry strategy for the client. By default, uses exponential
+     * back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
      * @default DefaultRetryStrategy
      */
     retryStrategy?: RetryStrategy;
   };
 
-  /** Settings for Layout Service. */
+  /**
+   * Settings for Layout Service
+   */
   layout?: {
     /**
-     * Override the first part of the GraphQL query for Layout Service.
-     * @param {string} siteName site name
-     * @param {string} itemPath full item or route path
-     * @param {string} [locale] item or route language
+     * Override the first part of graphQL query for Layout Service (excluding the fields part)
+     * @param {string} siteName your site name
+     * @param {string} itemPath full path to Sitecore item/route
+     * @param {string} [locale] item/route language
      * @returns {string} custom layout query
+     * @default 'layout(site:"${siteName}", routePath:"${itemPath}", language:"${language}")'
      */
     formatLayoutQuery?: ((siteName: string, itemPath: string, locale?: string) => string) | null;
   };
 
-  /** Settings for Dictionary Service. */
+  /**
+   * Settings for Dictionary Service
+   */
   dictionary?: {
-    /** Configure local memory caching for Dictionary Service requests. */
+    /**
+     * Configure local memory caching for Dictionary Service requests
+     */
     caching?: {
       enabled?: boolean;
       timeout?: number;
     };
   };
 
-  /** Settings for multisite functionality. */
+  /**
+   * Settings for multisite functionality
+   */
   multisite?: {
     /**
-     * Enable multisite.
+     * Enable multisite
+     *
+     * **WARNING: Do NOT disable multisite in App Router applications.**
+     *
+     * The App Router route structure requires the `[site]` segment in the path (`/[site]/[locale]/[[...path]]`).
+     * Disabling this will break routing and cause 404 errors for regular requests.
+     *
+     * Preview and Editing modes will still work (they bypass this check), but regular page requests will fail.
+     *
+     * **For single-site setups**: Keep `enabled: true` and configure only one site in your sites configuration.
+     * The middleware will always use that single site, achieving the desired single-site behavior.
      * @default true
      */
     enabled?: boolean;
-    /** Determines if the site should be resolved from the sc_site cookie. */
+    /**
+     * Function used to determine if site should be resolved from sc_site cookie when present
+     */
     useCookieResolution?: (req?: RequestInit, res?: ResponseInit) => boolean;
   };
 
-  /** Settings for Personalize functionality. */
+  /**
+   * Settings for Personalize functionality
+   */
   personalize?: {
     /**
-     * Enable personalize proxy.
+     * Enable personalize proxy
      * @default process.env.NODE_ENV !== 'development'
      */
     enabled?: boolean;
     /**
-     * Sitecore Experience Edge timeout in milliseconds.
-     * @default 400
+     * Configuration for your Sitecore Experience Edge endpoint
+     * by default set by the PERSONALIZE_MIDDLEWARE_EDGE_TIMEOUT environment variable (for personalize proxy)
+     * if not set, will use the default value of 400ms
      */
     edgeTimeout?: number;
     /**
-     * Sitecore CDP timeout in milliseconds.
-     * @default 400
+     * Configuration for your Sitecore CDP endpoint
+     * by default set by the PERSONALIZE_MIDDLEWARE_CDP_TIMEOUT environment variable (for personalize proxy)
+     * if not set, will use the default value of 400ms
      */
     cdpTimeout?: number;
-    /** Optional Sitecore Personalize scope ID. */
+    /**
+     * Optional Sitecore Personalize scope ID (to isolate data between environments)
+     */
     scope?: string;
     /**
-     * Sitecore CDP channel used for events.
-     * @default WEB
+     * The Sitecore CDP channel to use for events. Uses 'WEB' by default.
      */
     channel?: string;
     /**
-     * Currency for CDP requests.
-     * @default USA
+     * Currency for CDP requests
+     * @default 'USA'
      */
     currency?: string;
   };
-
-  /** Settings for redirects functionality. */
+  /**
+   * Settings for redirects functionality
+   */
   redirects?: {
     /**
-     * Enable redirects middleware.
+     * Enable redirects middleware
      * @default process.env.NODE_ENV !== 'development'
      */
     enabled?: boolean;
-    /** Locales supported by the application. */
+    /**
+     * These are all the locales you support in your application.
+     * These should match those in framework-specific configuration of your app.
+     */
     locales?: string[];
   };
-
   /**
-   * Rewrite media/content URLs in Layout Service data and `SitecoreClient.getData` results.
+   * Rewrite media/content URLs in layout data and in `SitecoreClient.getData` results
+   * (media fields, rich text img/src, href, and other strings that contain a URL).
+   * - When `true`: rewrite the default Experience Edge hostname (`edge.sitecorecloud.io`) to the custom hostname from `SITECORE_EXPERIENCE_EDGE_HOSTNAME`.
+   * - When a function: transform each string value; the SDK traverses the response for you.
+   * Relative paths and hostnames other than the default Experience Edge host are left unchanged by the default rewriter.
    * @default false
    */
   rewriteMediaUrls?: boolean | ((value: string) => string);
-
-  /** Disable application code extraction and generation. */
+  /**
+   * Opt-out setting for code generation feature
+   * Disables code extraction procedure
+   */
   disableCodeGeneration?: boolean;
 };
 
 /**
  * Final Sitecore config type used at runtime.
- * Every property is populated by application configuration or fallback values.
+ * Every property is populated, either from sitecore.config or fallback values.
  * @public
  */
 export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;

@@ -1,6 +1,6 @@
 import type { CapabilityFilter } from '@sitecore-content-sdk/core';
+import { importsNamedExport, someSourceFile } from '@sitecore-content-sdk/core/node-tools';
 import type * as NextjsExports from '../index';
-import { importsNamedExport, someSourceFile } from './utils';
 
 // Type-checked against the package exports: renaming a component fails compilation here.
 const DESIGN_LIBRARY_EXPORTS: ReadonlyArray<keyof typeof NextjsExports> = [

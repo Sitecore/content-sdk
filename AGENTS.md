@@ -93,6 +93,7 @@ Full safety: [RULES-safety.md](.agents/docs/RULES-safety.md). Workflows: [AGENTS
 - **Layered docs:** [.agents/docs/](.agents/docs/)
 - **Cursor rules:** [.cursor/rules/](.cursor/rules/) (glob-scoped)
 - **Head-app skills:** [Skills.md](Skills.md) → template `.agents/skills/`
+- **Metadata capabilities (monorepo):** [.agents/skills/content-sdk-capabilities/SKILL.md](.agents/skills/content-sdk-capabilities/SKILL.md)
 - **Contributing:** `CONTRIBUTING.md`
 - **MCP:** https://sitecore.mcp.kapa.ai
 - **Docs:** [Content SDK](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html)

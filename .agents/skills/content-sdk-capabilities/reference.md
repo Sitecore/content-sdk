@@ -30,6 +30,7 @@ flowchart LR
 |------|------|
 | Contract types | `packages/core/src/capabilities.ts` |
 | Collect / merge / resolve | `packages/core/src/tools/capabilities/index.ts` |
+| Shared filter helpers | `packages/core/src/tools/capabilities/filter-utils.ts` |
 | Metadata write | `packages/core/src/tools/metadata/generateMetadata.ts`, `metadata.ts` |
 | Package discovery | `packages/core/src/tools/framework-packages.ts` |
 | Next.js caps | `packages/nextjs/src/capabilities/` |
