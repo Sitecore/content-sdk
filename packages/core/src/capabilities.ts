@@ -60,7 +60,10 @@ export type CapabilityDefinition = {
  */
 export type CSDKCapabilities = {
   /** Allows item preview through the editing render endpoint. */
-  preview?: CapabilityDefinition;
+  preview?: CapabilityDefinition & {
+    /** Allows preview for a specific point in time through the editing render endpoint. */
+    timeBasedPreview?: CapabilityDefinition;
+  };
   /** Allows item editing through the editing render endpoint. */
   editing?: CapabilityDefinition;
   /** Allows setting up and displaying personalization-based A/B tests. */
@@ -80,7 +83,7 @@ export type CSDKCapabilities = {
       /** Allows previewing AI-generated components. */
       variantPreview?: CapabilityDefinition;
       /** Allows the CLI to create a generated component in the local filesystem. */
-      aiComponentImport?: CapabilityDefinition;
+      aiComponentExport?: CapabilityDefinition;
     };
   };
 };

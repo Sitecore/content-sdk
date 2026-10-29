@@ -21,9 +21,11 @@ const createContext = (
 
 describe('Angular capabilities', () => {
   it('nests AI capabilities under Design Studio component rendering', () => {
-    expect(
-      Object.keys(capabilities.designLibrary?.value ?? {})
-    ).toEqual(['variantGeneration', 'variantPreview']);
+    expect(Object.keys(capabilities.designLibrary?.value ?? {})).toEqual([
+      'variantGeneration',
+      'variantPreview',
+    ]);
+    expect(Object.keys(capabilities.preview ?? {})).toEqual(['value', 'timeBasedPreview']);
   });
 
   it('filters capabilities based on application wiring', async () => {
@@ -31,7 +33,6 @@ describe('Angular capabilities', () => {
       'src/server.ts': 'createEditingRenderMiddleware(); createPersonalizeMiddleware({});',
     });
 
-    expect(await capabilities.preview?.filter?.(context)).toBe(true);
     expect(await capabilities.abTesting?.filter?.(context)).toBe(true);
     expect(capabilities.designLibrary?.filter).toBeTypeOf('function');
   });
@@ -39,7 +40,6 @@ describe('Angular capabilities', () => {
   it('filters capabilities out when application wiring is absent', async () => {
     const context = createContext();
 
-    expect(await capabilities.preview?.filter?.(context)).toBe(false);
     expect(await capabilities.abTesting?.filter?.(context)).toBe(false);
   });
 
