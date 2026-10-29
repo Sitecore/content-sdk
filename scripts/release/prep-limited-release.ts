@@ -17,7 +17,7 @@ import { readChangesets } from '@changesets/read';
 import { getPackages } from '@manypkg/get-packages';
 import type { ComprehensiveRelease } from '@changesets/types';
 import { getCascadeReleasePlan } from '../changesets/cascade-version';
-import { readProducts, runMain, type ChangesetLike, type Products } from '../changesets/utils';
+import { readProducts, runMain, type ChangesetLike } from '../changesets/utils';
 import { PRODUCTS_PATH, RELEASE_LATEST } from '../constants';
 import { git, packageDirs, tryGit, updateLockfile } from './utils';
 
@@ -25,7 +25,7 @@ import { git, packageDirs, tryGit, updateLockfile } from './utils';
  * Packages left out of a product's limited release: the other products' packages, except those the
  * product lists too.
  */
-export function productExclusions(products: Products, product: string): string[] {
+export function productExclusions(products: Record<string, string[]>, product: string): string[] {
   const own = new Set(products[product]);
   const others = Object.entries(products)
     .filter(([name]) => name !== product)
@@ -94,7 +94,8 @@ async function main(): Promise<void> {
   const released = changesets.filter((cs) => cs.releases.some((r) => !excluded.includes(r.name)));
 
   // what the version step on release/latest computes for the copied changesets
-  const { config } = await readConfig(cwd, packages);
+  const { config, errors } = await readConfig(cwd, packages);
+  if (errors) throw new Error(`Invalid changesets config:\n${errors.join('\n')}`);
   const releasePlan = getCascadeReleasePlan(released, packages, config, await readPreState(cwd));
 
   const releases = releasePlan.releases.filter((r) => r.type !== 'none');

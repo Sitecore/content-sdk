@@ -7,7 +7,8 @@
  *   (a PR on conflicts). Its changes came from dev (the limited copy, cherry-picked fixes), so the
  *   bump is all dev lacks;
  * - other branches: none.
- * Every step is idempotent: when one failed, fix the cause and re-run the publish workflow.
+ * Every step is idempotent. A publish re-run doesn't run the sync again (it publishes nothing), so
+ * when a step failed, fix the cause and finish the remaining steps by hand.
  *
  * Input (env):
  * - GITHUB_REF_NAME: the release branch
