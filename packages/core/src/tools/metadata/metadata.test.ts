@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import { getMetadata } from './metadata';
+import proxyquire from 'proxyquire';
 import sinon, { SinonStub } from 'sinon';
 import childProcess from 'child_process';
 import metadataNextjs from './test-data/metadata-nextjs.json';
@@ -88,48 +89,48 @@ describe('metadata', () => {
       setEnv('npm_execpath', execPath);
     });
 
-    it('should return tracked packages with exact versions from result of npm query (nextjs app)', () => {
+    it('should return tracked packages with exact versions from result of npm query (nextjs app)', async () => {
       runWithPackageManager(USER_AGENTS.npm);
       execSyncStub.withArgs(NPM_QUERY).returns(JSON.stringify(npmQueryResultNext));
 
-      const metadata = getMetadata();
+      const metadata = await getMetadata({ capabilities: false });
 
       expect(execSyncStub.calledOnceWith(NPM_QUERY)).to.be.true;
       expect(metadata).to.deep.equal(metadataNextjs);
     });
 
-    it('should use npm when the package manager could not be determined', () => {
+    it('should use npm when the package manager could not be determined', async () => {
       runWithPackageManager();
       execSyncStub.withArgs(NPM_QUERY).returns(JSON.stringify(npmQueryResultNext));
 
-      const metadata = getMetadata();
+      const metadata = await getMetadata({ capabilities: false });
 
       expect(execSyncStub.calledOnceWith(NPM_QUERY)).to.be.true;
       expect(metadata).to.deep.equal(metadataNextjs);
     });
 
-    it('should detect the package manager from the executable path when there is no user agent', () => {
+    it('should detect the package manager from the executable path when there is no user agent', async () => {
       runWithPackageManager();
       setEnv('npm_execpath', '/usr/local/share/pnpm/store/v10/pnpm/bin/pnpm.cjs');
       execSyncStub.withArgs(PNPM_LIST).returns(pnpmListResult);
 
-      const metadata = getMetadata();
+      const metadata = await getMetadata({ capabilities: false });
 
       expect(execSyncStub.calledOnceWith(PNPM_LIST)).to.be.true;
       expect(metadata).to.deep.equal(pnpmMetadata);
     });
 
-    it('should return tracked packages with exact versions from result of pnpm list', () => {
+    it('should return tracked packages with exact versions from result of pnpm list', async () => {
       runWithPackageManager(USER_AGENTS.pnpm);
       execSyncStub.withArgs(PNPM_LIST).returns(pnpmListResult);
 
-      const metadata = getMetadata();
+      const metadata = await getMetadata({ capabilities: false });
 
       expect(execSyncStub.calledOnceWith(PNPM_LIST)).to.be.true;
       expect(metadata).to.deep.equal(pnpmMetadata);
     });
 
-    it('should return tracked packages with exact versions from result of yarn info', () => {
+    it('should return tracked packages with exact versions from result of yarn info', async () => {
       runWithPackageManager(USER_AGENTS.yarn);
       execSyncStub.withArgs(YARN_INFO).returns(
         [
@@ -141,7 +142,7 @@ describe('metadata', () => {
         ].join('\n')
       );
 
-      const metadata = getMetadata();
+      const metadata = await getMetadata({ capabilities: false });
 
       expect(execSyncStub.calledOnceWith(YARN_INFO)).to.be.true;
       expect(metadata).to.deep.equal({
@@ -153,7 +154,7 @@ describe('metadata', () => {
       });
     });
 
-    it('should return tracked packages with exact versions from result of yarn classic list', () => {
+    it('should return tracked packages with exact versions from result of yarn classic list', async () => {
       runWithPackageManager(USER_AGENTS.yarnClassic);
       execSyncStub.withArgs(YARN_CLASSIC_LIST).returns(
         [
@@ -162,7 +163,7 @@ describe('metadata', () => {
         ].join('\n')
       );
 
-      const metadata = getMetadata();
+      const metadata = await getMetadata({ capabilities: false });
 
       expect(execSyncStub.calledOnceWith(YARN_CLASSIC_LIST)).to.be.true;
       expect(metadata).to.deep.equal({
@@ -173,7 +174,7 @@ describe('metadata', () => {
       });
     });
 
-    it('should return tracked packages with exact versions from result of bun pm ls', () => {
+    it('should return tracked packages with exact versions from result of bun pm ls', async () => {
       runWithPackageManager(USER_AGENTS.bun);
       execSyncStub
         .withArgs(BUN_LIST)
@@ -187,7 +188,7 @@ describe('metadata', () => {
           ].join('\n')
         );
 
-      const metadata = getMetadata();
+      const metadata = await getMetadata({ capabilities: false });
 
       expect(execSyncStub.calledOnceWith(BUN_LIST)).to.be.true;
       expect(metadata).to.deep.equal({
@@ -198,48 +199,73 @@ describe('metadata', () => {
       });
     });
 
-    it('should include workspace packages when workspaces are allowed', () => {
+    it('should include workspace packages when workspaces are allowed', async () => {
       runWithPackageManager(USER_AGENTS.pnpm);
       const command = 'pnpm list --depth 3 --parseable --long --recursive';
       execSyncStub.withArgs(command).returns(pnpmListResult);
 
-      const metadata = getMetadata(true);
+      const metadata = await getMetadata({ allowWorkspaces: true, capabilities: false });
 
       expect(execSyncStub.calledOnceWith(command)).to.be.true;
       expect(metadata).to.deep.equal(pnpmMetadata);
     });
 
-    it('should return metadata with empty package object and log error in the console if result of npm query is not valid', () => {
+    it('should return metadata with empty package object and log error in the console if result of npm query is not valid', async () => {
       runWithPackageManager(USER_AGENTS.npm);
       execSyncStub.withArgs(NPM_QUERY).returns('[{"name":}');
       logStub = sinon.stub(console, 'error');
 
-      const metadata = getMetadata();
+      const metadata = await getMetadata({ capabilities: false });
 
       expect(logStub.calledOnceWith(`Failed to retrieve sitecore packages using '${NPM_QUERY}'`)).to
         .be.true;
       expect(metadata).to.deep.equal({ packages: {} });
     });
 
-    it('should return metadata with empty package object and log error in the console if the query command fails', () => {
+    it('should return metadata with empty package object and log error in the console if the query command fails', async () => {
       runWithPackageManager(USER_AGENTS.pnpm);
       execSyncStub.withArgs(PNPM_LIST).throws();
       logStub = sinon.stub(console, 'error');
 
-      const metadata = getMetadata();
+      const metadata = await getMetadata({ capabilities: false });
 
       expect(logStub.calledOnceWith(`Failed to retrieve sitecore packages using '${PNPM_LIST}'`)).to
         .be.true;
       expect(metadata).to.deep.equal({ packages: {} });
     });
 
-    it('should not return packages for result of npm query not containng tracked packages', () => {
+    it('should not return packages for result of npm query not containng tracked packages', async () => {
       runWithPackageManager(USER_AGENTS.npm);
       execSyncStub.withArgs(NPM_QUERY).returns(JSON.stringify(npmQueryResultNoSc));
 
-      const metadata = getMetadata();
+      const metadata = await getMetadata({ capabilities: false });
 
       expect(metadata).to.deep.equal({ packages: {} });
+    });
+
+    it('should log and rethrow when calculateCapabilities throws', async () => {
+      const error = new Error('capability failure');
+      runWithPackageManager(USER_AGENTS.npm);
+      execSyncStub.withArgs(NPM_QUERY).returns(JSON.stringify(npmQueryResultNext));
+      logStub = sinon.stub(console, 'error');
+      const calculateCapabilities = sinon.stub().rejects(error);
+      const { getMetadata: getMetadataWithStub } = proxyquire('./metadata', {
+        '../capabilities': { calculateCapabilities },
+      });
+
+      let thrown: unknown;
+      try {
+        await getMetadataWithStub();
+      } catch (caught) {
+        thrown = caught;
+      }
+
+      expect(thrown).to.equal(error);
+      expect(logStub.calledOnce).to.be.true;
+      expect(logStub.firstCall.args[0]).to.equal(
+        'Failed to calculate application capabilities. This step is required for correct headless integration.'
+      );
+      expect(logStub.firstCall.args[1]).to.equal(error);
     });
   });
 });

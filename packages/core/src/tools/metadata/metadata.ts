@@ -1,5 +1,6 @@
 ﻿import { execSync } from 'child_process';
-import type { ResolvedCapabilities } from '../../capabilities';
+import type { CapabilitySitecoreConfig, ResolvedCapabilities } from '../../capabilities';
+import { calculateCapabilities } from '../capabilities';
 
 type Package = {
   name: string;
@@ -24,6 +25,24 @@ export interface Metadata {
   capabilities?: ResolvedCapabilities;
 }
 
+/**
+ * Configuration for building application metadata.
+ * @public
+ */
+export type GetMetadataConfig = {
+  /**
+   * Whether packages from all workspaces should be included.
+   * @deprecated Package-manager-based package discovery will be removed in a future version.
+   */
+  allowWorkspaces?: boolean;
+  /** Whether to resolve installed package capabilities. Defaults to true. */
+  capabilities?: boolean;
+  /** Application root used for capability resolution. Defaults to the current working directory. */
+  appRoot?: string;
+  /** Resolved Sitecore configuration passed to capability filters. */
+  sitecoreConfig?: CapabilitySitecoreConfig;
+};
+
 const trackedScopes = ['@sitecore', '@sitecore-feaas', '@sitecore-content-sdk'];
 
 // yarn matches name patterns as globs, in which '*' does not cross the scope separator, so both
@@ -37,38 +56,68 @@ const PACKAGE_ENTRY = /(@[^\s/:\\]+\/[^\s/:\\]+)@([^\s]+)$/;
 const MAX_OUTPUT_BUFFER = 10 * 1024 * 1024;
 
 /**
- * Get application metadata
- * @param {boolean} allowWorkspaces - Whether to allow workspaces in the metadata generation.
- * @returns {Metadata} The generated metadata.
- * @deprecated Package-manager-based package discovery will be removed in a future version.
+ * Get application metadata.
+ * @param {GetMetadataConfig} [config] metadata generation configuration
+ * @returns {Promise<Metadata>} The generated metadata.
+ * @public
  */
-export function getMetadata(allowWorkspaces: boolean = false): Metadata {
-  const metadata: Metadata = { packages: {} };
+export async function getMetadata(config: GetMetadataConfig = {}): Promise<Metadata> {
+  const { allowWorkspaces = false, capabilities = true, appRoot, sitecoreConfig } = config;
+  const packages = getPackagesFromPackageManager(allowWorkspaces);
+
+  if (packages === undefined) {
+    return { packages: {} };
+  }
+
+  const metadata: Metadata = { packages };
+
+  if (capabilities !== false) {
+    try {
+      metadata.capabilities = await calculateCapabilities({ appRoot, sitecoreConfig });
+    } catch (error) {
+      console.error(
+        'Failed to calculate application capabilities. This step is required for correct headless integration.',
+        error
+      );
+      throw error;
+    }
+  }
+
+  return metadata;
+}
+
+/**
+ * Lists installed Sitecore-scoped packages and their exact versions via the active package manager.
+ * @param {boolean} [allowWorkspaces] whether packages of all workspaces should be included
+ * @returns {Record<string, string> | undefined} tracked packages with versions, or undefined when discovery fails
+ * @deprecated Package-manager-based package discovery will be removed in a future version.
+ * @internal
+ */
+function getPackagesFromPackageManager(allowWorkspaces = false): Record<string, string> | undefined {
   const packageManagement = getPackageManagement(allowWorkspaces);
   const { query, parse } = packageManagement[detectPackageManager(packageManagement)];
 
-  let queryResult: Package[] = [];
   try {
-    queryResult = parse(
+    const queryResult = parse(
       execSync(query, {
         maxBuffer: MAX_OUTPUT_BUFFER,
         stdio: ['ignore', 'pipe', 'pipe'],
       }).toString()
     );
+
+    return getPackagesFromQueryResult(queryResult);
   } catch (error) {
     console.error(`Failed to retrieve sitecore packages using '${query}'`, error);
-    return metadata;
+    return undefined;
   }
-
-  metadata.packages = getPackagesFromQueryResult(queryResult);
-
-  return metadata;
 }
 
 /**
  * Retrieve all packages of the tracked scopes with their exact versions
  * @param {Package[]} scPackages list of packages
  * @returns {Record<string, string>} an object with the packages with their exact versions
+ * @deprecated Package-manager-based package discovery will be removed in a future version.
+ * @internal
  */
 function getPackagesFromQueryResult(scPackages: Package[]): Record<string, string> {
   const packages: Record<string, string> = {};
@@ -87,6 +136,7 @@ function getPackagesFromQueryResult(scPackages: Package[]): Record<string, strin
  * Yarn classic is a dedicated entry because its command differs from yarn berry.
  * @param {boolean} allowWorkspaces whether packages of all workspaces should be included
  * @returns {Record<string, PackagesQuery>} query and parser per package manager
+ * @deprecated Package-manager-based package discovery will be removed in a future version.
  * @internal
  */
 function getPackageManagement(allowWorkspaces: boolean): Record<string, PackagesQuery> {
@@ -127,6 +177,7 @@ function getPackageManagement(allowWorkspaces: boolean): Record<string, Packages
  * the package manager (workspaces).
  * @param {Record<string, PackagesQuery>} packageManagement supported package managers
  * @returns {string} the detected package manager, npm when it could not be determined
+ * @deprecated Package-manager-based package discovery will be removed in a future version.
  * @internal
  */
 function detectPackageManager(packageManagement: Record<string, PackagesQuery>): string {

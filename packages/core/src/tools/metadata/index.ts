@@ -1,2 +1,2 @@
 export { generateMetadata, GenerateMetadataConfig } from './generateMetadata';
-export { Metadata } from './metadata';
+export { Metadata, getMetadata, GetMetadataConfig } from './metadata';

@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import { Metadata, getMetadata } from './metadata';
 import { ensurePathExists } from '../ensurePath';
-import { calculateCapabilities } from '../capabilities';
 import type { CapabilitySitecoreConfig } from '../../capabilities';
 
 /*
@@ -44,20 +43,11 @@ export const generateMetadata = (
   config?: GenerateMetadataConfig
 ): ((args?: { scConfig?: CapabilitySitecoreConfig }) => Promise<void>) => {
   return async (args) => {
-    const metadata: Metadata = getMetadata(!!config?.allowWorkspaces);
-    if (config?.capabilities !== false) {
-      try {
-        metadata.capabilities = await calculateCapabilities({
-          sitecoreConfig: args?.scConfig,
-        });
-      } catch (error) {
-        console.error(
-          'Failed to calculate application capabilities. This is step is required for correct headless integration.',
-          error
-        );
-        throw error;
-      }
-    }
+    const metadata: Metadata = await getMetadata({
+      allowWorkspaces: config?.allowWorkspaces,
+      capabilities: config?.capabilities,
+      sitecoreConfig: args?.scConfig,
+    });
     writeMetadata(metadata, config?.destinationPath ?? '.sitecore/metadata.json');
   };
 };
