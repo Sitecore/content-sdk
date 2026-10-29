@@ -8,7 +8,7 @@
 
 > **subscribeToFormSubmitEvent**(`formElement`, `componentId?`, `signal?`): `void`
 
-Defined in: [content/src/form/form.ts:91](https://github.com/Sitecore/content-sdk/blob/170cbe9237292df82e9fbc54971cd7ffa5d9a3c9/packages/content/src/form/form.ts#L91)
+Defined in: [content/src/form/form.ts:91](https://github.com/Sitecore/content-sdk/blob/a61659d31d52d41a1b13c8b63d46053c1b52cda1/packages/content/src/form/form.ts#L91)
 
 **`Internal`**
 

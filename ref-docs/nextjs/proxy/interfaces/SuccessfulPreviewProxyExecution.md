@@ -6,7 +6,7 @@
 
 # Interface: SuccessfulPreviewProxyExecution
 
-Defined in: [nextjs/src/proxy/preview-proxy.ts:26](https://github.com/Sitecore/content-sdk/blob/170cbe9237292df82e9fbc54971cd7ffa5d9a3c9/packages/nextjs/src/proxy/preview-proxy.ts#L26)
+Defined in: [nextjs/src/proxy/preview-proxy.ts:26](https://github.com/Sitecore/content-sdk/blob/a61659d31d52d41a1b13c8b63d46053c1b52cda1/packages/nextjs/src/proxy/preview-proxy.ts#L26)
 
 Information about executed proxy to be stored in the context
 Used for describing successful execution with details about the preview that was applied
@@ -21,7 +21,7 @@ Used for describing successful execution with details about the preview that was
 
 > **error**: `null`
 
-Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-sdk/blob/170cbe9237292df82e9fbc54971cd7ffa5d9a3c9/packages/nextjs/src/proxy/types.ts#L18)
+Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-sdk/blob/a61659d31d52d41a1b13c8b63d46053c1b52cda1/packages/nextjs/src/proxy/types.ts#L18)
 
 #### Inherited from
 
@@ -33,7 +33,7 @@ Defined in: [nextjs/src/proxy/types.ts:18](https://github.com/Sitecore/content-s
 
 > **executedSuccessfully**: `true`
 
-Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-sdk/blob/170cbe9237292df82e9fbc54971cd7ffa5d9a3c9/packages/nextjs/src/proxy/types.ts#L17)
+Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-sdk/blob/a61659d31d52d41a1b13c8b63d46053c1b52cda1/packages/nextjs/src/proxy/types.ts#L17)
 
 #### Inherited from
 
@@ -45,4 +45,4 @@ Defined in: [nextjs/src/proxy/types.ts:17](https://github.com/Sitecore/content-s
 
 > **pageDataReceived**: `boolean`
 
-Defined in: [nextjs/src/proxy/preview-proxy.ts:27](https://github.com/Sitecore/content-sdk/blob/170cbe9237292df82e9fbc54971cd7ffa5d9a3c9/packages/nextjs/src/proxy/preview-proxy.ts#L27)
+Defined in: [nextjs/src/proxy/preview-proxy.ts:27](https://github.com/Sitecore/content-sdk/blob/a61659d31d52d41a1b13c8b63d46053c1b52cda1/packages/nextjs/src/proxy/preview-proxy.ts#L27)
