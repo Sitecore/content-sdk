@@ -1,6 +1,6 @@
 /**
- * Shared helpers of the release scripts (`post-release-sync.ts`, the limited release prep): git,
- * npm and workspace state.
+ * Shared helpers of the release scripts (`post-release-sync.ts`, the limited release prep): git
+ * and workspace state.
  */
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
@@ -14,7 +14,7 @@ export interface PackageVersion {
 }
 
 /** The part of a `@manypkg/get-packages` package the release scripts use. */
-export interface WorkspacePackage {
+interface WorkspacePackage {
   dir: string;
   packageJson: { name: string };
 }

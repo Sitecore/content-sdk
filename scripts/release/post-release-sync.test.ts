@@ -124,6 +124,26 @@ describe('devBranchSync', () => {
       expect.anything()
     );
   });
+
+  const ghFails = (stderr: string) => {
+    const git = mocks.execFileSync.getMockImplementation()!;
+    mocks.execFileSync.mockImplementation((cmd: string, args: string[]) => {
+      if (cmd === 'gh') throw Object.assign(new Error('gh failed'), { stderr });
+      return git(cmd, args);
+    });
+  };
+
+  it('accepts a conflict PR that is open already (re-run)', async () => {
+    stubGit({ pick: 'conflict' });
+    ghFails('a pull request for branch "x" into branch "dev" already exists:\nhttps://pr');
+    await expect(devBranchSync(ctx)).resolves.toBeUndefined();
+  });
+
+  it('fails when the conflict PR cannot be opened', async () => {
+    stubGit({ pick: 'conflict' });
+    ghFails('HTTP 403: Resource not accessible by integration');
+    await expect(devBranchSync(ctx)).rejects.toThrow(/could not be opened.*\n.*HTTP 403/);
+  });
 });
 
 describe('runSteps', () => {

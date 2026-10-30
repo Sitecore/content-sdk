@@ -6,8 +6,8 @@
 export const REPO = 'sitecore/content-sdk';
 
 /**
- * The app scaffolder: released with every product (listed under each in `products.config.json`),
- * patch-only in the cascade.
+ * The app scaffolder: in no product in `products.config.json`, so it is shared and released with
+ * either product; patch-only in the cascade.
  */
 export const SCAFFOLDER = 'create-content-sdk-app';
 

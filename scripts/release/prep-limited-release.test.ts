@@ -15,9 +15,10 @@ const cs = (id: string, name: string, type: VersionType = 'minor'): NewChangeset
 });
 
 const CCA = SCAFFOLDER;
+// as `.changeset/products.config.json`: create-content-sdk-app is in no product (shared)
 const PRODUCTS = {
-  nextjs: ['nextjs', 'react', 'nextjs-templates', CCA],
-  angular: ['angular', 'angular-templates', CCA],
+  nextjs: ['nextjs', 'react', 'nextjs-templates'],
+  angular: ['angular', 'angular-templates'],
 };
 
 // the templates-split structure: create-content-sdk-app depends on both templates packages at
@@ -67,6 +68,8 @@ describe('productExclusions', () => {
   it("leaves out the other products' packages, except those the product lists too", () => {
     expect(productExclusions(PRODUCTS, 'nextjs')).toEqual(['angular', 'angular-templates']);
     expect(productExclusions(PRODUCTS, 'angular')).toEqual(['nextjs', 'react', 'nextjs-templates']);
+    const shared = { nextjs: [...PRODUCTS.nextjs, CCA], angular: [...PRODUCTS.angular, CCA] };
+    expect(productExclusions(shared, 'nextjs')).toEqual(['angular', 'angular-templates']);
   });
 });
 

@@ -36,7 +36,7 @@ const POST_RELEASE_STEPS = new Map<string, Step[]>([
 ]);
 
 /** The release a post-release run is for. */
-export interface SyncContext {
+interface SyncContext {
   branch: string;
   releaseSha: string;
   published: PackageVersion[];
@@ -108,7 +108,7 @@ function openConflictPr(branch: string, releaseSha: string): void {
   git('-c', 'core.editor=true', 'cherry-pick', '--continue');
   git('push', '-f', 'origin', `HEAD:refs/heads/${syncBranch}`);
   try {
-    execFileSync(
+    const url = execFileSync(
       'gh',
       [
         'pr',
@@ -123,12 +123,20 @@ function openConflictPr(branch: string, releaseSha: string): void {
         `Automated cherry-pick of \`${releaseSha}\` (${branch} version bump) onto dev hit ` +
           'conflicts. Resolve the conflict markers in this PR before merging.',
       ],
-      { stdio: 'inherit' }
-    );
-  } catch {
-    console.log(`  a PR for ${syncBranch} may already exist.`);
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }
+    ).trim();
+    console.log(`  ⚠️ cherry-pick conflicts; opened ${url} from ${syncBranch} to ${MAIN_BRANCH}`);
+  } catch (error) {
+    // a re-run of the same release: its conflict PR is open already
+    const stderr = String((error as { stderr?: unknown }).stderr ?? '');
+    if (!/already exists/.test(stderr)) {
+      throw new Error(
+        `cherry-pick conflicts pushed to ${syncBranch}, but the PR to ${MAIN_BRANCH} could not ` +
+          `be opened; open it by hand.\n${stderr || (error as Error).message}`
+      );
+    }
+    console.log(`  ⚠️ cherry-pick conflicts; the PR from ${syncBranch} is open already`);
   }
-  console.log(`  ⚠️ cherry-pick conflicts; opened a PR from ${syncBranch} to ${MAIN_BRANCH}`);
 }
 
 /**

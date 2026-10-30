@@ -7,7 +7,7 @@ permissions:
 on:
   # Trigger for canary and stable releases:
   # - Stable prod release: When PR from changeset-release/* branch is merged with [release] prefix
-  # - Canary release: Push to dev or release/* branches (not from changeset-release merge)
+  # - Canary release: Push to any branch below (not from changeset-release merge)
   # Only these release branch types (each job's "Release info" step maps them to npm tags); any
   # other release/* branch (e.g. old release/2.x.x) publishes nothing.
   push:
