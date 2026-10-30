@@ -57,6 +57,30 @@ const renderChecked = (
   return render(<Component {...props} page={page} />);
 };
 
+/**
+ * Renders the component without a `page` prop, inside a `SitecoreProvider` context built from `pageMode`.
+ * @param {React.ComponentType<WithDatasourceCheckProps>} Component component to render
+ * @param {WithDatasourceCheckProps} props component props
+ * @param {PageModeOverrides} [pageMode] page mode flags for the context page
+ * @returns {ReturnType<typeof render>} render result
+ */
+const renderWithContext = (
+  Component: React.ComponentType<WithDatasourceCheckProps>,
+  props: WithDatasourceCheckProps,
+  pageMode?: PageModeOverrides
+) => {
+  const context = {
+    page: createPage(pageMode),
+    setPage: () => {},
+  } as SitecoreProviderState;
+
+  return render(
+    <SitecoreProviderReactContext.Provider value={context}>
+      <Component {...props} />
+    </SitecoreProviderReactContext.Provider>
+  );
+};
+
 describe('withDatasourceCheck', () => {
   const TestComponent: React.FC<WithDatasourceCheckProps> = (props: WithDatasourceCheckProps) => {
     return (
@@ -354,32 +378,95 @@ describe('withDatasourceCheck', () => {
     expect(wrapper.container.innerHTML).to.contain(props.rendering.componentName);
   });
 
-  it('should hide a missing datasource when page is omitted', () => {
-    const TestComponentWithDatasourceCheck = withDatasourceCheck()(TestComponent);
-    const props = {
+  describe('when page is omitted', () => {
+    const missingDatasourceProps = {
       rendering: {
         componentName: 'TestComponent',
         dataSource: '',
       },
     };
 
-    const wrapper = renderChecked(TestComponentWithDatasourceCheck, props, null);
+    it('should hide a missing datasource without SitecoreProvider', () => {
+      const TestComponentWithDatasourceCheck = withDatasourceCheck()(TestComponent);
 
-    expect(wrapper.container.innerHTML).to.be.empty;
-  });
+      const wrapper = renderChecked(TestComponentWithDatasourceCheck, missingDatasourceProps, null);
 
-  it('should render the component when page is omitted and the datasource is valid', () => {
-    const TestComponentWithDatasourceCheck = withDatasourceCheck()(TestComponent);
-    const props = {
-      rendering: {
-        componentName: 'TestComponent',
-        dataSource: '{CACDB205-2386-4271-9F05-AE20AAC2A39E}',
-      },
-    };
+      expect(wrapper.container.innerHTML).to.be.empty;
+    });
 
-    const wrapper = renderChecked(TestComponentWithDatasourceCheck, props, null);
+    it('should render the component when the datasource is valid', () => {
+      const TestComponentWithDatasourceCheck = withDatasourceCheck()(TestComponent);
+      const props = {
+        rendering: {
+          componentName: 'TestComponent',
+          dataSource: '{CACDB205-2386-4271-9F05-AE20AAC2A39E}',
+        },
+      };
 
-    expect(wrapper.container.innerHTML).to.contain(props.rendering.componentName);
+      const wrapper = renderChecked(TestComponentWithDatasourceCheck, props, null);
+
+      expect(wrapper.container.innerHTML).to.contain(props.rendering.componentName);
+    });
+
+    it('should return null if datasource missing in normal mode from context', () => {
+      const TestComponentWithDatasourceCheck = withDatasourceCheck()(TestComponent);
+
+      const wrapper = renderWithContext(TestComponentWithDatasourceCheck, missingDatasourceProps);
+
+      expect(wrapper.container.innerHTML).to.be.empty;
+    });
+
+    it('should return default error component if datasource missing in editing mode from context', () => {
+      const TestComponentWithDatasourceCheck = withDatasourceCheck()(TestComponent);
+
+      const wrapper = renderWithContext(TestComponentWithDatasourceCheck, missingDatasourceProps, {
+        isEditing: true,
+      });
+
+      expect(wrapper.container.querySelectorAll('div.sc-jss-editing-error')).to.have.length(1);
+    });
+
+    it('should return custom error component in editing mode from context', () => {
+      const CustomEditingError = () => <div>Better than yours</div>;
+      const TestComponentWithDatasourceCheck = withDatasourceCheck({
+        editingErrorComponent: CustomEditingError,
+      })(TestComponent);
+
+      const wrapper = renderWithContext(TestComponentWithDatasourceCheck, missingDatasourceProps, {
+        isEditing: true,
+      });
+
+      expect(wrapper.container.innerHTML).to.contain('Better than yours');
+    });
+
+    it('should return wrapped component if rendered in DesignLibrary from context', () => {
+      const TestComponentWithDatasourceCheck = withDatasourceCheck()(TestComponent);
+
+      const wrapper = renderWithContext(TestComponentWithDatasourceCheck, missingDatasourceProps, {
+        isDesignLibrary: true,
+      });
+
+      expect(wrapper.container.innerHTML).to.contain(
+        missingDatasourceProps.rendering.componentName
+      );
+    });
+
+    it('should return default error component when isContentResolved is false in editing mode from context', () => {
+      const TestComponentWithDatasourceCheck = withDatasourceCheck()(TestComponent);
+      const props = {
+        rendering: {
+          componentName: 'TestComponent',
+          dataSource: '{CACDB205-2386-4271-9F05-AE20AAC2A39E}',
+          isContentResolved: false,
+        },
+      };
+
+      const wrapper = renderWithContext(TestComponentWithDatasourceCheck, props, {
+        isEditing: true,
+      });
+
+      expect(wrapper.container.querySelectorAll('div.sc-jss-editing-error')).to.have.length(1);
+    });
   });
 
   it('should read page mode from props and ignore SitecoreProvider context', () => {
