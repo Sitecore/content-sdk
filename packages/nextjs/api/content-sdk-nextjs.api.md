@@ -994,6 +994,7 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     protected getHostHeader(req: NextRequest): string;
     protected getLanguage(req: NextRequest, res?: NextResponse): string;
     protected getLanguageFromHeader(res?: NextResponse): string | undefined;
+    protected getPathname(req: NextRequest, res?: NextResponse): string;
     protected getSite(req: NextRequest, res?: NextResponse): SiteInfo;
     protected isAppRouter(res: NextResponse): boolean;
     protected isPrefetch(req: NextRequest): boolean;

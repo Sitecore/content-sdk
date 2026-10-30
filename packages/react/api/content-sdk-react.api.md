@@ -167,6 +167,7 @@ export { debug_2 as debug }
 export const DefaultEmptyFieldEditingComponentImage: React_2.FC<{
     [key: string]: unknown;
     className?: string;
+    style?: React_2.CSSProperties;
 }>;
 
 // @public

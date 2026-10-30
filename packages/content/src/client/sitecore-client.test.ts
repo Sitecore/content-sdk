@@ -120,24 +120,6 @@ describe('SitecoreClient', () => {
       global.window = originalWindow;
     });
 
-    it('should set edgeInitialized when instantiated with a context id', () => {
-      const client = new SitecoreClient(defaultInitOptions);
-
-      expect(client.edgeInitialized).to.be.true;
-    });
-
-    it('should set edgeInitialized to false when both server and client context ids are missing', () => {
-      const client = new SitecoreClient({
-        ...defaultInitOptions,
-        api: {
-          ...defaultInitOptions.api,
-          edge: { edgeUrl: defaultInitOptions.api.edge.edgeUrl },
-        },
-      });
-
-      expect(client.edgeInitialized).to.be.false;
-    });
-
     it('should use a NoOpGraphQLClient in the browser when the browser context id is not provided', () => {
       const warnStub = sandbox.stub(console, 'warn');
       // Simulate a browser bundle with no Edge/local configuration
@@ -1313,7 +1295,9 @@ describe('SitecoreClient', () => {
       await sitecoreClient.getPreview(previewData);
 
       expect(
-        editingServiceStub.fetchEditingData.calledWith(sinon.match({ previewTime: sinon.match.defined }))
+        editingServiceStub.fetchEditingData.calledWith(
+          sinon.match({ previewTime: sinon.match.defined })
+        )
       ).to.be.false;
     });
 
@@ -1638,6 +1622,8 @@ describe('SitecoreClient', () => {
     };
 
     const stylesBaseUrl = resolveEdgeUrlForStaticFiles(defaultInitOptions.api.edge.edgeUrl);
+    const missingClientContextIdWarn =
+      'Cannot retrieve style head links. Provide a client context ID or disable the the `getHeadLinks` call in page layout.';
 
     it('should return stylesheets when enableStyles and enableThemes are true', () => {
       const result = sitecoreClient.getHeadLinks(layoutData);
@@ -1654,8 +1640,9 @@ describe('SitecoreClient', () => {
       ]);
     });
 
-    it('should fall back to the server contextId when clientContextId is not set', () => {
-      const sitecoreClient = new SitecoreClient({
+    it('should log and return an empty array when clientContextId is not set', () => {
+      const warnStub = sandbox.stub(console, 'warn');
+      const clientWithoutClientContextId = new SitecoreClient({
         ...defaultInitOptions,
         api: {
           ...defaultInitOptions.api,
@@ -1666,18 +1653,10 @@ describe('SitecoreClient', () => {
         },
       });
 
-      const result = sitecoreClient.getHeadLinks(layoutData);
+      const result = clientWithoutClientContextId.getHeadLinks(layoutData);
 
-      expect(result).to.deep.equal([
-        {
-          href: `${stylesBaseUrl}/v1/files/pages/styles/content-styles.css?sitecoreContextId=test-context-id`,
-          rel: 'stylesheet',
-        },
-        {
-          href: `${stylesBaseUrl}/v1/files/components/styles/foo.css?sitecoreContextId=test-context-id`,
-          rel: 'stylesheet',
-        },
-      ]);
+      expect(result).to.deep.equal([]);
+      expect(warnStub.calledWith(missingClientContextIdWarn)).to.be.true;
     });
 
     it('should return only theme stylesheets when enableStyles is false', () => {
@@ -1728,11 +1707,7 @@ describe('SitecoreClient', () => {
       const result = clientWithoutContext.getHeadLinks(layoutData);
 
       expect(result).to.deep.equal([]);
-      expect(
-        warnStub.calledWith(
-          'Both client and server context IDs are absent. Cannot retrieve head links.'
-        )
-      ).to.be.true;
+      expect(warnStub.calledWith(missingClientContextIdWarn)).to.be.true;
     });
   });
 
