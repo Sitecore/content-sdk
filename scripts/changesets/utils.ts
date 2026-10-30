@@ -12,7 +12,7 @@ export interface ChangesetLike {
 /**
  * Reads `.changeset/products.config.json`.
  * @param {string} cwd repository root
- * @returns {Products} product name -> packages
+ * @returns {Record<string, string[]>} product name -> packages
  */
 export function readProducts(cwd: string): Record<string, string[]> {
   return JSON.parse(readFileSync(path.join(cwd, PRODUCTS_PATH), 'utf8'));
@@ -33,14 +33,18 @@ export const isMainModule = (moduleUrl: string): boolean => {
 };
 
 /**
- * Runs a script's `main` when the module is the script being run: an error is printed and exits 1.
+ * Runs a script's `main` when the module is the script being run: an error is printed with its
+ * stack trace and exits 1.
  * @param {string} moduleUrl - the caller's `import.meta.url`
  * @param {Function} main - the script's entry point
  */
 export const runMain = (moduleUrl: string, main: () => Promise<void>): void => {
   if (!isMainModule(moduleUrl)) return;
   main().catch((error: unknown) => {
-    console.error('❌ Error:', (error as Error).message);
+    console.error(
+      'Error:',
+      error instanceof Error ? { message: error.message, stack: error.stack } : error
+    );
     process.exit(1);
   });
 };

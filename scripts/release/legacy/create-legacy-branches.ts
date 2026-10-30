@@ -25,7 +25,7 @@ import { readFileSync, rmSync, writeFileSync } from 'fs';
 import path from 'path';
 import { getPackages } from '@manypkg/get-packages';
 import semver from 'semver';
-import { readProducts, type Products } from '../../changesets/utils';
+import { readProducts } from '../../changesets/utils';
 import {
   CHANGESET_CONFIG_PATH,
   LATEST_RELEASE_TAG,
@@ -54,7 +54,7 @@ export const productPackage = (slug: string): string => `${SDK_SCOPE}${slug}`;
 
 /** Products whose own package was published as a new major: `x.0.0`, not a prerelease. */
 export function getMajorPublishedProducts(
-  products: Products,
+  products: Record<string, string[]>,
   published: PackageVersion[]
 ): string[] {
   return Object.keys(products).filter((slug) => {
@@ -71,7 +71,7 @@ export function getMajorPublishedProducts(
 }
 
 /** Packages a product's legacy branch keeps: its own and the scaffolder. Throws on an unknown one. */
-export function getProductPackages(products: Products, slug: string): string[] {
+export function getProductPackages(products: Record<string, string[]>, slug: string): string[] {
   const productPackages = products[slug];
   if (!productPackages) {
     throw new Error(`Product "${slug}" is not defined in ${PRODUCTS_PATH}.`);

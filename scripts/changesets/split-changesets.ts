@@ -1,24 +1,24 @@
 /**
  * Enforces one package per changeset file.
  *
- * Reads every pending changeset in `.changeset/`. Any changeset that releases
- * more than one package is rewritten into N single-package changesets (one new
- * file per released package, each keeping the original summary and its own bump
- * type), and the original multi-package file is removed. Changesets that already
+ * Reads the pending changesets in `.changeset/` (only the given files, when any are passed). Any
+ * changeset that releases more than one package is rewritten into N single-package changesets (one new
+ * file per released package, `<original id>-<unscoped package name>.md`, each keeping the original
+ * summary and its own bump type), and the original multi-package file is removed. Changesets that already
  * target a single package are left untouched.
  *
  * Modes:
  *   (default)    split multi-package changesets in place
  *   --dry-run    report what would change; write nothing
  *   --check      exit non-zero if any multi-package changeset exists; write nothing
- *                (used by the PR guard so aggregated changesets can't be merged)
+ *                (used by the PR check, which only reports it)
  *
- * Usage: tsx ./scripts/changesets/split-changesets.ts [--dry-run | --check]
+ * Usage: tsx ./scripts/changesets/split-changesets.ts [--dry-run | --check] [.changeset/<id>.md ...]
  */
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
 
-import { unlinkSync } from 'fs';
+import { renameSync, unlinkSync } from 'fs';
 import path from 'path';
 import { readChangesets } from '@changesets/read';
 import { writeChangeset } from '@changesets/write';
@@ -38,9 +38,22 @@ export function splitChangeset(
   return changeset.releases.map((release) => ({ summary: changeset.summary, releases: [release] }));
 }
 
+/** Id of the split changeset for one package: `<original id>-<package name without its scope>`. */
+export function splitChangesetId(id: string, packageName: string): string {
+  return `${id}-${packageName.replace(/^@[^/]+\//, '')}`;
+}
+
+/** Keeps the changesets whose files are listed; all of them when no files are given. */
+export function selectChangesets<T extends ChangesetLike>(changesets: T[], files: string[]): T[] {
+  if (files.length === 0) return changesets;
+  const ids = files.map((file) => path.basename(file, '.md'));
+  return changesets.filter((cs) => ids.includes(cs.id));
+}
+
 async function main(): Promise<void> {
   const dryRun = process.argv.includes('--dry-run');
   const checkOnly = process.argv.includes('--check');
+  const files = process.argv.slice(2).filter((arg) => !arg.startsWith('--'));
   const cwd = process.cwd();
 
   console.log(
@@ -53,7 +66,7 @@ async function main(): Promise<void> {
     throw new Error(`Invalid .changeset/config.json:\n${errors.join('\n')}`);
   }
 
-  const changesets = (await readChangesets(cwd)) as ChangesetLike[];
+  const changesets = selectChangesets((await readChangesets(cwd)) as ChangesetLike[], files);
   if (changesets.length === 0) {
     console.log('No pending changesets found.');
     return;
@@ -88,7 +101,12 @@ async function main(): Promise<void> {
         createdCount += 1;
         continue;
       }
-      const newId = await writeChangeset(single, cwd, { format: config.format });
+      const newId = splitChangesetId(changeset.id, release.name);
+      const written = await writeChangeset(single, cwd, { format: config.format });
+      renameSync(
+        path.join(cwd, '.changeset', `${written}.md`),
+        path.join(cwd, '.changeset', `${newId}.md`)
+      );
       createdCount += 1;
       console.log(`     created .changeset/${newId}.md`);
     }

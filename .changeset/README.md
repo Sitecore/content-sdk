@@ -8,4 +8,5 @@ Changesets allows flexible management of multiple packages in a monorepo
 Quick references:
 - `yarn changeset:add` - add a changeset for current changes, split into one changeset per package.
 - `yarn changeset <command>` - the changesets CLI itself (e.g. `yarn changeset status`, `yarn changeset pre enter`).
+- Committed changesets release one package each: the pre-commit hook (installed by `yarn install`) splits staged multi-package changesets. The PR check only reports the ones committed without it.
 - `yarn changeset:cascade-version` - apply version changes from current changesets onto the monrepo (usually runs via CI)

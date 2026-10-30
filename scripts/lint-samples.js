@@ -3,7 +3,7 @@
  * Usage: yarn lint-samples [product] — all products' samples by default.
  */
 const { execSync } = require('child_process');
-const { getAppFolder, getSamples } = require('./utils');
+const { getAppFolder, getSamples, sampleNamePrefix } = require('./utils');
 
 const runLintCommand = (scope) =>
   execSync(`lerna run lint --scope ${scope} -- --fix`, {
@@ -14,4 +14,4 @@ const apps = getSamples(process.argv[2]).map((sample) =>
   getAppFolder({ ...sample.args, template: sample.template })
 );
 
-if (apps.length > 0) runLintCommand(`{${apps.join(',')}}`);
+if (apps.length > 0) runLintCommand(`"${sampleNamePrefix}*"`);

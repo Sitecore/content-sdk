@@ -1,6 +1,6 @@
 /**
  * Shared helpers of the release scripts (`post-release-sync.ts`, the limited release prep and the
- * legacy branches): git, npm and workspace state.
+ * legacy branches): git and workspace state.
  */
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
@@ -67,26 +67,5 @@ export function tryGit(...args: string[]): string | null {
     return git(...args);
   } catch {
     return null;
-  }
-}
-
-/**
- * A package's npm `latest` version; undefined when it was never published (or has no `latest`).
- * `--prefer-online` revalidates npm's cached metadata (the registry allows 5 minutes), so a version
- * published moments ago in the same job isn't missed.
- */
-export function npmLatest(name: string): string | undefined {
-  try {
-    const args = ['view', name, 'dist-tags.latest', '--prefer-online'];
-    const out = execFileSync('npm', args, {
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-      shell: process.platform === 'win32',
-    });
-    return out.trim() || undefined;
-  } catch (error) {
-    const err = error as { stdout?: string; stderr?: string };
-    if (`${err.stdout ?? ''}${err.stderr ?? ''}`.includes('E404')) return undefined;
-    throw error;
   }
 }
