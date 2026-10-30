@@ -8,7 +8,7 @@
 
 > **SitecoreEdgeRevalidateRequestBody** = `object`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:20](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L20)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:20](https://github.com/Sitecore/content-sdk/blob/a61659d31d52d41a1b13c8b63d46053c1b52cda1/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L20)
 
 Request body shape for webhook-driven revalidation.
 
@@ -18,7 +18,7 @@ Request body shape for webhook-driven revalidation.
 
 > `optional` **continues?**: `boolean`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:23](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L23)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:23](https://github.com/Sitecore/content-sdk/blob/a61659d31d52d41a1b13c8b63d46053c1b52cda1/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L23)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revali
 
 > `optional` **invocation\_id?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:21](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L21)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:21](https://github.com/Sitecore/content-sdk/blob/a61659d31d52d41a1b13c8b63d46053c1b52cda1/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L21)
 
 ***
 
@@ -34,4 +34,4 @@ Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revali
 
 > `optional` **updates?**: [`SitecoreEdgeRevalidateUpdate`](SitecoreEdgeRevalidateUpdate.md)[]
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:22](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L22)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:22](https://github.com/Sitecore/content-sdk/blob/a61659d31d52d41a1b13c8b63d46053c1b52cda1/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L22)

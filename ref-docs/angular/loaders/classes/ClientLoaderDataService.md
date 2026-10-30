@@ -6,7 +6,7 @@
 
 # Class: ClientLoaderDataService
 
-Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:28](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/angular/src/loaders/client-loader-data.service.ts#L28)
+Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:28](https://github.com/Sitecore/content-sdk/blob/a61659d31d52d41a1b13c8b63d46053c1b52cda1/packages/angular/src/loaders/client-loader-data.service.ts#L28)
 
 Loader data client for browser loader data resolution. POSTs to the `/_data` endpoint and holds
 short-lived prefetched responses for parallel navigation prefetching.
@@ -28,7 +28,7 @@ Not aware of the server-side [LoaderCache](../interfaces/LoaderCache.md).
 
 > **getData**(`request`): `Promise`\<[`LoaderApiResponse`](../type-aliases/LoaderApiResponse.md)\>
 
-Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:76](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/angular/src/loaders/client-loader-data.service.ts#L76)
+Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:76](https://github.com/Sitecore/content-sdk/blob/a61659d31d52d41a1b13c8b63d46053c1b52cda1/packages/angular/src/loaders/client-loader-data.service.ts#L76)
 
 Get data for the given request, using staged prefetched responses or fetching if needed.
 If a request is already pending for this URL/loader combination,
@@ -53,7 +53,7 @@ Promise resolving to the API response
 
 > **prefetch**(`loaderRequest`, `options?`): `void`
 
-Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:50](https://github.com/Sitecore/content-sdk/blob/f70de24ceab6ebe2b6e95278899cac24b1268e03/packages/angular/src/loaders/client-loader-data.service.ts#L50)
+Defined in: [packages/angular/src/loaders/client-loader-data.service.ts:50](https://github.com/Sitecore/content-sdk/blob/a61659d31d52d41a1b13c8b63d46053c1b52cda1/packages/angular/src/loaders/client-loader-data.service.ts#L50)
 
 Prefetch loader data for the given request without consuming staged responses.
 If a request is already pending for this key, does nothing (avoids two overlapping HTTP
