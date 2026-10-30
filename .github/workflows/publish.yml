@@ -7,11 +7,15 @@ permissions:
 on:
   # Trigger for canary and stable releases:
   # - Stable prod release: When PR from changeset-release/* branch is merged with [release] prefix
-  # - Canary release: Push to dev or release/* branches (not from changeset-release merge)
+  # - Canary release: Push to any branch below (not from changeset-release merge)
+  # Only these release branch types (each job's "Release info" step maps them to npm tags); any
+  # other release/* branch (e.g. old release/2.x.x) publishes nothing.
   push:
     branches:
       - dev
-      - 'release/**'
+      - 'release/latest'
+      - 'release/1.x.x'
+      - 'release/betas/**'
     paths:
       - '**'
 
@@ -21,6 +25,11 @@ jobs:
   stable-release-prep:
     runs-on: ubuntu-latest
     if: ${{ !startsWith(github.ref_name, 'release/betas') }}
+    # One stable run per branch at a time, so overlapping pushes don't race on the API docs push,
+    # the release/latest sync and the dev cherry-pick. Never cancel a run that may be publishing.
+    concurrency:
+      group: stable-release-${{ github.ref }}
+      cancel-in-progress: false
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
     steps:
@@ -40,21 +49,11 @@ jobs:
           persist-credentials: false
           token: ${{ steps.generate-token.outputs.token }}
 
-      - name: Set git configuration
-        run: |
-          git config --global user.email builds@sitecore.com
-          git config --global user.name "content-sdk-bot"
-          git remote set-url origin https://x-access-token:${{ steps.generate-token.outputs.token }}@github.com/${{ github.repository }}
-
-      - name: Use Node.js 24
-        uses: actions/setup-node@v4
+      - name: Release setup
+        uses: ./.github/actions/release-setup
         with:
-          node-version: 24
-
-      - name: Install dependencies
-        run: |
-          yarn cache clean --all
-          yarn install --immutable
+          token: ${{ steps.generate-token.outputs.token }}
+          clean-cache: 'true'
 
       - name: Build packages
         run: npm run build
@@ -70,39 +69,48 @@ jobs:
             echo "No API doc changes to commit"
           fi
 
-      - name: NPM tags and version
-        id: npm-tags
+      # npm dist-tag and release PR title of this branch's stable releases (betas don't run this job)
+      - name: Release info
+        id: release-info
         env:
-          BRANCH_NAME: ${{ github.ref_name }}
+          BRANCH: ${{ github.ref_name }}
         run: |
-          if [[ "$BRANCH_NAME" == release/* ]]; then
-            BRANCH_END="${BRANCH_NAME#release/}"
-            if [[ "$BRANCH_END" == 1.x.x ]]; then
-              RELEASE="NextJS v1.x hotfix"
-              NPM_TAG="ver1"
-            else
-              RELEASE="legacy version hotfix"
-              NPM_TAG="legacy"
-            fi
-          else
-            NPM_TAG="latest"
-            RELEASE="latest release"
-          fi
-          echo "release_text=$RELEASE" >> "$GITHUB_OUTPUT"
-          echo "npm_tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
+          case "$BRANCH" in
+            dev) npm_tag=latest; pr_title="Full release" ;;
+            release/latest) npm_tag=latest; pr_title="Latest release" ;;
+            release/1.x.x) npm_tag=ver1; pr_title="Legacy release (ver1) - $BRANCH" ;;
+            *) echo "::error::$BRANCH has no stable release info"; exit 1 ;;
+          esac
+          echo "npm_tag=$npm_tag" >> "$GITHUB_OUTPUT"
+          echo "pr_title=[csdk][release] $pr_title" >> "$GITHUB_OUTPUT"
+          echo "$BRANCH: npm_tag=$npm_tag, pr_title=[csdk][release] $pr_title"
 
       - name: Prepare and Process Changesets Release
         id: changesets
         uses: changesets/action@v2
         with:
           version-script: yarn csdk:prep-release
-          publish-script: yarn changeset:publish --tag ${{ steps.npm-tags.outputs.npm_tag }}
+          publish-script: yarn changeset:publish --tag ${{ steps.release-info.outputs.npm_tag }}
           commit-message: '[release][ci] Version bump and changelog'
-          pr-title: ${{ format('[csdk] {0}', steps.npm-tags.outputs.release_text) }}
+          pr-title: ${{ steps.release-info.outputs.pr_title }}
           github-token: ${{ steps.generate-token.outputs.token }}
           push-with-git-cli: true
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Everything after a stable publish, in one idempotent script (scripts/release/post-release-sync.ts):
+      # dev: re-create release/latest at the release; release/latest: cherry-pick the version bump
+      # onto dev (PR on conflicts).
+      # The published packages are changesets/action's output: a re-run publishes nothing, so it
+      # skips this step. When it failed, finish the remaining steps by hand.
+      # github.sha is the release commit, unaffected by the "Generate API docs" commit on top.
+      - name: Post-release sync
+        if: steps.changesets.outputs.published == 'true'
+        env:
+          RELEASE_SHA: ${{ github.sha }}
+          PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.published-packages }}
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: yarn csdk:post-release-sync
 
   canary-snapshot:
     runs-on: ubuntu-latest
@@ -115,30 +123,25 @@ jobs:
           ref: ${{ github.ref }}
           fetch-depth: 0
 
-      - name: Use Node.js 24
-        uses: actions/setup-node@v4
+      - name: Release setup
+        uses: ./.github/actions/release-setup
         with:
-          node-version: 24
+          clean-cache: 'true'
 
-      - name: Install dependencies
-        run: |
-          yarn cache clean --all
-          yarn install --immutable
-
-      - name: Set canary prefix
-        id: canary-prefix
+      # Canary dist-tag (and version prefix) of this branch; betas: beta.<rest of the branch name>
+      - name: Release info
+        id: release-info
         env:
-          BRANCH_NAME: ${{ github.ref_name }}
+          BRANCH: ${{ github.ref_name }}
         run: |
-          if [[ "$BRANCH_NAME" == release/betas/* ]]; then
-            BRANCH_END="${BRANCH_NAME#release/betas/}"
-            PREFIX="beta.${BRANCH_END//\//-}"
-          elif [[ "$BRANCH_NAME" == release/* ]]; then
-            PREFIX="canary-hotfix"
-          else
-            PREFIX="canary"
-          fi
-          echo "prefix=$PREFIX" >> "$GITHUB_OUTPUT"
+          case "$BRANCH" in
+            dev | release/latest) canary_prefix=canary ;;
+            release/1.x.x) canary_prefix=ver1-canary ;;
+            release/betas/*) suffix="${BRANCH#release/betas/}"; canary_prefix="beta.${suffix//\//-}" ;;
+            *) echo "::error::$BRANCH has no canary release info"; exit 1 ;;
+          esac
+          echo "canary_prefix=$canary_prefix" >> "$GITHUB_OUTPUT"
+          echo "$BRANCH: canary_prefix=$canary_prefix"
 
       - name: Build packages
         run: npm run build
@@ -147,7 +150,7 @@ jobs:
         id: canary_snapshot
         run: yarn changeset:cascade-snapshot-version
         env:
-          CANARY_PREFIX: ${{ steps.canary-prefix.outputs.prefix }}
+          CANARY_PREFIX: ${{ steps.release-info.outputs.canary_prefix }}
 
       - name: Re-Install dependencies
         run: |
@@ -156,8 +159,9 @@ jobs:
       - name: Publish canary snapshot packages to npm
         if: steps.canary_snapshot.outputs.snapshot_publish == 'true'
         env:
-          CANARY_PREFIX: ${{ steps.canary-prefix.outputs.prefix }}
+          CANARY_PREFIX: ${{ steps.release-info.outputs.canary_prefix }}
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           yarn build
           yarn changeset:publish --tag $CANARY_PREFIX --no-git-tag
+

@@ -12,7 +12,7 @@ export interface ChangesetLike {
 /**
  * Reads `.changeset/products.config.json`.
  * @param {string} cwd repository root
- * @returns {Products} product name -> packages
+ * @returns {Record<string, string[]>} product name -> packages
  */
 export function readProducts(cwd: string): Record<string, string[]> {
   return JSON.parse(readFileSync(path.join(cwd, PRODUCTS_PATH), 'utf8'));

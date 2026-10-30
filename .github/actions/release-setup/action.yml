@@ -1,0 +1,44 @@
+name: Release setup
+description: >
+  Shared setup of the release workflows after checkout: the bot's git identity and an
+  authenticated origin (when a token is given), Node.js 24, and the dependency install.
+  The GitHub App token and the checkout stay in each workflow: a local action is only
+  available once the repository is checked out.
+
+inputs:
+  token:
+    description: GitHub App token; when set, git commits as content-sdk-bot and origin pushes with it
+    required: false
+    default: ''
+  install:
+    description: "'immutable' (yarn install --immutable), 'update' (yarn install) or 'none' (no Node.js, no install)"
+    required: false
+    default: immutable
+  clean-cache:
+    description: Run `yarn cache clean --all` before installing
+    required: false
+    default: 'false'
+
+runs:
+  using: composite
+  steps:
+    - name: Set git configuration
+      if: inputs.token != ''
+      shell: bash
+      run: |
+        git config --global user.email builds@sitecore.com
+        git config --global user.name "content-sdk-bot"
+        git remote set-url origin "https://x-access-token:${{ inputs.token }}@github.com/${{ github.repository }}"
+
+    - name: Use Node.js 24
+      if: inputs.install != 'none'
+      uses: actions/setup-node@v4
+      with:
+        node-version: 24
+
+    - name: Install dependencies
+      if: inputs.install != 'none'
+      shell: bash
+      run: |
+        if [ "${{ inputs.clean-cache }}" = "true" ]; then yarn cache clean --all; fi
+        if [ "${{ inputs.install }}" = "immutable" ]; then yarn install --immutable; else yarn install; fi
