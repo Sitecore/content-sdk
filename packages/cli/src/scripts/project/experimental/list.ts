@@ -10,7 +10,7 @@ import {
   canResolveAppModule,
   loadAppModule,
   resolveContentSdkPackageNames,
-} from '../../../utils/framework-package';
+} from '@sitecore-content-sdk/core/node-tools';
 
 /**
  * @param {Argv} yargs

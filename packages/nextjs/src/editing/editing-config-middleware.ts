@@ -80,6 +80,7 @@ export class EditingConfigMiddleware {
     return res.status(200).json({
       components,
       packages: this.config.metadata.packages,
+      capabilities: this.config.metadata.capabilities ?? {},
       editMode: EditMode.Metadata,
     });
   };

@@ -13,4 +13,8 @@ Use [AGENTS.md](../../AGENTS.md) first (compact). Open **one** file below when y
 | [RULES-sitecore.md](RULES-sitecore.md) | XM Cloud config, components, content client, placeholders |
 | [AGENTS-workflows.md](AGENTS-workflows.md) | Example agent tasks, testing, CLI init flow |
 
-Cursor rules in [`.cursor/rules/`](../../.cursor/rules/) are slim glob-scoped cards that point here. Skills for **head apps** live in template `.agents/skills/` — see [Skills.md](../../Skills.md).
+Cursor rules in [`.cursor/rules/`](../../.cursor/rules/) are slim glob-scoped cards that point here.
+
+**Monorepo skills:** [`.agents/skills/`](../skills/) — e.g. [content-sdk-capabilities](../skills/content-sdk-capabilities/SKILL.md) for metadata capability work.
+
+Skills for **head apps** live in template `.agents/skills/` — see [Skills.md](../../Skills.md).

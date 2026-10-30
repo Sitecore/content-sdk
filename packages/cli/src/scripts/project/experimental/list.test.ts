@@ -1,9 +1,8 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
+import proxyquire from 'proxyquire';
 import { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG } from '@sitecore-content-sdk/content/experimental';
-import * as frameworkPackage from '../../../utils/framework-package';
-import { handler } from './list';
 
 describe('experimental list command', () => {
   const frameworkPackageName = '@sitecore-content-sdk/nextjs';
@@ -22,6 +21,7 @@ describe('experimental list command', () => {
   let resolveContentSdkPackageNamesStub: sinon.SinonStub;
   let loadAppModuleStub: sinon.SinonStub;
   let canResolveAppModuleStub: sinon.SinonStub;
+  let handler: () => void;
 
   const output = () =>
     consoleLogStub
@@ -32,13 +32,16 @@ describe('experimental list command', () => {
   beforeEach(() => {
     consoleLogStub = sinon.stub(console, 'log');
     consoleErrorStub = sinon.stub(console, 'error');
-    resolveContentSdkPackageNamesStub = sinon
-      .stub(frameworkPackage, 'resolveContentSdkPackageNames')
-      .returns([frameworkPackageName]);
-    loadAppModuleStub = sinon
-      .stub(frameworkPackage, 'loadAppModule')
-      .returns({ experimentalFeaturesCatalog: catalog });
-    canResolveAppModuleStub = sinon.stub(frameworkPackage, 'canResolveAppModule').returns(true);
+    resolveContentSdkPackageNamesStub = sinon.stub().returns([frameworkPackageName]);
+    loadAppModuleStub = sinon.stub().returns({ experimentalFeaturesCatalog: catalog });
+    canResolveAppModuleStub = sinon.stub().returns(true);
+    handler = proxyquire('./list', {
+      '@sitecore-content-sdk/core/node-tools': {
+        resolveContentSdkPackageNames: resolveContentSdkPackageNamesStub,
+        loadAppModule: loadAppModuleStub,
+        canResolveAppModule: canResolveAppModuleStub,
+      },
+    }).handler;
     delete process.env[CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG];
     delete process.env.CSDK_EXPERIMENTAL_DUMMY_FEATURE;
   });

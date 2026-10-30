@@ -142,6 +142,11 @@
       "require": "./dist/cjs/experimental-features/index.js",
       "types": "./types/experimental-features/index.d.ts"
     },
+    "./capabilities": {
+      "import": "./dist/esm/capabilities/index.js",
+      "require": "./dist/cjs/capabilities/index.js",
+      "types": "./types/capabilities/index.d.ts"
+    },
     "./proxy": {
       "types": "./types/proxy/index.d.ts",
       "import": "./dist/esm/proxy/index.js",

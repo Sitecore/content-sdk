@@ -27,13 +27,17 @@ describe('createEditingConfigRouteHandler', () => {
   componentsMap.set('TestComponentOne', {} as NextjsContentSdkComponent);
   componentsMap.set('TestComponentTwo', {} as NextjsContentSdkComponent);
 
-  const metadata = { packages: { testPackageOne: '0.1.1' } };
+  const metadata = {
+    packages: { testPackageOne: '0.1.1' },
+    capabilities: { preview: true as const },
+  };
 
   const expectedResult = {
     framework: 'nextjs-approuter',
     components: ['TestComponentOne', 'TestComponentTwo'],
     clientComponents: [],
     packages: { testPackageOne: '0.1.1' },
+    capabilities: { preview: true },
     editMode: 'metadata',
   };
 
