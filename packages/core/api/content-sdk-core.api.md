@@ -117,7 +117,9 @@ export function createCapabilityFilterContext(appRoot?: string, sitecoreConfig?:
 // @public
 export type CSDKCapabilities = {
     preview?: CapabilityDefinition & {
-        timeBasedPreview?: CapabilityDefinition;
+        value: {
+            timeBasedPreview?: CapabilityDefinition;
+        };
     };
     editing?: CapabilityDefinition;
     abTesting?: CapabilityDefinition;
@@ -277,6 +279,17 @@ export const getEnforcedCorsHeaders: (input: {
 }) => {
     [key: string]: string;
 } | null;
+
+// @public
+export function getMetadata(config?: GetMetadataConfig): Promise<Metadata>;
+
+// @public
+export type GetMetadataConfig = {
+    allowWorkspaces?: boolean;
+    capabilities?: boolean;
+    appRoot?: string;
+    sitecoreConfig?: CapabilitySitecoreConfig;
+};
 
 // @public
 export interface GraphQLClient {

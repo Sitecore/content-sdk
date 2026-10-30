@@ -25,7 +25,7 @@ describe('Angular capabilities', () => {
       'variantGeneration',
       'variantPreview',
     ]);
-    expect(Object.keys(capabilities.preview ?? {})).toEqual(['value', 'timeBasedPreview']);
+    expect(Object.keys(capabilities.preview?.value ?? {})).toEqual(['timeBasedPreview']);
   });
 
   it('filters capabilities based on application wiring', async () => {

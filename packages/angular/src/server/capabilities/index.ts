@@ -8,7 +8,7 @@ const hasCodeGenerationEnabled: CapabilityFilter = ({ sitecoreConfig }) =>
   sitecoreConfig?.disableCodeGeneration !== true;
 
 const capabilities: CSDKCapabilities = {
-  preview: { value: true, timeBasedPreview: { value: true } },
+  preview: { value: { timeBasedPreview: { value: true } } },
   editing: { value: true },
   abTesting: { value: true, filter: hasPersonalizeMiddleware },
   designLibrary: {

@@ -31,7 +31,7 @@ describe('Next.js capabilities', () => {
       'feaasRender',
       'designLibrary',
     ]);
-    expect(Object.keys(capabilities.preview ?? {})).to.deep.equal(['value', 'timeBasedPreview']);
+    expect(Object.keys(capabilities.preview?.value ?? {})).to.deep.equal(['timeBasedPreview']);
     expect(Object.keys(capabilities.designLibrary?.value ?? {})).to.deep.equal([
       'variantGeneration',
       'variantPreview',

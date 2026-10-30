@@ -61,8 +61,10 @@ export type CapabilityDefinition = {
 export type CSDKCapabilities = {
   /** Allows item preview through the editing render endpoint. */
   preview?: CapabilityDefinition & {
-    /** Allows preview for a specific point in time through the editing render endpoint. */
-    timeBasedPreview?: CapabilityDefinition;
+    value: {
+      /** Allows preview for a specific point in time through the editing render endpoint. */
+      timeBasedPreview?: CapabilityDefinition;
+    };
   };
   /** Allows item editing through the editing render endpoint. */
   editing?: CapabilityDefinition;
