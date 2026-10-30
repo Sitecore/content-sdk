@@ -1,7 +1,7 @@
-﻿'use client';
-import React, { JSX } from 'react';
+﻿import React, { JSX } from 'react';
+import { Page } from '@sitecore-content-sdk/content/client';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
-import { useSitecore } from './../components/SitecoreProvider';
+import { DatasourceCheckFallback } from './DatasourceCheckFallback';
 
 export const DefaultEditingError = (): JSX.Element => (
   <div className="sc-jss-editing-error" role="alert">
@@ -11,6 +11,11 @@ export const DefaultEditingError = (): JSX.Element => (
 
 export interface WithDatasourceCheckProps {
   rendering: ComponentRendering;
+  /**
+   * Page data, supplied by `Placeholder`. Used to detect editing and Design Library modes.
+   * When omitted, the page mode is read from `SitecoreProvider` context on the client.
+   */
+  page?: Page;
 }
 
 export interface WithDatasourceCheckOptions {
@@ -37,6 +42,10 @@ function hasValidDatasource(rendering?: ComponentRendering): boolean {
 /**
  * Checks whether a Sitecore datasource is present and valid, then renders appropriately depending on page mode (normal vs editing).
  * `isContentResolved: false` is treated the same as a missing datasource. If the property is omitted, the original presence check is used.
+ *
+ * Works in both Server and Client Components. Apply it in the same module as the wrapped component.
+ * When `page` is not passed (e.g. outside a `Placeholder`), the page mode is resolved on the client
+ * from `SitecoreProvider` context. In Server Components, pass `page` to keep the check on the server.
  * @param {WithDatasourceCheckOptions} [options]
  * @returns
  *  The wrapped component, if a datasource is present and valid.
@@ -55,18 +64,29 @@ export function withDatasourceCheck(options?: WithDatasourceCheckOptions) {
   return function withDatasourceCheckHoc<ComponentProps extends WithDatasourceCheckProps>(
     Component: React.ComponentType<ComponentProps>
   ) {
-    return (props: ComponentProps) => {
-      const { page } = useSitecore();
+    return function WithDatasourceCheck(props: ComponentProps): JSX.Element | null {
       const EditingError = options?.editingErrorComponent ?? DefaultEditingError;
 
-      // If the component is rendered in DesignLibrary, we don't need to check for datasource
-      const isDesignLibrary = page.mode.isDesignLibrary;
+      if (hasValidDatasource(props.rendering)) {
+        return <Component {...props} />;
+      }
 
-      return isDesignLibrary || hasValidDatasource(props.rendering) ? (
-        <Component {...props} />
-      ) : page.mode.isEditing ? (
-        <EditingError />
-      ) : null;
+      if (!props.page) {
+        return (
+          <DatasourceCheckFallback editingError={<EditingError />}>
+            <Component {...props} />
+          </DatasourceCheckFallback>
+        );
+      }
+
+      const isDesignLibrary = props.page.mode?.isDesignLibrary;
+      const isEditing = props.page.mode?.isEditing;
+      // If the component is rendered in DesignLibrary, we don't need to check for datasource
+      if (isDesignLibrary) {
+        return <Component {...props} />;
+      }
+
+      return isEditing ? <EditingError /> : null;
     };
   };
 }
