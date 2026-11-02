@@ -16,6 +16,8 @@ export interface DatasourceCheckFallbackProps {
 /**
  * Resolves the missing-datasource outcome from `SitecoreProvider` context when `page` is not available in props.
  * Accepts only React elements so it can be rendered from a Server Component.
+ * @deprecated Temporary fallback for callers that omit `page`. Remove this component in version 3.0.0
+ * and make the `page` prop required on `withDatasourceCheck`.
  * @param {DatasourceCheckFallbackProps} props component props
  * @returns {JSX.Element | null} the wrapped component in Design Library, the editing error in editing mode, otherwise null
  */

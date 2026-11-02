@@ -14,6 +14,7 @@ export interface WithDatasourceCheckProps {
   /**
    * Page data, supplied by `Placeholder`. Used to detect editing and Design Library modes.
    * When omitted, the page mode is read from `SitecoreProvider` context on the client.
+   * This prop will be required in version 3.0.0, when `DatasourceCheckFallback` is removed.
    */
   page?: Page;
 }
@@ -72,6 +73,10 @@ export function withDatasourceCheck(options?: WithDatasourceCheckOptions) {
       }
 
       if (!props.page) {
+        console.warn(
+          'withDatasourceCheck: The `page` prop was not provided. Pass the `page` prop to components wrapped by `withDatasourceCheck`, especially when using Server Components.'
+        );
+
         return (
           <DatasourceCheckFallback editingError={<EditingError />}>
             <Component {...props} />
