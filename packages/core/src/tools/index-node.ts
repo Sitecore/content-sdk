@@ -6,6 +6,26 @@ export * from './metadata';
 
 export { ensurePathExists } from './ensurePath';
 
+export {
+  APP_SCAFFOLDED_EVENT_NAME,
+  DEFAULT_TELEMETRY_URL,
+  TELEMETRY_DISABLED_ENV,
+  TELEMETRY_DISPATCH_TIMEOUT_MS,
+  TELEMETRY_SOURCE,
+  TELEMETRY_URL_ENV,
+  createTelemetryFingerprint,
+  dispatchTelemetryEvent,
+  isTelemetryEnabled,
+  resolveTelemetryUrl,
+} from './telemetry';
+export type {
+  DispatchTelemetryOptions,
+  TelemetryData,
+  TelemetryEvent,
+  TelemetryFingerprint,
+  TelemetryPrimitive,
+} from './telemetry';
+
 /**
  * Preserve "live binding" semantics similar to ES module imports: production
  * code always sees the current implementation; tests can swap it safely and

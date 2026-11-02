@@ -11,7 +11,7 @@ export const parseArgs = (): ParsedArgs => {
   // to pass to the generator prompts and skip them.
   // useful for CI and testing purposes
   const options = {
-    boolean: ['force', 'noInstall', 'yes', 'silent', 'help'],
+    boolean: ['force', 'noInstall', 'noTelemetry', 'yes', 'silent', 'help'],
     alias: {
       h: 'help',
     },
@@ -45,6 +45,7 @@ ${chalk.bold('Options:')}
   ${chalk.yellow('--yes')}                   Use defaults and skip prompts where possible
   ${chalk.yellow('--force')}                 Continue if destination is not empty
   ${chalk.yellow('--noInstall')}             Skip package install and lint fix
+  ${chalk.yellow('--noTelemetry')}           Disable anonymous usage telemetry for this run
   ${chalk.yellow('--silent')}                Suppress normal output
   ${chalk.yellow('-h, --help')}             Show help`);
 };

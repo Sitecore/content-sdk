@@ -77,6 +77,12 @@ describe('bin', () => {
       expect(args.destination).to.be.undefined;
     });
 
+    it('should parse the telemetry opt-out flag', () => {
+      process.argv = ['node', 'index.ts', '--noTelemetry'];
+
+      expect(parseArgs().noTelemetry).to.equal(true);
+    });
+
     it('should parse help flags', () => {
       process.argv = ['node', 'index.ts', '-h'];
 
@@ -113,6 +119,7 @@ describe('bin', () => {
       expect(helpText).to.include('foo');
       expect(helpText).to.include('bar');
       expect(helpText).to.not.include('--template');
+      expect(helpText).to.include('--noTelemetry');
     });
   });
 

@@ -27,4 +27,8 @@ export type BaseAppArgs = {
    * Default values will be used
    */
   yes?: boolean;
+  /**
+   * Skip anonymous usage telemetry for this run
+   */
+  noTelemetry?: boolean;
 };

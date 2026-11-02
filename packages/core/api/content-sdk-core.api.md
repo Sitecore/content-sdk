@@ -12,6 +12,9 @@ import { IncomingHttpHeaders } from 'http';
 import { ParsedUrlQueryInput } from 'querystring';
 
 // @public
+export const APP_SCAFFOLDED_EVENT_NAME = "app_scaffolded";
+
+// @public
 export const areURLSearchParamsEqual: (params1: URLSearchParams, params2: URLSearchParams) => boolean;
 
 // @public
@@ -61,10 +64,14 @@ export interface CoreContext {
 }
 
 // @public
+export function createTelemetryFingerprint(packageName: string, packageVersion: string): TelemetryFingerprint;
+
+// @public
 const debug_2: {
     common: debug_3.Debugger;
     http: debug_3.Debugger;
     init: debug_3.Debugger;
+    telemetry: debug_3.Debugger;
 };
 export { debug_2 as debug }
 
@@ -90,6 +97,9 @@ const DEFAULT_SITECORE_AUTH_BASE_URL = "https://edge-platform.sitecorecloud.io/c
 const DEFAULT_SITECORE_AUTH_DOMAIN = "https://auth.sitecorecloud.io";
 
 // @public
+export const DEFAULT_TELEMETRY_URL = "https://edge-platform.sitecorecloud.io/telemetry/v1/events";
+
+// @public
 export class DefaultRetryStrategy implements RetryStrategy {
     constructor(options?: {
         statusCodes?: number[];
@@ -101,6 +111,17 @@ export class DefaultRetryStrategy implements RetryStrategy {
     // (undocumented)
     shouldRetry(error: GenericGraphQLClientError, attempt: number, retries: number): boolean;
 }
+
+// @public
+export function dispatchTelemetryEvent(event: TelemetryEvent, options?: DispatchTelemetryOptions): Promise<boolean>;
+
+// @public
+export type DispatchTelemetryOptions = {
+    enabled?: boolean;
+    url?: string;
+    timeoutMs?: number;
+    fetchImpl?: typeof fetch;
+};
 
 // @public
 export const enableDebug: (namespaces: string) => void;
@@ -259,6 +280,9 @@ export const isRegexOrUrl: (input: string) => "regex" | "url";
 export function isServer(): boolean;
 
 // @public
+export function isTelemetryEnabled(enabled?: boolean): boolean;
+
+// @public
 export const isTimeoutError: (error: unknown) => boolean;
 
 // @public
@@ -348,6 +372,9 @@ export function resolveEdgeUrlForStaticFiles(edgeUrl?: string): string;
 export function resolveExperienceEdgeUrl(): string;
 
 // @public
+export function resolveTelemetryUrl(override?: string): string;
+
+// @public
 export function resolveUrl(urlBase: string, params?: ParsedUrlQueryInput): string;
 
 // @public
@@ -372,6 +399,41 @@ export const SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV = "SITECORE_EXPERIENCE_EDGE_H
 const SITECORE_EXPERIENCE_EDGE_URL_DEFAULT = "https://edge.sitecorecloud.io";
 
 // @public
+export const TELEMETRY_DISABLED_ENV = "SITECORE_TELEMETRY_DISABLED";
+
+// @public
+export const TELEMETRY_DISPATCH_TIMEOUT_MS = 1500;
+
+// @public
+export const TELEMETRY_SOURCE = "contentsdk";
+
+// @public
+export const TELEMETRY_URL_ENV = "SITECORE_TELEMETRY_URL";
+
+// @public
+export type TelemetryData = Record<string, TelemetryPrimitive>;
+
+// @public
+export type TelemetryEvent = {
+    source: string;
+    name: string;
+    data: TelemetryData;
+    date?: number;
+    fingerprint: TelemetryFingerprint;
+};
+
+// @public
+export type TelemetryFingerprint = {
+    packageName: string;
+    packageVersion: string;
+    os?: string;
+    runtimeVersion?: string;
+};
+
+// @public
+export type TelemetryPrimitive = string | number | boolean;
+
+// @public
 export interface TenantArgs {
     audience?: string;
     authority?: string;
@@ -384,7 +446,7 @@ export interface TenantArgs {
 
 // Warnings were encountered during analysis:
 //
-// src/tools/index-node.ts:16:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+// src/tools/index-node.ts:36:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 
