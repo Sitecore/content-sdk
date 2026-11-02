@@ -6,7 +6,7 @@
 
 # Interface: DictionaryPhrases
 
-Defined in: [content/src/i18n/dictionary-service.ts:68](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/i18n/dictionary-service.ts#L68)
+Defined in: [content/src/i18n/dictionary-service.ts:68](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/content/src/i18n/dictionary-service.ts#L68)
 
 Object model for Sitecore dictionary phrases
 

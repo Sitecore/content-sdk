@@ -26,6 +26,7 @@ export {
   NativeDataFetcherResponse,
 } from './native-fetcher';
 export { RetryStrategy, GenericGraphQLClientError, FetchOptions } from './models';
+export { DeepRequired, SitecoreConfig, SitecoreConfigInput } from './sitecore-config';
 export { constants };
 export * from './initialization';
 export {
@@ -33,3 +34,4 @@ export {
   getAtomsCssCompiler,
   type AtomsCssCompiler,
 } from './atoms-css-compiler-registry';
+export * from './capabilities';

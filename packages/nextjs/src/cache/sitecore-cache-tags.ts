@@ -66,7 +66,7 @@ export function buildSitecoreRouteCacheTag(params: BuildSitecoreRouteCacheTagPar
 
 /**
  * Parameters for {@link buildSitecoreItemCacheTag}.
- * @internal
+ * @public
  */
 export type BuildSitecoreItemCacheTagParams = {
   itemId: string;
@@ -76,7 +76,7 @@ export type BuildSitecoreItemCacheTagParams = {
 /**
  * Tag for a layout/route item (and anything else keyed the same way). Use for item-level invalidation.
  * @param {BuildSitecoreItemCacheTagParams} params - Item id and locale.
- * @internal
+ * @public
  */
 export function buildSitecoreItemCacheTag(params: BuildSitecoreItemCacheTagParams): string {
   const id = normalizeSitecoreItemIdForCacheTag(params.itemId);

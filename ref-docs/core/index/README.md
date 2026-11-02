@@ -32,8 +32,16 @@
 
 ## Type Aliases
 
-- [AtomsCssCompiler](type-aliases/AtomsCssCompiler.md)
+- [CapabilitiesModule](type-aliases/CapabilitiesModule.md)
+- [CapabilityDefinition](type-aliases/CapabilityDefinition.md)
+- [CapabilityFilter](type-aliases/CapabilityFilter.md)
+- [CapabilityFilterContext](type-aliases/CapabilityFilterContext.md)
+- [CapabilityMap](type-aliases/CapabilityMap.md)
+- [CapabilityMetadata](type-aliases/CapabilityMetadata.md)
+- [CapabilitySitecoreConfig](type-aliases/CapabilitySitecoreConfig.md)
+- [CSDKCapabilities](type-aliases/CSDKCapabilities.md)
 - [Debugger](type-aliases/Debugger.md)
+- [DeepRequired](type-aliases/DeepRequired.md)
 - [FetchOptions](type-aliases/FetchOptions.md)
 - [GenericGraphQLClientError](type-aliases/GenericGraphQLClientError.md)
 - [GraphQLClientError](type-aliases/GraphQLClientError.md)
@@ -43,6 +51,10 @@
 - [NativeDataFetcherConfig](type-aliases/NativeDataFetcherConfig.md)
 - [NativeDataFetcherError](type-aliases/NativeDataFetcherError.md)
 - [PluginDependency](type-aliases/PluginDependency.md)
+- [ResolvedCapabilities](type-aliases/ResolvedCapabilities.md)
+- [ResolvedCapability](type-aliases/ResolvedCapability.md)
+- [SitecoreConfig](type-aliases/SitecoreConfig.md)
+- [SitecoreConfigInput](type-aliases/SitecoreConfigInput.md)
 
 ## Variables
 
@@ -53,8 +65,6 @@
 ## Functions
 
 - [enableDebug](functions/enableDebug.md)
-- [getAtomsCssCompiler](functions/getAtomsCssCompiler.md)
 - [getCoreContext](functions/getCoreContext.md)
 - [initContentSdk](functions/initContentSdk.md)
 - [isNamespaceEnabled](functions/isNamespaceEnabled.md)
-- [setAtomsCssCompiler](functions/setAtomsCssCompiler.md)

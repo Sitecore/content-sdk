@@ -1,0 +1,92 @@
+import fs from 'fs';
+import path from 'path';
+import type { CapabilityFilterContext } from '../../capabilities';
+
+const SOURCE_DIRECTORY = 'src';
+const SOURCE_FILE = /\.[jt]sx?$/;
+const EXCLUDED_FILE = /\.(d|test|spec)\.[jt]sx?$/;
+
+/**
+ * Tests whether any application source file under `src` satisfies a predicate.
+ * Declaration and test files are skipped, and the scan stops at the first match.
+ * @param {CapabilityFilterContext} context filter context
+ * @param {Function} predicate test applied to each file's source code
+ * @returns {boolean} whether any source file matches
+ * @internal
+ */
+export const someSourceFile = (
+  context: CapabilityFilterContext,
+  predicate: (source: string) => boolean
+): boolean => {
+  const { appRoot, readFile } = context;
+  let entries: string[];
+  try {
+    entries = fs.readdirSync(path.join(appRoot, SOURCE_DIRECTORY), { recursive: true }) as string[];
+  } catch {
+    return false;
+  }
+
+  return entries
+    .filter((entry) => SOURCE_FILE.test(entry) && !EXCLUDED_FILE.test(entry))
+    .some((entry) => predicate(readFile(path.join(SOURCE_DIRECTORY, entry)) ?? ''));
+};
+
+// import { A, B as C } from '<module>'. Type-only imports (`import type { ... }`) don't match.
+const NAMED_IMPORT = /import\s+(?:[\w$]+\s*,\s*)?\{([^}]*)\}\s*from\s*['"]([^'"]+)['"]/g;
+
+/**
+ * Gets the imported (not local) name from one import specifier, skipping inline type imports.
+ * @param {string} specifier single import specifier
+ * @returns {string | undefined} imported name, or undefined when the specifier is type-only
+ */
+const getImportedName = (specifier: string): string | undefined => {
+  const trimmed = specifier.trim();
+  if (!trimmed || trimmed.startsWith('type ')) {
+    return undefined;
+  }
+
+  const asIndex = trimmed.indexOf(' as ');
+  const imported = (asIndex === -1 ? trimmed : trimmed.slice(0, asIndex)).trim();
+
+  return imported || undefined;
+};
+
+/**
+ * Gets the imported (not local) names from a named import list, skipping inline type imports.
+ * @param {string} namedImports contents of the import braces
+ * @returns {string[]} imported names
+ */
+const getImportedNames = (namedImports: string) =>
+  namedImports
+    .split(',')
+    .map(getImportedName)
+    .filter((name): name is string => name !== undefined);
+
+/**
+ * Tests whether source code imports any of the given names from a matching module.
+ * @param {string} source source code
+ * @param {RegExp} modulePattern pattern the module specifier must match
+ * @param {string[]} names exported names to look for
+ * @returns {boolean} whether any of the names is imported
+ * @internal
+ */
+export const importsNamedExport = (
+  source: string,
+  modulePattern: RegExp,
+  names: readonly string[]
+): boolean => {
+  const importPattern = new RegExp(NAMED_IMPORT.source, 'g');
+  let match: RegExpExecArray | null;
+
+  while ((match = importPattern.exec(source)) !== null) {
+    const [, namedImports, moduleName] = match;
+    if (
+      modulePattern.test(moduleName) &&
+      getImportedNames(namedImports).some((name) => names.includes(name))
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+};
