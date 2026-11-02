@@ -8,4 +8,4 @@
 
 > `const` **LOADER\_REGISTRY**: `InjectionToken`\<[`LoaderRegistry`](../type-aliases/LoaderRegistry.md)\>
 
-Defined in: [packages/angular/src/loaders/loader-registry.token.ts:21](https://github.com/Sitecore/content-sdk/blob/a61659d31d52d41a1b13c8b63d46053c1b52cda1/packages/angular/src/loaders/loader-registry.token.ts#L21)
+Defined in: [packages/angular/src/loaders/loader-registry.token.ts:21](https://github.com/Sitecore/content-sdk/blob/10c92fa4a2d5b496313949dc30b1527d5cd4c787/packages/angular/src/loaders/loader-registry.token.ts#L21)
