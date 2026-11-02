@@ -510,6 +510,14 @@ export { NativeDataFetcherResponse }
 // @public
 export const noopLoadImportMap: () => Promise<ImportMapImport>;
 
+// @public
+export type NumberFieldSchema = z.infer<ReturnType<typeof numberFieldSchema>>;
+
+// @public
+export const numberFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
+    value: z.ZodOptional<z.ZodNumber>;
+}, z.core.$strip>;
+
 export { OG_CREATION_TIME_TAG }
 
 export { OG_MODIFIED_TIME_TAG }

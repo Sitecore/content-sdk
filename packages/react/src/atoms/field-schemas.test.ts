@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { z } from 'zod';
 import {
   textFieldSchema,
+  numberFieldSchema,
   richTextFieldSchema,
   dateFieldSchema,
   linkFieldSchema,
@@ -37,6 +38,12 @@ describe('field-schemas', () => {
       factory: textFieldSchema,
       control: 'Single-Line Text',
       fieldType: 'Text',
+    },
+    {
+      name: 'numberFieldSchema',
+      factory: numberFieldSchema,
+      control: 'Number',
+      fieldType: 'Number',
     },
     {
       name: 'richTextFieldSchema',
@@ -84,6 +91,25 @@ describe('field-schemas', () => {
 
     it('parses with no value', () => {
       expect(() => textFieldSchema().parse({})).not.to.throw();
+    });
+  });
+
+  describe('numberFieldSchema', () => {
+    it('parses a valid number field', () => {
+      expect(() => numberFieldSchema().parse({ value: 42 })).not.to.throw();
+    });
+
+    it('parses a decimal and a negative value', () => {
+      expect(() => numberFieldSchema().parse({ value: 3.14 })).not.to.throw();
+      expect(() => numberFieldSchema().parse({ value: -1 })).not.to.throw();
+    });
+
+    it('parses with no value', () => {
+      expect(() => numberFieldSchema().parse({})).not.to.throw();
+    });
+
+    it('rejects a non-numeric value', () => {
+      expect(() => numberFieldSchema().parse({ value: 'abc' })).to.throw();
     });
   });
 
@@ -170,6 +196,12 @@ describe('field-schemas', () => {
     it('accepts textFieldSchema as a prop in a component definition', () => {
       const props = z.object({ title: textFieldSchema() });
       const parsed = props.safeParse({ title: { value: 'Hello' } });
+      expect(parsed.success).to.equal(true);
+    });
+
+    it('accepts numberFieldSchema as a prop', () => {
+      const props = z.object({ quantity: numberFieldSchema() });
+      const parsed = props.safeParse({ quantity: { value: 5 } });
       expect(parsed.success).to.equal(true);
     });
 

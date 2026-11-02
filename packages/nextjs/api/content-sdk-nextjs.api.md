@@ -163,6 +163,8 @@ import { NextURL } from 'next/dist/server/web/next-url';
 import { noopLoadImportMap } from '@sitecore-content-sdk/react';
 import { normalizePersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
 import { normalizeSiteRewrite } from '@sitecore-content-sdk/content/site';
+import { NumberFieldSchema } from '@sitecore-content-sdk/react';
+import { numberFieldSchema } from '@sitecore-content-sdk/react';
 import { OG_CREATION_TIME_TAG } from '@sitecore-content-sdk/react';
 import { OG_MODIFIED_TIME_TAG } from '@sitecore-content-sdk/react';
 import { OpenGraphFields } from '@sitecore-content-sdk/react';
@@ -903,6 +905,10 @@ export { noopLoadImportMap }
 export { normalizePersonalizedRewrite }
 
 export { normalizeSiteRewrite }
+
+export { NumberFieldSchema }
+
+export { numberFieldSchema }
 
 export { OG_CREATION_TIME_TAG }
 

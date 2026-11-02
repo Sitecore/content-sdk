@@ -19,6 +19,21 @@ export const textFieldSchema = (extra?: z.ZodRawShape) =>
   );
 
 /**
+ * Zod schema for a Sitecore Number field.
+ * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the schema.
+ * @returns A ZodObject with `value?: number` and DS control/fieldType hints attached.
+ * @public
+ */
+export const numberFieldSchema = (extra?: z.ZodRawShape) =>
+  withPropMeta(
+    z.object({
+      value: z.number().optional(),
+      ...extra,
+    }),
+    { control: 'Number', fieldType: 'Number' }
+  );
+
+/**
  * Zod schema for a Sitecore Rich Text field.
  * Mirrors the Sitecore Rich Text component (`RichText.tsx` in `@sitecore-content-sdk/react`).
  * @param {z.ZodRawShape} [extra] - Optional additional shape to merge into the schema.
@@ -132,6 +147,12 @@ export const fileFieldSchema = (extra?: z.ZodRawShape) =>
  * @public
  */
 export type TextFieldSchema = z.infer<ReturnType<typeof textFieldSchema>>;
+
+/**
+ * Inferred type for a Sitecore Number field prop.
+ * @public
+ */
+export type NumberFieldSchema = z.infer<ReturnType<typeof numberFieldSchema>>;
 
 /**
  * Inferred type for a Sitecore Rich Text field prop.
