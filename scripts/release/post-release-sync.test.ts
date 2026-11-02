@@ -63,6 +63,7 @@ function stubGit({
       const version = ref === `origin/${RELEASE_LATEST}` ? latestVersion : devVersion;
       return JSON.stringify({ version });
     }
+    if (args[0] === 'symbolic-ref') return RELEASE_LATEST;
     if (args[0] === 'rev-list') return [SHA, ...Array(parents).fill('p')].join(' ');
     if (args[0] === 'cherry-pick' && pick === 'conflict') throw new Error('conflict');
     return '';
@@ -166,36 +167,51 @@ describe('runSteps', () => {
     await expect(runSteps([a, b, c], ctx)).rejects.toThrow('b: boom');
     expect(order).toEqual(['a']);
   });
+
+  it('returns to the starting branch after every step, failed ones included', async () => {
+    const a = () => undefined;
+    const b = () => {
+      throw new Error('boom');
+    };
+    await expect(runSteps([a, b], ctx)).rejects.toThrow('b: boom');
+    expect(gitCalls().filter(([cmd]) => cmd === 'checkout')).toEqual([
+      ['checkout', '-q', '-f', RELEASE_LATEST],
+      ['checkout', '-q', '-f', RELEASE_LATEST],
+    ]);
+  });
+
+  it('returns to the starting commit when started detached', async () => {
+    mocks.execFileSync.mockImplementation((_cmd: string, args: string[]) => {
+      if (args[0] === 'symbolic-ref') throw new Error('not a symbolic ref');
+      return args[0] === 'rev-parse' ? SHA : '';
+    });
+    await runSteps([() => undefined], ctx);
+    expect(gitCalls().slice(-1)).toEqual([['checkout', '-q', '-f', SHA]]);
+  });
 });
 
 describe('syncRelease', () => {
-  const order: string[] = [];
   const releaseLatestPushes = () =>
     gitCalls().filter(
       ([cmd, ...rest]) => cmd === 'push' && rest.join(' ').includes(RELEASE_LATEST)
     );
 
   beforeEach(() => {
-    order.length = 0;
     stubGit({ devVersion: '2.5.0' }); // dev already has the bump: no cherry-pick
-    mocks.createLegacyBranches.mockImplementation(async () => {
-      order.push(`legacy (release/latest pushes so far: ${releaseLatestPushes().length})`);
-    });
   });
 
-  it('creates legacy branches from the release, before release/latest moves to it', async () => {
+  it('passes the published packages to the legacy branches step', async () => {
     await syncRelease('dev', SHA, released);
     expect(mocks.createLegacyBranches).toHaveBeenCalledWith(released);
-    expect(order).toEqual(['legacy (release/latest pushes so far: 0)']);
-    expect(releaseLatestPushes()).toHaveLength(1);
   });
 
   it('stops at the first failing step: release/latest keeps the previous release', async () => {
-    mocks.createLegacyBranches.mockRejectedValue(new Error('no tag for nextjs@2.4.0'));
+    mocks.createLegacyBranches.mockRejectedValueOnce(new Error('push rejected'));
     await expect(syncRelease('dev', SHA, released)).rejects.toThrow(
-      'createLegacyBranchesOnMajor: no tag for nextjs@2.4.0'
+      'createLegacyBranchesOnMajor: push rejected'
     );
     expect(releaseLatestPushes()).toEqual([]);
+    expect(mocks.refreshLegacyLockfiles).not.toHaveBeenCalled();
   });
 
   const stepNames = () =>
@@ -216,12 +232,14 @@ describe('syncRelease', () => {
     await syncRelease(RELEASE_LATEST, SHA, released);
     expect(stepNames()).toEqual([
       'createLegacyBranchesOnMajor',
-      'refreshLegacyLockfiles',
       'devBranchSync',
+      'refreshLegacyLockfiles',
     ]);
-    vi.mocked(console.log).mockClear();
-    await syncRelease('release/legacy/nextjs/v2', SHA, released);
-    expect(stepNames()).toEqual([]);
+    for (const other of ['release/legacy/nextjs', 'release/1.x.x', 'release/betas/foo']) {
+      vi.mocked(console.log).mockClear();
+      await syncRelease(other, SHA, released);
+      expect(stepNames()).toEqual([]);
+    }
   });
 
   it('re-creates release/latest for a dev release it does not hold yet', async () => {
@@ -241,7 +259,8 @@ describe('syncRelease', () => {
 
   it('never pushes release/latest from other branches, release/latest included', async () => {
     await syncRelease(RELEASE_LATEST, SHA, released);
-    await syncRelease('release/legacy/nextjs/v2', SHA, released);
+    await syncRelease('release/legacy/nextjs', SHA, released);
+    await syncRelease('release/1.x.x', SHA, released);
     expect(releaseLatestPushes()).toEqual([]);
   });
 });

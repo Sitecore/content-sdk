@@ -14,7 +14,7 @@ on:
     branches:
       - dev
       - 'release/latest'
-      - 'release/legacy/**'
+      - 'release/legacy/*'
       - 'release/1.x.x'
       - 'release/betas/**'
     paths:
@@ -100,12 +100,8 @@ jobs:
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      # Everything after a stable publish, in one idempotent script (scripts/release/post-release-sync.ts):
-      # create legacy branches after a product major (cut at the `latest` tag, the previous release);
-      # dev: re-create release/latest at the release; release/latest: cherry-pick the version bump
-      # onto dev (PR on conflicts).
-      # The published packages are changesets/action's output: a re-run publishes nothing, so it
-      # skips this step. When it failed, finish the remaining steps by hand.
+      # Steps by branch: scripts/release/post-release-sync.ts. A re-run publishes nothing and skips
+      # this step: when it failed, finish the remaining steps by hand.
       # github.sha is the release commit, unaffected by the "Generate API docs" commit on top.
       - name: Post-release sync
         if: steps.changesets.outputs.published == 'true'
@@ -115,8 +111,8 @@ jobs:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: yarn csdk:post-release-sync
 
-      # The `latest` tag marks the latest release of dev or release/latest; legacy branches are cut
-      # at it. After the post-release sync, which cuts them at the previous release.
+      # Legacy branches are cut at the `latest` tag: move it only after the post-release sync.
+      # When the sync failed, move it by hand after finishing it.
       - name: Move the latest tag
         if: >-
           steps.changesets.outputs.published == 'true' &&

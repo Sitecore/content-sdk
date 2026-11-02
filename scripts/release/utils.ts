@@ -44,9 +44,12 @@ export function packageDirs(
 export const branchPrefix = (branch: string): string =>
   /^release\/[^/]+/.exec(branch)?.[0] ?? branch;
 
-/** Rewrites `yarn.lock` for the current workspace without linking (`--mode=update-lockfile`). */
-export function updateLockfile(): void {
-  execFileSync('yarn', ['install', '--mode=update-lockfile'], {
+/**
+ * Rewrites `yarn.lock` for the current workspace without linking (`--mode=update-lockfile`):
+ * `yarn install` by default, or the given yarn command.
+ */
+export function updateLockfile(...command: string[]): void {
+  execFileSync('yarn', [...(command.length ? command : ['install']), '--mode=update-lockfile'], {
     stdio: 'inherit',
     env: { ...process.env, YARN_ENABLE_IMMUTABLE_INSTALLS: 'false' },
     shell: process.platform === 'win32',

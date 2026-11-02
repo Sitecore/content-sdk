@@ -1,6 +1,5 @@
 /**
- * One legacy branch per product, `release/legacy/<product>`: the product's previous major, for
- * maintenance releases (`createLegacyBranchesOnMajor` in `post-release-sync.ts`).
+ * One legacy branch per product, `release/legacy/<product>`: the product's previous major
  *
  * When a full (dev) or `release/latest` release publishes a new major of a product's own package
  * (`x.0.0`), the branch is (re)created at the `latest` tag (`LATEST_RELEASE_TAG`): the previous
@@ -8,19 +7,13 @@
  * `release/latest` nor the release commit's parent: they can hold the new major's code. It replaces
  * the branch of the major before (force-push); its releases stay on npm and in their tags.
  *
- * 1. `getMajorPublishedProducts`: products whose own package was published as `x.0.0`;
- * 2. `getProductPackages`: the packages the product's legacy branch keeps;
- * 3. `getPreviousMajor`: checks out the `latest` tag; skipped when the branch already holds it (a
- *    re-run);
- * 4. `trimLegacyBranch`: keeps only the product's packages (`.changeset/products.config.json`) plus
- *    `create-content-sdk-app`; every other workspace package is deleted and resolves from npm,
- *    exactly as for consumers of the legacy product, to avoid version conflicts with non-product
- *    packages in other branches. Commits and force-pushes the branch.
+ * The branch keeps only the product's packages and the scaffolder: every other workspace package
+ * resolves from npm, as for the legacy product's consumers, so it can't conflict with the versions
+ * of non-product packages on other branches.
  */
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
 
-import { execFileSync } from 'child_process';
 import { readFileSync, rmSync, writeFileSync } from 'fs';
 import path from 'path';
 import { getPackages } from '@manypkg/get-packages';
@@ -43,14 +36,14 @@ import {
 } from '../utils';
 
 /** A legacy branch checked out at the `latest` tag (`source`: its commit). */
-export interface LegacyBranch {
+interface LegacyBranch {
   slug: string;
   branch: string;
   source: string;
 }
 
-/** A product's own package (`products.json` key `nextjs` -> `@sitecore-content-sdk/nextjs`). */
-export const productPackage = (slug: string): string => `${SDK_SCOPE}${slug}`;
+/** A product's own package (`products.config.json` key `nextjs` -> `@sitecore-content-sdk/nextjs`). */
+const productPackage = (slug: string): string => `${SDK_SCOPE}${slug}`;
 
 /** Products whose own package was published as a new major: `x.0.0`, not a prerelease. */
 export function getMajorPublishedProducts(
@@ -70,7 +63,7 @@ export function getMajorPublishedProducts(
   });
 }
 
-/** Packages a product's legacy branch keeps: its own and the scaffolder. Throws on an unknown one. */
+/** Packages a product's legacy branch keeps: products + scaffolder. Throws on an unknown one. */
 export function getProductPackages(products: Record<string, string[]>, slug: string): string[] {
   const productPackages = products[slug];
   if (!productPackages) {
@@ -120,8 +113,7 @@ export async function trimLegacyBranch(
   kept: string[]
 ): Promise<void> {
   const { packages, rootDir } = await getPackages(process.cwd());
-  // whole directories, untracked content included (build output, node_modules): left in place, a
-  // workspace would still be found and land in the committed lockfile
+  // whole directories with untracked build output and node_modules
   const pruned = legacyPrunedDirs(packages, rootDir, kept);
   for (const dir of pruned) rmSync(path.join(rootDir, dir), { recursive: true, force: true });
 
@@ -137,7 +129,8 @@ export async function trimLegacyBranch(
   const summary =
     `Kept: ${kept.join(', ')} (${SCAFFOLDER} ignored by changesets). ` +
     `Removed (resolved from npm): ${pruned.join(', ') || 'none'}.`;
-  const subject = `[ci] Legacy ${slug} branch from ${source.slice(0, 7)}: product packages only`;
+  const subject =
+    `[ci] Legacy ${slug} branch from ${source.slice(0, 7)}: ` + 'product packages only [skip ci]';
   git('commit', '-q', '-m', subject, '-m', summary);
   git('push', '-f', 'origin', `HEAD:refs/heads/${branch}`);
   console.log(`  ${summary}`);
@@ -147,7 +140,7 @@ export async function trimLegacyBranch(
  * Refreshes the lockfile of every legacy branch: the Content SDK packages it resolves from npm move
  * to their newest in-range releases (as its consumers install them); workspace packages stay as
  * they are. Commits and pushes `yarn.lock` when it changed (`[skip ci]`: no legacy canary or
- * release run). Checks each branch out in place, then returns to the initial branch.
+ * release run). Checks each branch out in place.
  */
 export async function refreshLegacyLockfiles(): Promise<void> {
   git('fetch', '-q', 'origin', 'refs/heads/release/legacy/*:refs/remotes/origin/release/legacy/*');
@@ -161,34 +154,25 @@ export async function refreshLegacyLockfiles(): Promise<void> {
     .split('\n')
     .filter(Boolean);
 
-  const initial = tryGit('symbolic-ref', '-q', '--short', 'HEAD') ?? git('rev-parse', 'HEAD');
-  try {
-    for (const remoteBranch of branches) {
-      const branch = remoteBranch.replace(/^origin\//, '');
-      git('checkout', '-q', '-f', '--detach', remoteBranch);
-      execFileSync('yarn', ['up', '-R', `${SDK_SCOPE}*`, '--mode=update-lockfile'], {
-        stdio: 'inherit',
-        env: { ...process.env, YARN_ENABLE_IMMUTABLE_INSTALLS: 'false' },
-        shell: process.platform === 'win32',
-      });
-      if (
-        tryGit(
-          'commit',
-          '-q',
-          '-m',
-          '[ci][legacy] Refresh yarn.lock [skip ci]',
-          '--',
-          'yarn.lock'
-        ) === null
-      ) {
-        console.log(`${branch}: yarn.lock already up to date.`);
-        continue;
-      }
-      git('push', 'origin', `HEAD:refs/heads/${branch}`);
-      console.log(`✅ ${branch}: refreshed yarn.lock pushed.`);
+  for (const remoteBranch of branches) {
+    const branch = remoteBranch.replace(/^origin\//, '');
+    git('checkout', '-q', '-f', '--detach', remoteBranch);
+    updateLockfile('up', '-R', `${SDK_SCOPE}*`);
+    if (
+      tryGit(
+        'commit',
+        '-q',
+        '-m',
+        '[ci][legacy] Refresh yarn.lock [skip ci]',
+        '--',
+        'yarn.lock'
+      ) === null
+    ) {
+      console.log(`${branch}: yarn.lock already up to date.`);
+      continue;
     }
-  } finally {
-    git('checkout', '-q', '-f', initial);
+    git('push', 'origin', `HEAD:refs/heads/${branch}`);
+    console.log(`✅ ${branch}: refreshed yarn.lock pushed.`);
   }
 }
 
@@ -210,15 +194,10 @@ export async function createLegacyBranches(published: PackageVersion[]): Promise
     return;
   }
 
-  const originalSha = git('rev-parse', 'HEAD');
   for (const slug of majors) {
     const legacy = getPreviousMajor(slug);
     if (!legacy) continue;
-    try {
-      await trimLegacyBranch(legacy, getProductPackages(products, slug));
-      console.log(`✅ Created ${legacy.branch}.`);
-    } finally {
-      git('checkout', '-q', '-f', '--detach', originalSha);
-    }
+    await trimLegacyBranch(legacy, getProductPackages(products, slug));
+    console.log(`✅ Created ${legacy.branch}.`);
   }
 }
