@@ -6,16 +6,16 @@
 
 # Interface: AngularSitecoreConfigInput
 
-Defined in: [packages/angular/src/config/define-config.ts:32](https://github.com/Sitecore/content-sdk/blob/10c92fa4a2d5b496313949dc30b1527d5cd4c787/packages/angular/src/config/define-config.ts#L32)
+Defined in: [packages/angular/src/config/define-config.ts:32](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/angular/src/config/define-config.ts#L32)
 
 Sitecore configuration input for Angular apps. Extends the base
-[SitecoreConfigInput](../content/config/type-aliases/SitecoreConfigInput.md) with an `angular` section. `redirects.locales` is intentionally
+SitecoreConfigInput with an `angular` section. `redirects.locales` is intentionally
 omitted from the input — it is derived from `angular.locales` so there is a single
 source of truth for the locale list.
 
 ## Extends
 
-- `Omit`\<[`SitecoreConfigInput`](../content/config/type-aliases/SitecoreConfigInput.md), `"multisite"`\>
+- `Omit`\<`SitecoreConfigInput`, `"multisite"`\>
 
 ## Properties
 
@@ -23,7 +23,7 @@ source of truth for the locale list.
 
 > `optional` **angular?**: `object`
 
-Defined in: [packages/angular/src/config/define-config.ts:34](https://github.com/Sitecore/content-sdk/blob/10c92fa4a2d5b496313949dc30b1527d5cd4c787/packages/angular/src/config/define-config.ts#L34)
+Defined in: [packages/angular/src/config/define-config.ts:34](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/angular/src/config/define-config.ts#L34)
 
 Angular-specific configuration.
 
@@ -79,7 +79,7 @@ Locales supported by the Angular app.
 
 > `optional` **api?**: `object`
 
-Defined in: packages/content/types/config/models.d.ts:27
+Defined in: packages/core/types/sitecore-config.d.ts:19
 
 API settings required to connect to Sitecore.
 Both edge and local sets can be specified; the Content SDK app will choose
@@ -157,7 +157,7 @@ GraphQL endpoint path (appended to `apiHost` to form the full URL).
 
 > `optional` **defaultLanguage?**: `string`
 
-Defined in: packages/content/types/config/models.d.ts:71
+Defined in: packages/core/types/sitecore-config.d.ts:63
 
 The default and fallback locale for your site.
 Ensure it aligns with the framework-specific settings used in your application.
@@ -172,7 +172,7 @@ Ensure it aligns with the framework-specific settings used in your application.
 
 > `optional` **defaultSite?**: `string`
 
-Defined in: packages/content/types/config/models.d.ts:75
+Defined in: packages/core/types/sitecore-config.d.ts:67
 
 Your default site name. When using the multisite feature this variable defines the fallback site.
 
@@ -186,7 +186,7 @@ Your default site name. When using the multisite feature this variable defines t
 
 > `optional` **dictionary?**: `object`
 
-Defined in: packages/content/types/config/models.d.ts:114
+Defined in: packages/core/types/sitecore-config.d.ts:106
 
 Settings for Dictionary Service
 
@@ -214,7 +214,7 @@ Configure local memory caching for Dictionary Service requests
 
 > `optional` **disableCodeGeneration?**: `boolean`
 
-Defined in: packages/content/types/config/models.d.ts:210
+Defined in: packages/core/types/sitecore-config.d.ts:202
 
 Opt-out setting for code generation feature
 Disables code extraction procedure
@@ -229,7 +229,7 @@ Disables code extraction procedure
 
 > `optional` **editingSecret?**: `string`
 
-Defined in: packages/content/types/config/models.d.ts:80
+Defined in: packages/core/types/sitecore-config.d.ts:72
 
 Editing secret required for Sitecore editing and preview functionality.
 Default comes from the SITECORE_EDITING_SECRET environment variable.
@@ -244,7 +244,7 @@ Default comes from the SITECORE_EDITING_SECRET environment variable.
 
 > `optional` **layout?**: `object`
 
-Defined in: packages/content/types/config/models.d.ts:100
+Defined in: packages/core/types/sitecore-config.d.ts:92
 
 Settings for Layout Service
 
@@ -292,7 +292,7 @@ custom layout query
 
 > `optional` **multisite?**: `object`
 
-Defined in: [packages/angular/src/config/define-config.ts:62](https://github.com/Sitecore/content-sdk/blob/10c92fa4a2d5b496313949dc30b1527d5cd4c787/packages/angular/src/config/define-config.ts#L62)
+Defined in: [packages/angular/src/config/define-config.ts:62](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/angular/src/config/define-config.ts#L62)
 
 #### enabled?
 
@@ -321,7 +321,7 @@ Function used to determine if site should be resolved from sc_site cookie when p
 
 > `optional` **personalize?**: `object`
 
-Defined in: packages/content/types/config/models.d.ts:150
+Defined in: packages/core/types/sitecore-config.d.ts:142
 
 Settings for Personalize functionality
 
@@ -387,7 +387,7 @@ Optional Sitecore Personalize scope ID (to isolate data between environments)
 
 > `optional` **redirects?**: `object`
 
-Defined in: packages/content/types/config/models.d.ts:185
+Defined in: packages/core/types/sitecore-config.d.ts:177
 
 Settings for redirects functionality
 
@@ -420,7 +420,7 @@ These should match those in framework-specific configuration of your app.
 
 > `optional` **retries?**: `object`
 
-Defined in: packages/content/types/config/models.d.ts:84
+Defined in: packages/core/types/sitecore-config.d.ts:76
 
 Retry configuration applied to Layout, Dictionary and ErrorPages services
 
@@ -459,7 +459,7 @@ DefaultRetryStrategy
 
 > `optional` **rewriteMediaUrls?**: `boolean` \| ((`value`) => `string`)
 
-Defined in: packages/content/types/config/models.d.ts:205
+Defined in: packages/core/types/sitecore-config.d.ts:197
 
 Rewrite media/content URLs in layout data and in `SitecoreClient.getData` results
 (media fields, rich text img/src, href, and other strings that contain a URL).

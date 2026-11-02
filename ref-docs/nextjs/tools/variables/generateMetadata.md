@@ -6,9 +6,9 @@
 
 # Variable: generateMetadata
 
-> `const` **generateMetadata**: (`config?`) => () => `Promise`\<`void`\>
+> `const` **generateMetadata**: (`config?`) => (`args?`) => `Promise`\<`void`\>
 
-Defined in: core/types/tools/metadata/generateMetadata.d.ts:23
+Defined in: core/types/tools/metadata/generateMetadata.d.ts:30
 
 Generate application metadata
 
@@ -22,4 +22,4 @@ Generate application metadata
 
 A promise that resolves when the metadata generation is complete.
 
-() => `Promise`\<`void`\>
+(`args?`) => `Promise`\<`void`\>
