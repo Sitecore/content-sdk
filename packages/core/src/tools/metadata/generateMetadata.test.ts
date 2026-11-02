@@ -29,6 +29,7 @@ describe('generateMetadata', () => {
     expect(writeFileSyncStub.getCall(0).args[0]).to.be.equal(
       path.resolve('.sitecore/metadata.json')
     );
+    expect(JSON.parse(writeFileSyncStub.getCall(0).args[1])).to.have.property('capabilities');
   });
 
   it('should generate metadata and write to specified path if config is provided', async () => {
@@ -51,5 +52,12 @@ describe('generateMetadata', () => {
     expect(writeFileSyncStub.getCall(0).args[0]).to.be.equal(
       path.resolve('.sitecore/metadata.json')
     );
+  });
+
+  it('should omit capabilities when capability calculation is disabled', async () => {
+    const generate = generateMetadata({ capabilities: false });
+    await generate();
+
+    expect(JSON.parse(writeFileSyncStub.getCall(0).args[1])).not.to.have.property('capabilities');
   });
 });

@@ -45,11 +45,15 @@ const mockResponse = () => {
 const componentsMap = new Map<string, unknown>();
 componentsMap.set('TestComponentOne', {});
 componentsMap.set('TestComponentTwo', {});
-const metadata = { packages: { testPackageOne: '0.1.1' } };
+const metadata = {
+  packages: { testPackageOne: '0.1.1' },
+  capabilities: { preview: true as const },
+};
 
 const expectedResultWithMetadata = {
   components: ['TestComponentOne', 'TestComponentTwo'],
   packages: { testPackageOne: '0.1.1' },
+  capabilities: { preview: true },
   editMode: 'metadata',
 };
 

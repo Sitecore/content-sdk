@@ -128,6 +128,10 @@
       "types": "./dist-node/server/experimental-features/index.d.ts",
       "default": "./dist-node/server/experimental-features/index.js"
     },
+    "./capabilities": {
+      "types": "./dist-node/server/capabilities/index.d.ts",
+      "default": "./dist-node/server/capabilities/index.js"
+    },
     "./tools": {
       "types": "./dist-node/server/tools/index.d.ts",
       "default": "./dist-node/server/tools/index.js"
