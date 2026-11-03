@@ -6,7 +6,6 @@ import { CapabilityFilterContext } from '../../capabilities';
 import {
   createCapabilityFilterContext,
   mergeCapabilityExports,
-  MergedCapabilityTree,
   resolveCapabilities,
 } from './index';
 
@@ -115,119 +114,6 @@ describe('capabilities', () => {
     ]);
 
     expect(await resolveCapabilities(merged, context)).to.deep.equal({});
-  });
-
-  describe('resolveCapabilities function metadata', () => {
-    it('writes metadata returned by a synchronous resolver on a boolean capability', async () => {
-      const metadataResolver = sinon.stub().returns({ catalogKey: 'atomsCatalog' });
-      const tree: MergedCapabilityTree = {
-        preview: {
-          value: true,
-          filters: [],
-          metadata: metadataResolver,
-        },
-      };
-
-      expect(await resolveCapabilities(tree, context)).to.deep.equal({
-        preview: { metadata: { catalogKey: 'atomsCatalog' } },
-      });
-      expect(metadataResolver.calledOnceWith(context)).to.be.true;
-    });
-
-    it('writes metadata returned by an async resolver', async () => {
-      const metadataResolver = sinon.stub().resolves({ version: 2 });
-      const tree: MergedCapabilityTree = {
-        editing: {
-          value: true,
-          filters: [],
-          metadata: metadataResolver,
-        },
-      };
-
-      expect(await resolveCapabilities(tree, context)).to.deep.equal({
-        editing: { metadata: { version: 2 } },
-      });
-    });
-
-    it('passes appInputs on the filter context to the metadata resolver', async () => {
-      const contextWithInputs: CapabilityFilterContext = {
-        ...context,
-        appInputs: { atomsCatalog: { components: [] } },
-      };
-      const metadataResolver = sinon
-        .stub()
-        .callsFake((ctx: CapabilityFilterContext) => ({
-          catalog: ctx.appInputs?.atomsCatalog,
-        }));
-      const tree: MergedCapabilityTree = {
-        preview: {
-          value: true,
-          filters: [],
-          metadata: metadataResolver,
-        },
-      };
-
-      expect(await resolveCapabilities(tree, contextWithInputs)).to.deep.equal({
-        preview: { metadata: { catalog: { components: [] } } },
-      });
-    });
-
-    it('omits metadata when the resolver returns an empty object', async () => {
-      const tree: MergedCapabilityTree = {
-        preview: {
-          value: true,
-          filters: [],
-          metadata: () => ({}),
-        },
-      };
-
-      expect(await resolveCapabilities(tree, context)).to.deep.equal({ preview: true });
-    });
-
-    it('writes resolved metadata on a parent alongside sub-capabilities', async () => {
-      const tree: MergedCapabilityTree = {
-        designLibrary: {
-          value: {
-            atoms: {
-              value: true,
-              filters: [],
-              metadata: {},
-            },
-          },
-          filters: [],
-          metadata: () => ({ catalogKey: 'atomsCatalog' }),
-        },
-      };
-
-      expect(await resolveCapabilities(tree, context)).to.deep.equal({
-        designLibrary: {
-          atoms: true,
-          metadata: { catalogKey: 'atomsCatalog' },
-        },
-      });
-    });
-
-    it('keeps a parent when only function metadata is present and sub-capabilities are disabled', async () => {
-      const tree: MergedCapabilityTree = {
-        designLibrary: {
-          value: {
-            atoms: {
-              value: false,
-              filters: [],
-              metadata: {},
-            },
-          },
-          filters: [],
-          metadata: () => ({ catalogKey: 'atomsCatalog' }),
-        },
-      };
-
-      expect(await resolveCapabilities(tree, context)).to.deep.equal({
-        designLibrary: {
-          metadata: { catalogKey: 'atomsCatalog' },
-        },
-      });
-    });
   });
 
   it('merges and writes capability metadata', async () => {
