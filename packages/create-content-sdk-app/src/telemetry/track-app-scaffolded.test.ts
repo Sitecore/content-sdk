@@ -6,8 +6,8 @@ import chai, { expect } from 'chai';
 import sinon, { SinonStub } from 'sinon';
 import sinonChai from 'sinon-chai';
 import chalk from 'chalk';
+import { telemetryClient } from '@sitecore-content-sdk/core/node-tools';
 import * as monorepo from './monorepo';
-import { telemetryClient } from './client';
 import {
   TELEMETRY_NOTICE,
   buildAppScaffoldedEvent,
@@ -110,9 +110,18 @@ describe('trackAppScaffolded', () => {
       destination: root,
     });
 
-    expect(event.data.app_name).to.equal(path.basename(root));
-    expect(event.data.template).to.equal('nextjs-app-router');
-    expect(event.data).to.not.have.property('nextjs_version');
+    expect(event?.data.app_name).to.equal(path.basename(root));
+    expect(event?.data.template).to.equal('nextjs-app-router');
+    expect(event?.data).to.not.have.property('nextjs_version');
+  });
+
+  it('does not build an event when the template name is not a simple slug', () => {
+    expect(
+      buildAppScaffoldedEvent({
+        template: 'not a template',
+        destination: root,
+      })
+    ).to.equal(undefined);
   });
 
   /**

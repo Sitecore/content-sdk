@@ -12,9 +12,6 @@ import { IncomingHttpHeaders } from 'http';
 import { ParsedUrlQueryInput } from 'querystring';
 
 // @public
-export const APP_SCAFFOLDED_EVENT_NAME = "app_scaffolded";
-
-// @public
 export const areURLSearchParamsEqual: (params1: URLSearchParams, params2: URLSearchParams) => boolean;
 
 // @public
@@ -38,6 +35,9 @@ export interface CacheOptions {
 const CLAIMS = "https://auth.sitecorecloud.io/claims";
 
 export { ClientError }
+
+// @public
+export function collectSdkPackageVersions(pkg: Record<string, unknown> | undefined): Record<string, string>;
 
 declare namespace constants {
     export {
@@ -408,7 +408,14 @@ export const TELEMETRY_DISPATCH_TIMEOUT_MS = 1500;
 export const TELEMETRY_SOURCE = "contentsdk";
 
 // @public
-export const TELEMETRY_URL_ENV = "SITECORE_TELEMETRY_URL";
+export const telemetryClient: {
+    TELEMETRY_SOURCE: string;
+    createTelemetryFingerprint: typeof createTelemetryFingerprint;
+    collectSdkPackageVersions: typeof collectSdkPackageVersions;
+    dispatchTelemetryEvent: typeof dispatchTelemetryEvent;
+    isTelemetryEnabled: typeof isTelemetryEnabled;
+    resolveTelemetryUrl: typeof resolveTelemetryUrl;
+};
 
 // @public
 export type TelemetryData = Record<string, TelemetryPrimitive>;

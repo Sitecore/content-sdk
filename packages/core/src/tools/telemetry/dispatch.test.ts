@@ -2,24 +2,24 @@
 import os from 'os';
 import { expect } from 'chai';
 import sinon from 'sinon';
+import { SITECORE_EDGE_PLATFORM_HOSTNAME_ENV } from '../resolve-edge-url';
 import {
-  APP_SCAFFOLDED_EVENT_NAME,
   DEFAULT_TELEMETRY_URL,
   TELEMETRY_DISABLED_ENV,
   TELEMETRY_SOURCE,
-  TELEMETRY_URL_ENV,
   TelemetryEvent,
 } from './models';
 import {
   createTelemetryFingerprint,
   dispatchTelemetryEvent,
   isTelemetryEnabled,
+  resetTelemetryDispatchWindow,
   resolveTelemetryUrl,
 } from './dispatch';
 
 const event = (): TelemetryEvent => ({
   source: TELEMETRY_SOURCE,
-  name: APP_SCAFFOLDED_EVENT_NAME,
+  name: 'app_scaffolded',
   data: {
     app_name: 'my-app',
     template: 'nextjs',
@@ -78,27 +78,38 @@ describe('isTelemetryEnabled', () => {
 });
 
 describe('resolveTelemetryUrl', () => {
-  const previous = process.env[TELEMETRY_URL_ENV];
+  const previous = process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV];
 
   afterEach(() => {
     if (previous === undefined) {
-      delete process.env[TELEMETRY_URL_ENV];
+      delete process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV];
     } else {
-      process.env[TELEMETRY_URL_ENV] = previous;
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = previous;
     }
   });
 
   it('uses the Edge Platform path by default', () => {
-    delete process.env[TELEMETRY_URL_ENV];
+    delete process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV];
     expect(resolveTelemetryUrl()).to.equal(DEFAULT_TELEMETRY_URL);
     expect(DEFAULT_TELEMETRY_URL).to.equal(
       'https://edge-platform.sitecorecloud.io/telemetry/v1/events'
     );
   });
 
-  it('prefers the environment variable, then an explicit override', () => {
-    process.env[TELEMETRY_URL_ENV] = 'http://127.0.0.1:3100/telemetry/v1/events';
-    expect(resolveTelemetryUrl()).to.equal('http://127.0.0.1:3100/telemetry/v1/events');
+  it('uses SITECORE_EDGE_PLATFORM_HOSTNAME for the host', () => {
+    process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'my-tenant.edge.example.com';
+    expect(resolveTelemetryUrl()).to.equal(
+      'https://my-tenant.edge.example.com/telemetry/v1/events'
+    );
+
+    process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'https://my-tenant.edge.example.com/';
+    expect(resolveTelemetryUrl()).to.equal(
+      'https://my-tenant.edge.example.com/telemetry/v1/events'
+    );
+  });
+
+  it('lets one call replace the resolved URL', () => {
+    process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = 'my-tenant.edge.example.com';
     expect(resolveTelemetryUrl('http://localhost:9/telemetry/v1/events')).to.equal(
       'http://localhost:9/telemetry/v1/events'
     );
@@ -118,7 +129,11 @@ describe('createTelemetryFingerprint', () => {
 
 describe('dispatchTelemetryEvent', () => {
   const previousDisabled = process.env[TELEMETRY_DISABLED_ENV];
-  const previousUrl = process.env[TELEMETRY_URL_ENV];
+  const previousHost = process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV];
+
+  beforeEach(() => {
+    resetTelemetryDispatchWindow();
+  });
 
   afterEach(() => {
     sinon.restore();
@@ -127,16 +142,16 @@ describe('dispatchTelemetryEvent', () => {
     } else {
       process.env[TELEMETRY_DISABLED_ENV] = previousDisabled;
     }
-    if (previousUrl === undefined) {
-      delete process.env[TELEMETRY_URL_ENV];
+    if (previousHost === undefined) {
+      delete process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV];
     } else {
-      process.env[TELEMETRY_URL_ENV] = previousUrl;
+      process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV] = previousHost;
     }
   });
 
   it('posts the event and treats 202 as success', async () => {
     delete process.env[TELEMETRY_DISABLED_ENV];
-    delete process.env[TELEMETRY_URL_ENV];
+    delete process.env[SITECORE_EDGE_PLATFORM_HOSTNAME_ENV];
     const fetchImpl = sinon.stub().resolves(new Response(null, { status: 202 }));
 
     const sent = await dispatchTelemetryEvent(event(), { fetchImpl });
@@ -193,6 +208,39 @@ describe('dispatchTelemetryEvent', () => {
     const sent = await dispatchTelemetryEvent(event(), { fetchImpl });
 
     expect(sent).to.equal(false);
+  });
+
+  it('returns false for an os value that is not platform/arch', async () => {
+    const fetchImpl = sinon.stub();
+    const invalid = event();
+    invalid.fingerprint.os = 'not an os';
+
+    const sent = await dispatchTelemetryEvent(invalid, { fetchImpl });
+
+    expect(sent).to.equal(false);
+    expect(fetchImpl.called).to.equal(false);
+  });
+
+  it('returns false when the date is far from now', async () => {
+    const fetchImpl = sinon.stub();
+    const invalid = event();
+    invalid.date = Date.now() - 8 * 24 * 60 * 60 * 1000;
+
+    const sent = await dispatchTelemetryEvent(invalid, { fetchImpl });
+
+    expect(sent).to.equal(false);
+    expect(fetchImpl.called).to.equal(false);
+  });
+
+  it('refuses fetches after ten events in a minute', async () => {
+    const fetchImpl = sinon.stub().resolves(new Response(null, { status: 202 }));
+
+    for (let attempt = 0; attempt < 10; attempt += 1) {
+      expect(await dispatchTelemetryEvent(event(), { fetchImpl })).to.equal(true);
+    }
+
+    expect(await dispatchTelemetryEvent(event(), { fetchImpl })).to.equal(false);
+    expect(fetchImpl.callCount).to.equal(10);
   });
 
   it('returns false when the receiver does not respond in time', async () => {

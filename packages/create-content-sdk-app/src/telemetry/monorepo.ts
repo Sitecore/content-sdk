@@ -1,5 +1,5 @@
-import fs from 'fs';
 import path from 'path';
+import { isDevEnvironment } from '../common/utils/helpers';
 
 /**
  * Arguments that can turn scaffold telemetry off before a request is built.
@@ -8,37 +8,6 @@ export type ScaffoldTelemetryArgs = {
   destination?: string;
   noTelemetry?: boolean;
 };
-
-/**
- * True when `start` is inside this Content SDK checkout.
- * Customer projects do not contain `packages/create-content-sdk-app`.
- * @param {string} start Directory to walk up from
- * @returns {boolean} Whether the directory belongs to the Content SDK repo
- */
-export function isRunningInsideContentSdkRepo(start: string): boolean {
-  let current = path.resolve(start);
-  const root = path.parse(current).root;
-
-  while (true) {
-    if (
-      fs.existsSync(path.join(current, 'lerna.json')) &&
-      fs.existsSync(path.join(current, 'packages', 'create-content-sdk-app', 'package.json'))
-    ) {
-      return true;
-    }
-
-    if (current === root) {
-      return false;
-    }
-
-    const parent = path.dirname(current);
-    if (parent === current) {
-      return false;
-    }
-
-    current = parent;
-  }
-}
 
 /**
  * Skips telemetry for an explicit opt-out and for runs inside the monorepo.
@@ -55,11 +24,11 @@ export function shouldSkipScaffoldTelemetry(
     return true;
   }
 
-  if (isRunningInsideContentSdkRepo(cwd)) {
+  if (isDevEnvironment(cwd)) {
     return true;
   }
 
-  if (args.destination && isRunningInsideContentSdkRepo(args.destination)) {
+  if (args.destination && isDevEnvironment(path.resolve(cwd, args.destination))) {
     return true;
   }
 

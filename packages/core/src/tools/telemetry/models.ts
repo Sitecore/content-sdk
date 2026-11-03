@@ -6,10 +6,9 @@ import { SITECORE_EDGE_PLATFORM_URL_DEFAULT } from '../../constants';
  * The Edge Platform receiver is still a draft. These values follow that draft
  * for the parts the SDK can decide now:
  * - source `contentsdk`
- * - scaffold event `app_scaffolded` (snake_case)
- * - anonymous fingerprint package `create-content-sdk-app`
  * - flat primitive `data` (SDK package versions are `<name>_version` strings)
- * - default URL is the Edge Platform host plus `/telemetry/v1/events`
+ * - URL is the Edge Platform host plus `/telemetry/v1/events`
+ *   (`SITECORE_EDGE_PLATFORM_HOSTNAME` selects the host)
  *
  * `destinations` is omitted. The receiver defaults `contentsdk` to Gainsight.
  * Gainsight credentials stay on the processor.
@@ -22,12 +21,6 @@ import { SITECORE_EDGE_PLATFORM_URL_DEFAULT } from '../../constants';
 export const TELEMETRY_SOURCE = 'contentsdk';
 
 /**
- * Event recorded after `create-content-sdk-app` finishes scaffolding.
- * @public
- */
-export const APP_SCAFFOLDED_EVENT_NAME = 'app_scaffolded';
-
-/**
  * Environment variable that disables telemetry when set to `1`, `true`, or `yes`.
  * Telemetry is on when the variable is unset.
  * @public
@@ -35,13 +28,7 @@ export const APP_SCAFFOLDED_EVENT_NAME = 'app_scaffolded';
 export const TELEMETRY_DISABLED_ENV = 'SITECORE_TELEMETRY_DISABLED';
 
 /**
- * Environment variable that overrides the dispatch URL. Intended for tests and staging.
- * @public
- */
-export const TELEMETRY_URL_ENV = 'SITECORE_TELEMETRY_URL';
-
-/**
- * Default receiver URL. Override with {@link TELEMETRY_URL_ENV} until Edge Platform publishes the host.
+ * Receiver URL used when `SITECORE_EDGE_PLATFORM_HOSTNAME` is unset.
  * @public
  */
 export const DEFAULT_TELEMETRY_URL = `${SITECORE_EDGE_PLATFORM_URL_DEFAULT}/telemetry/v1/events`;
@@ -91,7 +78,11 @@ export type TelemetryEvent = {
   name: string;
   /** Event attributes. */
   data: TelemetryData;
-  /** Unix epoch milliseconds. The receiver fills this in when it is omitted. */
+  /**
+   * Unix epoch milliseconds.
+   * Accepted when it is within 7 days in the past and 5 minutes in the future.
+   * The receiver fills this in when it is omitted.
+   */
   date?: number;
   /** Required for anonymous CLI and SDK calls. */
   fingerprint: TelemetryFingerprint;

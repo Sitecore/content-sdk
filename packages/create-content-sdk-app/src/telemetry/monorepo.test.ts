@@ -3,7 +3,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { expect } from 'chai';
-import { isRunningInsideContentSdkRepo, shouldSkipScaffoldTelemetry } from './monorepo';
+import { shouldSkipScaffoldTelemetry } from './monorepo';
 
 describe('scaffold telemetry monorepo guard', () => {
   let root: string;
@@ -16,31 +16,30 @@ describe('scaffold telemetry monorepo guard', () => {
     fs.rmSync(root, { recursive: true, force: true });
   });
 
-  it('recognizes this repository', () => {
-    expect(isRunningInsideContentSdkRepo(__dirname)).to.equal(true);
-  });
-
-  it('does not treat an unrelated directory as the repository', () => {
-    expect(isRunningInsideContentSdkRepo(root)).to.equal(false);
+  it('skips when the command runs inside this repository', () => {
+    expect(shouldSkipScaffoldTelemetry({ destination: path.join(root, 'app') }, __dirname)).to.equal(
+      true
+    );
   });
 
   it('skips an explicit opt-out', () => {
     expect(shouldSkipScaffoldTelemetry({ noTelemetry: true }, root)).to.equal(true);
   });
 
-  it('skips when the working directory or destination is inside the repository', () => {
-    fs.mkdirSync(path.join(root, 'packages', 'create-content-sdk-app'), { recursive: true });
+  it('skips when the working directory or destination is inside a lerna checkout', () => {
     fs.writeFileSync(path.join(root, 'lerna.json'), '{}');
-    fs.writeFileSync(path.join(root, 'packages', 'create-content-sdk-app', 'package.json'), '{}');
-    const appDir = path.join(root, 'samples', 'nextjs');
+    const appDir = path.join(root, 'my-app');
     fs.mkdirSync(appDir, { recursive: true });
+    const outside = fs.mkdtempSync(path.join(os.tmpdir(), 'csdk-telemetry-outside-'));
 
-    expect(shouldSkipScaffoldTelemetry({ destination: path.join(root, 'outside') }, root)).to.equal(
-      true
-    );
-    expect(
-      shouldSkipScaffoldTelemetry({ destination: appDir }, path.join(root, 'outside'))
-    ).to.equal(true);
+    try {
+      expect(shouldSkipScaffoldTelemetry({ destination: path.join(outside, 'app') }, root)).to.equal(
+        true
+      );
+      expect(shouldSkipScaffoldTelemetry({ destination: appDir }, outside)).to.equal(true);
+    } finally {
+      fs.rmSync(outside, { recursive: true, force: true });
+    }
   });
 
   it('tracks a scaffold created outside the repository', () => {
@@ -48,7 +47,10 @@ describe('scaffold telemetry monorepo guard', () => {
     fs.mkdirSync(outside, { recursive: true });
 
     expect(
-      shouldSkipScaffoldTelemetry({ destination: path.join(outside, 'my-app'), noTelemetry: false }, outside)
+      shouldSkipScaffoldTelemetry(
+        { destination: path.join(outside, 'my-app'), noTelemetry: false },
+        outside
+      )
     ).to.equal(false);
   });
 });

@@ -1,11 +1,10 @@
 import os from 'os';
 import debug from '../../debug';
 import { normalizeEnvValue } from '../normalize-env-value';
+import { resolveEdgeUrl } from '../resolve-edge-url';
 import {
-  DEFAULT_TELEMETRY_URL,
   TELEMETRY_DISABLED_ENV,
   TELEMETRY_DISPATCH_TIMEOUT_MS,
-  TELEMETRY_URL_ENV,
   DispatchTelemetryOptions,
   TelemetryEvent,
   TelemetryFingerprint,
@@ -13,8 +12,21 @@ import {
 } from './models';
 
 const SNAKE_CASE = /^[a-z][a-z0-9]*(_[a-z0-9]+)*$/;
+const PACKAGE_NAME = /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
+const RELEASE_VERSION = /^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/;
+const OS_VALUE = /^[a-z0-9]+\/[a-z0-9_]+$/;
+const RUNTIME_VERSION = /^node\/\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/;
 const MAX_DATA_KEYS = 32;
 const MAX_STRING_LENGTH = 512;
+const MAX_PACKAGE_NAME_LENGTH = 214;
+const MAX_VERSION_LENGTH = 64;
+const MAX_OS_LENGTH = 32;
+const DATE_MAX_PAST_MS = 7 * 24 * 60 * 60 * 1000;
+const DATE_MAX_FUTURE_MS = 5 * 60 * 1000;
+const MAX_DISPATCHES_PER_WINDOW = 10;
+const DISPATCH_WINDOW_MS = 60_000;
+
+const dispatchTimestamps: number[] = [];
 
 const telemetryDebug = debug.telemetry;
 
@@ -39,19 +51,23 @@ export function isTelemetryEnabled(enabled?: boolean): boolean {
   return value !== '1' && value !== 'true' && value !== 'yes';
 }
 
+const TELEMETRY_EVENTS_PATH = '/telemetry/v1/events';
+
 /**
  * Resolves the receiver URL.
- * An explicit override wins, then `SITECORE_TELEMETRY_URL`, then {@link DEFAULT_TELEMETRY_URL}.
+ * `SITECORE_EDGE_PLATFORM_HOSTNAME` selects the host, the same way as other Edge calls.
+ * The path is `/telemetry/v1/events`. An explicit override replaces that URL for one call.
  * @param {string} [override] URL for this call
  * @returns {string} Absolute URL
  * @public
  */
 export function resolveTelemetryUrl(override?: string): string {
-  return (
-    normalizeEnvValue(override) ??
-    normalizeEnvValue(process.env[TELEMETRY_URL_ENV]) ??
-    DEFAULT_TELEMETRY_URL
-  );
+  const explicit = normalizeEnvValue(override);
+  if (explicit) {
+    return explicit;
+  }
+
+  return `${resolveEdgeUrl()}${TELEMETRY_EVENTS_PATH}`;
 }
 
 /**
@@ -97,6 +113,11 @@ export async function dispatchTelemetryEvent(
     return false;
   }
 
+  if (!allowDispatch(Date.now())) {
+    telemetryDebug('skipped (dispatch limit reached)');
+    return false;
+  }
+
   const url = resolveTelemetryUrl(options.url);
   const timeoutMs = options.timeoutMs ?? TELEMETRY_DISPATCH_TIMEOUT_MS;
   const fetchImpl = options.fetchImpl ?? fetch;
@@ -129,7 +150,8 @@ function normalizeEvent(event: TelemetryEvent): TelemetryEvent | undefined {
     return undefined;
   }
 
-  if (!event.fingerprint?.packageName || !event.fingerprint.packageVersion) {
+  const fingerprint = normalizeFingerprint(event.fingerprint);
+  if (!fingerprint) {
     return undefined;
   }
 
@@ -140,19 +162,6 @@ function normalizeEvent(event: TelemetryEvent): TelemetryEvent | undefined {
 
   if (event.date !== undefined && !isValidDate(event.date)) {
     return undefined;
-  }
-
-  const fingerprint: TelemetryFingerprint = {
-    packageName: event.fingerprint.packageName,
-    packageVersion: event.fingerprint.packageVersion,
-  };
-
-  if (event.fingerprint.os) {
-    fingerprint.os = clip(event.fingerprint.os);
-  }
-
-  if (event.fingerprint.runtimeVersion) {
-    fingerprint.runtimeVersion = clip(event.fingerprint.runtimeVersion);
   }
 
   return {
@@ -182,7 +191,7 @@ function normalizeData(data: TelemetryEvent['data']): TelemetryEvent['data'] | u
   const normalized: Record<string, TelemetryPrimitive> = {};
 
   for (const key of keys) {
-    if (!key) {
+    if (!isSnakeCase(key)) {
       return undefined;
     }
 
@@ -191,7 +200,7 @@ function normalizeData(data: TelemetryEvent['data']): TelemetryEvent['data'] | u
       return undefined;
     }
 
-    if (typeof value === 'string' && value.length > MAX_STRING_LENGTH) {
+    if (typeof value === 'string' && !isAcceptableDataString(value)) {
       return undefined;
     }
 
@@ -222,17 +231,137 @@ function isSnakeCase(value: unknown): value is string {
 }
 
 /**
- * @param {number} value Candidate event date
- * @returns {boolean} Whether the value is a positive finite timestamp
+ * Checks the fingerprint fields the receiver treats as structured.
+ * A field that is present and does not match is rejected. Nothing is trimmed.
+ * @param {TelemetryFingerprint | undefined} fingerprint Candidate fingerprint
+ * @returns {TelemetryFingerprint | undefined} Fingerprint safe to send
  */
-function isValidDate(value: number): boolean {
-  return Number.isFinite(value) && value > 0;
+function normalizeFingerprint(
+  fingerprint: TelemetryFingerprint | undefined
+): TelemetryFingerprint | undefined {
+  if (!fingerprint) {
+    return undefined;
+  }
+
+  if (!isPackageName(fingerprint.packageName) || !isReleaseVersion(fingerprint.packageVersion)) {
+    return undefined;
+  }
+
+  const normalized: TelemetryFingerprint = {
+    packageName: fingerprint.packageName,
+    packageVersion: fingerprint.packageVersion,
+  };
+
+  if (fingerprint.os !== undefined) {
+    if (!isOs(fingerprint.os)) {
+      return undefined;
+    }
+    normalized.os = fingerprint.os;
+  }
+
+  if (fingerprint.runtimeVersion !== undefined) {
+    if (!isRuntimeVersion(fingerprint.runtimeVersion)) {
+      return undefined;
+    }
+    normalized.runtimeVersion = fingerprint.runtimeVersion;
+  }
+
+  return normalized;
 }
 
 /**
- * @param {string} value Fingerprint field
- * @returns {string} Value trimmed to the receiver string limit
+ * @param {string} value Data string
+ * @returns {boolean} Whether the string is within the receiver limit and has no control characters
  */
-function clip(value: string): string {
-  return value.length > MAX_STRING_LENGTH ? value.slice(0, MAX_STRING_LENGTH) : value;
+function isAcceptableDataString(value: string): boolean {
+  return value.length > 0 && value.length <= MAX_STRING_LENGTH && !hasControlCharacter(value);
+}
+
+/**
+ * @param {string} value Candidate string
+ * @returns {boolean} Whether the string contains an ASCII control character
+ */
+function hasControlCharacter(value: string): boolean {
+  for (let index = 0; index < value.length; index += 1) {
+    const code = value.charCodeAt(index);
+    if (code <= 31 || code === 127) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * @param {string} value Package name
+ * @returns {boolean} Whether the value is a short npm package name
+ */
+function isPackageName(value: string): boolean {
+  return value.length <= MAX_PACKAGE_NAME_LENGTH && PACKAGE_NAME.test(value);
+}
+
+/**
+ * @param {string} value Package version
+ * @returns {boolean} Whether the value is a semver version, without a range prefix
+ */
+function isReleaseVersion(value: string): boolean {
+  return value.length <= MAX_VERSION_LENGTH && RELEASE_VERSION.test(value);
+}
+
+/**
+ * @param {string} value Operating system field
+ * @returns {boolean} Whether the value is `platform/arch`
+ */
+function isOs(value: string): boolean {
+  return value.length <= MAX_OS_LENGTH && OS_VALUE.test(value);
+}
+
+/**
+ * @param {string} value Runtime field
+ * @returns {boolean} Whether the value is `node/<semver>`
+ */
+function isRuntimeVersion(value: string): boolean {
+  return value.length <= MAX_VERSION_LENGTH && RUNTIME_VERSION.test(value);
+}
+
+/**
+ * Accepts a timestamp close to now. The receiver rejects dates outside
+ * 7 days in the past and 5 minutes in the future.
+ * @param {number} value Candidate event date
+ * @returns {boolean} Whether the value is a plausible epoch millisecond timestamp
+ */
+function isValidDate(value: number): boolean {
+  if (!Number.isFinite(value) || !Number.isInteger(value)) {
+    return false;
+  }
+
+  const now = Date.now();
+  return value >= now - DATE_MAX_PAST_MS && value <= now + DATE_MAX_FUTURE_MS;
+}
+
+/**
+ * Clears the in-process dispatch limit. Used by tests.
+ */
+export function resetTelemetryDispatchWindow(): void {
+  dispatchTimestamps.length = 0;
+}
+
+/**
+ * Stops a tight loop from posting one event per call.
+ * Ten accepted events are allowed per minute in this process.
+ * @param {number} now Current epoch milliseconds
+ * @returns {boolean} Whether this call may call fetch
+ */
+function allowDispatch(now: number): boolean {
+  const cutoff = now - DISPATCH_WINDOW_MS;
+  while (dispatchTimestamps.length > 0 && dispatchTimestamps[0] <= cutoff) {
+    dispatchTimestamps.shift();
+  }
+
+  if (dispatchTimestamps.length >= MAX_DISPATCHES_PER_WINDOW) {
+    return false;
+  }
+
+  dispatchTimestamps.push(now);
+  return true;
 }

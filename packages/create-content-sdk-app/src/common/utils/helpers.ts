@@ -4,17 +4,31 @@ import path from 'path';
 import { JsonObjectType } from '../processes/transform';
 
 /**
- * Determines whether you are in a dev environment.
- * It's `true` if you are inside the monorepo
+ * Determines whether a directory is inside this monorepo.
+ * Walks up from `cwd` until it finds `lerna.json`.
  * @param {string} [cwd] path to the current working directory
  * @returns {boolean} is a development environment
  */
 export const isDevEnvironment = (cwd?: string): boolean => {
-  const currentPath = path.resolve(cwd || process.cwd());
-  // TODO: is there a better way to detect this?
-  const lernaPath = path.join(currentPath, '..', '..');
+  let current = path.resolve(cwd || process.cwd());
+  const root = path.parse(current).root;
 
-  return fs.existsSync(path.join(lernaPath, 'lerna.json'));
+  while (true) {
+    if (fs.existsSync(path.join(current, 'lerna.json'))) {
+      return true;
+    }
+
+    if (current === root) {
+      return false;
+    }
+
+    const parent = path.dirname(current);
+    if (parent === current) {
+      return false;
+    }
+
+    current = parent;
+  }
 };
 
 /**
