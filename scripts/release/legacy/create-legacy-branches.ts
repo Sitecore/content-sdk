@@ -35,11 +35,15 @@ import {
   type WorkspacePackage,
 } from '../utils';
 
-/** A legacy branch checked out at the `latest` tag (`source`: its commit). */
+/**
+ * A legacy branch checked out at the `latest` tag (`source`: its commit). `remoteSha`: the branch
+ * on origin it replaces, null when there is none.
+ */
 interface LegacyBranch {
   slug: string;
   branch: string;
   source: string;
+  remoteSha: string | null;
 }
 
 /** A product's own package (`products.config.json` key `nextjs` -> `@sitecore-content-sdk/nextjs`). */
@@ -90,7 +94,7 @@ export function legacyPrunedDirs(
  * one) already. Returns null, without checking out, when the branch already holds it: created from
  * this previous release already (idempotent). A branch of an older major doesn't, and is replaced.
  */
-export function getPreviousMajor(slug: string, publishedMajor: number): LegacyBranch | null {
+export function checkoutLegacySource(slug: string, publishedMajor: number): LegacyBranch | null {
   const branch = `release/legacy/${slug}`;
   const source = git('rev-parse', `refs/tags/${LATEST_RELEASE_TAG}^{commit}`);
   const tagManifest = git('show', `${source}:packages/${slug}/package.json`);
@@ -101,16 +105,34 @@ export function getPreviousMajor(slug: string, publishedMajor: number): LegacyBr
         ` If tag was moved, point it at the previous release and re-run.`
     );
   }
-  if (
-    tryGit('fetch', '-q', 'origin', branch) !== null &&
-    tryGit('merge-base', '--is-ancestor', source, `origin/${branch}`) !== null
-  ) {
-    console.log(`${branch} already holds ${LATEST_RELEASE_TAG} (${source.slice(0, 7)}); skipping.`);
-    return null;
+  let remoteSha: string | null = null;
+  if (branchExists(branch)) {
+    git('fetch', '-q', 'origin', branch);
+    remoteSha = git('rev-parse', `origin/${branch}`);
+    if (tryGit('merge-base', '--is-ancestor', source, remoteSha) !== null) {
+      console.log(
+        `${branch} already holds ${LATEST_RELEASE_TAG} (${source.slice(0, 7)}); skipping.`
+      );
+      return null;
+    }
   }
   git('checkout', '-q', '-f', '--detach', source);
-  console.log(`Creating ${branch} from ${LATEST_RELEASE_TAG} (${source.slice(0, 7)})`);
-  return { slug, branch, source };
+  console.log(`Script will create ${branch} from ${LATEST_RELEASE_TAG} (${source.slice(0, 7)})`);
+  return { slug, branch, source, remoteSha };
+}
+
+/**
+ * Whether origin has the branch: false only when `ls-remote` exits with 2 (no such branch).
+ * Throws on any other failure (network, auth), never mistaken for a missing branch.
+ */
+export function branchExists(branch: string): boolean {
+  try {
+    git('ls-remote', '--exit-code', '--heads', 'origin', branch);
+    return true;
+  } catch (error) {
+    if ((error as { status?: number }).status === 2) return false;
+    throw error;
+  }
 }
 
 /**
@@ -118,7 +140,7 @@ export function getPreviousMajor(slug: string, publishedMajor: number): LegacyBr
  * it (replacing the previous major's branch).
  */
 export async function trimLegacyBranch(
-  { slug, branch, source }: LegacyBranch,
+  { slug, branch, source, remoteSha }: LegacyBranch,
   kept: string[]
 ): Promise<void> {
   const { packages, rootDir } = await getPackages(process.cwd());
@@ -141,7 +163,13 @@ export async function trimLegacyBranch(
   const subject =
     `[ci] Legacy ${slug} branch from ${source.slice(0, 7)}: ` + 'product packages only [skip ci]';
   git('commit', '-q', '-m', subject, '-m', summary);
-  git('push', '-f', 'origin', `HEAD:refs/heads/${branch}`);
+  // replaces only the branch seen by checkoutLegacySource (empty lease: must not exist yet)
+  git(
+    'push',
+    `--force-with-lease=refs/heads/${branch}:${remoteSha ?? ''}`,
+    'origin',
+    `HEAD:refs/heads/${branch}`
+  );
   console.log(`  ${summary}`);
 }
 
@@ -205,7 +233,7 @@ export async function createLegacyBranches(published: PackageVersion[]): Promise
 
   for (const slug of majors) {
     const version = published.find((p) => p.name === productPackage(slug))!.version;
-    const legacy = getPreviousMajor(slug, semver.major(version));
+    const legacy = checkoutLegacySource(slug, semver.major(version));
     if (!legacy) continue;
     await trimLegacyBranch(legacy, getProductPackages(products, slug));
     console.log(`✅ Created ${legacy.branch}.`);

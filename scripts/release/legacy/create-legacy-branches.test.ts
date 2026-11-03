@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   createLegacyBranches,
   getMajorPublishedProducts,
-  getPreviousMajor,
+  checkoutLegacySource,
   getProductPackages,
   legacyPrunedDirs,
   refreshLegacyLockfiles,
@@ -119,6 +119,7 @@ describe('legacyPrunedDirs', () => {
 // git side effects: execFileSync is stubbed, calls are checked as argument arrays
 
 const TAG_SHA = '1111111aaaaaaa';
+const LEGACY_SHA = '2222222bbbbbbb';
 const LEGACY_NEXTJS = 'release/legacy/nextjs';
 const LEGACY_ANGULAR = 'release/legacy/angular';
 const root = path.resolve('/repo');
@@ -134,17 +135,19 @@ const gitCalls = () =>
 const gitCommands = (name: string) => gitCalls().filter(([cmd]) => cmd === name);
 const yarnCalls = () =>
   mocks.execFileSync.mock.calls.filter(([cmd]) => cmd === 'yarn').map(([, args]) => args);
-const fail = (message: string): never => {
-  throw new Error(message);
+const fail = (message: string, status = 1): never => {
+  throw Object.assign(new Error(message), { status });
 };
 
 // Stubs git and yarn. `tag`: origin has the `latest` tag; `legacyBranch`: origin has the nextjs
-// legacy branch, `holds`: which already contains the tag; `remoteLegacy`: the legacy branches on
-// origin, `unchanged`: those whose yarn.lock the refresh leaves as is; `tagVersion`: the product
-// package version at the tag.
+// legacy branch at LEGACY_SHA, `holds`: which already contains the tag; `lsRemoteFails`: looking
+// the branch up fails (network, auth); `remoteLegacy`: the legacy branches on origin, `unchanged`:
+// those whose yarn.lock the refresh leaves as is; `tagVersion`: the product package version at the
+// tag.
 function stubGit({
   tag = true,
   legacyBranch = false,
+  lsRemoteFails = false,
   holds = false,
   remoteLegacy = [] as string[],
   unchanged = [] as string[],
@@ -159,12 +162,15 @@ function stubGit({
         if (rest.some((arg) => arg.startsWith('refs/tags/')) && !tag) fail('no such ref');
         if (rest.includes(LEGACY_NEXTJS) && !legacyBranch) fail("couldn't find remote ref");
         return '';
+      case 'ls-remote':
+        if (lsRemoteFails) fail('could not read from remote repository', 128);
+        return legacyBranch ? '' : fail('', 2);
       case 'merge-base':
         return holds ? '' : fail('not an ancestor');
       case 'show':
         return JSON.stringify({ version: tagVersion });
       case 'rev-parse':
-        return TAG_SHA;
+        return rest[0] === `origin/${LEGACY_NEXTJS}` ? LEGACY_SHA : TAG_SHA;
       case 'branch':
         return remoteLegacy.map((branch) => `origin/${branch}`).join('\n');
       case 'checkout':
@@ -190,40 +196,55 @@ describe('legacy branch git side effects', () => {
     stubGit();
   });
 
-  describe('getPreviousMajor', () => {
+  describe('checkoutLegacySource', () => {
     it('checks out the latest tag (detached) when the legacy branch does not exist yet', () => {
-      expect(getPreviousMajor('nextjs', 3)).toEqual({
+      expect(checkoutLegacySource('nextjs', 3)).toEqual({
         slug: 'nextjs',
         branch: LEGACY_NEXTJS,
         source: TAG_SHA,
+        remoteSha: null,
       });
+      expect(gitCommands('ls-remote')).toEqual([
+        ['ls-remote', '--exit-code', '--heads', 'origin', LEGACY_NEXTJS],
+      ]);
       expect(gitCommands('checkout')).toEqual([['checkout', '-q', '-f', '--detach', TAG_SHA]]);
     });
 
     it("replaces a previous major's branch, which does not hold the tag", () => {
       stubGit({ legacyBranch: true });
-      expect(getPreviousMajor('nextjs', 3)?.source).toBe(TAG_SHA);
+      expect(checkoutLegacySource('nextjs', 3)).toMatchObject({
+        source: TAG_SHA,
+        remoteSha: LEGACY_SHA,
+      });
       expect(gitCommands('merge-base')).toEqual([
-        ['merge-base', '--is-ancestor', TAG_SHA, `origin/${LEGACY_NEXTJS}`],
+        ['merge-base', '--is-ancestor', TAG_SHA, LEGACY_SHA],
       ]);
       expect(gitCommands('checkout')).toHaveLength(1);
     });
 
+    it('throws, without checking out, when the branch cannot be looked up (network, auth)', () => {
+      stubGit({ lsRemoteFails: true });
+      expect(() => checkoutLegacySource('nextjs', 3)).toThrow(
+        'could not read from remote repository'
+      );
+      expect(gitCommands('checkout')).toEqual([]);
+    });
+
     it('skips, without checking out, when the branch already holds the tag (re-run)', () => {
       stubGit({ legacyBranch: true, holds: true });
-      expect(getPreviousMajor('nextjs', 3)).toBeNull();
+      expect(checkoutLegacySource('nextjs', 3)).toBeNull();
       expect(gitCommands('checkout')).toEqual([]);
     });
 
     it('reads the product package version at the tag', () => {
-      getPreviousMajor('nextjs', 3);
+      checkoutLegacySource('nextjs', 3);
       expect(gitCommands('show')).toEqual([['show', `${TAG_SHA}:packages/nextjs/package.json`]]);
     });
 
     it('throws, without checking out, when the tag is not on an older major (moved already)', () => {
       for (const tagVersion of ['3.0.0', '3.1.0', '4.0.0']) {
         stubGit({ legacyBranch: true, holds: true, tagVersion });
-        expect(() => getPreviousMajor('nextjs', 3)).toThrow(
+        expect(() => checkoutLegacySource('nextjs', 3)).toThrow(
           'Cannot create legacy branch. latest tag points to the fresh release instead of the ' +
             'previous major. If tag was moved, point it at the previous release and re-run.'
         );
@@ -233,10 +254,10 @@ describe('legacy branch git side effects', () => {
   });
 
   describe('trimLegacyBranch', () => {
-    const legacy = { slug: 'nextjs', branch: LEGACY_NEXTJS, source: TAG_SHA };
+    const legacy = { slug: 'nextjs', branch: LEGACY_NEXTJS, source: TAG_SHA, remoteSha: null };
     const writtenConfig = () => JSON.parse(mocks.writeFileSync.mock.calls[0][1]);
 
-    it('deletes the other packages, ignores the scaffolder, refreshes yarn.lock, force-pushes', async () => {
+    it('deletes the other packages, ignores the scaffolder, refreshes yarn.lock, pushes', async () => {
       await trimLegacyBranch(legacy, [NEXTJS, SCAFFOLDER]);
 
       expect(mocks.rmSync.mock.calls).toEqual([
@@ -251,8 +272,20 @@ describe('legacy branch git side effects', () => {
         `[ci] Legacy nextjs branch from ${TAG_SHA.slice(0, 7)}: product packages only [skip ci]`
       );
       expect(gitCommands('push')).toEqual([
-        ['push', '-f', 'origin', `HEAD:refs/heads/${LEGACY_NEXTJS}`],
+        [
+          'push',
+          `--force-with-lease=refs/heads/${LEGACY_NEXTJS}:`,
+          'origin',
+          `HEAD:refs/heads/${LEGACY_NEXTJS}`,
+        ],
       ]);
+    });
+
+    it('replaces only the branch commit it saw (lease)', async () => {
+      await trimLegacyBranch({ ...legacy, remoteSha: LEGACY_SHA }, [NEXTJS, SCAFFOLDER]);
+      expect(gitCommands('push')[0][1]).toBe(
+        `--force-with-lease=refs/heads/${LEGACY_NEXTJS}:${LEGACY_SHA}`
+      );
     });
 
     it('keeps the existing ignore entries and lists the scaffolder once', async () => {
@@ -282,8 +315,21 @@ describe('legacy branch git side effects', () => {
       await createLegacyBranches(nextjsMajor);
       expect(gitCommands('checkout')).toEqual([['checkout', '-q', '-f', '--detach', TAG_SHA]]);
       expect(gitCommands('push')).toEqual([
-        ['push', '-f', 'origin', `HEAD:refs/heads/${LEGACY_NEXTJS}`],
+        [
+          'push',
+          `--force-with-lease=refs/heads/${LEGACY_NEXTJS}:`,
+          'origin',
+          `HEAD:refs/heads/${LEGACY_NEXTJS}`,
+        ],
       ]);
+    });
+
+    it("replaces a previous major's branch with a lease on its commit", async () => {
+      stubGit({ legacyBranch: true });
+      await createLegacyBranches(nextjsMajor);
+      expect(gitCommands('push')[0][1]).toBe(
+        `--force-with-lease=refs/heads/${LEGACY_NEXTJS}:${LEGACY_SHA}`
+      );
     });
 
     it('pushes nothing when the branch already holds the tag (re-run)', async () => {
