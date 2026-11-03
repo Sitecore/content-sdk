@@ -1,7 +1,6 @@
 import type { CapabilityFilter, CSDKCapabilities } from '@sitecore-content-sdk/core';
-import { ATOMS_CATALOG_METADATA_KEY } from '@sitecore-content-sdk/content/atoms';
 import { detectRouterType, ROUTER_TYPE } from '../tools/templating/utils';
-import { hasAtomsConfig } from './Atoms';
+import { getAtomsMetadata, hasAtomsConfig } from './Atoms';
 import { hasDesignLibrary } from './DesignLibrary';
 import { hasPersonalizeProxy } from './PersonalizeProxy';
 
@@ -30,9 +29,7 @@ const capabilities: CSDKCapabilities = {
       atoms: {
         value: true,
         filter: hasAtomsConfig,
-        metadata: {
-          catalogKey: ATOMS_CATALOG_METADATA_KEY,
-        },
+        metadata: getAtomsMetadata,
       },
     },
     filter: hasDesignLibrary,
@@ -40,4 +37,3 @@ const capabilities: CSDKCapabilities = {
 };
 
 export default capabilities;
-

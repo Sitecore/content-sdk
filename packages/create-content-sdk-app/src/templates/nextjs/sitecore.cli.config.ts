@@ -1,4 +1,4 @@
-import { getAtomsMetadata } from '@sitecore-content-sdk/nextjs/atoms';
+import { ATOMS_CATALOG_METADATA_KEY } from '@sitecore-content-sdk/nextjs/atoms';
 import scConfig from './sitecore.config';
 import { catalog } from 'src/atoms';
 import { defineCliConfig } from '@sitecore-content-sdk/nextjs/config-cli';
@@ -14,7 +14,7 @@ export default defineCliConfig({
   build: {
     commands: [
       generateMetadata({
-        customSections: { ...getAtomsMetadata(catalog) },
+        appInputs: { [ATOMS_CATALOG_METADATA_KEY]: catalog },
       }),
       generateSites(),
       extractFiles(),

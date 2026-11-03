@@ -100,7 +100,10 @@ function mergeCapability(
   key: string
 ): MergedCapability {
   const filters = [...(current?.filters ?? []), ...(incoming.filter ? [incoming.filter] : [])];
-  const metadata = { ...current?.metadata, ...incoming.metadata };
+  const metadata =
+    typeof incoming.metadata === 'function'
+      ? incoming.metadata
+      : { ...current?.metadata, ...incoming.metadata };
 
   if (typeof incoming.value === 'boolean') {
     if (current && typeof current.value !== 'boolean') {
@@ -251,12 +254,14 @@ async function runFilters(
  * Creates an application filesystem context for capability filters.
  * @param {string} [appRoot] application root
  * @param {CapabilitySitecoreConfig} [sitecoreConfig] resolved Sitecore configuration
+ * @param {Record<string, unknown>} [appInputs] custom application inputs for capability resolution
  * @returns filter context
  * @internal
  */
 export function createCapabilityFilterContext(
   appRoot = process.cwd(),
-  sitecoreConfig?: CapabilitySitecoreConfig
+  sitecoreConfig?: CapabilitySitecoreConfig,
+  appInputs?: Record<string, unknown>
 ): CapabilityFilterContext {
   const resolvePath = (relativePath: string) => path.resolve(appRoot, relativePath);
   const readFile = (relativePath: string): string | undefined => {
@@ -270,6 +275,7 @@ export function createCapabilityFilterContext(
   return {
     appRoot: path.resolve(appRoot),
     sitecoreConfig,
+    appInputs,
     fileExists: (relativePath) => {
       try {
         return fs.existsSync(resolvePath(relativePath));
@@ -295,21 +301,23 @@ export function createCapabilityFilterContext(
 
 /**
  * Calculates enabled capabilities for an application.
- * @param {{ appRoot?: string, sitecoreConfig?: CapabilitySitecoreConfig }} [config] calculation configuration
+ * @param {{ appRoot?: string, sitecoreConfig?: CapabilitySitecoreConfig, appInputs?: Record<string, unknown> }} [config] calculation configuration
  * @param {string} [config.appRoot] application root
  * @param {CapabilitySitecoreConfig} [config.sitecoreConfig] resolved Sitecore configuration
+ * @param {Record<string, unknown>} [config.appInputs] custom application inputs for capability resolution
  * @returns enabled capability keys
  * @public
  */
 export async function calculateCapabilities(config?: {
   appRoot?: string;
   sitecoreConfig?: CapabilitySitecoreConfig;
+  appInputs?: Record<string, unknown>;
 }): Promise<ResolvedCapabilities> {
   const appRoot = config?.appRoot ?? process.cwd();
   const collected = collectCapabilities(appRoot);
   const merged = mergeCapabilityExports(collected);
   return resolveCapabilities(
     merged,
-    createCapabilityFilterContext(appRoot, config?.sitecoreConfig)
+    createCapabilityFilterContext(appRoot, config?.sitecoreConfig, config?.appInputs)
   );
 }

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import fs from 'fs';
 import sinon from 'sinon';
 import { CapabilityFilterContext } from '@sitecore-content-sdk/core';
-import { ATOMS_CATALOG_METADATA_KEY } from '@sitecore-content-sdk/content/atoms';
+import { getAtomsMetadata } from './Atoms';
 import capabilities from './index';
 
 const createContext = (
@@ -40,10 +40,8 @@ describe('Next.js capabilities', () => {
     ]);
   });
 
-  it('points atoms metadata to the atoms catalog metadata section', () => {
-    expect(capabilities.designLibrary?.value.atoms?.metadata).to.deep.equal({
-      catalogKey: ATOMS_CATALOG_METADATA_KEY,
-    });
+  it('resolves atoms metadata from the atoms catalog', () => {
+    expect(capabilities.designLibrary?.value.atoms?.metadata).to.equal(getAtomsMetadata);
   });
 
   it('filters capabilities based on application wiring', async () => {

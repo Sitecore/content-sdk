@@ -1,4 +1,6 @@
-import type { CapabilityFilter } from '@sitecore-content-sdk/core';
+import type { CapabilityFilter, CapabilityMetadataResolver } from '@sitecore-content-sdk/core';
+import { ATOMS_CATALOG_METADATA_KEY } from '@sitecore-content-sdk/content/atoms';
+import { type AtomsCatalog, serializeCatalog } from '@sitecore-content-sdk/react';
 import { importsNamedExport, someSourceFile } from '@sitecore-content-sdk/core/node-tools';
 import type * as NextjsExports from '../index';
 
@@ -24,3 +26,25 @@ export const usesAtomsConfig = (source: string) =>
  */
 export const hasAtomsConfig: CapabilityFilter = (context) =>
   someSourceFile(context, usesAtomsConfig);
+
+/**
+ * Resolves atoms capability metadata from the catalog passed in `appInputs`.
+ * Schemas without a JSON Schema equivalent (e.g. `z.date()`) are serialized as `{}` instead of throwing,
+ * and an empty catalog is written when the catalog is missing or cannot be serialized,
+ * so a broken catalog does not break metadata generation.
+ * @param {CapabilityFilterContext} context filter context
+ * @returns {CapabilityMetadata} atoms metadata with the serialized catalog
+ */
+export const getAtomsMetadata: CapabilityMetadataResolver = ({ appInputs }) => {
+  const catalog = appInputs?.[ATOMS_CATALOG_METADATA_KEY] as AtomsCatalog | undefined;
+  if (!catalog) {
+    return { catalog: {} };
+  }
+
+  try {
+    return { catalog: serializeCatalog(catalog, { unrepresentable: 'any' }) };
+  } catch (error) {
+    console.error('Failed to serialize the atoms catalog for application metadata.', error);
+    return { catalog: {} };
+  }
+};

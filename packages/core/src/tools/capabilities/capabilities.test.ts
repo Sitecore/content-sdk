@@ -28,6 +28,14 @@ describe('capabilities', () => {
     );
   });
 
+  it('exposes custom application inputs to filters and metadata resolvers', () => {
+    const appInputs = { atomsCatalog: { components: [] } };
+
+    expect(createCapabilityFilterContext('/app', undefined, appInputs).appInputs).to.equal(
+      appInputs
+    );
+  });
+
   it('returns false from fileExists when existence checks throw', () => {
     const context = createCapabilityFilterContext('/app');
     sinon.stub(fs, 'existsSync').throws(new Error('EINVAL'));
@@ -227,6 +235,53 @@ describe('capabilities', () => {
           metadata: { catalogKey: 'atomsCatalog' },
         },
       });
+    });
+  });
+
+  describe('mergeCapabilityExports function metadata', () => {
+    it('keeps a metadata resolver exported by a single package', async () => {
+      const merged = mergeCapabilityExports([
+        {
+          packageName: 'one',
+          capabilities: { preview: { value: true, metadata: () => ({ catalog: {} }) } },
+        },
+      ]);
+
+      expect(await resolveCapabilities(merged, context)).to.deep.equal({
+        preview: { metadata: { catalog: {} } },
+      });
+    });
+
+    it('replaces earlier static metadata with a later metadata resolver', async () => {
+      const merged = mergeCapabilityExports([
+        {
+          packageName: 'one',
+          capabilities: { preview: { value: true, metadata: { owner: 'one' } } },
+        },
+        {
+          packageName: 'two',
+          capabilities: { preview: { value: true, metadata: async () => ({ catalog: {} }) } },
+        },
+      ]);
+
+      expect(await resolveCapabilities(merged, context)).to.deep.equal({
+        preview: { metadata: { catalog: {} } },
+      });
+    });
+
+    it('does not run metadata resolvers when the capability filter fails', async () => {
+      const metadataResolver = sinon.stub().returns({ catalog: {} });
+      const merged = mergeCapabilityExports([
+        {
+          packageName: 'one',
+          capabilities: {
+            preview: { value: true, filter: () => false, metadata: metadataResolver },
+          },
+        },
+      ]);
+
+      expect(await resolveCapabilities(merged, context)).to.deep.equal({});
+      expect(metadataResolver.called).to.be.false;
     });
   });
 

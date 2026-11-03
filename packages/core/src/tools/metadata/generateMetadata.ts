@@ -31,9 +31,12 @@ export type GenerateMetadataConfig = {
    */
   capabilities?: boolean;
   /**
-   * Optional custom sections written as additional top-level properties of the metadata file,
-   * e.g. `{ atomsCatalog: serializeCatalog(catalog) }`.
-   * Built-in sections (`packages`, `capabilities`) take precedence over custom sections with the same name.
+   * Custom application inputs passed to capability filters and metadata resolvers,
+   * e.g. the atoms catalog: `{ atomsCatalog: catalog }`.
+   */
+  appInputs?: Record<string, unknown>;
+  /**
+   * Overrides for metadata fields.
    */
   customSections?: Record<string, unknown>;
 };
@@ -53,6 +56,7 @@ export const generateMetadata = (
       allowWorkspaces: config?.allowWorkspaces,
       capabilities: config?.capabilities,
       sitecoreConfig: args?.scConfig,
+      appInputs: config?.appInputs,
     });
     writeMetadata(
       { ...config?.customSections, ...metadata },

@@ -243,6 +243,26 @@ describe('metadata', () => {
       expect(metadata).to.deep.equal({ packages: {} });
     });
 
+    it('should pass app inputs to capability calculation', async () => {
+      runWithPackageManager(USER_AGENTS.npm);
+      execSyncStub.withArgs(NPM_QUERY).returns(JSON.stringify(npmQueryResultNext));
+      const calculateCapabilities = sinon.stub().resolves({});
+      const { getMetadata: getMetadataWithStub } = proxyquire('./metadata', {
+        '../capabilities': { calculateCapabilities },
+      });
+      const appInputs = { atomsCatalog: { components: [] } };
+
+      await getMetadataWithStub({ appRoot: '/app', appInputs });
+
+      expect(
+        calculateCapabilities.calledOnceWith({
+          appRoot: '/app',
+          sitecoreConfig: undefined,
+          appInputs,
+        })
+      ).to.be.true;
+    });
+
     it('should log and rethrow when calculateCapabilities throws', async () => {
       const error = new Error('capability failure');
       runWithPackageManager(USER_AGENTS.npm);

@@ -1,6 +1,6 @@
 /**
- * Application metadata section that holds the serialized atoms catalog.
- * Referenced by the atoms capability metadata (`catalogKey`) and written through `generateMetadata` custom sections.
+ * Key of the atoms catalog in `generateMetadata` app inputs.
+ * The atoms capability serializes the catalog under this key into its metadata.
  * @public
  */
 export const ATOMS_CATALOG_METADATA_KEY = 'atomsCatalog';
