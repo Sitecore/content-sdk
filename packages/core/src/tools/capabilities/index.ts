@@ -8,6 +8,7 @@ import type {
   CapabilityFilterContext,
   CapabilityMap,
   CapabilityMetadata,
+  CapabilityMetadataResolver,
   CapabilitySitecoreConfig,
   CSDKCapabilities,
   ResolvedCapabilities,
@@ -30,7 +31,7 @@ export type CollectedCapabilities = {
 export type MergedCapability = {
   value: boolean | MergedCapabilityTree;
   filters: CapabilityFilter[];
-  metadata: CapabilityMetadata;
+  metadata: CapabilityMetadata | CapabilityMetadataResolver;
 };
 
 /** @internal */
@@ -163,8 +164,7 @@ function isCapabilityDefinition(value: unknown): value is CapabilityDefinition {
     typeof value === 'object' &&
     value !== null &&
     'value' in value &&
-    (typeof value.value === 'boolean' ||
-      (typeof value.value === 'object' && value.value !== null))
+    (typeof value.value === 'boolean' || (typeof value.value === 'object' && value.value !== null))
   );
 }
 
@@ -186,7 +186,12 @@ export async function resolveCapabilities(
         return undefined;
       }
 
-      const hasMetadata = Object.keys(capability.metadata).length > 0;
+      const resolvedMetadata: CapabilityMetadata =
+        typeof capability.metadata === 'function'
+          ? (await capability.metadata(context)) ?? {}
+          : capability.metadata ?? {};
+
+      const hasMetadata = Object.keys(resolvedMetadata).length > 0;
 
       if (typeof capability.value === 'boolean') {
         if (!capability.value) {
@@ -197,7 +202,7 @@ export async function resolveCapabilities(
           ? ([
               key,
               {
-                metadata: capability.metadata,
+                metadata: resolvedMetadata,
               },
             ] as const)
           : ([key, true] as const);
@@ -212,7 +217,7 @@ export async function resolveCapabilities(
         key,
         {
           ...subCapabilities,
-          ...(hasMetadata ? { metadata: capability.metadata } : {}),
+          ...(hasMetadata ? { metadata: resolvedMetadata } : {}),
         },
       ] as const;
     })
