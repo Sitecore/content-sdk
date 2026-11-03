@@ -38,6 +38,7 @@ export interface CacheOptions {
 export function calculateCapabilities(config?: {
     appRoot?: string;
     sitecoreConfig?: CapabilitySitecoreConfig;
+    appInputs?: Record<string, unknown>;
 }): Promise<ResolvedCapabilities>;
 
 // @public
@@ -119,7 +120,7 @@ export interface CoreContext {
 }
 
 // @internal
-export function createCapabilityFilterContext(appRoot?: string, sitecoreConfig?: CapabilitySitecoreConfig): CapabilityFilterContext;
+export function createCapabilityFilterContext(appRoot?: string, sitecoreConfig?: CapabilitySitecoreConfig, appInputs?: Record<string, unknown>): CapabilityFilterContext;
 
 // @public
 export type CSDKCapabilities = {
@@ -263,6 +264,7 @@ export type GenerateMetadataConfig = {
     destinationPath?: string;
     allowWorkspaces?: boolean;
     capabilities?: boolean;
+    appInputs?: Record<string, unknown>;
     customSections?: Record<string, unknown>;
 };
 
@@ -311,6 +313,7 @@ export type GetMetadataConfig = {
     capabilities?: boolean;
     appRoot?: string;
     sitecoreConfig?: CapabilitySitecoreConfig;
+    appInputs?: Record<string, unknown>;
 };
 
 // @public

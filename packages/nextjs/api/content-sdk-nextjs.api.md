@@ -10,6 +10,7 @@ import { AppPlaceholderProps } from '@sitecore-content-sdk/react';
 import { AtomActionDefinition } from '@sitecore-content-sdk/react';
 import { AtomActionHandler } from '@sitecore-content-sdk/react';
 import { AtomComponentDefinition } from '@sitecore-content-sdk/react';
+import { ATOMS_CATALOG_METADATA_KEY } from '@sitecore-content-sdk/content/atoms';
 import { AtomsActionsMap } from '@sitecore-content-sdk/react';
 import { AtomsCatalog } from '@sitecore-content-sdk/react';
 import { AtomsCatalogInput } from '@sitecore-content-sdk/react';
@@ -90,7 +91,6 @@ import { GenerateMapFunction } from '@sitecore-content-sdk/content/tools';
 import { generateMetadata } from '@sitecore-content-sdk/core/node-tools';
 import { generateSites } from '@sitecore-content-sdk/content/node-tools';
 import { GenerateSitesConfig } from '@sitecore-content-sdk/content/node-tools';
-import { getAtomsMetadata } from '@sitecore-content-sdk/react';
 import { getChildPlaceholder } from '@sitecore-content-sdk/content/layout';
 import { getComponentList } from '@sitecore-content-sdk/content/node-tools';
 import { getContentStylesheetLink } from '@sitecore-content-sdk/content/layout';
@@ -284,6 +284,8 @@ export { AtomActionDefinition }
 export { AtomActionHandler }
 
 export { AtomComponentDefinition }
+
+export { ATOMS_CATALOG_METADATA_KEY }
 
 export { AtomsActionsMap }
 
@@ -691,8 +693,6 @@ export { generateMetadata }
 export { generateSites }
 
 export { GenerateSitesConfig }
-
-export { getAtomsMetadata }
 
 // @public
 export const getCachedPageParams: () => {
