@@ -21,11 +21,14 @@ export const FieldMetadata = (props: FieldMetadataProps): JSX.Element => {
   const codeOpenAttributes = { ...attributes, kind: MetadataKind.Open };
   const codeCloseAttributes = { ...attributes, kind: MetadataKind.Close };
 
+  // Pages may add chrome attributes to these markers before hydration.
   return (
     <>
-      <code {...codeOpenAttributes}>{data}</code>
+      <code {...codeOpenAttributes} suppressHydrationWarning>
+        {data}
+      </code>
       {props.children}
-      <code {...codeCloseAttributes}></code>
+      <code {...codeCloseAttributes} suppressHydrationWarning></code>
     </>
   );
 };

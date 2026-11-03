@@ -1,4 +1,5 @@
 import React from 'react';
+import sinon from 'sinon';
 import { FieldMetadata } from './FieldMetadata';
 import { render } from '@testing-library/react';
 import { expect } from 'chai';
@@ -37,5 +38,30 @@ describe('<FieldMetadata />', () => {
         '<code type="text/sitecore" chrometype="field" class="scpm" kind="close"></code>',
       ].join('')
     );
+  });
+
+  it('should suppress hydration warnings on field chrome markers', () => {
+    const createElementSpy = sinon.spy(React, 'createElement');
+
+    try {
+      render(
+        <FieldMetadata
+          metadata={{
+            fieldId: '{414061F4-FBB1-4591-BC37-BFFA67F745EB}',
+            fieldType: 'date',
+          }}
+        >
+          <span>23-11-2001</span>
+        </FieldMetadata>
+      );
+
+      const codeCalls = createElementSpy.getCalls().filter((call) => {
+        return call.args[0] === 'code' && call.args[1]?.suppressHydrationWarning === true;
+      });
+
+      expect(codeCalls.length).to.equal(2);
+    } finally {
+      createElementSpy.restore();
+    }
   });
 });

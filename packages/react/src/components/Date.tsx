@@ -37,9 +37,14 @@ const DateFieldComponent: React.FC<DateFieldProps> = ({ field, tag, render, ...h
     children = field.value;
   }
 
-  if (tag) {
+  // In editing mode Pages wraps a bare text node before hydration, so always render an element.
+  if (tag || field.metadata) {
     const Tag = (tag || 'span') as React.ElementType;
-    return <Tag {...htmlProps}>{children}</Tag>;
+    return (
+      <Tag {...htmlProps} suppressHydrationWarning={field.metadata ? true : undefined}>
+        {children}
+      </Tag>
+    );
   } else {
     return <React.Fragment>{children}</React.Fragment>;
   }
