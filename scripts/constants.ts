@@ -30,7 +30,7 @@ export const MAIN_BRANCH = 'dev';
 export const RELEASE_LATEST = 'release/latest';
 
 /**
- * Git tag on the latest release commit of dev or `release/latest` (moved by `publish.yml` after the
- * post-release sync): the released code, which legacy branches are cut from.
+ * Git tag on the latest release commit of dev or `release/latest` (moved by the last post-release
+ * sync step): the released code, which legacy branches are cut from.
  */
 export const LATEST_RELEASE_TAG = 'latest';

@@ -3,7 +3,7 @@
  * it after changesets/action publishes. Steps by branch: `POST_RELEASE_STEPS`.
  * `release/latest` changes came from dev (the limited copy, cherry-picked fixes), so the version
  * bump is all dev lacks. Legacy branches are cut at the `latest` tag (the previous release), which
- * `publish.yml` moves to the release commit after this script.
+ * the last step moves to the release commit.
  * Every step is idempotent. A publish re-run doesn't run the sync again (it publishes nothing), so
  * when a step failed, fix the cause and finish the remaining steps by hand.
  *
@@ -25,12 +25,18 @@ import semver from 'semver';
 import { runMain } from '../changesets/utils';
 import { createLegacyBranches, refreshLegacyLockfiles } from './legacy/create-legacy-branches';
 import { git, tryGit, repoPath, type PackageVersion, branchPrefix } from './utils';
-import { MAIN_BRANCH, RELEASE_LATEST } from '../constants';
+import { LATEST_RELEASE_TAG, MAIN_BRANCH, RELEASE_LATEST } from '../constants';
 
 /** Post-release steps by branch prefix (`branchPrefix`), run in order. */
 const POST_RELEASE_STEPS = new Map<string, Step[]>([
-  [MAIN_BRANCH, [createLegacyBranchesOnMajor, latestBranchSync, refreshLegacyLockfiles]],
-  [RELEASE_LATEST, [createLegacyBranchesOnMajor, devBranchSync, refreshLegacyLockfiles]],
+  [
+    MAIN_BRANCH,
+    [latestBranchSync, createLegacyBranchesOnMajor, refreshLegacyLockfiles, moveLatestTag],
+  ],
+  [
+    RELEASE_LATEST,
+    [devBranchSync, createLegacyBranchesOnMajor, refreshLegacyLockfiles, moveLatestTag],
+  ],
 ]);
 
 /** The release a post-release run is for. */
@@ -93,6 +99,15 @@ export async function devBranchSync({ branch, releaseSha, published }: SyncConte
   }
 
   openConflictPr(branch, releaseSha);
+}
+
+/**
+ * Moves the `latest` tag to the release commit. Last step: legacy branches are cut at the tag, so
+ * it keeps the previous release until they are created.
+ */
+export function moveLatestTag({ releaseSha }: SyncContext): void {
+  git('push', '-f', 'origin', `${releaseSha}:refs/tags/${LATEST_RELEASE_TAG}`);
+  console.log(`✅ Moved ${LATEST_RELEASE_TAG} to ${releaseSha.slice(0, 7)}.`);
 }
 
 /**

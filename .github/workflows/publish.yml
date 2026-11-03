@@ -111,14 +111,6 @@ jobs:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: yarn csdk:post-release-sync
 
-      # Legacy branches are cut at the `latest` tag: move it only after the post-release sync.
-      # When the sync failed, move it by hand after finishing it.
-      - name: Move the latest tag
-        if: >-
-          steps.changesets.outputs.published == 'true' &&
-          (github.ref_name == 'dev' || github.ref_name == 'release/latest')
-        run: git push -f origin "${{ github.sha }}:refs/tags/latest"
-
   canary-snapshot:
     runs-on: ubuntu-latest
     env:

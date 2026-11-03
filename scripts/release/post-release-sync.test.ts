@@ -210,7 +210,6 @@ describe('syncRelease', () => {
     await expect(syncRelease('dev', SHA, released)).rejects.toThrow(
       'createLegacyBranchesOnMajor: push rejected'
     );
-    expect(releaseLatestPushes()).toEqual([]);
     expect(mocks.refreshLegacyLockfiles).not.toHaveBeenCalled();
   });
 
@@ -224,16 +223,18 @@ describe('syncRelease', () => {
   it('runs the steps of the branch prefix', async () => {
     await syncRelease('dev', SHA, released);
     expect(stepNames()).toEqual([
-      'createLegacyBranchesOnMajor',
       'latestBranchSync',
+      'createLegacyBranchesOnMajor',
       'refreshLegacyLockfiles',
+      'moveLatestTag',
     ]);
     vi.mocked(console.log).mockClear();
     await syncRelease(RELEASE_LATEST, SHA, released);
     expect(stepNames()).toEqual([
-      'createLegacyBranchesOnMajor',
       'devBranchSync',
+      'createLegacyBranchesOnMajor',
       'refreshLegacyLockfiles',
+      'moveLatestTag',
     ]);
     for (const other of ['release/legacy/nextjs', 'release/1.x.x', 'release/betas/foo']) {
       vi.mocked(console.log).mockClear();
@@ -257,6 +258,30 @@ describe('syncRelease', () => {
     expect(releaseLatestPushes()).toEqual([]);
   });
 
+  const tagPushes = () =>
+    gitCalls().filter(([cmd, ...rest]) => cmd === 'push' && rest.join(' ').includes('refs/tags/'));
+
+  it('moves the latest tag to the release commit last', async () => {
+    for (const branch of ['dev', RELEASE_LATEST]) {
+      mocks.execFileSync.mockClear();
+      await syncRelease(branch, SHA, released);
+      expect(tagPushes()).toEqual([['push', '-f', 'origin', `${SHA}:refs/tags/latest`]]);
+    }
+  });
+
+  it('keeps the latest tag when an earlier step fails', async () => {
+    mocks.refreshLegacyLockfiles.mockRejectedValueOnce(new Error('install failed'));
+    await expect(syncRelease('dev', SHA, released)).rejects.toThrow('install failed');
+    expect(tagPushes()).toEqual([]);
+  });
+
+  it('never moves the latest tag from other branches', async () => {
+    for (const branch of ['release/legacy/nextjs', 'release/1.x.x', 'release/betas/foo']) {
+      await syncRelease(branch, SHA, released);
+    }
+    expect(tagPushes()).toEqual([]);
+  });
+
   it('never pushes release/latest from other branches, release/latest included', async () => {
     await syncRelease(RELEASE_LATEST, SHA, released);
     await syncRelease('release/legacy/nextjs', SHA, released);
@@ -264,3 +289,4 @@ describe('syncRelease', () => {
     expect(releaseLatestPushes()).toEqual([]);
   });
 });
+
