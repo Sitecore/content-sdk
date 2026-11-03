@@ -32,6 +32,7 @@ vi.mock('fs', () => ({
 
 const NEXTJS = '@sitecore-content-sdk/nextjs';
 const ANGULAR = '@sitecore-content-sdk/angular';
+const CORE = '@sitecore-content-sdk/core';
 
 describe('getMajorPublishedProducts', () => {
   const products = { nextjs: [NEXTJS], angular: [ANGULAR] };
@@ -124,7 +125,7 @@ const LEGACY_NEXTJS = 'release/legacy/nextjs';
 const LEGACY_ANGULAR = 'release/legacy/angular';
 const root = path.resolve('/repo');
 const workspace = [
-  ['@sitecore-content-sdk/core', 'core'],
+  [CORE, 'core'],
   [NEXTJS, 'nextjs'],
   [ANGULAR, 'angular'],
   [SCAFFOLDER, 'create-content-sdk-app'],
@@ -143,7 +144,7 @@ const fail = (message: string, status = 1): never => {
 // legacy branch at LEGACY_SHA, `holds`: which already contains the tag; `lsRemoteFails`: looking
 // the branch up fails (network, auth); `remoteLegacy`: the legacy branches on origin, `unchanged`:
 // those whose yarn.lock the refresh leaves as is; `tagVersion`: the product package version at the
-// tag.
+// tag, `tagProducts`: its products.config.json (null: none, predates it).
 function stubGit({
   tag = true,
   legacyBranch = false,
@@ -152,6 +153,7 @@ function stubGit({
   remoteLegacy = [] as string[],
   unchanged = [] as string[],
   tagVersion = '2.5.0',
+  tagProducts = null as Record<string, string[]> | null,
 } = {}) {
   let checkedOut = '';
   mocks.execFileSync.mockImplementation((cmd: string, args: string[]) => {
@@ -168,6 +170,9 @@ function stubGit({
       case 'merge-base':
         return holds ? '' : fail('not an ancestor');
       case 'show':
+        if (rest[0].endsWith('products.config.json')) {
+          return tagProducts ? JSON.stringify(tagProducts) : fail('path does not exist');
+        }
         return JSON.stringify({ version: tagVersion });
       case 'rev-parse':
         return rest[0] === `origin/${LEGACY_NEXTJS}` ? LEGACY_SHA : TAG_SHA;
@@ -330,6 +335,27 @@ describe('legacy branch git side effects', () => {
       expect(gitCommands('push')[0][1]).toBe(
         `--force-with-lease=refs/heads/${LEGACY_NEXTJS}:${LEGACY_SHA}`
       );
+    });
+
+    const deleted = () => mocks.rmSync.mock.calls.map(([dir]) => dir);
+
+    it("trims to the previous major's products: keeps a package the new release moved out", async () => {
+      // the new release dropped core from nextjs; the previous major shipped it
+      stubGit({ tagProducts: { nextjs: [NEXTJS, CORE], angular: [ANGULAR] } });
+      await createLegacyBranches(nextjsMajor);
+      expect(gitCommands('show')).toContainEqual([
+        'show',
+        `${TAG_SHA}:.changeset/products.config.json`,
+      ]);
+      expect(deleted()).toEqual([path.join(root, 'packages/angular')]);
+    });
+
+    it('uses the new products when the tag predates products.config.json', async () => {
+      await createLegacyBranches(nextjsMajor);
+      expect(deleted()).toEqual([
+        path.join(root, 'packages/core'),
+        path.join(root, 'packages/angular'),
+      ]);
     });
 
     it('pushes nothing when the branch already holds the tag (re-run)', async () => {

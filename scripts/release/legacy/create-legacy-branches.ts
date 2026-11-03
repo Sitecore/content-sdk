@@ -213,9 +213,15 @@ export async function refreshLegacyLockfiles(): Promise<void> {
   }
 }
 
+/** `products.config.json` at the commit; null when it predates the file. */
+function productsAt(commit: string): Record<string, string[]> | null {
+  const config = tryGit('show', `${commit}:${PRODUCTS_PATH}`);
+  return config === null ? null : JSON.parse(config);
+}
+
 /** (Re)creates the legacy branch of every product published as a new major (see header). */
 export async function createLegacyBranches(published: PackageVersion[]): Promise<void> {
-  // the current product definitions, read from the published commit
+  // the current product definitions, read from the published commit: which products got a major
   const products = readProducts(process.cwd());
   const majors = getMajorPublishedProducts(products, published);
   if (majors.length === 0) {
@@ -235,7 +241,9 @@ export async function createLegacyBranches(published: PackageVersion[]): Promise
     const version = published.find((p) => p.name === productPackage(slug))!.version;
     const legacy = checkoutLegacySource(slug, semver.major(version));
     if (!legacy) continue;
-    await trimLegacyBranch(legacy, getProductPackages(products, slug));
+    // the previous major's own product definitions: the new release may have moved packages
+    const previousProducts = productsAt(legacy.source) ?? products;
+    await trimLegacyBranch(legacy, getProductPackages(previousProducts, slug));
     console.log(`✅ Created ${legacy.branch}.`);
   }
 }
