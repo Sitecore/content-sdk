@@ -16,12 +16,14 @@ export { serializeCatalog } from './catalog-serializer';
 export { withPropMeta, type PropMeta } from './schema-utils';
 export {
   textFieldSchema,
+  numberFieldSchema,
   richTextFieldSchema,
   dateFieldSchema,
   linkFieldSchema,
   imageFieldSchema,
   fileFieldSchema,
   type TextFieldSchema,
+  type NumberFieldSchema,
   type RichTextFieldSchema,
   type DateFieldSchema,
   type LinkFieldSchema,

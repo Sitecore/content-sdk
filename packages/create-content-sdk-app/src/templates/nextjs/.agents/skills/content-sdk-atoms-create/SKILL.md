@@ -20,7 +20,7 @@ description: Creates atoms via defineAtomsCatalog and defineAtomsRegistry — pr
 - Per component: `props` (Zod), `description`, optional `slots`, `allowedChildren` / `allowedParents`, optional `version`
 - Registry component names must match catalog names; each renderer gets `{ props, children, emit, on, bindings }`
 - If catalog defines actions, map matching handlers under registry `actions`
-- Sitecore fields: prefer `textFieldSchema`, `richTextFieldSchema`, `linkFieldSchema`, `imageFieldSchema`, `dateFieldSchema`, `fileFieldSchema` — do not invent parallel field shapes
+- Sitecore fields: prefer `textFieldSchema`, `numberFieldSchema` (for numeric values), `richTextFieldSchema`, `linkFieldSchema`, `imageFieldSchema`, `dateFieldSchema`, `fileFieldSchema` — do not invent parallel field shapes
 - `className` may be included in catalog props when the atom should accept styling classes; Document-level `className` and rendering `params.styles` / `params.RenderingIdentifier` remain available for wrapper styling
 - Keep registry as a Client Component surface (`'use client'` via `defineAtomsRegistry`)
 - Do **not** add atoms to `.sitecore/component-map*` — Provider `atomsConfig` is the registration path
