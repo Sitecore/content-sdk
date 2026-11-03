@@ -33,6 +33,8 @@ export type CapabilityFilterContext = {
   readFile: (relativePath: string) => string | undefined;
   /** Tests whether one of the supplied files contains a string or regular expression. */
   fileContains: (relativePaths: string[], pattern: string | RegExp) => boolean;
+  /** Custom inputs for capability resolution that otherwise cannot be computed within filter context. */
+  appInputs?: Record<string, unknown>;
 };
 
 /**
