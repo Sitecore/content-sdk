@@ -31,11 +31,11 @@ import { LATEST_RELEASE_TAG, MAIN_BRANCH, RELEASE_LATEST } from '../constants';
 const POST_RELEASE_STEPS = new Map<string, Step[]>([
   [
     MAIN_BRANCH,
-    [latestBranchSync, createLegacyBranchesOnMajor, refreshLegacyLockfiles, moveLatestTag],
+    [latestBranchSync, createLegacyBranchesOnMajor, moveLatestTag, refreshLegacyLockfiles],
   ],
   [
     RELEASE_LATEST,
-    [devBranchSync, createLegacyBranchesOnMajor, refreshLegacyLockfiles, moveLatestTag],
+    [devBranchSync, createLegacyBranchesOnMajor, moveLatestTag, refreshLegacyLockfiles],
   ],
 ]);
 
