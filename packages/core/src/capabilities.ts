@@ -86,6 +86,8 @@ export type CSDKCapabilities = {
       variantPreview?: CapabilityDefinition;
       /** Allows the CLI to create a generated component in the local filesystem. */
       aiComponentExport?: CapabilityDefinition;
+      /** Allows Design Studio to use the app's atoms catalog for low-code components. */
+      atoms?: CapabilityDefinition;
     };
   };
 };

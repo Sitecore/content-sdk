@@ -133,6 +133,7 @@ export type CSDKCapabilities = {
             variantGeneration?: CapabilityDefinition;
             variantPreview?: CapabilityDefinition;
             aiComponentExport?: CapabilityDefinition;
+            atoms?: CapabilityDefinition;
         };
     };
 };
@@ -258,6 +259,7 @@ export type GenerateMetadataConfig = {
     destinationPath?: string;
     allowWorkspaces?: boolean;
     capabilities?: boolean;
+    customSections?: Record<string, unknown>;
 };
 
 // @public

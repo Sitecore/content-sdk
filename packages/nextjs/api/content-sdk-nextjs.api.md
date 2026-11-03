@@ -90,6 +90,7 @@ import { GenerateMapFunction } from '@sitecore-content-sdk/content/tools';
 import { generateMetadata } from '@sitecore-content-sdk/core/node-tools';
 import { generateSites } from '@sitecore-content-sdk/content/node-tools';
 import { GenerateSitesConfig } from '@sitecore-content-sdk/content/node-tools';
+import { getAtomsMetadata } from '@sitecore-content-sdk/react';
 import { getChildPlaceholder } from '@sitecore-content-sdk/content/layout';
 import { getComponentList } from '@sitecore-content-sdk/content/node-tools';
 import { getContentStylesheetLink } from '@sitecore-content-sdk/content/layout';
@@ -690,6 +691,8 @@ export { generateMetadata }
 export { generateSites }
 
 export { GenerateSitesConfig }
+
+export { getAtomsMetadata }
 
 // @public
 export const getCachedPageParams: () => {

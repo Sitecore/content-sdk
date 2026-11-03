@@ -13,6 +13,7 @@ export type {
 export { defineAtomsCatalog } from './define-atoms-catalog';
 export { defineAtomsRegistry } from './define-atoms-registry';
 export { serializeCatalog } from './catalog-serializer';
+export { getAtomsMetadata } from './atoms-metadata';
 export { withPropMeta, type PropMeta } from './schema-utils';
 export {
   textFieldSchema,

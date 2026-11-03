@@ -4,6 +4,7 @@
 
 ```ts
 
+import { ATOMS_CATALOG_METADATA_KEY } from '@sitecore-content-sdk/content/atoms';
 import { AtomsStylingSolution } from '@sitecore-content-sdk/content/atoms';
 import { CacheClient } from '@sitecore-content-sdk/core';
 import { CacheOptions } from '@sitecore-content-sdk/core';
@@ -383,6 +384,9 @@ export const fileFieldSchema: (extra?: z.ZodRawShape) => z.ZodObject<{
 //
 // @public
 export const Form: (input: FormProps) => React_2.JSX.Element;
+
+// @public
+export function getAtomsMetadata(catalog: AtomsCatalog): Record<typeof ATOMS_CATALOG_METADATA_KEY, unknown>;
 
 export { getChildPlaceholder }
 

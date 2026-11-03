@@ -30,6 +30,12 @@ export type GenerateMetadataConfig = {
    * Whether to calculate installed package capabilities. Defaults to true.
    */
   capabilities?: boolean;
+  /**
+   * Optional custom sections written as additional top-level properties of the metadata file,
+   * e.g. `{ atomsCatalog: serializeCatalog(catalog) }`.
+   * Built-in sections (`packages`, `capabilities`) take precedence over custom sections with the same name.
+   */
+  customSections?: Record<string, unknown>;
 };
 
 /**
@@ -48,7 +54,10 @@ export const generateMetadata = (
       capabilities: config?.capabilities,
       sitecoreConfig: args?.scConfig,
     });
-    writeMetadata(metadata, config?.destinationPath ?? '.sitecore/metadata.json');
+    writeMetadata(
+      { ...config?.customSections, ...metadata },
+      config?.destinationPath ?? '.sitecore/metadata.json'
+    );
   };
 };
 

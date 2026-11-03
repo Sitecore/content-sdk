@@ -125,6 +125,7 @@ export {
   useBoundProp,
   defineAtomsCatalog,
   defineAtomsRegistry,
+  getAtomsMetadata,
   withPropMeta,
   extractDocumentClasses,
   type PropMeta,

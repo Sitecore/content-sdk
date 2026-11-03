@@ -54,6 +54,26 @@ describe('generateMetadata', () => {
     );
   });
 
+  it('should write custom sections as top-level metadata properties', async () => {
+    const atomsCatalog = { stylingSolution: 'tailwind', components: [], actions: [] };
+    const generate = generateMetadata({ capabilities: false, customSections: { atomsCatalog } });
+    await generate();
+
+    expect(JSON.parse(writeFileSyncStub.getCall(0).args[1])).to.deep.include({ atomsCatalog });
+  });
+
+  it('should not let custom sections override built-in sections', async () => {
+    const generate = generateMetadata({
+      capabilities: false,
+      customSections: { packages: { custom: '1.0.0' } },
+    });
+    await generate();
+
+    expect(JSON.parse(writeFileSyncStub.getCall(0).args[1]).packages).not.to.have.property(
+      'custom'
+    );
+  });
+
   it('should omit capabilities when capability calculation is disabled', async () => {
     const generate = generateMetadata({ capabilities: false });
     await generate();

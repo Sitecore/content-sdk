@@ -1,6 +1,7 @@
 export {
   useBoundProp,
   withPropMeta,
+  getAtomsMetadata,
   extractDocumentClasses,
   type AtomComponentDefinition,
   type AtomActionDefinition,
