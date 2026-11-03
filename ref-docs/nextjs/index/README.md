@@ -84,6 +84,7 @@
 
 - [AppPlaceholderProps](type-aliases/AppPlaceholderProps.md)
 - [BuildSitecoreDictionaryCacheTagParams](type-aliases/BuildSitecoreDictionaryCacheTagParams.md)
+- [BuildSitecoreItemCacheTagParams](type-aliases/BuildSitecoreItemCacheTagParams.md)
 - [BYOCComponentParams](type-aliases/BYOCComponentParams.md)
 - [BYOCComponentProps](type-aliases/BYOCComponentProps.md)
 - [CachedPageParams](type-aliases/CachedPageParams.md)
@@ -162,6 +163,7 @@
 
 - [analyticsProxyAdapter](functions/analyticsProxyAdapter.md)
 - [buildSitecoreDictionaryCacheTag](functions/buildSitecoreDictionaryCacheTag.md)
+- [buildSitecoreItemCacheTag](functions/buildSitecoreItemCacheTag.md)
 - [collectSitecorePageCacheTags](functions/collectSitecorePageCacheTags.md)
 - [ComponentPropsContext](functions/ComponentPropsContext.md)
 - [DesignLibraryApp](functions/DesignLibraryApp.md)

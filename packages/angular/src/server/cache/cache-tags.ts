@@ -16,7 +16,7 @@ export const SITECORE_CONTENT_CACHE_TAG_PREFIX = 'sc';
 
 /**
  * Parameters for {@link buildSitecoreItemCacheTag}.
- * @internal
+ * @public
  */
 export type BuildSitecoreItemCacheTagParams = {
   /** Sitecore item GUID or content id. */
@@ -29,7 +29,7 @@ export type BuildSitecoreItemCacheTagParams = {
  * Builds an item-scoped revalidation tag: `sc:item:<id>:<locale>`.
  * @param {BuildSitecoreItemCacheTagParams} params - Item id and locale.
  * @returns {string} Sitecore item cache tag.
- * @internal
+ * @public
  */
 export function buildSitecoreItemCacheTag(params: BuildSitecoreItemCacheTagParams): string {
   const id = normalizeSitecoreItemIdForCacheKey(params.itemId);

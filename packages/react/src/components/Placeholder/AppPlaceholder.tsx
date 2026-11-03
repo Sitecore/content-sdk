@@ -65,7 +65,7 @@ const getPlaceholderComponents = (
         hiddenRenderingComponent,
         missingComponentComponent
       );
-      const key = componentRendering.uid || `component-${index}`;
+      const key = componentRendering.uid || `${componentRendering.componentName}-${index}`;
 
       const renderedProps = modifyComponentProps
         ? modifyComponentProps(getChildComponentProps(placeholderProps, componentRendering))
@@ -99,7 +99,6 @@ const getPlaceholderComponents = (
       }
 
       if (!componentEmpty) {
-        const errorBoundaryKey = rendered.type + '-' + index;
         // ErrorBoundary is a client component, so whatever it receives is serialized into the
         // page's RSC payload - pass only the fields it displays, not the rendering's datasource,
         // fields and nested placeholders.
@@ -108,7 +107,7 @@ const getPlaceholderComponents = (
         rendered = (
           <ErrorBoundary
             data-testid="error-boundary"
-            key={errorBoundaryKey}
+            key={key}
             errorComponent={errorComponent}
             componentLoadingMessage={componentLoadingMessage}
             isDynamic={dynamic}

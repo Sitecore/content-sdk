@@ -1,5 +1,27 @@
 # @sitecore-content-sdk/cli
 
+## 2.4.0
+
+### Minor Changes
+
+- Add `sitecore-tools project experimental list` to show the experimental features available in the current Content SDK app. ([e1d0156](https://github.com/sitecore/content-sdk/commit/e1d01567743ba659061230b4c463eb068f9fd3da))
+  The command reads the app's framework package (`@sitecore-content-sdk/nextjs` or `@sitecore-content-sdk/angular`) and prints each feature with its enabled status. Framework packages now export `experimentalFeaturesCatalog` from their `/experimental` entry.
+- minor `@sitecore-content-sdk/content` dependency update:
+
+  - [angular] Metadata, Open Graph and Schema.org & JSON-LD Support
+
+  - `@sitecore-content-sdk/content`: `resolvePageMetadataFields` (with `PageMetadataRouteFields` / `ResolvedPageMetadataFields`) moved from `@sitecore-content-sdk/nextjs` to `@sitecore-content-sdk/content/layout`, so every framework shares the same field-to-tag rules. `@sitecore-content-sdk/nextjs` keeps re-exporting `PageMetadataRouteFields`.
+  - `@sitecore-content-sdk/angular`: added `PageMetadataService` + `<sc-page-meta-tags [route]>` (`<title>`, metadata and Open Graph `<meta>` tags via Angular's `Title`/`Meta` services) and `JsonLdSchemaService` + `<sc-json-ld-schema [page]>` (a single `<script type="application/ld+json">` in `<head>`, normal mode only). Re-exported the `PageMetadataFields`, `MetadataFields`, `OpenGraphFields`, `OpenGraphImageField(Value)` and `PageMetadataRouteFields` types.
+  - Angular template: `LayoutComponent` renders both components; `RouteFields` extends `PageMetadataFields`. ([c7801c3](https://github.com/sitecore/content-sdk/commit/c7801c33fe661bb4b9b6f414c72a29794de8b26a))
+    - Avoid throwing errors in scClient calls when context ID in browser is missing.
+
+  * Replaces the GraphQL client used by scClient with no-op fallback in browser context, when public content ID is missing, preventing `getPage()`, `getDictionary()` and other GraphQL-bound method from throwing.
+  * Adds a guard into `getHeadLinks()` call to return empty results when client context ID is missing, instead of throwing an error.
+  * Client Context ID becomes required for rendering head links. ([5184ea7](https://github.com/sitecore/content-sdk/commit/5184ea7a4b946180169da0d19c7f8f7d61b0c8ec))
+
+  - Apply `rewriteMediaUrls` to `SitecoreClient.getData` results so custom Experience Edge hostnames are rewritten in component GraphQL data. ([5509bcd](https://github.com/sitecore/content-sdk/commit/5509bcddfb4134f289ce04760ee3a119d66b3d04))
+  - Schema.org & JSON-LD Support ([b858df1](https://github.com/sitecore/content-sdk/commit/b858df1f6f27c4f7a00a2d33c81c5e5233790233))
+
 ## 2.3.0
 
 ### Minor Changes

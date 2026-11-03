@@ -13,6 +13,18 @@ const nextConfig = {
     turbopackFileSystemCacheForDev: true,
   },
 
+  turbopack: {
+    rules: {
+      // Strip out getComponentServerProps from components in the client bundle
+      '*.tsx': {
+        condition: {
+          all: ['browser', { not: 'foreign' }, { path: /(^|\/)src\/components\// }],
+        },
+        loaders: ['@sitecore-content-sdk/nextjs/component-props-loader'],
+      },
+    },
+  },
+
   i18n: {
     // These are all the locales you want to support in your application.
     // These should generally match (or at least be a subset of) those in Sitecore.
@@ -80,8 +92,8 @@ const nextConfig = {
     if (!options.isServer) {
       // Add a loader to strip out getComponentServerProps from components in the client bundle
       config.module.rules.unshift({
-        test: /src\\components\\.*\.tsx$/,
-        use: ['@sitecore-content-sdk\\nextjs\\component-props-loader'],
+        test: /[\\/]src[\\/]components[\\/].*\.tsx$/,
+        use: ['@sitecore-content-sdk/nextjs/component-props-loader'],
       });
     } else {
       // Force use of CommonJS on the server for FEAAS SDK since Content SDK also uses CommonJS entrypoint to FEAAS SDK.

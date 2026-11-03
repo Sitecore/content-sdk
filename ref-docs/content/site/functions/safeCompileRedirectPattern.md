@@ -8,7 +8,7 @@
 
 > **safeCompileRedirectPattern**(`pattern`): `RegExp` \| `null`
 
-Defined in: [content/src/site/redirect-utils.ts:169](https://github.com/Sitecore/content-sdk/blob/0a0329383af69f84aabe08a1dceb0b75ccb35504/packages/content/src/site/redirect-utils.ts#L169)
+Defined in: [content/src/site/redirect-utils.ts:169](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/content/src/site/redirect-utils.ts#L169)
 
 **`Internal`**
 

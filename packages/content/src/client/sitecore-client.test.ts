@@ -1321,7 +1321,9 @@ describe('SitecoreClient', () => {
       await sitecoreClient.getPreview(previewData);
 
       expect(
-        editingServiceStub.fetchEditingData.calledWith(sinon.match({ previewTime: sinon.match.defined }))
+        editingServiceStub.fetchEditingData.calledWith(
+          sinon.match({ previewTime: sinon.match.defined })
+        )
       ).to.be.false;
     });
 
@@ -1684,7 +1686,7 @@ describe('SitecoreClient', () => {
     });
 
     it('should fall back to the server contextId when clientContextId is not set', () => {
-      const sitecoreClient = new SitecoreClient({
+      const clientWithoutClientContextId = new SitecoreClient({
         ...defaultInitOptions,
         api: {
           ...defaultInitOptions.api,
@@ -1695,7 +1697,7 @@ describe('SitecoreClient', () => {
         },
       });
 
-      const result = sitecoreClient.getHeadLinks(layoutData);
+      const result = clientWithoutClientContextId.getHeadLinks(layoutData);
 
       expect(result).to.deep.equal([
         {

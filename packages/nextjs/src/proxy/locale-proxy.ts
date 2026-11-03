@@ -54,8 +54,7 @@ export class LocaleProxy extends ProxyBase {
     proxiesContext?: ProxiesContext
   ): Promise<NextResponse> => {
     try {
-      const { pathname } = req.nextUrl;
-
+      const pathname = this.getPathname(req, res);
       const localeFromPath = this.getLocaleFromPath(pathname);
       const locale = localeFromPath || this.getLanguage(req, res);
 

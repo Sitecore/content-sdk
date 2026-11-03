@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-content-sdk/nextjs",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "sideEffects": false,
@@ -95,10 +95,10 @@
   },
   "dependencies": {
     "@babel/parser": "^7.27.2",
-    "@sitecore-content-sdk/content": "^2.3.1",
+    "@sitecore-content-sdk/content": "^2.4.0",
     "@sitecore-content-sdk/core": "^2.1.4",
     "@sitecore-content-sdk/events": "^2.1.2",
-    "@sitecore-content-sdk/react": "^2.4.0",
+    "@sitecore-content-sdk/react": "^2.5.0",
     "@tailwindcss/node": "^4.0.0",
     "recast": "^0.23.11",
     "regex-parser": "^2.3.1"
@@ -135,9 +135,8 @@
       "require": "./dist/cjs/editing/codegen/index.js"
     },
     "./component-props-loader": {
-      "types": "./types/component-props-loader/index.d.ts",
-      "import": "./dist/esm/component-props-loader/index.js",
-      "require": "./dist/cjs/component-props-loader/index.js"
+      "types": "./component-props-loader.d.ts",
+      "default": "./component-props-loader.js"
     },
     "./config": {
       "types": "./types/config/index.d.ts",
@@ -158,6 +157,11 @@
       "import": "./dist/esm/experimental-features/index.js",
       "require": "./dist/cjs/experimental-features/index.js",
       "types": "./types/experimental-features/index.d.ts"
+    },
+    "./capabilities": {
+      "import": "./dist/esm/capabilities/index.js",
+      "require": "./dist/cjs/capabilities/index.js",
+      "types": "./types/capabilities/index.d.ts"
     },
     "./proxy": {
       "types": "./types/proxy/index.d.ts",

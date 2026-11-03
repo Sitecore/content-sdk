@@ -26,6 +26,12 @@
 - [deepMerge](functions/deepMerge.md)
 - [getFallbackConfig](functions/getFallbackConfig.md)
 
+## Functions
+
+- [buildFallbackConfig](functions/buildFallbackConfig.md)
+- [deepMerge](functions/deepMerge.md)
+- [getFallbackConfig](functions/getFallbackConfig.md)
+
 ## References
 
 ### defineConfig

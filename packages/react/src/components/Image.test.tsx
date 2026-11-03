@@ -310,6 +310,29 @@ describe('<Image />', () => {
       expect(rendered.container.innerHTML).to.contain('scEmptyImage');
     });
 
+    it('should override the default empty image inline styles with the passed style', () => {
+      const field = {
+        value: { src: undefined },
+        metadata: testMetadata,
+      };
+
+      const rendered = render(
+        <Image
+          field={field}
+          style={{ minWidth: '16px', minHeight: '16px', width: '16px', height: '16px' }}
+        />
+      );
+      const img = rendered.container.querySelector('img') as HTMLImageElement;
+
+      expect(img.style.minWidth).to.equal('16px');
+      expect(img.style.minHeight).to.equal('16px');
+      expect(img.style.width).to.equal('16px');
+      expect(img.style.height).to.equal('16px');
+      expect(img.style.maxWidth).to.equal('400px');
+      expect(img.style.maxHeight).to.equal('400px');
+      expect(img.style.cursor).to.equal('pointer');
+    });
+
     it('should render custom empty field component when provided, when field value src is not present', () => {
       const field = {
         value: { src: undefined },

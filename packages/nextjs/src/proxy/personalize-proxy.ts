@@ -12,7 +12,7 @@ import { personalize } from '@sitecore-content-sdk/personalize';
 import { analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
 import { personalizeServerPlugin } from '@sitecore-content-sdk/personalize';
 import { analyticsProxyAdapter } from '../initialization/proxy/analytics-adapter';
-import { ProxyBase, ProxyBaseConfig, REWRITE_HEADER_NAME } from './proxy';
+import { ProxyBase, ProxyBaseConfig } from './proxy';
 import { SitecoreConfig } from '../config';
 import debug from '../debug';
 import { personalizeProxyAdapter } from '../initialization/proxy/personalize-adapter';
@@ -248,7 +248,7 @@ export class PersonalizeProxy extends ProxyBase {
       }
 
       // Path can be rewritten by previously executed proxy
-      const basePath = res?.headers.get(REWRITE_HEADER_NAME) || pathname;
+      const basePath = this.getPathname(req, res);
 
       // Rewrite to persononalized path
       const rewritePath = getPersonalizedRewrite(basePath, identifiedVariantIds);
