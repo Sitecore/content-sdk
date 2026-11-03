@@ -6,9 +6,10 @@ const samplesByProduct = require('./samples.json');
  * @returns unique app name
  */
 module.exports.getAppFolder = (args) =>
-  `sample-${args.template}${args.prerender ? `-${args.prerender}` : ''
-  }`;
+  `${sampleNamePrefix}${args.template}${args.prerender ? `-${args.prerender}` : ''}`;
 
+const sampleNamePrefix = 'sample-';
+module.exports.sampleNamePrefix = sampleNamePrefix;
 /**
  * Samples to scaffold, from `samples.json` (product -> samples)
  * @param {string} [product] product name (e.g. nextjs); all products' samples when omitted
@@ -19,7 +20,9 @@ module.exports.getSamples = (product) => {
   const samples = samplesByProduct[product];
   if (!samples) {
     throw new Error(
-      `Unknown product "${product}". samples.json defines: ${Object.keys(samplesByProduct).join(', ')}.`
+      `Unknown product "${product}". samples.json defines: ${Object.keys(samplesByProduct).join(
+        ', '
+      )}.`
     );
   }
   return samples;

@@ -9,8 +9,8 @@ export const REPO = 'sitecore/content-sdk';
 export const SDK_SCOPE = '@sitecore-content-sdk/';
 
 /**
- * The app scaffolder: released with every product (listed under each in `products.config.json`),
- * patch-only in the cascade, kept but never published on legacy branches.
+ * The app scaffolder: in no product in `products.config.json`, so it is shared and released with
+ * either product; patch-only in the cascade, kept but never published on legacy branches.
  */
 export const SCAFFOLDER = 'create-content-sdk-app';
 
@@ -30,7 +30,6 @@ export const MAIN_BRANCH = 'dev';
 export const RELEASE_LATEST = 'release/latest';
 
 /**
- * Git tag on the latest release commit of dev or `release/latest` (moved by the post-release sync):
- * the released code, which legacy branches are cut from.
+ * Git tag on the latest release commit of dev or `release/latest`
  */
 export const LATEST_RELEASE_TAG = 'latest';

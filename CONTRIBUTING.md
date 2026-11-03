@@ -28,6 +28,7 @@ In your fork from the root of the monorepo:
 
 - `yarn install` - this will install Lerna at the root, packages and will link them and allow the remaining scripts to be called.
 - (optional) `yarn install-git-hooks` - installs a pre-push hook that will lint all packages before a `git-push`. Opt out per-push with the `--no-verify` flag.
+- `yarn install` also installs a pre-commit hook that splits staged multi-package changesets into one changeset per package.
 - `yarn build` - will build all Sitecore Content SDK packages.
 
 In our terms `workspace` - it's a sample or package.

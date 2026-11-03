@@ -4,7 +4,7 @@ name: Release Branch Guards
 # - release/latest: release versions. Fails when a version the pending changesets would release
 #   (release plan, cascade included) is not above npm `latest`: already published from dev, or
 #   lower. PRs without pending changesets (the release PR) pass.
-# - release/legacy/**: legacy changesets. Fails on changesets a legacy branch can't release: for a package
+# - release/legacy/<product>: legacy changesets. Fails on changesets a legacy branch can't release: for a package
 #   that resolves from npm (e.g. a cherry-picked core changeset; ship it from dev) or for
 #   create-content-sdk-app (would stay pending and silently block publishing).
 # Other release branches pass. Mark this check as required on these branches.
@@ -13,7 +13,7 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - 'release/latest'
-      - 'release/legacy/**'
+      - 'release/legacy/*'
 
 permissions:
   contents: read
@@ -42,4 +42,3 @@ jobs:
 
       - name: Release branch guards
         run: node ./scripts/release/release-branch-guards.ts
-
