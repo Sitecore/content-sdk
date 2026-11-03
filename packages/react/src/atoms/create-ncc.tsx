@@ -1,5 +1,5 @@
 'use client';
-import React, { type FC, useMemo, useState } from 'react';
+import React, { type FC, useEffect, useMemo, useState } from 'react';
 import {
   Renderer,
   StateProvider,
@@ -13,6 +13,7 @@ import { Document } from '@sitecore-content-sdk/content/atoms';
 import type { AtomsCatalog } from './types';
 import { useSitecore } from '../components/SitecoreProvider';
 import { withElementChromeKeys, withEditingChromeRegistry } from './with-editing-chrome';
+import { scheduleEditorChromesReset } from './reset-editor-chromes';
 
 /**
  * Creates a React functional component that renders the given Component Layout document
@@ -40,6 +41,15 @@ export function createNCC(
       () => (isEditing ? withEditingChromeRegistry(registry, catalog) : registry),
       [isEditing]
     );
+    // json-render has no "render complete" callback. In editing mode the atoms DOM can be created
+    // after the Pages canvas has attached (initial mount, remount, or chrome registry swap),
+    // so ask Pages to re-discover chromes once the new DOM is committed.
+    useEffect(() => {
+      if (isEditing) {
+        scheduleEditorChromesReset();
+      }
+    }, [renderRegistry, isEditing]);
+
     const [store] = useState(() => createStateStore(doc.state));
 
     const [resolvedHandlers] = useState(() =>

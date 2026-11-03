@@ -2,8 +2,10 @@
 /* eslint-disable no-unused-expressions */
 import React from 'react';
 import { expect } from 'chai';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import proxyquire from 'proxyquire';
+import sinon from 'sinon';
+import { PagesEditor } from '@sitecore-content-sdk/content/editing';
 import { z } from 'zod';
 import type { Document } from '@sitecore-content-sdk/content/atoms';
 import type { DefineRegistryResult } from '@json-render/react';
@@ -241,6 +243,106 @@ describe('create-ncc', () => {
       expect(
         container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="card-el_1"]`)
       ).to.not.be.null;
+    });
+  });
+
+  describe('Pages chrome reset', () => {
+    // Chrome rediscovery contract with Pages (Horizon)
+    const resetChromesKey = 'Sitecore.Horizon.ResetChromes';
+    const catalog = defineAtomsCatalog({
+      components: {
+        Card: { props: z.object({ title: z.string().optional() }), description: 'Card' },
+      },
+      actions: {},
+    });
+    const registry = defineAtomsRegistry(catalog, {
+      components: { Card: ({ props }) => <span>{props?.title}</span> },
+      actions: {},
+    });
+    const doc: Document = {
+      name: 'reset-doc',
+      root: 'card-el',
+      elements: { 'card-el': { type: 'Card', props: { title: 'Hello' } } },
+    };
+
+    let resetChromes: sinon.SinonStub;
+
+    const flushMicrotasks = () => act(async () => {});
+
+    const withPage = (isEditing: boolean, ui: React.ReactNode) => (
+      <SitecoreProvider
+        api={{} as any}
+        componentMap={new Map()}
+        page={
+          {
+            locale: 'en',
+            mode: { isEditing },
+            layout: { sitecore: { context: {}, route: null } },
+          } as any
+        }
+        loadImportMap={async () => ({} as any)}
+        atomsConfig={{ catalog, registry }}
+      >
+        {ui}
+      </SitecoreProvider>
+    );
+
+    beforeEach(() => {
+      sinon.stub(PagesEditor, 'isActive').returns(true);
+      resetChromes = sinon.stub();
+      (window as any)[resetChromesKey] = resetChromes;
+    });
+
+    afterEach(() => {
+      sinon.restore();
+      delete (window as any)[resetChromesKey];
+    });
+
+    it('asks Pages to re-discover chromes after mounting in editing mode', async () => {
+      const View = createNCC(doc, registry, catalog);
+      render(withPage(true, <View />));
+      await flushMicrotasks();
+
+      expect(resetChromes.calledOnce).to.be.true;
+    });
+
+    it('coalesces the reset when several atom components mount together', async () => {
+      const First = createNCC(doc, registry, catalog);
+      const Second = createNCC({ ...doc, name: 'reset-doc-2' }, registry, catalog);
+      render(
+        withPage(
+          true,
+          <>
+            <First />
+            <Second />
+          </>
+        )
+      );
+      await flushMicrotasks();
+
+      expect(resetChromes.calledOnce).to.be.true;
+    });
+
+    it('asks Pages to re-discover chromes again after the component is remounted', async () => {
+      const First = createNCC(doc, registry, catalog);
+      const { rerender } = render(withPage(true, <First />));
+      await flushMicrotasks();
+      expect(resetChromes.calledOnce).to.be.true;
+
+      // A new component type (e.g. createNCC re-run) remounts the subtree
+      const Second = createNCC(doc, registry, catalog);
+      rerender(withPage(true, <Second />));
+      await flushMicrotasks();
+
+      expect(resetChromes.calledTwice).to.be.true;
+    });
+
+    it('does not reset chromes when not in editing mode', async () => {
+      const View = createNCC(doc, registry, catalog);
+      render(withPage(false, <View />));
+      await flushMicrotasks();
+
+      expect(resetChromes.called).to.be.false;
     });
   });
 });

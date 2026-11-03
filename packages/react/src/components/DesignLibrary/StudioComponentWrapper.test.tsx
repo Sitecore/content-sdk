@@ -1083,4 +1083,46 @@ describe('<StudioComponentWrapper />', () => {
       expect(container.firstElementChild?.id).to.equal('');
     });
   });
+
+  describe('DOM stability', () => {
+    // Replacing the DOM after load detaches the Pages editor canvas from the atoms, so
+    // identity-only changes must keep the existing elements.
+    const doc: Document = {
+      name: 'stable',
+      root: 'r',
+      elements: { r: { type: 'Text', props: { content: 'Hello' }, children: [] } },
+      state: { fields: { heading: { value: 'v1' } } },
+    };
+
+    it('keeps the same DOM when atomsConfig is re-created with the same catalog and registry', async () => {
+      const { getByTestId, rerender } = render(
+        wrapInProvider(<StudioComponentWrapper document={doc} />, { ...textBoxConfig })
+      );
+      const initialElement = getByTestId('text-el');
+
+      await act(async () => {
+        rerender(wrapInProvider(<StudioComponentWrapper document={doc} />, { ...textBoxConfig }));
+      });
+
+      expect(getByTestId('text-el')).to.equal(initialElement);
+    });
+
+    it('keeps the same DOM when a new but deeply equal document is provided', async () => {
+      const { getByTestId, rerender } = render(
+        wrapInProvider(<StudioComponentWrapper document={doc} />, textBoxConfig)
+      );
+      const initialElement = getByTestId('text-el');
+
+      await act(async () => {
+        rerender(
+          wrapInProvider(
+            <StudioComponentWrapper document={JSON.parse(JSON.stringify(doc))} />,
+            textBoxConfig
+          )
+        );
+      });
+
+      expect(getByTestId('text-el')).to.equal(initialElement);
+    });
+  });
 });
