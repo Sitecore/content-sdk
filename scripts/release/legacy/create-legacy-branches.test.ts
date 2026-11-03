@@ -140,13 +140,15 @@ const fail = (message: string): never => {
 
 // Stubs git and yarn. `tag`: origin has the `latest` tag; `legacyBranch`: origin has the nextjs
 // legacy branch, `holds`: which already contains the tag; `remoteLegacy`: the legacy branches on
-// origin, `unchanged`: those whose yarn.lock the refresh leaves as is.
+// origin, `unchanged`: those whose yarn.lock the refresh leaves as is; `tagVersion`: the product
+// package version at the tag.
 function stubGit({
   tag = true,
   legacyBranch = false,
   holds = false,
   remoteLegacy = [] as string[],
   unchanged = [] as string[],
+  tagVersion = '2.5.0',
 } = {}) {
   let checkedOut = '';
   mocks.execFileSync.mockImplementation((cmd: string, args: string[]) => {
@@ -159,6 +161,8 @@ function stubGit({
         return '';
       case 'merge-base':
         return holds ? '' : fail('not an ancestor');
+      case 'show':
+        return JSON.stringify({ version: tagVersion });
       case 'rev-parse':
         return TAG_SHA;
       case 'branch':
@@ -188,7 +192,7 @@ describe('legacy branch git side effects', () => {
 
   describe('getPreviousMajor', () => {
     it('checks out the latest tag (detached) when the legacy branch does not exist yet', () => {
-      expect(getPreviousMajor('nextjs')).toEqual({
+      expect(getPreviousMajor('nextjs', 3)).toEqual({
         slug: 'nextjs',
         branch: LEGACY_NEXTJS,
         source: TAG_SHA,
@@ -198,7 +202,7 @@ describe('legacy branch git side effects', () => {
 
     it("replaces a previous major's branch, which does not hold the tag", () => {
       stubGit({ legacyBranch: true });
-      expect(getPreviousMajor('nextjs')?.source).toBe(TAG_SHA);
+      expect(getPreviousMajor('nextjs', 3)?.source).toBe(TAG_SHA);
       expect(gitCommands('merge-base')).toEqual([
         ['merge-base', '--is-ancestor', TAG_SHA, `origin/${LEGACY_NEXTJS}`],
       ]);
@@ -207,7 +211,23 @@ describe('legacy branch git side effects', () => {
 
     it('skips, without checking out, when the branch already holds the tag (re-run)', () => {
       stubGit({ legacyBranch: true, holds: true });
-      expect(getPreviousMajor('nextjs')).toBeNull();
+      expect(getPreviousMajor('nextjs', 3)).toBeNull();
+      expect(gitCommands('checkout')).toEqual([]);
+    });
+
+    it('reads the product package version at the tag', () => {
+      getPreviousMajor('nextjs', 3);
+      expect(gitCommands('show')).toEqual([['show', `${TAG_SHA}:packages/nextjs/package.json`]]);
+    });
+
+    it('throws, without checking out, when the tag is not on an older major (moved already)', () => {
+      for (const tagVersion of ['3.0.0', '3.1.0', '4.0.0']) {
+        stubGit({ legacyBranch: true, holds: true, tagVersion });
+        expect(() => getPreviousMajor('nextjs', 3)).toThrow(
+          'Cannot create legacy branch. latest tag points to the fresh release instead of the ' +
+            'previous major. If tag was moved, point it at the previous release and re-run.'
+        );
+      }
       expect(gitCommands('checkout')).toEqual([]);
     });
   });

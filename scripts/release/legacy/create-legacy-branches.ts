@@ -3,7 +3,7 @@
  *
  * When a full (dev) or `release/latest` release publishes a new major of a product's own package
  * (`x.0.0`), the branch is (re)created at the `latest` tag (`LATEST_RELEASE_TAG`): the previous
- * release, which `publish.yml` moves to this release only after the post-release sync. Not
+ * release, which the post-release sync moves to this release only in its last step. Not
  * `release/latest` nor the release commit's parent: they can hold the new major's code. It replaces
  * the branch of the major before (force-push); its releases stay on npm and in their tags.
  *
@@ -86,12 +86,21 @@ export function legacyPrunedDirs(
 
 /**
  * Checks out (detached) the previous release, the `latest` tag, for the product's legacy branch.
- * Returns null, without checking out, when the branch already holds it: created from this previous
- * release already (idempotent). A branch of an older major doesn't, and is replaced.
+ * Throws when the tag is not on an older major of the product: moved to this release (or a later
+ * one) already. Returns null, without checking out, when the branch already holds it: created from
+ * this previous release already (idempotent). A branch of an older major doesn't, and is replaced.
  */
-export function getPreviousMajor(slug: string): LegacyBranch | null {
+export function getPreviousMajor(slug: string, publishedMajor: number): LegacyBranch | null {
   const branch = `release/legacy/${slug}`;
   const source = git('rev-parse', `refs/tags/${LATEST_RELEASE_TAG}^{commit}`);
+  const tagManifest = git('show', `${source}:packages/${slug}/package.json`);
+  const tagVersion: string = JSON.parse(tagManifest).version;
+  if (semver.major(tagVersion) >= publishedMajor) {
+    throw new Error(
+      `Cannot create legacy branch. ${LATEST_RELEASE_TAG} tag points to the fresh release instead of the previous major.` +
+        ` If tag was moved, point it at the previous release and re-run.`
+    );
+  }
   if (
     tryGit('fetch', '-q', 'origin', branch) !== null &&
     tryGit('merge-base', '--is-ancestor', source, `origin/${branch}`) !== null
@@ -195,7 +204,8 @@ export async function createLegacyBranches(published: PackageVersion[]): Promise
   }
 
   for (const slug of majors) {
-    const legacy = getPreviousMajor(slug);
+    const version = published.find((p) => p.name === productPackage(slug))!.version;
+    const legacy = getPreviousMajor(slug, semver.major(version));
     if (!legacy) continue;
     await trimLegacyBranch(legacy, getProductPackages(products, slug));
     console.log(`✅ Created ${legacy.branch}.`);
