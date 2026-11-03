@@ -225,16 +225,16 @@ describe('syncRelease', () => {
     expect(stepNames()).toEqual([
       'latestBranchSync',
       'createLegacyBranchesOnMajor',
-      'refreshLegacyLockfiles',
       'moveLatestTag',
+      'refreshLegacyLockfiles',
     ]);
     vi.mocked(console.log).mockClear();
     await syncRelease(RELEASE_LATEST, SHA, released);
     expect(stepNames()).toEqual([
       'devBranchSync',
       'createLegacyBranchesOnMajor',
-      'refreshLegacyLockfiles',
       'moveLatestTag',
+      'refreshLegacyLockfiles',
     ]);
     for (const other of ['release/legacy/nextjs', 'release/1.x.x', 'release/betas/foo']) {
       vi.mocked(console.log).mockClear();
@@ -261,7 +261,7 @@ describe('syncRelease', () => {
   const tagPushes = () =>
     gitCalls().filter(([cmd, ...rest]) => cmd === 'push' && rest.join(' ').includes('refs/tags/'));
 
-  it('moves the latest tag to the release commit last', async () => {
+  it('moves the latest tag to the release commit', async () => {
     for (const branch of ['dev', RELEASE_LATEST]) {
       mocks.execFileSync.mockClear();
       await syncRelease(branch, SHA, released);
@@ -269,10 +269,16 @@ describe('syncRelease', () => {
     }
   });
 
-  it('keeps the latest tag when an earlier step fails', async () => {
+  it('keeps the latest tag when the legacy branches step fails', async () => {
+    mocks.createLegacyBranches.mockRejectedValueOnce(new Error('push rejected'));
+    await expect(syncRelease('dev', SHA, released)).rejects.toThrow('push rejected');
+    expect(tagPushes()).toEqual([]);
+  });
+
+  it('moves the latest tag before the lockfile refresh, which may fail on its own', async () => {
     mocks.refreshLegacyLockfiles.mockRejectedValueOnce(new Error('install failed'));
     await expect(syncRelease('dev', SHA, released)).rejects.toThrow('install failed');
-    expect(tagPushes()).toEqual([]);
+    expect(tagPushes()).toEqual([['push', '-f', 'origin', `${SHA}:refs/tags/latest`]]);
   });
 
   it('never moves the latest tag from other branches', async () => {

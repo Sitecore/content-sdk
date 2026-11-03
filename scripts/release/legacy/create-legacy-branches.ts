@@ -3,7 +3,7 @@
  *
  * When a full (dev) or `release/latest` release publishes a new major of a product's own package
  * (`x.0.0`), the branch is (re)created at the `latest` tag (`LATEST_RELEASE_TAG`): the previous
- * release, which the post-release sync moves to this release only in its last step. Not
+ * release (`moveLatestTag` in the post-release sync moves it to this release). Not
  * `release/latest` nor the release commit's parent: they can hold the new major's code. It replaces
  * the branch of the major before (force-push); its releases stay on npm and in their tags.
  *

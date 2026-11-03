@@ -3,7 +3,7 @@
  * it after changesets/action publishes. Steps by branch: `POST_RELEASE_STEPS`.
  * `release/latest` changes came from dev (the limited copy, cherry-picked fixes), so the version
  * bump is all dev lacks. Legacy branches are cut at the `latest` tag (the previous release), which
- * the last step moves to the release commit.
+ * `moveLatestTag` moves to the release commit.
  * Every step is idempotent. A publish re-run doesn't run the sync again (it publishes nothing), so
  * when a step failed, fix the cause and finish the remaining steps by hand.
  *
@@ -102,8 +102,7 @@ export async function devBranchSync({ branch, releaseSha, published }: SyncConte
 }
 
 /**
- * Moves the `latest` tag to the release commit. Last step: legacy branches are cut at the tag, so
- * it keeps the previous release until they are created.
+ * Moves the `latest` tag to the release commit.
  */
 export function moveLatestTag({ releaseSha }: SyncContext): void {
   git('push', '-f', 'origin', `${releaseSha}:refs/tags/${LATEST_RELEASE_TAG}`);
