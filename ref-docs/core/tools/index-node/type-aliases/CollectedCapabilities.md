@@ -8,7 +8,7 @@
 
 > **CollectedCapabilities** = `object`
 
-Defined in: [packages/core/src/tools/capabilities/index.ts:24](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/core/src/tools/capabilities/index.ts#L24)
+Defined in: [packages/core/src/tools/capabilities/index.ts:24](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/tools/capabilities/index.ts#L24)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Defined in: [packages/core/src/tools/capabilities/index.ts:24](https://github.co
 
 > **capabilities**: [`CSDKCapabilities`](../../../index/type-aliases/CSDKCapabilities.md)
 
-Defined in: [packages/core/src/tools/capabilities/index.ts:26](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/core/src/tools/capabilities/index.ts#L26)
+Defined in: [packages/core/src/tools/capabilities/index.ts:26](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/tools/capabilities/index.ts#L26)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [packages/core/src/tools/capabilities/index.ts:26](https://github.co
 
 > **packageName**: `string`
 
-Defined in: [packages/core/src/tools/capabilities/index.ts:25](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/core/src/tools/capabilities/index.ts#L25)
+Defined in: [packages/core/src/tools/capabilities/index.ts:25](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/tools/capabilities/index.ts#L25)

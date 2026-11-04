@@ -8,7 +8,7 @@
 
 > **CapabilityFilterContext** = `object`
 
-Defined in: [packages/core/src/capabilities.ts:25](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/core/src/capabilities.ts#L25)
+Defined in: [packages/core/src/capabilities.ts:25](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L25)
 
 Filesystem access exposed to capability filters at application build time.
 
@@ -18,7 +18,7 @@ Filesystem access exposed to capability filters at application build time.
 
 > **appRoot**: `string`
 
-Defined in: [packages/core/src/capabilities.ts:27](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/core/src/capabilities.ts#L27)
+Defined in: [packages/core/src/capabilities.ts:27](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L27)
 
 Absolute path to the application root.
 
@@ -28,7 +28,7 @@ Absolute path to the application root.
 
 > **fileContains**: (`relativePaths`, `pattern`) => `boolean`
 
-Defined in: [packages/core/src/capabilities.ts:35](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/core/src/capabilities.ts#L35)
+Defined in: [packages/core/src/capabilities.ts:35](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L35)
 
 Tests whether one of the supplied files contains a string or regular expression.
 
@@ -49,7 +49,7 @@ Tests whether one of the supplied files contains a string or regular expression.
 
 > **fileExists**: (`relativePath`) => `boolean`
 
-Defined in: [packages/core/src/capabilities.ts:31](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/core/src/capabilities.ts#L31)
+Defined in: [packages/core/src/capabilities.ts:31](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L31)
 
 Tests whether a path relative to the application root exists.
 
@@ -69,7 +69,7 @@ Tests whether a path relative to the application root exists.
 
 > **readFile**: (`relativePath`) => `string` \| `undefined`
 
-Defined in: [packages/core/src/capabilities.ts:33](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/core/src/capabilities.ts#L33)
+Defined in: [packages/core/src/capabilities.ts:33](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L33)
 
 Reads a UTF-8 file relative to the application root, or returns undefined.
 
@@ -89,6 +89,6 @@ Reads a UTF-8 file relative to the application root, or returns undefined.
 
 > `optional` **sitecoreConfig?**: [`CapabilitySitecoreConfig`](CapabilitySitecoreConfig.md)
 
-Defined in: [packages/core/src/capabilities.ts:29](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/core/src/capabilities.ts#L29)
+Defined in: [packages/core/src/capabilities.ts:29](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L29)
 
 Resolved Sitecore configuration supplied to the metadata build command.

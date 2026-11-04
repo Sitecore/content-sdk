@@ -6,7 +6,7 @@
 
 # Interface: ErrorPagesServiceConfig
 
-Defined in: [content/src/site/error-pages-service.ts:33](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/content/src/site/error-pages-service.ts#L33)
+Defined in: [content/src/site/error-pages-service.ts:33](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/content/src/site/error-pages-service.ts#L33)
 
 Configuration for
 
@@ -24,7 +24,7 @@ ErrorPagesService instances
 
 > **clientFactory**: [`GraphQLRequestClientFactory`](../../client/type-aliases/GraphQLRequestClientFactory.md)
 
-Defined in: [content/src/site/error-pages-service.ts:42](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/content/src/site/error-pages-service.ts#L42)
+Defined in: [content/src/site/error-pages-service.ts:42](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/content/src/site/error-pages-service.ts#L42)
 
 A GraphQL Request Client Factory is a function that accepts configuration and returns an instance of a GraphQLRequestClient.
 This factory function is used to create and configure GraphQL clients for making GraphQL API requests.
@@ -39,7 +39,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 > `optional` **debugger?**: `Debugger`
 
-Defined in: [content/src/sitecore-service-base.ts:13](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/content/src/sitecore-service-base.ts#L13)
+Defined in: [content/src/sitecore-service-base.ts:13](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/content/src/sitecore-service-base.ts#L13)
 
 Optional debug logger override
 
@@ -53,7 +53,7 @@ Optional debug logger override
 
 > **language**: `string`
 
-Defined in: [content/src/site/error-pages-service.ts:37](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/content/src/site/error-pages-service.ts#L37)
+Defined in: [content/src/site/error-pages-service.ts:37](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/content/src/site/error-pages-service.ts#L37)
 
 The language
 

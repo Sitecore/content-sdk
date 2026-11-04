@@ -8,7 +8,7 @@
 
 > **buildSitecoreItemCacheTag**(`params`): `string`
 
-Defined in: [nextjs/src/cache/sitecore-cache-tags.ts:81](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/nextjs/src/cache/sitecore-cache-tags.ts#L81)
+Defined in: [nextjs/src/cache/sitecore-cache-tags.ts:81](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/nextjs/src/cache/sitecore-cache-tags.ts#L81)
 
 Tag for a layout/route item (and anything else keyed the same way). Use for item-level invalidation.
 

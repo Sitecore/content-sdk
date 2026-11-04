@@ -8,7 +8,7 @@
 
 > `const` **OG\_CREATION\_TIME\_TAG**: `Record`\<`string`, `string`\>
 
-Defined in: [content/src/layout/field-types.ts:99](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/content/src/layout/field-types.ts#L99)
+Defined in: [content/src/layout/field-types.ts:99](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/content/src/layout/field-types.ts#L99)
 
 Open Graph types that define a creation-time meta tag, mapped to its exact property name
 per the Open Graph protocol (e.g. `article:published_time`, `book:release_date`).

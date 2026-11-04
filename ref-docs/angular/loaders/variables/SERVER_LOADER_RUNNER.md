@@ -8,7 +8,7 @@
 
 > `const` **SERVER\_LOADER\_RUNNER**: `InjectionToken`\<[`ServerLoaderRunnerPort`](../interfaces/ServerLoaderRunnerPort.md)\>
 
-Defined in: [packages/angular/src/loaders/server-loader-runner.token.ts:24](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/angular/src/loaders/server-loader-runner.token.ts#L24)
+Defined in: [packages/angular/src/loaders/server-loader-runner.token.ts:24](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/angular/src/loaders/server-loader-runner.token.ts#L24)
 
 Injection token for SSR loader data resolution.
 Must be provided via `provideServerLoaderRunner` in server application config.

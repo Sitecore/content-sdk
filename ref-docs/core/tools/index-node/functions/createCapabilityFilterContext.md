@@ -8,7 +8,7 @@
 
 > **createCapabilityFilterContext**(`appRoot?`, `sitecoreConfig?`): [`CapabilityFilterContext`](../../../index/type-aliases/CapabilityFilterContext.md)
 
-Defined in: [packages/core/src/tools/capabilities/index.ts:252](https://github.com/Sitecore/content-sdk/blob/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad/packages/core/src/tools/capabilities/index.ts#L252)
+Defined in: [packages/core/src/tools/capabilities/index.ts:252](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/tools/capabilities/index.ts#L252)
 
 **`Internal`**
 
