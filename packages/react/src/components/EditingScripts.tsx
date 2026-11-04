@@ -10,6 +10,7 @@ import { ThemePreviewEvents } from './ThemePreviewEvents';
 /**
  * Renders client scripts and data for editing/preview mode for Pages.
  * Renders script required for the Design Library (when mode.isDesignLibrary is true).
+ * In preview mode renders only the theme live update listener.
  * @returns A JSX element containing the editing scripts or an empty fragment if not in editing/preview mode.
  * @public
  */
@@ -21,9 +22,14 @@ export const EditingScripts = () => {
 
   const { clientData, clientScripts } = layout.sitecore.context;
 
-  // Don't render anything if not in editing mode and rendering type is not component
-  if (mode.isNormal || mode.isPreview) {
+  // Don't render anything if not in editing or preview mode
+  if (mode.isNormal) {
     return <></>;
+  }
+
+  // In preview mode no editing scripts are needed, only the theme live update listener
+  if (mode.isPreview) {
+    return <ThemePreviewEvents />;
   }
 
   // In case of Design Library - render only the script for Design Library
