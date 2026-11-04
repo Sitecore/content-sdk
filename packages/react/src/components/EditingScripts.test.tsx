@@ -351,6 +351,36 @@ describe('<EditingScripts />', () => {
       expect(document.getElementById(themeStyleId)?.textContent).to.equal('body { color: navy; }');
     });
 
+    it('should inject theme-update css in preview mode without rendering editing scripts', () => {
+      const previewMode: PageMode = {
+        name: LayoutServicePageState.Preview,
+        isNormal: false,
+        isPreview: true,
+        isEditing: false,
+        isDesignLibrary: false,
+        designLibrary: { isVariantGeneration: false, isLowCode: false },
+      };
+
+      const layoutData = getLayoutData({
+        pageState: LayoutServicePageState.Preview,
+        pageEditing: false,
+      });
+
+      const page = { locale: 'en', layout: layoutData, mode: previewMode };
+
+      const component = render(
+        <SitecoreProvider componentMap={mockComponentMap} page={page}>
+          <EditingScripts />
+        </SitecoreProvider>
+      );
+
+      expect(component.baseElement.querySelectorAll('script')).to.have.length(0);
+
+      dispatchThemeUpdate('body { color: olive; }');
+
+      expect(document.getElementById(themeStyleId)?.textContent).to.equal('body { color: olive; }');
+    });
+
     it('should not inject theme-update css when not in editing mode', () => {
       const normalMode: PageMode = {
         name: LayoutServicePageState.Normal,

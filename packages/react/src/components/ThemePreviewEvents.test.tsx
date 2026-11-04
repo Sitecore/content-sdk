@@ -57,6 +57,54 @@ describe('<ThemePreviewEvents />', () => {
     expect(document.getElementById(THEME_PREVIEW_STYLE_ID)).to.be.null;
   });
 
+  it('should inject the css from a theme-update message while in preview mode', () => {
+    const mode: PageMode = {
+      name: LayoutServicePageState.Preview,
+      isNormal: false,
+      isPreview: true,
+      isEditing: false,
+      isDesignLibrary: false,
+      designLibrary: { isVariantGeneration: false, isLowCode: false },
+    };
+
+    render(
+      <SitecoreProvider componentMap={mockComponentMap} page={getPage(mode)}>
+        <ThemePreviewEvents />
+      </SitecoreProvider>
+    );
+
+    dispatchThemeUpdate('body { color: green; }');
+
+    expect(document.getElementById(THEME_PREVIEW_STYLE_ID)?.textContent).to.equal(
+      'body { color: green; }'
+    );
+  });
+
+  it('should not attach a listener in preview mode when theming.mode is none', () => {
+    const mode: PageMode = {
+      name: LayoutServicePageState.Preview,
+      isNormal: false,
+      isPreview: true,
+      isEditing: false,
+      isDesignLibrary: false,
+      designLibrary: { isVariantGeneration: false, isLowCode: false },
+    };
+
+    render(
+      <SitecoreProvider
+        componentMap={mockComponentMap}
+        page={getPage(mode)}
+        theming={{ mode: 'none' }}
+      >
+        <ThemePreviewEvents />
+      </SitecoreProvider>
+    );
+
+    dispatchThemeUpdate('body { color: green; }');
+
+    expect(document.getElementById(THEME_PREVIEW_STYLE_ID)).to.be.null;
+  });
+
   it('should not attach a listener when theming.mode is none', () => {
     const mode: PageMode = {
       name: LayoutServicePageState.Edit,
