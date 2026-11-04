@@ -1,5 +1,5 @@
 'use client';
-import React, { JSX, useMemo, useRef } from 'react';
+import React, { JSX, useMemo, useState } from 'react';
 import fastDeepEqual from 'fast-deep-equal/es6/react';
 import { createNCC } from '../../atoms';
 import { useSitecore } from '../SitecoreProvider';
@@ -20,13 +20,19 @@ type StudioComponentWrapperProps = {
  * @returns {Document | null | undefined} a referentially stable document for as long as its content is unchanged
  */
 const useStableDocument = (document: Document | null | undefined) => {
-  const ref = useRef(document);
+  // State (not a ref) keeps render pure: React discards state set during a render it throws away.
+  // The last seen input is stored too, so the deep comparison runs once per new reference
+  // rather than on every render.
+  const [seen, setSeen] = useState({ input: document, stable: document });
 
-  if (ref.current !== document && !fastDeepEqual(ref.current, document)) {
-    ref.current = document;
+  if (seen.input === document) {
+    return seen.stable;
   }
 
-  return ref.current;
+  const stable = fastDeepEqual(seen.stable, document) ? seen.stable : document;
+  setSeen({ input: document, stable });
+
+  return stable;
 };
 
 /**

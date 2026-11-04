@@ -42,13 +42,13 @@ export function createNCC(
       [isEditing]
     );
     // json-render has no "render complete" callback. In editing mode the atoms DOM can be created
-    // after the Pages canvas has attached (initial mount, remount, or chrome registry swap),
+    // after the Pages canvas has attached (initial mount, remount),
     // so ask Pages to re-discover chromes once the new DOM is committed.
     useEffect(() => {
       if (isEditing) {
         scheduleEditorChromesReset();
       }
-    }, [renderRegistry, isEditing]);
+    }, [isEditing]);
 
     const [store] = useState(() => createStateStore(doc.state));
 
