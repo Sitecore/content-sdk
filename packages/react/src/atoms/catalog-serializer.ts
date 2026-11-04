@@ -6,19 +6,35 @@ import {
 } from '@sitecore-content-sdk/content/atoms';
 
 /**
+ * Options for serializing an atoms catalog.
+ * @internal
+ */
+export type SerializeCatalogOptions = {
+  /**
+   * How schemas without a JSON Schema equivalent (e.g. `z.date()`, `z.custom()`, transforms) are handled:
+   * `'throw'` (default) throws, `'any'` serializes them as `{}`.
+   */
+  unrepresentable?: 'throw' | 'any';
+};
+
+/**
  * Serialize a json-render Catalog into the payload shape expected by Design Studio.
  * @param {AtomsCatalog} catalog - The Atoms catalog to serialize
+ * @param {SerializeCatalogOptions} [options] - Serialization options
  * @returns Serialized catalog for the Design Library event
  * @internal
  */
-export function serializeCatalog(catalog: AtomsCatalog): SerializedCatalog {
+export function serializeCatalog(
+  catalog: AtomsCatalog,
+  options?: SerializeCatalogOptions
+): SerializedCatalog {
   const { version, stylingSolution, components, actions } = catalog.data;
 
   const serializedComponents: AtomCatalogComponentEntry[] = Object.entries(components).map(
     ([name, component]) => {
       const serializedComponent: AtomCatalogComponentEntry = {
         name,
-        propsSchema: component.props.toJSONSchema(),
+        propsSchema: component.props.toJSONSchema(options),
         description: component.description,
         slots: component.slots ?? ['default'],
         allowedChildren: component.allowedChildren,
@@ -43,7 +59,7 @@ export function serializeCatalog(catalog: AtomsCatalog): SerializedCatalog {
         legacy: action.legacy ?? false,
       };
 
-      if (action.params) serializedAction.paramsSchema = action.params.toJSONSchema();
+      if (action.params) serializedAction.paramsSchema = action.params.toJSONSchema(options);
 
       return serializedAction;
     }

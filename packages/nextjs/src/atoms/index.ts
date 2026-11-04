@@ -28,4 +28,6 @@ export {
   type FileFieldSchema,
 } from '@sitecore-content-sdk/react';
 
+export { ATOMS_CATALOG_METADATA_KEY } from '@sitecore-content-sdk/content/atoms';
+
 export { defineAtomsCatalog, defineAtomsRegistry } from './re-exports';

@@ -79,6 +79,7 @@ import { RichTextField } from '@sitecore-content-sdk/content/layout';
 import { RouteData } from '@sitecore-content-sdk/content/layout';
 import { SearchDocument } from '@sitecore-content-sdk/search';
 import { SearchParameters } from '@sitecore-content-sdk/search';
+import { SerializedCatalog } from '@sitecore-content-sdk/content/atoms';
 import { SitecoreActionMeta } from '@sitecore-content-sdk/content/atoms';
 import { SitecoreComponentMeta } from '@sitecore-content-sdk/content/atoms';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
@@ -625,6 +626,11 @@ export { RouteData }
 
 // @public
 export type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
+
+// Warning: (ae-forgotten-export) The symbol "SerializeCatalogOptions" needs to be exported by the entry point api-surface.d.ts
+//
+// @internal
+export function serializeCatalog(catalog: AtomsCatalog, options?: SerializeCatalogOptions): SerializedCatalog;
 
 // @public
 export const SitecoreProvider: {

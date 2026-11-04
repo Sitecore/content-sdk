@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import fs from 'fs';
 import sinon from 'sinon';
 import { CapabilityFilterContext } from '@sitecore-content-sdk/core';
+import { getAtomsMetadata } from './Atoms';
 import capabilities from './index';
 
 const createContext = (
@@ -35,7 +36,12 @@ describe('Next.js capabilities', () => {
     expect(Object.keys(capabilities.designLibrary?.value ?? {})).to.deep.equal([
       'variantGeneration',
       'variantPreview',
+      'atoms',
     ]);
+  });
+
+  it('resolves atoms metadata from the atoms catalog', () => {
+    expect(capabilities.designLibrary?.value.atoms?.metadata).to.equal(getAtomsMetadata);
   });
 
   it('filters capabilities based on application wiring', async () => {

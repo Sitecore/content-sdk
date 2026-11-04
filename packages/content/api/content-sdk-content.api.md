@@ -81,6 +81,9 @@ export interface AtomCatalogEntry {
     slots: string[];
 }
 
+// @public
+export const ATOMS_CATALOG_METADATA_KEY = "atomsCatalog";
+
 // @internal
 export interface AtomsCatalogPayload {
     actions: ActionCatalogEntry[];

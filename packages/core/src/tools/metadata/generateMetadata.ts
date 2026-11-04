@@ -30,6 +30,15 @@ export type GenerateMetadataConfig = {
    * Whether to calculate installed package capabilities. Defaults to true.
    */
   capabilities?: boolean;
+  /**
+   * Custom application inputs passed to capability filters and metadata resolvers,
+   * e.g. the atoms catalog: `{ atomsCatalog: catalog }`.
+   */
+  appInputs?: Record<string, unknown>;
+  /**
+   * Overrides for metadata fields.
+   */
+  customSections?: Record<string, unknown>;
 };
 
 /**
@@ -47,8 +56,12 @@ export const generateMetadata = (
       allowWorkspaces: config?.allowWorkspaces,
       capabilities: config?.capabilities,
       sitecoreConfig: args?.scConfig,
+      appInputs: config?.appInputs,
     });
-    writeMetadata(metadata, config?.destinationPath ?? '.sitecore/metadata.json');
+    writeMetadata(
+      { ...config?.customSections, ...metadata },
+      config?.destinationPath ?? '.sitecore/metadata.json'
+    );
   };
 };
 

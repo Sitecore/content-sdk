@@ -1,5 +1,6 @@
 import type { CapabilityFilter, CSDKCapabilities } from '@sitecore-content-sdk/core';
 import { detectRouterType, ROUTER_TYPE } from '../tools/templating/utils';
+import { getAtomsMetadata, hasAtomsConfig } from './Atoms';
 import { hasDesignLibrary } from './DesignLibrary';
 import { hasPersonalizeProxy } from './PersonalizeProxy';
 
@@ -25,10 +26,14 @@ const capabilities: CSDKCapabilities = {
     value: {
       variantGeneration: { value: true, filter: hasCodeGenerationEnabled },
       variantPreview: { value: true, filter: hasCodeGenerationEnabled },
+      atoms: {
+        value: true,
+        filter: hasAtomsConfig,
+        metadata: getAtomsMetadata,
+      },
     },
     filter: hasDesignLibrary,
   },
 };
 
 export default capabilities;
-

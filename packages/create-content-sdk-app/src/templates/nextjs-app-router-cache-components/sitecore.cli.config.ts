@@ -5,13 +5,17 @@ import {
   extractFiles,
   writeImportMap,
 } from '@sitecore-content-sdk/nextjs/tools';
+import { ATOMS_CATALOG_METADATA_KEY } from '@sitecore-content-sdk/nextjs/atoms';
 import scConfig from './sitecore.config';
+import { catalog } from 'src/atoms';
 
 export default defineCliConfig({
   config: scConfig,
   build: {
     commands: [
-      generateMetadata(),
+      generateMetadata({
+        appInputs: { [ATOMS_CATALOG_METADATA_KEY]: catalog },
+      }),
       generateSites(),
       extractFiles(),
       writeImportMap({
@@ -29,3 +33,4 @@ export default defineCliConfig({
     exclude: ['src/components/content-sdk/*'],
   },
 });
+

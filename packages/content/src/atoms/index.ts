@@ -21,3 +21,5 @@ export {
   validateAtomsDocument,
   ValidateAtomsDocumentResult,
 } from './design-library-bridge';
+
+export { ATOMS_CATALOG_METADATA_KEY } from './constants';

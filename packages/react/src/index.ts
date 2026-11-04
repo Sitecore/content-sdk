@@ -144,6 +144,7 @@ export {
   linkFieldSchema,
   imageFieldSchema,
   fileFieldSchema,
+  serializeCatalog,
   type TextFieldSchema,
   type NumberFieldSchema,
   type RichTextFieldSchema,

@@ -13,6 +13,14 @@ export type CapabilitySitecoreConfig = Pick<SitecoreConfig, 'disableCodeGenerati
 export type CapabilityMetadata = Record<string, unknown>;
 
 /**
+ * A function that resolves metadata JSON for a capability.
+ * @public
+ */
+export type CapabilityMetadataResolver = (
+  context: CapabilityFilterContext
+) => CapabilityMetadata | Promise<CapabilityMetadata>;
+
+/**
  * Determines whether a capability exported by an installed package is used by the application.
  * @public
  */
@@ -33,6 +41,8 @@ export type CapabilityFilterContext = {
   readFile: (relativePath: string) => string | undefined;
   /** Tests whether one of the supplied files contains a string or regular expression. */
   fileContains: (relativePaths: string[], pattern: string | RegExp) => boolean;
+  /** Custom inputs for capability resolution that otherwise cannot be computed within filter context. */
+  appInputs?: Record<string, unknown>;
 };
 
 /**
@@ -51,7 +61,7 @@ export type CapabilityDefinition = {
   /** Optional build-time check that the application uses the capability. */
   filter?: CapabilityFilter;
   /** Optional metadata about the capability. */
-  metadata?: CapabilityMetadata;
+  metadata?: CapabilityMetadata | CapabilityMetadataResolver;
 };
 
 /**
@@ -86,6 +96,8 @@ export type CSDKCapabilities = {
       variantPreview?: CapabilityDefinition;
       /** Allows the CLI to create a generated component in the local filesystem. */
       aiComponentExport?: CapabilityDefinition;
+      /** Allows Design Studio to use the app's atoms catalog for low-code components. */
+      atoms?: CapabilityDefinition;
     };
   };
 };

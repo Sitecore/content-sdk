@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import { generateMetadata } from './generateMetadata';
 import childProcess from 'child_process';
+import proxyquire from 'proxyquire';
 import npmQueryResultNext from './test-data/npm-query-nextjs.json';
 
 describe('generateMetadata', () => {
@@ -52,6 +53,41 @@ describe('generateMetadata', () => {
     expect(writeFileSyncStub.getCall(0).args[0]).to.be.equal(
       path.resolve('.sitecore/metadata.json')
     );
+  });
+
+  it('should write custom sections as top-level metadata properties', async () => {
+    const atomsCatalog = { stylingSolution: 'tailwind', components: [], actions: [] };
+    const generate = generateMetadata({ capabilities: false, customSections: { atomsCatalog } });
+    await generate();
+
+    expect(JSON.parse(writeFileSyncStub.getCall(0).args[1])).to.deep.include({ atomsCatalog });
+  });
+
+  it('should not let custom sections override built-in sections', async () => {
+    const generate = generateMetadata({
+      capabilities: false,
+      customSections: { packages: { custom: '1.0.0' } },
+    });
+    await generate();
+
+    expect(JSON.parse(writeFileSyncStub.getCall(0).args[1]).packages).not.to.have.property(
+      'custom'
+    );
+  });
+
+  it('should pass app inputs and Sitecore config to metadata calculation', async () => {
+    const getMetadata = sinon.stub().resolves({ packages: {} });
+    const { generateMetadata: generateMetadataWithStub } = proxyquire('./generateMetadata', {
+      './metadata': { getMetadata },
+    });
+    const appInputs = { atomsCatalog: { components: [] } };
+    await generateMetadataWithStub({ appInputs })({ scConfig: { disableCodeGeneration: true } });
+
+    expect(getMetadata.calledOnce).to.be.true;
+    expect(getMetadata.getCall(0).args[0]).to.deep.include({
+      appInputs,
+      sitecoreConfig: { disableCodeGeneration: true },
+    });
   });
 
   it('should omit capabilities when capability calculation is disabled', async () => {
