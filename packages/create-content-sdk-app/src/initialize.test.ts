@@ -8,6 +8,7 @@ import * as initialize from './initialize';
 import * as helpers from './common/utils/helpers';
 import * as install from './common/processes/install';
 import * as next from './common/processes/next';
+import * as appTelemetry from './telemetry/track-app-scaffolded';
 
 const { getInitializer, initialize: initializeFunc } = initialize;
 
@@ -20,6 +21,7 @@ describe('initialize', () => {
   let nextStepsStub: SinonStub;
   let openJsonFileStub: SinonStub;
   let getInitializerStub: SinonStub;
+  let trackStub: SinonStub;
 
   const defaultAppName = 'content-sdk-foo-app';
 
@@ -38,6 +40,7 @@ describe('initialize', () => {
     openJsonFileStub = sinon
       .stub(helpers, 'openJsonFile')
       .returns({ name: defaultAppName });
+    trackStub = sinon.stub(appTelemetry, 'trackAppScaffolded').resolves();
   });
 
   afterEach(() => {
@@ -47,6 +50,7 @@ describe('initialize', () => {
     nextStepsStub?.restore();
     getInitializerStub?.restore();
     openJsonFileStub?.restore();
+    trackStub?.restore();
   });
 
   it('should run', async () => {
@@ -65,6 +69,7 @@ describe('initialize', () => {
     expect(log.getCalls().length).to.equal(1);
     expect(log.getCall(0).args[0]).to.equal(chalk.cyan(`Initializing '${template}'...`));
     expect(mockFoo.init).to.be.calledOnceWith(args);
+    expect(trackStub).to.be.calledOnceWith(args);
     expect(installPackagesStub).to.be.calledOnceWith(args.destination, args.silent);
     expect(lintFixStub).to.be.calledOnceWith(args.destination, args.silent);
     expect(nextStepsStub).to.be.calledOnceWith(defaultAppName, undefined);
@@ -121,6 +126,29 @@ describe('initialize', () => {
 
     expect(installPackagesStub).to.not.have.been.called;
     expect(lintFixStub).to.not.have.been.called;
+    expect(trackStub).to.be.calledOnceWith(args);
+  });
+
+  it('should not track telemetry when init fails', async () => {
+    const template = 'foo';
+    const args = {
+      silent: false,
+      destination: 'samples/next',
+      template,
+    };
+
+    const mockFoo = mockInitializer({});
+    mockFoo.init = sinon.stub().rejects(new Error('boom'));
+    getInitializerStub.withArgs('foo').returns(mockFoo);
+
+    try {
+      await initializeFunc(template, args);
+      expect.fail('initialize should throw when init fails');
+    } catch (error) {
+      expect((error as Error).message).to.equal('boom');
+    }
+
+    expect(trackStub).to.not.have.been.called;
   });
 });
 

@@ -8691,6 +8691,7 @@ __metadata:
     "@sitecore-content-sdk/analytics-core": "npm:^2.1.2"
     "@sitecore-content-sdk/angular": "npm:~1.1.0"
     "@sitecore-content-sdk/cli": "npm:^2.4.0"
+    "@sitecore-content-sdk/core": "npm:^2.1.4"
     "@sitecore-content-sdk/events": "npm:^2.1.2"
     "@sitecore-content-sdk/nextjs": "npm:^2.5.0"
     "@sitecore-content-sdk/personalize": "npm:^2.1.0"

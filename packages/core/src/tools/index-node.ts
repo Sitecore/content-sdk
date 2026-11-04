@@ -6,6 +6,26 @@ export * from './metadata';
 
 export { ensurePathExists } from './ensurePath';
 
+export {
+  DEFAULT_TELEMETRY_URL,
+  TELEMETRY_DISABLED_ENV,
+  TELEMETRY_DISPATCH_TIMEOUT_MS,
+  TELEMETRY_SOURCE,
+  collectSdkPackageVersions,
+  createTelemetryFingerprint,
+  dispatchTelemetryEvent,
+  isTelemetryEnabled,
+  resolveTelemetryUrl,
+  telemetryClient,
+} from './telemetry';
+export type {
+  DispatchTelemetryOptions,
+  TelemetryData,
+  TelemetryEvent,
+  TelemetryFingerprint,
+  TelemetryPrimitive,
+} from './telemetry';
+
 /**
  * Preserve "live binding" semantics similar to ES module imports: production
  * code always sees the current implementation; tests can swap it safely and

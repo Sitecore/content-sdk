@@ -8,11 +8,14 @@ import {
   openJsonFile,
   Initializer,
 } from './common';
+import * as appTelemetry from './telemetry/track-app-scaffolded';
 
 export const initialize = async (template: string, args: BaseAppArgs) => {
   const initializer = await getInitializer(template);
   args.silent || console.log(chalk.cyan(`Initializing '${template}'...`));
   const response = await initializer.init(args);
+
+  await appTelemetry.trackAppScaffolded(args);
 
   // final steps (install, lint)
   if (!args.noInstall) {
