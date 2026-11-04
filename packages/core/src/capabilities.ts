@@ -108,7 +108,7 @@ export type CSDKCapabilities = {
  * @public
  */
 export type ResolvedCapability =
-  | true
+  | boolean
   | {
       [key: string]: ResolvedCapability | CapabilityMetadata | undefined;
       metadata?: CapabilityMetadata;

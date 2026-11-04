@@ -100,9 +100,11 @@ function mergeCapability(
   key: string
 ): MergedCapability {
   const filters = [...(current?.filters ?? []), ...(incoming.filter ? [incoming.filter] : [])];
+  // A resolver can't be merged with other metadata, so the latest export wins; packages
+  // without metadata leave the current value (resolver or static) untouched.
   const metadata =
-    typeof incoming.metadata === 'function'
-      ? incoming.metadata
+    typeof incoming.metadata === 'function' || incoming.metadata === undefined
+      ? incoming.metadata ?? current?.metadata ?? {}
       : { ...current?.metadata, ...incoming.metadata };
 
   if (typeof incoming.value === 'boolean') {

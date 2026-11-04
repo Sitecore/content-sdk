@@ -35,10 +35,6 @@ export type GenerateMetadataConfig = {
    * e.g. the atoms catalog: `{ atomsCatalog: catalog }`.
    */
   appInputs?: Record<string, unknown>;
-  /**
-   * Overrides for metadata fields.
-   */
-  customSections?: Record<string, unknown>;
 };
 
 /**
@@ -58,10 +54,7 @@ export const generateMetadata = (
       sitecoreConfig: args?.scConfig,
       appInputs: config?.appInputs,
     });
-    writeMetadata(
-      { ...config?.customSections, ...metadata },
-      config?.destinationPath ?? '.sitecore/metadata.json'
-    );
+    writeMetadata(metadata, config?.destinationPath ?? '.sitecore/metadata.json');
   };
 };
 

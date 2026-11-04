@@ -269,6 +269,23 @@ describe('capabilities', () => {
       });
     });
 
+    it('keeps an earlier metadata resolver when a later package exports no metadata', async () => {
+      const merged = mergeCapabilityExports([
+        {
+          packageName: 'one',
+          capabilities: { preview: { value: true, metadata: () => ({ catalog: {} }) } },
+        },
+        {
+          packageName: 'two',
+          capabilities: { preview: { value: true } },
+        },
+      ]);
+
+      expect(await resolveCapabilities(merged, context)).to.deep.equal({
+        preview: { metadata: { catalog: {} } },
+      });
+    });
+
     it('does not run metadata resolvers when the capability filter fails', async () => {
       const metadataResolver = sinon.stub().returns({ catalog: {} });
       const merged = mergeCapabilityExports([
