@@ -5,6 +5,9 @@ import { getMetadata } from './metadata';
 import proxyquire from 'proxyquire';
 import sinon, { SinonStub } from 'sinon';
 import childProcess from 'child_process';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import metadataNextjs from './test-data/metadata-nextjs.json';
 import npmQueryResultNext from './test-data/npm-query-nextjs.json';
 import npmQueryResultNoSc from './test-data/npm-query-no-sc.json';
@@ -132,15 +135,17 @@ describe('metadata', () => {
 
     it('should return tracked packages with exact versions from result of yarn info', async () => {
       runWithPackageManager(USER_AGENTS.yarn);
-      execSyncStub.withArgs(YARN_INFO).returns(
-        [
-          '{"value":"@sitecore-content-sdk/nextjs@npm:22.2.0-canary.69","children":{}}',
-          '"@sitecore-content-sdk/core@npm:22.2.0-canary.69"',
-          '{"value":"@sitecore-content-sdk/react@virtual:1a2b3c#npm:22.2.0-canary.69"}',
-          '➤ YN0000: a diagnostic that is not json',
-          '',
-        ].join('\n')
-      );
+      execSyncStub
+        .withArgs(YARN_INFO)
+        .returns(
+          [
+            '{"value":"@sitecore-content-sdk/nextjs@npm:22.2.0-canary.69","children":{}}',
+            '"@sitecore-content-sdk/core@npm:22.2.0-canary.69"',
+            '{"value":"@sitecore-content-sdk/react@virtual:1a2b3c#npm:22.2.0-canary.69"}',
+            '➤ YN0000: a diagnostic that is not json',
+            '',
+          ].join('\n')
+        );
 
       const metadata = await getMetadata({ capabilities: false });
 
@@ -156,12 +161,14 @@ describe('metadata', () => {
 
     it('should return tracked packages with exact versions from result of yarn classic list', async () => {
       runWithPackageManager(USER_AGENTS.yarnClassic);
-      execSyncStub.withArgs(YARN_CLASSIC_LIST).returns(
-        [
-          '{"type":"progressStart","data":{"id":0,"total":5}}',
-          '{"type":"tree","data":{"type":"list","trees":[{"name":"@sitecore-content-sdk/core@22.2.0-canary.69","children":[],"depth":0},{"name":"@sitecore/byoc@0.2.15","children":[],"depth":0}]}}',
-        ].join('\n')
-      );
+      execSyncStub
+        .withArgs(YARN_CLASSIC_LIST)
+        .returns(
+          [
+            '{"type":"progressStart","data":{"id":0,"total":5}}',
+            '{"type":"tree","data":{"type":"list","trees":[{"name":"@sitecore-content-sdk/core@22.2.0-canary.69","children":[],"depth":0},{"name":"@sitecore/byoc@0.2.15","children":[],"depth":0}]}}',
+          ].join('\n')
+        );
 
       const metadata = await getMetadata({ capabilities: false });
 
@@ -287,5 +294,145 @@ describe('metadata', () => {
       );
       expect(logStub.firstCall.args[1]).to.equal(error);
     });
+
+    describe('capabilities', () => {
+      const resolvedCapabilities = {
+        editing: true,
+        preview: { timeBasedPreview: true },
+        designLibrary: { variantGeneration: true, metadata: { catalogKey: 'atomsCatalog' } },
+      };
+
+      const getMetadataWithCapabilities = (calculateCapabilities: SinonStub) =>
+        proxyquire('./metadata', { '../capabilities': { calculateCapabilities } })
+          .getMetadata as typeof getMetadata;
+
+      it('should write calculated capabilities next to packages by default', async () => {
+        runWithPackageManager(USER_AGENTS.npm);
+        execSyncStub.withArgs(NPM_QUERY).returns(JSON.stringify(npmQueryResultNext));
+        const calculateCapabilities = sinon.stub().resolves(resolvedCapabilities);
+
+        const metadata = await getMetadataWithCapabilities(calculateCapabilities)();
+
+        expect(
+          calculateCapabilities.calledOnceWith({
+            appRoot: undefined,
+            sitecoreConfig: undefined,
+            appInputs: undefined,
+          })
+        ).to.be.true;
+        expect(metadata).to.deep.equal({
+          ...metadataNextjs,
+          capabilities: resolvedCapabilities,
+        });
+      });
+
+      it('should pass the Sitecore config to capability calculation', async () => {
+        runWithPackageManager(USER_AGENTS.npm);
+        execSyncStub.withArgs(NPM_QUERY).returns(JSON.stringify(npmQueryResultNext));
+        const calculateCapabilities = sinon.stub().resolves({});
+        const sitecoreConfig = { disableCodeGeneration: true };
+
+        await getMetadataWithCapabilities(calculateCapabilities)({ sitecoreConfig });
+
+        expect(calculateCapabilities.firstCall.args[0]).to.deep.include({ sitecoreConfig });
+      });
+
+      it('should write empty capabilities when no capability is enabled', async () => {
+        runWithPackageManager(USER_AGENTS.npm);
+        execSyncStub.withArgs(NPM_QUERY).returns(JSON.stringify(npmQueryResultNext));
+        const calculateCapabilities = sinon.stub().resolves({});
+
+        const metadata = await getMetadataWithCapabilities(calculateCapabilities)();
+
+        expect(metadata).to.have.property('capabilities').that.deep.equals({});
+      });
+
+      it('should not calculate capabilities when disabled', async () => {
+        runWithPackageManager(USER_AGENTS.npm);
+        execSyncStub.withArgs(NPM_QUERY).returns(JSON.stringify(npmQueryResultNext));
+        const calculateCapabilities = sinon.stub().resolves(resolvedCapabilities);
+
+        const metadata = await getMetadataWithCapabilities(calculateCapabilities)({
+          capabilities: false,
+        });
+
+        expect(calculateCapabilities.called).to.be.false;
+        expect(metadata).not.to.have.property('capabilities');
+      });
+
+      it('should still calculate capabilities when package discovery fails', async () => {
+        runWithPackageManager(USER_AGENTS.pnpm);
+        execSyncStub.withArgs(PNPM_LIST).throws();
+        logStub = sinon.stub(console, 'error');
+        const calculateCapabilities = sinon.stub().resolves(resolvedCapabilities);
+
+        const metadata = await getMetadataWithCapabilities(calculateCapabilities)();
+
+        expect(calculateCapabilities.calledOnce).to.be.true;
+        expect(metadata).to.deep.equal({ packages: {}, capabilities: resolvedCapabilities });
+      });
+
+      describe('with installed packages', () => {
+        let appRoot: string;
+
+        // An app depending on one Content SDK package, whose capabilities use a filter on the
+        // Sitecore config and a metadata resolver on the app inputs.
+        beforeEach(() => {
+          appRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'csdk-metadata-'));
+          const packageRoot = path.join(appRoot, 'node_modules', '@sitecore-content-sdk', 'probe');
+          fs.mkdirSync(packageRoot, { recursive: true });
+          fs.writeFileSync(
+            path.join(appRoot, 'package.json'),
+            JSON.stringify({ dependencies: { '@sitecore-content-sdk/probe': '1.0.0' } })
+          );
+          fs.writeFileSync(
+            path.join(packageRoot, 'package.json'),
+            JSON.stringify({
+              name: '@sitecore-content-sdk/probe',
+              version: '1.0.0',
+              exports: { './capabilities': './capabilities.js' },
+            })
+          );
+          fs.writeFileSync(
+            path.join(packageRoot, 'capabilities.js'),
+            `module.exports = {
+              default: {
+                editing: { value: true },
+                designLibrary: {
+                  value: {
+                    variantGeneration: {
+                      value: true,
+                      filter: (ctx) => ctx.sitecoreConfig?.disableCodeGeneration !== true,
+                    },
+                  },
+                  metadata: async (ctx) => ({ catalog: ctx.appInputs?.catalog }),
+                },
+              },
+            };`
+          );
+        });
+
+        afterEach(() => {
+          fs.rmSync(appRoot, { recursive: true, force: true });
+        });
+
+        it('should resolve capabilities of the packages installed in the app', async () => {
+          runWithPackageManager(USER_AGENTS.npm);
+          execSyncStub.withArgs(NPM_QUERY).returns(JSON.stringify(npmQueryResultNext));
+
+          const metadata = await getMetadata({
+            appRoot,
+            sitecoreConfig: { disableCodeGeneration: true },
+            appInputs: { catalog: ['Button'] },
+          });
+
+          expect(metadata.capabilities).to.deep.equal({
+            editing: true,
+            designLibrary: { metadata: { catalog: ['Button'] } },
+          });
+        });
+      });
+    });
   });
 });
+

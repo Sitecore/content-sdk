@@ -265,7 +265,6 @@ export type GenerateMetadataConfig = {
     allowWorkspaces?: boolean;
     capabilities?: boolean;
     appInputs?: Record<string, unknown>;
-    customSections?: Record<string, unknown>;
 };
 
 // @public
@@ -496,7 +495,7 @@ export function resolveContentSdkPackageNames(appPath?: string): string[] | unde
 export type ResolvedCapabilities = CapabilityMap<ResolvedCapability>;
 
 // @public
-export type ResolvedCapability = true | {
+export type ResolvedCapability = boolean | {
     [key: string]: ResolvedCapability | CapabilityMetadata | undefined;
     metadata?: CapabilityMetadata;
 };

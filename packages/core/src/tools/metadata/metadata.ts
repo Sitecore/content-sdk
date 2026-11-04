@@ -73,11 +73,7 @@ export async function getMetadata(config: GetMetadataConfig = {}): Promise<Metad
   } = config;
   const packages = getPackagesFromPackageManager(allowWorkspaces);
 
-  if (packages === undefined) {
-    return { packages: {} };
-  }
-
-  const metadata: Metadata = { packages };
+  const metadata: Metadata = { packages: packages ?? {} };
 
   if (capabilities !== false) {
     try {
@@ -101,7 +97,9 @@ export async function getMetadata(config: GetMetadataConfig = {}): Promise<Metad
  * @deprecated Package-manager-based package discovery will be removed in a future version.
  * @internal
  */
-function getPackagesFromPackageManager(allowWorkspaces = false): Record<string, string> | undefined {
+function getPackagesFromPackageManager(
+  allowWorkspaces = false
+): Record<string, string> | undefined {
   const packageManagement = getPackageManagement(allowWorkspaces);
   const { query, parse } = packageManagement[detectPackageManager(packageManagement)];
 
