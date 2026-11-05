@@ -32,8 +32,6 @@ jobs:
       # the base commit.
       - name: Checkout PR merge commit
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Release setup
         uses: ./.github/actions/release-setup
@@ -41,4 +39,5 @@ jobs:
           install: update
 
       - name: Release branch guards
-        run: node ./scripts/release/release-branch-guards.ts
+        run: node ./scripts/release/release-branch-guards.ts pr
+

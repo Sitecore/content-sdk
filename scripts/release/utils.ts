@@ -74,13 +74,14 @@ export function tryGit(...args: string[]): string | null {
 }
 
 /**
- * A package's npm `latest` version; undefined when it was never published (or has no `latest`).
+ * `npm view <spec> <field>`: e.g. a package's `dist-tags.latest`, or `version` of `name@version`;
+ * undefined when npm has no such package or version (E404) or the field is empty.
  * `--prefer-online` revalidates npm's cached metadata (the registry allows 5 minutes), so a version
  * published moments ago in the same job isn't missed.
  */
-export function npmLatest(name: string): string | undefined {
+export function npmView(spec: string, field: string): string | undefined {
   try {
-    const args = ['view', name, 'dist-tags.latest', '--prefer-online'];
+    const args = ['view', spec, field, '--prefer-online'];
     const out = execFileSync('npm', args, {
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'pipe'],

@@ -1,17 +1,23 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { releaseVersionsGuard, unreleasableChangesets } from './release-branch-guards';
+import {
+  publishVersionsGuard,
+  releaseVersionsGuard,
+  unreleasableChangesets,
+} from './release-branch-guards';
 import { SCAFFOLDER } from '../constants';
 
 const mocks = vi.hoisted(() => ({
   getReleasePlan: vi.fn(),
-  npmLatest: vi.fn(),
+  getPackages: vi.fn(),
+  npmView: vi.fn(),
 }));
 
 vi.mock('../changesets/cascade-version.ts', () => ({ getReleasePlan: mocks.getReleasePlan }));
+vi.mock('@manypkg/get-packages', () => ({ getPackages: mocks.getPackages }));
 vi.mock('./utils.ts', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  npmLatest: mocks.npmLatest,
+  npmView: mocks.npmView,
 }));
 
 const NEXTJS = '@sitecore-content-sdk/nextjs';
@@ -26,7 +32,7 @@ describe('releaseVersionsGuard', () => {
     });
   // npm latest by package; missing: never published
   const npmLatest = (latest: Record<string, string | undefined>) =>
-    mocks.npmLatest.mockImplementation((name: string) => latest[name]);
+    mocks.npmView.mockImplementation((name: string) => latest[name]);
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -37,7 +43,7 @@ describe('releaseVersionsGuard', () => {
   it('passes without pending changesets, without asking npm', async () => {
     plan();
     await expect(releaseVersionsGuard()).resolves.toBeUndefined();
-    expect(mocks.npmLatest).not.toHaveBeenCalled();
+    expect(mocks.npmView).not.toHaveBeenCalled();
   });
 
   it('passes when every planned version is above npm latest', async () => {
@@ -92,7 +98,57 @@ describe('releaseVersionsGuard', () => {
   it("ignores releases of type 'none'", async () => {
     plan({ name: NEXTJS, newVersion: '2.4.0', type: 'none' });
     await expect(releaseVersionsGuard()).resolves.toBeUndefined();
-    expect(mocks.npmLatest).not.toHaveBeenCalled();
+    expect(mocks.npmView).not.toHaveBeenCalled();
+  });
+});
+
+describe('publishVersionsGuard', () => {
+  // workspace packages: [name, version, private?]
+  const workspace = (...packages: [string, string, boolean?][]) =>
+    mocks.getPackages.mockResolvedValue({
+      packages: packages.map(([name, version, isPrivate]) => ({
+        packageJson: { name, version, private: isPrivate },
+      })),
+    });
+  // npm state: latest by package, and the versions it has
+  const npm = (latest: Record<string, string>, published: string[] = []) =>
+    mocks.npmView.mockImplementation((spec: string, field: string) =>
+      field === 'dist-tags.latest' ? latest[spec] : published.includes(spec) ? '1' : undefined
+    );
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.spyOn(console, 'log').mockImplementation(() => undefined);
+  });
+
+  it('passes versions above npm latest, and first publishes', async () => {
+    workspace([NEXTJS, '2.5.0'], [NEW, '0.1.0']);
+    npm({ [NEXTJS]: '2.4.0' });
+    await expect(publishVersionsGuard()).resolves.toBeUndefined();
+  });
+
+  it('passes versions on npm already: latest itself (a re-run) or an older release', async () => {
+    workspace([NEXTJS, '2.4.0'], [REACT, '2.3.0']);
+    npm({ [NEXTJS]: '2.4.0', [REACT]: '2.4.0' }, [`${REACT}@2.3.0`]);
+    await expect(publishVersionsGuard()).resolves.toBeUndefined();
+  });
+
+  it('fails on an unpublished version below npm latest (would move latest back)', async () => {
+    workspace([NEXTJS, '2.4.1'], [REACT, '2.6.0']);
+    npm({ [NEXTJS]: '2.5.0', [REACT]: '2.5.0' });
+    const error = await publishVersionsGuard().catch((e: Error) => e);
+    expect(error).toBeInstanceOf(Error);
+    const { message } = error as Error;
+    expect(message).toMatch(/^Publishing would move npm latest back:\n {2}- /);
+    expect(message).toContain(`${NEXTJS}@2.4.1 is below npm latest (2.5.0)`);
+    expect(message).not.toContain(REACT);
+  });
+
+  it('skips private packages', async () => {
+    workspace([NEXTJS, '2.4.1', true]);
+    npm({ [NEXTJS]: '2.5.0' });
+    await expect(publishVersionsGuard()).resolves.toBeUndefined();
+    expect(mocks.npmView).not.toHaveBeenCalled();
   });
 });
 
