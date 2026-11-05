@@ -69,8 +69,20 @@ jobs:
         run: cat coverlet/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
         shell: bash
 
+      # Release scripts are maintained on dev. A legacy branch holds only its product's packages, so
+      # the tests that read the full workspace can't pass there.
       - name: Run tests for release scripts
+        if: ${{ !startsWith(github.base_ref, 'release/legacy/') }}
         run: yarn changeset:test
 
+      # Legacy branches (release/legacy/<product>) hold only their product, so scaffold only
+      # its samples; everywhere else scaffold all products' samples.
       - name: Scaffold samples
-        run: yarn scaffold-samples
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          PRODUCT=""
+          if [[ "$BASE_REF" == release/legacy/* ]]; then
+            PRODUCT=$(echo "$BASE_REF" | cut -d/ -f3)
+          fi
+          yarn scaffold-samples $PRODUCT

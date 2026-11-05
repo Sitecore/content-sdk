@@ -14,6 +14,7 @@ on:
     branches:
       - dev
       - 'release/latest'
+      - 'release/legacy/*'
       - 'release/1.x.x'
       - 'release/betas/**'
     paths:
@@ -78,6 +79,7 @@ jobs:
           case "$BRANCH" in
             dev) npm_tag=latest; pr_title="Full release" ;;
             release/latest) npm_tag=latest; pr_title="Latest release" ;;
+            release/legacy/*) npm_tag=legacy; pr_title="Legacy release - $BRANCH" ;;
             release/1.x.x) npm_tag=ver1; pr_title="Legacy release (ver1) - $BRANCH" ;;
             *) echo "::error::$BRANCH has no stable release info"; exit 1 ;;
           esac
@@ -98,11 +100,8 @@ jobs:
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      # Everything after a stable publish, in one idempotent script (scripts/release/post-release-sync.ts):
-      # dev: re-create release/latest at the release; release/latest: cherry-pick the version bump
-      # onto dev (PR on conflicts).
-      # The published packages are changesets/action's output: a re-run publishes nothing, so it
-      # skips this step. When it failed, finish the remaining steps by hand.
+      # Steps by branch: scripts/release/post-release-sync.ts. A re-run publishes nothing and skips
+      # this step: when it failed, finish the remaining steps by hand.
       # github.sha is the release commit, unaffected by the "Generate API docs" commit on top.
       - name: Post-release sync
         if: steps.changesets.outputs.published == 'true'
@@ -136,6 +135,7 @@ jobs:
         run: |
           case "$BRANCH" in
             dev | release/latest) canary_prefix=canary ;;
+            release/legacy/*) canary_prefix=canary-legacy ;;
             release/1.x.x) canary_prefix=ver1-canary ;;
             release/betas/*) suffix="${BRANCH#release/betas/}"; canary_prefix="beta.${suffix//\//-}" ;;
             *) echo "::error::$BRANCH has no canary release info"; exit 1 ;;

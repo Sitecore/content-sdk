@@ -1,6 +1,6 @@
 /**
- * Shared helpers of the release scripts (`post-release-sync.ts`, the limited release prep): git
- * and workspace state.
+ * Shared helpers of the release scripts (`post-release-sync.ts`, the limited release prep and the
+ * legacy branches): git and workspace state.
  */
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
@@ -14,7 +14,7 @@ export interface PackageVersion {
 }
 
 /** The part of a `@manypkg/get-packages` package the release scripts use. */
-interface WorkspacePackage {
+export interface WorkspacePackage {
   dir: string;
   packageJson: { name: string };
 }
@@ -44,9 +44,12 @@ export function packageDirs(
 export const branchPrefix = (branch: string): string =>
   /^release\/[^/]+/.exec(branch)?.[0] ?? branch;
 
-/** Rewrites `yarn.lock` for the current workspace without linking (`--mode=update-lockfile`). */
-export function updateLockfile(): void {
-  execFileSync('yarn', ['install', '--mode=update-lockfile'], {
+/**
+ * Rewrites `yarn.lock` for the current workspace without linking (`--mode=update-lockfile`):
+ * `yarn install` by default, or the given yarn command.
+ */
+export function updateLockfile(...command: string[]): void {
+  execFileSync('yarn', [...(command.length ? command : ['install']), '--mode=update-lockfile'], {
     stdio: 'inherit',
     env: { ...process.env, YARN_ENABLE_IMMUTABLE_INSTALLS: 'false' },
     shell: process.platform === 'win32',
