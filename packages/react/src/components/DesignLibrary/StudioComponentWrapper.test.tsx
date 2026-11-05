@@ -1083,4 +1083,87 @@ describe('<StudioComponentWrapper />', () => {
       expect(container.firstElementChild?.id).to.equal('');
     });
   });
+
+  describe('DOM stability', () => {
+    // Replacing the DOM after load detaches the Pages editor canvas from the atoms, so
+    // identity-only changes must keep the existing elements.
+    const doc: Document = {
+      name: 'stable',
+      root: 'r',
+      elements: { r: { type: 'Text', props: { content: 'Hello' }, children: [] } },
+      state: { fields: { heading: { value: 'v1' } } },
+    };
+
+    it('keeps the same DOM when atomsConfig is re-created with the same catalog and registry', async () => {
+      const { getByTestId, rerender } = render(
+        wrapInProvider(<StudioComponentWrapper document={doc} />, { ...textBoxConfig })
+      );
+      const initialElement = getByTestId('text-el');
+
+      await act(async () => {
+        rerender(wrapInProvider(<StudioComponentWrapper document={doc} />, { ...textBoxConfig }));
+      });
+
+      expect(getByTestId('text-el')).to.equal(initialElement);
+    });
+
+    it('keeps the same DOM when a new but deeply equal document is provided', async () => {
+      const { getByTestId, rerender } = render(
+        wrapInProvider(<StudioComponentWrapper document={doc} />, textBoxConfig)
+      );
+      const initialElement = getByTestId('text-el');
+
+      await act(async () => {
+        rerender(
+          wrapInProvider(
+            <StudioComponentWrapper document={JSON.parse(JSON.stringify(doc))} />,
+            textBoxConfig
+          )
+        );
+      });
+
+      expect(getByTestId('text-el')).to.equal(initialElement);
+    });
+
+    it('keeps the same DOM under StrictMode when a deeply equal document is provided', async () => {
+      const { getByTestId, rerender } = render(
+        <React.StrictMode>
+          {wrapInProvider(<StudioComponentWrapper document={doc} />, textBoxConfig)}
+        </React.StrictMode>
+      );
+      const initialElement = getByTestId('text-el');
+
+      await act(async () => {
+        rerender(
+          <React.StrictMode>
+            {wrapInProvider(
+              <StudioComponentWrapper document={JSON.parse(JSON.stringify(doc))} />,
+              textBoxConfig
+            )}
+          </React.StrictMode>
+        );
+      });
+
+      expect(getByTestId('text-el')).to.equal(initialElement);
+    });
+
+    it('still remounts when the content changes after an equal document was received', async () => {
+      const { getByTestId, rerender } = render(
+        wrapInProvider(<StudioComponentWrapper document={doc} />, textBoxConfig)
+      );
+      const initialElement = getByTestId('text-el');
+      const renderDoc = (document: Document) =>
+        rerender(wrapInProvider(<StudioComponentWrapper document={document} />, textBoxConfig));
+
+      await act(async () => renderDoc(JSON.parse(JSON.stringify(doc))));
+      expect(getByTestId('text-el')).to.equal(initialElement);
+
+      await act(async () =>
+        renderDoc({ ...doc, elements: { r: { type: 'Text', props: { content: 'Changed' } } } })
+      );
+
+      expect(getByTestId('text-el')).to.not.equal(initialElement);
+      expect(getByTestId('text-el').textContent).to.equal('Changed');
+    });
+  });
 });

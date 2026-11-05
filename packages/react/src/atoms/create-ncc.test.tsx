@@ -4,6 +4,9 @@ import React from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import proxyquire from 'proxyquire';
+import sinon from 'sinon';
+import { PagesEditor } from '@sitecore-content-sdk/content/editing';
+import { EDITOR_CHROMES_RESET_DEBOUNCE_MS } from './reset-editor-chromes';
 import { z } from 'zod';
 import type { Document } from '@sitecore-content-sdk/content/atoms';
 import type { DefineRegistryResult } from '@json-render/react';
@@ -241,6 +244,139 @@ describe('create-ncc', () => {
       expect(
         container.querySelector(`code[chrometype="${ATOM_TYPE}"][data-element-name="card-el_1"]`)
       ).to.not.be.null;
+    });
+  });
+
+  describe('Pages chrome reset', () => {
+    // Chrome rediscovery contract with Pages (Horizon)
+    const resetChromesKey = 'Sitecore.Horizon.ResetChromes';
+    const catalog = defineAtomsCatalog({
+      components: {
+        Card: { props: z.object({ title: z.string().optional() }), description: 'Card' },
+      },
+      actions: {},
+    });
+    const registry = defineAtomsRegistry(catalog, {
+      components: { Card: ({ props }) => <span>{props?.title}</span> },
+      actions: {},
+    });
+    const doc: Document = {
+      name: 'reset-doc',
+      root: 'card-el',
+      elements: { 'card-el': { type: 'Card', props: { title: 'Hello' } } },
+    };
+
+    let resetChromes: sinon.SinonStub;
+    let clock: sinon.SinonFakeTimers;
+
+    const withPage = (isEditing: boolean, ui: React.ReactNode) => (
+      <SitecoreProvider
+        api={{} as any}
+        componentMap={new Map()}
+        page={
+          {
+            locale: 'en',
+            mode: { isEditing },
+            layout: { sitecore: { context: {}, route: null } },
+          } as any
+        }
+        loadImportMap={async () => ({} as any)}
+        atomsConfig={{ catalog, registry }}
+      >
+        {ui}
+      </SitecoreProvider>
+    );
+
+    beforeEach(() => {
+      clock = sinon.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+      sinon.stub(PagesEditor, 'isActive').returns(true);
+      resetChromes = sinon.stub();
+      (window as any)[resetChromesKey] = resetChromes;
+    });
+
+    afterEach(() => {
+      // Flush any pending debounced reset so it can't leak into the next test
+      clock.runAll();
+      clock.restore();
+      sinon.restore();
+      delete (window as any)[resetChromesKey];
+    });
+
+    it('asks Pages to re-discover chromes once, after the debounce window, when mounting in editing mode', () => {
+      const View = createNCC(doc, registry, catalog);
+      render(withPage(true, <View />));
+
+      expect(resetChromes.called).to.be.false;
+      clock.tick(EDITOR_CHROMES_RESET_DEBOUNCE_MS - 1);
+      expect(resetChromes.called).to.be.false;
+
+      clock.tick(1);
+      expect(resetChromes.calledOnce).to.be.true;
+    });
+
+    it('coalesces the reset when several atom components mount together', () => {
+      const First = createNCC(doc, registry, catalog);
+      const Second = createNCC({ ...doc, name: 'reset-doc-2' }, registry, catalog);
+      render(
+        withPage(
+          true,
+          <>
+            <First />
+            <Second />
+          </>
+        )
+      );
+      clock.tick(EDITOR_CHROMES_RESET_DEBOUNCE_MS);
+
+      expect(resetChromes.calledOnce).to.be.true;
+    });
+
+    it('coalesces mounts that happen in different commits into a single reset after the last one', () => {
+      const First = createNCC(doc, registry, catalog);
+      const { rerender } = render(withPage(true, <First />));
+      clock.tick(EDITOR_CHROMES_RESET_DEBOUNCE_MS - 20);
+      expect(resetChromes.called).to.be.false;
+
+      // A new component type (e.g. createNCC re-run) remounts the subtree in a later commit
+      const Second = createNCC(doc, registry, catalog);
+      rerender(withPage(true, <Second />));
+
+      // The first request's window has elapsed, but the second one restarted the timer
+      clock.tick(EDITOR_CHROMES_RESET_DEBOUNCE_MS - 1);
+      expect(resetChromes.called).to.be.false;
+
+      clock.tick(1);
+      expect(resetChromes.calledOnce).to.be.true;
+    });
+
+    it('asks Pages to re-discover chromes again when the component is remounted after things settled', () => {
+      const First = createNCC(doc, registry, catalog);
+      const { rerender } = render(withPage(true, <First />));
+      clock.tick(EDITOR_CHROMES_RESET_DEBOUNCE_MS);
+      expect(resetChromes.calledOnce).to.be.true;
+
+      const Second = createNCC(doc, registry, catalog);
+      rerender(withPage(true, <Second />));
+      clock.tick(EDITOR_CHROMES_RESET_DEBOUNCE_MS);
+
+      expect(resetChromes.calledTwice).to.be.true;
+    });
+
+    it('does not reset chromes when not in editing mode', () => {
+      const View = createNCC(doc, registry, catalog);
+      render(withPage(false, <View />));
+      clock.tick(EDITOR_CHROMES_RESET_DEBOUNCE_MS);
+
+      expect(resetChromes.called).to.be.false;
+    });
+
+    it('does not throw when the Pages reset function fails', () => {
+      resetChromes.throws(new Error('boom'));
+      const View = createNCC(doc, registry, catalog);
+      render(withPage(true, <View />));
+
+      expect(() => clock.tick(EDITOR_CHROMES_RESET_DEBOUNCE_MS)).to.not.throw();
+      expect(resetChromes.calledOnce).to.be.true;
     });
   });
 });
