@@ -1,6 +1,6 @@
 /**
- * Shared helpers of the release scripts (`post-release-sync.ts`, the limited release prep): git
- * and workspace state.
+ * Shared helpers of the release scripts (`release-branch-guards.ts`, `post-release-sync.ts`, the
+ * limited release prep and the legacy branches): git, npm and workspace state.
  */
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable jsdoc/require-param */
@@ -14,7 +14,7 @@ export interface PackageVersion {
 }
 
 /** The part of a `@manypkg/get-packages` package the release scripts use. */
-interface WorkspacePackage {
+export interface WorkspacePackage {
   dir: string;
   packageJson: { name: string };
 }
@@ -38,15 +38,18 @@ export function packageDirs(
 }
 
 /**
- * A branch's prefix, the key of the per-branch Maps (post-release steps):
+ * A branch's prefix, the key of the per-branch Maps (post-release steps, guards):
  * `release/<name>` (the first two path segments), else the whole branch (e.g. `dev`).
  */
 export const branchPrefix = (branch: string): string =>
   /^release\/[^/]+/.exec(branch)?.[0] ?? branch;
 
-/** Rewrites `yarn.lock` for the current workspace without linking (`--mode=update-lockfile`). */
-export function updateLockfile(): void {
-  execFileSync('yarn', ['install', '--mode=update-lockfile'], {
+/**
+ * Rewrites `yarn.lock` for the current workspace without linking (`--mode=update-lockfile`):
+ * `yarn install` by default, or the given yarn command.
+ */
+export function updateLockfile(...command: string[]): void {
+  execFileSync('yarn', [...(command.length ? command : ['install']), '--mode=update-lockfile'], {
     stdio: 'inherit',
     env: { ...process.env, YARN_ENABLE_IMMUTABLE_INSTALLS: 'false' },
     shell: process.platform === 'win32',
@@ -67,5 +70,27 @@ export function tryGit(...args: string[]): string | null {
     return git(...args);
   } catch {
     return null;
+  }
+}
+
+/**
+ * `npm view <spec> <field>`: e.g. a package's `dist-tags.latest`, or `version` of `name@version`;
+ * undefined when npm has no such package or version (E404) or the field is empty.
+ * `--prefer-online` revalidates npm's cached metadata (the registry allows 5 minutes), so a version
+ * published moments ago in the same job isn't missed.
+ */
+export function npmView(spec: string, field: string): string | undefined {
+  try {
+    const args = ['view', spec, field, '--prefer-online'];
+    const out = execFileSync('npm', args, {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+      shell: process.platform === 'win32',
+    });
+    return out.trim() || undefined;
+  } catch (error) {
+    const err = error as { stdout?: string; stderr?: string };
+    if (`${err.stdout ?? ''}${err.stderr ?? ''}`.includes('E404')) return undefined;
+    throw error;
   }
 }

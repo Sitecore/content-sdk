@@ -7,10 +7,19 @@ import { RELEASE_LATEST } from '../constants';
 const mocks = vi.hoisted(() => ({
   execFileSync: vi.fn(),
   getPackages: vi.fn(),
+  createLegacyBranches: vi.fn(),
+  // steps are logged and reported by function name
+  refreshLegacyLockfiles: Object.defineProperty(vi.fn(), 'name', {
+    value: 'refreshLegacyLockfiles',
+  }),
 }));
 
 vi.mock('child_process', () => ({ execFileSync: mocks.execFileSync }));
 vi.mock('@manypkg/get-packages', () => ({ getPackages: mocks.getPackages }));
+vi.mock('./legacy/create-legacy-branches', () => ({
+  createLegacyBranches: mocks.createLegacyBranches,
+  refreshLegacyLockfiles: mocks.refreshLegacyLockfiles,
+}));
 
 const NEXTJS = '@sitecore-content-sdk/nextjs';
 const CORE = '@sitecore-content-sdk/core';
@@ -54,6 +63,7 @@ function stubGit({
       const version = ref === `origin/${RELEASE_LATEST}` ? latestVersion : devVersion;
       return JSON.stringify({ version });
     }
+    if (args[0] === 'symbolic-ref') return RELEASE_LATEST;
     if (args[0] === 'rev-list') return [SHA, ...Array(parents).fill('p')].join(' ');
     if (args[0] === 'cherry-pick' && pick === 'conflict') throw new Error('conflict');
     return '';
@@ -157,6 +167,27 @@ describe('runSteps', () => {
     await expect(runSteps([a, b, c], ctx)).rejects.toThrow('b: boom');
     expect(order).toEqual(['a']);
   });
+
+  it('returns to the starting branch after every step, failed ones included', async () => {
+    const a = () => undefined;
+    const b = () => {
+      throw new Error('boom');
+    };
+    await expect(runSteps([a, b], ctx)).rejects.toThrow('b: boom');
+    expect(gitCalls().filter(([cmd]) => cmd === 'checkout')).toEqual([
+      ['checkout', '-q', '-f', RELEASE_LATEST],
+      ['checkout', '-q', '-f', RELEASE_LATEST],
+    ]);
+  });
+
+  it('returns to the starting commit when started detached', async () => {
+    mocks.execFileSync.mockImplementation((_cmd: string, args: string[]) => {
+      if (args[0] === 'symbolic-ref') throw new Error('not a symbolic ref');
+      return args[0] === 'rev-parse' ? SHA : '';
+    });
+    await runSteps([() => undefined], ctx);
+    expect(gitCalls().slice(-1)).toEqual([['checkout', '-q', '-f', SHA]]);
+  });
 });
 
 describe('syncRelease', () => {
@@ -169,6 +200,19 @@ describe('syncRelease', () => {
     stubGit({ devVersion: '2.5.0' }); // dev already has the bump: no cherry-pick
   });
 
+  it('passes the published packages to the legacy branches step', async () => {
+    await syncRelease('dev', SHA, released);
+    expect(mocks.createLegacyBranches).toHaveBeenCalledWith(released);
+  });
+
+  it('stops at the first failing step: release/latest keeps the previous release', async () => {
+    mocks.createLegacyBranches.mockRejectedValueOnce(new Error('push rejected'));
+    await expect(syncRelease('dev', SHA, released)).rejects.toThrow(
+      'createLegacyBranchesOnMajor: push rejected'
+    );
+    expect(mocks.refreshLegacyLockfiles).not.toHaveBeenCalled();
+  });
+
   const stepNames = () =>
     vi
       .mocked(console.log)
@@ -178,13 +222,25 @@ describe('syncRelease', () => {
 
   it('runs the steps of the branch prefix', async () => {
     await syncRelease('dev', SHA, released);
-    expect(stepNames()).toEqual(['latestBranchSync']);
+    expect(stepNames()).toEqual([
+      'latestBranchSync',
+      'createLegacyBranchesOnMajor',
+      'moveLatestTag',
+      'refreshLegacyLockfiles',
+    ]);
     vi.mocked(console.log).mockClear();
     await syncRelease(RELEASE_LATEST, SHA, released);
-    expect(stepNames()).toEqual(['devBranchSync']);
-    vi.mocked(console.log).mockClear();
-    await syncRelease('release/1.x.x', SHA, released);
-    expect(stepNames()).toEqual([]);
+    expect(stepNames()).toEqual([
+      'devBranchSync',
+      'createLegacyBranchesOnMajor',
+      'moveLatestTag',
+      'refreshLegacyLockfiles',
+    ]);
+    for (const other of ['release/legacy/nextjs', 'release/1.x.x', 'release/betas/foo']) {
+      vi.mocked(console.log).mockClear();
+      await syncRelease(other, SHA, released);
+      expect(stepNames()).toEqual([]);
+    }
   });
 
   it('re-creates release/latest for a dev release it does not hold yet', async () => {
@@ -202,8 +258,39 @@ describe('syncRelease', () => {
     expect(releaseLatestPushes()).toEqual([]);
   });
 
+  const tagPushes = () =>
+    gitCalls().filter(([cmd, ...rest]) => cmd === 'push' && rest.join(' ').includes('refs/tags/'));
+
+  it('moves the latest tag to the release commit', async () => {
+    for (const branch of ['dev', RELEASE_LATEST]) {
+      mocks.execFileSync.mockClear();
+      await syncRelease(branch, SHA, released);
+      expect(tagPushes()).toEqual([['push', '-f', 'origin', `${SHA}:refs/tags/latest`]]);
+    }
+  });
+
+  it('keeps the latest tag when the legacy branches step fails', async () => {
+    mocks.createLegacyBranches.mockRejectedValueOnce(new Error('push rejected'));
+    await expect(syncRelease('dev', SHA, released)).rejects.toThrow('push rejected');
+    expect(tagPushes()).toEqual([]);
+  });
+
+  it('moves the latest tag before the lockfile refresh, which may fail on its own', async () => {
+    mocks.refreshLegacyLockfiles.mockRejectedValueOnce(new Error('install failed'));
+    await expect(syncRelease('dev', SHA, released)).rejects.toThrow('install failed');
+    expect(tagPushes()).toEqual([['push', '-f', 'origin', `${SHA}:refs/tags/latest`]]);
+  });
+
+  it('never moves the latest tag from other branches', async () => {
+    for (const branch of ['release/legacy/nextjs', 'release/1.x.x', 'release/betas/foo']) {
+      await syncRelease(branch, SHA, released);
+    }
+    expect(tagPushes()).toEqual([]);
+  });
+
   it('never pushes release/latest from other branches, release/latest included', async () => {
     await syncRelease(RELEASE_LATEST, SHA, released);
+    await syncRelease('release/legacy/nextjs', SHA, released);
     await syncRelease('release/1.x.x', SHA, released);
     expect(releaseLatestPushes()).toEqual([]);
   });

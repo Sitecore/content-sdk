@@ -1,12 +1,9 @@
 /**
- * Everything that follows a stable publish to sync monorepo release branches.
- * `publish.yml` runs it after changesets/action publishes. The steps depend on the branch
- * (`POST_RELEASE_STEPS`):
- * - dev (full release): re-create `release/latest` at the release commit;
- * - `release/latest` (limited, hotfix and feature releases): cherry-pick the version bump onto dev
- *   (a PR on conflicts). Its changes came from dev (the limited copy, cherry-picked fixes), so the
- *   bump is all dev lacks;
- * - other branches: none.
+ * Everything that follows a stable publish to sync monorepo release branches; `publish.yml` runs
+ * it after changesets/action publishes. Steps by branch: `POST_RELEASE_STEPS`.
+ * `release/latest` changes came from dev (the limited copy, cherry-picked fixes), so the version
+ * bump is all dev lacks. Legacy branches are cut at the `latest` tag (the previous release), which
+ * `moveLatestTag` moves to the release commit.
  * Every step is idempotent. A publish re-run doesn't run the sync again (it publishes nothing), so
  * when a step failed, fix the cause and finish the remaining steps by hand.
  *
@@ -26,13 +23,20 @@ import path from 'path';
 import { getPackages } from '@manypkg/get-packages';
 import semver from 'semver';
 import { runMain } from '../changesets/utils';
+import { createLegacyBranches, refreshLegacyLockfiles } from './legacy/create-legacy-branches';
 import { git, tryGit, repoPath, type PackageVersion, branchPrefix } from './utils';
-import { MAIN_BRANCH, RELEASE_LATEST } from '../constants';
+import { LATEST_RELEASE_TAG, MAIN_BRANCH, RELEASE_LATEST } from '../constants';
 
-/** Post-release steps by branch prefix (`branchPrefix`), run in order (see header). */
+/** Post-release steps by branch prefix (`branchPrefix`), run in order. */
 const POST_RELEASE_STEPS = new Map<string, Step[]>([
-  [MAIN_BRANCH, [latestBranchSync]],
-  [RELEASE_LATEST, [devBranchSync]],
+  [
+    MAIN_BRANCH,
+    [latestBranchSync, createLegacyBranchesOnMajor, moveLatestTag, refreshLegacyLockfiles],
+  ],
+  [
+    RELEASE_LATEST,
+    [devBranchSync, createLegacyBranchesOnMajor, moveLatestTag, refreshLegacyLockfiles],
+  ],
 ]);
 
 /** The release a post-release run is for. */
@@ -98,6 +102,14 @@ export async function devBranchSync({ branch, releaseSha, published }: SyncConte
 }
 
 /**
+ * Moves the `latest` tag to the release commit.
+ */
+export function moveLatestTag({ releaseSha }: SyncContext): void {
+  git('push', '-f', 'origin', `${releaseSha}:refs/tags/${LATEST_RELEASE_TAG}`);
+  console.log(`✅ Moved ${LATEST_RELEASE_TAG} to ${releaseSha.slice(0, 7)}.`);
+}
+
+/**
  * The cherry-pick onto dev conflicted: commits the conflicted state on a sync branch and opens a PR
  * to dev, so the conflict markers are resolved and reviewed before landing there.
  */
@@ -142,16 +154,26 @@ function openConflictPr(branch: string, releaseSha: string): void {
 /**
  * Runs the steps one by one and stops at the first failure, so a failure leaves the later steps
  * undone rather than half-applied. Every step is idempotent: fix the cause and re-run.
+ * Steps may check out other commits: each one ends back on the run's starting branch (or commit).
+ * Untracked files a step deleted stay deleted (the legacy trim: dropped packages' build output).
  */
 export async function runSteps(steps: Step[], ctx: SyncContext): Promise<void> {
+  const start = tryGit('symbolic-ref', '-q', '--short', 'HEAD') ?? git('rev-parse', 'HEAD');
   for (const step of steps) {
     console.log(`\n▶ ${step.name}`);
     try {
       await step(ctx);
     } catch (error) {
       throw new Error(`${step.name}: ${(error as Error).message}`);
+    } finally {
+      git('checkout', '-q', '-f', start);
     }
   }
+}
+
+/** Legacy branches on a product major release. Branches off of the previous major. */
+function createLegacyBranchesOnMajor({ published }: SyncContext): Promise<void> {
+  return createLegacyBranches(published);
 }
 
 /** Runs the post-release steps of the branch's prefix; throws at the first failing step. */
