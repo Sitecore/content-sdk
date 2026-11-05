@@ -30,6 +30,7 @@ import {
   DesignLibraryServerVariantGenerationProps,
   ServerComponentInitError,
 } from './models';
+import { isDesignLibraryAuthorizedFromHeaders } from '../../utils/utils';
 
 let { getCacheAndClean, hasCache } = globalCache;
 let { createComponentInstance, getImportMapInfo } = codegen;
@@ -64,6 +65,9 @@ export const DesignLibraryServer = async ({
   rendering,
   loadServerImportMap,
 }: DesignLibraryServerProps) => {
+  if (!(await isDesignLibraryAuthorizedFromHeaders())) {
+    return null;
+  }
   if (!page.mode.isDesignLibrary) {
     return null;
   }

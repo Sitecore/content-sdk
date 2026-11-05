@@ -17,6 +17,7 @@ import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import {
   EDITING_PARAMS_HEADER,
+  EDITING_SECRET_HEADER,
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from './constants';
@@ -841,6 +842,8 @@ describe('EditingRenderMiddleware', () => {
       mode: 'edit',
       layoutKind: 'shared',
     });
+    expect(editingParams).to.not.have.property('secret');
+    expect(fetchRequestHeaders).to.have.property(EDITING_SECRET_HEADER, secret);
   });
 
   it('should include allowed query params in EDITING_PARAMS_HEADER previewData', async () => {

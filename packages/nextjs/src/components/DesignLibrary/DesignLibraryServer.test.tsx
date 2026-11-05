@@ -34,6 +34,7 @@ describe('<DesignLibraryServer />', () => {
   let DesignLibraryServer: any;
   let DesignLibraryServerPreview: any;
   let DesignLibraryServerVariantGeneration: any;
+  let isDesignLibraryAuthorizedFromHeadersStub: sinon.SinonStub;
   let __mockDependencies: any;
 
   const sandbox = sinon.createSandbox();
@@ -142,12 +143,17 @@ describe('<DesignLibraryServer />', () => {
       .stub(DesignLibraryClient, 'DesignLibraryVariantGenerationEvents')
       .callsFake(DlClientEventsMockVariantGeneration);
 
+    isDesignLibraryAuthorizedFromHeadersStub = sandbox.stub().resolves(true);
+
     // Use proxyquire to mock React components that use hooks
     const module = proxyquire('./DesignLibraryServer', {
       '@sitecore-content-sdk/react': {
         ErrorBoundary: ErrorBoundaryStub,
         AppPlaceholder: AppPlaceholderStub,
         DesignLibraryErrorBoundary: DesignLibraryErrorBoundaryStub,
+      },
+      '../../utils/utils': {
+        isDesignLibraryAuthorizedFromHeaders: isDesignLibraryAuthorizedFromHeadersStub,
       },
     });
 
@@ -227,6 +233,20 @@ describe('<DesignLibraryServer />', () => {
   });
 
   describe('DesignLibraryServer', () => {
+    it('should return null when editing secret is invalid', async () => {
+      isDesignLibraryAuthorizedFromHeadersStub.resolves(false);
+      const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
+      const page = getPage(layoutData, modeLibrary);
+
+      const result = await DesignLibraryServer({
+        page,
+        rendering: layoutData.sitecore.route as any,
+        componentMap: components,
+      });
+
+      expect(result).to.equal(null);
+    });
+
     it('should return null when not in design library mode', async () => {
       const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
       const page = getPage(layoutData, modeNormal);
