@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import sinon from 'sinon';
 import * as loadConfigModule from '../../utils/load-config';
+import * as telemetry from '../../telemetry/track';
 import { handler } from './build';
 
 describe('build command', () => {
@@ -17,6 +18,7 @@ describe('build command', () => {
       },
     };
     loadCliConfigStub = sinon.stub(loadConfigModule, 'default').returns(mockConfig);
+    sinon.stub(telemetry, 'trackAppBuilt').resolves();
     sinon.stub(fs, 'existsSync').returns(true);
     sinon.stub(fs, 'mkdirSync');
     sinon.stub(process, 'exit');
@@ -38,6 +40,23 @@ describe('build command', () => {
     mockConfig.build.commands.forEach((command: sinon.SinonStub) => {
       expect(command.calledOnce).to.be.true;
     });
+    expect((telemetry.trackAppBuilt as sinon.SinonStub).calledOnce).to.be.true;
+    expect((telemetry.trackAppBuilt as sinon.SinonStub).firstCall.args[0].success).to.equal(true);
+  });
+
+  it('should record a failed build and rethrow', async () => {
+    mockConfig.build.commands = [sinon.stub().rejects(new Error('boom'))];
+
+    try {
+      await handler({});
+      expect.fail('build should throw when a command fails');
+    } catch (error) {
+      expect((error as Error).message).to.equal('boom');
+    }
+
+    expect((telemetry.trackAppBuilt as sinon.SinonStub).calledOnce).to.be.true;
+    expect((telemetry.trackAppBuilt as sinon.SinonStub).firstCall.args[0].success).to.equal(false);
+    expect((process.exit as unknown as sinon.SinonStub).called).to.be.false;
   });
 
   it('should create the .sitecore directory before executing build commands', async () => {

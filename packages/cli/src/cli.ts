@@ -1,4 +1,5 @@
 import yargs, { Argv, CommandModule } from 'yargs';
+import { trackCliCommandRun } from './telemetry/track';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -19,7 +20,10 @@ export default async function cli(commands?: {
 }) {
   let appCommands: Argv = yargs.usage('$0 <command>');
 
-  appCommands = appCommands.scriptName('sitecore-tools');
+  appCommands = appCommands.scriptName('sitecore-tools').option('noTelemetry', {
+    type: 'boolean',
+    describe: 'Disable usage telemetry for this run',
+  });
 
   // Register commands if available
   if (commands && Object.keys(commands).length > 0) {
@@ -43,6 +47,17 @@ export default async function cli(commands?: {
   }
 
   appCommands
+    .middleware(async (argv) => {
+      const commandName = argv._.map(String).join(' ');
+      if (!commandName) {
+        return;
+      }
+
+      await trackCliCommandRun({
+        commandName,
+        noTelemetry: argv.noTelemetry === true,
+      });
+    })
     .command({
       command: '*',
       handler: (argv) => {

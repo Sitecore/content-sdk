@@ -1,5 +1,6 @@
 import loadCliConfig from '../../utils/load-config';
 import { ensureSitecoreDirectory } from '../../utils/ensure-sitecore-directory';
+import { trackAppBuilt } from '../../telemetry/track';
 
 export const command = ['build', 'b'];
 
@@ -23,6 +24,10 @@ export type BuildArgs = {
    * Supports both JavaScript (`.js`) and TypeScript (`.ts`) formats.
    */
   config?: string;
+  /**
+   * Skip usage telemetry for this run.
+   */
+  noTelemetry?: boolean;
 };
 
 /**
@@ -31,12 +36,28 @@ export type BuildArgs = {
  */
 export async function handler(argv: BuildArgs) {
   ensureSitecoreDirectory();
-  const cliConfig = loadCliConfig(argv.config);
 
-  if (cliConfig.build && Array.isArray(cliConfig.build.commands)) {
-    for (const command of cliConfig.build.commands) {
-      await command({ scConfig: cliConfig.config });
+  try {
+    const cliConfig = loadCliConfig(argv.config);
+
+    if (cliConfig.build && Array.isArray(cliConfig.build.commands)) {
+      for (const command of cliConfig.build.commands) {
+        await command({ scConfig: cliConfig.config });
+      }
     }
+
+    await trackAppBuilt({
+      success: true,
+      config: cliConfig.config,
+      noTelemetry: argv.noTelemetry,
+    });
+  } catch (error) {
+    await trackAppBuilt({
+      success: false,
+      error,
+      noTelemetry: argv.noTelemetry,
+    });
+    throw error;
   }
 
   // grace period for all pooled connections to close (https://github.com/nodejs/undici/issues/5680)
