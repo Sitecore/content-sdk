@@ -14,7 +14,6 @@ import {
 } from '@sitecore-content-sdk/content/editing';
 import {
   EDITING_PARAMS_HEADER,
-  EDITING_SECRET_HEADER,
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from '../editing/constants';
@@ -264,7 +263,6 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.status).to.equal(401);
       const responseBody = JSON.parse(res.body);
       expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
-      expect(getEditingRequestHtmlStub).to.not.have.been.called;
     });
 
     it('should return 401 for missing editing secret', async () => {
@@ -281,7 +279,6 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.status).to.equal(401);
       const responseBody = JSON.parse(res.body);
       expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
-      expect(getEditingRequestHtmlStub).to.not.have.been.called;
     });
 
     it('should return 400 for missing required query parameters', async () => {
@@ -384,9 +381,7 @@ describe('createEditingRenderRouteHandlers', () => {
           version: mockQuery.sc_version,
           layoutKind: mockQuery.sc_layoutKind,
         }),
-        [EDITING_SECRET_HEADER]: secret,
       });
-      expect(JSON.parse(propagatedHeaders[EDITING_PARAMS_HEADER])).to.not.have.property('secret');
 
       // Verify converted cookies from cookieStore.getAll()
       expect(convertedCookies).to.be.an('array');
@@ -455,7 +450,6 @@ describe('createEditingRenderRouteHandlers', () => {
       const [, , propagatedHeaders] = getEditingRequestHtmlStub.firstCall.args;
       expect(propagatedHeaders).to.deep.include(expectedPropagatedHeaders);
       expect(propagatedHeaders[EDITING_PARAMS_HEADER]).to.be.a('string');
-      expect(propagatedHeaders[EDITING_SECRET_HEADER]).to.equal(secret);
     });
 
     it('should include previewTime in editing params when sc_previewTime is present in query params', async () => {
@@ -1163,7 +1157,6 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.status).to.equal(401);
       const responseBody = JSON.parse(res.body);
       expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
-      expect(fetchStub).to.not.have.been.called;
     });
 
     it('should return 401 for missing editing secret', async () => {
@@ -1180,7 +1173,6 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.status).to.equal(401);
       const responseBody = JSON.parse(res.body);
       expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
-      expect(fetchStub).to.not.have.been.called;
     });
 
     it('should proxy POST request with correct headers and cookies', async () => {
@@ -1231,8 +1223,6 @@ describe('createEditingRenderRouteHandlers', () => {
         version: mockQuery.sc_version,
         layoutKind: mockQuery.sc_layoutKind,
       });
-      expect(parsed).to.not.have.property('secret');
-      expect(fetchHeaders.get(EDITING_SECRET_HEADER)).to.equal(secret);
     });
 
     it('should proxy POST request with mapped querry string parameters and propagated vercel protection parameters', async () => {

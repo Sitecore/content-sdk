@@ -1,7 +1,6 @@
 import { isEditorActive, resetEditorChromes } from '@sitecore-content-sdk/content/editing';
 import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
 import { REWRITE_HEADER_NAME } from '../proxy/proxy';
-import { EDITING_SECRET_HEADER } from '../editing/constants';
 
 /**
  * Since Sitecore editors do not support Fast Refresh:
@@ -47,43 +46,6 @@ export const getEditingSecret = (): string => {
     throw new Error('The SITECORE_EDITING_SECRET environment variable is missing or invalid.');
   }
   return secret;
-};
-
-/**
- * Reads the raw configured editing secret without throwing.
- * Empty and whitespace-only values are treated as unset.
- * @returns The trimmed `SITECORE_EDITING_SECRET` value, or an empty string when unset.
- * @internal
- */
-export const getConfiguredEditingSecret = (): string => {
-  return (process.env.SITECORE_EDITING_SECRET || '').trim();
-};
-
-/**
- * Reads Next.js request headers when available (App Router / server actions).
- * Returns null when `headers()` is unavailable so Pages Router callers can continue.
- * @returns {Promise<Headers | null>} The request headers, or null.
- * @internal
- */
-export const getEditingRequestHeaders = async (): Promise<Headers | null> => {
-  try {
-    const { headers } = await import('next/headers');
-    return await headers();
-  } catch {
-    return null;
-  }
-};
-
-/**
- * Authorizes an editing/Design Library request from the internal secret header.
- * Fail-closed: missing headers, empty env, placeholder, or mismatch → false.
- * @returns {Promise<boolean>} True when the request carries a valid editing secret.
- * @internal
- */
-export const isDesignLibraryAuthorizedFromHeaders = async (): Promise<boolean> => {
-  const headerList = await getEditingRequestHeaders();
-  const envSecret = getEditingSecret();
-  return envSecret === headerList?.get(EDITING_SECRET_HEADER);
 };
 
 /**

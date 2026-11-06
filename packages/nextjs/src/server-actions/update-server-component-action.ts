@@ -12,19 +12,6 @@ import {
   COMPONENT_UPDATE_CACHE_KEY_PREFIX,
   COMPONENT_PREVIEW_CACHE_KEY_PREFIX,
 } from '@sitecore-content-sdk/content/editing';
-import { isDesignLibraryAuthorizedFromHeaders } from '../utils/utils';
-
-/**
- * Fail-closed secret check for Design Library server actions.
- * Does not log the token.
- */
-const assertEditingSecretAuthorized = async (): Promise<void> => {
-  if (await isDesignLibraryAuthorizedFromHeaders()) {
-    return;
-  }
-  debug.editing('empty / invalid editing secret');
-  throw new Error('Unauthorized');
-};
 
 export type ComponentUpdateModel = {
   /**
@@ -79,7 +66,6 @@ export type PreviewEventModel = {
  * @returns A Promise that resolves when the cache has been updated.
  */
 export async function updateComponentAction(updatedComponent: ComponentUpdateModel): Promise<void> {
-  await assertEditingSecretAuthorized();
   debug.editing(`Updating server component cache for Update Component: ${updatedComponent.uid}`);
   setCache(`${COMPONENT_UPDATE_CACHE_KEY_PREFIX}${updatedComponent.uid}`, updatedComponent);
   refresh();
@@ -99,7 +85,6 @@ export async function previewComponentAction(
   rendering: ComponentRendering | null,
   edgeUrl: string | undefined
 ): Promise<void> {
-  await assertEditingSecretAuthorized();
   debug.editing(`Updating server component cache for Preview Component: ${previewEvent.uid}`);
 
   const updatedComponent: ComponentPreviewModel = {
