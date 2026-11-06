@@ -8,7 +8,7 @@
 
 > **WriteImportMapArgs** = `object`
 
-Defined in: [content/src/tools/codegen/import-map.ts:80](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/content/src/tools/codegen/import-map.ts#L80)
+Defined in: [content/src/tools/codegen/import-map.ts:80](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/tools/codegen/import-map.ts#L80)
 
 Args for import map generation
 Specifies paths to include and exclude when generating imports
@@ -19,7 +19,7 @@ Specifies paths to include and exclude when generating imports
 
 > `optional` **exclude?**: `string`[]
 
-Defined in: [content/src/tools/codegen/import-map.ts:82](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/content/src/tools/codegen/import-map.ts#L82)
+Defined in: [content/src/tools/codegen/import-map.ts:82](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/tools/codegen/import-map.ts#L82)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [content/src/tools/codegen/import-map.ts:82](https://github.com/Site
 
 > `optional` **includeVariants?**: `boolean`
 
-Defined in: [content/src/tools/codegen/import-map.ts:83](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/content/src/tools/codegen/import-map.ts#L83)
+Defined in: [content/src/tools/codegen/import-map.ts:83](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/tools/codegen/import-map.ts#L83)
 
 ***
 
@@ -35,4 +35,4 @@ Defined in: [content/src/tools/codegen/import-map.ts:83](https://github.com/Site
 
 > **paths**: `string`[]
 
-Defined in: [content/src/tools/codegen/import-map.ts:81](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/content/src/tools/codegen/import-map.ts#L81)
+Defined in: [content/src/tools/codegen/import-map.ts:81](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/tools/codegen/import-map.ts#L81)

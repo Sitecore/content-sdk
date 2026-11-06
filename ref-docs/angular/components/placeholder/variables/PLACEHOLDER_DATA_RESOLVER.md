@@ -8,7 +8,7 @@
 
 > `const` **PLACEHOLDER\_DATA\_RESOLVER**: `InjectionToken`\<[`PlaceholderDataResolver`](../type-aliases/PlaceholderDataResolver.md)\>
 
-Defined in: [packages/angular/src/components/placeholder/placeholder-tokens.ts:55](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/angular/src/components/placeholder/placeholder-tokens.ts#L55)
+Defined in: [packages/angular/src/components/placeholder/placeholder-tokens.ts:55](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/angular/src/components/placeholder/placeholder-tokens.ts#L55)
 
 Optional hook to decorate placeholder renderings after the guard pass. Defaults to
 an identity pass-through.

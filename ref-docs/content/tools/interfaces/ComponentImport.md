@@ -6,7 +6,7 @@
 
 # Interface: ComponentImport
 
-Defined in: [content/src/tools/templating/component-builder.ts:78](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/content/src/tools/templating/component-builder.ts#L78)
+Defined in: [content/src/tools/templating/component-builder.ts:78](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/tools/templating/component-builder.ts#L78)
 
 Definition for custom components to be included in component map.
 Use this to define components imported from modules/dependencies/packages
@@ -17,7 +17,7 @@ Use this to define components imported from modules/dependencies/packages
 
 > **importInfo**: `object`
 
-Defined in: [content/src/tools/templating/component-builder.ts:82](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/content/src/tools/templating/component-builder.ts#L82)
+Defined in: [content/src/tools/templating/component-builder.ts:82](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/tools/templating/component-builder.ts#L82)
 
 Information about how to import the package
 
@@ -39,6 +39,6 @@ The specific named components to import from the package. Leave empty to have wh
 
 > **importName**: `string`
 
-Defined in: [content/src/tools/templating/component-builder.ts:80](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/content/src/tools/templating/component-builder.ts#L80)
+Defined in: [content/src/tools/templating/component-builder.ts:80](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/tools/templating/component-builder.ts#L80)
 
 The name of the import (e.g., 'MyComponent')

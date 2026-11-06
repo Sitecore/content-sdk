@@ -6,7 +6,7 @@
 
 # Interface: ScriptAttributes
 
-Defined in: [analytics-core/src/utils/browser/appendScriptWithAttributes.ts:20](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/analytics-core/src/utils/browser/appendScriptWithAttributes.ts#L20)
+Defined in: [analytics-core/src/utils/browser/appendScriptWithAttributes.ts:20](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/analytics-core/src/utils/browser/appendScriptWithAttributes.ts#L20)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ The script attributes required to append a script element.
 
 > **async**: `boolean`
 
-Defined in: [analytics-core/src/utils/browser/appendScriptWithAttributes.ts:24](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/analytics-core/src/utils/browser/appendScriptWithAttributes.ts#L24)
+Defined in: [analytics-core/src/utils/browser/appendScriptWithAttributes.ts:24](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/analytics-core/src/utils/browser/appendScriptWithAttributes.ts#L24)
 
 A boolean value that controls how the script should be executed.
 
@@ -28,6 +28,6 @@ A boolean value that controls how the script should be executed.
 
 > **src**: `string`
 
-Defined in: [analytics-core/src/utils/browser/appendScriptWithAttributes.ts:28](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/analytics-core/src/utils/browser/appendScriptWithAttributes.ts#L28)
+Defined in: [analytics-core/src/utils/browser/appendScriptWithAttributes.ts:28](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/analytics-core/src/utils/browser/appendScriptWithAttributes.ts#L28)
 
 Represents the URL of an external script; this can be used as an alternative to embedding a script directly within a document. It reflects the `src` attribute of the `script` element.

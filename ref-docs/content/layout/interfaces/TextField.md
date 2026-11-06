@@ -6,7 +6,7 @@
 
 # Interface: TextField
 
-Defined in: [content/src/layout/field-types.ts:142](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/content/src/layout/field-types.ts#L142)
+Defined in: [content/src/layout/field-types.ts:142](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/layout/field-types.ts#L142)
 
 The interface for the Text field.
 
@@ -20,7 +20,7 @@ The interface for the Text field.
 
 > `optional` **metadata?**: `object`
 
-Defined in: [content/src/layout/models.ts:149](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/content/src/layout/models.ts#L149)
+Defined in: [content/src/layout/models.ts:149](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/layout/models.ts#L149)
 
 #### Index Signature
 
@@ -36,4 +36,4 @@ Defined in: [content/src/layout/models.ts:149](https://github.com/Sitecore/conte
 
 > `optional` **value?**: `string` \| `number`
 
-Defined in: [content/src/layout/field-types.ts:143](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/content/src/layout/field-types.ts#L143)
+Defined in: [content/src/layout/field-types.ts:143](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/layout/field-types.ts#L143)
