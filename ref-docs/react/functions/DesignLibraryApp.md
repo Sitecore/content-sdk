@@ -8,12 +8,13 @@
 
 > **DesignLibraryApp**(`props`): `Promise`\<`null` \| `Element`\>
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryApp.tsx:12](https://github.com/Sitecore/content-sdk/blob/f66ee3072229f1bfcc7159dae827dec3f5a04397/packages/react/src/components/DesignLibrary/DesignLibraryApp.tsx#L12)
+Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryApp.tsx:15](https://github.com/Sitecore/content-sdk/blob/bf1778855be199e9ff2d9c4f99717b45b5cfbcf4/packages/react/src/components/DesignLibrary/DesignLibraryApp.tsx#L15)
 
 Design Library component intended to be used by the NextJs app router application.
 This component serves as a router between client and server component rendering modes
-for the Design Library. The client/server runtime is loaded lazily so static import
-of `DesignLibrary` / `DesignLibraryServer` does not pull those modules into every render.
+for the Design Library. The runtime loader comes from `#rsc-env`, which resolves to
+a different module in the RSC and client bundles, so the `global-error` client chunk
+does not reference `DesignLibraryServer`.
 
 ## Parameters
 
@@ -24,3 +25,5 @@ of `DesignLibrary` / `DesignLibraryServer` does not pull those modules into ever
 ## Returns
 
 `Promise`\<`null` \| `Element`\>
+
+The Design Library tree, or null when the page has no route.

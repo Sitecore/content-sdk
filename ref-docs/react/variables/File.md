@@ -8,7 +8,7 @@
 
 > `const` **File**: `React.FC`\<`FileProps`\>
 
-Defined in: [packages/react/src/components/File.tsx:32](https://github.com/Sitecore/content-sdk/blob/f66ee3072229f1bfcc7159dae827dec3f5a04397/packages/react/src/components/File.tsx#L32)
+Defined in: [packages/react/src/components/File.tsx:32](https://github.com/Sitecore/content-sdk/blob/bf1778855be199e9ff2d9c4f99717b45b5cfbcf4/packages/react/src/components/File.tsx#L32)
 
 The File component.
 
