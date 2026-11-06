@@ -8,7 +8,7 @@
 
 > **LlmsTxtOptions** = `object`
 
-Defined in: [content/src/client/sitecore-client.ts:157](https://github.com/Sitecore/content-sdk/blob/3bed6f208a6c26f4869c9507dbeff792d9b37a6c/packages/content/src/client/sitecore-client.ts#L157)
+Defined in: [content/src/client/sitecore-client.ts:157](https://github.com/Sitecore/content-sdk/blob/7d4c69140e982b6bb2bbcda53356d6312ae346e0/packages/content/src/client/sitecore-client.ts#L157)
 
 Options for fetching llms.txt content.
 
@@ -18,6 +18,6 @@ Options for fetching llms.txt content.
 
 > **siteName**: `string`
 
-Defined in: [content/src/client/sitecore-client.ts:161](https://github.com/Sitecore/content-sdk/blob/3bed6f208a6c26f4869c9507dbeff792d9b37a6c/packages/content/src/client/sitecore-client.ts#L161)
+Defined in: [content/src/client/sitecore-client.ts:161](https://github.com/Sitecore/content-sdk/blob/7d4c69140e982b6bb2bbcda53356d6312ae346e0/packages/content/src/client/sitecore-client.ts#L161)
 
 The name of the site for which to fetch llms.txt content.
