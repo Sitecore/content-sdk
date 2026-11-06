@@ -171,6 +171,9 @@ export class GraphQLRequestClient implements GraphQLClient {
     options?: FetchOptions
   ): Promise<T> {
     let attempt = 1;
+    const client = options?.fetch
+      ? new Client(this.endpoint, { fetch: options.fetch })
+      : this.client;
 
     const retryer = async (): Promise<T> => {
       const retries = options?.retries || this.retries;
@@ -188,7 +191,7 @@ export class GraphQLRequestClient implements GraphQLClient {
       // Use performance.now() for Next.js 16 compatibility (safe to use before request data access)
       const headers = { ...this.headers, ...options?.headers };
       const startTimestamp = performance.now();
-      const fetchWithOptionalTimeout = [this.client.request(query, variables, headers)];
+      const fetchWithOptionalTimeout = [client.request(query, variables, headers)];
       if (this.timeout) {
         this.abortTimeout = new TimeoutPromise(this.timeout);
         fetchWithOptionalTimeout.push(this.abortTimeout.start);
