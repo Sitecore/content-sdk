@@ -12,3 +12,10 @@ export const EDITING_PASS_THROUGH_HEADERS = ['authorization', 'cookie'];
  * route handler to the Next.js page when running in App Router.
  */
 export const EDITING_PARAMS_HEADER = 'x-sitecore-editing-params';
+
+/**
+ * Header used to forward the already-validated editing secret from the editing
+ * render handler/middleware to the internal Next.js page or server-action request.
+ * Do not put this value in `EDITING_PARAMS_HEADER` JSON.
+ */
+export const EDITING_SECRET_HEADER = 'x-sitecore-editing-secret';

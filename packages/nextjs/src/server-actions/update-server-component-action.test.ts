@@ -26,6 +26,7 @@ describe('Server Component Actions', () => {
   let fetchGeneratedComponentFromCacheStub: sinon.SinonStub;
   let updateComponentAction: any;
   let previewComponentAction: any;
+  let isDesignLibraryAuthorizedFromHeadersStub: sinon.SinonStub;
   let originalEnv: NodeJS.ProcessEnv;
 
   beforeEach(() => {
@@ -34,6 +35,7 @@ describe('Server Component Actions', () => {
     refreshStub = sandbox.stub();
     debugEditingStub = sandbox.stub();
     fetchGeneratedComponentFromCacheStub = sandbox.stub();
+    isDesignLibraryAuthorizedFromHeadersStub = sandbox.stub().resolves(true);
 
     originalEnv = process.env;
     process.env = { ...originalEnv, SITECORE_EDGE_URL: 'https://edge.sitecorecloud.io' };
@@ -52,6 +54,9 @@ describe('Server Component Actions', () => {
       },
       '@sitecore-content-sdk/content/codegen': {
         fetchGeneratedComponentFromCache: fetchGeneratedComponentFromCacheStub,
+      },
+      '../utils/utils': {
+        isDesignLibraryAuthorizedFromHeaders: isDesignLibraryAuthorizedFromHeadersStub,
       },
     });
 
@@ -131,9 +136,47 @@ describe('Server Component Actions', () => {
       );
       expect(fetchGeneratedComponentFromCacheStub).to.not.have.been.called;
     });
+
+    it('should not update cache when editing secret is invalid', async () => {
+      isDesignLibraryAuthorizedFromHeadersStub.resolves(false);
+
+      const componentUpdate: ComponentUpdateModel = {
+        uid: 'test-uid-unauthorized',
+        rendering: {
+          uid: 'test-uid-unauthorized',
+          componentName: 'ContentBlock',
+        } as ComponentRendering,
+      };
+
+      try {
+        await updateComponentAction(componentUpdate);
+        expect.fail('expected updateComponentAction to reject');
+      } catch (error) {
+        expect((error as Error).message).to.equal('Unauthorized');
+      }
+
+      expect(setCacheStub).to.not.have.been.called;
+      expect(refreshStub).to.not.have.been.called;
+      expect(debugEditingStub).to.have.been.calledWith('empty / invalid editing secret');
+    });
   });
 
   describe('previewComponentAction', () => {
+    it('should not update cache when editing secret is invalid', async () => {
+      isDesignLibraryAuthorizedFromHeadersStub.resolves(false);
+
+      try {
+        await previewComponentAction({ uid: 'test-uid-unauthorized', args: undefined as any }, null);
+        expect.fail('expected previewComponentAction to reject');
+      } catch (error) {
+        expect((error as Error).message).to.equal('Unauthorized');
+      }
+
+      expect(setCacheStub).to.not.have.been.called;
+      expect(refreshStub).to.not.have.been.called;
+      expect(fetchGeneratedComponentFromCacheStub).to.not.have.been.called;
+    });
+
     it('should fetch generated component data when args is provided', async () => {
       const args: ServerComponentPreviewEventArgs = {
         name: 'component:generation:component-preview',

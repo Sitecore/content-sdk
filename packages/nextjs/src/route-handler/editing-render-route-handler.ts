@@ -23,7 +23,7 @@ import {
   PREVIEW_COOKIES,
   getAllowedQueryParams,
 } from '../editing/utils';
-import { EDITING_PARAMS_HEADER } from '../editing/constants';
+import { EDITING_PARAMS_HEADER, EDITING_SECRET_HEADER } from '../editing/constants';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 import debug from '../debug';
 import type { AllowedQueryParams } from '../editing/types';
@@ -147,7 +147,8 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     const responseHeaders: { [key: string]: string } = expectedCorsHeaders;
 
     // Validate secret
-    if (!validateEditingSecret(query[QUERY_PARAM_EDITING_SECRET])) {
+    const receivedSecret = query[QUERY_PARAM_EDITING_SECRET];
+    if (!validateEditingSecret(receivedSecret)) {
       return Response.json(
         {
           html: INVALID_SECRET_HTML_MESSAGE,
@@ -248,6 +249,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       const propagatedHeaders = {
         ...getHeadersForPropagation(headers),
         [EDITING_PARAMS_HEADER]: JSON.stringify(editingPreviewData),
+        [EDITING_SECRET_HEADER]: receivedSecret,
       };
       const html = await getEditingRequestHtml(
         requestUrl,
@@ -312,7 +314,8 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     }
 
     // Validate secret
-    if (!validateEditingSecret(req.nextUrl.searchParams.get(QUERY_PARAM_EDITING_SECRET) || '')) {
+    const receivedSecret = req.nextUrl.searchParams.get(QUERY_PARAM_EDITING_SECRET) || '';
+    if (!validateEditingSecret(receivedSecret)) {
       return Response.json(
         {
           html: INVALID_SECRET_HTML_MESSAGE,
@@ -369,6 +372,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
     const forwardHeaders = new Headers(req.headers);
     forwardHeaders.set('cookie', forwardCookie);
     forwardHeaders.set(EDITING_PARAMS_HEADER, JSON.stringify(editingPreviewData));
+    forwardHeaders.set(EDITING_SECRET_HEADER, receivedSecret);
 
     const forwardedResponse = await dataFetcher.fetch<string>(targetUrl.toString(), {
       method: req.method,
