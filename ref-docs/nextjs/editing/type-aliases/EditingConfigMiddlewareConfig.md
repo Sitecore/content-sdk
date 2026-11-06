@@ -8,7 +8,7 @@
 
 > **EditingConfigMiddlewareConfig** = `object`
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:18](https://github.com/Sitecore/content-sdk/blob/5e586300554a131c9488a0b89af8f85d395d0b88/packages/nextjs/src/editing/editing-config-middleware.ts#L18)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:18](https://github.com/Sitecore/content-sdk/blob/f66ee3072229f1bfcc7159dae827dec3f5a04397/packages/nextjs/src/editing/editing-config-middleware.ts#L18)
 
 The interface for the EditingConfigMiddleware configuration.
 
@@ -18,7 +18,7 @@ The interface for the EditingConfigMiddleware configuration.
 
 > **components**: [`ComponentMap`](../../index/type-aliases/ComponentMap.md)\<[`NextjsContentSdkComponent`](../../index/type-aliases/NextjsContentSdkComponent.md)\>
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:22](https://github.com/Sitecore/content-sdk/blob/5e586300554a131c9488a0b89af8f85d395d0b88/packages/nextjs/src/editing/editing-config-middleware.ts#L22)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:22](https://github.com/Sitecore/content-sdk/blob/f66ee3072229f1bfcc7159dae827dec3f5a04397/packages/nextjs/src/editing/editing-config-middleware.ts#L22)
 
 Components available in the application
 
@@ -28,6 +28,6 @@ Components available in the application
 
 > **metadata**: `Metadata`
 
-Defined in: [nextjs/src/editing/editing-config-middleware.ts:26](https://github.com/Sitecore/content-sdk/blob/5e586300554a131c9488a0b89af8f85d395d0b88/packages/nextjs/src/editing/editing-config-middleware.ts#L26)
+Defined in: [nextjs/src/editing/editing-config-middleware.ts:26](https://github.com/Sitecore/content-sdk/blob/f66ee3072229f1bfcc7159dae827dec3f5a04397/packages/nextjs/src/editing/editing-config-middleware.ts#L26)
 
 Application metadata

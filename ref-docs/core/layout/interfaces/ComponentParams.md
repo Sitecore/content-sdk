@@ -6,7 +6,7 @@
 
 # Interface: ComponentParams
 
-Defined in: [packages/core/src/layout/models.ts:95](https://github.com/Sitecore/content-sdk/blob/5e586300554a131c9488a0b89af8f85d395d0b88/packages/core/src/layout/models.ts#L95)
+Defined in: [packages/core/src/layout/models.ts:95](https://github.com/Sitecore/content-sdk/blob/f66ee3072229f1bfcc7159dae827dec3f5a04397/packages/core/src/layout/models.ts#L95)
 
 Component params
 
