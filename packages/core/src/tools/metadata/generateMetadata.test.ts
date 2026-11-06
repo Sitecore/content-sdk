@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import { generateMetadata } from './generateMetadata';
 import childProcess from 'child_process';
+import proxyquire from 'proxyquire';
 import npmQueryResultNext from './test-data/npm-query-nextjs.json';
 
 describe('generateMetadata', () => {
@@ -52,6 +53,21 @@ describe('generateMetadata', () => {
     expect(writeFileSyncStub.getCall(0).args[0]).to.be.equal(
       path.resolve('.sitecore/metadata.json')
     );
+  });
+
+  it('should pass app inputs and Sitecore config to metadata calculation', async () => {
+    const getMetadata = sinon.stub().resolves({ packages: {} });
+    const { generateMetadata: generateMetadataWithStub } = proxyquire('./generateMetadata', {
+      './metadata': { getMetadata },
+    });
+    const appInputs = { atomsCatalog: { components: [] } };
+    await generateMetadataWithStub({ appInputs })({ scConfig: { disableCodeGeneration: true } });
+
+    expect(getMetadata.calledOnce).to.be.true;
+    expect(getMetadata.getCall(0).args[0]).to.deep.include({
+      appInputs,
+      sitecoreConfig: { disableCodeGeneration: true },
+    });
   });
 
   it('should omit capabilities when capability calculation is disabled', async () => {
