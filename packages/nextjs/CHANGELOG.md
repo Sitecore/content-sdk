@@ -1,5 +1,21 @@
 # @sitecore-content-sdk/nextjs
 
+## 3.0.0
+
+### Minor Changes
+
+- Add package capability exports and build-time capability discovery. Generated application metadata ([e2bacaf](https://github.com/sitecore/content-sdk/commit/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad))
+  now includes the capabilities supported and used by the application, and editing configuration
+  endpoints expose the resolved capability keys.
+- minor `@sitecore-content-sdk/core` dependency update:
+  - Add package capability exports and build-time capability discovery. Generated application metadata
+    now includes the capabilities supported and used by the application, and editing configuration
+    endpoints expose the resolved capability keys. ([e2bacaf](https://github.com/sitecore/content-sdk/commit/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad))
+
+### Patch Changes
+
+- Prevent and gate remote execution for Design Library server actions while in normal mode ([b124678](https://github.com/sitecore/content-sdk/commit/b124678d1f36578713f38271906f1e3a623ad001))
+
 ## 2.5.0
 
 ### Minor Changes
