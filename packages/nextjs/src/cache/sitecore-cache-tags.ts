@@ -108,9 +108,8 @@ export function buildSitecoreDictionaryCacheTag(
 }
 
 /**
- * Tag for a FEaaS component template fetched on normal pages. FEaaS publishing does not call the
- * Sitecore revalidate webhook, so entries expire per `cacheLife` unless the app revalidates this tag.
- * @param {FEaaSComponentParams} params - FEaaS rendering params (host, library, component, version, revision).
+ * Cache tag for a published FEaaS component.
+ * @param {FEaaSComponentParams} params - Host, library, component, version, and revision.
  * @public
  */
 export function buildFEaaSComponentCacheTag(params: FEaaSComponentParams): string {

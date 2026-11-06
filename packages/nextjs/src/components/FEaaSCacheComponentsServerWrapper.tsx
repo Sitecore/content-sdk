@@ -9,9 +9,7 @@ import {
 } from '@sitecore-content-sdk/react';
 
 /**
- * Fetches server props for a FEaaS component on a normal (published) page.
- * Receives only the params that identify the component, so the implementation can be
- * wrapped in `'use cache'` and keyed by the component rather than the page.
+ * Fetches published FEaaS server props from the component params, so it can use `'use cache'`.
  * @public
  */
 export type FEaaSCachedServerPropsFetcher = (
@@ -23,11 +21,7 @@ export type FEaaSCachedServerPropsFetcher = (
  * @public
  */
 export type FEaaSCacheComponentsServerWrapperOptions = {
-  /**
-   * Fetcher used on normal pages instead of the request-time fetch. Typically an app-level
-   * `'use cache'` function that calls `fetchFEaaSComponentServerProps(params, true)`.
-   * When omitted, FEaaS components always render at request time.
-   */
+  /** Cached fetcher for normal pages. When omitted, FEaaS renders at request time. */
   getCachedServerProps?: FEaaSCachedServerPropsFetcher;
 };
 
@@ -46,16 +40,10 @@ const pickFetchParams = (params: FEaaSComponentParams): FEaaSComponentParams =>
   );
 
 /**
- * Creates a FEaaS server component for apps with Next.js Cache Components (`cacheComponents: true`).
- *
- * The component renders behind `<Suspense>`. Without `getCachedServerProps`, or on preview/editing
- * pages, it calls `connection()` before fetching, so the FEaaS template is fetched at request time.
- * With `getCachedServerProps`, normal pages use it, so the component can be part of the static shell.
- *
- * Do not use it without Cache Components: there `connection()` makes the whole route dynamic.
- * Use the built-in `FEaaSServerWrapper` instead.
+ * FEaaS server component for Cache Components apps. Renders behind `<Suspense>` and fetches
+ * at request time, unless `getCachedServerProps` handles normal pages. Requires `cacheComponents: true`.
  * @param {FEaaSCacheComponentsServerWrapperOptions} [options] wrapper options
- * @returns {Function} FEaaS server component to register as `FEaaSWrapper` in the component map
+ * @returns {Function} component to register as `FEaaSWrapper`
  * @public
  */
 export function createFEaaSCacheComponentsServerWrapper(
@@ -88,9 +76,7 @@ export function createFEaaSCacheComponentsServerWrapper(
 }
 
 /**
- * FEaaS server component for apps with Next.js Cache Components. Renders at request time behind
- * `<Suspense>`, so pages with FEaaS components can be prerendered. Register it as `FEaaSWrapper`
- * in the component map, or use {@link createFEaaSCacheComponentsServerWrapper} to cache published components.
+ * Request-time FEaaS server component for Cache Components apps.
  * @public
  */
 export const FEaaSCacheComponentsServerWrapper = createFEaaSCacheComponentsServerWrapper();
