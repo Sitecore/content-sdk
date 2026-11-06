@@ -8,7 +8,7 @@
 
 > **resolveRedirectTarget**(`existsRedirect`, `siteLanguage`, `requestPath`): `string`
 
-Defined in: [content/src/site/redirect-utils.ts:205](https://github.com/Sitecore/content-sdk/blob/a61659d31d52d41a1b13c8b63d46053c1b52cda1/packages/content/src/site/redirect-utils.ts#L205)
+Defined in: [content/src/site/redirect-utils.ts:205](https://github.com/Sitecore/content-sdk/blob/3bed6f208a6c26f4869c9507dbeff792d9b37a6c/packages/content/src/site/redirect-utils.ts#L205)
 
 **`Internal`**
 
