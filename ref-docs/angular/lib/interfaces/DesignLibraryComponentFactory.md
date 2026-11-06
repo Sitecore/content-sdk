@@ -6,7 +6,7 @@
 
 # Interface: DesignLibraryComponentFactory
 
-Defined in: [packages/angular/src/lib/design-library/component-factory.ts:59](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/angular/src/lib/design-library/component-factory.ts#L59)
+Defined in: [packages/angular/src/lib/design-library/component-factory.ts:59](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/angular/src/lib/design-library/component-factory.ts#L59)
 
 Compiles a Design Library preview payload into a renderable component class.
 
@@ -21,7 +21,7 @@ different import-map/compile pipeline — while the renderer keeps ownership of 
 
 > **compile**(`source`, `importMap`): `Promise`\<`Type`\<`unknown`\>\>
 
-Defined in: [packages/angular/src/lib/design-library/component-factory.ts:66](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/angular/src/lib/design-library/component-factory.ts#L66)
+Defined in: [packages/angular/src/lib/design-library/component-factory.ts:66](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/angular/src/lib/design-library/component-factory.ts#L66)
 
 Compiles a preview payload into a renderable component class.
 

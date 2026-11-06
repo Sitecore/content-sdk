@@ -6,7 +6,7 @@
 
 # Class: LocaleUrlSerializer
 
-Defined in: [packages/angular/src/i18n/locale-url-serializer.ts:28](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/angular/src/i18n/locale-url-serializer.ts#L28)
+Defined in: [packages/angular/src/i18n/locale-url-serializer.ts:28](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/angular/src/i18n/locale-url-serializer.ts#L28)
 
 Locale-aware UrlSerializer replacement. Extends [DefaultUrlSerializer](https://angular.dev/api/router/DefaultUrlSerializer) and
 prepends the current URL locale (from the request pathname) to every serialized
@@ -73,7 +73,7 @@ Parses a url into a `UrlTree`
 
 > **serialize**(`tree`): `string`
 
-Defined in: [packages/angular/src/i18n/locale-url-serializer.ts:34](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/angular/src/i18n/locale-url-serializer.ts#L34)
+Defined in: [packages/angular/src/i18n/locale-url-serializer.ts:34](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/angular/src/i18n/locale-url-serializer.ts#L34)
 
 Converts a `UrlTree` into a url
 

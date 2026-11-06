@@ -35,6 +35,7 @@ export interface CacheOptions {
 export function calculateCapabilities(config?: {
     appRoot?: string;
     sitecoreConfig?: CapabilitySitecoreConfig;
+    appInputs?: Record<string, unknown>;
 }): Promise<ResolvedCapabilities>;
 
 // @public
@@ -49,7 +50,7 @@ export type CapabilitiesModule = {
 export type CapabilityDefinition = {
     value: boolean | CapabilityMap<CapabilityDefinition>;
     filter?: CapabilityFilter;
-    metadata?: CapabilityMetadata;
+    metadata?: CapabilityMetadata | CapabilityMetadataResolver;
 };
 
 // @public
@@ -62,6 +63,7 @@ export type CapabilityFilterContext = {
     fileExists: (relativePath: string) => boolean;
     readFile: (relativePath: string) => string | undefined;
     fileContains: (relativePaths: string[], pattern: string | RegExp) => boolean;
+    appInputs?: Record<string, unknown>;
 };
 
 // @public
@@ -69,6 +71,9 @@ export type CapabilityMap<T> = Record<string, T>;
 
 // @public
 export type CapabilityMetadata = Record<string, unknown>;
+
+// @public
+export type CapabilityMetadataResolver = (context: CapabilityFilterContext) => CapabilityMetadata | Promise<CapabilityMetadata>;
 
 // @public
 export type CapabilitySitecoreConfig = Pick<SitecoreConfig, 'disableCodeGeneration'>;
@@ -112,7 +117,7 @@ export interface CoreContext {
 }
 
 // @internal
-export function createCapabilityFilterContext(appRoot?: string, sitecoreConfig?: CapabilitySitecoreConfig): CapabilityFilterContext;
+export function createCapabilityFilterContext(appRoot?: string, sitecoreConfig?: CapabilitySitecoreConfig, appInputs?: Record<string, unknown>): CapabilityFilterContext;
 
 // @public
 export type CSDKCapabilities = {
@@ -245,6 +250,7 @@ export type GenerateMetadataConfig = {
     destinationPath?: string;
     allowWorkspaces?: boolean;
     capabilities?: boolean;
+    appInputs?: Record<string, unknown>;
 };
 
 // @public
@@ -289,6 +295,7 @@ export type GetMetadataConfig = {
     capabilities?: boolean;
     appRoot?: string;
     sitecoreConfig?: CapabilitySitecoreConfig;
+    appInputs?: Record<string, unknown>;
 };
 
 // @public
@@ -383,7 +390,7 @@ export function mergeCapabilityExports(packages: CollectedCapabilities[]): Merge
 export type MergedCapability = {
     value: boolean | MergedCapabilityTree;
     filters: CapabilityFilter[];
-    metadata: CapabilityMetadata;
+    metadata: CapabilityMetadata | CapabilityMetadataResolver;
 };
 
 // @internal (undocumented)
@@ -471,7 +478,7 @@ export function resolveContentSdkPackageNames(appPath?: string): string[] | unde
 export type ResolvedCapabilities = CapabilityMap<ResolvedCapability>;
 
 // @public
-export type ResolvedCapability = true | {
+export type ResolvedCapability = boolean | {
     [key: string]: ResolvedCapability | CapabilityMetadata | undefined;
     metadata?: CapabilityMetadata;
 };
