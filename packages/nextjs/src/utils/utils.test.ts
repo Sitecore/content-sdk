@@ -1,7 +1,12 @@
 /* eslint-disable no-unused-expressions */
-import { expect } from 'chai';
+import { expect, use } from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
+import proxyquire from 'proxyquire';
 import { REWRITE_HEADER_NAME } from '../proxy/proxy';
 import { getEditingSecret, parseRewriteHeader } from './utils';
+
+use(sinonChai);
 
 describe('utils', () => {
   describe('getEditingSecret', () => {
@@ -18,6 +23,36 @@ describe('utils', () => {
       process.env.SITECORE_EDITING_SECRET = secret;
       const result = getEditingSecret();
       expect(result).to.equal(secret);
+    });
+  });
+
+  describe('isDraftModeEnabled', () => {
+    afterEach(() => {
+      sinon.restore();
+    });
+
+    it('should return draftMode().isEnabled from next/headers', async () => {
+      const draftModeStub = sinon.stub().resolves({ isEnabled: true });
+      const module = proxyquire('./utils', {
+        'next/headers': {
+          draftMode: draftModeStub,
+        },
+      });
+
+      const result = await module.isDraftModeEnabled();
+      expect(result).to.equal(true);
+      expect(draftModeStub).to.have.been.calledOnce;
+    });
+
+    it('should return false when next/headers is unavailable', async () => {
+      const module = proxyquire('./utils', {
+        'next/headers': (): never => {
+          throw new Error('not in server context');
+        },
+      });
+
+      const result = await module.isDraftModeEnabled();
+      expect(result).to.equal(false);
     });
   });
 

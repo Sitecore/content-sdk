@@ -3,6 +3,7 @@ import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/content/lay
 import { DesingLibraryAppProps } from './models';
 import { DesignLibraryServer } from './DesignLibraryServer';
 import { DesignLibrary, noopLoadImportMap } from '@sitecore-content-sdk/react';
+import { isDraftModeEnabled } from '../../utils/utils';
 
 /**
  * Design Library component intended to be used by the NextJs app router application
@@ -11,14 +12,19 @@ import { DesignLibrary, noopLoadImportMap } from '@sitecore-content-sdk/react';
  * delegates to the appropriate rendering implementation:
  * - Client components are rendered using the `DesignLibrary` component
  * - Server components are rendered using the `DesignLibraryServer` component
+ * Requires Next.js draft mode so editing/preview requests match the page data path.
  * @param {DesingLibraryAppProps} props - The properties for the Design Library App.
  * @public
  */
-export const DesignLibraryApp = ({
+export const DesignLibraryApp = async ({
   page,
   componentMap,
   loadServerImportMap = noopLoadImportMap,
 }: DesingLibraryAppProps) => {
+  if (!(await isDraftModeEnabled())) {
+    return null;
+  }
+
   const { route } = page.layout.sitecore;
   if (!route) return null;
 

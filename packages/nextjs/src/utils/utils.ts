@@ -49,6 +49,21 @@ export const getEditingSecret = (): string => {
 };
 
 /**
+ * Whether Next.js draft mode is enabled for the current request (App Router).
+ * Returns false when `next/headers` is unavailable (e.g. Pages Router or tests).
+ * @returns {Promise<boolean>} True when draft mode is on.
+ * @internal
+ */
+export async function isDraftModeEnabled(): Promise<boolean> {
+  try {
+    const { draftMode } = await import('next/headers');
+    return (await draftMode()).isEnabled;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Extracts the path from the Next.js context parameters.
  * @param {GetStaticPropsContext | GetServerSidePropsContext} context - The Next.js context parameters.
  * @returns The extracted path.

@@ -24,6 +24,7 @@ describe('Server Component Actions', () => {
   let setCacheStub: sinon.SinonStub;
   let debugEditingStub: sinon.SinonStub;
   let fetchGeneratedComponentFromCacheStub: sinon.SinonStub;
+  let isDraftModeEnabledStub: sinon.SinonStub;
   let updateComponentAction: any;
   let previewComponentAction: any;
   let originalEnv: NodeJS.ProcessEnv;
@@ -34,6 +35,7 @@ describe('Server Component Actions', () => {
     refreshStub = sandbox.stub();
     debugEditingStub = sandbox.stub();
     fetchGeneratedComponentFromCacheStub = sandbox.stub();
+    isDraftModeEnabledStub = sandbox.stub().resolves(true);
 
     originalEnv = process.env;
     process.env = { ...originalEnv, SITECORE_EDGE_URL: 'https://edge.sitecorecloud.io' };
@@ -53,6 +55,9 @@ describe('Server Component Actions', () => {
       '@sitecore-content-sdk/content/codegen': {
         fetchGeneratedComponentFromCache: fetchGeneratedComponentFromCacheStub,
       },
+      '../utils/utils': {
+        isDraftModeEnabled: isDraftModeEnabledStub,
+      },
     });
 
     updateComponentAction = module.updateComponentAction;
@@ -65,6 +70,26 @@ describe('Server Component Actions', () => {
   });
 
   describe('updateComponentAction', () => {
+    it('should not set cache when draft mode is disabled', async () => {
+      isDraftModeEnabledStub.resolves(false);
+
+      const componentUpdate: ComponentUpdateModel = {
+        uid: 'test-uid-draft-off',
+        rendering: {
+          uid: 'test-uid-draft-off',
+          componentName: 'ContentBlock',
+        } as ComponentRendering,
+      };
+
+      await updateComponentAction(componentUpdate);
+
+      expect(setCacheStub).to.not.have.been.called;
+      expect(refreshStub).to.not.have.been.called;
+      expect(debugEditingStub).to.have.been.calledWith(
+        'updateComponentAction skipped (draft mode disabled)'
+      );
+    });
+
     it('should set cache with updated component rendering', async () => {
       const componentUpdate: ComponentUpdateModel = {
         uid: 'test-uid-123',
@@ -134,6 +159,29 @@ describe('Server Component Actions', () => {
   });
 
   describe('previewComponentAction', () => {
+    it('should not set cache when draft mode is disabled', async () => {
+      isDraftModeEnabledStub.resolves(false);
+
+      const previewEvent: PreviewEventModel = {
+        uid: 'test-uid-preview-draft-off',
+        args: {
+          name: 'component:generation:component-preview',
+          message: {
+            cache: { id: 'id', token: 'tok' },
+          },
+        },
+      };
+
+      await previewComponentAction(previewEvent, null);
+
+      expect(fetchGeneratedComponentFromCacheStub).to.not.have.been.called;
+      expect(setCacheStub).to.not.have.been.called;
+      expect(refreshStub).to.not.have.been.called;
+      expect(debugEditingStub).to.have.been.calledWith(
+        'previewComponentAction skipped (draft mode disabled)'
+      );
+    });
+
     it('should fetch generated component data when args is provided', async () => {
       const args: ServerComponentPreviewEventArgs = {
         name: 'component:generation:component-preview',
