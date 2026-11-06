@@ -1,4 +1,5 @@
 import type { RouteData } from '@sitecore-content-sdk/content/layout';
+import type { FEaaSComponentParams } from '@sitecore-content-sdk/react';
 
 /**
  * Stable cache tag strings for Sitecore content (Next.js `cacheTag`, `unstable_cache` tags, `revalidateTag`).
@@ -104,6 +105,24 @@ export function buildSitecoreDictionaryCacheTag(
   const site = sanitizeSitecoreCacheTagSegment(params.site);
   const locale = sanitizeSitecoreCacheTagSegment(params.locale);
   return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:${site}:${locale}`;
+}
+
+/**
+ * Tag for a FEaaS component template fetched on normal pages. FEaaS publishing does not call the
+ * Sitecore revalidate webhook, so entries expire per `cacheLife` unless the app revalidates this tag.
+ * @param {FEaaSComponentParams} params - FEaaS rendering params (host, library, component, version, revision).
+ * @public
+ */
+export function buildFEaaSComponentCacheTag(params: FEaaSComponentParams): string {
+  const host = (params.ComponentHostName ?? '').replace(/^https?:\/\//i, '');
+  const segments = [
+    host,
+    params.LibraryId ?? '',
+    params.ComponentId ?? '',
+    params.ComponentVersion ?? '',
+    String(params.ComponentRevision || 'published'),
+  ].map((s) => sanitizeSitecoreCacheTagSegment(s) || '_');
+  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:feaas:${segments.join(':')}`;
 }
 
 /**

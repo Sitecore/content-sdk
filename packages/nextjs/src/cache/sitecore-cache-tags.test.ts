@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import type { RouteData } from '@sitecore-content-sdk/content/layout';
 import {
+  buildFEaaSComponentCacheTag,
   buildSitecoreDictionaryCacheTag,
   buildSitecoreItemCacheTag,
   buildSitecoreItemCacheTagFromRouteData,
@@ -12,6 +13,34 @@ import {
 } from './sitecore-cache-tags';
 
 describe('sitecore-cache-tags', () => {
+  describe('buildFEaaSComponentCacheTag', () => {
+    const params = {
+      ComponentHostName: 'https://Feaas.Example.com',
+      LibraryId: 'lib',
+      ComponentId: 'comp',
+      ComponentVersion: 'responsive',
+    };
+
+    it('defaults the revision to published and strips the protocol', () => {
+      expect(buildFEaaSComponentCacheTag(params)).to.equal(
+        'sc:feaas:feaas.example.com:lib:comp:responsive:published'
+      );
+    });
+
+    it('uses the explicit revision so staged or numbered revisions get their own tag', () => {
+      expect(buildFEaaSComponentCacheTag({ ...params, ComponentRevision: 'staged' })).to.equal(
+        'sc:feaas:feaas.example.com:lib:comp:responsive:staged'
+      );
+      expect(buildFEaaSComponentCacheTag({ ...params, ComponentRevision: 3 })).to.equal(
+        'sc:feaas:feaas.example.com:lib:comp:responsive:3'
+      );
+    });
+
+    it('keeps the tag shape when params are missing', () => {
+      expect(buildFEaaSComponentCacheTag({})).to.equal('sc:feaas:_:_:_:_:published');
+    });
+  });
+
   describe('sanitizeSitecoreCacheTagSegment', () => {
     it('lowercases and replaces reserved characters', () => {
       expect(sanitizeSitecoreCacheTagSegment('  MySite  ')).to.equal('mysite');
@@ -82,7 +111,7 @@ describe('sitecore-cache-tags', () => {
       })
     );
   });
-  
+
   describe('buildSitecoreDictionaryCacheTag', () => {
     it('scopes by site and locale', () => {
       expect(buildSitecoreDictionaryCacheTag({ site: 'Website', locale: 'da-DK' })).to.equal(
