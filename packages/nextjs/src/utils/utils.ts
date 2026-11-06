@@ -4,12 +4,6 @@ import { REWRITE_HEADER_NAME } from '../proxy/proxy';
 import { EDITING_SECRET_HEADER } from '../editing/constants';
 
 /**
- * Fallback used by `defineConfig` when `SITECORE_EDITING_SECRET` is unset.
- * Must never authorize editing or Design Library server actions.
- */
-const EDITING_SECRET_PLACEHOLDER = 'editing-secret-missing';
-
-/**
  * Since Sitecore editors do not support Fast Refresh:
  * 1. Subscribe on events provided by webpack.
  * 2. Reset editor chromes when build is finished
@@ -66,26 +60,6 @@ export const getConfiguredEditingSecret = (): string => {
 };
 
 /**
- * Non-throwing comparison of a request secret to `SITECORE_EDITING_SECRET`.
- * Empty configured secret, the defineConfig placeholder, or an empty received
- * value all return false. Does not log the token.
- * @param {string | null | undefined} received Secret from the request header or query.
- * @returns {boolean} True when both values are non-empty and equal.
- * @internal
- */
-export const isEditingSecretValid = (received: string | null | undefined): boolean => {
-  const configured = getConfiguredEditingSecret();
-  if (!configured || configured === EDITING_SECRET_PLACEHOLDER) {
-    return false;
-  }
-  const value = received?.trim() || '';
-  if (!value) {
-    return false;
-  }
-  return value === configured;
-};
-
-/**
  * Reads Next.js request headers when available (App Router / server actions).
  * Returns null when `headers()` is unavailable so Pages Router callers can continue.
  * @returns {Promise<Headers | null>} The request headers, or null.
@@ -108,7 +82,8 @@ export const getEditingRequestHeaders = async (): Promise<Headers | null> => {
  */
 export const isDesignLibraryAuthorizedFromHeaders = async (): Promise<boolean> => {
   const headerList = await getEditingRequestHeaders();
-  return isEditingSecretValid(headerList?.get(EDITING_SECRET_HEADER));
+  const envSecret = getEditingSecret();
+  return envSecret === headerList?.get(EDITING_SECRET_HEADER);
 };
 
 /**
