@@ -6,7 +6,7 @@
 
 # Interface: SuggestResponse\<T\>
 
-Defined in: [search-service.ts:169](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/search/src/search-service.ts#L169)
+Defined in: [search-service.ts:169](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/search/src/search-service.ts#L169)
 
 Response from the Suggest Service.
 
@@ -22,7 +22,7 @@ Response from the Suggest Service.
 
 > **previewResults**: `T`[]
 
-Defined in: [search-service.ts:177](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/search/src/search-service.ts#L177)
+Defined in: [search-service.ts:177](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/search/src/search-service.ts#L177)
 
 Document previews from preview results mode.
 
@@ -32,6 +32,6 @@ Document previews from preview results mode.
 
 > **querySuggestions**: [`QuerySuggestionItem`](QuerySuggestionItem.md)[]
 
-Defined in: [search-service.ts:173](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/search/src/search-service.ts#L173)
+Defined in: [search-service.ts:173](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/search/src/search-service.ts#L173)
 
 Autocomplete completions from query suggestion mode.

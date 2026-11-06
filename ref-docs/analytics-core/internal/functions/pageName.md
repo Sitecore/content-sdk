@@ -8,7 +8,7 @@
 
 > **pageName**(): `string`
 
-Defined in: [analytics-core/src/infer/infer.ts:19](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/analytics-core/src/infer/infer.ts#L19)
+Defined in: [analytics-core/src/infer/infer.ts:19](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/analytics-core/src/infer/infer.ts#L19)
 
 **`Internal`**
 

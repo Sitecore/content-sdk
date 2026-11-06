@@ -8,7 +8,7 @@
 
 > **CapabilityDefinition** = `object`
 
-Defined in: [packages/core/src/capabilities.ts:48](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L48)
+Defined in: [packages/core/src/capabilities.ts:58](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/core/src/capabilities.ts#L58)
 
 A capability offered by a package.
 
@@ -18,7 +18,7 @@ A capability offered by a package.
 
 > `optional` **filter?**: [`CapabilityFilter`](CapabilityFilter.md)
 
-Defined in: [packages/core/src/capabilities.ts:52](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L52)
+Defined in: [packages/core/src/capabilities.ts:62](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/core/src/capabilities.ts#L62)
 
 Optional build-time check that the application uses the capability.
 
@@ -26,9 +26,9 @@ Optional build-time check that the application uses the capability.
 
 ### metadata?
 
-> `optional` **metadata?**: [`CapabilityMetadata`](CapabilityMetadata.md)
+> `optional` **metadata?**: [`CapabilityMetadata`](CapabilityMetadata.md) \| [`CapabilityMetadataResolver`](CapabilityMetadataResolver.md)
 
-Defined in: [packages/core/src/capabilities.ts:54](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L54)
+Defined in: [packages/core/src/capabilities.ts:64](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/core/src/capabilities.ts#L64)
 
 Optional metadata about the capability.
 
@@ -38,6 +38,6 @@ Optional metadata about the capability.
 
 > **value**: `boolean` \| [`CapabilityMap`](CapabilityMap.md)\<`CapabilityDefinition`\>
 
-Defined in: [packages/core/src/capabilities.ts:50](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L50)
+Defined in: [packages/core/src/capabilities.ts:60](https://github.com/Sitecore/content-sdk/blob/8fa5fac9f3a10278127871abd6e608e014e74155/packages/core/src/capabilities.ts#L60)
 
 Whether the capability is offered.
