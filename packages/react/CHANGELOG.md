@@ -1,5 +1,19 @@
 # @sitecore-content-sdk/react
 
+## 3.0.0
+
+### Minor Changes
+
+- minor `@sitecore-content-sdk/core` dependency update:
+  - Add package capability exports and build-time capability discovery. Generated application metadata
+    now includes the capabilities supported and used by the application, and editing configuration
+    endpoints expose the resolved capability keys. ([e2bacaf](https://github.com/sitecore/content-sdk/commit/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad))
+
+### Patch Changes
+
+- Fix `DateField` hydration errors in Page Builder. In editing mode, `DateField` now always renders an element (default `span`), so a missing `tag` no longer causes a structural hydration mismatch. ([85bfea1](https://github.com/sitecore/content-sdk/commit/85bfea16a8a93e2d5b0410a454a1d882cebba54b))
+- Read page mode from `props.page` in `withDatasourceCheck()` so it can run in an App Router Server Component. When `page` is not passed, the page mode is still read from `SitecoreProvider` context on the client, so existing usages keep their current behavior. Wrap the component in its own module, and pass `page` when rendering it in a Server Component outside a `Placeholder`. ([10c92fa](https://github.com/sitecore/content-sdk/commit/10c92fa4a2d5b496313949dc30b1527d5cd4c787))
+
 ## 2.5.0
 
 ### Minor Changes
