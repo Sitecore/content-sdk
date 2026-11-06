@@ -25,7 +25,7 @@ import {
   PREVIEW_COOKIES,
 } from './utils';
 import type { AllowedQueryParams } from './types';
-import { EDITING_PARAMS_HEADER, EDITING_SECRET_HEADER } from './constants';
+import { EDITING_PARAMS_HEADER } from './constants';
 
 /**
  * Configuration for the Editing Render Middleware.
@@ -204,7 +204,6 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
       const propagatedHeaders: Record<string, string> = {
         ...getHeadersForPropagation(headers),
         [EDITING_PARAMS_HEADER]: JSON.stringify(previewData),
-        [EDITING_SECRET_HEADER]: secret,
       };
       const html = await getEditingRequestHtml(
         requestUrl,
