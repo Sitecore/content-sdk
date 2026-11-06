@@ -814,6 +814,35 @@ describe('EditingRenderMiddleware', () => {
     expect(fetchRequestHeaders).to.not.have.property('otherHeader');
   });
 
+  it('should propagate previewData as JSON in EDITING_PARAMS_HEADER', async () => {
+    const req = mockRequest({ query });
+    const res = mockResponse();
+
+    const middleware = new EditingRenderMiddleware();
+    const handler = middleware.getHandler();
+
+    const fetcherGetStub = sinon
+      .stub(middleware['dataFetcher'], 'get')
+      .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+
+    await handler(req, res);
+
+    const fetchRequestHeaders = fetcherGetStub.getCall(0).args[1]?.headers;
+
+    expect(fetchRequestHeaders).to.have.property(EDITING_PARAMS_HEADER);
+
+    const editingParams = JSON.parse(fetchRequestHeaders![EDITING_PARAMS_HEADER]);
+    expect(editingParams).to.deep.equal({
+      site: 'website',
+      itemId: '{11111111-1111-1111-1111-111111111111}',
+      language: 'en',
+      variantId: 'dev',
+      version: 'latest',
+      mode: 'edit',
+      layoutKind: 'shared',
+    });
+  });
+
   it('should include allowed query params in EDITING_PARAMS_HEADER previewData', async () => {
     const customQuery = {
       ...query,
