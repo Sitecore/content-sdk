@@ -249,16 +249,26 @@ export type FEaaSComponentParams = {
     RenderingIdentifier?: string;
 };
 
-// Warning: (ae-forgotten-export) The symbol "FEaaSComponentServerProps" needs to be exported by the entry point api-surface.d.ts
 // Warning: (ae-forgotten-export) The symbol "FEaaSComponentClientProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
 export type FEaaSComponentProps = FEaaSComponentServerProps & FEaaSComponentClientProps;
 
-// Warning: (ae-forgotten-export) The symbol "FEaaSServerWrapperProps" needs to be exported by the entry point api-surface.d.ts
-//
+// @public
+export type FEaaSComponentServerProps = {
+    template?: string;
+    revisionFallback?: RevisionType;
+    fetchedData?: FEAAS.DataScopes;
+};
+
 // @public
 export const FEaaSServerWrapper: (props: FEaaSServerWrapperProps) => Promise<React_2.JSX.Element>;
+
+// @public
+export type FEaaSServerWrapperProps = FEaaSComponentProps & {
+    rendering?: ComponentRendering;
+    page?: Page;
+};
 
 // @public
 const FEaaSWrapper: (props: FEaaSComponentProps) => JSX_2.Element;
