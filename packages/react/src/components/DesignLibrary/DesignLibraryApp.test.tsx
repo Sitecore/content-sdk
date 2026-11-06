@@ -56,8 +56,13 @@ describe('<DesignLibraryApp />', () => {
       .returns(<div data-testid="design-library-runtime">Runtime Rendered</div>);
 
     const module = proxyquire('./DesignLibraryApp', {
-      './DesignLibraryRuntime': {
-        DesignLibraryRuntime: DesignLibraryRuntimeStub,
+      '#rsc-env': {
+        '@noCallThru': true,
+        rsc: true,
+        loadDesignLibraryRuntime: () =>
+          Promise.resolve({
+            DesignLibraryRuntime: DesignLibraryRuntimeStub,
+          }),
       },
     });
 
