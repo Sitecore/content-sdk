@@ -13,6 +13,8 @@ import {
   PREVIEW_KEY,
 } from '@sitecore-content-sdk/content/editing';
 import {
+  EDITING_PARAMS_HEADER,
+  EDITING_SECRET_HEADER,
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from '../editing/constants';
@@ -258,6 +260,7 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.status).to.equal(401);
       const responseBody = JSON.parse(res.body);
       expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
+      expect(getEditingRequestHtmlStub).to.not.have.been.called;
     });
 
     it('should return 401 for missing editing secret', async () => {
@@ -274,6 +277,7 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.status).to.equal(401);
       const responseBody = JSON.parse(res.body);
       expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
+      expect(getEditingRequestHtmlStub).to.not.have.been.called;
     });
 
     it('should return 400 for missing required query parameters', async () => {
@@ -367,7 +371,18 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(propagatedHeaders).to.deep.equal({
         authorization: 'Bearer token123',
         cookie: 'test=value',
+        [EDITING_PARAMS_HEADER]: JSON.stringify({
+          itemId: mockQuery.sc_itemid,
+          language: mockQuery.sc_lang,
+          site: mockQuery.sc_site,
+          mode: mockQuery.mode,
+          variantId: mockQuery.sc_variant,
+          version: mockQuery.sc_version,
+          layoutKind: mockQuery.sc_layoutKind,
+        }),
+        [EDITING_SECRET_HEADER]: secret,
       });
+      expect(JSON.parse(propagatedHeaders[EDITING_PARAMS_HEADER])).to.not.have.property('secret');
 
       // Verify converted cookies from cookieStore.getAll()
       expect(convertedCookies).to.be.an('array');
@@ -434,7 +449,50 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
 
       const [, , propagatedHeaders] = getEditingRequestHtmlStub.firstCall.args;
-      expect(propagatedHeaders).to.deep.equal(expectedPropagatedHeaders);
+      expect(propagatedHeaders).to.deep.include(expectedPropagatedHeaders);
+      expect(propagatedHeaders[EDITING_PARAMS_HEADER]).to.be.a('string');
+      expect(propagatedHeaders[EDITING_SECRET_HEADER]).to.equal(secret);
+    });
+
+    it('should include previewTime in editing params when sc_previewTime is present in query params', async () => {
+      req.nextUrl!.searchParams = mockSearchParams({
+        [QUERY_PARAM_EDITING_SECRET]: secret,
+        mode: 'edit',
+        route: '/',
+        sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+        sc_lang: 'en',
+        sc_site: 'website',
+        sc_previewTime: '2024-12-25T10:00:00Z',
+      });
+
+      await handlers.GET(req as NextRequest);
+
+      expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
+
+      // Verify previewTime is included in the EDITING_PARAMS_HEADER JSON, which flows to Edge GraphQL via PreviewProxy
+      const [, , propagatedHeaders] = getEditingRequestHtmlStub.firstCall.args;
+      const editingParams = JSON.parse(propagatedHeaders[EDITING_PARAMS_HEADER]);
+      expect(editingParams).to.have.property('previewTime', '2024-12-25T10:00:00Z');
+    });
+
+    it('should not include previewTime in editing params when sc_previewTime is absent (backward compatibility)', async () => {
+      req.nextUrl!.searchParams = mockSearchParams({
+        [QUERY_PARAM_EDITING_SECRET]: secret,
+        mode: 'edit',
+        route: '/',
+        sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+        sc_lang: 'en',
+        sc_site: 'website',
+      });
+
+      await handlers.GET(req as NextRequest);
+
+      expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
+
+      // Verify previewTime is absent from the EDITING_PARAMS_HEADER JSON
+      const [, , propagatedHeaders] = getEditingRequestHtmlStub.firstCall.args;
+      const editingParams = JSON.parse(propagatedHeaders[EDITING_PARAMS_HEADER]);
+      expect(editingParams).to.not.have.property('previewTime');
     });
 
     it('should pass cookies correctly for internal request', async () => {
@@ -1101,6 +1159,7 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.status).to.equal(401);
       const responseBody = JSON.parse(res.body);
       expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
+      expect(fetchStub).to.not.have.been.called;
     });
 
     it('should return 401 for missing editing secret', async () => {
@@ -1117,6 +1176,7 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(res.status).to.equal(401);
       const responseBody = JSON.parse(res.body);
       expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
+      expect(fetchStub).to.not.have.been.called;
     });
 
     it('should proxy POST request with correct headers and cookies', async () => {
@@ -1142,6 +1202,33 @@ describe('createEditingRenderRouteHandlers', () => {
       const fetchCall = fetchStub.getCall(0);
       const fetchHeaders = fetchCall.args[1].headers as Headers;
       expect(fetchHeaders.get('cookie')).to.include('__prerender_bypass=some-value');
+    });
+
+    it('should propagate editing preview data via EDITING_PARAMS_HEADER on forwarded POST', async () => {
+      fetchStub.resolves({
+        status: 200,
+        statusText: 'OK',
+        data: '<html>Server Action Response</html>',
+      });
+
+      await handlers.POST(req);
+
+      expect(fetchStub.calledOnce).to.be.true;
+      const fetchHeaders = fetchStub.getCall(0).args[1].headers as Headers;
+      const packed = fetchHeaders.get(EDITING_PARAMS_HEADER);
+      expect(packed).to.be.a('string');
+      const parsed = JSON.parse(packed as string);
+      expect(parsed).to.deep.equal({
+        itemId: mockQuery.sc_itemid,
+        language: mockQuery.sc_lang,
+        site: mockQuery.sc_site,
+        mode: mockQuery.mode,
+        variantId: mockQuery.sc_variant,
+        version: mockQuery.sc_version,
+        layoutKind: mockQuery.sc_layoutKind,
+      });
+      expect(parsed).to.not.have.property('secret');
+      expect(fetchHeaders.get(EDITING_SECRET_HEADER)).to.equal(secret);
     });
 
     it('should proxy POST request with mapped querry string parameters and propagated vercel protection parameters', async () => {
