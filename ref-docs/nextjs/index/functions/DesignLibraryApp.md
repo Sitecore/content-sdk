@@ -8,7 +8,7 @@
 
 > **DesignLibraryApp**(`props`): `Promise`\<`null` \| `Element`\>
 
-Defined in: [nextjs/src/components/DesignLibrary/DesignLibraryApp.tsx:18](https://github.com/Sitecore/content-sdk/blob/2802b7af64926841fba2ca3c30b0e425c6eab6ff/packages/nextjs/src/components/DesignLibrary/DesignLibraryApp.tsx#L18)
+Defined in: [nextjs/src/components/DesignLibrary/DesignLibraryApp.tsx:18](https://github.com/Sitecore/content-sdk/blob/a8134eb1d6b0ccc6bea8513dc8a31f6c8f5bb353/packages/nextjs/src/components/DesignLibrary/DesignLibraryApp.tsx#L18)
 
 Next.js Design Library entry. Passes server actions that authorize the editing
 secret header into the React Design Library. The React package keeps empty

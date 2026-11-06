@@ -8,7 +8,7 @@
 
 > **DesignLibraryApp**(`props`): `Promise`\<`null` \| `Element`\>
 
-Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryApp.tsx:12](https://github.com/Sitecore/content-sdk/blob/2802b7af64926841fba2ca3c30b0e425c6eab6ff/packages/react/src/components/DesignLibrary/DesignLibraryApp.tsx#L12)
+Defined in: [packages/react/src/components/DesignLibrary/DesignLibraryApp.tsx:12](https://github.com/Sitecore/content-sdk/blob/a8134eb1d6b0ccc6bea8513dc8a31f6c8f5bb353/packages/react/src/components/DesignLibrary/DesignLibraryApp.tsx#L12)
 
 Design Library component intended to be used by the NextJs app router application.
 This component serves as a router between client and server component rendering modes
