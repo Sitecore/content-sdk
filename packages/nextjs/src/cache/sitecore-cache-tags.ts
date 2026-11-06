@@ -1,4 +1,5 @@
 import type { RouteData } from '@sitecore-content-sdk/content/layout';
+import type { FEaaSComponentParams } from '@sitecore-content-sdk/react';
 
 /**
  * Stable cache tag strings for Sitecore content (Next.js `cacheTag`, `unstable_cache` tags, `revalidateTag`).
@@ -104,6 +105,23 @@ export function buildSitecoreDictionaryCacheTag(
   const site = sanitizeSitecoreCacheTagSegment(params.site);
   const locale = sanitizeSitecoreCacheTagSegment(params.locale);
   return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:dict:${site}:${locale}`;
+}
+
+/**
+ * Cache tag for a published FEaaS component.
+ * @param {FEaaSComponentParams} params - Host, library, component, version, and revision.
+ * @public
+ */
+export function buildFEaaSComponentCacheTag(params: FEaaSComponentParams): string {
+  const host = (params.ComponentHostName ?? '').replace(/^https?:\/\//i, '');
+  const segments = [
+    host,
+    params.LibraryId ?? '',
+    params.ComponentId ?? '',
+    params.ComponentVersion ?? '',
+    String(params.ComponentRevision || 'published'),
+  ].map((s) => sanitizeSitecoreCacheTagSegment(s) || '_');
+  return `${SITECORE_CONTENT_CACHE_TAG_PREFIX}:feaas:${segments.join(':')}`;
 }
 
 /**
