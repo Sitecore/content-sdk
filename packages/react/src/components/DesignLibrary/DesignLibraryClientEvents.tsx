@@ -3,12 +3,10 @@ import React, { useEffect } from 'react';
 import * as dlHelpers from '@sitecore-content-sdk/core/editing';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
 import {
-  updateComponentAction,
-  previewComponentAction,
-} from '../../server-actions/update-server-component-action';
-import {
   DesignLibraryPreviewEventsProps,
   DesignLibraryVariantGenerationEventsProps,
+  PreviewComponentAction,
+  UpdateComponentAction,
 } from './models';
 import { useSitecore } from '../../enhancers/withSitecore';
 
@@ -20,14 +18,18 @@ let {
   sendErrorEvent,
 } = codegen;
 let { getDesignLibraryStatusEvent, addComponentUpdateHandler, postToDesignLibrary } = dlHelpers;
-let _updateComponentAction = updateComponentAction;
-let _previewComponentAction = previewComponentAction;
+
+const emptyUpdateComponentAction: UpdateComponentAction = async () => {
+  return;
+};
+
+const emptyPreviewComponentAction: PreviewComponentAction = async () => {
+  return;
+};
 
 export const __mockDependencies = (mocks: any) => {
   postToDesignLibrary = mocks.postToDesignLibrary;
   addComponentUpdateHandler = mocks.addComponentUpdateHandler;
-  _updateComponentAction = mocks.updateComponentAction;
-  _previewComponentAction = mocks.previewComponentAction;
   addServerComponentPreviewHandler = mocks.addServerComponentPreviewHandler;
   getDesignLibraryImportMapEvent = mocks.getDesignLibraryImportMapEvent;
   getDesignLibraryComponentPropsEvent = mocks.getDesignLibraryComponentPropsEvent;
@@ -45,6 +47,7 @@ export const __mockDependencies = (mocks: any) => {
 export const DesignLibraryPreviewEvents = ({
   designLibraryStatus,
   component,
+  updateComponentAction = emptyUpdateComponentAction,
 }: DesignLibraryPreviewEventsProps) => {
   useEffect(() => {
     if (!component?.uid) return;
@@ -52,13 +55,13 @@ export const DesignLibraryPreviewEvents = ({
     postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid, true));
 
     const unsubUpdate = addComponentUpdateHandler(component, (rendering) => {
-      _updateComponentAction({ uid: rendering.uid!, rendering });
+      updateComponentAction({ uid: rendering.uid!, rendering });
     });
 
     return () => {
       unsubUpdate && unsubUpdate();
     };
-  }, [component, designLibraryStatus]);
+  }, [component, designLibraryStatus, updateComponentAction]);
 
   return <></>;
 };
@@ -77,6 +80,8 @@ export const DesignLibraryVariantGenerationEvents = ({
   importMap,
   componentInitError,
   generatedComponentData,
+  updateComponentAction = emptyUpdateComponentAction,
+  previewComponentAction = emptyPreviewComponentAction,
 }: DesignLibraryVariantGenerationEventsProps) => {
   const { api } = useSitecore();
 
@@ -86,7 +91,7 @@ export const DesignLibraryVariantGenerationEvents = ({
     postToDesignLibrary(getDesignLibraryStatusEvent(designLibraryStatus, component.uid, true));
 
     const unsubUpdate = addComponentUpdateHandler(component, (rendering) => {
-      _updateComponentAction({
+      updateComponentAction({
         uid: rendering.uid!,
         rendering,
         generatedComponentData,
@@ -94,7 +99,7 @@ export const DesignLibraryVariantGenerationEvents = ({
     });
 
     const unsubPreview = addServerComponentPreviewHandler((eventArgs) => {
-      _previewComponentAction(
+      previewComponentAction(
         {
           uid: component.uid!,
           args: eventArgs,
@@ -127,7 +132,16 @@ export const DesignLibraryVariantGenerationEvents = ({
       unsubUpdate && unsubUpdate();
       unsubPreview && unsubPreview();
     };
-  }, [component, designLibraryStatus, importMap, componentInitError, generatedComponentData]);
+  }, [
+    component,
+    designLibraryStatus,
+    importMap,
+    componentInitError,
+    generatedComponentData,
+    updateComponentAction,
+    previewComponentAction,
+    api?.edge?.edgeUrl,
+  ]);
 
   return <></>;
 };

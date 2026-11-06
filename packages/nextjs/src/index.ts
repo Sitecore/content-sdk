@@ -118,6 +118,7 @@ export {
 // TODO: remove in future major release
 export { FEaaSWrapper };
 export { BYOCWrapper };
+export { DesignLibraryApp } from './components/DesignLibrary/DesignLibraryApp';
 
 export {
   ComponentMap,
@@ -142,7 +143,6 @@ export {
   FileField,
   RichTextField,
   DesignLibrary,
-  DesignLibraryApp,
   DefaultEmptyFieldEditingComponentImage,
   DefaultEmptyFieldEditingComponentText,
   PlaceholderComponentProps,

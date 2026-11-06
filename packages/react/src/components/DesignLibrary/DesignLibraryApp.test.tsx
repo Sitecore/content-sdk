@@ -12,30 +12,14 @@ import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
 import { DesignLibraryMode } from '@sitecore-content-sdk/core/editing';
 import { ComponentMapEntry } from '../models';
 import { getTestLayoutData } from '../../test-data/component-editing-data';
-import { DesignLibraryApp } from './DesignLibraryApp';
-import * as DesignLibraryModule from './DesignLibrary';
-import * as DesignLibraryServerModule from './DesignLibraryServer';
+import proxyquire from 'proxyquire';
 
 use(sinonChai);
 
 describe('<DesignLibraryApp />', () => {
-  let DesignLibraryStub: sinon.SinonStub;
-  let DesignLibraryServerStub: sinon.SinonStub;
+  let DesignLibraryRuntimeStub: sinon.SinonStub;
+  let DesignLibraryApp: any;
   const sandbox = sinon.createSandbox();
-
-  beforeEach(() => {
-    DesignLibraryStub = sandbox
-      .stub(DesignLibraryModule, 'DesignLibrary')
-      .returns(<div data-testid="design-library-client">Client Component Rendered</div>);
-
-    DesignLibraryServerStub = sandbox
-      .stub(DesignLibraryServerModule, 'DesignLibraryServer')
-      .resolves(<div data-testid="design-library-server">Server Component Rendered</div>);
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
 
   const modeLibrary: PageMode = {
     name: DesignLibraryMode.Normal,
@@ -48,15 +32,13 @@ describe('<DesignLibraryApp />', () => {
 
   const ClientComponent: React.FC<{ [prop: string]: unknown }> = () => <div>Client Component</div>;
 
-  const ServerComponent: React.FC<{ [prop: string]: unknown }> = () => <div>Server Component</div>;
-
   const createComponentMap = (
     componentName: string,
     componentType: 'client' | 'server'
   ): Map<string, ComponentMapEntry> => {
     const map = new Map<string, ComponentMapEntry>();
     map.set(componentName, {
-      component: componentType === 'client' ? ClientComponent : ServerComponent,
+      component: ClientComponent,
       componentType,
     });
     return map;
@@ -68,84 +50,56 @@ describe('<DesignLibraryApp />', () => {
     mode: pageMode,
   });
 
-  it('should return null when route is null', () => {
+  beforeEach(() => {
+    DesignLibraryRuntimeStub = sandbox
+      .stub()
+      .returns(<div data-testid="design-library-runtime">Runtime Rendered</div>);
+
+    const module = proxyquire('./DesignLibraryApp', {
+      './DesignLibraryRuntime': {
+        DesignLibraryRuntime: DesignLibraryRuntimeStub,
+      },
+    });
+
+    DesignLibraryApp = module.DesignLibraryApp;
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  it('should return null and not import runtime when route is null', async () => {
     const page: Page = {
       locale: 'en',
       layout: { sitecore: { context: {}, route: null } },
       mode: modeLibrary,
     };
 
-    const componentMap = createComponentMap('ContentBlock', 'client');
-
-    const awaitedDesignLibraryServer = DesignLibraryApp({
+    const result = await DesignLibraryApp({
       page,
       rendering: page.layout.sitecore.route as any,
-      componentMap,
+      componentMap: createComponentMap('ContentBlock', 'client'),
       loadServerImportMap: sinon.stub(),
     });
 
-    render(awaitedDesignLibraryServer);
-
-    expect(DesignLibraryStub).to.not.have.been.called;
-    expect(DesignLibraryServerStub).to.not.have.been.called;
+    expect(result).to.equal(null);
+    expect(DesignLibraryRuntimeStub).to.not.have.been.called;
   });
 
-  it('should render DesignLibrary when component is client type', () => {
+  it('should render DesignLibraryRuntime when route is present', async () => {
     const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
     const page = getPage(layoutData, modeLibrary);
     const componentMap = createComponentMap('ContentBlock', 'client');
-    const awaitedDesignLibraryServer = DesignLibraryApp({
+
+    const result = await DesignLibraryApp({
       page,
       rendering: layoutData.sitecore.route as any,
       componentMap,
       loadServerImportMap: sinon.stub(),
     });
 
-    render(awaitedDesignLibraryServer);
+    render(result);
 
-    expect(DesignLibraryStub).to.have.been.calledOnce;
-    expect(DesignLibraryServerStub).to.not.have.been.called;
-  });
-
-  it('should render DesignLibraryServer when component is server type', async () => {
-    const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
-    const page = getPage(layoutData, modeLibrary);
-    const componentMap = createComponentMap('ContentBlock', 'server');
-    const awaitedDesignLibraryServer = await DesignLibraryApp({
-      page,
-      rendering: layoutData.sitecore.route as any,
-      componentMap,
-      loadServerImportMap: sinon.stub(),
-    });
-
-    render(awaitedDesignLibraryServer);
-
-    expect(DesignLibraryServerStub).to.have.been.calledOnce;
-    expect(DesignLibraryStub).to.not.have.been.called;
-
-    expect(DesignLibraryServerStub).to.have.been.calledWith({
-      page,
-      componentMap,
-      loadServerImportMap: sinon.match.func,
-      rendering: layoutData.sitecore.route,
-    });
-  });
-
-  it('should render DesignLibraryServer when component is not in map (treated as server)', async () => {
-    const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
-    const page = getPage(layoutData, modeLibrary);
-    const componentMap = new Map<string, ComponentMapEntry>();
-
-    const awaitedDesignLibraryServer = await DesignLibraryApp({
-      page,
-      rendering: layoutData.sitecore.route as any,
-      componentMap,
-      loadServerImportMap: sinon.stub(),
-    });
-
-    render(awaitedDesignLibraryServer);
-
-    expect(DesignLibraryServerStub).to.have.been.calledOnce;
-    expect(DesignLibraryStub).to.not.have.been.called;
+    expect(DesignLibraryRuntimeStub).to.have.been.calledOnce;
   });
 });

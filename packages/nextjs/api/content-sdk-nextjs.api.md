@@ -32,7 +32,7 @@ import { DefaultEmptyFieldEditingComponentImage } from '@sitecore-content-sdk/re
 import { DefaultEmptyFieldEditingComponentText } from '@sitecore-content-sdk/react';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core/client';
 import { DesignLibrary } from '@sitecore-content-sdk/react';
-import { DesignLibraryApp } from '@sitecore-content-sdk/react';
+import { DesignLibraryApp as DesignLibraryApp_2 } from '@sitecore-content-sdk/react';
 import { DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/core/editing';
 import { DictionaryPhrases } from '@sitecore-content-sdk/core/i18n';
 import { DictionaryService } from '@sitecore-content-sdk/core/i18n';
@@ -348,7 +348,10 @@ export const defineMiddleware: (...middlewares: Middleware[]) => {
 
 export { DesignLibrary }
 
-export { DesignLibraryApp }
+// Warning: (ae-forgotten-export) The symbol "DesignLibraryAppProps" needs to be exported by the entry point api-surface.d.ts
+//
+// @public
+export const DesignLibraryApp: (props: DesignLibraryAppProps) => Promise<React_2.JSX.Element | null>;
 
 export { DictionaryPhrases }
 

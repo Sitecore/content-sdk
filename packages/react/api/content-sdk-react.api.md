@@ -22,6 +22,7 @@ import { ErrorPage } from '@sitecore-content-sdk/core/client';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import { Field } from '@sitecore-content-sdk/core/layout';
 import { FieldMetadata } from '@sitecore-content-sdk/core/layout';
+import { GeneratedComponentData } from '@sitecore-content-sdk/core/codegen';
 import { GenericFieldValue } from '@sitecore-content-sdk/core/layout';
 import { getChildPlaceholder } from '@sitecore-content-sdk/core/layout';
 import { getContentStylesheetLink } from '@sitecore-content-sdk/core/layout';
@@ -53,6 +54,7 @@ import { RetryStrategy } from '@sitecore-content-sdk/core/client';
 import { RouteData } from '@sitecore-content-sdk/core/layout';
 import { SearchDocument } from '@sitecore-content-sdk/search';
 import { SearchParameters } from '@sitecore-content-sdk/search';
+import { ServerComponentPreviewEventArgs } from '@sitecore-content-sdk/core/codegen';
 import { SitecoreConfig } from '@sitecore-content-sdk/core/config';
 import { SitePathService } from '@sitecore-content-sdk/core/site';
 import { SitePathServiceConfig } from '@sitecore-content-sdk/core/site';
@@ -172,7 +174,7 @@ export const DesignLibrary: {
 // Warning: (ae-forgotten-export) The symbol "DesingLibraryAppProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export const DesignLibraryApp: ({ page, componentMap, loadServerImportMap, }: DesingLibraryAppProps) => React_2.JSX.Element | null;
+export const DesignLibraryApp: (props: DesingLibraryAppProps) => Promise<React_2.JSX.Element | null>;
 
 export { DictionaryPhrases }
 

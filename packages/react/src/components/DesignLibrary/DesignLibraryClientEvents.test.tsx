@@ -114,13 +114,18 @@ describe('<DesignLibraryClientEvents />', () => {
   ) => {
     const layoutData: LayoutServiceData = getTestLayoutData();
     const page = getPage(layoutData, pageMode);
+    const eventsProps = {
+      updateComponentAction: updateComponentActionSpy,
+      previewComponentAction: previewComponentActionSpy,
+      ...props,
+    };
 
     return render(
       <SitecoreProvider page={page} componentMap={components} api={api}>
         {isVariantGeneration ? (
-          <DesignLibraryVariantGenerationEvents {...props} />
+          <DesignLibraryVariantGenerationEvents {...eventsProps} />
         ) : (
-          <DesignLibraryPreviewEvents {...props} />
+          <DesignLibraryPreviewEvents {...eventsProps} />
         )}
       </SitecoreProvider>
     );

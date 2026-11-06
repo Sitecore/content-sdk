@@ -3,6 +3,7 @@ import {
   GeneratedComponentData,
   ImportEntry,
   ImportEntryInfo,
+  ServerComponentPreviewEventArgs,
 } from '@sitecore-content-sdk/core/codegen';
 import {
   ComponentFields,
@@ -33,6 +34,75 @@ export type DesignLibraryProps = {
   loadImportMap?: () => Promise<ImportMapImport>;
 };
 
+export type ComponentUpdateModel = {
+  /**
+   * Unique identifier of the component being updated.
+   */
+  uid: string;
+  /**
+   * The updated component rendering data.
+   */
+  rendering?: ComponentRendering;
+  /**
+   * The data needed for generated component to be rendered on the server. Required if update event is coming for a generated component in variant generation mode.
+   */
+  generatedComponentData?: GeneratedComponentData;
+};
+
+export type ComponentPreviewModel = {
+  /**
+   * Unique identifier of the component being updated.
+   */
+  uid: string;
+  /**
+   * The data needed for generated component to be rendered on the server
+   */
+  generatedComponentData?: GeneratedComponentData;
+  /**
+   * Error message in case fetching generated component data from secured cache endpoint fails.
+   */
+  error?: string;
+};
+
+export type PreviewEventModel = {
+  /**
+   * Unique identifier of the component being updated.
+   */
+  uid: string;
+  /**
+   * The preview component event arguments in variant generation mode.
+   */
+  args: ServerComponentPreviewEventArgs;
+};
+
+/**
+ * Server action invoked when Design Studio sends a component update.
+ */
+export type UpdateComponentAction = (updatedComponent: ComponentUpdateModel) => Promise<void>;
+
+/**
+ * Server action invoked when Design Studio sends a generated-component preview.
+ */
+export type PreviewComponentAction = (
+  previewEvent: PreviewEventModel,
+  edgeUrl?: string
+) => Promise<void>;
+
+/**
+ * Optional server actions. Callers that cannot authorize the editing secret omit them,
+ * and Design Library client events then no-op.
+ */
+export type DesignLibraryServerActionProps = {
+  /**
+   * Overrides the empty default update action.
+   */
+  updateComponentAction?: UpdateComponentAction;
+  /**
+   * Overrides the empty default preview action.
+   */
+  previewComponentAction?: PreviewComponentAction;
+};
+
 export type DesignLibraryServerProps = {
   /**
    * Component Map will be used to map Sitecore component names to app implementation
@@ -50,7 +120,7 @@ export type DesignLibraryServerProps = {
    * The dynamic import for sever import map to be used in variant generation mode.
    */
   loadServerImportMap: () => Promise<ImportMapImport>;
-};
+} & DesignLibraryServerActionProps;
 
 export type DesingLibraryAppProps = DesignLibraryServerProps;
 
@@ -67,7 +137,7 @@ export type DesignLibraryPreviewEventsProps = {
    * The component rendering data that is being edited in the Design Studio.
    */
   component: ComponentRendering;
-};
+} & DesignLibraryServerActionProps;
 
 export type DesignLibraryVariantGenerationEventsProps = DesignLibraryPreviewEventsProps & {
   /**

@@ -12,10 +12,7 @@ import {
   COMPONENT_PREVIEW_CACHE_KEY_PREFIX,
   updateComponent as updateComponentOriginal,
 } from '@sitecore-content-sdk/core/editing';
-import {
-  ComponentUpdateModel,
-  ComponentPreviewModel,
-} from '../../server-actions/update-server-component-action';
+import type { ComponentPreviewModel, ComponentUpdateModel } from './models';
 import * as codegen from '@sitecore-content-sdk/core/codegen';
 import { AppPlaceholder, PlaceholderMetadata } from '../Placeholder';
 import { DesignLibraryErrorBoundary } from './DesignLibraryErrorBoundary';
@@ -60,6 +57,8 @@ export const DesignLibraryServer = async ({
   componentMap,
   rendering,
   loadServerImportMap,
+  updateComponentAction,
+  previewComponentAction,
 }: DesignLibraryServerProps) => {
   if (!page.mode.isDesignLibrary) {
     return null;
@@ -73,12 +72,20 @@ export const DesignLibraryServer = async ({
         rendering={rendering}
         loadServerImportMap={loadServerImportMap}
         componentMap={componentMap}
+        updateComponentAction={updateComponentAction}
+        previewComponentAction={previewComponentAction}
       />
     );
   }
 
   return (
-    <DesignLibraryServerPreview page={page} rendering={rendering} componentMap={componentMap} />
+    <DesignLibraryServerPreview
+      page={page}
+      rendering={rendering}
+      componentMap={componentMap}
+      updateComponentAction={updateComponentAction}
+      previewComponentAction={previewComponentAction}
+    />
   );
 };
 
@@ -97,6 +104,8 @@ export const DesignLibraryServerVariantGeneration = async ({
   rendering,
   loadServerImportMap,
   componentMap,
+  updateComponentAction,
+  previewComponentAction,
 }: DesignLibraryServerVariantGenerationProps) => {
   let designLibraryStatus = DesignLibraryStatus.READY;
   let importMap: codegen.ImportEntry[] | undefined;
@@ -228,6 +237,8 @@ export const DesignLibraryServerVariantGeneration = async ({
         component={{ ...componentToUpdate }}
         componentInitError={componentInitError}
         generatedComponentData={generatedComponentData}
+        updateComponentAction={updateComponentAction}
+        previewComponentAction={previewComponentAction}
       />
     </>
   );
@@ -247,6 +258,8 @@ export const DesignLibraryServerPreview = async ({
   page,
   rendering,
   componentMap,
+  updateComponentAction,
+  previewComponentAction,
 }: DesignLibraryServerPreviewProps) => {
   let designLibraryStatus = DesignLibraryStatus.READY;
 
@@ -282,6 +295,8 @@ export const DesignLibraryServerPreview = async ({
         designLibraryStatus={designLibraryStatus}
         // pass a new object since we have mutated the original which leads to old reference passed to the client
         component={{ ...componentToUpdate }}
+        updateComponentAction={updateComponentAction}
+        previewComponentAction={previewComponentAction}
       />
     </>
   );
