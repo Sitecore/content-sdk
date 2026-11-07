@@ -60,7 +60,9 @@ import { FEaaSClientWrapper } from '@sitecore-content-sdk/react';
 import { FEaaSComponent } from '@sitecore-content-sdk/react';
 import { FEaaSComponentParams } from '@sitecore-content-sdk/react';
 import { FEaaSComponentProps } from '@sitecore-content-sdk/react';
+import { FEaaSComponentServerProps } from '@sitecore-content-sdk/react';
 import { FEaaSServerWrapper } from '@sitecore-content-sdk/react';
+import { FEaaSServerWrapperProps } from '@sitecore-content-sdk/react';
 import { FEaaSWrapper as FEaaSWrapper_2 } from '@sitecore-content-sdk/react';
 import { fetchFEaaSComponentServerProps } from '@sitecore-content-sdk/react';
 import { FetchOptions } from '@sitecore-content-sdk/content/client';
@@ -266,6 +268,9 @@ export type BotTrackingProxyConfig = SitecoreConfig_2['api']['edge'] & Omit<Prox
 export { buildExperimentalFeaturesResponse }
 
 // @public
+export function buildFEaaSComponentCacheTag(params: FEaaSComponentParams): string;
+
+// @public
 export function buildSitecoreDictionaryCacheTag(params: BuildSitecoreDictionaryCacheTagParams): string;
 
 // @public
@@ -407,6 +412,9 @@ export const createExperimentalFeaturesRouteHandler: () => {
     GET: (req: NextRequest) => Promise<Response>;
     OPTIONS: (req: NextRequest) => Promise<Response>;
 };
+
+// @public
+export function createFEaaSCacheComponentsServerWrapper(options?: FEaaSCacheComponentsServerWrapperOptions): (props: FEaaSServerWrapperProps) => React_2.JSX.Element;
 
 export { createGraphQLClientFactory }
 
@@ -568,6 +576,17 @@ export interface FailedProxyExecution {
     executedSuccessfully: false;
 }
 
+// @public
+export const FEaaSCacheComponentsServerWrapper: (props: FEaaSServerWrapperProps) => React_2.JSX.Element;
+
+// @public
+export type FEaaSCacheComponentsServerWrapperOptions = {
+    getCachedServerProps?: FEaaSCachedServerPropsFetcher;
+};
+
+// @public
+export type FEaaSCachedServerPropsFetcher = (params: FEaaSComponentParams) => Promise<FEaaSComponentServerProps | null>;
+
 export { FEaaSClientWrapper }
 
 export { FEaaSComponent }
@@ -575,6 +594,8 @@ export { FEaaSComponent }
 export { FEaaSComponentParams }
 
 export { FEaaSComponentProps }
+
+export { FEaaSComponentServerProps }
 
 // @public
 export class FEAASRenderMiddleware extends RenderMiddlewareBase {
