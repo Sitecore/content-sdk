@@ -1,4 +1,5 @@
-import yargs, { Argv, CommandModule } from 'yargs';
+import { Argv, CommandModule } from 'yargs';
+import yargs from 'yargs/yargs';
 import { trackCliCommandRun } from './telemetry/track';
 
 // Makes the script crash on unhandled rejections instead of silently
@@ -18,12 +19,13 @@ process.on('unhandledRejection', (err) => {
 export default async function cli(commands?: {
   [key: string]: CommandModule & { disableStrictArgs?: boolean };
 }) {
-  let appCommands: Argv = yargs.usage('$0 <command>');
-
-  appCommands = appCommands.scriptName('sitecore-tools').option('noTelemetry', {
-    type: 'boolean',
-    describe: 'Disable usage telemetry for this run',
-  });
+  let appCommands: Argv = yargs(process.argv.slice(2))
+    .usage('$0 <command>')
+    .scriptName('sitecore-tools')
+    .option('noTelemetry', {
+      type: 'boolean',
+      describe: 'Disable usage telemetry for this run',
+    });
 
   // Register commands if available
   if (commands && Object.keys(commands).length > 0) {
@@ -53,6 +55,8 @@ export default async function cli(commands?: {
         return;
       }
 
+      // The shell value of SITECORE_TELEMETRY_DISABLED wins. Otherwise the app `.env*`
+      // files, loaded from the working directory before commands run, supply it.
       await trackCliCommandRun({
         commandName,
         noTelemetry: argv.noTelemetry === true,
@@ -66,7 +70,7 @@ export default async function cli(commands?: {
         } else {
           console.error('No command provided');
         }
-        yargs.showHelp();
+        appCommands.showHelp();
         process.exit(1);
       },
     })

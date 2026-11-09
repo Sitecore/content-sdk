@@ -19,6 +19,19 @@ describe('cli telemetry events', () => {
   beforeEach(() => {
     root = fs.mkdtempSync(path.join(os.tmpdir(), 'csdk-cli-event-'));
     fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify({ name: 'my-app' }));
+    fs.mkdirSync(path.join(root, '.sitecore'));
+    fs.writeFileSync(
+      path.join(root, '.sitecore', 'metadata.json'),
+      JSON.stringify({
+        packages: {},
+        capabilities: {
+          editing: true,
+          designLibrary: { variantGeneration: true, metadata: { source: 'cli' } },
+          preview: { metadata: { owner: 'pages' } },
+          ignored: false,
+        },
+      })
+    );
     sinon.stub(telemetryClient, 'isTelemetryEnabled').returns(true);
     dispatch = sinon.stub(telemetryClient, 'dispatchTelemetryEvent').resolves(true);
     log = sinon.stub(console, 'log');
@@ -40,6 +53,23 @@ describe('cli telemetry events', () => {
     expect(event.data.app_name).to.equal('my-app');
     expect(event.data.cli_version).to.be.a('string');
     expect(event.fingerprint.packageName).to.equal('@sitecore-content-sdk/cli');
+    expect(event.data.capabilities).to.equal(
+      'designLibrary,designLibrary.variantGeneration,editing,preview'
+    );
+  });
+
+  it('does not send when SITECORE_TELEMETRY_DISABLED is set', async () => {
+    (telemetryClient.isTelemetryEnabled as sinon.SinonStub).restore();
+    process.env.SITECORE_TELEMETRY_DISABLED = '1';
+
+    try {
+      await trackCliCommandRun({ commandName: 'project build', cwd: root });
+    } finally {
+      delete process.env.SITECORE_TELEMETRY_DISABLED;
+    }
+
+    expect(dispatch.called).to.equal(false);
+    expect(log.called).to.equal(false);
   });
 
   it('sends app_built with the result, platform, and enabled features', async () => {
@@ -69,6 +99,9 @@ describe('cli telemetry events', () => {
     expect(event.data.error).to.equal('build failed line two');
     expect(event.data.features).to.equal('multisite');
     expect(event.data.app_name).to.equal('my-app');
+    expect(event.data.capabilities).to.equal(
+      'designLibrary,designLibrary.variantGeneration,editing,preview'
+    );
   });
 
   it('does not send when the run is inside this repository', async () => {

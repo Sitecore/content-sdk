@@ -44,6 +44,14 @@ describe('build command', () => {
     expect((telemetry.trackAppBuilt as sinon.SinonStub).firstCall.args[0].success).to.equal(true);
   });
 
+  it('should pass noTelemetry through to the build event', async () => {
+    await handler({ noTelemetry: true });
+
+    expect((telemetry.trackAppBuilt as sinon.SinonStub).firstCall.args[0].noTelemetry).to.equal(
+      true
+    );
+  });
+
   it('should record a failed build and rethrow', async () => {
     mockConfig.build.commands = [sinon.stub().rejects(new Error('boom'))];
 

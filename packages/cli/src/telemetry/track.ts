@@ -3,12 +3,14 @@ import path from 'path';
 import { debug } from '@sitecore-content-sdk/core';
 import { telemetryClient } from '@sitecore-content-sdk/core/node-tools';
 import type { TelemetryData, TelemetryPrimitive } from '@sitecore-content-sdk/core/node-tools';
+import packageJson from '../../package.json';
 import { shouldSkipCliTelemetry } from './skip';
 
-const PACKAGE_NAME = '@sitecore-content-sdk/cli';
 const RELEASE_VERSION = /^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/;
 const APP_NAME = /^[A-Za-z0-9][A-Za-z0-9._@/-]{0,127}$/;
+const CAPABILITY_NAME = /^[A-Za-z][A-Za-z0-9]*$/;
 const MAX_COMMAND_LENGTH = 128;
+const MAX_CAPABILITIES_LENGTH = 512;
 
 /**
  * Event recorded after `sitecore-tools project build` finishes.
@@ -46,7 +48,7 @@ export async function trackCliCommandRun(args: {
   const cwd = args.cwd ?? process.cwd();
 
   try {
-    if (shouldSkipCliTelemetry(args.noTelemetry, cwd) || !telemetryClient.isTelemetryEnabled()) {
+    if (!shouldSendTelemetry(args.noTelemetry, cwd)) {
       return;
     }
 
@@ -68,8 +70,9 @@ export async function trackCliCommandRun(args: {
         command_name: commandName,
         cli_version: version,
         app_name: readAppName(cwd),
+        capabilities: readCapabilities(cwd),
       }),
-      fingerprint: telemetryClient.createTelemetryFingerprint(PACKAGE_NAME, version),
+      fingerprint: telemetryClient.createTelemetryFingerprint(packageJson.name, version),
     });
   } catch (error) {
     debug.telemetry('cli command telemetry failed: %O', error);
@@ -95,7 +98,7 @@ export async function trackAppBuilt(args: {
   const cwd = args.cwd ?? process.cwd();
 
   try {
-    if (shouldSkipCliTelemetry(args.noTelemetry, cwd) || !telemetryClient.isTelemetryEnabled()) {
+    if (!shouldSendTelemetry(args.noTelemetry, cwd)) {
       return;
     }
 
@@ -114,12 +117,25 @@ export async function trackAppBuilt(args: {
         app_name: readAppName(cwd),
         error: args.success ? undefined : sanitizeError(args.error),
         features: enabledFeatures(args.config),
+        capabilities: readCapabilities(cwd),
       }),
-      fingerprint: telemetryClient.createTelemetryFingerprint(PACKAGE_NAME, version),
+      fingerprint: telemetryClient.createTelemetryFingerprint(packageJson.name, version),
     });
   } catch (error) {
     debug.telemetry('app built telemetry failed: %O', error);
   }
+}
+
+/**
+ * Telemetry stays off for an opt-out, a linked Content SDK checkout, or
+ * `SITECORE_TELEMETRY_DISABLED`. The CLI entrypoint loads that variable from the
+ * shell and from the app `.env*` files before a command runs. A shell value wins.
+ * @param {boolean} [noTelemetry] Per-run opt-out
+ * @param {string} cwd Working directory
+ * @returns {boolean} Whether this run may send
+ */
+function shouldSendTelemetry(noTelemetry: boolean | undefined, cwd: string): boolean {
+  return !shouldSkipCliTelemetry(noTelemetry, cwd) && telemetryClient.isTelemetryEnabled();
 }
 
 /**
@@ -143,7 +159,7 @@ function compactData(data: Record<string, TelemetryPrimitive | undefined>): Tele
  * @returns {string | undefined} This package's version, when it is a release version
  */
 function readOwnVersion(): string | undefined {
-  const version = readJson(path.resolve(__dirname, '..', '..', 'package.json'))?.version;
+  const version = packageJson.version;
   return typeof version === 'string' && RELEASE_VERSION.test(version) ? version : undefined;
 }
 
@@ -169,6 +185,64 @@ function resolvePlatform(): string {
   }
 
   return 'other';
+}
+
+/**
+ * @param {string} cwd Working directory
+ * @returns {string | undefined} Enabled capabilities from `.sitecore/metadata.json`
+ */
+function readCapabilities(cwd: string): string | undefined {
+  const capabilities = readJson(path.join(cwd, '.sitecore', 'metadata.json'))?.capabilities;
+  if (!isRecord(capabilities)) {
+    return undefined;
+  }
+
+  const names: string[] = [];
+  collectCapabilities(capabilities, '', names);
+  names.sort();
+
+  while (names.length > 1 && names.join(',').length > MAX_CAPABILITIES_LENGTH) {
+    names.pop();
+  }
+
+  const joined = names.join(',');
+  return joined.length > 0 && joined.length <= MAX_CAPABILITIES_LENGTH ? joined : undefined;
+}
+
+/**
+ * @param {Record<string, unknown>} value Capabilities object
+ * @param {string} prefix Path of the parent capability
+ * @param {string[]} names Enabled capability paths
+ */
+function collectCapabilities(
+  value: Record<string, unknown>,
+  prefix: string,
+  names: string[]
+): void {
+  for (const [key, child] of Object.entries(value)) {
+    if (key === 'metadata' || !CAPABILITY_NAME.test(key)) {
+      continue;
+    }
+
+    const capability = prefix ? `${prefix}.${key}` : key;
+    if (child === true) {
+      names.push(capability);
+      continue;
+    }
+
+    if (isRecord(child)) {
+      names.push(capability);
+      collectCapabilities(child, capability, names);
+    }
+  }
+}
+
+/**
+ * @param {unknown} value Candidate object
+ * @returns {value is Record<string, unknown>} Whether the value is a plain object
+ */
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === 'object' && !Array.isArray(value);
 }
 
 /**
