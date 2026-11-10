@@ -135,13 +135,11 @@ export class GraphQLRequestClient implements GraphQLClient {
     this.retryStrategy =
       clientConfig.retryStrategy ||
       new DefaultRetryStrategy({ statusCodes: [429, 502, 503, 504, 520, 521, 522, 523, 524] });
-    this.client = new Client(endpoint, {
-      headers: this.headers,
-      // Prefer native fetch over graphql-request's node-fetch default (DEP0169). Resolve at call time for runtime patches/stubs.
-      fetch:
-        clientConfig.fetch ??
-        ((input: RequestInfo | URL, init?: RequestInit) => globalThis.fetch(input, init)),
-    });
+    // Prefer native fetch over graphql-request's node-fetch default (DEP0169). Resolve at call time for runtime patches/stubs.
+    this.client = this.createClient(
+      clientConfig.fetch ??
+        ((input: RequestInfo | URL, init?: RequestInit) => globalThis.fetch(input, init))
+    );
     this.debug = clientConfig.debugger || debuggers.http;
   }
 
@@ -171,9 +169,7 @@ export class GraphQLRequestClient implements GraphQLClient {
     options?: FetchOptions
   ): Promise<T> {
     let attempt = 1;
-    const client = options?.fetch
-      ? new Client(this.endpoint, { fetch: options.fetch })
-      : this.client;
+    const client = options?.fetch ? this.createClient(options.fetch) : this.client;
 
     const retryer = async (): Promise<T> => {
       const retries = options?.retries || this.retries;
@@ -223,5 +219,14 @@ export class GraphQLRequestClient implements GraphQLClient {
     };
 
     return retryer();
+  }
+
+  /**
+   * Create a GraphQL client with shared configuration and the selected fetch implementation.
+   * @param {typeof fetch} fetchImplementation Fetch implementation for the client.
+   * @returns {Client} Configured GraphQL client.
+   */
+  private createClient(fetchImplementation: typeof fetch): Client {
+    return new Client(this.endpoint, { headers: this.headers, fetch: fetchImplementation });
   }
 }
