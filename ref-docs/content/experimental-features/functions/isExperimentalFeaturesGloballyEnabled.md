@@ -8,7 +8,7 @@
 
 > **isExperimentalFeaturesGloballyEnabled**(): `boolean`
 
-Defined in: [content/src/experimental-features/utils.ts:35](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/experimental-features/utils.ts#L35)
+Defined in: [content/src/experimental-features/utils.ts:35](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/content/src/experimental-features/utils.ts#L35)
 
 Returns true when experimental features are globally enabled for the app.
 Set `CSDK_GLOBAL_EXPERIMENTAL_FEATURES_ENABLED` to `true` to enable them.

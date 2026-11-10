@@ -8,7 +8,7 @@
 
 > **GenerateMetadataConfig** = `object`
 
-Defined in: [packages/core/src/tools/metadata/generateMetadata.ts:17](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/metadata/generateMetadata.ts#L17)
+Defined in: [packages/core/src/tools/metadata/generateMetadata.ts:17](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/metadata/generateMetadata.ts#L17)
 
 Configuration options for generating metadata.
 
@@ -18,7 +18,7 @@ Configuration options for generating metadata.
 
 > `optional` **allowWorkspaces?**: `boolean`
 
-Defined in: [packages/core/src/tools/metadata/generateMetadata.ts:28](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/metadata/generateMetadata.ts#L28)
+Defined in: [packages/core/src/tools/metadata/generateMetadata.ts:28](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/metadata/generateMetadata.ts#L28)
 
 Optional flag to allow npm workspaces in the metadata generation. Should be kept as false for non-npm monorepos.
 If not provided, the default is false.
@@ -33,7 +33,7 @@ Package-manager-based package discovery will be removed in a future version.
 
 > `optional` **appInputs?**: `Record`\<`string`, `unknown`\>
 
-Defined in: [packages/core/src/tools/metadata/generateMetadata.ts:37](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/metadata/generateMetadata.ts#L37)
+Defined in: [packages/core/src/tools/metadata/generateMetadata.ts:37](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/metadata/generateMetadata.ts#L37)
 
 Custom application inputs passed to capability filters and metadata resolvers,
 e.g. the atoms catalog: `{ atomsCatalog: catalog }`.
@@ -44,7 +44,7 @@ e.g. the atoms catalog: `{ atomsCatalog: catalog }`.
 
 > `optional` **capabilities?**: `boolean`
 
-Defined in: [packages/core/src/tools/metadata/generateMetadata.ts:32](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/metadata/generateMetadata.ts#L32)
+Defined in: [packages/core/src/tools/metadata/generateMetadata.ts:32](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/metadata/generateMetadata.ts#L32)
 
 Whether to calculate installed package capabilities. Defaults to true.
 
@@ -54,7 +54,7 @@ Whether to calculate installed package capabilities. Defaults to true.
 
 > `optional` **destinationPath?**: `string`
 
-Defined in: [packages/core/src/tools/metadata/generateMetadata.ts:22](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/metadata/generateMetadata.ts#L22)
+Defined in: [packages/core/src/tools/metadata/generateMetadata.ts:22](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/metadata/generateMetadata.ts#L22)
 
 Optional path where the generated metadata will be saved.
 If not provided, the default '.sitecore/metadata.json' will be used.
