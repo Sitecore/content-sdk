@@ -100,10 +100,12 @@ export function checkoutLegacySource(slug: string, publishedMajor: number): Lega
   const tagManifest = git('show', `${source}:packages/${slug}/package.json`);
   const tagVersion: string = JSON.parse(tagManifest).version;
   if (semver.major(tagVersion) >= publishedMajor) {
-    throw new Error(
-      `Cannot create legacy branch. ${LATEST_RELEASE_TAG} tag points to the fresh release instead of the previous major.` +
-        ` If tag was moved, point it at the previous release and re-run.`
+    console.error(
+      `Cannot create legacy branch. '${LATEST_RELEASE_TAG}' tag points to the fresh release instead of the previous major.` +
+        ` If tag was moved, point it at the previous release and re-run.` +
+        ` If this is a re-run after a later release, ignore this error.`
     );
+    return null;
   }
   let remoteSha: string | null = null;
   if (branchExists(branch)) {

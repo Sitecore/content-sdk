@@ -246,13 +246,10 @@ describe('legacy branch git side effects', () => {
       expect(gitCommands('show')).toEqual([['show', `${TAG_SHA}:packages/nextjs/package.json`]]);
     });
 
-    it('throws, without checking out, when the tag is not on an older major (moved already)', () => {
+    it('returns null, without checking out, when the tag is not on an older major (moved already)', () => {
       for (const tagVersion of ['3.0.0', '3.1.0', '4.0.0']) {
         stubGit({ legacyBranch: true, holds: true, tagVersion });
-        expect(() => checkoutLegacySource('nextjs', 3)).toThrow(
-          'Cannot create legacy branch. latest tag points to the fresh release instead of the ' +
-            'previous major. If tag was moved, point it at the previous release and re-run.'
-        );
+        expect(checkoutLegacySource('nextjs', 3)).toBeNull();
       }
       expect(gitCommands('checkout')).toEqual([]);
     });
