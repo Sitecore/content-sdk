@@ -59,6 +59,10 @@ jobs:
       - name: Build packages
         run: npm run build
 
+      # Verify upcoming publish does not move npm `latest` tag back
+      - name: Publish guards
+        run: node ./scripts/release/release-branch-guards.ts publish
+
       - name: Generate API docs
         run: |
           yarn generate-docs
@@ -164,4 +168,3 @@ jobs:
         run: |
           yarn build
           yarn changeset:publish --tag $CANARY_PREFIX --no-git-tag
-

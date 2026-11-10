@@ -75,6 +75,13 @@ jobs:
         if: ${{ !startsWith(github.base_ref, 'release/legacy/') }}
         run: yarn changeset:test
 
+      # publish.yml and pr_release_branch_guards.yml run this with plain node (Node 24 type
+      # stripping), which vitest doesn't exercise: a local import without its .ts extension or a
+      # type imported without `type` only fails here. Read-only run on a branch without guards.
+      - name: Smoke-test release scripts run by plain node
+        if: ${{ !startsWith(github.base_ref, 'release/legacy/') }}
+        run: node ./scripts/release/release-branch-guards.ts pr dev
+
       # Legacy branches (release/legacy/<product>) hold only their product, so scaffold only
       # its samples; everywhere else scaffold all products' samples.
       - name: Scaffold samples
