@@ -8,7 +8,7 @@
 
 > **createSitemapMiddleware**(`options`): [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/sitemap-middleware.ts:21](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/angular/src/server/middleware/sitemap-middleware.ts#L21)
+Defined in: [packages/angular/src/server/middleware/sitemap-middleware.ts:21](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/angular/src/server/middleware/sitemap-middleware.ts#L21)
 
 Sitemap handler for Express. Mount at `/sitemap.xml` and `/sitemap-:id.xml`.
 

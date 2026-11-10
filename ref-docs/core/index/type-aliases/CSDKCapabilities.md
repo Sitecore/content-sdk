@@ -8,7 +8,7 @@
 
 > **CSDKCapabilities** = `object`
 
-Defined in: [packages/core/src/capabilities.ts:61](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L61)
+Defined in: [packages/core/src/capabilities.ts:71](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/capabilities.ts#L71)
 
 Contract containing every capability packages may export.
 
@@ -18,7 +18,7 @@ Contract containing every capability packages may export.
 
 > `optional` **abTesting?**: [`CapabilityDefinition`](CapabilityDefinition.md)
 
-Defined in: [packages/core/src/capabilities.ts:72](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L72)
+Defined in: [packages/core/src/capabilities.ts:82](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/capabilities.ts#L82)
 
 Allows setting up and displaying personalization-based A/B tests.
 
@@ -28,7 +28,7 @@ Allows setting up and displaying personalization-based A/B tests.
 
 > `optional` **byocRender?**: [`CapabilityDefinition`](CapabilityDefinition.md)
 
-Defined in: [packages/core/src/capabilities.ts:74](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L74)
+Defined in: [packages/core/src/capabilities.ts:84](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/capabilities.ts#L84)
 
 Allows rendering BYOC components.
 
@@ -38,7 +38,7 @@ Allows rendering BYOC components.
 
 > `optional` **designLibrary?**: [`CapabilityDefinition`](CapabilityDefinition.md) & `object`
 
-Defined in: [packages/core/src/capabilities.ts:81](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L81)
+Defined in: [packages/core/src/capabilities.ts:91](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/capabilities.ts#L91)
 
 Allows Design Studio to render components dynamically.
 Sub-capabilities are optional because each package exports only the ones it provides.
@@ -73,7 +73,7 @@ Allows previewing AI-generated components.
 
 > `optional` **editing?**: [`CapabilityDefinition`](CapabilityDefinition.md)
 
-Defined in: [packages/core/src/capabilities.ts:70](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L70)
+Defined in: [packages/core/src/capabilities.ts:80](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/capabilities.ts#L80)
 
 Allows item editing through the editing render endpoint.
 
@@ -83,7 +83,7 @@ Allows item editing through the editing render endpoint.
 
 > `optional` **feaasRender?**: [`CapabilityDefinition`](CapabilityDefinition.md)
 
-Defined in: [packages/core/src/capabilities.ts:76](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L76)
+Defined in: [packages/core/src/capabilities.ts:86](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/capabilities.ts#L86)
 
 Allows rendering FEaaS components.
 
@@ -93,7 +93,7 @@ Allows rendering FEaaS components.
 
 > `optional` **preview?**: [`CapabilityDefinition`](CapabilityDefinition.md) & `object`
 
-Defined in: [packages/core/src/capabilities.ts:63](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/capabilities.ts#L63)
+Defined in: [packages/core/src/capabilities.ts:73](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/capabilities.ts#L73)
 
 Allows item preview through the editing render endpoint.
 

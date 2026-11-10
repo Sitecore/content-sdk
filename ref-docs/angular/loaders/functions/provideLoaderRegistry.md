@@ -8,7 +8,7 @@
 
 > **provideLoaderRegistry**(`loaders`): `Provider`[]
 
-Defined in: [packages/angular/src/loaders/loader-registry.token.ts:31](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/angular/src/loaders/loader-registry.token.ts#L31)
+Defined in: [packages/angular/src/loaders/loader-registry.token.ts:31](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/angular/src/loaders/loader-registry.token.ts#L31)
 
 Registers the app's loader registry for DI. Pass the loaders your app uses
 (e.g. page, '404', '500'). Use the **same object** with

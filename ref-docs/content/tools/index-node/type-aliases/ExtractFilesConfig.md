@@ -8,7 +8,7 @@
 
 > **ExtractFilesConfig** = `object`
 
-Defined in: [content/src/tools/codegen/extract-files.ts:23](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/content/src/tools/codegen/extract-files.ts#L23)
+Defined in: [content/src/tools/codegen/extract-files.ts:23](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/tools/codegen/extract-files.ts#L23)
 
 Configuration for the [extractFiles](../variables/extractFiles.md) build command.
 
@@ -18,7 +18,7 @@ Configuration for the [extractFiles](../variables/extractFiles.md) build command
 
 > `optional` **clientComponentMapPath?**: `string`
 
-Defined in: [content/src/tools/codegen/extract-files.ts:25](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/content/src/tools/codegen/extract-files.ts#L25)
+Defined in: [content/src/tools/codegen/extract-files.ts:25](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/tools/codegen/extract-files.ts#L25)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [content/src/tools/codegen/extract-files.ts:25](https://github.com/S
 
 > `optional` **componentMapPath?**: `string`
 
-Defined in: [content/src/tools/codegen/extract-files.ts:24](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/content/src/tools/codegen/extract-files.ts#L24)
+Defined in: [content/src/tools/codegen/extract-files.ts:24](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/tools/codegen/extract-files.ts#L24)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [content/src/tools/codegen/extract-files.ts:24](https://github.com/S
 
 > `optional` **customValidateDeployContext?**: () => `boolean`
 
-Defined in: [content/src/tools/codegen/extract-files.ts:26](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/content/src/tools/codegen/extract-files.ts#L26)
+Defined in: [content/src/tools/codegen/extract-files.ts:26](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/tools/codegen/extract-files.ts#L26)
 
 #### Returns
 
@@ -46,7 +46,7 @@ Defined in: [content/src/tools/codegen/extract-files.ts:26](https://github.com/S
 
 > `optional` **gatherCompanionFiles?**: (`componentFilePath`, `componentKey`) => [`ExtractedFile`](ExtractedFile.md)[]
 
-Defined in: [content/src/tools/codegen/extract-files.ts:32](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/content/src/tools/codegen/extract-files.ts#L32)
+Defined in: [content/src/tools/codegen/extract-files.ts:32](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/tools/codegen/extract-files.ts#L32)
 
 Optional hook to gather additional source files a resolved component references
 externally (e.g. Angular `templateUrl` / `styleUrls`). Called once per resolved

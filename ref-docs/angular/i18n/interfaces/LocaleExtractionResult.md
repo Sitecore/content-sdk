@@ -6,7 +6,7 @@
 
 # Interface: LocaleExtractionResult
 
-Defined in: [packages/angular/src/i18n/locale-utils.ts:7](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/angular/src/i18n/locale-utils.ts#L7)
+Defined in: [packages/angular/src/i18n/locale-utils.ts:7](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/angular/src/i18n/locale-utils.ts#L7)
 
 Result of locale extraction from a URL path.
 
@@ -16,7 +16,7 @@ Result of locale extraction from a URL path.
 
 > **locale**: `string` \| `null`
 
-Defined in: [packages/angular/src/i18n/locale-utils.ts:9](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/angular/src/i18n/locale-utils.ts#L9)
+Defined in: [packages/angular/src/i18n/locale-utils.ts:9](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/angular/src/i18n/locale-utils.ts#L9)
 
 Configured locale found at the start of the path, or `null` when absent.
 
@@ -26,7 +26,7 @@ Configured locale found at the start of the path, or `null` when absent.
 
 > **nonLocalePath**: `string`
 
-Defined in: [packages/angular/src/i18n/locale-utils.ts:11](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/angular/src/i18n/locale-utils.ts#L11)
+Defined in: [packages/angular/src/i18n/locale-utils.ts:11](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/angular/src/i18n/locale-utils.ts#L11)
 
 Remainder of the path after the locale segment (always starts with `/`).
 
@@ -36,6 +36,6 @@ Remainder of the path after the locale segment (always starts with `/`).
 
 > `optional` **queryFragment?**: `string`
 
-Defined in: [packages/angular/src/i18n/locale-utils.ts:13](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/angular/src/i18n/locale-utils.ts#L13)
+Defined in: [packages/angular/src/i18n/locale-utils.ts:13](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/angular/src/i18n/locale-utils.ts#L13)
 
 Query or fragment string found at the end of the path, or `null` when absent.

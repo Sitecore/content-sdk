@@ -8,7 +8,7 @@
 
 > `const` **generateMetadata**: (`config?`) => (`args?`) => `Promise`\<`void`\>
 
-Defined in: core/types/tools/metadata/generateMetadata.d.ts:30
+Defined in: core/types/tools/metadata/generateMetadata.d.ts:35
 
 Generate application metadata
 

@@ -481,7 +481,7 @@ export { DesignLibrary }
 // Warning: (ae-forgotten-export) The symbol "DesingLibraryAppProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export const DesignLibraryApp: (input: DesingLibraryAppProps) => React_2.JSX.Element | null;
+export const DesignLibraryApp: (props: DesingLibraryAppProps) => Promise<React_2.JSX.Element | null>;
 
 export { DictionaryPhrases }
 

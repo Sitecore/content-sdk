@@ -8,7 +8,7 @@
 
 > **loadAppModule**\<`T`\>(`specifier`, `appPath?`): `T`
 
-Defined in: [packages/core/src/tools/framework-packages.ts:55](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/tools/framework-packages.ts#L55)
+Defined in: [packages/core/src/tools/framework-packages.ts:55](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/framework-packages.ts#L55)
 
 Lazily loads a module installed in the app, resolving it from the app's `node_modules`
 rather than from the CLI location (the CLI may be installed globally).

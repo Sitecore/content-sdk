@@ -6,7 +6,7 @@
 
 # Interface: QuerySuggestionItem
 
-Defined in: [models.ts:149](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/search/src/models.ts#L149)
+Defined in: [models.ts:149](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/search/src/models.ts#L149)
 
 A single autocomplete completion from query suggestion mode.
 
@@ -16,7 +16,7 @@ A single autocomplete completion from query suggestion mode.
 
 > **queryPlusText**: `string`
 
-Defined in: [models.ts:157](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/search/src/models.ts#L157)
+Defined in: [models.ts:157](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/search/src/models.ts#L157)
 
 Full query with the completion applied.
 
@@ -26,6 +26,6 @@ Full query with the completion applied.
 
 > **text**: `string`
 
-Defined in: [models.ts:153](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/search/src/models.ts#L153)
+Defined in: [models.ts:153](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/search/src/models.ts#L153)
 
 Completed term from autocomplete.

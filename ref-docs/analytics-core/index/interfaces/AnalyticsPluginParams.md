@@ -6,7 +6,7 @@
 
 # Interface: AnalyticsPluginParams
 
-Defined in: [analytics-core/src/initialization/plugin.ts:19](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/analytics-core/src/initialization/plugin.ts#L19)
+Defined in: [analytics-core/src/initialization/plugin.ts:19](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/analytics-core/src/initialization/plugin.ts#L19)
 
 Parameters for creating an analytics plugin.
 
@@ -16,7 +16,7 @@ Parameters for creating an analytics plugin.
 
 > **adapter**: [`AnalyticsAdapter`](../../internal/interfaces/AnalyticsAdapter.md)
 
-Defined in: [analytics-core/src/initialization/plugin.ts:48](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/analytics-core/src/initialization/plugin.ts#L48)
+Defined in: [analytics-core/src/initialization/plugin.ts:48](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/analytics-core/src/initialization/plugin.ts#L48)
 
 The adapter to be used for the analytics plugin.
 
@@ -26,7 +26,7 @@ The adapter to be used for the analytics plugin.
 
 > `optional` **options?**: `object`
 
-Defined in: [analytics-core/src/initialization/plugin.ts:23](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/analytics-core/src/initialization/plugin.ts#L23)
+Defined in: [analytics-core/src/initialization/plugin.ts:23](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/analytics-core/src/initialization/plugin.ts#L23)
 
 Optional configuration options for the analytics plugin.
 

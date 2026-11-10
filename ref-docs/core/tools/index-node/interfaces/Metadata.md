@@ -6,7 +6,7 @@
 
 # Interface: Metadata
 
-Defined in: [packages/core/src/tools/metadata/metadata.ts:23](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/tools/metadata/metadata.ts#L23)
+Defined in: [packages/core/src/tools/metadata/metadata.ts:23](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/metadata/metadata.ts#L23)
 
 Application metadata
 
@@ -16,7 +16,7 @@ Application metadata
 
 > `optional` **capabilities?**: [`ResolvedCapabilities`](../../../index/type-aliases/ResolvedCapabilities.md)
 
-Defined in: [packages/core/src/tools/metadata/metadata.ts:25](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/tools/metadata/metadata.ts#L25)
+Defined in: [packages/core/src/tools/metadata/metadata.ts:25](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/metadata/metadata.ts#L25)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/core/src/tools/metadata/metadata.ts:25](https://github.com
 
 > **packages**: `object`
 
-Defined in: [packages/core/src/tools/metadata/metadata.ts:24](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/tools/metadata/metadata.ts#L24)
+Defined in: [packages/core/src/tools/metadata/metadata.ts:24](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/metadata/metadata.ts#L24)
 
 #### Index Signature
 
