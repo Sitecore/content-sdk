@@ -68,8 +68,15 @@ export function handler(argv: GenerateMapCliArgs) {
     return;
   }
   const componentMapGenerator = cliConfig.componentMap.generator;
-  const { paths, destination, componentImports, exclude, clientComponentMap, includeVariants } =
-    cliConfig.componentMap;
+  const {
+    paths,
+    destination,
+    componentImports,
+    exclude,
+    clientComponentMap,
+    includeVariants,
+    cacheComponents,
+  } = cliConfig.componentMap;
 
   ensureSitecoreDirectory(destination);
 
@@ -86,6 +93,7 @@ export function handler(argv: GenerateMapCliArgs) {
         exclude,
         clientComponentMap,
         includeVariants,
+        cacheComponents,
       })
     );
   } else {
@@ -97,6 +105,7 @@ export function handler(argv: GenerateMapCliArgs) {
       exclude,
       clientComponentMap,
       includeVariants,
+      cacheComponents,
     });
   }
 }

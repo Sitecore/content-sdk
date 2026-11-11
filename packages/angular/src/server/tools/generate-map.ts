@@ -14,7 +14,7 @@ import {
 
 export type AngularGenerateMapArgs = Omit<
   GenerateMapArgs,
-  'clientComponentMap' | 'clientMapTemplate'
+  'clientComponentMap' | 'clientMapTemplate' | 'cacheComponents'
 >;
 
 /**

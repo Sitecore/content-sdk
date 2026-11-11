@@ -119,12 +119,7 @@ export {
   BYOCServerWrapper,
 } from '@sitecore-content-sdk/react';
 export { FEaaSWrapper };
-export {
-  FEaaSCacheComponentsServerWrapper,
-  createFEaaSCacheComponentsServerWrapper,
-  FEaaSCacheComponentsServerWrapperOptions,
-  FEaaSCachedServerPropsFetcher,
-} from './components/FEaaSCacheComponentsServerWrapper';
+export { FEaaSCacheComponentsServerWrapper } from './components/FEaaSCacheComponentsServerWrapper';
 export { BYOCWrapper };
 
 export {
@@ -148,7 +143,6 @@ export {
   FEaaSComponent,
   FEaaSComponentProps,
   FEaaSComponentParams,
-  FEaaSComponentServerProps,
   fetchFEaaSComponentServerProps,
   BYOCComponentParams,
   BYOCComponent,
@@ -209,7 +203,6 @@ export {
   type BuildSitecoreDictionaryCacheTagParams,
   buildSitecoreItemCacheTag,
   type BuildSitecoreItemCacheTagParams,
-  buildFEaaSComponentCacheTag,
 } from './cache/sitecore-cache-tags';
 
 export {

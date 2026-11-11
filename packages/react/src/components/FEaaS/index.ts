@@ -4,7 +4,6 @@ export {
   FEaaSComponentClientProps,
   FEaaSComponentParams,
   FEaaSComponentProps,
-  FEaaSComponentServerProps,
   FEaaSServerWrapperProps,
   BYOCComponentParams,
   BYOCComponentProps,

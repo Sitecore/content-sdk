@@ -82,6 +82,7 @@ describe('generate-map CLI', () => {
       exclude: ['ex'],
       clientComponentMap: undefined,
       includeVariants: undefined,
+      cacheComponents: undefined,
     };
     const fakeConfig = {
       componentMap: {
@@ -128,6 +129,7 @@ describe('generate-map CLI', () => {
       exclude: ['ex'],
       clientComponentMap: false,
       includeVariants: undefined,
+      cacheComponents: undefined,
     };
     const fakeConfig = {
       componentMap: {
@@ -141,5 +143,21 @@ describe('generate-map CLI', () => {
     expect(generatorStub.firstCall.args[0]).to.deep.equal(args);
     expect(generatorStub.firstCall.args[0].clientComponentMap).to.be.false;
     expect(consoleLogStub.calledWithMatch(/Generating component map/)).to.be.true;
+  });
+
+  it('should pass cacheComponents to generator when set in cli config', () => {
+    const generatorStub = sinon.stub();
+    const fakeConfig = {
+      componentMap: {
+        generator: generatorStub,
+        paths: ['src'],
+        destination: 'dest',
+        cacheComponents: true,
+      },
+    };
+    loadCliConfigStub.returns(fakeConfig);
+    generateMapModule.handler({});
+    expect(generatorStub.calledOnce).to.be.true;
+    expect(generatorStub.firstCall.args[0].cacheComponents).to.be.true;
   });
 });

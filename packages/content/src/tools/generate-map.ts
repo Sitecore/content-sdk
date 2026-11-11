@@ -38,4 +38,9 @@ export type GenerateMapArgs = {
   clientComponentMap?: boolean;
   /** Optional flag to include component's variants path in the component map. */
   includeVariants?: boolean;
+  /**
+   * Set to true when the Next.js App Router app enables `cacheComponents`. Registers built-in
+   * components that are compatible with Cache Components in the server component map.
+   */
+  cacheComponents?: boolean;
 };

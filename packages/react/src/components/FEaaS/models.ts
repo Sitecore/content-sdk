@@ -121,7 +121,6 @@ export type FEaaSComponentProps = FEaaSComponentServerProps & FEaaSComponentClie
 
 /**
  * FEaaS props for server rendering.
- * @public
  */
 export type FEaaSComponentServerProps = {
   /**
