@@ -55,7 +55,7 @@ This template ships **two** not-found components and a segment layout that ties 
 - **Root not-found:** `src/app/not-found.tsx`. Used as the fallback when no segment handles the route (e.g. unknown site/locale). Falls back to `scConfig.defaultSite` / `scConfig.defaultLanguage` and calls `getSitecoreErrorPage({ site, locale, code: ErrorPage.NotFound })`, so 404 content gets the same Sitecore cache tags as a normal page.
 - **Segment not-found:** `src/app/[site]/[locale]/[[...path]]/not-found.tsx`. Triggered when the catch-all page calls `notFound()`. Reads site/locale via `getCachedPageParams()` (set by the segment layout and by the page before `notFound()`). If site is empty or `isBuildValidationSite(resolvedSite)` (`_DEFAULT_`), returns static fallback HTML without calling Edge. Otherwise calls `getSitecoreErrorPage(...)`. Wrapped in `NextIntlClientProvider` to keep i18n working in 404 markup.
 - **Segment layout:** `src/app/[site]/[locale]/[[...path]]/layout.tsx`. Calls `setCachedPageParams({ site, locale })` on every request for this segment. The catch-all **page** also calls `setCachedPageParams` immediately before `notFound()` so early 404s during SSG still pass site/locale to segment not-found. Uses the SDK's React `cache()` based `set/getCachedPageParams` helpers (from `@sitecore-content-sdk/nextjs`) so segment `not-found.tsx` can read `{ site, locale }` **without** calling `headers()` — which would opt the route out of SSG. **Do not** call `headers()` in the segment not-found; keep using `getCachedPageParams()`.
-- **Root global error:** `src/app/global-error.tsx` is a Client Component (`'use client'`) that fetches `client.getErrorPage(ErrorPage.InternalServerError, ...)` on the client; it is not cached (the cache helpers are server-side).
+- **Root global error:** `src/app/global-error.tsx` is a Client Component (`'use client'`) that fetches `client.getErrorPage(ErrorPage.InternalServerError, ...)` on the client; it is not cached (the cache helpers are server-side). It renders the page with `src/Layout.client.tsx` (client component map only) — **do not** import `src/Layout.tsx` there, because that would pull the server component map into the client bundle.
 
 ## API route handlers
 
@@ -74,7 +74,7 @@ This template ships **two** not-found components and a segment layout that ties 
 ## Component maps and layout
 
 - **Server/client components:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client) — auto-generated from `src/components/`. Do not edit manually unless needed.
-- **Layout:** `Layout.tsx` renders page layout and placeholders; `Providers` wrap page and component context; `Bootstrap` in `[site]/layout.tsx` receives `siteName={site}` and preview state.
+- **Layout:** `Layout.tsx` renders page layout and placeholders using the server component map; `Layout.client.tsx` is its client-only counterpart (client component map only) for Client Components such as `global-error.tsx`; `Providers` wrap page and component context; `Bootstrap` in `[site]/layout.tsx` receives `siteName={site}` and preview state.
 
 ## Best practices
 
