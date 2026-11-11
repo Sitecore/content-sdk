@@ -8,7 +8,7 @@
 
 > **GetMetadataConfig** = `object`
 
-Defined in: [packages/core/src/tools/metadata/metadata.ts:32](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/metadata/metadata.ts#L32)
+Defined in: [packages/core/src/tools/metadata/metadata.ts:32](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/metadata/metadata.ts#L32)
 
 Configuration for building application metadata.
 
@@ -18,7 +18,7 @@ Configuration for building application metadata.
 
 > `optional` **allowWorkspaces?**: `boolean`
 
-Defined in: [packages/core/src/tools/metadata/metadata.ts:37](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/metadata/metadata.ts#L37)
+Defined in: [packages/core/src/tools/metadata/metadata.ts:37](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/metadata/metadata.ts#L37)
 
 Whether packages from all workspaces should be included.
 
@@ -32,7 +32,7 @@ Package-manager-based package discovery will be removed in a future version.
 
 > `optional` **appInputs?**: `Record`\<`string`, `unknown`\>
 
-Defined in: [packages/core/src/tools/metadata/metadata.ts:45](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/metadata/metadata.ts#L45)
+Defined in: [packages/core/src/tools/metadata/metadata.ts:45](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/metadata/metadata.ts#L45)
 
 Custom application inputs passed to capability filters and metadata resolvers.
 
@@ -42,7 +42,7 @@ Custom application inputs passed to capability filters and metadata resolvers.
 
 > `optional` **appRoot?**: `string`
 
-Defined in: [packages/core/src/tools/metadata/metadata.ts:41](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/metadata/metadata.ts#L41)
+Defined in: [packages/core/src/tools/metadata/metadata.ts:41](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/metadata/metadata.ts#L41)
 
 Application root used for capability resolution. Defaults to the current working directory.
 
@@ -52,7 +52,7 @@ Application root used for capability resolution. Defaults to the current working
 
 > `optional` **capabilities?**: `boolean`
 
-Defined in: [packages/core/src/tools/metadata/metadata.ts:39](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/metadata/metadata.ts#L39)
+Defined in: [packages/core/src/tools/metadata/metadata.ts:39](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/metadata/metadata.ts#L39)
 
 Whether to resolve installed package capabilities. Defaults to true.
 
@@ -62,6 +62,6 @@ Whether to resolve installed package capabilities. Defaults to true.
 
 > `optional` **sitecoreConfig?**: [`CapabilitySitecoreConfig`](../../../index/type-aliases/CapabilitySitecoreConfig.md)
 
-Defined in: [packages/core/src/tools/metadata/metadata.ts:43](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/tools/metadata/metadata.ts#L43)
+Defined in: [packages/core/src/tools/metadata/metadata.ts:43](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/metadata/metadata.ts#L43)
 
 Resolved Sitecore configuration passed to capability filters.

@@ -8,7 +8,7 @@
 
 > **CapabilityDefinition** = `object`
 
-Defined in: [packages/core/src/capabilities.ts:58](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/capabilities.ts#L58)
+Defined in: [packages/core/src/capabilities.ts:58](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/capabilities.ts#L58)
 
 A capability offered by a package.
 
@@ -18,7 +18,7 @@ A capability offered by a package.
 
 > `optional` **filter?**: [`CapabilityFilter`](CapabilityFilter.md)
 
-Defined in: [packages/core/src/capabilities.ts:62](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/capabilities.ts#L62)
+Defined in: [packages/core/src/capabilities.ts:62](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/capabilities.ts#L62)
 
 Optional build-time check that the application uses the capability.
 
@@ -28,7 +28,7 @@ Optional build-time check that the application uses the capability.
 
 > `optional` **metadata?**: [`CapabilityMetadata`](CapabilityMetadata.md) \| [`CapabilityMetadataResolver`](CapabilityMetadataResolver.md)
 
-Defined in: [packages/core/src/capabilities.ts:64](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/capabilities.ts#L64)
+Defined in: [packages/core/src/capabilities.ts:64](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/capabilities.ts#L64)
 
 Optional metadata about the capability.
 
@@ -38,6 +38,6 @@ Optional metadata about the capability.
 
 > **value**: `boolean` \| [`CapabilityMap`](CapabilityMap.md)\<`CapabilityDefinition`\>
 
-Defined in: [packages/core/src/capabilities.ts:60](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/core/src/capabilities.ts#L60)
+Defined in: [packages/core/src/capabilities.ts:60](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/capabilities.ts#L60)
 
 Whether the capability is offered.
