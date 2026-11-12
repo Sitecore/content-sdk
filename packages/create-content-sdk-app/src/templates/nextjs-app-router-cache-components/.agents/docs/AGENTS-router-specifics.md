@@ -74,7 +74,7 @@ This template ships **two** not-found components and a segment layout that ties 
 ## Component maps and layout
 
 - **Server/client components:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client) — auto-generated from `src/components/`. Do not edit manually unless needed.
-- **Layout:** `Layout.tsx` renders page layout and placeholders using the server component map; `Layout.client.tsx` is its client-only counterpart (client component map only) for Client Components such as `global-error.tsx`; `Providers` wrap page and component context; `Bootstrap` in `[site]/layout.tsx` receives `siteName={site}` and preview state.
+- **Layout:** `Layout.tsx` renders the page with the server component map; `Layout.client.tsx` is its client-only counterpart (client component map only) for Client Components such as `global-error.tsx`; both render header, main, and footer through `LayoutPlaceholders.tsx`, which takes the map as a prop and does not import either map; `Providers` wrap page and component context; `Bootstrap` in `[site]/layout.tsx` receives `siteName={site}` and preview state.
 
 ## Best practices
 

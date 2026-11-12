@@ -2,4 +2,8 @@
 'create-content-sdk-app': patch
 ---
 
-[nextjs-app-router-cache-components] Fix `global-error.tsx` pulling the server component map into the client bundle. The Client Component imported `src/Layout`, which imports `.sitecore/component-map`, so every server component (and any inline `'use cache'` function or `server-only` code reachable from it) was compiled for the client. `global-error.tsx` now renders the Sitecore 500 page with the new `src/Layout.client.tsx`, which uses only `.sitecore/component-map.client`. Only client components in the 500 page layout are rendered there.
+[nextjs-app-router][nextjs-app-router-cache-components] Fix `global-error.tsx` pulling the server component map into the client bundle.
+
+`global-error.tsx` is a Client Component, but it imported `src/Layout`, which uses `.sitecore/component-map`. As a result, all server components (including `'use cache'` and `server-only` code) were compiled for the client. It now renders the 500 page with `src/Layout.client.tsx`, which uses `.sitecore/component-map.client`. Header, main, and footer markup is shared through `src/LayoutPlaceholders.tsx`. Only client components are rendered on the 500 page.
+
+Existing apps can apply the same change to `src/Layout.tsx`, `src/LayoutPlaceholders.tsx`, `src/Layout.client.tsx`, and `src/app/global-error.tsx`.
