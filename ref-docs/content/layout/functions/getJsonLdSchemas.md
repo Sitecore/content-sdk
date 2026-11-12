@@ -8,7 +8,7 @@
 
 > **getJsonLdSchemas**(`schemas?`): [`HTMLScript`](../../index/type-aliases/HTMLScript.md) \| `null`
 
-Defined in: [content/src/layout/json-ld.ts:50](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/content/src/layout/json-ld.ts#L50)
+Defined in: [content/src/layout/json-ld.ts:50](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/content/src/layout/json-ld.ts#L50)
 
 Builds the `<script type="application/ld+json">` data for the JSON-LD structured data
 schemas returned by the Sitecore Layout Service (`sitecore.context.schemas`), for

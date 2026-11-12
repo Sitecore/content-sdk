@@ -6,7 +6,7 @@
 
 # Interface: JsonLdSchemaProps
 
-Defined in: [packages/react/src/components/JsonLdSchema.tsx:9](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/react/src/components/JsonLdSchema.tsx#L9)
+Defined in: [packages/react/src/components/JsonLdSchema.tsx:9](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/react/src/components/JsonLdSchema.tsx#L9)
 
 Props for [JsonLdSchema](../functions/JsonLdSchema.md).
 
@@ -16,6 +16,6 @@ Props for [JsonLdSchema](../functions/JsonLdSchema.md).
 
 > `optional` **page?**: [`Page`](../type-aliases/Page.md) \| `null`
 
-Defined in: [packages/react/src/components/JsonLdSchema.tsx:11](https://github.com/Sitecore/content-sdk/blob/b124678d1f36578713f38271906f1e3a623ad001/packages/react/src/components/JsonLdSchema.tsx#L11)
+Defined in: [packages/react/src/components/JsonLdSchema.tsx:11](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/react/src/components/JsonLdSchema.tsx#L11)
 
 Page object (for example `props.page` on a Sitecore page component).
