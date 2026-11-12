@@ -8,7 +8,7 @@
 
 > **SearchQuery** = `StrictUnion`\<`KeyphraseQuery` \| `SeedItemIdQuery` \| `SeedItemUrlQuery`\>
 
-Defined in: [models.ts:143](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/search/src/models.ts#L143)
+Defined in: [models.ts:143](https://github.com/Sitecore/content-sdk/blob/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad/packages/search/src/models.ts#L143)
 
 Query payload for the `/v1/search` API.
 `keyphrase`, `seedItemId`, and `seedItemUrl` are mutually exclusive; provide at most one.

@@ -8,6 +8,6 @@
 
 > `const` **debug**: `Record`\<`string`, `debug.Debugger`\>
 
-Defined in: [nextjs/src/debug.ts:13](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/nextjs/src/debug.ts#L13)
+Defined in: [nextjs/src/debug.ts:13](https://github.com/Sitecore/content-sdk/blob/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad/packages/nextjs/src/debug.ts#L13)
 
 Unified debug object containing all debug namespaces from referenced content-sdk packages.

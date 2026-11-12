@@ -4,11 +4,11 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [tools](../README.md) / generateMap
 
-# Variable: generateMap
+# Function: generateMap()
 
-> `const` **generateMap**: `GenerateMapFunction`
+> **generateMap**(`params`): `void`
 
-Defined in: [nextjs/src/tools/generate-map.ts:159](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/nextjs/src/tools/generate-map.ts#L159)
+Defined in: [nextjs/src/tools/generate-map.ts:189](https://github.com/Sitecore/content-sdk/blob/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad/packages/nextjs/src/tools/generate-map.ts#L189)
 
 Generate and write componentMap.ts files based on provided params.
 
@@ -23,6 +23,9 @@ App Router (clientComponentMap=false):
 - component-map.ts          : Full component map with all components (server, client, universal)
 - component-map.client.ts   : Client-safe map with built-in components only (no user components)
 
+When cacheComponents is true (App Router only):
+- component-map.ts registers `FEaaSCacheComponentsServerWrapper` as the built-in `FEaaSWrapper`
+
 When includeVariants is true:
 - Includes component **variants** in the generated map(s) alongside base components
 - Preserves the same client/server filtering rules (variants obey clientComponentMap filtering)
@@ -32,8 +35,12 @@ Template Customization:
 - mapTemplate: Custom template for main component map (works for both single and dual map modes)
 - clientMapTemplate: Custom template for client component map (App Router only)
 
-## Param
+## Parameters
 
-**params**
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `params` | [`NextjsGenerateMapArgs`](../type-aliases/NextjsGenerateMapArgs.md) | The parameters for the generateMap function. |
 
-The parameters for the generateMap function.
+## Returns
+
+`void`

@@ -76,6 +76,7 @@
 - [EnhancedOmit](type-aliases/EnhancedOmit.md)
 - [FEaaSComponentParams](type-aliases/FEaaSComponentParams.md)
 - [FEaaSComponentProps](type-aliases/FEaaSComponentProps.md)
+- [FEaaSServerWrapperProps](type-aliases/FEaaSServerWrapperProps.md)
 - [GraphQLClientError](type-aliases/GraphQLClientError.md)
 - [GraphQLRequestClientFactoryConfig](type-aliases/GraphQLRequestClientFactoryConfig.md)
 - [ImportMapImport](type-aliases/ImportMapImport.md)
