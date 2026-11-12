@@ -1,6 +1,6 @@
 ---
 'create-content-sdk-app': patch
-'@sitecore-content-sdk/nextjs': patch
+'@sitecore-content-sdk/nextjs': minor
 '@sitecore-content-sdk/react': patch
 '@sitecore-content-sdk/cli': patch
 ---

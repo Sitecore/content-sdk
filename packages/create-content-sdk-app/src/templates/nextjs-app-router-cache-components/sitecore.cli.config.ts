@@ -22,7 +22,6 @@ export default defineCliConfig({
   componentMap: {
     paths: ['src/components'],
     exclude: ['src/components/content-sdk/*'],
-    // Must match `cacheComponents` in next.config.ts.
     cacheComponents: true,
   },
 });
