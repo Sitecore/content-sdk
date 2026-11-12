@@ -1,6 +1,5 @@
 import {
   GenerateMapArgs,
-  GenerateMapFunction,
   filterComponentsByType,
   ComponentFileWithType,
   EnhancedComponentMapTemplate,
@@ -68,12 +67,25 @@ const isComponentMapTemplate = (
   fn: ComponentMapTemplate | EnhancedComponentMapTemplate
 ): fn is ComponentMapTemplate => fn.length === 2;
 
+/**
+ * Arguments for the Next.js generateMap function.
+ * @public
+ */
+export type NextjsGenerateMapArgs = GenerateMapArgs & {
+  /** Set to true when the App Router app enables `cacheComponents` in next.config. */
+  cacheComponents?: boolean;
+};
+
+type ServerMapTemplateContext = Parameters<EnhancedComponentMapTemplate>[2] & {
+  cacheComponents?: boolean;
+};
+
 // Default App Router (server) component map template
-export const defaultServerMapTemplate: EnhancedComponentMapTemplate = (
-  components,
-  componentImports,
-  ctx
-) => {
+export const defaultServerMapTemplate = (
+  components: Parameters<EnhancedComponentMapTemplate>[0],
+  componentImports: Parameters<EnhancedComponentMapTemplate>[1],
+  ctx?: ServerMapTemplateContext
+): string => {
   const entries =
     ctx?.entries ??
     prepareComponentsForMap(components as ComponentFileWithType[], {
@@ -171,10 +183,10 @@ const collectComponents = (opts: {
  * Template Customization:
  * - mapTemplate: Custom template for main component map (works for both single and dual map modes)
  * - clientMapTemplate: Custom template for client component map (App Router only)
- * @param {GenerateMapArgs} params - The parameters for the generateMap function.
+ * @param {NextjsGenerateMapArgs} params - The parameters for the generateMap function.
  * @public
  */
-export const generateMap: GenerateMapFunction = ({
+export const generateMap = ({
   paths,
   destination = '.sitecore',
   exclude,
@@ -184,7 +196,7 @@ export const generateMap: GenerateMapFunction = ({
   clientComponentMap,
   includeVariants = true,
   cacheComponents,
-}: GenerateMapArgs) => {
+}: NextjsGenerateMapArgs): void => {
   const routerType = detectRouterType();
   const allComponents = collectComponents({ paths, exclude, includeVariants, filter: 'all' });
 
@@ -220,7 +232,6 @@ export const generateMap: GenerateMapFunction = ({
         entries: allComponents.entries,
         includeVariants,
         isClientMap: false,
-        cacheComponents,
       })
     : defaultServerMapTemplate(allComponents.raw, componentImports, {
         entries: allComponents.entries,

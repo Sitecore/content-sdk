@@ -26,7 +26,6 @@ export type EnhancedComponentMapTemplate = (
     entries: ComponentMapEntry[];
     includeVariants?: boolean;
     isClientMap?: boolean;
-    cacheComponents?: boolean;
   }
 ) => string;
 

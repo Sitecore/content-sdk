@@ -67,16 +67,8 @@ export function handler(argv: GenerateMapCliArgs) {
     );
     return;
   }
-  const componentMapGenerator = cliConfig.componentMap.generator;
-  const {
-    paths,
-    destination,
-    componentImports,
-    exclude,
-    clientComponentMap,
-    includeVariants,
-    cacheComponents,
-  } = cliConfig.componentMap;
+  const { generator, ...generateMapArgs } = cliConfig.componentMap;
+  const { paths, destination } = generateMapArgs;
 
   ensureSitecoreDirectory(destination);
 
@@ -84,28 +76,9 @@ export function handler(argv: GenerateMapCliArgs) {
     console.log(
       `Watching for component changes to component builder sources in:\n ${paths.join('\n')}`
     );
-    watchItems(
-      paths,
-      componentMapGenerator.bind(null, {
-        paths,
-        destination,
-        componentImports,
-        exclude,
-        clientComponentMap,
-        includeVariants,
-        cacheComponents,
-      })
-    );
+    watchItems(paths, generator.bind(null, generateMapArgs));
   } else {
     console.log(`Generating component map for:\n ${paths.join('\n')}`);
-    componentMapGenerator({
-      paths,
-      destination,
-      componentImports,
-      exclude,
-      clientComponentMap,
-      includeVariants,
-      cacheComponents,
-    });
+    generator(generateMapArgs);
   }
 }

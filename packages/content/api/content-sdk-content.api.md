@@ -439,7 +439,6 @@ export type EnhancedComponentMapTemplate = (components: (ComponentFile | Compone
     entries: ComponentMapEntry[];
     includeVariants?: boolean;
     isClientMap?: boolean;
-    cacheComponents?: boolean;
 }) => string;
 
 // @public
@@ -596,7 +595,6 @@ export type GenerateMapArgs = {
     clientMapTemplate?: ComponentMapTemplate | EnhancedComponentMapTemplate;
     clientComponentMap?: boolean;
     includeVariants?: boolean;
-    cacheComponents?: boolean;
 };
 
 // @public (undocumented)
