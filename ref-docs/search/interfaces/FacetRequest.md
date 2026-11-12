@@ -6,7 +6,7 @@
 
 # Interface: FacetRequest
 
-Defined in: [models.ts:49](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/search/src/models.ts#L49)
+Defined in: [models.ts:56](https://github.com/Sitecore/content-sdk/blob/c534eb99847822eb0c922118a328b7fc16159f1c/packages/search/src/models.ts#L56)
 
 Facet request configuration.
 Use 'all: true' to retrieve counts for every enabled facet in the index config.
@@ -19,7 +19,7 @@ Both can be combined: 'all: true' returns all facet counts while 'fields' filter
 
 > `optional` **all?**: `boolean`
 
-Defined in: [models.ts:53](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/search/src/models.ts#L53)
+Defined in: [models.ts:60](https://github.com/Sitecore/content-sdk/blob/c534eb99847822eb0c922118a328b7fc16159f1c/packages/search/src/models.ts#L60)
 
 When true, returns value counts for all facets enabled in the index configuration.
 
@@ -29,6 +29,6 @@ When true, returns value counts for all facets enabled in the index configuratio
 
 > `optional` **fields?**: [`FacetField`](FacetField.md)[]
 
-Defined in: [models.ts:57](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/search/src/models.ts#L57)
+Defined in: [models.ts:64](https://github.com/Sitecore/content-sdk/blob/c534eb99847822eb0c922118a328b7fc16159f1c/packages/search/src/models.ts#L64)
 
 Specific facet fields to request or filter by.

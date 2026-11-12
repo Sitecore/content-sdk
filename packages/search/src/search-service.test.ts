@@ -569,6 +569,63 @@ describe('SearchService', () => {
       expect(response.facets).to.deep.equal(facetResponse);
     });
 
+    it('should send max on a facet field in the request body', async () => {
+      const facet = {
+        fields: [{ name: 'category', max: 20 }],
+      };
+      const facetResponse = [{ name: 'category', value: [{ text: 'News', count: 5 }] }];
+
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: { 'x-sitecore-contextid': contextId },
+      })
+        .post('/v1/search', {
+          config: { id: searchIndexId },
+          limit: 10,
+          offset: 0,
+          query: { keyphrase: '' },
+          sessionId: '',
+          sort: { fields: [] },
+          facet,
+        })
+        .reply(200, { content: [{ id: 1 }], total: 1, facet: facetResponse });
+
+      const searchService = new SearchService({ contextId });
+      const response = await searchService.search({ searchIndexId, facet });
+
+      expect(response.facets).to.deep.equal(facetResponse);
+    });
+
+    it('should send max together with filters on a facet field', async () => {
+      const facet = {
+        fields: [
+          {
+            name: 'category',
+            filters: [{ operator: 'eq', value: ['News'] }],
+            max: 5,
+          },
+        ],
+      };
+
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: { 'x-sitecore-contextid': contextId },
+      })
+        .post('/v1/search', {
+          config: { id: searchIndexId },
+          limit: 10,
+          offset: 0,
+          query: { keyphrase: '' },
+          sessionId: '',
+          sort: { fields: [] },
+          facet,
+        })
+        .reply(200, { content: [{ id: 1 }], total: 1 });
+
+      const searchService = new SearchService({ contextId });
+      const response = await searchService.search({ searchIndexId, facet });
+
+      expect(response.results).to.deep.equal([{ id: 1 }]);
+    });
+
     it('should not include facet in the request when not provided', async () => {
       nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
         reqheaders: { 'x-sitecore-contextid': contextId },

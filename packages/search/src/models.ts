@@ -37,6 +37,13 @@ export interface FacetField {
    * Optional filters that narrow search results to items matching the given facet values.
    */
   filters?: FacetFilter[];
+  /**
+   * Maximum number of values to return for this facet.
+   *
+   * Valid values are integers from 1 through 100.
+   * When omitted, the Search Runtime uses its default of 10.
+   */
+  max?: number;
 }
 
 /**
