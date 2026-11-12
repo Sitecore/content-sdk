@@ -6,7 +6,7 @@
 
 # Interface: LinkField
 
-Defined in: [content/src/layout/field-types.ts:24](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/content/src/layout/field-types.ts#L24)
+Defined in: [content/src/layout/field-types.ts:24](https://github.com/Sitecore/content-sdk/blob/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad/packages/content/src/layout/field-types.ts#L24)
 
 The interface for the Link field.
 
@@ -16,4 +16,4 @@ The interface for the Link field.
 
 > **value**: [`LinkFieldValue`](LinkFieldValue.md)
 
-Defined in: [content/src/layout/field-types.ts:25](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/content/src/layout/field-types.ts#L25)
+Defined in: [content/src/layout/field-types.ts:25](https://github.com/Sitecore/content-sdk/blob/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad/packages/content/src/layout/field-types.ts#L25)

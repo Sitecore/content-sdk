@@ -8,7 +8,7 @@
 
 > **CapabilityFilterContext** = `object`
 
-Defined in: [packages/core/src/capabilities.ts:33](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/capabilities.ts#L33)
+Defined in: [packages/core/src/capabilities.ts:33](https://github.com/Sitecore/content-sdk/blob/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad/packages/core/src/capabilities.ts#L33)
 
 Filesystem access exposed to capability filters at application build time.
 
@@ -18,7 +18,7 @@ Filesystem access exposed to capability filters at application build time.
 
 > `optional` **appInputs?**: `Record`\<`string`, `unknown`\>
 
-Defined in: [packages/core/src/capabilities.ts:45](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/capabilities.ts#L45)
+Defined in: [packages/core/src/capabilities.ts:45](https://github.com/Sitecore/content-sdk/blob/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad/packages/core/src/capabilities.ts#L45)
 
 Custom inputs for capability resolution that otherwise cannot be computed within filter context.
 
@@ -28,7 +28,7 @@ Custom inputs for capability resolution that otherwise cannot be computed within
 
 > **appRoot**: `string`
 
-Defined in: [packages/core/src/capabilities.ts:35](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/capabilities.ts#L35)
+Defined in: [packages/core/src/capabilities.ts:35](https://github.com/Sitecore/content-sdk/blob/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad/packages/core/src/capabilities.ts#L35)
 
 Absolute path to the application root.
 
@@ -38,7 +38,7 @@ Absolute path to the application root.
 
 > **fileContains**: (`relativePaths`, `pattern`) => `boolean`
 
-Defined in: [packages/core/src/capabilities.ts:43](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/capabilities.ts#L43)
+Defined in: [packages/core/src/capabilities.ts:43](https://github.com/Sitecore/content-sdk/blob/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad/packages/core/src/capabilities.ts#L43)
 
 Tests whether one of the supplied files contains a string or regular expression.
 
@@ -59,7 +59,7 @@ Tests whether one of the supplied files contains a string or regular expression.
 
 > **fileExists**: (`relativePath`) => `boolean`
 
-Defined in: [packages/core/src/capabilities.ts:39](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/capabilities.ts#L39)
+Defined in: [packages/core/src/capabilities.ts:39](https://github.com/Sitecore/content-sdk/blob/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad/packages/core/src/capabilities.ts#L39)
 
 Tests whether a path relative to the application root exists.
 
@@ -79,7 +79,7 @@ Tests whether a path relative to the application root exists.
 
 > **readFile**: (`relativePath`) => `string` \| `undefined`
 
-Defined in: [packages/core/src/capabilities.ts:41](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/capabilities.ts#L41)
+Defined in: [packages/core/src/capabilities.ts:41](https://github.com/Sitecore/content-sdk/blob/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad/packages/core/src/capabilities.ts#L41)
 
 Reads a UTF-8 file relative to the application root, or returns undefined.
 
@@ -99,6 +99,6 @@ Reads a UTF-8 file relative to the application root, or returns undefined.
 
 > `optional` **sitecoreConfig?**: [`CapabilitySitecoreConfig`](CapabilitySitecoreConfig.md)
 
-Defined in: [packages/core/src/capabilities.ts:37](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/capabilities.ts#L37)
+Defined in: [packages/core/src/capabilities.ts:37](https://github.com/Sitecore/content-sdk/blob/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad/packages/core/src/capabilities.ts#L37)
 
 Resolved Sitecore configuration supplied to the metadata build command.

@@ -104,6 +104,10 @@ export type FEaaSComponentParams = {
 
 export type RevisionType = number | 'staged' | 'published' | 'saved';
 
+/**
+ * Props for the server FEaaS wrapper, including the Sitecore rendering and page.
+ * @public
+ */
 export type FEaaSServerWrapperProps = FEaaSComponentProps & {
   rendering?: ComponentRendering;
   page?: Page;

@@ -167,6 +167,7 @@
 - [collectSitecorePageCacheTags](functions/collectSitecorePageCacheTags.md)
 - [ComponentPropsContext](functions/ComponentPropsContext.md)
 - [DesignLibraryApp](functions/DesignLibraryApp.md)
+- [FEaaSCacheComponentsServerWrapper](functions/FEaaSCacheComponentsServerWrapper.md)
 - [fetchFEaaSComponentServerProps](functions/fetchFEaaSComponentServerProps.md)
 - [getCachedPageParams](functions/getCachedPageParams.md)
 - [getChildPlaceholder](functions/getChildPlaceholder.md)

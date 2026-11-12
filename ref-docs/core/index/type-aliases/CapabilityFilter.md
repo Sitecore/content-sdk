@@ -8,7 +8,7 @@
 
 > **CapabilityFilter** = (`context`) => `boolean` \| `Promise`\<`boolean`\>
 
-Defined in: [packages/core/src/capabilities.ts:27](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/capabilities.ts#L27)
+Defined in: [packages/core/src/capabilities.ts:27](https://github.com/Sitecore/content-sdk/blob/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad/packages/core/src/capabilities.ts#L27)
 
 Determines whether a capability exported by an installed package is used by the application.
 
