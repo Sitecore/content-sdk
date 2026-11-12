@@ -38,6 +38,7 @@
 - [CapabilityFilterContext](type-aliases/CapabilityFilterContext.md)
 - [CapabilityMap](type-aliases/CapabilityMap.md)
 - [CapabilityMetadata](type-aliases/CapabilityMetadata.md)
+- [CapabilityMetadataResolver](type-aliases/CapabilityMetadataResolver.md)
 - [CapabilitySitecoreConfig](type-aliases/CapabilitySitecoreConfig.md)
 - [CSDKCapabilities](type-aliases/CSDKCapabilities.md)
 - [Debugger](type-aliases/Debugger.md)

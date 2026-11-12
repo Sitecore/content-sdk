@@ -8,7 +8,7 @@
 
 > `const` **OG\_MODIFIED\_TIME\_TAG**: `Record`\<`string`, `string`\>
 
-Defined in: [content/src/layout/field-types.ts:112](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/content/src/layout/field-types.ts#L112)
+Defined in: [content/src/layout/field-types.ts:112](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/content/src/layout/field-types.ts#L112)
 
 Open Graph types that define an update-time meta tag, mapped to its exact property name
 per the Open Graph protocol. `article` is the only type the protocol defines one for.

@@ -41,6 +41,8 @@ export type GetMetadataConfig = {
   appRoot?: string;
   /** Resolved Sitecore configuration passed to capability filters. */
   sitecoreConfig?: CapabilitySitecoreConfig;
+  /** Custom application inputs passed to capability filters and metadata resolvers. */
+  appInputs?: Record<string, unknown>;
 };
 
 const trackedScopes = ['@sitecore', '@sitecore-feaas', '@sitecore-content-sdk'];
@@ -62,18 +64,20 @@ const MAX_OUTPUT_BUFFER = 10 * 1024 * 1024;
  * @public
  */
 export async function getMetadata(config: GetMetadataConfig = {}): Promise<Metadata> {
-  const { allowWorkspaces = false, capabilities = true, appRoot, sitecoreConfig } = config;
+  const {
+    allowWorkspaces = false,
+    capabilities = true,
+    appRoot,
+    sitecoreConfig,
+    appInputs,
+  } = config;
   const packages = getPackagesFromPackageManager(allowWorkspaces);
 
-  if (packages === undefined) {
-    return { packages: {} };
-  }
-
-  const metadata: Metadata = { packages };
+  const metadata: Metadata = { packages: packages ?? {} };
 
   if (capabilities !== false) {
     try {
-      metadata.capabilities = await calculateCapabilities({ appRoot, sitecoreConfig });
+      metadata.capabilities = await calculateCapabilities({ appRoot, sitecoreConfig, appInputs });
     } catch (error) {
       console.error(
         'Failed to calculate application capabilities. This step is required for correct headless integration.',
@@ -93,7 +97,9 @@ export async function getMetadata(config: GetMetadataConfig = {}): Promise<Metad
  * @deprecated Package-manager-based package discovery will be removed in a future version.
  * @internal
  */
-function getPackagesFromPackageManager(allowWorkspaces = false): Record<string, string> | undefined {
+function getPackagesFromPackageManager(
+  allowWorkspaces = false
+): Record<string, string> | undefined {
   const packageManagement = getPackageManagement(allowWorkspaces);
   const { query, parse } = packageManagement[detectPackageManager(packageManagement)];
 

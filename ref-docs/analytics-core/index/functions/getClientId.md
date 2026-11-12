@@ -8,7 +8,7 @@
 
 > **getClientId**(): `string`
 
-Defined in: [analytics-core/src/client-id/get-client-id.ts:8](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/analytics-core/src/client-id/get-client-id.ts#L8)
+Defined in: [analytics-core/src/client-id/get-client-id.ts:8](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/analytics-core/src/client-id/get-client-id.ts#L8)
 
 Gets the client ID from the cookie.
 

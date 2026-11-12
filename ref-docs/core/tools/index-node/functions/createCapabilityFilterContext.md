@@ -6,9 +6,9 @@
 
 # Function: createCapabilityFilterContext()
 
-> **createCapabilityFilterContext**(`appRoot?`, `sitecoreConfig?`): [`CapabilityFilterContext`](../../../index/type-aliases/CapabilityFilterContext.md)
+> **createCapabilityFilterContext**(`appRoot?`, `sitecoreConfig?`, `appInputs?`): [`CapabilityFilterContext`](../../../index/type-aliases/CapabilityFilterContext.md)
 
-Defined in: [packages/core/src/tools/capabilities/index.ts:252](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/tools/capabilities/index.ts#L252)
+Defined in: [packages/core/src/tools/capabilities/index.ts:263](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/capabilities/index.ts#L263)
 
 **`Internal`**
 
@@ -20,6 +20,7 @@ Creates an application filesystem context for capability filters.
 | ------ | ------ | ------ |
 | `appRoot?` | `string` | application root |
 | `sitecoreConfig?` | [`CapabilitySitecoreConfig`](../../../index/type-aliases/CapabilitySitecoreConfig.md) | resolved Sitecore configuration |
+| `appInputs?` | `Record`\<`string`, `unknown`\> | custom application inputs for capability resolution |
 
 ## Returns
 

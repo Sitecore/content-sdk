@@ -8,7 +8,7 @@
 
 > **calculateCapabilities**(`config?`): `Promise`\<[`ResolvedCapabilities`](../../../index/type-aliases/ResolvedCapabilities.md)\>
 
-Defined in: [packages/core/src/tools/capabilities/index.ts:299](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/tools/capabilities/index.ts#L299)
+Defined in: [packages/core/src/tools/capabilities/index.ts:313](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/capabilities/index.ts#L313)
 
 Calculates enabled capabilities for an application.
 
@@ -16,7 +16,8 @@ Calculates enabled capabilities for an application.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `config?` | \{ `appRoot?`: `string`; `sitecoreConfig?`: [`CapabilitySitecoreConfig`](../../../index/type-aliases/CapabilitySitecoreConfig.md); \} | calculation configuration |
+| `config?` | \{ `appInputs?`: `Record`\<`string`, `unknown`\>; `appRoot?`: `string`; `sitecoreConfig?`: [`CapabilitySitecoreConfig`](../../../index/type-aliases/CapabilitySitecoreConfig.md); \} | calculation configuration |
+| `config.appInputs?` | `Record`\<`string`, `unknown`\> | custom application inputs for capability resolution |
 | `config.appRoot?` | `string` | application root |
 | `config.sitecoreConfig?` | [`CapabilitySitecoreConfig`](../../../index/type-aliases/CapabilitySitecoreConfig.md) | resolved Sitecore configuration |
 

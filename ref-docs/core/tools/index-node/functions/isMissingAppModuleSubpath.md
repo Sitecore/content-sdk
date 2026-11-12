@@ -8,7 +8,7 @@
 
 > **isMissingAppModuleSubpath**(`error`, `specifier`, `appPath?`): `boolean`
 
-Defined in: [packages/core/src/tools/framework-packages.ts:87](https://github.com/Sitecore/content-sdk/blob/85bfea16a8a93e2d5b0410a454a1d882cebba54b/packages/core/src/tools/framework-packages.ts#L87)
+Defined in: [packages/core/src/tools/framework-packages.ts:87](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/framework-packages.ts#L87)
 
 Reports whether an error means an optional package subpath is absent.
 
