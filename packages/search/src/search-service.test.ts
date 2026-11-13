@@ -451,6 +451,47 @@ describe('SearchService', () => {
       }
     });
 
+    it('should throw an error if a facet field max is greater than 100', async () => {
+      const searchService = new SearchService({ contextId });
+
+      let thrown: unknown;
+      try {
+        await searchService.search({
+          searchIndexId,
+          facet: { fields: [{ name: 'category', max: 101 }] },
+        });
+      } catch (error) {
+        thrown = error;
+      }
+
+      expect(thrown)
+        .to.be.an.instanceOf(RangeError)
+        .and.to.have.property('message', 'Facet field max must be less than or equal to 100');
+    });
+
+    it('should accept a facet field max of 100', async () => {
+      const facet = { fields: [{ name: 'category', max: 100 }] };
+
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: { 'x-sitecore-contextid': contextId },
+      })
+        .post('/v1/search', {
+          config: { id: searchIndexId },
+          limit: 10,
+          offset: 0,
+          query: { keyphrase: '' },
+          sessionId: '',
+          sort: { fields: [] },
+          facet,
+        })
+        .reply(200, { content: [{ id: 1 }], total: 1 });
+
+      const searchService = new SearchService({ contextId });
+      const response = await searchService.search({ searchIndexId, facet });
+
+      expect(response.results).to.deep.equal([{ id: 1 }]);
+    });
+
     it('should throw an error if offset is not a positive number', async () => {
       const searchService = new SearchService({
         contextId,

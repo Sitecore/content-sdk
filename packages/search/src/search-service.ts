@@ -323,7 +323,7 @@ export class SearchService {
   private validateParameters<T extends SearchDocument = SearchDocument>(
     params: SearchParameters<T>
   ) {
-    const { limit, offset, searchIndexId, sort } = params;
+    const { limit, offset, searchIndexId, sort, facet } = params;
 
     if (limit && limit < 0) {
       throw new RangeError('Limit must be a positive number');
@@ -343,6 +343,10 @@ export class SearchService {
 
     if (sort && !Array.isArray(sort) && typeof sort !== 'object') {
       throw new TypeError('Sort must be an array or an object');
+    }
+
+    if (facet?.fields?.some((field) => field.max !== undefined && field.max > 100)) {
+      throw new RangeError('Facet field max must be less than or equal to 100');
     }
 
     this.validateQueryExclusivity(params);
