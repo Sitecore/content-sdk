@@ -8,7 +8,7 @@
 
 > `const` **CSDK\_GLOBAL\_EXPERIMENTAL\_FEATURES\_FLAG**: `"CSDK_GLOBAL_EXPERIMENTAL_FEATURES_ENABLED"` = `'CSDK_GLOBAL_EXPERIMENTAL_FEATURES_ENABLED'`
 
-Defined in: [content/src/experimental-features/utils.ts:12](https://github.com/Sitecore/content-sdk/blob/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad/packages/content/src/experimental-features/utils.ts#L12)
+Defined in: [content/src/experimental-features/utils.ts:12](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/content/src/experimental-features/utils.ts#L12)
 
 Environment variable that globally enables experimental features for an app.
 Set `CSDK_GLOBAL_EXPERIMENTAL_FEATURES_ENABLED` to `true` to enable experimental features.
