@@ -35,6 +35,7 @@ src/
           page.tsx                # Sitecore page
           not-found.tsx           # 404 with Sitecore error page
     not-found.tsx                 # Root not-found
+    global-error.tsx              # Root 500 (Client Component; uses Layout.client)
     api/                          # Route handlers
       sitemap/route.ts, robots/route.ts, editing/config/route.ts, editing/render/route.ts
   components/                    # React components (Sitecore + app-specific)
@@ -42,7 +43,7 @@ src/
   i18n/                          # next-intl
     routing.ts                    # locales, defaultLocale, localePrefix
     request.ts                    # getRequestConfig, getDictionary per site
-  Layout.tsx, Providers.tsx, Bootstrap.tsx, Scripts.tsx
+  Layout.tsx, Layout.client.tsx, LayoutPlaceholders.tsx, Providers.tsx, Bootstrap.tsx, Scripts.tsx
 proxy.ts                         # Edge middleware (preview, bot-tracking, locale, multisite, redirects, personalize)
 .sitecore/                       # component-map.ts, component-map.client.ts, import-map.*, sites.json, metadata.json
 sitecore.config.ts               # Sitecore config (api, defaultSite, defaultLanguage, multisite, etc.)

@@ -48,7 +48,7 @@ src/
   i18n/                          # next-intl
     routing.ts                    # locales, defaultLocale, localePrefix
     request.ts                    # getRequestConfig, getSitecoreDictionary per site
-  Layout.tsx, Providers.tsx, Bootstrap.tsx, Scripts.tsx
+  Layout.tsx, Layout.client.tsx, LayoutPlaceholders.tsx, Providers.tsx, Bootstrap.tsx, Scripts.tsx
 proxy.ts                         # Edge middleware (preview, bot-tracking, locale, multisite, redirects, personalize)
 .sitecore/                       # component-map.ts, component-map.client.ts, import-map.*, sites.json, metadata.json
 sitecore.config.ts               # Sitecore config (api, defaultSite, defaultLanguage, dictionary cache off)
