@@ -1,5 +1,17 @@
 # @sitecore-content-sdk/core
 
+## 2.2.0
+
+### Minor Changes
+
+- Add package capability exports and build-time capability discovery. Generated application metadata ([e2bacaf](https://github.com/sitecore/content-sdk/commit/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad))
+  now includes the capabilities supported and used by the application, and editing configuration
+  endpoints expose the resolved capability keys.
+
+### Patch Changes
+
+- Fix custom `fetch` functions supplied through `FetchOptions` being ignored by `SitecoreClient.getData()` and `SitecoreClient.getPage()`. `GraphQLRequestClient` now honors the override for the individual request and its retries without changing the configured fetch used by other requests. ([a6f2fa8](https://github.com/sitecore/content-sdk/commit/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82))
+
 ## 2.1.4
 
 ### Patch Changes

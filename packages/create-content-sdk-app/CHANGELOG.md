@@ -1,5 +1,34 @@
 # create-content-sdk-app
 
+## 2.4.3
+
+### Patch Changes
+
+- [nextjs-app-router][nextjs-app-router-cache-components] Fix `global-error.tsx` pulling the server component map into the client bundle. ([84b2ebc](https://github.com/sitecore/content-sdk/commit/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d))
+
+  `global-error.tsx` is a Client Component, but it imported `src/Layout`, which uses `.sitecore/component-map`. As a result, all server components (including `'use cache'` and `server-only` code) were compiled for the client. It now renders the 500 page with `src/Layout.client.tsx`, which uses `.sitecore/component-map.client`. Header, main, and footer markup is shared through `src/LayoutPlaceholders.tsx`. Only client components are rendered on the 500 page.
+
+  Existing apps can apply the same change to `src/Layout.tsx`, `src/LayoutPlaceholders.tsx`, `src/Layout.client.tsx`, and `src/app/global-error.tsx`.
+
+- Support FEaaS components when Next.js Cache Components is enabled. Set `componentMap.cacheComponents: true` in `sitecore.cli.config.ts` and `generate-map` registers `FEaaSCacheComponentsServerWrapper`, which renders FEaaS at request time behind Suspense while the rest of the page stays cached. The Cache Components template sets this flag. Existing Cache Components apps should add it on upgrade. The built-in `FEaaSServerWrapper` is unchanged. ([d7a3c5a](https://github.com/sitecore/content-sdk/commit/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad))
+- minor `@sitecore-content-sdk/angular` dependency update:
+  - Add package capability exports and build-time capability discovery. Generated application metadata
+    now includes the capabilities supported and used by the application, and editing configuration
+    endpoints expose the resolved capability keys. ([e2bacaf](https://github.com/sitecore/content-sdk/commit/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad))
+- minor `@sitecore-content-sdk/cli` dependency update:
+  - Add package capability exports and build-time capability discovery. Generated application metadata
+    now includes the capabilities supported and used by the application, and editing configuration
+    endpoints expose the resolved capability keys. ([e2bacaf](https://github.com/sitecore/content-sdk/commit/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad))
+- minor `@sitecore-content-sdk/core` dependency update:
+  - Add package capability exports and build-time capability discovery. Generated application metadata
+    now includes the capabilities supported and used by the application, and editing configuration
+    endpoints expose the resolved capability keys. ([e2bacaf](https://github.com/sitecore/content-sdk/commit/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad))
+- minor `@sitecore-content-sdk/nextjs` dependency update:
+  - Add package capability exports and build-time capability discovery. Generated application metadata
+    now includes the capabilities supported and used by the application, and editing configuration
+    endpoints expose the resolved capability keys. ([e2bacaf](https://github.com/sitecore/content-sdk/commit/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad))
+  - Support FEaaS components when Next.js Cache Components is enabled. Set `componentMap.cacheComponents: true` in `sitecore.cli.config.ts` and `generate-map` registers `FEaaSCacheComponentsServerWrapper`, which renders FEaaS at request time behind Suspense while the rest of the page stays cached. The Cache Components template sets this flag. Existing Cache Components apps should add it on upgrade. The built-in `FEaaSServerWrapper` is unchanged. ([d7a3c5a](https://github.com/sitecore/content-sdk/commit/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad))
+
 ## 2.4.2
 
 ### Patch Changes
