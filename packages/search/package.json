@@ -28,7 +28,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Sitecore/content-sdk"
+    "url": "git+https://github.com/Sitecore/content-sdk.git",
+    "directory": "packages/search"
   },
   "license": "Apache-2.0",
   "homepage": "https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html",

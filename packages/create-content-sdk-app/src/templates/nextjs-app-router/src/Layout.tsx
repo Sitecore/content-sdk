@@ -1,12 +1,7 @@
 import { JSX } from 'react';
-import {
-  AppPlaceholder,
-  DesignLibraryApp,
-  Field,
-  PageMetadataFields,
-  Page,
-} from '@sitecore-content-sdk/nextjs';
+import { DesignLibraryApp, Field, PageMetadataFields, Page } from '@sitecore-content-sdk/nextjs';
 import SitecoreHead from 'src/SitecoreHead';
+import LayoutPlaceholders from 'src/LayoutPlaceholders';
 import componentMap from '.sitecore/component-map';
 
 interface LayoutProps {
@@ -25,7 +20,6 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
   return (
     <>
       <SitecoreHead page={page} />
-      {/* root placeholder for the app, which we add components to using route data */}
       <div className={mainClassPageEditing}>
         {mode.isDesignLibrary ? (
           route && (
@@ -37,44 +31,7 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
             />
           )
         ) : (
-          <>
-            <header>
-              <div id="header">
-                {route && (
-                  <AppPlaceholder
-                    page={page}
-                    componentMap={componentMap}
-                    name="headless-header"
-                    rendering={route}
-                  />
-                )}
-              </div>
-            </header>
-            <main>
-              <div id="content">
-                {route && (
-                  <AppPlaceholder
-                    page={page}
-                    componentMap={componentMap}
-                    name="headless-main"
-                    rendering={route}
-                  />
-                )}
-              </div>
-            </main>
-            <footer>
-              <div id="footer">
-                {route && (
-                  <AppPlaceholder
-                    page={page}
-                    componentMap={componentMap}
-                    name="headless-footer"
-                    rendering={route}
-                  />
-                )}
-              </div>
-            </footer>
-          </>
+          <LayoutPlaceholders page={page} componentMap={componentMap} />
         )}
       </div>
     </>

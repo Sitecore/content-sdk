@@ -8,7 +8,7 @@
 
 > **cookieExists**(`cookieStr`, `cookieName`): `boolean`
 
-Defined in: [analytics-core/src/utils/cookies/cookie-exists.ts:8](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/analytics-core/src/utils/cookies/cookie-exists.ts#L8)
+Defined in: [analytics-core/src/utils/cookies/cookie-exists.ts:8](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/analytics-core/src/utils/cookies/cookie-exists.ts#L8)
 
 **`Internal`**
 

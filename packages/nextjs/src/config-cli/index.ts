@@ -1,1 +1,1 @@
-export { defineCliConfig } from './define-cli-config';
+export { defineCliConfig, NextjsCliConfigInput } from './define-cli-config';

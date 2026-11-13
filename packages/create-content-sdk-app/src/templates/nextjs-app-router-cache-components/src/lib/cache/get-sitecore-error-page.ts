@@ -1,5 +1,5 @@
 import { collectSitecorePageCacheTags, ErrorPage, type Page } from '@sitecore-content-sdk/nextjs';
-import { cacheTag } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import client from 'src/lib/sitecore-client';
 
 type GetSitecoreErrorPageParams = {
@@ -12,7 +12,9 @@ type GetSitecoreErrorPageParams = {
  * Loads Sitecore error pages with Next.js Cache Components and the same tag strategy as
  * {@link getSitecorePage}, so webhook / `revalidateTag` flows can invalidate updated error experiences.
  */
-export async function getSitecoreErrorPage(params: GetSitecoreErrorPageParams): Promise<Page | null> {
+export async function getSitecoreErrorPage(
+  params: GetSitecoreErrorPageParams
+): Promise<Page | null> {
   'use cache';
 
   const { site, locale, code } = params;
@@ -20,6 +22,11 @@ export async function getSitecoreErrorPage(params: GetSitecoreErrorPageParams): 
 
   const sitecore = page?.layout?.sitecore;
   const itemPath = sitecore?.context?.itemPath;
+
+  // Update the cacheLife profile to control the lifespan of Cache Components.
+  // NextJS defaults to the 'default' profile if not called, we explicity call it to make the policy clear.
+  // https://nextjs.org/docs/app/api-reference/functions/cacheLife
+  cacheLife('default');
 
   const tags = collectSitecorePageCacheTags({
     site,

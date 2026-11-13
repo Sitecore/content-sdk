@@ -122,6 +122,7 @@ export {
   BYOCServerWrapper,
 } from '@sitecore-content-sdk/react';
 export { FEaaSWrapper };
+export { FEaaSCacheComponentsServerWrapper } from './components/FEaaSCacheComponentsServerWrapper';
 export { BYOCWrapper };
 
 export {
@@ -198,9 +199,13 @@ export {
 // (`getSitecorePage`, `getSitecoreErrorPage`, `getSitecoreDictionary`) and the `createSitecoreRevalidateRouteHandler`
 // already cover the end-to-end Sitecore tag flow. Lower-level tag builders and webhook-body parsers remain
 // internal so callers don't hand-build Sitecore cache tag strings or duplicate the route handler's logic.
+// buildSitecoreItemCacheTag is added as an exception, since it is common to perform GraphQL for additional Sitecore data
+// and wanting it to revalidate on publish.
 export {
   buildSitecoreDictionaryCacheTag,
   type BuildSitecoreDictionaryCacheTagParams,
+  buildSitecoreItemCacheTag,
+  type BuildSitecoreItemCacheTagParams,
 } from './cache/sitecore-cache-tags';
 
 export {

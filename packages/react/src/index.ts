@@ -85,6 +85,7 @@ export {
   FEaaSWrapper,
   FEaaSWrapper as FEaaSClientWrapper,
   FEaaSServerWrapper,
+  FEaaSServerWrapperProps,
   BYOCServerWrapper,
 } from './components/FEaaS';
 export {

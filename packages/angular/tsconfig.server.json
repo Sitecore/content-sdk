@@ -17,6 +17,8 @@
     "src/server/config-cli/**/*.ts",
     "src/server/tools/**/*.ts",
     "src/server/codegen/**/*.ts",
-    "src/server/experimental-features/**/*.ts"
-  ]
+    "src/server/experimental-features/**/*.ts",
+    "src/server/capabilities/**/*.ts"
+  ],
+  "exclude": ["src/**/*.spec.ts"]
 }

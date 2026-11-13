@@ -391,6 +391,36 @@ describe('Import Map Generation', () => {
 
       expect(convertToTestable(result)).to.deep.equal(expected);
     });
+
+    // SCSS modules, SVGs, and other bundler assets cannot be resolved by the
+    // TypeScript module resolver. They are omitted from the import map without a warning.
+    // Unresolved JS/TS modules still warn.
+    it('should omit unresolved non-JS asset imports without warning', () => {
+      const warnStub = sandbox.stub(console, 'warn');
+
+      try {
+        const result = getImportMap(['single-file-imports/with-assets.tsx']);
+        const expected = [
+          {
+            module: testExportsModulePath,
+            namedImports: [{ name: 'funco', value: 'funco' }],
+            defaultImport: null,
+            namespaceImport: null,
+          },
+        ];
+        expect(convertToTestable(result)).to.deep.equal(expected);
+
+        const unresolvedWarnings = warnStub
+          .getCalls()
+          .filter((call) =>
+            String(call.args[0]).includes('Could not resolve a file for import')
+          )
+          .map((call) => call.args[1]);
+        expect(unresolvedWarnings).to.deep.equal(['./does-not-exist']);
+      } finally {
+        warnStub.restore();
+      }
+    });
   });
 
   describe('defaultMapTemplate', () => {

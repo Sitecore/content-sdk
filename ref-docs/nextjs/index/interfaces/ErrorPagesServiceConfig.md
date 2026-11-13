@@ -63,7 +63,7 @@ The language
 
 > `optional` **retries?**: `object`
 
-Defined in: content/types/config/models.d.ts:84
+Defined in: core/types/sitecore-config.d.ts:76
 
 Retry configuration applied to Layout, Dictionary and ErrorPages services
 

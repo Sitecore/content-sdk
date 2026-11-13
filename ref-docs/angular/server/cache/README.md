@@ -10,6 +10,11 @@
 
 - [GlobalLoaderCacheConfig](interfaces/GlobalLoaderCacheConfig.md)
 
+## Type Aliases
+
+- [BuildSitecoreItemCacheTagParams](type-aliases/BuildSitecoreItemCacheTagParams.md)
+
 ## Functions
 
+- [buildSitecoreItemCacheTag](functions/buildSitecoreItemCacheTag.md)
 - [createLoaderCache](functions/createLoaderCache.md)

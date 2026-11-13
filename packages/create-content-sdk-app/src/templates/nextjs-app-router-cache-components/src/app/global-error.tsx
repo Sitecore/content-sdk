@@ -5,7 +5,7 @@ import { ErrorPage, Page } from '@sitecore-content-sdk/nextjs';
 import client from 'lib/sitecore-client';
 import scConfig from 'sitecore.config';
 import Providers from 'src/Providers';
-import Layout from 'src/Layout';
+import LayoutClient from 'src/Layout.client';
 
 export default function GlobalError() {
   const [page, setPage] = useState<Page | null>(null);
@@ -36,7 +36,7 @@ export default function GlobalError() {
   if (page) {
     return (
       <Providers page={page}>
-        <Layout page={page} />
+        <LayoutClient page={page} />
       </Providers>
     );
   }

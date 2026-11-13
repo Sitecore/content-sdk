@@ -6,9 +6,9 @@
 
 # Variable: DefaultEmptyFieldEditingComponentImage
 
-> `const` **DefaultEmptyFieldEditingComponentImage**: `React.FC`\<\{\[`key`: `string`\]: `unknown`; `className?`: `string`; \}\>
+> `const` **DefaultEmptyFieldEditingComponentImage**: `React.FC`\<\{\[`key`: `string`\]: `unknown`; `className?`: `string`; `style?`: `React.CSSProperties`; \}\>
 
-Defined in: [packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx:25](https://github.com/Sitecore/content-sdk/blob/5509bcddfb4134f289ce04760ee3a119d66b3d04/packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx#L25)
+Defined in: [packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx:25](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/react/src/components/DefaultEmptyFieldEditingComponents.tsx#L25)
 
 The DefaultEmptyFieldEditingComponentImage component.
 

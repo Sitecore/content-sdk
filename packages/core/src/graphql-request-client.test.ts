@@ -279,6 +279,94 @@ describe('GraphQLRequestClient', () => {
     }
   });
 
+  describe('request-level fetch override', () => {
+    const response = (result: string) =>
+      new Response(JSON.stringify({ data: { result } }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+    it('should override configured fetch for one request and preserve headers and variables', async () => {
+      const configuredFetch = sinon.stub().callsFake(async () => response('configured'));
+      const requestFetch = sinon.stub().callsFake(async () => response('override'));
+      const client = new GraphQLRequestClient(endpoint, {
+        fetch: configuredFetch,
+        apiKey: 'test-api-key',
+        contextId: 'test-context-id',
+        headers: { 'x-custom': 'configured' },
+      });
+      const query = 'query Test($value: String!) { test(value: $value) }';
+      const variables = { value: 'test' };
+
+      const result = await client.request(query, variables, {
+        fetch: requestFetch,
+        headers: { 'x-custom': 'override' },
+      });
+
+      expect(result).to.deep.equal({ result: 'override' });
+      expect(requestFetch.calledOnce).to.equal(true);
+      expect(configuredFetch.called).to.equal(false);
+      const [requestUrl, requestInit] = requestFetch.firstCall.args as [string, RequestInit];
+      const headers = new Headers(requestInit.headers);
+      expect(requestUrl).to.equal(endpoint);
+      expect(headers.get('sc_apikey')).to.equal('test-api-key');
+      expect(headers.get('x-sitecore-contextid')).to.equal('test-context-id');
+      expect(headers.get('x-custom')).to.equal('override');
+      expect(JSON.parse(requestInit.body as string)).to.deep.equal({
+        query,
+        variables,
+        operationName: 'Test',
+      });
+
+      expect(await client.request(query, variables)).to.deep.equal({ result: 'configured' });
+      expect(configuredFetch.calledOnce).to.equal(true);
+      expect(requestFetch.calledOnce).to.equal(true);
+    });
+
+    it('should isolate fetch overrides between concurrent requests', async () => {
+      const configuredFetch = sinon.stub().callsFake(async () => response('configured'));
+      const firstFetch = sinon.stub().callsFake(async () => response('first'));
+      const secondFetch = sinon.stub().callsFake(async () => response('second'));
+      const client = new GraphQLRequestClient(endpoint, { fetch: configuredFetch });
+
+      const results = await Promise.all([
+        client.request('query { test }', undefined, { fetch: firstFetch }),
+        client.request('query { test }', undefined, { fetch: secondFetch }),
+        client.request('query { test }'),
+      ]);
+
+      expect(results).to.deep.equal([
+        { result: 'first' },
+        { result: 'second' },
+        { result: 'configured' },
+      ]);
+      expect(firstFetch.calledOnce).to.equal(true);
+      expect(secondFetch.calledOnce).to.equal(true);
+      expect(configuredFetch.calledOnce).to.equal(true);
+    });
+
+    it('should use the request fetch override for every retry', async () => {
+      const configuredFetch = sinon.stub().callsFake(async () => response('configured'));
+      const requestFetch = sinon.stub();
+      requestFetch.onFirstCall().resolves(new Response('Unavailable', { status: 503 }));
+      requestFetch.onSecondCall().resolves(response('retried'));
+      const client = new GraphQLRequestClient(endpoint, { fetch: configuredFetch });
+
+      const result = await client.request('query { test }', undefined, {
+        fetch: requestFetch,
+        retries: 1,
+        retryStrategy: {
+          shouldRetry: (_error, attempt) => attempt === 1,
+          getDelay: () => 0,
+        },
+      });
+
+      expect(result).to.deep.equal({ result: 'retried' });
+      expect(requestFetch.calledTwice).to.equal(true);
+      expect(configuredFetch.called).to.equal(false);
+    });
+  });
+
   describe('Working with retryer', () => {
     it('should use the clientConfig values configured by the client', () => {
       const clientConfig = {

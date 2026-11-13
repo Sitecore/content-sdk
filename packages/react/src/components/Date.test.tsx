@@ -2,6 +2,7 @@
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import React from 'react';
+import sinon from 'sinon';
 import { DateField } from './Date';
 import { EMPTY_DATE_FIELD_VALUE } from '@sitecore-content-sdk/content/layout';
 
@@ -82,10 +83,57 @@ describe('<DateField />', () => {
           `<code type="text/sitecore" chrometype="field" class="scpm" kind="open">${JSON.stringify(
             testMetadata
           )}</code>`,
-          '23-11-2001',
+          '<span>23-11-2001</span>',
           '<code type="text/sitecore" chrometype="field" class="scpm" kind="close"></code>',
         ].join('')
       );
+    });
+
+    it('should keep an explicit tag in editing mode', () => {
+      const props = {
+        field: {
+          value: '23-11-2001',
+          metadata: testMetadata,
+        },
+        tag: 'p',
+      };
+
+      const rendered = render(<DateField {...props} />, { container: document.body });
+
+      expect(rendered.baseElement.innerHTML).to.equal(
+        [
+          `<code type="text/sitecore" chrometype="field" class="scpm" kind="open">${JSON.stringify(
+            testMetadata
+          )}</code>`,
+          '<p>23-11-2001</p>',
+          '<code type="text/sitecore" chrometype="field" class="scpm" kind="close"></code>',
+        ].join('')
+      );
+    });
+
+    it('should apply suppressHydrationWarning when metadata is present', () => {
+      const props = {
+        field: {
+          value: '23-11-2001',
+          metadata: testMetadata,
+        },
+      };
+
+      const createElementSpy = sinon.spy(React, 'createElement');
+
+      try {
+        render(<DateField {...props} />, { container: document.body });
+
+        const spanCall = createElementSpy
+          .getCalls()
+          .find(
+            (call) => call.args[0] === 'span' && call.args[1]?.suppressHydrationWarning === true
+          );
+
+        expect(spanCall).to.not.be.undefined;
+      } finally {
+        createElementSpy.restore();
+      }
     });
 
     describe('empty value', () => {

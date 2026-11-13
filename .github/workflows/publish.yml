@@ -19,6 +19,8 @@ on:
 # Canary snapshot must run in a separate job with its own checkout so changesets still exist.
 jobs:
   stable-release-prep:
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     if: ${{ !startsWith(github.ref_name, 'release/betas') }}
     env:
@@ -33,7 +35,7 @@ jobs:
           owner: ${{ github.repository_owner }}
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.ref }}
           fetch-depth: 0
@@ -47,9 +49,10 @@ jobs:
           git remote set-url origin https://x-access-token:${{ steps.generate-token.outputs.token }}@github.com/${{ github.repository }}
 
       - name: Use Node.js 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 24
+          registry-url: ${{ secrets.NPM_REGISTRY }}
 
       - name: Install dependencies
         run: |
@@ -69,22 +72,6 @@ jobs:
           else
             echo "No API doc changes to commit"
           fi
-
-      - name: Creating .npmrc
-        run: |
-          NPM_REGISTRY="${NPM_REGISTRY%/}"
-          NPM_REGISTRY="${NPM_REGISTRY}/"
-          write_npmrc() {
-            {
-              echo "@sitecore-content-sdk:registry=https://$NPM_REGISTRY"
-              echo "registry=https://$NPM_REGISTRY"
-              echo "//$NPM_REGISTRY:_authToken=$NPM_TOKEN"
-            } > "$1"
-          }
-          write_npmrc "$GITHUB_WORKSPACE/.npmrc"
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
 
       - name: NPM tags and version
         id: npm-tags
@@ -116,26 +103,27 @@ jobs:
           commit: '[release][ci] Version bump and changelog'
           title: ${{ format('[csdk] {0}', steps.npm-tags.outputs.release_text) }}
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
 
   canary-snapshot:
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.ref }}
           fetch-depth: 0
 
       - name: Use Node.js 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 24
+          registry-url: https://registry.npmjs.org/
 
       - name: Install dependencies
         run: |
@@ -159,22 +147,6 @@ jobs:
 
       - name: Build packages
         run: npm run build
-
-      - name: Creating .npmrc
-        run: |
-          NPM_REGISTRY="${NPM_REGISTRY%/}"
-          NPM_REGISTRY="${NPM_REGISTRY}/"
-          write_npmrc() {
-            {
-              echo "@sitecore-content-sdk:registry=https://$NPM_REGISTRY"
-              echo "registry=https://$NPM_REGISTRY"
-              echo "//$NPM_REGISTRY:_authToken=$NPM_TOKEN"
-            } > "$1"
-          }
-          write_npmrc "$GITHUB_WORKSPACE/.npmrc"
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
 
       - name: Pre-release canary version bump and snapshot cascade
         id: canary_snapshot

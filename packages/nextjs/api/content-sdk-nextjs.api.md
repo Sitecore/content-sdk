@@ -61,6 +61,7 @@ import { FEaaSComponent } from '@sitecore-content-sdk/react';
 import { FEaaSComponentParams } from '@sitecore-content-sdk/react';
 import { FEaaSComponentProps } from '@sitecore-content-sdk/react';
 import { FEaaSServerWrapper } from '@sitecore-content-sdk/react';
+import { FEaaSServerWrapperProps } from '@sitecore-content-sdk/react';
 import { FEaaSWrapper as FEaaSWrapper_2 } from '@sitecore-content-sdk/react';
 import { fetchFEaaSComponentServerProps } from '@sitecore-content-sdk/react';
 import { FetchOptions } from '@sitecore-content-sdk/content/client';
@@ -190,6 +191,7 @@ import { SitecoreCliConfigInput } from '@sitecore-content-sdk/content/config';
 import { SitecoreClient as SitecoreClient_2 } from '@sitecore-content-sdk/content/client';
 import { SitecoreClientInit } from '@sitecore-content-sdk/content/client';
 import { SitecoreConfig as SitecoreConfig_2 } from '@sitecore-content-sdk/content/config';
+import { SitecoreConfig as SitecoreConfig_3 } from '@sitecore-content-sdk/core';
 import { SitecoreConfigInput as SitecoreConfigInput_2 } from '@sitecore-content-sdk/content/config';
 import { SitecoreProvider } from '@sitecore-content-sdk/react';
 import { SitecoreProviderReactContext } from '@sitecore-content-sdk/react';
@@ -272,6 +274,15 @@ export function buildSitecoreDictionaryCacheTag(params: BuildSitecoreDictionaryC
 // @public
 export type BuildSitecoreDictionaryCacheTagParams = {
     site: string;
+    locale: string;
+};
+
+// @public
+export function buildSitecoreItemCacheTag(params: BuildSitecoreItemCacheTagParams): string;
+
+// @public
+export type BuildSitecoreItemCacheTagParams = {
+    itemId: string;
     locale: string;
 };
 
@@ -458,7 +469,7 @@ export { DefaultRetryStrategy }
 export const defaultServerImportEntries: ImportEntry[];
 
 // @public
-export const defineCliConfig: (cliConfig: SitecoreCliConfigInput) => SitecoreCliConfig;
+export const defineCliConfig: (cliConfig: NextjsCliConfigInput) => SitecoreCliConfig;
 
 // @public
 export const defineConfig: (config?: SitecoreConfigInput) => SitecoreConfig;
@@ -473,7 +484,7 @@ export { DesignLibrary }
 // Warning: (ae-forgotten-export) The symbol "DesingLibraryAppProps" needs to be exported by the entry point api-surface.d.ts
 //
 // @public
-export const DesignLibraryApp: (input: DesingLibraryAppProps) => React_2.JSX.Element | null;
+export const DesignLibraryApp: (props: DesingLibraryAppProps) => Promise<React_2.JSX.Element | null>;
 
 export { DictionaryPhrases }
 
@@ -560,6 +571,9 @@ export interface FailedProxyExecution {
     executedSuccessfully: false;
 }
 
+// @public
+export const FEaaSCacheComponentsServerWrapper: (props: FEaaSServerWrapperProps) => React_2.JSX.Element;
+
 export { FEaaSClientWrapper }
 
 export { FEaaSComponent }
@@ -604,7 +618,7 @@ export { FileField }
 export { Form }
 
 // @public
-export const generateMap: GenerateMapFunction;
+export const generateMap: (input: NextjsGenerateMapArgs) => void;
 
 export { GenerateMapArgs }
 
@@ -821,10 +835,22 @@ export { NativeDataFetcherResponse }
 export const NextImage: React_2.FC<NextImageProps>;
 
 // @public
+export type NextjsCliConfigInput = Omit<SitecoreCliConfigInput, 'componentMap'> & {
+    componentMap?: NextjsGenerateMapArgs & {
+        generator?: GenerateMapFunction;
+    };
+};
+
+// @public
 export type NextjsContentSdkComponent = ReactContentSdkComponent & {
     getComponentServerProps?: GetComponentServerProps;
     dynamicModule?: () => Promise<ReactContentSdkComponent>;
     componentType?: 'client' | 'server' | 'universal';
+};
+
+// @public
+export type NextjsGenerateMapArgs = GenerateMapArgs & {
+    cacheComponents?: boolean;
 };
 
 export { noopLoadImportMap }
@@ -998,6 +1024,7 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     protected getHostHeader(req: NextRequest): string;
     protected getLanguage(req: NextRequest, res?: NextResponse): string;
     protected getLanguageFromHeader(res?: NextResponse): string | undefined;
+    protected getPathname(req: NextRequest, res?: NextResponse): string;
     protected getSite(req: NextRequest, res?: NextResponse): SiteInfo;
     protected isAppRouter(res: NextResponse): boolean;
     protected isPrefetch(req: NextRequest): boolean;
@@ -1277,7 +1304,7 @@ export { withSitecore }
 
 // @public
 export const writeImportMap: (args: WriteImportMapArgs) => (input: {
-    scConfig: SitecoreConfig_2;
+    scConfig: SitecoreConfig_3;
 }) => Promise<void>;
 
 

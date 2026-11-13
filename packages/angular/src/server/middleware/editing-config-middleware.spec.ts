@@ -31,7 +31,10 @@ describe('createEditingConfigMiddleware', () => {
     ['ComponentA', TestAComponent],
     ['ComponentB', TestBComponent],
   ]);
-  const metadata = { packages: { '@sitecore-content-sdk/angular': '1.0.0' } };
+  const metadata = {
+    packages: { '@sitecore-content-sdk/angular': '1.0.0' },
+    capabilities: { preview: true as const },
+  };
   const next = vi.fn();
 
   beforeEach(() => {
@@ -138,6 +141,7 @@ describe('createEditingConfigMiddleware', () => {
     expect(res.json).toHaveBeenCalledWith({
       components: ['ComponentA', 'ComponentB'],
       packages: expect.objectContaining({ ...metadata.packages }),
+      capabilities: { preview: true },
       editMode: EditMode.Metadata,
     });
     expect(res.setHeader).toHaveBeenCalledWith('Access-Control-Allow-Origin', expect.any(String));
@@ -178,6 +182,7 @@ describe('createEditingConfigMiddleware', () => {
     expect(res.json).toHaveBeenCalledWith({
       components: ['ComponentA', 'ComponentB'],
       packages: {},
+      capabilities: {},
       editMode: EditMode.Metadata,
     });
   });
@@ -188,6 +193,7 @@ describe('createEditingConfigMiddleware', () => {
       editingSecret: 's',
       metadataImport: async () => ({
         packages: { '@sitecore-content-sdk/angular': '2.0.0' },
+        capabilities: { editing: true as const },
       }),
     });
     const req: ExpressRequest = {
@@ -203,6 +209,7 @@ describe('createEditingConfigMiddleware', () => {
     expect(res.json).toHaveBeenCalledWith({
       components: ['ComponentA', 'ComponentB'],
       packages: { '@sitecore-content-sdk/angular': '2.0.0' },
+      capabilities: { editing: true },
       editMode: EditMode.Metadata,
     });
   });
@@ -228,6 +235,7 @@ describe('createEditingConfigMiddleware', () => {
     expect(res.json).toHaveBeenCalledWith({
       components: ['ComponentA', 'ComponentB'],
       packages: {},
+      capabilities: {},
       editMode: EditMode.Metadata,
     });
   });

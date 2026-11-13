@@ -21,6 +21,12 @@ description: Tag-based caching in src/lib/cache/ and POST /api/revalidate webhoo
 - Optional `SITECORE_REVALIDATE_SECRET` + `x-revalidate-secret` header
 - Do not call `revalidateTag` from components
 
+## FEaaS components
+
+- `componentMap.cacheComponents: true` in `sitecore.cli.config.ts` registers `FEaaSCacheComponentsServerWrapper` for `FEaaSWrapper`; keep it in sync with `next.config.ts`
+- FEaaS components are not cached: they render at request time behind `<Suspense>` while the page shell stays cached
+- Do not override `FEaaSWrapper` in `src/components/` to cache FEaaS
+
 ## Stop
 
 - Stop if re-enabling SDK in-process dictionary cache

@@ -3,6 +3,8 @@ export * from './auth/models';
 import * as authModule from './auth';
 
 export * from './metadata';
+export * from './framework-packages';
+export * from './capabilities';
 
 export { ensurePathExists } from './ensurePath';
 
