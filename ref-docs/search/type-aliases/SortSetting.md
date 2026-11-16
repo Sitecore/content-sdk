@@ -8,7 +8,7 @@
 
 > **SortSetting**\<`T`\> = `object`
 
-Defined in: [search-service.ts:18](https://github.com/nayanadarshana/content-sdk/blob/71aa3f3ed0dd285013d6675023586752ddc551a8/packages/search/src/search-service.ts#L18)
+Defined in: [search-service.ts:18](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/search/src/search-service.ts#L18)
 
 Options for sorting the search results.
 
@@ -24,7 +24,7 @@ Options for sorting the search results.
 
 > **name**: `PathsToStringProps`\<`T`\>
 
-Defined in: [search-service.ts:19](https://github.com/nayanadarshana/content-sdk/blob/71aa3f3ed0dd285013d6675023586752ddc551a8/packages/search/src/search-service.ts#L19)
+Defined in: [search-service.ts:19](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/search/src/search-service.ts#L19)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [search-service.ts:19](https://github.com/nayanadarshana/content-sdk
 
 > **order**: `"asc"` \| `"desc"`
 
-Defined in: [search-service.ts:20](https://github.com/nayanadarshana/content-sdk/blob/71aa3f3ed0dd285013d6675023586752ddc551a8/packages/search/src/search-service.ts#L20)
+Defined in: [search-service.ts:20](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/search/src/search-service.ts#L20)
