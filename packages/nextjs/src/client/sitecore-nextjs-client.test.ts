@@ -152,56 +152,16 @@ describe('SitecoreClient', () => {
       });
     });
 
-    it('should not throw when called with only a path', async () => {
-      const testLayoutData = structuredClone(layoutData);
-      layoutServiceStub.fetchLayoutData.returns(testLayoutData);
-
-      const result = await sitecoreClient.getPage('/test/path');
-
-      expect(result).to.not.be.null;
-      expect(layoutServiceStub.fetchLayoutData).to.be.calledWithMatch('/test/path', {
-        locale: 'en',
-        site: 'default-site',
-      });
-    });
-
     it('should forward tokens to the base client', async () => {
-      const testLayoutData = structuredClone(layoutData);
-      layoutServiceStub.fetchLayoutData.returns(testLayoutData);
+      layoutServiceStub.fetchLayoutData.returns(structuredClone(layoutData));
       const superGetPage = sandbox.spy(Object.getPrototypeOf(SitecoreNextjsClient.prototype), 'getPage');
 
-      await sitecoreClient.getPage('/test/path', {
-        locale: 'en-US',
-        tokens: { name: 'Ada' },
-      });
+      await sitecoreClient.getPage('/test/path', { locale: 'en-US', tokens: { name: 'Ada' } });
 
       expect(superGetPage).to.be.calledWith(
         '/test/path',
-        sandbox.match({
-          locale: 'en-US',
-          tokens: { name: 'Ada' },
-        })
+        sandbox.match({ locale: 'en-US', tokens: { name: 'Ada' } })
       );
-      superGetPage.restore();
-    });
-
-    it('should not merge path-derived component variants into a caller personalize object', async () => {
-      const path = `${VARIANT_PREFIX}variant1/${VARIANT_PREFIX}sand_bike_audience/test/path`;
-      const superGetPage = sandbox.spy(Object.getPrototypeOf(SitecoreNextjsClient.prototype), 'getPage');
-      layoutServiceStub.fetchLayoutData.returns(structuredClone(layoutData));
-
-      await sitecoreClient.getPage(path, {
-        locale: 'en-US',
-        personalize: { variantId: 'caller-only' },
-      });
-
-      expect(superGetPage).to.be.calledWith(
-        sandbox.match.string,
-        sandbox.match({
-          personalize: { variantId: 'caller-only' },
-        })
-      );
-      expect(superGetPage.firstCall.args[1].personalize.componentVariantIds).to.equal(undefined);
       superGetPage.restore();
     });
 

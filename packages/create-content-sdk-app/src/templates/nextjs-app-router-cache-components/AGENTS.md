@@ -34,6 +34,7 @@ src/
           layout.tsx              # Segment layout: setCachedPageParams({ site, locale }) (SSG-safe)
           page.tsx                # Sitecore page (uses getSitecorePage)
           not-found.tsx           # Segment 404: getCachedPageParams() + getSitecoreErrorPage
+        %5Fsctokens/[[...path]]/page.tsx  # Same page, rendered per request in <Suspense> for dynamic content tokens (URL `_sctokens`)
     api/                          # Route handlers
       sitemap/route.ts, robots/route.ts
       editing/config/route.ts, editing/render/route.ts

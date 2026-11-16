@@ -252,31 +252,6 @@ describe('ServerLoaderRunner', () => {
     expect(cache.set).not.toHaveBeenCalled();
   });
 
-  it('should use the cache when the tokens header is invalid', async () => {
-    const cache: LoaderCache = {
-      get: vi.fn().mockResolvedValue({ kind: 'hit', value: { cached: true }, cacheKey: 'k' }),
-      set: vi.fn(),
-      invalidate: vi.fn(),
-      delete: vi.fn(),
-      flush: vi.fn(),
-      entries: vi.fn(),
-      ttl: 300,
-      enabled: vi.fn().mockReturnValue(true),
-      config: {},
-    };
-
-    const provider = new ServerLoaderRunner({ page: pageLoader }, mockConfig, cache);
-    const result = await provider.resolve({
-      loaderId: 'page',
-      url: '/about',
-      routeParams: {},
-      query: {},
-      csdkRequestData: { headers: { [PERSONALIZE_TOKENS_HEADER]: 'not-valid' } },
-    });
-
-    expect(result).toEqual({ kind: 'data', data: { cached: true } });
-  });
-
   it('should skip the cache when it is globally disabled and the route did not opt in', async () => {
     const cache: LoaderCache = {
       get: vi.fn(),

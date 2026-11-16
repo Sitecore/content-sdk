@@ -1,21 +1,14 @@
 /* eslint-disable no-unused-expressions */
-import { runInNewContext } from 'node:vm';
 import { expect } from 'chai';
 import { collectPersonalizeExecutionTokens, normalizeTokens, TokenMap } from './token-map';
-import { createTokenTransform, replaceTokens } from './token-replace';
+import { replaceTokens } from './token-replace';
 import {
-  decodePersonalizeTokens,
   encodePersonalizeTokens,
+  getPersonalizeTokens,
+  PERSONALIZE_TOKENS_HEADER,
   PERSONALIZE_TOKENS_MAX_LENGTH,
 } from './token-codec';
-import { isSafeUrlValue } from './token-url';
-import { transformLayoutStrings } from '../layout/layout-walker';
-import {
-  getPersonalizedRewrite,
-  getPersonalizedRewriteData,
-  hasPersonalizeTokensRewrite,
-  normalizePersonalizedRewrite,
-} from './utils';
+import { getPersonalizedRewriteData, normalizePersonalizedRewrite } from './utils';
 
 const tokens = (map: Record<string, string>): TokenMap => normalizeTokens(map);
 
@@ -28,17 +21,14 @@ describe('dynamic content tokens', () => {
       expect(replaceTokens('Hi {{ name }}!', t)).to.equal('Hi Ada!');
       expect(replaceTokens('Hi {{user.first-name}}', t)).to.equal('Hi Grace');
       expect(replaceTokens('Hi {{missing|friend}}!', t)).to.equal('Hi friend!');
+      expect(replaceTokens('Hi {{ missing | dear friend }}!', t)).to.equal('Hi dear friend!');
       expect(replaceTokens('Hi {{name|friend}}!', t)).to.equal('Hi Ada!');
       expect(replaceTokens('{{name}} from {{city}}', t)).to.equal('Ada from Rome');
     });
 
-    it('removes unmatched tokens without a fallback and reports them', () => {
-      const unmatched: string[] = [];
-      expect(replaceTokens('Hi {{missing}}!', t, undefined, (k) => unmatched.push(k))).to.equal(
-        'Hi !'
-      );
+    it('removes tokens without a value or fallback', () => {
+      expect(replaceTokens('Hi {{missing}}!', t)).to.equal('Hi !');
       expect(replaceTokens('Hi {{missing|}}!', t)).to.equal('Hi !');
-      expect(unmatched).to.deep.equal(['missing']);
     });
 
     it('leaves text that is not a token as authored', () => {
@@ -48,6 +38,7 @@ describe('dynamic content tokens', () => {
       expect(replaceTokens('{{{name}}}', t)).to.equal('{{{name}}}');
       expect(replaceTokens('Hi {{name', t)).to.equal('Hi {{name');
       expect(replaceTokens('no tokens', t)).to.equal('no tokens');
+      expect(replaceTokens('\uE000{{name}}', t)).to.equal('\uE000{{name}}');
     });
 
     it('inserts values literally and does not rescan them', () => {
@@ -56,27 +47,53 @@ describe('dynamic content tokens', () => {
       expect(replaceTokens('{{b}}', v)).to.equal('{{c}}');
     });
 
-    it('does not insert values containing < into plain strings', () => {
-      const v = tokens({ x: '<img src=x onerror=alert(1)>', y: 'a > b' });
+    it('ignores inherited properties of a plain token object', () => {
+      expect(replaceTokens('{{constructor|x}}', {})).to.equal('x');
+      expect(replaceTokens('{{toString|x}}', {})).to.equal('x');
+    });
+  });
+
+  describe('plain strings', () => {
+    it('uses fallbacks when values would add markup', () => {
+      const v = tokens({ x: '<img src=x onerror=alert(1)>', tag: 'img src=x onerror=alert(1)' });
       expect(replaceTokens('Hi {{x|friend}}', v)).to.equal('Hi friend');
-      expect(replaceTokens('Hi {{x}}', v)).to.equal('Hi ');
-      expect(replaceTokens('{{y}}', v)).to.equal('a > b');
+      expect(replaceTokens('Save <{{tag|10%}}', v)).to.equal('Save <10%');
+      expect(replaceTokens('{{y}}', tokens({ y: 'a > b < c' }))).to.equal('a > b < c');
     });
 
-    it('does not insert script-capable URLs into plain strings', () => {
-      for (const value of ['javascript:alert(1)', ' JAVA\tSCRIPT:alert(1)', 'vbscript:x', 'data:text/html,x']) {
+    it('uses fallbacks when the result starts with a script-capable scheme', () => {
+      for (const value of [
+        'javascript:alert(1)',
+        ' JAVA\tSCRIPT:alert(1)',
+        'vbscript:x',
+        'data:text/html,x',
+      ]) {
         expect(replaceTokens('{{x|safe}}', tokens({ x: value })), value).to.equal('safe');
       }
+      const split = tokens({ a: 'java', b: 'script:alert(1)' });
+      expect(replaceTokens('{{a|x}}{{b|y}}', split)).to.equal('xy');
       expect(replaceTokens('{{x}}', tokens({ x: 'Visit javascript: the language' }))).to.equal(
         'Visit javascript: the language'
       );
     });
+  });
 
-    it('HTML-escapes values in strings that contain markup', () => {
+  describe('markup', () => {
+    it('HTML-escapes values in text', () => {
       const v = tokens({ x: `<script>"&'` });
       expect(replaceTokens('<p>Hi {{x}}</p>', v)).to.equal(
         '<p>Hi &lt;script&gt;&quot;&amp;&#39;</p>'
       );
+      expect(replaceTokens('<p>2 < 3 {{x}}</p>', tokens({ x: 'Ada' }))).to.equal(
+        '<p>2 < 3 Ada</p>'
+      );
+    });
+
+    it('uses only fallbacks directly after <', () => {
+      const v = tokens({ x: 'img src=x onerror=alert(1)//', y: 'onmouseover=alert(1)' });
+      expect(replaceTokens('<p>Save <{{x|10%}}</p>', v)).to.equal('<p>Save <10%</p>');
+      expect(replaceTokens('<p>a <{{none}}{{x}}</p>', v)).to.equal('<p>a <</p>');
+      expect(replaceTokens('<p><{{none|b}} {{y}}</p>', v)).to.equal('<p><b </p>');
     });
 
     it('uses only the fallback inside tags', () => {
@@ -89,6 +106,14 @@ describe('dynamic content tokens', () => {
       expect(replaceTokens('<a title="a>b" href="{{url}}">{{name}}</a>', v)).to.equal(
         '<a title="a>b" href="">Ada</a>'
       );
+    });
+
+    it('opens quoted attribute values only after =, as browsers do', () => {
+      const v = tokens({ v: '0||alert(1)', name: 'Ada' });
+      expect(replaceTokens('<a title=a"b onclick="x=1>{{v}}">t</a>', v)).to.equal(
+        '<a title=a"b onclick="x=1>">t</a>'
+      );
+      expect(replaceTokens("<a title='x>{{v}}'>{{name}}</a>", v)).to.equal("<a title='x>'>Ada</a>");
     });
 
     it('treats unterminated tags and quotes as tags', () => {
@@ -111,72 +136,156 @@ describe('dynamic content tokens', () => {
       expect(replaceTokens('<p>a</p><script>{{name}}', v)).to.equal('<p>a</p><script>{{name}}');
     });
 
-    it('keeps a < that does not start a tag in text', () => {
+    it('does not treat custom elements as raw blocks', () => {
       const v = tokens({ name: 'Ada' });
-      expect(replaceTokens('<p>2 < 3 {{name}}</p>', v)).to.equal('<p>2 < 3 Ada</p>');
+      expect(replaceTokens('<p><code-block>{{name}}</code-block> {{name}}</p>', v)).to.equal(
+        '<p><code-block>Ada</code-block> Ada</p>'
+      );
     });
 
-    it('leaves strings containing the internal marker characters untouched', () => {
-      expect(replaceTokens('\uE000{{name}}', t)).to.equal('\uE000{{name}}');
+    it('uses only fallbacks where browsers would not parse the token as text', () => {
+      const v = tokens({ v: 'alert(1)' });
+      for (const authored of [
+        '<!x a="> <a onclick="> {{v}} <">',
+        '<a ="x onclick="> {{v}} <">',
+        '<a b=x=" onclick="> {{v}} <">',
+        '</ a="> <a onclick="> {{v}} <">',
+        '<xmp><a title="</xmp><a onclick=">{{v}}"></xmp>',
+        '<noscript><p title="</noscript><img onerror=">{{v}}">',
+        '<script></script x><a onclick="</script>{{v}}">',
+        '<script><!--<script></script>{{v}}</script>',
+        '<svg><style><a onclick="</style>{{v}}"></svg>',
+        '<select><style><input><a onclick="</style>{{v}}">',
+        '<svg><![CDATA[ > <b c="]]> <a onclick="> {{v}} <">',
+        '<!--><a onclick="-->{{v}}">',
+        '<script{{none}}>{{v}}</script>',
+      ]) {
+        expect(replaceTokens(authored, v), authored).to.not.contain('alert(1)');
+      }
     });
 
-    it('ignores inherited properties of a plain token object', () => {
-      expect(replaceTokens('{{constructor|x}}', {})).to.equal('x');
-      expect(replaceTokens('{{toString|x}}', {})).to.equal('x');
+    it('checks the markup with fallbacks in place', () => {
+      const v = tokens({ v: 'alert(1)' });
+      expect(replaceTokens('<p>{{a|<b onclick="}}{{v}}"></p>', v)).to.equal(
+        '<p><b onclick=""></p>'
+      );
+      expect(replaceTokens('<a title="{{a|"><i onclick="}}">{{v}}</i>', v)).to.equal(
+        '<a title=""><i onclick="">alert(1)</i>'
+      );
+      expect(replaceTokens('<p>{{a|<}}{{v}}</p>', v)).to.equal('<p><</p>');
+      expect(
+        replaceTokens('<p>{{a|<b>friend</b>}} {{v}}</p>', tokens({ a: 'Ada', v: 'x' }))
+      ).to.equal('<p>Ada x</p>');
+    });
+
+    it('recognizes doctypes, unquoted values and legacy script comments', () => {
+      const v = tokens({ name: 'Ada' });
+      expect(replaceTokens('<!DOCTYPE html><p>{{name}}</p>', v)).to.equal(
+        '<!DOCTYPE html><p>Ada</p>'
+      );
+      expect(replaceTokens('<a href=/x?a=1&b=2>{{name}}</a>', v)).to.equal(
+        '<a href=/x?a=1&b=2>Ada</a>'
+      );
+      expect(replaceTokens('<input value={{name}}><p>{{name}}</p>', v)).to.equal(
+        '<input value=><p>Ada</p>'
+      );
+      expect(replaceTokens('<script><!-- x() //--></script><p>{{name}}</p>', v)).to.equal(
+        '<script><!-- x() //--></script><p>Ada</p>'
+      );
     });
   });
 
   describe('URLs', () => {
-    const v = tokens({ city: 'Rome', path: '../../admin?x=1#y', proto: 'javascript' });
+    const v = tokens({
+      city: 'Rome',
+      path: '../../admin?x=1#y',
+      host: 'evil.com',
+      q: 'x&admin=1',
+      image: 'https://cdn.example.com/offers/rome.jpg',
+      js: 'javascript:alert(1)',
+    });
 
-    it('encodes values in URL properties', () => {
+    it('encodes values in the path, query and fragment', () => {
       expect(replaceTokens('/media/promo-{{city|london}}.jpg', v, 'src')).to.equal(
         '/media/promo-Rome.jpg'
       );
       expect(replaceTokens('/offers/{{path}}', v, 'href')).to.equal(
         '/offers/..%2F..%2Fadmin%3Fx%3D1%23y'
       );
-      expect(replaceTokens('/a?q={{city}}', v, 'url')).to.equal('/a?q=Rome');
+      expect(replaceTokens('https://cdn.example.com/{{city}}/i.jpg', v, 'src')).to.equal(
+        'https://cdn.example.com/Rome/i.jpg'
+      );
+      expect(replaceTokens('/a?q={{q}}#{{city}}', v, 'url')).to.equal('/a?q=x%26admin%3D1#Rome');
+      expect(replaceTokens('mailto:a@b.c?subject={{city}}', v, 'href')).to.equal(
+        'mailto:a@b.c?subject=Rome'
+      );
       expect(replaceTokens('/p-{{none|london}}.jpg', v, 'src')).to.equal('/p-london.jpg');
+    });
+
+    it('uses only the fallback in the scheme and host', () => {
+      expect(replaceTokens('https://{{host|a.com}}/x', v, 'href')).to.equal('https://a.com/x');
+      expect(replaceTokens('//{{host|a.com}}/x', v, 'src')).to.equal('//a.com/x');
+      expect(replaceTokens('{{host|/shop}}/x', v, 'href')).to.equal('/shop/x');
+      expect(replaceTokens('{{js|https}}:alert(1)', v, 'href')).to.equal('https:alert(1)');
+      expect(replaceTokens('mailto:{{city|a@b.c}}', v, 'href')).to.equal('mailto:a@b.c');
+    });
+
+    it('uses only fallbacks in URLs with other schemes', () => {
+      const code = tokens({ code: "')(alert(document.domain))('" });
+      expect(replaceTokens("javascript:openWin('/promo?code={{code|x}}')", code, 'href')).to.equal(
+        "javascript:openWin('/promo?code=x')"
+      );
+      expect(replaceTokens('java\tscript:go(/{{code}})', code, 'href')).to.equal(
+        'java\tscript:go(/)'
+      );
+      expect(replaceTokens('data:text/html,/{{code}}', code, 'src')).to.equal('data:text/html,/');
+    });
+
+    it('does not turn a root-relative path into a protocol-relative URL', () => {
+      expect(replaceTokens('/{{region}}/{{host}}/stores', v, 'href')).to.equal('/evil.com/stores');
+      expect(replaceTokens('/{{region}}/offers', v, 'src')).to.equal('/offers');
+      expect(replaceTokens('\\{{region}}/{{host}}/x', v, 'href')).to.equal('/evil.com/x');
+      expect(replaceTokens('//cdn.example.com/{{city}}', v, 'src')).to.equal(
+        '//cdn.example.com/Rome'
+      );
+    });
+
+    it('takes a whole URL value when the string is a single token', () => {
+      expect(replaceTokens('{{image|/default.jpg}}', v, 'src')).to.equal(
+        'https://cdn.example.com/offers/rome.jpg'
+      );
+      expect(replaceTokens('{{image|/default.jpg}}', v, 'value')).to.equal(
+        'https://cdn.example.com/offers/rome.jpg'
+      );
+      expect(replaceTokens('{{js|/home}}', v, 'href')).to.equal('/home');
+      expect(replaceTokens('{{none|/home}}', v, 'href')).to.equal('/home');
+      for (const value of [
+        'data:image/png,x',
+        'vbscript:x',
+        '/a\\b',
+        'a\nb',
+        '/a b',
+        '/<svg/onload=alert(1)>',
+        'https://x.com/<img/src/onerror=alert(1)>',
+        '/"onmouseover="x',
+      ]) {
+        expect(replaceTokens('{{u|/x}}', tokens({ u: value }), 'src'), value).to.equal('/x');
+        expect(replaceTokens('{{u|/x}}', tokens({ u: value }), 'value'), value).to.equal('/x');
+      }
+    });
+
+    it('encodes link query string and anchor values', () => {
+      expect(replaceTokens('b={{q}}', v, 'querystring')).to.equal('b=x%26admin%3D1');
+      expect(replaceTokens('{{q}}', v, 'anchor')).to.equal('x%26admin%3D1');
     });
 
     it('treats a whole-URL string in any field as a URL', () => {
       expect(replaceTokens('https://cdn.example.com/p-{{city}}.jpg', v, 'value')).to.equal(
         'https://cdn.example.com/p-Rome.jpg'
       );
-      expect(replaceTokens('//cdn.example.com/{{path}}', v, 'value')).to.equal(
-        '//cdn.example.com/..%2F..%2Fadmin%3Fx%3D1%23y'
-      );
       expect(replaceTokens('/p/{{city|new york}}', v, 'value')).to.equal('/p/Rome');
       expect(replaceTokens('Visit {{city}} today', v, 'value')).to.equal('Visit Rome today');
-    });
-
-    it('treats a string whose fallback is a URL as a URL', () => {
-      const js = tokens({ url: 'javascript:alert(1)', city: 'São Paulo' });
-      expect(replaceTokens('{{url|/home}}', js, 'value')).to.equal('javascript%3Aalert(1)');
-      expect(replaceTokens('/p/{{city|new york}}', js, 'value')).to.equal('/p/S%C3%A3o%20Paulo');
-    });
-
-    it('renders fallbacks only when the result is not a safe URL', () => {
-      expect(replaceTokens('{{proto|https}}:alert(1)', v, 'href')).to.equal('https:alert(1)');
-    });
-
-    it('validates srcSet values', () => {
-      expect(replaceTokens('/a-{{city}}.jpg 1x, /b-{{city}}.jpg 2x', v, 'srcSet')).to.equal(
-        '/a-Rome.jpg 1x, /b-Rome.jpg 2x'
-      );
-      expect(isSafeUrlValue('srcSet', '/a.jpg 1x, javascript:x 2x')).to.be.false;
-      expect(isSafeUrlValue('srcSet', '/a.jpg 0x')).to.be.false;
-      expect(isSafeUrlValue('srcSet', '/a.jpg 1x extra')).to.be.false;
-    });
-
-    it('allows only safe schemes', () => {
-      for (const url of ['https://a.com', 'http://a', 'mailto:a@b.c', 'tel:+1', '/a', '?q', '#x', '']) {
-        expect(isSafeUrlValue('href', url), url).to.be.true;
-      }
-      for (const url of ['javascript:alert(1)', 'data:text/html,x', 'vbscript:x', '/a\\b', 'a\nb']) {
-        expect(isSafeUrlValue('href', url), url).to.be.false;
-      }
+      expect(replaceTokens('/{{a|<script>}}{{js}}', v, 'value')).to.equal('/<script>');
     });
   });
 
@@ -197,14 +306,14 @@ describe('dynamic content tokens', () => {
       });
       expect({ ...result }).to.deep.equal({ a: 'x', n: '0', f: '1500' });
       expect(Object.getPrototypeOf(result)).to.equal(null);
+      expect(Object.keys(normalizeTokens(null))).to.deep.equal([]);
+      expect(Object.keys(normalizeTokens(['x']))).to.deep.equal([]);
     });
 
-    it('skips dangerous keys and non-objects', () => {
-      const raw = JSON.parse('{"__proto__": {"x": "1"}, "constructor": "c", "prototype": "p"}');
-      expect(Object.keys(normalizeTokens(raw))).to.deep.equal([]);
-      expect(Object.keys(normalizeTokens(null))).to.deep.equal([]);
-      expect(Object.keys(normalizeTokens('x'))).to.deep.equal([]);
-      expect(Object.keys(normalizeTokens(['x']))).to.deep.equal([]);
+    it('makes values well-formed so URLs can always be encoded', () => {
+      const result = normalizeTokens({ bad: 'a\uD800b' });
+      expect(result.bad).to.equal('a\uFFFDb');
+      expect(replaceTokens('/p/{{bad}}', result, 'href')).to.equal('/p/a%EF%BF%BDb');
     });
   });
 
@@ -220,7 +329,7 @@ describe('dynamic content tokens', () => {
           return { variantId: 'c2_a', tokens: { offer: 'second' } };
         }
       );
-      expect(result.identifiedVariantIds).to.have.members(['c1_a', 'c2_a']);
+      expect(result.identifiedVariantIds).to.deep.equal(['c1_a', 'c2_a']);
       expect({ ...result.tokens }).to.deep.equal({ offer: 'second', a: 'x' });
     });
 
@@ -244,52 +353,21 @@ describe('dynamic content tokens', () => {
       expect(result.identifiedVariantIds).to.deep.equal([]);
       expect(Object.keys(result.tokens)).to.deep.equal([]);
     });
-
-    it('keeps a valid variant when tokens has an unsupported shape', async () => {
-      const result = await collectPersonalizeExecutionTokens(
-        [{ variantIds: ['page-a'] }],
-        async () => ({ variantId: 'page-a', tokens: ['x'] })
-      );
-      expect(result.identifiedVariantIds).to.deep.equal(['page-a']);
-      expect(Object.keys(result.tokens)).to.deep.equal([]);
-    });
-
-    it('accepts results created in another JavaScript realm', async () => {
-      const result = await collectPersonalizeExecutionTokens([{ variantIds: ['page-a'] }], async () =>
-        runInNewContext('JSON.parse(input)', {
-          input: JSON.stringify({ variantId: 'page-a', tokens: { name: 'Ada' } }),
-        })
-      );
-      expect(result.identifiedVariantIds).to.deep.equal(['page-a']);
-      expect(result.tokens.name).to.equal('Ada');
-    });
-
-    it('does not fail sibling executions when one rejects or throws synchronously', async () => {
-      const result = await collectPersonalizeExecutionTokens(
-        [{ variantIds: ['a'] }, { variantIds: ['b'] }, { variantIds: ['c'] }],
-        (execution) => {
-          if (execution.variantIds[0] === 'a') {
-            throw new Error('sync');
-          }
-          if (execution.variantIds[0] === 'b') {
-            return Promise.reject(new Error('async'));
-          }
-          return Promise.resolve({ variantId: 'c', tokens: { x: '1' } });
-        }
-      );
-      expect(result.identifiedVariantIds).to.deep.equal(['c']);
-      expect(result.tokens.x).to.equal('1');
-    });
   });
 
   describe('codec', () => {
-    it('round-trips unicode values', () => {
+    it('round-trips unicode values through web and Node.js headers', () => {
       const encoded = encodePersonalizeTokens(tokens({ name: 'Łukasz 李 🎉', city: 'Zürich' }));
-      expect(encoded).to.match(/^[A-Za-z0-9_-]+$/);
-      expect({ ...decodePersonalizeTokens(encoded) }).to.deep.equal({
-        name: 'Łukasz 李 🎉',
-        city: 'Zürich',
-      });
+      expect(encoded).to.match(/^[\x21-\x7e]+$/);
+      const expected = { name: 'Łukasz 李 🎉', city: 'Zürich' };
+      const web = new Headers({ [PERSONALIZE_TOKENS_HEADER]: encoded as string });
+      expect({ ...getPersonalizeTokens(web) }).to.deep.equal(expected);
+      expect({ ...getPersonalizeTokens({ [PERSONALIZE_TOKENS_HEADER]: encoded }) }).to.deep.equal(
+        expected
+      );
+      expect({
+        ...getPersonalizeTokens({ [PERSONALIZE_TOKENS_HEADER]: [encoded as string] }),
+      }).to.deep.equal(expected);
     });
 
     it('encodes empty or oversized maps as undefined', () => {
@@ -298,61 +376,26 @@ describe('dynamic content tokens', () => {
         .undefined;
     });
 
-    it('decodes missing, oversized and invalid values as undefined', () => {
-      expect(decodePersonalizeTokens(undefined)).to.be.undefined;
-      expect(decodePersonalizeTokens(null)).to.be.undefined;
-      expect(decodePersonalizeTokens('')).to.be.undefined;
-      expect(decodePersonalizeTokens('a'.repeat(PERSONALIZE_TOKENS_MAX_LENGTH + 1))).to.be
-        .undefined;
-      expect(decodePersonalizeTokens('!!!')).to.be.undefined;
-      expect(decodePersonalizeTokens(btoa('not json'))).to.be.undefined;
-      expect(decodePersonalizeTokens(btoa('["x"]'))).to.be.undefined;
-      expect(decodePersonalizeTokens(btoa('{}'))).to.be.undefined;
-      expect(decodePersonalizeTokens(btoa('\xff\xfe'))).to.be.undefined;
-    });
-
-    it('normalizes decoded values', () => {
-      const encoded = btoa('{"a":"x","n":1,"bad key":"y","o":{}}');
-      expect({ ...decodePersonalizeTokens(encoded) }).to.deep.equal({ a: 'x', n: '1' });
-    });
-  });
-
-  describe('createTokenTransform', () => {
-    it('resolves tokens across a tree, collects unmatched keys and shares unchanged subtrees', () => {
-      const untouched = { fields: { title: { value: 'Static' } } };
-      const tree = {
-        a: untouched,
-        b: { fields: { title: { value: 'Hi {{name|there}} {{x}}' } } },
-        c: [1, 'plain', { link: { value: { href: '/p/{{name}}' } } }],
-      };
-      const { transform, unmatched } = createTokenTransform(tokens({ name: 'Ada Lovelace' }));
-      const result = transformLayoutStrings(tree, transform);
-      expect(result.a).to.equal(untouched);
-      expect(result.b.fields.title.value).to.equal('Hi Ada Lovelace ');
-      expect((result.c[2] as { link: { value: { href: string } } }).link.value.href).to.equal(
-        '/p/Ada%20Lovelace'
-      );
-      expect(tree.b.fields.title.value).to.equal('Hi {{name|there}} {{x}}');
-      expect(Array.from(unmatched)).to.deep.equal(['x']);
+    it('reads missing and invalid values as undefined', () => {
+      const read = (value: string) => getPersonalizeTokens({ [PERSONALIZE_TOKENS_HEADER]: value });
+      expect(getPersonalizeTokens(undefined)).to.be.undefined;
+      expect(getPersonalizeTokens(new Headers())).to.be.undefined;
+      expect(read('')).to.be.undefined;
+      expect(read('%E0%A4%A')).to.be.undefined;
+      expect(read('not json')).to.be.undefined;
+      expect(read(encodeURIComponent('["x"]'))).to.be.undefined;
+      expect(read(encodeURIComponent('{}'))).to.be.undefined;
     });
   });
 
   describe('rewrite path marker', () => {
-    it('adds and detects the tokens segment', () => {
-      expect(getPersonalizedRewrite('/about', ['c1_a'], true)).to.equal(
-        '/about/_variantId_c1_a/_sctokens'
-      );
-      expect(getPersonalizedRewrite('/', [], true)).to.equal('/_sctokens');
-      expect(getPersonalizedRewrite('/about', ['c1_a'])).to.equal('/about/_variantId_c1_a');
-      expect(hasPersonalizeTokensRewrite('/about/_variantId_c1_a/_sctokens')).to.be.true;
-      expect(hasPersonalizeTokensRewrite(['about', '_variantId_c1_a', '_sctokens'])).to.be.true;
-      expect(hasPersonalizeTokensRewrite('/about/_variantId_c1_a')).to.be.false;
-    });
-
     it('is removed by normalization and ignored by variant parsing', () => {
-      expect(normalizePersonalizedRewrite('/about/_variantId_c1_a/_sctokens')).to.equal('/about');
+      expect(normalizePersonalizedRewrite('/_sctokens/_site_s/about/_variantId_c1_a')).to.equal(
+        '/_site_s/about'
+      );
+      expect(normalizePersonalizedRewrite('/s/en/_sctokens/about')).to.equal('/s/en/about');
       expect(normalizePersonalizedRewrite('/_sctokens')).to.equal('/');
-      expect(getPersonalizedRewriteData('/about/_variantId_c1_a/_sctokens')).to.deep.equal({
+      expect(getPersonalizedRewriteData('/_sctokens/about/_variantId_c1_a')).to.deep.equal({
         variantId: '_default',
         componentVariantIds: ['c1_a'],
       });

@@ -1,7 +1,7 @@
 import type { CsdkRequestData, LoaderContext } from './models';
 import {
   DEFAULT_VARIANT,
-  decodePersonalizeTokens,
+  getPersonalizeTokens as readPersonalizeTokens,
   PERSONALIZE_TOKENS_HEADER,
   TokenMap,
 } from '@sitecore-content-sdk/content/personalize';
@@ -67,12 +67,12 @@ export function getPersonalizeTokens(context: LoaderContext): TokenMap | undefin
 }
 
 /**
- * Decode the dynamic content tokens header from request headers.
+ * Whether the personalize middleware forwarded dynamic content tokens for the current request.
+ * Such renders contain visitor data, so they must not be cached in shared caches.
  * @param {CsdkRequestData['headers']} headers - Request headers.
- * @returns {TokenMap | undefined} Tokens, or `undefined` when there are none.
+ * @returns {boolean} Whether the request carries tokens.
  * @internal
  */
-export function readPersonalizeTokens(headers: CsdkRequestData['headers']): TokenMap | undefined {
-  const value = headers?.[PERSONALIZE_TOKENS_HEADER];
-  return decodePersonalizeTokens(Array.isArray(value) ? value[0] : value);
+export function hasPersonalizeTokens(headers: CsdkRequestData['headers']): boolean {
+  return !!headers?.[PERSONALIZE_TOKENS_HEADER];
 }

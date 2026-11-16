@@ -28,8 +28,8 @@ import { HTMLLink, StaticPath } from '../models';
 import { PersonalizedRewriteData } from '../personalize/utils';
 import { personalizeLayout } from '../personalize/layout-personalizer';
 import { normalizeTokens, TokenMap } from '../personalize/token-map';
-import { createTokenTransform } from '../personalize/token-replace';
-import { transformLayoutStrings, LayoutStringTransform } from '../layout/layout-walker';
+import { replaceTokens } from '../personalize/token-replace';
+import { transformLayoutStrings } from '../layout/layout-walker';
 import { ErrorPages, ErrorPagesService, SitePathService, SitemapXmlService } from '../site';
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
@@ -402,7 +402,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       return null;
     }
     // Apply personalization first to select the variant(s) that will be used,
-    // then rewrite content URLs and resolve tokens so we only process the selected variant(s)
+    // then resolve tokens and rewrite content URLs so we only process the selected variant(s)
     if (pageOptions?.personalize?.variantId) {
       personalizeLayout(
         layout,
@@ -780,6 +780,12 @@ export class SitecoreClient implements BaseSitecoreClient {
   }
 
   /**
+   * Get page mode based on mode name
+   * @param {PageModeName} mode - The mode name to get the page mode for
+   * @param { DesignLibraryVariantGeneration} generation - The variant generation mode, if applicable
+   * @returns {PageMode} The page mode
+   */
+  /**
    * Applies media URL rewrite when rewriteMediaUrls is enabled.
    * When true, uses default Edge host rewriter; when a function, transforms each string.
    * @param {LayoutServiceData} layout - Layout data from layout/editing/component/error service
@@ -801,59 +807,39 @@ export class SitecoreClient implements BaseSitecoreClient {
    * @internal
    */
   protected rewriteContentUrls<T>(data: T): T {
-    const transformer = this.getMediaUrlTransformer();
-    return transformer ? applyMediaUrlRewrite(data, transformer) : data;
-  }
-
-  /**
-   * Applies media URL rewrite and, when `personalize.dynamicContent` is enabled, dynamic content
-   * tokens to a normal-mode page layout in a single walk. Tokens are resolved only in the route
-   * (fields and placeholders), never in `sitecore.context`.
-   * @param {LayoutServiceData} layout - Personalized layout data
-   * @param {TokenMap} [tokens] - Token values for this request; fallbacks render when omitted
-   * @returns {LayoutServiceData} Processed layout (same reference when nothing changed)
-   * @internal
-   */
-  protected applyPageTransforms(layout: LayoutServiceData, tokens?: TokenMap): LayoutServiceData {
-    if (!this.initOptions.personalize?.dynamicContent) {
-      if (tokens) {
-        contentDebug.personalize('dynamic content tokens ignored: personalize.dynamicContent is off');
-      }
-      return this.rewriteContentUrls(layout);
-    }
-
-    const rewrite = this.getMediaUrlTransformer();
-    const { transform: replaceTokens, unmatched } = createTokenTransform(normalizeTokens(tokens));
-    const routeTransform: LayoutStringTransform = rewrite
-      ? (value, key) => rewrite(replaceTokens(value, key))
-      : replaceTokens;
-    const { route, ...rest } = layout.sitecore;
-    const processedRest = rewrite ? applyMediaUrlRewrite(rest, rewrite) : rest;
-    const processedRoute = route ? transformLayoutStrings(route, routeTransform) : route;
-
-    if (unmatched.size > 0) {
-      contentDebug.personalize('unmatched dynamic content tokens: %o', Array.from(unmatched));
-    }
-    if (processedRest === rest && processedRoute === route) {
-      return layout;
-    }
-    return { ...layout, sitecore: { ...processedRest, route: processedRoute } };
-  }
-
-  private getMediaUrlTransformer(): ((value: string) => string) | undefined {
     const opt = this.initOptions.rewriteMediaUrls;
     if (!opt) {
-      return undefined;
+      return data;
     }
-    return opt === true ? getDefaultMediaUrlTransformer(resolveExperienceEdgeUrl()) : opt;
+    const experienceEdgeUrl = resolveExperienceEdgeUrl();
+    const transformer = opt === true ? getDefaultMediaUrlTransformer(experienceEdgeUrl) : opt;
+    return applyMediaUrlRewrite(data, transformer);
   }
 
   /**
-   * Get page mode flags for a layout page-state name.
-   * @param {PageModeName} mode Mode name
-   * @param {DesignLibraryVariantGeneration} [generation] Variant generation, if applicable
-   * @returns {PageMode} Page mode
+   * Resolves dynamic content tokens in the route when `personalize.dynamicContent` is enabled
+   * (fallbacks render when `tokens` is omitted), then rewrites content URLs.
+   * Tokens are never resolved in `sitecore.context`.
+   * @param {LayoutServiceData} layout - Personalized layout data
+   * @param {TokenMap} [tokens] - Token values for this request
+   * @returns {LayoutServiceData} Processed layout
    */
+  private applyPageTransforms(layout: LayoutServiceData, tokens?: TokenMap): LayoutServiceData {
+    const route = layout.sitecore.route;
+    if (this.initOptions.personalize?.dynamicContent && route) {
+      const map = normalizeTokens(tokens);
+      const resolved = transformLayoutStrings(route, (value, key) =>
+        replaceTokens(value, map, key)
+      );
+      if (resolved !== route) {
+        layout = { ...layout, sitecore: { ...layout.sitecore, route: resolved } };
+      }
+    } else if (tokens) {
+      contentDebug.personalize('dynamic content tokens ignored: personalize.dynamicContent is off');
+    }
+    return this.rewriteContentUrls(layout);
+  }
+
   private getPageMode(mode: PageModeName, generation?: DesignLibraryVariantGeneration): PageMode {
     const pageMode: PageMode = {
       name: mode,

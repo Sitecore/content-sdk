@@ -16,6 +16,7 @@ src/
         [[...path]]/
           page.tsx                # Sitecore page
           not-found.tsx           # 404 with Sitecore error page
+        %5Fsctokens/[[...path]]/page.tsx  # Same page, rendered per request for dynamic content tokens (URL `_sctokens`)
     not-found.tsx                 # Root not-found
     global-error.tsx              # Root 500 (Client Component; uses Layout.client)
     api/                          # Route handlers

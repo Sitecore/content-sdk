@@ -232,9 +232,6 @@ const debug_2: {
 };
 export { debug_2 as debug }
 
-// @internal
-export function decodePersonalizeTokens(value: string | null | undefined): TokenMap | undefined;
-
 // Warning: (ae-forgotten-export) The symbol "DeepPartial" needs to be exported by the entry point api-surface.d.ts
 //
 // @internal
@@ -716,10 +713,13 @@ export const getJsonLdSchemas: (schemas?: Record<string, unknown>[] | null) => H
 export function getLocaleRewrite(pathname: string, locale: string): string;
 
 // @public
-export function getPersonalizedRewrite(pathname: string, variantIds: string[], hasTokens?: boolean): string;
+export function getPersonalizedRewrite(pathname: string, variantIds: string[]): string;
 
 // @public
 export function getPersonalizedRewriteData(pathname: string): PersonalizedRewriteData;
+
+// @public
+export function getPersonalizeTokens(headers: PersonalizeTokensHeaders | null | undefined): TokenMap | undefined;
 
 // @internal
 export function getRenderingParamString(value: unknown): string | undefined;
@@ -768,9 +768,6 @@ export { GraphQLRequestClientConfig }
 export { GraphQLRequestClientFactory }
 
 export { GraphQLRequestClientFactoryConfig }
-
-// @public
-export function hasPersonalizeTokensRewrite(path: string | string[]): boolean;
 
 // @internal
 export const HIDDEN_RENDERING_NAME = "Hidden Rendering";
@@ -1193,6 +1190,9 @@ export type PersonalizeServiceConfig = CacheOptions & {
 };
 
 // @public
+export type PersonalizeTokensHeaders = Pick<Headers, 'get'> | Record<string, string | string[] | undefined>;
+
+// @public
 export interface PlaceholderData {
     // (undocumented)
     elements: ComponentRendering[];
@@ -1494,8 +1494,6 @@ export class SitecoreClient implements BaseSitecoreClient {
     constructor(initOptions: SitecoreClientInit);
     // @internal @deprecated
     protected applyContentRewrite(layout: LayoutServiceData): LayoutServiceData;
-    // @internal
-    protected applyPageTransforms(layout: LayoutServiceData, tokens?: TokenMap): LayoutServiceData;
     // (undocumented)
     protected clientFactory: GraphQLRequestClientFactory;
     // (undocumented)
@@ -1680,6 +1678,9 @@ export interface TextField extends FieldMetadata {
 
 // @public
 export type TokenMap = Record<string, string>;
+
+// @internal
+export const TOKENS_REWRITE_SEGMENT = "_sctokens";
 
 // @internal
 export const toPascalCase: (name: string) => string;

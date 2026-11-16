@@ -85,6 +85,7 @@ import { getGroomedVariantIds } from '@sitecore-content-sdk/content/personalize'
 import { getJsonLdSchemas } from '@sitecore-content-sdk/content/layout';
 import { getPersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
 import { getPersonalizedRewriteData } from '@sitecore-content-sdk/content/personalize';
+import { getPersonalizeTokens } from '@sitecore-content-sdk/content/personalize';
 import { GetServerSidePropsContext } from 'next';
 import { getSiteRewrite } from '@sitecore-content-sdk/content/site';
 import { getSiteRewriteData } from '@sitecore-content-sdk/content/site';
@@ -95,7 +96,6 @@ import { GraphQLRequestClient } from '@sitecore-content-sdk/content/client';
 import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/content/client';
 import { GraphQLRequestClientFactory as GraphQLRequestClientFactory_2 } from '@sitecore-content-sdk/core';
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/content/client';
-import { hasPersonalizeTokensRewrite } from '@sitecore-content-sdk/content/personalize';
 import { HTMLLink } from '@sitecore-content-sdk/content';
 import { HTMLScript } from '@sitecore-content-sdk/content';
 import { Image as Image_2 } from '@sitecore-content-sdk/react';
@@ -159,6 +159,7 @@ import { PersonalizeInfo } from '@sitecore-content-sdk/content/personalize';
 import { personalizeLayout } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeService } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeServiceConfig } from '@sitecore-content-sdk/content/personalize';
+import { PersonalizeTokensHeaders } from '@sitecore-content-sdk/content/personalize';
 import { PlaceholderComponentProps } from '@sitecore-content-sdk/react';
 import { PlaceholderData } from '@sitecore-content-sdk/content/layout';
 import { PlaceholdersData } from '@sitecore-content-sdk/content/layout';
@@ -673,8 +674,7 @@ export { getPersonalizedRewrite }
 
 export { getPersonalizedRewriteData }
 
-// @public
-export function getPersonalizeTokens(path: string | string[] | undefined, getHeaders: () => Pick<Headers, 'get'> | IncomingHttpHeaders | Promise<Pick<Headers, 'get'> | IncomingHttpHeaders>): Promise<TokenMap | undefined>;
+export { getPersonalizeTokens }
 
 // @internal
 export const getQueryParamsForPropagation: (query: Partial<{
@@ -697,8 +697,6 @@ export { GraphQLRequestClientFactoryConfig }
 
 // @public
 export const handleEditorFastRefresh: (forceReload?: boolean) => void;
-
-export { hasPersonalizeTokensRewrite }
 
 // @public
 export class HealthcheckMiddleware {
@@ -908,14 +906,10 @@ export class PersonalizeProxy extends ProxyBase {
     protected config: PersonalizeProxyConfig;
     // (undocumented)
     protected disabled(req: NextRequest, res: NextResponse): boolean | undefined;
-    // @internal
-    protected forwardWithoutInboundTokens(req: NextRequest, res: NextResponse): NextResponse;
     // Warning: (ae-forgotten-export) The symbol "ExperienceParams" needs to be exported by the entry point api-surface.d.ts
     //
     // (undocumented)
     protected getExperienceParams(req: NextRequest): ExperienceParams;
-    // @internal
-    protected getForwardedRequestHeaders(req: NextRequest, res: NextResponse, encodedTokens?: string): Headers | undefined;
     // Warning: (ae-forgotten-export) The symbol "PersonalizeExecution" needs to be exported by the entry point api-surface.d.ts
     protected getPersonalizeExecutions(personalizeInfo: PersonalizeInfo, language: string): PersonalizeExecution[];
     // (undocumented)
@@ -937,7 +931,7 @@ export class PersonalizeProxy extends ProxyBase {
         variantIds?: string[];
         geo?: PersonalizeGeoData;
     }): Promise<{
-        variantId?: string;
+        variantId: string;
         tokens?: Record<string, string | number>;
     }>;
     // (undocumented)
@@ -963,6 +957,8 @@ export type PersonalizeProxyConfig = ProxyBaseConfig & SitecoreConfig['api']['ed
 export { PersonalizeService }
 
 export { PersonalizeServiceConfig }
+
+export { PersonalizeTokensHeaders }
 
 // Warning: (ae-forgotten-export) The symbol "PlaceholderProps" needs to be exported by the entry point api-surface.d.ts
 //
@@ -1017,8 +1013,6 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     protected extractDebugHeaders(incomingHeaders: Headers): {
         [key: string]: string;
     };
-    // @internal
-    protected forward(res: NextResponse, requestHeaders: Headers): NextResponse;
     // (undocumented)
     protected getClientFactory(graphQLOptions: GraphQLClientOptions): GraphQLRequestClientFactory_2;
     protected getHostHeader(req: NextRequest): string;
@@ -1030,7 +1024,7 @@ export abstract class ProxyBase extends ProxyHandler_2 {
     protected isPrefetch(req: NextRequest): boolean;
     protected isPreview(req: NextRequest): boolean;
     get name(): string;
-    protected rewrite(rewritePath: string, req: NextRequest, res: NextResponse, skipHeader?: boolean, requestHeaders?: Headers): NextResponse;
+    protected rewrite(rewritePath: string, req: NextRequest, res: NextResponse, skipHeader?: boolean): NextResponse;
     // (undocumented)
     protected siteResolver: SiteResolver;
 }
@@ -1146,7 +1140,7 @@ export class SitecoreClient extends SitecoreClient_2 {
     protected getComponentPropsService(): ComponentPropsService;
     getDesignLibraryData(designLibData: PreviewData, fetchOptions?: FetchOptions): Promise<Page>;
     // (undocumented)
-    getPage(path: string | string[], pageOptions?: PageOptions, fetchOptions?: FetchOptions): Promise<Page | null>;
+    getPage(path: string | string[], pageOptions: PageOptions, options?: FetchOptions): Promise<Page | null>;
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
     getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null>;
     getPreviewData(headers: Headers): PreviewData;

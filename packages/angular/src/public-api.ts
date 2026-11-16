@@ -129,6 +129,7 @@ export {
   getLanguage,
   getPersonalizeTokens,
 } from './loaders/context-helpers';
+export type { TokenMap } from '@sitecore-content-sdk/content/personalize';
 export { SC_PARAMS_HEADER } from './loaders/constants';
 export { provideSitecoreAngular } from './lib/providers';
 export {

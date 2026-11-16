@@ -16,9 +16,9 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 
 ## Catch-all route
 
-- **Where:** `src/app/[site]/[locale]/[[...path]]/page.tsx`. This is the **only** page component that renders Sitecore content; the optional `[[...path]]` segment captures the content path.
+- **Where:** `src/app/[site]/[locale]/[[...path]]/page.tsx`. This is the page component that renders Sitecore content; the optional `[[...path]]` segment captures the content path. `src/app/[site]/[locale]/%5Fsctokens/[[...path]]/page.tsx` (URL segment `_sctokens`) renders the same page per request for requests with dynamic content tokens.
 - **Flow:** `params` is a Promise (Next.js 15+) — `await params` to get `{ site, locale, path? }`. Call `setRequestLocale(\`${site}_${locale}\`)` at the top of the page for next-intl. For published content use `client.getPage(path ?? [], { site, locale })`. For preview, use `draftMode()`; when enabled, `const previewData = client.getPreviewData(await headers())`, then `client.getPreview(previewData)` or `client.getDesignLibraryData(previewData)`.
-- **Do not:** Add another catch-all or page at a different path for Sitecore pages; keep this single entry point.
+- **Do not:** Add another catch-all or page at a different path for Sitecore pages. When you change how `[[...path]]/page.tsx` fetches or renders the page, make the same change in the `%5Fsctokens` route.
 
 ## How locale works
 

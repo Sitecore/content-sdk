@@ -17,18 +17,25 @@ export const PERSONALIZE_TOKENS_HEADER = 'x-sc-personalize-tokens';
 export const PERSONALIZE_TOKENS_MAX_LENGTH = 7000;
 
 /**
- * Encodes a token map for {@link PERSONALIZE_TOKENS_HEADER} as base64url UTF-8 JSON, which is
- * safe for any header value regardless of the characters in the tokens.
- * @param {TokenMap} tokens Token map
+ * Request headers as Web `Headers` or a Node.js / Express header object.
+ * @public
+ */
+export type PersonalizeTokensHeaders =
+  | Pick<Headers, 'get'>
+  | Record<string, string | string[] | undefined>;
+
+/**
+ * Encodes a token map for {@link PERSONALIZE_TOKENS_HEADER} as URI-encoded JSON, which is safe for
+ * any header value regardless of the characters in the tokens.
+ * @param {TokenMap} tokens Normalized token map
  * @returns {string | undefined} Encoded value, or `undefined` when the map is empty or too large
  * @internal
  */
 export function encodePersonalizeTokens(tokens: TokenMap): string | undefined {
-  const normalized = normalizeTokens(tokens);
-  if (Object.keys(normalized).length === 0) {
+  if (Object.keys(tokens).length === 0) {
     return undefined;
   }
-  const encoded = toBase64Url(new TextEncoder().encode(JSON.stringify(normalized)));
+  const encoded = encodeURIComponent(JSON.stringify(tokens));
   if (encoded.length > PERSONALIZE_TOKENS_MAX_LENGTH) {
     debug.personalize(
       'dynamic content tokens dropped: encoded length %d exceeds %d',
@@ -41,54 +48,31 @@ export function encodePersonalizeTokens(tokens: TokenMap): string | undefined {
 }
 
 /**
- * Decodes a {@link PERSONALIZE_TOKENS_HEADER} value.
- * @param {string | null | undefined} value Header value
- * @returns {TokenMap | undefined} Tokens, or `undefined` when the value is missing, empty or invalid
- * @internal
+ * Returns the dynamic content tokens that the personalize proxy / middleware forwarded for the
+ * current request, for `getPage(path, { tokens })`. Returns `undefined` when there are none.
+ * The proxy / middleware removes any client-sent value, so read it only on requests that passed through it.
+ * @param {PersonalizeTokensHeaders | null | undefined} headers Request headers
+ * @returns {TokenMap | undefined} Tokens, or `undefined` when there are none
+ * @public
  */
-export function decodePersonalizeTokens(value: string | null | undefined): TokenMap | undefined {
+export function getPersonalizeTokens(
+  headers: PersonalizeTokensHeaders | null | undefined
+): TokenMap | undefined {
+  const raw =
+    typeof (headers as Headers | undefined)?.get === 'function'
+      ? (headers as Pick<Headers, 'get'>).get(PERSONALIZE_TOKENS_HEADER)
+      : (headers as Record<string, string | string[] | undefined> | undefined)?.[
+          PERSONALIZE_TOKENS_HEADER
+        ];
+  const value = Array.isArray(raw) ? raw[0] : raw;
   if (!value) {
     return undefined;
   }
-  if (value.length > PERSONALIZE_TOKENS_MAX_LENGTH) {
-    debug.personalize('dynamic content tokens header ignored: too large');
-    return undefined;
-  }
   try {
-    const json = new TextDecoder('utf-8', { fatal: true }).decode(fromBase64Url(value));
-    const tokens = normalizeTokens(JSON.parse(json));
+    const tokens = normalizeTokens(JSON.parse(decodeURIComponent(value)));
     return Object.keys(tokens).length > 0 ? tokens : undefined;
   } catch {
     debug.personalize('dynamic content tokens header ignored: invalid value');
     return undefined;
   }
-}
-
-/**
- * Encodes bytes as unpadded base64url. Uses `btoa` instead of `Buffer` so the codec behaves the
- * same on Node and Edge runtimes.
- * @param {Uint8Array} bytes Bytes to encode
- * @returns {string} base64url string
- */
-function toBase64Url(bytes: Uint8Array): string {
-  let binary = '';
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-
-/**
- * Decodes base64url (or standard base64) to bytes. Throws on invalid input.
- * @param {string} value Encoded value
- * @returns {Uint8Array} Decoded bytes
- */
-function fromBase64Url(value: string): Uint8Array {
-  const base64 = value.replace(/-/g, '+').replace(/_/g, '/');
-  const binary = atob(base64 + '='.repeat((4 - (base64.length % 4)) % 4));
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return bytes;
 }

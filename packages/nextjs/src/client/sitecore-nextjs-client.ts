@@ -69,21 +69,26 @@ export class SitecoreNextjsClient extends SitecoreClient {
 
   async getPage(
     path: string | string[],
-    pageOptions?: PageOptions,
-    fetchOptions?: FetchOptions
+    pageOptions: PageOptions,
+    options?: FetchOptions
   ): Promise<Page | null> {
-    const opts = pageOptions ?? {};
     const resolvedPath = this.parsePath(path);
-
-    return super.getPage(
+    // Get variant(s) for personalization (from path), must ensure path is of type string
+    const personalizeData =
+      pageOptions.personalize || getPersonalizedRewriteData(super.parsePath(path));
+    const site = pageOptions.site || this.getSiteNameFromPath(path);
+    const page = await super.getPage(
       resolvedPath,
       {
-        ...opts,
-        site: opts.site || this.getSiteNameFromPath(path),
-        personalize: opts.personalize ?? getPersonalizedRewriteData(super.parsePath(path)),
+        locale: pageOptions.locale,
+        site,
+        personalize: personalizeData,
+        tokens: pageOptions.tokens,
       },
-      fetchOptions
+      options
     );
+
+    return page;
   }
 
   /**

@@ -55,10 +55,10 @@ export {
   normalizePersonalizedRewrite,
   CdpHelper,
   PersonalizeService,
-  hasPersonalizeTokensRewrite,
+  getPersonalizeTokens,
+  PersonalizeTokensHeaders,
+  TokenMap,
 } from '@sitecore-content-sdk/content/personalize';
-export type { TokenMap } from '@sitecore-content-sdk/content/personalize';
-export { getPersonalizeTokens } from './personalize/tokens';
 
 export {
   SitePathService,

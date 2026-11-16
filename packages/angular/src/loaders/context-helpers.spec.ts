@@ -15,20 +15,12 @@ const context = (headers?: Record<string, string | string[] | undefined>): Loade
 });
 
 describe('getPersonalizeTokens', () => {
-  it('returns the tokens forwarded by the personalize middleware', () => {
+  it('reads the tokens forwarded by the personalize middleware from the request data', () => {
     const encoded = encodePersonalizeTokens({ name: 'Ada' }) as string;
 
     expect({ ...getPersonalizeTokens(context({ [PERSONALIZE_TOKENS_HEADER]: encoded })) }).toEqual({
       name: 'Ada',
     });
-    expect({ ...getPersonalizeTokens(context({ [PERSONALIZE_TOKENS_HEADER]: [encoded] })) }).toEqual(
-      { name: 'Ada' }
-    );
-  });
-
-  it('returns undefined when there are no valid tokens', () => {
     expect(getPersonalizeTokens(context())).toBeUndefined();
-    expect(getPersonalizeTokens(context({}))).toBeUndefined();
-    expect(getPersonalizeTokens(context({ [PERSONALIZE_TOKENS_HEADER]: '%%' }))).toBeUndefined();
   });
 });

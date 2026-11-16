@@ -3,9 +3,6 @@ import { notFound } from 'next/navigation';
 import { draftMode, headers as nextHeaders } from 'next/headers';
 import { Metadata } from 'next';
 import { getPageMetadata } from '@sitecore-content-sdk/nextjs';
-<% if (prerender === 'SSR') { -%>
-import { getPersonalizeTokens } from '@sitecore-content-sdk/nextjs';
-<% } -%>
 <% if (prerender === 'SSG') { -%>
 import { SiteInfo } from '@sitecore-content-sdk/nextjs';
 import sites from '.sitecore/sites.json';
@@ -42,15 +39,7 @@ export default async function Page({ params }: PageProps) {
       page = await client.getPreview(previewData);
     }
   } else {
-    page = await client.getPage(path ?? [], {
-      site,
-      locale,
-<% if (prerender === 'SSR') { -%>
-      // Dynamic content tokens forwarded by PersonalizeProxy.
-      // Statically generated (SSG) pages cannot read request headers, so they render token fallbacks.
-      tokens: await getPersonalizeTokens(path, nextHeaders),
-<% } -%>
-    });
+    page = await client.getPage(path ?? [], { site, locale });
   }
 
   // If the page is not found, return a 404
@@ -85,12 +74,6 @@ export const generateMetadata = async ({ params }: PageProps): Promise<Metadata>
   const { path, site, locale } = await params;
 
   // The same call as for rendering the page. Should be cached by default react behavior
-  const page = await client.getPage(path ?? [], {
-    site,
-    locale,
-<% if (prerender === 'SSR') { -%>
-    tokens: await getPersonalizeTokens(path, nextHeaders),
-<% } -%>
-  });
+  const page = await client.getPage(path ?? [], { site, locale });
   return getPageMetadata(page?.layout.sitecore.route);
 };

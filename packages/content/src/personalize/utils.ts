@@ -3,8 +3,8 @@ export const DEFAULT_VARIANT = '_default';
 /** @internal */
 export const VARIANT_PREFIX = '_variantId_';
 /**
- * Rewrite path segment added by the personalize proxy when the request carries dynamic content
- * tokens, so renders read the tokens header only when there is something to read.
+ * Rewrite path segment of the app route that renders requests carrying dynamic content tokens
+ * per request. The personalize proxy adds it when Personalize returned tokens.
  * @internal
  */
 export const TOKENS_REWRITE_SEGMENT = '_sctokens';
@@ -19,30 +19,12 @@ export type PersonalizedRewriteData = {
  * Get a personalized rewrite path for given pathname
  * @param {string} pathname the pathname
  * @param {string[]} variantIds the variantIds to include in the rewrite
- * @param {boolean} [hasTokens] whether the request carries dynamic content tokens
  * @returns {string} the rewrite path
  * @public
  */
-export function getPersonalizedRewrite(
-  pathname: string,
-  variantIds: string[],
-  hasTokens = false
-): string {
+export function getPersonalizedRewrite(pathname: string, variantIds: string[]): string {
   const path = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
-  const variants = variantIds.map((variantId) => `/${VARIANT_PREFIX}${variantId}`).join('');
-  return `${path}${variants}${hasTokens ? `/${TOKENS_REWRITE_SEGMENT}` : ''}`;
-}
-
-/**
- * Whether a (rewritten) path was marked by the personalize proxy as carrying dynamic content tokens.
- * Such requests render with visitor data, so they must be rendered per request.
- * @param {string | string[]} path the pathname or path segments
- * @returns {boolean} true when the path contains the tokens marker segment
- * @public
- */
-export function hasPersonalizeTokensRewrite(path: string | string[]): boolean {
-  const segments = Array.isArray(path) ? path : path.split('/');
-  return segments.includes(TOKENS_REWRITE_SEGMENT);
+  return `${path}${variantIds.map((variantId) => `/${VARIANT_PREFIX}${variantId}`).join('')}`;
 }
 
 /**

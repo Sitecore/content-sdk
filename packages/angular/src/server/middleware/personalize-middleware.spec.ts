@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   CdpHelper,
   DEFAULT_VARIANT,
-  decodePersonalizeTokens,
+  getPersonalizeTokens,
   PERSONALIZE_TOKENS_HEADER,
   PersonalizeService,
 } from '@sitecore-content-sdk/content/personalize';
@@ -484,14 +484,20 @@ describe('createPersonalizeMiddleware', () => {
       const value = req.headers?.[PERSONALIZE_TOKENS_HEADER] as string;
       // Angular SSR copies request headers into a web Headers object, which rejects non-Latin-1 values.
       expect(() => new Headers({ [PERSONALIZE_TOKENS_HEADER]: value })).not.toThrow();
-      expect({ ...decodePersonalizeTokens(value) }).toEqual({ firstName: 'Łukasz 李', visits: '3' });
+      expect({ ...getPersonalizeTokens(req.headers) }).toEqual({
+        firstName: 'Łukasz 李',
+        visits: '3',
+      });
       expect(JSON.parse(req.headers?.[SC_PARAMS_HEADER] as string)).not.toHaveProperty('tokens');
       expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', 'private, no-store');
     });
 
     it('forwards tokens returned with the default branch', async () => {
       getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['comp1_var1'] });
-      personalizeMock.mockResolvedValue({ variantId: `comp1${DEFAULT_VARIANT}`, tokens: { a: 'b' } });
+      personalizeMock.mockResolvedValue({
+        variantId: `comp1${DEFAULT_VARIANT}`,
+        tokens: { a: 'b' },
+      });
       const req = createReq();
 
       await createPersonalizeMiddleware(createOptions({ dynamicContent: true }))(
@@ -500,7 +506,7 @@ describe('createPersonalizeMiddleware', () => {
         next
       );
 
-      expect({ ...decodePersonalizeTokens(req.headers?.[PERSONALIZE_TOKENS_HEADER] as string) }).toEqual({
+      expect({ ...getPersonalizeTokens(req.headers) }).toEqual({
         a: 'b',
       });
     });
@@ -518,16 +524,25 @@ describe('createPersonalizeMiddleware', () => {
       expect(req.scParams?.variantId).toBe('variant-a');
     });
 
-    it('drops tokens that exceed the header budget', async () => {
-      getPersonalizeInfo.mockResolvedValue({ pageId: 'page-1', variantIds: ['variant-a'] });
-      personalizeMock.mockResolvedValue({ variantId: 'variant-a', tokens: { a: 'x'.repeat(8000) } });
+    it('serves the default page without tokens when an execution fails', async () => {
+      getPersonalizeInfo.mockResolvedValue({
+        pageId: 'page-1',
+        variantIds: ['variant-a', 'comp1_var1'],
+      });
+      personalizeMock
+        .mockResolvedValueOnce({ variantId: 'variant-a', tokens: { a: 'b' } })
+        .mockRejectedValueOnce(new Error('cdp down'));
       const req = createReq();
       const res = createRes();
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
 
       await createPersonalizeMiddleware(createOptions({ dynamicContent: true }))(req, res, next);
 
+      logSpy.mockRestore();
       expect(req.headers?.[PERSONALIZE_TOKENS_HEADER]).toBeUndefined();
+      expect(req.scParams?.variantId).not.toBe('variant-a');
       expect(res.setHeader).not.toHaveBeenCalledWith('Cache-Control', 'private, no-store');
+      expect(next).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -327,7 +327,7 @@ export function createPersonalizeMiddleware(
       const encodedTokens = options.dynamicContent ? encodePersonalizeTokens(tokens) : undefined;
       if (encodedTokens) {
         // Ride a request header (like SC_PARAMS_HEADER) so the tokens survive Angular's conversion
-        // of the Express request to a web Request. base64url keeps the value header-safe.
+        // of the Express request to a web Request. The value is URI-encoded, so it is header-safe.
         req.headers = req.headers ?? {};
         req.headers[PERSONALIZE_TOKENS_HEADER] = encodedTokens;
         // The render now contains visitor data: keep it out of shared caches.

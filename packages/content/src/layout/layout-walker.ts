@@ -38,18 +38,11 @@ function walk<T>(value: T, key: string | undefined, transform: LayoutStringTrans
   }
   if (Array.isArray(value)) {
     let changed = false;
-    const result: unknown[] = [];
-    result.length = value.length;
-    for (let i = 0; i < value.length; i++) {
-      if (!Object.prototype.hasOwnProperty.call(value, i)) {
-        continue;
-      }
-      const child = walk(value[i], undefined, transform);
-      if (child !== value[i]) {
-        changed = true;
-      }
-      result[i] = child;
-    }
+    const result = value.map((item) => {
+      const child = walk(item, undefined, transform);
+      changed = changed || child !== item;
+      return child;
+    });
     return (changed ? result : value) as T;
   }
   if (typeof value === 'object' && Object.getPrototypeOf(value) === Object.prototype) {

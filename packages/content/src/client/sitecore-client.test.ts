@@ -804,55 +804,28 @@ describe('SitecoreClient', () => {
       expect((route?.fields?.image?.value as { src: string }).src).to.equal(
         'https://custom.example.com/-/media/Rome.jpg'
       );
-      expect((page?.layout.sitecore.context as Record<string, unknown>).custom).to.equal('{{name}}');
+      expect((page?.layout.sitecore.context as Record<string, unknown>).custom).to.equal(
+        '{{name}}'
+      );
       expect(route?.placeholders.main[0]).to.equal(raw.sitecore.route.placeholders.main[0]);
       expect(raw.sitecore.route.fields.title.value).to.equal('Hello {{name|friend}}{{missing}}');
     });
 
-    it('should resolve tokens after personalization selects component variants', async () => {
-      layoutServiceStub.fetchLayoutData.returns({
-        sitecore: {
-          route: {
-            name: 'home',
-            placeholders: {
-              main: [
-                {
-                  uid: 'c1',
-                  componentName: 'Promo',
-                  fields: { text: { value: 'Default' } },
-                  experiences: {
-                    c1_a: {
-                      uid: 'c1',
-                      componentName: 'Promo',
-                      fields: { text: { value: 'Visit {{city|Paris}}' } },
-                    },
-                  },
-                },
-              ],
-            },
-          },
-          context: { site: { name: 'default-site' } },
-        },
+    it('should keep tokens as authored in preview and editing, so authors can edit them', async () => {
+      editingServiceStub.fetchEditingData.resolves({ layoutData: tokenLayout() });
+      const client = createClient();
+      (client as any).editingService = editingServiceStub;
+
+      const page = await client.getPreview({
+        site: 'default-site',
+        itemId: 'test-item-id',
+        mode: LayoutServicePageState.Edit,
+        language: 'en',
+        version: '1',
+        variantId: 'variant1',
+        layoutKind: LayoutKind.Final,
+        previewTime: undefined,
       });
-
-      const page = await createClient().getPage('/test', {
-        locale: 'en',
-        personalize: { variantId: '_default', componentVariantIds: ['c1_a'] },
-        tokens: { city: 'Rome' },
-      });
-
-      expect(
-        (page?.layout.sitecore.route?.placeholders.main[0] as { fields: { text: unknown } }).fields
-          .text
-      ).to.deep.equal({ value: 'Visit Rome' });
-    });
-
-    it('should not process tokens on error pages', async () => {
-      errorPagesServiceStub.fetchErrorPages.resolves({
-        notFoundPage: { rendered: tokenLayout() },
-      });
-
-      const page = await createClient().getErrorPage(ErrorPage.NotFound);
 
       expect(page?.layout.sitecore.route?.fields?.title).to.deep.equal({
         value: 'Hello {{name|friend}}{{missing}}',

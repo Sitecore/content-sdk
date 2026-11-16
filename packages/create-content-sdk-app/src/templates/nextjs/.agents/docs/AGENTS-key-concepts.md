@@ -16,9 +16,9 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 
 ## Catch-all route
 
-- **Where:** `src/pages/[[...path]].tsx`. This is the **only** page component that renders Sitecore content; the optional `[[...path]]` segment captures the content path.
+- **Where:** `src/pages/[[...path]].tsx`. This is the page component that renders Sitecore content; the optional `[[...path]]` segment captures the content path. `src/pages/_sctokens/[[...path]].tsx` re-exports it and renders requests with dynamic content tokens per request (`getServerSideProps`).
 - **Flow:** Use `extractPath(context)` (from `@sitecore-content-sdk/nextjs/utils`) to get the path array; use `context.locale` for locale. In getStaticProps/getServerSideProps: `client.getPage(path, { locale: context.locale })`, then `client.getDictionary({ site: page.siteName, locale: page.locale })` and `client.getComponentData(page.layout, context, components)`. For SSG, paths from `client.getPagePaths(sites, context?.locales)` with `sites` from `.sitecore/sites.json`. For preview, use `context.preview` and `context.previewData` with `client.getPreview(context.previewData)` or `client.getDesignLibraryData(context.previewData)`.
-- **Do not:** Add another page or catch-all for Sitecore content; keep this single entry point.
+- **Do not:** Add another page or catch-all for Sitecore content. When you change how `[[...path]].tsx` fetches page props, make the same change in `_sctokens/[[...path]].tsx`.
 
 ## How locale works
 

@@ -183,8 +183,9 @@ export type SitecoreConfigInput = {
      * route content; normal `getPage` renders replace them with values returned by the
      * Personalize execution, or with the fallback when no value is available.
      * Unmatched tokens without a fallback are removed.
-     * - Visitor values are applied only on per-request renders that pass `tokens`
-     * (SSR, dynamic App Router renders, Angular SSR). Statically generated pages render fallbacks.
+     * - Visitor values are applied on renders that pass `tokens` to `getPage`. In Next.js apps the
+     * personalize proxy routes requests with tokens to the app's per-request `_sctokens` route, so
+     * other pages stay statically generated and render fallbacks.
      * - Preview, Design Library and error pages are never processed.
      * @default false
      */

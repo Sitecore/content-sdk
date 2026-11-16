@@ -11,13 +11,14 @@ export {
   normalizePersonalizedRewrite,
   PersonalizedRewriteData,
   CdpHelper,
-  hasPersonalizeTokensRewrite,
+  TOKENS_REWRITE_SEGMENT,
   DEFAULT_VARIANT,
   VARIANT_PREFIX,
 } from './utils';
 export { TokenMap, collectPersonalizeExecutionTokens } from './token-map';
 export {
   PERSONALIZE_TOKENS_HEADER,
+  PersonalizeTokensHeaders,
   encodePersonalizeTokens,
-  decodePersonalizeTokens,
+  getPersonalizeTokens,
 } from './token-codec';
