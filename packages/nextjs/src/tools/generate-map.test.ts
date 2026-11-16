@@ -188,6 +188,21 @@ describe('generateMap', () => {
       expect(content).to.include("['Form', { ...Form, componentType: 'client' }],");
     });
 
+    it('should register FEaaSCacheComponentsServerWrapper when cacheComponents is true', async () => {
+      getComponentListWithTypesStub.returns([]);
+      generateMap({ paths: ['src/components'], cacheComponents: true });
+
+      const [, mainContent] = (fs.writeFileSync as sinon.SinonStub).getCall(0).args;
+      expect(mainContent).to.include(
+        "import { BYOCServerWrapper, FEaaSCacheComponentsServerWrapper } from '@sitecore-content-sdk/nextjs';"
+      );
+      expect(mainContent).to.include("['FEaaSWrapper', FEaaSCacheComponentsServerWrapper],");
+      expect(mainContent).to.not.include('FEaaSServerWrapper]');
+
+      const [, clientContent] = (fs.writeFileSync as sinon.SinonStub).getCall(1).args;
+      expect(clientContent).to.include("['FEaaSWrapper', FEaaSClientWrapper],");
+    });
+
     it('should handle multiple paths and merge their components', async () => {
       const paths = ['src/components', 'src/other-components'];
       const abs = (p: string) => path.resolve(process.cwd(), p);

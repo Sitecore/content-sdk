@@ -119,6 +119,7 @@ export {
   BYOCServerWrapper,
 } from '@sitecore-content-sdk/react';
 export { FEaaSWrapper };
+export { FEaaSCacheComponentsServerWrapper } from './components/FEaaSCacheComponentsServerWrapper';
 export { BYOCWrapper };
 
 export {

@@ -12,5 +12,5 @@ export {
 
 export { generateMetadata } from '@sitecore-content-sdk/core/node-tools';
 
-export { generateMap } from './generate-map';
+export { generateMap, NextjsGenerateMapArgs } from './generate-map';
 export { writeImportMap } from './codegen/import-map';

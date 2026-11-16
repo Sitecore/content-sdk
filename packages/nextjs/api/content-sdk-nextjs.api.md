@@ -61,6 +61,7 @@ import { FEaaSComponent } from '@sitecore-content-sdk/react';
 import { FEaaSComponentParams } from '@sitecore-content-sdk/react';
 import { FEaaSComponentProps } from '@sitecore-content-sdk/react';
 import { FEaaSServerWrapper } from '@sitecore-content-sdk/react';
+import { FEaaSServerWrapperProps } from '@sitecore-content-sdk/react';
 import { FEaaSWrapper as FEaaSWrapper_2 } from '@sitecore-content-sdk/react';
 import { fetchFEaaSComponentServerProps } from '@sitecore-content-sdk/react';
 import { FetchOptions } from '@sitecore-content-sdk/content/client';
@@ -466,7 +467,7 @@ export { DefaultRetryStrategy }
 export const defaultServerImportEntries: ImportEntry[];
 
 // @public
-export const defineCliConfig: (cliConfig: SitecoreCliConfigInput) => SitecoreCliConfig;
+export const defineCliConfig: (cliConfig: NextjsCliConfigInput) => SitecoreCliConfig;
 
 // @public
 export const defineConfig: (config?: SitecoreConfigInput) => SitecoreConfig;
@@ -568,6 +569,9 @@ export interface FailedProxyExecution {
     executedSuccessfully: false;
 }
 
+// @public
+export const FEaaSCacheComponentsServerWrapper: (props: FEaaSServerWrapperProps) => React_2.JSX.Element;
+
 export { FEaaSClientWrapper }
 
 export { FEaaSComponent }
@@ -612,7 +616,7 @@ export { FileField }
 export { Form }
 
 // @public
-export const generateMap: GenerateMapFunction;
+export const generateMap: (input: NextjsGenerateMapArgs) => void;
 
 export { GenerateMapArgs }
 
@@ -824,10 +828,22 @@ export { NativeDataFetcherResponse }
 export const NextImage: React_2.FC<NextImageProps>;
 
 // @public
+export type NextjsCliConfigInput = Omit<SitecoreCliConfigInput, 'componentMap'> & {
+    componentMap?: NextjsGenerateMapArgs & {
+        generator?: GenerateMapFunction;
+    };
+};
+
+// @public
 export type NextjsContentSdkComponent = ReactContentSdkComponent & {
     getComponentServerProps?: GetComponentServerProps;
     dynamicModule?: () => Promise<ReactContentSdkComponent>;
     componentType?: 'client' | 'server' | 'universal';
+};
+
+// @public
+export type NextjsGenerateMapArgs = GenerateMapArgs & {
+    cacheComponents?: boolean;
 };
 
 export { noopLoadImportMap }

@@ -43,6 +43,7 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 
 - **Segment not-found:** `src/app/[site]/[locale]/[[...path]]/not-found.tsx`. Uses `getCachedPageParams()` from `@sitecore-content-sdk/nextjs` (set by segment `layout.tsx` via `setCachedPageParams`), then `client.getErrorPage(ErrorPage.NotFound, { site, locale })` and renders layout if a page is returned. **Do not** call `headers()` in segment not-found — it opts out of SSG.
 - **Root not-found:** `src/app/not-found.tsx` — falls back to `scConfig.defaultSite` / `scConfig.defaultLanguage` when set.
+- **Root global error:** `src/app/global-error.tsx` is a Client Component (`'use client'`) that fetches `client.getErrorPage(ErrorPage.InternalServerError, ...)` on the client. It renders the page with `src/Layout.client.tsx` (client component map only) — **do not** import `src/Layout.tsx` there, because that would pull the server component map into the client bundle.
 
 ## API route handlers
 
@@ -60,7 +61,7 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
 ## Component maps and layout
 
 - **Server/client components:** `.sitecore/component-map.ts` (Server) and `.sitecore/component-map.client.ts` (Client) — auto-generated from `src/components/` during `npm run dev` (watch) and `npm run build` (Server vs Client based on `'use client'`). Do not edit manually unless needed.
-- **Layout:** `Layout.tsx` renders page layout and placeholders; `Providers` wrap page and component context; `Bootstrap` in `[site]/layout.tsx` receives `siteName={site}` and preview state.
+- **Layout:** `Layout.tsx` renders the page with the server component map; `Layout.client.tsx` is its client-only counterpart (client component map only) for Client Components such as `global-error.tsx`; both render header, main, and footer through `LayoutPlaceholders.tsx`, which takes the map as a prop and does not import either map; `Providers` wrap page and component context; `Bootstrap` in `[site]/layout.tsx` receives `siteName={site}` and preview state.
 
 ## Best practices
 

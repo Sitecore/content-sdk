@@ -8,7 +8,7 @@
 
 > **canResolveAppModule**(`specifier`, `appPath?`): `boolean`
 
-Defined in: [packages/core/src/tools/framework-packages.ts:68](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/core/src/tools/framework-packages.ts#L68)
+Defined in: [packages/core/src/tools/framework-packages.ts:68](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/core/src/tools/framework-packages.ts#L68)
 
 Reports whether a module can be resolved from the app without loading it.
 

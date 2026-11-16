@@ -6,7 +6,7 @@
 
 # Interface: FlattenedObject
 
-Defined in: [analytics-core/src/utils/converters/flatten-object.ts:51](https://github.com/Sitecore/content-sdk/blob/a6f2fa837d94ddfacbf5ffaa348ac01f0737da82/packages/analytics-core/src/utils/converters/flatten-object.ts#L51)
+Defined in: [analytics-core/src/utils/converters/flatten-object.ts:51](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/analytics-core/src/utils/converters/flatten-object.ts#L51)
 
 **`Internal`**
 

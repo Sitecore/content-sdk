@@ -1,6 +1,5 @@
 import {
   GenerateMapArgs,
-  GenerateMapFunction,
   filterComponentsByType,
   ComponentFileWithType,
   EnhancedComponentMapTemplate,
@@ -23,6 +22,17 @@ import { Form } from '@sitecore-content-sdk/nextjs';
 const APP_ROUTER_BUILTIN_ENTRIES = [
   `['BYOCWrapper', BYOCServerWrapper]`,
   `['FEaaSWrapper', FEaaSServerWrapper]`,
+  `['Form', { ...Form, componentType: 'client' }]`,
+];
+
+const APP_ROUTER_CACHE_COMPONENTS_BUILTIN_IMPORTS = `
+import { BYOCServerWrapper, FEaaSCacheComponentsServerWrapper } from '@sitecore-content-sdk/nextjs';
+import { Form } from '@sitecore-content-sdk/nextjs';
+`;
+
+const APP_ROUTER_CACHE_COMPONENTS_BUILTIN_ENTRIES = [
+  `['BYOCWrapper', BYOCServerWrapper]`,
+  `['FEaaSWrapper', FEaaSCacheComponentsServerWrapper]`,
   `['Form', { ...Form, componentType: 'client' }]`,
 ];
 
@@ -57,12 +67,25 @@ const isComponentMapTemplate = (
   fn: ComponentMapTemplate | EnhancedComponentMapTemplate
 ): fn is ComponentMapTemplate => fn.length === 2;
 
+/**
+ * Arguments for the Next.js generateMap function.
+ * @public
+ */
+export type NextjsGenerateMapArgs = GenerateMapArgs & {
+  /** Set to true when the App Router app enables `cacheComponents` in next.config. */
+  cacheComponents?: boolean;
+};
+
+type ServerMapTemplateContext = Parameters<EnhancedComponentMapTemplate>[2] & {
+  cacheComponents?: boolean;
+};
+
 // Default App Router (server) component map template
-export const defaultServerMapTemplate: EnhancedComponentMapTemplate = (
-  components,
-  componentImports,
-  ctx
-) => {
+export const defaultServerMapTemplate = (
+  components: Parameters<EnhancedComponentMapTemplate>[0],
+  componentImports: Parameters<EnhancedComponentMapTemplate>[1],
+  ctx?: ServerMapTemplateContext
+): string => {
   const entries =
     ctx?.entries ??
     prepareComponentsForMap(components as ComponentFileWithType[], {
@@ -72,8 +95,12 @@ export const defaultServerMapTemplate: EnhancedComponentMapTemplate = (
   return buildComponentMapContent(entries, componentImports, {
     framework: 'nextjs',
     isClientMap: false,
-    builtInImports: APP_ROUTER_BUILTIN_IMPORTS,
-    builtInMapEntries: APP_ROUTER_BUILTIN_ENTRIES,
+    builtInImports: ctx?.cacheComponents
+      ? APP_ROUTER_CACHE_COMPONENTS_BUILTIN_IMPORTS
+      : APP_ROUTER_BUILTIN_IMPORTS,
+    builtInMapEntries: ctx?.cacheComponents
+      ? APP_ROUTER_CACHE_COMPONENTS_BUILTIN_ENTRIES
+      : APP_ROUTER_BUILTIN_ENTRIES,
   });
 };
 
@@ -145,6 +172,9 @@ const collectComponents = (opts: {
  * - component-map.ts          : Full component map with all components (server, client, universal)
  * - component-map.client.ts   : Client-safe map with built-in components only (no user components)
  *
+ * When cacheComponents is true (App Router only):
+ * - component-map.ts registers `FEaaSCacheComponentsServerWrapper` as the built-in `FEaaSWrapper`
+ *
  * When includeVariants is true:
  * - Includes component **variants** in the generated map(s) alongside base components
  * - Preserves the same client/server filtering rules (variants obey clientComponentMap filtering)
@@ -153,10 +183,10 @@ const collectComponents = (opts: {
  * Template Customization:
  * - mapTemplate: Custom template for main component map (works for both single and dual map modes)
  * - clientMapTemplate: Custom template for client component map (App Router only)
- * @param {GenerateMapArgs} params - The parameters for the generateMap function.
+ * @param {NextjsGenerateMapArgs} params - The parameters for the generateMap function.
  * @public
  */
-export const generateMap: GenerateMapFunction = ({
+export const generateMap = ({
   paths,
   destination = '.sitecore',
   exclude,
@@ -165,7 +195,8 @@ export const generateMap: GenerateMapFunction = ({
   clientMapTemplate,
   clientComponentMap,
   includeVariants = true,
-}: GenerateMapArgs) => {
+  cacheComponents,
+}: NextjsGenerateMapArgs): void => {
   const routerType = detectRouterType();
   const allComponents = collectComponents({ paths, exclude, includeVariants, filter: 'all' });
 
@@ -206,6 +237,7 @@ export const generateMap: GenerateMapFunction = ({
         entries: allComponents.entries,
         includeVariants,
         isClientMap: false,
+        cacheComponents,
       });
 
   try {
