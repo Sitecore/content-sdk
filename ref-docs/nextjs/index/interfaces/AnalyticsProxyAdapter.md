@@ -6,7 +6,7 @@
 
 # Interface: AnalyticsProxyAdapter
 
-Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:17](https://github.com/Sitecore/content-sdk/blob/4ed8b0d2eae4c3a3380de61934b40365770bba80/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L17)
+Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:17](https://github.com/Sitecore/content-sdk/blob/17e859e2129ef994749bbc91241f601b807f14da/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L17)
 
 Defines the AnalyticsProxyAdapter.
 
@@ -20,7 +20,7 @@ Defines the AnalyticsProxyAdapter.
 
 > **getClientId**: () => `string` \| `null`
 
-Defined in: analytics-core/types/src/initialization/types.d.ts:13
+Defined in: nextjs/node\_modules/@sitecore-content-sdk/analytics-core/types/src/initialization/types.d.ts:13
 
 Gets the client ID.
 
@@ -40,7 +40,7 @@ The client ID, or null if it is not set.
 
 > **location**: `object`
 
-Defined in: analytics-core/types/src/initialization/types.d.ts:22
+Defined in: nextjs/node\_modules/@sitecore-content-sdk/analytics-core/types/src/initialization/types.d.ts:22
 
 The location object, which provides a method for getting search parameters.
 
@@ -66,7 +66,7 @@ The search parameters from the location.
 
 > **setClientId**: () => `Promise`\<`void`\>
 
-Defined in: analytics-core/types/src/initialization/types.d.ts:18
+Defined in: nextjs/node\_modules/@sitecore-content-sdk/analytics-core/types/src/initialization/types.d.ts:18
 
 Sets the client ID.
 
@@ -86,7 +86,7 @@ A promise that resolves when the client ID has been set.
 
 > **type**: `"proxy"`
 
-Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:21](https://github.com/Sitecore/content-sdk/blob/4ed8b0d2eae4c3a3380de61934b40365770bba80/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L21)
+Defined in: [nextjs/src/initialization/proxy/analytics-adapter.ts:21](https://github.com/Sitecore/content-sdk/blob/17e859e2129ef994749bbc91241f601b807f14da/packages/nextjs/src/initialization/proxy/analytics-adapter.ts#L21)
 
 The type of the adapter.
 
