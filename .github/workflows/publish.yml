@@ -90,7 +90,7 @@ jobs:
         uses: changesets/action@v1
         with:
           version: yarn csdk:prep-release
-          publish: yarn changeset:publish --tag latest
+          publish: yarn changeset:publish --tag v2.2-legacy
           commit: '[release][ci] Version bump and changelog'
           title: ${{ github.ref_name == 'dev' && '[csdk] latest release' || format('[csdk] patch release - {0}', github.ref_name) }}
         env:
@@ -162,8 +162,8 @@ jobs:
             });
             const prNums = data.map((p) => p.number).filter((n) => n != null);
             const prLabel = prNums.length ? String(Math.max(...prNums)) : 'no-pr';
-            const tagPr = `canary.pr-${prLabel}`;
-            const tagSha = `canary.commit-${short}`;
+            const tagPr = `v2.2-canary.pr-${prLabel}`;
+            const tagSha = `v2.2-canary.commit-${short}`;
             core.setOutput('tag_pr', tagPr);
             core.setOutput('tag_sha', tagSha);
             core.info(`Snapshot npm dist-tags: ${tagPr} + ${tagSha}`);
@@ -177,11 +177,11 @@ jobs:
         run: |
           BRANCH_NAME="${{ github.ref_name }}"
           if [[ "$BRANCH_NAME" =~ ^release/beta ]]; then
-            NPM_TAG="beta"
+            NPM_TAG="v2.2-beta"
           elif [[ "$BRANCH_NAME" =~ ^release/ ]]; then
             NPM_TAG="hotfix-canary"
           else
-            NPM_TAG="canary"
+            NPM_TAG="v2.2-canary"
           fi
           yarn build
           yarn changeset:publish --tag $NPM_TAG --no-git-tag
