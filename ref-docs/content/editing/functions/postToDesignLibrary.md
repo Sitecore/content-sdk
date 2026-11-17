@@ -8,7 +8,7 @@
 
 > **postToDesignLibrary**(`evt`): `void`
 
-Defined in: [content/src/editing/design-library.ts:268](https://github.com/Sitecore/content-sdk/blob/3d19bf996fa63795dea962436719524519fbfd8d/packages/content/src/editing/design-library.ts#L268)
+Defined in: [content/src/editing/design-library.ts:268](https://github.com/Sitecore/content-sdk/blob/ea388d67640acc72edb0875cb7b9b9f7c0999fae/packages/content/src/editing/design-library.ts#L268)
 
 **`Internal`**
 

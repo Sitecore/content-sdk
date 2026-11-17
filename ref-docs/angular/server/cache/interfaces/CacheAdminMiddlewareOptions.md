@@ -6,7 +6,7 @@
 
 # Interface: CacheAdminMiddlewareOptions
 
-Defined in: [packages/angular/src/server/cache/demo/cache-admin-middleware.ts:18](https://github.com/Sitecore/content-sdk/blob/3d19bf996fa63795dea962436719524519fbfd8d/packages/angular/src/server/cache/demo/cache-admin-middleware.ts#L18)
+Defined in: [packages/angular/src/server/cache/demo/cache-admin-middleware.ts:18](https://github.com/Sitecore/content-sdk/blob/ea388d67640acc72edb0875cb7b9b9f7c0999fae/packages/angular/src/server/cache/demo/cache-admin-middleware.ts#L18)
 
 Options for the admin middleware.
 
@@ -16,7 +16,7 @@ Options for the admin middleware.
 
 > `optional` **auth?**: (`req`) => `boolean`
 
-Defined in: [packages/angular/src/server/cache/demo/cache-admin-middleware.ts:27](https://github.com/Sitecore/content-sdk/blob/3d19bf996fa63795dea962436719524519fbfd8d/packages/angular/src/server/cache/demo/cache-admin-middleware.ts#L27)
+Defined in: [packages/angular/src/server/cache/demo/cache-admin-middleware.ts:27](https://github.com/Sitecore/content-sdk/blob/ea388d67640acc72edb0875cb7b9b9f7c0999fae/packages/angular/src/server/cache/demo/cache-admin-middleware.ts#L27)
 
 Optional auth gate. Return true to allow. Defaults to allowing everything,
 which is fine for local demos — *do not* leave that default in a deploy.
@@ -37,7 +37,7 @@ which is fine for local demos — *do not* leave that default in a deploy.
 
 > **cache**: [`LoaderCache`](../../../loaders/interfaces/LoaderCache.md)
 
-Defined in: [packages/angular/src/server/cache/demo/cache-admin-middleware.ts:20](https://github.com/Sitecore/content-sdk/blob/3d19bf996fa63795dea962436719524519fbfd8d/packages/angular/src/server/cache/demo/cache-admin-middleware.ts#L20)
+Defined in: [packages/angular/src/server/cache/demo/cache-admin-middleware.ts:20](https://github.com/Sitecore/content-sdk/blob/ea388d67640acc72edb0875cb7b9b9f7c0999fae/packages/angular/src/server/cache/demo/cache-admin-middleware.ts#L20)
 
 The cache instance to expose. Capture once in `server.ts`.
 
@@ -47,6 +47,6 @@ The cache instance to expose. Capture once in `server.ts`.
 
 > `optional` **endpoint?**: `string`
 
-Defined in: [packages/angular/src/server/cache/demo/cache-admin-middleware.ts:22](https://github.com/Sitecore/content-sdk/blob/3d19bf996fa63795dea962436719524519fbfd8d/packages/angular/src/server/cache/demo/cache-admin-middleware.ts#L22)
+Defined in: [packages/angular/src/server/cache/demo/cache-admin-middleware.ts:22](https://github.com/Sitecore/content-sdk/blob/ea388d67640acc72edb0875cb7b9b9f7c0999fae/packages/angular/src/server/cache/demo/cache-admin-middleware.ts#L22)
 
 Base path. Defaults to `/api/_cache`.
