@@ -1,4 +1,4 @@
-# Sitecore Content SDK 2.1.1
+# Sitecore Content SDK
 
 [![Publish](https://github.com/Sitecore/content-sdk/actions/workflows/publish.yml/badge.svg)](https://github.com/Sitecore/content-sdk/actions/workflows/publish.yml) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
