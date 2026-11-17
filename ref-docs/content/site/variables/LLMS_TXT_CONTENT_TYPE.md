@@ -8,6 +8,6 @@
 
 > `const` **LLMS\_TXT\_CONTENT\_TYPE**: `"text/markdown; charset=utf-8"` = `'text/markdown; charset=utf-8'`
 
-Defined in: [content/src/site/llms-txt-service.ts:22](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/content/src/site/llms-txt-service.ts#L22)
+Defined in: [content/src/site/llms-txt-service.ts:22](https://github.com/Sitecore/content-sdk/blob/6bf9292fdd107f1fb78908370ca4f0fc56a384ff/packages/content/src/site/llms-txt-service.ts#L22)
 
 Content-Type header value to use when serving llms.txt (Markdown per https://llmstxt.org).

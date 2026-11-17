@@ -8,7 +8,7 @@
 
 > **prepareComponentsForMap**(`components`, `opts`): [`ComponentMapEntry`](../../type-aliases/ComponentMapEntry.md)[]
 
-Defined in: [content/src/tools/templating/utils.ts:42](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/content/src/tools/templating/utils.ts#L42)
+Defined in: [content/src/tools/templating/utils.ts:42](https://github.com/Sitecore/content-sdk/blob/6bf9292fdd107f1fb78908370ca4f0fc56a384ff/packages/content/src/tools/templating/utils.ts#L42)
 
 **`Internal`**
 
