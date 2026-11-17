@@ -6,7 +6,7 @@
 
 # Interface: ImageField
 
-Defined in: [packages/react/src/components/Image.tsx:25](https://github.com/Sitecore/content-sdk/blob/83c3585a0a21e4640bc818f7e60ba915fa2bfbaf/packages/react/src/components/Image.tsx#L25)
+Defined in: [packages/react/src/components/Image.tsx:25](https://github.com/Sitecore/content-sdk/blob/888b282da5d67f36822a018975f9a32daa614821/packages/react/src/components/Image.tsx#L25)
 
 The interface for the Image field.
 
@@ -16,4 +16,4 @@ The interface for the Image field.
 
 > `optional` **value**: [`ImageFieldValue`](ImageFieldValue.md)
 
-Defined in: [packages/react/src/components/Image.tsx:26](https://github.com/Sitecore/content-sdk/blob/83c3585a0a21e4640bc818f7e60ba915fa2bfbaf/packages/react/src/components/Image.tsx#L26)
+Defined in: [packages/react/src/components/Image.tsx:26](https://github.com/Sitecore/content-sdk/blob/888b282da5d67f36822a018975f9a32daa614821/packages/react/src/components/Image.tsx#L26)
