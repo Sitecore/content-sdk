@@ -14,4 +14,6 @@ The Image component.
 
 ## Param
 
+**props**
+
 component props

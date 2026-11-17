@@ -18,13 +18,13 @@ Field interface
 
 | Type Parameter | Default type |
 | ------ | ------ |
-| `T` | `GenericFieldValue` |
+| <a id="type-parameter-t"></a> `T` | `GenericFieldValue` |
 
 ## Properties
 
 ### metadata?
 
-> `optional` **metadata**: `object`
+> `optional` **metadata?**: `object`
 
 Defined in: content/types/layout/models.d.ts:123
 

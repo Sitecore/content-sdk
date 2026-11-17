@@ -6,9 +6,9 @@
 
 # Function: withFieldMetadata()
 
-> **withFieldMetadata**\<`FieldComponentProps`, `RefElementType`\>(`FieldComponent`, `isForwardRef`): (`props`) => `Element`
+> **withFieldMetadata**\<`FieldComponentProps`, `RefElementType`\>(`FieldComponent`, `isForwardRef?`): (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withFieldMetadata.tsx:17](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/react/src/enhancers/withFieldMetadata.tsx#L17)
+Defined in: [packages/react/src/enhancers/withFieldMetadata.tsx:17](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/react/src/enhancers/withFieldMetadata.tsx#L17)
 
 Wraps the field component with metadata markup intended to be used for chromes hydration in Pages
 
@@ -16,26 +16,16 @@ Wraps the field component with metadata markup intended to be used for chromes h
 
 | Type Parameter | Default type |
 | ------ | ------ |
-| `FieldComponentProps` *extends* `WithMetadataProps` | - |
-| `RefElementType` | `HTMLElement` |
+| <a id="type-parameter-fieldcomponentprops"></a> `FieldComponentProps` *extends* `WithMetadataProps` | - |
+| <a id="type-parameter-refelementtype"></a> `RefElementType` | `HTMLElement` |
 
 ## Parameters
 
 | Parameter | Type | Default value | Description |
 | ------ | ------ | ------ | ------ |
 | `FieldComponent` | `ComponentType`\<`FieldComponentProps`\> | `undefined` | the field component |
-| `isForwardRef` | `boolean` | `false` | set to 'true' if the ref prop should be explicitly accepted and forwarded |
+| `isForwardRef?` | `boolean` | `false` | set to 'true' if the ref prop should be explicitly accepted and forwarded |
 
 ## Returns
 
-> (`props`): `Element`
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `props` | `FieldComponentProps` & `object` |
-
-### Returns
-
-`Element`
+(`props`) => `Element`

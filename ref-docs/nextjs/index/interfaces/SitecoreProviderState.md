@@ -14,7 +14,7 @@ The state for the SitecoreProvider component.
 
 ### api?
 
-> `optional` **api**: `Required`\<\{ `edge?`: `Required`\<\{ `clientContextId?`: `string`; `contextId`: `string`; `edgeUrl?`: `string`; \} \| `undefined`\>; `local?`: `Required`\<\{ `apiHost`: `string`; `apiKey`: `string`; `path?`: `string`; \} \| `undefined`\>; \}\>
+> `optional` **api?**: `Required`\<\{ `edge?`: `Required`\<\{ `clientContextId?`: `string`; `contextId`: `string`; `edgeUrl?`: `string`; \} \| `undefined`\>; `local?`: `Required`\<\{ `apiHost`: `string`; `apiKey`: `string`; `path?`: `string`; \} \| `undefined`\>; \}\>
 
 Defined in: react/types/components/SitecoreProvider.d.ts:51
 
@@ -32,7 +32,7 @@ The component map to use for rendering components.
 
 ***
 
-### loadImportMap()
+### loadImportMap
 
 > **loadImportMap**: () => `Promise`\<`ImportMapImport`\>
 
@@ -56,9 +56,9 @@ The page data.
 
 ***
 
-### setPage()?
+### setPage?
 
-> `optional` **setPage**: (`value`) => `void`
+> `optional` **setPage?**: (`value`) => `void`
 
 Defined in: react/types/components/SitecoreProvider.d.ts:35
 

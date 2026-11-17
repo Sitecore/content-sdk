@@ -6,86 +6,86 @@
 
 # Interface: LayoutServiceContext
 
-Defined in: [content/src/layout/models.ts:33](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L33)
+Defined in: [content/src/layout/models.ts:33](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L33)
 
 Shape of context data from the Sitecore Layout Service
 
 ## Indexable
 
-\[`key`: `string`\]: `unknown`
+> \[`key`: `string`\]: `unknown`
 
 ## Properties
 
 ### clientData?
 
-> `optional` **clientData**: `Record`\<`string`, `Record`\<`string`, `unknown`\>\>
+> `optional` **clientData?**: `Record`\<`string`, `Record`\<`string`, `unknown`\>\>
 
-Defined in: [content/src/layout/models.ts:45](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L45)
+Defined in: [content/src/layout/models.ts:45](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L45)
 
 ***
 
 ### clientScripts?
 
-> `optional` **clientScripts**: `string`[]
+> `optional` **clientScripts?**: `string`[]
 
-Defined in: [content/src/layout/models.ts:44](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L44)
+Defined in: [content/src/layout/models.ts:44](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L44)
 
 ***
 
 ### itemPath?
 
-> `optional` **itemPath**: `string`
+> `optional` **itemPath?**: `string`
 
-Defined in: [content/src/layout/models.ts:37](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L37)
+Defined in: [content/src/layout/models.ts:37](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L37)
 
 ***
 
 ### language?
 
-> `optional` **language**: `string`
+> `optional` **language?**: `string`
 
-Defined in: [content/src/layout/models.ts:36](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L36)
+Defined in: [content/src/layout/models.ts:36](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L36)
 
 ***
 
 ### pageEditing?
 
-> `optional` **pageEditing**: `boolean`
+> `optional` **pageEditing?**: `boolean`
 
-Defined in: [content/src/layout/models.ts:35](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L35)
+Defined in: [content/src/layout/models.ts:35](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L35)
 
 ***
 
 ### pageState?
 
-> `optional` **pageState**: [`LayoutServicePageState`](../enumerations/LayoutServicePageState.md)
+> `optional` **pageState?**: [`LayoutServicePageState`](../enumerations/LayoutServicePageState.md)
 
-Defined in: [content/src/layout/models.ts:38](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L38)
+Defined in: [content/src/layout/models.ts:38](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L38)
 
 ***
 
 ### renderingType?
 
-> `optional` **renderingType**: [`Component`](../enumerations/RenderingType.md#component)
+> `optional` **renderingType?**: [`Component`](../enumerations/RenderingType.md#component)
 
-Defined in: [content/src/layout/models.ts:43](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L43)
+Defined in: [content/src/layout/models.ts:43](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L43)
 
 ***
 
 ### site?
 
-> `optional` **site**: `object`
+> `optional` **site?**: `object`
 
-Defined in: [content/src/layout/models.ts:40](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L40)
+Defined in: [content/src/layout/models.ts:40](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L40)
 
 #### name?
 
-> `optional` **name**: `string`
+> `optional` **name?**: `string`
 
 ***
 
 ### visitorIdentificationTimestamp?
 
-> `optional` **visitorIdentificationTimestamp**: `number`
+> `optional` **visitorIdentificationTimestamp?**: `number`
 
-Defined in: [content/src/layout/models.ts:39](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L39)
+Defined in: [content/src/layout/models.ts:39](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L39)

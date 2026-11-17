@@ -6,16 +6,14 @@
 
 # Function: DesignLibraryApp()
 
-> **DesignLibraryApp**(`props`): `Element` \| `null`
+> **DesignLibraryApp**(`props`): `Promise`\<`Element` \| `null`\>
 
-Defined in: [nextjs/src/components/DesignLibrary/DesignLibraryApp.tsx:17](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/components/DesignLibrary/DesignLibraryApp.tsx#L17)
+Defined in: [nextjs/src/components/DesignLibrary/DesignLibraryApp.tsx:12](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/components/DesignLibrary/DesignLibraryApp.tsx#L12)
 
-Design Library component intended to be used by the NextJs app router application
-This component serves as a router between client and server component rendering modes for the Design Library.
-It inspects the component type from the component map and
-delegates to the appropriate rendering implementation:
-- Client components are rendered using the `DesignLibrary` component
-- Server components are rendered using the `DesignLibraryServer` component
+Design Library component intended to be used by the NextJs app router application.
+This component serves as a router between client and server component rendering modes
+for the Design Library. The client/server runtime is loaded lazily so static import
+of `DesignLibrary` / `DesignLibraryServer` does not pull those modules into every render.
 
 ## Parameters
 
@@ -25,4 +23,4 @@ delegates to the appropriate rendering implementation:
 
 ## Returns
 
-`Element` \| `null`
+`Promise`\<`Element` \| `null`\>

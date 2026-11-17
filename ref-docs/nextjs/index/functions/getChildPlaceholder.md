@@ -16,8 +16,8 @@ Gets rendering definitions in a given child placeholder under a current renderin
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `rendering` | [`ComponentRendering`](../interfaces/ComponentRendering.md) |  |
-| `placeholderName` | `string` |  |
+| `rendering` | [`ComponentRendering`](../interfaces/ComponentRendering.md) | - |
+| `placeholderName` | `string` | - |
 
 ## Returns
 

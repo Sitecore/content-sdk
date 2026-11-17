@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [utils](../README.md) / isEditorActive
 
-# Variable: isEditorActive()
+# Variable: isEditorActive
 
 > `const` **isEditorActive**: () => `boolean`
 

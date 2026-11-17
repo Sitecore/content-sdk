@@ -50,7 +50,7 @@ Perform a DELETE request
 
 | Type Parameter |
 | ------ |
-| `T` |
+| <a id="type-parameter-t"></a> `T` |
 
 #### Parameters
 
@@ -101,7 +101,7 @@ Implements a data fetcher.
 
 | Type Parameter |
 | ------ |
-| `T` |
+| <a id="type-parameter-t-1"></a> `T` |
 
 #### Parameters
 
@@ -130,7 +130,7 @@ Perform a GET request
 
 | Type Parameter |
 | ------ |
-| `T` |
+| <a id="type-parameter-t-2"></a> `T` |
 
 #### Parameters
 
@@ -181,7 +181,7 @@ Perform a HEAD request
 
 | Type Parameter |
 | ------ |
-| `T` |
+| <a id="type-parameter-t-3"></a> `T` |
 
 #### Parameters
 
@@ -210,7 +210,7 @@ Perform a POST request
 
 | Type Parameter |
 | ------ |
-| `T` |
+| <a id="type-parameter-t-4"></a> `T` |
 
 #### Parameters
 
@@ -240,7 +240,7 @@ Perform a PUT request
 
 | Type Parameter |
 | ------ |
-| `T` |
+| <a id="type-parameter-t-5"></a> `T` |
 
 #### Parameters
 

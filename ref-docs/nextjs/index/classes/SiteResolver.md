@@ -30,7 +30,7 @@ Defined in: content/types/site/site-resolver.d.ts:11
 
 ## Properties
 
-### getByHost()
+### getByHost
 
 > **getByHost**: (`hostName`) => [`SiteInfo`](../type-aliases/SiteInfo.md)
 
@@ -56,7 +56,7 @@ if a matching site is not found
 
 ***
 
-### getByName()
+### getByName
 
 > **getByName**: (`siteName`) => [`SiteInfo`](../type-aliases/SiteInfo.md) \| `undefined`
 
@@ -78,7 +78,7 @@ the resolved site or undefined if not found
 
 ***
 
-### getHostMap()
+### getHostMap
 
 > `protected` **getHostMap**: () => `Map`\<`string`, [`SiteInfo`](../type-aliases/SiteInfo.md)\>
 

@@ -16,7 +16,7 @@ Fetch options
 
 ### debugger?
 
-> `optional` **debugger**: `Debugger`
+> `optional` **debugger?**: `Debugger`
 
 Defined in: core/types/models.d.ts:61
 
@@ -26,7 +26,7 @@ Override debugger for logging. Uses 'content-sdk:http' by default.
 
 ### fetch?
 
-> `optional` **fetch**: *typeof* `fetch`
+> `optional` **fetch?**: *typeof* `fetch`
 
 Defined in: core/types/models.d.ts:53
 
@@ -36,7 +36,7 @@ Override to replace default nodeJS fetch implementation
 
 ### headers?
 
-> `optional` **headers**: `Record`\<`string`, `string`\>
+> `optional` **headers?**: `Record`\<`string`, `string`\>
 
 Defined in: core/types/models.d.ts:57
 
@@ -46,7 +46,7 @@ Custom headers to be sent with each request.
 
 ### retries?
 
-> `optional` **retries**: `number`
+> `optional` **retries?**: `number`
 
 Defined in: core/types/models.d.ts:45
 
@@ -56,7 +56,7 @@ Number of retries GraphQL client will attempt on request error
 
 ### retryStrategy?
 
-> `optional` **retryStrategy**: [`RetryStrategy`](../interfaces/RetryStrategy.md)
+> `optional` **retryStrategy?**: [`RetryStrategy`](../interfaces/RetryStrategy.md)
 
 Defined in: core/types/models.d.ts:49
 

@@ -14,6 +14,6 @@ The interface for the Image field.
 
 ### value?
 
-> `optional` **value**: [`ImageFieldValue`](ImageFieldValue.md)
+> `optional` **value?**: [`ImageFieldValue`](ImageFieldValue.md)
 
 Defined in: react/types/components/Image.d.ts:17

@@ -6,7 +6,7 @@
 
 # Class: DefaultRetryStrategy
 
-Defined in: [packages/core/src/retries.ts:9](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/core/src/retries.ts#L9)
+Defined in: [packages/core/src/retries.ts:9](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/core/src/retries.ts#L9)
 
 Represents a default retry strategy for handling retry attempts in case of specific HTTP status codes.
 This class implements the RetryStrategy interface and provides methods to determine whether a request
@@ -20,15 +20,15 @@ should be retried and calculates the delay before the next retry attempt.
 
 ### Constructor
 
-> **new DefaultRetryStrategy**(`options`): `DefaultRetryStrategy`
+> **new DefaultRetryStrategy**(`options?`): `DefaultRetryStrategy`
 
-Defined in: [packages/core/src/retries.ts:20](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/core/src/retries.ts#L20)
+Defined in: [packages/core/src/retries.ts:20](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/core/src/retries.ts#L20)
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `options` | \{ `errorCodes?`: `string`[]; `factor?`: `number`; `statusCodes?`: `number`[]; \} | Configurable options for retry mechanism. |
+| `options?` | \{ `errorCodes?`: `string`[]; `factor?`: `number`; `statusCodes?`: `number`[]; \} | Configurable options for retry mechanism. |
 | `options.errorCodes?` | `string`[] | Node error codes to trigger retries. Default is ['ECONNRESET', 'ETIMEDOUT', 'EPROTO']. |
 | `options.factor?` | `number` | Factor by which the delay increases with each retry attempt. Default is 2. |
 | `options.statusCodes?` | `number`[] | HTTP status codes to trigger retries on. Default is [429]. |
@@ -43,7 +43,7 @@ Defined in: [packages/core/src/retries.ts:20](https://github.com/Sitecore/conten
 
 > **getDelay**(`error`, `attempt`): `number`
 
-Defined in: [packages/core/src/retries.ts:33](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/core/src/retries.ts#L33)
+Defined in: [packages/core/src/retries.ts:33](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/core/src/retries.ts#L33)
 
 Calculates the delay (in milliseconds) before the next retry based on the given error and attempt count.
 
@@ -70,7 +70,7 @@ The delay in milliseconds before the next retry.
 
 > **shouldRetry**(`error`, `attempt`, `retries`): `boolean`
 
-Defined in: [packages/core/src/retries.ts:26](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/core/src/retries.ts#L26)
+Defined in: [packages/core/src/retries.ts:26](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/core/src/retries.ts#L26)
 
 Determines whether a request should be retried based on the given error and attempt count.
 

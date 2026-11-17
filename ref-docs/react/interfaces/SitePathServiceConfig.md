@@ -33,7 +33,7 @@ This factory function is used to create and configure GraphQL clients for making
 
 ### excludedPaths?
 
-> `optional` **excludedPaths**: `string`[]
+> `optional` **excludedPaths?**: `string`[]
 
 Defined in: packages/content/types/site/sitepath-service.d.ts:30
 
@@ -47,7 +47,7 @@ Optional. Paths starting with these provided prefixes will be excluded from retu
 
 ### includedPaths?
 
-> `optional` **includedPaths**: `string`[]
+> `optional` **includedPaths?**: `string`[]
 
 Defined in: packages/content/types/site/sitepath-service.d.ts:26
 
@@ -61,7 +61,7 @@ Optional. Only paths starting with these provided prefixes will be returned.
 
 ### includePersonalizedRoutes?
 
-> `optional` **includePersonalizedRoutes**: `boolean`
+> `optional` **includePersonalizedRoutes?**: `boolean`
 
 Defined in: packages/content/types/site/sitepath-service.d.ts:77
 
@@ -73,7 +73,7 @@ Turned off by default.
 
 ### pageSize?
 
-> `optional` **pageSize**: `number`
+> `optional` **pageSize?**: `number`
 
 Defined in: packages/content/types/site/sitepath-service.d.ts:37
 

@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [client](../README.md) / GraphQLRequestClientFactory
 
-# Type Alias: GraphQLRequestClientFactory()
+# Type Alias: GraphQLRequestClientFactory
 
 > **GraphQLRequestClientFactory** = (`config?`) => [`GraphQLRequestClient`](../classes/GraphQLRequestClient.md)
 

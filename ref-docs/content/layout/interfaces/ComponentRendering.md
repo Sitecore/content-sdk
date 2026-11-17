@@ -6,7 +6,7 @@
 
 # Interface: ComponentRendering\<T\>
 
-Defined in: [content/src/layout/models.ts:103](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L103)
+Defined in: [content/src/layout/models.ts:103](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L103)
 
 Definition of a component instance within a placeholder on a route
 
@@ -14,7 +14,7 @@ Definition of a component instance within a placeholder on a route
 
 | Type Parameter | Default type |
 | ------ | ------ |
-| `T` | [`ComponentFields`](ComponentFields.md) |
+| <a id="type-parameter-t"></a> `T` | [`ComponentFields`](ComponentFields.md) |
 
 ## Properties
 
@@ -22,44 +22,44 @@ Definition of a component instance within a placeholder on a route
 
 > **componentName**: `string`
 
-Defined in: [content/src/layout/models.ts:104](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L104)
+Defined in: [content/src/layout/models.ts:104](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L104)
 
 ***
 
 ### dataSource?
 
-> `optional` **dataSource**: `string`
+> `optional` **dataSource?**: `string`
 
-Defined in: [content/src/layout/models.ts:105](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L105)
+Defined in: [content/src/layout/models.ts:105](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L105)
 
 ***
 
 ### fields?
 
-> `optional` **fields**: `T`
+> `optional` **fields?**: `T`
 
-Defined in: [content/src/layout/models.ts:108](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L108)
+Defined in: [content/src/layout/models.ts:108](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L108)
 
 ***
 
 ### params?
 
-> `optional` **params**: [`ComponentParams`](ComponentParams.md)
+> `optional` **params?**: [`ComponentParams`](ComponentParams.md)
 
-Defined in: [content/src/layout/models.ts:109](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L109)
+Defined in: [content/src/layout/models.ts:109](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L109)
 
 ***
 
 ### placeholders?
 
-> `optional` **placeholders**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\>
+> `optional` **placeholders?**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\>
 
-Defined in: [content/src/layout/models.ts:107](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L107)
+Defined in: [content/src/layout/models.ts:107](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L107)
 
 ***
 
 ### uid?
 
-> `optional` **uid**: `string`
+> `optional` **uid?**: `string`
 
-Defined in: [content/src/layout/models.ts:106](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/content/src/layout/models.ts#L106)
+Defined in: [content/src/layout/models.ts:106](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/content/src/layout/models.ts#L106)

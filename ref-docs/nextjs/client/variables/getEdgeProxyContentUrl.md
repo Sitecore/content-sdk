@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [client](../README.md) / getEdgeProxyContentUrl
 
-# Variable: getEdgeProxyContentUrl()
+# Variable: getEdgeProxyContentUrl
 
 > `const` **getEdgeProxyContentUrl**: (`sitecoreEdgeUrl?`) => `string`
 

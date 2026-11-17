@@ -12,13 +12,13 @@ The interface for the Link field value.
 
 ## Indexable
 
-\[`attributeName`: `string`\]: `unknown`
+> \[`attributeName`: `string`\]: `unknown`
 
 ## Properties
 
 ### anchor?
 
-> `optional` **anchor**: `string`
+> `optional` **anchor?**: `string`
 
 Defined in: react/types/components/Link.d.ts:16
 
@@ -26,7 +26,7 @@ Defined in: react/types/components/Link.d.ts:16
 
 ### class?
 
-> `optional` **class**: `string`
+> `optional` **class?**: `string`
 
 Defined in: react/types/components/Link.d.ts:12
 
@@ -34,7 +34,7 @@ Defined in: react/types/components/Link.d.ts:12
 
 ### className?
 
-> `optional` **className**: `string`
+> `optional` **className?**: `string`
 
 Defined in: react/types/components/Link.d.ts:11
 
@@ -42,7 +42,7 @@ Defined in: react/types/components/Link.d.ts:11
 
 ### href?
 
-> `optional` **href**: `string`
+> `optional` **href?**: `string`
 
 Defined in: react/types/components/Link.d.ts:10
 
@@ -50,7 +50,7 @@ Defined in: react/types/components/Link.d.ts:10
 
 ### linktype?
 
-> `optional` **linktype**: `string`
+> `optional` **linktype?**: `string`
 
 Defined in: react/types/components/Link.d.ts:18
 
@@ -58,7 +58,7 @@ Defined in: react/types/components/Link.d.ts:18
 
 ### querystring?
 
-> `optional` **querystring**: `string`
+> `optional` **querystring?**: `string`
 
 Defined in: react/types/components/Link.d.ts:17
 
@@ -66,7 +66,7 @@ Defined in: react/types/components/Link.d.ts:17
 
 ### target?
 
-> `optional` **target**: `string`
+> `optional` **target?**: `string`
 
 Defined in: react/types/components/Link.d.ts:14
 
@@ -74,7 +74,7 @@ Defined in: react/types/components/Link.d.ts:14
 
 ### text?
 
-> `optional` **text**: `string`
+> `optional` **text?**: `string`
 
 Defined in: react/types/components/Link.d.ts:15
 
@@ -82,6 +82,6 @@ Defined in: react/types/components/Link.d.ts:15
 
 ### title?
 
-> `optional` **title**: `string`
+> `optional` **title?**: `string`
 
 Defined in: react/types/components/Link.d.ts:13

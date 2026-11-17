@@ -16,7 +16,7 @@ Configuration type for
 
 ### apiKey?
 
-> `optional` **apiKey**: `string`
+> `optional` **apiKey?**: `string`
 
 Defined in: packages/core/types/graphql-request-client.d.ts:78
 
@@ -24,7 +24,7 @@ Defined in: packages/core/types/graphql-request-client.d.ts:78
 
 ### contextId?
 
-> `optional` **contextId**: `string`
+> `optional` **contextId?**: `string`
 
 Defined in: packages/core/types/graphql-request-client.d.ts:79
 

@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / withAppPlaceholder
 
-# Variable: withAppPlaceholder()
+# Variable: withAppPlaceholder
 
 > `const` **withAppPlaceholder**: \<`T`, `W`\>(`Component`) => (`props`) => `React.JSX.Element`
 
@@ -16,8 +16,8 @@ Provides a slot-like functionality by wrapping a component and rendering placeho
 
 | Type Parameter |
 | ------ |
-| `T` *extends* `ComponentProps` |
-| `W` *extends* `T` & `WrapperProps` |
+| <a id="type-parameter-__typet"></a> `T` *extends* `ComponentProps` |
+| <a id="type-parameter-__typew"></a> `W` *extends* `T` & `WrapperProps` |
 
 ## Parameters
 
@@ -29,14 +29,4 @@ Provides a slot-like functionality by wrapping a component and rendering placeho
 
 A new component that renders the original component with placeholders.
 
-> (`props`): `React.JSX.Element`
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `props` | `W` |
-
-### Returns
-
-`React.JSX.Element`
+(`props`) => `React.JSX.Element`

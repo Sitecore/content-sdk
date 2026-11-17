@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [tools](../README.md) / generateSites
 
-# Variable: generateSites()
+# Variable: generateSites
 
 > `const` **generateSites**: (`{ destinationPath }?`) => (`args`) => `Promise`\<`void`\>
 
@@ -22,15 +22,4 @@ Generates site information and writes it to a specified destination path.
 
 - A promise that resolves to an asynchronous function that fetches site information and writes it to a file.
 
-> (`args`): `Promise`\<`void`\>
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `args` | \{ `scConfig`: `SitecoreConfig`; \} |
-| `args.scConfig` | `SitecoreConfig` |
-
-### Returns
-
-`Promise`\<`void`\>
+(`args`) => `Promise`\<`void`\>

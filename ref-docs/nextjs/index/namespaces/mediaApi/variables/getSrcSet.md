@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../../../README.md) / [index](../../../README.md) / [mediaApi](../README.md) / getSrcSet
 
-# Variable: getSrcSet()
+# Variable: getSrcSet
 
 > `const` **getSrcSet**: (`url`, `srcSet`, `imageParams?`, `mediaUrlPrefix?`) => `string`
 

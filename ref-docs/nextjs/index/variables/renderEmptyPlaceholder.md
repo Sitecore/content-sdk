@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / renderEmptyPlaceholder
 
-# Variable: renderEmptyPlaceholder()
+# Variable: renderEmptyPlaceholder
 
 > `const` **renderEmptyPlaceholder**: (`node`) => `React.JSX.Element`
 

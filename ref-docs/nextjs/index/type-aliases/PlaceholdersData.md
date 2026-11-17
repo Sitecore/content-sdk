@@ -16,4 +16,4 @@ Placeholder contents data (name: placeholder name, then array of components with
 
 | Type Parameter | Default type |
 | ------ | ------ |
-| `TYPEDNAME` *extends* `string` | `string` |
+| <a id="type-parameter-typedname"></a> `TYPEDNAME` *extends* `string` | `string` |

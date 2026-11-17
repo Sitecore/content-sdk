@@ -17,7 +17,7 @@ This class is meant to be extended or used as a mixin; it's not meant to be used
 
 | Type Parameter | Description |
 | ------ | ------ |
-| `T` | The type of data being cached. |
+| <a id="type-parameter-t"></a> `T` | The type of data being cached. |
 
 ## Implements
 
