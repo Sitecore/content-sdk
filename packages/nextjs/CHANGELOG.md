@@ -1,5 +1,11 @@
 # @sitecore-content-sdk/nextjs
 
+## 2.2.2
+
+### Patch Changes
+
+- Prevent and gate remote execution for Design Library server actions while in normal mode ([010b91a](https://github.com/sitecore/content-sdk/commit/010b91aab3f0435e6704fe3514d6ad9d19bdebc6))
+
 ## 2.2.1
 
 ### Patch Changes
