@@ -6,7 +6,7 @@
 
 # Interface: AnalyticsAdapter
 
-Defined in: [analytics-core/src/initialization/types.ts:9](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/analytics-core/src/initialization/types.ts#L9)
+Defined in: [analytics-core/src/initialization/types.ts:9](https://github.com/Sitecore/content-sdk/blob/4ed8b0d2eae4c3a3380de61934b40365770bba80/packages/analytics-core/src/initialization/types.ts#L9)
 
 Defines the structure of the analytics adapter, including methods for getting and setting the client ID, and retrieving search parameters from the location.
 
@@ -25,7 +25,7 @@ Defines the structure of the analytics adapter, including methods for getting an
 
 > **getClientId**: () => `string` \| `null`
 
-Defined in: [analytics-core/src/initialization/types.ts:14](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/analytics-core/src/initialization/types.ts#L14)
+Defined in: [analytics-core/src/initialization/types.ts:14](https://github.com/Sitecore/content-sdk/blob/4ed8b0d2eae4c3a3380de61934b40365770bba80/packages/analytics-core/src/initialization/types.ts#L14)
 
 Gets the client ID.
 
@@ -41,7 +41,7 @@ The client ID, or null if it is not set.
 
 > **location**: `object`
 
-Defined in: [analytics-core/src/initialization/types.ts:23](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/analytics-core/src/initialization/types.ts#L23)
+Defined in: [analytics-core/src/initialization/types.ts:23](https://github.com/Sitecore/content-sdk/blob/4ed8b0d2eae4c3a3380de61934b40365770bba80/packages/analytics-core/src/initialization/types.ts#L23)
 
 The location object, which provides a method for getting search parameters.
 
@@ -63,7 +63,7 @@ The search parameters from the location.
 
 > **setClientId**: () => `Promise`\<`void`\>
 
-Defined in: [analytics-core/src/initialization/types.ts:19](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/analytics-core/src/initialization/types.ts#L19)
+Defined in: [analytics-core/src/initialization/types.ts:19](https://github.com/Sitecore/content-sdk/blob/4ed8b0d2eae4c3a3380de61934b40365770bba80/packages/analytics-core/src/initialization/types.ts#L19)
 
 Sets the client ID.
 

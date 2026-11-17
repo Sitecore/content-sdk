@@ -6,7 +6,7 @@
 
 # Class: EditingRenderMiddleware
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:65](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/editing/editing-render-middleware.ts#L65)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:65](https://github.com/Sitecore/content-sdk/blob/4ed8b0d2eae4c3a3380de61934b40365770bba80/packages/nextjs/src/editing/editing-render-middleware.ts#L65)
 
 Middleware / handler for use in the editing render Next.js API route (e.g. '/api/editing/render')
 which is required for Sitecore editing support.
@@ -21,7 +21,7 @@ which is required for Sitecore editing support.
 
 > **new EditingRenderMiddleware**(`config?`): `EditingRenderMiddleware`
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:70](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/editing/editing-render-middleware.ts#L70)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:70](https://github.com/Sitecore/content-sdk/blob/4ed8b0d2eae4c3a3380de61934b40365770bba80/packages/nextjs/src/editing/editing-render-middleware.ts#L70)
 
 #### Parameters
 
@@ -43,7 +43,7 @@ Defined in: [nextjs/src/editing/editing-render-middleware.ts:70](https://github.
 
 > `optional` **config?**: [`EditingRenderMiddlewareConfig`](../type-aliases/EditingRenderMiddlewareConfig.md)
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:70](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/editing/editing-render-middleware.ts#L70)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:70](https://github.com/Sitecore/content-sdk/blob/4ed8b0d2eae4c3a3380de61934b40365770bba80/packages/nextjs/src/editing/editing-render-middleware.ts#L70)
 
 Editing render middleware config
 
@@ -53,7 +53,7 @@ Editing render middleware config
 
 > **getHandler**(): (`req`, `res`) => `Promise`\<`void`\>
 
-Defined in: [nextjs/src/editing/editing-render-middleware.ts:79](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/editing/editing-render-middleware.ts#L79)
+Defined in: [nextjs/src/editing/editing-render-middleware.ts:79](https://github.com/Sitecore/content-sdk/blob/4ed8b0d2eae4c3a3380de61934b40365770bba80/packages/nextjs/src/editing/editing-render-middleware.ts#L79)
 
 Gets the Next.js API route handler
 
@@ -69,7 +69,7 @@ route handler
 
 > `protected` **getHeadersForPropagation**(`headers`): `object`
 
-Defined in: [nextjs/src/editing/render-middleware.ts:40](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/editing/render-middleware.ts#L40)
+Defined in: [nextjs/src/editing/render-middleware.ts:40](https://github.com/Sitecore/content-sdk/blob/4ed8b0d2eae4c3a3380de61934b40365770bba80/packages/nextjs/src/editing/render-middleware.ts#L40)
 
 Get headers that should be passed along to subsequent requests
 
@@ -95,7 +95,7 @@ Object of approved headers
 
 > `protected` **getQueryParamsForPropagation**(`query`): `object`
 
-Defined in: [nextjs/src/editing/render-middleware.ts:18](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/editing/render-middleware.ts#L18)
+Defined in: [nextjs/src/editing/render-middleware.ts:18](https://github.com/Sitecore/content-sdk/blob/4ed8b0d2eae4c3a3380de61934b40365770bba80/packages/nextjs/src/editing/render-middleware.ts#L18)
 
 Gets query parameters that should be passed along to subsequent requests (e.g. for deployment protection bypass)
 
