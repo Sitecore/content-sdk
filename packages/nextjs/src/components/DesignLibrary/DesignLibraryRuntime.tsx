@@ -2,7 +2,10 @@ import React from 'react';
 import { EDITING_COMPONENT_PLACEHOLDER } from '@sitecore-content-sdk/content/layout';
 import { DesingLibraryAppProps } from './models';
 import { DesignLibraryServer } from './DesignLibraryServer';
-import { DesignLibrary, noopLoadImportMap } from '@sitecore-content-sdk/react';
+import { DesignLibrary } from '@sitecore-content-sdk/react';
+
+const noopLoadImportMap: DesingLibraryAppProps['loadServerImportMap'] = () =>
+  Promise.resolve({ default: [] });
 
 /**
  * Internal Design Library renderer. Routes between client and server
