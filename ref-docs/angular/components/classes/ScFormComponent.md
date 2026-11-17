@@ -6,7 +6,7 @@
 
 # Class: ScFormComponent
 
-Defined in: [packages/angular/src/components/sc-form.component.ts:32](https://github.com/Sitecore/content-sdk/blob/95d74dcd93e25d19170d9d00899f07b66d4bacb6/packages/angular/src/components/sc-form.component.ts#L32)
+Defined in: [packages/angular/src/components/sc-form.component.ts:32](https://github.com/Sitecore/content-sdk/blob/f673e1e4e1c62fdeb44ee47a8895719ecb51528b/packages/angular/src/components/sc-form.component.ts#L32)
 
 Angular wrapper for Sitecore Forms.
 Loads form HTML from Edge, executes embedded scripts, and subscribes to form events.
@@ -19,7 +19,7 @@ Usage: register in the component map with the rendering name "Form".
 
 > **new ScFormComponent**(): `ScFormComponent`
 
-Defined in: [packages/angular/src/components/sc-form.component.ts:51](https://github.com/Sitecore/content-sdk/blob/95d74dcd93e25d19170d9d00899f07b66d4bacb6/packages/angular/src/components/sc-form.component.ts#L51)
+Defined in: [packages/angular/src/components/sc-form.component.ts:51](https://github.com/Sitecore/content-sdk/blob/f673e1e4e1c62fdeb44ee47a8895719ecb51528b/packages/angular/src/components/sc-form.component.ts#L51)
 
 #### Returns
 
@@ -31,7 +31,7 @@ Defined in: [packages/angular/src/components/sc-form.component.ts:51](https://gi
 
 > `readonly` **params**: `InputSignal`\<\{\[`key`: `string`\]: `string`; \}\>
 
-Defined in: [packages/angular/src/components/sc-form.component.ts:37](https://github.com/Sitecore/content-sdk/blob/95d74dcd93e25d19170d9d00899f07b66d4bacb6/packages/angular/src/components/sc-form.component.ts#L37)
+Defined in: [packages/angular/src/components/sc-form.component.ts:37](https://github.com/Sitecore/content-sdk/blob/f673e1e4e1c62fdeb44ee47a8895719ecb51528b/packages/angular/src/components/sc-form.component.ts#L37)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: [packages/angular/src/components/sc-form.component.ts:37](https://gi
 
 > `readonly` **rendering**: `InputSignal`\<`ComponentRendering`\<`ComponentFields`\> \| `undefined`\>
 
-Defined in: [packages/angular/src/components/sc-form.component.ts:36](https://github.com/Sitecore/content-sdk/blob/95d74dcd93e25d19170d9d00899f07b66d4bacb6/packages/angular/src/components/sc-form.component.ts#L36)
+Defined in: [packages/angular/src/components/sc-form.component.ts:36](https://github.com/Sitecore/content-sdk/blob/f673e1e4e1c62fdeb44ee47a8895719ecb51528b/packages/angular/src/components/sc-form.component.ts#L36)
 
 ## Methods
 
@@ -47,7 +47,7 @@ Defined in: [packages/angular/src/components/sc-form.component.ts:36](https://gi
 
 > `readonly` **renderingId**(): `string` \| `undefined`
 
-Defined in: [packages/angular/src/components/sc-form.component.ts:106](https://github.com/Sitecore/content-sdk/blob/95d74dcd93e25d19170d9d00899f07b66d4bacb6/packages/angular/src/components/sc-form.component.ts#L106)
+Defined in: [packages/angular/src/components/sc-form.component.ts:106](https://github.com/Sitecore/content-sdk/blob/f673e1e4e1c62fdeb44ee47a8895719ecb51528b/packages/angular/src/components/sc-form.component.ts#L106)
 
 #### Returns
 
@@ -59,7 +59,7 @@ Defined in: [packages/angular/src/components/sc-form.component.ts:106](https://g
 
 > `readonly` **styles**(): `string`
 
-Defined in: [packages/angular/src/components/sc-form.component.ts:101](https://github.com/Sitecore/content-sdk/blob/95d74dcd93e25d19170d9d00899f07b66d4bacb6/packages/angular/src/components/sc-form.component.ts#L101)
+Defined in: [packages/angular/src/components/sc-form.component.ts:101](https://github.com/Sitecore/content-sdk/blob/f673e1e4e1c62fdeb44ee47a8895719ecb51528b/packages/angular/src/components/sc-form.component.ts#L101)
 
 #### Returns
 
