@@ -84,7 +84,7 @@ jobs:
           write_npmrc "$GITHUB_WORKSPACE/.npmrc"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY_LEGACY }}
 
       - name: NPM tags and version
         id: npm-tags
@@ -116,7 +116,7 @@ jobs:
           title: ${{ format('[csdk] {0}', steps.npm-tags.outputs.release_text) }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY_LEGACY }}
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
 
@@ -173,7 +173,7 @@ jobs:
           write_npmrc "$GITHUB_WORKSPACE/.npmrc"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY_LEGACY }}
 
       - name: Pre-release canary version bump and snapshot cascade
         id: canary_snapshot
