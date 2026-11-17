@@ -95,15 +95,14 @@ jobs:
             BRANCH_END="${BRANCH_NAME#release/}"
             if [[ "$BRANCH_END" == 1.x.x ]]; then
               RELEASE="NextJS v1.x hotfix"
-              NPM_TAG="ver1"
             else
               RELEASE="legacy version hotfix"
-              NPM_TAG="legacy"
             fi
           else
-            NPM_TAG="latest"
             RELEASE="latest release"
           fi
+          # Never publish under 'latest': this version line uses its own dist-tag
+          NPM_TAG="v2.3-legacy"
           echo "release_text=$RELEASE" >> "$GITHUB_OUTPUT"
           echo "npm_tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
 
@@ -193,4 +192,10 @@ jobs:
           npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
         run: |
           yarn build
-          yarn changeset:publish --tag $CANARY_PREFIX --no-git-tag
+          # hotfix canaries keep their original dist-tag; other canary/beta tags are prefixed with the version line
+          if [[ "$CANARY_PREFIX" == "canary-hotfix" ]]; then
+            NPM_TAG="$CANARY_PREFIX"
+          else
+            NPM_TAG="v2.3-$CANARY_PREFIX"
+          fi
+          yarn changeset:publish --tag "$NPM_TAG" --no-git-tag
