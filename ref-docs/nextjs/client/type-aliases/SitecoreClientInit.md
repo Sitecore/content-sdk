@@ -16,28 +16,28 @@ Init options for Sitecore Client that allows you to override services too
 
 ### custom?
 
-> `optional` **custom**: `object`
+> `optional` **custom?**: `object`
 
 #### custom.componentService?
 
-> `optional` **componentService**: [`ComponentLayoutService`](../../index/classes/ComponentLayoutService.md)
+> `optional` **componentService?**: [`ComponentLayoutService`](../../index/classes/ComponentLayoutService.md)
 
 #### custom.dictionaryService?
 
-> `optional` **dictionaryService**: [`DictionaryService`](../../index/classes/DictionaryService.md)
+> `optional` **dictionaryService?**: [`DictionaryService`](../../index/classes/DictionaryService.md)
 
 #### custom.editingService?
 
-> `optional` **editingService**: [`EditingService`](../../editing/classes/EditingService.md)
+> `optional` **editingService?**: [`EditingService`](../../editing/classes/EditingService.md)
 
 #### custom.errorPagesService?
 
-> `optional` **errorPagesService**: [`ErrorPagesService`](../../index/classes/ErrorPagesService.md)
+> `optional` **errorPagesService?**: [`ErrorPagesService`](../../index/classes/ErrorPagesService.md)
 
 #### custom.layoutService?
 
-> `optional` **layoutService**: [`LayoutService`](../../index/classes/LayoutService.md)
+> `optional` **layoutService?**: [`LayoutService`](../../index/classes/LayoutService.md)
 
 #### custom.sitePathService?
 
-> `optional` **sitePathService**: [`SitePathService`](../../index/classes/SitePathService.md)
+> `optional` **sitePathService?**: [`SitePathService`](../../index/classes/SitePathService.md)

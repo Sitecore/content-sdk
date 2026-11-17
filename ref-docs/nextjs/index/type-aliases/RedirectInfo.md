@@ -16,7 +16,7 @@ Object model of Redirect Info result
 
 ### isLanguagePreserved?
 
-> `optional` **isLanguagePreserved**: `boolean`
+> `optional` **isLanguagePreserved?**: `boolean`
 
 Defined in: content/types/site/redirects-service.d.ts:26
 

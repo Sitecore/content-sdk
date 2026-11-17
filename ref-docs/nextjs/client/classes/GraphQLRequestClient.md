@@ -50,7 +50,7 @@ Execute graphql request
 
 | Type Parameter |
 | ------ |
-| `T` |
+| <a id="type-parameter-t"></a> `T` |
 
 #### Parameters
 

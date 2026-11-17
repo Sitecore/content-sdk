@@ -6,9 +6,9 @@
 
 # Function: resolveUrl()
 
-> **resolveUrl**(`urlBase`, `params`): `string`
+> **resolveUrl**(`urlBase`, `params?`): `string`
 
-Defined in: [packages/core/src/tools/utils.ts:36](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/core/src/tools/utils.ts#L36)
+Defined in: [packages/core/src/tools/utils.ts:36](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/core/src/tools/utils.ts#L36)
 
 Resolves a base URL that may contain query string parameters and an additional set of query
 string parameters into a unified string representation.
@@ -18,7 +18,7 @@ string parameters into a unified string representation.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `urlBase` | `string` | the base URL that may contain query string parameters |
-| `params` | `ParsedUrlQueryInput` | query string parameters |
+| `params?` | `ParsedUrlQueryInput` | query string parameters |
 
 ## Returns
 

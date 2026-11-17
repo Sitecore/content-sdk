@@ -10,6 +10,8 @@ The File component.
 
 ## Param
 
+**props**
+
 component props
 
 ## Variables

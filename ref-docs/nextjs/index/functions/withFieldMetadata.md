@@ -16,8 +16,8 @@ Wraps the field component with metadata markup intended to be used for chromes h
 
 | Type Parameter | Default type |
 | ------ | ------ |
-| `FieldComponentProps` *extends* `WithMetadataProps` | - |
-| `RefElementType` | `HTMLElement` |
+| <a id="type-parameter-fieldcomponentprops"></a> `FieldComponentProps` *extends* `WithMetadataProps` | - |
+| <a id="type-parameter-refelementtype"></a> `RefElementType` | `HTMLElement` |
 
 ## Parameters
 
@@ -28,14 +28,4 @@ Wraps the field component with metadata markup intended to be used for chromes h
 
 ## Returns
 
-> (`props`): `Element`
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `props` | `FieldComponentProps` & `object` |
-
-### Returns
-
-`Element`
+(`props`) => `Element`

@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / withEditorChromes
 
-# Variable: withEditorChromes()
+# Variable: withEditorChromes
 
 > `const` **withEditorChromes**: (`WrappedComponent`) => \{(`props`): `Element`; `displayName`: `string`; \}
 
@@ -20,17 +20,7 @@ HOC to inject editor chromes reset on component update.
 
 ## Returns
 
-> (`props`): `Element`
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `props` | `Record`\<`string`, `unknown`\> |
-
-### Returns
-
-`Element`
+\{(`props`): `Element`; `displayName`: `string`; \}
 
 ### displayName
 

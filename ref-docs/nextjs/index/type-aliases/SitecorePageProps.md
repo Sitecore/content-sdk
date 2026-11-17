@@ -8,7 +8,7 @@
 
 > **SitecorePageProps** = `object`
 
-Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:9](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L9)
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:9](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L9)
 
 The interface for the application page props.
 
@@ -16,25 +16,25 @@ The interface for the application page props.
 
 ### componentProps?
 
-> `optional` **componentProps**: [`ComponentPropsCollection`](ComponentPropsCollection.md)
+> `optional` **componentProps?**: [`ComponentPropsCollection`](ComponentPropsCollection.md)
 
-Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:12](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L12)
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:12](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L12)
 
 ***
 
 ### dictionary?
 
-> `optional` **dictionary**: [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
+> `optional` **dictionary?**: [`DictionaryPhrases`](../interfaces/DictionaryPhrases.md)
 
-Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:11](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L11)
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:11](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L11)
 
 ***
 
 ### notFound?
 
-> `optional` **notFound**: `boolean`
+> `optional` **notFound?**: `boolean`
 
-Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:13](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L13)
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:13](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L13)
 
 ***
 
@@ -42,4 +42,4 @@ Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:13](https://github.co
 
 > **page**: [`Page`](Page.md) \| `null`
 
-Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:10](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L10)
+Defined in: [nextjs/src/sharedTypes/sitecore-page-props.ts:10](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/sharedTypes/sitecore-page-props.ts#L10)

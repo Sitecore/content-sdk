@@ -17,5 +17,5 @@ Since default `Omit` doesn't support indexing types, we had to introduce this cu
 
 | Type Parameter |
 | ------ |
-| `T` |
-| `K` *extends* `PropertyKey` |
+| <a id="type-parameter-t"></a> `T` |
+| <a id="type-parameter-k"></a> `K` *extends* `PropertyKey` |

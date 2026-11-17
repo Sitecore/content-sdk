@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../../../README.md) / [index](../../../README.md) / [mediaApi](../README.md) / replaceMediaUrlPrefix
 
-# Variable: replaceMediaUrlPrefix()
+# Variable: replaceMediaUrlPrefix
 
 > `const` **replaceMediaUrlPrefix**: (`url`, `mediaUrlPrefix?`) => `string`
 

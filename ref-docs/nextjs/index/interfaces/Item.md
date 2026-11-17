@@ -14,7 +14,7 @@ Content data returned from Layout Service
 
 ### displayName?
 
-> `optional` **displayName**: `string`
+> `optional` **displayName?**: `string`
 
 Defined in: content/types/layout/models.d.ts:133
 
@@ -34,7 +34,7 @@ Defined in: content/types/layout/models.d.ts:136
 
 ### id?
 
-> `optional` **id**: `string`
+> `optional` **id?**: `string`
 
 Defined in: content/types/layout/models.d.ts:134
 
@@ -50,6 +50,6 @@ Defined in: content/types/layout/models.d.ts:132
 
 ### url?
 
-> `optional` **url**: `string`
+> `optional` **url?**: `string`
 
 Defined in: content/types/layout/models.d.ts:135

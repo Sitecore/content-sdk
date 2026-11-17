@@ -14,7 +14,7 @@ An interface for cache clients.
 
 | Type Parameter | Description |
 | ------ | ------ |
-| `T` | The type of data being cached. |
+| <a id="type-parameter-t"></a> `T` | The type of data being cached. |
 
 ## Methods
 

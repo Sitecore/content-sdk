@@ -14,7 +14,7 @@ Response data for an HTTP request sent to an API
 
 | Type Parameter | Description |
 | ------ | ------ |
-| `T` | the type of data model requested |
+| <a id="type-parameter-t"></a> `T` | the type of data model requested |
 
 ## Properties
 
@@ -30,7 +30,7 @@ Response content
 
 ### headers?
 
-> `optional` **headers**: `HeadersInit`
+> `optional` **headers?**: `HeadersInit`
 
 Defined in: packages/core/types/native-fetcher.d.ts:29
 

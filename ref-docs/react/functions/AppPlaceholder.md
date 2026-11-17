@@ -8,7 +8,7 @@
 
 > **AppPlaceholder**(`props`): `Element`
 
-Defined in: [packages/react/src/components/Placeholder/AppPlaceholder.tsx:156](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/react/src/components/Placeholder/AppPlaceholder.tsx#L156)
+Defined in: [packages/react/src/components/Placeholder/AppPlaceholder.tsx:156](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/react/src/components/Placeholder/AppPlaceholder.tsx#L156)
 
 The implemention of placeholder compatible with React Server Components.
 Renders components from the layout data for the given placeholder name, with consideration for page edit mode.

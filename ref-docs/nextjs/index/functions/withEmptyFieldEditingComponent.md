@@ -16,8 +16,8 @@ Returns the passed field component or default component in case field value is e
 
 | Type Parameter | Default type |
 | ------ | ------ |
-| `FieldComponentProps` *extends* `WithEmptyFieldEditingComponentProps`\<`FieldComponentProps`\> | - |
-| `RefElementType` | `HTMLElement` |
+| <a id="type-parameter-fieldcomponentprops"></a> `FieldComponentProps` *extends* `WithEmptyFieldEditingComponentProps`\<`FieldComponentProps`\> | - |
+| <a id="type-parameter-refelementtype"></a> `RefElementType` | `HTMLElement` |
 
 ## Parameters
 
@@ -28,14 +28,4 @@ Returns the passed field component or default component in case field value is e
 
 ## Returns
 
-> (`props`): `Element`
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `props` | `FieldComponentProps` & `object` |
-
-### Returns
-
-`Element`
+(`props`) => `Element`

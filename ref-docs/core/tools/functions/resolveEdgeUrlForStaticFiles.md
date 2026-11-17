@@ -8,7 +8,7 @@
 
 > **resolveEdgeUrlForStaticFiles**(): `string`
 
-Defined in: [packages/core/src/tools/resolve-edge-url.ts:84](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/core/src/tools/resolve-edge-url.ts#L84)
+Defined in: [packages/core/src/tools/resolve-edge-url.ts:84](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/core/src/tools/resolve-edge-url.ts#L84)
 
 Resolves the Edge URL for static files (e.g. stylesheets) by ignoring the custom hostname.
 Use this when the custom host does not serve static file paths (e.g. /v1/files/...).

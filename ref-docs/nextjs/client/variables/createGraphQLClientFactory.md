@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [client](../README.md) / createGraphQLClientFactory
 
-# Variable: createGraphQLClientFactory()
+# Variable: createGraphQLClientFactory
 
 > `const` **createGraphQLClientFactory**: (`options`) => [`GraphQLRequestClientFactory`](../type-aliases/GraphQLRequestClientFactory.md)
 

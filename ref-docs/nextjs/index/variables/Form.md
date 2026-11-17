@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / Form
 
-# Variable: Form()
+# Variable: Form
 
 > `const` **Form**: (`{ params, rendering }`) => `React.JSX.Element`
 

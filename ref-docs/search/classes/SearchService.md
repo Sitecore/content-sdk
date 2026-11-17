@@ -6,7 +6,7 @@
 
 # Class: SearchService
 
-Defined in: [search-service.ts:100](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/search/src/search-service.ts#L100)
+Defined in: [search-service.ts:100](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/search/src/search-service.ts#L100)
 
 Service that fetches search results from Sitecore.
 
@@ -16,7 +16,7 @@ Service that fetches search results from Sitecore.
 
 > **new SearchService**(`config`): `SearchService`
 
-Defined in: [search-service.ts:103](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/search/src/search-service.ts#L103)
+Defined in: [search-service.ts:103](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/search/src/search-service.ts#L103)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [search-service.ts:103](https://github.com/Sitecore/content-sdk/blob
 
 > **search**\<`T`\>(`params`, `fetchOptions?`): `Promise`\<[`SearchResponse`](../interfaces/SearchResponse.md)\<`T`\>\>
 
-Defined in: [search-service.ts:123](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/search/src/search-service.ts#L123)
+Defined in: [search-service.ts:123](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/search/src/search-service.ts#L123)
 
 Search for items in the search index.
 
@@ -42,7 +42,7 @@ Search for items in the search index.
 
 | Type Parameter | Default type |
 | ------ | ------ |
-| `T` *extends* [`SearchDocument`](../type-aliases/SearchDocument.md) | [`SearchDocument`](../type-aliases/SearchDocument.md) |
+| <a id="type-parameter-t"></a> `T` *extends* [`SearchDocument`](../type-aliases/SearchDocument.md) | [`SearchDocument`](../type-aliases/SearchDocument.md) |
 
 #### Parameters
 

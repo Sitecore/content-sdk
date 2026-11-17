@@ -74,5 +74,5 @@
     "api-extractor": "npm run build && api-extractor run --local --verbose",
     "api-extractor:verify": "api-extractor run"
   },
-  "version": "2.0.1"
+  "version": "2.0.2-canary.0"
 }

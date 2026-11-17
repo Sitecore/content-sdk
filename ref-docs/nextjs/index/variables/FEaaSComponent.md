@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/nextjs](../../README.md) / [index](../README.md) / FEaaSComponent
 
-# Variable: FEaaSComponent()
+# Variable: FEaaSComponent
 
 > `const` **FEaaSComponent**: (`props`) => `JSX.Element` \| `null`
 

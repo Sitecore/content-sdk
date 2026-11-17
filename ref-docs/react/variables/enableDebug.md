@@ -4,7 +4,7 @@
 
 [@sitecore-content-sdk/react](../README.md) / enableDebug
 
-# Variable: enableDebug()
+# Variable: enableDebug
 
 > `const` **enableDebug**: (`namespaces`) => `void`
 

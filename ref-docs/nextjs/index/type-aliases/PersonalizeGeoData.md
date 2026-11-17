@@ -8,7 +8,7 @@
 
 > **PersonalizeGeoData** = `object`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:23](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/proxy/personalize-proxy.ts#L23)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:23](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/proxy/personalize-proxy.ts#L23)
 
 Represents the geolocation data used for personalization
 
@@ -16,22 +16,22 @@ Represents the geolocation data used for personalization
 
 ### city?
 
-> `optional` **city**: `string`
+> `optional` **city?**: `string`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:24](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/proxy/personalize-proxy.ts#L24)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:24](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/proxy/personalize-proxy.ts#L24)
 
 ***
 
 ### country?
 
-> `optional` **country**: `string`
+> `optional` **country?**: `string`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:25](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/proxy/personalize-proxy.ts#L25)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:25](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/proxy/personalize-proxy.ts#L25)
 
 ***
 
 ### region?
 
-> `optional` **region**: `string`
+> `optional` **region?**: `string`
 
-Defined in: [nextjs/src/proxy/personalize-proxy.ts:26](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/proxy/personalize-proxy.ts#L26)
+Defined in: [nextjs/src/proxy/personalize-proxy.ts:26](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/proxy/personalize-proxy.ts#L26)

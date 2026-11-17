@@ -6,7 +6,7 @@
 
 # Interface: PersonalizeProxyAdapter
 
-Defined in: [nextjs/src/initialization/proxy/personalize-adapter.ts:19](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/initialization/proxy/personalize-adapter.ts#L19)
+Defined in: [nextjs/src/initialization/proxy/personalize-adapter.ts:19](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/initialization/proxy/personalize-adapter.ts#L19)
 
 Defines the PersonalizeProxyAdapter.
 
@@ -16,7 +16,7 @@ Defines the PersonalizeProxyAdapter.
 
 ## Properties
 
-### getProfileId()
+### getProfileId
 
 > **getProfileId**: () => `string` \| `null`
 
@@ -36,7 +36,7 @@ The profile ID or null if not found.
 
 ***
 
-### getUserAgent()
+### getUserAgent
 
 > **getUserAgent**: () => `string` \| `undefined`
 
@@ -56,7 +56,7 @@ The user agent string or undefined.
 
 ***
 
-### setProfileId()
+### setProfileId
 
 > **setProfileId**: () => `Promise`\<`void`\>
 
@@ -80,7 +80,7 @@ A promise that resolves when the profile ID has been set.
 
 > **type**: `"proxy"`
 
-Defined in: [nextjs/src/initialization/proxy/personalize-adapter.ts:23](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/nextjs/src/initialization/proxy/personalize-adapter.ts#L23)
+Defined in: [nextjs/src/initialization/proxy/personalize-adapter.ts:23](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/nextjs/src/initialization/proxy/personalize-adapter.ts#L23)
 
 The type of the adapter.
 

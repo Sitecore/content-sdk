@@ -8,7 +8,7 @@
 
 > **withAppPlaceholder**\<`T`, `W`\>(`Component`): (`props`) => `Element`
 
-Defined in: [packages/react/src/enhancers/withAppPlaceholder.tsx:25](https://github.com/Sitecore/content-sdk/blob/1f49f65949106a1df6f81df5c5e41772e45f913a/packages/react/src/enhancers/withAppPlaceholder.tsx#L25)
+Defined in: [packages/react/src/enhancers/withAppPlaceholder.tsx:25](https://github.com/Sitecore/content-sdk/blob/5991f1a4c56e3c96ca4c21000f5f32eaf78f2644/packages/react/src/enhancers/withAppPlaceholder.tsx#L25)
 
 Provides a slot-like functionality by wrapping a component and rendering placeholders defined in the layout data.
 
@@ -16,8 +16,8 @@ Provides a slot-like functionality by wrapping a component and rendering placeho
 
 | Type Parameter |
 | ------ |
-| `T` *extends* `ComponentProps` |
-| `W` *extends* `ComponentProps` & `WrapperProps` |
+| <a id="type-parameter-t"></a> `T` *extends* `ComponentProps` |
+| <a id="type-parameter-w"></a> `W` *extends* `ComponentProps` & `WrapperProps` |
 
 ## Parameters
 
@@ -29,14 +29,4 @@ Provides a slot-like functionality by wrapping a component and rendering placeho
 
 A new component that renders the original component with placeholders.
 
-> (`props`): `Element`
-
-### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `props` | `W` |
-
-### Returns
-
-`Element`
+(`props`) => `Element`

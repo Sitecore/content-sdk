@@ -20,7 +20,7 @@ GraphQLClient
 
 ### apiKey?
 
-> `optional` **apiKey**: `string`
+> `optional` **apiKey?**: `string`
 
 Defined in: core/types/graphql-request-client.d.ts:33
 
@@ -30,7 +30,7 @@ The API key to use for authentication. This will be added as an 'sc_apikey' head
 
 ### contextId?
 
-> `optional` **contextId**: `string`
+> `optional` **contextId?**: `string`
 
 Defined in: core/types/graphql-request-client.d.ts:37
 
@@ -40,7 +40,7 @@ A unified identifier used to connect and retrieve data from XM Cloud instance
 
 ### debugger?
 
-> `optional` **debugger**: `Debugger`
+> `optional` **debugger?**: `Debugger`
 
 Defined in: core/types/graphql-request-client.d.ts:41
 
@@ -50,7 +50,7 @@ Override debugger for logging. Uses 'content-sdk:http' by default.
 
 ### fetch?
 
-> `optional` **fetch**: *typeof* `fetch`
+> `optional` **fetch?**: *typeof* `fetch`
 
 Defined in: core/types/graphql-request-client.d.ts:45
 
@@ -60,7 +60,7 @@ Override fetch method. Uses 'graphql-request' library default otherwise ('cross-
 
 ### headers?
 
-> `optional` **headers**: `Record`\<`string`, `string`\>
+> `optional` **headers?**: `Record`\<`string`, `string`\>
 
 Defined in: core/types/graphql-request-client.d.ts:62
 
@@ -70,7 +70,7 @@ Custom headers to be sent with each request.
 
 ### retries?
 
-> `optional` **retries**: `number`
+> `optional` **retries?**: `number`
 
 Defined in: core/types/graphql-request-client.d.ts:53
 
@@ -80,7 +80,7 @@ Number of retries for client. Will use the specified `retryStrategy`.
 
 ### retryStrategy?
 
-> `optional` **retryStrategy**: [`RetryStrategy`](../interfaces/RetryStrategy.md)
+> `optional` **retryStrategy?**: [`RetryStrategy`](../interfaces/RetryStrategy.md)
 
 Defined in: core/types/graphql-request-client.d.ts:58
 
@@ -91,7 +91,7 @@ back-off factor of 2 for codes 429, 502, 503, 504, 520, 521, 522, 523, 524.
 
 ### timeout?
 
-> `optional` **timeout**: `number`
+> `optional` **timeout?**: `number`
 
 Defined in: core/types/graphql-request-client.d.ts:49
 

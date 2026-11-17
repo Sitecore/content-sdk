@@ -16,4 +16,4 @@ The type of the component map.
 
 | Type Parameter | Default type |
 | ------ | ------ |
-| `TComponent` *extends* `ReactContentSdkComponent` | `ReactContentSdkComponent` |
+| <a id="type-parameter-tcomponent"></a> `TComponent` *extends* `ReactContentSdkComponent` | `ReactContentSdkComponent` |

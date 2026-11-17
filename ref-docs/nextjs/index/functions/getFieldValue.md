@@ -19,7 +19,7 @@ Null will be returned if the field is not defined.
 
 | Type Parameter |
 | ------ |
-| `T` |
+| <a id="type-parameter-t"></a> `T` |
 
 ### Parameters
 
@@ -46,7 +46,7 @@ Safely extracts a field value from a rendering or fields object.
 
 | Type Parameter |
 | ------ |
-| `T` |
+| <a id="type-parameter-t-1"></a> `T` |
 
 ### Parameters
 
