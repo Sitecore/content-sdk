@@ -8,6 +8,6 @@
 
 > **ComponentMap** = `Map`\<`string`, [`AngularContentSdkComponent`](AngularContentSdkComponent.md)\>
 
-Defined in: [packages/angular/src/components/types.ts:29](https://github.com/Sitecore/content-sdk/blob/462e9bc1b890973f790c4ba0d500ff0712ebc051/packages/angular/src/components/types.ts#L29)
+Defined in: [packages/angular/src/components/types.ts:29](https://github.com/Sitecore/content-sdk/blob/95d74dcd93e25d19170d9d00899f07b66d4bacb6/packages/angular/src/components/types.ts#L29)
 
 The Angular component map type: maps Sitecore rendering names to standalone component types or SXA variant groups.

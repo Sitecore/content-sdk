@@ -6,7 +6,7 @@
 
 # Interface: ComponentRendering\<T\>
 
-Defined in: [content/src/layout/models.ts:103](https://github.com/Sitecore/content-sdk/blob/462e9bc1b890973f790c4ba0d500ff0712ebc051/packages/content/src/layout/models.ts#L103)
+Defined in: [content/src/layout/models.ts:103](https://github.com/Sitecore/content-sdk/blob/95d74dcd93e25d19170d9d00899f07b66d4bacb6/packages/content/src/layout/models.ts#L103)
 
 Definition of a component instance within a placeholder on a route
 
@@ -22,7 +22,7 @@ Definition of a component instance within a placeholder on a route
 
 > **componentName**: `string`
 
-Defined in: [content/src/layout/models.ts:104](https://github.com/Sitecore/content-sdk/blob/462e9bc1b890973f790c4ba0d500ff0712ebc051/packages/content/src/layout/models.ts#L104)
+Defined in: [content/src/layout/models.ts:104](https://github.com/Sitecore/content-sdk/blob/95d74dcd93e25d19170d9d00899f07b66d4bacb6/packages/content/src/layout/models.ts#L104)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [content/src/layout/models.ts:104](https://github.com/Sitecore/conte
 
 > `optional` **dataSource?**: `string`
 
-Defined in: [content/src/layout/models.ts:105](https://github.com/Sitecore/content-sdk/blob/462e9bc1b890973f790c4ba0d500ff0712ebc051/packages/content/src/layout/models.ts#L105)
+Defined in: [content/src/layout/models.ts:105](https://github.com/Sitecore/content-sdk/blob/95d74dcd93e25d19170d9d00899f07b66d4bacb6/packages/content/src/layout/models.ts#L105)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [content/src/layout/models.ts:105](https://github.com/Sitecore/conte
 
 > `optional` **fields?**: `T`
 
-Defined in: [content/src/layout/models.ts:108](https://github.com/Sitecore/content-sdk/blob/462e9bc1b890973f790c4ba0d500ff0712ebc051/packages/content/src/layout/models.ts#L108)
+Defined in: [content/src/layout/models.ts:108](https://github.com/Sitecore/content-sdk/blob/95d74dcd93e25d19170d9d00899f07b66d4bacb6/packages/content/src/layout/models.ts#L108)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [content/src/layout/models.ts:108](https://github.com/Sitecore/conte
 
 > `optional` **params?**: [`ComponentParams`](ComponentParams.md)
 
-Defined in: [content/src/layout/models.ts:109](https://github.com/Sitecore/content-sdk/blob/462e9bc1b890973f790c4ba0d500ff0712ebc051/packages/content/src/layout/models.ts#L109)
+Defined in: [content/src/layout/models.ts:109](https://github.com/Sitecore/content-sdk/blob/95d74dcd93e25d19170d9d00899f07b66d4bacb6/packages/content/src/layout/models.ts#L109)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [content/src/layout/models.ts:109](https://github.com/Sitecore/conte
 
 > `optional` **placeholders?**: [`PlaceholdersData`](../type-aliases/PlaceholdersData.md)\<`string`\>
 
-Defined in: [content/src/layout/models.ts:107](https://github.com/Sitecore/content-sdk/blob/462e9bc1b890973f790c4ba0d500ff0712ebc051/packages/content/src/layout/models.ts#L107)
+Defined in: [content/src/layout/models.ts:107](https://github.com/Sitecore/content-sdk/blob/95d74dcd93e25d19170d9d00899f07b66d4bacb6/packages/content/src/layout/models.ts#L107)
 
 ***
 
@@ -62,4 +62,4 @@ Defined in: [content/src/layout/models.ts:107](https://github.com/Sitecore/conte
 
 > `optional` **uid?**: `string`
 
-Defined in: [content/src/layout/models.ts:106](https://github.com/Sitecore/content-sdk/blob/462e9bc1b890973f790c4ba0d500ff0712ebc051/packages/content/src/layout/models.ts#L106)
+Defined in: [content/src/layout/models.ts:106](https://github.com/Sitecore/content-sdk/blob/95d74dcd93e25d19170d9d00899f07b66d4bacb6/packages/content/src/layout/models.ts#L106)
