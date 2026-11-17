@@ -83,7 +83,7 @@ jobs:
           write_npmrc "$GITHUB_WORKSPACE/.npmrc"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY_LEGACY }}
 
       - name: Prepare and Process Changesets Release
         id: changesets
@@ -95,7 +95,7 @@ jobs:
           title: ${{ github.ref_name == 'dev' && '[csdk] latest release' || format('[csdk] patch release - {0}', github.ref_name) }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY_LEGACY }}
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           npm_config_ignore_scripts: true # skip lifecycle scripts to avoid running build again during changeset:publish
 
@@ -137,7 +137,7 @@ jobs:
           write_npmrc "$GITHUB_WORKSPACE/.npmrc"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY_LEGACY }}
 
       - name: Pre-release canary version bump and snapshot cascade
         id: canary_snapshot
