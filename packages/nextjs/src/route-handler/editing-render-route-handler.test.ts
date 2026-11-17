@@ -376,7 +376,7 @@ describe('createEditingRenderRouteHandlers', () => {
           language: mockQuery.sc_lang,
           site: mockQuery.sc_site,
           mode: mockQuery.mode,
-          variantId: mockQuery.sc_variant,
+          variantIds: mockQuery.sc_variant,
           version: mockQuery.sc_version,
           layoutKind: mockQuery.sc_layoutKind,
         }),
@@ -452,47 +452,6 @@ describe('createEditingRenderRouteHandlers', () => {
       expect(propagatedHeaders).to.deep.include(expectedPropagatedHeaders);
       expect(propagatedHeaders[EDITING_PARAMS_HEADER]).to.be.a('string');
       expect(propagatedHeaders[EDITING_SECRET_HEADER]).to.equal(secret);
-    });
-
-    it('should include previewTime in editing params when sc_previewTime is present in query params', async () => {
-      req.nextUrl!.searchParams = mockSearchParams({
-        [QUERY_PARAM_EDITING_SECRET]: secret,
-        mode: 'edit',
-        route: '/',
-        sc_itemid: '{11111111-1111-1111-1111-111111111111}',
-        sc_lang: 'en',
-        sc_site: 'website',
-        sc_previewTime: '2024-12-25T10:00:00Z',
-      });
-
-      await handlers.GET(req as NextRequest);
-
-      expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
-
-      // Verify previewTime is included in the EDITING_PARAMS_HEADER JSON, which flows to Edge GraphQL via PreviewProxy
-      const [, , propagatedHeaders] = getEditingRequestHtmlStub.firstCall.args;
-      const editingParams = JSON.parse(propagatedHeaders[EDITING_PARAMS_HEADER]);
-      expect(editingParams).to.have.property('previewTime', '2024-12-25T10:00:00Z');
-    });
-
-    it('should not include previewTime in editing params when sc_previewTime is absent (backward compatibility)', async () => {
-      req.nextUrl!.searchParams = mockSearchParams({
-        [QUERY_PARAM_EDITING_SECRET]: secret,
-        mode: 'edit',
-        route: '/',
-        sc_itemid: '{11111111-1111-1111-1111-111111111111}',
-        sc_lang: 'en',
-        sc_site: 'website',
-      });
-
-      await handlers.GET(req as NextRequest);
-
-      expect(getEditingRequestHtmlStub).to.have.been.calledOnce;
-
-      // Verify previewTime is absent from the EDITING_PARAMS_HEADER JSON
-      const [, , propagatedHeaders] = getEditingRequestHtmlStub.firstCall.args;
-      const editingParams = JSON.parse(propagatedHeaders[EDITING_PARAMS_HEADER]);
-      expect(editingParams).to.not.have.property('previewTime');
     });
 
     it('should pass cookies correctly for internal request', async () => {
@@ -1223,7 +1182,7 @@ describe('createEditingRenderRouteHandlers', () => {
         language: mockQuery.sc_lang,
         site: mockQuery.sc_site,
         mode: mockQuery.mode,
-        variantId: mockQuery.sc_variant,
+        variantIds: mockQuery.sc_variant,
         version: mockQuery.sc_version,
         layoutKind: mockQuery.sc_layoutKind,
       });

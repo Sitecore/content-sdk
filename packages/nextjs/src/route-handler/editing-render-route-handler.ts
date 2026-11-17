@@ -230,19 +230,16 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
 
     try {
       debug.editing('fetching page route for %s', query.route);
-      // Get query string parameters to propagate on subsequent requests (e.g. for deployment protection bypass)
-      // Additionally ,in app router preview data is passed through query string instead of preview data cookie
-      const propagatedQsParams = {
-        ...getQueryParamsForPropagation(query as { [key: string]: string }),
-        ...mapEditingParams(query as { [key: string]: string }),
-        ...(allowedQueryParams as { [key: string]: string }),
-      };
       // Query string parameters required by the runtime/platform itself
       // (e.g. Vercel deployment protection bypass tokens). Editing preview
       // data is also appended here for backward compatibility with apps that
       // still read `searchParams` in the page; new code should consume the
       // `EDITING_PARAMS_HEADER` instead via `client.getPreviewInputs`.
       // TODO: Remove preview data from qs before next major release.
+      const editingPreviewData = {
+        ...mapEditingParams(query as { [key: string]: string }),
+        ...(allowedQueryParams as { [key: string]: string }),
+      };
       const propagatedQsParams = {
         ...getQueryParamsForPropagation(query as { [key: string]: string }),
         ...editingPreviewData,
@@ -331,12 +328,15 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
       query[key] = value;
     });
 
-    const propagatedQsParams = {
-      ...getQueryParamsForPropagation(query as { [key: string]: string }),
+    const editingPreviewData = {
       ...mapEditingParams(query as { [key: string]: string }),
       ...(getAllowedQueryParams(query, options.allowedQueryParams).allowedQueryParams as {
         [key: string]: string;
       }),
+    };
+    const propagatedQsParams = {
+      ...getQueryParamsForPropagation(query as { [key: string]: string }),
+      ...editingPreviewData,
     };
 
     const base = resolveServerUrl(req);
