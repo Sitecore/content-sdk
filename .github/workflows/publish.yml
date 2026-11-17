@@ -96,6 +96,8 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          # lerna publish (csdk:publish-release) reads npm_config_tag as its dist-tag; never publish under 'latest'
+          npm_config_tag: v2.0-legacy
 
       - name: Bump canary version
         run: |
@@ -129,10 +131,10 @@ jobs:
           if [[ "$BRANCH_NAME" =~ ^release/ ]]; then
             NPM_TAG="hotfix-canary"
           else
-            NPM_TAG="canary"
+            NPM_TAG="v2.0-canary"
           fi
           echo "Publishing canary packages to npm..."
-          npx lerna publish from-package --canary --pre-dist-tag "$NPM_TAG" --preid canary --no-verify-access --yes
+          npx lerna publish from-package --canary --dist-tag "$NPM_TAG" --pre-dist-tag "$NPM_TAG" --preid canary --no-verify-access --yes
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
