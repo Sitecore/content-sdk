@@ -94,7 +94,6 @@ describe('EditingService', () => {
         headers: {
           sc_layoutKind: 'final',
           sc_editMode: 'true',
-          sc_previewMode: 'false',
         },
       }
     );
@@ -144,7 +143,6 @@ describe('EditingService', () => {
         headers: {
           sc_layoutKind: 'final',
           sc_editMode: 'false',
-          sc_previewMode: 'true',
         },
       }
     );
@@ -198,7 +196,6 @@ describe('EditingService', () => {
         headers: {
           sc_layoutKind: 'final',
           sc_editMode: 'true',
-          sc_previewMode: 'false',
         },
       }
     );
@@ -252,7 +249,6 @@ describe('EditingService', () => {
         headers: {
           sc_layoutKind: 'final',
           sc_editMode: 'true',
-          sc_previewMode: 'false',
         },
       }
     );
@@ -298,7 +294,6 @@ describe('EditingService', () => {
         headers: {
           sc_layoutKind: 'shared',
           sc_editMode: 'true',
-          sc_previewMode: 'false',
         },
       }
     );
@@ -406,18 +401,12 @@ describe('EditingService', () => {
     await service.fetchEditingData(editingOptions, fetchOptions);
 
     expect(requestMock.calledOnce).to.be.true;
-
-    const requestOptions = requestMock.firstCall.args[2];
-
-    expect(requestOptions.retries).to.equal(fetchOptions.retries);
-    expect(requestOptions.fetch).to.equal(fetchOptions.fetch);
-    expect(requestOptions.retryStrategy).to.equal(fetchOptions.retryStrategy);
-    expect(requestOptions.headers).to.deep.equal({
-      Authorization: 'Bearer test-token',
-      'Content-Type': 'application/json',
-      sc_editMode: 'true',
-      sc_layoutKind: LayoutKind.Final,
-      sc_previewMode: 'false',
+    expect(requestMock.firstCall.args[2]).to.deep.equal({
+      ...fetchOptions,
+      headers: {
+        sc_editMode: 'true',
+        sc_layoutKind: LayoutKind.Final,
+      },
     });
   });
 });
