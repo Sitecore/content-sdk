@@ -77,7 +77,7 @@ jobs:
           EOF
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY_LEGACY }}
 
       # ========== CHANGESET ACTION ==========
       # Create/update the release PR with updated versions based on changesets
@@ -94,7 +94,7 @@ jobs:
           title: ${{ github.ref_name == 'dev' && '[csdk] latest release' || format('[csdk] patch release - {0}', github.ref_name) }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY_LEGACY }}
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           # lerna publish (csdk:publish-release) reads npm_config_tag as its dist-tag; never publish under 'latest'
           npm_config_tag: v2.0-legacy
@@ -137,7 +137,7 @@ jobs:
           npx lerna publish from-package --canary --dist-tag "$NPM_TAG" --pre-dist-tag "$NPM_TAG" --preid canary --no-verify-access --yes
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY }}
+          NPM_REGISTRY: ${{ secrets.NPM_REGISTRY_LEGACY }}
 
       - name: Post-canary sync to changeset release PR
         run: |
