@@ -8,7 +8,7 @@
 
 > **personalizeBrowserPlugin**(`params`): [`PersonalizeBrowserPlugin`](../../internal/interfaces/PersonalizeBrowserPlugin.md)
 
-Defined in: [personalize/src/initialization/plugin-browser.ts:92](https://github.com/Sitecore/content-sdk/blob/04f0dc6ce596d5395ca75fa2d35b683819beed92/packages/personalize/src/initialization/plugin-browser.ts#L92)
+Defined in: [personalize/src/initialization/plugin-browser.ts:92](https://github.com/Sitecore/content-sdk/blob/462e9bc1b890973f790c4ba0d500ff0712ebc051/packages/personalize/src/initialization/plugin-browser.ts#L92)
 
 Creates a personalize browser plugin with the provided adapter and options.
 

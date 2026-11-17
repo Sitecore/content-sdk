@@ -8,7 +8,7 @@
 
 > **DynamicComponent** = `React.ComponentType`\<\{\[`key`: `string`\]: `unknown`; `fields?`: [`ComponentFields`](../interfaces/ComponentFields.md); `params?`: [`ComponentParams`](../interfaces/ComponentParams.md); \}\>
 
-Defined in: [packages/react/src/components/DesignLibrary/models.ts:9](https://github.com/Sitecore/content-sdk/blob/04f0dc6ce596d5395ca75fa2d35b683819beed92/packages/react/src/components/DesignLibrary/models.ts#L9)
+Defined in: [packages/react/src/components/DesignLibrary/models.ts:9](https://github.com/Sitecore/content-sdk/blob/462e9bc1b890973f790c4ba0d500ff0712ebc051/packages/react/src/components/DesignLibrary/models.ts#L9)
 
 **`Internal`**
 
