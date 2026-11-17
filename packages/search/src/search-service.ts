@@ -206,6 +206,7 @@ export class SearchService {
    * @throws {RangeError} If offset is not a positive number.
    * @throws {TypeError} If search index ID is not provided.
    * @throws {TypeError} If sort is not an array or an object.
+   * @throws {RangeError} If a facet field max is not an integer from 1 through 100.
    * @throws {TypeError} If more than one of keyphrase, seedItemId, or seedItemUrl is provided.
    * @throws {TypeError} If seedItemId or seedItemUrl is empty or whitespace only.
    */
@@ -345,8 +346,16 @@ export class SearchService {
       throw new TypeError('Sort must be an array or an object');
     }
 
-    if (facet?.fields?.some((field) => field.max !== undefined && field.max > 100)) {
-      throw new RangeError('Facet field max must be less than or equal to 100');
+    const invalidMaxField = facet?.fields?.find(
+      (field) =>
+        field.max !== undefined &&
+        (!Number.isInteger(field.max) || field.max < 1 || field.max > 100)
+    );
+
+    if (invalidMaxField) {
+      throw new RangeError(
+        `Facet field max must be an integer from 1 through 100. Received ${invalidMaxField.max} for facet "${invalidMaxField.name}"`
+      );
     }
 
     this.validateQueryExclusivity(params);

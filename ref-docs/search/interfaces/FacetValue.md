@@ -6,7 +6,7 @@
 
 # Interface: FacetValue
 
-Defined in: [models.ts:71](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/search/src/models.ts#L71)
+Defined in: [models.ts:71](https://github.com/nayanadarshana/content-sdk/blob/469722c5a2544a875a80aa8cb3c7b3f6c18f819f/packages/search/src/models.ts#L71)
 
 A single facet value with the number of matching results.
 
@@ -16,7 +16,7 @@ A single facet value with the number of matching results.
 
 > **count**: `number`
 
-Defined in: [models.ts:79](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/search/src/models.ts#L79)
+Defined in: [models.ts:79](https://github.com/nayanadarshana/content-sdk/blob/469722c5a2544a875a80aa8cb3c7b3f6c18f819f/packages/search/src/models.ts#L79)
 
 The number of search results that have this facet value.
 
@@ -26,6 +26,6 @@ The number of search results that have this facet value.
 
 > **text**: `string` \| `number` \| `boolean`
 
-Defined in: [models.ts:75](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/search/src/models.ts#L75)
+Defined in: [models.ts:75](https://github.com/nayanadarshana/content-sdk/blob/469722c5a2544a875a80aa8cb3c7b3f6c18f819f/packages/search/src/models.ts#L75)
 
 The facet value (e.g. a category name, a price, a boolean flag).
