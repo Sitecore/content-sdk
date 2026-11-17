@@ -10,6 +10,7 @@ import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
+import { isJavascriptUrl, reportBlockedJavascriptUrl } from './javascript-url';
 
 /**
  * The interface for the Link component props.
@@ -72,13 +73,25 @@ const LinkComponent: React.FC<LinkProps> = ({
 
   const anchor = link.linktype !== 'anchor' && link.anchor ? `#${link.anchor}` : '';
   const querystring = link.querystring ? `?${link.querystring}` : '';
+  const { href: hrefProp, ...domProps } = otherProps;
+
+  const fieldHref = `${link.href}${querystring}${anchor}`;
+  const resolvedHref = hrefProp ?? fieldHref;
+  // React blocks javascript: hrefs. Keep the anchor and its text so the content
+  // and Pages editing chrome stay in place, and omit the href.
+  const blocked = isJavascriptUrl(resolvedHref);
 
   const anchorAttrs: { [attr: string]: unknown } = {
-    href: `${link.href}${querystring}${anchor}`,
+    href: resolvedHref,
     className: link.class,
     title: link.title,
     target: link.target,
   };
+
+  if (blocked) {
+    reportBlockedJavascriptUrl(resolvedHref);
+    delete anchorAttrs.href;
+  }
 
   if (anchorAttrs.target === '_blank' && !anchorAttrs.rel) {
     // information disclosure attack prevention keeps target blank site from getting ref to window.opener
@@ -88,7 +101,7 @@ const LinkComponent: React.FC<LinkProps> = ({
   const linkText = showLinkTextWithChildrenPresent || !children ? link.text || link.href : null;
 
   return (
-    <a {...anchorAttrs} {...otherProps} key="link" ref={ref}>
+    <a {...anchorAttrs} {...domProps} key="link" ref={ref}>
       {linkText}
       {children}
     </a>

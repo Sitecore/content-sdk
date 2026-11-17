@@ -80,7 +80,8 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
 
     const isEditing = editable && (field as LinkFieldValue).metadata;
 
-    if (href && !isEditing) {
+    // javascript: URLs are rendered by React Link, which drops the href.
+    if (href && !isEditing && !isJavascriptUrl(href)) {
       const text = showLinkTextWithChildrenPresent || !children ? value.text || value.href : null;
 
       const isMatching = internalLinkMatcher.test(href);
@@ -127,6 +128,21 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
 );
 
 Link.displayName = 'NextLink';
+
+/**
+ * Whether an href is a javascript: URL. Matches the React Link check so these
+ * URLs are not passed to next/link: any case, leading spaces or control
+ * characters, and tab or newline characters between the letters of the scheme.
+ * @param {string} href candidate link href
+ * @returns {boolean} true when the href uses the javascript protocol
+ */
+function isJavascriptUrl(href: string): boolean {
+  // Control characters are intentional: this matches the javascript: URLs React blocks.
+  // eslint-disable-next-line no-control-regex
+  return /^[\u0000-\u001F ]*j[\r\n\t]*a[\r\n\t]*v[\r\n\t]*a[\r\n\t]*s[\r\n\t]*c[\r\n\t]*r[\r\n\t]*i[\r\n\t]*p[\r\n\t]*t[\r\n\t]*:/i.test(
+    href
+  );
+}
 
 /**
  * Sanitize props for ReactLink by removing Next.js and internal props to prevent invalid DOM attributes.
