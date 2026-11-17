@@ -13,6 +13,7 @@ export { debug_2 as debug }
 // @public
 export interface FacetField {
     filters?: FacetFilter[];
+    max?: number;
     name: string;
 }
 
@@ -119,7 +120,7 @@ export interface SuggestResponse<T extends SearchDocument = SearchDocument> {
 
 // Warnings were encountered during analysis:
 //
-// src/models.ts:95:3 - (ae-forgotten-export) The symbol "PrimitiveType" needs to be exported by the entry point index.d.ts
+// src/models.ts:102:3 - (ae-forgotten-export) The symbol "PrimitiveType" needs to be exported by the entry point index.d.ts
 // src/search-service.ts:19:3 - (ae-forgotten-export) The symbol "PathsToStringProps" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)

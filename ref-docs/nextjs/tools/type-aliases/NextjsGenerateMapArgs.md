@@ -8,7 +8,7 @@
 
 > **NextjsGenerateMapArgs** = [`GenerateMapArgs`](GenerateMapArgs.md) & `object`
 
-Defined in: [nextjs/src/tools/generate-map.ts:74](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/nextjs/src/tools/generate-map.ts#L74)
+Defined in: [nextjs/src/tools/generate-map.ts:74](https://github.com/Sitecore/content-sdk/blob/6bf9292fdd107f1fb78908370ca4f0fc56a384ff/packages/nextjs/src/tools/generate-map.ts#L74)
 
 Arguments for the Next.js generateMap function.
 

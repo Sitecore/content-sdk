@@ -451,6 +451,126 @@ describe('SearchService', () => {
       }
     });
 
+    it('should throw an error if a facet field max is outside the 1-100 integer range', async () => {
+      const searchService = new SearchService({ contextId });
+
+      for (const max of [0, -1, 1.5, 99.9, 101, NaN, Infinity, -Infinity]) {
+        let thrown: unknown;
+        try {
+          await searchService.search({
+            searchIndexId,
+            facet: { fields: [{ name: 'category', max }] },
+          });
+        } catch (error) {
+          thrown = error;
+        }
+
+        expect(thrown, `max: ${max}`)
+          .to.be.an.instanceOf(RangeError)
+          .and.to.have.property(
+            'message',
+            `Facet field max must be an integer from 1 through 100. Received ${max} for facet "category"`
+          );
+      }
+    });
+
+    it('should name the offending facet when multiple facet fields are provided', async () => {
+      const searchService = new SearchService({ contextId });
+
+      let thrown: unknown;
+      try {
+        await searchService.search({
+          searchIndexId,
+          facet: {
+            fields: [
+              { name: 'category', max: 10 },
+              { name: 'brand' },
+              { name: 'color', max: 150 },
+              { name: 'size', max: 0 },
+            ],
+          },
+        });
+      } catch (error) {
+        thrown = error;
+      }
+
+      expect(thrown)
+        .to.be.an.instanceOf(RangeError)
+        .and.to.have.property(
+          'message',
+          'Facet field max must be an integer from 1 through 100. Received 150 for facet "color"'
+        );
+    });
+
+    it('should not send a request when a facet field max is invalid', async () => {
+      const scope = nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT)
+        .post('/v1/search')
+        .reply(200, { content: [], total: 0 });
+
+      const searchService = new SearchService({ contextId });
+
+      let thrown: unknown;
+      try {
+        await searchService.search({
+          searchIndexId,
+          facet: { fields: [{ name: 'category', max: 0 }] },
+        });
+      } catch (error) {
+        thrown = error;
+      }
+
+      expect(thrown).to.be.an.instanceOf(RangeError);
+      expect(scope.isDone()).to.equal(false);
+    });
+
+    for (const max of [1, 100]) {
+      it(`should accept a facet field max of ${max}`, async () => {
+        const facet = { fields: [{ name: 'category', max }] };
+
+        nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+          reqheaders: { 'x-sitecore-contextid': contextId },
+        })
+          .post('/v1/search', {
+            config: { id: searchIndexId },
+            limit: 10,
+            offset: 0,
+            query: { keyphrase: '' },
+            sessionId: '',
+            sort: { fields: [] },
+            facet,
+          })
+          .reply(200, { content: [{ id: 1 }], total: 1 });
+
+        const searchService = new SearchService({ contextId });
+        const response = await searchService.search({ searchIndexId, facet });
+
+        expect(response.results).to.deep.equal([{ id: 1 }]);
+      });
+    }
+
+    it('should accept facet fields without max', async () => {
+      const facet = { fields: [{ name: 'category' }, { name: 'brand', max: 50 }] };
+
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: { 'x-sitecore-contextid': contextId },
+      })
+        .post('/v1/search', {
+          config: { id: searchIndexId },
+          limit: 10,
+          offset: 0,
+          query: { keyphrase: '' },
+          sessionId: '',
+          sort: { fields: [] },
+          facet,
+        })
+        .reply(200, { content: [{ id: 1 }], total: 1 });
+
+      const searchService = new SearchService({ contextId });
+      const response = await searchService.search({ searchIndexId, facet });
+
+      expect(response.results).to.deep.equal([{ id: 1 }]);
+    });
+
     it('should throw an error if offset is not a positive number', async () => {
       const searchService = new SearchService({
         contextId,
@@ -567,6 +687,63 @@ describe('SearchService', () => {
       const response = await searchService.search({ searchIndexId, facet });
 
       expect(response.facets).to.deep.equal(facetResponse);
+    });
+
+    it('should send max on a facet field in the request body', async () => {
+      const facet = {
+        fields: [{ name: 'category', max: 20 }],
+      };
+      const facetResponse = [{ name: 'category', value: [{ text: 'News', count: 5 }] }];
+
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: { 'x-sitecore-contextid': contextId },
+      })
+        .post('/v1/search', {
+          config: { id: searchIndexId },
+          limit: 10,
+          offset: 0,
+          query: { keyphrase: '' },
+          sessionId: '',
+          sort: { fields: [] },
+          facet,
+        })
+        .reply(200, { content: [{ id: 1 }], total: 1, facet: facetResponse });
+
+      const searchService = new SearchService({ contextId });
+      const response = await searchService.search({ searchIndexId, facet });
+
+      expect(response.facets).to.deep.equal(facetResponse);
+    });
+
+    it('should send max together with filters on a facet field', async () => {
+      const facet = {
+        fields: [
+          {
+            name: 'category',
+            filters: [{ operator: 'eq', value: ['News'] }],
+            max: 5,
+          },
+        ],
+      };
+
+      nock(constants.SITECORE_EDGE_PLATFORM_URL_DEFAULT, {
+        reqheaders: { 'x-sitecore-contextid': contextId },
+      })
+        .post('/v1/search', {
+          config: { id: searchIndexId },
+          limit: 10,
+          offset: 0,
+          query: { keyphrase: '' },
+          sessionId: '',
+          sort: { fields: [] },
+          facet,
+        })
+        .reply(200, { content: [{ id: 1 }], total: 1 });
+
+      const searchService = new SearchService({ contextId });
+      const response = await searchService.search({ searchIndexId, facet });
+
+      expect(response.results).to.deep.equal([{ id: 1 }]);
     });
 
     it('should not include facet in the request when not provided', async () => {
