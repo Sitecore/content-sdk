@@ -9,13 +9,9 @@ import * as globalCache from '@sitecore-content-sdk/core/tools';
 import {
   DesignLibraryStatus,
   COMPONENT_UPDATE_CACHE_KEY_PREFIX,
-  COMPONENT_PREVIEW_CACHE_KEY_PREFIX,
   updateComponent as updateComponentOriginal,
 } from '@sitecore-content-sdk/content/editing';
-import {
-  ComponentUpdateModel,
-  ComponentPreviewModel,
-} from '../../server-actions/update-server-component-action';
+import { ComponentRenderState } from '../../server-actions/update-server-component-action';
 import * as codegen from '@sitecore-content-sdk/content/codegen';
 import { AppPlaceholder, PlaceholderMetadata } from '@sitecore-content-sdk/react';
 import {
@@ -135,66 +131,32 @@ export const DesignLibraryServerVariantGeneration = async ({
   if (!componentToUpdate.uid)
     return <ErrorComponent message="Rendering UID is missing in the rendering data" />;
 
-  const uid = componentToUpdate.uid;
-  const componentUpdateKey = `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}${uid}`;
-  const componentPreviewKey = `${COMPONENT_PREVIEW_CACHE_KEY_PREFIX}${uid}`;
+  const componentStateKey = `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}${componentToUpdate.uid}`;
 
-  // check if we have an update for this component in the global cache
-  if (hasCache(componentUpdateKey)) {
-    // we have fields/params update, get it and clean the cache
+  // check if we have a component state (fields/params update or generated component preview) in the global cache
+  // the state is produced by the Design Library server actions within the same request (see updateComponentAction / previewComponentAction)
+  if (hasCache(componentStateKey)) {
     designLibraryStatus = DesignLibraryStatus.RENDERED;
-    const updateData = getCacheAndClean<ComponentUpdateModel>(componentUpdateKey);
+    const state = getCacheAndClean<ComponentRenderState>(componentStateKey);
 
     // apply the updates to the component rendering
-    if (updateData?.rendering) {
-      updateComponent(componentToUpdate, updateData.rendering.fields, updateData.rendering.params);
+    if (state?.rendering) {
+      updateComponent(componentToUpdate, state.rendering.fields, state.rendering.params);
+    }
+
+    if (state?.error && !componentInitError) {
+      componentInitError = getComponentInitError(
+        codegen.DesignLibraryPreviewError.GeneratedComponentFetch,
+        state.error
+      );
     }
 
     // generate the component instance if we are dealing with an AI-generated component
-    if (updateData?.generatedComponentData && !componentInitError && importMap) {
-      generatedComponentData = updateData.generatedComponentData;
+    // generated component data is always fetched on the server from Sitecore Edge (never accepted from the client)
+    if (state?.generatedComponentData && !componentInitError && importMap) {
+      generatedComponentData = state.generatedComponentData;
       try {
-        // use provided code and import map to create the component instance
-        Component = createComponentInstance(
-          importMap,
-          updateData.generatedComponentData
-        ) as DynamicComponent;
-      } catch (error) {
-        // error during component initialization - send error to client
-        componentInitError = getComponentInitError(
-          codegen.DesignLibraryPreviewError.RenderInit,
-          error
-        );
-      }
-    }
-  } else if (hasCache(componentPreviewKey) && !componentInitError && importMap) {
-    // we have a preview update, get it and clean the cache
-    designLibraryStatus = DesignLibraryStatus.RENDERED;
-    const previewData = getCacheAndClean<ComponentPreviewModel>(componentPreviewKey);
-    if (previewData?.error) {
-      componentInitError = getComponentInitError(
-        codegen.DesignLibraryPreviewError.GeneratedComponentFetch,
-        previewData.error
-      );
-    }
-
-    // apply the updates to the component rendering
-    if (previewData?.rendering) {
-      updateComponent(
-        componentToUpdate,
-        previewData.rendering.fields,
-        previewData.rendering.params
-      );
-    }
-
-    if (previewData?.generatedComponentData) {
-      generatedComponentData = previewData.generatedComponentData;
-      try {
-        // use provided code and import map to create the component instance
-        Component = createComponentInstance(
-          importMap,
-          previewData.generatedComponentData
-        ) as DynamicComponent;
+        Component = createComponentInstance(importMap, generatedComponentData) as DynamicComponent;
       } catch (error) {
         // error during component initialization - send error to client
         componentInitError = getComponentInitError(
@@ -232,7 +194,7 @@ export const DesignLibraryServerVariantGeneration = async ({
         // pass a new object since we have mutated the original which leads to old reference passed to the client
         component={{ ...componentToUpdate }}
         componentInitError={componentInitError}
-        generatedComponentData={generatedComponentData}
+        generatedStyles={generatedComponentData?.styles?.content}
       />
     </>
   );
@@ -266,7 +228,7 @@ export const DesignLibraryServerPreview = async ({
   if (hasCache(componentUpdateKey)) {
     // we have an update, get it and clean the cache
     designLibraryStatus = DesignLibraryStatus.RENDERED;
-    const updateData = getCacheAndClean<ComponentUpdateModel>(componentUpdateKey);
+    const updateData = getCacheAndClean<ComponentRenderState>(componentUpdateKey);
 
     // apply the updates to the component rendering
     if (updateData?.rendering) {
