@@ -8,7 +8,7 @@
 
 > **LoaderFn**\<`T`\> = (`ctx`) => `Promise`\<`T`\> \| `T` \| [`LoaderRedirectResult`](LoaderRedirectResult.md)
 
-Defined in: [packages/angular/src/loaders/models.ts:170](https://github.com/Sitecore/content-sdk/blob/6bf9292fdd107f1fb78908370ca4f0fc56a384ff/packages/angular/src/loaders/models.ts#L170)
+Defined in: [packages/angular/src/loaders/models.ts:170](https://github.com/Sitecore/content-sdk/blob/17c91dd6a59e449fbba2c70048fe1b4ce6a5fb72/packages/angular/src/loaders/models.ts#L170)
 
 Loader function type.
 A loader is an async function that receives context, can be applied in route resolvers and can return:

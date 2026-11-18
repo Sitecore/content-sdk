@@ -8,6 +8,6 @@
 
 > `const` **REDIRECT\_TYPE\_302**: `"REDIRECT_302"` = `'REDIRECT_302'`
 
-Defined in: [content/src/site/redirects-service.ts:24](https://github.com/Sitecore/content-sdk/blob/6bf9292fdd107f1fb78908370ca4f0fc56a384ff/packages/content/src/site/redirects-service.ts#L24)
+Defined in: [content/src/site/redirects-service.ts:24](https://github.com/Sitecore/content-sdk/blob/17c91dd6a59e449fbba2c70048fe1b4ce6a5fb72/packages/content/src/site/redirects-service.ts#L24)
 
 Redirect type for 302 redirects
