@@ -5,6 +5,7 @@ import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
+import { omitJavascriptUrls } from './omit-javascript-urls';
 
 export interface TextProps extends EditableFieldProps<TextProps> {
   [htmlAttributes: string]: unknown;
@@ -49,7 +50,7 @@ const TextComponent: React.FC<TextProps> = ({
 
   if (!encode) {
     htmlProps.dangerouslySetInnerHTML = {
-      __html: String(value).split('\n').join('<br>'),
+      __html: omitJavascriptUrls(String(value).split('\n').join('<br>')),
     };
   } else {
     let output: string | number | (ReactElement | string)[] = value;

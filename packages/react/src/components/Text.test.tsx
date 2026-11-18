@@ -5,6 +5,7 @@ import { render } from '@testing-library/react';
 import sinon from 'sinon';
 
 import { Text, TextField } from './Text';
+import { resetOmittedJavascriptUrlLog } from './omit-javascript-urls';
 
 describe('<Text />', () => {
   it('should render nothing with missing field', () => {
@@ -109,6 +110,32 @@ describe('<Text />', () => {
     };
     const rendered = render(<Text tag="span" field={field} />).container.querySelector('span');
     expect(rendered?.outerHTML).to.contain('<span><br></span>');
+  });
+
+  it('should remove a javascript: href when encoding is disabled', () => {
+    resetOmittedJavascriptUrlLog();
+    const errorStub = sinon.stub(console, 'error');
+    const field = {
+      value: 'Line one\n<a href="javascript:alert(1)">Click</a>',
+    };
+    const rendered = render(<Text field={field} encode={false} />).container.querySelector('span');
+    const anchor = rendered?.querySelector('a');
+
+    expect(rendered?.innerHTML).to.equal('Line one<br><a>Click</a>');
+    expect(anchor?.textContent).to.equal('Click');
+    expect(anchor?.getAttribute('href')).to.equal(null);
+    expect(errorStub.calledOnce).to.equal(true);
+    errorStub.restore();
+  });
+
+  it('should encode a javascript: href when encoding is enabled', () => {
+    const field = {
+      value: '<a href="javascript:alert(1)">Click</a>',
+    };
+    const rendered = render(<Text tag="span" field={field} />).container.querySelector('span');
+
+    expect(rendered?.querySelector('a')).to.equal(null);
+    expect(rendered?.innerHTML).to.contain('javascript:alert(1)');
   });
 
   it('should render embedded html as-is when encoding is disabled', () => {

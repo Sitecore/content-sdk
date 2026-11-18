@@ -5,6 +5,7 @@ import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
+import { omitJavascriptUrls } from './omit-javascript-urls';
 
 /**
  * The interface for the RichText component props.
@@ -29,10 +30,15 @@ const RichTextComponent: React.FC<RichTextProps> = ({ field, tag = 'div', ref, .
   // Keep the object reference stable across re-renders when the html is unchanged,
   // since React DOM compares dangerouslySetInnerHTML by reference and re-sets
   // innerHTML (recreating all child DOM nodes) whenever it changes.
-  const dangerouslySetInnerHTML = useMemo(
-    () => (html !== undefined && html !== '' ? { __html: html } : undefined),
-    [html]
-  );
+  // javascript: URLs are removed first. React does not block them inside innerHTML.
+  const dangerouslySetInnerHTML = useMemo(() => {
+    if (typeof html !== 'string' || html === '') {
+      return undefined;
+    }
+
+    const safeHtml = omitJavascriptUrls(html);
+    return safeHtml !== '' ? { __html: safeHtml } : undefined;
+  }, [html]);
 
   if (isFieldValueEmpty(field) || !dangerouslySetInnerHTML) {
     return null;

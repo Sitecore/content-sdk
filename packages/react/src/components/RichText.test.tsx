@@ -4,6 +4,7 @@ import { render } from '@testing-library/react';
 import sinon from 'sinon';
 
 import { RichText, RichTextField } from './RichText';
+import { resetOmittedJavascriptUrlLog } from './omit-javascript-urls';
 
 describe('<RichText />', () => {
   it('should render nothing with missing field', () => {
@@ -44,6 +45,22 @@ describe('<RichText />', () => {
     const rendered = render(<RichText field={field} />).container.querySelectorAll('div');
     expect(rendered).to.have.length(1);
     expect(rendered[0].innerHTML).to.contain('value');
+  });
+
+  it('should remove a javascript: href and keep the surrounding html', () => {
+    resetOmittedJavascriptUrlLog();
+    const errorStub = sinon.stub(console, 'error');
+    const field = {
+      value: '<p>Read <a href="javascript:alert(1)">this</a> and <a href="/ok">that</a></p>',
+    };
+    const rendered = render(<RichText field={field} />).container.querySelector('div');
+    const links = rendered?.querySelectorAll('a');
+
+    expect(links?.[0].textContent).to.equal('this');
+    expect(links?.[0].getAttribute('href')).to.equal(null);
+    expect(links?.[1].getAttribute('href')).to.equal('/ok');
+    expect(errorStub.calledOnce).to.equal(true);
+    errorStub.restore();
   });
 
   it('should render embedded html as-is', () => {
@@ -188,6 +205,28 @@ describe('<RichText />', () => {
       const rendered = render(<RichText field={field} editable={false} />);
 
       expect(rendered.container.innerHTML).to.equal('');
+    });
+
+    it('should keep editing chromes and remove a javascript: href', () => {
+      resetOmittedJavascriptUrlLog();
+      const errorStub = sinon.stub(console, 'error');
+      const field = {
+        value: '<a class="edit-link" href="javascript:alert(1)">Click</a>',
+        metadata: testMetadata,
+      };
+
+      const rendered = render(<RichText field={field} />);
+      const anchor = rendered.container.querySelector('a');
+
+      expect(rendered.container.querySelectorAll('code.scpm').length).to.equal(2);
+      expect(anchor?.textContent).to.equal('Click');
+      expect(anchor?.getAttribute('href')).to.equal(null);
+      expect(anchor?.getAttribute('class')).to.equal('edit-link');
+      expect(rendered.container.querySelector('code.scpm')?.textContent).to.contain(
+        testMetadata.fieldId
+      );
+      expect(errorStub.calledOnce).to.equal(true);
+      errorStub.restore();
     });
 
     it('should apply suppressHydrationWarning prop when in editing mode', () => {
