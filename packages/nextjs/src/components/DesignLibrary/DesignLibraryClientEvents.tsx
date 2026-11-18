@@ -1,16 +1,16 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as dlHelpers from '@sitecore-content-sdk/content/editing';
 import * as codegen from '@sitecore-content-sdk/content/codegen';
 import {
   updateComponentAction,
   previewComponentAction,
+  GeneratedComponentCacheReference,
 } from '../../server-actions/update-server-component-action';
 import {
   DesignLibraryPreviewEventsProps,
   DesignLibraryVariantGenerationEventsProps,
 } from './models';
-import { useSitecore } from '@sitecore-content-sdk/react';
 
 let {
   getDesignLibraryComponentPropsEvent,
@@ -76,10 +76,11 @@ export const DesignLibraryVariantGenerationEvents = ({
   component,
   importMap,
   componentInitError,
-  generatedComponentData,
+  generatedStyles,
 }: DesignLibraryVariantGenerationEventsProps) => {
-  const { api } = useSitecore();
-  const edgeUrl = api?.edge?.edgeUrl;
+  // reference (id + token) of the last generated component received from Design Studio.
+  // Only the reference is sent to the server, the component code is always fetched on the server from Sitecore Edge.
+  const lastPreviewCacheRef = useRef<GeneratedComponentCacheReference | undefined>(undefined);
 
   useEffect(() => {
     if (!component?.uid) return;
@@ -90,18 +91,21 @@ export const DesignLibraryVariantGenerationEvents = ({
       _updateComponentAction({
         uid: rendering.uid!,
         rendering,
-        generatedComponentData,
+        cache: lastPreviewCacheRef.current,
       });
     });
 
     const unsubPreview = addServerComponentPreviewHandler(component, (rendering, eventArgs) => {
+      const cache = eventArgs?.message?.cache;
+      if (cache?.id && cache?.token) {
+        lastPreviewCacheRef.current = { id: cache.id, token: cache.token };
+      }
       _previewComponentAction(
         {
           uid: component.uid!,
           args: eventArgs,
         },
-        rendering,
-        edgeUrl
+        rendering
       );
     });
 
@@ -119,9 +123,9 @@ export const DesignLibraryVariantGenerationEvents = ({
       );
       postToDesignLibrary(propsEvent);
 
-      if (generatedComponentData?.styles?.content) {
+      if (generatedStyles) {
         // the generated component has custom styles, so add the css in style element and add it to document head
-        addStyleElement(generatedComponentData.styles.content);
+        addStyleElement(generatedStyles);
       }
     }
 
@@ -129,14 +133,7 @@ export const DesignLibraryVariantGenerationEvents = ({
       unsubUpdate && unsubUpdate();
       unsubPreview && unsubPreview();
     };
-  }, [
-    component,
-    designLibraryStatus,
-    importMap,
-    componentInitError,
-    generatedComponentData,
-    edgeUrl,
-  ]);
+  }, [component, designLibraryStatus, importMap, componentInitError, generatedStyles]);
 
   return <></>;
 };

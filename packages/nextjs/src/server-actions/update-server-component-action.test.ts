@@ -5,10 +5,7 @@ import { expect, use } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { ComponentUpdateModel, PreviewEventModel } from './update-server-component-action';
-import {
-  COMPONENT_UPDATE_CACHE_KEY_PREFIX,
-  COMPONENT_PREVIEW_CACHE_KEY_PREFIX,
-} from '@sitecore-content-sdk/content/editing';
+import { COMPONENT_UPDATE_CACHE_KEY_PREFIX } from '@sitecore-content-sdk/content/editing';
 import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import {
   ServerComponentPreviewEventArgs,
@@ -38,7 +35,10 @@ describe('Server Component Actions', () => {
     isDesignLibraryAuthorizedFromHeadersStub = sandbox.stub().resolves(true);
 
     originalEnv = process.env;
-    process.env = { ...originalEnv, SITECORE_EDGE_URL: 'https://edge.sitecorecloud.io' };
+    process.env = { ...originalEnv };
+    // edge url is resolved on the server from env variables only
+    delete process.env.NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME;
+    delete process.env.SITECORE_EDGE_PLATFORM_HOSTNAME;
 
     const module = proxyquire('./update-server-component-action', {
       'next/cache': {
@@ -70,7 +70,24 @@ describe('Server Component Actions', () => {
   });
 
   describe('updateComponentAction', () => {
-    it('should set cache with updated component rendering', async () => {
+    const generatedComponentData: GeneratedComponentData = {
+      uid: 'test-uid-456',
+      code: {
+        type: 'function',
+        content: 'const Component = () => <div>Generated</div>',
+      },
+      styles: {
+        type: 'style-element',
+        content: '.generated { color: blue; }',
+        styleImport: {
+          name: 'styles',
+          content: {},
+        },
+      },
+      imports: [],
+    };
+
+    it('should set cache with updated fields and params only', async () => {
       const componentUpdate: ComponentUpdateModel = {
         uid: 'test-uid-123',
         rendering: {
@@ -92,7 +109,13 @@ describe('Server Component Actions', () => {
       expect(refreshStub).to.have.been.calledOnce;
       expect(setCacheStub).to.have.been.calledWith(
         `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}test-uid-123`,
-        componentUpdate
+        {
+          uid: 'test-uid-123',
+          rendering: {
+            fields: componentUpdate.rendering!.fields,
+            params: componentUpdate.rendering!.params,
+          },
+        }
       );
       expect(debugEditingStub).to.have.been.calledWith(
         'Updating server component cache for Update Component: test-uid-123'
@@ -100,41 +123,93 @@ describe('Server Component Actions', () => {
       expect(fetchGeneratedComponentFromCacheStub).to.not.have.been.called;
     });
 
-    it('should set cache with generated component data', async () => {
-      const generatedComponentData: GeneratedComponentData = {
-        uid: 'test-uid-456',
-        code: {
-          type: 'function',
-          content: 'const Component = () => <div>Generated</div>',
-        },
-        styles: {
-          type: 'style-element',
-          content: '.generated { color: blue; }',
-          styleImport: {
-            name: 'styles',
-            content: {},
-          },
-        },
-        imports: [],
-      };
-
-      const componentUpdate: ComponentUpdateModel = {
+    it('should ignore generated component data sent by the client', async () => {
+      const maliciousUpdate = {
         uid: 'test-uid-456',
         generatedComponentData,
+        rendering: {
+          uid: 'test-uid-456',
+          componentName: 'ContentBlock',
+          params: { variant: 'primary' },
+          generatedComponentData,
+        },
       };
 
-      await updateComponentAction(componentUpdate);
+      await updateComponentAction(maliciousUpdate as unknown as ComponentUpdateModel);
 
       expect(setCacheStub).to.have.been.calledOnce;
+      const cached = setCacheStub.getCall(0).args[1];
+      expect(cached).to.deep.equal({
+        uid: 'test-uid-456',
+        rendering: { fields: undefined, params: { variant: 'primary' } },
+      });
+      expect(fetchGeneratedComponentFromCacheStub).to.not.have.been.called;
       expect(refreshStub).to.have.been.calledOnce;
+    });
+
+    it('should fetch generated component data from the production Edge url when no env variable is set', async () => {
+      fetchGeneratedComponentFromCacheStub.resolves(generatedComponentData);
+
+      await updateComponentAction({
+        uid: 'test-uid-456',
+        cache: { id: 'cache-id-1', token: 'token-1' },
+      });
+
+      expect(fetchGeneratedComponentFromCacheStub).to.have.been.calledOnceWith(
+        'cache-id-1',
+        'token-1',
+        'https://edge-platform.sitecorecloud.io'
+      );
+      expect(setCacheStub).to.have.been.calledOnceWith(
+        `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}test-uid-456`,
+        {
+          uid: 'test-uid-456',
+          rendering: undefined,
+          generatedComponentData,
+        }
+      );
+      expect(refreshStub).to.have.been.calledOnce;
+    });
+
+    it('should ignore an edge url provided by the client', async () => {
+      fetchGeneratedComponentFromCacheStub.resolves(generatedComponentData);
+
+      // a malicious caller may pass extra arguments to the server action
+      await (updateComponentAction as any)(
+        { uid: 'test-uid-456', cache: { id: 'cache-id-1', token: 'token-1' } },
+        'https://attacker.example.com'
+      );
+
+      expect(fetchGeneratedComponentFromCacheStub).to.have.been.calledOnceWith(
+        'cache-id-1',
+        'token-1',
+        'https://edge-platform.sitecorecloud.io'
+      );
+    });
+
+    it('should set error in cache when fetching generated component data fails', async () => {
+      const fetchError = new Error('Response Status: 401');
+      fetchGeneratedComponentFromCacheStub.rejects(fetchError);
+
+      await updateComponentAction({
+        uid: 'test-uid-456',
+        cache: { id: 'cache-id-1', token: 'expired-token' },
+      });
+
+      expect(setCacheStub).to.have.been.calledOnce;
       expect(setCacheStub).to.have.been.calledWith(
         `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}test-uid-456`,
-        componentUpdate
+        {
+          uid: 'test-uid-456',
+          rendering: undefined,
+          error: fetchError.message,
+        }
       );
       expect(debugEditingStub).to.have.been.calledWith(
-        'Updating server component cache for Update Component: test-uid-456'
+        'Error fetching generated component data from cache for Component: test-uid-456',
+        fetchError
       );
-      expect(fetchGeneratedComponentFromCacheStub).to.not.have.been.called;
+      expect(refreshStub).to.have.been.calledOnce;
     });
 
     it('should not update cache when editing secret is invalid', async () => {
@@ -162,11 +237,36 @@ describe('Server Component Actions', () => {
   });
 
   describe('previewComponentAction', () => {
+    const fetchedGeneratedComponentData: GeneratedComponentData = {
+      uid: 'test-uid-789',
+      code: {
+        type: 'function',
+        content: 'const Component = () => <div>Fetched</div>',
+      },
+      styles: {
+        type: 'style-element',
+        content: '.fetched { color: green; }',
+        styleImport: {
+          name: 'styles',
+          content: {},
+        },
+      },
+      imports: [],
+    };
+
+    const getArgs = (id: string, token: string): ServerComponentPreviewEventArgs => ({
+      name: 'component:generation:component-preview',
+      message: { cache: { id, token } },
+    });
+
     it('should not update cache when editing secret is invalid', async () => {
       isDesignLibraryAuthorizedFromHeadersStub.resolves(false);
 
       try {
-        await previewComponentAction({ uid: 'test-uid-unauthorized', args: undefined as any }, null);
+        await previewComponentAction(
+          { uid: 'test-uid-unauthorized', args: undefined as any },
+          null
+        );
         expect.fail('expected previewComponentAction to reject');
       } catch (error) {
         expect((error as Error).message).to.equal('Unauthorized');
@@ -177,290 +277,85 @@ describe('Server Component Actions', () => {
       expect(fetchGeneratedComponentFromCacheStub).to.not.have.been.called;
     });
 
-    it('should fetch generated component data when args is provided', async () => {
-      const args: ServerComponentPreviewEventArgs = {
-        name: 'component:generation:component-preview',
-        message: {
-          cache: {
-            id: 'cache-id-123',
-            token: 'cache-token-456',
-          },
-        },
-      };
-
-      const fetchedGeneratedComponentData: GeneratedComponentData = {
-        uid: 'test-uid-789',
-        code: {
-          type: 'function',
-          content: 'const Component = () => <div>Fetched</div>',
-        },
-        styles: {
-          type: 'style-element',
-          content: '.fetched { color: green; }',
-          styleImport: {
-            name: 'styles',
-            content: {},
-          },
-        },
-        imports: [],
-      };
-
+    it('should fetch generated component data and store the component state', async () => {
       fetchGeneratedComponentFromCacheStub.resolves(fetchedGeneratedComponentData);
-
+      const rendering: ComponentRendering = {
+        uid: 'test-uid-789',
+        componentName: 'TestComponent',
+        fields: { heading: { value: 'Heading' } },
+        params: { theme: 'dark' },
+      };
       const previewEvent: PreviewEventModel = {
         uid: 'test-uid-789',
-        args,
+        args: getArgs('cache-id-123', 'cache-token-456'),
       };
 
-      await previewComponentAction(previewEvent, null);
+      process.env.NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME = 'https://custom-edge.example.com';
+      // a malicious caller may pass an extra edge url argument - it must be ignored
+      await (previewComponentAction as any)(
+        previewEvent,
+        rendering,
+        'https://attacker.example.com'
+      );
 
-      expect(fetchGeneratedComponentFromCacheStub).to.have.been.calledOnce;
-      expect(fetchGeneratedComponentFromCacheStub).to.have.been.calledWith(
+      expect(fetchGeneratedComponentFromCacheStub).to.have.been.calledOnceWith(
         'cache-id-123',
         'cache-token-456',
-        undefined
+        'https://custom-edge.example.com'
       );
-
-      expect(setCacheStub).to.have.been.calledOnce;
-      expect(setCacheStub).to.have.been.calledWith(
-        `${COMPONENT_PREVIEW_CACHE_KEY_PREFIX}test-uid-789`,
+      expect(setCacheStub).to.have.been.calledOnceWith(
+        `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}test-uid-789`,
         {
           uid: 'test-uid-789',
+          rendering: { fields: rendering.fields, params: rendering.params },
           generatedComponentData: fetchedGeneratedComponentData,
-          rendering: null,
-          error: undefined,
         }
       );
-
       expect(debugEditingStub).to.have.been.calledWith(
         'Updating server component cache for Preview Component: test-uid-789'
       );
       expect(refreshStub).to.have.been.calledOnce;
     });
 
-    it('should set cache with undefined generatedComponentData when no args provided', async () => {
-      const previewEvent: PreviewEventModel = {
-        uid: 'test-uid-no-preview',
-        args: undefined as any, // simulating no preview event arguments provided
-      };
-
-      await previewComponentAction(previewEvent, null);
+    it('should store an error when no preview event arguments provided', async () => {
+      await previewComponentAction({ uid: 'test-uid-no-preview', args: undefined as any }, null);
 
       expect(fetchGeneratedComponentFromCacheStub).to.not.have.been.called;
-      expect(setCacheStub).to.have.been.calledOnce;
-      expect(setCacheStub).to.have.been.calledWith(
-        `${COMPONENT_PREVIEW_CACHE_KEY_PREFIX}test-uid-no-preview`,
+      expect(setCacheStub).to.have.been.calledOnceWith(
+        `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}test-uid-no-preview`,
         {
           uid: 'test-uid-no-preview',
-          generatedComponentData: undefined,
-          rendering: null,
           error: 'No preview event arguments provided',
         }
       );
-      expect(debugEditingStub).to.have.been.calledTwice;
-      expect(debugEditingStub.firstCall).to.have.been.calledWith(
-        'Updating server component cache for Preview Component: test-uid-no-preview'
-      );
-      expect(debugEditingStub.secondCall).to.have.been.calledWith(
+      expect(debugEditingStub).to.have.been.calledWith(
         'No preview event arguments provided for Component: test-uid-no-preview'
       );
       expect(refreshStub).to.have.been.calledOnce;
     });
 
-    it('should use custom edgeUrl when provided', async () => {
-      const customEdgeUrl = 'https://custom-edge.example.com';
-
-      const args: ServerComponentPreviewEventArgs = {
-        name: 'component:generation:component-preview',
-        message: {
-          cache: {
-            id: 'cache-id-env',
-            token: 'cache-token-env',
-          },
-        },
-      };
-
-      const fetchedGeneratedComponentData: GeneratedComponentData = {
-        uid: 'test-uid-env',
-        code: {
-          type: 'function',
-          content: 'const Component = () => <div>Env Test</div>',
-        },
-        styles: {
-          type: 'style-element',
-          content: '.env { color: red; }',
-          styleImport: {
-            name: 'styles',
-            content: {},
-          },
-        },
-        imports: [],
-      };
-
-      fetchGeneratedComponentFromCacheStub.resolves(fetchedGeneratedComponentData);
-
-      const previewEvent: PreviewEventModel = {
-        uid: 'test-uid-env',
-        args,
-      };
-
-      await previewComponentAction(previewEvent, null, customEdgeUrl);
-
-      expect(fetchGeneratedComponentFromCacheStub).to.have.been.calledWith(
-        'cache-id-env',
-        'cache-token-env',
-        customEdgeUrl
-      );
-    });
-
-    it('should pass rendering to the cache when rendering is provided', async () => {
-      const rendering: ComponentRendering = {
-        uid: 'test-uid-rendering',
-        componentName: 'TestComponent',
-      };
-
-      const args: ServerComponentPreviewEventArgs = {
-        name: 'component:generation:component-preview',
-        message: { cache: { id: 'cache-id-r', token: 'cache-token-r' } },
-      };
-
-      fetchGeneratedComponentFromCacheStub.resolves({
-        uid: 'test-uid-rendering',
-        code: { type: 'function', content: '' },
-        styles: { type: 'style-element', content: '', styleImport: { name: 's', content: {} } },
-        imports: [],
-      });
-
-      await previewComponentAction({ uid: 'test-uid-rendering', args }, rendering, undefined);
-
-      expect(setCacheStub).to.have.been.calledOnce;
-      const cached = setCacheStub.getCall(0).args[1];
-      expect(cached.rendering).to.equal(rendering);
-    });
-
-    it('should handle undefined edgeUrl when not provided', async () => {
-      const args: ServerComponentPreviewEventArgs = {
-        name: 'component:generation:component-preview',
-        message: {
-          cache: {
-            id: 'cache-id-no-env',
-            token: 'cache-token-no-env',
-          },
-        },
-      };
-
-      const fetchedGeneratedComponentData: GeneratedComponentData = {
-        uid: 'test-uid-no-env',
-        code: {
-          type: 'function',
-          content: 'const Component = () => <div>No Env</div>',
-        },
-        styles: {
-          type: 'style-element',
-          content: '.no-env { color: yellow; }',
-          styleImport: {
-            name: 'styles',
-            content: {},
-          },
-        },
-        imports: [],
-      };
-
-      fetchGeneratedComponentFromCacheStub.resolves(fetchedGeneratedComponentData);
-
-      const previewEvent: PreviewEventModel = {
-        uid: 'test-uid-no-env',
-        args,
-      };
-
-      await previewComponentAction(previewEvent, null);
-
-      expect(fetchGeneratedComponentFromCacheStub).to.have.been.calledWith(
-        'cache-id-no-env',
-        'cache-token-no-env',
-        undefined
-      );
-    });
-
-    it('should handle fetch errors and set error in cache', async () => {
-      const args: ServerComponentPreviewEventArgs = {
-        name: 'component:generation:component-preview',
-        message: {
-          cache: {
-            id: 'cache-id-error',
-            token: 'cache-token-error',
-          },
-        },
-      };
-
+    it('should store an error when fetching generated component data fails', async () => {
       const fetchError = new Error(
         'Failed to fetch generated component data from cache for id: cache-id-error. Response Status: 404, Response Status Text: Not Found'
       );
       fetchGeneratedComponentFromCacheStub.rejects(fetchError);
 
-      const previewEvent: PreviewEventModel = {
-        uid: 'test-uid-error',
-        args,
-      };
+      await previewComponentAction(
+        { uid: 'test-uid-error', args: getArgs('cache-id-error', 'cache-token-error') },
+        null
+      );
 
-      await previewComponentAction(previewEvent, null);
-
-      expect(fetchGeneratedComponentFromCacheStub).to.have.been.calledOnce;
-      expect(setCacheStub).to.have.been.calledOnce;
-      expect(setCacheStub).to.have.been.calledWith(
-        `${COMPONENT_PREVIEW_CACHE_KEY_PREFIX}test-uid-error`,
+      expect(setCacheStub).to.have.been.calledOnceWith(
+        `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}test-uid-error`,
         {
           uid: 'test-uid-error',
-          generatedComponentData: undefined,
-          rendering: null,
+          rendering: undefined,
           error: fetchError.message,
         }
       );
-      expect(debugEditingStub).to.have.been.calledTwice;
-      expect(debugEditingStub.firstCall).to.have.been.calledWith(
-        'Updating server component cache for Preview Component: test-uid-error'
-      );
-      expect(debugEditingStub.secondCall).to.have.been.calledWith(
+      expect(debugEditingStub).to.have.been.calledWith(
         'Error fetching generated component data from cache for Component: test-uid-error',
         fetchError
-      );
-      expect(refreshStub).to.have.been.calledOnce;
-    });
-
-    it('should handle non-Error fetch failures', async () => {
-      const args: ServerComponentPreviewEventArgs = {
-        name: 'component:generation:component-preview',
-        message: {
-          cache: {
-            id: 'cache-id-string-error',
-            token: 'cache-token-string-error',
-          },
-        },
-      };
-
-      const errorMessage = 'String error message';
-      fetchGeneratedComponentFromCacheStub.rejects(new Error(errorMessage));
-
-      const previewEvent: PreviewEventModel = {
-        uid: 'test-uid-string-error',
-        args,
-      };
-
-      await previewComponentAction(previewEvent, null);
-
-      expect(setCacheStub).to.have.been.calledOnce;
-      expect(setCacheStub).to.have.been.calledWith(
-        `${COMPONENT_PREVIEW_CACHE_KEY_PREFIX}test-uid-string-error`,
-        {
-          uid: 'test-uid-string-error',
-          generatedComponentData: undefined,
-          rendering: null,
-          error: errorMessage,
-        }
-      );
-      expect(debugEditingStub).to.have.been.calledTwice;
-      expect(debugEditingStub.firstCall).to.have.been.calledWith(
-        'Updating server component cache for Preview Component: test-uid-string-error'
       );
       expect(refreshStub).to.have.been.calledOnce;
     });
