@@ -843,5 +843,32 @@ describe('<Link />', () => {
       expect(link?.textContent).to.equal('Click');
       expect(link?.getAttribute('class')).to.equal('my-link');
     });
+
+    it('should not pass a javascript: href prop through to NextLink', () => {
+      const rendered = render(
+        <Page>
+          <Link field={{ value: { href: '/lorem', text: 'Click' } }} href="javascript:alert(1)" />
+        </Page>
+      );
+
+      const link = rendered.container.querySelector('a');
+      expect(link?.getAttribute('data-nextjs-link')).to.equal(null);
+      expect(link?.getAttribute('data-react-link')).to.equal('true');
+      expect(link?.getAttribute('href')).to.equal(null);
+      expect(link?.textContent).to.equal('Click');
+    });
+
+    it('should keep a safe href prop when the field href is javascript:', () => {
+      const rendered = render(
+        <Page>
+          <Link field={{ value: { href: 'javascript:alert(1)', text: 'Click' } }} href="/safe" />
+        </Page>
+      );
+
+      const link = rendered.container.querySelector('a');
+      expect(link?.getAttribute('data-nextjs-link')).to.equal('true');
+      expect(link?.getAttribute('href')).to.equal('/safe');
+      expect(link?.textContent).to.equal('Click');
+    });
   });
 });

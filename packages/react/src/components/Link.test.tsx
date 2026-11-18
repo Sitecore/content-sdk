@@ -4,7 +4,6 @@ import { render } from '@testing-library/react';
 import { createSandbox, SinonSandbox, SinonStub } from 'sinon';
 
 import { Link, LinkField } from './Link';
-import { resetBlockedJavascriptUrlLog } from './javascript-url';
 
 describe('<Link />', () => {
   it('should render nothing with missing field', () => {
@@ -358,7 +357,6 @@ describe('<Link />', () => {
     let errorStub: SinonStub;
 
     beforeEach(() => {
-      resetBlockedJavascriptUrlLog();
       sandbox = createSandbox();
       errorStub = sandbox.stub(console, 'error');
     });

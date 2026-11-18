@@ -6,6 +6,7 @@ import {
   getAllowedOriginsFromEnv,
   isTimeoutError,
   isRegexOrUrl,
+  isJavascriptUrl,
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,
   escapeRegExp,
@@ -241,6 +242,46 @@ describe('utils', () => {
         'https://alsoallowed.com',
       ]);
       delete process.env.JSS_ALLOWED_ORIGINS;
+    });
+  });
+
+  describe('isJavascriptUrl', () => {
+    const blocked = [
+      'javascript:alert(1)',
+      'JAVASCRIPT:void(0)',
+      'JaVaScRiPt:alert(1)',
+      ' javascript:alert(1)',
+      '\tjavascript:alert(1)',
+      '\njavascript:alert(1)',
+      '\r\n javascript:void(0)',
+      'java\nscript:alert(1)',
+      'java\tscript:alert(1)',
+      'java\rscript:void(0)',
+      'j\na\tv\ra\ns\tc\nr\ni\tp\nt:alert(1)',
+    ];
+
+    const allowed = [
+      'https://example.com',
+      'http://example.com',
+      'mailto:editor@example.com',
+      'tel:+15551212',
+      '/lorem',
+      '/javascript:alert(1)',
+      'notjavascript:alert(1)',
+      'java script:alert(1)',
+      '',
+    ];
+
+    blocked.forEach((url) => {
+      it(`blocks ${JSON.stringify(url)}`, () => {
+        expect(isJavascriptUrl(url)).to.equal(true);
+      });
+    });
+
+    allowed.forEach((url) => {
+      it(`allows ${JSON.stringify(url)}`, () => {
+        expect(isJavascriptUrl(url)).to.equal(false);
+      });
     });
   });
 

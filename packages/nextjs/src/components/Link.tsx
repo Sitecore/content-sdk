@@ -7,6 +7,7 @@ import {
   LinkField,
   LinkProps as ReactLinkProps,
 } from '@sitecore-content-sdk/react';
+import { isJavascriptUrl } from '@sitecore-content-sdk/core/tools';
 import { useRouter as usePageRouter } from 'next/compat/router';
 
 /**
@@ -79,24 +80,34 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
     const { href, querystring, anchor } = value || {};
 
     const isEditing = editable && (field as LinkFieldValue).metadata;
+    // An href prop is spread onto next/link after the field href and overrides it.
+    // Judge that final value, not only the field.
+    const propHref = typeof rest.href === 'string' ? rest.href : undefined;
+    const effectiveHref = propHref ?? href;
 
-    // javascript: URLs are rendered by React Link, which drops the href.
-    if (href && !isEditing && !isJavascriptUrl(href)) {
+    if (effectiveHref && !isEditing && !isJavascriptUrl(effectiveHref)) {
       const text = showLinkTextWithChildrenPresent || !children ? value.text || value.href : null;
 
-      const isMatching = internalLinkMatcher.test(href);
-      const isFileUrl = FILE_EXTENSION_MATCHER.test(href);
+      const isMatching = internalLinkMatcher.test(effectiveHref);
+      const isFileUrl = FILE_EXTENSION_MATCHER.test(effectiveHref);
 
       // determine if a link is a route or not. File extensions are not routes and should not be pre-fetched.
       if (isMatching && !isFileUrl) {
+        const linkProps = { ...rest };
+        delete linkProps.href;
+
         return (
           <NextLink
-            href={{ pathname: href, query: querystring, hash: anchor }}
             key="link"
             title={value.title}
             target={value.target}
             className={value.class}
-            {...rest}
+            {...linkProps}
+            href={
+              propHref !== undefined
+                ? propHref
+                : { pathname: href, query: querystring, hash: anchor }
+            }
             // locale prop is supported only in Pages Router
             locale={pageRouter ? false : undefined}
             ref={ref}
@@ -128,21 +139,6 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
 );
 
 Link.displayName = 'NextLink';
-
-/**
- * Whether an href is a javascript: URL. Matches the React Link check so these
- * URLs are not passed to next/link: any case, leading spaces or control
- * characters, and tab or newline characters between the letters of the scheme.
- * @param {string} href candidate link href
- * @returns {boolean} true when the href uses the javascript protocol
- */
-function isJavascriptUrl(href: string): boolean {
-  // Control characters are intentional: this matches the javascript: URLs React blocks.
-  // eslint-disable-next-line no-control-regex
-  return /^[\u0000-\u001F ]*j[\r\n\t]*a[\r\n\t]*v[\r\n\t]*a[\r\n\t]*s[\r\n\t]*c[\r\n\t]*r[\r\n\t]*i[\r\n\t]*p[\r\n\t]*t[\r\n\t]*:/i.test(
-    href
-  );
-}
 
 /**
  * Sanitize props for ReactLink by removing Next.js and internal props to prevent invalid DOM attributes.
