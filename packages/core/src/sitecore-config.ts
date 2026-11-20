@@ -178,6 +178,18 @@ export type SitecoreConfigInput = {
      * @default 'USA'
      */
     currency?: string;
+    /**
+     * Enable Dynamic Content Tokens. Authors place `{{key}}` or `{{key|fallback}}` in
+     * route content; normal `getPage` renders replace them with values returned by the
+     * Personalize execution, or with the fallback when no value is available.
+     * Unmatched tokens without a fallback are removed.
+     * - Visitor values are applied on renders that pass `tokens` to `getPage`. In Next.js apps the
+     * personalize proxy routes requests with tokens to the app's per-request `_sctokens` route, so
+     * other pages stay statically generated and render fallbacks.
+     * - Preview, Design Library and error pages are never processed.
+     * @default false
+     */
+    dynamicContent?: boolean;
   };
   /**
    * Settings for redirects functionality

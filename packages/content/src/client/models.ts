@@ -10,6 +10,7 @@ import { ErrorPagesService, SitePathService } from '../site';
  * @public
  */
 export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' | 'personalize'> & {
+  personalize?: Partial<Pick<SitecoreConfig['personalize'], 'dynamicContent'>>;
   custom?: {
     layoutService?: LayoutService;
     dictionaryService?: DictionaryService;

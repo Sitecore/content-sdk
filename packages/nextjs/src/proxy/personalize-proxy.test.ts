@@ -9,7 +9,11 @@ import nextjs, { NextRequest, NextResponse } from 'next/server';
 import { GraphQLRequestClient } from '@sitecore-content-sdk/core';
 import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/analytics-core/internal';
 import { SiteResolver } from '@sitecore-content-sdk/content/site';
-import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
+import {
+  CdpHelper,
+  getPersonalizeTokens,
+  PERSONALIZE_TOKENS_HEADER,
+} from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeProxyConfig } from './personalize-proxy';
 import type { SuccessfulPersonalizeProxyExecution } from './personalize-proxy';
 import proxyquire from 'proxyquire';
@@ -95,9 +99,6 @@ describe('PersonalizeProxy', () => {
       },
       headers: {
         host: hostname,
-        get(key: string) {
-          return req.headers[key];
-        },
         referer: referrer,
         ...props.headerValues,
       },
@@ -105,9 +106,23 @@ describe('PersonalizeProxy', () => {
     } as NextRequest;
 
     Object.defineProperties(req.headers, {
+      get: {
+        value: (key: string) => req.headers[key],
+        enumerable: false,
+      },
+      has: {
+        value: (key: string) => req.headers[key] !== undefined,
+        enumerable: false,
+      },
       set: {
         value: (key, value) => {
           req.headers[key] = value;
+        },
+        enumerable: false,
+      },
+      delete: {
+        value: (key) => {
+          delete req.headers[key];
         },
         enumerable: false,
       },
@@ -145,6 +160,7 @@ describe('PersonalizeProxy', () => {
       },
       ...props,
     } as NextResponse;
+    (res.headers as any)._response = res;
 
     Object.defineProperties(res.headers, {
       set: {
@@ -155,6 +171,10 @@ describe('PersonalizeProxy', () => {
       },
       get: {
         value: (key) => res.headers[key],
+      },
+      has: {
+        value: (key) => res.headers[key] !== undefined,
+        enumerable: false,
       },
       forEach: {
         value: (cb) => {
@@ -257,6 +277,14 @@ describe('PersonalizeProxy', () => {
   beforeEach(() => {
     userAgentStub.resetHistory();
     debugSpy.resetHistory();
+    sandbox.stub(nextjs.NextResponse, 'next').callsFake((init: any) => {
+      const owner = init?.headers?._response;
+      if (owner) {
+        owner.forwardedRequestHeaders = init?.request?.headers;
+        return owner;
+      }
+      return createResponse({ forwardedRequestHeaders: init?.request?.headers });
+    });
   });
 
   afterEach(() => {
@@ -594,7 +622,7 @@ describe('PersonalizeProxy', () => {
       expect(getPersonalizeInfo.calledWith('/styleguide', 'en')).to.be.true;
       expect(initPersonalizeServer.called).to.be.true;
       expect(personalize.called).to.be.true;
-      validateDebugLog('invalid variant %s', invalidVariant);
+      validateDebugLog('skipped (no variant(s) identified)');
       expect(finalRes).to.deep.equal(res);
     });
 
@@ -1434,6 +1462,207 @@ describe('PersonalizeProxy', () => {
       // Verify proxy was created and personalizeService is initialized
       expect(proxy).to.not.be.undefined;
       expect(proxy['personalizeService']).to.not.be.null;
+    });
+  });
+
+  describe('dynamic content tokens', () => {
+    const tokenConfig = { ...defaultConfig, dynamicContent: true };
+
+    // A response from earlier proxies that continues to the app, like `NextResponse.next()`
+    const createNextResponse = (headerValues: Record<string, string> = {}) =>
+      createResponse({ headerValues: { 'x-middleware-next': '1', ...headerValues } });
+    const stubRewrite = (res: NextResponse) =>
+      sandbox.stub(nextjs.NextResponse, 'rewrite').callsFake(() => res);
+    const rewritePath = (res: NextResponse) => res.headers.get('x-sc-rewrite');
+    const forwardedHeaders = (res: NextResponse) =>
+      (res as any).forwardedRequestHeaders as Headers | undefined;
+    const withTokens = (tokens: Record<string, string | number>, variantId = 'variant-2') =>
+      sandbox.stub().resolves({ variantId, tokens });
+
+    it('returns the response unchanged on skip paths when there is no inbound tokens header', async () => {
+      const req = createRequest();
+      const res = createNextResponse();
+      const { proxy } = createProxy({ config: tokenConfig, personalizeInfo: null });
+
+      const finalRes = await proxy.handle(req, res);
+
+      expect(finalRes).to.equal(res);
+      expect((nextjs.NextResponse.next as sinon.SinonStub).called).to.be.false;
+    });
+
+    it('strips an inbound tokens header on every path', async () => {
+      const cases: Array<{ name: string; req?: any; proxy?: any }> = [
+        { name: 'globally disabled', proxy: { config: { ...tokenConfig, enabled: false } } },
+        { name: 'skip predicate', proxy: { config: { ...tokenConfig, skip: () => true } } },
+        { name: 'preview', req: { cookieValues: { __prerender_bypass: true } } },
+        { name: 'bot', req: { cookieValues: { [BOT_DETECTION_COOKIE]: '1' } } },
+        { name: 'missing personalize info', proxy: { personalizeInfo: null } },
+        { name: 'prefetch', req: { headerValues: { purpose: 'prefetch' } } },
+        { name: 'no variant and no tokens', proxy: { variantId: undefined } },
+        { name: 'variant without tokens', proxy: { variantId: 'variant-2' } },
+      ];
+
+      for (const testCase of cases) {
+        const req = createRequest({
+          headerValues: {
+            [PERSONALIZE_TOKENS_HEADER]: 'forged',
+            ...(testCase.req?.headerValues || {}),
+          },
+          cookieValues: testCase.req?.cookieValues,
+        });
+        const res = createNextResponse();
+        const rewrite = stubRewrite(res);
+        const { proxy } = createProxy({ config: tokenConfig, ...testCase.proxy });
+
+        const finalRes = await proxy.handle(req, res);
+
+        rewrite.restore();
+        const forwarded = forwardedHeaders(finalRes);
+        expect(forwarded, testCase.name).to.not.be.undefined;
+        expect(forwarded?.get(PERSONALIZE_TOKENS_HEADER), testCase.name).to.equal(null);
+        expect(forwarded?.get('host'), testCase.name).to.equal(hostname);
+        expect(req.headers.has(PERSONALIZE_TOKENS_HEADER), testCase.name).to.be.false;
+      }
+    });
+
+    it('returns responses that do not continue to the app unchanged', async () => {
+      const req = createRequest({ headerValues: { [PERSONALIZE_TOKENS_HEADER]: 'forged' } });
+      const res = createResponse({ status: 401 });
+      const { proxy } = createProxy({ config: { ...tokenConfig, enabled: false } });
+
+      const finalRes = await proxy.handle(req, res);
+
+      expect(finalRes).to.equal(res);
+      expect((nextjs.NextResponse.next as sinon.SinonStub).called).to.be.false;
+    });
+
+    it('serves the default page when an execution fails', async () => {
+      const req = createRequest();
+      const res = createNextResponse();
+      const rewrite = stubRewrite(res);
+      const { proxy } = createProxy({
+        config: tokenConfig,
+        personalizeInfo: { pageId, variantIds: ['variant-2', 'c1_a'] },
+        personalizeStub: sandbox
+          .stub()
+          .onFirstCall()
+          .resolves({ variantId: 'variant-2', tokens: { a: 'b' } })
+          .onSecondCall()
+          .rejects(new Error('cdp down')),
+      });
+      const logStub = sandbox.stub(console, 'log');
+
+      const finalRes = await proxy.handle(req, res);
+
+      logStub.restore();
+      expect(finalRes).to.equal(res);
+      expect(rewrite.called).to.be.false;
+    });
+
+    it('rewrites to the Pages Router tokens route and forwards the tokens', async () => {
+      const req = createRequest({ headerValues: { [PERSONALIZE_TOKENS_HEADER]: 'forged' } });
+      const res = createNextResponse({ 'x-sc-rewrite': '/_site_nextjs-app/styleguide' });
+      stubRewrite(res);
+      const { proxy } = createProxy({
+        config: tokenConfig,
+        personalizeStub: withTokens({ firstName: 'Łukasz', visits: 3 }),
+      });
+
+      await proxy.handle(req, res);
+
+      expect(rewritePath(res)).to.equal(
+        '/_sctokens/_site_nextjs-app/styleguide/_variantId_variant-2'
+      );
+      expect({ ...getPersonalizeTokens(forwardedHeaders(res)) }).to.deep.equal({
+        firstName: 'Łukasz',
+        visits: '3',
+      });
+      expect(res.headers.get('Cache-Control')).to.equal('private, no-store');
+    });
+
+    it('rewrites to the App Router tokens route after the site and locale', async () => {
+      const req = createRequest();
+      const res = createNextResponse({
+        'x-sc-locale': 'en',
+        'x-sc-rewrite': '/site1/en/styleguide',
+      });
+      stubRewrite(res);
+      const { proxy } = createProxy({
+        config: tokenConfig,
+        personalizeStub: withTokens({ a: 'b' }),
+      });
+
+      await proxy.handle(req, res);
+
+      expect(rewritePath(res)).to.equal('/site1/en/_sctokens/styleguide/_variantId_variant-2');
+    });
+
+    it('rewrites root paths to the tokens route, with tokens from the default branch', async () => {
+      const cases = [
+        { headers: { 'x-sc-rewrite': '/' }, expected: '/_sctokens' },
+        {
+          headers: { 'x-sc-locale': 'en', 'x-sc-rewrite': '/site1/en' },
+          expected: '/site1/en/_sctokens',
+        },
+      ];
+      for (const testCase of cases) {
+        const req = createRequest();
+        const res = createNextResponse(testCase.headers);
+        const rewrite = stubRewrite(res);
+        const { proxy } = createProxy({
+          config: tokenConfig,
+          personalizeStub: sandbox.stub().resolves({ tokens: { a: 'b' } }),
+        });
+
+        await proxy.handle(req, res);
+
+        rewrite.restore();
+        expect(rewritePath(res)).to.equal(testCase.expected);
+      }
+    });
+
+    it('keeps request headers set and removed by earlier proxies', async () => {
+      const req = createRequest({
+        headerValues: { 'x-user-id': 'admin', [PERSONALIZE_TOKENS_HEADER]: 'forged' },
+      });
+      // As written by NextResponse.next({ request: { headers } }) in an earlier proxy that deleted x-user-id
+      const res = createNextResponse({
+        'x-middleware-override-headers': `host,x-custom,${PERSONALIZE_TOKENS_HEADER}`,
+        'x-middleware-request-host': hostname,
+        'x-middleware-request-x-custom': 'from-earlier-proxy',
+        'x-middleware-request-x-user-id': 'stale',
+        [`x-middleware-request-${PERSONALIZE_TOKENS_HEADER}`]: 'forged',
+      });
+      stubRewrite(res);
+      const { proxy } = createProxy({
+        config: tokenConfig,
+        personalizeStub: withTokens({ a: 'b' }),
+      });
+
+      await proxy.handle(req, res);
+
+      const forwarded = forwardedHeaders(res);
+      expect(forwarded?.get('x-custom')).to.equal('from-earlier-proxy');
+      expect(forwarded?.get('host')).to.equal(hostname);
+      expect(forwarded?.get('x-user-id')).to.equal(null);
+      expect(forwarded?.get('referer')).to.equal(null);
+      expect(getPersonalizeTokens(forwarded)).to.deep.equal({ a: 'b' });
+    });
+
+    it('ignores tokens when dynamicContent is off', async () => {
+      const req = createRequest();
+      const res = createNextResponse();
+      stubRewrite(res);
+      const { proxy } = createProxy({
+        config: defaultConfig,
+        personalizeStub: withTokens({ firstName: 'Ada' }),
+      });
+
+      await proxy.handle(req, res);
+
+      expect(rewritePath(res)).to.equal('/styleguide/_variantId_variant-2');
+      expect(forwardedHeaders(res)).to.be.undefined;
+      expect(res.headers.get('Cache-Control')).to.not.equal('private, no-store');
     });
   });
 });

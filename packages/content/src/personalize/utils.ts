@@ -2,6 +2,12 @@
 export const DEFAULT_VARIANT = '_default';
 /** @internal */
 export const VARIANT_PREFIX = '_variantId_';
+/**
+ * Rewrite path segment of the app route that renders requests carrying dynamic content tokens
+ * per request. The personalize proxy adds it when Personalize returned tokens.
+ * @internal
+ */
+export const TOKENS_REWRITE_SEGMENT = '_sctokens';
 
 /** @public */
 export type PersonalizedRewriteData = {
@@ -74,11 +80,13 @@ export function getGroomedVariantIds(variantIds: string[]) {
  * @public
  */
 export function normalizePersonalizedRewrite(pathname: string): string {
-  if (!pathname.includes(VARIANT_PREFIX)) {
+  if (!pathname.includes(VARIANT_PREFIX) && !pathname.includes(TOKENS_REWRITE_SEGMENT)) {
     return pathname;
   }
   let segments = pathname.split('/');
-  segments = segments.filter((segment) => !segment.includes(VARIANT_PREFIX));
+  segments = segments.filter(
+    (segment) => !segment.includes(VARIANT_PREFIX) && segment !== TOKENS_REWRITE_SEGMENT
+  );
   const result = segments.join('/');
   // return root path if all segments were personalize data
   return result ? result : '/';

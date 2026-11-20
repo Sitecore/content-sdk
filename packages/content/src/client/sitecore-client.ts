@@ -27,12 +27,16 @@ import {
 import { HTMLLink, StaticPath } from '../models';
 import { PersonalizedRewriteData } from '../personalize/utils';
 import { personalizeLayout } from '../personalize/layout-personalizer';
+import { normalizeTokens, TokenMap } from '../personalize/token-map';
+import { replaceTokens } from '../personalize/token-replace';
+import { transformLayoutStrings } from '../layout/layout-walker';
 import { ErrorPages, ErrorPagesService, SitePathService, SitemapXmlService } from '../site';
 import { SitecoreClientInit } from './models';
 import { createGraphQLClientFactory, GraphQLClientOptions } from './utils';
 import { RobotsService } from '../site/robots-service';
 import { LlmsTxtService } from '../site/llms-txt-service';
 import { DesignLibraryVariantGeneration } from '../editing/models';
+import contentDebug from '../debug';
 import {
   DesignLibraryRenderPreviewData,
   EditingPreviewData,
@@ -123,6 +127,11 @@ export type Page = {
  */
 export type PageOptions = Partial<RouteOptions> & {
   personalize?: PersonalizedRewriteData;
+  /**
+   * Dynamic content token values for this request, as forwarded by the personalize proxy / middleware.
+   * Used only when `personalize.dynamicContent` is enabled; when omitted, tokens render their fallbacks.
+   */
+  tokens?: TokenMap;
 };
 
 /**
@@ -393,7 +402,7 @@ export class SitecoreClient implements BaseSitecoreClient {
       return null;
     }
     // Apply personalization first to select the variant(s) that will be used,
-    // then rewrite content URLs so we only process the selected variant(s)
+    // then resolve tokens and rewrite content URLs so we only process the selected variant(s)
     if (pageOptions?.personalize?.variantId) {
       personalizeLayout(
         layout,
@@ -401,7 +410,7 @@ export class SitecoreClient implements BaseSitecoreClient {
         pageOptions.personalize.componentVariantIds
       );
     }
-    layout = this.rewriteContentUrls(layout);
+    layout = this.applyPageTransforms(layout, pageOptions?.tokens);
 
     return {
       layout,
@@ -805,6 +814,30 @@ export class SitecoreClient implements BaseSitecoreClient {
     const experienceEdgeUrl = resolveExperienceEdgeUrl();
     const transformer = opt === true ? getDefaultMediaUrlTransformer(experienceEdgeUrl) : opt;
     return applyMediaUrlRewrite(data, transformer);
+  }
+
+  /**
+   * Resolves dynamic content tokens in the route when `personalize.dynamicContent` is enabled
+   * (fallbacks render when `tokens` is omitted), then rewrites content URLs.
+   * Tokens are never resolved in `sitecore.context`.
+   * @param {LayoutServiceData} layout - Personalized layout data
+   * @param {TokenMap} [tokens] - Token values for this request
+   * @returns {LayoutServiceData} Processed layout
+   */
+  private applyPageTransforms(layout: LayoutServiceData, tokens?: TokenMap): LayoutServiceData {
+    const route = layout.sitecore.route;
+    if (this.initOptions.personalize?.dynamicContent && route) {
+      const map = normalizeTokens(tokens);
+      const resolved = transformLayoutStrings(route, (value, key) =>
+        replaceTokens(value, map, key)
+      );
+      if (resolved !== route) {
+        layout = { ...layout, sitecore: { ...layout.sitecore, route: resolved } };
+      }
+    } else if (tokens) {
+      contentDebug.personalize('dynamic content tokens ignored: personalize.dynamicContent is off');
+    }
+    return this.rewriteContentUrls(layout);
   }
 
   private getPageMode(mode: PageModeName, generation?: DesignLibraryVariantGeneration): PageMode {

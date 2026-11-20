@@ -296,6 +296,13 @@ describe('ProxyBase', () => {
       foo: 'net',
       bar: 'one',
     });
+
+    // Tokens carry visitor data, including Next.js `x-middleware-request-*` copies on responses
+    headers.set('x-sc-personalize-tokens', 'secret');
+    headers.set('x-middleware-request-x-sc-personalize-tokens', 'secret');
+    const debugHeaders = proxy['extractDebugHeaders'](headers);
+    expect(debugHeaders['x-sc-personalize-tokens']).to.equal('[redacted]');
+    expect(debugHeaders['x-middleware-request-x-sc-personalize-tokens']).to.equal('[redacted]');
   });
 
   describe('getHostHeader', () => {

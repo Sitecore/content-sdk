@@ -85,6 +85,7 @@ import { getGroomedVariantIds } from '@sitecore-content-sdk/content/personalize'
 import { getJsonLdSchemas } from '@sitecore-content-sdk/content/layout';
 import { getPersonalizedRewrite } from '@sitecore-content-sdk/content/personalize';
 import { getPersonalizedRewriteData } from '@sitecore-content-sdk/content/personalize';
+import { getPersonalizeTokens } from '@sitecore-content-sdk/content/personalize';
 import { GetServerSidePropsContext } from 'next';
 import { getSiteRewrite } from '@sitecore-content-sdk/content/site';
 import { getSiteRewriteData } from '@sitecore-content-sdk/content/site';
@@ -158,6 +159,7 @@ import { PersonalizeInfo } from '@sitecore-content-sdk/content/personalize';
 import { personalizeLayout } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeService } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeServiceConfig } from '@sitecore-content-sdk/content/personalize';
+import { PersonalizeTokensHeaders } from '@sitecore-content-sdk/content/personalize';
 import { PlaceholderComponentProps } from '@sitecore-content-sdk/react';
 import { PlaceholderData } from '@sitecore-content-sdk/content/layout';
 import { PlaceholdersData } from '@sitecore-content-sdk/content/layout';
@@ -206,6 +208,7 @@ import { SiteResolver } from '@sitecore-content-sdk/content/site';
 import { StaticPath } from '@sitecore-content-sdk/content';
 import { Text as Text_2 } from '@sitecore-content-sdk/react';
 import { TextField } from '@sitecore-content-sdk/react';
+import { TokenMap } from '@sitecore-content-sdk/content/personalize';
 import { useSitecore } from '@sitecore-content-sdk/react';
 import { withAppPlaceholder } from '@sitecore-content-sdk/react';
 import { withDatasourceCheck } from '@sitecore-content-sdk/react';
@@ -671,6 +674,8 @@ export { getPersonalizedRewrite }
 
 export { getPersonalizedRewriteData }
 
+export { getPersonalizeTokens }
+
 // @internal
 export const getQueryParamsForPropagation: (query: Partial<{
     [key: string]: string | string[];
@@ -927,6 +932,7 @@ export class PersonalizeProxy extends ProxyBase {
         geo?: PersonalizeGeoData;
     }): Promise<{
         variantId: string;
+        tokens?: Record<string, string | number>;
     }>;
     // (undocumented)
     protected personalizeService: PersonalizeService | null;
@@ -941,7 +947,7 @@ export interface PersonalizeProxyAdapter extends Required<PersonalizeAdapter> {
 export function personalizeProxyAdapter(request: NextRequest, response: NextResponse): PersonalizeProxyAdapter;
 
 // @public
-export type PersonalizeProxyConfig = ProxyBaseConfig & SitecoreConfig['api']['edge'] & SitecoreConfig['personalize'] & {
+export type PersonalizeProxyConfig = ProxyBaseConfig & SitecoreConfig['api']['edge'] & Omit<SitecoreConfig['personalize'], 'dynamicContent'> & Partial<Pick<SitecoreConfig['personalize'], 'dynamicContent'>> & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
     extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
@@ -951,6 +957,8 @@ export type PersonalizeProxyConfig = ProxyBaseConfig & SitecoreConfig['api']['ed
 export { PersonalizeService }
 
 export { PersonalizeServiceConfig }
+
+export { PersonalizeTokensHeaders }
 
 // Warning: (ae-forgotten-export) The symbol "PlaceholderProps" needs to be exported by the entry point api-surface.d.ts
 //
@@ -1266,6 +1274,8 @@ export interface SuccessfulRedirectsProxyExecution extends SuccessfulProxyExecut
 export { Text_2 as Text }
 
 export { TextField }
+
+export { TokenMap }
 
 // @public
 export function useComponentProps<ComponentData>(componentUid: string | undefined): ComponentData | undefined;

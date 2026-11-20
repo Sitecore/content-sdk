@@ -67,6 +67,7 @@ export const buildFallbackConfig = (env: { [key: string]: string | undefined }):
         '',
       channel: 'WEB',
       currency: 'USD',
+      dynamicContent: false,
     },
     defaultSite:
       env.SITECORE_DEFAULT_SITE ||

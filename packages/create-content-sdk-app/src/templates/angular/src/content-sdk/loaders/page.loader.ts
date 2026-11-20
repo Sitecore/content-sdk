@@ -7,6 +7,7 @@ import {
   getVariantId,
   getComponentVariantIds,
   getLanguage,
+  getPersonalizeTokens,
   splitLocaleFromPath,
 } from '@sitecore-content-sdk/angular';
 import scConfig from '../../../sitecore.config';
@@ -34,6 +35,8 @@ export const pageLoader: LoaderFn<Page> = async (context) => {
         variantId: getVariantId(context),
         componentVariantIds: getComponentVariantIds(context),
       },
+      // Dynamic content tokens forwarded by the personalize middleware
+      tokens: getPersonalizeTokens(context),
     });
   }
 

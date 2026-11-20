@@ -114,9 +114,11 @@ export const config = {
    * 4. /- (Sitecore media)
    * 5. /healthz (Health check)
    * 6. static files inside /public (images, fonts, css, js, etc.)
+   * Dynamic content token routes always run the proxy, so a tokens header sent by a client is removed.
    */
   matcher: [
     '/',
     '/((?!api/|sitemap|robots|_next/|healthz|sitecore/api/|-/|.*[.](?:svg|png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf|eot|css|js|map|webmanifest)$).*)',
+    '/:site/:locale/_sctokens/:path*',
   ],
 };

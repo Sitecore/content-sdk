@@ -83,6 +83,7 @@ export class SitecoreNextjsClient extends SitecoreClient {
         locale: pageOptions.locale,
         site,
         personalize: personalizeData,
+        tokens: pageOptions.tokens,
       },
       options
     );

@@ -10,6 +10,7 @@ This is a **Sitecore Content SDK** application built with **Next.js (Pages Route
 src/
   pages/             # Next.js Pages Router
     [[...path]].tsx  # Catch-all Sitecore page (SSG or SSR)
+    _sctokens/[[...path]].tsx  # Same page, rendered per request for dynamic content tokens
     _app.tsx
     404.tsx, 500.tsx, _error.tsx
     api/             # API routes (sitemap, robots, editing, healthz)

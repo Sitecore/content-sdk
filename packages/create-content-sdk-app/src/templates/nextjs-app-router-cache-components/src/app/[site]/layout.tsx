@@ -2,21 +2,25 @@ import { draftMode } from 'next/headers';
 import { Suspense } from 'react';
 import Bootstrap from 'src/Bootstrap';
 
-export default async function SiteLayout({
-  children,
-  params,
-}: {
+type SiteLayoutProps = {
   children: React.ReactNode;
   params: Promise<{ site: string }>;
-}) {
-  const { site } = await params;
+};
 
+export default function SiteLayout({ children, params }: SiteLayoutProps) {
   return (
     <>
+      {/* Params are read inside Suspense so routes that are not prebuilt (such as the
+          dynamic content tokens route) can render at request time */}
       <Suspense fallback={null}>
-        <Bootstrap siteName={site} isPreviewMode={(await draftMode()).isEnabled} />
+        <SiteBootstrap params={params} />
       </Suspense>
       {children}
     </>
   );
+}
+
+async function SiteBootstrap({ params }: Pick<SiteLayoutProps, 'params'>) {
+  const { site } = await params;
+  return <Bootstrap siteName={site} isPreviewMode={(await draftMode()).isEnabled} />;
 }
