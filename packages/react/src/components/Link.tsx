@@ -40,12 +40,12 @@ const LinkComponent: React.FC<LinkProps> = ({
   showLinkTextWithChildrenPresent,
   renderChildrenWhenEmpty,
   ref,
+  href: hrefProp,
   ...otherProps
 }) => {
   const children = otherProps.children as React.ReactNode;
   const dynamicField: LinkField | LinkFieldValue = field;
   delete otherProps.editable; // prevent editable from being passed to the DOM
-  const { href: hrefProp, ...domProps } = otherProps;
 
   const isEmptyField = isFieldValueEmpty(dynamicField);
 
@@ -79,7 +79,7 @@ const LinkComponent: React.FC<LinkProps> = ({
 
     return (
       <a
-        {...domProps}
+        {...otherProps}
         {...(blockedHref || hrefProp === undefined ? {} : { href: hrefProp })}
         key="link"
         ref={ref}
@@ -110,7 +110,7 @@ const LinkComponent: React.FC<LinkProps> = ({
   const linkText = showLinkTextWithChildrenPresent || !children ? link.text || link.href : null;
 
   return (
-    <a {...anchorAttrs} {...domProps} key="link" ref={ref}>
+    <a {...anchorAttrs} {...otherProps} key="link" ref={ref}>
       {linkText}
       {children}
     </a>

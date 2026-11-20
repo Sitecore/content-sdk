@@ -55,6 +55,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
       internalLinkMatcher = /^\//g,
       showLinkTextWithChildrenPresent,
       renderChildrenWhenEmpty,
+      href: propHref,
       ...rest
     } = props;
 
@@ -65,7 +66,11 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
           delete cleanRest[prop as keyof typeof cleanRest];
         }
         return (
-          <a {...cleanRest} ref={ref}>
+          <a
+            {...cleanRest}
+            {...(propHref !== undefined && !isJavascriptUrl(propHref) ? { href: propHref } : {})}
+            ref={ref}
+          >
             {children}
           </a>
         );
@@ -80,9 +85,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
     const { href, querystring, anchor } = value || {};
 
     const isEditing = editable && (field as LinkFieldValue).metadata;
-    // An href prop is spread onto next/link after the field href and overrides it.
-    // Judge that final value, not only the field.
-    const propHref = typeof rest.href === 'string' ? rest.href : undefined;
+    // An href prop overrides the field value. Judge that final href.
     const effectiveHref = propHref ?? href;
 
     if (effectiveHref && !isEditing && !isJavascriptUrl(effectiveHref)) {
@@ -93,21 +96,18 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
 
       // determine if a link is a route or not. File extensions are not routes and should not be pre-fetched.
       if (isMatching && !isFileUrl) {
-        const linkProps = { ...rest };
-        delete linkProps.href;
-
         return (
           <NextLink
-            key="link"
-            title={value.title}
-            target={value.target}
-            className={value.class}
-            {...linkProps}
             href={
               propHref !== undefined
                 ? propHref
                 : { pathname: href, query: querystring, hash: anchor }
             }
+            key="link"
+            title={value.title}
+            target={value.target}
+            className={value.class}
+            {...rest}
             // locale prop is supported only in Pages Router
             locale={pageRouter ? false : undefined}
             ref={ref}
