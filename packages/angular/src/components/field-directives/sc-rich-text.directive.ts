@@ -11,10 +11,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { TextField } from '@sitecore-content-sdk/content/layout';
-import {
-  getOmittedJavascriptUrlMessage,
-  omitJavascriptUrls,
-} from '@sitecore-content-sdk/core/tools';
+import { omitJavascriptUrls } from '@sitecore-content-sdk/core/tools';
 import { BaseFieldDirective } from './base-field.directive';
 import { DefaultEmptyFieldEditingComponent } from '../default-empty-text-field.component';
 import { EXTERNAL_HREF_PREFIXES } from './utils';
@@ -92,7 +89,7 @@ export class ScRichTextDirective extends BaseFieldDirective<TextField | undefine
     // Remove javascript: URLs so the link keeps its text without an href, instead of
     // the "unsafe:" href DomSanitizer would leave behind.
     const { html: raw, omittedUrls } = omitJavascriptUrls((field.value as string) ?? '');
-    omittedUrls.forEach((url) => console.error(getOmittedJavascriptUrlMessage(url)));
+    this.logOmittedUrls(omittedUrls);
     const trusted = this.sanitizer.bypassSecurityTrustHtml(raw);
     const html = this.sanitizer.sanitize(SecurityContext.HTML, trusted) ?? '';
     for (const node of this.viewRef.rootNodes) {

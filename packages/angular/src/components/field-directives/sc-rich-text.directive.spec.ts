@@ -116,6 +116,19 @@ describe('ScRichTextDirective', () => {
 
       expect(errorSpy).toHaveBeenCalledOnce();
     });
+
+    it('logs again only when the removed URLs change', () => {
+      const fixture = createFixture();
+      fixture.componentRef.setInput('field', { value: '<a href="javascript:void(0)">x</a>' });
+      fixture.detectChanges();
+      fixture.componentRef.setInput('field', { value: '<a href="javascript:void(0)">x</a>' });
+      fixture.detectChanges();
+      expect(errorSpy).toHaveBeenCalledOnce();
+
+      fixture.componentRef.setInput('field', { value: '<a href="javascript:alert(2)">x</a>' });
+      fixture.detectChanges();
+      expect(errorSpy).toHaveBeenCalledTimes(2);
+    });
   });
 
   it('routes internal links to the latest href after multiple field updates', async () => {

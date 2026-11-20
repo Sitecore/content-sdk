@@ -1,9 +1,6 @@
 import { Directive, TemplateRef, Type, input } from '@angular/core';
 import { TextField } from '@sitecore-content-sdk/content/layout';
-import {
-  getOmittedJavascriptUrlMessage,
-  omitJavascriptUrls,
-} from '@sitecore-content-sdk/core/tools';
+import { omitJavascriptUrls } from '@sitecore-content-sdk/core/tools';
 import { BaseFieldDirective } from './base-field.directive';
 import { DefaultEmptyFieldEditingComponent } from '../default-empty-text-field.component';
 import { MetadataKind } from '@sitecore-content-sdk/content/editing';
@@ -68,11 +65,11 @@ export class ScTextDirective extends BaseFieldDirective<TextField | undefined> {
     const encode = this.encode();
     // Renderer2 does not sanitize innerHTML, so javascript: URLs are removed here.
     let html = value;
+    let omittedUrls: string[] = [];
     if (!encode) {
-      const result = omitJavascriptUrls(value);
-      html = result.html;
-      result.omittedUrls.forEach((url) => console.error(getOmittedJavascriptUrlMessage(url)));
+      ({ html, omittedUrls } = omitJavascriptUrls(value));
     }
+    this.logOmittedUrls(omittedUrls);
     for (const node of this.viewRef.rootNodes) {
       if (!(node instanceof Element)) continue;
       if (encode) {
