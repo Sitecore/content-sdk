@@ -1,5 +1,15 @@
 # @sitecore-content-sdk/search
 
+## 0.6.0
+
+### Minor Changes
+
+- Add the optional `max` property to `FacetField` to limit the number of values returned for a facet. Valid values are integers from 1 through 100; when omitted, the Search Runtime default of 10 is used. The value is sent as `facet.fields[].max` in the `SearchService.search()` request. ([6bf9292](https://github.com/sitecore/content-sdk/commit/6bf9292fdd107f1fb78908370ca4f0fc56a384ff))
+- minor `@sitecore-content-sdk/core` dependency update:
+  - Add package capability exports and build-time capability discovery. Generated application metadata
+    now includes the capabilities supported and used by the application, and editing configuration
+    endpoints expose the resolved capability keys. ([e2bacaf](https://github.com/sitecore/content-sdk/commit/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad))
+
 ## 0.5.0
 
 ### Minor Changes

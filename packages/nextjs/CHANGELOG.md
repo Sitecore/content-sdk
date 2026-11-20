@@ -1,5 +1,25 @@
 # @sitecore-content-sdk/nextjs
 
+## 3.0.0
+
+### Minor Changes
+
+- Add package capability exports and build-time capability discovery. Generated application metadata ([e2bacaf](https://github.com/sitecore/content-sdk/commit/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad))
+  now includes the capabilities supported and used by the application, and editing configuration
+  endpoints expose the resolved capability keys.
+- Support FEaaS components when Next.js Cache Components is enabled. Set `componentMap.cacheComponents: true` in `sitecore.cli.config.ts` and `generate-map` registers `FEaaSCacheComponentsServerWrapper`, which renders FEaaS at request time behind Suspense while the rest of the page stays cached. The Cache Components template sets this flag. Existing Cache Components apps should add it on upgrade. The built-in `FEaaSServerWrapper` is unchanged. ([d7a3c5a](https://github.com/sitecore/content-sdk/commit/d7a3c5aad0610817ec39a8d7adbdbdc09d785aad))
+- minor `@sitecore-content-sdk/core` dependency update:
+  - Add package capability exports and build-time capability discovery. Generated application metadata
+    now includes the capabilities supported and used by the application, and editing configuration
+    endpoints expose the resolved capability keys. ([e2bacaf](https://github.com/sitecore/content-sdk/commit/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad))
+- minor `@sitecore-content-sdk/search` dependency update:
+  - Add the optional `max` property to `FacetField` to limit the number of values returned for a facet. Valid values are integers from 1 through 100; when omitted, the Search Runtime default of 10 is used. The value is sent as `facet.fields[].max` in the `SearchService.search()` request. ([6bf9292](https://github.com/sitecore/content-sdk/commit/6bf9292fdd107f1fb78908370ca4f0fc56a384ff))
+
+### Patch Changes
+
+- Design Library variant generation: server actions no longer accept generated component code or the Sitecore Edge URL from the client. The code is always fetched on the server from Sitecore Edge. ([17c91dd](https://github.com/sitecore/content-sdk/commit/17c91dd6a59e449fbba2c70048fe1b4ce6a5fb72))
+- Omit `javascript:` hrefs from `Link`. The link text still renders, a blocked URL is logged when that link is shown, and Pages editing chromes stay in place. React 19 blocks these URLs, so the component no longer passes them through to the anchor. ([51a9829](https://github.com/sitecore/content-sdk/commit/51a9829bf867488124b20691dcc78e44f942c3db))
+
 ## 2.5.1
 
 ### Patch Changes
