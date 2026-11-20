@@ -1,8 +1,4 @@
-import {
-  DesignLibraryPreviewError,
-  GeneratedComponentData,
-  ImportEntryInfo,
-} from '@sitecore-content-sdk/content/codegen';
+import { DesignLibraryPreviewError, ImportEntryInfo } from '@sitecore-content-sdk/content/codegen';
 import { ComponentRendering, RouteData } from '@sitecore-content-sdk/content/layout';
 import { DesignLibraryStatus } from '@sitecore-content-sdk/content/editing';
 import { Page } from '@sitecore-content-sdk/content/client';
@@ -58,9 +54,9 @@ export type DesignLibraryVariantGenerationEventsProps = DesignLibraryPreviewEven
    */
   componentInitError?: ServerComponentInitError;
   /**
-   * The generated component data received from design library.
+   * The CSS styles of the generated component (variant generation mode) to be added to the document head.
    */
-  generatedComponentData?: GeneratedComponentData;
+  generatedStyles?: string;
 };
 
 export type ServerComponentInitError = {
