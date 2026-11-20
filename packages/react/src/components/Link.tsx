@@ -1,11 +1,12 @@
 'use client';
-import React, { RefAttributes } from 'react';
+import React, { RefAttributes, useEffect } from 'react';
 import {
   FieldMetadata,
   isFieldValueEmpty,
   type LinkField,
   type LinkFieldValue,
 } from '@sitecore-content-sdk/content/layout';
+import { isJavascriptUrl } from '@sitecore-content-sdk/core/tools';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
@@ -39,23 +40,12 @@ const LinkComponent: React.FC<LinkProps> = ({
   showLinkTextWithChildrenPresent,
   renderChildrenWhenEmpty,
   ref,
+  href: hrefProp,
   ...otherProps
 }) => {
   const children = otherProps.children as React.ReactNode;
   const dynamicField: LinkField | LinkFieldValue = field;
   delete otherProps.editable; // prevent editable from being passed to the DOM
-
-  const renderEmptyLink = () => {
-    if (!renderChildrenWhenEmpty || !children) {
-      return null;
-    }
-
-    return (
-      <a {...otherProps} key="link" ref={ref}>
-        {children}
-      </a>
-    );
-  };
 
   const isEmptyField = isFieldValueEmpty(dynamicField);
 
@@ -66,15 +56,47 @@ const LinkComponent: React.FC<LinkProps> = ({
       : (dynamicField as LinkField).value
     : undefined;
 
+  const anchor = link && link.linktype !== 'anchor' && link.anchor ? `#${link.anchor}` : '';
+  const querystring = link?.querystring ? `?${link.querystring}` : '';
+  const fieldHref = link ? `${link.href}${querystring}${anchor}` : undefined;
+  // An href prop overrides the field value. Judge that final href.
+  const resolvedHref = hrefProp ?? fieldHref;
+  const blockedHref =
+    typeof resolvedHref === 'string' && isJavascriptUrl(resolvedHref) ? resolvedHref : undefined;
+
+  useEffect(() => {
+    if (blockedHref) {
+      console.error(
+        `Link blocked a javascript: URL ("${blockedHref}"). The link text is rendered without an href.`
+      );
+    }
+  }, [blockedHref]);
+
+  const renderEmptyLink = () => {
+    if (!renderChildrenWhenEmpty || !children) {
+      return null;
+    }
+
+    return (
+      <a
+        {...otherProps}
+        {...(blockedHref || hrefProp === undefined ? {} : { href: hrefProp })}
+        key="link"
+        ref={ref}
+      >
+        {children}
+      </a>
+    );
+  };
+
   if (isEmptyField || !link) {
     return renderEmptyLink();
   }
 
-  const anchor = link.linktype !== 'anchor' && link.anchor ? `#${link.anchor}` : '';
-  const querystring = link.querystring ? `?${link.querystring}` : '';
-
+  // React blocks javascript: hrefs. Keep the anchor and its text so the content
+  // and Pages editing chrome stay in place, and omit the href.
   const anchorAttrs: { [attr: string]: unknown } = {
-    href: `${link.href}${querystring}${anchor}`,
+    ...(blockedHref ? {} : { href: resolvedHref }),
     className: link.class,
     title: link.title,
     target: link.target,
