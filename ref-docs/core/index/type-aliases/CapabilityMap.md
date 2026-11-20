@@ -8,7 +8,7 @@
 
 > **CapabilityMap**\<`T`\> = `Record`\<`string`, `T`\>
 
-Defined in: [packages/core/src/capabilities.ts:52](https://github.com/Sitecore/content-sdk/blob/17c91dd6a59e449fbba2c70048fe1b4ce6a5fb72/packages/core/src/capabilities.ts#L52)
+Defined in: [packages/core/src/capabilities.ts:52](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/core/src/capabilities.ts#L52)
 
 A named map of capabilities.
 

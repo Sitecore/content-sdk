@@ -8,7 +8,7 @@
 
 > **ResolvedCapability** = `boolean` \| \{\[`key`: `string`\]: [`CapabilityMetadata`](CapabilityMetadata.md) \| `ResolvedCapability` \| `undefined`; `metadata?`: [`CapabilityMetadata`](CapabilityMetadata.md); \}
 
-Defined in: [packages/core/src/capabilities.ts:108](https://github.com/Sitecore/content-sdk/blob/17c91dd6a59e449fbba2c70048fe1b4ce6a5fb72/packages/core/src/capabilities.ts#L108)
+Defined in: [packages/core/src/capabilities.ts:108](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/core/src/capabilities.ts#L108)
 
 A resolved capability written to application metadata.
 Sub-capabilities are nested directly alongside the reserved `metadata` property.

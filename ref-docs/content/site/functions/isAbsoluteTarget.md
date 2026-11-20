@@ -8,7 +8,7 @@
 
 > **isAbsoluteTarget**(`target`): `boolean`
 
-Defined in: [content/src/site/redirect-utils.ts:194](https://github.com/Sitecore/content-sdk/blob/17c91dd6a59e449fbba2c70048fe1b4ce6a5fb72/packages/content/src/site/redirect-utils.ts#L194)
+Defined in: [content/src/site/redirect-utils.ts:194](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/content/src/site/redirect-utils.ts#L194)
 
 **`Internal`**
 

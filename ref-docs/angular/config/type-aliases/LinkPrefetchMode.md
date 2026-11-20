@@ -8,7 +8,7 @@
 
 > **LinkPrefetchMode** = `"eager"` \| `"hover"` \| `"off"`
 
-Defined in: [packages/angular/src/config/define-config.ts:13](https://github.com/Sitecore/content-sdk/blob/17c91dd6a59e449fbba2c70048fe1b4ce6a5fb72/packages/angular/src/config/define-config.ts#L13)
+Defined in: [packages/angular/src/config/define-config.ts:13](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/angular/src/config/define-config.ts#L13)
 
 Link-prefetch strategy for `scRouterLink`/`scRichText` links:
 - `'eager'` (default) — prefetch as soon as the link renders.

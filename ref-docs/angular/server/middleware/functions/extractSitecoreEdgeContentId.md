@@ -8,7 +8,7 @@
 
 > **extractSitecoreEdgeContentId**(`identifier`): `string`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:31](https://github.com/Sitecore/content-sdk/blob/17c91dd6a59e449fbba2c70048fe1b4ce6a5fb72/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L31)
+Defined in: [packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts:31](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/angular/src/server/middleware/sitecore-edge-webhook-revalidation.ts#L31)
 
 Strips Experience Edge style suffixes from an `identifier`.
 

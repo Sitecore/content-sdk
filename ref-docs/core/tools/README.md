@@ -25,6 +25,7 @@
 - [getCacheAndClean](functions/getCacheAndClean.md)
 - [getEnforcedCorsHeaders](functions/getEnforcedCorsHeaders.md)
 - [hasCache](functions/hasCache.md)
+- [isJavascriptUrl](functions/isJavascriptUrl.md)
 - [isRegexOrUrl](functions/isRegexOrUrl.md)
 - [isServer](functions/isServer.md)
 - [isTimeoutError](functions/isTimeoutError.md)

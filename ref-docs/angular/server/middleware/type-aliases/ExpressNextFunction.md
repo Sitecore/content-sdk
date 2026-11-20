@@ -8,7 +8,7 @@
 
 > **ExpressNextFunction** = (`error?`) => `void`
 
-Defined in: [packages/angular/src/server/middleware/models.ts:18](https://github.com/Sitecore/content-sdk/blob/17c91dd6a59e449fbba2c70048fe1b4ce6a5fb72/packages/angular/src/server/middleware/models.ts#L18)
+Defined in: [packages/angular/src/server/middleware/models.ts:18](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/angular/src/server/middleware/models.ts#L18)
 
 Express next function type
 
