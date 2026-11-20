@@ -298,6 +298,9 @@ export type GetMetadataConfig = {
     appInputs?: Record<string, unknown>;
 };
 
+// @internal
+export function getOmittedJavascriptUrlMessage(url: string): string;
+
 // @public
 export interface GraphQLClient {
     request<T>(query: string | DocumentNode, variables?: {
@@ -451,6 +454,15 @@ export interface NativeDataFetcherResponse<T> {
 
 // @public
 export const normalizeUrl: (url: string) => string;
+
+// @internal
+export function omitJavascriptUrls(html: string): OmitJavascriptUrlsResult;
+
+// @internal
+export type OmitJavascriptUrlsResult = {
+    html: string;
+    omittedUrls: string[];
+};
 
 // @public
 interface Plugin_2<Options = unknown, Adapter = unknown> {

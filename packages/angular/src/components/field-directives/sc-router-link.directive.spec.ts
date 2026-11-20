@@ -132,6 +132,36 @@ describe('ScRouterLinkDirective', () => {
     spy.mockRestore();
   });
 
+  it('should omit a javascript: href and not route or prefetch it', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    try {
+      const prefetchSpy = vi.fn();
+      const { fixture, router } = await createFixture([
+        { provide: ClientPreLoaderDataService, useValue: { prefetchForUrl: prefetchSpy } },
+      ]);
+      const spy = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+      prefetchSpy.mockClear();
+
+      fixture.componentRef.setInput('field', {
+        value: { href: 'javascript:alert(1)', text: 'Click', linktype: 'external' },
+      });
+      fixture.detectChanges();
+
+      const a = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
+      expect(a.hasAttribute('href')).toBe(false);
+      expect(a.textContent).toBe('Label');
+
+      a.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }));
+
+      expect(spy).not.toHaveBeenCalled();
+      expect(prefetchSpy).not.toHaveBeenCalled();
+      expect(errorSpy).toHaveBeenCalledOnce();
+      spy.mockRestore();
+    } finally {
+      errorSpy.mockRestore();
+    }
+  });
+
   it('should not call Router.navigateByUrl when href is empty so in-app routing is skipped', async () => {
     const { fixture, router } = await createFixture();
     const spy = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
@@ -176,7 +206,6 @@ describe('ScRouterLinkDirective', () => {
     'mailto:user@example.com',
     'tel:+15551234567',
     'sms:+15551234567',
-    'javascript:void(0)',
     'data:text/plain,hi',
     'ftp://files.example.com/',
     '//cdn.example.com/asset.js',

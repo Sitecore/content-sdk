@@ -14,6 +14,7 @@ import {
   type Field,
 } from '@sitecore-content-sdk/content/layout';
 import { MetadataKind } from '@sitecore-content-sdk/content/editing';
+import { getOmittedJavascriptUrlMessage } from '@sitecore-content-sdk/core/tools';
 import { SitecoreContextService } from '../../lib/sitecore-context.service';
 import { FieldMetadataMarkerComponent } from './metadata-chrome.component';
 
@@ -54,6 +55,8 @@ export abstract class BaseFieldDirective<TField> {
   /** Embedded view created by the latest successful render; cleared on each tick. */
   protected viewRef?: EmbeddedViewRef<unknown>;
 
+  private lastOmittedUrlsKey = '';
+
   /** Concrete subclass exposes the Sitecore field via an aliased signal input. */
   abstract readonly field: Signal<TField>;
   /** Consumer-supplied empty-field template; takes precedence over {@link defaultEmptyComponent}. */
@@ -93,6 +96,19 @@ export abstract class BaseFieldDirective<TField> {
   /** Whether the host page is in preview mode. Falls back to `false` when no context is provided. */
   protected isPreview(): boolean {
     return this.context?.isPreview() ?? false;
+  }
+
+  /**
+   * Logs javascript: URLs removed from field HTML once per directive instance, and again
+   * only when the removed URLs change.
+   * @param {string[]} omittedUrls - URLs removed from the rendered HTML.
+   */
+  protected logOmittedUrls(omittedUrls: string[]): void {
+    const key = omittedUrls.length ? JSON.stringify(omittedUrls) : '';
+    if (key && key !== this.lastOmittedUrlsKey) {
+      omittedUrls.forEach((url) => console.error(getOmittedJavascriptUrlMessage(url)));
+    }
+    this.lastOmittedUrlsKey = key;
   }
 
   /** Field metadata payload, when present. */

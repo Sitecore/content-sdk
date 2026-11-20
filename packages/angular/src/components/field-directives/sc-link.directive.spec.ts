@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { Component, input } from '@angular/core';
 import { ScLinkDirective } from './sc-link.directive';
 import type { LinkField } from '@sitecore-content-sdk/content/layout';
@@ -11,6 +11,10 @@ import {
   setMockContextPage,
   setMockContextUrlLocale,
 } from '../../testing/mock-sitecore-context';
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 function sortedClassTokens(el: HTMLElement): string[] {
   return (el.className || '').split(/\s+/).filter(Boolean).sort();
@@ -238,6 +242,75 @@ describe('ScLinkDirective editing mode', () => {
     expect(fixture.nativeElement.textContent).toContain('[No text in field]');
     expect(fixture.nativeElement.querySelector('a')).toBeNull();
   });
+
+  it('should keep chrome markers and render the text without an href for a javascript: link', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const fixture = createEditingFixture();
+    fixture.componentRef.setInput('field', {
+      value: { href: 'javascript:alert(1)', text: 'Click', title: 'My link' },
+      metadata: { contextItem: { id: 'x' }, fieldId: 'link' },
+    });
+    fixture.detectChanges();
+
+    const a = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
+    expect(fixture.nativeElement.querySelectorAll('code.scpm').length).toBe(2);
+    expect(a.hasAttribute('href')).toBe(false);
+    expect(a.textContent).toBe('Click');
+    expect(a.getAttribute('title')).toBe('My link');
+    expect(errorSpy).toHaveBeenCalledOnce();
+    errorSpy.mockRestore();
+  });
+});
+
+describe('ScLinkDirective javascript: URLs', () => {
+  function createFixture(): ComponentFixture<TestHostComponent> {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({ imports: [TestHostComponent] });
+    return TestBed.createComponent(TestHostComponent);
+  }
+
+  it('should render the text without an href, log once, and not log again on change detection', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const fixture = createFixture();
+    fixture.componentRef.setInput('field', { value: { href: 'javascript:alert(1)', text: 'Click' } });
+    fixture.detectChanges();
+    fixture.detectChanges();
+
+    const a = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
+    expect(a.hasAttribute('href')).toBe(false);
+    expect(a.textContent).toBe('Click');
+    expect(errorSpy).toHaveBeenCalledOnce();
+    expect(errorSpy.mock.calls[0][0]).toContain('javascript:alert(1)');
+    errorSpy.mockRestore();
+  });
+
+  it('should drop a previous safe href when the field changes to a javascript: URL', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const fixture = createFixture();
+    fixture.componentRef.setInput('field', { value: { href: '/about', text: 'About' } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('a')?.getAttribute('href')).toBe('/about');
+
+    fixture.componentRef.setInput('field', { value: { href: 'javascript:void(0)', text: 'About' } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('a')?.hasAttribute('href')).toBe(false);
+    errorSpy.mockRestore();
+  });
+
+  it('should not log again for a new field object with the same URL, but log a different URL', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const fixture = createFixture();
+    fixture.componentRef.setInput('field', { value: { href: 'javascript:alert(1)', text: 'A' } });
+    fixture.detectChanges();
+    fixture.componentRef.setInput('field', { value: { href: 'javascript:alert(1)', text: 'A' } });
+    fixture.detectChanges();
+    expect(errorSpy).toHaveBeenCalledOnce();
+
+    fixture.componentRef.setInput('field', { value: { href: 'javascript:alert(2)', text: 'A' } });
+    fixture.detectChanges();
+    expect(errorSpy).toHaveBeenCalledTimes(2);
+    expect(errorSpy.mock.calls[1][0]).toContain('javascript:alert(2)');
+  });
 });
 
 describe('ScLinkDirective locale-aware href', () => {
@@ -303,6 +376,14 @@ describe('ScLinkDirective locale-aware href', () => {
     expect(hrefFor({ value: { href: 'tel:+15551234567' } }, ['en', 'de'], 'en')).toBe(
       'tel:+15551234567'
     );
+  });
+
+  it('should not locale-prefix a javascript: href, and should omit it', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    expect(hrefFor({ value: { href: 'java\nscript:alert(1)' } }, ['en', 'de'], 'en')).toBe(null);
+    expect(hrefFor({ value: { href: 'JAVASCRIPT:alert(1)' } }, ['en', 'de'], 'en')).toBe(null);
+    expect(errorSpy).toHaveBeenCalledTimes(2);
+    errorSpy.mockRestore();
   });
 
   it('should leave a protocol-relative href untouched', () => {

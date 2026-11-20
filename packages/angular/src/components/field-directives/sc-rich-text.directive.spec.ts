@@ -52,6 +52,85 @@ describe('ScRichTextDirective', () => {
     expect(fixture.nativeElement.querySelector('div')).toBeNull();
   });
 
+  describe('javascript: URLs', () => {
+    let errorSpy: ReturnType<typeof vi.spyOn>;
+
+    beforeEach(() => {
+      errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    });
+
+    afterEach(() => {
+      errorSpy.mockRestore();
+    });
+
+    it('removes a javascript: href, keeps the link text, and logs it', () => {
+      const fixture = createFixture();
+      fixture.componentRef.setInput('field', {
+        value: '<p>Read <a class="x" href="javascript:alert(1)">this</a> and <a href="/ok">that</a></p>',
+      });
+      fixture.detectChanges();
+
+      const links = fixture.nativeElement.querySelectorAll('a') as NodeListOf<HTMLAnchorElement>;
+      expect(links[0].textContent).toBe('this');
+      expect(links[0].hasAttribute('href')).toBe(false);
+      expect(links[0].getAttribute('class')).toBe('x');
+      expect(links[1].getAttribute('href')).toBe('/ok');
+      expect(errorSpy).toHaveBeenCalledOnce();
+      expect(errorSpy.mock.calls[0][0]).toContain('javascript:alert(1)');
+    });
+
+    it('removes case, whitespace, and entity-encoded variants', () => {
+      const fixture = createFixture();
+      fixture.componentRef.setInput('field', {
+        value:
+          '<a href="JAVASCRIPT:void(0)">a</a><a href=" java\nscript:alert(1)">b</a><a href="&#106;avascript:alert(1)">c</a>',
+      });
+      fixture.detectChanges();
+
+      const links = Array.from(fixture.nativeElement.querySelectorAll('a')) as HTMLAnchorElement[];
+      expect(links.map((a) => a.textContent)).toEqual(['a', 'b', 'c']);
+      expect(links.every((a) => !a.hasAttribute('href'))).toBe(true);
+      expect(errorSpy).toHaveBeenCalledTimes(3);
+    });
+
+    it('does not route a removed javascript: link through the router on click', async () => {
+      const fixture = createFixture();
+      const router = TestBed.inject(Router);
+      await router.navigateByUrl('/');
+      const navSpy = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+
+      fixture.componentRef.setInput('field', { value: '<a href="javascript:alert(1)">x</a>' });
+      fixture.detectChanges();
+
+      const anchor = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
+      anchor.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+      expect(navSpy).not.toHaveBeenCalled();
+      navSpy.mockRestore();
+    });
+
+    it('does not log again when change detection runs without a field change', () => {
+      const fixture = createFixture();
+      fixture.componentRef.setInput('field', { value: '<a href="javascript:void(0)">x</a>' });
+      fixture.detectChanges();
+      fixture.detectChanges();
+
+      expect(errorSpy).toHaveBeenCalledOnce();
+    });
+
+    it('logs again only when the removed URLs change', () => {
+      const fixture = createFixture();
+      fixture.componentRef.setInput('field', { value: '<a href="javascript:void(0)">x</a>' });
+      fixture.detectChanges();
+      fixture.componentRef.setInput('field', { value: '<a href="javascript:void(0)">x</a>' });
+      fixture.detectChanges();
+      expect(errorSpy).toHaveBeenCalledOnce();
+
+      fixture.componentRef.setInput('field', { value: '<a href="javascript:alert(2)">x</a>' });
+      fixture.detectChanges();
+      expect(errorSpy).toHaveBeenCalledTimes(2);
+    });
+  });
+
   it('routes internal links to the latest href after multiple field updates', async () => {
     const fixture = createFixture();
     const router = TestBed.inject(Router);
@@ -379,6 +458,24 @@ describe('ScRichTextDirective editing mode', () => {
     anchor.dispatchEvent(ev);
 
     expect(preventSpy).not.toHaveBeenCalled();
+  });
+
+  it('keeps editing chromes and removes a javascript: href', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const fixture = createEditingFixture();
+    fixture.componentRef.setInput('field', {
+      value: '<a class="edit-link" href="javascript:alert(1)">Click</a>',
+      metadata: { contextItem: { id: 'x' }, fieldId: 'content' },
+    });
+    fixture.detectChanges();
+
+    const anchor = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
+    expect(fixture.nativeElement.querySelectorAll('code.scpm').length).toBe(2);
+    expect(anchor.textContent).toBe('Click');
+    expect(anchor.hasAttribute('href')).toBe(false);
+    expect(anchor.getAttribute('class')).toBe('edit-link');
+    expect(errorSpy).toHaveBeenCalledOnce();
+    errorSpy.mockRestore();
   });
 
   it('does not attach prefetch (any mode) while in editing mode', () => {
