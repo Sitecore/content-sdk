@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { render } from '@testing-library/react';
 import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime';
 import { Link } from './Link';
-import { spy } from 'sinon';
+import { createSandbox, SinonSandbox, spy } from 'sinon';
 
 const Router = (): NextRouter => ({
   pathname: '/',
@@ -770,6 +770,105 @@ describe('<Link />', () => {
       );
 
       expect(rendered.container.innerHTML).to.equal('');
+    });
+  });
+
+  describe('javascript: URLs', () => {
+    let sandbox: SinonSandbox;
+
+    beforeEach(() => {
+      sandbox = createSandbox();
+      sandbox.stub(console, 'error');
+    });
+
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    const blockedHrefs = [
+      'javascript:alert(1)',
+      'JAVASCRIPT:void(0)',
+      '  javascript:void(0)',
+      '\t\njavascript:alert(1)',
+      'java\nscript:alert(1)',
+    ];
+
+    blockedHrefs.forEach((href) => {
+      it(`should render ${JSON.stringify(href)} as text without an href or NextLink`, () => {
+        const rendered = render(
+          <Page>
+            <Link field={{ value: { href, text: 'Click' } }} internalLinkMatcher={/.*/} />
+          </Page>
+        );
+
+        const link = rendered.container.querySelector('a');
+        expect(link?.getAttribute('data-nextjs-link')).to.equal(null);
+        expect(link?.getAttribute('data-react-link')).to.equal('true');
+        expect(link?.getAttribute('href')).to.equal(null);
+        expect(link?.textContent).to.equal('Click');
+      });
+    });
+
+    it('should keep Pages editing chromes for a javascript: link', () => {
+      const metadata = {
+        contextItem: {
+          id: '{09A07660-6834-476C-B93B-584248D3003B}',
+          language: 'en',
+          revision: 'a0b36ce0a7db49418edf90eb9621e145',
+          version: 1,
+        },
+        fieldId: '{414061F4-FBB1-4591-BC37-BFFA67F745EB}',
+        fieldType: 'general link',
+        rawValue: 'javascript:alert(1)',
+      };
+      const field = {
+        value: {
+          href: 'javascript:alert(1)',
+          text: 'Click',
+          class: 'my-link',
+        },
+        metadata,
+      };
+
+      const rendered = render(
+        <Page>
+          <Link field={field} />
+        </Page>
+      );
+
+      expect(rendered.container.querySelectorAll('code.scpm').length).to.equal(2);
+      const link = rendered.container.querySelector('a');
+      expect(link?.getAttribute('data-react-link')).to.equal('true');
+      expect(link?.getAttribute('href')).to.equal(null);
+      expect(link?.textContent).to.equal('Click');
+      expect(link?.getAttribute('class')).to.equal('my-link');
+    });
+
+    it('should not pass a javascript: href prop through to NextLink', () => {
+      const rendered = render(
+        <Page>
+          <Link field={{ value: { href: '/lorem', text: 'Click' } }} href="javascript:alert(1)" />
+        </Page>
+      );
+
+      const link = rendered.container.querySelector('a');
+      expect(link?.getAttribute('data-nextjs-link')).to.equal(null);
+      expect(link?.getAttribute('data-react-link')).to.equal('true');
+      expect(link?.getAttribute('href')).to.equal(null);
+      expect(link?.textContent).to.equal('Click');
+    });
+
+    it('should keep a safe href prop when the field href is javascript:', () => {
+      const rendered = render(
+        <Page>
+          <Link field={{ value: { href: 'javascript:alert(1)', text: 'Click' } }} href="/safe" />
+        </Page>
+      );
+
+      const link = rendered.container.querySelector('a');
+      expect(link?.getAttribute('data-nextjs-link')).to.equal('true');
+      expect(link?.getAttribute('href')).to.equal('/safe');
+      expect(link?.textContent).to.equal('Click');
     });
   });
 });

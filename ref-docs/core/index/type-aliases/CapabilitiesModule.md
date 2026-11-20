@@ -8,7 +8,7 @@
 
 > **CapabilitiesModule** = `object`
 
-Defined in: [packages/core/src/capabilities.ts:125](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/core/src/capabilities.ts#L125)
+Defined in: [packages/core/src/capabilities.ts:125](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/core/src/capabilities.ts#L125)
 
 Shape of a package's `/capabilities` submodule.
 
@@ -18,4 +18,4 @@ Shape of a package's `/capabilities` submodule.
 
 > **default**: [`CSDKCapabilities`](CSDKCapabilities.md)
 
-Defined in: [packages/core/src/capabilities.ts:126](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/core/src/capabilities.ts#L126)
+Defined in: [packages/core/src/capabilities.ts:126](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/core/src/capabilities.ts#L126)

@@ -6,7 +6,7 @@
 
 # Interface: LoaderCacheEntryInfo
 
-Defined in: [packages/angular/src/loaders/models.ts:225](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/angular/src/loaders/models.ts#L225)
+Defined in: [packages/angular/src/loaders/models.ts:225](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/angular/src/loaders/models.ts#L225)
 
 Metadata returned by cache.entries() — sufficient for an admin UI without
 shipping the cached values themselves (which can be large).
@@ -17,7 +17,7 @@ shipping the cached values themselves (which can be large).
 
 > **expiresAt**: `number` \| `null`
 
-Defined in: [packages/angular/src/loaders/models.ts:229](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/angular/src/loaders/models.ts#L229)
+Defined in: [packages/angular/src/loaders/models.ts:229](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/angular/src/loaders/models.ts#L229)
 
 ***
 
@@ -25,7 +25,7 @@ Defined in: [packages/angular/src/loaders/models.ts:229](https://github.com/Site
 
 > **key**: `string`
 
-Defined in: [packages/angular/src/loaders/models.ts:226](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/angular/src/loaders/models.ts#L226)
+Defined in: [packages/angular/src/loaders/models.ts:226](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/angular/src/loaders/models.ts#L226)
 
 ***
 
@@ -33,7 +33,7 @@ Defined in: [packages/angular/src/loaders/models.ts:226](https://github.com/Site
 
 > **stale**: `boolean`
 
-Defined in: [packages/angular/src/loaders/models.ts:230](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/angular/src/loaders/models.ts#L230)
+Defined in: [packages/angular/src/loaders/models.ts:230](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/angular/src/loaders/models.ts#L230)
 
 ***
 
@@ -41,7 +41,7 @@ Defined in: [packages/angular/src/loaders/models.ts:230](https://github.com/Site
 
 > **storedAt**: `number`
 
-Defined in: [packages/angular/src/loaders/models.ts:228](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/angular/src/loaders/models.ts#L228)
+Defined in: [packages/angular/src/loaders/models.ts:228](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/angular/src/loaders/models.ts#L228)
 
 ***
 
@@ -49,4 +49,4 @@ Defined in: [packages/angular/src/loaders/models.ts:228](https://github.com/Site
 
 > **tags**: `string`[]
 
-Defined in: [packages/angular/src/loaders/models.ts:227](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/angular/src/loaders/models.ts#L227)
+Defined in: [packages/angular/src/loaders/models.ts:227](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/angular/src/loaders/models.ts#L227)

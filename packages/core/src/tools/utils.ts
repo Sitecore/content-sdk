@@ -172,6 +172,23 @@ export const isRegexOrUrl = (input: string): 'regex' | 'url' => {
 };
 
 /**
+ * Whether an href is a javascript: URL that React blocks.
+ * Case-insensitive. Allows leading spaces and control characters, and tab or
+ * newline characters between the letters of the scheme.
+ * @see https://github.com/facebook/react/blob/main/packages/react-dom-bindings/src/shared/sanitizeURL.js
+ * @param {string} url candidate href
+ * @returns {boolean} true when the URL uses the javascript protocol
+ * @internal
+ */
+export function isJavascriptUrl(url: string): boolean {
+  // Control characters are intentional: this matches the javascript: URLs React blocks.
+  // eslint-disable-next-line no-control-regex
+  return /^[\u0000-\u001F ]*j[\r\n\t]*a[\r\n\t]*v[\r\n\t]*a[\r\n\t]*s[\r\n\t]*c[\r\n\t]*r[\r\n\t]*i[\r\n\t]*p[\r\n\t]*t[\r\n\t]*:/i.test(
+    url
+  );
+}
+
+/**
  * Compares two URLSearchParams objects to determine if they are equal.
  * @param {URLSearchParams} params1 - The first set of URL search parameters.
  * @param {URLSearchParams} params2 - The second set of URL search parameters.

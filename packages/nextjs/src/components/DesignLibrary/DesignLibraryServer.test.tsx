@@ -13,6 +13,7 @@ import {
   EDITING_COMPONENT_PLACEHOLDER,
 } from '@sitecore-content-sdk/content/layout';
 import { DesignLibraryPreviewError } from '@sitecore-content-sdk/content/codegen';
+import { COMPONENT_UPDATE_CACHE_KEY_PREFIX } from '@sitecore-content-sdk/content/editing';
 import { DesignLibraryStatus, DesignLibraryMode } from '@sitecore-content-sdk/content/editing';
 import { getTestLayoutData } from '../../test-data/component-editing-data';
 import * as DesignLibraryClient from './DesignLibraryClientEvents';
@@ -562,8 +563,7 @@ describe('<DesignLibraryServer />', () => {
 
     describe('variant generation mode - with update cache', () => {
       beforeEach(() => {
-        hasCacheStub.onFirstCall().returns(true);
-        hasCacheStub.onSecondCall().returns(false);
+        hasCacheStub.returns(true);
       });
 
       it('should apply field and param updates from cache', async () => {
@@ -691,7 +691,8 @@ describe('<DesignLibraryServer />', () => {
 
         expect(DesignLibraryVariantGenerationEventsStub).to.have.been.calledOnce;
         const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
-        expect(propsPassed.generatedComponentData).to.deep.equal(generatedComponentData);
+        expect(propsPassed.generatedStyles).to.equal(generatedComponentData.styles.content);
+        expect(propsPassed).to.not.have.property('generatedComponentData');
       });
 
       it('should call createComponentInstance with import map and preview data', async () => {
@@ -717,6 +718,33 @@ describe('<DesignLibraryServer />', () => {
           importMap,
           generatedComponentData
         );
+      });
+
+      it('should set componentInitError when fetching generated component data failed in update action', async () => {
+        const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
+        const page = getPage(layoutData, modeLibraryMetadata_Gen);
+        const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
+        getCacheAndCleanStub.returns({
+          uid: 'test-content',
+          rendering: { params: { theme: 'dark' } },
+          error: 'Response Status: 401',
+        } as any);
+
+        const awaitedDesignLibraryServer = await DesignLibraryServerVariantGeneration({
+          page,
+          rendering: layoutData.sitecore.route as any,
+          componentMap: components,
+          loadServerImportMap: importMapLoaderSpy,
+        });
+
+        render(awaitedDesignLibraryServer);
+
+        expect(createComponentInstanceStub).to.not.have.been.called;
+        const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
+        expect(propsPassed.componentInitError).to.deep.equal({
+          type: DesignLibraryPreviewError.GeneratedComponentFetch,
+          message: 'Response Status: 401',
+        });
       });
 
       it('should set componentInitError when createComponentInstance throws', async () => {
@@ -801,126 +829,21 @@ describe('<DesignLibraryServer />', () => {
       });
     });
 
-    describe('variant generation mode - with preview cache', () => {
+    describe('variant generation mode - with state and import map error', () => {
       beforeEach(() => {
-        hasCacheStub.onFirstCall().returns(false);
-        hasCacheStub.onSecondCall().returns(true);
+        hasCacheStub.returns(true);
       });
 
-      it('should apply field and param updates from cache', async () => {
+      it('should consume the state and apply fields/params without creating the generated component', async () => {
         const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
         const page = getPage(layoutData, modeLibraryMetadata_Gen);
-        const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
-        getCacheAndCleanStub.returns({
+        const importMapLoaderSpy = sandbox.stub().throws(new Error('import map failed'));
+        const state = {
           uid: 'test-content',
-          rendering: {
-            uid: 'test-content',
-            fields: {
-              content: {
-                value: 'This is the updated value',
-              },
-              heading: {
-                value: 'This is the updated heading value',
-              },
-            },
-            params: { theme: 'dark' },
-          },
-        } as any);
-
-        const awaitedDesignLibraryServer = await DesignLibraryServerVariantGeneration({
-          page,
-          rendering: layoutData.sitecore.route as any,
-          componentMap: components,
-          loadServerImportMap: importMapLoaderSpy,
-        });
-
-        const rendered = render(awaitedDesignLibraryServer);
-
-        const expectedParam = 'dark';
-        const expectedHeadingField = 'This is the updated heading value';
-
-        expect(rendered?.container.innerHTML).to.equal(
-          [
-            '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="editing-componentmode-placeholder_00000000-0000-0000-0000-000000000000"></code>',
-            '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="test-content" data-csdk-component-runtime="server"></code>',
-            `<div class="test"><h2>Content Block Component</h2><p class="${expectedParam}">${expectedHeadingField}</p></div>`,
-            '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
-            '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
-            '<div data-testid="mock-dl-client-events-variant-generation">Mocked DL CLient Events for variant generation</div>',
-          ].join('')
-        );
-
-        expect(DesignLibraryVariantGenerationEventsStub).to.have.been.calledOnce;
-        const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
-        expect(propsPassed.designLibraryStatus).to.equal(DesignLibraryStatus.RENDERED);
-      });
-
-      it('should render generated component when preview component exists', async () => {
-        const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
-        const page = getPage(layoutData, modeLibraryMetadata_Gen);
-        const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
-        getCacheAndCleanStub.returns({
-          uid: 'test-content',
-          rendering: {
-            fields: {
-              heading: {
-                value: 'This is the updated heading value',
-              },
-            },
-            params: { theme: 'dark' },
-          },
+          rendering: { params: { theme: 'dark' } },
           generatedComponentData: { core: 'preview component code' },
-        } as any);
-        createComponentInstanceStub.returns((props) => (
-          <div>
-            <h1>Generated Component</h1>
-            <h2>{props?.fields?.heading?.value}</h2>
-          </div>
-        ));
-
-        const awaitedDesignLibraryServer = await DesignLibraryServerVariantGeneration({
-          page,
-          rendering: layoutData.sitecore.route as any,
-          componentMap: components,
-          loadServerImportMap: importMapLoaderSpy,
-        });
-
-        const rendered = render(awaitedDesignLibraryServer);
-
-        expect(rendered?.container.innerHTML).to.equal(
-          [
-            '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="test-content"></code>',
-            '<div><h1>Generated Component</h1>',
-            '<h2>This is the updated heading value</h2></div>',
-            '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
-            '<div data-testid="mock-dl-client-events-variant-generation">Mocked DL CLient Events for variant generation</div>',
-          ].join('')
-        );
-      });
-
-      it('should pass component veriant data to DesignLibraryClientEvents', async () => {
-        const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
-        const page = getPage(layoutData, modeLibraryMetadata_Gen);
-        const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
-        const generatedComponentData = { styles: { content: 'background: green' } };
-        getCacheAndCleanStub.returns({
-          uid: 'test-content',
-          rendering: {
-            fields: {
-              heading: {
-                value: 'This is the updated heading value',
-              },
-            },
-            params: { theme: 'dark' },
-          },
-          generatedComponentData,
-        } as any);
-        createComponentInstanceStub.returns((props) => (
-          <div>
-            <h1>Generated Component</h1>
-            <h2>{props?.fields?.heading?.value}</h2>
-          </div>
-        ));
+        };
+        getCacheAndCleanStub.returns(state as any);
 
         const awaitedDesignLibraryServer = await DesignLibraryServerVariantGeneration({
           page,
@@ -931,114 +854,15 @@ describe('<DesignLibraryServer />', () => {
 
         render(awaitedDesignLibraryServer);
 
-        expect(DesignLibraryVariantGenerationEventsStub).to.have.been.calledOnce;
-        const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
-        expect(propsPassed.generatedComponentData).to.deep.equal(generatedComponentData);
-      });
-
-      it('should call createComponentInstance with import map and preview data', async () => {
-        const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
-        const page = getPage(layoutData, modeLibraryMetadata_Gen);
-        const importMap = [{ someEntry: 'someUrl' }];
-        const importMapLoaderSpy = sandbox.stub().returns({ default: importMap });
-        const generatedComponentData = { core: 'preview component code' };
-        getCacheAndCleanStub.returns({
-          uid: 'test-content',
-          generatedComponentData,
-        } as any);
-        createComponentInstanceStub.returns(() => <div>Generated</div>);
-
-        await DesignLibraryServerVariantGeneration({
-          page,
-          rendering: layoutData.sitecore.route as any,
-          componentMap: components,
-          loadServerImportMap: importMapLoaderSpy,
-        });
-
-        expect(createComponentInstanceStub).to.have.been.calledOnceWith(
-          importMap,
-          generatedComponentData
+        expect(getCacheAndCleanStub).to.have.been.calledOnceWith(
+          `${COMPONENT_UPDATE_CACHE_KEY_PREFIX}test-content`
         );
-      });
-
-      it('should set componentInitError when createComponentInstance throws', async () => {
-        const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
-        const page = getPage(layoutData, modeLibraryMetadata_Gen);
-        const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
-        getCacheAndCleanStub.returns({
-          uid: 'test-content',
-          generatedComponentData: { core: 'preview component code' },
-        } as any);
-        createComponentInstanceStub.throws(new Error('create component failed'));
-
-        const awaitedDesignLibraryServer = await DesignLibraryServerVariantGeneration({
-          page,
-          rendering: layoutData.sitecore.route as any,
-          componentMap: components,
-          loadServerImportMap: importMapLoaderSpy,
-        });
-
-        const rendered = render(awaitedDesignLibraryServer);
-
+        expect(createComponentInstanceStub).to.not.have.been.called;
         const propsPassed = DesignLibraryVariantGenerationEventsStub.getCall(0).args[0];
-        expect(propsPassed.componentInitError).to.deep.equal({
-          message: 'create component failed',
-          type: DesignLibraryPreviewError.RenderInit,
-        });
-
-        expect(rendered?.container.innerHTML).to.equal(
-          [
-            '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="open" id="editing-componentmode-placeholder_00000000-0000-0000-0000-000000000000"></code>',
-            '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="open" id="test-content" data-csdk-component-runtime="server"></code>',
-            '<div class="test"><h2>Content Block Component</h2><p>Content SDK Styleguide</p></div>',
-            '<code type="text/sitecore" chrometype="rendering" class="scpm" kind="close"></code>',
-            '<code type="text/sitecore" chrometype="placeholder" class="scpm" kind="close"></code>',
-            '<div data-testid="mock-dl-client-events-variant-generation">Mocked DL CLient Events for variant generation</div>',
-          ].join('')
-        );
-      });
-
-      it('should wrap generated component when error boundary and catch error', async () => {
-        const layoutData: LayoutServiceData = getTestLayoutData().layoutData;
-        const page = getPage(layoutData, modeLibraryMetadata_Gen);
-        const importMapLoaderSpy = sandbox.stub().returns({ default: [] });
-        getCacheAndCleanStub.returns({
-          uid: 'test-content',
-          rendering: {
-            fields: {
-              heading: {
-                value: 'This is the updated heading value',
-              },
-            },
-            params: { theme: 'dark' },
-          },
-          generatedComponentData: { core: 'preview component code' },
-        } as any);
-        createComponentInstanceStub.returns((props) => {
-          throw new Error('render component failed');
-          // eslint-disable-next-line no-unreachable
-          return (
-            <div>
-              <h1>Generated Component</h1>
-              <h2>{props?.fields?.heading?.value}</h2>
-            </div>
-          );
-        });
-
-        const awaitedDesignLibraryServer = await DesignLibraryServerVariantGeneration({
-          page,
-          rendering: layoutData.sitecore.route as any,
-          componentMap: components,
-          loadServerImportMap: importMapLoaderSpy,
-        });
-
-        const rendered = render(awaitedDesignLibraryServer);
-
-        expect(rendered?.container.innerHTML).to.equal(
-          [
-            '<div>Error during component rendering</div>',
-            '<div data-testid="mock-dl-client-events-variant-generation">Mocked DL CLient Events for variant generation</div>',
-          ].join('')
+        expect(propsPassed.designLibraryStatus).to.equal(DesignLibraryStatus.RENDERED);
+        expect(propsPassed.component.params).to.deep.equal({ theme: 'dark' });
+        expect(propsPassed.componentInitError.type).to.equal(
+          DesignLibraryPreviewError.ImportMapLoad
         );
       });
     });

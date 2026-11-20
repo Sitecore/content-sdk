@@ -6,7 +6,7 @@
 
 # Class: SearchService
 
-Defined in: [search-service.ts:184](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/search/src/search-service.ts#L184)
+Defined in: [search-service.ts:184](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/search/src/search-service.ts#L184)
 
 Service that fetches search results from Sitecore.
 
@@ -16,7 +16,7 @@ Service that fetches search results from Sitecore.
 
 > **new SearchService**(`config`): `SearchService`
 
-Defined in: [search-service.ts:187](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/search/src/search-service.ts#L187)
+Defined in: [search-service.ts:187](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/search/src/search-service.ts#L187)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [search-service.ts:187](https://github.com/Sitecore/content-sdk/blob
 
 > **search**\<`T`\>(`params`, `fetchOptions?`): `Promise`\<[`SearchResponse`](../interfaces/SearchResponse.md)\<`T`\>\>
 
-Defined in: [search-service.ts:212](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/search/src/search-service.ts#L212)
+Defined in: [search-service.ts:213](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/search/src/search-service.ts#L213)
 
 Search for items in the search index.
 For keyword search, pass `keyphrase`. For More Like This (MLT) widget queries,
@@ -86,6 +86,10 @@ If sort is not an array or an object.
 
 #### Throws
 
+If a facet field max is not an integer from 1 through 100.
+
+#### Throws
+
 If more than one of keyphrase, seedItemId, or seedItemUrl is provided.
 
 #### Throws
@@ -98,7 +102,7 @@ If seedItemId or seedItemUrl is empty or whitespace only.
 
 > **suggest**\<`T`\>(`params`, `fetchOptions?`): `Promise`\<[`SuggestResponse`](../interfaces/SuggestResponse.md)\<`T`\>\>
 
-Defined in: [search-service.ts:281](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/search/src/search-service.ts#L281)
+Defined in: [search-service.ts:282](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/search/src/search-service.ts#L282)
 
 Retrieve typeahead suggestions for a keyphrase.
 

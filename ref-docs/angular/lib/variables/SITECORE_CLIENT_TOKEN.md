@@ -8,7 +8,7 @@
 
 > `const` **SITECORE\_CLIENT\_TOKEN**: `InjectionToken`\<[`SitecoreClient`](../content/client/classes/SitecoreClient.md)\>
 
-Defined in: [packages/angular/src/lib/tokens.ts:21](https://github.com/Sitecore/content-sdk/blob/84b2ebcb77b1c88a88e7b2b7d4b9b7117148025d/packages/angular/src/lib/tokens.ts#L21)
+Defined in: [packages/angular/src/lib/tokens.ts:21](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/angular/src/lib/tokens.ts#L21)
 
 Injection token for the SitecoreClient instance.
 Provided by `provideSitecoreAngular({ sitecoreConfig, sitecoreClient })` with the app-supplied client instance.
