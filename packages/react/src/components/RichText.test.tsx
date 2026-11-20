@@ -4,7 +4,6 @@ import { render } from '@testing-library/react';
 import sinon from 'sinon';
 
 import { RichText, RichTextField } from './RichText';
-import { resetOmittedJavascriptUrlLog } from './omit-javascript-urls';
 
 describe('<RichText />', () => {
   it('should render nothing with missing field', () => {
@@ -48,19 +47,41 @@ describe('<RichText />', () => {
   });
 
   it('should remove a javascript: href and keep the surrounding html', () => {
-    resetOmittedJavascriptUrlLog();
     const errorStub = sinon.stub(console, 'error');
-    const field = {
-      value: '<p>Read <a href="javascript:alert(1)">this</a> and <a href="/ok">that</a></p>',
-    };
-    const rendered = render(<RichText field={field} />).container.querySelector('div');
-    const links = rendered?.querySelectorAll('a');
+    try {
+      const field = {
+        value: '<p>Read <a href="javascript:alert(1)">this</a> and <a href="/ok">that</a></p>',
+      };
+      const rendered = render(<RichText field={field} />).container.querySelector('div');
+      const links = rendered?.querySelectorAll('a');
 
-    expect(links?.[0].textContent).to.equal('this');
-    expect(links?.[0].getAttribute('href')).to.equal(null);
-    expect(links?.[1].getAttribute('href')).to.equal('/ok');
-    expect(errorStub.calledOnce).to.equal(true);
-    errorStub.restore();
+      expect(links?.[0].textContent).to.equal('this');
+      expect(links?.[0].getAttribute('href')).to.equal(null);
+      expect(links?.[1].getAttribute('href')).to.equal('/ok');
+      expect(errorStub.calledOnce).to.equal(true);
+      expect(errorStub.firstCall.args[0]).to.contain('javascript:alert(1)');
+    } finally {
+      errorStub.restore();
+    }
+  });
+
+  it('should log a removed javascript: URL once per mounted field, not on re-render', () => {
+    const errorStub = sinon.stub(console, 'error');
+    try {
+      const field = { value: '<a href="javascript:void(0)">x</a>' };
+      const { rerender } = render(<RichText field={field} />);
+      rerender(<RichText field={{ ...field }} />);
+      expect(errorStub.callCount).to.equal(1);
+
+      render(<RichText field={field} />);
+      expect(errorStub.callCount).to.equal(2);
+
+      rerender(<RichText field={{ value: '<a href="javascript:alert(2)">x</a>' }} />);
+      expect(errorStub.callCount).to.equal(3);
+      expect(errorStub.thirdCall.args[0]).to.contain('javascript:alert(2)');
+    } finally {
+      errorStub.restore();
+    }
   });
 
   it('should render embedded html as-is', () => {
@@ -208,7 +229,6 @@ describe('<RichText />', () => {
     });
 
     it('should keep editing chromes and remove a javascript: href', () => {
-      resetOmittedJavascriptUrlLog();
       const errorStub = sinon.stub(console, 'error');
       const field = {
         value: '<a class="edit-link" href="javascript:alert(1)">Click</a>',

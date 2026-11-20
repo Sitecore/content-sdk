@@ -1,11 +1,12 @@
 'use client';
 import React, { useMemo } from 'react';
 import { isFieldValueEmpty, type RichTextField } from '@sitecore-content-sdk/content/layout';
+import { omitJavascriptUrls } from '@sitecore-content-sdk/core/tools';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
-import { omitJavascriptUrls } from './omit-javascript-urls';
+import { useOmittedJavascriptUrlLog } from './use-omitted-javascript-url-log';
 
 /**
  * The interface for the RichText component props.
@@ -31,14 +32,19 @@ const RichTextComponent: React.FC<RichTextProps> = ({ field, tag = 'div', ref, .
   // since React DOM compares dangerouslySetInnerHTML by reference and re-sets
   // innerHTML (recreating all child DOM nodes) whenever it changes.
   // javascript: URLs are removed first. React does not block them inside innerHTML.
-  const dangerouslySetInnerHTML = useMemo(() => {
+  const { dangerouslySetInnerHTML, omittedUrls } = useMemo(() => {
     if (typeof html !== 'string' || html === '') {
-      return undefined;
+      return { dangerouslySetInnerHTML: undefined, omittedUrls: [] };
     }
 
-    const safeHtml = omitJavascriptUrls(html);
-    return safeHtml !== '' ? { __html: safeHtml } : undefined;
+    const result = omitJavascriptUrls(html);
+    return {
+      dangerouslySetInnerHTML: result.html !== '' ? { __html: result.html } : undefined,
+      omittedUrls: result.omittedUrls,
+    };
   }, [html]);
+
+  useOmittedJavascriptUrlLog(omittedUrls);
 
   if (isFieldValueEmpty(field) || !dangerouslySetInnerHTML) {
     return null;

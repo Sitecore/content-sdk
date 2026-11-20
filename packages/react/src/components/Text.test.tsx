@@ -5,7 +5,6 @@ import { render } from '@testing-library/react';
 import sinon from 'sinon';
 
 import { Text, TextField } from './Text';
-import { resetOmittedJavascriptUrlLog } from './omit-javascript-urls';
 
 describe('<Text />', () => {
   it('should render nothing with missing field', () => {
@@ -113,29 +112,41 @@ describe('<Text />', () => {
   });
 
   it('should remove a javascript: href when encoding is disabled', () => {
-    resetOmittedJavascriptUrlLog();
     const errorStub = sinon.stub(console, 'error');
-    const field = {
-      value: 'Line one\n<a href="javascript:alert(1)">Click</a>',
-    };
-    const rendered = render(<Text field={field} encode={false} />).container.querySelector('span');
-    const anchor = rendered?.querySelector('a');
+    try {
+      const field = {
+        value: 'Line one\n<a href="javascript:alert(1)">Click</a>',
+      };
+      const { container, rerender } = render(<Text field={field} encode={false} />);
+      const rendered = container.querySelector('span');
+      const anchor = rendered?.querySelector('a');
 
-    expect(rendered?.innerHTML).to.equal('Line one<br><a>Click</a>');
-    expect(anchor?.textContent).to.equal('Click');
-    expect(anchor?.getAttribute('href')).to.equal(null);
-    expect(errorStub.calledOnce).to.equal(true);
-    errorStub.restore();
+      expect(rendered?.innerHTML).to.equal('Line one<br><a>Click</a>');
+      expect(anchor?.textContent).to.equal('Click');
+      expect(anchor?.getAttribute('href')).to.equal(null);
+
+      rerender(<Text field={{ ...field }} encode={false} />);
+      expect(errorStub.calledOnce).to.equal(true);
+      expect(errorStub.firstCall.args[0]).to.contain('javascript:alert(1)');
+    } finally {
+      errorStub.restore();
+    }
   });
 
   it('should encode a javascript: href when encoding is enabled', () => {
-    const field = {
-      value: '<a href="javascript:alert(1)">Click</a>',
-    };
-    const rendered = render(<Text tag="span" field={field} />).container.querySelector('span');
+    const errorStub = sinon.stub(console, 'error');
+    try {
+      const field = {
+        value: '<a href="javascript:alert(1)">Click</a>',
+      };
+      const rendered = render(<Text tag="span" field={field} />).container.querySelector('span');
 
-    expect(rendered?.querySelector('a')).to.equal(null);
-    expect(rendered?.innerHTML).to.contain('javascript:alert(1)');
+      expect(rendered?.querySelector('a')).to.equal(null);
+      expect(rendered?.innerHTML).to.contain('javascript:alert(1)');
+      expect(errorStub.callCount).to.equal(0);
+    } finally {
+      errorStub.restore();
+    }
   });
 
   it('should render embedded html as-is when encoding is disabled', () => {
