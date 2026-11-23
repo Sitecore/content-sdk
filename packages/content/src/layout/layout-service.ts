@@ -44,11 +44,12 @@ export class LayoutService extends SitecoreServiceBase {
     fetchOptions?: FetchOptions
   ): Promise<LayoutServiceData> {
     const site = routeOptions.site;
-    const query = this.getLayoutQuery(itemPath, site, routeOptions?.locale);
-    debug.layout('fetching layout data for %s %s %s', itemPath, routeOptions?.locale, site);
+    const language = routeOptions?.locale;
+    const query = this.getLayoutQuery(itemPath, site, language);
+    debug.layout('fetching layout data for %s %s %s', itemPath, language, site);
     const data = await this.graphQLClient.request<{
       layout: { item: { rendered: LayoutServiceData } };
-    }>(query, {}, fetchOptions);
+    }>(query, this.getLayoutQueryVariables(itemPath, site, language), fetchOptions);
 
     // If `rendered` is empty -> not found
     const layoutData =
@@ -60,25 +61,72 @@ export class LayoutService extends SitecoreServiceBase {
   }
 
   /**
-   * Returns GraphQL Layout query
+   * Returns GraphQL Layout query.
+   * The default query takes `site`, `routePath` and `language` as GraphQL variables
+   * (see `getLayoutQueryVariables`), so request values never become part of the query text.
+   * When `formatLayoutQuery` is set, it gets the values escaped for use inside a
+   * double-quoted GraphQL string literal.
    * @param {string} itemPath page route
    * @param {string} [site] site name
    * @param {string} [language] language
    * @returns {string} GraphQL query
    */
   protected getLayoutQuery(itemPath: string, site: string, language?: string) {
-    const languageVariable = language ? `, language:"${language}"` : '';
+    if (this.serviceConfig.formatLayoutQuery) {
+      const layoutQuery = this.serviceConfig.formatLayoutQuery(
+        escapeGraphQLString(site),
+        escapeGraphQLString(itemPath),
+        language === undefined ? undefined : escapeGraphQLString(language)
+      );
 
-    const layoutQuery = this.serviceConfig.formatLayoutQuery
-      ? this.serviceConfig.formatLayoutQuery(site, itemPath, language)
-      : `layout(site:"${site}", routePath:"${itemPath}"${languageVariable})`;
-
-    return `query ${GRAPHQL_LAYOUT_QUERY_NAME} {
+      return `query ${GRAPHQL_LAYOUT_QUERY_NAME} {
       ${layoutQuery}{
         item {
           rendered
         }
       }
     }`;
+    }
+
+    const languageDefinition = language ? `, $language: String!` : '';
+    const languageArgument = language ? `, language: $language` : '';
+
+    return `query ${GRAPHQL_LAYOUT_QUERY_NAME}($site: String!, $routePath: String!${languageDefinition}) {
+      layout(site: $site, routePath: $routePath${languageArgument}){
+        item {
+          rendered
+        }
+      }
+    }`;
+  }
+
+  /**
+   * Returns the variables for the GraphQL Layout query
+   * @param {string} itemPath page route
+   * @param {string} site site name
+   * @param {string} [language] language
+   * @returns {Record<string, string>} GraphQL query variables
+   */
+  protected getLayoutQueryVariables(
+    itemPath: string,
+    site: string,
+    language?: string
+  ): Record<string, string> {
+    // A custom `formatLayoutQuery` declares no variables
+    if (this.serviceConfig.formatLayoutQuery) return {};
+
+    return {
+      site,
+      routePath: itemPath,
+      ...(language ? { language } : {}),
+    };
   }
 }
+
+/**
+ * Escapes a value for use inside a double-quoted GraphQL string literal.
+ * GraphQL string escapes (`\"`, `\\`, `\n`, `\uXXXX`, ...) match JSON's, so JSON.stringify does the work.
+ * @param {string} value value to escape
+ * @returns {string} escaped value, without the surrounding quotes
+ */
+const escapeGraphQLString = (value: string) => JSON.stringify(String(value)).slice(1, -1);
