@@ -131,9 +131,13 @@ implementation
 
 > `protected` **getLayoutQuery**(`itemPath`, `site?`, `language?`): `string`
 
-Defined in: packages/content/types/layout/layout-service.d.ts:43
+Defined in: packages/content/types/layout/layout-service.d.ts:47
 
-Returns GraphQL Layout query
+Returns GraphQL Layout query.
+The default query takes `site`, `routePath` and `language` as GraphQL variables
+(see `getLayoutQueryVariables`), so request values never become part of the query text.
+When `formatLayoutQuery` is set, it gets the values escaped for use inside a
+double-quoted GraphQL string literal.
 
 #### Parameters
 
@@ -148,3 +152,27 @@ Returns GraphQL Layout query
 `string`
 
 GraphQL query
+
+***
+
+### getLayoutQueryVariables()
+
+> `protected` **getLayoutQueryVariables**(`itemPath`, `site`, `language?`): `Record`\<`string`, `string`\>
+
+Defined in: packages/content/types/layout/layout-service.d.ts:55
+
+Returns the variables for the GraphQL Layout query
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `itemPath` | `string` | page route |
+| `site` | `string` | site name |
+| `language?` | `string` | language |
+
+#### Returns
+
+`Record`\<`string`, `string`\>
+
+GraphQL query variables

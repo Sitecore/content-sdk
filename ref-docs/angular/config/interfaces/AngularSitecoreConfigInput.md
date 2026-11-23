@@ -6,7 +6,7 @@
 
 # Interface: AngularSitecoreConfigInput
 
-Defined in: [packages/angular/src/config/define-config.ts:32](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/angular/src/config/define-config.ts#L32)
+Defined in: [packages/angular/src/config/define-config.ts:32](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/angular/src/config/define-config.ts#L32)
 
 Sitecore configuration input for Angular apps. Extends the base
 SitecoreConfigInput with an `angular` section. `redirects.locales` is intentionally
@@ -23,7 +23,7 @@ source of truth for the locale list.
 
 > `optional` **angular?**: `object`
 
-Defined in: [packages/angular/src/config/define-config.ts:34](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/angular/src/config/define-config.ts#L34)
+Defined in: [packages/angular/src/config/define-config.ts:34](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/angular/src/config/define-config.ts#L34)
 
 Angular-specific configuration.
 
@@ -186,7 +186,7 @@ Your default site name. When using the multisite feature this variable defines t
 
 > `optional` **dictionary?**: `object`
 
-Defined in: packages/core/types/sitecore-config.d.ts:106
+Defined in: packages/core/types/sitecore-config.d.ts:107
 
 Settings for Dictionary Service
 
@@ -214,7 +214,7 @@ Configure local memory caching for Dictionary Service requests
 
 > `optional` **disableCodeGeneration?**: `boolean`
 
-Defined in: packages/core/types/sitecore-config.d.ts:202
+Defined in: packages/core/types/sitecore-config.d.ts:203
 
 Opt-out setting for code generation feature
 Disables code extraction procedure
@@ -252,7 +252,8 @@ Settings for Layout Service
 
 > `optional` **formatLayoutQuery?**: ((`siteName`, `itemPath`, `locale?`) => `string`) \| `null`
 
-Override the first part of graphQL query for Layout Service (excluding the fields part)
+Override the first part of graphQL query for Layout Service (excluding the fields part).
+The values are escaped for use inside a double-quoted GraphQL string literal.
 
 ##### Param
 
@@ -279,7 +280,7 @@ custom layout query
 ##### Default
 
 ```ts
-'layout(site:"${siteName}", routePath:"${itemPath}", language:"${language}")'
+'layout(site: $site, routePath: $routePath, language: $language)' with values sent as GraphQL variables
 ```
 
 #### Inherited from
@@ -292,7 +293,7 @@ custom layout query
 
 > `optional` **multisite?**: `object`
 
-Defined in: [packages/angular/src/config/define-config.ts:62](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/angular/src/config/define-config.ts#L62)
+Defined in: [packages/angular/src/config/define-config.ts:62](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/angular/src/config/define-config.ts#L62)
 
 #### enabled?
 
@@ -321,7 +322,7 @@ Function used to determine if site should be resolved from sc_site cookie when p
 
 > `optional` **personalize?**: `object`
 
-Defined in: packages/core/types/sitecore-config.d.ts:142
+Defined in: packages/core/types/sitecore-config.d.ts:143
 
 Settings for Personalize functionality
 
@@ -387,7 +388,7 @@ Optional Sitecore Personalize scope ID (to isolate data between environments)
 
 > `optional` **redirects?**: `object`
 
-Defined in: packages/core/types/sitecore-config.d.ts:177
+Defined in: packages/core/types/sitecore-config.d.ts:178
 
 Settings for redirects functionality
 
@@ -459,7 +460,7 @@ DefaultRetryStrategy
 
 > `optional` **rewriteMediaUrls?**: `boolean` \| ((`value`) => `string`)
 
-Defined in: packages/core/types/sitecore-config.d.ts:197
+Defined in: packages/core/types/sitecore-config.d.ts:198
 
 Rewrite media/content URLs in layout data and in `SitecoreClient.getData` results
 (media fields, rich text img/src, href, and other strings that contain a URL).

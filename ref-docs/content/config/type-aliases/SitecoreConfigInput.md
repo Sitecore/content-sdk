@@ -113,7 +113,7 @@ Your default site name. When using the multisite feature this variable defines t
 
 > `optional` **dictionary?**: `object`
 
-Defined in: core/types/sitecore-config.d.ts:106
+Defined in: core/types/sitecore-config.d.ts:107
 
 Settings for Dictionary Service
 
@@ -137,7 +137,7 @@ Configure local memory caching for Dictionary Service requests
 
 > `optional` **disableCodeGeneration?**: `boolean`
 
-Defined in: core/types/sitecore-config.d.ts:202
+Defined in: core/types/sitecore-config.d.ts:203
 
 Opt-out setting for code generation feature
 Disables code extraction procedure
@@ -167,7 +167,8 @@ Settings for Layout Service
 
 > `optional` **formatLayoutQuery?**: ((`siteName`, `itemPath`, `locale?`) => `string`) \| `null`
 
-Override the first part of graphQL query for Layout Service (excluding the fields part)
+Override the first part of graphQL query for Layout Service (excluding the fields part).
+The values are escaped for use inside a double-quoted GraphQL string literal.
 
 ##### Param
 
@@ -194,7 +195,7 @@ custom layout query
 ##### Default
 
 ```ts
-'layout(site:"${siteName}", routePath:"${itemPath}", language:"${language}")'
+'layout(site: $site, routePath: $routePath, language: $language)' with values sent as GraphQL variables
 ```
 
 ***
@@ -203,7 +204,7 @@ custom layout query
 
 > `optional` **multisite?**: `object`
 
-Defined in: core/types/sitecore-config.d.ts:118
+Defined in: core/types/sitecore-config.d.ts:119
 
 Settings for multisite functionality
 
@@ -252,7 +253,7 @@ Function used to determine if site should be resolved from sc_site cookie when p
 
 > `optional` **personalize?**: `object`
 
-Defined in: core/types/sitecore-config.d.ts:142
+Defined in: core/types/sitecore-config.d.ts:143
 
 Settings for Personalize functionality
 
@@ -314,7 +315,7 @@ Optional Sitecore Personalize scope ID (to isolate data between environments)
 
 > `optional` **redirects?**: `object`
 
-Defined in: core/types/sitecore-config.d.ts:177
+Defined in: core/types/sitecore-config.d.ts:178
 
 Settings for redirects functionality
 
@@ -378,7 +379,7 @@ DefaultRetryStrategy
 
 > `optional` **rewriteMediaUrls?**: `boolean` \| ((`value`) => `string`)
 
-Defined in: core/types/sitecore-config.d.ts:197
+Defined in: core/types/sitecore-config.d.ts:198
 
 Rewrite media/content URLs in layout data and in `SitecoreClient.getData` results
 (media fields, rich text img/src, href, and other strings that contain a URL).
