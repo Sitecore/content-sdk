@@ -1,6 +1,7 @@
 import React, { createRef } from 'react';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
+import { createSandbox, SinonSandbox, SinonStub } from 'sinon';
 
 import { Link, LinkField } from './Link';
 
@@ -348,6 +349,170 @@ describe('<Link />', () => {
       const rendered = render(<Link field={field} editable={false} />);
 
       expect(rendered.container.innerHTML).to.equal('');
+    });
+  });
+
+  describe('javascript: URLs', () => {
+    let sandbox: SinonSandbox;
+    let errorStub: SinonStub;
+
+    beforeEach(() => {
+      sandbox = createSandbox();
+      errorStub = sandbox.stub(console, 'error');
+    });
+
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    it('should render link text without an href and log once', () => {
+      const field = {
+        value: {
+          href: 'javascript:alert(1)',
+          text: 'Click',
+          class: 'my-link',
+          title: 'My Link',
+          target: '_blank',
+        },
+      };
+
+      const rendered = render(<Link field={field} />);
+      const { rerender } = rendered;
+      rerender(<Link field={field} />);
+
+      const anchor = rendered.container.querySelector('a');
+      expect(anchor?.getAttribute('href')).to.equal(null);
+      expect(anchor?.textContent).to.equal('Click');
+      expect(anchor?.getAttribute('class')).to.equal('my-link');
+      expect(anchor?.getAttribute('title')).to.equal('My Link');
+      expect(anchor?.getAttribute('target')).to.equal('_blank');
+      expect(anchor?.getAttribute('rel')).to.equal('noopener noreferrer');
+      expect(errorStub.callCount).to.equal(1);
+      expect(errorStub.firstCall.args[0]).to.contain('javascript:alert(1)');
+    });
+
+    it('should block case, whitespace, and tab or newline variants', () => {
+      const variants = [
+        'JAVASCRIPT:void(0)',
+        '  javascript:void(0)',
+        '\t\njavascript:alert(1)',
+        'java\nscript:alert(1)',
+      ];
+
+      variants.forEach((href) => {
+        const rendered = render(<Link field={{ href, text: 'Click' }} />);
+        expect(rendered.container.querySelector('a')?.getAttribute('href')).to.equal(null);
+        expect(rendered.container.querySelector('a')?.textContent).to.equal('Click');
+      });
+
+      expect(errorStub.callCount).to.equal(variants.length);
+    });
+
+    it('should ignore a query string and anchor on a javascript: href', () => {
+      const field = {
+        value: {
+          href: 'javascript:alert(1)',
+          text: 'Click',
+          querystring: 'x=1',
+          anchor: 'section',
+        },
+      };
+
+      const rendered = render(<Link field={field} />);
+      expect(rendered.container.querySelector('a')?.getAttribute('href')).to.equal(null);
+      expect(rendered.container.querySelector('a')?.textContent).to.equal('Click');
+    });
+
+    it('should still render children when the href is blocked', () => {
+      const field = {
+        value: {
+          href: 'javascript:void(0)',
+          text: 'Click',
+        },
+      };
+
+      const rendered = render(
+        <Link field={field}>
+          <span>child</span>
+        </Link>
+      );
+
+      const anchor = rendered.container.querySelector('a');
+      expect(anchor?.getAttribute('href')).to.equal(null);
+      expect(anchor?.textContent).to.equal('child');
+    });
+
+    it('should block a javascript: href passed as a prop', () => {
+      const field = {
+        value: {
+          href: '/lorem',
+          text: 'Click',
+        },
+      };
+
+      const rendered = render(<Link field={field} href="javascript:alert(document.domain)" />);
+      expect(rendered.container.querySelector('a')?.getAttribute('href')).to.equal(null);
+      expect(rendered.container.querySelector('a')?.textContent).to.equal('Click');
+    });
+
+    it('should keep a safe href prop when the field href is javascript:', () => {
+      const field = {
+        value: {
+          href: 'javascript:alert(1)',
+          text: 'Click',
+        },
+      };
+
+      const rendered = render(<Link field={field} href="/safe" />);
+      const anchor = rendered.container.querySelector('a');
+      expect(anchor?.getAttribute('href')).to.equal('/safe');
+      expect(errorStub.callCount).to.equal(0);
+    });
+
+    it('should keep editing chromes and render the link text without an href', () => {
+      const metadata = {
+        contextItem: {
+          id: '{09A07660-6834-476C-B93B-584248D3003B}',
+          language: 'en',
+          revision: 'a0b36ce0a7db49418edf90eb9621e145',
+          version: 1,
+        },
+        fieldId: '{414061F4-FBB1-4591-BC37-BFFA67F745EB}',
+        fieldType: 'general link',
+        rawValue: 'javascript:alert(1)',
+      };
+      const field = {
+        value: {
+          href: 'javascript:alert(1)',
+          text: 'Click',
+          class: 'my-link',
+        },
+        metadata,
+      };
+
+      const rendered = render(<Link field={field} />);
+
+      expect(rendered.container.querySelectorAll('code.scpm').length).to.equal(2);
+      const anchor = rendered.container.querySelector('a');
+      expect(anchor?.textContent).to.equal('Click');
+      expect(anchor?.getAttribute('href')).to.equal(null);
+      expect(anchor?.getAttribute('class')).to.equal('my-link');
+      expect(errorStub.callCount).to.equal(1);
+    });
+
+    it('should not block ordinary schemes', () => {
+      const field = {
+        value: {
+          href: 'mailto:editor@example.com',
+          text: 'Email',
+        },
+      };
+
+      const rendered = render(<Link field={field} />);
+      expect(rendered.container.querySelector('a')?.getAttribute('href')).to.equal(
+        'mailto:editor@example.com'
+      );
+      expect(errorStub.callCount).to.equal(0);
     });
   });
 });

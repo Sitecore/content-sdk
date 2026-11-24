@@ -7,6 +7,7 @@ import {
   LinkField,
   LinkProps as ReactLinkProps,
 } from '@sitecore-content-sdk/react';
+import { isJavascriptUrl } from '@sitecore-content-sdk/core/tools';
 import { useRouter as usePageRouter } from 'next/compat/router';
 
 /**
@@ -54,6 +55,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
       internalLinkMatcher = /^\//g,
       showLinkTextWithChildrenPresent,
       renderChildrenWhenEmpty,
+      href: propHref,
       ...rest
     } = props;
 
@@ -64,7 +66,11 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
           delete cleanRest[prop as keyof typeof cleanRest];
         }
         return (
-          <a {...cleanRest} ref={ref}>
+          <a
+            {...cleanRest}
+            {...(propHref !== undefined && !isJavascriptUrl(propHref) ? { href: propHref } : {})}
+            ref={ref}
+          >
             {children}
           </a>
         );
@@ -79,18 +85,24 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
     const { href, querystring, anchor } = value || {};
 
     const isEditing = editable && (field as LinkFieldValue).metadata;
+    // An href prop overrides the field value. Judge that final href.
+    const effectiveHref = propHref ?? href;
 
-    if (href && !isEditing) {
+    if (effectiveHref && !isEditing && !isJavascriptUrl(effectiveHref)) {
       const text = showLinkTextWithChildrenPresent || !children ? value.text || value.href : null;
 
-      const isMatching = internalLinkMatcher.test(href);
-      const isFileUrl = FILE_EXTENSION_MATCHER.test(href);
+      const isMatching = internalLinkMatcher.test(effectiveHref);
+      const isFileUrl = FILE_EXTENSION_MATCHER.test(effectiveHref);
 
       // determine if a link is a route or not. File extensions are not routes and should not be pre-fetched.
       if (isMatching && !isFileUrl) {
         return (
           <NextLink
-            href={{ pathname: href, query: querystring, hash: anchor }}
+            href={
+              propHref !== undefined
+                ? propHref
+                : { pathname: href, query: querystring, hash: anchor }
+            }
             key="link"
             title={value.title}
             target={value.target}

@@ -96,12 +96,13 @@ export type SitecoreConfigInput = {
    */
   layout?: {
     /**
-     * Override the first part of graphQL query for Layout Service (excluding the fields part)
+     * Override the first part of graphQL query for Layout Service (excluding the fields part).
+     * The values are escaped for use inside a double-quoted GraphQL string literal.
      * @param {string} siteName your site name
      * @param {string} itemPath full path to Sitecore item/route
      * @param {string} [locale] item/route language
      * @returns {string} custom layout query
-     * @default 'layout(site:"${siteName}", routePath:"${itemPath}", language:"${language}")'
+     * @default 'layout(site: $site, routePath: $routePath, language: $language)' with values sent as GraphQL variables
      */
     formatLayoutQuery?: ((siteName: string, itemPath: string, locale?: string) => string) | null;
   };

@@ -885,6 +885,7 @@ export class LayoutService extends SitecoreServiceBase {
     constructor(serviceConfig: LayoutServiceConfig);
     fetchLayoutData(itemPath: string, routeOptions: RouteOptions, fetchOptions?: FetchOptions): Promise<LayoutServiceData>;
     protected getLayoutQuery(itemPath: string, site: string, language?: string): string;
+    protected getLayoutQueryVariables(itemPath: string, site: string, language?: string): Record<string, string>;
     // (undocumented)
     serviceConfig: LayoutServiceConfig;
 }

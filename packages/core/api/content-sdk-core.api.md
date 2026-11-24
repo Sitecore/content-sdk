@@ -356,6 +356,9 @@ export interface InitContentSdkParams {
     plugins: Plugin_2[];
 }
 
+// @internal
+export function isJavascriptUrl(url: string): boolean;
+
 // @public
 export function isMissingAppModuleSubpath(error: unknown, specifier: string, appPath?: string): boolean;
 

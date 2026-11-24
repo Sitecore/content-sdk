@@ -354,14 +354,11 @@ describe('<DesignLibraryClientEvents />', () => {
     });
 
     it('should call updateComponentAction when component is updated', () => {
-      const previewComponentData = {
-        message: { styles: { content: 'some style' }, code: { content: 'some code' } },
-      };
       renderWithSitecore(
         {
           designLibraryStatus: DesignLibraryStatus.READY,
           component: testEditedComponent,
-          previewComponentData: previewComponentData,
+          generatedStyles: 'some style',
         },
         modeLibraryMetadata_Gen,
         true
@@ -375,10 +372,47 @@ describe('<DesignLibraryClientEvents />', () => {
 
       updateCallback(rendering);
 
-      expect(updateComponentActionSpy).to.have.been.calledWith({
+      expect(updateComponentActionSpy).to.have.been.calledOnceWith({
         uid: rendering.uid,
         rendering,
-        generatedComponentData: undefined,
+        cache: undefined,
+      });
+      expect(updateComponentActionSpy.getCall(0).args).to.have.length(1);
+      expect(updateComponentActionSpy.getCall(0).args[0]).to.not.have.property(
+        'generatedComponentData'
+      );
+    });
+
+    it('should send the cache reference of the last preview event (not the code) on component update', () => {
+      renderWithSitecore(
+        {
+          designLibraryStatus: DesignLibraryStatus.READY,
+          component: testEditedComponent,
+          importMap: importMap,
+        },
+        modeLibraryMetadata_Gen,
+        true
+      );
+
+      const previewCallback = addServerComponentPreviewHandlerSpy.getCall(0).args[1];
+      const previewEvent = (id: string, token: string) => ({
+        name: 'component:generation:component-preview',
+        message: { cache: { id, token } },
+      });
+      previewCallback(testEditedComponent, previewEvent('cache-id-1', 'token-1'));
+      previewCallback(testEditedComponent, previewEvent('cache-id-2', 'token-2'));
+
+      const updateCallback = addComponentUpdateHandlerSpy.getCall(0).args[1];
+      const rendering = {
+        ...testEditedComponent,
+        params: { variant: 'secondary' },
+      };
+      updateCallback(rendering);
+
+      expect(updateComponentActionSpy).to.have.been.calledOnceWith({
+        uid: rendering.uid,
+        rendering,
+        cache: { id: 'cache-id-2', token: 'token-2' },
       });
     });
 
@@ -471,20 +505,19 @@ describe('<DesignLibraryClientEvents />', () => {
           uid: testEditedComponent.uid,
           args: componentPreviewServerEvent,
         },
-        mockRendering,
-        'https://test-edge-url.com'
+        mockRendering
       );
+      expect(previewComponentActionSpy.getCall(0).args).to.have.length(2);
     });
 
     it('should add style element when previewComponentData style is provided', async () => {
       const testStyle = '.test-class { color: red; }';
-      const previewComponentData = { styles: { content: testStyle } };
       renderWithSitecore(
         {
           designLibraryStatus: DesignLibraryStatus.READY,
           component: testEditedComponent,
           importMap: importMap,
-          generatedComponentData: previewComponentData,
+          generatedStyles: testStyle,
         },
         modeLibraryMetadata_Gen,
         true

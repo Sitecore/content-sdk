@@ -16,6 +16,7 @@ export {
   EnhancedOmit,
   getAllowedOriginsFromEnv,
   isRegexOrUrl,
+  isJavascriptUrl,
   areURLSearchParamsEqual,
   escapeNonSpecialQuestionMarks,
   escapeRegExp,

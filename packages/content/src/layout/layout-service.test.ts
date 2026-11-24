@@ -13,6 +13,8 @@ describe('LayoutService', () => {
   const apiKey = '0FBFF61E-267A-43E3-9252-B77E71CEE4BA';
   const endpoint = 'http://sctest/graphql';
   const site = 'supersite';
+  const layoutQueryWithLanguage = `query${GRAPHQL_LAYOUT_QUERY_NAME}($site:String!,$routePath:String!,$language:String!){layout(site:$site,routePath:$routePath,language:$language){item{rendered}}}`;
+  const layoutQueryWithoutLanguage = `query${GRAPHQL_LAYOUT_QUERY_NAME}($site:String!,$routePath:String!){layout(site:$site,routePath:$routePath){item{rendered}}}`;
 
   const clientFactory = GraphQLRequestClient.createClientFactory({
     endpoint,
@@ -32,8 +34,9 @@ describe('LayoutService', () => {
     })
       .post('/graphql', (body) => {
         return (
-          body.query.replace(/\n|\s/g, '') ===
-          `query${GRAPHQL_LAYOUT_QUERY_NAME}{layout(site:"supersite",routePath:"/styleguide",language:"da-DK"){item{rendered}}}`
+          body.query.replace(/\n|\s/g, '') === layoutQueryWithLanguage &&
+          JSON.stringify(body.variables) ===
+            JSON.stringify({ site: 'supersite', routePath: '/styleguide', language: 'da-DK' })
         );
       })
       .reply(200, {
@@ -90,8 +93,9 @@ describe('LayoutService', () => {
     })
       .post('/graphql', (body) => {
         return (
-          body.query.replace(/\n|\s/g, '') ===
-          `query${GRAPHQL_LAYOUT_QUERY_NAME}{layout(site:"supersite",routePath:"/styleguide"){item{rendered}}}`
+          body.query.replace(/\n|\s/g, '') === layoutQueryWithoutLanguage &&
+          JSON.stringify(body.variables) ===
+            JSON.stringify({ site: 'supersite', routePath: '/styleguide' })
         );
       })
       .reply(200, {
@@ -190,12 +194,64 @@ describe('LayoutService', () => {
     });
   });
 
+  describe('request-derived values', () => {
+    const maliciousPath = '/products") { item { rendered } } injected: layout(site:"other",routePath:"/\\\n';
+    const maliciousLocale = 'en"){item{rendered}}#';
+
+    it('should pass route path, site and language as variables, not in the query text', async () => {
+      const requestMock = sinon.stub().resolves({ layout: null });
+      sinon.stub(GraphQLRequestClient.prototype, 'request').callsFake(requestMock);
+
+      const service = new LayoutService({ clientFactory });
+
+      await service.fetchLayoutData(maliciousPath, { site: 'site"x', locale: maliciousLocale });
+
+      const [query, variables] = requestMock.firstCall.args;
+      expect(query.replace(/\n|\s/g, '')).to.equal(layoutQueryWithLanguage);
+      expect(variables).to.deep.equal({
+        site: 'site"x',
+        routePath: maliciousPath,
+        language: maliciousLocale,
+      });
+    });
+
+    it('should escape values passed to a custom formatLayoutQuery', async () => {
+      const requestMock = sinon.stub().resolves({ layout: null });
+      sinon.stub(GraphQLRequestClient.prototype, 'request').callsFake(requestMock);
+      const formatLayoutQuery = sinon.spy(
+        (siteName: string, itemPath: string, locale?: string) =>
+          `layout(site:"${siteName}",routePath:"${itemPath}",language:"${locale}")`
+      );
+
+      const service = new LayoutService({ clientFactory, formatLayoutQuery });
+
+      await service.fetchLayoutData('/a"b\\c\nd', { site, locale: 'en"' });
+
+      expect(formatLayoutQuery.firstCall.args).to.deep.equal([site, '/a\\"b\\\\c\\nd', 'en\\"']);
+      const [query, variables] = requestMock.firstCall.args;
+      expect(query).to.contain('layout(site:"supersite",routePath:"/a\\"b\\\\c\\nd",language:"en\\"")');
+      expect(variables).to.deep.equal({});
+    });
+
+    it('should not escape an omitted language for a custom formatLayoutQuery', async () => {
+      sinon.stub(GraphQLRequestClient.prototype, 'request').resolves({ layout: null });
+      const formatLayoutQuery = sinon.spy(() => 'layout(site:"x",routePath:"/")');
+
+      const service = new LayoutService({ clientFactory, formatLayoutQuery });
+
+      await service.fetchLayoutData('/', { site });
+
+      expect(formatLayoutQuery.firstCall.args).to.deep.equal([site, '/', undefined]);
+    });
+  });
+
   it('should handle not found', async () => {
     nock('http://sctest')
       .post('/graphql', (body) => {
         return (
-          body.query.replace(/\n|\s/g, '') ===
-          `query${GRAPHQL_LAYOUT_QUERY_NAME}{layout(site:"supersite",routePath:"/styleguide",language:"da-DK"){item{rendered}}}`
+          body.query.replace(/\n|\s/g, '') === layoutQueryWithLanguage &&
+          JSON.stringify(body.variables) ===
+            JSON.stringify({ site: 'supersite', routePath: '/styleguide', language: 'da-DK' })
         );
       })
       .reply(200, {
