@@ -4,6 +4,7 @@ import {
 } from '../cache/sitecore-edge-webhook-revalidation';
 import { dedupeSitecoreCacheTags } from '../cache/sitecore-cache-tags';
 import debug from '../debug';
+import { secretsEqual } from '@sitecore-content-sdk/core/node-tools';
 import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 import type { SiteInfo } from '@sitecore-content-sdk/content/site';
@@ -97,7 +98,7 @@ export function createSitecoreRevalidateRouteHandler(
 
       if (configuredSecret) {
         const providedSecret = req.headers.get(DEFAULT_SECRET_HEADER);
-        if (providedSecret !== configuredSecret) {
+        if (!secretsEqual(providedSecret, configuredSecret)) {
           debug.revalidate('sitecore revalidate: unauthorized (secret mismatch or missing header)');
           return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
         }

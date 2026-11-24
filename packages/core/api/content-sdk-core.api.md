@@ -505,6 +505,9 @@ export interface RetryStrategy {
 }
 
 // @internal
+export const secretsEqual: (received: unknown, expected?: string | null) => boolean;
+
+// @internal
 export function setCache(key: string, data: unknown): void;
 
 // @public
@@ -588,7 +591,7 @@ export interface TenantArgs {
 
 // Warnings were encountered during analysis:
 //
-// src/tools/index-node.ts:18:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+// src/tools/index-node.ts:19:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

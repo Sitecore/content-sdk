@@ -13,7 +13,7 @@ import {
 } from '@sitecore-content-sdk/content/codegen';
 import { resolveEdgeUrl, setCache } from '@sitecore-content-sdk/core/tools';
 import { COMPONENT_UPDATE_CACHE_KEY_PREFIX } from '@sitecore-content-sdk/content/editing';
-import { isDesignLibraryAuthorizedFromHeaders } from '../utils/utils';
+import { isDesignLibraryAuthorizedFromHeaders } from '../editing/editing-secret-auth';
 import { NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV } from '../config/define-config';
 
 /**

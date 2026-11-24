@@ -10,6 +10,7 @@ import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { NextRequest } from 'next/server';
 import { getEditingSecret } from '../utils/utils';
+import { secretsEqual } from '@sitecore-content-sdk/core/node-tools';
 import { draftMode, cookies as nextCokies } from 'next/headers';
 import {
   mapEditingParams,
@@ -92,13 +93,10 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
   };
 
   const validateEditingSecret = (receivedSecret: string) => {
-    const editingSecret = getEditingSecret();
-    const secretIsvalid = editingSecret === receivedSecret;
+    const secretIsvalid = secretsEqual(receivedSecret, getEditingSecret());
     if (!secretIsvalid) {
       debug.editing(
-        'invalid editing secret - sent "%s" expected "%s"',
-        receivedSecret,
-        editingSecret
+        'invalid editing secret - check the expected editing secret in the SITECORE_EDITING_SECRET env variable set in your editing host'
       );
     }
 

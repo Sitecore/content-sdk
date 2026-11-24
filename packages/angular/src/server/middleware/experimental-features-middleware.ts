@@ -4,6 +4,7 @@ import {
 } from '@sitecore-content-sdk/content/editing';
 import { buildExperimentalFeaturesResponse } from '@sitecore-content-sdk/content/experimental';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
+import { secretsEqual } from '@sitecore-content-sdk/core/node-tools';
 import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from './models';
 import { readProcessEnv } from '../utils';
 import debug from '../../debug';
@@ -72,8 +73,10 @@ export function createExperimentalFeaturesMiddleware(
     const secret = Array.isArray(secretParam) ? secretParam[0] : secretParam;
     const configuredSecret = readProcessEnv('SITECORE_EDITING_SECRET')?.trim() || undefined;
 
-    if (!configuredSecret || secret !== configuredSecret) {
-      debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, configuredSecret);
+    if (!secretsEqual(secret, configuredSecret)) {
+      debug.editing(
+        'invalid editing secret - check the expected editing secret in the SITECORE_EDITING_SECRET env variable set in your editing host'
+      );
       res.status(401).json({ message: 'Missing or invalid editing secret' });
       return;
     }
