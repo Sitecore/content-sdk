@@ -5,7 +5,8 @@ import {
   getThemingStylesheetLinks,
   getThemingStylesheetUrl,
   isSiteThemingEnabled,
-  THEMING_BODY_CLASS_NAME,
+  getThemingHtmlAttributes,
+  THEMING_HTML_ATTRIBUTE_NAME,
   THEMING_DELIVERY_CHANNEL,
 } from './theming';
 
@@ -43,7 +44,20 @@ describe('theming', () => {
 
     it('returns true when site theming is enabled', () => {
       expect(isSiteThemingEnabled('site')).to.be.true;
-      expect(THEMING_BODY_CLASS_NAME).to.equal('sc-ds-theme');
+    });
+  });
+
+  describe('getThemingHtmlAttributes', () => {
+    it('uses the data-sc-theme attribute name', () => {
+      expect(THEMING_HTML_ATTRIBUTE_NAME).to.equal('data-sc-theme');
+    });
+
+    it('returns no attributes when theming is disabled', () => {
+      expect(getThemingHtmlAttributes('none')).to.deep.equal({});
+    });
+
+    it('returns the data-sc-theme attribute when site theming is enabled', () => {
+      expect(getThemingHtmlAttributes('site')).to.deep.equal({ 'data-sc-theme': '' });
     });
   });
 
@@ -59,9 +73,9 @@ describe('theming', () => {
     });
 
     it('returns no links when site name is missing', () => {
-      expect(getThemingStylesheetLinks({ mode: 'site', clientContextId: 'client-1' })).to.deep.equal(
-        []
-      );
+      expect(
+        getThemingStylesheetLinks({ mode: 'site', clientContextId: 'client-1' })
+      ).to.deep.equal([]);
       expect(
         getThemingStylesheetLinks({ mode: 'site', siteName: '', clientContextId: 'client-1' })
       ).to.deep.equal([]);

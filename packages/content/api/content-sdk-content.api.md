@@ -829,6 +829,9 @@ const getSrcSet: (url: string, srcSet: Array<{
 }, mediaUrlPrefix?: RegExp) => string;
 
 // @public
+export const getThemingHtmlAttributes: (mode: ThemingMode) => ThemingHtmlAttributes;
+
+// @public
 export const getThemingStylesheetLinks: (input: ThemingStylesheetLinksOptions) => HTMLLink[];
 
 // @internal
@@ -1806,10 +1809,15 @@ export interface ThemeUpdateEventArgs extends DesignLibraryEvent {
 }
 
 // @public
-export const THEMING_BODY_CLASS_NAME = "sc-ds-theme";
+export const THEMING_DELIVERY_CHANNEL = "web-css";
 
 // @public
-export const THEMING_DELIVERY_CHANNEL = "web-css";
+export const THEMING_HTML_ATTRIBUTE_NAME = "data-sc-theme";
+
+// @public
+export type ThemingHtmlAttributes = {
+    [THEMING_HTML_ATTRIBUTE_NAME]?: string;
+};
 
 // @public
 export type ThemingMode = 'none' | 'site';

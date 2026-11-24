@@ -105,6 +105,7 @@ import { GetServerSidePropsContext } from 'next';
 import { getSiteRewrite } from '@sitecore-content-sdk/content/site';
 import { getSiteRewriteData } from '@sitecore-content-sdk/content/site';
 import { GetStaticPropsContext } from 'next';
+import { getThemingHtmlAttributes } from '@sitecore-content-sdk/content/layout';
 import { GraphQLClientError } from '@sitecore-content-sdk/content/client';
 import { GraphQLClientOptions } from '@sitecore-content-sdk/content/client';
 import { GraphQLRequestClient } from '@sitecore-content-sdk/content/client';
@@ -234,7 +235,8 @@ import { TextField } from '@sitecore-content-sdk/react';
 import { TextFieldSchema } from '@sitecore-content-sdk/react';
 import { textFieldSchema } from '@sitecore-content-sdk/react';
 import { ThemePreviewEvents } from '@sitecore-content-sdk/react';
-import { THEMING_BODY_CLASS_NAME } from '@sitecore-content-sdk/content/layout';
+import { THEMING_HTML_ATTRIBUTE_NAME } from '@sitecore-content-sdk/content/layout';
+import { ThemingHtmlAttributes } from '@sitecore-content-sdk/content/layout';
 import { ThemingMode } from '@sitecore-content-sdk/content/config';
 import { useBoundProp } from '@sitecore-content-sdk/react';
 import { useSitecore } from '@sitecore-content-sdk/react';
@@ -749,6 +751,8 @@ export const getQueryParamsForPropagation: (query: Partial<{
 export { getSiteRewrite }
 
 export { getSiteRewriteData }
+
+export { getThemingHtmlAttributes }
 
 export { GraphQLClientError }
 
@@ -1349,7 +1353,9 @@ export { textFieldSchema }
 
 export { ThemePreviewEvents }
 
-export { THEMING_BODY_CLASS_NAME }
+export { THEMING_HTML_ATTRIBUTE_NAME }
+
+export { ThemingHtmlAttributes }
 
 export { useBoundProp }
 
