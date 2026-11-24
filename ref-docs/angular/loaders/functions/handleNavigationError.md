@@ -8,7 +8,7 @@
 
 > **handleNavigationError**(): (`error`) => `void` \| `RedirectCommand`
 
-Defined in: [packages/angular/src/loaders/router-error-handling.ts:77](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/angular/src/loaders/router-error-handling.ts#L77)
+Defined in: [packages/angular/src/loaders/router-error-handling.ts:77](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/angular/src/loaders/router-error-handling.ts#L77)
 
 Returns a navigation error handler for use with withNavigationErrorHandler.
 Delegates to [redirectOnNavigationError](redirectOnNavigationError.md).

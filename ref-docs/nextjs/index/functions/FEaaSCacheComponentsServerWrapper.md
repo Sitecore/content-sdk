@@ -8,7 +8,7 @@
 
 > **FEaaSCacheComponentsServerWrapper**(`props`): `Element`
 
-Defined in: [nextjs/src/components/FEaaSCacheComponentsServerWrapper.tsx:17](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/nextjs/src/components/FEaaSCacheComponentsServerWrapper.tsx#L17)
+Defined in: [nextjs/src/components/FEaaSCacheComponentsServerWrapper.tsx:17](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/nextjs/src/components/FEaaSCacheComponentsServerWrapper.tsx#L17)
 
 FEaaS server component for Cache Components apps. Renders `FEaaSServerWrapper` at request time
 behind `<Suspense>`, so the rest of the page can be prerendered. Requires `cacheComponents: true`.
