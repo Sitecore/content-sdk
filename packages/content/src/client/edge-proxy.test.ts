@@ -68,5 +68,13 @@ describe('edge-proxy', () => {
 
       expect(url).to.equal(`https://test.com/v1/forms/publisher/${formId}?language=fr-FR`);
     });
+
+    it('should url encode formId', () => {
+      const url = getEdgeProxyFormsUrl('../admin?x=1#y', 'https://test.com', 'fr-FR');
+
+      expect(url).to.equal(
+        'https://test.com/v1/forms/publisher/..%2Fadmin%3Fx%3D1%23y?language=fr-FR'
+      );
+    });
   });
 });
