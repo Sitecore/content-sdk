@@ -21,18 +21,27 @@ function previewPayload(uid = 'uid-1', content = 'export class Generated {}') {
   };
 }
 
+const DESIGN_LIBRARY_ORIGIN = 'https://designlibrary.sitecorecloud.io';
+
+let parentWindow: { postMessage: ReturnType<typeof vi.fn> };
+
 function previewMessage(
   payload: ReturnType<typeof previewPayload>,
-  overrides: { name?: string; origin?: string } = {}
+  overrides: { name?: string; origin?: string; source?: unknown } = {}
 ): MessageEvent {
-  return new MessageEvent('message', {
-    origin: overrides.origin ?? 'http://localhost',
+  const event = new MessageEvent('message', {
+    origin: overrides.origin ?? DESIGN_LIBRARY_ORIGIN,
     data: { name: overrides.name ?? 'component:generation:component-preview', message: payload },
   });
+  // jsdom only accepts real windows as MessageEvent source
+  Object.defineProperty(event, 'source', {
+    value: 'source' in overrides ? overrides.source : parentWindow,
+  });
+  return event;
 }
 
 describe('addAngularComponentPreviewHandler', () => {
-  let postSpy: ReturnType<typeof vi.spyOn>;
+  let postSpy: ReturnType<typeof vi.fn>;
   let unsubscribe: (() => void) | undefined;
 
   function postedEventNames(): string[] {
@@ -45,7 +54,10 @@ describe('addAngularComponentPreviewHandler', () => {
     vi.spyOn(console, 'log').mockImplementation(() => {});
     vi.spyOn(console, 'debug').mockImplementation(() => {});
     vi.spyOn(console, 'error').mockImplementation(() => {});
-    postSpy = vi.spyOn(window, 'postMessage').mockImplementation(() => {});
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    postSpy = vi.fn();
+    parentWindow = { postMessage: postSpy };
+    vi.spyOn(window, 'parent', 'get').mockReturnValue(parentWindow as unknown as Window);
   });
 
   afterEach(() => {
@@ -101,6 +113,31 @@ describe('addAngularComponentPreviewHandler', () => {
     window.dispatchEvent(previewMessage(previewPayload(), { origin: '' }));
 
     await new Promise((r) => setTimeout(r, 20));
+    expect(callback).not.toHaveBeenCalled();
+  });
+
+  it('should ignore messages from an origin other than the parent', async () => {
+    vi.spyOn(document, 'referrer', 'get').mockReturnValue(`${DESIGN_LIBRARY_ORIGIN}/studio`);
+    const factory: DesignLibraryComponentFactory = { compile: vi.fn().mockResolvedValue(class {}) };
+    const callback = vi.fn();
+
+    unsubscribe = addAngularComponentPreviewHandler(importMap, factory, callback);
+    window.dispatchEvent(previewMessage(previewPayload(), { origin: 'https://evil.com' }));
+
+    await new Promise((r) => setTimeout(r, 20));
+    expect(factory.compile).not.toHaveBeenCalled();
+    expect(callback).not.toHaveBeenCalled();
+  });
+
+  it('should ignore messages not sent by the parent window', async () => {
+    const factory: DesignLibraryComponentFactory = { compile: vi.fn().mockResolvedValue(class {}) };
+    const callback = vi.fn();
+
+    unsubscribe = addAngularComponentPreviewHandler(importMap, factory, callback);
+    window.dispatchEvent(previewMessage(previewPayload(), { source: window }));
+
+    await new Promise((r) => setTimeout(r, 20));
+    expect(factory.compile).not.toHaveBeenCalled();
     expect(callback).not.toHaveBeenCalled();
   });
 
