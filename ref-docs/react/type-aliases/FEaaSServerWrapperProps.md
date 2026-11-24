@@ -8,7 +8,7 @@
 
 > **FEaaSServerWrapperProps** = [`FEaaSComponentProps`](FEaaSComponentProps.md) & `object`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:111](https://github.com/Sitecore/content-sdk/blob/51a9829bf867488124b20691dcc78e44f942c3db/packages/react/src/components/FEaaS/models.ts#L111)
+Defined in: [packages/react/src/components/FEaaS/models.ts:111](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/react/src/components/FEaaS/models.ts#L111)
 
 Props for the server FEaaS wrapper, including the Sitecore rendering and page.
 
