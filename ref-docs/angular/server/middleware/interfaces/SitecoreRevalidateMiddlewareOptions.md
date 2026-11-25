@@ -6,7 +6,7 @@
 
 # Interface: SitecoreRevalidateMiddlewareOptions
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:34](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L34)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:35](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L35)
 
 Options for [createSitecoreRevalidateMiddleware](../functions/createSitecoreRevalidateMiddleware.md).
 
@@ -16,7 +16,7 @@ Options for [createSitecoreRevalidateMiddleware](../functions/createSitecoreReva
 
 > **cache**: [`LoaderCache`](../../../loaders/interfaces/LoaderCache.md)
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:36](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L36)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:37](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L37)
 
 Shared cache instance from createLoaderCache call
 
@@ -26,7 +26,7 @@ Shared cache instance from createLoaderCache call
 
 > `optional` **defaultLocale?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:40](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L40)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:41](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L41)
 
 Locale fallback when an update has no `entity_culture`; default `'en'`.
 
@@ -36,7 +36,7 @@ Locale fallback when an update has no `entity_culture`; default `'en'`.
 
 > `optional` **endpoint?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:48](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L48)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:49](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L49)
 
 Endpoint path; default `/api/revalidate`.
 
@@ -46,7 +46,7 @@ Endpoint path; default `/api/revalidate`.
 
 > `optional` **secret?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:38](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L38)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:39](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L39)
 
 Default: `process.env.SITECORE_REVALIDATE_SECRET`
 
@@ -56,7 +56,7 @@ Default: `process.env.SITECORE_REVALIDATE_SECRET`
 
 > `optional` **sites?**: `SiteInfo`[]
 
-Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:46](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L46)
+Defined in: [packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts:47](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/angular/src/server/middleware/sitecore-revalidate-middleware.ts#L47)
 
 Sites list (e.g. from `.sitecore/sites.json`), used to resolve which site a Dictionary entry
 update (`entity_definition: "DictionaryEntry"`) belongs to, so only that site's

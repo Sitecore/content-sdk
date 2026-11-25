@@ -6,7 +6,7 @@
 
 # Class: SearchService
 
-Defined in: [search-service.ts:184](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/search/src/search-service.ts#L184)
+Defined in: [search-service.ts:184](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/search/src/search-service.ts#L184)
 
 Service that fetches search results from Sitecore.
 
@@ -16,7 +16,7 @@ Service that fetches search results from Sitecore.
 
 > **new SearchService**(`config`): `SearchService`
 
-Defined in: [search-service.ts:187](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/search/src/search-service.ts#L187)
+Defined in: [search-service.ts:187](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/search/src/search-service.ts#L187)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [search-service.ts:187](https://github.com/Sitecore/content-sdk/blob
 
 > **search**\<`T`\>(`params`, `fetchOptions?`): `Promise`\<[`SearchResponse`](../interfaces/SearchResponse.md)\<`T`\>\>
 
-Defined in: [search-service.ts:213](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/search/src/search-service.ts#L213)
+Defined in: [search-service.ts:213](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/search/src/search-service.ts#L213)
 
 Search for items in the search index.
 For keyword search, pass `keyphrase`. For More Like This (MLT) widget queries,
@@ -102,7 +102,7 @@ If seedItemId or seedItemUrl is empty or whitespace only.
 
 > **suggest**\<`T`\>(`params`, `fetchOptions?`): `Promise`\<[`SuggestResponse`](../interfaces/SuggestResponse.md)\<`T`\>\>
 
-Defined in: [search-service.ts:282](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/search/src/search-service.ts#L282)
+Defined in: [search-service.ts:282](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/search/src/search-service.ts#L282)
 
 Retrieve typeahead suggestions for a keyphrase.
 
