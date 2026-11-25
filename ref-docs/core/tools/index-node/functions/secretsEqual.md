@@ -1,0 +1,32 @@
+[**@sitecore-content-sdk/core**](../../../README.md)
+
+***
+
+[@sitecore-content-sdk/core](../../../README.md) / [tools/index-node](../README.md) / secretsEqual
+
+# Function: secretsEqual()
+
+> **secretsEqual**(`received`, `expected?`): `boolean`
+
+Defined in: [packages/core/src/tools/secure-compare.ts:14](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/core/src/tools/secure-compare.ts#L14)
+
+**`Internal`**
+
+Compares two secrets in constant time to prevent timing attacks.
+Both values are SHA-256 hashed first, so the compared buffers always have the same length
+(`timingSafeEqual` throws on unequal lengths) and the secret length is not leaked.
+Fails closed: returns false when either value is missing, empty or not a string
+(e.g. a repeated query param parsed as an array).
+
+## Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `received` | `unknown` | The secret received with the request. |
+| `expected?` | `string` \| `null` | The configured secret. |
+
+## Returns
+
+`boolean`
+
+True when both secrets are non-empty and equal.

@@ -13,8 +13,10 @@ import {
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from './constants';
 import { FEAASRenderMiddleware } from './feaas-render-middleware';
-import { spy } from 'sinon';
+import sinon, { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
+import debug from '../debug';
+import { expectSecretsNotLogged } from '../tests/debug-output';
 
 use(sinonChai);
 
@@ -228,6 +230,37 @@ describe('FEAASRenderMiddleware', () => {
     expect(res.status).to.have.been.calledWith(401);
     expect(res.send).to.have.been.calledOnce;
     expect(res.send).to.have.been.calledWith(INVALID_SECRET_HTML_MESSAGE);
+  });
+
+  it('should not log the sent or expected secret for an invalid secret', async () => {
+    const debugStub = sinon.stub(debug, 'editing');
+    try {
+      const sentSecret = 'sent-secret-should-not-be-logged';
+      const query = { [QUERY_PARAM_EDITING_SECRET]: sentSecret } as Query;
+      const res = mockResponse();
+
+      await new FEAASRenderMiddleware().getHandler()(mockRequest(query), res);
+
+      expect(res.status).to.have.been.calledWith(401);
+      expectSecretsNotLogged(debugStub, [sentSecret, secret]);
+    } finally {
+      debugStub.restore();
+    }
+  });
+
+  it('should not log the secret for a valid request', async () => {
+    const debugStub = sinon.stub(debug, 'editing');
+    try {
+      const query = { [QUERY_PARAM_EDITING_SECRET]: secret } as Query;
+      const res = mockResponse();
+
+      await new FEAASRenderMiddleware().getHandler()(mockRequest(query), res);
+
+      expect(res.redirect).to.have.been.calledOnce;
+      expectSecretsNotLogged(debugStub, [secret]);
+    } finally {
+      debugStub.restore();
+    }
   });
 
   it('should use custom pageUrl', async () => {

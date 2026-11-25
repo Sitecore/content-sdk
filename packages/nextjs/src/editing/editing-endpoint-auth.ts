@@ -6,6 +6,7 @@ import {
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import debug from '../debug';
 import { getEditingSecret } from '../utils/utils';
+import { secretsEqual } from '@sitecore-content-sdk/core/node-tools';
 
 type HeaderBag =
   | Headers
@@ -69,11 +70,9 @@ export const authorizeEditingEndpointRequest = (params: {
     const secretValue = Array.isArray(secret) ? secret[0] : secret ?? undefined;
     const expectedSecret = getEditingSecret();
 
-    if (secretValue !== expectedSecret) {
+    if (!secretsEqual(secretValue, expectedSecret)) {
       debug.editing(
-        'invalid editing secret - sent "%s" expected "%s"',
-        secretValue,
-        expectedSecret
+        'invalid editing secret - check the expected editing secret in the SITECORE_EDITING_SECRET env variable set in your editing host'
       );
       return {
         ok: false,

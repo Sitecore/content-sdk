@@ -298,6 +298,9 @@ export type GetMetadataConfig = {
     appInputs?: Record<string, unknown>;
 };
 
+// @internal
+export function getOmittedJavascriptUrlMessage(url: string): string;
+
 // @public
 export interface GraphQLClient {
     request<T>(query: string | DocumentNode, variables?: {
@@ -452,6 +455,15 @@ export interface NativeDataFetcherResponse<T> {
 // @public
 export const normalizeUrl: (url: string) => string;
 
+// @internal
+export function omitJavascriptUrls(html: string): OmitJavascriptUrlsResult;
+
+// @internal
+export type OmitJavascriptUrlsResult = {
+    html: string;
+    omittedUrls: string[];
+};
+
 // @public
 interface Plugin_2<Options = unknown, Adapter = unknown> {
     adapter?: Adapter;
@@ -503,6 +515,9 @@ export interface RetryStrategy {
     getDelay(error: GenericGraphQLClientError, attempt: number): number;
     shouldRetry(error: GenericGraphQLClientError, attempt: number, retries: number): boolean;
 }
+
+// @internal
+export const secretsEqual: (received: unknown, expected?: string | null) => boolean;
 
 // @internal
 export function setCache(key: string, data: unknown): void;
@@ -589,7 +604,7 @@ export interface TenantArgs {
 
 // Warnings were encountered during analysis:
 //
-// src/tools/index-node.ts:18:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
+// src/tools/index-node.ts:19:3 - (ae-forgotten-export) The symbol "authModule" needs to be exported by the entry point api-surface.d.ts
 
 // (No @packageDocumentation comment for this package)
 

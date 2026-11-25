@@ -46,6 +46,7 @@
 - [PAGES\_EDITING\_MARKER](variables/PAGES_EDITING_MARKER.md)
 - [PREVIEW\_KEY](variables/PREVIEW_KEY.md)
 - [QUERY\_PARAM\_EDITING\_SECRET](variables/QUERY_PARAM_EDITING_SECRET.md)
+- [REDACTED\_VALUE](variables/REDACTED_VALUE.md)
 
 ## Functions
 
@@ -56,6 +57,7 @@
 - [isDesignLibraryMode](functions/isDesignLibraryMode.md)
 - [isEditorActive](functions/isEditorActive.md)
 - [postToDesignLibrary](functions/postToDesignLibrary.md)
+- [redactEditingSecret](functions/redactEditingSecret.md)
 - [resetEditorChromes](functions/resetEditorChromes.md)
 - [updateComponent](functions/updateComponent.md)
 - [validateEvent](functions/validateEvent.md)

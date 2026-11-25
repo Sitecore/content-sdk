@@ -19,6 +19,8 @@ import {
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from '../editing/constants';
 import { SITE_KEY } from '@sitecore-content-sdk/content/site';
+import debug from '../debug';
+import { expectSecretsNotLogged } from '../tests/debug-output';
 
 chai.use(sinonChai);
 
@@ -282,6 +284,33 @@ describe('createEditingRenderRouteHandlers', () => {
       const responseBody = JSON.parse(res.body);
       expect(responseBody.html).to.equal(INVALID_SECRET_HTML_MESSAGE);
       expect(getEditingRequestHtmlStub).to.not.have.been.called;
+    });
+
+    it('should not log the sent or expected secret for an invalid secret', async () => {
+      const debugStub = sandbox.stub(debug, 'editing');
+      const sentSecret = 'sent-secret-should-not-be-logged';
+      req.nextUrl!.searchParams = mockSearchParams({
+        [QUERY_PARAM_EDITING_SECRET]: sentSecret,
+        mode: 'edit',
+        route: '/styleguide',
+        sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+        sc_lang: 'en',
+        sc_site: 'website',
+      });
+
+      const res = await handlers.GET(req as NextRequest);
+
+      expect(res.status).to.equal(401);
+      expectSecretsNotLogged(debugStub, [sentSecret, secret]);
+    });
+
+    it('should not log the secret for a valid request', async () => {
+      const debugStub = sandbox.stub(debug, 'editing');
+
+      const res = await handlers.GET(req as NextRequest);
+
+      expect(res.status).to.equal(200);
+      expectSecretsNotLogged(debugStub, [secret]);
     });
 
     it('should return 400 for missing required query parameters', async () => {

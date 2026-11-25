@@ -22,3 +22,8 @@ export {
   escapeRegExp,
   mergeURLSearchParams,
 } from './utils';
+export {
+  omitJavascriptUrls,
+  getOmittedJavascriptUrlMessage,
+  OmitJavascriptUrlsResult,
+} from './omit-javascript-urls';

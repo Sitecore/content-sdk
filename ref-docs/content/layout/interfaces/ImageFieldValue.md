@@ -6,7 +6,7 @@
 
 # Interface: ImageFieldValue
 
-Defined in: [content/src/layout/field-types.ts:32](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/content/src/layout/field-types.ts#L32)
+Defined in: [content/src/layout/field-types.ts:32](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/content/src/layout/field-types.ts#L32)
 
 The interface for the Image field value.
 
@@ -20,4 +20,4 @@ The interface for the Image field value.
 
 > `optional` **src?**: `string`
 
-Defined in: [content/src/layout/field-types.ts:34](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/content/src/layout/field-types.ts#L34)
+Defined in: [content/src/layout/field-types.ts:34](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/content/src/layout/field-types.ts#L34)

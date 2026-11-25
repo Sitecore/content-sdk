@@ -1,9 +1,11 @@
 /* eslint-disable no-unused-expressions */
 import { NextApiRequest, NextApiResponse } from 'next';
-import { spy } from 'sinon';
+import sinon, { spy } from 'sinon';
 import { expect } from 'chai';
 import { EditingConfigMiddleware } from './editing-config-middleware';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/content/editing';
+import debug from '../debug';
+import { expectSecretsNotLogged } from '../tests/debug-output';
 
 type Query = {
   [key: string]: string;
@@ -117,6 +119,46 @@ describe('EditingConfigMiddleware', () => {
     expect(res.status).to.have.been.calledWith(401);
     expect(res.json).to.have.been.calledOnce;
     expect(res.json).to.have.been.calledWith(expectedResultForbidden);
+  });
+
+  it('should not log the sent or expected secret for an invalid secret', async () => {
+    const debugStub = sinon.stub(debug, 'editing');
+    try {
+      const sentSecret = 'sent-secret-should-not-be-logged';
+      const query = { [QUERY_PARAM_EDITING_SECRET]: sentSecret } as Query;
+      const res = mockResponse();
+
+      const handler = new EditingConfigMiddleware({
+        components: componentsMap,
+        metadata,
+      }).getHandler();
+      await handler(mockRequest('GET', query), res);
+
+      expect(res.status).to.have.been.calledWith(401);
+      expectSecretsNotLogged(debugStub, [sentSecret, secret]);
+    } finally {
+      debugStub.restore();
+    }
+  });
+
+  it('should not log the secret for a valid request', async () => {
+    const debugStub = sinon.stub(debug, 'editing');
+    try {
+      const query = { [QUERY_PARAM_EDITING_SECRET]: secret } as Query;
+      const res = mockResponse();
+
+      const handler = new EditingConfigMiddleware({
+        components: componentsMap,
+        metadata,
+      }).getHandler();
+      await handler(mockRequest('GET', query), res);
+
+      expect(res.status).to.have.been.calledWith(200);
+      // this handler does not log on a valid request, so there may be no output at all
+      expectSecretsNotLogged(debugStub, [secret], { requireOutput: false });
+    } finally {
+      debugStub.restore();
+    }
   });
 
   it('should respond with 204 for preflight OPTIONS request', async () => {

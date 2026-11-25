@@ -1,11 +1,13 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import proxyquire from 'proxyquire';
+import { expectSecretsNotLogged } from '../tests/debug-output';
 const proxyquireNoCallThru = proxyquire.noCallThru();
 
 describe('createSitecoreRevalidateRouteHandler', () => {
   const sandbox = sinon.createSandbox();
   let revalidateTagStub: sinon.SinonStub;
+  let debugRevalidateStub: sinon.SinonStub;
   let nextResponseJsonStub: sinon.SinonStub;
   let module: { createSitecoreRevalidateRouteHandler: typeof import('./sitecore-revalidate-route-handler').createSitecoreRevalidateRouteHandler };
 
@@ -19,6 +21,7 @@ describe('createSitecoreRevalidateRouteHandler', () => {
 
   beforeEach(() => {
     revalidateTagStub = sandbox.stub();
+    debugRevalidateStub = sandbox.stub();
     nextResponseJsonStub = sandbox.stub().callsFake((body: unknown, init?: { status?: number }) => ({
       status: init?.status ?? 200,
       body,
@@ -28,7 +31,7 @@ describe('createSitecoreRevalidateRouteHandler', () => {
       '../debug': {
         __esModule: true,
         default: {
-          revalidate: () => undefined,
+          revalidate: debugRevalidateStub,
         },
       },
       'next/cache': { revalidateTag: revalidateTagStub },
@@ -91,6 +94,53 @@ describe('createSitecoreRevalidateRouteHandler', () => {
 
     expect(res.status).to.equal(401);
     expect(revalidateTagStub.called).to.equal(false);
+  });
+
+  it('should return 401 when the header secret has a different length', async () => {
+    process.env.SITECORE_REVALIDATE_SECRET = 'expected';
+    const handler = module.createSitecoreRevalidateRouteHandler();
+    const res = await handler.POST(
+      createReq({
+        headers: { 'x-revalidate-secret': 'expected-but-longer' },
+        body: { updates: [{ identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' }] },
+      })
+    );
+
+    expect(res.status).to.equal(401);
+    expect(revalidateTagStub.called).to.equal(false);
+  });
+
+  it('should not log the sent or expected secret when the secret does not match', async () => {
+    const expectedSecret = 'expected-secret-should-not-be-logged';
+    const sentSecret = 'sent-secret-should-not-be-logged';
+    process.env.SITECORE_REVALIDATE_SECRET = expectedSecret;
+    const handler = module.createSitecoreRevalidateRouteHandler();
+
+    const res = await handler.POST(
+      createReq({
+        headers: { 'x-revalidate-secret': sentSecret },
+        body: { updates: [{ identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' }] },
+      })
+    );
+
+    expect(res.status).to.equal(401);
+    expectSecretsNotLogged(debugRevalidateStub, [sentSecret, expectedSecret]);
+  });
+
+  it('should not log the secret for an authorized request', async () => {
+    const expectedSecret = 'expected-secret-should-not-be-logged';
+    process.env.SITECORE_REVALIDATE_SECRET = expectedSecret;
+    const handler = module.createSitecoreRevalidateRouteHandler({ defaultLocale: 'en' });
+
+    const res = await handler.POST(
+      createReq({
+        headers: { 'x-revalidate-secret': expectedSecret },
+        body: { updates: [{ identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' }] },
+      })
+    );
+
+    expect(res.status).to.equal(200);
+    expectSecretsNotLogged(debugRevalidateStub, [expectedSecret]);
   });
 
   it('should return 400 when body is not a JSON object', async () => {

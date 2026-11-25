@@ -377,5 +377,69 @@ describe('link-field-binding', () => {
       const classes = Array.from(anchor.classList).sort();
       expect(classes).toEqual(['c-b', 'cn-a']);
     });
+
+    describe('javascript: URLs', () => {
+      it('should omit the href, keep text, title, target and rel, and return the blocked href', () => {
+        const renderer = createDomRenderer();
+        const anchor = document.createElement('a');
+        anchor.setAttribute('href', '/previous');
+
+        const blocked = applyLinkFieldToAnchor(
+          renderer,
+          anchor,
+          {
+            href: 'javascript:alert(1)',
+            text: 'Click',
+            title: 'T',
+            target: '_blank',
+            linktype: 'external',
+          },
+          baseOptions()
+        );
+
+        expect(blocked).toBe('javascript:alert(1)');
+        expect(anchor.hasAttribute('href')).toBe(false);
+        expect(anchor.textContent).toBe('Click');
+        expect(anchor.getAttribute('title')).toBe('T');
+        expect(anchor.getAttribute('target')).toBe('_blank');
+        expect(anchor.getAttribute('rel')).toBe('noopener noreferrer');
+      });
+
+      it('should omit case, whitespace, and tab or newline variants', () => {
+        ['JAVASCRIPT:void(0)', '  javascript:void(0)', '\t\njavascript:alert(1)', 'java\nscript:alert(1)'].forEach(
+          (href) => {
+            const anchor = document.createElement('a');
+            const blocked = applyLinkFieldToAnchor(createDomRenderer(), anchor, { href, text: 'x' }, baseOptions());
+            expect(blocked).toBe(href);
+            expect(anchor.hasAttribute('href')).toBe(false);
+          }
+        );
+      });
+
+      it('should ignore a query string and anchor on a javascript: href', () => {
+        const anchor = document.createElement('a');
+
+        const blocked = applyLinkFieldToAnchor(
+          createDomRenderer(),
+          anchor,
+          { href: 'javascript:alert(1)', querystring: 'a=1', anchor: 'sec', text: 'x' },
+          baseOptions()
+        );
+
+        expect(blocked).toBe('javascript:alert(1)?a=1#sec');
+        expect(anchor.hasAttribute('href')).toBe(false);
+      });
+
+      it('should not block ordinary schemes or paths that mention javascript:', () => {
+        ['mailto:a@b.com', 'https://example.com', '/javascript:alert(1)', 'java script:alert(1)'].forEach(
+          (href) => {
+            const anchor = document.createElement('a');
+            const blocked = applyLinkFieldToAnchor(createDomRenderer(), anchor, { href, text: 'x' }, baseOptions());
+            expect(blocked).toBeUndefined();
+            expect(anchor.getAttribute('href')).toBe(href);
+          }
+        );
+      });
+    });
   });
 });

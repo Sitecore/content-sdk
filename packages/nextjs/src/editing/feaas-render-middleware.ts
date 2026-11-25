@@ -3,8 +3,10 @@ import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
   INVALID_SECRET_HTML_MESSAGE,
+  redactEditingSecret,
 } from '@sitecore-content-sdk/content/editing';
 import { getEditingSecret } from '../utils/utils';
+import { secretsEqual } from '@sitecore-content-sdk/core/node-tools';
 import { RenderMiddlewareBase } from './render-middleware';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import debug from '../debug';
@@ -55,7 +57,7 @@ export class FEAASRenderMiddleware extends RenderMiddlewareBase {
 
     debug.editing('feaas render middleware start: %o', {
       method,
-      query,
+      query: redactEditingSecret(query),
       headers,
     });
 
@@ -89,8 +91,10 @@ export class FEAASRenderMiddleware extends RenderMiddlewareBase {
 
     // Validate secret
     const secret = query[QUERY_PARAM_EDITING_SECRET];
-    if (secret !== getEditingSecret()) {
-      debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, getEditingSecret());
+    if (!secretsEqual(secret, getEditingSecret())) {
+      debug.editing(
+        'invalid editing secret - check the expected editing secret in the SITECORE_EDITING_SECRET env variable set in your editing host'
+      );
       return res.status(401).send(INVALID_SECRET_HTML_MESSAGE);
     }
 
