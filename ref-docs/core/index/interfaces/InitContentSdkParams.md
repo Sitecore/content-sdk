@@ -6,7 +6,7 @@
 
 # Interface: InitContentSdkParams
 
-Defined in: [packages/core/src/initialization/types.ts:5](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/core/src/initialization/types.ts#L5)
+Defined in: [packages/core/src/initialization/types.ts:5](https://github.com/Sitecore/content-sdk/blob/70cc3e22e6077307faa68bfeead5defb753a25b8/packages/core/src/initialization/types.ts#L5)
 
 Parameters for initContentSdk
 
@@ -16,7 +16,7 @@ Parameters for initContentSdk
 
 > **config**: `object`
 
-Defined in: [packages/core/src/initialization/types.ts:7](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/core/src/initialization/types.ts#L7)
+Defined in: [packages/core/src/initialization/types.ts:7](https://github.com/Sitecore/content-sdk/blob/70cc3e22e6077307faa68bfeead5defb753a25b8/packages/core/src/initialization/types.ts#L7)
 
 Initialization config
 
@@ -44,6 +44,6 @@ The site name.
 
 > **plugins**: [`Plugin`](Plugin.md)\<`unknown`, `unknown`\>[]
 
-Defined in: [packages/core/src/initialization/types.ts:22](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/core/src/initialization/types.ts#L22)
+Defined in: [packages/core/src/initialization/types.ts:22](https://github.com/Sitecore/content-sdk/blob/70cc3e22e6077307faa68bfeead5defb753a25b8/packages/core/src/initialization/types.ts#L22)
 
 Array of plugins to initialize

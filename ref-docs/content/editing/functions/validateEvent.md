@@ -8,12 +8,11 @@
 
 > **validateEvent**(`e`, `eventName`): `boolean`
 
-Defined in: [content/src/editing/design-library.ts:120](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/content/src/editing/design-library.ts#L120)
+Defined in: [content/src/editing/design-library.ts:151](https://github.com/Sitecore/content-sdk/blob/70cc3e22e6077307faa68bfeead5defb753a25b8/packages/content/src/editing/design-library.ts#L151)
 
 **`Internal`**
 
-Validates that a MessageEvent has the expected event name and required data.
-Logs debug information when validation fails due to invalid origin.
+Validates that a MessageEvent has the expected event name, required data and a valid origin.
 
 ## Parameters
 
@@ -26,4 +25,4 @@ Logs debug information when validation fails due to invalid origin.
 
 `boolean`
 
-True if the event has a valid origin, data object, and matching event name; otherwise false.
+True if the event should be processed; otherwise false.

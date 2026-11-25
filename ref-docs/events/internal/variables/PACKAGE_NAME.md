@@ -8,7 +8,7 @@
 
 > `const` **PACKAGE\_NAME**: `string` = `packageJson.name`
 
-Defined in: [events/src/consts.ts:12](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/events/src/consts.ts#L12)
+Defined in: [events/src/consts.ts:12](https://github.com/Sitecore/content-sdk/blob/70cc3e22e6077307faa68bfeead5defb753a25b8/packages/events/src/consts.ts#L12)
 
 **`Internal`**
 

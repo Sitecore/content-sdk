@@ -8,7 +8,7 @@
 
 > **importsNamedExport**(`source`, `modulePattern`, `names`): `boolean`
 
-Defined in: [packages/core/src/tools/capabilities/filter-utils.ts:73](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/core/src/tools/capabilities/filter-utils.ts#L73)
+Defined in: [packages/core/src/tools/capabilities/filter-utils.ts:73](https://github.com/Sitecore/content-sdk/blob/70cc3e22e6077307faa68bfeead5defb753a25b8/packages/core/src/tools/capabilities/filter-utils.ts#L73)
 
 **`Internal`**
 
