@@ -464,4 +464,127 @@ describe('createEditingRenderMiddleware', () => {
     expect(editingParams.generation).toBe('variant');
     expect(next).toHaveBeenCalled();
   });
+
+  // ─── Inbound header sanitization (security) ────────────────────────────────
+  // The editing params header is an internal channel. A client must not be able to
+  // forge preview context by sending it directly to a non-editing route, /_data, or
+  // the SSR handler. This middleware strips any inbound copy on every request.
+  describe('inbound EDITING_PARAMS_HEADER sanitization', () => {
+    const forgedPreview = JSON.stringify({
+      site: 'attacker-site',
+      itemId: 'attacker-item',
+      language: 'en',
+      mode: 'edit',
+    });
+
+    it('strips a forged inbound editing header on a non-editing path and still passes through', async () => {
+      const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+      const req: ExpressRequest = {
+        method: 'GET',
+        path: '/about',
+        url: '/about',
+        body: undefined,
+        query: {},
+        headers: { [EDITING_PARAMS_HEADER]: forgedPreview },
+      };
+      const res = createMockRes();
+      await middleware(req, res, next);
+      expect(req.headers![EDITING_PARAMS_HEADER]).toBeUndefined();
+      expect(next).toHaveBeenCalled();
+      expect(res.status).not.toHaveBeenCalled();
+    });
+
+    it('strips a forged inbound editing header before rejecting an invalid secret (no preview context leaks)', async () => {
+      const middleware = createEditingRenderMiddleware({ editingSecret: 'good' });
+      const req: ExpressRequest = {
+        method: 'GET',
+        path: '/api/editing/render',
+        url: '/api/editing/render',
+        body: undefined,
+        query: baseQuery({ secret: 'bad' }),
+        headers: { ...baseHeaders(), [EDITING_PARAMS_HEADER]: forgedPreview },
+      };
+      const res = createMockRes();
+      await middleware(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(401);
+      expect(req.headers![EDITING_PARAMS_HEADER]).toBeUndefined();
+      expect(next).not.toHaveBeenCalled();
+    });
+
+    it('replaces a forged inbound editing header with secret-validated params on its endpoint', async () => {
+      const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+      const req: ExpressRequest = {
+        method: 'GET',
+        path: '/api/editing/render',
+        url: '/api/editing/render',
+        body: undefined,
+        query: baseQuery(),
+        headers: { ...baseHeaders(), [EDITING_PARAMS_HEADER]: forgedPreview },
+      };
+      const res = createMockRes();
+      await middleware(req, res, next);
+      const editingReq = req as ExpressEditingRequest;
+      const params = JSON.parse(editingReq.headers![EDITING_PARAMS_HEADER] as string);
+      // Params come from the secret-validated query, never from the forged header.
+      expect(params.site).toBe('demo');
+      expect(params.itemId).toBe('11111111-1111-1111-1111-111111111111');
+      expect(params.itemId).not.toBe('attacker-item');
+      expect(next).toHaveBeenCalled();
+    });
+  });
+
+  // ─── req.scEditing is the trusted in-process marker ────────────────────────
+  // `scEditing` is set on the Express request only by this middleware and only after
+  // secret validation, so downstream Express-side code can trust it without reparsing
+  // headers. It must never be present for forged or unauthenticated requests.
+  describe('req.scEditing trusted marker', () => {
+    it('does not set scEditing for a forged non-editing request', async () => {
+      const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+      const req: ExpressRequest = {
+        method: 'GET',
+        path: '/about',
+        url: '/about',
+        body: undefined,
+        query: {},
+        headers: { [EDITING_PARAMS_HEADER]: JSON.stringify({ site: 'attacker', mode: 'edit' }) },
+      };
+      const res = createMockRes();
+      await middleware(req, res, next);
+      expect((req as ExpressEditingRequest).scEditing).toBeUndefined();
+    });
+
+    it('does not set scEditing when the secret is invalid', async () => {
+      const middleware = createEditingRenderMiddleware({ editingSecret: 'good' });
+      const req: ExpressRequest = {
+        method: 'GET',
+        path: '/api/editing/render',
+        url: '/api/editing/render',
+        body: undefined,
+        query: baseQuery({ secret: 'bad' }),
+        headers: baseHeaders(),
+      };
+      const res = createMockRes();
+      await middleware(req, res, next);
+      expect((req as ExpressEditingRequest).scEditing).toBeUndefined();
+    });
+
+    it('sets scEditing in sync with the header only after the secret is validated', async () => {
+      const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+      const req: ExpressRequest = {
+        method: 'GET',
+        path: '/api/editing/render',
+        url: '/api/editing/render',
+        body: undefined,
+        query: baseQuery(),
+        headers: baseHeaders(),
+      };
+      const res = createMockRes();
+      await middleware(req, res, next);
+      const editingReq = req as ExpressEditingRequest;
+      expect(editingReq.scEditing).toBeDefined();
+      expect(JSON.parse(editingReq.headers![EDITING_PARAMS_HEADER] as string)).toEqual(
+        editingReq.scEditing
+      );
+    });
+  });
 });
