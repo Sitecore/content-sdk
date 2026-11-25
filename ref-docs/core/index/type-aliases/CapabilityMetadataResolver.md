@@ -8,7 +8,7 @@
 
 > **CapabilityMetadataResolver** = (`context`) => [`CapabilityMetadata`](CapabilityMetadata.md) \| `Promise`\<[`CapabilityMetadata`](CapabilityMetadata.md)\>
 
-Defined in: [packages/core/src/capabilities.ts:19](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/core/src/capabilities.ts#L19)
+Defined in: [packages/core/src/capabilities.ts:19](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/core/src/capabilities.ts#L19)
 
 A function that resolves metadata JSON for a capability.
 

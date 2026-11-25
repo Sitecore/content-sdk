@@ -6,7 +6,7 @@
 
 # Interface: OpenGraphFields
 
-Defined in: [content/src/layout/field-types.ts:70](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/content/src/layout/field-types.ts#L70)
+Defined in: [content/src/layout/field-types.ts:70](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/content/src/layout/field-types.ts#L70)
 
 The interface for a page's Open Graph fields (siblings of Title in a route's fields).
 
@@ -20,7 +20,7 @@ The interface for a page's Open Graph fields (siblings of Title in a route's fie
 
 > `optional` **baseOgDescription?**: [`Field`](Field.md)\<`string`\>
 
-Defined in: [content/src/layout/field-types.ts:72](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/content/src/layout/field-types.ts#L72)
+Defined in: [content/src/layout/field-types.ts:72](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/content/src/layout/field-types.ts#L72)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [content/src/layout/field-types.ts:72](https://github.com/Sitecore/c
 
 > `optional` **baseOgImage?**: [`OpenGraphImageField`](OpenGraphImageField.md)
 
-Defined in: [content/src/layout/field-types.ts:73](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/content/src/layout/field-types.ts#L73)
+Defined in: [content/src/layout/field-types.ts:73](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/content/src/layout/field-types.ts#L73)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [content/src/layout/field-types.ts:73](https://github.com/Sitecore/c
 
 > `optional` **baseOgTitle?**: [`Field`](Field.md)\<`string`\>
 
-Defined in: [content/src/layout/field-types.ts:71](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/content/src/layout/field-types.ts#L71)
+Defined in: [content/src/layout/field-types.ts:71](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/content/src/layout/field-types.ts#L71)
 
 ***
 
@@ -44,4 +44,4 @@ Defined in: [content/src/layout/field-types.ts:71](https://github.com/Sitecore/c
 
 > `optional` **baseOgType?**: [`Field`](Field.md)\<`string`\>
 
-Defined in: [content/src/layout/field-types.ts:74](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/content/src/layout/field-types.ts#L74)
+Defined in: [content/src/layout/field-types.ts:74](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/content/src/layout/field-types.ts#L74)

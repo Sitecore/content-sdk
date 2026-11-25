@@ -5,9 +5,11 @@ import {
   INVALID_SECRET_HTML_MESSAGE,
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
+  redactEditingSecret,
 } from '@sitecore-content-sdk/content/editing';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { getEditingSecret } from '../utils/utils';
+import { secretsEqual } from '@sitecore-content-sdk/core/node-tools';
 import { RenderMiddlewareBase } from './render-middleware';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import debug from '../debug';
@@ -87,7 +89,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
     debug.editing('editing render middleware start: %o', {
       method,
-      query,
+      query: redactEditingSecret(query),
       headers,
       body,
     });
@@ -113,8 +115,10 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
     // Validate secret
     const secret = query[QUERY_PARAM_EDITING_SECRET];
-    if (secret !== getEditingSecret()) {
-      debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, getEditingSecret());
+    if (!secretsEqual(secret, getEditingSecret())) {
+      debug.editing(
+        'invalid editing secret - check the expected editing secret in the SITECORE_EDITING_SECRET env variable set in your editing host'
+      );
       return res.status(401).json({
         html: INVALID_SECRET_HTML_MESSAGE,
       });

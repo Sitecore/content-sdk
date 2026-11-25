@@ -111,6 +111,44 @@ describe('<Text />', () => {
     expect(rendered?.outerHTML).to.contain('<span><br></span>');
   });
 
+  it('should remove a javascript: href when encoding is disabled', () => {
+    const errorStub = sinon.stub(console, 'error');
+    try {
+      const field = {
+        value: 'Line one\n<a href="javascript:alert(1)">Click</a>',
+      };
+      const { container, rerender } = render(<Text field={field} encode={false} />);
+      const rendered = container.querySelector('span');
+      const anchor = rendered?.querySelector('a');
+
+      expect(rendered?.innerHTML).to.equal('Line one<br><a>Click</a>');
+      expect(anchor?.textContent).to.equal('Click');
+      expect(anchor?.getAttribute('href')).to.equal(null);
+
+      rerender(<Text field={{ ...field }} encode={false} />);
+      expect(errorStub.calledOnce).to.equal(true);
+      expect(errorStub.firstCall.args[0]).to.contain('javascript:alert(1)');
+    } finally {
+      errorStub.restore();
+    }
+  });
+
+  it('should encode a javascript: href when encoding is enabled', () => {
+    const errorStub = sinon.stub(console, 'error');
+    try {
+      const field = {
+        value: '<a href="javascript:alert(1)">Click</a>',
+      };
+      const rendered = render(<Text tag="span" field={field} />).container.querySelector('span');
+
+      expect(rendered?.querySelector('a')).to.equal(null);
+      expect(rendered?.innerHTML).to.contain('javascript:alert(1)');
+      expect(errorStub.callCount).to.equal(0);
+    } finally {
+      errorStub.restore();
+    }
+  });
+
   it('should render embedded html as-is when encoding is disabled', () => {
     const field = {
       value: '<input type="text">some crazy stuff<script code="whaaaat">uh oh</script>',

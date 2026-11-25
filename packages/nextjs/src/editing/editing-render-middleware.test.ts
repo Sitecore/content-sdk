@@ -15,6 +15,8 @@ import { EditingRenderMiddleware, EditingNextApiRequest } from './editing-render
 import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
+import debug from '../debug';
+import { expectSecretsNotLogged } from '../tests/debug-output';
 import {
   EDITING_PARAMS_HEADER,
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
@@ -160,6 +162,52 @@ describe('EditingRenderMiddleware', () => {
     expect(res.status).to.have.been.calledOnce;
     expect(res.status).to.have.been.calledWith(401);
     expect(res.json).to.have.been.calledOnce;
+  });
+
+  it('should not log the sent or expected secret for an invalid secret', async () => {
+    const debugStub = sinon.stub(debug, 'editing');
+    try {
+      const sentSecret = 'sent-secret-should-not-be-logged';
+      const res = mockResponse();
+
+      const handler = new EditingRenderMiddleware().getHandler();
+      await handler(mockRequest({ query: { [QUERY_PARAM_EDITING_SECRET]: sentSecret } }), res);
+
+      expect(res.status).to.have.been.calledWith(401);
+      expectSecretsNotLogged(debugStub, [sentSecret, secret]);
+    } finally {
+      debugStub.restore();
+    }
+  });
+
+  it('should not log the secret for a valid request', async () => {
+    const debugStub = sinon.stub(debug, 'editing');
+    try {
+      const res = mockResponse();
+
+      const middleware = new EditingRenderMiddleware();
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '<div>some html</div>' });
+      await middleware.getHandler()(
+        mockRequest({
+          query: {
+            mode: 'edit',
+            route: '/styleguide',
+            sc_itemid: '{11111111-1111-1111-1111-111111111111}',
+            sc_lang: 'en',
+            sc_site: 'website',
+            secret,
+          } as EditingRenderQueryParams,
+        }),
+        res
+      );
+
+      expect(res.status).to.have.been.calledWith(200);
+      expectSecretsNotLogged(debugStub, [secret]);
+    } finally {
+      debugStub.restore();
+    }
   });
 
   it('should stop request and return 401 when CORS match is not met', async () => {

@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { Component, input } from '@angular/core';
 import { Field } from '@sitecore-content-sdk/content/layout';
 import { ScTextDirective } from './sc-text.directive';
@@ -74,6 +74,37 @@ describe('ScTextDirective', () => {
 
     const span = fixture.nativeElement.querySelector('span');
     expect(span?.querySelector('strong')?.textContent).toBe('Bold');
+  });
+
+  it('should remove a javascript: href when encode is false and log it', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const fixture = createFixture(TestHostUnencodedComponent);
+    fixture.componentRef.setInput('field', {
+      value: 'Read <a href="javascript:alert(1)">Click</a> or <a href="/ok">ok</a>',
+    });
+    fixture.detectChanges();
+    fixture.detectChanges();
+
+    const links = fixture.nativeElement.querySelectorAll('a') as NodeListOf<HTMLAnchorElement>;
+    expect(links[0].textContent).toBe('Click');
+    expect(links[0].hasAttribute('href')).toBe(false);
+    expect(links[1].getAttribute('href')).toBe('/ok');
+    expect(errorSpy).toHaveBeenCalledOnce();
+    expect(errorSpy.mock.calls[0][0]).toContain('javascript:alert(1)');
+    errorSpy.mockRestore();
+  });
+
+  it('should keep a javascript: href as encoded text when encode is true', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const fixture = createFixture(TestHostComponent);
+    fixture.componentRef.setInput('field', { value: '<a href="javascript:alert(1)">Click</a>' });
+    fixture.detectChanges();
+
+    const span = fixture.nativeElement.querySelector('span');
+    expect(span?.querySelector('a')).toBeNull();
+    expect(span?.textContent).toBe('<a href="javascript:alert(1)">Click</a>');
+    expect(errorSpy).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
   });
 });
 

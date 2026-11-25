@@ -38,4 +38,5 @@
 - [mergeCapabilityExports](functions/mergeCapabilityExports.md)
 - [resolveCapabilities](functions/resolveCapabilities.md)
 - [resolveContentSdkPackageNames](functions/resolveContentSdkPackageNames.md)
+- [secretsEqual](functions/secretsEqual.md)
 - [someSourceFile](functions/someSourceFile.md)

@@ -7,6 +7,7 @@ import {
   type SitecoreEdgeRevalidateRequestBody,
 } from './sitecore-edge-webhook-revalidation';
 import { readProcessEnv } from '../utils';
+import { secretsEqual } from '@sitecore-content-sdk/core/node-tools';
 const DEFAULT_SECRET_ENV_VAR = 'SITECORE_REVALIDATE_SECRET';
 const DEFAULT_SECRET_HEADER = 'x-revalidate-secret';
 const DEFAULT_ENDPOINT = '/api/revalidate';
@@ -85,7 +86,7 @@ export function createSitecoreRevalidateMiddleware(
       const headers = req.headers as Record<string, string | string[] | undefined>;
       const providedSecret = headers[DEFAULT_SECRET_HEADER];
       const headerValue = Array.isArray(providedSecret) ? providedSecret[0] : providedSecret;
-      if (headerValue !== configuredSecret) {
+      if (configuredSecret && !secretsEqual(headerValue, configuredSecret)) {
         res.status(401).json({ error: 'Unauthorized.' });
         return;
       }

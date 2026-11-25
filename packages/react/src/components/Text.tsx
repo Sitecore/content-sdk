@@ -1,10 +1,12 @@
 'use client';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import { isFieldValueEmpty, type TextField } from '@sitecore-content-sdk/content/layout';
+import { omitJavascriptUrls } from '@sitecore-content-sdk/core/tools';
 import { withFieldMetadata } from '../enhancers/withFieldMetadata';
 import { withEmptyFieldEditingComponent } from '../enhancers/withEmptyFieldEditingComponent';
 import { DefaultEmptyFieldEditingComponentText } from './DefaultEmptyFieldEditingComponents';
 import { EditableFieldProps } from './sharedTypes';
+import { useOmittedJavascriptUrlLog } from './use-omitted-javascript-url-log';
 
 export interface TextProps extends EditableFieldProps<TextProps> {
   [htmlAttributes: string]: unknown;
@@ -27,6 +29,18 @@ const TextComponent: React.FC<TextProps> = ({
   encode = true,
   ...otherProps
 }) => {
+  const rawValue = field?.value;
+  // Unencoded values go to innerHTML, where React does not block javascript: URLs.
+  const unencoded = useMemo(
+    () =>
+      encode || rawValue === undefined || rawValue === null
+        ? undefined
+        : omitJavascriptUrls(String(rawValue).split('\n').join('<br>')),
+    [encode, rawValue]
+  );
+
+  useOmittedJavascriptUrlLog(unencoded?.omittedUrls ?? []);
+
   if (isFieldValueEmpty(field)) {
     return null;
   }
@@ -49,7 +63,7 @@ const TextComponent: React.FC<TextProps> = ({
 
   if (!encode) {
     htmlProps.dangerouslySetInnerHTML = {
-      __html: String(value).split('\n').join('<br>'),
+      __html: unencoded?.html ?? '',
     };
   } else {
     let output: string | number | (ReactElement | string)[] = value;

@@ -7,6 +7,8 @@ import proxyquire from 'proxyquire';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/content/editing';
 import { ComponentMap } from '@sitecore-content-sdk/react';
 import { NextjsContentSdkComponent } from '../sharedTypes/component-props';
+import debug from '../debug';
+import { expectSecretsNotLogged } from '../tests/debug-output';
 
 chai.use(sinonChai);
 
@@ -122,6 +124,28 @@ describe('createEditingConfigRouteHandler', () => {
       expect(res.status).to.equal(401);
       expect(res.body).to.equal(JSON.stringify({ message: 'Missing or invalid editing secret' }));
       expect(res.headers['Content-Type']).to.equal('application/json');
+    });
+
+    it('should not log the sent or expected secret for an invalid secret', async () => {
+      const debugStub = sandbox.stub(debug, 'editing');
+      const sentSecret = 'sent-secret-should-not-be-logged';
+      req.nextUrl!.searchParams = new URLSearchParams({
+        [QUERY_PARAM_EDITING_SECRET]: sentSecret,
+      });
+
+      const res = await handler.GET(req as NextRequest);
+
+      expect(res.status).to.equal(401);
+      expectSecretsNotLogged(debugStub, [sentSecret, secret]);
+    });
+
+    it('should not log the secret for a valid request', async () => {
+      const debugStub = sandbox.stub(debug, 'editing');
+
+      const res = await handler.GET(req as NextRequest);
+
+      expect(res.status).to.equal(200);
+      expectSecretsNotLogged(debugStub, [secret]);
     });
 
     it('should return 200 with config data for valid request', async () => {

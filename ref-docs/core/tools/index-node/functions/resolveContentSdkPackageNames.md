@@ -8,7 +8,7 @@
 
 > **resolveContentSdkPackageNames**(`appPath?`): `string`[] \| `undefined`
 
-Defined in: [packages/core/src/tools/framework-packages.ts:21](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/core/src/tools/framework-packages.ts#L21)
+Defined in: [packages/core/src/tools/framework-packages.ts:21](https://github.com/Sitecore/content-sdk/blob/47aea23db5c87b62b269d8f5d3e2ee45d9901657/packages/core/src/tools/framework-packages.ts#L21)
 
 Reads the Content SDK packages an app depends on.
 Every direct `@sitecore-content-sdk/*` dependency is included, so a new product

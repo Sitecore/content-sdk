@@ -9,6 +9,7 @@
 ## Type Aliases
 
 - [EnhancedOmit](type-aliases/EnhancedOmit.md)
+- [OmitJavascriptUrlsResult](type-aliases/OmitJavascriptUrlsResult.md)
 
 ## Variables
 
@@ -24,6 +25,7 @@
 - [getCache](functions/getCache.md)
 - [getCacheAndClean](functions/getCacheAndClean.md)
 - [getEnforcedCorsHeaders](functions/getEnforcedCorsHeaders.md)
+- [getOmittedJavascriptUrlMessage](functions/getOmittedJavascriptUrlMessage.md)
 - [hasCache](functions/hasCache.md)
 - [isJavascriptUrl](functions/isJavascriptUrl.md)
 - [isRegexOrUrl](functions/isRegexOrUrl.md)
@@ -31,6 +33,7 @@
 - [isTimeoutError](functions/isTimeoutError.md)
 - [mergeURLSearchParams](functions/mergeURLSearchParams.md)
 - [normalizeUrl](functions/normalizeUrl.md)
+- [omitJavascriptUrls](functions/omitJavascriptUrls.md)
 - [resolveEdgeUrl](functions/resolveEdgeUrl.md)
 - [resolveEdgeUrlForStaticFiles](functions/resolveEdgeUrlForStaticFiles.md)
 - [resolveExperienceEdgeUrl](functions/resolveExperienceEdgeUrl.md)

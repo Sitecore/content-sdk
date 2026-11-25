@@ -5,6 +5,8 @@ import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { createEditingConfigMiddleware } from './editing-config-middleware';
 import type { ExpressRequest, ExpressResponse } from './models';
 import type { ComponentMap } from '../../components/types';
+import debug from '../../debug';
+import { expectSecretsNotLogged } from '../../testing/debug-output';
 
 @Component({ selector: 'test-a', template: '' })
 class TestAComponent {}
@@ -99,6 +101,61 @@ describe('createEditingConfigMiddleware', () => {
     await middleware(req, res, next);
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({ message: 'Missing or invalid editing secret' });
+  });
+
+  it('does not log the sent or expected secret when secret is invalid', async () => {
+    const debugEditingSpy = vi.spyOn(debug, 'editing').mockImplementation(() => {});
+    const middleware = createEditingConfigMiddleware({
+      components,
+      metadata,
+      editingSecret: 'correct-secret-value',
+    });
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/config',
+      url: '/api/editing/config?secret=wrong-secret-value',
+      body: undefined,
+      query: { secret: 'wrong-secret-value' },
+      headers: { origin: 'https://pages.sitecorecloud.io' },
+    };
+    const res = createMockRes();
+    try {
+      await middleware(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+      expectSecretsNotLogged(debugEditingSpy, ['correct-secret-value', 'wrong-secret-value']);
+      expect(debugEditingSpy.mock.calls.flat().map(String).join(' ')).toContain(
+        'SITECORE_EDITING_SECRET'
+      );
+    } finally {
+      debugEditingSpy.mockRestore();
+    }
+  });
+
+  it('does not log the secret when secret is valid', async () => {
+    const debugEditingSpy = vi.spyOn(debug, 'editing').mockImplementation(() => {});
+    const middleware = createEditingConfigMiddleware({
+      components,
+      metadata,
+      editingSecret: 'correct-secret-value',
+    });
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/config',
+      url: '/api/editing/config?secret=correct-secret-value',
+      body: undefined,
+      query: { secret: 'correct-secret-value' },
+      headers: { origin: 'https://pages.sitecorecloud.io' },
+    };
+    const res = createMockRes();
+    try {
+      await middleware(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expectSecretsNotLogged(debugEditingSpy, ['correct-secret-value']);
+    } finally {
+      debugEditingSpy.mockRestore();
+    }
   });
 
   it('responds 204 on OPTIONS preflight', async () => {

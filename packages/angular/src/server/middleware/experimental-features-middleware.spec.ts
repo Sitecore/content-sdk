@@ -4,6 +4,8 @@ import { CSDK_GLOBAL_EXPERIMENTAL_FEATURES_FLAG } from '@sitecore-content-sdk/co
 import { createExperimentalFeaturesMiddleware } from './experimental-features-middleware';
 import type { ExpressRequest, ExpressResponse } from './models';
 import experimentalFeaturesCatalog from '../../experimental.json';
+import debug from '../../debug';
+import { expectSecretsNotLogged } from '../../testing/debug-output';
 
 function createMockRes() {
   return {
@@ -85,6 +87,54 @@ describe('createExperimentalFeaturesMiddleware', () => {
     await middleware(req, res, next);
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({ message: 'Missing or invalid editing secret' });
+  });
+
+  it('does not log the sent or expected secret when secret is invalid', async () => {
+    process.env.JSS_ALLOWED_ORIGINS = 'https://allowed.com';
+    process.env.SITECORE_EDITING_SECRET = 'expected-secret-value';
+    const debugEditingSpy = vi.spyOn(debug, 'editing').mockImplementation(() => {});
+    const middleware = createExperimentalFeaturesMiddleware();
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/experimental',
+      url: '/api/editing/experimental?secret=sent-secret-value',
+      body: undefined,
+      query: { secret: 'sent-secret-value' },
+      headers: { origin: 'https://allowed.com' },
+    };
+    const res = createMockRes();
+    try {
+      await middleware(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+      expectSecretsNotLogged(debugEditingSpy, ['expected-secret-value', 'sent-secret-value']);
+    } finally {
+      debugEditingSpy.mockRestore();
+    }
+  });
+
+  it('does not log the secret when secret is valid', async () => {
+    process.env.JSS_ALLOWED_ORIGINS = 'https://allowed.com';
+    process.env.SITECORE_EDITING_SECRET = 'expected-secret-value';
+    const debugEditingSpy = vi.spyOn(debug, 'editing').mockImplementation(() => {});
+    const middleware = createExperimentalFeaturesMiddleware();
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/experimental',
+      url: '/api/editing/experimental?secret=expected-secret-value',
+      body: undefined,
+      query: { secret: 'expected-secret-value' },
+      headers: { origin: 'https://allowed.com' },
+    };
+    const res = createMockRes();
+    try {
+      await middleware(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expectSecretsNotLogged(debugEditingSpy, ['expected-secret-value']);
+    } finally {
+      debugEditingSpy.mockRestore();
+    }
   });
 
   it('returns package catalog feature statuses for valid request', async () => {
