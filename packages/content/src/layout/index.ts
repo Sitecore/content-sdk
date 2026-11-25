@@ -48,9 +48,11 @@ export { getDesignLibraryStylesheetLinks } from './themes';
 export {
   ThemingMode,
   ThemingStylesheetLinksOptions,
-  THEMING_BODY_CLASS_NAME,
+  ThemingHtmlAttributes,
+  THEMING_HTML_ATTRIBUTE_NAME,
   THEMING_DELIVERY_CHANNEL,
   isSiteThemingEnabled,
+  getThemingHtmlAttributes,
   getThemingStylesheetLinks,
 } from './theming';
 
