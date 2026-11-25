@@ -3,6 +3,7 @@ import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
   INVALID_SECRET_HTML_MESSAGE,
+  redactEditingSecret,
 } from '@sitecore-content-sdk/content/editing';
 import { getEditingSecret } from '../utils/utils';
 import { secretsEqual } from '@sitecore-content-sdk/core/node-tools';
@@ -56,7 +57,7 @@ export class FEAASRenderMiddleware extends RenderMiddlewareBase {
 
     debug.editing('feaas render middleware start: %o', {
       method,
-      query,
+      query: redactEditingSecret(query),
       headers,
     });
 

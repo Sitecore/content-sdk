@@ -1,6 +1,7 @@
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
+  redactEditingSecret,
 } from '@sitecore-content-sdk/content/editing';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
@@ -157,7 +158,7 @@ export function createEditingConfigMiddleware(
 
     debug.editing('editing config middleware start: %o', {
       method: req.method,
-      query: req.query,
+      query: redactEditingSecret(req.query),
       headers: req.headers,
     });
 

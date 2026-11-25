@@ -1,6 +1,7 @@
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
+  redactEditingSecret,
 } from '@sitecore-content-sdk/content/editing';
 import { buildExperimentalFeaturesResponse } from '@sitecore-content-sdk/content/experimental';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
@@ -44,7 +45,7 @@ export function createExperimentalFeaturesMiddleware(
 
     debug.editing('experimental features middleware start: %o', {
       method: req.method,
-      query: req.query,
+      query: redactEditingSecret(req.query),
       headers: req.headers,
     });
 

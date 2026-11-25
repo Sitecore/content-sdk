@@ -1,5 +1,7 @@
 /* eslint-disable jsdoc/require-jsdoc */
+import { inspect } from 'util';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import debug from '../../debug';
 import { createSitecoreRevalidateMiddleware } from './sitecore-revalidate-middleware';
 import { createLoaderCache } from '../cache/loader-cache';
 import { buildCacheKey } from '../cache/cache-key';
@@ -107,6 +109,103 @@ describe('createSitecoreRevalidateMiddleware', () => {
     );
 
     expect(res.status).toHaveBeenCalledWith(401);
+  });
+
+  describe('secret handling', () => {
+    const webhookBody = {
+      updates: [{ identifier: '71B0BA0716214254AEE4429B1A970C8B', entity_culture: 'en' }],
+    };
+
+    function createRequest(headers: ExpressRequest['headers']): ExpressRequest {
+      return {
+        method: 'POST',
+        path: '/api/revalidate',
+        url: '/api/revalidate',
+        headers,
+        body: webhookBody,
+        query: {},
+      } as ExpressRequest;
+    }
+
+    it('returns 401 when the header secret has a different length', async () => {
+      process.env.SITECORE_REVALIDATE_SECRET = 'expected';
+      const middleware = createSitecoreRevalidateMiddleware({ cache });
+      const res = createMockRes();
+
+      await middleware(createRequest({ 'x-revalidate-secret': 'expected-but-longer' }), res, next);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.json).toHaveBeenCalledWith({ error: 'Unauthorized.' });
+      expect((await cache.get(cacheKey)).kind).not.toBe('stale');
+    });
+
+    it('authorizes a matching secret', async () => {
+      process.env.SITECORE_REVALIDATE_SECRET = 'expected';
+      const middleware = createSitecoreRevalidateMiddleware({ cache });
+      const res = createMockRes();
+
+      await middleware(createRequest({ 'x-revalidate-secret': 'expected' }), res, next);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect((await cache.get(cacheKey)).kind).toBe('stale');
+    });
+
+    it('uses the first value when the header is repeated', async () => {
+      const middleware = createSitecoreRevalidateMiddleware({ cache, secret: 'expected' });
+      const okRes = createMockRes();
+      const rejectedRes = createMockRes();
+
+      await middleware(createRequest({ 'x-revalidate-secret': ['wrong', 'expected'] }), rejectedRes, next);
+      expect(rejectedRes.status).toHaveBeenCalledWith(401);
+
+      await middleware(createRequest({ 'x-revalidate-secret': ['expected', 'wrong'] }), okRes, next);
+      expect(okRes.status).toHaveBeenCalledWith(200);
+    });
+
+    it('skips the check when no secret is configured, even if a header is sent', async () => {
+      const middleware = createSitecoreRevalidateMiddleware({ cache });
+      const res = createMockRes();
+
+      await middleware(createRequest({ 'x-revalidate-secret': 'anything' }), res, next);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+    });
+
+    it('does not write the sent or expected secret to the console or debug output', async () => {
+      const expectedSecret = 'expected-secret-value';
+      const sentSecret = 'sent-secret-value';
+      const consoleSpies = (['log', 'info', 'warn', 'error', 'debug'] as const).map((method) =>
+        vi.spyOn(console, method).mockImplementation(() => {})
+      );
+      const debugEditingSpy = vi.spyOn(debug, 'editing').mockImplementation(() => {});
+      const middleware = createSitecoreRevalidateMiddleware({ cache, secret: expectedSecret });
+      const rejectedRes = createMockRes();
+      const authorizedRes = createMockRes();
+
+      try {
+        await middleware(createRequest({ 'x-revalidate-secret': sentSecret }), rejectedRes, next);
+        await middleware(createRequest({ 'x-revalidate-secret': expectedSecret }), authorizedRes, next);
+
+        expect(rejectedRes.status).toHaveBeenCalledWith(401);
+        expect(authorizedRes.status).toHaveBeenCalledWith(200);
+        const output = [debugEditingSpy, ...consoleSpies]
+          .flatMap((spy) => spy.mock.calls)
+          .map((args) => args.map((arg) => inspect(arg, { depth: null })).join(' '))
+          .join('\n');
+        expect(output).not.toContain(expectedSecret);
+        expect(output).not.toContain(sentSecret);
+        // the JSON responses must not echo the secrets either
+        const responses = JSON.stringify([
+          ...rejectedRes.json.mock.calls,
+          ...authorizedRes.json.mock.calls,
+        ]);
+        expect(responses).not.toContain(expectedSecret);
+        expect(responses).not.toContain(sentSecret);
+      } finally {
+        consoleSpies.forEach((spy) => spy.mockRestore());
+        debugEditingSpy.mockRestore();
+      }
+    });
   });
 
   it('falls through non-POST requests', async () => {

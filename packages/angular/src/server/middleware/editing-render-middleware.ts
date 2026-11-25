@@ -6,6 +6,7 @@ import {
   DesignLibraryMode,
   DesignLibraryVariantGeneration,
   DesignLibraryRenderPreviewData,
+  redactEditingSecret,
 } from '@sitecore-content-sdk/content/editing';
 import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import { getAllowedOriginsFromEnv, getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
@@ -229,7 +230,7 @@ export function createEditingRenderMiddleware(
     try {
       debug.editing('editing render middleware start: %o', {
         method: req.method,
-        query: req.query,
+        query: redactEditingSecret(req.query),
         headers: req.headers,
       });
 

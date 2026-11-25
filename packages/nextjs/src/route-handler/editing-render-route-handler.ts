@@ -5,6 +5,7 @@ import {
   PREVIEW_KEY,
   QUERY_PARAM_EDITING_SECRET,
   INVALID_SECRET_HTML_MESSAGE,
+  redactEditingSecret,
 } from '@sitecore-content-sdk/content/editing';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
@@ -131,7 +132,7 @@ export const createEditingRenderRouteHandlers = (options: EditingHandlerOptions)
 
     debug.editing('editing render handler start: %o', {
       method,
-      query,
+      query: redactEditingSecret(query),
       headers,
     });
 

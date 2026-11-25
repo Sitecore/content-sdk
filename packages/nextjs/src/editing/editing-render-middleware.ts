@@ -5,6 +5,7 @@ import {
   INVALID_SECRET_HTML_MESSAGE,
   EDITING_ALLOWED_ORIGINS,
   EditingRenderQueryParams,
+  redactEditingSecret,
 } from '@sitecore-content-sdk/content/editing';
 import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { getEditingSecret } from '../utils/utils';
@@ -88,7 +89,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
     debug.editing('editing render middleware start: %o', {
       method,
-      query,
+      query: redactEditingSecret(query),
       headers,
       body,
     });
