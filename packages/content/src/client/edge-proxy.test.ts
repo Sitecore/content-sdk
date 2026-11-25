@@ -69,12 +69,34 @@ describe('edge-proxy', () => {
       expect(url).to.equal(`https://test.com/v1/forms/publisher/${formId}?language=fr-FR`);
     });
 
-    it('should url encode formId', () => {
+    it('should url encode formId so it cannot change the path or query', () => {
       const url = getEdgeProxyFormsUrl('../admin?x=1#y', 'https://test.com', 'fr-FR');
 
       expect(url).to.equal(
         'https://test.com/v1/forms/publisher/..%2Fadmin%3Fx%3D1%23y?language=fr-FR'
       );
+    });
+
+    it('should url encode formId when language is not provided', () => {
+      const url = getEdgeProxyFormsUrl('a/b?c#d', 'https://test.com');
+
+      expect(url).to.equal('https://test.com/v1/forms/publisher/a%2Fb%3Fc%23d');
+    });
+
+    it('should keep a regular form id unchanged', () => {
+      const url = getEdgeProxyFormsUrl('6a4d4a3e-1c2b-4f3a-9b8e-2d1c3b4a5f6e', 'https://test.com');
+
+      expect(url).to.equal(
+        'https://test.com/v1/forms/publisher/6a4d4a3e-1c2b-4f3a-9b8e-2d1c3b4a5f6e'
+      );
+    });
+
+    ['..', '.', ''].forEach((invalidId) => {
+      it(`should throw for invalid form id '${invalidId}'`, () => {
+        expect(() => getEdgeProxyFormsUrl(invalidId, 'https://test.com')).to.throw(
+          `Invalid form id '${invalidId}'`
+        );
+      });
     });
   });
 });

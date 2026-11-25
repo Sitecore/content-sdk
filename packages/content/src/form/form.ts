@@ -25,9 +25,9 @@ export const loadForm = async (
     return '';
   }
 
-  const url = getEdgeProxyFormsUrl(formId, edgeUrl, language);
-
   try {
+    const url = getEdgeProxyFormsUrl(formId, edgeUrl, language);
+
     debug.form(`Fetching form data from ${url}`);
 
     const rsp = await fetch(url, {
