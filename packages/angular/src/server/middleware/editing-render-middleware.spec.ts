@@ -465,19 +465,15 @@ describe('createEditingRenderMiddleware', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  // ─── Inbound header sanitization (security) ────────────────────────────────
-  // The editing params header is an internal channel. A client must not be able to
-  // forge preview context by sending it directly to a non-editing route, /_data, or
-  // the SSR handler. This middleware strips any inbound copy on every request.
-  describe('inbound EDITING_PARAMS_HEADER sanitization', () => {
-    const forgedPreview = JSON.stringify({
-      site: 'attacker-site',
-      itemId: 'attacker-item',
+  describe('incoming editing params header', () => {
+    const incomingPreview = JSON.stringify({
+      site: 'other',
+      itemId: 'item-2',
       language: 'en',
       mode: 'edit',
     });
 
-    it('strips a forged inbound editing header on a non-editing path and still passes through', async () => {
+    it('should drop an incoming editing params header on a non-editing path', async () => {
       const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
       const req: ExpressRequest = {
         method: 'GET',
@@ -485,7 +481,7 @@ describe('createEditingRenderMiddleware', () => {
         url: '/about',
         body: undefined,
         query: {},
-        headers: { [EDITING_PARAMS_HEADER]: forgedPreview },
+        headers: { [EDITING_PARAMS_HEADER]: incomingPreview },
       };
       const res = createMockRes();
       await middleware(req, res, next);
@@ -494,7 +490,7 @@ describe('createEditingRenderMiddleware', () => {
       expect(res.status).not.toHaveBeenCalled();
     });
 
-    it('strips a forged inbound editing header before rejecting an invalid secret (no preview context leaks)', async () => {
+    it('should drop an incoming editing params header when the secret is invalid', async () => {
       const middleware = createEditingRenderMiddleware({ editingSecret: 'good' });
       const req: ExpressRequest = {
         method: 'GET',
@@ -502,7 +498,7 @@ describe('createEditingRenderMiddleware', () => {
         url: '/api/editing/render',
         body: undefined,
         query: baseQuery({ secret: 'bad' }),
-        headers: { ...baseHeaders(), [EDITING_PARAMS_HEADER]: forgedPreview },
+        headers: { ...baseHeaders(), [EDITING_PARAMS_HEADER]: incomingPreview },
       };
       const res = createMockRes();
       await middleware(req, res, next);
@@ -511,7 +507,7 @@ describe('createEditingRenderMiddleware', () => {
       expect(next).not.toHaveBeenCalled();
     });
 
-    it('replaces a forged inbound editing header with secret-validated params on its endpoint', async () => {
+    it('should replace an incoming editing params header with params from the query', async () => {
       const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
       const req: ExpressRequest = {
         method: 'GET',
@@ -519,26 +515,20 @@ describe('createEditingRenderMiddleware', () => {
         url: '/api/editing/render',
         body: undefined,
         query: baseQuery(),
-        headers: { ...baseHeaders(), [EDITING_PARAMS_HEADER]: forgedPreview },
+        headers: { ...baseHeaders(), [EDITING_PARAMS_HEADER]: incomingPreview },
       };
       const res = createMockRes();
       await middleware(req, res, next);
       const editingReq = req as ExpressEditingRequest;
       const params = JSON.parse(editingReq.headers![EDITING_PARAMS_HEADER] as string);
-      // Params come from the secret-validated query, never from the forged header.
       expect(params.site).toBe('demo');
       expect(params.itemId).toBe('11111111-1111-1111-1111-111111111111');
-      expect(params.itemId).not.toBe('attacker-item');
       expect(next).toHaveBeenCalled();
     });
   });
 
-  // ─── req.scEditing is the trusted in-process marker ────────────────────────
-  // `scEditing` is set on the Express request only by this middleware and only after
-  // secret validation, so downstream Express-side code can trust it without reparsing
-  // headers. It must never be present for forged or unauthenticated requests.
-  describe('req.scEditing trusted marker', () => {
-    it('does not set scEditing for a forged non-editing request', async () => {
+  describe('req.scEditing', () => {
+    it('should not set scEditing when the path is not the editing endpoint', async () => {
       const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
       const req: ExpressRequest = {
         method: 'GET',
@@ -546,14 +536,14 @@ describe('createEditingRenderMiddleware', () => {
         url: '/about',
         body: undefined,
         query: {},
-        headers: { [EDITING_PARAMS_HEADER]: JSON.stringify({ site: 'attacker', mode: 'edit' }) },
+        headers: { [EDITING_PARAMS_HEADER]: JSON.stringify({ site: 'other', mode: 'edit' }) },
       };
       const res = createMockRes();
       await middleware(req, res, next);
       expect((req as ExpressEditingRequest).scEditing).toBeUndefined();
     });
 
-    it('does not set scEditing when the secret is invalid', async () => {
+    it('should not set scEditing when the secret is invalid', async () => {
       const middleware = createEditingRenderMiddleware({ editingSecret: 'good' });
       const req: ExpressRequest = {
         method: 'GET',
@@ -568,7 +558,7 @@ describe('createEditingRenderMiddleware', () => {
       expect((req as ExpressEditingRequest).scEditing).toBeUndefined();
     });
 
-    it('sets scEditing in sync with the header only after the secret is validated', async () => {
+    it('should set scEditing from the same params written to the header', async () => {
       const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
       const req: ExpressRequest = {
         method: 'GET',
