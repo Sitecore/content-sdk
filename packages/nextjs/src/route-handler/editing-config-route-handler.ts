@@ -3,7 +3,7 @@ import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
 } from '@sitecore-content-sdk/content/editing';
-import { Metadata } from '@sitecore-content-sdk/core/node-tools';
+import { Metadata, secretsEqual } from '@sitecore-content-sdk/core/node-tools';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { getEditingSecret } from '../utils/utils';
@@ -68,11 +68,9 @@ export const createEditingConfigRouteHandler = (options: EditingConfigRouteHandl
         });
       }
 
-      if (secret !== getEditingSecret()) {
+      if (!secretsEqual(secret, getEditingSecret())) {
         debug.editing(
-          'invalid editing secret - sent "%s" expected "%s"',
-          secret,
-          getEditingSecret()
+          'invalid editing secret - check the expected editing secret in the SITECORE_EDITING_SECRET env variable set in your editing host'
         );
 
         return new Response(JSON.stringify({ message: 'Missing or invalid editing secret' }), {

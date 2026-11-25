@@ -4,7 +4,7 @@ import {
   QUERY_PARAM_EDITING_SECRET,
 } from '@sitecore-content-sdk/content/editing';
 import debug from '../debug';
-import { Metadata } from '@sitecore-content-sdk/core/node-tools';
+import { Metadata, secretsEqual } from '@sitecore-content-sdk/core/node-tools';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { getEditingSecret } from '../utils/utils';
@@ -62,8 +62,10 @@ export class EditingConfigMiddleware {
     Object.keys(corsHeaders).forEach((key) => {
       res.setHeader(key, corsHeaders[key]);
     });
-    if (secret !== getEditingSecret()) {
-      debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, getEditingSecret());
+    if (!secretsEqual(secret, getEditingSecret())) {
+      debug.editing(
+        'invalid editing secret - check the expected editing secret in the SITECORE_EDITING_SECRET env variable set in your editing host'
+      );
 
       return res.status(401).json({ message: 'Missing or invalid editing secret' });
     }

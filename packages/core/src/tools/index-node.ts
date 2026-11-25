@@ -7,6 +7,7 @@ export * from './framework-packages';
 export * from './capabilities';
 
 export { ensurePathExists } from './ensurePath';
+export { secretsEqual } from './secure-compare';
 
 /**
  * Preserve "live binding" semantics similar to ES module imports: production

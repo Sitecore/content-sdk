@@ -6,9 +6,11 @@ import {
   DesignLibraryMode,
   DesignLibraryVariantGeneration,
   DesignLibraryRenderPreviewData,
+  redactEditingSecret,
 } from '@sitecore-content-sdk/content/editing';
 import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
 import { getAllowedOriginsFromEnv, getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
+import { secretsEqual } from '@sitecore-content-sdk/core/node-tools';
 import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from './models';
 import { readProcessEnv } from '../utils';
 import { resolveConfiguredEditingSecret } from './editing-config-middleware';
@@ -228,7 +230,7 @@ export function createEditingRenderMiddleware(
     try {
       debug.editing('editing render middleware start: %o', {
         method: req.method,
-        query: req.query,
+        query: redactEditingSecret(req.query),
         headers: req.headers,
       });
 
@@ -260,8 +262,10 @@ export function createEditingRenderMiddleware(
         resolveConfiguredEditingSecret(options?.editingSecret) ??
         readProcessEnv('SITECORE_EDITING_SECRET');
 
-      if (!configuredSecret || secret !== configuredSecret) {
-        debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, configuredSecret);
+      if (!secretsEqual(secret, configuredSecret)) {
+        debug.editing(
+          'invalid editing secret - check the expected editing secret in the SITECORE_EDITING_SECRET env variable set in your editing host'
+        );
         res.status(401).json({ error: 'Missing or invalid secret' });
         return;
       }

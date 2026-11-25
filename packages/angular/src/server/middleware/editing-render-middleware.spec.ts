@@ -6,6 +6,8 @@ import {
 } from './editing-render-middleware';
 import type { ExpressRequest, ExpressResponse } from './models';
 import { EDITING_PARAMS_HEADER } from '../../editing/constants';
+import debug from '../../debug';
+import { expectSecretsNotLogged } from '../../testing/debug-output';
 
 function createMockRes() {
   return {
@@ -111,6 +113,50 @@ describe('createEditingRenderMiddleware', () => {
     await middleware(req, res, next);
     expect(res.status).toHaveBeenCalledWith(401);
     expect(next).not.toHaveBeenCalled();
+  });
+
+  it('should not log the sent or expected secret when secret is invalid', async () => {
+    const debugEditingSpy = vi.spyOn(debug, 'editing').mockImplementation(() => {});
+    const middleware = createEditingRenderMiddleware({ editingSecret: 'expected-secret-value' });
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/render',
+      url: '/api/editing/render',
+      body: undefined,
+      query: baseQuery({ secret: 'sent-secret-value' }),
+      headers: baseHeaders(),
+    };
+    const res = createMockRes();
+    try {
+      await middleware(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+      expectSecretsNotLogged(debugEditingSpy, ['expected-secret-value', 'sent-secret-value']);
+    } finally {
+      debugEditingSpy.mockRestore();
+    }
+  });
+
+  it('should not log the secret when secret is valid', async () => {
+    const debugEditingSpy = vi.spyOn(debug, 'editing').mockImplementation(() => {});
+    const middleware = createEditingRenderMiddleware({ editingSecret: 'expected-secret-value' });
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/render',
+      url: '/api/editing/render',
+      body: undefined,
+      query: baseQuery({ secret: 'expected-secret-value' }),
+      headers: baseHeaders(),
+    };
+    const res = createMockRes();
+    try {
+      await middleware(req, res, next);
+
+      expect(next).toHaveBeenCalled();
+      expectSecretsNotLogged(debugEditingSpy, ['expected-secret-value']);
+    } finally {
+      debugEditingSpy.mockRestore();
+    }
   });
 
   it('should reject 405 on non-GET methods', async () => {
