@@ -1,5 +1,6 @@
 import { Renderer2 } from '@angular/core';
 import { isFieldValueEmpty, LinkField, LinkFieldValue } from '@sitecore-content-sdk/content/layout';
+import { isJavascriptUrl } from '@sitecore-content-sdk/core/tools';
 import { getClassFromField } from './utils';
 
 /**
@@ -56,18 +57,21 @@ export interface ApplyLinkFieldToAnchorOptions {
  * @param {HTMLAnchorElement} element - Host anchor element.
  * @param {LinkFieldValue | undefined} link - Resolved link value, or `undefined` when empty.
  * @param {ApplyLinkFieldToAnchorOptions} options - Text/class/title/target behavior flags.
- * @returns {void}
+ * @returns {string | undefined} The javascript: href that was omitted, if any. Logging is left to the caller.
  */
 export function applyLinkFieldToAnchor(
   renderer: Renderer2,
   element: HTMLAnchorElement,
   link: LinkFieldValue | undefined,
   options: ApplyLinkFieldToAnchorOptions
-): void {
-  if (!link) {
+): string | undefined {
+  const href = link ? buildHrefFromLinkField(link) : undefined;
+  // Renderer2 does not sanitize attributes. Keep the anchor and its text, and omit the href.
+  const blockedHref = href !== undefined && isJavascriptUrl(href) ? href : undefined;
+  if (href === undefined || blockedHref) {
     renderer.removeAttribute(element, 'href');
   } else {
-    renderer.setAttribute(element, 'href', buildHrefFromLinkField(link));
+    renderer.setAttribute(element, 'href', href);
   }
   const classValue = link ? getClassFromField(link) : undefined;
   if (classValue) {
@@ -110,4 +114,6 @@ export function applyLinkFieldToAnchor(
       renderer.setProperty(element, 'textContent', link?.text || '');
     }
   }
+
+  return blockedHref;
 }

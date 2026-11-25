@@ -8,6 +8,7 @@ import { SitecoreContextService } from '../../lib/sitecore-context.service';
 import { SITECORE_CONFIG_TOKEN } from '../../lib/tokens';
 import { splitLocaleFromPath } from '../../i18n/locale-utils';
 import { MetadataKind } from '@sitecore-content-sdk/content/editing';
+import { isJavascriptUrl } from '@sitecore-content-sdk/core/tools';
 import { EXTERNAL_HREF_PREFIXES } from './utils';
 
 type OriginalAnchorAttrs = {
@@ -25,6 +26,7 @@ type OriginalAnchorAttrs = {
  */
 function isNonInternalHref(href: string): boolean {
   if (!href) return true;
+  if (isJavascriptUrl(href)) return true;
   const trimmed = href.trim();
   if (!trimmed) return true;
   if (trimmed.startsWith('#')) return true;
@@ -73,6 +75,7 @@ export class ScLinkDirective extends BaseFieldDirective<LinkField | LinkFieldVal
   private readonly locales =
     inject(SITECORE_CONFIG_TOKEN, { optional: true })?.angular?.locales ?? [];
   private readonly originalAttrs = new WeakMap<HTMLAnchorElement, OriginalAnchorAttrs>();
+  private lastBlockedHref: string | undefined;
 
   protected updateView(): void {
     this.viewContainer.clear();
@@ -106,18 +109,28 @@ export class ScLinkDirective extends BaseFieldDirective<LinkField | LinkFieldVal
     const link = resolveLinkFromField(field);
     const localizedLink = link ? this.localizeLink(link) : link;
 
+    let blockedHref: string | undefined;
     for (const node of this.viewRef.rootNodes) {
       if (!(node instanceof Element)) continue;
       const anchor = node as HTMLAnchorElement;
       const originals = this.getOriginals(anchor);
-      applyLinkFieldToAnchor(this.renderer, anchor, localizedLink, {
-        preferTextFromField: this.preferTextFromField(),
-        originalClass: originals.class,
-        originalTitle: originals.title,
-        originalTarget: originals.target,
-        originalRel: originals.rel,
-      });
+      blockedHref =
+        applyLinkFieldToAnchor(this.renderer, anchor, localizedLink, {
+          preferTextFromField: this.preferTextFromField(),
+          originalClass: originals.class,
+          originalTitle: originals.title,
+          originalTarget: originals.target,
+          originalRel: originals.rel,
+        }) ?? blockedHref;
     }
+
+    // Log once per link, and again only when the blocked URL changes.
+    if (blockedHref && blockedHref !== this.lastBlockedHref) {
+      console.error(
+        `Link blocked a javascript: URL ("${blockedHref}"). The link text is rendered without an href.`
+      );
+    }
+    this.lastBlockedHref = blockedHref;
   }
 
   private getOriginals(anchor: HTMLAnchorElement): OriginalAnchorAttrs {
