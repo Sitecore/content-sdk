@@ -56,8 +56,8 @@ describe('theming', () => {
       expect(getThemingHtmlAttributes('none')).to.deep.equal({});
     });
 
-    it('returns the data-sc-theme attribute when site theming is enabled', () => {
-      expect(getThemingHtmlAttributes('site')).to.deep.equal({ 'data-sc-theme': '' });
+    it('returns the data-sc-theme attribute with the mode as value when site theming is enabled', () => {
+      expect(getThemingHtmlAttributes('site')).to.deep.equal({ 'data-sc-theme': 'site' });
     });
   });
 

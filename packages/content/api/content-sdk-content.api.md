@@ -1816,7 +1816,7 @@ export const THEMING_HTML_ATTRIBUTE_NAME = "data-sc-theme";
 
 // @public
 export type ThemingHtmlAttributes = {
-    [THEMING_HTML_ATTRIBUTE_NAME]?: string;
+    [THEMING_HTML_ATTRIBUTE_NAME]?: Exclude<ThemingMode, 'none'>;
 };
 
 // @public

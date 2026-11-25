@@ -21,7 +21,8 @@ export const isSiteThemingEnabled = (mode: ThemingMode): boolean => mode === 'si
 
 /**
  * Name of the data attribute set on the `<html>` element when site-level design-token theming
- * is enabled. Generated theme CSS is scoped to this attribute (`[data-sc-theme]`) to avoid
+ * is enabled. The attribute value is the active theming mode (e.g. `data-sc-theme="site"`), so
+ * generated theme CSS can be scoped with `[data-sc-theme]` or `[data-sc-theme="site"]` to avoid
  * overriding variables defined by the application.
  * @public
  */
@@ -29,15 +30,17 @@ export const THEMING_HTML_ATTRIBUTE_NAME = 'data-sc-theme';
 
 /**
  * Attributes to spread onto the `<html>` element for site-level design-token theming.
+ * The value is the active theming mode.
  * @public
  */
 export type ThemingHtmlAttributes = {
-  [THEMING_HTML_ATTRIBUTE_NAME]?: string;
+  [THEMING_HTML_ATTRIBUTE_NAME]?: Exclude<ThemingMode, 'none'>;
 };
 
 /**
  * Returns the attributes to apply to the `<html>` element so that the injected theme stylesheet
- * takes effect. Returns an empty object when site-level theming is disabled.
+ * takes effect. The attribute value is the theming mode (e.g. `data-sc-theme="site"`).
+ * Returns an empty object when site-level theming is disabled.
  * @example
  * <html lang="en" {...getThemingHtmlAttributes(scConfig.theming.mode)}>
  * @param {ThemingMode} mode Theming mode from `sitecore.config`
@@ -45,7 +48,9 @@ export type ThemingHtmlAttributes = {
  * @public
  */
 export const getThemingHtmlAttributes = (mode: ThemingMode): ThemingHtmlAttributes =>
-  isSiteThemingEnabled(mode) ? { [THEMING_HTML_ATTRIBUTE_NAME]: '' } : {};
+  isSiteThemingEnabled(mode)
+    ? { [THEMING_HTML_ATTRIBUTE_NAME]: mode as Exclude<ThemingMode, 'none'> }
+    : {};
 
 /**
  * Builds the design-token theme stylesheet URL for a site.
