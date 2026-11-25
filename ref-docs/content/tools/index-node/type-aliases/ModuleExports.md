@@ -8,7 +8,7 @@
 
 > **ModuleExports** = `object`
 
-Defined in: [content/src/tools/codegen/import-map.ts:130](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/content/src/tools/codegen/import-map.ts#L130)
+Defined in: [content/src/tools/codegen/import-map.ts:130](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/content/src/tools/codegen/import-map.ts#L130)
 
 **`Internal`**
 
@@ -20,7 +20,7 @@ Import module definition, specifying all the imports for a given import path
 
 > **defaultExport**: `string` \| `null`
 
-Defined in: [content/src/tools/codegen/import-map.ts:134](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/content/src/tools/codegen/import-map.ts#L134)
+Defined in: [content/src/tools/codegen/import-map.ts:134](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/content/src/tools/codegen/import-map.ts#L134)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [content/src/tools/codegen/import-map.ts:134](https://github.com/Sit
 
 > **namedExports**: `Map`\<`string`, `string`\>
 
-Defined in: [content/src/tools/codegen/import-map.ts:132](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/content/src/tools/codegen/import-map.ts#L132)
+Defined in: [content/src/tools/codegen/import-map.ts:132](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/content/src/tools/codegen/import-map.ts#L132)
 
 ***
 
@@ -36,4 +36,4 @@ Defined in: [content/src/tools/codegen/import-map.ts:132](https://github.com/Sit
 
 > **namespaceExport**: `string` \| `null`
 
-Defined in: [content/src/tools/codegen/import-map.ts:136](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/content/src/tools/codegen/import-map.ts#L136)
+Defined in: [content/src/tools/codegen/import-map.ts:136](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/content/src/tools/codegen/import-map.ts#L136)

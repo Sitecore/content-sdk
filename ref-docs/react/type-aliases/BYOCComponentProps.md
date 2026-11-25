@@ -8,6 +8,6 @@
 
 > **BYOCComponentProps** = `BYOCComponentClientProps` & `BYOCServerProps`
 
-Defined in: [packages/react/src/components/FEaaS/models.ts:81](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/react/src/components/FEaaS/models.ts#L81)
+Defined in: [packages/react/src/components/FEaaS/models.ts:81](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/react/src/components/FEaaS/models.ts#L81)
 
 Props for BYOCComponent.

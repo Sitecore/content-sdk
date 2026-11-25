@@ -8,7 +8,7 @@
 
 > `const` **API\_VERSION**: `"v1.2"` = `'v1.2'`
 
-Defined in: [analytics-core/src/consts.ts:37](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/analytics-core/src/consts.ts#L37)
+Defined in: [analytics-core/src/consts.ts:37](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/analytics-core/src/consts.ts#L37)
 
 **`Internal`**
 

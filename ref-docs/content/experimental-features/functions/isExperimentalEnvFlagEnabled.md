@@ -8,7 +8,7 @@
 
 > **isExperimentalEnvFlagEnabled**(`value`): `boolean`
 
-Defined in: [content/src/experimental-features/utils.ts:21](https://github.com/Sitecore/content-sdk/blob/84bf2bda90cece7039a2dce1d068cc3670fab0df/packages/content/src/experimental-features/utils.ts#L21)
+Defined in: [content/src/experimental-features/utils.ts:21](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/content/src/experimental-features/utils.ts#L21)
 
 Returns true when an experimental feature env flag is enabled.
 Set the env var to `true` to opt in.
