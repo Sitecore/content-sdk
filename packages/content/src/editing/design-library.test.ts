@@ -711,7 +711,7 @@ describe('component library utils', () => {
       expect(validateEvent(evt, statusRenderedEvent)).to.be.true;
     });
 
-    it('should return false when name mismatches without logging (wildcard origin)', () => {
+    it('should return false when name mismatches without logging', () => {
       const evt = createParentMessage({
         origin: parentOrigin,
         data: { name: 'other:event' },
