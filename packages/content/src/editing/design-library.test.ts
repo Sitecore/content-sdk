@@ -21,10 +21,34 @@ import { ComponentRendering } from '../layout';
 const { SITECORE_EDGE_PLATFORM_URL_DEFAULT } = constants;
 
 describe('component library utils', () => {
+  const parentOrigin = 'https://designlibrary.sitecorecloud.io';
+  const parentWindow = {};
   let debugSpy: sinon.SinonSpy;
+  let originalWindow: any;
+  let originalDocument: any;
+
+  const setupWindow = ({
+    ancestorOrigins = [parentOrigin],
+    framed = true,
+  }: { ancestorOrigins?: string[]; framed?: boolean } = {}) => {
+    const win: any = { location: { origin: 'https://rendering.host', ancestorOrigins } };
+    win.parent = framed ? parentWindow : win;
+    (global as any).window = win;
+  };
+
+  const createParentMessage = (init: Partial<MessageEvent>) =>
+    ({ source: parentWindow, ...init } as MessageEvent);
 
   beforeEach(() => {
     debugSpy = sinon.spy(console, 'debug');
+    originalWindow = (global as any).window;
+    originalDocument = (global as any).document;
+    setupWindow();
+  });
+
+  afterEach(() => {
+    (global as any).window = originalWindow;
+    (global as any).document = originalDocument;
   });
 
   describe('updateComponentHandler', () => {
@@ -34,14 +58,24 @@ describe('component library utils', () => {
       expect(debugSpy.called).to.be.false;
     });
 
-    xit('should abort when origin is not allowed', () => {
-      // TODO implement when security hardening in place
-      expect(true).to.be.true;
+    it('should abort when origin is not allowed', () => {
+      const warnStub = sinon.stub(console, 'warn');
+      const changedComponent = JSON.parse(JSON.stringify(testComponent));
+      const message = createParentMessage({
+        origin: 'https://evil.com',
+        data: { name: 'component:update', details: { uid: 'test-content', params: { a: 'b' } } },
+      });
+
+      updateComponentHandler(message, changedComponent);
+      warnStub.restore();
+
+      expect(changedComponent.params).to.deep.equal(testComponent.params);
+      expect(warnStub.calledOnce).to.be.true;
     });
 
     it('should abort when message is not component:update', () => {
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
+      const message = createParentMessage({
+        origin: parentOrigin,
         data: { name: 'component:degrade' },
       });
       updateComponentHandler(message, testComponent);
@@ -49,8 +83,8 @@ describe('component library utils', () => {
     });
 
     it('should abort when uid is empty', () => {
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
+      const message = createParentMessage({
+        origin: parentOrigin,
         data: { name: 'component:update' },
       });
       updateComponentHandler(message, testComponent);
@@ -64,8 +98,8 @@ describe('component library utils', () => {
 
     it('should append params and fields for component', () => {
       const changedComponent = JSON.parse(JSON.stringify(testComponent));
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
+      const message = createParentMessage({
+        origin: parentOrigin,
         data: {
           name: 'component:update',
           details: {
@@ -88,8 +122,8 @@ describe('component library utils', () => {
 
     it('should replace params and fields for component', () => {
       const changedComponent = JSON.parse(JSON.stringify(testComponent));
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
+      const message = createParentMessage({
+        origin: parentOrigin,
         data: {
           name: 'component:update',
           details: {
@@ -121,8 +155,8 @@ describe('component library utils', () => {
       const changedComponent = JSON.parse(JSON.stringify(testComponent));
       changedComponent.fields = undefined;
       changedComponent.params = undefined;
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
+      const message = createParentMessage({
+        origin: parentOrigin,
         data: {
           name: 'component:update',
           details: {
@@ -136,8 +170,8 @@ describe('component library utils', () => {
     });
 
     it('should debug log when component not found', () => {
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
+      const message = createParentMessage({
+        origin: parentOrigin,
         data: {
           name: 'component:update',
           details: {
@@ -154,8 +188,8 @@ describe('component library utils', () => {
     it('should call callback when component found and updated', () => {
       const changedComponent = JSON.parse(JSON.stringify(testComponent));
       const callbackStub = sinon.stub();
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
+      const message = createParentMessage({
+        origin: parentOrigin,
         data: {
           name: 'component:update',
           details: {
@@ -204,13 +238,14 @@ describe('component library utils', () => {
       (global as any).window = {
         addEventListener: addEventListenerSpy,
         removeEventListener: sinon.stub(),
+        parent: parentWindow,
       };
 
       addComponentUpdateHandler(testComponent, callbackStub);
 
       const handler = addEventListenerSpy.getCall(0).args[1];
-      const message = new MessageEvent('message', {
-        origin: 'http://localhost',
+      const message = createParentMessage({
+        origin: parentOrigin,
         data: {
           name: 'component:update',
           details: {
@@ -669,16 +704,16 @@ describe('component library utils', () => {
     const statusRenderedEvent = 'component:status:render';
 
     it('should return true for valid event', () => {
-      const evt = new MessageEvent('message', {
-        origin: 'http://localhost',
+      const evt = createParentMessage({
+        origin: parentOrigin,
         data: { name: statusRenderedEvent },
       });
       expect(validateEvent(evt, statusRenderedEvent)).to.be.true;
     });
 
-    it('should return false when name mismatches without logging (wildcard origin)', () => {
-      const evt = new MessageEvent('message', {
-        origin: 'http://localhost',
+    it('should return false when name mismatches without logging', () => {
+      const evt = createParentMessage({
+        origin: parentOrigin,
         data: { name: 'other:event' },
       });
       expect(validateEvent(evt, statusRenderedEvent)).to.be.false;
@@ -686,8 +721,8 @@ describe('component library utils', () => {
     });
 
     it('should return false when data missing', () => {
-      const evt = new MessageEvent('message', {
-        origin: 'http://localhost',
+      const evt = createParentMessage({
+        origin: parentOrigin,
       });
       expect(validateEvent(evt, statusRenderedEvent)).to.be.false;
       expect(debugSpy.called).to.be.false;
@@ -697,6 +732,87 @@ describe('component library utils', () => {
       const evt = { origin: '', data: { name: statusRenderedEvent } } as any;
       expect(validateEvent(evt, statusRenderedEvent)).to.be.false;
       expect(debugSpy.called).to.be.false;
+    });
+
+    describe('origin validation', () => {
+      let warnStub: sinon.SinonStub;
+
+      beforeEach(() => {
+        warnStub = sinon.stub(console, 'warn');
+      });
+
+      afterEach(() => {
+        warnStub.restore();
+      });
+
+      it('should return false when origin is null', () => {
+        const evt = createParentMessage({ origin: 'null', data: { name: statusRenderedEvent } });
+        expect(validateEvent(evt, statusRenderedEvent)).to.be.false;
+      });
+
+      it('should return false and warn when origin does not match the parent origin', () => {
+        const evt = createParentMessage({
+          origin: 'https://evil.com',
+          data: { name: statusRenderedEvent },
+        });
+        expect(validateEvent(evt, statusRenderedEvent)).to.be.false;
+        expect(warnStub.calledOnce).to.be.true;
+      });
+
+      it('should return false when message is not sent by the parent window', () => {
+        const evt = createParentMessage({
+          origin: parentOrigin,
+          source: {} as MessageEventSource,
+          data: { name: statusRenderedEvent },
+        });
+        expect(validateEvent(evt, statusRenderedEvent)).to.be.false;
+      });
+
+      it('should return false when the page is not framed', () => {
+        setupWindow({ framed: false });
+        const evt = createParentMessage({
+          origin: parentOrigin,
+          source: (global as any).window,
+          data: { name: statusRenderedEvent },
+        });
+        expect(validateEvent(evt, statusRenderedEvent)).to.be.false;
+      });
+
+      it('should match the referrer origin when ancestorOrigins is not supported', () => {
+        setupWindow({ ancestorOrigins: [] });
+        (global as any).document = { referrer: `${parentOrigin}/studio?x=1` };
+
+        const valid = createParentMessage({
+          origin: parentOrigin,
+          data: { name: statusRenderedEvent },
+        });
+        const invalid = createParentMessage({
+          origin: 'https://evil.com',
+          data: { name: statusRenderedEvent },
+        });
+
+        expect(validateEvent(valid, statusRenderedEvent)).to.be.true;
+        expect(validateEvent(invalid, statusRenderedEvent)).to.be.false;
+      });
+
+      it('should ignore a same-origin referrer', () => {
+        setupWindow({ ancestorOrigins: [] });
+        (global as any).document = { referrer: 'https://rendering.host/page' };
+        const evt = createParentMessage({
+          origin: parentOrigin,
+          data: { name: statusRenderedEvent },
+        });
+        expect(validateEvent(evt, statusRenderedEvent)).to.be.true;
+      });
+
+      it('should accept a message from the parent when the parent origin is unknown', () => {
+        setupWindow({ ancestorOrigins: [] });
+        const evt = createParentMessage({
+          origin: 'https://any.origin',
+          data: { name: statusRenderedEvent },
+        });
+        expect(validateEvent(evt, statusRenderedEvent)).to.be.true;
+      });
     });
   });
 

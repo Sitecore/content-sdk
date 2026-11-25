@@ -111,12 +111,24 @@ describe('<DesignLibrary />', () => {
   components.set('ContentBlock', ContentBlock);
   components.set('InnerBlock', InnerBlock);
 
+  // Design Library messages are only accepted from the parent window
+  async function dispatchFromParent(ev: Event) {
+    const parentWindow = {};
+    (ev as any).source = parentWindow;
+    const parentStub = sinon.stub(window, 'parent').get(() => parentWindow);
+    try {
+      await fireEvent(window, ev);
+    } finally {
+      parentStub.restore();
+    }
+  }
+
   async function sendUpdate(details: { uid: string; fields?: any; params?: any }) {
     const ev = document.createEvent('Event');
     ev.initEvent('message', false, true);
     (ev as any).origin = window.location.origin;
     (ev as any).data = { name: 'component:update', details };
-    await fireEvent(window, ev);
+    await dispatchFromParent(ev);
   }
 
   const defaultImportMap = () =>
@@ -236,7 +248,7 @@ describe('<DesignLibrary />', () => {
       ev.initEvent('message', false, true);
       (ev as any).origin = window.location.origin;
       (ev as any).data = { name: 'component:update', details };
-      await fireEvent(window, ev);
+      await dispatchFromParent(ev);
     }
 
     beforeEach(() => {

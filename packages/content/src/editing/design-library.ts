@@ -98,36 +98,67 @@ export const addComponentUpdateHandler = (
   return unsubscribe;
 };
 
-export const validateOrigin = (event: MessageEvent) => {
-  // TODO: use `EDITING_ALLOWED_ORIGINS.concat(getAllowedOriginsFromEnv())` later
-  // nextjs's JSS_ALLOWED_ORIGINS is not available on the client, need to use NEXT_PUBLIC_ variable, but it's a breaking change for Deploy
-  const allowedOrigins = ['*'];
-  return allowedOrigins.some(
-    (origin) =>
-      origin === event.origin ||
-      new RegExp('^' + origin.replace('.', '\\.').replace(/\*/g, '.*') + '$').test(event.origin)
-  );
+const isFramed = () =>
+  typeof window !== 'undefined' && !!window.parent && window.parent !== window;
+
+/**
+ * Resolves the origin of the window framing the current page.
+ * Uses `location.ancestorOrigins` where supported, falling back to the cross-origin `document.referrer`.
+ * @returns {string | null} The parent origin, or null when the page is not framed or the origin can't be resolved.
+ * @internal
+ */
+export const getParentOrigin = (): string | null => {
+  if (!isFramed()) return null;
+
+  const ancestorOrigin = window.location?.ancestorOrigins?.[0];
+  if (ancestorOrigin && ancestorOrigin !== 'null') return ancestorOrigin;
+
+  const referrer = typeof document !== 'undefined' ? document.referrer : '';
+  if (!referrer) return null;
+  try {
+    const referrerOrigin = new URL(referrer).origin;
+    // a same-origin referrer comes from an in-frame navigation, not from the parent
+    return referrerOrigin !== window.location?.origin ? referrerOrigin : null;
+  } catch {
+    return null;
+  }
 };
 
 /**
- * Validates that a MessageEvent has the expected event name and required data.
- * Logs debug information when validation fails due to invalid origin.
+ * Validates that a message comes from the window framing the Design Library page.
+ * Which origins may frame the page is enforced on the server by the CSP `frame-ancestors` header
+ * (built from EDITING_ALLOWED_ORIGINS and JSS_ALLOWED_ORIGINS), so a message sent by the parent window
+ * comes from an allowed origin. The message origin is additionally matched against the parent origin when it can be resolved.
+ * @param {MessageEvent} event - The message event to validate.
+ * @returns {boolean} True if the message origin is valid; otherwise false.
+ * @internal
+ */
+export const validateOrigin = (event: MessageEvent): boolean => {
+  if (!event.origin || event.origin === 'null') return false;
+  if (!isFramed() || event.source !== window.parent) return false;
+
+  const parentOrigin = getParentOrigin();
+  return !parentOrigin || event.origin === parentOrigin;
+};
+
+/**
+ * Validates that a MessageEvent has the expected event name, required data and a valid origin.
  * @param {MessageEvent} e - The message event to validate.
  * @param {string} eventName - The expected event name to match against e.data.name.
- * @returns {boolean} True if the event has a valid origin, data object, and matching event name; otherwise false.
+ * @returns {boolean} True if the event should be processed; otherwise false.
  * @internal
  */
 export const validateEvent = (e: MessageEvent, eventName: string): boolean => {
-  if (!e.origin || !e.data || e.data.name !== eventName) {
-    // avoid extra noise in logs
-    if (!validateOrigin(e)) {
-      console.debug(
-        'Component Library: event skipped - invalid origin: message %s from origin %s',
-        e.data.name,
-        e.origin
-      );
-    }
+  if (!e.origin || e.origin === 'null' || !e.data || e.data.name !== eventName) {
+    return false;
+  }
 
+  if (!validateOrigin(e)) {
+    console.warn(
+      'Component Library: event skipped - invalid origin: message %s from origin %s',
+      e.data.name,
+      e.origin
+    );
     return false;
   }
 
@@ -139,18 +170,9 @@ export const updateComponentHandler = (
   rootComponent: ComponentRendering,
   successCallback?: (updatedRootComponent: ComponentRendering) => void
 ) => {
+  if (!validateEvent(e, 'component:update')) return;
+
   const eventArgs: ComponentUpdateEventArgs = e.data;
-  if (!e.origin || !eventArgs || eventArgs.name !== 'component:update') {
-    // avoid extra noise in logs
-    if (!validateOrigin(e)) {
-      console.debug(
-        'Component Library: event skipped: message %s from origin %s',
-        eventArgs.name,
-        e.origin
-      );
-    }
-    return;
-  }
   if (!eventArgs.details?.uid) {
     console.debug('Received component:update event without uid, aborting event handler...');
     return;

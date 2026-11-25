@@ -94,14 +94,29 @@ function previewPayload(uid = 'uid-1') {
   };
 }
 
+const DESIGN_LIBRARY_ORIGIN = 'https://designlibrary.sitecorecloud.io';
+
+const parentWindow = {
+  postMessage: (message: unknown, targetOrigin: string) =>
+    window.postMessage(message, targetOrigin),
+};
+
+function fromParent(event: MessageEvent): MessageEvent {
+  // jsdom only accepts real windows as MessageEvent source
+  Object.defineProperty(event, 'source', { value: parentWindow });
+  return event;
+}
+
 function previewMessage(
   payload: ReturnType<typeof previewPayload>,
   overrides: { name?: string; origin?: string } = {}
 ): MessageEvent {
-  return new MessageEvent('message', {
-    origin: overrides.origin ?? 'http://localhost',
-    data: { name: overrides.name ?? 'component:generation:component-preview', message: payload },
-  });
+  return fromParent(
+    new MessageEvent('message', {
+      origin: overrides.origin ?? DESIGN_LIBRARY_ORIGIN,
+      data: { name: overrides.name ?? 'component:generation:component-preview', message: payload },
+    })
+  );
 }
 
 function stubFactory(
@@ -156,13 +171,15 @@ function updateMessage(
   params?: Record<string, string>,
   overrides: { name?: string; origin?: string } = {}
 ): MessageEvent {
-  return new MessageEvent('message', {
-    origin: overrides.origin ?? 'http://localhost',
-    data: {
-      name: overrides.name ?? 'component:update',
-      details: { uid, fields, params },
-    },
-  });
+  return fromParent(
+    new MessageEvent('message', {
+      origin: overrides.origin ?? DESIGN_LIBRARY_ORIGIN,
+      data: {
+        name: overrides.name ?? 'component:update',
+        details: { uid, fields, params },
+      },
+    })
+  );
 }
 
 describe('ScDesignLibraryComponent', () => {
@@ -190,8 +207,9 @@ describe('ScDesignLibraryComponent', () => {
   beforeEach(() => {
     vi.spyOn(console, 'log').mockImplementation(() => {});
     vi.spyOn(console, 'debug').mockImplementation(() => {});
-    // window.parent === window in jsdom, so postToDesignLibrary targets window.postMessage.
+    // the parent stub forwards to window.postMessage, so posts to Studio are captured by postSpy
     postSpy = vi.spyOn(window, 'postMessage').mockImplementation(() => {});
+    vi.spyOn(window, 'parent', 'get').mockReturnValue(parentWindow as unknown as Window);
 
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
@@ -380,6 +398,7 @@ describe('ScDesignLibraryComponent variant generation', () => {
     vi.spyOn(console, 'debug').mockImplementation(() => {});
     vi.spyOn(console, 'error').mockImplementation(() => {});
     postSpy = vi.spyOn(window, 'postMessage').mockImplementation(() => {});
+    vi.spyOn(window, 'parent', 'get').mockReturnValue(parentWindow as unknown as Window);
   });
 
   afterEach(() => {
