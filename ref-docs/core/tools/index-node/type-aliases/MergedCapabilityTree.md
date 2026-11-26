@@ -8,7 +8,7 @@
 
 > **MergedCapabilityTree** = `object`
 
-Defined in: [packages/core/src/tools/capabilities/index.ts:38](https://github.com/Sitecore/content-sdk/blob/5f3a752c70ee72724112f3ed87925efaf43205a5/packages/core/src/tools/capabilities/index.ts#L38)
+Defined in: [packages/core/src/tools/capabilities/index.ts:38](https://github.com/Sitecore/content-sdk/blob/3966c04d9148447d9abcf751cdefb214d74a9fb3/packages/core/src/tools/capabilities/index.ts#L38)
 
 **`Internal`**
 

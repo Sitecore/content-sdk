@@ -8,7 +8,7 @@
 
 > **createRobotsMiddleware**(`options`): [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/robots-middleware.ts:21](https://github.com/Sitecore/content-sdk/blob/5f3a752c70ee72724112f3ed87925efaf43205a5/packages/angular/src/server/middleware/robots-middleware.ts#L21)
+Defined in: [packages/angular/src/server/middleware/robots-middleware.ts:21](https://github.com/Sitecore/content-sdk/blob/3966c04d9148447d9abcf751cdefb214d74a9fb3/packages/angular/src/server/middleware/robots-middleware.ts#L21)
 
 Robots.txt handler for Express. Mount at `/robots.txt`.
 

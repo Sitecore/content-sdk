@@ -6,7 +6,7 @@
 
 # Interface: MiddlewareMatcher
 
-Defined in: [packages/angular/src/server/middleware/models.ts:37](https://github.com/Sitecore/content-sdk/blob/5f3a752c70ee72724112f3ed87925efaf43205a5/packages/angular/src/server/middleware/models.ts#L37)
+Defined in: [packages/angular/src/server/middleware/models.ts:37](https://github.com/Sitecore/content-sdk/blob/3966c04d9148447d9abcf751cdefb214d74a9fb3/packages/angular/src/server/middleware/models.ts#L37)
 
 Matcher configuration for middleware path inclusion/exclusion. Each pattern is either a `string`
 (matched exactly) or a `RegExp` (matched with `.test`).
@@ -17,7 +17,7 @@ Matcher configuration for middleware path inclusion/exclusion. Each pattern is e
 
 > `optional` **excludePaths?**: [`PathPattern`](../type-aliases/PathPattern.md)[]
 
-Defined in: [packages/angular/src/server/middleware/models.ts:47](https://github.com/Sitecore/content-sdk/blob/5f3a752c70ee72724112f3ed87925efaf43205a5/packages/angular/src/server/middleware/models.ts#L47)
+Defined in: [packages/angular/src/server/middleware/models.ts:47](https://github.com/Sitecore/content-sdk/blob/3966c04d9148447d9abcf751cdefb214d74a9fb3/packages/angular/src/server/middleware/models.ts#L47)
 
 Paths to **exclude** (always skipped), evaluated before [MiddlewareMatcher.includePaths](#includepaths).
 Example: `['/health', /\.json$/]`
@@ -28,7 +28,7 @@ Example: `['/health', /\.json$/]`
 
 > `optional` **includePaths?**: [`PathPattern`](../type-aliases/PathPattern.md)[]
 
-Defined in: [packages/angular/src/server/middleware/models.ts:42](https://github.com/Sitecore/content-sdk/blob/5f3a752c70ee72724112f3ed87925efaf43205a5/packages/angular/src/server/middleware/models.ts#L42)
+Defined in: [packages/angular/src/server/middleware/models.ts:42](https://github.com/Sitecore/content-sdk/blob/3966c04d9148447d9abcf751cdefb214d74a9fb3/packages/angular/src/server/middleware/models.ts#L42)
 
 Paths to **include**. If provided, only matching paths are processed.
 Example: `['/about', /^/products//]`
