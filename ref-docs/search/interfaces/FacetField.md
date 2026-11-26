@@ -6,7 +6,7 @@
 
 # Interface: FacetField
 
-Defined in: [models.ts:31](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/search/src/models.ts#L31)
+Defined in: [models.ts:31](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/search/src/models.ts#L31)
 
 A specific facet field to include in the request, with optional filters.
 
@@ -16,7 +16,7 @@ A specific facet field to include in the request, with optional filters.
 
 > `optional` **filters?**: [`FacetFilter`](FacetFilter.md)[]
 
-Defined in: [models.ts:39](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/search/src/models.ts#L39)
+Defined in: [models.ts:39](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/search/src/models.ts#L39)
 
 Optional filters that narrow search results to items matching the given facet values.
 
@@ -26,7 +26,7 @@ Optional filters that narrow search results to items matching the given facet va
 
 > `optional` **max?**: `number`
 
-Defined in: [models.ts:46](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/search/src/models.ts#L46)
+Defined in: [models.ts:46](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/search/src/models.ts#L46)
 
 Maximum number of values to return for this facet.
 
@@ -39,6 +39,6 @@ When omitted, the Search Runtime uses its default of 10.
 
 > **name**: `string`
 
-Defined in: [models.ts:35](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/search/src/models.ts#L35)
+Defined in: [models.ts:35](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/search/src/models.ts#L35)
 
 The display name of the facet as configured in the search index (not the raw field name).

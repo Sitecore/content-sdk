@@ -8,7 +8,7 @@
 
 > **BuildSitecoreDictionaryCacheTagParams** = `object`
 
-Defined in: [nextjs/src/cache/sitecore-cache-tags.ts:91](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/nextjs/src/cache/sitecore-cache-tags.ts#L91)
+Defined in: [nextjs/src/cache/sitecore-cache-tags.ts:91](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/nextjs/src/cache/sitecore-cache-tags.ts#L91)
 
 Parameters for [buildSitecoreDictionaryCacheTag](../functions/buildSitecoreDictionaryCacheTag.md).
 
@@ -18,7 +18,7 @@ Parameters for [buildSitecoreDictionaryCacheTag](../functions/buildSitecoreDicti
 
 > **locale**: `string`
 
-Defined in: [nextjs/src/cache/sitecore-cache-tags.ts:93](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/nextjs/src/cache/sitecore-cache-tags.ts#L93)
+Defined in: [nextjs/src/cache/sitecore-cache-tags.ts:93](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/nextjs/src/cache/sitecore-cache-tags.ts#L93)
 
 ***
 
@@ -26,4 +26,4 @@ Defined in: [nextjs/src/cache/sitecore-cache-tags.ts:93](https://github.com/Site
 
 > **site**: `string`
 
-Defined in: [nextjs/src/cache/sitecore-cache-tags.ts:92](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/nextjs/src/cache/sitecore-cache-tags.ts#L92)
+Defined in: [nextjs/src/cache/sitecore-cache-tags.ts:92](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/nextjs/src/cache/sitecore-cache-tags.ts#L92)

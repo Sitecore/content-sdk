@@ -53,6 +53,10 @@ describe('design library codegen', () => {
     let createElementSpy: sinon.SinonStub;
     let postMessageSpy: sinon.SinonStub;
     let removeSpy: sinon.SinonStub;
+    let parentWindow: { postMessage: sinon.SinonStub };
+
+    const createParentMessageEvent = (init: Partial<MessageEvent>) =>
+      ({ source: parentWindow, ...init } as MessageEvent);
 
     const useMemoFn = sinon.stub();
     const useCallbackFn = sinon.stub();
@@ -161,14 +165,14 @@ describe('design library codegen', () => {
         setAttribute: setAttributeSpy,
       });
       postMessageSpy = sinon.stub();
+      parentWindow = { postMessage: postMessageSpy };
       global.window = {} as any;
       windowSpy = sinon.stub(global, 'window' as any).value({
         addEventListener: addEventListenerSpy,
         removeEventListener: removeEventListenerSpy,
-        parent: {
-          postMessage: postMessageSpy,
-        },
+        parent: parentWindow,
         postMessage: postMessageSpy,
+        location: { origin: 'http://rendering.host', ancestorOrigins: ['http://localhost'] },
       });
       global.document = {} as any;
       documentSpy = sinon.stub(global, 'document' as any).value({
@@ -213,6 +217,37 @@ describe('design library codegen', () => {
         expect(callbackStub.called).to.be.false;
       });
 
+      it('should ignore events from an origin other than the parent', () => {
+        const warnStub = sinon.stub(console, 'warn');
+        addComponentPreviewHandler(importMap, callbackStub);
+        const handler = addEventListenerSpy.getCall(0).args[1];
+
+        handler(createParentMessageEvent({ origin: 'https://evil.com', data: previewMessage }));
+
+        warnStub.restore();
+        expect(warnStub.calledOnce).to.be.true;
+        expect(callbackStub.called).to.be.false;
+        expect(appendChildSpy.called).to.be.false;
+      });
+
+      it('should ignore events not sent by the parent window', () => {
+        const warnStub = sinon.stub(console, 'warn');
+        addComponentPreviewHandler(importMap, callbackStub);
+        const handler = addEventListenerSpy.getCall(0).args[1];
+
+        handler(
+          createParentMessageEvent({
+            origin: 'http://localhost',
+            data: previewMessage,
+            source: {} as MessageEventSource,
+          })
+        );
+
+        warnStub.restore();
+        expect(warnStub.calledOnce).to.be.true;
+        expect(callbackStub.called).to.be.false;
+      });
+
       it('should ignore events with wrong event name', () => {
         addComponentPreviewHandler(importMap, callbackStub);
         const handler = addEventListenerSpy.getCall(0).args[1];
@@ -244,7 +279,7 @@ describe('design library codegen', () => {
       it('should handle valid component preview event', () => {
         addComponentPreviewHandler(importMap, callbackStub);
         const handler = addEventListenerSpy.getCall(0).args[1];
-        const message = new MessageEvent('message', {
+        const message = createParentMessageEvent({
           origin: 'http://localhost',
           data: previewMessage,
         });
@@ -282,7 +317,7 @@ describe('design library codegen', () => {
 
         addComponentPreviewHandler(importMap, callbackStub);
         const handler = addEventListenerSpy.getCall(0).args[1];
-        const message = new MessageEvent('message', {
+        const message = createParentMessageEvent({
           origin: 'http://localhost',
           data: previewMessage,
         });
@@ -320,7 +355,7 @@ describe('design library codegen', () => {
       it('should send error when component fails to initialze', () => {
         addComponentPreviewHandler(importMap, callbackStub);
         const handler = addEventListenerSpy.getCall(0).args[1];
-        const message = new MessageEvent('message', {
+        const message = createParentMessageEvent({
           origin: 'http://localhost',
           data: corruptedPreviewMessage,
         });
@@ -358,7 +393,7 @@ describe('design library codegen', () => {
           callbackStub
         );
         const handler = addEventListenerSpy.getCall(0).args[1];
-        const message = new MessageEvent('message', {
+        const message = createParentMessageEvent({
           origin: 'http://localhost',
           data: corruptedPreviewMessage,
         });
@@ -471,7 +506,7 @@ describe('design library codegen', () => {
       it('should handle valid component preview event', () => {
         addServerComponentPreviewHandlerWithMock(serverRootComponent, callbackStub);
         const handler = addEventListenerSpy.getCall(0).args[1];
-        const message = new MessageEvent('message', {
+        const message = createParentMessageEvent({
           origin: 'http://localhost',
           data: previewMessage,
         });
@@ -534,7 +569,7 @@ describe('design library codegen', () => {
 
     describe('createComponentInstance', () => {
       it('should create a component instance with the provided dependencies', () => {
-        const message = new MessageEvent('message', {
+        const message = createParentMessageEvent({
           origin: 'http://localhost',
           data: previewMessage,
         });
@@ -552,7 +587,7 @@ describe('design library codegen', () => {
       });
 
       it('should throw an error if the component fails to initialize', () => {
-        const message = new MessageEvent('message', {
+        const message = createParentMessageEvent({
           origin: 'http://localhost',
           data: corruptedPreviewMessage,
         });
@@ -563,7 +598,7 @@ describe('design library codegen', () => {
       });
 
       it('should throw an error if dependencies are missing', () => {
-        const message = new MessageEvent('message', {
+        const message = createParentMessageEvent({
           origin: 'http://localhost',
           data: corruptedPreviewMessage,
         });

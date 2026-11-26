@@ -20,6 +20,27 @@ export const QUERY_PARAM_EDITING_SECRET = 'secret';
 export const INVALID_SECRET_HTML_MESSAGE = '<html><body>Missing or invalid secret</body></html>';
 
 /**
+ * Value written in place of a secret in debug output
+ * @internal
+ */
+export const REDACTED_VALUE = '[redacted]';
+
+/**
+ * Returns a copy of editing request query parameters with the editing secret replaced by
+ * {@link REDACTED_VALUE}, so request details can be written to debug output without leaking it.
+ * @param {object} [query] Editing request query parameters
+ * @returns {object} Query parameters with the editing secret redacted
+ * @internal
+ */
+export const redactEditingSecret = <T extends object>(query?: T): T | undefined => {
+  if (!query || !(QUERY_PARAM_EDITING_SECRET in query)) {
+    return query;
+  }
+
+  return { ...query, [QUERY_PARAM_EDITING_SECRET]: REDACTED_VALUE };
+};
+
+/**
  * Key to identify whether the app is running in Sitecore Preview mode
  * @internal
  */

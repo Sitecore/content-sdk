@@ -8,7 +8,7 @@
 
 > `const` **BOT\_DETECTION\_COOKIE**: `"sc_bot"` = `'sc_bot'`
 
-Defined in: [analytics-core/src/bot-detection/bot-detection.ts:8](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/analytics-core/src/bot-detection/bot-detection.ts#L8)
+Defined in: [analytics-core/src/bot-detection/bot-detection.ts:8](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/analytics-core/src/bot-detection/bot-detection.ts#L8)
 
 **`Internal`**
 

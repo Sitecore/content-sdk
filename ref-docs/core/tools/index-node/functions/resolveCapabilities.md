@@ -8,7 +8,7 @@
 
 > **resolveCapabilities**(`capabilities`, `context`): `Promise`\<[`ResolvedCapabilities`](../../../index/type-aliases/ResolvedCapabilities.md)\>
 
-Defined in: [packages/core/src/tools/capabilities/index.ts:183](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/core/src/tools/capabilities/index.ts#L183)
+Defined in: [packages/core/src/tools/capabilities/index.ts:183](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/core/src/tools/capabilities/index.ts#L183)
 
 **`Internal`**
 

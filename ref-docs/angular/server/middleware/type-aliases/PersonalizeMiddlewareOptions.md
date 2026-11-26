@@ -8,7 +8,7 @@
 
 > **PersonalizeMiddlewareOptions** = [`BaseMiddlewareOptions`](../interfaces/BaseMiddlewareOptions.md) & `Partial`\<`SitecoreConfig`\[`"personalize"`\]\> & `Partial`\<`SitecoreConfig`\[`"api"`\]\[`"edge"`\]\> & `object`
 
-Defined in: [packages/angular/src/server/middleware/personalize-middleware.ts:62](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/angular/src/server/middleware/personalize-middleware.ts#L62)
+Defined in: [packages/angular/src/server/middleware/personalize-middleware.ts:62](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/angular/src/server/middleware/personalize-middleware.ts#L62)
 
 Configuration for the personalize middleware
 

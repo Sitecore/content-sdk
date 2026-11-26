@@ -55,7 +55,7 @@ describe('Server Component Actions', () => {
       '@sitecore-content-sdk/content/codegen': {
         fetchGeneratedComponentFromCache: fetchGeneratedComponentFromCacheStub,
       },
-      '../utils/utils': {
+      '../editing/editing-secret-auth': {
         isDesignLibraryAuthorizedFromHeaders: isDesignLibraryAuthorizedFromHeadersStub,
       },
     });

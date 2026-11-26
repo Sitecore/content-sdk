@@ -5,6 +5,9 @@ import {
   resetEditorChromes,
   ChromeRediscoveryGlobalFunctionName,
   PAGES_EDITING_MARKER,
+  QUERY_PARAM_EDITING_SECRET,
+  REDACTED_VALUE,
+  redactEditingSecret,
 } from './utils';
 
 // must make TypeScript happy with `global` variable modification
@@ -62,6 +65,39 @@ describe('utils', () => {
 
     after(() => {
       global.window = undefined;
+    });
+  });
+
+  describe('redactEditingSecret', () => {
+    it('should replace the editing secret and keep other params', () => {
+      const query = { [QUERY_PARAM_EDITING_SECRET]: 'top-secret', route: '/home' };
+
+      expect(redactEditingSecret(query)).to.deep.equal({
+        [QUERY_PARAM_EDITING_SECRET]: REDACTED_VALUE,
+        route: '/home',
+      });
+    });
+
+    it('should redact an array value (secret passed multiple times)', () => {
+      const result = redactEditingSecret({ [QUERY_PARAM_EDITING_SECRET]: ['one', 'two'] });
+
+      expect(JSON.stringify(result)).to.not.include('one');
+      expect(JSON.stringify(result)).to.not.include('two');
+    });
+
+    it('should not mutate the original query', () => {
+      const query = { [QUERY_PARAM_EDITING_SECRET]: 'top-secret' };
+
+      redactEditingSecret(query);
+
+      expect(query[QUERY_PARAM_EDITING_SECRET]).to.equal('top-secret');
+    });
+
+    it('should return the query as is when there is no secret', () => {
+      const query = { route: '/home' };
+
+      expect(redactEditingSecret(query)).to.equal(query);
+      expect(redactEditingSecret(undefined)).to.be.undefined;
     });
   });
 

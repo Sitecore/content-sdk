@@ -8,7 +8,7 @@
 
 > **GraphQLRequestClientFactoryConfig** = `object` & [`GraphQLRequestClientConfig`](GraphQLRequestClientConfig.md)
 
-Defined in: [packages/core/src/graphql-request-client.ts:87](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/core/src/graphql-request-client.ts#L87)
+Defined in: [packages/core/src/graphql-request-client.ts:87](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/core/src/graphql-request-client.ts#L87)
 
 Configuration type for
 

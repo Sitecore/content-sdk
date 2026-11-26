@@ -8,7 +8,7 @@
 
 > **PageMetaTags**(`props`): `Element`
 
-Defined in: [nextjs/src/components/PageMetaTags.tsx:26](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/nextjs/src/components/PageMetaTags.tsx#L26)
+Defined in: [nextjs/src/components/PageMetaTags.tsx:26](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/nextjs/src/components/PageMetaTags.tsx#L26)
 
 Renders `<title>` and the metadata/Open Graph `<meta>` tags for a Sitecore route via `next/head`,
 for use in Pages Router layouts. Field-mapping/omission rules match `getPageMetadata` (the App

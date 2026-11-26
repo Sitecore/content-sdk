@@ -6,6 +6,8 @@ import {
 } from './editing-render-middleware';
 import type { ExpressRequest, ExpressResponse } from './models';
 import { EDITING_PARAMS_HEADER } from '../../editing/constants';
+import debug from '../../debug';
+import { expectSecretsNotLogged } from '../../testing/debug-output';
 
 function createMockRes() {
   return {
@@ -111,6 +113,50 @@ describe('createEditingRenderMiddleware', () => {
     await middleware(req, res, next);
     expect(res.status).toHaveBeenCalledWith(401);
     expect(next).not.toHaveBeenCalled();
+  });
+
+  it('should not log the sent or expected secret when secret is invalid', async () => {
+    const debugEditingSpy = vi.spyOn(debug, 'editing').mockImplementation(() => {});
+    const middleware = createEditingRenderMiddleware({ editingSecret: 'expected-secret-value' });
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/render',
+      url: '/api/editing/render',
+      body: undefined,
+      query: baseQuery({ secret: 'sent-secret-value' }),
+      headers: baseHeaders(),
+    };
+    const res = createMockRes();
+    try {
+      await middleware(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+      expectSecretsNotLogged(debugEditingSpy, ['expected-secret-value', 'sent-secret-value']);
+    } finally {
+      debugEditingSpy.mockRestore();
+    }
+  });
+
+  it('should not log the secret when secret is valid', async () => {
+    const debugEditingSpy = vi.spyOn(debug, 'editing').mockImplementation(() => {});
+    const middleware = createEditingRenderMiddleware({ editingSecret: 'expected-secret-value' });
+    const req: ExpressRequest = {
+      method: 'GET',
+      path: '/api/editing/render',
+      url: '/api/editing/render',
+      body: undefined,
+      query: baseQuery({ secret: 'expected-secret-value' }),
+      headers: baseHeaders(),
+    };
+    const res = createMockRes();
+    try {
+      await middleware(req, res, next);
+
+      expect(next).toHaveBeenCalled();
+      expectSecretsNotLogged(debugEditingSpy, ['expected-secret-value']);
+    } finally {
+      debugEditingSpy.mockRestore();
+    }
   });
 
   it('should reject 405 on non-GET methods', async () => {
@@ -417,5 +463,118 @@ describe('createEditingRenderMiddleware', () => {
     const editingParams = JSON.parse(editingReq.headers![EDITING_PARAMS_HEADER] as string);
     expect(editingParams.generation).toBe('variant');
     expect(next).toHaveBeenCalled();
+  });
+
+  describe('incoming editing params header', () => {
+    const incomingPreview = JSON.stringify({
+      site: 'other',
+      itemId: 'item-2',
+      language: 'en',
+      mode: 'edit',
+    });
+
+    it('should drop an incoming editing params header on a non-editing path', async () => {
+      const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+      const req: ExpressRequest = {
+        method: 'GET',
+        path: '/about',
+        url: '/about',
+        body: undefined,
+        query: {},
+        headers: { [EDITING_PARAMS_HEADER]: incomingPreview },
+      };
+      const res = createMockRes();
+      await middleware(req, res, next);
+      expect(req.headers![EDITING_PARAMS_HEADER]).toBeUndefined();
+      expect(next).toHaveBeenCalled();
+      expect(res.status).not.toHaveBeenCalled();
+    });
+
+    it('should drop an incoming editing params header when the secret is invalid', async () => {
+      const middleware = createEditingRenderMiddleware({ editingSecret: 'good' });
+      const req: ExpressRequest = {
+        method: 'GET',
+        path: '/api/editing/render',
+        url: '/api/editing/render',
+        body: undefined,
+        query: baseQuery({ secret: 'bad' }),
+        headers: { ...baseHeaders(), [EDITING_PARAMS_HEADER]: incomingPreview },
+      };
+      const res = createMockRes();
+      await middleware(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(401);
+      expect(req.headers![EDITING_PARAMS_HEADER]).toBeUndefined();
+      expect(next).not.toHaveBeenCalled();
+    });
+
+    it('should replace an incoming editing params header with params from the query', async () => {
+      const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+      const req: ExpressRequest = {
+        method: 'GET',
+        path: '/api/editing/render',
+        url: '/api/editing/render',
+        body: undefined,
+        query: baseQuery(),
+        headers: { ...baseHeaders(), [EDITING_PARAMS_HEADER]: incomingPreview },
+      };
+      const res = createMockRes();
+      await middleware(req, res, next);
+      const editingReq = req as ExpressEditingRequest;
+      const params = JSON.parse(editingReq.headers![EDITING_PARAMS_HEADER] as string);
+      expect(params.site).toBe('demo');
+      expect(params.itemId).toBe('11111111-1111-1111-1111-111111111111');
+      expect(next).toHaveBeenCalled();
+    });
+  });
+
+  describe('req.scEditing', () => {
+    it('should not set scEditing when the path is not the editing endpoint', async () => {
+      const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+      const req: ExpressRequest = {
+        method: 'GET',
+        path: '/about',
+        url: '/about',
+        body: undefined,
+        query: {},
+        headers: { [EDITING_PARAMS_HEADER]: JSON.stringify({ site: 'other', mode: 'edit' }) },
+      };
+      const res = createMockRes();
+      await middleware(req, res, next);
+      expect((req as ExpressEditingRequest).scEditing).toBeUndefined();
+    });
+
+    it('should not set scEditing when the secret is invalid', async () => {
+      const middleware = createEditingRenderMiddleware({ editingSecret: 'good' });
+      const req: ExpressRequest = {
+        method: 'GET',
+        path: '/api/editing/render',
+        url: '/api/editing/render',
+        body: undefined,
+        query: baseQuery({ secret: 'bad' }),
+        headers: baseHeaders(),
+      };
+      const res = createMockRes();
+      await middleware(req, res, next);
+      expect((req as ExpressEditingRequest).scEditing).toBeUndefined();
+    });
+
+    it('should set scEditing from the same params written to the header', async () => {
+      const middleware = createEditingRenderMiddleware({ editingSecret: 's' });
+      const req: ExpressRequest = {
+        method: 'GET',
+        path: '/api/editing/render',
+        url: '/api/editing/render',
+        body: undefined,
+        query: baseQuery(),
+        headers: baseHeaders(),
+      };
+      const res = createMockRes();
+      await middleware(req, res, next);
+      const editingReq = req as ExpressEditingRequest;
+      expect(editingReq.scEditing).toBeDefined();
+      expect(JSON.parse(editingReq.headers![EDITING_PARAMS_HEADER] as string)).toEqual(
+        editingReq.scEditing
+      );
+    });
   });
 });

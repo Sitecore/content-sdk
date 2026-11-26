@@ -8,7 +8,7 @@
 
 > **redirectOnNavigationError**(`err`, `failedUrl`, `notFoundRoute`, `errorRoute`, `router`): `void` \| `RedirectCommand`
 
-Defined in: [packages/angular/src/loaders/router-error-handling.ts:38](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/angular/src/loaders/router-error-handling.ts#L38)
+Defined in: [packages/angular/src/loaders/router-error-handling.ts:38](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/angular/src/loaders/router-error-handling.ts#L38)
 
 Resolves a navigation error to a RedirectCommand or void.
 Handles loader exceptions (NotFoundNavigationError and other errors) and prevents redirect loops

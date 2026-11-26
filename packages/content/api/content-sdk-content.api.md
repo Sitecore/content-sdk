@@ -1220,6 +1220,12 @@ export const processRelativeUrlTarget: (incomingPathData: ProcessedPath, existsR
 // @internal
 export const QUERY_PARAM_EDITING_SECRET = "secret";
 
+// @internal
+export const REDACTED_VALUE = "[redacted]";
+
+// @internal
+export const redactEditingSecret: <T extends object>(query?: T) => T | undefined;
+
 // @public
 export const REDIRECT_TYPE_301 = "REDIRECT_301";
 

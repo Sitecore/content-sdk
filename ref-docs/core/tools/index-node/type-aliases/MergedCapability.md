@@ -8,7 +8,7 @@
 
 > **MergedCapability** = `object`
 
-Defined in: [packages/core/src/tools/capabilities/index.ts:31](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/core/src/tools/capabilities/index.ts#L31)
+Defined in: [packages/core/src/tools/capabilities/index.ts:31](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/core/src/tools/capabilities/index.ts#L31)
 
 **`Internal`**
 
@@ -18,7 +18,7 @@ Defined in: [packages/core/src/tools/capabilities/index.ts:31](https://github.co
 
 > **filters**: [`CapabilityFilter`](../../../index/type-aliases/CapabilityFilter.md)[]
 
-Defined in: [packages/core/src/tools/capabilities/index.ts:33](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/core/src/tools/capabilities/index.ts#L33)
+Defined in: [packages/core/src/tools/capabilities/index.ts:33](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/core/src/tools/capabilities/index.ts#L33)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [packages/core/src/tools/capabilities/index.ts:33](https://github.co
 
 > **metadata**: [`CapabilityMetadata`](../../../index/type-aliases/CapabilityMetadata.md) \| [`CapabilityMetadataResolver`](../../../index/type-aliases/CapabilityMetadataResolver.md)
 
-Defined in: [packages/core/src/tools/capabilities/index.ts:34](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/core/src/tools/capabilities/index.ts#L34)
+Defined in: [packages/core/src/tools/capabilities/index.ts:34](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/core/src/tools/capabilities/index.ts#L34)
 
 ***
 
@@ -34,4 +34,4 @@ Defined in: [packages/core/src/tools/capabilities/index.ts:34](https://github.co
 
 > **value**: `boolean` \| [`MergedCapabilityTree`](MergedCapabilityTree.md)
 
-Defined in: [packages/core/src/tools/capabilities/index.ts:32](https://github.com/Sitecore/content-sdk/blob/11719c29a76964a5138c9b66c4ad7c2c94a0da6d/packages/core/src/tools/capabilities/index.ts#L32)
+Defined in: [packages/core/src/tools/capabilities/index.ts:32](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/core/src/tools/capabilities/index.ts#L32)

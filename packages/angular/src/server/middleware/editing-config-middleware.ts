@@ -1,10 +1,12 @@
 import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
+  redactEditingSecret,
 } from '@sitecore-content-sdk/content/editing';
 import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
 import type { Metadata } from '@sitecore-content-sdk/core/node-tools';
+import { secretsEqual } from '@sitecore-content-sdk/core/node-tools';
 import { ExpressMiddleware, ExpressNextFunction, ExpressRequest, ExpressResponse } from './models';
 import type { ComponentMap } from '../../components/types';
 import { readProcessEnv } from '../utils';
@@ -156,7 +158,7 @@ export function createEditingConfigMiddleware(
 
     debug.editing('editing config middleware start: %o', {
       method: req.method,
-      query: req.query,
+      query: redactEditingSecret(req.query),
       headers: req.headers,
     });
 
@@ -185,8 +187,10 @@ export function createEditingConfigMiddleware(
     const secret = Array.isArray(secretParam) ? secretParam[0] : secretParam;
     const configuredSecret = resolveConfiguredEditingSecret(options.editingSecret);
 
-    if (!configuredSecret || secret !== configuredSecret) {
-      debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, configuredSecret);
+    if (!secretsEqual(secret, configuredSecret)) {
+      debug.editing(
+        'invalid editing secret - check the expected editing secret in the SITECORE_EDITING_SECRET env variable set in your editing host'
+      );
       res.status(401).json({ message: 'Missing or invalid editing secret' });
       return;
     }
