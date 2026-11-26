@@ -8,7 +8,7 @@
 
 > **generateMetadata**(`config?`): (`args?`) => `Promise`\<`void`\>
 
-Defined in: [packages/core/src/tools/metadata/generateMetadata.ts:47](https://github.com/Sitecore/content-sdk/blob/70cc3e22e6077307faa68bfeead5defb753a25b8/packages/core/src/tools/metadata/generateMetadata.ts#L47)
+Defined in: [packages/core/src/tools/metadata/generateMetadata.ts:47](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/core/src/tools/metadata/generateMetadata.ts#L47)
 
 Generate application metadata
 

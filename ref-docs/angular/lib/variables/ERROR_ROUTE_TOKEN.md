@@ -8,6 +8,6 @@
 
 > `const` **ERROR\_ROUTE\_TOKEN**: `InjectionToken`\<`string`\>
 
-Defined in: [packages/angular/src/lib/tokens.ts:29](https://github.com/Sitecore/content-sdk/blob/70cc3e22e6077307faa68bfeead5defb753a25b8/packages/angular/src/lib/tokens.ts#L29)
+Defined in: [packages/angular/src/lib/tokens.ts:29](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/angular/src/lib/tokens.ts#L29)
 
 Injection token for the error route.

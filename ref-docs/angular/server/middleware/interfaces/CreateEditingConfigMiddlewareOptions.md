@@ -6,7 +6,7 @@
 
 # Interface: CreateEditingConfigMiddlewareOptions
 
-Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:29](https://github.com/Sitecore/content-sdk/blob/70cc3e22e6077307faa68bfeead5defb753a25b8/packages/angular/src/server/middleware/editing-config-middleware.ts#L29)
+Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:29](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/angular/src/server/middleware/editing-config-middleware.ts#L29)
 
 Options for [createEditingConfigMiddleware](../functions/createEditingConfigMiddleware.md).
 
@@ -16,7 +16,7 @@ Options for [createEditingConfigMiddleware](../functions/createEditingConfigMidd
 
 > **components**: [`ComponentMap`](../../../components/type-aliases/ComponentMap.md)
 
-Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:34](https://github.com/Sitecore/content-sdk/blob/70cc3e22e6077307faa68bfeead5defb753a25b8/packages/angular/src/server/middleware/editing-config-middleware.ts#L34)
+Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:34](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/angular/src/server/middleware/editing-config-middleware.ts#L34)
 
 Component map registered with the Angular app
 (the same map provided to `SITECORE_COMPONENT_MAP`).
@@ -27,7 +27,7 @@ Component map registered with the Angular app
 
 > `optional` **editingSecret?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:51](https://github.com/Sitecore/content-sdk/blob/70cc3e22e6077307faa68bfeead5defb753a25b8/packages/angular/src/server/middleware/editing-config-middleware.ts#L51)
+Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:51](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/angular/src/server/middleware/editing-config-middleware.ts#L51)
 
 Editing secret to validate. Defaults to the `SITECORE_EDITING_SECRET`
 environment variable.
@@ -38,7 +38,7 @@ environment variable.
 
 > `optional` **endpoint?**: `string`
 
-Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:53](https://github.com/Sitecore/content-sdk/blob/70cc3e22e6077307faa68bfeead5defb753a25b8/packages/angular/src/server/middleware/editing-config-middleware.ts#L53)
+Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:53](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/angular/src/server/middleware/editing-config-middleware.ts#L53)
 
 Endpoint path; default `/api/editing/config`.
 
@@ -48,7 +48,7 @@ Endpoint path; default `/api/editing/config`.
 
 > `optional` **metadata?**: `Metadata`
 
-Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:40](https://github.com/Sitecore/content-sdk/blob/70cc3e22e6077307faa68bfeead5defb753a25b8/packages/angular/src/server/middleware/editing-config-middleware.ts#L40)
+Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:40](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/angular/src/server/middleware/editing-config-middleware.ts#L40)
 
 Inline metadata. When set, [metadataImport](#metadataimport) is ignored.
 When neither `metadata` nor `metadataImport` is provided, the middleware
@@ -60,7 +60,7 @@ responds with `{ packages: {} }`.
 
 > `optional` **metadataImport?**: [`MetadataImportFn`](../type-aliases/MetadataImportFn.md)
 
-Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:46](https://github.com/Sitecore/content-sdk/blob/70cc3e22e6077307faa68bfeead5defb753a25b8/packages/angular/src/server/middleware/editing-config-middleware.ts#L46)
+Defined in: [packages/angular/src/server/middleware/editing-config-middleware.ts:46](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/angular/src/server/middleware/editing-config-middleware.ts#L46)
 
 Optional dynamic import for metadata (e.g. from `.sitecore/metadata.json`).
 Use createSitecoreMetadataImport to build the conventional path
