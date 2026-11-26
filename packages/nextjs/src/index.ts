@@ -55,6 +55,9 @@ export {
   normalizePersonalizedRewrite,
   CdpHelper,
   PersonalizeService,
+  getPersonalizeTokens,
+  PersonalizeTokensHeaders,
+  TokenMap,
 } from '@sitecore-content-sdk/content/personalize';
 
 export {

@@ -1,0 +1,23 @@
+---
+'@sitecore-content-sdk/core': minor
+'@sitecore-content-sdk/content': minor
+'@sitecore-content-sdk/nextjs': minor
+'@sitecore-content-sdk/angular': minor
+'create-content-sdk-app': minor
+---
+
+[core][content][nextjs][angular] Add Dynamic Content Tokens
+
+Authors can place `{{key}}` and `{{key|fallback}}` tokens in page content, and personalized renders replace them with the values returned by the Personalize execution. Turn it on with `personalize: { dynamicContent: true }` in `sitecore.config`. It is off by default, so upgrading changes nothing until you enable it.
+
+- `getPage` resolves tokens in the route right after personalization. Pass the request's values with `getPage(path, { tokens })`; without them, tokens render their fallback. A token with no value and no fallback is removed, and `{{...}}` text that is not a valid token key (for example `{{#each items}}` or `{{{body}}}`) is left as authored.
+- Text values are inserted as written in plain strings (fallbacks are used if a value would add markup or a script URL). In rich text they are HTML-escaped and only inserted where browsers parse text; inside tags, and in rich text with markup the SDK does not fully recognize (for example malformed tags or CDATA), only fallbacks are used. Tokens in comments, `<pre>`, `<code>` and elements whose content is not markup (such as `<script>`, `<style>` and `<textarea>`) are left as authored.
+- Link and image URLs (`href`, `src`, `url`, `querystring`, `anchor`, or a string that is entirely a URL): a field that is a single token takes a whole http(s), mailto, tel or relative URL value, for example `{{imageUrl|/images/default.jpg}}`. Elsewhere values are percent-encoded and only allowed after the first `/`, `?` or `#` that follows the scheme and host. Before it (the host, a `mailto:` address, a `tel:` number, or the start of a relative URL such as `{{page}}.html`) only the fallback is used; to personalize a whole phone or email link, make the field a single token such as `{{phoneLink|tel:+18000000}}`.
+- Preview, Design Library and error pages are never processed.
+- Next.js: when Personalize returns tokens, `PersonalizeProxy` rewrites the request to the app's `_sctokens` route with the tokens in the `x-sc-personalize-tokens` request header and `Cache-Control: private, no-store`. That route renders per request; every other request keeps its statically generated or cached page. Read the tokens there with `getPersonalizeTokens(headers)`. `PersonalizeProxy` removes a client-sent `x-sc-personalize-tokens` header from the requests it handles, and keeps the request headers earlier proxies set or removed. The starters' proxy matchers always include the tokens route.
+- Angular: the personalize middleware forwards tokens in the same header, and `getPersonalizeTokens(context)` reads them in loaders. Requests with tokens skip the loader cache and respond with `Cache-Control: private, no-store`. Keep the middleware registered before the `/_data` and SSR handlers, even when disabled, so it removes client-sent token headers.
+- Tokens are collected from every Personalize execution, including the default branch. They travel in a request header, so if the encoded tokens are larger than about 7 KB they are dropped and fallbacks render.
+
+Starters enable `dynamicContent` and add the tokens route: `src/pages/_sctokens/[[...path]].tsx` (Pages Router), `src/app/[site]/[locale]/%5Fsctokens/[[...path]]/` (App Router, with and without Cache Components; its `not-found.tsx` renders the 404 page of the request's site). The Angular page loader passes `tokens` to `getPage`. The Cache Components starter's `[site]/layout.tsx` now reads `params` inside `<Suspense>`.
+
+**Existing apps:** set `personalize.dynamicContent: true`, keep `PersonalizeProxy` / `createPersonalizeMiddleware` in the request chain, and add the tokens route from the starter plus its proxy matcher entry, `'/_sctokens/:path*'` (Pages Router) or `'/:site/:locale/_sctokens/:path*'` (App Router), so a client cannot skip the proxy with a static-file extension (Next.js) or pass `tokens: getPersonalizeTokens(context)` to `getPage` in your page loader (Angular). Cache Components apps also need the starter's `[site]/layout.tsx` change (read `params` inside `<Suspense>`), or the build fails for the new route. Without the Next.js route, token requests are served by the catch-all with fallbacks, rendered on demand and marked `private, no-store`, so add the route before enabling the flag. Apps built with `output: 'export'` should not add the route; proxies do not run in static exports. Once enabled, `{{key}}` text in route content is processed, so check existing content for literal `{{...}}` text.

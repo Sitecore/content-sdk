@@ -10,6 +10,7 @@ import {
   createGraphQLClientFactory,
   GraphQLClientOptions,
 } from '@sitecore-content-sdk/content/client';
+import { PERSONALIZE_TOKENS_HEADER } from '@sitecore-content-sdk/content/personalize';
 import { PREVIEW_COOKIES } from '../editing/utils';
 import debug from '../debug';
 import { ProxiesContext } from './types';
@@ -158,7 +159,10 @@ export abstract class ProxyBase extends ProxyHandler {
    */
   protected extractDebugHeaders(incomingHeaders: Headers) {
     const headers = {} as { [key: string]: string };
-    incomingHeaders.forEach((value, key) => (headers[key] = value));
+    incomingHeaders.forEach((value, key) => {
+      // Tokens carry visitor data. Also covers Next's `x-middleware-request-*` copies on responses.
+      headers[key] = key.endsWith(PERSONALIZE_TOKENS_HEADER) ? '[redacted]' : value;
+    });
     return headers;
   }
 

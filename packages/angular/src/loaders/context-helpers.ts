@@ -1,5 +1,10 @@
-import type { LoaderContext } from './models';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
+import type { CsdkRequestData, LoaderContext } from './models';
+import {
+  DEFAULT_VARIANT,
+  getPersonalizeTokens as readPersonalizeTokens,
+  PERSONALIZE_TOKENS_HEADER,
+  TokenMap,
+} from '@sitecore-content-sdk/content/personalize';
 
 /**
  * Read the site name resolved for the current request (multisite middleware →
@@ -47,4 +52,27 @@ export function getComponentVariantIds(context: LoaderContext): string[] {
 export function getLanguage(context: LoaderContext): string | undefined {
   const locale = context.routeParams.locale;
   return typeof locale === 'string' ? locale : undefined;
+}
+
+/**
+ * Read the dynamic content tokens that the personalize middleware forwarded for the current
+ * request, for `getPage(path, { tokens })`. Returns `undefined` when there are none.
+ * The personalize middleware removes any client-sent value, so keep it in the server chain.
+ * @param {LoaderContext} context - Loader context.
+ * @returns {TokenMap | undefined} Tokens for the current request.
+ * @public
+ */
+export function getPersonalizeTokens(context: LoaderContext): TokenMap | undefined {
+  return readPersonalizeTokens(context.csdkRequestData?.headers);
+}
+
+/**
+ * Whether the personalize middleware forwarded dynamic content tokens for the current request.
+ * Such renders contain visitor data, so they must not be cached in shared caches.
+ * @param {CsdkRequestData['headers']} headers - Request headers.
+ * @returns {boolean} Whether the request carries tokens.
+ * @internal
+ */
+export function hasPersonalizeTokens(headers: CsdkRequestData['headers']): boolean {
+  return !!headers?.[PERSONALIZE_TOKENS_HEADER];
 }

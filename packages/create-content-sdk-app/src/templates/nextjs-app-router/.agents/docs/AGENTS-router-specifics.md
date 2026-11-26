@@ -25,7 +25,8 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
   - **AppRouterMultisiteProxy** — rewrites to `/[site]/[locale]/[...path]`; uses `scConfig.multisite`.
   - **RedirectsProxy** — redirects; uses `scConfig.redirects`, `scConfig.api.edge`, `scConfig.api.local`.
   - **PersonalizeProxy** — personalization; uses `scConfig.personalize`; often disabled in dev.
-- **Matcher:** Exclude API routes, `_next/`, sitemap, robots, healthz, Sitecore paths, and static assets so middleware does not run on every static request. The matcher is defined in `config` in `proxy.ts` (or in `middleware.ts` if it re-exports the proxy).
+    - **Dynamic content tokens** (`personalize.dynamicContent`): when Personalize returns tokens, rewrites to `/[site]/[locale]/_sctokens/...` with the tokens in the `x-sc-personalize-tokens` request header. That route (`src/app/[site]/[locale]/%5Fsctokens/[[...path]]/page.tsx`; `%5F` escapes the leading underscore) is `force-dynamic` and passes `tokens: getPersonalizeTokens(await headers())` to `getPage`; every other request keeps using `[[...path]]`, so SSG pages stay static. Don't read the tokens in `[[...path]]`; only the `_sctokens` route renders visitor values. Preview, Design Library and error pages are never processed.
+- **Matcher:** Exclude API routes, `_next/`, sitemap, robots, healthz, Sitecore paths, and static assets so middleware does not run on every static request. Keep the `/:site/:locale/_sctokens/:path*` entry so the proxy always runs on the tokens route and removes a tokens header sent by a client. The matcher is defined in `config` in `proxy.ts` (or in `middleware.ts` if it re-exports the proxy).
 - **Config:** `sitecore.config.ts` → `multisite`, `redirects`, `personalize`; never commit secrets.
 
 ## Data fetching and preview

@@ -26,6 +26,7 @@ Optional, on-demand detail. The compact guide is [AGENTS.md](../../AGENTS.md).
   - **MultisiteProxy** — resolves site from request (e.g. hostname or cookie), rewrites to internal path; uses `scConfig.api.edge` and `scConfig.multisite` (e.g. `useCookieResolution`).
   - **RedirectsProxy** — handles redirects; uses `scConfig.redirects`, `scConfig.api.edge`, `scConfig.api.local`.
   - **PersonalizeProxy** — personalization; uses `scConfig.personalize`; often disabled in dev.
+    - **Dynamic content tokens** (`personalize.dynamicContent`): when Personalize returns tokens, rewrites to `src/pages/_sctokens/[[...path]].tsx` (prefix `/_sctokens`) with the tokens in the `x-sc-personalize-tokens` request header. That route reuses the page component and renders per request with `getServerSideProps` (`tokens: getPersonalizeTokens(context.req.headers)`); every other request keeps using `[[...path]].tsx`, so SSG pages stay static. Without the route, token requests render fallbacks. Keep the `/_sctokens/:path*` entry in the `proxy.ts` matcher so the proxy always runs there and removes a tokens header sent by a client. Preview, Design Library and error pages are never processed.
 - **Skip function:** Each proxy has a `skip` callback. Use it to avoid running on certain paths (e.g. `/api`, `/_next`, static files) for performance.
 - **Config:** `sitecore.config.ts` → `multisite.enabled`, `redirects.enabled`, `personalize`; never commit secrets.
 

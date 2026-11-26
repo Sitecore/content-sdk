@@ -60,6 +60,14 @@ export class CdpHelper {
     static normalizeScope(scope?: string): string;
 }
 
+// @internal
+export function collectPersonalizeExecutionTokens<T extends {
+    variantIds: string[];
+}>(executions: T[], execute: (execution: T) => Promise<unknown>): Promise<{
+    identifiedVariantIds: string[];
+    tokens: TokenMap;
+}>;
+
 // @public
 export const combineImportEntries: (defaultImportEntries: ImportEntry[], generatedImportEntries: ImportEntry[]) => ImportEntry[];
 
@@ -434,6 +442,9 @@ export enum EditMode {
 // @internal
 export const EMPTY_DATE_FIELD_VALUE = "0001-01-01T00:00:00Z";
 
+// @internal
+export function encodePersonalizeTokens(tokens: TokenMap): string | undefined;
+
 // @internal (undocumented)
 export type EnhancedComponentMapTemplate = (components: (ComponentFile | ComponentFileWithType)[], componentImports: ComponentImport[] | undefined, ctx: {
     entries: ComponentMapEntry[];
@@ -706,6 +717,9 @@ export function getPersonalizedRewrite(pathname: string, variantIds: string[]): 
 
 // @public
 export function getPersonalizedRewriteData(pathname: string): PersonalizedRewriteData;
+
+// @public
+export function getPersonalizeTokens(headers: PersonalizeTokensHeaders | null | undefined): TokenMap | undefined;
 
 // @internal
 export function getRenderingParamString(value: unknown): string | undefined;
@@ -1122,6 +1136,7 @@ export type PageMode = {
 // @public
 export type PageOptions = Partial<RouteOptions> & {
     personalize?: PersonalizedRewriteData;
+    tokens?: TokenMap;
 };
 
 // @internal
@@ -1133,6 +1148,9 @@ export class PagesEditor {
     // (undocumented)
     static resetChromes(): void;
 }
+
+// @internal
+export const PERSONALIZE_TOKENS_HEADER = "x-sc-personalize-tokens";
 
 // @public (undocumented)
 export type PersonalizedRewriteData = {
@@ -1171,6 +1189,9 @@ export type PersonalizeServiceConfig = CacheOptions & {
     fetch?: typeof fetch;
     clientFactory: GraphQLRequestClientFactory;
 };
+
+// @public
+export type PersonalizeTokensHeaders = Pick<Headers, 'get'> | Record<string, string | string[] | undefined>;
 
 // @public
 export interface PlaceholderData {
@@ -1529,6 +1550,7 @@ export class SitecoreClient implements BaseSitecoreClient {
 
 // @public
 export type SitecoreClientInit = Omit<SitecoreConfig, 'multisite' | 'redirects' | 'personalize'> & {
+    personalize?: Partial<Pick<SitecoreConfig['personalize'], 'dynamicContent'>>;
     custom?: {
         layoutService?: LayoutService;
         dictionaryService?: DictionaryService;
@@ -1661,6 +1683,12 @@ export interface TextField extends FieldMetadata {
     value?: string | number;
 }
 
+// @public
+export type TokenMap = Record<string, string>;
+
+// @internal
+export const TOKENS_REWRITE_SEGMENT = "_sctokens";
+
 // @internal
 export const toPascalCase: (name: string) => string;
 
@@ -1701,7 +1729,7 @@ export type WriteImportMapArgsInternal = WriteImportMapArgs & {
 
 // Warnings were encountered during analysis:
 //
-// src/client/sitecore-client.ts:69:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
+// src/client/sitecore-client.ts:73:3 - (ae-forgotten-export) The symbol "PageModeName" needs to be exported by the entry point api-surface.d.ts
 // src/editing/codegen/preview.ts:116:3 - (ae-forgotten-export) The symbol "ComponentImport_2" needs to be exported by the entry point api-surface.d.ts
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "ComponentMapTemplate" which is marked as @internal
 // src/tools/generate-map.ts:28:3 - (ae-incompatible-release-tags) The symbol "mapTemplate" is marked as @public, but its signature references "EnhancedComponentMapTemplate" which is marked as @internal

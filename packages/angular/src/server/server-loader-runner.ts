@@ -6,6 +6,7 @@ import {
   LoaderDataResult,
 } from '../loaders/models';
 import { LoaderRegistry } from '../loaders/loader-registry.token';
+import { hasPersonalizeTokens } from '../loaders/context-helpers';
 import { buildCacheKey } from './cache/cache-key';
 import { buildLoaderCacheTags } from './cache/cache-tags';
 import { AngularSitecoreConfig } from '../config/define-config';
@@ -74,7 +75,11 @@ export class ServerLoaderRunner {
       csdkRequestData: csdkRequestData ?? undefined,
     };
 
-    const cacheable = this.cache && (cacheOptions?.enabled ?? this.cache.enabled());
+    // Renders with dynamic content tokens contain visitor data: never read or write the shared cache.
+    const cacheable =
+      this.cache &&
+      !hasPersonalizeTokens(csdkRequestData?.headers) &&
+      (cacheOptions?.enabled ?? this.cache.enabled());
 
     if (cacheable) {
       const { key } = buildCacheKey(loaderId, ctx);

@@ -152,6 +152,19 @@ describe('SitecoreClient', () => {
       });
     });
 
+    it('should forward tokens to the base client', async () => {
+      layoutServiceStub.fetchLayoutData.returns(structuredClone(layoutData));
+      const superGetPage = sandbox.spy(Object.getPrototypeOf(SitecoreNextjsClient.prototype), 'getPage');
+
+      await sitecoreClient.getPage('/test/path', { locale: 'en-US', tokens: { name: 'Ada' } });
+
+      expect(superGetPage).to.be.calledWith(
+        '/test/path',
+        sandbox.match({ locale: 'en-US', tokens: { name: 'Ada' } })
+      );
+      superGetPage.restore();
+    });
+
     it('should use site passed in page options over site parsed from path', async () => {
       const path = `${SITE_PREFIX}mysite/test/path`;
       const locale = 'en-US';

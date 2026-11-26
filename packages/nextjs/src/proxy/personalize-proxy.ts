@@ -5,6 +5,10 @@ import {
   PersonalizeInfo,
   CdpHelper,
   DEFAULT_VARIANT,
+  PERSONALIZE_TOKENS_HEADER,
+  TOKENS_REWRITE_SEGMENT,
+  collectPersonalizeExecutionTokens,
+  encodePersonalizeTokens,
 } from '@sitecore-content-sdk/content/personalize';
 import { BOT_DETECTION_COOKIE } from '@sitecore-content-sdk/analytics-core/internal';
 import { initContentSdk } from '@sitecore-content-sdk/core';
@@ -17,6 +21,12 @@ import { SitecoreConfig } from '../config';
 import debug from '../debug';
 import { personalizeProxyAdapter } from '../initialization/proxy/personalize-adapter';
 import { FailedProxyExecution, ProxiesContext, SuccessfulProxyExecution } from './types';
+
+// Headers Next.js sets on proxy responses that continue to the app, and on request header overrides.
+const NEXT_HEADER_NAME = 'x-middleware-next';
+const REWRITE_URL_HEADER_NAME = 'x-middleware-rewrite';
+const REQUEST_OVERRIDE_PREFIX = 'x-middleware-request-';
+const OVERRIDE_HEADERS_HEADER_NAME = 'x-middleware-override-headers';
 
 /**
  * Information about executed proxy to be stored in the context
@@ -44,7 +54,8 @@ export type PersonalizeGeoData = {
  */
 export type PersonalizeProxyConfig = ProxyBaseConfig &
   SitecoreConfig['api']['edge'] &
-  SitecoreConfig['personalize'] & {
+  Omit<SitecoreConfig['personalize'], 'dynamicContent'> &
+  Partial<Pick<SitecoreConfig['personalize'], 'dynamicContent'>> & {
     personalizeService?: PersonalizeService;
     getExtraUtmParams?: (req: NextRequest) => Partial<ExperienceParams['utm']>;
     extractGeoDataCb?: (req?: NextRequest) => Promise<PersonalizeGeoData> | PersonalizeGeoData;
@@ -78,7 +89,11 @@ type PersonalizeExecution = {
 };
 
 /**
- * Proxy / handler to support Sitecore Personalize
+ * Proxy / handler to support Sitecore Personalize.
+ *
+ * When `dynamicContent` is enabled and Personalize returns tokens, the request is rewritten to the
+ * app's per-request `_sctokens` route with the tokens in the `x-sc-personalize-tokens` request header.
+ * The proxy removes any client-sent `x-sc-personalize-tokens` header.
  * @public
  */
 export class PersonalizeProxy extends ProxyBase {
@@ -134,6 +149,17 @@ export class PersonalizeProxy extends ProxyBase {
     res: NextResponse,
     proxiesContext?: ProxiesContext
   ): Promise<NextResponse> => {
+    // Only this proxy may set the tokens header: drop any value sent by the client. Responses that
+    // do not continue to the app (for example a 401 from an earlier proxy) are returned unchanged.
+    const continues = res.headers.has(NEXT_HEADER_NAME) || res.headers.has(REWRITE_URL_HEADER_NAME);
+    if (req.headers.has(PERSONALIZE_TOKENS_HEADER)) {
+      if (continues) {
+        res = this.withRequestHeaders(req, res);
+      }
+      // Proxies that run later and copy the incoming request headers must not see it either
+      req.headers.delete(PERSONALIZE_TOKENS_HEADER);
+    }
+
     if (!this.config.enabled) {
       debug.personalize('skipped (personalize proxy is disabled globally)');
       return res;
@@ -218,10 +244,9 @@ export class PersonalizeProxy extends ProxyBase {
 
       const params = this.getExperienceParams(req);
       const executions = this.getPersonalizeExecutions(personalizeInfo, language);
-      const identifiedVariantIds: string[] = [];
-
-      await Promise.all(
-        executions.map((execution) =>
+      const { identifiedVariantIds, tokens } = await collectPersonalizeExecutionTokens(
+        executions,
+        (execution) =>
           this.personalize({
             friendlyId: execution.friendlyId,
             variantIds: execution.variantIds,
@@ -229,20 +254,13 @@ export class PersonalizeProxy extends ProxyBase {
             language,
             timeout: cdpTimeout,
             ...(geo && { geo }),
-          }).then((personalization) => {
-            const variantId = personalization.variantId;
-            if (variantId) {
-              if (!execution.variantIds.includes(variantId)) {
-                debug.personalize('invalid variant %s', variantId);
-              } else {
-                identifiedVariantIds.push(variantId);
-              }
-            }
           })
-        )
       );
+      const encodedTokens = this.config.dynamicContent
+        ? encodePersonalizeTokens(tokens)
+        : undefined;
 
-      if (identifiedVariantIds.length === 0) {
+      if (identifiedVariantIds.length === 0 && !encodedTokens) {
         debug.personalize('skipped (no variant(s) identified)');
         return res;
       }
@@ -250,9 +268,17 @@ export class PersonalizeProxy extends ProxyBase {
       // Path can be rewritten by previously executed proxy
       const basePath = this.getPathname(req, res);
 
-      // Rewrite to persononalized path
-      const rewritePath = getPersonalizedRewrite(basePath, identifiedVariantIds);
-      const response = this.rewrite(rewritePath, req, res);
+      // Rewrite to persononalized path. Requests with tokens go to the app's per-request tokens route.
+      let rewritePath = getPersonalizedRewrite(basePath, identifiedVariantIds);
+      let response: NextResponse;
+      if (encodedTokens) {
+        rewritePath = this.getTokensRewrite(rewritePath, res);
+        response = this.withRequestHeaders(req, this.rewrite(rewritePath, req, res), encodedTokens);
+        // The render contains visitor data: keep it out of shared caches
+        response.headers.set('Cache-Control', 'private, no-store');
+      } else {
+        response = this.rewrite(rewritePath, req, res);
+      }
 
       // Disable preflight caching to force revalidation on client-side navigation (personalization MAY be influenced).
       // See https://github.com/vercel/next.js/pull/32767
@@ -381,6 +407,7 @@ export class PersonalizeProxy extends ProxyBase {
       { timeout }
     )) as {
       variantId: string;
+      tokens?: Record<string, string | number>;
     };
   }
 
@@ -438,5 +465,49 @@ export class PersonalizeProxy extends ProxyBase {
       }
       return results;
     }, results);
+  }
+
+  /**
+   * Adds the tokens route segment to a rewrite path: first for the Pages Router
+   * (`/_sctokens/...`), after `/<site>/<locale>` for the App Router.
+   * @param {string} rewritePath Personalized rewrite path
+   * @param {NextResponse} res Current response
+   * @returns {string} Rewrite path to the tokens route
+   */
+  private getTokensRewrite(rewritePath: string, res: NextResponse): string {
+    const segments = rewritePath.split('/');
+    segments.splice(this.isAppRouter(res) ? 3 : 1, 0, TOKENS_REWRITE_SEGMENT);
+    return segments.join('/');
+  }
+
+  /**
+   * Continues with the request headers, without any client-sent tokens header and with `encodedTokens`
+   * when given. Rewrites, cookies and request headers set by earlier proxies (including headers they
+   * removed) are kept.
+   * @param {NextRequest} req Incoming request
+   * @param {NextResponse} res Current response
+   * @param {string} [encodedTokens] Encoded tokens to forward to the render
+   * @returns {NextResponse} Response that forwards the request headers
+   */
+  private withRequestHeaders(
+    req: NextRequest,
+    res: NextResponse,
+    encodedTokens?: string
+  ): NextResponse {
+    // Request headers set by an earlier proxy replace the incoming ones; Next.js forwards only the names
+    // listed in the override header
+    const overridden = res.headers.get(OVERRIDE_HEADERS_HEADER_NAME);
+    const headers = new Headers(typeof overridden === 'string' ? undefined : req.headers);
+    overridden?.split(',').forEach((name) => {
+      const value = res.headers.get(`${REQUEST_OVERRIDE_PREFIX}${name.trim()}`);
+      if (typeof value === 'string') {
+        headers.set(name.trim(), value);
+      }
+    });
+    headers.delete(PERSONALIZE_TOKENS_HEADER);
+    if (encodedTokens) {
+      headers.set(PERSONALIZE_TOKENS_HEADER, encodedTokens);
+    }
+    return NextResponse.next({ request: { headers }, headers: res.headers });
   }
 }

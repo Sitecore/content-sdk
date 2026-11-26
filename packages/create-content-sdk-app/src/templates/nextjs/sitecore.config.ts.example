@@ -36,5 +36,7 @@ export default defineConfig({
     scope: process.env.NEXT_PUBLIC_PERSONALIZE_SCOPE,
     edgeTimeout: parseInt(process.env.PERSONALIZE_PROXY_EDGE_TIMEOUT!, 10),
     cdpTimeout: parseInt(process.env.PERSONALIZE_PROXY_EDGE_TIMEOUT!, 10),
+    // Resolve dynamic content tokens ({{key}} / {{key|fallback}}) authored in page content
+    dynamicContent: true,
   },
 });

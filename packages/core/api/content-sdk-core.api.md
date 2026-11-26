@@ -578,6 +578,7 @@ export type SitecoreConfigInput = {
         scope?: string;
         channel?: string;
         currency?: string;
+        dynamicContent?: boolean;
     };
     redirects?: {
         enabled?: boolean;
