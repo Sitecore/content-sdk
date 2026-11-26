@@ -423,9 +423,7 @@ export class NativeDataFetcher {
     // (undocumented)
     protected config: NativeDataFetcherConfig;
     delete<T>(url: string, options?: RequestInit): Promise<NativeDataFetcherResponse<T>>;
-    protected extractDebugHeaders(incomingHeaders?: HeadersInit): {
-        [key: string]: string | string[];
-    };
+    protected extractDebugHeaders(incomingHeaders?: HeadersInit): Record<string, string | string[]>;
     fetch<T>(url: string, options?: RequestInit): Promise<NativeDataFetcherResponse<T>>;
     get<T>(url: string, options?: RequestInit): Promise<NativeDataFetcherResponse<T>>;
     protected getRequestInit(init?: RequestInit): RequestInit;
@@ -482,6 +480,12 @@ export interface PluginAdapter {
 
 // @public
 export type PluginDependency = string;
+
+// @internal
+export const REDACTED_HEADER_VALUE = "[redacted]";
+
+// @internal
+export const redactSensitiveHeaders: (headers: Record<string, string | string[]>) => Record<string, string | string[]>;
 
 // @internal
 export function resolveCapabilities(capabilities: MergedCapabilityTree, context: CapabilityFilterContext): Promise<ResolvedCapabilities>;

@@ -22,6 +22,7 @@ export {
   escapeRegExp,
   mergeURLSearchParams,
 } from './utils';
+export { redactSensitiveHeaders, REDACTED_HEADER_VALUE } from './redact-headers';
 export {
   omitJavascriptUrls,
   getOmittedJavascriptUrlMessage,
