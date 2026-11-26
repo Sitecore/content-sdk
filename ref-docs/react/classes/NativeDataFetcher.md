@@ -69,11 +69,12 @@ response
 
 ### extractDebugHeaders()
 
-> `protected` **extractDebugHeaders**(`incomingHeaders?`): `object`
+> `protected` **extractDebugHeaders**(`incomingHeaders?`): `Record`\<`string`, `string` \| `string`[]\>
 
-Defined in: packages/core/types/native-fetcher.d.ts:106
+Defined in: packages/core/types/native-fetcher.d.ts:107
 
-Safely extract all headers for debug logging
+Safely extract all headers for debug logging.
+Values of sensitive headers (e.g. the editing secret) are redacted.
 
 #### Parameters
 
@@ -83,7 +84,7 @@ Safely extract all headers for debug logging
 
 #### Returns
 
-`object`
+`Record`\<`string`, `string` \| `string`[]\>
 
 Object with headers as key/value pairs
 

@@ -13,6 +13,7 @@
 
 ## Variables
 
+- [REDACTED\_HEADER\_VALUE](variables/REDACTED_HEADER_VALUE.md)
 - [SITECORE\_EDGE\_PLATFORM\_HOSTNAME\_ENV](variables/SITECORE_EDGE_PLATFORM_HOSTNAME_ENV.md)
 - [SITECORE\_EXPERIENCE\_EDGE\_HOSTNAME\_ENV](variables/SITECORE_EXPERIENCE_EDGE_HOSTNAME_ENV.md)
 
@@ -34,6 +35,7 @@
 - [mergeURLSearchParams](functions/mergeURLSearchParams.md)
 - [normalizeUrl](functions/normalizeUrl.md)
 - [omitJavascriptUrls](functions/omitJavascriptUrls.md)
+- [redactSensitiveHeaders](functions/redactSensitiveHeaders.md)
 - [resolveEdgeUrl](functions/resolveEdgeUrl.md)
 - [resolveEdgeUrlForStaticFiles](functions/resolveEdgeUrlForStaticFiles.md)
 - [resolveExperienceEdgeUrl](functions/resolveExperienceEdgeUrl.md)
