@@ -222,6 +222,10 @@ export function createEditingRenderMiddleware(
   const endpoint = options?.endpoint ?? DEFAULT_ENDPOINT;
 
   return async (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
+    if (req.headers) {
+      delete req.headers[EDITING_PARAMS_HEADER];
+    }
+
     if (req.path !== endpoint) {
       next();
       return;
