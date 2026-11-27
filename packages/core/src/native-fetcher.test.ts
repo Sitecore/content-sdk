@@ -258,6 +258,28 @@ describe('NativeDataFetcher', () => {
       expect(debug.http.log, 'request and response log').to.be.called.twice;
     });
 
+    it('should not write the editing secret header to the debug log', async () => {
+      // the suite mocks global Headers; this test needs the real implementation to log headers
+      spy.restore(global, 'Headers');
+      const fetcher = new NativeDataFetcher();
+
+      spy.on(global, 'fetch', mockFetch(200));
+
+      await fetcher.fetch('http://test.com/api', {
+        headers: { 'x-sitecore-editing-secret': 'top-secret-value', 'x-other': 'visible' },
+      });
+
+      // @ts-expect-error chai-spies keeps recorded calls on the spy
+      const logged = JSON.stringify(debug.http.log.__spy.calls);
+      expect(logged).to.not.contain('top-secret-value');
+      expect(logged).to.contain('[redacted]');
+      expect(logged).to.contain('visible');
+      // the secret must still be sent with the actual request
+      expect(new Headers(fetchInit?.headers).get('x-sitecore-editing-secret')).to.equal(
+        'top-secret-value'
+      );
+    });
+
     it('should debug log request and response error', async () => {
       const fetcher = new NativeDataFetcher();
 

@@ -8,7 +8,7 @@
 
 > **BuildSitecoreItemCacheTagParams** = `object`
 
-Defined in: [packages/angular/src/server/cache/cache-tags.ts:21](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/angular/src/server/cache/cache-tags.ts#L21)
+Defined in: [packages/angular/src/server/cache/cache-tags.ts:21](https://github.com/Sitecore/content-sdk/blob/3966c04d9148447d9abcf751cdefb214d74a9fb3/packages/angular/src/server/cache/cache-tags.ts#L21)
 
 Parameters for [buildSitecoreItemCacheTag](../functions/buildSitecoreItemCacheTag.md).
 
@@ -18,7 +18,7 @@ Parameters for [buildSitecoreItemCacheTag](../functions/buildSitecoreItemCacheTa
 
 > **itemId**: `string`
 
-Defined in: [packages/angular/src/server/cache/cache-tags.ts:23](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/angular/src/server/cache/cache-tags.ts#L23)
+Defined in: [packages/angular/src/server/cache/cache-tags.ts:23](https://github.com/Sitecore/content-sdk/blob/3966c04d9148447d9abcf751cdefb214d74a9fb3/packages/angular/src/server/cache/cache-tags.ts#L23)
 
 Sitecore item GUID or content id.
 
@@ -28,6 +28,6 @@ Sitecore item GUID or content id.
 
 > **locale**: `string`
 
-Defined in: [packages/angular/src/server/cache/cache-tags.ts:25](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/angular/src/server/cache/cache-tags.ts#L25)
+Defined in: [packages/angular/src/server/cache/cache-tags.ts:25](https://github.com/Sitecore/content-sdk/blob/3966c04d9148447d9abcf751cdefb214d74a9fb3/packages/angular/src/server/cache/cache-tags.ts#L25)
 
 Locale/culture for the item tag.

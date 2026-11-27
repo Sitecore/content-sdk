@@ -8,7 +8,7 @@
 
 > **createLlmsTxtMiddleware**(`options`): [`ExpressMiddleware`](../type-aliases/ExpressMiddleware.md)
 
-Defined in: [packages/angular/src/server/middleware/llms-txt-middleware.ts:26](https://github.com/Sitecore/content-sdk/blob/ec39303dfab1c8fa45958f31c508ba9a92e16847/packages/angular/src/server/middleware/llms-txt-middleware.ts#L26)
+Defined in: [packages/angular/src/server/middleware/llms-txt-middleware.ts:26](https://github.com/Sitecore/content-sdk/blob/3966c04d9148447d9abcf751cdefb214d74a9fb3/packages/angular/src/server/middleware/llms-txt-middleware.ts#L26)
 
 llms.txt handler for Express. Mount at `/llms.txt`.
 Serves the llms.txt content managed via SitecoreAI for the site resolved by host name.

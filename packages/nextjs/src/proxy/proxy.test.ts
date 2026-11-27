@@ -8,6 +8,7 @@ import chaiString from 'chai-string';
 import { defineProxy, ProxyHandler, ProxyBase, REWRITE_HEADER_NAME, ProxiesContext } from './proxy';
 import { NextRequest, NextResponse } from 'next/server';
 import { SiteResolver } from '../site';
+import { EDITING_SECRET_HEADER } from '../editing/constants';
 import { SuccessfulProxyExecution } from './types';
 
 use(sinonChai);
@@ -296,6 +297,22 @@ describe('ProxyBase', () => {
       foo: 'net',
       bar: 'one',
     });
+  });
+
+  it('extractDebugHeaders should redact the editing secret header', () => {
+    const proxy = new SampleProxy({ sites: [] });
+
+    const headers = new Headers({});
+    headers.set('foo', 'net');
+    headers.set(EDITING_SECRET_HEADER, 'top-secret');
+
+    const result = proxy['extractDebugHeaders'](headers);
+
+    expect(result).to.deep.equal({
+      foo: 'net',
+      [EDITING_SECRET_HEADER]: '[redacted]',
+    });
+    expect(JSON.stringify(result)).to.not.contain('top-secret');
   });
 
   describe('getHostHeader', () => {

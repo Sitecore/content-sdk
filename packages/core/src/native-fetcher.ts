@@ -1,5 +1,6 @@
 import debuggers, { Debugger } from './debug';
 import TimeoutPromise from './tools/timeout-promise';
+import { redactSensitiveHeaders } from './tools/redact-headers';
 
 export type NativeDataFetcherOptions = {
   /**
@@ -77,8 +78,8 @@ export class NativeDataFetcher {
 
     debug('Request initiated: %o', {
       url,
-      headers: this.extractDebugHeaders(requestInit.headers),
       ...requestInit,
+      headers: this.extractDebugHeaders(requestInit.headers),
     });
 
     try {
@@ -194,7 +195,8 @@ export class NativeDataFetcher {
   }
 
   /**
-   * Safely extract all headers for debug logging
+   * Safely extract all headers for debug logging.
+   * Values of sensitive headers (e.g. the editing secret) are redacted.
    * @param {HeadersInit} incomingHeaders Incoming headers
    * @returns Object with headers as key/value pairs
    */
@@ -207,7 +209,7 @@ export class NativeDataFetcher {
       });
     }
 
-    return headers;
+    return redactSensitiveHeaders(headers);
   }
 
   /**

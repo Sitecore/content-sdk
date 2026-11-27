@@ -5,6 +5,7 @@ import {
   getHostnameFromHostHeader,
 } from '@sitecore-content-sdk/content/site';
 import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
+import { redactSensitiveHeaders } from '@sitecore-content-sdk/core/tools';
 import { NextRequest, NextResponse } from 'next/server';
 import {
   createGraphQLClientFactory,
@@ -153,13 +154,14 @@ export abstract class ProxyBase extends ProxyHandler {
   /**
    * Safely extract all headers for debug logging
    * Necessary to avoid proxy issue https://github.com/vercel/next.js/issues/39765
+   * Values of sensitive headers (e.g. the editing secret) are redacted.
    * @param {Headers} incomingHeaders Incoming headers
    * @returns Object with headers as key/value pairs
    */
   protected extractDebugHeaders(incomingHeaders: Headers) {
     const headers = {} as { [key: string]: string };
     incomingHeaders.forEach((value, key) => (headers[key] = value));
-    return headers;
+    return redactSensitiveHeaders(headers) as { [key: string]: string };
   }
 
   /**
