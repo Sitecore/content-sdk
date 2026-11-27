@@ -1049,7 +1049,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/cli@npm:^2.29.8":
+"@changesets/cli@npm:2.31.0":
   version: 2.31.0
   resolution: "@changesets/cli@npm:2.31.0"
   dependencies:
@@ -17593,7 +17593,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
-    "@changesets/cli": "npm:^2.29.8"
+    "@changesets/cli": "npm:2.31.0"
     "@microsoft/api-extractor": "npm:^7.55.0"
     "@rushstack/eslint-patch": "npm:^1.10.3"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
