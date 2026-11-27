@@ -18,6 +18,46 @@ const DefaultErrorComponent = (props: ErrorComponentProps) => (
   <div>A rendering error occurred: {props.error?.message}.</div>
 );
 
+// Props set by BYOCComponent or the BYOC renderer that ComponentProps must not override
+const RESERVED_COMPONENT_PROPS = [
+  'componentName',
+  'clientFallback',
+  'fallback',
+  'fallbackWrapper',
+  'datasources',
+  '_dynamic',
+  'className',
+  'suppressHydrationWarning',
+  'dangerouslySetInnerHTML',
+  'children',
+  'ref',
+  'key',
+];
+
+const sanitizeComponentProps = (
+  props: unknown,
+  componentName: string
+): { [key: string]: unknown } => {
+  if (!props || typeof props !== 'object' || Array.isArray(props)) {
+    return {};
+  }
+  const dropped: string[] = [];
+  const sanitized = Object.fromEntries(
+    Object.entries(props).filter(([key]) => {
+      // on* keys are server-rendered as event handler attributes
+      const unsafe = /^on/i.test(key) || RESERVED_COMPONENT_PROPS.includes(key);
+      if (unsafe) dropped.push(key);
+      return !unsafe;
+    })
+  );
+  if (dropped.length) {
+    console.warn(
+      `BYOC: Ignored unsupported props for ${componentName} component from rendering params: ${dropped.join(', ')}`
+    );
+  }
+  return sanitized;
+};
+
 // BYOCComponent remains for backward compatibility and testing purposes
 
 /**
@@ -80,11 +120,14 @@ export class BYOCComponent extends React.Component<BYOCComponentProps> {
 
     const ErrorComponent = this.props.errorComponent;
 
-    let componentProps: { [key: string]: any } = {};
+    let componentProps: { [key: string]: unknown } = {};
 
     if (props.params?.ComponentProps) {
       try {
-        componentProps = JSON.parse(props.params.ComponentProps) ?? {};
+        componentProps = sanitizeComponentProps(
+          JSON.parse(props.params.ComponentProps),
+          componentName
+        );
       } catch (e) {
         console.error(
           `Parsing props for ${componentName} component from rendering params failed. Error: ${e}`

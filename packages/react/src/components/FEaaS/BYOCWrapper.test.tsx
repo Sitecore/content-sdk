@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import React from 'react';
+import { renderToString } from 'react-dom/server';
 import { expect } from 'chai';
 import { render } from '@testing-library/react';
-import { createSandbox, SinonSandbox } from 'sinon';
+import { createSandbox, SinonSandbox, SinonStub } from 'sinon';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import { BYOCComponent, __mockDependencies } from './BYOCWrapper';
 import { MissingComponent, MissingComponentProps } from '../MissingComponent';
@@ -355,5 +356,103 @@ describe('Error handling', () => {
     const fallbackProps = externalComponentProps.clientFallback.props;
     expect(fallbackProps.rendering.componentName).to.equal('NonExistentComponent');
     expect(fallbackProps.errorOverride).to.equal('BYOC: This component was not registered.');
+  });
+});
+
+describe('ComponentProps sanitization', () => {
+  let sandbox: SinonSandbox;
+  let mockExternalComponent: any;
+  let warnStub: SinonStub;
+
+  beforeEach(() => {
+    sandbox = createSandbox();
+    warnStub = sandbox.stub(console, 'warn');
+    mockExternalComponent = sandbox.spy((props: any) => {
+      mockExternalComponent.lastProps = props;
+      return <div data-testid="mock-external-component" />;
+    });
+    __mockDependencies({ ExternalComponent: mockExternalComponent });
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+    __mockDependencies({ ExternalComponent: FEAAS.ExternalComponent });
+  });
+
+  const renderWithComponentProps = (componentProps: string) =>
+    render(
+      <BYOCComponent
+        params={{ ComponentName: 'Foo', ComponentProps: componentProps }}
+        fetchedData={{ ds: { a: 1 } }}
+      />
+    );
+
+  it('should drop event handler props', () => {
+    renderWithComponentProps(
+      JSON.stringify({
+        prop1: 'value1',
+        onclick: 'alert(1)',
+        onFocus: 'alert(2)',
+        ONLOAD: 'alert(3)',
+      })
+    );
+
+    const props = mockExternalComponent.lastProps;
+    expect(props.prop1).to.equal('value1');
+    expect(props).to.not.have.any.keys('onclick', 'onFocus', 'ONLOAD');
+    expect(warnStub.callCount).to.equal(1);
+    expect(warnStub.firstCall.args[0]).to.equal(
+      'BYOC: Ignored unsupported props for Foo component from rendering params: onclick, onFocus, ONLOAD'
+    );
+  });
+
+  it('should not let ComponentProps override props set by BYOCComponent', () => {
+    renderWithComponentProps(
+      JSON.stringify({
+        componentName: 'Other',
+        datasources: { evil: 1 },
+        clientFallback: 'fallback',
+        fallback: 'fallback',
+        dangerouslySetInnerHTML: { __html: '<img src=x onerror=alert(1)>' },
+      })
+    );
+
+    const props = mockExternalComponent.lastProps;
+    expect(props.componentName).to.equal('Foo');
+    expect(props.datasources).to.deep.equal({ ds: { a: 1 }, _: {} });
+    expect(props.clientFallback.type).to.equal(MissingComponent);
+    expect(props).to.not.have.any.keys('fallback', 'dangerouslySetInnerHTML');
+  });
+
+  it('should ignore ComponentProps that are not a JSON object', () => {
+    renderWithComponentProps(JSON.stringify(['a', 'b']));
+
+    expect(mockExternalComponent.lastProps).to.not.have.any.keys('0', '1');
+    expect(warnStub.callCount).to.equal(0);
+  });
+
+  it('should not render event handler attributes on the server', () => {
+    __mockDependencies({ ExternalComponent: FEAAS.ExternalComponent });
+    FEAAS.External.registerComponent(() => <p>Test</p>, {
+      name: 'Foo',
+      properties: { prop1: { type: 'string' } },
+    });
+
+    const html = renderToString(
+      <BYOCComponent
+        params={{
+          ComponentName: 'Foo',
+          ComponentProps: JSON.stringify({
+            prop1: 'value1',
+            onclick: 'alert(1)',
+            onfocus: 'alert(2)',
+          }),
+        }}
+      />
+    );
+
+    expect(html).to.contain('prop1="value1"');
+    expect(html).to.not.contain('onclick');
+    expect(html).to.not.contain('onfocus');
   });
 });
