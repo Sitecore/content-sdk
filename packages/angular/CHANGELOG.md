@@ -1,5 +1,24 @@
 # @sitecore-content-sdk/angular
 
+## 1.2.0
+
+### Minor Changes
+
+- Add package capability exports and build-time capability discovery. Generated application metadata ([e2bacaf](https://github.com/sitecore/content-sdk/commit/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad))
+  now includes the capabilities supported and used by the application, and editing configuration
+  endpoints expose the resolved capability keys.
+- minor `@sitecore-content-sdk/core` dependency update:
+  - Add package capability exports and build-time capability discovery. Generated application metadata
+    now includes the capabilities supported and used by the application, and editing configuration
+    endpoints expose the resolved capability keys. ([e2bacaf](https://github.com/sitecore/content-sdk/commit/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad))
+
+### Patch Changes
+
+- Apply stricter origin verifications for Design Library messages, limiting them to frame parent only. ([70cc3e2](https://github.com/sitecore/content-sdk/commit/70cc3e22e6077307faa68bfeead5defb753a25b8))
+- Harden editing secret handling. An invalid editing secret no longer writes the sent or expected secret to debug logs. The message now points to the `SITECORE_EDITING_SECRET` environment variable on the editing host. The editing secret query parameter is also redacted from the request details logged when an editing render, FEAAS render, config or experimental features request starts. Editing and revalidate secrets are now compared in constant time (`crypto.timingSafeEqual`) to prevent timing attacks. ([47aea23](https://github.com/sitecore/content-sdk/commit/47aea23db5c87b62b269d8f5d3e2ee45d9901657))
+- Refresh headers for editing requests ([ec39303](https://github.com/sitecore/content-sdk/commit/ec39303dfab1c8fa45958f31c508ba9a92e16847))
+- Remove `javascript:` URLs from `RichText` and from `Text` when `encode` is false, in React and in the Angular `*scRichText` and `*scText` directives. The surrounding HTML and text stay in place, and a removed URL is logged when the field renders. The Angular `*scLink` and `*scRouterLink` directives also omit `javascript:` hrefs, matching the React `Link` component. ([11719c2](https://github.com/sitecore/content-sdk/commit/11719c29a76964a5138c9b66c4ad7c2c94a0da6d))
+
 ## 1.1.0
 
 ### Minor Changes

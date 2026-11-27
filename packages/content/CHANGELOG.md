@@ -1,5 +1,20 @@
 # @sitecore-content-sdk/content
 
+## 2.5.0
+
+### Minor Changes
+
+- minor `@sitecore-content-sdk/core` dependency update:
+  - Add package capability exports and build-time capability discovery. Generated application metadata
+    now includes the capabilities supported and used by the application, and editing configuration
+    endpoints expose the resolved capability keys. ([e2bacaf](https://github.com/sitecore/content-sdk/commit/e2bacaf0f5c83b2db3fd8f4245136fda44d91dad))
+
+### Patch Changes
+
+- Apply stricter origin verifications for Design Library messages, limiting them to frame parent only. ([70cc3e2](https://github.com/sitecore/content-sdk/commit/70cc3e22e6077307faa68bfeead5defb753a25b8))
+- Harden editing secret handling. An invalid editing secret no longer writes the sent or expected secret to debug logs. The message now points to the `SITECORE_EDITING_SECRET` environment variable on the editing host. The editing secret query parameter is also redacted from the request details logged when an editing render, FEAAS render, config or experimental features request starts. Editing and revalidate secrets are now compared in constant time (`crypto.timingSafeEqual`) to prevent timing attacks. ([47aea23](https://github.com/sitecore/content-sdk/commit/47aea23db5c87b62b269d8f5d3e2ee45d9901657))
+- `LayoutService` now passes `site`, `routePath` and `language` to the layout query as GraphQL variables, so a route path from the request URL can no longer change the query. URLs with characters such as `"`, `\` or line breaks now resolve to a not-found page instead of an HTTP 500. A custom `layout.formatLayoutQuery` now gets its values escaped for use inside a double-quoted GraphQL string. ([84bf2bd](https://github.com/sitecore/content-sdk/commit/84bf2bda90cece7039a2dce1d068cc3670fab0df))
+
 ## 2.4.0
 
 ### Minor Changes
