@@ -8,7 +8,7 @@
 
 > **SitecoreRevalidateRouteHandlerOptions** = `object`
 
-Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:40](https://github.com/Sitecore/content-sdk/blob/3966c04d9148447d9abcf751cdefb214d74a9fb3/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L40)
+Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:40](https://github.com/Sitecore/content-sdk/blob/5d6b10bbee4bce6e575bd048c07d2ee0751ac361/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L40)
 
 Options for [createSitecoreRevalidateRouteHandler](../functions/createSitecoreRevalidateRouteHandler.md).
 
@@ -18,7 +18,7 @@ Options for [createSitecoreRevalidateRouteHandler](../functions/createSitecoreRe
 
 > `optional` **cacheProfile?**: [`RevalidateTagCacheProfile`](RevalidateTagCacheProfile.md)
 
-Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:51](https://github.com/Sitecore/content-sdk/blob/3966c04d9148447d9abcf751cdefb214d74a9fb3/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L51)
+Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:51](https://github.com/Sitecore/content-sdk/blob/5d6b10bbee4bce6e575bd048c07d2ee0751ac361/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L51)
 
 Next.js `revalidateTag` cache profile (second argument). Default is `"max"` (recommended).
 Other string values may match profiles from `cacheLife` in `next.config`; objects may use `{ expire }` per Next.js docs.
@@ -29,7 +29,7 @@ Other string values may match profiles from `cacheLife` in `next.config`; object
 
 > `optional` **defaultLocale?**: `string`
 
-Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:56](https://github.com/Sitecore/content-sdk/blob/3966c04d9148447d9abcf751cdefb214d74a9fb3/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L56)
+Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:56](https://github.com/Sitecore/content-sdk/blob/5d6b10bbee4bce6e575bd048c07d2ee0751ac361/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L56)
 
 Locale for item and dictionary tags when an update omits `entity_culture`.
 Defaults to `'en'` when omitted.
@@ -40,7 +40,7 @@ Defaults to `'en'` when omitted.
 
 > `optional` **secret?**: `string`
 
-Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:46](https://github.com/Sitecore/content-sdk/blob/3966c04d9148447d9abcf751cdefb214d74a9fb3/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L46)
+Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:46](https://github.com/Sitecore/content-sdk/blob/5d6b10bbee4bce6e575bd048c07d2ee0751ac361/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L46)
 
 Shared secret for `POST /api/revalidate`. If omitted, the handler reads `process.env.SITECORE_REVALIDATE_SECRET`.
 When a non-empty value is configured (here or via env), callers must send the same value in the
@@ -52,7 +52,7 @@ When a non-empty value is configured (here or via env), callers must send the sa
 
 > `optional` **sites?**: [`SiteInfo`](../../index/type-aliases/SiteInfo.md)[]
 
-Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:63](https://github.com/Sitecore/content-sdk/blob/3966c04d9148447d9abcf751cdefb214d74a9fb3/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L63)
+Defined in: [nextjs/src/route-handler/sitecore-revalidate-route-handler.ts:63](https://github.com/Sitecore/content-sdk/blob/5d6b10bbee4bce6e575bd048c07d2ee0751ac361/packages/nextjs/src/route-handler/sitecore-revalidate-route-handler.ts#L63)
 
 Sites list (e.g. from `.sitecore/sites.json`), used to resolve which site a Dictionary entry
 update (`entity_definition: "DictionaryEntry"`) belongs to, so only that site's
